@@ -1,0 +1,67 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Counter component should match exact snapshot 1`] = `
+<div>
+  <div>
+    <div
+      className="backButton"
+      data-tid="backButton"
+    >
+      <a
+        href="/"
+        onClick={[Function]}
+      >
+        <i
+          className="fa fa-arrow-left fa-3x"
+        />
+      </a>
+    </div>
+    <div
+      className="counter counter"
+      data-tid="counter"
+    >
+      1
+    </div>
+    <div
+      className="btnGroup"
+    >
+      <button
+        className="btn"
+        data-tclass="btn"
+        onClick={[Function]}
+        type="button"
+      >
+        <i
+          className="fa fa-plus"
+        />
+      </button>
+      <button
+        className="btn"
+        data-tclass="btn"
+        onClick={[Function]}
+        type="button"
+      >
+        <i
+          className="fa fa-minus"
+        />
+      </button>
+      <button
+        className="btn"
+        data-tclass="btn"
+        onClick={[Function]}
+        type="button"
+      >
+        odd
+      </button>
+      <button
+        className="btn"
+        data-tclass="btn"
+        onClick={[Function]}
+        type="button"
+      >
+        async
+      </button>
+    </div>
+  </div>
+</div>
+`;
