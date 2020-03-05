@@ -65,7 +65,7 @@ class Book extends Component {
           src={
             this.props.bookCover !== null
               ? this.props.bookCover
-              : "../../assets/cover.jpg"
+              : "assets/cover.jpg"
           }
           alt=""
           onClick={() => {
