@@ -49,7 +49,7 @@ app.on("ready", () => {
   autoUpdater.on("update-available", () => {
     dialog
       .showMessageBox({
-        title:"更新提示"
+        title: "更新提示",
         message: "可道阅读器发布新版本啦！",
         buttons: ["前往下载", "稍后提醒"],
         defaultId: 0, // bound to buttons array
