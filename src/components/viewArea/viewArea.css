@@ -1,0 +1,20 @@
+.view-area-page {
+  position: absolute;
+  left: 60px;
+  right: 60px;
+  top: 55px;
+  bottom: 55px;
+  /* width: calc(100% - 100px);
+  height: calc(100% - 100px); */
+  z-index: 0;
+  user-select: text;
+}
+
+.popup-menu-container {
+  position: absolute;
+  left: 100px;
+  top: 100px;
+  z-index: 20;
+  /* display: none; */
+  animation: popup 0.075s ease-in-out 0s 1;
+}

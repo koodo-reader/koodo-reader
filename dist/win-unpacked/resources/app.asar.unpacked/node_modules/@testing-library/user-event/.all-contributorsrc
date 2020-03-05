@@ -1,0 +1,146 @@
+{
+  "projectName": "user-event",
+  "projectOwner": "testing-library",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": true,
+  "contributors": [
+    {
+      "login": "Gpx",
+      "name": "Giorgio Polvara",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/767959?v=4",
+      "profile": "https://twitter.com/Gpx",
+      "contributions": [
+        "bug",
+        "code",
+        "doc",
+        "ideas",
+        "infra",
+        "review",
+        "test"
+      ]
+    },
+    {
+      "login": "weyert",
+      "name": "Weyert de Boer",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/7049?v=4",
+      "profile": "https://github.com/weyert",
+      "contributions": [
+        "code",
+        "test"
+      ]
+    },
+    {
+      "login": "twhitbeck",
+      "name": "Tim Whitbeck",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/762471?v=4",
+      "profile": "https://github.com/twhitbeck",
+      "contributions": [
+        "bug",
+        "code"
+      ]
+    },
+    {
+      "login": "MichaelDeBoey",
+      "name": "Michaël De Boey",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/6643991?v=4",
+      "profile": "https://michaeldeboey.be",
+      "contributions": [
+        "doc"
+      ]
+    },
+    {
+      "login": "michaellasky",
+      "name": "Michael Lasky",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/6646599?v=4",
+      "profile": "https://github.com/michaellasky",
+      "contributions": [
+        "code",
+        "doc",
+        "ideas"
+      ]
+    },
+    {
+      "login": "shomalgan",
+      "name": "Ahmad Esmaeilzadeh",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/2883620?v=4",
+      "profile": "https://github.com/shomalgan",
+      "contributions": [
+        "doc"
+      ]
+    },
+    {
+      "login": "calebeby",
+      "name": "Caleb Eby",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/13206945?v=4",
+      "profile": "https://calebeby.ml",
+      "contributions": [
+        "code",
+        "bug"
+      ]
+    },
+    {
+      "login": "afontcu",
+      "name": "Adrià Fontcuberta",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/9197791?v=4",
+      "profile": "https://afontcu.dev",
+      "contributions": [
+        "bug",
+        "test",
+        "code"
+      ]
+    },
+    {
+      "login": "skywickenden",
+      "name": "Sky Wickenden",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/4930551?v=4",
+      "profile": "https://github.com/skywickenden",
+      "contributions": [
+        "bug",
+        "code"
+      ]
+    },
+    {
+      "login": "bogdanbodnar",
+      "name": "Bodnar Bogdan",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/9034868?v=4",
+      "profile": "https://github.com/bogdanbodnar",
+      "contributions": [
+        "bug",
+        "code"
+      ]
+    },
+    {
+      "login": "zperrault",
+      "name": "Zach Perrault",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/1699281?v=4",
+      "profile": "https://zach.website",
+      "contributions": [
+        "doc"
+      ]
+    },
+    {
+      "login": "FLGMwt",
+      "name": "Ryan Stelly",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/4138357?v=4",
+      "profile": "https://twitter.com/ryanastelly",
+      "contributions": [
+        "doc"
+      ]
+    },
+    {
+      "login": "benmonro",
+      "name": "Ben Monro",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/399236?v=4",
+      "profile": "https://github.com/benmonro",
+      "contributions": [
+        "code"
+      ]
+    }
+  ],
+  "commitConvention": "none"
+}

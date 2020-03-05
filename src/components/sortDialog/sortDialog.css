@@ -1,0 +1,34 @@
+.sort-dialog-container {
+  width: 80px;
+  height: 120px;
+  background: rgba(255, 255, 255, 1);
+  box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.3);
+  opacity: 1;
+  position: absolute;
+  left: 454px;
+  top: 60px;
+  z-index: 10;
+  animation: popup 0.1s ease-in-out 0s 1;
+}
+.sort-by-category {
+  margin-top: 6px;
+}
+.sort-by-category-list,
+.sort-by-order-list {
+  font-size: 14px;
+
+  line-height: 14px;
+  color: rgba(75, 75, 75, 0.34);
+  opacity: 1;
+  line-height: 24px;
+  width: 100%;
+  text-align: center;
+  cursor: pointer;
+}
+.sort-dialog-seperator {
+  width: 100%;
+  height: 0px;
+  border: 0.5px solid rgba(0, 0, 0, 1);
+  opacity: 0.1;
+  margin: 6px 0px;
+}

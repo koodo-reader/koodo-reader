@@ -1,0 +1,61 @@
+.note-editor {
+  width: 264px;
+  height: 158px;
+}
+.note-return-button {
+  position: absolute;
+  left: 13px;
+  top: 12px;
+  font-size: 18px;
+}
+.editor-box-parent {
+  position: absolute;
+  left: 34px;
+  top: 32px;
+  width: 222px;
+  height: 90px;
+  /* width: 100%;
+  height: 100%; */
+  overflow: hidden;
+}
+.editor-box {
+  border: none;
+  outline: none;
+  resize: none;
+  /* box-sizing: border-box; */
+  /* padding-bottom: 60px; */
+  font-size: 16px;
+  width: 100%;
+  height: 100%;
+  overflow-y: scroll;
+  padding-right: 17px; /* Increase/decrease this value for cross-browser compatibility */
+  box-sizing: content-box;
+}
+
+.editor-box::placeholder {
+  font-size: 16px;
+  line-height: 15px;
+  color: rgba(133, 133, 133, 1);
+  opacity: 0.6;
+  position: relative;
+  top: 6px;
+  font-weight: 500;
+}
+.editor-box::-ms-input-placeholder {
+  font-size: 16px;
+  line-height: 15px;
+  color: rgba(133, 133, 133, 1);
+  opacity: 0.6;
+  position: relative;
+  top: 6px;
+  font-weight: 500;
+}
+.editor-box::-moz-placeholder {
+  font-size: 16px;
+  line-height: 15px;
+  color: rgba(133, 133, 133, 1);
+  opacity: 0.6;
+  position: relative;
+  top: 6px;
+  font-weight: 500;
+}
