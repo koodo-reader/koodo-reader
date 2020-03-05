@@ -1,9 +1,0 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
-
-exports[`reducers counter should handle DECREMENT_COUNTER 1`] = `0`;
-
-exports[`reducers counter should handle INCREMENT_COUNTER 1`] = `2`;
-
-exports[`reducers counter should handle initial state 1`] = `0`;
-
-exports[`reducers counter should handle unknown action type 1`] = `1`;

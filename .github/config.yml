@@ -1,6 +1,0 @@
-requiredHeaders:
-  - Prerequisites
-  - Expected Behavior
-  - Current Behavior
-  - Possible Solution
-  - Your Environment

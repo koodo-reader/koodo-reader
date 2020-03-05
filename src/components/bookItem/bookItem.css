@@ -1,0 +1,54 @@
+.book-list-item-container {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  margin: 18px;
+}
+.book-item-list-cover {
+  width: 57px;
+  height: 74px;
+  background: rgba(0, 0, 0, 0);
+  box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.22);
+  opacity: 0.73;
+  cursor: pointer;
+}
+.book-item-list-title,
+.book-item-list-author {
+  height: 30px;
+  width: 200px;
+  font-size: 15px;
+  color: rgba(75, 75, 75, 1);
+  opacity: 1;
+  text-align: center;
+  text-overflow: ellipsis;
+  cursor: pointer;
+  margin: 22px 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.book-item-list-date,
+.book-item-list-percentage,
+.book-item-list-config {
+  height: 30px;
+  width: 80px;
+  font-size: 15px;
+  color: rgba(75, 75, 75, 1);
+  opacity: 1;
+  text-align: center;
+  margin: 22px 10px;
+  line-height: 30px;
+}
+.book-item-list-config {
+  cursor: pointer;
+}
+.list-icon {
+  margin: 7px;
+  font-size: 16px;
+}
+.book-item-list-percentage {
+  width: 50px;
+}
+.icon-edit {
+  font-size: 15px;
+}

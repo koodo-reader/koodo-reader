@@ -1,0 +1,80 @@
+.highlight-list {
+  width: 158px;
+  height: 110px;
+  margin-top: 48px;
+}
+.highlight-return-button {
+  position: absolute;
+  left: 14px;
+  top: 14px;
+  font-size: 18px;
+  width: 99px;
+}
+.confirm-button {
+  position: absolute;
+  bottom: 14px;
+  right: 14px;
+  font-size: 16px;
+  line-height: 15px;
+  color: rgba(0, 0, 0, 1);
+  opacity: 1;
+  cursor: pointer;
+}
+.cancel-button {
+  position: absolute;
+  bottom: 14px;
+  right: 60px;
+  font-size: 16px;
+  line-height: 15px;
+  color: rgba(128, 128, 128, 1);
+  opacity: 1;
+  cursor: pointer;
+}
+.highlight-color1,
+.highlight-color2,
+.highlight-color3,
+.highlight-color4 {
+  float: left;
+  /* display: inline-block; */
+  margin-top: 50px;
+  width: 31px;
+  height: 31px;
+  border-radius: 50%;
+  opacity: 1;
+  /* border: 1px solid black; */
+  background-color: pink;
+  box-shadow: 0px 0px 4px #ddd;
+  cursor: pointer;
+}
+.highlight-color {
+  /* position: absolute;
+  top: 75px; */
+  /* margin: 14px 7px; */
+  margin: 0px 5px;
+  display: flex;
+  justify-content: space-between;
+}
+.highlight-text {
+  /* position: absolute; */
+  /* left: 56px; */
+  float: right;
+  display: block;
+  font-size: 16px;
+  line-height: 15px;
+  color: rgba(0, 0, 0, 1);
+  opacity: 1;
+  text-align: center;
+  line-height: 20px;
+}
+.highlight-color1 {
+  background-color: #fbf1d1;
+}
+.highlight-color2 {
+  background-color: #efeeb0;
+}
+.highlight-color3 {
+  background-color: #caefc9;
+}
+.highlight-color4 {
+  background-color: #76bee9;
+}

@@ -1,0 +1,203 @@
+.backup-page-container {
+  width: 454px;
+  height: 278px;
+  position: absolute;
+  left: calc(50% - 225px);
+  top: calc(50% - 150px);
+  overflow: hidden;
+  box-shadow: 0px 0px 16px rgba(0, 0, 0, 0.34);
+  z-index: 20;
+  background: rgba(255, 255, 255, 1);
+  box-shadow: 0px 0px 16px rgba(0, 0, 0, 0.34);
+  opacity: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+
+  z-index: 10;
+  animation: popup 0.1s ease-in-out 0s 1;
+}
+@keyframes popup {
+  0% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@keyframes popout {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+}
+
+.backup-page-title {
+  width: 100%;
+  font-size: 20px;
+  font-weight: bold;
+  line-height: 60px;
+  color: rgba(75, 75, 75, 1);
+  opacity: 1;
+  text-align: center;
+}
+.backup-page-drive-container {
+  width: 100%;
+  height: calc(100% - 80px);
+  position: relative;
+  bottom: 10px;
+}
+.backup-page-list-item {
+  float: left;
+  width: 150px;
+  height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0.5;
+}
+
+.backup-page-list-icon {
+  font-size: 50px;
+  position: relative;
+  left: 45px;
+  cursor: pointer;
+  line-height: 50px !important;
+}
+.backup-page-list-title {
+  width: 150px !important;
+  font-size: 15px;
+  line-height: 30px;
+  color: rgba(75, 75, 75, 1);
+  opacity: 1;
+  width: 100%;
+  text-align: center;
+}
+.icon-onedrive {
+  font-size: 40px;
+  position: relative;
+  left: 40px;
+}
+.icon-googledrive {
+  font-size: 45px;
+}
+.icon-yandex {
+  font-size: 42px;
+  position: relative;
+  left: 37px;
+  display: inline-block;
+  transform: scale(0.9);
+}
+.icon-yandex:after {
+  font-size: 44px;
+  z-index: 11;
+}
+.icon-webdav {
+  font-size: 35px;
+  position: relative;
+  left: 40px;
+}
+.icon-mega {
+  position: relative;
+  left: 49px;
+}
+.backup-page-close-icon {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  cursor: pointer;
+}
+.backup-page-option {
+  width: 100%;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  position: absolute;
+  top: 65px;
+}
+.backup-page-backup {
+  width: 152px;
+  height: 152px;
+  background: rgba(75, 75, 75, 0);
+  font-size: 20px;
+  line-height: 40px;
+  color: rgba(75, 75, 75, 1);
+  opacity: 1;
+  text-align: center;
+}
+.active {
+  color: white;
+}
+.icon-backup,
+.icon-restore {
+  display: inline-block;
+  font-size: 90px;
+  margin-top: 10px;
+}
+.backup-page-next {
+  font-size: 18px;
+  line-height: 20px;
+  color: rgba(75, 75, 75, 1);
+  opacity: 1;
+  position: absolute;
+  bottom: 21px;
+  right: 37px;
+  cursor: pointer;
+}
+.backup-page-previous {
+  font-size: 18px;
+  line-height: 20px;
+  color: rgba(75, 75, 75, 1);
+  opacity: 1;
+  position: absolute;
+  bottom: 21px;
+  right: 108px;
+  cursor: pointer;
+}
+.backup-page-backup-selector {
+  width: 152px;
+  height: 152px;
+  opacity: 1;
+  background-color: rgba(75, 75, 75, 1);
+  box-shadow: 0px 0px 24px rgba(0, 0, 0, 0.39);
+  animation: popup 0.1s ease-in-out 0s 1;
+  margin-left: 49px;
+}
+.icon-local {
+  color: rgba(75, 75, 75, 1);
+  opacity: 1;
+}
+.restore-file {
+  position: absolute;
+  left: 0px;
+  bottom: 100px;
+  width: 150px;
+  height: 100px;
+  z-index: 500;
+  opacity: 0;
+  cursor: pointer;
+  font-size: 0;
+  /* background-color: pink; */
+}
+.backup-page-finish-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: rgba(75, 75, 75, 1);
+  text-align: center;
+}
+.backup-page-finish-icon {
+  font-size: 60px;
+}
+.backup-page-finish-text {
+  line-height: 50px;
+  font-size: 25px;
+}

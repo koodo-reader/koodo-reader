@@ -1,0 +1,10 @@
+.setting-panel-title {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: calc(100% - 44px);
+  height: 38px;
+  font-size: 16px;
+  color: rgba(75, 75, 75, 1);
+  margin: 6px 22px;
+}

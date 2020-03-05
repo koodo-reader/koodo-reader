@@ -1,0 +1,60 @@
+.book-list-item {
+  width: 135px;
+  height: 190px;
+  float: left;
+  overflow: hidden;
+}
+.book-item-cover {
+  width: 105px;
+  height: 137px;
+  background: rgba(0, 0, 0, 0);
+  box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.22);
+  opacity: 0.73;
+  margin: 15px 15px 5px 15px;
+  cursor: pointer;
+}
+.book-item-title {
+  height: 30px;
+  font-size: 15px;
+  color: rgba(75, 75, 75, 1);
+  opacity: 1;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  white-space: normal;
+  word-break: keep-all;
+  overflow: hidden;
+  position: relative;
+}
+.book-item-config {
+  width: 105px;
+  height: 35px;
+  background: rgba(0, 0, 0, 0.5);
+  position: relative;
+  bottom: 71px;
+  left: 15px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  font-size: 15px;
+  opacity: 1;
+  cursor: pointer;
+  animation: fade-in 0.1s ease-in 0s 1;
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0px);
+  }
+}
+.view-icon {
+  color: white;
+}

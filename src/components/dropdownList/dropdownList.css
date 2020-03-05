@@ -1,0 +1,34 @@
+/* .paragraph-character-container {
+  height: 50px;
+} */
+.paragraph-character-setting {
+  margin: 25px 22px;
+  width: calc(100% - 44px);
+}
+.general-setting-title {
+  font-size: 16px;
+  font-weight: 500;
+  color: rgba(75, 75, 75, 1);
+  margin: 18px 0px 7px 0px;
+}
+.general-setting-dropdown {
+  width: 190px;
+  height: 30px;
+  margin-right: 5px;
+  background: rgba(255, 255, 255, 1);
+  border: 2px solid rgba(112, 112, 112, 1);
+  font-size: 16px;
+  font-weight: 500;
+  color: rgba(75, 75, 75, 1);
+  text-align: center;
+  cursor: pointer;
+  position: relative;
+  left: 25px;
+}
+.general-setting-option {
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 27px;
+  color: rgba(75, 75, 75, 1);
+  text-align: center;
+}
