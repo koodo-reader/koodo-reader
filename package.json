@@ -7,7 +7,7 @@
     "name": "Troye Guo",
     "email": "troyeguo@102410.xyz"
   },
-  "repository": "https://github.com/vikingmute/clouddoc"
+  "repository": "https://github.com/vikingmute/clouddoc",
   "private": true,
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.26",
