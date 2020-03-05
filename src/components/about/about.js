@@ -2,7 +2,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import "./about.css";
-
+import { handleMessageBox, handleMessage } from "../../redux/manager.redux";
 class About extends Component {
   constructor(props) {
     super(props);
@@ -22,67 +22,71 @@ class About extends Component {
   handleDonate = mode => {
     this.setState({ isDonate: mode });
   };
+  handleClick = str => {
+    const el = document.createElement("textarea");
+    el.value = str;
+    el.setAttribute("readonly", "");
+    el.style.position = "absolute";
+    el.style.left = "-9999px";
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand("copy");
+    document.body.removeChild(el);
+    this.props.handleMessage("链接复制成功");
+    this.props.handleMessageBox(true);
+  };
   render() {
     return (
       <div className="about-container">
         <div className="about-icon-container">
-          <a
-            href="https://wj.qq.com/s2/5565378/4b3f/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <span
-              className="icon-github about-icon"
-              onMouseEnter={() => {
-                this.handleGithub(true);
-              }}
-              onMouseLeave={() => {
-                this.handleGithub(false);
-              }}
-            ></span>
-          </a>
-          <a
-            href="https://wj.qq.com/s2/5565378/4b3f/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <span
-              className="icon-contact about-icon"
-              onMouseEnter={() => {
-                this.handleContact(true);
-              }}
-              onMouseLeave={() => {
-                this.handleContact(false);
-              }}
-            ></span>
-          </a>
-          <a
-            href="https://wj.qq.com/s2/5565378/4b3f/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <span
-              className="icon-donate about-icon"
-              onMouseEnter={() => {
-                this.handleDonate(true);
-              }}
-              onMouseLeave={() => {
-                this.handleDonate(false);
-              }}
-            ></span>
-          </a>
+          <span
+            className="icon-github about-icon"
+            onMouseEnter={() => {
+              this.handleGithub(true);
+            }}
+            onMouseLeave={() => {
+              this.handleGithub(false);
+            }}
+            onClick={() => {
+              this.handleClick("https://wj.qq.com/s2/5565378/4b3f/");
+            }}
+          ></span>
+
+          <span
+            className="icon-contact about-icon"
+            onMouseEnter={() => {
+              this.handleContact(true);
+            }}
+            onMouseLeave={() => {
+              this.handleContact(false);
+            }}
+            onClick={() => {
+              this.handleClick("https://wj.qq.com/s2/5565378/4b3f/");
+            }}
+          ></span>
+
+          <span
+            className="icon-donate about-icon"
+            onMouseEnter={() => {
+              this.handleDonate(true);
+            }}
+            onMouseLeave={() => {
+              this.handleDonate(false);
+            }}
+            onClick={() => {}}
+          ></span>
         </div>
         {this.state.isGithub ? (
           <div className="about-box">
             <div className="about-message">
-              本项目所有代码均已在GitHub上开源，点击前往查看
+              本项目所有代码均已在GitHub上开源，点击复制项目地址
             </div>
           </div>
         ) : null}
         {this.state.isContact ? (
           <div className="about-box">
             <div className="about-message">
-              向开发者反馈您在使用过程中遇到的问题和改进建议
+              向开发者反馈您在使用过程中遇到的问题和改进建议，点击复制反馈地址
             </div>
           </div>
         ) : null}
@@ -100,6 +104,6 @@ class About extends Component {
 const mapStateToProps = state => {
   return {};
 };
-const actionCreator = {};
+const actionCreator = { handleMessageBox, handleMessage };
 About = connect(mapStateToProps, actionCreator)(About);
 export default About;

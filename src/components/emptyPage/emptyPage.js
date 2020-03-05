@@ -34,7 +34,11 @@ class EmptyPage extends Component {
     return (
       <div className="empty-page-container">
         <img
-          src="../../assets/empty.jpg"
+          src={
+            process.env.NODE_ENV === "production"
+              ? "assets/empty.jpg"
+              : "../../assets/empty.jpg"
+          }
           alt=""
           className="empty-page-illustration"
         />

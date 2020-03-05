@@ -1,24 +1,17 @@
 {
   "name": "koodo-reader",
   "main": "main.js",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "A cross-platform open source Epub reader ",
   "author": {
-    "name": "Troye Guo",
+    "name": "App by Troye",
     "email": "troyeguo@102410.xyz"
   },
-  "repository": "https://github.com/vikingmute/clouddoc",
+  "repository": "https://github.com/troyeguo/koodo-desktop",
   "private": true,
   "dependencies": {
-    "@fortawesome/fontawesome-svg-core": "^1.2.26",
-    "@fortawesome/free-brands-svg-icons": "^5.12.0",
-    "@fortawesome/free-solid-svg-icons": "^5.12.0",
-    "@fortawesome/react-fontawesome": "^0.1.8",
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.3.2",
-    "@testing-library/user-event": "^7.1.2",
-    "bootstrap": "^4.4.1",
-    "classnames": "^2.2.6"
+    "electron-is-dev": "^1.1.0",
+    "electron-updater": "4.0.0"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -29,8 +22,10 @@
     "dev": "concurrently \"cross-env BROWSER=none npm start\" \"wait-on http://localhost:3000/ && electron .\"",
     "pack": "electron-builder --dir",
     "dist": "electron-builder",
-    "release": "electron-builder",
-    "prerelease": "npm run build && npm run buildMain"
+    "release": "cross-env GH_TOKEN=af721d882c2b5268c49dabdff0d10d0e760af0cc electron-builder ",
+    "prerelease": "npm run build",
+    "prepack": "npm run build",
+    "predist": "npm run build"
   },
   "homepage": "./",
   "build": {
@@ -40,13 +35,11 @@
     "files": [
       "build/**/*",
       "node_modules/**/*",
-      "package.json"
+      "package.json",
+      "main.js"
     ],
     "directories": {
       "buildResources": "assets"
-    },
-    "extraMetadata": {
-      "main": "./build/main.js"
     },
     "publish": [
       "github"
@@ -58,7 +51,7 @@
     },
     "dmg": {
       "background": "assets/appdmg.png",
-      "icon": "assets/logo.icns",
+      "icon": "assets/icon-mac.icns",
       "iconSize": 128,
       "contents": [
         {
@@ -83,14 +76,15 @@
         "msi",
         "nsis"
       ],
-      "icon": "assets/logo.ico",
+      "icon": "assets/icon.ico",
       "artifactName": "${productName}-Web-Setup-${version}.${ext}",
-      "publisherName": "Troye Guo"
+      "publisherName": "App by Troye"
     },
     "nsis": {
       "allowToChangeInstallationDirectory": true,
       "oneClick": false,
-      "perMachine": false
+      "perMachine": false,
+      "installerSidebar": null
     }
   },
   "eslintConfig": {
@@ -109,17 +103,19 @@
     ]
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.3.2",
+    "@testing-library/user-event": "^7.1.2",
+    "classnames": "^2.2.6",
     "concurrently": "^5.0.1",
     "cross-env": "^6.0.3",
     "electron": "^7.1.4",
-    "electron-is-dev": "^1.1.0",
-    "node-sass": "^4.13.0",
-    "sass-loader": "^8.0.0",
-    "wait-on": "^3.3.0",
     "electron-builder": "^22.3.6",
+    "electron-is-dev": "^1.1.0",
     "file-saver": "^2.0.2",
     "jszip": "^3.2.2",
     "localforage": "^1.7.3",
+    "node-sass": "^4.13.0",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "react-fontawesome": "^1.7.1",
@@ -128,6 +124,8 @@
     "react-simplemde-editor": "^4.1.0",
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
-    "spark-md5": "^3.0.0"
+    "sass-loader": "^8.0.0",
+    "spark-md5": "^3.0.0",
+    "wait-on": "^3.3.0"
   }
 }

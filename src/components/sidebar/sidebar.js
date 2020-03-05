@@ -98,7 +98,15 @@ class Sidebar extends Component {
     };
     return (
       <div className="sidebar">
-        <img src="../../assets/logo.jpg" alt="" className="logo" />
+        <img
+          src={
+            process.env.NODE_ENV === "production"
+              ? "assets/logo.jpg"
+              : "../../assets/logo.jpg"
+          }
+          alt=""
+          className="logo"
+        />
         <div className="side-menu-container-parent">
           <ul className="side-menu-container">
             {renderSideMenu()}
