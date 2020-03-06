@@ -26,8 +26,10 @@
 </div>
 
 <div align="center">
-  <img src="/screenshot/manager.png">
-  <img src="/screenshot/reader.png">
+  <img src="/screenshot/manager.png" style="width:1024px;box-shadow:0 0 8px blank">
+  <br/>
+  <br/>
+  <img src="/screenshot/reader.png" style="width:1024px;box-shadow:0 0 8px blank">
 
 </div>
 
@@ -35,11 +37,11 @@
 
 English | [简体中文](https://github.com/getgridea/gridea/blob/master/README-zh_CN.md) | [繁體中文](https://github.com/getgridea/gridea/blob/master/README-zh_TW.md)
 
-**[CHANGELOG](https://github.com/getgridea/gridea/blob/master/CHANGELOG.md)**
+<!-- **[CHANGELOG](https://github.com/getgridea/gridea/blob/master/CHANGELOG.md)** -->
 
-👏 Welcome to use **Gridea** ！
+👏 Welcome to use **Koodo Reader** ！
 
-✍️ **Gridea** A static blog writing client. You can use it to record your life, mood, knowledge, notes and ideas...
+✍️ **Koodo Reader** A electron-based cross-platform epub reader using React and Redux with a web version too
 
 ## Features👇
 
@@ -97,7 +99,7 @@ $ yarn dev
 
 We welcome all contributions.You can submit any ideas as [pull requests](https://github.com/troyeguo/koodo-desktop/pulls) or as GitHub [issues](https://github.com/troyeguo/koodo-desktop/issues).
 
-## Donation
+<!-- ## Donation -->
 
 <div>
   <!-- <img src="./files/wechat.png" width="240px"> -->
