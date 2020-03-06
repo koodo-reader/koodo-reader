@@ -25,12 +25,13 @@
 
 </div>
 
-<div align="center">
-  <img src="/screenshot/manager.png" style="width:1024px;box-shadow:0 0 8px blank">
+<div align="center" style="width:1024px;box-shadow:0 0 8px blank">
+  <img src="/screenshot/manager.png" >
+</div>
   <br/>
   <br/>
-  <img src="/screenshot/reader.png" style="width:1024px;box-shadow:0 0 8px blank">
-
+<div align="center" style="width:1024px;box-shadow:0 0 8px blank">
+  <img src="/screenshot/reader.png" >
 </div>
 
 ## Dependencies
