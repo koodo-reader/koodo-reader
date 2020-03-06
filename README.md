@@ -25,12 +25,12 @@
 
 </div>
 
-<div align="center" style="width:700px;box-shadow:0 0 8px black">
+<div align="center" width="700px" box-shadow="0 0 8px black">
   <img src="/screenshot/manager.png" >
 </div>
   <br/>
   <br/>
-<div align="center" style="width:700px;box-shadow:0 0 8px black">
+<div align="center" width="700px" box-shadow="0 0 8px black">
   <img src="/screenshot/reader.png" >
 </div>
 
@@ -53,8 +53,6 @@ English | [简体中文](https://github.com/troyeguo/koodo-desktop/blob/master/R
 🌎 Client-free reading with Koodo web version [here](http://reader.102410.xyz)
 
 💻 Use this client on **Windows** or **MacOS** or **Linux**
-
-🇬🇧 Use **simplified Chinese**、 **English**
 
 🖥 Customize the source folder and synchronize multiple devices using OneDrive, iCloud, Dropbox, etc.
 

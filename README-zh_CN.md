@@ -25,12 +25,12 @@
 
 </div>
 
-<div align="center" style="width:700px;box-shadow:0 0 8px black">
+<div align="center"  width="700px" box-shadow="0 0 8px black">
   <img src="/screenshot/manager.png" >
 </div>
   <br/>
   <br/>
-<div align="center" style="width:700px;box-shadow:0 0 8px black">
+<div align="center"  width="700px" box-shadow="0 0 8px black">
   <img src="/screenshot/reader.png" >
 </div>
 
@@ -53,8 +53,6 @@
 🌎 无需客户端，在浏览器上也可以使用 [查看](http://reader.102410.xyz)
 
 💻 客户端同时支持 **Windows** ，**MacOS** 和 **Linux**
-
-🇬🇧 Use **简体中文**、 **English**
 
 🖥 Customize the source folder and synchronize multiple devices using OneDrive, iCloud, Dropbox, etc.
 
