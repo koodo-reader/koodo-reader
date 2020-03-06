@@ -25,18 +25,18 @@
 
 </div>
 
-<div align="center" style="width:1024px;box-shadow:0 0 8px blank">
+<div align="center" style="width:700px;box-shadow:0 0 8px black">
   <img src="/screenshot/manager.png" >
 </div>
   <br/>
   <br/>
-<div align="center" style="width:1024px;box-shadow:0 0 8px blank">
+<div align="center" style="width:700px;box-shadow:0 0 8px black">
   <img src="/screenshot/reader.png" >
 </div>
 
 ## Dependencies
 
-English | [简体中文](https://github.com/getgridea/gridea/blob/master/README-zh_CN.md) | [繁體中文](https://github.com/getgridea/gridea/blob/master/README-zh_TW.md)
+English | [简体中文](https://github.com/troyeguo/koodo-desktop/blob/master/README-zh_CN.md)
 
 <!-- **[CHANGELOG](https://github.com/getgridea/gridea/blob/master/CHANGELOG.md)** -->
 
@@ -46,31 +46,21 @@ English | [简体中文](https://github.com/getgridea/gridea/blob/master/README-
 
 ## Features👇
 
-📝 Use the coolest **Markdown** grammar to create quickly
+📝 An elegant Epub Reader with backup and restore ability
 
-🌉 Insert pictures and article cover charts anywhere in the article
+🌉 Easily manage all you bookmarks, notes, digests and shelfs
 
-🏷️ Label and group articles
-
-📋 Customize menus and even create external link menus
+🌎 Client-free reading with Koodo web version [here](http://reader.102410.xyz)
 
 💻 Use this client on **Windows** or **MacOS** or **Linux**
 
-🌎 Use **Github Pages** or **Coding Pages** to show the world that more platforms will be supported in the future
-
-💬 Simply configure and access the [Gitalk](https://github.com/gitalk/gitalk) or [DisqusJS](https://github.com/SukkaW/DisqusJS) comment system
-
-🇬🇧 Use **simplified Chinese**、**traditional Chinese**、 **English**
-
-🌁 Use any default theme within the application or any third-party theme, free theme customization
+🇬🇧 Use **simplified Chinese**、 **English**
 
 🖥 Customize the source folder and synchronize multiple devices using OneDrive, iCloud, Dropbox, etc.
 
 🌱 Of course **Gridea** is still very young and has many shortcomings, but please believe it will keep moving forward 🏃
 
 In the future, it will surely become your inseparable partner
-
-Give full play to your talents！
 
 😘 Enjoy~
 
@@ -88,7 +78,7 @@ $ yarn dev
 
 ## Contract
 
-[Gitter Chat](https://gitter.im/koodo-reader/community?utm_source=share-link&utm_medium=link&utm_campaign=share-link) | [Email](troyeguo@102410.xyz)
+[Gitter Chat](https://gitter.im/koodo-reader/community?utm_source=share-link&utm_medium=link&utm_campaign=share-link) | [Email] troyeguo@102410.xyz
 
 <!-- ## Example Screenshots
 
