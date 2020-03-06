@@ -41,7 +41,7 @@ English | [简体中文](https://github.com/getgridea/gridea/blob/master/README-
 
 👏 Welcome to use **Koodo Reader** ！
 
-✍️ **Koodo Reader** A electron-based cross-platform epub reader using React and Redux with a web version too
+✍️ **Koodo Reader** A static blog writing client. You can use it to record your life, mood, knowledge, notes and ideas...
 
 ## Features👇
 
