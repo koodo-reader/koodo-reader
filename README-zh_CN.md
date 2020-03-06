@@ -3,13 +3,13 @@
     <img src="assets/icon.ico"  width="80px" height="80px">
   </a>
   <h1 align="center">
-    Koodo Reader
+    可道阅读器
   </h1>
   <h3 align="center">
-    A electron-based cross-platform epub reader
+    一个基于electron跨平台的epub阅读器
   </h3>
 
-[Download](https://github.com/troyeguo/koodo-desktop/releases) | [Homepage](http://koodo.102410.xyz/)
+[下载](https://github.com/troyeguo/koodo-desktop/releases) | [主页](http://koodo.102410.xyz/)
 
   <!-- <a href="https://github.com/getgridea/gridea/releases/latest">
     <img src="https://img.shields.io/github/release/getgridea/gridea.svg?style=flat-square" alt="">
@@ -25,51 +25,42 @@
 
 </div>
 
-<div align="center">
-  <img src="/screenshot/manager.png" style="width:1024px;box-shadow:0 0 8px blank">
+<div align="center" style="width:700px;box-shadow:0 0 8px black">
+  <img src="/screenshot/manager.png" >
+</div>
   <br/>
   <br/>
-  <img src="/screenshot/reader.png" style="width:1024px;box-shadow:0 0 8px blank">
-
+<div align="center" style="width:700px;box-shadow:0 0 8px black">
+  <img src="/screenshot/reader.png" >
 </div>
 
 ## Dependencies
 
-English | [简体中文](https://github.com/getgridea/gridea/blob/master/README-zh_CN.md) | [繁體中文](https://github.com/getgridea/gridea/blob/master/README-zh_TW.md)
+简体中文 | [English](https://github.com/troyeguo/koodo-desktop/blob/master/README.md)
 
 <!-- **[CHANGELOG](https://github.com/getgridea/gridea/blob/master/CHANGELOG.md)** -->
 
-👏 Welcome to use **Koodo Reader** ！
+👏 欢迎使用 **可道阅读器** ！
 
-✍️ **Koodo Reader** A static blog writing client. You can use it to record your life, mood, knowledge, notes and ideas...
+✍️ **可道阅读器** 可道阅读器基于 React 和 Redux 开发同时支持桌面版和网页版
 
 ## Features👇
 
-📝 Use the coolest **Markdown** grammar to create quickly
+📝 可道阅读器同时支持桌面版和网页版，您所有的数据都可以导出和恢复
 
-🌉 Insert pictures and article cover charts anywhere in the article
+🌉 主题切换，阅读历史，图书管理，书架管理，更多功能等你探索
 
-🏷️ Label and group articles
+🌎 无需客户端，在浏览器上也可以使用 [查看](http://reader.102410.xyz)
 
-📋 Customize menus and even create external link menus
+💻 客户端同时支持 **Windows** ，**MacOS** 和 **Linux**
 
-💻 Use this client on **Windows** or **MacOS** or **Linux**
-
-🌎 Use **Github Pages** or **Coding Pages** to show the world that more platforms will be supported in the future
-
-💬 Simply configure and access the [Gitalk](https://github.com/gitalk/gitalk) or [DisqusJS](https://github.com/SukkaW/DisqusJS) comment system
-
-🇬🇧 Use **simplified Chinese**、**traditional Chinese**、 **English**
-
-🌁 Use any default theme within the application or any third-party theme, free theme customization
+🇬🇧 Use **简体中文**、 **English**
 
 🖥 Customize the source folder and synchronize multiple devices using OneDrive, iCloud, Dropbox, etc.
 
 🌱 Of course **Gridea** is still very young and has many shortcomings, but please believe it will keep moving forward 🏃
 
 In the future, it will surely become your inseparable partner
-
-Give full play to your talents！
 
 😘 Enjoy~
 
@@ -87,7 +78,7 @@ $ yarn dev
 
 ## Contract
 
-[Gitter Chat](https://gitter.im/koodo-reader/community?utm_source=share-link&utm_medium=link&utm_campaign=share-link) | [Email](troyeguo@102410.xyz)
+[Gitter Chat](https://gitter.im/koodo-reader/community?utm_source=share-link&utm_medium=link&utm_campaign=share-link) | [Email] troyeguo@102410.xyz
 
 <!-- ## Example Screenshots
 
