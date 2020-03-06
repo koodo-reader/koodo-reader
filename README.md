@@ -1,68 +1,108 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+<div align="center">
+  <a href="https://gridea.dev">
+    <img src="assets/icon.ico"  width="80px" height="80px">
+  </a>
+  <h1 align="center">
+    Koodo Reader
+  </h1>
+  <h3 align="center">
+    A electron-based cross-platform epub reader
+  </h3>
 
-## Available Scripts
+[Download](https://github.com/troyeguo/koodo-desktop/releases) | [Homepage](http://koodo.102410.xyz/)
 
-In the project directory, you can run:
+  <!-- <a href="https://github.com/getgridea/gridea/releases/latest">
+    <img src="https://img.shields.io/github/release/getgridea/gridea.svg?style=flat-square" alt="">
+  </a>
 
-### `yarn start`
+  <a href="https://github.com/getgridea/gridea/blob/master/LICENSE">
+    <img src="https://img.shields.io/github/license/getgridea/gridea.svg?style=flat-square" alt="">
+  </a>
+  
+  <a href="https://github.com/getgridea/gridea/releases/latest">
+    <img alt="GitHub All Releases" src="https://img.shields.io/github/downloads/getgridea/gridea/total.svg?color=%2312b886&style=flat-square">
+  </a> -->
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+</div>
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+<div align="center">
+  <img src="/screenshot/manager.png">
+  <img src="/screenshot/reader.png">
 
-### `yarn test`
+</div>
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Dependencies
 
-### `yarn build`
+English | [简体中文](https://github.com/getgridea/gridea/blob/master/README-zh_CN.md) | [繁體中文](https://github.com/getgridea/gridea/blob/master/README-zh_TW.md)
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+**[CHANGELOG](https://github.com/getgridea/gridea/blob/master/CHANGELOG.md)**
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+👏 Welcome to use **Gridea** ！
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+✍️ **Gridea** A static blog writing client. You can use it to record your life, mood, knowledge, notes and ideas...
 
-### `yarn eject`
+## Features👇
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+📝 Use the coolest **Markdown** grammar to create quickly
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+🌉 Insert pictures and article cover charts anywhere in the article
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+🏷️ Label and group articles
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+📋 Customize menus and even create external link menus
 
-## Learn More
+💻 Use this client on **Windows** or **MacOS** or **Linux**
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+🌎 Use **Github Pages** or **Coding Pages** to show the world that more platforms will be supported in the future
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+💬 Simply configure and access the [Gitalk](https://github.com/gitalk/gitalk) or [DisqusJS](https://github.com/SukkaW/DisqusJS) comment system
 
-### Code Splitting
+🇬🇧 Use **simplified Chinese**、**traditional Chinese**、 **English**
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
+🌁 Use any default theme within the application or any third-party theme, free theme customization
 
-### Analyzing the Bundle Size
+🖥 Customize the source folder and synchronize multiple devices using OneDrive, iCloud, Dropbox, etc.
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
+🌱 Of course **Gridea** is still very young and has many shortcomings, but please believe it will keep moving forward 🏃
 
-### Making a Progressive Web App
+In the future, it will surely become your inseparable partner
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
+Give full play to your talents！
 
-### Advanced Configuration
+😘 Enjoy~
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
+<!-- ## Development
 
-### Deployment
+If you want to contribute code, please check the [Contribution Guide](https://github.com/getgridea/gridea/wiki/%E8%B4%A1%E7%8C%AE%E6%8C%87%E5%8D%97) in advance. -->
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
+```shell
+$ # Node version > v10.0.0 is requied
+$ git clone https://github.com/troyeguo/koodo-desktop
+$ cd koodo-desktop
+$ yarn
+$ yarn dev
+```
 
-### `yarn build` fails to minify
+## Contract
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+[Gitter Chat](https://gitter.im/koodo-reader/community?utm_source=share-link&utm_medium=link&utm_campaign=share-link) | [Email](troyeguo@102410.xyz)
+
+<!-- ## Example Screenshots
+
+<div align="center">
+  <img src="./files/themes.png">
+</div> -->
+
+## Contributions
+
+We welcome all contributions.You can submit any ideas as [pull requests](https://github.com/troyeguo/koodo-desktop/pulls) or as GitHub [issues](https://github.com/troyeguo/koodo-desktop/issues).
+
+## Donation
+
+<div>
+  <!-- <img src="./files/wechat.png" width="240px"> -->
+</div>
+
+## License
+
+[MIT](https://github.com/troyeguo/koodo-desktop/blob/master/LICENSE). Copyright (c) 2020 App by Troye
