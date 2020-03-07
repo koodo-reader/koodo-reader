@@ -26,9 +26,9 @@
 </div>
 
 <div align="center">
-  <img src="/screenshot/manager.jpg" >
+  <img src="/screenshot/manager.png" >
   <br/>
-  <img src="/screenshot/reader.jpg" >
+  <img src="/screenshot/reader.png" >
 </div>
 
 ## Dependencies
