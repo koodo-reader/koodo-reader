@@ -1,5 +1,5 @@
 <div align="center">
-  <a href="https://gridea.dev">
+  <a href="https://koodo.102410.xyz">
     <img src="assets/icon.ico"  width="80px" height="80px">
   </a>
   <h1 align="center">
@@ -9,7 +9,7 @@
     A electron-based cross-platform epub reader
   </h3>
 
-[Download](https://github.com/troyeguo/koodo-desktop/releases) | [Homepage](http://koodo.102410.xyz/)
+[Download](https://github.com/troyeguo/koodo-reader/releases) | [Homepage](http://koodo.102410.xyz/)
 
   <!-- <a href="https://github.com/getgridea/gridea/releases/latest">
     <img src="https://img.shields.io/github/release/getgridea/gridea.svg?style=flat-square" alt="">
@@ -33,7 +33,7 @@
 
 ## Dependencies
 
-English | [简体中文](https://github.com/troyeguo/koodo-desktop/blob/master/README-zh_CN.md)
+English | [简体中文](https://github.com/troyeguo/koodo-reader/blob/master/README-zh_CN.md)
 
 <!-- **[CHANGELOG](https://github.com/getgridea/gridea/blob/master/CHANGELOG.md)** -->
 
@@ -53,7 +53,7 @@ English | [简体中文](https://github.com/troyeguo/koodo-desktop/blob/master/R
 
 🖥 Customize the source folder and synchronize multiple devices using OneDrive, iCloud, Dropbox, etc.
 
-🌱 Of course **Gridea** is still very young and has many shortcomings, but please believe it will keep moving forward 🏃
+🌱 Of course **Koodo Reader** is still very young and has many shortcomings, but please believe it will keep moving forward 🏃
 
 In the future, it will surely become your inseparable partner
 
@@ -65,8 +65,8 @@ If you want to contribute code, please check the [Contribution Guide](https://gi
 
 ```shell
 $ # Node version > v10.0.0 is requied
-$ git clone https://github.com/troyeguo/koodo-desktop
-$ cd koodo-desktop
+$ git clone https://github.com/troyeguo/koodo-reader
+$ cd koodo-reader
 $ yarn
 $ yarn dev
 ```
@@ -83,7 +83,7 @@ $ yarn dev
 
 ## Contributions
 
-We welcome all contributions.You can submit any ideas as [pull requests](https://github.com/troyeguo/koodo-desktop/pulls) or as GitHub [issues](https://github.com/troyeguo/koodo-desktop/issues).
+We welcome all contributions.You can submit any ideas as [pull requests](https://github.com/troyeguo/koodo-reader/pulls) or as GitHub [issues](https://github.com/troyeguo/koodo-reader/issues).
 
 <!-- ## Donation -->
 
@@ -93,4 +93,4 @@ We welcome all contributions.You can submit any ideas as [pull requests](https:/
 
 ## License
 
-[MIT](https://github.com/troyeguo/koodo-desktop/blob/master/LICENSE). Copyright (c) 2020 App by Troye
+[MIT](https://github.com/troyeguo/koodo-reader/blob/master/LICENSE). Copyright (c) 2020 App by Troye
