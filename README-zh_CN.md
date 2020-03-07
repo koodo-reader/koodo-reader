@@ -27,8 +27,7 @@
 
 <div align="center">
   <img src="/screenshot/manager.jpg" >
-</div>
-<div align="center">
+  <br/>
   <img src="/screenshot/reader.jpg" >
 </div>
 
