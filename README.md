@@ -25,13 +25,9 @@
 
 </div>
 
-<div align="center" width="700px" box-shadow="0 0 8px black">
-  <img src="/screenshot/manager.png" >
-</div>
-  <br/>
-  <br/>
-<div align="center" width="700px" box-shadow="0 0 8px black">
-  <img src="/screenshot/reader.png" >
+<div align="center">
+  <img src="/screenshot/manager.jpg" >
+  <img src="/screenshot/reader.jpg" >
 </div>
 
 ## Dependencies
@@ -42,11 +38,11 @@ English | [简体中文](https://github.com/troyeguo/koodo-desktop/blob/master/R
 
 👏 Welcome to use **Koodo Reader** ！
 
-✍️ **Koodo Reader** A electron-based cross-platform epub reader using React and Redux with a web version too
+✍️ **Koodo Reader** A electron-based cross-platform epub reader using React and Redux
 
 ## Features👇
 
-📝 An elegant Epub Reader with backup and restore ability
+📝 An elegant Epub Reader supporting backup and restore
 
 🌉 Easily manage all you bookmarks, notes, digests and shelfs
 

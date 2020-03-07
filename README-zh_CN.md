@@ -25,13 +25,9 @@
 
 </div>
 
-<div align="center"  width="700px" box-shadow="0 0 8px black">
-  <img src="/screenshot/manager.png" >
-</div>
-  <br/>
-  <br/>
-<div align="center"  width="700px" box-shadow="0 0 8px black">
-  <img src="/screenshot/reader.png" >
+<div align="center">
+  <img src="/screenshot/manager.jpg" >
+  <img src="/screenshot/reader.jpg" >
 </div>
 
 ## Dependencies
@@ -42,11 +38,11 @@
 
 👏 欢迎使用 **可道阅读器** ！
 
-✍️ **可道阅读器** 可道阅读器基于 React 和 Redux 开发同时支持桌面版和网页版
+✍️ **可道阅读器** 可道阅读器基于 React 和 Redux 开发，支持桌面版和网页版
 
 ## Features👇
 
-📝 可道阅读器同时支持桌面版和网页版，您所有的数据都可以导出和恢复
+📝 您所有的数据都可以导出和恢复
 
 🌉 主题切换，阅读历史，图书管理，书架管理，更多功能等你探索
 
