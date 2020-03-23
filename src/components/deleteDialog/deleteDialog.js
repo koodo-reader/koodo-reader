@@ -58,7 +58,7 @@ class DeleteDialog extends Component {
         });
       }
     }
-    console.log(this.props.notes, "notes");
+    // console.log(this.props.notes, "notes");
     if (this.props.digests !== null) {
       let digestArr = DeleteUtil.deleteDigests(
         this.props.digests,
@@ -89,7 +89,7 @@ class DeleteDialog extends Component {
         });
       }
     }
-    console.log(this.props.digests, "digests");
+    // console.log(this.props.digests, "digests");
 
     // console.log(this.props.highlighters, "highlighters");
   };
@@ -109,7 +109,7 @@ class DeleteDialog extends Component {
             this.props.handleDeleteDialog(false);
             this.props.handleFetchBooks();
           });
-      console.log(this.props.bookmarks, "bookmarks");
+      // console.log(this.props.bookmarks, "bookmarks");
       //从书架删除
       ShelfUtil.deletefromAllShelf(this.props.currentBook.key);
       //从阅读记录删除

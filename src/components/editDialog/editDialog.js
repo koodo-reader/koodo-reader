@@ -17,7 +17,7 @@ class editDialog extends Component {
   componentDidMount() {
     let nameBox = document.querySelector(".edit-dialog-book-name-box");
     let authorBox = document.querySelector(".edit-dialog-book-author-box");
-    console.log(this.props.currentBook);
+    // console.log(this.props.currentBook);
     nameBox.value = this.props.currentBook.name;
     authorBox.value = this.props.currentBook.author;
   }

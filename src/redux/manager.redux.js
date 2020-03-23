@@ -104,19 +104,19 @@ export function handleList(mode) {
   return { type: "HANDLE_LIST", payload: mode };
 }
 export function handleMessage(message) {
-  console.log(message);
+  // console.log(message);
   return { type: "HANDLE_MESSAGE", payload: message };
 }
 export function handleMessageBox(mode) {
-  console.log(mode);
+  // console.log(mode);
   return { type: "HANDLE_MESSAGE_BOX", payload: mode };
 }
 export function handleSortDisplay(mode) {
-  console.log("hdflhghgh", mode);
+  // console.log("hdflhghgh", mode);
   return { type: "HANDLE_SORT_DISPLAY", payload: mode };
 }
 export function handleSortCode(code) {
-  console.log(code);
+  // console.log(code);
   return { type: "HANDLE_SORT_CODE", payload: code };
 }
 export function handleEpubs(epubs) {

@@ -1,0 +1,43 @@
+.about-icon-container {
+  position: absolute;
+  left: 0px;
+  bottom: 0;
+  width: 200px;
+  height: 50px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  z-index: 10;
+}
+.about-icon {
+  font-size: 24px;
+  cursor: pointer;
+  opacity: 1;
+}
+.icon-github {
+  margin-left: 40px;
+}
+.icon-donate {
+  margin-right: 40px;
+}
+.about-box {
+  position: absolute;
+  left: 5px;
+  top: 0px;
+  width: 190px;
+  height: 70px;
+  background-color: #fff;
+  box-shadow: 0px 0px 12px rgba(75, 75, 75, 0.2);
+  float: left;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.about-message {
+  font-size: 14px;
+  color: rgba(75, 75, 75, 0.8);
+  line-height: 16px;
+  margin: 10px;
+  animation: popup 0.1s ease-in-out 0s 1;
+}

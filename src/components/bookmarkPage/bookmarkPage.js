@@ -29,7 +29,7 @@ class BookmarkPage extends Component {
     for (let i = 0; i < books.length; i++) {
       // console.log(books[i].key, key, "key");
       if (books[i].key === key) {
-        console.log("sdghasghgh");
+        // console.log("sdghasghgh");
         book = books[i];
         epub = epubs[i];
         break;
@@ -91,7 +91,7 @@ class BookmarkPage extends Component {
       }
       return false;
     });
-    console.log(bookmarkObj, "bookmarkObj");
+    // console.log(bookmarkObj, "bookmarkObj");
     // bookKeyArr.map(item => {});
     const renderBookmarklistItem = item => {
       return bookmarkObj[item.key].map(item => (
@@ -112,7 +112,7 @@ class BookmarkPage extends Component {
       ));
     };
     const renderBookmarkPageItem = (item, index, isShowMore) => {
-      console.log(bookmarkObj[item.key].length, "fhfjhfjhfk");
+      // console.log(bookmarkObj[item.key].length, "fhfjhfjhfk");
       return (
         <li className="bookmark-page-item" key={item.key}>
           <img

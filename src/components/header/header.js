@@ -19,35 +19,20 @@ class Header extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isSort: this.props.isSort,
-      sortCode: this.props.sortCode,
-      isSortDisplay: this.props.isSortDisplay,
       isOnlyLocal: false
-      // md5: null
     };
   }
-  UNSAFE_componentWillReceiveProps = nextProps => {
-    // console.log(nextProps);
-    this.setState({
-      isSort: nextProps.isSort,
-      isSortDisplay: nextProps.isSortDisplay,
-      sortCode: nextProps.sortCode
-    });
-  };
 
   handleSortBooks = () => {
-    console.log(this.state.isSortDisplay, "ahdgslahg");
-    if (this.state.isSortDisplay) {
+    // console.log(this.state.isSortDisplay, "ahdgslahg");
+    if (this.props.isSortDisplay) {
       this.props.handleSortDisplay(false);
     } else {
       this.props.handleSortDisplay(true);
     }
-
-    // this.props.handleSortDisplay(!this.state.isSortDisplay);
-    // console.log(this.state.isSortDisplay);
   };
   handleBackup = () => {
-    console.log("dgsghsg");
+    // console.log("dgsghsg");
     this.props.handleBackup(true);
   };
   handleOnlyLocal = () => {
@@ -70,7 +55,7 @@ class Header extends Component {
           <span className="header-sort-text">排序</span>
           <span className="icon-sort header-sort-icon"></span>
         </div>
-        {this.state.isSort}
+        {this.props.isSort}
         {
           // <div className="only-local-container">
           //   <span className="only-local-text">只显示本地图书</span>

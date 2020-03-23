@@ -1,0 +1,34 @@
+.book-content-list {
+  float: left;
+
+  width: 220px;
+
+  margin-left: 18px;
+}
+.book-content-name {
+  display: block;
+  width: 282px;
+  font-size: 14px;
+  
+  line-height: 48px;
+  color: rgba(75, 75, 75, 1);
+  opacity: 1;
+  float: left;
+  transition: none;
+  border-bottom: 1px solid rgba(112, 112, 112, 0.1);
+}
+.book-subcontent-name {
+  display: block;
+  width: 220px;
+  float: left;
+  font-size: 13px;
+  
+  line-height: 20px;
+  color: rgba(75, 75, 75, 1);
+  opacity: 0.64;
+  border-bottom: 1px solid rgba(112, 112, 112, 0.1);
+  padding: 8px;
+}
+.book-subcontent-list {
+  margin-left: 18px;
+}
