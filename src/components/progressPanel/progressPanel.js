@@ -36,7 +36,7 @@ class ProgressPanel extends Component {
   //使进度百分比随拖动实时变化
   onProgressInput = event => {
     this.setState({ displayPercentage: event.target.value / 100 });
-    console.log(this.state.displayPercentage, "kgdkdk");
+    // console.log(this.state.displayPercentage, "kgdkdk");
   };
   previourChapter = () => {
     let currentSection = this.props.currentEpub.spinePos;
@@ -45,7 +45,7 @@ class ProgressPanel extends Component {
       RecordLocation.getCfi(this.props.currentBook.key) === null
         ? 0
         : RecordLocation.getCfi(this.props.currentBook.key).percentage;
-    console.log(percentage, "sfhfhg");
+    // console.log(percentage, "sfhfhg");
     // this.props.handleFetchPercentage(this.props.currentBook);
     this.setState({ displayPercentage: percentage });
   };
@@ -56,13 +56,13 @@ class ProgressPanel extends Component {
       RecordLocation.getCfi(this.props.currentBook.key) === null
         ? 0
         : RecordLocation.getCfi(this.props.currentBook.key).percentage;
-    console.log(percentage, "sfhfhg");
+    // console.log(percentage, "sfhfhg");
     // this.props.handleFetchPercentage(this.props.currentBook);
     this.setState({ displayPercentage: percentage });
   };
 
   render() {
-    console.log(this.state.displayPercentage, "sfhfsah");
+    // console.log(this.state.displayPercentage, "sfhfsah");
     return (
       <div className="progress-panel">
         <p className="progress-text">

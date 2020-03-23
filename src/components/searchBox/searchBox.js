@@ -9,20 +9,6 @@ import {
 import OtherUtil from "../../utils/otherUtil";
 // @connect(state => state.manager)
 class Header extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isSearch: this.props.isSearch
-      // md5: null
-    };
-  }
-  UNSAFE_componentWillReceiveProps = nextProps => {
-    // console.log(nextProps);
-    this.setState({
-      isSearch: nextProps.isSearch
-    });
-  };
-
   handleMouse = () => {
     let results = OtherUtil.MouseSearch(this.props.books);
     this.props.handleSearchBooks(results);

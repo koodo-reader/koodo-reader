@@ -11,7 +11,7 @@ class ViewPage extends Component {
   }
   componentDidMount() {
     let page = document.querySelector("#page-area");
-    console.log(page, "fahfgf");
+    // console.log(page, "fahfgf");
     let epub = this.props.currentEpub;
     window.rangy.init(); // 初始化
 
@@ -23,7 +23,7 @@ class ViewPage extends Component {
       let cfi = epub.getCurrentLocationCfi();
       if (this.props.locations) {
         let percentage = this.props.locations.percentageFromCfi(cfi);
-        console.log(percentage, "sahafhfh");
+        // console.log(percentage, "sahafhfh");
         // console.log(percentage, "dgafhdafha");
         RecordLocation.recordCfi(this.props.currentBook.key, cfi, percentage);
         this.props.handlePercentage(percentage);

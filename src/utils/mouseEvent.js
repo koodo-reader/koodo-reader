@@ -10,7 +10,7 @@ export const MouseEvent = (epub, key) => {
     event.preventDefault();
 
     if (lock) return;
-    console.log("hello");
+    // console.log("hello");
     if (event.keyCode === 37 || event.keyCode === 38) {
       epub.prevPage();
       lock = true;
@@ -56,7 +56,7 @@ export const MouseEvent = (epub, key) => {
 
   let mouseChrome = event => {
     // event.preventDefault();
-    console.log("wheel moving");
+    // console.log("wheel moving");
     if (lock) return;
 
     if (event.wheelDelta > 0) {
@@ -108,7 +108,7 @@ export const MouseEvent = (epub, key) => {
     doc.addEventListener("keydown", arrowKeys, false); // 箭头按键翻页
     doc.addEventListener("keydown", copyText); // 解决 Ctrl + C 复制的bug
     window.addEventListener("keypress", () => {
-      console.log("ehllo");
+      // console.log("ehllo");
     }); // 解决 Ctrl + C 复制的bug
 
     // 鼠标滚轮翻页

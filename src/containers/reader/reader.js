@@ -55,7 +55,7 @@ class Reader extends Component {
         this.setState({ isMessage: false });
       }, 2000);
     }
-    console.log(this.state.isMessage, "asdgsgjhf");
+    // console.log(this.state.isMessage, "asdgsgjhf");
   }
   componentDidMount() {
     window.rangy.init(); // 初始化
@@ -70,7 +70,7 @@ class Reader extends Component {
   }
 
   handleEnter = position => {
-    console.log("enter");
+    // console.log("enter");
 
     switch (position) {
       case "right":
@@ -99,10 +99,6 @@ class Reader extends Component {
     // this.setState({ isOpenSettingPanel: true });
   };
   handleLeave = (event, position) => {
-    console.log("leave");
-    // let option = document.querySelector(".general-setting-option");
-    // console.log(window.event.clientX, "X");
-    console.log(event.clientX, document.body.offsetWidth, "hello");
     switch (position) {
       case "right": {
         if (event.clientX < document.body.offsetWidth - 282) {

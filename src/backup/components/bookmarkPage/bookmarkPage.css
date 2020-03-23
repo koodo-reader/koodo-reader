@@ -1,0 +1,150 @@
+.bookmark-page-container-parent {
+  position: absolute;
+  top: 80px;
+  left: 200px;
+  width: calc(100% - 210px);
+  height: calc(100% - 90px);
+  overflow: hidden;
+}
+.bookmark-page-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  overflow-y: scroll;
+  align-content: flex-start;
+  padding-right: 17px; /* Increase/decrease this value for cross-browser compatibility */
+  box-sizing: content-box; /* So the width will be 100% + 17px */
+}
+.bookmark-page-bookmark-container-parent {
+  float: left;
+  width: 270px;
+  height: 120px;
+  /* margin: 0px !important; */
+  margin-top: 10px;
+  margin-left: 10px;
+  overflow: hidden;
+}
+.bookmark-page-bookmark-container {
+  width: 100%;
+  height: 100%;
+  /* float: left; */
+  padding-right: 17px; /* Increase/decrease this value for cross-browser compatibility */
+  box-sizing: content-box; /* So the width will be 100% + 17px */
+  overflow-y: scroll;
+  padding-right: 17px; /* Increase/decrease this value for cross-browser compatibility */
+  box-sizing: content-box; /* So the width will be 100% + 17px */
+}
+
+.bookmark-page-item {
+  position: relative;
+  float: left;
+  width: 390px;
+  height: 160px;
+  margin: 5px;
+}
+
+.bookmark-page-cover {
+  float: left;
+  width: 90px;
+  height: 117px;
+  background: rgba(0, 0, 0, 0);
+  box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.22);
+  opacity: 0.73;
+  margin: 10px;
+}
+.bookmark-page-name {
+  /* float: left; */
+  height: 29px;
+  width: 110px;
+  /* margin-left: 10px; */
+  display: block;
+  font-size: 14px;
+  color: rgba(75, 75, 75, 1);
+  opacity: 1;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  white-space: normal;
+  word-break: keep-all;
+  overflow: hidden;
+  position: absolute;
+  top: 140px;
+}
+.bookmark-page-list-item {
+  width: 270px;
+  height: 30px;
+  margin-top: 10px;
+}
+.bookmark-page-list-item-title {
+  float: left;
+  font-size: 14px;
+  height: 15px;
+
+  line-height: 15px;
+  color: rgba(75, 75, 75, 1);
+  opacity: 1;
+  width: 150px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.bookmark-page-list-item-link {
+  float: left;
+  cursor: pointer;
+}
+
+.bookmark-page-progress {
+  width: 30px;
+  display: block;
+  height: 15px;
+  margin-left: 10px;
+  float: left;
+  font-size: 14px;
+
+  line-height: 15px;
+  color: rgba(161, 161, 161, 1);
+  opacity: 1;
+}
+.bookmark-page-list-item-link {
+  width: 63px;
+  height: 24px;
+  background: rgba(191, 191, 191, 1);
+  opacity: 1;
+  border-radius: 12px;
+  float: left;
+  margin-left: 10px;
+  position: relative;
+  bottom: 3px;
+}
+.bookmark-page-list-item-link-text {
+  width: 45px;
+  height: 11px;
+  font-size: 11px;
+
+  line-height: 24px;
+  margin-left: 8px;
+  color: rgba(255, 255, 255, 1);
+  opacity: 1;
+}
+.bookmark-show-more {
+  font-size: 12px;
+  line-height: 13px;
+  color: rgba(140, 140, 140, 1);
+  opacity: 1;
+  position: relative;
+  bottom: 170px;
+  left: 100px;
+  cursor: pointer;
+}
+
+.icon-close {
+  float: right;
+  font-size: 18px;
+  margin-right: 10px;
+  margin-top: 10px;
+  cursor: pointer;
+}

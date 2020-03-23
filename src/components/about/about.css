@@ -33,6 +33,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 15;
 }
 .about-message {
   font-size: 14px;
