@@ -9,7 +9,7 @@
     一个基于electron跨平台的epub阅读器
   </h3>
 
-[下载](https://github.com/troyeguo/koodo-reader/releases) | [主页](http://koodo.102410.xyz/)
+[下载](https://github.com/troyeguo/koodo-reader/releases) | [主页](https://github.com/troyeguo/koodo-reader/)
 
   <!-- <a href="https://github.com/getgridea/gridea/releases/latest">
     <img src="https://img.shields.io/github/release/getgridea/gridea.svg?style=flat-square" alt="">
@@ -31,7 +31,7 @@
   <img src="/screenshot/reader.jpg" >
 </div>
 
-## Dependencies
+## 简介
 
 简体中文 | [English](https://github.com/troyeguo/koodo-reader/blob/master/README.md)
 
@@ -41,7 +41,7 @@
 
 ✍️ **可道阅读器** 可道阅读器基于 React 和 Redux 开发，支持桌面版和网页版
 
-## Features👇
+## 特色 👇
 
 📝 您所有的数据都可以导出和恢复
 
@@ -51,13 +51,11 @@
 
 💻 客户端同时支持 **Windows** ，**MacOS** 和 **Linux**
 
-🖥 Customize the source folder and synchronize multiple devices using OneDrive, iCloud, Dropbox, etc.
+🖥 通过把备份文件保存到 OneDrive, iCloud, Dropbox 等网盘的本地文件夹，实现同步
 
-🌱 Of course **Koodo Reader** is still very young and has many shortcomings, but please believe it will keep moving forward 🏃
+🌱 当然 **可道阅读器** 仍然很年轻并且有一些缺陷，但有你的支持它一定会越来越好 🏃
 
-In the future, it will surely become your inseparable partner
-
-😘 Enjoy~
+😘 快去添加你的第一本电子书吧
 
 <!-- ## Development
 
@@ -68,12 +66,13 @@ $ # Node version > v10.0.0 is requied
 $ git clone https://github.com/troyeguo/koodo-reader
 $ cd koodo-reader
 $ yarn
-$ yarn dev
+$ yarn dev #enter electron mode
+$ yarn start #enter web mode
 ```
 
-## Contract
+## 联系方式
 
-[Gitter Chat](https://gitter.im/koodo-reader/community?utm_source=share-link&utm_medium=link&utm_campaign=share-link) | [Email] troyeguo@102410.xyz
+[Gitter Chat](https://gitter.im/koodo-reader/community?utm_source=share-link&utm_medium=link&utm_campaign=share-link)
 
 <!-- ## Example Screenshots
 
@@ -81,9 +80,9 @@ $ yarn dev
   <img src="./files/themes.png">
 </div> -->
 
-## Contributions
+## 帮助
 
-We welcome all contributions.You can submit any ideas as [pull requests](https://github.com/troyeguo/koodo-reader/pulls) or as GitHub [issues](https://github.com/troyeguo/koodo-reader/issues).
+欢迎 pull request [pull requests](https://github.com/troyeguo/koodo-reader/pulls) 或者提交 issue [issues](https://github.com/troyeguo/koodo-reader/issues).
 
 <!-- ## Donation -->
 
@@ -91,6 +90,6 @@ We welcome all contributions.You can submit any ideas as [pull requests](https:/
   <!-- <img src="./files/wechat.png" width="240px"> -->
 </div>
 
-## License
+## 许可
 
 [MIT](https://github.com/troyeguo/koodo-reader/blob/master/LICENSE). Copyright (c) 2020 App by Troye

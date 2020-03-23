@@ -84,11 +84,11 @@ class OperationPanel extends Component {
     }
     // console.log(label, "ahahagh");
     let bookmark = new Bookmark(bookKey, cfi, label, percentage, chapter);
-    console.log(bookmark, "bookmark");
+    // console.log(bookmark, "bookmark");
     let bookmarkArr = this.props.bookmarks ? this.props.bookmarks : [];
     // console.log(this.props.bookmarks, "dhdhdfah");
     bookmarkArr.push(bookmark);
-    console.log(bookmarkArr, "bookmarkArr");
+    // console.log(bookmarkArr, "bookmarkArr");
     this.props.handleBookmarks(bookmarkArr);
     localforage.setItem("bookmarks", bookmarkArr);
     // this.props.toggleMessage(true);

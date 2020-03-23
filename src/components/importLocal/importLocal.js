@@ -9,10 +9,7 @@ import {
   handleMessage,
   handleFetchBooks
 } from "../../redux/manager.redux";
-import SparkMD5 from "spark-md5";
-// import Epub from "epubjs/lib/index/";
-
-// global.ePub = Epub;
+// import SparkMD5 from "spark-md5";
 // @connect(state => state.manager)
 class ImportLocal extends Component {
   constructor(props) {
@@ -25,14 +22,14 @@ class ImportLocal extends Component {
   //向indexdb中添加书籍
   handleAddBook = book => {
     let bookArr = this.props.books;
-    console.log(bookArr, "bookArr");
+    // console.log(bookArr, "bookArr");
     if (bookArr == null) {
       bookArr = [];
     }
     bookArr.push(book);
-    console.log(bookArr, "sghasfkh");
+    // console.log(bookArr, "sghasfkh");
     localforage.setItem("books", bookArr).then(() => {
-      console.log("hadfhafh");
+      // console.log("hadfhafh");
       this.props.handleFetchBooks();
     });
     this.props.handleMessage("添加成功");
@@ -50,7 +47,7 @@ class ImportLocal extends Component {
       chunkSize = 2097152, // 以每片2MB大小来逐次读取
       chunks = Math.ceil(file.size / chunkSize),
       currentChunk = 0,
-      spark = new SparkMD5(), //创建SparkMD5的实例
+      spark = new window.SparkMD5(), //创建SparkMD5的实例
       fileReader = new FileReader();
 
     fileReader.onload = e => {
@@ -62,11 +59,12 @@ class ImportLocal extends Component {
       if (currentChunk < chunks) {
         loadNext();
       } else {
-        console.log("Finished loading!");
+        // console.log("Finished loading!");
         let md5 = spark.end(); // 完成计算，返回结果
         // this.setState({ md5: md5 });
-        console.log(md5, "sgsgh");
+        // console.log(md5, "sgsgh");
         this.handleBook(file, md5);
+        // console.log(md5);
       }
     };
 
@@ -96,8 +94,8 @@ class ImportLocal extends Component {
       reader.readAsArrayBuffer(file);
 
       reader.onload = e => {
-        const epub = global.ePub({ bookPath: e.target.result });
-        console.log(epub);
+        // console.log(window.ePub);
+        const epub = window.ePub({ bookPath: e.target.result });
         epub.getMetadata().then(metadata => {
           let name, author, content, description, book;
           [name, author, content, description] = [
@@ -116,7 +114,7 @@ class ImportLocal extends Component {
     event.preventDefault();
     this.setState({ isRepeat: false });
     let file = event.target.files[0];
-    console.log(file);
+    // console.log(file);
     this.doIncrementalTest(file);
   };
 

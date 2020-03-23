@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="156" height="109" viewBox="0 0 156 109">
+  <defs>
+    <filter id="koodo" x="0" y="0" width="156" height="88" filterUnits="userSpaceOnUse">
+      <feOffset input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feFlood flood-opacity="0.302"/>
+      <feComposite operator="in" in2="blur"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+  </defs>
+  <g id="组_649" data-name="组 649" transform="translate(-40 -23)">
+    <text id="可道阅读器" transform="translate(55 125)" fill="#4b4b4b" font-size="25" font-family="SourceHanSerifCN-Bold, Source Han Serif CN" font-weight="700"><tspan x="0" y="0">可道阅读器</tspan></text>
+    <g transform="matrix(1, 0, 0, 1, 40, 23)" filter="url(#koodo)">
+      <text id="koodo-2" data-name="koodo" transform="translate(12 65)" fill="#4b4b4b" font-size="56" font-family="Lobster-Regular, Lobster"><tspan x="0" y="0">koodo</tspan></text>
+    </g>
+  </g>
+</svg>

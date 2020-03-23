@@ -15,7 +15,7 @@ class NoteList extends Component {
     let { books } = this.props;
     let bookName = "";
     for (let i = 0; i < this.props.books.length; i++) {
-      console.log(books[i].key === bookKey);
+      // console.log(books[i].key === bookKey);
       if (books[i].key === bookKey) {
         bookName = books[i].name;
         break;
@@ -34,7 +34,7 @@ class NoteList extends Component {
   };
   render() {
     let { notes } = this.props;
-    console.log(this.props.notes);
+    // console.log(this.props.notes);
     let noteArr = [];
     //从早到晚排序
     for (let i = notes.length - 1; i >= 0; i--) {
@@ -63,7 +63,7 @@ class NoteList extends Component {
     }
     //得到日期为键，笔记为值的对象
     let noteObj = {};
-    console.log(dateArr);
+    // console.log(dateArr);
 
     dateArr.forEach(date => {
       noteObj["" + date.year + date.month + date.day] = [];
@@ -83,7 +83,7 @@ class NoteList extends Component {
     // console.log(noteObj, "agasgbsg");
     const renderNoteListItem = date => {
       return noteObj[date].map((item, index) => {
-        console.log(item, "item");
+        // console.log(item, "item");
         // console.log(height, "height");
         // notePageItem.setAttribute("style", `height:${height}px`);
         let isCurrent =
@@ -149,7 +149,7 @@ class NoteList extends Component {
         );
       });
     };
-    console.log(dateArr, noteArr, notes, "notesaghsag");
+    // console.log(dateArr, noteArr, notes, "notesaghsag");
     return (
       <div className="note-list-container-parent">
         <div className="note-list-container">{renderNoteList()}</div>

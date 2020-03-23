@@ -20,7 +20,6 @@
 }
 .empty-page-info-main {
   font-size: 32px;
-  ;
   line-height: 50px;
   color: rgba(75, 75, 75, 1);
   opacity: 1;
@@ -28,8 +27,7 @@
 .empty-page-info-sub {
   width: 400px;
   font-size: 24px;
-  
-  ;
+
   line-height: 30px;
   color: rgba(75, 75, 75, 1);
   opacity: 0.49;

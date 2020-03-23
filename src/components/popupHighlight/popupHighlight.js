@@ -54,7 +54,7 @@ class PopupHighlight extends Component {
     iDoc.getSelection().empty();
     this.props.handleMessage("高亮成功");
     this.props.handleMessageBox(true);
-    console.log("%c Add note here. ", "background-color: green");
+    // console.log("%c Add note here. ", "background-color: green");
         this.props.changeMenu("menu");
   }
 

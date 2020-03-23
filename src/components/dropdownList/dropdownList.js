@@ -15,7 +15,7 @@ class DropdownList extends Component {
       }),
 
       currentLineHeightIndex: dropdownList[1].option.findIndex(item => {
-        console.log(item.value, this.props.lineHeight, "adhsdjgh");
+        // console.log(item.value, this.props.lineHeight, "adhsdjgh");
         return item.value === parseFloat(this.props.lineHeight);
       }),
       currentPaddingIndex: dropdownList[2].option.findIndex(item => {
@@ -50,7 +50,7 @@ class DropdownList extends Component {
     // console.log(arr);
     // console.log(typeof event.target.value, "fgafhh");
     ReaderConfig.set(option, arr[0]);
-    console.log(option, arr[0], "sasfhfshg");
+    // console.log(option, arr[0], "sasfhfshg");
     switch (option) {
       case "font":
         this.setState({

@@ -48,7 +48,7 @@ class About extends Component {
               this.handleGithub(false);
             }}
             onClick={() => {
-              this.handleClick("https://wj.qq.com/s2/5565378/4b3f/");
+              this.handleClick("https://github.com/troyeguo/koodo-reader");
             }}
           ></span>
 

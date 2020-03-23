@@ -9,12 +9,9 @@ class SingleControl extends Component {
     super(props);
     this.state = { isSingle: localStorage.getItem("isSingle") || "double" };
   }
-  UNSAFE_componentWillMount() {
-    console.log(this.state.isSingle);
-  }
 
   handleClick = mode => {
-    console.log(mode, "sadfsahgj");
+    // console.log(mode, "sadfsahgj");
     this.props.handleSingle(mode);
     this.setState({ isSingle: mode });
     localStorage.setItem("isSingle", mode);
@@ -22,7 +19,7 @@ class SingleControl extends Component {
     this.props.handleMessageBox(true);
   };
   render() {
-    console.log(this.state.isSingle);
+    // console.log(this.state.isSingle);
     return (
       <div className="single-control-container">
         <div

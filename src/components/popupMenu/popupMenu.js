@@ -68,7 +68,7 @@ class PopupMenu extends Component {
       };
       let applier = window.rangy.createClassApplier(item, config);
       this.highlighter.addClassApplier(applier);
-      console.log("applier");
+      // console.log("applier");
     });
   };
   //渲染高亮
@@ -139,13 +139,13 @@ class PopupMenu extends Component {
     }
     //获取选择文字的坐标
     let rect = this.props.currentEpub.renderer.rangePosition(sel.getRangeAt(0));
-    console.log(rect);
+    // console.log(rect);
 
     let height = 200;
     let posX = rect.x + rect.width / 2 - 20;
     //防止menu超出图书
     let rightEdge = this.props.currentEpub.renderer.width - 154;
-    console.log(this.props.currentEpub.renderer.width);
+    // console.log(this.props.currentEpub.renderer.width);
     var posY;
     //控制menu方向
     if (rect.y < height) {

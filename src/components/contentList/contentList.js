@@ -16,7 +16,7 @@ class ContentList extends Component {
   }
   handleJump(event) {
     let href = event.target.getAttribute("href");
-    console.log(this.props.currentEpub, href, "sfhfdhdfhf");
+    // console.log(this.props.currentEpub, href, "sfhfdhdfhf");
     this.props.currentEpub.goto(href);
     event.preventDefault();
     // console.log("fdhadfhgdgdj");

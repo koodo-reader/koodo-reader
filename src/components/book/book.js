@@ -65,7 +65,9 @@ class Book extends Component {
           src={
             this.props.bookCover !== null
               ? this.props.bookCover
-              : "assets/cover.jpg"
+              : process.env.NODE_ENV === "production"
+              ? "assets/cover.svg"
+              : "../../assets/cover.svg"
           }
           alt=""
           onClick={() => {

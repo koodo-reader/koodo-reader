@@ -9,7 +9,7 @@
     A electron-based cross-platform epub reader
   </h3>
 
-[Download](https://github.com/troyeguo/koodo-reader/releases) | [Homepage](http://koodo.102410.xyz/)
+[Download](https://github.com/troyeguo/koodo-reader/releases) | [Homepage](https://github.com/troyeguo/koodo-reader/)
 
   <!-- <a href="https://github.com/getgridea/gridea/releases/latest">
     <img src="https://img.shields.io/github/release/getgridea/gridea.svg?style=flat-square" alt="">
@@ -49,7 +49,7 @@ English | [简体中文](https://github.com/troyeguo/koodo-reader/blob/master/RE
 
 🌎 Client-free reading with Koodo web version [here](http://reader.102410.xyz)
 
-💻 Use this client on **Windows** or **MacOS** or **Linux**
+<!-- 💻 Use this client on **Windows** or **MacOS** or **Linux** -->
 
 🖥 Customize the source folder and synchronize multiple devices using OneDrive, iCloud, Dropbox, etc.
 
@@ -68,12 +68,13 @@ $ # Node version > v10.0.0 is requied
 $ git clone https://github.com/troyeguo/koodo-reader
 $ cd koodo-reader
 $ yarn
-$ yarn dev
+$ yarn dev #enter electron mode
+$ yarn start #enter web mode
 ```
 
 ## Contract
 
-[Gitter Chat](https://gitter.im/koodo-reader/community?utm_source=share-link&utm_medium=link&utm_campaign=share-link) | [Email] troyeguo@102410.xyz
+[Gitter Chat](https://gitter.im/koodo-reader/community?utm_source=share-link&utm_medium=link&utm_campaign=share-link)
 
 <!-- ## Example Screenshots
 

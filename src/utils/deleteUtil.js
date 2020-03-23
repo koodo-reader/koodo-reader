@@ -15,14 +15,14 @@ class DeleteUtil {
   }
   static deleteBookmarks(bookmarks, bookKey) {
     let deleteIndex = [];
-    console.log(bookmarks);
+    // console.log(bookmarks);
     for (let i = 0; i < bookmarks.length; i++) {
-      console.log(bookmarks[i].bookKey, bookKey);
+      // console.log(bookmarks[i].bookKey, bookKey);
       if (bookmarks[i].bookKey === bookKey) {
         deleteIndex.push(i);
       }
     }
-    console.log(deleteIndex);
+    // console.log(deleteIndex);
     deleteIndex.forEach(item => {
       bookmarks.splice(item, 1);
     });
@@ -43,8 +43,8 @@ class DeleteUtil {
   }
   static deleteDigests(digests, bookKey) {
     let deleteIndex = [];
-    console.log("ahhadhg");
-    console.log(digests);
+    // console.log("ahhadhg");
+    // console.log(digests);
     if (digests !== undefined) {
       for (let i = 0; i < digests.length; i++) {
         if (digests[i].bookKey === bookKey) {

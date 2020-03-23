@@ -18,11 +18,11 @@ class PopupNote extends Component {
     let iDoc = iframe.contentDocument;
     let sel = iDoc.getSelection();
     let range = sel.getRangeAt(0);
-    console.log(range, "range");
+    // console.log(range, "range");
     let notes = document.querySelector(".editor-box").value;
     // let notes = editor.;
     document.querySelector(".editor-box").value = "";
-    console.log(notes, "note");
+    // console.log(notes, "note");
     let text = sel.toString();
     text = text && text.trim();
     let cfiBase = epub.renderer.currentChapter.cfiBase;

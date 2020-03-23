@@ -4,38 +4,25 @@ import { connect } from "react-redux";
 import OtherUtil from "../../utils/otherUtil";
 import { handleSort, handleSortCode } from "../../redux/manager.redux";
 class SortDialog extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isSort: this.props.isSort,
-      sortCode: this.props.sortCode
-    };
-  }
-  UNSAFE_componentWillReceiveProps = nextProps => {
-    this.setState({
-      isSort: nextProps.isSort,
-      sortCode: nextProps.sortCode
-    });
-  };
   handleSort = code => {
-    let sortCode = this.state.sortCode;
+    let sortCode = this.props.sortCode;
     sortCode.sort = code;
-    console.log(sortCode);
+    // console.log(sortCode);
     this.setState({ sortCode });
     this.props.handleSortCode(sortCode);
-    console.log(this.props.sortCode);
-    OtherUtil.setSortCode(code, this.state.sortCode.order);
+    // console.log(this.props.sortCode);
+    OtherUtil.setSortCode(code, this.props.sortCode.order);
   };
   handleOrder = code => {
-    let sortCode = this.state.sortCode;
+    let sortCode = this.props.sortCode;
     sortCode.order = code;
     this.setState({ sortCode });
-    OtherUtil.setSortCode(this.state.sortCode.sort, code);
+    OtherUtil.setSortCode(this.props.sortCode.sort, code);
     this.props.handleSortCode(sortCode);
-    console.log(this.props.sortCode);
+    // console.log(this.props.sortCode);
   };
   render() {
-    console.log(this.state.sortCode);
+    // console.log(this.state.sortCode);
     return (
       <div className="sort-dialog-container">
         <ul className="sort-by-category">
@@ -45,7 +32,7 @@ class SortDialog extends Component {
               this.handleSort(1);
             }}
             style={
-              this.state.sortCode.sort === 1
+              this.props.sortCode.sort === 1
                 ? { color: "rgba(75, 75, 75, 1)" }
                 : {}
             }
@@ -58,7 +45,7 @@ class SortDialog extends Component {
               this.handleSort(2);
             }}
             style={
-              this.state.sortCode.sort === 2
+              this.props.sortCode.sort === 2
                 ? { color: "rgba(75, 75, 75, 1)" }
                 : {}
             }
@@ -74,7 +61,7 @@ class SortDialog extends Component {
               this.handleOrder(1);
             }}
             style={
-              this.state.sortCode.order === 1
+              this.props.sortCode.order === 1
                 ? { color: "rgba(75, 75, 75, 1)" }
                 : {}
             }
@@ -87,7 +74,7 @@ class SortDialog extends Component {
               this.handleOrder(2);
             }}
             style={
-              this.state.sortCode.order === 2
+              this.props.sortCode.order === 2
                 ? { color: "rgba(75, 75, 75, 1)" }
                 : {}
             }

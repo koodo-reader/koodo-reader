@@ -12,7 +12,7 @@ class DigestList extends Component {
     let { books } = this.props;
     let bookName = "";
     for (let i = 0; i < this.props.books.length; i++) {
-      console.log(books[i].key === bookKey, "fhgjfhj");
+      // console.log(books[i].key === bookKey, "fhgjfhj");
       if (books[i].key === bookKey) {
         bookName = books[i].name;
         break;
@@ -23,7 +23,7 @@ class DigestList extends Component {
   };
   render() {
     let { digests } = this.props;
-    console.log(this.props.digests);
+    // console.log(this.props.digests);
     let digestArr = [];
     //使书摘从晚到早排序
     for (let i = digests.length - 1; i >= 0; i--) {

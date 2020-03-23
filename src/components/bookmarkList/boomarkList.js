@@ -15,14 +15,14 @@ class BookmarkList extends Component {
   }
   //跳转到图书的指定位置
   handleJump(cfi) {
-    console.log(cfi, "afhahhhh");
+    // console.log(cfi, "afhahhhh");
     this.props.currentEpub.gotoCfi(cfi);
   }
   render() {
-    console.log(this.props.bookmarks, "bookmarkks");
+    // console.log(this.props.bookmarks, "bookmarkks");
     const renderBookmarkList = () => {
       let { bookmarks } = this.state;
-      console.log(bookmarks);
+      // console.log(bookmarks);
       return bookmarks
         .filter(item => {
           return item.bookKey === this.props.currentBook.key;

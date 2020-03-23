@@ -36,22 +36,8 @@ class Manager extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      mode: this.props.mode,
-      shelfIndex: this.props.shelfIndex,
-      books: this.props.books,
-      notes: this.props.notes,
-      digests: this.props.digests,
-      covers: this.props.covers,
-      bookmarks: this.props.bookmarks,
-      isOpenEditDialog: this.props.isOpenEditDialog,
-      isOpenDeleteDialog: this.props.isOpenDeleteDialog,
-      isOpenAddDialog: this.props.isOpenAddDialog,
-      isSort: this.props.isSort,
-      isSortDisplay: this.props.isSortDisplay,
-      isMessage: false,
-      isBackup: false,
       totalBooks: localStorage.getItem("totalBooks") || 0,
-      isFirst: null,
+      isFirst: this.props.isFirst,
       recentBooks: Object.keys(RecordRecent.getRecent()).length
     };
   }
@@ -67,33 +53,15 @@ class Manager extends Component {
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
-    // console.log(nextProps);
     this.setState({
-      mode: nextProps.mode,
-      shelfIndex: nextProps.shelfIndex,
-      books: nextProps.books,
-      notes: nextProps.notes,
-      covers: nextProps.covers,
-      digests: nextProps.digests,
-      bookmarks: nextProps.bookmarks,
-      isOpenDeleteDialog: nextProps.isOpenDeleteDialog,
-      isOpenEditDialog: nextProps.isOpenEditDialog,
-      isOpenAddDialog: nextProps.isOpenAddDialog,
-      isSort: nextProps.isSort,
-      isSortDisplay: nextProps.isSortDisplay,
-      isMessage: nextProps.isMessage,
-      isBackup: nextProps.isBackup
-    });
-    console.log(this.state.books, "books");
-    this.setState({
-      totalBooks: this.state.books === null ? 0 : this.state.books.length
+      totalBooks: this.props.books === null ? 0 : this.props.books.length
     });
     localStorage.setItem("totalBooks", this.state.totalBooks);
 
     if (nextProps.isMessage) {
       this.timer = setTimeout(() => {
         this.props.handleMessageBox(false);
-        this.setState({ isMessage: false });
+        // this.setState({ isMessage: false });
       }, 2000);
     }
   }
@@ -109,7 +77,7 @@ class Manager extends Component {
     localStorage.setItem("isFirst", "no");
   };
   render() {
-    console.log(this.state.isFirst, "first");
+    // console.log(this.state.isFirst, "first");
     let {
       mode,
       notes,
@@ -118,30 +86,30 @@ class Manager extends Component {
       covers,
       totalBooks,
       recentBooks
-    } = this.state;
-    console.log(this.state.isBackup, "toatl");
+    } = this.props;
+    // console.log(this.props.isBackup, "toatl");
     let shelfTitle = Object.keys(ShelfUtil.getShelf());
     // console.log(shelfTitle, index, "shelfTitle");
-    let currentShelfTitle = shelfTitle[this.state.shelfIndex + 1];
+    let currentShelfTitle = shelfTitle[this.props.shelfIndex + 1];
     let shelfBooks = ShelfUtil.getShelf()[currentShelfTitle].length;
     // console.log(this.state.isMessage, "message");
-    console.log(shelfBooks, "shelf");
+    // console.log(shelfBooks, "shelf");
     return (
       <div className="manager">
         <Sidebar />
         <Header />
         <div className="manager-dialog-container">
-          {this.state.isOpenDeleteDialog ? (
+          {this.props.isOpenDeleteDialog ? (
             <DeleteDialog />
-          ) : this.state.isOpenEditDialog ? (
+          ) : this.props.isOpenEditDialog ? (
             <EditDialog />
-          ) : this.state.isOpenAddDialog ? (
+          ) : this.props.isOpenAddDialog ? (
             <AddDialog />
           ) : null}
         </div>
-        {this.state.isMessage ? <MessageBox /> : null}
-        {this.state.isSortDisplay ? <SortDialog /> : null}
-        {this.state.isBackup ? <BackupPage /> : null}
+        {this.props.isMessage ? <MessageBox /> : null}
+        {this.props.isSortDisplay ? <SortDialog /> : null}
+        {this.props.isBackup ? <BackupPage /> : null}
         {this.state.isFirst === "first" ? (
           <WelcomePage
             handleCloseWelcome={() => {

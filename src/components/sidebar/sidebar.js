@@ -17,7 +17,7 @@ class Sidebar extends Component {
     };
   }
   handleSidebar = (mode, index) => {
-    console.log(index);
+    // console.log(index);
     this.setState({ index: index });
     this.setState({ shelfIndex: null });
     this.setState({ isCollapse: true });
@@ -28,7 +28,7 @@ class Sidebar extends Component {
     this.setState({ isCollapse: !this.state.isCollapse });
   };
   handleShelfItem = index => {
-    console.log(index);
+    // console.log(index);
     this.setState({ shelfIndex: index });
     this.props.handleShelfIndex(index);
     this.props.handleMode("shelf");
@@ -101,8 +101,8 @@ class Sidebar extends Component {
         <img
           src={
             process.env.NODE_ENV === "production"
-              ? "assets/logo.jpg"
-              : "../../assets/logo.jpg"
+              ? "assets/logo.svg"
+              : "../../assets/logo.svg"
           }
           alt=""
           className="logo"

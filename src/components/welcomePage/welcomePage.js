@@ -10,12 +10,12 @@ class WelcomePage extends Component {
     this.props.handleCloseWelcome();
   };
   handlePrevious = () => {
-    console.log("pre");
+    // console.log("pre");
     if (this.state.currentIndex > 0)
       this.setState({ currentIndex: this.state.currentIndex - 1 });
   };
   handleNext = () => {
-    console.log("next");
+    // console.log("next");
     if (this.state.currentIndex < 3)
       this.setState({ currentIndex: this.state.currentIndex + 1 });
   };

@@ -40,7 +40,7 @@ class OtherUtil {
     let bookResults = this.fuzzyQuery(bookNameArr, keyword);
     let authorResults = this.fuzzyQuery(AuthorNameArr, keyword);
     let results = this.MergeArray(bookResults, authorResults);
-    console.log(results.sort());
+    // console.log(results.sort());
     return results;
   }
   static KeySearch(event, books) {
@@ -54,7 +54,7 @@ class OtherUtil {
       let bookResults = this.fuzzyQuery(bookNameArr, event.target.value);
       let authorResults = this.fuzzyQuery(AuthorNameArr, event.target.value);
       let results = this.MergeArray(bookResults, authorResults);
-      console.log(results.sort());
+      // console.log(results.sort());
 
       return results;
     }
