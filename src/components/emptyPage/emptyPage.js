@@ -4,16 +4,6 @@ import { connect } from "react-redux";
 import "./emptyPage.css";
 import { emptyList } from "../../utils/readerConfig";
 class EmptyPage extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { mode: this.props.mode };
-  }
-  UNSAFE_componentWillReceiveProps = nextProps => {
-    // console.log(nextProps);
-    this.setState({
-      mode: nextProps.mode
-    });
-  };
   render() {
     const renderEmptyList = () => {
       return emptyList.map(item => {
@@ -22,7 +12,7 @@ class EmptyPage extends Component {
             className="empty-page-info-container"
             key={item.mode}
             style={
-              this.state.mode === item.mode ? {} : { visibility: "hidden" }
+              this.props.mode === item.mode ? {} : { visibility: "hidden" }
             }
           >
             <div className="empty-page-info-main">{item.main}</div>
@@ -36,8 +26,8 @@ class EmptyPage extends Component {
         <img
           src={
             process.env.NODE_ENV === "production"
-              ? "assets/empty.jpg"
-              : "../../assets/empty.jpg"
+              ? "assets/empty.svg"
+              : "../../assets/empty.svg"
           }
           alt=""
           className="empty-page-illustration"

@@ -40,13 +40,13 @@ class AddDialog extends Component {
         .setAttribute("disabled", "diabled");
     }
 
-    console.log(shelfTitle, this.state.isNew);
+    // console.log(shelfTitle, this.state.isNew);
   };
   render() {
     const renderShelfList = () => {
       let shelfList = ShelfUtil.getShelf();
       let shelfTitle = Object.keys(shelfList);
-      console.log(shelfTitle);
+      // console.log(shelfTitle);
       return shelfTitle.map((item, index) => {
         return (
           <option

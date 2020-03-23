@@ -1,16 +1,16 @@
 // import localforage from "localforage";
 import JSZip from "jszip";
-import FileSaver from "file-saver";
+// import FileSaver from "file-saver";
 import localforage from "localforage";
 class RestoreUtil {
   static importBooks = (books, file, handleFinish) => {
-    console.log("huifusdg");
+    // console.log("huifusdg");
     let zip = new JSZip();
     books.forEach((item, index) => {
       zip
         .loadAsync(file)
         .then(content => {
-          console.log(`epub/${item.name}.epub`);
+          // console.log(`epub/${item.name}.epub`);
           // you now have every files contained in the loaded zip
           return content.files[`epub/${item.name}.epub`].async("arraybuffer"); // a promise of "Hello World\n"
         })
@@ -18,9 +18,9 @@ class RestoreUtil {
           item.content = book;
         })
         .then(() => {
-          console.log(index, books.length, "huifu");
+          // console.log(index, books.length, "huifu");
           if (index === books.length - 1) {
-            console.log("huifu");
+            // console.log("huifu");
 
             localforage.setItem("books", books).then(() => {
               handleFinish();
@@ -71,7 +71,7 @@ class RestoreUtil {
           }
         })
         .then(() => {
-          console.log(item, "item");
+          // console.log(item, "item");
           if (item === "books") {
             localforage.getItem("books").then(value => {
               this.importBooks(value, file, handleFinish);

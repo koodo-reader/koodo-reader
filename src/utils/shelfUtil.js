@@ -43,7 +43,7 @@ class ShelfUtil {
     let shelfTitle = Object.keys(obj);
     shelfTitle.splice(0, 1);
     shelfTitle.forEach(item => {
-      console.log(obj[item], "item");
+      // console.log(obj[item], "item");
       let index = obj[item].indexOf(bookKey);
       if (index > -1) {
         obj[item].splice(index, 1);

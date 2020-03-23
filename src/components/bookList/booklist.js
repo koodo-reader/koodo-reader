@@ -9,33 +9,6 @@ import RecordRecent from "../../utils/recordRecent";
 import ShelfUtil from "../../utils/shelfUtil";
 import SortUtil from "../../utils/sortUtil";
 class BookList extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      books: this.props.books,
-      covers: this.props.covers,
-      shelfIndex: this.props.shelfIndex,
-      isList: this.props.isList,
-      isSearch: this.props.isSearch,
-      isSort: this.props.isSort,
-      sortCode: this.props.sortCode,
-      searchBooks: this.props.searchBooks
-    };
-  }
-  UNSAFE_componentWillReceiveProps = nextProps => {
-    // console.log(nextProps);
-    this.setState({
-      books: nextProps.books,
-      covers: nextProps.covers,
-      shelfIndex: nextProps.shelfIndex,
-      isSearch: nextProps.isSearch,
-      isSort: nextProps.isSort,
-      sortCode: nextProps.sortCode,
-      searchBooks: nextProps.searchBooks
-    });
-    // console.log(this.state.sortCode);
-  };
-
   //根据localstorage列表的数据，得到最近阅读的图书
   handleRecent = items => {
     let recentArr = [];
@@ -74,7 +47,7 @@ class BookList extends Component {
   }
   //控制卡片模式和列表模式的切换
   handleChange = mode => {
-    this.setState({ isList: mode });
+    // this.setState({ isList: mode });
     localStorage.setItem("isList", mode);
     this.props.handleFetchList();
   };
@@ -91,45 +64,45 @@ class BookList extends Component {
   render() {
     localStorage.setItem("totalBooks", this.props.books.length);
 
-    // console.log(this.state.isList);
+    // console.log(this.props.isList);
     const renderBookList = () => {
-      // console.log(this.state.books, "sdgasf");
+      // console.log(this.props.books, "sdgasf");
       //根据不同的场景获取不同的图书数据
       let books =
         this.props.mode === "recent"
-          ? this.handleRecent(this.state.books)
-          : this.state.shelfIndex !== null
-          ? this.handleShelf(this.state.books, this.state.shelfIndex)
-          : this.state.isSearch
-          ? this.handleFilter(this.state.books, this.props.searchBooks)
-          : this.state.isSort
+          ? this.handleRecent(this.props.books)
+          : this.props.shelfIndex !== null
+          ? this.handleShelf(this.props.books, this.props.shelfIndex)
+          : this.props.isSearch
+          ? this.handleFilter(this.props.books, this.props.searchBooks)
+          : this.props.isSort
           ? this.handleFilter(
-              this.state.books,
+              this.props.books,
               //返回排序后的图书index
-              SortUtil.sortBooks(this.state.books, this.state.sortCode)
+              SortUtil.sortBooks(this.props.books, this.props.sortCode)
             )
-          : this.state.books;
+          : this.props.books;
       // console.log(this.props.covers);
       //根据不同的场景获取不同图书的封面
       let covers =
         this.props.mode === "recent"
-          ? this.handleRecent(this.state.covers)
-          : this.state.shelfIndex !== null
-          ? this.handleShelf(this.state.covers, this.state.shelfIndex)
-          : this.state.isSearch
-          ? this.handleFilter(this.state.covers, this.props.searchBooks)
-          : this.state.isSort
+          ? this.handleRecent(this.props.covers)
+          : this.props.shelfIndex !== null
+          ? this.handleShelf(this.props.covers, this.props.shelfIndex)
+          : this.props.isSearch
+          ? this.handleFilter(this.props.covers, this.props.searchBooks)
+          : this.props.isSort
           ? this.handleFilter(
-              this.state.covers,
-              SortUtil.sortBooks(this.state.books, this.state.sortCode)
+              this.props.covers,
+              SortUtil.sortBooks(this.props.books, this.props.sortCode)
             )
-          : this.state.covers;
+          : this.props.covers;
       return books.map((item, index) => {
         // console.log(covers, "djhdhdfh");
-        // console.log(this.state.isList, "sdgasf");
-        // let mode = this.state.isList;
+        // console.log(this.props.isList, "sdgasf");
+        // let mode = this.props.isList;
         // console.log(mode);
-        return this.state.isList === "list" ? (
+        return this.props.isList === "list" ? (
           <BookItem
             key={item.key}
             book={item}
@@ -154,7 +127,7 @@ class BookList extends Component {
                 this.handleChange("card");
               }}
               style={
-                this.state.isList === "card"
+                this.props.isList === "card"
                   ? {}
                   : { color: "rgba(75,75,75,0.5)" }
               }
@@ -167,7 +140,7 @@ class BookList extends Component {
                 this.handleChange("list");
               }}
               style={
-                this.state.isList === "list"
+                this.props.isList === "list"
                   ? {}
                   : { color: "rgba(75,75,75,0.5)" }
               }
@@ -182,20 +155,20 @@ class BookList extends Component {
     );
   }
 }
-const mapStateToProps = state => {
+const mappropsToProps = props => {
   return {
-    books: state.manager.books,
-    covers: state.manager.covers,
-    epubs: state.manager.epubs,
-    mode: state.sidebar.mode,
-    shelfIndex: state.sidebar.shelfIndex,
-    searchBooks: state.manager.searchBooks,
-    isSearch: state.manager.isSearch,
-    isSort: state.manager.isSort,
-    isList: state.manager.isList,
-    sortCode: state.manager.sortCode
+    books: props.manager.books,
+    covers: props.manager.covers,
+    epubs: props.manager.epubs,
+    mode: props.sidebar.mode,
+    shelfIndex: props.sidebar.shelfIndex,
+    searchBooks: props.manager.searchBooks,
+    isSearch: props.manager.isSearch,
+    isSort: props.manager.isSort,
+    isList: props.manager.isList,
+    sortCode: props.manager.sortCode
   };
 };
 const actionCreator = { handleFetchList };
-BookList = connect(mapStateToProps, actionCreator)(BookList);
+BookList = connect(mappropsToProps, actionCreator)(BookList);
 export default BookList;

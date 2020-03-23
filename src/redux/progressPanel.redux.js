@@ -35,23 +35,23 @@ export function handleLocations(locations) {
   return { type: "HANDLE_LOCATIONS", payload: locations };
 }
 export function handlePercentage(percentage) {
-  console.log(percentage, "jkjlll");
+  // console.log(percentage, "jkjlll");
   return { type: "HANDLE_PERCENTAGE", payload: percentage };
 }
 export function handleFetchPercentage(book) {
   return dispatch => {
     let percentage = RecordLocation.getCfi(book.key).percentage;
-    console.log(percentage, "percentage");
+    // console.log(percentage, "percentage");
     dispatch(handlePercentage(percentage));
   };
 }
 export function handleFetchLocations(epub) {
   return dispatch => {
-    console.log(epub);
+    // console.log(epub);
     if (epub.locations !== undefined) {
       epub.locations.generate().then(result => {
         let locations = epub.locations;
-        console.log("sfhafshfhafh");
+        // console.log("sfhafshfhafh");
         dispatch(handleLocations(locations));
       });
     }

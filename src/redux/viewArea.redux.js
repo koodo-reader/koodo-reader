@@ -36,7 +36,7 @@ export function viewArea(state = initState, action) {
 }
 
 export function handleOpenMenu(isOpenMenu) {
-  console.log(isOpenMenu);
+  // console.log(isOpenMenu);
   return { type: "HANDLE_OPEN_MENU", payload: isOpenMenu };
 }
 export function handleOpenHighlight(isOpenHighlight) {
@@ -46,6 +46,6 @@ export function handleOpenNote(isOpenNote) {
   return { type: "HANDLE_OPEN_NOTE", payload: isOpenNote };
 }
 export function handleSelection(selection) {
-  console.log("copy ");
+  // console.log("copy ");
   return { type: "HANDLE_SELECTION", payload: selection };
 }

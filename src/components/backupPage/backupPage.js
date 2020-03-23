@@ -39,7 +39,7 @@ class BackupPage extends Component {
     RestoreUtil.restore(event.target.files[0], this.handleFinish);
   };
   handleDrive = async index => {
-    console.log(index, "insghsgahs");
+    // console.log(index, "insghsgahs");
     await this.setState({ currentDrive: index });
     if (this.state.currentDrive === 0) {
       this.handleBackupToLocal();
@@ -116,7 +116,6 @@ class BackupPage extends Component {
             <div>{renderDrivePage()}</div>
             {this.state.isBackup === "restore" ? (
               <input
-                type="file"
                 type="file"
                 id="restore-file"
                 accept="application/zip"

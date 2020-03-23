@@ -24,7 +24,7 @@ class ViewArea extends Component {
   }
 
   render() {
-    console.log(this.state.isSingle);
+    // console.log(this.state.isSingle);
     return (
       <div className="view-area">
         <PopupMenu id="popup-menu" />
