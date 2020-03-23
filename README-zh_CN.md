@@ -1,5 +1,8 @@
 <div align="center">
-  <a href="https://koodo.102410.xyz" target="_blank" width="80px" height="80px"><img src="https://i.loli.net/2020/03/23/lf49YjXzdxhq2vN.png" ></a>
+  <a href="https://koodo.102410.xyz">
+    <img src="https://i.loli.net/2020/03/23/lf49YjXzdxhq2vN.png"  width="80px" height="80px">
+  </a>
+
   <h1 align="center">
     可道阅读器
   </h1>
@@ -22,10 +25,11 @@
   </a> -->
 
 </div>
+
 <div align="center">
-  <img src="https://i.loli.net/2020/03/23/cX6REjaMygf8iIo.jpg" >
+  <img src="https://i.loli.net/2020/03/23/jenEPUIuVJzC6bX.jpg" >
   <br/>
-  <img src="https://i.loli.net/2020/03/23/EDywO5Gbe2zqKLh.jpg" >
+  <img src="https://i.loli.net/2020/03/23/UpVulqMBXRcEtJG.jpg" >
 </div>
 
 ## 简介
