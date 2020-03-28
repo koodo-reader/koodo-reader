@@ -5,11 +5,11 @@
   <h1 align="center">
     Koodo Reader
   </h1>
-  <h2 align="center">
+  <h3 align="center">
     一个基于 electron 和 React 开发的epub阅读器
-  </h2>
+  </h3>
 
-
+## 预览
 
 <div align="center">
   <img src="https://i.loli.net/2020/03/23/jenEPUIuVJzC6bX.jpg" >
@@ -77,4 +77,4 @@
 
 ## 帮助
 
-我会在前面的搭建教程中尽量提到所有需要注意的问题，请仔细阅读，当然您还可以在 issue 区提问，我会在力所能及的范围内提供帮助
+您可以在 issue 区提问，我会在力所能及的范围内提供帮助
