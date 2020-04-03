@@ -21,7 +21,7 @@
 
 👏 欢迎使用 **可道阅读器** ！
 
-✍️ **可道阅读器** 可道阅读器基于 electron 和 React  开发，支持桌面版和网页版
+✍️ **可道阅读器** 可道阅读器基于 electron 和 React 开发，支持桌面版和网页版
 
 ## 特色 👇
 
@@ -43,7 +43,7 @@
 
 桌面端：前往这里下载最新的安装包 [点我前往](https://github.com/troyeguo/koodo-reader/releases)
 
-网页版：代码托管在 Coding Page [点我前往](https://reader.102410.xyz)
+网页版：代码托管在 Gitee Page [点我前往](https://troyeguo.gitee.io/koodo-web/)
 
 ## 运行源码
 
