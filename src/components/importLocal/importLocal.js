@@ -9,7 +9,7 @@ import {
   handleMessage,
   handleFetchBooks
 } from "../../redux/manager.redux";
-// import SparkMD5 from "spark-md5";
+import SparkMD5 from "spark-md5";
 // @connect(state => state.manager)
 class ImportLocal extends Component {
   constructor(props) {
@@ -47,7 +47,7 @@ class ImportLocal extends Component {
       chunkSize = 2097152, // 以每片2MB大小来逐次读取
       chunks = Math.ceil(file.size / chunkSize),
       currentChunk = 0,
-      spark = new window.SparkMD5(), //创建SparkMD5的实例
+      spark = new SparkMD5(), //创建SparkMD5的实例
       fileReader = new FileReader();
 
     fileReader.onload = e => {
