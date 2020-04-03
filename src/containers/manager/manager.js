@@ -78,16 +78,9 @@ class Manager extends Component {
   };
   render() {
     // console.log(this.state.isFirst, "first");
-    let {
-      mode,
-      notes,
-      digests,
-      bookmarks,
-      covers,
-      totalBooks,
-      recentBooks
-    } = this.props;
-    // console.log(this.props.isBackup, "toatl");
+    let { mode, notes, digests, bookmarks, covers } = this.props;
+    let { totalBooks, recentBooks } = this.state;
+    // console.log(totalBooks, "toatl");
     let shelfTitle = Object.keys(ShelfUtil.getShelf());
     // console.log(shelfTitle, index, "shelfTitle");
     let currentShelfTitle = shelfTitle[this.props.shelfIndex + 1];
