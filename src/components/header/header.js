@@ -79,7 +79,11 @@ class Header extends Component {
         }
         <About />
 
-        <a href="/assets/demo.epub" target="_blank" rel="noopener noreferrer">
+        <a
+          href="/koodo-web/assets/demo.epub"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           <div
             className="download-demo-book"
             onClick={this.handleDownload.bind(this)}
