@@ -4,14 +4,14 @@ import "./deleteDialog.css";
 import {
   handleFetchBooks,
   handleMessageBox,
-  handleMessage
+  handleMessage,
 } from "../../redux/manager.redux";
 import { handleDeleteDialog } from "../../redux/book.redux";
 import {
   handleFetchBookmarks,
   handleFetchNotes,
   handleFetchDigests,
-  handleFetchHighlighters
+  handleFetchHighlighters,
 } from "../../redux/reader.redux";
 import DeleteUtil from "../../utils/deleteUtil";
 import localforage from "localforage";
@@ -187,7 +187,7 @@ class DeleteDialog extends Component {
     );
   }
 }
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     books: state.manager.books,
     isOpenDeleteDialog: state.book.isOpenDeleteDialog,
@@ -197,7 +197,7 @@ const mapStateToProps = state => {
     digests: state.reader.digests,
     highlighters: state.reader.highlighters,
     mode: state.sidebar.mode,
-    shelfIndex: state.sidebar.shelfIndex
+    shelfIndex: state.sidebar.shelfIndex,
   };
 };
 const actionCreator = {
@@ -208,7 +208,7 @@ const actionCreator = {
   handleFetchDigests,
   handleFetchHighlighters,
   handleMessageBox,
-  handleMessage
+  handleMessage,
 };
 DeleteDialog = connect(mapStateToProps, actionCreator)(DeleteDialog);
 export default DeleteDialog;

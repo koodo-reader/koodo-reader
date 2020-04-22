@@ -6,7 +6,7 @@ import { handleFetchBookmarks } from "../../redux/reader.redux";
 import {
   handleReadingState,
   handleReadingBook,
-  handleReadingEpub
+  handleReadingEpub,
 } from "../../redux/book.redux";
 import RecentBooks from "../../utils/recordRecent";
 import RecordLocation from "../../utils/recordLocation";
@@ -56,7 +56,7 @@ class BookmarkPage extends Component {
     // console.log(this.props.state, "bookmarks");
     let bookKeyArr = [];
     //获取bookmarks中的图书列表
-    bookmarks.forEach(item => {
+    bookmarks.forEach((item) => {
       if (bookKeyArr.indexOf(item.bookKey) === -1) {
         bookKeyArr.push(item.bookKey);
         return false;
@@ -64,23 +64,23 @@ class BookmarkPage extends Component {
     });
     // console.log(bookKeyArr, "bookArr");
     //根据图书列表获取图书数据
-    let bookArr = books.filter(item => {
+    let bookArr = books.filter((item) => {
       // console.log(item.key, bookKeyArr, "haslghakfg");
       return bookKeyArr.indexOf(item.key) > -1;
     });
     // console.log(bookArr);
-    let coverArr = covers.filter(item => {
+    let coverArr = covers.filter((item) => {
       // console.log(item.key, bookKeyArr, "asgalsgh");
       return bookKeyArr.indexOf(item.key) > -1;
     });
     let coverObj = {};
     //根据图书数据获取封面的url
-    coverArr.forEach(item => {
+    coverArr.forEach((item) => {
       coverObj[item.key] = item.url;
     });
     // console.log(coverObj, "arr");
     let bookmarkObj = {};
-    bookmarks.forEach(item => {
+    bookmarks.forEach((item) => {
       //bookmarkobj没有此书就新建
       if (!bookmarkObj[item.bookKey] && bookKeyArr.indexOf(item.bookKey) > -1) {
         bookmarkObj[item.bookKey] = [];
@@ -91,10 +91,8 @@ class BookmarkPage extends Component {
       }
       return false;
     });
-    // console.log(bookmarkObj, "bookmarkObj");
-    // bookKeyArr.map(item => {});
-    const renderBookmarklistItem = item => {
-      return bookmarkObj[item.key].map(item => (
+    const renderBookmarklistItem = (item) => {
+      return bookmarkObj[item.key].map((item) => (
         <li className="bookmark-page-list-item" key={item.key}>
           <div className="bookmark-page-list-item-title">{item.chapter}</div>
           <div className="bookmark-page-progress">
@@ -132,7 +130,7 @@ class BookmarkPage extends Component {
     const renderBookmarkPage = () => {
       return bookArr.map((item, index) => {
         return (
-          <div key={index}>{renderBookmarkPageItem(item, index, false)}</div>
+          <div key={item.key}>{renderBookmarkPageItem(item, index, false)}</div>
         );
       });
     };
@@ -143,20 +141,20 @@ class BookmarkPage extends Component {
     );
   }
 }
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     state: state,
     bookmarks: state.reader.bookmarks,
     covers: state.manager.covers,
     books: state.manager.books,
-    epubs: state.manager.epubs
+    epubs: state.manager.epubs,
   };
 };
 const actionCreator = {
   handleFetchBookmarks,
   handleReadingState,
   handleReadingBook,
-  handleReadingEpub
+  handleReadingEpub,
 };
 BookmarkPage = connect(mapStateToProps, actionCreator)(BookmarkPage);
 export default BookmarkPage;

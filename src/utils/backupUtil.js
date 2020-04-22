@@ -7,10 +7,10 @@ class BackupUtil {
     let zip = new JSZip();
 
     let epubZip = zip.folder("epub");
-    books.forEach(item => {
+    books.forEach((item) => {
       epubZip.file(`${item.name}.epub`, item.content);
     });
-    books.forEach(item => {
+    books.forEach((item) => {
       delete item.content;
     });
     let dataZip = zip.folder("data");
@@ -40,16 +40,19 @@ class BackupUtil {
 
     zip
       .generateAsync({ type: "blob" })
-      .then(function(blob) {
+      .then(function (blob) {
         FileSaver.saveAs(
           blob,
-          `${year}-${month < 9 ? 0 : null}${month}-${
-            day < 9 ? 0 : null
-          }${day}.zip`
+          `${year}-${month < 9 ? "0" + month : month}-${
+            day < 9 ? "0" + day : day
+          }.zip`
         );
       })
       .then(() => {
         handleFinish();
+      })
+      .catch((err) => {
+        console.log("Error occurs");
       });
     // return zip;
   }

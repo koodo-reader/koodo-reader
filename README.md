@@ -12,16 +12,16 @@
 ## 预览
 
 <div align="center">
-  <img src="https://i.loli.net/2020/03/23/jenEPUIuVJzC6bX.jpg" >
-  <br/>
   <img src="https://i.loli.net/2020/03/23/UpVulqMBXRcEtJG.jpg" >
+  <br/>
+  <img src="https://i.loli.net/2020/03/23/jenEPUIuVJzC6bX.jpg" >
 </div>
 
 ## 简介
 
-👏 欢迎使用 **可道阅读器** ！
+👏 欢迎使用 **Koodo Reader** ！
 
-✍️ **可道阅读器** 可道阅读器基于 electron 和 React 开发，支持桌面版和网页版
+✍️ **Koodo Reader** Koodo Reader 基于 electron 和 React 开发，支持桌面版和网页版
 
 ## 特色 👇
 
@@ -35,7 +35,7 @@
 
 🖥 通过把备份文件保存到 OneDrive, iCloud, Dropbox 等网盘的本地文件夹，实现同步
 
-🌱 当然 **可道阅读器** 仍然很年轻并且有一些缺陷，但有你的支持它一定会越来越好 🏃
+🌱 当然 **Koodo Reader** 仍然很年轻并且有一些缺陷，但有你的支持它一定会越来越好 🏃
 
 😘 快去添加你的第一本电子书吧
 
@@ -46,8 +46,6 @@
 网页版：代码托管在 Gitee Page [点我前往](https://troyeguo.gitee.io/koodo-web/)
 
 ## 运行源码
-
-以下内容只针对前端开发者，小白请略过。
 
 请确保您电脑的 node 的版本大于 10.0.0，已配置好 yarn，git 的运行环境。
 

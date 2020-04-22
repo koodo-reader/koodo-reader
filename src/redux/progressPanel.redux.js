@@ -3,25 +3,25 @@ import RecordLocation from "../utils/recordLocation";
 const initState = {
   percentage: null,
   section: null,
-  locations: null
+  locations: null,
 };
 export function progressPanel(state = initState, action) {
   switch (action.type) {
     case "HANDLE_PERCENTAGE":
       return {
         ...state,
-        percentage: action.payload
+        percentage: action.payload,
       };
 
     case "HANDLE_SECTION":
       return {
         ...state,
-        section: action.payload
+        section: action.payload,
       };
     case "HANDLE_LOCATIONS":
       return {
         ...state,
-        locations: action.payload
+        locations: action.payload,
       };
     default:
       return state;
@@ -39,21 +39,26 @@ export function handlePercentage(percentage) {
   return { type: "HANDLE_PERCENTAGE", payload: percentage };
 }
 export function handleFetchPercentage(book) {
-  return dispatch => {
+  return (dispatch) => {
     let percentage = RecordLocation.getCfi(book.key).percentage;
     // console.log(percentage, "percentage");
     dispatch(handlePercentage(percentage));
   };
 }
 export function handleFetchLocations(epub) {
-  return dispatch => {
+  return (dispatch) => {
     // console.log(epub);
     if (epub.locations !== undefined) {
-      epub.locations.generate().then(result => {
-        let locations = epub.locations;
-        // console.log("sfhafshfhafh");
-        dispatch(handleLocations(locations));
-      });
+      epub.locations
+        .generate()
+        .then((result) => {
+          let locations = epub.locations;
+          // console.log("sfhafshfhafh");
+          dispatch(handleLocations(locations));
+        })
+        .catch((err) => {
+          console.log("Error occurs");
+        });
     }
   };
 }

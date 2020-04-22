@@ -8,7 +8,7 @@ class DigestList extends Component {
     this.state = {};
   }
   //根据bookkey获取
-  handleBookName = bookKey => {
+  handleBookName = (bookKey) => {
     let { books } = this.props;
     let bookName = "";
     for (let i = 0; i < this.props.books.length; i++) {
@@ -49,11 +49,11 @@ class DigestList extends Component {
     }
     //得到以日期为键，书摘为值的对象
     let digestObj = {};
-    dateArr.forEach(date => {
+    dateArr.forEach((date) => {
       digestObj["" + date.year + date.month + date.day] = [];
     });
-    digestArr.forEach(digest => {
-      dateArr.forEach(date => {
+    digestArr.forEach((digest) => {
+      dateArr.forEach((date) => {
         if (
           date.year === digest.date.year &&
           date.month === digest.date.month &&
@@ -65,15 +65,14 @@ class DigestList extends Component {
       // if(item.date.year===)
     });
     // console.log(digestObj, "agasgbsg");
-    const renderDigestListItem = date => {
+    const renderDigestListItem = (date) => {
       return digestObj[date].map((item, index) => {
         return (
-          <li className="digest-list-item" key={index}>
+          <li className="digest-list-item" key={item.text}>
             <div className="digest-list-item-digest">
               <div className="digest-list-item-text-parent">
                 <div className="digest-list-item-text">{item.text}</div>
               </div>
-
               <div className="digest-list-item-citation">
                 <div className="digest-list-item-title">来自《</div>
                 <div className="digest-list-item-chapter digest-list-item-title">
@@ -106,14 +105,14 @@ class DigestList extends Component {
     );
   }
 }
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     digests: state.reader.digests,
     currentEpub: state.book.currentEpub,
     currentBook: state.book.currentBook,
     bookmarks: state.reader.bookmarks,
     chapters: state.reader.chapters,
-    books: state.manager.books
+    books: state.manager.books,
   };
 };
 const actionCreator = {};
