@@ -7,11 +7,11 @@ class NoteList extends Component {
     super(props);
     this.state = {
       currentDate: null,
-      currentIndex: null
+      currentIndex: null,
     };
   }
   //获取图书名
-  handleBookName = bookKey => {
+  handleBookName = (bookKey) => {
     let { books } = this.props;
     let bookName = "";
     for (let i = 0; i < this.props.books.length; i++) {
@@ -65,11 +65,11 @@ class NoteList extends Component {
     let noteObj = {};
     // console.log(dateArr);
 
-    dateArr.forEach(date => {
+    dateArr.forEach((date) => {
       noteObj["" + date.year + date.month + date.day] = [];
     });
-    noteArr.forEach(note => {
-      dateArr.forEach(date => {
+    noteArr.forEach((note) => {
+      dateArr.forEach((date) => {
         if (
           date.year === note.date.year &&
           date.month === note.date.month &&
@@ -81,7 +81,7 @@ class NoteList extends Component {
       // if(item.date.year===)
     });
     // console.log(noteObj, "agasgbsg");
-    const renderNoteListItem = date => {
+    const renderNoteListItem = (date) => {
       return noteObj[date].map((item, index) => {
         // console.log(item, "item");
         // console.log(height, "height");
@@ -91,7 +91,7 @@ class NoteList extends Component {
         return (
           <li
             className="note-list-item"
-            key={index}
+            key={item.notes}
             style={isCurrent ? { height: "200px" } : null}
           >
             <div className="note-list-item-note-parent">
@@ -157,14 +157,14 @@ class NoteList extends Component {
     );
   }
 }
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     notes: state.reader.notes,
     currentEpub: state.book.currentEpub,
     currentBook: state.book.currentBook,
     bookmarks: state.reader.bookmarks,
     chapters: state.reader.chapters,
-    books: state.manager.books
+    books: state.manager.books,
   };
 };
 const actionCreator = {

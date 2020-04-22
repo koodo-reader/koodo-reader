@@ -29,7 +29,7 @@ class WelcomePage extends Component {
                 ? "welcome-message-page welcome-page-animation"
                 : "welcome-message-page"
             }
-            key={index}
+            key={item.sub}
           >
             <div className="welcome-message-main">
               <div>{item.main}</div>

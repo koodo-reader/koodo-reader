@@ -5,7 +5,7 @@ import Bookmark from "../../model/Bookmark";
 import { connect } from "react-redux";
 import {
   handleBookmarks,
-  handleFetchBookmarks
+  handleFetchBookmarks,
 } from "../../redux/reader.redux";
 import { handleMessageBox, handleMessage } from "../../redux/manager.redux.js";
 import { handleReadingState } from "../../redux/book.redux";
@@ -15,8 +15,9 @@ class OperationPanel extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isFullScreen: false, // 是否进入全屏模式
-      isBookmark: false // 是否进入全屏模式
+      isFullScreen:
+        localStorage.getItem("isFullScreen") === "yes" ? true : false, // 是否进入全屏模式
+      isBookmark: false, // 是否添加书签
     };
   }
 
@@ -41,6 +42,7 @@ class OperationPanel extends Component {
     }
 
     this.setState({ isFullScreen: true });
+    localStorage.setItem("isFullScreen", "yes");
   }
 
   // 退出全屏模式
@@ -56,6 +58,7 @@ class OperationPanel extends Component {
     }
 
     this.setState({ isFullScreen: false });
+    localStorage.setItem("isFullScreen", "no");
   }
   handleAddBookmark() {
     let bookKey = this.props.currentBook.key;
@@ -66,32 +69,24 @@ class OperationPanel extends Component {
         : RecordLocation.getCfi(this.props.currentBook.key).cfi;
     let firstVisibleNode = epub.renderer.findFirstVisible();
     let label = firstVisibleNode ? firstVisibleNode.textContent : "";
-    // console.log(label, "asfhfhafh");
     label = label && label.trim();
     label = label || cfi;
     let percentage =
       RecordLocation.getCfi(this.props.currentBook.key) === null
         ? 0
         : RecordLocation.getCfi(this.props.currentBook.key).percentage;
-    // console.log(this.props.chapters, this.props.currentEpub, "dhdgadgjg");
-    let index = this.props.chapters.findIndex(item => {
+    let index = this.props.chapters.findIndex((item) => {
       return item.spinePos > this.props.currentEpub.spinePos;
     });
-    // console.log(index, "sahathth");
     let chapter = "未知章节";
     if (this.props.chapters[index] !== undefined) {
       chapter = this.props.chapters[index].label.trim(" ");
     }
-    // console.log(label, "ahahagh");
     let bookmark = new Bookmark(bookKey, cfi, label, percentage, chapter);
-    // console.log(bookmark, "bookmark");
     let bookmarkArr = this.props.bookmarks ? this.props.bookmarks : [];
-    // console.log(this.props.bookmarks, "dhdhdfah");
     bookmarkArr.push(bookmark);
-    // console.log(bookmarkArr, "bookmarkArr");
     this.props.handleBookmarks(bookmarkArr);
     localforage.setItem("bookmarks", bookmarkArr);
-    // this.props.toggleMessage(true);
     this.setState({ isBookmark: true });
     this.props.handleMessage("添加成功");
     this.props.handleMessageBox(true);
@@ -107,7 +102,7 @@ class OperationPanel extends Component {
   }
 
   render() {
-    // console.log(this.props.state, "shafhahah");
+    console.log(this.state.isFullScreen, "isfull");
     return (
       <div className="book-operation-panel">
         <div
@@ -149,13 +144,13 @@ class OperationPanel extends Component {
     );
   }
 }
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     state: state,
     currentEpub: state.book.currentEpub,
     currentBook: state.book.currentBook,
     bookmarks: state.reader.bookmarks,
-    chapters: state.reader.chapters
+    chapters: state.reader.chapters,
   };
 };
 const actionCreator = {
@@ -163,7 +158,7 @@ const actionCreator = {
   handleReadingState,
   handleFetchBookmarks,
   handleMessageBox,
-  handleMessage
+  handleMessage,
 };
 OperationPanel = connect(mapStateToProps, actionCreator)(OperationPanel);
 export default OperationPanel;

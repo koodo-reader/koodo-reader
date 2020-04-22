@@ -9,12 +9,12 @@ class RestoreUtil {
     books.forEach((item, index) => {
       zip
         .loadAsync(file)
-        .then(content => {
+        .then((content) => {
           // console.log(`epub/${item.name}.epub`);
           // you now have every files contained in the loaded zip
           return content.files[`epub/${item.name}.epub`].async("arraybuffer"); // a promise of "Hello World\n"
         })
-        .then(book => {
+        .then((book) => {
           item.content = book;
         })
         .then(() => {
@@ -26,6 +26,9 @@ class RestoreUtil {
               handleFinish();
             });
           }
+        })
+        .catch((err) => {
+          console.log("Error occurs");
         });
     });
   };
@@ -45,38 +48,43 @@ class RestoreUtil {
       "readingTime",
       "recentBooks",
       "shelfList",
-      "recordLocation"
+      "recordLocation",
     ];
     // let zip = new JSZip();
     let zip = new JSZip();
     // more files !
-    dataArr.forEach(item => {
+    dataArr.forEach((item) => {
       zip
         .loadAsync(file)
-        .then(content => {
+        .then((content) => {
           // you now have every files contained in the loaded zip
           return content.files[`data/${item}.json`].async("text"); // a promise of "Hello World\n"
         })
-        .then(text => {
-          if (
-            item === "notes" ||
-            item === "books" ||
-            item === "digests" ||
-            item === "bookmarks" ||
-            item === "highlighters"
-          ) {
-            localforage.setItem(item, JSON.parse(text));
-          } else {
-            localStorage.setItem(item, text);
+        .then((text) => {
+          if (text) {
+            if (
+              item === "notes" ||
+              item === "books" ||
+              item === "digests" ||
+              item === "bookmarks" ||
+              item === "highlighters"
+            ) {
+              localforage.setItem(item, JSON.parse(text));
+            } else {
+              localStorage.setItem(item, text);
+            }
           }
         })
         .then(() => {
           // console.log(item, "item");
           if (item === "books") {
-            localforage.getItem("books").then(value => {
+            localforage.getItem("books").then((value) => {
               this.importBooks(value, file, handleFinish);
             });
           }
+        })
+        .catch(() => {
+          console.log("error happen");
         });
     });
   };

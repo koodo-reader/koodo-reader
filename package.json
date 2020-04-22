@@ -30,7 +30,7 @@
   "homepage": "./",
   "build": {
     "appId": "koodoReader",
-    "productName": "可道阅读器",
+    "productName": "koodo Reader",
     "copyright": "Copyright © 2020 ${author}",
     "files": [
       "build/**/*",

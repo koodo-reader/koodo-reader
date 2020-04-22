@@ -10,14 +10,14 @@ import ShelfUtil from "../../utils/shelfUtil";
 import SortUtil from "../../utils/sortUtil";
 class BookList extends Component {
   //根据localstorage列表的数据，得到最近阅读的图书
-  handleRecent = items => {
+  handleRecent = (items) => {
     let recentArr = [];
     for (let i in RecordRecent.getRecent()) {
       recentArr.push(RecordRecent.getRecent()[i].bookKey);
     }
     // console.log(items);
     // RecordRecent.getRecent();
-    let recentItems = items.filter(item => {
+    let recentItems = items.filter((item) => {
       // console.log(item.key, recentArr.indexOf(item.key));
 
       return recentArr.indexOf(item.key) > -1;
@@ -36,7 +36,7 @@ class BookList extends Component {
     let currentShelfList = ShelfUtil.getShelf()[currentShelfTitle];
     // console.log(currentShelfList);
     //根据图书列表获取到图书数据
-    let shelfItems = items.filter(item => {
+    let shelfItems = items.filter((item) => {
       // console.log(item.key, currentShelfList.indexOf(item.key));
 
       return currentShelfList.indexOf(item.key) > -1;
@@ -46,7 +46,7 @@ class BookList extends Component {
     return shelfItems;
   }
   //控制卡片模式和列表模式的切换
-  handleChange = mode => {
+  handleChange = (mode) => {
     // this.setState({ isList: mode });
     localStorage.setItem("isList", mode);
     this.props.handleFetchList();
@@ -56,7 +56,7 @@ class BookList extends Component {
     // console.log(arr, "arr");
     let itemArr = [];
 
-    arr.forEach(item => {
+    arr.forEach((item) => {
       itemArr.push(items[item]);
     });
     return itemArr;
@@ -98,10 +98,6 @@ class BookList extends Component {
             )
           : this.props.covers;
       return books.map((item, index) => {
-        // console.log(covers, "djhdhdfh");
-        // console.log(this.props.isList, "sdgasf");
-        // let mode = this.props.isList;
-        // console.log(mode);
         return this.props.isList === "list" ? (
           <BookItem
             key={item.key}
@@ -155,7 +151,7 @@ class BookList extends Component {
     );
   }
 }
-const mappropsToProps = props => {
+const mappropsToProps = (props) => {
   return {
     books: props.manager.books,
     covers: props.manager.covers,
@@ -166,7 +162,7 @@ const mappropsToProps = props => {
     isSearch: props.manager.isSearch,
     isSort: props.manager.isSort,
     isList: props.manager.isList,
-    sortCode: props.manager.sortCode
+    sortCode: props.manager.sortCode,
   };
 };
 const actionCreator = { handleFetchList };

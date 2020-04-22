@@ -150,14 +150,19 @@ export function handleFetchBooks() {
           let coverArr = [];
           // async function getCovers(epubArr) {
           epubArr.forEach(async (item, index) => {
-            await item.coverUrl().then(url => {
-              // console.log(url, "urlsagasf");
-              coverArr.push({ key: bookArr[index].key, url: url });
-              if (coverArr.length === bookArr.length) {
-                // console.log(coverArr, "coverArr");
-                dispatch(handleCovers(coverArr));
-              }
-            });
+            await item
+              .coverUrl()
+              .then((url) => {
+                // console.log(url, "urlsagasf");
+                coverArr.push({ key: bookArr[index].key, url: url });
+                if (coverArr.length === bookArr.length) {
+                  // console.log(coverArr, "coverArr");
+                  dispatch(handleCovers(coverArr));
+                }
+              })
+              .catch((err) => {
+                console.log("Error occurs");
+              });;
           });
         });
       }
