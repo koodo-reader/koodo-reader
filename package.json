@@ -1,11 +1,11 @@
 {
   "name": "koodo-reader",
   "main": "main.js",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "A cross-platform open source Epub reader ",
   "author": {
     "name": "App by Troye",
-    "email": "troyeguo@102410.xyz"
+    "email": "guo362429@gmail.com"
   },
   "repository": "https://github.com/troyeguo/koodo-desktop",
   "private": true,
@@ -22,7 +22,7 @@
     "dev": "concurrently \"cross-env BROWSER=none npm start\" \"wait-on http://localhost:3000/ && electron .\"",
     "pack": "electron-builder --dir",
     "dist": "electron-builder",
-    "release": "cross-env GH_TOKEN=GH_TOKEN electron-builder ",
+    "release": "cross-env GH_TOKEN=fa02fd7a04baa08eccb23977338eddddd6f3ceff electron-builder ",
     "prerelease": "npm run build",
     "prepack": "npm run build",
     "predist": "npm run build"
