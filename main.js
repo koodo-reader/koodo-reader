@@ -10,12 +10,12 @@ app.on("ready", () => {
     dialog
       .showMessageBox({
         title: "更新提示",
-        message: "可道阅读器发布新版本啦！",
+        message: "koodo Reader发布新版本啦！",
         buttons: ["前往下载", "稍后提醒"],
         defaultId: 0, // bound to buttons array
-        cancelId: 1 // bound to buttons array
+        cancelId: 1, // bound to buttons array
       })
-      .then(result => {
+      .then((result) => {
         if (result.response === 0) {
           // bound to buttons array
           shell.openExternal(
@@ -25,15 +25,19 @@ app.on("ready", () => {
           // bound to buttons array
           console.log("Cancel button clicked.");
         }
+      })
+      .catch((err) => {
+        console.log("Error occurs");
       });
+
     console.log("after message box");
   });
   mainWindow = new BrowserWindow({
     width: 1024,
     height: 660,
     webPreferences: {
-      nodeIntegration: false
-    }
+      nodeIntegration: false,
+    },
   });
   if (!isDev) {
     const { Menu } = require("electron");

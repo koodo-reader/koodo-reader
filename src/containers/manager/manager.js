@@ -22,13 +22,13 @@ import {
   handleFetchSortCode,
   handleFetchList,
   handleList,
-  handleMessageBox
+  handleMessageBox,
 } from "../../redux/manager.redux";
 import {
   handleFetchNotes,
   handleFetchDigests,
   handleFetchBookmarks,
-  handleFetchHighlighters
+  handleFetchHighlighters,
 } from "../../redux/reader.redux";
 import "./manager.css";
 
@@ -38,7 +38,7 @@ class Manager extends Component {
     this.state = {
       totalBooks: localStorage.getItem("totalBooks") || 0,
       isFirst: this.props.isFirst,
-      recentBooks: Object.keys(RecordRecent.getRecent()).length
+      recentBooks: Object.keys(RecordRecent.getRecent()).length,
     };
   }
   //从indexdb里读取书籍
@@ -54,7 +54,7 @@ class Manager extends Component {
 
   UNSAFE_componentWillReceiveProps(nextProps) {
     this.setState({
-      totalBooks: this.props.books === null ? 0 : this.props.books.length
+      totalBooks: this.props.books === null ? 0 : this.props.books.length,
     });
     localStorage.setItem("totalBooks", this.state.totalBooks);
 
@@ -77,16 +77,11 @@ class Manager extends Component {
     localStorage.setItem("isFirst", "no");
   };
   render() {
-    // console.log(this.state.isFirst, "first");
     let { mode, notes, digests, bookmarks, covers } = this.props;
     let { totalBooks, recentBooks } = this.state;
-    // console.log(totalBooks, "toatl");
     let shelfTitle = Object.keys(ShelfUtil.getShelf());
-    // console.log(shelfTitle, index, "shelfTitle");
     let currentShelfTitle = shelfTitle[this.props.shelfIndex + 1];
     let shelfBooks = ShelfUtil.getShelf()[currentShelfTitle].length;
-    // console.log(this.state.isMessage, "message");
-    // console.log(shelfBooks, "shelf");
     return (
       <div className="manager">
         <Sidebar />
@@ -110,6 +105,7 @@ class Manager extends Component {
             }}
           />
         ) : null}
+        //根据是否添加图书，路由地址等判断body的显示内容
         {totalBooks === 0 ? (
           <EmptyPage />
         ) : covers === null &&
@@ -133,7 +129,7 @@ class Manager extends Component {
     );
   }
 }
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     books: state.manager.books,
     covers: state.manager.covers,
@@ -149,7 +145,7 @@ const mapStateToProps = state => {
     isSort: state.manager.isSort,
     isSortDisplay: state.manager.isSortDisplay,
     isMessage: state.manager.isMessage,
-    isBackup: state.backupPage.isBackup
+    isBackup: state.backupPage.isBackup,
   };
 };
 const actionCreator = {
@@ -161,7 +157,7 @@ const actionCreator = {
   handleFetchSortCode,
   handleFetchList,
   handleList,
-  handleMessageBox
+  handleMessageBox,
 };
 Manager = connect(mapStateToProps, actionCreator)(Manager);
 export default Manager;

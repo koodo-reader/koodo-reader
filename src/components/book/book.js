@@ -7,7 +7,7 @@ import {
   handleAddDialog,
   handleReadingState,
   handleReadingBook,
-  handleReadingEpub
+  handleReadingEpub,
 } from "../../redux/book.redux";
 import RecentBooks from "../../utils/recordRecent";
 import "./book.css";
@@ -22,7 +22,7 @@ class Book extends Component {
   UNSAFE_componentWillMount() {
     this.epub = window.ePub({
       bookPath: this.props.book.content,
-      restore: false
+      restore: false,
     });
   }
   handleOpenBook() {
@@ -44,7 +44,7 @@ class Book extends Component {
     this.props.handleReadingBook(this.props.book);
   };
   //控制按钮的弹出
-  handleConfig = mode => {
+  handleConfig = (mode) => {
     // console.log(mode, "mode");
     this.setState({ isOpenConfig: mode });
   };
@@ -94,6 +94,7 @@ class Book extends Component {
               onClick={() => {
                 this.handleEditBook();
               }}
+              style={{ fontSize: "15px" }}
             ></span>
           </div>
         ) : null}
@@ -101,7 +102,7 @@ class Book extends Component {
     );
   }
 }
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return { isReading: state.book.isReading };
 };
 const actionCreator = {
@@ -110,7 +111,7 @@ const actionCreator = {
   handleReadingEpub,
   handleEditDialog,
   handleDeleteDialog,
-  handleAddDialog
+  handleAddDialog,
 };
 Book = connect(mapStateToProps, actionCreator)(Book);
 export default Book;

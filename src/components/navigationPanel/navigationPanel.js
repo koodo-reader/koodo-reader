@@ -14,7 +14,7 @@ class NavigationPanel extends Component {
       chapters: [],
       cover: "",
       searchList: null,
-      time: ReadingTime.getTime(this.props.currentBook.key)
+      time: ReadingTime.getTime(this.props.currentBook.key),
     };
     this.timer = null;
   }
@@ -25,10 +25,15 @@ class NavigationPanel extends Component {
       this.setState({ time });
     }, 1000);
     // console.log(this.props.currentBook.cover, "fhadhgdah");
-    this.props.currentEpub.coverUrl().then(url => {
-      // console.log(url, "url");
-      this.setState({ cover: url });
-    });
+    this.props.currentEpub
+      .coverUrl()
+      .then((url) => {
+        // console.log(url, "url");
+        this.setState({ cover: url });
+      })
+      .catch((err) => {
+        console.log("Error occurs");
+      });
     this.props.handleFetchBookmarks();
   }
   componentWillUnmount() {
@@ -36,7 +41,7 @@ class NavigationPanel extends Component {
     ReadingTime.setTime(this.props.currentBook.key, this.state.time);
   }
 
-  handleClick = state => {
+  handleClick = (state) => {
     this.setState({ isContentShow: state });
   };
 
@@ -103,11 +108,11 @@ class NavigationPanel extends Component {
     );
   }
 }
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     currentEpub: state.book.currentEpub,
     currentBook: state.book.currentBook,
-    bookmarks: state.reader.bookmarks
+    bookmarks: state.reader.bookmarks,
   };
 };
 const actionCreator = { handleFetchBookmarks };
