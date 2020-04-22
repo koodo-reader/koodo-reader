@@ -21,7 +21,7 @@
 
 👏 欢迎使用 **Koodo Reader** ！
 
-✍️ **Koodo Reader** Koodo Reader 基于 electron 和 React 开发，支持桌面版和网页版
+✍️ **Koodo Reader** 基于 electron 和 React 开发，支持桌面版和网页版
 
 ## 特色 👇
 
