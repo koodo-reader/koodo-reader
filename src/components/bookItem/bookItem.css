@@ -1,7 +1,7 @@
 .book-list-item-container {
   width: 100%;
   display: flex;
-  justify-content: space-around;
+  justify-content: flex-start;
   margin: 18px;
 }
 .book-item-list-cover {
@@ -15,7 +15,7 @@
 .book-item-list-title,
 .book-item-list-author {
   height: 30px;
-  width: 200px;
+  width: 250px;
   font-size: 15px;
   color: rgba(75, 75, 75, 1);
   opacity: 1;
@@ -31,7 +31,7 @@
 .book-item-list-percentage,
 .book-item-list-config {
   height: 30px;
-  width: 80px;
+  width: 100px;
   font-size: 15px;
   color: rgba(75, 75, 75, 1);
   opacity: 1;
@@ -43,12 +43,12 @@
   cursor: pointer;
 }
 .list-icon {
-  margin: 7px;
-  font-size: 16px;
+  margin: 15px;
+  font-size: 20px;
 }
 .book-item-list-percentage {
   width: 50px;
 }
 .icon-edit {
-  font-size: 15px;
+  font-size: 18px;
 }

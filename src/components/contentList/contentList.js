@@ -9,10 +9,15 @@ class ContentList extends Component {
     this.handleJump = this.handleJump.bind(this);
   }
   componentWillMount() {
-    this.props.currentEpub.getToc().then(chapters => {
-      this.setState({ chapters });
-      // console.log(this.state.chapters);
-    });
+    this.props.currentEpub
+      .getToc()
+      .then((chapters) => {
+        this.setState({ chapters });
+        // console.log(this.state.chapters);
+      })
+      .catch((err) => {
+        console.log("Error occurs");
+      });
   }
   handleJump(event) {
     let href = event.target.getAttribute("href");
@@ -64,7 +69,7 @@ class ContentList extends Component {
     );
   }
 }
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return { currentEpub: state.book.currentEpub };
 };
 const actionCreator = {};

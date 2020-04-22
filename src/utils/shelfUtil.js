@@ -3,7 +3,7 @@ const defaultShelf = {
   新建书架: null,
   工作学习: [],
   生活百科: [],
-  休闲娱乐: []
+  休闲娱乐: [],
 };
 class ShelfUtil {
   static setShelf(shelfTitle, bookKey) {
@@ -42,7 +42,7 @@ class ShelfUtil {
     // let shelfValues = Object.values(obj);
     let shelfTitle = Object.keys(obj);
     shelfTitle.splice(0, 1);
-    shelfTitle.forEach(item => {
+    shelfTitle.forEach((item) => {
       // console.log(obj[item], "item");
       let index = obj[item].indexOf(bookKey);
       if (index > -1) {

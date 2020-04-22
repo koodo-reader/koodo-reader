@@ -7,7 +7,7 @@ import localforage from "localforage";
 import {
   handleMessageBox,
   handleMessage,
-  handleFetchBooks
+  handleFetchBooks,
 } from "../../redux/manager.redux";
 import SparkMD5 from "spark-md5";
 // @connect(state => state.manager)
@@ -15,12 +15,12 @@ class ImportLocal extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isRepeat: false
+      isRepeat: false,
       // md5: null
     };
   }
   //向indexdb中添加书籍
-  handleAddBook = book => {
+  handleAddBook = (book) => {
     let bookArr = this.props.books;
     // console.log(bookArr, "bookArr");
     if (bookArr == null) {
@@ -36,7 +36,7 @@ class ImportLocal extends Component {
     this.props.handleMessageBox(true);
   };
   //获取书籍md5
-  doIncrementalTest = file => {
+  doIncrementalTest = (file) => {
     //这里假设直接将文件选择框的dom引用传入
 
     //这里需要用到File的slice( )方法，以下是兼容写法
@@ -50,7 +50,7 @@ class ImportLocal extends Component {
       spark = new SparkMD5(), //创建SparkMD5的实例
       fileReader = new FileReader();
 
-    fileReader.onload = e => {
+    fileReader.onload = (e) => {
       // console("Read chunk number (currentChunk + 1) of  chunks ");
 
       spark.appendBinary(e.target.result); // append array buffer
@@ -80,7 +80,7 @@ class ImportLocal extends Component {
   handleBook = (file, md5) => {
     //md5重复不导入
     if (this.props.books !== null) {
-      this.props.books.forEach(item => {
+      this.props.books.forEach((item) => {
         if (item.md5 === md5) {
           this.setState({ isRepeat: true });
           this.props.handleMessage("文件重复");
@@ -93,24 +93,29 @@ class ImportLocal extends Component {
       let reader = new FileReader();
       reader.readAsArrayBuffer(file);
 
-      reader.onload = e => {
+      reader.onload = (e) => {
         // console.log(window.ePub);
         const epub = window.ePub({ bookPath: e.target.result });
-        epub.getMetadata().then(metadata => {
-          let name, author, content, description, book;
-          [name, author, content, description] = [
-            metadata.bookTitle,
-            metadata.creator,
-            metadata.description,
-            e.target.result
-          ];
-          book = new BookModel(name, author, content, description, md5);
-          this.handleAddBook(book);
-        });
+        epub
+          .getMetadata()
+          .then((metadata) => {
+            let name, author, content, description, book;
+            [name, author, content, description] = [
+              metadata.bookTitle,
+              metadata.creator,
+              metadata.description,
+              e.target.result,
+            ];
+            book = new BookModel(name, author, content, description, md5);
+            this.handleAddBook(book);
+          })
+          .catch((err) => {
+            console.log("Error occurs");
+          });
       };
     }
   };
-  handleChange = event => {
+  handleChange = (event) => {
     event.preventDefault();
     this.setState({ isRepeat: false });
     let file = event.target.files[0];
@@ -131,7 +136,7 @@ class ImportLocal extends Component {
           className="import-book-box"
           name="file"
           multiple="multiple"
-          onChange={event => {
+          onChange={(event) => {
             this.handleChange(event);
           }}
         />
@@ -139,15 +144,15 @@ class ImportLocal extends Component {
     );
   }
 }
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
-    books: state.manager.books
+    books: state.manager.books,
   };
 };
 const actionCreator = {
   handleMessageBox,
   handleMessage,
-  handleFetchBooks
+  handleFetchBooks,
 };
 ImportLocal = connect(mapStateToProps, actionCreator)(ImportLocal);
 export default ImportLocal;

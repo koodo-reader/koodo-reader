@@ -26,7 +26,7 @@ class AddDialog extends Component {
     this.props.handleMessageBox(true);
   };
   //如果是添加到已存在的书架就diable新建图书的input框
-  handleChange = event => {
+  handleChange = (event) => {
     let shelfTitle = event.target.value;
     if (shelfTitle === "新建书架") {
       this.setState({ isNew: true });
@@ -37,21 +37,18 @@ class AddDialog extends Component {
       this.setState({ isNew: false });
       document
         .querySelector(".add-dialog-new-shelf-box")
-        .setAttribute("disabled", "diabled");
+        .setAttribute("disabled", "disabled");
     }
-
-    // console.log(shelfTitle, this.state.isNew);
   };
   render() {
     const renderShelfList = () => {
       let shelfList = ShelfUtil.getShelf();
       let shelfTitle = Object.keys(shelfList);
-      // console.log(shelfTitle);
-      return shelfTitle.map((item, index) => {
+      return shelfTitle.map((item) => {
         return (
           <option
             value={item}
-            key={index}
+            key={item}
             className="add-dialog-shelf-list-option"
           >
             {item}
@@ -66,7 +63,7 @@ class AddDialog extends Component {
           <div className="add-dialog-shelf-list-text">选择</div>
           <select
             className="add-dialog-shelf-list-box"
-            onChange={event => {
+            onChange={(event) => {
               this.handleChange(event);
             }}
           >
@@ -97,7 +94,7 @@ class AddDialog extends Component {
     );
   }
 }
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     books: state.manager.books,
     isOpenDeleteDialog: state.book.isOpenDeleteDialog,
@@ -105,13 +102,13 @@ const mapStateToProps = state => {
     bookmarks: state.reader.bookmarks,
     notes: state.reader.notes,
     digests: state.reader.digests,
-    highlighters: state.reader.highlighters
+    highlighters: state.reader.highlighters,
   };
 };
 const actionCreator = {
   handleAddDialog,
   handleMessageBox,
-  handleMessage
+  handleMessage,
 };
 AddDialog = connect(mapStateToProps, actionCreator)(AddDialog);
 export default AddDialog;

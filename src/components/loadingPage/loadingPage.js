@@ -12,11 +12,11 @@ class LoadingPage extends Component {
     const renderLoadingPage = () => {
       let arr = [];
       for (let i = 0; i < localStorage.getItem("totalBooks"); i++) {
-        arr.push({});
+        arr.push(i);
       }
       return arr.map((item, index) => {
         return (
-          <div className="loading-page-book" key={index}>
+          <div className="loading-page-book" key={item}>
             <div
               className="loading-page-cover"
               style={{ opacity: `${(index % 7) * 0.2 + 0.2}` }}
@@ -32,9 +32,9 @@ class LoadingPage extends Component {
     );
   }
 }
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
-    books: state.manager.books
+    books: state.manager.books,
   };
 };
 const actionCreator = {};

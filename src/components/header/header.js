@@ -11,7 +11,7 @@ import {
   handleSortCode,
   handleSortDisplay,
   handleMessageBox,
-  handleMessage
+  handleMessage,
 } from "../../redux/manager.redux";
 import { handleBackup } from "../../redux/backupPage.redux";
 // @connect(state => state.manager)
@@ -19,7 +19,8 @@ class Header extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isOnlyLocal: false
+      isOnlyLocal: false,
+      isDownload: localStorage.getItem("isDownload") === "yes" ? true : false,
     };
   }
 
@@ -40,6 +41,10 @@ class Header extends Component {
     this.props.handleMessage("下载客户端体验完整功能");
     this.props.handleMessageBox(true);
   };
+  handleDownload = () => {
+    this.setState({ isDownload: true });
+    localStorage.setItem("isDownload", "yes");
+  };
   render() {
     // const classes = this.props.classes;
 
@@ -55,7 +60,7 @@ class Header extends Component {
           <span className="header-sort-text">排序</span>
           <span className="icon-sort header-sort-icon"></span>
         </div>
-        {this.props.isSort}
+
         {
           // <div className="only-local-container">
           //   <span className="only-local-text">只显示本地图书</span>
@@ -73,8 +78,18 @@ class Header extends Component {
           // </div>
         }
         <About />
-        <ImportLocal />
 
+        <a href="/assets/demo.epub" target="_blank" rel="noopener noreferrer">
+          <div
+            className="download-demo-book"
+            onClick={this.handleDownload.bind(this)}
+            style={this.state.isDownload ? { opacity: 0 } : {}}
+          >
+            下载示例图书
+          </div>
+        </a>
+
+        <ImportLocal />
         <div
           className="import-from-cloud"
           onClick={() => {
@@ -87,11 +102,11 @@ class Header extends Component {
     );
   }
 }
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     books: state.manager.books,
     isSearch: state.manager.isSearch,
-    isSortDisplay: state.manager.isSortDisplay
+    isSortDisplay: state.manager.isSortDisplay,
   };
 };
 const actionCreator = {
@@ -101,7 +116,7 @@ const actionCreator = {
   handleSortDisplay,
   handleMessageBox,
   handleMessage,
-  handleBackup
+  handleBackup,
 };
 Header = connect(mapStateToProps, actionCreator)(Header);
 export default Header;

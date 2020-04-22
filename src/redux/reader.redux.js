@@ -6,49 +6,49 @@ const initState = {
   locations: null,
   chapters: null,
   highlighters: null,
-  isSingle: localStorage.getItem("isSingle") || "double"
+  isSingle: localStorage.getItem("isSingle") || "double",
 };
 export function reader(state = initState, action) {
   switch (action.type) {
     case "HANDLE_BOOKMARKS":
       return {
         ...state,
-        bookmarks: action.payload
+        bookmarks: action.payload,
       };
     case "HANDLE_NOTES":
       return {
         ...state,
-        notes: action.payload
+        notes: action.payload,
       };
     case "HANDLE_DIGESTS":
       return {
         ...state,
-        digests: action.payload
+        digests: action.payload,
       };
     case "HANDLE_LOCATIONS":
       return {
         ...state,
-        locations: action.payload
+        locations: action.payload,
       };
     case "HANDLE_SECTION":
       return {
         ...state,
-        section: action.payload
+        section: action.payload,
       };
     case "HANDLE_SINGLE":
       return {
         ...state,
-        isSingle: action.payload
+        isSingle: action.payload,
       };
     case "HANDLE_CHAPTERS":
       return {
         ...state,
-        chapters: action.payload
+        chapters: action.payload,
       };
     case "HANDLE_HIGHLIGHTERS":
       return {
         ...state,
-        highlighters: action.payload
+        highlighters: action.payload,
       };
     default:
       return state;
@@ -80,7 +80,7 @@ export function handleHighlighters(highlighters) {
   return { type: "HANDLE_HIGHLIGHTERS", payload: highlighters };
 }
 export function handleFetchNotes() {
-  return dispatch => {
+  return (dispatch) => {
     localforage.getItem("notes", (err, value) => {
       let noteArr;
       if (value === null || value === []) {
@@ -95,17 +95,22 @@ export function handleFetchNotes() {
 }
 
 export function handleFetchChapters(epub) {
-  return dispatch => {
+  return (dispatch) => {
     // console.log(value, "dgaskgskgr");
-    epub.getToc().then(chapters => {
-      // console.log(chapters, "asfhdgh");
-      dispatch(handleChapters(chapters));
-      // console.log(this.state.chapters);
-    });
+    epub
+      .getToc()
+      .then((chapters) => {
+        // console.log(chapters, "asfhdgh");
+        dispatch(handleChapters(chapters));
+        // console.log(this.state.chapters);
+      })
+      .catch((err) => {
+        console.log("Error occurs");
+      });
   };
 }
 export function handleFetchBookmarks() {
-  return dispatch => {
+  return (dispatch) => {
     localforage.getItem("bookmarks", (err, value) => {
       let bookmarkArr;
       if (value === null || value === []) {
@@ -119,7 +124,7 @@ export function handleFetchBookmarks() {
   };
 }
 export function handleFetchDigests() {
-  return dispatch => {
+  return (dispatch) => {
     localforage.getItem("digests", (err, value) => {
       let digestArr;
       if (value === null || value === []) {
@@ -133,7 +138,7 @@ export function handleFetchDigests() {
   };
 }
 export function handleFetchHighlighters() {
-  return dispatch => {
+  return (dispatch) => {
     localforage.getItem("highlighters", (err, value) => {
       let highlighterArr;
       if (value === null || value === []) {

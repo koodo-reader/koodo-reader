@@ -13,7 +13,7 @@ class Sidebar extends Component {
         this.props.mode
       ),
       isCollapse: true,
-      shelfIndex: null
+      shelfIndex: null,
     };
   }
   handleSidebar = (mode, index) => {
@@ -27,7 +27,7 @@ class Sidebar extends Component {
   handleShelf = () => {
     this.setState({ isCollapse: !this.state.isCollapse });
   };
-  handleShelfItem = index => {
+  handleShelfItem = (index) => {
     // console.log(index);
     this.setState({ shelfIndex: index });
     this.props.handleShelfIndex(index);
@@ -81,7 +81,7 @@ class Sidebar extends Component {
       return shelfList.map((item, index) => {
         return (
           <li
-            key={index}
+            key={item}
             className={
               this.state.shelfIndex === index
                 ? "shelf-list-item active-shelf "
@@ -139,7 +139,7 @@ class Sidebar extends Component {
     );
   }
 }
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return { mode: state.sidebar.mode };
 };
 const actionCreator = { handleMode, handleShelfIndex };
