@@ -2,17 +2,17 @@
   height: 50px;
 } */
 .paragraph-character-setting {
-  margin: 25px 22px;
+  margin: 45px 22px;
   width: calc(100% - 44px);
 }
 .general-setting-title {
   font-size: 16px;
-  font-weight: 500;
+  font-weight: bold;
   color: rgba(75, 75, 75, 1);
-  margin: 18px 0px 7px 0px;
+  margin: 18px 0px 17px 0px;
 }
 .general-setting-dropdown {
-  width: 190px;
+  width: 220px;
   height: 30px;
   margin-right: 5px;
   background: rgba(255, 255, 255, 1);
@@ -23,7 +23,7 @@
   text-align: center;
   cursor: pointer;
   position: relative;
-  left: 25px;
+  left: 15px;
 }
 .general-setting-option {
   font-size: 16px;
