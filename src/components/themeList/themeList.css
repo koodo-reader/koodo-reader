@@ -1,13 +1,18 @@
-.background-color-text {
+.background-color-setting {
   width: calc(100% - 44px);
+  margin: 30px 22px 20px;
+}
+.background-color-text {
   height: 20px;
+  width: 100%;
   font-size: 16px;
   color: rgba(75, 75, 75, 1);
-  margin: 6px 22px;
+  margin: 6px 0px;
+  font-weight: bold;
 }
 .background-color-list {
-  margin: 6px 22px;
-  width: calc(100% - 44px);
+  margin: 6px 0px;
+  width: 110%;
   height: 44px;
   display: flex;
   justify-content: space-around;
