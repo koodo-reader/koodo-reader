@@ -1,6 +1,5 @@
 import { createStore, applyMiddleware, compose, combineReducers } from "redux";
 import thunk from "redux-thunk";
-import { settingPanel } from "./redux/settingPanel.redux";
 import { book } from "./redux/book.redux";
 import { manager } from "./redux/manager.redux";
 import { progressPanel } from "./redux/progressPanel.redux";
@@ -9,7 +8,6 @@ import { viewArea } from "./redux/viewArea.redux";
 import { sidebar } from "./redux/sidebar.redux";
 import { backupPage } from "./redux/backupPage.redux";
 const rootReducer = combineReducers({
-  settingPanel,
   book,
   manager,
   reader,

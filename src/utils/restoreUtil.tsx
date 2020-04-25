@@ -39,7 +39,10 @@ class RestoreUtil {
       "isSingle",
       "isFirst",
       "sortCode",
-      "config",
+      "fontSize",
+      "fontFamily",
+      "lineHeight",
+      "theme",
       "readingTime",
       "recentBooks",
       "shelfList",
@@ -71,7 +74,8 @@ class RestoreUtil {
         })
         .then(() => {
           if (item === "books") {
-            localforage.getItem("books").then((value: BookModel[]) => {
+            console.log("hdshsd");
+            localforage.getItem("books").then((value: any) => {
               let zip = new JSZip();
               value.forEach((item, index) => {
                 zip
@@ -83,14 +87,13 @@ class RestoreUtil {
                     ); // a promise of "Hello World\n"
                   })
                   .then((book) => {
+                    console.log(book, "sjgsgjsgh");
                     item.content = book;
                   })
                   .then(() => {
-                    if (index === value.length - 1) {
-                      localforage.setItem("books", value).then(() => {
-                        handleFinish();
-                      });
-                    }
+                    localforage.setItem("books", value).then(() => {
+                      handleFinish();
+                    });
                   })
                   .catch(() => {
                     console.log("Error occurs");
