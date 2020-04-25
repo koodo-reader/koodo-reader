@@ -146,6 +146,7 @@ export function handleFetchBooks() {
               .then((url) => {
                 coverArr.push({ key: bookArr[index].key, url: url });
                 if (coverArr.length === bookArr.length) {
+                  console.log(coverArr, "coverArr");
                   dispatch(handleCovers(coverArr));
                 }
               })
