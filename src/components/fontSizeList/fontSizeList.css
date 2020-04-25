@@ -1,11 +1,11 @@
 .font-size-setting {
   width: calc(100% - 44px);
-  margin: 0 22px;
+  margin: 20px 22px;
   height: 70px;
 }
 .font-size-title {
   font-size: 16px;
-
+  font-weight: bold;
   line-height: 27px;
   color: rgba(75, 75, 75, 1);
   padding-bottom: 10px;

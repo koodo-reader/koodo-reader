@@ -10,7 +10,7 @@ app.on("ready", () => {
     dialog
       .showMessageBox({
         title: "更新提示",
-        message: "koodo Reader发布新版本啦！",
+        message: "Koodo Reader发布新版本啦！",
         buttons: ["前往下载", "稍后提醒"],
         defaultId: 0, // bound to buttons array
         cancelId: 1, // bound to buttons array

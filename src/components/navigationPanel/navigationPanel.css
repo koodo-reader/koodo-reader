@@ -29,7 +29,7 @@
   bottom: 120px;
 }
 .book-title {
-  height: 30px;
+  height: 32px;
   font-size: 15px;
   color: rgba(75, 75, 75, 1);
   opacity: 1;
@@ -44,13 +44,21 @@
   position: relative;
 }
 .book-arthur {
-  position: absolute;
-  left: 118px;
+  left: 28px;
   top: 56px;
-  font-size: 14px;
+  font-size: 15px;
   line-height: 25px;
   color: rgba(75, 75, 75, 1);
   opacity: 0.5;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  white-space: normal;
+  word-break: keep-all;
+  overflow: hidden;
+  position: relative;
 }
 
 .reading-duration {
