@@ -31,19 +31,31 @@ class BackupUtil {
       .file("digests.json", JSON.stringify(digests))
       .file("highlighters.json", JSON.stringify(highlighters))
       .file("bookmarks.json", JSON.stringify(bookmarks))
-      .file("isList.json", localStorage.getItem("isList"))
-      .file("totalBooks.json", localStorage.getItem("totalBooks"))
-      .file("isSingle.json", localStorage.getItem("isSingle"))
-      .file("isFirst.json", localStorage.getItem("isFirst"))
-      .file("sortCode.json", localStorage.getItem("sortCode"))
-      .file("fontSize.json", localStorage.getItem("fontSize"))
-      .file("fontFamily.json", localStorage.getItem("fontFamily"))
-      .file("theme.json", localStorage.getItem("theme"))
-      .file("lineHeight.json", localStorage.getItem("lineHeight"))
-      .file("readingTime.json", localStorage.getItem("readingTime"))
-      .file("recentBooks.json", localStorage.getItem("recentBooks"))
-      .file("shelfList.json", localStorage.getItem("shelfList"))
-      .file("recordLocation.json", localStorage.getItem("recordLocation"));
+      .file("isList.json", localStorage.getItem("isList") || "no")
+      .file("totalBooks.json", localStorage.getItem("totalBooks") || "0")
+      .file("isSingle.json", localStorage.getItem("isSingle") || "yes")
+      .file("isFirst.json", localStorage.getItem("isFirst") || "yes")
+      .file(
+        "sortCode.json",
+        localStorage.getItem("sortCode") || "{ sort: 2, order: 2 }"
+      )
+      .file("fontSize.json", localStorage.getItem("fontSize") || "17")
+      .file(
+        "fontFamily.json",
+        localStorage.getItem("fontFamily") || "Helvetica"
+      )
+      .file(
+        "theme.json",
+        localStorage.getItem("theme") || "rgba(255,254,252,1)"
+      )
+      .file("lineHeight.json", localStorage.getItem("lineHeight") || "1.25")
+      .file("readingTime.json", localStorage.getItem("readingTime") || "")
+      .file("recentBooks.json", localStorage.getItem("recentBooks") || [])
+      .file("shelfList.json", localStorage.getItem("shelfList") || [])
+      .file(
+        "recordLocation.json",
+        localStorage.getItem("recordLocation") || ""
+      );
 
     let year = new Date().getFullYear(),
       month = new Date().getMonth() + 1,

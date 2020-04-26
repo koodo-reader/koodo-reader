@@ -22,6 +22,8 @@ import NoteModel from "../../model/Note";
 import DigestModel from "../../model/Digest";
 import HighligherModel from "../../model/Highlighter";
 import BookmarkModel from "../../model/Bookmark";
+import { stateType } from "../../store";
+
 export interface DeleteDialogProps {
   books: BookModel[];
   isOpenDeleteDialog: boolean;
@@ -179,7 +181,7 @@ class DeleteDialog extends React.Component<DeleteDialogProps> {
     );
   }
 }
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: stateType) => {
   return {
     books: state.manager.books,
     isOpenDeleteDialog: state.book.isOpenDeleteDialog,

@@ -7,13 +7,12 @@ import { handleSelection } from "../../redux/viewArea.redux";
 import { connect } from "react-redux";
 import BookModel from "../../model/Book";
 import HighlighterModel from "../../model/Highlighter";
+import { stateType } from "../../store";
+
 declare var window: any;
 export interface PopupMenuProps {
   currentEpub: any;
   currentBook: BookModel;
-  isOpenMenu: boolean;
-  isOpenHighlight: boolean;
-  isOpenNote: boolean;
   highlighters: HighlighterModel[];
 }
 
@@ -25,7 +24,7 @@ export interface PopupMenuState {
 
 class PopupMenu extends React.Component<PopupMenuProps, PopupMenuState> {
   highlighter: any;
-  timer: NodeJS.Timeout;
+  timer!: NodeJS.Timeout;
   key: any;
   constructor(props: PopupMenuProps) {
     super(props);
@@ -64,17 +63,19 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuState> {
         ignoreWhiteSpace: true,
         elementTagName: "span",
         elementProperties: {
-          onclick: (event) => {
+          onclick: (event: any) => {
+            if (!document.getElementsByTagName("iframe")[0].contentDocument) {
+              return;
+            }
             let iDoc = document.getElementsByTagName("iframe")[0]
               .contentDocument;
-            let sel = iDoc.getSelection();
-            if (!sel.isCollapsed) return;
-            let key = event.currentTarget.dataset.key;
+            let sel = iDoc!.getSelection();
+            if (!sel!.isCollapsed) return;
             this.openMenu();
             event.stopPropagation();
           },
         },
-        onElementCreate: (element) => {
+        onElementCreate: (element: any) => {
           element.dataset.key = this.key;
         },
       };
@@ -84,9 +85,15 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuState> {
   };
   //渲染高亮
   renderHighlighters = () => {
+    if (
+      !document.getElementsByTagName("iframe")[0] ||
+      !document.getElementsByTagName("iframe")[0].contentDocument
+    ) {
+      return;
+    }
     let { highlighters } = this.props;
     let iframe = document.getElementsByTagName("iframe")[0];
-    let iWin = iframe.contentWindow || iframe.contentDocument.defaultView;
+    let iWin = iframe.contentWindow || iframe.contentDocument!.defaultView;
     let sel = window.rangy.getSelection(iframe);
     let serial = window.rangy.serializeSelection(sel, true);
     this.highlighter && this.highlighter.removeAllHighlights(); // 为了避免下次反序列化失败，必须先清除已有的高亮
@@ -114,15 +121,23 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuState> {
           this.highlighter.highlightSelection(classes[item.color]);
         }
       });
-
-    iWin.getSelection().empty(); // 清除文本选取
+    if (!iWin || !iWin.getSelection()) {
+      return;
+    }
+    iWin.getSelection()!.empty(); // 清除文本选取
     this.state.isOpenMenu &&
       window.rangy.deserializeSelection(serial, null, iWin); // （为了选取文本后不被上一行代码清除掉）恢复原本的文本选取
   };
   openMenu = () => {
+    if (
+      !document.getElementsByTagName("iframe")[0] ||
+      !document.getElementsByTagName("iframe")[0].contentDocument
+    ) {
+      return;
+    }
     let iframe = document.getElementsByTagName("iframe")[0];
     let iDoc = iframe.contentDocument;
-    let sel = iDoc.getSelection();
+    let sel = iDoc!.getSelection();
     this.setState({ isChangeDirection: false });
     // 如果 popmenu正在被展示，则隐藏
     if (this.state.isOpenMenu) {
@@ -130,13 +145,15 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuState> {
       this.closeMenu();
     }
     // 使弹出菜单更加灵活可控
-    if (sel.isCollapsed) {
-      this.props.isOpenMenu && this.closeMenu();
+    if (sel!.isCollapsed) {
+      this.state.isOpenMenu && this.closeMenu();
       this.changeMenu("menu");
       return;
     }
     //获取选择文字的坐标
-    let rect = this.props.currentEpub.renderer.rangePosition(sel.getRangeAt(0));
+    let rect = this.props.currentEpub.renderer.rangePosition(
+      sel!.getRangeAt(0)
+    );
     // console.log(rect);
 
     let height = 200;
@@ -163,12 +180,13 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuState> {
         : posX;
     this.setState({ isOpenMenu: true });
     let popupMenu = document.querySelector(".popup-menu-container");
-    popupMenu.setAttribute("style", `left:${posX}px;top:${posY}px`);
+    popupMenu &&
+      popupMenu.setAttribute("style", `left:${posX}px;top:${posY}px`);
   };
   closeMenu = () => {
     this.setState({ isOpenMenu: false });
   };
-  changeMenu = (mode) => {
+  changeMenu = (mode: string) => {
     this.setState({ mode: mode });
   };
   render() {
@@ -213,13 +231,10 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuState> {
     );
   }
 }
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: stateType) => {
   return {
     currentEpub: state.book.currentEpub,
     currentBook: state.book.currentBook,
-    isOpenMenu: state.viewArea.isOpenMenu,
-    isOpenHighlight: state.viewArea.isOpenHighlight,
-    isOpenNote: state.viewArea.isOpenNote,
     highlighters: state.reader.highlighters,
   };
 };

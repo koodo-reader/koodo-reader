@@ -1,8 +1,11 @@
 const initState = {
   mode: "home",
-  shelfIndex: null,
+  shelfIndex: -1,
 };
-export function sidebar(state = initState, action) {
+export function sidebar(
+  state = initState,
+  action: { type: string; payload: any }
+) {
   switch (action.type) {
     case "HANDLE_MODE":
       return {
