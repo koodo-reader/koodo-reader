@@ -10,6 +10,8 @@ import {
   handleFetchBooks,
 } from "../../redux/manager.redux";
 import SparkMD5 from "spark-md5";
+import { stateType } from "../../store";
+
 export interface ImportLocalProps {
   books: BookModel[];
   handleMessageBox: (isShow: boolean) => void;
@@ -42,7 +44,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
     this.props.handleMessageBox(true);
   };
   //获取书籍md5
-  doIncrementalTest = (file) => {
+  doIncrementalTest = (file: any) => {
     //这里假设直接将文件选择框的dom引用传入
 
     //这里需要用到File的slice( )方法，以下是兼容写法
@@ -57,6 +59,9 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
       fileReader = new FileReader();
 
     fileReader.onload = (e) => {
+      if (!e.target) {
+        throw new Error();
+      }
       spark.appendBinary(e.target.result as any); // append array buffer
       currentChunk += 1;
       if (currentChunk < chunks) {
@@ -76,7 +81,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
 
     loadNext();
   };
-  handleBook = (file, md5: string) => {
+  handleBook = (file: any, md5: string) => {
     //md5重复不导入
     if (this.props.books !== null) {
       this.props.books.forEach((item) => {
@@ -93,10 +98,16 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
       reader.readAsArrayBuffer(file);
 
       reader.onload = (e) => {
+        if (!e.target) {
+          throw new Error();
+        }
         const epub = (window as any).ePub({ bookPath: e.target.result });
         epub
           .getMetadata()
-          .then((metadata) => {
+          .then((metadata: any) => {
+            if (!e.target) {
+              throw new Error();
+            }
             let name: string,
               author: string,
               content: any,
@@ -117,13 +128,13 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
       };
     }
   };
-  handleChange = (event: {
-    preventDefault: () => void;
-    target: HTMLInputElement;
-  }) => {
+  handleChange = (event: any) => {
+    if (!event.target) {
+      return;
+    }
     event.preventDefault();
     this.setState({ isRepeat: false });
-    let file = (event.target as HTMLInputElement).files[0];
+    let file = event.target.files[0];
     this.doIncrementalTest(file);
   };
 
@@ -146,7 +157,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
     );
   }
 }
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: stateType) => {
   return {
     books: state.manager.books,
   };

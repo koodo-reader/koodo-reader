@@ -3,6 +3,8 @@ import React from "react";
 import ReaderConfig from "../../utils/readerConfig";
 import { dropdownList } from "../../utils/readerConfig";
 import "./dropdownList.css";
+import { stateType } from "../../store";
+
 export interface DropdownListProps {}
 export interface DropdownListState {
   currentFontFamilyIndex: number;
@@ -28,19 +30,19 @@ class DropdownList extends React.Component<
   componentDidMount() {
     //使下拉菜单选中预设的值
     document
-      .querySelector(".paragraph-character-setting")
+      .querySelector(".paragraph-character-setting")!
       .children[0].children[1].children[
         this.state.currentFontFamilyIndex
       ].setAttribute("selected", "selected");
 
     document
-      .querySelector(".paragraph-character-setting")
+      .querySelector(".paragraph-character-setting")!
       .children[1].children[1].children[
         this.state.currentLineHeightIndex
       ].setAttribute("selected", "selected");
   }
   //切换不同的样式
-  handleView(event, option: string) {
+  handleView(event: any, option: string) {
     let arr = event.target.value.split(",");
     localStorage.setItem(option, arr[0]);
     switch (option) {

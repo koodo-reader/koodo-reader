@@ -2,7 +2,10 @@ const initState = {
   selection: null,
   highlighters: [],
 };
-export function viewArea(state = initState, action) {
+export function viewArea(
+  state = initState,
+  action: { type: string; payload: any }
+) {
   switch (action.type) {
     case "HANDLE_OPEN_MENU":
       return {
@@ -13,11 +16,6 @@ export function viewArea(state = initState, action) {
       return {
         ...state,
         isOpenHighlight: action.payload,
-      };
-    case "HANDLE_OPEN_NOTE":
-      return {
-        ...state,
-        isOpenNote: action.payload,
       };
     case "HANDLE_SELECTION":
       return {
@@ -40,9 +38,7 @@ export function handleOpenMenu(isOpenMenu: boolean) {
 export function handleOpenHighlight(isOpenHighlight: boolean) {
   return { type: "HANDLE_OPEN_HIGHLIGHT", payload: isOpenHighlight };
 }
-export function handleOpenNote(isOpenNote: boolean) {
-  return { type: "HANDLE_OPEN_NOTE", payload: isOpenNote };
-}
+
 export function handleSelection(selection: string) {
   return { type: "HANDLE_SELECTION", payload: selection };
 }

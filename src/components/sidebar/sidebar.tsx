@@ -4,6 +4,8 @@ import { handleMode, handleShelfIndex } from "../../redux/sidebar.redux";
 import { connect } from "react-redux";
 import { sideMenu } from "../../utils/readerConfig";
 import ShelfUtil from "../../utils/shelfUtil";
+import { stateType } from "../../store";
+
 export interface SidebarProps {
   mode: string;
   handleMode: (mode: string) => void;
@@ -24,15 +26,15 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
         this.props.mode
       ),
       isCollapse: true,
-      shelfIndex: null,
+      shelfIndex: -1,
     };
   }
   handleSidebar = (mode: string, index: number) => {
     this.setState({ index: index });
-    this.setState({ shelfIndex: null });
+    this.setState({ shelfIndex: -1 });
     this.setState({ isCollapse: true });
     this.props.handleMode(mode);
-    this.props.handleShelfIndex(null);
+    this.props.handleShelfIndex(-1);
   };
   handleShelf = () => {
     this.setState({ isCollapse: !this.state.isCollapse });
@@ -49,7 +51,7 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
           <li
             key={item.name}
             className={
-              this.state.index === index && this.state.shelfIndex === null
+              this.state.index === index && this.state.shelfIndex === -1
                 ? "active side-menu-item"
                 : "side-menu-item"
             }
@@ -58,19 +60,19 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
               this.handleSidebar(item.mode, index);
             }}
           >
-            {this.state.index === index && this.state.shelfIndex === null ? (
+            {this.state.index === index && this.state.shelfIndex === -1 ? (
               <div className="side-menu-selector-container"></div>
             ) : null}
             <div
               className={
-                this.state.index === index && this.state.shelfIndex === null
+                this.state.index === index && this.state.shelfIndex === -1
                   ? "side-menu-selector active-selector"
                   : "side-menu-selector "
               }
             >
               <span
                 className={
-                  this.state.index === index && this.state.shelfIndex === null
+                  this.state.index === index && this.state.shelfIndex === -1
                     ? `icon-${item.icon} side-menu-icon  active-icon`
                     : `icon-${item.icon} side-menu-icon`
                 }
@@ -147,7 +149,7 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
     );
   }
 }
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: stateType) => {
   return { mode: state.sidebar.mode };
 };
 const actionCreator = { handleMode, handleShelfIndex };

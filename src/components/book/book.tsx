@@ -12,6 +12,7 @@ import {
 import RecentBooks from "../../utils/recordRecent";
 import BookModel from "../../model/Book";
 import "./book.css";
+
 export interface BookProps {
   book: BookModel;
   bookCover: string;
@@ -27,7 +28,7 @@ export interface BookState {
   isOpenConfig: boolean;
 }
 class Book extends React.Component<BookProps, BookState> {
-  epub: object;
+  epub: any;
   constructor(props: BookProps) {
     super(props);
     this.state = { isDeleteDialog: false, isOpenConfig: false };

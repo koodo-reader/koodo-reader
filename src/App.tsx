@@ -12,7 +12,7 @@ class App extends React.Component<AppProps> {
     return this.props.isReading ? <Reader /> : <Manager />;
   }
 }
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: { book: { isReading: boolean } }) => {
   return { isReading: state.book.isReading };
 };
 const actionCreator = {};

@@ -34,6 +34,8 @@ import BookModel from "../../model/Book";
 import NoteModel from "../../model/Note";
 import DigestModel from "../../model/Digest";
 import BookmarkModel from "../../model/Bookmark";
+import { stateType } from "../../store";
+
 export interface ManagerProps {
   books: BookModel[];
   covers: { key: string; url: string }[];
@@ -67,12 +69,12 @@ export interface ManagerState {
 }
 
 class Manager extends React.Component<ManagerProps, ManagerState> {
-  timer: NodeJS.Timeout;
-  constructor(props) {
+  timer!: NodeJS.Timeout;
+  constructor(props: ManagerProps) {
     super(props);
     this.state = {
-      totalBooks: parseInt(localStorage.getItem("totalBooks")) || 0,
-      isFirst: null,
+      totalBooks: parseInt(localStorage.getItem("totalBooks") || "0") || 0,
+      isFirst: "no",
       recentBooks: Object.keys(RecordRecent.getRecent()).length,
     };
   }
@@ -87,7 +89,7 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
     this.props.handleFetchList();
   }
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps: ManagerProps) {
     this.setState({
       totalBooks: this.props.books === null ? 0 : this.props.books.length,
     });
@@ -101,7 +103,7 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
     }
   }
   componentDidMount() {
-    this.setState({ isFirst: localStorage.getItem("isFirst") || "first" });
+    this.setState({ isFirst: localStorage.getItem("isFirst") || "yes" });
   }
 
   componentWillUnmout() {
@@ -116,7 +118,7 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
     let { totalBooks, recentBooks } = this.state;
     let shelfTitle = Object.keys(ShelfUtil.getShelf());
     let currentShelfTitle = shelfTitle[this.props.shelfIndex + 1];
-    let shelfBooks = ShelfUtil.getShelf()[currentShelfTitle].length;
+    let shelfBooks = (ShelfUtil.getShelf()[currentShelfTitle] || []).length;
     return (
       <div className="manager">
         <Sidebar />
@@ -133,7 +135,7 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
         {this.props.isMessage ? <MessageBox /> : null}
         {this.props.isSortDisplay ? <SortDialog /> : null}
         {this.props.isBackup ? <BackupPage /> : null}
-        {this.state.isFirst === "first" ? (
+        {this.state.isFirst === "yes" ? (
           <WelcomePage
             handleCloseWelcome={() => {
               this.handleCloseWelcome();
@@ -164,7 +166,7 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
     );
   }
 }
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: stateType) => {
   return {
     books: state.manager.books,
     covers: state.manager.covers,

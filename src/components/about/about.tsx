@@ -112,8 +112,5 @@ class About extends React.Component<AboutProps, AboutState> {
     );
   }
 }
-const mapStateToProps = () => {
-  return {};
-};
 const actionCreator = { handleMessageBox, handleMessage };
-export default connect(mapStateToProps, actionCreator)(About);
+export default connect(null, actionCreator)(About);

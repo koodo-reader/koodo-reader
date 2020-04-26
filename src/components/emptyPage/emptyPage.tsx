@@ -3,6 +3,8 @@ import React from "react";
 import { connect } from "react-redux";
 import "./emptyPage.css";
 import { emptyList } from "../../utils/readerConfig";
+import { stateType } from "../../store";
+
 export interface EmptyPageProps {
   mode: string;
 }
@@ -43,7 +45,7 @@ class EmptyPage extends React.Component<EmptyPageProps, EmptyPageState> {
     );
   }
 }
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: stateType) => {
   return {
     mode: state.sidebar.mode,
   };

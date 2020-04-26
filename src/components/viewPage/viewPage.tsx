@@ -4,6 +4,8 @@ import { connect } from "react-redux";
 import { MouseEvent } from "../../utils/mouseEvent";
 import { handlePercentage } from "../../redux/progressPanel.redux";
 import BookModel from "../../model/Book";
+import { stateType } from "../../store";
+
 export interface ViewPageProps {
   currentBook: BookModel;
   currentEpub: any;
@@ -16,7 +18,7 @@ export interface ViewPageState {
 }
 
 class ViewPage extends React.Component<ViewPageProps, ViewPageState> {
-  constructor(props) {
+  constructor(props: ViewPageProps) {
     super(props);
     this.state = { isSingle: localStorage.getItem("isSingle") === "single" };
   }
@@ -42,10 +44,16 @@ class ViewPage extends React.Component<ViewPageProps, ViewPageState> {
     );
     document.addEventListener("copy", this.copyTextHack);
   }
-  copyTextHack = (event) => {
+  copyTextHack = (event: any) => {
+    if (
+      !document ||
+      !document.getElementsByTagName("iframe")[0].contentDocument
+    ) {
+      return;
+    }
     let iDoc = document.getElementsByTagName("iframe")[0].contentDocument;
     let copyText =
-      iDoc.getSelection().toString() || document.getSelection().toString();
+      iDoc!.getSelection()!.toString() || document!.getSelection()!.toString();
     event.clipboardData.setData("text/plain", copyText);
     event.preventDefault();
   };
@@ -54,7 +62,7 @@ class ViewPage extends React.Component<ViewPageProps, ViewPageState> {
     return <div className="view-area-page" id="page-area"></div>;
   }
 }
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: stateType) => {
   return {
     currentBook: state.book.currentBook,
     currentEpub: state.book.currentEpub,

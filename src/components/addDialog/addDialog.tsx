@@ -6,6 +6,7 @@ import { handleMessageBox, handleMessage } from "../../redux/manager.redux";
 import { handleAddDialog } from "../../redux/book.redux";
 import ShelfUtil from "../../utils/shelfUtil";
 import BookModel from "../../model/Book";
+import {stateType} from '../../store'
 export interface AddDialogProps {
   handleAddDialog: (isShow: boolean) => void;
   currentBook: BookModel;
@@ -41,14 +42,14 @@ class AddDialog extends Component<AddDialogProps, AddDialogState> {
   handleChange = (shelfTitle: string) => {
     if (shelfTitle === "新建书架") {
       this.setState({ isNew: true });
-      document
-        .querySelector(".add-dialog-new-shelf-box")
-        .removeAttribute("disabled");
+      (document.querySelector(
+        ".add-dialog-new-shelf-box"
+      ) as HTMLInputElement).removeAttribute("disabled");
     } else {
       this.setState({ isNew: false });
-      document
-        .querySelector(".add-dialog-new-shelf-box")
-        .setAttribute("disabled", "disabled");
+      (document.querySelector(
+        ".add-dialog-new-shelf-box"
+      ) as HTMLInputElement).setAttribute("disabled", "disabled");
     }
   };
   render() {
@@ -105,7 +106,7 @@ class AddDialog extends Component<AddDialogProps, AddDialogState> {
     );
   }
 }
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: stateType) => {
   return {
     books: state.manager.books,
     isOpenDeleteDialog: state.book.isOpenDeleteDialog,

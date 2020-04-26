@@ -12,6 +12,8 @@ import NoteModel from "../../model/Note";
 import DigestModel from "../../model/Digest";
 import HighligherModel from "../../model/Highlighter";
 import BookmarkModel from "../../model/Bookmark";
+import { stateType } from "../../store";
+
 export interface BackupPageProps {
   handleBackupDialog: (isBackup: boolean) => void;
   handleMessage: (message: string) => void;
@@ -52,15 +54,9 @@ class BackupPage extends React.Component<BackupPageProps, BackupPageState> {
   handleFinish = () => {
     this.setState({ currentStep: 2 });
   };
-  handleRestoreToLocal = (event: {
-    preventDefault: () => void;
-    target: HTMLInputElement;
-  }) => {
+  handleRestoreToLocal = (event: any) => {
     event.preventDefault();
-    RestoreUtil.restore(
-      (event.target as HTMLInputElement).files[0],
-      this.handleFinish
-    );
+    RestoreUtil.restore(event.target.files[0], this.handleFinish);
   };
   handleDrive = async (index: number) => {
     this.setState({ currentDrive: index }, () => {
@@ -204,15 +200,7 @@ class BackupPage extends React.Component<BackupPageProps, BackupPageState> {
     );
   }
 }
-const mapStateToProps = (state: {
-  manager: { books: BookModel[] };
-  reader: {
-    bookmarks: BookmarkModel[];
-    notes: NoteModel[];
-    digests: DigestModel[];
-    highlighters: HighligherModel[];
-  };
-}) => {
+const mapStateToProps = (state: stateType) => {
   return {
     books: state.manager.books,
     bookmarks: state.reader.bookmarks,
