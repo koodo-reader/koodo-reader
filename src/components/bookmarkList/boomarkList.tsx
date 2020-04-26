@@ -4,6 +4,7 @@ import "./bookmarkList.css";
 import { connect } from "react-redux";
 import BookmarkModel from "../../model/Bookmark";
 import BookModel from "../../model/Book";
+import { stateType } from "../../store";
 export interface BookmarkListProps {
   currentBook: BookModel;
   currentEpub: any;
@@ -68,7 +69,7 @@ class BookmarkList extends React.Component<
     );
   }
 }
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: stateType) => {
   return {
     currentBook: state.book.currentBook,
     currentEpub: state.book.currentEpub,

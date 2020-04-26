@@ -6,6 +6,8 @@ import localforage from "localforage";
 import { handleMessageBox, handleMessage } from "../../redux/manager.redux";
 import BookModel from "../../model/Book";
 import NoteModel from "../../model/Note";
+import { stateType } from "../../store";
+
 declare var window: any;
 export interface PopupNoteProps {
   currentEpub: any;
@@ -21,26 +23,32 @@ export interface PopupNoteProps {
 class PopupNote extends React.Component<PopupNoteProps> {
   createNote() {
     // let { book, epub } = this.props;
+    if (
+      !document.getElementsByTagName("iframe")[0] ||
+      !document.getElementsByTagName("iframe")[0].contentDocument
+    ) {
+      return;
+    }
     let book = this.props.currentBook;
     let epub = this.props.currentEpub;
     let iframe = document.getElementsByTagName("iframe")[0];
     let iDoc = iframe.contentDocument;
-    let sel = iDoc.getSelection();
-    let range = sel.getRangeAt(0);
+    let sel = iDoc!.getSelection();
+    let range = sel!.getRangeAt(0);
     let notes = (document.querySelector(".editor-box") as HTMLInputElement)
       .value;
     (document.querySelector(".editor-box") as HTMLInputElement).value = "";
-    let text = sel.toString();
+    let text = sel!.toString();
     text = text && text.trim();
     let cfiBase = epub.renderer.currentChapter.cfiBase;
     let cfi = new window.EPUBJS.EpubCFI().generateCfiFromRange(range, cfiBase);
     let bookKey = book.key;
     let charRange = window.rangy
       .getSelection(iframe)
-      .saveCharacterRanges(iDoc.body)[0];
+      .saveCharacterRanges(iDoc!.body)[0];
     let serial = JSON.stringify(charRange);
     //获取章节名
-    let index = this.props.chapters.findIndex((item) => {
+    let index = this.props.chapters.findIndex((item: any) => {
       return item.spinePos > epub.renderer.currentChapter.spinePos;
     });
     let chapter =
@@ -52,7 +60,7 @@ class PopupNote extends React.Component<PopupNoteProps> {
     noteArr.push(note);
     localforage.setItem("notes", noteArr);
     this.props.closeMenu();
-    iDoc.getSelection().empty();
+    iDoc!.getSelection()!.empty();
     this.props.handleMessage("添加成功");
     this.props.handleMessageBox(true);
     this.props.changeMenu("menu");
@@ -103,7 +111,7 @@ class PopupNote extends React.Component<PopupNoteProps> {
     return renderNoteEditor();
   }
 }
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: stateType) => {
   return {
     currentEpub: state.book.currentEpub,
     currentBook: state.book.currentBook,

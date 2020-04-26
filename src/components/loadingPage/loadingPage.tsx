@@ -3,6 +3,8 @@ import React from "react";
 import "./loadingPage.css";
 import { connect } from "react-redux";
 import BookModel from "../../model/Book";
+import { stateType } from "../../store";
+
 export interface LoadingPageProps {
   books: BookModel[];
 }
@@ -10,7 +12,11 @@ class LoadingPage extends React.Component<LoadingPageProps> {
   render() {
     const renderLoadingPage = () => {
       let arr = [];
-      for (let i = 0; i < parseInt(localStorage.getItem("totalBooks")); i++) {
+      for (
+        let i = 0;
+        i < parseInt(localStorage.getItem("totalBooks") || "0");
+        i++
+      ) {
         arr.push(i);
       }
       return arr.map((item, index) => {
@@ -31,7 +37,7 @@ class LoadingPage extends React.Component<LoadingPageProps> {
     );
   }
 }
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: stateType) => {
   return {
     books: state.manager.books,
   };

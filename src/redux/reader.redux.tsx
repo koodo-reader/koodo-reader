@@ -1,4 +1,9 @@
 import localforage from "localforage";
+import BookModel from "../model/Book";
+import NoteModel from "../model/Note";
+import DigestModel from "../model/Digest";
+import HighligherModel from "../model/Highlighter";
+import BookmarkModel from "../model/Bookmark";
 const initState = {
   bookmarks: null,
   notes: null,
@@ -8,7 +13,10 @@ const initState = {
   highlighters: null,
   isSingle: localStorage.getItem("isSingle") || "double",
 };
-export function reader(state = initState, action) {
+export function reader(
+  state = initState,
+  action: { type: string; payload: any }
+) {
   switch (action.type) {
     case "HANDLE_BOOKMARKS":
       return {
@@ -54,34 +62,31 @@ export function reader(state = initState, action) {
       return state;
   }
 }
-export function handleNotes(notes) {
+export function handleNotes(notes: NoteModel[]) {
   return { type: "HANDLE_NOTES", payload: notes };
 }
-export function handleBookmarks(bookmarks) {
+export function handleBookmarks(bookmarks: BookmarkModel[]) {
   return { type: "HANDLE_BOOKMARKS", payload: bookmarks };
 }
-export function handleDigests(digests) {
+export function handleDigests(digests: DigestModel[]) {
   return { type: "HANDLE_DIGESTS", payload: digests };
 }
-export function handleLocations(locations) {
+export function handleLocations(locations: any) {
   return { type: "HANDLE_LOCATIONS", payload: locations };
 }
-export function handleSection(section) {
-  return { type: "HANDLE_SECTION", payload: section };
-}
-export function handleSingle(mode) {
+export function handleSingle(mode: string) {
   return { type: "HANDLE_SINGLE", payload: mode };
 }
-export function handleChapters(chapters) {
+export function handleChapters(chapters: any) {
   return { type: "HANDLE_CHAPTERS", payload: chapters };
 }
-export function handleHighlighters(highlighters) {
+export function handleHighlighters(highlighters: HighligherModel[]) {
   return { type: "HANDLE_HIGHLIGHTERS", payload: highlighters };
 }
 export function handleFetchNotes() {
-  return (dispatch) => {
+  return (dispatch: (arg0: { type: string; payload: NoteModel[] }) => void) => {
     localforage.getItem("notes", (err, value) => {
-      let noteArr;
+      let noteArr: any;
       if (value === null || value === []) {
         noteArr = null;
       } else {
@@ -92,11 +97,11 @@ export function handleFetchNotes() {
   };
 }
 
-export function handleFetchChapters(epub) {
-  return (dispatch) => {
+export function handleFetchChapters(epub: any) {
+  return (dispatch: (arg0: { type: string; payload: any }) => void) => {
     epub
       .getToc()
-      .then((chapters) => {
+      .then((chapters: any) => {
         dispatch(handleChapters(chapters));
       })
       .catch(() => {
@@ -105,9 +110,11 @@ export function handleFetchChapters(epub) {
   };
 }
 export function handleFetchBookmarks() {
-  return (dispatch) => {
+  return (
+    dispatch: (arg0: { type: string; payload: BookmarkModel[] }) => void
+  ) => {
     localforage.getItem("bookmarks", (err, value) => {
-      let bookmarkArr;
+      let bookmarkArr: any;
       if (value === null || value === []) {
         bookmarkArr = null;
       } else {
@@ -119,9 +126,11 @@ export function handleFetchBookmarks() {
   };
 }
 export function handleFetchDigests() {
-  return (dispatch) => {
+  return (
+    dispatch: (arg0: { type: string; payload: DigestModel[] }) => void
+  ) => {
     localforage.getItem("digests", (err, value) => {
-      let digestArr;
+      let digestArr: any;
       if (value === null || value === []) {
         digestArr = null;
       } else {
@@ -132,9 +141,11 @@ export function handleFetchDigests() {
   };
 }
 export function handleFetchHighlighters() {
-  return (dispatch) => {
+  return (
+    dispatch: (arg0: { type: string; payload: HighligherModel[] }) => void
+  ) => {
     localforage.getItem("highlighters", (err, value) => {
-      let highlighterArr;
+      let highlighterArr: any;
       if (value === null || value === []) {
         highlighterArr = null;
       } else {

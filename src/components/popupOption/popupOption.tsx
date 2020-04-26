@@ -6,10 +6,11 @@ import Digest from "../../model/Digest";
 import { handleMessageBox, handleMessage } from "../../redux/manager.redux";
 import BookModel from "../../model/Book";
 import DigestModel from "../../model/Digest";
+import { stateType } from "../../store";
+
 export interface PopupOptionProps {
   currentBook: BookModel;
   currentEpub: any;
-  isOpenMenu: boolean;
   selection: string;
   digests: DigestModel[];
   chapters: any;
@@ -26,27 +27,37 @@ class PopupOption extends React.Component<PopupOptionProps> {
     this.props.changeMenu("highlight");
   };
   handleCopy = () => {
-    // let selection = this.props.selection;
-    // console.log(selection);
+    if (
+      !document.getElementsByTagName("iframe")[0] ||
+      !document.getElementsByTagName("iframe")[0].contentDocument
+    ) {
+      return;
+    }
     let iDoc = document.getElementsByTagName("iframe")[0].contentDocument;
-    let text = iDoc.execCommand("copy", false, null);
+    let text = iDoc!.execCommand("copy", false);
     !text
       ? console.log("failed to copy text to clipboard")
       : console.log("copied!");
     this.props.closeMenu();
-    iDoc.getSelection().empty();
+    iDoc!.getSelection()!.empty();
     this.props.handleMessage("复制成功");
     this.props.handleMessageBox(true);
   };
   handleDigest = () => {
+    if (
+      !document.getElementsByTagName("iframe")[0] ||
+      !document.getElementsByTagName("iframe")[0].contentDocument
+    ) {
+      return;
+    }
     let book = this.props.currentBook;
     let epub = this.props.currentEpub;
     let iframe = document.getElementsByTagName("iframe")[0];
     let iDoc = iframe.contentDocument;
-    let sel = iDoc.getSelection();
-    let range = sel.getRangeAt(0);
+    let sel = iDoc!.getSelection();
+    let range = sel!.getRangeAt(0);
 
-    let text = sel.toString();
+    let text = sel!.toString();
     text = text && text.trim();
     let cfiBase = epub.renderer.currentChapter.cfiBase;
     let cfi = new (window as any).EPUBJS.EpubCFI().generateCfiFromRange(
@@ -56,7 +67,7 @@ class PopupOption extends React.Component<PopupOptionProps> {
     let bookKey = book.key;
 
     //获取章节名
-    let index = this.props.chapters.findIndex((item) => {
+    let index = this.props.chapters.findIndex((item: any) => {
       return item.spinePos > epub.renderer.currentChapter.spinePos;
     });
     // console.log(index, "sahathth");
@@ -71,7 +82,7 @@ class PopupOption extends React.Component<PopupOptionProps> {
     digestArr.push(digest);
     localforage.setItem("digests", digestArr);
     this.props.closeMenu();
-    iDoc.getSelection().empty();
+    iDoc!.getSelection()!.empty();
     this.props.handleMessage("添加成功");
     this.props.handleMessageBox(true);
   };
@@ -130,11 +141,10 @@ class PopupOption extends React.Component<PopupOptionProps> {
     return renderMenuList();
   }
 }
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: stateType) => {
   return {
     currentBook: state.book.currentBook,
     currentEpub: state.book.currentEpub,
-    isOpenMenu: state.viewArea.isOpenMenu,
     selection: state.viewArea.selection,
     digests: state.reader.digests,
     chapters: state.reader.chapters,

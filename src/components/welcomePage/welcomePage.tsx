@@ -12,7 +12,7 @@ export interface WelcomePageState {
 }
 
 class WelcomePage extends React.Component<WelcomePageProps, WelcomePageState> {
-  constructor(props) {
+  constructor(props: WelcomePageProps) {
     super(props);
     this.state = { currentIndex: 0, isOpenWelcome: false };
   }

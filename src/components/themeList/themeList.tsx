@@ -2,17 +2,15 @@ import React from "react";
 import { themeList } from "../../utils/readerConfig";
 import ReaderConfig from "../../utils/readerConfig";
 import "./themeList.css";
-import { connect } from "react-redux";
-export interface ThemeListProps {
-  theme: string;
-}
+
+export interface ThemeListProps {}
 
 export interface ThemeListState {
   currentBackgroundIndex: number;
 }
 
 class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
-  constructor(props) {
+  constructor(props: ThemeListProps) {
     super(props);
     this.state = {
       currentBackgroundIndex: themeList.findIndex((item) => {
@@ -57,8 +55,5 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
     );
   }
 }
-const mapStateToProps = (state) => {
-  return { theme: state.settingPanel.theme };
-};
-const actionCreator = {};
-export default connect(mapStateToProps, actionCreator)(ThemeList);
+
+export default ThemeList;

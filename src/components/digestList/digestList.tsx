@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import BookModel from "../../model/Book";
 import BookmarkModel from "../../model/Bookmark";
 import DigestModel from "../../model/Digest";
+import { stateType } from "../../store";
 
 export interface DigestListProps {
   currentEpub: any;
@@ -50,7 +51,7 @@ class DigestList extends React.Component<DigestListProps> {
       }
     }
     //得到以日期为键，书摘为值的对象
-    let digestObj = {};
+    let digestObj: { [key: string]: any } = {};
     dateArr.forEach((date) => {
       digestObj["" + date.year + date.month + date.day] = [];
     });
@@ -104,7 +105,7 @@ class DigestList extends React.Component<DigestListProps> {
     );
   }
 }
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: stateType) => {
   return {
     digests: state.reader.digests,
     currentEpub: state.book.currentEpub,

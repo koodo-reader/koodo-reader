@@ -3,6 +3,8 @@ import "./sortDialog.css";
 import { connect } from "react-redux";
 import OtherUtil from "../../utils/otherUtil";
 import { handleSortCode } from "../../redux/manager.redux";
+import { stateType } from "../../store";
+
 export interface SortDialogProps {
   sortCode: { sort: number; order: number };
   handleSortCode: (sortCode: { sort: number; order: number }) => void;
@@ -87,7 +89,7 @@ class SortDialog extends React.Component<SortDialogProps> {
     );
   }
 }
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: stateType) => {
   return { sortCode: state.manager.sortCode };
 };
 const actionCreator = {

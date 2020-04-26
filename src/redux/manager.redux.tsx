@@ -2,6 +2,8 @@ import localforage from "localforage";
 import OtherUtil from "../utils/otherUtil";
 import BookModel from "../model/Book";
 import BookmarkModel from "../model/Bookmark";
+import NoteModel from "../model/Note";
+import { Dispatch } from "redux";
 const initState = {
   books: null,
   epubs: null,
@@ -15,7 +17,10 @@ const initState = {
   isMessage: false,
   message: "添加成功",
 };
-export function manager(state = initState, action) {
+export function manager(
+  state = initState,
+  action: { type: string; payload: any }
+) {
   switch (action.type) {
     case "HANDLE_BOOKS":
       return {
@@ -87,19 +92,19 @@ export function manager(state = initState, action) {
       return state;
   }
 }
-export function handleNotes(notes) {
+export function handleNotes(notes: NoteModel[]) {
   return { type: "HANDLE_NOTES", payload: notes };
 }
 export function handleBooks(books: BookModel[]) {
   return { type: "HANDLE_BOOKS", payload: books };
 }
-export function handleSearchBooks(searchBooks) {
+export function handleSearchBooks(searchBooks: number[]) {
   return { type: "HANDLE_SEARCH_BOOKS", payload: searchBooks };
 }
 export function handleSearch(isSearch: boolean) {
   return { type: "HANDLE_SEARCH", payload: isSearch };
 }
-export function handleList(mode) {
+export function handleList(mode: string) {
   return { type: "HANDLE_LIST", payload: mode };
 }
 export function handleMessage(message: string) {
@@ -124,26 +129,26 @@ export function handleBookmarks(bookmarks: BookmarkModel[]) {
   return { type: "HANDLE_COVERS", payload: bookmarks };
 }
 export function handleFetchBooks() {
-  return (dispatch) => {
-    localforage.getItem("books").then((value) => {
+  return (dispatch: Dispatch) => {
+    localforage.getItem("books", (err, value) => {
       let bookArr: any = value;
       dispatch(handleBooks(bookArr));
-      let epubArr = [];
+      let epubArr: any = [];
       if (bookArr === null) {
         epubArr = null;
       } else {
-        bookArr.forEach((item) => {
+        bookArr.forEach((item: BookModel) => {
           let epub = (window as any).ePub({
             bookPath: item.content,
             restore: false,
           });
           epubArr.push(epub);
           dispatch(handleEpubs(epubArr));
-          let coverArr = [];
-          epubArr.forEach(async (item, index) => {
+          let coverArr: { key: string; url: string }[] = [];
+          epubArr.forEach(async (item: any, index: number) => {
             await item
               .coverUrl()
-              .then((url) => {
+              .then((url: string) => {
                 coverArr.push({ key: bookArr[index].key, url: url });
                 if (coverArr.length === bookArr.length) {
                   console.log(coverArr, "coverArr");
@@ -160,13 +165,13 @@ export function handleFetchBooks() {
   };
 }
 export function handleFetchSortCode() {
-  return (dispatch) => {
+  return (dispatch: Dispatch) => {
     let sortCode = OtherUtil.getSortCode();
     dispatch(handleSortCode(sortCode));
   };
 }
 export function handleFetchList() {
-  return (dispatch) => {
+  return (dispatch: Dispatch) => {
     let isList = localStorage.getItem("isList") || "card";
     dispatch(handleList(isList));
   };
