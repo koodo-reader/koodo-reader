@@ -6,7 +6,7 @@
     Koodo Reader
   </h1>
   <h3 align="center">
-    一个基于 **Electron** 和 **React** 开发的 Epub 阅读器
+    一个基于 React 和 Electron 开发的 Epub 阅读器
   </h3>
 
 ## 预览
@@ -55,7 +55,7 @@
    git clone https://github.com/troyeguo/koodo-reader.git
    ```
 
-2. cd 到项目文件夹，运行以下代码进入 Electron 模式
+2. cd 到项目文件夹，运行以下代码进入客户端模式
 
    ```
    yarn
