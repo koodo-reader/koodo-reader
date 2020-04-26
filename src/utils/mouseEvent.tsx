@@ -2,7 +2,7 @@ import ReaderConfig from "./readerConfig";
 export const MouseEvent = (epub: any) => {
   let isFirefox = navigator.userAgent.indexOf("Firefox") !== -1;
   let lock = false; // 暂时锁住翻页快捷键，避免快速点击产生的Bug
-  let arrowKeys = (event) => {
+  let arrowKeys = (event: any) => {
     event.preventDefault();
     if (lock) return;
     if (event.keyCode === 37 || event.keyCode === 38) {
@@ -22,7 +22,7 @@ export const MouseEvent = (epub: any) => {
       return false;
     }
   };
-  let mouseFirefox = (event) => {
+  let mouseFirefox = (event: any) => {
     event.preventDefault();
     if (lock) return;
     if (event.detail < 0) {
@@ -43,7 +43,7 @@ export const MouseEvent = (epub: any) => {
     }
   };
 
-  let mouseChrome = (event) => {
+  let mouseChrome = (event: any) => {
     if (lock) return;
     if (event.wheelDelta > 0) {
       epub.prevPage();
@@ -62,11 +62,15 @@ export const MouseEvent = (epub: any) => {
       return false;
     }
   };
-  let copyText = (event) => {
+  let copyText = (event: any) => {
     let key = event.keyCode || event.which;
-    if (key === 67 && event.ctrlKey) {
+    if (
+      key === 67 &&
+      event.ctrlKey &&
+      document.getElementsByTagName("iframe")[0].contentDocument
+    ) {
       let iDoc = document.getElementsByTagName("iframe")[0].contentDocument;
-      let text = iDoc.execCommand("copy", false, null);
+      let text = iDoc!.execCommand("copy", false);
       !text
         ? console.log("failed to copy text to clipboard")
         : console.log(`copied!`);

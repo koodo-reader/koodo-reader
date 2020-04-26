@@ -4,12 +4,13 @@ import { connect } from "react-redux";
 import RecordLocation from "../../utils/recordLocation";
 import { handleFetchLocations } from "../../redux/progressPanel.redux";
 import BookModel from "../../model/Book";
+import { stateType } from "../../store";
+
 export interface ProgressPanelProps {
   currentEpub: any;
   currentBook: BookModel;
   percentage: number;
   locations: any;
-  section: string;
   handleFetchLocations: (currentEpub: any) => void;
 }
 
@@ -21,7 +22,7 @@ class ProgressPanel extends React.Component<
   ProgressPanelProps,
   ProgressPanelState
 > {
-  constructor(props) {
+  constructor(props: ProgressPanelProps) {
     super(props);
     this.state = {
       displayPercentage:
@@ -32,14 +33,14 @@ class ProgressPanel extends React.Component<
   UNSAFE_componentWillMount() {
     this.props.handleFetchLocations(this.props.currentEpub);
   }
-  onProgressChange = (event) => {
+  onProgressChange = (event: any) => {
     const percentage = event.target.value / 100;
     const location =
       percentage >= 0 ? this.props.locations.cfiFromPercentage(percentage) : 0;
     this.props.currentEpub.gotoCfi(location);
   };
   //使进度百分比随拖动实时变化
-  onProgressInput = (event) => {
+  onProgressInput = (event: any) => {
     this.setState({ displayPercentage: event.target.value / 100 });
   };
   previourChapter = () => {
@@ -105,13 +106,12 @@ class ProgressPanel extends React.Component<
     );
   }
 }
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: stateType) => {
   return {
     currentEpub: state.book.currentEpub,
     currentBook: state.book.currentBook,
     percentage: state.progressPanel.percentage,
     locations: state.progressPanel.locations,
-    section: state.progressPanel.section,
   };
 };
 const actionCreator = { handleFetchLocations };

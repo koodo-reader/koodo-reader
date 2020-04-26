@@ -2,6 +2,7 @@
 import React from "react";
 import "./contentList.css";
 import { connect } from "react-redux";
+import { stateType } from "../../store";
 
 export interface ContentListProps {
   currentEpub: any;
@@ -18,24 +19,24 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
   componentWillMount() {
     this.props.currentEpub
       .getToc()
-      .then((chapters) => {
+      .then((chapters: any) => {
         this.setState({ chapters });
       })
       .catch(() => {
         console.log("Error occurs");
       });
   }
-  handleJump(event) {
+  handleJump(event: any) {
     event.preventDefault();
     let href = event.target.getAttribute("href");
     this.props.currentEpub.goto(href);
   }
   render() {
     const renderContentList = () => {
-      return this.state.chapters.map((item, index) => {
+      return this.state.chapters.map((item: any, index: number) => {
         let isSubContentList = item.subitems && item.subitems.length;
         const renderSubContentList = () => {
-          return item.subitems.map((item, index) => {
+          return item.subitems.map((item: any, index: number) => {
             return (
               <li key={index} className="book-subcontent-list">
                 <a
@@ -71,7 +72,7 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
     );
   }
 }
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: stateType) => {
   return { currentEpub: state.book.currentEpub };
 };
 const actionCreator = {};

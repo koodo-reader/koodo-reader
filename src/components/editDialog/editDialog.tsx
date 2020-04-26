@@ -14,6 +14,8 @@ import NoteModel from "../../model/Note";
 import DigestModel from "../../model/Digest";
 import HighligherModel from "../../model/Highlighter";
 import BookmarkModel from "../../model/Bookmark";
+import { stateType } from "../../store";
+
 export interface EditDialogProps {
   handleMessage: (message: string) => void;
   handleMessageBox: (isShow: boolean) => void;
@@ -107,7 +109,7 @@ class EditDialog extends React.Component<EditDialogProps, EditDialogState> {
     );
   }
 }
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: stateType) => {
   return {
     books: state.manager.books,
     isOpenDeleteDialog: state.book.isOpenDeleteDialog,

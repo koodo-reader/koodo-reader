@@ -12,6 +12,8 @@ import RecentBooks from "../../utils/recordRecent";
 import RecordLocation from "../../utils/recordLocation";
 import BookmarkModel from "../../model/Bookmark";
 import BookModel from "../../model/Book";
+import { stateType } from "../../store";
+
 export interface BookmarkPageProps {
   bookmarks: BookmarkModel[];
   covers: { key: string; url: string }[];
@@ -45,7 +47,7 @@ class BookmarkPage extends React.Component<
         break;
       }
     }
-    this.props.handleReadingBook(book);
+    this.props.handleReadingBook(book!);
     this.props.handleReadingEpub(epub);
     this.props.handleReadingState(true);
     RecentBooks.setRecent(key);
@@ -53,7 +55,7 @@ class BookmarkPage extends React.Component<
   };
   render() {
     let { bookmarks, books, covers } = this.props;
-    let bookKeyArr = [];
+    let bookKeyArr: string[] = [];
     //获取bookmarks中的图书列表
     bookmarks.forEach((item) => {
       if (bookKeyArr.indexOf(item.bookKey) === -1) {
@@ -65,15 +67,15 @@ class BookmarkPage extends React.Component<
     let bookArr = books.filter((item) => {
       return bookKeyArr.indexOf(item.key) > -1;
     });
-    let coverArr = covers.filter((item) => {
+    let coverArr: { key: string; url: string }[] = covers.filter((item) => {
       return bookKeyArr.indexOf(item.key) > -1;
     });
-    let coverObj = {};
+    let coverObj: { [key: string]: string } = {};
     //根据图书数据获取封面的url
-    coverArr.forEach((item) => {
+    coverArr.forEach((item: any) => {
       coverObj[item.key] = item.url;
     });
-    let bookmarkObj = {};
+    let bookmarkObj: { [key: string]: any } = {};
     bookmarks.forEach((item) => {
       //bookmarkobj没有此书就新建
       if (!bookmarkObj[item.bookKey] && bookKeyArr.indexOf(item.bookKey) > -1) {
@@ -132,7 +134,7 @@ class BookmarkPage extends React.Component<
     );
   }
 }
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: stateType) => {
   return {
     bookmarks: state.reader.bookmarks,
     covers: state.manager.covers,

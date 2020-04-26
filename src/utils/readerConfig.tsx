@@ -15,20 +15,23 @@ class readerConfig {
   // 更新config
   // 为 iframe 添加默认的样式
   static addDefaultCss() {
+    if (!document.getElementsByTagName("iframe")[0].contentDocument){
+      return
+    }
     let css = this.getDefaultCss();
     let iDoc = document.getElementsByTagName("iframe")[0].contentDocument;
-    let style = iDoc.getElementById("default-style");
+    let style = iDoc!.getElementById("default-style");
     let background = document.querySelector(".background");
-    background.setAttribute(
+    background!.setAttribute(
       "style",
       `background-color:${localStorage.getItem("theme")}`
     );
 
     if (!style) {
-      style = iDoc.createElement("style");
+      style = iDoc!.createElement("style");
       style.id = "default-style";
       style.textContent = css;
-      iDoc.head.appendChild(style);
+      iDoc!.head.appendChild(style);
       return;
     }
     style.textContent = css;

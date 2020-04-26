@@ -1,10 +1,12 @@
 import RecordLocation from "../utils/recordLocation";
 const initState = {
   percentage: null,
-  section: null,
   locations: null,
 };
-export function progressPanel(state = initState, action) {
+export function progressPanel(
+  state = initState,
+  action: { type: string; payload: any }
+) {
   switch (action.type) {
     case "HANDLE_PERCENTAGE":
       return {
@@ -27,27 +29,24 @@ export function progressPanel(state = initState, action) {
   }
 }
 
-export function handleSection(section) {
-  return { type: "HANDLE_SECTION", payload: section };
-}
-export function handleLocations(locations) {
+export function handleLocations(locations: any) {
   return { type: "HANDLE_LOCATIONS", payload: locations };
 }
-export function handlePercentage(percentage) {
+export function handlePercentage(percentage: number) {
   return { type: "HANDLE_PERCENTAGE", payload: percentage };
 }
-export function handleFetchPercentage(book) {
-  return (dispatch) => {
+export function handleFetchPercentage(book: { key: string }) {
+  return (dispatch: (arg0: { type: string; payload: any }) => void) => {
     let percentage = RecordLocation.getCfi(book.key).percentage;
     dispatch(handlePercentage(percentage));
   };
 }
-export function handleFetchLocations(epub) {
-  return (dispatch) => {
+export function handleFetchLocations(epub: any) {
+  return (dispatch: (arg0: { type: string; payload: any }) => void) => {
     if (epub.locations !== undefined) {
       epub.locations
         .generate()
-        .then((result) => {
+        .then((result: any) => {
           let locations = epub.locations;
           dispatch(handleLocations(locations));
         })

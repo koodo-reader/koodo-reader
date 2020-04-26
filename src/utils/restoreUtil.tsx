@@ -3,7 +3,7 @@ import localforage from "localforage";
 import BookModel from "../model/Book";
 
 class RestoreUtil {
-  importBooks = (books: BookModel[], file, handleFinish: () => void) => {
+  importBooks = (books: BookModel[], file:any, handleFinish: () => void) => {
     let zip = new JSZip();
     books.forEach((item, index) => {
       zip
@@ -27,7 +27,7 @@ class RestoreUtil {
         });
     });
   };
-  static restore = (file, handleFinish: () => void) => {
+  static restore = (file:any, handleFinish: () => void) => {
     let dataArr = [
       "notes",
       "digests",
@@ -77,7 +77,7 @@ class RestoreUtil {
             console.log("hdshsd");
             localforage.getItem("books").then((value: any) => {
               let zip = new JSZip();
-              value.forEach((item, index) => {
+              value.forEach((item:any) => {
                 zip
                   .loadAsync(file)
                   .then((content) => {

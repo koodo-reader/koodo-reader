@@ -14,6 +14,8 @@ import "./bookItem.css";
 import RecordRecent from "../../utils/recordRecent";
 import RecordLocation from "../../utils/recordLocation";
 import BookModel from "../../model/Book";
+import { stateType } from "../../store";
+
 export interface BookItemProps {
   book: BookModel;
   bookCover: string;
@@ -29,7 +31,7 @@ export interface BookItemState {
   isDeleteDialog: boolean;
 }
 class Book extends React.Component<BookItemProps, BookItemState> {
-  epub: object;
+  epub: any;
   constructor(props: BookItemProps) {
     super(props);
     this.state = { isDeleteDialog: false };
@@ -121,10 +123,7 @@ class Book extends React.Component<BookItemProps, BookItemState> {
     );
   }
 }
-const mapStateToProps = (state: {
-  book: { isReading: boolean };
-  progressPanel: { percentage: number };
-}) => {
+const mapStateToProps = (state: stateType) => {
   return {
     isReading: state.book.isReading,
     percentage: state.progressPanel.percentage,

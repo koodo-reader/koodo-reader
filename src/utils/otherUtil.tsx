@@ -33,8 +33,8 @@ class OtherUtil {
     let keyword = (document.querySelector(
       ".header-search-box"
     ) as HTMLInputElement).value;
-    let bookNameArr = [];
-    let AuthorNameArr = [];
+    let bookNameArr: string[] = [];
+    let AuthorNameArr: string[] = [];
     books.forEach((item) => {
       bookNameArr.push(item.name.toLowerCase());
       AuthorNameArr.push(item.author.toLowerCase());
@@ -44,10 +44,10 @@ class OtherUtil {
     let results = this.MergeArray(bookResults, authorResults);
     return results;
   }
-  static KeySearch(event, books: BookModel[]) {
+  static KeySearch(event: any, books: BookModel[]) {
     if (event && event.keyCode === 13) {
-      let bookNameArr = [];
-      let AuthorNameArr = [];
+      let bookNameArr: string[] = [];
+      let AuthorNameArr: string[] = [];
       books.forEach((item) => {
         bookNameArr.push(item.name.toLowerCase());
         AuthorNameArr.push(item.author.toLowerCase());
@@ -60,14 +60,15 @@ class OtherUtil {
   }
   static setSortCode(sortCode: number, orderCode: number) {
     let json = localStorage.getItem("sortCode");
-    let obj = JSON.parse(json) || { sort: 2, order: 2 };
+    let obj = JSON.parse(json!) || { sort: 2, order: 2 };
     obj.sort = sortCode;
     obj.order = orderCode;
     localStorage.setItem("sortCode", JSON.stringify(obj));
   }
 
   static getSortCode() {
-    let json = localStorage.getItem("sordCode");
+    let json =
+      localStorage.getItem("sordCode") || JSON.stringify({ sort: 2, order: 2 });
     let obj = JSON.parse(json) || { sort: 2, order: 2 };
     return obj || null;
   }

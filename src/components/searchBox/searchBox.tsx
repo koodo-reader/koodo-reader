@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import { handleSearchBooks, handleSearch } from "../../redux/manager.redux";
 import OtherUtil from "../../utils/otherUtil";
 import BookModel from "../../model/Book";
+import { stateType } from "../../store";
 
 export interface SearchBoxProps {
   books: BookModel[];
@@ -18,7 +19,7 @@ class SearchBox extends React.Component<SearchBoxProps> {
     this.props.handleSearchBooks(results);
     this.props.handleSearch(true);
   };
-  handleKey = (event) => {
+  handleKey = (event: any) => {
     let results = OtherUtil.KeySearch(event, this.props.books);
     if (results !== undefined) {
       this.props.handleSearchBooks(results);
@@ -64,7 +65,7 @@ class SearchBox extends React.Component<SearchBoxProps> {
     );
   }
 }
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: stateType) => {
   return {
     books: state.manager.books,
     isSearch: state.manager.isSearch,

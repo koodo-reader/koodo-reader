@@ -4,6 +4,8 @@ import "./singleControl.css";
 import { handleSingle } from "../../redux/reader.redux";
 import { connect } from "react-redux";
 import { handleMessageBox, handleMessage } from "../../redux/manager.redux";
+import { stateType } from "../../store";
+
 export interface SingleControlProps {
   handleSingle: (mode: string) => void;
   handleMessageBox: (isShow: boolean) => void;

@@ -9,6 +9,7 @@ import RecordRecent from "../../utils/recordRecent";
 import ShelfUtil from "../../utils/shelfUtil";
 import SortUtil from "../../utils/sortUtil";
 import BookModel from "../../model/Book";
+import { stateType } from "../../store";
 
 export interface BookListProps {
   books: BookModel[];
@@ -17,35 +18,38 @@ export interface BookListProps {
   mode: string;
   shelfIndex: number;
   searchBooks: number[];
-  isSearch: string;
-  isSort: string;
+  isSearch: boolean;
+  isSort: boolean;
   isList: string;
   sortCode: { sort: number; order: number };
   handleFetchList: () => void;
 }
 class BookList extends React.Component<BookListProps> {
   //根据localstorage列表的数据，得到最近阅读的图书
-  handleRecent = (items: BookModel[] | object[]) => {
-    let recentArr = [];
+  handleRecent = (items: any) => {
+    let recentArr: any = [];
     for (let i in RecordRecent.getRecent()) {
       recentArr.push(RecordRecent.getRecent()[i].bookKey);
     }
-    let recentItems = items.filter((item) => {
+    let recentItems: any = items.filter((item: { key: number }) => {
       return recentArr.indexOf(item.key) > -1;
     });
     return recentItems;
   };
   //获取书架数据
-  handleShelf(items: BookModel[] | object[], index: number) {
+  handleShelf(items: any, index: number) {
     //获取书架名
+    if (index === -1) {
+      return;
+    }
     let shelfTitle = Object.keys(ShelfUtil.getShelf());
-    // console.log(shelfTitle, index, "shelfTitle");
     //获取当前书架名
     let currentShelfTitle = shelfTitle[index + 1];
     //获取当前书架的图书列表
     let currentShelfList = ShelfUtil.getShelf()[currentShelfTitle];
     //根据图书列表获取到图书数据
-    let shelfItems = items.filter((item) => {
+    console.log(currentShelfList, currentShelfTitle, "currentShelfList");
+    let shelfItems = items.filter((item: { key: number }) => {
       return currentShelfList.indexOf(item.key) > -1;
     });
     return shelfItems;
@@ -56,8 +60,8 @@ class BookList extends React.Component<BookListProps> {
     this.props.handleFetchList();
   };
   //根据搜索图书index获取到搜索出的图书
-  handleFilter = (items: BookModel[] | object[], arr: number[]) => {
-    let itemArr = [];
+  handleFilter = (items: any, arr: number[]) => {
+    let itemArr: any[] = [];
     arr.forEach((item) => {
       itemArr.push(items[item]);
     });
@@ -73,7 +77,7 @@ class BookList extends React.Component<BookListProps> {
       let books =
         this.props.mode === "recent"
           ? this.handleRecent(this.props.books)
-          : this.props.shelfIndex !== null
+          : this.props.shelfIndex !== -1
           ? this.handleShelf(this.props.books, this.props.shelfIndex)
           : this.props.isSearch
           ? this.handleFilter(this.props.books, this.props.searchBooks)
@@ -81,25 +85,24 @@ class BookList extends React.Component<BookListProps> {
           ? this.handleFilter(
               this.props.books,
               //返回排序后的图书index
-              SortUtil.sortBooks(this.props.books, this.props.sortCode)
+              SortUtil.sortBooks(this.props.books, this.props.sortCode) || []
             )
           : this.props.books;
-      // console.log(this.props.covers);
       //根据不同的场景获取不同图书的封面
       let covers =
         this.props.mode === "recent"
           ? this.handleRecent(this.props.covers)
-          : this.props.shelfIndex !== null
+          : this.props.shelfIndex !== -1
           ? this.handleShelf(this.props.covers, this.props.shelfIndex)
           : this.props.isSearch
           ? this.handleFilter(this.props.covers, this.props.searchBooks)
           : this.props.isSort
           ? this.handleFilter(
               this.props.covers,
-              SortUtil.sortBooks(this.props.books, this.props.sortCode)
+              SortUtil.sortBooks(this.props.books, this.props.sortCode) || []
             )
           : this.props.covers;
-      return books.map((item, index) => {
+      return books.map((item: BookModel, index: number) => {
         return this.props.isList === "list" ? (
           <BookItem
             key={item.key}
@@ -153,7 +156,7 @@ class BookList extends React.Component<BookListProps> {
     );
   }
 }
-const mappropsToProps = (props) => {
+const mappropsToProps = (props: stateType) => {
   return {
     books: props.manager.books,
     covers: props.manager.covers,

@@ -149,6 +149,7 @@
   bottom: 21px;
   right: 37px;
   cursor: pointer;
+  font-weight: bold;
 }
 .backup-page-previous {
   font-size: 18px;
@@ -159,6 +160,7 @@
   bottom: 21px;
   right: 108px;
   cursor: pointer;
+  font-weight: bold;
 }
 .backup-page-backup-selector {
   width: 152px;

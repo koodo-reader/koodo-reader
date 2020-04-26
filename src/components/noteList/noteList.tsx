@@ -5,18 +5,20 @@ import { connect } from "react-redux";
 import NoteModel from "../../model/Note";
 import BookModel from "../../model/Book";
 import BookmarkModel from "../../model/Bookmark";
+import { stateType } from "../../store";
+
 export interface NoteListProps {
   notes: NoteModel[];
   currentEpub: any;
-  currentBook: BookModel[];
+  currentBook: BookModel;
   bookmarks: BookmarkModel[];
   chapters: any;
   books: BookModel[];
 }
 
 export interface NoteListState {
-  currentDate: string;
-  currentIndex: number;
+  currentDate: string | null;
+  currentIndex: number | null;
 }
 
 class NoteList extends React.Component<NoteListProps, NoteListState> {
@@ -70,7 +72,7 @@ class NoteList extends React.Component<NoteListProps, NoteListState> {
       }
     }
     //得到日期为键，笔记为值的对象
-    let noteObj = {};
+    let noteObj: { [key: string]: any } = {};
     dateArr.forEach((date) => {
       noteObj["" + date.year + date.month + date.day] = [];
     });
@@ -93,7 +95,7 @@ class NoteList extends React.Component<NoteListProps, NoteListState> {
           <li
             className="note-list-item"
             key={item.notes}
-            style={isCurrent ? { height: "200px" } : null}
+            style={isCurrent ? { height: "200px" } : {}}
           >
             <div className="note-list-item-note-parent">
               <div className="note-list-item-note">{item.notes}</div>
@@ -157,7 +159,7 @@ class NoteList extends React.Component<NoteListProps, NoteListState> {
     );
   }
 }
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: stateType) => {
   return {
     notes: state.reader.notes,
     currentEpub: state.book.currentEpub,

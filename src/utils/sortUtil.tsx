@@ -1,13 +1,13 @@
 import BookModel from "../model/Book";
 const getBookName = (books: BookModel[]) => {
-  let nameArr = [];
+  let nameArr: string[] = [];
   books.forEach((item: BookModel) => {
     nameArr.push(item.name);
   });
   return nameArr;
 };
 const getBookIndex = (nameArr: string[], oldNameArr: string[]) => {
-  let indexArr = [];
+  let indexArr: number[] = [];
   nameArr.forEach((item) => {
     indexArr.push(oldNameArr.indexOf(item));
   });

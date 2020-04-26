@@ -8,6 +8,8 @@ import { handleFetchBookmarks } from "../../redux/reader.redux";
 import ReadingTime from "../../utils/readingTime";
 import BookModel from "../../model/Book";
 import BookmarkModel from "../../model/Bookmark";
+import { stateType } from "../../store";
+
 export interface NavigationPanelProps {
   currentEpub: any;
   currentBook: BookModel;
@@ -125,7 +127,7 @@ class NavigationPanel extends React.Component<
     );
   }
 }
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: stateType) => {
   return {
     currentEpub: state.book.currentEpub,
     currentBook: state.book.currentBook,

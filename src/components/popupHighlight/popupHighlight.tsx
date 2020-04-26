@@ -8,6 +8,8 @@ import { connect } from "react-redux";
 import NoteModel from "../../model/Note";
 import BookModel from "../../model/Book";
 import HighlighterModel from "../../model/Highlighter";
+import { stateType } from "../../store";
+
 declare var window: any;
 export interface PopupHighlightProps {
   currentEpub: any;
@@ -40,7 +42,14 @@ class PopupHighlight extends React.Component<PopupHighlightProps> {
     });
   }
 
-  handleHighlight(event) {
+  handleHighlight(event: any) {
+    if (
+      !document.getElementsByTagName("iframe")[0] ||
+      !document.getElementsByTagName("iframe")[0].contentDocument
+    ) {
+      console.log("hgiht hsaj");
+      return;
+    }
     let iframe = document.getElementsByTagName("iframe")[0];
 
     let iDoc = document.getElementsByTagName("iframe")[0].contentDocument;
@@ -53,14 +62,14 @@ class PopupHighlight extends React.Component<PopupHighlightProps> {
     // 清空文本选取
     let book = this.props.currentBook;
     let epub = this.props.currentEpub;
-    let sel = iDoc.getSelection();
-    let range = sel.getRangeAt(0);
+    let sel = iDoc!.getSelection();
+    let range = sel!.getRangeAt(0);
     let cfiBase = epub.renderer.currentChapter.cfiBase;
     let cfi = new window.EPUBJS.EpubCFI().generateCfiFromRange(range, cfiBase);
     let bookKey = book.key;
     let charRange = window.rangy
       .getSelection(iframe)
-      .saveCharacterRanges(iDoc.body)[0];
+      .saveCharacterRanges(iDoc!.body)[0];
     let serial = JSON.stringify(charRange);
     //获取章节名
 
@@ -70,7 +79,7 @@ class PopupHighlight extends React.Component<PopupHighlightProps> {
     highlighterArr.push(highlighter);
     localforage.setItem("highlighters", highlighterArr);
     this.props.closeMenu();
-    iDoc.getSelection().empty();
+    iDoc!.getSelection()!.empty();
     this.props.handleMessage("高亮成功");
     this.props.handleMessageBox(true);
     // console.log("%c Add note here. ", "background-color: green");
@@ -129,7 +138,7 @@ class PopupHighlight extends React.Component<PopupHighlightProps> {
     return renderHighlightList();
   }
 }
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: stateType) => {
   return {
     currentEpub: state.book.currentEpub,
     currentBook: state.book.currentBook,

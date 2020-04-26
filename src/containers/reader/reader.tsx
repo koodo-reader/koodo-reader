@@ -17,7 +17,8 @@ import { handleFetchPercentage } from "../../redux/progressPanel.redux";
 import { handleMessageBox } from "../../redux/manager.redux";
 import "./reader.css";
 import { connect } from "react-redux";
-import BookModel from "../../model/Book";
+import BookModel from "../../model/Book"; import { stateType } from "../../store";
+
 export interface ReaderProps {
   currentEpub: any;
   currentBook: BookModel;
@@ -40,8 +41,8 @@ export interface ReaderState {
 }
 
 class Reader extends React.Component<ReaderProps, ReaderState> {
-  timer: NodeJS.Timeout;
-  constructor(props) {
+  timer!: NodeJS.Timeout;
+  constructor(props:ReaderProps) {
     super(props);
     this.state = {
       isOpenSettingPanel: false,
@@ -59,7 +60,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
     this.props.handleFetchHighlighters();
     this.props.handleFetchChapters(this.props.currentEpub);
   }
-  UNSAFE_componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps:ReaderProps) {
     this.setState({
       isMessage: nextProps.isMessage,
     });
@@ -84,7 +85,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
   //   this.setState({ [key]: value });
   // }
   //进入阅读器
-  handleEnterReader = (position) => {
+  handleEnterReader = (position:string) => {
     //控制上下左右的菜单的显示
     switch (position) {
       case "right":
@@ -112,7 +113,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
     }
   };
   //退出阅读器
-  handleLeaveReader = (event, position: string) => {
+  handleLeaveReader = (event:any, position: string) => {
     //控制上下左右的菜单的显示
     switch (position) {
       case "right": {
@@ -213,7 +214,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
     );
   }
 }
-const mapStateToProps = (state) => {
+const mapStateToProps = (state:stateType) => {
   return {
     currentEpub: state.book.currentEpub,
     currentBook: state.book.currentBook,

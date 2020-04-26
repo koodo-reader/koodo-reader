@@ -12,6 +12,8 @@ import {
 } from "../../redux/manager.redux";
 import { handleBackupDialog } from "../../redux/backupPage.redux";
 import BookModel from "../../model/Book";
+import { stateType } from "../../store";
+
 export interface HeaderProps {
   books: BookModel[];
   isSearch: boolean;
@@ -28,7 +30,7 @@ export interface HeaderState {
 }
 
 class Header extends React.Component<HeaderProps, HeaderState> {
-  constructor(props) {
+  constructor(props:HeaderProps) {
     super(props);
     this.state = {
       isOnlyLocal: false,
@@ -92,7 +94,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     );
   }
 }
-const mapStateToProps = (state) => {
+const mapStateToProps = (state:stateType) => {
   return {
     books: state.manager.books,
     isSearch: state.manager.isSearch,

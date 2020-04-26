@@ -1,3 +1,4 @@
+import BookModel from "../model/Book";
 const initState = {
   isOpenEditDialog: false,
   isOpenDeleteDialog: false,
@@ -5,9 +6,11 @@ const initState = {
   isReading: false,
   currentBook: {},
   currentEpub: {},
-  isRedirect: false,
 };
-export function book(state = initState, action) {
+export function book(
+  state = initState,
+  action: { type: string; payload: any }
+) {
   switch (action.type) {
     case "HANDLE_EDIT_DIALOG":
       return {
@@ -50,25 +53,21 @@ export function book(state = initState, action) {
   }
 }
 
-export function handleEditDialog(mode) {
+export function handleEditDialog(mode: boolean) {
   return { type: "HANDLE_EDIT_DIALOG", payload: mode };
 }
-export function handleDeleteDialog(mode) {
+export function handleDeleteDialog(mode: boolean) {
   return { type: "HANDLE_DELETE_DIALOG", payload: mode };
 }
-export function handleAddDialog(mode) {
+export function handleAddDialog(mode: boolean) {
   return { type: "HANDLE_ADD_DIALOG", payload: mode };
 }
-export function handleReadingState(state) {
+export function handleReadingState(state: boolean) {
   return { type: "HANDLE_READING_STATE", payload: state };
 }
-export function handleReadingBook(book) {
+export function handleReadingBook(book: BookModel) {
   return { type: "HANDLE_READING_BOOK", payload: book };
 }
-export function handleReadingEpub(epub) {
+export function handleReadingEpub(epub: any) {
   return { type: "HANDLE_READING_EPUB", payload: epub };
-}
-
-export function handleRedirect() {
-  return { type: "HANDLE_REDIRECT" };
 }

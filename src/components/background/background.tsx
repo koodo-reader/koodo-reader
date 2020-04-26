@@ -2,12 +2,13 @@
 import React from "react";
 import "./background.css";
 import { connect } from "react-redux";
+import { stateType } from "../../store";
 export interface BackgroundProps {}
 export interface BackgroundState {
   isSingle: boolean;
 }
 class Background extends React.Component<BackgroundProps, BackgroundState> {
-  constructor(props) {
+  constructor(props:any) {
     super(props);
     this.state = {
       isSingle: localStorage.getItem("isSingle") === "single",
@@ -36,7 +37,7 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
     );
   }
 }
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: stateType) => {
   return {
     isSingle: state.reader.isSingle,
   };

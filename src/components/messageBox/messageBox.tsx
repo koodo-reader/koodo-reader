@@ -2,6 +2,8 @@
 import React from "react";
 import { connect } from "react-redux";
 import "./messageBox.css";
+import { stateType } from "../../store";
+
 export interface MessageBoxProps {
   message: string;
 }
@@ -15,7 +17,7 @@ class MessageBox extends React.Component<MessageBoxProps> {
     );
   }
 }
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: stateType) => {
   return {
     message: state.manager.message,
   };

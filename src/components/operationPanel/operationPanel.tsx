@@ -7,6 +7,8 @@ import {
   handleBookmarks,
   handleFetchBookmarks,
 } from "../../redux/reader.redux";
+import { stateType } from "../../store";
+
 import { handleMessageBox, handleMessage } from "../../redux/manager.redux";
 import { handleReadingState } from "../../redux/book.redux";
 import localforage from "localforage";
@@ -98,7 +100,7 @@ class OperationPanel extends React.Component<
       RecordLocation.getCfi(this.props.currentBook.key) === null
         ? 0
         : RecordLocation.getCfi(this.props.currentBook.key).percentage;
-    let index = this.props.chapters.findIndex((item) => {
+    let index = this.props.chapters.findIndex((item:any) => {
       return item.spinePos > this.props.currentEpub.spinePos;
     });
     let chapter = "未知章节";
@@ -166,7 +168,7 @@ class OperationPanel extends React.Component<
     );
   }
 }
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: stateType) => {
   return {
     currentEpub: state.book.currentEpub,
     currentBook: state.book.currentBook,
