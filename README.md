@@ -6,7 +6,7 @@
     Koodo Reader
   </h1>
   <h3 align="center">
-    一个基于 electron 和 React 开发的epub阅读器
+    一个基于 **Electron** 和 **React** 开发的 Epub 阅读器
   </h3>
 
 ## 预览
@@ -21,7 +21,7 @@
 
 👏 欢迎使用 **Koodo Reader** ！
 
-✍️ **Koodo Reader** 基于 electron 和 React 开发，支持桌面版和网页版
+✍️ **Koodo Reader** 是一个开源免费的 Epub 阅读器，支持桌面版和网页版
 
 ## 特色 👇
 
@@ -33,7 +33,7 @@
 
 💻 安全的备份和恢复您所有的数据
 
-🖥 通过把备份文件保存到 OneDrive, iCloud, Dropbox 等网盘的本地文件夹，实现同步
+🖥 通过把备份文件保存到 **OneDrive**, **iCloud**, **Dropbox** 等网盘的本地文件夹，实现同步
 
 🌱 当然 **Koodo Reader** 仍然很年轻并且有一些缺陷，但有你的支持它一定会越来越好 🏃
 
@@ -51,7 +51,11 @@
 
 1. 将项目源码下载到本地
 
-2. 进入 src 文件夹，打开命令行工具，运行以下代码进入 Electron 模式
+   ```
+   git clone https://github.com/troyeguo/koodo-reader.git
+   ```
+
+2. cd 到项目文件夹，运行以下代码进入 Electron 模式
 
    ```
    yarn
@@ -64,10 +68,6 @@
    yarn
    yarn start
    ```
-
-4. 整个安装和启动过程比较漫长，只要控制台和命令行没报错，还请耐心等待
-
-5. 以上介绍可能难以覆盖所有流程，如果您在哪一步出现问题或者有疑问，欢迎通过 issue 向我提问
 
 ## 后续更新
 
