@@ -1,9 +1,13 @@
 import React from "react";
 import "./welcomePage.css";
 import { welcomeMessage } from "../../utils/readerConfig";
-
+import { Trans } from "react-i18next";
+import { withNamespaces } from "react-i18next";
+import { handleFirst } from "../../redux/actions/manager";
+import { connect } from "react-redux";
 export interface WelcomePageProps {
   handleCloseWelcome: () => void;
+  handleFirst: (isFirst: string) => void;
 }
 
 export interface WelcomePageState {
@@ -17,7 +21,7 @@ class WelcomePage extends React.Component<WelcomePageProps, WelcomePageState> {
     this.state = { currentIndex: 0, isOpenWelcome: false };
   }
   handleSkip = () => {
-    this.props.handleCloseWelcome();
+    this.handleCloseWelcome();
   };
   handlePrevious = () => {
     if (this.state.currentIndex > 0)
@@ -27,6 +31,10 @@ class WelcomePage extends React.Component<WelcomePageProps, WelcomePageState> {
     // console.log("next");
     if (this.state.currentIndex < 3)
       this.setState({ currentIndex: this.state.currentIndex + 1 });
+  };
+  handleCloseWelcome = () => {
+    this.props.handleFirst("no");
+    localStorage.setItem("isFirst", "no");
   };
   render() {
     const renderWelcome = () => {
@@ -41,16 +49,22 @@ class WelcomePage extends React.Component<WelcomePageProps, WelcomePageState> {
             key={item.sub}
           >
             <div className="welcome-message-main">
-              <div>{item.main}</div>
+              <div>
+                <Trans>{item.main}</Trans>
+              </div>
             </div>
-            <div className="welcome-message-sub">{item.sub}</div>
+            <div className="welcome-message-sub">
+              <Trans>{item.sub}</Trans>
+            </div>
           </div>
         );
       });
     };
     return (
       <div className="welcome-page-container">
-        <div className="welcome-title">朋友，别来无恙啊！</div>
+        <div className="welcome-title">
+          <Trans>Hi! Stranger</Trans>
+        </div>
         <div
           className="welcome-previout-page"
           onClick={() => {
@@ -114,11 +128,21 @@ class WelcomePage extends React.Component<WelcomePageProps, WelcomePageState> {
             this.handleSkip();
           }}
         >
-          <div>不再提示</div>
+          <div>
+            <Trans>Skip</Trans>
+          </div>
         </div>
       </div>
     );
   }
 }
-
-export default WelcomePage;
+const mapStateToProps = () => {
+  return {};
+};
+const actionCreator = {
+  handleFirst,
+};
+export default connect(
+  mapStateToProps,
+  actionCreator
+)(withNamespaces()(WelcomePage as any));

@@ -2,8 +2,8 @@
 const defaultShelf = {
   新建书架: null,
   工作学习: [],
-  生活百科: [],
   休闲娱乐: [],
+  生活百科: [],
 };
 class ShelfUtil {
   static setShelf(shelfTitle: string, bookKey: string) {

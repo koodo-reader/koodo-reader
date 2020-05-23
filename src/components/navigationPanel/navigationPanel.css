@@ -71,20 +71,12 @@
 }
 
 .book-content-title {
-  position: absolute;
-  left: 62px;
-  top: 145px;
-  width: 32px;
   line-height: 27px;
   /* color: rgba(112, 112, 112, 1); */
   opacity: 1;
   cursor: pointer;
 }
 .book-bookmark-title {
-  position: absolute;
-  left: 192px;
-  top: 145px;
-  width: 32px;
   line-height: 27px;
   /* color: rgba(217, 217, 217, 1); */
   opacity: 1;
@@ -116,4 +108,12 @@
   font-size: 15px;
   color: rgba(75, 75, 75, 0.8);
   line-height: 60px;
+}
+.navigation-navigation {
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
 }

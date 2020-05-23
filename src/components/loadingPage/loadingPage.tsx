@@ -3,7 +3,7 @@ import React from "react";
 import "./loadingPage.css";
 import { connect } from "react-redux";
 import BookModel from "../../model/Book";
-import { stateType } from "../../store";
+import { stateType } from "../../redux/store";
 
 export interface LoadingPageProps {
   books: BookModel[];

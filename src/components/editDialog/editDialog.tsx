@@ -6,15 +6,17 @@ import {
   handleFetchBooks,
   handleMessageBox,
   handleMessage,
-} from "../../redux/manager.redux";
-import { handleEditDialog } from "../../redux/book.redux";
+} from "../../redux/actions/manager";
+import { handleEditDialog } from "../../redux/actions/book";
 import localforage from "localforage";
 import BookModel from "../../model/Book";
 import NoteModel from "../../model/Note";
 import DigestModel from "../../model/Digest";
 import HighligherModel from "../../model/Highlighter";
 import BookmarkModel from "../../model/Bookmark";
-import { stateType } from "../../store";
+import { stateType } from "../../redux/store";
+import { Trans } from "react-i18next";
+import { withNamespaces } from "react-i18next";
 
 export interface EditDialogProps {
   handleMessage: (message: string) => void;
@@ -74,19 +76,25 @@ class EditDialog extends React.Component<EditDialogProps, EditDialogState> {
       this.props.handleEditDialog(false);
       this.props.handleFetchBooks();
     });
-    this.props.handleMessage("编辑成功");
+    this.props.handleMessage("Edit Successfully");
     this.props.handleMessageBox(true);
   };
   render() {
     return (
       <div className="edit-dialog-container">
-        <div className="edit-dialog-title">编辑图书</div>
+        <div className="edit-dialog-title">
+          <Trans>Edit Book</Trans>
+        </div>
         <div className="edit-dialog-book-name-container">
-          <div className="edit-dialog-book-name-text">书名</div>
+          <div className="edit-dialog-book-name-text">
+            <Trans>Book Name</Trans>
+          </div>
           <input className="edit-dialog-book-name-box" />
         </div>
         <div className="edit-dialog-book-author-container">
-          <div className="edit-dialog-book-author-text">作者</div>
+          <div className="edit-dialog-book-author-text">
+            <Trans>Author</Trans>
+          </div>
           <input className="edit-dialog-book-author-box" />
         </div>
         <div
@@ -95,7 +103,7 @@ class EditDialog extends React.Component<EditDialogProps, EditDialogState> {
             this.handleCancel();
           }}
         >
-          取消
+          <Trans>Cancel</Trans>
         </div>
         <div
           className="edit-dialog-comfirm"
@@ -103,7 +111,7 @@ class EditDialog extends React.Component<EditDialogProps, EditDialogState> {
             this.handleComfirm();
           }}
         >
-          确认
+          <Trans>Confirm</Trans>
         </div>
       </div>
     );
@@ -126,4 +134,7 @@ const actionCreator = {
   handleMessageBox,
   handleMessage,
 };
-export default connect(mapStateToProps, actionCreator)(EditDialog);
+export default connect(
+  mapStateToProps,
+  actionCreator
+)(withNamespaces()(EditDialog as any));

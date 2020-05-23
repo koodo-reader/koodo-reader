@@ -14,8 +14,6 @@
   width: 120px;
   height: 20px;
   font-size: 20px;
-
-  font-weight: bold;
   color: rgba(75, 75, 75, 1);
   opacity: 1;
   width: 100%;
@@ -33,6 +31,7 @@
   top: 55px;
 }
 .edit-dialog-book-name-text {
+  width: 50px;
   float: left;
   margin-left: 35px;
   margin-top: 7px;
@@ -58,6 +57,7 @@
   top: 95px;
 }
 .edit-dialog-book-author-text {
+  width: 50px;
   float: left;
   margin-left: 35px;
   margin-top: 7px;

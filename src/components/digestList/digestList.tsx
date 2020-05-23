@@ -5,7 +5,9 @@ import { connect } from "react-redux";
 import BookModel from "../../model/Book";
 import BookmarkModel from "../../model/Bookmark";
 import DigestModel from "../../model/Digest";
-import { stateType } from "../../store";
+import { stateType } from "../../redux/store";
+import { Trans } from "react-i18next";
+import { withNamespaces } from "react-i18next";
 
 export interface DigestListProps {
   currentEpub: any;
@@ -75,7 +77,9 @@ class DigestList extends React.Component<DigestListProps> {
                 <div className="digest-list-item-text">{item.text}</div>
               </div>
               <div className="digest-list-item-citation">
-                <div className="digest-list-item-title">来自《</div>
+                <div className="digest-list-item-title">
+                  <Trans>From</Trans>《
+                </div>
                 <div className="digest-list-item-chapter digest-list-item-title">
                   {this.handleBookName(item.bookKey)}
                 </div>
@@ -90,7 +94,7 @@ class DigestList extends React.Component<DigestListProps> {
       return dateArr.map((item, index) => {
         return (
           <li className="digest-page-item" key={index}>
-            <div className="digest-page-item-date">{`${item.year}年${item.month}月${item.day}日`}</div>
+            <div className="digest-page-item-date">{`${item.year}-${item.month}-${item.day}`}</div>
             <ul className="digest-list-container-box">
               {renderDigestListItem("" + item.year + item.month + item.day)}
             </ul>
@@ -116,4 +120,7 @@ const mapStateToProps = (state: stateType) => {
   };
 };
 const actionCreator = {};
-export default connect(mapStateToProps, actionCreator)(DigestList);
+export default connect(
+  mapStateToProps,
+  actionCreator
+)(withNamespaces()(DigestList as any));
