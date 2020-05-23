@@ -41,7 +41,6 @@
 .backup-page-title {
   width: 100%;
   font-size: 20px;
-  font-weight: bold;
   line-height: 60px;
   color: rgba(75, 75, 75, 1);
   opacity: 1;
@@ -149,7 +148,6 @@
   bottom: 21px;
   right: 37px;
   cursor: pointer;
-  font-weight: bold;
 }
 .backup-page-previous {
   font-size: 18px;
@@ -160,7 +158,6 @@
   bottom: 21px;
   right: 108px;
   cursor: pointer;
-  font-weight: bold;
 }
 .backup-page-backup-selector {
   width: 152px;

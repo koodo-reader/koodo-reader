@@ -5,14 +5,14 @@ import {
   handleFetchBooks,
   handleMessageBox,
   handleMessage,
-} from "../../redux/manager.redux";
-import { handleDeleteDialog } from "../../redux/book.redux";
+} from "../../redux/actions/manager";
+import { handleDeleteDialog } from "../../redux/actions/book";
 import {
   handleFetchBookmarks,
   handleFetchNotes,
   handleFetchDigests,
   handleFetchHighlighters,
-} from "../../redux/reader.redux";
+} from "../../redux/actions/reader";
 import DeleteUtil from "../../utils/deleteUtil";
 import localforage from "localforage";
 import ShelfUtil from "../../utils/shelfUtil";
@@ -22,7 +22,9 @@ import NoteModel from "../../model/Note";
 import DigestModel from "../../model/Digest";
 import HighligherModel from "../../model/Highlighter";
 import BookmarkModel from "../../model/Bookmark";
-import { stateType } from "../../store";
+import { stateType } from "../../redux/store";
+import { Trans } from "react-i18next";
+import { withNamespaces } from "react-i18next";
 
 export interface DeleteDialogProps {
   books: BookModel[];
@@ -135,16 +137,20 @@ class DeleteDialog extends React.Component<DeleteDialogProps> {
       this.handleDeleteOther();
     }
 
-    this.props.handleMessage("删除成功");
+    this.props.handleMessage("Delete Successfully");
     this.props.handleMessageBox(true);
   };
   render() {
     return (
       <div className="delete-dialog-container">
         {this.props.mode !== "shelf" ? (
-          <div className="delete-dialog-title">是否删除本图书</div>
+          <div className="delete-dialog-title">
+            <Trans>Delete This Book</Trans>
+          </div>
         ) : (
-          <div className="delete-dialog-title">从书架删除本书</div>
+          <div className="delete-dialog-title">
+            <Trans>Delete from Shelf</Trans>
+          </div>
         )}
 
         <div className="delete-dialog-book">
@@ -154,11 +160,14 @@ class DeleteDialog extends React.Component<DeleteDialogProps> {
         </div>
         {this.props.mode !== "shelf" ? (
           <div className="delete-dialog-other-option">
-            同时删除本书所有的书签，笔记，书摘
+            <Trans>
+              This action will delete all the notes, bookmarks and digests of
+              this book
+            </Trans>
           </div>
         ) : (
           <div className="delete-dialog-other-option">
-            仅从此书架中删除本书，原图书不受影响
+            <Trans>This action won't delete the original book</Trans>
           </div>
         )}
         <div
@@ -167,7 +176,7 @@ class DeleteDialog extends React.Component<DeleteDialogProps> {
             this.handleCancel();
           }}
         >
-          取消
+          <Trans>Cancel</Trans>
         </div>
         <div
           className="delete-dialog-comfirm"
@@ -175,7 +184,7 @@ class DeleteDialog extends React.Component<DeleteDialogProps> {
             this.handleComfirm();
           }}
         >
-          删除
+          <Trans>Delete</Trans>
         </div>
       </div>
     );
@@ -204,4 +213,7 @@ const actionCreator = {
   handleMessageBox,
   handleMessage,
 };
-export default connect(mapStateToProps, actionCreator)(DeleteDialog);
+export default connect(
+  mapStateToProps,
+  actionCreator
+)(withNamespaces()(DeleteDialog as any));

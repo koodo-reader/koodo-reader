@@ -26,6 +26,7 @@
   overflow-y: scroll;
   padding-right: 17px; /* Increase/decrease this value for cross-browser compatibility */
   box-sizing: content-box;
+  position: relative;
 }
 
 .side-menu-icon {

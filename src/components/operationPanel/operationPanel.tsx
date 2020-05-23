@@ -6,11 +6,13 @@ import { connect } from "react-redux";
 import {
   handleBookmarks,
   handleFetchBookmarks,
-} from "../../redux/reader.redux";
-import { stateType } from "../../store";
+} from "../../redux/actions/reader";
+import { stateType } from "../../redux/store";
+import { Trans } from "react-i18next";
+import { withNamespaces } from "react-i18next";
 
-import { handleMessageBox, handleMessage } from "../../redux/manager.redux";
-import { handleReadingState } from "../../redux/book.redux";
+import { handleMessageBox, handleMessage } from "../../redux/actions/manager";
+import { handleReadingState } from "../../redux/actions/book";
 import localforage from "localforage";
 import RecordLocation from "../../utils/recordLocation";
 import BookModel from "../../model/Book";
@@ -100,7 +102,7 @@ class OperationPanel extends React.Component<
       RecordLocation.getCfi(this.props.currentBook.key) === null
         ? 0
         : RecordLocation.getCfi(this.props.currentBook.key).percentage;
-    let index = this.props.chapters.findIndex((item:any) => {
+    let index = this.props.chapters.findIndex((item: any) => {
       return item.spinePos > this.props.currentEpub.spinePos;
     });
     let chapter = "未知章节";
@@ -113,7 +115,7 @@ class OperationPanel extends React.Component<
     this.props.handleBookmarks(bookmarkArr);
     localforage.setItem("bookmarks", bookmarkArr);
     this.setState({ isBookmark: true });
-    this.props.handleMessage("添加成功");
+    this.props.handleMessage("Add Successfully");
     this.props.handleMessageBox(true);
   }
 
@@ -136,7 +138,9 @@ class OperationPanel extends React.Component<
           }}
         >
           <span className="icon-exit exit-reading-icon"></span>
-          <span className="exit-reading-text">退出阅读</span>
+          <span className="exit-reading-text">
+            <Trans>Exit</Trans>
+          </span>
         </div>
         <div
           className="add-bookmark-button"
@@ -145,11 +149,9 @@ class OperationPanel extends React.Component<
           }}
         >
           <span className="icon-add add-bookmark-icon"></span>
-          {true ? (
-            <span className="add-bookmark-text">添加书签</span>
-          ) : (
-            <span className="add-bookmark-text">取消书签</span>
-          )}
+          <span className="add-bookmark-text">
+            <Trans>Add Bookmark</Trans>
+          </span>
         </div>
         <div
           className="enter-fullscreen-button"
@@ -159,9 +161,13 @@ class OperationPanel extends React.Component<
         >
           <span className="icon-fullscreen enter-fullscreen-icon"></span>
           {!this.state.isFullScreen ? (
-            <span className="enter-fullscreen-text">进入全屏</span>
+            <span className="enter-fullscreen-text">
+              <Trans>Enter Fullscreen</Trans>
+            </span>
           ) : (
-            <span className="enter-fullscreen-text">退出全屏</span>
+            <span className="enter-fullscreen-text">
+              <Trans>Exit Fullscreen</Trans>
+            </span>
           )}
         </div>
       </div>
@@ -183,4 +189,7 @@ const actionCreator = {
   handleMessageBox,
   handleMessage,
 };
-export default connect(mapStateToProps, actionCreator)(OperationPanel);
+export default connect(
+  mapStateToProps,
+  actionCreator
+)(withNamespaces()(OperationPanel as any));

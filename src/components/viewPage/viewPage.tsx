@@ -2,9 +2,9 @@ import React from "react";
 import RecordLocation from "../../utils/recordLocation";
 import { connect } from "react-redux";
 import { MouseEvent } from "../../utils/mouseEvent";
-import { handlePercentage } from "../../redux/progressPanel.redux";
+import { handlePercentage } from "../../redux/actions/progressPanel";
 import BookModel from "../../model/Book";
-import { stateType } from "../../store";
+import { stateType } from "../../redux/store";
 
 export interface ViewPageProps {
   currentBook: BookModel;

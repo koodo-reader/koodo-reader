@@ -4,15 +4,18 @@ import "./header.css";
 import { connect } from "react-redux";
 import SearchBox from "../searchBox/searchBox";
 import ImportLocal from "../importLocal/importLocal";
-import About from "../about/about";
+import { Trans } from "react-i18next";
 import {
   handleSortDisplay,
   handleMessageBox,
   handleMessage,
-} from "../../redux/manager.redux";
-import { handleBackupDialog } from "../../redux/backupPage.redux";
+} from "../../redux/actions/manager";
+import { withNamespaces } from "react-i18next";
+import i18n from "../../i18n";
+import { handleBackupDialog } from "../../redux/actions/backupPage";
 import BookModel from "../../model/Book";
-import { stateType } from "../../store";
+import { stateType } from "../../redux/store";
+import About from "../about/about";
 
 export interface HeaderProps {
   books: BookModel[];
@@ -27,16 +30,22 @@ export interface HeaderProps {
 export interface HeaderState {
   isOnlyLocal: boolean;
   isDownload: boolean;
+  isChinese: boolean;
 }
 
 class Header extends React.Component<HeaderProps, HeaderState> {
-  constructor(props:HeaderProps) {
+  constructor(props: HeaderProps) {
     super(props);
     this.state = {
       isOnlyLocal: false,
       isDownload: localStorage.getItem("isDownload") === "yes" ? true : false,
+      isChinese: true,
     };
   }
+  changeLanguage = (lng: string) => {
+    i18n.changeLanguage(lng);
+    this.setState({ isChinese: !this.state.isChinese });
+  };
   handleSortBooks = () => {
     if (this.props.isSortDisplay) {
       this.props.handleSortDisplay(false);
@@ -63,38 +72,49 @@ class Header extends React.Component<HeaderProps, HeaderState> {
             this.handleSortBooks();
           }}
         >
-          <span className="header-sort-text">排序</span>
+          <span className="header-sort-text">
+            <Trans>Sort</Trans>
+          </span>
           <span className="icon-sort header-sort-icon"></span>
         </div>
-        <About />
-        <a
-          href="/koodo-web/assets/demo.epub"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
+        <div className="change-language">
+          {this.state.isChinese ? (
+            <span
+              className="icon-english"
+              onClick={() => this.changeLanguage("en")}
+            ></span>
+          ) : (
+            <span
+              className="icon-chinese"
+              onClick={() => this.changeLanguage("cn")}
+            ></span>
+          )}
+        </div>
+        <a href="/assets/demo.epub" target="_blank" rel="noopener noreferrer">
           <div
             className="download-demo-book"
             onClick={this.handleDownload.bind(this)}
             style={this.state.isDownload ? { color: "rgba(75,75,75,0.8)" } : {}}
           >
-            下载示例图书
+            <Trans>Download Demo Book</Trans>
           </div>
         </a>
+        <About />
 
-        <ImportLocal />
         <div
           className="import-from-cloud"
           onClick={() => {
             this.props.handleBackupDialog(true);
           }}
         >
-          备份和恢复
+          <Trans>Backup and Restore</Trans>
         </div>
+        <ImportLocal />
       </div>
     );
   }
 }
-const mapStateToProps = (state:stateType) => {
+const mapStateToProps = (state: stateType) => {
   return {
     books: state.manager.books,
     isSearch: state.manager.isSearch,
@@ -107,4 +127,7 @@ const actionCreator = {
   handleMessage,
   handleBackupDialog,
 };
-export default connect(mapStateToProps, actionCreator)(Header);
+export default connect(
+  mapStateToProps,
+  actionCreator
+)(withNamespaces()(Header as any));
