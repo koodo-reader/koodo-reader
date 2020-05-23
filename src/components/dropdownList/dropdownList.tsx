@@ -3,7 +3,7 @@ import React from "react";
 import ReaderConfig from "../../utils/readerConfig";
 import { dropdownList } from "../../utils/readerConfig";
 import "./dropdownList.css";
-import { stateType } from "../../store";
+import { Trans, withNamespaces } from "react-i18next";
 
 export interface DropdownListProps {}
 export interface DropdownListState {
@@ -67,7 +67,9 @@ class DropdownList extends React.Component<
     const renderParagraphCharacter = () => {
       return dropdownList.map((item) => (
         <li className="paragraph-character-container" key={item.id}>
-          <p className="general-setting-title">{item.title}</p>
+          <p className="general-setting-title">
+            <Trans>{item.title}</Trans>
+          </p>
           <select
             name=""
             className="general-setting-dropdown"
@@ -97,4 +99,4 @@ class DropdownList extends React.Component<
   }
 }
 
-export default DropdownList;
+export default withNamespaces()(DropdownList as any);

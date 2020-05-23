@@ -2,17 +2,19 @@
 import React from "react";
 import "./bookmarkPage.css";
 import { connect } from "react-redux";
-import { handleFetchBookmarks } from "../../redux/reader.redux";
+import { handleFetchBookmarks } from "../../redux/actions/reader";
 import {
   handleReadingState,
   handleReadingBook,
   handleReadingEpub,
-} from "../../redux/book.redux";
+} from "../../redux/actions/book";
 import RecentBooks from "../../utils/recordRecent";
 import RecordLocation from "../../utils/recordLocation";
 import BookmarkModel from "../../model/Bookmark";
 import BookModel from "../../model/Book";
-import { stateType } from "../../store";
+import { stateType } from "../../redux/store";
+import { Trans } from "react-i18next";
+import { withNamespaces } from "react-i18next";
 
 export interface BookmarkPageProps {
   bookmarks: BookmarkModel[];
@@ -100,7 +102,9 @@ class BookmarkPage extends React.Component<
               this.handleRedirect(item.bookKey, item.cfi, item.percentage);
             }}
           >
-            <div className="bookmark-page-list-item-link-text">点击跳转</div>
+            <div className="bookmark-page-list-item-link-text">
+              <Trans>Go To</Trans>
+            </div>
           </div>
         </li>
       ));
@@ -148,4 +152,7 @@ const actionCreator = {
   handleReadingBook,
   handleReadingEpub,
 };
-export default connect(mapStateToProps, actionCreator)(BookmarkPage);
+export default connect(
+  mapStateToProps,
+  actionCreator
+)(withNamespaces()(BookmarkPage as any));

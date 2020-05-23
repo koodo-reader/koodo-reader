@@ -2,9 +2,11 @@ import React from "react";
 import "./progressPanel.css";
 import { connect } from "react-redux";
 import RecordLocation from "../../utils/recordLocation";
-import { handleFetchLocations } from "../../redux/progressPanel.redux";
+import { handleFetchLocations } from "../../redux/actions/progressPanel";
 import BookModel from "../../model/Book";
-import { stateType } from "../../store";
+import { stateType } from "../../redux/store";
+import { Trans } from "react-i18next";
+import { withNamespaces } from "react-i18next";
 
 export interface ProgressPanelProps {
   currentEpub: any;
@@ -66,7 +68,7 @@ class ProgressPanel extends React.Component<
     return (
       <div className="progress-panel">
         <p className="progress-text">
-          当前进度:
+          <Trans>Current Progress</Trans>:{" "}
           {Math.round(this.state.displayPercentage * 100)}%
         </p>
 
@@ -115,4 +117,7 @@ const mapStateToProps = (state: stateType) => {
   };
 };
 const actionCreator = { handleFetchLocations };
-export default connect(mapStateToProps, actionCreator)(ProgressPanel);
+export default connect(
+  mapStateToProps,
+  actionCreator
+)(withNamespaces()(ProgressPanel as any));

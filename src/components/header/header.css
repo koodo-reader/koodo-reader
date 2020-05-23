@@ -7,7 +7,7 @@
 
 .header-sort-container {
   position: absolute;
-  left: 285px;
+  left: 265px;
   top: 29px;
   cursor: pointer;
 }
@@ -59,12 +59,13 @@
 }
 .import-from-cloud {
   float: right;
-  margin-right: -270px;
+  margin-right: 220px;
   margin-top: 20px;
-  width: 118px;
+  min-width: 118px;
   height: 42px;
   border: 2px solid #4b4b4b;
   background: white;
+  padding: 0px 10px;
   opacity: 1;
   border-radius: 25px;
   line-height: 38px;
@@ -74,32 +75,36 @@
   cursor: pointer;
 }
 
-@media screen and (max-width: 1024px) {
+@media screen and (max-width: 950px) {
   .import-from-cloud {
-    position: absolute;
-    left: 685px;
+    display: none;
   }
   .import-from-local {
-    position: absolute;
-    left: 538px;
+    display: none;
   }
-}
-.about-container {
-  position: absolute;
-  left: 340px;
-  top: 66px;
 }
 .download-demo-book {
   text-decoration: underline;
   width: 200px;
   position: absolute;
-  left: 585px;
+  left: 530px;
   top: 29px;
   cursor: pointer;
   color: blue;
 }
-@media screen and (max-width: 1124px) {
+@media screen and (max-width: 1250px) {
   .download-demo-book {
     display: none;
   }
+}
+
+.change-language {
+  width: 30px;
+  height: 30px;
+  font-size: 30px;
+  position: absolute;
+  left: 340px;
+  margin-top: 30px;
+  color: rgba(75, 75, 75, 1);
+  cursor: pointer;
 }

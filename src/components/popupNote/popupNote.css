@@ -59,3 +59,25 @@
   top: 6px;
   font-weight: 500;
 }
+.note-button-container {
+  position: absolute;
+  bottom: 15px;
+  right: 15px;
+  width: 120px;
+  display: flex;
+  justify-content: space-between;
+}
+.confirm-button {
+  font-size: 16px;
+  line-height: 15px;
+  color: rgba(0, 0, 0, 1);
+  opacity: 1;
+  cursor: pointer;
+}
+.cancel-button {
+  font-size: 16px;
+  line-height: 15px;
+  color: rgba(128, 128, 128, 1);
+  opacity: 1;
+  cursor: pointer;
+}

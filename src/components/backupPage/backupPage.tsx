@@ -2,9 +2,9 @@
 import React from "react";
 import "./backupPage.css";
 import { driveList } from "../../utils/readerConfig";
-import { handleBackupDialog } from "../../redux/backupPage.redux";
+import { handleBackupDialog } from "../../redux/actions/backupPage";
 import { connect } from "react-redux";
-import { handleMessageBox, handleMessage } from "../../redux/manager.redux";
+import { handleMessageBox, handleMessage } from "../../redux/actions/manager";
 import BackupUtil from "../../utils/backupUtil";
 import RestoreUtil from "../../utils/restoreUtil";
 import BookModel from "../../model/Book";
@@ -12,7 +12,9 @@ import NoteModel from "../../model/Note";
 import DigestModel from "../../model/Digest";
 import HighligherModel from "../../model/Highlighter";
 import BookmarkModel from "../../model/Bookmark";
-import { stateType } from "../../store";
+import { stateType } from "../../redux/store";
+import { Trans } from "react-i18next";
+import { withNamespaces } from "react-i18next";
 
 export interface BackupPageProps {
   handleBackupDialog: (isBackup: boolean) => void;
@@ -63,7 +65,7 @@ class BackupPage extends React.Component<BackupPageProps, BackupPageState> {
       if (this.state.currentDrive === 0) {
         this.handleBackupToLocal();
       } else {
-        this.props.handleMessage("敬请期待");
+        this.props.handleMessage("Coming Soon");
         this.props.handleMessageBox(true);
       }
     });
@@ -85,7 +87,9 @@ class BackupPage extends React.Component<BackupPageProps, BackupPageState> {
               <span
                 className={`icon-${item.icon} backup-page-list-icon`}
               ></span>
-              <div className="backup-page-list-title">{item.name}</div>
+              <div className="backup-page-list-title">
+                <Trans>{item.name}</Trans>
+              </div>
             </div>
           </li>
         );
@@ -95,11 +99,17 @@ class BackupPage extends React.Component<BackupPageProps, BackupPageState> {
     return (
       <div className="backup-page-container">
         {this.state.currentStep === 0 ? (
-          <div className="backup-page-title">您想要备份还是恢复</div>
+          <div className="backup-page-title">
+            <Trans>Do you want to backup or restore?</Trans>
+          </div>
         ) : this.state.currentStep === 1 && this.state.isBackup ? (
-          <div className="backup-page-title">您想把数据存在哪里</div>
+          <div className="backup-page-title">
+            <Trans>Where to keep your data?</Trans>
+          </div>
         ) : this.state.currentStep === 1 && !this.state.isBackup ? (
-          <div className="backup-page-title">您的数据保存在哪里</div>
+          <div className="backup-page-title">
+            <Trans>Where is your data?</Trans>
+          </div>
         ) : null}
         {this.state.currentStep === 0 ? (
           <div className="backup-page-option">
@@ -114,7 +124,9 @@ class BackupPage extends React.Component<BackupPageProps, BackupPageState> {
               }}
             >
               <span className="icon-backup"></span>
-              <div>我要备份</div>
+              <div>
+                <Trans>I want to backup</Trans>
+              </div>
             </div>
 
             <div
@@ -128,7 +140,9 @@ class BackupPage extends React.Component<BackupPageProps, BackupPageState> {
               }}
             >
               <span className="icon-restore"></span>
-              <div>我要恢复</div>
+              <div>
+                <Trans>I want to restore</Trans>
+              </div>
             </div>
           </div>
         ) : this.state.currentStep === 1 ? (
@@ -153,10 +167,16 @@ class BackupPage extends React.Component<BackupPageProps, BackupPageState> {
             <div className="backup-page-finish">
               <span className="icon-message backup-page-finish-icon"></span>
               <div className="backup-page-finish-text">
-                {this.state.isBackup ? "备份成功" : "恢复成功"}
+                <Trans>
+                  {this.state.isBackup
+                    ? "Backup Successfully"
+                    : "Restore Successfully"}
+                </Trans>
               </div>
               {this.state.isBackup ? null : (
-                <div style={{ opacity: 0.6 }}>刷新后生效</div>
+                <div style={{ opacity: 0.6 }}>
+                  <Trans>Try refresh or restart</Trans>
+                </div>
               )}
             </div>
           </div>
@@ -183,7 +203,7 @@ class BackupPage extends React.Component<BackupPageProps, BackupPageState> {
               this.setState({ currentStep: 0 });
             }}
           >
-            上一步
+            <Trans>Last Step</Trans>
           </div>
         ) : this.state.currentStep === 0 ? (
           <div
@@ -193,7 +213,7 @@ class BackupPage extends React.Component<BackupPageProps, BackupPageState> {
             }}
             style={this.state.isBackup !== null ? {} : { display: "none" }}
           >
-            下一步
+            <Trans>Next Step</Trans>
           </div>
         ) : null}
       </div>
@@ -214,4 +234,7 @@ const actionCreator = {
   handleMessageBox,
   handleMessage,
 };
-export default connect(mapStateToProps, actionCreator)(BackupPage);
+export default connect(
+  mapStateToProps,
+  actionCreator
+)(withNamespaces()(BackupPage as any));

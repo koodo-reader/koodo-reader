@@ -3,6 +3,9 @@ import React from "react";
 import { fontSizeList } from "../../utils/readerConfig";
 import ReaderConfig from "../../utils/readerConfig";
 import "./fontSizeList.css";
+import { Trans } from "react-i18next";
+import { withNamespaces } from "react-i18next";
+
 export interface FontSizeListProps {}
 export interface FontSizeListState {
   currentFontSizeIndex: number;
@@ -42,14 +45,18 @@ class FontSizeList extends React.Component<
               }
               onClick={() => this.handleFontSize(item.value, index)}
             ></div>
-            <p className="font-size-text">{item.size}</p>
+            <p className="font-size-text">
+              <Trans>{item.size}</Trans>
+            </p>
           </li>
         );
       });
     };
     return (
       <div className="font-size-setting">
-        <div className="font-size-title">字号大小</div>
+        <div className="font-size-title">
+          <Trans>Font Size</Trans>
+        </div>
         <span className="ultra-small-size">A</span>
         <div className="font-size-line"></div>
         <ul className="font-size-selector">{renderFontSizeDescription()}</ul>
@@ -60,4 +67,4 @@ class FontSizeList extends React.Component<
   }
 }
 
-export default FontSizeList;
+export default withNamespaces()(FontSizeList as any);

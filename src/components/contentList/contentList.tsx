@@ -2,7 +2,7 @@
 import React from "react";
 import "./contentList.css";
 import { connect } from "react-redux";
-import { stateType } from "../../store";
+import { stateType } from "../../redux/store";
 
 export interface ContentListProps {
   currentEpub: any;

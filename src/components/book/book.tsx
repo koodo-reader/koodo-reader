@@ -8,7 +8,7 @@ import {
   handleReadingState,
   handleReadingBook,
   handleReadingEpub,
-} from "../../redux/book.redux";
+} from "../../redux/actions/book";
 import RecentBooks from "../../utils/recordRecent";
 import BookModel from "../../model/Book";
 import "./book.css";

@@ -4,12 +4,14 @@ import "./booklist.css";
 import Book from "../book/book";
 import BookItem from "../bookItem/bookItem";
 import { connect } from "react-redux";
-import { handleFetchList } from "../../redux/manager.redux";
+import { handleFetchList } from "../../redux/actions/manager";
 import RecordRecent from "../../utils/recordRecent";
 import ShelfUtil from "../../utils/shelfUtil";
 import SortUtil from "../../utils/sortUtil";
 import BookModel from "../../model/Book";
-import { stateType } from "../../store";
+import { stateType } from "../../redux/store";
+import { Trans } from "react-i18next";
+import { withNamespaces } from "react-i18next";
 
 export interface BookListProps {
   books: BookModel[];
@@ -133,7 +135,7 @@ class BookList extends React.Component<BookListProps> {
                   : { color: "rgba(75,75,75,0.5)" }
               }
             >
-              <span className="icon-grid"></span> 卡片模式
+              <span className="icon-grid"></span> <Trans>Card Mode</Trans>
             </div>
             <div
               className="list-view-mode"
@@ -146,7 +148,7 @@ class BookList extends React.Component<BookListProps> {
                   : { color: "rgba(75,75,75,0.5)" }
               }
             >
-              <span className="icon-list"></span> 列表模式
+              <span className="icon-list"></span> <Trans>List Mode</Trans>
             </div>
           </div>
 
@@ -171,4 +173,7 @@ const mappropsToProps = (props: stateType) => {
   };
 };
 const actionCreator = { handleFetchList };
-export default connect(mappropsToProps, actionCreator)(BookList);
+export default connect(
+  mappropsToProps,
+  actionCreator
+)(withNamespaces()(BookList as any));

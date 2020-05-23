@@ -9,6 +9,7 @@
 .two-page-icon {
   font-size: 60px;
   color: rgba(75, 75, 75, 1);
+  text-align: center;
 }
 .single-mode-text,
 .double-mode-text {
@@ -21,4 +22,5 @@
 .single-mode-container,
 .double-mode-container {
   cursor: pointer;
+  text-align: center;
 }

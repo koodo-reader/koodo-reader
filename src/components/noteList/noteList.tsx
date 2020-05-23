@@ -5,7 +5,9 @@ import { connect } from "react-redux";
 import NoteModel from "../../model/Note";
 import BookModel from "../../model/Book";
 import BookmarkModel from "../../model/Bookmark";
-import { stateType } from "../../store";
+import { stateType } from "../../redux/store";
+import { Trans } from "react-i18next";
+import { withNamespaces } from "react-i18next";
 
 export interface NoteListProps {
   notes: NoteModel[];
@@ -114,7 +116,7 @@ class NoteList extends React.Component<NoteListProps, NoteListState> {
                     : {}
                 }
               >
-                {isCurrent ? "收起" : "显示笔记出处"}
+                <Trans>{isCurrent ? "Less" : "More"}</Trans>
               </div>
               {isCurrent ? null : (
                 <span className="icon-dropdown note-list-show-more-icon"></span>
@@ -129,7 +131,9 @@ class NoteList extends React.Component<NoteListProps, NoteListState> {
               </div>
 
               <div className="note-list-item-citation">
-                <div className="note-list-item-title">来自《</div>
+                <div className="note-list-item-title">
+                  <Trans>From</Trans>《
+                </div>
                 <div className="note-list-item-chapter note-list-item-title">
                   {this.handleBookName(item.bookKey)}
                 </div>
@@ -144,7 +148,7 @@ class NoteList extends React.Component<NoteListProps, NoteListState> {
       return dateArr.map((item, index) => {
         return (
           <li className="note-page-item" key={index}>
-            <div className="note-page-item-date">{`${item.year}年${item.month}月${item.day}日`}</div>
+            <div className="note-page-item-date">{`${item.year}-${item.month}-${item.day}`}</div>
             <ul className="note-list-container-box">
               {renderNoteListItem("" + item.year + item.month + item.day)}
             </ul>
@@ -170,4 +174,7 @@ const mapStateToProps = (state: stateType) => {
   };
 };
 const actionCreator = {};
-export default connect(mapStateToProps, actionCreator)(NoteList);
+export default connect(
+  mapStateToProps,
+  actionCreator
+)(withNamespaces()(NoteList as any));

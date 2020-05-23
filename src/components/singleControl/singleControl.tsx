@@ -1,10 +1,11 @@
 //单双页切换
 import React from "react";
 import "./singleControl.css";
-import { handleSingle } from "../../redux/reader.redux";
+import { handleSingle } from "../../redux/actions/reader";
 import { connect } from "react-redux";
-import { handleMessageBox, handleMessage } from "../../redux/manager.redux";
-import { stateType } from "../../store";
+import { handleMessageBox, handleMessage } from "../../redux/actions/manager";
+import { Trans } from "react-i18next";
+import { withNamespaces } from "react-i18next";
 
 export interface SingleControlProps {
   handleSingle: (mode: string) => void;
@@ -29,7 +30,7 @@ class SingleControl extends React.Component<
     this.props.handleSingle(mode);
     this.setState({ isSingle: mode === "single" });
     localStorage.setItem("isSingle", mode);
-    this.props.handleMessage("退出后生效");
+    this.props.handleMessage("Try Refresh or Restart");
     this.props.handleMessageBox(true);
   };
   render() {
@@ -43,7 +44,9 @@ class SingleControl extends React.Component<
           style={!this.state.isSingle ? { opacity: 0.4 } : {}}
         >
           <span className="icon-single-page single-page-icon"></span>
-          <div className="single-mode-text">单页模式</div>
+          <div className="single-mode-text">
+            <Trans>Single-Page Mode</Trans>
+          </div>
         </div>
         <div
           className="double-mode-container"
@@ -53,11 +56,16 @@ class SingleControl extends React.Component<
           style={this.state.isSingle ? { opacity: 0.4 } : {}}
         >
           <span className="icon-two-page two-page-icon"></span>
-          <div className="double-mode-text">双页模式</div>
+          <div className="double-mode-text">
+            <Trans>Double-Page Mode</Trans>
+          </div>
         </div>
       </div>
     );
   }
 }
 const actionCreator = { handleSingle, handleMessageBox, handleMessage };
-export default connect(null, actionCreator)(SingleControl);
+export default connect(
+  null,
+  actionCreator
+)(withNamespaces()(SingleControl as any));

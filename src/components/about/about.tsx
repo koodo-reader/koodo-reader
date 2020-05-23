@@ -2,7 +2,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import "./about.css";
-import { handleMessageBox, handleMessage } from "../../redux/manager.redux";
+import { handleMessageBox, handleMessage } from "../../redux/actions/manager";
 export interface AboutProps {
   handleMessage: (message: string) => void;
   handleMessageBox: (isShow: boolean) => void;
@@ -43,7 +43,7 @@ class About extends React.Component<AboutProps, AboutState> {
     el.select();
     document.execCommand("copy");
     document.body.removeChild(el);
-    this.props.handleMessage("链接复制成功");
+    this.props.handleMessage("Copy Link Successfully");
     this.props.handleMessageBox(true);
   };
   render() {
@@ -52,12 +52,6 @@ class About extends React.Component<AboutProps, AboutState> {
         <div className="about-icon-container">
           <span
             className="icon-github about-icon"
-            onMouseEnter={() => {
-              this.handleGithub(true);
-            }}
-            onMouseLeave={() => {
-              this.handleGithub(false);
-            }}
             onClick={() => {
               this.handleClick("https://github.com/troyeguo/koodo-reader");
             }}
@@ -65,12 +59,6 @@ class About extends React.Component<AboutProps, AboutState> {
 
           <span
             className="icon-contact about-icon"
-            onMouseEnter={() => {
-              this.handleContact(true);
-            }}
-            onMouseLeave={() => {
-              this.handleContact(false);
-            }}
             onClick={() => {
               this.handleClick("https://wj.qq.com/s2/5565378/4b3f/");
             }}
@@ -78,36 +66,11 @@ class About extends React.Component<AboutProps, AboutState> {
 
           <span
             className="icon-donate about-icon"
-            onMouseEnter={() => {
-              this.handleDonate(true);
+            onClick={() => {
+              this.handleClick("https://github.com/troyeguo/coodo-pay");
             }}
-            onMouseLeave={() => {
-              this.handleDonate(false);
-            }}
-            onClick={() => {}}
           ></span>
         </div>
-        {this.state.isGithub ? (
-          <div className="about-box">
-            <div className="about-message">
-              本项目所有代码均已在GitHub上开源，点击复制项目地址
-            </div>
-          </div>
-        ) : null}
-        {this.state.isContact ? (
-          <div className="about-box">
-            <div className="about-message">
-              向开发者反馈您在使用过程中遇到的问题和改进建议，点击复制反馈地址
-            </div>
-          </div>
-        ) : null}
-        {this.state.isDonate ? (
-          <div className="about-box">
-            <div className="about-message">
-              维护本项目需要占用大量时间，如果您觉得本项目对您有帮助，欢迎打赏开发者
-            </div>
-          </div>
-        ) : null}
       </div>
     );
   }

@@ -8,10 +8,12 @@ import {
   handleMessageBox,
   handleMessage,
   handleFetchBooks,
-} from "../../redux/manager.redux";
+} from "../../redux/actions/manager";
 import SparkMD5 from "spark-md5";
-import { stateType } from "../../store";
-
+import { stateType } from "../../redux/store";
+import { Trans } from "react-i18next";
+import { withNamespaces } from "react-i18next";
+import Dropzone from "react-dropzone";
 export interface ImportLocalProps {
   books: BookModel[];
   handleMessageBox: (isShow: boolean) => void;
@@ -40,7 +42,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
     localforage.setItem("books", bookArr).then(() => {
       this.props.handleFetchBooks();
     });
-    this.props.handleMessage("添加成功");
+    this.props.handleMessage("Add Successfully");
     this.props.handleMessageBox(true);
   };
   //获取书籍md5
@@ -87,7 +89,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
       this.props.books.forEach((item) => {
         if (item.md5 === md5) {
           this.setState({ isRepeat: true });
-          this.props.handleMessage("文件重复");
+          this.props.handleMessage("Duplicate Book");
           this.props.handleMessageBox(true);
         }
       });
@@ -140,20 +142,30 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
 
   render() {
     return (
-      <div className="import-from-local">
-        从本地导入
-        <input
-          type="file"
-          id="import-book-box"
-          accept="application/epub+zip"
-          className="import-book-box"
-          name="file"
-          multiple={true}
-          onChange={(event) => {
-            this.handleChange(event);
-          }}
-        />
-      </div>
+      <Dropzone
+        onDrop={(acceptedFiles) => {
+          console.log("hello", acceptedFiles);
+          this.doIncrementalTest(acceptedFiles[0]);
+        }}
+      >
+        {({ getRootProps, getInputProps }) => (
+          <div className="import-from-local" {...getRootProps()}>
+            <Trans>Import from Local</Trans>
+            <input
+              type="file"
+              id="import-book-box"
+              accept="application/epub+zip"
+              className="import-book-box"
+              name="file"
+              multiple={true}
+              onChange={(event) => {
+                this.handleChange(event);
+              }}
+              {...getInputProps()}
+            />
+          </div>
+        )}
+      </Dropzone>
     );
   }
 }
@@ -167,4 +179,7 @@ const actionCreator = {
   handleMessage,
   handleFetchBooks,
 };
-export default connect(mapStateToProps, actionCreator)(ImportLocal);
+export default connect(
+  mapStateToProps,
+  actionCreator
+)(withNamespaces()(ImportLocal as any));

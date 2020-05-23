@@ -1,10 +1,12 @@
 import React from "react";
 import "./sidebar.css";
-import { handleMode, handleShelfIndex } from "../../redux/sidebar.redux";
+import { handleMode, handleShelfIndex } from "../../redux/actions/sidebar";
 import { connect } from "react-redux";
 import { sideMenu } from "../../utils/readerConfig";
 import ShelfUtil from "../../utils/shelfUtil";
-import { stateType } from "../../store";
+import { stateType } from "../../redux/store";
+import { Trans } from "react-i18next";
+import { withNamespaces } from "react-i18next";
 
 export interface SidebarProps {
   mode: string;
@@ -77,8 +79,7 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
                     : `icon-${item.icon} side-menu-icon`
                 }
               ></span>
-
-              {item.name}
+              <Trans>{item.name}</Trans>
             </div>
           </li>
         );
@@ -101,7 +102,7 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
               this.handleShelfItem(index);
             }}
           >
-            {item}
+            <Trans>{item}</Trans>
           </li>
         );
       });
@@ -127,7 +128,7 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
                 }}
               >
                 <span className="icon-shelf"></span>
-                {"我的书架"}
+                <Trans>My Shelves</Trans>
                 <span
                   className={
                     this.state.isCollapse ? "icon-dropdown" : "icon-shangla"
@@ -153,4 +154,7 @@ const mapStateToProps = (state: stateType) => {
   return { mode: state.sidebar.mode };
 };
 const actionCreator = { handleMode, handleShelfIndex };
-export default connect(mapStateToProps, actionCreator)(Sidebar);
+export default connect(
+  mapStateToProps,
+  actionCreator
+)(withNamespaces()(Sidebar as any));

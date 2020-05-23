@@ -1,17 +1,17 @@
 import { createStore, applyMiddleware, compose, combineReducers } from "redux";
 import thunk from "redux-thunk";
-import { book } from "./redux/book.redux";
-import { manager } from "./redux/manager.redux";
-import { progressPanel } from "./redux/progressPanel.redux";
-import { reader } from "./redux/reader.redux";
-import { viewArea } from "./redux/viewArea.redux";
-import { sidebar } from "./redux/sidebar.redux";
-import { backupPage } from "./redux/backupPage.redux";
-import BookModel from "./model/Book";
-import NoteModel from "./model/Note";
-import DigestModel from "./model/Digest";
-import HighligherModel from "./model/Highlighter";
-import BookmarkModel from "./model/Bookmark";
+import { book } from "./reducers/book";
+import { manager } from "./reducers/manager";
+import { progressPanel } from "./reducers/progressPanel";
+import { reader } from "./reducers/reader";
+import { viewArea } from "./reducers/viewArea";
+import { sidebar } from "./reducers/sidebar";
+import { backupPage } from "./reducers/backupPage";
+import BookModel from "../model/Book";
+import NoteModel from "../model/Note";
+import DigestModel from "../model/Digest";
+import HighligherModel from "../model/Highlighter";
+import BookmarkModel from "../model/Bookmark";
 const rootReducer = combineReducers({
   book,
   manager,
@@ -39,6 +39,7 @@ export type stateType = {
     searchBooks: number[];
     isSearch: boolean;
     isSort: boolean;
+    isFirst: string;
     isList: string;
     isSortDisplay: boolean;
     sortCode: { sort: number; order: number };
@@ -76,5 +77,8 @@ export type stateType = {
   viewArea: {
     selection: string;
     highlighters: HighligherModel[];
+    menuMode: string;
+    isOpenMenu: boolean;
+    isChangeDirection: boolean;
   };
 };

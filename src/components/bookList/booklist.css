@@ -23,19 +23,24 @@
   right: 0px;
   top: 0px;
   font-size: 14px;
-  color: rgba(75,75,75,1);
+  color: rgba(75, 75, 75, 1);
   margin-right: 30px;
   clear: both;
 }
+@media (max-width: 950px) {
+  .book-list-view {
+    display: none;
+  }
+}
 .card-list-mode {
-  width: 81px;
+  max-width: 81px;
   height: 17px;
   float: left;
   line-height: 17px;
   cursor: pointer;
 }
 .list-view-mode {
-  width: 81px;
+  min-width: 51px;
   height: 17px;
   float: left;
   line-height: 17px;

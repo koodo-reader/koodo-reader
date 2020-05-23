@@ -15,8 +15,8 @@ class readerConfig {
   // 更新config
   // 为 iframe 添加默认的样式
   static addDefaultCss() {
-    if (!document.getElementsByTagName("iframe")[0].contentDocument){
-      return
+    if (!document.getElementsByTagName("iframe")[0].contentDocument) {
+      return;
     }
     let css = this.getDefaultCss();
     let iDoc = document.getElementsByTagName("iframe")[0].contentDocument;
@@ -43,7 +43,7 @@ class readerConfig {
     let css2 = [
       "a, article, cite, code, div, li, p, pre, span, table {",
       `    font-size: ${
-        localStorage.getItem("fontSize") || "17" + "px"
+        localStorage.getItem("fontSize") || "17px"
       } !important;`,
       `    line-height: ${
         localStorage.getItem("lineHeight") || "1.25"
@@ -66,74 +66,72 @@ export const themeList = [
   { id: 4, theme: "rgba(255,254,252,1)" },
 ];
 export const fontSizeList = [
-  { id: 1, size: "小", value: "15" },
-  { id: 2, size: "中", value: "17" },
-  { id: 3, size: "大", value: "20" },
-  { id: 4, size: "特大", value: "23" },
-  { id: 5, size: "超大", value: "26" },
+  { id: 1, size: "Small", value: "15" },
+  { id: 2, size: "Medium", value: "17" },
+  { id: 3, size: "Large", value: "20" },
+  { id: 4, size: "Extra Large", value: "23" },
+  { id: 5, size: "Ultra Large", value: "26" },
 ];
 export const dropdownList = [
   {
     id: 1,
-    title: "字体",
+    title: "Font Family",
     value: "fontFamily",
-
     option: [
-      { id: 1, name: "默认(Helvetica)", value: "Helvetica" },
-      { id: 2, name: "微软雅黑", value: "Microsoft Yahei" },
-      { id: 3, name: " 苹方字体", value: " Arial" },
-      { id: 4, name: "冬青黑体", value: "Hiragino Sans GB" },
-      { id: 5, name: "黑体", value: "Heiti SC" },
+      { id: 1, name: "Helvetica", value: "Helvetica" },
+      { id: 2, name: "Times New Roman", value: "Times New Roman" },
+      { id: 3, name: "Microsoft YaHei", value: "Microsoft YaHei" },
+      { id: 4, name: "SimSun", value: "SimSun" },
+      { id: 5, name: "SimHei", value: "SimHei" },
       { id: 6, name: "Aril", value: "Aril" },
     ],
   },
   {
     id: 2,
-    title: "行间距",
+    title: "Line Height",
     value: "lineHeight",
-
     option: [
-      { id: 1, name: "默认(1.25倍)", value: "1.25" },
-      { id: 2, name: "1倍", value: "1" },
+      { id: 1, name: "1.25", value: "1.25" },
+      { id: 2, name: "1", value: "1" },
       {
         id: 3,
-        name: "1.25倍",
+        name: "1.25",
         value: "1.25",
       },
-      { id: 4, name: "1.5倍", value: "1.5" },
+      { id: 4, name: "1.5", value: "1.5" },
       {
         id: 5,
-        name: "1.75倍",
+        name: "1.75",
         value: "1.75",
       },
-      { id: 6, name: "2倍", value: "2" },
+      { id: 6, name: "2", value: "2" },
     ],
   },
 ];
 export const sideMenu = [
   {
-    name: "全部图书",
+    name: "All Books",
     icon: "home",
     mode: "home",
   },
   {
-    name: "最近阅读",
+    name: "Recent Books",
     icon: "recent",
     mode: "recent",
   },
   {
-    name: "我的书签",
+    name: "My Bookmarks",
     icon: "bookmark",
     mode: "bookmark",
   },
   {
-    name: "我的笔记",
+    name: "My Notes",
     icon: "idea",
     mode: "note",
   },
 
   {
-    name: "我的书摘",
+    name: "My Digests",
     icon: "digest",
     mode: "digest",
   },
@@ -141,7 +139,7 @@ export const sideMenu = [
 export const driveList = [
   {
     id: 1,
-    name: "本地",
+    name: "Local",
     icon: "local",
   },
   {
@@ -168,51 +166,56 @@ export const driveList = [
 export const emptyList = [
   {
     mode: "home",
-    main: "您的图书库为空",
-    sub: "请点击右上角的图标添加图书",
+    main: "Empty Library",
+    sub: "Click the top-right button to add books",
   },
   {
     mode: "recent",
-    main: "您没有阅读记录",
-    sub: "点击任意一本书开始阅读",
+    main: "Empty Reading Records",
+    sub: "Click on any book to read",
   },
   {
     mode: "bookmark",
-    main: "您的书签为空",
-    sub: "在阅读器界面，将鼠标移至上边缘处，在弹出的菜单栏中添加书签",
+    main: "Empty Bookmark",
+    sub:
+      "Move your mouse on the top edge of the reader, menu will pop up showing an Add-Bookmark button",
   },
   {
     mode: "note",
-    main: "您的笔记为空",
-    sub: "在阅读器界面，选中文字后，在弹出的对话框中添加笔记",
+    main: "Empty Note",
+    sub: "Select any text and click the Add-Note button on the popup Menu",
   },
   {
     mode: "digest",
-    main: "您的书摘为空",
-    sub: "在阅读器界面，选中文字后，在弹出的对话框中点击收藏",
+    main: "Empty Digest",
+    sub: "Select any text and click the Collect button on the popup Menu",
   },
   {
     mode: "shelf",
-    main: "您的书架为空",
-    sub: "将鼠标移动到任意书本上方，在弹出的菜单中点击加号添加到书架",
+    main: "Empty Shelf",
+    sub:
+      "Move your mouse on top of a book, menu will pop up showing an Add-To-Shelf button",
   },
 ];
 export const welcomeMessage = [
   {
-    main: "这是一个免费开源的Epub阅读器",
-    sub: "Koodo Reader同时支持桌面版和网页版，您所有的数据都可以导出和恢复",
+    main: "This is a free and open-source Epub reader",
+    sub:
+      "Koodo Reader works on multiple platforms with backup and restore support",
   },
   {
-    main: "只为最好的阅读体验",
-    sub: "主题切换，阅读历史，图书管理，书架管理，更多功能等你探索",
+    main: "For better reading experience",
+    sub:
+      "Supports for theme changing, reading history, book managerment, shelf managerment and more",
   },
   {
-    main: "简单流畅的操作方式",
-    sub: "鼠标移至边缘弹出菜单，使用鼠标滚轮和键盘上下左右按键控制翻页",
+    main: "Fluent and easy operation",
+    sub:
+      "Move your mouse to the edge of the reader to trigger menu,use mouse wheel and keyborad to switch pages",
   },
   {
-    main: "快去添加您的第一本书吧",
-    sub: "介绍完毕，点击左下角的按钮了解更多",
+    main: "Go to Add your first book",
+    sub: "That's all for the tutorial",
   },
 ];
 export default readerConfig;

@@ -1,6 +1,9 @@
 const initState = {
   selection: null,
   highlighters: [],
+  isOpenMenu: false,
+  menuMode: "menu",
+  isChangeDirection: false,
 };
 export function viewArea(
   state = initState,
@@ -27,18 +30,17 @@ export function viewArea(
         ...state,
         dialogLocation: action.payload,
       };
+    case "HANDLE_MENU_MODE":
+      return {
+        ...state,
+        menuMode: action.payload,
+      };
+    case "HANDLE_CHANGE_DIRECTION":
+      return {
+        ...state,
+        isChangeDirection: action.payload,
+      };
     default:
       return state;
   }
-}
-
-export function handleOpenMenu(isOpenMenu: boolean) {
-  return { type: "HANDLE_OPEN_MENU", payload: isOpenMenu };
-}
-export function handleOpenHighlight(isOpenHighlight: boolean) {
-  return { type: "HANDLE_OPEN_HIGHLIGHT", payload: isOpenHighlight };
-}
-
-export function handleSelection(selection: string) {
-  return { type: "HANDLE_SELECTION", payload: selection };
 }

@@ -2,8 +2,10 @@ import React from "react";
 import "./sortDialog.css";
 import { connect } from "react-redux";
 import OtherUtil from "../../utils/otherUtil";
-import { handleSortCode } from "../../redux/manager.redux";
-import { stateType } from "../../store";
+import { handleSortCode } from "../../redux/actions/manager";
+import { stateType } from "../../redux/store";
+import { Trans } from "react-i18next";
+import { withNamespaces } from "react-i18next";
 
 export interface SortDialogProps {
   sortCode: { sort: number; order: number };
@@ -40,7 +42,7 @@ class SortDialog extends React.Component<SortDialogProps> {
                 : {}
             }
           >
-            按名称
+            <Trans>Sort by Name</Trans>
           </li>
           <li
             className="sort-by-category-list"
@@ -53,7 +55,7 @@ class SortDialog extends React.Component<SortDialogProps> {
                 : {}
             }
           >
-            按添加时间
+            <Trans>Sort by Date</Trans>
           </li>
         </ul>
         <div className="sort-dialog-seperator"></div>
@@ -69,7 +71,7 @@ class SortDialog extends React.Component<SortDialogProps> {
                 : {}
             }
           >
-            顺序
+            <Trans>Ascending Order</Trans>
           </li>
           <li
             className="sort-by-order-list"
@@ -82,7 +84,7 @@ class SortDialog extends React.Component<SortDialogProps> {
                 : {}
             }
           >
-            逆序
+            <Trans>Descending Order</Trans>
           </li>
         </ul>
       </div>
@@ -95,4 +97,7 @@ const mapStateToProps = (state: stateType) => {
 const actionCreator = {
   handleSortCode,
 };
-export default connect(mapStateToProps, actionCreator)(SortDialog);
+export default connect(
+  mapStateToProps,
+  actionCreator
+)(withNamespaces()(SortDialog as any));

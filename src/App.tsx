@@ -2,6 +2,7 @@ import React from "react";
 import Reader from "./containers/reader/reader";
 import Manager from "./containers/manager/manager";
 import "./assets/styles/reset.css";
+import "./assets/styles/global.css";
 import "./assets/styles/style.css";
 import { connect } from "react-redux";
 interface AppProps {

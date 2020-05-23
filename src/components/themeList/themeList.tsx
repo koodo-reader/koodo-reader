@@ -2,6 +2,8 @@ import React from "react";
 import { themeList } from "../../utils/readerConfig";
 import ReaderConfig from "../../utils/readerConfig";
 import "./themeList.css";
+import { Trans } from "react-i18next";
+import { withNamespaces } from "react-i18next";
 
 export interface ThemeListProps {}
 
@@ -49,11 +51,13 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
     };
     return (
       <div className="background-color-setting">
-        <div className="background-color-text">背景颜色</div>
+        <div className="background-color-text">
+          <Trans>Background Color</Trans>
+        </div>
         <ul className="background-color-list">{renderBackgroundColorList()}</ul>
       </div>
     );
   }
 }
 
-export default ThemeList;
+export default withNamespaces()(ThemeList as any);

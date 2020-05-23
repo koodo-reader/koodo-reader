@@ -2,11 +2,14 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import "./addDialog.css";
-import { handleMessageBox, handleMessage } from "../../redux/manager.redux";
-import { handleAddDialog } from "../../redux/book.redux";
+import { handleMessageBox, handleMessage } from "../../redux/actions/manager";
+import { handleAddDialog } from "../../redux/actions/book";
 import ShelfUtil from "../../utils/shelfUtil";
 import BookModel from "../../model/Book";
-import {stateType} from '../../store'
+import { stateType } from "../../redux/store";
+import { Trans } from "react-i18next";
+import { withNamespaces } from "react-i18next";
+
 export interface AddDialogProps {
   handleAddDialog: (isShow: boolean) => void;
   currentBook: BookModel;
@@ -35,12 +38,12 @@ class AddDialog extends Component<AddDialogProps, AddDialogState> {
     }
     ShelfUtil.setShelf(shelfTitle, this.props.currentBook.key);
     this.props.handleAddDialog(false);
-    this.props.handleMessage("添加成功");
+    this.props.handleMessage("Add Successfully");
     this.props.handleMessageBox(true);
   };
   //如果是添加到已存在的书架就diable新建图书的input框
   handleChange = (shelfTitle: string) => {
-    if (shelfTitle === "新建书架") {
+    if (shelfTitle === "New Shelf") {
       this.setState({ isNew: true });
       (document.querySelector(
         ".add-dialog-new-shelf-box"
@@ -70,9 +73,13 @@ class AddDialog extends Component<AddDialogProps, AddDialogState> {
     };
     return (
       <div className="add-dialog-container">
-        <div className="add-dialog-title">添加到书架</div>
+        <div className="add-dialog-title">
+          <Trans>Add to Shelf</Trans>
+        </div>
         <div className="add-dialog-shelf-list-container">
-          <div className="add-dialog-shelf-list-text">选择</div>
+          <div className="add-dialog-shelf-list-text">
+            <Trans>Select</Trans>
+          </div>
           <select
             className="add-dialog-shelf-list-box"
             onChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -83,7 +90,9 @@ class AddDialog extends Component<AddDialogProps, AddDialogState> {
           </select>
         </div>
         <div className="add-dialog-new-shelf-container">
-          <div className="add-dialog-new-shelf-text">新建</div>
+          <div className="add-dialog-new-shelf-text">
+            <Trans>New Shelf</Trans>
+          </div>
           <input className="add-dialog-new-shelf-box" />
         </div>
         <div
@@ -92,7 +101,7 @@ class AddDialog extends Component<AddDialogProps, AddDialogState> {
             this.handleCancel();
           }}
         >
-          取消
+          <Trans>Cancel</Trans>
         </div>
         <div
           className="add-dialog-comfirm"
@@ -100,7 +109,7 @@ class AddDialog extends Component<AddDialogProps, AddDialogState> {
             this.handleComfirm();
           }}
         >
-          确认
+          <Trans>Confirm</Trans>
         </div>
       </div>
     );
@@ -122,4 +131,7 @@ const actionCreator = {
   handleMessageBox,
   handleMessage,
 };
-export default connect(mapStateToProps, actionCreator)(AddDialog);
+export default connect(
+  mapStateToProps,
+  actionCreator
+)(withNamespaces()(AddDialog as any));

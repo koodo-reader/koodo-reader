@@ -3,10 +3,14 @@ import "./popupOption.css";
 import { connect } from "react-redux";
 import localforage from "localforage";
 import Digest from "../../model/Digest";
-import { handleMessageBox, handleMessage } from "../../redux/manager.redux";
+import { handleMessageBox, handleMessage } from "../../redux/actions/manager";
+import { handleOpenMenu, handleMenuMode } from "../../redux/actions/viewArea";
+
 import BookModel from "../../model/Book";
 import DigestModel from "../../model/Digest";
-import { stateType } from "../../store";
+import { stateType } from "../../redux/store";
+import { Trans } from "react-i18next";
+import { withNamespaces } from "react-i18next";
 
 export interface PopupOptionProps {
   currentBook: BookModel;
@@ -14,17 +18,17 @@ export interface PopupOptionProps {
   selection: string;
   digests: DigestModel[];
   chapters: any;
-  changeMenu: (menu: string) => void;
-  closeMenu: () => void;
   handleMessageBox: (isShow: boolean) => void;
   handleMessage: (message: string) => void;
+  handleOpenMenu: (isOpenMenu: boolean) => void;
+  handleMenuMode: (menu: string) => void;
 }
 class PopupOption extends React.Component<PopupOptionProps> {
   handleNote = () => {
-    this.props.changeMenu("note");
+    this.props.handleMenuMode("note");
   };
   handleHighlight = () => {
-    this.props.changeMenu("highlight");
+    this.props.handleMenuMode("highlight");
   };
   handleCopy = () => {
     if (
@@ -38,9 +42,9 @@ class PopupOption extends React.Component<PopupOptionProps> {
     !text
       ? console.log("failed to copy text to clipboard")
       : console.log("copied!");
-    this.props.closeMenu();
+    this.props.handleOpenMenu(false);
     iDoc!.getSelection()!.empty();
-    this.props.handleMessage("复制成功");
+    this.props.handleMessage("Copy Successfully");
     this.props.handleMessageBox(true);
   };
   handleDigest = () => {
@@ -74,16 +78,16 @@ class PopupOption extends React.Component<PopupOptionProps> {
     let chapter =
       this.props.chapters[index] !== undefined
         ? this.props.chapters[index].label.trim(" ")
-        : "未知章节";
+        : "Unknown";
     // let chapter = epub.renderer.currentChapter.spinePos;
 
     let digest = new Digest(bookKey, chapter, text, cfi);
     let digestArr = this.props.digests ? this.props.digests : [];
     digestArr.push(digest);
     localforage.setItem("digests", digestArr);
-    this.props.closeMenu();
+    this.props.handleOpenMenu(false);
     iDoc!.getSelection()!.empty();
-    this.props.handleMessage("添加成功");
+    this.props.handleMessage("Add Successfully");
     this.props.handleMessageBox(true);
   };
   // return note;};
@@ -99,7 +103,9 @@ class PopupOption extends React.Component<PopupOptionProps> {
           >
             <div>
               <span className="icon-note note-icon"></span>
-              <p>记笔记</p>
+              <p>
+                <Trans>Take Notes</Trans>
+              </p>
             </div>
           </div>
           <div
@@ -110,7 +116,9 @@ class PopupOption extends React.Component<PopupOptionProps> {
           >
             <div>
               <span className="icon-collect digest-icon"></span>
-              <p>收藏</p>
+              <p>
+                <Trans>Collect</Trans>
+              </p>
             </div>
           </div>
           <div
@@ -121,7 +129,9 @@ class PopupOption extends React.Component<PopupOptionProps> {
           >
             <div>
               <span className="icon-highlight highlight-icon"></span>
-              <p>高亮</p>
+              <p>
+                <Trans>Highlight</Trans>
+              </p>
             </div>
           </div>
           <div
@@ -132,7 +142,9 @@ class PopupOption extends React.Component<PopupOptionProps> {
           >
             <div>
               <span className="icon-copy copy-icon"></span>
-              <p>复制</p>
+              <p>
+                <Trans>Copy</Trans>
+              </p>
             </div>
           </div>
         </div>
@@ -153,5 +165,10 @@ const mapStateToProps = (state: stateType) => {
 const actionCreator = {
   handleMessageBox,
   handleMessage,
+  handleOpenMenu,
+  handleMenuMode,
 };
-export default connect(mapStateToProps, actionCreator)(PopupOption);
+export default connect(
+  mapStateToProps,
+  actionCreator
+)(withNamespaces()(PopupOption as any));

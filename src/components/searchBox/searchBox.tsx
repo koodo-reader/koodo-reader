@@ -1,10 +1,12 @@
 import React from "react";
 import "./searchBox.css";
 import { connect } from "react-redux";
-import { handleSearchBooks, handleSearch } from "../../redux/manager.redux";
+import { handleSearchBooks, handleSearch } from "../../redux/actions/manager";
 import OtherUtil from "../../utils/otherUtil";
 import BookModel from "../../model/Book";
-import { stateType } from "../../store";
+import { stateType } from "../../redux/store";
+import { Trans } from "react-i18next";
+import { withNamespaces } from "react-i18next";
 
 export interface SearchBoxProps {
   books: BookModel[];
@@ -51,7 +53,7 @@ class SearchBox extends React.Component<SearchBoxProps> {
               this.handleCancel();
             }}
           >
-            取消
+            <Trans>Cancel</Trans>
           </span>
         ) : (
           <span
@@ -75,4 +77,7 @@ const actionCreator = {
   handleSearchBooks,
   handleSearch,
 };
-export default connect(mapStateToProps, actionCreator)(SearchBox);
+export default connect(
+  mapStateToProps,
+  actionCreator
+)(withNamespaces()(SearchBox as any));

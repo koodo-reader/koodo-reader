@@ -3,10 +3,13 @@ import "./popupNote.css";
 import { connect } from "react-redux";
 import Note from "../../model/Note";
 import localforage from "localforage";
-import { handleMessageBox, handleMessage } from "../../redux/manager.redux";
+import { handleMessageBox, handleMessage } from "../../redux/actions/manager";
+import { handleOpenMenu, handleMenuMode } from "../../redux/actions/viewArea";
 import BookModel from "../../model/Book";
 import NoteModel from "../../model/Note";
-import { stateType } from "../../store";
+import { stateType } from "../../redux/store";
+import { Trans } from "react-i18next";
+import { withNamespaces } from "react-i18next";
 
 declare var window: any;
 export interface PopupNoteProps {
@@ -16,8 +19,8 @@ export interface PopupNoteProps {
   chapters: any;
   handleMessageBox: (isShow: boolean) => void;
   handleMessage: (message: string) => void;
-  changeMenu: (menu: string) => void;
-  closeMenu: () => void;
+  handleOpenMenu: (isOpenMenu: boolean) => void;
+  handleMenuMode: (menu: string) => void;
 }
 
 class PopupNote extends React.Component<PopupNoteProps> {
@@ -54,25 +57,26 @@ class PopupNote extends React.Component<PopupNoteProps> {
     let chapter =
       this.props.chapters[index] !== undefined
         ? this.props.chapters[index].label.trim(" ")
-        : "未知章节";
+        : "Unknown";
     let note = new Note(bookKey, chapter, text, cfi, serial, notes);
     let noteArr = this.props.notes ? this.props.notes : [];
     noteArr.push(note);
     localforage.setItem("notes", noteArr);
-    this.props.closeMenu();
+    this.props.handleOpenMenu(false);
     iDoc!.getSelection()!.empty();
-    this.props.handleMessage("添加成功");
+    this.props.handleMessage("Add Successfully");
     this.props.handleMessageBox(true);
-    this.props.changeMenu("menu");
+    this.props.handleMenuMode("menu");
     // return note;
   }
   handleReturn = () => {
-    this.props.changeMenu("menu");
+    this.props.handleMenuMode("menu");
   };
   handleClose = () => {
-    this.props.closeMenu();
-    this.props.changeMenu("menu");
+    this.props.handleOpenMenu(false);
+    this.props.handleMenuMode("menu");
   };
+
   render() {
     const renderNoteEditor = () => {
       return (
@@ -88,23 +92,24 @@ class PopupNote extends React.Component<PopupNoteProps> {
           <div className="editor-box-parent">
             <textarea className="editor-box" placeholder="请在此输入您的笔记" />
           </div>
-
-          <span
-            className="confirm-button"
-            onClick={() => {
-              this.createNote();
-            }}
-          >
-            确认
-          </span>
-          <span
-            className="cancel-button"
-            onClick={() => {
-              this.handleClose();
-            }}
-          >
-            取消
-          </span>
+          <div className="note-button-container">
+            <span
+              className="confirm-button"
+              onClick={() => {
+                this.createNote();
+              }}
+            >
+              <Trans>Confirm</Trans>
+            </span>
+            <span
+              className="cancel-button"
+              onClick={() => {
+                this.handleClose();
+              }}
+            >
+              <Trans>Cancel</Trans>
+            </span>
+          </div>
         </div>
       );
     };
@@ -119,5 +124,13 @@ const mapStateToProps = (state: stateType) => {
     chapters: state.reader.chapters,
   };
 };
-const actionCreator = { handleMessageBox, handleMessage };
-export default connect(mapStateToProps, actionCreator)(PopupNote);
+const actionCreator = {
+  handleMessageBox,
+  handleMessage,
+  handleOpenMenu,
+  handleMenuMode,
+};
+export default connect(
+  mapStateToProps,
+  actionCreator
+)(withNamespaces()(PopupNote as any));

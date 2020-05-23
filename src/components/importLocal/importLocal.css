@@ -1,8 +1,9 @@
 .import-from-local {
   float: right;
-  margin-right: 370px;
+  margin-right: 20px;
   margin-top: 20px;
-  width: 118px;
+  min-width: 118px;
+  padding: 0px 10px;
   height: 42px;
   background: rgba(75, 75, 75, 1);
   opacity: 1;
@@ -22,4 +23,14 @@
   opacity: 0;
   cursor: pointer;
   font-size: 0;
+}
+.drag-section {
+  position: absolute;
+  top: 75px;
+  width: calc(100% - 200px);
+  height: calc(100vh - 90px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
 }
