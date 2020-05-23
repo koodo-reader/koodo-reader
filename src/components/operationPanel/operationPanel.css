@@ -8,20 +8,19 @@
   margin-top: 11px;
   margin-left: 23px;
   cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .exit-reading-icon {
   font-size: 21px;
-  margin-left: 10px;
-  position: relative;
-  top: 8px;
 }
 .exit-reading-text {
   font-size: 14px;
   line-height: 37px;
   color: rgba(255, 255, 255, 1);
   opacity: 1;
-  float: right;
-  margin-right: 11px;
+  margin-left: 10px;
 }
 .add-bookmark-button {
   float: left;
@@ -33,12 +32,12 @@
   margin-top: 11px;
   margin-left: 26px;
   cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .add-bookmark-icon {
   font-size: 20px;
-  margin-left: 10px;
-  position: relative;
-  top: 8px;
   color: white;
 }
 .add-bookmark-text {
@@ -46,8 +45,7 @@
   line-height: 37px;
   color: rgba(255, 255, 255, 1);
   opacity: 1;
-  float: right;
-  margin-right: 11px;
+  margin-left: 10px;
 }
 .enter-fullscreen-button {
   float: left;
@@ -59,18 +57,17 @@
   margin-top: 11px;
   margin-left: 26px;
   cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .enter-fullscreen-icon {
   font-size: 19px;
-  margin-left: 10px;
-  position: relative;
-  top: 9px;
 }
 .enter-fullscreen-text {
   font-size: 14px;
   line-height: 37px;
   color: rgba(255, 255, 255, 1);
   opacity: 1;
-  float: right;
-  margin-right: 11px;
+  margin-left: 10px;
 }

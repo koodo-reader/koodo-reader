@@ -22,19 +22,20 @@ import {
   handleFetchSortCode,
   handleFetchList,
   handleMessageBox,
-} from "../../redux/manager.redux";
+  handleFirst,
+} from "../../redux/actions/manager";
 import {
   handleFetchNotes,
   handleFetchDigests,
   handleFetchBookmarks,
   handleFetchHighlighters,
-} from "../../redux/reader.redux";
+} from "../../redux/actions/reader";
 import "./manager.css";
 import BookModel from "../../model/Book";
 import NoteModel from "../../model/Note";
 import DigestModel from "../../model/Digest";
 import BookmarkModel from "../../model/Bookmark";
-import { stateType } from "../../store";
+import { stateType } from "../../redux/store";
 
 export interface ManagerProps {
   books: BookModel[];
@@ -49,6 +50,7 @@ export interface ManagerProps {
   isOpenDeleteDialog: boolean;
   isOpenAddDialog: boolean;
   isSort: boolean;
+  isFirst: string;
   isSortDisplay: boolean;
   isMessage: boolean;
   isBackup: boolean;
@@ -60,11 +62,11 @@ export interface ManagerProps {
   handleFetchSortCode: () => void;
   handleFetchList: () => void;
   handleMessageBox: (isShow: boolean) => void;
+  handleFirst: (isFirst: string) => void;
 }
 
 export interface ManagerState {
   totalBooks: number;
-  isFirst: string;
   recentBooks: number;
 }
 
@@ -74,7 +76,6 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
     super(props);
     this.state = {
       totalBooks: parseInt(localStorage.getItem("totalBooks") || "0") || 0,
-      isFirst: "no",
       recentBooks: Object.keys(RecordRecent.getRecent()).length,
     };
   }
@@ -103,16 +104,13 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
     }
   }
   componentDidMount() {
-    this.setState({ isFirst: localStorage.getItem("isFirst") || "yes" });
+    this.props.handleFirst(localStorage.getItem("isFirst") || "yes");
   }
 
   componentWillUnmout() {
     clearTimeout(this.timer);
   }
-  handleCloseWelcome = () => {
-    this.setState({ isFirst: "no" });
-    localStorage.setItem("isFirst", "no");
-  };
+
   render() {
     let { mode, notes, digests, bookmarks, covers } = this.props;
     let { totalBooks, recentBooks } = this.state;
@@ -135,13 +133,7 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
         {this.props.isMessage ? <MessageBox /> : null}
         {this.props.isSortDisplay ? <SortDialog /> : null}
         {this.props.isBackup ? <BackupPage /> : null}
-        {this.state.isFirst === "yes" ? (
-          <WelcomePage
-            handleCloseWelcome={() => {
-              this.handleCloseWelcome();
-            }}
-          />
-        ) : null}
+        {this.props.isFirst === "yes" ? <WelcomePage /> : null}
         //根据是否添加图书，路由地址等判断body的显示内容
         {totalBooks === 0 ? (
           <EmptyPage />
@@ -183,6 +175,7 @@ const mapStateToProps = (state: stateType) => {
     isSortDisplay: state.manager.isSortDisplay,
     isMessage: state.manager.isMessage,
     isBackup: state.backupPage.isBackup,
+    isFirst: state.manager.isFirst,
   };
 };
 const actionCreator = {
@@ -194,5 +187,6 @@ const actionCreator = {
   handleFetchSortCode,
   handleFetchList,
   handleMessageBox,
+  handleFirst,
 };
 export default connect(mapStateToProps, actionCreator)(Manager);

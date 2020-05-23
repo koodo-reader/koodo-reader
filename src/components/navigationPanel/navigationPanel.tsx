@@ -4,11 +4,13 @@ import "./navigationPanel.css";
 import { connect } from "react-redux";
 import ContentList from "../contentList/contentList";
 import BookmarkList from "../bookmarkList/boomarkList";
-import { handleFetchBookmarks } from "../../redux/reader.redux";
+import { handleFetchBookmarks } from "../../redux/actions/reader";
 import ReadingTime from "../../utils/readingTime";
 import BookModel from "../../model/Book";
 import BookmarkModel from "../../model/Bookmark";
-import { stateType } from "../../store";
+import { stateType } from "../../redux/store";
+import { Trans } from "react-i18next";
+import { withNamespaces } from "react-i18next";
 
 export interface NavigationPanelProps {
   currentEpub: any;
@@ -74,13 +76,17 @@ class NavigationPanel extends React.Component<
           </div>
 
           <p className="book-arthur">
-            作者:{" "}
-            {this.props.currentBook.author
-              ? this.props.currentBook.author
-              : "未知"}
+            <Trans>Author</Trans>:{" "}
+            <Trans>
+              {this.props.currentBook.author
+                ? this.props.currentBook.author
+                : "Unknown"}
+            </Trans>
           </p>
           <span className="reading-duration">
-            已读: {Math.floor(this.state.time / 60)}分钟
+            <Trans>Reading Time</Trans>: {Math.floor(this.state.time / 60)}
+            &nbsp;
+            <Trans>Minute</Trans>
           </span>
 
           <div className="navigation-navigation">
@@ -95,7 +101,7 @@ class NavigationPanel extends React.Component<
                   : { color: "rgba(217, 217, 217, 1)" }
               }
             >
-              目录
+              <Trans>Content</Trans>
             </span>
             <span
               className="book-bookmark-title"
@@ -108,7 +114,7 @@ class NavigationPanel extends React.Component<
                 this.handleClick(false);
               }}
             >
-              书签
+              <Trans>Bookmark</Trans>
             </span>
           </div>
         </div>
@@ -119,7 +125,9 @@ class NavigationPanel extends React.Component<
             ) : this.props.bookmarks !== null ? (
               <BookmarkList />
             ) : (
-              <div className="navigation-panel-empty-bookmark">书签为空</div>
+              <div className="navigation-panel-empty-bookmark">
+                <Trans>Empty</Trans>
+              </div>
             )}
           </div>
         </div>
@@ -135,4 +143,7 @@ const mapStateToProps = (state: stateType) => {
   };
 };
 const actionCreator = { handleFetchBookmarks };
-export default connect(mapStateToProps, actionCreator)(NavigationPanel);
+export default connect(
+  mapStateToProps,
+  actionCreator
+)(withNamespaces()(NavigationPanel as any));

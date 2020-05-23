@@ -4,7 +4,10 @@ import "./bookmarkList.css";
 import { connect } from "react-redux";
 import BookmarkModel from "../../model/Bookmark";
 import BookModel from "../../model/Book";
-import { stateType } from "../../store";
+import { stateType } from "../../redux/store";
+import { Trans } from "react-i18next";
+import { withNamespaces } from "react-i18next";
+
 export interface BookmarkListProps {
   currentBook: BookModel;
   currentEpub: any;
@@ -53,7 +56,7 @@ class BookmarkList extends React.Component<
                 }}
                 style={{ cursor: "pointer" }}
               >
-                点击跳转
+                <Trans>Go To</Trans>
               </div>
               <div className="book-bookmark-progress">
                 {Math.floor(item.percentage * 100)}%
@@ -77,4 +80,7 @@ const mapStateToProps = (state: stateType) => {
   };
 };
 const actionCreator = {};
-export default connect(mapStateToProps, actionCreator)(BookmarkList);
+export default connect(
+  mapStateToProps,
+  actionCreator
+)(withNamespaces()(BookmarkList as any));

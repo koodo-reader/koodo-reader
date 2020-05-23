@@ -8,13 +8,13 @@ import {
   handleReadingState,
   handleReadingBook,
   handleReadingEpub,
-} from "../../redux/book.redux";
+} from "../../redux/actions/book";
 import RecentBooks from "../../utils/recordRecent";
 import "./bookItem.css";
 import RecordRecent from "../../utils/recordRecent";
 import RecordLocation from "../../utils/recordLocation";
 import BookModel from "../../model/Book";
-import { stateType } from "../../store";
+import { stateType } from "../../redux/store";
 
 export interface BookItemProps {
   book: BookModel;
