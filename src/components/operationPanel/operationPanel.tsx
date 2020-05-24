@@ -8,8 +8,7 @@ import {
   handleFetchBookmarks,
 } from "../../redux/actions/reader";
 import { stateType } from "../../redux/store";
-import { Trans } from "react-i18next";
-import { withNamespaces } from "react-i18next";
+import { Trans, withNamespaces } from "react-i18next";
 
 import { handleMessageBox, handleMessage } from "../../redux/actions/manager";
 import { handleReadingState } from "../../redux/actions/book";

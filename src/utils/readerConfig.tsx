@@ -177,8 +177,7 @@ export const emptyList = [
   {
     mode: "bookmark",
     main: "Empty Bookmark",
-    sub:
-      "Move your mouse on the top edge of the reader, menu will pop up showing an Add-Bookmark button",
+    sub: "Move your mouse on the top edge of the reader",
   },
   {
     mode: "note",
@@ -193,8 +192,7 @@ export const emptyList = [
   {
     mode: "shelf",
     main: "Empty Shelf",
-    sub:
-      "Move your mouse on top of a book, menu will pop up showing an Add-To-Shelf button",
+    sub: "Move your mouse on the top of any book",
   },
 ];
 export const welcomeMessage = [

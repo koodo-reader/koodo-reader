@@ -4,8 +4,7 @@ import ThemeList from "../themeList/themeList";
 import FontSizeList from "../fontSizeList/fontSizeList";
 import DropdownList from "../dropdownList/dropdownList";
 import SingleControl from "../singleControl/singleControl";
-import { Trans } from "react-i18next";
-import { withNamespaces } from "react-i18next";
+import { Trans, withNamespaces } from "react-i18next";
 
 class SettingPanel extends React.Component {
   componentDidMount() {}
