@@ -1,6 +1,6 @@
 .loading-page-container-parent {
   position: absolute;
-  top: 85px;
+  top: 90px;
   left: 200px;
   width: calc(100% - 200px);
   height: calc(100% - 90px);

@@ -3,7 +3,6 @@ import React from "react";
 import "./background.css";
 import { connect } from "react-redux";
 import { stateType } from "../../redux/store";
-import { withNamespaces } from "react-i18next";
 
 export interface BackgroundProps {}
 export interface BackgroundState {
@@ -45,7 +44,4 @@ const mapStateToProps = (state: stateType) => {
   };
 };
 const actionCreator = {};
-export default connect(
-  mapStateToProps,
-  actionCreator
-)(withNamespaces()(Background as any));
+export default connect(mapStateToProps, actionCreator)(Background);

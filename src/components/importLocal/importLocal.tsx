@@ -11,8 +11,8 @@ import {
 } from "../../redux/actions/manager";
 import SparkMD5 from "spark-md5";
 import { stateType } from "../../redux/store";
-import { Trans } from "react-i18next";
-import { withNamespaces } from "react-i18next";
+import { Trans, withNamespaces } from "react-i18next";
+
 import Dropzone from "react-dropzone";
 export interface ImportLocalProps {
   books: BookModel[];

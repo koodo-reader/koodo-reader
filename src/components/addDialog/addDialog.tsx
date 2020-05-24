@@ -7,8 +7,7 @@ import { handleAddDialog } from "../../redux/actions/book";
 import ShelfUtil from "../../utils/shelfUtil";
 import BookModel from "../../model/Book";
 import { stateType } from "../../redux/store";
-import { Trans } from "react-i18next";
-import { withNamespaces } from "react-i18next";
+import { Trans, withNamespaces, NamespacesConsumer } from "react-i18next";
 
 export interface AddDialogProps {
   handleAddDialog: (isShow: boolean) => void;
@@ -59,15 +58,20 @@ class AddDialog extends Component<AddDialogProps, AddDialogState> {
     const renderShelfList = () => {
       let shelfList = ShelfUtil.getShelf();
       let shelfTitle = Object.keys(shelfList);
+      console.log(shelfTitle);
       return shelfTitle.map((item) => {
         return (
-          <option
-            value={item}
-            key={item}
-            className="add-dialog-shelf-list-option"
-          >
-            {item}
-          </option>
+          <NamespacesConsumer>
+            {(t, { i18n, ready }) => (
+              <option
+                value={item}
+                key={item}
+                className="add-dialog-shelf-list-option"
+              >
+                {t(item)}
+              </option>
+            )}
+          </NamespacesConsumer>
         );
       });
     };

@@ -13,8 +13,7 @@ import DigestModel from "../../model/Digest";
 import HighligherModel from "../../model/Highlighter";
 import BookmarkModel from "../../model/Bookmark";
 import { stateType } from "../../redux/store";
-import { Trans } from "react-i18next";
-import { withNamespaces } from "react-i18next";
+import { Trans, withNamespaces } from "react-i18next";
 
 export interface BackupPageProps {
   handleBackupDialog: (isBackup: boolean) => void;

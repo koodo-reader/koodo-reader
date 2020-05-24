@@ -4,13 +4,13 @@ import "./header.css";
 import { connect } from "react-redux";
 import SearchBox from "../searchBox/searchBox";
 import ImportLocal from "../importLocal/importLocal";
-import { Trans } from "react-i18next";
+import { Trans, withNamespaces } from "react-i18next";
 import {
   handleSortDisplay,
   handleMessageBox,
   handleMessage,
 } from "../../redux/actions/manager";
-import { withNamespaces } from "react-i18next";
+
 import i18n from "../../i18n";
 import { handleBackupDialog } from "../../redux/actions/backupPage";
 import BookModel from "../../model/Book";

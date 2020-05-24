@@ -23,6 +23,14 @@
 
 ✍️ **Koodo Reader** 是一个开源免费的 Epub 阅读器，支持桌面版和网页版
 
+## 新功能
+
+- 现在 Koodo Reader 支持英文啦！非中文操作系统会自动显示为英文界面
+
+- Koodo Reader 官网正式上线啦！[点我前往](https://github.com/troyeguo/website-for-koodo-reader)
+
+- 支持拖拽添加图书，把图书拖拽到导入图书的按钮上就可以实现添加图书
+
 ## 特色 👇
 
 📝 支持书签，高亮，笔记和书摘功能

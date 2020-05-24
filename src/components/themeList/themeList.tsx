@@ -2,8 +2,7 @@ import React from "react";
 import { themeList } from "../../utils/readerConfig";
 import ReaderConfig from "../../utils/readerConfig";
 import "./themeList.css";
-import { Trans } from "react-i18next";
-import { withNamespaces } from "react-i18next";
+import { Trans, withNamespaces } from "react-i18next";
 
 export interface ThemeListProps {}
 

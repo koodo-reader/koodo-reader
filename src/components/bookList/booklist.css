@@ -49,6 +49,6 @@
 }
 .book-list-item-box {
   position: relative;
-  top: 10px;
+  top: 15px;
   width: calc(100% - 10px);
 }

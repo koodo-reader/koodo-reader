@@ -40,7 +40,7 @@ textarea::-ms-input-placeholder {
 .header-search-text {
   position: absolute;
   top: 12px;
-  left: 165px;
+  right: 5px;
   font-size: 16px;
   display: inline-block;
   width: 50px;

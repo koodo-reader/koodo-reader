@@ -1,9 +1,9 @@
 // 记录书本打开记录
 const defaultShelf = {
-  新建书架: null,
-  工作学习: [],
-  休闲娱乐: [],
-  生活百科: [],
+  New: null,
+  Study: [],
+  Work: [],
+  Entertainment: [],
 };
 class ShelfUtil {
   static setShelf(shelfTitle: string, bookKey: string) {
