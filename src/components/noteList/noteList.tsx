@@ -6,8 +6,7 @@ import NoteModel from "../../model/Note";
 import BookModel from "../../model/Book";
 import BookmarkModel from "../../model/Bookmark";
 import { stateType } from "../../redux/store";
-import { Trans } from "react-i18next";
-import { withNamespaces } from "react-i18next";
+import { Trans, withNamespaces } from "react-i18next";
 
 export interface NoteListProps {
   notes: NoteModel[];

@@ -10,10 +10,6 @@
   "repository": "https://github.com/troyeguo/koodo-desktop",
   "private": true,
   "dependencies": {
-    "@types/i18next": "^13.0.0",
-    "@types/i18next-browser-languagedetector": "^3.0.0",
-    "@types/react-dropzone": "^5.1.0",
-    "@types/react-i18next": "^8.1.0",
     "electron-is-dev": "^1.1.0",
     "electron-updater": "4.0.0",
     "i18next": "^19.4.4",
@@ -110,6 +106,10 @@
     ]
   },
   "devDependencies": {
+    "@types/i18next": "^13.0.0",
+    "@types/i18next-browser-languagedetector": "^3.0.0",
+    "@types/react-dropzone": "^5.1.0",
+    "@types/react-i18next": "^8.1.0",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",

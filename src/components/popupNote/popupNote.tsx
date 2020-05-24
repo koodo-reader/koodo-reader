@@ -8,8 +8,7 @@ import { handleOpenMenu, handleMenuMode } from "../../redux/actions/viewArea";
 import BookModel from "../../model/Book";
 import NoteModel from "../../model/Note";
 import { stateType } from "../../redux/store";
-import { Trans } from "react-i18next";
-import { withNamespaces } from "react-i18next";
+import { Trans, withNamespaces } from "react-i18next";
 
 declare var window: any;
 export interface PopupNoteProps {
