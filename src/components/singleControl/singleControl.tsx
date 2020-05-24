@@ -4,8 +4,7 @@ import "./singleControl.css";
 import { handleSingle } from "../../redux/actions/reader";
 import { connect } from "react-redux";
 import { handleMessageBox, handleMessage } from "../../redux/actions/manager";
-import { Trans } from "react-i18next";
-import { withNamespaces } from "react-i18next";
+import { Trans, withNamespaces } from "react-i18next";
 
 export interface SingleControlProps {
   handleSingle: (mode: string) => void;

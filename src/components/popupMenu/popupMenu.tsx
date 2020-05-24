@@ -100,7 +100,8 @@ class PopupMenu extends React.Component<PopupMenuProps> {
     if (!highlighters) {
       return;
     }
-    let chapter = this.props.currentEpub.renderer.currentChapter;
+    let chapter = this.props.currentEpub.renderer.currentChapter.spinePos;
+    console.log(chapter, highlighters, "highlighters");
     let highlightersByChapter = highlighters.filter(
       (item) => item.chapter === chapter
     );
@@ -111,8 +112,8 @@ class PopupMenu extends React.Component<PopupMenuProps> {
     this.highlighter && this.highlighter.removeAllHighlights(); // 为了避免下次反序列化失败，必须先清除已有的高亮
 
     let classes = ["color-0", "color-1", "color-2", "color-3"];
-    highlighters !== null &&
-      highlighters.forEach((item) => {
+    highlightersByChapter !== null &&
+      highlightersByChapter.forEach((item) => {
         this.key = item.key;
         //控制渲染指定图书的指定高亮
         if (item.bookKey === this.props.currentBook.key) {

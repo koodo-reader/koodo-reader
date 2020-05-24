@@ -1,8 +1,8 @@
 import React from "react";
 import "./welcomePage.css";
 import { welcomeMessage } from "../../utils/readerConfig";
-import { Trans } from "react-i18next";
-import { withNamespaces } from "react-i18next";
+import { Trans, withNamespaces } from "react-i18next";
+
 import { handleFirst } from "../../redux/actions/manager";
 import { connect } from "react-redux";
 export interface WelcomePageProps {

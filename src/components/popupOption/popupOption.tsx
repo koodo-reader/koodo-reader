@@ -9,8 +9,7 @@ import { handleOpenMenu, handleMenuMode } from "../../redux/actions/viewArea";
 import BookModel from "../../model/Book";
 import DigestModel from "../../model/Digest";
 import { stateType } from "../../redux/store";
-import { Trans } from "react-i18next";
-import { withNamespaces } from "react-i18next";
+import { Trans, withNamespaces } from "react-i18next";
 
 export interface PopupOptionProps {
   currentBook: BookModel;
