@@ -10,7 +10,7 @@
   </h3>
 <div align="center">
   <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
-    <img src="https://ci.appveyor.com/api/projects/status/3ktyyycodq6s4yew?svg=true" alt="">
+    <img src="https://ci.appveyor.com/api/projects/status/602fp409plq8qcwu?svg=true" alt="">
   </a>
     <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
     <img src="https://travis-ci.com/troyeguo/koodo-reader.svg?branch=master" alt="">
