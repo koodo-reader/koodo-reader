@@ -21,9 +21,13 @@
 ## 预览
 
 <div align="center">
-  <img src="https://i.loli.net/2020/03/23/UpVulqMBXRcEtJG.jpg" >
+  <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
+    <img src="https://i.loli.net/2020/03/23/UpVulqMBXRcEtJG.jpg" >
+  </a>
+  <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
+    <img src="https://i.loli.net/2020/03/23/jenEPUIuVJzC6bX.jpg" >
+  </a>
   <br/>
-  <img src="https://i.loli.net/2020/03/23/jenEPUIuVJzC6bX.jpg" >
 </div>
 
 ## 简介
