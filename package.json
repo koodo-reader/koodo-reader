@@ -83,6 +83,9 @@
       "artifactName": "${productName}-Web-Setup-${version}.${ext}",
       "publisherName": "App by Troye"
     },
+    "linux": {
+      "icon": "assets/icon.ico"
+    },
     "nsis": {
       "allowToChangeInstallationDirectory": true,
       "oneClick": false,
