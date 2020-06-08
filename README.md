@@ -8,7 +8,14 @@
   <h3 align="center">
     一个基于 React 和 Electron 开发的 Epub 阅读器
   </h3>
-
+<div align="center">
+  <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
+    <img src="https://ci.appveyor.com/api/projects/status/3ktyyycodq6s4yew?svg=true" alt="">
+  </a>
+    <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
+    <img src="https://travis-ci.com/troyeguo/koodo-reader.svg?branch=master" alt="">
+  </a>
+</div>
 ## 预览
 
 <div align="center">
@@ -37,7 +44,7 @@
 
 🌉 使用书架功能来为您的图书分类
 
-🌎 支持客户端和网页版，客户端目前仅支持 **Windows** ，未来会添加对 **MacOS** 和 **Linux** 的支持
+🌎 支持 **Windows** ， **MacOS** 和 **网页版**
 
 💻 安全的备份和恢复您所有的数据
 
