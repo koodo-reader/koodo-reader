@@ -1,7 +1,7 @@
 {
   "name": "koodo-reader",
   "main": "main.js",
-  "version": "0.1.8",
+  "version": "1.8.0",
   "description": "A cross-platform open source Epub reader ",
   "author": {
     "name": "App by Troye",
@@ -55,7 +55,7 @@
     },
     "dmg": {
       "background": "assets/appdmg.png",
-      "icon": "assets/icon-mac.icns",
+      "icon": "assets/icon.icns",
       "iconSize": 128,
       "contents": [
         {
