@@ -33,7 +33,7 @@
   },
   "homepage": "./",
   "build": {
-    "appId": "KoodoReader",
+    "appId": "koodo.960960.xyz",
     "productName": "Koodo Reader",
     "copyright": "Copyright © 2020 ${author}",
     "files": [
