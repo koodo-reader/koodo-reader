@@ -1,0 +1,142 @@
+.sidebar {
+  width: 190px;
+  height: 100%;
+}
+
+.logo {
+  width: 140px;
+
+  position: absolute;
+  /* position: relative; */
+  top: 0px;
+  left: 25px;
+}
+.side-menu-container-parent {
+  position: relative;
+  top: 120px;
+  width: 190px;
+  height: 100%;
+  overflow: hidden;
+}
+.side-menu-container {
+  /* overflow: hidden; */
+  width: 100%;
+  height: 100%;
+  overflow-y: scroll;
+  padding-right: 17px; /* Increase/decrease this value for cross-browser compatibility */
+  box-sizing: content-box;
+  position: relative;
+}
+
+.side-menu-icon {
+  /* float: left; */
+  font-size: 17px;
+  color: rgba(0, 0, 0, 1);
+  margin: 7px 12px 7px 26px;
+  display: inline-block;
+  position: relative;
+  top: 2px;
+}
+.side-menu-item {
+  margin-top: 2px;
+  list-style-type: none;
+  font-size: 16px;
+  width: 150px;
+  cursor: pointer;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-left: 20px;
+  margin-bottom: 15px;
+  color: rgba(75, 75, 75, 1);
+  position: relative;
+  bottom: 1px;
+}
+.side-menu-selector {
+  width: 148px;
+  height: 39px;
+  color: rgba(75, 75, 75, 1);
+  line-height: 39px;
+  z-index: 40;
+}
+.active-selector {
+  color: white;
+}
+.shelf-list-container-parent {
+  margin-top: 20px;
+  height: 120px;
+  width: 100%;
+  overflow: hidden;
+}
+.shelf-list-container {
+  width: 100%;
+  height: 100%;
+  overflow-y: scroll;
+  padding-right: 17px; /* Increase/decrease this value for cross-browser compatibility */
+  box-sizing: content-box;
+  list-style-type: none;
+  cursor: pointer;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow-x: hidden;
+}
+
+.shelf-list-item {
+  list-style-type: none;
+  line-height: 28px;
+  font-size: 14px;
+  width: 140px;
+  cursor: pointer;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-bottom: 15px;
+  margin-left: 31px;
+  color: rgba(75, 75, 75, 0.5);
+  opacity: 1;
+}
+.icon-more {
+  margin-left: 93px;
+  /* line-height: 29px; */
+  position: relative;
+  top: 6px;
+}
+.icon-shelf {
+  margin-right: 12px;
+}
+.icon-dropdown {
+  margin-left: 16px;
+  font-size: 13px;
+}
+
+.active-icon {
+  color: white;
+}
+.icon-shangla {
+  font-size: 6px;
+  margin-left: 16px;
+  position: relative;
+  bottom: 4px;
+}
+.inactive-selector {
+  background-color: #fff;
+}
+.side-menu-shelf {
+  margin-left: 45px;
+  margin-top: 25px;
+  cursor: pointer;
+  color: rgba(75, 75, 75, 1);
+}
+.active-shelf {
+  color: black;
+  font-size: 16px;
+  margin-left: 27px;
+}
+.side-menu-selector-container {
+  width: 148px;
+  height: 39px;
+  border-radius: 25px;
+  line-height: 39px;
+  background-color: rgba(75, 75, 75, 1);
+  position: absolute;
+  z-index: -1;
+  animation: popup 0.1s ease-in-out 0s 1;
+}

@@ -88,7 +88,7 @@
   "Local": "本地",
   "Line Height": "行间距",
   "Empty Library": "图书库为空",
-  "Click the top-right button to add books": "请点击右上角的图标添加图书",
+  "Click the top-right button to add books": "请点击右上角的导入图书按钮添加图书",
   "Empty Reading Records": "您没有阅读记录",
   "Click on any book to read": "点击任意一本书开始阅读",
   "Empty Bookmark": "您的书签为空",
@@ -106,5 +106,5 @@
   "Fluent and easy operation": "简单流畅的操作方式",
   "Move your mouse to the edge of the reader to trigger menu,use mouse wheel and keyborad to switch pages": "鼠标移至边缘弹出菜单，使用鼠标滚轮和键盘上下左右按键控制翻页",
   "Go to Add your first book": "快去添加您的第一本书吧",
-  "That's all for the tutorial": "介绍完毕，点击左下角的按钮了解更多"
+  "That's all for the tutorial": "介绍完毕"
 }
