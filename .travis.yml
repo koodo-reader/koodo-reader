@@ -24,7 +24,7 @@ addons:
       channel: stable
 before_install:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install git-lfs; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]];then sudo snap install snapcraft --classic; then sudo apt-get install --no-install-recommends -y icnsutils graphicsmagick xz-utils; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]];then sudo apt-get install --no-install-recommends -y icnsutils graphicsmagick xz-utils; fi
 install:
   - nvm install 10
   - curl -o- -L https://yarnpkg.com/install.sh | bash
