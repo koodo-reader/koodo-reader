@@ -1,0 +1,63 @@
+//图书导航栏页面的书签页面
+import React from "react";
+import "./bookmarkList.css";
+import { Trans } from "react-i18next";
+import { BookmarkListProps, BookmarkListState } from "./interface";
+class BookmarkList extends React.Component<
+  BookmarkListProps,
+  BookmarkListState
+> {
+  constructor(props: BookmarkListProps) {
+    super(props);
+    this.state = { bookmarks: this.props.bookmarks };
+  }
+  static getDerivedStateFromProps(
+    nextProps: BookmarkListProps,
+    prevState: BookmarkListProps
+  ) {
+    if (nextProps.bookmarks !== prevState.bookmarks)
+      return { bookmarks: nextProps.bookmarks };
+    else return null;
+  }
+  //跳转到图书的指定位置
+  handleJump(cfi: string) {
+    this.props.currentEpub.gotoCfi(cfi);
+  }
+  render() {
+    const renderBookmarkList = () => {
+      let { bookmarks } = this.state;
+      return bookmarks
+        .filter((item) => {
+          return item.bookKey === this.props.currentBook.key;
+        })
+        .map((item) => {
+          return (
+            <li className="book-bookmark-list" key={item.key}>
+              <p className="book-bookmark-digest">{item.label}</p>
+              <span className="book-bookmark-index">{item.chapter}</span>
+
+              <div
+                className="book-bookmark-link"
+                onClick={() => {
+                  this.handleJump(item.cfi);
+                }}
+                style={{ cursor: "pointer" }}
+              >
+                <Trans>Go To</Trans>
+              </div>
+              <div className="book-bookmark-progress">
+                {Math.floor(item.percentage * 100)}%
+              </div>
+            </li>
+          );
+        });
+    };
+    return (
+      <div className="book-bookmark-container">
+        <ul className="book-bookmark">{renderBookmarkList()}</ul>
+      </div>
+    );
+  }
+}
+
+export default BookmarkList;
