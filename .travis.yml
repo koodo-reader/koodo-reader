@@ -30,7 +30,7 @@ install:
 before_script:
   - git lfs pull
 script:
-  - yarn run release
+  - yarn release
 branches:
   only:
     - master
