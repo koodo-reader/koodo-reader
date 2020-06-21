@@ -18,6 +18,10 @@ addons:
     packages:
       - libgnome-keyring-dev
       - icnsutils
+  snaps:
+    - name: snapcraft
+      confinement: classic
+      channel: stable
 before_install:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install git-lfs; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]];then sudo snap install snapcraft --classic; then sudo apt-get install --no-install-recommends -y icnsutils graphicsmagick xz-utils; fi
@@ -29,6 +33,7 @@ install:
   - yarn
 before_script:
   - git lfs pull
+  - sudo snap install snapcraft --classic
 script:
   - yarn release
 branches:
