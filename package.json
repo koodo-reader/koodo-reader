@@ -78,7 +78,9 @@
       "publisherName": "App by Troye"
     },
     "linux": {
-      "icon": "assets/icon.ico"
+      "icon": "assets",
+      "executableName": "KoodoReader",
+      "artifactName": "${productName}-${version}-${arch}.${ext}"
     }
   },
   "eslintConfig": {
