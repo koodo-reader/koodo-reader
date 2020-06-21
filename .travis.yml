@@ -34,6 +34,9 @@ install:
 before_script:
   - git lfs pull
 script:
+  - sudo apt-get remove -y --purge lxd lxd-client
+  - sudo snap install lxd
+  - snap list
   - yarn release
 branches:
   only:
