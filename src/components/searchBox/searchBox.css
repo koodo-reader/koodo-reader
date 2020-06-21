@@ -54,3 +54,9 @@ textarea::-ms-input-placeholder {
   ; */
   cursor: pointer;
 }
+.search-text {
+  font-size: 17px;
+  position: relative;
+  right: 180px;
+  bottom: 4px;
+}

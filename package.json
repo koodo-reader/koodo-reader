@@ -48,32 +48,25 @@
     "publish": [
       "github"
     ],
-    "extends": null,
-    "mac": {
-      "category": "public.app-category.productivity",
-      "artifactName": "${productName}-${version}-${arch}.${ext}"
-    },
     "dmg": {
-      "background": "assets/appdmg.png",
-      "icon": "assets/icon.icns",
-      "iconSize": 128,
       "contents": [
         {
-          "x": 380,
-          "y": 280,
+          "x": 410,
+          "y": 150,
           "type": "link",
           "path": "/Applications"
         },
         {
-          "x": 110,
-          "y": 280,
+          "x": 130,
+          "y": 150,
           "type": "file"
         }
-      ],
-      "window": {
-        "width": 500,
-        "height": 500
-      }
+      ]
+    },
+    "mac": {
+      "icon": "build/icons/icon.icns",
+      "category": "public.app-category.productivity",
+      "artifactName": "${productName}-${version}-${arch}.${ext}"
     },
     "win": {
       "target": [
@@ -85,12 +78,6 @@
     },
     "linux": {
       "icon": "assets/icon.ico"
-    },
-    "nsis": {
-      "allowToChangeInstallationDirectory": true,
-      "oneClick": false,
-      "perMachine": false,
-      "installerSidebar": null
     }
   },
   "eslintConfig": {

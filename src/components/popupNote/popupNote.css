@@ -63,21 +63,21 @@
   position: absolute;
   bottom: 15px;
   right: 15px;
-  width: 120px;
+  width: 100px;
   display: flex;
   justify-content: space-between;
 }
 .confirm-button {
-  font-size: 16px;
+  font-size: 15px;
   line-height: 15px;
   color: rgba(0, 0, 0, 1);
   opacity: 1;
   cursor: pointer;
 }
 .cancel-button {
-  font-size: 16px;
+  font-size: 15px;
   line-height: 15px;
-  color: rgba(128, 128, 128, 1);
+  color: rgba(0, 0, 0, 1);
   opacity: 1;
   cursor: pointer;
 }
