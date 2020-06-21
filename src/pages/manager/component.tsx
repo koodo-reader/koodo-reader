@@ -16,60 +16,8 @@ import EmptyPage from "../../containers/emptyPage";
 import ShelfUtil from "../../utils/shelfUtil";
 import WelcomePage from "../../containers/welcomePage";
 import RecordRecent from "../../utils/recordRecent";
-import { connect } from "react-redux";
-import {
-  handleFetchBooks,
-  handleFetchSortCode,
-  handleFetchList,
-  handleMessageBox,
-  handleFirst,
-} from "../../redux/actions/manager";
-import {
-  handleFetchNotes,
-  handleFetchDigests,
-  handleFetchBookmarks,
-  handleFetchHighlighters,
-} from "../../redux/actions/reader";
 import "./manager.css";
-import BookModel from "../../model/Book";
-import NoteModel from "../../model/Note";
-import DigestModel from "../../model/Digest";
-import BookmarkModel from "../../model/Bookmark";
-import { stateType } from "../../redux/store";
-
-export interface ManagerProps {
-  books: BookModel[];
-  covers: { key: string; url: string }[];
-  notes: NoteModel[];
-  digests: DigestModel[];
-  bookmarks: BookmarkModel[];
-  isReading: boolean;
-  mode: string;
-  shelfIndex: number;
-  isOpenEditDialog: boolean;
-  isOpenDeleteDialog: boolean;
-  isOpenAddDialog: boolean;
-  isSort: boolean;
-  isFirst: string;
-  isSortDisplay: boolean;
-  isMessage: boolean;
-  isBackup: boolean;
-  handleFetchBooks: () => void;
-  handleFetchNotes: () => void;
-  handleFetchDigests: () => void;
-  handleFetchBookmarks: () => void;
-  handleFetchHighlighters: () => void;
-  handleFetchSortCode: () => void;
-  handleFetchList: () => void;
-  handleMessageBox: (isShow: boolean) => void;
-  handleFirst: (isFirst: string) => void;
-}
-
-export interface ManagerState {
-  totalBooks: number;
-  recentBooks: number;
-}
-
+import { ManagerProps, ManagerState } from "./interface";
 class Manager extends React.Component<ManagerProps, ManagerState> {
   timer!: NodeJS.Timeout;
   constructor(props: ManagerProps) {
@@ -158,35 +106,5 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
     );
   }
 }
-const mapStateToProps = (state: stateType) => {
-  return {
-    books: state.manager.books,
-    covers: state.manager.covers,
-    notes: state.reader.notes,
-    digests: state.reader.digests,
-    bookmarks: state.reader.bookmarks,
-    isReading: state.book.isReading,
-    mode: state.sidebar.mode,
-    shelfIndex: state.sidebar.shelfIndex,
-    isOpenEditDialog: state.book.isOpenEditDialog,
-    isOpenDeleteDialog: state.book.isOpenDeleteDialog,
-    isOpenAddDialog: state.book.isOpenAddDialog,
-    isSort: state.manager.isSort,
-    isSortDisplay: state.manager.isSortDisplay,
-    isMessage: state.manager.isMessage,
-    isBackup: state.backupPage.isBackup,
-    isFirst: state.manager.isFirst,
-  };
-};
-const actionCreator = {
-  handleFetchBooks,
-  handleFetchNotes,
-  handleFetchDigests,
-  handleFetchBookmarks,
-  handleFetchHighlighters,
-  handleFetchSortCode,
-  handleFetchList,
-  handleMessageBox,
-  handleFirst,
-};
-export default connect(mapStateToProps, actionCreator)(Manager);
+
+export default Manager;

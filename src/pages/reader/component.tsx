@@ -6,41 +6,7 @@ import NavigationPanel from "../../containers/navigationPanel";
 import OperationPanel from "../../containers/operationPanel";
 import MessageBox from "../../containers/messageBox";
 import ProgressPanel from "../../containers/progressPanel";
-import {
-  handleFetchNotes,
-  handleFetchBookmarks,
-  handleFetchDigests,
-  handleFetchChapters,
-  handleFetchHighlighters,
-} from "../../redux/actions/reader";
-import { handleFetchPercentage } from "../../redux/actions/progressPanel";
-import { handleMessageBox } from "../../redux/actions/manager";
-import "./reader.css";
-import { connect } from "react-redux";
-import BookModel from "../../model/Book";
-import { stateType } from "../../redux/store";
-
-export interface ReaderProps {
-  currentEpub: any;
-  currentBook: BookModel;
-  isMessage: boolean;
-  handleFetchNotes: () => void;
-  handleFetchDigests: () => void;
-  handleFetchBookmarks: () => void;
-  handleFetchHighlighters: () => void;
-  handleMessageBox: (isShow: boolean) => void;
-  handleFetchPercentage: (currentBook: BookModel) => void;
-  handleFetchChapters: (currentEpub: any) => void;
-}
-
-export interface ReaderState {
-  isOpenSettingPanel: boolean;
-  isOpenOperationPanel: boolean;
-  isOpenProgressPanel: boolean;
-  isOpenInfoPanel: boolean;
-  isMessage: boolean;
-}
-
+import { ReaderProps, ReaderState } from "./interface";
 class Reader extends React.Component<ReaderProps, ReaderState> {
   timer!: NodeJS.Timeout;
   constructor(props: ReaderProps) {
@@ -207,20 +173,5 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
     );
   }
 }
-const mapStateToProps = (state: stateType) => {
-  return {
-    currentEpub: state.book.currentEpub,
-    currentBook: state.book.currentBook,
-    isMessage: state.manager.isMessage,
-  };
-};
-const actionCreator = {
-  handleFetchNotes,
-  handleFetchBookmarks,
-  handleFetchDigests,
-  handleFetchChapters,
-  handleFetchHighlighters,
-  handleMessageBox,
-  handleFetchPercentage,
-};
-export default connect(mapStateToProps, actionCreator)(Reader);
+
+export default Reader;
