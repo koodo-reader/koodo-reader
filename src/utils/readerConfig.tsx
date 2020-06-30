@@ -19,7 +19,6 @@ class readerConfig {
       return;
     }
     let css = this.getDefaultCss();
-    console.log(css);
     let iDoc = document.getElementsByTagName("iframe")[0].contentDocument;
     let style = iDoc!.getElementById("default-style");
     let background = document.querySelector(".background");
