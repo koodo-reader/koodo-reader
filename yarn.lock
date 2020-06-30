@@ -1649,6 +1649,11 @@
   resolved "https://registry.npm.taobao.org/@types/q/download/@types/q-1.5.4.tgz#15925414e0ad2cd765bfef58842f7e26a7accb24"
   integrity sha1-FZJUFOCtLNdlv+9YhC9+JqesyyQ=
 
+"@types/rangy@^0.0.33":
+  version "0.0.33"
+  resolved "https://registry.npm.taobao.org/@types/rangy/download/@types/rangy-0.0.33.tgz#9f1afff01b4ba840360713a2c2ef3a36e7d49576"
+  integrity sha1-nxr/8BtLqEA2BxOiwu86NufUlXY=
+
 "@types/react-dom@*", "@types/react-dom@^16.9.6":
   version "16.9.8"
   resolved "https://registry.npm.taobao.org/@types/react-dom/download/@types/react-dom-16.9.8.tgz#fe4c1e11dfc67155733dfa6aa65108b4971cb423"
@@ -9726,6 +9731,11 @@ range-parser@^1.2.1, range-parser@~1.2.1:
   version "1.2.1"
   resolved "https://registry.npm.taobao.org/range-parser/download/range-parser-1.2.1.tgz#3cf37023d199e1c24d1a55b84800c2f3e6468031"
   integrity sha1-PPNwI9GZ4cJNGlW4SADC8+ZGgDE=
+
+rangy@^1.3.0:
+  version "1.3.0"
+  resolved "https://registry.npm.taobao.org/rangy/download/rangy-1.3.0.tgz#b7c9a70aea05e5d8cdc74a8d4c8273d697271904"
+  integrity sha1-t8mnCuoF5djNx0qNTIJz1pcnGQQ=
 
 raw-body@2.4.0:
   version "2.4.0"

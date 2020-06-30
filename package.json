@@ -14,6 +14,7 @@
     "electron-updater": "4.0.0",
     "i18next": "^19.4.4",
     "i18next-browser-languagedetector": "^4.2.0",
+    "rangy": "^1.3.0",
     "react-dropzone": "^11.0.1",
     "react-i18next": "^9.0.10"
   },
@@ -103,6 +104,7 @@
     "@types/jest": "^25.2.1",
     "@types/jszip": "^3.4.1",
     "@types/node": "^13.13.2",
+    "@types/rangy": "^0.0.33",
     "@types/react": "^16.9.34",
     "@types/react-dom": "^16.9.6",
     "@types/react-dropzone": "^5.1.0",
