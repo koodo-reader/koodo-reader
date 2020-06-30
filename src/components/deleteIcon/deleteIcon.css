@@ -1,0 +1,19 @@
+.delete-digest-button {
+  width: 18px !important;
+  height: 18px !important;
+  border-radius: 50%;
+  background-color: rgba(75, 75, 75, 0.8);
+  color: white;
+  cursor: pointer;
+  text-align: center;
+  position: absolute;
+  top: 2px !important;
+  right: 2px !important;
+  z-index: 10;
+}
+.delete-digest-icon {
+  position: relative;
+  left: 10px !important;
+  bottom: 10px !important;
+  transform: scale(0.6);
+}

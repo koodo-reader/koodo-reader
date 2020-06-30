@@ -42,12 +42,14 @@
   /* clear: both; */
   /* float: left; */
   /* zoom: 1; */
+
   overflow: hidden;
   clear: both;
 }
 .digest-list-item {
   float: left;
   /* display: inline-block; */
+  cursor: pointer;
   font-size: 16px;
   width: 363px;
   height: 106px;
