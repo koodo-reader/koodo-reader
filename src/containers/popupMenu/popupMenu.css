@@ -22,3 +22,6 @@
   text-shadow: 0px 8px 8px rgba(0, 0, 0, 0.16);
   z-index: 0;
 }
+.delete-highlighter-container {
+  position: relative;
+}

@@ -13,3 +13,6 @@ export interface PopupMenuProps {
   handleMenuMode: (menu: string) => void;
   handleChangeDirection: (isChangeDirection: boolean) => void;
 }
+export interface PopupMenuStates {
+  deleteKey: string;
+}

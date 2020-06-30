@@ -4,16 +4,19 @@ import PopupNote from "../../components/popupNote";
 import PopupOption from "../../components/popupOption";
 import Highlighter from "../../model/Highlighter";
 import localforage from "localforage";
-import { PopupMenuProps } from "./interface";
+import { PopupMenuProps, PopupMenuStates } from "./interface";
+import DeleteIcon from "../../components/deleteIcon";
+
 declare var window: any;
 
-class PopupMenu extends React.Component<PopupMenuProps> {
+class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
   highlighter: any;
   timer!: NodeJS.Timeout;
   key: any;
   constructor(props: PopupMenuProps) {
     super(props);
     this.highlighter = null;
+    this.state = { deleteKey: "" };
   }
 
   componentDidMount() {
@@ -45,9 +48,27 @@ class PopupMenu extends React.Component<PopupMenuProps> {
         elementTagName: "span",
         elementProperties: {
           onclick: (event: any) => {
+            console.log(this.key, "hello");
             if (!document.getElementsByTagName("iframe")[0].contentDocument) {
               return;
             }
+            //显示高亮的删除图标
+            if (this.state.deleteKey) {
+              this.setState({ deleteKey: "" });
+            } else {
+              this.handleShowDelete(this.key);
+              let e = event || window.event;
+              let icon = document.querySelector(
+                ".delete-highlighter-container"
+              );
+              icon!.setAttribute(
+                "style",
+                `position:relative;top:${e.clientY}px;right:${
+                  document.body.clientWidth - e.clientX
+                }px`
+              );
+            }
+
             let iDoc = document.getElementsByTagName("iframe")[0]
               .contentDocument;
             let sel = iDoc!.getSelection();
@@ -64,6 +85,9 @@ class PopupMenu extends React.Component<PopupMenuProps> {
       this.highlighter.addClassApplier(applier);
     });
   };
+  handleShowDelete = (deleteKey: string) => {
+    this.setState({ deleteKey });
+  };
   //渲染高亮
   renderHighlighters = () => {
     if (
@@ -77,7 +101,6 @@ class PopupMenu extends React.Component<PopupMenuProps> {
       return;
     }
     let chapter = this.props.currentEpub.renderer.currentChapter.spinePos;
-    console.log(chapter, highlighters, "highlighters");
     let highlightersByChapter = highlighters.filter(
       (item) => item.chapter === chapter
     );
@@ -185,7 +208,7 @@ class PopupMenu extends React.Component<PopupMenuProps> {
     let iframe = document.getElementsByTagName("iframe")[0];
 
     let iDoc = document.getElementsByTagName("iframe")[0].contentDocument;
-    let color = 3;
+    let color = 1;
     // let note = this.createNote(color);
     let classes = ["color-0", "color-1", "color-2", "color-3"];
     let key = new Date().getTime() + "";
@@ -208,6 +231,7 @@ class PopupMenu extends React.Component<PopupMenuProps> {
     //获取章节名
     let chapter = this.props.currentEpub.renderer.currentChapter.spinePos;
     let highlighter = new Highlighter(key, bookKey, cfi, color, chapter, range);
+    this.key = key;
     let highlighterArr = this.props.highlighters ? this.props.highlighters : [];
     highlighterArr.push(highlighter);
     localforage.setItem("highlighters", highlighterArr);
@@ -222,8 +246,18 @@ class PopupMenu extends React.Component<PopupMenuProps> {
     if (this.props.menuMode === "highlight") {
       this.handleHighlight();
     }
+    const highlighterProps = {
+      mode: "highlighters",
+      itemKey: this.state.deleteKey,
+      renderHighlighters: this.renderHighlighters,
+      handleShowDelete: this.handleShowDelete,
+    };
     return (
       <div>
+        <div className="delete-highlighter-container">
+          {this.state.deleteKey ? <DeleteIcon {...highlighterProps} /> : null}
+        </div>
+
         {this.props.isOpenMenu ? (
           <div className="popup-menu-container">
             <div className="popup-menu-box">

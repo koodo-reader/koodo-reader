@@ -128,7 +128,6 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         {this.state.isOpenSettingPanel ? (
           <div
             onMouseLeave={(event) => {
-              console.log("wolikail");
               this.handleLeaveReader(event, "right");
             }}
           >
@@ -136,7 +135,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
           </div>
         ) : null}
         //控制图书信息的显示
-        {1 ? (
+        {this.state.isOpenInfoPanel ? (
           <div
             onMouseLeave={(event) => {
               this.handleLeaveReader(event, "left");
