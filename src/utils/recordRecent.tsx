@@ -15,7 +15,7 @@ class RecordRecent {
   static getRecent() {
     let json = localStorage.getItem("recentBooks");
     let obj = JSON.parse(json!) || {};
-    return obj || null;
+    return obj || {};
   }
   static clear(bookKey: string) {
     let json = localStorage.getItem("recentBooks");

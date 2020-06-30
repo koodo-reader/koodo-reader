@@ -10,3 +10,6 @@ export interface DigestListProps {
   books: BookModel[];
   digests: DigestModel[];
 }
+export interface DigestListStates {
+  deleteIndex: number;
+}

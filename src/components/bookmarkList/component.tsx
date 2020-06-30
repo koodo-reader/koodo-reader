@@ -3,13 +3,14 @@ import React from "react";
 import "./bookmarkList.css";
 import { Trans } from "react-i18next";
 import { BookmarkListProps, BookmarkListState } from "./interface";
+import DeleteIcon from "../deleteIcon";
 class BookmarkList extends React.Component<
   BookmarkListProps,
   BookmarkListState
 > {
   constructor(props: BookmarkListProps) {
     super(props);
-    this.state = { bookmarks: this.props.bookmarks };
+    this.state = { bookmarks: this.props.bookmarks, deleteIndex: -1 };
   }
   static getDerivedStateFromProps(
     nextProps: BookmarkListProps,
@@ -21,8 +22,16 @@ class BookmarkList extends React.Component<
   }
   //跳转到图书的指定位置
   handleJump(cfi: string) {
+    if (!cfi) {
+      this.props.handleMessage("Wrong bookmark");
+      this.props.handleMessageBox(true);
+      return;
+    }
     this.props.currentEpub.gotoCfi(cfi);
   }
+  handleShowDelete = (index: number) => {
+    this.setState({ deleteIndex: index });
+  };
   render() {
     const renderBookmarkList = () => {
       let { bookmarks } = this.state;
@@ -30,12 +39,27 @@ class BookmarkList extends React.Component<
         .filter((item) => {
           return item.bookKey === this.props.currentBook.key;
         })
-        .map((item) => {
+        .map((item, index) => {
+          const bookmarkProps = {
+            itemKey: item.key,
+            mode: "bookmarks",
+          };
           return (
-            <li className="book-bookmark-list" key={item.key}>
+            <li
+              className="book-bookmark-list"
+              key={item.key}
+              onMouseEnter={() => {
+                this.handleShowDelete(index);
+              }}
+              onMouseLeave={() => {
+                this.handleShowDelete(-1);
+              }}
+            >
               <p className="book-bookmark-digest">{item.label}</p>
               <span className="book-bookmark-index">{item.chapter}</span>
-
+              {this.state.deleteIndex === index ? (
+                <DeleteIcon {...bookmarkProps} />
+              ) : null}
               <div
                 className="book-bookmark-link"
                 onClick={() => {
