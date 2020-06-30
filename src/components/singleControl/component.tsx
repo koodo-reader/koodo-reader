@@ -16,7 +16,7 @@ class SingleControl extends React.Component<
     this.props.handleSingle(mode);
     this.setState({ isSingle: mode === "single" });
     localStorage.setItem("isSingle", mode);
-    this.props.handleMessage("Try Refresh or Restart");
+    this.props.handleMessage("Try refresh or restart");
     this.props.handleMessageBox(true);
   };
   render() {

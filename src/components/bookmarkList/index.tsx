@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { stateType } from "../../redux/store";
 import { withNamespaces } from "react-i18next";
 import BookmarkList from "./component";
+import { handleMessageBox, handleMessage } from "../../redux/actions/manager";
 const mapStateToProps = (state: stateType) => {
   return {
     currentBook: state.book.currentBook,
@@ -10,7 +11,7 @@ const mapStateToProps = (state: stateType) => {
     bookmarks: state.reader.bookmarks,
   };
 };
-const actionCreator = {};
+const actionCreator = { handleMessageBox, handleMessage };
 export default connect(
   mapStateToProps,
   actionCreator

@@ -4,12 +4,14 @@ import "./noteList.css";
 import NoteModel from "../../model/Note";
 import { Trans } from "react-i18next";
 import { NoteListProps, NoteListState } from "./interface";
+import DeleteIcon from "../../components/deleteIcon";
 class NoteList extends React.Component<NoteListProps, NoteListState> {
   constructor(props: NoteListProps) {
     super(props);
     this.state = {
       currentDate: null,
       currentIndex: null,
+      deleteIndex: -1,
     };
   }
   //获取图书名
@@ -32,6 +34,10 @@ class NoteList extends React.Component<NoteListProps, NoteListState> {
       this.setState({ currentDate: date, currentIndex: index });
     }
   };
+  handleShowDelete = (index: number) => {
+    this.setState({ deleteIndex: index });
+  };
+
   render() {
     let { notes } = this.props;
     let noteArr = [];
@@ -74,12 +80,25 @@ class NoteList extends React.Component<NoteListProps, NoteListState> {
       return noteObj[date].map((item: NoteModel, index: number) => {
         let isCurrent =
           this.state.currentDate === date && this.state.currentIndex === index;
+        const noteProps = {
+          itemKey: item.key,
+          mode: "notes",
+        };
         return (
           <li
             className="note-list-item"
             key={item.notes}
             style={isCurrent ? { height: "200px" } : {}}
+            onMouseEnter={() => {
+              this.handleShowDelete(index);
+            }}
+            onMouseLeave={() => {
+              this.handleShowDelete(-1);
+            }}
           >
+            {this.state.deleteIndex === index ? (
+              <DeleteIcon {...noteProps} />
+            ) : null}
             <div className="note-list-item-note-parent">
               <div className="note-list-item-note">{item.notes}</div>
             </div>

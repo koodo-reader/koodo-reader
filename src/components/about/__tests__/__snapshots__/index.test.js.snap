@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<About /> should render about info 1`] = `
+<div
+  class="about-container"
+>
+  <div
+    class="about-icon-container"
+  >
+    <span
+      class="icon-github about-icon"
+    />
+    <span
+      class="icon-contact about-icon"
+    />
+    <span
+      class="icon-donate about-icon"
+    />
+  </div>
+</div>
+`;

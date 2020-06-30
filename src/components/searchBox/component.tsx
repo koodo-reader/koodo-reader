@@ -32,6 +32,7 @@ class SearchBox extends React.Component<SearchBoxProps> {
           onKeyDown={(event) => {
             this.handleKey(event);
           }}
+          placeholder="Search My Library"
         />
         {this.props.isSearch ? (
           <span
@@ -48,11 +49,7 @@ class SearchBox extends React.Component<SearchBoxProps> {
             onClick={() => {
               this.handleMouse();
             }}
-          >
-            <span className="search-text">
-              <Trans>Search My Library</Trans>
-            </span>
-          </span>
+          ></span>
         )}
       </div>
     );

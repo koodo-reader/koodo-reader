@@ -121,7 +121,8 @@ class BookList extends React.Component<BookListProps> {
                   : { color: "rgba(75,75,75,0.5)" }
               }
             >
-              <span className="icon-grid"></span> <Trans>Card Mode</Trans>
+              <span className="icon-grid"></span>
+              <Trans>Card Mode</Trans>
             </div>
             <div
               className="list-view-mode"

@@ -5,6 +5,7 @@
   margin-left: 18px;
   box-sizing: border-box;
   overflow: hidden;
+  position: relative;
 }
 .book-bookmark-digest {
   /* margin-left: 5px;
@@ -22,6 +23,7 @@
 .book-bookmark-index {
   float: left;
   width: 200px;
+  height: 16px;
   /* margin-top: 9px; */
   font-size: 14px;
   color: rgba(161, 161, 161, 1);
@@ -61,7 +63,7 @@
   color: rgba(255, 255, 255, 1);
   opacity: 1;
   text-align: center;
-  margin: 0px 12px 5px;
+  margin: 0px 12px 0px;
   cursor: pointer;
   position: relative;
   bottom: 15px;

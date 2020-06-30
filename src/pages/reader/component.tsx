@@ -77,7 +77,6 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
   };
   //退出阅读器
   handleLeaveReader = (event: any, position: string) => {
-    console.log(event.clientX, document.body.offsetWidth);
     //控制上下左右的菜单的显示
     switch (position) {
       case "right":
@@ -137,7 +136,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
           </div>
         ) : null}
         //控制图书信息的显示
-        {this.state.isOpenInfoPanel ? (
+        {1 ? (
           <div
             onMouseLeave={(event) => {
               this.handleLeaveReader(event, "left");
