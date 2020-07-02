@@ -7,6 +7,9 @@
   "My Digests": "我的书摘",
   "My Shelves": "我的书架",
   "Sort": "排序",
+  "Authorizing": "授权中，请稍候",
+  "Downloading": "下载中，请稍候",
+  "Uploading": "上传中，请稍候",
   "Import from Local": "从本地导入",
   "Backup and Restore": "备份和恢复",
   "Search My Library": "搜索我的书库",
@@ -55,6 +58,9 @@
   "Add Successfully": "添加成功",
   "Select": "选择",
   "Coming Soon": "敬请期待",
+  "Authorize Successfully": "授权成功",
+  "Authorize Failed": "授权失败",
+  "You can turn off this tab now": "您可以关闭此标签页了",
   "Do you want to backup or restore?": "您想要备份还是恢复?",
   "Where is your data?": "您的数据保存在哪里?",
   "Where to keep your data?": "您想把数据存在哪里?",
@@ -107,5 +113,7 @@
   "Fluent and easy operation": "简单流畅的操作方式",
   "Move your mouse to the edge of the reader to trigger menu,use mouse wheel and keyborad to switch pages": "鼠标移至边缘弹出菜单，使用鼠标滚轮和键盘上下左右按键控制翻页",
   "Go to Add your first book": "快去添加您的第一本书吧",
-  "That's all for the tutorial": "介绍完毕"
+  "That's all for the tutorial": "介绍完毕",
+  "Download failed,network problem or no backup": "下载失败，网络出错或者没有找到备份",
+  "Upload failed, check your connection": "上传失败，请检查网络连接"
 }

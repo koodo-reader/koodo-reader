@@ -8,7 +8,11 @@
 <h3 align="center">
   一个基于 React 和 Electron 开发的 Epub 阅读器
 </h3>
-  
+<h3 align="center">
+
+[下载](https://koodo.960960.xyz/download) | [官网](https://koodo.960960.xyz)
+
+</h3>
 <div align="center">
   <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
     <img src="https://ci.appveyor.com/api/projects/status/602fp409plq8qcwu?svg=true" alt="">
@@ -36,13 +40,13 @@
 
 ✍️ **Koodo Reader** 是一个开源免费的 Epub 阅读器，支持桌面版和网页版
 
-## 新功能
+## 新功能 (2020.7.2)
 
-- 现在 Koodo Reader 支持英文啦！非中文操作系统会自动显示为英文界面
+- 现在 Koodo Reader 支持绑定 Dropbox 实现多端同步啦，更多网盘会在后续更新中支持
 
-- Koodo Reader 官网正式上线啦！[点我前往](https://github.com/troyeguo/website-for-koodo-reader)
+- 书签，高亮，笔记和书摘支持删除啦
 
-- 支持拖拽添加图书，把图书拖拽到导入图书的按钮上就可以实现添加图书
+- 支持批量添加图书
 
 ## 特色 👇
 
@@ -52,9 +56,9 @@
 
 🌎 支持 **Windows** ， **MacOS** 和 **网页版**
 
-💻 安全的备份和恢复您所有的数据
+🖥 绑定 **OneDrive**， **Google Drive**， **Dropbox** 等网盘，实现数据的多端同步
 
-🖥 通过把备份文件保存到 **OneDrive**, **iCloud**, **Dropbox** 等网盘的本地文件夹，实现同步
+💻 您所有的数据都支持导入导出
 
 🌱 当然 **Koodo Reader** 仍然很年轻并且有一些缺陷，但有你的支持它一定会越来越好 🏃
 
@@ -62,7 +66,7 @@
 
 ## 使用方法
 
-桌面端：前往这里下载最新的安装包 [点我前往](https://github.com/troyeguo/koodo-reader/releases)
+桌面端：前往这里下载最新的安装包 [点我前往](https://koodo.960960.xyz/download)
 
 网页版：代码托管在 Netlify [点我前往](https://reader.960960.xyz)
 

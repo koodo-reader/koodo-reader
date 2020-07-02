@@ -5,6 +5,7 @@ import { driveList } from "../../utils/readerConfig";
 import BackupUtil from "../../utils/backupUtil";
 import RestoreUtil from "../../utils/restoreUtil";
 import { Trans } from "react-i18next";
+import DropboxUtil from "../../utils/syncUtils/dropbox";
 import { BackupPageProps, BackupPageState } from "./interface";
 class BackupPage extends React.Component<BackupPageProps, BackupPageState> {
   constructor(props: BackupPageProps) {
@@ -18,16 +19,7 @@ class BackupPage extends React.Component<BackupPageProps, BackupPageState> {
   handleClose = () => {
     this.props.handleBackupDialog(false);
   };
-  handleBackupToLocal = () => {
-    BackupUtil.backup(
-      this.props.books,
-      this.props.notes,
-      this.props.digests,
-      this.props.highlighters,
-      this.props.bookmarks,
-      this.handleFinish
-    );
-  };
+
   handleFinish = () => {
     this.setState({ currentStep: 2 });
   };
@@ -35,18 +27,62 @@ class BackupPage extends React.Component<BackupPageProps, BackupPageState> {
     event.preventDefault();
     RestoreUtil.restore(event.target.files[0], this.handleFinish);
   };
+  showMessage = (message: string) => {
+    this.props.handleMessage(message);
+    this.props.handleMessageBox(true);
+  };
   handleDrive = async (index: number) => {
     this.setState({ currentDrive: index }, () => {
-      if (this.state.currentDrive === 0) {
-        this.handleBackupToLocal();
-      } else {
-        this.props.handleMessage("Coming Soon");
-        this.props.handleMessageBox(true);
+      switch (index) {
+        case 0:
+          BackupUtil.backup(
+            this.props.books,
+            this.props.notes,
+            this.props.digests,
+            this.props.highlighters,
+            this.props.bookmarks,
+            this.handleFinish,
+            0,
+            this.showMessage
+          );
+          break;
+        case 1:
+          if (!localStorage.getItem("dropbox_access_token")) {
+            DropboxUtil.FetchToken();
+          }
+          if (this.state.isBackup) {
+            this.showMessage("Uploading");
+            BackupUtil.backup(
+              this.props.books,
+              this.props.notes,
+              this.props.digests,
+              this.props.highlighters,
+              this.props.bookmarks,
+              this.handleFinish,
+              1,
+              this.showMessage
+            );
+          } else {
+            this.showMessage("Downloading");
+            DropboxUtil.DownloadFile(this.handleFinish, this.showMessage);
+          }
+
+          break;
+        case 2:
+          this.showMessage("Coming Soon");
+          break;
+        case 3:
+          this.showMessage("Coming Soon");
+          break;
+        case 4:
+          this.showMessage("Coming Soon");
+          break;
+        default:
+          break;
       }
     });
   };
   render() {
-    console.log(this.state.isBackup === true, this.state.isBackup === false);
     const renderDrivePage = () => {
       return driveList.map((item, index) => {
         return (
@@ -56,7 +92,7 @@ class BackupPage extends React.Component<BackupPageProps, BackupPageState> {
             onClick={async () => {
               this.handleDrive(index);
             }}
-            style={index === 0 ? { opacity: 1 } : {}}
+            style={index === 0 || index === 1 ? { opacity: 1 } : {}}
           >
             <div className="backup-page-list-item-container">
               <span
@@ -130,7 +166,7 @@ class BackupPage extends React.Component<BackupPageProps, BackupPageState> {
                 accept="application/zip"
                 className="restore-file"
                 name="file"
-                multiple={true}
+                multiple={false}
                 onChange={(event) => {
                   this.handleRestoreToLocal(event);
                 }}

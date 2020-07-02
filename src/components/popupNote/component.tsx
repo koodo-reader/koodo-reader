@@ -73,7 +73,7 @@ class PopupNote extends React.Component<PopupNoteProps> {
             <span className="icon-return"></span>
           </div>
           <div className="editor-box-parent">
-            <textarea className="editor-box" placeholder="在此输入您的笔记" />
+            <textarea className="editor-box" placeholder="Write notes here" />
           </div>
           <div className="note-button-container">
             <span

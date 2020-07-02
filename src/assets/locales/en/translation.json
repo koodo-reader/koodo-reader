@@ -7,6 +7,9 @@
   "My Digests": "Digests",
   "My Shelves": "Shelves",
   "Sort": "Sort",
+  "Authorizing": "Authorizing, please wait",
+  "Downloading": "Downloading, please wait",
+  "Uploading": "Uploading, please wait",
   "Import from Local": "Import from Local",
   "Backup and Restore": "Backup and Restore",
   "Search My Library": "Search My Library",
@@ -54,6 +57,9 @@
   "Add Successfully": "Add Successfully",
   "Select": "Select",
   "Coming Soon": "Coming Soon",
+  "Authorize Successfully": "Authorize Successfully",
+  "Authorize Failed": "Authorize Failed",
+  "You can turn off this tab now": "You can turn off this tab now",
   "Do you want to backup or restore?": "Do You Want To Backup Or Restore?",
   "Where is your data?": "Where is your data?",
   "Where to keep your data?": "Where to keep your data?",
@@ -106,5 +112,7 @@
   "Fluent and easy operation": "Fluent and easy operation",
   "Move your mouse to the edge of the reader to trigger menu,use mouse wheel and keyborad to switch pages": "Move your mouse to the edge of the reader to trigger menu,use mouse wheel and keyborad to switch pages",
   "Go to Add your first book": "Go to Add your first book",
+  "Download failed,network problem or no backup": "Download failed,network problem or no backup",
+  "Upload failed, check your connection": "Upload failed, check your connection",
   "That's all for the tutorial": "That's all for the tutorial"
 }

@@ -10,15 +10,7 @@ class BookmarkList extends React.Component<
 > {
   constructor(props: BookmarkListProps) {
     super(props);
-    this.state = { bookmarks: this.props.bookmarks, deleteIndex: -1 };
-  }
-  static getDerivedStateFromProps(
-    nextProps: BookmarkListProps,
-    prevState: BookmarkListProps
-  ) {
-    if (nextProps.bookmarks !== prevState.bookmarks)
-      return { bookmarks: nextProps.bookmarks };
-    else return null;
+    this.state = { deleteIndex: -1 };
   }
   //跳转到图书的指定位置
   handleJump(cfi: string) {
@@ -33,8 +25,9 @@ class BookmarkList extends React.Component<
     this.setState({ deleteIndex: index });
   };
   render() {
+    console.log(this.props.bookmarks, "bookmarks");
     const renderBookmarkList = () => {
-      let { bookmarks } = this.state;
+      let { bookmarks } = this.props;
       return bookmarks
         .filter((item) => {
           return item.bookKey === this.props.currentBook.key;
@@ -78,7 +71,9 @@ class BookmarkList extends React.Component<
     };
     return (
       <div className="book-bookmark-container">
-        <ul className="book-bookmark">{renderBookmarkList()}</ul>
+        <ul className="book-bookmark">
+          {this.props.bookmarks && renderBookmarkList()}
+        </ul>
       </div>
     );
   }

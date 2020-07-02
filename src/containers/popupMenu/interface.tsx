@@ -7,6 +7,7 @@ export interface PopupMenuProps {
   isOpenMenu: boolean;
   isChangeDirection: boolean;
   menuMode: string;
+  handleHighlighters: (highlighters: HighlighterModel[]) => void;
   handleMessageBox: (isShow: boolean) => void;
   handleMessage: (message: string) => void;
   handleOpenMenu: (isOpenMenu: boolean) => void;

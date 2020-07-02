@@ -33,4 +33,6 @@ export interface ManagerProps {
 export interface ManagerState {
   totalBooks: number;
   recentBooks: number;
+  isAuthed: boolean;
+  isError: boolean;
 }

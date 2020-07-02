@@ -3,7 +3,6 @@ import React from "react";
 import "./importLocal.css";
 import BookModel from "../../model/Book";
 import localforage from "localforage";
-
 import SparkMD5 from "spark-md5";
 import { Trans } from "react-i18next";
 
@@ -16,7 +15,6 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
       isRepeat: false,
     };
   }
-  //向indexdb中添加书籍
   handleAddBook = (book: BookModel) => {
     let bookArr = this.props.books;
     if (bookArr == null) {
@@ -32,7 +30,6 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
   //获取书籍md5
   doIncrementalTest = (file: any) => {
     //这里假设直接将文件选择框的dom引用传入
-
     //这里需要用到File的slice( )方法，以下是兼容写法
     var blobSlice =
         (File as any).prototype.slice ||
@@ -114,22 +111,15 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
       };
     }
   };
-  handleChange = (event: any) => {
-    if (!event.target) {
-      return;
-    }
-    event.preventDefault();
-    this.setState({ isRepeat: false });
-    let file = event.target.files[0];
-    this.doIncrementalTest(file);
-  };
 
   render() {
     return (
       <Dropzone
         onDrop={(acceptedFiles) => {
           console.log("hello", acceptedFiles);
-          this.doIncrementalTest(acceptedFiles[0]);
+          acceptedFiles.forEach((item) => {
+            this.doIncrementalTest(item);
+          });
         }}
       >
         {({ getRootProps, getInputProps }) => (
@@ -142,9 +132,6 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
               className="import-book-box"
               name="file"
               multiple={true}
-              onChange={(event) => {
-                this.handleChange(event);
-              }}
               {...getInputProps()}
             />
           </div>

@@ -234,13 +234,14 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     this.key = key;
     let highlighterArr = this.props.highlighters ? this.props.highlighters : [];
     highlighterArr.push(highlighter);
-    localforage.setItem("highlighters", highlighterArr);
-    this.props.handleOpenMenu(false);
-    iDoc!.getSelection()!.empty();
+    localforage.setItem("highlighters", highlighterArr).then((value) => {
+      this.props.handleHighlighters(value);
+    });
     this.props.handleMessage("Highlight Successfully");
     this.props.handleMessageBox(true);
-    // console.log("%c Add note here. ", "background-color: green");
     this.props.handleMenuMode("menu");
+    this.props.handleOpenMenu(false);
+    iDoc!.getSelection()!.empty();
   }
   render() {
     if (this.props.menuMode === "highlight") {

@@ -2,6 +2,7 @@
 import React from "react";
 import "./about.css";
 import { AboutProps, AboutState } from "./interface";
+
 class About extends React.Component<AboutProps, AboutState> {
   constructor(props: AboutProps) {
     super(props);

@@ -6,6 +6,7 @@ import NoteModel from "../model/Note";
 import DigestModel from "../model/Digest";
 import HighligherModel from "../model/Highlighter";
 import BookmarkModel from "../model/Bookmark";
+import DropboxUtil from "./syncUtils/dropbox";
 class BackupUtil {
   static backup(
     books: BookModel[],
@@ -13,17 +14,21 @@ class BackupUtil {
     digests: DigestModel[],
     highlighters: HighligherModel[],
     bookmarks: BookmarkModel[],
-    handleFinish: () => void
+    handleFinish: () => void,
+    driveIndex: number,
+    showMessage: (message: string) => void
   ) {
     let zip = new JSZip();
 
     let epubZip = zip.folder("epub");
-    books.forEach((item) => {
-      epubZip.file(`${item.name}.epub`, item.content);
-    });
-    books.forEach((item) => {
-      delete item.content;
-    });
+    books &&
+      books.forEach((item) => {
+        epubZip.file(`${item.name}.epub`, item.content);
+      });
+    books &&
+      books.forEach((item) => {
+        delete item.content;
+      });
     let dataZip = zip.folder("data");
     dataZip
       .file("notes.json", JSON.stringify(notes))
@@ -64,15 +69,23 @@ class BackupUtil {
     zip
       .generateAsync({ type: "blob" })
       .then(function (blob) {
-        FileSaver.saveAs(
-          blob,
-          `${year}-${month < 9 ? "0" + month : month}-${
-            day < 9 ? "0" + day : day
-          }.zip`
-        );
-      })
-      .then(() => {
-        handleFinish();
+        switch (driveIndex) {
+          case 0:
+            handleFinish();
+            FileSaver.saveAs(
+              blob,
+              `${year}-${month < 9 ? "0" + month : month}-${
+                day < 9 ? "0" + day : day
+              }.zip`
+            );
+            break;
+          case 1:
+            console.log("backuputil 1");
+            DropboxUtil.UploadFile(blob, handleFinish, showMessage);
+            break;
+          default:
+            break;
+        }
       })
       .catch(() => {
         console.log("Error occurs");
