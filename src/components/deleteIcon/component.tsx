@@ -24,9 +24,8 @@ class DeleteIcon extends React.Component<DeleteIconProps, DeleteIconStates> {
         : this.props.mode === "notes"
         ? this.props.handleFetchNotes
         : this.props.mode === "highlighters"
-        ? this.props.handleFetchBookmarks
-        : this.props.handleFetchHighlighters;
-    console.log(deleteItems, "deleteItems");
+        ? this.props.handleFetchHighlighters
+        : this.props.handleFetchBookmarks;
     deleteItems.forEach((item: any, index: number) => {
       console.log(
         item.key,

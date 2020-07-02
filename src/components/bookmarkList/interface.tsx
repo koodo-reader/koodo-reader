@@ -8,6 +8,5 @@ export interface BookmarkListProps {
   handleMessageBox: (isShow: boolean) => void;
 }
 export interface BookmarkListState {
-  bookmarks: BookmarkModel[];
   deleteIndex: number;
 }
