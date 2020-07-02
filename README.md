@@ -2,17 +2,17 @@
 <img src="https://i.loli.net/2020/04/26/wrO8EPokvUQWaf5.png" />
 </div>
 
-<h1 align="center">
+<p align="center">
   Koodo Reader
-</h1>
+</p>
 <h3 align="center">
   一个基于 React 和 Electron 开发的 Epub 阅读器
 </h3>
-<h3 align="center">
+<p align="center">
 
 [下载](https://koodo.960960.xyz/download) | [官网](https://koodo.960960.xyz)
 
-</h3>
+</p>
 <div align="center">
   <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
     <img src="https://ci.appveyor.com/api/projects/status/602fp409plq8qcwu?svg=true" alt="">
