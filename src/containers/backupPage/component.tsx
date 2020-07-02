@@ -7,13 +7,14 @@ import RestoreUtil from "../../utils/restoreUtil";
 import { Trans } from "react-i18next";
 import DropboxUtil from "../../utils/syncUtils/dropbox";
 import { BackupPageProps, BackupPageState } from "./interface";
+import TokenDialog from "../../components/tokenDialog";
 class BackupPage extends React.Component<BackupPageProps, BackupPageState> {
   constructor(props: BackupPageProps) {
     super(props);
     this.state = {
       currentStep: 0,
       isBackup: null,
-      currentDrive: null,
+      currentDrive: 0,
     };
   }
   handleClose = () => {
@@ -31,7 +32,7 @@ class BackupPage extends React.Component<BackupPageProps, BackupPageState> {
     this.props.handleMessage(message);
     this.props.handleMessageBox(true);
   };
-  handleDrive = async (index: number) => {
+  handleDrive = (index: number) => {
     this.setState({ currentDrive: index }, () => {
       switch (index) {
         case 0:
@@ -48,7 +49,8 @@ class BackupPage extends React.Component<BackupPageProps, BackupPageState> {
           break;
         case 1:
           if (!localStorage.getItem("dropbox_access_token")) {
-            DropboxUtil.FetchToken();
+            this.props.handleTokenDialog(true);
+            break;
           }
           if (this.state.isBackup) {
             this.showMessage("Uploading");
@@ -89,7 +91,7 @@ class BackupPage extends React.Component<BackupPageProps, BackupPageState> {
           <li
             key={item.id}
             className="backup-page-list-item"
-            onClick={async () => {
+            onClick={() => {
               this.handleDrive(index);
             }}
             style={index === 0 || index === 1 ? { opacity: 1 } : {}}
@@ -106,9 +108,13 @@ class BackupPage extends React.Component<BackupPageProps, BackupPageState> {
         );
       });
     };
-
+    const dialogProps = {
+      driveName: driveList[this.state.currentDrive!].icon,
+      url: driveList[this.state.currentDrive!].url,
+    };
     return (
       <div className="backup-page-container">
+        {this.props.isOpenTokenDialog ? <TokenDialog {...dialogProps} /> : null}
         {this.state.currentStep === 0 ? (
           <div className="backup-page-title">
             <Trans>Do you want to backup or restore?</Trans>
