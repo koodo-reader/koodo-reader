@@ -1,5 +1,6 @@
 const initState = {
   isBackup: false,
+  isOpenTokenDialog: false,
 };
 export function backupPage(
   state = initState,
@@ -11,7 +12,11 @@ export function backupPage(
         ...state,
         isBackup: action.payload,
       };
-
+    case "HANDLE_TOKEN_DIALOG":
+      return {
+        ...state,
+        isOpenTokenDialog: action.payload,
+      };
     default:
       return state;
   }

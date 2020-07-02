@@ -1,18 +1,4 @@
 class readerConfig {
-  // 获取默认的配置
-  // static getDefaultConfigObj() {
-  //   return {
-  //     theme: "rgba(255,254,252,1)",
-  //     fontFamily: "Helvetica",
-  //     fontSize: "17", // 0 代表使用默认值
-  //     lineHeight: "1.25", // 0 代表使用默认值
-  //     padding: "50", // 阅读区域与浏览器可视区域上下的间距
-  //     progress: 0,
-  //     colors: ["#FBF1D1", "#EFEEB0", "#CAEFC9", "#76BEE9"],
-  //   };
-  // }
-
-  // 更新config
   // 为 iframe 添加默认的样式
   static addDefaultCss() {
     if (!document.getElementsByTagName("iframe")[0].contentDocument) {
@@ -134,31 +120,43 @@ export const sideMenu = [
     mode: "digest",
   },
 ];
+const config = {
+  dropbox_callback_url:
+    process.env.NODE_ENV === "production"
+      ? "https://reader.960960.xyz"
+      : "http://localhost:3000",
+  dropbox_client_id: "e3zgg310xbizvaf",
+};
 export const driveList = [
   {
     id: 1,
     name: "Local",
     icon: "local",
+    url: "",
   },
   {
     id: 2,
     name: "Dropbox",
     icon: "dropbox",
+    url: `https://www.dropbox.com/oauth2/authorize?response_type=token&client_id=${config.dropbox_client_id}&redirect_uri=${config.dropbox_callback_url}`,
   },
   {
     id: 3,
     name: "OneDrive",
     icon: "onedrive",
+    url: "",
   },
   {
     id: 4,
     name: "Google Drive",
     icon: "googledrive",
+    url: "",
   },
   {
     id: 5,
     name: "WebDav",
     icon: "webdav",
+    url: "",
   },
 ];
 export const emptyList = [

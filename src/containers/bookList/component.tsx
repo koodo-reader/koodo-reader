@@ -36,7 +36,6 @@ class BookList extends React.Component<BookListProps> {
     //获取当前书架的图书列表
     let currentShelfList = ShelfUtil.getShelf()[currentShelfTitle];
     //根据图书列表获取到图书数据
-    console.log(currentShelfList, currentShelfTitle, "currentShelfList");
     let shelfItems = items.filter((item: { key: number }) => {
       return currentShelfList.indexOf(item.key) > -1;
     });
@@ -58,9 +57,7 @@ class BookList extends React.Component<BookListProps> {
   render() {
     localStorage.setItem("totalBooks", this.props.books.length.toString());
 
-    // console.log(this.props.isList);
     const renderBookList = () => {
-      // console.log(this.props.books, "sdgasf");
       //根据不同的场景获取不同的图书数据
       let books =
         this.props.mode === "recent"

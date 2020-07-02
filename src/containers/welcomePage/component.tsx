@@ -16,7 +16,6 @@ class WelcomePage extends React.Component<WelcomePageProps, WelcomePageState> {
       this.setState({ currentIndex: this.state.currentIndex - 1 });
   };
   handleNext = () => {
-    // console.log("next");
     if (this.state.currentIndex < 3)
       this.setState({ currentIndex: this.state.currentIndex + 1 });
   };

@@ -8,6 +8,7 @@ export function handleDeleteDialog(mode: boolean) {
 export function handleAddDialog(mode: boolean) {
   return { type: "HANDLE_ADD_DIALOG", payload: mode };
 }
+
 export function handleReadingState(state: boolean) {
   return { type: "HANDLE_READING_STATE", payload: state };
 }

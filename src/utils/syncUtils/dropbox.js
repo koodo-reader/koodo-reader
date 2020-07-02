@@ -1,11 +1,10 @@
-import { dropbox_client_id, dropbox_callback_url } from "../../config";
 import Dropbox from "dropbox";
 import RestoreUtil from "../restoreUtil";
 
 class DropboxUitl {
   static FetchToken() {
     window.open(
-      `https://www.dropbox.com/oauth2/authorize?response_type=token&client_id=${dropbox_client_id}&redirect_uri=${dropbox_callback_url}`
+      `https://www.dropbox.com/oauth2/authorize?response_type=token&client_id=e3zgg310xbizvaf&redirect_uri=https://reader.960960.xyz`
     );
   }
   static UploadFile(file, handleFinish, showMessage) {
@@ -36,7 +35,6 @@ class DropboxUitl {
       })
       .then(function (data) {
         let file = data.fileBlob;
-        console.log(data);
         file.lastModifiedDate = new Date();
         file.name = "data.zip";
         RestoreUtil.restore(file, handleFinish);

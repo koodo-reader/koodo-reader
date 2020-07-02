@@ -7,7 +7,7 @@ import { AddDialogProps, AddDialogState } from "./interface";
 class AddDialog extends Component<AddDialogProps, AddDialogState> {
   constructor(props: AddDialogProps) {
     super(props);
-    this.state = { isNew: false };
+    this.state = { isNew: true };
   }
 
   handleCancel = () => {
@@ -15,7 +15,7 @@ class AddDialog extends Component<AddDialogProps, AddDialogState> {
   };
   handleComfirm = () => {
     const inputElement: HTMLInputElement = document.querySelector(
-      ".add-dialog-shelf-list-box"
+      ".add-dialog-new-shelf-box"
     ) as HTMLInputElement;
     let shelfTitle: string = inputElement.value;
     if (this.state.isNew) {
@@ -28,27 +28,22 @@ class AddDialog extends Component<AddDialogProps, AddDialogState> {
   };
   //如果是添加到已存在的书架就diable新建图书的input框
   handleChange = (shelfTitle: string) => {
-    if (shelfTitle === "New Shelf") {
+    if (shelfTitle === "New") {
+      console.log(shelfTitle, "shelfTitle1");
       this.setState({ isNew: true });
-      (document.querySelector(
-        ".add-dialog-new-shelf-box"
-      ) as HTMLInputElement).removeAttribute("disabled");
     } else {
+      console.log(shelfTitle, "shelfTitle2");
       this.setState({ isNew: false });
-      (document.querySelector(
-        ".add-dialog-new-shelf-box"
-      ) as HTMLInputElement).setAttribute("disabled", "disabled");
     }
   };
   render() {
     const renderShelfList = () => {
       let shelfList = ShelfUtil.getShelf();
       let shelfTitle = Object.keys(shelfList);
-      console.log(shelfTitle);
       return shelfTitle.map((item) => {
         return (
           <NamespacesConsumer>
-            {(t, { i18n, ready }) => (
+            {(t) => (
               <option
                 value={item}
                 key={item}
@@ -83,7 +78,10 @@ class AddDialog extends Component<AddDialogProps, AddDialogState> {
           <div className="add-dialog-new-shelf-text">
             <Trans>New Shelf</Trans>
           </div>
-          <input className="add-dialog-new-shelf-box" />
+          <input
+            className="add-dialog-new-shelf-box"
+            disabled={!this.state.isNew}
+          />
         </div>
         <div
           className="add-dialog-cancel"

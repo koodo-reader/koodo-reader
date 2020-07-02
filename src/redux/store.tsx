@@ -56,6 +56,7 @@ export type stateType = {
   };
   backupPage: {
     isBackup: boolean;
+    isOpenTokenDialog: boolean;
   };
   progressPanel: {
     percentage: number;

@@ -48,7 +48,6 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
         elementTagName: "span",
         elementProperties: {
           onclick: (event: any) => {
-            console.log(this.key, "hello");
             if (!document.getElementsByTagName("iframe")[0].contentDocument) {
               return;
             }
@@ -119,7 +118,6 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
           try {
             let temp = JSON.parse(item.range);
             temp = [temp];
-            // console.log(temp, "test");
             window.rangy
               .getSelection(iframe)
               .restoreCharacterRanges(iframe.contentDocument, temp);
@@ -167,7 +165,6 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     let rect = this.props.currentEpub.renderer.rangePosition(
       sel!.getRangeAt(0)
     );
-    // console.log(rect);
 
     let height = 200;
     let posX = rect.x + rect.width / 2 - 20;

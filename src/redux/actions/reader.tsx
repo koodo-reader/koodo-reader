@@ -61,7 +61,6 @@ export function handleFetchBookmarks() {
       } else {
         bookmarkArr = value;
       }
-      // console.log(value, "dgaskgskgr");
       dispatch(handleBookmarks(bookmarkArr));
     });
   };
@@ -82,7 +81,6 @@ export function handleFetchDigests() {
   };
 }
 export function handleFetchHighlighters() {
-  console.log("get highlighter");
   return (
     dispatch: (arg0: { type: string; payload: HighligherModel[] }) => void
   ) => {

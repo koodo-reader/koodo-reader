@@ -37,7 +37,6 @@ class Book extends React.Component<BookProps, BookState> {
   };
   //控制按钮的弹出
   handleConfig = (mode: boolean) => {
-    // console.log(mode, "mode");
     this.setState({ isOpenConfig: mode });
   };
   render() {

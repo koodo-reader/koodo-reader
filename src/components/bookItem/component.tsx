@@ -48,7 +48,6 @@ class Book extends React.Component<BookItemProps, BookItemState> {
     this.props.handleReadingBook(this.props.book);
   };
   render() {
-    // console.log(this.props.isReading, "agsffh");
     let date =
       RecordRecent.getRecent()[this.props.book.key] !== null &&
       RecordRecent.getRecent()[this.props.book.key] !== undefined
