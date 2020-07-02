@@ -56,7 +56,6 @@ class PopupOption extends React.Component<PopupOptionProps> {
     let index = this.props.chapters.findIndex((item: any) => {
       return item.spinePos > epub.renderer.currentChapter.spinePos;
     });
-    // console.log(index, "sahathth");
     let chapter =
       this.props.chapters[index] !== undefined
         ? this.props.chapters[index].label.trim(" ")

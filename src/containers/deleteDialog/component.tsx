@@ -41,7 +41,6 @@ class DeleteDialog extends React.Component<DeleteDialogProps> {
         });
       }
     }
-    // console.log(this.props.notes, "notes");
     if (this.props.digests !== null) {
       let digestArr = DeleteUtil.deleteDigests(
         this.props.digests,

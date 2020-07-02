@@ -20,6 +20,7 @@ import "./manager.css";
 import { ManagerProps, ManagerState } from "./interface";
 import { Trans } from "react-i18next";
 import { getParamsFromUrl } from "../../utils/syncUtils/common";
+import copy from "copy-text-to-clipboard";
 class Manager extends React.Component<ManagerProps, ManagerState> {
   timer!: NodeJS.Timeout;
   constructor(props: ManagerProps) {
@@ -29,6 +30,8 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
       recentBooks: Object.keys(RecordRecent.getRecent()).length,
       isAuthed: false,
       isError: false,
+      isCopied: false,
+      token: "",
     };
   }
   //从indexdb里读取书籍
@@ -57,11 +60,10 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
   componentDidMount() {
     //判断是否是获取token后的回调页面
     let url = document.location.href;
-    console.log(url, "url");
     if (url.indexOf("access_token") > -1) {
       let params: any = getParamsFromUrl();
       if (params.uid) {
-        localStorage.setItem("dropbox_access_token", params.access_token);
+        this.setState({ token: params.access_token });
       }
       this.setState({ isAuthed: true });
     }
@@ -89,8 +91,18 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
               </Trans>
             </div>
 
-            <div style={{ opacity: 0.6 }}>
-              <Trans>You can turn off this tab now</Trans>
+            <div
+              className="token-dialog-token-text"
+              onClick={() => {
+                copy(this.state.token);
+                this.setState({ isCopied: true });
+              }}
+            >
+              {this.state.isCopied ? (
+                <Trans>Copied</Trans>
+              ) : (
+                <Trans>Copy Token</Trans>
+              )}
             </div>
           </div>
         </div>

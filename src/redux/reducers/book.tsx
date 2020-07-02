@@ -21,6 +21,7 @@ export function book(
         ...state,
         isOpenDeleteDialog: action.payload,
       };
+
     case "HANDLE_ADD_DIALOG":
       return {
         ...state,
