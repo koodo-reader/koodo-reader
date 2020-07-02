@@ -3,7 +3,7 @@ import localforage from "localforage";
 import BookModel from "../model/Book";
 
 class RestoreUtil {
-  importBooks = (books: BookModel[], file:any, handleFinish: () => void) => {
+  importBooks = (books: BookModel[], file: any, handleFinish: () => void) => {
     let zip = new JSZip();
     books.forEach((item, index) => {
       zip
@@ -27,7 +27,7 @@ class RestoreUtil {
         });
     });
   };
-  static restore = (file:any, handleFinish: () => void) => {
+  static restore = (file: any, handleFinish: () => void) => {
     let dataArr = [
       "notes",
       "digests",
@@ -74,31 +74,30 @@ class RestoreUtil {
         })
         .then(() => {
           if (item === "books") {
-            console.log("hdshsd");
             localforage.getItem("books").then((value: any) => {
               let zip = new JSZip();
-              value.forEach((item:any) => {
-                zip
-                  .loadAsync(file)
-                  .then((content) => {
-                    // you now have every files contained in the loaded zip
-                    return content.files[`epub/${item.name}.epub`].async(
-                      "arraybuffer"
-                    ); // a promise of "Hello World\n"
-                  })
-                  .then((book) => {
-                    console.log(book, "sjgsgjsgh");
-                    item.content = book;
-                  })
-                  .then(() => {
-                    localforage.setItem("books", value).then(() => {
-                      handleFinish();
+              value &&
+                value.forEach((item: any) => {
+                  zip
+                    .loadAsync(file)
+                    .then((content) => {
+                      // you now have every files contained in the loaded zip
+                      return content.files[`epub/${item.name}.epub`].async(
+                        "arraybuffer"
+                      ); // a promise of "Hello World\n"
+                    })
+                    .then((book) => {
+                      item.content = book;
+                    })
+                    .then(() => {
+                      localforage.setItem("books", value).then(() => {
+                        handleFinish();
+                      });
+                    })
+                    .catch(() => {
+                      console.log("Error occurs");
                     });
-                  })
-                  .catch(() => {
-                    console.log("Error occurs");
-                  });
-              });
+                });
             });
           }
         })
