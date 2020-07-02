@@ -47,6 +47,11 @@ class OperationPanel extends React.Component<
 
   // 退出全屏模式
   handleExitFullScreen() {
+    //解决使用esc退出全屏，再退出阅读时发生的bug
+    if (!document.fullscreenElement) {
+      return;
+    }
+
     if (document.exitFullscreen) {
       document.exitFullscreen();
     } else if (document.msExitFullscreen) {

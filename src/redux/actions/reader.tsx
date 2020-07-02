@@ -82,10 +82,11 @@ export function handleFetchDigests() {
   };
 }
 export function handleFetchHighlighters() {
+  console.log("get highlighter");
   return (
     dispatch: (arg0: { type: string; payload: HighligherModel[] }) => void
   ) => {
-    localforage.getItem("highlighters", (err, value) => {
+    localforage.getItem("highlighters", (value) => {
       let highlighterArr: any;
       if (value === null || value === []) {
         highlighterArr = null;
