@@ -116,7 +116,6 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
     return (
       <Dropzone
         onDrop={(acceptedFiles) => {
-          console.log("hello", acceptedFiles);
           acceptedFiles.forEach((item) => {
             this.doIncrementalTest(item);
           });

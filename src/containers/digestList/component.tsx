@@ -4,7 +4,7 @@ import "./digestList.css";
 import DigestModel from "../../model/Digest";
 import { Trans } from "react-i18next";
 import { DigestListProps, DigestListStates } from "./interface";
-import DeleteIcon from '../../components/deleteIcon'
+import DeleteIcon from "../../components/deleteIcon";
 class DigestList extends React.Component<DigestListProps, DigestListStates> {
   constructor(props: DigestListProps) {
     super(props);
@@ -15,7 +15,6 @@ class DigestList extends React.Component<DigestListProps, DigestListStates> {
     let { books } = this.props;
     let bookName = "";
     for (let i = 0; i < this.props.books.length; i++) {
-      // console.log(books[i].key === bookKey, "fhgjfhj");
       if (books[i].key === bookKey) {
         bookName = books[i].name;
         break;
@@ -82,10 +81,7 @@ class DigestList extends React.Component<DigestListProps, DigestListStates> {
             {this.state.deleteIndex === index ? (
               <DeleteIcon {...digestProps} />
             ) : null}
-            <div
-              className="digest-list-item-digest"
-              
-            >
+            <div className="digest-list-item-digest">
               <div className="digest-list-item-text-parent">
                 <div className="digest-list-item-text">{item.text}</div>
               </div>

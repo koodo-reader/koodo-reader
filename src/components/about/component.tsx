@@ -2,7 +2,7 @@
 import React from "react";
 import "./about.css";
 import { AboutProps, AboutState } from "./interface";
-
+import copy from "copy-text-to-clipboard";
 class About extends React.Component<AboutProps, AboutState> {
   constructor(props: AboutProps) {
     super(props);
@@ -23,15 +23,7 @@ class About extends React.Component<AboutProps, AboutState> {
     this.setState({ isDonate: mode });
   };
   handleClick = (str: string) => {
-    const el = document.createElement("textarea");
-    el.value = str;
-    el.setAttribute("readonly", "");
-    el.style.position = "absolute";
-    el.style.left = "-9999px";
-    document.body.appendChild(el);
-    el.select();
-    document.execCommand("copy");
-    document.body.removeChild(el);
+    copy(str);
     this.props.handleMessage("Copy Link Successfully");
     this.props.handleMessageBox(true);
   };

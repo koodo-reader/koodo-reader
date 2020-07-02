@@ -35,4 +35,6 @@ export interface ManagerState {
   recentBooks: number;
   isAuthed: boolean;
   isError: boolean;
+  isCopied: boolean;
+  token: string;
 }

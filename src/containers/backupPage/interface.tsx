@@ -5,8 +5,10 @@ import HighligherModel from "../../model/Highlighter";
 import BookmarkModel from "../../model/Bookmark";
 export interface BackupPageProps {
   handleBackupDialog: (isBackup: boolean) => void;
+  handleTokenDialog: (isOpenTokenDialog: boolean) => void;
   handleMessage: (message: string) => void;
   handleMessageBox: (isShow: boolean) => void;
+  isOpenTokenDialog: boolean;
   books: BookModel[];
   notes: NoteModel[];
   digests: DigestModel[];

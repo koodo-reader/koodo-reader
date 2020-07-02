@@ -25,7 +25,6 @@ class BookmarkList extends React.Component<
     this.setState({ deleteIndex: index });
   };
   render() {
-    console.log(this.props.bookmarks, "bookmarks");
     const renderBookmarkList = () => {
       let { bookmarks } = this.props;
       return bookmarks
