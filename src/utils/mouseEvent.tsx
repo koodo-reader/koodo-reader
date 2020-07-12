@@ -81,7 +81,7 @@ export const MouseEvent = (epub: any) => {
     let doc = epub.renderer.doc;
 
     // doc.addEventListener("click", openMenu); // 为每一章节内容绑定弹出菜单触发程序
-    doc.addEventListener("keydown", arrowKeys, false); // 箭头按键翻页
+    doc.addEventListener("keydown", arrowKeys); // 箭头按键翻页
     doc.addEventListener("keydown", copyText); // 解决 Ctrl + C 复制的bug
     window.addEventListener("keypress", () => {}); // 解决 Ctrl + C 复制的bug
 

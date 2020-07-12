@@ -130,7 +130,6 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
         {this.props.isSortDisplay ? <SortDialog /> : null}
         {this.props.isBackup ? <BackupPage /> : null}
         {this.props.isFirst === "yes" ? <WelcomePage /> : null}
-        //根据是否添加图书，路由地址等判断body的显示内容
         {totalBooks === 0 ? (
           <EmptyPage />
         ) : covers === null &&

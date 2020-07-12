@@ -104,6 +104,7 @@ class OperationPanel extends React.Component<
     let locations = this.props.currentEpub.locations;
     let percentage = locations.percentageFromCfi(cfi);
     RecordLocation.recordCfi(this.props.currentBook.key, cfi, percentage);
+    localStorage.setItem("isFullScreen", "no");
     if (this.state.isFullScreen) {
       this.handleExitFullScreen();
     }
