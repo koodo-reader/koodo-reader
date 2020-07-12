@@ -1,5 +1,5 @@
 export function getParamsFromUrl() {
-  var hashParams = {};
+  var hashParams: any = {};
   var e,
     r = /([^&;=]+)=?([^&;]*)/g,
     q = window.location.hash.substring(1);

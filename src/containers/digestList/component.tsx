@@ -8,7 +8,7 @@ import DeleteIcon from "../../components/deleteIcon";
 class DigestList extends React.Component<DigestListProps, DigestListStates> {
   constructor(props: DigestListProps) {
     super(props);
-    this.state = { deleteIndex: -1 };
+    this.state = { deleteKey: "" };
   }
   //根据bookkey获取
   handleBookName = (bookKey: string) => {
@@ -22,8 +22,8 @@ class DigestList extends React.Component<DigestListProps, DigestListStates> {
     }
     return bookName;
   };
-  handleShowDelete = (index: number) => {
-    this.setState({ deleteIndex: index });
+  handleShowDelete = (deleteKey: string) => {
+    this.setState({ deleteKey });
   };
   render() {
     let { digests } = this.props;
@@ -72,13 +72,13 @@ class DigestList extends React.Component<DigestListProps, DigestListStates> {
             className="digest-list-item"
             key={item.text}
             onMouseEnter={() => {
-              this.handleShowDelete(index);
+              this.handleShowDelete(item.key);
             }}
             onMouseLeave={() => {
-              this.handleShowDelete(-1);
+              this.handleShowDelete("");
             }}
           >
-            {this.state.deleteIndex === index ? (
+            {this.state.deleteKey === item.key ? (
               <DeleteIcon {...digestProps} />
             ) : null}
             <div className="digest-list-item-digest">

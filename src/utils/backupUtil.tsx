@@ -37,6 +37,19 @@ class BackupUtil {
       .file("highlighters.json", JSON.stringify(highlighters))
       .file("bookmarks.json", JSON.stringify(bookmarks))
       .file("isList.json", localStorage.getItem("isList") || "no")
+      .file(
+        "dropbox_access_token.json",
+        localStorage.getItem("dropbox_access_token") || ""
+      )
+      .file(
+        "onedrive_access_token.json",
+        localStorage.getItem("onedrive_access_token") || ""
+      )
+      .file(
+        "google_drive_access_token.json",
+        localStorage.getItem("google_drive_access_token") || ""
+      )
+      .file("webdav_config.json", localStorage.getItem("webdav_config") || "")
       .file("totalBooks.json", localStorage.getItem("totalBooks") || "0")
       .file("isSingle.json", localStorage.getItem("isSingle") || "yes")
       .file("isFirst.json", localStorage.getItem("isFirst") || "yes")
