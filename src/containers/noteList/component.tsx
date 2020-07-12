@@ -11,7 +11,7 @@ class NoteList extends React.Component<NoteListProps, NoteListState> {
     this.state = {
       currentDate: null,
       currentIndex: null,
-      deleteIndex: -1,
+      deleteKey: "",
     };
   }
   //获取图书名
@@ -34,8 +34,8 @@ class NoteList extends React.Component<NoteListProps, NoteListState> {
       this.setState({ currentDate: date, currentIndex: index });
     }
   };
-  handleShowDelete = (index: number) => {
-    this.setState({ deleteIndex: index });
+  handleShowDelete = (deleteKey: string) => {
+    this.setState({ deleteKey });
   };
 
   render() {
@@ -90,13 +90,13 @@ class NoteList extends React.Component<NoteListProps, NoteListState> {
             key={item.notes}
             style={isCurrent ? { height: "200px" } : {}}
             onMouseEnter={() => {
-              this.handleShowDelete(index);
+              this.handleShowDelete(item.key);
             }}
             onMouseLeave={() => {
-              this.handleShowDelete(-1);
+              this.handleShowDelete("");
             }}
           >
-            {this.state.deleteIndex === index ? (
+            {this.state.deleteKey === item.key ? (
               <DeleteIcon {...noteProps} />
             ) : null}
             <div className="note-list-item-note-parent">

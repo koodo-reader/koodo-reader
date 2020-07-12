@@ -52,3 +52,9 @@
   top: 15px;
   width: calc(100% - 10px);
 }
+.icon-grid,
+.icon-list {
+  position: relative;
+  top: 1px;
+  margin-right: 5px;
+}

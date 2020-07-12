@@ -7,7 +7,7 @@ import { AddDialogProps, AddDialogState } from "./interface";
 class AddDialog extends Component<AddDialogProps, AddDialogState> {
   constructor(props: AddDialogProps) {
     super(props);
-    this.state = { isNew: true };
+    this.state = { isNew: true, shelfTitle: "" };
   }
 
   handleCancel = () => {
@@ -17,10 +17,11 @@ class AddDialog extends Component<AddDialogProps, AddDialogState> {
     const inputElement: HTMLInputElement = document.querySelector(
       ".add-dialog-new-shelf-box"
     ) as HTMLInputElement;
-    let shelfTitle: string = inputElement.value;
+    let shelfTitle: string = this.state.shelfTitle;
     if (this.state.isNew) {
       shelfTitle = inputElement.value;
     }
+
     ShelfUtil.setShelf(shelfTitle, this.props.currentBook.key);
     this.props.handleAddDialog(false);
     this.props.handleMessage("Add Successfully");
@@ -29,10 +30,9 @@ class AddDialog extends Component<AddDialogProps, AddDialogState> {
   //如果是添加到已存在的书架就diable新建图书的input框
   handleChange = (shelfTitle: string) => {
     if (shelfTitle === "New") {
-      console.log(shelfTitle, "shelfTitle1");
       this.setState({ isNew: true });
     } else {
-      console.log(shelfTitle, "shelfTitle2");
+      this.setState({ shelfTitle });
       this.setState({ isNew: false });
     }
   };

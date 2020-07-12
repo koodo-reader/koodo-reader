@@ -11,5 +11,5 @@ export interface DigestListProps {
   digests: DigestModel[];
 }
 export interface DigestListStates {
-  deleteIndex: number;
+  deleteKey: string;
 }

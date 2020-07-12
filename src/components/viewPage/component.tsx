@@ -11,7 +11,6 @@ class ViewPage extends React.Component<ViewPageProps, ViewPageState> {
     let page = document.querySelector("#page-area");
     let epub = this.props.currentEpub;
     (window as any).rangy.init(); // 初始化
-
     epub.renderTo(page);
     MouseEvent(epub); // 绑定事件
     epub.on("renderer:locationChanged", () => {

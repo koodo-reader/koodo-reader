@@ -7,4 +7,5 @@ export interface AddDialogProps {
 }
 export interface AddDialogState {
   isNew: boolean;
+  shelfTitle: string;
 }
