@@ -13,5 +13,5 @@ export interface NoteListProps {
 export interface NoteListState {
   currentDate: string | null;
   currentIndex: number | null;
-  deleteIndex: number;
+  deleteKey: string;
 }
