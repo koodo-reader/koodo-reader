@@ -128,7 +128,6 @@ export const config = {
   dropbox_client_id: "e3zgg310xbizvaf",
   googledrive_client_id:
     "99440516227-ifr1ann33f2j610i3ri17ej0i51c7m6e.apps.googleusercontent.com",
-  googledrive_client_secret: "b5u8U9APCGcFl--PWU4Emh4v",
 };
 export const driveList = [
   {
