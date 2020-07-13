@@ -84,7 +84,7 @@ export function handleFetchHighlighters() {
   return (
     dispatch: (arg0: { type: string; payload: HighligherModel[] }) => void
   ) => {
-    localforage.getItem("highlighters", (value) => {
+    localforage.getItem("highlighters", (err, value) => {
       let highlighterArr: any;
       if (value === null || value === []) {
         highlighterArr = null;
