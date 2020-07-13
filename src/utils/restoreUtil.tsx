@@ -37,7 +37,7 @@ class RestoreUtil {
       "isList",
       "dropbox_access_token",
       "onedrive_access_token",
-      "google_drive_access_token",
+      "googledrive_access_token",
       "webdav_config",
       "totalBooks",
       "isSingle",
