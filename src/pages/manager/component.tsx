@@ -62,9 +62,14 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
     let url = document.location.href;
     if (url.indexOf("access_token") > -1) {
       let params: any = getParamsFromUrl();
-      if (params.uid) {
-        this.setState({ token: params.access_token });
-      }
+      console.log(params, "params");
+      this.setState({ token: params.access_token });
+      this.setState({ isAuthed: true });
+    }
+    if (url.indexOf("code") > -1) {
+      let params: any = getParamsFromUrl();
+      console.log(params, "params");
+      this.setState({ token: params.code });
       this.setState({ isAuthed: true });
     }
     if (url.indexOf("error") > -1) {

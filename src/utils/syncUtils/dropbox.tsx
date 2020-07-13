@@ -2,11 +2,6 @@ import Dropbox from "dropbox";
 import RestoreUtil from "../restoreUtil";
 
 class DropboxUitl {
-  static FetchToken() {
-    window.open(
-      `https://www.dropbox.com/oauth2/authorize?response_type=token&client_id=e3zgg310xbizvaf&redirect_uri=https://reader.960960.xyz`
-    );
-  }
   static UploadFile(
     file: any,
     handleFinish: () => void,

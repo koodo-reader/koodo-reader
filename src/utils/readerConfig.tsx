@@ -120,12 +120,15 @@ export const sideMenu = [
     mode: "digest",
   },
 ];
-const config = {
-  dropbox_callback_url:
+export const config = {
+  callback_url:
     process.env.NODE_ENV === "production"
       ? "https://reader.960960.xyz"
       : "http://localhost:3000",
   dropbox_client_id: "e3zgg310xbizvaf",
+  googledrive_client_id:
+    "99440516227-ifr1ann33f2j610i3ri17ej0i51c7m6e.apps.googleusercontent.com",
+  googledrive_client_secret: "b5u8U9APCGcFl--PWU4Emh4v",
 };
 export const driveList = [
   {
@@ -138,19 +141,20 @@ export const driveList = [
     id: 2,
     name: "Dropbox",
     icon: "dropbox",
-    url: `https://www.dropbox.com/oauth2/authorize?response_type=token&client_id=${config.dropbox_client_id}&redirect_uri=${config.dropbox_callback_url}`,
+    url: `https://www.dropbox.com/oauth2/authorize?response_type=token&client_id=${config.dropbox_client_id}&redirect_uri=${config.callback_url}`,
   },
+
   {
     id: 3,
-    name: "OneDrive",
-    icon: "onedrive",
-    url: "",
+    name: "Google Drive",
+    icon: "googledrive",
+    url: `https://accounts.google.com/signin/oauth/oauthchooseaccount?response_type=code&access_type=offline&client_id=${config.googledrive_client_id}&redirect_uri=${config.callback_url}&scope=https://www.googleapis.com/auth/drive.appdata&prompt=consent&o2v=2&as=${config.googledrive_client_secret}&flowName=GeneralOAuthFlow`,
   },
   {
     id: 4,
-    name: "Google Drive",
-    icon: "googledrive",
-    url: "",
+    name: "OneDrive",
+    icon: "onedrive",
+    url: ``,
   },
   {
     id: 5,

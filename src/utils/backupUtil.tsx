@@ -46,8 +46,8 @@ class BackupUtil {
         localStorage.getItem("onedrive_access_token") || ""
       )
       .file(
-        "google_drive_access_token.json",
-        localStorage.getItem("google_drive_access_token") || ""
+        "googledrive_access_token.json",
+        localStorage.getItem("googledrive_access_token") || ""
       )
       .file("webdav_config.json", localStorage.getItem("webdav_config") || "")
       .file("totalBooks.json", localStorage.getItem("totalBooks") || "0")
@@ -95,6 +95,9 @@ class BackupUtil {
           case 1:
             console.log("backuputil 1");
             DropboxUtil.UploadFile(blob, handleFinish, showMessage);
+            break;
+          case 2:
+            console.log("backuputil 2");
             break;
           default:
             break;
