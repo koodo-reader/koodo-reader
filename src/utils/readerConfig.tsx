@@ -147,7 +147,7 @@ export const driveList = [
     id: 3,
     name: "Google Drive",
     icon: "googledrive",
-    url: `https://accounts.google.com/signin/oauth/oauthchooseaccount?response_type=code&access_type=offline&client_id=${config.googledrive_client_id}&redirect_uri=${config.callback_url}&scope=https://www.googleapis.com/auth/drive.appdata&prompt=consent&o2v=2&as=${config.googledrive_client_secret}&flowName=GeneralOAuthFlow`,
+    url: "",
   },
   {
     id: 4,
