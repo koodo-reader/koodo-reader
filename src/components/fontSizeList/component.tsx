@@ -2,9 +2,10 @@
 import React from "react";
 import { fontSizeList } from "../../utils/readerConfig";
 import ReaderConfig from "../../utils/readerConfig";
-import "./fontSizeList.css";
 import { Trans } from "react-i18next";
 import { FontSizeListProps, FontSizeListState } from "./interface";
+import "./fontSizeList.css";
+
 class FontSizeList extends React.Component<
   FontSizeListProps,
   FontSizeListState
