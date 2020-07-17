@@ -2,13 +2,15 @@
 import React from "react";
 import "./loadingPage.css";
 import { LoadingPageProps } from "./interface";
+import OtherUtil from "../../utils/otherUtil";
+
 class LoadingPage extends React.Component<LoadingPageProps> {
   render() {
     const renderLoadingPage = () => {
       let arr = [];
       for (
         let i = 0;
-        i < parseInt(localStorage.getItem("totalBooks") || "0");
+        i < parseInt(OtherUtil.getReaderConfig("totalBooks") || "0");
         i++
       ) {
         arr.push(i);

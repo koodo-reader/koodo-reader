@@ -3,19 +3,23 @@ import React from "react";
 import "./singleControl.css";
 import { Trans } from "react-i18next";
 import { SingleControlProps, SingleControlState } from "./interface";
+import OtherUtil from "../../utils/otherUtil";
+
 class SingleControl extends React.Component<
   SingleControlProps,
   SingleControlState
 > {
   constructor(props: SingleControlProps) {
     super(props);
-    this.state = { isSingle: localStorage.getItem("isSingle") === "single" };
+    this.state = {
+      isSingle: OtherUtil.getReaderConfig("isSingle") === "single",
+    };
   }
 
   handleClick = (mode: string) => {
     this.props.handleSingle(mode);
     this.setState({ isSingle: mode === "single" });
-    localStorage.setItem("isSingle", mode);
+    OtherUtil.setReaderConfig("isSingle", mode);
     this.props.handleMessage("Try refresh or restart");
     this.props.handleMessageBox(true);
   };

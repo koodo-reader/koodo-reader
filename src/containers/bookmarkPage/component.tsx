@@ -7,6 +7,7 @@ import BookmarkModel from "../../model/Bookmark";
 import BookModel from "../../model/Book";
 import { Trans } from "react-i18next";
 import { BookmarkPageProps, BookmarkPageState } from "./interface";
+
 class BookmarkPage extends React.Component<
   BookmarkPageProps,
   BookmarkPageState

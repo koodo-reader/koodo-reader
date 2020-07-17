@@ -1,4 +1,5 @@
 import BookModel from "../../model/Book";
+
 export interface HeaderProps {
   books: BookModel[];
   isSearch: boolean;
@@ -11,6 +12,7 @@ export interface HeaderProps {
 
 export interface HeaderState {
   isOnlyLocal: boolean;
-  isDownload: boolean;
+  isBookImported: boolean;
   isChinese: boolean;
+  isNewVersion: boolean;
 }

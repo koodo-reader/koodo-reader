@@ -9,6 +9,7 @@ import {
 import { handleBackupDialog } from "../../redux/actions/backupPage";
 import { stateType } from "../../redux/store";
 import Header from "./component";
+
 const mapStateToProps = (state: stateType) => {
   return {
     books: state.manager.books,

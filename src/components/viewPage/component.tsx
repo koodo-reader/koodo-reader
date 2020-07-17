@@ -2,10 +2,14 @@ import React from "react";
 import RecordLocation from "../../utils/recordLocation";
 import { MouseEvent } from "../../utils/mouseEvent";
 import { ViewPageProps, ViewPageState } from "./interface";
+import OtherUtil from "../../utils/otherUtil";
+
 class ViewPage extends React.Component<ViewPageProps, ViewPageState> {
   constructor(props: ViewPageProps) {
     super(props);
-    this.state = { isSingle: localStorage.getItem("isSingle") === "single" };
+    this.state = {
+      isSingle: OtherUtil.getReaderConfig("isSingle") === "single",
+    };
   }
   componentDidMount() {
     let page = document.querySelector("#page-area");

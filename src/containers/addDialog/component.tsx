@@ -4,6 +4,7 @@ import "./addDialog.css";
 import ShelfUtil from "../../utils/shelfUtil";
 import { Trans, NamespacesConsumer } from "react-i18next";
 import { AddDialogProps, AddDialogState } from "./interface";
+
 class AddDialog extends Component<AddDialogProps, AddDialogState> {
   constructor(props: AddDialogProps) {
     super(props);
@@ -21,7 +22,11 @@ class AddDialog extends Component<AddDialogProps, AddDialogState> {
     if (this.state.isNew) {
       shelfTitle = inputElement.value;
     }
-
+    if (!shelfTitle) {
+      this.props.handleMessage("Empty Shelf Title");
+      this.props.handleMessageBox(true);
+      return;
+    }
     ShelfUtil.setShelf(shelfTitle, this.props.currentBook.key);
     this.props.handleAddDialog(false);
     this.props.handleMessage("Add Successfully");

@@ -4,6 +4,7 @@ import { sideMenu } from "../../utils/readerConfig";
 import ShelfUtil from "../../utils/shelfUtil";
 import { Trans } from "react-i18next";
 import { SidebarProps, SidebarState } from "./interface";
+
 class Sidebar extends React.Component<SidebarProps, SidebarState> {
   constructor(props: SidebarProps) {
     super(props);

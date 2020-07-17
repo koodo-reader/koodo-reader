@@ -1,5 +1,6 @@
 import BookmarkModel from "../../model/Bookmark";
 import BookModel from "../../model/Book";
+
 export interface BookmarkPageProps {
   bookmarks: BookmarkModel[];
   covers: { key: string; url: string }[];
