@@ -1,5 +1,6 @@
 import BookModel from "../../model/Book";
 import BookmarkModel from "../../model/Bookmark";
+
 export interface NavigationPanelProps {
   currentEpub: any;
   currentBook: BookModel;

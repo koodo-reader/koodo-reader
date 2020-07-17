@@ -2,11 +2,13 @@
 import React from "react";
 import "./background.css";
 import { BackgroundProps, BackgroundState } from "./interface";
+import OtherUtil from "../../utils/otherUtil";
+
 class Background extends React.Component<BackgroundProps, BackgroundState> {
   constructor(props: any) {
     super(props);
     this.state = {
-      isSingle: localStorage.getItem("isSingle") === "single",
+      isSingle: OtherUtil.getReaderConfig("isSingle") === "single",
     };
   }
   render() {

@@ -6,6 +6,8 @@ import { Trans } from "react-i18next";
 import localforage from "localforage";
 import RecordLocation from "../../utils/recordLocation";
 import { OperationPanelProps, OperationPanelState } from "./interface";
+import OtherUtil from "../../utils/otherUtil";
+
 declare var document: any;
 
 class OperationPanel extends React.Component<
@@ -16,7 +18,7 @@ class OperationPanel extends React.Component<
     super(props);
     this.state = {
       isFullScreen:
-        localStorage.getItem("isFullScreen") === "yes" ? true : false, // 是否进入全屏模式
+        OtherUtil.getReaderConfig("isFullScreen") === "yes" ? true : false, // 是否进入全屏模式
       isBookmark: false, // 是否添加书签
     };
   }
@@ -42,7 +44,7 @@ class OperationPanel extends React.Component<
     }
 
     this.setState({ isFullScreen: true });
-    localStorage.setItem("isFullScreen", "yes");
+    OtherUtil.setReaderConfig("isFullScreen", "yes");
   }
 
   // 退出全屏模式
@@ -63,7 +65,7 @@ class OperationPanel extends React.Component<
     }
 
     this.setState({ isFullScreen: false });
-    localStorage.setItem("isFullScreen", "no");
+    OtherUtil.setReaderConfig("isFullScreen", "no");
   }
   handleAddBookmark() {
     let bookKey = this.props.currentBook.key;
@@ -104,7 +106,7 @@ class OperationPanel extends React.Component<
     let locations = this.props.currentEpub.locations;
     let percentage = locations.percentageFromCfi(cfi);
     RecordLocation.recordCfi(this.props.currentBook.key, cfi, percentage);
-    localStorage.setItem("isFullScreen", "no");
+    OtherUtil.setReaderConfig("isFullScreen", "no");
     if (this.state.isFullScreen) {
       this.handleExitFullScreen();
     }

@@ -4,6 +4,7 @@ import "./editDialog.css";
 import localforage from "localforage";
 import { Trans } from "react-i18next";
 import { EditDialogProps, EditDialogState } from "./interface";
+
 class EditDialog extends React.Component<EditDialogProps, EditDialogState> {
   constructor(props: EditDialogProps) {
     super(props);

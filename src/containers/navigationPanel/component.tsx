@@ -6,6 +6,7 @@ import BookmarkList from "../../components/bookmarkList";
 import ReadingTime from "../../utils/readingTime";
 import { Trans } from "react-i18next";
 import { NavigationPanelProps, NavigationPanelState } from "./interface";
+
 class NavigationPanel extends React.Component<
   NavigationPanelProps,
   NavigationPanelState

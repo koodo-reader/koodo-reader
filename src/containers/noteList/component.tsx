@@ -5,6 +5,7 @@ import NoteModel from "../../model/Note";
 import { Trans } from "react-i18next";
 import { NoteListProps, NoteListState } from "./interface";
 import DeleteIcon from "../../components/deleteIcon";
+
 class NoteList extends React.Component<NoteListProps, NoteListState> {
   constructor(props: NoteListProps) {
     super(props);

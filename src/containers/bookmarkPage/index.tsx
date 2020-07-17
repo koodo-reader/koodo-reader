@@ -9,6 +9,7 @@ import {
 import { stateType } from "../../redux/store";
 import { withNamespaces } from "react-i18next";
 import BookmarkPage from "./component";
+
 const mapStateToProps = (state: stateType) => {
   return {
     bookmarks: state.reader.bookmarks,

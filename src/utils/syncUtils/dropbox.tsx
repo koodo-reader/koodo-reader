@@ -1,5 +1,6 @@
 import Dropbox from "dropbox";
 import RestoreUtil from "../restoreUtil";
+import OtherUtil from "../otherUtil";
 
 class DropboxUitl {
   static UploadFile(
@@ -7,7 +8,7 @@ class DropboxUitl {
     handleFinish: () => void,
     showMessage: (message: string) => void
   ) {
-    var ACCESS_TOKEN = localStorage.getItem("dropbox_access_token") || "";
+    var ACCESS_TOKEN = OtherUtil.getReaderConfig("dropbox_access_token") || "";
     var dbx = new Dropbox.Dropbox({ accessToken: ACCESS_TOKEN });
     dbx
       .filesUpload({
@@ -29,7 +30,7 @@ class DropboxUitl {
     handleFinish: () => void,
     showMessage: (message: string) => void
   ) {
-    var ACCESS_TOKEN = localStorage.getItem("dropbox_access_token") || "";
+    var ACCESS_TOKEN = OtherUtil.getReaderConfig("dropbox_access_token") || "";
     var dbx = new Dropbox.Dropbox({ accessToken: ACCESS_TOKEN });
     dbx
       .filesDownload({

@@ -4,6 +4,7 @@ import { handleFetchBookmarks } from "../../redux/actions/reader";
 import { stateType } from "../../redux/store";
 import { withNamespaces } from "react-i18next";
 import NavigationPanel from "./component";
+
 const mapStateToProps = (state: stateType) => {
   return {
     currentEpub: state.book.currentEpub,

@@ -1,3 +1,4 @@
+import OtherUtil from "../../utils/otherUtil";
 const initState = {
   bookmarks: null,
   notes: null,
@@ -5,7 +6,7 @@ const initState = {
   locations: null,
   chapters: null,
   highlighters: null,
-  isSingle: localStorage.getItem("isSingle") || "double",
+  isSingle: OtherUtil.getReaderConfig("isSingle") || "double",
 };
 export function reader(
   state = initState,
