@@ -3,6 +3,7 @@ import React from "react";
 import "./messageBox.css";
 import { Trans } from "react-i18next";
 import { MessageBoxProps } from "./interface";
+
 class MessageBox extends React.Component<MessageBoxProps> {
   render() {
     return (

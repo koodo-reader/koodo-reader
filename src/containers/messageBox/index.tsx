@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { stateType } from "../../redux/store";
 import { withNamespaces } from "react-i18next";
 import MessageBox from "./component";
+
 const mapStateToProps = (state: stateType) => {
   return {
     message: state.manager.message,

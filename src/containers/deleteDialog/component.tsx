@@ -6,6 +6,7 @@ import ShelfUtil from "../../utils/shelfUtil";
 import RecordRecent from "../../utils/recordRecent";
 import { Trans } from "react-i18next";
 import { DeleteDialogProps } from "./interface";
+
 class DeleteDialog extends React.Component<DeleteDialogProps> {
   handleCancel = () => {
     this.props.handleDeleteDialog(false);

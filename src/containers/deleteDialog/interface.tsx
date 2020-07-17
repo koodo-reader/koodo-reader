@@ -3,6 +3,7 @@ import NoteModel from "../../model/Note";
 import DigestModel from "../../model/Digest";
 import HighligherModel from "../../model/Highlighter";
 import BookmarkModel from "../../model/Bookmark";
+
 export interface DeleteDialogProps {
   books: BookModel[];
   isOpenDeleteDialog: boolean;

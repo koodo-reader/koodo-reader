@@ -84,20 +84,20 @@
   opacity: 0;
 }
 .top-panel {
-  width: calc(100% - 100px);
-  height: 50px;
+  width: 412px;
+  height: 60px;
   position: absolute;
-  right: 50px;
+  right: calc(50% - 206px);
   top: 0px;
   background-color: pink;
   z-index: 10;
   opacity: 0;
 }
 .bottom-panel {
-  width: calc(100% - 100px);
-  height: 50px;
+  width: 412px;
+  height: 60px;
   position: absolute;
-  right: 50px;
+  right: calc(50% - 206px);
   bottom: 0px;
   background-color: pink;
   z-index: 10;

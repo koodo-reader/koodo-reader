@@ -3,6 +3,7 @@ import "./sortDialog.css";
 import OtherUtil from "../../utils/otherUtil";
 import { Trans } from "react-i18next";
 import { SortDialogProps } from "./interface";
+
 class SortDialog extends React.Component<SortDialogProps> {
   handleSort = (code: number) => {
     let sortCode = this.props.sortCode;

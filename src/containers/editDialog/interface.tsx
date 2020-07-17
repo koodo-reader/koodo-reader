@@ -3,6 +3,7 @@ import NoteModel from "../../model/Note";
 import DigestModel from "../../model/Digest";
 import HighligherModel from "../../model/Highlighter";
 import BookmarkModel from "../../model/Bookmark";
+
 export interface EditDialogProps {
   handleMessage: (message: string) => void;
   handleMessageBox: (isShow: boolean) => void;

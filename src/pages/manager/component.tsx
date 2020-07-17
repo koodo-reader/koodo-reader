@@ -21,12 +21,14 @@ import { ManagerProps, ManagerState } from "./interface";
 import { Trans } from "react-i18next";
 import { getParamsFromUrl } from "../../utils/syncUtils/common";
 import copy from "copy-text-to-clipboard";
+import OtherUtil from "../../utils/otherUtil";
+
 class Manager extends React.Component<ManagerProps, ManagerState> {
   timer!: NodeJS.Timeout;
   constructor(props: ManagerProps) {
     super(props);
     this.state = {
-      totalBooks: parseInt(localStorage.getItem("totalBooks") || "0") || 0,
+      totalBooks: parseInt(OtherUtil.getReaderConfig("totalBooks") || "0") || 0,
       recentBooks: Object.keys(RecordRecent.getRecent()).length,
       isAuthed: false,
       isError: false,
@@ -49,7 +51,7 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
     this.setState({
       totalBooks: this.props.books === null ? 0 : this.props.books.length,
     });
-    localStorage.setItem("totalBooks", this.state.totalBooks.toString());
+    OtherUtil.setReaderConfig("totalBooks", this.state.totalBooks.toString());
 
     if (nextProps.isMessage) {
       this.timer = setTimeout(() => {
@@ -75,7 +77,7 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
     if (url.indexOf("error") > -1) {
       this.setState({ isError: true });
     }
-    this.props.handleFirst(localStorage.getItem("isFirst") || "yes");
+    this.props.handleFirst(OtherUtil.getReaderConfig("isFirst") || "yes");
   }
 
   componentWillUnmout() {

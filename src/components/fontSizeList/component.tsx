@@ -5,6 +5,7 @@ import ReaderConfig from "../../utils/readerConfig";
 import { Trans } from "react-i18next";
 import { FontSizeListProps, FontSizeListState } from "./interface";
 import "./fontSizeList.css";
+import OtherUtil from "../../utils/otherUtil";
 
 class FontSizeList extends React.Component<
   FontSizeListProps,
@@ -14,13 +15,13 @@ class FontSizeList extends React.Component<
     super(props);
     this.state = {
       currentFontSizeIndex: fontSizeList.findIndex((item) => {
-        return item.value === (localStorage.getItem("fontSize") || "17");
+        return item.value === (OtherUtil.getReaderConfig("fontSize") || "17");
       }),
     };
   }
 
   handleFontSize(value: string, index: number) {
-    localStorage.setItem("fontSize", value);
+    OtherUtil.setReaderConfig("fontSize", value);
     this.setState({
       currentFontSizeIndex: index,
     });

@@ -3,6 +3,7 @@ import NoteModel from "../../model/Note";
 import DigestModel from "../../model/Digest";
 import HighligherModel from "../../model/Highlighter";
 import BookmarkModel from "../../model/Bookmark";
+
 export interface BackupPageProps {
   handleBackupDialog: (isBackup: boolean) => void;
   handleTokenDialog: (isOpenTokenDialog: boolean) => void;
