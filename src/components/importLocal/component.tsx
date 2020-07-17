@@ -5,9 +5,9 @@ import BookModel from "../../model/Book";
 import localforage from "localforage";
 import SparkMD5 from "spark-md5";
 import { Trans } from "react-i18next";
-
 import Dropzone from "react-dropzone";
 import { ImportLocalProps, ImportLocalState } from "./interface";
+
 class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
   constructor(props: ImportLocalProps) {
     super(props);
