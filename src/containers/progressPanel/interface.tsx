@@ -1,4 +1,5 @@
 import BookModel from "../../model/Book";
+
 export interface ProgressPanelProps {
   currentEpub: any;
   currentBook: BookModel;
@@ -6,7 +7,6 @@ export interface ProgressPanelProps {
   locations: any;
   handleFetchLocations: (currentEpub: any) => void;
 }
-
 export interface ProgressPanelState {
   displayPercentage: number;
 }

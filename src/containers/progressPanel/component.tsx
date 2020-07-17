@@ -3,6 +3,7 @@ import "./progressPanel.css";
 import RecordLocation from "../../utils/recordLocation";
 import { Trans } from "react-i18next";
 import { ProgressPanelProps, ProgressPanelState } from "./interface";
+
 class ProgressPanel extends React.Component<
   ProgressPanelProps,
   ProgressPanelState

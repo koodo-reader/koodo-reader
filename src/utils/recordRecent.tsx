@@ -1,4 +1,5 @@
 // 记录书本打开记录
+
 class RecordRecent {
   static setRecent(bookKey: string) {
     let json = localStorage.getItem("recentBooks");

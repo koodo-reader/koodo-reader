@@ -8,6 +8,8 @@ import { Trans } from "react-i18next";
 import DropboxUtil from "../../utils/syncUtils/dropbox";
 import { BackupPageProps, BackupPageState } from "./interface";
 import TokenDialog from "../../components/tokenDialog";
+import OtherUtil from "../../utils/otherUtil";
+
 class BackupPage extends React.Component<BackupPageProps, BackupPageState> {
   constructor(props: BackupPageProps) {
     super(props);
@@ -48,7 +50,7 @@ class BackupPage extends React.Component<BackupPageProps, BackupPageState> {
           );
           break;
         case 1:
-          if (!localStorage.getItem("dropbox_access_token")) {
+          if (!OtherUtil.getReaderConfig("dropbox_access_token")) {
             this.props.handleTokenDialog(true);
             break;
           }

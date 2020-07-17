@@ -5,6 +5,7 @@ import DigestModel from "../../model/Digest";
 import { Trans } from "react-i18next";
 import { DigestListProps, DigestListStates } from "./interface";
 import DeleteIcon from "../../components/deleteIcon";
+
 class DigestList extends React.Component<DigestListProps, DigestListStates> {
   constructor(props: DigestListProps) {
     super(props);

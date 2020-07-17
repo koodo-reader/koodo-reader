@@ -5,6 +5,7 @@ import { handleAddDialog } from "../../redux/actions/book";
 import { stateType } from "../../redux/store";
 import { withNamespaces } from "react-i18next";
 import AddDialog from "./component";
+
 const mapStateToProps = (state: stateType) => {
   return {
     books: state.manager.books,

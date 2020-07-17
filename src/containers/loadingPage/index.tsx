@@ -2,6 +2,7 @@
 import { connect } from "react-redux";
 import { stateType } from "../../redux/store";
 import LoadingPage from "./component";
+
 const mapStateToProps = (state: stateType) => {
   return {
     books: state.manager.books,

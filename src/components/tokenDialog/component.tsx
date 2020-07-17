@@ -4,6 +4,8 @@ import "./tokenDialog.css";
 import copy from "copy-text-to-clipboard";
 import { Trans } from "react-i18next";
 import { TokenDialogProps, TokenDialogState } from "./interface";
+import OtherUtil from "../../utils/otherUtil";
+
 class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
   constructor(props: TokenDialogProps) {
     super(props);
@@ -17,7 +19,7 @@ class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
     let token: string = (document.querySelector(
       ".token-dialog-token-box"
     ) as HTMLTextAreaElement).value;
-    localStorage.setItem(`${this.props.driveName}_access_token`, token);
+    OtherUtil.setReaderConfig(`${this.props.driveName}_access_token`, token);
     this.props.handleTokenDialog(false);
     this.props.handleMessage("Add Successfully");
     this.props.handleMessageBox(true);

@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { stateType } from "../../redux/store";
 import { withNamespaces } from "react-i18next";
 import EmptyPage from "./component";
+
 const mapStateToProps = (state: stateType) => {
   return {
     mode: state.sidebar.mode,

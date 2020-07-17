@@ -10,6 +10,7 @@ import { handleEditDialog } from "../../redux/actions/book";
 import { stateType } from "../../redux/store";
 import { withNamespaces } from "react-i18next";
 import EditDialog from "./component";
+
 const mapStateToProps = (state: stateType) => {
   return {
     books: state.manager.books,

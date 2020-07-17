@@ -3,6 +3,8 @@ import "./welcomePage.css";
 import { welcomeMessage } from "../../utils/readerConfig";
 import { Trans } from "react-i18next";
 import { WelcomePageProps, WelcomePageState } from "./interface";
+import OtherUtil from "../../utils/otherUtil";
+
 class WelcomePage extends React.Component<WelcomePageProps, WelcomePageState> {
   constructor(props: WelcomePageProps) {
     super(props);
@@ -21,7 +23,7 @@ class WelcomePage extends React.Component<WelcomePageProps, WelcomePageState> {
   };
   handleCloseWelcome = () => {
     this.props.handleFirst("no");
-    localStorage.setItem("isFirst", "no");
+    OtherUtil.setReaderConfig("isFirst", "no");
   };
   render() {
     const renderWelcome = () => {

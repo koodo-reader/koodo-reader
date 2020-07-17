@@ -12,6 +12,8 @@ import BookModel from "../../model/Book";
 import { stateType } from "../../redux/store";
 import { Trans, withNamespaces } from "react-i18next";
 import { BookListProps } from "./interface";
+import OtherUtil from "../../utils/otherUtil";
+
 class BookList extends React.Component<BookListProps> {
   //根据localstorage列表的数据，得到最近阅读的图书
   handleRecent = (items: any) => {
@@ -43,7 +45,7 @@ class BookList extends React.Component<BookListProps> {
   }
   //控制卡片模式和列表模式的切换
   handleChange = (mode: string) => {
-    localStorage.setItem("isList", mode);
+    OtherUtil.setReaderConfig("isList", mode);
     this.props.handleFetchList();
   };
   //根据搜索图书index获取到搜索出的图书
@@ -55,7 +57,7 @@ class BookList extends React.Component<BookListProps> {
     return itemArr;
   };
   render() {
-    localStorage.setItem("totalBooks", this.props.books.length.toString());
+    OtherUtil.setReaderConfig("totalBooks", this.props.books.length.toString());
 
     const renderBookList = () => {
       //根据不同的场景获取不同的图书数据

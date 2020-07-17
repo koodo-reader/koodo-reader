@@ -4,21 +4,23 @@ import "./header.css";
 import SearchBox from "../../components/searchBox";
 import ImportLocal from "../../components/importLocal";
 import { Trans } from "react-i18next";
-
 import i18n from "../../i18n";
-import About from "../../components/about";
 import { HeaderProps, HeaderState } from "./interface";
+import OtherUtil from "../../utils/otherUtil";
+
 class Header extends React.Component<HeaderProps, HeaderState> {
   constructor(props: HeaderProps) {
     super(props);
     this.state = {
       isOnlyLocal: false,
-      isDownload: localStorage.getItem("isDownload") === "yes" ? true : false,
-      isChinese: localStorage.getItem("lang") === "cn",
+      isBookImported:
+        OtherUtil.getReaderConfig("isBookImported") === "yes" ? true : false,
+      isChinese: OtherUtil.getReaderConfig("lang") === "cn",
+      isNewVersion: false,
     };
   }
   componentDidMount() {
-    const lng = localStorage.getItem("lang");
+    const lng = OtherUtil.getReaderConfig("lang");
     if (lng) {
       i18n.changeLanguage(lng);
       this.setState({ isChinese: !this.state.isChinese });
@@ -27,7 +29,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
   changeLanguage = (lng: string) => {
     i18n.changeLanguage(lng);
     this.setState({ isChinese: !this.state.isChinese });
-    localStorage.setItem("lang", lng);
+    OtherUtil.setReaderConfig("lang", lng);
   };
   handleSortBooks = () => {
     if (this.props.isSortDisplay) {
@@ -40,10 +42,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     this.setState({ isOnlyLocal: !this.state.isOnlyLocal });
     this.props.handleMessage("下载客户端体验完整功能");
     this.props.handleMessageBox(true);
-  };
-  handleDownload = () => {
-    this.setState({ isDownload: true });
-    localStorage.setItem("isDownload", "yes");
   };
   render() {
     return (
@@ -76,14 +74,11 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         <a href="/assets/demo.epub" target="_blank" rel="noopener noreferrer">
           <div
             className="download-demo-book"
-            onClick={this.handleDownload.bind(this)}
-            style={this.state.isDownload ? { color: "rgba(75,75,75,0.8)" } : {}}
+            style={this.state.isBookImported ? { display: "none" } : {}}
           >
             <Trans>Download Demo Book</Trans>
           </div>
         </a>
-        <About />
-
         <div
           className="import-from-cloud"
           onClick={() => {

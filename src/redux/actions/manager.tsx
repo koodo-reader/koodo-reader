@@ -4,6 +4,7 @@ import BookModel from "../../model/Book";
 import BookmarkModel from "../../model/Bookmark";
 import NoteModel from "../../model/Note";
 import { Dispatch } from "redux";
+
 export function handleNotes(notes: NoteModel[]) {
   return { type: "HANDLE_NOTES", payload: notes };
 }
@@ -86,7 +87,7 @@ export function handleFetchSortCode() {
 }
 export function handleFetchList() {
   return (dispatch: Dispatch) => {
-    let isList = localStorage.getItem("isList") || "card";
+    let isList = OtherUtil.getReaderConfig("isList") || "card";
     dispatch(handleList(isList));
   };
 }

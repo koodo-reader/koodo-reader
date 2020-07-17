@@ -2,6 +2,7 @@
 import { connect } from "react-redux";
 import { stateType } from "../../redux/store";
 import Background from "./component";
+
 const mapStateToProps = (state: stateType) => {
   return {
     isSingle: state.reader.isSingle,

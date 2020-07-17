@@ -5,6 +5,8 @@ import { dropdownList } from "../../utils/readerConfig";
 import "./dropdownList.css";
 import { Trans } from "react-i18next";
 import { DropdownListProps, DropdownListState } from "./interface";
+import OtherUtil from "../../utils/otherUtil";
+
 class DropdownList extends React.Component<
   DropdownListProps,
   DropdownListState
@@ -14,11 +16,14 @@ class DropdownList extends React.Component<
     this.state = {
       currentFontFamilyIndex: dropdownList[0].option.findIndex((item) => {
         return (
-          item.value === (localStorage.getItem("fontFamily") || "Helvetica")
+          item.value ===
+          (OtherUtil.getReaderConfig("fontFamily") || "Helvetica")
         );
       }),
       currentLineHeightIndex: dropdownList[1].option.findIndex((item) => {
-        return item.value === (localStorage.getItem("lineHeight") || "1.25");
+        return (
+          item.value === (OtherUtil.getReaderConfig("lineHeight") || "1.25")
+        );
       }),
     };
   }
@@ -39,7 +44,7 @@ class DropdownList extends React.Component<
   //切换不同的样式
   handleView(event: any, option: string) {
     let arr = event.target.value.split(",");
-    localStorage.setItem(option, arr[0]);
+    OtherUtil.setReaderConfig(option, arr[0]);
     switch (option) {
       case "fontFamily":
         this.setState({

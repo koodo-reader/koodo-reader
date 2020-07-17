@@ -4,6 +4,8 @@ import ReaderConfig from "../../utils/readerConfig";
 import "./themeList.css";
 import { Trans } from "react-i18next";
 import { ThemeListProps, ThemeListState } from "./interface";
+import OtherUtil from "../../utils/otherUtil";
+
 class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
   constructor(props: ThemeListProps) {
     super(props);
@@ -11,13 +13,13 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
       currentBackgroundIndex: themeList.findIndex((item) => {
         return (
           item.theme ===
-          (localStorage.getItem("theme") || "rgba(255,254,252,1)")
+          (OtherUtil.getReaderConfig("theme") || "rgba(255,254,252,1)")
         );
       }),
     };
   }
   handleChangeColor(theme: string, index: number) {
-    localStorage.setItem("theme", theme);
+    OtherUtil.setReaderConfig("theme", theme);
     this.setState({
       currentBackgroundIndex: index,
     });

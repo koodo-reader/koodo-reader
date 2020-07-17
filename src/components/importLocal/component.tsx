@@ -7,6 +7,7 @@ import SparkMD5 from "spark-md5";
 import { Trans } from "react-i18next";
 import Dropzone from "react-dropzone";
 import { ImportLocalProps, ImportLocalState } from "./interface";
+import OtherUtil from "../../utils/otherUtil";
 
 class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
   constructor(props: ImportLocalProps) {
@@ -24,6 +25,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
     localforage.setItem("books", bookArr).then(() => {
       this.props.handleFetchBooks();
     });
+    OtherUtil.setReaderConfig("isBookImported", "yes");
     this.props.handleMessage("Add Successfully");
     this.props.handleMessageBox(true);
   };

@@ -1,4 +1,5 @@
 import BookModel from "../../model/Book";
+
 export interface BookListProps {
   books: BookModel[];
   covers: { key: string; url: string }[];
