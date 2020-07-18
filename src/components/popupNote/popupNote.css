@@ -10,26 +10,20 @@
 }
 .editor-box-parent {
   position: absolute;
-  left: 34px;
+  left: 25px;
   top: 32px;
-  width: 222px;
+  width: 217px;
   height: 90px;
-  /* width: 100%;
-  height: 100%; */
-  overflow: hidden;
 }
 .editor-box {
   border: none;
   outline: none;
   resize: none;
-  /* box-sizing: border-box; */
-  /* padding-bottom: 60px; */
   font-size: 16px;
   width: 100%;
   height: 100%;
+  line-height: 18px;
   overflow-y: scroll;
-  padding-right: 17px; /* Increase/decrease this value for cross-browser compatibility */
-  box-sizing: content-box;
 }
 
 .editor-box::placeholder {
