@@ -4,14 +4,13 @@ import { sideMenu } from "../../utils/readerConfig";
 import ShelfUtil from "../../utils/shelfUtil";
 import { Trans } from "react-i18next";
 import { SidebarProps, SidebarState } from "./interface";
+import About from "../../components/about";
 
 class Sidebar extends React.Component<SidebarProps, SidebarState> {
   constructor(props: SidebarProps) {
     super(props);
     this.state = {
-      index: ["home", "recent", "bookmark", "note", "digest"].indexOf(
-        this.props.mode
-      ),
+      index: ["home", "bookmark", "note", "digest"].indexOf(this.props.mode),
       isCollapse: true,
       shelfIndex: -1,
     };
@@ -128,6 +127,9 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
                   {renderShelfList()}
                 </ul>
               </div>
+            </li>
+            <li className="side-menu-about">
+              <About />
             </li>
           </ul>
         </div>

@@ -8,6 +8,11 @@ import { Trans } from "react-i18next";
 declare var window: any;
 
 class PopupNote extends React.Component<PopupNoteProps> {
+  componentDidMount() {
+    let textArea: any = document.querySelector(".editor-box");
+    textArea && textArea.focus();
+    console.log(textArea);
+  }
   createNote() {
     if (
       !document.getElementsByTagName("iframe")[0] ||
@@ -73,7 +78,7 @@ class PopupNote extends React.Component<PopupNoteProps> {
             <span className="icon-return"></span>
           </div>
           <div className="editor-box-parent">
-            <textarea className="editor-box" placeholder="Write notes here" />
+            <textarea className="editor-box" />
           </div>
           <div className="note-button-container">
             <span

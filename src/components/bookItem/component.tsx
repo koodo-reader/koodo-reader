@@ -1,20 +1,11 @@
 //控制列表模式下的图书显示
 import React from "react";
-import { connect } from "react-redux";
-import {
-  handleEditDialog,
-  handleDeleteDialog,
-  handleAddDialog,
-  handleReadingState,
-  handleReadingBook,
-  handleReadingEpub,
-} from "../../redux/actions/book";
 import RecentBooks from "../../utils/recordRecent";
 import "./bookItem.css";
 import RecordRecent from "../../utils/recordRecent";
 import RecordLocation from "../../utils/recordLocation";
-import { stateType } from "../../redux/store";
 import { BookItemProps, BookItemState } from "./interface";
+
 class Book extends React.Component<BookItemProps, BookItemState> {
   epub: any;
   constructor(props: BookItemProps) {
@@ -107,18 +98,5 @@ class Book extends React.Component<BookItemProps, BookItemState> {
     );
   }
 }
-const mapStateToProps = (state: stateType) => {
-  return {
-    isReading: state.book.isReading,
-    percentage: state.progressPanel.percentage,
-  };
-};
-const actionCreator = {
-  handleReadingState,
-  handleReadingBook,
-  handleReadingEpub,
-  handleEditDialog,
-  handleDeleteDialog,
-  handleAddDialog,
-};
-export default connect(mapStateToProps, actionCreator)(Book);
+
+export default Book;

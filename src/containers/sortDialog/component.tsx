@@ -10,12 +10,14 @@ class SortDialog extends React.Component<SortDialogProps> {
     sortCode.sort = code;
     this.setState({ sortCode });
     this.props.handleSortCode(sortCode);
+    this.props.handleSort(true);
     OtherUtil.setSortCode(code, this.props.sortCode.order);
   };
   handleOrder = (code: number) => {
     let sortCode = this.props.sortCode;
     sortCode.order = code;
     this.setState({ sortCode });
+    this.props.handleSort(true);
     OtherUtil.setSortCode(this.props.sortCode.sort, code);
     this.props.handleSortCode(sortCode);
   };

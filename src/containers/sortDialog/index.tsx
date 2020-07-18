@@ -1,5 +1,9 @@
 import { connect } from "react-redux";
-import { handleSortCode, handleSortDisplay } from "../../redux/actions/manager";
+import {
+  handleSortCode,
+  handleSortDisplay,
+  handleSort,
+} from "../../redux/actions/manager";
 import { stateType } from "../../redux/store";
 import { withNamespaces } from "react-i18next";
 import SortDialog from "./component";
@@ -13,6 +17,7 @@ const mapStateToProps = (state: stateType) => {
 const actionCreator = {
   handleSortCode,
   handleSortDisplay,
+  handleSort
 };
 export default connect(
   mapStateToProps,
