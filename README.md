@@ -29,7 +29,7 @@
     <img src="https://i.loli.net/2020/07/18/5NhQZfxXRs8VO7c.png" >
   </a>
   <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
-    <img src="https://i.loli.net/2020/07/18/niAyZV2cSdl1bUu.png" >
+    <img src="https://i.loli.net/2020/07/18/QHGNJStXsiLTvf3.png" >
   </a>
   <br/>
 </div>
