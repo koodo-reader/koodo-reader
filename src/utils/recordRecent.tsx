@@ -3,7 +3,8 @@ import BookModel from "../model/Book";
 class RecordRecent {
   static setRecent(bookKey: string) {
     let bookArr =
-      localStorage.getItem("recentBooks") !== "{}"
+      localStorage.getItem("recentBooks") !== "{}" &&
+      localStorage.getItem("recentBooks")
         ? JSON.parse(localStorage.getItem("recentBooks") || "")
         : [];
     const index = bookArr.indexOf(bookKey);
@@ -26,13 +27,18 @@ class RecordRecent {
   }
   static getRecent() {
     let bookArr =
-      localStorage.getItem("recentBooks") !== "{}"
+      localStorage.getItem("recentBooks") !== "{}" &&
+      localStorage.getItem("recentBooks")
         ? JSON.parse(localStorage.getItem("recentBooks") || "")
         : [];
     return bookArr;
   }
   static clear(bookKey: string) {
-    let bookArr = JSON.parse(localStorage.getItem("recentBooks") || "[]");
+    let bookArr =
+      localStorage.getItem("recentBooks") !== "{}" &&
+      localStorage.getItem("recentBooks")
+        ? JSON.parse(localStorage.getItem("recentBooks") || "")
+        : [];
     const index = bookArr.indexOf(bookKey);
     if (index > -1) {
       bookArr.splice(index, 1);
@@ -41,7 +47,8 @@ class RecordRecent {
   }
   static getAllRecent() {
     let bookArr =
-      localStorage.getItem("recentBooks") !== "{}"
+      localStorage.getItem("recentBooks") !== "{}" &&
+      localStorage.getItem("recentBooks")
         ? JSON.parse(localStorage.getItem("recentBooks") || "")
         : [];
     return bookArr || [];

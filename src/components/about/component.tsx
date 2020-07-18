@@ -11,8 +11,6 @@ class About extends React.Component<AboutProps, AboutState> {
     this.state = { downlownLink: "" };
   }
   componentDidMount() {
-    console.log(packageJson.version);
-    console.log(navigator.platform, "os");
     axios.get("https://koodo.960960.xyz/update").then((res) => {
       const download = res.data.download;
       const version = res.data.log.version;
@@ -28,7 +26,7 @@ class About extends React.Component<AboutProps, AboutState> {
     const ver2Arr = ver2.split(".");
 
     for (let i = 0; i < ver1Arr.length; i++) {
-      if (ver1Arr[i] < ver2Arr[i]) {
+      if (parseInt(ver1Arr[i]) < parseInt(ver2Arr[i])) {
         return true;
       }
     }
