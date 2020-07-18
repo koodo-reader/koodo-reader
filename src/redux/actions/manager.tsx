@@ -26,8 +26,11 @@ export function handleMessage(message: string) {
 export function handleMessageBox(isShow: boolean) {
   return { type: "HANDLE_MESSAGE_BOX", payload: isShow };
 }
-export function handleSortDisplay(isSort: boolean) {
-  return { type: "HANDLE_SORT_DISPLAY", payload: isSort };
+export function handleSortDisplay(isSortDisplay: boolean) {
+  return { type: "HANDLE_SORT_DISPLAY", payload: isSortDisplay };
+}
+export function handleSort(isSort: boolean) {
+  return { type: "HANDLE_SORT", payload: isSort };
 }
 export function handleFirst(isFirst: string) {
   return { type: "HANDLE_FIRST", payload: isFirst };

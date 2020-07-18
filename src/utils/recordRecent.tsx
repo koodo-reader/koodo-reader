@@ -1,28 +1,50 @@
 // 记录书本打开记录
-
+import BookModel from "../model/Book";
 class RecordRecent {
   static setRecent(bookKey: string) {
-    let json = localStorage.getItem("recentBooks");
-    let obj = JSON.parse(json!) || {};
-    let date = {
-      year: new Date().getFullYear(),
-      month: new Date().getMonth() + 1,
-      day: new Date().getDate(),
-    };
-    obj[bookKey] = { bookKey: bookKey, date: date };
-    localStorage.setItem("recentBooks", JSON.stringify(obj));
-  }
+    let bookArr =
+      localStorage.getItem("recentBooks") !== "{}"
+        ? JSON.parse(localStorage.getItem("recentBooks") || "")
+        : [];
+    const index = bookArr.indexOf(bookKey);
+    if (index > -1) {
+      bookArr.splice(index, 1);
+      bookArr.unshift(bookKey);
+    } else {
+      bookArr.unshift(bookKey);
+    }
 
+    console.log(bookArr);
+    localStorage.setItem("recentBooks", JSON.stringify(bookArr));
+  }
+  static setAllRecent(books: BookModel[]) {
+    let bookArr: string[] = [];
+    books.forEach((item) => {
+      bookArr.push(item.key);
+    });
+    localStorage.setItem("recentBooks", JSON.stringify(bookArr));
+  }
   static getRecent() {
-    let json = localStorage.getItem("recentBooks");
-    let obj = JSON.parse(json!) || {};
-    return obj || {};
+    let bookArr =
+      localStorage.getItem("recentBooks") !== "{}"
+        ? JSON.parse(localStorage.getItem("recentBooks") || "")
+        : [];
+    return bookArr;
   }
   static clear(bookKey: string) {
-    let json = localStorage.getItem("recentBooks");
-    let obj = JSON.parse(json!) || {};
-    delete obj[bookKey];
-    localStorage.setItem("recentBooks", JSON.stringify(obj));
+    let bookArr = JSON.parse(localStorage.getItem("recentBooks") || "[]");
+    const index = bookArr.indexOf(bookKey);
+    if (index > -1) {
+      bookArr.splice(index, 1);
+    }
+    localStorage.setItem("recentBooks", JSON.stringify(bookArr));
+  }
+  static getAllRecent() {
+    let bookArr =
+      localStorage.getItem("recentBooks") !== "{}"
+        ? JSON.parse(localStorage.getItem("recentBooks") || "")
+        : [];
+    return bookArr || [];
   }
 }
 

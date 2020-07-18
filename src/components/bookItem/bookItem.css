@@ -2,6 +2,7 @@
   display: flex;
   justify-content: flex-start;
   margin: 18px;
+  margin-right: 50px;
 }
 .book-item-list-cover {
   width: 57px;
@@ -15,7 +16,7 @@
 .book-item-list-author {
   height: 30px;
   width: 250px;
-  font-size: 15px;
+  font-size: 17px;
   color: rgba(75, 75, 75, 1);
   opacity: 1;
   text-align: center;
@@ -30,8 +31,8 @@
 .book-item-list-percentage,
 .book-item-list-config {
   height: 30px;
-  width: 100px;
-  font-size: 15px;
+  width: 120px;
+  font-size: 17px;
   color: rgba(75, 75, 75, 1);
   opacity: 1;
   text-align: center;

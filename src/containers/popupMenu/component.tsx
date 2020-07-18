@@ -190,6 +190,7 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
           : posX
         : posX;
     this.props.handleOpenMenu(true);
+
     let popupMenu = document.querySelector(".popup-menu-container");
     popupMenu &&
       popupMenu.setAttribute("style", `left:${posX}px;top:${posY}px`);

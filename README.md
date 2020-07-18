@@ -15,10 +15,10 @@
 </div>
 <div align="center">
   <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
-    <img src="https://ci.appveyor.com/api/projects/status/602fp409plq8qcwu?svg=true" alt="">
+    <img src="https://ci.appveyor.com/api/projects/status/602fp409plq8qcwu?svg=true" alt="appveyor">
   </a>
     <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
-    <img src="https://travis-ci.com/troyeguo/koodo-reader.svg?branch=master" alt="">
+    <img src="https://travis-ci.com/troyeguo/koodo-reader.svg?branch=master" alt="travis-ci">
   </a>
 </div>
 
@@ -26,10 +26,10 @@
 
 <div align="center">
   <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
-    <img src="https://i.loli.net/2020/03/23/UpVulqMBXRcEtJG.jpg" >
+    <img src="https://i.loli.net/2020/07/18/5NhQZfxXRs8VO7c.png" >
   </a>
   <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
-    <img src="https://i.loli.net/2020/03/23/jenEPUIuVJzC6bX.jpg" >
+    <img src="https://i.loli.net/2020/07/18/niAyZV2cSdl1bUu.png" >
   </a>
   <br/>
 </div>
@@ -42,7 +42,9 @@
 
 ## 特色 👇
 
-📝 支持书架，书签，高亮，笔记和书摘功能
+📝 强大笔记功能，学习事半功倍
+
+🚩 使用书架来为你的图书分类
 
 🌎 支持 **Windows** ， **MacOS** 和 **网页版**
 

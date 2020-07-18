@@ -103,11 +103,6 @@ export const sideMenu = [
     mode: "home",
   },
   {
-    name: "Recent Books",
-    icon: "recent",
-    mode: "recent",
-  },
-  {
     name: "My Bookmarks",
     icon: "bookmark",
     mode: "bookmark",
@@ -171,11 +166,6 @@ export const emptyList = [
     mode: "home",
     main: "Empty Library",
     sub: "Click the top-right button to add books",
-  },
-  {
-    mode: "recent",
-    main: "Empty Reading Records",
-    sub: "Click on any book to read",
   },
   {
     mode: "bookmark",

@@ -89,7 +89,7 @@ class NoteList extends React.Component<NoteListProps, NoteListState> {
           <li
             className="note-list-item"
             key={item.notes}
-            style={isCurrent ? { height: "200px" } : {}}
+            style={isCurrent ? { height: "235px" } : {}}
             onMouseEnter={() => {
               this.handleShowDelete(item.key);
             }}

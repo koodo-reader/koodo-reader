@@ -10,10 +10,10 @@
   "repository": "https://github.com/troyeguo/koodo-desktop",
   "private": true,
   "dependencies": {
+    "axios": "^0.19.2",
     "copy-text-to-clipboard": "^2.2.0",
     "dropbox": "^5.2.0",
     "electron-is-dev": "^1.1.0",
-    "electron-updater": "4.0.0",
     "i18next": "^19.4.4",
     "i18next-browser-languagedetector": "^4.2.0",
     "react-dropzone": "^11.0.1",

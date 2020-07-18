@@ -4,7 +4,7 @@ export interface HeaderProps {
   books: BookModel[];
   isSearch: boolean;
   isSortDisplay: boolean;
-  handleSortDisplay: (isSort: boolean) => void;
+  handleSortDisplay: (isSortDisplay: boolean) => void;
   handleMessageBox: (isShow: boolean) => void;
   handleMessage: (message: string) => void;
   handleBackupDialog: (isBackup: boolean) => void;
