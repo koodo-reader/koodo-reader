@@ -1,22 +1,11 @@
 .about-icon-container {
-  position: absolute;
-  left: 0px;
-  bottom: 0;
-  width: 120px;
-  height: 50px;
+  width: 190px;
+  height: 200px;
   display: flex;
   justify-content: space-around;
   align-items: center;
-}
-@media (max-width: 1100px) {
-  .about-icon-container {
-    display: none;
-  }
-}
-.about-container {
-  position: absolute;
-  left: 390px;
-  margin-top: 68px;
+  position: relative;
+  bottom: 50px;
 }
 .about-icon {
   font-size: 24px;

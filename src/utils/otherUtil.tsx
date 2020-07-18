@@ -59,10 +59,13 @@ class OtherUtil {
     }
   }
   static setSortCode(sortCode: number, orderCode: number) {
-    let json = localStorage.getItem("sortCode");
-    let obj = JSON.parse(json!) || { sort: 2, order: 2 };
+    let json =
+      localStorage.getItem("sordCode") || JSON.stringify({ sort: 2, order: 2 });
+    console.log(json, json, "json");
+    let obj = json ? JSON.parse(json) : { sort: 2, order: 2 };
     obj.sort = sortCode;
     obj.order = orderCode;
+    console.log(obj, "bo");
     localStorage.setItem("sortCode", JSON.stringify(obj));
   }
 
@@ -79,7 +82,6 @@ class OtherUtil {
   static setReaderConfig(key: string, value: string) {
     let readerConfig = JSON.parse(localStorage.getItem("readerConfig")!) || {};
     readerConfig[key] = value;
-    console.log(readerConfig);
     localStorage.setItem("readerConfig", JSON.stringify(readerConfig));
   }
 }

@@ -4,7 +4,7 @@ const initState = {
   covers: null,
   searchBooks: [],
   isSearch: false,
-  isSort: true,
+  isSort: false,
   isFirst: "no",
   isList: "card",
   isSortDisplay: false,

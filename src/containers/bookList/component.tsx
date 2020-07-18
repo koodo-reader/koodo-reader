@@ -3,28 +3,31 @@ import React from "react";
 import "./booklist.css";
 import Book from "../../components/book";
 import BookItem from "../../components/bookItem";
-import { connect } from "react-redux";
-import { handleFetchList } from "../../redux/actions/manager";
 import RecordRecent from "../../utils/recordRecent";
 import ShelfUtil from "../../utils/shelfUtil";
 import SortUtil from "../../utils/sortUtil";
 import BookModel from "../../model/Book";
-import { stateType } from "../../redux/store";
-import { Trans, withNamespaces } from "react-i18next";
+import { Trans } from "react-i18next";
 import { BookListProps } from "./interface";
 import OtherUtil from "../../utils/otherUtil";
 
 class BookList extends React.Component<BookListProps> {
   //根据localstorage列表的数据，得到最近阅读的图书
-  handleRecent = (items: any) => {
-    let recentArr: any = [];
-    for (let i in RecordRecent.getRecent()) {
-      recentArr.push(RecordRecent.getRecent()[i].bookKey);
+  handleRecent = (items: any[], arr: string[]) => {
+    let itemArr: any[] = [];
+    //兼容之前的版本
+    if (!arr[0] || arr.length !== items.length) {
+      RecordRecent.setAllRecent(items);
+      return items;
     }
-    let recentItems: any = items.filter((item: { key: number }) => {
-      return recentArr.indexOf(item.key) > -1;
+    arr.forEach((item) => {
+      items.forEach((subItem: any) => {
+        if (subItem.key === item) {
+          itemArr.push(subItem);
+        }
+      });
     });
-    return recentItems;
+    return itemArr;
   };
   //获取书架数据
   handleShelf(items: any, index: number) {
@@ -54,17 +57,16 @@ class BookList extends React.Component<BookListProps> {
     arr.forEach((item) => {
       itemArr.push(items[item]);
     });
+    console.log(itemArr, "arr", this.props.isSort, this.props.isSearch);
     return itemArr;
   };
   render() {
     OtherUtil.setReaderConfig("totalBooks", this.props.books.length.toString());
-
     const renderBookList = () => {
+      console.log(this.props.isSort, "this.props.isSort");
       //根据不同的场景获取不同的图书数据
       let books =
-        this.props.mode === "recent"
-          ? this.handleRecent(this.props.books)
-          : this.props.shelfIndex !== -1
+        this.props.shelfIndex !== -1
           ? this.handleShelf(this.props.books, this.props.shelfIndex)
           : this.props.isSearch
           ? this.handleFilter(this.props.books, this.props.searchBooks)
@@ -74,12 +76,10 @@ class BookList extends React.Component<BookListProps> {
               //返回排序后的图书index
               SortUtil.sortBooks(this.props.books, this.props.sortCode) || []
             )
-          : this.props.books;
+          : this.handleRecent(this.props.books, RecordRecent.getAllRecent());
       //根据不同的场景获取不同图书的封面
       let covers =
-        this.props.mode === "recent"
-          ? this.handleRecent(this.props.covers)
-          : this.props.shelfIndex !== -1
+        this.props.shelfIndex !== -1
           ? this.handleShelf(this.props.covers, this.props.shelfIndex)
           : this.props.isSearch
           ? this.handleFilter(this.props.covers, this.props.searchBooks)
@@ -88,7 +88,7 @@ class BookList extends React.Component<BookListProps> {
               this.props.covers,
               SortUtil.sortBooks(this.props.books, this.props.sortCode) || []
             )
-          : this.props.covers;
+          : this.handleRecent(this.props.covers, RecordRecent.getAllRecent());
       return books.map((item: BookModel, index: number) => {
         return this.props.isList === "list" ? (
           <BookItem
@@ -144,22 +144,5 @@ class BookList extends React.Component<BookListProps> {
     );
   }
 }
-const mappropsToProps = (props: stateType) => {
-  return {
-    books: props.manager.books,
-    covers: props.manager.covers,
-    epubs: props.manager.epubs,
-    mode: props.sidebar.mode,
-    shelfIndex: props.sidebar.shelfIndex,
-    searchBooks: props.manager.searchBooks,
-    isSearch: props.manager.isSearch,
-    isSort: props.manager.isSort,
-    isList: props.manager.isList,
-    sortCode: props.manager.sortCode,
-  };
-};
-const actionCreator = { handleFetchList };
-export default connect(
-  mappropsToProps,
-  actionCreator
-)(withNamespaces()(BookList as any));
+
+export default BookList;

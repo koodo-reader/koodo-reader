@@ -2,56 +2,52 @@
 import React from "react";
 import "./about.css";
 import { AboutProps, AboutState } from "./interface";
-import copy from "copy-text-to-clipboard";
+import packageJson from "../../../package.json";
+import axios from "axios";
+
 class About extends React.Component<AboutProps, AboutState> {
   constructor(props: AboutProps) {
     super(props);
-    this.state = {
-      isNew: false,
-      isGithub: false,
-      isContact: false,
-      isDonate: false,
-    };
+    this.state = { downlownLink: "" };
   }
-  handleGithub = (mode: boolean) => {
-    this.setState({ isGithub: mode });
-  };
-  handleContact = (mode: boolean) => {
-    this.setState({ isContact: mode });
-  };
-  handleDonate = (mode: boolean) => {
-    this.setState({ isDonate: mode });
-  };
-  handleClick = (str: string) => {
-    copy(str);
-    this.props.handleMessage("Copy Link Successfully");
-    this.props.handleMessageBox(true);
+  componentDidMount() {
+    console.log(packageJson.version);
+    console.log(navigator.platform, "os");
+    axios.get("http://localhost:3001/update").then((res) => {
+      const download = res.data.download;
+      const version = res.data.log.version;
+      if (this.compareVersion(packageJson.version, version)) {
+        navigator.platform === "Win32"
+          ? this.setState({ downlownLink: download[0].url })
+          : this.setState({ downlownLink: download[1].url });
+      }
+    });
+  }
+  compareVersion = (ver1: string, ver2: string) => {
+    const ver1Arr = ver1.split(".");
+    const ver2Arr = ver2.split(".");
+
+    for (let i = 0; i < ver1Arr.length; i++) {
+      if (ver1Arr[i] < ver2Arr[i]) {
+        return true;
+      }
+    }
+    return false;
   };
   render() {
+    console.log(this.state.downlownLink, "link");
     return (
-      <div className="about-container">
-        <div className="about-icon-container">
-          <span
-            className="icon-github about-icon"
-            onClick={() => {
-              this.handleClick("https://github.com/troyeguo/koodo-reader");
-            }}
-          ></span>
-
-          <span
-            className="icon-contact about-icon"
-            onClick={() => {
-              this.handleClick("https://wj.qq.com/s2/5565378/4b3f/");
-            }}
-          ></span>
-
-          <span
-            className="icon-donate about-icon"
-            onClick={() => {
-              this.handleClick("https://github.com/troyeguo/coodo-pay");
-            }}
-          ></span>
-        </div>
+      <div
+        className="about-icon-container"
+        style={this.state.downlownLink ? {} : { display: "none" }}
+      >
+        <a
+          href={this.state.downlownLink}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          下载新版本
+        </a>
       </div>
     );
   }

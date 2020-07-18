@@ -8,6 +8,7 @@ import { Trans } from "react-i18next";
 import Dropzone from "react-dropzone";
 import { ImportLocalProps, ImportLocalState } from "./interface";
 import OtherUtil from "../../utils/otherUtil";
+import RecordRecent from "../../utils/recordRecent";
 
 class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
   constructor(props: ImportLocalProps) {
@@ -22,6 +23,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
       bookArr = [];
     }
     bookArr.push(book);
+    RecordRecent.setRecent(book.key);
     localforage.setItem("books", bookArr).then(() => {
       this.props.handleFetchBooks();
     });
