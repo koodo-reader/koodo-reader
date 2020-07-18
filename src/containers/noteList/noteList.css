@@ -100,7 +100,7 @@
   text-align: center;
   position: absolute;
   bottom: 5px;
-  margin-left: 175px;
+  margin-left: calc(50% - 6px);
 }
 .note-list-item-more-text-parent {
   height: 60px;
