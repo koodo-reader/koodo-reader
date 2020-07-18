@@ -9,8 +9,6 @@
 .note-list-container {
   width: 100%;
   height: 100%;
-  padding-right: 17px; /* Increase/decrease this value for cross-browser compatibility */
-  box-sizing: content-box;
   display: flex;
   flex-wrap: wrap;
   overflow-y: scroll;
@@ -27,28 +25,8 @@
   flex-wrap: wrap;
   overflow-y: scroll;
   align-content: flex-start;
-  /* font-size: 0px; */
-  /* clear: both; */
-  /* float: left; */
-  /* zoom: 1; */
-  overflow: hidden;
-  /* width: 100%;
-  position: relative;
-  display: flex;
-  flex-wrap: wrap;
-  overflow-y: scroll;
-  align-content: flex-start;
-  font-size: 0px;
-  overflow: hidden; */
 }
-/* .note-page-item:before,
-.note-page-item:after {
-  content: "";
-  display: table;
-} */
-/* .note-page-item:after {
-  clear: both;
-} */
+
 .note-page-item-date {
   /* float: left; */
   position: absolute;
@@ -59,24 +37,19 @@
   margin-left: 19px;
 }
 .note-list-container-box {
-  /* float: left; */
   margin-top: 35px;
   width: 100%;
-  /* height: 600px; */
-  /* margin-top: 10px; */
 }
 .note-list-item {
   float: left;
-  /* display: inline-block; */
   font-size: 16px;
-  width: 363px;
-  height: 106px;
+  width: calc(50vw - 140px);
+  height: 150px;
   background: rgba(255, 255, 255, 1);
   box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.16);
   opacity: 1;
   border-radius: 7px;
   margin: 15px;
-
   font-size: 14px;
   line-height: 14px;
   color: rgba(75, 75, 75, 1);
@@ -85,37 +58,33 @@
   bottom: 10px;
 }
 .note-list-item-note-parent {
-  height: 60px;
-  overflow: hidden;
+  height: 90px;
   margin: 16px;
   width: 100%;
 }
 .note-list-item-note {
-  width: 100%;
+  width: calc(100% - 20px);
   height: 100%;
   overflow-y: scroll;
-  padding-right: 17px; /* Increase/decrease this value for cross-browser compatibility */
-  box-sizing: content-box;
-  line-height: 17px;
+  line-height: 18px;
+  font-size: 16px;
 }
 
 .note-list-item-more-info {
   display: none;
-  width: 321px;
-  height: 64px;
+  width: calc(100% - 30px);
+  height: 94px;
   font-size: 12px;
-
   line-height: 13px;
-  color: rgba(191, 191, 191, 1);
+  color: rgba(155, 155, 155, 1);
   opacity: 1;
   margin: 0px 25px;
 }
 .note-list-item-show-more {
   width: 100%;
-  font-size: 12px;
-
-  line-height: 13px;
-  color: rgba(191, 191, 191, 1);
+  font-size: 15px;
+  line-height: 17px;
+  color: rgba(155, 155, 155, 1);
   opacity: 1;
   text-align: center;
   position: absolute;
@@ -136,21 +105,20 @@
 .note-list-item-more-text-parent {
   height: 60px;
   width: 100%;
-  overflow: hidden;
 }
 .note-list-item-more-text {
-  width: 100%;
+  width: calc(100% - 10px);
   height: 100%;
   overflow-y: scroll;
-  padding-right: 17px; /* Increase/decrease this value for cross-browser compatibility */
-  box-sizing: content-box;
-  font-size: 13px;
-  line-height: 15px;
+  font-size: 15px;
+  line-height: 17px;
 }
 
 .note-list-item-citation {
   margin-right: 20px !important;
   float: right;
+  font-size: 15px;
+  color: rgba(155, 155, 155, 1);
 }
 .note-list-item-chapter {
   overflow: hidden;

@@ -3,8 +3,5 @@ export interface AboutProps {
   handleMessageBox: (isShow: boolean) => void;
 }
 export interface AboutState {
-  isNew: boolean;
-  isGithub: boolean;
-  isContact: boolean;
-  isDonate: boolean;
+  downlownLink: string;
 }

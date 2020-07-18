@@ -13,35 +13,29 @@
   flex-wrap: wrap;
   overflow-y: scroll;
   align-content: flex-start;
-  padding-right: 17px; /* Increase/decrease this value for cross-browser compatibility */
-  box-sizing: content-box; /* So the width will be 100% + 17px */
 }
 .bookmark-page-bookmark-container-parent {
   float: left;
-  width: 270px;
+  width: 280px;
   height: 120px;
   /* margin: 0px !important; */
   margin-top: 10px;
   margin-left: 10px;
-  overflow: hidden;
 }
 .bookmark-page-bookmark-container {
   width: 100%;
   height: 100%;
-  /* float: left; */
-  padding-right: 17px; /* Increase/decrease this value for cross-browser compatibility */
-  box-sizing: content-box; /* So the width will be 100% + 17px */
   overflow-y: scroll;
-  padding-right: 17px; /* Increase/decrease this value for cross-browser compatibility */
-  box-sizing: content-box; /* So the width will be 100% + 17px */
+  overflow-x: hidden;
 }
 
 .bookmark-page-item {
   position: relative;
   float: left;
-  width: 390px;
+  width: calc(50vw - 140px);
   height: 160px;
   margin: 5px;
+  min-width: 403px;
 }
 
 .bookmark-page-cover {

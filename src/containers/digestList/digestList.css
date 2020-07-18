@@ -51,14 +51,13 @@
   /* display: inline-block; */
   cursor: pointer;
   font-size: 16px;
-  width: 363px;
-  height: 106px;
+  width: calc(50vw - 140px);
+  height: 126px;
   background: rgba(255, 255, 255, 1);
   box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.16);
   opacity: 1;
   border-radius: 7px;
   margin: 15px;
-
   font-size: 14px;
   line-height: 14px;
   color: rgba(75, 75, 75, 1);
@@ -85,7 +84,7 @@
   white-space: nowrap;
   white-space: normal;
   word-break: break-all;
-  color: rgba(191, 191, 191, 1);
+  color: rgba(155, 155, 155, 1);
 
   /* width: 300px; */
   /* text-align: right; */
@@ -93,22 +92,37 @@
 .digest-list-item-text-parent {
   position: absolute;
   width: 100%;
-  height: 74px;
-  overflow: hidden;
+  height: 104px;
 }
 .digest-list-item-text {
-  width: 100%;
-  height: 58px;
-  overflow-y: scroll;
-  padding-right: 17px; /* Increase/decrease this value for cross-browser compatibility */
-  box-sizing: content-box; /* So the width will be 100% + 17px */
-  /* text-align: right; */
+  width: calc(100% - 20px);
+  height: 80px;
   overflow-y: scroll;
   margin: 14px 10px 0px 10px;
   position: absolute;
   cursor: text;
+  line-height: 18px;
+  font-size: 16px;
+}
+::-webkit-scrollbar {
+  width: 0.3rem;
+  height: 0.5rem;
+  background: hsla(0, 0%, 100%, 0.6);
 }
 
+::-webkit-scrollbar-track {
+  border-radius: 0;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 0;
+  background-color: rgba(95, 95, 95, 0.4);
+  transition: all 0.2s;
+  border-radius: 0.5rem;
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(95, 95, 95, 0.7);
+}
 .digest-list-item-title {
   float: left;
 }
