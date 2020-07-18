@@ -13,7 +13,7 @@ class About extends React.Component<AboutProps, AboutState> {
   componentDidMount() {
     console.log(packageJson.version);
     console.log(navigator.platform, "os");
-    axios.get("http://localhost:3001/update").then((res) => {
+    axios.get("https://koodo.960960.xyz/update").then((res) => {
       const download = res.data.download;
       const version = res.data.log.version;
       if (this.compareVersion(packageJson.version, version)) {
