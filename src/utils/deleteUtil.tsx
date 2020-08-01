@@ -5,7 +5,7 @@ import HighligherModel from "../model/Highlighter";
 import BookmarkModel from "../model/Bookmark";
 class DeleteUtil {
   static deleteBook(books: BookModel[], bookKey: string) {
-    let deleteIndex=-1;
+    let deleteIndex = -1;
     for (let i = 0; i < books.length; i++) {
       if (books[i].key === bookKey) {
         deleteIndex = i;
@@ -41,7 +41,7 @@ class DeleteUtil {
   }
   static deleteDigests(digests: DigestModel[], bookKey: string) {
     let deleteIndex = [];
-    if (digests !== undefined) {
+    if (digests) {
       for (let i = 0; i < digests.length; i++) {
         if (digests[i].bookKey === bookKey) {
           deleteIndex.push(i);

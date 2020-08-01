@@ -5,7 +5,14 @@ class Digest {
   chapter: string;
   text: string;
   cfi: string;
-  constructor(bookKey: string, chapter: string, text: string, cfi: string) {
+  percentage: number;
+  constructor(
+    bookKey: string,
+    chapter: string,
+    text: string,
+    cfi: string,
+    percentage: number
+  ) {
     this.key = new Date().getTime() + ""; //书摘的键值
     this.date = {
       year: new Date().getFullYear(),
@@ -16,6 +23,7 @@ class Digest {
     this.chapter = chapter; //书摘的所在章节
     this.text = text; //书摘的内容
     this.cfi = cfi; //书摘的所在位置
+    this.percentage = percentage; //书摘的所在位置
   }
 }
 

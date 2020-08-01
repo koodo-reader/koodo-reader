@@ -14,8 +14,8 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     this.state = {
       isOnlyLocal: false,
       isBookImported:
-        OtherUtil.getReaderConfig("isBookImported") === "yes" ? true : false,
-      isChinese: OtherUtil.getReaderConfig("lang") === "cn",
+        OtherUtil.getReaderConfig("totalBooks") !== "0" ? true : false,
+      language: OtherUtil.getReaderConfig("lang"),
       isNewVersion: false,
     };
   }
@@ -23,12 +23,12 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     const lng = OtherUtil.getReaderConfig("lang");
     if (lng) {
       i18n.changeLanguage(lng);
-      this.setState({ isChinese: !this.state.isChinese });
+      this.setState({ language: lng });
     }
   }
   changeLanguage = (lng: string) => {
     i18n.changeLanguage(lng);
-    this.setState({ isChinese: !this.state.isChinese });
+    this.setState({ language: lng });
     OtherUtil.setReaderConfig("lang", lng);
   };
   handleSortBooks = () => {
@@ -59,9 +59,14 @@ class Header extends React.Component<HeaderProps, HeaderState> {
           <span className="icon-sort header-sort-icon"></span>
         </div>
         <div className="change-language">
-          {this.state.isChinese ? (
+          {this.state.language === "cn" ? (
             <span
-              className="icon-chinese"
+              className="icon-traditional"
+              onClick={() => this.changeLanguage("tw")}
+            ></span>
+          ) : this.state.language === "en" ? (
+            <span
+              className="icon-simplified"
               onClick={() => this.changeLanguage("cn")}
             ></span>
           ) : (

@@ -24,26 +24,10 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
     this.props.currentEpub.goto(href);
   }
   render() {
-    const renderContentList = () => {
-      return this.state.chapters.map((item: any, index: number) => {
-        let isSubContentList = item.subitems && item.subitems.length;
-        const renderSubContentList = () => {
-          return item.subitems.map((item: any, index: number) => {
-            return (
-              <li key={index} className="book-subcontent-list">
-                <a
-                  href={item.href}
-                  onClick={this.handleJump}
-                  className="book-subcontent-name"
-                >
-                  {item.label}
-                </a>
-              </li>
-            );
-          });
-        };
+    const renderContentList = (items: any) => {
+      return items.map((item: any, index: number) => {
         return (
-          <li className="book-content-list" key={index}>
+          <li key={index} className="book-content-list">
             <a
               href={item.href}
               onClick={this.handleJump}
@@ -51,15 +35,33 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
             >
               {item.label}
             </a>
-            {isSubContentList ? <ul>{renderSubContentList()}</ul> : null}
+            {item.subitems.length > 0 ? (
+              <ul>{renderContentList(item.subitems)}</ul>
+            ) : null}
           </li>
         );
       });
     };
+    // return (
+    //   <li className="book-content-list" key={index}>
+    //     <a
+    //       href={item.href}
+    //       onClick={this.handleJump}
+    //       className="book-content-name"
+    //     >
+    //       {item.label}
+    //     </a>
+    //     {item.subitems.length > 0 ? (
+    //       <ul>{renderSubContentList(item.subitems)}</ul>
+    //     ) : null}
+    //   </li>
+    // );
 
     return (
       <div className="book-content-container">
-        <ul className="book-content">{renderContentList()}</ul>
+        <ul className="book-content">
+          {renderContentList(this.state.chapters)}
+        </ul>
       </div>
     );
   }

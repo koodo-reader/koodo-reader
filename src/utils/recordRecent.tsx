@@ -15,7 +15,6 @@ class RecordRecent {
       bookArr.unshift(bookKey);
     }
 
-    console.log(bookArr);
     localStorage.setItem("recentBooks", JSON.stringify(bookArr));
   }
   static setAllRecent(books: BookModel[]) {

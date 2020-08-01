@@ -11,8 +11,7 @@ class ProgressPanel extends React.Component<
   constructor(props: ProgressPanelProps) {
     super(props);
     this.state = {
-      displayPercentage:
-        this.props.percentage !== undefined ? this.props.percentage : 0,
+      displayPercentage: this.props.percentage ? this.props.percentage : 0,
     };
   }
   //WARNING! To be deprecated in React v17. Use componentDidMount instead.
