@@ -52,7 +52,7 @@ class NoteList extends React.Component<NoteListProps, NoteListState> {
     //获取笔记日期列表
     for (let i = 1; i < noteArr.length; i++) {
       if (
-        noteArr[i].date !== undefined &&
+        noteArr[i].date &&
         (noteArr[i].date.year !== temp.year ||
           noteArr[i].date.month !== temp.month ||
           noteArr[i].date.day !== temp.day)
@@ -89,7 +89,7 @@ class NoteList extends React.Component<NoteListProps, NoteListState> {
           <li
             className="note-list-item"
             key={item.key}
-            style={isCurrent ? { height: "235px" } : {}}
+            style={isCurrent ? { height: "245px" } : {}}
             onMouseEnter={() => {
               this.handleShowDelete(item.key);
             }}
@@ -117,7 +117,7 @@ class NoteList extends React.Component<NoteListProps, NoteListState> {
                     : {}
                 }
               >
-                <Trans>{isCurrent ? "Less" : "More"}</Trans>
+                <Trans>{isCurrent ? "Less" : "More Notes"}</Trans>
               </div>
               {isCurrent ? null : (
                 <span className="icon-dropdown note-list-show-more-icon"></span>

@@ -51,18 +51,17 @@ class PopupOption extends React.Component<PopupOptionProps> {
       cfiBase
     );
     let bookKey = book.key;
-
+    let percentage = this.props.currentEpub.locations.percentageFromCfi(cfi);
     //获取章节名
     let index = this.props.chapters.findIndex((item: any) => {
       return item.spinePos > epub.renderer.currentChapter.spinePos;
     });
-    let chapter =
-      this.props.chapters[index] !== undefined
-        ? this.props.chapters[index].label.trim(" ")
-        : "Unknown";
+    let chapter = this.props.chapters[index]
+      ? this.props.chapters[index].label.trim(" ")
+      : "Unknown";
     // let chapter = epub.renderer.currentChapter.spinePos;
 
-    let digest = new Digest(bookKey, chapter, text, cfi);
+    let digest = new Digest(bookKey, chapter, text, cfi, percentage);
     let digestArr = this.props.digests ? this.props.digests : [];
     digestArr.push(digest);
     localforage.setItem("digests", digestArr);
@@ -122,7 +121,7 @@ class PopupOption extends React.Component<PopupOptionProps> {
             }}
           >
             <div>
-              <span className="icon-copy copy-icon"></span>
+              <span className="icon-copy1 copy-icon"></span>
               <p>
                 <Trans>Copy</Trans>
               </p>
