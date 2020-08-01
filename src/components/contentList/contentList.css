@@ -1,16 +1,14 @@
 .book-content-list {
   float: left;
-
-  width: 220px;
-
+  width: calc(100% - 20px);
   margin-left: 18px;
 }
 .book-content-name {
   display: block;
-  width: 282px;
+  padding: 10px 0px;
+  width: 100%;
   font-size: 14px;
-  
-  line-height: 48px;
+  line-height: 18px;
   color: rgba(75, 75, 75, 1);
   opacity: 1;
   float: left;
@@ -22,7 +20,7 @@
   width: 220px;
   float: left;
   font-size: 13px;
-  
+
   line-height: 20px;
   color: rgba(75, 75, 75, 1);
   opacity: 0.64;

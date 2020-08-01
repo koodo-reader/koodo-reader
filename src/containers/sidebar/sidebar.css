@@ -63,16 +63,13 @@
 }
 .shelf-list-container-parent {
   margin-top: 20px;
-  height: 120px;
-  width: 100%;
-  overflow: hidden;
+  height: 140px;
+  width: 80%;
 }
 .shelf-list-container {
   width: 100%;
   height: 100%;
   overflow-y: scroll;
-  padding-right: 17px; /* Increase/decrease this value for cross-browser compatibility */
-  box-sizing: content-box;
   list-style-type: none;
   cursor: pointer;
   text-overflow: ellipsis;

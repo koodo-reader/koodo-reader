@@ -230,7 +230,7 @@ class BackupPage extends React.Component<BackupPageProps, BackupPageState> {
             onClick={() => {
               this.setState({ currentStep: 1 });
             }}
-            style={this.state.isBackup !== null ? {} : { display: "none" }}
+            style={this.state.isBackup ? {} : { display: "none" }}
           >
             <Trans>Next Step</Trans>
           </div>

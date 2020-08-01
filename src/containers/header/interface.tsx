@@ -13,6 +13,6 @@ export interface HeaderProps {
 export interface HeaderState {
   isOnlyLocal: boolean;
   isBookImported: boolean;
-  isChinese: boolean;
+        language:string;
   isNewVersion: boolean;
 }

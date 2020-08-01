@@ -13,16 +13,16 @@ export function handleFetchPercentage(book: { key: string }) {
 }
 export function handleFetchLocations(epub: any) {
   return (dispatch: (arg0: { type: string; payload: any }) => void) => {
-    if (epub.locations !== undefined) {
+    epub.locations &&
       epub.locations
         .generate()
         .then((result: any) => {
           let locations = epub.locations;
+          console.log(locations, "locations");
           dispatch(handleLocations(locations));
         })
         .catch(() => {
           console.log("Error occurs");
         });
-    }
   };
 }

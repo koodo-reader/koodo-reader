@@ -5,6 +5,8 @@ import DigestModel from "../../model/Digest";
 import { Trans } from "react-i18next";
 import { DigestListProps, DigestListStates } from "./interface";
 import DeleteIcon from "../../components/deleteIcon";
+import RecentBooks from "../../utils/recordRecent";
+import RecordLocation from "../../utils/recordLocation";
 
 class DigestList extends React.Component<DigestListProps, DigestListStates> {
   constructor(props: DigestListProps) {
@@ -25,6 +27,24 @@ class DigestList extends React.Component<DigestListProps, DigestListStates> {
   };
   handleShowDelete = (deleteKey: string) => {
     this.setState({ deleteKey });
+  };
+  handleJump = (cfi: string, bookKey: string, percentage: number) => {
+    let { books, epubs } = this.props;
+    let book = null;
+    let epub = null;
+    //根据bookKey获取指定的book和epub
+    for (let i = 0; i < books.length; i++) {
+      if (books[i].key === bookKey) {
+        book = books[i];
+        epub = epubs[i];
+        break;
+      }
+    }
+    this.props.handleReadingBook(book!);
+    this.props.handleReadingEpub(epub);
+    this.props.handleReadingState(true);
+    RecentBooks.setRecent(bookKey);
+    RecordLocation.recordCfi(bookKey, cfi, percentage);
   };
   render() {
     let { digests } = this.props;
@@ -94,6 +114,19 @@ class DigestList extends React.Component<DigestListProps, DigestListStates> {
                   {this.handleBookName(item.bookKey)}
                 </div>
                 <div className="digest-list-item-title">》{item.chapter}</div>
+              </div>
+              <div
+                onClick={() => {
+                  this.handleJump(item.cfi, item.bookKey, item.percentage);
+                }}
+              >
+                <div
+                  className="note-list-item-show-more"
+                  style={{ color: "rgba(75,75,75,0.8)", bottom: "10px" }}
+                >
+                  <Trans>{"More Digests"}</Trans>
+                  <span className="icon-dropdown icon-digest-right"></span>
+                </div>
               </div>
             </div>
           </li>

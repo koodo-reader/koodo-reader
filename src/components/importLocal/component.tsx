@@ -7,7 +7,6 @@ import SparkMD5 from "spark-md5";
 import { Trans } from "react-i18next";
 import Dropzone from "react-dropzone";
 import { ImportLocalProps, ImportLocalState } from "./interface";
-import OtherUtil from "../../utils/otherUtil";
 import RecordRecent from "../../utils/recordRecent";
 
 class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
@@ -27,7 +26,6 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
     localforage.setItem("books", bookArr).then(() => {
       this.props.handleFetchBooks();
     });
-    OtherUtil.setReaderConfig("isBookImported", "yes");
     this.props.handleMessage("Add Successfully");
     this.props.handleMessageBox(true);
   };
@@ -70,7 +68,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
   };
   handleBook = (file: any, md5: string) => {
     //md5重复不导入
-    if (this.props.books !== null) {
+    if (this.props.books) {
       this.props.books.forEach((item) => {
         if (item.md5 === md5) {
           this.setState({ isRepeat: true });

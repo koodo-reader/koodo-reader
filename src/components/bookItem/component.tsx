@@ -39,22 +39,18 @@ class Book extends React.Component<BookItemProps, BookItemState> {
     this.props.handleReadingBook(this.props.book);
   };
   render() {
-    let date =
-      RecordRecent.getRecent()[this.props.book.key] !== null &&
-      RecordRecent.getRecent()[this.props.book.key] !== undefined
-        ? RecordRecent.getRecent()[this.props.book.key].date
-        : { year: "0000", month: "00", day: "00" };
-    let percentage =
-      RecordLocation.getCfi(this.props.book.key) !== null &&
-      RecordLocation.getCfi(this.props.book.key) !== undefined
-        ? RecordLocation.getCfi(this.props.book.key).percentage
-        : 0;
+    let date = RecordRecent.getRecent()[this.props.book.key]
+      ? RecordRecent.getRecent()[this.props.book.key].date
+      : { year: "0000", month: "00", day: "00" };
+    let percentage = RecordLocation.getCfi(this.props.book.key)
+      ? RecordLocation.getCfi(this.props.book.key).percentage
+      : 0;
     return (
       <div className="book-list-item-container">
         <img
           className="book-item-list-cover"
           src={
-            this.props.bookCover !== null
+            this.props.bookCover 
               ? this.props.bookCover
               : process.env.NODE_ENV === "production"
               ? "assets/cover.svg"
@@ -71,7 +67,7 @@ class Book extends React.Component<BookItemProps, BookItemState> {
           {"" + date.year + "-" + date.month + "-" + date.day}
         </p>
         <p className="book-item-list-percentage">
-          {this.props.percentage !== null ? Math.round(percentage * 100) : 0}%
+          {this.props.percentage ? Math.round(percentage * 100) : 0}%
         </p>
         <div className="book-item-list-config">
           <span

@@ -8,7 +8,11 @@ export interface DigestListProps {
   bookmarks: BookmarkModel[];
   chapters: any;
   books: BookModel[];
+  epubs: any;
   digests: DigestModel[];
+  handleReadingState: (isReading: boolean) => void;
+  handleReadingBook: (currentBook: BookModel) => void;
+  handleReadingEpub: (currentEpub: any) => void;
 }
 export interface DigestListStates {
   deleteKey: string;

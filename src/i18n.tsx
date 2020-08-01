@@ -3,6 +3,7 @@ import { reactI18nextModule } from "react-i18next";
 import detector from "i18next-browser-languagedetector";
 import translationEN from "./assets/locales/en/translation.json";
 import translationCN from "./assets/locales/cn/translation.json";
+import translationTW from "./assets/locales/tw/translation.json";
 
 // the translations
 const resources = {
@@ -11,6 +12,9 @@ const resources = {
   },
   cn: {
     translation: translationCN,
+  },
+  tw: {
+    translation: translationTW,
   },
 };
 
@@ -22,7 +26,6 @@ i18n
     lng: "cn",
     fallbackLng: "en",
     keySeparator: false, // we do not use keys in form messages.welcome
-
     interpolation: {
       escapeValue: false, // react already safes from xss
     },

@@ -12,7 +12,7 @@ class DeleteDialog extends React.Component<DeleteDialogProps> {
     this.props.handleDeleteDialog(false);
   };
   handleDeleteOther = () => {
-    if (this.props.bookmarks !== null) {
+    if (this.props.bookmarks) {
       let bookmarkArr = DeleteUtil.deleteBookmarks(
         this.props.bookmarks,
         this.props.currentBook.key
@@ -27,7 +27,7 @@ class DeleteDialog extends React.Component<DeleteDialogProps> {
         });
       }
     }
-    if (this.props.notes !== null) {
+    if (this.props.notes) {
       let noteArr = DeleteUtil.deleteNotes(
         this.props.notes,
         this.props.currentBook.key
@@ -42,7 +42,7 @@ class DeleteDialog extends React.Component<DeleteDialogProps> {
         });
       }
     }
-    if (this.props.digests !== null) {
+    if (this.props.digests) {
       let digestArr = DeleteUtil.deleteDigests(
         this.props.digests,
         this.props.currentBook.key
@@ -57,7 +57,7 @@ class DeleteDialog extends React.Component<DeleteDialogProps> {
         });
       }
     }
-    if (this.props.highlighters !== null) {
+    if (this.props.highlighters) {
       let highlighterArr = DeleteUtil.deleteHighlighters(
         this.props.highlighters,
         this.props.currentBook.key
@@ -79,7 +79,7 @@ class DeleteDialog extends React.Component<DeleteDialogProps> {
       ShelfUtil.clearShelf(this.props.shelfIndex, this.props.currentBook.key);
       this.props.handleDeleteDialog(false);
     } else {
-      this.props.books !== null &&
+      this.props.books &&
         localforage
           .setItem(
             "books",

@@ -53,7 +53,7 @@ class Book extends React.Component<BookProps, BookState> {
         <img
           className="book-item-cover"
           src={
-            this.props.bookCover !== null
+            this.props.bookCover
               ? this.props.bookCover
               : process.env.NODE_ENV === "production"
               ? "assets/cover.svg"

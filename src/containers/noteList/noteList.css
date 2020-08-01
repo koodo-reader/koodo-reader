@@ -132,12 +132,11 @@
   white-space: nowrap;
   white-space: normal;
   word-break: break-all;
-  color: rgba(191, 191, 191, 1);
+  color: rgba(75, 75, 75, 1);
   margin-right: 20px !important;
   margin-top: 5px;
   float: right;
   font-size: 15px;
-  color: rgba(155, 155, 155, 1);
 }
 .note-list-item-text {
   /* text-align: right; */

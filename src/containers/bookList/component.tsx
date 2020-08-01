@@ -57,13 +57,11 @@ class BookList extends React.Component<BookListProps> {
     arr.forEach((item) => {
       itemArr.push(items[item]);
     });
-    console.log(itemArr, "arr", this.props.isSort, this.props.isSearch);
     return itemArr;
   };
   render() {
     OtherUtil.setReaderConfig("totalBooks", this.props.books.length.toString());
     const renderBookList = () => {
-      console.log(this.props.isSort, "this.props.isSort");
       //根据不同的场景获取不同的图书数据
       let books =
         this.props.shelfIndex !== -1

@@ -108,3 +108,9 @@
   color: rgba(75, 75, 75, 1);
   cursor: pointer;
 }
+.icon-traditional,
+.icon-simplified,
+.icon-english {
+  font-size: 25px;
+  color: rgba(75, 75, 75, 1);
+}

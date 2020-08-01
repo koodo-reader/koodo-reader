@@ -86,7 +86,7 @@ class OperationPanel extends React.Component<
       return item.spinePos > this.props.currentEpub.spinePos;
     });
     let chapter = "未知章节";
-    if (this.props.chapters[index] !== undefined) {
+    if (this.props.chapters[index]) {
       chapter = this.props.chapters[index].label.trim(" ");
     }
     let bookmark = new Bookmark(bookKey, cfi, label, percentage, chapter);

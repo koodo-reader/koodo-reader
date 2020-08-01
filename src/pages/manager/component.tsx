@@ -147,11 +147,11 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
             (mode === "recent" && recentBooks !== 0) ||
             mode === "shelf") ? (
           <BookList />
-        ) : bookmarks !== null && mode === "bookmark" ? (
+        ) : bookmarks && mode === "bookmark" ? (
           <BookmarkPage />
-        ) : notes !== null && notes !== undefined && mode === "note" ? (
+        ) : notes && mode === "note" ? (
           <NoteList />
-        ) : digests !== null && mode === "digest" ? (
+        ) : digests && mode === "digest" ? (
           <DigestList />
         ) : (
           <EmptyPage />
