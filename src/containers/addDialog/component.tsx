@@ -19,14 +19,31 @@ class AddDialog extends Component<AddDialogProps, AddDialogState> {
       ".add-dialog-new-shelf-box"
     ) as HTMLInputElement;
     let shelfTitle: string = this.state.shelfTitle;
+    let shelfList = ShelfUtil.getShelf();
+
     if (this.state.isNew) {
       shelfTitle = inputElement.value;
+      if (shelfList.hasOwnProperty(shelfTitle)) {
+        this.props.handleMessage("Duplicate Shelf");
+        this.props.handleMessageBox(true);
+        return;
+      }
     }
     if (!shelfTitle) {
       this.props.handleMessage("Empty Shelf Title");
       this.props.handleMessageBox(true);
       return;
     }
+    //判断书架中是否已有该图书
+    if (
+      shelfList[`${shelfTitle}`] &&
+      shelfList[`${shelfTitle}`].indexOf(this.props.currentBook.key) > -1
+    ) {
+      this.props.handleMessage("Duplicate Book");
+      this.props.handleMessageBox(true);
+      return;
+    }
+
     ShelfUtil.setShelf(shelfTitle, this.props.currentBook.key);
     this.props.handleAddDialog(false);
     this.props.handleMessage("Add Successfully");

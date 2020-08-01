@@ -103,7 +103,7 @@ class NavigationPanel extends React.Component<
           <div className="navigation-body">
             {this.state.isContentShow ? (
               <ContentList />
-            ) : this.props.bookmarks !== null ? (
+            ) : this.props.bookmarks ? (
               <BookmarkList />
             ) : (
               <div className="navigation-panel-empty-bookmark">

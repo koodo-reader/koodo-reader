@@ -11,7 +11,7 @@ class SearchBox extends React.Component<SearchBoxProps> {
   };
   handleKey = (event: any) => {
     let results = OtherUtil.KeySearch(event, this.props.books);
-    if (results !== undefined) {
+    if (results) {
       this.props.handleSearchBooks(results);
       this.props.handleSearch(true);
     }

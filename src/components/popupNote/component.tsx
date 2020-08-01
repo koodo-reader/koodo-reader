@@ -33,6 +33,7 @@ class PopupNote extends React.Component<PopupNoteProps> {
     text = text && text.trim();
     let cfiBase = epub.renderer.currentChapter.cfiBase;
     let cfi = new window.EPUBJS.EpubCFI().generateCfiFromRange(range, cfiBase);
+    let percentage = this.props.currentEpub.locations.percentageFromCfi(cfi);
     let bookKey = book.key;
     let charRange = window.rangy
       .getSelection(iframe)
@@ -42,11 +43,10 @@ class PopupNote extends React.Component<PopupNoteProps> {
     let index = this.props.chapters.findIndex((item: any) => {
       return item.spinePos > epub.renderer.currentChapter.spinePos;
     });
-    let chapter =
-      this.props.chapters[index] !== undefined
-        ? this.props.chapters[index].label.trim(" ")
-        : "Unknown";
-    let note = new Note(bookKey, chapter, text, cfi, serial, notes);
+    let chapter = this.props.chapters[index]
+      ? this.props.chapters[index].label.trim(" ")
+      : "Unknown";
+    let note = new Note(bookKey, chapter, text, cfi, serial, notes, percentage);
     let noteArr = this.props.notes ? this.props.notes : [];
     noteArr.push(note);
     localforage.setItem("notes", noteArr);
