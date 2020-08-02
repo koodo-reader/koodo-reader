@@ -3,7 +3,6 @@ import "./popupMenu.css";
 import PopupNote from "../../components/popupNote";
 import PopupOption from "../../components/popupOption";
 import { PopupMenuProps, PopupMenuStates } from "./interface";
-import DeleteIcon from "../../components/deleteIcon";
 
 declare var window: any;
 
@@ -52,26 +51,10 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
         elementTagName: "span",
         elementProperties: {
           onclick: (event: any) => {
-            let e = event || window.event;
             if (!document.getElementsByTagName("iframe")[0].contentDocument) {
               return;
             }
-            //显示高亮的删除图标
-            if (this.state.deleteKey) {
-              this.setState({ deleteKey: "" });
-            } else {
-              this.handleShowDelete(this.key);
 
-              let icon = document.querySelector(
-                ".delete-highlighter-container"
-              );
-              icon!.setAttribute(
-                "style",
-                `position:relative;top:${e.clientY}px;right:${
-                  document.body.clientWidth - e.clientX
-                }px`
-              );
-            }
             this.handleClickHighlighter();
 
             this.showMenu();
@@ -215,6 +198,7 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
       return;
     }
     this.showMenu();
+    this.props.handleMenuMode("menu");
   };
   //添加高亮
   handleHighlight() {
@@ -241,19 +225,9 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     if (this.props.menuMode === "highlight") {
       this.handleHighlight();
     }
-    const highlighterProps = {
-      mode: this.mode,
-      itemKey: this.key,
-      renderHighlighters: this.renderHighlighters,
-      handleShowDelete: this.handleShowDelete,
-    };
-    console.log(highlighterProps);
+
     return (
       <div>
-        <div className="delete-highlighter-container">
-          {this.state.deleteKey ? <DeleteIcon {...highlighterProps} /> : null}
-        </div>
-
         {this.props.isOpenMenu ? (
           <div className="popup-menu-container">
             <div className="popup-menu-box">
