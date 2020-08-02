@@ -3,7 +3,6 @@ import {
   handleFetchBookmarks,
   handleFetchDigests,
   handleFetchChapters,
-  handleFetchHighlighters,
 } from "../../redux/actions/reader";
 import { handleFetchPercentage } from "../../redux/actions/progressPanel";
 import { handleMessageBox } from "../../redux/actions/manager";
@@ -23,7 +22,6 @@ const actionCreator = {
   handleFetchBookmarks,
   handleFetchDigests,
   handleFetchChapters,
-  handleFetchHighlighters,
   handleMessageBox,
   handleFetchPercentage,
 };

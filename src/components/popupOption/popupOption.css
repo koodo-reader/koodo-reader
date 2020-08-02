@@ -3,13 +3,13 @@
   flex-direction: row;
   flex-wrap: wrap;
   width: 158px;
-  height: 158px;
+  height: 132px;
 }
 .note-option,
 .digest-option,
-.highlight-option,
+.translation-option,
 .copy-option {
-  height: 69px;
+  height: 55px;
   width: 69px;
   font-size: 14px !important;
 
@@ -25,28 +25,23 @@
   justify-content: center;
 }
 .digest-option {
-  margin-top: 10px;
+  margin-top: 5px;
   margin-right: 10px;
 }
-.highlight-option {
-  /* height: 69px; */
-  margin-left: 10px;
-  margin-bottom: 10px;
+.translate-option {
+  margin-left: 30px;
+  margin-right: 20px;
+  margin-bottom: 5px;
+  font-size: 15px;
 }
 .note-option {
-  margin-top: 10px;
+  margin-top: 5px;
   margin-left: 10px;
 }
 .note-icon,
-.highlight-icon,
+.translation-icon,
 .copy-icon,
 .digest-icon {
-  /* font-size: 20px !important; */
-  /* margin: 22px; */
   line-height: 45px !important;
   font-size: 27px;
-}
-
-.highlight-icon {
-  font-size: 30px;
 }

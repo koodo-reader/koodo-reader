@@ -132,7 +132,7 @@ class OperationPanel extends React.Component<
             this.handleAddBookmark();
           }}
         >
-          <span className="icon-add add-bookmark-icon"></span>
+          <span className="icon-add1 add-bookmark-icon"></span>
           <span className="add-bookmark-text">
             <Trans>Add Bookmark</Trans>
           </span>

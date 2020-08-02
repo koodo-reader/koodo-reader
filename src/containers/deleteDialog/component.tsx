@@ -42,7 +42,7 @@ class DeleteDialog extends React.Component<DeleteDialogProps> {
         });
       }
     }
-    if (this.props.digests) {
+    if (this.props.digests.length === 0) {
       let digestArr = DeleteUtil.deleteDigests(
         this.props.digests,
         this.props.currentBook.key
@@ -54,21 +54,6 @@ class DeleteDialog extends React.Component<DeleteDialogProps> {
       } else {
         localforage.setItem("digests", digestArr).then(() => {
           this.props.handleFetchDigests();
-        });
-      }
-    }
-    if (this.props.highlighters) {
-      let highlighterArr = DeleteUtil.deleteHighlighters(
-        this.props.highlighters,
-        this.props.currentBook.key
-      );
-      if (highlighterArr.length === 0) {
-        localforage.removeItem("highlighters").then(() => {
-          this.props.handleFetchHighlighters();
-        });
-      } else {
-        localforage.setItem("highlighters", highlighterArr).then(() => {
-          this.props.handleFetchHighlighters();
         });
       }
     }

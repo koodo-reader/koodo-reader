@@ -1,13 +1,16 @@
 import BookModel from "../../model/Book";
-import HighlighterModel from "../../model/Highlighter";
+import DigestModel from "../../model/Digest";
+import NoteModel from "../../model/Note";
+
 export interface PopupMenuProps {
   currentEpub: any;
   currentBook: BookModel;
-  highlighters: HighlighterModel[];
   isOpenMenu: boolean;
   isChangeDirection: boolean;
   menuMode: string;
-  handleHighlighters: (highlighters: HighlighterModel[]) => void;
+  digests: DigestModel[];
+  notes: NoteModel[];
+  color:number;
   handleMessageBox: (isShow: boolean) => void;
   handleMessage: (message: string) => void;
   handleOpenMenu: (isOpenMenu: boolean) => void;

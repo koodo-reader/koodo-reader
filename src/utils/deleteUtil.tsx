@@ -1,7 +1,6 @@
 import BookModel from "../model/Book";
 import NoteModel from "../model/Note";
 import DigestModel from "../model/Digest";
-import HighligherModel from "../model/Highlighter";
 import BookmarkModel from "../model/Bookmark";
 class DeleteUtil {
   static deleteBook(books: BookModel[], bookKey: string) {
@@ -53,18 +52,6 @@ class DeleteUtil {
     }
 
     return digests;
-  }
-  static deleteHighlighters(highlighters: HighligherModel[], bookKey: string) {
-    let deleteIndex = [];
-    for (let i = 0; i < highlighters.length; i++) {
-      if (highlighters[i].bookKey === bookKey) {
-        deleteIndex.push(i);
-      }
-    }
-    deleteIndex.forEach((item) => {
-      highlighters.splice(item, 1);
-    });
-    return highlighters;
   }
 }
 

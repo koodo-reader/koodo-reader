@@ -42,7 +42,6 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
     this.props.handleFetchNotes();
     this.props.handleFetchDigests();
     this.props.handleFetchBookmarks();
-    this.props.handleFetchHighlighters();
     this.props.handleFetchSortCode();
     this.props.handleFetchList();
   }
@@ -149,9 +148,9 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
           <BookList />
         ) : bookmarks && mode === "bookmark" ? (
           <BookmarkPage />
-        ) : notes && mode === "note" ? (
+        ) : notes.length > 0 && mode === "note" ? (
           <NoteList />
-        ) : digests && mode === "digest" ? (
+        ) : digests.length > 0 && mode === "digest" ? (
           <DigestList />
         ) : (
           <EmptyPage />

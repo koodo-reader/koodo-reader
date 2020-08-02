@@ -2,15 +2,14 @@ import React from "react";
 import "./popupOption.css";
 import localforage from "localforage";
 import Digest from "../../model/Digest";
-
 import { Trans } from "react-i18next";
 import { PopupOptionProps } from "./interface";
+import ColorOption from "../colorOption";
+declare var window: any;
+
 class PopupOption extends React.Component<PopupOptionProps> {
   handleNote = () => {
     this.props.handleMenuMode("note");
-  };
-  handleHighlight = () => {
-    this.props.handleMenuMode("highlight");
   };
   handleCopy = () => {
     if (
@@ -41,13 +40,13 @@ class PopupOption extends React.Component<PopupOptionProps> {
     let iframe = document.getElementsByTagName("iframe")[0];
     let iDoc = iframe.contentDocument;
     let sel = iDoc!.getSelection();
-    let range = sel!.getRangeAt(0);
+    let rangeBefore = sel!.getRangeAt(0);
 
     let text = sel!.toString();
     text = text && text.trim();
     let cfiBase = epub.renderer.currentChapter.cfiBase;
     let cfi = new (window as any).EPUBJS.EpubCFI().generateCfiFromRange(
-      range,
+      rangeBefore,
       cfiBase
     );
     let bookKey = book.key;
@@ -59,75 +58,86 @@ class PopupOption extends React.Component<PopupOptionProps> {
     let chapter = this.props.chapters[index]
       ? this.props.chapters[index].label.trim(" ")
       : "Unknown";
-    // let chapter = epub.renderer.currentChapter.spinePos;
-
-    let digest = new Digest(bookKey, chapter, text, cfi, percentage);
-    let digestArr = this.props.digests ? this.props.digests : [];
+    let chapterIndex = this.props.currentEpub.renderer.currentChapter.spinePos;
+    let charRange = window.rangy
+      .getSelection(iframe)
+      .saveCharacterRanges(iDoc!.body)[0];
+    let range = JSON.stringify(charRange);
+    let color = this.props.color;
+    let digest = new Digest(
+      bookKey,
+      chapter,
+      chapterIndex,
+      text,
+      cfi,
+      percentage,
+      color,
+      range
+    );
+    let digestArr = this.props.digests;
     digestArr.push(digest);
     localforage.setItem("digests", digestArr);
     this.props.handleOpenMenu(false);
-    iDoc!.getSelection()!.empty();
     this.props.handleMessage("Add Successfully");
     this.props.handleMessageBox(true);
+    this.props.handleMenuMode("highlight");
   };
-  // return note;};
+
   render() {
     const renderMenuList = () => {
       return (
-        <div className="menu-list">
-          <div
-            className="note-option"
-            onClick={() => {
-              this.handleNote();
-            }}
-          >
-            <div>
-              <span className="icon-note note-icon"></span>
-              <p>
-                <Trans>Take Notes</Trans>
-              </p>
+        <>
+          <div className="menu-list">
+            <div
+              className="note-option"
+              onClick={() => {
+                this.handleNote();
+              }}
+            >
+              <div>
+                <span className="icon-note note-icon"></span>
+                <p>
+                  <Trans>Take Notes</Trans>
+                </p>
+              </div>
+            </div>
+            <div
+              className="digest-option"
+              onClick={() => {
+                this.handleDigest();
+              }}
+            >
+              <div>
+                <span className="icon-collect digest-icon"></span>
+                <p>
+                  <Trans>Collect</Trans>
+                </p>
+              </div>
+            </div>
+            <div className="translate-option">
+              <div>
+                <span className="icon-translation translation-icon"></span>
+                <p>
+                  <Trans>Translate</Trans>
+                </p>
+              </div>
+            </div>
+            <div
+              className="copy-option icon"
+              onClick={() => {
+                this.handleCopy();
+              }}
+            >
+              <div>
+                <span className="icon-copy1 copy-icon"></span>
+                <p>
+                  <Trans>Copy</Trans>
+                </p>
+              </div>
             </div>
           </div>
-          <div
-            className="digest-option"
-            onClick={() => {
-              this.handleDigest();
-            }}
-          >
-            <div>
-              <span className="icon-collect digest-icon"></span>
-              <p>
-                <Trans>Collect</Trans>
-              </p>
-            </div>
-          </div>
-          <div
-            className="highlight-option"
-            onClick={() => {
-              this.handleHighlight();
-            }}
-          >
-            <div>
-              <span className="icon-highlight highlight-icon"></span>
-              <p>
-                <Trans>Highlight</Trans>
-              </p>
-            </div>
-          </div>
-          <div
-            className="copy-option icon"
-            onClick={() => {
-              this.handleCopy();
-            }}
-          >
-            <div>
-              <span className="icon-copy1 copy-icon"></span>
-              <p>
-                <Trans>Copy</Trans>
-              </p>
-            </div>
-          </div>
-        </div>
+          <ColorOption />
+        </>
       );
     };
     return renderMenuList();
