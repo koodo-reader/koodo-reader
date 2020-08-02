@@ -10,7 +10,6 @@ import {
   handleFetchNotes,
   handleFetchDigests,
   handleFetchBookmarks,
-  handleFetchHighlighters,
 } from "../../redux/actions/reader";
 import "./manager.css";
 import { stateType } from "../../redux/store";
@@ -40,7 +39,6 @@ const actionCreator = {
   handleFetchNotes,
   handleFetchDigests,
   handleFetchBookmarks,
-  handleFetchHighlighters,
   handleFetchSortCode,
   handleFetchList,
   handleMessageBox,

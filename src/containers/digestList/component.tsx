@@ -30,6 +30,7 @@ class DigestList extends React.Component<DigestListProps, DigestListStates> {
   };
   handleJump = (cfi: string, bookKey: string, percentage: number) => {
     let { books, epubs } = this.props;
+    console.log(books, epubs);
     let book = null;
     let epub = null;
     //根据bookKey获取指定的book和epub
@@ -40,6 +41,8 @@ class DigestList extends React.Component<DigestListProps, DigestListStates> {
         break;
       }
     }
+    console.log(book, epub);
+
     this.props.handleReadingBook(book!);
     this.props.handleReadingEpub(epub);
     this.props.handleReadingState(true);

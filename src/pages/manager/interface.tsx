@@ -23,7 +23,6 @@ export interface ManagerProps {
   handleFetchNotes: () => void;
   handleFetchDigests: () => void;
   handleFetchBookmarks: () => void;
-  handleFetchHighlighters: () => void;
   handleFetchSortCode: () => void;
   handleFetchList: () => void;
   handleMessageBox: (isShow: boolean) => void;
