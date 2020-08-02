@@ -68,13 +68,13 @@ class Book extends React.Component<BookProps, BookState> {
         {this.state.isOpenConfig ? (
           <div className="book-item-config">
             <span
-              className="icon-add view-icon"
+              className="icon-add1 view-icon"
               onClick={() => {
                 this.handleAddShelf();
               }}
             ></span>
             <span
-              className="icon-delete view-icon"
+              className="icon-delete1 view-icon"
               onClick={() => {
                 this.handleDeleteBook();
               }}

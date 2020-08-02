@@ -112,7 +112,7 @@
   width: calc(100% - 10px);
   height: 100%;
   overflow-y: scroll;
-  font-size: 15px;
+  font-size: 17px;
   line-height: 17px;
 }
 
@@ -127,7 +127,7 @@
 }
 .note-list-item-citation {
   position: absolute;
-  bottom: 28px;
+  bottom: 32px;
   right: 5px;
   white-space: nowrap;
   white-space: normal;

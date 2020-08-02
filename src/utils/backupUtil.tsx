@@ -4,7 +4,6 @@ import FileSaver from "file-saver";
 import BookModel from "../model/Book";
 import NoteModel from "../model/Note";
 import DigestModel from "../model/Digest";
-import HighligherModel from "../model/Highlighter";
 import BookmarkModel from "../model/Bookmark";
 import DropboxUtil from "./syncUtils/dropbox";
 
@@ -13,7 +12,6 @@ class BackupUtil {
     books: BookModel[],
     notes: NoteModel[],
     digests: DigestModel[],
-    highlighters: HighligherModel[],
     bookmarks: BookmarkModel[],
     handleFinish: () => void,
     driveIndex: number,
@@ -35,7 +33,6 @@ class BackupUtil {
       .file("notes.json", JSON.stringify(notes))
       .file("books.json", JSON.stringify(books))
       .file("digests.json", JSON.stringify(digests))
-      .file("highlighters.json", JSON.stringify(highlighters))
       .file("bookmarks.json", JSON.stringify(bookmarks))
       .file("readerConfig.json", localStorage.getItem("readerConfig") || "")
       .file(

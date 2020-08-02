@@ -6,7 +6,9 @@ import localforage from "localforage";
 class DeleteIcon extends React.Component<DeleteIconProps, DeleteIconStates> {
   constructor(props: DeleteIconProps) {
     super(props);
-    this.state = { deleteIndex: -1 };
+    this.state = {
+      deleteIndex: -1,
+    };
   }
 
   handleDelete = () => {
@@ -15,20 +17,18 @@ class DeleteIcon extends React.Component<DeleteIconProps, DeleteIconStates> {
         ? this.props.digests
         : this.props.mode === "notes"
         ? this.props.notes
-        : this.props.mode === "bookmarks"
-        ? this.props.bookmarks
-        : this.props.highlighters;
+        : this.props.bookmarks;
     let deleteFunc =
       this.props.mode === "digests"
         ? this.props.handleFetchDigests
         : this.props.mode === "notes"
         ? this.props.handleFetchNotes
-        : this.props.mode === "highlighters"
-        ? this.props.handleFetchHighlighters
         : this.props.handleFetchBookmarks;
+    console.log(this.props.itemKey, this.props.mode, "icon");
     deleteItems.forEach((item: any, index: number) => {
       if (item.key === this.props.itemKey) {
         deleteItems.splice(index, 1);
+        console.log(deleteItems, "test");
         if (deleteItems.length === 0) {
           localforage
             .removeItem(this.props.mode)
@@ -54,7 +54,7 @@ class DeleteIcon extends React.Component<DeleteIconProps, DeleteIconStates> {
         }
       }
     });
-    if (this.props.mode === "highlighters") {
+    if (this.props.isReading) {
       this.props.renderHighlighters();
       this.props.handleShowDelete("");
     }

@@ -3,12 +3,13 @@ import { handleMessageBox, handleMessage } from "../../redux/actions/manager";
 import { handleOpenMenu, handleMenuMode } from "../../redux/actions/viewArea";
 import { stateType } from "../../redux/store";
 import { withNamespaces } from "react-i18next";
-import PopupNote from './component'
+import PopupNote from "./component";
 const mapStateToProps = (state: stateType) => {
   return {
     currentEpub: state.book.currentEpub,
     currentBook: state.book.currentBook,
     notes: state.reader.notes,
+    color: state.reader.color,
     chapters: state.reader.chapters,
   };
 };
