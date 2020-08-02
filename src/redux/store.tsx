@@ -10,7 +10,6 @@ import { backupPage } from "./reducers/backupPage";
 import BookModel from "../model/Book";
 import NoteModel from "../model/Note";
 import DigestModel from "../model/Digest";
-import HighligherModel from "../model/Highlighter";
 import BookmarkModel from "../model/Bookmark";
 const rootReducer = combineReducers({
   book,
@@ -67,8 +66,8 @@ export type stateType = {
     notes: NoteModel[];
     digests: DigestModel[];
     locations: any[];
+    color: number;
     chapters: any[];
-    highlighters: HighligherModel[];
     isSingle: string;
   };
   sidebar: {
@@ -77,7 +76,6 @@ export type stateType = {
   };
   viewArea: {
     selection: string;
-    highlighters: HighligherModel[];
     menuMode: string;
     isOpenMenu: boolean;
     isChangeDirection: boolean;

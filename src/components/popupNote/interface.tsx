@@ -5,6 +5,7 @@ export interface PopupNoteProps {
   currentBook: BookModel;
   notes: NoteModel[];
   chapters: any;
+  color: number;
   handleMessageBox: (isShow: boolean) => void;
   handleMessage: (message: string) => void;
   handleOpenMenu: (isOpenMenu: boolean) => void;

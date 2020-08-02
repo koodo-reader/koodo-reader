@@ -9,7 +9,6 @@ import {
   handleFetchBookmarks,
   handleFetchNotes,
   handleFetchDigests,
-  handleFetchHighlighters,
 } from "../../redux/actions/reader";
 import { stateType } from "../../redux/store";
 import { withNamespaces } from "react-i18next";
@@ -23,7 +22,6 @@ const mapStateToProps = (state: stateType) => {
     bookmarks: state.reader.bookmarks,
     notes: state.reader.notes,
     digests: state.reader.digests,
-    highlighters: state.reader.highlighters,
     mode: state.sidebar.mode,
     shelfIndex: state.sidebar.shelfIndex,
   };
@@ -34,7 +32,6 @@ const actionCreator = {
   handleFetchBookmarks,
   handleFetchNotes,
   handleFetchDigests,
-  handleFetchHighlighters,
   handleMessageBox,
   handleMessage,
 };

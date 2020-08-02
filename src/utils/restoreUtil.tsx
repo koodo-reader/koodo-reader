@@ -32,7 +32,6 @@ class RestoreUtil {
       "notes",
       "digests",
       "books",
-      "highlighters",
       "bookmarks",
       "readerConfig",
       "sortCode",
@@ -56,8 +55,7 @@ class RestoreUtil {
               item === "notes" ||
               item === "books" ||
               item === "digests" ||
-              item === "bookmarks" ||
-              item === "highlighters"
+              item === "bookmarks"
             ) {
               localforage.setItem(item, JSON.parse(text));
             } else {

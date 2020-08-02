@@ -24,7 +24,6 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
     this.props.handleFetchPercentage(this.props.currentBook);
     this.props.handleFetchNotes();
     this.props.handleFetchDigests();
-    this.props.handleFetchHighlighters();
     this.props.handleFetchChapters(this.props.currentEpub);
   }
   UNSAFE_componentWillReceiveProps(nextProps: ReaderProps) {

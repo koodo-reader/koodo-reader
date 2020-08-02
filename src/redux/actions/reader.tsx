@@ -1,10 +1,12 @@
 import localforage from "localforage";
 import NoteModel from "../../model/Note";
 import DigestModel from "../../model/Digest";
-import HighligherModel from "../../model/Highlighter";
 import BookmarkModel from "../../model/Bookmark";
 export function handleNotes(notes: NoteModel[]) {
   return { type: "HANDLE_NOTES", payload: notes };
+}
+export function handleColor(color: number) {
+  return { type: "HANDLE_COLOR", payload: color };
 }
 export function handleBookmarks(bookmarks: BookmarkModel[]) {
   return { type: "HANDLE_BOOKMARKS", payload: bookmarks };
@@ -21,15 +23,13 @@ export function handleSingle(mode: string) {
 export function handleChapters(chapters: any) {
   return { type: "HANDLE_CHAPTERS", payload: chapters };
 }
-export function handleHighlighters(highlighters: HighligherModel[]) {
-  return { type: "HANDLE_HIGHLIGHTERS", payload: highlighters };
-}
+
 export function handleFetchNotes() {
   return (dispatch: (arg0: { type: string; payload: NoteModel[] }) => void) => {
     localforage.getItem("notes", (err, value) => {
       let noteArr: any;
       if (value === null || value === []) {
-        noteArr = null;
+        noteArr = [];
       } else {
         noteArr = value;
       }
@@ -57,7 +57,7 @@ export function handleFetchBookmarks() {
     localforage.getItem("bookmarks", (err, value) => {
       let bookmarkArr: any;
       if (value === null || value === []) {
-        bookmarkArr = null;
+        bookmarkArr = [];
       } else {
         bookmarkArr = value;
       }
@@ -72,26 +72,11 @@ export function handleFetchDigests() {
     localforage.getItem("digests", (err, value) => {
       let digestArr: any;
       if (value === null || value === []) {
-        digestArr = null;
+        digestArr = [];
       } else {
         digestArr = value;
       }
       dispatch(handleDigests(digestArr));
-    });
-  };
-}
-export function handleFetchHighlighters() {
-  return (
-    dispatch: (arg0: { type: string; payload: HighligherModel[] }) => void
-  ) => {
-    localforage.getItem("highlighters", (err, value) => {
-      let highlighterArr: any;
-      if (value === null || value === []) {
-        highlighterArr = null;
-      } else {
-        highlighterArr = value;
-      }
-      dispatch(handleHighlighters(highlighterArr));
     });
   };
 }

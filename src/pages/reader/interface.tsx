@@ -6,7 +6,6 @@ export interface ReaderProps {
   handleFetchNotes: () => void;
   handleFetchDigests: () => void;
   handleFetchBookmarks: () => void;
-  handleFetchHighlighters: () => void;
   handleMessageBox: (isShow: boolean) => void;
   handleFetchPercentage: (currentBook: BookModel) => void;
   handleFetchChapters: (currentEpub: any) => void;

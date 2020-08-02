@@ -10,6 +10,7 @@ const mapStateToProps = (state: stateType) => {
     currentEpub: state.book.currentEpub,
     selection: state.viewArea.selection,
     digests: state.reader.digests,
+    color: state.reader.color,
     chapters: state.reader.chapters,
   };
 };

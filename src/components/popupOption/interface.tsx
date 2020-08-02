@@ -6,6 +6,7 @@ export interface PopupOptionProps {
   selection: string;
   digests: DigestModel[];
   chapters: any;
+  color: number;
   handleMessageBox: (isShow: boolean) => void;
   handleMessage: (message: string) => void;
   handleOpenMenu: (isOpenMenu: boolean) => void;

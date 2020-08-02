@@ -1,6 +1,6 @@
 .note-editor {
   width: 264px;
-  height: 158px;
+  height: 172px;
 }
 .note-return-button {
   position: absolute;
@@ -11,9 +11,9 @@
 .editor-box-parent {
   position: absolute;
   left: 25px;
-  top: 32px;
+  top: 22px;
   width: 217px;
-  height: 90px;
+  height: 110px;
 }
 .editor-box {
   border: none;

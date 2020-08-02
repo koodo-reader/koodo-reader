@@ -1,0 +1,18 @@
+.color-option-container {
+  width: 100%;
+  height: 40px;
+  position: relative;
+  top: 8px;
+  display: flex;
+  justify-content: space-around;
+}
+.color-option {
+  width: 30px;
+  height: 30px;
+  background: rgba(228, 255, 154, 1);
+  border-radius: 50%;
+  opacity: 1;
+  box-sizing: border-box;
+  position: relative;
+  bottom: 5px;
+}

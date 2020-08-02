@@ -3,6 +3,11 @@ import { connect } from "react-redux";
 import { stateType } from "../../redux/store";
 import { withNamespaces } from "react-i18next";
 import DigestList from "./component";
+import {
+  handleReadingState,
+  handleReadingBook,
+  handleReadingEpub,
+} from "../../redux/actions/book";
 
 const mapStateToProps = (state: stateType) => {
   return {
@@ -12,9 +17,14 @@ const mapStateToProps = (state: stateType) => {
     bookmarks: state.reader.bookmarks,
     chapters: state.reader.chapters,
     books: state.manager.books,
+    epubs: state.manager.epubs,
   };
 };
-const actionCreator = {};
+const actionCreator = {
+  handleReadingState,
+  handleReadingBook,
+  handleReadingEpub,
+};
 export default connect(
   mapStateToProps,
   actionCreator

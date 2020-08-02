@@ -25,20 +25,23 @@ class PopupNote extends React.Component<PopupNoteProps> {
     let iframe = document.getElementsByTagName("iframe")[0];
     let iDoc = iframe.contentDocument;
     let sel = iDoc!.getSelection();
-    let range = sel!.getRangeAt(0);
+    let rangeBefore = sel!.getRangeAt(0);
     let notes = (document.querySelector(".editor-box") as HTMLInputElement)
       .value;
     (document.querySelector(".editor-box") as HTMLInputElement).value = "";
     let text = sel!.toString();
     text = text && text.trim();
     let cfiBase = epub.renderer.currentChapter.cfiBase;
-    let cfi = new window.EPUBJS.EpubCFI().generateCfiFromRange(range, cfiBase);
+    let cfi = new window.EPUBJS.EpubCFI().generateCfiFromRange(
+      rangeBefore,
+      cfiBase
+    );
     let percentage = this.props.currentEpub.locations.percentageFromCfi(cfi);
     let bookKey = book.key;
     let charRange = window.rangy
       .getSelection(iframe)
       .saveCharacterRanges(iDoc!.body)[0];
-    let serial = JSON.stringify(charRange);
+    let range = JSON.stringify(charRange);
     //获取章节名
     let index = this.props.chapters.findIndex((item: any) => {
       return item.spinePos > epub.renderer.currentChapter.spinePos;
@@ -46,16 +49,27 @@ class PopupNote extends React.Component<PopupNoteProps> {
     let chapter = this.props.chapters[index]
       ? this.props.chapters[index].label.trim(" ")
       : "Unknown";
-    let note = new Note(bookKey, chapter, text, cfi, serial, notes, percentage);
-    let noteArr = this.props.notes ? this.props.notes : [];
+    let chapterIndex = this.props.currentEpub.renderer.currentChapter.spinePos;
+    let color = this.props.color || 1;
+    let note = new Note(
+      bookKey,
+      chapter,
+      chapterIndex,
+      text,
+      cfi,
+      range,
+      notes,
+      percentage,
+      color
+    );
+    let noteArr = this.props.notes;
     noteArr.push(note);
     localforage.setItem("notes", noteArr);
     this.props.handleOpenMenu(false);
-    iDoc!.getSelection()!.empty();
     this.props.handleMessage("Add Successfully");
     this.props.handleMessageBox(true);
-    this.props.handleMenuMode("menu");
-    // return note;
+    this.props.handleMenuMode("highlight");
+    // this.props.handleMenuMode("menu");
   }
   handleReturn = () => {
     this.props.handleMenuMode("menu");

@@ -1,6 +1,5 @@
 const initState = {
   selection: null,
-  highlighters: [],
   isOpenMenu: false,
   menuMode: "menu",
   isChangeDirection: false,
