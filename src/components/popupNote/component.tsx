@@ -11,7 +11,6 @@ class PopupNote extends React.Component<PopupNoteProps> {
   componentDidMount() {
     let textArea: any = document.querySelector(".editor-box");
     textArea && textArea.focus();
-    console.log(textArea);
   }
   createNote() {
     if (
@@ -51,32 +50,71 @@ class PopupNote extends React.Component<PopupNoteProps> {
       : "Unknown";
     let chapterIndex = this.props.currentEpub.renderer.currentChapter.spinePos;
     let color = this.props.color || 1;
-    let note = new Note(
-      bookKey,
-      chapter,
-      chapterIndex,
-      text,
-      cfi,
-      range,
-      notes,
-      percentage,
-      color
-    );
-    let noteArr = this.props.notes;
-    noteArr.push(note);
-    localforage.setItem("notes", noteArr);
-    this.props.handleOpenMenu(false);
-    this.props.handleMessage("Add Successfully");
-    this.props.handleMessageBox(true);
-    this.props.handleMenuMode("highlight");
-    // this.props.handleMenuMode("menu");
+    if (this.props.noteKey) {
+      this.props.notes.forEach((item) => {
+        if (item.key === this.props.noteKey) {
+          item.notes = notes;
+        }
+      });
+      localforage.setItem("notes", this.props.notes).then(() => {
+        this.props.handleOpenMenu(false);
+        this.props.handleMessage("Add Successfully");
+        this.props.handleMessageBox(true);
+        this.props.handleFetchNotes();
+        this.props.handleMenuMode("highlight");
+        this.props.handleNoteKey("");
+      });
+    } else {
+      let note = new Note(
+        bookKey,
+        chapter,
+        chapterIndex,
+        text,
+        cfi,
+        range,
+        notes,
+        percentage,
+        color
+      );
+      let noteArr = this.props.notes;
+      noteArr.push(note);
+      localforage.setItem("notes", noteArr).then(() => {
+        this.props.handleOpenMenu(false);
+        this.props.handleMessage("Add Successfully");
+        this.props.handleMessageBox(true);
+        this.props.handleFetchNotes();
+        this.props.handleMenuMode("highlight");
+      });
+    }
   }
   handleReturn = () => {
     this.props.handleMenuMode("menu");
   };
   handleClose = () => {
-    this.props.handleOpenMenu(false);
-    this.props.handleMenuMode("menu");
+    let noteIndex;
+    if (this.props.noteKey) {
+      this.props.notes.forEach((item, index) => {
+        if (item.key === this.props.noteKey) {
+          noteIndex = index;
+        }
+      });
+      if (noteIndex) {
+        this.props.notes.splice(noteIndex, 1);
+        localforage.setItem("notes", this.props.notes).then(() => {
+          this.props.handleOpenMenu(false);
+          this.props.handleMenuMode("menu");
+          this.props.handleMessage("Delete Successfully");
+          this.props.handleMessageBox(true);
+          this.props.handleMenuMode("highlight");
+
+          this.props.handleNoteKey("");
+        });
+      }
+    } else {
+      this.props.handleOpenMenu(false);
+      this.props.handleMenuMode("menu");
+      this.props.handleNoteKey("");
+    }
   };
 
   render() {
@@ -101,7 +139,11 @@ class PopupNote extends React.Component<PopupNoteProps> {
                 this.handleClose();
               }}
             >
-              <Trans>Cancel</Trans>
+              {this.props.noteKey ? (
+                <Trans>Delete</Trans>
+              ) : (
+                <Trans>Cancel</Trans>
+              )}
             </span>
             <span
               className="confirm-button"

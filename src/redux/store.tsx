@@ -9,7 +9,6 @@ import { sidebar } from "./reducers/sidebar";
 import { backupPage } from "./reducers/backupPage";
 import BookModel from "../model/Book";
 import NoteModel from "../model/Note";
-import DigestModel from "../model/Digest";
 import BookmarkModel from "../model/Bookmark";
 const rootReducer = combineReducers({
   book,
@@ -64,11 +63,12 @@ export type stateType = {
   reader: {
     bookmarks: BookmarkModel[];
     notes: NoteModel[];
-    digests: DigestModel[];
+    digests: NoteModel[];
     locations: any[];
     color: number;
     chapters: any[];
     isSingle: string;
+    noteKey: string;
   };
   sidebar: {
     mode: string;

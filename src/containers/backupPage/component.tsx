@@ -41,7 +41,6 @@ class BackupPage extends React.Component<BackupPageProps, BackupPageState> {
           BackupUtil.backup(
             this.props.books,
             this.props.notes,
-            this.props.digests,
             this.props.bookmarks,
             this.handleFinish,
             0,
@@ -58,7 +57,6 @@ class BackupPage extends React.Component<BackupPageProps, BackupPageState> {
             BackupUtil.backup(
               this.props.books,
               this.props.notes,
-              this.props.digests,
               this.props.bookmarks,
               this.handleFinish,
               1,

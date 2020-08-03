@@ -13,22 +13,14 @@ class DeleteIcon extends React.Component<DeleteIconProps, DeleteIconStates> {
 
   handleDelete = () => {
     let deleteItems =
-      this.props.mode === "digests"
-        ? this.props.digests
-        : this.props.mode === "notes"
-        ? this.props.notes
-        : this.props.bookmarks;
+      this.props.mode === "notes" ? this.props.notes : this.props.bookmarks;
     let deleteFunc =
-      this.props.mode === "digests"
-        ? this.props.handleFetchDigests
-        : this.props.mode === "notes"
+      this.props.mode === "notes"
         ? this.props.handleFetchNotes
         : this.props.handleFetchBookmarks;
-    console.log(this.props.itemKey, this.props.mode, "icon");
     deleteItems.forEach((item: any, index: number) => {
       if (item.key === this.props.itemKey) {
         deleteItems.splice(index, 1);
-        console.log(deleteItems, "test");
         if (deleteItems.length === 0) {
           localforage
             .removeItem(this.props.mode)

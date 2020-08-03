@@ -1,6 +1,5 @@
 import BookModel from "../../model/Book";
 import NoteModel from "../../model/Note";
-import DigestModel from "../../model/Digest";
 import BookmarkModel from "../../model/Bookmark";
 
 export interface BackupPageProps {
@@ -11,7 +10,7 @@ export interface BackupPageProps {
   isOpenTokenDialog: boolean;
   books: BookModel[];
   notes: NoteModel[];
-  digests: DigestModel[];
+  digests: NoteModel[];
   bookmarks: BookmarkModel[];
 }
 export interface BackupPageState {

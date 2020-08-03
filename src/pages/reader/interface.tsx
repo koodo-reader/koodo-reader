@@ -4,7 +4,6 @@ export interface ReaderProps {
   currentBook: BookModel;
   isMessage: boolean;
   handleFetchNotes: () => void;
-  handleFetchDigests: () => void;
   handleFetchBookmarks: () => void;
   handleMessageBox: (isShow: boolean) => void;
   handleFetchPercentage: (currentBook: BookModel) => void;

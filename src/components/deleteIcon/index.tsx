@@ -2,7 +2,6 @@
 import { connect } from "react-redux";
 import { stateType } from "../../redux/store";
 import {
-  handleFetchDigests,
   handleFetchBookmarks,
   handleFetchNotes,
 } from "../../redux/actions/reader";
@@ -17,7 +16,6 @@ const mapStateToProps = (state: stateType) => {
   };
 };
 const actionCreator = {
-  handleFetchDigests,
   handleFetchBookmarks,
   handleFetchNotes,
   handleMessageBox,

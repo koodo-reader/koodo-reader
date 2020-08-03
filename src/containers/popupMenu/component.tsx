@@ -25,17 +25,15 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
   componentDidMount() {
     this.props.currentEpub.on("renderer:chapterDisplayed", () => {
       let doc = this.props.currentEpub.renderer.doc;
-      this.getHighlighter();
-      this.timer = setTimeout(() => {
+      new Promise((resolve, reject) => {
+        this.getHighlighter();
+        resolve();
+      }).then(() => {
         this.renderHighlighters();
-      }, 100);
-      this.getHighlighter();
+      });
 
       doc.addEventListener("click", this.openMenu);
     });
-  }
-  componentWillUnmount() {
-    clearTimeout(this.timer);
   }
   //新建高亮
   getHighlighter = () => {
@@ -44,7 +42,6 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     let iDoc = document.getElementsByTagName("iframe")[0].contentDocument;
     this.highlighter = window.rangy.createHighlighter(iDoc);
     let classes = ["color-0", "color-1", "color-2", "color-3"];
-
     classes.forEach((item) => {
       let config = {
         ignoreWhiteSpace: true,
@@ -54,10 +51,8 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
             if (!document.getElementsByTagName("iframe")[0].contentDocument) {
               return;
             }
-
-            this.handleClickHighlighter();
-
             this.showMenu();
+            this.handleClickHighlighter(event.currentTarget.dataset.key);
             event.stopPropagation();
           },
         },
@@ -69,7 +64,14 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
       this.highlighter.addClassApplier(applier);
     });
   };
-  handleClickHighlighter = () => {};
+  handleClickHighlighter = (key: string) => {
+    let dialog: HTMLInputElement | null = document.querySelector(".editor-box");
+    let note = this.props.notes.filter((item) => item.key === key)[0];
+    if (note && note.notes) {
+      dialog!.value = note.notes;
+    }
+    this.props.handleNoteKey(key);
+  };
   handleShowDelete = (deleteKey: string) => {
     this.setState({ deleteKey });
   };
@@ -110,9 +112,6 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
           ? rightEdge
           : posX
         : posX;
-    const selection = window.getSelection();
-    selection.removeAllRanges();
-    // selection.addRange(item.range);
     this.props.handleOpenMenu(true);
     this.props.handleMenuMode("note");
     let popupMenu = document.querySelector(".popup-menu-container");
@@ -128,7 +127,7 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
       return;
     }
 
-    let highlighters: any = [...this.props.digests, ...this.props.notes];
+    let highlighters: any = this.props.notes;
     if (!highlighters) {
       return;
     }
@@ -138,15 +137,12 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     );
     let iframe = document.getElementsByTagName("iframe")[0];
     let iWin = iframe.contentWindow || iframe.contentDocument!.defaultView;
-    let sel = window.rangy.getSelection(iframe);
-    let serial = window.rangy.serializeSelection(sel, true);
     this.highlighter && this.highlighter.removeAllHighlights(); // 为了避免下次反序列化失败，必须先清除已有的高亮
 
     let classes = ["color-0", "color-1", "color-2", "color-3"];
     highlightersByChapter &&
       highlightersByChapter.forEach((item: any) => {
         this.key = item.key;
-
         //控制渲染指定图书的指定高亮
         if (item.bookKey === this.props.currentBook.key) {
           try {
@@ -169,8 +165,8 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
       return;
     }
     iWin.getSelection()!.empty(); // 清除文本选取
-    this.props.isOpenMenu &&
-      window.rangy.deserializeSelection(serial, null, iWin); // （为了选取文本后不被上一行代码清除掉）恢复原本的文本选取
+    // this.props.isOpenMenu &&
+    //   window.rangy.deserializeSelection(serial, null, iWin); // （为了选取文本后不被上一行代码清除掉）恢复原本的文本选取
   };
   //控制弹窗
   openMenu = () => {
@@ -211,21 +207,24 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
 
     let iDoc = document.getElementsByTagName("iframe")[0].contentDocument;
     let color = this.props.color;
-    // let note = this.createNote(color);
     let classes = ["color-0", "color-1", "color-2", "color-3"];
-    let key = new Date().getTime() + "";
     this.highlighter.highlightSelection(classes[color]);
-    // 清空文本选取
-    this.key = key;
     this.props.handleMenuMode("menu");
     this.props.handleOpenMenu(false);
     iDoc!.getSelection()!.empty();
+    this.props.handleMenuMode("menu");
+    this.highlighter && this.highlighter.removeAllHighlights();
+    new Promise((resolve) => {
+      this.getHighlighter();
+      resolve();
+    }).then(() => {
+      this.renderHighlighters();
+    });
   }
   render() {
     if (this.props.menuMode === "highlight") {
       this.handleHighlight();
     }
-
     return (
       <div>
         {this.props.isOpenMenu ? (
