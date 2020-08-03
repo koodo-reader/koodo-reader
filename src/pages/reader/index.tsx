@@ -1,7 +1,6 @@
 import {
   handleFetchNotes,
   handleFetchBookmarks,
-  handleFetchDigests,
   handleFetchChapters,
 } from "../../redux/actions/reader";
 import { handleFetchPercentage } from "../../redux/actions/progressPanel";
@@ -20,7 +19,6 @@ const mapStateToProps = (state: stateType) => {
 const actionCreator = {
   handleFetchNotes,
   handleFetchBookmarks,
-  handleFetchDigests,
   handleFetchChapters,
   handleMessageBox,
   handleFetchPercentage,

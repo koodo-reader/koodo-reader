@@ -1,16 +1,14 @@
 import BookmarkModel from "../../model/Bookmark";
-import DigestModel from "../../model/Digest";
 import NoteModel from "../../model/Note";
 export interface DeleteIconProps {
   bookmarks: BookmarkModel[];
   notes: NoteModel[];
-  digests: DigestModel[];
+  digests: NoteModel[];
   mode: string;
   isReading: boolean;
   itemKey: string;
   handleFetchNotes: () => void;
   handleFetchBookmarks: () => void;
-  handleFetchDigests: () => void;
   renderHighlighters: () => void;
   handleShowDelete: (Deletekey: string) => void;
   handleMessageBox: (isShow: boolean) => void;
