@@ -1,12 +1,11 @@
 import BookModel from "../../model/Book";
 import NoteModel from "../../model/Note";
-import DigestModel from "../../model/Digest";
 import BookmarkModel from "../../model/Bookmark";
 export interface ManagerProps {
   books: BookModel[];
   covers: { key: string; url: string }[];
   notes: NoteModel[];
-  digests: DigestModel[];
+  digests: NoteModel[];
   bookmarks: BookmarkModel[];
   isReading: boolean;
   mode: string;
@@ -21,7 +20,6 @@ export interface ManagerProps {
   isBackup: boolean;
   handleFetchBooks: () => void;
   handleFetchNotes: () => void;
-  handleFetchDigests: () => void;
   handleFetchBookmarks: () => void;
   handleFetchSortCode: () => void;
   handleFetchList: () => void;

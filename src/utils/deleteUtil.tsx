@@ -1,6 +1,5 @@
 import BookModel from "../model/Book";
 import NoteModel from "../model/Note";
-import DigestModel from "../model/Digest";
 import BookmarkModel from "../model/Bookmark";
 class DeleteUtil {
   static deleteBook(books: BookModel[], bookKey: string) {
@@ -38,7 +37,7 @@ class DeleteUtil {
     });
     return notes;
   }
-  static deleteDigests(digests: DigestModel[], bookKey: string) {
+  static deleteDigests(digests: NoteModel[], bookKey: string) {
     let deleteIndex = [];
     if (digests) {
       for (let i = 0; i < digests.length; i++) {

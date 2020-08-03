@@ -8,6 +8,7 @@ import {
 import { connect } from "react-redux";
 import { stateType } from "../../redux/store";
 import { handleMessageBox, handleMessage } from "../../redux/actions/manager";
+import { handleNoteKey } from "../../redux/actions/reader";
 import PopupMenu from "./component";
 const mapStateToProps = (state: stateType) => {
   return {
@@ -28,5 +29,6 @@ const actionCreator = {
   handleChangeDirection,
   handleMessageBox,
   handleMessage,
+  handleNoteKey,
 };
 export default connect(mapStateToProps, actionCreator)(PopupMenu);

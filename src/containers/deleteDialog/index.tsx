@@ -8,7 +8,6 @@ import { handleDeleteDialog } from "../../redux/actions/book";
 import {
   handleFetchBookmarks,
   handleFetchNotes,
-  handleFetchDigests,
 } from "../../redux/actions/reader";
 import { stateType } from "../../redux/store";
 import { withNamespaces } from "react-i18next";
@@ -31,7 +30,6 @@ const actionCreator = {
   handleDeleteDialog,
   handleFetchBookmarks,
   handleFetchNotes,
-  handleFetchDigests,
   handleMessageBox,
   handleMessage,
 };

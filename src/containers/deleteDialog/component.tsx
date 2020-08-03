@@ -42,21 +42,8 @@ class DeleteDialog extends React.Component<DeleteDialogProps> {
         });
       }
     }
-    if (this.props.digests.length === 0) {
-      let digestArr = DeleteUtil.deleteDigests(
-        this.props.digests,
-        this.props.currentBook.key
-      );
-      if (digestArr.length === 0) {
-        localforage.removeItem("digests").then(() => {
-          this.props.handleFetchDigests();
-        });
-      } else {
-        localforage.setItem("digests", digestArr).then(() => {
-          this.props.handleFetchDigests();
-        });
-      }
-    }
+
+  
   };
   handleComfirm = () => {
     //从列表删除和从图书库删除判断

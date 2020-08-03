@@ -1,6 +1,7 @@
 import { connect } from "react-redux";
 import { handleMessageBox, handleMessage } from "../../redux/actions/manager";
 import { handleOpenMenu, handleMenuMode } from "../../redux/actions/viewArea";
+import {handleFetchNotes} from '../../redux/actions/reader'
 import { stateType } from "../../redux/store";
 import { withNamespaces } from "react-i18next";
 import PopupOption from "./component";
@@ -9,7 +10,7 @@ const mapStateToProps = (state: stateType) => {
     currentBook: state.book.currentBook,
     currentEpub: state.book.currentEpub,
     selection: state.viewArea.selection,
-    digests: state.reader.digests,
+    notes: state.reader.notes,
     color: state.reader.color,
     chapters: state.reader.chapters,
   };
@@ -19,6 +20,7 @@ const actionCreator = {
   handleMessage,
   handleOpenMenu,
   handleMenuMode,
+  handleFetchNotes,
 };
 export default connect(
   mapStateToProps,

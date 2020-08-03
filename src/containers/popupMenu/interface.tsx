@@ -1,5 +1,4 @@
 import BookModel from "../../model/Book";
-import DigestModel from "../../model/Digest";
 import NoteModel from "../../model/Note";
 
 export interface PopupMenuProps {
@@ -8,9 +7,10 @@ export interface PopupMenuProps {
   isOpenMenu: boolean;
   isChangeDirection: boolean;
   menuMode: string;
-  digests: DigestModel[];
+  digests: NoteModel[];
   notes: NoteModel[];
-  color:number;
+  color: number;
+  handleNoteKey: (key: string) => void;
   handleMessageBox: (isShow: boolean) => void;
   handleMessage: (message: string) => void;
   handleOpenMenu: (isOpenMenu: boolean) => void;

@@ -7,11 +7,6 @@ import NoteList from "./component";
 const mapStateToProps = (state: stateType) => {
   return {
     notes: state.reader.notes,
-    currentEpub: state.book.currentEpub,
-    currentBook: state.book.currentBook,
-    bookmarks: state.reader.bookmarks,
-    chapters: state.reader.chapters,
-    books: state.manager.books,
   };
 };
 const actionCreator = {};

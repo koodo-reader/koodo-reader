@@ -40,7 +40,6 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
   UNSAFE_componentWillMount() {
     this.props.handleFetchBooks();
     this.props.handleFetchNotes();
-    this.props.handleFetchDigests();
     this.props.handleFetchBookmarks();
     this.props.handleFetchSortCode();
     this.props.handleFetchList();
@@ -115,6 +114,7 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
       );
     }
     let { mode, notes, digests, bookmarks, covers } = this.props;
+    console.log(bookmarks);
     let { totalBooks, recentBooks } = this.state;
     let shelfTitle = Object.keys(ShelfUtil.getShelf());
     let currentShelfTitle = shelfTitle[this.props.shelfIndex + 1];

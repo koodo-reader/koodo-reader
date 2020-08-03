@@ -1,7 +1,7 @@
 import React from "react";
 import "./popupOption.css";
 import localforage from "localforage";
-import Digest from "../../model/Digest";
+import Note from "../../model/Note";
 import { Trans } from "react-i18next";
 import { PopupOptionProps } from "./interface";
 import ColorOption from "../colorOption";
@@ -64,23 +64,27 @@ class PopupOption extends React.Component<PopupOptionProps> {
       .saveCharacterRanges(iDoc!.body)[0];
     let range = JSON.stringify(charRange);
     let color = this.props.color;
-    let digest = new Digest(
+    let notes = "";
+    let digest = new Note(
       bookKey,
       chapter,
       chapterIndex,
       text,
       cfi,
+      range,
+      notes,
       percentage,
-      color,
-      range
+      color
     );
-    let digestArr = this.props.digests;
-    digestArr.push(digest);
-    localforage.setItem("digests", digestArr);
-    this.props.handleOpenMenu(false);
-    this.props.handleMessage("Add Successfully");
-    this.props.handleMessageBox(true);
-    this.props.handleMenuMode("highlight");
+    let noteArr = this.props.notes;
+    noteArr.push(digest);
+    localforage.setItem("notes", noteArr).then(() => {
+      this.props.handleOpenMenu(false);
+      this.props.handleMessage("Add Successfully");
+      this.props.handleMessageBox(true);
+      this.props.handleFetchNotes();
+      this.props.handleMenuMode("highlight");
+    });
   };
 
   render() {

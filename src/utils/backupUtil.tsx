@@ -3,7 +3,6 @@ import JSZip from "jszip";
 import FileSaver from "file-saver";
 import BookModel from "../model/Book";
 import NoteModel from "../model/Note";
-import DigestModel from "../model/Digest";
 import BookmarkModel from "../model/Bookmark";
 import DropboxUtil from "./syncUtils/dropbox";
 
@@ -11,7 +10,6 @@ class BackupUtil {
   static backup(
     books: BookModel[],
     notes: NoteModel[],
-    digests: DigestModel[],
     bookmarks: BookmarkModel[],
     handleFinish: () => void,
     driveIndex: number,
@@ -32,7 +30,6 @@ class BackupUtil {
     dataZip
       .file("notes.json", JSON.stringify(notes))
       .file("books.json", JSON.stringify(books))
-      .file("digests.json", JSON.stringify(digests))
       .file("bookmarks.json", JSON.stringify(bookmarks))
       .file("readerConfig.json", localStorage.getItem("readerConfig") || "")
       .file(

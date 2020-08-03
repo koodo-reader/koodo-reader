@@ -1,6 +1,5 @@
 import localforage from "localforage";
 import NoteModel from "../../model/Note";
-import DigestModel from "../../model/Digest";
 import BookmarkModel from "../../model/Bookmark";
 export function handleNotes(notes: NoteModel[]) {
   return { type: "HANDLE_NOTES", payload: notes };
@@ -11,7 +10,7 @@ export function handleColor(color: number) {
 export function handleBookmarks(bookmarks: BookmarkModel[]) {
   return { type: "HANDLE_BOOKMARKS", payload: bookmarks };
 }
-export function handleDigests(digests: DigestModel[]) {
+export function handleDigests(digests: NoteModel[]) {
   return { type: "HANDLE_DIGESTS", payload: digests };
 }
 export function handleLocations(locations: any) {
@@ -23,7 +22,9 @@ export function handleSingle(mode: string) {
 export function handleChapters(chapters: any) {
   return { type: "HANDLE_CHAPTERS", payload: chapters };
 }
-
+export function handleNoteKey(key: string) {
+  return { type: "HANDLE_NOTE_KEY", payload: key };
+}
 export function handleFetchNotes() {
   return (dispatch: (arg0: { type: string; payload: NoteModel[] }) => void) => {
     localforage.getItem("notes", (err, value) => {
@@ -34,6 +35,13 @@ export function handleFetchNotes() {
         noteArr = value;
       }
       dispatch(handleNotes(noteArr));
+      dispatch(
+        handleDigests(
+          noteArr.filter((item: NoteModel) => {
+            return item.notes === "";
+          })
+        )
+      );
     });
   };
 }
@@ -57,7 +65,7 @@ export function handleFetchBookmarks() {
     localforage.getItem("bookmarks", (err, value) => {
       let bookmarkArr: any;
       if (value === null || value === []) {
-        bookmarkArr = [];
+        bookmarkArr = null;
       } else {
         bookmarkArr = value;
       }
@@ -65,18 +73,18 @@ export function handleFetchBookmarks() {
     });
   };
 }
-export function handleFetchDigests() {
-  return (
-    dispatch: (arg0: { type: string; payload: DigestModel[] }) => void
-  ) => {
-    localforage.getItem("digests", (err, value) => {
-      let digestArr: any;
-      if (value === null || value === []) {
-        digestArr = [];
-      } else {
-        digestArr = value;
-      }
-      dispatch(handleDigests(digestArr));
-    });
-  };
-}
+// export function handleFetchDigests() {
+//   return (
+//     dispatch: (arg0: { type: string; payload: DigestModel[] }) => void
+//   ) => {
+//     localforage.getItem("digests", (err, value) => {
+//       let digestArr: any;
+//       if (value === null || value === []) {
+//         digestArr = [];
+//       } else {
+//         digestArr = value;
+//       }
+//       dispatch(handleDigests(digestArr));
+//     });
+//   };
+// }

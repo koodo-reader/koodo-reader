@@ -8,7 +8,6 @@ import {
 } from "../../redux/actions/manager";
 import {
   handleFetchNotes,
-  handleFetchDigests,
   handleFetchBookmarks,
 } from "../../redux/actions/reader";
 import "./manager.css";
@@ -37,7 +36,6 @@ const mapStateToProps = (state: stateType) => {
 const actionCreator = {
   handleFetchBooks,
   handleFetchNotes,
-  handleFetchDigests,
   handleFetchBookmarks,
   handleFetchSortCode,
   handleFetchList,

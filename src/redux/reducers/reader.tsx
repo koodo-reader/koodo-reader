@@ -6,6 +6,7 @@ const initState = {
   locations: null,
   chapters: null,
   color: 0,
+  noteKey: "",
   isSingle: OtherUtil.getReaderConfig("isSingle") || "double",
 };
 export function reader(
@@ -27,6 +28,11 @@ export function reader(
       return {
         ...state,
         color: action.payload,
+      };
+    case "HANDLE_NOTE_KEY":
+      return {
+        ...state,
+        noteKey: action.payload,
       };
     case "HANDLE_DIGESTS":
       return {
