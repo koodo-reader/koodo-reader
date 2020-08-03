@@ -17,15 +17,18 @@ class ViewArea extends React.Component<ViewAreaProps, ViewAreaStates> {
     });
   }
   showImage = (event: any) => {
+    if (this.state.isShowImage) {
+      this.setState({ isShowImage: false });
+    }
     event.preventDefault();
     console.log(event.target);
     if (event.target.src) {
       let image: HTMLImageElement | null = document.querySelector(".image");
       if (image) {
         image.src = event.target.src;
+        this.setState({ isShowImage: true });
       }
     }
-    this.setState({ isShowImage: true });
   };
   hideImage = (event: any) => {
     event.preventDefault();
@@ -40,14 +43,14 @@ class ViewArea extends React.Component<ViewAreaProps, ViewAreaStates> {
       <div className="view-area">
         <div
           className="image-preview"
-          onClick={(event) => {
-            this.hideImage(event);
-          }}
           style={
             this.state.isShowImage
               ? { backgroundColor: "rgba(75,75,75,0.3)" }
               : { display: "none" }
           }
+          onClick={(event) => {
+            this.hideImage(event);
+          }}
         >
           <img src="" alt="" className="image" />
         </div>
