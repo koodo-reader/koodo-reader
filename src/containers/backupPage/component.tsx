@@ -15,7 +15,7 @@ class BackupPage extends React.Component<BackupPageProps, BackupPageState> {
     super(props);
     this.state = {
       currentStep: 0,
-      isBackup: null,
+      isBackup: "",
       currentDrive: 0,
     };
   }
@@ -52,7 +52,7 @@ class BackupPage extends React.Component<BackupPageProps, BackupPageState> {
             this.props.handleTokenDialog(true);
             break;
           }
-          if (this.state.isBackup) {
+          if (this.state.isBackup === "yes") {
             this.showMessage("Uploading");
             BackupUtil.backup(
               this.props.books,
@@ -117,11 +117,11 @@ class BackupPage extends React.Component<BackupPageProps, BackupPageState> {
           <div className="backup-page-title">
             <Trans>Do you want to backup or restore?</Trans>
           </div>
-        ) : this.state.currentStep === 1 && this.state.isBackup ? (
+        ) : this.state.currentStep === 1 && this.state.isBackup === "yes" ? (
           <div className="backup-page-title">
             <Trans>Where to keep your data?</Trans>
           </div>
-        ) : this.state.currentStep === 1 && !this.state.isBackup ? (
+        ) : this.state.currentStep === 1 && this.state.isBackup === "no" ? (
           <div className="backup-page-title">
             <Trans>Where is your data?</Trans>
           </div>
@@ -130,12 +130,12 @@ class BackupPage extends React.Component<BackupPageProps, BackupPageState> {
           <div className="backup-page-option">
             <div
               className={
-                this.state.isBackup === true
+                this.state.isBackup === "yes"
                   ? "backup-page-backup active"
                   : "backup-page-backup"
               }
               onClick={() => {
-                this.setState({ isBackup: true });
+                this.setState({ isBackup: "yes" });
               }}
             >
               <span className="icon-backup"></span>
@@ -146,12 +146,12 @@ class BackupPage extends React.Component<BackupPageProps, BackupPageState> {
 
             <div
               className={
-                this.state.isBackup === false
+                this.state.isBackup === "no"
                   ? "backup-page-backup active"
                   : "backup-page-backup"
               }
               onClick={() => {
-                this.setState({ isBackup: false });
+                this.setState({ isBackup: "no" });
               }}
             >
               <span className="icon-restore"></span>
@@ -183,7 +183,7 @@ class BackupPage extends React.Component<BackupPageProps, BackupPageState> {
               <span className="icon-message backup-page-finish-icon"></span>
               <div className="backup-page-finish-text">
                 <Trans>
-                  {this.state.isBackup
+                  {this.state.isBackup === "yes"
                     ? "Backup Successfully"
                     : "Restore Successfully"}
                 </Trans>
@@ -196,10 +196,10 @@ class BackupPage extends React.Component<BackupPageProps, BackupPageState> {
             </div>
           </div>
         )}
-        {this.state.isBackup && this.state.currentStep === 0 ? (
+        {this.state.isBackup === "yes" && this.state.currentStep === 0 ? (
           <div className="backup-page-backup-selector"></div>
         ) : null}
-        {this.state.isBackup === false && this.state.currentStep === 0 ? (
+        {this.state.isBackup === "no" && this.state.currentStep === 0 ? (
           <div
             className="backup-page-backup-selector"
             style={{ marginLeft: "252px" }}

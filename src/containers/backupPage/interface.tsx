@@ -15,6 +15,6 @@ export interface BackupPageProps {
 }
 export interface BackupPageState {
   currentStep: number | null;
-  isBackup: boolean | null;
+  isBackup: string;
   currentDrive: number | null;
 }
