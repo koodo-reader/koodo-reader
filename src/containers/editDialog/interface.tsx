@@ -1,6 +1,5 @@
 import BookModel from "../../model/Book";
 import NoteModel from "../../model/Note";
-import DigestModel from "../../model/Digest";
 import BookmarkModel from "../../model/Bookmark";
 
 export interface EditDialogProps {
@@ -10,7 +9,7 @@ export interface EditDialogProps {
   handleEditDialog: (isShow: boolean) => void;
   books: BookModel[];
   notes: NoteModel[];
-  digests: DigestModel[];
+  digests: NoteModel[];
   bookmarks: BookmarkModel[];
   isOpenDeleteDialog: boolean;
   currentBook: BookModel;

@@ -65,7 +65,6 @@ class OtherUtil {
     let obj = json ? JSON.parse(json) : { sort: 2, order: 2 };
     obj.sort = sortCode;
     obj.order = orderCode;
-    console.log(obj, "bo");
     localStorage.setItem("sortCode", JSON.stringify(obj));
   }
 
