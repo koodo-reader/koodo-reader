@@ -14,12 +14,16 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     this.state = {
       isOnlyLocal: false,
       isBookImported:
-        OtherUtil.getReaderConfig("totalBooks") !== "0" ? true : false,
+        OtherUtil.getReaderConfig("totalBooks") &&
+        OtherUtil.getReaderConfig("totalBooks") > 0
+          ? true
+          : false,
       language: OtherUtil.getReaderConfig("lang"),
       isNewVersion: false,
     };
   }
   componentDidMount() {
+    console.log(OtherUtil.getReaderConfig("totalBooks"), "gjj");
     const lng = OtherUtil.getReaderConfig("lang");
     if (lng) {
       i18n.changeLanguage(lng);
