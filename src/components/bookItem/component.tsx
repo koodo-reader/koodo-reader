@@ -2,7 +2,6 @@
 import React from "react";
 import RecentBooks from "../../utils/recordRecent";
 import "./bookItem.css";
-import RecordRecent from "../../utils/recordRecent";
 import RecordLocation from "../../utils/recordLocation";
 import { BookItemProps, BookItemState } from "./interface";
 
@@ -39,9 +38,6 @@ class Book extends React.Component<BookItemProps, BookItemState> {
     this.props.handleReadingBook(this.props.book);
   };
   render() {
-    let date = RecordRecent.getRecent()[this.props.book.key]
-      ? RecordRecent.getRecent()[this.props.book.key].date
-      : { year: "0000", month: "00", day: "00" };
     let percentage = RecordLocation.getCfi(this.props.book.key)
       ? RecordLocation.getCfi(this.props.book.key).percentage
       : 0;
@@ -63,9 +59,6 @@ class Book extends React.Component<BookItemProps, BookItemState> {
         />
         <p className="book-item-list-title">{this.props.book.name}</p>
         <p className="book-item-list-author">{this.props.book.author}</p>
-        <p className="book-item-list-date">
-          {"" + date.year + "-" + date.month + "-" + date.day}
-        </p>
         <p className="book-item-list-percentage">
           {this.props.percentage ? Math.round(percentage * 100) : 0}%
         </p>

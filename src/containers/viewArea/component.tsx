@@ -21,7 +21,6 @@ class ViewArea extends React.Component<ViewAreaProps, ViewAreaStates> {
       this.setState({ isShowImage: false });
     }
     event.preventDefault();
-    console.log(event.target);
     if (event.target.src) {
       let image: HTMLImageElement | null = document.querySelector(".image");
       if (image) {

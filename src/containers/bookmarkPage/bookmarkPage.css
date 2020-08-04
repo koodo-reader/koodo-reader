@@ -2,7 +2,7 @@
   position: absolute;
   top: 80px;
   left: 200px;
-  width: calc(100% - 210px);
+  width: calc(100% - 200px);
   height: calc(100% - 90px);
   overflow: hidden;
 }
@@ -34,7 +34,6 @@
   float: left;
   width: calc(50vw - 140px);
   height: 160px;
-  margin: 5px;
   min-width: 403px;
 }
 
@@ -113,14 +112,13 @@
   margin-left: 10px;
   position: relative;
   bottom: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .bookmark-page-list-item-link-text {
-  width: 45px;
   height: 11px;
   font-size: 11px;
-
-  line-height: 24px;
-  margin-left: 8px;
   color: rgba(255, 255, 255, 1);
   opacity: 1;
 }

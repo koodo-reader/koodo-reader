@@ -4,6 +4,9 @@ import BookmarkModel from "../../model/Bookmark";
 export function handleNotes(notes: NoteModel[]) {
   return { type: "HANDLE_NOTES", payload: notes };
 }
+export function handleOriginalText(originalText: string) {
+  return { type: "HANDLE_ORIGINAL_TEXT", payload: originalText };
+}
 export function handleColor(color: number) {
   return { type: "HANDLE_COLOR", payload: color };
 }
@@ -73,18 +76,3 @@ export function handleFetchBookmarks() {
     });
   };
 }
-// export function handleFetchDigests() {
-//   return (
-//     dispatch: (arg0: { type: string; payload: DigestModel[] }) => void
-//   ) => {
-//     localforage.getItem("digests", (err, value) => {
-//       let digestArr: any;
-//       if (value === null || value === []) {
-//         digestArr = [];
-//       } else {
-//         digestArr = value;
-//       }
-//       dispatch(handleDigests(digestArr));
-//     });
-//   };
-// }

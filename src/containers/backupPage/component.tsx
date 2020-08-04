@@ -163,7 +163,7 @@ class BackupPage extends React.Component<BackupPageProps, BackupPageState> {
         ) : this.state.currentStep === 1 ? (
           <div className="backup-page-drive-container">
             <div>{renderDrivePage()}</div>
-            {!this.state.isBackup ? (
+            {this.state.isBackup === "no" ? (
               <input
                 type="file"
                 id="restore-file"
