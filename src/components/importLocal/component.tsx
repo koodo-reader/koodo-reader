@@ -21,7 +21,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
     if (bookArr == null) {
       bookArr = [];
     }
-    bookArr.push(book);
+    bookArr.unshift(book);
     RecordRecent.setRecent(book.key);
     localforage.setItem("books", bookArr).then(() => {
       this.props.handleFetchBooks();

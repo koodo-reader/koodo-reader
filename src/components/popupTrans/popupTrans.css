@@ -1,0 +1,31 @@
+.trans-container {
+  width: 264px;
+  height: 172px;
+}
+.original-text-box,
+.trans-text-box {
+  width: 230px;
+  height: 63px;
+  background: rgba(242, 242, 242, 1);
+  opacity: 1;
+  border-radius: 10px;
+  position: absolute;
+  user-select: text;
+  overflow-y: scroll;
+  padding: 5px;
+  box-sizing: border-box;
+  font-size: 16px;
+}
+.trans-button-container {
+  position: absolute;
+  bottom: 8px;
+  right: 20px;
+}
+.original-text-box {
+  left: 16px;
+  top: 15px;
+}
+.trans-text-box {
+  left: 16px;
+  top: 90px;
+}

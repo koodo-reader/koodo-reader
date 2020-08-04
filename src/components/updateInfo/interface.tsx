@@ -1,7 +1,7 @@
-export interface AboutProps {
+export interface UpdateInfoProps {
   handleMessage: (message: string) => void;
   handleMessageBox: (isShow: boolean) => void;
 }
-export interface AboutState {
+export interface UpdateInfoState {
   downlownLink: string;
 }

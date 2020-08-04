@@ -69,6 +69,7 @@ export type stateType = {
     chapters: any[];
     isSingle: string;
     noteKey: string;
+    originalText: string;
   };
   sidebar: {
     mode: string;

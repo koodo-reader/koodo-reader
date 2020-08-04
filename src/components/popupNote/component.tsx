@@ -87,9 +87,6 @@ class PopupNote extends React.Component<PopupNoteProps> {
       });
     }
   }
-  handleReturn = () => {
-    this.props.handleMenuMode("menu");
-  };
   handleClose = () => {
     let noteIndex;
     if (this.props.noteKey) {
@@ -121,14 +118,6 @@ class PopupNote extends React.Component<PopupNoteProps> {
     const renderNoteEditor = () => {
       return (
         <div className="note-editor">
-          <div
-            className="note-return-button"
-            onClick={() => {
-              this.handleReturn();
-            }}
-          >
-            <span className="icon-return"></span>
-          </div>
           <div className="editor-box-parent">
             <textarea className="editor-box" />
           </div>

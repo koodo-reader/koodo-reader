@@ -5,6 +5,7 @@ import Note from "../../model/Note";
 import { Trans } from "react-i18next";
 import { PopupOptionProps } from "./interface";
 import ColorOption from "../colorOption";
+
 declare var window: any;
 
 class PopupOption extends React.Component<PopupOptionProps> {
@@ -27,6 +28,21 @@ class PopupOption extends React.Component<PopupOptionProps> {
     iDoc!.getSelection()!.empty();
     this.props.handleMessage("Copy Successfully");
     this.props.handleMessageBox(true);
+  };
+  handleTrans = () => {
+    if (
+      !document.getElementsByTagName("iframe")[0] ||
+      !document.getElementsByTagName("iframe")[0].contentDocument
+    ) {
+      return;
+    }
+    let iframe = document.getElementsByTagName("iframe")[0];
+    let iDoc = iframe.contentDocument;
+    let sel = iDoc!.getSelection();
+    let text = sel!.toString();
+    text = text && text.trim();
+    this.props.handleMenuMode("trans");
+    this.props.handleOriginalText(text);
   };
   handleDigest = () => {
     if (
@@ -118,7 +134,12 @@ class PopupOption extends React.Component<PopupOptionProps> {
                 </p>
               </div>
             </div>
-            <div className="translate-option">
+            <div
+              className="translation-option"
+              onClick={() => {
+                this.handleTrans();
+              }}
+            >
               <div>
                 <span className="icon-translation translation-icon"></span>
                 <p>

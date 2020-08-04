@@ -8,8 +8,6 @@
   position: relative;
 }
 .book-bookmark-digest {
-  /* margin-left: 5px;
-  margin-top: 18px; */
   margin: 15px 5px 10px;
   width: 236px;
   max-height: 183px;
@@ -24,7 +22,6 @@
   float: left;
   width: 200px;
   height: 16px;
-  /* margin-top: 9px; */
   font-size: 14px;
   color: rgba(161, 161, 161, 1);
   opacity: 1;
