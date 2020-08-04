@@ -68,40 +68,5 @@
       async
       src="https://www.googletagmanager.com/gtag/js?id=UA-149740367-3"
     ></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag() {
-        dataLayer.push(arguments);
-      }
-      gtag("js", new Date());
-
-      gtag("config", "UA-149740367-3");
-    </script>
-    <script>
-      if ("serviceWorker" in navigator) {
-        window.addEventListener("load", function () {
-          navigator.serviceWorker
-            .register("service-worker.js")
-            .then(
-              function (registration) {
-                // Registration was successful
-                console.log(
-                  "ServiceWorker registration successful with scope: ",
-                  registration.scope
-                );
-              },
-              function (err) {
-                // registration failed :(
-                console.log("ServiceWorker registration failed: ", err);
-              }
-            )
-            .catch(function (err) {
-              console.log(err);
-            });
-        });
-      } else {
-        console.log("service worker is not supported");
-      }
-    </script>
   </body>
 </html>
