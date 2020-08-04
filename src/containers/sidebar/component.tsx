@@ -4,7 +4,7 @@ import { sideMenu } from "../../utils/readerConfig";
 import ShelfUtil from "../../utils/shelfUtil";
 import { Trans } from "react-i18next";
 import { SidebarProps, SidebarState } from "./interface";
-import About from "../../components/about";
+import UpdateInfo from "../../components/updateInfo";
 
 class Sidebar extends React.Component<SidebarProps, SidebarState> {
   constructor(props: SidebarProps) {
@@ -129,7 +129,7 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
               </div>
             </li>
             <li className="side-menu-about">
-              <About />
+              <UpdateInfo />
             </li>
           </ul>
         </div>

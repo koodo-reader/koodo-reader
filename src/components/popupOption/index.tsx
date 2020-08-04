@@ -1,7 +1,10 @@
 import { connect } from "react-redux";
 import { handleMessageBox, handleMessage } from "../../redux/actions/manager";
 import { handleOpenMenu, handleMenuMode } from "../../redux/actions/viewArea";
-import {handleFetchNotes} from '../../redux/actions/reader'
+import {
+  handleFetchNotes,
+  handleOriginalText,
+} from "../../redux/actions/reader";
 import { stateType } from "../../redux/store";
 import { withNamespaces } from "react-i18next";
 import PopupOption from "./component";
@@ -21,6 +24,7 @@ const actionCreator = {
   handleOpenMenu,
   handleMenuMode,
   handleFetchNotes,
+  handleOriginalText,
 };
 export default connect(
   mapStateToProps,

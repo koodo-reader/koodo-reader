@@ -23,7 +23,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     };
   }
   componentDidMount() {
-    console.log(OtherUtil.getReaderConfig("totalBooks"), "gjj");
     const lng = OtherUtil.getReaderConfig("lang");
     if (lng) {
       i18n.changeLanguage(lng);
@@ -63,15 +62,15 @@ class Header extends React.Component<HeaderProps, HeaderState> {
           <span className="icon-sort header-sort-icon"></span>
         </div>
         <div className="change-language">
-          {this.state.language === "cn" ? (
+          {this.state.language === "zh" ? (
             <span
               className="icon-traditional"
-              onClick={() => this.changeLanguage("tw")}
+              onClick={() => this.changeLanguage("cht")}
             ></span>
           ) : this.state.language === "en" ? (
             <span
               className="icon-simplified"
-              onClick={() => this.changeLanguage("cn")}
+              onClick={() => this.changeLanguage("zh")}
             ></span>
           ) : (
             <span

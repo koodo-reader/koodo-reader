@@ -2,6 +2,7 @@ import React from "react";
 import "./popupMenu.css";
 import PopupNote from "../../components/popupNote";
 import PopupOption from "../../components/popupOption";
+import PopupTrans from "../../components/popupTrans";
 import { PopupMenuProps, PopupMenuStates } from "./interface";
 
 declare var window: any;
@@ -234,6 +235,8 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
                 <PopupOption />
               ) : this.props.menuMode === "note" ? (
                 <PopupNote />
+              ) : this.props.menuMode === "trans" ? (
+                <PopupTrans />
               ) : null}
             </div>
             {this.props.isChangeDirection ? (

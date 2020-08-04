@@ -18,7 +18,6 @@ export function handleFetchLocations(epub: any) {
         .generate()
         .then((result: any) => {
           let locations = epub.locations;
-          console.log(locations, "locations");
           dispatch(handleLocations(locations));
         })
         .catch(() => {
