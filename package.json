@@ -1,7 +1,7 @@
 {
   "name": "koodo-reader",
   "main": "main.ts",
-  "version": "1.1.2",
+  "version": "1.1.3",
   "description": "A cross-platform open source Epub reader ",
   "author": {
     "name": "App by Troye",
@@ -12,12 +12,14 @@
   "dependencies": {
     "@types/md5": "^2.2.0",
     "axios": "^0.19.2",
+    "cls-bluebird": "^2.1.0",
     "copy-text-to-clipboard": "^2.2.0",
     "dropbox": "^5.2.0",
     "electron-is-dev": "^1.1.0",
     "i18next": "^19.4.4",
     "i18next-browser-languagedetector": "^4.2.0",
     "md5": "^2.3.0",
+    "onedrive-api": "^0.3.4",
     "react-dropzone": "^11.0.1",
     "react-i18next": "^9.0.10"
   },

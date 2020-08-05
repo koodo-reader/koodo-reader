@@ -93,7 +93,7 @@ class CardList extends React.Component<CardListProps, CardListStates> {
           <li
             className="card-list-item"
             key={index}
-            onMouseEnter={() => {
+            onMouseOver={() => {
               this.handleShowDelete(item.key);
             }}
             onMouseLeave={() => {
