@@ -28,6 +28,7 @@
   justify-content: center;
   align-items: center;
   z-index: 3;
+  overflow-y: scroll;
 }
 .image {
   width: 60%;

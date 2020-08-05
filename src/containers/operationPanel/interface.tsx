@@ -11,6 +11,7 @@ export interface OperationPanelProps {
   handleFetchBookmarks: () => void;
   handleMessageBox: (isShow: boolean) => void;
   handleMessage: (message: string) => void;
+  handleOpenMenu: (isOpenMenu: boolean) => void;
 }
 
 export interface OperationPanelState {

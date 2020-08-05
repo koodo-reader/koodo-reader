@@ -4,6 +4,7 @@ import {
   handleBookmarks,
   handleFetchBookmarks,
 } from "../../redux/actions/reader";
+import { handleOpenMenu } from "../../redux/actions/viewArea";
 import { stateType } from "../../redux/store";
 import { withNamespaces } from "react-i18next";
 import { handleMessageBox, handleMessage } from "../../redux/actions/manager";
@@ -24,6 +25,7 @@ const actionCreator = {
   handleFetchBookmarks,
   handleMessageBox,
   handleMessage,
+  handleOpenMenu,
 };
 export default connect(
   mapStateToProps,

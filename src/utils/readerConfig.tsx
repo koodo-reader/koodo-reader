@@ -124,9 +124,14 @@ export const config = {
     process.env.NODE_ENV === "production"
       ? "https://reader.960960.xyz"
       : "http://localhost:3000",
+  token_url:
+    process.env.NODE_ENV === "production"
+      ? "https://koodo.960960.xyz"
+      : "http://localhost:3001",
   dropbox_client_id: "e3zgg310xbizvaf",
   googledrive_client_id:
     "99440516227-ifr1ann33f2j610i3ri17ej0i51c7m6e.apps.googleusercontent.com",
+  onedrive_client_id: "ac96f9bf-94f2-49c0-8418-999b919bc236",
 };
 export const driveList = [
   {
@@ -152,7 +157,7 @@ export const driveList = [
     id: 4,
     name: "OneDrive",
     icon: "onedrive",
-    url: ``,
+    url: `https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=${config.onedrive_client_id}&scope=files.readwrite offline_access&response_type=code&redirect_uri=${config.callback_url}`,
   },
   {
     id: 5,

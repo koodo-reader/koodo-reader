@@ -5,6 +5,7 @@ import BookModel from "../model/Book";
 import NoteModel from "../model/Note";
 import BookmarkModel from "../model/Bookmark";
 import DropboxUtil from "./syncUtils/dropbox";
+import OndriveUtil from "./syncUtils/onedrive";
 
 class BackupUtil {
   static backup(
@@ -68,12 +69,16 @@ class BackupUtil {
           case 2:
             console.log("backuputil 2");
             break;
+          case 3:
+            OndriveUtil.UploadFile(blob, handleFinish, showMessage);
+            console.log("backuputil 2");
+            break;
           default:
             break;
         }
       })
-      .catch(() => {
-        console.log("Error occurs");
+      .catch((err) => {
+        console.log(err);
       });
   }
 }

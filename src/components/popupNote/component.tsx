@@ -50,6 +50,7 @@ class PopupNote extends React.Component<PopupNoteProps> {
       : "Unknown";
     let chapterIndex = this.props.currentEpub.renderer.currentChapter.spinePos;
     let color = this.props.color || 1;
+    console.log(this.props.noteKey, "this.props.noteKey");
     if (this.props.noteKey) {
       this.props.notes.forEach((item) => {
         if (item.key === this.props.noteKey) {
@@ -63,6 +64,7 @@ class PopupNote extends React.Component<PopupNoteProps> {
         this.props.handleFetchNotes();
         this.props.handleMenuMode("highlight");
         this.props.handleNoteKey("");
+        console.log("edit");
       });
     } else {
       let note = new Note(
@@ -84,6 +86,7 @@ class PopupNote extends React.Component<PopupNoteProps> {
         this.props.handleMessageBox(true);
         this.props.handleFetchNotes();
         this.props.handleMenuMode("highlight");
+        console.log("new");
       });
     }
   }

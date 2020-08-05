@@ -75,7 +75,9 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
     if (url.indexOf("error") > -1) {
       this.setState({ isError: true });
     }
-    this.props.handleFirst(OtherUtil.getReaderConfig("isFirst") || "yes");
+    setTimeout(() => {
+      this.props.handleFirst(OtherUtil.getReaderConfig("isFirst") || "yes");
+    }, 1000);
   }
 
   componentWillUnmout() {
@@ -147,7 +149,8 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
           <BookList />
         ) : bookmarks && mode === "bookmark" ? (
           <BookmarkPage />
-        ) : notes.length > 0 && mode === "note" ? (
+        ) : notes.filter((item) => item.notes !== "").length > 0 &&
+          mode === "note" ? (
           <NoteList />
         ) : digests.length > 0 && mode === "digest" ? (
           <DigestList />

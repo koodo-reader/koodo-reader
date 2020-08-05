@@ -20,8 +20,9 @@ class ProgressPanel extends React.Component<
   }
   onProgressChange = (event: any) => {
     const percentage = event.target.value / 100;
-    const location =
-      percentage >= 0 ? this.props.locations.cfiFromPercentage(percentage) : 0;
+    const location = percentage
+      ? this.props.locations.cfiFromPercentage(percentage)
+      : 0;
     this.props.currentEpub.gotoCfi(location);
   };
   //使进度百分比随拖动实时变化

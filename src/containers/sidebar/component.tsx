@@ -113,11 +113,14 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
               >
                 <span className="icon-shelf"></span>
                 <Trans>My Shelves</Trans>
-                <span
-                  className={
-                    this.state.isCollapse ? "icon-dropdown" : "icon-shangla"
+                <div
+                className="dropdown-icon-container"
+                  style={
+                    this.state.isCollapse ? { transform: "rotate(180deg)" } : {}
                   }
-                ></span>
+                >
+                  <span className="icon-dropdown"></span>
+                </div>
               </div>
               <div className="shelf-list-container-parent">
                 <ul
