@@ -110,6 +110,7 @@ class OperationPanel extends React.Component<
     if (this.state.isFullScreen) {
       this.handleExitFullScreen();
     }
+    this.props.handleOpenMenu(false);
   }
 
   render() {
