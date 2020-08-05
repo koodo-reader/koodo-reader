@@ -6,6 +6,7 @@ import BackupUtil from "../../utils/backupUtil";
 import RestoreUtil from "../../utils/restoreUtil";
 import { Trans } from "react-i18next";
 import DropboxUtil from "../../utils/syncUtils/dropbox";
+import OnedriveUtil from "../../utils/syncUtils/onedrive";
 import { BackupPageProps, BackupPageState } from "./interface";
 import TokenDialog from "../../components/tokenDialog";
 import OtherUtil from "../../utils/otherUtil";
@@ -48,7 +49,7 @@ class BackupPage extends React.Component<BackupPageProps, BackupPageState> {
           );
           break;
         case 1:
-          if (!OtherUtil.getReaderConfig("dropbox_access_token")) {
+          if (!OtherUtil.getReaderConfig("dropbox_token")) {
             this.props.handleTokenDialog(true);
             break;
           }
@@ -72,7 +73,24 @@ class BackupPage extends React.Component<BackupPageProps, BackupPageState> {
           this.showMessage("Coming Soon");
           break;
         case 3:
-          this.showMessage("Coming Soon");
+          if (!OtherUtil.getReaderConfig("onedrive_access_token")) {
+            this.props.handleTokenDialog(true);
+            break;
+          }
+          if (this.state.isBackup === "yes") {
+            this.showMessage("Uploading");
+            BackupUtil.backup(
+              this.props.books,
+              this.props.notes,
+              this.props.bookmarks,
+              this.handleFinish,
+              3,
+              this.showMessage
+            );
+          } else {
+            this.showMessage("Downloading");
+            OnedriveUtil.DownloadFile(this.handleFinish, this.showMessage);
+          }
           break;
         case 4:
           this.showMessage("Coming Soon");
@@ -92,7 +110,9 @@ class BackupPage extends React.Component<BackupPageProps, BackupPageState> {
             onClick={() => {
               this.handleDrive(index);
             }}
-            style={index === 0 || index === 1 ? { opacity: 1 } : {}}
+            style={
+              index === 0 || index === 1 || index === 3 ? { opacity: 1 } : {}
+            }
           >
             <div className="backup-page-list-item-container">
               <span

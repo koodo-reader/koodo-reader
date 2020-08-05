@@ -5,9 +5,7 @@
 
 .logo {
   width: 140px;
-
   position: absolute;
-  /* position: relative; */
   top: 0px;
   left: 25px;
 }
@@ -100,18 +98,11 @@
   margin-right: 12px;
 }
 .icon-dropdown {
-  margin-left: 16px;
   font-size: 13px;
 }
 
 .active-icon {
   color: white;
-}
-.icon-shangla {
-  font-size: 6px;
-  margin-left: 16px;
-  position: relative;
-  bottom: 4px;
 }
 .inactive-selector {
   background-color: #fff;
@@ -140,4 +131,8 @@
 .side-menu-about {
   position: absolute;
   bottom: 0px;
+}
+.dropdown-icon-container {
+  display: inline-block;
+  margin-left: 13px;
 }
