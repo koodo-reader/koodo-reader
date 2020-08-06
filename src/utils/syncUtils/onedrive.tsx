@@ -1,16 +1,14 @@
-import Dropbox from "dropbox";
 import RestoreUtil from "../restoreUtil";
 import OtherUtil from "../otherUtil";
 import axios from "axios";
 import { config } from "../readerConfig";
-var oneDriveAPI = require("onedrive-api");
 
 class OnedriveUitl {
   static GetAccessToken() {
     const code: string = OtherUtil.getReaderConfig("onedrive_token");
     axios
       .get(
-        `${config.token_url}/onedrive?code=${code}&&redirect_uri=${config.callback_url}`
+        `${config.token_url}/onedrive_get?code=${code}&&redirect_uri=${config.callback_url}`
       )
       .then((res: any) => {
         OtherUtil.setReaderConfig(
@@ -27,7 +25,6 @@ class OnedriveUitl {
       });
   }
   static RefreshAccessToken(showMessage: (message: string) => void) {
-    showMessage("Refreshing Access Token");
     const refresh_token: string = OtherUtil.getReaderConfig(
       "onedrive_refresh_token"
     );
@@ -44,9 +41,10 @@ class OnedriveUitl {
           "onedrive_refresh_token",
           res.data.refresh_token
         );
-        showMessage("Access token received");
+        showMessage("Access token received, please continue");
       })
       .catch((err) => {
+        showMessage("Fetching Acess token failed");
         console.log(err);
       });
   }
@@ -56,25 +54,29 @@ class OnedriveUitl {
     showMessage: (message: string) => void
   ) {
     var ACCESS_TOKEN = OtherUtil.getReaderConfig("onedrive_access_token") || "";
-    oneDriveAPI.items
-      .uploadSession({
-        accessToken: ACCESS_TOKEN,
-        filename: "data.zip",
-        fileSize: file.size,
-        readableStream: new ReadableStream(),
-        parentPath: "/Apps/KoodoReader/",
+    let formData = new FormData();
+    formData.append("file", file);
+    formData.append("ACCESS_TOKEN", ACCESS_TOKEN);
+    axios
+      .post(`${config.token_url}/onedrive_upload`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
       })
-      .then((item: any) => {
-        console.log(item);
+      .then((res) => {
+        OtherUtil.setReaderConfig("onedrive_backup_id", res.data.data.id);
         handleFinish();
-        showMessage("Upload Successfully");
-        // returns body of https://docs.microsoft.com/en-us/onedrive/developer/rest-api/api/driveitem_createuploadsession?view=odsp-graph-online#http-response
       })
-      .catch((err: any) => {
-        if (err.statusCode === 401) {
+      .catch((err) => {
+        if (
+          err.response &&
+          err.response.status &&
+          err.response.status === 401
+        ) {
           this.RefreshAccessToken(showMessage);
+        } else {
+          showMessage("Upload failed, check your connection");
         }
-        console.log(err);
       });
     return false;
   }
@@ -82,24 +84,37 @@ class OnedriveUitl {
     handleFinish: () => void,
     showMessage: (message: string) => void
   ) {
-    var ACCESS_TOKEN = OtherUtil.getReaderConfig("dropbox_token") || "";
-    var dbx = new Dropbox.Dropbox({ accessToken: ACCESS_TOKEN });
-    dbx
-      .filesDownload({
-        path: "/Apps/KoodoReader/data.zip",
+    var ACCESS_TOKEN = OtherUtil.getReaderConfig("onedrive_access_token") || "";
+    var backupId = OtherUtil.getReaderConfig("onedrive_backup_id") || "";
+    let formData = new FormData();
+    formData.append("ACCESS_TOKEN", ACCESS_TOKEN);
+    formData.append("backupId", backupId);
+    axios
+      .post(`${config.token_url}/onedrive_download`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        responseType: "blob",
       })
-      .then(function (data: any) {
-        let file = data.fileBlob;
-        file.lastModifiedDate = new Date();
-        file.name = "data.zip";
-        RestoreUtil.restore(file, handleFinish);
+      .then((data) => {
+        if (data.data.error) {
+          this.RefreshAccessToken(showMessage);
+        } else {
+          let type = "application/octet-stream";
+          let file: any = new Blob([data.data], { type: type });
+          file.lastModifiedDate = new Date();
+          file.name = "data.zip";
+          RestoreUtil.restore(file, handleFinish);
+        }
       })
-      .catch(function (error) {
-        showMessage("Download failed,network problem or no backup");
-
-        console.error(error);
+      .catch((err) => {
+        if (err.response && err.response.status === 401) {
+          this.RefreshAccessToken(showMessage);
+        } else {
+          showMessage("Download failed,network problem or no backup");
+        }
+        console.log(err);
       });
-
     return false;
   }
 }

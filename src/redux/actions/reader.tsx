@@ -72,6 +72,7 @@ export function handleFetchBookmarks() {
       } else {
         bookmarkArr = value;
       }
+      console.log(bookmarkArr, "bookmarkArr");
       dispatch(handleBookmarks(bookmarkArr));
     });
   };

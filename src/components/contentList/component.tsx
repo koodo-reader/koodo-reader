@@ -21,7 +21,6 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
   handleJump(event: any) {
     event.preventDefault();
     let href = event.target.getAttribute("href");
-    console.log(href, "href");
     this.props.currentEpub.goto(href);
   }
   render() {

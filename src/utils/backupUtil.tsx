@@ -6,10 +6,11 @@ import NoteModel from "../model/Note";
 import BookmarkModel from "../model/Bookmark";
 import DropboxUtil from "./syncUtils/dropbox";
 import OndriveUtil from "./syncUtils/onedrive";
+import _ from "lodash";
 
 class BackupUtil {
   static backup(
-    books: BookModel[],
+    bookArr: BookModel[],
     notes: NoteModel[],
     bookmarks: BookmarkModel[],
     handleFinish: () => void,
@@ -17,7 +18,7 @@ class BackupUtil {
     showMessage: (message: string) => void
   ) {
     let zip = new JSZip();
-
+    let books: BookModel[] = _.cloneDeep(bookArr);
     let epubZip = zip.folder("epub");
     books &&
       books.forEach((item) => {
@@ -63,7 +64,7 @@ class BackupUtil {
             );
             break;
           case 1:
-            console.log("backuputil 1");
+            console.log("backuputil 1", blob);
             DropboxUtil.UploadFile(blob, handleFinish, showMessage);
             break;
           case 2:
@@ -71,7 +72,7 @@ class BackupUtil {
             break;
           case 3:
             OndriveUtil.UploadFile(blob, handleFinish, showMessage);
-            console.log("backuputil 2");
+            console.log("backuputil 2", blob);
             break;
           default:
             break;
