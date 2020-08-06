@@ -8,23 +8,7 @@
     "email": "guo362429@gmail.com"
   },
   "repository": "https://github.com/troyeguo/koodo-desktop",
-  "private": true,
-  "dependencies": {
-    "@types/lodash": "^4.14.159",
-    "@types/md5": "^2.2.0",
-    "@types/streamsaver": "^2.0.0",
-    "axios": "^0.19.2",
-    "copy-text-to-clipboard": "^2.2.0",
-    "dropbox": "^5.2.0",
-    "electron-is-dev": "^1.1.0",
-    "i18next": "^19.4.4",
-    "i18next-browser-languagedetector": "^4.2.0",
-    "lodash": "^4.17.19",
-    "md5": "^2.3.0",
-    "react-dropzone": "^11.0.1",
-    "react-i18next": "^9.0.10",
-    "streamsaver": "^2.0.4"
-  },
+  "dependencies": {},
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
@@ -118,6 +102,8 @@
     "@types/react-i18next": "^8.1.0",
     "@types/react-redux": "^7.1.7",
     "@types/spark-md5": "^3.0.2",
+    "@types/lodash": "^4.14.159",
+    "@types/md5": "^2.2.0",
     "classnames": "^2.2.6",
     "concurrently": "^5.0.1",
     "cross-env": "^6.0.3",
@@ -139,6 +125,15 @@
     "sass-loader": "^8.0.0",
     "spark-md5": "^3.0.1",
     "typescript": "^3.8.3",
-    "wait-on": "^3.3.0"
+    "wait-on": "^3.3.0",
+    "axios": "^0.19.2",
+    "copy-text-to-clipboard": "^2.2.0",
+    "dropbox": "^5.2.0",
+    "i18next": "^19.4.4",
+    "i18next-browser-languagedetector": "^4.2.0",
+    "lodash": "^4.17.19",
+    "md5": "^2.3.0",
+    "react-dropzone": "^11.0.1",
+    "react-i18next": "^9.0.10"
   }
 }

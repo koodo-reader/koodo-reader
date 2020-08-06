@@ -1715,11 +1715,6 @@
   resolved "https://registry.npm.taobao.org/@types/stack-utils/download/@types/stack-utils-1.0.1.tgz#0a851d3bd96498fa25c33ab7278ed3bd65f06c3e"
   integrity sha1-CoUdO9lkmPolwzq3J47TvWXwbD4=
 
-"@types/streamsaver@^2.0.0":
-  version "2.0.0"
-  resolved "https://registry.npm.taobao.org/@types/streamsaver/download/@types/streamsaver-2.0.0.tgz#2a6bdec0389f41a74c60091d37e84f8840d27ac9"
-  integrity sha1-KmvewDifQadMYAkdN+hPiEDSesk=
-
 "@types/tern@*":
   version "0.23.3"
   resolved "https://registry.npm.taobao.org/@types/tern/download/@types/tern-0.23.3.tgz#4b54538f04a88c9ff79de1f6f94f575a7f339460"
@@ -11137,11 +11132,6 @@ stream-shift@^1.0.0:
   version "1.0.1"
   resolved "https://registry.npm.taobao.org/stream-shift/download/stream-shift-1.0.1.tgz#d7088281559ab2778424279b0877da3c392d5a3d"
   integrity sha1-1wiCgVWasneEJCebCHfaPDktWj0=
-
-streamsaver@^2.0.4:
-  version "2.0.4"
-  resolved "https://registry.npm.taobao.org/streamsaver/download/streamsaver-2.0.4.tgz#ecd1b40749dc5a81d7c03c2bfdc842de372191e2"
-  integrity sha1-7NG0B0ncWoHXwDwr/chC3jchkeI=
 
 strict-uri-encode@^1.0.0:
   version "1.1.0"
