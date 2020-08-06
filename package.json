@@ -10,18 +10,20 @@
   "repository": "https://github.com/troyeguo/koodo-desktop",
   "private": true,
   "dependencies": {
+    "@types/lodash": "^4.14.159",
     "@types/md5": "^2.2.0",
+    "@types/streamsaver": "^2.0.0",
     "axios": "^0.19.2",
-    "cls-bluebird": "^2.1.0",
     "copy-text-to-clipboard": "^2.2.0",
     "dropbox": "^5.2.0",
     "electron-is-dev": "^1.1.0",
     "i18next": "^19.4.4",
     "i18next-browser-languagedetector": "^4.2.0",
+    "lodash": "^4.17.19",
     "md5": "^2.3.0",
-    "onedrive-api": "^0.3.4",
     "react-dropzone": "^11.0.1",
-    "react-i18next": "^9.0.10"
+    "react-i18next": "^9.0.10",
+    "streamsaver": "^2.0.4"
   },
   "scripts": {
     "start": "react-scripts start",

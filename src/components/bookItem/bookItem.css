@@ -1,6 +1,6 @@
 .book-list-item-container {
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-between;
   margin: 18px;
   margin-right: 50px;
 }
@@ -47,7 +47,7 @@
   font-size: 20px;
 }
 .book-item-list-percentage {
-  width: 50px;
+  max-width: 50px;
 }
 .icon-edit {
   font-size: 18px;

@@ -30,7 +30,6 @@ class RestoreUtil {
   static restore = (file: any, handleFinish: () => void) => {
     let dataArr = [
       "notes",
-      "digests",
       "books",
       "bookmarks",
       "readerConfig",
@@ -51,12 +50,7 @@ class RestoreUtil {
         })
         .then((text) => {
           if (text) {
-            if (
-              item === "notes" ||
-              item === "books" ||
-              item === "digests" ||
-              item === "bookmarks"
-            ) {
+            if (item === "notes" || item === "books" || item === "bookmarks") {
               localforage.setItem(item, JSON.parse(text));
             } else {
               localStorage.setItem(item, text);
