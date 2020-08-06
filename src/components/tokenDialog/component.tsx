@@ -27,6 +27,7 @@ class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
     this.props.handleMessageBox(true);
   };
   handleOAuth(driveName: string) {
+    console.log(driveName, "onedrive");
     if (driveName === "onedrive") {
       OnedriveUtil.GetAccessToken();
     }

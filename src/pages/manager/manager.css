@@ -15,3 +15,7 @@
   text-align: center;
   cursor: pointer;
 }
+.auth-page-close-icon {
+  font-size: 60px !important;
+  float: none !important;
+}
