@@ -186,12 +186,14 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     if (this.props.isOpenMenu) {
       this.props.handleMenuMode("menu");
       this.props.handleOpenMenu(false);
+      this.props.handleNoteKey("");
     }
 
     // 使弹出菜单更加灵活可控;
     if (sel!.isCollapsed) {
       this.props.isOpenMenu && this.props.handleOpenMenu(false);
       this.props.handleMenuMode("menu");
+      this.props.handleNoteKey("");
       return;
     }
     this.showMenu();
