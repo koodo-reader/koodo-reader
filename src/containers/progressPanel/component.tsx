@@ -15,9 +15,6 @@ class ProgressPanel extends React.Component<
     };
   }
   //WARNING! To be deprecated in React v17. Use componentDidMount instead.
-  UNSAFE_componentWillMount() {
-    this.props.handleFetchLocations(this.props.currentEpub);
-  }
   onProgressChange = (event: any) => {
     const percentage = event.target.value / 100;
     const location = percentage
@@ -53,7 +50,12 @@ class ProgressPanel extends React.Component<
       <div className="progress-panel">
         <p className="progress-text">
           <Trans>Current Progress</Trans>:{" "}
-          {Math.round(this.state.displayPercentage * 100)}%
+          {Math.round(
+            this.state.displayPercentage > 1
+              ? 100
+              : this.state.displayPercentage * 100
+          )}
+          %
         </p>
 
         <input

@@ -10,7 +10,40 @@ declare var window: any;
 
 class PopupOption extends React.Component<PopupOptionProps> {
   handleNote = () => {
+    if (
+      !document.getElementsByTagName("iframe")[0] ||
+      !document.getElementsByTagName("iframe")[0].contentDocument
+    ) {
+      return;
+    }
+    this.props.handleChangeDirection(false);
+    let iframe = document.getElementsByTagName("iframe")[0];
+    let iDoc = iframe.contentDocument;
+    let sel = iDoc!.getSelection();
     this.props.handleMenuMode("note");
+    let rect = this.props.currentEpub.renderer.rangePosition(
+      sel!.getRangeAt(0)
+    );
+
+    let height = 200;
+    let posX = rect.x + rect.width / 2 - 20;
+    //防止menu超出图书
+    let rightEdge = this.props.currentEpub.renderer.width - 200;
+    var posY;
+    //控制menu方向
+    if (rect.y < height) {
+      this.props.handleChangeDirection(true);
+      posY = rect.y + 77;
+    } else {
+      posY = rect.y - height / 2 - rect.height;
+    }
+
+    posY = posY < 6 ? 6 : posY;
+    posX = posX < 10 ? 10 : rect.x > rightEdge ? rightEdge : posX;
+
+    let popupMenu = document.querySelector(".popup-menu-container");
+    popupMenu &&
+      popupMenu.setAttribute("style", `left:${posX}px;top:${posY}px`);
   };
   handleCopy = () => {
     if (
