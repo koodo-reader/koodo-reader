@@ -3,6 +3,7 @@ import "./popupNote.css";
 import Note from "../../model/Note";
 import localforage from "localforage";
 import { PopupNoteProps } from "./interface";
+import RecordLocation from "../../utils/recordLocation";
 import { Trans } from "react-i18next";
 
 declare var window: any;
@@ -24,18 +25,13 @@ class PopupNote extends React.Component<PopupNoteProps> {
     let iframe = document.getElementsByTagName("iframe")[0];
     let iDoc = iframe.contentDocument;
     let sel = iDoc!.getSelection();
-    let rangeBefore = sel!.getRangeAt(0);
     let notes = (document.querySelector(".editor-box") as HTMLInputElement)
       .value;
     (document.querySelector(".editor-box") as HTMLInputElement).value = "";
     let text = sel!.toString();
     text = text && text.trim();
-    let cfiBase = epub.renderer.currentChapter.cfiBase;
-    let cfi = new window.EPUBJS.EpubCFI().generateCfiFromRange(
-      rangeBefore,
-      cfiBase
-    );
-    let percentage = this.props.currentEpub.locations.percentageFromCfi(cfi);
+    let cfi = RecordLocation.getCfi(book.key).cfi;
+    let percentage = RecordLocation.getCfi(book.key).percentage;
     let bookKey = book.key;
     let charRange = window.rangy
       .getSelection(iframe)
@@ -49,8 +45,7 @@ class PopupNote extends React.Component<PopupNoteProps> {
       ? this.props.chapters[index].label.trim(" ")
       : "Unknown";
     let chapterIndex = this.props.currentEpub.renderer.currentChapter.spinePos;
-    let color = this.props.color || 1;
-    console.log(this.props.noteKey, "this.props.noteKey");
+    let color = this.props.color || 0;
     if (this.props.noteKey) {
       this.props.notes.forEach((item) => {
         if (item.key === this.props.noteKey) {

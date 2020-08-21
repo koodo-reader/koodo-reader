@@ -7,8 +7,15 @@ import { ViewAreaProps, ViewAreaStates } from "./interface";
 class ViewArea extends React.Component<ViewAreaProps, ViewAreaStates> {
   constructor(props: ViewAreaProps) {
     super(props);
-    this.state = { isShowImage: false };
+    this.state = {
+      isShowImage: false,
+      imageRatio: "horizontal",
+    };
   }
+  UNSAFE_componentWillMount() {
+    this.props.handleFetchLocations(this.props.currentEpub);
+  }
+
   componentDidMount() {
     this.props.currentEpub.on("renderer:chapterDisplayed", () => {
       let doc = this.props.currentEpub.renderer.doc;
@@ -21,7 +28,17 @@ class ViewArea extends React.Component<ViewAreaProps, ViewAreaStates> {
       this.setState({ isShowImage: false });
     }
     event.preventDefault();
+    const handleDirection = (direction: string) => {
+      this.setState({ imageRatio: direction });
+    };
     if (event.target.src) {
+      var img = new Image();
+      img.addEventListener("load", function () {
+        handleDirection(
+          this.naturalWidth / this.naturalHeight > 1 ? "horizontal" : "vertical"
+        );
+      });
+      img.src = event.target.src;
       let image: HTMLImageElement | null = document.querySelector(".image");
       if (image) {
         image.src = event.target.src;
@@ -51,7 +68,16 @@ class ViewArea extends React.Component<ViewAreaProps, ViewAreaStates> {
             this.hideImage(event);
           }}
         >
-          <img src="" alt="" className="image" />
+          <img
+            src=""
+            alt=""
+            className="image"
+            style={
+              this.state.imageRatio === "horizontal"
+                ? { width: "60vw" }
+                : { height: "90vh" }
+            }
+          />
         </div>
         <PopupMenu />
         <ViewPage />

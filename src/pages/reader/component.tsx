@@ -122,7 +122,6 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
           }}
         ></div>
         <ViewArea />
-        //控制阅读器设置的显示
         {this.state.isOpenSettingPanel ? (
           <div
             onMouseLeave={(event) => {
@@ -132,7 +131,6 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
             <SettingPanel />
           </div>
         ) : null}
-        //控制图书信息的显示
         {this.state.isOpenInfoPanel ? (
           <div
             onMouseLeave={(event) => {
@@ -142,7 +140,6 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
             <NavigationPanel />
           </div>
         ) : null}
-        //控制阅读进度条的显示
         {this.state.isOpenProgressPanel ? (
           <div
             className="progress-panel-container"
@@ -153,7 +150,6 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
             <ProgressPanel />
           </div>
         ) : null}
-        //控制阅读器控制栏的显示
         {this.state.isOpenOperationPanel ? (
           <div
             className="operation-panel-container"
