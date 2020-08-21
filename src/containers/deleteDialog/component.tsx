@@ -4,6 +4,7 @@ import DeleteUtil from "../../utils/deleteUtil";
 import localforage from "localforage";
 import ShelfUtil from "../../utils/shelfUtil";
 import RecordRecent from "../../utils/recordRecent";
+import RecordLocation from "../../utils/recordLocation";
 import { Trans } from "react-i18next";
 import { DeleteDialogProps } from "./interface";
 
@@ -42,8 +43,6 @@ class DeleteDialog extends React.Component<DeleteDialogProps> {
         });
       }
     }
-
-  
   };
   handleComfirm = () => {
     //从列表删除和从图书库删除判断
@@ -65,6 +64,8 @@ class DeleteDialog extends React.Component<DeleteDialogProps> {
       ShelfUtil.deletefromAllShelf(this.props.currentBook.key);
       //从阅读记录删除
       RecordRecent.clear(this.props.currentBook.key);
+      //删除阅读历史
+      RecordLocation.clear(this.props.currentBook.key);
       //删除书签，笔记，书摘，高亮
       this.handleDeleteOther();
     }

@@ -80,5 +80,6 @@ export type stateType = {
     menuMode: string;
     isOpenMenu: boolean;
     isChangeDirection: boolean;
+    isShowBookmark: boolean;
   };
 };

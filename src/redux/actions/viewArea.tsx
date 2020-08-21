@@ -10,6 +10,9 @@ export function handleOpenHighlight(isOpenHighlight: boolean) {
 export function handleChangeDirection(isChangeDirection: boolean) {
   return { type: "HANDLE_CHANGE_DIRECTION", payload: isChangeDirection };
 }
+export function handleShowBookmark(isShowBookmark: boolean) {
+  return { type: "HANDLE_SHOW_BOOKMARK", payload: isShowBookmark };
+}
 export function handleSelection(selection: string) {
   return { type: "HANDLE_SELECTION", payload: selection };
 }

@@ -12,6 +12,7 @@ export interface OperationPanelProps {
   handleMessageBox: (isShow: boolean) => void;
   handleMessage: (message: string) => void;
   handleOpenMenu: (isOpenMenu: boolean) => void;
+  handleShowBookmark: (isShowBookmark: boolean) => void;
 }
 
 export interface OperationPanelState {

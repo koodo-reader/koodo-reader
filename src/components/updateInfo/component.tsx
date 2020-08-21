@@ -40,7 +40,6 @@ class UpdateInfo extends React.Component<UpdateInfoProps, UpdateInfoState> {
     return false;
   };
   render() {
-    console.log("link", this.state.downlownLink, "link");
     return (
       <div
         className="update-info-container"

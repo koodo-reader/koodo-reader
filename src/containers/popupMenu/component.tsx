@@ -52,6 +52,7 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
             if (!document.getElementsByTagName("iframe")[0].contentDocument) {
               return;
             }
+            this.props.handleMenuMode("note");
             this.showMenu();
             this.handleClickHighlighter(event.currentTarget.dataset.key);
             event.stopPropagation();
@@ -94,7 +95,7 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     let height = 200;
     let posX = rect.x + rect.width / 2 - 20;
     //防止menu超出图书
-    let rightEdge = this.props.currentEpub.renderer.width - 154;
+    let rightEdge = this.props.currentEpub.renderer.width - 200;
     var posY;
     //控制menu方向
     if (rect.y < height) {
@@ -113,8 +114,8 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
           ? rightEdge
           : posX
         : posX;
+    console.log(rect.x, rightEdge, posX, this.props.menuMode, "rightEdge");
     this.props.handleOpenMenu(true);
-    this.props.handleMenuMode("note");
     let popupMenu = document.querySelector(".popup-menu-container");
     popupMenu &&
       popupMenu.setAttribute("style", `left:${posX}px;top:${posY}px`);

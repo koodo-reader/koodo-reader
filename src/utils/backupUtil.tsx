@@ -58,8 +58,8 @@ class BackupUtil {
             handleFinish();
             FileSaver.saveAs(
               blob,
-              `${year}-${month < 9 ? "0" + month : month}-${
-                day < 9 ? "0" + day : day
+              `${year}-${month <= 9 ? "0" + month : month}-${
+                day <= 9 ? "0" + day : day
               }.zip`
             );
             break;
