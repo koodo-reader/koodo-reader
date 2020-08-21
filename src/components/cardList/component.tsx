@@ -40,7 +40,7 @@ class CardList extends React.Component<CardListProps, CardListStates> {
         break;
       }
     }
-
+    console.log(cfi, "cfi");
     this.props.handleReadingBook(book!);
     this.props.handleReadingEpub(epub);
     this.props.handleReadingState(true);

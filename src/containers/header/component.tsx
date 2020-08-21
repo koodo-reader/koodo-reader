@@ -62,10 +62,10 @@ class Header extends React.Component<HeaderProps, HeaderState> {
           <span className="icon-sort header-sort-icon"></span>
         </div>
         <div className="change-language">
-          {this.state.language === "zh" ? (
+          {this.state.language === "cht" ? (
             <span
-              className="icon-traditional"
-              onClick={() => this.changeLanguage("cht")}
+              className="icon-english"
+              onClick={() => this.changeLanguage("en")}
             ></span>
           ) : this.state.language === "en" ? (
             <span
@@ -74,8 +74,8 @@ class Header extends React.Component<HeaderProps, HeaderState> {
             ></span>
           ) : (
             <span
-              className="icon-english"
-              onClick={() => this.changeLanguage("en")}
+              className="icon-traditional"
+              onClick={() => this.changeLanguage("cht")}
             ></span>
           )}
         </div>

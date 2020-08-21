@@ -36,6 +36,7 @@ class BookmarkPage extends React.Component<
   };
   render() {
     let { bookmarks, books, covers } = this.props;
+    console.log(bookmarks, "bookmarks");
     let bookKeyArr: string[] = [];
     //获取bookmarks中的图书列表
     bookmarks.forEach((item) => {

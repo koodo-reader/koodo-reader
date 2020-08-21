@@ -3,6 +3,7 @@ import RecordLocation from "../../utils/recordLocation";
 import { MouseEvent } from "../../utils/mouseEvent";
 import { ViewPageProps, ViewPageState } from "./interface";
 import OtherUtil from "../../utils/otherUtil";
+import BookmarkModel from "../../model/Bookmark";
 
 class ViewPage extends React.Component<ViewPageProps, ViewPageState> {
   constructor(props: ViewPageProps) {
@@ -17,8 +18,19 @@ class ViewPage extends React.Component<ViewPageProps, ViewPageState> {
     (window as any).rangy.init(); // 初始化
     epub.renderTo(page);
     MouseEvent(epub); // 绑定事件
+
     epub.on("renderer:locationChanged", () => {
+      this.props.handleOpenMenu(false);
       let cfi = epub.getCurrentLocationCfi();
+      this.props.handleShowBookmark(
+        this.props.bookmarks &&
+          this.props.bookmarks.filter(
+            (item: BookmarkModel) => item.cfi === cfi
+          )[0]
+          ? true
+          : false
+      );
+
       if (this.props.locations) {
         let percentage = this.props.locations.percentageFromCfi(cfi);
         RecordLocation.recordCfi(this.props.currentBook.key, cfi, percentage);
@@ -47,7 +59,12 @@ class ViewPage extends React.Component<ViewPageProps, ViewPageState> {
   };
   render() {
     this.props.currentEpub.renderer.forceSingle(this.state.isSingle);
-    return <div className="view-area-page" id="page-area"></div>;
+    return (
+      <>
+        <div className="view-area-page" id="page-area"></div>
+        {this.props.isShowBookmark ? <div className="bookmark"></div> : null}
+      </>
+    );
   }
 }
 

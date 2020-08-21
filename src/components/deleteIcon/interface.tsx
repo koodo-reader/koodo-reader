@@ -13,6 +13,7 @@ export interface DeleteIconProps {
   handleShowDelete: (Deletekey: string) => void;
   handleMessageBox: (isShow: boolean) => void;
   handleMessage: (message: string) => void;
+  handleShowBookmark: (isShowBookmark: boolean) => void;
 }
 export interface DeleteIconStates {
   deleteIndex: number;

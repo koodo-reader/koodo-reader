@@ -75,6 +75,8 @@
   -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
   height: 16px;
+  line-height: 16px;
+  font-size: 16px;
   max-width: 130px;
 }
 .card-list-item-citation {
@@ -153,4 +155,10 @@
   position: absolute;
   bottom: 5px;
   margin-left: calc(50% - 6px);
+}
+/* 控制小于888px是书脊消失 */
+@media screen and (max-width: 888px) {
+  .card-list-item-citation {
+    display: none;
+  }
 }

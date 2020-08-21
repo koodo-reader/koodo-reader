@@ -73,8 +73,12 @@ export function handleFetchBooks() {
                   dispatch(handleCovers(coverArr));
                 }
               })
-              .catch(() => {
-                console.log("Error occurs");
+              .catch((err: any) => {
+                coverArr.push({ key: bookArr[index].key, url: "" });
+                if (coverArr.length === bookArr.length) {
+                  dispatch(handleCovers(coverArr));
+                }
+                console.log(err, "Error occurs");
               });
           });
         });

@@ -5,6 +5,7 @@ import {
   handleFetchBookmarks,
   handleFetchNotes,
 } from "../../redux/actions/reader";
+import { handleShowBookmark } from "../../redux/actions/viewArea";
 import DeleteIcon from "./component";
 import { handleMessageBox, handleMessage } from "../../redux/actions/manager";
 const mapStateToProps = (state: stateType) => {
@@ -20,5 +21,6 @@ const actionCreator = {
   handleFetchNotes,
   handleMessageBox,
   handleMessage,
+  handleShowBookmark,
 };
 export default connect(mapStateToProps, actionCreator)(DeleteIcon as any);

@@ -1,6 +1,10 @@
 import { connect } from "react-redux";
 import { handleMessageBox, handleMessage } from "../../redux/actions/manager";
-import { handleOpenMenu, handleMenuMode } from "../../redux/actions/viewArea";
+import {
+  handleOpenMenu,
+  handleMenuMode,
+  handleChangeDirection,
+} from "../../redux/actions/viewArea";
 import {
   handleFetchNotes,
   handleOriginalText,
@@ -25,6 +29,7 @@ const actionCreator = {
   handleMenuMode,
   handleFetchNotes,
   handleOriginalText,
+  handleChangeDirection,
 };
 export default connect(
   mapStateToProps,

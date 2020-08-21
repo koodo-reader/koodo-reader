@@ -32,7 +32,6 @@ class OperationPanel extends React.Component<
   //控制进入全屏
   handleFullScreen() {
     let de: any = document.documentElement;
-
     if (de.requestFullscreen) {
       de.requestFullscreen();
     } else if (de.mozRequestFullScreen) {
@@ -97,6 +96,7 @@ class OperationPanel extends React.Component<
     this.setState({ isBookmark: true });
     this.props.handleMessage("Add Successfully");
     this.props.handleMessageBox(true);
+    this.props.handleShowBookmark(true);
   }
 
   // 点击退出按钮的处理程序

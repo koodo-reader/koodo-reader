@@ -31,6 +31,7 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
     this.props.handleMode("shelf");
   };
   render() {
+    console.log("test");
     const renderSideMenu = () => {
       return sideMenu.map((item, index) => {
         return (
@@ -114,9 +115,9 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
                 <span className="icon-shelf"></span>
                 <Trans>My Shelves</Trans>
                 <div
-                className="dropdown-icon-container"
+                  className="dropdown-icon-container"
                   style={
-                    this.state.isCollapse ? { transform: "rotate(180deg)" } : {}
+                    this.state.isCollapse ? {} : { transform: "rotate(180deg)" }
                   }
                 >
                   <span className="icon-dropdown"></span>

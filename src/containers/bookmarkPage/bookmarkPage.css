@@ -35,6 +35,7 @@
   width: calc(50vw - 140px);
   height: 160px;
   min-width: 403px;
+  margin-top: 15px;
 }
 
 .bookmark-page-cover {
