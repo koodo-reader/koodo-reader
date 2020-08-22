@@ -68,6 +68,7 @@ class DeleteDialog extends React.Component<DeleteDialogProps> {
       RecordLocation.clear(this.props.currentBook.key);
       //删除书签，笔记，书摘，高亮
       this.handleDeleteOther();
+      this.props.handleActionDialog(false);
     }
 
     this.props.handleMessage("Delete Successfully");

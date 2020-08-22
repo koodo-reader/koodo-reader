@@ -3,6 +3,7 @@ import React from "react";
 import "./booklist.css";
 import Book from "../../components/book";
 import BookItem from "../../components/bookItem";
+import AddFavorite from "../../utils/addFavorite";
 import RecordRecent from "../../utils/recordRecent";
 import ShelfUtil from "../../utils/shelfUtil";
 import SortUtil from "../../utils/sortUtil";
@@ -12,6 +13,17 @@ import { BookListProps } from "./interface";
 import OtherUtil from "../../utils/otherUtil";
 
 class BookList extends React.Component<BookListProps> {
+  handleFavorite = (items: any[], arr: string[]) => {
+    let itemArr: any[] = [];
+    arr.forEach((item) => {
+      items.forEach((subItem: any) => {
+        if (subItem.key === item) {
+          itemArr.push(subItem);
+        }
+      });
+    });
+    return itemArr;
+  };
   //根据localstorage列表的数据，得到最近阅读的图书
   handleRecent = (items: any[], arr: string[]) => {
     let itemArr: any[] = [];
@@ -59,50 +71,55 @@ class BookList extends React.Component<BookListProps> {
     });
     return itemArr;
   };
+  renderBookList = () => {
+    //根据不同的场景获取不同的图书数据
+    let books =
+      this.props.shelfIndex !== -1
+        ? this.handleShelf(this.props.books, this.props.shelfIndex)
+        : this.props.isSearch
+        ? this.handleFilter(this.props.books, this.props.searchBooks)
+        : this.props.isSort
+        ? this.handleFilter(
+            this.props.books,
+            //返回排序后的图书index
+            SortUtil.sortBooks(this.props.books, this.props.sortCode) || []
+          )
+        : this.props.mode === "favorite"
+        ? this.handleFavorite(this.props.books, AddFavorite.getAllFavorite())
+        : this.handleRecent(this.props.books, RecordRecent.getAllRecent());
+    //根据不同的场景获取不同图书的封面
+    let covers =
+      this.props.shelfIndex !== -1
+        ? this.handleShelf(this.props.covers, this.props.shelfIndex)
+        : this.props.isSearch
+        ? this.handleFilter(this.props.covers, this.props.searchBooks)
+        : this.props.isSort
+        ? this.handleFilter(
+            this.props.covers,
+            SortUtil.sortBooks(this.props.books, this.props.sortCode) || []
+          )
+        : this.props.mode === "favorite"
+        ? this.handleFavorite(this.props.covers, AddFavorite.getAllFavorite())
+        : this.handleRecent(this.props.covers, RecordRecent.getAllRecent());
+    return books.map((item: BookModel, index: number) => {
+      return this.props.isList === "list" ? (
+        <BookItem
+          key={item.key}
+          book={item}
+          bookCover={covers[index] ? covers[index].url : null}
+        />
+      ) : (
+        <Book
+          key={item.key}
+          book={item}
+          bookCover={covers[index] ? covers[index].url : null}
+        />
+      );
+    });
+  };
   render() {
     OtherUtil.setReaderConfig("totalBooks", this.props.books.length.toString());
-    const renderBookList = () => {
-      //根据不同的场景获取不同的图书数据
-      let books =
-        this.props.shelfIndex !== -1
-          ? this.handleShelf(this.props.books, this.props.shelfIndex)
-          : this.props.isSearch
-          ? this.handleFilter(this.props.books, this.props.searchBooks)
-          : this.props.isSort
-          ? this.handleFilter(
-              this.props.books,
-              //返回排序后的图书index
-              SortUtil.sortBooks(this.props.books, this.props.sortCode) || []
-            )
-          : this.handleRecent(this.props.books, RecordRecent.getAllRecent());
-      //根据不同的场景获取不同图书的封面
-      let covers =
-        this.props.shelfIndex !== -1
-          ? this.handleShelf(this.props.covers, this.props.shelfIndex)
-          : this.props.isSearch
-          ? this.handleFilter(this.props.covers, this.props.searchBooks)
-          : this.props.isSort
-          ? this.handleFilter(
-              this.props.covers,
-              SortUtil.sortBooks(this.props.books, this.props.sortCode) || []
-            )
-          : this.handleRecent(this.props.covers, RecordRecent.getAllRecent());
-      return books.map((item: BookModel, index: number) => {
-        return this.props.isList === "list" ? (
-          <BookItem
-            key={item.key}
-            book={item}
-            bookCover={covers[index] ? covers[index].url : null}
-          />
-        ) : (
-          <Book
-            key={item.key}
-            book={item}
-            bookCover={covers[index] ? covers[index].url : null}
-          />
-        );
-      });
-    };
+    console.log("object");
     return (
       <div className="book-list-container-parent">
         <div className="book-list-container">
@@ -136,7 +153,7 @@ class BookList extends React.Component<BookListProps> {
             </div>
           </div>
 
-          <div className="book-list-item-box">{renderBookList()}</div>
+          <div className="book-list-item-box">{this.renderBookList()}</div>
         </div>
       </div>
     );

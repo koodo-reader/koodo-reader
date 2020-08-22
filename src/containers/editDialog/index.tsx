@@ -6,7 +6,7 @@ import {
   handleMessageBox,
   handleMessage,
 } from "../../redux/actions/manager";
-import { handleEditDialog } from "../../redux/actions/book";
+import { handleEditDialog, handleActionDialog } from "../../redux/actions/book";
 import { stateType } from "../../redux/store";
 import { withNamespaces } from "react-i18next";
 import EditDialog from "./component";
@@ -24,6 +24,7 @@ const mapStateToProps = (state: stateType) => {
 const actionCreator = {
   handleFetchBooks,
   handleEditDialog,
+  handleActionDialog,
   handleMessageBox,
   handleMessage,
 };
