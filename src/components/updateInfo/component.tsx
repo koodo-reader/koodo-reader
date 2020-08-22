@@ -41,18 +41,18 @@ class UpdateInfo extends React.Component<UpdateInfoProps, UpdateInfoState> {
   };
   render() {
     return (
-      <div
-        className="update-info-container"
-        style={this.state.downlownLink ? {} : { display: "none" }}
+      <a
+        href={this.state.downlownLink}
+        target="_blank"
+        rel="noopener noreferrer"
       >
-        <a
-          href={this.state.downlownLink}
-          target="_blank"
-          rel="noopener noreferrer"
+        <div
+          className="update-info-container"
+          style={this.state.downlownLink ? {} : { display: "none" }}
         >
           <Trans>New Version Available</Trans>
-        </a>
-      </div>
+        </div>
+      </a>
     );
   }
 }

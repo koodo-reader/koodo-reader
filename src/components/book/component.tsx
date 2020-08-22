@@ -3,11 +3,16 @@ import React from "react";
 import RecentBooks from "../../utils/recordRecent";
 import "./book.css";
 import { BookProps, BookState } from "./interface";
+import AddFavorite from "../../utils/addFavorite";
 class Book extends React.Component<BookProps, BookState> {
   epub: any;
   constructor(props: BookProps) {
     super(props);
-    this.state = { isDeleteDialog: false, isOpenConfig: false };
+    this.state = {
+      isDeleteDialog: false,
+      isOpenConfig: false,
+      isFavorite: false,
+    };
     this.handleOpenBook = this.handleOpenBook.bind(this);
     this.epub = null;
   }
@@ -16,6 +21,11 @@ class Book extends React.Component<BookProps, BookState> {
       bookPath: this.props.book.content,
       restore: false,
     });
+
+    this.setState({
+      isFavorite:
+        AddFavorite.getAllFavorite().indexOf(this.props.book.key) > -1,
+    });
   }
   handleOpenBook() {
     this.props.handleReadingBook(this.props.book);
@@ -23,17 +33,17 @@ class Book extends React.Component<BookProps, BookState> {
     this.props.handleReadingState(true);
     RecentBooks.setRecent(this.props.book.key);
   }
-  handleDeleteBook = () => {
-    this.props.handleDeleteDialog(true);
+  handleMoreAction = () => {
+    this.props.handleActionDialog(true);
     this.props.handleReadingBook(this.props.book);
   };
-  handleEditBook = () => {
-    this.props.handleEditDialog(true);
-    this.props.handleReadingBook(this.props.book);
+  handleLoveBook = () => {
+    AddFavorite.setFavorite(this.props.book.key);
+    this.setState({ isFavorite: true });
   };
-  handleAddShelf = () => {
-    this.props.handleAddDialog(true);
-    this.props.handleReadingBook(this.props.book);
+  handleCancelLoveBook = () => {
+    AddFavorite.clear(this.props.book.key);
+    this.setState({ isFavorite: false });
   };
   //控制按钮的弹出
   handleConfig = (mode: boolean) => {
@@ -50,43 +60,44 @@ class Book extends React.Component<BookProps, BookState> {
           this.handleConfig(false);
         }}
       >
-        <img
-          className="book-item-cover"
-          src={
-            this.props.bookCover
-              ? this.props.bookCover
-              : process.env.NODE_ENV === "production"
-              ? "assets/cover.svg"
-              : "../../assets/cover.svg"
-          }
-          alt=""
-          onClick={() => {
-            this.handleOpenBook();
-          }}
-        />
+        {0 ? (
+          <img
+            className="book-item-cover"
+            src={this.props.bookCover}
+            alt=""
+            onClick={() => {
+              this.handleOpenBook();
+            }}
+          />
+        ) : (
+          <div className="book-item-cover">test</div>
+        )}
+
         <p className="book-item-title">{this.props.book.name}</p>
+        {this.state.isFavorite ? (
+          <span
+            className="icon-love book-loved-icon"
+            onClick={() => {
+              this.handleCancelLoveBook();
+            }}
+          ></span>
+        ) : null}
+
         {this.state.isOpenConfig ? (
-          <div className="book-item-config">
+          <>
             <span
-              className="icon-add1 view-icon"
+              className="icon-more book-more-action"
               onClick={() => {
-                this.handleAddShelf();
+                this.handleMoreAction();
               }}
             ></span>
             <span
-              className="icon-delete1 view-icon"
+              className="icon-love book-love-icon"
               onClick={() => {
-                this.handleDeleteBook();
+                this.handleLoveBook();
               }}
             ></span>
-            <span
-              className="icon-edit view-icon"
-              onClick={() => {
-                this.handleEditBook();
-              }}
-              style={{ fontSize: "15px" }}
-            ></span>
-          </div>
+          </>
         ) : null}
       </div>
     );

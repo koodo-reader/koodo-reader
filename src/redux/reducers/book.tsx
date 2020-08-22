@@ -2,6 +2,7 @@ const initState = {
   isOpenEditDialog: false,
   isOpenDeleteDialog: false,
   isOpenAddDialog: false,
+  isOpenActionDialog: false,
   isReading: false,
   currentBook: {},
   currentEpub: {},
@@ -26,6 +27,11 @@ export function book(
       return {
         ...state,
         isOpenAddDialog: action.payload,
+      };
+    case "HANDLE_ACTION_DIALOG":
+      return {
+        ...state,
+        isOpenActionDialog: action.payload,
       };
     case "HANDLE_READING_STATE":
       return {
