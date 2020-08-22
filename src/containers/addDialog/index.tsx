@@ -1,7 +1,7 @@
 //添加图书到书架的对话框
 import { connect } from "react-redux";
 import { handleMessageBox, handleMessage } from "../../redux/actions/manager";
-import { handleAddDialog } from "../../redux/actions/book";
+import { handleAddDialog, handleActionDialog } from "../../redux/actions/book";
 import { stateType } from "../../redux/store";
 import { withNamespaces } from "react-i18next";
 import AddDialog from "./component";
@@ -18,6 +18,7 @@ const mapStateToProps = (state: stateType) => {
 };
 const actionCreator = {
   handleAddDialog,
+  handleActionDialog,
   handleMessageBox,
   handleMessage,
 };

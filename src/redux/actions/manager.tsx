@@ -64,23 +64,31 @@ export function handleFetchBooks() {
           epubArr.push(epub);
           dispatch(handleEpubs(epubArr));
           let coverArr: { key: string; url: string }[] = [];
-          epubArr.forEach(async (item: any, index: number) => {
-            await item
-              .coverUrl()
-              .then((url: string) => {
-                coverArr.push({ key: bookArr[index].key, url: url });
-                if (coverArr.length === bookArr.length) {
-                  dispatch(handleCovers(coverArr));
-                }
-              })
-              .catch((err: any) => {
-                coverArr.push({ key: bookArr[index].key, url: "" });
-                if (coverArr.length === bookArr.length) {
-                  dispatch(handleCovers(coverArr));
-                }
-                console.log(err, "Error occurs");
-              });
-          });
+          if (epubArr.length === bookArr.length) {
+            epubArr.forEach(async (item: any, index: number) => {
+              await item
+                .coverUrl()
+                .then((url: string) => {
+                  coverArr.push({
+                    key: bookArr[index].key,
+                    url: url,
+                  });
+                  if (coverArr.length === bookArr.length) {
+                    dispatch(handleCovers(coverArr));
+                  }
+                })
+                .catch((err: any) => {
+                  coverArr.push({
+                    key: bookArr[index].key,
+                    url: "",
+                  });
+                  if (coverArr.length === bookArr.length) {
+                    dispatch(handleCovers(coverArr));
+                  }
+                  console.log(err, "Error occurs");
+                });
+            });
+          }
         });
       }
     });

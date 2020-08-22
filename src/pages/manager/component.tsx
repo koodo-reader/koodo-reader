@@ -8,6 +8,7 @@ import DigestList from "../../containers/digestList";
 import DeleteDialog from "../../containers/deleteDialog";
 import EditDialog from "../../containers/editDialog";
 import AddDialog from "../../containers/addDialog";
+import ActionDialog from "../../containers/actionDialog";
 import SortDialog from "../../containers/sortDialog";
 import MessageBox from "../../containers/messageBox";
 import LoadingPage from "../../containers/loadingPage";
@@ -15,13 +16,13 @@ import BackupPage from "../../containers/backupPage";
 import EmptyPage from "../../containers/emptyPage";
 import ShelfUtil from "../../utils/shelfUtil";
 import WelcomePage from "../../containers/welcomePage";
-import RecordRecent from "../../utils/recordRecent";
 import "./manager.css";
 import { ManagerProps, ManagerState } from "./interface";
 import { Trans } from "react-i18next";
 import { getParamsFromUrl } from "../../utils/syncUtils/common";
 import copy from "copy-text-to-clipboard";
 import OtherUtil from "../../utils/otherUtil";
+import AddFavorite from "../../utils/addFavorite";
 
 class Manager extends React.Component<ManagerProps, ManagerState> {
   timer!: NodeJS.Timeout;
@@ -29,7 +30,7 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
     super(props);
     this.state = {
       totalBooks: parseInt(OtherUtil.getReaderConfig("totalBooks") || "0") || 0,
-      recentBooks: Object.keys(RecordRecent.getRecent()).length,
+      favoriteBooks: Object.keys(AddFavorite.getAllFavorite()).length,
       isAuthed: false,
       isError: false,
       isCopied: false,
@@ -46,11 +47,20 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
   }
 
   UNSAFE_componentWillReceiveProps(nextProps: ManagerProps) {
-    this.setState({
-      totalBooks: this.props.books === null ? 0 : this.props.books.length,
-    });
-    OtherUtil.setReaderConfig("totalBooks", this.state.totalBooks.toString());
-
+    if (
+      this.props.books &&
+      this.props.books.length !== nextProps.books.length
+    ) {
+      this.setState({
+        totalBooks: this.props.books === null ? 0 : this.props.books.length,
+      });
+      OtherUtil.setReaderConfig("totalBooks", this.state.totalBooks.toString());
+    }
+    if (this.props.mode !== nextProps.mode) {
+      this.setState({
+        favoriteBooks: Object.keys(AddFavorite.getAllFavorite()).length,
+      });
+    }
     if (nextProps.isMessage) {
       this.timer = setTimeout(() => {
         this.props.handleMessageBox(false);
@@ -125,7 +135,7 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
       );
     }
     let { mode, notes, digests, bookmarks, covers } = this.props;
-    let { totalBooks, recentBooks } = this.state;
+    let { totalBooks, favoriteBooks } = this.state;
     let shelfTitle = Object.keys(ShelfUtil.getShelf());
     let currentShelfTitle = shelfTitle[this.props.shelfIndex + 1];
     let shelfBooks = (ShelfUtil.getShelf()[currentShelfTitle] || []).length;
@@ -143,17 +153,18 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
           ) : null}
         </div>
         {this.props.isMessage ? <MessageBox /> : null}
+        {this.props.isOpenActionDialog ? <ActionDialog /> : null}
         {this.props.isSortDisplay ? <SortDialog /> : null}
         {this.props.isBackup ? <BackupPage /> : null}
         {this.props.isFirst === "yes" ? <WelcomePage /> : null}
         {totalBooks === 0 ? (
           <EmptyPage />
         ) : covers === null &&
-          (mode === "home" || mode === "recent" || mode === "shelf") ? (
+          (mode === "home" || mode === "favorite" || mode === "shelf") ? (
           <LoadingPage />
         ) : (mode !== "shelf" || shelfBooks !== 0) &&
           (mode === "home" ||
-            (mode === "recent" && recentBooks !== 0) ||
+            (mode === "favorite" && favoriteBooks !== 0) ||
             mode === "shelf") ? (
           <BookList />
         ) : bookmarks && mode === "bookmark" ? (

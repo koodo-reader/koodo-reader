@@ -86,25 +86,11 @@
 .icon-googledrive {
   font-size: 45px;
 }
-.icon-yandex {
-  font-size: 42px;
-  position: relative;
-  left: 37px;
-  display: inline-block;
-  transform: scale(0.9);
-}
-.icon-yandex:after {
-  font-size: 44px;
-  z-index: 11;
-}
+
 .icon-webdav {
   font-size: 35px;
   position: relative;
   left: 40px;
-}
-.icon-mega {
-  position: relative;
-  left: 49px;
 }
 .backup-page-close-icon {
   position: absolute;

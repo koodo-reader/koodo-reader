@@ -187,7 +187,7 @@ class PopupOption extends React.Component<PopupOptionProps> {
               }}
             >
               <div>
-                <span className="icon-copy1 copy-icon"></span>
+                <span className="icon-copy copy-icon"></span>
                 <p>
                   <Trans>Copy</Trans>
                 </p>

@@ -7,6 +7,7 @@ import { Trans } from "react-i18next";
 import i18n from "../../i18n";
 import { HeaderProps, HeaderState } from "./interface";
 import OtherUtil from "../../utils/otherUtil";
+import UpdateInfo from "../../components/updateInfo";
 
 class Header extends React.Component<HeaderProps, HeaderState> {
   constructor(props: HeaderProps) {
@@ -96,6 +97,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
           <Trans>Backup and Restore</Trans>
         </div>
         <ImportLocal />
+        <UpdateInfo />
       </div>
     );
   }

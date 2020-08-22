@@ -13,6 +13,7 @@ export interface DeleteDialogProps {
   shelfIndex: number;
   handleFetchBooks: () => void;
   handleDeleteDialog: (isShow: boolean) => void;
+  handleActionDialog: (isShow: boolean) => void;
   handleFetchBookmarks: () => void;
   handleFetchNotes: () => void;
   handleMessageBox: (isShow: boolean) => void;

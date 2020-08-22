@@ -4,7 +4,10 @@ import {
   handleMessageBox,
   handleMessage,
 } from "../../redux/actions/manager";
-import { handleDeleteDialog } from "../../redux/actions/book";
+import {
+  handleDeleteDialog,
+  handleActionDialog,
+} from "../../redux/actions/book";
 import {
   handleFetchBookmarks,
   handleFetchNotes,
@@ -32,6 +35,7 @@ const actionCreator = {
   handleFetchNotes,
   handleMessageBox,
   handleMessage,
+  handleActionDialog,
 };
 export default connect(
   mapStateToProps,

@@ -47,6 +47,7 @@ class EditDialog extends React.Component<EditDialogProps, EditDialogState> {
     });
     this.props.handleMessage("Edit Successfully");
     this.props.handleMessageBox(true);
+    this.props.handleActionDialog(false);
   };
   render() {
     return (

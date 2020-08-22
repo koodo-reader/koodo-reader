@@ -64,14 +64,14 @@ class Book extends React.Component<BookItemProps, BookItemState> {
         </p>
         <div className="book-item-list-config">
           <span
-            className="icon-add1 list-icon"
+            className="icon-shelf list-icon"
             onClick={() => {
               this.handleAddShelf();
             }}
             color="rgba(75,75,75,1)"
           ></span>
           <span
-            className="icon-delete1 list-icon"
+            className="icon-trash list-icon"
             onClick={() => {
               this.handleDeleteBook();
             }}

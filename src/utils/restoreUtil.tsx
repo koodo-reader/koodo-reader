@@ -36,6 +36,7 @@ class RestoreUtil {
       "sortCode",
       "readingTime",
       "recentBooks",
+      "favoriteBooks",
       "shelfList",
       "recordLocation",
     ];

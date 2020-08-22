@@ -13,6 +13,7 @@ export interface ManagerProps {
   isOpenEditDialog: boolean;
   isOpenDeleteDialog: boolean;
   isOpenAddDialog: boolean;
+  isOpenActionDialog: boolean;
   isSort: boolean;
   isFirst: string;
   isSortDisplay: boolean;
@@ -29,7 +30,7 @@ export interface ManagerProps {
 
 export interface ManagerState {
   totalBooks: number;
-  recentBooks: number;
+  favoriteBooks: number;
   isAuthed: boolean;
   isError: boolean;
   isCopied: boolean;

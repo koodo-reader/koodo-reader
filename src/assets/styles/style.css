@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'icomoon';
-  src:  url('fonts/icomoon.eot?61yhiy');
-  src:  url('fonts/icomoon.eot?61yhiy#iefix') format('embedded-opentype'),
-    url('fonts/icomoon.ttf?61yhiy') format('truetype'),
-    url('fonts/icomoon.woff?61yhiy') format('woff'),
-    url('fonts/icomoon.svg?61yhiy#icomoon') format('svg');
+  src:  url('fonts/icomoon.eot?sh6zh9');
+  src:  url('fonts/icomoon.eot?sh6zh9#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.ttf?sh6zh9') format('truetype'),
+    url('fonts/icomoon.woff?sh6zh9') format('woff'),
+    url('fonts/icomoon.svg?sh6zh9#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -25,6 +25,15 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-love:before {
+  content: "\e901";
+}
+.icon-trash:before {
+  content: "\e906";
+}
+.icon-edit:before {
+  content: "\e907";
+}
 .icon-translation:before {
   content: "\e900";
   color: #f16464;
@@ -49,44 +58,11 @@
 .icon-restore:before {
   content: "\e92c";
 }
-.icon-contact:before {
-  content: "\e912";
-  color: #4b4b4b;
-}
-.icon-github:before {
-  content: "\e913";
-  color: #4b4b4b;
-}
-.icon-donate:before {
-  content: "\e929";
-  color: #4b4b4b;
-}
-.icon-yandex2:before {
-  content: "\e927";
-  color: #4b4b4b;
-}
-.icon-yandex1:before {
-  content: "\e928";
-  color: #4b4b4b;
-}
-.icon-yandex .path1:before {
-  content: "\e914";
-  color: rgb(75, 75, 75);
-  opacity: 0.71;
-}
-.icon-yandex .path2:before {
-  content: "\e944";
-  margin-left: -1.517578125em;
-  color: rgb(75, 75, 75);
-}
 .icon-two-page:before {
   content: "\e925";
 }
 .icon-single-page:before {
   content: "\e926";
-}
-.icon-logo:before {
-  content: "\e924";
 }
 .icon-message:before {
   content: "\e923";
@@ -102,29 +78,21 @@
 }
 .icon-popup:before {
   content: "\e91f";
-  color: #fff;
 }
 .icon-note:before {
   content: "\e91a";
-  color: #109870;
 }
 .icon-collect:before {
   content: "\e91b";
-  color: #5e7fff;
 }
-.icon-copy1:before {
+.icon-copy:before {
   content: "\e91d";
-  color: #f90;
 }
 .icon-success:before {
   content: "\e91e";
-  color: #fff;
 }
-.icon-add1:before {
+.icon-add:before {
   content: "\e90d";
-}
-.icon-delete1:before {
-  content: "\e90e";
 }
 .icon-onedrive:before {
   content: "\e90f";
@@ -134,38 +102,19 @@
   content: "\e910";
   color: #4b4b4b;
 }
-.icon-mega:before {
-  content: "\e911";
-  color: #4b4b4b;
-}
-.icon-yandex3:before {
-  content: "\e915";
-}
 .icon-webdav:before {
   content: "\e916";
   color: #4b4b4b;
 }
-.icon-edit:before {
-  content: "\e918";
-}
 .icon-exit:before {
   content: "\e919";
-  color: #fff;
 }
 .icon-fullscreen:before {
   content: "\e933";
-  color: #fff;
 }
 .icon-googledrive:before {
   content: "\e934";
   color: #4b4b4b;
-}
-.icon-koodo:before {
-  content: "\e935";
-}
-.icon-home1:before {
-  content: "\e936";
-  color: #515151;
 }
 .icon-list:before {
   content: "\e937";

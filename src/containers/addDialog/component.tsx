@@ -48,6 +48,7 @@ class AddDialog extends Component<AddDialogProps, AddDialogState> {
     this.props.handleAddDialog(false);
     this.props.handleMessage("Add Successfully");
     this.props.handleMessageBox(true);
+    this.props.handleActionDialog(false);
   };
   //如果是添加到已存在的书架就diable新建图书的input框
   handleChange = (shelfTitle: string) => {

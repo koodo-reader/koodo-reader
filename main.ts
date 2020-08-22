@@ -7,7 +7,7 @@ app.on("ready", () => {
   // console.log("before message box");
 
   mainWindow = new BrowserWindow({
-    width: 1024,
+    width: 1030,
     height: 660,
     webPreferences: {
       nodeIntegration: false,

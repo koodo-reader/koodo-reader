@@ -103,6 +103,11 @@ export const sideMenu = [
     mode: "home",
   },
   {
+    name: "My Favorites",
+    icon: "love",
+    mode: "favorite",
+  },
+  {
     name: "My Bookmarks",
     icon: "bookmark",
     mode: "bookmark",
@@ -171,6 +176,12 @@ export const emptyList = [
     mode: "home",
     main: "Empty Library",
     sub: "Click the top-right button to add books",
+  },
+  {
+    mode: "favorite",
+    main: "No Favorite Books",
+    sub:
+      "Move your mouse on the top of any book, click the heart icon to add it to your favorite books",
   },
   {
     mode: "bookmark",
