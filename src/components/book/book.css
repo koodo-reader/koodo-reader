@@ -85,3 +85,44 @@
   z-index: 2;
   text-shadow: 0px 0px 5px rgba(75, 75, 75, 0.6);
 }
+.book-item-cover-img {
+  width: 90px;
+  height: 100px;
+  background: linear-gradient(
+    197deg,
+    rgba(45, 162, 255, 1) 0%,
+    rgba(105, 235, 222, 1) 100%
+  );
+  margin-left: 15px;
+  opacity: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.book-item-cover-title {
+  height: 30px;
+  font-size: 8px;
+  line-height: 15px;
+  color: rgba(75, 75, 75, 1);
+  opacity: 1;
+  float: left;
+  font-size: 14px;
+  height: 15px;
+
+  line-height: 30px;
+  color: black;
+  opacity: 1;
+  width: 150px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  position: absolute;
+  top: 115px;
+  left: 15px;
+  font-weight: bold;
+  width: 106px;
+  height: 38px;
+  /* display: flex;
+  align-items: center;
+  justify-content: flex-start; */
+}

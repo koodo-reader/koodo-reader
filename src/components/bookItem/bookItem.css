@@ -49,3 +49,14 @@
 .book-item-list-percentage {
   max-width: 50px;
 }
+.book-item-list-cover-img {
+  min-width: 57px;
+  background: linear-gradient(
+    197deg,
+    rgba(45, 162, 255, 1) 0%,
+    rgba(105, 235, 222, 1) 100%
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

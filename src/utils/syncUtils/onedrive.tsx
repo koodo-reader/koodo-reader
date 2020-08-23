@@ -86,6 +86,10 @@ class OnedriveUitl {
   ) {
     var ACCESS_TOKEN = OtherUtil.getReaderConfig("onedrive_access_token") || "";
     var backupId = OtherUtil.getReaderConfig("onedrive_backup_id") || "";
+    if (!backupId) {
+      showMessage("For OneDrive, you must first backup your file");
+      return;
+    }
     let formData = new FormData();
     formData.append("ACCESS_TOKEN", ACCESS_TOKEN);
     formData.append("backupId", backupId);

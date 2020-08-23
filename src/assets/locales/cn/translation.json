@@ -133,5 +133,15 @@
   "Go to Add your first book": "快去添加您的第一本书吧",
   "That's all for the tutorial": "介绍完毕",
   "Download failed,network problem or no backup": "下载失败，网络出错或者没有找到备份",
-  "Upload failed, check your connection": "上传失败，请检查网络连接"
+  "Upload failed, check your connection": "上传失败，请检查网络连接",
+  "For OneDrive, you must first backup your file": "对于Onedrive，请先备份后，再使用恢复功能",
+  "Choose your action to this book": "选择对本书的操作",
+  "Edit": "编辑",
+  "Add": "添加",
+  "What's new about this version": "这次更新包含了什么",
+  "Version": "版本号：",
+  "Date": "更新日期：",
+  "Our Website": "欢迎访问我们的网站",
+  "What's New": "新增功能",
+  "What's been fixed": "问题修复"
 }

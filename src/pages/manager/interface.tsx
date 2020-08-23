@@ -34,5 +34,6 @@ export interface ManagerState {
   isAuthed: boolean;
   isError: boolean;
   isCopied: boolean;
+  isUpdated: boolean;
   token: string;
 }

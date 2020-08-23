@@ -23,6 +23,8 @@ import { getParamsFromUrl } from "../../utils/syncUtils/common";
 import copy from "copy-text-to-clipboard";
 import OtherUtil from "../../utils/otherUtil";
 import AddFavorite from "../../utils/addFavorite";
+import packageJson from "../../../package.json";
+import UpdateDialog from "../../components/updataDialog";
 
 class Manager extends React.Component<ManagerProps, ManagerState> {
   timer!: NodeJS.Timeout;
@@ -34,6 +36,7 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
       isAuthed: false,
       isError: false,
       isCopied: false,
+      isUpdated: OtherUtil.getReaderConfig("version") !== packageJson.version,
       token: "",
     };
   }
@@ -47,12 +50,9 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
   }
 
   UNSAFE_componentWillReceiveProps(nextProps: ManagerProps) {
-    if (
-      this.props.books &&
-      this.props.books.length !== nextProps.books.length
-    ) {
+    if (nextProps.books && this.state.totalBooks !== nextProps.books.length) {
       this.setState({
-        totalBooks: this.props.books === null ? 0 : this.props.books.length,
+        totalBooks: nextProps.books.length,
       });
       OtherUtil.setReaderConfig("totalBooks", this.state.totalBooks.toString());
     }
@@ -92,12 +92,20 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
       this.props.handleFirst(OtherUtil.getReaderConfig("isFirst") || "yes");
     }, 1000);
   }
-
+  handleUpdateDialog = () => {
+    this.setState({ isUpdated: false });
+    OtherUtil.setReaderConfig("version", packageJson.version);
+  };
   componentWillUnmout() {
     clearTimeout(this.timer);
   }
 
   render() {
+    console.log(
+      this.state.isUpdated,
+      OtherUtil.getReaderConfig("version"),
+      packageJson.version
+    );
     if (this.state.isError || this.state.isAuthed) {
       return (
         <div className="backup-page-finish-container">
@@ -139,6 +147,9 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
     let shelfTitle = Object.keys(ShelfUtil.getShelf());
     let currentShelfTitle = shelfTitle[this.props.shelfIndex + 1];
     let shelfBooks = (ShelfUtil.getShelf()[currentShelfTitle] || []).length;
+    const updateDialogProps = {
+      handleUpdateDialog: this.handleUpdateDialog,
+    };
     return (
       <div className="manager">
         <Sidebar />
@@ -157,6 +168,7 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
         {this.props.isSortDisplay ? <SortDialog /> : null}
         {this.props.isBackup ? <BackupPage /> : null}
         {this.props.isFirst === "yes" ? <WelcomePage /> : null}
+        {this.state.isUpdated ? <UpdateDialog {...updateDialogProps} /> : null}
         {totalBooks === 0 ? (
           <EmptyPage />
         ) : covers === null &&
