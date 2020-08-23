@@ -25,6 +25,7 @@
 .delete-highlighter-container {
   position: relative;
 }
-.popup-menu-triangle-up {
+.popup-menu-triangle-up,
+.icon-popup {
   color: white;
 }

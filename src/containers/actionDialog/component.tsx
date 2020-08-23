@@ -23,7 +23,7 @@ class ActionDialog extends React.Component<ActionDialogProps> {
     return (
       <div className="action-dialog-container">
         <div className="action-dialog-title">
-          <Trans>选择对本书的操作</Trans>
+          <Trans>Choose your action to this book</Trans>
         </div>
         <div className="action-dialog-book">
           <div className="action-dialog-book-title">
@@ -39,7 +39,7 @@ class ActionDialog extends React.Component<ActionDialogProps> {
               }}
             ></span>
             <p className="action-name">
-              <Trans>添加</Trans>
+              <Trans>Add</Trans>
             </p>
           </div>
           <div className="action-dialog-delete">
@@ -50,7 +50,7 @@ class ActionDialog extends React.Component<ActionDialogProps> {
               }}
             ></span>
             <p className="action-name">
-              <Trans>删除</Trans>
+              <Trans>Delete</Trans>
             </p>
           </div>
           <div className="action-dialog-edit">
@@ -61,7 +61,7 @@ class ActionDialog extends React.Component<ActionDialogProps> {
               }}
             ></span>
             <p className="action-name">
-              <Trans>编辑</Trans>
+              <Trans>Edit</Trans>
             </p>
           </div>
         </div>

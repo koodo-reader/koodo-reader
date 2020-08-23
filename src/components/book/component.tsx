@@ -60,7 +60,7 @@ class Book extends React.Component<BookProps, BookState> {
           this.handleConfig(false);
         }}
       >
-        {0 ? (
+        {this.props.bookCover ? (
           <img
             className="book-item-cover"
             src={this.props.bookCover}
@@ -70,7 +70,20 @@ class Book extends React.Component<BookProps, BookState> {
             }}
           />
         ) : (
-          <div className="book-item-cover">test</div>
+          <div
+            className="book-item-cover"
+            onClick={() => {
+              this.handleOpenBook();
+            }}
+          >
+            <div className="book-item-cover-img">
+              <img src="/assets/cover.svg" alt="" style={{ width: "80%" }} />
+            </div>
+
+            <p className="book-item-cover-title">
+              <span>{this.props.book.name}</span>
+            </p>
+          </div>
         )}
 
         <p className="book-item-title">{this.props.book.name}</p>
