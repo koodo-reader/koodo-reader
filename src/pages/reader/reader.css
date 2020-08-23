@@ -64,7 +64,7 @@
   }
 }
 .left-panel {
-  width: 50px;
+  width: 60px;
   height: calc(100% - 100px);
   position: absolute;
   left: 0px;
@@ -74,7 +74,7 @@
   opacity: 0;
 }
 .right-panel {
-  width: 50px;
+  width: 60px;
   height: calc(100% - 100px);
   position: absolute;
   right: 0px;

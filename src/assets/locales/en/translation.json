@@ -132,5 +132,7 @@
   "Go to Add your first book": "Go to Add your first book",
   "Download failed,network problem or no backup": "Download failed,network problem or no backup",
   "Upload failed, check your connection": "Upload failed, check your connection",
-  "That's all for the tutorial": "That's all for the tutorial"
+  "That's all for the tutorial": "That's all for the tutorial",
+  "Version": "Version: ",
+  "Date": "Date: "
 }
