@@ -133,5 +133,15 @@
   "That's all for the tutorial": "介紹完畢",
   "Download failed,network problem or no backup": "下載失敗，網路出錯或者沒有找到備份",
   "Upload failed, check your connection": "上傳失敗，請檢查網路連接",
-  "Duplicate Shelf": "書架重複"
+  "Duplicate Shelf": "書架重複",
+  "For OneDrive, you must first backup your file": "對於Onedrive，請先備份後，再使用恢復功能",
+  "Choose your action to this book": "選擇對本書的操作",
+  "Edit": "編輯",
+  "Add": "添加",
+  "What's new about this version": "這次更新包含了什麽",
+  "Version": "版本號：",
+  "Date": "更新日期：",
+  "Our Website": "歡迎訪問我們的網站",
+  "What's New": "新增功能",
+  "What's been fixed": "問題修復"
 }
