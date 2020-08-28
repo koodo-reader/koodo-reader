@@ -67,8 +67,9 @@ class BookList extends React.Component<BookListProps> {
   handleFilter = (items: any, arr: number[]) => {
     let itemArr: any[] = [];
     arr.forEach((item) => {
-      itemArr.push(items[item]);
+      items[item] && itemArr.push(items[item]);
     });
+    console.log(items, itemArr, "filter");
     return itemArr;
   };
   renderBookList = () => {
@@ -78,14 +79,20 @@ class BookList extends React.Component<BookListProps> {
         ? this.handleShelf(this.props.books, this.props.shelfIndex)
         : this.props.isSearch
         ? this.handleFilter(this.props.books, this.props.searchBooks)
+        : this.props.mode === "favorite" && !this.props.isSort
+        ? this.handleFavorite(this.props.books, AddFavorite.getAllFavorite())
+        : this.props.mode === "favorite" && this.props.isSort
+        ? this.handleFilter(
+            this.handleFavorite(this.props.books, AddFavorite.getAllFavorite()),
+            //返回排序后的图书index
+            SortUtil.sortBooks(this.props.books, this.props.sortCode) || []
+          )
         : this.props.isSort
         ? this.handleFilter(
             this.props.books,
             //返回排序后的图书index
             SortUtil.sortBooks(this.props.books, this.props.sortCode) || []
           )
-        : this.props.mode === "favorite"
-        ? this.handleFavorite(this.props.books, AddFavorite.getAllFavorite())
         : this.handleRecent(this.props.books, RecordRecent.getAllRecent());
     //根据不同的场景获取不同图书的封面
     let covers =
@@ -93,13 +100,21 @@ class BookList extends React.Component<BookListProps> {
         ? this.handleShelf(this.props.covers, this.props.shelfIndex)
         : this.props.isSearch
         ? this.handleFilter(this.props.covers, this.props.searchBooks)
+        : this.props.mode === "favorite" && !this.props.isSort
+        ? this.handleFavorite(this.props.covers, AddFavorite.getAllFavorite())
+        : this.props.mode === "favorite" && this.props.isSort
+        ? this.handleFilter(
+            this.handleFavorite(
+              this.props.covers,
+              AddFavorite.getAllFavorite()
+            ),
+            SortUtil.sortBooks(this.props.books, this.props.sortCode) || []
+          )
         : this.props.isSort
         ? this.handleFilter(
             this.props.covers,
             SortUtil.sortBooks(this.props.books, this.props.sortCode) || []
           )
-        : this.props.mode === "favorite"
-        ? this.handleFavorite(this.props.covers, AddFavorite.getAllFavorite())
         : this.handleRecent(this.props.covers, RecordRecent.getAllRecent());
     return books.map((item: BookModel, index: number) => {
       return this.props.isList === "list" ? (
