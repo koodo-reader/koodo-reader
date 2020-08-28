@@ -8,7 +8,7 @@ fontList
     console.log(fonts);
   })
   .catch((err: any) => {
-    console.log(err);
+    console.log("epub");
   });
 let mainWindow;
 
