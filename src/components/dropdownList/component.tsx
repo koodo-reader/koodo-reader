@@ -29,6 +29,7 @@ class DropdownList extends React.Component<
   }
   componentDidMount() {
     //使下拉菜单选中预设的值
+
     document
       .querySelector(".paragraph-character-setting")!
       .children[0].children[1].children[
