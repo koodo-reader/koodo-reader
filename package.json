@@ -1,7 +1,7 @@
 {
   "name": "koodo-reader",
   "main": "main.ts",
-  "version": "1.1.3",
+  "version": "1.1.4",
   "description": "A cross-platform open source Epub reader ",
   "author": {
     "name": "App by Troye",
@@ -14,9 +14,10 @@
     "copy-text-to-clipboard": "^2.2.0",
     "dropbox": "^5.2.0",
     "electron-is-dev": "^1.1.0",
+    "font-list": "^1.2.11",
     "i18next": "^19.4.4",
     "i18next-browser-languagedetector": "^4.2.0",
-    "lodash": "^4.17.19",
+    "lodash": "^4.17.20",
     "md5": "^2.3.0",
     "react-dropzone": "^11.0.1",
     "react-i18next": "^9.0.10"
@@ -98,8 +99,6 @@
     ]
   },
   "devDependencies": {
-    "@types/lodash": "^4.14.159",
-    "@types/md5": "^2.2.0",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
@@ -108,6 +107,8 @@
     "@types/i18next-browser-languagedetector": "^3.0.0",
     "@types/jest": "^25.2.1",
     "@types/jszip": "^3.4.1",
+    "@types/lodash": "^4.14.159",
+    "@types/md5": "^2.2.0",
     "@types/node": "^13.13.2",
     "@types/rangy": "^0.0.33",
     "@types/react": "^16.9.34",

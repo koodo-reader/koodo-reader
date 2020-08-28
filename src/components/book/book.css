@@ -74,6 +74,7 @@
   color: white;
   cursor: pointer;
   z-index: 1;
+  text-shadow: 0px 0px 5px rgba(75, 75, 75, 0.6);
 }
 .book-loved-icon {
   position: absolute;
