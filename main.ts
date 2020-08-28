@@ -1,6 +1,15 @@
 const { app, BrowserWindow, dialog, shell, remote } = require("electron");
 const isDev = require("electron-is-dev");
 const path = require("path");
+const fontList = require("font-list");
+fontList
+  .getFonts()
+  .then((fonts: any[]) => {
+    console.log(fonts);
+  })
+  .catch((err: any) => {
+    console.log(err);
+  });
 let mainWindow;
 
 app.on("ready", () => {
