@@ -10,7 +10,7 @@
 </h3>
 <div align="center">
 
-[下载](https://koodo.960960.xyz/download) | [官网](https://koodo.960960.xyz)
+[下载](https://github.com/troyeguo/koodo-reader/releases/tag/v1.1.3) | [官网](https://koodo.960960.xyz)
 
 </div>
 <div align="center">
@@ -58,7 +58,7 @@
 
 ## 使用方法
 
-桌面端：前往这里下载最新的安装包 [点我前往](https://koodo.960960.xyz/download)
+桌面端：前往这里下载最新的安装包 [点我前往](https://github.com/troyeguo/koodo-reader/releases/tag/v1.1.3)
 
 网页版：代码托管在 Netlify [点我前往](https://reader.960960.xyz)
 
