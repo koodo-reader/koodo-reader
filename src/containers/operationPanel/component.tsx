@@ -49,9 +49,7 @@ class OperationPanel extends React.Component<
   // 退出全屏模式
   handleExitFullScreen() {
     //解决使用esc退出全屏，再退出阅读时发生的bug
-    if (!document.fullscreenElement) {
-      return;
-    }
+    if (!document.fullscreenElement) return;
 
     if (document.exitFullscreen) {
       document.exitFullscreen();
@@ -69,10 +67,6 @@ class OperationPanel extends React.Component<
   handleAddBookmark() {
     let bookKey = this.props.currentBook.key;
     let epub = this.props.currentEpub;
-    let cfi1 =
-      RecordLocation.getCfi(this.props.currentBook.key) === null
-        ? 0
-        : RecordLocation.getCfi(this.props.currentBook.key).cfi;
     const currentLocation = epub.rendition.currentLocation();
     let chapterHref = currentLocation.start.href;
     let chapter = "Unknown Chapter";
@@ -90,7 +84,8 @@ class OperationPanel extends React.Component<
       .replace(/\)/, "");
     const cfiend = currentLocation.end.cfi.replace(/.*!/, "").replace(/\)/, "");
     const cfiRange = `epubcfi(${cfibase}!,${cfistart},${cfiend})`;
-    const cfi = currentLocation.start.cfi;
+    const cfi = RecordLocation.getCfi(this.props.currentBook.key).cfi;
+
     epub.getRange(cfiRange).then((range: any) => {
       let text = range.toString();
       text = text.replace(/\s\s/g, "");
@@ -104,7 +99,6 @@ class OperationPanel extends React.Component<
           : RecordLocation.getCfi(this.props.currentBook.key).percentage;
 
       let bookmark = new Bookmark(bookKey, cfi, text, percentage, chapter);
-      console.log(cfi1, cfi, bookmark, "bookmark");
       let bookmarkArr = this.props.bookmarks ? this.props.bookmarks : [];
       bookmarkArr.push(bookmark);
       this.props.handleBookmarks(bookmarkArr);
@@ -119,11 +113,13 @@ class OperationPanel extends React.Component<
   // 点击退出按钮的处理程序
   handleExit() {
     this.props.handleReadingState(false);
-    let cfi = this.props.currentEpub.rendition.currentLocation().start.cfi;
+    // let cfi = this.props.currentEpub.locations.cfiFromPercentage(
+    //   RecordLocation.getCfi(this.props.currentBook.key).percentage
+    // );
 
-    let locations = this.props.currentEpub.locations;
-    let percentage = locations.percentageFromCfi(cfi);
-    RecordLocation.recordCfi(this.props.currentBook.key, cfi, percentage);
+    // let locations = this.props.currentEpub.locations;
+    // let percentage = locations.percentageFromCfi(cfi);
+    // RecordLocation.recordCfi(this.props.currentBook.key, cfi, percentage);
     OtherUtil.setReaderConfig("isFullScreen", "no");
     if (this.state.isFullScreen) {
       this.handleExitFullScreen();
