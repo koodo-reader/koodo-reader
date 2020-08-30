@@ -45,9 +45,7 @@ class BookList extends React.Component<BookListProps> {
   //获取书架数据
   handleShelf(items: any, index: number) {
     //获取书架名
-    if (index === -1) {
-      return;
-    }
+    if (index === -1) return;
     let shelfTitle = Object.keys(ShelfUtil.getShelf());
     //获取当前书架名
     let currentShelfTitle = shelfTitle[index + 1];
