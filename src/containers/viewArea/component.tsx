@@ -11,7 +11,7 @@ declare var window: any;
 
 class ViewArea extends React.Component<ViewAreaProps, ViewAreaStates> {
   rendition: any;
-
+  isFirst: boolean;
   constructor(props: ViewAreaProps) {
     super(props);
     this.state = {
@@ -24,6 +24,7 @@ class ViewArea extends React.Component<ViewAreaProps, ViewAreaStates> {
       rect: null,
     };
     this.rendition = null;
+    this.isFirst = true;
   }
   UNSAFE_componentWillMount() {
     this.props.handleFetchLocations(this.props.currentEpub);
@@ -44,7 +45,9 @@ class ViewArea extends React.Component<ViewAreaProps, ViewAreaStates> {
     this.rendition.on("locationChanged", () => {
       this.props.handleReadingEpub(epub);
       this.props.handleOpenMenu(false);
-      let cfi = epub.rendition.currentLocation().start.cfi;
+      const currentLocation = this.rendition.currentLocation();
+      const cfi = currentLocation.start.cfi;
+
       this.props.handleShowBookmark(
         this.props.bookmarks &&
           this.props.bookmarks.filter(
@@ -53,34 +56,44 @@ class ViewArea extends React.Component<ViewAreaProps, ViewAreaStates> {
           ? true
           : false
       );
-
-      if (this.props.locations) {
+      if (!this.isFirst && this.props.locations) {
         let percentage = this.props.locations.percentageFromCfi(cfi);
         RecordLocation.recordCfi(this.props.currentBook.key, cfi, percentage);
         this.props.handlePercentage(percentage);
       }
+      this.isFirst = false;
     });
     this.rendition.on("rendered", () => {
       let doc = document.getElementsByTagName("iframe")[0].contentDocument;
-      doc!.addEventListener("click", this.showImage);
+      if (!doc) {
+        return;
+      }
+      doc.addEventListener("click", this.showImage);
     });
     this.rendition.on("selected", (cfiRange: any, contents: any) => {
       var range = contents.range(cfiRange);
       var rect = range.getBoundingClientRect();
+      console.log("selected");
       this.setState({ cfiRange, contents, rect });
     });
-    // this.rendition.on("selected", (cfiRange: any, contents: any) => {
-    //   var range = contents.range(cfiRange);
-    //   console.log(range, "range");
-    //   var rect = range.getBoundingClientRect();
-    //   console.log(rect);
-    // });
+    this.rendition.themes.default({
+      "a, article, cite, code, div, li, p, pre, span, table": {
+        "font-size": `${
+          OtherUtil.getReaderConfig("fontSize") || 17
+        }px !important`,
+        "line-height": `${
+          OtherUtil.getReaderConfig("lineHeight") || "1.25"
+        } !important`,
+        "font-family": `${
+          OtherUtil.getReaderConfig("fontFamily") || "Helvetica"
+        } !important`,
+      },
+    });
     this.rendition.display(
       RecordLocation.getCfi(this.props.currentBook.key) === null
         ? null
         : RecordLocation.getCfi(this.props.currentBook.key).cfi
     );
-    document.addEventListener("click", this.showImage);
   }
   showImage = (event: any) => {
     console.log("click");

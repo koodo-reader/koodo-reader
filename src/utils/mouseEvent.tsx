@@ -3,7 +3,7 @@ export const MouseEvent = (rendition: any) => {
   let isFirefox = navigator.userAgent.indexOf("Firefox") !== -1;
   let lock = false; // 暂时锁住翻页快捷键，避免快速点击产生的Bug
   let arrowKeys = (event: any) => {
-    event.preventDefault();
+    // event.preventDefault();
     if (lock) return;
     if (event.keyCode === 37 || event.keyCode === 38) {
       rendition.prev();
@@ -65,19 +65,16 @@ export const MouseEvent = (rendition: any) => {
   };
 
   rendition.on("rendered", () => {
-    if (!document.getElementsByTagName("iframe")[0]) {
-      return;
-    }
+    if (!document.getElementsByTagName("iframe")[0]) return;
     let doc = document.getElementsByTagName("iframe")[0].contentDocument;
-    window.addEventListener("keydown", arrowKeys); // 箭头按键翻页
-    doc!.addEventListener("keydown", arrowKeys); // 箭头按键翻页
+    if (!doc) return;
+    doc.addEventListener("keydown", arrowKeys); // 箭头按键翻页
     // 鼠标滚轮翻页
+    window.addEventListener("keydown", arrowKeys, false);
     if (isFirefox) {
-      doc!.addEventListener("DOMMouseScroll", mouseFirefox, false);
-      window.addEventListener("DOMMouseScroll", mouseFirefox, false);
+      doc.addEventListener("DOMMouseScroll", mouseFirefox, false);
     } else {
-      doc!.addEventListener("mousewheel", mouseChrome, false);
-      window.addEventListener("mousewheel", mouseChrome, false);
+      doc.addEventListener("mousewheel", mouseChrome, false);
     }
     ReaderConfig.addDefaultCss(); // 切换章节后为当前文档设置默认的样式
   });

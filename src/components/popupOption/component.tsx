@@ -5,6 +5,7 @@ import Note from "../../model/Note";
 import { Trans } from "react-i18next";
 import { PopupOptionProps } from "./interface";
 import ColorOption from "../colorOption";
+import RecordLocation from "../../utils/recordLocation";
 
 declare var window: any;
 
@@ -13,22 +14,16 @@ class PopupOption extends React.Component<PopupOptionProps> {
     if (
       !document.getElementsByTagName("iframe")[0] ||
       !document.getElementsByTagName("iframe")[0].contentDocument
-    ) {
+    )
       return;
-    }
     this.props.handleChangeDirection(false);
-    let iframe = document.getElementsByTagName("iframe")[0];
-    let iDoc = iframe.contentDocument;
-    let sel = iDoc!.getSelection();
     this.props.handleMenuMode("note");
-    let rect = this.props.currentEpub.renderer.rangePosition(
-      sel!.getRangeAt(0)
-    );
-
+    let rect = this.props.rect;
+    let x = rect.x % this.props.currentEpub.rendition._layout.width;
     let height = 200;
-    let posX = rect.x + rect.width / 2 - 20;
+    let posX = x + rect.width / 2 - 20;
     //防止menu超出图书
-    let rightEdge = this.props.currentEpub.renderer.width - 200;
+    let rightEdge = this.props.currentEpub.rendition._layout.width - 200;
     var posY;
     //控制menu方向
     if (rect.y < height) {
@@ -39,7 +34,7 @@ class PopupOption extends React.Component<PopupOptionProps> {
     }
 
     posY = posY < 6 ? 6 : posY;
-    posX = posX < 10 ? 10 : rect.x > rightEdge ? rightEdge : posX;
+    posX = posX < 10 ? 10 : x > rightEdge ? rightEdge : posX;
 
     let popupMenu = document.querySelector(".popup-menu-container");
     popupMenu &&
@@ -49,16 +44,18 @@ class PopupOption extends React.Component<PopupOptionProps> {
     if (
       !document.getElementsByTagName("iframe")[0] ||
       !document.getElementsByTagName("iframe")[0].contentDocument
-    ) {
+    )
       return;
-    }
-    let iDoc = document.getElementsByTagName("iframe")[0].contentDocument;
-    let text = iDoc!.execCommand("copy", false);
+    let iframe = document.getElementsByTagName("iframe")[0];
+    if (!iframe) return;
+    let doc = iframe.contentDocument;
+    if (!doc) return;
+    let text = doc.execCommand("copy", false);
     !text
       ? console.log("failed to copy text to clipboard")
       : console.log("copied!");
     this.props.handleOpenMenu(false);
-    iDoc!.getSelection()!.empty();
+    doc.getSelection()!.empty();
     this.props.handleMessage("Copy Successfully");
     this.props.handleMessageBox(true);
   };
@@ -66,13 +63,15 @@ class PopupOption extends React.Component<PopupOptionProps> {
     if (
       !document.getElementsByTagName("iframe")[0] ||
       !document.getElementsByTagName("iframe")[0].contentDocument
-    ) {
+    )
       return;
-    }
     let iframe = document.getElementsByTagName("iframe")[0];
-    let iDoc = iframe.contentDocument;
-    let sel = iDoc!.getSelection();
-    let text = sel!.toString();
+    if (!iframe) return;
+    let doc = iframe.contentDocument;
+    if (!doc) return;
+    let sel = doc.getSelection();
+    if (!sel) return;
+    let text = sel.toString();
     text = text && text.trim();
     this.props.handleMenuMode("trans");
     this.props.handleOriginalText(text);
@@ -81,28 +80,13 @@ class PopupOption extends React.Component<PopupOptionProps> {
     if (
       !document.getElementsByTagName("iframe")[0] ||
       !document.getElementsByTagName("iframe")[0].contentDocument
-    ) {
+    )
       return;
-    }
-    let book = this.props.currentBook;
+    let bookKey = this.props.currentBook.key;
     let epub = this.props.currentEpub;
-    let iframe = document.getElementsByTagName("iframe")[0];
-    let iDoc = iframe.contentDocument;
-    let sel = iDoc!.getSelection();
-    let rangeBefore = sel!.getRangeAt(0);
-
-    let text = sel!.toString();
-    text = text && text.trim();
-    let cfiBase = epub.renderer.currentChapter.cfiBase;
-    let cfi = new (window as any).EPUBJS.EpubCFI().generateCfiFromRange(
-      rangeBefore,
-      cfiBase
-    );
-    let bookKey = book.key;
-    let percentage = this.props.currentEpub.locations.percentageFromCfi(cfi);
-    //获取章节名
     const currentLocation = epub.rendition.currentLocation();
     let chapterHref = currentLocation.start.href;
+    let chapterIndex = currentLocation.start.index;
     let chapter = "Unknown Chapter";
     let currentChapter = this.props.chapters.filter(
       (item: any) => item.href.split("#")[0] === chapterHref
@@ -110,15 +94,34 @@ class PopupOption extends React.Component<PopupOptionProps> {
     if (currentChapter) {
       chapter = currentChapter.label.trim(" ");
     }
-    let charRange = window.rangy
-      .getSelection(iframe)
-      .saveCharacterRanges(iDoc!.body)[0];
-    let range = JSON.stringify(charRange);
+    const cfi = RecordLocation.getCfi(this.props.currentBook.key).cfi;
+
+    let percentage =
+      RecordLocation.getCfi(this.props.currentBook.key) === null
+        ? 0
+        : RecordLocation.getCfi(this.props.currentBook.key).percentage;
     let color = this.props.color;
     let notes = "";
+    let iframe = document.getElementsByTagName("iframe")[0];
+    if (!iframe) return;
+    let doc = iframe.contentDocument;
+    if (!doc) return;
+    let charRange = window.rangy
+      .getSelection(iframe)
+      .saveCharacterRanges(doc.body)[0];
+    let range = JSON.stringify(charRange);
+    console.log(doc.getSelection(), "propscontents");
+    let text = doc.getSelection()?.toString();
+    if (!text) return;
+    text = text.replace(/\s\s/g, "");
+    text = text.replace(/\r/g, "");
+    text = text.replace(/\n/g, "");
+    text = text.replace(/\t/g, "");
+    text = text.replace(/\f/g, "");
     let digest = new Note(
       bookKey,
       chapter,
+      chapterIndex,
       text,
       cfi,
       range,
@@ -126,6 +129,7 @@ class PopupOption extends React.Component<PopupOptionProps> {
       percentage,
       color
     );
+    console.log(digest, "digest");
     let noteArr = this.props.notes;
     noteArr.push(digest);
     localforage.setItem("notes", noteArr).then(() => {

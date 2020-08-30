@@ -3,12 +3,11 @@ import OtherUtil from "./otherUtil";
 class readerConfig {
   // 为 iframe 添加默认的样式
   static addDefaultCss() {
-    if (!document.getElementsByTagName("iframe")[0].contentDocument) {
-      return;
-    }
+    if (!document.getElementsByTagName("iframe")[0].contentDocument) return;
     let css = this.getDefaultCss();
-    let iDoc = document.getElementsByTagName("iframe")[0].contentDocument;
-    let style = iDoc!.getElementById("default-style");
+    let doc = document.getElementsByTagName("iframe")[0].contentDocument;
+    if (!doc) return;
+    let style = doc.getElementById("default-style");
     let background = document.querySelector(".background");
     background!.setAttribute(
       "style",
@@ -16,10 +15,10 @@ class readerConfig {
     );
 
     if (!style) {
-      style = iDoc!.createElement("style");
+      style = doc.createElement("style");
       style.id = "default-style";
       style.textContent = css;
-      iDoc!.head.appendChild(style);
+      doc.head.appendChild(style);
       return;
     }
     style.textContent = css;
@@ -28,23 +27,8 @@ class readerConfig {
   static getDefaultCss() {
     let colors = ["#FBF1D1", "#EFEEB0", "#CAEFC9", "#76BEE9"];
     let css1 = `::selection{background:#f3a6a68c}::-moz-selection{background:#f3a6a68c}[class*=color-]:hover{cursor:pointer;background-image:linear-gradient(0,rgba(0,0,0,.075),rgba(0,0,0,.075))}.color-0{background-color:${colors[0]}}.color-1{background-color:${colors[1]}}.color-2{background-color:${colors[2]}}.color-3{background-color:${colors[3]}}`;
-    let css2 = [
-      "a, article, cite, code, div, li, p, pre, span, table {",
-      `    font-size: ${
-        OtherUtil.getReaderConfig("fontSize") || 17
-      }px !important;`,
-      `    line-height: ${
-        OtherUtil.getReaderConfig("lineHeight") || "1.25"
-      } !important;`,
-      `    font-family: "${
-        OtherUtil.getReaderConfig("fontFamily") || "Helvetica"
-      }" !important;`,
-      "}",
-      "img {",
-      "    max-width: 100% !important;",
-      "}",
-    ];
-    return css1 + css2.join("\n");
+
+    return css1;
   }
 }
 export const themeList = [

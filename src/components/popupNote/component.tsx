@@ -17,43 +17,18 @@ class PopupNote extends React.Component<PopupNoteProps> {
     if (
       !document.getElementsByTagName("iframe")[0] ||
       !document.getElementsByTagName("iframe")[0].contentDocument
-    ) {
+    )
       return;
-    }
-    let book = this.props.currentBook;
-    let epub = this.props.currentEpub;
-    let iframe = document.getElementsByTagName("iframe")[0];
-    let iDoc = iframe.contentDocument;
-    let sel = iDoc!.getSelection();
     let notes = (document.querySelector(".editor-box") as HTMLInputElement)
       .value;
-    (document.querySelector(".editor-box") as HTMLInputElement).value = "";
-    let text = sel!.toString();
-    text = text && text.trim();
-    let cfi = RecordLocation.getCfi(book.key).cfi;
-    let percentage = RecordLocation.getCfi(book.key).percentage;
-    let bookKey = book.key;
-    let charRange = window.rangy
-      .getSelection(iframe)
-      .saveCharacterRanges(iDoc!.body)[0];
-    let range = JSON.stringify(charRange);
-    //获取章节名
-    const currentLocation = epub.rendition.currentLocation();
-    let chapterHref = currentLocation.start.href;
-    let chapter = "Unknown Chapter";
-    let currentChapter = this.props.chapters.filter(
-      (item: any) => item.href.split("#")[0] === chapterHref
-    )[0];
-    if (currentChapter) {
-      chapter = currentChapter.label.trim(" ");
-    }
-    let color = this.props.color || 0;
+
     if (this.props.noteKey) {
       this.props.notes.forEach((item) => {
         if (item.key === this.props.noteKey) {
           item.notes = notes;
         }
       });
+      console.log(this.props.notes, "notes");
       localforage.setItem("notes", this.props.notes).then(() => {
         this.props.handleOpenMenu(false);
         this.props.handleMessage("Add Successfully");
@@ -64,9 +39,54 @@ class PopupNote extends React.Component<PopupNoteProps> {
         console.log("edit");
       });
     } else {
+      let bookKey = this.props.currentBook.key;
+      let epub = this.props.currentEpub;
+      const currentLocation = epub.rendition.currentLocation();
+      let chapterHref = currentLocation.start.href;
+      let chapterIndex = currentLocation.start.index;
+      let chapter = "Unknown Chapter";
+      let currentChapter = this.props.chapters.filter(
+        (item: any) => item.href.split("#")[0] === chapterHref
+      )[0];
+      if (currentChapter) {
+        chapter = currentChapter.label.trim(" ");
+      }
+
+      const cfi = RecordLocation.getCfi(this.props.currentBook.key).cfi;
+
+      let iframe = document.getElementsByTagName("iframe")[0];
+      let doc = iframe.contentDocument;
+      if (!doc) {
+        return;
+      }
+      let charRange = window.rangy
+        .getSelection(iframe)
+        .saveCharacterRanges(doc.body)[0];
+      let range = JSON.stringify(charRange);
+      console.log(
+        charRange,
+        doc.getSelection(),
+        doc.getSelection()!.toString()
+      );
+      let text = doc.getSelection()?.toString();
+      if (!text) {
+        return;
+      }
+      text = text.replace(/\s\s/g, "");
+      text = text.replace(/\r/g, "");
+      text = text.replace(/\n/g, "");
+      text = text.replace(/\t/g, "");
+      text = text.replace(/\f/g, "");
+      let percentage =
+        RecordLocation.getCfi(this.props.currentBook.key) === null
+          ? 0
+          : RecordLocation.getCfi(this.props.currentBook.key).percentage;
+
+      let color = this.props.color || 0;
       let note = new Note(
         bookKey,
         chapter,
+        chapterIndex,
         text,
         cfi,
         range,
