@@ -14,6 +14,7 @@
     "copy-text-to-clipboard": "^2.2.0",
     "dropbox": "^5.2.0",
     "electron-is-dev": "^1.1.0",
+    "epubjs": "^0.3.88",
     "font-list": "^1.2.11",
     "i18next": "^19.4.4",
     "i18next-browser-languagedetector": "^4.2.0",

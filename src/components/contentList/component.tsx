@@ -9,10 +9,14 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
     this.handleJump = this.handleJump.bind(this);
   }
   componentWillMount() {
-    this.props.currentEpub
-      .getToc()
+    console.log(
+      this.props.currentEpub.navigation,
+      "this.props.currentEpub.navigation"
+    );
+    this.props.currentEpub.loaded.navigation
       .then((chapters: any) => {
-        this.setState({ chapters });
+        console.log(chapters.toc, "chapters");
+        this.setState({ chapters: chapters.toc });
       })
       .catch(() => {
         console.log("Error occurs");
@@ -21,7 +25,7 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
   handleJump(event: any) {
     event.preventDefault();
     let href = event.target.getAttribute("href");
-    this.props.currentEpub.goto(href);
+    this.props.currentEpub.rendition.display(href);
   }
   render() {
     const renderContentList = (items: any) => {

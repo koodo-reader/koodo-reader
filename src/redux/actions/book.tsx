@@ -15,6 +15,7 @@ export function handleReadingState(state: boolean) {
   return { type: "HANDLE_READING_STATE", payload: state };
 }
 export function handleReadingBook(book: BookModel) {
+  console.log(book, "book");
   return { type: "HANDLE_READING_BOOK", payload: book };
 }
 export function handleReadingEpub(epub: any) {
