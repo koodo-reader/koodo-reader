@@ -4,6 +4,8 @@ import PopupNote from "../../components/popupNote";
 import PopupOption from "../../components/popupOption";
 import PopupTrans from "../../components/popupTrans";
 import { PopupMenuProps, PopupMenuStates } from "./interface";
+import { debounce } from "../../utils/debounceUtil";
+import _ from 'lodash'
 
 declare var window: any;
 
@@ -14,6 +16,9 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
   mode: string;
   showNote: boolean;
   isFirstShow: boolean;
+  cfiRange: any;
+  contents: any;
+  rect: any;
   constructor(props: PopupMenuProps) {
     super(props);
     this.showNote = false;
@@ -21,20 +26,34 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     this.highlighter = null;
     this.mode = "";
     this.state = { deleteKey: "" };
+    this.cfiRange = null;
+    this.contents = null;
+    this.rect = null;
   }
 
   componentDidMount() {
-    this.props.currentEpub.on("renderer:chapterDisplayed", () => {
-      let doc = this.props.currentEpub.renderer.doc;
-      new Promise((resolve, reject) => {
-        this.getHighlighter();
-        resolve();
-      }).then(() => {
-        this.renderHighlighters();
-      });
-
-      doc.addEventListener("click", this.openMenu);
+    console.log(this.props.rendition, "rendition");
+    this.props.rendition.on("rendered", () => {
+      // new Promise((resolve, reject) => {
+      //   this.getHighlighter();
+      //   resolve();
+      // }).then(() => {
+      //   this.renderHighlighters();
+      // });
+      let doc = document.getElementsByTagName("iframe")[0].contentDocument;
+      console.log("binding");
+      doc!.addEventListener("click", () => this.openMenu());
     });
+  }
+  componentWillReceiveProps(nextProps: PopupMenuProps) {
+    if (nextProps.cfiRange !== this.props.cfiRange) {
+      this.cfiRange = nextProps.cfiRange;
+      this.contents = nextProps.contents;
+      this.rect = nextProps.rect;
+      console.log(nextProps,'nextprops')
+      _.debounce(this.openMenu, 100);
+    }
+    
   }
   //新建高亮
   getHighlighter = () => {
@@ -85,17 +104,13 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
       return;
     }
     this.props.handleChangeDirection(false);
-    let iframe = document.getElementsByTagName("iframe")[0];
-    let iDoc = iframe.contentDocument;
-    let sel = iDoc!.getSelection();
-    let rect = this.props.currentEpub.renderer.rangePosition(
-      sel!.getRangeAt(0)
-    );
 
+    const rect = this.rect;
+    console.log(this.rect, "rect");
     let height = 200;
     let posX = rect.x + rect.width / 2 - 20;
     //防止menu超出图书
-    let rightEdge = this.props.currentEpub.renderer.width - 200;
+    let rightEdge = this.props.currentEpub.rendition._layout.width - 200;
     var posY;
     //控制menu方向
     if (rect.y < height) {
@@ -114,7 +129,6 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
           ? rightEdge
           : posX
         : posX;
-    console.log(rect.x, rightEdge, posX, this.props.menuMode, "rightEdge");
     this.props.handleOpenMenu(true);
     let popupMenu = document.querySelector(".popup-menu-container");
     popupMenu &&
@@ -172,6 +186,7 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
   };
   //控制弹窗
   openMenu = () => {
+    console.log("test");
     if (
       !document.getElementsByTagName("iframe")[0] ||
       !document.getElementsByTagName("iframe")[0].contentDocument

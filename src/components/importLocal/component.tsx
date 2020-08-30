@@ -9,6 +9,11 @@ import Dropzone from "react-dropzone";
 import { ImportLocalProps, ImportLocalState } from "./interface";
 import RecordRecent from "../../utils/recordRecent";
 import axios from "axios";
+import Epub from "epubjs";
+
+declare var window: any;
+
+window.ePub = Epub;
 
 class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
   constructor(props: ImportLocalProps) {
@@ -22,8 +27,9 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
     if (bookArr == null) {
       bookArr = [];
     }
-    bookArr.unshift(book);
+    bookArr.push(book);
     RecordRecent.setRecent(book.key);
+    console.log(bookArr, "bookArr");
     localforage.setItem("books", bookArr).then(() => {
       this.props.handleFetchBooks();
     });
@@ -140,9 +146,8 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
         if (!e.target) {
           throw new Error();
         }
-        const epub = (window as any).ePub({ bookPath: e.target.result });
-        epub
-          .getMetadata()
+        const epub = window.ePub(e.target.result);
+        epub.loaded.metadata
           .then((metadata: any) => {
             if (!e.target) {
               throw new Error();
@@ -153,7 +158,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
               description: string,
               book: BookModel;
             [name, author, description, content] = [
-              metadata.bookTitle,
+              metadata.title,
               metadata.creator,
               metadata.description,
               e.target.result,

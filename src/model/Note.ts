@@ -3,7 +3,6 @@ class Note {
   bookKey: string;
   date: { year: number; month: number; day: number };
   chapter: string;
-  chapterIndex: number;
   text: string;
   cfi: string;
   range: string;
@@ -13,7 +12,6 @@ class Note {
   constructor(
     bookKey: string,
     chapter: string,
-    chapterIndex: number,
     text: string,
     cfi: string,
     range: string,
@@ -29,7 +27,6 @@ class Note {
       day: new Date().getDate(),
     }; //笔记的添加日期
     this.chapter = chapter; //笔记的所在章节
-    this.chapterIndex = chapterIndex; //笔记的所在章节
     this.text = text; //笔记对应的书本的内容
     this.cfi = cfi; //添加笔记的位置
     this.range = range; // Rangy.js产生的将Range对象序列化后的字符串

@@ -17,32 +17,43 @@ class ProgressPanel extends React.Component<
   //WARNING! To be deprecated in React v17. Use componentDidMount instead.
   onProgressChange = (event: any) => {
     const percentage = event.target.value / 100;
+    console.log(this.props.locations, "locations");
     const location = percentage
       ? this.props.locations.cfiFromPercentage(percentage)
       : 0;
-    this.props.currentEpub.gotoCfi(location);
+    this.props.currentEpub.rendition.display(location);
   };
   //使进度百分比随拖动实时变化
   onProgressInput = (event: any) => {
     this.setState({ displayPercentage: event.target.value / 100 });
   };
   previourChapter = () => {
-    let currentSection = this.props.currentEpub.spinePos;
-    this.props.currentEpub.displayChapter(currentSection - 1, false);
-    let percentage =
-      RecordLocation.getCfi(this.props.currentBook.key) === null
-        ? 0
-        : RecordLocation.getCfi(this.props.currentBook.key).percentage;
-    this.setState({ displayPercentage: percentage });
+    const currentLocation = this.props.currentEpub.rendition.currentLocation();
+    let chapterIndex = currentLocation.start.index;
+    const section = this.props.currentEpub.section(chapterIndex - 1);
+    if (section && section.href) {
+      this.props.currentEpub.rendition.display(section.href).then(() => {
+        let percentage =
+          RecordLocation.getCfi(this.props.currentBook.key) === null
+            ? 0
+            : RecordLocation.getCfi(this.props.currentBook.key).percentage;
+        this.setState({ displayPercentage: percentage });
+      });
+    }
   };
   nextChapter = () => {
-    let currentSection = this.props.currentEpub.spinePos;
-    this.props.currentEpub.displayChapter(currentSection + 1, false);
-    let percentage =
-      RecordLocation.getCfi(this.props.currentBook.key) === null
-        ? 0
-        : RecordLocation.getCfi(this.props.currentBook.key).percentage;
-    this.setState({ displayPercentage: percentage });
+    const currentLocation = this.props.currentEpub.rendition.currentLocation();
+    let chapterIndex = currentLocation.start.index;
+    const section = this.props.currentEpub.section(chapterIndex + 1);
+    if (section && section.href) {
+      this.props.currentEpub.rendition.display(section.href).then(() => {
+        let percentage =
+          RecordLocation.getCfi(this.props.currentBook.key) === null
+            ? 0
+            : RecordLocation.getCfi(this.props.currentBook.key).percentage;
+        this.setState({ displayPercentage: percentage });
+      });
+    }
   };
 
   render() {

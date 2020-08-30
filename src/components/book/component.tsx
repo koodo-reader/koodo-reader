@@ -4,6 +4,12 @@ import RecentBooks from "../../utils/recordRecent";
 import "./book.css";
 import { BookProps, BookState } from "./interface";
 import AddFavorite from "../../utils/addFavorite";
+import Epub from "epubjs";
+
+declare var window: any;
+
+window.ePub = Epub;
+
 class Book extends React.Component<BookProps, BookState> {
   epub: any;
   constructor(props: BookProps) {
@@ -17,10 +23,7 @@ class Book extends React.Component<BookProps, BookState> {
     this.epub = null;
   }
   UNSAFE_componentWillMount() {
-    this.epub = (window as any).ePub({
-      bookPath: this.props.book.content,
-      restore: false,
-    });
+    this.epub = window.ePub(this.props.book.content, {});
 
     this.setState({
       isFavorite:
@@ -53,7 +56,7 @@ class Book extends React.Component<BookProps, BookState> {
     return (
       <div
         className="book-list-item"
-        onMouseEnter={() => {
+        onMouseOver={() => {
           this.handleConfig(true);
         }}
         onMouseLeave={() => {

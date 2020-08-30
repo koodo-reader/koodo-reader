@@ -101,13 +101,15 @@ class PopupOption extends React.Component<PopupOptionProps> {
     let bookKey = book.key;
     let percentage = this.props.currentEpub.locations.percentageFromCfi(cfi);
     //获取章节名
-    let index = this.props.chapters.findIndex((item: any) => {
-      return item.spinePos > epub.renderer.currentChapter.spinePos;
-    });
-    let chapter = this.props.chapters[index]
-      ? this.props.chapters[index].label.trim(" ")
-      : "Unknown";
-    let chapterIndex = this.props.currentEpub.renderer.currentChapter.spinePos;
+    const currentLocation = epub.rendition.currentLocation();
+    let chapterHref = currentLocation.start.href;
+    let chapter = "Unknown Chapter";
+    let currentChapter = this.props.chapters.filter(
+      (item: any) => item.href.split("#")[0] === chapterHref
+    )[0];
+    if (currentChapter) {
+      chapter = currentChapter.label.trim(" ");
+    }
     let charRange = window.rangy
       .getSelection(iframe)
       .saveCharacterRanges(iDoc!.body)[0];
@@ -117,7 +119,6 @@ class PopupOption extends React.Component<PopupOptionProps> {
     let digest = new Note(
       bookKey,
       chapter,
-      chapterIndex,
       text,
       cfi,
       range,
