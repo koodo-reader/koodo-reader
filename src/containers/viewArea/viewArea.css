@@ -1,7 +1,7 @@
 .view-area-page {
   position: absolute;
-  left: 10px;
-  right: 10px;
+  left: 30px;
+  right: 30px;
   top: 30px;
   bottom: 30px;
   /* width: calc(100% - 100px);

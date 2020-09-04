@@ -46,7 +46,7 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
       if (!doc) {
         return;
       }
-      doc.addEventListener("click", this.openMenu);
+      doc.addEventListener("mousedown", this.openMenu);
     });
   }
   componentWillReceiveProps(nextProps: PopupMenuProps) {
@@ -129,7 +129,7 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     let x = rect.x % this.props.currentEpub.rendition._layout.width;
     let posX = x + rect.width / 2 - 20;
     //防止menu超出图书
-    let rightEdge = this.props.currentEpub.rendition._layout.width - 300;
+    let rightEdge = this.props.currentEpub.rendition._layout.width - 150;
     var posY;
     //控制menu方向
     if (rect.y < height) {
@@ -139,12 +139,8 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
       posY = rect.y - height / 2 - 57;
     }
 
-    posX =
-      this.props.menuMode === "note"
-        ? posX > rightEdge
-          ? rightEdge
-          : posX
-        : posX;
+    posX = posX > rightEdge ? rightEdge : posX;
+
     this.props.handleOpenMenu(true);
     console.log(posX, posY, "postion");
     let popupMenu = document.querySelector(".popup-menu-container");
