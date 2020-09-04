@@ -61,7 +61,7 @@ class NavigationPanel extends React.Component<
             <Trans>
               {this.props.currentBook.author
                 ? this.props.currentBook.author
-                : "Unknown"}
+                : "Unknown Authur"}
             </Trans>
           </p>
           <span className="reading-duration">

@@ -1,6 +1,5 @@
 //图书样式设置的下拉菜单页面
 import React from "react";
-import ReaderConfig from "../../utils/readerConfig";
 import { dropdownList } from "../../utils/readerConfig";
 import "./dropdownList.css";
 import { Trans } from "react-i18next";
@@ -62,7 +61,8 @@ class DropdownList extends React.Component<
       default:
         break;
     }
-    ReaderConfig.addDefaultCss();
+    this.props.handleMessage("Try refresh or restart");
+    this.props.handleMessageBox(true);
   }
   render() {
     const renderParagraphCharacter = () => {

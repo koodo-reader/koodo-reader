@@ -1,5 +1,18 @@
 //字体大小选择页面
-import {  withNamespaces } from "react-i18next";
-import FontSizeList from './component'
+import { connect } from "react-redux";
+import { withNamespaces } from "react-i18next";
+import FontSizeList from "./component";
+import { handleMessageBox, handleMessage } from "../../redux/actions/manager";
+import { stateType } from "../../redux/store";
 
-export default withNamespaces()(FontSizeList as any);
+const mapStateToProps = (state: stateType) => {
+  return {};
+};
+const actionCreator = {
+  handleMessageBox,
+  handleMessage,
+};
+export default connect(
+  mapStateToProps,
+  actionCreator
+)(withNamespaces()(FontSizeList as any));

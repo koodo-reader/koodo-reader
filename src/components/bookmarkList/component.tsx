@@ -19,7 +19,7 @@ class BookmarkList extends React.Component<
       this.props.handleMessageBox(true);
       return;
     }
-    this.props.currentEpub.gotoCfi(cfi);
+    this.props.currentEpub.rendition.display(cfi);
   }
   handleShowDelete = (index: number) => {
     this.setState({ deleteIndex: index });
