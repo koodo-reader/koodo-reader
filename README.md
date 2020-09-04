@@ -60,7 +60,7 @@
 
 桌面端：前往这里下载最新的安装包 [点我前往](https://github.com/troyeguo/koodo-reader/releases/tag/v1.1.3)
 
-网页版：代码托管在 Netlify [点我前往](https://reader.960960.xyz)
+网页版：代码托管在 Vercel [点我前往](https://reader.960960.xyz)
 
 ## 运行源码
 

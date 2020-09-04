@@ -3,13 +3,13 @@ class Book {
   name: string;
   author: string;
   description: string;
-  content: any;
+  content: ArrayBuffer;
   md5: string;
   constructor(
     name: string,
     author: string,
     description: string,
-    content: any,
+    content: ArrayBuffer,
     md5: string
   ) {
     this.key = new Date().getTime() + ""; // 数据库的键

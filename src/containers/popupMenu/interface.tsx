@@ -10,6 +10,10 @@ export interface PopupMenuProps {
   digests: NoteModel[];
   notes: NoteModel[];
   color: number;
+  rendition: any;
+  cfiRange: any;
+  contents: any;
+  rect: any;
   handleNoteKey: (key: string) => void;
   handleMessageBox: (isShow: boolean) => void;
   handleMessage: (message: string) => void;
@@ -19,4 +23,7 @@ export interface PopupMenuProps {
 }
 export interface PopupMenuStates {
   deleteKey: string;
+  cfiRange: string;
+  contents: any;
+  rect: DOMRect | null;
 }

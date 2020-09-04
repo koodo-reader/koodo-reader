@@ -8,6 +8,9 @@ export interface PopupOptionProps {
   notes: NoteModel[];
   chapters: any;
   color: number;
+  rect: DOMRect;
+  cfiRange: string;
+  contents: any;
   handleMessageBox: (isShow: boolean) => void;
   handleMessage: (message: string) => void;
   handleOpenMenu: (isOpenMenu: boolean) => void;
