@@ -1,7 +1,6 @@
 //字体大小选择页面
 import React from "react";
 import { fontSizeList } from "../../utils/readerConfig";
-import ReaderConfig from "../../utils/readerConfig";
 import { Trans } from "react-i18next";
 import { FontSizeListProps, FontSizeListState } from "./interface";
 import "./fontSizeList.css";
@@ -25,7 +24,8 @@ class FontSizeList extends React.Component<
     this.setState({
       currentFontSizeIndex: index,
     });
-    ReaderConfig.addDefaultCss();
+    this.props.handleMessage("Try refresh or restart");
+    this.props.handleMessageBox(true);
   }
 
   render() {
