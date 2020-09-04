@@ -1,9 +1,9 @@
 .view-area-page {
   position: absolute;
-  left: 60px;
-  right: 60px;
-  top: 55px;
-  bottom: 55px;
+  left: 30px;
+  right: 30px;
+  top: 30px;
+  bottom: 30px;
   /* width: calc(100% - 100px);
   height: calc(100% - 100px); */
   z-index: 0;
