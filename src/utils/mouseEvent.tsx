@@ -1,4 +1,3 @@
-import ReaderConfig from "./readerConfig";
 export const MouseEvent = (rendition: any) => {
   let isFirefox = navigator.userAgent.indexOf("Firefox") !== -1;
   let lock = false; // 暂时锁住翻页快捷键，避免快速点击产生的Bug
@@ -65,9 +64,12 @@ export const MouseEvent = (rendition: any) => {
   };
 
   rendition.on("rendered", () => {
-    if (!document.getElementsByTagName("iframe")[0]) return;
-    let doc = document.getElementsByTagName("iframe")[0].contentDocument;
-    if (!doc) return;
+    let iframe = document.getElementsByTagName("iframe")[0];
+    if (!iframe) return;
+    let doc = iframe.contentDocument;
+    if (!doc) {
+      return;
+    }
     doc.addEventListener("keydown", arrowKeys); // 箭头按键翻页
     // 鼠标滚轮翻页
     window.addEventListener("keydown", arrowKeys, false);
@@ -76,6 +78,5 @@ export const MouseEvent = (rendition: any) => {
     } else {
       doc.addEventListener("mousewheel", mouseChrome, false);
     }
-    ReaderConfig.addDefaultCss(); // 切换章节后为当前文档设置默认的样式
   });
 };

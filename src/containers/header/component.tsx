@@ -42,15 +42,14 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       this.props.handleSortDisplay(true);
     }
   };
-  handleOnlyLocal = () => {
-    this.setState({ isOnlyLocal: !this.state.isOnlyLocal });
-    this.props.handleMessage("下载客户端体验完整功能");
-    this.props.handleMessageBox(true);
-  };
+
   render() {
     return (
       <div className="header">
-        <SearchBox />
+        <div className="header-search-container">
+          <SearchBox />
+        </div>
+
         <div
           className="header-sort-container"
           onClick={() => {

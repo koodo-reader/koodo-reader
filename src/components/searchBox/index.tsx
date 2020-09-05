@@ -7,6 +7,7 @@ const mapStateToProps = (state: stateType) => {
   return {
     books: state.manager.books,
     isSearch: state.manager.isSearch,
+    currentEpub: state.book.currentEpub,
   };
 };
 const actionCreator = {

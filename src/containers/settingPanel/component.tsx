@@ -11,7 +11,6 @@ class SettingPanel extends React.Component {
   render() {
     return (
       <div className="setting-panel-parent">
-        {" "}
         <div className="setting-panel">
           <div className="setting-panel-title">
             <Trans>Reading Option</Trans>

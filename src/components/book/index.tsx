@@ -7,8 +7,13 @@ import {
   handleReadingEpub,
 } from "../../redux/actions/book";
 import Book from "./component";
-const mapStateToProps = () => {
-  return {};
+import { stateType } from "../../redux/store";
+
+const mapStateToProps = (state: stateType) => {
+  return {
+    isOpenActionDialog: state.book.isOpenActionDialog,
+    currentBook: state.book.currentBook,
+  };
 };
 const actionCreator = {
   handleReadingState,
