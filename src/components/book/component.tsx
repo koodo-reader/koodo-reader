@@ -5,6 +5,7 @@ import "./book.css";
 import { BookProps, BookState } from "./interface";
 import AddFavorite from "../../utils/addFavorite";
 import Epub from "epubjs";
+import ActionDialog from "../../containers/actionDialog";
 
 declare var window: any;
 
@@ -15,9 +16,10 @@ class Book extends React.Component<BookProps, BookState> {
   constructor(props: BookProps) {
     super(props);
     this.state = {
-      isDeleteDialog: false,
       isOpenConfig: false,
       isFavorite: false,
+      left: 0,
+      top: 0,
     };
     this.handleOpenBook = this.handleOpenBook.bind(this);
     this.epub = null;
@@ -36,9 +38,17 @@ class Book extends React.Component<BookProps, BookState> {
     this.props.handleReadingState(true);
     RecentBooks.setRecent(this.props.book.key);
   }
-  handleMoreAction = () => {
-    this.props.handleActionDialog(true);
-    this.props.handleReadingBook(this.props.book);
+  handleMoreAction = (event: any) => {
+    const e = event || window.event;
+    let x = e.clientX;
+    console.log(e.clientX, document.body.clientWidth);
+    if (x > document.body.clientWidth - 100) {
+      x = x - 80;
+    }
+    this.setState({ left: x - 210, top: e.clientY - 100 }, () => {
+      this.props.handleActionDialog(true);
+      this.props.handleReadingBook(this.props.book);
+    });
   };
   handleLoveBook = () => {
     AddFavorite.setFavorite(this.props.book.key);
@@ -53,69 +63,76 @@ class Book extends React.Component<BookProps, BookState> {
     this.setState({ isOpenConfig: mode });
   };
   render() {
+    const actionProps = { left: this.state.left, top: this.state.top };
     return (
-      <div
-        className="book-list-item"
-        onMouseOver={() => {
-          this.handleConfig(true);
-        }}
-        onMouseLeave={() => {
-          this.handleConfig(false);
-        }}
-      >
-        {this.props.bookCover ? (
-          <img
-            className="book-item-cover"
-            src={this.props.bookCover}
-            alt=""
-            onClick={() => {
-              this.handleOpenBook();
-            }}
-          />
-        ) : (
-          <div
-            className="book-item-cover"
-            onClick={() => {
-              this.handleOpenBook();
-            }}
-          >
-            <div className="book-item-cover-img">
-              <img src="/assets/cover.svg" alt="" style={{ width: "80%" }} />
+      <>
+        <div
+          className="book-list-item"
+          onMouseOver={() => {
+            this.handleConfig(true);
+          }}
+          onMouseLeave={() => {
+            this.handleConfig(false);
+          }}
+        >
+          {this.props.bookCover ? (
+            <img
+              className="book-item-cover"
+              src={this.props.bookCover}
+              alt=""
+              onClick={() => {
+                this.handleOpenBook();
+              }}
+            />
+          ) : (
+            <div
+              className="book-item-cover"
+              onClick={() => {
+                this.handleOpenBook();
+              }}
+            >
+              <div className="book-item-cover-img">
+                <img src="/assets/cover.svg" alt="" style={{ width: "80%" }} />
+              </div>
+
+              <p className="book-item-cover-title">
+                <span>{this.props.book.name}</span>
+              </p>
             </div>
+          )}
 
-            <p className="book-item-cover-title">
-              <span>{this.props.book.name}</span>
-            </p>
-          </div>
-        )}
-
-        <p className="book-item-title">{this.props.book.name}</p>
-        {this.state.isFavorite ? (
-          <span
-            className="icon-love book-loved-icon"
-            onClick={() => {
-              this.handleCancelLoveBook();
-            }}
-          ></span>
-        ) : null}
-
-        {this.state.isOpenConfig ? (
-          <>
+          <p className="book-item-title">{this.props.book.name}</p>
+          {this.state.isFavorite ? (
             <span
-              className="icon-more book-more-action"
+              className="icon-love book-loved-icon"
               onClick={() => {
-                this.handleMoreAction();
+                this.handleCancelLoveBook();
               }}
             ></span>
-            <span
-              className="icon-love book-love-icon"
-              onClick={() => {
-                this.handleLoveBook();
-              }}
-            ></span>
-          </>
+          ) : null}
+
+          {this.state.isOpenConfig ? (
+            <>
+              <span
+                className="icon-more book-more-action"
+                onClick={(event) => {
+                  this.handleMoreAction(event);
+                }}
+              ></span>
+              <span
+                className="icon-love book-love-icon"
+                onClick={() => {
+                  this.handleLoveBook();
+                }}
+              ></span>
+            </>
+          ) : null}
+        </div>
+        {this.props.isOpenActionDialog &&
+        this.props.book.key === this.props.currentBook.key ? (
+          <ActionDialog {...actionProps} />
         ) : null}
-      </div>
+      </>
     );
   }
 }

@@ -5,6 +5,7 @@ import localforage from "localforage";
 import ShelfUtil from "../../utils/shelfUtil";
 import RecordRecent from "../../utils/recordRecent";
 import RecordLocation from "../../utils/recordLocation";
+import AddFavorite from "../../utils/addFavorite";
 import { Trans } from "react-i18next";
 import { DeleteDialogProps } from "./interface";
 
@@ -60,6 +61,8 @@ class DeleteDialog extends React.Component<DeleteDialogProps> {
             this.props.handleDeleteDialog(false);
             this.props.handleFetchBooks();
           });
+      //从喜爱的图书中删除
+      AddFavorite.clear(this.props.currentBook.key);
       //从书架删除
       ShelfUtil.deletefromAllShelf(this.props.currentBook.key);
       //从阅读记录删除

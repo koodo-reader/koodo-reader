@@ -14,11 +14,6 @@ class PopupNote extends React.Component<PopupNoteProps> {
     textArea && textArea.focus();
   }
   createNote() {
-    if (
-      !document.getElementsByTagName("iframe")[0] ||
-      !document.getElementsByTagName("iframe")[0].contentDocument
-    )
-      return;
     let notes = (document.querySelector(".editor-box") as HTMLInputElement)
       .value;
 
@@ -55,6 +50,7 @@ class PopupNote extends React.Component<PopupNoteProps> {
       const cfi = RecordLocation.getCfi(this.props.currentBook.key).cfi;
 
       let iframe = document.getElementsByTagName("iframe")[0];
+      if(!iframe)return;
       let doc = iframe.contentDocument;
       if (!doc) {
         return;
