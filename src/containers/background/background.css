@@ -73,3 +73,7 @@
   position: absolute;
   right: calc(50% - 68px);
 }
+.single-background {
+  width: 60vw;
+  left: 20vw;
+}

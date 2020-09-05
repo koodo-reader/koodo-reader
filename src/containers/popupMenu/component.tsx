@@ -33,8 +33,6 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
   }
 
   componentDidMount() {
-    console.log(this.props.rendition, "rendition");
-
     this.props.rendition.on("rendered", () => {
       new Promise((resolve, reject) => {
         this.getHighlighter();
@@ -42,10 +40,10 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
       }).then(() => {
         this.renderHighlighters();
       });
-      let doc = document.getElementsByTagName("iframe")[0].contentDocument;
-      if (!doc) {
-        return;
-      }
+      let iframe = document.getElementsByTagName("iframe")[0];
+      if (!iframe) return;
+      let doc = iframe.contentDocument;
+      if (!doc) return;
       doc.addEventListener("mousedown", this.openMenu);
     });
   }
@@ -67,7 +65,9 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
   getHighlighter = () => {
     // 注意点一
     // 为了每次切换章节时都有与当前文档相关联的 pen
-    let doc = document.getElementsByTagName("iframe")[0].contentDocument;
+    let iframe = document.getElementsByTagName("iframe")[0];
+    if (!iframe) return;
+    let doc = iframe.contentDocument;
     if (!doc) return;
     this.highlighter = window.rangy.createHighlighter(doc);
     let classes = ["color-0", "color-1", "color-2", "color-3"];
@@ -77,13 +77,11 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
         elementTagName: "span",
         elementProperties: {
           onclick: (event: any) => {
-            if (!document.getElementsByTagName("iframe")[0].contentDocument) {
-              return;
-            }
-            this.props.handleMenuMode("note");
             let iframe = document.getElementsByTagName("iframe")[0];
+            if (!iframe) return;
             let doc = iframe.contentDocument;
             if (!doc) return;
+            this.props.handleMenuMode("note");
             let sel = doc.getSelection();
             if (!sel) return;
             let range = sel.getRangeAt(0);
@@ -114,12 +112,6 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     this.setState({ deleteKey });
   };
   showMenu = () => {
-    if (
-      !document.getElementsByTagName("iframe")[0] ||
-      !document.getElementsByTagName("iframe")[0].contentDocument
-    )
-      return;
-
     let rect = this.state.rect;
     if (!rect) return;
     console.log(rect, "showmenu");
@@ -127,16 +119,18 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     // const rect = this.rect;
     let height = 200;
     let x = rect.x % this.props.currentEpub.rendition._layout.width;
+    let y = rect.y % this.props.currentEpub.rendition._layout.height;
+
     let posX = x + rect.width / 2 - 20;
     //防止menu超出图书
     let rightEdge = this.props.currentEpub.rendition._layout.width - 150;
     var posY;
     //控制menu方向
-    if (rect.y < height) {
+    if (y < height) {
       this.props.handleChangeDirection(true);
-      posY = rect.y + 67;
+      posY = y + 67;
     } else {
-      posY = rect.y - height / 2 - 57;
+      posY = y - height / 2 - 57;
     }
 
     posX = posX > rightEdge ? rightEdge : posX;
@@ -151,12 +145,6 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
   };
   //渲染高亮
   renderHighlighters = () => {
-    if (
-      !document.getElementsByTagName("iframe")[0] ||
-      !document.getElementsByTagName("iframe")[0].contentDocument
-    )
-      return;
-
     let highlighters: any = this.props.notes;
     if (!highlighters) return;
     const currentLocation = this.props.currentEpub.rendition.currentLocation();
@@ -197,11 +185,6 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
   };
   //控制弹窗
   openMenu = () => {
-    if (
-      !document.getElementsByTagName("iframe")[0] ||
-      !document.getElementsByTagName("iframe")[0].contentDocument
-    )
-      return;
     console.log("openmenu");
     this.setState({ deleteKey: "" });
     let iframe = document.getElementsByTagName("iframe")[0];
@@ -228,13 +211,9 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
   };
   //添加高亮
   handleHighlight() {
-    if (
-      !document.getElementsByTagName("iframe")[0] ||
-      !document.getElementsByTagName("iframe")[0].contentDocument
-    )
-      return;
-
-    let doc = document.getElementsByTagName("iframe")[0].contentDocument;
+    let iframe = document.getElementsByTagName("iframe")[0];
+    if (!iframe) return;
+    let doc = iframe.contentDocument;
     if (!doc) return;
     let color = this.props.color;
     let classes = ["color-0", "color-1", "color-2", "color-3"];

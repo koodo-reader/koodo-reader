@@ -31,6 +31,7 @@ class AddFavorite {
         ? JSON.parse(localStorage.getItem("favoriteBooks") || "")
         : [];
     const index = bookArr.indexOf(bookKey);
+    console.log(bookArr, index, "clear");
     if (index > -1) {
       bookArr.splice(index, 1);
     }

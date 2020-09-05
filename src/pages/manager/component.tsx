@@ -8,7 +8,7 @@ import DigestList from "../../containers/digestList";
 import DeleteDialog from "../../containers/deleteDialog";
 import EditDialog from "../../containers/editDialog";
 import AddDialog from "../../containers/addDialog";
-import ActionDialog from "../../containers/actionDialog";
+
 import SortDialog from "../../containers/sortDialog";
 import MessageBox from "../../containers/messageBox";
 import LoadingPage from "../../containers/loadingPage";
@@ -36,7 +36,7 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
       isAuthed: false,
       isError: false,
       isCopied: false,
-      isUpdated: OtherUtil.getReaderConfig("version") !== packageJson.version,
+      isUpdated: false,
       token: "",
     };
   }
@@ -89,6 +89,9 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
       return false;
     }
     setTimeout(() => {
+      this.setState({
+        isUpdated: OtherUtil.getReaderConfig("version") !== packageJson.version,
+      });
       this.props.handleFirst(OtherUtil.getReaderConfig("isFirst") || "yes");
     }, 1000);
   }
@@ -101,11 +104,6 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
   }
 
   render() {
-    console.log(
-      this.state.isUpdated,
-      OtherUtil.getReaderConfig("version"),
-      packageJson.version
-    );
     if (this.state.isError || this.state.isAuthed) {
       return (
         <div className="backup-page-finish-container">
@@ -164,10 +162,11 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
           ) : null}
         </div>
         {this.props.isMessage ? <MessageBox /> : null}
-        {this.props.isOpenActionDialog ? <ActionDialog /> : null}
         {this.props.isSortDisplay ? <SortDialog /> : null}
         {this.props.isBackup ? <BackupPage /> : null}
-        {this.props.isFirst === "yes" ? <WelcomePage /> : null}
+        {!this.state.isUpdated && this.props.isFirst === "yes" ? (
+          <WelcomePage />
+        ) : null}
         {this.state.isUpdated ? <UpdateDialog {...updateDialogProps} /> : null}
         {totalBooks === 0 ? (
           <EmptyPage />

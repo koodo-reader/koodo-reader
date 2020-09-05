@@ -9,7 +9,9 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
   constructor(props: SidebarProps) {
     super(props);
     this.state = {
-      index: ["home", "bookmark", "note", "digest"].indexOf(this.props.mode),
+      index: ["home", "favorite", "bookmark", "note", "digest"].indexOf(
+        this.props.mode
+      ),
       isCollapse: true,
       shelfIndex: -1,
     };

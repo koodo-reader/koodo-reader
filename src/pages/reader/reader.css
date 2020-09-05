@@ -117,3 +117,17 @@
   bottom: 0px;
   left: calc(50% - 206px);
 }
+.setting-panel-container {
+  width: 299px;
+  height: 100vh;
+  position: absolute;
+  bottom: 0px;
+  right: 0px;
+}
+.navigation-panel-container {
+  width: 299px;
+  height: 100vh;
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+}
