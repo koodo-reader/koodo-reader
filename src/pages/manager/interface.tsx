@@ -13,7 +13,6 @@ export interface ManagerProps {
   isOpenEditDialog: boolean;
   isOpenDeleteDialog: boolean;
   isOpenAddDialog: boolean;
-  isOpenActionDialog: boolean;
   isSort: boolean;
   isFirst: string;
   isSortDisplay: boolean;

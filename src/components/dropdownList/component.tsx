@@ -5,6 +5,11 @@ import "./dropdownList.css";
 import { Trans } from "react-i18next";
 import { DropdownListProps, DropdownListState } from "./interface";
 import OtherUtil from "../../utils/otherUtil";
+const isElectron = require("is-electron");
+if (isElectron()) {
+  const { ipcRenderer } = window.require("electron");
+  dropdownList[0].option = ipcRenderer.sendSync("fonts-ready", "ping");
+}
 
 class DropdownList extends React.Component<
   DropdownListProps,
@@ -13,26 +18,22 @@ class DropdownList extends React.Component<
   constructor(props: DropdownListProps) {
     super(props);
     this.state = {
-      currentFontFamilyIndex: dropdownList[0].option.findIndex((item) => {
-        return (
-          item.value ===
-          (OtherUtil.getReaderConfig("fontFamily") || "Helvetica")
-        );
+      currentFontFamilyIndex: dropdownList[0].option.findIndex((item: any) => {
+        return item === (OtherUtil.getReaderConfig("fontFamily") || "Arial");
       }),
-      currentLineHeightIndex: dropdownList[1].option.findIndex((item) => {
-        return (
-          item.value === (OtherUtil.getReaderConfig("lineHeight") || "1.25")
-        );
+      currentLineHeightIndex: dropdownList[1].option.findIndex((item: any) => {
+        return item === (OtherUtil.getReaderConfig("lineHeight") || "1.25");
       }),
     };
   }
   componentDidMount() {
     //使下拉菜单选中预设的值
-
     document
       .querySelector(".paragraph-character-setting")!
       .children[0].children[1].children[
-        this.state.currentFontFamilyIndex
+        this.state.currentFontFamilyIndex === -1
+          ? 0
+          : this.state.currentFontFamilyIndex
       ].setAttribute("selected", "selected");
 
     document
@@ -78,13 +79,13 @@ class DropdownList extends React.Component<
               this.handleView(event, item.value);
             }}
           >
-            {item.option.map((subItem, index) => (
+            {item.option.map((subItem: string, index: number) => (
               <option
-                value={[subItem.value, index.toString()]}
+                value={[subItem, index.toString()]}
                 className="general-setting-option"
-                key={subItem.id}
+                key={index}
               >
-                {subItem.name}
+                {subItem}
               </option>
             ))}
           </select>

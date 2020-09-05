@@ -171,6 +171,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
           });
       };
     }
+    this.setState({ isRepeat: false });
   };
 
   render() {

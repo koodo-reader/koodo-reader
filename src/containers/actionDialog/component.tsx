@@ -4,74 +4,65 @@ import { Trans } from "react-i18next";
 import { ActionDialogProps } from "./interface";
 
 class ActionDialog extends React.Component<ActionDialogProps> {
-  handleCancel = () => {
-    this.props.handleActionDialog(false);
-  };
   handleDeleteBook = () => {
+    console.log("tests");
     this.props.handleReadingBook(this.props.currentBook);
     this.props.handleDeleteDialog(true);
+    this.props.handleActionDialog(false);
   };
   handleEditBook = () => {
     this.props.handleEditDialog(true);
     this.props.handleReadingBook(this.props.currentBook);
+    this.props.handleActionDialog(false);
   };
   handleAddShelf = () => {
     this.props.handleAddDialog(true);
     this.props.handleReadingBook(this.props.currentBook);
+    this.props.handleActionDialog(false);
   };
   render() {
     return (
-      <div className="action-dialog-container">
-        <div className="action-dialog-title">
-          <Trans>Choose your action to this book</Trans>
-        </div>
-        <div className="action-dialog-book">
-          <div className="action-dialog-book-title">
-            {this.props.currentBook.name}
-          </div>
-        </div>
+      <div
+        className="action-dialog-container"
+        onMouseLeave={() => {
+          this.props.handleActionDialog(false);
+        }}
+        style={{ left: this.props.left, top: this.props.top }}
+      >
         <div className="action-dialog-actions-container">
-          <div className="action-dialog-add">
-            <span
-              className="icon-shelf view-icon"
-              onClick={() => {
-                this.handleAddShelf();
-              }}
-            ></span>
-            <p className="action-name">
+          <div
+            className="action-dialog-add"
+            onClick={() => {
+              this.handleAddShelf();
+            }}
+          >
+            <span className="icon-shelf view-icon"></span>
+            <span className="action-name">
               <Trans>Add</Trans>
-            </p>
+            </span>
           </div>
-          <div className="action-dialog-delete">
-            <span
-              className="icon-trash view-icon"
-              onClick={() => {
-                this.handleDeleteBook();
-              }}
-            ></span>
-            <p className="action-name">
+          <div
+            className="action-dialog-delete"
+            onClick={() => {
+              this.handleDeleteBook();
+            }}
+          >
+            <span className="icon-trash view-icon"></span>
+            <span className="action-name">
               <Trans>Delete</Trans>
-            </p>
+            </span>
           </div>
-          <div className="action-dialog-edit">
-            <span
-              className="icon-edit view-icon"
-              onClick={() => {
-                this.handleEditBook();
-              }}
-            ></span>
-            <p className="action-name">
+          <div
+            className="action-dialog-edit"
+            onClick={() => {
+              this.handleEditBook();
+            }}
+          >
+            <span className="icon-edit view-icon"></span>
+            <span className="action-name">
               <Trans>Edit</Trans>
-            </p>
+            </span>
           </div>
-        </div>
-        <div
-          className="action-dialog-cancel"
-          onClick={() => {
-            this.handleCancel();
-          }}
-        >
-          <Trans>Cancel</Trans>
         </div>
       </div>
     );

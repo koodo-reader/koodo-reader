@@ -13,13 +13,20 @@ class SingleControl extends React.Component<
     super(props);
     this.state = {
       isSingle: OtherUtil.getReaderConfig("isSingle") === "single",
+      isScroll: OtherUtil.getReaderConfig("isScroll") === "yes",
     };
   }
 
-  handleClick = (mode: string) => {
+  handleChangeMode = (mode: string) => {
     this.props.handleSingle(mode);
     this.setState({ isSingle: mode === "single" });
     OtherUtil.setReaderConfig("isSingle", mode);
+    this.props.handleMessage("Try refresh or restart");
+    this.props.handleMessageBox(true);
+  };
+  handleChangeScroll = () => {
+    OtherUtil.setReaderConfig("isScroll", this.state.isScroll ? "no" : "yes");
+    this.setState({ isScroll: !this.state.isScroll });
     this.props.handleMessage("Try refresh or restart");
     this.props.handleMessageBox(true);
   };
@@ -29,7 +36,7 @@ class SingleControl extends React.Component<
         <div
           className="single-mode-container"
           onClick={() => {
-            this.handleClick("single");
+            this.handleChangeMode("single");
           }}
           style={!this.state.isSingle ? { opacity: 0.4 } : {}}
         >
@@ -41,7 +48,7 @@ class SingleControl extends React.Component<
         <div
           className="double-mode-container"
           onClick={() => {
-            this.handleClick("double");
+            this.handleChangeMode("double");
           }}
           style={this.state.isSingle ? { opacity: 0.4 } : {}}
         >
@@ -50,6 +57,29 @@ class SingleControl extends React.Component<
             <Trans>Double-Page Mode</Trans>
           </div>
         </div>
+        {this.state.isSingle ? (
+          <div className="single-control-switch-container">
+            <span className="single-control-switch-title">
+              {this.state.isScroll ? (
+                <Trans>Turn off scroll mode</Trans>
+              ) : (
+                <Trans>Turn on scroll mode</Trans>
+              )}
+            </span>
+
+            <span
+              className="single-control-switch"
+              onClick={() => {
+                this.handleChangeScroll();
+              }}
+            >
+              <span
+                className="single-control-button"
+                style={this.state.isScroll ? { float: "right" } : {}}
+              ></span>
+            </span>
+          </div>
+        ) : null}
       </div>
     );
   }

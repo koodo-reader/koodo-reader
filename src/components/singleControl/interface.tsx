@@ -6,4 +6,5 @@ export interface SingleControlProps {
 
 export interface SingleControlState {
   isSingle: boolean;
+  isScroll: boolean;
 }

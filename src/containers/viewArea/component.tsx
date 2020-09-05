@@ -6,6 +6,8 @@ import RecordLocation from "../../utils/recordLocation";
 import { MouseEvent } from "../../utils/mouseEvent";
 import OtherUtil from "../../utils/otherUtil";
 import BookmarkModel from "../../model/Bookmark";
+import ReaderConfig from "../../utils/readerConfig";
+import { Trans } from "react-i18next";
 
 declare var window: any;
 
@@ -18,10 +20,12 @@ class ViewArea extends React.Component<ViewAreaProps, ViewAreaStates> {
       isShowImage: false,
       imageRatio: "horizontal",
       isSingle: OtherUtil.getReaderConfig("isSingle") === "single",
+      isScroll: OtherUtil.getReaderConfig("isScroll") === "yes",
       cfiRange: null,
       contents: null,
       rendition: null,
       rect: null,
+      loading: true,
     };
     this.rendition = null;
     this.isFirst = true;
@@ -35,13 +39,13 @@ class ViewArea extends React.Component<ViewAreaProps, ViewAreaStates> {
     let epub = this.props.currentEpub;
     (window as any).rangy.init(); // 初始化
     this.rendition = epub.renderTo(page, {
-      manager: "default",
-      flow: "auto",
-      width: this.state.isSingle ? "60%" : "100%",
+      manager: this.state.isSingle ? "continuous" : "default",
+      flow: this.state.isScroll ? "scrolled" : "auto",
+      width: "100%",
       height: "100%",
     });
     this.setState({ rendition: this.rendition });
-    MouseEvent(this.rendition); // 绑定事件
+    !this.state.isScroll && MouseEvent(this.rendition); // 绑定事件
     this.rendition.on("locationChanged", () => {
       this.props.handleReadingEpub(epub);
       this.props.handleOpenMenu(false);
@@ -64,10 +68,14 @@ class ViewArea extends React.Component<ViewAreaProps, ViewAreaStates> {
       this.isFirst = false;
     });
     this.rendition.on("rendered", () => {
-      let doc = document.getElementsByTagName("iframe")[0].contentDocument;
+      this.setState({ loading: false });
+      let iframe = document.getElementsByTagName("iframe")[0];
+      if (!iframe) return;
+      let doc = iframe.contentDocument;
       if (!doc) {
         return;
       }
+      ReaderConfig.addDefaultCss();
       doc.addEventListener("click", this.showImage);
     });
     this.rendition.on("selected", (cfiRange: any, contents: any) => {
@@ -159,8 +167,38 @@ class ViewArea extends React.Component<ViewAreaProps, ViewAreaStates> {
           />
         </div>
         {this.rendition && <PopupMenu {...popupMenuProps} />}
+        {this.state.loading ? (
+          <div className="spinner">
+            <div className="sk-chase">
+              <div className="sk-chase-dot"></div>
+              <div className="sk-chase-dot"></div>
+              <div className="sk-chase-dot"></div>
+              <div className="sk-chase-dot"></div>
+              <div className="sk-chase-dot"></div>
+              <div className="sk-chase-dot"></div>
+            </div>
+            <div style={{ marginTop: "10px" }}>
+              <Trans>Loading</Trans>
+            </div>
+          </div>
+        ) : null}
         <>
-          <div className="view-area-page" id="page-area"></div>
+          <div
+            className="view-area-page"
+            id="page-area"
+            style={
+              this.state.isSingle && this.state.isScroll
+                ? {
+                    left: "calc(50vw - 270px)",
+                    right: "calc(50vw - 270px)",
+                    top: "50px",
+                    bottom: "50px",
+                  }
+                : this.state.isSingle
+                ? { left: "calc(50vw - 270px)", right: "calc(50vw - 270px)" }
+                : {}
+            }
+          ></div>
           {this.props.isShowBookmark ? <div className="bookmark"></div> : null}
         </>
       </div>

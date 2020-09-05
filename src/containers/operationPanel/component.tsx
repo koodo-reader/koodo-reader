@@ -22,7 +22,6 @@ class OperationPanel extends React.Component<
       isBookmark: false, // 是否添加书签
     };
   }
-
   // 点击切换全屏按钮触发
   handleScreen() {
     !this.state.isFullScreen
@@ -113,13 +112,6 @@ class OperationPanel extends React.Component<
   // 点击退出按钮的处理程序
   handleExit() {
     this.props.handleReadingState(false);
-    // let cfi = this.props.currentEpub.locations.cfiFromPercentage(
-    //   RecordLocation.getCfi(this.props.currentBook.key).percentage
-    // );
-
-    // let locations = this.props.currentEpub.locations;
-    // let percentage = locations.percentageFromCfi(cfi);
-    // RecordLocation.recordCfi(this.props.currentBook.key, cfi, percentage);
     OtherUtil.setReaderConfig("isFullScreen", "no");
     if (this.state.isFullScreen) {
       this.handleExitFullScreen();

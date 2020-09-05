@@ -16,10 +16,13 @@
     "electron-is-dev": "^1.1.0",
     "epubjs": "^0.3.88",
     "font-list": "^1.2.11",
+    "html-react-parser": "^0.13.0",
     "i18next": "^19.4.4",
     "i18next-browser-languagedetector": "^4.2.0",
+    "is-electron": "^2.2.0",
     "lodash": "^4.17.20",
     "md5": "^2.3.0",
+    "rangy": "^1.3.0",
     "react-dropzone": "^11.0.1",
     "react-i18next": "^9.0.10"
   },

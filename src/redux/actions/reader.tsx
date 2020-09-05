@@ -51,10 +51,8 @@ export function handleFetchNotes() {
 
 export function handleFetchChapters(epub: any) {
   return (dispatch: (arg0: { type: string; payload: any }) => void) => {
-    console.log(epub, "epub");
     epub.loaded.navigation
       .then((chapters: any) => {
-        console.log(chapters.toc, "chapters");
         dispatch(handleChapters(chapters.toc));
       })
       .catch(() => {

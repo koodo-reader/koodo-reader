@@ -15,7 +15,7 @@ class UpdateDialog extends React.Component<UpdateInfoProps, UpdateInfoState> {
   renderList = (arr: any[]) => {
     return arr.map((item, index) => {
       return (
-        <li className="update-dialog-list">
+        <li className="update-dialog-list" key={index}>
           <span style={{ color: "black" }}>{index + 1 + ". "}</span>
           <span>{item}</span>
         </li>

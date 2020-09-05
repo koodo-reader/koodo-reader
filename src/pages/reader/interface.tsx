@@ -14,6 +14,6 @@ export interface ReaderState {
   isOpenSettingPanel: boolean;
   isOpenOperationPanel: boolean;
   isOpenProgressPanel: boolean;
-  isOpenInfoPanel: boolean;
+  isOpenNavPanel: boolean;
   isMessage: boolean;
 }

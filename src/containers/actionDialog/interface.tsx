@@ -4,6 +4,8 @@ export interface ActionDialogProps {
   book: BookModel;
   currentBook: BookModel;
   currentEpub: any;
+  left: number;
+  top: number;
   handleFetchBooks: () => void;
   handleDeleteDialog: (isShow: boolean) => void;
   handleFetchBookmarks: () => void;

@@ -3,10 +3,11 @@ import OtherUtil from "./otherUtil";
 class readerConfig {
   // 为 iframe 添加默认的样式
   static addDefaultCss() {
-    if (!document.getElementsByTagName("iframe")[0].contentDocument) return;
-    let css = this.getDefaultCss();
-    let doc = document.getElementsByTagName("iframe")[0].contentDocument;
+    let iframe = document.getElementsByTagName("iframe")[0];
+    if (!iframe) return;
+    let doc = iframe.contentDocument;
     if (!doc) return;
+    let css = this.getDefaultCss();
     let style = doc.getElementById("default-style");
     let background = document.querySelector(".background");
     background!.setAttribute(
@@ -66,34 +67,19 @@ export const dropdownList = [
     title: "Font Family",
     value: "fontFamily",
     option: [
-      { id: 1, name: "Helvetica", value: "Helvetica" },
-      { id: 2, name: "Times New Roman", value: "Times New Roman" },
-      { id: 3, name: "Microsoft YaHei", value: "Microsoft YaHei" },
-      { id: 4, name: "SimSun", value: "SimSun" },
-      { id: 5, name: "SimHei", value: "SimHei" },
-      { id: 6, name: "Aril", value: "Aril" },
+      "Helvetica",
+      "Times New Roman",
+      "Microsoft YaHei",
+      "SimSun",
+      "SimHei",
+      "Arial",
     ],
   },
   {
     id: 2,
     title: "Line Height",
     value: "lineHeight",
-    option: [
-      { id: 1, name: "1.25", value: "1.25" },
-      { id: 2, name: "1", value: "1" },
-      {
-        id: 3,
-        name: "1.25",
-        value: "1.25",
-      },
-      { id: 4, name: "1.5", value: "1.5" },
-      {
-        id: 5,
-        name: "1.75",
-        value: "1.75",
-      },
-      { id: 6, name: "2", value: "2" },
-    ],
+    option: ["1.25", "1", "1.25", "1.5", "1.75", "2"],
   },
 ];
 export const sideMenu = [

@@ -15,7 +15,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
       isOpenSettingPanel: false,
       isOpenOperationPanel: false,
       isOpenProgressPanel: false,
-      isOpenInfoPanel: false,
+      isOpenNavPanel: false,
       isMessage: false,
     };
   }
@@ -56,7 +56,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         break;
       case "left":
         this.setState({
-          isOpenInfoPanel: this.state.isOpenInfoPanel ? false : true,
+          isOpenNavPanel: this.state.isOpenNavPanel ? false : true,
         });
         break;
       case "top":
@@ -81,7 +81,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         this.setState({ isOpenSettingPanel: false });
         break;
       case "left":
-        this.setState({ isOpenInfoPanel: false });
+        this.setState({ isOpenNavPanel: false });
         break;
       case "top":
         this.setState({ isOpenOperationPanel: false });
@@ -122,44 +122,70 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
           }}
         ></div>
         <ViewArea />
-        {this.state.isOpenSettingPanel ? (
-          <div
-            onMouseLeave={(event) => {
-              this.handleLeaveReader(event, "right");
-            }}
-          >
-            <SettingPanel />
-          </div>
-        ) : null}
-        {this.state.isOpenInfoPanel ? (
-          <div
-            onMouseLeave={(event) => {
-              this.handleLeaveReader(event, "left");
-            }}
-          >
-            <NavigationPanel />
-          </div>
-        ) : null}
-        {this.state.isOpenProgressPanel ? (
-          <div
-            className="progress-panel-container"
-            onMouseLeave={(event) => {
-              this.handleLeaveReader(event, "bottom");
-            }}
-          >
-            <ProgressPanel />
-          </div>
-        ) : null}
-        {this.state.isOpenOperationPanel ? (
-          <div
-            className="operation-panel-container"
-            onMouseLeave={(event) => {
-              this.handleLeaveReader(event, "top");
-            }}
-          >
-            <OperationPanel />
-          </div>
-        ) : null}
+        <div
+          className="setting-panel-container"
+          onMouseLeave={(event) => {
+            this.handleLeaveReader(event, "right");
+          }}
+          style={
+            this.state.isOpenSettingPanel
+              ? {}
+              : {
+                  transition: "transform 0.6s ease",
+                  transform: "translateX(309px)",
+                }
+          }
+        >
+          <SettingPanel />
+        </div>
+        <div
+          className="navigation-panel-container"
+          onMouseLeave={(event) => {
+            this.handleLeaveReader(event, "left");
+          }}
+          style={
+            this.state.isOpenNavPanel
+              ? {}
+              : {
+                  transform: "translateX(-309px)",
+                  transition: "transform 0.6s ease",
+                }
+          }
+        >
+          <NavigationPanel />
+        </div>
+        <div
+          className="progress-panel-container"
+          onMouseLeave={(event) => {
+            this.handleLeaveReader(event, "bottom");
+          }}
+          style={
+            this.state.isOpenProgressPanel
+              ? {}
+              : {
+                  transform: "translateY(90px)",
+                  transition: "transform 0.5s ease",
+                }
+          }
+        >
+          <ProgressPanel />
+        </div>
+        <div
+          className="operation-panel-container"
+          onMouseLeave={(event) => {
+            this.handleLeaveReader(event, "top");
+          }}
+          style={
+            this.state.isOpenOperationPanel
+              ? {}
+              : {
+                  transform: "translateY(-90px)",
+                  transition: "transform 0.5s ease",
+                }
+          }
+        >
+          <OperationPanel />
+        </div>
         <Background />
       </div>
     );

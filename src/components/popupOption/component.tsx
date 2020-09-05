@@ -11,26 +11,22 @@ declare var window: any;
 
 class PopupOption extends React.Component<PopupOptionProps> {
   handleNote = () => {
-    if (
-      !document.getElementsByTagName("iframe")[0] ||
-      !document.getElementsByTagName("iframe")[0].contentDocument
-    )
-      return;
     this.props.handleChangeDirection(false);
     this.props.handleMenuMode("note");
     let rect = this.props.rect;
     let x = rect.x % this.props.currentEpub.rendition._layout.width;
+    let y= rect.y % this.props.currentEpub.rendition._layout.height;
     let height = 200;
     let posX = x + rect.width / 2 - 20;
     //防止menu超出图书
     let rightEdge = this.props.currentEpub.rendition._layout.width - 200;
     var posY;
     //控制menu方向
-    if (rect.y < height) {
+    if (y < height) {
       this.props.handleChangeDirection(true);
-      posY = rect.y + 77;
+      posY = y + 77;
     } else {
-      posY = rect.y - height / 2 - rect.height;
+      posY = y - height / 2 - rect.height;
     }
 
     posY = posY < 6 ? 6 : posY;
@@ -41,11 +37,6 @@ class PopupOption extends React.Component<PopupOptionProps> {
       popupMenu.setAttribute("style", `left:${posX}px;top:${posY}px`);
   };
   handleCopy = () => {
-    if (
-      !document.getElementsByTagName("iframe")[0] ||
-      !document.getElementsByTagName("iframe")[0].contentDocument
-    )
-      return;
     let iframe = document.getElementsByTagName("iframe")[0];
     if (!iframe) return;
     let doc = iframe.contentDocument;
@@ -60,11 +51,6 @@ class PopupOption extends React.Component<PopupOptionProps> {
     this.props.handleMessageBox(true);
   };
   handleTrans = () => {
-    if (
-      !document.getElementsByTagName("iframe")[0] ||
-      !document.getElementsByTagName("iframe")[0].contentDocument
-    )
-      return;
     let iframe = document.getElementsByTagName("iframe")[0];
     if (!iframe) return;
     let doc = iframe.contentDocument;
@@ -77,11 +63,6 @@ class PopupOption extends React.Component<PopupOptionProps> {
     this.props.handleOriginalText(text);
   };
   handleDigest = () => {
-    if (
-      !document.getElementsByTagName("iframe")[0] ||
-      !document.getElementsByTagName("iframe")[0].contentDocument
-    )
-      return;
     let bookKey = this.props.currentBook.key;
     let epub = this.props.currentEpub;
     const currentLocation = epub.rendition.currentLocation();

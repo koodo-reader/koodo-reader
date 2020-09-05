@@ -60,10 +60,9 @@ export function handleFetchBooks() {
         epubArr = null;
       } else {
         for (let i = 0; i < bookArr.length; i++) {
-          let epub = window.ePub(bookArr[i].content, {});
+          let epub = (window as any).ePub(bookArr[i].content, {});
           epubArr.push(epub);
         }
-        console.log(epubArr, "epubarr");
         let coverArr: { key: string; url: string }[] = [];
         for (let i = 0; i < epubArr.length; i++) {
           await epubArr[i]
@@ -81,7 +80,7 @@ export function handleFetchBooks() {
               });
             });
         }
-        console.log(coverArr, "coverArr");
+        // console.log(coverArr, "coverArr");
         dispatch(handleEpubs(epubArr));
         dispatch(handleCovers(coverArr));
       }

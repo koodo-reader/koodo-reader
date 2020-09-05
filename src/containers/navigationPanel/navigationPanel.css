@@ -1,6 +1,6 @@
 .navigation-header {
   position: fixed;
-  width: 282px;
+  width: 299px;
   height: 173px;
   background: rgba(255, 255, 255, 1);
   box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.16);
@@ -18,54 +18,48 @@
   left: 12px;
   top: 14px;
 }
-.book-title-container {
+/* .book-title-container {
   display: flex;
   align-items: flex-end;
   justify-content: flex-start;
-  width: 160px;
-  height: 30px;
-  position: absolute;
-  left: 118px;
-  bottom: 120px;
-}
+} */
 .book-title {
   height: 30px;
   font-size: 15px;
   line-height: 15px;
   color: rgba(75, 75, 75, 1);
   opacity: 1;
+  width: 150px;
   text-overflow: ellipsis;
   white-space: nowrap;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  white-space: normal;
-  word-break: keep-all;
   overflow: hidden;
+  height: 30px;
+  position: absolute;
+  left: 30px;
+  top: 20px;
   position: relative;
 }
 .book-arthur {
-  left: 28px;
-  top: 56px;
+  height: 30px;
   font-size: 15px;
-  line-height: 25px;
-  color: rgba(75, 75, 75, 1);
-  opacity: 0.5;
+  line-height: 15px;
+  color: rgba(75, 75, 75, 0.65);
+  opacity: 1;
+  width: 150px;
   text-overflow: ellipsis;
   white-space: nowrap;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 1;
-  white-space: normal;
-  word-break: keep-all;
   overflow: hidden;
+  height: 30px;
+  position: absolute;
+  left: 30px;
+  top: 10px;
   position: relative;
 }
 
 .reading-duration {
   position: absolute;
-  left: 118px;
-  top: 83px;
+  left: 120px;
+  top: 60px;
   font-size: 14px;
   line-height: 22px;
   color: rgba(75, 75, 75, 1);
@@ -73,13 +67,11 @@
 
 .book-content-title {
   line-height: 27px;
-  /* color: rgba(112, 112, 112, 1); */
   opacity: 1;
   cursor: pointer;
 }
 .book-bookmark-title {
   line-height: 27px;
-  /* color: rgba(217, 217, 217, 1); */
   opacity: 1;
   cursor: pointer;
 }
@@ -122,11 +114,73 @@
   position: absolute;
   top: 0px;
   left: 0px;
-  width: 282px;
+  width: 299px;
   height: 100%;
   background: rgba(255, 255, 255, 1);
   box-shadow: 0px 0px 16px rgba(0, 0, 0, 0.38);
   opacity: 1;
   z-index: 10;
   animation: fade-left 0.2s ease-in-out 0s 1;
+}
+.navigation-search-box {
+  position: absolute;
+  left: 115px;
+  top: 90px;
+}
+.navigation-search-title {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: calc(100% - 44px);
+  height: 38px;
+  font-size: 16px;
+  color: rgba(75, 75, 75, 1);
+  margin: 6px 22px;
+}
+.nav-close-icon {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  font-size: 20px;
+}
+.nav-search-list {
+  position: absolute;
+  left: 10px;
+  top: 110px;
+  right: 10px;
+  font-size: 15px;
+  height: calc(100vh - 150px);
+  overflow: scroll;
+}
+.nav-search-list-item {
+  border-bottom: 1px solid rgba(112, 112, 112, 0.1);
+  padding: 8px;
+  cursor: pointer;
+}
+.content-search-text {
+  color: red !important;
+  font-weight: bold !important;
+}
+.nav-search-page {
+  position: absolute;
+  left: 40px;
+  bottom: 7px;
+  display: flex;
+  justify-content: space-around;
+  width: calc(100% - 80px);
+}
+.nav-search-page-item {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: rgba(75, 75, 75, 1);
+  border: 1px solid rgba(75, 75, 75, 1);
+  cursor: pointer;
+}
+.active-page {
+  background-color: rgba(75, 75, 75, 1);
+  color: white;
 }

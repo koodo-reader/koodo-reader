@@ -114,3 +114,10 @@
   font-size: 25px;
   color: rgba(75, 75, 75, 1);
 }
+.header-search-container {
+  position: absolute;
+  top: 23px;
+  left: 20px;
+  width: 209px;
+  height: 40px;
+}

@@ -1511,6 +1511,18 @@
   resolved "https://registry.npm.taobao.org/@types/debug/download/@types/debug-4.1.5.tgz#b14efa8852b7768d898906613c23f688713e02cd"
   integrity sha1-sU76iFK3do2JiQZhPCP2iHE+As0=
 
+"@types/domhandler@*", "@types/domhandler@2.4.1":
+  version "2.4.1"
+  resolved "https://registry.npm.taobao.org/@types/domhandler/download/@types/domhandler-2.4.1.tgz#7b3b347f7762180fbcb1ece1ce3dd0ebbb8c64cf"
+  integrity sha1-ezs0f3diGA+8sezhzj3Q67uMZM8=
+
+"@types/domutils@*":
+  version "1.7.2"
+  resolved "https://registry.npm.taobao.org/@types/domutils/download/@types/domutils-1.7.2.tgz#89422e579c165994ad5c09ce90325da596cc105d"
+  integrity sha1-iUIuV5wWWZStXAnOkDJdpZbMEF0=
+  dependencies:
+    "@types/domhandler" "*"
+
 "@types/eslint-visitor-keys@^1.0.0":
   version "1.0.0"
   resolved "https://registry.npm.taobao.org/@types/eslint-visitor-keys/download/@types/eslint-visitor-keys-1.0.0.tgz?cache=0&sync_timestamp=1588199895754&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40types%2Feslint-visitor-keys%2Fdownload%2F%40types%2Feslint-visitor-keys-1.0.0.tgz#1ee30d79544ca84d68d4b3cdb0af4f205663dd2d"
@@ -1554,6 +1566,15 @@
   dependencies:
     "@types/react" "*"
     hoist-non-react-statics "^3.3.0"
+
+"@types/htmlparser2@3.10.1":
+  version "3.10.1"
+  resolved "https://registry.npm.taobao.org/@types/htmlparser2/download/@types/htmlparser2-3.10.1.tgz#1e65ba81401d53f425c1e2ba5a3d05c90ab742c7"
+  integrity sha1-HmW6gUAdU/QlweK6Wj0FyQq3Qsc=
+  dependencies:
+    "@types/domhandler" "*"
+    "@types/domutils" "*"
+    "@types/node" "*"
 
 "@types/i18next-browser-languagedetector@^3.0.0":
   version "3.0.0"
@@ -4315,7 +4336,7 @@ domexception@^1.0.1:
   dependencies:
     webidl-conversions "^4.0.2"
 
-domhandler@^2.3.0:
+domhandler@2.4.2, domhandler@^2.3.0:
   version "2.4.2"
   resolved "https://registry.npm.taobao.org/domhandler/download/domhandler-2.4.2.tgz#8805097e933d65e85546f726d60f5eb88b44f803"
   integrity sha1-iAUJfpM9ZehVRvcm1g9euItE+AM=
@@ -5895,6 +5916,15 @@ html-comment-regex@^1.1.0:
   resolved "https://registry.npm.taobao.org/html-comment-regex/download/html-comment-regex-1.1.2.tgz#97d4688aeb5c81886a364faa0cad1dda14d433a7"
   integrity sha1-l9RoiutcgYhqNk+qDK0d2hTUM6c=
 
+html-dom-parser@0.3.0:
+  version "0.3.0"
+  resolved "https://registry.npm.taobao.org/html-dom-parser/download/html-dom-parser-0.3.0.tgz#19864ca42836ec8750b439600633f145ab5409b9"
+  integrity sha1-GYZMpCg27IdQtDlgBjPxRatUCbk=
+  dependencies:
+    "@types/domhandler" "2.4.1"
+    domhandler "2.4.2"
+    htmlparser2 "3.10.1"
+
 html-encoding-sniffer@^1.0.2:
   version "1.0.2"
   resolved "https://registry.npm.taobao.org/html-encoding-sniffer/download/html-encoding-sniffer-1.0.2.tgz#e70d84b94da53aa375e11fe3a351be6642ca46f8"
@@ -5932,6 +5962,16 @@ html-parse-stringify2@2.0.1:
   dependencies:
     void-elements "^2.0.1"
 
+html-react-parser@^0.13.0:
+  version "0.13.0"
+  resolved "https://registry.npm.taobao.org/html-react-parser/download/html-react-parser-0.13.0.tgz#be15f24795a57f0927e7b7d56e97b699e24160f4"
+  integrity sha1-vhXyR5Wlfwkn57fVbpe2meJBYPQ=
+  dependencies:
+    "@types/htmlparser2" "3.10.1"
+    html-dom-parser "0.3.0"
+    react-property "1.0.1"
+    style-to-object "0.3.0"
+
 html-webpack-plugin@4.0.0-beta.11:
   version "4.0.0-beta.11"
   resolved "https://registry.npm.taobao.org/html-webpack-plugin/download/html-webpack-plugin-4.0.0-beta.11.tgz#3059a69144b5aecef97708196ca32f9e68677715"
@@ -5944,7 +5984,7 @@ html-webpack-plugin@4.0.0-beta.11:
     tapable "^1.1.3"
     util.promisify "1.0.0"
 
-htmlparser2@^3.3.0:
+htmlparser2@3.10.1, htmlparser2@^3.3.0:
   version "3.10.1"
   resolved "https://registry.npm.taobao.org/htmlparser2/download/htmlparser2-3.10.1.tgz#bd679dc3f59897b6a34bb10749c855bb53a9392f"
   integrity sha1-vWedw/WYl7ajS7EHSchVu1OpOS8=
@@ -6211,6 +6251,11 @@ ini@^1.3.4, ini@^1.3.5, ini@~1.3.0:
   resolved "https://registry.npm.taobao.org/ini/download/ini-1.3.5.tgz#eee25f56db1c9ec6085e0c22778083f596abf927"
   integrity sha1-7uJfVtscnsYIXgwid4CD9Zar+Sc=
 
+inline-style-parser@0.1.1:
+  version "0.1.1"
+  resolved "https://registry.npm.taobao.org/inline-style-parser/download/inline-style-parser-0.1.1.tgz#ec8a3b429274e9c0a1f1c4ffa9453a7fef72cea1"
+  integrity sha1-7Io7QpJ06cCh8cT/qUU6f+9yzqE=
+
 inquirer@7.0.4:
   version "7.0.4"
   resolved "https://registry.npm.taobao.org/inquirer/download/inquirer-7.0.4.tgz?cache=0&sync_timestamp=1586434743693&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Finquirer%2Fdownload%2Finquirer-7.0.4.tgz#99af5bde47153abca23f5c7fc30db247f39da703"
@@ -6412,6 +6457,11 @@ is-docker@^2.0.0:
   version "2.0.0"
   resolved "https://registry.npm.taobao.org/is-docker/download/is-docker-2.0.0.tgz#2cb0df0e75e2d064fe1864c37cdeacb7b2dcf25b"
   integrity sha1-LLDfDnXi0GT+GGTDfN6st7Lc8ls=
+
+is-electron@^2.2.0:
+  version "2.2.0"
+  resolved "https://registry.npm.taobao.org/is-electron/download/is-electron-2.2.0.tgz#8943084f09e8b731b3a7a0298a7b5d56f6b7eef0"
+  integrity sha1-iUMITwnotzGzp6ApintdVva37vA=
 
 is-extendable@^0.1.0, is-extendable@^0.1.1:
   version "0.1.1"
@@ -9838,6 +9888,11 @@ range-parser@^1.2.1, range-parser@~1.2.1:
   resolved "https://registry.npm.taobao.org/range-parser/download/range-parser-1.2.1.tgz#3cf37023d199e1c24d1a55b84800c2f3e6468031"
   integrity sha1-PPNwI9GZ4cJNGlW4SADC8+ZGgDE=
 
+rangy@^1.3.0:
+  version "1.3.0"
+  resolved "https://registry.npm.taobao.org/rangy/download/rangy-1.3.0.tgz#b7c9a70aea05e5d8cdc74a8d4c8273d697271904"
+  integrity sha1-t8mnCuoF5djNx0qNTIJz1pcnGQQ=
+
 raw-body@2.4.0:
   version "2.4.0"
   resolved "https://registry.npm.taobao.org/raw-body/download/raw-body-2.4.0.tgz#a1ce6fb9c9bc356ca52e89256ab59059e13d0332"
@@ -9952,6 +10007,11 @@ react-is@^16.12.0, react-is@^16.3.2, react-is@^16.7.0, react-is@^16.8.1, react-i
   version "16.13.1"
   resolved "https://registry.npm.taobao.org/react-is/download/react-is-16.13.1.tgz#789729a4dc36de2999dc156dd6c1d9c18cea56a4"
   integrity sha1-eJcppNw23imZ3BVt1sHZwYzqVqQ=
+
+react-property@1.0.1:
+  version "1.0.1"
+  resolved "https://registry.npm.taobao.org/react-property/download/react-property-1.0.1.tgz#4ae4211557d0a0ae050a71aa8ad288c074bea4e6"
+  integrity sha1-SuQhFVfQoK4FCnGqitKIwHS+pOY=
 
 react-redux@^7.2.0:
   version "7.2.0"
@@ -11392,6 +11452,13 @@ style-loader@0.23.1:
   dependencies:
     loader-utils "^1.1.0"
     schema-utils "^1.0.0"
+
+style-to-object@0.3.0:
+  version "0.3.0"
+  resolved "https://registry.npm.taobao.org/style-to-object/download/style-to-object-0.3.0.tgz#b1b790d205991cc783801967214979ee19a76e46"
+  integrity sha1-sbeQ0gWZHMeDgBlnIUl57hmnbkY=
+  dependencies:
+    inline-style-parser "0.1.1"
 
 stylehacks@^4.0.0:
   version "4.0.3"
