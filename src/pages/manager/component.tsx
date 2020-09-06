@@ -23,7 +23,7 @@ import { getParamsFromUrl } from "../../utils/syncUtils/common";
 import copy from "copy-text-to-clipboard";
 import OtherUtil from "../../utils/otherUtil";
 import AddFavorite from "../../utils/addFavorite";
-import packageJson from "../../../package.json";
+import { updateLog } from "../../utils/readerConfig";
 import UpdateDialog from "../../components/updataDialog";
 
 class Manager extends React.Component<ManagerProps, ManagerState> {
@@ -90,14 +90,14 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
     }
     setTimeout(() => {
       this.setState({
-        isUpdated: OtherUtil.getReaderConfig("version") !== packageJson.version,
+        isUpdated: OtherUtil.getReaderConfig("version") !== updateLog.version,
       });
       this.props.handleFirst(OtherUtil.getReaderConfig("isFirst") || "yes");
     }, 1000);
   }
   handleUpdateDialog = () => {
     this.setState({ isUpdated: false });
-    OtherUtil.setReaderConfig("version", packageJson.version);
+    OtherUtil.setReaderConfig("version", updateLog.version);
   };
   componentWillUnmout() {
     clearTimeout(this.timer);

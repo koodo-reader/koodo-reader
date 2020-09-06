@@ -43,6 +43,7 @@ export const themeList = [
 
 export const updateLog = {
   date: "2020.9.6",
+  version: "1.1.4",
   new: [
     "支持全书搜索",
     "客户端版本支持使用本地字体",
