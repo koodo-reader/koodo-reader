@@ -10,7 +10,11 @@ import {
 } from "../../redux/actions/viewArea";
 import { stateType } from "../../redux/store";
 import { withNamespaces } from "react-i18next";
-import { handleMessageBox, handleMessage } from "../../redux/actions/manager";
+import {
+  handleMessageBox,
+  handleMessage,
+  handleSearch,
+} from "../../redux/actions/manager";
 import { handleReadingState } from "../../redux/actions/book";
 import OperationPanel from "./component";
 
@@ -30,6 +34,7 @@ const actionCreator = {
   handleMessage,
   handleOpenMenu,
   handleShowBookmark,
+  handleSearch,
 };
 export default connect(
   mapStateToProps,

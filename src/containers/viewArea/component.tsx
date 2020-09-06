@@ -39,7 +39,8 @@ class ViewArea extends React.Component<ViewAreaProps, ViewAreaStates> {
     let epub = this.props.currentEpub;
     (window as any).rangy.init(); // 初始化
     this.rendition = epub.renderTo(page, {
-      manager: this.state.isSingle ? "continuous" : "default",
+      manager:
+        this.state.isSingle && this.state.isScroll ? "continuous" : "default",
       flow: this.state.isScroll ? "scrolled" : "auto",
       width: "100%",
       height: "100%",

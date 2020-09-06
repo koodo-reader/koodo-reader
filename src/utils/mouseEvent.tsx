@@ -45,7 +45,6 @@ export const MouseEvent = (rendition: any) => {
   let mouseChrome = (event: any) => {
     if (lock) return;
     if (event.wheelDelta > 0) {
-      console.log(rendition, "rendition");
       rendition.prev();
       lock = true;
       setTimeout(function () {
@@ -75,6 +74,7 @@ export const MouseEvent = (rendition: any) => {
     if (isFirefox) {
       doc.addEventListener("DOMMouseScroll", mouseFirefox, false);
     } else {
+      console.log("chrome-scroll");
       doc.addEventListener("mousewheel", mouseChrome, false);
     }
   };
