@@ -3,7 +3,10 @@ import { connect } from "react-redux";
 import { stateType } from "../../redux/store";
 import ContentList from "./component";
 const mapStateToProps = (state: stateType) => {
-  return { currentEpub: state.book.currentEpub };
+  return {
+    currentEpub: state.book.currentEpub,
+    chapters: state.reader.chapters,
+  };
 };
 const actionCreator = {};
 export default connect(mapStateToProps, actionCreator)(ContentList);

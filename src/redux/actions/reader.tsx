@@ -25,6 +25,9 @@ export function handleSingle(mode: string) {
 export function handleChapters(chapters: any) {
   return { type: "HANDLE_CHAPTERS", payload: chapters };
 }
+export function handleFlattenChapters(flattenChapters: any) {
+  return { type: "HANDLE_FLATTEN_CHAPTERS", payload: flattenChapters };
+}
 export function handleNoteKey(key: string) {
   return { type: "HANDLE_NOTE_KEY", payload: key };
 }
@@ -48,12 +51,24 @@ export function handleFetchNotes() {
     });
   };
 }
-
+export function flatChapter(chapters: any) {
+  let newChapter: any = [];
+  for (let i = 0; i < chapters.length; i++) {
+    if (chapters[i].subitems[0]) {
+      newChapter.push(chapters[i]);
+      newChapter = newChapter.concat(flatChapter(chapters[i].subitems));
+    } else {
+      newChapter.push(chapters[i]);
+    }
+  }
+  return newChapter;
+}
 export function handleFetchChapters(epub: any) {
   return (dispatch: (arg0: { type: string; payload: any }) => void) => {
     epub.loaded.navigation
       .then((chapters: any) => {
         dispatch(handleChapters(chapters.toc));
+        dispatch(handleFlattenChapters(flatChapter(chapters.toc)));
       })
       .catch(() => {
         console.log("Error occurs");

@@ -40,7 +40,6 @@ class CardList extends React.Component<CardListProps, CardListStates> {
         break;
       }
     }
-    console.log(cfi, "cfi");
     this.props.handleReadingBook(book!);
     this.props.handleReadingEpub(epub);
     this.props.handleReadingState(true);
@@ -116,7 +115,9 @@ class CardList extends React.Component<CardListProps, CardListStates> {
                 <div className="card-list-item-chapter card-list-item-title">
                   {this.handleBookName(item.bookKey)}
                 </div>
-                <div className="card-list-item-title">》{item.chapter}</div>
+                <div className="card-list-item-chapter card-list-item-title">
+                  》<Trans>{item.chapter}</Trans>
+                </div>
               </div>
               <div
                 onClick={() => {

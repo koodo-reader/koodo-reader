@@ -133,6 +133,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
               : {
                   transition: "transform 0.6s ease",
                   transform: "translateX(309px)",
+                  display: "none",
                 }
           }
         >
@@ -149,6 +150,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
               : {
                   transform: "translateX(-309px)",
                   transition: "transform 0.6s ease",
+                  display: "none",
                 }
           }
         >
@@ -165,6 +167,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
               : {
                   transform: "translateY(90px)",
                   transition: "transform 0.5s ease",
+                  display: "none",
                 }
           }
         >
@@ -181,6 +184,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
               : {
                   transform: "translateY(-90px)",
                   transition: "transform 0.5s ease",
+                  display: "none",
                 }
           }
         >
