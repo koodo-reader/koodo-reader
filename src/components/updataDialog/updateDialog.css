@@ -17,7 +17,7 @@
   line-height: 15px;
   color: rgba(75, 75, 75, 1);
   opacity: 1;
-  margin: 20px 20px 10px;
+  margin: 20px 0px 10px;
   text-align: center;
   width: 346px;
 }
@@ -47,7 +47,7 @@
   margin-top: 10px;
   height: 300px;
   overflow-y: scroll;
-  width: 320px;
+  width: 346px;
 }
 .update-dialog-illustration {
   width: 200px;

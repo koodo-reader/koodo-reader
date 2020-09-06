@@ -44,7 +44,7 @@ export const themeList = [
 export const updateLog = {
   date: "2020.9.6",
   new: [
-    "现在 Koodo Reader 支持全书搜索啦",
+    "支持全书搜索",
     "客户端版本支持使用本地字体",
     "单页模式新增滚动阅读功能",
     "新增对epub文件内置样式的支持",

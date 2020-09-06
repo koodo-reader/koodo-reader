@@ -14,9 +14,6 @@
     "copy-text-to-clipboard": "^2.2.0",
     "dropbox": "^5.2.0",
     "electron-is-dev": "^1.1.0",
-    "epubjs": "^0.3.88",
-    "font-list": "^1.2.11",
-    "html-react-parser": "^0.13.0",
     "i18next": "^19.4.4",
     "i18next-browser-languagedetector": "^4.2.0",
     "is-electron": "^2.2.0",
@@ -142,6 +139,9 @@
     "sass-loader": "^8.0.0",
     "spark-md5": "^3.0.1",
     "typescript": "^3.8.3",
-    "wait-on": "^3.3.0"
+    "wait-on": "^3.3.0",
+    "epubjs": "^0.3.88",
+    "font-list": "^1.2.11",
+    "html-react-parser": "^0.13.0"
   }
 }

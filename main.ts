@@ -29,10 +29,10 @@ app.on("ready", () => {
     height: 660,
     webPreferences: { webSecurity: false, nodeIntegration: true },
   });
-  if (!isDev) {
-    const { Menu } = require("electron");
-    Menu.setApplicationMenu(null);
-  }
+  // if (!isDev) {
+  //   const { Menu } = require("electron");
+  //   Menu.setApplicationMenu(null);
+  // }
 
   const urlLocation = isDev
     ? "http://localhost:3000/"
