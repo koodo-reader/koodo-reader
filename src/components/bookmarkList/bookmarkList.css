@@ -10,13 +10,20 @@
 .book-bookmark-digest {
   margin: 15px 5px 10px;
   width: 236px;
-  max-height: 183px;
+  max-height: 186px;
   font-size: 14px;
   line-height: 14px;
   color: rgba(75, 75, 75, 1);
   opacity: 1;
-  overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+  white-space: normal;
+  word-break: keep-all;
+  overflow: hidden;
+  position: relative;
 }
 .book-bookmark-index {
   float: left;
@@ -42,7 +49,8 @@
   margin-left: 12px;
   /* margin-top: 8px; */
   position: relative;
-  bottom: 10px;
+  bottom: 15px;
+  left: 10px;
   font-size: 14px;
   color: rgba(161, 161, 161, 1);
   opacity: 1;
@@ -63,5 +71,6 @@
   margin: 0px 12px 0px;
   cursor: pointer;
   position: relative;
-  bottom: 15px;
+  bottom: 5px;
+  left: 10px;
 }

@@ -41,7 +41,6 @@ class Book extends React.Component<BookProps, BookState> {
   handleMoreAction = (event: any) => {
     const e = event || window.event;
     let x = e.clientX;
-    console.log(e.clientX, document.body.clientWidth);
     if (x > document.body.clientWidth - 100) {
       x = x - 80;
     }

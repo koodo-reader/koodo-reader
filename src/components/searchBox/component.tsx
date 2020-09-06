@@ -8,9 +8,7 @@ class SearchBox extends React.Component<SearchBoxProps> {
     if (this.props.isNavSearch) {
       let searchBox: any = document.querySelector(".header-search-box");
       searchBox && searchBox.focus();
-      console.log(searchBox, "searchBox");
     }
-    console.log(this.props.isNavSearch, "this.props.isNavSearch");
   }
   handleMouse = () => {
     let value = (this.refs.searchBox as any).value;
@@ -48,7 +46,6 @@ class SearchBox extends React.Component<SearchBoxProps> {
         );
         return item;
       });
-      console.log(searchList, "searchListtest");
       // this.$refs.searchInput.blur();
       this.props.handleSearchList(searchList);
     });

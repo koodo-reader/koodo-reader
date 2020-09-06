@@ -68,7 +68,6 @@ class BookList extends React.Component<BookListProps> {
     arr.forEach((item) => {
       items[item] && itemArr.push(items[item]);
     });
-    console.log(items, itemArr, "filter");
     return itemArr;
   };
   renderBookList = () => {

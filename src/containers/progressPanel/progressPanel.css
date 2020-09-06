@@ -5,6 +5,8 @@
   width: 100%;
   margin-top: 9px;
   text-align: center;
+  height: 15px;
+  overflow: hidden;
 }
 .progress-slide-container {
   width: 309px;
@@ -150,4 +152,8 @@ input[type="range"]::-ms-thumb {
   left: calc(50% - 206px);
   z-index: 10;
   animation: fade-up 0.1s ease-in-out 0s 1;
+}
+.input-progress {
+  position: absolute;
+  bottom: 3px;
 }
