@@ -91,7 +91,7 @@ class Book extends React.Component<BookProps, BookState> {
               }}
             >
               <div className="book-item-cover-img">
-                <img src="/assets/cover.svg" alt="" style={{ width: "80%" }} />
+                <img src="assets/cover.svg" alt="" style={{ width: "80%" }} />
               </div>
 
               <p className="book-item-cover-title">
