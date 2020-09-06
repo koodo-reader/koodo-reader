@@ -16,6 +16,7 @@ class UpdateInfo extends React.Component<UpdateInfoProps, UpdateInfoState> {
     axios
       .get("https://koodo.960960.xyz/update")
       .then((res) => {
+        console.log(res);
         const download = res.data.download;
         const version = res.data.log.version;
         // console.log(version, "version");
