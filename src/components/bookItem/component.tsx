@@ -56,7 +56,7 @@ class Book extends React.Component<BookItemProps, BookItemState> {
           />
         ) : (
           <div className="book-item-list-cover book-item-list-cover-img">
-            <img src="/assets/cover.svg" alt="" style={{ width: "80%" }} />
+            <img src="assets/cover.svg" alt="" style={{ width: "80%" }} />
           </div>
         )}
 

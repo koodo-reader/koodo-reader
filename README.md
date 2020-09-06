@@ -14,10 +14,10 @@
 
 </div>
 <div align="center">
-  <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
+  <a href="https://ci.appveyor.com/project/troyeguo/koodo-reader/branch/master">
     <img src="https://ci.appveyor.com/api/projects/status/602fp409plq8qcwu?svg=true" alt="appveyor">
   </a>
-    <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
+  <a href="https://travis-ci.com/github/troyeguo/koodo-reader">
     <img src="https://travis-ci.com/troyeguo/koodo-reader.svg?branch=master" alt="travis-ci">
   </a>
 </div>
