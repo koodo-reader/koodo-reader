@@ -126,6 +126,7 @@
 }
 .card-list-item-title {
   float: left;
+  /* width: 100px; */
 }
 .card-list-container-box {
   margin-top: 35px;

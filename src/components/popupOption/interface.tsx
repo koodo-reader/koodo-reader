@@ -6,7 +6,7 @@ export interface PopupOptionProps {
   selection: string;
   digests: NoteModel[];
   notes: NoteModel[];
-  chapters: any;
+  flattenChapters: any;
   color: number;
   rect: DOMRect;
   cfiRange: string;

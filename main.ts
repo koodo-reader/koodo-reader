@@ -9,28 +9,21 @@ const {
 const isDev = require("electron-is-dev");
 const path = require("path");
 const fontList = require("font-list");
-// ipcMain.on("is-fonts-ready", (event, arg) => {
-//   console.log(arg, "arg");
 
-// });
 ipcMain.on("fonts-ready", (event, arg) => {
-  console.log(arg); // prints "ping"
   fontList
     .getFonts()
     .then((fonts) => {
       event.returnValue = fonts;
-      // event.reply("fonts-ready", "pong");
     })
     .catch((err) => {
-      console.log("epub");
+      console.log(err);
     });
 });
 
 let mainWindow;
 
 app.on("ready", () => {
-  // console.log("before message box");
-
   mainWindow = new BrowserWindow({
     width: 1030,
     height: 660,

@@ -19,7 +19,7 @@ const mapStateToProps = (state: stateType) => {
     currentEpub: state.book.currentEpub,
     currentBook: state.book.currentBook,
     bookmarks: state.reader.bookmarks,
-    chapters: state.reader.chapters,
+    flattenChapters: state.reader.flattenChapters,
   };
 };
 const actionCreator = {

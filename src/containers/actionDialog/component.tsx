@@ -5,7 +5,6 @@ import { ActionDialogProps } from "./interface";
 
 class ActionDialog extends React.Component<ActionDialogProps> {
   handleDeleteBook = () => {
-    console.log("tests");
     this.props.handleReadingBook(this.props.currentBook);
     this.props.handleDeleteDialog(true);
     this.props.handleActionDialog(false);

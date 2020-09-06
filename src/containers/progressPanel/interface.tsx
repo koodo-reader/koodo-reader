@@ -5,7 +5,9 @@ export interface ProgressPanelProps {
   currentBook: BookModel;
   percentage: number;
   locations: any;
+  flattenChapters: any;
 }
 export interface ProgressPanelState {
   displayPercentage: number;
+  currentChapter: string;
 }

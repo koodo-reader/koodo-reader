@@ -21,6 +21,9 @@ class SingleControl extends React.Component<
     this.props.handleSingle(mode);
     this.setState({ isSingle: mode === "single" });
     OtherUtil.setReaderConfig("isSingle", mode);
+    if (mode !== "single") {
+      OtherUtil.setReaderConfig("isScroll", "no");
+    }
     this.props.handleMessage("Try refresh or restart");
     this.props.handleMessageBox(true);
   };
