@@ -28,7 +28,6 @@ class WelcomePage extends React.Component<WelcomePageProps, WelcomePageState> {
   render() {
     const renderWelcome = () => {
       return welcomeMessage.map((item, index) => {
-        console.log(this.state.currentIndex, index, "index");
         return (
           <div
             className={

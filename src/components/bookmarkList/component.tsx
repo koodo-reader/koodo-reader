@@ -31,6 +31,7 @@ class BookmarkList extends React.Component<
         .filter((item) => {
           return item.bookKey === this.props.currentBook.key;
         })
+        .reverse()
         .map((item, index) => {
           const bookmarkProps = {
             itemKey: item.key,
@@ -48,7 +49,9 @@ class BookmarkList extends React.Component<
               }}
             >
               <p className="book-bookmark-digest">{item.label}</p>
-              <span className="book-bookmark-index">{item.chapter}</span>
+              <span className="bookmark-page-list-item-title">
+                {item.chapter}
+              </span>
               {this.state.deleteIndex === index ? (
                 <DeleteIcon {...bookmarkProps} />
               ) : null}

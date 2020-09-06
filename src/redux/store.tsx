@@ -68,6 +68,7 @@ export type stateType = {
     locations: any[];
     color: number;
     chapters: any[];
+    flattenChapters: any;
     isSingle: string;
     noteKey: string;
     originalText: string;

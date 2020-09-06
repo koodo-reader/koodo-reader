@@ -148,6 +148,7 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     let highlighters: any = this.props.notes;
     if (!highlighters) return;
     const currentLocation = this.props.currentEpub.rendition.currentLocation();
+    if (!currentLocation.start) return;
     let chapterIndex = currentLocation.start.index;
     let highlightersByChapter = highlighters.filter(
       (item: any) => item.chapterIndex === chapterIndex

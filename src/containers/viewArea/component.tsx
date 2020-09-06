@@ -51,7 +51,6 @@ class ViewArea extends React.Component<ViewAreaProps, ViewAreaStates> {
       this.props.handleOpenMenu(false);
       const currentLocation = this.rendition.currentLocation();
       const cfi = currentLocation.start.cfi;
-
       this.props.handleShowBookmark(
         this.props.bookmarks &&
           this.props.bookmarks.filter(
@@ -105,6 +104,9 @@ class ViewArea extends React.Component<ViewAreaProps, ViewAreaStates> {
   }
   showImage = (event: any) => {
     console.log("click");
+    if (!event.target.src) {
+      return;
+    }
     if (this.state.isShowImage) {
       this.setState({ isShowImage: false });
     }
@@ -112,19 +114,17 @@ class ViewArea extends React.Component<ViewAreaProps, ViewAreaStates> {
     const handleDirection = (direction: string) => {
       this.setState({ imageRatio: direction });
     };
-    if (event.target.src) {
-      var img = new Image();
-      img.addEventListener("load", function () {
-        handleDirection(
-          this.naturalWidth / this.naturalHeight > 1 ? "horizontal" : "vertical"
-        );
-      });
-      img.src = event.target.src;
-      let image: HTMLImageElement | null = document.querySelector(".image");
-      if (image) {
-        image.src = event.target.src;
-        this.setState({ isShowImage: true });
-      }
+    var img = new Image();
+    img.addEventListener("load", function () {
+      handleDirection(
+        this.naturalWidth / this.naturalHeight > 1 ? "horizontal" : "vertical"
+      );
+    });
+    img.src = event.target.src;
+    let image: HTMLImageElement | null = document.querySelector(".image");
+    if (image) {
+      image.src = event.target.src;
+      this.setState({ isShowImage: true });
     }
   };
   hideImage = (event: any) => {

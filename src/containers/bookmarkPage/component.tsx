@@ -36,7 +36,6 @@ class BookmarkPage extends React.Component<
   };
   render() {
     let { bookmarks, books, covers } = this.props;
-    console.log(bookmarks, "bookmarks");
     let bookKeyArr: string[] = [];
     //获取bookmarks中的图书列表
     bookmarks.forEach((item) => {
@@ -70,9 +69,11 @@ class BookmarkPage extends React.Component<
       return false;
     });
     const renderBookmarklistItem = (item: BookModel) => {
-      return bookmarkObj[item.key].map((item: BookmarkModel) => (
+      return bookmarkObj[item.key].reverse().map((item: BookmarkModel) => (
         <li className="bookmark-page-list-item" key={item.key}>
-          <div className="bookmark-page-list-item-title">{item.chapter}</div>
+          <div className="bookmark-page-list-item-title">
+            <Trans>{item.chapter}</Trans>
+          </div>
           <div className="bookmark-page-progress">
             {Math.round(item.percentage * 100)}%
           </div>

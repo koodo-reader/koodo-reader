@@ -65,11 +65,10 @@ class OperationPanel extends React.Component<
   }
   handleAddBookmark() {
     let bookKey = this.props.currentBook.key;
-    let epub = this.props.currentEpub;
-    const currentLocation = epub.rendition.currentLocation();
+    const currentLocation = this.props.currentEpub.rendition.currentLocation();
     let chapterHref = currentLocation.start.href;
     let chapter = "Unknown Chapter";
-    let currentChapter = this.props.chapters.filter(
+    let currentChapter = this.props.flattenChapters.filter(
       (item: any) => item.href.split("#")[0] === chapterHref
     )[0];
     if (currentChapter) {
@@ -85,7 +84,7 @@ class OperationPanel extends React.Component<
     const cfiRange = `epubcfi(${cfibase}!,${cfistart},${cfiend})`;
     const cfi = RecordLocation.getCfi(this.props.currentBook.key).cfi;
 
-    epub.getRange(cfiRange).then((range: any) => {
+    this.props.currentEpub.getRange(cfiRange).then((range: any) => {
       let text = range.toString();
       text = text.replace(/\s\s/g, "");
       text = text.replace(/\r/g, "");

@@ -19,7 +19,7 @@ const mapStateToProps = (state: stateType) => {
     selection: state.viewArea.selection,
     notes: state.reader.notes,
     color: state.reader.color,
-    chapters: state.reader.chapters,
+    flattenChapters: state.reader.flattenChapters,
   };
 };
 const actionCreator = {

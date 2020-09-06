@@ -62,8 +62,8 @@ export const MouseEvent = (rendition: any) => {
       return false;
     }
   };
-
-  rendition.on("rendered", () => {
+  let rebind = () => {
+    console.log("rebind");
     let iframe = document.getElementsByTagName("iframe")[0];
     if (!iframe) return;
     let doc = iframe.contentDocument;
@@ -72,11 +72,33 @@ export const MouseEvent = (rendition: any) => {
     }
     doc.addEventListener("keydown", arrowKeys); // 箭头按键翻页
     // 鼠标滚轮翻页
-    window.addEventListener("keydown", arrowKeys, false);
     if (isFirefox) {
       doc.addEventListener("DOMMouseScroll", mouseFirefox, false);
     } else {
       doc.addEventListener("mousewheel", mouseChrome, false);
     }
+  };
+  let bindEvent = (doc: any) => {
+    doc.addEventListener("keydown", arrowKeys); // 箭头按键翻页
+    // 鼠标滚轮翻页
+    if (isFirefox) {
+      doc.addEventListener("DOMMouseScroll", mouseFirefox, false);
+    } else {
+      doc.addEventListener("mousewheel", mouseChrome, false);
+    }
+  };
+  rendition.on("locationChanged", () => {
+    let iframe = document.getElementsByTagName("iframe")[0];
+    if (!iframe) return;
+    let doc = iframe.contentDocument;
+    if (!doc) {
+      return;
+    }
+    // 鼠标滚轮翻页
+    window.addEventListener("keydown", arrowKeys);
+    window.addEventListener("mousewheel", rebind);
+    window.addEventListener("DOMMouseScroll", rebind);
+    window.onmousewheel = rebind;
+    bindEvent(doc);
   });
 };

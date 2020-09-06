@@ -23,7 +23,6 @@ class PopupNote extends React.Component<PopupNoteProps> {
           item.notes = notes;
         }
       });
-      console.log(this.props.notes, "notes");
       localforage.setItem("notes", this.props.notes).then(() => {
         this.props.handleOpenMenu(false);
         this.props.handleMessage("Add Successfully");
@@ -35,12 +34,11 @@ class PopupNote extends React.Component<PopupNoteProps> {
       });
     } else {
       let bookKey = this.props.currentBook.key;
-      let epub = this.props.currentEpub;
-      const currentLocation = epub.rendition.currentLocation();
+      const currentLocation = this.props.currentEpub.rendition.currentLocation();
       let chapterHref = currentLocation.start.href;
       let chapterIndex = currentLocation.start.index;
       let chapter = "Unknown Chapter";
-      let currentChapter = this.props.chapters.filter(
+      let currentChapter = this.props.flattenChapters.filter(
         (item: any) => item.href.split("#")[0] === chapterHref
       )[0];
       if (currentChapter) {
@@ -50,7 +48,7 @@ class PopupNote extends React.Component<PopupNoteProps> {
       const cfi = RecordLocation.getCfi(this.props.currentBook.key).cfi;
 
       let iframe = document.getElementsByTagName("iframe")[0];
-      if(!iframe)return;
+      if (!iframe) return;
       let doc = iframe.contentDocument;
       if (!doc) {
         return;
@@ -59,11 +57,6 @@ class PopupNote extends React.Component<PopupNoteProps> {
         .getSelection(iframe)
         .saveCharacterRanges(doc.body)[0];
       let range = JSON.stringify(charRange);
-      console.log(
-        charRange,
-        doc.getSelection(),
-        doc.getSelection()!.toString()
-      );
       let text = doc.getSelection()?.toString();
       if (!text) {
         return;

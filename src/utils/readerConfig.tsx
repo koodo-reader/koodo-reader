@@ -14,7 +14,9 @@ class readerConfig {
       "style",
       `background-color:${OtherUtil.getReaderConfig("theme")}`
     );
-
+    if (!doc.head) {
+      return;
+    }
     if (!style) {
       style = doc.createElement("style");
       style.id = "default-style";
@@ -38,27 +40,18 @@ export const themeList = [
   { id: 3, theme: "rgba(242,219,187,0.8)" },
   { id: 4, theme: "rgba(255,254,252,1)" },
 ];
-export const fontSizeList = [
-  { id: 1, size: "Small", value: "15" },
-  { id: 2, size: "Medium", value: "17" },
-  { id: 3, size: "Large", value: "20" },
-  { id: 4, size: "Extra Large", value: "23" },
-  { id: 5, size: "Ultra Large", value: "26" },
-];
+
 export const updateLog = {
-  date: "2020.8.23",
+  date: "2020.9.6",
   new: [
-    "现在您可以给喜爱的图书添加心形标记，并且可以在我的喜爱中找到所有标记过的图书",
-    "添加书签之后，这一页的右上角会出现书签图标",
-    "图书操作的UI优化",
+    "现在 Koodo Reader 支持全书搜索啦",
+    "客户端版本支持使用本地字体",
+    "单页模式新增滚动阅读功能",
+    "新增对epub文件内置样式的支持",
+    "字体支持任意大小的调节",
+    "UI细节优化",
   ],
-  fix: [
-    "修复笔记，书摘，书签跳转位置不准确的问题",
-    "修复删除书签导致阅读器崩溃的问题",
-    "修复阅读进度为NaN的问题",
-    "修复笔记弹窗超出阅读器范围的问题",
-    "修复导入图书失败后，图书页面闪烁问题",
-  ],
+  fix: ["修复图片错页显示的问题", "修复批量导入时，部分图书无法导入的问题"],
 };
 
 export const dropdownList = [

@@ -5,7 +5,7 @@ export interface OperationPanelProps {
   currentEpub: any;
   currentBook: BookModel;
   bookmarks: BookmarkModel[];
-  chapters: any;
+  flattenChapters: any;
   handleBookmarks: (bookmarks: BookmarkModel[]) => void;
   handleReadingState: (isReading: boolean) => void;
   handleFetchBookmarks: () => void;

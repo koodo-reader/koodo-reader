@@ -5,6 +5,7 @@ const initState = {
   digests: [],
   locations: null,
   chapters: null,
+  flattenChapters: null,
   color: 0,
   noteKey: "",
   originalText: "",
@@ -64,6 +65,11 @@ export function reader(
       return {
         ...state,
         chapters: action.payload,
+      };
+    case "HANDLE_FLATTEN_CHAPTERS":
+      return {
+        ...state,
+        flattenChapters: action.payload,
       };
     default:
       return state;

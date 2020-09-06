@@ -12,12 +12,29 @@ class ProgressPanel extends React.Component<
     super(props);
     this.state = {
       displayPercentage: this.props.percentage ? this.props.percentage : 0,
+      currentChapter: "",
     };
+  }
+  componentWillReceiveProps(nextProps: ProgressPanelProps) {
+    if (nextProps.currentEpub.rendition.location) {
+      const currentLocation = this.props.currentEpub.rendition.currentLocation();
+      if (!currentLocation.start) {
+        return;
+      }
+      let chapterHref = currentLocation.start.href;
+      let chapter = "Unknown Chapter";
+      let currentChapter = this.props.flattenChapters.filter(
+        (item: any) => item.href.split("#")[0] === chapterHref
+      )[0];
+      if (currentChapter) {
+        chapter = currentChapter.label.trim(" ");
+      }
+      this.setState({ currentChapter: chapter });
+    }
   }
   //WARNING! To be deprecated in React v17. Use componentDidMount instead.
   onProgressChange = (event: any) => {
     const percentage = event.target.value / 100;
-    console.log(this.props.locations, "locations");
     const location = percentage
       ? this.props.locations.cfiFromPercentage(percentage)
       : 0;
@@ -57,16 +74,28 @@ class ProgressPanel extends React.Component<
   };
 
   render() {
+    if (!this.props.locations) {
+      return (
+        <div className="progress-panel">
+          <p className="progress-text">
+            <Trans>Loading</Trans>
+          </p>
+        </div>
+      );
+    }
     return (
       <div className="progress-panel">
         <p className="progress-text">
-          <Trans>Current Progress</Trans>:{" "}
-          {Math.round(
-            this.state.displayPercentage > 1
-              ? 100
-              : this.state.displayPercentage * 100
-          )}
-          %
+          <span>
+            <Trans>Current Progress</Trans>:{" "}
+            {Math.round(
+              this.state.displayPercentage > 1
+                ? 100
+                : this.state.displayPercentage * 100
+            )}
+            {"%  "}
+          </span>
+          <span>{this.state.currentChapter}</span>
         </p>
 
         <input

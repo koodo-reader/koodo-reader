@@ -3,5 +3,5 @@ export interface FontSizeListProps {
   handleMessage: (message: string) => void;
 }
 export interface FontSizeListState {
-  currentFontSizeIndex: number;
+  fontSize: string;
 }

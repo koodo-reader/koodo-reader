@@ -15,7 +15,7 @@ class PopupOption extends React.Component<PopupOptionProps> {
     this.props.handleMenuMode("note");
     let rect = this.props.rect;
     let x = rect.x % this.props.currentEpub.rendition._layout.width;
-    let y= rect.y % this.props.currentEpub.rendition._layout.height;
+    let y = rect.y % this.props.currentEpub.rendition._layout.height;
     let height = 200;
     let posX = x + rect.width / 2 - 20;
     //防止menu超出图书
@@ -64,12 +64,11 @@ class PopupOption extends React.Component<PopupOptionProps> {
   };
   handleDigest = () => {
     let bookKey = this.props.currentBook.key;
-    let epub = this.props.currentEpub;
-    const currentLocation = epub.rendition.currentLocation();
+    const currentLocation = this.props.currentEpub.rendition.currentLocation();
     let chapterHref = currentLocation.start.href;
     let chapterIndex = currentLocation.start.index;
     let chapter = "Unknown Chapter";
-    let currentChapter = this.props.chapters.filter(
+    let currentChapter = this.props.flattenChapters.filter(
       (item: any) => item.href.split("#")[0] === chapterHref
     )[0];
     if (currentChapter) {
@@ -91,7 +90,6 @@ class PopupOption extends React.Component<PopupOptionProps> {
       .getSelection(iframe)
       .saveCharacterRanges(doc.body)[0];
     let range = JSON.stringify(charRange);
-    console.log(doc.getSelection(), "propscontents");
     let text = doc.getSelection()?.toString();
     if (!text) return;
     text = text.replace(/\s\s/g, "");
@@ -110,7 +108,6 @@ class PopupOption extends React.Component<PopupOptionProps> {
       percentage,
       color
     );
-    console.log(digest, "digest");
     let noteArr = this.props.notes;
     noteArr.push(digest);
     localforage.setItem("notes", noteArr).then(() => {
