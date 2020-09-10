@@ -10,17 +10,6 @@ const isDev = require("electron-is-dev");
 const path = require("path");
 const fontList = require("font-list");
 
-ipcMain.on("fonts-ready", (event, arg) => {
-  fontList
-    .getFonts()
-    .then((fonts) => {
-      event.returnValue = fonts;
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-});
-
 let mainWindow;
 
 app.on("ready", () => {
@@ -38,4 +27,15 @@ app.on("ready", () => {
     ? "http://localhost:3000/"
     : `file://${path.join(__dirname, "./build/index.html")}`;
   mainWindow.loadURL(urlLocation);
+
+  ipcMain.on("fonts-ready", (event, arg) => {
+    fontList
+      .getFonts()
+      .then((fonts) => {
+        event.returnValue = fonts;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  });
 });
