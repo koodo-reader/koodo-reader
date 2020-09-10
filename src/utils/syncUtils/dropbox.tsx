@@ -1,6 +1,8 @@
-import Dropbox from "dropbox";
+// import Dropbox from "dropbox";
 import RestoreUtil from "../restoreUtil";
 import OtherUtil from "../otherUtil";
+
+var Dropbox = (window as any).Dropbox;
 
 class DropboxUitl {
   static UploadFile(
@@ -42,7 +44,7 @@ class DropboxUitl {
         file.name = "data.zip";
         RestoreUtil.restore(file, handleFinish);
       })
-      .catch(function (error) {
+      .catch(function (error: any) {
         showMessage("Download failed,network problem or no backup");
 
         console.error(error);
