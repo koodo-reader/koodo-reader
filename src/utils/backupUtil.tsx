@@ -8,7 +8,7 @@ import DropboxUtil from "./syncUtils/dropbox";
 import OndriveUtil from "./syncUtils/onedrive";
 // import _ from "lodash";
 
-let _ = (window as any).lodash;
+let _ = (window as any)._;
 let JSZip = (window as any).JSZip;
 class BackupUtil {
   static backup(

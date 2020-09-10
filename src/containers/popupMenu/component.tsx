@@ -8,7 +8,7 @@ import { PopupMenuProps, PopupMenuStates } from "./interface";
 
 declare var window: any;
 
-let _ = window.lodash;
+let _ = window._;
 
 class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
   highlighter: any;
