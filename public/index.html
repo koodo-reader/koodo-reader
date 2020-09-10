@@ -19,6 +19,7 @@
       itemprop="description"
       content="Koodo Reader is a open-source epub reader with backup and restore support, runs on Windows, Mac and Web"
     />
+
     <style>
       #root {
         height: 100%;
@@ -35,6 +36,22 @@
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
+    <script
+      type="text/javascript"
+      src="%PUBLIC_URL%/lib/JSZip/jszip.min.js"
+    ></script>
+    <script
+      type="text/javascript"
+      src="%PUBLIC_URL%/lib/EpubJS/epub.min.js"
+    ></script>
+    <script
+      type="text/javascript"
+      src="%PUBLIC_URL%/lib/Lodash/lodash.min.js"
+    ></script>
+    <script
+      type="text/javascript"
+      src="%PUBLIC_URL%/lib/Dropbox/Dropbox-sdk.min.js"
+    ></script>
     <script
       type="text/javascript"
       src="%PUBLIC_URL%/lib/Rangy/rangy-core.js"

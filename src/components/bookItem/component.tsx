@@ -4,11 +4,11 @@ import RecentBooks from "../../utils/recordRecent";
 import "./bookItem.css";
 import RecordLocation from "../../utils/recordLocation";
 import { BookItemProps, BookItemState } from "./interface";
-import Epub from "epubjs";
+// import Epub from "epubjs";
 
 declare var window: any;
 
-window.ePub = Epub;
+// window.ePub = Epub;
 
 class Book extends React.Component<BookItemProps, BookItemState> {
   epub: any;
