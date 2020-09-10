@@ -20,6 +20,17 @@
   <a href="https://travis-ci.com/github/troyeguo/koodo-reader">
     <img src="https://travis-ci.com/troyeguo/koodo-reader.svg?branch=master" alt="travis-ci">
   </a>
+  <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
+    <img src="https://img.shields.io/github/release/troyeguo/koodo-reader.svg?style=flat-square" alt="">
+  </a>
+
+  <a href="https://github.com/troyeguo/koodo-reader/blob/master/LICENSE">
+    <img src="https://img.shields.io/github/license/troyeguo/koodo-reader.svg?style=flat-square" alt="">
+  </a>
+
+  <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
+    <img alt="GitHub All Releases" src="https://img.shields.io/github/downloads/troyeguo/koodo-reader/total.svg?color=%2312b886&style=flat-square">
+  </a>
 </div>
 
 ## 预览
