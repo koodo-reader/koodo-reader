@@ -1,13 +1,15 @@
 // import localforage from "localforage";
-import JSZip from "jszip";
+// import JSZip from "jszip";
 import FileSaver from "file-saver";
 import BookModel from "../model/Book";
 import NoteModel from "../model/Note";
 import BookmarkModel from "../model/Bookmark";
 import DropboxUtil from "./syncUtils/dropbox";
 import OndriveUtil from "./syncUtils/onedrive";
-import _ from "lodash";
+// import _ from "lodash";
 
+let _ = (window as any).lodash;
+let JSZip = (window as any).JSZip;
 class BackupUtil {
   static backup(
     bookArr: BookModel[],
@@ -53,7 +55,7 @@ class BackupUtil {
 
     zip
       .generateAsync({ type: "blob" })
-      .then(function (blob) {
+      .then(function (blob: any) {
         switch (driveIndex) {
           case 0:
             handleFinish();
@@ -79,7 +81,7 @@ class BackupUtil {
             break;
         }
       })
-      .catch((err) => {
+      .catch((err: any) => {
         console.log(err);
       });
   }
