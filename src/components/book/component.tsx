@@ -4,12 +4,12 @@ import RecentBooks from "../../utils/recordRecent";
 import "./book.css";
 import { BookProps, BookState } from "./interface";
 import AddFavorite from "../../utils/addFavorite";
-import Epub from "epubjs";
+// import Epub from "epubjs";
 import ActionDialog from "../../containers/actionDialog";
 
 declare var window: any;
 
-window.ePub = Epub;
+// window.ePub = Epub;
 
 class Book extends React.Component<BookProps, BookState> {
   epub: any;

@@ -4,9 +4,11 @@ import PopupNote from "../../components/popupNote";
 import PopupOption from "../../components/popupOption";
 import PopupTrans from "../../components/popupTrans";
 import { PopupMenuProps, PopupMenuStates } from "./interface";
-import _ from "lodash";
+// import _ from "lodash";
 
 declare var window: any;
+
+let _ = window.lodash;
 
 class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
   highlighter: any;

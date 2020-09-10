@@ -4,10 +4,10 @@ import BookModel from "../../model/Book";
 import BookmarkModel from "../../model/Bookmark";
 import NoteModel from "../../model/Note";
 import { Dispatch } from "redux";
-import Epub from "epubjs";
+// import Epub from "epubjs";
 
 declare var window: any;
-window.ePub = Epub;
+// window.ePub = Epub;
 export function handleNotes(notes: NoteModel[]) {
   return { type: "HANDLE_NOTES", payload: notes };
 }
@@ -60,7 +60,7 @@ export function handleFetchBooks() {
         epubArr = null;
       } else {
         for (let i = 0; i < bookArr.length; i++) {
-          let epub = (window as any).ePub(bookArr[i].content, {});
+          let epub = window.ePub(bookArr[i].content, {});
           epubArr.push(epub);
         }
         let coverArr: { key: string; url: string }[] = [];
