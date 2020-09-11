@@ -4,7 +4,6 @@ import PopupNote from "../../components/popupNote";
 import PopupOption from "../../components/popupOption";
 import PopupTrans from "../../components/popupTrans";
 import { PopupMenuProps, PopupMenuStates } from "./interface";
-// import _ from "lodash";
 
 declare var window: any;
 
