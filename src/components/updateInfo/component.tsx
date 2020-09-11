@@ -19,7 +19,6 @@ class UpdateInfo extends React.Component<UpdateInfoProps, UpdateInfoState> {
         console.log(res);
         const download = res.data.download;
         const version = res.data.log.version;
-        // console.log(version, "version");
         if (this.compareVersion(updateLog.version, version)) {
           navigator.platform === "Win32"
             ? this.setState({ downlownLink: download[0].url })
