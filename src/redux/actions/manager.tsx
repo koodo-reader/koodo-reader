@@ -4,10 +4,9 @@ import BookModel from "../../model/Book";
 import BookmarkModel from "../../model/Bookmark";
 import NoteModel from "../../model/Note";
 import { Dispatch } from "redux";
-// import Epub from "epubjs";
 
 declare var window: any;
-// window.ePub = Epub;
+
 export function handleNotes(notes: NoteModel[]) {
   return { type: "HANDLE_NOTES", payload: notes };
 }

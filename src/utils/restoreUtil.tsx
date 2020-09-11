@@ -1,4 +1,3 @@
-// import JSZip from "jszip";
 import localforage from "localforage";
 import BookModel from "../model/Book";
 
