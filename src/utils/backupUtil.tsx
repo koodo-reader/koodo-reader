@@ -1,12 +1,9 @@
-// import localforage from "localforage";
-// import JSZip from "jszip";
 import FileSaver from "file-saver";
 import BookModel from "../model/Book";
 import NoteModel from "../model/Note";
 import BookmarkModel from "../model/Bookmark";
 import DropboxUtil from "./syncUtils/dropbox";
 import OndriveUtil from "./syncUtils/onedrive";
-// import _ from "lodash";
 
 let _ = (window as any)._;
 let JSZip = (window as any).JSZip;
