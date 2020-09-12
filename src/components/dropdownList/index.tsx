@@ -6,7 +6,7 @@ import { handleMessageBox, handleMessage } from "../../redux/actions/manager";
 import { stateType } from "../../redux/store";
 
 const mapStateToProps = (state: stateType) => {
-  return {};
+  return { currentEpub: state.book.currentEpub };
 };
 const actionCreator = {
   handleMessageBox,

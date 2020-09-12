@@ -126,7 +126,7 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
                     this.state.isCollapse ? {} : { transform: "rotate(180deg)" }
                   }
                 >
-                  <span className="icon-dropdown"></span>
+                  <span className="icon-dropdown sidebar-dropdown"></span>
                 </div>
               </div>
               <div className="shelf-list-container-parent">

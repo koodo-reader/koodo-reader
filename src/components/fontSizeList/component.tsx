@@ -19,8 +19,11 @@ class FontSizeList extends React.Component<
   onFontChange = (event: any) => {
     const fontSize = event.target.value;
     OtherUtil.setReaderConfig("fontSize", fontSize);
-    this.props.handleMessage("Try refresh or restart");
-    this.props.handleMessageBox(true);
+    this.props.currentEpub.rendition.themes.default({
+      "a, article, cite, code, div, li, p, pre, span, table": {
+        "font-size": `${fontSize || 17}px !important`,
+      },
+    });
   };
   //使进度百分比随拖动实时变化
   onFontInput = (event: any) => {
@@ -54,8 +57,6 @@ class FontSizeList extends React.Component<
           style={{ fontSize: `${this.state.fontSize}px` }}
           className="font-size-demo"
         >
-          <Trans>Current Font Size</Trans>
-          {": "}
           {this.state.fontSize}
         </div>
       </div>

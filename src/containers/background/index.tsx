@@ -5,7 +5,7 @@ import Background from "./component";
 
 const mapStateToProps = (state: stateType) => {
   return {
-    isSingle: state.reader.isSingle,
+    currentEpub: state.book.currentEpub,
   };
 };
 const actionCreator = {};

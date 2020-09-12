@@ -10,7 +10,7 @@ export interface NavigationPanelProps {
 }
 
 export interface NavigationPanelState {
-  isContentShow: boolean;
+  currentTab: string;
   chapters: any;
   cover: string;
   time: number;

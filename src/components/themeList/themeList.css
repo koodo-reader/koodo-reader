@@ -1,6 +1,6 @@
 .background-color-setting {
   width: calc(100% - 44px);
-  margin: 30px 22px 20px;
+  margin: 10px 22px 10px;
 }
 .background-color-text {
   height: 20px;
@@ -10,8 +10,8 @@
   margin: 6px 0px;
 }
 .background-color-list {
-  margin: 6px 0px;
-  width: 110%;
+  margin: 10px 0px 6px;
+  width: 100%;
   height: 44px;
   display: flex;
   justify-content: space-around;
