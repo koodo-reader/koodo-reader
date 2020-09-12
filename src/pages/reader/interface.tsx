@@ -16,4 +16,6 @@ export interface ReaderState {
   isOpenProgressPanel: boolean;
   isOpenNavPanel: boolean;
   isMessage: boolean;
+  readerMode: string;
+  rendition: any;
 }

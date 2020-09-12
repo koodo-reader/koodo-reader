@@ -4,6 +4,7 @@ import RecentBooks from "../../utils/recordRecent";
 import "./bookItem.css";
 import RecordLocation from "../../utils/recordLocation";
 import { BookItemProps, BookItemState } from "./interface";
+import { Trans } from "react-i18next";
 
 declare var window: any;
 
@@ -57,10 +58,23 @@ class Book extends React.Component<BookItemProps, BookItemState> {
           </div>
         )}
 
-        <p className="book-item-list-title">{this.props.book.name}</p>
-        <p className="book-item-list-author">{this.props.book.author}</p>
+        <p
+          className="book-item-list-title"
+          onClick={() => {
+            this.handleOpenBook();
+          }}
+        >
+          {this.props.book.name}
+        </p>
+        <p className="book-item-list-author">
+          {this.props.book.author ? (
+            this.props.book.author
+          ) : (
+            <Trans>Unknown Authur</Trans>
+          )}
+        </p>
         <p className="book-item-list-percentage">
-          {this.props.percentage ? Math.round(percentage * 100) : 0}%
+          {percentage ? Math.round(percentage * 100) : 0}%
         </p>
         <div className="book-item-list-config">
           <span

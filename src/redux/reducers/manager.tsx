@@ -2,7 +2,7 @@ const initState = {
   books: null,
   epubs: null,
   covers: null,
-  searchBooks: [],
+  searchResults: [],
   isSearch: false,
   isSort: false,
   isFirst: "no",
@@ -25,7 +25,7 @@ export function manager(
     case "HANDLE_SEARCH_BOOKS":
       return {
         ...state,
-        searchBooks: action.payload,
+        searchResults: action.payload,
       };
     case "HANDLE_SEARCH":
       return {

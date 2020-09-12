@@ -7,8 +7,13 @@ import OperationPanel from "../../containers/operationPanel";
 import MessageBox from "../../containers/messageBox";
 import ProgressPanel from "../../containers/progressPanel";
 import { ReaderProps, ReaderState } from "./interface";
+import { MouseEvent } from "../../utils/mouseEvent";
+import OtherUtil from "../../utils/otherUtil";
+
 class Reader extends React.Component<ReaderProps, ReaderState> {
   timer!: NodeJS.Timeout;
+  rendition: any;
+
   constructor(props: ReaderProps) {
     super(props);
     this.state = {
@@ -17,6 +22,8 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
       isOpenProgressPanel: false,
       isOpenNavPanel: false,
       isMessage: false,
+      rendition: null,
+      readerMode: OtherUtil.getReaderConfig("readerMode") || "double",
     };
   }
   componentWillMount() {
@@ -39,7 +46,17 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
     }
   }
   componentDidMount() {
-    (window as any).rangy.init(); // 初始化rangy插件，用于高亮
+    let page = document.querySelector("#page-area");
+    let epub = this.props.currentEpub;
+    (window as any).rangy.init(); // 初始化
+    this.rendition = epub.renderTo(page, {
+      manager: "default",
+      flow: this.state.readerMode === "scroll" ? "scrolled-doc" : "auto",
+      width: "100%",
+      height: "100%",
+    });
+    this.setState({ rendition: this.rendition });
+    this.state.readerMode !== "scroll" && MouseEvent(this.rendition); // 绑定事件
   }
   componentWillUnmount() {
     //清除上面的计时器
@@ -94,6 +111,9 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
     }
   };
   render() {
+    const renditionProps = {
+      rendition: this.state.rendition,
+    };
     return (
       <div className="viewer">
         {this.state.isMessage ? <MessageBox /> : null}
@@ -121,7 +141,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
             this.handleEnterReader("bottom");
           }}
         ></div>
-        <ViewArea />
+        {this.state.rendition && <ViewArea {...renditionProps} />}
         <div
           className="setting-panel-container"
           onMouseLeave={(event) => {
@@ -137,7 +157,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
                 }
           }
         >
-          <SettingPanel />
+          <SettingPanel {...renditionProps} />
         </div>
         <div
           className="navigation-panel-container"
@@ -171,7 +191,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
                 }
           }
         >
-          <ProgressPanel />
+          <ProgressPanel {...renditionProps} />
         </div>
         <div
           className="operation-panel-container"
@@ -188,8 +208,24 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
                 }
           }
         >
-          <OperationPanel />
+          <OperationPanel {...renditionProps} />
         </div>
+        <div
+          className="view-area-page"
+          id="page-area"
+          style={
+            this.state.readerMode === "scroll"
+              ? {
+                  left: "calc(50vw - 270px)",
+                  right: "calc(50vw - 270px)",
+                  top: "75px",
+                  bottom: "75px",
+                }
+              : this.state.readerMode === "single"
+              ? { left: "calc(50vw - 270px)", right: "calc(50vw - 270px)" }
+              : {}
+          }
+        ></div>
         <Background />
       </div>
     );

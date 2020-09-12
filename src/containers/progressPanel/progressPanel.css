@@ -41,6 +41,8 @@
   bottom: 10px;
   left: 10px;
   font-size: 14px;
+  transform: rotate(90deg);
+  cursor: pointer;
 }
 .next-chapter {
   width: 25px;
@@ -53,15 +55,10 @@
   bottom: 10px;
   left: 370px;
   font-size: 14px;
-}
-.previous-chapter {
-  transform: rotate(90deg);
-  cursor: pointer;
-}
-.next-chapter {
   transform: rotate(-90deg);
   cursor: pointer;
 }
+
 .previous-chapter-icon {
   line-height: 25px !important;
   margin-left: 6px !important;
@@ -156,4 +153,11 @@ input[type="range"]::-ms-thumb {
 .input-progress {
   position: absolute;
   bottom: 3px;
+}
+.progress-chapter-name {
+  display: inline-block;
+  width: 150px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }

@@ -2,6 +2,7 @@ import BookModel from "../../model/Book";
 import BookmarkModel from "../../model/Bookmark";
 
 export interface ViewAreaProps {
+  rendition: any;
   currentBook: BookModel;
   currentEpub: any;
   bookmarks: BookmarkModel[];
@@ -17,11 +18,9 @@ export interface ViewAreaProps {
 export interface ViewAreaStates {
   isShowImage: boolean;
   imageRatio: string;
-  isSingle: boolean;
-  isScroll: boolean;
   loading: boolean;
   cfiRange: any;
   contents: any;
-  rendition: any;
+  // rendition: any;
   rect: any;
 }

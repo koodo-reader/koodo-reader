@@ -15,6 +15,7 @@ class ProgressPanel extends React.Component<
       currentChapter: "",
     };
   }
+
   componentWillReceiveProps(nextProps: ProgressPanelProps) {
     if (nextProps.currentEpub.rendition.location) {
       const currentLocation = this.props.currentEpub.rendition.currentLocation();
@@ -95,7 +96,11 @@ class ProgressPanel extends React.Component<
             )}
             {"%  "}
           </span>
-          <span>{this.state.currentChapter}</span>
+          {this.state.currentChapter && (
+            <span className="progress-chapter-name">
+              {this.state.currentChapter}
+            </span>
+          )}
         </p>
 
         <input

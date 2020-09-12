@@ -28,6 +28,10 @@ class BookmarkPage extends React.Component<
         break;
       }
     }
+    if (!cfi || !percentage) {
+      cfi = RecordLocation.getCfi(book!.key).cfi;
+      percentage = RecordLocation.getCfi(book!.key).percentage;
+    }
     this.props.handleReadingBook(book!);
     this.props.handleReadingEpub(epub);
     this.props.handleReadingState(true);
@@ -97,6 +101,9 @@ class BookmarkPage extends React.Component<
             className="bookmark-page-cover"
             src={coverObj[item.key]}
             alt=""
+            onClick={() => {
+              this.handleRedirect(item.key, "", 0);
+            }}
           />
           <p className="bookmark-page-name">{bookArr[index].name}</p>
           <div className="bookmark-page-bookmark-container-parent">

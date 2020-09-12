@@ -20,7 +20,7 @@
   height: 120px;
   /* margin: 0px !important; */
   margin-top: 10px;
-  margin-left: 10px;
+  margin-left: 5px;
 }
 .bookmark-page-bookmark-container {
   width: 100%;
@@ -46,6 +46,8 @@
   box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.22);
   opacity: 0.73;
   margin: 10px;
+  margin-left: 15px;
+  cursor: pointer;
 }
 .bookmark-page-name {
   /* float: left; */

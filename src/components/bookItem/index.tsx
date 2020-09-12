@@ -8,6 +8,8 @@ import {
   handleReadingBook,
   handleReadingEpub,
 } from "../../redux/actions/book";
+import { withNamespaces } from "react-i18next";
+
 import { stateType } from "../../redux/store";
 import BookItem from "./component";
 const mapStateToProps = (state: stateType) => {
@@ -24,4 +26,7 @@ const actionCreator = {
   handleDeleteDialog,
   handleAddDialog,
 };
-export default connect(mapStateToProps, actionCreator)(BookItem);
+export default connect(
+  mapStateToProps,
+  actionCreator
+)(withNamespaces()(BookItem as any));

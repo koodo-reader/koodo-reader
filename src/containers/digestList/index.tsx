@@ -7,6 +7,8 @@ import DigestList from "./component";
 const mapStateToProps = (state: stateType) => {
   return {
     digests: state.reader.digests,
+    isSearch: state.manager.isSearch,
+    searchResults: state.manager.searchResults,
   };
 };
 const actionCreator = {};

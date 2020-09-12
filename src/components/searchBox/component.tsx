@@ -19,8 +19,15 @@ class SearchBox extends React.Component<SearchBoxProps> {
       this.props.handleSearchState(true);
       return;
     }
-    let results = OtherUtil.MouseSearch(this.props.books);
-    this.props.handleSearchBooks(results);
+    let results =
+      this.props.tabMode === "note"
+        ? OtherUtil.MouseNoteSearch(
+            this.props.notes.filter((item) => item.notes !== "")
+          )
+        : this.props.tabMode === "digest"
+        ? OtherUtil.MouseNoteSearch(this.props.digests)
+        : OtherUtil.MouseSearch(this.props.books);
+    this.props.handleSearchResults(results);
     this.props.handleSearch(true);
   };
   handleKey = (event: any) => {
@@ -31,9 +38,17 @@ class SearchBox extends React.Component<SearchBoxProps> {
     if (this.props.isNavSearch) {
       value && this.search(value);
     }
-    let results = OtherUtil.KeySearch(event, this.props.books);
+    let results =
+      this.props.tabMode === "note"
+        ? OtherUtil.KeyNoteSearch(
+            event,
+            this.props.notes.filter((item) => item.notes !== "")
+          )
+        : this.props.tabMode === "digest"
+        ? OtherUtil.KeyNoteSearch(event, this.props.digests)
+        : OtherUtil.KeySearch(event, this.props.books);
     if (results) {
-      this.props.handleSearchBooks(results);
+      this.props.handleSearchResults(results);
       this.props.handleSearch(true);
     }
   };
@@ -46,7 +61,6 @@ class SearchBox extends React.Component<SearchBoxProps> {
         );
         return item;
       });
-      // this.$refs.searchInput.blur();
       this.props.handleSearchList(searchList);
     });
   };
@@ -82,7 +96,15 @@ class SearchBox extends React.Component<SearchBoxProps> {
           onFocus={() => {
             this.props.mode === "nav" && this.props.handleSearchState(true);
           }}
-          placeholder="Search"
+          placeholder={
+            this.props.isNavSearch || this.props.mode === "nav"
+              ? "搜索全书"
+              : this.props.tabMode === "note"
+              ? "搜索我的笔记"
+              : this.props.tabMode === "digest"
+              ? "搜索我的书摘"
+              : "搜索我的书库"
+          }
           style={
             this.props.mode === "nav"
               ? { width: this.props.width, height: this.props.height }

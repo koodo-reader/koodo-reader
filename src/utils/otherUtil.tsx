@@ -1,4 +1,5 @@
 import BookModel from "../model/Book";
+import NoteModel from "../model/Note";
 
 class OtherUtil {
   static fuzzyQuery(list: string[], keyWord: string) {
@@ -55,6 +56,35 @@ class OtherUtil {
       let bookResults = this.fuzzyQuery(bookNameArr, event.target.value);
       let authorResults = this.fuzzyQuery(AuthorNameArr, event.target.value);
       let results = this.MergeArray(bookResults, authorResults);
+      return results;
+    }
+  }
+  static MouseNoteSearch(notes: NoteModel[]) {
+    let keyword = (document.querySelector(
+      ".header-search-box"
+    ) as HTMLInputElement).value;
+    let noteArr: string[] = [];
+    let textArr: string[] = [];
+    notes.forEach((item: NoteModel) => {
+      noteArr.push(item.notes.toLowerCase());
+      textArr.push(item.text.toLowerCase());
+    });
+    let noteResults = this.fuzzyQuery(noteArr, keyword);
+    let textResults = this.fuzzyQuery(textArr, keyword);
+    let results = this.MergeArray(noteResults, textResults);
+    return results;
+  }
+  static KeyNoteSearch(event: any, notes: NoteModel[]) {
+    if (event && event.keyCode === 13) {
+      let noteArr: string[] = [];
+      let textArr: string[] = [];
+      notes.forEach((item: NoteModel) => {
+        noteArr.push(item.notes.toLowerCase());
+        textArr.push(item.text.toLowerCase());
+      });
+      let noteResults = this.fuzzyQuery(noteArr, event.target.value);
+      let textResults = this.fuzzyQuery(textArr, event.target.value);
+      let results = this.MergeArray(noteResults, textResults);
       return results;
     }
   }

@@ -76,7 +76,7 @@ class BookList extends React.Component<BookListProps> {
       this.props.shelfIndex !== -1
         ? this.handleShelf(this.props.books, this.props.shelfIndex)
         : this.props.isSearch
-        ? this.handleFilter(this.props.books, this.props.searchBooks)
+        ? this.handleFilter(this.props.books, this.props.searchResults)
         : this.props.mode === "favorite" && !this.props.isSort
         ? this.handleFavorite(this.props.books, AddFavorite.getAllFavorite())
         : this.props.mode === "favorite" && this.props.isSort
@@ -97,7 +97,7 @@ class BookList extends React.Component<BookListProps> {
       this.props.shelfIndex !== -1
         ? this.handleShelf(this.props.covers, this.props.shelfIndex)
         : this.props.isSearch
-        ? this.handleFilter(this.props.covers, this.props.searchBooks)
+        ? this.handleFilter(this.props.covers, this.props.searchResults)
         : this.props.mode === "favorite" && !this.props.isSort
         ? this.handleFavorite(this.props.covers, AddFavorite.getAllFavorite())
         : this.props.mode === "favorite" && this.props.isSort
@@ -117,9 +117,11 @@ class BookList extends React.Component<BookListProps> {
     return books.map((item: BookModel, index: number) => {
       return this.props.isList === "list" ? (
         <BookItem
-          key={item.key}
-          book={item}
-          bookCover={covers[index] ? covers[index].url : null}
+          {...{
+            key: item.key,
+            book: item,
+            bookCover: covers[index] ? covers[index].url : null,
+          }}
         />
       ) : (
         <Book

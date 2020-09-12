@@ -51,19 +51,27 @@ class DropdownList extends React.Component<
         this.setState({
           currentFontFamilyIndex: arr[1],
         });
+        this.props.currentEpub.rendition.themes.default({
+          "a, article, cite, code, div, li, p, pre, span, table": {
+            "font-family": `${arr[0] || "Helvetica"} !important`,
+          },
+        });
         break;
 
       case "lineHeight":
         this.setState({
           currentLineHeightIndex: arr[1],
         });
+        this.props.currentEpub.rendition.themes.default({
+          "a, article, cite, code, div, li, p, pre, span, table": {
+            "line-height": `${arr[0] || "1.25"} !important`,
+          },
+        });
         break;
 
       default:
         break;
     }
-    this.props.handleMessage("Try refresh or restart");
-    this.props.handleMessageBox(true);
   }
   render() {
     const renderParagraphCharacter = () => {

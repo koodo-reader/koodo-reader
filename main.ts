@@ -9,15 +9,26 @@ const {
 const isDev = require("electron-is-dev");
 const path = require("path");
 const fontList = require("font-list");
-
-let mainWindow;
+// const Elp = require("electron-launch-page");
 
 app.on("ready", () => {
-  mainWindow = new BrowserWindow({
+  let mainWin = new BrowserWindow({
     width: 1030,
     height: 660,
     webPreferences: { webSecurity: false, nodeIntegration: true },
+    // show: false,
+    // transparent: true,
   });
+  // Elp.main.start({
+  //   //主窗口 BrowserWindow
+  //   mainWin,
+  //   //自定义的启动页
+  //   launchUrl: path.join(__dirname, "launch-page.html"),
+  //   //启动窗口大小，根据 your-launch.html 配置
+  //   transparent: true,
+  //   width: 480,
+  //   height: 320,
+  // });
   if (!isDev) {
     const { Menu } = require("electron");
     Menu.setApplicationMenu(null);
@@ -26,7 +37,10 @@ app.on("ready", () => {
   const urlLocation = isDev
     ? "http://localhost:3000/"
     : `file://${path.join(__dirname, "./build/index.html")}`;
-  mainWindow.loadURL(urlLocation);
+  mainWin.loadURL(urlLocation);
+  mainWin.on("close", () => {
+    mainWin = null;
+  });
 
   ipcMain.on("fonts-ready", (event, arg) => {
     fontList
@@ -38,4 +52,7 @@ app.on("ready", () => {
         console.log(err);
       });
   });
+});
+app.on("window-all-closed", () => {
+  app.quit();
 });

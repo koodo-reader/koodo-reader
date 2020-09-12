@@ -1,12 +1,16 @@
 import BookmarkModel from "../../model/Bookmark";
 import BookModel from "../../model/Book";
-export interface BookmarkListProps {
+import NoteModel from "../../model/Note";
+export interface BookNavListProps {
   currentBook: BookModel;
   currentEpub: any;
   bookmarks: BookmarkModel[];
+  notes: NoteModel[];
+  digests: NoteModel[];
+  currentTab: string;
   handleMessage: (message: string) => void;
   handleMessageBox: (isShow: boolean) => void;
 }
-export interface BookmarkListState {
+export interface BookNavListState {
   deleteIndex: number;
 }

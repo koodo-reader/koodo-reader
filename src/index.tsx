@@ -5,6 +5,12 @@ import { Provider } from "react-redux";
 import "./i18n";
 import store from "./redux/store";
 import * as serviceWorker from "./serviceWorker";
+// const isElectron = require("is-electron");
+// if (isElectron()) {
+//   const Elp = window.require("electron-launch-page");
+//   console.log(Elp, "elp");
+//   Elp.render.ready();
+// }
 
 ReactDOM.render(
   <Provider store={store}>

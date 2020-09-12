@@ -5,18 +5,18 @@ import { stateType } from "../../redux/store";
 import { withNamespaces } from "react-i18next";
 import BookList from "./component";
 
-const mappropsToProps = (props: stateType) => {
+const mappropsToProps = (state: stateType) => {
   return {
-    books: props.manager.books,
-    covers: props.manager.covers,
-    epubs: props.manager.epubs,
-    mode: props.sidebar.mode,
-    shelfIndex: props.sidebar.shelfIndex,
-    searchBooks: props.manager.searchBooks,
-    isSearch: props.manager.isSearch,
-    isSort: props.manager.isSort,
-    isList: props.manager.isList,
-    sortCode: props.manager.sortCode,
+    books: state.manager.books,
+    covers: state.manager.covers,
+    epubs: state.manager.epubs,
+    mode: state.sidebar.mode,
+    shelfIndex: state.sidebar.shelfIndex,
+    searchResults: state.manager.searchResults,
+    isSearch: state.manager.isSearch,
+    isSort: state.manager.isSort,
+    isList: state.manager.isList,
+    sortCode: state.manager.sortCode,
   };
 };
 const actionCreator = { handleFetchList };

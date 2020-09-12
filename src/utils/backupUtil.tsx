@@ -4,8 +4,8 @@ import NoteModel from "../model/Note";
 import BookmarkModel from "../model/Bookmark";
 import DropboxUtil from "./syncUtils/dropbox";
 import OndriveUtil from "./syncUtils/onedrive";
+import _ from "lodash";
 
-let _ = (window as any)._;
 let JSZip = (window as any).JSZip;
 class BackupUtil {
   static backup(
@@ -64,15 +64,12 @@ class BackupUtil {
             );
             break;
           case 1:
-            console.log("backuputil 1", blob);
             DropboxUtil.UploadFile(blob, handleFinish, showMessage);
             break;
           case 2:
-            console.log("backuputil 2");
             break;
           case 3:
             OndriveUtil.UploadFile(blob, handleFinish, showMessage);
-            console.log("backuputil 2", blob);
             break;
           default:
             break;
