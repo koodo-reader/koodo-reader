@@ -34,7 +34,7 @@ export type stateType = {
     books: BookModel[];
     epubs: any[];
     covers: { key: string; url: string }[];
-    searchBooks: number[];
+    searchResults: number[];
     isSearch: boolean;
     isSort: boolean;
     isFirst: string;
@@ -69,7 +69,6 @@ export type stateType = {
     color: number;
     chapters: any[];
     flattenChapters: any;
-    isSingle: string;
     noteKey: string;
     originalText: string;
   };

@@ -8,7 +8,6 @@ import {
   handleShowBookmark,
 } from "../../redux/actions/viewArea";
 import { handleReadingEpub } from "../../redux/actions/book";
-import { withNamespaces } from "react-i18next";
 
 const mapStateToProps = (state: stateType) => {
   return {
@@ -28,7 +27,4 @@ const actionCreator = {
   handleReadingEpub,
 };
 
-export default connect(
-  mapStateToProps,
-  actionCreator
-)(withNamespaces()(ViewArea as any));
+export default connect(mapStateToProps, actionCreator)(ViewArea);

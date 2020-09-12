@@ -19,8 +19,8 @@ export function handleDigests(digests: NoteModel[]) {
 export function handleLocations(locations: any) {
   return { type: "HANDLE_LOCATIONS", payload: locations };
 }
-export function handleSingle(mode: string) {
-  return { type: "HANDLE_SINGLE", payload: mode };
+export function handleCurrentChapter(currentChapter: string) {
+  return { type: "HANDLE_CURRENT_CHAPTER", payload: currentChapter };
 }
 export function handleChapters(chapters: any) {
   return { type: "HANDLE_CHAPTERS", payload: chapters };

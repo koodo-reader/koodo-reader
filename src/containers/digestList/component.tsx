@@ -5,9 +5,18 @@ import { DigestListProps, DigestListStates } from "./interface";
 import CardList from "../../components/cardList";
 
 class DigestList extends React.Component<DigestListProps, DigestListStates> {
+  handleFilter = (items: any, arr: number[]) => {
+    let itemArr: any[] = [];
+    arr.forEach((item) => {
+      items[item] && itemArr.push(items[item]);
+    });
+    return itemArr;
+  };
   render() {
     const noteProps = {
-      cards: this.props.digests,
+      cards: this.props.isSearch
+        ? this.handleFilter(this.props.digests, this.props.searchResults)
+        : this.props.digests,
       mode: "digest",
     };
     return (

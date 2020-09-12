@@ -36,7 +36,12 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
     //这里假设直接将文件选择框的dom引用传入
     //这里需要用到File的slice( )方法，以下是兼容写法
     let fileName = file.name.split(".");
-    let extension = fileName[1];
+    let extension = fileName[fileName.length - 1];
+    if (file.size > 20 * 1024 * 1024) {
+      this.props.handleMessage("Book size is over 20M");
+      this.props.handleMessageBox(true);
+      return;
+    }
     if (extension === "epub") {
       var blobSlice =
           (File as any).prototype.slice ||
@@ -71,7 +76,8 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
 
       loadNext();
     } else {
-      //this.handleOtherFormat(file, file.name);
+      this.props.handleMessage("Import Failed");
+      this.props.handleMessageBox(true);
     }
   };
   handleBook = (file: any, md5: string) => {
@@ -91,6 +97,8 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
       reader.readAsArrayBuffer(file);
       reader.onload = (e) => {
         if (!e.target) {
+          this.props.handleMessage("Import Failed");
+          this.props.handleMessageBox(true);
           throw new Error();
         }
         const epub = window.ePub(e.target.result);
@@ -114,6 +122,8 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
             this.handleAddBook(book);
           })
           .catch(() => {
+            this.props.handleMessage("Import Failed");
+            this.props.handleMessageBox(true);
             console.log("Error occurs");
           });
       };
@@ -125,9 +135,9 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
     return (
       <Dropzone
         onDrop={(acceptedFiles) => {
-          acceptedFiles.forEach((item) => {
-            this.doIncrementalTest(item);
-          });
+          for (let i = 0; i < acceptedFiles.length; i++) {
+            this.doIncrementalTest(acceptedFiles[i]);
+          }
         }}
         accept={[".epub"]}
         multiple={true}

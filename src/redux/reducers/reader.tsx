@@ -1,15 +1,16 @@
 import OtherUtil from "../../utils/otherUtil";
 const initState = {
-  bookmarks: null,
+  bookmarks: [],
   notes: [],
   digests: [],
   locations: null,
   chapters: null,
+  currentChapter: "",
   flattenChapters: null,
   color: 0,
   noteKey: "",
   originalText: "",
-  isSingle: OtherUtil.getReaderConfig("isSingle") || "double",
+  readerMode: OtherUtil.getReaderConfig("readerMode") || "double",
 };
 export function reader(
   state = initState,
@@ -55,11 +56,6 @@ export function reader(
       return {
         ...state,
         section: action.payload,
-      };
-    case "HANDLE_SINGLE":
-      return {
-        ...state,
-        isSingle: action.payload,
       };
     case "HANDLE_CHAPTERS":
       return {

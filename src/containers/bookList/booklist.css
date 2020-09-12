@@ -3,7 +3,7 @@
   top: 75px;
   left: 200px;
   width: calc(100% - 200px);
-  height: calc(100% - 90px);
+  height: calc(100% - 75px);
   overflow: hidden;
 }
 .book-list-container {
@@ -50,7 +50,7 @@
 .book-list-item-box {
   position: relative;
   top: 15px;
-  width: calc(100% - 10px);
+  width: 100%;
 }
 .icon-grid,
 .icon-list {

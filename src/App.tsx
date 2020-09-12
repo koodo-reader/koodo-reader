@@ -1,3 +1,4 @@
+// import { hot } from "react-hot-loader/root";
 import React from "react";
 import Reader from "./pages/reader";
 import Manager from "./pages/manager";
@@ -5,6 +6,7 @@ import "./assets/styles/reset.css";
 import "./assets/styles/global.css";
 import "./assets/styles/style.css";
 import { connect } from "react-redux";
+
 interface AppProps {
   isReading: boolean;
 }

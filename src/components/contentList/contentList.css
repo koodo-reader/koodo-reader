@@ -6,7 +6,7 @@
 .book-content-name {
   display: block;
   padding: 10px 0px;
-  width: 100%;
+  width: 94%;
   font-size: 14px;
   line-height: 18px;
   color: rgba(75, 75, 75, 1);
@@ -29,4 +29,11 @@
 }
 .book-subcontent-list {
   margin-left: 18px;
+}
+.content-dropdown {
+  float: right;
+  margin-top: 15px;
+  position: relative;
+  right: 15px;
+  opacity: 0.5;
 }
