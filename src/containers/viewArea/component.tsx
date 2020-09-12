@@ -3,31 +3,24 @@ import "./viewArea.css";
 import PopupMenu from "../popupMenu";
 import { ViewAreaProps, ViewAreaStates } from "./interface";
 import RecordLocation from "../../utils/recordLocation";
-import { MouseEvent } from "../../utils/mouseEvent";
 import OtherUtil from "../../utils/otherUtil";
 import BookmarkModel from "../../model/Bookmark";
 import ReaderConfig from "../../utils/readerConfig";
-import { Trans } from "react-i18next";
 
 declare var window: any;
 
 class ViewArea extends React.Component<ViewAreaProps, ViewAreaStates> {
-  rendition: any;
   isFirst: boolean;
   constructor(props: ViewAreaProps) {
     super(props);
     this.state = {
       isShowImage: false,
       imageRatio: "horizontal",
-      isSingle: OtherUtil.getReaderConfig("isSingle") === "single",
-      isScroll: OtherUtil.getReaderConfig("isScroll") === "yes",
       cfiRange: null,
       contents: null,
-      rendition: null,
       rect: null,
       loading: true,
     };
-    this.rendition = null;
     this.isFirst = true;
   }
   UNSAFE_componentWillMount() {
@@ -35,22 +28,12 @@ class ViewArea extends React.Component<ViewAreaProps, ViewAreaStates> {
   }
 
   componentDidMount() {
-    let page = document.querySelector("#page-area");
     let epub = this.props.currentEpub;
     (window as any).rangy.init(); // 初始化
-    this.rendition = epub.renderTo(page, {
-      manager:
-        this.state.isSingle && this.state.isScroll ? "continuous" : "default",
-      flow: this.state.isScroll ? "scrolled" : "auto",
-      width: "100%",
-      height: "100%",
-    });
-    this.setState({ rendition: this.rendition });
-    !this.state.isScroll && MouseEvent(this.rendition); // 绑定事件
-    this.rendition.on("locationChanged", () => {
+    this.props.rendition.on("locationChanged", () => {
       this.props.handleReadingEpub(epub);
       this.props.handleOpenMenu(false);
-      const currentLocation = this.rendition.currentLocation();
+      const currentLocation = this.props.rendition.currentLocation();
       const cfi = currentLocation.start.cfi;
       this.props.handleShowBookmark(
         this.props.bookmarks &&
@@ -67,7 +50,7 @@ class ViewArea extends React.Component<ViewAreaProps, ViewAreaStates> {
       }
       this.isFirst = false;
     });
-    this.rendition.on("rendered", () => {
+    this.props.rendition.on("rendered", () => {
       this.setState({ loading: false });
       let iframe = document.getElementsByTagName("iframe")[0];
       if (!iframe) return;
@@ -78,13 +61,13 @@ class ViewArea extends React.Component<ViewAreaProps, ViewAreaStates> {
       ReaderConfig.addDefaultCss();
       doc.addEventListener("click", this.showImage);
     });
-    this.rendition.on("selected", (cfiRange: any, contents: any) => {
+    this.props.rendition.on("selected", (cfiRange: any, contents: any) => {
       var range = contents.range(cfiRange);
       var rect = range.getBoundingClientRect();
       console.log("selected");
       this.setState({ cfiRange, contents, rect });
     });
-    this.rendition.themes.default({
+    this.props.rendition.themes.default({
       "a, article, cite, code, div, li, p, pre, span, table": {
         "font-size": `${
           OtherUtil.getReaderConfig("fontSize") || 17
@@ -95,9 +78,14 @@ class ViewArea extends React.Component<ViewAreaProps, ViewAreaStates> {
         "font-family": `${
           OtherUtil.getReaderConfig("fontFamily") || "Helvetica"
         } !important`,
+        color: `${
+          OtherUtil.getReaderConfig("theme") === "rgba(44,47,49,1)"
+            ? "white"
+            : ""
+        } !important`,
       },
     });
-    this.rendition.display(
+    this.props.rendition.display(
       RecordLocation.getCfi(this.props.currentBook.key) === null
         ? null
         : RecordLocation.getCfi(this.props.currentBook.key).cfi
@@ -136,15 +124,53 @@ class ViewArea extends React.Component<ViewAreaProps, ViewAreaStates> {
     }
     this.setState({ isShowImage: false });
   };
+  previourChapter = () => {
+    const currentLocation = this.props.rendition.currentLocation();
+    let chapterIndex = currentLocation.start.index;
+    const section = this.props.currentEpub.section(chapterIndex - 1);
+    if (section && section.href) {
+      this.props.currentEpub.rendition.display(section.href);
+    }
+  };
+  nextChapter = () => {
+    const currentLocation = this.props.rendition.currentLocation();
+    let chapterIndex = currentLocation.start.index;
+    const section = this.props.currentEpub.section(chapterIndex + 1);
+    if (section && section.href) {
+      this.props.currentEpub.rendition.display(section.href);
+    }
+  };
   render() {
     const popupMenuProps = {
-      rendition: this.state.rendition,
+      rendition: this.props.rendition,
       cfiRange: this.state.cfiRange,
       contents: this.state.contents,
       rect: this.state.rect,
     };
     return (
       <div className="view-area">
+        {(OtherUtil.getReaderConfig("readerMode") === "single" ||
+          OtherUtil.getReaderConfig("readerMode") === "scroll") &&
+          this.props.locations && (
+            <>
+              <div
+                className="previous-chapter-single-container"
+                onClick={() => {
+                  this.previourChapter();
+                }}
+              >
+                <span className="icon-dropdown previous-chapter-single"> </span>
+              </div>
+              <div
+                className="next-chapter-single-container"
+                onClick={() => {
+                  this.nextChapter();
+                }}
+              >
+                <span className="icon-dropdown next-chapter-single"></span>
+              </div>
+            </>
+          )}
         <div
           className="image-preview"
           style={
@@ -167,7 +193,7 @@ class ViewArea extends React.Component<ViewAreaProps, ViewAreaStates> {
             }
           />
         </div>
-        {this.rendition && <PopupMenu {...popupMenuProps} />}
+        <PopupMenu {...popupMenuProps} />
         {this.state.loading ? (
           <div className="spinner">
             <div className="sk-chase">
@@ -178,28 +204,9 @@ class ViewArea extends React.Component<ViewAreaProps, ViewAreaStates> {
               <div className="sk-chase-dot"></div>
               <div className="sk-chase-dot"></div>
             </div>
-            <div style={{ marginTop: "10px" }}>
-              <Trans>Loading</Trans>
-            </div>
           </div>
         ) : null}
         <>
-          <div
-            className="view-area-page"
-            id="page-area"
-            style={
-              this.state.isSingle && this.state.isScroll
-                ? {
-                    left: "calc(50vw - 270px)",
-                    right: "calc(50vw - 270px)",
-                    top: "50px",
-                    bottom: "50px",
-                  }
-                : this.state.isSingle
-                ? { left: "calc(50vw - 270px)", right: "calc(50vw - 270px)" }
-                : {}
-            }
-          ></div>
           {this.props.isShowBookmark ? <div className="bookmark"></div> : null}
         </>
       </div>

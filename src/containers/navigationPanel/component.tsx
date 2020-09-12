@@ -2,7 +2,7 @@
 import React from "react";
 import "./navigationPanel.css";
 import ContentList from "../../components/contentList";
-import BookmarkList from "../../components/bookmarkList";
+import BookNavList from "../../components/bookNavList";
 import ReadingTime from "../../utils/readingTime";
 import { Trans } from "react-i18next";
 import { NavigationPanelProps, NavigationPanelState } from "./interface";
@@ -17,7 +17,7 @@ class NavigationPanel extends React.Component<
   constructor(props: NavigationPanelProps) {
     super(props);
     this.state = {
-      isContentShow: true,
+      currentTab: "contents",
       chapters: [],
       cover: "",
       time: ReadingTime.getTime(this.props.currentBook.key),
@@ -55,8 +55,8 @@ class NavigationPanel extends React.Component<
     ReadingTime.setTime(this.props.currentBook.key, this.state.time);
   }
 
-  handleClick = (isContentShow: boolean) => {
-    this.setState({ isContentShow });
+  handleClick = (currentTab: string) => {
+    this.setState({ currentTab });
   };
   renderSearchList = () => {
     if (!this.state.searchList[0]) {
@@ -150,7 +150,9 @@ class NavigationPanel extends React.Component<
       handleSearchState: this.handleSearchState,
       handleSearchList: this.handleSearchList,
     };
-
+    const bookmarkProps = {
+      currentTab: this.state.currentTab,
+    };
     return (
       <div className="navigation-panel">
         {this.state.isSearch ? (
@@ -208,10 +210,10 @@ class NavigationPanel extends React.Component<
                 <span
                   className="book-content-title"
                   onClick={() => {
-                    this.handleClick(true);
+                    this.handleClick("contents");
                   }}
                   style={
-                    this.state.isContentShow
+                    this.state.currentTab === "contents"
                       ? { color: "rgba(112, 112, 112, 1)" }
                       : { color: "rgba(217, 217, 217, 1)" }
                   }
@@ -221,28 +223,50 @@ class NavigationPanel extends React.Component<
                 <span
                   className="book-bookmark-title"
                   style={
-                    this.state.isContentShow
-                      ? { color: "rgba(217, 217, 217, 1)" }
-                      : { color: "rgba(112, 112, 112, 1)" }
+                    this.state.currentTab === "bookmarks"
+                      ? { color: "rgba(112, 112, 112, 1)" }
+                      : { color: "rgba(217, 217, 217, 1)" }
                   }
                   onClick={() => {
-                    this.handleClick(false);
+                    this.handleClick("bookmarks");
                   }}
                 >
                   <Trans>Bookmark</Trans>
+                </span>
+                <span
+                  className="book-bookmark-title"
+                  style={
+                    this.state.currentTab === "notes"
+                      ? { color: "rgba(112, 112, 112, 1)" }
+                      : { color: "rgba(217, 217, 217, 1)" }
+                  }
+                  onClick={() => {
+                    this.handleClick("notes");
+                  }}
+                >
+                  <Trans>Note</Trans>
+                </span>
+                <span
+                  className="book-bookmark-title"
+                  style={
+                    this.state.currentTab === "digests"
+                      ? { color: "rgba(112, 112, 112, 1)" }
+                      : { color: "rgba(217, 217, 217, 1)" }
+                  }
+                  onClick={() => {
+                    this.handleClick("digests");
+                  }}
+                >
+                  <Trans>Digest</Trans>
                 </span>
               </div>
             </div>
             <div className="navigation-body-parent">
               <div className="navigation-body">
-                {this.state.isContentShow ? (
+                {this.state.currentTab === "contents" ? (
                   <ContentList />
-                ) : this.props.bookmarks ? (
-                  <BookmarkList />
                 ) : (
-                  <div className="navigation-panel-empty-bookmark">
-                    <Trans>Empty</Trans>
-                  </div>
+                  <BookNavList {...bookmarkProps} />
                 )}
               </div>
             </div>

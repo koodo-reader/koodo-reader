@@ -5,7 +5,7 @@ import { ContentListProps, ContentListState } from "./interface";
 class ContentList extends React.Component<ContentListProps, ContentListState> {
   constructor(props: ContentListProps) {
     super(props);
-    this.state = { chapters: [] };
+    this.state = { chapters: [], isCollapsed: true, currentIndex: -1 };
     this.handleJump = this.handleJump.bind(this);
   }
 
@@ -28,6 +28,23 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
       return items.map((item: any, index: number) => {
         return (
           <li key={index} className="book-content-list">
+            {item.subitems.length > 0 && (
+              <span
+                className="icon-dropdown content-dropdown"
+                onClick={() => {
+                  this.setState({
+                    currentIndex:
+                      this.state.currentIndex === index ? -1 : index,
+                  });
+                }}
+                style={
+                  this.state.currentIndex === index
+                    ? {}
+                    : { transform: "rotate(-90deg)" }
+                }
+              ></span>
+            )}
+
             <a
               href={item.href}
               onClick={this.handleJump}
@@ -35,7 +52,7 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
             >
               {item.label}
             </a>
-            {item.subitems.length > 0 ? (
+            {item.subitems.length > 0 && this.state.currentIndex === index ? (
               <ul>{renderContentList(item.subitems)}</ul>
             ) : null}
           </li>

@@ -13,8 +13,8 @@ export function handleNotes(notes: NoteModel[]) {
 export function handleBooks(books: BookModel[]) {
   return { type: "HANDLE_BOOKS", payload: books };
 }
-export function handleSearchBooks(searchBooks: number[]) {
-  return { type: "HANDLE_SEARCH_BOOKS", payload: searchBooks };
+export function handleSearchResults(searchResults: number[]) {
+  return { type: "HANDLE_SEARCH_BOOKS", payload: searchResults };
 }
 export function handleSearch(isSearch: boolean) {
   return { type: "HANDLE_SEARCH", payload: isSearch };
@@ -79,7 +79,6 @@ export function handleFetchBooks() {
               });
             });
         }
-        // console.log(coverArr, "coverArr");
         dispatch(handleEpubs(epubArr));
         dispatch(handleCovers(coverArr));
       }

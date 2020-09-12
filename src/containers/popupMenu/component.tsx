@@ -4,10 +4,9 @@ import PopupNote from "../../components/popupNote";
 import PopupOption from "../../components/popupOption";
 import PopupTrans from "../../components/popupTrans";
 import { PopupMenuProps, PopupMenuStates } from "./interface";
+import _ from "lodash";
 
 declare var window: any;
-
-let _ = window._;
 
 class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
   highlighter: any;
@@ -50,7 +49,6 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
   }
   componentWillReceiveProps(nextProps: PopupMenuProps) {
     if (nextProps.cfiRange !== this.props.cfiRange) {
-      console.log(nextProps.cfiRange, "nextProps.cfiRange");
       this.setState(
         {
           cfiRange: nextProps.cfiRange,
@@ -115,7 +113,6 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
   showMenu = () => {
     let rect = this.state.rect;
     if (!rect) return;
-    console.log(rect, "showmenu");
     this.props.handleChangeDirection(false);
     // const rect = this.rect;
     let height = 200;
@@ -124,7 +121,10 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
 
     let posX = x + rect.width / 2 - 20;
     //防止menu超出图书
-    let rightEdge = this.props.currentEpub.rendition._layout.width - 150;
+    let rightEdge =
+      this.props.menuMode === "note"
+        ? this.props.currentEpub.rendition._layout.width - 240
+        : this.props.currentEpub.rendition._layout.width - 150;
     var posY;
     //控制menu方向
     if (y < height) {
@@ -137,11 +137,9 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     posX = posX > rightEdge ? rightEdge : posX;
 
     this.props.handleOpenMenu(true);
-    console.log(posX, posY, "postion");
     let popupMenu = document.querySelector(".popup-menu-container");
 
     popupMenu!.setAttribute("style", `left:${posX}px;top:${posY}px`);
-    console.log(popupMenu, "openmenu end");
     this.setState({ rect: null });
   };
   //渲染高亮
@@ -187,7 +185,6 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
   };
   //控制弹窗
   openMenu = () => {
-    console.log("openmenu");
     this.setState({ deleteKey: "" });
     let iframe = document.getElementsByTagName("iframe")[0];
     let doc = iframe.contentDocument;
@@ -219,6 +216,7 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     if (!doc) return;
     let color = this.props.color;
     let classes = ["color-0", "color-1", "color-2", "color-3"];
+    console.log(classes[color], "classes[color]");
     this.highlighter.highlightSelection(classes[color]);
     this.props.handleMenuMode("menu");
     this.props.handleOpenMenu(false);

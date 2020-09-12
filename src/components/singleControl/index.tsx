@@ -1,11 +1,15 @@
 //单双页切换
-import { handleSingle } from "../../redux/actions/reader";
 import { connect } from "react-redux";
 import { handleMessageBox, handleMessage } from "../../redux/actions/manager";
 import { withNamespaces } from "react-i18next";
-import SingleControl from './component'
-const actionCreator = { handleSingle, handleMessageBox, handleMessage };
+import SingleControl from "./component";
+import { stateType } from "../../redux/store";
+
+const mapStateToProps = (state: stateType) => {
+  return {};
+};
+const actionCreator = { handleMessageBox, handleMessage };
 export default connect(
-  null,
+  mapStateToProps,
   actionCreator
 )(withNamespaces()(SingleControl as any));

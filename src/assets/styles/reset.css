@@ -174,3 +174,6 @@ option:hover {
   color: #fff;
   background-color: #1e90ff;
 }
+.epub-container {
+  overflow-x: hidden !important;
+}
