@@ -106,7 +106,8 @@ class PopupOption extends React.Component<PopupOptionProps> {
       range,
       notes,
       percentage,
-      color
+      color,
+      []
     );
     let noteArr = this.props.notes;
     noteArr.push(digest);

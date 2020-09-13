@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Launch ...</title>
+    <style type="text/css">
+      html,
+      body,
+      .launch-box {
+        height: 100%;
+        overflow: hidden;
+        background-color: white;
+      }
+      * {
+        margin: 0;
+      }
+      .logo {
+        width: 180px;
+        margin: 10px;
+      }
+      .writer {
+        width: 240px;
+        position: absolute;
+        top: 0px;
+        right: 0px;
+      }
+      .words {
+        font-size: 16px;
+        font-weight: 400;
+        line-height: 17px;
+        color: #878787;
+        width: 250px;
+        margin: 40px 20px;
+      }
+      .launching {
+        font-size: 19px;
+        font-weight: bold;
+        line-height: 32px;
+        color: #000000;
+        margin-left: 10px;
+        margin-bottom: 5px;
+      }
+      .progress-container {
+        position: absolute;
+        bottom: 20px;
+        left: 0px;
+      }
+      .progress {
+        font-size: 17px;
+        font-weight: 500;
+        line-height: 29px;
+        color: #878787;
+        opacity: 1;
+        float: right;
+        margin-bottom: 5px;
+      }
+      .progress-bar {
+        width: 255px;
+        height: 0px;
+        border-bottom: 4px solid #eaeaea;
+        opacity: 1;
+      }
+      .progress-line {
+        width: 172px;
+        height: 0px;
+        border-bottom: 4px solid #000000;
+        opacity: 1;
+        position: relative;
+        bottom: 4px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="launch-box">
+      <img src="assets/splash.png" alt="" class="logo" />
+      <p class="words"></p>
+      <div class="progress-container">
+        <span class="launching">启动中</span>
+        <span class="progress"></span>
+        <div class="progress-bar"></div>
+        <div class="progress-line"></div>
+      </div>
+
+      <img src="writer.jpg" alt="" class="writer" />
+    </div>
+    <script>
+      let words = [
+        "悲伤的情绪是一张向两面观望着的脸，一面朝着恐怖，一面朝着怜悯，而这两者都不过是它的两个不同的阶段。",
+        "我曾努力过，去爱上帝。他最后说道。不过现在看来，我失败了。那样做很难。我曾努力一点一点地把自己的意志同上帝的意志结合起来，也不是完全没有办到，或许我会继续这么做。",
+        "我几乎没有耐心来严肃地生活，既然这正儿八经的生活挡在我和我的愿望中间，那在我看来它就好像是儿戏，丑陋单调的儿戏。",
+        "我除了几句日常客气话，再没有对她说过什么，可是她的名字却像一声呼唤，会调动我全身血液喷发愚蠢的激情。",
+      ];
+      let number = Math.floor(Math.random() * words.length);
+      let word = words[number];
+      document.querySelector(".words").innerHTML = word;
+      let progressNum = document.querySelector(".progress");
+      let progressLine = document.querySelector(".progress-line");
+      let progress = 0;
+      let timer = setInterval(() => {
+        progress++;
+        progressNum.innerHTML = progress + "%";
+        progressLine.style.width = (255 * progress) / 100 + "px";
+        if (progress > 99) {
+          clearInterval(timer);
+        }
+      }, 20);
+    </script>
+  </body>
+</html>

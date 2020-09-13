@@ -41,6 +41,7 @@ class BackupUtil {
       .file("recentBooks.json", localStorage.getItem("recentBooks") || [])
       .file("favoriteBooks.json", localStorage.getItem("favoriteBooks") || [])
       .file("shelfList.json", localStorage.getItem("shelfList") || [])
+      .file("noteTags.json", localStorage.getItem("noteTags") || [])
       .file(
         "recordLocation.json",
         localStorage.getItem("recordLocation") || ""

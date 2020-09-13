@@ -37,6 +37,7 @@ export type stateType = {
     searchResults: number[];
     isSearch: boolean;
     isSort: boolean;
+    isSettingOpen: boolean;
     isFirst: string;
     isList: string;
     isSortDisplay: boolean;

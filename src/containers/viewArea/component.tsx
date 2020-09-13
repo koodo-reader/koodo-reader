@@ -6,8 +6,11 @@ import RecordLocation from "../../utils/recordLocation";
 import OtherUtil from "../../utils/otherUtil";
 import BookmarkModel from "../../model/Bookmark";
 import ReaderConfig from "../../utils/readerConfig";
+const isElectron = require("is-electron");
 
 declare var window: any;
+
+let Hammer = window.Hammer;
 
 class ViewArea extends React.Component<ViewAreaProps, ViewAreaStates> {
   isFirst: boolean;
@@ -59,6 +62,25 @@ class ViewArea extends React.Component<ViewAreaProps, ViewAreaStates> {
         return;
       }
       ReaderConfig.addDefaultCss();
+      if (OtherUtil.getReaderConfig("isTouch") === "yes") {
+        const mc = new Hammer(doc);
+        mc.on("panleft panright panup pandown", (event: any) => {
+          const mc = new Hammer(doc);
+          mc.on("doubletap", (event: any) => {
+            if (this.props.isShow) {
+              this.props.handleLeaveReader("left");
+              this.props.handleLeaveReader("right");
+              this.props.handleLeaveReader("top");
+              this.props.handleLeaveReader("bottom");
+            } else {
+              this.props.handleEnterReader("left");
+              this.props.handleEnterReader("right");
+              this.props.handleEnterReader("top");
+              this.props.handleEnterReader("bottom");
+            }
+          });
+        });
+      }
       doc.addEventListener("click", this.showImage);
     });
     this.props.rendition.on("selected", (cfiRange: any, contents: any) => {
@@ -70,13 +92,19 @@ class ViewArea extends React.Component<ViewAreaProps, ViewAreaStates> {
     this.props.rendition.themes.default({
       "a, article, cite, code, div, li, p, pre, span, table": {
         "font-size": `${
-          OtherUtil.getReaderConfig("fontSize") || 17
+          OtherUtil.getReaderConfig("isUseFont") === "yes"
+            ? ""
+            : OtherUtil.getReaderConfig("fontSize") || 17
         }px !important`,
         "line-height": `${
-          OtherUtil.getReaderConfig("lineHeight") || "1.25"
+          OtherUtil.getReaderConfig("isUseFont") === "yes"
+            ? ""
+            : OtherUtil.getReaderConfig("lineHeight") || "1.25"
         } !important`,
         "font-family": `${
-          OtherUtil.getReaderConfig("fontFamily") || "Helvetica"
+          OtherUtil.getReaderConfig("isUseFont") === "yes"
+            ? ""
+            : OtherUtil.getReaderConfig("fontFamily") || "Helvetica"
         } !important`,
         color: `${
           OtherUtil.getReaderConfig("theme") === "rgba(44,47,49,1)"
@@ -93,6 +121,15 @@ class ViewArea extends React.Component<ViewAreaProps, ViewAreaStates> {
   }
   showImage = (event: any) => {
     console.log("click");
+    if (
+      isElectron() &&
+      event.target.parentNode.parentNode.tagName.toLowerCase() === "a"
+    ) {
+      event.preventDefault();
+      window
+        .require("electron")
+        .shell.openExternal(event.target.parentNode.parentNode.href);
+    }
     if (!event.target.src) {
       return;
     }

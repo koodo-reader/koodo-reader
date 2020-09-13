@@ -16,3 +16,28 @@
   position: relative;
   bottom: 5px;
 }
+.popup-color-more {
+  display: inline-block;
+  width: 10px;
+  position: relative;
+  right: 3px;
+  top: 2px;
+  opacity: 0.7;
+  cursor: pointer;
+}
+.line-option {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  opacity: 1;
+  box-sizing: border-box;
+  position: relative;
+  bottom: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.demo-line {
+  width: 100%;
+  height: 0px;
+}

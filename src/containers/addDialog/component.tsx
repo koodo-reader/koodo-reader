@@ -29,6 +29,7 @@ class AddDialog extends Component<AddDialogProps, AddDialogState> {
         return;
       }
     }
+    //未填书架名提醒
     if (!shelfTitle) {
       this.props.handleMessage("Empty Shelf Title");
       this.props.handleMessageBox(true);

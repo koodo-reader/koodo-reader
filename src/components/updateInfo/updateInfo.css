@@ -5,8 +5,9 @@
   justify-content: center;
   align-items: center;
   position: relative;
-  left: 320px;
+  left: 310px;
   top: 18px;
   color: blue;
+  cursor: pointer;
   /* bottom: 120px; */
 }

@@ -24,32 +24,3 @@
   cursor: pointer;
   text-align: center;
 }
-.single-control-switch-container {
-  position: absolute;
-  left: 90px;
-  top: 135px;
-}
-.single-control-switch-title {
-  font-size: 14px;
-  line-height: 16px;
-  color: #4b4b4b;
-  opacity: 1;
-}
-.single-control-switch {
-  display: inline-block;
-  width: 29px;
-  height: 15px;
-  background: #000000;
-  opacity: 1;
-  border-radius: 7px;
-  position: relative;
-  top: 3px;
-  left: 2px;
-}
-.single-control-button {
-  display: inline-block;
-  height: 15px;
-  width: 15px;
-  border-radius: 50%;
-  background-color: white;
-}
