@@ -6,6 +6,10 @@ import { Trans } from "react-i18next";
 import { DropdownListProps, DropdownListState } from "./interface";
 import OtherUtil from "../../utils/otherUtil";
 const isElectron = require("is-electron");
+if (isElectron()) {
+  const { ipcRenderer } = window.require("electron");
+  dropdownList[0].option = ipcRenderer.sendSync("fonts-ready", "ping");
+}
 
 class DropdownList extends React.Component<
   DropdownListProps,
@@ -24,10 +28,7 @@ class DropdownList extends React.Component<
   }
   componentDidMount() {
     //使下拉菜单选中预设的值
-    if (isElectron()) {
-      const { ipcRenderer } = window.require("electron");
-      dropdownList[0].option = ipcRenderer.sendSync("fonts-ready", "ping");
-    }
+
     document
       .querySelector(".paragraph-character-setting")!
       .children[0].children[1].children[

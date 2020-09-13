@@ -18,9 +18,9 @@ app.on("ready", () => {
     titleBarStyle: "hidden",
     width: 1030,
     height: 660,
-    transparent: true,
     webPreferences: { webSecurity: false, nodeIntegration: true },
     show: false,
+    transparent: true,
   });
   splash = new BrowserWindow({
     width: 510,
