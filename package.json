@@ -79,7 +79,7 @@
     },
     "win": {
       "target": [
-        "portable"
+        "nsis"
       ],
       "icon": "assets/icons/icon.ico",
       "artifactName": "${productName}-Web-Setup-${version}.${ext}",
