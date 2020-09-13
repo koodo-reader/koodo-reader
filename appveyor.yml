@@ -4,7 +4,11 @@ branches:
   only:
     - master
 
-image: Visual Studio 2017
+image:
+  - macos
+  - Visual Studio 2019
+  - Ubuntu
+
 platform:
   - x64
 
