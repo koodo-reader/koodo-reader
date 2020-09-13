@@ -18,22 +18,22 @@ app.on("ready", () => {
     titleBarStyle: "hidden",
     width: 1030,
     height: 660,
+    transparent: true,
     webPreferences: { webSecurity: false, nodeIntegration: true },
     show: false,
   });
   splash = new BrowserWindow({
     width: 510,
     height: 323,
-    transparent: true,
     frame: false,
+    transparent: true,
     alwaysOnTop: true,
   });
   splash.loadURL(
     isDev
-      ? path.join(__dirname, "/assets/launch-page.html")
-      : `file://${path.join(__dirname, "./assets/launch-page.html")}`
+      ? path.join(__dirname, "/public/assets/launch-page.html")
+      : `file://${path.join(__dirname, "./build/assets/launch-page.html")}`
   );
-
   if (!isDev) {
     const { Menu } = require("electron");
     Menu.setApplicationMenu(null);
