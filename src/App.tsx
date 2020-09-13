@@ -1,4 +1,4 @@
-// import { hot } from "react-hot-loader/root";
+import { hot } from "react-hot-loader/root";
 import React from "react";
 import Reader from "./pages/reader";
 import Manager from "./pages/manager";
@@ -19,4 +19,4 @@ const mapStateToProps = (state: { book: { isReading: boolean } }) => {
   return { isReading: state.book.isReading };
 };
 const actionCreator = {};
-export default connect(mapStateToProps, actionCreator)(App);
+export default connect(mapStateToProps, actionCreator)(hot(App));

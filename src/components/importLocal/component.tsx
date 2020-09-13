@@ -135,6 +135,16 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
     return (
       <Dropzone
         onDrop={(acceptedFiles) => {
+          if (acceptedFiles.length > 9) {
+            this.props.handleMessage("Please import less than 10 books");
+            this.props.handleMessageBox(true);
+            return;
+          }
+          if (this.props.books && this.props.books.length > 50) {
+            this.props.handleMessage("Please delete some books before import");
+            this.props.handleMessageBox(true);
+            return;
+          }
           for (let i = 0; i < acceptedFiles.length; i++) {
             this.doIncrementalTest(acceptedFiles[i]);
           }

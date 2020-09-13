@@ -2,25 +2,37 @@ import React from "react";
 import "./popupNote.css";
 import Note from "../../model/Note";
 import localforage from "localforage";
-import { PopupNoteProps } from "./interface";
+import { PopupNoteProps, PopupNoteState } from "./interface";
 import RecordLocation from "../../utils/recordLocation";
+import NoteTag from "../noteTag";
+import NoteModel from "../../model/Note";
 import { Trans } from "react-i18next";
 
 declare var window: any;
 
-class PopupNote extends React.Component<PopupNoteProps> {
+class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
+  constructor(props: PopupNoteProps) {
+    super(props);
+    this.state = { tag: [] };
+  }
   componentDidMount() {
     let textArea: any = document.querySelector(".editor-box");
     textArea && textArea.focus();
   }
+  handleTag = (tag: string[]) => {
+    console.log(tag, "tag pop");
+    this.setState({ tag });
+  };
   createNote() {
     let notes = (document.querySelector(".editor-box") as HTMLInputElement)
       .value;
 
     if (this.props.noteKey) {
+      //编辑笔记
       this.props.notes.forEach((item) => {
         if (item.key === this.props.noteKey) {
           item.notes = notes;
+          item.tag = this.state.tag;
         }
       });
       localforage.setItem("notes", this.props.notes).then(() => {
@@ -33,6 +45,7 @@ class PopupNote extends React.Component<PopupNoteProps> {
         console.log("edit");
       });
     } else {
+      //创建笔记
       let bookKey = this.props.currentBook.key;
       const currentLocation = this.props.currentEpub.rendition.currentLocation();
       let chapterHref = currentLocation.start.href;
@@ -72,6 +85,7 @@ class PopupNote extends React.Component<PopupNoteProps> {
           : RecordLocation.getCfi(this.props.currentBook.key).percentage;
 
       let color = this.props.color || 0;
+      let tag = this.state.tag;
       let note = new Note(
         bookKey,
         chapter,
@@ -81,7 +95,8 @@ class PopupNote extends React.Component<PopupNoteProps> {
         range,
         notes,
         percentage,
-        color
+        color,
+        tag
       );
       let noteArr = this.props.notes;
       noteArr.push(note);
@@ -123,12 +138,33 @@ class PopupNote extends React.Component<PopupNoteProps> {
   };
 
   render() {
+    let note: NoteModel;
+    if (this.props.noteKey) {
+      this.props.notes.forEach((item) => {
+        if (item.key === this.props.noteKey) {
+          note = item;
+        }
+      });
+    }
+
     const renderNoteEditor = () => {
       return (
         <div className="note-editor">
           <div className="editor-box-parent">
             <textarea className="editor-box" />
           </div>
+          <div
+            className="note-tags"
+            style={{ position: "absolute", bottom: "0px", height: "70px" }}
+          >
+            <NoteTag
+              {...{
+                handleTag: this.handleTag,
+                tag: this.props.noteKey ? note.tag : [],
+              }}
+            />
+          </div>
+
           <div className="note-button-container">
             <span
               className="cancel-button"

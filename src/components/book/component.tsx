@@ -5,6 +5,7 @@ import "./book.css";
 import { BookProps, BookState } from "./interface";
 import AddFavorite from "../../utils/addFavorite";
 import ActionDialog from "../../containers/actionDialog";
+import OtherUtil from "../../utils/otherUtil";
 
 declare var window: any;
 
@@ -21,6 +22,7 @@ class Book extends React.Component<BookProps, BookState> {
     this.handleOpenBook = this.handleOpenBook.bind(this);
     this.epub = null;
   }
+
   UNSAFE_componentWillMount() {
     this.epub = window.ePub(this.props.book.content, {});
 
@@ -28,6 +30,15 @@ class Book extends React.Component<BookProps, BookState> {
       isFavorite:
         AddFavorite.getAllFavorite().indexOf(this.props.book.key) > -1,
     });
+  }
+  componentDidMount() {
+    if (
+      OtherUtil.getReaderConfig("isOpenBook") === "yes" &&
+      RecentBooks.getAllRecent()[0] === this.props.book.key &&
+      !this.props.currentBook.key
+    ) {
+      this.handleOpenBook();
+    }
   }
   handleOpenBook() {
     this.props.handleReadingBook(this.props.book);

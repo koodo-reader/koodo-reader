@@ -5,6 +5,7 @@ import {
   handleSortDisplay,
   handleMessageBox,
   handleMessage,
+  handleSetting,
 } from "../../redux/actions/manager";
 import { handleBackupDialog } from "../../redux/actions/backupPage";
 import { stateType } from "../../redux/store";
@@ -22,6 +23,7 @@ const actionCreator = {
   handleMessageBox,
   handleMessage,
   handleBackupDialog,
+  handleSetting,
 };
 export default connect(
   mapStateToProps,

@@ -91,7 +91,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
     }
   };
   //退出阅读器
-  handleLeaveReader = (event: any, position: string) => {
+  handleLeaveReader = (position: string) => {
     //控制上下左右的菜单的显示
     switch (position) {
       case "right":
@@ -110,9 +110,13 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         break;
     }
   };
+
   render() {
     const renditionProps = {
       rendition: this.state.rendition,
+      handleLeaveReader: this.handleLeaveReader,
+      handleEnterReader: this.handleEnterReader,
+      isShow: this.state.isOpenNavPanel,
     };
     return (
       <div className="viewer">
@@ -145,7 +149,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         <div
           className="setting-panel-container"
           onMouseLeave={(event) => {
-            this.handleLeaveReader(event, "right");
+            this.handleLeaveReader("right");
           }}
           style={
             this.state.isOpenSettingPanel
@@ -157,12 +161,12 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
                 }
           }
         >
-          <SettingPanel {...renditionProps} />
+          <SettingPanel />
         </div>
         <div
           className="navigation-panel-container"
           onMouseLeave={(event) => {
-            this.handleLeaveReader(event, "left");
+            this.handleLeaveReader("left");
           }}
           style={
             this.state.isOpenNavPanel
@@ -179,7 +183,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         <div
           className="progress-panel-container"
           onMouseLeave={(event) => {
-            this.handleLeaveReader(event, "bottom");
+            this.handleLeaveReader("bottom");
           }}
           style={
             this.state.isOpenProgressPanel
@@ -191,12 +195,12 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
                 }
           }
         >
-          <ProgressPanel {...renditionProps} />
+          <ProgressPanel />
         </div>
         <div
           className="operation-panel-container"
           onMouseLeave={(event) => {
-            this.handleLeaveReader(event, "top");
+            this.handleLeaveReader("top");
           }}
           style={
             this.state.isOpenOperationPanel
@@ -208,8 +212,9 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
                 }
           }
         >
-          <OperationPanel {...renditionProps} />
+          <OperationPanel />
         </div>
+
         <div
           className="view-area-page"
           id="page-area"

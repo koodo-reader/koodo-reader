@@ -10,6 +10,7 @@ class Note {
   notes: string;
   percentage: number;
   color: number;
+  tag: string[];
   constructor(
     bookKey: string,
     chapter: string,
@@ -19,7 +20,8 @@ class Note {
     range: string,
     notes: string,
     percentage: number,
-    color: number
+    color: number,
+    tag: string[]
   ) {
     this.key = new Date().getTime() + ""; //笔记的键值
     this.bookKey = bookKey; //笔记的所在书的键值
@@ -36,6 +38,7 @@ class Note {
     this.notes = notes || ""; //笔记的内容
     this.percentage = percentage; //笔记在文中的进度
     this.color = color; //笔记高亮的颜色
+    this.tag = tag; //笔记高亮的颜色
   }
 }
 

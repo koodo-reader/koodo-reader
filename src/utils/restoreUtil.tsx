@@ -34,6 +34,7 @@ class RestoreUtil {
       "books",
       "bookmarks",
       "readerConfig",
+      "noteTags",
       "sortCode",
       "readingTime",
       "recentBooks",

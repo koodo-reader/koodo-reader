@@ -1,3 +1,6 @@
+import OtherUtil from "./otherUtil";
+let Hammer = (window as any).Hammer;
+
 export const MouseEvent = (rendition: any) => {
   let isFirefox = navigator.userAgent.indexOf("Firefox") !== -1;
   let lock = false; // 暂时锁住翻页快捷键，避免快速点击产生的Bug
@@ -61,29 +64,28 @@ export const MouseEvent = (rendition: any) => {
       return false;
     }
   };
-  // const rebind = () => {
-  //   console.log("rebind");
-  //   let iframe = document.getElementsByTagName("iframe")[0];
-  //   if (!iframe) return;
-  //   let doc = iframe.contentDocument;
-  //   if (!doc) {
-  //     return;
-  //   }
-  //   doc.addEventListener("keydown", arrowKeys); // 箭头按键翻页
-  //   // 鼠标滚轮翻页
-  //   if (isFirefox) {
-  //     doc.addEventListener("DOMMouseScroll", mouseFirefox, false);
-  //   } else {
-  //     // console.log("chrome-scroll");
-  //     doc.addEventListener("mousewheel", mouseChrome, false);
-  //   }
-  // };
-  const touchDown = () => {
-    console.log("touch down");
+
+  const gesture = (event: any) => {
+    if (lock) return;
+    if (event.type === "panleft" || event.type === "panup") {
+      rendition.next();
+      lock = true;
+      setTimeout(function () {
+        lock = false;
+      }, 100);
+      return false;
+    }
+    if (event.type === "panright" || event.type === "pandown") {
+      rendition.prev();
+      lock = true;
+      setTimeout(function () {
+        lock = false;
+      }, 100);
+      return false;
+    }
   };
   const bindEvent = (doc: any) => {
     doc.addEventListener("keydown", arrowKeys); // 箭头按键翻页
-    doc.addEventListener("touchdown", touchDown); // 箭头按键翻页
     // 鼠标滚轮翻页
     if (isFirefox) {
       doc.addEventListener("DOMMouseScroll", mouseFirefox, false);
@@ -91,6 +93,7 @@ export const MouseEvent = (rendition: any) => {
       doc.addEventListener("mousewheel", mouseChrome, false);
     }
   };
+
   rendition.on("rendered", () => {
     let iframe = document.getElementsByTagName("iframe")[0];
     if (!iframe) return;
@@ -98,11 +101,15 @@ export const MouseEvent = (rendition: any) => {
     if (!doc) {
       return;
     }
+    if (OtherUtil.getReaderConfig("isTouch") === "yes") {
+      const mc = new Hammer(doc);
+      mc.on("panleft panright panup pandown", (event: any) => {
+        gesture(event);
+      });
+    }
+
     // 鼠标滚轮翻页
     window.addEventListener("keydown", arrowKeys);
-    // window.addEventListener("mousewheel", rebind);
-    // window.addEventListener("DOMMouseScroll", rebind);
-    // window.onmousewheel = rebind;
     bindEvent(doc);
   });
 };

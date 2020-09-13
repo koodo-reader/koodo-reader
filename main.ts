@@ -9,26 +9,31 @@ const {
 const isDev = require("electron-is-dev");
 const path = require("path");
 const fontList = require("font-list");
-// const Elp = require("electron-launch-page");
+
+let mainWin;
+let splash;
 
 app.on("ready", () => {
-  let mainWin = new BrowserWindow({
+  mainWin = new BrowserWindow({
+    titleBarStyle: "hidden",
     width: 1030,
     height: 660,
     webPreferences: { webSecurity: false, nodeIntegration: true },
-    // show: false,
-    // transparent: true,
+    show: false,
   });
-  // Elp.main.start({
-  //   //主窗口 BrowserWindow
-  //   mainWin,
-  //   //自定义的启动页
-  //   launchUrl: path.join(__dirname, "launch-page.html"),
-  //   //启动窗口大小，根据 your-launch.html 配置
-  //   transparent: true,
-  //   width: 480,
-  //   height: 320,
-  // });
+  splash = new BrowserWindow({
+    width: 510,
+    height: 323,
+    transparent: true,
+    frame: false,
+    alwaysOnTop: true,
+  });
+  splash.loadURL(
+    isDev
+      ? path.join(__dirname, "/assets/launch-page.html")
+      : `file://${path.join(__dirname, "./assets/launch-page.html")}`
+  );
+
   if (!isDev) {
     const { Menu } = require("electron");
     Menu.setApplicationMenu(null);
@@ -38,6 +43,10 @@ app.on("ready", () => {
     ? "http://localhost:3000/"
     : `file://${path.join(__dirname, "./build/index.html")}`;
   mainWin.loadURL(urlLocation);
+  mainWin.once("ready-to-show", () => {
+    splash.destroy();
+    mainWin.show();
+  });
   mainWin.on("close", () => {
     mainWin = null;
   });
