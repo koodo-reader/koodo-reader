@@ -83,7 +83,6 @@ class OperationPanel extends React.Component<
     const cfiend = currentLocation.end.cfi.replace(/.*!/, "").replace(/\)/, "");
     const cfiRange = `epubcfi(${cfibase}!,${cfistart},${cfiend})`;
     const cfi = RecordLocation.getCfi(this.props.currentBook.key).cfi;
-
     this.props.currentEpub.getRange(cfiRange).then((range: any) => {
       let text = range.toString();
       text = text.replace(/\s\s/g, "");
@@ -112,6 +111,7 @@ class OperationPanel extends React.Component<
   handleExit() {
     this.props.handleReadingState(false);
     OtherUtil.setReaderConfig("isFullScreen", "no");
+    window.speechSynthesis && window.speechSynthesis.cancel();
     if (this.state.isFullScreen) {
       this.handleExitFullScreen();
     }

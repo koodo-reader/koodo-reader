@@ -25,6 +25,8 @@ import OtherUtil from "../../utils/otherUtil";
 import AddFavorite from "../../utils/addFavorite";
 import { updateLog } from "../../utils/readerConfig";
 import UpdateDialog from "../../components/updataDialog";
+import SettingDialog from "../../components/settingDialog";
+import { isMobileOnly } from "react-device-detect";
 
 class Manager extends React.Component<ManagerProps, ManagerState> {
   timer!: NodeJS.Timeout;
@@ -148,6 +150,25 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
     const updateDialogProps = {
       handleUpdateDialog: this.handleUpdateDialog,
     };
+    if (isMobileOnly) {
+      return (
+        <>
+          <p className="waring-title">
+            <Trans>Warning</Trans>
+          </p>
+          <div className="mobile-warning">
+            <span>
+              <Trans>
+                For better user experince, please visit this site on a computer
+              </Trans>
+            </span>
+          </div>
+          <div>
+            <img src="assets/empty.svg" alt="" className="waring-pic" />
+          </div>
+        </>
+      );
+    }
     return (
       <div className="manager">
         <Sidebar />
@@ -168,6 +189,7 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
           <WelcomePage />
         ) : null}
         {this.state.isUpdated ? <UpdateDialog {...updateDialogProps} /> : null}
+        {this.props.isSettingOpen ? <SettingDialog /> : null}
         {totalBooks === 0 ? (
           <EmptyPage />
         ) : covers === null &&

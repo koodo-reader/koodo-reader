@@ -6,6 +6,7 @@ const initState = {
   isSearch: false,
   isSort: false,
   isFirst: "no",
+  isSettingOpen: false,
   isList: "card",
   isSortDisplay: false,
   sortCode: { sort: 2, order: 2 },
@@ -31,6 +32,11 @@ export function manager(
       return {
         ...state,
         isSearch: action.payload,
+      };
+    case "HANDLE_SETTING":
+      return {
+        ...state,
+        isSettingOpen: action.payload,
       };
     case "HANDLE_SORT":
       return {

@@ -1,4 +1,17 @@
 import { withNamespaces } from "react-i18next";
+import { connect } from "react-redux";
 import SettingPanel from "./component";
+import { stateType } from "../../redux/store";
 
-export default withNamespaces()(SettingPanel as any);
+const mapStateToProps = (state: stateType) => {
+  return {
+    currentEpub: state.book.currentEpub,
+    locations: state.reader.locations,
+    isReading: state.book.isReading,
+  };
+};
+const actionCreator = {};
+export default connect(
+  mapStateToProps,
+  actionCreator
+)(withNamespaces()(SettingPanel as any));

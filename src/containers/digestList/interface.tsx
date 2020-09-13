@@ -5,4 +5,6 @@ export interface DigestListProps {
   isSearch: boolean;
   searchResults: number[];
 }
-export interface DigestListStates {}
+export interface DigestListStates {
+  tag: string[];
+}

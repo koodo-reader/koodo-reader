@@ -17,7 +17,6 @@
   /* position: absolute;
   left: 156px;
   top: 45px; */
-  font-family: Source Han Sans CN;
   font-weight: 500;
   line-height: 100px;
   color: rgba(75, 75, 75, 1);
@@ -40,7 +39,6 @@
 .welcome-message-main {
   width: 420px;
   font-size: 29px;
-  font-family: Source Han Sans CN;
   font-weight: 500;
   line-height: 29px;
   color: rgba(75, 75, 75, 1);
@@ -52,7 +50,6 @@
   margin-left: 18px;
   width: 390px;
   font-size: 18px;
-  font-family: Source Han Sans CN;
   font-weight: 500;
   line-height: 28px;
   color: rgba(75, 75, 75, 1);
