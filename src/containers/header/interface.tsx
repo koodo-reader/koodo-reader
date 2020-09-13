@@ -5,6 +5,7 @@ export interface HeaderProps {
   isSearch: boolean;
   isSortDisplay: boolean;
   handleSortDisplay: (isSortDisplay: boolean) => void;
+  handleSetting: (isSettingOpen: boolean) => void;
   handleMessageBox: (isShow: boolean) => void;
   handleMessage: (message: string) => void;
   handleBackupDialog: (isBackup: boolean) => void;
@@ -13,6 +14,6 @@ export interface HeaderProps {
 export interface HeaderState {
   isOnlyLocal: boolean;
   isBookImported: boolean;
-        language:string;
+  language: string;
   isNewVersion: boolean;
 }

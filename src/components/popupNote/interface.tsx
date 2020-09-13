@@ -14,3 +14,6 @@ export interface PopupNoteProps {
   handleMenuMode: (menu: string) => void;
   handleFetchNotes: () => void;
 }
+export interface PopupNoteState {
+  tag: string[];
+}

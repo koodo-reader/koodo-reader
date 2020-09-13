@@ -6,5 +6,5 @@ export interface ColorProps {
   handleColor: (color: number) => void;
 }
 export interface ColorStates {
-  deleteKey: string;
+  isLine: boolean;
 }

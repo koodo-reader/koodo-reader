@@ -19,6 +19,9 @@ export function handleSearchResults(searchResults: number[]) {
 export function handleSearch(isSearch: boolean) {
   return { type: "HANDLE_SEARCH", payload: isSearch };
 }
+export function handleSetting(isSettingOpen: boolean) {
+  return { type: "HANDLE_SETTING", payload: isSettingOpen };
+}
 export function handleList(mode: string) {
   return { type: "HANDLE_LIST", payload: mode };
 }

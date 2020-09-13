@@ -19,3 +19,20 @@
   font-size: 60px !important;
   float: none !important;
 }
+.mobile-warning {
+  text-align: center;
+  font-size: 22px;
+  padding: 70px 30px;
+  line-height: 30px;
+}
+.waring-title {
+  text-align: center;
+  margin: 50px 0px 20px;
+  font-size: 40px;
+  font-weight: bold;
+}
+.waring-pic {
+  width: 100vw;
+  position: absolute;
+  bottom: 0px;
+}

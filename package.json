@@ -14,13 +14,13 @@
     "axios": "^0.19.2",
     "copy-text-to-clipboard": "^2.2.0",
     "electron-is-dev": "^1.1.0",
-    "electron-launch-page": "^1.0.2",
     "font-list": "^1.2.11",
     "i18next": "^19.4.4",
     "i18next-browser-languagedetector": "^4.2.0",
     "is-electron": "^2.2.0",
     "lodash": "^4.17.20",
     "md5": "^2.3.0",
+    "react-device-detect": "^1.12.1",
     "react-dropzone": "^11.0.1",
     "react-i18next": "^9.0.10"
   },
@@ -84,6 +84,9 @@
       "icon": "assets/icon.ico",
       "artifactName": "${productName}-Web-Setup-${version}.${ext}",
       "publisherName": "App by Troye"
+    },
+    "linux": {
+      "icon": "assets/icon.ico"
     }
   },
   "eslintConfig": {
@@ -99,6 +102,16 @@
       "last 1 chrome version",
       "last 1 firefox version",
       "last 1 safari version"
+    ]
+  },
+  "babel": {
+    "presets": [
+      "react-app"
+    ],
+    "plugins": [
+      [
+        "react-hot-loader/babel"
+      ]
     ]
   },
   "devDependencies": {

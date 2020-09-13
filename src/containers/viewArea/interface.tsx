@@ -9,6 +9,9 @@ export interface ViewAreaProps {
   locations: any;
   isShowBookmark: boolean;
   chapters: any[];
+  isShow: boolean;
+  handleLeaveReader: (position: string) => void;
+  handleEnterReader: (position: string) => void;
   handlePercentage: (percentage: number) => void;
   handleOpenMenu: (isOpenMenu: boolean) => void;
   handleShowBookmark: (isShowBookmark: boolean) => void;

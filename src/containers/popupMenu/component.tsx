@@ -69,7 +69,16 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     let doc = iframe.contentDocument;
     if (!doc) return;
     this.highlighter = window.rangy.createHighlighter(doc);
-    let classes = ["color-0", "color-1", "color-2", "color-3"];
+    let classes = [
+      "color-0",
+      "color-1",
+      "color-2",
+      "color-3",
+      "line-0",
+      "line-1",
+      "line-2",
+      "line-3",
+    ];
     classes.forEach((item) => {
       let config = {
         ignoreWhiteSpace: true,
@@ -156,7 +165,16 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     let iWin = iframe.contentWindow || iframe.contentDocument!.defaultView;
     this.highlighter && this.highlighter.removeAllHighlights(); // 为了避免下次反序列化失败，必须先清除已有的高亮
 
-    let classes = ["color-0", "color-1", "color-2", "color-3"];
+    let classes = [
+      "color-0",
+      "color-1",
+      "color-2",
+      "color-3",
+      "line-0",
+      "line-1",
+      "line-2",
+      "line-3",
+    ];
     highlightersByChapter &&
       highlightersByChapter.forEach((item: any) => {
         this.key = item.key;
@@ -174,7 +192,6 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
             );
             return;
           }
-
           this.highlighter.highlightSelection(classes[item.color]);
         }
       });
@@ -215,8 +232,16 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     let doc = iframe.contentDocument;
     if (!doc) return;
     let color = this.props.color;
-    let classes = ["color-0", "color-1", "color-2", "color-3"];
-    console.log(classes[color], "classes[color]");
+    let classes = [
+      "color-0",
+      "color-1",
+      "color-2",
+      "color-3",
+      "line-0",
+      "line-1",
+      "line-2",
+      "line-3",
+    ];
     this.highlighter.highlightSelection(classes[color]);
     this.props.handleMenuMode("menu");
     this.props.handleOpenMenu(false);

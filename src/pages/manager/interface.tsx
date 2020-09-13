@@ -18,6 +18,7 @@ export interface ManagerProps {
   isSortDisplay: boolean;
   isMessage: boolean;
   isBackup: boolean;
+  isSettingOpen: boolean;
   handleFetchBooks: () => void;
   handleFetchNotes: () => void;
   handleFetchBookmarks: () => void;

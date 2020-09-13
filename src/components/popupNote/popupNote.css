@@ -10,10 +10,10 @@
 }
 .editor-box-parent {
   position: absolute;
-  left: 25px;
-  top: 22px;
-  width: 217px;
-  height: 110px;
+  left: 10px;
+  top: 12px;
+  width: 237px;
+  height: 100px;
 }
 .editor-box {
   border: none;
@@ -21,7 +21,7 @@
   resize: none;
   font-size: 16px;
   width: 100%;
-  height: 100%;
+  height: 70%;
   line-height: 18px;
   overflow-y: scroll;
 }
@@ -74,4 +74,8 @@
   color: rgba(0, 0, 0, 1);
   opacity: 1;
   cursor: pointer;
+}
+.note-tags {
+  width: 100%;
+  overflow-x: scroll;
 }

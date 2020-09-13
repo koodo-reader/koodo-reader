@@ -48,6 +48,9 @@ class CardList extends React.Component<CardListProps, CardListStates> {
   };
   render() {
     let { cards } = this.props;
+    if (cards.length === 0) {
+      return null;
+    }
     let cardArr = [];
     //使书摘从晚到早排序
     for (let i = cards.length - 1; i >= 0; i--) {

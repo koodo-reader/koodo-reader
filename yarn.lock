@@ -4607,11 +4607,6 @@ electron-is-dev@^1.1.0:
   resolved "https://registry.npm.taobao.org/electron-is-dev/download/electron-is-dev-1.2.0.tgz#2e5cea0a1b3ccf1c86f577cee77363ef55deb05e"
   integrity sha1-LlzqChs8zxyG9XfO53Nj71XesF4=
 
-electron-launch-page@^1.0.2:
-  version "1.0.2"
-  resolved "https://registry.npm.taobao.org/electron-launch-page/download/electron-launch-page-1.0.2.tgz#6b5919347e14b8e7d188fe4ab2802452d79bfb2c"
-  integrity sha1-a1kZNH4UuOfRiP5KsoAkUteb+yw=
-
 electron-publish@22.8.0:
   version "22.8.0"
   resolved "https://registry.npm.taobao.org/electron-publish/download/electron-publish-22.8.0.tgz#7f410fe043abc5d3d896c4ee9eea7a43ea352c7d"
@@ -10058,6 +10053,13 @@ react-dev-utils@^10.2.0:
     strip-ansi "6.0.0"
     text-table "0.2.0"
 
+react-device-detect@^1.12.1:
+  version "1.12.1"
+  resolved "https://registry.npm.taobao.org/react-device-detect/download/react-device-detect-1.12.1.tgz#0a2e0b02dbbceff7d619c57074a9e0ebab74bb35"
+  integrity sha1-Ci4LAtu87/fWGcVwdKng66t0uzU=
+  dependencies:
+    ua-parser-js "^0.7.21"
+
 react-dom@^16.12.0:
   version "16.13.1"
   resolved "https://registry.npm.taobao.org/react-dom/download/react-dom-16.13.1.tgz#c1bd37331a0486c078ee54c4740720993b2e0e7f"
@@ -12009,6 +12011,11 @@ typo-js@*:
   version "1.1.0"
   resolved "https://registry.npm.taobao.org/typo-js/download/typo-js-1.1.0.tgz#a5a9f592bcb453666bf70c9694da58705d025ed8"
   integrity sha1-pan1kry0U2Zr9wyWlNpYcF0CXtg=
+
+ua-parser-js@^0.7.21:
+  version "0.7.22"
+  resolved "https://registry.npm.taobao.org/ua-parser-js/download/ua-parser-js-0.7.22.tgz?cache=0&sync_timestamp=1599900411653&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fua-parser-js%2Fdownload%2Fua-parser-js-0.7.22.tgz#960df60a5f911ea8f1c818f3747b99c6e177eae3"
+  integrity sha1-lg32Cl+RHqjxyBjzdHuZxuF36uM=
 
 unicode-canonical-property-names-ecmascript@^1.0.4:
   version "1.0.4"
