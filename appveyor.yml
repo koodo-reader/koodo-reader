@@ -5,9 +5,9 @@ branches:
     - master
 
 image:
-  - macOS 10.15 “Catalina”
-  - Visual Studio 2019
-  - Ubuntu 18.04.4 LTS (Bionic Beaver)
+  - Visual Studio 2017
+  - ubuntu1804
+  - macos
 
 platform:
   - x64
