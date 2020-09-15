@@ -7,8 +7,9 @@ import SparkMD5 from "spark-md5";
 import { Trans } from "react-i18next";
 import Dropzone from "react-dropzone";
 import { ImportLocalProps, ImportLocalState } from "./interface";
-import OtherUtil from "../../utils/otherUtil";
 import RecordRecent from "../../utils/recordRecent";
+
+declare var window: any;
 
 class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
   constructor(props: ImportLocalProps) {
@@ -27,7 +28,6 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
     localforage.setItem("books", bookArr).then(() => {
       this.props.handleFetchBooks();
     });
-    OtherUtil.setReaderConfig("isBookImported", "yes");
     this.props.handleMessage("Add Successfully");
     this.props.handleMessageBox(true);
   };
@@ -35,42 +35,54 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
   doIncrementalTest = (file: any) => {
     //这里假设直接将文件选择框的dom引用传入
     //这里需要用到File的slice( )方法，以下是兼容写法
-    var blobSlice =
-        (File as any).prototype.slice ||
-        (File as any).prototype.mozSlice ||
-        (File as any).prototype.webkitSlice,
-      chunkSize = 2097152, // 以每片2MB大小来逐次读取
-      chunks = Math.ceil(file.size / chunkSize),
-      currentChunk = 0,
-      spark = new SparkMD5(), //创建SparkMD5的实例
-      fileReader = new FileReader();
-
-    fileReader.onload = (e) => {
-      if (!e.target) {
-        throw new Error();
-      }
-      spark.appendBinary(e.target.result as any); // append array buffer
-      currentChunk += 1;
-      if (currentChunk < chunks) {
-        loadNext();
-      } else {
-        let md5 = spark.end(); // 完成计算，返回结果
-        this.handleBook(file, md5);
-      }
-    };
-
-    function loadNext() {
-      var start = currentChunk * chunkSize,
-        end = start + chunkSize >= file.size ? file.size : start + chunkSize;
-
-      fileReader.readAsBinaryString(blobSlice.call(file, start, end));
+    let fileName = file.name.split(".");
+    let extension = fileName[fileName.length - 1];
+    if (file.size > 50 * 1024 * 1024) {
+      this.props.handleMessage("Book size is over 20M");
+      this.props.handleMessageBox(true);
+      return;
     }
+    if (extension === "epub") {
+      var blobSlice =
+          (File as any).prototype.slice ||
+          (File as any).prototype.mozSlice ||
+          (File as any).prototype.webkitSlice,
+        chunkSize = 2097152, // 以每片2MB大小来逐次读取
+        chunks = Math.ceil(file.size / chunkSize),
+        currentChunk = 0,
+        spark = new SparkMD5(), //创建SparkMD5的实例
+        fileReader = new FileReader();
 
-    loadNext();
+      fileReader.onload = (e) => {
+        if (!e.target) {
+          throw new Error();
+        }
+        spark.appendBinary(e.target.result as any); // append array buffer
+        currentChunk += 1;
+        if (currentChunk < chunks) {
+          loadNext();
+        } else {
+          let md5 = spark.end(); // 完成计算，返回结果
+          this.handleBook(file, md5);
+        }
+      };
+
+      const loadNext = () => {
+        var start = currentChunk * chunkSize,
+          end = start + chunkSize >= file.size ? file.size : start + chunkSize;
+
+        fileReader.readAsBinaryString(blobSlice.call(file, start, end));
+      };
+
+      loadNext();
+    } else {
+      this.props.handleMessage("Import Failed");
+      this.props.handleMessageBox(true);
+    }
   };
   handleBook = (file: any, md5: string) => {
     //md5重复不导入
-    if (this.props.books !== null) {
+    if (this.props.books) {
       this.props.books.forEach((item) => {
         if (item.md5 === md5) {
           this.setState({ isRepeat: true });
@@ -83,14 +95,14 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
     if (!this.state.isRepeat) {
       let reader = new FileReader();
       reader.readAsArrayBuffer(file);
-
       reader.onload = (e) => {
         if (!e.target) {
+          this.props.handleMessage("Import Failed");
+          this.props.handleMessageBox(true);
           throw new Error();
         }
-        const epub = (window as any).ePub({ bookPath: e.target.result });
-        epub
-          .getMetadata()
+        const epub = window.ePub(e.target.result);
+        epub.loaded.metadata
           .then((metadata: any) => {
             if (!e.target) {
               throw new Error();
@@ -101,7 +113,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
               description: string,
               book: BookModel;
             [name, author, description, content] = [
-              metadata.bookTitle,
+              metadata.title,
               metadata.creator,
               metadata.description,
               e.target.result,
@@ -110,20 +122,35 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
             this.handleAddBook(book);
           })
           .catch(() => {
+            this.props.handleMessage("Import Failed");
+            this.props.handleMessageBox(true);
             console.log("Error occurs");
           });
       };
     }
+    this.setState({ isRepeat: false });
   };
 
   render() {
     return (
       <Dropzone
         onDrop={(acceptedFiles) => {
-          acceptedFiles.forEach((item) => {
-            this.doIncrementalTest(item);
-          });
+          if (acceptedFiles.length > 9) {
+            this.props.handleMessage("Please import less than 10 books");
+            this.props.handleMessageBox(true);
+            return;
+          }
+          if (this.props.books && this.props.books.length > 50) {
+            this.props.handleMessage("Please delete some books before import");
+            this.props.handleMessageBox(true);
+            return;
+          }
+          for (let i = 0; i < acceptedFiles.length; i++) {
+            this.doIncrementalTest(acceptedFiles[i]);
+          }
         }}
+        accept={[".epub"]}
+        multiple={true}
       >
         {({ getRootProps, getInputProps }) => (
           <div className="import-from-local" {...getRootProps()}>
@@ -131,10 +158,8 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
             <input
               type="file"
               id="import-book-box"
-              accept="application/epub+zip"
               className="import-book-box"
               name="file"
-              multiple={true}
               {...getInputProps()}
             />
           </div>

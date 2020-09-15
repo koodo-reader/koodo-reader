@@ -1,49 +1,74 @@
 import localforage from "localforage";
 import NoteModel from "../../model/Note";
-import DigestModel from "../../model/Digest";
-import HighligherModel from "../../model/Highlighter";
 import BookmarkModel from "../../model/Bookmark";
 export function handleNotes(notes: NoteModel[]) {
   return { type: "HANDLE_NOTES", payload: notes };
 }
+export function handleOriginalText(originalText: string) {
+  return { type: "HANDLE_ORIGINAL_TEXT", payload: originalText };
+}
+export function handleColor(color: number) {
+  return { type: "HANDLE_COLOR", payload: color };
+}
 export function handleBookmarks(bookmarks: BookmarkModel[]) {
   return { type: "HANDLE_BOOKMARKS", payload: bookmarks };
 }
-export function handleDigests(digests: DigestModel[]) {
+export function handleDigests(digests: NoteModel[]) {
   return { type: "HANDLE_DIGESTS", payload: digests };
 }
 export function handleLocations(locations: any) {
   return { type: "HANDLE_LOCATIONS", payload: locations };
 }
-export function handleSingle(mode: string) {
-  return { type: "HANDLE_SINGLE", payload: mode };
+export function handleCurrentChapter(currentChapter: string) {
+  return { type: "HANDLE_CURRENT_CHAPTER", payload: currentChapter };
 }
 export function handleChapters(chapters: any) {
   return { type: "HANDLE_CHAPTERS", payload: chapters };
 }
-export function handleHighlighters(highlighters: HighligherModel[]) {
-  return { type: "HANDLE_HIGHLIGHTERS", payload: highlighters };
+export function handleFlattenChapters(flattenChapters: any) {
+  return { type: "HANDLE_FLATTEN_CHAPTERS", payload: flattenChapters };
+}
+export function handleNoteKey(key: string) {
+  return { type: "HANDLE_NOTE_KEY", payload: key };
 }
 export function handleFetchNotes() {
   return (dispatch: (arg0: { type: string; payload: NoteModel[] }) => void) => {
     localforage.getItem("notes", (err, value) => {
       let noteArr: any;
       if (value === null || value === []) {
-        noteArr = null;
+        noteArr = [];
       } else {
         noteArr = value;
       }
       dispatch(handleNotes(noteArr));
+      dispatch(
+        handleDigests(
+          noteArr.filter((item: NoteModel) => {
+            return item.notes === "";
+          })
+        )
+      );
     });
   };
 }
-
+export function flatChapter(chapters: any) {
+  let newChapter: any = [];
+  for (let i = 0; i < chapters.length; i++) {
+    if (chapters[i].subitems[0]) {
+      newChapter.push(chapters[i]);
+      newChapter = newChapter.concat(flatChapter(chapters[i].subitems));
+    } else {
+      newChapter.push(chapters[i]);
+    }
+  }
+  return newChapter;
+}
 export function handleFetchChapters(epub: any) {
   return (dispatch: (arg0: { type: string; payload: any }) => void) => {
-    epub
-      .getToc()
+    epub.loaded.navigation
       .then((chapters: any) => {
-        dispatch(handleChapters(chapters));
+        dispatch(handleChapters(chapters.toc));
+        dispatch(handleFlattenChapters(flatChapter(chapters.toc)));
       })
       .catch(() => {
         console.log("Error occurs");
@@ -62,36 +87,6 @@ export function handleFetchBookmarks() {
         bookmarkArr = value;
       }
       dispatch(handleBookmarks(bookmarkArr));
-    });
-  };
-}
-export function handleFetchDigests() {
-  return (
-    dispatch: (arg0: { type: string; payload: DigestModel[] }) => void
-  ) => {
-    localforage.getItem("digests", (err, value) => {
-      let digestArr: any;
-      if (value === null || value === []) {
-        digestArr = null;
-      } else {
-        digestArr = value;
-      }
-      dispatch(handleDigests(digestArr));
-    });
-  };
-}
-export function handleFetchHighlighters() {
-  return (
-    dispatch: (arg0: { type: string; payload: HighligherModel[] }) => void
-  ) => {
-    localforage.getItem("highlighters", (err, value) => {
-      let highlighterArr: any;
-      if (value === null || value === []) {
-        highlighterArr = null;
-      } else {
-        highlighterArr = value;
-      }
-      dispatch(handleHighlighters(highlighterArr));
     });
   };
 }

@@ -64,7 +64,7 @@
   }
 }
 .left-panel {
-  width: 50px;
+  width: 60px;
   height: calc(100% - 100px);
   position: absolute;
   left: 0px;
@@ -74,7 +74,7 @@
   opacity: 0;
 }
 .right-panel {
-  width: 50px;
+  width: 60px;
   height: calc(100% - 100px);
   position: absolute;
   right: 0px;
@@ -116,4 +116,29 @@
   position: absolute;
   bottom: 0px;
   left: calc(50% - 206px);
+}
+.setting-panel-container {
+  width: 299px;
+  height: 100vh;
+  position: absolute;
+  bottom: 0px;
+  right: 0px;
+}
+.navigation-panel-container {
+  width: 299px;
+  height: 100vh;
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+}
+.view-area-page {
+  position: absolute;
+  left: 30px;
+  right: 30px;
+  top: 30px;
+  bottom: 30px;
+  /* width: calc(100% - 100px);
+  height: calc(100% - 100px); */
+  z-index: 0;
+  user-select: text;
 }

@@ -2,84 +2,169 @@ import React from "react";
 import "./popupNote.css";
 import Note from "../../model/Note";
 import localforage from "localforage";
-import { PopupNoteProps } from "./interface";
+import { PopupNoteProps, PopupNoteState } from "./interface";
+import RecordLocation from "../../utils/recordLocation";
+import NoteTag from "../noteTag";
+import NoteModel from "../../model/Note";
 import { Trans } from "react-i18next";
 
 declare var window: any;
 
-class PopupNote extends React.Component<PopupNoteProps> {
+class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
+  constructor(props: PopupNoteProps) {
+    super(props);
+    this.state = { tag: [] };
+  }
   componentDidMount() {
     let textArea: any = document.querySelector(".editor-box");
     textArea && textArea.focus();
-    console.log(textArea);
   }
+  handleTag = (tag: string[]) => {
+    console.log(tag, "tag pop");
+    this.setState({ tag });
+  };
   createNote() {
-    if (
-      !document.getElementsByTagName("iframe")[0] ||
-      !document.getElementsByTagName("iframe")[0].contentDocument
-    ) {
-      return;
-    }
-    let book = this.props.currentBook;
-    let epub = this.props.currentEpub;
-    let iframe = document.getElementsByTagName("iframe")[0];
-    let iDoc = iframe.contentDocument;
-    let sel = iDoc!.getSelection();
-    let range = sel!.getRangeAt(0);
     let notes = (document.querySelector(".editor-box") as HTMLInputElement)
       .value;
-    (document.querySelector(".editor-box") as HTMLInputElement).value = "";
-    let text = sel!.toString();
-    text = text && text.trim();
-    let cfiBase = epub.renderer.currentChapter.cfiBase;
-    let cfi = new window.EPUBJS.EpubCFI().generateCfiFromRange(range, cfiBase);
-    let bookKey = book.key;
-    let charRange = window.rangy
-      .getSelection(iframe)
-      .saveCharacterRanges(iDoc!.body)[0];
-    let serial = JSON.stringify(charRange);
-    //获取章节名
-    let index = this.props.chapters.findIndex((item: any) => {
-      return item.spinePos > epub.renderer.currentChapter.spinePos;
-    });
-    let chapter =
-      this.props.chapters[index] !== undefined
-        ? this.props.chapters[index].label.trim(" ")
-        : "Unknown";
-    let note = new Note(bookKey, chapter, text, cfi, serial, notes);
-    let noteArr = this.props.notes ? this.props.notes : [];
-    noteArr.push(note);
-    localforage.setItem("notes", noteArr);
-    this.props.handleOpenMenu(false);
-    iDoc!.getSelection()!.empty();
-    this.props.handleMessage("Add Successfully");
-    this.props.handleMessageBox(true);
-    this.props.handleMenuMode("menu");
-    // return note;
+
+    if (this.props.noteKey) {
+      //编辑笔记
+      this.props.notes.forEach((item) => {
+        if (item.key === this.props.noteKey) {
+          item.notes = notes;
+          item.tag = this.state.tag;
+        }
+      });
+      localforage.setItem("notes", this.props.notes).then(() => {
+        this.props.handleOpenMenu(false);
+        this.props.handleMessage("Add Successfully");
+        this.props.handleMessageBox(true);
+        this.props.handleFetchNotes();
+        this.props.handleMenuMode("highlight");
+        this.props.handleNoteKey("");
+        console.log("edit");
+      });
+    } else {
+      //创建笔记
+      let bookKey = this.props.currentBook.key;
+      const currentLocation = this.props.currentEpub.rendition.currentLocation();
+      let chapterHref = currentLocation.start.href;
+      let chapterIndex = currentLocation.start.index;
+      let chapter = "Unknown Chapter";
+      let currentChapter = this.props.flattenChapters.filter(
+        (item: any) => item.href.split("#")[0] === chapterHref
+      )[0];
+      if (currentChapter) {
+        chapter = currentChapter.label.trim(" ");
+      }
+
+      const cfi = RecordLocation.getCfi(this.props.currentBook.key).cfi;
+
+      let iframe = document.getElementsByTagName("iframe")[0];
+      if (!iframe) return;
+      let doc = iframe.contentDocument;
+      if (!doc) {
+        return;
+      }
+      let charRange = window.rangy
+        .getSelection(iframe)
+        .saveCharacterRanges(doc.body)[0];
+      let range = JSON.stringify(charRange);
+      let text = doc.getSelection()?.toString();
+      if (!text) {
+        return;
+      }
+      text = text.replace(/\s\s/g, "");
+      text = text.replace(/\r/g, "");
+      text = text.replace(/\n/g, "");
+      text = text.replace(/\t/g, "");
+      text = text.replace(/\f/g, "");
+      let percentage =
+        RecordLocation.getCfi(this.props.currentBook.key) === null
+          ? 0
+          : RecordLocation.getCfi(this.props.currentBook.key).percentage;
+
+      let color = this.props.color || 0;
+      let tag = this.state.tag;
+      let note = new Note(
+        bookKey,
+        chapter,
+        chapterIndex,
+        text,
+        cfi,
+        range,
+        notes,
+        percentage,
+        color,
+        tag
+      );
+      let noteArr = this.props.notes;
+      noteArr.push(note);
+      localforage.setItem("notes", noteArr).then(() => {
+        this.props.handleOpenMenu(false);
+        this.props.handleMessage("Add Successfully");
+        this.props.handleMessageBox(true);
+        this.props.handleFetchNotes();
+        this.props.handleMenuMode("highlight");
+        console.log("new");
+      });
+    }
   }
-  handleReturn = () => {
-    this.props.handleMenuMode("menu");
-  };
   handleClose = () => {
-    this.props.handleOpenMenu(false);
-    this.props.handleMenuMode("menu");
+    let noteIndex;
+    if (this.props.noteKey) {
+      this.props.notes.forEach((item, index) => {
+        if (item.key === this.props.noteKey) {
+          noteIndex = index;
+        }
+      });
+      if (noteIndex) {
+        this.props.notes.splice(noteIndex, 1);
+        localforage.setItem("notes", this.props.notes).then(() => {
+          this.props.handleOpenMenu(false);
+          this.props.handleMenuMode("menu");
+          this.props.handleMessage("Delete Successfully");
+          this.props.handleMessageBox(true);
+          this.props.handleMenuMode("highlight");
+
+          this.props.handleNoteKey("");
+        });
+      }
+    } else {
+      this.props.handleOpenMenu(false);
+      this.props.handleMenuMode("menu");
+      this.props.handleNoteKey("");
+    }
   };
 
   render() {
+    let note: NoteModel;
+    if (this.props.noteKey) {
+      this.props.notes.forEach((item) => {
+        if (item.key === this.props.noteKey) {
+          note = item;
+        }
+      });
+    }
+
     const renderNoteEditor = () => {
       return (
         <div className="note-editor">
-          <div
-            className="note-return-button"
-            onClick={() => {
-              this.handleReturn();
-            }}
-          >
-            <span className="icon-return"></span>
-          </div>
           <div className="editor-box-parent">
             <textarea className="editor-box" />
           </div>
+          <div
+            className="note-tags"
+            style={{ position: "absolute", bottom: "0px", height: "70px" }}
+          >
+            <NoteTag
+              {...{
+                handleTag: this.handleTag,
+                tag: this.props.noteKey ? note.tag : [],
+              }}
+            />
+          </div>
+
           <div className="note-button-container">
             <span
               className="cancel-button"
@@ -87,7 +172,11 @@ class PopupNote extends React.Component<PopupNoteProps> {
                 this.handleClose();
               }}
             >
-              <Trans>Cancel</Trans>
+              {this.props.noteKey ? (
+                <Trans>Delete</Trans>
+              ) : (
+                <Trans>Cancel</Trans>
+              )}
             </span>
             <span
               className="confirm-button"

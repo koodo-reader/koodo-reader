@@ -5,14 +5,14 @@ import { ContentListProps, ContentListState } from "./interface";
 class ContentList extends React.Component<ContentListProps, ContentListState> {
   constructor(props: ContentListProps) {
     super(props);
-    this.state = { chapters: [] };
+    this.state = { chapters: [], isCollapsed: true, currentIndex: -1 };
     this.handleJump = this.handleJump.bind(this);
   }
+
   componentWillMount() {
-    this.props.currentEpub
-      .getToc()
+    this.props.currentEpub.loaded.navigation
       .then((chapters: any) => {
-        this.setState({ chapters });
+        this.setState({ chapters: chapters.toc });
       })
       .catch(() => {
         console.log("Error occurs");
@@ -21,29 +21,30 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
   handleJump(event: any) {
     event.preventDefault();
     let href = event.target.getAttribute("href");
-    this.props.currentEpub.goto(href);
+    this.props.currentEpub.rendition.display(href);
   }
   render() {
-    const renderContentList = () => {
-      return this.state.chapters.map((item: any, index: number) => {
-        let isSubContentList = item.subitems && item.subitems.length;
-        const renderSubContentList = () => {
-          return item.subitems.map((item: any, index: number) => {
-            return (
-              <li key={index} className="book-subcontent-list">
-                <a
-                  href={item.href}
-                  onClick={this.handleJump}
-                  className="book-subcontent-name"
-                >
-                  {item.label}
-                </a>
-              </li>
-            );
-          });
-        };
+    const renderContentList = (items: any) => {
+      return items.map((item: any, index: number) => {
         return (
-          <li className="book-content-list" key={index}>
+          <li key={index} className="book-content-list">
+            {item.subitems.length > 0 && (
+              <span
+                className="icon-dropdown content-dropdown"
+                onClick={() => {
+                  this.setState({
+                    currentIndex:
+                      this.state.currentIndex === index ? -1 : index,
+                  });
+                }}
+                style={
+                  this.state.currentIndex === index
+                    ? {}
+                    : { transform: "rotate(-90deg)" }
+                }
+              ></span>
+            )}
+
             <a
               href={item.href}
               onClick={this.handleJump}
@@ -51,7 +52,9 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
             >
               {item.label}
             </a>
-            {isSubContentList ? <ul>{renderSubContentList()}</ul> : null}
+            {item.subitems.length > 0 && this.state.currentIndex === index ? (
+              <ul>{renderContentList(item.subitems)}</ul>
+            ) : null}
           </li>
         );
       });
@@ -59,7 +62,9 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
 
     return (
       <div className="book-content-container">
-        <ul className="book-content">{renderContentList()}</ul>
+        <ul className="book-content">
+          {this.state.chapters && renderContentList(this.state.chapters)}
+        </ul>
       </div>
     );
   }

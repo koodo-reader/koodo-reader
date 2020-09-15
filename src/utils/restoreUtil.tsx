@@ -1,6 +1,7 @@
-import JSZip from "jszip";
 import localforage from "localforage";
 import BookModel from "../model/Book";
+
+let JSZip = (window as any).JSZip;
 
 class RestoreUtil {
   importBooks = (books: BookModel[], file: any, handleFinish: () => void) => {
@@ -8,11 +9,11 @@ class RestoreUtil {
     books.forEach((item, index) => {
       zip
         .loadAsync(file)
-        .then((content) => {
+        .then((content: any) => {
           // you now have every files contained in the loaded zip
           return content.files[`epub/${item.name}.epub`].async("arraybuffer"); // a promise of "Hello World\n"
         })
-        .then((book) => {
+        .then((book: any) => {
           item.content = book;
         })
         .then(() => {
@@ -30,14 +31,14 @@ class RestoreUtil {
   static restore = (file: any, handleFinish: () => void) => {
     let dataArr = [
       "notes",
-      "digests",
       "books",
-      "highlighters",
       "bookmarks",
       "readerConfig",
+      "noteTags",
       "sortCode",
       "readingTime",
       "recentBooks",
+      "favoriteBooks",
       "shelfList",
       "recordLocation",
     ];
@@ -46,19 +47,13 @@ class RestoreUtil {
     dataArr.forEach((item) => {
       zip
         .loadAsync(file)
-        .then((content) => {
+        .then((content: any) => {
           // you now have every files contained in the loaded zip
           return content.files[`data/${item}.json`].async("text"); // a promise of "Hello World\n"
         })
-        .then((text) => {
+        .then((text: any) => {
           if (text) {
-            if (
-              item === "notes" ||
-              item === "books" ||
-              item === "digests" ||
-              item === "bookmarks" ||
-              item === "highlighters"
-            ) {
+            if (item === "notes" || item === "books" || item === "bookmarks") {
               localforage.setItem(item, JSON.parse(text));
             } else {
               localStorage.setItem(item, text);
@@ -73,13 +68,13 @@ class RestoreUtil {
                 value.forEach((item: any) => {
                   zip
                     .loadAsync(file)
-                    .then((content) => {
+                    .then((content: any) => {
                       // you now have every files contained in the loaded zip
                       return content.files[`epub/${item.name}.epub`].async(
                         "arraybuffer"
                       ); // a promise of "Hello World\n"
                     })
-                    .then((book) => {
+                    .then((book: any) => {
                       item.content = book;
                     })
                     .then(() => {

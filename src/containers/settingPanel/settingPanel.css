@@ -12,7 +12,7 @@
   position: absolute;
   right: 0px;
   top: 0px;
-  width: 282px;
+  width: 299px;
   height: 100%;
   overflow: hidden;
   box-shadow: 0px 0px 16px rgba(0, 0, 0, 0.38);
@@ -29,4 +29,37 @@
   padding-right: 17px; /* Increase/decrease this value for cross-browser compatibility */
   box-sizing: content-box;
   /* display: none; */
+}
+.single-control-switch-container {
+  margin: 15px 0px 20px;
+  margin-left: 50px;
+  height: 20px;
+}
+.single-control-switch-title {
+  font-size: 16px;
+  line-height: 16px;
+  color: #4b4b4b;
+  opacity: 1;
+  margin: 0px 10px 0px 30px;
+  position: relative;
+  bottom: 2px;
+}
+.single-control-switch {
+  display: inline-block;
+  width: 40px;
+  height: 20px;
+  background: #000000;
+  opacity: 1;
+  border-radius: 10px;
+  position: relative;
+  top: 3px;
+  left: 2px;
+}
+.single-control-button {
+  display: inline-block;
+  height: 18px;
+  width: 18px;
+  border-radius: 50%;
+  border: 1px solid black;
+  background-color: white;
 }

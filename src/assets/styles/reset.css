@@ -152,11 +152,12 @@ body {
 
 body {
   -webkit-tap-highlight-color: transparent;
+  background-color: white;
 }
 
 html,
 body {
-  font-family: "Source Sans Pro", -apple-system, BlinkMacSystemFont, Segoe UI,
+  font-family: "Noto Sans TC", -apple-system, BlinkMacSystemFont, Segoe UI,
     Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans",
     "Helvetica Neue", sans-serif !important;
   /* font-weight: 500; */
@@ -173,4 +174,7 @@ option {
 option:hover {
   color: #fff;
   background-color: #1e90ff;
+}
+.epub-container {
+  overflow-x: hidden !important;
 }

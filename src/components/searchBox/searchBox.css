@@ -1,18 +1,12 @@
-.header-search-container {
-  position: absolute;
-  top: 23px;
-  left: 20px;
-  width: 209px;
-  height: 40px;
-}
 .header-search-box {
-  width: 189px;
+  width: 150px;
   height: 38px;
   background: rgba(191, 191, 191, 0.28);
   border-radius: 19px;
   border-style: none;
   outline: none;
   padding-left: 20px;
+  padding-right: 40px;
   font-size: 16px;
   color: rgba(75, 75, 75, 0.8);
 }
@@ -28,30 +22,23 @@ textarea::-ms-input-placeholder {
   /* opacity: 1; */
 }
 .header-search-icon {
-  float: left;
-  font-size: 23px;
+  position: absolute;
+  top: 10px;
+  right: -6px;
+  font-size: 22px;
+  display: inline-block;
   color: rgba(75, 75, 75, 0.6);
-  position: relative;
-
-  left: 170px;
-  bottom: 30px;
   cursor: pointer;
+  margin-right: 10px;
 }
 .header-search-text {
   position: absolute;
-  top: 12px;
-  right: 5px;
+  top: 11px;
+  right: -16px;
   font-size: 16px;
   display: inline-block;
   width: 50px;
   color: rgba(75, 75, 75, 1);
-  /* position: absolute;
-  margin-top: 32px;
-  margin-left: 20px; */
-  /* left: 165px; */
-  /* position: relative;
-  right: 50px;
-  ; */
   cursor: pointer;
 }
 .search-text {

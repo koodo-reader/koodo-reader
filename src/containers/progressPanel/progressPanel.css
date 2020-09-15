@@ -5,6 +5,8 @@
   width: 100%;
   margin-top: 9px;
   text-align: center;
+  height: 15px;
+  overflow: hidden;
 }
 .progress-slide-container {
   width: 309px;
@@ -39,6 +41,8 @@
   bottom: 10px;
   left: 10px;
   font-size: 14px;
+  transform: rotate(90deg);
+  cursor: pointer;
 }
 .next-chapter {
   width: 25px;
@@ -51,15 +55,10 @@
   bottom: 10px;
   left: 370px;
   font-size: 14px;
-}
-.previous-chapter {
-  transform: rotate(90deg);
-  cursor: pointer;
-}
-.next-chapter {
   transform: rotate(-90deg);
   cursor: pointer;
 }
+
 .previous-chapter-icon {
   line-height: 25px !important;
   margin-left: 6px !important;
@@ -150,4 +149,15 @@ input[type="range"]::-ms-thumb {
   left: calc(50% - 206px);
   z-index: 10;
   animation: fade-up 0.1s ease-in-out 0s 1;
+}
+.input-progress {
+  position: absolute;
+  bottom: 3px;
+}
+.progress-chapter-name {
+  display: inline-block;
+  width: 150px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }

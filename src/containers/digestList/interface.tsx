@@ -1,15 +1,10 @@
-import BookModel from "../../model/Book";
-import BookmarkModel from "../../model/Bookmark";
-import DigestModel from "../../model/Digest";
+import NoteModel from "../../model/Note";
 
 export interface DigestListProps {
-  currentEpub: any;
-  currentBook: BookModel;
-  bookmarks: BookmarkModel[];
-  chapters: any;
-  books: BookModel[];
-  digests: DigestModel[];
+  digests: NoteModel[];
+  isSearch: boolean;
+  searchResults: number[];
 }
 export interface DigestListStates {
-  deleteKey: string;
+  tag: string[];
 }

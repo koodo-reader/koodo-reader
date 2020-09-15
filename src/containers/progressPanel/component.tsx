@@ -11,49 +11,96 @@ class ProgressPanel extends React.Component<
   constructor(props: ProgressPanelProps) {
     super(props);
     this.state = {
-      displayPercentage:
-        this.props.percentage !== undefined ? this.props.percentage : 0,
+      displayPercentage: this.props.percentage ? this.props.percentage : 0,
+      currentChapter: "",
     };
   }
-  //WARNING! To be deprecated in React v17. Use componentDidMount instead.
-  UNSAFE_componentWillMount() {
-    this.props.handleFetchLocations(this.props.currentEpub);
+
+  componentWillReceiveProps(nextProps: ProgressPanelProps) {
+    if (nextProps.currentEpub.rendition.location) {
+      const currentLocation = this.props.currentEpub.rendition.currentLocation();
+      if (!currentLocation.start) {
+        return;
+      }
+      let chapterHref = currentLocation.start.href;
+      let chapter = "Unknown Chapter";
+      let currentChapter = this.props.flattenChapters.filter(
+        (item: any) => item.href.split("#")[0] === chapterHref
+      )[0];
+      if (currentChapter) {
+        chapter = currentChapter.label.trim(" ");
+      }
+      this.setState({ currentChapter: chapter });
+    }
   }
+  //WARNING! To be deprecated in React v17. Use componentDidMount instead.
   onProgressChange = (event: any) => {
     const percentage = event.target.value / 100;
-    const location =
-      percentage >= 0 ? this.props.locations.cfiFromPercentage(percentage) : 0;
-    this.props.currentEpub.gotoCfi(location);
+    const location = percentage
+      ? this.props.locations.cfiFromPercentage(percentage)
+      : 0;
+    this.props.currentEpub.rendition.display(location);
   };
   //使进度百分比随拖动实时变化
   onProgressInput = (event: any) => {
     this.setState({ displayPercentage: event.target.value / 100 });
   };
   previourChapter = () => {
-    let currentSection = this.props.currentEpub.spinePos;
-    this.props.currentEpub.displayChapter(currentSection - 1, false);
-    let percentage =
-      RecordLocation.getCfi(this.props.currentBook.key) === null
-        ? 0
-        : RecordLocation.getCfi(this.props.currentBook.key).percentage;
-    this.setState({ displayPercentage: percentage });
+    const currentLocation = this.props.currentEpub.rendition.currentLocation();
+    let chapterIndex = currentLocation.start.index;
+    const section = this.props.currentEpub.section(chapterIndex - 1);
+    if (section && section.href) {
+      this.props.currentEpub.rendition.display(section.href).then(() => {
+        let percentage =
+          RecordLocation.getCfi(this.props.currentBook.key) === null
+            ? 0
+            : RecordLocation.getCfi(this.props.currentBook.key).percentage;
+        this.setState({ displayPercentage: percentage });
+      });
+    }
   };
   nextChapter = () => {
-    let currentSection = this.props.currentEpub.spinePos;
-    this.props.currentEpub.displayChapter(currentSection + 1, false);
-    let percentage =
-      RecordLocation.getCfi(this.props.currentBook.key) === null
-        ? 0
-        : RecordLocation.getCfi(this.props.currentBook.key).percentage;
-    this.setState({ displayPercentage: percentage });
+    const currentLocation = this.props.currentEpub.rendition.currentLocation();
+    let chapterIndex = currentLocation.start.index;
+    const section = this.props.currentEpub.section(chapterIndex + 1);
+    if (section && section.href) {
+      this.props.currentEpub.rendition.display(section.href).then(() => {
+        let percentage =
+          RecordLocation.getCfi(this.props.currentBook.key) === null
+            ? 0
+            : RecordLocation.getCfi(this.props.currentBook.key).percentage;
+        this.setState({ displayPercentage: percentage });
+      });
+    }
   };
 
   render() {
+    if (!this.props.locations) {
+      return (
+        <div className="progress-panel">
+          <p className="progress-text">
+            <Trans>Loading</Trans>
+          </p>
+        </div>
+      );
+    }
     return (
       <div className="progress-panel">
         <p className="progress-text">
-          <Trans>Current Progress</Trans>:{" "}
-          {Math.round(this.state.displayPercentage * 100)}%
+          <span>
+            <Trans>Current Progress</Trans>:{" "}
+            {Math.round(
+              this.state.displayPercentage > 1
+                ? 100
+                : this.state.displayPercentage * 100
+            )}
+            {"%  "}
+          </span>
+          {this.state.currentChapter && (
+            <span className="progress-chapter-name">
+              {this.state.currentChapter}
+            </span>
+          )}
         </p>
 
         <input

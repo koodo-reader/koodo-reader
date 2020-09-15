@@ -14,6 +14,7 @@
 }
 .exit-reading-icon {
   font-size: 21px;
+  color: white;
 }
 .exit-reading-text {
   font-size: 14px;
@@ -63,6 +64,7 @@
 }
 .enter-fullscreen-icon {
   font-size: 19px;
+  color: white;
 }
 .enter-fullscreen-text {
   font-size: 14px;

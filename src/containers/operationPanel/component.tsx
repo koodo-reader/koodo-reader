@@ -22,7 +22,6 @@ class OperationPanel extends React.Component<
       isBookmark: false, // 是否添加书签
     };
   }
-
   // 点击切换全屏按钮触发
   handleScreen() {
     !this.state.isFullScreen
@@ -32,7 +31,6 @@ class OperationPanel extends React.Component<
   //控制进入全屏
   handleFullScreen() {
     let de: any = document.documentElement;
-
     if (de.requestFullscreen) {
       de.requestFullscreen();
     } else if (de.mozRequestFullScreen) {
@@ -50,9 +48,7 @@ class OperationPanel extends React.Component<
   // 退出全屏模式
   handleExitFullScreen() {
     //解决使用esc退出全屏，再退出阅读时发生的bug
-    if (!document.fullscreenElement) {
-      return;
-    }
+    if (!document.fullscreenElement) return;
 
     if (document.exitFullscreen) {
       document.exitFullscreen();
@@ -69,47 +65,58 @@ class OperationPanel extends React.Component<
   }
   handleAddBookmark() {
     let bookKey = this.props.currentBook.key;
-    let epub = this.props.currentEpub;
-    let cfi =
-      RecordLocation.getCfi(this.props.currentBook.key) === null
-        ? 0
-        : RecordLocation.getCfi(this.props.currentBook.key).cfi;
-    let firstVisibleNode = epub.renderer.findFirstVisible();
-    let label = firstVisibleNode ? firstVisibleNode.textContent : "";
-    label = label && label.trim();
-    label = label || cfi;
-    let percentage =
-      RecordLocation.getCfi(this.props.currentBook.key) === null
-        ? 0
-        : RecordLocation.getCfi(this.props.currentBook.key).percentage;
-    let index = this.props.chapters.findIndex((item: any) => {
-      return item.spinePos > this.props.currentEpub.spinePos;
-    });
-    let chapter = "未知章节";
-    if (this.props.chapters[index] !== undefined) {
-      chapter = this.props.chapters[index].label.trim(" ");
+    const currentLocation = this.props.currentEpub.rendition.currentLocation();
+    let chapterHref = currentLocation.start.href;
+    let chapter = "Unknown Chapter";
+    let currentChapter = this.props.flattenChapters.filter(
+      (item: any) => item.href.split("#")[0] === chapterHref
+    )[0];
+    if (currentChapter) {
+      chapter = currentChapter.label.trim(" ");
     }
-    let bookmark = new Bookmark(bookKey, cfi, label, percentage, chapter);
-    let bookmarkArr = this.props.bookmarks ? this.props.bookmarks : [];
-    bookmarkArr.push(bookmark);
-    this.props.handleBookmarks(bookmarkArr);
-    localforage.setItem("bookmarks", bookmarkArr);
-    this.setState({ isBookmark: true });
-    this.props.handleMessage("Add Successfully");
-    this.props.handleMessageBox(true);
+    const cfibase = currentLocation.start.cfi
+      .replace(/!.*/, "")
+      .replace("epubcfi(", "");
+    const cfistart = currentLocation.start.cfi
+      .replace(/.*!/, "")
+      .replace(/\)/, "");
+    const cfiend = currentLocation.end.cfi.replace(/.*!/, "").replace(/\)/, "");
+    const cfiRange = `epubcfi(${cfibase}!,${cfistart},${cfiend})`;
+    const cfi = RecordLocation.getCfi(this.props.currentBook.key).cfi;
+    this.props.currentEpub.getRange(cfiRange).then((range: any) => {
+      let text = range.toString();
+      text = text.replace(/\s\s/g, "");
+      text = text.replace(/\r/g, "");
+      text = text.replace(/\n/g, "");
+      text = text.replace(/\t/g, "");
+      text = text.replace(/\f/g, "");
+      let percentage =
+        RecordLocation.getCfi(this.props.currentBook.key) === null
+          ? 0
+          : RecordLocation.getCfi(this.props.currentBook.key).percentage;
+
+      let bookmark = new Bookmark(bookKey, cfi, text, percentage, chapter);
+      let bookmarkArr = this.props.bookmarks[0] ? this.props.bookmarks : [];
+      bookmarkArr.push(bookmark);
+      this.props.handleBookmarks(bookmarkArr);
+      localforage.setItem("bookmarks", bookmarkArr);
+      this.setState({ isBookmark: true });
+      this.props.handleMessage("Add Successfully");
+      this.props.handleMessageBox(true);
+      this.props.handleShowBookmark(true);
+    });
   }
 
   // 点击退出按钮的处理程序
   handleExit() {
     this.props.handleReadingState(false);
-    let cfi = this.props.currentEpub.getCurrentLocationCfi();
-    let locations = this.props.currentEpub.locations;
-    let percentage = locations.percentageFromCfi(cfi);
-    RecordLocation.recordCfi(this.props.currentBook.key, cfi, percentage);
     OtherUtil.setReaderConfig("isFullScreen", "no");
+    window.speechSynthesis && window.speechSynthesis.cancel();
     if (this.state.isFullScreen) {
       this.handleExitFullScreen();
     }
+    this.props.handleSearch(false);
+    this.props.handleOpenMenu(false);
   }
 
   render() {

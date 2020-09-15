@@ -2,9 +2,11 @@
 import React from "react";
 import RecentBooks from "../../utils/recordRecent";
 import "./bookItem.css";
-import RecordRecent from "../../utils/recordRecent";
 import RecordLocation from "../../utils/recordLocation";
 import { BookItemProps, BookItemState } from "./interface";
+import { Trans } from "react-i18next";
+
+declare var window: any;
 
 class Book extends React.Component<BookItemProps, BookItemState> {
   epub: any;
@@ -15,10 +17,7 @@ class Book extends React.Component<BookItemProps, BookItemState> {
     this.epub = null;
   }
   UNSAFE_componentWillMount() {
-    this.epub = (window as any).ePub({
-      bookPath: this.props.book.content,
-      restore: false,
-    });
+    this.epub = window.ePub(this.props.book.content, {});
   }
   handleOpenBook() {
     this.props.handleReadingBook(this.props.book);
@@ -39,50 +38,54 @@ class Book extends React.Component<BookItemProps, BookItemState> {
     this.props.handleReadingBook(this.props.book);
   };
   render() {
-    let date =
-      RecordRecent.getRecent()[this.props.book.key] !== null &&
-      RecordRecent.getRecent()[this.props.book.key] !== undefined
-        ? RecordRecent.getRecent()[this.props.book.key].date
-        : { year: "0000", month: "00", day: "00" };
-    let percentage =
-      RecordLocation.getCfi(this.props.book.key) !== null &&
-      RecordLocation.getCfi(this.props.book.key) !== undefined
-        ? RecordLocation.getCfi(this.props.book.key).percentage
-        : 0;
+    let percentage = RecordLocation.getCfi(this.props.book.key)
+      ? RecordLocation.getCfi(this.props.book.key).percentage
+      : 0;
     return (
       <div className="book-list-item-container">
-        <img
-          className="book-item-list-cover"
-          src={
-            this.props.bookCover !== null
-              ? this.props.bookCover
-              : process.env.NODE_ENV === "production"
-              ? "assets/cover.svg"
-              : "../../assets/cover.svg"
-          }
-          alt=""
+        {this.props.bookCover ? (
+          <img
+            className="book-item-list-cover"
+            src={this.props.bookCover}
+            alt=""
+            onClick={() => {
+              this.handleOpenBook();
+            }}
+          />
+        ) : (
+          <div className="book-item-list-cover book-item-list-cover-img">
+            <img src="assets/cover.svg" alt="" style={{ width: "80%" }} />
+          </div>
+        )}
+
+        <p
+          className="book-item-list-title"
           onClick={() => {
             this.handleOpenBook();
           }}
-        />
-        <p className="book-item-list-title">{this.props.book.name}</p>
-        <p className="book-item-list-author">{this.props.book.author}</p>
-        <p className="book-item-list-date">
-          {"" + date.year + "-" + date.month + "-" + date.day}
+        >
+          {this.props.book.name}
+        </p>
+        <p className="book-item-list-author">
+          {this.props.book.author ? (
+            this.props.book.author
+          ) : (
+            <Trans>Unknown Authur</Trans>
+          )}
         </p>
         <p className="book-item-list-percentage">
-          {this.props.percentage !== null ? Math.round(percentage * 100) : 0}%
+          {percentage ? Math.round(percentage * 100) : 0}%
         </p>
         <div className="book-item-list-config">
           <span
-            className="icon-add list-icon"
+            className="icon-shelf list-icon"
             onClick={() => {
               this.handleAddShelf();
             }}
             color="rgba(75,75,75,1)"
           ></span>
           <span
-            className="icon-delete list-icon"
+            className="icon-trash list-icon"
             onClick={() => {
               this.handleDeleteBook();
             }}

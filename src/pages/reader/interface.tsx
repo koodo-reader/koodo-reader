@@ -4,9 +4,7 @@ export interface ReaderProps {
   currentBook: BookModel;
   isMessage: boolean;
   handleFetchNotes: () => void;
-  handleFetchDigests: () => void;
   handleFetchBookmarks: () => void;
-  handleFetchHighlighters: () => void;
   handleMessageBox: (isShow: boolean) => void;
   handleFetchPercentage: (currentBook: BookModel) => void;
   handleFetchChapters: (currentEpub: any) => void;
@@ -16,6 +14,8 @@ export interface ReaderState {
   isOpenSettingPanel: boolean;
   isOpenOperationPanel: boolean;
   isOpenProgressPanel: boolean;
-  isOpenInfoPanel: boolean;
+  isOpenNavPanel: boolean;
   isMessage: boolean;
+  readerMode: string;
+  rendition: any;
 }

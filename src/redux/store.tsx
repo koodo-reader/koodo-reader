@@ -9,8 +9,6 @@ import { sidebar } from "./reducers/sidebar";
 import { backupPage } from "./reducers/backupPage";
 import BookModel from "../model/Book";
 import NoteModel from "../model/Note";
-import DigestModel from "../model/Digest";
-import HighligherModel from "../model/Highlighter";
 import BookmarkModel from "../model/Bookmark";
 const rootReducer = combineReducers({
   book,
@@ -36,9 +34,10 @@ export type stateType = {
     books: BookModel[];
     epubs: any[];
     covers: { key: string; url: string }[];
-    searchBooks: number[];
+    searchResults: number[];
     isSearch: boolean;
     isSort: boolean;
+    isSettingOpen: boolean;
     isFirst: string;
     isList: string;
     isSortDisplay: boolean;
@@ -50,6 +49,7 @@ export type stateType = {
     isOpenEditDialog: boolean;
     isOpenDeleteDialog: boolean;
     isOpenAddDialog: boolean;
+    isOpenActionDialog: boolean;
     isReading: boolean;
     currentBook: BookModel;
     currentEpub: any;
@@ -65,11 +65,13 @@ export type stateType = {
   reader: {
     bookmarks: BookmarkModel[];
     notes: NoteModel[];
-    digests: DigestModel[];
+    digests: NoteModel[];
     locations: any[];
+    color: number;
     chapters: any[];
-    highlighters: HighligherModel[];
-    isSingle: string;
+    flattenChapters: any;
+    noteKey: string;
+    originalText: string;
   };
   sidebar: {
     mode: string;
@@ -77,9 +79,9 @@ export type stateType = {
   };
   viewArea: {
     selection: string;
-    highlighters: HighligherModel[];
     menuMode: string;
     isOpenMenu: boolean;
     isChangeDirection: boolean;
+    isShowBookmark: boolean;
   };
 };

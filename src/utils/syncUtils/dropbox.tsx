@@ -1,6 +1,7 @@
-import Dropbox from "dropbox";
 import RestoreUtil from "../restoreUtil";
 import OtherUtil from "../otherUtil";
+
+var Dropbox = (window as any).Dropbox;
 
 class DropboxUitl {
   static UploadFile(
@@ -8,7 +9,7 @@ class DropboxUitl {
     handleFinish: () => void,
     showMessage: (message: string) => void
   ) {
-    var ACCESS_TOKEN = OtherUtil.getReaderConfig("dropbox_access_token") || "";
+    var ACCESS_TOKEN = OtherUtil.getReaderConfig("dropbox_token") || "";
     var dbx = new Dropbox.Dropbox({ accessToken: ACCESS_TOKEN });
     dbx
       .filesUpload({
@@ -30,7 +31,7 @@ class DropboxUitl {
     handleFinish: () => void,
     showMessage: (message: string) => void
   ) {
-    var ACCESS_TOKEN = OtherUtil.getReaderConfig("dropbox_access_token") || "";
+    var ACCESS_TOKEN = OtherUtil.getReaderConfig("dropbox_token") || "";
     var dbx = new Dropbox.Dropbox({ accessToken: ACCESS_TOKEN });
     dbx
       .filesDownload({
@@ -42,7 +43,7 @@ class DropboxUitl {
         file.name = "data.zip";
         RestoreUtil.restore(file, handleFinish);
       })
-      .catch(function (error) {
+      .catch(function (error: any) {
         showMessage("Download failed,network problem or no backup");
 
         console.error(error);

@@ -6,6 +6,7 @@ import BackupUtil from "../../utils/backupUtil";
 import RestoreUtil from "../../utils/restoreUtil";
 import { Trans } from "react-i18next";
 import DropboxUtil from "../../utils/syncUtils/dropbox";
+import OnedriveUtil from "../../utils/syncUtils/onedrive";
 import { BackupPageProps, BackupPageState } from "./interface";
 import TokenDialog from "../../components/tokenDialog";
 import OtherUtil from "../../utils/otherUtil";
@@ -15,7 +16,7 @@ class BackupPage extends React.Component<BackupPageProps, BackupPageState> {
     super(props);
     this.state = {
       currentStep: 0,
-      isBackup: null,
+      isBackup: "",
       currentDrive: 0,
     };
   }
@@ -41,8 +42,6 @@ class BackupPage extends React.Component<BackupPageProps, BackupPageState> {
           BackupUtil.backup(
             this.props.books,
             this.props.notes,
-            this.props.digests,
-            this.props.highlighters,
             this.props.bookmarks,
             this.handleFinish,
             0,
@@ -50,17 +49,15 @@ class BackupPage extends React.Component<BackupPageProps, BackupPageState> {
           );
           break;
         case 1:
-          if (!OtherUtil.getReaderConfig("dropbox_access_token")) {
+          if (!OtherUtil.getReaderConfig("dropbox_token")) {
             this.props.handleTokenDialog(true);
             break;
           }
-          if (this.state.isBackup) {
+          if (this.state.isBackup === "yes") {
             this.showMessage("Uploading");
             BackupUtil.backup(
               this.props.books,
               this.props.notes,
-              this.props.digests,
-              this.props.highlighters,
               this.props.bookmarks,
               this.handleFinish,
               1,
@@ -76,7 +73,24 @@ class BackupPage extends React.Component<BackupPageProps, BackupPageState> {
           this.showMessage("Coming Soon");
           break;
         case 3:
-          this.showMessage("Coming Soon");
+          if (!OtherUtil.getReaderConfig("onedrive_access_token")) {
+            this.props.handleTokenDialog(true);
+            break;
+          }
+          if (this.state.isBackup === "yes") {
+            this.showMessage("Uploading");
+            BackupUtil.backup(
+              this.props.books,
+              this.props.notes,
+              this.props.bookmarks,
+              this.handleFinish,
+              3,
+              this.showMessage
+            );
+          } else {
+            this.showMessage("Downloading");
+            OnedriveUtil.DownloadFile(this.handleFinish, this.showMessage);
+          }
           break;
         case 4:
           this.showMessage("Coming Soon");
@@ -96,7 +110,9 @@ class BackupPage extends React.Component<BackupPageProps, BackupPageState> {
             onClick={() => {
               this.handleDrive(index);
             }}
-            style={index === 0 || index === 1 ? { opacity: 1 } : {}}
+            style={
+              index === 0 || index === 1 || index === 3 ? { opacity: 1 } : {}
+            }
           >
             <div className="backup-page-list-item-container">
               <span
@@ -121,11 +137,11 @@ class BackupPage extends React.Component<BackupPageProps, BackupPageState> {
           <div className="backup-page-title">
             <Trans>Do you want to backup or restore?</Trans>
           </div>
-        ) : this.state.currentStep === 1 && this.state.isBackup ? (
+        ) : this.state.currentStep === 1 && this.state.isBackup === "yes" ? (
           <div className="backup-page-title">
             <Trans>Where to keep your data?</Trans>
           </div>
-        ) : this.state.currentStep === 1 && !this.state.isBackup ? (
+        ) : this.state.currentStep === 1 && this.state.isBackup === "no" ? (
           <div className="backup-page-title">
             <Trans>Where is your data?</Trans>
           </div>
@@ -134,12 +150,12 @@ class BackupPage extends React.Component<BackupPageProps, BackupPageState> {
           <div className="backup-page-option">
             <div
               className={
-                this.state.isBackup === true
+                this.state.isBackup === "yes"
                   ? "backup-page-backup active"
                   : "backup-page-backup"
               }
               onClick={() => {
-                this.setState({ isBackup: true });
+                this.setState({ isBackup: "yes" });
               }}
             >
               <span className="icon-backup"></span>
@@ -150,12 +166,12 @@ class BackupPage extends React.Component<BackupPageProps, BackupPageState> {
 
             <div
               className={
-                this.state.isBackup === false
+                this.state.isBackup === "no"
                   ? "backup-page-backup active"
                   : "backup-page-backup"
               }
               onClick={() => {
-                this.setState({ isBackup: false });
+                this.setState({ isBackup: "no" });
               }}
             >
               <span className="icon-restore"></span>
@@ -167,7 +183,7 @@ class BackupPage extends React.Component<BackupPageProps, BackupPageState> {
         ) : this.state.currentStep === 1 ? (
           <div className="backup-page-drive-container">
             <div>{renderDrivePage()}</div>
-            {!this.state.isBackup ? (
+            {this.state.isBackup === "no" ? (
               <input
                 type="file"
                 id="restore-file"
@@ -187,7 +203,7 @@ class BackupPage extends React.Component<BackupPageProps, BackupPageState> {
               <span className="icon-message backup-page-finish-icon"></span>
               <div className="backup-page-finish-text">
                 <Trans>
-                  {this.state.isBackup
+                  {this.state.isBackup === "yes"
                     ? "Backup Successfully"
                     : "Restore Successfully"}
                 </Trans>
@@ -200,10 +216,10 @@ class BackupPage extends React.Component<BackupPageProps, BackupPageState> {
             </div>
           </div>
         )}
-        {this.state.isBackup && this.state.currentStep === 0 ? (
+        {this.state.isBackup === "yes" && this.state.currentStep === 0 ? (
           <div className="backup-page-backup-selector"></div>
         ) : null}
-        {this.state.isBackup === false && this.state.currentStep === 0 ? (
+        {this.state.isBackup === "no" && this.state.currentStep === 0 ? (
           <div
             className="backup-page-backup-selector"
             style={{ marginLeft: "252px" }}
@@ -230,7 +246,7 @@ class BackupPage extends React.Component<BackupPageProps, BackupPageState> {
             onClick={() => {
               this.setState({ currentStep: 1 });
             }}
-            style={this.state.isBackup !== null ? {} : { display: "none" }}
+            style={this.state.isBackup ? {} : { display: "none" }}
           >
             <Trans>Next Step</Trans>
           </div>

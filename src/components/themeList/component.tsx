@@ -23,6 +23,19 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
     this.setState({
       currentBackgroundIndex: index,
     });
+    if (index === 4) {
+      this.props.currentEpub.rendition.themes.default({
+        "a, article, cite, code, div, li, p, pre, span, table": {
+          color: `white !important`,
+        },
+      });
+    } else {
+      this.props.currentEpub.rendition.themes.default({
+        "a, article, cite, code, div, li, p, pre, span, table": {
+          color: `inherit !important`,
+        },
+      });
+    }
     ReaderConfig.addDefaultCss();
   }
   render() {

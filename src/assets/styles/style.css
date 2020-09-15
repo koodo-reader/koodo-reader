@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'icomoon';
-  src:  url('fonts/icomoon.eot?bat9kn');
-  src:  url('fonts/icomoon.eot?bat9kn#iefix') format('embedded-opentype'),
-    url('fonts/icomoon.ttf?bat9kn') format('truetype'),
-    url('fonts/icomoon.woff?bat9kn') format('woff'),
-    url('fonts/icomoon.svg?bat9kn#icomoon') format('svg');
+  src:  url('fonts/icomoon.eot?owg6ai');
+  src:  url('fonts/icomoon.eot?owg6ai#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.ttf?owg6ai') format('truetype'),
+    url('fonts/icomoon.woff?owg6ai') format('woff'),
+    url('fonts/icomoon.svg?owg6ai#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -13,7 +13,7 @@
 [class^="icon-"], [class*=" icon-"] {
   /* use !important to prevent issues with browser extensions that change fonts */
   font-family: 'icomoon' !important;
-  speak: none;
+  speak: never;
   font-style: normal;
   font-weight: normal;
   font-variant: normal;
@@ -25,11 +25,38 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-setting:before {
+  content: "\e904";
+}
+.icon-audio:before {
+  content: "\e903";
+}
+.icon-scroll:before {
+  content: "\e902";
+}
+.icon-love:before {
+  content: "\e901";
+}
+.icon-trash:before {
+  content: "\e906";
+}
+.icon-edit:before {
+  content: "\e907";
+}
+.icon-translation:before {
+  content: "\e900";
+  color: #f16464;
+}
 .icon-english:before {
   content: "\e92d";
 }
-.icon-chinese:before {
+.icon-simplified:before {
   content: "\e92e";
+  color: #565656;
+}
+.icon-traditional:before {
+  content: "\e932";
+  color: #565656;
 }
 .icon-local:before {
   content: "\e92a";
@@ -40,34 +67,11 @@
 .icon-restore:before {
   content: "\e92c";
 }
-.icon-contact:before {
-  content: "\e912";
-  color: #4b4b4b;
-}
-.icon-github:before {
-  content: "\e913";
-  color: #4b4b4b;
-}
-.icon-donate:before {
-  content: "\e929";
-  color: #4b4b4b;
-}
-.icon-yandex2:before {
-  content: "\e927";
-  color: #4b4b4b;
-}
-.icon-yandex1:before {
-  content: "\e928";
-  color: #4b4b4b;
-}
 .icon-two-page:before {
   content: "\e925";
 }
 .icon-single-page:before {
   content: "\e926";
-}
-.icon-logo:before {
-  content: "\e924";
 }
 .icon-message:before {
   content: "\e923";
@@ -78,41 +82,26 @@
 .icon-close:before {
   content: "\e921";
 }
-.icon-shangla:before {
-  content: "\e920";
-}
 .icon-home:before {
   content: "\e90b";
 }
 .icon-popup:before {
   content: "\e91f";
-  color: #fff;
 }
 .icon-note:before {
   content: "\e91a";
-  color: #109870;
 }
 .icon-collect:before {
   content: "\e91b";
-  color: #5e7fff;
-}
-.icon-highlight:before {
-  content: "\e91c";
-  color: #f16464;
 }
 .icon-copy:before {
   content: "\e91d";
-  color: #f90;
 }
 .icon-success:before {
   content: "\e91e";
-  color: #fff;
 }
 .icon-add:before {
   content: "\e90d";
-}
-.icon-delete:before {
-  content: "\e90e";
 }
 .icon-onedrive:before {
   content: "\e90f";
@@ -122,69 +111,50 @@
   content: "\e910";
   color: #4b4b4b;
 }
-.icon-mega:before {
-  content: "\e911";
-  color: #4b4b4b;
-}
 .icon-webdav:before {
-  content: "\e914";
-  color: #4b4b4b;
-}
-.icon-noun_books_2156102:before {
-  content: "\e915";
-  color: #fff;
-}
-.icon-edit:before {
   content: "\e916";
+  color: #4b4b4b;
 }
 .icon-exit:before {
-  content: "\e917";
-  color: #fff;
+  content: "\e919";
 }
 .icon-fullscreen:before {
-  content: "\e918";
-  color: #fff;
+  content: "\e933";
 }
 .icon-googledrive:before {
-  content: "\e919";
+  content: "\e934";
   color: #4b4b4b;
 }
-.icon-koodo:before {
-  content: "\e90c";
-}
 .icon-list:before {
-  content: "\e900";
+  content: "\e937";
 }
 .icon-more:before {
-  content: "\e901";
+  content: "\e938";
 }
 .icon-bookmark:before {
-  content: "\e902";
+  content: "\e939";
 }
 .icon-shelf:before {
-  content: "\e903";
+  content: "\e93a";
 }
 .icon-idea:before {
-  content: "\e904";
+  content: "\e93b";
 }
 .icon-recent:before {
-  content: "\e905";
+  content: "\e93c";
 }
 .icon-sort:before {
-  content: "\e906";
+  content: "\e93d";
 }
 .icon-search:before {
-  content: "\e907";
+  content: "\e93e";
 }
 .icon-grid:before {
-  content: "\e908";
+  content: "\e93f";
 }
 .icon-dropdown:before {
-  content: "\e909";
+  content: "\e940";
 }
 .icon-digest:before {
-  content: "\e90a";
-}
-.icon-return:before {
-  content: "\ea40";
+  content: "\e941";
 }

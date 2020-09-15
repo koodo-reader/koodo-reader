@@ -8,9 +8,7 @@ import {
 } from "../../redux/actions/manager";
 import {
   handleFetchNotes,
-  handleFetchDigests,
   handleFetchBookmarks,
-  handleFetchHighlighters,
 } from "../../redux/actions/reader";
 import "./manager.css";
 import { stateType } from "../../redux/store";
@@ -28,6 +26,7 @@ const mapStateToProps = (state: stateType) => {
     isOpenEditDialog: state.book.isOpenEditDialog,
     isOpenDeleteDialog: state.book.isOpenDeleteDialog,
     isOpenAddDialog: state.book.isOpenAddDialog,
+    isSettingOpen: state.manager.isSettingOpen,
     isSort: state.manager.isSort,
     isSortDisplay: state.manager.isSortDisplay,
     isMessage: state.manager.isMessage,
@@ -38,9 +37,7 @@ const mapStateToProps = (state: stateType) => {
 const actionCreator = {
   handleFetchBooks,
   handleFetchNotes,
-  handleFetchDigests,
   handleFetchBookmarks,
-  handleFetchHighlighters,
   handleFetchSortCode,
   handleFetchList,
   handleMessageBox,

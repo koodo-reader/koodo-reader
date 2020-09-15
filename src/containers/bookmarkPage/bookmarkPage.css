@@ -2,7 +2,7 @@
   position: absolute;
   top: 80px;
   left: 200px;
-  width: calc(100% - 210px);
+  width: calc(100% - 200px);
   height: calc(100% - 90px);
   overflow: hidden;
 }
@@ -20,7 +20,7 @@
   height: 120px;
   /* margin: 0px !important; */
   margin-top: 10px;
-  margin-left: 10px;
+  margin-left: 5px;
 }
 .bookmark-page-bookmark-container {
   width: 100%;
@@ -34,8 +34,8 @@
   float: left;
   width: calc(50vw - 140px);
   height: 160px;
-  margin: 5px;
   min-width: 403px;
+  margin-top: 15px;
 }
 
 .bookmark-page-cover {
@@ -46,6 +46,8 @@
   box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.22);
   opacity: 0.73;
   margin: 10px;
+  margin-left: 15px;
+  cursor: pointer;
 }
 .bookmark-page-name {
   /* float: left; */
@@ -76,8 +78,7 @@
 .bookmark-page-list-item-title {
   float: left;
   font-size: 14px;
-  height: 15px;
-
+  height: 16px;
   line-height: 15px;
   color: rgba(75, 75, 75, 1);
   opacity: 1;
@@ -113,14 +114,13 @@
   margin-left: 10px;
   position: relative;
   bottom: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .bookmark-page-list-item-link-text {
-  width: 45px;
   height: 11px;
   font-size: 11px;
-
-  line-height: 24px;
-  margin-left: 8px;
   color: rgba(255, 255, 255, 1);
   opacity: 1;
 }

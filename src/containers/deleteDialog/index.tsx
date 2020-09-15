@@ -4,12 +4,13 @@ import {
   handleMessageBox,
   handleMessage,
 } from "../../redux/actions/manager";
-import { handleDeleteDialog } from "../../redux/actions/book";
+import {
+  handleDeleteDialog,
+  handleActionDialog,
+} from "../../redux/actions/book";
 import {
   handleFetchBookmarks,
   handleFetchNotes,
-  handleFetchDigests,
-  handleFetchHighlighters,
 } from "../../redux/actions/reader";
 import { stateType } from "../../redux/store";
 import { withNamespaces } from "react-i18next";
@@ -23,7 +24,6 @@ const mapStateToProps = (state: stateType) => {
     bookmarks: state.reader.bookmarks,
     notes: state.reader.notes,
     digests: state.reader.digests,
-    highlighters: state.reader.highlighters,
     mode: state.sidebar.mode,
     shelfIndex: state.sidebar.shelfIndex,
   };
@@ -33,10 +33,9 @@ const actionCreator = {
   handleDeleteDialog,
   handleFetchBookmarks,
   handleFetchNotes,
-  handleFetchDigests,
-  handleFetchHighlighters,
   handleMessageBox,
   handleMessage,
+  handleActionDialog,
 };
 export default connect(
   mapStateToProps,

@@ -7,24 +7,29 @@ import OperationPanel from "../../containers/operationPanel";
 import MessageBox from "../../containers/messageBox";
 import ProgressPanel from "../../containers/progressPanel";
 import { ReaderProps, ReaderState } from "./interface";
+import { MouseEvent } from "../../utils/mouseEvent";
+import OtherUtil from "../../utils/otherUtil";
+
 class Reader extends React.Component<ReaderProps, ReaderState> {
   timer!: NodeJS.Timeout;
+  rendition: any;
+
   constructor(props: ReaderProps) {
     super(props);
     this.state = {
       isOpenSettingPanel: false,
       isOpenOperationPanel: false,
       isOpenProgressPanel: false,
-      isOpenInfoPanel: false,
+      isOpenNavPanel: false,
       isMessage: false,
+      rendition: null,
+      readerMode: OtherUtil.getReaderConfig("readerMode") || "double",
     };
   }
   componentWillMount() {
     this.props.handleFetchBookmarks();
     this.props.handleFetchPercentage(this.props.currentBook);
     this.props.handleFetchNotes();
-    this.props.handleFetchDigests();
-    this.props.handleFetchHighlighters();
     this.props.handleFetchChapters(this.props.currentEpub);
   }
   UNSAFE_componentWillReceiveProps(nextProps: ReaderProps) {
@@ -41,7 +46,17 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
     }
   }
   componentDidMount() {
-    (window as any).rangy.init(); // 初始化rangy插件，用于高亮
+    let page = document.querySelector("#page-area");
+    let epub = this.props.currentEpub;
+    (window as any).rangy.init(); // 初始化
+    this.rendition = epub.renderTo(page, {
+      manager: "default",
+      flow: this.state.readerMode === "scroll" ? "scrolled-doc" : "auto",
+      width: "100%",
+      height: "100%",
+    });
+    this.setState({ rendition: this.rendition });
+    this.state.readerMode !== "scroll" && MouseEvent(this.rendition); // 绑定事件
   }
   componentWillUnmount() {
     //清除上面的计时器
@@ -58,7 +73,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         break;
       case "left":
         this.setState({
-          isOpenInfoPanel: this.state.isOpenInfoPanel ? false : true,
+          isOpenNavPanel: this.state.isOpenNavPanel ? false : true,
         });
         break;
       case "top":
@@ -76,14 +91,14 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
     }
   };
   //退出阅读器
-  handleLeaveReader = (event: any, position: string) => {
+  handleLeaveReader = (position: string) => {
     //控制上下左右的菜单的显示
     switch (position) {
       case "right":
         this.setState({ isOpenSettingPanel: false });
         break;
       case "left":
-        this.setState({ isOpenInfoPanel: false });
+        this.setState({ isOpenNavPanel: false });
         break;
       case "top":
         this.setState({ isOpenOperationPanel: false });
@@ -95,7 +110,14 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         break;
     }
   };
+
   render() {
+    const renditionProps = {
+      rendition: this.state.rendition,
+      handleLeaveReader: this.handleLeaveReader,
+      handleEnterReader: this.handleEnterReader,
+      isShow: this.state.isOpenNavPanel,
+    };
     return (
       <div className="viewer">
         {this.state.isMessage ? <MessageBox /> : null}
@@ -123,49 +145,92 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
             this.handleEnterReader("bottom");
           }}
         ></div>
-        <ViewArea />
-        //控制阅读器设置的显示
-        {this.state.isOpenSettingPanel ? (
-          <div
-            onMouseLeave={(event) => {
-              this.handleLeaveReader(event, "right");
-            }}
-          >
-            <SettingPanel />
-          </div>
-        ) : null}
-        //控制图书信息的显示
-        {this.state.isOpenInfoPanel ? (
-          <div
-            onMouseLeave={(event) => {
-              this.handleLeaveReader(event, "left");
-            }}
-          >
-            <NavigationPanel />
-          </div>
-        ) : null}
-        //控制阅读进度条的显示
-        {this.state.isOpenProgressPanel ? (
-          <div
-            className="progress-panel-container"
-            onMouseLeave={(event) => {
-              this.handleLeaveReader(event, "bottom");
-            }}
-          >
-            <ProgressPanel />
-          </div>
-        ) : null}
-        //控制阅读器控制栏的显示
-        {this.state.isOpenOperationPanel ? (
-          <div
-            className="operation-panel-container"
-            onMouseLeave={(event) => {
-              this.handleLeaveReader(event, "top");
-            }}
-          >
-            <OperationPanel />
-          </div>
-        ) : null}
+        {this.state.rendition && <ViewArea {...renditionProps} />}
+        <div
+          className="setting-panel-container"
+          onMouseLeave={(event) => {
+            this.handleLeaveReader("right");
+          }}
+          style={
+            this.state.isOpenSettingPanel
+              ? {}
+              : {
+                  transition: "transform 0.6s ease",
+                  transform: "translateX(309px)",
+                  display: "none",
+                }
+          }
+        >
+          <SettingPanel />
+        </div>
+        <div
+          className="navigation-panel-container"
+          onMouseLeave={(event) => {
+            this.handleLeaveReader("left");
+          }}
+          style={
+            this.state.isOpenNavPanel
+              ? {}
+              : {
+                  transform: "translateX(-309px)",
+                  transition: "transform 0.6s ease",
+                  display: "none",
+                }
+          }
+        >
+          <NavigationPanel />
+        </div>
+        <div
+          className="progress-panel-container"
+          onMouseLeave={(event) => {
+            this.handleLeaveReader("bottom");
+          }}
+          style={
+            this.state.isOpenProgressPanel
+              ? {}
+              : {
+                  transform: "translateY(90px)",
+                  transition: "transform 0.5s ease",
+                  display: "none",
+                }
+          }
+        >
+          <ProgressPanel />
+        </div>
+        <div
+          className="operation-panel-container"
+          onMouseLeave={(event) => {
+            this.handleLeaveReader("top");
+          }}
+          style={
+            this.state.isOpenOperationPanel
+              ? {}
+              : {
+                  transform: "translateY(-90px)",
+                  transition: "transform 0.5s ease",
+                  display: "none",
+                }
+          }
+        >
+          <OperationPanel />
+        </div>
+
+        <div
+          className="view-area-page"
+          id="page-area"
+          style={
+            this.state.readerMode === "scroll"
+              ? {
+                  left: "calc(50vw - 270px)",
+                  right: "calc(50vw - 270px)",
+                  top: "75px",
+                  bottom: "75px",
+                }
+              : this.state.readerMode === "single"
+              ? { left: "calc(50vw - 270px)", right: "calc(50vw - 270px)" }
+              : {}
+          }
+        ></div>
         <Background />
       </div>
     );

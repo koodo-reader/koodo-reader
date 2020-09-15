@@ -1,26 +1,23 @@
-// import localforage from "localforage";
-import JSZip from "jszip";
 import FileSaver from "file-saver";
 import BookModel from "../model/Book";
 import NoteModel from "../model/Note";
-import DigestModel from "../model/Digest";
-import HighligherModel from "../model/Highlighter";
 import BookmarkModel from "../model/Bookmark";
 import DropboxUtil from "./syncUtils/dropbox";
+import OndriveUtil from "./syncUtils/onedrive";
+import _ from "lodash";
 
+let JSZip = (window as any).JSZip;
 class BackupUtil {
   static backup(
-    books: BookModel[],
+    bookArr: BookModel[],
     notes: NoteModel[],
-    digests: DigestModel[],
-    highlighters: HighligherModel[],
     bookmarks: BookmarkModel[],
     handleFinish: () => void,
     driveIndex: number,
     showMessage: (message: string) => void
   ) {
     let zip = new JSZip();
-
+    let books: BookModel[] = _.cloneDeep(bookArr);
     let epubZip = zip.folder("epub");
     books &&
       books.forEach((item) => {
@@ -34,8 +31,6 @@ class BackupUtil {
     dataZip
       .file("notes.json", JSON.stringify(notes))
       .file("books.json", JSON.stringify(books))
-      .file("digests.json", JSON.stringify(digests))
-      .file("highlighters.json", JSON.stringify(highlighters))
       .file("bookmarks.json", JSON.stringify(bookmarks))
       .file("readerConfig.json", localStorage.getItem("readerConfig") || "")
       .file(
@@ -44,7 +39,9 @@ class BackupUtil {
       )
       .file("readingTime.json", localStorage.getItem("readingTime") || "")
       .file("recentBooks.json", localStorage.getItem("recentBooks") || [])
+      .file("favoriteBooks.json", localStorage.getItem("favoriteBooks") || [])
       .file("shelfList.json", localStorage.getItem("shelfList") || [])
+      .file("noteTags.json", localStorage.getItem("noteTags") || [])
       .file(
         "recordLocation.json",
         localStorage.getItem("recordLocation") || ""
@@ -56,30 +53,31 @@ class BackupUtil {
 
     zip
       .generateAsync({ type: "blob" })
-      .then(function (blob) {
+      .then(function (blob: any) {
         switch (driveIndex) {
           case 0:
             handleFinish();
             FileSaver.saveAs(
               blob,
-              `${year}-${month < 9 ? "0" + month : month}-${
-                day < 9 ? "0" + day : day
+              `${year}-${month <= 9 ? "0" + month : month}-${
+                day <= 9 ? "0" + day : day
               }.zip`
             );
             break;
           case 1:
-            console.log("backuputil 1");
             DropboxUtil.UploadFile(blob, handleFinish, showMessage);
             break;
           case 2:
-            console.log("backuputil 2");
+            break;
+          case 3:
+            OndriveUtil.UploadFile(blob, handleFinish, showMessage);
             break;
           default:
             break;
         }
       })
-      .catch(() => {
-        console.log("Error occurs");
+      .catch((err: any) => {
+        console.log(err);
       });
   }
 }

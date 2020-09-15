@@ -1,18 +1,39 @@
-const { app, BrowserWindow, dialog, shell, remote } = require("electron");
+const {
+  app,
+  BrowserWindow,
+  dialog,
+  shell,
+  remote,
+  ipcMain,
+} = require("electron");
 const isDev = require("electron-is-dev");
 const path = require("path");
-let mainWindow;
+const fontList = require("font-list");
+
+let mainWin;
+let splash;
 
 app.on("ready", () => {
-  // console.log("before message box");
-
-  mainWindow = new BrowserWindow({
-    width: 1024,
+  mainWin = new BrowserWindow({
+    titleBarStyle: "hidden",
+    width: 1030,
     height: 660,
-    webPreferences: {
-      nodeIntegration: false,
-    },
+    webPreferences: { webSecurity: false, nodeIntegration: true },
+    show: false,
+    // transparent: true,
   });
+  splash = new BrowserWindow({
+    width: 510,
+    height: 323,
+    frame: false,
+    transparent: true,
+    alwaysOnTop: true,
+  });
+  splash.loadURL(
+    isDev
+      ? path.join(__dirname, "/public/assets/launch-page.html")
+      : `file://${path.join(__dirname, "./build/assets/launch-page.html")}`
+  );
   if (!isDev) {
     const { Menu } = require("electron");
     Menu.setApplicationMenu(null);
@@ -21,5 +42,26 @@ app.on("ready", () => {
   const urlLocation = isDev
     ? "http://localhost:3000/"
     : `file://${path.join(__dirname, "./build/index.html")}`;
-  mainWindow.loadURL(urlLocation);
+  mainWin.loadURL(urlLocation);
+  mainWin.once("ready-to-show", () => {
+    splash.destroy();
+    mainWin.show();
+  });
+  mainWin.on("close", () => {
+    mainWin = null;
+  });
+
+  ipcMain.on("fonts-ready", (event, arg) => {
+    fontList
+      .getFonts()
+      .then((fonts) => {
+        event.returnValue = fonts;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  });
+});
+app.on("window-all-closed", () => {
+  app.quit();
 });

@@ -1,9 +1,9 @@
 const initState = {
   selection: null,
-  highlighters: [],
   isOpenMenu: false,
   menuMode: "menu",
   isChangeDirection: false,
+  isShowBookmark: false,
 };
 export function viewArea(
   state = initState,
@@ -19,6 +19,11 @@ export function viewArea(
       return {
         ...state,
         isOpenHighlight: action.payload,
+      };
+    case "HANDLE_SHOW_BOOKMARK":
+      return {
+        ...state,
+        isShowBookmark: action.payload,
       };
     case "HANDLE_SELECTION":
       return {

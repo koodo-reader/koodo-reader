@@ -7,11 +7,8 @@ import DigestList from "./component";
 const mapStateToProps = (state: stateType) => {
   return {
     digests: state.reader.digests,
-    currentEpub: state.book.currentEpub,
-    currentBook: state.book.currentBook,
-    bookmarks: state.reader.bookmarks,
-    chapters: state.reader.chapters,
-    books: state.manager.books,
+    isSearch: state.manager.isSearch,
+    searchResults: state.manager.searchResults,
   };
 };
 const actionCreator = {};

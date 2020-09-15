@@ -5,17 +5,22 @@ import BookmarkModel from "../../model/Bookmark";
 import NoteModel from "../../model/Note";
 import { Dispatch } from "redux";
 
+declare var window: any;
+
 export function handleNotes(notes: NoteModel[]) {
   return { type: "HANDLE_NOTES", payload: notes };
 }
 export function handleBooks(books: BookModel[]) {
   return { type: "HANDLE_BOOKS", payload: books };
 }
-export function handleSearchBooks(searchBooks: number[]) {
-  return { type: "HANDLE_SEARCH_BOOKS", payload: searchBooks };
+export function handleSearchResults(searchResults: number[]) {
+  return { type: "HANDLE_SEARCH_BOOKS", payload: searchResults };
 }
 export function handleSearch(isSearch: boolean) {
   return { type: "HANDLE_SEARCH", payload: isSearch };
+}
+export function handleSetting(isSettingOpen: boolean) {
+  return { type: "HANDLE_SETTING", payload: isSettingOpen };
 }
 export function handleList(mode: string) {
   return { type: "HANDLE_LIST", payload: mode };
@@ -49,35 +54,36 @@ export function handleBookmarks(bookmarks: BookmarkModel[]) {
 }
 export function handleFetchBooks() {
   return (dispatch: Dispatch) => {
-    localforage.getItem("books", (err, value) => {
+    localforage.getItem("books", async (err, value) => {
       let bookArr: any = value;
       dispatch(handleBooks(bookArr));
       let epubArr: any = [];
       if (bookArr === null) {
         epubArr = null;
       } else {
-        bookArr.forEach((item: BookModel) => {
-          let epub = (window as any).ePub({
-            bookPath: item.content,
-            restore: false,
-          });
+        for (let i = 0; i < bookArr.length; i++) {
+          let epub = window.ePub(bookArr[i].content, {});
           epubArr.push(epub);
-          dispatch(handleEpubs(epubArr));
-          let coverArr: { key: string; url: string }[] = [];
-          epubArr.forEach(async (item: any, index: number) => {
-            await item
-              .coverUrl()
-              .then((url: string) => {
-                coverArr.push({ key: bookArr[index].key, url: url });
-                if (coverArr.length === bookArr.length) {
-                  dispatch(handleCovers(coverArr));
-                }
-              })
-              .catch(() => {
-                console.log("Error occurs");
+        }
+        let coverArr: { key: string; url: string }[] = [];
+        for (let i = 0; i < epubArr.length; i++) {
+          await epubArr[i]
+            .coverUrl()
+            .then((url: string) => {
+              coverArr.push({
+                key: bookArr[i].key,
+                url: url,
               });
-          });
-        });
+            })
+            .catch((err: any) => {
+              coverArr.push({
+                key: bookArr[i].key,
+                url: "",
+              });
+            });
+        }
+        dispatch(handleEpubs(epubArr));
+        dispatch(handleCovers(coverArr));
       }
     });
   };

@@ -4,6 +4,8 @@ import DeleteUtil from "../../utils/deleteUtil";
 import localforage from "localforage";
 import ShelfUtil from "../../utils/shelfUtil";
 import RecordRecent from "../../utils/recordRecent";
+import RecordLocation from "../../utils/recordLocation";
+import AddFavorite from "../../utils/addFavorite";
 import { Trans } from "react-i18next";
 import { DeleteDialogProps } from "./interface";
 
@@ -12,7 +14,7 @@ class DeleteDialog extends React.Component<DeleteDialogProps> {
     this.props.handleDeleteDialog(false);
   };
   handleDeleteOther = () => {
-    if (this.props.bookmarks !== null) {
+    if (this.props.bookmarks[0]) {
       let bookmarkArr = DeleteUtil.deleteBookmarks(
         this.props.bookmarks,
         this.props.currentBook.key
@@ -27,7 +29,7 @@ class DeleteDialog extends React.Component<DeleteDialogProps> {
         });
       }
     }
-    if (this.props.notes !== null) {
+    if (this.props.notes) {
       let noteArr = DeleteUtil.deleteNotes(
         this.props.notes,
         this.props.currentBook.key
@@ -42,36 +44,6 @@ class DeleteDialog extends React.Component<DeleteDialogProps> {
         });
       }
     }
-    if (this.props.digests !== null) {
-      let digestArr = DeleteUtil.deleteDigests(
-        this.props.digests,
-        this.props.currentBook.key
-      );
-      if (digestArr.length === 0) {
-        localforage.removeItem("digests").then(() => {
-          this.props.handleFetchDigests();
-        });
-      } else {
-        localforage.setItem("digests", digestArr).then(() => {
-          this.props.handleFetchDigests();
-        });
-      }
-    }
-    if (this.props.highlighters !== null) {
-      let highlighterArr = DeleteUtil.deleteHighlighters(
-        this.props.highlighters,
-        this.props.currentBook.key
-      );
-      if (highlighterArr.length === 0) {
-        localforage.removeItem("highlighters").then(() => {
-          this.props.handleFetchHighlighters();
-        });
-      } else {
-        localforage.setItem("highlighters", highlighterArr).then(() => {
-          this.props.handleFetchHighlighters();
-        });
-      }
-    }
   };
   handleComfirm = () => {
     //从列表删除和从图书库删除判断
@@ -79,7 +51,7 @@ class DeleteDialog extends React.Component<DeleteDialogProps> {
       ShelfUtil.clearShelf(this.props.shelfIndex, this.props.currentBook.key);
       this.props.handleDeleteDialog(false);
     } else {
-      this.props.books !== null &&
+      this.props.books &&
         localforage
           .setItem(
             "books",
@@ -89,12 +61,17 @@ class DeleteDialog extends React.Component<DeleteDialogProps> {
             this.props.handleDeleteDialog(false);
             this.props.handleFetchBooks();
           });
+      //从喜爱的图书中删除
+      AddFavorite.clear(this.props.currentBook.key);
       //从书架删除
       ShelfUtil.deletefromAllShelf(this.props.currentBook.key);
       //从阅读记录删除
       RecordRecent.clear(this.props.currentBook.key);
+      //删除阅读历史
+      RecordLocation.clear(this.props.currentBook.key);
       //删除书签，笔记，书摘，高亮
       this.handleDeleteOther();
+      this.props.handleActionDialog(false);
     }
 
     this.props.handleMessage("Delete Successfully");

@@ -5,6 +5,7 @@ import copy from "copy-text-to-clipboard";
 import { Trans } from "react-i18next";
 import { TokenDialogProps, TokenDialogState } from "./interface";
 import OtherUtil from "../../utils/otherUtil";
+import OnedriveUtil from "../../utils/syncUtils/onedrive";
 
 class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
   constructor(props: TokenDialogProps) {
@@ -19,12 +20,17 @@ class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
     let token: string = (document.querySelector(
       ".token-dialog-token-box"
     ) as HTMLTextAreaElement).value;
-    OtherUtil.setReaderConfig(`${this.props.driveName}_access_token`, token);
+    OtherUtil.setReaderConfig(`${this.props.driveName}_token`, token);
+    this.handleOAuth(this.props.driveName);
     this.props.handleTokenDialog(false);
     this.props.handleMessage("Add Successfully");
     this.props.handleMessageBox(true);
   };
-
+  handleOAuth(driveName: string) {
+    if (driveName === "onedrive") {
+      OnedriveUtil.GetAccessToken();
+    }
+  }
   render() {
     return (
       <div className="token-dialog-container">

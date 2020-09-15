@@ -12,14 +12,13 @@ class SingleControl extends React.Component<
   constructor(props: SingleControlProps) {
     super(props);
     this.state = {
-      isSingle: OtherUtil.getReaderConfig("isSingle") === "single",
+      readerMode: OtherUtil.getReaderConfig("readerMode") || "double",
     };
   }
 
-  handleClick = (mode: string) => {
-    this.props.handleSingle(mode);
-    this.setState({ isSingle: mode === "single" });
-    OtherUtil.setReaderConfig("isSingle", mode);
+  handleChangeMode = (mode: string) => {
+    this.setState({ readerMode: mode });
+    OtherUtil.setReaderConfig("readerMode", mode);
     this.props.handleMessage("Try refresh or restart");
     this.props.handleMessageBox(true);
   };
@@ -29,9 +28,9 @@ class SingleControl extends React.Component<
         <div
           className="single-mode-container"
           onClick={() => {
-            this.handleClick("single");
+            this.handleChangeMode("single");
           }}
-          style={!this.state.isSingle ? { opacity: 0.4 } : {}}
+          style={this.state.readerMode === "single" ? {} : { opacity: 0.4 }}
         >
           <span className="icon-single-page single-page-icon"></span>
           <div className="single-mode-text">
@@ -41,13 +40,25 @@ class SingleControl extends React.Component<
         <div
           className="double-mode-container"
           onClick={() => {
-            this.handleClick("double");
+            this.handleChangeMode("double");
           }}
-          style={this.state.isSingle ? { opacity: 0.4 } : {}}
+          style={this.state.readerMode === "double" ? {} : { opacity: 0.4 }}
         >
           <span className="icon-two-page two-page-icon"></span>
           <div className="double-mode-text">
             <Trans>Double-Page Mode</Trans>
+          </div>
+        </div>
+        <div
+          className="double-mode-container"
+          onClick={() => {
+            this.handleChangeMode("scroll");
+          }}
+          style={this.state.readerMode === "scroll" ? {} : { opacity: 0.4 }}
+        >
+          <span className="icon-scroll two-page-icon"></span>
+          <div className="double-mode-text">
+            <Trans>Scroll Mode</Trans>
           </div>
         </div>
       </div>

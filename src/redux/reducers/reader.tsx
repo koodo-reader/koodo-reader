@@ -1,12 +1,16 @@
 import OtherUtil from "../../utils/otherUtil";
 const initState = {
-  bookmarks: null,
-  notes: null,
-  digests: null,
+  bookmarks: [],
+  notes: [],
+  digests: [],
   locations: null,
   chapters: null,
-  highlighters: null,
-  isSingle: OtherUtil.getReaderConfig("isSingle") || "double",
+  currentChapter: "",
+  flattenChapters: null,
+  color: 0,
+  noteKey: "",
+  originalText: "",
+  readerMode: OtherUtil.getReaderConfig("readerMode") || "double",
 };
 export function reader(
   state = initState,
@@ -23,6 +27,21 @@ export function reader(
         ...state,
         notes: action.payload,
       };
+    case "HANDLE_ORIGINAL_TEXT":
+      return {
+        ...state,
+        originalText: action.payload,
+      };
+    case "HANDLE_COLOR":
+      return {
+        ...state,
+        color: action.payload,
+      };
+    case "HANDLE_NOTE_KEY":
+      return {
+        ...state,
+        noteKey: action.payload,
+      };
     case "HANDLE_DIGESTS":
       return {
         ...state,
@@ -38,20 +57,15 @@ export function reader(
         ...state,
         section: action.payload,
       };
-    case "HANDLE_SINGLE":
-      return {
-        ...state,
-        isSingle: action.payload,
-      };
     case "HANDLE_CHAPTERS":
       return {
         ...state,
         chapters: action.payload,
       };
-    case "HANDLE_HIGHLIGHTERS":
+    case "HANDLE_FLATTEN_CHAPTERS":
       return {
         ...state,
-        highlighters: action.payload,
+        flattenChapters: action.payload,
       };
     default:
       return state;

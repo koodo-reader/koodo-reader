@@ -6,7 +6,7 @@ export interface BookListProps {
   epubs: object[];
   mode: string;
   shelfIndex: number;
-  searchBooks: number[];
+  searchResults: number[];
   isSearch: boolean;
   isSort: boolean;
   isList: string;

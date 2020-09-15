@@ -2,11 +2,10 @@
 import { connect } from "react-redux";
 import { stateType } from "../../redux/store";
 import {
-  handleFetchDigests,
   handleFetchBookmarks,
   handleFetchNotes,
-  handleFetchHighlighters,
 } from "../../redux/actions/reader";
+import { handleShowBookmark } from "../../redux/actions/viewArea";
 import DeleteIcon from "./component";
 import { handleMessageBox, handleMessage } from "../../redux/actions/manager";
 const mapStateToProps = (state: stateType) => {
@@ -14,15 +13,14 @@ const mapStateToProps = (state: stateType) => {
     digests: state.reader.digests,
     bookmarks: state.reader.bookmarks,
     notes: state.reader.notes,
-    highlighters: state.reader.highlighters,
+    isReading: state.book.isReading,
   };
 };
 const actionCreator = {
-  handleFetchDigests,
   handleFetchBookmarks,
   handleFetchNotes,
   handleMessageBox,
   handleMessage,
-  handleFetchHighlighters,
+  handleShowBookmark,
 };
 export default connect(mapStateToProps, actionCreator)(DeleteIcon as any);

@@ -1,7 +1,5 @@
 import BookModel from "../../model/Book";
 import NoteModel from "../../model/Note";
-import DigestModel from "../../model/Digest";
-import HighligherModel from "../../model/Highlighter";
 import BookmarkModel from "../../model/Bookmark";
 
 export interface DeleteDialogProps {
@@ -10,16 +8,14 @@ export interface DeleteDialogProps {
   currentBook: BookModel;
   bookmarks: BookmarkModel[];
   notes: NoteModel[];
-  digests: DigestModel[];
-  highlighters: HighligherModel[];
+  digests: NoteModel[];
   mode: string;
   shelfIndex: number;
   handleFetchBooks: () => void;
   handleDeleteDialog: (isShow: boolean) => void;
+  handleActionDialog: (isShow: boolean) => void;
   handleFetchBookmarks: () => void;
   handleFetchNotes: () => void;
-  handleFetchDigests: () => void;
-  handleFetchHighlighters: () => void;
   handleMessageBox: (isShow: boolean) => void;
   handleMessage: (message: string) => void;
 }

@@ -1,0 +1,54 @@
+.tag-list-item {
+  min-width: 45px;
+  height: 20px;
+  background: #ffffff;
+  border: 1.5px solid #4b4b4b;
+  opacity: 1;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  display: inline-block;
+  margin-right: 10px;
+  font-size: 13px;
+  margin-top: 5px;
+}
+.active-tag {
+  background-color: #4b4b4b;
+  color: white;
+}
+.tag-title {
+  font-size: 16px;
+  line-height: 31px;
+  color: #4b4b4b;
+  opacity: 1;
+  margin-left: 10px;
+  font-weight: bold;
+}
+.tag-container {
+  display: inline-block;
+  margin: 0px 10px;
+}
+
+#newTag {
+  width: 50px;
+}
+.tag-list-item-new {
+  width: 20px;
+  height: 20px;
+  background: #ffffff;
+  border: 1.5px solid #4b4b4b;
+  opacity: 1;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  display: inline-block;
+  margin-right: 10px;
+  font-size: 10px;
+  margin-top: 5px;
+  position: relative;
+  bottom: 1px;
+}

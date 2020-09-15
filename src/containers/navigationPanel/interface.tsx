@@ -6,11 +6,16 @@ export interface NavigationPanelProps {
   currentBook: BookModel;
   bookmarks: BookmarkModel[];
   handleFetchBookmarks: () => void;
+  handleSearch: (isSearch: boolean) => void;
 }
 
 export interface NavigationPanelState {
-  isContentShow: boolean;
+  currentTab: string;
   chapters: any;
   cover: string;
   time: number;
+  startIndex: number;
+  currentIndex: number;
+  isSearch: boolean;
+  searchList: any;
 }

@@ -1,5 +1,4 @@
 import { connect } from "react-redux";
-import { handleFetchLocations } from "../../redux/actions/progressPanel";
 import { stateType } from "../../redux/store";
 import { withNamespaces } from "react-i18next";
 import ProgressPanel from "./component";
@@ -10,9 +9,10 @@ const mapStateToProps = (state: stateType) => {
     currentBook: state.book.currentBook,
     percentage: state.progressPanel.percentage,
     locations: state.progressPanel.locations,
+    flattenChapters: state.reader.flattenChapters,
   };
 };
-const actionCreator = { handleFetchLocations };
+const actionCreator = {};
 export default connect(
   mapStateToProps,
   actionCreator

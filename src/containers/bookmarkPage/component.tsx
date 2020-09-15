@@ -28,6 +28,10 @@ class BookmarkPage extends React.Component<
         break;
       }
     }
+    if (!cfi || !percentage) {
+      cfi = RecordLocation.getCfi(book!.key).cfi;
+      percentage = RecordLocation.getCfi(book!.key).percentage;
+    }
     this.props.handleReadingBook(book!);
     this.props.handleReadingEpub(epub);
     this.props.handleReadingState(true);
@@ -69,9 +73,11 @@ class BookmarkPage extends React.Component<
       return false;
     });
     const renderBookmarklistItem = (item: BookModel) => {
-      return bookmarkObj[item.key].map((item: BookmarkModel) => (
+      return bookmarkObj[item.key].reverse().map((item: BookmarkModel) => (
         <li className="bookmark-page-list-item" key={item.key}>
-          <div className="bookmark-page-list-item-title">{item.chapter}</div>
+          <div className="bookmark-page-list-item-title">
+            <Trans>{item.chapter}</Trans>
+          </div>
           <div className="bookmark-page-progress">
             {Math.round(item.percentage * 100)}%
           </div>
@@ -95,6 +101,9 @@ class BookmarkPage extends React.Component<
             className="bookmark-page-cover"
             src={coverObj[item.key]}
             alt=""
+            onClick={() => {
+              this.handleRedirect(item.key, "", 0);
+            }}
           />
           <p className="bookmark-page-name">{bookArr[index].name}</p>
           <div className="bookmark-page-bookmark-container-parent">
