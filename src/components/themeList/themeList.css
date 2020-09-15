@@ -1,0 +1,32 @@
+.background-color-setting {
+  width: calc(100% - 44px);
+  margin: 30px 22px 20px;
+}
+.background-color-text {
+  height: 20px;
+  width: 100%;
+  font-size: 16px;
+  color: rgba(75, 75, 75, 1);
+  margin: 6px 0px;
+}
+.background-color-list {
+  margin: 6px 0px;
+  width: 110%;
+  height: 44px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding-bottom: 6px;
+}
+.background-color-circle {
+  float: left;
+  width: 35px;
+  height: 35px;
+  box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.33);
+  border-radius: 50%;
+  opacity: 1;
+  cursor: pointer;
+}
+.active-color {
+  border: 4px solid rgba(0, 0, 0, 1);
+}
