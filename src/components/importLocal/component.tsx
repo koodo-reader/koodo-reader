@@ -37,7 +37,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
     //这里需要用到File的slice( )方法，以下是兼容写法
     let fileName = file.name.split(".");
     let extension = fileName[fileName.length - 1];
-    if (file.size > 20 * 1024 * 1024) {
+    if (file.size > 50 * 1024 * 1024) {
       this.props.handleMessage("Book size is over 20M");
       this.props.handleMessageBox(true);
       return;

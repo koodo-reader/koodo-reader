@@ -20,7 +20,7 @@ app.on("ready", () => {
     height: 660,
     webPreferences: { webSecurity: false, nodeIntegration: true },
     show: false,
-    transparent: true,
+    // transparent: true,
   });
   splash = new BrowserWindow({
     width: 510,
