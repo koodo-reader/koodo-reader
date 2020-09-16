@@ -96,7 +96,7 @@ class OperationPanel extends React.Component<
           : RecordLocation.getCfi(this.props.currentBook.key).percentage;
 
       let bookmark = new Bookmark(bookKey, cfi, text, percentage, chapter);
-      let bookmarkArr = this.props.bookmarks[0] ? this.props.bookmarks : [];
+      let bookmarkArr = this.props.bookmarks ?? [];
       bookmarkArr.push(bookmark);
       this.props.handleBookmarks(bookmarkArr);
       localforage.setItem("bookmarks", bookmarkArr);

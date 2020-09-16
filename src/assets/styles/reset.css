@@ -152,6 +152,7 @@ body {
 
 body {
   -webkit-tap-highlight-color: transparent;
+  background-color: white;
 }
 
 html,
