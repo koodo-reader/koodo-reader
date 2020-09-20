@@ -66,7 +66,7 @@ class ViewArea extends React.Component<ViewAreaProps, ViewAreaStates> {
         const mc = new Hammer(doc);
         mc.on("panleft panright panup pandown", (event: any) => {
           const mc = new Hammer(doc);
-          mc.on("doubletap", (event: any) => {
+          mc.on("tap", (event: any) => {
             if (this.props.isShow) {
               this.props.handleLeaveReader("left");
               this.props.handleLeaveReader("right");
@@ -121,6 +121,12 @@ class ViewArea extends React.Component<ViewAreaProps, ViewAreaStates> {
   }
   showImage = (event: any) => {
     console.log("click");
+    if (this.props.isShow) {
+      this.props.handleLeaveReader("left");
+      this.props.handleLeaveReader("right");
+      this.props.handleLeaveReader("top");
+      this.props.handleLeaveReader("bottom");
+    }
     if (
       isElectron() &&
       event.target.parentNode.parentNode.tagName.toLowerCase() === "a"

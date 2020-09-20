@@ -37,11 +37,6 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
     //这里需要用到File的slice( )方法，以下是兼容写法
     let fileName = file.name.split(".");
     let extension = fileName[fileName.length - 1];
-    if (file.size > 20 * 1024 * 1024) {
-      this.props.handleMessage("Book size is over 20M");
-      this.props.handleMessageBox(true);
-      return;
-    }
     if (extension === "epub") {
       var blobSlice =
           (File as any).prototype.slice ||
@@ -101,25 +96,48 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
           this.props.handleMessageBox(true);
           throw new Error();
         }
+        let cover: any = "";
         const epub = window.ePub(e.target.result);
         epub.loaded.metadata
           .then((metadata: any) => {
+            console.log(metadata, "medata");
             if (!e.target) {
               throw new Error();
             }
-            let name: string,
-              author: string,
-              content: any,
-              description: string,
-              book: BookModel;
-            [name, author, description, content] = [
-              metadata.title,
-              metadata.creator,
-              metadata.description,
-              e.target.result,
-            ];
-            book = new BookModel(name, author, description, content, md5);
-            this.handleAddBook(book);
+            epub
+              .coverUrl()
+              .then(async (url: string) => {
+                var reader = new FileReader();
+                let blob = await fetch(url).then((r) => r.blob());
+                reader.readAsDataURL(blob);
+                reader.onloadend = () => {
+                  cover = reader.result;
+                  console.log(cover);
+                  let name: string,
+                    author: string,
+                    content: any,
+                    description: string,
+                    book: BookModel;
+                  [name, author, description, content] = [
+                    metadata.title,
+                    metadata.creator,
+                    metadata.description,
+                    e.target!.result,
+                  ];
+                  book = new BookModel(
+                    name,
+                    author,
+                    description,
+                    content,
+                    md5,
+                    cover
+                  );
+                  this.handleAddBook(book);
+                };
+              })
+              .catch((err: any) => {
+                console.log(err, "err");
+              });
           })
           .catch(() => {
             this.props.handleMessage("Import Failed");

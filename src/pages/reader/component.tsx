@@ -23,6 +23,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
       isOpenNavPanel: false,
       isMessage: false,
       rendition: null,
+      isTouch: OtherUtil.getReaderConfig("isTouch") === "yes",
       readerMode: OtherUtil.getReaderConfig("readerMode") || "double",
     };
   }
@@ -116,7 +117,11 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
       rendition: this.state.rendition,
       handleLeaveReader: this.handleLeaveReader,
       handleEnterReader: this.handleEnterReader,
-      isShow: this.state.isOpenNavPanel,
+      isShow:
+        this.state.isOpenNavPanel ||
+        this.state.isOpenOperationPanel ||
+        this.state.isOpenProgressPanel ||
+        this.state.isOpenSettingPanel,
     };
     return (
       <div className="viewer">
@@ -124,24 +129,49 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         <div
           className="left-panel"
           onMouseEnter={() => {
+            if (this.state.isTouch || this.state.isOpenNavPanel) {
+              return;
+            }
+            console.log("test");
+            this.handleEnterReader("left");
+          }}
+          onClick={() => {
             this.handleEnterReader("left");
           }}
         ></div>
         <div
           className="right-panel"
           onMouseEnter={() => {
+            if (this.state.isTouch || this.state.isOpenSettingPanel) {
+              return;
+            }
+            this.handleEnterReader("right");
+          }}
+          onClick={() => {
             this.handleEnterReader("right");
           }}
         ></div>
         <div
           className="top-panel"
           onMouseEnter={() => {
+            if (this.state.isTouch || this.state.isOpenOperationPanel) {
+              return;
+            }
+            this.handleEnterReader("top");
+          }}
+          onClick={() => {
             this.handleEnterReader("top");
           }}
         ></div>
         <div
           className="bottom-panel"
           onMouseEnter={() => {
+            if (this.state.isTouch || this.state.isOpenProgressPanel) {
+              return;
+            }
+            this.handleEnterReader("bottom");
+          }}
+          onClick={() => {
             this.handleEnterReader("bottom");
           }}
         ></div>
@@ -155,9 +185,9 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
             this.state.isOpenSettingPanel
               ? {}
               : {
-                  transition: "transform 0.6s ease",
                   transform: "translateX(309px)",
-                  display: "none",
+                  // transition: "transform 1s ease",
+                  // display: "none",
                 }
           }
         >
@@ -166,6 +196,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         <div
           className="navigation-panel-container"
           onMouseLeave={(event) => {
+            console.log("teste");
             this.handleLeaveReader("left");
           }}
           style={
@@ -173,8 +204,8 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
               ? {}
               : {
                   transform: "translateX(-309px)",
-                  transition: "transform 0.6s ease",
-                  display: "none",
+                  // transition: "transform 1s ease",
+                  // display: "none",
                 }
           }
         >
@@ -190,8 +221,8 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
               ? {}
               : {
                   transform: "translateY(90px)",
-                  transition: "transform 0.5s ease",
-                  display: "none",
+                  // transition: "transform 0.5s ease",
+                  // display: "none",
                 }
           }
         >
@@ -207,8 +238,8 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
               ? {}
               : {
                   transform: "translateY(-90px)",
-                  transition: "transform 0.5s ease",
-                  display: "none",
+                  // transition: "transform 0.5s ease",
+                  // display: "none",
                 }
           }
         >
