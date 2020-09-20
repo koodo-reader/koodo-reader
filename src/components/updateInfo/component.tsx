@@ -13,21 +13,22 @@ class UpdateInfo extends React.Component<UpdateInfoProps, UpdateInfoState> {
     this.state = { downlownLink: "" };
   }
   componentDidMount() {
-    axios
-      .get("https://koodo.960960.xyz/update")
-      .then((res) => {
-        console.log(res);
-        const download = res.data.download;
-        const version = res.data.log.version;
-        if (this.compareVersion(updateLog.version, version)) {
-          navigator.platform === "Win32"
-            ? this.setState({ downlownLink: download[0].url })
-            : this.setState({ downlownLink: download[1].url });
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    !this.props.currentBook.key &&
+      axios
+        .get("https://koodo.960960.xyz/update")
+        .then((res) => {
+          console.log(res);
+          const download = res.data.download;
+          const version = res.data.log.version;
+          if (this.compareVersion(updateLog.version, version)) {
+            navigator.platform === "Win32"
+              ? this.setState({ downlownLink: download[0].url })
+              : this.setState({ downlownLink: download[1].url });
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
   }
   handleJump = () => {
     isElectron() &&

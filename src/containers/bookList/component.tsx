@@ -115,8 +115,7 @@ class BookList extends React.Component<BookListProps> {
           )
         : this.handleRecent(this.props.covers, RecordRecent.getAllRecent());
     return books.map((item: BookModel, index: number) => {
-      return this.props.isList === "list" ||
-        OtherUtil.getReaderConfig("isTouch") === "yes" ? (
+      return this.props.isList === "list" ? (
         <BookItem
           {...{
             key: item.key,
