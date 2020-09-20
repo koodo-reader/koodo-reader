@@ -14,6 +14,7 @@ class DeleteDialog extends React.Component<DeleteDialogProps> {
     this.props.handleDeleteDialog(false);
   };
   handleDeleteOther = () => {
+    console.log(this.props.bookmarks, "test");
     if (this.props.bookmarks[0]) {
       let bookmarkArr = DeleteUtil.deleteBookmarks(
         this.props.bookmarks,
@@ -58,8 +59,10 @@ class DeleteDialog extends React.Component<DeleteDialogProps> {
             DeleteUtil.deleteBook(this.props.books, this.props.currentBook.key)
           )
           .then(() => {
-            this.props.handleDeleteDialog(false);
-            this.props.handleFetchBooks();
+            localforage.removeItem(this.props.currentBook.key).then(() => {
+              this.props.handleDeleteDialog(false);
+              this.props.handleFetchBooks();
+            });
           });
       //从喜爱的图书中删除
       AddFavorite.clear(this.props.currentBook.key);

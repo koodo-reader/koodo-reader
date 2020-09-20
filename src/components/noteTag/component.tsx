@@ -108,6 +108,7 @@ class NoteTag extends React.Component<NoteTagProps, NoteTagState> {
             onClick={() => {
               this.handleInput();
             }}
+            style={this.state.isInput ? { width: "80px" } : {}}
           >
             <div className="center">
               {this.state.isInput ? (

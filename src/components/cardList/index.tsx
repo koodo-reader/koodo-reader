@@ -17,7 +17,6 @@ const mapStateToProps = (state: stateType) => {
     bookmarks: state.reader.bookmarks,
     chapters: state.reader.chapters,
     books: state.manager.books,
-    epubs: state.manager.epubs,
   };
 };
 const actionCreator = {

@@ -32,8 +32,6 @@ export default store;
 export type stateType = {
   manager: {
     books: BookModel[];
-    epubs: any[];
-    covers: { key: string; url: string }[];
     searchResults: number[];
     isSearch: boolean;
     isSort: boolean;

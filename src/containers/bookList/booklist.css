@@ -1,6 +1,6 @@
 .book-list-container-parent {
   position: absolute;
-  top: 75px;
+  top: 115px;
   left: 200px;
   width: calc(100% - 200px);
   height: calc(100% - 75px);
@@ -20,8 +20,8 @@
 
 .book-list-view {
   position: absolute;
-  right: 0px;
-  top: 0px;
+  right: 5px;
+  top: 85px;
   font-size: 14px;
   color: rgba(75, 75, 75, 1);
   margin-right: 30px;
@@ -49,12 +49,29 @@
 }
 .book-list-item-box {
   position: relative;
-  top: 15px;
+  top: 0px;
   width: 100%;
+  overflow: scroll;
 }
 .icon-grid,
 .icon-list {
   position: relative;
   top: 1px;
   margin-right: 5px;
+}
+.booklist-shelf-container {
+  position: absolute;
+  top: 80px;
+  left: calc(50vw - 100px);
+  width: 400px;
+}
+.booklist-shelf-list {
+  width: 169px;
+  height: 31px;
+  border: 2px solid rgba(75, 75, 75, 1);
+  opacity: 1;
+  box-sizing: border-box;
+  margin-left: 16px;
+  font-size: 15px;
+  line-height: 31px;
 }

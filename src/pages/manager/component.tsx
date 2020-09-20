@@ -14,7 +14,6 @@ import MessageBox from "../../containers/messageBox";
 import LoadingPage from "../../containers/loadingPage";
 import BackupPage from "../../containers/backupPage";
 import EmptyPage from "../../containers/emptyPage";
-import ShelfUtil from "../../utils/shelfUtil";
 import WelcomePage from "../../containers/welcomePage";
 import "./manager.css";
 import { ManagerProps, ManagerState } from "./interface";
@@ -142,11 +141,8 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
         </div>
       );
     }
-    let { mode, notes, digests, bookmarks, covers } = this.props;
+    let { mode, notes, digests, bookmarks, books } = this.props;
     let { totalBooks, favoriteBooks } = this.state;
-    let shelfTitle = Object.keys(ShelfUtil.getShelf());
-    let currentShelfTitle = shelfTitle[this.props.shelfIndex + 1];
-    let shelfBooks = (ShelfUtil.getShelf()[currentShelfTitle] || []).length;
     const updateDialogProps = {
       handleUpdateDialog: this.handleUpdateDialog,
     };
@@ -192,15 +188,13 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
         {this.props.isSettingOpen ? <SettingDialog /> : null}
         {totalBooks === 0 ? (
           <EmptyPage />
-        ) : covers === null &&
-          (mode === "home" || mode === "favorite" || mode === "shelf") ? (
+        ) : !books ? (
           <LoadingPage />
-        ) : (mode !== "shelf" || shelfBooks !== 0) &&
-          (mode === "home" ||
-            (mode === "favorite" && favoriteBooks !== 0) ||
-            mode === "shelf") ? (
+        ) : mode === "home" ||
+          (mode === "favorite" && favoriteBooks !== 0) ||
+          mode === "shelf" ? (
           <BookList />
-        ) : bookmarks && mode === "bookmark" ? (
+        ) : bookmarks.length > 0 && mode === "bookmark" ? (
           <BookmarkPage />
         ) : notes.filter((item) => item.notes !== "").length > 0 &&
           mode === "note" ? (

@@ -7,6 +7,8 @@ import { Trans } from "react-i18next";
 import axios from "axios";
 const isElectron = require("is-electron");
 
+declare var window: any;
+
 class UpdateInfo extends React.Component<UpdateInfoProps, UpdateInfoState> {
   constructor(props: UpdateInfoProps) {
     super(props);
@@ -15,7 +17,7 @@ class UpdateInfo extends React.Component<UpdateInfoProps, UpdateInfoState> {
   componentDidMount() {
     !this.props.currentBook.key &&
       axios
-        .get("https://koodo.960960.xyz/update")
+        .get("https://koodo.960960.xyz/api/update")
         .then((res) => {
           console.log(res);
           const download = res.data.download;
@@ -30,6 +32,7 @@ class UpdateInfo extends React.Component<UpdateInfoProps, UpdateInfoState> {
           console.log(err);
         });
   }
+
   handleJump = () => {
     isElectron() &&
       window.require("electron").shell.openExternal(this.state.downlownLink);
