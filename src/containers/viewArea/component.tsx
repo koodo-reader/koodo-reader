@@ -10,8 +10,6 @@ const isElectron = require("is-electron");
 
 declare var window: any;
 
-let Hammer = window.Hammer;
-
 class ViewArea extends React.Component<ViewAreaProps, ViewAreaStates> {
   isFirst: boolean;
   constructor(props: ViewAreaProps) {
@@ -62,31 +60,11 @@ class ViewArea extends React.Component<ViewAreaProps, ViewAreaStates> {
         return;
       }
       ReaderConfig.addDefaultCss();
-      if (OtherUtil.getReaderConfig("isTouch") === "yes") {
-        const mc = new Hammer(doc);
-        mc.on("panleft panright panup pandown", (event: any) => {
-          const mc = new Hammer(doc);
-          mc.on("tap", (event: any) => {
-            if (this.props.isShow) {
-              this.props.handleLeaveReader("left");
-              this.props.handleLeaveReader("right");
-              this.props.handleLeaveReader("top");
-              this.props.handleLeaveReader("bottom");
-            } else {
-              this.props.handleEnterReader("left");
-              this.props.handleEnterReader("right");
-              this.props.handleEnterReader("top");
-              this.props.handleEnterReader("bottom");
-            }
-          });
-        });
-      }
       doc.addEventListener("click", this.showImage);
     });
     this.props.rendition.on("selected", (cfiRange: any, contents: any) => {
       var range = contents.range(cfiRange);
       var rect = range.getBoundingClientRect();
-      console.log("selected");
       this.setState({ cfiRange, contents, rect });
     });
     this.props.rendition.themes.default({
@@ -119,6 +97,7 @@ class ViewArea extends React.Component<ViewAreaProps, ViewAreaStates> {
         : RecordLocation.getCfi(this.props.currentBook.key).cfi
     );
   }
+
   showImage = (event: any) => {
     console.log("click");
     if (this.props.isShow) {

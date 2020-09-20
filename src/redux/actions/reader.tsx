@@ -82,7 +82,7 @@ export function handleFetchBookmarks() {
     localforage.getItem("bookmarks", (err, value) => {
       let bookmarkArr: any;
       if (value === null || value === []) {
-        bookmarkArr = null;
+        bookmarkArr = [];
       } else {
         bookmarkArr = value;
       }

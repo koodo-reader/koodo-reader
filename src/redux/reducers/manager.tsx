@@ -1,7 +1,5 @@
 const initState = {
   books: null,
-  epubs: null,
-  covers: null,
   searchResults: [],
   isSearch: false,
   isSort: false,
@@ -82,16 +80,6 @@ export function manager(
       return {
         ...state,
         bookmarks: action.payload,
-      };
-    case "HANDLE_EPUBS":
-      return {
-        ...state,
-        epubs: action.payload,
-      };
-    case "HANDLE_COVERS":
-      return {
-        ...state,
-        covers: action.payload,
       };
 
     default:

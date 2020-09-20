@@ -5,6 +5,7 @@ import "./bookItem.css";
 import RecordLocation from "../../utils/recordLocation";
 import { BookItemProps, BookItemState } from "./interface";
 import { Trans } from "react-i18next";
+import localforage from "localforage";
 
 declare var window: any;
 
@@ -14,16 +15,14 @@ class Book extends React.Component<BookItemProps, BookItemState> {
     super(props);
     this.state = { isDeleteDialog: false };
     this.handleOpenBook = this.handleOpenBook.bind(this);
-    this.epub = null;
-  }
-  UNSAFE_componentWillMount() {
-    this.epub = window.ePub(this.props.book.content, {});
   }
   handleOpenBook() {
-    this.props.handleReadingBook(this.props.book);
-    this.props.handleReadingEpub(this.epub);
-    this.props.handleReadingState(true);
-    RecentBooks.setRecent(this.props.book.key);
+    localforage.getItem(this.props.book.key).then((result) => {
+      this.props.handleReadingEpub(window.ePub(result, {}));
+      this.props.handleReadingState(true);
+      this.props.handleReadingBook(this.props.book);
+      RecentBooks.setRecent(this.props.book.key);
+    });
   }
   handleDeleteBook = () => {
     this.props.handleDeleteDialog(true);
@@ -43,10 +42,10 @@ class Book extends React.Component<BookItemProps, BookItemState> {
       : 0;
     return (
       <div className="book-list-item-container">
-        {this.props.bookCover ? (
+        {this.props.book.cover ? (
           <img
             className="book-item-list-cover"
-            src={this.props.bookCover}
+            src={this.props.book.cover}
             alt=""
             onClick={() => {
               this.handleOpenBook();

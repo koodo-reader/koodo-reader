@@ -13,6 +13,7 @@ const fontList = require("font-list");
 let mainWin;
 let splash;
 
+app.disableHardwareAcceleration();
 app.on("ready", () => {
   mainWin = new BrowserWindow({
     titleBarStyle: "hidden",
@@ -20,10 +21,11 @@ app.on("ready", () => {
     height: 660,
     webPreferences: { webSecurity: false, nodeIntegration: true },
     show: false,
+    // transparent: true,
   });
   splash = new BrowserWindow({
-    width: 510,
-    height: 323,
+    width: 530,
+    height: 343,
     frame: false,
     transparent: true,
     alwaysOnTop: true,
@@ -44,6 +46,7 @@ app.on("ready", () => {
   mainWin.loadURL(urlLocation);
   mainWin.once("ready-to-show", () => {
     splash.destroy();
+    // mainWin.maximize();
     mainWin.show();
   });
   mainWin.on("close", () => {

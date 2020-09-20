@@ -6,6 +6,4 @@ export interface ImportLocalProps {
   handleMessage: (message: string) => void;
   handleFetchBooks: () => void;
 }
-export interface ImportLocalState {
-  isRepeat: boolean;
-}
+export interface ImportLocalState {}

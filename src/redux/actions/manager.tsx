@@ -43,48 +43,15 @@ export function handleFirst(isFirst: string) {
 export function handleSortCode(sortCode: { sort: number; order: number }) {
   return { type: "HANDLE_SORT_CODE", payload: sortCode };
 }
-export function handleEpubs(epubs: any) {
-  return { type: "HANDLE_EPUBS", payload: epubs };
-}
-export function handleCovers(covers: { key: string; url: string }[]) {
-  return { type: "HANDLE_COVERS", payload: covers };
-}
+
 export function handleBookmarks(bookmarks: BookmarkModel[]) {
-  return { type: "HANDLE_COVERS", payload: bookmarks };
+  return { type: "HANDLE_BOOKMARKS", payload: bookmarks };
 }
 export function handleFetchBooks() {
   return (dispatch: Dispatch) => {
     localforage.getItem("books", async (err, value) => {
       let bookArr: any = value;
       dispatch(handleBooks(bookArr));
-      let epubArr: any = [];
-      if (bookArr === null) {
-        epubArr = null;
-      } else {
-        for (let i = 0; i < bookArr.length; i++) {
-          let epub = window.ePub(bookArr[i].content, {});
-          epubArr.push(epub);
-        }
-        let coverArr: { key: string; url: string }[] = [];
-        for (let i = 0; i < epubArr.length; i++) {
-          await epubArr[i]
-            .coverUrl()
-            .then((url: string) => {
-              coverArr.push({
-                key: bookArr[i].key,
-                url: url,
-              });
-            })
-            .catch((err: any) => {
-              coverArr.push({
-                key: bookArr[i].key,
-                url: "",
-              });
-            });
-        }
-        dispatch(handleEpubs(epubArr));
-        dispatch(handleCovers(coverArr));
-      }
     });
   };
 }

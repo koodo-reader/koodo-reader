@@ -14,7 +14,8 @@ class RestoreUtil {
           return content.files[`epub/${item.name}.epub`].async("arraybuffer"); // a promise of "Hello World\n"
         })
         .then((book: any) => {
-          item.content = book;
+          localforage.setItem(item.key, book);
+          // item.content = book;
         })
         .then(() => {
           if (index === books.length - 1) {
@@ -75,10 +76,7 @@ class RestoreUtil {
                       ); // a promise of "Hello World\n"
                     })
                     .then((book: any) => {
-                      item.content = book;
-                    })
-                    .then(() => {
-                      localforage.setItem("books", value).then(() => {
+                      localforage.setItem(item.key, book).then(() => {
                         handleFinish();
                       });
                     })
