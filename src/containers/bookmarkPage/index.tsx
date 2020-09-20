@@ -13,9 +13,7 @@ import BookmarkPage from "./component";
 const mapStateToProps = (state: stateType) => {
   return {
     bookmarks: state.reader.bookmarks,
-    covers: state.manager.covers,
     books: state.manager.books,
-    epubs: state.manager.epubs,
   };
 };
 const actionCreator = {

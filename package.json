@@ -18,7 +18,6 @@
     "i18next": "^19.4.4",
     "i18next-browser-languagedetector": "^4.2.0",
     "is-electron": "^2.2.0",
-    "lodash": "^4.17.20",
     "md5": "^2.3.0",
     "react-device-detect": "^1.12.1",
     "react-dropzone": "^11.0.1",

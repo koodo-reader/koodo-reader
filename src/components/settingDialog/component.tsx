@@ -19,6 +19,8 @@ class SettingDialog extends React.Component<
       isTouch: OtherUtil.getReaderConfig("isTouch") === "yes",
       isOpenBook: OtherUtil.getReaderConfig("isOpenBook") === "yes",
       isUseFont: OtherUtil.getReaderConfig("isUseFont") === "yes",
+      isUseBackground: OtherUtil.getReaderConfig("isUseBackground") === "yes",
+      isHideCursor: OtherUtil.getReaderConfig("isHideCursor") === "yes",
     };
   }
   componentDidMount() {
@@ -64,6 +66,28 @@ class SettingDialog extends React.Component<
       this.state.isOpenBook ? "no" : "yes"
     );
     this.state.isOpenBook
+      ? this.props.handleMessage("Turn Off Successfully")
+      : this.props.handleMessage("Turn On Successfully");
+    this.props.handleMessageBox(true);
+  };
+  handleChangeBackground = () => {
+    this.setState({ isUseBackground: !this.state.isUseBackground });
+    OtherUtil.setReaderConfig(
+      "isUseBackground",
+      this.state.isUseBackground ? "no" : "yes"
+    );
+    this.state.isUseBackground
+      ? this.props.handleMessage("Turn Off Successfully")
+      : this.props.handleMessage("Turn On Successfully");
+    this.props.handleMessageBox(true);
+  };
+  handleChangeCursor = () => {
+    this.setState({ isHideCursor: !this.state.isHideCursor });
+    OtherUtil.setReaderConfig(
+      "isHideCursor",
+      this.state.isHideCursor ? "no" : "yes"
+    );
+    this.state.isHideCursor
       ? this.props.handleMessage("Turn Off Successfully")
       : this.props.handleMessage("Turn On Successfully");
     this.props.handleMessageBox(true);
@@ -136,6 +160,36 @@ class SettingDialog extends React.Component<
               <span
                 className="single-control-button"
                 style={this.state.isUseFont ? { float: "right" } : {}}
+              ></span>
+            </span>
+          </div>
+          <div className="setting-dialog-new-title">
+            <Trans>Dont't use mimical background</Trans>
+            <span
+              className="single-control-switch"
+              onClick={() => {
+                this.handleChangeBackground();
+              }}
+              style={{ float: "right" }}
+            >
+              <span
+                className="single-control-button"
+                style={this.state.isUseBackground ? { float: "right" } : {}}
+              ></span>
+            </span>
+          </div>
+          <div className="setting-dialog-new-title">
+            <Trans>Auto hide cursor when reading</Trans>
+            <span
+              className="single-control-switch"
+              onClick={() => {
+                this.handleChangeCursor();
+              }}
+              style={{ float: "right" }}
+            >
+              <span
+                className="single-control-button"
+                style={this.state.isHideCursor ? { float: "right" } : {}}
               ></span>
             </span>
           </div>

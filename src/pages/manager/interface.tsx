@@ -3,7 +3,6 @@ import NoteModel from "../../model/Note";
 import BookmarkModel from "../../model/Bookmark";
 export interface ManagerProps {
   books: BookModel[];
-  covers: { key: string; url: string }[];
   notes: NoteModel[];
   digests: NoteModel[];
   bookmarks: BookmarkModel[];

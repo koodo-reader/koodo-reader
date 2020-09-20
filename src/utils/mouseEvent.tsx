@@ -1,4 +1,5 @@
 import OtherUtil from "./otherUtil";
+import ReaderConfig from "./readerConfig";
 let Hammer = (window as any).Hammer;
 
 export const MouseEvent = (rendition: any) => {
@@ -93,6 +94,16 @@ export const MouseEvent = (rendition: any) => {
       doc.addEventListener("mousewheel", mouseChrome, false);
     }
   };
+  const handleCursor = () => {
+    if (lock) return;
+    OtherUtil.setReaderConfig("isHideCursor", "yes");
+    ReaderConfig.addDefaultCss();
+    lock = true;
+    setTimeout(function () {
+      lock = false;
+    }, 500);
+    return false;
+  };
 
   rendition.on("rendered", () => {
     let iframe = document.getElementsByTagName("iframe")[0];
@@ -107,6 +118,7 @@ export const MouseEvent = (rendition: any) => {
         gesture(event);
       });
     }
+    doc.addEventListener("mousemove", handleCursor);
 
     // 鼠标滚轮翻页
     window.addEventListener("keydown", arrowKeys);

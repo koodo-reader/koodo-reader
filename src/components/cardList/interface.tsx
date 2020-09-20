@@ -8,7 +8,6 @@ export interface CardListProps {
   bookmarks: BookmarkModel[];
   chapters: any;
   books: BookModel[];
-  epubs: any;
   cards: NoteModel[];
   mode: string;
   handleReadingState: (isReading: boolean) => void;

@@ -11,6 +11,7 @@ export interface SearchBoxProps {
   width: string;
   height: string;
   currentEpub: any;
+  shelfIndex: number;
   handleSearchResults: (results: number[]) => void;
   handleSearch: (isSearch: boolean) => void;
   handleSearchState: (isSearch: boolean) => void;

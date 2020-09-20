@@ -5,8 +5,11 @@ import RecentBooks from "../../utils/recordRecent";
 import RecordLocation from "../../utils/recordLocation";
 import BookmarkModel from "../../model/Bookmark";
 import BookModel from "../../model/Book";
+import localforage from "localforage";
 import { Trans } from "react-i18next";
 import { BookmarkPageProps, BookmarkPageState } from "./interface";
+
+declare var window: any;
 
 class BookmarkPage extends React.Component<
   BookmarkPageProps,
@@ -17,14 +20,12 @@ class BookmarkPage extends React.Component<
   }
   //点击跳转后跳转到指定页面
   handleRedirect = (key: string, cfi: string, percentage: number) => {
-    let { books, epubs } = this.props;
-    let book = null;
-    let epub = null;
-    //根据bookKey获取指定的book和epub
+    let { books } = this.props;
+    let book: BookModel;
+    //根据bookKey获取指定的book
     for (let i = 0; i < books.length; i++) {
       if (books[i].key === key) {
         book = books[i];
-        epub = epubs[i];
         break;
       }
     }
@@ -32,14 +33,16 @@ class BookmarkPage extends React.Component<
       cfi = RecordLocation.getCfi(book!.key).cfi;
       percentage = RecordLocation.getCfi(book!.key).percentage;
     }
-    this.props.handleReadingBook(book!);
-    this.props.handleReadingEpub(epub);
-    this.props.handleReadingState(true);
-    RecentBooks.setRecent(key);
-    RecordLocation.recordCfi(key, cfi, percentage);
+    localforage.getItem(book!.key).then((result) => {
+      this.props.handleReadingBook(book);
+      this.props.handleReadingEpub(window.ePub(result, {}));
+      this.props.handleReadingState(true);
+      RecentBooks.setRecent(key);
+      RecordLocation.recordCfi(key, cfi, percentage);
+    });
   };
   render() {
-    let { bookmarks, books, covers } = this.props;
+    let { bookmarks, books } = this.props;
     let bookKeyArr: string[] = [];
     //获取bookmarks中的图书列表
     bookmarks.forEach((item) => {
@@ -51,14 +54,6 @@ class BookmarkPage extends React.Component<
     //根据图书列表获取图书数据
     let bookArr = books.filter((item) => {
       return bookKeyArr.indexOf(item.key) > -1;
-    });
-    let coverArr: { key: string; url: string }[] = covers.filter((item) => {
-      return bookKeyArr.indexOf(item.key) > -1;
-    });
-    let coverObj: { [key: string]: string } = {};
-    //根据图书数据获取封面的url
-    coverArr.forEach((item: any) => {
-      coverObj[item.key] = item.url;
     });
     let bookmarkObj: { [key: string]: any } = {};
     bookmarks.forEach((item) => {
@@ -99,7 +94,7 @@ class BookmarkPage extends React.Component<
         <li className="bookmark-page-item" key={item.key}>
           <img
             className="bookmark-page-cover"
-            src={coverObj[item.key]}
+            src={item.cover}
             alt=""
             onClick={() => {
               this.handleRedirect(item.key, "", 0);

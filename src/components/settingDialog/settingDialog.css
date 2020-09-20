@@ -27,7 +27,7 @@
   line-height: 25px;
   color: rgba(75, 75, 75, 1);
   opacity: 1;
-  margin-top: 20px;
+  margin-top: 10px;
   margin-left: 30px;
   width: 280px;
 }
@@ -65,7 +65,7 @@
 }
 .setting-dialog-subtitle {
   font-size: 16px;
-  margin: 10px;
+  margin: 7px 10px;
   text-align: center;
   color: blue;
   float: left;
@@ -92,10 +92,11 @@
 }
 .about-this-project {
   position: absolute;
-  bottom: 100px;
-  left: 130px;
+  bottom: 20px;
+  left: 40px;
   width: 150px;
   cursor: pointer;
+  z-index: 10;
 }
 .setting-subtitle {
   font-size: 15px;

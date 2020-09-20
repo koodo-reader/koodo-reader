@@ -6,6 +6,7 @@ import {
   handleReadingBook,
   handleReadingEpub,
 } from "../../redux/actions/book";
+import { handleMessageBox, handleMessage } from "../../redux/actions/manager";
 import Book from "./component";
 import { stateType } from "../../redux/store";
 
@@ -20,5 +21,7 @@ const actionCreator = {
   handleReadingBook,
   handleReadingEpub,
   handleActionDialog,
+  handleMessageBox,
+  handleMessage,
 };
 export default connect(mapStateToProps, actionCreator)(Book);

@@ -77,10 +77,12 @@
 
 @media screen and (max-width: 950px) {
   .import-from-cloud {
-    display: none;
+    position: absolute;
+    left: 580px;
   }
   .import-from-local {
-    display: none;
+    position: absolute;
+    left: 400px;
   }
 }
 .download-demo-book {

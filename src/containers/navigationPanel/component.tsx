@@ -55,7 +55,7 @@ class NavigationPanel extends React.Component<
     ReadingTime.setTime(this.props.currentBook.key, this.state.time);
   }
 
-  handleClick = (currentTab: string) => {
+  handleChangeTab = (currentTab: string) => {
     this.setState({ currentTab });
   };
   renderSearchList = () => {
@@ -210,7 +210,7 @@ class NavigationPanel extends React.Component<
                 <span
                   className="book-content-title"
                   onClick={() => {
-                    this.handleClick("contents");
+                    this.handleChangeTab("contents");
                   }}
                   style={
                     this.state.currentTab === "contents"
@@ -228,7 +228,7 @@ class NavigationPanel extends React.Component<
                       : { color: "rgba(217, 217, 217, 1)" }
                   }
                   onClick={() => {
-                    this.handleClick("bookmarks");
+                    this.handleChangeTab("bookmarks");
                   }}
                 >
                   <Trans>Bookmark</Trans>
@@ -241,7 +241,7 @@ class NavigationPanel extends React.Component<
                       : { color: "rgba(217, 217, 217, 1)" }
                   }
                   onClick={() => {
-                    this.handleClick("notes");
+                    this.handleChangeTab("notes");
                   }}
                 >
                   <Trans>Note</Trans>
@@ -254,7 +254,7 @@ class NavigationPanel extends React.Component<
                       : { color: "rgba(217, 217, 217, 1)" }
                   }
                   onClick={() => {
-                    this.handleClick("digests");
+                    this.handleChangeTab("digests");
                   }}
                 >
                   <Trans>Digest</Trans>

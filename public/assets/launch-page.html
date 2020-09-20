@@ -9,10 +9,17 @@
       .launch-box {
         height: 100%;
         overflow: hidden;
-        background-color: white;
       }
       * {
         margin: 0;
+      }
+      .shadow-box {
+        margin: 10px;
+        height: calc(100% - 20px);
+        background-color: white;
+        box-shadow: 0 0 10px rgba(75, 75, 75, 0.2);
+        overflow: hidden;
+        position: relative;
       }
       .logo {
         width: 180px;
@@ -72,16 +79,17 @@
   </head>
   <body>
     <div class="launch-box">
-      <img src="splash.png" alt="" class="logo" />
-      <p class="words"></p>
-      <div class="progress-container">
-        <span class="launching">启动中</span>
-        <span class="progress"></span>
-        <div class="progress-bar"></div>
-        <div class="progress-line"></div>
+      <div class="shadow-box">
+        <img src="splash.png" alt="" class="logo" />
+        <p class="words"></p>
+        <div class="progress-container">
+          <span class="launching">启动中</span>
+          <span class="progress"></span>
+          <div class="progress-bar"></div>
+          <div class="progress-line"></div>
+        </div>
+        <img src="writer.jpg" alt="" class="writer" />
       </div>
-
-      <img src="writer.jpg" alt="" class="writer" />
     </div>
     <script>
       let words = [

@@ -11,6 +11,7 @@ const mapStateToProps = (state: stateType) => {
     isSearch: state.manager.isSearch,
     currentEpub: state.book.currentEpub,
     tabMode: state.sidebar.mode,
+    shelfIndex: state.sidebar.shelfIndex,
   };
 };
 const actionCreator = {

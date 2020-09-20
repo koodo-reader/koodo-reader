@@ -32,7 +32,15 @@
 }
 
 #newTag {
-  width: 50px;
+  width: 100%;
+  border: none;
+  border-radius: 10px;
+  height: 100%;
+  background-color: rgba(75, 75, 75, 0.1);
+  padding-left: 10px;
+}
+#newTag:focus {
+  outline: none;
 }
 .tag-list-item-new {
   width: 20px;
@@ -51,4 +59,5 @@
   margin-top: 5px;
   position: relative;
   bottom: 1px;
+  box-sizing: border-box;
 }
