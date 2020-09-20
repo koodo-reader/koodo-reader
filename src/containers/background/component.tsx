@@ -15,6 +15,9 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
   }
 
   render() {
+    if (OtherUtil.getReaderConfig("isUseBackground") === "yes") {
+      return <div className="background"></div>;
+    }
     return (
       <div className="background">
         <div

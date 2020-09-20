@@ -6,6 +6,7 @@ import { BookProps, BookState } from "./interface";
 import AddFavorite from "../../utils/addFavorite";
 import ActionDialog from "../../containers/actionDialog";
 import OtherUtil from "../../utils/otherUtil";
+import localforage from "localforage";
 
 declare var window: any;
 
@@ -20,12 +21,9 @@ class Book extends React.Component<BookProps, BookState> {
       top: 0,
     };
     this.handleOpenBook = this.handleOpenBook.bind(this);
-    this.epub = null;
   }
 
   UNSAFE_componentWillMount() {
-    this.epub = window.ePub(this.props.book.content, {});
-
     this.setState({
       isFavorite:
         AddFavorite.getAllFavorite().indexOf(this.props.book.key) > -1,
@@ -42,9 +40,11 @@ class Book extends React.Component<BookProps, BookState> {
   }
   handleOpenBook() {
     this.props.handleReadingBook(this.props.book);
-    this.props.handleReadingEpub(this.epub);
-    this.props.handleReadingState(true);
-    RecentBooks.setRecent(this.props.book.key);
+    localforage.getItem(this.props.book.key).then((result) => {
+      this.props.handleReadingEpub(window.ePub(result, {}));
+      this.props.handleReadingState(true);
+      RecentBooks.setRecent(this.props.book.key);
+    });
   }
   handleMoreAction = (event: any) => {
     const e = event || window.event;
@@ -60,10 +60,14 @@ class Book extends React.Component<BookProps, BookState> {
   handleLoveBook = () => {
     AddFavorite.setFavorite(this.props.book.key);
     this.setState({ isFavorite: true });
+    this.props.handleMessage("Add Successfully");
+    this.props.handleMessageBox(true);
   };
   handleCancelLoveBook = () => {
     AddFavorite.clear(this.props.book.key);
     this.setState({ isFavorite: false });
+    this.props.handleMessage("Cancel Successfully");
+    this.props.handleMessageBox(true);
   };
   //控制按钮的弹出
   handleConfig = (mode: boolean) => {
@@ -82,10 +86,10 @@ class Book extends React.Component<BookProps, BookState> {
             this.handleConfig(false);
           }}
         >
-          {this.props.bookCover ? (
+          {this.props.book.cover ? (
             <img
               className="book-item-cover"
-              src={this.props.bookCover}
+              src={this.props.book.cover}
               alt=""
               onClick={() => {
                 this.handleOpenBook();

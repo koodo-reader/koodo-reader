@@ -7,6 +7,10 @@ import { CardListProps, CardListStates } from "./interface";
 import DeleteIcon from "../../components/deleteIcon";
 import RecentBooks from "../../utils/recordRecent";
 import RecordLocation from "../../utils/recordLocation";
+import localforage from "localforage";
+import BookModel from "../../model/Book";
+
+declare var window: any;
 
 class CardList extends React.Component<CardListProps, CardListStates> {
   constructor(props: CardListProps) {
@@ -29,22 +33,23 @@ class CardList extends React.Component<CardListProps, CardListStates> {
     this.setState({ deleteKey });
   };
   handleJump = (cfi: string, bookKey: string, percentage: number) => {
-    let { books, epubs } = this.props;
-    let book = null;
-    let epub = null;
+    let { books } = this.props;
+    let book: BookModel;
     //根据bookKey获取指定的book和epub
     for (let i = 0; i < books.length; i++) {
       if (books[i].key === bookKey) {
         book = books[i];
-        epub = epubs[i];
         break;
       }
     }
-    this.props.handleReadingBook(book!);
-    this.props.handleReadingEpub(epub);
-    this.props.handleReadingState(true);
-    RecentBooks.setRecent(bookKey);
-    RecordLocation.recordCfi(bookKey, cfi, percentage);
+    // if (!book) return;
+    localforage.getItem(book!.key).then((result) => {
+      this.props.handleReadingBook(book);
+      this.props.handleReadingEpub(window.ePub(result, {}));
+      this.props.handleReadingState(true);
+      RecentBooks.setRecent(bookKey);
+      RecordLocation.recordCfi(bookKey, cfi, percentage);
+    });
   };
   render() {
     let { cards } = this.props;

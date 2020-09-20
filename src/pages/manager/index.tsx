@@ -16,7 +16,6 @@ import Manager from "./component";
 const mapStateToProps = (state: stateType) => {
   return {
     books: state.manager.books,
-    covers: state.manager.covers,
     notes: state.reader.notes,
     digests: state.reader.digests,
     bookmarks: state.reader.bookmarks,

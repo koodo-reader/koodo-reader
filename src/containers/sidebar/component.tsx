@@ -1,7 +1,6 @@
 import React from "react";
 import "./sidebar.css";
 import { sideMenu } from "../../utils/readerConfig";
-import ShelfUtil from "../../utils/shelfUtil";
 import { Trans } from "react-i18next";
 import { SidebarProps, SidebarState } from "./interface";
 
@@ -21,15 +20,6 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
     this.setState({ shelfIndex: -1 });
     this.setState({ isCollapse: true });
     this.props.handleMode(mode);
-    this.props.handleShelfIndex(-1);
-  };
-  handleShelf = () => {
-    this.setState({ isCollapse: !this.state.isCollapse });
-  };
-  handleShelfItem = (index: number) => {
-    this.setState({ shelfIndex: index });
-    this.props.handleShelfIndex(index);
-    this.props.handleMode("shelf");
   };
   render() {
     const renderSideMenu = () => {
@@ -70,28 +60,6 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
         );
       });
     };
-    const renderShelfList = () => {
-      const shelfList = Object.keys(ShelfUtil.getShelf());
-      //去除开头的新建书架
-      shelfList.splice(0, 1);
-      return shelfList.map((item, index) => {
-        return (
-          <li
-            key={item}
-            className={
-              this.state.shelfIndex === index
-                ? "shelf-list-item active-shelf "
-                : "shelf-list-item"
-            }
-            onClick={() => {
-              this.handleShelfItem(index);
-            }}
-          >
-            <Trans>{item}</Trans>
-          </li>
-        );
-      });
-    };
     return (
       <div className="sidebar">
         <img
@@ -104,42 +72,7 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
           className="logo"
         />
         <div className="side-menu-container-parent">
-          <ul className="side-menu-container">
-            {renderSideMenu()}
-            <li className="side-menu-shelf">
-              <div
-                onClick={() => {
-                  this.handleShelf();
-                }}
-              >
-                <span
-                  className="icon-shelf"
-                  style={{ marginLeft: "2px" }}
-                ></span>
-                <span style={{ marginLeft: "12px" }}>
-                  <Trans>My Shelves</Trans>
-                </span>
-
-                <div
-                  className="dropdown-icon-container"
-                  style={
-                    this.state.isCollapse ? {} : { transform: "rotate(180deg)" }
-                  }
-                >
-                  <span className="icon-dropdown sidebar-dropdown"></span>
-                </div>
-              </div>
-              <div className="shelf-list-container-parent">
-                <ul
-                  className="shelf-list-container"
-                  style={this.state.isCollapse ? { display: "none" } : {}}
-                >
-                  {renderShelfList()}
-                </ul>
-              </div>
-            </li>
-            <li className="side-menu-about"></li>
-          </ul>
+          <ul className="side-menu-container">{renderSideMenu()}</ul>
         </div>
       </div>
     );

@@ -2,7 +2,6 @@ import BookModel from "../../model/Book";
 
 export interface BookItemProps {
   book: BookModel;
-  bookCover: string;
   percentage: number;
   handleReadingState: (isReading: boolean) => void;
   handleReadingBook: (book: BookModel) => void;

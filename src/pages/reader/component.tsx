@@ -62,6 +62,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
   componentWillUnmount() {
     //清除上面的计时器
     clearTimeout(this.timer);
+    setTimeout(() => {}, 5000);
   }
   //进入阅读器
   handleEnterReader = (position: string) => {
@@ -262,6 +263,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
               : {}
           }
         ></div>
+
         <Background />
       </div>
     );
