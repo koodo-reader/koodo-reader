@@ -7,7 +7,7 @@ import { connect } from "react-redux";
 import { handleMessageBox, handleMessage } from "../../redux/actions/manager";
 import { stateType } from "../../redux/store";
 import { withNamespaces } from "react-i18next";
-import BackupPage from "./component";
+import BackupDialog from "./component";
 
 const mapStateToProps = (state: stateType) => {
   return {
@@ -27,4 +27,4 @@ const actionCreator = {
 export default connect(
   mapStateToProps,
   actionCreator
-)(withNamespaces()(BackupPage as any));
+)(withNamespaces()(BackupDialog as any));

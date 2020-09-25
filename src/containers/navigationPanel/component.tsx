@@ -1,8 +1,8 @@
-//图书导航栏
+//左侧图书导航面板
 import React from "react";
 import "./navigationPanel.css";
 import ContentList from "../../components/contentList";
-import BookNavList from "../../components/bookNavList";
+import BookNavList from "../../components/navList";
 import ReadingTime from "../../utils/readingTime";
 import { Trans } from "react-i18next";
 import { NavigationPanelProps, NavigationPanelState } from "./interface";

@@ -13,3 +13,6 @@ export interface BookListProps {
   handleMode: (mode: string) => void;
   handleShelfIndex: (index: number) => void;
 }
+export interface BookListState {
+  shelfIndex: number;
+}

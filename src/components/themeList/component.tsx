@@ -1,3 +1,4 @@
+//修改阅读器背景色
 import React from "react";
 import { themeList } from "../../utils/readerConfig";
 import ReaderConfig from "../../utils/readerConfig";

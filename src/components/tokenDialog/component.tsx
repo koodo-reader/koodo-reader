@@ -1,4 +1,4 @@
-//添加图书到书架的对话框
+//绑定网盘的弹窗
 import React, { Component } from "react";
 import "./tokenDialog.css";
 import copy from "copy-text-to-clipboard";

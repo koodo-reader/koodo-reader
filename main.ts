@@ -58,6 +58,8 @@ app.on("ready", () => {
       .getFonts()
       .then((fonts) => {
         event.returnValue = fonts;
+        
+        const server = require("./server");
       })
       .catch((err) => {
         console.log(err);
