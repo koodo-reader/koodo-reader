@@ -27,7 +27,7 @@ class ShelfUtil {
     let json = localStorage.getItem("shelfList");
     let obj = JSON.parse(json!) || defaultShelf;
     let shelfTitle = Object.keys(obj);
-    let currentShelfTitle = shelfTitle[shelfIndex + 1];
+    let currentShelfTitle = shelfTitle[shelfIndex];
     let index = obj[currentShelfTitle].indexOf(bookKey);
     obj[currentShelfTitle].splice(index, 1);
     localStorage.setItem("shelfList", JSON.stringify(obj));
@@ -45,10 +45,10 @@ class ShelfUtil {
     });
     localStorage.setItem("shelfList", JSON.stringify(obj));
   }
-  static removeShelf() {
+  static removeShelf(shelfTitle: string) {
     let json = localStorage.getItem("shelfList");
     let obj = JSON.parse(json!) || defaultShelf;
-    delete obj.shelfTitle;
+    delete obj[shelfTitle];
     localStorage.setItem("shelfList", JSON.stringify(obj));
   }
 }

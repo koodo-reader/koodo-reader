@@ -86,7 +86,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
   handleBook = (file: any, md5: string) => {
     return new Promise((resolve, reject) => {
       //md5重复不导入
-      let isRepeat= false;
+      let isRepeat = false;
       if (this.props.books) {
         this.props.books.forEach((item) => {
           if (item.md5 === md5) {
@@ -160,7 +160,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
               reject();
             });
         };
-      } 
+      }
     });
   };
 
@@ -175,6 +175,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
           }
 
           for (let i = 0; i < acceptedFiles.length; i++) {
+            //异步解析文件
             await this.doIncrementalTest(acceptedFiles[i]);
           }
         }}

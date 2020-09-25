@@ -8,6 +8,5 @@ export interface SettingInfoState {
   isTouch: boolean;
   isOpenBook: boolean;
   isUseFont: boolean;
-  isHideCursor: boolean;
   isUseBackground: boolean;
 }

@@ -1,3 +1,4 @@
+//添加笔记的弹窗
 import React from "react";
 import "./popupNote.css";
 import Note from "../../model/Note";
@@ -79,10 +80,10 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
       text = text.replace(/\n/g, "");
       text = text.replace(/\t/g, "");
       text = text.replace(/\f/g, "");
-      let percentage =
-        RecordLocation.getCfi(this.props.currentBook.key) === null
-          ? 0
-          : RecordLocation.getCfi(this.props.currentBook.key).percentage;
+      let percentage = RecordLocation.getCfi(this.props.currentBook.key)
+        .percentage
+        ? RecordLocation.getCfi(this.props.currentBook.key).percentage
+        : 0;
 
       let color = this.props.color || 0;
       let tag = this.state.tag;

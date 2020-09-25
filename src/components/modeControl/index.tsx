@@ -2,7 +2,7 @@
 import { connect } from "react-redux";
 import { handleMessageBox, handleMessage } from "../../redux/actions/manager";
 import { withNamespaces } from "react-i18next";
-import SingleControl from "./component";
+import ModeControl from "./component";
 import { stateType } from "../../redux/store";
 
 const mapStateToProps = (state: stateType) => {
@@ -12,4 +12,4 @@ const actionCreator = { handleMessageBox, handleMessage };
 export default connect(
   mapStateToProps,
   actionCreator
-)(withNamespaces()(SingleControl as any));
+)(withNamespaces()(ModeControl as any));

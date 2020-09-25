@@ -6,6 +6,7 @@ export interface AddDialogProps {
   currentBook: BookModel;
   handleMessage: (message: string) => void;
   handleMessageBox: (isShow: boolean) => void;
+  handleMode: (mode: string) => void;
 }
 export interface AddDialogState {
   isNew: boolean;

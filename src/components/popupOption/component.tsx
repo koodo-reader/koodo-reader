@@ -1,3 +1,4 @@
+//选中文字后的弹窗，四个按钮
 import React from "react";
 import "./popupOption.css";
 import localforage from "localforage";
@@ -76,10 +77,10 @@ class PopupOption extends React.Component<PopupOptionProps> {
     }
     const cfi = RecordLocation.getCfi(this.props.currentBook.key).cfi;
 
-    let percentage =
-      RecordLocation.getCfi(this.props.currentBook.key) === null
-        ? 0
-        : RecordLocation.getCfi(this.props.currentBook.key).percentage;
+    let percentage = RecordLocation.getCfi(this.props.currentBook.key)
+      .percentage
+      ? RecordLocation.getCfi(this.props.currentBook.key).percentage
+      : 0;
     let color = this.props.color;
     let notes = "";
     let iframe = document.getElementsByTagName("iframe")[0];

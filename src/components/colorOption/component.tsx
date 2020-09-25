@@ -1,4 +1,4 @@
-//左下角的图标外链
+//高亮，下划线颜色选择
 import React from "react";
 import "./colorOption.css";
 import { ColorProps, ColorStates } from "./interface";

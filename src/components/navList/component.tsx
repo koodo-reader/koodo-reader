@@ -1,11 +1,11 @@
-//图书导航栏页面的书签页面
+//图书导航栏页面的书签，笔记，书摘页面
 import React from "react";
-import "./bookNavList.css";
+import "./navList.css";
 import { Trans } from "react-i18next";
-import { BookNavListProps, BookNavListState } from "./interface";
+import { NavListProps, NavListState } from "./interface";
 import DeleteIcon from "../deleteIcon";
-class BookNavList extends React.Component<BookNavListProps, BookNavListState> {
-  constructor(props: BookNavListProps) {
+class NavList extends React.Component<NavListProps, NavListState> {
+  constructor(props: NavListProps) {
     super(props);
     this.state = {
       deleteIndex: -1,
@@ -92,4 +92,4 @@ class BookNavList extends React.Component<BookNavListProps, BookNavListState> {
   }
 }
 
-export default BookNavList;
+export default NavList;

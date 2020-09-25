@@ -1,7 +1,7 @@
 //控制列表模式下的图书显示
 import React from "react";
 import RecentBooks from "../../utils/recordRecent";
-import "./bookItem.css";
+import "./bookListItem.css";
 import RecordLocation from "../../utils/recordLocation";
 import { BookItemProps, BookItemState } from "./interface";
 import { Trans } from "react-i18next";
@@ -9,7 +9,7 @@ import localforage from "localforage";
 
 declare var window: any;
 
-class Book extends React.Component<BookItemProps, BookItemState> {
+class BookListItem extends React.Component<BookItemProps, BookItemState> {
   epub: any;
   constructor(props: BookItemProps) {
     super(props);
@@ -101,4 +101,4 @@ class Book extends React.Component<BookItemProps, BookItemState> {
   }
 }
 
-export default Book;
+export default BookListItem;

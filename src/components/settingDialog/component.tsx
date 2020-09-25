@@ -20,7 +20,6 @@ class SettingDialog extends React.Component<
       isOpenBook: OtherUtil.getReaderConfig("isOpenBook") === "yes",
       isUseFont: OtherUtil.getReaderConfig("isUseFont") === "yes",
       isUseBackground: OtherUtil.getReaderConfig("isUseBackground") === "yes",
-      isHideCursor: OtherUtil.getReaderConfig("isHideCursor") === "yes",
     };
   }
   componentDidMount() {
@@ -81,17 +80,7 @@ class SettingDialog extends React.Component<
       : this.props.handleMessage("Turn On Successfully");
     this.props.handleMessageBox(true);
   };
-  handleChangeCursor = () => {
-    this.setState({ isHideCursor: !this.state.isHideCursor });
-    OtherUtil.setReaderConfig(
-      "isHideCursor",
-      this.state.isHideCursor ? "no" : "yes"
-    );
-    this.state.isHideCursor
-      ? this.props.handleMessage("Turn Off Successfully")
-      : this.props.handleMessage("Turn On Successfully");
-    this.props.handleMessageBox(true);
-  };
+
   render() {
     return (
       <div className="setting-dialog-container">
@@ -178,21 +167,7 @@ class SettingDialog extends React.Component<
               ></span>
             </span>
           </div>
-          <div className="setting-dialog-new-title">
-            <Trans>Auto hide cursor when reading</Trans>
-            <span
-              className="single-control-switch"
-              onClick={() => {
-                this.handleChangeCursor();
-              }}
-              style={{ float: "right" }}
-            >
-              <span
-                className="single-control-button"
-                style={this.state.isHideCursor ? { float: "right" } : {}}
-              ></span>
-            </span>
-          </div>
+
           <div className="setting-dialog-new-title">
             <Trans>语言 / Language</Trans>
             <div className="setting-language">

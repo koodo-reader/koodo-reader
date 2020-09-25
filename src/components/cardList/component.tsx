@@ -1,4 +1,4 @@
-//我的书摘页面
+//我的书摘，笔记的卡片
 import React from "react";
 import "./cardList.css";
 import NoteModel from "../../model/Note";
@@ -8,7 +8,6 @@ import DeleteIcon from "../../components/deleteIcon";
 import RecentBooks from "../../utils/recordRecent";
 import RecordLocation from "../../utils/recordLocation";
 import localforage from "localforage";
-import BookModel from "../../model/Book";
 
 declare var window: any;
 
@@ -34,7 +33,7 @@ class CardList extends React.Component<CardListProps, CardListStates> {
   };
   handleJump = (cfi: string, bookKey: string, percentage: number) => {
     let { books } = this.props;
-    let book: BookModel;
+    let book: any;
     //根据bookKey获取指定的book和epub
     for (let i = 0; i < books.length; i++) {
       if (books[i].key === bookKey) {
@@ -42,7 +41,12 @@ class CardList extends React.Component<CardListProps, CardListStates> {
         break;
       }
     }
-    // if (!book) return;
+    if (!book) {
+      this.props.handleMessage("Book not exsit");
+      this.props.handleMessageBox(true);
+      return;
+    }
+
     localforage.getItem(book!.key).then((result) => {
       this.props.handleReadingBook(book);
       this.props.handleReadingEpub(window.ePub(result, {}));

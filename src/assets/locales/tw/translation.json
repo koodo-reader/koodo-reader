@@ -119,9 +119,6 @@
   "Current Font Size": "目前大小",
   "Current Chapter": "目前章節",
   "Loading": "載入中",
-  "Cancel Successfully": "取消成功",
-  "Don't use realisc background": "不使用仿真背景",
-  "Auto hide cursor when reading": "阅读时自动隐藏鼠标",
   "Pick Up Color": "選擇顏色",
   "Highlight Successfully": "高亮成功",
   "Take Notes": "筆記",
@@ -173,5 +170,11 @@
   "Our Website": "歡迎造訪我們的網站",
   "What's New": "新增功能",
   "What's been fixed": "問題修復",
-  "语言 / Language": "語言 / Language"
+  "语言 / Language": "語言 / Language",
+  "Cancel Successfully": "取消成功",
+  "Don't use realisc background": "不使用仿真背景",
+  "Please continue in desktop version": "仅客户端版本支持",
+  "Auto hide cursor when reading": "阅读时自动隐藏鼠标",
+  "Book not exsit": "书籍不存在",
+  "Delete Shelf": "删除书架"
 }

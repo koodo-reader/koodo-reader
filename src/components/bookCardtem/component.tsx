@@ -1,7 +1,7 @@
 //卡片模式下的图书显示
 import React from "react";
 import RecentBooks from "../../utils/recordRecent";
-import "./book.css";
+import "./bookCardItem.css";
 import { BookProps, BookState } from "./interface";
 import AddFavorite from "../../utils/addFavorite";
 import ActionDialog from "../../containers/actionDialog";
@@ -10,7 +10,7 @@ import localforage from "localforage";
 
 declare var window: any;
 
-class Book extends React.Component<BookProps, BookState> {
+class BookCardItem extends React.Component<BookProps, BookState> {
   epub: any;
   constructor(props: BookProps) {
     super(props);
@@ -24,12 +24,14 @@ class Book extends React.Component<BookProps, BookState> {
   }
 
   UNSAFE_componentWillMount() {
+    //判断此书是否为喜爱的图书
     this.setState({
       isFavorite:
         AddFavorite.getAllFavorite().indexOf(this.props.book.key) > -1,
     });
   }
   componentDidMount() {
+    //控制是否自动打开本书
     if (
       OtherUtil.getReaderConfig("isOpenBook") === "yes" &&
       RecentBooks.getAllRecent()[0] === this.props.book.key &&
@@ -52,7 +54,7 @@ class Book extends React.Component<BookProps, BookState> {
     if (x > document.body.clientWidth - 100) {
       x = x - 80;
     }
-    this.setState({ left: x - 210, top: e.clientY - 100 }, () => {
+    this.setState({ left: x - 210, top: e.clientY - 120 }, () => {
       this.props.handleActionDialog(true);
       this.props.handleReadingBook(this.props.book);
     });
@@ -147,4 +149,4 @@ class Book extends React.Component<BookProps, BookState> {
     );
   }
 }
-export default Book;
+export default BookCardItem;

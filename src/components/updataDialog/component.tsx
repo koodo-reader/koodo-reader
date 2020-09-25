@@ -1,4 +1,4 @@
-//左下角的图标外链
+//更新提示弹窗
 import React from "react";
 import "./updateDialog.css";
 import { UpdateInfoProps, UpdateInfoState } from "./interface";

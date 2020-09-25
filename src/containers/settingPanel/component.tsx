@@ -1,9 +1,10 @@
+//右侧阅读选项面板
 import React from "react";
 import "./settingPanel.css";
 import ThemeList from "../../components/themeList";
 import FontSizeList from "../../components/fontSizeList";
 import DropdownList from "../../components/dropdownList";
-import SingleControl from "../../components/singleControl";
+import ModeControl from "../../components/modeControl";
 import { SettingPanelProps, SettingPanelState } from "./interface";
 import { Trans } from "react-i18next";
 
@@ -78,7 +79,7 @@ class SettingPanel extends React.Component<
           <div className="setting-panel-title">
             <Trans>Reading Option</Trans>
           </div>
-          <SingleControl />
+          <ModeControl />
           {this.state.isSupported && this.props.locations ? (
             <div className="single-control-switch-container">
               <span className="single-control-switch-title">

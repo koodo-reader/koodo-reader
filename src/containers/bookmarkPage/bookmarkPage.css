@@ -3,12 +3,14 @@
   top: 80px;
   left: 200px;
   width: calc(100% - 200px);
-  height: calc(100% - 90px);
+  height: calc(100% - 80px);
   overflow: hidden;
 }
 .bookmark-page-container {
   width: 100%;
   height: 100%;
+  padding-right: 17px; /* Increase/decrease this value for cross-browser compatibility */
+  box-sizing: content-box; /* So the width will be 100% + 17px */
   display: flex;
   flex-wrap: wrap;
   overflow-y: scroll;
@@ -36,6 +38,7 @@
   height: 160px;
   min-width: 403px;
   margin-top: 15px;
+  margin-bottom: 15px;
 }
 
 .bookmark-page-cover {
@@ -50,10 +53,8 @@
   cursor: pointer;
 }
 .bookmark-page-name {
-  /* float: left; */
   height: 29px;
   width: 110px;
-  /* margin-left: 10px; */
   display: block;
   font-size: 14px;
   color: rgba(75, 75, 75, 1);
