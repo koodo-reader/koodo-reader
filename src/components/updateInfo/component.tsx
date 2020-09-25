@@ -1,4 +1,4 @@
-//左下角的图标外链
+//提示更新的文字
 import React from "react";
 import "./updateInfo.css";
 import { UpdateInfoProps, UpdateInfoState } from "./interface";

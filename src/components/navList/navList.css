@@ -10,9 +10,9 @@
 .book-bookmark-digest {
   margin: 15px 5px 10px;
   width: 236px;
-  max-height: 186px;
+  max-height: 198px;
   font-size: 14px;
-  line-height: 14px;
+  line-height: 18px;
   color: rgba(75, 75, 75, 1);
   opacity: 1;
   text-overflow: ellipsis;

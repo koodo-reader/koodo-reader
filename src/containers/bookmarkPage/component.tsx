@@ -89,29 +89,26 @@ class BookmarkPage extends React.Component<
         </li>
       ));
     };
-    const renderBookmarkPageItem = (item: BookModel, index: number) => {
-      return (
-        <li className="bookmark-page-item" key={item.key}>
-          <img
-            className="bookmark-page-cover"
-            src={item.cover}
-            alt=""
-            onClick={() => {
-              this.handleRedirect(item.key, "", 0);
-            }}
-          />
-          <p className="bookmark-page-name">{bookArr[index].name}</p>
-          <div className="bookmark-page-bookmark-container-parent">
-            <ul className="bookmark-page-bookmark-container">
-              {renderBookmarklistItem(item)}
-            </ul>
-          </div>
-        </li>
-      );
-    };
     const renderBookmarkPage = () => {
       return bookArr.map((item, index) => {
-        return <div key={item.key}>{renderBookmarkPageItem(item, index)}</div>;
+        return (
+          <li className="bookmark-page-item" key={item.key}>
+            <img
+              className="bookmark-page-cover"
+              src={item.cover}
+              alt=""
+              onClick={() => {
+                this.handleRedirect(item.key, "", 0);
+              }}
+            />
+            <p className="bookmark-page-name">{bookArr[index].name}</p>
+            <div className="bookmark-page-bookmark-container-parent">
+              <ul className="bookmark-page-bookmark-container">
+                {renderBookmarklistItem(item)}
+              </ul>
+            </div>
+          </li>
+        );
       });
     };
     return (

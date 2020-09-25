@@ -8,6 +8,7 @@ import {
   handleReadingBook,
   handleReadingEpub,
 } from "../../redux/actions/book";
+import { handleMessageBox, handleMessage } from "../../redux/actions/manager";
 
 const mapStateToProps = (state: stateType) => {
   return {
@@ -23,6 +24,8 @@ const actionCreator = {
   handleReadingState,
   handleReadingBook,
   handleReadingEpub,
+  handleMessageBox,
+  handleMessage,
 };
 export default connect(
   mapStateToProps,

@@ -1,3 +1,4 @@
+//底部阅读进度面板
 import React from "react";
 import "./progressPanel.css";
 import RecordLocation from "../../utils/recordLocation";
@@ -51,10 +52,10 @@ class ProgressPanel extends React.Component<
     const section = this.props.currentEpub.section(chapterIndex - 1);
     if (section && section.href) {
       this.props.currentEpub.rendition.display(section.href).then(() => {
-        let percentage =
-          RecordLocation.getCfi(this.props.currentBook.key) === null
-            ? 0
-            : RecordLocation.getCfi(this.props.currentBook.key).percentage;
+        let percentage = RecordLocation.getCfi(this.props.currentBook.key)
+          .percentage
+          ? RecordLocation.getCfi(this.props.currentBook.key).percentage
+          : 0;
         this.setState({ displayPercentage: percentage });
       });
     }
@@ -65,10 +66,10 @@ class ProgressPanel extends React.Component<
     const section = this.props.currentEpub.section(chapterIndex + 1);
     if (section && section.href) {
       this.props.currentEpub.rendition.display(section.href).then(() => {
-        let percentage =
-          RecordLocation.getCfi(this.props.currentBook.key) === null
-            ? 0
-            : RecordLocation.getCfi(this.props.currentBook.key).percentage;
+        let percentage = RecordLocation.getCfi(this.props.currentBook.key)
+          .percentage
+          ? RecordLocation.getCfi(this.props.currentBook.key).percentage
+          : 0;
         this.setState({ displayPercentage: percentage });
       });
     }

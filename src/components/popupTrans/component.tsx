@@ -1,3 +1,4 @@
+//翻译弹窗
 import React from "react";
 import "./popupTrans.css";
 import { PopupTransProps, PopupTransState } from "./interface";

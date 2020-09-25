@@ -10,6 +10,7 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
   }
 
   componentWillMount() {
+    //获取目录
     this.props.currentEpub.loaded.navigation
       .then((chapters: any) => {
         this.setState({ chapters: chapters.toc });

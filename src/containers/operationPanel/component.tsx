@@ -1,4 +1,4 @@
-//图书操作页面
+//顶部图书操作面板
 import React from "react";
 import "./operationPanel.css";
 import Bookmark from "../../model/Bookmark";
@@ -84,17 +84,17 @@ class OperationPanel extends React.Component<
     const cfiRange = `epubcfi(${cfibase}!,${cfistart},${cfiend})`;
     const cfi = RecordLocation.getCfi(this.props.currentBook.key).cfi;
     this.props.currentEpub.getRange(cfiRange).then((range: any) => {
+      if (!range) return;
       let text = range.toString();
       text = text.replace(/\s\s/g, "");
       text = text.replace(/\r/g, "");
       text = text.replace(/\n/g, "");
       text = text.replace(/\t/g, "");
       text = text.replace(/\f/g, "");
-      let percentage =
-        RecordLocation.getCfi(this.props.currentBook.key) === null
-          ? 0
-          : RecordLocation.getCfi(this.props.currentBook.key).percentage;
-
+      let percentage = RecordLocation.getCfi(this.props.currentBook.key)
+        .percentage
+        ? RecordLocation.getCfi(this.props.currentBook.key).percentage
+        : 0;
       let bookmark = new Bookmark(bookKey, cfi, text, percentage, chapter);
       let bookmarkArr = this.props.bookmarks ?? [];
       bookmarkArr.push(bookmark);

@@ -13,6 +13,8 @@ export interface CardListProps {
   handleReadingState: (isReading: boolean) => void;
   handleReadingBook: (currentBook: BookModel) => void;
   handleReadingEpub: (currentEpub: any) => void;
+  handleMessage: (message: string) => void;
+  handleMessageBox: (isShow: boolean) => void;
 }
 export interface CardListStates {
   deleteKey: string;

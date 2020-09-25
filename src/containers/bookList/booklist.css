@@ -3,7 +3,7 @@
   top: 115px;
   left: 200px;
   width: calc(100% - 200px);
-  height: calc(100% - 75px);
+  height: calc(100% - 110px);
   overflow: hidden;
 }
 .book-list-container {
@@ -74,4 +74,8 @@
   margin-left: 16px;
   font-size: 15px;
   line-height: 31px;
+}
+.delete-shelf-icon {
+  cursor: pointer;
+  margin-left: 20px;
 }
