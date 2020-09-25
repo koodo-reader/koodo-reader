@@ -2,7 +2,7 @@ import BookModel from "../../model/Book";
 import NoteModel from "../../model/Note";
 import BookmarkModel from "../../model/Bookmark";
 
-export interface BackupPageProps {
+export interface BackupDialogProps {
   handleBackupDialog: (isBackup: boolean) => void;
   handleTokenDialog: (isOpenTokenDialog: boolean) => void;
   handleMessage: (message: string) => void;
@@ -13,7 +13,7 @@ export interface BackupPageProps {
   digests: NoteModel[];
   bookmarks: BookmarkModel[];
 }
-export interface BackupPageState {
+export interface BackupDialogState {
   currentStep: number | null;
   isBackup: string;
   currentDrive: number | null;

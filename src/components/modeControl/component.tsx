@@ -1,15 +1,12 @@
-//单双页切换
+//阅读模式切换
 import React from "react";
-import "./singleControl.css";
+import "./modeControl.css";
 import { Trans } from "react-i18next";
-import { SingleControlProps, SingleControlState } from "./interface";
+import { ModeControlProps, ModeControlState } from "./interface";
 import OtherUtil from "../../utils/otherUtil";
 
-class SingleControl extends React.Component<
-  SingleControlProps,
-  SingleControlState
-> {
-  constructor(props: SingleControlProps) {
+class ModeControl extends React.Component<ModeControlProps, ModeControlState> {
+  constructor(props: ModeControlProps) {
     super(props);
     this.state = {
       readerMode: OtherUtil.getReaderConfig("readerMode") || "double",
@@ -34,7 +31,7 @@ class SingleControl extends React.Component<
         >
           <span className="icon-single-page single-page-icon"></span>
           <div className="single-mode-text">
-            <Trans>Single-Page Mode</Trans>
+            <Trans>Mode-Page Mode</Trans>
           </div>
         </div>
         <div
@@ -65,4 +62,4 @@ class SingleControl extends React.Component<
     );
   }
 }
-export default SingleControl;
+export default ModeControl;

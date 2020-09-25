@@ -12,7 +12,7 @@ import AddDialog from "../../containers/addDialog";
 import SortDialog from "../../containers/sortDialog";
 import MessageBox from "../../containers/messageBox";
 import LoadingPage from "../../containers/loadingPage";
-import BackupPage from "../../containers/backupPage";
+import BackupPage from "../../containers/backupDialog";
 import EmptyPage from "../../containers/emptyPage";
 import WelcomePage from "../../containers/welcomePage";
 import "./manager.css";

@@ -1,21 +1,27 @@
 //全部图书，最近阅读，搜索结果，排序结果的数据
 import React from "react";
 import "./booklist.css";
-import Book from "../../components/book";
-import BookItem from "../../components/bookItem";
+import Book from "../../components/bookCardtem";
+import BookItem from "../../components/bookListItem";
 import AddFavorite from "../../utils/addFavorite";
 import RecordRecent from "../../utils/recordRecent";
 import ShelfUtil from "../../utils/shelfUtil";
 import SortUtil from "../../utils/sortUtil";
 import BookModel from "../../model/Book";
 import { Trans, NamespacesConsumer } from "react-i18next";
-import { BookListProps } from "./interface";
+import { BookListProps, BookListState } from "./interface";
 import OtherUtil from "../../utils/otherUtil";
 import localforage from "localforage";
 
 declare var window: any;
 
-class BookList extends React.Component<BookListProps> {
+class BookList extends React.Component<BookListProps, BookListState> {
+  constructor(props: BookListProps) {
+    super(props);
+    this.state = {
+      shelfIndex: 0,
+    };
+  }
   componentDidMount() {
     this.handleOldVersion();
   }
@@ -121,7 +127,6 @@ class BookList extends React.Component<BookListProps> {
     arr.forEach((item) => {
       items[item] && itemArr.push(items[item]);
     });
-    console.log(itemArr);
     return itemArr;
   };
   renderBookList = () => {
@@ -159,11 +164,26 @@ class BookList extends React.Component<BookListProps> {
       );
     });
   };
+  //切换书架
   handleShelfItem = (event: any) => {
     let index = event.target.value.split(",")[1];
     console.log(index, "index");
     this.setState({ shelfIndex: index });
     this.props.handleShelfIndex(index);
+    if (index > 0) {
+      this.props.handleMode("shelf");
+    } else {
+      this.props.handleMode("home");
+    }
+  };
+  handleDeleteShelf = () => {
+    if (this.state.shelfIndex < 1) return;
+    let shelfTitles = Object.keys(ShelfUtil.getShelf());
+    //获取当前书架名
+    let currentShelfTitle = shelfTitles[this.state.shelfIndex];
+    ShelfUtil.removeShelf(currentShelfTitle);
+    // this.setState({ shelfIndex: 0 });
+    this.props.handleShelfIndex(0);
     this.props.handleMode("shelf");
   };
   renderShelfList = () => {
@@ -230,6 +250,14 @@ class BookList extends React.Component<BookListProps> {
           >
             {this.renderShelfList()}
           </select>
+          {this.state.shelfIndex > 0 ? (
+            <span
+              className="icon-trash delete-shelf-icon"
+              onClick={() => {
+                this.handleDeleteShelf();
+              }}
+            ></span>
+          ) : null}
         </div>
         <div className="book-list-container-parent">
           <div className="book-list-container">

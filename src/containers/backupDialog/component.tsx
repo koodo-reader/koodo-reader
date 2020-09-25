@@ -1,18 +1,22 @@
 //备份和恢复页面
 import React from "react";
-import "./backupPage.css";
+import "./backupDialog.css";
 import { driveList } from "../../utils/readerConfig";
 import BackupUtil from "../../utils/backupUtil";
 import RestoreUtil from "../../utils/restoreUtil";
 import { Trans } from "react-i18next";
 import DropboxUtil from "../../utils/syncUtils/dropbox";
 import OnedriveUtil from "../../utils/syncUtils/onedrive";
-import { BackupPageProps, BackupPageState } from "./interface";
+import { BackupDialogProps, BackupDialogState } from "./interface";
 import TokenDialog from "../../components/tokenDialog";
 import OtherUtil from "../../utils/otherUtil";
+const isElectron = require("is-electron");
 
-class BackupPage extends React.Component<BackupPageProps, BackupPageState> {
-  constructor(props: BackupPageProps) {
+class BackupDialog extends React.Component<
+  BackupDialogProps,
+  BackupDialogState
+> {
+  constructor(props: BackupDialogProps) {
     super(props);
     this.state = {
       currentStep: 0,
@@ -73,6 +77,9 @@ class BackupPage extends React.Component<BackupPageProps, BackupPageState> {
           this.showMessage("Coming Soon");
           break;
         case 3:
+          if (isElectron()) {
+            this.showMessage("Please continue in desktop version");
+          }
           if (!OtherUtil.getReaderConfig("onedrive_access_token")) {
             this.props.handleTokenDialog(true);
             break;
@@ -256,4 +263,4 @@ class BackupPage extends React.Component<BackupPageProps, BackupPageState> {
   }
 }
 
-export default BackupPage;
+export default BackupDialog;

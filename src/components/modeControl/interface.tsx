@@ -1,8 +1,8 @@
-export interface SingleControlProps {
+export interface ModeControlProps {
   handleMessageBox: (isShow: boolean) => void;
   handleMessage: (message: string) => void;
 }
 
-export interface SingleControlState {
+export interface ModeControlState {
   readerMode: string;
 }
