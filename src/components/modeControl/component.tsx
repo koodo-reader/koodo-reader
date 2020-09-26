@@ -31,7 +31,7 @@ class ModeControl extends React.Component<ModeControlProps, ModeControlState> {
         >
           <span className="icon-single-page single-page-icon"></span>
           <div className="single-mode-text">
-            <Trans>Mode-Page Mode</Trans>
+            <Trans>Single-Page Mode</Trans>
           </div>
         </div>
         <div

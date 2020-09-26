@@ -4,6 +4,7 @@ const initState = {
   menuMode: "menu",
   isChangeDirection: false,
   isShowBookmark: false,
+  margin: 270,
 };
 export function viewArea(
   state = initState,
@@ -19,6 +20,11 @@ export function viewArea(
       return {
         ...state,
         isOpenHighlight: action.payload,
+      };
+    case "HANDLE_MARGIN":
+      return {
+        ...state,
+        margin: action.payload,
       };
     case "HANDLE_SHOW_BOOKMARK":
       return {

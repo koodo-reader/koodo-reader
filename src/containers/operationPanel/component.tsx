@@ -7,6 +7,7 @@ import localforage from "localforage";
 import RecordLocation from "../../utils/recordLocation";
 import { OperationPanelProps, OperationPanelState } from "./interface";
 import OtherUtil from "../../utils/otherUtil";
+import ReadingTime from "../../utils/readingTime";
 
 declare var document: any;
 
@@ -14,13 +15,45 @@ class OperationPanel extends React.Component<
   OperationPanelProps,
   OperationPanelState
 > {
+  timeStamp: number;
+  speed: number;
   constructor(props: OperationPanelProps) {
     super(props);
     this.state = {
       isFullScreen:
         OtherUtil.getReaderConfig("isFullScreen") === "yes" ? true : false, // 是否进入全屏模式
       isBookmark: false, // 是否添加书签
+      time: 0,
+      currentPercentage: RecordLocation.getCfi(this.props.currentBook.key)
+        ? RecordLocation.getCfi(this.props.currentBook.key).percentage
+        : 0,
+      timeLeft: 0,
     };
+    this.timeStamp = Date.now();
+    this.speed = 30000;
+  }
+  componentWillReceiveProps(nextProps: OperationPanelProps) {
+    if (nextProps.currentEpub.rendition.location) {
+      const currentLocation = this.props.currentEpub.rendition.currentLocation();
+      if (!currentLocation.start) {
+        return;
+      }
+      if (
+        this.props.currentEpub.rendition.currentLocation().percentage !==
+        nextProps.currentEpub.rendition.currentLocation().percentage
+      ) {
+        this.speed = Date.now() - this.timeStamp;
+        this.timeStamp = Date.now();
+      }
+      this.setState({
+        timeLeft:
+          ((currentLocation.start.displayed.total -
+            currentLocation.start.displayed.page) *
+            this.speed) /
+          1000,
+      });
+      // let nextPercentage = section.start.percentage;
+    }
   }
   // 点击切换全屏按钮触发
   handleScreen() {
@@ -69,7 +102,9 @@ class OperationPanel extends React.Component<
     let chapterHref = currentLocation.start.href;
     let chapter = "Unknown Chapter";
     let currentChapter = this.props.flattenChapters.filter(
-      (item: any) => item.href.split("#")[0] === chapterHref
+      (item: any) =>
+        chapterHref.indexOf(item.href.split("#")[0]) > -1 ||
+        item.href.split("#")[0].indexOf(chapterHref) > -1
     )[0];
     if (currentChapter) {
       chapter = currentChapter.label.trim(" ");
@@ -122,6 +157,19 @@ class OperationPanel extends React.Component<
   render() {
     return (
       <div className="book-operation-panel">
+        <div className="book-opeartion-info">
+          <span>
+            本次阅读时间:{" "}
+            {Math.floor(
+              (this.props.time -
+                ReadingTime.getTime(this.props.currentBook.key)) /
+                60
+            )}
+            分钟
+          </span>
+          &nbsp;&nbsp;&nbsp;
+          <span>读完本章还需: {this.props.locations ? `${Math.ceil(this.state.timeLeft/60)}分钟` : "计算中"}</span>
+        </div>
         <div
           className="exit-reading-button"
           onClick={() => {

@@ -53,7 +53,6 @@ server.get("/onedrive_refresh", (req, res) => {
 });
 server.get("/onedrive_get", (req, res) => {
   const { code, redirect_uri } = req.query;
-  console.log("test2");
   const requestBody = {
     client_id: "ac96f9bf-94f2-49c0-8418-999b919bc236",
     code,
@@ -129,7 +128,6 @@ server.post("/onedrive_upload", async (req, res) => {
         }
         let file = req.files.file;
         file.mv("./uploads/" + name);
-        console.log(name, "test1");
         oneDriveAPI.items
           .uploadSession({
             accessToken: req.body.ACCESS_TOKEN,

@@ -6,6 +6,9 @@ export interface OperationPanelProps {
   currentBook: BookModel;
   bookmarks: BookmarkModel[];
   flattenChapters: any;
+  locations: any;
+  rendition: any;
+  time: number;
   handleBookmarks: (bookmarks: BookmarkModel[]) => void;
   handleReadingState: (isReading: boolean) => void;
   handleFetchBookmarks: () => void;
@@ -19,4 +22,7 @@ export interface OperationPanelProps {
 export interface OperationPanelState {
   isFullScreen: boolean;
   isBookmark: boolean;
+  time: number;
+  currentPercentage: number;
+  timeLeft: number;
 }

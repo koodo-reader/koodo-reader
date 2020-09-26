@@ -9,9 +9,11 @@ import ProgressPanel from "../../containers/progressPanel";
 import { ReaderProps, ReaderState } from "./interface";
 import { MouseEvent } from "../../utils/mouseEvent";
 import OtherUtil from "../../utils/otherUtil";
+import ReadingTime from "../../utils/readingTime";
 
 class Reader extends React.Component<ReaderProps, ReaderState> {
-  timer!: NodeJS.Timeout;
+  messageTimer!: NodeJS.Timeout;
+  tickTimer!: NodeJS.Timeout;
   rendition: any;
 
   constructor(props: ReaderProps) {
@@ -23,6 +25,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
       isOpenNavPanel: false,
       isMessage: false,
       rendition: null,
+      time: ReadingTime.getTime(this.props.currentBook.key),
       isTouch: OtherUtil.getReaderConfig("isTouch") === "yes",
       readerMode: OtherUtil.getReaderConfig("readerMode") || "double",
     };
@@ -40,7 +43,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
 
     //控制消息提示两秒之后消失
     if (nextProps.isMessage) {
-      this.timer = setTimeout(() => {
+      this.messageTimer = setTimeout(() => {
         this.props.handleMessageBox(false);
         this.setState({ isMessage: false });
       }, 2000);
@@ -55,14 +58,23 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
       flow: this.state.readerMode === "scroll" ? "scrolled-doc" : "auto",
       width: "100%",
       height: "100%",
+      snap: true,
     });
     this.setState({ rendition: this.rendition });
     this.state.readerMode !== "scroll" && MouseEvent(this.rendition); // 绑定事件
+    this.tickTimer = setInterval(() => {
+      let time = this.state.time;
+      time += 1;
+      this.setState({ time });
+    }, 1000);
   }
+
   componentWillUnmount() {
     //清除上面的计时器
-    clearTimeout(this.timer);
+    clearTimeout(this.messageTimer);
     setTimeout(() => {}, 5000);
+    clearInterval(this.tickTimer);
+    ReadingTime.setTime(this.props.currentBook.key, this.state.time);
   }
   //进入阅读器
   handleEnterReader = (position: string) => {
@@ -133,7 +145,6 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
             if (this.state.isTouch || this.state.isOpenNavPanel) {
               return;
             }
-            console.log("test");
             this.handleEnterReader("left");
           }}
           onClick={() => {
@@ -183,7 +194,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
             this.handleLeaveReader("right");
           }}
           style={
-            this.state.isOpenSettingPanel
+            1
               ? {}
               : {
                   transform: "translateX(309px)",
@@ -197,7 +208,6 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         <div
           className="navigation-panel-container"
           onMouseLeave={(event) => {
-            console.log("teste");
             this.handleLeaveReader("left");
           }}
           style={
@@ -210,7 +220,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
                 }
           }
         >
-          <NavigationPanel />
+          <NavigationPanel {...{ time: this.state.time }} />
         </div>
         <div
           className="progress-panel-container"
@@ -227,7 +237,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
                 }
           }
         >
-          <ProgressPanel />
+          <ProgressPanel {...{ time: this.state.time }} />
         </div>
         <div
           className="operation-panel-container"
@@ -238,13 +248,13 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
             this.state.isOpenOperationPanel
               ? {}
               : {
-                  transform: "translateY(-90px)",
+                  transform: "translateY(-110px)",
                   // transition: "transform 0.5s ease",
                   // display: "none",
                 }
           }
         >
-          <OperationPanel />
+          <OperationPanel {...{ time: this.state.time }} />
         </div>
 
         <div
@@ -264,7 +274,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
           }
         ></div>
 
-        <Background />
+        <Background {...{ time: this.state.time }} />
       </div>
     );
   }
