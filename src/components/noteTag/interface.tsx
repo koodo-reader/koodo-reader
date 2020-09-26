@@ -7,4 +7,5 @@ export interface NoteTagProps {
 export interface NoteTagState {
   tagIndex: number[];
   isInput: boolean;
+  deleteIndex: number;
 }

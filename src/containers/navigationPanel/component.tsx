@@ -3,7 +3,6 @@ import React from "react";
 import "./navigationPanel.css";
 import ContentList from "../../components/contentList";
 import BookNavList from "../../components/navList";
-import ReadingTime from "../../utils/readingTime";
 import { Trans } from "react-i18next";
 import { NavigationPanelProps, NavigationPanelState } from "./interface";
 import SearchBox from "../../components/searchBox";
@@ -20,13 +19,11 @@ class NavigationPanel extends React.Component<
       currentTab: "contents",
       chapters: [],
       cover: "",
-      time: ReadingTime.getTime(this.props.currentBook.key),
       isSearch: false,
       searchList: null,
       startIndex: 0,
       currentIndex: 0,
     };
-    this.timer = null;
   }
   handleSearchState = (isSearch: boolean) => {
     this.setState({ isSearch });
@@ -35,11 +32,6 @@ class NavigationPanel extends React.Component<
     this.setState({ searchList });
   };
   componentDidMount() {
-    this.timer = setInterval(() => {
-      let time = this.state.time;
-      time += 1;
-      this.setState({ time });
-    }, 1000);
     this.props.currentEpub
       .coverUrl()
       .then((url: string) => {
@@ -49,10 +41,6 @@ class NavigationPanel extends React.Component<
         console.log("Error occurs");
       });
     this.props.handleFetchBookmarks();
-  }
-  componentWillUnmount() {
-    clearInterval(this.timer);
-    ReadingTime.setTime(this.props.currentBook.key, this.state.time);
   }
 
   handleChangeTab = (currentTab: string) => {
@@ -198,7 +186,7 @@ class NavigationPanel extends React.Component<
                 </Trans>
               </p>
               <span className="reading-duration">
-                <Trans>Reading Time</Trans>: {Math.floor(this.state.time / 60)}
+                <Trans>Reading Time</Trans>: {Math.floor(this.props.time / 60)}
                 &nbsp;
                 <Trans>Minute</Trans>
               </span>

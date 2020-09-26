@@ -61,3 +61,7 @@
   bottom: 1px;
   box-sizing: border-box;
 }
+.delete-tag-container {
+  position: relative;
+  left: 25px;
+}

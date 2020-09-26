@@ -15,4 +15,5 @@ export interface BookListProps {
 }
 export interface BookListState {
   shelfIndex: number;
+  isOpenDelete: boolean;
 }

@@ -57,9 +57,9 @@
 }
 .single-control-button {
   display: inline-block;
-  height: 18px;
-  width: 18px;
+  height: 16px;
+  width: 16px;
   border-radius: 50%;
-  border: 1px solid black;
+  border: 2px solid black;
   background-color: white;
 }

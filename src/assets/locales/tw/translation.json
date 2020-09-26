@@ -176,5 +176,8 @@
   "Please continue in desktop version": "仅客户端版本支持",
   "Auto hide cursor when reading": "阅读时自动隐藏鼠标",
   "Book not exsit": "书籍不存在",
-  "Delete Shelf": "删除书架"
+  "Delete this shelf": "删除此书架",
+  "This action will clear and remove this shelf": "此操作会清空并删除此书架",
+  "Delete this tag": "删除此标签",
+  "This action will clear and remove this tag": "此操作会清空并删除此标签"
 }

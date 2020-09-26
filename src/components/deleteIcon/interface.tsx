@@ -5,6 +5,8 @@ export interface DeleteIconProps {
   notes: NoteModel[];
   digests: NoteModel[];
   mode: string;
+  index: number;
+  tagName: string;
   isReading: boolean;
   itemKey: string;
   handleFetchNotes: () => void;
@@ -14,7 +16,9 @@ export interface DeleteIconProps {
   handleMessageBox: (isShow: boolean) => void;
   handleMessage: (message: string) => void;
   handleShowBookmark: (isShowBookmark: boolean) => void;
+  handleChangeTag: (index: number) => void;
 }
 export interface DeleteIconStates {
   deleteIndex: number;
+  isOpenDelete: boolean;
 }
