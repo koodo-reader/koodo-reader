@@ -149,6 +149,7 @@ class ViewArea extends React.Component<ViewAreaProps, ViewAreaStates> {
   };
   previourChapter = () => {
     const currentLocation = this.props.rendition.currentLocation();
+    if (!currentLocation.start) return;
     let chapterIndex = currentLocation.start.index;
     const section = this.props.currentEpub.section(chapterIndex - 1);
     if (section && section.href) {
@@ -157,6 +158,7 @@ class ViewArea extends React.Component<ViewAreaProps, ViewAreaStates> {
   };
   nextChapter = () => {
     const currentLocation = this.props.rendition.currentLocation();
+    if (!currentLocation.start) return;
     let chapterIndex = currentLocation.start.index;
     const section = this.props.currentEpub.section(chapterIndex + 1);
     if (section && section.href) {
@@ -182,7 +184,7 @@ class ViewArea extends React.Component<ViewAreaProps, ViewAreaStates> {
                   this.previourChapter();
                 }}
               >
-                <span className="icon-dropdown previous-chapter-single"> </span>
+                <span className="icon-dropdown previous-chapter-single"></span>
               </div>
               <div
                 className="next-chapter-single-container"

@@ -5,7 +5,7 @@ import { handleAddDialog, handleActionDialog } from "../../redux/actions/book";
 import { stateType } from "../../redux/store";
 import { withNamespaces } from "react-i18next";
 import AddDialog from "./component";
-import { handleMode } from "../../redux/actions/sidebar";
+import { handleMode, handleShelfIndex } from "../../redux/actions/sidebar";
 
 const mapStateToProps = (state: stateType) => {
   return {
@@ -23,6 +23,7 @@ const actionCreator = {
   handleMessageBox,
   handleMessage,
   handleMode,
+  handleShelfIndex,
 };
 export default connect(
   mapStateToProps,

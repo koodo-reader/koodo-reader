@@ -58,3 +58,12 @@
   position: relative;
   bottom: 35px;
 }
+.boxcontainer {
+  align-items: center;
+  width: 100px;
+  height: 30px;
+  display: -webkit-box;
+  display: flex;
+  -moz-box-orient: horizontal;
+  -webkit-box-orient: horizontal;
+}

@@ -19,4 +19,5 @@ export interface ReaderState {
   isTouch: boolean;
   readerMode: string;
   rendition: any;
+  time: number;
 }

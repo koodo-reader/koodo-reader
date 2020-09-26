@@ -14,7 +14,7 @@ import MessageBox from "../../containers/messageBox";
 import LoadingPage from "../../containers/loadingPage";
 import BackupPage from "../../containers/backupDialog";
 import EmptyPage from "../../containers/emptyPage";
-import WelcomePage from "../../containers/welcomePage";
+import WelcomeDialog from "../../containers/welcomeDialog";
 import "./manager.css";
 import { ManagerProps, ManagerState } from "./interface";
 import { Trans } from "react-i18next";
@@ -182,7 +182,7 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
         {this.props.isSortDisplay ? <SortDialog /> : null}
         {this.props.isBackup ? <BackupPage /> : null}
         {!this.state.isUpdated && this.props.isFirst === "yes" ? (
-          <WelcomePage />
+          <WelcomeDialog />
         ) : null}
         {this.state.isUpdated ? <UpdateDialog {...updateDialogProps} /> : null}
         {this.props.isSettingOpen ? <SettingDialog /> : null}

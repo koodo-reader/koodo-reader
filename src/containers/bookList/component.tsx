@@ -12,6 +12,7 @@ import { Trans, NamespacesConsumer } from "react-i18next";
 import { BookListProps, BookListState } from "./interface";
 import OtherUtil from "../../utils/otherUtil";
 import localforage from "localforage";
+import DeletePopup from "../../components/deletePopup";
 
 declare var window: any;
 
@@ -20,6 +21,7 @@ class BookList extends React.Component<BookListProps, BookListState> {
     super(props);
     this.state = {
       shelfIndex: 0,
+      isOpenDelete: false,
     };
   }
   componentDidMount() {
@@ -34,8 +36,6 @@ class BookList extends React.Component<BookListProps, BookListState> {
         !this.props.books[0].cover
       );
       let bookArr: any = this.props.books;
-      let epubArr: any = [];
-
       for (let i = 0; i < bookArr.length; i++) {
         await new Promise(async (resolve, reject) => {
           let epub;
@@ -57,7 +57,6 @@ class BookList extends React.Component<BookListProps, BookListState> {
           var reader = new FileReader();
           let blob = await fetch(url).then((r) => r.blob());
           reader.readAsDataURL(blob);
-          // console.log(blob, "blob");
           reader.onloadend = () => {
             let cover = reader.result;
             bookArr[i].cover = cover;
@@ -65,7 +64,6 @@ class BookList extends React.Component<BookListProps, BookListState> {
           };
         });
       }
-      console.log(epubArr, "epubarr");
 
       localforage.setItem("books", bookArr);
       window.location.reload();
@@ -107,6 +105,7 @@ class BookList extends React.Component<BookListProps, BookListState> {
     let shelfTitle = Object.keys(ShelfUtil.getShelf());
     //获取当前书架名
     let currentShelfTitle = shelfTitle[index];
+    if (!currentShelfTitle) return items;
     //获取当前书架的图书列表
     let currentShelfList = ShelfUtil.getShelf()[currentShelfTitle];
     //根据图书列表获取到图书数据
@@ -122,7 +121,6 @@ class BookList extends React.Component<BookListProps, BookListState> {
   };
   //根据搜索图书index获取到搜索出的图书
   handleFilter = (items: any, arr: number[]) => {
-    console.log("filter");
     let itemArr: any[] = [];
     arr.forEach((item) => {
       items[item] && itemArr.push(items[item]);
@@ -167,7 +165,6 @@ class BookList extends React.Component<BookListProps, BookListState> {
   //切换书架
   handleShelfItem = (event: any) => {
     let index = event.target.value.split(",")[1];
-    console.log(index, "index");
     this.setState({ shelfIndex: index });
     this.props.handleShelfIndex(index);
     if (index > 0) {
@@ -182,9 +179,10 @@ class BookList extends React.Component<BookListProps, BookListState> {
     //获取当前书架名
     let currentShelfTitle = shelfTitles[this.state.shelfIndex];
     ShelfUtil.removeShelf(currentShelfTitle);
-    // this.setState({ shelfIndex: 0 });
-    this.props.handleShelfIndex(0);
-    this.props.handleMode("shelf");
+    this.setState({ shelfIndex: 0 }, () => {
+      this.props.handleShelfIndex(0);
+      this.props.handleMode("shelf");
+    });
   };
   renderShelfList = () => {
     let shelfList = ShelfUtil.getShelf();
@@ -197,6 +195,7 @@ class BookList extends React.Component<BookListProps, BookListState> {
               value={[item, index.toString()]}
               key={index}
               className="add-dialog-shelf-list-option"
+              selected={this.props.shelfIndex === index ? true : false}
             >
               {t(item === "New" ? "All Books" : item)}
             </option>
@@ -205,10 +204,22 @@ class BookList extends React.Component<BookListProps, BookListState> {
       );
     });
   };
+  handleDeletePopup = (isOpenDelete: boolean) => {
+    this.setState({ isOpenDelete });
+  };
   render() {
+    const deletePopupProps = {
+      mode: "shelf",
+      name: Object.keys(ShelfUtil.getShelf())[this.state.shelfIndex],
+      title: "Delete this shelf",
+      description: "This action will clear and remove this shelf",
+      handleDeletePopup: this.handleDeletePopup,
+      handleDeleteOpearion: this.handleDeleteShelf,
+    };
     OtherUtil.setReaderConfig("totalBooks", this.props.books.length.toString());
     return (
       <>
+        {this.state.isOpenDelete && <DeletePopup {...deletePopupProps} />}
         <div className="book-list-view">
           <div
             className="card-list-mode"
@@ -254,7 +265,7 @@ class BookList extends React.Component<BookListProps, BookListState> {
             <span
               className="icon-trash delete-shelf-icon"
               onClick={() => {
-                this.handleDeleteShelf();
+                this.handleDeletePopup(true);
               }}
             ></span>
           ) : null}

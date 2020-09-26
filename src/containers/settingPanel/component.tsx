@@ -2,7 +2,7 @@
 import React from "react";
 import "./settingPanel.css";
 import ThemeList from "../../components/themeList";
-import FontSizeList from "../../components/fontSizeList";
+import SliderList from "../../components/SliderList";
 import DropdownList from "../../components/dropdownList";
 import ModeControl from "../../components/modeControl";
 import { SettingPanelProps, SettingPanelState } from "./interface";
@@ -104,7 +104,20 @@ class SettingPanel extends React.Component<
             </div>
           ) : null}
           <ThemeList />
-          <FontSizeList />
+          <SliderList
+            {...{
+              maxValue: 31,
+              minValue: 13,
+              mode: "fontSize",
+            }}
+          />
+          <SliderList
+            {...{
+              maxValue: 150,
+              minValue: 50,
+              mode: "margin",
+            }}
+          />
           <DropdownList />
         </div>
       </div>

@@ -14,7 +14,6 @@ class DeleteDialog extends React.Component<DeleteDialogProps> {
     this.props.handleDeleteDialog(false);
   };
   handleDeleteOther = () => {
-    console.log(this.props.bookmarks, "test");
     if (this.props.bookmarks[0]) {
       let bookmarkArr = DeleteUtil.deleteBookmarks(
         this.props.bookmarks,

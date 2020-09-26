@@ -10,4 +10,7 @@ export interface ProgressPanelProps {
 export interface ProgressPanelState {
   displayPercentage: number;
   currentChapter: string;
+  currentPage: number;
+  totalPage: number;
+  currentChapterIndex: number;
 }

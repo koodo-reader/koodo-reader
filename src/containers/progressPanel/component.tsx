@@ -14,6 +14,9 @@ class ProgressPanel extends React.Component<
     this.state = {
       displayPercentage: this.props.percentage ? this.props.percentage : 0,
       currentChapter: "",
+      currentPage: 0,
+      totalPage: 0,
+      currentChapterIndex: 0,
     };
   }
 
@@ -23,6 +26,11 @@ class ProgressPanel extends React.Component<
       if (!currentLocation.start) {
         return;
       }
+      this.setState({
+        currentPage: currentLocation.start.displayed.page,
+        totalPage: currentLocation.start.displayed.total,
+        currentChapterIndex: currentLocation.start.index,
+      });
       let chapterHref = currentLocation.start.href;
       let chapter = "Unknown Chapter";
       let currentChapter = this.props.flattenChapters.filter(
@@ -35,20 +43,14 @@ class ProgressPanel extends React.Component<
     }
   }
   //WARNING! To be deprecated in React v17. Use componentDidMount instead.
-  onProgressChange = (event: any) => {
-    const percentage = event.target.value / 100;
-    const location = percentage
-      ? this.props.locations.cfiFromPercentage(percentage)
-      : 0;
-    this.props.currentEpub.rendition.display(location);
-  };
-  //使进度百分比随拖动实时变化
-  onProgressInput = (event: any) => {
-    this.setState({ displayPercentage: event.target.value / 100 });
-  };
+
   previourChapter = () => {
     const currentLocation = this.props.currentEpub.rendition.currentLocation();
+    if (!currentLocation.start) return;
     let chapterIndex = currentLocation.start.index;
+    this.setState({
+      currentChapterIndex: chapterIndex,
+    });
     const section = this.props.currentEpub.section(chapterIndex - 1);
     if (section && section.href) {
       this.props.currentEpub.rendition.display(section.href).then(() => {
@@ -56,13 +58,18 @@ class ProgressPanel extends React.Component<
           .percentage
           ? RecordLocation.getCfi(this.props.currentBook.key).percentage
           : 0;
+
         this.setState({ displayPercentage: percentage });
       });
     }
   };
   nextChapter = () => {
     const currentLocation = this.props.currentEpub.rendition.currentLocation();
+    if (!currentLocation.start) return;
     let chapterIndex = currentLocation.start.index;
+    this.setState({
+      currentChapterIndex: chapterIndex,
+    });
     const section = this.props.currentEpub.section(chapterIndex + 1);
     if (section && section.href) {
       this.props.currentEpub.rendition.display(section.href).then(() => {
@@ -74,7 +81,20 @@ class ProgressPanel extends React.Component<
       });
     }
   };
-
+  handleJumpChapter = (event: any) => {
+    if (!event.target.value) return;
+    const section = this.props.currentEpub.section(event.target.value);
+    if (section && section.href) {
+      this.props.currentEpub.rendition.display(section.href).then(() => {
+        let percentage = RecordLocation.getCfi(this.props.currentBook.key)
+          .percentage
+          ? RecordLocation.getCfi(this.props.currentBook.key).percentage
+          : 0;
+        this.setState({ displayPercentage: percentage });
+      });
+    }
+  };
+  handleJumpPage = (event: any) => {};
   render() {
     if (!this.props.locations) {
       return (
@@ -96,30 +116,45 @@ class ProgressPanel extends React.Component<
                 : this.state.displayPercentage * 100
             )}
             {"%  "}
+            &nbsp;&nbsp;&nbsp;
           </span>
-          {this.state.currentChapter && (
-            <span className="progress-chapter-name">
-              {this.state.currentChapter}
-            </span>
-          )}
+          {this.state.currentPage > 0 ? (
+            <>
+              <span>本章页数</span>
+              <input
+                type="text"
+                name="jumpPage"
+                id="jumpPage"
+                onBlur={(event) => {
+                  this.handleJumpPage(event);
+                }}
+                defaultValue={this.state.currentPage}
+              />
+
+              <span>/ {this.state.totalPage}</span>
+            </>
+          ) : null}
         </p>
+        <p className="progress-text" style={{ marginTop: 5 }}>
+          {this.state.currentPage > 0 ? (
+            <>
+              <span>跳转章节</span>
+              <input
+                type="text"
+                name="jumpPage"
+                id="jumpPage"
+                onBlur={(event) => {
+                  this.handleJumpChapter(event);
+                }}
+                defaultValue={this.state.currentChapterIndex}
+              />
 
-        <input
-          className="input-progress"
-          defaultValue={Math.round(this.state.displayPercentage * 100)}
-          type="range"
-          max="100"
-          min="0"
-          step="1"
-          onMouseUp={(event) => {
-            this.onProgressChange(event);
-          }}
-          // onMouseDown={this.handleDrag()}
-          onChange={(event) => {
-            this.onProgressInput(event);
-          }}
-        />
-
+              <span>
+                / {this.props.currentEpub.rendition.book.spine.length}
+              </span>
+            </>
+          ) : null}
+        </p>
         <div
           className="previous-chapter"
           onClick={() => {

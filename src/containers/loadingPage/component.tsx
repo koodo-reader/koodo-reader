@@ -6,31 +6,35 @@ import OtherUtil from "../../utils/otherUtil";
 
 class LoadingPage extends React.Component<LoadingPageProps> {
   render() {
-    const renderLoadingPage = () => {
-      let arr = [];
-      for (
-        let i = 0;
-        i < parseInt(OtherUtil.getReaderConfig("totalBooks") || "0");
-        i++
-      ) {
-        arr.push(i);
-      }
-      return arr.map((item, index) => {
-        return (
-          <div className="loading-page-book" key={item}>
-            <div
-              className="loading-page-cover"
-              style={{ opacity: `${(index % 7) * 0.2 + 0.2}` }}
-            ></div>
-          </div>
-        );
-      });
-    };
-    return (
-      <div className="loading-page-container-parent">
-        <div className="loading-page-container">{renderLoadingPage()}</div>
-      </div>
-    );
+    if (OtherUtil.getReaderConfig("isList") !== "list") {
+      const renderLoadingPage = () => {
+        let arr = [];
+        for (
+          let i = 0;
+          i < parseInt(OtherUtil.getReaderConfig("totalBooks") || "0");
+          i++
+        ) {
+          arr.push(i);
+        }
+        return arr.map((item, index) => {
+          return (
+            <div className="loading-page-book" key={item}>
+              <div
+                className="loading-page-cover"
+                style={{ opacity: `${(index % 7) * 0.2 + 0.2}` }}
+              ></div>
+            </div>
+          );
+        });
+      };
+      return (
+        <div className="loading-page-container-parent">
+          <div className="loading-page-container">{renderLoadingPage()}</div>
+        </div>
+      );
+    } else {
+      return <div className="boxcontainer"></div>;
+    }
   }
 }
 
