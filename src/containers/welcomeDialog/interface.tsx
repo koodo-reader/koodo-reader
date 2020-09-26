@@ -1,9 +1,9 @@
-export interface WelcomePageProps {
+export interface WelcomeDialogProps {
   handleCloseWelcome: () => void;
   handleFirst: (isFirst: string) => void;
 }
 
-export interface WelcomePageState {
+export interface WelcomeDialogState {
   currentIndex: number;
   isOpenWelcome: boolean;
 }

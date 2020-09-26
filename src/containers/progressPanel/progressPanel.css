@@ -1,11 +1,11 @@
 .progress-text {
-  font-size: 14px;
+  font-size: 16px;
 
   color: rgba(75, 75, 75, 1);
   width: 100%;
-  margin-top: 9px;
+  margin-top: 15px;
   text-align: center;
-  height: 15px;
+  height: 25px;
   overflow: hidden;
 }
 .progress-slide-container {
@@ -31,41 +31,41 @@
   bottom: 16px;
 }
 .previous-chapter {
-  width: 25px !important;
-  height: 25px !important;
+  width: 40px !important;
+  height: 40px !important;
   border: 2px solid rgba(112, 112, 112, 1);
   border-radius: 50%;
   opacity: 1;
   color: rgba(112, 112, 112, 1);
   position: absolute;
-  bottom: 10px;
-  left: 10px;
+  bottom: 15px;
+  left: 15px;
   font-size: 14px;
   transform: rotate(90deg);
   cursor: pointer;
 }
 .next-chapter {
-  width: 25px;
-  height: 25px;
+  width: 40px;
+  height: 40px;
   border: 2px solid rgba(112, 112, 112, 1);
   border-radius: 50%;
   opacity: 1;
   color: rgba(112, 112, 112, 1);
   position: absolute;
-  bottom: 10px;
-  left: 370px;
+  bottom: 15px;
+  left: 350px;
   font-size: 14px;
   transform: rotate(-90deg);
   cursor: pointer;
 }
 
 .previous-chapter-icon {
-  line-height: 25px !important;
-  margin-left: 6px !important;
+  line-height: 40px !important;
+  margin-left: 13px !important;
 }
 .next-chapter-icon {
-  line-height: 25px !important;
-  margin-left: 6px !important;
+  line-height: 40px !important;
+  margin-left: 13px !important;
 }
 input[type="range"] {
   -webkit-appearance: none;
@@ -140,7 +140,7 @@ input[type="range"]::-ms-thumb {
 }
 .progress-panel {
   width: 412px !important;
-  height: 60px;
+  height: 80px;
   background: rgba(255, 255, 255, 1);
   box-shadow: 0px 0px 16px rgba(0, 0, 0, 0.38);
   opacity: 1;
@@ -152,12 +152,18 @@ input[type="range"]::-ms-thumb {
 }
 .input-progress {
   position: absolute;
-  bottom: 3px;
+  top: 2px;
 }
-.progress-chapter-name {
-  display: inline-block;
-  width: 150px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
+#jumpPage {
+  width: 30px;
+  border: none;
+  height: 20px;
+  border-radius: 5px;
+  background-color: rgba(75, 75, 75, 0.1);
+  padding-left: 10px;
+  margin-right: 5px;
+  margin-left: 5px;
+}
+#jumpPage {
+  outline: none;
 }

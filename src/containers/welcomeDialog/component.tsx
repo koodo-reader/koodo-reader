@@ -1,12 +1,15 @@
 import React from "react";
-import "./welcomePage.css";
+import "./welcomeDialog.css";
 import { welcomeMessage } from "../../utils/readerConfig";
 import { Trans } from "react-i18next";
-import { WelcomePageProps, WelcomePageState } from "./interface";
+import { WelcomeDialogProps, WelcomeDialogState } from "./interface";
 import OtherUtil from "../../utils/otherUtil";
 
-class WelcomePage extends React.Component<WelcomePageProps, WelcomePageState> {
-  constructor(props: WelcomePageProps) {
+class WelcomeDialog extends React.Component<
+  WelcomeDialogProps,
+  WelcomeDialogState
+> {
+  constructor(props: WelcomeDialogProps) {
     super(props);
     this.state = { currentIndex: 0, isOpenWelcome: false };
   }
@@ -126,4 +129,4 @@ class WelcomePage extends React.Component<WelcomePageProps, WelcomePageState> {
   }
 }
 
-export default WelcomePage;
+export default WelcomeDialog;
