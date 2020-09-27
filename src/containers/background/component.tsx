@@ -9,12 +9,11 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
   constructor(props: any) {
     super(props);
     this.state = {
-      isSingle:
-        OtherUtil.getReaderConfig("readerMode") === "single" ||
-        OtherUtil.getReaderConfig("readerMode") === "scroll",
+      isSingle: OtherUtil.getReaderConfig("readerMode") !== "double",
       currentChapter: "",
       prevPage: 0,
       nextPage: 0,
+      scale: OtherUtil.getReaderConfig("scale"),
     };
   }
   componentWillReceiveProps(nextProps: BackgroundProps) {
@@ -44,13 +43,67 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
     }
     return (
       <div className="background">
+        {this.state.currentChapter && (
+          <p
+            className="progress-chapter-name"
+            style={
+              this.state.isSingle
+                ? {
+                    left: `calc(50vw - 
+                      270px)`,
+                  }
+                : {}
+            }
+          >
+            <Trans>{this.state.currentChapter}</Trans>
+          </p>
+        )}
+
+        {!this.state.isSingle && (
+          <p
+            className="progress-book-name"
+            style={
+              this.state.isSingle
+                ? {
+                    right: `calc(50vw - 
+                      270px)`,
+                  }
+                : {}
+            }
+          >
+            <Trans>{this.props.currentBook.name}</Trans>
+          </p>
+        )}
+
+        {this.state.prevPage > 0 && (
+          <p
+            className="background-page-left"
+            style={
+              this.state.isSingle
+                ? {
+                    left: `calc(50vw - 
+                      270px)`,
+                  }
+                : {}
+            }
+          >
+            第{this.state.prevPage}页
+          </p>
+        )}
+        {this.state.nextPage > 0 && !this.state.isSingle && (
+          <p className="background-page-right">第{this.state.nextPage}页</p>
+        )}
         <div
           className="background-box2"
           style={
             this.state.isSingle
               ? {
-                  left: "calc(50vw - 279px)",
-                  right: "calc(50vw - 277px)",
+                  left: `calc(50vw - ${
+                    270 * parseFloat(this.state.scale)
+                  }px - ${this.state.isSingle ? "9" : "5"}px)`,
+                  right: `calc(50vw - ${
+                    270 * parseFloat(this.state.scale)
+                  }px - 7px)`,
                   boxShadow: "0 0 0px rgba(191, 191, 191, 1)",
                 }
               : {}
@@ -60,7 +113,14 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
           className="background-box3"
           style={
             this.state.isSingle
-              ? { left: "calc(50vw - 279px)", right: "calc(50vw - 279px)" }
+              ? {
+                  left: `calc(50vw - ${
+                    270 * parseFloat(this.state.scale)
+                  }px - 9px)`,
+                  right: `calc(50vw - ${
+                    270 * parseFloat(this.state.scale)
+                  }px - 9px)`,
+                }
               : {}
           }
         >
@@ -83,7 +143,10 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
               OtherUtil.getReaderConfig("theme") === "rgba(44,47,49,1)"
                 ? { display: "none" }
                 : this.state.isSingle
-                ? { left: "calc(50% - 300px)" }
+                ? {
+                    position: "relative",
+                    right: 0,
+                  }
                 : {}
             }
           ></div>
@@ -94,43 +157,17 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
           style={
             this.state.isSingle
               ? {
-                  left: "calc(50vw - 279px)",
-                  right: "calc(50vw - 275px)",
+                  left: `calc(50vw - ${
+                    270 * parseFloat(this.state.scale)
+                  }px - ${this.state.isSingle ? "9" : "5"}px)`,
+                  right: `calc(50vw - ${
+                    270 * parseFloat(this.state.scale)
+                  }px - 5px)`,
                   boxShadow: "0 0 0px rgba(191, 191, 191, 1)",
                 }
               : {}
           }
-        >
-          {this.state.currentChapter && (
-            <p
-              className="progress-chapter-name"
-              style={this.state.isSingle ? { left: "calc(50% - 270px)" } : {}}
-            >
-              <Trans>{this.state.currentChapter}</Trans>
-            </p>
-          )}
-
-          {!this.state.isSingle && (
-            <p
-              className="progress-book-name"
-              style={this.state.isSingle ? { right: "calc(50% - 270px)" } : {}}
-            >
-              <Trans>{this.props.currentBook.name}</Trans>
-            </p>
-          )}
-
-          {this.state.prevPage > 0 && (
-            <p
-              className="background-page-left"
-              style={this.state.isSingle ? { left: "calc(50% - 270px)" } : {}}
-            >
-              第{this.state.prevPage}页
-            </p>
-          )}
-          {this.state.nextPage > 0 && !this.state.isSingle && (
-            <p className="background-page-right">第{this.state.nextPage}页</p>
-          )}
-        </div>
+        ></div>
       </div>
     );
   }

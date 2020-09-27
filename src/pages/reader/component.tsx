@@ -25,6 +25,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
       isOpenNavPanel: false,
       isMessage: false,
       rendition: null,
+      scale: OtherUtil.getReaderConfig("scale"),
       time: ReadingTime.getTime(this.props.currentBook.key),
       isTouch: OtherUtil.getReaderConfig("isTouch") === "yes",
       readerMode: OtherUtil.getReaderConfig("readerMode") || "double",
@@ -54,14 +55,22 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
     let epub = this.props.currentEpub;
     (window as any).rangy.init(); // 初始化
     this.rendition = epub.renderTo(page, {
-      manager: "default",
-      flow: this.state.readerMode === "scroll" ? "scrolled-doc" : "auto",
+      manager:
+        this.state.readerMode === "continuous" ? "continuous" : "default",
+      flow:
+        this.state.readerMode === "scroll"
+          ? "scrolled-doc"
+          : this.state.readerMode === "continuous"
+          ? "scrolled"
+          : "auto",
       width: "100%",
       height: "100%",
       snap: true,
     });
     this.setState({ rendition: this.rendition });
-    this.state.readerMode !== "scroll" && MouseEvent(this.rendition); // 绑定事件
+    this.state.readerMode !== "scroll" &&
+      this.state.readerMode !== "continuous" &&
+      MouseEvent(this.rendition); // 绑定事件
     this.tickTimer = setInterval(() => {
       let time = this.state.time;
       time += 1;
@@ -194,7 +203,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
             this.handleLeaveReader("right");
           }}
           style={
-            1
+            this.state.isOpenSettingPanel
               ? {}
               : {
                   transform: "translateX(309px)",
@@ -261,15 +270,19 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
           className="view-area-page"
           id="page-area"
           style={
-            this.state.readerMode === "scroll"
+            this.state.readerMode === "scroll" ||
+            this.state.readerMode === "continuous"
               ? {
-                  left: "calc(50vw - 270px)",
-                  right: "calc(50vw - 270px)",
+                  left: `calc(50vw - ${270 * parseFloat(this.state.scale)}px)`,
+                  right: `calc(50vw - ${270 * parseFloat(this.state.scale)}px)`,
                   top: "75px",
                   bottom: "75px",
                 }
               : this.state.readerMode === "single"
-              ? { left: "calc(50vw - 270px)", right: "calc(50vw - 270px)" }
+              ? {
+                  left: `calc(50vw - ${270 * parseFloat(this.state.scale)}px)`,
+                  right: `calc(50vw - ${270 * parseFloat(this.state.scale)}px)`,
+                }
               : {}
           }
         ></div>

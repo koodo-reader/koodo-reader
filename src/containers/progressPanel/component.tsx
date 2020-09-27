@@ -108,19 +108,9 @@ class ProgressPanel extends React.Component<
     return (
       <div className="progress-panel">
         <p className="progress-text">
-          <span>
-            <Trans>Current Progress</Trans>:{" "}
-            {Math.round(
-              this.state.displayPercentage > 1
-                ? 100
-                : this.state.displayPercentage * 100
-            )}
-            {"%  "}
-            &nbsp;&nbsp;&nbsp;
-          </span>
           {this.state.currentPage > 0 ? (
             <>
-              <span>本章页数</span>
+              <Trans>Current Chapter Pages</Trans>
               <input
                 type="text"
                 name="jumpPage"
@@ -128,7 +118,7 @@ class ProgressPanel extends React.Component<
                 onBlur={(event) => {
                   this.handleJumpPage(event);
                 }}
-                defaultValue={this.state.currentPage}
+                value={this.state.currentPage}
               />
 
               <span>/ {this.state.totalPage}</span>
@@ -138,7 +128,7 @@ class ProgressPanel extends React.Component<
         <p className="progress-text" style={{ marginTop: 5 }}>
           {this.state.currentPage > 0 ? (
             <>
-              <span>跳转章节</span>
+              <Trans>Chapter Redirect</Trans>
               <input
                 type="text"
                 name="jumpPage"

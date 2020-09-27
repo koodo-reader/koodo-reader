@@ -9,7 +9,7 @@
   overflow: hidden;
 }
 .progress-slide-container {
-  width: 309px;
+  width: 209px;
 }
 .progress-slide-line {
   width: 100%;
@@ -69,29 +69,28 @@
 }
 input[type="range"] {
   -webkit-appearance: none;
-  width: 309px;
-  position: relative;
-  left: 48px;
+  width: 209px;
+  position: absolute;
 }
 input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
 }
 input[type="range"]::-webkit-slider-runnable-track {
-  width: 309px;
+  width: 209px;
   height: 0px;
   border-bottom: 2px solid rgba(112, 112, 112, 1);
   opacity: 1;
   cursor: pointer;
 }
 input[type="range"]::-moz-range-track {
-  width: 309px;
+  width: 209px;
   height: 0px;
   border-bottom: 2px solid rgba(112, 112, 112, 1);
   opacity: 1;
   cursor: pointer;
 }
 input[type="range"]::-ms-track {
-  width: 309px;
+  width: 209px;
   height: 0px;
   border-bottom: 2px solid rgba(112, 112, 112, 1);
   opacity: 1;
@@ -152,7 +151,8 @@ input[type="range"]::-ms-thumb {
 }
 .input-progress {
   position: absolute;
-  top: 2px;
+  top: 10px;
+  left: 17px;
 }
 #jumpPage {
   width: 30px;
