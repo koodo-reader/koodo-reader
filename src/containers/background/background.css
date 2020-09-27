@@ -84,7 +84,7 @@
   white-space: nowrap;
   overflow: hidden;
   position: absolute;
-  top: 0px;
+  top: 5px;
   line-height: 30px;
   color: rgba(191, 191, 191, 1);
   text-align: center;
@@ -102,7 +102,7 @@
   white-space: nowrap;
   overflow: hidden;
   position: absolute;
-  bottom: 5px;
+  bottom: 10px;
   line-height: 30px;
   color: rgba(191, 191, 191, 1);
   text-align: center;

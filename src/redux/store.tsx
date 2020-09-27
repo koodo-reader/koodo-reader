@@ -81,6 +81,5 @@ export type stateType = {
     isOpenMenu: boolean;
     isChangeDirection: boolean;
     isShowBookmark: boolean;
-    margin: boolean;
   };
 };

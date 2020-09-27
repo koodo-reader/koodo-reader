@@ -179,5 +179,14 @@
   "Delete this shelf": "删除此书架",
   "This action will clear and remove this shelf": "此操作会清空并删除此书架",
   "Delete this tag": "删除此标签",
-  "This action will clear and remove this tag": "此操作会清空并删除此标签"
+  "This action will clear and remove this tag": "此操作会清空并删除此标签",
+  "Scale": "缩放",
+  "Next Chapter": "下一章",
+  "Prev Chapter": "上一章",
+  "Current Reading Time": "本次阅读时间：{{count}}分钟",
+  "Finish Reading Time": "读完本章需要：{{count}}分钟",
+  "Current Chapter Pages": "本章页数",
+  "Chapter Redirect": "章节跳转",
+  "Continuous Scroll": "连续滚动",
+  "Chapter Scroll": "分章滚动"
 }

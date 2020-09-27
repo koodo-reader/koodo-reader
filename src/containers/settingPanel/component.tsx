@@ -7,6 +7,7 @@ import DropdownList from "../../components/dropdownList";
 import ModeControl from "../../components/modeControl";
 import { SettingPanelProps, SettingPanelState } from "./interface";
 import { Trans } from "react-i18next";
+import OtherUtil from "../../utils/otherUtil";
 
 class SettingPanel extends React.Component<
   SettingPanelProps,
@@ -17,6 +18,7 @@ class SettingPanel extends React.Component<
     this.state = {
       isSupported: false,
       isAudioOn: false,
+      readerMode: OtherUtil.getReaderConfig("readerMode"),
     };
   }
   componentDidMount() {
@@ -111,13 +113,16 @@ class SettingPanel extends React.Component<
               mode: "fontSize",
             }}
           />
-          <SliderList
-            {...{
-              maxValue: 150,
-              minValue: 50,
-              mode: "margin",
-            }}
-          />
+          {this.state.readerMode !== "double" ? (
+            <SliderList
+              {...{
+                maxValue: 1.5,
+                minValue: 0.5,
+                mode: "scale",
+              }}
+            />
+          ) : null}
+
           <DropdownList />
         </div>
       </div>

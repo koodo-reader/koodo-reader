@@ -174,8 +174,7 @@ class ViewArea extends React.Component<ViewAreaProps, ViewAreaStates> {
     };
     return (
       <div className="view-area">
-        {(OtherUtil.getReaderConfig("readerMode") === "single" ||
-          OtherUtil.getReaderConfig("readerMode") === "scroll") &&
+        {OtherUtil.getReaderConfig("readerMode") !== "double" &&
           this.props.locations && (
             <>
               <div

@@ -2,13 +2,13 @@
   height: 50px;
 } */
 .paragraph-character-setting {
-  margin: 30px 22px;
+  margin: 0px 22px;
   width: calc(100% - 44px);
 }
 .general-setting-title {
   font-size: 16px;
   color: rgba(75, 75, 75, 1);
-  margin: 18px 0px 17px 0px;
+  margin: 15px 0px 17px 0px;
 }
 .general-setting-dropdown {
   width: 220px;
