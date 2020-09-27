@@ -20,4 +20,5 @@ export interface ReaderState {
   readerMode: string;
   rendition: any;
   time: number;
+  scale: string;
 }

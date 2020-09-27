@@ -11,4 +11,5 @@ export interface BackgroundState {
   currentChapter: string;
   prevPage: number;
   nextPage: number;
+  scale: string;
 }

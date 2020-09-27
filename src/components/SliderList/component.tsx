@@ -12,18 +12,27 @@ class SliderList extends React.Component<SliderListProps, SliderListState> {
       value:
         this.props.mode === "fontSize"
           ? OtherUtil.getReaderConfig("fontSize") || "17"
-          : OtherUtil.getReaderConfig("margin") || "100",
+          : OtherUtil.getReaderConfig("scale") || "1",
     };
   }
 
   onValueChange = (event: any) => {
-    const fontSize = event.target.value;
-    OtherUtil.setReaderConfig("fontSize", fontSize);
-    this.props.currentEpub.rendition.themes.default({
-      "a, article, cite, code, div, li, p, pre, span, table": {
-        "font-size": `${fontSize || 17}px !important`,
-      },
-    });
+    if (this.props.mode === "fontSize") {
+      const fontSize = event.target.value;
+      this.setState({ value: fontSize });
+      OtherUtil.setReaderConfig("fontSize", fontSize);
+      this.props.currentEpub.rendition.themes.default({
+        "a, article, cite, code, div, li, p, pre, span, table": {
+          "font-size": `${fontSize || 17}px !important`,
+        },
+      });
+    } else {
+      const scale = event.target.value;
+      this.setState({ value: scale });
+      OtherUtil.setReaderConfig("scale", scale);
+      this.props.handleMessage("Try refresh or restart");
+      this.props.handleMessageBox(true);
+    }
   };
   //使进度百分比随拖动实时变化
   onValueInput = (event: any) => {
@@ -33,10 +42,30 @@ class SliderList extends React.Component<SliderListProps, SliderListState> {
     return (
       <div className="font-size-setting">
         <div className="font-size-title">
-          <Trans>Font Size</Trans>
+          {this.props.mode === "fontSize" ? (
+            <>
+              <Trans>Font Size</Trans>&nbsp;&nbsp; &nbsp;
+              <span>{this.state.value}px</span>
+            </>
+          ) : (
+            <>
+              <Trans>Scale</Trans>&nbsp;&nbsp; &nbsp;
+              <span>
+                {parseInt((parseFloat(this.state.value) * 100).toString())}%
+              </span>
+            </>
+          )}
         </div>
-        <span className="ultra-small-size">
-          {this.props.mode === "fontSize" ? "A" : `${this.props.minValue}%`}
+
+        <span
+          className="ultra-small-size"
+          style={
+            this.props.mode === "fontSize"
+              ? {}
+              : { position: "relative", right: 7 }
+          }
+        >
+          {this.props.mode === "fontSize" ? "A" : `0.5`}
         </span>
         <div className="font-size-selector">
           <input
@@ -45,7 +74,7 @@ class SliderList extends React.Component<SliderListProps, SliderListState> {
             type="range"
             max={this.props.maxValue}
             min={this.props.minValue}
-            step="1"
+            step={this.props.mode === "fontSize" ? "1" : "0.1"}
             onMouseUp={(event) => {
               this.onValueChange(event);
             }}
@@ -57,20 +86,13 @@ class SliderList extends React.Component<SliderListProps, SliderListState> {
         {this.props.mode === "fontSize" ? (
           <span className="ultra-large-size">A</span>
         ) : (
-          <span className="ultra-small-size">{`${this.props.maxValue}%`}</span>
+          <span
+            className="ultra-large-size"
+            style={{ fontSize: "16px", left: 5 }}
+          >
+            1.5
+          </span>
         )}
-        <div
-          style={
-            this.props.mode === "fontSize"
-              ? { fontSize: `${this.state.value}px` }
-              : {}
-          }
-          className="font-size-demo"
-        >
-          {this.props.mode === "fontSize"
-            ? `${this.state.value}px`
-            : `${this.state.value}%`}
-        </div>
       </div>
     );
   }
