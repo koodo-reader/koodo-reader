@@ -159,16 +159,38 @@ class OperationPanel extends React.Component<
       <div className="book-operation-panel">
         <div className="book-opeartion-info">
           <span>
-            本次阅读时间:{" "}
-            {Math.floor(
-              (this.props.time -
-                ReadingTime.getTime(this.props.currentBook.key)) /
-                60
-            )}
-            分钟
+            <Trans
+              i18nKey="Current Reading Time"
+              count={Math.floor(
+                (this.props.time -
+                  ReadingTime.getTime(this.props.currentBook.key)) /
+                  60
+              )}
+            >
+              Current Reading Time:
+              {{
+                count: Math.floor(
+                  (this.props.time -
+                    ReadingTime.getTime(this.props.currentBook.key)) /
+                    60
+                ),
+              }}
+              Minutes
+            </Trans>
           </span>
           &nbsp;&nbsp;&nbsp;
-          <span>读完本章还需: {this.props.locations ? `${Math.ceil(this.state.timeLeft/60)}分钟` : "计算中"}</span>
+          <span>
+            <Trans
+              i18nKey="Finish Reading Time"
+              count={Math.ceil(this.state.timeLeft / 60)}
+            >
+              Finish Reading Time:
+              {{
+                count: `${Math.ceil(this.state.timeLeft / 60)}`,
+              }}
+              Minutes
+            </Trans>
+          </span>
         </div>
         <div
           className="exit-reading-button"

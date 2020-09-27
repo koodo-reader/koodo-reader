@@ -6,4 +6,5 @@ export interface SettingPanelProps {
 export interface SettingPanelState {
   isSupported: boolean;
   isAudioOn: boolean;
+  readerMode:string
 }

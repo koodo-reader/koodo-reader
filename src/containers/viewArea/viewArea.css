@@ -142,7 +142,7 @@
   color: white;
   position: absolute;
   bottom: calc(50vh - 50px);
-  left: calc(50vw - 450px);
+  left: 50px;
   font-size: 60px;
   transform: rotate(90deg);
   cursor: pointer;
@@ -160,7 +160,7 @@
   color: white;
   position: absolute;
   bottom: calc(50vh - 50px);
-  right: calc(50vw - 450px);
+  right: 50px;
   transform: rotate(-90deg);
   cursor: pointer;
   opacity: 0.1;

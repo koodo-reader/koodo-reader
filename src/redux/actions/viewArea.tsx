@@ -4,9 +4,6 @@ export function handleOpenMenu(isOpenMenu: boolean) {
 export function handleMenuMode(menuMode: string) {
   return { type: "HANDLE_MENU_MODE", payload: menuMode };
 }
-export function handleMagin(margin: number) {
-  return { type: "HANDLE_MARGIN", payload: margin };
-}
 export function handleOpenHighlight(isOpenHighlight: boolean) {
   return { type: "HANDLE_OPEN_HIGHLIGHT", payload: isOpenHighlight };
 }
