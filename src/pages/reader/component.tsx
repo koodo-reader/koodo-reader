@@ -240,7 +240,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
             this.state.isOpenProgressPanel
               ? {}
               : {
-                  transform: "translateY(90px)",
+                  transform: "translateY(110px)",
                   // transition: "transform 0.5s ease",
                   // display: "none",
                 }

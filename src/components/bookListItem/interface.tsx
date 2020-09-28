@@ -9,7 +9,10 @@ export interface BookItemProps {
   handleEditDialog: (isShow: boolean) => void;
   handleDeleteDialog: (isShow: boolean) => void;
   handleAddDialog: (isShow: boolean) => void;
+  handleMessage: (message: string) => void;
+  handleMessageBox: (isShow: boolean) => void;
 }
 export interface BookItemState {
   isDeleteDialog: boolean;
+  isFavorite: boolean;
 }
