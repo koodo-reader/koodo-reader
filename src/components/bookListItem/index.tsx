@@ -9,6 +9,7 @@ import {
   handleReadingEpub,
 } from "../../redux/actions/book";
 import { withNamespaces } from "react-i18next";
+import { handleMessageBox, handleMessage } from "../../redux/actions/manager";
 
 import { stateType } from "../../redux/store";
 import BookItem from "./component";
@@ -25,6 +26,8 @@ const actionCreator = {
   handleEditDialog,
   handleDeleteDialog,
   handleAddDialog,
+  handleMessageBox,
+  handleMessage,
 };
 export default connect(
   mapStateToProps,
