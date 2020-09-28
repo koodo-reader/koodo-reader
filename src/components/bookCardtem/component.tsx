@@ -16,20 +16,14 @@ class BookCardItem extends React.Component<BookProps, BookState> {
     super(props);
     this.state = {
       isOpenConfig: false,
-      isFavorite: false,
+      isFavorite:
+        AddFavorite.getAllFavorite().indexOf(this.props.book.key) > -1,
       left: 0,
       top: 0,
     };
     this.handleOpenBook = this.handleOpenBook.bind(this);
   }
 
-  UNSAFE_componentWillMount() {
-    //判断此书是否为喜爱的图书
-    this.setState({
-      isFavorite:
-        AddFavorite.getAllFavorite().indexOf(this.props.book.key) > -1,
-    });
-  }
   componentDidMount() {
     //控制是否自动打开本书
     if (

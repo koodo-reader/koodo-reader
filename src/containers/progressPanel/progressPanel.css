@@ -31,41 +31,41 @@
   bottom: 16px;
 }
 .previous-chapter {
-  width: 40px !important;
-  height: 40px !important;
+  width: 25px !important;
+  height: 25px !important;
   border: 2px solid rgba(112, 112, 112, 1);
   border-radius: 50%;
   opacity: 1;
   color: rgba(112, 112, 112, 1);
   position: absolute;
-  bottom: 15px;
-  left: 15px;
+  bottom: 10px;
+  left: 10px;
   font-size: 14px;
   transform: rotate(90deg);
   cursor: pointer;
 }
 .next-chapter {
-  width: 40px;
-  height: 40px;
+  width: 25px;
+  height: 25px;
   border: 2px solid rgba(112, 112, 112, 1);
   border-radius: 50%;
   opacity: 1;
   color: rgba(112, 112, 112, 1);
   position: absolute;
-  bottom: 15px;
-  left: 350px;
+  bottom: 10px;
+  left: 370px;
   font-size: 14px;
   transform: rotate(-90deg);
   cursor: pointer;
 }
 
 .previous-chapter-icon {
-  line-height: 40px !important;
-  margin-left: 13px !important;
+  line-height: 25px !important;
+  margin-left: 6px !important;
 }
 .next-chapter-icon {
-  line-height: 40px !important;
-  margin-left: 13px !important;
+  line-height: 25px !important;
+  margin-left: 6px !important;
 }
 input[type="range"] {
   -webkit-appearance: none;
@@ -139,7 +139,7 @@ input[type="range"]::-ms-thumb {
 }
 .progress-panel {
   width: 412px !important;
-  height: 80px;
+  height: 100px;
   background: rgba(255, 255, 255, 1);
   box-shadow: 0px 0px 16px rgba(0, 0, 0, 0.38);
   opacity: 1;
@@ -154,7 +154,8 @@ input[type="range"]::-ms-thumb {
   top: 10px;
   left: 17px;
 }
-#jumpPage {
+#jumpPage,
+#jumpChapter {
   width: 30px;
   border: none;
   height: 20px;
@@ -164,6 +165,7 @@ input[type="range"]::-ms-thumb {
   margin-right: 5px;
   margin-left: 5px;
 }
-#jumpPage {
+#jumpPage,
+#jumpChapter {
   outline: none;
 }

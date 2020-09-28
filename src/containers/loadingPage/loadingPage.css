@@ -67,3 +67,35 @@
   -moz-box-orient: horizontal;
   -webkit-box-orient: horizontal;
 }
+.loading-page-list-cover {
+  float: left;
+  width: 57px;
+  height: 74px;
+  background: #e2e2e2;
+  margin-right: 18px;
+}
+.loading-page-bar1,
+.loading-page-bar2,
+.loading-page-bar3 {
+  height: 16px;
+  background: #e2e2e2;
+  opacity: 1;
+  border-radius: 5px;
+  margin: 7px 0px;
+}
+.loading-page-bar1 {
+  width: calc(100vw - 620px);
+}
+.loading-page-bar2 {
+  width: calc(100vw - 320px);
+}
+.loading-page-bar3 {
+  width: calc(100vw - 520px);
+}
+.loading-page-list {
+  height: 74px;
+  margin: 10px;
+}
+.loading-page-bar {
+  float: left;
+}

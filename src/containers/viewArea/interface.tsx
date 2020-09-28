@@ -19,8 +19,6 @@ export interface ViewAreaProps {
   handleFetchLocations: (currentEpub: any) => void;
 }
 export interface ViewAreaStates {
-  isShowImage: boolean;
-  imageRatio: string;
   loading: boolean;
   cfiRange: any;
   contents: any;

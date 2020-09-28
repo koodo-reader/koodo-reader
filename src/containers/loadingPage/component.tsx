@@ -6,22 +6,22 @@ import OtherUtil from "../../utils/otherUtil";
 
 class LoadingPage extends React.Component<LoadingPageProps> {
   render() {
+    let arr: number[] = [];
+    for (
+      let i = 0;
+      i < parseInt(OtherUtil.getReaderConfig("totalBooks") || "0");
+      i++
+    ) {
+      arr.push(i);
+    }
     if (OtherUtil.getReaderConfig("isList") !== "list") {
-      const renderLoadingPage = () => {
-        let arr = [];
-        for (
-          let i = 0;
-          i < parseInt(OtherUtil.getReaderConfig("totalBooks") || "0");
-          i++
-        ) {
-          arr.push(i);
-        }
+      const renderLoadingCard = () => {
         return arr.map((item, index) => {
           return (
             <div className="loading-page-book" key={item}>
               <div
                 className="loading-page-cover"
-                style={{ opacity: `${(index % 7) * 0.2 + 0.2}` }}
+                style={{ opacity: `${(index % 7) * 0.2}` }}
               ></div>
             </div>
           );
@@ -29,11 +29,35 @@ class LoadingPage extends React.Component<LoadingPageProps> {
       };
       return (
         <div className="loading-page-container-parent">
-          <div className="loading-page-container">{renderLoadingPage()}</div>
+          <div className="loading-page-container">{renderLoadingCard()}</div>
         </div>
       );
     } else {
-      return <div className="boxcontainer"></div>;
+      const renderLoadingList = () => {
+        return arr.map((item, index) => {
+          return (
+            <div className="loading-page-list" key={item}>
+              <div className="loading-page-list-cover"></div>
+              <div className="loading-page-bar">
+                <div
+                  className="loading-page-bar1"
+                ></div>
+                <div
+                  className="loading-page-bar2"
+                ></div>
+                <div
+                  className="loading-page-bar3"
+                ></div>
+              </div>
+            </div>
+          );
+        });
+      };
+      return (
+        <div className="loading-page-container-parent">
+          <div className="loading-page-container" style={{marginTop:"8px"}}>{renderLoadingList()}</div>
+        </div>
+      );
     }
   }
 }

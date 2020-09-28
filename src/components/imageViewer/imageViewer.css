@@ -1,0 +1,30 @@
+.image-preview {
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  overflow-y: scroll;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 50;
+}
+.image {
+  z-index: 5;
+}
+.image-operation {
+  position: absolute;
+  left: calc(50% - 172px);
+  bottom: 30px;
+  color: white;
+  font-size: 30px;
+}
+.zoom-in-icon,
+.zoom-out-icon,
+.save-icon,
+.clockwise-icon,
+.counterclockwise-icon {
+  margin: 20px;
+  cursor: pointer;
+}
