@@ -7,7 +7,7 @@ import RecordLocation from "../../utils/recordLocation";
 import OtherUtil from "../../utils/otherUtil";
 import BookmarkModel from "../../model/Bookmark";
 import ReaderConfig from "../../utils/readerConfig";
-const isElectron = require("is-electron");
+import ImageViewer from "../../components/imageViewer";
 
 declare var window: any;
 
@@ -16,8 +16,6 @@ class ViewArea extends React.Component<ViewAreaProps, ViewAreaStates> {
   constructor(props: ViewAreaProps) {
     super(props);
     this.state = {
-      isShowImage: false,
-      imageRatio: "horizontal",
       cfiRange: null,
       contents: null,
       rect: null,
@@ -61,7 +59,6 @@ class ViewArea extends React.Component<ViewAreaProps, ViewAreaStates> {
         return;
       }
       ReaderConfig.addDefaultCss();
-      doc.addEventListener("click", this.showImage);
     });
     this.props.rendition.on("selected", (cfiRange: any, contents: any) => {
       var range = contents.range(cfiRange);
@@ -99,54 +96,6 @@ class ViewArea extends React.Component<ViewAreaProps, ViewAreaStates> {
     );
   }
 
-  showImage = (event: any) => {
-    console.log("click");
-    if (this.props.isShow) {
-      this.props.handleLeaveReader("left");
-      this.props.handleLeaveReader("right");
-      this.props.handleLeaveReader("top");
-      this.props.handleLeaveReader("bottom");
-    }
-    if (
-      isElectron() &&
-      event.target.parentNode.parentNode.tagName.toLowerCase() === "a"
-    ) {
-      event.preventDefault();
-      window
-        .require("electron")
-        .shell.openExternal(event.target.parentNode.parentNode.href);
-    }
-    if (!event.target.src) {
-      return;
-    }
-    if (this.state.isShowImage) {
-      this.setState({ isShowImage: false });
-    }
-    event.preventDefault();
-    const handleDirection = (direction: string) => {
-      this.setState({ imageRatio: direction });
-    };
-    var img = new Image();
-    img.addEventListener("load", function () {
-      handleDirection(
-        this.naturalWidth / this.naturalHeight > 1 ? "horizontal" : "vertical"
-      );
-    });
-    img.src = event.target.src;
-    let image: HTMLImageElement | null = document.querySelector(".image");
-    if (image) {
-      image.src = event.target.src;
-      this.setState({ isShowImage: true });
-    }
-  };
-  hideImage = (event: any) => {
-    event.preventDefault();
-    if (event.target.src) {
-      let image: HTMLImageElement | null = document.querySelector(".image");
-      if (image) image.src = "";
-    }
-    this.setState({ isShowImage: false });
-  };
   previourChapter = () => {
     const currentLocation = this.props.rendition.currentLocation();
     if (!currentLocation.start) return;
@@ -195,28 +144,14 @@ class ViewArea extends React.Component<ViewAreaProps, ViewAreaStates> {
               </div>
             </>
           )}
-        <div
-          className="image-preview"
-          style={
-            this.state.isShowImage
-              ? { backgroundColor: "rgba(75,75,75,0.3)" }
-              : { display: "none" }
-          }
-          onClick={(event) => {
-            this.hideImage(event);
+        <ImageViewer
+          {...{
+            isShow: this.props.isShow,
+            rendition: this.props.rendition,
+            handleEnterReader: this.props.handleEnterReader,
+            handleLeaveReader: this.props.handleLeaveReader,
           }}
-        >
-          <img
-            src=""
-            alt=""
-            className="image"
-            style={
-              this.state.imageRatio === "horizontal"
-                ? { width: "60vw" }
-                : { height: "90vh" }
-            }
-          />
-        </div>
+        />
         <PopupMenu {...popupMenuProps} />
         {this.state.loading ? (
           <div className="spinner">

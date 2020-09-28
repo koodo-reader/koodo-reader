@@ -5,6 +5,7 @@ import "./bookListItem.css";
 import RecordLocation from "../../utils/recordLocation";
 import { BookItemProps, BookItemState } from "./interface";
 import { Trans } from "react-i18next";
+import AddFavorite from "../../utils/addFavorite";
 import localforage from "localforage";
 
 declare var window: any;
@@ -13,7 +14,11 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
   epub: any;
   constructor(props: BookItemProps) {
     super(props);
-    this.state = { isDeleteDialog: false };
+    this.state = {
+      isDeleteDialog: false,
+      isFavorite:
+        AddFavorite.getAllFavorite().indexOf(this.props.book.key) > -1,
+    };
     this.handleOpenBook = this.handleOpenBook.bind(this);
   }
   handleOpenBook() {
@@ -35,6 +40,18 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
   handleAddShelf = () => {
     this.props.handleAddDialog(true);
     this.props.handleReadingBook(this.props.book);
+  };
+  handleLoveBook = () => {
+    AddFavorite.setFavorite(this.props.book.key);
+    this.setState({ isFavorite: true });
+    this.props.handleMessage("Add Successfully");
+    this.props.handleMessageBox(true);
+  };
+  handleCancelLoveBook = () => {
+    AddFavorite.clear(this.props.book.key);
+    this.setState({ isFavorite: false });
+    this.props.handleMessage("Cancel Successfully");
+    this.props.handleMessageBox(true);
   };
   render() {
     let percentage = RecordLocation.getCfi(this.props.book.key)
@@ -76,6 +93,23 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
           {percentage ? Math.round(percentage * 100) : 0}%
         </p>
         <div className="book-item-list-config">
+          {this.state.isFavorite ? (
+            <span
+              className="icon-love list-icon"
+              onClick={() => {
+                this.handleCancelLoveBook();
+              }}
+              style={{ color: "#f87356" }}
+            ></span>
+          ) : (
+            <span
+              className="icon-love list-icon"
+              onClick={() => {
+                this.handleLoveBook();
+              }}
+            ></span>
+          )}
+
           <span
             className="icon-shelf list-icon"
             onClick={() => {

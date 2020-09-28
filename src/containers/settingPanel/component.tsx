@@ -2,7 +2,7 @@
 import React from "react";
 import "./settingPanel.css";
 import ThemeList from "../../components/themeList";
-import SliderList from "../../components/SliderList";
+import SliderList from "../../components/sliderList";
 import DropdownList from "../../components/dropdownList";
 import ModeControl from "../../components/modeControl";
 import { SettingPanelProps, SettingPanelState } from "./interface";

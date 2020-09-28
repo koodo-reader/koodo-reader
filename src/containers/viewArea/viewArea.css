@@ -5,21 +5,6 @@
   z-index: 20;
   animation: popup 0.075s ease-in-out 0s 1;
 }
-.image-preview {
-  width: 100vw;
-  height: 100vh;
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  z-index: 3;
-  overflow-y: scroll;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.image {
-  z-index: 5;
-}
 .bookmark {
   height: 40px;
   width: 20px;

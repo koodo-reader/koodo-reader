@@ -43,7 +43,17 @@ class ProgressPanel extends React.Component<
     }
   }
   //WARNING! To be deprecated in React v17. Use componentDidMount instead.
-
+  onProgressChange = (event: any) => {
+    const percentage = event.target.value / 100;
+    const location = percentage
+      ? this.props.locations.cfiFromPercentage(percentage)
+      : 0;
+    this.props.currentEpub.rendition.display(location);
+  };
+  //使进度百分比随拖动实时变化
+  onProgressInput = (event: any) => {
+    this.setState({ displayPercentage: event.target.value / 100 });
+  };
   previourChapter = () => {
     const currentLocation = this.props.currentEpub.rendition.currentLocation();
     if (!currentLocation.start) return;
@@ -107,7 +117,19 @@ class ProgressPanel extends React.Component<
     }
     return (
       <div className="progress-panel">
-        <p className="progress-text">
+        <p className="progress-text" style={{ marginTop: 10 }}>
+          <span>
+            <Trans>Current Progress</Trans>:{" "}
+            {Math.round(
+              this.state.displayPercentage > 1
+                ? 100
+                : this.state.displayPercentage * 100
+            )}
+            %&nbsp;&nbsp;&nbsp;
+          </span>
+        </p>
+
+        <p className="progress-text" style={{ marginTop: 0 }}>
           {this.state.currentPage > 0 ? (
             <>
               <Trans>Current Chapter Pages</Trans>
@@ -120,31 +142,42 @@ class ProgressPanel extends React.Component<
                 }}
                 value={this.state.currentPage}
               />
-
-              <span>/ {this.state.totalPage}</span>
-            </>
-          ) : null}
-        </p>
-        <p className="progress-text" style={{ marginTop: 5 }}>
-          {this.state.currentPage > 0 ? (
-            <>
+              <span>/ {this.state.totalPage}</span>&nbsp;&nbsp;&nbsp;
               <Trans>Chapter Redirect</Trans>
               <input
                 type="text"
-                name="jumpPage"
-                id="jumpPage"
+                name="jumpChapter"
+                id="jumpChapter"
                 onBlur={(event) => {
                   this.handleJumpChapter(event);
                 }}
                 defaultValue={this.state.currentChapterIndex}
               />
-
               <span>
                 / {this.props.currentEpub.rendition.book.spine.length}
               </span>
             </>
           ) : null}
         </p>
+        <div>
+          <input
+            className="input-progress"
+            defaultValue={Math.round(this.state.displayPercentage * 100)}
+            type="range"
+            max="100"
+            min="0"
+            step="1"
+            onMouseUp={(event) => {
+              this.onProgressChange(event);
+            }}
+            // onMouseDown={this.handleDrag()}
+            onChange={(event) => {
+              this.onProgressInput(event);
+            }}
+            style={{ width: 300, left: 50, top: 73 }}
+          />
+        </div>
+
         <div
           className="previous-chapter"
           onClick={() => {
