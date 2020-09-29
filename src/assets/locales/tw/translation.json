@@ -182,6 +182,7 @@
   "This action will clear and remove this tag": "此操作会清空并删除此标签",
   "Scale": "页面缩放",
   "Next Chapter": "下一章",
+  "Don't show footer and header": "不显示页眉页脚",
   "Prev Chapter": "上一章",
   "Current Reading Time": "本次阅读时间：{{count}}分钟",
   "Finish Reading Time": "读完本章需要：{{count}}分钟",

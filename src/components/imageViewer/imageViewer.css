@@ -19,6 +19,7 @@
   bottom: 30px;
   color: white;
   font-size: 30px;
+  z-index: 6;
 }
 .zoom-in-icon,
 .zoom-out-icon,
@@ -27,4 +28,11 @@
 .counterclockwise-icon {
   margin: 20px;
   cursor: pointer;
+}
+.image-background {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0px;
+  left: 0px;
 }
