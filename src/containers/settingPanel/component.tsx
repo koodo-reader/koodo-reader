@@ -113,7 +113,7 @@ class SettingPanel extends React.Component<
               mode: "fontSize",
             }}
           />
-          {this.state.readerMode !== "double" ? (
+          {this.state.readerMode && this.state.readerMode !== "double" ? (
             <SliderList
               {...{
                 maxValue: 1.5,

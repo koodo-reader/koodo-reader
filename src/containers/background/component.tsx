@@ -9,11 +9,14 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
   constructor(props: any) {
     super(props);
     this.state = {
-      isSingle: OtherUtil.getReaderConfig("readerMode") !== "double",
+      isSingle:
+        OtherUtil.getReaderConfig("readerMode") &&
+        OtherUtil.getReaderConfig("readerMode") !== "double",
       currentChapter: "",
       prevPage: 0,
       nextPage: 0,
-      scale: OtherUtil.getReaderConfig("scale"),
+      scale: OtherUtil.getReaderConfig("scale") || 1,
+      isShowFooter: OtherUtil.getReaderConfig("isShowFooter") !== "no",
     };
   }
   componentWillReceiveProps(nextProps: BackgroundProps) {
@@ -43,7 +46,7 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
     }
     return (
       <div className="background">
-        {this.state.currentChapter && (
+        {this.state.isShowFooter && this.state.currentChapter && (
           <p
             className="progress-chapter-name"
             style={
@@ -59,7 +62,7 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
           </p>
         )}
 
-        {!this.state.isSingle && (
+        {this.state.isShowFooter && !this.state.isSingle && (
           <p
             className="progress-book-name"
             style={
@@ -75,7 +78,7 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
           </p>
         )}
 
-        {this.state.prevPage > 0 && (
+        {this.state.isShowFooter && this.state.prevPage > 0 && (
           <p
             className="background-page-left"
             style={
@@ -90,9 +93,11 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
             第{this.state.prevPage}页
           </p>
         )}
-        {this.state.nextPage > 0 && !this.state.isSingle && (
-          <p className="background-page-right">第{this.state.nextPage}页</p>
-        )}
+        {this.state.isShowFooter &&
+          this.state.nextPage > 0 &&
+          !this.state.isSingle && (
+            <p className="background-page-right">第{this.state.nextPage}页</p>
+          )}
         <div
           className="background-box2"
           style={
