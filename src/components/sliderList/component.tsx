@@ -75,7 +75,7 @@ class SliderList extends React.Component<SliderListProps, SliderListState> {
             max={this.props.maxValue}
             min={this.props.minValue}
             step={this.props.mode === "fontSize" ? "1" : "0.1"}
-            onMouseUp={(event) => {
+            onInput={(event) => {
               this.onValueChange(event);
             }}
             onChange={(event) => {
