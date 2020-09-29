@@ -8,6 +8,7 @@ export interface BackgroundProps {
 }
 export interface BackgroundState {
   isSingle: boolean;
+  isShowFooter: boolean;
   currentChapter: string;
   prevPage: number;
   nextPage: number;

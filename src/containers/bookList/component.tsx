@@ -28,13 +28,7 @@ class BookList extends React.Component<BookListProps, BookListState> {
     this.handleOldVersion();
   }
   handleOldVersion = async () => {
-    console.log(this.props.books, "books");
     if (!this.props.books[0].cover) {
-      console.log(
-        this.props.books,
-        this.props.books[0],
-        !this.props.books[0].cover
-      );
       let bookArr: any = this.props.books;
       for (let i = 0; i < bookArr.length; i++) {
         await new Promise(async (resolve, reject) => {

@@ -9,4 +9,5 @@ export interface SettingInfoState {
   isOpenBook: boolean;
   isUseFont: boolean;
   isUseBackground: boolean;
+  isShowFooter: boolean;
 }

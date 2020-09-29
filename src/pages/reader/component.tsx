@@ -25,7 +25,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
       isOpenNavPanel: false,
       isMessage: false,
       rendition: null,
-      scale: OtherUtil.getReaderConfig("scale"),
+      scale: OtherUtil.getReaderConfig("scale") || 1,
       time: ReadingTime.getTime(this.props.currentBook.key),
       isTouch: OtherUtil.getReaderConfig("isTouch") === "yes",
       readerMode: OtherUtil.getReaderConfig("readerMode") || "double",

@@ -20,6 +20,7 @@ class SettingDialog extends React.Component<
       isOpenBook: OtherUtil.getReaderConfig("isOpenBook") === "yes",
       isUseFont: OtherUtil.getReaderConfig("isUseFont") === "yes",
       isUseBackground: OtherUtil.getReaderConfig("isUseBackground") === "yes",
+      isShowFooter: OtherUtil.getReaderConfig("isShowFooter") !== "no",
     };
   }
   componentDidMount() {
@@ -80,7 +81,17 @@ class SettingDialog extends React.Component<
       : this.props.handleMessage("Turn On Successfully");
     this.props.handleMessageBox(true);
   };
-
+  handleFooterHeader = () => {
+    this.setState({ isShowFooter: !this.state.isShowFooter });
+    OtherUtil.setReaderConfig(
+      "isShowFooter",
+      this.state.isShowFooter ? "no" : "yes"
+    );
+    this.state.isShowFooter
+      ? this.props.handleMessage("Turn On Successfully")
+      : this.props.handleMessage("Turn Off Successfully");
+    this.props.handleMessageBox(true);
+  };
   render() {
     return (
       <div className="setting-dialog-container">
@@ -149,6 +160,21 @@ class SettingDialog extends React.Component<
               <span
                 className="single-control-button"
                 style={this.state.isUseFont ? { float: "right" } : {}}
+              ></span>
+            </span>
+          </div>
+          <div className="setting-dialog-new-title">
+            <Trans>Don't show footer and header</Trans>
+            <span
+              className="single-control-switch"
+              onClick={() => {
+                this.handleFooterHeader();
+              }}
+              style={{ float: "right" }}
+            >
+              <span
+                className="single-control-button"
+                style={this.state.isShowFooter ? {} : { float: "right" }}
               ></span>
             </span>
           </div>

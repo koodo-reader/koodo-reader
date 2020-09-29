@@ -112,7 +112,6 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
           const epub = window.ePub(e.target.result);
           epub.loaded.metadata
             .then((metadata: any) => {
-              console.log(metadata, "medata");
               if (!e.target) {
                 reject();
                 throw new Error();
