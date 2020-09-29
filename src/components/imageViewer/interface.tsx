@@ -8,4 +8,5 @@ export interface ImageViewerStates {
   isShowImage: boolean;
   imageRatio: string;
   zoomIndex: number;
+  rotateIndex: number;
 }
