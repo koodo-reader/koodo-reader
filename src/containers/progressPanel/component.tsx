@@ -167,7 +167,7 @@ class ProgressPanel extends React.Component<
             max="100"
             min="0"
             step="1"
-            onMouseUp={(event) => {
+            onInput={(event) => {
               this.onProgressChange(event);
             }}
             // onMouseDown={this.handleDrag()}
