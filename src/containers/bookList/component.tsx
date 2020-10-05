@@ -59,8 +59,9 @@ class BookList extends React.Component<BookListProps, BookListState> {
         });
       }
 
-      localforage.setItem("books", bookArr);
-      window.location.reload();
+      localforage.setItem("books", bookArr).then(() => {
+        window.location.reload();
+      });
     }
   };
   handleFavorite = (items: any[], arr: string[]) => {
