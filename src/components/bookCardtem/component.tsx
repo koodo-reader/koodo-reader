@@ -82,7 +82,7 @@ class BookCardItem extends React.Component<BookProps, BookState> {
             this.handleConfig(false);
           }}
         >
-          {this.props.book.cover ? (
+          {this.props.book.cover && this.props.book.cover !== "noCover" ? (
             <img
               className="book-item-cover"
               src={this.props.book.cover}

@@ -59,7 +59,7 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
       : 0;
     return (
       <div className="book-list-item-container">
-        {this.props.book.cover ? (
+        {this.props.book.cover && this.props.book.cover !== "noCover" ? (
           <img
             className="book-item-list-cover"
             src={this.props.book.cover}
