@@ -119,11 +119,38 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
               epub
                 .coverUrl()
                 .then(async (url: string) => {
-                  var reader = new FileReader();
-                  let blob = await fetch(url).then((r) => r.blob());
-                  reader.readAsDataURL(blob);
-                  reader.onloadend = async () => {
-                    cover = reader.result;
+                  if (url) {
+                    var reader = new FileReader();
+                    let blob = await fetch(url).then((r) => r.blob());
+                    reader.readAsDataURL(blob);
+                    console.log(url, "url");
+                    reader.onloadend = async () => {
+                      cover = reader.result;
+                      console.log(cover, "cover");
+                      let key: string,
+                        name: string,
+                        author: string,
+                        description: string;
+                      [name, author, description] = [
+                        metadata.title,
+                        metadata.creator,
+                        metadata.description,
+                      ];
+                      key = new Date().getTime() + "";
+                      let book = new BookModel(
+                        key,
+                        name,
+                        author,
+                        description,
+                        md5,
+                        cover
+                      );
+                      await this.handleAddBook(book);
+                      localforage.setItem(key, e.target!.result);
+                      resolve();
+                    };
+                  } else {
+                    cover = "noCover";
                     let key: string,
                       name: string,
                       author: string,
@@ -145,7 +172,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                     await this.handleAddBook(book);
                     localforage.setItem(key, e.target!.result);
                     resolve();
-                  };
+                  }
                 })
                 .catch((err: any) => {
                   console.log(err, "err");
