@@ -2,7 +2,7 @@
 import React from "react";
 import "./imageViewer.css";
 import { ImageViewerProps, ImageViewerStates } from "./interface";
-import ReaderConfig from "../../utils/readerConfig";
+import StyleUtil from "../../utils/styleUtil";
 import FileSaver from "file-saver";
 const isElectron = require("is-electron");
 
@@ -27,7 +27,7 @@ class ImageViewer extends React.Component<ImageViewerProps, ImageViewerStates> {
       if (!doc) {
         return;
       }
-      ReaderConfig.addDefaultCss();
+      StyleUtil.addDefaultCss();
       doc.addEventListener("click", this.showImage, true);
     });
   }

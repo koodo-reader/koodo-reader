@@ -1,7 +1,7 @@
 import RestoreUtil from "../restoreUtil";
 import OtherUtil from "../otherUtil";
 import axios from "axios";
-import { config } from "../readerConfig";
+import { config } from "../../constants/readerConfig";
 
 class OnedriveUitl {
   static GetAccessToken() {

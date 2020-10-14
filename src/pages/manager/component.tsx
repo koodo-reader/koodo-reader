@@ -22,7 +22,7 @@ import { getParamsFromUrl } from "../../utils/syncUtils/common";
 import copy from "copy-text-to-clipboard";
 import OtherUtil from "../../utils/otherUtil";
 import AddFavorite from "../../utils/addFavorite";
-import { updateLog } from "../../utils/readerConfig";
+import { updateLog } from "../../constants/readerConfig";
 import UpdateDialog from "../../components/updataDialog";
 import SettingDialog from "../../components/settingDialog";
 import { isMobileOnly } from "react-device-detect";

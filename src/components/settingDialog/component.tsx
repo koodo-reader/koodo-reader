@@ -4,7 +4,7 @@ import "./settingDialog.css";
 import { SettingInfoProps, SettingInfoState } from "./interface";
 import { Trans } from "react-i18next";
 import i18n from "../../i18n";
-import { updateLog } from "../../utils/readerConfig";
+import { updateLog } from "../../constants/readerConfig";
 import OtherUtil from "../../utils/otherUtil";
 const isElectron = require("is-electron");
 

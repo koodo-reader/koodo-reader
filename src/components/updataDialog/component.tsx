@@ -3,7 +3,7 @@ import React from "react";
 import "./updateDialog.css";
 import { UpdateInfoProps, UpdateInfoState } from "./interface";
 import { Trans } from "react-i18next";
-import { updateLog } from "../../utils/readerConfig";
+import { updateLog } from "../../constants/readerConfig";
 
 class UpdateDialog extends React.Component<UpdateInfoProps, UpdateInfoState> {
   constructor(props: UpdateInfoProps) {

@@ -1,6 +1,6 @@
 import React from "react";
 import "./sidebar.css";
-import { sideMenu } from "../../utils/readerConfig";
+import { sideMenu } from "../../constants/readerConfig";
 import { Trans } from "react-i18next";
 import { SidebarProps, SidebarState } from "./interface";
 
