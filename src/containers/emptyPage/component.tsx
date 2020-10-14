@@ -1,7 +1,7 @@
 //为空页面
 import React from "react";
 import "./emptyPage.css";
-import { emptyList } from "../../utils/readerConfig";
+import { emptyList } from "../../constants/readerConfig";
 import { Trans } from "react-i18next";
 import { EmptyPageProps, EmptyPageState } from "./interface";
 

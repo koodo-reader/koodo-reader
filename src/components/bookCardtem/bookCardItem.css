@@ -15,8 +15,9 @@
   cursor: pointer;
 }
 .book-item-title {
-  height: 30px;
+  height: 39px;
   font-size: 15px;
+  line-height: 17px;
   color: rgba(75, 75, 75, 1);
   opacity: 1;
   text-align: center;

@@ -1,7 +1,7 @@
 //修改阅读器背景色
 import React from "react";
-import { themeList } from "../../utils/readerConfig";
-import ReaderConfig from "../../utils/readerConfig";
+import { themeList } from "../../constants/readerConfig";
+import StyleUtil from "../../utils/styleUtil";
 import "./themeList.css";
 import { Trans } from "react-i18next";
 import { ThemeListProps, ThemeListState } from "./interface";
@@ -37,7 +37,7 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
         },
       });
     }
-    ReaderConfig.addDefaultCss();
+    StyleUtil.addDefaultCss();
   }
   render() {
     const renderBackgroundColorList = () => {

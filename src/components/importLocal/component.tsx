@@ -126,7 +126,6 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                     console.log(url, "url");
                     reader.onloadend = async () => {
                       cover = reader.result;
-                      console.log(cover, "cover");
                       let key: string,
                         name: string,
                         author: string,

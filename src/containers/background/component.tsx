@@ -31,6 +31,7 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
       });
       let chapterHref = currentLocation.start.href;
       let chapter = "Unknown Chapter";
+      console.log(chapterHref, this.props.flattenChapters, "flattenChapters");
       let currentChapter = this.props.flattenChapters.filter(
         (item: any) => item.href.split("#")[0] === chapterHref
       )[0];

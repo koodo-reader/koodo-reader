@@ -1,6 +1,6 @@
 //图书样式设置的下拉菜单页面
 import React from "react";
-import { dropdownList } from "../../utils/readerConfig";
+import { dropdownList } from "../../constants/readerConfig";
 import "./dropdownList.css";
 import { Trans } from "react-i18next";
 import { DropdownListProps, DropdownListState } from "./interface";
