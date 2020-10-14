@@ -1,6 +1,6 @@
 import React from "react";
 import "./welcomeDialog.css";
-import { welcomeMessage } from "../../utils/readerConfig";
+import { welcomeMessage } from "../../constants/readerConfig";
 import { Trans } from "react-i18next";
 import { WelcomeDialogProps, WelcomeDialogState } from "./interface";
 import OtherUtil from "../../utils/otherUtil";

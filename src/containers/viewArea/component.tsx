@@ -6,7 +6,7 @@ import { ViewAreaProps, ViewAreaStates } from "./interface";
 import RecordLocation from "../../utils/recordLocation";
 import OtherUtil from "../../utils/otherUtil";
 import BookmarkModel from "../../model/Bookmark";
-import ReaderConfig from "../../utils/readerConfig";
+import StyleUtil from "../../utils/styleUtil";
 import ImageViewer from "../../components/imageViewer";
 
 declare var window: any;
@@ -58,7 +58,7 @@ class ViewArea extends React.Component<ViewAreaProps, ViewAreaStates> {
       if (!doc) {
         return;
       }
-      ReaderConfig.addDefaultCss();
+      StyleUtil.addDefaultCss();
     });
     this.props.rendition.on("selected", (cfiRange: any, contents: any) => {
       var range = contents.range(cfiRange);

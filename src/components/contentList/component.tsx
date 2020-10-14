@@ -25,11 +25,12 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
     this.props.currentEpub.rendition.display(href);
   }
   render() {
-    const renderContentList = (items: any) => {
+    const renderContentList = (items: any, level: number) => {
+      level++;
       return items.map((item: any, index: number) => {
         return (
           <li key={index} className="book-content-list">
-            {item.subitems.length > 0 && (
+            {item.subitems.length > 0 && level <= 2 && (
               <span
                 className="icon-dropdown content-dropdown"
                 onClick={() => {
@@ -53,8 +54,9 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
             >
               {item.label}
             </a>
-            {item.subitems.length > 0 && this.state.currentIndex === index ? (
-              <ul>{renderContentList(item.subitems)}</ul>
+            {item.subitems.length > 0 &&
+            (this.state.currentIndex === index || level > 2) ? (
+              <ul>{renderContentList(item.subitems, level)}</ul>
             ) : null}
           </li>
         );
@@ -64,7 +66,7 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
     return (
       <div className="book-content-container">
         <ul className="book-content">
-          {this.state.chapters && renderContentList(this.state.chapters)}
+          {this.state.chapters && renderContentList(this.state.chapters, 1)}
         </ul>
       </div>
     );
