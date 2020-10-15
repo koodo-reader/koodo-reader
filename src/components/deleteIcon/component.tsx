@@ -78,7 +78,6 @@ class DeleteIcon extends React.Component<DeleteIconProps, DeleteIconStates> {
       handleDeletePopup: this.handleDeletePopup,
       handleDeleteOpearion: this.handleDelete,
     };
-    console.log(this.state.isOpenDelete, "this.state.isOpenDelete");
     return (
       <>
         {this.state.isOpenDelete && <DeletePopup {...deletePopupProps} />}
