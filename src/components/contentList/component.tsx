@@ -2,10 +2,16 @@
 import React from "react";
 import "./contentList.css";
 import { ContentListProps, ContentListState } from "./interface";
+import OtherUtil from "../../utils/otherUtil";
 class ContentList extends React.Component<ContentListProps, ContentListState> {
   constructor(props: ContentListProps) {
     super(props);
-    this.state = { chapters: [], isCollapsed: true, currentIndex: -1 };
+    this.state = {
+      chapters: [],
+      isCollapsed: true,
+      currentIndex: -1,
+      isExpandContent: OtherUtil.getReaderConfig("isExpandContent") === "yes",
+    };
     this.handleJump = this.handleJump.bind(this);
   }
 
@@ -30,22 +36,24 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
       return items.map((item: any, index: number) => {
         return (
           <li key={index} className="book-content-list">
-            {item.subitems.length > 0 && level <= 2 && (
-              <span
-                className="icon-dropdown content-dropdown"
-                onClick={() => {
-                  this.setState({
-                    currentIndex:
-                      this.state.currentIndex === index ? -1 : index,
-                  });
-                }}
-                style={
-                  this.state.currentIndex === index
-                    ? {}
-                    : { transform: "rotate(-90deg)" }
-                }
-              ></span>
-            )}
+            {item.subitems.length > 0 &&
+              level <= 2 &&
+              !this.state.isExpandContent && (
+                <span
+                  className="icon-dropdown content-dropdown"
+                  onClick={() => {
+                    this.setState({
+                      currentIndex:
+                        this.state.currentIndex === index ? -1 : index,
+                    });
+                  }}
+                  style={
+                    this.state.currentIndex === index
+                      ? {}
+                      : { transform: "rotate(-90deg)" }
+                  }
+                ></span>
+              )}
 
             <a
               href={item.href}
@@ -55,7 +63,9 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
               {item.label}
             </a>
             {item.subitems.length > 0 &&
-            (this.state.currentIndex === index || level > 2) ? (
+            (this.state.currentIndex === index ||
+              level > 2 ||
+              this.state.isExpandContent) ? (
               <ul>{renderContentList(item.subitems, level)}</ul>
             ) : null}
           </li>

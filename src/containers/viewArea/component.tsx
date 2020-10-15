@@ -23,9 +23,6 @@ class ViewArea extends React.Component<ViewAreaProps, ViewAreaStates> {
     };
     this.isFirst = true;
   }
-  UNSAFE_componentWillMount() {
-    this.props.handleFetchLocations(this.props.currentEpub);
-  }
 
   componentDidMount() {
     let epub = this.props.currentEpub;
@@ -59,6 +56,30 @@ class ViewArea extends React.Component<ViewAreaProps, ViewAreaStates> {
         return;
       }
       StyleUtil.addDefaultCss();
+      this.props.rendition.themes.default({
+        "a, article, cite, code, div, li, p, pre, span, table": {
+          "font-size": `${
+            OtherUtil.getReaderConfig("isUseFont") === "yes"
+              ? ""
+              : OtherUtil.getReaderConfig("fontSize") || 17
+          }px !important`,
+          "line-height": `${
+            OtherUtil.getReaderConfig("isUseFont") === "yes"
+              ? ""
+              : OtherUtil.getReaderConfig("lineHeight") || "1.25"
+          } !important`,
+          "font-family": `${
+            OtherUtil.getReaderConfig("isUseFont") === "yes"
+              ? ""
+              : OtherUtil.getReaderConfig("fontFamily") || "Helvetica"
+          } !important`,
+          color: `${
+            OtherUtil.getReaderConfig("theme") === "rgba(44,47,49,1)"
+              ? "white"
+              : ""
+          } !important`,
+        },
+      });
     });
     this.props.rendition.on("selected", (cfiRange: any, contents: any) => {
       var range = contents.range(cfiRange);

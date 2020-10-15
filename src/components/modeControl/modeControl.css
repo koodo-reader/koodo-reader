@@ -3,11 +3,11 @@
   height: 80px;
   margin: 0px 20px 0px 20px;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
 }
 .single-page-icon,
 .two-page-icon {
-  font-size: 48px;
+  font-size: 40px;
   color: rgba(75, 75, 75, 1);
   text-align: center;
 }

@@ -28,6 +28,7 @@
 .counterclockwise-icon {
   margin: 20px;
   cursor: pointer;
+  text-shadow: 0px 0px 5px rgba(75, 75, 75, 0.6);
 }
 .image-background {
   width: 100%;
