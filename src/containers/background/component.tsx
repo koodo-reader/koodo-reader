@@ -17,6 +17,7 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
       nextPage: 0,
       scale: OtherUtil.getReaderConfig("scale") || 1,
       isShowFooter: OtherUtil.getReaderConfig("isShowFooter") !== "no",
+      isUseBackground: OtherUtil.getReaderConfig("isUseBackground") === "yes",
     };
   }
   componentWillReceiveProps(nextProps: BackgroundProps) {
@@ -25,13 +26,14 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
       if (!currentLocation.start) {
         return;
       }
+      this.props.handleFetchLocations(this.props.currentEpub);
+
       this.setState({
         prevPage: currentLocation.start.displayed.page,
         nextPage: currentLocation.end.displayed.page,
       });
       let chapterHref = currentLocation.start.href;
       let chapter = "Unknown Chapter";
-      console.log(chapterHref, this.props.flattenChapters, "flattenChapters");
       let currentChapter = this.props.flattenChapters.filter(
         (item: any) => item.href.split("#")[0] === chapterHref
       )[0];
@@ -42,8 +44,73 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
     }
   }
   render() {
-    if (OtherUtil.getReaderConfig("isUseBackground") === "yes") {
-      return <div className="background"></div>;
+    if (this.state.isUseBackground) {
+      return (
+        <div className="background">
+          {this.state.isShowFooter && this.state.currentChapter && (
+            <p
+              className="progress-chapter-name"
+              style={
+                this.state.isSingle
+                  ? {
+                      left: `calc(50vw - 
+                      270px)`,
+                    }
+                  : {}
+              }
+            >
+              <Trans>{this.state.currentChapter}</Trans>
+            </p>
+          )}
+          {this.state.isShowFooter && !this.state.isSingle && (
+            <p
+              className="progress-book-name"
+              style={
+                this.state.isSingle
+                  ? {
+                      right: `calc(50vw - 
+                      270px)`,
+                    }
+                  : {}
+              }
+            >
+              <Trans>{this.props.currentBook.name}</Trans>
+            </p>
+          )}
+          {this.state.isShowFooter && this.state.prevPage > 0 && (
+            <p
+              className="background-page-left"
+              style={
+                this.state.isSingle
+                  ? {
+                      left: `calc(50vw - 
+                      270px)`,
+                    }
+                  : {}
+              }
+            >
+              <Trans i18nKey="Book Page" count={this.state.prevPage}>
+                Page
+                {{
+                  count: this.state.prevPage,
+                }}
+              </Trans>
+            </p>
+          )}
+          {this.state.isShowFooter &&
+            this.state.nextPage > 0 &&
+            !this.state.isSingle && (
+              <p className="background-page-right">
+                <Trans i18nKey="Book Page" count={this.state.nextPage}>
+                  Page
+                  {{
+                    count: this.state.nextPage,
+                  }}
+                </Trans>
+              </p>
+            )}
+        </div>
+      );
     }
     return (
       <div className="background">
@@ -91,13 +158,25 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
                 : {}
             }
           >
-            第{this.state.prevPage}页
+            <Trans i18nKey="Book Page" count={this.state.prevPage}>
+              Page
+              {{
+                count: this.state.prevPage,
+              }}
+            </Trans>
           </p>
         )}
         {this.state.isShowFooter &&
           this.state.nextPage > 0 &&
           !this.state.isSingle && (
-            <p className="background-page-right">第{this.state.nextPage}页</p>
+            <p className="background-page-right">
+              <Trans i18nKey="Book Page" count={this.state.nextPage}>
+                Page
+                {{
+                  count: this.state.nextPage,
+                }}
+              </Trans>
+            </p>
           )}
         <div
           className="background-box2"

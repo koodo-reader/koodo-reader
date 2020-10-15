@@ -2,10 +2,9 @@
   width: 220px;
   height: 50px;
   display: flex;
-  justify-content: center;
   align-items: center;
   position: relative;
-  left: 310px;
+  left: 380px;
   top: 18px;
   color: blue;
   cursor: pointer;

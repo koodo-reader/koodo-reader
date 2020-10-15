@@ -4,7 +4,7 @@ import "./progressPanel.css";
 import RecordLocation from "../../utils/recordLocation";
 import { Trans } from "react-i18next";
 import { ProgressPanelProps, ProgressPanelState } from "./interface";
-import _ from "underscore";
+
 class ProgressPanel extends React.Component<
   ProgressPanelProps,
   ProgressPanelState
@@ -48,7 +48,6 @@ class ProgressPanel extends React.Component<
     const location = percentage
       ? this.props.locations.cfiFromPercentage(percentage)
       : 0;
-    console.log(location, "location");
     this.props.currentEpub.rendition.display(location);
   };
   //使进度百分比随拖动实时变化

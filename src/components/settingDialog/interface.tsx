@@ -10,4 +10,5 @@ export interface SettingInfoState {
   isUseFont: boolean;
   isUseBackground: boolean;
   isShowFooter: boolean;
+  isExpandContent: boolean;
 }

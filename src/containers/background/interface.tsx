@@ -5,10 +5,12 @@ export interface BackgroundProps {
   flattenChapters: any;
   locations: any;
   time: number;
+  handleFetchLocations: (currentEpub: any) => void;
 }
 export interface BackgroundState {
   isSingle: boolean;
   isShowFooter: boolean;
+  isUseBackground: boolean;
   currentChapter: string;
   prevPage: number;
   nextPage: number;
