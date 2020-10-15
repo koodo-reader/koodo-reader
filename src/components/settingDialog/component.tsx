@@ -19,6 +19,7 @@ class SettingDialog extends React.Component<
       isTouch: OtherUtil.getReaderConfig("isTouch") === "yes",
       isOpenBook: OtherUtil.getReaderConfig("isOpenBook") === "yes",
       isUseFont: OtherUtil.getReaderConfig("isUseFont") === "yes",
+      isExpandContent: OtherUtil.getReaderConfig("isExpandContent") === "yes",
       isUseBackground: OtherUtil.getReaderConfig("isUseBackground") === "yes",
       isShowFooter: OtherUtil.getReaderConfig("isShowFooter") !== "no",
     };
@@ -55,6 +56,17 @@ class SettingDialog extends React.Component<
     this.setState({ isUseFont: !this.state.isUseFont });
     OtherUtil.setReaderConfig("isUseFont", this.state.isUseFont ? "no" : "yes");
     this.state.isUseFont
+      ? this.props.handleMessage("Turn Off Successfully")
+      : this.props.handleMessage("Turn On Successfully");
+    this.props.handleMessageBox(true);
+  };
+  handleExpandContent = () => {
+    this.setState({ isExpandContent: !this.state.isExpandContent });
+    OtherUtil.setReaderConfig(
+      "isExpandContent",
+      this.state.isExpandContent ? "no" : "yes"
+    );
+    this.state.isExpandContent
       ? this.props.handleMessage("Turn Off Successfully")
       : this.props.handleMessage("Turn On Successfully");
     this.props.handleMessageBox(true);
@@ -160,6 +172,21 @@ class SettingDialog extends React.Component<
               <span
                 className="single-control-button"
                 style={this.state.isUseFont ? { float: "right" } : {}}
+              ></span>
+            </span>
+          </div>
+          <div className="setting-dialog-new-title">
+            <Trans>Default expand all content</Trans>
+            <span
+              className="single-control-switch"
+              onClick={() => {
+                this.handleExpandContent();
+              }}
+              style={{ float: "right" }}
+            >
+              <span
+                className="single-control-button"
+                style={this.state.isExpandContent ? { float: "right" } : {}}
               ></span>
             </span>
           </div>

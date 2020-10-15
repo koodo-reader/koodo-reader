@@ -1,7 +1,6 @@
 import { connect } from "react-redux";
 import { stateType } from "../../redux/store";
 import ViewArea from "./component";
-import { handleFetchLocations } from "../../redux/actions/progressPanel";
 import { handlePercentage } from "../../redux/actions/progressPanel";
 import {
   handleOpenMenu,
@@ -20,7 +19,6 @@ const mapStateToProps = (state: stateType) => {
   };
 };
 const actionCreator = {
-  handleFetchLocations,
   handlePercentage,
   handleOpenMenu,
   handleShowBookmark,

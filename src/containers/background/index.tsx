@@ -2,6 +2,7 @@
 import { connect } from "react-redux";
 import { stateType } from "../../redux/store";
 import Background from "./component";
+import { handleFetchLocations } from "../../redux/actions/progressPanel";
 
 const mapStateToProps = (state: stateType) => {
   return {
@@ -11,5 +12,5 @@ const mapStateToProps = (state: stateType) => {
     locations: state.progressPanel.locations,
   };
 };
-const actionCreator = {};
+const actionCreator = { handleFetchLocations };
 export default connect(mapStateToProps, actionCreator)(Background);
