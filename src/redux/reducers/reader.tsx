@@ -3,7 +3,6 @@ const initState = {
   bookmarks: [],
   notes: [],
   digests: [],
-  locations: null,
   chapters: null,
   currentChapter: "",
   flattenChapters: null,
@@ -46,11 +45,6 @@ export function reader(
       return {
         ...state,
         digests: action.payload,
-      };
-    case "HANDLE_LOCATIONS":
-      return {
-        ...state,
-        locations: action.payload,
       };
     case "HANDLE_SECTION":
       return {

@@ -14,7 +14,7 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
       currentBackgroundIndex: themeList.findIndex((item) => {
         return (
           item.theme ===
-          (OtherUtil.getReaderConfig("theme") || "rgba(255,254,252,1)")
+          (OtherUtil.getReaderConfig("theme") || "rgba(255,255,255,1)")
         );
       }),
     };

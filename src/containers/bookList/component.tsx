@@ -13,6 +13,7 @@ import { BookListProps, BookListState } from "./interface";
 import OtherUtil from "../../utils/otherUtil";
 import localforage from "localforage";
 import DeletePopup from "../../components/deletePopup";
+import EmptyPage from "../emptyPage";
 
 declare var window: any;
 
@@ -143,7 +144,10 @@ class BookList extends React.Component<BookListProps, BookListState> {
           SortUtil.sortBooks(this.props.books, this.props.sortCode) || []
         )
       : this.handleRecent(this.props.books, RecordRecent.getAllRecent());
-
+    if (books.length === 0) {
+      console.log("empty");
+      return <EmptyPage />;
+    }
     return books.map((item: BookModel, index: number) => {
       return this.props.isList === "list" ? (
         <BookItem

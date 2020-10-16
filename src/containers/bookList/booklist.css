@@ -1,8 +1,8 @@
 .book-list-container-parent {
   position: absolute;
   top: 115px;
-  left: 200px;
-  width: calc(100% - 200px);
+  left: 190px;
+  width: calc(100% - 190px);
   height: calc(100% - 110px);
   overflow: hidden;
 }
@@ -51,6 +51,7 @@
   position: relative;
   top: 0px;
   width: 100%;
+  height: 100%;
   overflow: scroll;
 }
 .icon-grid,

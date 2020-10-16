@@ -16,9 +16,7 @@ export function handleBookmarks(bookmarks: BookmarkModel[]) {
 export function handleDigests(digests: NoteModel[]) {
   return { type: "HANDLE_DIGESTS", payload: digests };
 }
-export function handleLocations(locations: any) {
-  return { type: "HANDLE_LOCATIONS", payload: locations };
-}
+
 export function handleCurrentChapter(currentChapter: string) {
   return { type: "HANDLE_CURRENT_CHAPTER", payload: currentChapter };
 }
