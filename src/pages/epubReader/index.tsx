@@ -1,32 +1,28 @@
+//卡片模式下的图书显示
 import { connect } from "react-redux";
 import {
-  handleEditDialog,
-  handleDeleteDialog,
-  handleAddDialog,
   handleActionDialog,
+  handleReadingState,
   handleReadingBook,
   handleReadingEpub,
 } from "../../store/actions/book";
-
+import { handleMessageBox, handleMessage } from "../../store/actions/manager";
+import Book from "./component";
 import { stateType } from "../../store";
-import { withNamespaces } from "react-i18next";
-import ActionDialog from "./component";
 
 const mapStateToProps = (state: stateType) => {
   return {
-    currentEpub: state.book.currentEpub,
+    isOpenActionDialog: state.book.isOpenActionDialog,
     currentBook: state.book.currentBook,
+    isReading: state.book.isReading,
   };
 };
 const actionCreator = {
-  handleEditDialog,
-  handleAddDialog,
-  handleDeleteDialog,
+  handleReadingState,
   handleReadingBook,
   handleReadingEpub,
   handleActionDialog,
+  handleMessageBox,
+  handleMessage,
 };
-export default connect(
-  mapStateToProps,
-  actionCreator
-)(withNamespaces()(ActionDialog as any));
+export default connect(mapStateToProps, actionCreator)(Book);

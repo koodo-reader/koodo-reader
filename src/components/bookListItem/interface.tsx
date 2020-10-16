@@ -1,9 +1,9 @@
 import BookModel from "../../model/Book";
+import { RouteComponentProps } from "react-router";
 
-export interface BookItemProps {
+export interface BookItemProps extends RouteComponentProps<any> {
   book: BookModel;
   percentage: number;
-  handleReadingState: (isReading: boolean) => void;
   handleReadingBook: (book: BookModel) => void;
   handleReadingEpub: (epub: object) => void;
   handleEditDialog: (isShow: boolean) => void;

@@ -1,6 +1,6 @@
 //欢迎页面
 import { withNamespaces } from "react-i18next";
-import { handleFirst } from "../../redux/actions/manager";
+import { handleFirst } from "../../store/actions/manager";
 import { connect } from "react-redux";
 import WelcomeDialog from "./component";
 

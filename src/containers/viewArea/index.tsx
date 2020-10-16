@@ -1,12 +1,12 @@
 import { connect } from "react-redux";
-import { stateType } from "../../redux/store";
+import { stateType } from "../../store";
 import ViewArea from "./component";
-import { handlePercentage } from "../../redux/actions/progressPanel";
+import { handlePercentage } from "../../store/actions/progressPanel";
 import {
   handleOpenMenu,
   handleShowBookmark,
-} from "../../redux/actions/viewArea";
-import { handleReadingEpub } from "../../redux/actions/book";
+} from "../../store/actions/viewArea";
+import { handleReadingEpub } from "../../store/actions/book";
 
 const mapStateToProps = (state: stateType) => {
   return {

@@ -1,14 +1,10 @@
 //我的书摘页面
 import { connect } from "react-redux";
-import { stateType } from "../../redux/store";
+import { stateType } from "../../store";
 import { withNamespaces } from "react-i18next";
 import CardList from "./component";
-import {
-  handleReadingState,
-  handleReadingBook,
-  handleReadingEpub,
-} from "../../redux/actions/book";
-import { handleMessageBox, handleMessage } from "../../redux/actions/manager";
+import { handleReadingBook, handleReadingEpub } from "../../store/actions/book";
+import { handleMessageBox, handleMessage } from "../../store/actions/manager";
 
 const mapStateToProps = (state: stateType) => {
   return {
@@ -21,7 +17,6 @@ const mapStateToProps = (state: stateType) => {
   };
 };
 const actionCreator = {
-  handleReadingState,
   handleReadingBook,
   handleReadingEpub,
   handleMessageBox,

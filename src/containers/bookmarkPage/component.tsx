@@ -8,6 +8,7 @@ import BookModel from "../../model/Book";
 import localforage from "localforage";
 import { Trans } from "react-i18next";
 import { BookmarkPageProps, BookmarkPageState } from "./interface";
+import { Redirect, withRouter } from "react-router-dom";
 
 declare var window: any;
 
@@ -21,7 +22,7 @@ class BookmarkPage extends React.Component<
   //点击跳转后跳转到指定页面
   handleRedirect = (key: string, cfi: string, percentage: number) => {
     let { books } = this.props;
-    let book: BookModel;
+    let book: any;
     //根据bookKey获取指定的book
     for (let i = 0; i < books.length; i++) {
       if (books[i].key === key) {
@@ -33,17 +34,20 @@ class BookmarkPage extends React.Component<
       cfi = RecordLocation.getCfi(book!.key).cfi;
       percentage = RecordLocation.getCfi(book!.key).percentage;
     }
-    localforage.getItem(book!.key).then((result) => {
-      this.props.handleReadingBook(book);
-      this.props.handleReadingEpub(window.ePub(result, {}));
-      this.props.handleReadingState(true);
-      RecentBooks.setRecent(key);
-      RecordLocation.recordCfi(key, cfi, percentage);
-    });
+    if (!book) {
+      this.props.handleMessage("Book not exsit");
+      this.props.handleMessageBox(true);
+      return;
+    }
+    RecordLocation.recordCfi(key, cfi, percentage);
+    window.open(`/epub/${book.key}`);
   };
   render() {
     let { bookmarks, books } = this.props;
     let bookKeyArr: string[] = [];
+    if (bookmarks.length === 0) {
+      return <Redirect to="/manager/empty" />;
+    }
     //获取bookmarks中的图书列表
     bookmarks.forEach((item) => {
       if (bookKeyArr.indexOf(item.bookKey) === -1) {
@@ -119,4 +123,4 @@ class BookmarkPage extends React.Component<
   }
 }
 
-export default BookmarkPage;
+export default withRouter(BookmarkPage);
