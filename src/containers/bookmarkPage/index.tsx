@@ -1,12 +1,9 @@
 //我的书签页面
 import { connect } from "react-redux";
-import { handleFetchBookmarks } from "../../redux/actions/reader";
-import {
-  handleReadingState,
-  handleReadingBook,
-  handleReadingEpub,
-} from "../../redux/actions/book";
-import { stateType } from "../../redux/store";
+import { handleFetchBookmarks } from "../../store/actions/reader";
+import { handleReadingBook, handleReadingEpub } from "../../store/actions/book";
+import { handleMessageBox, handleMessage } from "../../store/actions/manager";
+import { stateType } from "../../store";
 import { withNamespaces } from "react-i18next";
 import BookmarkPage from "./component";
 
@@ -18,9 +15,10 @@ const mapStateToProps = (state: stateType) => {
 };
 const actionCreator = {
   handleFetchBookmarks,
-  handleReadingState,
   handleReadingBook,
   handleReadingEpub,
+  handleMessageBox,
+  handleMessage,
 };
 export default connect(
   mapStateToProps,

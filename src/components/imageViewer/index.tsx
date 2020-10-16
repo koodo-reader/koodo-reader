@@ -1,5 +1,5 @@
 import { connect } from "react-redux";
-import { stateType } from "../../redux/store";
+import { stateType } from "../../store";
 import ImageViewer from "./component";
 
 const mapStateToProps = (state: stateType) => {

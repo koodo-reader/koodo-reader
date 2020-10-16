@@ -1,11 +1,11 @@
 import React from "react";
-import ViewArea from "../../containers/viewArea";
-import Background from "../../containers/background";
-import SettingPanel from "../../containers/settingPanel";
-import NavigationPanel from "../../containers/navigationPanel";
-import OperationPanel from "../../containers/operationPanel";
-import MessageBox from "../../containers/messageBox";
-import ProgressPanel from "../../containers/progressPanel";
+import ViewArea from "../viewArea";
+import Background from "../background";
+import SettingPanel from "../settingPanel";
+import NavigationPanel from "../navigationPanel";
+import OperationPanel from "../operationPanel";
+import MessageBox from "../messageBox";
+import ProgressPanel from "../progressPanel";
 import { ReaderProps, ReaderState } from "./interface";
 import { MouseEvent } from "../../utils/mouseEvent";
 import OtherUtil from "../../utils/otherUtil";
@@ -51,6 +51,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
     }
   }
   componentDidMount() {
+    console.log("rendered");
     let page = document.querySelector("#page-area");
     let epub = this.props.currentEpub;
     (window as any).rangy.init(); // 初始化
@@ -196,7 +197,10 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
             this.handleEnterReader("bottom");
           }}
         ></div>
-        {this.state.rendition && <ViewArea {...renditionProps} />}
+
+        {this.state.rendition && this.props.currentEpub.rendition && (
+          <ViewArea {...renditionProps} />
+        )}
         <div
           className="setting-panel-container"
           onMouseLeave={(event) => {

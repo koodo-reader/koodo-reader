@@ -1,14 +1,11 @@
 //控制列表模式下的图书显示
 import React from "react";
-import RecentBooks from "../../utils/recordRecent";
 import "./bookListItem.css";
 import RecordLocation from "../../utils/recordLocation";
 import { BookItemProps, BookItemState } from "./interface";
 import { Trans } from "react-i18next";
 import AddFavorite from "../../utils/addFavorite";
-import localforage from "localforage";
-
-declare var window: any;
+import { withRouter, Link } from "react-router-dom";
 
 class BookListItem extends React.Component<BookItemProps, BookItemState> {
   epub: any;
@@ -19,15 +16,6 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
       isFavorite:
         AddFavorite.getAllFavorite().indexOf(this.props.book.key) > -1,
     };
-    this.handleOpenBook = this.handleOpenBook.bind(this);
-  }
-  handleOpenBook() {
-    localforage.getItem(this.props.book.key).then((result) => {
-      this.props.handleReadingEpub(window.ePub(result, {}));
-      this.props.handleReadingState(true);
-      this.props.handleReadingBook(this.props.book);
-      RecentBooks.setRecent(this.props.book.key);
-    });
   }
   handleDeleteBook = () => {
     this.props.handleDeleteDialog(true);
@@ -59,29 +47,23 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
       : 0;
     return (
       <div className="book-list-item-container">
-        {this.props.book.cover && this.props.book.cover !== "noCover" ? (
-          <img
-            className="book-item-list-cover"
-            src={this.props.book.cover}
-            alt=""
-            onClick={() => {
-              this.handleOpenBook();
-            }}
-          />
-        ) : (
-          <div className="book-item-list-cover book-item-list-cover-img">
-            <img src="assets/cover.svg" alt="" style={{ width: "80%" }} />
-          </div>
-        )}
+        <Link to={`/epub/${this.props.book.key}`} target="_blank">
+          {this.props.book.cover && this.props.book.cover !== "noCover" ? (
+            <img
+              className="book-item-list-cover"
+              src={this.props.book.cover}
+              alt=""
+            />
+          ) : (
+            <div className="book-item-list-cover book-item-list-cover-img">
+              <img src="assets/cover.svg" alt="" style={{ width: "80%" }} />
+            </div>
+          )}
+        </Link>
+        <Link to={`/epub/${this.props.book.key}`} target="_blank">
+          <p className="book-item-list-title">{this.props.book.name}</p>
+        </Link>
 
-        <p
-          className="book-item-list-title"
-          onClick={() => {
-            this.handleOpenBook();
-          }}
-        >
-          {this.props.book.name}
-        </p>
         <p className="book-item-list-author">
           {this.props.book.author ? (
             this.props.book.author
@@ -135,4 +117,4 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
   }
 }
 
-export default BookListItem;
+export default withRouter(BookListItem);

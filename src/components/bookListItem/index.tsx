@@ -4,14 +4,13 @@ import {
   handleEditDialog,
   handleDeleteDialog,
   handleAddDialog,
-  handleReadingState,
   handleReadingBook,
   handleReadingEpub,
-} from "../../redux/actions/book";
+} from "../../store/actions/book";
 import { withNamespaces } from "react-i18next";
-import { handleMessageBox, handleMessage } from "../../redux/actions/manager";
+import { handleMessageBox, handleMessage } from "../../store/actions/manager";
 
-import { stateType } from "../../redux/store";
+import { stateType } from "../../store";
 import BookItem from "./component";
 const mapStateToProps = (state: stateType) => {
   return {
@@ -20,7 +19,6 @@ const mapStateToProps = (state: stateType) => {
   };
 };
 const actionCreator = {
-  handleReadingState,
   handleReadingBook,
   handleReadingEpub,
   handleEditDialog,

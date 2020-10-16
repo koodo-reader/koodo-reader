@@ -1,14 +1,18 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import App from "./App";
+// import App from "./App";
+import "./assets/styles/reset.css";
+import "./assets/styles/global.css";
+import "./assets/styles/style.css";
 import { Provider } from "react-redux";
 import "./i18n";
-import store from "./redux/store";
+import store from "./store";
+import Router from "./router/index";
 import * as serviceWorker from "./serviceWorker";
 
 ReactDOM.render(
   <Provider store={store}>
-    <App />
+    <Router />
   </Provider>,
   document.getElementById("root")
 );

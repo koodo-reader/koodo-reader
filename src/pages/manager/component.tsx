@@ -8,11 +8,10 @@ import DigestList from "../../containers/digestList";
 import DeleteDialog from "../../containers/deleteDialog";
 import EditDialog from "../../containers/editDialog";
 import AddDialog from "../../containers/addDialog";
-
 import SortDialog from "../../containers/sortDialog";
 import MessageBox from "../../containers/messageBox";
 import LoadingPage from "../../containers/loadingPage";
-import BackupPage from "../../containers/backupDialog";
+import BackupDialog from "../../containers/backupDialog";
 import EmptyPage from "../../containers/emptyPage";
 import WelcomeDialog from "../../containers/welcomeDialog";
 import "./manager.css";
@@ -26,7 +25,8 @@ import { updateLog } from "../../constants/readerConfig";
 import UpdateDialog from "../../components/updataDialog";
 import SettingDialog from "../../components/settingDialog";
 import { isMobileOnly } from "react-device-detect";
-
+import { Route, Switch, Redirect } from "react-router-dom";
+import { routes } from "../../router/routes";
 class Manager extends React.Component<ManagerProps, ManagerState> {
   timer!: NodeJS.Timeout;
   constructor(props: ManagerProps) {
@@ -180,13 +180,27 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
         </div>
         {this.props.isMessage ? <MessageBox /> : null}
         {this.props.isSortDisplay ? <SortDialog /> : null}
-        {this.props.isBackup ? <BackupPage /> : null}
+        {this.props.isBackup ? <BackupDialog /> : null}
         {!this.state.isUpdated && this.props.isFirst === "yes" ? (
           <WelcomeDialog />
         ) : null}
         {this.state.isUpdated ? <UpdateDialog {...updateDialogProps} /> : null}
         {this.props.isSettingOpen ? <SettingDialog /> : null}
-        {totalBooks === 0 ? (
+        {!books ? (
+          <Redirect to="/manager/loading" />
+        ) : (
+          <Switch>
+            {routes.map((ele) => (
+              <Route
+                render={() => <ele.component />}
+                key={ele.path}
+                path={ele.path}
+              />
+            ))}
+          </Switch>
+        )}
+
+        {/* {totalBooks === 0 ? (
           <EmptyPage />
         ) : !books ? (
           <LoadingPage />
@@ -203,7 +217,7 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
           <DigestList />
         ) : (
           <EmptyPage />
-        )}
+        )} */}
       </div>
     );
   }

@@ -5,9 +5,9 @@ import {
   handleFetchBooks,
   handleMessageBox,
   handleMessage,
-} from "../../redux/actions/manager";
-import { handleEditDialog, handleActionDialog } from "../../redux/actions/book";
-import { stateType } from "../../redux/store";
+} from "../../store/actions/manager";
+import { handleEditDialog, handleActionDialog } from "../../store/actions/book";
+import { stateType } from "../../store";
 import { withNamespaces } from "react-i18next";
 import EditDialog from "./component";
 

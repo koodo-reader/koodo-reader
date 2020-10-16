@@ -1,6 +1,6 @@
 import { connect } from "react-redux";
-import { handleOpenMenu, handleMenuMode } from "../../redux/actions/viewArea";
-import { stateType } from "../../redux/store";
+import { handleOpenMenu, handleMenuMode } from "../../store/actions/viewArea";
+import { stateType } from "../../store";
 import { withNamespaces } from "react-i18next";
 import PopupNote from "./component";
 const mapStateToProps = (state: stateType) => {
