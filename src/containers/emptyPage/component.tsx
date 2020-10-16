@@ -27,8 +27,16 @@ class EmptyPage extends React.Component<EmptyPageProps, EmptyPageState> {
         );
       });
     };
+    console.log(this.props.mode, "mode");
     return (
-      <div className="empty-page-container">
+      <div
+        className="empty-page-container"
+        style={
+          this.props.mode === "shelf"
+            ? { top: 0, left: 0, width: "100%", height: "100%" }
+            : {}
+        }
+      >
         <img
           src={
             process.env.NODE_ENV === "production"

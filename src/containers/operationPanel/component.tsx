@@ -169,10 +169,12 @@ class OperationPanel extends React.Component<
             >
               Current Reading Time:
               {{
-                count: Math.floor(
-                  (this.props.time -
-                    ReadingTime.getTime(this.props.currentBook.key)) /
-                    60
+                count: Math.abs(
+                  Math.floor(
+                    (this.props.time -
+                      ReadingTime.getTime(this.props.currentBook.key)) /
+                      60
+                  )
                 ),
               }}
               Minutes

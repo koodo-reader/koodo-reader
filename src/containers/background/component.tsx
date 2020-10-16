@@ -6,6 +6,7 @@ import OtherUtil from "../../utils/otherUtil";
 import { Trans } from "react-i18next";
 
 class Background extends React.Component<BackgroundProps, BackgroundState> {
+  isFirst: Boolean;
   constructor(props: any) {
     super(props);
     this.state = {
@@ -19,15 +20,17 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
       isShowFooter: OtherUtil.getReaderConfig("isShowFooter") !== "no",
       isUseBackground: OtherUtil.getReaderConfig("isUseBackground") === "yes",
     };
+    this.isFirst = true;
   }
   componentWillReceiveProps(nextProps: BackgroundProps) {
-    if (nextProps.currentEpub.rendition.location) {
+    if (nextProps.currentEpub.rendition.location && this.isFirst) {
       const currentLocation = this.props.currentEpub.rendition.currentLocation();
       if (!currentLocation.start) {
         return;
       }
+      console.log("test,");
       this.props.handleFetchLocations(this.props.currentEpub);
-
+      this.isFirst = false;
       this.setState({
         prevPage: currentLocation.start.displayed.page,
         nextPage: currentLocation.end.displayed.page,
