@@ -14,6 +14,7 @@ import OtherUtil from "../../utils/otherUtil";
 import localforage from "localforage";
 import DeletePopup from "../../components/deletePopup";
 import EmptyPage from "../emptyPage";
+import { Redirect } from "react-router-dom";
 
 declare var window: any;
 
@@ -23,6 +24,7 @@ class BookList extends React.Component<BookListProps, BookListState> {
     this.state = {
       shelfIndex: 0,
       isOpenDelete: false,
+      favoriteBooks: Object.keys(AddFavorite.getAllFavorite()).length,
     };
   }
   componentDidMount() {
@@ -207,6 +209,9 @@ class BookList extends React.Component<BookListProps, BookListState> {
     this.setState({ isOpenDelete });
   };
   render() {
+    if (this.state.favoriteBooks === 0 && this.props.mode === "favorite") {
+      return <Redirect to="/manager/empty" />;
+    }
     const deletePopupProps = {
       mode: "shelf",
       name: Object.keys(ShelfUtil.getShelf())[this.state.shelfIndex],

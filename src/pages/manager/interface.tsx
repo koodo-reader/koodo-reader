@@ -1,7 +1,8 @@
 import BookModel from "../../model/Book";
 import NoteModel from "../../model/Note";
 import BookmarkModel from "../../model/Bookmark";
-export interface ManagerProps {
+import { RouteComponentProps } from "react-router";
+export interface ManagerProps extends RouteComponentProps<any> {
   books: BookModel[];
   notes: NoteModel[];
   digests: NoteModel[];

@@ -23,12 +23,14 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
     this.isFirst = true;
   }
   componentWillReceiveProps(nextProps: BackgroundProps) {
-    if (nextProps.currentEpub.rendition.location && this.isFirst) {
+    if (
+      nextProps.currentEpub.rendition&&nextProps.currentEpub.rendition.location &&
+      this.isFirst
+    ) {
       const currentLocation = this.props.currentEpub.rendition.currentLocation();
       if (!currentLocation.start) {
         return;
       }
-      console.log("test,");
       this.props.handleFetchLocations(this.props.currentEpub);
       this.isFirst = false;
       this.setState({

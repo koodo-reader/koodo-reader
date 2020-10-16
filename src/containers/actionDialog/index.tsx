@@ -4,12 +4,11 @@ import {
   handleDeleteDialog,
   handleAddDialog,
   handleActionDialog,
-  handleReadingState,
   handleReadingBook,
   handleReadingEpub,
-} from "../../redux/actions/book";
+} from "../../store/actions/book";
 
-import { stateType } from "../../redux/store";
+import { stateType } from "../../store";
 import { withNamespaces } from "react-i18next";
 import ActionDialog from "./component";
 
@@ -23,7 +22,6 @@ const actionCreator = {
   handleEditDialog,
   handleAddDialog,
   handleDeleteDialog,
-  handleReadingState,
   handleReadingBook,
   handleReadingEpub,
   handleActionDialog,

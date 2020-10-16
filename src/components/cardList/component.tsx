@@ -8,6 +8,8 @@ import DeleteIcon from "../../components/deleteIcon";
 import RecentBooks from "../../utils/recordRecent";
 import RecordLocation from "../../utils/recordLocation";
 import localforage from "localforage";
+import { withRouter } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 
 declare var window: any;
 
@@ -46,19 +48,13 @@ class CardList extends React.Component<CardListProps, CardListStates> {
       this.props.handleMessageBox(true);
       return;
     }
-
-    localforage.getItem(book!.key).then((result) => {
-      RecentBooks.setRecent(bookKey);
-      RecordLocation.recordCfi(bookKey, cfi, percentage);
-      this.props.handleReadingBook(book);
-      this.props.handleReadingEpub(window.ePub(result, {}));
-      this.props.handleReadingState(true);
-    });
+    RecordLocation.recordCfi(bookKey, cfi, percentage);
+    window.open(`/epub/${book.key}`);
   };
   render() {
     let { cards } = this.props;
     if (cards.length === 0) {
-      return null;
+      return <Redirect to="/manager/empty" />;
     }
     let cardArr = [];
     //使书摘从晚到早排序
@@ -170,4 +166,4 @@ class CardList extends React.Component<CardListProps, CardListStates> {
   }
 }
 
-export default CardList;
+export default withRouter(CardList);

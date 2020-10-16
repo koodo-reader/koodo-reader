@@ -1,5 +1,5 @@
 import { connect } from "react-redux";
-import { stateType } from "../../redux/store";
+import { stateType } from "../../store";
 import { withNamespaces } from "react-i18next";
 import ProgressPanel from "./component";
 

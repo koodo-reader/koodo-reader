@@ -11,7 +11,8 @@
   "private": true,
   "dependencies": {
     "@types/lodash": "^4.14.161",
-    "@types/react-router": "^5.1.8",
+    "@types/react-router-dom": "^5.1.6",
+    "@types/underscore": "^1.10.24",
     "axios": "^0.19.2",
     "body-parser": "^1.19.0",
     "copy-text-to-clipboard": "^2.2.0",
@@ -29,7 +30,8 @@
     "react-device-detect": "^1.12.1",
     "react-dropzone": "^11.0.1",
     "react-i18next": "^9.0.10",
-    "react-router": "^5.2.0"
+    "react-router-dom": "^5.2.0",
+    "underscore": "^1.11.0"
   },
   "scripts": {
     "analyze": "source-map-explorer 'build/static/js/*.js'",

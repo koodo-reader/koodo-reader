@@ -1,9 +1,9 @@
 //单双页切换
 import { connect } from "react-redux";
-import { handleMessageBox, handleMessage } from "../../redux/actions/manager";
+import { handleMessageBox, handleMessage } from "../../store/actions/manager";
 import { withNamespaces } from "react-i18next";
 import ModeControl from "./component";
-import { stateType } from "../../redux/store";
+import { stateType } from "../../store";
 
 const mapStateToProps = (state: stateType) => {
   return {};

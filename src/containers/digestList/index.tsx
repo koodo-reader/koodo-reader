@@ -1,6 +1,6 @@
 //我的书摘页面
 import { connect } from "react-redux";
-import { stateType } from "../../redux/store";
+import { stateType } from "../../store";
 import { withNamespaces } from "react-i18next";
 import DigestList from "./component";
 

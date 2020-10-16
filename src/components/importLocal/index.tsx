@@ -5,8 +5,8 @@ import {
   handleMessageBox,
   handleMessage,
   handleFetchBooks,
-} from "../../redux/actions/manager";
-import { stateType } from "../../redux/store";
+} from "../../store/actions/manager";
+import { stateType } from "../../store";
 import { withNamespaces } from "react-i18next";
 import ImportLocal from "./component";
 

@@ -6,8 +6,8 @@ import {
   handleSetting,
   handleMessageBox,
   handleMessage,
-} from "../../redux/actions/manager";
-import { stateType } from "../../redux/store";
+} from "../../store/actions/manager";
+import { stateType } from "../../store";
 
 const mapStateToProps = (state: stateType) => {
   return {};

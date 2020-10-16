@@ -6,9 +6,9 @@ import {
   handleMessageBox,
   handleMessage,
   handleSetting,
-} from "../../redux/actions/manager";
-import { handleBackupDialog } from "../../redux/actions/backupPage";
-import { stateType } from "../../redux/store";
+} from "../../store/actions/manager";
+import { handleBackupDialog } from "../../store/actions/backupPage";
+import { stateType } from "../../store";
 import Header from "./component";
 
 const mapStateToProps = (state: stateType) => {

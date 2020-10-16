@@ -3,19 +3,19 @@ import { connect } from "react-redux";
 import {
   handleBookmarks,
   handleFetchBookmarks,
-} from "../../redux/actions/reader";
+} from "../../store/actions/reader";
 import {
   handleOpenMenu,
   handleShowBookmark,
-} from "../../redux/actions/viewArea";
-import { stateType } from "../../redux/store";
+} from "../../store/actions/viewArea";
+import { stateType } from "../../store";
 import { withNamespaces } from "react-i18next";
 import {
   handleMessageBox,
   handleMessage,
   handleSearch,
-} from "../../redux/actions/manager";
-import { handleReadingState } from "../../redux/actions/book";
+} from "../../store/actions/manager";
+import { handleReadingState } from "../../store/actions/book";
 import OperationPanel from "./component";
 
 const mapStateToProps = (state: stateType) => {

@@ -1,7 +1,7 @@
 import { withNamespaces } from "react-i18next";
 import { connect } from "react-redux";
 import SettingPanel from "./component";
-import { stateType } from "../../redux/store";
+import { stateType } from "../../store";
 
 const mapStateToProps = (state: stateType) => {
   return {

@@ -3,16 +3,16 @@ import {
   handleFetchBooks,
   handleMessageBox,
   handleMessage,
-} from "../../redux/actions/manager";
+} from "../../store/actions/manager";
 import {
   handleDeleteDialog,
   handleActionDialog,
-} from "../../redux/actions/book";
+} from "../../store/actions/book";
 import {
   handleFetchBookmarks,
   handleFetchNotes,
-} from "../../redux/actions/reader";
-import { stateType } from "../../redux/store";
+} from "../../store/actions/reader";
+import { stateType } from "../../store";
 import { withNamespaces } from "react-i18next";
 import DeleteDialog from "./component";
 

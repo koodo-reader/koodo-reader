@@ -6,7 +6,7 @@ import { BookProps, BookState } from "./interface";
 import AddFavorite from "../../utils/addFavorite";
 import ActionDialog from "../../containers/actionDialog";
 import OtherUtil from "../../utils/otherUtil";
-import localforage from "localforage";
+import { withRouter, Link } from "react-router-dom";
 
 declare var window: any;
 
@@ -21,7 +21,6 @@ class BookCardItem extends React.Component<BookProps, BookState> {
       left: 0,
       top: 0,
     };
-    this.handleOpenBook = this.handleOpenBook.bind(this);
   }
 
   componentDidMount() {
@@ -31,17 +30,10 @@ class BookCardItem extends React.Component<BookProps, BookState> {
       RecentBooks.getAllRecent()[0] === this.props.book.key &&
       !this.props.currentBook.key
     ) {
-      this.handleOpenBook();
+      window.open(`/epub/${this.props.book.key}`);
     }
   }
-  handleOpenBook() {
-    this.props.handleReadingBook(this.props.book);
-    localforage.getItem(this.props.book.key).then((result) => {
-      this.props.handleReadingEpub(window.ePub(result, {}));
-      this.props.handleReadingState(true);
-      RecentBooks.setRecent(this.props.book.key);
-    });
-  }
+
   handleMoreAction = (event: any) => {
     const e = event || window.event;
     let x = e.clientX;
@@ -82,33 +74,28 @@ class BookCardItem extends React.Component<BookProps, BookState> {
             this.handleConfig(false);
           }}
         >
-          {this.props.book.cover && this.props.book.cover !== "noCover" ? (
-            <img
-              className="book-item-cover"
-              src={this.props.book.cover}
-              alt=""
-              onClick={() => {
-                this.handleOpenBook();
-              }}
-            />
-          ) : (
-            <div
-              className="book-item-cover"
-              onClick={() => {
-                this.handleOpenBook();
-              }}
-            >
-              <div className="book-item-cover-img">
-                <img src="assets/cover.svg" alt="" style={{ width: "80%" }} />
+          <Link to={`/epub/${this.props.book.key}`} target="_blank">
+            {this.props.book.cover && this.props.book.cover !== "noCover" ? (
+              <img
+                className="book-item-cover"
+                src={this.props.book.cover}
+                alt=""
+              />
+            ) : (
+              <div className="book-item-cover">
+                <div className="book-item-cover-img">
+                  <img src="assets/cover.svg" alt="" style={{ width: "80%" }} />
+                </div>
+
+                <p className="book-item-cover-title">
+                  <span>{this.props.book.name}</span>
+                </p>
               </div>
+            )}
 
-              <p className="book-item-cover-title">
-                <span>{this.props.book.name}</span>
-              </p>
-            </div>
-          )}
+            <p className="book-item-title">{this.props.book.name}</p>
+          </Link>
 
-          <p className="book-item-title">{this.props.book.name}</p>
           {this.state.isFavorite ? (
             <span
               className="icon-love book-loved-icon"
@@ -143,4 +130,4 @@ class BookCardItem extends React.Component<BookProps, BookState> {
     );
   }
 }
-export default BookCardItem;
+export default withRouter(BookCardItem);

@@ -2,10 +2,10 @@
 import {
   handleBackupDialog,
   handleTokenDialog,
-} from "../../redux/actions/backupPage";
+} from "../../store/actions/backupPage";
 import { connect } from "react-redux";
-import { handleMessageBox, handleMessage } from "../../redux/actions/manager";
-import { stateType } from "../../redux/store";
+import { handleMessageBox, handleMessage } from "../../store/actions/manager";
+import { stateType } from "../../store";
 import { withNamespaces } from "react-i18next";
 import BackupDialog from "./component";
 
