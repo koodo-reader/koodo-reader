@@ -64,7 +64,6 @@ export type stateType = {
     bookmarks: BookmarkModel[];
     notes: NoteModel[];
     digests: NoteModel[];
-    locations: any[];
     color: number;
     chapters: any[];
     flattenChapters: any;

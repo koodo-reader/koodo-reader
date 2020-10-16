@@ -6,7 +6,7 @@ import { stateType } from "../../redux/store";
 const mapStateToProps = (state: stateType) => {
   return {
     currentEpub: state.book.currentEpub,
-    locations: state.reader.locations,
+    locations: state.progressPanel.locations,
     isReading: state.book.isReading,
   };
 };
