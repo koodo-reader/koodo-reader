@@ -10,6 +10,7 @@ class styleUtil {
     let css = this.getDefaultCss();
     let style = doc.getElementById("default-style");
     let background = document.querySelector(".background");
+    if (!background) return;
     background!.setAttribute(
       "style",
       `background-color:${OtherUtil.getReaderConfig("theme")}`

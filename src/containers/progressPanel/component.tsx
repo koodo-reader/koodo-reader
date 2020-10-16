@@ -21,7 +21,10 @@ class ProgressPanel extends React.Component<
   }
 
   componentWillReceiveProps(nextProps: ProgressPanelProps) {
-    if (nextProps.currentEpub.rendition.location) {
+    if (
+      nextProps.currentEpub.rendition &&
+      nextProps.currentEpub.rendition.location
+    ) {
       const currentLocation = this.props.currentEpub.rendition.currentLocation();
       if (!currentLocation.start) {
         return;

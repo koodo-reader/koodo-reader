@@ -1,8 +1,8 @@
 import { connect } from "react-redux";
-import { handleMessageBox, handleMessage } from "../../redux/actions/manager";
-import { handleOpenMenu, handleMenuMode } from "../../redux/actions/viewArea";
-import { handleNoteKey, handleFetchNotes } from "../../redux/actions/reader";
-import { stateType } from "../../redux/store";
+import { handleMessageBox, handleMessage } from "../../store/actions/manager";
+import { handleOpenMenu, handleMenuMode } from "../../store/actions/viewArea";
+import { handleNoteKey, handleFetchNotes } from "../../store/actions/reader";
+import { stateType } from "../../store";
 import { withNamespaces } from "react-i18next";
 import PopupNote from "./component";
 const mapStateToProps = (state: stateType) => {

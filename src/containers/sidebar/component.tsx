@@ -3,6 +3,7 @@ import "./sidebar.css";
 import { sideMenu } from "../../constants/readerConfig";
 import { Trans } from "react-i18next";
 import { SidebarProps, SidebarState } from "./interface";
+import { withRouter } from "react-router-dom";
 
 class Sidebar extends React.Component<SidebarProps, SidebarState> {
   constructor(props: SidebarProps) {
@@ -19,6 +20,7 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
     this.setState({ index: index });
     this.setState({ shelfIndex: -1 });
     this.setState({ isCollapse: true });
+    window.open(`/manager/${mode}`);
     this.props.handleMode(mode);
   };
   render() {
@@ -79,4 +81,4 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
   }
 }
 
-export default Sidebar;
+export default withRouter(Sidebar);

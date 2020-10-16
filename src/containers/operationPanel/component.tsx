@@ -8,6 +8,7 @@ import RecordLocation from "../../utils/recordLocation";
 import { OperationPanelProps, OperationPanelState } from "./interface";
 import OtherUtil from "../../utils/otherUtil";
 import ReadingTime from "../../utils/readingTime";
+import { withRouter } from "react-router-dom";
 
 declare var document: any;
 
@@ -33,7 +34,10 @@ class OperationPanel extends React.Component<
     this.speed = 30000;
   }
   componentWillReceiveProps(nextProps: OperationPanelProps) {
-    if (nextProps.currentEpub.rendition.location) {
+    if (
+      nextProps.currentEpub.rendition &&
+      nextProps.currentEpub.rendition.location
+    ) {
       const currentLocation = this.props.currentEpub.rendition.currentLocation();
       if (!currentLocation.start) {
         return;
@@ -144,7 +148,6 @@ class OperationPanel extends React.Component<
 
   // 点击退出按钮的处理程序
   handleExit() {
-    this.props.handleReadingState(false);
     OtherUtil.setReaderConfig("isFullScreen", "no");
     window.speechSynthesis && window.speechSynthesis.cancel();
     if (this.state.isFullScreen) {
@@ -152,6 +155,7 @@ class OperationPanel extends React.Component<
     }
     this.props.handleSearch(false);
     this.props.handleOpenMenu(false);
+    window.open("/manager/home");
   }
 
   render() {
@@ -238,4 +242,4 @@ class OperationPanel extends React.Component<
   }
 }
 
-export default OperationPanel;
+export default withRouter(OperationPanel);

@@ -1,15 +1,15 @@
 import { connect } from "react-redux";
-import { handleMessageBox, handleMessage } from "../../redux/actions/manager";
+import { handleMessageBox, handleMessage } from "../../store/actions/manager";
 import {
   handleOpenMenu,
   handleMenuMode,
   handleChangeDirection,
-} from "../../redux/actions/viewArea";
+} from "../../store/actions/viewArea";
 import {
   handleFetchNotes,
   handleOriginalText,
-} from "../../redux/actions/reader";
-import { stateType } from "../../redux/store";
+} from "../../store/actions/reader";
+import { stateType } from "../../store";
 import { withNamespaces } from "react-i18next";
 import PopupOption from "./component";
 const mapStateToProps = (state: stateType) => {
