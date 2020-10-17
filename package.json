@@ -1,6 +1,6 @@
 {
   "name": "koodo-reader",
-  "main": "main.ts",
+  "main": "main.js",
   "version": "1.1.7",
   "description": "A cross-platform open source Epub reader ",
   "author": {
@@ -18,6 +18,7 @@
     "copy-text-to-clipboard": "^2.2.0",
     "cors": "^2.8.5",
     "electron-is-dev": "^1.1.0",
+    "epub-gen": "^0.1.0",
     "express": "^4.17.1",
     "express-fileupload": "^1.2.0",
     "font-list": "^1.2.11",
@@ -57,7 +58,7 @@
       "build/**/*",
       "node_modules/**/*",
       "package.json",
-      "main.ts"
+      "main.js"
     ],
     "directories": {
       "buildResources": "assets"
@@ -154,7 +155,6 @@
     "react-hot-loader": "^4.12.21",
     "react-redux": "^7.2.0",
     "react-scripts": "3.4.0",
-    "react-simplemde-editor": "^4.1.0",
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
     "sass-loader": "^8.0.0",

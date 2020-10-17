@@ -13,7 +13,6 @@ export interface ActionDialogProps {
   handleMessageBox: (isShow: boolean) => void;
   handleMessage: (message: string) => void;
   handleReadingBook: (book: BookModel) => void;
-  handleReadingEpub: (epub: object) => void;
   handleEditDialog: (isShow: boolean) => void;
   handleAddDialog: (isShow: boolean) => void;
   handleActionDialog: (isShow: boolean) => void;

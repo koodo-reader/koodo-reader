@@ -12,7 +12,6 @@ export interface CardListProps extends RouteComponentProps<any> {
   cards: NoteModel[];
   mode: string;
   handleReadingBook: (currentBook: BookModel) => void;
-  handleReadingEpub: (currentEpub: any) => void;
   handleMessage: (message: string) => void;
   handleMessageBox: (isShow: boolean) => void;
 }

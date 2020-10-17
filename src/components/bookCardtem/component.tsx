@@ -6,7 +6,7 @@ import { BookProps, BookState } from "./interface";
 import AddFavorite from "../../utils/addFavorite";
 import ActionDialog from "../../containers/actionDialog";
 import OtherUtil from "../../utils/otherUtil";
-import { withRouter, Link } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 
 declare var window: any;
 
@@ -61,6 +61,15 @@ class BookCardItem extends React.Component<BookProps, BookState> {
   handleConfig = (mode: boolean) => {
     this.setState({ isOpenConfig: mode });
   };
+  handleJump = () => {
+    RecentBooks.setRecent(this.props.book.key);
+
+    if (this.props.book.description === "pdf") {
+      window.open(`/lib/pdf/viewer.html?file=${this.props.book.key}`);
+    } else {
+      window.open(`/epub/${this.props.book.key}`);
+    }
+  };
   render() {
     const actionProps = { left: this.state.left, top: this.state.top };
     return (
@@ -74,27 +83,33 @@ class BookCardItem extends React.Component<BookProps, BookState> {
             this.handleConfig(false);
           }}
         >
-          <Link to={`/epub/${this.props.book.key}`} target="_blank">
-            {this.props.book.cover && this.props.book.cover !== "noCover" ? (
-              <img
-                className="book-item-cover"
-                src={this.props.book.cover}
-                alt=""
-              />
-            ) : (
-              <div className="book-item-cover">
-                <div className="book-item-cover-img">
-                  <img src="assets/cover.svg" alt="" style={{ width: "80%" }} />
-                </div>
-
-                <p className="book-item-cover-title">
-                  <span>{this.props.book.name}</span>
-                </p>
+          {this.props.book.cover && this.props.book.cover !== "noCover" ? (
+            <img
+              className="book-item-cover"
+              src={this.props.book.cover}
+              alt=""
+              onClick={() => {
+                this.handleJump();
+              }}
+            />
+          ) : (
+            <div
+              className="book-item-cover"
+              onClick={() => {
+                this.handleJump();
+              }}
+            >
+              <div className="book-item-cover-img">
+                <img src="assets/cover.svg" alt="" style={{ width: "80%" }} />
               </div>
-            )}
 
-            <p className="book-item-title">{this.props.book.name}</p>
-          </Link>
+              <p className="book-item-cover-title">
+                <span>{this.props.book.name}</span>
+              </p>
+            </div>
+          )}
+
+          <p className="book-item-title">{this.props.book.name}</p>
 
           {this.state.isFavorite ? (
             <span

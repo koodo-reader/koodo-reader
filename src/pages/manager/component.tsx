@@ -1,18 +1,12 @@
 import React from "react";
 import Sidebar from "../../containers/sidebar";
 import Header from "../../containers/header";
-import BookList from "../../containers/bookList";
-import BookmarkPage from "../../containers/bookmarkPage";
-import NoteList from "../../containers/noteList";
-import DigestList from "../../containers/digestList";
 import DeleteDialog from "../../containers/deleteDialog";
 import EditDialog from "../../containers/editDialog";
 import AddDialog from "../../containers/addDialog";
 import SortDialog from "../../containers/sortDialog";
 import MessageBox from "../../containers/messageBox";
-import LoadingPage from "../../containers/loadingPage";
 import BackupDialog from "../../containers/backupDialog";
-import EmptyPage from "../../containers/emptyPage";
 import WelcomeDialog from "../../containers/welcomeDialog";
 import "./manager.css";
 import { ManagerProps, ManagerState } from "./interface";
@@ -141,8 +135,7 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
         </div>
       );
     }
-    let { mode, notes, digests, bookmarks, books } = this.props;
-    let { totalBooks, favoriteBooks } = this.state;
+    let { books } = this.props;
     const updateDialogProps = {
       handleUpdateDialog: this.handleUpdateDialog,
     };
@@ -199,25 +192,6 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
             ))}
           </Switch>
         )}
-
-        {/* {totalBooks === 0 ? (
-          <EmptyPage />
-        ) : !books ? (
-          <LoadingPage />
-        ) : mode === "home" ||
-          (mode === "favorite" && favoriteBooks !== 0) ||
-          mode === "shelf" ? (
-          <BookList />
-        ) : bookmarks.length > 0 && mode === "bookmark" ? (
-          <BookmarkPage />
-        ) : notes.filter((item) => item.notes !== "").length > 0 &&
-          mode === "note" ? (
-          <NoteList />
-        ) : digests.length > 0 && mode === "digest" ? (
-          <DigestList />
-        ) : (
-          <EmptyPage />
-        )} */}
       </div>
     );
   }

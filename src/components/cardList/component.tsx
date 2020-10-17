@@ -5,9 +5,7 @@ import NoteModel from "../../model/Note";
 import { Trans } from "react-i18next";
 import { CardListProps, CardListStates } from "./interface";
 import DeleteIcon from "../../components/deleteIcon";
-import RecentBooks from "../../utils/recordRecent";
 import RecordLocation from "../../utils/recordLocation";
-import localforage from "localforage";
 import { withRouter } from "react-router-dom";
 import { Redirect } from "react-router-dom";
 
