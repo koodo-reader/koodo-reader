@@ -1,7 +1,6 @@
 //我的书签页面
 import { connect } from "react-redux";
 import { handleFetchBookmarks } from "../../store/actions/reader";
-import { handleReadingBook, handleReadingEpub } from "../../store/actions/book";
 import { handleMessageBox, handleMessage } from "../../store/actions/manager";
 import { stateType } from "../../store";
 import { withNamespaces } from "react-i18next";
@@ -15,8 +14,6 @@ const mapStateToProps = (state: stateType) => {
 };
 const actionCreator = {
   handleFetchBookmarks,
-  handleReadingBook,
-  handleReadingEpub,
   handleMessageBox,
   handleMessage,
 };

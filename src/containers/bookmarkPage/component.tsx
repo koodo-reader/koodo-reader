@@ -1,11 +1,9 @@
 //我的书签页面
 import React from "react";
 import "./bookmarkPage.css";
-import RecentBooks from "../../utils/recordRecent";
 import RecordLocation from "../../utils/recordLocation";
 import BookmarkModel from "../../model/Bookmark";
 import BookModel from "../../model/Book";
-import localforage from "localforage";
 import { Trans } from "react-i18next";
 import { BookmarkPageProps, BookmarkPageState } from "./interface";
 import { Redirect, withRouter } from "react-router-dom";

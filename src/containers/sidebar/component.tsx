@@ -20,7 +20,7 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
     this.setState({ index: index });
     this.setState({ shelfIndex: -1 });
     this.setState({ isCollapse: true });
-    window.open(`/manager/${mode}`);
+    this.props.history.push(`/manager/${mode}`);
     this.props.handleMode(mode);
   };
   render() {

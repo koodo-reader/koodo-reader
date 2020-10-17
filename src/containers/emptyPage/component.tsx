@@ -27,7 +27,6 @@ class EmptyPage extends React.Component<EmptyPageProps, EmptyPageState> {
         );
       });
     };
-    console.log(this.props.mode, "mode");
     return (
       <div
         className="empty-page-container"
