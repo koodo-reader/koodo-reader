@@ -14,19 +14,19 @@
 .message-content {
   height: 16px;
   font-size: 17px;
-
-  line-height: 45px;
+  line-height: 40px;
   color: rgba(220, 220, 220, 1);
   opacity: 1;
   display: inline-block;
   margin-left: 15px;
   margin-right: 20px;
+  position: relative;
+  bottom: 2px;
 }
 .message-box-icon {
   font-size: 20px;
-  line-height: 50px;
+  line-height: 45px;
   margin-left: 30px;
   position: relative;
-  top: 2px;
   color: white;
 }

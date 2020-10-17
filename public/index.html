@@ -26,20 +26,17 @@
         width: 100%;
       }
     </style>
-    <!-- <script
-      type="text/javascript"
-      src="%PUBLIC_URL%/lib/JSZip/jszip.js"
-    ></script> -->
-
     <title>Koodo Reader</title>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
+    <canvas id="the-canvas"></canvas>
     <script
       type="text/javascript"
       src="%PUBLIC_URL%/lib/JSZip/jszip.min.js"
     ></script>
+    <script type="text/javascript" src="%PUBLIC_URL%/lib/pdf/pdf.js"></script>
     <script
       type="text/javascript"
       src="%PUBLIC_URL%/lib/EpubJS/epub.min.js"
@@ -47,10 +44,6 @@
     <script
       type="text/javascript"
       src="%PUBLIC_URL%/lib/Dropbox/Dropbox-sdk.min.js"
-    ></script>
-    <script
-      type="text/javascript"
-      src="%PUBLIC_URL%/lib/PDF/pdf.min.js"
     ></script>
     <script
       type="text/javascript"

@@ -5,7 +5,6 @@ import {
   handleDeleteDialog,
   handleAddDialog,
   handleReadingBook,
-  handleReadingEpub,
 } from "../../store/actions/book";
 import { withNamespaces } from "react-i18next";
 import { handleMessageBox, handleMessage } from "../../store/actions/manager";
@@ -20,7 +19,6 @@ const mapStateToProps = (state: stateType) => {
 };
 const actionCreator = {
   handleReadingBook,
-  handleReadingEpub,
   handleEditDialog,
   handleDeleteDialog,
   handleAddDialog,

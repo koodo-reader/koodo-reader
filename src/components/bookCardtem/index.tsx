@@ -3,7 +3,6 @@ import { connect } from "react-redux";
 import {
   handleActionDialog,
   handleReadingBook,
-  handleReadingEpub,
 } from "../../store/actions/book";
 import { handleMessageBox, handleMessage } from "../../store/actions/manager";
 import Book from "./component";
@@ -17,7 +16,6 @@ const mapStateToProps = (state: stateType) => {
 };
 const actionCreator = {
   handleReadingBook,
-  handleReadingEpub,
   handleActionDialog,
   handleMessageBox,
   handleMessage,

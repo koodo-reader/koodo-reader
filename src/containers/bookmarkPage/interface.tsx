@@ -6,8 +6,6 @@ export interface BookmarkPageProps extends RouteComponentProps<any> {
   bookmarks: BookmarkModel[];
   books: BookModel[];
   handleFetchBookmarks: () => void;
-  handleReadingBook: (currentBook: BookModel) => void;
-  handleReadingEpub: (currentEpub: any) => void;
   handleMessage: (message: string) => void;
   handleMessageBox: (isShow: boolean) => void;
 }

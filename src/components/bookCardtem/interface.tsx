@@ -6,7 +6,6 @@ export interface BookProps extends RouteComponentProps<any> {
   currentBook: BookModel;
   isOpenActionDialog: boolean;
   handleReadingBook: (book: BookModel) => void;
-  handleReadingEpub: (epub: object) => void;
   handleActionDialog: (isShowActionDialog: boolean) => void;
   handleMessage: (message: string) => void;
   handleMessageBox: (isShow: boolean) => void;

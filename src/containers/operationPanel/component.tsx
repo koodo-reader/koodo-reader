@@ -155,7 +155,7 @@ class OperationPanel extends React.Component<
     }
     this.props.handleSearch(false);
     this.props.handleOpenMenu(false);
-    window.open("/manager/home");
+    window.close();
   }
 
   render() {

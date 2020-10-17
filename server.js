@@ -7,6 +7,7 @@ const fileUpload = require("express-fileupload");
 const oneDriveAPI = require("onedrive-api");
 const path = require("path");
 const fs = require("fs");
+const Epub = require("epub-gen");
 var dirPath = "uploads";
 if (!fs.existsSync(dirPath)) {
   fs.mkdirSync(dirPath);

@@ -5,7 +5,8 @@ import RecordLocation from "../../utils/recordLocation";
 import { BookItemProps, BookItemState } from "./interface";
 import { Trans } from "react-i18next";
 import AddFavorite from "../../utils/addFavorite";
-import { withRouter, Link } from "react-router-dom";
+import { withRouter } from "react-router-dom";
+import RecentBooks from "../../utils/recordRecent";
 
 class BookListItem extends React.Component<BookItemProps, BookItemState> {
   epub: any;
@@ -41,28 +42,48 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
     this.props.handleMessage("Cancel Successfully");
     this.props.handleMessageBox(true);
   };
+  handleJump = () => {
+    RecentBooks.setRecent(this.props.book.key);
+
+    if (this.props.book.description === "pdf") {
+      window.open(`/lib/pdf/viewer.html?file=${this.props.book.key}`);
+    } else {
+      window.open(`/epub/${this.props.book.key}`);
+    }
+  };
   render() {
     let percentage = RecordLocation.getCfi(this.props.book.key)
       ? RecordLocation.getCfi(this.props.book.key).percentage
       : 0;
     return (
       <div className="book-list-item-container">
-        <Link to={`/epub/${this.props.book.key}`} target="_blank">
-          {this.props.book.cover && this.props.book.cover !== "noCover" ? (
-            <img
-              className="book-item-list-cover"
-              src={this.props.book.cover}
-              alt=""
-            />
-          ) : (
-            <div className="book-item-list-cover book-item-list-cover-img">
-              <img src="assets/cover.svg" alt="" style={{ width: "80%" }} />
-            </div>
-          )}
-        </Link>
-        <Link to={`/epub/${this.props.book.key}`} target="_blank">
-          <p className="book-item-list-title">{this.props.book.name}</p>
-        </Link>
+        {this.props.book.cover && this.props.book.cover !== "noCover" ? (
+          <img
+            className="book-item-list-cover"
+            src={this.props.book.cover}
+            alt=""
+            onClick={() => {
+              this.handleJump();
+            }}
+          />
+        ) : (
+          <div
+            className="book-item-list-cover book-item-list-cover-img"
+            onClick={() => {
+              this.handleJump();
+            }}
+          >
+            <img src="assets/cover.svg" alt="" style={{ width: "80%" }} />
+          </div>
+        )}
+        <p
+          className="book-item-list-title"
+          onClick={() => {
+            this.handleJump();
+          }}
+        >
+          {this.props.book.name}
+        </p>
 
         <p className="book-item-list-author">
           {this.props.book.author ? (
