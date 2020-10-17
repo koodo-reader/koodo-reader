@@ -5,7 +5,6 @@ import {
   handleAddDialog,
   handleActionDialog,
   handleReadingBook,
-  handleReadingEpub,
 } from "../../store/actions/book";
 
 import { stateType } from "../../store";
@@ -23,7 +22,6 @@ const actionCreator = {
   handleAddDialog,
   handleDeleteDialog,
   handleReadingBook,
-  handleReadingEpub,
   handleActionDialog,
 };
 export default connect(

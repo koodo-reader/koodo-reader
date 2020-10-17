@@ -2,10 +2,10 @@ const path = require("path");
 
 module.exports = {
   target: "electron-main",
-  entry: "./main.ts",
+  entry: "./main.js",
   output: {
     path: path.resolve(__dirname, "./build"),
-    filename: "main.ts",
+    filename: "main.js",
   },
   resolve: {
     extensions: [".ts", ".js", ".tsx"],

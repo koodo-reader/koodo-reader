@@ -10,6 +10,7 @@ import { ImportLocalProps, ImportLocalState } from "./interface";
 import RecordRecent from "../../utils/recordRecent";
 
 declare var window: any;
+var pdfjsLib = window["pdfjs-dist/build/pdf"];
 
 class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
   handleAddBook = (book: BookModel) => {
@@ -38,49 +39,41 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
     return new Promise((resolve, reject) => {
       //这里假设直接将文件选择框的dom引用传入
       //这里需要用到File的slice( )方法，以下是兼容写法
-      let fileName = file.name.split(".");
-      let extension = fileName[fileName.length - 1];
-      if (extension === "epub") {
-        var blobSlice =
-            (File as any).prototype.slice ||
-            (File as any).prototype.mozSlice ||
-            (File as any).prototype.webkitSlice,
-          chunkSize = 2097152, // 以每片2MB大小来逐次读取
-          chunks = Math.ceil(file.size / chunkSize),
-          currentChunk = 0,
-          spark = new SparkMD5(), //创建SparkMD5的实例
-          fileReader = new FileReader();
 
-        fileReader.onload = async (e) => {
-          if (!e.target) {
-            reject();
-            throw new Error();
-          }
-          spark.appendBinary(e.target.result as any); // append array buffer
-          currentChunk += 1;
-          if (currentChunk < chunks) {
-            loadNext();
-          } else {
-            let md5 = spark.end(); // 完成计算，返回结果
-            await this.handleBook(file, md5);
-            resolve();
-          }
-        };
+      var blobSlice =
+          (File as any).prototype.slice ||
+          (File as any).prototype.mozSlice ||
+          (File as any).prototype.webkitSlice,
+        chunkSize = 2097152, // 以每片2MB大小来逐次读取
+        chunks = Math.ceil(file.size / chunkSize),
+        currentChunk = 0,
+        spark = new SparkMD5(), //创建SparkMD5的实例
+        fileReader = new FileReader();
 
-        const loadNext = () => {
-          var start = currentChunk * chunkSize,
-            end =
-              start + chunkSize >= file.size ? file.size : start + chunkSize;
+      fileReader.onload = async (e) => {
+        if (!e.target) {
+          reject();
+          throw new Error();
+        }
+        spark.appendBinary(e.target.result as any); // append array buffer
+        currentChunk += 1;
+        if (currentChunk < chunks) {
+          loadNext();
+        } else {
+          let md5 = spark.end(); // 完成计算，返回结果
+          await this.handleBook(file, md5);
+          resolve();
+        }
+      };
 
-          fileReader.readAsBinaryString(blobSlice.call(file, start, end));
-        };
+      const loadNext = () => {
+        var start = currentChunk * chunkSize,
+          end = start + chunkSize >= file.size ? file.size : start + chunkSize;
 
-        loadNext();
-      } else {
-        this.props.handleMessage("Import Failed");
-        this.props.handleMessageBox(true);
-        reject();
-      }
+        fileReader.readAsBinaryString(blobSlice.call(file, start, end));
+      };
+
+      loadNext();
     });
   };
   handleBook = (file: any, md5: string) => {
@@ -108,24 +101,110 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
             reject();
             throw new Error();
           }
-          let cover: any = "";
-          const epub = window.ePub(e.target.result);
-          epub.loaded.metadata
-            .then((metadata: any) => {
-              if (!e.target) {
+          console.log(file);
+          if (file.type === "application/pdf") {
+            if (!e.target) {
+              reject();
+              throw new Error();
+            }
+            pdfjsLib
+              .getDocument({ data: e.target.result })
+              .promise.then((pdfDoc_: any) => {
+                let pdfDoc = pdfDoc_;
+                pdfDoc.getMetadata().then((metadata: any) => {
+                  pdfDoc.getPage(1).then((page: any) => {
+                    var scale = 1.5;
+                    var viewport = page.getViewport({
+                      scale: scale,
+                    });
+                    var canvas: any = document.getElementById("the-canvas");
+                    var context = canvas.getContext("2d");
+                    canvas.height =
+                      viewport.height ||
+                      viewport.viewBox[3]; /* viewport.height is NaN */
+                    canvas.width =
+                      viewport.width ||
+                      viewport.viewBox[2]; /* viewport.width is also NaN */
+                    var task = page.render({
+                      canvasContext: context,
+                      viewport: viewport,
+                    });
+                    task.promise.then(async () => {
+                      let cover: any = canvas.toDataURL("image/jpeg");
+                      let key: string,
+                        name: string,
+                        author: string,
+                        description: string;
+                      [name, author, description] = [
+                        metadata.info.Title || file.name,
+                        metadata.info.Author,
+                        "pdf",
+                      ];
+                      key = new Date().getTime() + "";
+                      let book = new BookModel(
+                        key,
+                        name,
+                        author,
+                        description,
+                        md5,
+                        cover
+                      );
+                      await this.handleAddBook(book);
+                      localforage.setItem(key, e.target!.result);
+                      resolve();
+                    });
+                  });
+                });
+              })
+              .catch((err: any) => {
+                this.props.handleMessage("Import Failed");
+                this.props.handleMessageBox(true);
+                console.log("Error occurs");
                 reject();
-                throw new Error();
-              }
-              epub
-                .coverUrl()
-                .then(async (url: string) => {
-                  if (url) {
-                    var reader = new FileReader();
-                    let blob = await fetch(url).then((r) => r.blob());
-                    reader.readAsDataURL(blob);
-                    console.log(url, "url");
-                    reader.onloadend = async () => {
-                      cover = reader.result;
+              });
+          } else {
+            let cover: any = "";
+            const epub = window.ePub(e.target.result);
+            epub.loaded.metadata
+              .then((metadata: any) => {
+                if (!e.target) {
+                  reject();
+                  throw new Error();
+                }
+                epub
+                  .coverUrl()
+                  .then(async (url: string) => {
+                    if (url) {
+                      var reader = new FileReader();
+                      let blob = await fetch(url).then((r) => r.blob());
+                      reader.readAsDataURL(blob);
+                      console.log(url, "url");
+                      reader.onloadend = async () => {
+                        cover = reader.result;
+                        let key: string,
+                          name: string,
+                          author: string,
+                          description: string;
+                        [name, author, description] = [
+                          metadata.title,
+                          metadata.creator,
+                          metadata.description,
+                        ];
+                        key = new Date().getTime() + "";
+                        let book = new BookModel(
+                          key,
+                          name,
+                          author,
+                          description,
+                          md5,
+                          cover
+                        );
+                        await this.handleAddBook(book);
+                        localforage.setItem(key, e.target!.result);
+                        resolve();
+                      };
+                    } else {
+                      cover = "noCover";
                       let key: string,
                         name: string,
                         author: string,
@@ -147,43 +226,20 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                       await this.handleAddBook(book);
                       localforage.setItem(key, e.target!.result);
                       resolve();
-                    };
-                  } else {
-                    cover = "noCover";
-                    let key: string,
-                      name: string,
-                      author: string,
-                      description: string;
-                    [name, author, description] = [
-                      metadata.title,
-                      metadata.creator,
-                      metadata.description,
-                    ];
-                    key = new Date().getTime() + "";
-                    let book = new BookModel(
-                      key,
-                      name,
-                      author,
-                      description,
-                      md5,
-                      cover
-                    );
-                    await this.handleAddBook(book);
-                    localforage.setItem(key, e.target!.result);
-                    resolve();
-                  }
-                })
-                .catch((err: any) => {
-                  console.log(err, "err");
-                  reject();
-                });
-            })
-            .catch(() => {
-              this.props.handleMessage("Import Failed");
-              this.props.handleMessageBox(true);
-              console.log("Error occurs");
-              reject();
-            });
+                    }
+                  })
+                  .catch((err: any) => {
+                    console.log(err, "err");
+                    reject();
+                  });
+              })
+              .catch(() => {
+                this.props.handleMessage("Import Failed");
+                this.props.handleMessageBox(true);
+                console.log("Error occurs");
+                reject();
+              });
+          }
         };
       }
     });
@@ -204,7 +260,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
             await this.doIncrementalTest(acceptedFiles[i]);
           }
         }}
-        accept={[".epub"]}
+        accept={[".epub", ".pdf"]}
         multiple={true}
       >
         {({ getRootProps, getInputProps }) => (

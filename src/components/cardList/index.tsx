@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { stateType } from "../../store";
 import { withNamespaces } from "react-i18next";
 import CardList from "./component";
-import { handleReadingBook, handleReadingEpub } from "../../store/actions/book";
+import { handleReadingBook } from "../../store/actions/book";
 import { handleMessageBox, handleMessage } from "../../store/actions/manager";
 
 const mapStateToProps = (state: stateType) => {
@@ -18,7 +18,6 @@ const mapStateToProps = (state: stateType) => {
 };
 const actionCreator = {
   handleReadingBook,
-  handleReadingEpub,
   handleMessageBox,
   handleMessage,
 };
