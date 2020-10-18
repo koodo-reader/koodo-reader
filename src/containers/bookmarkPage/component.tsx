@@ -38,7 +38,7 @@ class BookmarkPage extends React.Component<
       return;
     }
     RecordLocation.recordCfi(key, cfi, percentage);
-    window.open(`/epub/${book.key}`);
+    window.open(`${window.location.href.split("#")[0]}#/epub/${book.key}`);
   };
   render() {
     let { bookmarks, books } = this.props;

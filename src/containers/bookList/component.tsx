@@ -146,6 +146,7 @@ class BookList extends React.Component<BookListProps, BookListState> {
           SortUtil.sortBooks(this.props.books, this.props.sortCode) || []
         )
       : this.handleRecent(this.props.books, RecordRecent.getAllRecent());
+    console.log(books.length, "books.length");
     if (books.length === 0) {
       console.log("empty");
       return <EmptyPage />;

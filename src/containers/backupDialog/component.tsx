@@ -77,7 +77,7 @@ class BackupDialog extends React.Component<
           this.showMessage("Coming Soon");
           break;
         case 3:
-          if (isElectron()) {
+          if (!isElectron()) {
             this.showMessage("Please continue in desktop version");
           }
           if (!OtherUtil.getReaderConfig("onedrive_access_token")) {

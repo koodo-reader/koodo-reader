@@ -66,7 +66,7 @@ class UpdateDialog extends React.Component<UpdateInfoProps, UpdateInfoState> {
           koodo.960960.xyz
         </p>
         <img
-          src="/assets/empty.svg"
+          src={`${window.location.href.split("#")[0]}assets/empty.svg`}
           alt=""
           className="update-dialog-illustration"
         />
