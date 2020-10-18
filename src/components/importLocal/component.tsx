@@ -169,7 +169,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
               });
           } else if (extension === "mobi") {
             if (!isElectron()) {
-              this.props.handleMessage("Please continue in desktop version");
+              this.props.handleMessage("Only Desktop support this format");
               this.props.handleMessageBox(true);
               console.log("Error occurs");
               reject();
@@ -197,7 +197,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
             reader.readAsArrayBuffer(file);
           } else if (extension === "txt") {
             if (!isElectron()) {
-              this.props.handleMessage("Please continue in desktop version");
+              this.props.handleMessage("Only Desktop support this format");
               this.props.handleMessageBox(true);
               console.log("Error occurs");
               reject();
