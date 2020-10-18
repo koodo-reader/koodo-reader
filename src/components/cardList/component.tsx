@@ -47,7 +47,7 @@ class CardList extends React.Component<CardListProps, CardListStates> {
       return;
     }
     RecordLocation.recordCfi(bookKey, cfi, percentage);
-    window.open(`/epub/${book.key}`);
+    window.open(`${window.location.href.split("#")[0]}#/epub/${book.key}`);
   };
   render() {
     let { cards } = this.props;

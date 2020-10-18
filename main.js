@@ -34,10 +34,10 @@ app.on("ready", () => {
       ? path.join(__dirname, "/public/assets/launch-page.html")
       : `file://${path.join(__dirname, "./build/assets/launch-page.html")}`
   );
-  if (!isDev) {
-    const { Menu } = require("electron");
-    Menu.setApplicationMenu(null);
-  }
+  // if (!isDev) {
+  //   const { Menu } = require("electron");
+  //   Menu.setApplicationMenu(null);
+  // }
 
   const urlLocation = isDev
     ? "http://localhost:3000"
@@ -60,7 +60,7 @@ app.on("ready", () => {
         parent: mainWin,
         width: width,
         height: height,
-        frame: url.indexOf("epub") > -1 ? false : true,
+        frame: url.indexOf("epub") > -1 ? true : true,
       });
       event.newGuest = new BrowserWindow(options);
       event.newGuest.maximize();

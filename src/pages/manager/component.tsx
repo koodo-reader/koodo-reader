@@ -153,7 +153,11 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
             </span>
           </div>
           <div>
-            <img src="assets/empty.svg" alt="" className="waring-pic" />
+            <img
+              src={`${window.location.href.split("#")[0]}assets/empty.svg`}
+              alt=""
+              className="waring-pic"
+            />
           </div>
         </>
       );

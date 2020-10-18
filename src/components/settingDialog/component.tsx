@@ -271,7 +271,7 @@ class SettingDialog extends React.Component<
         </div>
 
         <img
-          src="assets/empty.svg"
+          src={`${window.location.href.split("#")[0]}assets/empty.svg`}
           alt=""
           className="setting-dialog-illustration"
         />

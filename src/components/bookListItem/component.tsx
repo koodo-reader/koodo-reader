@@ -48,7 +48,9 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
     if (this.props.book.description === "pdf") {
       window.open(`/lib/pdf/viewer.html?file=${this.props.book.key}`);
     } else {
-      window.open(`/epub/${this.props.book.key}`);
+      window.open(
+        `${window.location.href.split("#")[0]}#/epub/${this.props.book.key}`
+      );
     }
   };
   render() {
@@ -73,7 +75,11 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
               this.handleJump();
             }}
           >
-            <img src="/assets/cover.svg" alt="" style={{ width: "80%" }} />
+            <img
+              src={`${window.location.href.split("#")[0]}assets/cover.svg`}
+              alt=""
+              style={{ width: "80%" }}
+            />
           </div>
         )}
         <p

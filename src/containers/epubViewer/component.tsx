@@ -51,7 +51,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
     }
   }
   componentDidMount() {
-    console.log("rendered");
+    console.log(window.location.href, "rendered");
     let page = document.querySelector("#page-area");
     let epub = this.props.currentEpub;
     (window as any).rangy.init(); // 初始化

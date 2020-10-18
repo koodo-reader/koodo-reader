@@ -9,22 +9,16 @@ import {
 } from "react-router-dom";
 import Manager from "../pages/manager";
 import EpubReader from "../pages/epubReader";
-import isElectron from "is-electron";
+
 const Router = () => {
-  return isElectron() ? (
-    <BrowserRouter>
-      <Switch>
-        <Route component={Manager} path="/manager" />
-        <Route component={EpubReader} path="/epub" />
-        <Redirect to="/manager/home" />
-      </Switch>
-    </BrowserRouter>
-  ) : (
+  return (
     <HashRouter>
       <Switch>
         <Route component={Manager} path="/manager" />
+        <Route component={Manager} exact path="/" />
         <Route component={EpubReader} path="/epub" />
-        <Redirect to="/manager/home" />
+        {/* <Route component={_Redirect} path="/redirect" />
+        <Redirect to="/redirect" /> */}
       </Switch>
     </HashRouter>
   );
