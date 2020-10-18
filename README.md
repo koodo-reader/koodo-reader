@@ -15,7 +15,7 @@
 </div>
 <div align="center">
 
-[简体中文] | [English](https://github.com/troyeguo/koodo-reader/blob/master/README-en.md)
+简体中文 | [English](https://github.com/troyeguo/koodo-reader/blob/master/README_en.md)
 
 </div>
 <div align="center">
@@ -52,7 +52,7 @@
 
 ## 特色 👇
 
-🌈 支持阅读 epub，pdf，mobi 和 txt 格式的图书
+🌈 支持阅读 **Epub** , **PDF**, **Mobi** and **TXT** 格式的图书
 
 🌎 支持 **Windows** ， **macOS**， **Linux** 和 **网页版**
 
@@ -112,4 +112,4 @@
 
 ## 帮助
 
-您可以在 issue 区提问，我会在力所能及的范围内提供帮助
+您可以在 issue 区提问，或者通过邮箱 guo362429@gmail.com 与我取得联系

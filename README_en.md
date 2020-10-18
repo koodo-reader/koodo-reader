@@ -15,7 +15,7 @@
 </div>
 <div align="center">
 
-[简体中文](https://github.com/troyeguo/koodo-reader/blob/master/README.md) | [English]
+[简体中文](https://github.com/troyeguo/koodo-reader/blob/master/README.md) | English
 
 </div>
 <div align="center">
@@ -52,7 +52,7 @@
 
 ## Feature 👇
 
-🌈 Formate support: epub, pdf, mobi and txt
+🌈 Formate support: **Epub** , **PDF**, **Mobi** and **TXT**
 
 🌎 Platform support: **Windows** , **macOS**, **Linux** and **Web**
 
@@ -108,8 +108,8 @@ Make sure node's version on your computer is larger than 10.0.0, yarn and git is
 
 ## Update
 
-whenever there is a update, a short message will show up in the software's header
+Whenever there is a update, a short message will show up in the software's header
 
 ## Help
 
-Click (here)[https://github.com/troyeguo/koodo-reader/issues] to report your issue.
+Click [here](https://github.com/troyeguo/koodo-reader/issues) to report your issue, or contact me with guo362429@gmail.com
