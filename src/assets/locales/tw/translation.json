@@ -191,5 +191,6 @@
   "Current Chapter Pages": "本章页数",
   "Chapter Redirect": "章节跳转",
   "Continuous Scroll": "连续滚动",
-  "Chapter Scroll": "分章滚动"
+  "Chapter Scroll": "分章滚动",
+  "Only Desktop support this format": "仅客户端版本支持Mobi和TXT格式"
 }

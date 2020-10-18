@@ -56,7 +56,7 @@
 
 🌎 Platform support: **Windows** , **macOS**, **Linux** and **Web**
 
-💡 Backup and Restore,Sync with your favorite cloud drive
+💡 Backup and Restore, Sync with your favorite cloud drive
 
 📝 Single-column, two-column, or continuous scrolling layouts
 

@@ -20,16 +20,12 @@
     "font-list": "^1.2.11",
     "i18next": "^19.4.4",
     "i18next-browser-languagedetector": "^4.2.0",
-    "iconv-lite": "^0.6.2",
     "is-electron": "^2.2.0",
     "md5": "^2.3.0",
-    "onedrive-api": "^0.5.0",
     "qs": "^6.9.4",
     "react-device-detect": "^1.12.1",
     "react-dropzone": "^11.0.1",
-    "react-i18next": "^9.0.10",
-    "react-router-dom": "^5.2.0",
-    "underscore": "^1.11.0"
+    "react-i18next": "^9.0.10"
   },
   "scripts": {
     "analyze": "source-map-explorer 'build/static/js/*.js'",
@@ -139,6 +135,8 @@
     "@types/spark-md5": "^3.0.2",
     "@types/react-router-dom": "^5.1.6",
     "@types/underscore": "^1.10.24",
+    "react-router-dom": "^5.2.0",
+    "underscore": "^1.11.0",
     "classnames": "^2.2.6",
     "concurrently": "^5.0.1",
     "cross-env": "^6.0.3",
@@ -148,6 +146,7 @@
     "file-saver": "^2.0.2",
     "html-react-parser": "^0.13.0",
     "localforage": "^1.7.3",
+    "iconv-lite": "^0.6.2",
     "node-sass": "^4.13.0",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
@@ -160,6 +159,7 @@
     "source-map-explorer": "^2.5.0",
     "spark-md5": "^3.0.1",
     "typescript": "^3.8.3",
+    "onedrive-api": "^0.5.0",
     "wait-on": "^3.3.0"
   }
 }
