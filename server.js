@@ -8,6 +8,9 @@ const oneDriveAPI = require("onedrive-api");
 const path = require("path");
 const fs = require("fs");
 const Epub = require("epub-gen");
+const { readFileSync } = require("fs");
+const iconv = require("iconv-lite");
+
 var dirPath = "uploads";
 if (!fs.existsSync(dirPath)) {
   fs.mkdirSync(dirPath);
@@ -24,6 +27,95 @@ server.use(
 server.use(cors());
 server.use(bodyParser.json());
 server.use(bodyParser.urlencoded({ extended: true }));
+server.post("/ebook_parser", async (req, res) => {
+  let file = req.files.file;
+  file.mv("./uploads/" + file.name, () => {
+    const data = readFileSync("./uploads/" + file.name, { encoding: "binary" });
+    const buf = new Buffer(data, "binary");
+    const lines = iconv.decode(buf, "GBK").split("\n");
+    const content = [];
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i];
+      // console.log(line, line.startsWith("序章"), "test");
+
+      if (
+        line.startsWith("CHAPTER ") ||
+        line.startsWith("Chapter") ||
+        line.startsWith("第") ||
+        line.startsWith("序章") ||
+        line.startsWith("前言") ||
+        line.startsWith("写在前面的话") ||
+        line.startsWith("后记") ||
+        line.startsWith("楔子") ||
+        line.startsWith("后记") ||
+        line.startsWith("后序")
+      ) {
+        if (content.length) {
+          content[content.length - 1].data = content[
+            content.length - 1
+          ].data.join("\n");
+        }
+        content.push({
+          data: [],
+        });
+      } else if (line.trim() === "" && content.length) {
+        if (content[content.length - 1].data.length > 1) {
+          content[content.length - 1].data.push("</p>");
+        }
+        content[content.length - 1].data.push("<p style='text-indent:2em'>");
+      } else if (content.length) {
+        content[content.length - 1].data.push(line.trim());
+      }
+      if (
+        content[content.length - 1] &&
+        content[content.length - 1].data &&
+        i === lines.length - 1
+      ) {
+        content[content.length - 1].data = content[
+          content.length - 1
+        ].data.join("\n");
+      }
+    }
+    if (!content.length) {
+      content.push({
+        title: "正文",
+        data: lines
+          .map((item) => {
+            return `<p>${item}</p>`;
+          })
+          .join("\n"),
+      });
+    }
+    const options = {
+      title: file.name.split(".")[0],
+      author: "Koodo Reader",
+      output: `./uploads/${file.name.split(".")[0]}.epub`,
+      content,
+    };
+    new Epub(options).promise
+      .then(() => {
+        res.sendFile(path.resolve(`./uploads/${file.name.split(".")[0]}.epub`));
+        res.on("finish", function () {
+          try {
+            fs.unlink(
+              path.resolve(`./uploads/${file.name.split(".")[0]}.epub`),
+              (err) => {
+                if (err) throw err;
+                console.log("successfully deleted");
+              }
+            );
+            fs.unlink(path.resolve(`./uploads/${file.name}`), (err) => {
+              if (err) throw err;
+              console.log("successfully deleted");
+            });
+          } catch (e) {
+            console.log("error removing ");
+          }
+        });
+      })
+      .catch((err) => console.log("err"));
+  });
+});
 
 server.get("/onedrive_refresh", (req, res) => {
   const { refresh_token, redirect_uri } = req.query;

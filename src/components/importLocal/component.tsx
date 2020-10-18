@@ -8,6 +8,11 @@ import { Trans } from "react-i18next";
 import Dropzone from "react-dropzone";
 import { ImportLocalProps, ImportLocalState } from "./interface";
 import RecordRecent from "../../utils/recordRecent";
+import axios from "axios";
+import { config } from "../../constants/readerConfig";
+import MobiFile from "../../utils/mobiUtil";
+import iconv from "iconv-lite";
+import isElectron from "is-electron";
 
 declare var window: any;
 var pdfjsLib = window["pdfjs-dist/build/pdf"];
@@ -77,6 +82,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
     });
   };
   handleBook = (file: any, md5: string) => {
+    let extension = file.name.split(".")[file.name.split(".").length - 1];
     return new Promise((resolve, reject) => {
       //md5重复不导入
       let isRepeat = false;
@@ -94,15 +100,14 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
       if (!isRepeat) {
         let reader = new FileReader();
         reader.readAsArrayBuffer(file);
-        reader.onload = (e) => {
+        reader.onload = async (e) => {
           if (!e.target) {
             this.props.handleMessage("Import Failed");
             this.props.handleMessageBox(true);
             reject();
             throw new Error();
           }
-          console.log(file);
-          if (file.type === "application/pdf") {
+          if (extension === "pdf") {
             if (!e.target) {
               reject();
               throw new Error();
@@ -162,6 +167,71 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                 console.log("Error occurs");
                 reject();
               });
+          } else if (extension === "mobi") {
+            if (!isElectron()) {
+              this.props.handleMessage("Please continue in desktop version");
+              this.props.handleMessageBox(true);
+              console.log("Error occurs");
+              reject();
+              return;
+            }
+            var reader = new FileReader();
+            reader.onload = (event) => {
+              const file_content = (event.target as any).result;
+              let mobiFile = new MobiFile(file_content);
+
+              let content = mobiFile.render();
+              let buf = iconv.encode(content, "GBK");
+              let blobTemp: any = new Blob([buf], { type: "text/plain" });
+              let fileTemp = new File(
+                [blobTemp],
+                file.name.split(".")[0] + ".txt",
+                {
+                  lastModified: new Date().getTime(),
+                  type: blobTemp.type,
+                }
+              );
+
+              this.doIncrementalTest(fileTemp);
+            };
+            reader.readAsArrayBuffer(file);
+          } else if (extension === "txt") {
+            if (!isElectron()) {
+              this.props.handleMessage("Please continue in desktop version");
+              this.props.handleMessageBox(true);
+              console.log("Error occurs");
+              reject();
+              return;
+            }
+            let formData = new FormData();
+            formData.append("file", file);
+            axios
+              .post(`${config.token_url}/ebook_parser`, formData, {
+                headers: {
+                  "Content-Type": "multipart/form-data",
+                },
+                responseType: "blob",
+              })
+              .then((res) => {
+                let type = "application/octet-stream";
+                let blobTemp: any = new Blob([res.data], { type: type });
+                let fileTemp = new File(
+                  [blobTemp],
+                  file.name.split(".")[0] + ".epub",
+                  {
+                    lastModified: new Date().getTime(),
+                    type: blobTemp.type,
+                  }
+                );
+
+                this.doIncrementalTest(fileTemp);
+              })
+              .catch((err) => {
+                this.props.handleMessage("Import Failed");
+                this.props.handleMessageBox(true);
+                console.log(err, "Error occurs");
+                reject();
+              });
           } else {
             let cover: any = "";
             const epub = window.ePub(e.target.result);
@@ -178,7 +248,6 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                       var reader = new FileReader();
                       let blob = await fetch(url).then((r) => r.blob());
                       reader.readAsDataURL(blob);
-                      console.log(url, "url");
                       reader.onloadend = async () => {
                         cover = reader.result;
                         let key: string,
@@ -260,7 +329,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
             await this.doIncrementalTest(acceptedFiles[i]);
           }
         }}
-        accept={[".epub", ".pdf"]}
+        accept={[".epub", ".pdf", ".txt", ".mobi"]}
         multiple={true}
       >
         {({ getRootProps, getInputProps }) => (

@@ -13,6 +13,7 @@
   opacity: 0.73;
   margin: 15px 15px 5px 15px;
   cursor: pointer;
+  overflow: hidden;
 }
 .book-item-title {
   height: 39px;

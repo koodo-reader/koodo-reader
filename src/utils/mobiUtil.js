@@ -276,7 +276,6 @@ class MobiFile {
     header.uid = this.getUint32();
     header.next_rec = this.getUint32();
     header.record_num = this.getUint16();
-    console.log({ header });
     return header;
   }
 
@@ -371,21 +370,17 @@ class MobiFile {
   render() {
     this.load();
     var content = this.read_text();
-
-    var bookDoc = domParser.parseFromString(content, "text/html");
+    var bookDoc = domParser.parseFromString(content, "text/html")
+      .documentElement;
     const pages = Array.from(bookDoc.getElementsByTagName("mbp:pagebreak"));
+    let parseContent = [];
     for (let i = 0, len = pages.length; i < len - 1; i++) {
-      // todo 检查后一个不是前一个node的child的原因
-      if (pages[i].hasChildNodes(pages[i + 1])) {
-        pages[i].removeChild(pages[i + 1]);
-      }
+      pages[i].childNodes &&
+        pages[i].childNodes.forEach((item) => {
+          item.innerText.length < 1000 && parseContent.push(item.innerText);
+        });
     }
-    this.pages = pages;
-
-    // var imgDoms = bookDom.getElementsByTagName('img')
-    // for (var i = 0; i < imgDoms.length; i++) {
-    //   this.render_image(imgDoms, i)
-    // }
+    return parseContent.join("\n    \n");
   }
   render_image(imgDoms, i) {
     var imgDom = imgDoms[i];

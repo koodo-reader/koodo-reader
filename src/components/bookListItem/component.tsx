@@ -73,7 +73,7 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
               this.handleJump();
             }}
           >
-            <img src="assets/cover.svg" alt="" style={{ width: "80%" }} />
+            <img src="/assets/cover.svg" alt="" style={{ width: "80%" }} />
           </div>
         )}
         <p
