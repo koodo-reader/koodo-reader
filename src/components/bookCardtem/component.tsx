@@ -30,7 +30,9 @@ class BookCardItem extends React.Component<BookProps, BookState> {
       RecentBooks.getAllRecent()[0] === this.props.book.key &&
       !this.props.currentBook.key
     ) {
-      window.open(`/epub/${this.props.book.key}`);
+      window.open(
+        `${window.location.href.split("#")[0]}#/epub/${this.props.book.key}`
+      );
     }
   }
 
@@ -67,7 +69,9 @@ class BookCardItem extends React.Component<BookProps, BookState> {
     if (this.props.book.description === "pdf") {
       window.open(`/lib/pdf/viewer.html?file=${this.props.book.key}`);
     } else {
-      window.open(`/epub/${this.props.book.key}`);
+      window.open(
+        `${window.location.href.split("#")[0]}#/epub/${this.props.book.key}`
+      );
     }
   };
   render() {
@@ -100,7 +104,11 @@ class BookCardItem extends React.Component<BookProps, BookState> {
               }}
             >
               <div className="book-item-cover-img">
-                <img src="/assets/cover.svg" alt="" style={{ width: "80%" }} />
+                <img
+                  src={`${window.location.href.split("#")[0]}assets/cover.svg`}
+                  alt=""
+                  style={{ width: "80%" }}
+                />
               </div>
 
               <p
