@@ -52,7 +52,7 @@
 
 ## 特色 👇
 
-🌈 支持阅读 **Epub** , **PDF**, **Mobi** and **TXT** 格式的图书
+🌈 支持阅读 **Epub** , **PDF**, **Mobi** 和 **TXT** 格式的图书
 
 🌎 支持 **Windows** ， **macOS**， **Linux** 和 **网页版**
 
