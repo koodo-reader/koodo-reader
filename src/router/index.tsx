@@ -1,16 +1,29 @@
 import { hot } from "react-hot-loader/root";
 import React from "react";
-import { Route, Switch, Redirect, HashRouter } from "react-router-dom";
+import {
+  Route,
+  Switch,
+  Redirect,
+  HashRouter,
+  BrowserRouter,
+} from "react-router-dom";
 import Manager from "../pages/manager";
 import EpubReader from "../pages/epubReader";
-import PdfReader from "../pages/pdfReader";
+import isElectron from "is-electron";
 const Router = () => {
-  return (
+  return isElectron() ? (
+    <BrowserRouter>
+      <Switch>
+        <Route component={Manager} path="/manager" />
+        <Route component={EpubReader} path="/epub" />
+        <Redirect to="/manager/home" />
+      </Switch>
+    </BrowserRouter>
+  ) : (
     <HashRouter>
       <Switch>
         <Route component={Manager} path="/manager" />
         <Route component={EpubReader} path="/epub" />
-        <Route component={PdfReader} path="/pdf" />
         <Redirect to="/manager/home" />
       </Switch>
     </HashRouter>

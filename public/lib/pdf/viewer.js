@@ -2578,7 +2578,6 @@
           "file" in params
             ? params.file
             : _app_options.AppOptions.get("defaultUrl");
-        console.log(file, "file1");
         const fileInput = document.createElement("input");
         fileInput.id = appConfig.openFileInputName;
         fileInput.className = "fileInput";

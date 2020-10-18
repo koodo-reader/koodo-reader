@@ -21,7 +21,6 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
     textArea && textArea.focus();
   }
   handleTag = (tag: string[]) => {
-    console.log(tag, "tag pop");
     this.setState({ tag });
   };
   createNote() {
