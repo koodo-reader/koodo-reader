@@ -7,6 +7,7 @@ import { EmptyPageProps, EmptyPageState } from "./interface";
 
 class EmptyPage extends React.Component<EmptyPageProps, EmptyPageState> {
   render() {
+    console.log("empty");
     const renderEmptyList = () => {
       return emptyList.map((item) => {
         return (
@@ -39,7 +40,7 @@ class EmptyPage extends React.Component<EmptyPageProps, EmptyPageState> {
         <img
           src={
             process.env.NODE_ENV === "production"
-              ? "assets/empty.svg"
+              ? `${window.location.href.split("#")[0]}assets/empty.svg`
               : "../../assets/empty.svg"
           }
           alt=""

@@ -58,7 +58,11 @@ class Header extends React.Component<HeaderProps, HeaderState> {
           ></span>
         </div>
 
-        <a href="assets/demo.epub" target="_blank" rel="noopener noreferrer">
+        <a
+          href={`${window.location.href.split("#")[0]}assets/demo.epub`}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           <div
             className="download-demo-book"
             style={this.state.isBookImported ? { display: "none" } : {}}

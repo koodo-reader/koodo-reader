@@ -67,7 +67,7 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
         <img
           src={
             process.env.NODE_ENV === "production"
-              ? "assets/logo.png"
+              ? `${window.location.href.split("#")[0]}assets/logo.png`
               : "../../assets/logo.png"
           }
           alt=""
