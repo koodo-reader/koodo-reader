@@ -40,10 +40,10 @@ app.on("ready", () => {
   }
 
   const urlLocation = isDev
-    ? "http://localhost:3000/"
+    ? "http://localhost:3000"
     : `file://${path.join(__dirname, "./build/index.html")}`;
   mainWin.loadURL(urlLocation);
-  mainWin.once("ready-to-show", () => {
+  mainWin.webContents.on("did-finish-load", () => {
     splash.destroy();
     // mainWin.maximize();
     // mainWin.webContents.setZoomFactor(1);
@@ -60,8 +60,10 @@ app.on("ready", () => {
         parent: mainWin,
         width: width,
         height: height,
+        frame: url.indexOf("epub") > -1 ? false : true,
       });
       event.newGuest = new BrowserWindow(options);
+      event.newGuest.maximize();
     }
   );
   ipcMain.on("fonts-ready", (event, arg) => {
