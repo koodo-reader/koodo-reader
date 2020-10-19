@@ -13,6 +13,9 @@ class NoteList extends React.Component<NoteListProps, NoteListState> {
       tag: [],
     };
   }
+  componentWillMount() {
+    this.props.handleFetchNotes();
+  }
   handleTag = (tag: string[]) => {
     this.setState({ tag });
   };
