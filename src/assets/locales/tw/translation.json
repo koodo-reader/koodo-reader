@@ -192,5 +192,7 @@
   "Chapter Redirect": "章节跳转",
   "Continuous Scroll": "连续滚动",
   "Chapter Scroll": "分章滚动",
-  "Only Desktop support this format": "仅客户端版本支持Mobi和TXT格式"
+  "Only Desktop support this format": "仅客户端版本支持Mobi和TXT格式",
+  "It seems like you're lost": "你要访问的内容走丢了",
+  "Return to home": "返回主页"
 }

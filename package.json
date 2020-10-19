@@ -23,9 +23,9 @@
     "i18next-browser-languagedetector": "^4.2.0",
     "iconv-lite": "^0.6.2",
     "is-electron": "^2.2.0",
+    "lodash": "^4.17.20",
     "md5": "^2.3.0",
-    "onedrive-api": "^0.5.0",
-    "qs": "^6.9.4",
+    "nodepub": "^2.2.0",
     "react-device-detect": "^1.12.1",
     "react-dropzone": "^11.0.1",
     "react-i18next": "^9.0.10",
@@ -61,9 +61,9 @@
     "directories": {
       "buildResources": "assets"
     },
-    "publish": [
-      "github"
-    ],
+    "publish": {
+      "provider": "bintray"
+    },
     "extends": null,
     "dmg": {
       "contents": [
@@ -137,8 +137,8 @@
     "@types/react-dropzone": "^5.1.0",
     "@types/react-i18next": "^8.1.0",
     "@types/react-redux": "^7.1.7",
-    "@types/spark-md5": "^3.0.2",
     "@types/react-router-dom": "^5.1.6",
+    "@types/spark-md5": "^3.0.2",
     "@types/underscore": "^1.10.24",
     "classnames": "^2.2.6",
     "concurrently": "^5.0.1",

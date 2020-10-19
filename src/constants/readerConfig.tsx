@@ -79,7 +79,7 @@ export const sideMenu = [
 export const config = {
   callback_url:
     process.env.NODE_ENV === "production"
-      ? "https://koodo.960960.xyz"
+      ? "https://reader.960960.xyz"
       : "http://localhost:3000",
   token_url:
     process.env.NODE_ENV === "production"
@@ -110,12 +110,12 @@ export const driveList = [
     icon: "googledrive",
     url: "",
   },
-  {
-    id: 4,
-    name: "OneDrive",
-    icon: "onedrive",
-    url: `https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=${config.onedrive_client_id}&scope=files.readwrite offline_access&response_type=code&redirect_uri=${config.callback_url}`,
-  },
+  // {
+  //   id: 4,
+  //   name: "OneDrive",
+  //   icon: "onedrive",
+  //   url: `https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=${config.onedrive_client_id}&scope=files.readwrite offline_access&response_type=code&redirect_uri=${config.callback_url}`,
+  // },
   {
     id: 5,
     name: "WebDav",
