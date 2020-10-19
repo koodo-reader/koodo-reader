@@ -13,6 +13,9 @@ class DigestList extends React.Component<DigestListProps, DigestListStates> {
       tag: [],
     };
   }
+  componentWillMount() {
+    this.props.handleFetchNotes();
+  }
   handleFilter = (items: any, arr: number[]) => {
     let itemArr: any[] = [];
     arr.forEach((item) => {

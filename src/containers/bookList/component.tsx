@@ -14,7 +14,7 @@ import OtherUtil from "../../utils/otherUtil";
 import localforage from "localforage";
 import DeletePopup from "../../components/deletePopup";
 import EmptyPage from "../emptyPage";
-import { Redirect } from "react-router-dom";
+import { Redirect, withRouter } from "react-router-dom";
 
 declare var window: any;
 
@@ -28,6 +28,9 @@ class BookList extends React.Component<BookListProps, BookListState> {
     };
   }
   componentDidMount() {
+    if (!this.props.books || !this.props.books[0]) {
+      return <Redirect to="manager/empty" />;
+    }
     this.handleOldVersion();
   }
   handleOldVersion = async () => {
@@ -146,11 +149,10 @@ class BookList extends React.Component<BookListProps, BookListState> {
           SortUtil.sortBooks(this.props.books, this.props.sortCode) || []
         )
       : this.handleRecent(this.props.books, RecordRecent.getAllRecent());
-    console.log(books.length, "books.length");
-    if (books.length === 0) {
-      console.log("empty");
+    if (this.props.mode === "shelf" && books.length === 0) {
       return <EmptyPage />;
     }
+
     return books.map((item: BookModel, index: number) => {
       return this.props.isList === "list" ? (
         <BookItem
@@ -210,7 +212,11 @@ class BookList extends React.Component<BookListProps, BookListState> {
     this.setState({ isOpenDelete });
   };
   render() {
-    if (this.state.favoriteBooks === 0 && this.props.mode === "favorite") {
+    if (
+      (this.state.favoriteBooks === 0 && this.props.mode === "favorite") ||
+      !this.props.books ||
+      !this.props.books[0]
+    ) {
       return <Redirect to="/manager/empty" />;
     }
     const deletePopupProps = {
@@ -285,4 +291,4 @@ class BookList extends React.Component<BookListProps, BookListState> {
   }
 }
 
-export default BookList;
+export default withRouter(BookList);

@@ -154,7 +154,11 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
           </div>
           <div>
             <img
-              src={`${window.location.href.split("#")[0]}assets/empty.svg`}
+              src={
+                process.env.NODE_ENV === "production"
+                  ? "./assets/empty.svg"
+                  : "../../assets/empty.svg"
+              }
               alt=""
               className="waring-pic"
             />
@@ -183,7 +187,7 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
         ) : null}
         {this.state.isUpdated ? <UpdateDialog {...updateDialogProps} /> : null}
         {this.props.isSettingOpen ? <SettingDialog /> : null}
-        {!books ? (
+        {!books && this.state.totalBooks ? (
           <Redirect to="/manager/loading" />
         ) : (
           <Switch>
@@ -200,5 +204,4 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
     );
   }
 }
-
 export default Manager;

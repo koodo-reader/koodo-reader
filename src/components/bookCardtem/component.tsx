@@ -105,7 +105,11 @@ class BookCardItem extends React.Component<BookProps, BookState> {
             >
               <div className="book-item-cover-img">
                 <img
-                  src={`${window.location.href.split("#")[0]}assets/cover.svg`}
+                  src={
+                    process.env.NODE_ENV === "production"
+                      ? "./assets/cover.svg"
+                      : "../../assets/cover.svg"
+                  }
                   alt=""
                   style={{ width: "80%" }}
                 />

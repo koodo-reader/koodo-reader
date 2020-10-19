@@ -1,6 +1,6 @@
 import BookModel from "../../model/Book";
-
-export interface BookListProps {
+import { RouteComponentProps } from "react-router";
+export interface BookListProps extends RouteComponentProps<any> {
   books: BookModel[];
   mode: string;
   shelfIndex: number;
