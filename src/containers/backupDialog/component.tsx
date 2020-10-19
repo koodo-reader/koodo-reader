@@ -6,11 +6,9 @@ import BackupUtil from "../../utils/backupUtil";
 import RestoreUtil from "../../utils/restoreUtil";
 import { Trans } from "react-i18next";
 import DropboxUtil from "../../utils/syncUtils/dropbox";
-import OnedriveUtil from "../../utils/syncUtils/onedrive";
 import { BackupDialogProps, BackupDialogState } from "./interface";
 import TokenDialog from "../../components/tokenDialog";
 import OtherUtil from "../../utils/otherUtil";
-const isElectron = require("is-electron");
 
 class BackupDialog extends React.Component<
   BackupDialogProps,
@@ -76,29 +74,7 @@ class BackupDialog extends React.Component<
         case 2:
           this.showMessage("Coming Soon");
           break;
-        case 3:
-          if (!isElectron()) {
-            this.showMessage("Please continue in desktop version");
-          }
-          if (!OtherUtil.getReaderConfig("onedrive_access_token")) {
-            this.props.handleTokenDialog(true);
-            break;
-          }
-          if (this.state.isBackup === "yes") {
-            this.showMessage("Uploading");
-            BackupUtil.backup(
-              this.props.books,
-              this.props.notes,
-              this.props.bookmarks,
-              this.handleFinish,
-              3,
-              this.showMessage
-            );
-          } else {
-            this.showMessage("Downloading");
-            OnedriveUtil.DownloadFile(this.handleFinish, this.showMessage);
-          }
-          break;
+
         case 4:
           this.showMessage("Coming Soon");
           break;
