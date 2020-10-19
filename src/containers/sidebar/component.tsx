@@ -22,6 +22,7 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
     this.setState({ isCollapse: true });
     this.props.history.push(`/manager/${mode}`);
     this.props.handleMode(mode);
+    this.props.handleSearch(false);
   };
   render() {
     const renderSideMenu = () => {
@@ -67,7 +68,7 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
         <img
           src={
             process.env.NODE_ENV === "production"
-              ? `${window.location.href.split("#")[0]}assets/logo.png`
+              ? "./assets/logo.png"
               : "../../assets/logo.png"
           }
           alt=""

@@ -1,0 +1,22 @@
+.manager {
+  width: 100%;
+  height: 100%;
+}
+.token-dialog-token-text {
+  width: 94px;
+  height: 29px;
+  background: rgba(255, 255, 255, 1);
+  border: 2px solid rgba(45, 111, 200, 1);
+  opacity: 1;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 29px;
+  color: rgba(45, 111, 200, 1);
+  text-align: center;
+  cursor: pointer;
+}
+.auth-page-close-icon {
+  font-size: 60px !important;
+  float: none !important;
+}
+

@@ -13,11 +13,18 @@ import { config } from "../../constants/readerConfig";
 import MobiFile from "../../utils/mobiUtil";
 import iconv from "iconv-lite";
 import isElectron from "is-electron";
+import { withRouter } from "react-router-dom";
 
 declare var window: any;
 var pdfjsLib = window["pdfjs-dist/build/pdf"];
 
 class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
+  componentDidMount() {
+    if (isElectron()) {
+      const { ipcRenderer } = window.require("electron");
+      ipcRenderer.sendSync("start-server", "ping");
+    }
+  }
   handleAddBook = (book: BookModel) => {
     return new Promise((resolve, reject) => {
       let bookArr = this.props.books;
@@ -33,6 +40,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
           this.props.handleMessage("Add Successfully");
           this.props.handleMessageBox(true);
           resolve();
+          this.props.history.push("/manager/home");
         })
         .catch(() => {
           reject();
@@ -349,4 +357,4 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
   }
 }
 
-export default ImportLocal;
+export default withRouter(ImportLocal);

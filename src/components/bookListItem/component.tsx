@@ -76,7 +76,11 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
             }}
           >
             <img
-              src={`${window.location.href.split("#")[0]}assets/cover.svg`}
+              src={
+                process.env.NODE_ENV === "production"
+                  ? "./assets/cover.svg"
+                  : "../../assets/cover.svg"
+              }
               alt=""
               style={{ width: "80%" }}
             />

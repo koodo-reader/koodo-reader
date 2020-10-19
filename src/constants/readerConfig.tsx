@@ -79,7 +79,7 @@ export const sideMenu = [
 export const config = {
   callback_url:
     process.env.NODE_ENV === "production"
-      ? "https://reader.960960.xyz"
+      ? "https://koodo.960960.xyz"
       : "http://localhost:3000",
   token_url:
     process.env.NODE_ENV === "production"
