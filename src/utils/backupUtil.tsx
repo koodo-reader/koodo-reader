@@ -3,7 +3,6 @@ import BookModel from "../model/Book";
 import NoteModel from "../model/Note";
 import BookmarkModel from "../model/Bookmark";
 import DropboxUtil from "./syncUtils/dropbox";
-import OndriveUtil from "./syncUtils/onedrive";
 import localforage from "localforage";
 
 let JSZip = (window as any).JSZip;
@@ -78,7 +77,6 @@ class BackupUtil {
           case 2:
             break;
           case 3:
-            OndriveUtil.UploadFile(blob, handleFinish, showMessage);
             break;
           default:
             break;

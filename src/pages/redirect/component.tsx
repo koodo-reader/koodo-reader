@@ -78,7 +78,42 @@ class Redirect extends React.Component<RedirectProps, RedirectState> {
       );
     }
 
-    return <div className="manager">你似乎来到了没有知识的荒原</div>;
+    return (
+      <div className="manager">
+        <img
+          src={
+            process.env.NODE_ENV === "production"
+              ? "./assets/logo.png"
+              : "../../assets/logo.png"
+          }
+          alt=""
+          className="logo"
+        />
+        <div className="empty-page-info-container" style={{ margin: 100 }}>
+          <div className="empty-page-info-main">
+            <Trans>It seems like you're lost</Trans>
+          </div>
+          <div
+            className="empty-page-info-sub"
+            onClick={() => {
+              this.props.history.push("/manager/home");
+            }}
+            style={{ marginTop: 10, cursor: "pointer" }}
+          >
+            <Trans>Return to home</Trans>
+          </div>
+        </div>
+        <img
+          src={
+            process.env.NODE_ENV === "production"
+              ? "./assets/empty.svg"
+              : "../../assets/empty.svg"
+          }
+          alt=""
+          className="empty-page-illustration"
+        />
+      </div>
+    );
   }
 }
 
