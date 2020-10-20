@@ -6,11 +6,16 @@
   Koodo Reader
 </h1>
 <h3 align="center">
-  一个基于 React 和 Electron 开发的 Epub 阅读器
+  一个跨平台的电子书阅读器
 </h3>
 <div align="center">
 
 [下载](https://koodo.960960.xyz/download) | [官网](https://koodo.960960.xyz)
+
+</div>
+<div align="center">
+
+简体中文 | [English](https://github.com/troyeguo/koodo-reader/blob/master/README_en.md)
 
 </div>
 <div align="center">
@@ -43,13 +48,19 @@
 
 👏 欢迎使用 **Koodo Reader** ！
 
-✍️ **Koodo Reader** 是一个开源免费的 Epub 阅读器，支持桌面版和网页版
+✍️ **Koodo Reader** 是一个开源免费的电子书阅读器，支持桌面版和网页版
 
 ## 特色 👇
 
+🌈 支持阅读 **epub** , **pdf**, **mobi** 和 **txt** 格式的图书
+
+🌎 支持 **Windows** ， **macOS**， **Linux** 和 **网页版**
+
+💡 备份导出，网盘同步
+
 📝 双页模式，单页模式，滚动模式
 
-🚩 听书功能，翻译功能，备份导出，网盘同步
+🚩 听书功能，翻译功能
 
 💻 目录，书签，笔记，书摘，书架，标签
 
@@ -59,9 +70,7 @@
 
 🚀 文字高亮和下划线标记
 
-🌎 支持 **Windows** ， **MacOS**， **Linux** 和 **网页版**
-
-🌈 简体中文，繁体中文，英文，多语言支持
+⚽ 简体中文，繁体中文，英文，多语言支持
 
 🌱 当然 **Koodo Reader** 仍然很年轻并且有一些缺陷，但有你的支持它一定会越来越好 🏃
 
@@ -103,4 +112,4 @@
 
 ## 帮助
 
-您可以在 issue 区提问，我会在力所能及的范围内提供帮助
+您可以在 issue 区提问，或者通过邮箱 guo362429@gmail.com 与我取得联系
