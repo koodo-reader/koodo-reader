@@ -49,6 +49,9 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
       });
       OtherUtil.setReaderConfig("totalBooks", this.state.totalBooks.toString());
     }
+    if (nextProps.books && nextProps.books.length === 1 && !this.props.books) {
+      this.props.history.push("/manager/home");
+    }
     if (this.props.mode !== nextProps.mode) {
       this.setState({
         favoriteBooks: Object.keys(AddFavorite.getAllFavorite()).length,

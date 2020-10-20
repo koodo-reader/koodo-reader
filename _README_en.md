@@ -52,7 +52,7 @@
 
 ## Feature 👇
 
-🌈 Format support: **Epub** , **PDF**, **Mobi** and **TXT**
+🌈 Format support: **epub** , **pdf**, **mobi** and **txt**
 
 🌎 Platform support: **Windows** , **macOS**, **Linux** and **Web**
 

@@ -75,7 +75,7 @@ class BackupDialog extends React.Component<
           this.showMessage("Coming Soon");
           break;
 
-        case 4:
+        case 3:
           this.showMessage("Coming Soon");
           break;
         default:
@@ -93,9 +93,7 @@ class BackupDialog extends React.Component<
             onClick={() => {
               this.handleDrive(index);
             }}
-            style={
-              index === 0 || index === 1 || index === 3 ? { opacity: 1 } : {}
-            }
+            style={index === 0 || index === 1 ? { opacity: 1 } : {}}
           >
             <div className="backup-page-list-item-container">
               <span

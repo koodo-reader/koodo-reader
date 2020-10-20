@@ -20,6 +20,9 @@ class Redirect extends React.Component<RedirectProps, RedirectState> {
   componentDidMount() {
     //判断是否是获取token后的回调页面
     let url = document.location.href;
+    if (document.location.hash === "#/") {
+      this.props.history.push("/manager/home");
+    }
     if (url.indexOf("error") > -1) {
       this.setState({ isError: true });
       return false;
