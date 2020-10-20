@@ -13,7 +13,7 @@ import { BookListProps, BookListState } from "./interface";
 import OtherUtil from "../../utils/otherUtil";
 import localforage from "localforage";
 import DeletePopup from "../../components/deletePopup";
-import EmptyPage from "../emptyPage";
+import Empty from "../emptyPage";
 import { Redirect, withRouter } from "react-router-dom";
 
 declare var window: any;
@@ -150,7 +150,20 @@ class BookList extends React.Component<BookListProps, BookListState> {
         )
       : this.handleRecent(this.props.books, RecordRecent.getAllRecent());
     if (this.props.mode === "shelf" && books.length === 0) {
-      return <EmptyPage />;
+      return (
+        <div
+          style={{
+            position: "fixed",
+            left: 0,
+            top: 0,
+            width: "100%",
+            height: "100%",
+            zIndex: -1,
+          }}
+        >
+          <Empty />
+        </div>
+      );
     }
 
     return books.map((item: BookModel, index: number) => {
