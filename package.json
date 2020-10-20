@@ -61,12 +61,14 @@
     "directories": {
       "buildResources": "assets"
     },
-    "publish": {
-      "provider": "bintray",
-      "package": "koodo-reader",
-      "repo": "koodo-reader",
-      "owner": "troyeguo"
-    },
+    "publish": [
+      {
+        "provider": "bintray",
+        "package": "koodo-reader",
+        "repo": "koodo-reader",
+        "owner": "troyeguo"
+      }
+    ],
     "extends": null,
     "dmg": {
       "contents": [
