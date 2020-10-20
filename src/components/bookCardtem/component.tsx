@@ -67,7 +67,7 @@ class BookCardItem extends React.Component<BookProps, BookState> {
     RecentBooks.setRecent(this.props.book.key);
 
     if (this.props.book.description === "pdf") {
-      window.open(`/lib/pdf/viewer.html?file=${this.props.book.key}`);
+      window.open(`./lib/pdf/viewer.html?file=${this.props.book.key}`);
     } else {
       window.open(
         `${window.location.href.split("#")[0]}#/epub/${this.props.book.key}`
