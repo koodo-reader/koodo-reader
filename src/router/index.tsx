@@ -11,7 +11,6 @@ const Router = () => {
       <Switch>
         <Route component={Manager} path="/manager" />
         <Route component={EpubReader} path="/epub" />
-        <Route component={Manager} exact path="/" />
         <Route component={_Redirect} path="/" />
       </Switch>
     </HashRouter>
