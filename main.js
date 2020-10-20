@@ -35,10 +35,10 @@ app.on("ready", () => {
       ? path.join(__dirname, "/public/assets/launch-page.html")
       : `file://${path.join(__dirname, "./build/assets/launch-page.html")}`
   );
-  if (!isDev) {
-    const { Menu } = require("electron");
-    Menu.setApplicationMenu(null);
-  }
+  // if (!isDev) {
+  //   const { Menu } = require("electron");
+  //   Menu.setApplicationMenu(null);
+  // }
 
   const urlLocation = isDev
     ? "http://localhost:3000"
