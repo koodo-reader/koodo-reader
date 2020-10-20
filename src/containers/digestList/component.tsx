@@ -5,6 +5,7 @@ import { DigestListProps, DigestListStates } from "./interface";
 import CardList from "../../components/cardList";
 import NoteTag from "../../components/noteTag";
 import NoteModel from "../../model/Note";
+import Empty from "../emptyPage";
 
 class DigestList extends React.Component<DigestListProps, DigestListStates> {
   constructor(props: DigestListProps) {
@@ -51,12 +52,28 @@ class DigestList extends React.Component<DigestListProps, DigestListStates> {
         : this.props.digests,
       mode: "digest",
     };
+
     return (
       <div className="digest-list-container-parent">
         <div className="note-tags">
           <NoteTag {...{ handleTag: this.handleTag }} />
         </div>
-        <CardList {...noteProps} />
+        {noteProps.cards.length === 0 ? (
+          <div
+            style={{
+              position: "fixed",
+              left: 0,
+              top: 0,
+              width: "100%",
+              height: "100%",
+              zIndex: -1,
+            }}
+          >
+            <Empty />
+          </div>
+        ) : (
+          <CardList {...noteProps} />
+        )}
       </div>
     );
   }

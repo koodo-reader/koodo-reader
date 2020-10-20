@@ -39,8 +39,8 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
           this.props.handleFetchBooks();
           this.props.handleMessage("Add Successfully");
           this.props.handleMessageBox(true);
-          resolve();
           this.props.history.push("/manager/home");
+          resolve();
         })
         .catch(() => {
           reject();
@@ -222,6 +222,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
               })
               .then((res) => {
                 let type = "application/octet-stream";
+                console.log(res, "res");
                 let blobTemp: any = new Blob([res.data], { type: type });
                 let fileTemp = new File(
                   [blobTemp],

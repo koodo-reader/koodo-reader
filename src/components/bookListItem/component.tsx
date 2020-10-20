@@ -78,11 +78,11 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
             <img
               src={
                 process.env.NODE_ENV === "production"
-                  ? "./assets/cover.svg"
-                  : "../../assets/cover.svg"
+                  ? "./assets/cover.jpg"
+                  : "../../assets/cover.jpg"
               }
               alt=""
-              style={{ width: "80%" }}
+              style={{ width: "100%" }}
             />
           </div>
         )}

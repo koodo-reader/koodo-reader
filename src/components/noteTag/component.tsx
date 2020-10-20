@@ -103,7 +103,6 @@ class NoteTag extends React.Component<NoteTagProps, NoteTagState> {
               className="center"
               onClick={() => {
                 this.handleChangeTag(index);
-                console.log("tagclick");
               }}
             >
               <Trans>{item}</Trans>

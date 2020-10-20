@@ -5,6 +5,7 @@ import { NoteListProps, NoteListState } from "./interface";
 import CardList from "../../components/cardList";
 import NoteTag from "../../components/noteTag";
 import NoteModel from "../../model/Note";
+import Empty from "../emptyPage";
 
 class NoteList extends React.Component<NoteListProps, NoteListState> {
   constructor(props: NoteListProps) {
@@ -59,7 +60,22 @@ class NoteList extends React.Component<NoteListProps, NoteListState> {
         <div className="note-tags">
           <NoteTag {...{ handleTag: this.handleTag }} />
         </div>
-        <CardList {...noteProps} />
+        {noteProps.cards.length === 0 ? (
+          <div
+            style={{
+              position: "fixed",
+              left: 0,
+              top: 0,
+              width: "100%",
+              height: "100%",
+              zIndex: -1,
+            }}
+          >
+            <Empty />
+          </div>
+        ) : (
+          <CardList {...noteProps} />
+        )}
       </div>
     );
   }

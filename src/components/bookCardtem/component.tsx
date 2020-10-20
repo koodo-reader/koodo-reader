@@ -103,24 +103,15 @@ class BookCardItem extends React.Component<BookProps, BookState> {
                 this.handleJump();
               }}
             >
-              <div className="book-item-cover-img">
-                <img
-                  src={
-                    process.env.NODE_ENV === "production"
-                      ? "./assets/cover.svg"
-                      : "../../assets/cover.svg"
-                  }
-                  alt=""
-                  style={{ width: "80%" }}
-                />
-              </div>
-
-              <p
-                className="book-item-cover-title"
-                style={{ marginLeft: "10px", marginTop: "3px" }}
-              >
-                {this.props.book.name}
-              </p>
+              <img
+                src={
+                  process.env.NODE_ENV === "production"
+                    ? "./assets/cover.jpg"
+                    : "../../assets/cover.jpg"
+                }
+                alt=""
+                style={{ width: "100%" }}
+              />
             </div>
           )}
 
