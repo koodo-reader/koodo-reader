@@ -62,7 +62,10 @@
       "buildResources": "assets"
     },
     "publish": {
-      "provider": "bintray"
+      "provider": "bintray",
+      "package": "koodo-reader",
+      "repo": "koodo-reader",
+      "owner": "troyeguo"
     },
     "extends": null,
     "dmg": {
