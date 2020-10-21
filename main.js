@@ -35,10 +35,10 @@ app.on("ready", () => {
       ? path.join(__dirname, "/public/assets/launch-page.html")
       : `file://${path.join(__dirname, "./build/assets/launch-page.html")}`
   );
-  // if (!isDev) {
-  //   const { Menu } = require("electron");
-  //   Menu.setApplicationMenu(null);
-  // }
+  if (!isDev) {
+    const { Menu } = require("electron");
+    Menu.setApplicationMenu(null);
+  }
 
   const urlLocation = isDev
     ? "http://localhost:3000"
@@ -116,12 +116,16 @@ function startExpress() {
   server.use(bodyParser.json());
   server.use(bodyParser.urlencoded({ extended: true }));
   if (!fs.existsSync(dirPath + `/cover-0.jpg`)) {
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < 5; i++) {
       let stream = fs.createWriteStream(dirPath + `/cover-${i}.jpg`);
       request(`https://koodo.960960.xyz/images/cover-${i}.jpg`)
         .pipe(stream)
         .on("close", function (err) {
-          console.log("文件下载完毕");
+          if (err) {
+            console.log(err);
+          } else {
+            console.log("文件下载完毕");
+          }
         });
     }
   }
