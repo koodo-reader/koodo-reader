@@ -163,16 +163,17 @@ function startExpress() {
       for (let i = 0; i < lines.length; i++) {
         const line = lines[i];
         if (
-          line.startsWith("CHAPTER ") ||
-          line.startsWith("Chapter ") ||
-          line.startsWith("第") ||
-          line.startsWith("序章") ||
-          line.startsWith("前言") ||
-          line.startsWith("写在前面的话") ||
-          line.startsWith("后记") ||
-          line.startsWith("楔子") ||
-          line.startsWith("后记") ||
-          line.startsWith("后序")
+          line.length < 30 &&
+          (line.startsWith("CHAPTER ") ||
+            line.startsWith("Chapter ") ||
+            line.startsWith("第") ||
+            line.startsWith("序章") ||
+            line.startsWith("前言") ||
+            line.startsWith("写在前面的话") ||
+            line.startsWith("后记") ||
+            line.startsWith("楔子") ||
+            line.startsWith("后记") ||
+            line.startsWith("后序"))
         ) {
           content.push({
             title: line,
