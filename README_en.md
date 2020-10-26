@@ -78,7 +78,7 @@
 
 ## Usage
 
-Desktop : Download the latest software package [Click me](https://koodo.960960.xyz/download)
+Desktop : Download the latest software package(Windows7 is not supported yet) [Click me](https://koodo.960960.xyz/download)
 
 Web：Website is hosted on Vercel [Click me](https://reader.960960.xyz)
 
