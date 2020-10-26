@@ -13,11 +13,7 @@
 [下载](https://koodo.960960.xyz/download) | [官网](https://koodo.960960.xyz)
 
 </div>
-<div align="center">
 
-简体中文 | [English](https://github.com/troyeguo/koodo-reader/blob/master/README_en.md)
-
-</div>
 <div align="center">
   <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
     <img src="https://img.shields.io/github/release/troyeguo/koodo-reader.svg?style=flat-square" alt="">
@@ -30,6 +26,12 @@
   <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
     <img alt="GitHub All Releases" src="https://img.shields.io/github/downloads/troyeguo/koodo-reader/total.svg?color=%2312b886&style=flat-square">
   </a>
+</div>
+
+<div>
+
+简体中文 | [English](https://github.com/troyeguo/koodo-reader/blob/master/README_en.md)
+
 </div>
 
 ## 预览
