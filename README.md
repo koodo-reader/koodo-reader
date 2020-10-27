@@ -80,9 +80,9 @@
 
 ## 使用方法
 
-国内网络下载速度慢的解决办法，复制下载链接到这个网站：https://d.serctl.com/
-
 桌面端：前往这里下载最新的安装包(技术原因暂不支持 Windows7 系统) [点我前往](https://koodo.960960.xyz/download)
+
+（国内网络下载速度慢的解决办法，复制下载链接到这个网站：https://d.serctl.com/ ）
 
 网页版：代码托管在 Vercel [点我前往](https://reader.960960.xyz)
 
