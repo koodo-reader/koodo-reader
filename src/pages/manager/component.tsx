@@ -49,7 +49,6 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
           totalBooks: nextProps.books.length,
         },
         () => {
-          console.log(this.state.totalBooks, "totalbooks");
           OtherUtil.setReaderConfig(
             "totalBooks",
             this.state.totalBooks.toString()

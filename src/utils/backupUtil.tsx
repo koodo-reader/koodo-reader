@@ -30,7 +30,6 @@ class BackupUtil {
         // epubZip.file(`${item.name}.epub`, result);
       });
     let results = await Promise.all(data);
-    console.log(results);
     for (let i = 0; i < books.length; i++) {
       epubZip.file(`${books[i].name}.epub`, results[i]);
     }

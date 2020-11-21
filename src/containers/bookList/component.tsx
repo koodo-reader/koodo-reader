@@ -117,7 +117,6 @@ class BookList extends React.Component<BookListProps, BookListState> {
     arr.forEach((item) => {
       items[item] && itemArr.push(items[item]);
     });
-    console.log(itemArr, "index");
 
     return itemArr;
   };
