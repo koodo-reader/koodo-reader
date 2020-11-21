@@ -1,7 +1,7 @@
 //备份和恢复页面
 import React from "react";
 import "./backupDialog.css";
-import { driveList } from "../../constants/readerConfig";
+import { driveList } from "../../constants/driveList";
 import BackupUtil from "../../utils/backupUtil";
 import RestoreUtil from "../../utils/restoreUtil";
 import { Trans } from "react-i18next";

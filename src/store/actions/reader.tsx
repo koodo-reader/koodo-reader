@@ -1,6 +1,7 @@
 import localforage from "localforage";
 import NoteModel from "../../model/Note";
 import BookmarkModel from "../../model/Bookmark";
+import AddTrash from "../../utils/addTrash";
 export function handleNotes(notes: NoteModel[]) {
   return { type: "HANDLE_NOTES", payload: notes };
 }
@@ -38,12 +39,16 @@ export function handleFetchNotes() {
       } else {
         noteArr = value;
       }
-      dispatch(handleNotes(noteArr));
+      let keyArr = AddTrash.getAllTrash();
+      dispatch(handleNotes(handleKeyRemove(noteArr, keyArr)));
       dispatch(
         handleDigests(
-          noteArr.filter((item: NoteModel) => {
-            return item.notes === "";
-          })
+          handleKeyRemove(
+            noteArr.filter((item: NoteModel) => {
+              return item.notes === "";
+            }),
+            keyArr
+          )
         )
       );
     });
@@ -84,7 +89,20 @@ export function handleFetchBookmarks() {
       } else {
         bookmarkArr = value;
       }
-      dispatch(handleBookmarks(bookmarkArr));
+      let keyArr = AddTrash.getAllTrash();
+      dispatch(handleBookmarks(handleKeyRemove(bookmarkArr, keyArr)));
     });
   };
 }
+const handleKeyRemove = (items: any[], arr: string[]) => {
+  let itemArr: any[] = [];
+  if (!arr[0]) {
+    return items;
+  }
+  for (let i = 0; i < items.length; i++) {
+    if (arr.indexOf(items[i].bookKey) === -1) {
+      itemArr.push(items[i]);
+    }
+  }
+  return itemArr;
+};

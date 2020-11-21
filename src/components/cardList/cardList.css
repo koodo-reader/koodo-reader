@@ -74,7 +74,7 @@
   display: -webkit-box;
   -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
-  height: 17px;
+  height: 18px;
   line-height: 16px;
   font-size: 16px;
   max-width: 130px;
@@ -94,6 +94,13 @@
   position: absolute;
   width: 100%;
   height: 104px;
+}
+.card-list-item-text-note {
+  position: absolute;
+  top: 100px;
+  width: 100%;
+  height: 104px;
+  color: rgba(75, 75, 75, 0.68);
 }
 .card-list-item-text {
   width: calc(100% - 20px);

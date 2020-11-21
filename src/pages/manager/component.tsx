@@ -13,7 +13,7 @@ import { ManagerProps, ManagerState } from "./interface";
 import { Trans } from "react-i18next";
 import OtherUtil from "../../utils/otherUtil";
 import AddFavorite from "../../utils/addFavorite";
-import { updateLog } from "../../constants/readerConfig";
+import { updateLog } from "../../constants/updateLog";
 import UpdateDialog from "../../components/updataDialog";
 import SettingDialog from "../../components/settingDialog";
 import { isMobileOnly } from "react-device-detect";
@@ -44,10 +44,18 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
 
   UNSAFE_componentWillReceiveProps(nextProps: ManagerProps) {
     if (nextProps.books && this.state.totalBooks !== nextProps.books.length) {
-      this.setState({
-        totalBooks: nextProps.books.length,
-      });
-      OtherUtil.setReaderConfig("totalBooks", this.state.totalBooks.toString());
+      this.setState(
+        {
+          totalBooks: nextProps.books.length,
+        },
+        () => {
+          console.log(this.state.totalBooks, "totalbooks");
+          OtherUtil.setReaderConfig(
+            "totalBooks",
+            this.state.totalBooks.toString()
+          );
+        }
+      );
     }
     if (nextProps.books && nextProps.books.length === 1 && !this.props.books) {
       this.props.history.push("/manager/home");
@@ -132,7 +140,7 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
         ) : null}
         {this.state.isUpdated ? <UpdateDialog {...updateDialogProps} /> : null}
         {this.props.isSettingOpen ? <SettingDialog /> : null}
-        {!books && this.state.totalBooks ? (
+        {(!books || books.length === 0) && this.state.totalBooks ? (
           <Redirect to="/manager/loading" />
         ) : (
           <Switch>

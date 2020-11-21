@@ -7,6 +7,7 @@ import BookModel from "../../model/Book";
 import { Trans } from "react-i18next";
 import { BookmarkPageProps, BookmarkPageState } from "./interface";
 import { Redirect, withRouter } from "react-router-dom";
+import _ from "underscore";
 
 declare var window: any;
 
@@ -17,6 +18,7 @@ class BookmarkPage extends React.Component<
   UNSAFE_componentWillMount() {
     this.props.handleFetchBookmarks();
   }
+
   //点击跳转后跳转到指定页面
   handleRedirect = (key: string, cfi: string, percentage: number) => {
     let { books } = this.props;
@@ -115,7 +117,9 @@ class BookmarkPage extends React.Component<
     };
     return (
       <div className="bookmark-page-container-parent">
-        <div className="bookmark-page-container">{renderBookmarkPage()}</div>
+        <div className="bookmark-page-container">
+          {_.clone(this.props.bookmarks) && renderBookmarkPage()}
+        </div>
       </div>
     );
   }

@@ -1,6 +1,6 @@
 //图书样式设置的下拉菜单页面
 import React from "react";
-import { dropdownList } from "../../constants/readerConfig";
+import { dropdownList } from "../../constants/dropdownList";
 import "./dropdownList.css";
 import { Trans } from "react-i18next";
 import { DropdownListProps, DropdownListState } from "./interface";
@@ -19,7 +19,7 @@ class DropdownList extends React.Component<
     super(props);
     this.state = {
       currentFontFamilyIndex: dropdownList[0].option.findIndex((item: any) => {
-        return item === (OtherUtil.getReaderConfig("fontFamily") || "Arial");
+        return item === (OtherUtil.getReaderConfig("fontFamily") || "内嵌字体");
       }),
       currentLineHeightIndex: dropdownList[1].option.findIndex((item: any) => {
         return item === (OtherUtil.getReaderConfig("lineHeight") || "1.25");
@@ -54,7 +54,7 @@ class DropdownList extends React.Component<
         });
         this.props.currentEpub.rendition.themes.default({
           "a, article, cite, code, div, li, p, pre, span, table": {
-            "font-family": `${arr[0] || "Helvetica"} !important`,
+            "font-family": `${arr[0] || "内嵌字体"} !important`,
           },
         });
         break;

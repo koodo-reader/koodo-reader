@@ -1,5 +1,6 @@
 const initState = {
   books: null,
+  deletedBooks: [],
   searchResults: [],
   isSearch: false,
   isSort: false,
@@ -20,6 +21,11 @@ export function manager(
       return {
         ...state,
         books: action.payload,
+      };
+    case "HANDLE_DELETED_BOOKS":
+      return {
+        ...state,
+        deletedBooks: action.payload,
       };
     case "HANDLE_SEARCH_BOOKS":
       return {

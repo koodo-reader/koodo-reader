@@ -1,6 +1,6 @@
 .book-list-item {
   width: 135px;
-  height: 190px;
+  height: 192px;
   float: left;
   overflow: hidden;
   position: relative;
@@ -16,6 +16,8 @@
   overflow: hidden;
 }
 .book-item-title {
+  width: 80%;
+  margin-left: 10%;
   height: 39px;
   font-size: 15px;
   line-height: 17px;
@@ -67,6 +69,24 @@
   color: white;
   cursor: pointer;
   text-shadow: 0px 0px 5px rgba(75, 75, 75, 0.6);
+}
+.reading-progress-icon {
+  position: absolute;
+  top: 18px;
+  left: 17px;
+  width: 31px;
+  height: 31px;
+  border-radius: 50%;
+  background-color: rgba(75, 75, 75, 0.2);
+  font-size: 15px;
+  line-height: 31px;
+  color: white;
+  cursor: pointer;
+  transform: scale(0.9);
+}
+.reading-percentage-char {
+  display: inline-block;
+  transform: scale(0.5) translate(-5px, 2px);
 }
 .book-love-icon {
   position: absolute;

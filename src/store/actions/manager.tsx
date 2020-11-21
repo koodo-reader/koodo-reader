@@ -4,6 +4,7 @@ import BookModel from "../../model/Book";
 import BookmarkModel from "../../model/Bookmark";
 import NoteModel from "../../model/Note";
 import { Dispatch } from "redux";
+import AddTrash from "../../utils/addTrash";
 
 declare var window: any;
 
@@ -12,6 +13,9 @@ export function handleNotes(notes: NoteModel[]) {
 }
 export function handleBooks(books: BookModel[]) {
   return { type: "HANDLE_BOOKS", payload: books };
+}
+export function handleDeletedBooks(deletedBooks: BookModel[]) {
+  return { type: "HANDLE_DELETED_BOOKS", payload: deletedBooks };
 }
 export function handleSearchResults(searchResults: number[]) {
   return { type: "HANDLE_SEARCH_BOOKS", payload: searchResults };
@@ -47,11 +51,16 @@ export function handleSortCode(sortCode: { sort: number; order: number }) {
 export function handleBookmarks(bookmarks: BookmarkModel[]) {
   return { type: "HANDLE_BOOKMARKS", payload: bookmarks };
 }
-export function handleFetchBooks() {
+export function handleFetchBooks(isTrash = false) {
   return (dispatch: Dispatch) => {
     localforage.getItem("books", async (err, value) => {
       let bookArr: any = value;
-      dispatch(handleBooks(bookArr));
+      let keyArr = AddTrash.getAllTrash();
+      if (isTrash) {
+        dispatch(handleDeletedBooks(handleKeyFilter(bookArr, keyArr)));
+      } else {
+        dispatch(handleBooks(handleKeyRemove(bookArr, keyArr)));
+      }
     });
   };
 }
@@ -67,3 +76,28 @@ export function handleFetchList() {
     dispatch(handleList(isList));
   };
 }
+const handleKeyRemove = (items: any[], arr: string[]) => {
+  if (!items) return [];
+  let itemArr: any[] = [];
+  if (!arr[0]) {
+    return items;
+  }
+  for (let i = 0; i < items.length; i++) {
+    if (arr.indexOf(items[i].key) === -1) {
+      itemArr.push(items[i]);
+    }
+  }
+  return itemArr;
+};
+const handleKeyFilter = (items: any[], arr: string[]) => {
+  if (!items) {
+    return [];
+  }
+  let itemArr: any[] = [];
+  for (let i = 0; i < items.length; i++) {
+    if (arr.indexOf(items[i].key) > -1) {
+      itemArr.push(items[i]);
+    }
+  }
+  return itemArr;
+};

@@ -4,7 +4,7 @@ import "./settingDialog.css";
 import { SettingInfoProps, SettingInfoState } from "./interface";
 import { Trans } from "react-i18next";
 import i18n from "../../i18n";
-import { updateLog } from "../../constants/readerConfig";
+import { updateLog } from "../../constants/updateLog";
 import OtherUtil from "../../utils/otherUtil";
 const isElectron = require("is-electron");
 
@@ -18,7 +18,6 @@ class SettingDialog extends React.Component<
       language: OtherUtil.getReaderConfig("lang"),
       isTouch: OtherUtil.getReaderConfig("isTouch") === "yes",
       isOpenBook: OtherUtil.getReaderConfig("isOpenBook") === "yes",
-      isUseFont: OtherUtil.getReaderConfig("isUseFont") === "yes",
       isExpandContent: OtherUtil.getReaderConfig("isExpandContent") === "yes",
       isUseBackground: OtherUtil.getReaderConfig("isUseBackground") === "yes",
       isShowFooter: OtherUtil.getReaderConfig("isShowFooter") !== "no",
@@ -27,7 +26,6 @@ class SettingDialog extends React.Component<
   componentDidMount() {
     const lng = OtherUtil.getReaderConfig("lang");
     if (lng) {
-      i18n.changeLanguage(lng);
       this.setState({
         language: lng,
       });
@@ -52,14 +50,7 @@ class SettingDialog extends React.Component<
       ? window.require("electron").shell.openExternal(url)
       : window.open(url);
   };
-  handleChangeFont = () => {
-    this.setState({ isUseFont: !this.state.isUseFont });
-    OtherUtil.setReaderConfig("isUseFont", this.state.isUseFont ? "no" : "yes");
-    this.state.isUseFont
-      ? this.props.handleMessage("Turn Off Successfully")
-      : this.props.handleMessage("Turn On Successfully");
-    this.props.handleMessageBox(true);
-  };
+
   handleExpandContent = () => {
     this.setState({ isExpandContent: !this.state.isExpandContent });
     OtherUtil.setReaderConfig(
@@ -127,9 +118,9 @@ class SettingDialog extends React.Component<
         <div className="setting-dialog-info">
           <div className="setting-dialog-new-title">
             {this.state.isTouch ? (
-              <Trans>Turn off touch mode</Trans>
+              <Trans>Turn off touch screen mode</Trans>
             ) : (
-              <Trans>Turn on touch mode</Trans>
+              <Trans>Turn on touch screen mode</Trans>
             )}
 
             <span
@@ -160,21 +151,7 @@ class SettingDialog extends React.Component<
               ></span>
             </span>
           </div>
-          <div className="setting-dialog-new-title">
-            <Trans>Use built-in font</Trans>
-            <span
-              className="single-control-switch"
-              onClick={() => {
-                this.handleChangeFont();
-              }}
-              style={{ float: "right" }}
-            >
-              <span
-                className="single-control-button"
-                style={this.state.isUseFont ? { float: "right" } : {}}
-              ></span>
-            </span>
-          </div>
+
           <div className="setting-dialog-new-title">
             <Trans>Default expand all content</Trans>
             <span

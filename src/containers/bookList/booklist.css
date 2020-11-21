@@ -17,6 +17,18 @@
   padding-right: 17px; /* Increase/decrease this value for cross-browser compatibility */
   box-sizing: content-box; /* So the width will be 100% + 17px */
 }
+.booklist-delete-container {
+  position: absolute;
+  top: 80px;
+  left: calc(50vw - 100px);
+  width: 150px;
+  border: 2px solid rgb(231, 69, 69);
+  text-align: center;
+  height: 30px;
+  line-height: 30px;
+  color: rgb(231, 69, 69);
+  cursor: pointer;
+}
 
 .book-list-view {
   position: absolute;

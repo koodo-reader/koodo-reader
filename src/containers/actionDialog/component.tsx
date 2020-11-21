@@ -3,6 +3,7 @@ import React from "react";
 import "./actionDialog.css";
 import { Trans } from "react-i18next";
 import { ActionDialogProps } from "./interface";
+import AddTrash from "../../utils/addTrash";
 
 class ActionDialog extends React.Component<ActionDialogProps> {
   handleDeleteBook = () => {
@@ -20,7 +21,39 @@ class ActionDialog extends React.Component<ActionDialogProps> {
     this.props.handleReadingBook(this.props.currentBook);
     this.props.handleActionDialog(false);
   };
+  handleResoreBook = () => {
+    AddTrash.clear(this.props.currentBook.key);
+    this.props.handleActionDialog(false);
+    this.props.handleMessage("Restore Successfully");
+    this.props.handleMessageBox(true);
+    this.props.handleFetchBooks();
+  };
   render() {
+    if (this.props.mode === "trash") {
+      return (
+        <div
+          className="action-dialog-container"
+          onMouseLeave={() => {
+            this.props.handleActionDialog(false);
+          }}
+          style={{ left: this.props.left, top: this.props.top, height: "40px" }}
+        >
+          <div className="action-dialog-actions-container">
+            <div
+              className="action-dialog-add"
+              onClick={() => {
+                this.handleResoreBook();
+              }}
+            >
+              <span className="icon-clockwise view-icon"></span>
+              <span className="action-name">
+                <Trans>Restore</Trans>
+              </span>
+            </div>
+          </div>
+        </div>
+      );
+    }
     return (
       <div
         className="action-dialog-container"

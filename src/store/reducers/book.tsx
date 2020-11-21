@@ -4,6 +4,7 @@ const initState = {
   isOpenAddDialog: false,
   isOpenActionDialog: false,
   isReading: false,
+  dragItem: "",
   currentBook: {},
   currentEpub: {},
 };
@@ -48,6 +49,11 @@ export function book(
       return {
         ...state,
         currentEpub: action.payload,
+      };
+    case "HANDLE_DRAG_ITEM":
+      return {
+        ...state,
+        dragItem: action.payload,
       };
     case "HANDLE_REDIRECT":
       return {

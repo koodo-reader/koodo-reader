@@ -81,9 +81,8 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
   componentWillUnmount() {
     //清除上面的计时器
     clearTimeout(this.messageTimer);
-    setTimeout(() => {}, 5000);
     clearInterval(this.tickTimer);
-    ReadingTime.setTime(this.props.currentBook.key, this.state.time);
+    
   }
   //进入阅读器
   handleEnterReader = (position: string) => {
