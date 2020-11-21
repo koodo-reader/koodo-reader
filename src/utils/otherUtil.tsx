@@ -36,6 +36,7 @@ class OtherUtil {
     ) as HTMLInputElement).value;
     let bookNameArr: string[] = [];
     let AuthorNameArr: string[] = [];
+    if (!books) return [];
     books.forEach((item) => {
       bookNameArr.push(item.name.toLowerCase());
       AuthorNameArr.push(item.author.toLowerCase());
@@ -49,6 +50,8 @@ class OtherUtil {
     if (event && event.keyCode === 13) {
       let bookNameArr: string[] = [];
       let AuthorNameArr: string[] = [];
+      if (!books) return [];
+
       books.forEach((item) => {
         bookNameArr.push(item.name.toLowerCase());
         AuthorNameArr.push(item.author.toLowerCase());
