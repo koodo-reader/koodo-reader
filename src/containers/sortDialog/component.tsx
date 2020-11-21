@@ -64,6 +64,19 @@ class SortDialog extends React.Component<SortDialogProps> {
           >
             <Trans>Sort by Date</Trans>
           </li>
+          <li
+            className="sort-by-category-list"
+            onClick={() => {
+              this.handleSort(3);
+            }}
+            style={
+              this.props.sortCode.sort === 3
+                ? { color: "rgba(75, 75, 75, 1)" }
+                : {}
+            }
+          >
+            <Trans>Sort by Duration</Trans>
+          </li>
         </ul>
         <div className="sort-dialog-seperator"></div>
         <ul className="sort-by-order">

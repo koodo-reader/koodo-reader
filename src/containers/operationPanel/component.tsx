@@ -155,6 +155,7 @@ class OperationPanel extends React.Component<
     }
     this.props.handleSearch(false);
     this.props.handleOpenMenu(false);
+    ReadingTime.setTime(this.props.currentBook.key, this.props.time);
     window.close();
     // this.props.history.push("/manager/home");
   }

@@ -1,6 +1,6 @@
 //修改阅读器背景色
 import React from "react";
-import { themeList } from "../../constants/readerConfig";
+import { themeList } from "../../constants/themeList";
 import StyleUtil from "../../utils/styleUtil";
 import "./themeList.css";
 import { Trans } from "react-i18next";

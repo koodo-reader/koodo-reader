@@ -104,6 +104,7 @@ class CardList extends React.Component<CardListProps, CardListStates> {
             onMouseLeave={() => {
               this.handleShowDelete("");
             }}
+            style={this.props.mode === "note" ? { height: "250px" } : {}}
           >
             {this.state.deleteKey === item.key ? (
               <DeleteIcon {...cardProps} />
@@ -114,6 +115,12 @@ class CardList extends React.Component<CardListProps, CardListStates> {
                   {this.props.mode === "note" ? item.notes : item.text}
                 </div>
               </div>
+              {this.props.mode === "note" ? (
+                <div className="card-list-item-text-note">
+                  <div className="card-list-item-text">{item.text}</div>
+                </div>
+              ) : null}
+
               <div className="card-list-item-citation">
                 <div className="card-list-item-title">
                   <Trans>From</Trans>《

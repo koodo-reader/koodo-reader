@@ -82,6 +82,7 @@ class SettingPanel extends React.Component<
             <Trans>Reading Option</Trans>
           </div>
           <ModeControl />
+
           {this.state.isSupported && this.props.locations ? (
             <div className="single-control-switch-container">
               <span className="single-control-switch-title">
@@ -116,8 +117,8 @@ class SettingPanel extends React.Component<
           {this.state.readerMode && this.state.readerMode !== "double" ? (
             <SliderList
               {...{
-                maxValue: 1.5,
-                minValue: 0.5,
+                maxValue: 2,
+                minValue: 1,
                 mode: "scale",
               }}
             />

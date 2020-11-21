@@ -43,7 +43,7 @@ class ImageViewer extends React.Component<ImageViewerProps, ImageViewerStates> {
       event.target.href ||
       event.target.parentNode.href ||
       event.target.parentNode.parentNode.href;
-    if (isElectron() && href) {
+    if (isElectron() && href && href.indexOf("OEBPF") === -1) {
       event.preventDefault();
       window.require("electron").shell.openExternal(href);
     }

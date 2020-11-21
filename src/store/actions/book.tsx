@@ -20,3 +20,6 @@ export function handleReadingBook(book: BookModel) {
 export function handleReadingEpub(epub: any) {
   return { type: "HANDLE_READING_EPUB", payload: epub };
 }
+export function handleDragItem(key: string) {
+  return { type: "HANDLE_DRAG_ITEM", payload: key };
+}

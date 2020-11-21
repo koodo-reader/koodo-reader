@@ -15,6 +15,7 @@ const mapStateToProps = (state: stateType) => {
   return {
     isReading: state.book.isReading,
     percentage: state.progressPanel.percentage,
+    currentBook: state.book.currentBook,
   };
 };
 const actionCreator = {

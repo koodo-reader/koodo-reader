@@ -1,13 +1,13 @@
 .single-control-container {
-  width: calc(100% - 40px);
+  width: calc(100% - 10px);
   height: 80px;
-  margin: 0px 20px 0px 20px;
+  margin: 0px 5px 0px 5px;
   display: flex;
   justify-content: space-around;
 }
 .single-page-icon,
 .two-page-icon {
-  font-size: 40px;
+  font-size: 50px;
   color: rgba(75, 75, 75, 1);
   text-align: center;
 }

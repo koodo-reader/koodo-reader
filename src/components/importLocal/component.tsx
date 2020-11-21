@@ -9,29 +9,89 @@ import Dropzone from "react-dropzone";
 import { ImportLocalProps, ImportLocalState } from "./interface";
 import RecordRecent from "../../utils/recordRecent";
 import axios from "axios";
-import { config } from "../../constants/readerConfig";
+import { config } from "../../constants/driveList";
 import MobiFile from "../../utils/mobiUtil";
 import iconv from "iconv-lite";
 import isElectron from "is-electron";
 import { withRouter } from "react-router-dom";
+import RecentBooks from "../../utils/recordRecent";
 
 declare var window: any;
 var pdfjsLib = window["pdfjs-dist/build/pdf"];
 
 class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
+  constructor(props: ImportLocalProps) {
+    super(props);
+    this.state = {
+      isOpenFile: false,
+    };
+  }
   componentDidMount() {
     if (isElectron()) {
       const { ipcRenderer } = window.require("electron");
       ipcRenderer.sendSync("start-server", "ping");
+      var filePath = ipcRenderer.sendSync("get-file-data");
+      if (filePath === null || filePath === ".") {
+        console.log("There is no file");
+      } else {
+        // Do something with the file.
+        console.log(filePath);
+        fetch(filePath)
+          .then((response) => response.body)
+          .then((body) => {
+            console.log(body); //** print a streamable object
+
+            const reader = body!.getReader();
+            return new ReadableStream({
+              start(controller) {
+                return pump();
+                function pump(): any {
+                  return reader.read().then(({ done, value }) => {
+                    // When no more data needs to be consumed, close the stream
+                    if (done) {
+                      controller.close();
+                      return;
+                    }
+                    // Enqueue the next data chunk into our target stream
+                    controller.enqueue(value);
+                    return pump();
+                  });
+                }
+              },
+            });
+          })
+          .then((stream) => new Response(stream))
+          .then((response) => response.blob())
+          .then((blob) => {
+            console.log(blob);
+            let fileTemp = new File([blob], filePath.split("\\").reverse()[0], {
+              lastModified: new Date().getTime(),
+              type: blob.type,
+            });
+            this.setState({ isOpenFile: true }, () => {
+              this.doIncrementalTest(fileTemp);
+            });
+          })
+          .catch((err) => console.error(err));
+      }
     }
   }
+  handleJump = (book: BookModel) => {
+    RecentBooks.setRecent(book.key);
+    if (book.description === "pdf") {
+      window.open(`./lib/pdf/viewer.html?file=${book.key}`);
+    } else {
+      window.open(`${window.location.href.split("#")[0]}#/epub/${book.key}`);
+    }
+  };
   handleAddBook = (book: BookModel) => {
     return new Promise((resolve, reject) => {
-      let bookArr = this.props.books;
+      let bookArr = [...this.props.books, ...this.props.deletedBooks];
       if (bookArr == null) {
         bookArr = [];
       }
       bookArr.push(book);
+      this.props.handleReadingBook(book);
       RecordRecent.setRecent(book.key);
       localforage
         .setItem("books", bookArr)
@@ -39,7 +99,13 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
           this.props.handleFetchBooks();
           this.props.handleMessage("Add Successfully");
           this.props.handleMessageBox(true);
-          this.props.history.push("/manager/home");
+          setTimeout(() => {
+            console.log(this.state.isOpenFile, "open");
+            this.state.isOpenFile && this.handleJump(book);
+            this.setState({ isOpenFile: false });
+            this.props.history.push("/manager/home");
+          }, 1000);
+
           resolve();
         })
         .catch(() => {
@@ -94,8 +160,8 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
     return new Promise((resolve, reject) => {
       //md5重复不导入
       let isRepeat = false;
-      if (this.props.books) {
-        this.props.books.forEach((item) => {
+      if ([...this.props.books, ...this.props.deletedBooks].length > 0) {
+        [...this.props.books, ...this.props.deletedBooks].forEach((item) => {
           if (item.md5 === md5) {
             isRepeat = true;
             this.props.handleMessage("Duplicate Book");
@@ -175,7 +241,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                 console.log("Error occurs");
                 reject();
               });
-          } else if (extension === "mobi") {
+          } else if (extension === "mobi" || extension === "azw3") {
             if (!isElectron()) {
               this.props.handleMessage("Only Desktop support this format");
               this.props.handleMessageBox(true);
@@ -189,6 +255,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
               let mobiFile = new MobiFile(file_content);
 
               let content = mobiFile.render();
+              console.log(content, "mobi");
               let buf = iconv.encode(content, "GBK");
               let blobTemp: any = new Blob([buf], { type: "text/plain" });
               let fileTemp = new File(
@@ -332,13 +399,27 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
             this.props.handleMessageBox(true);
             return;
           }
-
           for (let i = 0; i < acceptedFiles.length; i++) {
+            let extension = acceptedFiles[i].name.split(".")[
+              acceptedFiles[i].name.split(".").length - 1
+            ];
+            if (
+              acceptedFiles.length > 1 &&
+              (extension === "mobi" ||
+                extension === "txt" ||
+                extension === "azw3")
+            ) {
+              this.props.handleMessage(
+                "Batch import only support epub or pdf files"
+              );
+              this.props.handleMessageBox(true);
+              return;
+            }
             //异步解析文件
             await this.doIncrementalTest(acceptedFiles[i]);
           }
         }}
-        accept={[".epub", ".pdf", ".txt", ".mobi"]}
+        accept={[".epub", ".pdf", ".txt", ".mobi", ".azw3"]}
         multiple={true}
       >
         {({ getRootProps, getInputProps }) => (
