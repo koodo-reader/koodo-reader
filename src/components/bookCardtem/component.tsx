@@ -7,6 +7,7 @@ import AddFavorite from "../../utils/addFavorite";
 import ActionDialog from "../../containers/actionDialog";
 import OtherUtil from "../../utils/otherUtil";
 import { withRouter } from "react-router-dom";
+import RecordLocation from "../../utils/recordLocation";
 
 declare var window: any;
 
@@ -24,18 +25,44 @@ class BookCardItem extends React.Component<BookProps, BookState> {
   }
 
   componentDidMount() {
+    console.log(
+      this.props.currentBook.key,
+      OtherUtil.getReaderConfig("totalBooks")
+    );
     //控制是否自动打开本书
     if (
       OtherUtil.getReaderConfig("isOpenBook") === "yes" &&
       RecentBooks.getAllRecent()[0] === this.props.book.key &&
       !this.props.currentBook.key
     ) {
-      window.open(
-        `${window.location.href.split("#")[0]}#/epub/${this.props.book.key}`
-      );
+      this.props.book.description === "pdf"
+        ? window.open(`./lib/pdf/viewer.html?file=${this.props.book.key}`)
+        : window.open(
+            `${window.location.href.split("#")[0]}#/epub/${this.props.book.key}`
+          );
+    }
+    this.props.handleReadingBook(this.props.book);
+  }
+  componentWillReceiveProps(nextProps: BookProps) {
+    if (nextProps.isDragToLove !== this.props.isDragToLove) {
+      if (
+        nextProps.isDragToLove &&
+        this.props.dragItem === this.props.book.key
+      ) {
+        this.handleLoveBook();
+        this.props.handleDragToLove(false);
+      }
+    }
+    if (nextProps.isDragToDelete !== this.props.isDragToDelete) {
+      if (
+        nextProps.isDragToDelete &&
+        this.props.dragItem === this.props.book.key
+      ) {
+        this.handleDeleteBook();
+        this.props.handleDragToDelete(false);
+      }
     }
   }
-
   handleMoreAction = (event: any) => {
     const e = event || window.event;
     let x = e.clientX;
@@ -47,7 +74,13 @@ class BookCardItem extends React.Component<BookProps, BookState> {
       this.props.handleReadingBook(this.props.book);
     });
   };
+  handleDeleteBook = () => {
+    this.props.handleReadingBook(this.props.book);
+    this.props.handleDeleteDialog(true);
+    this.props.handleActionDialog(false);
+  };
   handleLoveBook = () => {
+    console.log("love", this.props.book.key);
     AddFavorite.setFavorite(this.props.book.key);
     this.setState({ isFavorite: true });
     this.props.handleMessage("Add Successfully");
@@ -75,6 +108,9 @@ class BookCardItem extends React.Component<BookProps, BookState> {
     }
   };
   render() {
+    let percentage = RecordLocation.getCfi(this.props.book.key)
+      ? RecordLocation.getCfi(this.props.book.key).percentage
+      : 0;
     const actionProps = { left: this.state.left, top: this.state.top };
     return (
       <>
@@ -95,12 +131,18 @@ class BookCardItem extends React.Component<BookProps, BookState> {
               onClick={() => {
                 this.handleJump();
               }}
+              onDragStart={() => {
+                this.props.handleDragItem(this.props.book.key);
+              }}
             />
           ) : (
             <div
               className="book-item-cover"
               onClick={() => {
                 this.handleJump();
+              }}
+              onDragStart={() => {
+                this.props.handleDragItem(this.props.book.key);
               }}
             >
               <img
@@ -128,6 +170,18 @@ class BookCardItem extends React.Component<BookProps, BookState> {
 
           {this.state.isOpenConfig ? (
             <>
+              <div className="reading-progress-icon">
+                <div style={{ position: "relative", left: "4px" }}>
+                  {percentage
+                    ? Math.floor(percentage * 100) < 10
+                      ? "0" + Math.floor(percentage * 100)
+                      : Math.floor(percentage * 100) === 100
+                      ? "完"
+                      : Math.floor(percentage * 100)
+                    : "00"}
+                  <span className="reading-percentage-char">%</span>
+                </div>
+              </div>
               <span
                 className="icon-more book-more-action"
                 onClick={(event) => {

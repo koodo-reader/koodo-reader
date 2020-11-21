@@ -10,10 +10,8 @@ import BookList from "./component";
 const mappropsToProps = (state: stateType) => {
   return {
     books: state.manager.books,
+    deletedBooks: state.manager.deletedBooks,
     mode: state.sidebar.mode,
-    shelfIndex: state.sidebar.shelfIndex,
-    searchResults: state.manager.searchResults,
-    isSearch: state.manager.isSearch,
     isSort: state.manager.isSort,
     isList: state.manager.isList,
     sortCode: state.manager.sortCode,

@@ -6,6 +6,7 @@ import {
   handleMessage,
   handleFetchBooks,
 } from "../../store/actions/manager";
+import { handleReadingBook } from "../../store/actions/book";
 import { stateType } from "../../store";
 import { withNamespaces } from "react-i18next";
 import ImportLocal from "./component";
@@ -13,12 +14,14 @@ import ImportLocal from "./component";
 const mapStateToProps = (state: stateType) => {
   return {
     books: state.manager.books,
+    deletedBooks: state.manager.deletedBooks,
   };
 };
 const actionCreator = {
   handleMessageBox,
   handleMessage,
   handleFetchBooks,
+  handleReadingBook,
 };
 export default connect(
   mapStateToProps,

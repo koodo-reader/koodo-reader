@@ -2,7 +2,7 @@
 import React from "react";
 import "./updateInfo.css";
 import { UpdateInfoProps, UpdateInfoState } from "./interface";
-import { updateLog } from "../../constants/readerConfig";
+import { updateLog } from "../../constants/updateLog";
 import { Trans } from "react-i18next";
 import axios from "axios";
 const isElectron = require("is-electron");

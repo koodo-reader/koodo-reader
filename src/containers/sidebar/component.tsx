@@ -1,6 +1,6 @@
 import React from "react";
 import "./sidebar.css";
-import { sideMenu } from "../../constants/readerConfig";
+import { sideMenu } from "../../constants/sideMenu";
 import { Trans } from "react-i18next";
 import { SidebarProps, SidebarState } from "./interface";
 import { withRouter } from "react-router-dom";
@@ -9,8 +9,17 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
   constructor(props: SidebarProps) {
     super(props);
     this.state = {
-      index: ["home", "favorite", "bookmark", "note", "digest"].indexOf(
-        this.props.mode
+      index: [
+        "home",
+        "favorite",
+        "bookmark",
+        "note",
+        "digest",
+        "trash",
+      ].indexOf(
+        document.URL.split("/").reverse()[0] === "empty"
+          ? "home"
+          : document.URL.split("/").reverse()[0]
       ),
       isCollapse: true,
       shelfIndex: -1,
@@ -38,6 +47,11 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
             id={`sidebar-${item.icon}`}
             onClick={() => {
               this.handleSidebar(item.mode, index);
+            }}
+            onDrop={() => {
+              index === 1 && this.props.handleDragToLove(true);
+              index === 5 && this.props.handleDragToDelete(true);
+              console.log("drag");
             }}
           >
             {this.state.index === index && this.state.shelfIndex === -1 ? (

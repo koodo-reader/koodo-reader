@@ -27,6 +27,13 @@ class BookList extends React.Component<BookListProps, BookListState> {
       favoriteBooks: Object.keys(AddFavorite.getAllFavorite()).length,
     };
   }
+  componentWillMount() {
+    if (this.props.mode === "trash") {
+      this.props.handleFetchBooks(true);
+    } else {
+      this.props.handleFetchBooks(false);
+    }
+  }
   componentDidMount() {
     if (!this.props.books || !this.props.books[0]) {
       return <Redirect to="manager/empty" />;
@@ -70,25 +77,9 @@ class BookList extends React.Component<BookListProps, BookListState> {
       });
     }
   };
-  handleFavorite = (items: any[], arr: string[]) => {
+
+  handleKeyFilter = (items: any[], arr: string[]) => {
     let itemArr: any[] = [];
-    arr.forEach((item) => {
-      items.forEach((subItem: any) => {
-        if (subItem.key === item) {
-          itemArr.push(subItem);
-        }
-      });
-    });
-    return itemArr;
-  };
-  //根据localstorage列表的数据，得到最近阅读的图书
-  handleRecent = (items: any[], arr: string[]) => {
-    let itemArr: any[] = [];
-    //兼容之前的版本
-    if (!arr[0] || arr.length !== items.length) {
-      RecordRecent.setAllRecent(items);
-      return items;
-    }
     arr.forEach((item) => {
       items.forEach((subItem: any) => {
         if (subItem.key === item) {
@@ -121,34 +112,36 @@ class BookList extends React.Component<BookListProps, BookListState> {
     this.props.handleFetchList();
   };
   //根据搜索图书index获取到搜索出的图书
-  handleFilter = (items: any, arr: number[]) => {
+  handleIndexFilter = (items: any, arr: number[]) => {
     let itemArr: any[] = [];
     arr.forEach((item) => {
       items[item] && itemArr.push(items[item]);
     });
+    console.log(itemArr, "index");
+
     return itemArr;
   };
   renderBookList = () => {
     //根据不同的场景获取不同的图书数据
     let books = this.props.isSearch
-      ? this.handleFilter(this.props.books, this.props.searchResults)
+      ? this.handleIndexFilter(this.props.books, this.props.searchResults)
       : this.props.shelfIndex > 0
       ? this.handleShelf(this.props.books, this.props.shelfIndex)
       : this.props.mode === "favorite" && !this.props.isSort
-      ? this.handleFavorite(this.props.books, AddFavorite.getAllFavorite())
+      ? this.handleKeyFilter(this.props.books, AddFavorite.getAllFavorite())
       : this.props.mode === "favorite" && this.props.isSort
-      ? this.handleFilter(
-          this.handleFavorite(this.props.books, AddFavorite.getAllFavorite()),
+      ? this.handleIndexFilter(
+          this.handleKeyFilter(this.props.books, AddFavorite.getAllFavorite()),
           //返回排序后的图书index
           SortUtil.sortBooks(this.props.books, this.props.sortCode) || []
         )
       : this.props.isSort
-      ? this.handleFilter(
+      ? this.handleIndexFilter(
           this.props.books,
           //返回排序后的图书index
           SortUtil.sortBooks(this.props.books, this.props.sortCode) || []
         )
-      : this.handleRecent(this.props.books, RecordRecent.getAllRecent());
+      : this.handleKeyFilter(this.props.books, RecordRecent.getAllRecent());
     if (this.props.mode === "shelf" && books.length === 0) {
       return (
         <div
@@ -273,27 +266,38 @@ class BookList extends React.Component<BookListProps, BookListState> {
             <span className="icon-list"></span> <Trans>List Mode</Trans>
           </div>
         </div>
-        <div className="booklist-shelf-container">
-          <p className="general-setting-title" style={{ display: "inline" }}>
-            <Trans>My Shelves</Trans>
-          </p>
-          <select
-            className="booklist-shelf-list"
-            onChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
-              this.handleShelfItem(event);
+        {this.props.mode === "trash" ? (
+          <div
+            className="booklist-delete-container"
+            onClick={() => {
+              this.props.handleDeleteDialog(true);
             }}
           >
-            {this.renderShelfList()}
-          </select>
-          {this.state.shelfIndex > 0 ? (
-            <span
-              className="icon-trash delete-shelf-icon"
-              onClick={() => {
-                this.handleDeletePopup(true);
+            <Trans>Delete All Books</Trans>
+          </div>
+        ) : (
+          <div className="booklist-shelf-container">
+            <p className="general-setting-title" style={{ display: "inline" }}>
+              <Trans>My Shelves</Trans>
+            </p>
+            <select
+              className="booklist-shelf-list"
+              onChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
+                this.handleShelfItem(event);
               }}
-            ></span>
-          ) : null}
-        </div>
+            >
+              {this.renderShelfList()}
+            </select>
+            {this.state.shelfIndex > 0 ? (
+              <span
+                className="icon-trash delete-shelf-icon"
+                onClick={() => {
+                  this.handleDeletePopup(true);
+                }}
+              ></span>
+            ) : null}
+          </div>
+        )}
         <div className="book-list-container-parent">
           <div className="book-list-container">
             <ul className="book-list-item-box">{this.renderBookList()}</ul>

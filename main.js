@@ -81,6 +81,15 @@ app.on("ready", () => {
     startExpress();
     event.returnValue = "pong";
   });
+  ipcMain.on("get-file-data", function (event) {
+    var data = null;
+    if (process.platform == "win32" && process.argv.length >= 2) {
+      var openFilePath = process.argv[1];
+      console.log(process.argv);
+      data = openFilePath;
+    }
+    event.returnValue = data;
+  });
 });
 app.on("window-all-closed", () => {
   app.quit();
@@ -105,7 +114,33 @@ function startExpress() {
   } else {
     console.log("文件夹已存在");
   }
+  var escapeChars = {
+    "¢": "cent",
+    "£": "pound",
+    "¥": "yen",
+    "€": "euro",
+    "©": "copy",
+    "®": "reg",
+    "<": "lt",
+    ">": "gt",
+    '"': "quot",
+    "&": "amp",
+    "'": "#39",
+  };
 
+  var regexString = "[";
+  for (var key in escapeChars) {
+    regexString += key;
+  }
+  regexString += "]";
+
+  var regex = new RegExp(regexString, "g");
+
+  function escapeHTML(str) {
+    return str.replace(regex, function (m) {
+      return "&" + escapeChars[m] + ";";
+    });
+  }
   const server = express();
   server.use(
     fileUpload({
@@ -138,7 +173,7 @@ function startExpress() {
       var metadata = {
         id: new Date().getTime(),
         title: bookTitle,
-        author: "unknown",
+        author: "Unknown Authur",
         fileAs: "Anonymous",
         genre: "Non-Fiction",
         tags: "Sample,Example,Test",
@@ -161,9 +196,13 @@ function startExpress() {
       const lines = iconv.decode(buf, "GBK").split("\n");
       const content = [];
       for (let i = 0; i < lines.length; i++) {
-        const line = lines[i];
+        const line = escapeHTML(lines[i]);
         if (
           line.length < 30 &&
+          line.indexOf("。") === -1 &&
+          line.indexOf(".") === -1 &&
+          line.indexOf("第一天") === -1 &&
+          line.indexOf("第二天") === -1 &&
           (line.startsWith("CHAPTER ") ||
             line.startsWith("Chapter ") ||
             line.startsWith("第") ||
@@ -173,7 +212,8 @@ function startExpress() {
             line.startsWith("后记") ||
             line.startsWith("楔子") ||
             line.startsWith("后记") ||
-            line.startsWith("后序"))
+            line.startsWith("后序") ||
+            /^\d+$/.test(line))
         ) {
           content.push({
             title: line,
@@ -192,10 +232,11 @@ function startExpress() {
         }
       }
       for (let i = 0; i < content.length; i++) {
-        epub.addSection(
-          content[i].title,
-          `<h1>${content[i].title}</h1>` + content[i].data
-        );
+        content[i].data.trim() &&
+          epub.addSection(
+            content[i].title,
+            `<h1>${content[i].title}</h1>` + content[i].data
+          );
       }
 
       // Generate the result.

@@ -1,4 +1,5 @@
 import BookList from "../containers/bookList";
+import DeletedBookList from "../containers/deletedBookList";
 import BookmarkPage from "../containers/bookmarkPage";
 import NoteList from "../containers/noteList";
 import DigestList from "../containers/digestList";
@@ -12,5 +13,6 @@ export const routes = [
   { path: "/manager/digest", component: DigestList },
   { path: "/manager/home", component: BookList },
   { path: "/manager/favorite", component: BookList },
+  { path: "/manager/trash", component: DeletedBookList },
   { path: "/manager/bookmark", component: BookmarkPage },
 ];

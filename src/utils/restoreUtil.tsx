@@ -40,7 +40,9 @@ class RestoreUtil {
       "readingTime",
       "recentBooks",
       "favoriteBooks",
+      "favoriteBooks",
       "shelfList",
+      "pdfjs.history",
       "recordLocation",
     ];
     let zip = new JSZip();
