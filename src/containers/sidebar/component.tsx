@@ -51,7 +51,6 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
             onDrop={() => {
               index === 1 && this.props.handleDragToLove(true);
               index === 5 && this.props.handleDragToDelete(true);
-              console.log("drag");
             }}
           >
             {this.state.index === index && this.state.shelfIndex === -1 ? (

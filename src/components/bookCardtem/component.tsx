@@ -25,10 +25,6 @@ class BookCardItem extends React.Component<BookProps, BookState> {
   }
 
   componentDidMount() {
-    console.log(
-      this.props.currentBook.key,
-      OtherUtil.getReaderConfig("totalBooks")
-    );
     //控制是否自动打开本书
     if (
       OtherUtil.getReaderConfig("isOpenBook") === "yes" &&
@@ -80,7 +76,6 @@ class BookCardItem extends React.Component<BookProps, BookState> {
     this.props.handleActionDialog(false);
   };
   handleLoveBook = () => {
-    console.log("love", this.props.book.key);
     AddFavorite.setFavorite(this.props.book.key);
     this.setState({ isFavorite: true });
     this.props.handleMessage("Add Successfully");

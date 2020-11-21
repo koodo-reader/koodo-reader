@@ -35,12 +35,9 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
         console.log("There is no file");
       } else {
         // Do something with the file.
-        console.log(filePath);
         fetch(filePath)
           .then((response) => response.body)
           .then((body) => {
-            console.log(body); //** print a streamable object
-
             const reader = body!.getReader();
             return new ReadableStream({
               start(controller) {
@@ -63,7 +60,6 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
           .then((stream) => new Response(stream))
           .then((response) => response.blob())
           .then((blob) => {
-            console.log(blob);
             let fileTemp = new File([blob], filePath.split("\\").reverse()[0], {
               lastModified: new Date().getTime(),
               type: blob.type,
@@ -100,7 +96,6 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
           this.props.handleMessage("Add Successfully");
           this.props.handleMessageBox(true);
           setTimeout(() => {
-            console.log(this.state.isOpenFile, "open");
             this.state.isOpenFile && this.handleJump(book);
             this.setState({ isOpenFile: false });
             this.props.history.push("/manager/home");
@@ -255,7 +250,6 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
               let mobiFile = new MobiFile(file_content);
 
               let content = mobiFile.render();
-              console.log(content, "mobi");
               let buf = iconv.encode(content, "GBK");
               let blobTemp: any = new Blob([buf], { type: "text/plain" });
               let fileTemp = new File(

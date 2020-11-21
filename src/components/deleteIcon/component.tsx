@@ -28,7 +28,6 @@ class DeleteIcon extends React.Component<DeleteIconProps, DeleteIconStates> {
         : this.props.handleFetchBookmarks;
     deleteItems.forEach((item: any, index: number) => {
       if (this.props.mode === "tags") {
-        console.log(this.props.tagName, this.props.mode);
         item === this.props.tagName && TagUtil.clear(item);
         return;
       }

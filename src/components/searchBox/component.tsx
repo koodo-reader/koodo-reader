@@ -15,11 +15,9 @@ class SearchBox extends React.Component<SearchBoxProps> {
     let value = (this.refs.searchBox as any).value;
     if (this.props.isNavSearch) {
       value && this.search(value);
-      return;
     }
     if (this.props.mode === "nav") {
       this.props.handleSearchState(true);
-      return;
     }
     let results =
       this.props.tabMode === "note"
@@ -29,9 +27,10 @@ class SearchBox extends React.Component<SearchBoxProps> {
         : this.props.tabMode === "digest"
         ? OtherUtil.MouseNoteSearch(this.props.digests)
         : OtherUtil.MouseSearch(this.props.books);
-    console.log(results, "results");
-    this.props.handleSearchResults(results);
-    this.props.handleSearch(true);
+    if (results) {
+      this.props.handleSearchResults(results);
+      this.props.handleSearch(true);
+    }
   };
   handleKey = (event: any) => {
     if (event.keyCode !== 13) {
@@ -40,7 +39,6 @@ class SearchBox extends React.Component<SearchBoxProps> {
     let value = (this.refs.searchBox as any).value;
     if (this.props.isNavSearch) {
       value && this.search(value);
-      return;
     }
     let results =
       this.props.tabMode === "note"

@@ -5,10 +5,18 @@ import {
   handleDeleteDialog,
   handleAddDialog,
   handleReadingBook,
+  handleDragItem,
 } from "../../store/actions/book";
 import { withNamespaces } from "react-i18next";
-import { handleMessageBox, handleMessage } from "../../store/actions/manager";
-
+import {
+  handleMessageBox,
+  handleMessage,
+  handleFetchBooks,
+} from "../../store/actions/manager";
+import {
+  handleDragToLove,
+  handleDragToDelete,
+} from "../../store/actions/sidebar";
 import { stateType } from "../../store";
 import BookItem from "./component";
 const mapStateToProps = (state: stateType) => {
@@ -16,6 +24,10 @@ const mapStateToProps = (state: stateType) => {
     isReading: state.book.isReading,
     percentage: state.progressPanel.percentage,
     currentBook: state.book.currentBook,
+    isDragToLove: state.sidebar.isDragToLove,
+    isDragToDelete: state.sidebar.isDragToDelete,
+    dragItem: state.book.dragItem,
+    mode: state.sidebar.mode,
   };
 };
 const actionCreator = {
@@ -25,6 +37,10 @@ const actionCreator = {
   handleAddDialog,
   handleMessageBox,
   handleMessage,
+  handleDragItem,
+  handleDragToLove,
+  handleDragToDelete,
+  handleFetchBooks,
 };
 export default connect(
   mapStateToProps,
