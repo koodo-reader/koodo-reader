@@ -8,7 +8,6 @@ import i18n from "../i18n";
 import OtherUtil from "../utils/otherUtil";
 
 const Router = () => {
-  console.log(navigator.language, "lang");
   useEffect(() => {
     const lng = OtherUtil.getReaderConfig("lang");
     if (lng) {

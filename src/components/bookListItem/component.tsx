@@ -8,6 +8,7 @@ import AddFavorite from "../../utils/addFavorite";
 import { withRouter } from "react-router-dom";
 import RecentBooks from "../../utils/recordRecent";
 import OtherUtil from "../../utils/otherUtil";
+import AddTrash from "../../utils/addTrash";
 
 class BookListItem extends React.Component<BookItemProps, BookItemState> {
   epub: any;
@@ -31,8 +32,27 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
         : window.open(
             `${window.location.href.split("#")[0]}#/epub/${this.props.book.key}`
           );
-    } else {
-      this.props.handleReadingBook(this.props.book);
+    }
+    this.props.handleReadingBook(this.props.book);
+  }
+  componentWillReceiveProps(nextProps: BookItemProps) {
+    if (nextProps.isDragToLove !== this.props.isDragToLove) {
+      if (
+        nextProps.isDragToLove &&
+        this.props.dragItem === this.props.book.key
+      ) {
+        this.handleLoveBook();
+        this.props.handleDragToLove(false);
+      }
+    }
+    if (nextProps.isDragToDelete !== this.props.isDragToDelete) {
+      if (
+        nextProps.isDragToDelete &&
+        this.props.dragItem === this.props.book.key
+      ) {
+        this.handleDeleteBook();
+        this.props.handleDragToDelete(false);
+      }
     }
   }
   handleDeleteBook = () => {
@@ -59,6 +79,12 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
     this.props.handleMessage("Cancel Successfully");
     this.props.handleMessageBox(true);
   };
+  handleResoreBook = () => {
+    AddTrash.clear(this.props.currentBook.key);
+    this.props.handleMessage("Restore Successfully");
+    this.props.handleMessageBox(true);
+    this.props.handleFetchBooks();
+  };
   handleJump = () => {
     RecentBooks.setRecent(this.props.book.key);
 
@@ -74,6 +100,7 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
     let percentage = RecordLocation.getCfi(this.props.book.key)
       ? RecordLocation.getCfi(this.props.book.key).percentage
       : 0;
+
     return (
       <div className="book-list-item-container">
         {this.props.book.cover && this.props.book.cover !== "noCover" ? (
@@ -84,12 +111,18 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
             onClick={() => {
               this.handleJump();
             }}
+            onDragStart={() => {
+              this.props.handleDragItem(this.props.book.key);
+            }}
           />
         ) : (
           <div
             className="book-item-list-cover book-item-list-cover-img"
             onClick={() => {
               this.handleJump();
+            }}
+            onDragStart={() => {
+              this.props.handleDragItem(this.props.book.key);
             }}
           >
             <img
@@ -120,44 +153,55 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
         <p className="book-item-list-percentage">
           {percentage ? Math.round(percentage * 100) : 0}%
         </p>
-        <div className="book-item-list-config">
-          {this.state.isFavorite ? (
+        {this.props.mode === "trash" ? (
+          <div className="book-item-list-config">
             <span
-              className="icon-love list-icon"
+              className="icon-clockwise list-icon"
               onClick={() => {
-                this.handleCancelLoveBook();
-              }}
-              style={{ color: "#f87356" }}
-            ></span>
-          ) : (
-            <span
-              className="icon-love list-icon"
-              onClick={() => {
-                this.handleLoveBook();
+                this.handleResoreBook();
               }}
             ></span>
-          )}
+          </div>
+        ) : (
+          <div className="book-item-list-config">
+            {this.state.isFavorite ? (
+              <span
+                className="icon-love list-icon"
+                onClick={() => {
+                  this.handleCancelLoveBook();
+                }}
+                style={{ color: "#f87356" }}
+              ></span>
+            ) : (
+              <span
+                className="icon-love list-icon"
+                onClick={() => {
+                  this.handleLoveBook();
+                }}
+              ></span>
+            )}
 
-          <span
-            className="icon-shelf list-icon"
-            onClick={() => {
-              this.handleAddShelf();
-            }}
-            color="rgba(75,75,75,1)"
-          ></span>
-          <span
-            className="icon-trash list-icon"
-            onClick={() => {
-              this.handleDeleteBook();
-            }}
-          ></span>
-          <span
-            className="icon-edit list-icon"
-            onClick={() => {
-              this.handleEditBook();
-            }}
-          ></span>
-        </div>
+            <span
+              className="icon-shelf list-icon"
+              onClick={() => {
+                this.handleAddShelf();
+              }}
+              color="rgba(75,75,75,1)"
+            ></span>
+            <span
+              className="icon-trash list-icon"
+              onClick={() => {
+                this.handleDeleteBook();
+              }}
+            ></span>
+            <span
+              className="icon-edit list-icon"
+              onClick={() => {
+                this.handleEditBook();
+              }}
+            ></span>
+          </div>
+        )}
       </div>
     );
   }
