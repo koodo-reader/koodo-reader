@@ -32,6 +32,7 @@ export default store;
 export type stateType = {
   manager: {
     books: BookModel[];
+    deletedBooks: BookModel[];
     searchResults: number[];
     isSearch: boolean;
     isSort: boolean;
@@ -49,6 +50,7 @@ export type stateType = {
     isOpenAddDialog: boolean;
     isOpenActionDialog: boolean;
     isReading: boolean;
+    dragItem: string;
     currentBook: BookModel;
     currentEpub: any;
   };
@@ -73,6 +75,8 @@ export type stateType = {
   sidebar: {
     mode: string;
     shelfIndex: number;
+    isDragToLove: boolean;
+    isDragToDelete: boolean;
   };
   viewArea: {
     selection: string;

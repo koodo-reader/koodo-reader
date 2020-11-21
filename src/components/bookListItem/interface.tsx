@@ -4,6 +4,7 @@ import { RouteComponentProps } from "react-router";
 export interface BookItemProps extends RouteComponentProps<any> {
   book: BookModel;
   percentage: number;
+  currentBook: BookModel;
   handleReadingBook: (book: BookModel) => void;
   handleEditDialog: (isShow: boolean) => void;
   handleDeleteDialog: (isShow: boolean) => void;

@@ -65,7 +65,7 @@ class SliderList extends React.Component<SliderListProps, SliderListState> {
               : { position: "relative", right: 7 }
           }
         >
-          {this.props.mode === "fontSize" ? "A" : `0.5`}
+          {this.props.mode === "fontSize" ? "A" : "1"}
         </span>
         <div className="font-size-selector">
           <input
@@ -90,7 +90,7 @@ class SliderList extends React.Component<SliderListProps, SliderListState> {
             className="ultra-large-size"
             style={{ fontSize: "16px", left: 5 }}
           >
-            1.5
+            2
           </span>
         )}
       </div>

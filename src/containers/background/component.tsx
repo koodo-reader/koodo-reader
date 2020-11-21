@@ -24,14 +24,14 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
   }
   componentWillReceiveProps(nextProps: BackgroundProps) {
     if (
-      nextProps.currentEpub.rendition&&nextProps.currentEpub.rendition.location &&
-      this.isFirst
+      nextProps.currentEpub.rendition &&
+      nextProps.currentEpub.rendition.location
     ) {
       const currentLocation = this.props.currentEpub.rendition.currentLocation();
       if (!currentLocation.start) {
         return;
       }
-      this.props.handleFetchLocations(this.props.currentEpub);
+      this.isFirst && this.props.handleFetchLocations(this.props.currentEpub);
       this.isFirst = false;
       this.setState({
         prevPage: currentLocation.start.displayed.page,

@@ -19,7 +19,6 @@
     "express-fileupload": "^1.2.0",
     "font-list": "^1.2.11",
     "i18next": "^19.4.4",
-    "i18next-browser-languagedetector": "^4.2.0",
     "iconv-lite": "^0.6.2",
     "is-electron": "^2.2.0",
     "md5": "^2.3.0",

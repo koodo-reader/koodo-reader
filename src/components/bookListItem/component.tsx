@@ -7,6 +7,7 @@ import { Trans } from "react-i18next";
 import AddFavorite from "../../utils/addFavorite";
 import { withRouter } from "react-router-dom";
 import RecentBooks from "../../utils/recordRecent";
+import OtherUtil from "../../utils/otherUtil";
 
 class BookListItem extends React.Component<BookItemProps, BookItemState> {
   epub: any;
@@ -17,6 +18,22 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
       isFavorite:
         AddFavorite.getAllFavorite().indexOf(this.props.book.key) > -1,
     };
+  }
+  componentDidMount() {
+    //控制是否自动打开本书
+    if (
+      OtherUtil.getReaderConfig("isOpenBook") === "yes" &&
+      RecentBooks.getAllRecent()[0] === this.props.book.key &&
+      !this.props.currentBook.key
+    ) {
+      this.props.book.description === "pdf"
+        ? window.open(`./lib/pdf/viewer.html?file=${this.props.book.key}`)
+        : window.open(
+            `${window.location.href.split("#")[0]}#/epub/${this.props.book.key}`
+          );
+    } else {
+      this.props.handleReadingBook(this.props.book);
+    }
   }
   handleDeleteBook = () => {
     this.props.handleDeleteDialog(true);
@@ -96,11 +113,9 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
         </p>
 
         <p className="book-item-list-author">
-          {this.props.book.author ? (
-            this.props.book.author
-          ) : (
-            <Trans>Unknown Authur</Trans>
-          )}
+          <Trans>
+            {this.props.book.author ? this.props.book.author : "Unknown Authur"}
+          </Trans>
         </p>
         <p className="book-item-list-percentage">
           {percentage ? Math.round(percentage * 100) : 0}%

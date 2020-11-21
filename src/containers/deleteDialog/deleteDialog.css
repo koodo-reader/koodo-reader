@@ -8,6 +8,7 @@
   left: calc(50% - 155px);
   top: calc(50% - 95px);
   z-index: 10;
+  padding: 5px;
   animation: popup 0.1s ease-in-out 0s 1;
 }
 .delete-dialog-title {
@@ -41,7 +42,6 @@
   overflow: hidden;
 }
 .delete-dialog-other-option {
-  width: 100%;
   font-size: 14px;
   text-align: center;
   line-height: 14px;
