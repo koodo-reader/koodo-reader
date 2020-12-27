@@ -4,9 +4,10 @@ branches:
   only:
     - master
 
-image: Visual Studio 2017
-platform:
-  - x64
+image:
+  - macos
+  - Visual Studio 2019
+  - Ubuntu
 
 cache:
   - node_modules
