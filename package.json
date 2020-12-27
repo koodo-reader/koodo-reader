@@ -88,32 +88,11 @@
     },
     "win": {
       "target": [
-        {
-          "target": "nsis",
-          "arch": [
-            "x64",
-            "ia32"
-          ]
-        },
-        {
-          "target": "portable",
-          "arch": [
-            "x64",
-            "ia32"
-          ]
-        }
+        "nsis"
       ],
       "icon": "assets/icons/icon.ico",
       "artifactName": "${productName}-Web-Setup-${version}.${ext}",
       "publisherName": "App by Troye"
-    },
-    "nsis": {
-      "oneClick": false,
-      "allowToChangeInstallationDirectory": true,
-      "differentialPackage": false
-    },
-    "portable": {
-      "artifactName": "${productName}-${version}-${arch}-Portable.${ext}"
     },
     "linux": {
       "icon": "assets/icons",
