@@ -9,29 +9,26 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
   constructor(props: SidebarProps) {
     super(props);
     this.state = {
-      index: [
-        "home",
-        "favorite",
-        "bookmark",
-        "note",
-        "digest",
-        "trash",
-      ].indexOf(
-        document.URL.split("/").reverse()[0] === "empty"
-          ? "home"
-          : document.URL.split("/").reverse()[0]
-      ),
-      isCollapse: true,
-      shelfIndex: -1,
+      index: 0,
+      hoverIndex: -1,
     };
+  }
+  componentDidMount() {
+    this.props.handleMode(
+      document.URL.split("/").reverse()[0] === "empty"
+        ? "home"
+        : document.URL.split("/").reverse()[0]
+    );
+    console.log(this.props.mode, "mode");
   }
   handleSidebar = (mode: string, index: number) => {
     this.setState({ index: index });
-    this.setState({ shelfIndex: -1 });
-    this.setState({ isCollapse: true });
     this.props.history.push(`/manager/${mode}`);
     this.props.handleMode(mode);
     this.props.handleSearch(false);
+  };
+  handleHover = (index: number) => {
+    this.setState({ hoverIndex: index });
   };
   render() {
     const renderSideMenu = () => {
@@ -40,7 +37,7 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
           <li
             key={item.name}
             className={
-              this.state.index === index && this.state.shelfIndex === -1
+              this.state.index === index
                 ? "active side-menu-item"
                 : "side-menu-item"
             }
@@ -52,20 +49,29 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
               index === 1 && this.props.handleDragToLove(true);
               index === 5 && this.props.handleDragToDelete(true);
             }}
+            onMouseEnter={() => {
+              this.handleHover(index);
+            }}
+            onMouseLeave={() => {
+              this.handleHover(-1);
+            }}
           >
-            {this.state.index === index && this.state.shelfIndex === -1 ? (
+            {this.state.index === index ? (
               <div className="side-menu-selector-container"></div>
+            ) : null}
+            {this.state.hoverIndex === index ? (
+              <div className="side-menu-hover-container"></div>
             ) : null}
             <div
               className={
-                this.state.index === index && this.state.shelfIndex === -1
+                this.state.index === index
                   ? "side-menu-selector active-selector"
                   : "side-menu-selector "
               }
             >
               <span
                 className={
-                  this.state.index === index && this.state.shelfIndex === -1
+                  this.state.index === index
                     ? `icon-${item.icon} side-menu-icon  active-icon`
                     : `icon-${item.icon} side-menu-icon`
                 }

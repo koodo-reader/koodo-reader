@@ -66,24 +66,24 @@ class DeleteDialog extends React.Component<DeleteDialogProps> {
           .setItem("books", DeleteUtil.deleteBook(this.props.books, key))
           .then(() => {
             localforage.removeItem(key).then(() => {
+              //从喜爱的图书中删除
+              AddFavorite.clear(key);
+              //从回收的图书中删除
+              AddTrash.clear(key);
+              //从书架删除
+              ShelfUtil.deletefromAllShelf(key);
+              //从阅读记录删除
+              RecordRecent.clear(key);
+              //删除阅读历史
+              RecordLocation.clear(key);
+              //删除书签，笔记，书摘，高亮
+              this.handleDeleteOther(key);
               resolve();
             });
           })
           .catch(() => {
             reject();
           });
-      //从喜爱的图书中删除
-      AddFavorite.clear(key);
-      //从回收的图书中删除
-      AddTrash.clear(key);
-      //从书架删除
-      ShelfUtil.deletefromAllShelf(key);
-      //从阅读记录删除
-      RecordRecent.clear(key);
-      //删除阅读历史
-      RecordLocation.clear(key);
-      //删除书签，笔记，书摘，高亮
-      this.handleDeleteOther(key);
     });
   };
   render() {

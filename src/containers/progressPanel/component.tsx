@@ -23,7 +23,8 @@ class ProgressPanel extends React.Component<
   componentWillReceiveProps(nextProps: ProgressPanelProps) {
     if (
       nextProps.currentEpub.rendition &&
-      nextProps.currentEpub.rendition.location
+      nextProps.currentEpub.rendition.location &&
+      this.props.currentEpub.rendition
     ) {
       const currentLocation = this.props.currentEpub.rendition.currentLocation();
       if (!currentLocation.start) {
@@ -112,6 +113,16 @@ class ProgressPanel extends React.Component<
     if (!this.props.locations) {
       return (
         <div className="progress-panel">
+          <div className="spinner" style={{ top: "40%" }}>
+            <div className="sk-chase">
+              <div className="sk-chase-dot"></div>
+              <div className="sk-chase-dot"></div>
+              <div className="sk-chase-dot"></div>
+              <div className="sk-chase-dot"></div>
+              <div className="sk-chase-dot"></div>
+              <div className="sk-chase-dot"></div>
+            </div>
+          </div>
           <p className="progress-text">
             <Trans>Loading</Trans>
           </p>

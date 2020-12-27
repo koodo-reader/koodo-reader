@@ -1,8 +1,9 @@
-const { app, BrowserWindow, ipcMain, screen } = require("electron");
+const { app, BrowserWindow, ipcMain, screen, dialog } = require("electron");
 const isDev = require("electron-is-dev");
 const path = require("path");
 const fontList = require("font-list");
-
+const chardet = require("chardet");
+const detect = require("detect-port");
 let mainWin;
 let splash;
 
@@ -53,20 +54,19 @@ app.on("ready", () => {
   mainWin.on("close", () => {
     mainWin = null;
   });
-  mainWin.webContents.on(
-    "new-window",
-    (event, url, frameName, disposition, options, additionalFeatures) => {
-      event.preventDefault();
-      Object.assign(options, {
-        parent: mainWin,
-        width: width,
-        height: height,
-        frame: url.indexOf("epub") > -1 ? false : true,
-      });
-      event.newGuest = new BrowserWindow(options);
-      event.newGuest.maximize();
-    }
-  );
+  // mainWin.webContents.on(
+  //   "new-window",
+  //   (event, url, frameName, disposition, options, additionalFeatures) => {
+  //     event.preventDefault();
+  //     Object.assign(options, {
+  //       parent: mainWin,
+  //       width: width,
+  //       height: height,
+  //     });
+  //     event.newGuest = new BrowserWindow(options);
+  //     event.newGuest.maximize();
+  //   }
+  // );
   ipcMain.on("fonts-ready", (event, arg) => {
     fontList
       .getFonts()
@@ -85,7 +85,6 @@ app.on("ready", () => {
     var data = null;
     if (process.platform == "win32" && process.argv.length >= 2) {
       var openFilePath = process.argv[1];
-      console.log(process.argv);
       data = openFilePath;
     }
     event.returnValue = data;
@@ -193,7 +192,7 @@ function startExpress() {
         encoding: "binary",
       });
       const buf = new Buffer(data, "binary");
-      const lines = iconv.decode(buf, "GBK").split("\n");
+      const lines = iconv.decode(buf, chardet.detect(buf)).split("\n");
       const content = [];
       for (let i = 0; i < lines.length; i++) {
         const line = escapeHTML(lines[i]);
@@ -201,6 +200,9 @@ function startExpress() {
           line.length < 30 &&
           line.indexOf("。") === -1 &&
           line.indexOf(".") === -1 &&
+          line.indexOf("！") === -1 &&
+          line.indexOf("：") === -1 &&
+          line.indexOf("，") === -1 &&
           line.indexOf("第一天") === -1 &&
           line.indexOf("第二天") === -1 &&
           (line.startsWith("CHAPTER ") ||
@@ -213,6 +215,9 @@ function startExpress() {
             line.startsWith("楔子") ||
             line.startsWith("后记") ||
             line.startsWith("后序") ||
+            /^[\u4e00\u4e8c\u4e09\u56db\u4e94\u516d\u4e03\u516b\u4e5d\u5341\u767e\u5343\u4e07]+$/.test(
+              line
+            ) ||
             /^\d+$/.test(line))
         ) {
           content.push({
@@ -233,6 +238,7 @@ function startExpress() {
       }
       for (let i = 0; i < content.length; i++) {
         content[i].data.trim() &&
+          content[i].data.trim().length > 50 &&
           epub.addSection(
             content[i].title,
             `<h1>${content[i].title}</h1>` + content[i].data
@@ -271,15 +277,32 @@ function startExpress() {
   async function start() {
     try {
       const port = 3366;
-      expressServer = await server.listen(port);
-      console.log("started");
-      const address = expressServer.address();
-      serverInfo = {
-        port: address.port,
-        local: "localhost",
-        url: `http://localhost:${address.port}`,
-      };
-      return serverInfo;
+      detect(port)
+        .then(async (_port) => {
+          if (port == _port) {
+            console.log(`port: ${port} was not occupied`);
+            expressServer = await server.listen(port);
+            console.log("started");
+            const address = expressServer.address();
+            serverInfo = {
+              port: address.port,
+              local: "localhost",
+              url: `http://localhost:${address.port}`,
+            };
+            return serverInfo;
+          } else {
+            dialog.showMessageBox({
+              type: "warning",
+              title: `Port 3366 is in use`,
+              message: `Don't open multiple Koodo Reader at the same time`,
+            });
+            console.log(`port: ${port} was occupied, try port: ${_port}`);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+          dialog.showErrorBox("Error Message", err);
+        });
     } catch (e) {
       return { message: e.message };
     }

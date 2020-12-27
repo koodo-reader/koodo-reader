@@ -19,6 +19,15 @@ import SettingDialog from "../../components/settingDialog";
 import { isMobileOnly } from "react-device-detect";
 import { Route, Switch, Redirect } from "react-router-dom";
 import { routes } from "../../router/routes";
+import Arrow from "../../components/arrow";
+
+// declare var window: any;
+
+//判断是否为触控设备
+const is_touch_device = () => {
+  return "ontouchstart" in window;
+};
+
 class Manager extends React.Component<ManagerProps, ManagerState> {
   timer!: NodeJS.Timeout;
   constructor(props: ManagerProps) {
@@ -30,6 +39,7 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
       isError: false,
       isCopied: false,
       isUpdated: false,
+      isDrag: false,
       token: "",
     };
   }
@@ -38,7 +48,7 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
     this.props.handleFetchBooks();
     this.props.handleFetchNotes();
     this.props.handleFetchBookmarks();
-    this.props.handleFetchSortCode();
+    this.props.handleFetchBookSortCode();
     this.props.handleFetchList();
   }
 
@@ -77,10 +87,16 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
       });
       this.props.handleFirst(OtherUtil.getReaderConfig("isFirst") || "yes");
     }, 1000);
+    if (is_touch_device() && !OtherUtil.getReaderConfig("isTouch")) {
+      OtherUtil.setReaderConfig("isTouch", "yes");
+    }
   }
   handleUpdateDialog = () => {
     this.setState({ isUpdated: false });
     OtherUtil.setReaderConfig("version", updateLog.version);
+  };
+  handleDrag = (isDrag: boolean) => {
+    this.setState({ isDrag });
   };
   componentWillUnmout() {
     clearTimeout(this.timer);
@@ -118,10 +134,26 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
         </>
       );
     }
+    console.log(this.state.isDrag, !this.props.dragItem);
     return (
-      <div className="manager">
+      <div
+        className="manager"
+        onDragEnter={() => {
+          !this.props.dragItem && this.handleDrag(true);
+        }}
+      >
+        {this.state.isDrag && !this.props.dragItem && (
+          <div className="drag-background">
+            <div className="drag-info">
+              <Arrow />
+              <p className="arrow-text">
+                <Trans>Drop your books here</Trans>
+              </p>
+            </div>
+          </div>
+        )}
         <Sidebar />
-        <Header />
+        <Header {...{ handleDrag: this.handleDrag }} />
         <div className="manager-dialog-container">
           {this.props.isOpenDeleteDialog ? (
             <DeleteDialog />
@@ -134,10 +166,10 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
         {this.props.isMessage ? <MessageBox /> : null}
         {this.props.isSortDisplay ? <SortDialog /> : null}
         {this.props.isBackup ? <BackupDialog /> : null}
-        {!this.state.isUpdated && this.props.isFirst === "yes" ? (
-          <WelcomeDialog />
+        {this.props.isFirst === "yes" ? <WelcomeDialog /> : null}
+        {this.state.isUpdated && this.props.isFirst === "no" ? (
+          <UpdateDialog {...updateDialogProps} />
         ) : null}
-        {this.state.isUpdated ? <UpdateDialog {...updateDialogProps} /> : null}
         {this.props.isSettingOpen ? <SettingDialog /> : null}
         {(!books || books.length === 0) && this.state.totalBooks ? (
           <Redirect to="/manager/loading" />

@@ -1,5 +1,6 @@
 .import-from-local {
-  float: right;
+  position: absolute;
+  right: 360px;
   margin-right: 20px;
   margin-top: 20px;
   min-width: 138px;
@@ -12,6 +13,10 @@
   text-align: center;
   color: white;
   cursor: pointer;
+  z-index: 50;
+}
+.import-from-local:hover {
+  background-color: rgba(75, 75, 75, 0.9);
 }
 .import-book-box {
   position: relative;

@@ -128,6 +128,26 @@
   z-index: -1;
   animation: popup 0.1s ease-in-out 0s 1;
 }
+.side-menu-hover-container {
+  width: 148px;
+  height: 39px;
+  border-radius: 25px;
+  line-height: 39px;
+  background-color: rgba(75, 75, 75, 0.05);
+  position: absolute;
+  z-index: -1;
+  animation: slidein 0.1s ease-in-out 0s 1;
+}
+@keyframes slidein {
+  0% {
+    opacity: 0;
+    transform: scale(0.2);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
 .side-menu-about {
   position: absolute;
   bottom: 0px;

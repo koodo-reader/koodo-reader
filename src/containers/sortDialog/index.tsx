@@ -1,6 +1,7 @@
 import { connect } from "react-redux";
 import {
-  handleSortCode,
+  handleBookSortCode,
+  handleNoteSortCode,
   handleSortDisplay,
   handleSort,
 } from "../../store/actions/manager";
@@ -10,13 +11,16 @@ import SortDialog from "./component";
 
 const mapStateToProps = (state: stateType) => {
   return {
-    sortCode: state.manager.sortCode,
+    bookSortCode: state.manager.bookSortCode,
+    noteSortCode: state.manager.noteSortCode,
+    mode: state.sidebar.mode,
     isSortDisplay: state.manager.isSortDisplay,
   };
 };
 const actionCreator = {
-  handleSortCode,
+  handleBookSortCode,
   handleSortDisplay,
+  handleNoteSortCode,
   handleSort,
 };
 export default connect(

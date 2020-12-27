@@ -9,6 +9,7 @@ export interface HeaderProps {
   handleMessageBox: (isShow: boolean) => void;
   handleMessage: (message: string) => void;
   handleBackupDialog: (isBackup: boolean) => void;
+  handleDrag: (isDrag: boolean) => void;
 }
 
 export interface HeaderState {

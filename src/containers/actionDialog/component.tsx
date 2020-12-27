@@ -4,6 +4,8 @@ import "./actionDialog.css";
 import { Trans } from "react-i18next";
 import { ActionDialogProps } from "./interface";
 import AddTrash from "../../utils/addTrash";
+import FileSaver from "file-saver";
+import localforage from "localforage";
 
 class ActionDialog extends React.Component<ActionDialogProps> {
   handleDeleteBook = () => {
@@ -94,6 +96,29 @@ class ActionDialog extends React.Component<ActionDialogProps> {
             <span className="icon-edit view-icon"></span>
             <span className="action-name">
               <Trans>Edit</Trans>
+            </span>
+          </div>
+          <div
+            className="action-dialog-edit"
+            onClick={() => {
+              localforage
+                .getItem(this.props.currentBook.key)
+                .then((result: any) => {
+                  FileSaver.saveAs(
+                    new Blob([result]),
+                    this.props.currentBook.name +
+                      `${
+                        this.props.currentBook.description === "pdf"
+                          ? ".pdf"
+                          : ".epub"
+                      }`
+                  );
+                });
+            }}
+          >
+            <span className="icon-export view-icon"></span>
+            <span className="action-name">
+              <Trans>Export</Trans>
             </span>
           </div>
         </div>

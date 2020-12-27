@@ -44,10 +44,18 @@ export function handleSort(isSort: boolean) {
 export function handleFirst(isFirst: string) {
   return { type: "HANDLE_FIRST", payload: isFirst };
 }
-export function handleSortCode(sortCode: { sort: number; order: number }) {
-  return { type: "HANDLE_SORT_CODE", payload: sortCode };
+export function handleBookSortCode(bookSortCode: {
+  sort: number;
+  order: number;
+}) {
+  return { type: "HANDLE_SORT_CODE", payload: bookSortCode };
 }
-
+export function handleNoteSortCode(noteSortCode: {
+  sort: number;
+  order: number;
+}) {
+  return { type: "HANDLE_NOTE_SORT_CODE", payload: noteSortCode };
+}
 export function handleBookmarks(bookmarks: BookmarkModel[]) {
   return { type: "HANDLE_BOOKMARKS", payload: bookmarks };
 }
@@ -64,10 +72,10 @@ export function handleFetchBooks(isTrash = false) {
     });
   };
 }
-export function handleFetchSortCode() {
+export function handleFetchBookSortCode() {
   return (dispatch: Dispatch) => {
-    let sortCode = OtherUtil.getSortCode();
-    dispatch(handleSortCode(sortCode));
+    let bookSortCode = OtherUtil.getBookSortCode();
+    dispatch(handleBookSortCode(bookSortCode));
   };
 }
 export function handleFetchList() {

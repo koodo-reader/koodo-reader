@@ -49,6 +49,7 @@
   opacity: 1;
   position: absolute;
   top: 106px;
+  width: 100%;
   /* margin-left: 25px; */
 }
 .icon-check {

@@ -58,13 +58,19 @@ class BookList extends React.Component<BookListProps, BookListState> {
       ? this.handleIndexFilter(
           this.handleKeyFilter(this.props.deletedBooks, AddTrash.getAllTrash()),
           //返回排序后的图书index
-          SortUtil.sortBooks(this.props.deletedBooks, this.props.sortCode) || []
+          SortUtil.sortBooks(
+            this.props.deletedBooks,
+            this.props.bookSortCode
+          ) || []
         )
       : this.props.isSort
       ? this.handleIndexFilter(
           this.props.deletedBooks,
           //返回排序后的图书index
-          SortUtil.sortBooks(this.props.deletedBooks, this.props.sortCode) || []
+          SortUtil.sortBooks(
+            this.props.deletedBooks,
+            this.props.bookSortCode
+          ) || []
         )
       : this.handleKeyFilter(
           this.props.deletedBooks,

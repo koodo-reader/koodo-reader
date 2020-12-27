@@ -40,10 +40,18 @@ class ViewArea extends React.Component<ViewAreaProps, ViewAreaStates> {
           ? true
           : false
       );
+
       if (!this.isFirst && this.props.locations) {
         let percentage = this.props.locations.percentageFromCfi(cfi);
         RecordLocation.recordCfi(this.props.currentBook.key, cfi, percentage);
         this.props.handlePercentage(percentage);
+      } else if (!this.isFirst) {
+        //如果过暂时没有解析出locations，就直接记录cfi
+        RecordLocation.recordCfi(
+          this.props.currentBook.key,
+          cfi,
+          RecordLocation.getCfi(this.props.currentBook.key).percentage
+        );
       }
       this.isFirst = false;
     });
@@ -68,8 +76,8 @@ class ViewArea extends React.Component<ViewAreaProps, ViewAreaStates> {
             OtherUtil.getReaderConfig("fontFamily") || "Helvetica"
           } !important`,
           color: `${
-            OtherUtil.getReaderConfig("theme") === "rgba(44,47,49,1)"
-              ? "white"
+            OtherUtil.getReaderConfig("textColor")
+              ? OtherUtil.getReaderConfig("textColor")
               : ""
           } !important`,
         },
@@ -92,7 +100,7 @@ class ViewArea extends React.Component<ViewAreaProps, ViewAreaStates> {
           OtherUtil.getReaderConfig("fontFamily") || "内嵌字体"
         } !important`,
         color: `${
-          OtherUtil.getReaderConfig("theme") === "rgba(44,47,49,1)"
+          OtherUtil.getReaderConfig("backgroundColor") === "rgba(44,47,49,1)"
             ? "white"
             : ""
         } !important`,

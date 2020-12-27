@@ -6,6 +6,8 @@ export interface ImportLocalProps extends RouteComponentProps<any> {
   handleMessageBox: (isShow: boolean) => void;
   handleMessage: (message: string) => void;
   handleFetchBooks: () => void;
+  handleDrag: (isDrag: boolean) => void;
+
   handleReadingBook: (book: BookModel) => void;
 }
 export interface ImportLocalState {

@@ -30,8 +30,7 @@ class SliderList extends React.Component<SliderListProps, SliderListState> {
       const scale = event.target.value;
       this.setState({ value: scale });
       OtherUtil.setReaderConfig("scale", scale);
-      this.props.handleMessage("Try refresh or restart");
-      this.props.handleMessageBox(true);
+      window.location.reload();
     }
   };
   //使进度百分比随拖动实时变化

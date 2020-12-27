@@ -1,3 +1,4 @@
+import OtherUtil from "../../utils/otherUtil";
 const initState = {
   books: null,
   deletedBooks: [],
@@ -8,7 +9,8 @@ const initState = {
   isSettingOpen: false,
   isList: "card",
   isSortDisplay: false,
-  sortCode: { sort: 2, order: 2 },
+  bookSortCode: { sort: 0, order: 1 },
+  noteSortCode: OtherUtil.getNoteSortCode(),
   isMessage: false,
   message: "Add Successfully",
 };
@@ -75,7 +77,18 @@ export function manager(
     case "HANDLE_SORT_CODE":
       return {
         ...state,
-        sortCode: { sort: action.payload.sort, order: action.payload.order },
+        bookSortCode: {
+          sort: action.payload.sort,
+          order: action.payload.order,
+        },
+      };
+    case "HANDLE_NOTE_SORT_CODE":
+      return {
+        ...state,
+        noteSortCode: {
+          sort: action.payload.sort,
+          order: action.payload.order,
+        },
       };
     case "HANDLE_NOTES":
       return {

@@ -63,7 +63,6 @@
   "Sort by Date": "按加入時間",
   "Descending Order": "倒序",
   "Ascending Order": "正序",
-  "Sort by Name": "按名稱",
   "Copy Link Successfully": "連結複製成功",
   "Add Successfully": "加入成功",
   "Select": "選擇",
@@ -203,5 +202,13 @@
   "Batch import only support epub or pdf files": "批量导入仅支持epub或pdf格式",
   "Drag any book to the Deleted tab to add it to Recycle Bin": "将任意图书拖拽到我的回收标签页，将其添加到回收站",
   "Empty Recycle Bin": "回收站为空",
-  "Sort by Duration": "按阅读时长"
+  "Sort by Duration": "按阅读时长",
+  "Sort by Author": "按作者名",
+  "Sort by Name": "按书名",
+  "Audio is not ready yet": "图书解析中，请稍后再试",
+  "Drop your books here": "拖拽图书到此处",
+  "Export": "导出",
+  "Text Color": "文字颜色",
+
+  "Sort by Percentage": "按阅读进度"
 }

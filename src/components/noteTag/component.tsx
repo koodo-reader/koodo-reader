@@ -31,7 +31,7 @@ class NoteTag extends React.Component<NoteTagProps, NoteTagState> {
     }
   }
   tagToIndex = (tag: string[]) => {
-    let temp = [];
+    let temp: number[] = [];
     if (!tag) return [];
     for (let i = 0; i < TagUtil.getAllTags().length; i++) {
       if (tag.indexOf(TagUtil.getAllTags()[i]) > -1) {
@@ -41,7 +41,7 @@ class NoteTag extends React.Component<NoteTagProps, NoteTagState> {
     return temp;
   };
   indextoTag = (tagIndex: number[]) => {
-    let temp = [];
+    let temp: any = [];
     for (let i = 0; i < tagIndex.length; i++) {
       temp.push(TagUtil.getAllTags()[tagIndex[i]]);
     }

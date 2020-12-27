@@ -74,7 +74,9 @@
   box-sizing: border-box;
   cursor: pointer;
 }
-
+.import-from-cloud:hover {
+  background-color: rgba(75, 75, 75, 0.035);
+}
 @media screen and (max-width: 950px) {
   .import-from-cloud {
     position: absolute;
@@ -111,12 +113,12 @@
   font-size: 25px;
 }
 .setting-icon-container {
-  width: 30px;
-  height: 30px;
-  font-size: 30px;
+  width: 25px;
+  height: 25px;
+  font-size: 25px;
   position: absolute;
   left: 335px;
-  margin-top: 28px;
+  top: 33px;
   color: rgba(75, 75, 75, 1);
   cursor: pointer;
 }

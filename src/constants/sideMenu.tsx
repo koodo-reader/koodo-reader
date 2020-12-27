@@ -19,7 +19,6 @@ export const sideMenu = [
     icon: "idea",
     mode: "note",
   },
-
   {
     name: "My Digests",
     icon: "digest",

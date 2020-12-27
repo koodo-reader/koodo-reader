@@ -30,10 +30,16 @@ class SettingDialog extends React.Component<
         language: lng,
       });
     }
+    document
+      .querySelector(".lang-setting-dropdown")
+      ?.children[
+        ["zh", "cht", "en"].indexOf(OtherUtil.getReaderConfig("lang") || "zh")
+      ].setAttribute("selected", "selected");
   }
 
   changeLanguage = (lng: string) => {
     i18n.changeLanguage(lng);
+    console.log(lng, "lng");
     this.setState({ language: lng });
     OtherUtil.setReaderConfig("lang", lng);
   };
@@ -132,7 +138,17 @@ class SettingDialog extends React.Component<
             >
               <span
                 className="single-control-button"
-                style={this.state.isTouch ? { float: "right" } : {}}
+                style={
+                  this.state.isTouch
+                    ? {
+                        transform: "translateX(20px)",
+                        transition: "transform 0.5s ease",
+                      }
+                    : {
+                        transform: "translateX(0px)",
+                        transition: "transform 0.5s ease",
+                      }
+                }
               ></span>
             </span>
           </div>
@@ -147,7 +163,17 @@ class SettingDialog extends React.Component<
             >
               <span
                 className="single-control-button"
-                style={this.state.isOpenBook ? { float: "right" } : {}}
+                style={
+                  this.state.isOpenBook
+                    ? {
+                        transform: "translateX(20px)",
+                        transition: "transform 0.5s ease",
+                      }
+                    : {
+                        transform: "translateX(0px)",
+                        transition: "transform 0.5s ease",
+                      }
+                }
               ></span>
             </span>
           </div>
@@ -163,7 +189,17 @@ class SettingDialog extends React.Component<
             >
               <span
                 className="single-control-button"
-                style={this.state.isExpandContent ? { float: "right" } : {}}
+                style={
+                  this.state.isExpandContent
+                    ? {
+                        transform: "translateX(20px)",
+                        transition: "transform 0.5s ease",
+                      }
+                    : {
+                        transform: "translateX(0px)",
+                        transition: "transform 0.5s ease",
+                      }
+                }
               ></span>
             </span>
           </div>
@@ -178,7 +214,17 @@ class SettingDialog extends React.Component<
             >
               <span
                 className="single-control-button"
-                style={this.state.isShowFooter ? {} : { float: "right" }}
+                style={
+                  this.state.isShowFooter
+                    ? {
+                        transform: "translateX(0px)",
+                        transition: "transform 0.5s ease",
+                      }
+                    : {
+                        transform: "translateX(20px)",
+                        transition: "transform 0.5s ease",
+                      }
+                }
               ></span>
             </span>
           </div>
@@ -193,31 +239,40 @@ class SettingDialog extends React.Component<
             >
               <span
                 className="single-control-button"
-                style={this.state.isUseBackground ? { float: "right" } : {}}
+                style={
+                  this.state.isUseBackground
+                    ? {
+                        transform: "translateX(20px)",
+                        transition: "transform 0.5s ease",
+                      }
+                    : {
+                        transform: "translateX(0px)",
+                        transition: "transform 0.5s ease",
+                      }
+                }
               ></span>
             </span>
           </div>
 
           <div className="setting-dialog-new-title">
             <Trans>语言 / Language</Trans>
-            <div className="setting-language">
-              {this.state.language === "cht" ? (
-                <span
-                  className="icon-english"
-                  onClick={() => this.changeLanguage("en")}
-                ></span>
-              ) : this.state.language === "en" ? (
-                <span
-                  className="icon-simplified"
-                  onClick={() => this.changeLanguage("zh")}
-                ></span>
-              ) : (
-                <span
-                  className="icon-traditional"
-                  onClick={() => this.changeLanguage("cht")}
-                ></span>
-              )}
-            </div>
+            <select
+              name=""
+              className="lang-setting-dropdown"
+              onChange={(event) => {
+                this.changeLanguage(event.target.value);
+              }}
+            >
+              <option value="zh" className="lang-setting-option">
+                简体中文
+              </option>
+              <option value="cht" className="lang-setting-option">
+                繁體中文
+              </option>
+              <option value="en" className="lang-setting-option">
+                English
+              </option>
+            </select>
           </div>
           <div className="about-this-project">
             <div

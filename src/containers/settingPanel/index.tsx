@@ -2,6 +2,7 @@ import { withNamespaces } from "react-i18next";
 import { connect } from "react-redux";
 import SettingPanel from "./component";
 import { stateType } from "../../store";
+import { handleMessageBox, handleMessage } from "../../store/actions/manager";
 
 const mapStateToProps = (state: stateType) => {
   return {
@@ -10,7 +11,7 @@ const mapStateToProps = (state: stateType) => {
     isReading: state.book.isReading,
   };
 };
-const actionCreator = {};
+const actionCreator = { handleMessageBox, handleMessage };
 export default connect(
   mapStateToProps,
   actionCreator

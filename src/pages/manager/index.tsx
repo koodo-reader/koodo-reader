@@ -1,7 +1,7 @@
 import { connect } from "react-redux";
 import {
   handleFetchBooks,
-  handleFetchSortCode,
+  handleFetchBookSortCode,
   handleFetchList,
   handleMessageBox,
   handleFirst,
@@ -22,6 +22,7 @@ const mapStateToProps = (state: stateType) => {
     bookmarks: state.reader.bookmarks,
     isReading: state.book.isReading,
     mode: state.sidebar.mode,
+    dragItem: state.book.dragItem,
     shelfIndex: state.sidebar.shelfIndex,
     isOpenEditDialog: state.book.isOpenEditDialog,
     isOpenDeleteDialog: state.book.isOpenDeleteDialog,
@@ -38,7 +39,7 @@ const actionCreator = {
   handleFetchBooks,
   handleFetchNotes,
   handleFetchBookmarks,
-  handleFetchSortCode,
+  handleFetchBookSortCode,
   handleFetchList,
   handleMessageBox,
   handleFirst,

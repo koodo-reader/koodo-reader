@@ -1,34 +1,39 @@
 import BookModel from "../model/Book";
+import NoteModel from "../model/Note";
 import ReadingTime from "./readingTime";
+import RecordLocation from "./recordLocation";
+import _ from "underscore";
 //获取所有图书的书名
 const getBookName = (books: BookModel[]) => {
-  let nameArr: string[] = [];
-  books.forEach((item: BookModel) => {
-    nameArr.push(item.name);
-  });
-  return nameArr;
+  return books.map((item) => item.name);
+};
+//获取所有作者名
+const getAuthorName = (books: BookModel[]) => {
+  return books.map((item) => item.author);
 };
 //获取所有图书的key值
 const getBookKey = (books: BookModel[]) => {
-  let keyArr: string[] = [];
-  books.forEach((item: BookModel) => {
-    keyArr.push(item.key);
-  });
-  return keyArr;
+  return books.map((item) => item.key);
 };
-//
+//获取图书索引
 const getBookIndex = (nameArr: string[], oldNameArr: string[]) => {
   let indexArr: number[] = [];
   for (let i = 0; i < nameArr.length; i++) {
     if (oldNameArr.indexOf(nameArr[i]) > -1) {
-      indexArr.push(oldNameArr.indexOf(nameArr[i]));
+      //如果索引数组已经包含该索引，就把它放在随后一位，取数组长度为索引
+      indexArr.push(
+        indexArr.indexOf(oldNameArr.indexOf(nameArr[i])) > -1
+          ? indexArr.length
+          : oldNameArr.indexOf(nameArr[i])
+      );
     }
   }
   return indexArr;
 };
+
 const getDurationArr = () => {
   let durationObj = ReadingTime.getAllTime();
-  var sortable = [];
+  var sortable: any[] = [];
   for (let obj in durationObj) {
     sortable.push([obj, durationObj[obj]]);
   }
@@ -37,50 +42,151 @@ const getDurationArr = () => {
   });
   return Object.keys(durationObj);
 };
+const getPercentageArr = () => {
+  let locationObj = RecordLocation.getAllCfi();
+  var sortable: any = [];
+  for (let obj in locationObj) {
+    sortable.push([obj, locationObj[obj].percentage]);
+  }
+  sortable.sort(function (a, b) {
+    return a[1] - b[1];
+  });
+  return Object.keys(locationObj);
+};
 class SortUtil {
   static sortBooks(
     books: BookModel[],
-    sortCode: { sort: number; order: number }
+    bookSortCode: { sort: number; order: number }
   ) {
-    if (sortCode.sort === 1 && sortCode.order === 1) {
+    if (bookSortCode.sort === 1) {
       let oldNameArr = getBookName(books);
       let nameArr = getBookName(books).sort();
-      return getBookIndex(nameArr, oldNameArr);
+      if (bookSortCode.order === 1) {
+        return getBookIndex(nameArr, oldNameArr);
+      } else {
+        return getBookIndex(nameArr, oldNameArr).reverse();
+      }
     }
-    if (sortCode.sort === 1 && sortCode.order === 2) {
-      let oldNameArr = getBookName(books);
-      let nameArr = getBookName(books).sort().reverse();
-      return getBookIndex(nameArr, oldNameArr);
-    }
-    if (sortCode.sort === 2 && sortCode.order === 1) {
-      let nameArr = [];
+    if (bookSortCode.sort === 2) {
+      let nameArr: number[] = [];
       for (let i = 0; i < books.length; i++) {
         nameArr.push(i);
       }
-      return nameArr;
-    }
-    if (sortCode.sort === 2 && sortCode.order === 2) {
-      let nameArr = [];
-      for (let i = 0; i < books.length; i++) {
-        nameArr.push(i);
+      if (bookSortCode.order === 1) {
+        return nameArr;
+      } else {
+        return nameArr.reverse();
       }
-      return nameArr.reverse();
     }
-    if (sortCode.sort === 3 && sortCode.order === 1) {
+    if (bookSortCode.sort === 3) {
       let durationKeys = getDurationArr();
       let bookKeys = getBookKey(books);
-      return getBookIndex(
-        [...new Set(durationKeys.concat(bookKeys))],
-        bookKeys
+      if (bookSortCode.order === 1) {
+        return getBookIndex(_.union(durationKeys, bookKeys), bookKeys);
+      } else {
+        return getBookIndex(
+          _.union(durationKeys, bookKeys),
+          bookKeys
+        ).reverse();
+      }
+    }
+    if (bookSortCode.sort === 4) {
+      let oldAuthorArr = getAuthorName(books);
+      let authorArr = getAuthorName(books).sort();
+      console.log(getBookIndex(authorArr, oldAuthorArr));
+      if (bookSortCode.order === 1) {
+        return getBookIndex(authorArr, oldAuthorArr);
+      } else {
+        return getBookIndex(authorArr, oldAuthorArr).reverse();
+      }
+    }
+    if (bookSortCode.sort === 5) {
+      let percentagenKeys = getPercentageArr();
+      let bookKeys = getBookKey(books);
+      if (bookSortCode.order === 1) {
+        return getBookIndex(
+          _.union(percentagenKeys, bookKeys),
+          bookKeys
+        ).reverse();
+      } else {
+        return getBookIndex(_.union(percentagenKeys, bookKeys), bookKeys);
+      }
+    }
+  }
+  static sortNotes(
+    notes: NoteModel[],
+    noteSortCode: { sort: number; order: number },
+    books: BookModel[] = []
+  ) {
+    if (noteSortCode.sort === 2) {
+      //使书摘从晚到早排序
+      let noteArr = _.clone(notes).reverse();
+      let dateArr = _.uniq(
+        notes.map(
+          (item) =>
+            "" + item.date.year + "-" + item.date.month + "-" + item.date.day
+        )
       );
+      if (noteSortCode.order === 1) {
+        dateArr.sort();
+      } else {
+        dateArr.sort().reverse();
+      }
+      //得到以日期为键，书摘为值的对象
+      let noteObj: { [key: string]: any } = {};
+      dateArr.forEach((date) => {
+        noteObj[date] = [];
+      });
+      noteArr.forEach((note) => {
+        dateArr.forEach((date) => {
+          if (
+            date ===
+            "" + note.date.year + "-" + note.date.month + "-" + note.date.day
+          ) {
+            noteObj[date].push(note);
+          }
+        });
+      });
+      return noteObj || {};
     }
-    if (sortCode.sort === 3 && sortCode.order === 2) {
-      let durationKeys = getDurationArr();
-      let bookKeys = getBookKey(books);
-      return getBookIndex(
-        [...new Set(durationKeys.concat(bookKeys))],
-        bookKeys
-      ).reverse();
+    if (noteSortCode.sort === 1) {
+      //使书摘从晚到早排序
+      let noteArr = _.clone(notes).reverse();
+      let nameArr = _.uniq(
+        notes.map(
+          (item) =>
+            books[
+              _.findLastIndex(books, {
+                key: item.bookKey,
+              })
+            ].name
+        )
+      );
+      if (noteSortCode.order === 1) {
+        nameArr.sort();
+      } else {
+        nameArr.sort().reverse();
+      }
+      //得到以日期为键，书摘为值的对象
+      let noteObj: { [key: string]: any } = {};
+      nameArr.forEach((name) => {
+        noteObj[name] = [];
+      });
+      noteArr.forEach((note) => {
+        nameArr.forEach((name) => {
+          if (
+            name ===
+            books[
+              _.findLastIndex(books, {
+                key: note.bookKey,
+              })
+            ].name
+          ) {
+            noteObj[name].push(note);
+          }
+        });
+      });
+      return noteObj || {};
     }
   }
 }

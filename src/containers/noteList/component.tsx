@@ -28,7 +28,7 @@ class NoteList extends React.Component<NoteListProps, NoteListState> {
     return itemArr;
   };
   filterTag = (notes: NoteModel[]) => {
-    let temp = [];
+    let temp: NoteModel[] = [];
     for (let i = 0; i < notes.length; i++) {
       let flag = false;
       for (let j = 0; j < this.state.tag.length; j++) {

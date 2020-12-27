@@ -2,6 +2,10 @@
   width: 100%;
   height: 100%;
 }
+.arrow-text {
+  font-size: 20px;
+  color: white;
+}
 .token-dialog-token-text {
   width: 94px;
   height: 29px;
@@ -24,6 +28,23 @@
   font-size: 22px;
   padding: 70px 30px;
   line-height: 30px;
+}
+.drag-background {
+  background-color: rgba(75, 75, 75, 0.34);
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0px;
+  left: 0px;
+  z-index: 10;
+}
+.drag-info {
+  width: 200px;
+  height: 300px;
+  position: absolute;
+  top: 80px;
+  right: 160px;
+  text-align: center;
 }
 .waring-title {
   text-align: center;
