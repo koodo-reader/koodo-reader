@@ -107,6 +107,25 @@ function startExpress() {
   const request = require("request");
   const configDir = (electron.app || electron.remote.app).getPath("userData");
   var dirPath = path.join(configDir, "uploads\\");
+  detect(port)
+    .then(async (_port) => {
+      if (port == _port) {
+        console.log(`port: ${port} was not occupied`);
+      } else {
+        dialog.showMessageBox({
+          type: "warning",
+          title: `Port 3366 is in use`,
+          message: `Don't open multiple Koodo Reader at the same time`,
+        });
+        console.log(`port: ${port} was occupied, try port: ${_port}`);
+        return;
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+      dialog.showErrorBox("Error Message", err);
+      return;
+    });
   if (!fs.existsSync(dirPath)) {
     fs.mkdirSync(dirPath);
     console.log("文件夹创建成功");
@@ -277,32 +296,16 @@ function startExpress() {
   async function start() {
     try {
       const port = 3366;
-      detect(port)
-        .then(async (_port) => {
-          if (port == _port) {
-            console.log(`port: ${port} was not occupied`);
-            expressServer = await server.listen(port);
-            console.log("started");
-            const address = expressServer.address();
-            serverInfo = {
-              port: address.port,
-              local: "localhost",
-              url: `http://localhost:${address.port}`,
-            };
-            return serverInfo;
-          } else {
-            dialog.showMessageBox({
-              type: "warning",
-              title: `Port 3366 is in use`,
-              message: `Don't open multiple Koodo Reader at the same time`,
-            });
-            console.log(`port: ${port} was occupied, try port: ${_port}`);
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-          dialog.showErrorBox("Error Message", err);
-        });
+
+      expressServer = await server.listen(port);
+      console.log("started");
+      const address = expressServer.address();
+      serverInfo = {
+        port: address.port,
+        local: "localhost",
+        url: `http://localhost:${address.port}`,
+      };
+      return serverInfo;
     } catch (e) {
       return { message: e.message };
     }
@@ -319,24 +322,6 @@ function startExpress() {
     }
   }
   const port = 3366;
-  detect(port)
-    .then(async (_port) => {
-      if (port == _port) {
-        console.log(`port: ${port} was not occupied`);
-      } else {
-        dialog.showMessageBox({
-          type: "warning",
-          title: `Port 3366 is in use`,
-          message: `Don't open multiple Koodo Reader at the same time`,
-        });
-        console.log(`port: ${port} was occupied, try port: ${_port}`);
-        return;
-      }
-    })
-    .catch((err) => {
-      console.log(err);
-      dialog.showErrorBox("Error Message", err);
-      return;
-    });
+
   startServer();
 }
