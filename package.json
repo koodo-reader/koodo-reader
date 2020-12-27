@@ -88,8 +88,7 @@
     },
     "win": {
       "target": [
-        "nsis",
-        "portable"
+        "nsis"
       ],
       "icon": "assets/icons/icon.ico",
       "artifactName": "${productName}-${version}.${ext}",
@@ -99,9 +98,6 @@
       "icon": "assets/icons",
       "category": "Office",
       "target": "AppImage"
-    },
-    "portable": {
-      "artifactName": "${productName}-${version}-Portable.${ext}"
     }
   },
   "eslintConfig": {
