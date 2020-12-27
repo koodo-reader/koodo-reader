@@ -8,7 +8,7 @@ import ActionDialog from "../../containers/actionDialog";
 import OtherUtil from "../../utils/otherUtil";
 import { withRouter } from "react-router-dom";
 import RecordLocation from "../../utils/recordLocation";
-
+import isElectron from "is-electron";
 declare var window: any;
 
 class BookCardItem extends React.Component<BookProps, BookState> {
@@ -25,11 +25,18 @@ class BookCardItem extends React.Component<BookProps, BookState> {
   }
 
   componentDidMount() {
+    let filePath = "";
     //控制是否自动打开本书
+    if (isElectron()) {
+      const { ipcRenderer } = window.require("electron");
+      filePath = ipcRenderer.sendSync("get-file-data");
+    }
+
     if (
       OtherUtil.getReaderConfig("isOpenBook") === "yes" &&
       RecentBooks.getAllRecent()[0] === this.props.book.key &&
-      !this.props.currentBook.key
+      !this.props.currentBook.key &&
+      !filePath
     ) {
       this.props.book.description === "pdf"
         ? window.open(`./lib/pdf/viewer.html?file=${this.props.book.key}`)
@@ -94,13 +101,11 @@ class BookCardItem extends React.Component<BookProps, BookState> {
   handleJump = () => {
     RecentBooks.setRecent(this.props.book.key);
 
-    if (this.props.book.description === "pdf") {
-      window.open(`./lib/pdf/viewer.html?file=${this.props.book.key}`);
-    } else {
-      window.open(
-        `${window.location.href.split("#")[0]}#/epub/${this.props.book.key}`
-      );
-    }
+    this.props.book.description === "pdf"
+      ? window.open(`./lib/pdf/viewer.html?file=${this.props.book.key}`)
+      : window.open(
+          `${window.location.href.split("#")[0]}#/epub/${this.props.book.key}`
+        );
   };
   render() {
     let percentage = RecordLocation.getCfi(this.props.book.key)
@@ -129,6 +134,9 @@ class BookCardItem extends React.Component<BookProps, BookState> {
               onDragStart={() => {
                 this.props.handleDragItem(this.props.book.key);
               }}
+              onDragEnd={() => {
+                this.props.handleDragItem("");
+              }}
             />
           ) : (
             <div
@@ -138,6 +146,9 @@ class BookCardItem extends React.Component<BookProps, BookState> {
               }}
               onDragStart={() => {
                 this.props.handleDragItem(this.props.book.key);
+              }}
+              onDragEnd={() => {
+                this.props.handleDragItem("");
               }}
             >
               <img

@@ -104,3 +104,24 @@
   text-align: center;
   color: rgba(75, 75, 75, 1);
 }
+.lang-setting-dropdown {
+  width: 100px;
+  height: 30px;
+  margin-right: 5px;
+  background: rgba(255, 255, 255, 1);
+  border: 2px solid rgba(112, 112, 112, 1);
+  font-size: 16px;
+  font-weight: 500;
+  color: rgba(75, 75, 75, 1);
+  text-align: center;
+  cursor: pointer;
+  position: relative;
+  left: 50px;
+}
+.lang-setting-option {
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 27px;
+  color: rgba(75, 75, 75, 1);
+  text-align: center;
+}

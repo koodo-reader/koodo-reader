@@ -14,7 +14,7 @@ const mappropsToProps = (state: stateType) => {
     mode: state.sidebar.mode,
     isSort: state.manager.isSort,
     isList: state.manager.isList,
-    sortCode: state.manager.sortCode,
+    bookSortCode: state.manager.bookSortCode,
   };
 };
 const actionCreator = {

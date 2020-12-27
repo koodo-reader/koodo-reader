@@ -4,14 +4,22 @@ import BookModel from "../model/Book";
 let JSZip = (window as any).JSZip;
 
 class RestoreUtil {
-  importBooks = (books: BookModel[], file: any, handleFinish: () => void) => {
+  static importBooks = (
+    books: BookModel[],
+    file: any,
+    handleFinish: () => void
+  ) => {
     let zip = new JSZip();
     books.forEach((item, index) => {
       zip
         .loadAsync(file)
         .then((content: any) => {
           // you now have every files contained in the loaded zip
-          return content.files[`epub/${item.name}.epub`].async("arraybuffer"); // a promise of "Hello World\n"
+          if (item.description === "pdf") {
+            return content.files[`book/${item.name}.pdf`].async("arraybuffer"); // a promise of "Hello World\n"
+          } else {
+            return content.files[`book/${item.name}.epub`].async("arraybuffer"); // a promise of "Hello World\n"
+          }
         })
         .then((book: any) => {
           localforage.setItem(item.key, book);
@@ -30,13 +38,14 @@ class RestoreUtil {
     });
   };
   static restore = (file: any, handleFinish: () => void) => {
-    let dataArr = [
+    let configArr = [
       "notes",
       "books",
       "bookmarks",
       "readerConfig",
       "noteTags",
-      "sortCode",
+      "bookSortCode",
+      "noteSortCode",
       "readingTime",
       "recentBooks",
       "favoriteBooks",
@@ -47,12 +56,12 @@ class RestoreUtil {
     ];
     let zip = new JSZip();
     // more files !
-    dataArr.forEach((item) => {
+    configArr.forEach((item) => {
       zip
         .loadAsync(file)
         .then((content: any) => {
           // you now have every files contained in the loaded zip
-          return content.files[`data/${item}.json`].async("text"); // a promise of "Hello World\n"
+          return content.files[`config/${item}.json`].async("text"); // a promise of "Hello World\n"
         })
         .then((text: any) => {
           if (text) {
@@ -73,24 +82,30 @@ class RestoreUtil {
                     .loadAsync(file)
                     .then((content: any) => {
                       // you now have every files contained in the loaded zip
-                      return content.files[`epub/${item.name}.epub`].async(
-                        "arraybuffer"
-                      ); // a promise of "Hello World\n"
+                      if (item.description === "pdf") {
+                        return content.files[`book/${item.name}.pdf`].async(
+                          "arraybuffer"
+                        ); // a promise of "Hello World\n"
+                      } else {
+                        return content.files[`book/${item.name}.epub`].async(
+                          "arraybuffer"
+                        ); // a promise of "Hello World\n"
+                      }
                     })
                     .then((book: any) => {
                       localforage.setItem(item.key, book).then(() => {
                         handleFinish();
                       });
                     })
-                    .catch(() => {
-                      console.log("Error occurs");
+                    .catch((err: any) => {
+                      console.log(err, "Error occurs");
                     });
                 });
             });
           }
         })
-        .catch(() => {
-          console.log("Error happen");
+        .catch((err: any) => {
+          console.log(err, "Error happen");
         });
     });
   };

@@ -19,7 +19,19 @@
       itemprop="description"
       content="Koodo Reader is a open-source epub reader with backup and restore support, runs on Windows, Mac and Web"
     />
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-P4ZLVVECVF"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
 
+      gtag("config", "G-P4ZLVVECVF");
+    </script>
     <style>
       #root {
         height: 100%;
@@ -69,5 +81,6 @@
       type="text/javascript"
       src="%PUBLIC_URL%/lib/Hammer/hammer.min.js"
     ></script>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
   </body>
 </html>

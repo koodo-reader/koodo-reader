@@ -79,7 +79,7 @@ class NavigationPanel extends React.Component<
     let startIndex = this.state.startIndex;
     let currentIndex =
       startIndex > 0 ? startIndex + 2 : this.state.currentIndex;
-    let pageList = [];
+    let pageList: any[] = [];
     let total = Math.ceil(this.state.searchList.length / 10);
     if (total <= 5) {
       for (let i = 0; i < total; i++) {
