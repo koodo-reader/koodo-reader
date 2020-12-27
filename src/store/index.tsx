@@ -40,7 +40,8 @@ export type stateType = {
     isFirst: string;
     isList: string;
     isSortDisplay: boolean;
-    sortCode: { sort: number; order: number };
+    bookSortCode: { sort: number; order: number };
+    noteSortCode: { sort: number; order: number };
     isMessage: boolean;
     message: string;
   };

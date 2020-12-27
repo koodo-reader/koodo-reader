@@ -36,7 +36,8 @@ class OperationPanel extends React.Component<
   componentWillReceiveProps(nextProps: OperationPanelProps) {
     if (
       nextProps.currentEpub.rendition &&
-      nextProps.currentEpub.rendition.location
+      nextProps.currentEpub.rendition.location &&
+      this.props.currentEpub.rendition
     ) {
       const currentLocation = this.props.currentEpub.rendition.currentLocation();
       if (!currentLocation.start) {

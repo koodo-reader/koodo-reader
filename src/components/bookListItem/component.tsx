@@ -88,13 +88,11 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
   handleJump = () => {
     RecentBooks.setRecent(this.props.book.key);
 
-    if (this.props.book.description === "pdf") {
-      window.open(`./lib/pdf/viewer.html?file=${this.props.book.key}`);
-    } else {
-      window.open(
-        `${window.location.href.split("#")[0]}#/epub/${this.props.book.key}`
-      );
-    }
+    this.props.book.description === "pdf"
+      ? window.open(`./lib/pdf/viewer.html?file=${this.props.book.key}`)
+      : window.open(
+          `${window.location.href.split("#")[0]}#/epub/${this.props.book.key}`
+        );
   };
   render() {
     let percentage = RecordLocation.getCfi(this.props.book.key)
@@ -114,6 +112,9 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
             onDragStart={() => {
               this.props.handleDragItem(this.props.book.key);
             }}
+            onDragEnd={() => {
+              this.props.handleDragItem("");
+            }}
           />
         ) : (
           <div
@@ -123,6 +124,9 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
             }}
             onDragStart={() => {
               this.props.handleDragItem(this.props.book.key);
+            }}
+            onDragEnd={() => {
+              this.props.handleDragItem("");
             }}
           >
             <img

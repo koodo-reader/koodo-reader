@@ -13,7 +13,7 @@ class styleUtil {
     if (!background) return;
     background!.setAttribute(
       "style",
-      `background-color:${OtherUtil.getReaderConfig("theme")}`
+      `background-color:${OtherUtil.getReaderConfig("backgroundColor")}`
     );
     if (!doc.head) {
       return;

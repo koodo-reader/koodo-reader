@@ -7,6 +7,7 @@ import { CardListProps, CardListStates } from "./interface";
 import DeleteIcon from "../../components/deleteIcon";
 import RecordLocation from "../../utils/recordLocation";
 import { withRouter } from "react-router-dom";
+import SortUtil from "../../utils/sortUtil";
 import { Redirect } from "react-router-dom";
 
 declare var window: any;
@@ -54,42 +55,14 @@ class CardList extends React.Component<CardListProps, CardListStates> {
     if (cards.length === 0) {
       return <Redirect to="/manager/empty" />;
     }
-    let cardArr = [];
-    //使书摘从晚到早排序
-    for (let i = cards.length - 1; i >= 0; i--) {
-      cardArr.push(cards[i]);
-    }
-    let dateArr = [cardArr[0].date];
-    let temp = cardArr[0].date;
-    //获取同一天的所有书摘
-    for (let i = 1; i < cardArr.length; i++) {
-      if (
-        cardArr[i].date.year !== temp.year ||
-        cardArr[i].date.month !== temp.month ||
-        cardArr[i].date.day !== temp.day
-      ) {
-        dateArr.push(cardArr[i].date);
-        temp = cardArr[i].date;
-      }
-    }
-    //得到以日期为键，书摘为值的对象
-    let cardObj: { [key: string]: any } = {};
-    dateArr.forEach((date) => {
-      cardObj["" + date.year + date.month + date.day] = [];
-    });
-    cardArr.forEach((card) => {
-      dateArr.forEach((date) => {
-        if (
-          date.year === card.date.year &&
-          date.month === card.date.month &&
-          date.day === card.date.day
-        ) {
-          cardObj["" + date.year + date.month + date.day].push(card);
-        }
-      });
-    });
-    const renderCardListItem = (date: string) => {
-      return cardObj[date].map((item: NoteModel, index: number) => {
+
+    let noteObj = SortUtil.sortNotes(
+      cards,
+      this.props.noteSortCode,
+      this.props.books
+    );
+    const renderCardListItem = (title: string) => {
+      return noteObj![title].map((item: NoteModel, index: number) => {
         const cardProps = {
           itemKey: item.key,
           mode: "notes",
@@ -156,12 +129,12 @@ class CardList extends React.Component<CardListProps, CardListStates> {
       });
     };
     const renderCardList = () => {
-      return dateArr.map((item, index) => {
+      return Object.keys(noteObj!).map((item, index) => {
         return (
           <li className="card-page-item" key={index}>
-            <div className="card-page-item-date">{`${item.year}-${item.month}-${item.day}`}</div>
+            <div className="card-page-item-date">{item}</div>
             <ul className="card-list-container-box">
-              {renderCardListItem("" + item.year + item.month + item.day)}
+              {renderCardListItem(item)}
             </ul>
           </li>
         );

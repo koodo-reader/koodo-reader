@@ -3,7 +3,7 @@ import NoteModel from "../model/Note";
 
 class OtherUtil {
   static fuzzyQuery(list: string[], keyWord: string) {
-    var arr = [];
+    var arr: number[] = [];
     for (var i = 0; i < list.length; i++) {
       if (list[i].match(keyWord) != null) {
         arr.push(i);
@@ -12,7 +12,7 @@ class OtherUtil {
     return arr;
   }
   static MergeArray(arr1: number[], arr2: number[]) {
-    var _arr = [];
+    var _arr: number[] = [];
     for (let i = 0; i < arr1.length; i++) {
       _arr.push(arr1[i]);
     }
@@ -91,18 +91,37 @@ class OtherUtil {
       return results;
     }
   }
-  static setSortCode(sortCode: number, orderCode: number) {
+  static setBookSortCode(sortCode: number, orderCode: number) {
     let json =
-      localStorage.getItem("sordCode") || JSON.stringify({ sort: 2, order: 2 });
-    let obj = json ? JSON.parse(json) : { sort: 2, order: 2 };
+      localStorage.getItem("bookSortCode") ||
+      JSON.stringify({ sort: 0, order: 1 });
+    let obj = json ? JSON.parse(json) : { sort: 0, order: 1 };
     obj.sort = sortCode;
     obj.order = orderCode;
-    localStorage.setItem("sortCode", JSON.stringify(obj));
+    localStorage.setItem("bookSortCode", JSON.stringify(obj));
   }
 
-  static getSortCode() {
+  static getBookSortCode() {
     let json =
-      localStorage.getItem("sordCode") || JSON.stringify({ sort: 2, order: 2 });
+      localStorage.getItem("bookSortCode") ||
+      JSON.stringify({ sort: 0, order: 1 });
+    let obj = JSON.parse(json) || { sort: 0, order: 1 };
+    return obj || null;
+  }
+  static setNoteSortCode(sort: number, order: number) {
+    let json =
+      localStorage.getItem("noteSortCode") ||
+      JSON.stringify({ sort: 2, order: 2 });
+    let obj = json ? JSON.parse(json) : { sort: 2, order: 2 };
+    obj.sort = sort;
+    obj.order = order;
+    localStorage.setItem("noteSortCode", JSON.stringify(obj));
+  }
+
+  static getNoteSortCode() {
+    let json =
+      localStorage.getItem("noteSortCode") ||
+      JSON.stringify({ sort: 2, order: 2 });
     let obj = JSON.parse(json) || { sort: 2, order: 2 };
     return obj || null;
   }

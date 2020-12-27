@@ -19,10 +19,11 @@ export interface ManagerProps extends RouteComponentProps<any> {
   isMessage: boolean;
   isBackup: boolean;
   isSettingOpen: boolean;
+  dragItem: string;
   handleFetchBooks: () => void;
   handleFetchNotes: () => void;
   handleFetchBookmarks: () => void;
-  handleFetchSortCode: () => void;
+  handleFetchBookSortCode: () => void;
   handleFetchList: () => void;
   handleMessageBox: (isShow: boolean) => void;
   handleFirst: (isFirst: string) => void;
@@ -35,5 +36,6 @@ export interface ManagerState {
   isError: boolean;
   isCopied: boolean;
   isUpdated: boolean;
+  isDrag: boolean;
   token: string;
 }

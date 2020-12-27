@@ -9,6 +9,7 @@ const isElectron = require("is-electron");
 if (isElectron()) {
   const { ipcRenderer } = window.require("electron");
   dropdownList[0].option = ipcRenderer.sendSync("fonts-ready", "ping");
+  dropdownList[0].option.push("内嵌字体");
 }
 
 class DropdownList extends React.Component<

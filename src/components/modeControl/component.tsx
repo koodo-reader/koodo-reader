@@ -16,8 +16,7 @@ class ModeControl extends React.Component<ModeControlProps, ModeControlState> {
   handleChangeMode = (mode: string) => {
     this.setState({ readerMode: mode });
     OtherUtil.setReaderConfig("readerMode", mode);
-    this.props.handleMessage("Try refresh or restart");
-    this.props.handleMessageBox(true);
+    window.location.reload();
   };
   render() {
     return (

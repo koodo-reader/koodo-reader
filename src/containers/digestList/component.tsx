@@ -28,7 +28,7 @@ class DigestList extends React.Component<DigestListProps, DigestListStates> {
     this.setState({ tag });
   };
   filterTag = (digests: NoteModel[]) => {
-    let temp = [];
+    let temp: NoteModel[] = [];
     for (let i = 0; i < digests.length; i++) {
       let flag = false;
       for (let j = 0; j < this.state.tag.length; j++) {

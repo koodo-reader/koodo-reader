@@ -15,6 +15,7 @@ import iconv from "iconv-lite";
 import isElectron from "is-electron";
 import { withRouter } from "react-router-dom";
 import RecentBooks from "../../utils/recordRecent";
+import OtherUtil from "../../utils/otherUtil";
 
 declare var window: any;
 var pdfjsLib = window["pdfjs-dist/build/pdf"];
@@ -72,13 +73,12 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
       }
     }
   }
+
   handleJump = (book: BookModel) => {
     RecentBooks.setRecent(book.key);
-    if (book.description === "pdf") {
-      window.open(`./lib/pdf/viewer.html?file=${book.key}`);
-    } else {
-      window.open(`${window.location.href.split("#")[0]}#/epub/${book.key}`);
-    }
+    book.description === "pdf"
+      ? window.open(`./lib/pdf/viewer.html?file=${book.key}`)
+      : window.open(`${window.location.href.split("#")[0]}#/epub/${book.key}`);
   };
   handleAddBook = (book: BookModel) => {
     return new Promise((resolve, reject) => {
@@ -210,8 +210,8 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                         author: string,
                         description: string;
                       [name, author, description] = [
-                        metadata.info.Title || file.name,
-                        metadata.info.Author,
+                        metadata.info.Title || file.name.split(".")[0],
+                        metadata.info.Author || "Unknown Authur",
                         "pdf",
                       ];
                       key = new Date().getTime() + "";
@@ -250,7 +250,8 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
               let mobiFile = new MobiFile(file_content);
 
               let content = mobiFile.render();
-              let buf = iconv.encode(content, "GBK");
+              console.log(content, "lcon");
+              let buf = iconv.encode(content, "UTF-8");
               let blobTemp: any = new Blob([buf], { type: "text/plain" });
               let fileTemp = new File(
                 [blobTemp],
@@ -388,6 +389,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
     return (
       <Dropzone
         onDrop={async (acceptedFiles) => {
+          this.props.handleDrag(false);
           if (acceptedFiles.length > 9) {
             this.props.handleMessage("Please import less than 10 books");
             this.props.handleMessageBox(true);
@@ -417,7 +419,13 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
         multiple={true}
       >
         {({ getRootProps, getInputProps }) => (
-          <div className="import-from-local" {...getRootProps()}>
+          <div
+            className="import-from-local"
+            {...getRootProps()}
+            style={
+              OtherUtil.getReaderConfig("lang") === "en" ? { right: 390 } : {}
+            }
+          >
             <Trans>Import from Local</Trans>
             <input
               type="file"
