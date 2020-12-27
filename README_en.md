@@ -66,7 +66,7 @@
 
 💻 Bookmark, Note, Digest, Shelf and Tag
 
-🎯 Adjust font, line-spacing, and margins
+🎯 Adjust font, line-spacing, background color, text color and margins
 
 🏝 Support for Touch Screen
 

@@ -21,7 +21,7 @@ app.on("ready", () => {
       nodeIntegrationInSubFrames: true,
       allowRunningInsecureContent: true,
     },
-    // show: false,
+    show: false,
     // transparent: true,
   });
   splash = new BrowserWindow({
@@ -318,6 +318,25 @@ function startExpress() {
       console.info(`启动成功，本地访问 http://${local}:${port}`);
     }
   }
-
+  const port = 3366;
+  detect(port)
+    .then(async (_port) => {
+      if (port == _port) {
+        console.log(`port: ${port} was not occupied`);
+      } else {
+        dialog.showMessageBox({
+          type: "warning",
+          title: `Port 3366 is in use`,
+          message: `Don't open multiple Koodo Reader at the same time`,
+        });
+        console.log(`port: ${port} was occupied, try port: ${_port}`);
+        return;
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+      dialog.showErrorBox("Error Message", err);
+      return;
+    });
   startServer();
 }
