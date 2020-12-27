@@ -88,7 +88,8 @@
     },
     "win": {
       "target": [
-        "nsis"
+        "nsis",
+        "portable"
       ],
       "icon": "assets/icons/icon.ico",
       "artifactName": "${productName}-${version}.${ext}",
@@ -101,6 +102,10 @@
     },
     "portable": {
       "artifactName": "${productName}-${version}-Portable.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
     }
   },
   "eslintConfig": {
