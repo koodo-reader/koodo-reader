@@ -21,7 +21,7 @@ app.on("ready", () => {
       nodeIntegrationInSubFrames: true,
       allowRunningInsecureContent: true,
     },
-    show: false,
+    // show: false,
     // transparent: true,
   });
   splash = new BrowserWindow({
