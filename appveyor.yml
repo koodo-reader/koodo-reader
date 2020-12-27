@@ -20,10 +20,10 @@ init:
 
 install:
   - git reset --hard HEAD
-  - yarn
+  - npm install
   - node --version
 
 build_script:
-  - yarn release
+  - npm run release
 
 test: off
