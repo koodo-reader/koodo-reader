@@ -1,0 +1,40 @@
+.arrow-container {
+  width: 80px;
+  height: 80px;
+  margin-left: 50px;
+  display: flex;
+  justify-content: center;
+}
+.circle {
+  position: absolute;
+  margin: 1px;
+  top: 0px;
+}
+
+.arrow {
+  margin-top: 20px;
+  position: relative;
+  left: 1px;
+  animation-name: clickme;
+  animation-delay: 0s;
+  animation-duration: 1.5s;
+  animation-timing-function: cubic-bezier(0.65, -0.55, 0.25, 1.5);
+  animation-iteration-count: infinite;
+  transform-origin: 50% 20.5px;
+  will-change: transform;
+}
+@keyframes clickme {
+  0%,
+  20% {
+    transform: translateY(0);
+  }
+
+  10% {
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateY(-36px);
+    opacity: 0.01;
+  }
+}

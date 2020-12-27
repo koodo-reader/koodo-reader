@@ -64,40 +64,40 @@
   }
 }
 .left-panel {
-  width: 60px;
-  height: calc(100% - 100px);
+  width: 50px;
+  height: 150px;
   position: absolute;
   left: 0px;
-  top: 50px;
+  top: calc(50% - 75px);
   background-color: pink;
   z-index: 10;
   opacity: 0;
 }
 .right-panel {
-  width: 60px;
-  height: calc(100% - 100px);
+  width: 50px;
+  height: 150px;
   position: absolute;
   right: 0px;
-  top: 50px;
+  top: calc(50% - 75px);
   background-color: pink;
   z-index: 10;
   opacity: 0;
 }
 .top-panel {
-  width: 412px;
-  height: 60px;
+  width: 200px;
+  height: 50px;
   position: absolute;
-  right: calc(50% - 206px);
+  right: calc(50% - 100px);
   top: 0px;
   background-color: pink;
   z-index: 10;
   opacity: 0;
 }
 .bottom-panel {
-  width: 412px;
-  height: 60px;
+  width: 200px;
+  height: 50px;
   position: absolute;
-  right: calc(50% - 206px);
+  right: calc(50% - 100px);
   bottom: 0px;
   background-color: pink;
   z-index: 10;
@@ -141,4 +141,55 @@
   height: calc(100% - 100px); */
   z-index: 0;
   user-select: text;
+}
+.previous-chapter-single-container {
+  width: 50px !important;
+  height: 50px !important;
+  background-color: rgba(112, 112, 112, 1);
+  border-radius: 50%;
+  opacity: 1;
+  color: white;
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  font-size: 30px;
+  transform: rotate(90deg);
+  cursor: pointer;
+  opacity: 0.1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 5;
+}
+.next-chapter-single-container {
+  width: 50px;
+  height: 50px;
+  background-color: rgba(112, 112, 112, 1);
+  border-radius: 50%;
+  opacity: 1;
+  color: white;
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  transform: rotate(-90deg);
+  cursor: pointer;
+  opacity: 0.1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 5;
+}
+.next-chapter-single-container:hover {
+  opacity: 0.5;
+}
+.previous-chapter-single-container:hover {
+  opacity: 0.5;
+}
+.previous-chapter-single {
+  height: 20px;
+  font-size: 20px;
+}
+.next-chapter-single {
+  font-size: 20px;
+  height: 20px;
 }

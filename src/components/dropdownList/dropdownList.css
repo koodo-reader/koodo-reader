@@ -1,6 +1,6 @@
-/* .paragraph-character-container {
-  height: 50px;
-} */
+.paragraph-character-container {
+  margin-bottom: 20px;
+}
 .paragraph-character-setting {
   margin: 0px 22px;
   width: calc(100% - 44px);

@@ -10,6 +10,5 @@ export interface SidebarProps extends RouteComponentProps<any> {
 
 export interface SidebarState {
   index: number;
-  isCollapse: boolean;
-  shelfIndex: number;
+  hoverIndex: number;
 }

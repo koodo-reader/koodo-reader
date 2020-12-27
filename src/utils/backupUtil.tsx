@@ -17,7 +17,7 @@ class BackupUtil {
   ) => {
     let zip = new JSZip();
     let books = bookArr;
-    let epubZip = zip.folder("epub");
+    let bookZip = zip.folder("book");
     let data: any = [];
     books &&
       books.forEach((item) => {
@@ -31,17 +31,27 @@ class BackupUtil {
       });
     let results = await Promise.all(data);
     for (let i = 0; i < books.length; i++) {
-      epubZip.file(`${books[i].name}.epub`, results[i]);
+      if (books[i].description === "pdf") {
+        bookZip.file(`${books[i].name}.pdf`, results[i]);
+      } else {
+        bookZip.file(`${books[i].name}.epub`, results[i]);
+      }
     }
-    let dataZip = zip.folder("data");
-    dataZip
+    let configZip = zip.folder("config");
+    configZip
       .file("notes.json", JSON.stringify(notes))
       .file("books.json", JSON.stringify(books))
       .file("bookmarks.json", JSON.stringify(bookmarks))
       .file("readerConfig.json", localStorage.getItem("readerConfig") || "")
       .file(
-        "sortCode.json",
-        localStorage.getItem("sortCode") || "{ sort: 2, order: 2 }"
+        "bookSortCode.json",
+        localStorage.getItem("bookSortCode") ||
+          JSON.stringify({ sort: 0, order: 2 })
+      )
+      .file(
+        "noteSortCode.json",
+        localStorage.getItem("noteSortCode") ||
+          JSON.stringify({ sort: 2, order: 2 })
       )
       .file("readingTime.json", localStorage.getItem("readingTime") || "")
       .file("recentBooks.json", localStorage.getItem("recentBooks") || [])

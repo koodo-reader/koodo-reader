@@ -132,13 +132,13 @@ class BookList extends React.Component<BookListProps, BookListState> {
       ? this.handleIndexFilter(
           this.handleKeyFilter(this.props.books, AddFavorite.getAllFavorite()),
           //返回排序后的图书index
-          SortUtil.sortBooks(this.props.books, this.props.sortCode) || []
+          SortUtil.sortBooks(this.props.books, this.props.bookSortCode) || []
         )
       : this.props.isSort
       ? this.handleIndexFilter(
           this.props.books,
           //返回排序后的图书index
-          SortUtil.sortBooks(this.props.books, this.props.sortCode) || []
+          SortUtil.sortBooks(this.props.books, this.props.bookSortCode) || []
         )
       : this.handleKeyFilter(this.props.books, RecordRecent.getAllRecent());
     if (this.props.mode === "shelf" && books.length === 0) {

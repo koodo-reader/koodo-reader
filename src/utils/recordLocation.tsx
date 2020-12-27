@@ -12,7 +12,11 @@ class RecordLocation {
     let obj = JSON.parse(json!) || {};
     return obj[bookKey] || {};
   }
-
+  static getAllCfi() {
+    let json = localStorage.getItem("recordLocation");
+    let obj = JSON.parse(json!) || {};
+    return obj;
+  }
   static clear(bookKey: string) {
     let json = localStorage.getItem("recordLocation");
     let obj = JSON.parse(json!) || {};

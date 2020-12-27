@@ -74,7 +74,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         >
           <Trans>Backup and Restore</Trans>
         </div>
-        <ImportLocal />
+        <ImportLocal {...{ handleDrag: this.props.handleDrag }} />
         <UpdateInfo />
       </div>
     );
