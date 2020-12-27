@@ -84,20 +84,24 @@
     "mac": {
       "icon": "assets/icons/icon.icns",
       "category": "public.app-category.productivity",
-      "artifactName": "${productName}-${version}-${arch}.${ext}"
+      "artifactName": "${productName}-${version}.${ext}"
     },
     "win": {
       "target": [
-        "nsis"
+        "nsis",
+        "portable"
       ],
       "icon": "assets/icons/icon.ico",
-      "artifactName": "${productName}-Web-Setup-${version}.${ext}",
+      "artifactName": "${productName}-${version}.${ext}",
       "publisherName": "App by Troye"
     },
     "linux": {
       "icon": "assets/icons",
       "category": "Office",
       "target": "AppImage"
+    },
+    "portable": {
+      "artifactName": "${productName}-${version}-Portable.${ext}"
     }
   },
   "eslintConfig": {
