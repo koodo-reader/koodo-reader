@@ -82,6 +82,12 @@
 
 Desktop : Download the latest software package(Windows7 is not supported yet) [Click me](https://koodo.960960.xyz/download)
 
+Install with [Homebrew](https://brew.sh/):
+
+```shell
+brew install --cask koodo-reader
+```
+
 Web：Website is hosted on Vercel [Click me](https://reader.960960.xyz)
 
 ## Develop
