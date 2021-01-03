@@ -84,6 +84,12 @@
 
 （国内网络下载速度慢的解决办法，复制下载链接到这个网站：https://d.serctl.com/ ）
 
+如果您已安装[Homebrew 包管理器](https://brew.sh/)，可以使用如下命令安装：
+
+```shell
+brew install --cask koodo-reader
+```
+
 网页版：代码托管在 Vercel [点我前往](https://reader.960960.xyz)
 
 ## 运行源码
