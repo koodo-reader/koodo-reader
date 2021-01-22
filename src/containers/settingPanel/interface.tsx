@@ -9,4 +9,7 @@ export interface SettingPanelState {
   isSupported: boolean;
   isAudioOn: boolean;
   readerMode: string;
+  isUseBackground: boolean;
+  isShowFooter: boolean;
+  isShowHeader: boolean;
 }

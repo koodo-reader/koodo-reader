@@ -13,7 +13,7 @@
 }
 .setting-dialog-title {
   font-size: 20px;
-  font-weight: bold;
+  font-weight: 600;
   line-height: 15px;
   color: rgba(75, 75, 75, 1);
   opacity: 1;
@@ -85,15 +85,23 @@
   font-size: 25px;
   color: rgba(75, 75, 75, 1);
 }
-.setting-close {
+.setting-close-container {
   position: absolute;
   top: 10px;
   right: 10px;
+  transition: 0.1s;
+  width: 38px;
+  height: 38px;
+}
+
+.setting-close-container:hover {
+  background-color: rgba(75, 75, 75, 0.035);
+  border-radius: 50%;
 }
 .about-this-project {
   position: absolute;
   bottom: 20px;
-  left: 40px;
+  left: 100px;
   width: 150px;
   cursor: pointer;
   z-index: 10;

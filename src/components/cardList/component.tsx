@@ -79,9 +79,12 @@ class CardList extends React.Component<CardListProps, CardListStates> {
             }}
             style={this.props.mode === "note" ? { height: "250px" } : {}}
           >
-            {this.state.deleteKey === item.key ? (
-              <DeleteIcon {...cardProps} />
-            ) : null}
+            <div style={{ position: "relative", bottom: "25px" }}>
+              {this.state.deleteKey === item.key ? (
+                <DeleteIcon {...cardProps} />
+              ) : null}
+            </div>
+
             <div className="card-list-item-card">
               <div className="card-list-item-text-parent">
                 <div className="card-list-item-text">

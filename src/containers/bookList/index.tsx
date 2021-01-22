@@ -17,6 +17,7 @@ const mappropsToProps = (state: stateType) => {
     isSort: state.manager.isSort,
     isList: state.manager.isList,
     bookSortCode: state.manager.bookSortCode,
+    noteSortCode: state.manager.noteSortCode,
   };
 };
 const actionCreator = {

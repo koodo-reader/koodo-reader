@@ -206,12 +206,15 @@ class BackupDialog extends React.Component<
             style={{ marginLeft: "252px" }}
           ></div>
         ) : null}
-        <span
-          className="icon-close backup-page-close-icon"
-          onClick={() => {
-            this.handleClose();
-          }}
-        ></span>
+        <div className="backup-page-close-icon">
+          <span
+            className="icon-close "
+            onClick={() => {
+              this.handleClose();
+            }}
+          ></span>
+        </div>
+
         {this.state.currentStep === 1 ? (
           <div
             className="backup-page-next"

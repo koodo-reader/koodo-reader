@@ -7,7 +7,9 @@
   width: 100%;
   font-size: 16px;
   color: rgba(75, 75, 75, 1);
-  margin: 6px 0px;
+  font-weight: 500;
+  margin-bottom: -5px;
+  margin-top: 15px;
 }
 .background-color-list {
   margin: 10px 0px 0px;

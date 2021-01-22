@@ -8,7 +8,9 @@
 .general-setting-title {
   font-size: 16px;
   color: rgba(75, 75, 75, 1);
-  margin: 15px 0px 17px 0px;
+  font-weight: 500;
+  margin-top: 15px;
+  margin-bottom: 10px;
 }
 .general-setting-dropdown {
   width: 220px;
