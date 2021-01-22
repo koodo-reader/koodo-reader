@@ -32,12 +32,7 @@
   place-content: center; */
   overflow: hidden;
 }
-/* 控制小于888px是书脊消失 */
-@media screen and (max-width: 888px) {
-  .background-box3 {
-    display: none;
-  }
-}
+
 .book-spine {
   position: absolute;
   width: 1px;
@@ -86,7 +81,6 @@
   position: absolute;
   top: 5px;
   line-height: 30px;
-  color: rgba(191, 191, 191, 1);
   text-align: center;
 }
 .progress-chapter-name {
@@ -104,7 +98,6 @@
   position: absolute;
   bottom: 10px;
   line-height: 30px;
-  color: rgba(191, 191, 191, 1);
   text-align: center;
   font-size: 14px;
 }

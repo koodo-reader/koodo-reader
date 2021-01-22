@@ -423,7 +423,9 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
             className="import-from-local"
             {...getRootProps()}
             style={
-              OtherUtil.getReaderConfig("lang") === "en" ? { right: 390 } : {}
+              OtherUtil.getReaderConfig("lang") === "en"
+                ? { fontSize: "14px" }
+                : {}
             }
           >
             <Trans>Import from Local</Trans>

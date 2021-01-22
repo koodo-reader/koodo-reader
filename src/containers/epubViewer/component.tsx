@@ -26,6 +26,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
       isMessage: false,
       rendition: null,
       scale: OtherUtil.getReaderConfig("scale") || 1,
+      margin: OtherUtil.getReaderConfig("margin") || 30,
       time: ReadingTime.getTime(this.props.currentBook.key),
       isTouch: OtherUtil.getReaderConfig("isTouch") === "yes",
       readerMode: OtherUtil.getReaderConfig("readerMode") || "double",
@@ -57,12 +58,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
     this.rendition = epub.renderTo(page, {
       manager:
         this.state.readerMode === "continuous" ? "continuous" : "default",
-      flow:
-        this.state.readerMode === "scroll"
-          ? "scrolled-doc"
-          : this.state.readerMode === "continuous"
-          ? "scrolled"
-          : "auto",
+      flow: this.state.readerMode === "continuous" ? "scrolled" : "auto",
       width: "100%",
       height: "100%",
       snap: true,
@@ -70,9 +66,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         OtherUtil.getReaderConfig("readerMode") === "single" ? "none" : "",
     });
     this.setState({ rendition: this.rendition });
-    this.state.readerMode !== "scroll" &&
-      this.state.readerMode !== "continuous" &&
-      MouseEvent(this.rendition); // 绑定事件
+    this.state.readerMode !== "continuous" && MouseEvent(this.rendition); // 绑定事件
     this.tickTimer = setInterval(() => {
       let time = this.state.time;
       time += 1;
@@ -167,6 +161,17 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
           }}
         >
           <span className="icon-dropdown next-chapter-single"></span>
+        </div>
+        <div
+          className="reader-setting-icon-container"
+          onClick={() => {
+            this.handleEnterReader("left");
+            this.handleEnterReader("right");
+            this.handleEnterReader("bottom");
+            this.handleEnterReader("top");
+          }}
+        >
+          <span className="icon-setting reader-setting-icon"></span>
         </div>
         {this.state.isMessage ? <MessageBox /> : null}
         <div
@@ -294,7 +299,6 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
           className="view-area-page"
           id="page-area"
           style={
-            this.state.readerMode === "scroll" ||
             this.state.readerMode === "continuous"
               ? {
                   left: `calc(50vw - ${270 * parseFloat(this.state.scale)}px)`,
@@ -306,6 +310,11 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
               ? {
                   left: `calc(50vw - ${270 * parseFloat(this.state.scale)}px)`,
                   right: `calc(50vw - ${270 * parseFloat(this.state.scale)}px)`,
+                }
+              : this.state.readerMode === "double"
+              ? {
+                  left: this.state.margin + "px",
+                  right: this.state.margin + "px",
                 }
               : {}
           }

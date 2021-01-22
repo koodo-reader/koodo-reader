@@ -165,9 +165,3 @@
   bottom: 5px;
   margin-left: calc(50% - 6px);
 }
-/* 控制小于888px是书脊消失 */
-@media screen and (max-width: 888px) {
-  .card-list-item-citation {
-    display: none;
-  }
-}

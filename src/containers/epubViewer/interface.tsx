@@ -21,4 +21,5 @@ export interface ReaderState {
   rendition: any;
   time: number;
   scale: string;
+  margin: string;
 }

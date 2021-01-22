@@ -57,7 +57,7 @@
   position: absolute;
   bottom: 15px;
   right: 15px;
-  width: 100px;
+  width: 120px;
   display: flex;
   justify-content: space-between;
 }
@@ -74,6 +74,7 @@
   color: rgba(0, 0, 0, 1);
   opacity: 1;
   cursor: pointer;
+  margin-right: 20px;
 }
 .note-tags {
   width: 100%;

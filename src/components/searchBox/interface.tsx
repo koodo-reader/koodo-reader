@@ -16,4 +16,5 @@ export interface SearchBoxProps {
   handleSearch: (isSearch: boolean) => void;
   handleSearchState: (isSearch: boolean) => void;
   handleSearchList: (searchList: any) => void;
+  t: any;
 }
