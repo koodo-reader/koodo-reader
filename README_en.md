@@ -80,7 +80,7 @@
 
 ## Usage
 
-Desktop : Download the latest software package(Windows7 is not supported yet) [Click me](https://koodo.960960.xyz/download)
+Desktop : Download the latest software package(Windows 7 is not supported yet) [Click me](https://koodo.960960.xyz/download)
 
 Install with [Homebrew](https://brew.sh/):
 
@@ -100,14 +100,14 @@ Make sure node's version on your computer is larger than 10.0.0, yarn and git is
    git clone https://github.com/troyeguo/koodo-reader.git
    ```
 
-2. Enter desktop version
+2. Enter desktop mode
 
    ```
    yarn
    yarn dev
    ```
 
-3. Enter web version
+3. Enter web mode
 
    ```
    yarn
@@ -116,8 +116,8 @@ Make sure node's version on your computer is larger than 10.0.0, yarn and git is
 
 ## Update
 
-Whenever there is a update, a short message will show up in the software's header
+When an update is available, you will receive a notification when you open the software.
 
 ## Help
 
-Click [here](https://github.com/troyeguo/koodo-reader/issues) to report your issue, or contact me with guo362429@gmail.com
+Click [here](https://github.com/troyeguo/koodo-reader/issues) to report your issue, or visit https://koodo.960960.xyz/support for help.

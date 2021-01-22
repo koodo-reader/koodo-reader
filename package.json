@@ -1,7 +1,7 @@
 {
   "name": "koodo-reader",
   "main": "main.js",
-  "version": "1.1.9",
+  "version": "1.2.0",
   "description": "A cross-platform open source Epub reader ",
   "author": {
     "name": "App by Troye",

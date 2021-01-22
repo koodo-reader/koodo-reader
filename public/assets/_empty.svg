@@ -1,19 +1,24 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1371.37" height="565.416" viewBox="0 0 1371.37 565.416">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="987.234" height="565.416" viewBox="0 0 987.234 565.416">
   <defs>
     <linearGradient id="linear-gradient" x1="0.43" y1="0.005" x2="0.43" y2="0.577" gradientUnits="objectBoundingBox">
       <stop offset="0" stop-color="#dae0e6"/>
       <stop offset="1" stop-color="#eff1f3"/>
     </linearGradient>
-    <linearGradient id="linear-gradient-2" x1="1.146" y1="1" x2="0.038" y2="-0.34" gradientUnits="objectBoundingBox">
+    <linearGradient id="linear-gradient-2" x1="0.5" y1="1.739" x2="0.038" y2="-0.34" gradientUnits="objectBoundingBox">
       <stop offset="0" stop-color="#536db5" stop-opacity="0"/>
       <stop offset="1" stop-color="#0e284b" stop-opacity="0.212"/>
     </linearGradient>
+    <linearGradient id="linear-gradient-3" x1="1.146" y1="1" x2="0.038" y2="-0.34" xlink:href="#linear-gradient-2"/>
   </defs>
-  <g id="组_763" data-name="组 763" transform="translate(-295.755 -235)">
-    <path id="Rectangle_Copy" data-name="Rectangle Copy" d="M1311.106,335.481H924.7c-54.321,0-473.383,1.025-757.763,0-130.459.181-114.97.147-172,0s-55.024.014-55.2,0c34-94.858,111.065-117.526,141.341-136.925,37.1-23.772,186.425-66.258,276.359-88.634S458.856,26.1,570.367,3.674C663.653-15.09,760.674,41.28,889.9,132.376c106.941,77.594,154.175,95.475,273.271,129.213S1311.106,335.481,1311.106,335.481Z" transform="translate(356.019 464.479)" opacity="0.61" fill="url(#linear-gradient)"/>
-    <g id="shadow" transform="translate(1068.709 696.823) rotate(180)">
-      <ellipse id="shadow-2" data-name="shadow" cx="28.937" cy="3.472" rx="28.937" ry="3.472" transform="translate(57.875 6.944) rotate(180)" fill="url(#linear-gradient-2)" style="mix-blend-mode: multiply;isolation: isolate"/>
-      <ellipse id="shadow-3" data-name="shadow" cx="28.937" cy="3.472" rx="28.937" ry="3.472" transform="translate(57.875 6.944) rotate(180)" fill="rgba(216,216,216,0.08)" style="mix-blend-mode: darken;isolation: isolate"/>
+  <g id="组_664" data-name="组 664" transform="translate(-295.755 -235)">
+    <path id="Rectangle_Copy" data-name="Rectangle Copy" d="M924.7,139.541s5.11,66.414,0,195.94c-54.321,0-473.383,1.025-757.763,0-130.459.181-114.97.147-172,0s-55.024.014-55.2,0c34-94.858,111.065-117.526,141.341-136.925,37.1-23.772,186.425-66.258,276.359-88.634S458.856,26.1,570.367,3.674C663.653-15.09,720.693,41.121,859,101.9,914.256,126.178,924.7,139.541,924.7,139.541Z" transform="translate(356.019 464.479)" opacity="0.61" fill="url(#linear-gradient)"/>
+    <g id="shadow" transform="translate(1382.42 711.827) rotate(180)">
+      <path id="shadow-2" data-name="shadow" d="M0,17.362l166.231,9.463V2.158L11.279,7.283Z" transform="translate(268.27 26.847) rotate(180)" fill="url(#linear-gradient-2)" style="mix-blend-mode: multiply;isolation: isolate"/>
+      <path id="shadow-3" data-name="shadow" d="M0,17.362l165.85,9.485V2.158L6.973,7.283Z" transform="translate(268.27 26.847) rotate(180)" fill="rgba(216,216,216,0.08)" style="mix-blend-mode: darken;isolation: isolate"/>
+    </g>
+    <g id="shadow-4" data-name="shadow" transform="translate(1068.709 696.823) rotate(180)">
+      <ellipse id="shadow-5" data-name="shadow" cx="28.937" cy="3.472" rx="28.937" ry="3.472" transform="translate(57.875 6.944) rotate(180)" fill="url(#linear-gradient-3)" style="mix-blend-mode: multiply;isolation: isolate"/>
+      <ellipse id="shadow-6" data-name="shadow" cx="28.937" cy="3.472" rx="28.937" ry="3.472" transform="translate(57.875 6.944) rotate(180)" fill="rgba(216,216,216,0.08)" style="mix-blend-mode: darken;isolation: isolate"/>
     </g>
     <path id="Path_39" data-name="Path 39" d="M14.468,6.443a37.827,37.827,0,0,1,4.573,24.593c-2.287,13.934-2,34.451-2,34.451H9.461L0,3.373S10.745-.688,14.468.1,14.468,6.443,14.468,6.443Z" transform="translate(1179.929 626.963)" fill="#9ea4b8"/>
     <path id="Path_39_Copy" data-name="Path 39 Copy" d="M14.468,11.386a37.827,37.827,0,0,1,4.573,24.593c-2.287,13.934-2,34.451-2,34.451H9.461L0,8.316,17.552,0Z" transform="translate(1142.736 620.824) rotate(13)" fill="#9ea4b8"/>
@@ -62,7 +67,7 @@
         <path id="Triangle_2_Copy_8" data-name="Triangle 2 Copy 8" d="M3.646,0,7.293,9.356H0Z" transform="translate(10.757 2.105) rotate(103)" fill="#9ea4b8"/>
       </g>
       <g id="Group_7" data-name="Group 7" transform="translate(61.224 0)">
-        <path id="Path_41" data-name="Path 41" d="M30.055,0c0,3.984,9.7,21.376-15.555,43.447s-12.37,50.917,0,60.569" transform="translate(40.847 104.016) rotate(180)" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="3.24" opacity="0.7"/>
+        <path id="Path_41" data-name="Path 41" stroke="#fff" d="M30.055,0c0,3.984,9.7,21.376-15.555,43.447s-12.37,50.917,0,60.569" fill="none" transform="translate(40.847 104.016) rotate(180)" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="3.24" opacity="0.7"/>
         <path id="Triangle_2-2" data-name="Triangle 2" d="M3.646,0,0,9.356H7.293Z" transform="matrix(-0.602, 0.799, -0.799, -0.602, 11.861, 83.405)" fill="#52556e"/>
         <path id="Triangle_2_Copy_7-2" data-name="Triangle 2 Copy 7" d="M3.646,0,7.293,9.356H0Z" transform="matrix(0.588, -0.809, 0.809, 0.588, 7.295, 87.86)" fill="#9ea4b8"/>
         <path id="Triangle_2_Copy" data-name="Triangle 2 Copy" d="M3.646,0,0,9.356H7.293Z" transform="translate(24.755 63.33) rotate(155)" fill="#9ea4b8"/>
@@ -73,10 +78,6 @@
         <path id="Triangle_2_Copy_4" data-name="Triangle 2 Copy 4" d="M3.646,0,7.293,9.356H0Z" transform="translate(37.156 16.999) rotate(-97)" fill="#52556e"/>
       </g>
       <path id="Path_40" data-name="Path 40" d="M82.34,85.36c-15.2-.889-38.511-9.777-44.068-38.656S17.838,3.77,0,0" transform="translate(82.34 127.666) rotate(180)" fill="none" stroke="#cdd4e0" stroke-miterlimit="10" stroke-width="1.62"/>
-    </g>
-    <g id="shadow-4" data-name="shadow" transform="translate(1296.024 708.416) rotate(180)">
-      <ellipse id="shadow-5" data-name="shadow" cx="91.095" cy="6.269" rx="91.095" ry="6.269" transform="translate(182.19 12.537) rotate(180)" fill="url(#linear-gradient-2)" style="mix-blend-mode: multiply;isolation: isolate"/>
-      <ellipse id="shadow-6" data-name="shadow" cx="91.095" cy="6.269" rx="91.095" ry="6.269" transform="translate(182.19 12.537) rotate(180)" fill="rgba(216,216,216,0.08)" style="mix-blend-mode: darken;isolation: isolate"/>
     </g>
   </g>
 </svg>

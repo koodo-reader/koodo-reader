@@ -9,10 +9,9 @@
 .digest-option,
 .translation-option,
 .copy-option {
-  height: 55px;
+  height: 69px;
   width: 69px;
   font-size: 14px !important;
-
   line-height: 15px !important;
   color: rgba(0, 0, 0, 1);
   opacity: 1;
@@ -20,9 +19,16 @@
   display: flex;
   box-sizing: border-box;
   cursor: pointer;
-
+  transition: 0.1s;
   /* align-items: center; */
   justify-content: center;
+}
+.note-option:hover,
+.digest-option:hover,
+.translation-option:hover,
+.copy-option:hover {
+  background-color: rgba(75, 75, 75, 0.035);
+  border-radius: 8px;
 }
 .digest-option {
   margin-top: 5px;

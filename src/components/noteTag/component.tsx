@@ -71,7 +71,9 @@ class NoteTag extends React.Component<NoteTagProps, NoteTagState> {
     this.props.handleTag(this.indextoTag([]));
   };
   handleInput = () => {
-    this.setState({ isInput: true });
+    this.setState({ isInput: true }, () => {
+      document.getElementById("newTag")?.focus();
+    });
   };
   render() {
     const renderTag = () => {

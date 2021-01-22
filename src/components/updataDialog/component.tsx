@@ -59,21 +59,6 @@ class UpdateDialog extends React.Component<UpdateInfoProps, UpdateInfoState> {
         >
           <Trans>Confirm</Trans>
         </div>
-        <p className="update-dialog-url">
-          <span style={{ color: "#959595" }}>
-            <Trans>Our Website</Trans>
-          </span>
-          koodo.960960.xyz
-        </p>
-        <img
-          src={
-            process.env.NODE_ENV === "production"
-              ? "./assets/empty.svg"
-              : "../../assets/empty.svg"
-          }
-          alt=""
-          className="update-dialog-illustration"
-        />
       </div>
     );
   }

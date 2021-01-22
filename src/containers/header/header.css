@@ -10,6 +10,16 @@
   left: 265px;
   top: 29px;
   cursor: pointer;
+  transition: 0.1s;
+  width: 48px;
+  height: 27px;
+  padding-left: 8px;
+  transition: 0.1s;
+}
+.header-sort-container:hover,
+.setting-icon-container:hover {
+  background-color: rgba(75, 75, 75, 0.035);
+  border-radius: 8px;
 }
 .header-sort-text,
 .download-demo-book {
@@ -73,6 +83,7 @@
   color: #4b4b4b;
   box-sizing: border-box;
   cursor: pointer;
+  transition: 0.1s;
 }
 .import-from-cloud:hover {
   background-color: rgba(75, 75, 75, 0.035);
@@ -113,12 +124,15 @@
   font-size: 25px;
 }
 .setting-icon-container {
-  width: 25px;
-  height: 25px;
+  width: 32px;
+  height: 35px;
   font-size: 25px;
+  line-height: 37px;
   position: absolute;
   left: 335px;
-  top: 33px;
+  top: 25px;
   color: rgba(75, 75, 75, 1);
   cursor: pointer;
+  transition: 0.1s;
+  padding-left: 5px;
 }

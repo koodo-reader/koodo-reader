@@ -40,6 +40,7 @@ class ImageViewer extends React.Component<ImageViewerProps, ImageViewerStates> {
       this.props.handleLeaveReader("bottom");
     }
     let href =
+      event.target ||
       event.target.href ||
       event.target.parentNode.href ||
       event.target.parentNode.parentNode.href;

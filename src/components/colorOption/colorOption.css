@@ -1,20 +1,23 @@
 .color-option-container {
-  width: 100%;
+  width: 90%;
   height: 40px;
+  margin-left: 5%;
   position: relative;
-  top: 8px;
+  top: 15px;
   display: flex;
   justify-content: space-around;
 }
 .color-option {
-  width: 30px;
-  height: 30px;
+  width: 25px;
+  height: 25px;
   background: rgba(228, 255, 154, 1);
   border-radius: 50%;
   opacity: 1;
   box-sizing: border-box;
   position: relative;
   bottom: 5px;
+  cursor: pointer;
+  animation: slide-left 0.2s ease-in-out 0s 1;
 }
 .popup-color-more {
   display: inline-block;
@@ -36,6 +39,27 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  animation: slide-right 0.2s ease-in-out 0s 1;
+}
+@keyframes slide-right {
+  0% {
+    transform: translateX(30px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0px);
+    opacity: 1;
+  }
+}
+@keyframes slide-left {
+  0% {
+    transform: translateX(-50px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0px);
+    opacity: 1;
+  }
 }
 .demo-line {
   width: 100%;

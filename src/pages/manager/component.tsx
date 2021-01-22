@@ -154,23 +154,27 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
         )}
         <Sidebar />
         <Header {...{ handleDrag: this.handleDrag }} />
-        <div className="manager-dialog-container">
-          {this.props.isOpenDeleteDialog ? (
-            <DeleteDialog />
-          ) : this.props.isOpenEditDialog ? (
-            <EditDialog />
-          ) : this.props.isOpenAddDialog ? (
-            <AddDialog />
-          ) : null}
-        </div>
-        {this.props.isMessage ? <MessageBox /> : null}
-        {this.props.isSortDisplay ? <SortDialog /> : null}
-        {this.props.isBackup ? <BackupDialog /> : null}
-        {this.props.isFirst === "yes" ? <WelcomeDialog /> : null}
-        {this.state.isUpdated && this.props.isFirst === "no" ? (
+        {this.props.isOpenDeleteDialog && <DeleteDialog />}
+        {this.props.isOpenEditDialog && <EditDialog />}
+        {this.props.isOpenAddDialog && <AddDialog />}
+        {(this.props.isSettingOpen ||
+          this.props.isBackup ||
+          this.props.isOpenDeleteDialog ||
+          this.props.isOpenEditDialog ||
+          this.props.isOpenAddDialog ||
+          this.props.isFirst === "yes" ||
+          (this.state.isUpdated && this.props.isFirst === "no")) && (
+          <div className="drag-background"></div>
+        )}
+
+        {this.props.isMessage && <MessageBox />}
+        {this.props.isSortDisplay && <SortDialog />}
+        {this.props.isBackup && <BackupDialog />}
+        {this.props.isFirst === "yes" && <WelcomeDialog />}
+        {this.state.isUpdated && this.props.isFirst === "no" && (
           <UpdateDialog {...updateDialogProps} />
-        ) : null}
-        {this.props.isSettingOpen ? <SettingDialog /> : null}
+        )}
+        {this.props.isSettingOpen && <SettingDialog />}
         {(!books || books.length === 0) && this.state.totalBooks ? (
           <Redirect to="/manager/loading" />
         ) : (

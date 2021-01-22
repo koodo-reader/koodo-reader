@@ -13,7 +13,7 @@
 }
 .update-dialog-title {
   font-size: 20px;
-  font-weight: bold;
+  font-weight: 600;
   line-height: 15px;
   color: rgba(75, 75, 75, 1);
   opacity: 1;
@@ -44,7 +44,7 @@
 }
 .update-dialog-info {
   margin-top: 10px;
-  height: 300px;
+  height: 330px;
   overflow-y: scroll;
   width: 346px;
 }
