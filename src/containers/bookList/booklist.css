@@ -50,15 +50,19 @@
   float: left;
   line-height: 17px;
   cursor: pointer;
+  height: 27px;
+  padding: 5px;
 }
 .list-view-mode {
   min-width: 51px;
-  height: 17px;
+  height: 27px;
   float: left;
   line-height: 17px;
   margin-left: 15px;
   cursor: pointer;
+  padding: 5px;
 }
+
 .book-list-item-box {
   position: relative;
   top: 0px;
@@ -72,12 +76,7 @@
   top: 1px;
   margin-right: 5px;
 }
-.booklist-shelf-container {
-  position: absolute;
-  top: 80px;
-  left: calc(50vw - 100px);
-  width: 400px;
-}
+
 .booklist-shelf-list {
   width: 169px;
   height: 31px;

@@ -83,8 +83,8 @@ app.on("ready", () => {
     } else {
       dialog.showMessageBox({
         type: "warning",
-        title: "Port is in use",
-        message: "Please don't open multiple software at the same time",
+        title: "Warning",
+        message: "Another Koodo Reader is already running",
       });
     }
   });

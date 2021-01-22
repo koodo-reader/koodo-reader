@@ -133,8 +133,8 @@
 }
 .view-area-page {
   position: absolute;
-  left: 30px;
-  right: 30px;
+  left: 0px;
+  right: 0px;
   top: 30px;
   bottom: 30px;
   /* width: calc(100% - 100px);
@@ -155,7 +155,7 @@
   font-size: 30px;
   transform: rotate(90deg);
   cursor: pointer;
-  opacity: 0.1;
+  opacity: 0.05;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -173,7 +173,7 @@
   right: 20px;
   transform: rotate(-90deg);
   cursor: pointer;
-  opacity: 0.1;
+  opacity: 0.05;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -192,4 +192,13 @@
 .next-chapter-single {
   font-size: 20px;
   height: 20px;
+}
+.reader-setting-icon-container {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  font-size: 27px;
+  opacity: 0.1;
+  cursor: pointer;
+  z-index: 10;
 }

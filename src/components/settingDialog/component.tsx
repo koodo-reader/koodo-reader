@@ -19,8 +19,6 @@ class SettingDialog extends React.Component<
       isTouch: OtherUtil.getReaderConfig("isTouch") === "yes",
       isOpenBook: OtherUtil.getReaderConfig("isOpenBook") === "yes",
       isExpandContent: OtherUtil.getReaderConfig("isExpandContent") === "yes",
-      isUseBackground: OtherUtil.getReaderConfig("isUseBackground") === "yes",
-      isShowFooter: OtherUtil.getReaderConfig("isShowFooter") !== "no",
     };
   }
   componentDidMount() {
@@ -79,28 +77,7 @@ class SettingDialog extends React.Component<
       : this.props.handleMessage("Turn On Successfully");
     this.props.handleMessageBox(true);
   };
-  handleChangeBackground = () => {
-    this.setState({ isUseBackground: !this.state.isUseBackground });
-    OtherUtil.setReaderConfig(
-      "isUseBackground",
-      this.state.isUseBackground ? "no" : "yes"
-    );
-    this.state.isUseBackground
-      ? this.props.handleMessage("Turn Off Successfully")
-      : this.props.handleMessage("Turn On Successfully");
-    this.props.handleMessageBox(true);
-  };
-  handleFooterHeader = () => {
-    this.setState({ isShowFooter: !this.state.isShowFooter });
-    OtherUtil.setReaderConfig(
-      "isShowFooter",
-      this.state.isShowFooter ? "no" : "yes"
-    );
-    this.state.isShowFooter
-      ? this.props.handleMessage("Turn On Successfully")
-      : this.props.handleMessage("Turn Off Successfully");
-    this.props.handleMessageBox(true);
-  };
+
   render() {
     return (
       <div className="setting-dialog-container">
@@ -115,12 +92,15 @@ class SettingDialog extends React.Component<
           <Trans>Date</Trans>
           {updateLog.date}
         </p>
-        <span
-          className="icon-close setting-close"
-          onClick={() => {
-            this.props.handleSetting(false);
-          }}
-        ></span>
+        <div className="setting-close-container">
+          <span
+            className="icon-close setting-close"
+            onClick={() => {
+              this.props.handleSetting(false);
+            }}
+          ></span>
+        </div>
+
         <div className="setting-dialog-info">
           <div className="setting-dialog-new-title">
             {this.state.isTouch ? (
@@ -203,56 +183,6 @@ class SettingDialog extends React.Component<
               ></span>
             </span>
           </div>
-          <div className="setting-dialog-new-title">
-            <Trans>Don't show footer and header</Trans>
-            <span
-              className="single-control-switch"
-              onClick={() => {
-                this.handleFooterHeader();
-              }}
-              style={{ float: "right" }}
-            >
-              <span
-                className="single-control-button"
-                style={
-                  this.state.isShowFooter
-                    ? {
-                        transform: "translateX(0px)",
-                        transition: "transform 0.5s ease",
-                      }
-                    : {
-                        transform: "translateX(20px)",
-                        transition: "transform 0.5s ease",
-                      }
-                }
-              ></span>
-            </span>
-          </div>
-          <div className="setting-dialog-new-title">
-            <Trans>Dont't use mimical background</Trans>
-            <span
-              className="single-control-switch"
-              onClick={() => {
-                this.handleChangeBackground();
-              }}
-              style={{ float: "right" }}
-            >
-              <span
-                className="single-control-button"
-                style={
-                  this.state.isUseBackground
-                    ? {
-                        transform: "translateX(20px)",
-                        transition: "transform 0.5s ease",
-                      }
-                    : {
-                        transform: "translateX(0px)",
-                        transition: "transform 0.5s ease",
-                      }
-                }
-              ></span>
-            </span>
-          </div>
 
           <div className="setting-dialog-new-title">
             <Trans>语言 / Language</Trans>
@@ -294,23 +224,13 @@ class SettingDialog extends React.Component<
             <div
               className="setting-dialog-subtitle"
               onClick={() => {
-                this.handleJump("https://github.com/troyeguo");
+                this.handleJump("https://960960.xyz");
               }}
             >
               <Trans>About author</Trans>
             </div>
           </div>
         </div>
-
-        <img
-          src={
-            process.env.NODE_ENV === "production"
-              ? "./assets/empty.svg"
-              : "../../assets/empty.svg"
-          }
-          alt=""
-          className="setting-dialog-illustration"
-        />
       </div>
     );
   }

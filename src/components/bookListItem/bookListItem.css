@@ -9,7 +9,7 @@
   height: 74px;
   background: rgba(0, 0, 0, 0);
   box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.22);
-  opacity: 0.73;
+  opacity: 1;
   cursor: pointer;
 }
 .book-item-list-title,

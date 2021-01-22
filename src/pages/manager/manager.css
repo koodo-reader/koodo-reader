@@ -36,7 +36,7 @@
   height: 100%;
   top: 0px;
   left: 0px;
-  z-index: 10;
+  z-index: 9;
 }
 .drag-info {
   width: 200px;
@@ -50,7 +50,7 @@
   text-align: center;
   margin: 50px 0px 20px;
   font-size: 40px;
-  font-weight: bold;
+  font-weight: 600;
 }
 .waring-pic {
   width: 100vw;

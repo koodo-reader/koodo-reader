@@ -73,15 +73,14 @@
   z-index: -1;
   cursor: default;
   -webkit-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
-          user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 .textLayer .endOfContent.active {
   top: 0px;
 }
-
 
 .annotationLayer section {
   position: absolute;
@@ -215,8 +214,8 @@
 .annotationLayer .buttonWidgetAnnotation.checkBox input,
 .annotationLayer .buttonWidgetAnnotation.radioButton input {
   -webkit-appearance: none;
-     -moz-appearance: none;
-          appearance: none;
+  -moz-appearance: none;
+  appearance: none;
   padding: 0;
 }
 
@@ -290,7 +289,7 @@
   border: 9px solid transparent;
   background-clip: content-box;
   -o-border-image: url(images/shadow.png) 9 9 repeat;
-     border-image: url(images/shadow.png) 9 9 repeat;
+  border-image: url(images/shadow.png) 9 9 repeat;
   background-color: rgba(255, 255, 255, 1);
 }
 
@@ -576,10 +575,9 @@ body {
 }
 
 @media (prefers-color-scheme: dark) {
-
   body {
-  background-color: rgba(42, 42, 46, 1);
-  background-color: var(--body-bg-color);
+    background-color: rgba(42, 42, 46, 1);
+    background-color: var(--body-bg-color);
   }
 }
 
@@ -591,34 +589,30 @@ body {
 }
 
 @media (prefers-color-scheme: dark) {
-
   body {
-  scrollbar-color: rgba(121, 121, 123, 1) rgba(35, 35, 39, 1);
-  scrollbar-color: var(--scrollbar-color) var(--scrollbar-bg-color);
+    scrollbar-color: rgba(121, 121, 123, 1) rgba(35, 35, 39, 1);
+    scrollbar-color: var(--scrollbar-color) var(--scrollbar-bg-color);
   }
 }
 
 @media (prefers-color-scheme: dark) {
-
   body {
-  scrollbar-color: rgba(121, 121, 123, 1) rgba(35, 35, 39, 1);
-  scrollbar-color: var(--scrollbar-color) var(--scrollbar-bg-color);
+    scrollbar-color: rgba(121, 121, 123, 1) rgba(35, 35, 39, 1);
+    scrollbar-color: var(--scrollbar-color) var(--scrollbar-bg-color);
   }
 }
 
 @media (prefers-color-scheme: dark) {
-
   body {
-  scrollbar-color: rgba(121, 121, 123, 1) rgba(35, 35, 39, 1);
-  scrollbar-color: var(--scrollbar-color) var(--scrollbar-bg-color);
+    scrollbar-color: rgba(121, 121, 123, 1) rgba(35, 35, 39, 1);
+    scrollbar-color: var(--scrollbar-color) var(--scrollbar-bg-color);
   }
 }
 
 @media (prefers-color-scheme: dark) {
-
   body {
-  scrollbar-color: rgba(121, 121, 123, 1) rgba(35, 35, 39, 1);
-  scrollbar-color: var(--scrollbar-color) var(--scrollbar-bg-color);
+    scrollbar-color: rgba(121, 121, 123, 1) rgba(35, 35, 39, 1);
+    scrollbar-color: var(--scrollbar-color) var(--scrollbar-bg-color);
   }
 }
 
@@ -630,34 +624,30 @@ input {
 }
 
 @media (prefers-color-scheme: dark) {
-
   input {
-  scrollbar-color: rgba(121, 121, 123, 1) rgba(35, 35, 39, 1);
-  scrollbar-color: var(--scrollbar-color) var(--scrollbar-bg-color);
+    scrollbar-color: rgba(121, 121, 123, 1) rgba(35, 35, 39, 1);
+    scrollbar-color: var(--scrollbar-color) var(--scrollbar-bg-color);
   }
 }
 
 @media (prefers-color-scheme: dark) {
-
   input {
-  scrollbar-color: rgba(121, 121, 123, 1) rgba(35, 35, 39, 1);
-  scrollbar-color: var(--scrollbar-color) var(--scrollbar-bg-color);
+    scrollbar-color: rgba(121, 121, 123, 1) rgba(35, 35, 39, 1);
+    scrollbar-color: var(--scrollbar-color) var(--scrollbar-bg-color);
   }
 }
 
 @media (prefers-color-scheme: dark) {
-
   input {
-  scrollbar-color: rgba(121, 121, 123, 1) rgba(35, 35, 39, 1);
-  scrollbar-color: var(--scrollbar-color) var(--scrollbar-bg-color);
+    scrollbar-color: rgba(121, 121, 123, 1) rgba(35, 35, 39, 1);
+    scrollbar-color: var(--scrollbar-color) var(--scrollbar-bg-color);
   }
 }
 
 @media (prefers-color-scheme: dark) {
-
   input {
-  scrollbar-color: rgba(121, 121, 123, 1) rgba(35, 35, 39, 1);
-  scrollbar-color: var(--scrollbar-color) var(--scrollbar-bg-color);
+    scrollbar-color: rgba(121, 121, 123, 1) rgba(35, 35, 39, 1);
+    scrollbar-color: var(--scrollbar-color) var(--scrollbar-bg-color);
   }
 }
 
@@ -669,34 +659,30 @@ button {
 }
 
 @media (prefers-color-scheme: dark) {
-
   button {
-  scrollbar-color: rgba(121, 121, 123, 1) rgba(35, 35, 39, 1);
-  scrollbar-color: var(--scrollbar-color) var(--scrollbar-bg-color);
+    scrollbar-color: rgba(121, 121, 123, 1) rgba(35, 35, 39, 1);
+    scrollbar-color: var(--scrollbar-color) var(--scrollbar-bg-color);
   }
 }
 
 @media (prefers-color-scheme: dark) {
-
   button {
-  scrollbar-color: rgba(121, 121, 123, 1) rgba(35, 35, 39, 1);
-  scrollbar-color: var(--scrollbar-color) var(--scrollbar-bg-color);
+    scrollbar-color: rgba(121, 121, 123, 1) rgba(35, 35, 39, 1);
+    scrollbar-color: var(--scrollbar-color) var(--scrollbar-bg-color);
   }
 }
 
 @media (prefers-color-scheme: dark) {
-
   button {
-  scrollbar-color: rgba(121, 121, 123, 1) rgba(35, 35, 39, 1);
-  scrollbar-color: var(--scrollbar-color) var(--scrollbar-bg-color);
+    scrollbar-color: rgba(121, 121, 123, 1) rgba(35, 35, 39, 1);
+    scrollbar-color: var(--scrollbar-color) var(--scrollbar-bg-color);
   }
 }
 
 @media (prefers-color-scheme: dark) {
-
   button {
-  scrollbar-color: rgba(121, 121, 123, 1) rgba(35, 35, 39, 1);
-  scrollbar-color: var(--scrollbar-color) var(--scrollbar-bg-color);
+    scrollbar-color: rgba(121, 121, 123, 1) rgba(35, 35, 39, 1);
+    scrollbar-color: var(--scrollbar-color) var(--scrollbar-bg-color);
   }
 }
 
@@ -708,34 +694,30 @@ select {
 }
 
 @media (prefers-color-scheme: dark) {
-
   select {
-  scrollbar-color: rgba(121, 121, 123, 1) rgba(35, 35, 39, 1);
-  scrollbar-color: var(--scrollbar-color) var(--scrollbar-bg-color);
+    scrollbar-color: rgba(121, 121, 123, 1) rgba(35, 35, 39, 1);
+    scrollbar-color: var(--scrollbar-color) var(--scrollbar-bg-color);
   }
 }
 
 @media (prefers-color-scheme: dark) {
-
   select {
-  scrollbar-color: rgba(121, 121, 123, 1) rgba(35, 35, 39, 1);
-  scrollbar-color: var(--scrollbar-color) var(--scrollbar-bg-color);
+    scrollbar-color: rgba(121, 121, 123, 1) rgba(35, 35, 39, 1);
+    scrollbar-color: var(--scrollbar-color) var(--scrollbar-bg-color);
   }
 }
 
 @media (prefers-color-scheme: dark) {
-
   select {
-  scrollbar-color: rgba(121, 121, 123, 1) rgba(35, 35, 39, 1);
-  scrollbar-color: var(--scrollbar-color) var(--scrollbar-bg-color);
+    scrollbar-color: rgba(121, 121, 123, 1) rgba(35, 35, 39, 1);
+    scrollbar-color: var(--scrollbar-color) var(--scrollbar-bg-color);
   }
 }
 
 @media (prefers-color-scheme: dark) {
-
   select {
-  scrollbar-color: rgba(121, 121, 123, 1) rgba(35, 35, 39, 1);
-  scrollbar-color: var(--scrollbar-color) var(--scrollbar-bg-color);
+    scrollbar-color: rgba(121, 121, 123, 1) rgba(35, 35, 39, 1);
+    scrollbar-color: var(--scrollbar-color) var(--scrollbar-bg-color);
   }
 }
 
@@ -748,9 +730,9 @@ select {
 
 .pdfViewer.enablePermissions .textLayer > span {
   -webkit-user-select: none !important;
-     -moz-user-select: none !important;
-      -ms-user-select: none !important;
-          user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+  user-select: none !important;
   cursor: not-allowed;
 }
 
@@ -763,7 +745,7 @@ select {
   overflow: hidden;
   cursor: none;
   -webkit-user-select: none;
-          user-select: none;
+  user-select: none;
 }
 
 #viewerContainer.pdfPresentationMode:-moz-full-screen {
@@ -775,7 +757,7 @@ select {
   overflow: hidden;
   cursor: none;
   -moz-user-select: none;
-       user-select: none;
+  user-select: none;
 }
 
 #viewerContainer.pdfPresentationMode:-ms-fullscreen {
@@ -787,7 +769,7 @@ select {
   overflow: hidden;
   cursor: none;
   -ms-user-select: none;
-      user-select: none;
+  user-select: none;
 }
 
 #viewerContainer.pdfPresentationMode:fullscreen {
@@ -799,9 +781,9 @@ select {
   overflow: hidden;
   cursor: none;
   -webkit-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
-          user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 .pdfPresentationMode:-webkit-full-screen a:not(.internalLink) {
@@ -877,9 +859,9 @@ html[dir="rtl"] #sidebarContainer {
   transition-duration: 0s;
   /* Prevent e.g. the thumbnails being selected when the sidebar is resized. */
   -webkit-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
-          user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 #outerContainer.sidebarMoving #sidebarContainer,
@@ -977,10 +959,9 @@ html[dir="rtl"]
 }
 
 @media (prefers-color-scheme: dark) {
-
   #toolbarSidebar {
-  background-color: rgba(50, 50, 52, 1);
-  background-color: var(--sidebar-bg-color);
+    background-color: rgba(50, 50, 52, 1);
+    background-color: var(--sidebar-bg-color);
   }
 }
 html[dir="ltr"] #toolbarSidebar {
@@ -1022,10 +1003,9 @@ html[dir="rtl"] #sidebarResizer {
 }
 
 @media (prefers-color-scheme: dark) {
-
   #toolbarContainer {
-  background-color: rgba(56, 56, 61, 1);
-  background-color: var(--toolbar-bg-color);
+    background-color: rgba(56, 56, 61, 1);
+    background-color: var(--toolbar-bg-color);
   }
 }
 
@@ -1037,10 +1017,9 @@ html[dir="rtl"] #sidebarResizer {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .findbar {
-  background-color: rgba(56, 56, 61, 1);
-  background-color: var(--toolbar-bg-color);
+    background-color: rgba(56, 56, 61, 1);
+    background-color: var(--toolbar-bg-color);
   }
 }
 
@@ -1052,10 +1031,9 @@ html[dir="rtl"] #sidebarResizer {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .secondaryToolbar {
-  background-color: rgba(56, 56, 61, 1);
-  background-color: var(--toolbar-bg-color);
+    background-color: rgba(56, 56, 61, 1);
+    background-color: var(--toolbar-bg-color);
   }
 }
 html[dir="ltr"] #toolbarContainer {
@@ -1063,10 +1041,9 @@ html[dir="ltr"] #toolbarContainer {
   box-shadow: 0 1px 0 var(--toolbar-border-color);
 }
 @media (prefers-color-scheme: dark) {
-
   html[dir="ltr"] #toolbarContainer {
-  box-shadow: 0 1px 0 rgba(12, 12, 13, 1);
-  box-shadow: 0 1px 0 var(--toolbar-border-color);
+    box-shadow: 0 1px 0 rgba(12, 12, 13, 1);
+    box-shadow: 0 1px 0 var(--toolbar-border-color);
   }
 }
 .findbar {
@@ -1074,10 +1051,9 @@ html[dir="ltr"] #toolbarContainer {
   box-shadow: 0 1px 0 var(--toolbar-border-color);
 }
 @media (prefers-color-scheme: dark) {
-
   .findbar {
-  box-shadow: 0 1px 0 rgba(12, 12, 13, 1);
-  box-shadow: 0 1px 0 var(--toolbar-border-color);
+    box-shadow: 0 1px 0 rgba(12, 12, 13, 1);
+    box-shadow: 0 1px 0 var(--toolbar-border-color);
   }
 }
 .secondaryToolbar {
@@ -1085,10 +1061,9 @@ html[dir="ltr"] #toolbarContainer {
   box-shadow: 0 1px 0 var(--toolbar-border-color);
 }
 @media (prefers-color-scheme: dark) {
-
   .secondaryToolbar {
-  box-shadow: 0 1px 0 rgba(12, 12, 13, 1);
-  box-shadow: 0 1px 0 var(--toolbar-border-color);
+    box-shadow: 0 1px 0 rgba(12, 12, 13, 1);
+    box-shadow: 0 1px 0 var(--toolbar-border-color);
   }
 }
 html[dir="rtl"] #toolbarContainer {
@@ -1096,10 +1071,9 @@ html[dir="rtl"] #toolbarContainer {
   box-shadow: 0 1px 0 var(--toolbar-border-color);
 }
 @media (prefers-color-scheme: dark) {
-
   html[dir="rtl"] #toolbarContainer {
-  box-shadow: 0 1px 0 rgba(12, 12, 13, 1);
-  box-shadow: 0 1px 0 var(--toolbar-border-color);
+    box-shadow: 0 1px 0 rgba(12, 12, 13, 1);
+    box-shadow: 0 1px 0 var(--toolbar-border-color);
   }
 }
 .findbar {
@@ -1107,10 +1081,9 @@ html[dir="rtl"] #toolbarContainer {
   box-shadow: 0 1px 0 var(--toolbar-border-color);
 }
 @media (prefers-color-scheme: dark) {
-
   .findbar {
-  box-shadow: 0 1px 0 rgba(12, 12, 13, 1);
-  box-shadow: 0 1px 0 var(--toolbar-border-color);
+    box-shadow: 0 1px 0 rgba(12, 12, 13, 1);
+    box-shadow: 0 1px 0 var(--toolbar-border-color);
   }
 }
 .secondaryToolbar {
@@ -1118,10 +1091,9 @@ html[dir="rtl"] #toolbarContainer {
   box-shadow: 0 1px 0 var(--toolbar-border-color);
 }
 @media (prefers-color-scheme: dark) {
-
   .secondaryToolbar {
-  box-shadow: 0 1px 0 rgba(12, 12, 13, 1);
-  box-shadow: 0 1px 0 var(--toolbar-border-color);
+    box-shadow: 0 1px 0 rgba(12, 12, 13, 1);
+    box-shadow: 0 1px 0 var(--toolbar-border-color);
   }
 }
 
@@ -1145,18 +1117,16 @@ html[dir="rtl"] #toolbarContainer {
 }
 
 @media (prefers-color-scheme: dark) {
-
   #loadingBar {
-  border-bottom: 1px solid rgba(12, 12, 13, 1);
-  border-bottom: 1px solid var(--toolbar-border-color);
+    border-bottom: 1px solid rgba(12, 12, 13, 1);
+    border-bottom: 1px solid var(--toolbar-border-color);
   }
 }
 
 @media (prefers-color-scheme: dark) {
-
   #loadingBar {
-  background-color: rgba(42, 42, 46, 1);
-  background-color: var(--body-bg-color);
+    background-color: rgba(42, 42, 46, 1);
+    background-color: var(--body-bg-color);
   }
 }
 html[dir="ltr"] #loadingBar {
@@ -1199,10 +1169,9 @@ html[dir="rtl"] #outerContainer.sidebarOpen #loadingBar {
 }
 
 @media (prefers-color-scheme: dark) {
-
   #loadingBar .progress {
-  background-color: rgba(0, 96, 223, 1);
-  background-color: var(--progressBar-color);
+    background-color: rgba(0, 96, 223, 1);
+    background-color: var(--progressBar-color);
   }
 }
 
@@ -1231,10 +1200,9 @@ html[dir="rtl"] #outerContainer.sidebarOpen #loadingBar {
 }
 
 @media (prefers-color-scheme: dark) {
-
   #loadingBar .progress.indeterminate {
-  background-color: rgba(40, 40, 43, 1);
-  background-color: var(--progressBar-indeterminate-bg-color);
+    background-color: rgba(40, 40, 43, 1);
+    background-color: var(--progressBar-indeterminate-bg-color);
   }
 }
 
@@ -1263,222 +1231,213 @@ html[dir="rtl"] #outerContainer.sidebarOpen #loadingBar {
     var(--progressBar-indeterminate-blend-color) 100px
   );
   -webkit-animation: progressIndeterminate 1s linear infinite;
-          animation: progressIndeterminate 1s linear infinite;
+  animation: progressIndeterminate 1s linear infinite;
 }
 
 @media (prefers-color-scheme: dark) {
-
   #loadingBar .progress.indeterminate .glimmer {
-  background: repeating-linear-gradient(
-    135deg,
-    rgba(20, 68, 133, 1) 0,
-    rgba(40, 40, 43, 1) 5px,
-    rgba(40, 40, 43, 1) 45px,
-    rgba(0, 96, 223, 1) 55px,
-    rgba(0, 96, 223, 1) 95px,
-    rgba(20, 68, 133, 1) 100px
-  );
-  background: repeating-linear-gradient(
-    135deg,
-    var(--progressBar-indeterminate-blend-color) 0,
-    var(--progressBar-indeterminate-bg-color) 5px,
-    var(--progressBar-indeterminate-bg-color) 45px,
-    var(--progressBar-color) 55px,
-    var(--progressBar-color) 95px,
-    var(--progressBar-indeterminate-blend-color) 100px
-  );
+    background: repeating-linear-gradient(
+      135deg,
+      rgba(20, 68, 133, 1) 0,
+      rgba(40, 40, 43, 1) 5px,
+      rgba(40, 40, 43, 1) 45px,
+      rgba(0, 96, 223, 1) 55px,
+      rgba(0, 96, 223, 1) 95px,
+      rgba(20, 68, 133, 1) 100px
+    );
+    background: repeating-linear-gradient(
+      135deg,
+      var(--progressBar-indeterminate-blend-color) 0,
+      var(--progressBar-indeterminate-bg-color) 5px,
+      var(--progressBar-indeterminate-bg-color) 45px,
+      var(--progressBar-color) 55px,
+      var(--progressBar-color) 95px,
+      var(--progressBar-indeterminate-blend-color) 100px
+    );
   }
 }
 
 @media (prefers-color-scheme: dark) {
-
   #loadingBar .progress.indeterminate .glimmer {
-  background: repeating-linear-gradient(
-    135deg,
-    rgba(20, 68, 133, 1) 0,
-    rgba(40, 40, 43, 1) 5px,
-    rgba(40, 40, 43, 1) 45px,
-    rgba(0, 96, 223, 1) 55px,
-    rgba(0, 96, 223, 1) 95px,
-    rgba(20, 68, 133, 1) 100px
-  );
-  background: repeating-linear-gradient(
-    135deg,
-    var(--progressBar-indeterminate-blend-color) 0,
-    var(--progressBar-indeterminate-bg-color) 5px,
-    var(--progressBar-indeterminate-bg-color) 45px,
-    var(--progressBar-color) 55px,
-    var(--progressBar-color) 95px,
-    var(--progressBar-indeterminate-blend-color) 100px
-  );
+    background: repeating-linear-gradient(
+      135deg,
+      rgba(20, 68, 133, 1) 0,
+      rgba(40, 40, 43, 1) 5px,
+      rgba(40, 40, 43, 1) 45px,
+      rgba(0, 96, 223, 1) 55px,
+      rgba(0, 96, 223, 1) 95px,
+      rgba(20, 68, 133, 1) 100px
+    );
+    background: repeating-linear-gradient(
+      135deg,
+      var(--progressBar-indeterminate-blend-color) 0,
+      var(--progressBar-indeterminate-bg-color) 5px,
+      var(--progressBar-indeterminate-bg-color) 45px,
+      var(--progressBar-color) 55px,
+      var(--progressBar-color) 95px,
+      var(--progressBar-indeterminate-blend-color) 100px
+    );
   }
 }
 
 @media (prefers-color-scheme: dark) {
-
   #loadingBar .progress.indeterminate .glimmer {
-  background: repeating-linear-gradient(
-    135deg,
-    rgba(20, 68, 133, 1) 0,
-    rgba(40, 40, 43, 1) 5px,
-    rgba(40, 40, 43, 1) 45px,
-    rgba(0, 96, 223, 1) 55px,
-    rgba(0, 96, 223, 1) 95px,
-    rgba(20, 68, 133, 1) 100px
-  );
-  background: repeating-linear-gradient(
-    135deg,
-    var(--progressBar-indeterminate-blend-color) 0,
-    var(--progressBar-indeterminate-bg-color) 5px,
-    var(--progressBar-indeterminate-bg-color) 45px,
-    var(--progressBar-color) 55px,
-    var(--progressBar-color) 95px,
-    var(--progressBar-indeterminate-blend-color) 100px
-  );
+    background: repeating-linear-gradient(
+      135deg,
+      rgba(20, 68, 133, 1) 0,
+      rgba(40, 40, 43, 1) 5px,
+      rgba(40, 40, 43, 1) 45px,
+      rgba(0, 96, 223, 1) 55px,
+      rgba(0, 96, 223, 1) 95px,
+      rgba(20, 68, 133, 1) 100px
+    );
+    background: repeating-linear-gradient(
+      135deg,
+      var(--progressBar-indeterminate-blend-color) 0,
+      var(--progressBar-indeterminate-bg-color) 5px,
+      var(--progressBar-indeterminate-bg-color) 45px,
+      var(--progressBar-color) 55px,
+      var(--progressBar-color) 95px,
+      var(--progressBar-indeterminate-blend-color) 100px
+    );
   }
 }
 
 @media (prefers-color-scheme: dark) {
-
   #loadingBar .progress.indeterminate .glimmer {
-  background: repeating-linear-gradient(
-    135deg,
-    rgba(20, 68, 133, 1) 0,
-    rgba(40, 40, 43, 1) 5px,
-    rgba(40, 40, 43, 1) 45px,
-    rgba(0, 96, 223, 1) 55px,
-    rgba(0, 96, 223, 1) 95px,
-    rgba(20, 68, 133, 1) 100px
-  );
-  background: repeating-linear-gradient(
-    135deg,
-    var(--progressBar-indeterminate-blend-color) 0,
-    var(--progressBar-indeterminate-bg-color) 5px,
-    var(--progressBar-indeterminate-bg-color) 45px,
-    var(--progressBar-color) 55px,
-    var(--progressBar-color) 95px,
-    var(--progressBar-indeterminate-blend-color) 100px
-  );
+    background: repeating-linear-gradient(
+      135deg,
+      rgba(20, 68, 133, 1) 0,
+      rgba(40, 40, 43, 1) 5px,
+      rgba(40, 40, 43, 1) 45px,
+      rgba(0, 96, 223, 1) 55px,
+      rgba(0, 96, 223, 1) 95px,
+      rgba(20, 68, 133, 1) 100px
+    );
+    background: repeating-linear-gradient(
+      135deg,
+      var(--progressBar-indeterminate-blend-color) 0,
+      var(--progressBar-indeterminate-bg-color) 5px,
+      var(--progressBar-indeterminate-bg-color) 45px,
+      var(--progressBar-color) 55px,
+      var(--progressBar-color) 95px,
+      var(--progressBar-indeterminate-blend-color) 100px
+    );
   }
 }
 
 @media (prefers-color-scheme: dark) {
-
   #loadingBar .progress.indeterminate .glimmer {
-  background: repeating-linear-gradient(
-    135deg,
-    rgba(20, 68, 133, 1) 0,
-    rgba(40, 40, 43, 1) 5px,
-    rgba(40, 40, 43, 1) 45px,
-    rgba(0, 96, 223, 1) 55px,
-    rgba(0, 96, 223, 1) 95px,
-    rgba(20, 68, 133, 1) 100px
-  );
-  background: repeating-linear-gradient(
-    135deg,
-    var(--progressBar-indeterminate-blend-color) 0,
-    var(--progressBar-indeterminate-bg-color) 5px,
-    var(--progressBar-indeterminate-bg-color) 45px,
-    var(--progressBar-color) 55px,
-    var(--progressBar-color) 95px,
-    var(--progressBar-indeterminate-blend-color) 100px
-  );
+    background: repeating-linear-gradient(
+      135deg,
+      rgba(20, 68, 133, 1) 0,
+      rgba(40, 40, 43, 1) 5px,
+      rgba(40, 40, 43, 1) 45px,
+      rgba(0, 96, 223, 1) 55px,
+      rgba(0, 96, 223, 1) 95px,
+      rgba(20, 68, 133, 1) 100px
+    );
+    background: repeating-linear-gradient(
+      135deg,
+      var(--progressBar-indeterminate-blend-color) 0,
+      var(--progressBar-indeterminate-bg-color) 5px,
+      var(--progressBar-indeterminate-bg-color) 45px,
+      var(--progressBar-color) 55px,
+      var(--progressBar-color) 95px,
+      var(--progressBar-indeterminate-blend-color) 100px
+    );
   }
 }
 
 @media (prefers-color-scheme: dark) {
-
   #loadingBar .progress.indeterminate .glimmer {
-  background: repeating-linear-gradient(
-    135deg,
-    rgba(20, 68, 133, 1) 0,
-    rgba(40, 40, 43, 1) 5px,
-    rgba(40, 40, 43, 1) 45px,
-    rgba(0, 96, 223, 1) 55px,
-    rgba(0, 96, 223, 1) 95px,
-    rgba(20, 68, 133, 1) 100px
-  );
-  background: repeating-linear-gradient(
-    135deg,
-    var(--progressBar-indeterminate-blend-color) 0,
-    var(--progressBar-indeterminate-bg-color) 5px,
-    var(--progressBar-indeterminate-bg-color) 45px,
-    var(--progressBar-color) 55px,
-    var(--progressBar-color) 95px,
-    var(--progressBar-indeterminate-blend-color) 100px
-  );
+    background: repeating-linear-gradient(
+      135deg,
+      rgba(20, 68, 133, 1) 0,
+      rgba(40, 40, 43, 1) 5px,
+      rgba(40, 40, 43, 1) 45px,
+      rgba(0, 96, 223, 1) 55px,
+      rgba(0, 96, 223, 1) 95px,
+      rgba(20, 68, 133, 1) 100px
+    );
+    background: repeating-linear-gradient(
+      135deg,
+      var(--progressBar-indeterminate-blend-color) 0,
+      var(--progressBar-indeterminate-bg-color) 5px,
+      var(--progressBar-indeterminate-bg-color) 45px,
+      var(--progressBar-color) 55px,
+      var(--progressBar-color) 95px,
+      var(--progressBar-indeterminate-blend-color) 100px
+    );
   }
 }
 
 @media (prefers-color-scheme: dark) {
-
   #loadingBar .progress.indeterminate .glimmer {
-  background: repeating-linear-gradient(
-    135deg,
-    rgba(20, 68, 133, 1) 0,
-    rgba(40, 40, 43, 1) 5px,
-    rgba(40, 40, 43, 1) 45px,
-    rgba(0, 96, 223, 1) 55px,
-    rgba(0, 96, 223, 1) 95px,
-    rgba(20, 68, 133, 1) 100px
-  );
-  background: repeating-linear-gradient(
-    135deg,
-    var(--progressBar-indeterminate-blend-color) 0,
-    var(--progressBar-indeterminate-bg-color) 5px,
-    var(--progressBar-indeterminate-bg-color) 45px,
-    var(--progressBar-color) 55px,
-    var(--progressBar-color) 95px,
-    var(--progressBar-indeterminate-blend-color) 100px
-  );
+    background: repeating-linear-gradient(
+      135deg,
+      rgba(20, 68, 133, 1) 0,
+      rgba(40, 40, 43, 1) 5px,
+      rgba(40, 40, 43, 1) 45px,
+      rgba(0, 96, 223, 1) 55px,
+      rgba(0, 96, 223, 1) 95px,
+      rgba(20, 68, 133, 1) 100px
+    );
+    background: repeating-linear-gradient(
+      135deg,
+      var(--progressBar-indeterminate-blend-color) 0,
+      var(--progressBar-indeterminate-bg-color) 5px,
+      var(--progressBar-indeterminate-bg-color) 45px,
+      var(--progressBar-color) 55px,
+      var(--progressBar-color) 95px,
+      var(--progressBar-indeterminate-blend-color) 100px
+    );
   }
 }
 
 @media (prefers-color-scheme: dark) {
-
   #loadingBar .progress.indeterminate .glimmer {
-  background: repeating-linear-gradient(
-    135deg,
-    rgba(20, 68, 133, 1) 0,
-    rgba(40, 40, 43, 1) 5px,
-    rgba(40, 40, 43, 1) 45px,
-    rgba(0, 96, 223, 1) 55px,
-    rgba(0, 96, 223, 1) 95px,
-    rgba(20, 68, 133, 1) 100px
-  );
-  background: repeating-linear-gradient(
-    135deg,
-    var(--progressBar-indeterminate-blend-color) 0,
-    var(--progressBar-indeterminate-bg-color) 5px,
-    var(--progressBar-indeterminate-bg-color) 45px,
-    var(--progressBar-color) 55px,
-    var(--progressBar-color) 95px,
-    var(--progressBar-indeterminate-blend-color) 100px
-  );
+    background: repeating-linear-gradient(
+      135deg,
+      rgba(20, 68, 133, 1) 0,
+      rgba(40, 40, 43, 1) 5px,
+      rgba(40, 40, 43, 1) 45px,
+      rgba(0, 96, 223, 1) 55px,
+      rgba(0, 96, 223, 1) 95px,
+      rgba(20, 68, 133, 1) 100px
+    );
+    background: repeating-linear-gradient(
+      135deg,
+      var(--progressBar-indeterminate-blend-color) 0,
+      var(--progressBar-indeterminate-bg-color) 5px,
+      var(--progressBar-indeterminate-bg-color) 45px,
+      var(--progressBar-color) 55px,
+      var(--progressBar-color) 95px,
+      var(--progressBar-indeterminate-blend-color) 100px
+    );
   }
 }
 
 @media (prefers-color-scheme: dark) {
-
   #loadingBar .progress.indeterminate .glimmer {
-  background: repeating-linear-gradient(
-    135deg,
-    rgba(20, 68, 133, 1) 0,
-    rgba(40, 40, 43, 1) 5px,
-    rgba(40, 40, 43, 1) 45px,
-    rgba(0, 96, 223, 1) 55px,
-    rgba(0, 96, 223, 1) 95px,
-    rgba(20, 68, 133, 1) 100px
-  );
-  background: repeating-linear-gradient(
-    135deg,
-    var(--progressBar-indeterminate-blend-color) 0,
-    var(--progressBar-indeterminate-bg-color) 5px,
-    var(--progressBar-indeterminate-bg-color) 45px,
-    var(--progressBar-color) 55px,
-    var(--progressBar-color) 95px,
-    var(--progressBar-indeterminate-blend-color) 100px
-  );
+    background: repeating-linear-gradient(
+      135deg,
+      rgba(20, 68, 133, 1) 0,
+      rgba(40, 40, 43, 1) 5px,
+      rgba(40, 40, 43, 1) 45px,
+      rgba(0, 96, 223, 1) 55px,
+      rgba(0, 96, 223, 1) 95px,
+      rgba(20, 68, 133, 1) 100px
+    );
+    background: repeating-linear-gradient(
+      135deg,
+      var(--progressBar-indeterminate-blend-color) 0,
+      var(--progressBar-indeterminate-bg-color) 5px,
+      var(--progressBar-indeterminate-bg-color) 45px,
+      var(--progressBar-color) 55px,
+      var(--progressBar-color) 95px,
+      var(--progressBar-indeterminate-blend-color) 100px
+    );
   }
 }
 
@@ -1505,10 +1464,9 @@ html[dir="rtl"] #outerContainer.sidebarOpen #loadingBar {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .findbar {
-  background-color: rgba(56, 56, 61, 1);
-  background-color: var(--toolbar-bg-color);
+    background-color: rgba(56, 56, 61, 1);
+    background-color: var(--toolbar-bg-color);
   }
 }
 .findbar > div {
@@ -1547,10 +1505,9 @@ html[dir="ltr"] .findbar .splitToolbarButton .findNext {
 }
 
 @media (prefers-color-scheme: dark) {
-
   html[dir="ltr"] .findbar .splitToolbarButton .findNext {
-  border-right: 1px solid rgba(115, 115, 115, 1);
-  border-right: 1px solid var(--field-border-color);
+    border-right: 1px solid rgba(115, 115, 115, 1);
+    border-right: 1px solid var(--field-border-color);
   }
 }
 
@@ -1560,10 +1517,9 @@ html[dir="rtl"] .findbar .splitToolbarButton .findNext {
 }
 
 @media (prefers-color-scheme: dark) {
-
   html[dir="rtl"] .findbar .splitToolbarButton .findNext {
-  border-left: 1px solid rgba(115, 115, 115, 1);
-  border-left: 1px solid var(--field-border-color);
+    border-left: 1px solid rgba(115, 115, 115, 1);
+    border-left: 1px solid var(--field-border-color);
   }
 }
 
@@ -1579,26 +1535,23 @@ html[dir="rtl"] .findbar .splitToolbarButton .findNext {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .findbar .splitToolbarButton .toolbarButton {
-  border-bottom: 1px solid rgba(115, 115, 115, 1);
-  border-bottom: 1px solid var(--field-border-color);
+    border-bottom: 1px solid rgba(115, 115, 115, 1);
+    border-bottom: 1px solid var(--field-border-color);
   }
 }
 
 @media (prefers-color-scheme: dark) {
-
   .findbar .splitToolbarButton .toolbarButton {
-  border-top: 1px solid rgba(115, 115, 115, 1);
-  border-top: 1px solid var(--field-border-color);
+    border-top: 1px solid rgba(115, 115, 115, 1);
+    border-top: 1px solid var(--field-border-color);
   }
 }
 
 @media (prefers-color-scheme: dark) {
-
   .findbar .splitToolbarButton .toolbarButton {
-  background-color: rgba(89, 89, 89, 1);
-  background-color: var(--findbar-nextprevious-btn-bg-color);
+    background-color: rgba(89, 89, 89, 1);
+    background-color: var(--findbar-nextprevious-btn-bg-color);
   }
 }
 
@@ -1632,9 +1585,9 @@ html[dir="rtl"] .findbar .splitToolbarButton > .findNext {
 
 .findbar label {
   -webkit-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
-          user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 .findbar label:hover {
@@ -1643,10 +1596,9 @@ html[dir="rtl"] .findbar .splitToolbarButton > .findNext {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .findbar label:hover {
-  background-color: rgba(102, 102, 103, 1);
-  background-color: var(--button-hover-color);
+    background-color: rgba(102, 102, 103, 1);
+    background-color: var(--button-hover-color);
   }
 }
 
@@ -1656,10 +1608,9 @@ html[dir="rtl"] .findbar .splitToolbarButton > .findNext {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .findbar input:focus + label {
-  background-color: rgba(102, 102, 103, 1);
-  background-color: var(--button-hover-color);
+    background-color: rgba(102, 102, 103, 1);
+    background-color: var(--button-hover-color);
   }
 }
 
@@ -1679,10 +1630,9 @@ html[dir="rtl"] #findInput {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .findbar .toolbarField[type="checkbox"]:checked + .toolbarLabel {
-  background-color: rgba(0, 0, 0, 0.3) !important;
-  background-color: var(--toggled-btn-bg-color) !important;
+    background-color: rgba(0, 0, 0, 0.3) !important;
+    background-color: var(--toggled-btn-bg-color) !important;
   }
 }
 
@@ -1708,10 +1658,9 @@ html[dir="rtl"] #findInput {
   background-position: 98%;
 }
 @media (prefers-color-scheme: dark) {
-
   #findInput[data-status="pending"] {
-  background-image: url(images/loading-dark.svg);
-  background-image: var(--loading-icon);
+    background-image: url(images/loading-dark.svg);
+    background-image: var(--loading-icon);
   }
 }
 html[dir="rtl"] #findInput[data-status="pending"] {
@@ -1727,10 +1676,9 @@ html[dir="rtl"] #findInput[data-status="pending"] {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .secondaryToolbar {
-  background-color: rgba(74, 74, 79, 1);
-  background-color: var(--doorhanger-bg-color);
+    background-color: rgba(74, 74, 79, 1);
+    background-color: var(--doorhanger-bg-color);
   }
 }
 html[dir="ltr"] .secondaryToolbar {
@@ -1755,37 +1703,31 @@ html[dir="rtl"] .secondaryToolbar {
 
 .doorHanger {
   border-radius: 2px;
-  box-shadow: 0 1px 5px rgba(12, 12, 13, 0.2),
-    0 0 0 1px rgba(12, 12, 13, 0.2);
+  box-shadow: 0 1px 5px rgba(12, 12, 13, 0.2), 0 0 0 1px rgba(12, 12, 13, 0.2);
   box-shadow: 0 1px 5px var(--doorhanger-border-color),
     0 0 0 1px var(--doorhanger-border-color);
 }
 
 @media (prefers-color-scheme: dark) {
-
   .doorHanger {
-  box-shadow: 0 1px 5px rgba(39, 39, 43, 1),
-    0 0 0 1px rgba(39, 39, 43, 1);
-  box-shadow: 0 1px 5px var(--doorhanger-border-color),
-    0 0 0 1px var(--doorhanger-border-color);
+    box-shadow: 0 1px 5px rgba(39, 39, 43, 1), 0 0 0 1px rgba(39, 39, 43, 1);
+    box-shadow: 0 1px 5px var(--doorhanger-border-color),
+      0 0 0 1px var(--doorhanger-border-color);
   }
 }
 
 .doorHangerRight {
   border-radius: 2px;
-  box-shadow: 0 1px 5px rgba(12, 12, 13, 0.2),
-    0 0 0 1px rgba(12, 12, 13, 0.2);
+  box-shadow: 0 1px 5px rgba(12, 12, 13, 0.2), 0 0 0 1px rgba(12, 12, 13, 0.2);
   box-shadow: 0 1px 5px var(--doorhanger-border-color),
     0 0 0 1px var(--doorhanger-border-color);
 }
 
 @media (prefers-color-scheme: dark) {
-
   .doorHangerRight {
-  box-shadow: 0 1px 5px rgba(39, 39, 43, 1),
-    0 0 0 1px rgba(39, 39, 43, 1);
-  box-shadow: 0 1px 5px var(--doorhanger-border-color),
-    0 0 0 1px var(--doorhanger-border-color);
+    box-shadow: 0 1px 5px rgba(39, 39, 43, 1), 0 0 0 1px rgba(39, 39, 43, 1);
+    box-shadow: 0 1px 5px var(--doorhanger-border-color),
+      0 0 0 1px var(--doorhanger-border-color);
   }
 }
 .doorHanger:after,
@@ -1809,10 +1751,9 @@ html[dir="rtl"] .secondaryToolbar {
   border-bottom-color: var(--toolbar-bg-color);
 }
 @media (prefers-color-scheme: dark) {
-
   .doorHanger:after {
-  border-bottom-color: rgba(56, 56, 61, 1);
-  border-bottom-color: var(--toolbar-bg-color);
+    border-bottom-color: rgba(56, 56, 61, 1);
+    border-bottom-color: var(--toolbar-bg-color);
   }
 }
 .doorHangerRight:after {
@@ -1820,10 +1761,9 @@ html[dir="rtl"] .secondaryToolbar {
   border-bottom-color: var(--doorhanger-bg-color);
 }
 @media (prefers-color-scheme: dark) {
-
   .doorHangerRight:after {
-  border-bottom-color: rgba(74, 74, 79, 1);
-  border-bottom-color: var(--doorhanger-bg-color);
+    border-bottom-color: rgba(74, 74, 79, 1);
+    border-bottom-color: var(--doorhanger-bg-color);
   }
 }
 .doorHanger:before {
@@ -1832,10 +1772,9 @@ html[dir="rtl"] .secondaryToolbar {
   border-width: 9px;
 }
 @media (prefers-color-scheme: dark) {
-
   .doorHanger:before {
-  border-bottom-color: rgba(39, 39, 43, 1);
-  border-bottom-color: var(--doorhanger-border-color);
+    border-bottom-color: rgba(39, 39, 43, 1);
+    border-bottom-color: var(--doorhanger-border-color);
   }
 }
 .doorHangerRight:before {
@@ -1844,10 +1783,9 @@ html[dir="rtl"] .secondaryToolbar {
   border-width: 9px;
 }
 @media (prefers-color-scheme: dark) {
-
   .doorHangerRight:before {
-  border-bottom-color: rgba(39, 39, 43, 1);
-  border-bottom-color: var(--doorhanger-border-color);
+    border-bottom-color: rgba(39, 39, 43, 1);
+    border-bottom-color: var(--doorhanger-border-color);
   }
 }
 
@@ -1953,10 +1891,9 @@ html[dir="rtl"] .splitToolbarButton > .toolbarButton {
   background-color: var(--overlay-button-bg-color);
 }
 @media (prefers-color-scheme: dark) {
-
   .overlayButton {
-  background-color: rgba(92, 92, 97, 1);
-  background-color: var(--overlay-button-bg-color);
+    background-color: rgba(92, 92, 97, 1);
+    background-color: var(--overlay-button-bg-color);
   }
 }
 
@@ -1966,10 +1903,9 @@ html[dir="rtl"] .splitToolbarButton > .toolbarButton {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .overlayButton:hover {
-  background-color: rgba(115, 115, 115, 1);
-  background-color: var(--overlay-button-hover-color);
+    background-color: rgba(115, 115, 115, 1);
+    background-color: var(--overlay-button-hover-color);
   }
 }
 
@@ -1979,10 +1915,9 @@ html[dir="rtl"] .splitToolbarButton > .toolbarButton {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .overlayButton:focus {
-  background-color: rgba(115, 115, 115, 1);
-  background-color: var(--overlay-button-hover-color);
+    background-color: rgba(115, 115, 115, 1);
+    background-color: var(--overlay-button-hover-color);
   }
 }
 
@@ -2010,10 +1945,9 @@ html[dir="rtl"] .splitToolbarButton > .toolbarButton {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .splitToolbarButton > .toolbarButton:hover {
-  background-color: rgba(102, 102, 103, 1);
-  background-color: var(--button-hover-color);
+    background-color: rgba(102, 102, 103, 1);
+    background-color: var(--button-hover-color);
   }
 }
 
@@ -2024,10 +1958,9 @@ html[dir="rtl"] .splitToolbarButton > .toolbarButton {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .splitToolbarButton > .toolbarButton:focus {
-  background-color: rgba(102, 102, 103, 1);
-  background-color: var(--button-hover-color);
+    background-color: rgba(102, 102, 103, 1);
+    background-color: var(--button-hover-color);
   }
 }
 
@@ -2038,10 +1971,9 @@ html[dir="rtl"] .splitToolbarButton > .toolbarButton {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .dropdownToolbarButton:hover {
-  background-color: rgba(102, 102, 103, 1);
-  background-color: var(--button-hover-color);
+    background-color: rgba(102, 102, 103, 1);
+    background-color: var(--button-hover-color);
   }
 }
 
@@ -2052,10 +1984,9 @@ html[dir="rtl"] .splitToolbarButton > .toolbarButton {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .toolbarButton.textButton:hover {
-  background-color: rgba(102, 102, 103, 1);
-  background-color: var(--button-hover-color);
+    background-color: rgba(102, 102, 103, 1);
+    background-color: var(--button-hover-color);
   }
 }
 
@@ -2066,10 +1997,9 @@ html[dir="rtl"] .splitToolbarButton > .toolbarButton {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .toolbarButton.textButton:focus {
-  background-color: rgba(102, 102, 103, 1);
-  background-color: var(--button-hover-color);
+    background-color: rgba(102, 102, 103, 1);
+    background-color: var(--button-hover-color);
   }
 }
 .splitToolbarButton > .toolbarButton {
@@ -2095,10 +2025,9 @@ html[dir="rtl"] .splitToolbarButton > .toolbarButton:first-child {
   margin: 4px 0;
 }
 @media (prefers-color-scheme: dark) {
-
   .splitToolbarButtonSeparator {
-  background-color: rgba(0, 0, 0, 0.3);
-  background-color: var(--separator-color);
+    background-color: rgba(0, 0, 0, 0.3);
+    background-color: var(--separator-color);
   }
 }
 
@@ -2110,10 +2039,9 @@ html[dir="rtl"] .splitToolbarButton > .toolbarButton:first-child {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .findbar .splitToolbarButtonSeparator {
-  background-color: rgba(115, 115, 115, 1);
-  background-color: var(--field-border-color);
+    background-color: rgba(115, 115, 115, 1);
+    background-color: var(--field-border-color);
   }
 }
 
@@ -2134,18 +2062,17 @@ html[dir="rtl"] .splitToolbarButtonSeparator {
   font-size: 12px;
   line-height: 14px;
   -webkit-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
-          user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
   cursor: default;
   box-sizing: border-box;
 }
 
 @media (prefers-color-scheme: dark) {
-
   .toolbarButton {
-  color: rgba(249, 249, 250, 1);
-  color: var(--main-color);
+    color: rgba(249, 249, 250, 1);
+    color: var(--main-color);
   }
 }
 
@@ -2159,18 +2086,17 @@ html[dir="rtl"] .splitToolbarButtonSeparator {
   font-size: 12px;
   line-height: 14px;
   -webkit-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
-          user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
   cursor: default;
   box-sizing: border-box;
 }
 
 @media (prefers-color-scheme: dark) {
-
   .dropdownToolbarButton {
-  color: rgba(249, 249, 250, 1);
-  color: var(--main-color);
+    color: rgba(249, 249, 250, 1);
+    color: var(--main-color);
   }
 }
 
@@ -2184,18 +2110,17 @@ html[dir="rtl"] .splitToolbarButtonSeparator {
   font-size: 12px;
   line-height: 14px;
   -webkit-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
-          user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
   cursor: default;
   box-sizing: border-box;
 }
 
 @media (prefers-color-scheme: dark) {
-
   .secondaryToolbarButton {
-  color: rgba(249, 249, 250, 1);
-  color: var(--main-color);
+    color: rgba(249, 249, 250, 1);
+    color: var(--main-color);
   }
 }
 
@@ -2209,18 +2134,17 @@ html[dir="rtl"] .splitToolbarButtonSeparator {
   font-size: 12px;
   line-height: 14px;
   -webkit-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
-          user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
   cursor: default;
   box-sizing: border-box;
 }
 
 @media (prefers-color-scheme: dark) {
-
   .overlayButton {
-  color: rgba(249, 249, 250, 1);
-  color: var(--main-color);
+    color: rgba(249, 249, 250, 1);
+    color: var(--main-color);
   }
 }
 
@@ -2249,10 +2173,9 @@ html[dir="rtl"] #toolbarViewerLeft > .toolbarButton:first-child {
   background-color: var(--button-hover-color);
 }
 @media (prefers-color-scheme: dark) {
-
   .toolbarButton:hover {
-  background-color: rgba(102, 102, 103, 1);
-  background-color: var(--button-hover-color);
+    background-color: rgba(102, 102, 103, 1);
+    background-color: var(--button-hover-color);
   }
 }
 .toolbarButton:focus {
@@ -2260,10 +2183,9 @@ html[dir="rtl"] #toolbarViewerLeft > .toolbarButton:first-child {
   background-color: var(--button-hover-color);
 }
 @media (prefers-color-scheme: dark) {
-
   .toolbarButton:focus {
-  background-color: rgba(102, 102, 103, 1);
-  background-color: var(--button-hover-color);
+    background-color: rgba(102, 102, 103, 1);
+    background-color: var(--button-hover-color);
   }
 }
 .secondaryToolbarButton:hover {
@@ -2271,10 +2193,9 @@ html[dir="rtl"] #toolbarViewerLeft > .toolbarButton:first-child {
   background-color: var(--doorhanger-hover-color);
 }
 @media (prefers-color-scheme: dark) {
-
   .secondaryToolbarButton:hover {
-  background-color: rgba(93, 94, 98, 1);
-  background-color: var(--doorhanger-hover-color);
+    background-color: rgba(93, 94, 98, 1);
+    background-color: var(--doorhanger-hover-color);
   }
 }
 .secondaryToolbarButton:focus {
@@ -2282,10 +2203,9 @@ html[dir="rtl"] #toolbarViewerLeft > .toolbarButton:first-child {
   background-color: var(--doorhanger-hover-color);
 }
 @media (prefers-color-scheme: dark) {
-
   .secondaryToolbarButton:focus {
-  background-color: rgba(93, 94, 98, 1);
-  background-color: var(--doorhanger-hover-color);
+    background-color: rgba(93, 94, 98, 1);
+    background-color: var(--doorhanger-hover-color);
   }
 }
 
@@ -2295,10 +2215,9 @@ html[dir="rtl"] #toolbarViewerLeft > .toolbarButton:first-child {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .toolbarButton.toggled {
-  background-color: rgba(0, 0, 0, 0.3);
-  background-color: var(--toggled-btn-bg-color);
+    background-color: rgba(0, 0, 0, 0.3);
+    background-color: var(--toggled-btn-bg-color);
   }
 }
 
@@ -2308,10 +2227,9 @@ html[dir="rtl"] #toolbarViewerLeft > .toolbarButton:first-child {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .splitToolbarButton.toggled > .toolbarButton.toggled {
-  background-color: rgba(0, 0, 0, 0.3);
-  background-color: var(--toggled-btn-bg-color);
+    background-color: rgba(0, 0, 0, 0.3);
+    background-color: var(--toggled-btn-bg-color);
   }
 }
 
@@ -2321,10 +2239,9 @@ html[dir="rtl"] #toolbarViewerLeft > .toolbarButton:first-child {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .secondaryToolbarButton.toggled {
-  background-color: rgba(0, 0, 0, 0.3);
-  background-color: var(--toggled-btn-bg-color);
+    background-color: rgba(0, 0, 0, 0.3);
+    background-color: var(--toggled-btn-bg-color);
   }
 }
 
@@ -2344,10 +2261,9 @@ html[dir="rtl"] #toolbarViewerLeft > .toolbarButton:first-child {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .dropdownToolbarButton {
-  background-color: rgba(74, 74, 79, 1);
-  background-color: var(--dropdown-btn-bg-color);
+    background-color: rgba(74, 74, 79, 1);
+    background-color: var(--dropdown-btn-bg-color);
   }
 }
 .dropdownToolbarButton::after {
@@ -2360,10 +2276,9 @@ html[dir="rtl"] #toolbarViewerLeft > .toolbarButton:first-child {
   max-width: 16px;
 }
 @media (prefers-color-scheme: dark) {
-
   .dropdownToolbarButton::after {
-  content: url(images/toolbarButton-menuArrow-dark.svg);
-  content: var(--toolbarButton-menuArrow-icon);
+    content: url(images/toolbarButton-menuArrow-dark.svg);
+    content: var(--toolbarButton-menuArrow-icon);
   }
 }
 html[dir="ltr"] .dropdownToolbarButton::after {
@@ -2387,18 +2302,16 @@ html[dir="rtl"] .dropdownToolbarButton::after {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .dropdownToolbarButton > select {
-  background-color: rgba(74, 74, 79, 1);
-  background-color: var(--dropdown-btn-bg-color);
+    background-color: rgba(74, 74, 79, 1);
+    background-color: var(--dropdown-btn-bg-color);
   }
 }
 
 @media (prefers-color-scheme: dark) {
-
   .dropdownToolbarButton > select {
-  color: rgba(249, 249, 250, 1);
-  color: var(--main-color);
+    color: rgba(249, 249, 250, 1);
+    color: var(--main-color);
   }
 }
 html[dir="ltr"] .dropdownToolbarButton > select {
@@ -2412,10 +2325,9 @@ html[dir="rtl"] .dropdownToolbarButton > select {
   background-color: var(--button-hover-color);
 }
 @media (prefers-color-scheme: dark) {
-
   .dropdownToolbarButton > select:hover {
-  background-color: rgba(102, 102, 103, 1);
-  background-color: var(--button-hover-color);
+    background-color: rgba(102, 102, 103, 1);
+    background-color: var(--button-hover-color);
   }
 }
 
@@ -2425,10 +2337,9 @@ html[dir="rtl"] .dropdownToolbarButton > select {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .dropdownToolbarButton > select:focus {
-  background-color: rgba(102, 102, 103, 1);
-  background-color: var(--button-hover-color);
+    background-color: rgba(102, 102, 103, 1);
+    background-color: var(--button-hover-color);
   }
 }
 
@@ -2438,10 +2349,9 @@ html[dir="rtl"] .dropdownToolbarButton > select {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .dropdownToolbarButton > select > option {
-  background: rgba(74, 74, 79, 1);
-  background: var(--doorhanger-bg-color);
+    background: rgba(74, 74, 79, 1);
+    background: var(--doorhanger-bg-color);
   }
 }
 
@@ -2508,10 +2418,9 @@ html[dir="rtl"] .secondaryToolbarButton::before {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .toolbarButton#sidebarToggle::before {
-  content: url(images/toolbarButton-sidebarToggle-dark.svg);
-  content: var(--toolbarButton-sidebarToggle-icon);
+    content: url(images/toolbarButton-sidebarToggle-dark.svg);
+    content: var(--toolbarButton-sidebarToggle-icon);
   }
 }
 html[dir="rtl"] .toolbarButton#sidebarToggle::before {
@@ -2524,10 +2433,9 @@ html[dir="rtl"] .toolbarButton#sidebarToggle::before {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .toolbarButton#secondaryToolbarToggle::before {
-  content: url(images/toolbarButton-secondaryToolbarToggle-dark.svg);
-  content: var(--toolbarButton-secondaryToolbarToggle-icon);
+    content: url(images/toolbarButton-secondaryToolbarToggle-dark.svg);
+    content: var(--toolbarButton-secondaryToolbarToggle-icon);
   }
 }
 html[dir="rtl"] .toolbarButton#secondaryToolbarToggle::before {
@@ -2540,10 +2448,9 @@ html[dir="rtl"] .toolbarButton#secondaryToolbarToggle::before {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .toolbarButton.findPrevious::before {
-  content: url(images/findbarButton-previous-dark.svg);
-  content: var(--findbarButton-previous-icon);
+    content: url(images/findbarButton-previous-dark.svg);
+    content: var(--findbarButton-previous-icon);
   }
 }
 html[dir="rtl"] .toolbarButton.findPrevious::before {
@@ -2556,10 +2463,9 @@ html[dir="rtl"] .toolbarButton.findPrevious::before {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .toolbarButton.findNext::before {
-  content: url(images/findbarButton-next-dark.svg);
-  content: var(--findbarButton-next-icon);
+    content: url(images/findbarButton-next-dark.svg);
+    content: var(--findbarButton-next-icon);
   }
 }
 html[dir="rtl"] .toolbarButton.findNext::before {
@@ -2572,10 +2478,9 @@ html[dir="rtl"] .toolbarButton.findNext::before {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .toolbarButton.pageUp::before {
-  content: url(images/toolbarButton-pageUp-dark.svg);
-  content: var(--toolbarButton-pageUp-icon);
+    content: url(images/toolbarButton-pageUp-dark.svg);
+    content: var(--toolbarButton-pageUp-icon);
   }
 }
 html[dir="rtl"] .toolbarButton.pageUp::before {
@@ -2588,10 +2493,9 @@ html[dir="rtl"] .toolbarButton.pageUp::before {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .toolbarButton.pageDown::before {
-  content: url(images/toolbarButton-pageDown-dark.svg);
-  content: var(--toolbarButton-pageDown-icon);
+    content: url(images/toolbarButton-pageDown-dark.svg);
+    content: var(--toolbarButton-pageDown-icon);
   }
 }
 html[dir="rtl"] .toolbarButton.pageDown::before {
@@ -2604,10 +2508,9 @@ html[dir="rtl"] .toolbarButton.pageDown::before {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .toolbarButton.zoomOut::before {
-  content: url(images/toolbarButton-zoomOut-dark.svg);
-  content: var(--toolbarButton-zoomOut-icon);
+    content: url(images/toolbarButton-zoomOut-dark.svg);
+    content: var(--toolbarButton-zoomOut-icon);
   }
 }
 
@@ -2617,10 +2520,9 @@ html[dir="rtl"] .toolbarButton.pageDown::before {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .toolbarButton.zoomIn::before {
-  content: url(images/toolbarButton-zoomIn-dark.svg);
-  content: var(--toolbarButton-zoomIn-icon);
+    content: url(images/toolbarButton-zoomIn-dark.svg);
+    content: var(--toolbarButton-zoomIn-icon);
   }
 }
 
@@ -2630,10 +2532,9 @@ html[dir="rtl"] .toolbarButton.pageDown::before {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .toolbarButton.presentationMode::before {
-  content: url(images/toolbarButton-presentationMode-dark.svg);
-  content: var(--toolbarButton-presentationMode-icon);
+    content: url(images/toolbarButton-presentationMode-dark.svg);
+    content: var(--toolbarButton-presentationMode-icon);
   }
 }
 
@@ -2643,10 +2544,9 @@ html[dir="rtl"] .toolbarButton.pageDown::before {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .secondaryToolbarButton.presentationMode::before {
-  content: url(images/toolbarButton-presentationMode-dark.svg);
-  content: var(--toolbarButton-presentationMode-icon);
+    content: url(images/toolbarButton-presentationMode-dark.svg);
+    content: var(--toolbarButton-presentationMode-icon);
   }
 }
 
@@ -2656,10 +2556,9 @@ html[dir="rtl"] .toolbarButton.pageDown::before {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .toolbarButton.print::before {
-  content: url(images/toolbarButton-print-dark.svg);
-  content: var(--toolbarButton-print-icon);
+    content: url(images/toolbarButton-print-dark.svg);
+    content: var(--toolbarButton-print-icon);
   }
 }
 
@@ -2669,10 +2568,9 @@ html[dir="rtl"] .toolbarButton.pageDown::before {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .secondaryToolbarButton.print::before {
-  content: url(images/toolbarButton-print-dark.svg);
-  content: var(--toolbarButton-print-icon);
+    content: url(images/toolbarButton-print-dark.svg);
+    content: var(--toolbarButton-print-icon);
   }
 }
 
@@ -2682,10 +2580,9 @@ html[dir="rtl"] .toolbarButton.pageDown::before {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .toolbarButton.openFile::before {
-  content: url(images/toolbarButton-openFile-dark.svg);
-  content: var(--toolbarButton-openFile-icon);
+    content: url(images/toolbarButton-openFile-dark.svg);
+    content: var(--toolbarButton-openFile-icon);
   }
 }
 
@@ -2695,10 +2592,9 @@ html[dir="rtl"] .toolbarButton.pageDown::before {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .secondaryToolbarButton.openFile::before {
-  content: url(images/toolbarButton-openFile-dark.svg);
-  content: var(--toolbarButton-openFile-icon);
+    content: url(images/toolbarButton-openFile-dark.svg);
+    content: var(--toolbarButton-openFile-icon);
   }
 }
 
@@ -2708,10 +2604,9 @@ html[dir="rtl"] .toolbarButton.pageDown::before {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .toolbarButton.download::before {
-  content: url(images/toolbarButton-download-dark.svg);
-  content: var(--toolbarButton-download-icon);
+    content: url(images/toolbarButton-download-dark.svg);
+    content: var(--toolbarButton-download-icon);
   }
 }
 
@@ -2721,10 +2616,9 @@ html[dir="rtl"] .toolbarButton.pageDown::before {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .secondaryToolbarButton.download::before {
-  content: url(images/toolbarButton-download-dark.svg);
-  content: var(--toolbarButton-download-icon);
+    content: url(images/toolbarButton-download-dark.svg);
+    content: var(--toolbarButton-download-icon);
   }
 }
 
@@ -2744,10 +2638,9 @@ html[dir="rtl"] .toolbarButton.pageDown::before {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .toolbarButton.bookmark::before {
-  content: url(images/toolbarButton-bookmark-dark.svg);
-  content: var(--toolbarButton-bookmark-icon);
+    content: url(images/toolbarButton-bookmark-dark.svg);
+    content: var(--toolbarButton-bookmark-icon);
   }
 }
 
@@ -2757,10 +2650,9 @@ html[dir="rtl"] .toolbarButton.pageDown::before {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .secondaryToolbarButton.bookmark::before {
-  content: url(images/toolbarButton-bookmark-dark.svg);
-  content: var(--toolbarButton-bookmark-icon);
+    content: url(images/toolbarButton-bookmark-dark.svg);
+    content: var(--toolbarButton-bookmark-icon);
   }
 }
 
@@ -2770,10 +2662,9 @@ html[dir="rtl"] .toolbarButton.pageDown::before {
 }
 
 @media (prefers-color-scheme: dark) {
-
   #viewThumbnail.toolbarButton::before {
-  content: url(images/toolbarButton-viewThumbnail-dark.svg);
-  content: var(--toolbarButton-viewThumbnail-icon);
+    content: url(images/toolbarButton-viewThumbnail-dark.svg);
+    content: var(--toolbarButton-viewThumbnail-icon);
   }
 }
 
@@ -2783,10 +2674,9 @@ html[dir="rtl"] .toolbarButton.pageDown::before {
 }
 
 @media (prefers-color-scheme: dark) {
-
   #viewOutline.toolbarButton::before {
-  content: url(images/toolbarButton-viewOutline-dark.svg);
-  content: var(--toolbarButton-viewOutline-icon);
+    content: url(images/toolbarButton-viewOutline-dark.svg);
+    content: var(--toolbarButton-viewOutline-icon);
   }
 }
 html[dir="rtl"] #viewOutline.toolbarButton::before {
@@ -2799,10 +2689,9 @@ html[dir="rtl"] #viewOutline.toolbarButton::before {
 }
 
 @media (prefers-color-scheme: dark) {
-
   #viewAttachments.toolbarButton::before {
-  content: url(images/toolbarButton-viewAttachments-dark.svg);
-  content: var(--toolbarButton-viewAttachments-icon);
+    content: url(images/toolbarButton-viewAttachments-dark.svg);
+    content: var(--toolbarButton-viewAttachments-icon);
   }
 }
 
@@ -2812,10 +2701,9 @@ html[dir="rtl"] #viewOutline.toolbarButton::before {
 }
 
 @media (prefers-color-scheme: dark) {
-
   #viewLayers.toolbarButton::before {
-  content: url(images/toolbarButton-viewLayers-dark.svg);
-  content: var(--toolbarButton-viewLayers-icon);
+    content: url(images/toolbarButton-viewLayers-dark.svg);
+    content: var(--toolbarButton-viewLayers-icon);
   }
 }
 
@@ -2825,10 +2713,9 @@ html[dir="rtl"] #viewOutline.toolbarButton::before {
 }
 
 @media (prefers-color-scheme: dark) {
-
   #viewFind.toolbarButton::before {
-  content: url(images/toolbarButton-search-dark.svg);
-  content: var(--toolbarButton-search-icon);
+    content: url(images/toolbarButton-search-dark.svg);
+    content: var(--toolbarButton-search-icon);
   }
 }
 
@@ -2884,10 +2771,9 @@ html[dir="rtl"] .secondaryToolbarButton > span {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .secondaryToolbarButton.firstPage::before {
-  content: url(images/secondaryToolbarButton-firstPage-dark.svg);
-  content: var(--secondaryToolbarButton-firstPage-icon);
+    content: url(images/secondaryToolbarButton-firstPage-dark.svg);
+    content: var(--secondaryToolbarButton-firstPage-icon);
   }
 }
 
@@ -2897,10 +2783,9 @@ html[dir="rtl"] .secondaryToolbarButton > span {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .secondaryToolbarButton.lastPage::before {
-  content: url(images/secondaryToolbarButton-lastPage-dark.svg);
-  content: var(--secondaryToolbarButton-lastPage-icon);
+    content: url(images/secondaryToolbarButton-lastPage-dark.svg);
+    content: var(--secondaryToolbarButton-lastPage-icon);
   }
 }
 
@@ -2910,10 +2795,9 @@ html[dir="rtl"] .secondaryToolbarButton > span {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .secondaryToolbarButton.rotateCcw::before {
-  content: url(images/secondaryToolbarButton-rotateCcw-dark.svg);
-  content: var(--secondaryToolbarButton-rotateCcw-icon);
+    content: url(images/secondaryToolbarButton-rotateCcw-dark.svg);
+    content: var(--secondaryToolbarButton-rotateCcw-icon);
   }
 }
 
@@ -2923,10 +2807,9 @@ html[dir="rtl"] .secondaryToolbarButton > span {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .secondaryToolbarButton.rotateCw::before {
-  content: url(images/secondaryToolbarButton-rotateCw-dark.svg);
-  content: var(--secondaryToolbarButton-rotateCw-icon);
+    content: url(images/secondaryToolbarButton-rotateCw-dark.svg);
+    content: var(--secondaryToolbarButton-rotateCw-icon);
   }
 }
 
@@ -2936,10 +2819,9 @@ html[dir="rtl"] .secondaryToolbarButton > span {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .secondaryToolbarButton.selectTool::before {
-  content: url(images/secondaryToolbarButton-selectTool-dark.svg);
-  content: var(--secondaryToolbarButton-selectTool-icon);
+    content: url(images/secondaryToolbarButton-selectTool-dark.svg);
+    content: var(--secondaryToolbarButton-selectTool-icon);
   }
 }
 
@@ -2949,10 +2831,9 @@ html[dir="rtl"] .secondaryToolbarButton > span {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .secondaryToolbarButton.handTool::before {
-  content: url(images/secondaryToolbarButton-handTool-dark.svg);
-  content: var(--secondaryToolbarButton-handTool-icon);
+    content: url(images/secondaryToolbarButton-handTool-dark.svg);
+    content: var(--secondaryToolbarButton-handTool-icon);
   }
 }
 
@@ -2962,10 +2843,9 @@ html[dir="rtl"] .secondaryToolbarButton > span {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .secondaryToolbarButton.scrollVertical::before {
-  content: url(images/secondaryToolbarButton-scrollVertical-dark.svg);
-  content: var(--secondaryToolbarButton-scrollVertical-icon);
+    content: url(images/secondaryToolbarButton-scrollVertical-dark.svg);
+    content: var(--secondaryToolbarButton-scrollVertical-icon);
   }
 }
 
@@ -2975,10 +2855,9 @@ html[dir="rtl"] .secondaryToolbarButton > span {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .secondaryToolbarButton.scrollHorizontal::before {
-  content: url(images/secondaryToolbarButton-scrollHorizontal-dark.svg);
-  content: var(--secondaryToolbarButton-scrollHorizontal-icon);
+    content: url(images/secondaryToolbarButton-scrollHorizontal-dark.svg);
+    content: var(--secondaryToolbarButton-scrollHorizontal-icon);
   }
 }
 
@@ -2988,10 +2867,9 @@ html[dir="rtl"] .secondaryToolbarButton > span {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .secondaryToolbarButton.scrollWrapped::before {
-  content: url(images/secondaryToolbarButton-scrollWrapped-dark.svg);
-  content: var(--secondaryToolbarButton-scrollWrapped-icon);
+    content: url(images/secondaryToolbarButton-scrollWrapped-dark.svg);
+    content: var(--secondaryToolbarButton-scrollWrapped-icon);
   }
 }
 
@@ -3001,10 +2879,9 @@ html[dir="rtl"] .secondaryToolbarButton > span {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .secondaryToolbarButton.spreadNone::before {
-  content: url(images/secondaryToolbarButton-spreadNone-dark.svg);
-  content: var(--secondaryToolbarButton-spreadNone-icon);
+    content: url(images/secondaryToolbarButton-spreadNone-dark.svg);
+    content: var(--secondaryToolbarButton-spreadNone-icon);
   }
 }
 
@@ -3014,10 +2891,9 @@ html[dir="rtl"] .secondaryToolbarButton > span {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .secondaryToolbarButton.spreadOdd::before {
-  content: url(images/secondaryToolbarButton-spreadOdd-dark.svg);
-  content: var(--secondaryToolbarButton-spreadOdd-icon);
+    content: url(images/secondaryToolbarButton-spreadOdd-dark.svg);
+    content: var(--secondaryToolbarButton-spreadOdd-icon);
   }
 }
 
@@ -3027,10 +2903,9 @@ html[dir="rtl"] .secondaryToolbarButton > span {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .secondaryToolbarButton.spreadEven::before {
-  content: url(images/secondaryToolbarButton-spreadEven-dark.svg);
-  content: var(--secondaryToolbarButton-spreadEven-icon);
+    content: url(images/secondaryToolbarButton-spreadEven-dark.svg);
+    content: var(--secondaryToolbarButton-spreadEven-icon);
   }
 }
 
@@ -3040,10 +2915,9 @@ html[dir="rtl"] .secondaryToolbarButton > span {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .secondaryToolbarButton.documentProperties::before {
-  content: url(images/secondaryToolbarButton-documentProperties-dark.svg);
-  content: var(--secondaryToolbarButton-documentProperties-icon);
+    content: url(images/secondaryToolbarButton-documentProperties-dark.svg);
+    content: var(--secondaryToolbarButton-documentProperties-icon);
   }
 }
 
@@ -3057,10 +2931,9 @@ html[dir="rtl"] .secondaryToolbarButton > span {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .verticalToolbarSeparator {
-  background-color: rgba(0, 0, 0, 0.3);
-  background-color: var(--separator-color);
+    background-color: rgba(0, 0, 0, 0.3);
+    background-color: var(--separator-color);
   }
 }
 html[dir="ltr"] .verticalToolbarSeparator {
@@ -3080,10 +2953,9 @@ html[dir="rtl"] .verticalToolbarSeparator {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .horizontalToolbarSeparator {
-  border-top: 1px solid rgba(92, 92, 97, 1);
-  border-top: 1px solid var(--doorhanger-separator-color);
+    border-top: 1px solid rgba(92, 92, 97, 1);
+    border-top: 1px solid var(--doorhanger-separator-color);
   }
 }
 
@@ -3107,26 +2979,23 @@ html[dir="rtl"] .verticalToolbarSeparator {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .toolbarField {
-  color: rgba(250, 250, 250, 1);
-  color: var(--field-color);
+    color: rgba(250, 250, 250, 1);
+    color: var(--field-color);
   }
 }
 
 @media (prefers-color-scheme: dark) {
-
   .toolbarField {
-  border-color: rgba(115, 115, 115, 1);
-  border-color: var(--field-border-color);
+    border-color: rgba(115, 115, 115, 1);
+    border-color: var(--field-border-color);
   }
 }
 
 @media (prefers-color-scheme: dark) {
-
   .toolbarField {
-  background-color: rgba(64, 64, 68, 1);
-  background-color: var(--field-bg-color);
+    background-color: rgba(64, 64, 68, 1);
+    background-color: var(--field-bg-color);
   }
 }
 
@@ -3159,10 +3028,9 @@ html[dir="rtl"] .toolbarField[type="checkbox"] {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .toolbarField.pageNumber.visiblePageIsLoading {
-  background-image: url(images/loading-dark.svg);
-  background-image: var(--loading-icon);
+    background-image: url(images/loading-dark.svg);
+    background-image: var(--loading-icon);
   }
 }
 
@@ -3188,17 +3056,16 @@ html[dir="rtl"] .toolbarField[type="checkbox"] {
   line-height: 14px;
   text-align: left;
   -webkit-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
-          user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
   cursor: default;
 }
 
 @media (prefers-color-scheme: dark) {
-
   .toolbarLabel {
-  color: rgba(249, 249, 250, 1);
-  color: var(--main-color);
+    color: rgba(249, 249, 250, 1);
+    color: var(--main-color);
   }
 }
 
@@ -3274,10 +3141,9 @@ a:focus > .thumbnail > .thumbnailSelectionRing {
 }
 
 @media (prefers-color-scheme: dark) {
-
   a:focus > .thumbnail > .thumbnailSelectionRing {
-  background-color: rgba(255, 255, 255, 0.15);
-  background-color: var(--sidebaritem-bg-color);
+    background-color: rgba(255, 255, 255, 0.15);
+    background-color: var(--sidebaritem-bg-color);
   }
 }
 
@@ -3289,10 +3155,9 @@ a:focus > .thumbnail > .thumbnailSelectionRing {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .thumbnail:hover > .thumbnailSelectionRing {
-  background-color: rgba(255, 255, 255, 0.15);
-  background-color: var(--sidebaritem-bg-color);
+    background-color: rgba(255, 255, 255, 0.15);
+    background-color: var(--sidebaritem-bg-color);
   }
 }
 
@@ -3308,10 +3173,9 @@ a:focus > .thumbnail > .thumbnailSelectionRing {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .thumbnail.selected > .thumbnailSelectionRing {
-  background-color: rgba(255, 255, 255, 0.15);
-  background-color: var(--sidebaritem-bg-color);
+    background-color: rgba(255, 255, 255, 0.15);
+    background-color: var(--sidebaritem-bg-color);
   }
 }
 
@@ -3326,9 +3190,9 @@ a:focus > .thumbnail > .thumbnailSelectionRing {
   overflow: auto;
   -webkit-overflow-scrolling: touch;
   -webkit-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
-          user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 html[dir="ltr"] .treeWithDeepNesting > .treeItem,
@@ -3355,18 +3219,17 @@ html[dir="rtl"] .treeItem > .treeItems {
   font-size: 13px;
   line-height: 15px;
   -webkit-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
-          user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
   white-space: normal;
   cursor: pointer;
 }
 
 @media (prefers-color-scheme: dark) {
-
   .treeItem > a {
-  color: rgba(255, 255, 255, 0.8);
-  color: var(--treeitem-color);
+    color: rgba(255, 255, 255, 0.8);
+    color: var(--treeitem-color);
   }
 }
 html[dir="ltr"] .treeItem > a {
@@ -3400,10 +3263,9 @@ html[dir="rtl"] #layersView .treesItem > a > label {
   max-width: 16px;
 }
 @media (prefers-color-scheme: dark) {
-
   .treeItemToggler::before {
-  content: url(images/treeitem-expanded-dark.svg);
-  content: var(--treeitem-expanded-icon);
+    content: url(images/treeitem-expanded-dark.svg);
+    content: var(--treeitem-expanded-icon);
   }
 }
 .treeItemToggler.treeItemsHidden::before {
@@ -3412,10 +3274,9 @@ html[dir="rtl"] #layersView .treesItem > a > label {
   max-width: 16px;
 }
 @media (prefers-color-scheme: dark) {
-
   .treeItemToggler.treeItemsHidden::before {
-  content: url(images/treeitem-collapsed-dark.svg);
-  content: var(--treeitem-collapsed-icon);
+    content: url(images/treeitem-collapsed-dark.svg);
+    content: var(--treeitem-collapsed-icon);
   }
 }
 html[dir="rtl"] .treeItemToggler.treeItemsHidden::before {
@@ -3447,18 +3308,16 @@ html[dir="rtl"] .treeItemToggler::before {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .treeItemToggler:hover {
-  color: rgba(255, 255, 255, 0.9);
-  color: var(--treeitem-hover-color);
+    color: rgba(255, 255, 255, 0.9);
+    color: var(--treeitem-hover-color);
   }
 }
 
 @media (prefers-color-scheme: dark) {
-
   .treeItemToggler:hover {
-  background-color: rgba(255, 255, 255, 0.15);
-  background-color: var(--sidebaritem-bg-color);
+    background-color: rgba(255, 255, 255, 0.15);
+    background-color: var(--sidebaritem-bg-color);
   }
 }
 
@@ -3472,18 +3331,16 @@ html[dir="rtl"] .treeItemToggler::before {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .treeItemToggler:hover + a {
-  color: rgba(255, 255, 255, 0.9);
-  color: var(--treeitem-hover-color);
+    color: rgba(255, 255, 255, 0.9);
+    color: var(--treeitem-hover-color);
   }
 }
 
 @media (prefers-color-scheme: dark) {
-
   .treeItemToggler:hover + a {
-  background-color: rgba(255, 255, 255, 0.15);
-  background-color: var(--sidebaritem-bg-color);
+    background-color: rgba(255, 255, 255, 0.15);
+    background-color: var(--sidebaritem-bg-color);
   }
 }
 
@@ -3497,18 +3354,16 @@ html[dir="rtl"] .treeItemToggler::before {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .treeItemToggler:hover ~ .treeItems {
-  color: rgba(255, 255, 255, 0.9);
-  color: var(--treeitem-hover-color);
+    color: rgba(255, 255, 255, 0.9);
+    color: var(--treeitem-hover-color);
   }
 }
 
 @media (prefers-color-scheme: dark) {
-
   .treeItemToggler:hover ~ .treeItems {
-  background-color: rgba(255, 255, 255, 0.15);
-  background-color: var(--sidebaritem-bg-color);
+    background-color: rgba(255, 255, 255, 0.15);
+    background-color: var(--sidebaritem-bg-color);
   }
 }
 
@@ -3522,18 +3377,16 @@ html[dir="rtl"] .treeItemToggler::before {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .treeItem > a:hover {
-  color: rgba(255, 255, 255, 0.9);
-  color: var(--treeitem-hover-color);
+    color: rgba(255, 255, 255, 0.9);
+    color: var(--treeitem-hover-color);
   }
 }
 
 @media (prefers-color-scheme: dark) {
-
   .treeItem > a:hover {
-  background-color: rgba(255, 255, 255, 0.15);
-  background-color: var(--sidebaritem-bg-color);
+    background-color: rgba(255, 255, 255, 0.15);
+    background-color: var(--sidebaritem-bg-color);
   }
 }
 
@@ -3546,18 +3399,16 @@ html[dir="rtl"] .treeItemToggler::before {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .treeItem.selected {
-  color: rgba(255, 255, 255, 0.08);
-  color: var(--treeitem-active-color);
+    color: rgba(255, 255, 255, 0.08);
+    color: var(--treeitem-active-color);
   }
 }
 
 @media (prefers-color-scheme: dark) {
-
   .treeItem.selected {
-  background-color: rgba(255, 255, 255, 1);
-  background-color: var(--treeitem-active-bg-color);
+    background-color: rgba(255, 255, 255, 1);
+    background-color: var(--treeitem-active-bg-color);
   }
 }
 
@@ -3591,18 +3442,16 @@ html[dir="rtl"] .treeItemToggler::before {
 }
 
 @media (prefers-color-scheme: dark) {
-
   #errorWrapper {
-  color: rgba(249, 249, 250, 1);
-  color: var(--main-color);
+    color: rgba(249, 249, 250, 1);
+    color: var(--main-color);
   }
 }
 
 @media (prefers-color-scheme: dark) {
-
   #errorWrapper {
-  background: none repeat scroll 0 0 rgba(199, 17, 17, 1);
-  background: none repeat scroll 0 0 var(--errorWrapper-bg-color);
+    background: none repeat scroll 0 0 rgba(199, 17, 17, 1);
+    background: none repeat scroll 0 0 var(--errorWrapper-bg-color);
   }
 }
 
@@ -3627,26 +3476,23 @@ html[dir="rtl"] .treeItemToggler::before {
 }
 
 @media (prefers-color-scheme: dark) {
-
   #errorMoreInfo {
-  border: 1px solid rgba(115, 115, 115, 1);
-  border: 1px solid var(--field-border-color);
+    border: 1px solid rgba(115, 115, 115, 1);
+    border: 1px solid var(--field-border-color);
   }
 }
 
 @media (prefers-color-scheme: dark) {
-
   #errorMoreInfo {
-  color: rgba(250, 250, 250, 1);
-  color: var(--field-color);
+    color: rgba(250, 250, 250, 1);
+    color: var(--field-color);
   }
 }
 
 @media (prefers-color-scheme: dark) {
-
   #errorMoreInfo {
-  background-color: rgba(64, 64, 68, 1);
-  background-color: var(--field-bg-color);
+    background-color: rgba(64, 64, 68, 1);
+    background-color: var(--field-bg-color);
   }
 }
 
@@ -3691,18 +3537,16 @@ html[dir="rtl"] .treeItemToggler::before {
 }
 
 @media (prefers-color-scheme: dark) {
-
   #overlayContainer > .container > .dialog {
-  background-color: rgba(74, 74, 79, 1);
-  background-color: var(--doorhanger-bg-color);
+    background-color: rgba(74, 74, 79, 1);
+    background-color: var(--doorhanger-bg-color);
   }
 }
 
 @media (prefers-color-scheme: dark) {
-
   #overlayContainer > .container > .dialog {
-  color: rgba(249, 249, 250, 1);
-  color: var(--main-color);
+    color: rgba(249, 249, 250, 1);
+    color: var(--main-color);
   }
 }
 
@@ -3728,10 +3572,9 @@ html[dir="rtl"] .treeItemToggler::before {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .dialog .separator {
-  background-color: rgba(0, 0, 0, 0.3);
-  background-color: var(--separator-color);
+    background-color: rgba(0, 0, 0, 0.3);
+    background-color: var(--separator-color);
   }
 }
 
@@ -3818,7 +3661,7 @@ html[dir="rtl"] #documentPropertiesOverlay .row > * {
   padding: 5px;
 }
 #PDFBug button.active {
-  font-weight: bold;
+  font-weight: 600;
 }
 .debuggerShowText {
   background: none repeat scroll 0 0 rgba(255, 255, 0, 1);
@@ -3833,7 +3676,7 @@ html[dir="rtl"] #documentPropertiesOverlay .row > * {
   white-space: pre;
 }
 #PDFBug .stats .title {
-  font-weight: bold;
+  font-weight: 600;
 }
 #PDFBug table {
   font-size: 10px;

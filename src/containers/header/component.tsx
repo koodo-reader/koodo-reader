@@ -71,6 +71,11 @@ class Header extends React.Component<HeaderProps, HeaderState> {
           onClick={() => {
             this.props.handleBackupDialog(true);
           }}
+          style={
+            OtherUtil.getReaderConfig("lang") === "en"
+              ? { fontSize: "14px" }
+              : {}
+          }
         >
           <Trans>Backup and Restore</Trans>
         </div>

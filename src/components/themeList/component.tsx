@@ -24,7 +24,7 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
       currentTextIndex: textList.findIndex((item) => {
         return (
           item.theme ===
-          (OtherUtil.getReaderConfig("textColor") || "rgba(255,255,255,1)")
+          (OtherUtil.getReaderConfig("textColor") || "rgba(0,0,0,1)")
         );
       }),
       isShowTextPicker: false,
@@ -40,6 +40,15 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
       this.props.currentEpub.rendition.themes.default({
         "a, article, cite, code, div, li, p, pre, span, table": {
           color: `white !important`,
+        },
+      });
+    } else if (
+      index === 2 &&
+      OtherUtil.getReaderConfig("backgroundColor") === "rgba(255,255,255,1)"
+    ) {
+      this.props.currentEpub.rendition.themes.default({
+        "a, article, cite, code, div, li, p, pre, span, table": {
+          color: `black !important`,
         },
       });
     } else {

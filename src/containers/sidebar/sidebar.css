@@ -88,15 +88,7 @@
   color: rgba(75, 75, 75, 0.5);
   opacity: 1;
 }
-.icon-more {
-  margin-left: 93px;
-  /* line-height: 29px; */
-  position: relative;
-  top: 6px;
-}
-.icon-shelf {
-  /* margin-right: 12px; */
-}
+
 .sidebar-dropdown {
   font-size: 13px;
 }

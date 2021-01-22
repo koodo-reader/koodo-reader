@@ -128,13 +128,15 @@ class BookList extends React.Component<BookListProps, BookListState> {
       ? this.handleShelf(this.props.books, this.props.shelfIndex)
       : this.props.mode === "favorite" && !this.props.isSort
       ? this.handleKeyFilter(this.props.books, AddFavorite.getAllFavorite())
-      : this.props.mode === "favorite" && this.props.isSort
+      : this.props.mode === "favorite" &&
+        this.props.isSort &&
+        !this.props.noteSortCode
       ? this.handleIndexFilter(
           this.handleKeyFilter(this.props.books, AddFavorite.getAllFavorite()),
           //返回排序后的图书index
           SortUtil.sortBooks(this.props.books, this.props.bookSortCode) || []
         )
-      : this.props.isSort
+      : this.props.isSort && !this.props.noteSortCode
       ? this.handleIndexFilter(
           this.props.books,
           //返回排序后的图书index
@@ -217,6 +219,7 @@ class BookList extends React.Component<BookListProps, BookListState> {
     this.setState({ isOpenDelete });
   };
   render() {
+    console.log(this.state.favoriteBooks, "this.state.favoriteBooks");
     if (
       (this.state.favoriteBooks === 0 && this.props.mode === "favorite") ||
       !this.props.books ||

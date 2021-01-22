@@ -80,11 +80,17 @@
 
 ## 使用方法
 
-桌面端：前往这里下载最新的安装包(技术原因暂不支持 Windows7 系统) [点我前往](https://koodo.960960.xyz/download)
+桌面端：前往这里下载最新的安装包(暂不支持 Windows 7 系统) [点我前往](https://koodo.960960.xyz/download)
 
 （国内网络下载速度慢的解决办法，复制下载链接到这个网站：https://d.serctl.com/ ）
 
 网页版：代码托管在 Vercel [点我前往](https://reader.960960.xyz)
+
+[Homebrew](https://brew.sh/)：
+
+```shell
+brew install --cask koodo-reader
+```
 
 ## 运行源码
 
@@ -112,8 +118,8 @@
 
 ## 后续更新
 
-我会根据大家的反馈不定时更新，当有新版本更新时，Github 会自动向您的客户端推送提醒
+我会根据大家的反馈不定时更新，当有新版本更新时，您将自动收到更新提示
 
 ## 帮助
 
-您可以在 issue 区提问，或者通过邮箱 guo362429@gmail.com 与我取得联系
+您可以在[issue](https://github.com/troyeguo/koodo-reader/issues)提问，或者前往[这里]("https://koodo.960960.xyz/support")了解更多。

@@ -142,6 +142,13 @@
   right: 10px;
   top: 10px;
   font-size: 20px;
+  transition: 0.1s;
+  width: 38px;
+  height: 38px;
+}
+.nav-close-icon:hover {
+  background-color: rgba(75, 75, 75, 0.035);
+  border-radius: 50%;
 }
 .nav-search-list {
   position: absolute;
@@ -159,7 +166,7 @@
 }
 .content-search-text {
   color: red !important;
-  font-weight: bold !important;
+  font-weight: 600 !important;
 }
 .nav-search-page {
   position: absolute;

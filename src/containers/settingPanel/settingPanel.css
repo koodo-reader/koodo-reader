@@ -4,8 +4,8 @@
   align-items: center;
   width: calc(100% - 44px);
   height: 38px;
-  font-size: 16px;
   color: rgba(75, 75, 75, 1);
+  font-weight: 500;
   margin: 6px 22px;
 }
 .setting-panel-parent {
@@ -28,27 +28,27 @@
   overflow-y: scroll;
   padding-right: 17px; /* Increase/decrease this value for cross-browser compatibility */
   box-sizing: content-box;
+
   /* display: none; */
 }
 .single-control-switch-container {
-  margin: 10px 0px 15px;
-  margin-left: 50px;
+  margin: 15px 20px 10px;
   height: 20px;
+  display: flex;
+  justify-content: space-between;
+  cursor: pointer;
 }
 .single-control-switch-title {
   font-size: 16px;
   line-height: 16px;
-  color: #4b4b4b;
-  opacity: 1;
-  margin: 0px 10px 0px 30px;
-  position: relative;
-  bottom: 2px;
+  color: rgba(75, 75, 75, 1);
+  font-weight: 500;
 }
 .single-control-switch {
   display: inline-block;
   width: 40px;
   height: 20px;
-  background: #000000;
+  background: rgba(75, 75, 75, 1);
   opacity: 1;
   border-radius: 10px;
   position: relative;
@@ -60,6 +60,6 @@
   height: 16px;
   width: 16px;
   border-radius: 50%;
-  border: 2px solid black;
   background-color: white;
+  margin: 2px;
 }

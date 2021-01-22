@@ -7,7 +7,5 @@ export interface SettingInfoState {
   language: string;
   isTouch: boolean;
   isOpenBook: boolean;
-  isUseBackground: boolean;
-  isShowFooter: boolean;
   isExpandContent: boolean;
 }

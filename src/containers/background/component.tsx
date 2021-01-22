@@ -18,6 +18,7 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
       nextPage: 0,
       scale: OtherUtil.getReaderConfig("scale") || 1,
       isShowFooter: OtherUtil.getReaderConfig("isShowFooter") !== "no",
+      isShowHeader: OtherUtil.getReaderConfig("isShowHeader") !== "no",
       isUseBackground: OtherUtil.getReaderConfig("isUseBackground") === "yes",
     };
     this.isFirst = true;
@@ -53,8 +54,15 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
   render() {
     if (this.state.isUseBackground) {
       return (
-        <div className="background">
-          {this.state.isShowFooter && this.state.currentChapter && (
+        <div
+          className="background"
+          style={{
+            color: OtherUtil.getReaderConfig("textColor")
+              ? OtherUtil.getReaderConfig("textColor")
+              : "",
+          }}
+        >
+          {this.state.isShowHeader && this.state.currentChapter && (
             <p
               className="progress-chapter-name"
               style={
@@ -69,7 +77,7 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
               <Trans>{this.state.currentChapter}</Trans>
             </p>
           )}
-          {this.state.isShowFooter && !this.state.isSingle && (
+          {this.state.isShowHeader && !this.state.isSingle && (
             <p
               className="progress-book-name"
               style={
@@ -120,8 +128,15 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
       );
     }
     return (
-      <div className="background">
-        {this.state.isShowFooter && this.state.currentChapter && (
+      <div
+        className="background"
+        style={{
+          color: OtherUtil.getReaderConfig("textColor")
+            ? OtherUtil.getReaderConfig("textColor")
+            : "",
+        }}
+      >
+        {this.state.isShowHeader && this.state.currentChapter && (
           <p
             className="progress-chapter-name"
             style={
@@ -137,7 +152,7 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
           </p>
         )}
 
-        {this.state.isShowFooter && !this.state.isSingle && (
+        {this.state.isShowHeader && !this.state.isSingle && (
           <p
             className="progress-book-name"
             style={

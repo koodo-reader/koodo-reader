@@ -54,7 +54,7 @@ class BookList extends React.Component<BookListProps, BookListState> {
     //根据不同的场景获取不同的图书数据
     let books = !this.props.isSort
       ? this.handleKeyFilter(this.props.deletedBooks, AddTrash.getAllTrash())
-      : this.props.isSort
+      : this.props.isSort && !this.props.noteSortCode
       ? this.handleIndexFilter(
           this.handleKeyFilter(this.props.deletedBooks, AddTrash.getAllTrash()),
           //返回排序后的图书index
@@ -63,7 +63,7 @@ class BookList extends React.Component<BookListProps, BookListState> {
             this.props.bookSortCode
           ) || []
         )
-      : this.props.isSort
+      : this.props.isSort && !this.props.noteSortCode
       ? this.handleIndexFilter(
           this.props.deletedBooks,
           //返回排序后的图书index

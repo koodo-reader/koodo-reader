@@ -94,7 +94,6 @@ class DropdownList extends React.Component<
                 value={[subItem, index.toString()]}
                 className="general-setting-option"
                 key={index}
-                style={item.id === 1 ? { fontFamily: subItem } : {}}
               >
                 {subItem}
               </option>

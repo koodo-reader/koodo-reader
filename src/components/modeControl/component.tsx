@@ -45,18 +45,7 @@ class ModeControl extends React.Component<ModeControlProps, ModeControlState> {
             <Trans>Double-Page Mode</Trans>
           </div>
         </div>
-        <div
-          className="double-mode-container"
-          onClick={() => {
-            this.handleChangeMode("scroll");
-          }}
-          style={this.state.readerMode === "scroll" ? {} : { opacity: 0.4 }}
-        >
-          <span className="icon-scroll1 two-page-icon"></span>
-          <div className="double-mode-text">
-            <Trans>Chapter Scroll</Trans>
-          </div>
-        </div>
+
         <div
           className="double-mode-container"
           onClick={() => {

@@ -145,14 +145,17 @@ class NavigationPanel extends React.Component<
       <div className="navigation-panel">
         {this.state.isSearch ? (
           <>
-            <span
-              className="icon-close nav-close-icon"
-              onClick={() => {
-                this.handleSearchState(false);
-                this.props.handleSearch(false);
-                this.setState({ searchList: null });
-              }}
-            ></span>
+            <div className="nav-close-icon">
+              <span
+                className="icon-close"
+                onClick={() => {
+                  this.handleSearchState(false);
+                  this.props.handleSearch(false);
+                  this.setState({ searchList: null });
+                }}
+              ></span>
+            </div>
+
             <div
               className="header-search-container"
               style={this.state.isSearch ? { left: 40 } : {}}
