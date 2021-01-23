@@ -20,7 +20,7 @@ import { isMobileOnly } from "react-device-detect";
 import { Route, Switch, Redirect } from "react-router-dom";
 import { routes } from "../../router/routes";
 import Arrow from "../../components/arrow";
-
+import LoadingDialog from "../../components/loadingDialog";
 // declare var window: any;
 
 //判断是否为触控设备
@@ -134,7 +134,6 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
         </>
       );
     }
-    console.log(this.state.isDrag, !this.props.dragItem);
     return (
       <div
         className="manager"
@@ -157,11 +156,13 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
         {this.props.isOpenDeleteDialog && <DeleteDialog />}
         {this.props.isOpenEditDialog && <EditDialog />}
         {this.props.isOpenAddDialog && <AddDialog />}
+        {this.props.isShowLoading && <LoadingDialog />}
         {(this.props.isSettingOpen ||
           this.props.isBackup ||
           this.props.isOpenDeleteDialog ||
           this.props.isOpenEditDialog ||
           this.props.isOpenAddDialog ||
+          this.props.isShowLoading ||
           this.props.isFirst === "yes" ||
           (this.state.isUpdated && this.props.isFirst === "no")) && (
           <div className="drag-background"></div>

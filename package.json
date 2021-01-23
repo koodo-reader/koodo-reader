@@ -30,9 +30,11 @@
     "react-device-detect": "^1.12.1",
     "react-dropzone": "^11.0.1",
     "react-i18next": "^9.0.10",
+    "react-lottie": "^1.2.3",
     "react-router-dom": "^5.2.0",
     "request": "^2.88.2",
-    "underscore": "^1.11.0"
+    "underscore": "^1.11.0",
+    "webdav": "^3.6.2"
   },
   "scripts": {
     "analyze": "source-map-explorer 'build/static/js/*.js'",

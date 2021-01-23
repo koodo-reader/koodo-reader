@@ -9,7 +9,7 @@ import { withRouter } from "react-router-dom";
 import RecentBooks from "../../utils/recordRecent";
 import OtherUtil from "../../utils/otherUtil";
 import AddTrash from "../../utils/addTrash";
-
+import EmptyCover from "../emptyCover";
 class BookListItem extends React.Component<BookItemProps, BookItemState> {
   epub: any;
   constructor(props: BookItemProps) {
@@ -118,7 +118,7 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
           />
         ) : (
           <div
-            className="book-item-list-cover book-item-list-cover-img"
+            className="book-item-list-cover"
             onClick={() => {
               this.handleJump();
             }}
@@ -129,14 +129,12 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
               this.props.handleDragItem("");
             }}
           >
-            <img
-              src={
-                process.env.NODE_ENV === "production"
-                  ? "./assets/cover.jpg"
-                  : "../../assets/cover.jpg"
-              }
-              alt=""
-              style={{ width: "100%" }}
+            <EmptyCover
+              {...{
+                format: this.props.book.format,
+                title: this.props.book.name,
+                scale: 0.54,
+              }}
             />
           </div>
         )}
