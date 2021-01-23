@@ -203,7 +203,9 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
         <div
           className="background-box2"
           style={
-            this.state.isSingle
+            document.body.clientWidth < 570
+              ? { left: 5, right: 8 }
+              : this.state.isSingle
               ? {
                   left: `calc(50vw - ${
                     270 * parseFloat(this.state.scale)
@@ -219,7 +221,9 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
         <div
           className="background-box3"
           style={
-            this.state.isSingle
+            document.body.clientWidth < 570
+              ? { left: 5, right: 10 }
+              : this.state.isSingle
               ? {
                   left: `calc(50vw - ${
                     270 * parseFloat(this.state.scale)
@@ -268,7 +272,9 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
         <div
           className="background-box1"
           style={
-            this.state.isSingle
+            document.body.clientWidth < 570
+              ? { left: 5, right: 6 }
+              : this.state.isSingle
               ? {
                   left: `calc(50vw - ${
                     270 * parseFloat(this.state.scale)

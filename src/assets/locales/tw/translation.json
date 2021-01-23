@@ -100,7 +100,6 @@
   "Turn off audio": "關閉聽書",
   "Please import less than 10 books": "請一次導入10本以內的書",
   "Please delete some books before import": "您的書庫太大，請先刪除一些書",
-  "For better user experince, please visit this site on a computer": "為了更好的使用體驗，請在電腦上造訪本網站",
   "Book size is over 20M": "圖書大小超過20MB",
   "Less": "收起",
   "All Tags": "全部標籤",
@@ -193,6 +192,9 @@
   "Continuous Scroll": "连续滚动",
   "Chapter Scroll": "分章滚动",
   "Only Desktop support this format": "仅客户端版本支持 mobi 和 txt 格式",
+  "Only Desktop support this service": "仅客户端支持该备份方式",
+  "Please Wait a moment": "请稍侯",
+
   "It seems like you're lost": "你要访问的内容走丢了",
   "Return to home": "返回主页",
   "Deleted Books": "我的回收",
@@ -212,5 +214,19 @@
   "Text Color": "文字颜色",
   "Search my notes": "搜索我的笔记",
   "Search my digests": "搜索我的书摘",
-  "Sort by Percentage": "按阅读进度"
+  "Sort by Percentage": "按阅读进度",
+  "Publisher": "出版商",
+  "Added at": "添加于",
+  "Description": "描述",
+  "Export Successfully": "导出成功",
+  "Too many images": "图书包含过多图片会严重影响解析速度",
+  "Margin": "页边距",
+  "Open link in browser": "使用浏览器打开",
+  "Server Address": "服务器地址",
+  "Username": "用户名",
+  "Password": "密码",
+  "Do you want to open this link in browser": "是否使用浏览器打开此链接",
+  "Webdav Info": "Webdav是一种简单高效的数据备份方式，这里推荐使用坚果云提供的Webdav服务",
+  "For better user experince, please visit this site on a computer": "Koodo Reader专为桌面端设计打造，暂未适配移动端，请在电脑上打开本网站",
+  "Sort by Recent": "按最近阅读"
 }

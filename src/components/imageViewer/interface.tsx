@@ -3,6 +3,7 @@ export interface ImageViewerProps {
   isShow: boolean;
   handleLeaveReader: (position: string) => void;
   handleEnterReader: (position: string) => void;
+  t: any;
 }
 export interface ImageViewerStates {
   isShowImage: boolean;

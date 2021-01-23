@@ -17,13 +17,13 @@ class SortDialog extends React.Component<SortDialogProps, SortDialogState> {
       let noteSortCode = this.props.noteSortCode;
       noteSortCode.sort = code;
       this.props.handleNoteSortCode(noteSortCode);
-      this.props.handleSort(true);
+      this.props.handleNoteSort(true);
       OtherUtil.setNoteSortCode(code, this.props.noteSortCode.order);
     } else {
       let bookSortCode = this.props.bookSortCode;
       bookSortCode.sort = code;
       this.props.handleBookSortCode(bookSortCode);
-      this.props.handleSort(true);
+      this.props.handleBookSort(true);
       OtherUtil.setBookSortCode(code, this.props.bookSortCode.order);
     }
   };
@@ -31,13 +31,13 @@ class SortDialog extends React.Component<SortDialogProps, SortDialogState> {
     if (this.state.isNote) {
       let noteSortCode = this.props.noteSortCode;
       noteSortCode.order = code;
-      this.props.handleSort(true);
+      this.props.handleNoteSort(true);
       OtherUtil.setNoteSortCode(this.props.noteSortCode.sort, code);
       this.props.handleNoteSortCode(noteSortCode);
     } else {
       let bookSortCode = this.props.bookSortCode;
       bookSortCode.order = code;
-      this.props.handleSort(true);
+      this.props.handleBookSort(true);
       OtherUtil.setBookSortCode(this.props.bookSortCode.sort, code);
       this.props.handleBookSortCode(bookSortCode);
     }
@@ -88,6 +88,17 @@ class SortDialog extends React.Component<SortDialogProps, SortDialogState> {
           </ul>
         ) : (
           <ul className="sort-by-category">
+            <li
+              className="sort-by-category-list"
+              onClick={() => {
+                this.handleSort(0);
+              }}
+              style={
+                sortCode.sort === 0 ? { color: "rgba(75, 75, 75, 1)" } : {}
+              }
+            >
+              <Trans>Sort by Recent</Trans>
+            </li>
             <li
               className="sort-by-category-list"
               onClick={() => {

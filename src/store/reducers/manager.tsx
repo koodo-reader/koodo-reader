@@ -4,11 +4,13 @@ const initState = {
   deletedBooks: [],
   searchResults: [],
   isSearch: false,
-  isSort: false,
+  isBookSort: false,
+  isNoteSort: false,
   isFirst: "no",
   isSettingOpen: false,
   isList: "card",
   isSortDisplay: false,
+  isShowLoading: false,
   bookSortCode: { sort: 0, order: 1 },
   noteSortCode: OtherUtil.getNoteSortCode(),
   isMessage: false,
@@ -44,10 +46,15 @@ export function manager(
         ...state,
         isSettingOpen: action.payload,
       };
-    case "HANDLE_SORT":
+    case "HANDLE_BOOK_SORT":
       return {
         ...state,
-        isSort: action.payload,
+        isBookSort: action.payload,
+      };
+    case "HANDLE_NOTE_SORT":
+      return {
+        ...state,
+        isNoteSort: action.payload,
       };
     case "HANDLE_FIRST":
       return {
@@ -63,6 +70,11 @@ export function manager(
       return {
         ...state,
         isSortDisplay: action.payload,
+      };
+    case "HANDLE_SHOW_LOADING":
+      return {
+        ...state,
+        isShowLoading: action.payload,
       };
     case "HANDLE_MESSAGE":
       return {

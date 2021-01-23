@@ -11,6 +11,7 @@ class Buffer {
   constructor(capacity) {
     this.capacity = capacity;
     this.fragment_list = [];
+    this.imageArray = [];
     this.cur_fragment = new Fragment(capacity);
     this.fragment_list.push(this.cur_fragment);
   }
@@ -371,32 +372,57 @@ class MobiFile {
     span.innerHTML = s;
     return span.textContent || span.innerText;
   }
-  render() {
-    this.load();
-    var content = this.read_text();
-    var bookDoc = domParser.parseFromString(content, "text/html")
-      .documentElement;
-    const pages = Array.from(bookDoc.getElementsByTagName("mbp:pagebreak"));
-    console.log(pages, "doc");
+  render(handleMessage, handleMessageBox) {
+    return new Promise((resolve, reject) => {
+      this.load();
+      var content = this.read_text();
+      var bookDoc = domParser.parseFromString(content, "text/html")
+        .documentElement;
 
-    const lines = Array.from(bookDoc.getElementsByTagName("p"));
-    let parseContent = [];
-    for (let i = 0, len = lines.length; i < len - 1; i++) {
-      parseContent.push(lines[i].innerText);
-    }
-
-    return parseContent.join("\n    \n");
+      const lines = Array.from(bookDoc.getElementsByTagName("p"));
+      let parseContent = [];
+      for (let i = 0, len = lines.length; i < len - 1; i++) {
+        parseContent.push(lines[i].innerText);
+        let imgDoms = lines[i].getElementsByTagName("img");
+        if (imgDoms.length > 0) {
+          for (let i = 0; i < imgDoms.length; i++) {
+            parseContent.push("#image");
+          }
+        }
+      }
+      const handleImage = async () => {
+        var imgDoms = bookDoc.getElementsByTagName("img");
+        if (imgDoms.length > 100) {
+          handleMessage("Too many images");
+          handleMessageBox(true);
+          resolve(parseContent.join("\n    \n"));
+        }
+        parseContent.push("~image");
+        for (let i = 0; i < imgDoms.length; i++) {
+          const src = await this.render_image(imgDoms, i);
+          parseContent.push(src);
+        }
+        resolve(parseContent.join("\n    \n"));
+      };
+      handleImage();
+    });
   }
-  render_image(imgDoms, i) {
-    var imgDom = imgDoms[i];
-    var idx = +imgDom.getAttribute("recindex");
-    var blob = this.read_image(idx - 1);
-    var imgReader = new FileReader();
-    imgReader.onload = function (e) {
-      imgDom.src = e.target.result;
-    };
-    imgReader.readAsDataURL(blob);
-  }
+  render_image = (imgDoms, i) => {
+    return new Promise((resolve, reject) => {
+      var imgDom = imgDoms[i];
+      var idx = +imgDom.getAttribute("recindex");
+      var blob = this.read_image(idx - 1);
+      var imgReader = new FileReader();
+      imgReader.onload = (e) => {
+        imgDom.src = e.target.result;
+        resolve(e.target.result);
+      };
+      imgReader.onerror = function (err) {
+        reject(err);
+      };
+      imgReader.readAsDataURL(blob);
+    });
+  };
 }
 
 export default MobiFile;

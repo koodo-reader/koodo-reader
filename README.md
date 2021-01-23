@@ -120,6 +120,14 @@ brew install --cask koodo-reader
 
 我会根据大家的反馈不定时更新，当有新版本更新时，您将自动收到更新提示
 
+## 贡献
+
+| 贡献          | 感谢                                                                                       |
+| :------------ | :----------------------------------------------------------------------------------------- |
+| 繁体中文翻译  | [TobySkarting](https://github.com/TobySkarting), [playercd8](https://github.com/playercd8) |
+| Homebrew 安装 | [singularitti](https://github.com/singularitti)                                            |
+| 其他贡献者    | [bamlan](https://github.com/bamlan)                                                        |
+
 ## 帮助
 
 您可以在[issue](https://github.com/troyeguo/koodo-reader/issues)提问，或者前往[这里]("https://koodo.960960.xyz/support")了解更多。

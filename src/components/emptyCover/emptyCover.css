@@ -1,0 +1,41 @@
+.empty-cover {
+  width: 105px;
+  height: 137px;
+  transform-origin: 0% 0%;
+}
+.cover-banner {
+  float: left;
+  width: 90px;
+  height: 30px;
+  margin-top: 10px;
+  line-height: 30px;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 500;
+  text-indent: 10px;
+  font-size: 14px;
+}
+.cover-title {
+  float: left;
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(75, 75, 75, 0.8);
+  width: 90px;
+  text-align: left;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: visible;
+  position: relative;
+  margin-left: 5px;
+  margin-top: 20px;
+}
+.cover-footer {
+  width: 100%;
+  text-align: left;
+  font-size: 12px;
+  color: rgba(75, 75, 75, 0.4);
+  position: absolute;
+  bottom: 8px;
+  margin-left: 16px;
+}

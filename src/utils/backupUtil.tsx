@@ -3,6 +3,7 @@ import BookModel from "../model/Book";
 import NoteModel from "../model/Note";
 import BookmarkModel from "../model/Bookmark";
 import DropboxUtil from "./syncUtils/dropbox";
+import WebdavUtil from "./syncUtils/webdav";
 import localforage from "localforage";
 
 let JSZip = (window as any).JSZip;
@@ -87,6 +88,14 @@ class BackupUtil {
           case 2:
             break;
           case 3:
+            WebdavUtil.UploadFile(
+              new File([blob], "data.zip", {
+                lastModified: new Date().getTime(),
+                type: blob.type,
+              }),
+              handleFinish,
+              showMessage
+            );
             break;
           default:
             break;

@@ -208,12 +208,15 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                       let key: string,
                         name: string,
                         author: string,
+                        publisher: string,
                         description: string;
-                      [name, author, description] = [
+                      [name, author, description, publisher] = [
                         metadata.info.Title || file.name.split(".")[0],
                         metadata.info.Author || "Unknown Authur",
                         "pdf",
+                        metadata.info.publisher,
                       ];
+                      let format = "PDF";
                       key = new Date().getTime() + "";
                       let book = new BookModel(
                         key,
@@ -221,7 +224,9 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                         author,
                         description,
                         md5,
-                        cover
+                        cover,
+                        format,
+                        publisher
                       );
                       await this.handleAddBook(book);
                       localforage.setItem(key, e.target!.result);
@@ -245,23 +250,19 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
               return;
             }
             var reader = new FileReader();
-            reader.onload = (event) => {
+            reader.onload = async (event) => {
               const file_content = (event.target as any).result;
               let mobiFile = new MobiFile(file_content);
-
-              let content = mobiFile.render();
-              console.log(content, "lcon");
+              let content = await mobiFile.render(
+                this.props.handleMessage,
+                this.props.handleMessageBox
+              );
               let buf = iconv.encode(content, "UTF-8");
               let blobTemp: any = new Blob([buf], { type: "text/plain" });
-              let fileTemp = new File(
-                [blobTemp],
-                file.name.split(".")[0] + ".txt",
-                {
-                  lastModified: new Date().getTime(),
-                  type: blobTemp.type,
-                }
-              );
-
+              let fileTemp = new File([blobTemp], file.name + ".txt", {
+                lastModified: new Date().getTime(),
+                type: blobTemp.type,
+              });
               this.doIncrementalTest(fileTemp);
             };
             reader.readAsArrayBuffer(file);
@@ -284,7 +285,6 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
               })
               .then((res) => {
                 let type = "application/octet-stream";
-                console.log(res, "res");
                 let blobTemp: any = new Blob([res.data], { type: type });
                 let fileTemp = new File(
                   [blobTemp],
@@ -324,12 +324,22 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                         let key: string,
                           name: string,
                           author: string,
-                          description: string;
-                        [name, author, description] = [
+                          description: string,
+                          publisher: string;
+                        [name, author, description, publisher] = [
                           metadata.title,
                           metadata.creator,
                           metadata.description,
+                          metadata.publisher,
                         ];
+                        let format =
+                          publisher === "mobi"
+                            ? "MOBI"
+                            : publisher === "azw3"
+                            ? "AZW3"
+                            : publisher === "azw3"
+                            ? "TXT"
+                            : "EPUB";
                         key = new Date().getTime() + "";
                         let book = new BookModel(
                           key,
@@ -337,7 +347,9 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                           author,
                           description,
                           md5,
-                          cover
+                          cover,
+                          format,
+                          publisher
                         );
                         await this.handleAddBook(book);
                         localforage.setItem(key, e.target!.result);
@@ -348,12 +360,22 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                       let key: string,
                         name: string,
                         author: string,
+                        publisher: string,
                         description: string;
-                      [name, author, description] = [
+                      [name, author, description, publisher] = [
                         metadata.title,
                         metadata.creator,
                         metadata.description,
+                        metadata.publisher,
                       ];
+                      let format =
+                        publisher === "mobi"
+                          ? "MOBI"
+                          : publisher === "azw3"
+                          ? "AZW3"
+                          : publisher === "txt"
+                          ? "TXT"
+                          : "EPUB";
                       key = new Date().getTime() + "";
                       let book = new BookModel(
                         key,
@@ -361,7 +383,9 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                         author,
                         description,
                         md5,
-                        cover
+                        cover,
+                        format,
+                        publisher
                       );
                       await this.handleAddBook(book);
                       localforage.setItem(key, e.target!.result);
@@ -395,6 +419,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
             this.props.handleMessageBox(true);
             return;
           }
+          this.props.handleLoadingDialog(true);
           for (let i = 0; i < acceptedFiles.length; i++) {
             let extension = acceptedFiles[i].name.split(".")[
               acceptedFiles[i].name.split(".").length - 1
@@ -411,9 +436,13 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
               this.props.handleMessageBox(true);
               return;
             }
+
             //异步解析文件
             await this.doIncrementalTest(acceptedFiles[i]);
           }
+          setTimeout(() => {
+            this.props.handleLoadingDialog(false);
+          }, 1000);
         }}
         accept={[".epub", ".pdf", ".txt", ".mobi", ".azw3"]}
         multiple={true}
@@ -428,6 +457,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                 : {}
             }
           >
+            <div className="animation-mask-local"></div>
             <Trans>Import from Local</Trans>
             <input
               type="file"

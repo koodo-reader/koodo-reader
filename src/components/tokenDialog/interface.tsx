@@ -4,6 +4,7 @@ export interface TokenDialogProps {
   currentBook: BookModel;
   driveName: string;
   url: string;
+  t: any;
   handleMessage: (message: string) => void;
   handleMessageBox: (isShow: boolean) => void;
 }

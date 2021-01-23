@@ -14,7 +14,7 @@ const mappropsToProps = (state: stateType) => {
     shelfIndex: state.sidebar.shelfIndex,
     searchResults: state.manager.searchResults,
     isSearch: state.manager.isSearch,
-    isSort: state.manager.isSort,
+    isBookSort: state.manager.isBookSort,
     isList: state.manager.isList,
     bookSortCode: state.manager.bookSortCode,
     noteSortCode: state.manager.noteSortCode,

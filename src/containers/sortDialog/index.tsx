@@ -3,7 +3,8 @@ import {
   handleBookSortCode,
   handleNoteSortCode,
   handleSortDisplay,
-  handleSort,
+  handleBookSort,
+  handleNoteSort,
 } from "../../store/actions/manager";
 import { stateType } from "../../store";
 import { withNamespaces } from "react-i18next";
@@ -21,7 +22,8 @@ const actionCreator = {
   handleBookSortCode,
   handleSortDisplay,
   handleNoteSortCode,
-  handleSort,
+  handleBookSort,
+  handleNoteSort,
 };
 export default connect(
   mapStateToProps,

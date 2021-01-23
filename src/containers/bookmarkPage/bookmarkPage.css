@@ -54,20 +54,18 @@
 }
 .bookmark-page-name {
   height: 29px;
-  width: 110px;
+  width: 115px;
   display: block;
   font-size: 14px;
   color: rgba(75, 75, 75, 1);
   opacity: 1;
   text-align: center;
   text-overflow: ellipsis;
-  white-space: nowrap;
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
-  white-space: normal;
-  word-break: keep-all;
-  overflow: hidden;
+  overflow: visible;
+  position: relative;
   position: absolute;
   top: 140px;
 }

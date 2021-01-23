@@ -39,11 +39,7 @@
   margin-right: 30px;
   clear: both;
 }
-@media (max-width: 950px) {
-  .book-list-view {
-    display: none;
-  }
-}
+
 .card-list-mode {
   max-width: 81px;
   height: 17px;

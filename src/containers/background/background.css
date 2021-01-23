@@ -82,6 +82,7 @@
   top: 5px;
   line-height: 30px;
   text-align: center;
+  opacity: 0.3;
 }
 .progress-chapter-name {
   left: calc(25% - 270px);
@@ -100,6 +101,7 @@
   line-height: 30px;
   text-align: center;
   font-size: 14px;
+  opacity: 0.3;
 }
 .background-page-left {
   left: calc(25% - 270px);

@@ -8,6 +8,7 @@ import { Trans } from "react-i18next";
 import { BookmarkPageProps, BookmarkPageState } from "./interface";
 import { Redirect, withRouter } from "react-router-dom";
 import _ from "underscore";
+import EmptyCover from "../../components/emptyCover";
 
 declare var window: any;
 
@@ -95,16 +96,30 @@ class BookmarkPage extends React.Component<
     };
     const renderBookmarkPage = () => {
       return bookArr.map((item, index) => {
+        console.log(item.cover, item.name);
         return (
           <li className="bookmark-page-item" key={item.key}>
-            <img
-              className="bookmark-page-cover"
-              src={item.cover}
-              alt=""
-              onClick={() => {
-                this.handleRedirect(item.key, "", 0);
-              }}
-            />
+            {item.cover && item.cover !== "noCover" ? (
+              <img
+                className="bookmark-page-cover"
+                src={item.cover}
+                alt=""
+                onClick={() => {
+                  this.handleRedirect(item.key, "", 0);
+                }}
+              />
+            ) : (
+              <div className="bookmark-page-cover">
+                <EmptyCover
+                  {...{
+                    format: item.format,
+                    title: item.name,
+                    scale: 0.86,
+                  }}
+                />
+              </div>
+            )}
+
             <p className="bookmark-page-name">{bookArr[index].name}</p>
             <div className="bookmark-page-bookmark-container-parent">
               <ul className="bookmark-page-bookmark-container">

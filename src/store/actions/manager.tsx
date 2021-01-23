@@ -38,8 +38,14 @@ export function handleMessageBox(isShow: boolean) {
 export function handleSortDisplay(isSortDisplay: boolean) {
   return { type: "HANDLE_SORT_DISPLAY", payload: isSortDisplay };
 }
-export function handleSort(isSort: boolean) {
-  return { type: "HANDLE_SORT", payload: isSort };
+export function handleLoadingDialog(isShowLoading: boolean) {
+  return { type: "HANDLE_SHOW_LOADING", payload: isShowLoading };
+}
+export function handleBookSort(isBookSort: boolean) {
+  return { type: "HANDLE_BOOK_SORT", payload: isBookSort };
+}
+export function handleNoteSort(isNoteSort: boolean) {
+  return { type: "HANDLE_NOTE_SORT", payload: isNoteSort };
 }
 export function handleFirst(isFirst: string) {
   return { type: "HANDLE_FIRST", payload: isFirst };
@@ -50,6 +56,7 @@ export function handleBookSortCode(bookSortCode: {
 }) {
   return { type: "HANDLE_SORT_CODE", payload: bookSortCode };
 }
+
 export function handleNoteSortCode(noteSortCode: {
   sort: number;
   order: number;

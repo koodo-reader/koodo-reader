@@ -37,7 +37,6 @@ class SettingDialog extends React.Component<
 
   changeLanguage = (lng: string) => {
     i18n.changeLanguage(lng);
-    console.log(lng, "lng");
     this.setState({ language: lng });
     OtherUtil.setReaderConfig("lang", lng);
   };
@@ -114,7 +113,11 @@ class SettingDialog extends React.Component<
               onClick={() => {
                 this.handleChangeTouch();
               }}
-              style={{ float: "right" }}
+              style={
+                this.state.isTouch
+                  ? { background: "rgba(46, 170, 220)", float: "right" }
+                  : { float: "right" }
+              }
             >
               <span
                 className="single-control-button"
@@ -139,7 +142,11 @@ class SettingDialog extends React.Component<
               onClick={() => {
                 this.handleChangeOpen();
               }}
-              style={{ float: "right" }}
+              style={
+                this.state.isOpenBook
+                  ? { background: "rgba(46, 170, 220)", float: "right" }
+                  : { float: "right" }
+              }
             >
               <span
                 className="single-control-button"
@@ -165,7 +172,11 @@ class SettingDialog extends React.Component<
               onClick={() => {
                 this.handleExpandContent();
               }}
-              style={{ float: "right" }}
+              style={
+                this.state.isExpandContent
+                  ? { background: "rgba(46, 170, 220)", float: "right" }
+                  : { float: "right" }
+              }
             >
               <span
                 className="single-control-button"

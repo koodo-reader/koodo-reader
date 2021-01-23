@@ -9,6 +9,7 @@ import OtherUtil from "../../utils/otherUtil";
 import { withRouter } from "react-router-dom";
 import RecordLocation from "../../utils/recordLocation";
 import isElectron from "is-electron";
+import EmptyCover from "../emptyCover";
 declare var window: any;
 
 class BookCardItem extends React.Component<BookProps, BookState> {
@@ -69,13 +70,22 @@ class BookCardItem extends React.Component<BookProps, BookState> {
   handleMoreAction = (event: any) => {
     const e = event || window.event;
     let x = e.clientX;
-    if (x > document.body.clientWidth - 100) {
-      x = x - 80;
+    if (x > document.body.clientWidth - 300) {
+      x = x - 180;
     }
-    this.setState({ left: x - 210, top: e.clientY - 120 }, () => {
-      this.props.handleActionDialog(true);
-      this.props.handleReadingBook(this.props.book);
-    });
+    this.setState(
+      {
+        left: x - 210,
+        top:
+          document.body.clientHeight - e.clientY < 320
+            ? document.body.clientHeight - 120 - e.clientY
+            : e.clientY - 120,
+      },
+      () => {
+        this.props.handleActionDialog(true);
+        this.props.handleReadingBook(this.props.book);
+      }
+    );
   };
   handleDeleteBook = () => {
     this.props.handleReadingBook(this.props.book);
@@ -123,7 +133,11 @@ class BookCardItem extends React.Component<BookProps, BookState> {
             this.handleConfig(false);
           }}
         >
-          {this.props.book.cover && this.props.book.cover !== "noCover" ? (
+          {this.props.book.cover &&
+          this.props.book.cover !== "noCover" &&
+          this.props.book.publisher !== "mobi" &&
+          this.props.book.publisher !== "azw3" &&
+          this.props.book.publisher !== "txt" ? (
             <img
               className="book-item-cover"
               src={this.props.book.cover}
@@ -151,14 +165,12 @@ class BookCardItem extends React.Component<BookProps, BookState> {
                 this.props.handleDragItem("");
               }}
             >
-              <img
-                src={
-                  process.env.NODE_ENV === "production"
-                    ? "./assets/cover.jpg"
-                    : "../../assets/cover.jpg"
-                }
-                alt=""
-                style={{ width: "100%" }}
+              <EmptyCover
+                {...{
+                  format: this.props.book.format,
+                  title: this.props.book.name,
+                  scale: 1,
+                }}
               />
             </div>
           )}
@@ -176,18 +188,20 @@ class BookCardItem extends React.Component<BookProps, BookState> {
 
           {this.state.isOpenConfig ? (
             <>
-              <div className="reading-progress-icon">
-                <div style={{ position: "relative", left: "4px" }}>
-                  {percentage
-                    ? Math.floor(percentage * 100) < 10
-                      ? "0" + Math.floor(percentage * 100)
-                      : Math.floor(percentage * 100) === 100
-                      ? "完"
-                      : Math.floor(percentage * 100)
-                    : "00"}
-                  <span className="reading-percentage-char">%</span>
+              {this.props.book.format !== "PDF" && (
+                <div className="reading-progress-icon">
+                  <div style={{ position: "relative", left: "4px" }}>
+                    {percentage
+                      ? Math.floor(percentage * 100) < 10
+                        ? "0" + Math.floor(percentage * 100)
+                        : Math.floor(percentage * 100) === 100
+                        ? "完"
+                        : Math.floor(percentage * 100)
+                      : "00"}
+                    <span className="reading-percentage-char">%</span>
+                  </div>
                 </div>
-              </div>
+              )}
               <span
                 className="icon-more book-more-action"
                 onClick={(event) => {

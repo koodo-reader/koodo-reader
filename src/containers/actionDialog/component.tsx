@@ -6,7 +6,7 @@ import { ActionDialogProps } from "./interface";
 import AddTrash from "../../utils/addTrash";
 import FileSaver from "file-saver";
 import localforage from "localforage";
-
+import Parser from "html-react-parser";
 class ActionDialog extends React.Component<ActionDialogProps> {
   handleDeleteBook = () => {
     this.props.handleReadingBook(this.props.currentBook);
@@ -104,6 +104,8 @@ class ActionDialog extends React.Component<ActionDialogProps> {
               localforage
                 .getItem(this.props.currentBook.key)
                 .then((result: any) => {
+                  this.props.handleMessage("Export Successfully");
+                  this.props.handleMessageBox(true);
                   FileSaver.saveAs(
                     new Blob([result]),
                     this.props.currentBook.name +
@@ -120,6 +122,44 @@ class ActionDialog extends React.Component<ActionDialogProps> {
             <span className="action-name">
               <Trans>Export</Trans>
             </span>
+          </div>
+        </div>
+        <div className="sort-dialog-seperator"></div>
+
+        <div className="action-dialog-book-info">
+          <div>
+            <p className="action-dialog-book-title">
+              {this.props.currentBook.name}
+            </p>
+            <p className="action-dialog-book-author">
+              {this.props.currentBook.author}
+            </p>
+          </div>
+          <div>
+            <p className="action-dialog-book-publisher">
+              <Trans>Publisher</Trans>:
+            </p>
+            <p className="action-dialog-book-title">
+              {this.props.currentBook.publisher}
+            </p>
+          </div>
+          <div>
+            <p className="action-dialog-book-added">
+              <Trans>Added at</Trans>:
+            </p>
+            <p className="action-dialog-book-title">
+              {new Date(parseInt(this.props.currentBook.key))
+                .toLocaleString()
+                .replace(/:\d{1,2}$/, " ")}
+            </p>
+          </div>
+          <div>
+            <p className="action-dialog-book-desc">
+              <Trans>Description</Trans>:
+            </p>
+            <p className="action-dialog-book-desc">
+              {Parser(this.props.currentBook.description)}
+            </p>
           </div>
         </div>
       </div>
