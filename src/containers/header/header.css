@@ -1,13 +1,13 @@
 .header {
-  position: absolute;
-  top: 0;
-  left: 190px;
   width: 100%;
+  height: 80px;
+  overflow: hidden;
+  margin-left: 190px;
 }
 
 .header-sort-container {
   position: absolute;
-  left: 265px;
+  left: 455px;
   top: 29px;
   cursor: pointer;
   transition: 0.1s;
@@ -38,7 +38,7 @@
 }
 .only-local-container {
   position: absolute;
-  left: 350px;
+  left: 540px;
   margin-top: 29px;
 }
 .only-local-text {
@@ -68,8 +68,7 @@
   background-color: white;
 }
 .import-from-cloud {
-  float: right;
-  margin-right: 220px;
+  margin-right: 20px;
   margin-top: 20px;
   min-width: 138px;
   height: 42px;
@@ -83,19 +82,29 @@
   color: #4b4b4b;
   box-sizing: border-box;
   cursor: pointer;
-  transition: 0.1s;
+  transition: 0.2s;
+  position: fixed;
+  right: 0px;
+  top: 0px;
 }
-.import-from-cloud:hover {
-  background-color: rgba(75, 75, 75, 0.035);
+.import-from-cloud:hover .animation-mask {
+  transform: scaleX(1);
+}
+.import-from-local:hover .animation-mask-local {
+  transform: scaleX(1);
 }
 @media screen and (max-width: 950px) {
   .import-from-cloud {
-    position: absolute;
-    left: 580px;
+    position: fixed;
+    left: 20px;
+    top: calc(100vh - 80px);
+    width: 158px;
   }
   .import-from-local {
-    position: absolute;
-    left: 400px;
+    position: fixed !important;
+    left: 20px;
+    top: calc(100vh - 140px) !important;
+    width: 138px !important;
   }
 }
 .download-demo-book {
@@ -112,11 +121,24 @@
     display: none;
   }
 }
+.animation-mask,
+.animation-mask-local {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  background-color: rgba(75, 75, 75, 0.05);
+  transition: 0.1s;
+  transform: scaleX(0);
+  transform-origin: left;
+  border-radius: 19px;
+}
 
 .header-search-container {
   position: absolute;
   top: 23px;
-  left: 20px;
+  left: 210px;
   width: 209px;
   height: 40px;
 }
@@ -124,12 +146,12 @@
   font-size: 25px;
 }
 .setting-icon-container {
-  width: 32px;
+  width: 30px;
   height: 35px;
   font-size: 25px;
   line-height: 37px;
   position: absolute;
-  left: 335px;
+  left: 525px;
   top: 25px;
   color: rgba(75, 75, 75, 1);
   cursor: pointer;

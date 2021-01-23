@@ -77,6 +77,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
               : {}
           }
         >
+          <div className="animation-mask"></div>
           <Trans>Backup and Restore</Trans>
         </div>
         <ImportLocal {...{ handleDrag: this.props.handleDrag }} />

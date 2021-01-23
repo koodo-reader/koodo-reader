@@ -13,12 +13,13 @@ export interface ManagerProps extends RouteComponentProps<any> {
   isOpenEditDialog: boolean;
   isOpenDeleteDialog: boolean;
   isOpenAddDialog: boolean;
-  isSort: boolean;
+  isBookSort: boolean;
   isFirst: string;
   isSortDisplay: boolean;
   isMessage: boolean;
   isBackup: boolean;
   isSettingOpen: boolean;
+  isShowLoading: boolean;
   dragItem: string;
   handleFetchBooks: () => void;
   handleFetchNotes: () => void;

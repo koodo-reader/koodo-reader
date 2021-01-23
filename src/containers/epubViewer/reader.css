@@ -194,11 +194,21 @@
   height: 20px;
 }
 .reader-setting-icon-container {
+  width: 28px;
+  height: 30px;
   position: absolute;
   top: 15px;
   right: 20px;
-  font-size: 27px;
+  font-size: 22px;
   opacity: 0.1;
   cursor: pointer;
   z-index: 10;
+  transition: 0.1s;
+  line-height: 30px;
+  padding-left: 4px;
+}
+.reader-setting-icon-container:hover {
+  background-color: rgba(75, 75, 75, 0.07);
+  border-radius: 8px;
+  opacity: 0.5;
 }

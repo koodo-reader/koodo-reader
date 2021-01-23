@@ -20,8 +20,7 @@
   opacity: 1;
   width: 100%;
   text-align: center;
-  position: absolute;
-  top: 15px;
+  margin-top: 15px;
   font-weight: 500;
 }
 
@@ -37,9 +36,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  position: absolute;
-  top: 50px;
-  left: 19px;
+  margin-top: 15px;
+  margin-left: 13px;
 }
 
 .token-dialog-link-text {
@@ -73,7 +71,22 @@
   top: 144px;
   left: 30px;
 }
-
+.token-dialog-url-box,
+.token-dialog-username-box,
+.token-dialog-password-box {
+  width: 322px;
+  height: 30px;
+  background: rgba(246, 246, 246, 1);
+  border: 2px solid rgba(112, 112, 112, 1);
+  opacity: 1;
+  font-size: 13px;
+  line-height: 14px;
+  color: rgba(75, 75, 75, 1);
+  opacity: 1;
+  margin-left: 60px;
+  margin-top: 10px;
+  padding-left: 15px;
+}
 .token-dialog-cancel {
   width: 60px;
   height: 26px;

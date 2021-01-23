@@ -171,7 +171,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
             this.handleEnterReader("top");
           }}
         >
-          <span className="icon-setting reader-setting-icon"></span>
+          <span className="icon-grid reader-setting-icon"></span>
         </div>
         {this.state.isMessage ? <MessageBox /> : null}
         <div
@@ -299,7 +299,9 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
           className="view-area-page"
           id="page-area"
           style={
-            this.state.readerMode === "continuous"
+            document.body.clientWidth < 570
+              ? { left: 0, right: 0 }
+              : this.state.readerMode === "continuous"
               ? {
                   left: `calc(50vw - ${270 * parseFloat(this.state.scale)}px)`,
                   right: `calc(50vw - ${270 * parseFloat(this.state.scale)}px)`,

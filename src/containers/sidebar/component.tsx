@@ -19,7 +19,6 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
         ? "home"
         : document.URL.split("/").reverse()[0]
     );
-    console.log(this.props.mode, "mode");
   }
   handleSidebar = (mode: string, index: number) => {
     this.setState({ index: index });
