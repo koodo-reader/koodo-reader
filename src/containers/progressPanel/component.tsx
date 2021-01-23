@@ -85,6 +85,7 @@ class ProgressPanel extends React.Component<
       currentChapterIndex: chapterIndex,
     });
     const section = this.props.currentEpub.section(chapterIndex + 1);
+    console.log(section, "section");
     if (section && section.href) {
       this.props.currentEpub.rendition.display(section.href).then(() => {
         let percentage = RecordLocation.getCfi(this.props.currentBook.key)

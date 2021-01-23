@@ -118,6 +118,14 @@ Make sure node's version on your computer is larger than 10.0.0, yarn and git is
 
 When an update is available, you will receive a notification when you open the software.
 
+## Contribution
+
+| Contribution                        | Contributor                                                                                |
+| :---------------------------------- | :----------------------------------------------------------------------------------------- |
+| translation for traditional Chinese | [TobySkarting](https://github.com/TobySkarting), [playercd8](https://github.com/playercd8) |
+| installation for Homebrew           | [singularitti](https://github.com/singularitti)                                            |
+| other contributors                  | [bamlan](https://github.com/bamlan)                                                        |
+
 ## Help
 
 Click [here](https://github.com/troyeguo/koodo-reader/issues) to report your issue, or visit https://koodo.960960.xyz/support for help.

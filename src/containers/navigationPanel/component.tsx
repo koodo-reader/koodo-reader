@@ -7,6 +7,7 @@ import { Trans } from "react-i18next";
 import { NavigationPanelProps, NavigationPanelState } from "./interface";
 import SearchBox from "../../components/searchBox";
 import Parser from "html-react-parser";
+import EmptyCover from "../../components/emptyCover";
 
 class NavigationPanel extends React.Component<
   NavigationPanelProps,
@@ -178,7 +179,20 @@ class NavigationPanel extends React.Component<
         ) : (
           <>
             <div className="navigation-header">
-              <img className="book-cover" src={this.state.cover} alt="" />
+              {this.state.cover ? (
+                <img className="book-cover" src={this.state.cover} alt="" />
+              ) : (
+                <div className="book-cover">
+                  <EmptyCover
+                    {...{
+                      format: this.props.currentBook.format,
+                      title: this.props.currentBook.name,
+                      scale: 0.86,
+                    }}
+                  />
+                </div>
+              )}
+
               <p className="book-title">{this.props.currentBook.name}</p>
               <p className="book-arthur">
                 <Trans>Author</Trans>:{" "}

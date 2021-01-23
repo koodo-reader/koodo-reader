@@ -1,6 +1,7 @@
 .import-from-local {
-  position: absolute;
-  right: 360px;
+  position: fixed;
+  right: 160px;
+  top: 0px;
   margin-right: 20px;
   margin-top: 20px;
   min-width: 138px;

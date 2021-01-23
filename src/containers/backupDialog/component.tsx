@@ -6,9 +6,11 @@ import BackupUtil from "../../utils/backupUtil";
 import RestoreUtil from "../../utils/restoreUtil";
 import { Trans } from "react-i18next";
 import DropboxUtil from "../../utils/syncUtils/dropbox";
+import WebdavUtil from "../../utils/syncUtils/webdav";
 import { BackupDialogProps, BackupDialogState } from "./interface";
 import TokenDialog from "../../components/tokenDialog";
 import OtherUtil from "../../utils/otherUtil";
+import isElectron from "is-electron";
 
 class BackupDialog extends React.Component<
   BackupDialogProps,
@@ -28,6 +30,7 @@ class BackupDialog extends React.Component<
 
   handleFinish = () => {
     this.setState({ currentStep: 2 });
+    this.props.handleLoadingDialog(false);
   };
   handleRestoreToLocal = (event: any) => {
     event.preventDefault();
@@ -55,8 +58,11 @@ class BackupDialog extends React.Component<
             this.props.handleTokenDialog(true);
             break;
           }
+
           if (this.state.isBackup === "yes") {
             this.showMessage("Uploading");
+            this.props.handleLoadingDialog(true);
+
             BackupUtil.backup(
               this.props.books,
               this.props.notes,
@@ -66,6 +72,7 @@ class BackupDialog extends React.Component<
               this.showMessage
             );
           } else {
+            this.props.handleLoadingDialog(true);
             this.showMessage("Downloading");
             DropboxUtil.DownloadFile(this.handleFinish, this.showMessage);
           }
@@ -76,7 +83,31 @@ class BackupDialog extends React.Component<
           break;
 
         case 3:
-          this.showMessage("Coming Soon");
+          if (!isElectron()) {
+            this.showMessage("Only Desktop support this service");
+          }
+          if (!OtherUtil.getReaderConfig("webdav_token")) {
+            this.props.handleTokenDialog(true);
+            break;
+          }
+          if (this.state.isBackup === "yes") {
+            this.showMessage("Uploading");
+            this.props.handleLoadingDialog(true);
+
+            BackupUtil.backup(
+              this.props.books,
+              this.props.notes,
+              this.props.bookmarks,
+              this.handleFinish,
+              3,
+              this.showMessage
+            );
+          } else {
+            this.showMessage("Downloading");
+            this.props.handleLoadingDialog(true);
+
+            WebdavUtil.DownloadFile(this.handleFinish, this.showMessage);
+          }
           break;
         default:
           break;
@@ -93,7 +124,7 @@ class BackupDialog extends React.Component<
             onClick={() => {
               this.handleDrive(index);
             }}
-            style={index === 0 || index === 1 ? { opacity: 1 } : {}}
+            style={index !== 2 ? { opacity: 1 } : {}}
           >
             <div className="backup-page-list-item-container">
               <span
