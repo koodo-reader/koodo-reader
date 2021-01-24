@@ -13,8 +13,6 @@ import { ManagerProps, ManagerState } from "./interface";
 import { Trans } from "react-i18next";
 import OtherUtil from "../../utils/otherUtil";
 import AddFavorite from "../../utils/addFavorite";
-import { updateLog } from "../../constants/updateLog";
-import UpdateDialog from "../../components/updataDialog";
 import SettingDialog from "../../components/settingDialog";
 import { isMobileOnly } from "react-device-detect";
 import { Route, Switch, Redirect } from "react-router-dom";
@@ -82,19 +80,13 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
   }
   componentDidMount() {
     setTimeout(() => {
-      this.setState({
-        isUpdated: OtherUtil.getReaderConfig("version") !== updateLog.version,
-      });
       this.props.handleFirst(OtherUtil.getReaderConfig("isFirst") || "yes");
     }, 1000);
     if (is_touch_device() && !OtherUtil.getReaderConfig("isTouch")) {
       OtherUtil.setReaderConfig("isTouch", "yes");
     }
   }
-  handleUpdateDialog = () => {
-    this.setState({ isUpdated: false });
-    OtherUtil.setReaderConfig("version", updateLog.version);
-  };
+
   handleDrag = (isDrag: boolean) => {
     this.setState({ isDrag });
   };
@@ -104,9 +96,6 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
 
   render() {
     let { books } = this.props;
-    const updateDialogProps = {
-      handleUpdateDialog: this.handleUpdateDialog,
-    };
     if (isMobileOnly) {
       return (
         <>
@@ -159,12 +148,12 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
         {this.props.isShowLoading && <LoadingDialog />}
         {(this.props.isSettingOpen ||
           this.props.isBackup ||
+          this.props.isShowNew ||
           this.props.isOpenDeleteDialog ||
           this.props.isOpenEditDialog ||
           this.props.isOpenAddDialog ||
           this.props.isShowLoading ||
-          this.props.isFirst === "yes" ||
-          (this.state.isUpdated && this.props.isFirst === "no")) && (
+          this.props.isFirst === "yes") && (
           <div className="drag-background"></div>
         )}
 
@@ -172,9 +161,6 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
         {this.props.isSortDisplay && <SortDialog />}
         {this.props.isBackup && <BackupDialog />}
         {this.props.isFirst === "yes" && <WelcomeDialog />}
-        {this.state.isUpdated && this.props.isFirst === "no" && (
-          <UpdateDialog {...updateDialogProps} />
-        )}
         {this.props.isSettingOpen && <SettingDialog />}
         {(!books || books.length === 0) && this.state.totalBooks ? (
           <Redirect to="/manager/loading" />

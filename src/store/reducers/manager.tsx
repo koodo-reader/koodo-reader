@@ -11,6 +11,7 @@ const initState = {
   isList: "card",
   isSortDisplay: false,
   isShowLoading: false,
+  isShowNew: false,
   bookSortCode: { sort: 0, order: 1 },
   noteSortCode: OtherUtil.getNoteSortCode(),
   isMessage: false,
@@ -75,6 +76,11 @@ export function manager(
       return {
         ...state,
         isShowLoading: action.payload,
+      };
+    case "HANDLE_SHOW_NEW":
+      return {
+        ...state,
+        isShowNew: action.payload,
       };
     case "HANDLE_MESSAGE":
       return {

@@ -20,6 +20,7 @@ export interface ManagerProps extends RouteComponentProps<any> {
   isBackup: boolean;
   isSettingOpen: boolean;
   isShowLoading: boolean;
+  isShowNew: boolean;
   dragItem: string;
   handleFetchBooks: () => void;
   handleFetchNotes: () => void;

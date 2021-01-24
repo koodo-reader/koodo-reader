@@ -4,7 +4,9 @@ export interface UpdateInfoProps {
   books: BookModel[];
   handleMessage: (message: string) => void;
   handleMessageBox: (isShow: boolean) => void;
+  handleNewDialog: (isShowNew: boolean) => void;
 }
 export interface UpdateInfoState {
   downlownLink: string;
+  updateLog: any;
 }

@@ -3,10 +3,121 @@
   height: 50px;
   display: flex;
   align-items: center;
-  position: relative;
-  left: 380px;
+  position: absolute;
+  left: 590px;
   top: 18px;
   color: blue;
   cursor: pointer;
   /* bottom: 120px; */
+}
+.new-version {
+  width: 346px;
+  height: 480px;
+  position: absolute;
+  left: calc(50% - 173px);
+  top: calc(50% - 240px);
+  overflow: hidden;
+  background: rgba(255, 255, 255, 1);
+  box-shadow: 0px 0px 16px rgba(0, 0, 0, 0.34);
+  opacity: 1;
+  z-index: 20;
+  animation: popup 0.1s ease-in-out 0s 1;
+}
+.new-version-title {
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 15px;
+  color: rgba(75, 75, 75, 1);
+  opacity: 1;
+  margin: 20px 0px 10px;
+  text-align: center;
+  width: 346px;
+}
+.new-version-open {
+  margin-left: 100px;
+  margin-top: -10px;
+  width: 138px;
+  padding: 0px 10px;
+  height: 42px;
+  background: rgba(75, 75, 75, 1);
+  opacity: 1;
+  border-radius: 25px;
+  line-height: 42px;
+  text-align: center;
+  color: white;
+  cursor: pointer;
+  z-index: 50;
+  transition: 0.1s;
+}
+.new-version-copy {
+  margin-left: 142px;
+  margin-top: 5px;
+  color: rgba(75, 75, 75, 1);
+  cursor: pointer;
+  font-size: 17px;
+  font-weight: 500;
+  line-height: 25px;
+}
+.update-dialog-new-title,
+.update-dialog-fix-title {
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 15px;
+  color: rgba(75, 75, 75, 1);
+  opacity: 1;
+  margin-top: 10px;
+  margin-left: 20px;
+}
+.update-dialog-list {
+  font-size: 16px;
+  line-height: 18px;
+  color: rgba(149, 149, 149, 1);
+  opacity: 1;
+  margin: 7px;
+}
+.update-dialog-new-container,
+.update-dialog-fix-container {
+  margin: 20px 30px;
+}
+.update-dialog-info {
+  margin-top: 10px;
+  height: 330px;
+  overflow-y: scroll;
+  width: 346px;
+}
+.update-dialog-illustration {
+  width: 200px;
+  position: absolute;
+  bottom: 0px;
+  right: 0px;
+  z-index: 20;
+}
+.update-dialog-container-button {
+  width: 75px;
+  height: 32px;
+  background: rgba(75, 75, 75, 1);
+  opacity: 1;
+  line-height: 32px;
+  text-align: center;
+  color: white;
+  margin: 12px 130px;
+  position: absolute;
+  cursor: pointer;
+  z-index: 25;
+}
+.update-dialog-url {
+  width: 200px;
+  font-size: 14px;
+  position: absolute;
+  bottom: 6px;
+  left: 10px;
+  user-select: text;
+  z-index: 30;
+  line-height: 16px;
+}
+.update-dialog-subtitle {
+  font-size: 13px;
+  margin: 5px;
+  text-align: center;
+  color: rgba(75, 75, 75, 1);
 }

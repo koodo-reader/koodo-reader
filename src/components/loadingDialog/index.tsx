@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import "./loadingDialog.css";
 import Lottie from "react-lottie";
 import animationData from "../../assets/loading.json";
@@ -12,7 +12,6 @@ const defaultOptions = {
   },
 };
 const LoadingDialog = (props) => {
-  useEffect(() => {}, []);
   return (
     <div className="loading-dialog">
       <div className="loading-dialog-title">
