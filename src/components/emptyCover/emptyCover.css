@@ -17,7 +17,7 @@
 .cover-title {
   float: left;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
   color: rgba(75, 75, 75, 0.8);
   width: 90px;
   text-align: left;
@@ -25,7 +25,7 @@
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 3;
-  overflow: visible;
+  overflow: hidden;
   position: relative;
   margin-left: 5px;
   margin-top: 20px;
