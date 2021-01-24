@@ -99,40 +99,8 @@
     },
     "linux": {
       "icon": "assets/icons",
-      "target": [
-        {
-          "target": "deb",
-          "arch": [
-            "x64",
-            "ia32"
-          ]
-        },
-        {
-          "target": "rpm",
-          "arch": [
-            "x64",
-            "ia32"
-          ]
-        },
-        {
-          "target": "tar.gz",
-          "arch": [
-            "x64",
-            "ia32"
-          ]
-        },
-        {
-          "target": "freebsd",
-          "arch": [
-            "x64",
-            "ia32"
-          ]
-        },
-        "AppImage",
-        "snap",
-        "pacman"
-      ],
-      "category": "Office"
+      "category": "Office",
+      "target": "AppImage"
     },
     "portable": {
       "artifactName": "${productName}-${version}-Portable.${ext}"
