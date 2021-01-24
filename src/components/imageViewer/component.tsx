@@ -4,7 +4,7 @@ import "./imageViewer.css";
 import { ImageViewerProps, ImageViewerStates } from "./interface";
 import StyleUtil from "../../utils/styleUtil";
 import FileSaver from "file-saver";
-import { withNamespaces } from "react-i18next";
+
 const isElectron = require("is-electron");
 
 declare var window: any;
@@ -202,4 +202,4 @@ class ImageViewer extends React.Component<ImageViewerProps, ImageViewerStates> {
   }
 }
 
-export default withNamespaces()(ImageViewer as any);
+export default ImageViewer;

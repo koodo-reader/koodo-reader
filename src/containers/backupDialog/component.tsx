@@ -85,6 +85,7 @@ class BackupDialog extends React.Component<
         case 3:
           if (!isElectron()) {
             this.showMessage("Only Desktop support this service");
+            break;
           }
           if (!OtherUtil.getReaderConfig("webdav_token")) {
             this.props.handleTokenDialog(true);
