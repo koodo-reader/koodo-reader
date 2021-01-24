@@ -28,7 +28,7 @@
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
-  overflow: visible;
+  overflow: hidden;
   position: relative;
 }
 .book-item-config {
