@@ -41,6 +41,9 @@ export function handleSortDisplay(isSortDisplay: boolean) {
 export function handleLoadingDialog(isShowLoading: boolean) {
   return { type: "HANDLE_SHOW_LOADING", payload: isShowLoading };
 }
+export function handleNewDialog(isShowNew: boolean) {
+  return { type: "HANDLE_SHOW_NEW", payload: isShowNew };
+}
 export function handleBookSort(isBookSort: boolean) {
   return { type: "HANDLE_BOOK_SORT", payload: isBookSort };
 }
