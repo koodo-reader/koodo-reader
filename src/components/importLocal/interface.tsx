@@ -3,6 +3,8 @@ import { RouteComponentProps } from "react-router";
 export interface ImportLocalProps extends RouteComponentProps<any> {
   books: BookModel[];
   deletedBooks: BookModel[];
+  dragItem: string;
+
   handleMessageBox: (isShow: boolean) => void;
   handleMessage: (message: string) => void;
   handleFetchBooks: () => void;

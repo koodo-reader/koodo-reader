@@ -132,7 +132,7 @@ class ActionDialog extends React.Component<ActionDialogProps> {
               {this.props.currentBook.name}
             </p>
             <p className="action-dialog-book-author">
-              {this.props.currentBook.author}
+              <Trans>{this.props.currentBook.author}</Trans>
             </p>
           </div>
           <div>
