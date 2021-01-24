@@ -2,7 +2,7 @@
 import React from "react";
 import "./searchBox.css";
 import OtherUtil from "../../utils/otherUtil";
-import { Trans, withNamespaces } from "react-i18next";
+import { Trans } from "react-i18next";
 import { SearchBoxProps } from "./interface";
 class SearchBox extends React.Component<SearchBoxProps> {
   componentDidMount() {
@@ -137,4 +137,4 @@ class SearchBox extends React.Component<SearchBoxProps> {
   }
 }
 
-export default withNamespaces()(SearchBox as any);
+export default SearchBox;

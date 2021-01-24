@@ -4,7 +4,7 @@ import "./settingDialog.css";
 import { SettingInfoProps, SettingInfoState } from "./interface";
 import { Trans } from "react-i18next";
 import i18n from "../../i18n";
-import { updateLog } from "../../constants/updateLog";
+import { version } from "../../../package.json";
 import OtherUtil from "../../utils/otherUtil";
 const isElectron = require("is-electron");
 
@@ -85,11 +85,7 @@ class SettingDialog extends React.Component<
         </p>
         <p className="setting-subtitle">
           <Trans>Version</Trans>
-          {updateLog.version}
-        </p>
-        <p className="setting-subtitle">
-          <Trans>Date</Trans>
-          {updateLog.date}
+          {version}
         </p>
         <div className="setting-close-container">
           <span

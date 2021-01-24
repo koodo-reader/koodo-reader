@@ -2,7 +2,7 @@
 import React, { Component } from "react";
 import "./tokenDialog.css";
 import copy from "copy-text-to-clipboard";
-import { Trans, withNamespaces } from "react-i18next";
+import { Trans } from "react-i18next";
 import { TokenDialogProps, TokenDialogState } from "./interface";
 import OtherUtil from "../../utils/otherUtil";
 
@@ -123,4 +123,4 @@ class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
   }
 }
 
-export default withNamespaces()(TokenDialog as any);
+export default TokenDialog;

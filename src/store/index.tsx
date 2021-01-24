@@ -41,6 +41,7 @@ export type stateType = {
     isList: string;
     isSortDisplay: boolean;
     isShowLoading: boolean;
+    isShowNew: boolean;
     bookSortCode: { sort: number; order: number };
     noteSortCode: { sort: number; order: number };
     isMessage: boolean;
