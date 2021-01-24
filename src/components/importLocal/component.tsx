@@ -99,6 +99,8 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
             this.state.isOpenFile && this.handleJump(book);
             this.setState({ isOpenFile: false });
             this.props.history.push("/manager/home");
+
+            this.props.handleLoadingDialog(false);
           }, 1000);
 
           resolve();
@@ -440,9 +442,6 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
             //异步解析文件
             await this.doIncrementalTest(acceptedFiles[i]);
           }
-          setTimeout(() => {
-            this.props.handleLoadingDialog(false);
-          }, 1000);
         }}
         accept={[".epub", ".pdf", ".txt", ".mobi", ".azw3"]}
         multiple={true}
@@ -451,14 +450,18 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
           <div
             className="import-from-local"
             {...getRootProps()}
-            style={
-              OtherUtil.getReaderConfig("lang") === "en"
-                ? { fontSize: "14px" }
-                : {}
-            }
           >
             <div className="animation-mask-local"></div>
-            <Trans>Import from Local</Trans>
+            <span
+              style={
+                OtherUtil.getReaderConfig("lang") === "en"
+                  ? { fontSize: "14px" }
+                  : {}
+              }
+            >
+              <Trans>Import from Local</Trans>
+            </span>
+
             <input
               type="file"
               id="import-book-box"
