@@ -114,4 +114,4 @@ brew install --cask koodo-reader
 
 ## 帮助
 
-您可以在[issue](https://github.com/troyeguo/koodo-reader/issues)提问，或者前往[这里]("https://koodo.960960.xyz/support")了解更多。
+您可以在[issue](https://github.com/troyeguo/koodo-reader/issues)提问，或者前往[这里](https://koodo.960960.xyz/support)了解更多。
