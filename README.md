@@ -1,6 +1,6 @@
 <div align="center">
 
-[简体中文](https://github.com/troyeguo/koodo-reader/blob/master/README.md) | [繁體中文](https://github.com/troyeguo/koodo-reader/blob/master/README_tw.md) English
+[简体中文](https://github.com/troyeguo/koodo-reader/blob/master/README.md) | [繁體中文](https://github.com/troyeguo/koodo-reader/blob/master/README_tw.md) | English
 
 </div>
 
