@@ -30,7 +30,7 @@
 
 <div>
 
-简体中文 | [English](https://github.com/troyeguo/koodo-reader/blob/master/README_en.md)
+简体中文 | [繁體中文](https://github.com/troyeguo/koodo-reader/blob/master/README_tw.md) | [English](https://github.com/troyeguo/koodo-reader/blob/master/README_en.md)
 
 </div>
 
@@ -48,45 +48,39 @@
 
 ## 简介
 
-👏 欢迎使用 **Koodo Reader** ！
+欢迎使用 **Koodo Reader** ！
 
-✍️ **Koodo Reader** 是一个开源免费的电子书阅读器，支持桌面版和网页版
+**Koodo Reader** 是一个开源免费的电子书阅读器，支持桌面版和网页版
 
-## 特色 👇
+## 特色
 
-🌈 支持阅读 **epub** , **pdf**, **mobi**, **azw3** 和 **txt** 格式的图书
+支持阅读 **epub** , **pdf**, **mobi**, **azw3** 和 **txt** 格式的图书
 
-🌎 支持 **Windows** ， **macOS**， **Linux** 和 **网页版**
+支持 **Windows** ， **macOS**， **Linux** 和 **网页版**
 
-💡 备份导出，网盘同步
+备份数据到 Dropbox 和 Webdav
 
-📝 双页模式，单页模式，滚动模式
+双页模式，单页模式，滚动模式
 
-🚩 听书功能，翻译功能
+听书功能，翻译功能
 
-💻 目录，书签，笔记，书摘，书架，标签
+目录，书签，笔记，书摘，书架，标签
 
-🎯 自定义字体，字体大小，行间距，阅读背景色，文字颜色
+自定义字体，字体大小，行间距，阅读背景色，文字颜色
 
-🏝 触控屏手势支持
+触控屏手势支持
 
-🚀 文字高亮和下划线标记
+文字高亮和下划线标记
 
-⚽ 简体中文，繁体中文，英文，多语言支持
-
-🌱 当然 **Koodo Reader** 仍然很年轻并且有一些缺陷，但有你的支持它一定会越来越好 🏃
-
-😘 快去添加你的第一本电子书吧
+简体中文，繁体中文，英文，多语言支持
 
 ## 使用方法
 
-桌面端：前往这里下载最新的安装包(暂不支持 Windows 7 系统) [点我前往](https://koodo.960960.xyz/download)
+桌面端：[点我前往](https://koodo.960960.xyz/download)
 
-（国内网络下载速度慢的解决办法，复制下载链接到这个网站：https://d.serctl.com/ ）
+网页版：[点我前往](https://reader.960960.xyz)
 
-网页版：代码托管在 Vercel [点我前往](https://reader.960960.xyz)
-
-[Homebrew](https://brew.sh/)：
+使用[Homebrew](https://brew.sh/)安装：
 
 ```shell
 brew install --cask koodo-reader

@@ -30,7 +30,7 @@
 
 <div>
 
-[简体中文](https://github.com/troyeguo/koodo-reader/blob/master/README.md) | English
+[简体中文](https://github.com/troyeguo/koodo-reader/blob/master/README.md) | [繁體中文](https://github.com/troyeguo/koodo-reader/blob/master/README_tw.md) English
 
 </div>
 
@@ -48,39 +48,35 @@
 
 ## Introduction
 
-👏 Welcome to use **Koodo Reader** ！
+Welcome to use **Koodo Reader** ！
 
-✍️ **Koodo Reader** a open-source ebook reader, supporting desktop and web
+**Koodo Reader** an open-source ebook reader, supporting desktop and web
 
-## Feature 👇
+## Feature
 
-🌈 Format support: **epub** , **pdf**, **mobi**, **azw3**, and **txt**
+Format support: **epub** , **pdf**, **mobi**, **azw3**, and **txt**
 
-🌎 Platform support: **Windows** , **macOS**, **Linux** and **Web**
+Platform support: **Windows** , **macOS**, **Linux** and **Web**
 
-💡 Backup and Restore, Sync with your favorite cloud drive
+Backup and Restore, Sync with your favorite cloud drive
 
-📝 Single-column, two-column, or continuous scrolling layouts
+Single-column, two-column, or continuous scrolling layouts
 
-🚩 Text-to-speech, Translation
+Text-to-speech, Translation
 
-💻 Bookmark, Note, Digest, Shelf and Tag
+Bookmark, Note, Digest, Shelf and Tag
 
-🎯 Adjust font, line-spacing, background color, text color and margins
+Adjust font, line-spacing, background color, text color and margins
 
-🏝 Support for Touch Screen
+Support for Touch Screen
 
-🚀 Text highlight and underline
+Text highlight and underline
 
-⚽ Language support: Simplified Chinese, Traditional Chinese and English
-
-🌱 Of course Koodo Reader is still very young and has many shortcomings, but please believe it will keep moving forward 🏃
-
-😘 Go to add your first book
+Language support: Simplified Chinese, Traditional Chinese and English
 
 ## Usage
 
-Desktop : Download the latest software package(Windows 7 is not supported yet) [Click me](https://koodo.960960.xyz/download)
+Desktop : [Click me](https://koodo.960960.xyz/download)
 
 Install with [Homebrew](https://brew.sh/):
 
@@ -88,7 +84,7 @@ Install with [Homebrew](https://brew.sh/):
 brew install --cask koodo-reader
 ```
 
-Web：Website is hosted on Vercel [Click me](https://reader.960960.xyz)
+Web：[Click me](https://reader.960960.xyz)
 
 ## Develop
 
