@@ -66,7 +66,7 @@ Language support: Simplified Chinese, Traditional Chinese and English
 
 ## Usage
 
-Desktop Version:[Download](https://koodo.960960.xyz/download)
+Desktop Version: [Download](https://koodo.960960.xyz/download)
 
 Web Version：[Preview](https://reader.960960.xyz)
 
