@@ -48,7 +48,7 @@ Format support: **epub** , **pdf**, **mobi**, **azw3**, and **txt**
 
 Platform support: **Windows** , **macOS**, **Linux** and **Web**
 
-Save your data to Dropbox or Webdav
+Save your data to **Dropbox** or **Webdav**
 
 Single-column, two-column, or continuous scrolling layouts
 
