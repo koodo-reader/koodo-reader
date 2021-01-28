@@ -1,3 +1,9 @@
+<div>
+
+简体中文 | [繁體中文](https://github.com/troyeguo/koodo-reader/blob/master/README_tw.md) | [English](https://github.com/troyeguo/koodo-reader/blob/master/README_en.md)
+
+</div>
+
 <div align="center" width="128px" height="128px">
 <img src="https://i.loli.net/2020/04/26/wrO8EPokvUQWaf5.png" />
 </div>
@@ -22,12 +28,6 @@
   <a href="https://github.com/troyeguo/koodo-reader/blob/master/LICENSE">
     <img src="https://img.shields.io/github/license/troyeguo/koodo-reader.svg?style=flat-square" alt="">
   </a>
-</div>
-
-<div>
-
-简体中文 | [繁體中文](https://github.com/troyeguo/koodo-reader/blob/master/README_tw.md) | [English](https://github.com/troyeguo/koodo-reader/blob/master/README_en.md)
-
 </div>
 
 ## 预览
