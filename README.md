@@ -68,13 +68,13 @@ Language support: Simplified Chinese, Traditional Chinese and English
 
 Desktop : [Click me](https://koodo.960960.xyz/download)
 
+Web：[Click me](https://reader.960960.xyz)
+
 Install with [Homebrew](https://brew.sh/):
 
 ```shell
 brew install --cask koodo-reader
 ```
-
-Web：[Click me](https://reader.960960.xyz)
 
 ## Develop
 
