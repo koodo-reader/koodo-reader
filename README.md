@@ -1,6 +1,6 @@
 <div align="center">
 
-简体中文 | [繁體中文](https://github.com/troyeguo/koodo-reader/blob/master/README_tw.md) | [English](https://github.com/troyeguo/koodo-reader/blob/master/README_en.md)
+[简体中文](https://github.com/troyeguo/koodo-reader/blob/master/README.md) | [繁體中文](https://github.com/troyeguo/koodo-reader/blob/master/README_tw.md) English
 
 </div>
 
@@ -12,11 +12,11 @@
   Koodo Reader
 </h1>
 <h3 align="center">
-  一个跨平台的电子书阅读器
+  A cross-platform ebook reader
 </h3>
 <div align="center">
 
-[下载](https://koodo.960960.xyz/download) | [官网](https://koodo.960960.xyz)
+[Download](https://koodo.960960.xyz/download) | [Website](https://koodo.960960.xyz)
 
 </div>
 
@@ -30,7 +30,7 @@
   </a>
 </div>
 
-## 预览
+## Preview
 
 <div align="center">
   <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
@@ -42,80 +42,80 @@
   <br/>
 </div>
 
-## 特色
+## Feature
 
-支持阅读 **epub** , **pdf**, **mobi**, **azw3** 和 **txt** 格式的图书
+Format support: **epub** , **pdf**, **mobi**, **azw3**, and **txt**
 
-支持 **Windows** ， **macOS**， **Linux** 和 **网页版**
+Platform support: **Windows** , **macOS**, **Linux** and **Web**
 
-备份数据到 Dropbox 和 Webdav
+Save your data to Dropbox or Webdav
 
-双页模式，单页模式，滚动模式
+Single-column, two-column, or continuous scrolling layouts
 
-听书功能，翻译功能
+Text-to-speech, Translation
 
-目录，书签，笔记，书摘，书架，标签
+Bookmark, Note, Digest, Shelf and Tag
 
-自定义字体，字体大小，行间距，阅读背景色，文字颜色
+Adjust font, line-spacing, background color, text color and margins
 
-触控屏手势支持
+Support for Touch Screen
 
-文字高亮和下划线标记
+Text highlight and underline
 
-简体中文，繁体中文，英文，多语言支持
+Language support: Simplified Chinese, Traditional Chinese and English
 
-## 使用方法
+## Usage
 
-桌面端：[点我前往](https://koodo.960960.xyz/download)
+Desktop : [Click me](https://koodo.960960.xyz/download)
 
-网页版：[点我前往](https://reader.960960.xyz)
-
-使用 [Homebrew](https://brew.sh/) 安装：
+Install with [Homebrew](https://brew.sh/):
 
 ```shell
 brew install --cask koodo-reader
 ```
 
-## 运行源码
+Web：[Click me](https://reader.960960.xyz)
 
-请确保您电脑的 node 的版本大于 10.0.0，已配置好 yarn，git 的运行环境。
+## Develop
 
-1. 将项目源码下载到本地
+Make sure node's version on your computer is larger than 10.0.0, yarn and git is in place.
+
+1. Download the repo
 
    ```
    git clone https://github.com/troyeguo/koodo-reader.git
    ```
 
-2. cd 到项目文件夹，运行以下代码进入客户端模式
+2. Enter desktop mode
 
    ```
    yarn
    yarn dev
    ```
 
-3. 运行以下代码进入网页模式
+3. Enter web mode
 
    ```
    yarn
    yarn start
    ```
 
-## 后续更新
+## Update
 
-我会根据大家的反馈不定时更新，当有新版本更新时，您将自动收到更新提示
+When an update is available, you will receive a notification when you open the software.
 
-## 贡献
+## Contribution
 
-| 贡献          | 感谢                                                                                       |
-| :------------ | :----------------------------------------------------------------------------------------- |
-| 繁体中文翻译  | [TobySkarting](https://github.com/TobySkarting), [playercd8](https://github.com/playercd8) |
-| Homebrew 安装 | [singularitti](https://github.com/singularitti)                                            |
-| 其他贡献者    | [bamlan](https://github.com/bamlan)                                                        |
+| Contribution                        | Contributor                                                                                |
+| :---------------------------------- | :----------------------------------------------------------------------------------------- |
+| translation for traditional Chinese | [TobySkarting](https://github.com/TobySkarting), [playercd8](https://github.com/playercd8) |
+| installation for Homebrew           | [singularitti](https://github.com/singularitti)                                            |
+| other contributors                  | [bamlan](https://github.com/bamlan)                                                        |
 
-## 帮助
+## Help
 
-您可以在[issue](https://github.com/troyeguo/koodo-reader/issues)提问，或者前往[这里](https://koodo.960960.xyz/support)了解更多。
+Click [here](https://github.com/troyeguo/koodo-reader/issues) to report your issue, or visit https://koodo.960960.xyz/support for help.
 
-## 支持
+## Support
 
-如果您觉得本项目对您有帮助的话，请随手打赏一个 star。
+If you think this project is helpful, please give us a star.
