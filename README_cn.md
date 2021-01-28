@@ -66,9 +66,9 @@
 
 ## 使用方法
 
-桌面端：[点我前往](https://koodo.960960.xyz/download)
+桌面端：[下载](https://koodo.960960.xyz/download)
 
-网页版：[点我前往](https://reader.960960.xyz)
+网页版：[前往](https://reader.960960.xyz)
 
 使用 [Homebrew](https://brew.sh/) 安装：
 
