@@ -42,12 +42,6 @@
   <br/>
 </div>
 
-## Introduction
-
-Welcome to use **Koodo Reader** ！
-
-**Koodo Reader** an open-source ebook reader, supporting desktop and web
-
 ## Feature
 
 Format support: **epub** , **pdf**, **mobi**, **azw3**, and **txt**
