@@ -80,7 +80,7 @@
 
 網頁版：[點我前往](https://reader.960960.xyz)
 
-使用[Homebrew](https://brew.sh/)安裝：
+使用 [Homebrew](https://brew.sh/) 安裝：
 
 ```shell
 brew install --cask koodo-reader
