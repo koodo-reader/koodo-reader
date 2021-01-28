@@ -115,3 +115,7 @@ When an update is available, you will receive a notification when you open the s
 ## Help
 
 Click [here](https://github.com/troyeguo/koodo-reader/issues) to report your issue, or visit https://koodo.960960.xyz/support for help.
+
+## 支持
+
+If you think this project is helpful, please give us a star.
