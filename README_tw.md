@@ -1,4 +1,4 @@
-<div>
+<div align="center">
 
 [簡體中文](https://github.com/troyeguo/koodo-reader/blob/master/README.md) | 繁體中文 | [English](https://github.com/troyeguo/koodo-reader/blob/master/README_en.md)
 
