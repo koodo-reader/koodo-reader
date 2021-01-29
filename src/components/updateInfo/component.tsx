@@ -32,7 +32,7 @@ class UpdateInfo extends React.Component<UpdateInfoProps, UpdateInfoState> {
     console.log(this.state.updateLog, "this.state.updateLog");
     !this.props.currentBook.key &&
       axios
-        .get("https://koodo.960960.xyz/api/update")
+        .get(`https://koodo.960960.xyz/api/update?name=${navigator.language}`)
         .then((res) => {
           console.log(res);
           const download = res.data.download;
