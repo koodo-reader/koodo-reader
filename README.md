@@ -102,7 +102,7 @@ Make sure node's version on your computer is larger than 10.0.0, yarn and git is
 
 ## Update
 
-When an update is available, you will receive a notification when you open the software.
+You will receive an update notification when you open the software.
 
 ## Contribution
 
@@ -114,8 +114,8 @@ When an update is available, you will receive a notification when you open the s
 
 ## Help
 
-Click [here](https://github.com/troyeguo/koodo-reader/issues) to report your issue, or visit https://koodo.960960.xyz/support for help.
+Click [here](https://github.com/troyeguo/koodo-reader/issues) to report your issue, or visit [Website](https://koodo.960960.xyz/support) for more instruction.
 
-## Support
+## Sponsor
 
-If you found this project helpful, please give us a star.
+If you found this project helpful, please consider giving us a star.
