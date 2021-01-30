@@ -1,13 +1,13 @@
 ---
 name: Question
-about: 对 Koodo Reader 有任何问题吗？
+about: Do you have any questions for Koodo Reader
 title: ""
 labels: "question"
 assignees: ""
 ---
 
 <!--
-  如果你有任何问题也可以通过此渠道来向我们反馈。
+  Any more questions for Koodo Reader
 
-  谢谢！
+  如果你有任何问题也可以通过此渠道来向我们反馈。
 -->
