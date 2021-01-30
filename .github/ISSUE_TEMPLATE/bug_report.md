@@ -7,19 +7,19 @@ assignees: ""
 ---
 
 <!--
-  Please take a moment to answer the following questions.
+  This is issue template for bug report, please fill out your answer in the blank space.
 
-  你好！感谢你正在考虑为 Koodo Reader 提交一个 bug。请花一点点时间尽量详细地回答以下基础问题。只有标题没有描述的issue将直接关闭，不做回复。
+  这是一个报告bug的issue模板，请在注释代码之外回答以下问题
 -->
 
 <!--
-  Making sure you've already done the following things. if the bug still persists, try to describ your problem as detailed as possible
+  Note: making sure you've already done the following things. if the bug still persists, try to describ your problem as detailed as possible
 
   - I've already installed the latest version of Koodo Reader
   - There are no similar issues on the issue list
   - I've already read the FAQ: https://koodo.960960.xyz/faq
 
-  请确认你已经做了下面这些事情，若 bug 还是显而易见的，尽可详细地描述你的问题。
+  注意：请确认你已经做了下面这些事情，若 bug 还是显而易见的，尽可详细地描述你的问题。
   - 我已经安装了最新版的 Koodo Reader
   - 我已经搜索了已有的 Issues列表
   - 我已经阅读了 Koodo Reader 的 FAQ：https://koodo.960960.xyz/faq
@@ -35,8 +35,6 @@ assignees: ""
 ---
 
 ## Expected behavior (期望行为)
-
-A clear and concise description
 
 <!--
   What do you expect to happen?
