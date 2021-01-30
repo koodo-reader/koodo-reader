@@ -9,9 +9,7 @@ assignees: ""
 <!--
   Please take a moment to answer the following questions.
 
-  只有标题没有细节描述的issue将直接关闭，不做回复，给您带来的不便敬请见谅。
-
-  你好！感谢你愿意考虑希望 Koodo Reader 增加某个新功能。请花一点点时间尽量详细地回答以下基础问题。
+  你好！感谢你愿意考虑希望 Koodo Reader 增加某个新功能。请花一点点时间尽量详细地回答以下基础问题。只有标题没有描述的issue将直接关闭，不做回复。
 -->
 
 ## Brief Introduction (概述)
