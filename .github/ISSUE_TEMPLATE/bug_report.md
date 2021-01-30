@@ -29,10 +29,10 @@ assignees: ""
 
 ## Envirment (我的环境)
 
-| 名称(Key)                  | 值(Value) |
-| -------------------------- | --------- |
-| 操作系统(Operating System) |           |
-| 软件版本(App Version)      |           |
+| Key(名称)                   | Value(值) |
+| --------------------------- | --------- |
+| Operating System (操作系统) |           |
+| App Version (应用版本)      |           |
 
 ---
 
