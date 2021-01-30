@@ -9,10 +9,10 @@ assignees: ""
 <!--
   This is issue template for feature request, please fill out your answer in the blank space.
 
-  这是一个报告bug的issue模板，请在注释代码之外回答以下问题
+  这是一个报告bug的模板，请在尖括号的外面回答以下问题
 -->
 
-## Brief Introduction (概述)
+## Brief Introduction (这是一个怎样的功能？)
 
 <!--
   Introduction about this feature
@@ -20,7 +20,7 @@ assignees: ""
   对这个新功能的一段描述
 -->
 
-## Motivation (动机)
+## Motivation (为什么你想添加这个功能？)
 
 <!--
   Why do you think it's necessary for Koodo Reader to have this feature?

@@ -9,7 +9,7 @@ assignees: ""
 <!--
   This is issue template for bug report, please fill out your answer in the blank space.
 
-  这是一个报告bug的issue模板，请在注释代码之外回答以下问题
+  这是一个报告bug的模板，请在尖括号的外面回答以下问题
 -->
 
 <!--
@@ -25,7 +25,7 @@ assignees: ""
   - 我已经阅读了 Koodo Reader 的 FAQ：https://koodo.960960.xyz/faq
 -->
 
-## Envirment (我的环境)
+## Envirment (你的操作环境是什么？)
 
 | Key(名称)                   | Value(值) |
 | --------------------------- | --------- |
@@ -34,7 +34,7 @@ assignees: ""
 
 ---
 
-## Expected behavior (期望行为)
+## Expected behavior (你所期望行为是什么？)
 
 <!--
   What do you expect to happen?
@@ -42,7 +42,7 @@ assignees: ""
   你期望会发生什么？
 -->
 
-## Current behavior (当前行为)
+## Current behavior (实际发生的行为是什么？)
 
 <!--
   What currently happen? To help developers better navigate this problem, please attach some screenshots or files.
