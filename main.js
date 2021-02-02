@@ -272,7 +272,7 @@ const startExpress = () => {
             `<h1>${content[i].title}</h1>` + content[i].data
           );
       }
-      // Generate the result.
+      // Generate the result
       epub.writeEPUB(
         function (e) {
           console.log("Error:", e);
