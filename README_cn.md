@@ -118,4 +118,4 @@ brew install --cask koodo-reader
 
 ## 支持
 
-如果您觉得本项目对您有帮助的话，请 star 本项目
+如果您觉得本项目对您有帮助的话，欢迎 star 本项目
