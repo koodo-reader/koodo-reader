@@ -20,7 +20,7 @@ assignees: ""
   - 我已经阅读了 Koodo Reader 的 FAQ：https://koodo.960960.xyz/faq
 -->
 
-## Envirment (你的操作环境是什么？)
+## Envirment (操作环境)
 
 | Key(名称)                   | Value(值) |
 | --------------------------- | --------- |
@@ -29,7 +29,7 @@ assignees: ""
 
 ---
 
-## Expected behavior (你所期望行为是什么？)
+## Expected behavior (期望行为)
 
 <!--
   What do you expect to happen?
@@ -37,7 +37,7 @@ assignees: ""
   你期望会发生什么？
 -->
 
-## Current behavior (实际发生的行为是什么？)
+## Current behavior (当前行为)
 
 <!--
   What currently happen? To help developers better navigate this problem, please attach some screenshots or files.
