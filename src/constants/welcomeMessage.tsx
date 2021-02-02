@@ -1,6 +1,6 @@
 export const welcomeMessage = [
   {
-    main: "A free and open-source eBook reader",
+    main: "A open-source eBook reader",
     sub:
       "Koodo Reader works on multiple platforms with backup and restore support",
   },
