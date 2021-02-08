@@ -18,7 +18,7 @@ class LoadingPage extends React.Component<LoadingPageProps> {
     ) {
       arr.push(i);
     }
-    if (OtherUtil.getReaderConfig("isList") !== "list") {
+    if (OtherUtil.getReaderConfig("viewMode") !== "list") {
       const renderLoadingCard = () => {
         return arr.map((item, index) => {
           return (

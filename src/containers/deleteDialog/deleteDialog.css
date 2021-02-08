@@ -107,3 +107,11 @@
   right: 25px;
   cursor: pointer;
 }
+
+.icon-close {
+  float: right;
+  font-size: 18px;
+  margin-right: 10px;
+  margin-top: 10px;
+  cursor: pointer;
+}

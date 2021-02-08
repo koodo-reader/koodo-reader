@@ -88,13 +88,13 @@ class UpdateInfo extends React.Component<UpdateInfoProps, UpdateInfoState> {
             <div className="new-version-title">
               <Trans>New Version Available</Trans>
             </div>
-            <div className="setting-close-container">
-              <span
-                className="icon-close setting-close"
-                onClick={() => {
-                  this.handleClose();
-                }}
-              ></span>
+            <div
+              className="setting-close-container"
+              onClick={() => {
+                this.handleClose();
+              }}
+            >
+              <span className="icon-close setting-close"></span>
             </div>
             <div className="update-dialog-info" style={{ height: 420 }}>
               <div className="new-version-animation">

@@ -38,7 +38,11 @@ class ActionDialog extends React.Component<ActionDialogProps> {
           onMouseLeave={() => {
             this.props.handleActionDialog(false);
           }}
-          style={{ left: this.props.left, top: this.props.top, height: "40px" }}
+          style={{
+            left: this.props.left,
+            top: this.props.top,
+            minHeight: "40px",
+          }}
         >
           <div className="action-dialog-actions-container">
             <div
@@ -51,6 +55,7 @@ class ActionDialog extends React.Component<ActionDialogProps> {
               <span className="action-name">
                 <Trans>Restore</Trans>
               </span>
+              <p className="action-name"></p>
             </div>
           </div>
         </div>
@@ -72,9 +77,10 @@ class ActionDialog extends React.Component<ActionDialogProps> {
             }}
           >
             <span className="icon-shelf view-icon"></span>
-            <span className="action-name">
+            <p className="action-name">
               <Trans>Add</Trans>
-            </span>
+            </p>
+            <p className="action-name"></p>
           </div>
           <div
             className="action-dialog-delete"
@@ -83,9 +89,10 @@ class ActionDialog extends React.Component<ActionDialogProps> {
             }}
           >
             <span className="icon-trash view-icon"></span>
-            <span className="action-name">
+            <p className="action-name">
               <Trans>Delete</Trans>
-            </span>
+            </p>
+            <p className="action-name"></p>
           </div>
           <div
             className="action-dialog-edit"
@@ -94,9 +101,10 @@ class ActionDialog extends React.Component<ActionDialogProps> {
             }}
           >
             <span className="icon-edit view-icon"></span>
-            <span className="action-name">
+            <p className="action-name">
               <Trans>Edit</Trans>
-            </span>
+            </p>
+            <p className="action-name"></p>
           </div>
           <div
             className="action-dialog-edit"
@@ -119,19 +127,29 @@ class ActionDialog extends React.Component<ActionDialogProps> {
             }}
           >
             <span className="icon-export view-icon"></span>
-            <span className="action-name">
+            <p className="action-name">
               <Trans>Export</Trans>
-            </span>
+            </p>
+            <p className="action-name"></p>
           </div>
         </div>
         <div className="sort-dialog-seperator"></div>
 
         <div className="action-dialog-book-info">
           <div>
-            <p className="action-dialog-book-title">
+            <p className="action-dialog-book-publisher">
+              <Trans>Book Name</Trans>:
+            </p>
+            <p
+              className="action-dialog-book-title"
+              style={{ overflow: "scroll" }}
+            >
               {this.props.currentBook.name}
             </p>
-            <p className="action-dialog-book-author">
+            <p className="action-dialog-book-publisher">
+              <Trans>Author</Trans>:
+            </p>
+            <p className="action-dialog-book-title">
               <Trans>{this.props.currentBook.author}</Trans>
             </p>
           </div>
@@ -157,7 +175,7 @@ class ActionDialog extends React.Component<ActionDialogProps> {
             <p className="action-dialog-book-desc">
               <Trans>Description</Trans>:
             </p>
-            <p className="action-dialog-book-desc">
+            <p className="action-dialog-book-detail">
               {Parser(this.props.currentBook.description)}
             </p>
           </div>

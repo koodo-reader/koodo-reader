@@ -14,7 +14,6 @@ export interface ManagerProps extends RouteComponentProps<any> {
   isOpenDeleteDialog: boolean;
   isOpenAddDialog: boolean;
   isBookSort: boolean;
-  isFirst: string;
   isSortDisplay: boolean;
   isMessage: boolean;
   isBackup: boolean;
@@ -28,7 +27,6 @@ export interface ManagerProps extends RouteComponentProps<any> {
   handleFetchBookSortCode: () => void;
   handleFetchList: () => void;
   handleMessageBox: (isShow: boolean) => void;
-  handleFirst: (isFirst: string) => void;
 }
 
 export interface ManagerState {

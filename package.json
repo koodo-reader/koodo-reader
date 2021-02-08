@@ -2,12 +2,12 @@
   "name": "koodo-reader",
   "main": "main.js",
   "version": "1.2.0",
-  "description": "A cross-platform open source Epub reader ",
+  "description": "An open-source eBook reader ",
   "author": {
     "name": "App by Troye",
     "email": "guo362429@gmail.com"
   },
-  "repository": "https://github.com/troyeguo/koodo-desktop",
+  "repository": "https://github.com/troyeguo/koodo-reader",
   "private": true,
   "dependencies": {
     "axios": "^0.19.2",
@@ -54,7 +54,7 @@
   "build": {
     "appId": "koodo.960960.xyz",
     "productName": "Koodo Reader",
-    "copyright": "Copyright © 2020 ${author}",
+    "copyright": "Copyright (c) 2020-2021 ${author}",
     "files": [
       "build/**/*",
       "node_modules/**/*",

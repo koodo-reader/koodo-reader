@@ -137,7 +137,7 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
               this.handleColorBgPicker(!this.state.isShowBgPicker);
             }}
           >
-            <span className="icon-add"></span>
+            <span className="icon-more"></span>
           </li>
         </ul>
         {this.state.isShowBgPicker && (
@@ -146,7 +146,10 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
             color={"#345679"}
             onChange={this.handleChooseBgColor}
             mode="RGB"
-            style={{ margin: 20 }}
+            style={{
+              margin: 20,
+              animation: "fade-in 0.2s ease-in-out 0s 1",
+            }}
           />
         )}
         <div className="background-color-text">
@@ -162,7 +165,10 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
               this.handleColorTextPicker(!this.state.isShowTextPicker);
             }}
           >
-            <span className="icon-add"></span>
+            <span
+              className="icon-more"
+              style={{ transform: "rotate(-90deg)" }}
+            ></span>
           </li>
         </ul>
         {this.state.isShowTextPicker && (
@@ -171,7 +177,10 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
             color={"#345679"}
             onChange={this.handleChooseTextColor}
             mode="RGB"
-            style={{ margin: 20 }}
+            style={{
+              margin: 20,
+              animation: "fade-in 0.2s ease-in-out 0s 1",
+            }}
           />
         )}
       </div>

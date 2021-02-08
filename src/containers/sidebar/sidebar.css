@@ -30,10 +30,8 @@
   /* float: left; */
   font-size: 17px;
   color: rgba(0, 0, 0, 1);
-  margin: 7px 12px 7px 26px;
+  margin: 9px 12px 7px 26px;
   display: inline-block;
-  position: relative;
-  top: 2px;
 }
 .side-menu-item {
   margin-top: 2px;
@@ -55,6 +53,9 @@
   color: rgba(75, 75, 75, 1);
   line-height: 39px;
   z-index: 40;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 .active-selector {
   color: white;

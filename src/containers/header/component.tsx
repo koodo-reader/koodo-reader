@@ -13,11 +13,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     super(props);
     this.state = {
       isOnlyLocal: false,
-      isBookImported:
-        OtherUtil.getReaderConfig("totalBooks") &&
-        OtherUtil.getReaderConfig("totalBooks") > 0
-          ? true
-          : false,
       language: OtherUtil.getReaderConfig("lang"),
       isNewVersion: false,
     };
@@ -58,24 +53,11 @@ class Header extends React.Component<HeaderProps, HeaderState> {
           ></span>
         </div>
 
-        <a href="./assets/demo.epub" target="_blank" rel="noopener noreferrer">
-          <div
-            className="download-demo-book"
-            style={this.state.isBookImported ? { display: "none" } : {}}
-          >
-            <Trans>Download Demo Book</Trans>
-          </div>
-        </a>
         <div
           className="import-from-cloud"
           onClick={() => {
             this.props.handleBackupDialog(true);
           }}
-          style={
-            OtherUtil.getReaderConfig("lang") === "en"
-              ? { fontSize: "14px" }
-              : {}
-          }
         >
           <div className="animation-mask"></div>
           <Trans>Backup and Restore</Trans>

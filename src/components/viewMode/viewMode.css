@@ -1,0 +1,52 @@
+.book-list-view {
+  position: absolute;
+  right: -10px;
+  top: 75px;
+  font-size: 14px;
+  color: rgba(75, 75, 75, 1);
+  margin-right: 30px;
+  clear: both;
+  width: 110px;
+  z-index: 1;
+  height: 90px;
+  overflow: hidden;
+  padding: 10px;
+  background-color: white;
+  border-radius: 5px;
+  font-weight: 500;
+  transition: all 0.1s ease;
+}
+
+.card-list-mode {
+  max-width: 81px;
+  height: 20px;
+  line-height: 17px;
+  cursor: pointer;
+  padding: 5px;
+}
+.list-view-mode {
+  min-width: 51px;
+  height: 20px;
+  line-height: 17px;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.book-list-item-box {
+  position: relative;
+  top: 0px;
+  width: 100%;
+  height: 100%;
+  overflow: scroll;
+}
+.icon-grid,
+.icon-list {
+  position: relative;
+  top: 1px;
+  margin-right: 5px;
+}
+.view-mode-down {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+}
