@@ -2,7 +2,7 @@
 import React from "react";
 import RecentBooks from "../../utils/recordRecent";
 import "./bookCardItem.css";
-import { BookProps, BookState } from "./interface";
+import { BookCardProps, BookCardState } from "./interface";
 import AddFavorite from "../../utils/addFavorite";
 import ActionDialog from "../../containers/actionDialog";
 import OtherUtil from "../../utils/otherUtil";
@@ -12,9 +12,9 @@ import isElectron from "is-electron";
 import EmptyCover from "../emptyCover";
 declare var window: any;
 
-class BookCardItem extends React.Component<BookProps, BookState> {
+class BookCardItem extends React.Component<BookCardProps, BookCardState> {
   epub: any;
-  constructor(props: BookProps) {
+  constructor(props: BookCardProps) {
     super(props);
     this.state = {
       isOpenConfig: false,
@@ -47,7 +47,7 @@ class BookCardItem extends React.Component<BookProps, BookState> {
     }
     this.props.handleReadingBook(this.props.book);
   }
-  componentWillReceiveProps(nextProps: BookProps) {
+  componentWillReceiveProps(nextProps: BookCardProps) {
     if (nextProps.isDragToLove !== this.props.isDragToLove) {
       if (
         nextProps.isDragToLove &&
@@ -75,11 +75,11 @@ class BookCardItem extends React.Component<BookProps, BookState> {
     }
     this.setState(
       {
-        left: x - 210,
+        left: x - 200,
         top:
-          document.body.clientHeight - e.clientY < 320
-            ? document.body.clientHeight - 120 - e.clientY
-            : e.clientY - 120,
+          document.body.clientHeight - e.clientY > 400
+            ? document.body.clientHeight - 420 - e.clientY
+            : 200,
       },
       () => {
         this.props.handleActionDialog(true);
@@ -217,9 +217,12 @@ class BookCardItem extends React.Component<BookProps, BookState> {
             </>
           ) : null}
         </div>
+
         {this.props.isOpenActionDialog &&
         this.props.book.key === this.props.currentBook.key ? (
-          <ActionDialog {...actionProps} />
+          <div className="action-dialog-parent">
+            <ActionDialog {...actionProps} />
+          </div>
         ) : null}
       </>
     );

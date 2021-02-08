@@ -2,13 +2,14 @@
   width: 110px;
   height: 220px;
   background: rgba(255, 255, 255, 1);
-  box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.3);
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
   opacity: 1;
   position: absolute;
   left: 454px;
   top: 60px;
   z-index: 10;
   animation: popup 0.1s ease-in-out 0s 1;
+  border-radius: 5px;
 }
 .sort-by-category {
   margin-top: 6px;

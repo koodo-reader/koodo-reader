@@ -94,7 +94,7 @@ class SliderList extends React.Component<SliderListProps, SliderListState> {
               this.onValueInput(event);
             }}
             onMouseUp={() => {
-              window.location.reload();
+              this.props.mode === "scale" && window.location.reload();
             }}
           />
         </div>

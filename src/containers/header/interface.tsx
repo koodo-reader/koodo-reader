@@ -14,7 +14,6 @@ export interface HeaderProps {
 
 export interface HeaderState {
   isOnlyLocal: boolean;
-  isBookImported: boolean;
   language: string;
   isNewVersion: boolean;
 }

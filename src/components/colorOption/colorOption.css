@@ -39,6 +39,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
   animation: slide-right 0.2s ease-in-out 0s 1;
 }
 @keyframes slide-right {

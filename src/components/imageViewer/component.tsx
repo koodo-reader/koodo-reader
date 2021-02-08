@@ -29,11 +29,12 @@ class ImageViewer extends React.Component<ImageViewerProps, ImageViewerStates> {
         return;
       }
       StyleUtil.addDefaultCss();
-      doc.addEventListener("click", this.showImage, true);
+      doc.addEventListener("click", this.showImage, false);
     });
   }
 
   showImage = (event: any) => {
+    console.log("object");
     if (this.props.isShow) {
       this.props.handleLeaveReader("left");
       this.props.handleLeaveReader("right");
@@ -52,8 +53,10 @@ class ImageViewer extends React.Component<ImageViewerProps, ImageViewerStates> {
       href.indexOf("OEBPF") === -1 &&
       href.indexOf("OEBPS") === -1 &&
       href.indexOf("footnote") === -1 &&
-      href.indexOf("blob") === -1
+      href.indexOf("blob") === -1 &&
+      href.indexOf(".html") === -1
     ) {
+      console.log(href);
       event.preventDefault();
       const { shell } = window.require("electron");
       const { dialog } = window.require("electron").remote;
@@ -62,17 +65,22 @@ class ImageViewer extends React.Component<ImageViewerProps, ImageViewerStates> {
           type: "question",
           title: this.props.t("Open link in browser"),
           message: this.props.t("Do you want to open this link in browser"),
-          buttons: [this.props.t("Cancel"), this.props.t("Confirm")],
+          buttons: [this.props.t("Confirm"), this.props.t("Cancel")],
         })
         .then((result) => {
-          result.response === 1 && shell.openExternal(href);
+          result.response === 0 && shell.openExternal(href);
         });
     }
     if (!event.target.src) {
       return;
     }
     if (this.state.isShowImage) {
-      this.setState({ isShowImage: false });
+      this.setState({
+        isShowImage: false,
+        zoomIndex: 0,
+        rotateIndex: 0,
+        imageRatio: "horizontal",
+      });
     }
     event.preventDefault();
     const handleDirection = (direction: string) => {
@@ -101,7 +109,7 @@ class ImageViewer extends React.Component<ImageViewerProps, ImageViewerStates> {
   };
   handleZoomIn = () => {
     let image: any = document.querySelector(".image");
-    if (image.style.width === "100vw" || image.style.height === "100vh") return;
+    if (image.style.width === "200vw" || image.style.height === "200vh") return;
     this.setState({ zoomIndex: this.state.zoomIndex + 1 }, () => {
       if (this.state.imageRatio === "horizontal") {
         image.style.width = `${60 + this.state.zoomIndex * 10}vw`;
@@ -112,7 +120,7 @@ class ImageViewer extends React.Component<ImageViewerProps, ImageViewerStates> {
   };
   handleZoomOut = () => {
     let image: any = document.querySelector(".image");
-    if (image.style.width === "50vw" || image.style.height === "50vh") return;
+    if (image.style.width === "10vw" || image.style.height === "10vh") return;
     this.setState({ zoomIndex: this.state.zoomIndex - 1 }, () => {
       if (this.state.imageRatio === "horizontal") {
         image.style.width = `${60 + this.state.zoomIndex * 10}vw`;

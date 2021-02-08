@@ -18,4 +18,5 @@ export interface NavigationPanelState {
   currentIndex: number;
   isSearch: boolean;
   searchList: any;
+  isNavLocked: boolean;
 }

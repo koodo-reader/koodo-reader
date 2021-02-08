@@ -18,8 +18,11 @@ class SettingPanel extends React.Component<
     this.state = {
       isSupported: false,
       isAudioOn: false,
+      isBold: OtherUtil.getReaderConfig("isBold") === "yes",
       readerMode: OtherUtil.getReaderConfig("readerMode") || "double",
       isUseBackground: OtherUtil.getReaderConfig("isUseBackground") === "yes",
+      isSettingLocked:
+        OtherUtil.getReaderConfig("isSettingLocked") === "yes" ? true : false,
       isShowFooter: OtherUtil.getReaderConfig("isShowFooter") !== "no",
       isShowHeader: OtherUtil.getReaderConfig("isShowHeader") !== "no",
     };
@@ -42,6 +45,21 @@ class SettingPanel extends React.Component<
         this.handleAudio();
       });
     }
+  };
+  handleBold = () => {
+    console.log(
+      this.state.isBold,
+      this.props.currentEpub.rendition.themes,
+      "isbold"
+    );
+    this.props.currentEpub.rendition.themes.default({
+      "a, article, cite, code, div, li, p, pre, span, table": {
+        "font-weight": `${this.state.isBold ? "bold !important" : ""}`,
+      },
+    });
+    this.setState({ isBold: !this.state.isBold });
+    OtherUtil.setReaderConfig("isBold", this.state.isBold ? "no" : "yes");
+    window.location.reload();
   };
   handleAudio = () => {
     const currentLocation = this.props.currentEpub.rendition.currentLocation();
@@ -89,6 +107,7 @@ class SettingPanel extends React.Component<
       ? this.props.handleMessage("Turn Off Successfully")
       : this.props.handleMessage("Turn On Successfully");
     this.props.handleMessageBox(true);
+    window.location.reload();
   };
   handleFooter = () => {
     this.setState({ isShowFooter: !this.state.isShowFooter });
@@ -118,15 +137,32 @@ class SettingPanel extends React.Component<
       window.location.reload();
     }, 500);
   };
+  handleLock = () => {
+    this.setState({ isSettingLocked: !this.state.isSettingLocked }, () => {
+      OtherUtil.setReaderConfig(
+        "isSettingLocked",
+        this.state.isSettingLocked ? "yes" : "no"
+      );
+    });
+  };
   render() {
     return (
       <div className="setting-panel-parent">
+        <span
+          className={
+            this.state.isSettingLocked
+              ? "icon-lock lock-icon"
+              : "icon-unlock lock-icon"
+          }
+          onClick={() => {
+            this.handleLock();
+          }}
+        ></span>
+        <div className="setting-panel-title">
+          <Trans>Reading Option</Trans>
+        </div>
         <div className="setting-panel">
-          <div className="setting-panel-title">
-            <Trans>Reading Option</Trans>
-          </div>
           <ModeControl />
-
           <ThemeList />
           <SliderList
             {...{
@@ -194,6 +230,38 @@ class SettingPanel extends React.Component<
               </span>
             </div>
           ) : null}
+          <div className="single-control-switch-container">
+            <span className="single-control-switch-title">
+              <Trans>Bold Font</Trans>
+            </span>
+
+            <span
+              className="single-control-switch"
+              onClick={() => {
+                this.handleBold();
+              }}
+              style={
+                this.state.isBold
+                  ? { background: "rgba(46, 170, 220)", float: "right" }
+                  : { float: "right" }
+              }
+            >
+              <span
+                className="single-control-button"
+                style={
+                  !this.state.isBold
+                    ? {
+                        transform: "translateX(0px)",
+                        transition: "transform 0.5s ease",
+                      }
+                    : {
+                        transform: "translateX(20px)",
+                        transition: "transform 0.5s ease",
+                      }
+                }
+              ></span>
+            </span>
+          </div>
           <div
             className="single-control-switch-container"
             style={

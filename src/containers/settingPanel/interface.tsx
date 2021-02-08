@@ -11,5 +11,7 @@ export interface SettingPanelState {
   readerMode: string;
   isUseBackground: boolean;
   isShowFooter: boolean;
+  isBold: boolean;
   isShowHeader: boolean;
+  isSettingLocked: boolean;
 }

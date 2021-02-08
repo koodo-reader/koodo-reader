@@ -87,13 +87,13 @@ class SettingDialog extends React.Component<
           <Trans>Version</Trans>
           {version}
         </p>
-        <div className="setting-close-container">
-          <span
-            className="icon-close setting-close"
-            onClick={() => {
-              this.props.handleSetting(false);
-            }}
-          ></span>
+        <div
+          className="setting-close-container"
+          onClick={() => {
+            this.props.handleSetting(false);
+          }}
+        >
+          <span className="icon-close setting-close"></span>
         </div>
 
         <div className="setting-dialog-info">

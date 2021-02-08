@@ -15,7 +15,6 @@ import iconv from "iconv-lite";
 import isElectron from "is-electron";
 import { withRouter } from "react-router-dom";
 import RecentBooks from "../../utils/recordRecent";
-import OtherUtil from "../../utils/otherUtil";
 
 declare var window: any;
 var pdfjsLib = window["pdfjs-dist/build/pdf"];
@@ -99,10 +98,10 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
             this.state.isOpenFile && this.handleJump(book);
             this.setState({ isOpenFile: false });
             this.props.history.push("/manager/home");
-
+          }, 1000);
+          setTimeout(() => {
             this.props.handleLoadingDialog(false);
           }, 1000);
-
           resolve();
         })
         .catch(() => {
@@ -416,11 +415,6 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
       <Dropzone
         onDrop={async (acceptedFiles) => {
           this.props.handleDrag(false);
-          if (acceptedFiles.length > 9) {
-            this.props.handleMessage("Please import less than 10 books");
-            this.props.handleMessageBox(true);
-            return;
-          }
           this.props.handleLoadingDialog(true);
           for (let i = 0; i < acceptedFiles.length; i++) {
             let extension = acceptedFiles[i].name.split(".")[
@@ -442,23 +436,17 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
             //异步解析文件
             await this.doIncrementalTest(acceptedFiles[i]);
           }
+          setTimeout(() => {
+            this.props.handleLoadingDialog(false);
+          }, 1000);
         }}
         accept={[".epub", ".pdf", ".txt", ".mobi", ".azw3"]}
         multiple={true}
       >
         {({ getRootProps, getInputProps }) => (
-          <div
-            className="import-from-local"
-            {...getRootProps()}
-          >
+          <div className="import-from-local" {...getRootProps()}>
             <div className="animation-mask-local"></div>
-            <span
-              style={
-                OtherUtil.getReaderConfig("lang") === "en"
-                  ? { fontSize: "14px" }
-                  : {}
-              }
-            >
+            <span>
               <Trans>Import from Local</Trans>
             </span>
 

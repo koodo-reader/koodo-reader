@@ -76,6 +76,7 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
                 }
               ></span>
               <Trans>{item.name}</Trans>
+              <p style={{ opacity: 0 }}>test</p>
             </div>
           </li>
         );

@@ -48,12 +48,20 @@ class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
         <div className="token-dialog-box">
           <div className="token-dialog-title">
             <Trans>Bind</Trans>
-            {this.props.driveName}
+            &nbsp;
+            {this.props.driveName}&nbsp;
             <Trans>Token</Trans>
           </div>
           {this.props.driveName === "webdav" ? (
             <>
-              <div className="token-dialog-info-text">
+              <div
+                className="token-dialog-info-text"
+                style={
+                  OtherUtil.getReaderConfig("lang") === "en"
+                    ? { fontSize: "14px" }
+                    : {}
+                }
+              >
                 <Trans>Webdav Info</Trans>
               </div>
               <input
@@ -80,7 +88,14 @@ class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
             </>
           ) : (
             <>
-              <div className="token-dialog-info-text">
+              <div
+                className="token-dialog-info-text"
+                style={
+                  OtherUtil.getReaderConfig("lang") === "en"
+                    ? { fontSize: "14px" }
+                    : {}
+                }
+              >
                 <Trans>Token Info</Trans>
               </div>
               <div
