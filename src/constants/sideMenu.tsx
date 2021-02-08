@@ -9,11 +9,7 @@ export const sideMenu = [
     icon: "love",
     mode: "favorite",
   },
-  {
-    name: "My Bookmarks",
-    icon: "bookmark",
-    mode: "bookmark",
-  },
+
   {
     name: "My Notes",
     icon: "idea",

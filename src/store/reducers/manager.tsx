@@ -6,9 +6,8 @@ const initState = {
   isSearch: false,
   isBookSort: false,
   isNoteSort: false,
-  isFirst: "no",
   isSettingOpen: false,
-  isList: "card",
+  viewMode: "card",
   isSortDisplay: false,
   isShowLoading: false,
   isShowNew: false,
@@ -57,15 +56,11 @@ export function manager(
         ...state,
         isNoteSort: action.payload,
       };
-    case "HANDLE_FIRST":
+
+    case "HANDLE_VIEW_MODE":
       return {
         ...state,
-        isFirst: action.payload,
-      };
-    case "HANDLE_LIST":
-      return {
-        ...state,
-        isList: action.payload,
+        viewMode: action.payload,
       };
     case "HANDLE_SORT_DISPLAY":
       return {

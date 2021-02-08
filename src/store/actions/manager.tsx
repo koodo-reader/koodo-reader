@@ -6,8 +6,6 @@ import NoteModel from "../../model/Note";
 import { Dispatch } from "redux";
 import AddTrash from "../../utils/addTrash";
 
-declare var window: any;
-
 export function handleNotes(notes: NoteModel[]) {
   return { type: "HANDLE_NOTES", payload: notes };
 }
@@ -26,8 +24,8 @@ export function handleSearch(isSearch: boolean) {
 export function handleSetting(isSettingOpen: boolean) {
   return { type: "HANDLE_SETTING", payload: isSettingOpen };
 }
-export function handleList(mode: string) {
-  return { type: "HANDLE_LIST", payload: mode };
+export function handleViewMode(mode: string) {
+  return { type: "HANDLE_VIEW_MODE", payload: mode };
 }
 export function handleMessage(message: string) {
   return { type: "HANDLE_MESSAGE", payload: message };
@@ -49,9 +47,6 @@ export function handleBookSort(isBookSort: boolean) {
 }
 export function handleNoteSort(isNoteSort: boolean) {
   return { type: "HANDLE_NOTE_SORT", payload: isNoteSort };
-}
-export function handleFirst(isFirst: string) {
-  return { type: "HANDLE_FIRST", payload: isFirst };
 }
 export function handleBookSortCode(bookSortCode: {
   sort: number;
@@ -90,8 +85,8 @@ export function handleFetchBookSortCode() {
 }
 export function handleFetchList() {
   return (dispatch: Dispatch) => {
-    let isList = OtherUtil.getReaderConfig("isList") || "card";
-    dispatch(handleList(isList));
+    let viewMode = OtherUtil.getReaderConfig("viewMode") || "card";
+    dispatch(handleViewMode(viewMode));
   };
 }
 const handleKeyRemove = (items: any[], arr: string[]) => {

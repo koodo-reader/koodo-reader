@@ -378,8 +378,7 @@ class MobiFile {
       var content = this.read_text();
       var bookDoc = domParser.parseFromString(content, "text/html")
         .documentElement;
-
-      const lines = Array.from(bookDoc.getElementsByTagName("p"));
+      const lines = Array.from(bookDoc.querySelectorAll("p,b,font"));
       let parseContent = [];
       for (let i = 0, len = lines.length; i < len - 1; i++) {
         parseContent.push(lines[i].innerText);
@@ -392,7 +391,7 @@ class MobiFile {
       }
       const handleImage = async () => {
         var imgDoms = bookDoc.getElementsByTagName("img");
-        if (imgDoms.length > 100) {
+        if (imgDoms.length > 300) {
           handleMessage("Too many images");
           handleMessageBox(true);
           resolve(parseContent.join("\n    \n"));

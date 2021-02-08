@@ -13,7 +13,7 @@
   width: 69px;
   font-size: 14px !important;
   line-height: 15px !important;
-  color: rgba(0, 0, 0, 1);
+  color: rgba(0, 0, 0, 0.6);
   opacity: 1;
   text-align: center;
   display: flex;
@@ -22,6 +22,7 @@
   transition: 0.1s;
   /* align-items: center; */
   justify-content: center;
+  font-weight: 500;
 }
 .note-option:hover,
 .digest-option:hover,

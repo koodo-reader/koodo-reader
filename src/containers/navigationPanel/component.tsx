@@ -8,6 +8,7 @@ import { NavigationPanelProps, NavigationPanelState } from "./interface";
 import SearchBox from "../../components/searchBox";
 import Parser from "html-react-parser";
 import EmptyCover from "../../components/emptyCover";
+import OtherUtil from "../../utils/otherUtil";
 
 class NavigationPanel extends React.Component<
   NavigationPanelProps,
@@ -24,6 +25,8 @@ class NavigationPanel extends React.Component<
       searchList: null,
       startIndex: 0,
       currentIndex: 0,
+      isNavLocked:
+        OtherUtil.getReaderConfig("isNavLocked") === "yes" ? true : false,
     };
   }
   handleSearchState = (isSearch: boolean) => {
@@ -46,6 +49,14 @@ class NavigationPanel extends React.Component<
 
   handleChangeTab = (currentTab: string) => {
     this.setState({ currentTab });
+  };
+  handleLock = () => {
+    this.setState({ isNavLocked: !this.state.isNavLocked }, () => {
+      OtherUtil.setReaderConfig(
+        "isNavLocked",
+        this.state.isNavLocked ? "yes" : "no"
+      );
+    });
   };
   renderSearchList = () => {
     if (!this.state.searchList[0]) {
@@ -146,15 +157,15 @@ class NavigationPanel extends React.Component<
       <div className="navigation-panel">
         {this.state.isSearch ? (
           <>
-            <div className="nav-close-icon">
-              <span
-                className="icon-close"
-                onClick={() => {
-                  this.handleSearchState(false);
-                  this.props.handleSearch(false);
-                  this.setState({ searchList: null });
-                }}
-              ></span>
+            <div
+              className="nav-close-icon"
+              onClick={() => {
+                this.handleSearchState(false);
+                this.props.handleSearch(false);
+                this.setState({ searchList: null });
+              }}
+            >
+              <span className="icon-close"></span>
             </div>
 
             <div
@@ -179,6 +190,17 @@ class NavigationPanel extends React.Component<
         ) : (
           <>
             <div className="navigation-header">
+              <span
+                className={
+                  this.state.isNavLocked
+                    ? "icon-lock nav-lock-icon"
+                    : "icon-unlock nav-lock-icon"
+                }
+                style={{}}
+                onClick={() => {
+                  this.handleLock();
+                }}
+              ></span>
               {this.state.cover ? (
                 <img className="book-cover" src={this.state.cover} alt="" />
               ) : (

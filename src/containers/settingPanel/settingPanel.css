@@ -6,7 +6,7 @@
   height: 38px;
   color: rgba(75, 75, 75, 1);
   font-weight: 500;
-  margin: 6px 22px;
+  margin: 4px 22px;
 }
 .setting-panel-parent {
   position: absolute;
@@ -18,13 +18,15 @@
   box-shadow: 0px 0px 16px rgba(0, 0, 0, 0.38);
   animation: fade-right 0.2s ease-in-out 0s 1;
   z-index: 10;
+  background: rgba(255, 255, 255, 1);
+  opacity: 1;
 }
 
 .setting-panel {
   background: rgba(255, 255, 255, 1);
   opacity: 1;
   width: 100%;
-  height: 100%;
+  height: calc(100% - 55px);
   overflow-y: scroll;
   padding-right: 17px; /* Increase/decrease this value for cross-browser compatibility */
   box-sizing: content-box;
@@ -62,4 +64,13 @@
   border-radius: 50%;
   background-color: white;
   margin: 2px;
+}
+.lock-icon {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  font-size: 20px;
+  color: rgba(75, 75, 75, 0.5);
+  margin: 10px;
+  cursor: pointer;
 }

@@ -9,11 +9,9 @@ import SortUtil from "../../utils/sortUtil";
 import BookModel from "../../model/Book";
 import { Trans } from "react-i18next";
 import { BookListProps, BookListState } from "./interface";
-import OtherUtil from "../../utils/otherUtil";
 import Empty from "../emptyPage";
 import { withRouter } from "react-router-dom";
-
-declare var window: any;
+import ViewMode from "../../components/viewMode";
 
 class BookList extends React.Component<BookListProps, BookListState> {
   constructor(props: BookListProps) {
@@ -36,11 +34,6 @@ class BookList extends React.Component<BookListProps, BookListState> {
     return itemArr;
   };
 
-  //控制卡片模式和列表模式的切换
-  handleChange = (mode: string) => {
-    OtherUtil.setReaderConfig("isList", mode);
-    this.props.handleFetchList();
-  };
   //根据搜索图书index获取到搜索出的图书
   handleIndexFilter = (items: any, arr: number[]) => {
     let itemArr: any[] = [];
@@ -94,7 +87,7 @@ class BookList extends React.Component<BookListProps, BookListState> {
     }
 
     return books.map((item: BookModel, index: number) => {
-      return this.props.isList === "list" ? (
+      return this.props.viewMode === "list" ? (
         <BookItem
           {...{
             key: item.key,
@@ -110,36 +103,7 @@ class BookList extends React.Component<BookListProps, BookListState> {
   render() {
     return (
       <>
-        <div className="book-list-view">
-          <div
-            className="card-list-mode"
-            onClick={() => {
-              this.handleChange("card");
-            }}
-            style={
-              this.props.isList === "card"
-                ? {}
-                : { color: "rgba(75,75,75,0.5)" }
-            }
-          >
-            <span className="icon-grid"></span>
-            <Trans>Card Mode</Trans>
-          </div>
-          <div
-            className="list-view-mode"
-            onClick={() => {
-              this.handleChange("list");
-            }}
-            style={
-              this.props.isList === "list"
-                ? {}
-                : { color: "rgba(75,75,75,0.5)" }
-            }
-          >
-            <span className="icon-list"></span> <Trans>List Mode</Trans>
-          </div>
-        </div>
-
+        <ViewMode />
         <div
           className="booklist-delete-container"
           onClick={() => {

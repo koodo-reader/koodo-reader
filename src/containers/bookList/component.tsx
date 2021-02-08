@@ -1,8 +1,9 @@
 //全部图书，最近阅读，搜索结果，排序结果的数据
 import React from "react";
 import "./booklist.css";
-import Book from "../../components/bookCardtem";
-import BookItem from "../../components/bookListItem";
+import BookCardItem from "../../components/bookCardtem";
+import BookListItem from "../../components/bookListItem";
+import BookCoverItem from "../../components/bookCoverItem";
 import AddFavorite from "../../utils/addFavorite";
 import RecordRecent from "../../utils/recordRecent";
 import ShelfUtil from "../../utils/shelfUtil";
@@ -15,6 +16,7 @@ import localforage from "localforage";
 import DeletePopup from "../../components/deletePopup";
 import Empty from "../emptyPage";
 import { Redirect, withRouter } from "react-router-dom";
+import ViewMode from "../../components/viewMode";
 
 declare var window: any;
 
@@ -108,7 +110,7 @@ class BookList extends React.Component<BookListProps, BookListState> {
   }
   //控制卡片模式和列表模式的切换
   handleChange = (mode: string) => {
-    OtherUtil.setReaderConfig("isList", mode);
+    OtherUtil.setReaderConfig("viewMode", mode);
     this.props.handleFetchList();
   };
   //根据搜索图书index获取到搜索出的图书
@@ -159,15 +161,22 @@ class BookList extends React.Component<BookListProps, BookListState> {
     }
 
     return books.map((item: BookModel, index: number) => {
-      return this.props.isList === "list" ? (
-        <BookItem
+      return this.props.viewMode === "list" ? (
+        <BookListItem
           {...{
             key: item.key,
             book: item,
           }}
         />
+      ) : this.props.viewMode === "card" ? (
+        <BookCardItem key={item.key} book={item} />
       ) : (
-        <Book key={item.key} book={item} />
+        <BookCoverItem
+          {...{
+            key: item.key,
+            book: item,
+          }}
+        />
       );
     });
   };
@@ -236,35 +245,7 @@ class BookList extends React.Component<BookListProps, BookListState> {
     return (
       <>
         {this.state.isOpenDelete && <DeletePopup {...deletePopupProps} />}
-        <div className="book-list-view">
-          <div
-            className="card-list-mode"
-            onClick={() => {
-              this.handleChange("card");
-            }}
-            style={
-              this.props.isList === "card"
-                ? {}
-                : { color: "rgba(75,75,75,0.5)" }
-            }
-          >
-            <span className="icon-grid"></span>
-            <Trans>Card Mode</Trans>
-          </div>
-          <div
-            className="list-view-mode"
-            onClick={() => {
-              this.handleChange("list");
-            }}
-            style={
-              this.props.isList === "list"
-                ? {}
-                : { color: "rgba(75,75,75,0.5)" }
-            }
-          >
-            <span className="icon-list"></span> <Trans>List Mode</Trans>
-          </div>
-        </div>
+        <ViewMode />
         {this.props.mode === "trash" ? (
           <div
             className="booklist-delete-container"

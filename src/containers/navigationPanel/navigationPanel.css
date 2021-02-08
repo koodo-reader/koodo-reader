@@ -186,8 +186,18 @@
   color: rgba(75, 75, 75, 1);
   border: 1px solid rgba(75, 75, 75, 1);
   cursor: pointer;
+  transition: all 0.3s ease;
 }
 .active-page {
   background-color: rgba(75, 75, 75, 1);
   color: white;
+}
+.nav-lock-icon {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  font-size: 20px;
+  color: rgba(75, 75, 75, 0.5);
+  margin: 10px;
+  cursor: pointer;
 }

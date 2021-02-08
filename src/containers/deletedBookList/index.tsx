@@ -13,7 +13,7 @@ const mappropsToProps = (state: stateType) => {
     deletedBooks: state.manager.deletedBooks,
     mode: state.sidebar.mode,
     isBookSort: state.manager.isBookSort,
-    isList: state.manager.isList,
+    viewMode: state.manager.viewMode,
     bookSortCode: state.manager.bookSortCode,
     noteSortCode: state.manager.noteSortCode,
   };

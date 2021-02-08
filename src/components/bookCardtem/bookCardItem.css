@@ -137,3 +137,9 @@
   z-index: 2;
   text-shadow: 0px 0px 5px rgba(75, 75, 75, 0.6);
 }
+.action-dialog-parent {
+  position: fixed;
+  top: 0px;
+  left: 200px;
+  z-index: 10;
+}

@@ -19,10 +19,12 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
   constructor(props: ReaderProps) {
     super(props);
     this.state = {
-      isOpenSettingPanel: false,
+      isOpenSettingPanel:
+        OtherUtil.getReaderConfig("isSettingLocked") === "yes" ? true : false,
       isOpenOperationPanel: false,
       isOpenProgressPanel: false,
-      isOpenNavPanel: false,
+      isOpenNavPanel:
+        OtherUtil.getReaderConfig("isNavLocked") === "yes" ? true : false,
       isMessage: false,
       rendition: null,
       scale: OtherUtil.getReaderConfig("scale") || 1,
@@ -72,6 +74,13 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
       time += 1;
       this.setState({ time });
     }, 1000);
+    if (OtherUtil.getReaderConfig("isFirst") !== "no") {
+      this.handleEnterReader("left");
+      this.handleEnterReader("right");
+      this.handleEnterReader("bottom");
+      this.handleEnterReader("top");
+      OtherUtil.setReaderConfig("isFirst", "no");
+    }
   }
 
   componentWillUnmount() {
@@ -112,11 +121,20 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
     //控制上下左右的菜单的显示
     switch (position) {
       case "right":
-        this.setState({ isOpenSettingPanel: false });
-        break;
+        if (OtherUtil.getReaderConfig("isSettingLocked") === "yes") {
+          break;
+        } else {
+          this.setState({ isOpenSettingPanel: false });
+          break;
+        }
+
       case "left":
-        this.setState({ isOpenNavPanel: false });
-        break;
+        if (OtherUtil.getReaderConfig("isNavLocked") === "yes") {
+          break;
+        } else {
+          this.setState({ isOpenNavPanel: false });
+          break;
+        }
       case "top":
         this.setState({ isOpenOperationPanel: false });
         break;

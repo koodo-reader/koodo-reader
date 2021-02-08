@@ -4,7 +4,7 @@
   left: 190px;
   width: calc(100% - 190px);
   height: calc(100% - 110px);
-  overflow: hidden;
+  overflow: visible;
 }
 .book-list-container {
   width: 100%;
@@ -30,49 +30,6 @@
   cursor: pointer;
 }
 
-.book-list-view {
-  position: absolute;
-  right: 5px;
-  top: 85px;
-  font-size: 14px;
-  color: rgba(75, 75, 75, 1);
-  margin-right: 30px;
-  clear: both;
-}
-
-.card-list-mode {
-  max-width: 81px;
-  height: 17px;
-  float: left;
-  line-height: 17px;
-  cursor: pointer;
-  height: 27px;
-  padding: 5px;
-}
-.list-view-mode {
-  min-width: 51px;
-  height: 27px;
-  float: left;
-  line-height: 17px;
-  margin-left: 15px;
-  cursor: pointer;
-  padding: 5px;
-}
-
-.book-list-item-box {
-  position: relative;
-  top: 0px;
-  width: 100%;
-  height: 100%;
-  overflow: scroll;
-}
-.icon-grid,
-.icon-list {
-  position: relative;
-  top: 1px;
-  margin-right: 5px;
-}
-
 .booklist-shelf-list {
   width: 169px;
   height: 31px;
@@ -86,4 +43,15 @@
 .delete-shelf-icon {
   cursor: pointer;
   margin-left: 20px;
+}
+.icon-cover {
+  font-weight: 500;
+  position: relative;
+  top: 1px;
+  margin-right: 2px;
+}
+.booklist-shelf-container {
+  position: absolute;
+  top: 80px;
+  left: calc(50% - 125px);
 }

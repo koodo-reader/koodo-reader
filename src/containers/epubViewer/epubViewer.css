@@ -155,7 +155,7 @@
   font-size: 30px;
   transform: rotate(90deg);
   cursor: pointer;
-  opacity: 0.05;
+  opacity: 0.1;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -173,14 +173,14 @@
   right: 20px;
   transform: rotate(-90deg);
   cursor: pointer;
-  opacity: 0.05;
+  opacity: 0.1;
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 5;
 }
 .next-chapter-single-container:hover {
-  opacity: 0.5;
+  opacity: 0.7;
 }
 .previous-chapter-single-container:hover {
   opacity: 0.5;
@@ -200,7 +200,7 @@
   top: 15px;
   right: 20px;
   font-size: 22px;
-  opacity: 0.1;
+  opacity: 0.2;
   cursor: pointer;
   z-index: 10;
   transition: 0.1s;

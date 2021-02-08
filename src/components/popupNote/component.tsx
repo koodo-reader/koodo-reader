@@ -111,14 +111,15 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
     }
   }
   handleClose = () => {
-    let noteIndex;
+    let noteIndex = -1;
+    console.log(this.props.noteKey);
     if (this.props.noteKey) {
       this.props.notes.forEach((item, index) => {
         if (item.key === this.props.noteKey) {
           noteIndex = index;
         }
       });
-      if (noteIndex) {
+      if (noteIndex > -1) {
         this.props.notes.splice(noteIndex, 1);
         localforage.setItem("notes", this.props.notes).then(() => {
           this.props.handleOpenMenu(false);

@@ -1,7 +1,7 @@
 import BookModel from "../../model/Book";
 import { RouteComponentProps } from "react-router";
 
-export interface BookProps extends RouteComponentProps<any> {
+export interface BookCardProps extends RouteComponentProps<any> {
   book: BookModel;
   currentBook: BookModel;
   isOpenActionDialog: boolean;
@@ -17,7 +17,7 @@ export interface BookProps extends RouteComponentProps<any> {
   handleDragToDelete: (isDragToDelete: boolean) => void;
   handleDeleteDialog: (isShow: boolean) => void;
 }
-export interface BookState {
+export interface BookCardState {
   isOpenConfig: boolean;
   isFavorite: boolean;
   left: number;

@@ -1,12 +1,13 @@
 import OtherUtil from "./otherUtil";
 let Hammer = (window as any).Hammer;
-
+declare var document: any;
 export const MouseEvent = (rendition: any) => {
   let isFirefox = navigator.userAgent.indexOf("Firefox") !== -1;
   let lock = false; // 暂时锁住翻页快捷键，避免快速点击产生的Bug
   const arrowKeys = (event: any) => {
     // event.preventDefault();
     if (lock) return;
+
     if (event.keyCode === 37 || event.keyCode === 38) {
       rendition.prev();
       lock = true;

@@ -37,8 +37,7 @@ export type stateType = {
     isSearch: boolean;
     isBookSort: boolean;
     isSettingOpen: boolean;
-    isFirst: string;
-    isList: string;
+    viewMode: string;
     isSortDisplay: boolean;
     isShowLoading: boolean;
     isShowNew: boolean;

@@ -38,4 +38,5 @@
   opacity: 0.5;
   font-size: 13px;
   cursor: pointer;
+  transition: transform 0.1s ease;
 }

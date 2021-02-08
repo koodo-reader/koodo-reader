@@ -95,9 +95,6 @@ class RestoreUtil {
                     .then((book: any) => {
                       localforage.setItem(item.key, book).then(() => {
                         handleFinish();
-                        setTimeout(() => {
-                          window.location.reload();
-                        }, 500);
                       });
                     })
                     .catch((err: any) => {

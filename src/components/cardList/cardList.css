@@ -50,16 +50,13 @@
 .card-list-item {
   float: left;
   /* display: inline-block; */
-  min-width: 300px;
+  min-width: 330px;
   cursor: pointer;
   font-size: 16px;
-  width: calc(50vw - 140px);
+  width: calc(50vw - 110px);
   height: 146px;
-  background: rgba(255, 255, 255, 1);
-  box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.16);
   opacity: 1;
-  border-radius: 7px;
-  margin: 15px;
+  border: 15px solid transparent;
   font-size: 14px;
   line-height: 14px;
   color: rgba(75, 75, 75, 1);
@@ -67,7 +64,12 @@
   position: relative;
   bottom: 10px;
 }
-
+.card-list-item-card {
+  box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.16);
+  background: rgba(255, 255, 255, 1);
+  height: 100%;
+  border-radius: 7px;
+}
 .card-list-item-chapter {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -136,7 +138,7 @@
   /* width: 100px; */
 }
 .card-list-container-box {
-  margin-top: 35px;
+  margin-top: 40px;
   height: calc(100% - 89px);
 }
 .icon-card-right {

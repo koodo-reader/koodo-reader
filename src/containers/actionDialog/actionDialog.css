@@ -1,6 +1,6 @@
 .action-dialog-container {
   width: 200px;
-  min-height: 300px;
+  min-height: 340px;
   background: rgba(255, 255, 255, 1);
   box-shadow: 0px 0px 16px rgba(0, 0, 0, 0.34);
   opacity: 1;
@@ -10,7 +10,6 @@
 }
 
 .action-dialog-actions-container {
-  width: 80%;
   font-size: 16px;
   text-align: center;
   line-height: 14px;
@@ -23,7 +22,6 @@
 .action-dialog-add,
 .action-dialog-delete,
 .action-dialog-edit {
-  width: 65%;
   color: #4b4b4b;
   cursor: pointer;
   display: flex;
@@ -41,19 +39,28 @@
 .action-dialog-book-info {
   padding-left: 10px;
   padding-right: 10px;
-  padding-bottom: 10px;
+  padding-bottom: 5px;
 }
 .action-dialog-book-title {
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 500;
-  line-height: 23px;
+  line-height: 17px;
   opacity: 0.8;
+  max-height: 60px;
+  margin-bottom: 5px;
 }
 .action-dialog-book-author,
 .action-dialog-book-desc,
 .action-dialog-book-publisher,
 .action-dialog-book-added {
   font-size: 14px;
-  line-height: 23px;
+  line-height: 16px;
   opacity: 0.7;
+}
+.action-dialog-book-detail {
+  /* width: 80%; */
+  margin-top: 5px;
+  max-height: 50px;
+  overflow: scroll;
+  font-size: 14px;
 }
