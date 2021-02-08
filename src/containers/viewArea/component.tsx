@@ -80,6 +80,11 @@ class ViewArea extends React.Component<ViewAreaProps, ViewAreaStates> {
               ? OtherUtil.getReaderConfig("textColor")
               : ""
           } !important`,
+          "font-weight": `${
+            OtherUtil.getReaderConfig("isBold") === "yes"
+              ? "bold !important"
+              : ""
+          }`,
         },
       });
     });
@@ -104,6 +109,9 @@ class ViewArea extends React.Component<ViewAreaProps, ViewAreaStates> {
             ? "white"
             : ""
         } !important`,
+        "font-weight": `${
+          OtherUtil.getReaderConfig("isBold") === "yes" ? "bold !important" : ""
+        }`,
       },
     });
     this.props.rendition.display(

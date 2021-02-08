@@ -7,7 +7,7 @@ export interface BookListProps extends RouteComponentProps<any> {
   searchResults: number[];
   isSearch: boolean;
   isBookSort: boolean;
-  isList: string;
+  viewMode: string;
   bookSortCode: { sort: number; order: number };
   noteSortCode: { sort: number; order: number };
   handleFetchList: () => void;

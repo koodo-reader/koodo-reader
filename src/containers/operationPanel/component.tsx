@@ -9,6 +9,7 @@ import { OperationPanelProps, OperationPanelState } from "./interface";
 import OtherUtil from "../../utils/otherUtil";
 import ReadingTime from "../../utils/readingTime";
 import { withRouter } from "react-router-dom";
+import { setInterval } from "timers";
 
 declare var document: any;
 
@@ -18,6 +19,8 @@ class OperationPanel extends React.Component<
 > {
   timeStamp: number;
   speed: number;
+  timer: any;
+
   constructor(props: OperationPanelProps) {
     super(props);
     this.state = {
@@ -81,8 +84,13 @@ class OperationPanel extends React.Component<
 
     this.setState({ isFullScreen: true });
     OtherUtil.setReaderConfig("isFullScreen", "yes");
+    this.timer = setInterval(() => {
+      if (window.screenTop === 0) {
+        this.setState({ isFullScreen: false });
+        OtherUtil.setReaderConfig("isFullScreen", "no");
+      }
+    }, 1000);
   }
-
   // 退出全屏模式
   handleExitFullScreen() {
     //解决使用esc退出全屏，再退出阅读时发生的bug

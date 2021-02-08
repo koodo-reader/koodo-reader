@@ -7,7 +7,6 @@ import AddDialog from "../../containers/addDialog";
 import SortDialog from "../../containers/sortDialog";
 import MessageBox from "../../containers/messageBox";
 import BackupDialog from "../../containers/backupDialog";
-import WelcomeDialog from "../../containers/welcomeDialog";
 import "./manager.css";
 import { ManagerProps, ManagerState } from "./interface";
 import { Trans } from "react-i18next";
@@ -79,9 +78,6 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
     }
   }
   componentDidMount() {
-    setTimeout(() => {
-      this.props.handleFirst(OtherUtil.getReaderConfig("isFirst") || "yes");
-    }, 1000);
     if (is_touch_device() && !OtherUtil.getReaderConfig("isTouch")) {
       OtherUtil.setReaderConfig("isTouch", "yes");
     }
@@ -128,9 +124,9 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
         className="manager"
         onDragEnter={() => {
           !this.props.dragItem && this.handleDrag(true);
-          document
-            .querySelector("#import-from-local")
-            ?.setAttribute("style", "z-index:50");
+          (document.getElementsByClassName(
+            "import-from-local"
+          )[0] as any).style.zIndex = "50";
         }}
       >
         {this.state.isDrag && !this.props.dragItem && (
@@ -149,21 +145,28 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
         {this.props.isOpenEditDialog && <EditDialog />}
         {this.props.isOpenAddDialog && <AddDialog />}
         {this.props.isShowLoading && <LoadingDialog />}
-        {(this.props.isSettingOpen ||
-          this.props.isBackup ||
-          this.props.isShowNew ||
-          this.props.isOpenDeleteDialog ||
-          this.props.isOpenEditDialog ||
-          this.props.isOpenAddDialog ||
-          this.props.isShowLoading ||
-          this.props.isFirst === "yes") && (
-          <div className="drag-background"></div>
-        )}
+        {
+          <div
+            className="drag-background"
+            style={
+              this.props.isSettingOpen ||
+              this.props.isBackup ||
+              this.props.isShowNew ||
+              this.props.isOpenDeleteDialog ||
+              this.props.isOpenEditDialog ||
+              this.props.isOpenAddDialog ||
+              this.props.isShowLoading
+                ? {}
+                : {
+                    display: "none",
+                  }
+            }
+          ></div>
+        }
 
         {this.props.isMessage && <MessageBox />}
         {this.props.isSortDisplay && <SortDialog />}
         {this.props.isBackup && <BackupDialog />}
-        {this.props.isFirst === "yes" && <WelcomeDialog />}
         {this.props.isSettingOpen && <SettingDialog />}
         {(!books || books.length === 0) && this.state.totalBooks ? (
           <Redirect to="/manager/loading" />
