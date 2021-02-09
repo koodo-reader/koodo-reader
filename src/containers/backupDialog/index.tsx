@@ -8,6 +8,7 @@ import {
   handleMessageBox,
   handleMessage,
   handleLoadingDialog,
+  handleDownloadDesk,
 } from "../../store/actions/manager";
 import { stateType } from "../../store";
 import { withNamespaces } from "react-i18next";
@@ -28,6 +29,7 @@ const actionCreator = {
   handleMessage,
   handleTokenDialog,
   handleLoadingDialog,
+  handleDownloadDesk,
 };
 export default connect(
   mapStateToProps,

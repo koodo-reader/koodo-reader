@@ -114,6 +114,21 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
   };
   //获取书籍md5
   doIncrementalTest = (file: any) => {
+    let extension = file.name.split(".")[file.name.split(".").length - 1];
+    this.props.handleLoadingDialog(true);
+    if (
+      !isElectron() &&
+      (extension === "txt" || extension === "mobi" || extension === "azw3")
+    ) {
+      this.props.handleLoadingDialog(false);
+      this.props.handleMessage("Only Desktop support this format");
+      this.props.handleMessageBox(true);
+      this.props.handleDownloadDesk(true);
+      console.log("Error occurs");
+      return new Promise<void>((resolve, reject) => {
+        reject();
+      });
+    }
     return new Promise<void>((resolve, reject) => {
       //这里假设直接将文件选择框的dom引用传入
       //这里需要用到File的slice( )方法，以下是兼容写法
@@ -259,16 +274,6 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                 reject();
               });
           } else if (extension === "mobi" || extension === "azw3") {
-            if (!isElectron()) {
-              this.props.handleMessage("Only Desktop support this format");
-              this.props.handleMessageBox(true);
-              console.log("Error occurs");
-              setTimeout(() => {
-                this.props.handleLoadingDialog(false);
-              }, 1000);
-              reject();
-              return;
-            }
             var reader = new FileReader();
             reader.onload = async (event) => {
               const file_content = (event.target as any).result;
@@ -279,7 +284,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
               );
               let buf = iconv.encode(content, "UTF-8");
               let blobTemp: any = new Blob([buf], { type: "text/plain" });
-              let fileTemp = new File([blobTemp], bookName + ".txt", {
+              let fileTemp = new File([blobTemp], file.name + ".txt", {
                 lastModified: new Date().getTime(),
                 type: blobTemp.type,
               });
@@ -287,16 +292,6 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
             };
             reader.readAsArrayBuffer(file);
           } else if (extension === "txt") {
-            if (!isElectron()) {
-              this.props.handleMessage("Only Desktop support this format");
-              this.props.handleMessageBox(true);
-              console.log("Error occurs");
-              setTimeout(() => {
-                this.props.handleLoadingDialog(false);
-              }, 1000);
-              reject();
-              return;
-            }
             let formData = new FormData();
             formData.append("file", file);
             axios
@@ -445,7 +440,6 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
       <Dropzone
         onDrop={async (acceptedFiles) => {
           this.props.handleDrag(false);
-          this.props.handleLoadingDialog(true);
           for (let i = 0; i < acceptedFiles.length; i++) {
             let extension = acceptedFiles[i].name.split(".")[
               acceptedFiles[i].name.split(".").length - 1

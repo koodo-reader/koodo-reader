@@ -1,7 +1,6 @@
 const { app, BrowserWindow, ipcMain, screen, dialog } = require("electron");
 const isDev = require("electron-is-dev");
 const path = require("path");
-const fontList = require("font-list");
 const detect = require("detect-port");
 let mainWin;
 let splash;
@@ -71,6 +70,7 @@ app.on("ready", () => {
         mainWin = null;
       });
       ipcMain.on("fonts-ready", (event, arg) => {
+        const fontList = require("font-list");
         fontList
           .getFonts()
           .then((fonts) => {
@@ -179,10 +179,16 @@ const startExpress = () => {
 
   server.post("/ebook_parser", async (req, res) => {
     let file = req.files.file;
-    let bookExtension = file.name.split(".").reverse()[0];
-    let bookName = file.name.substr(
+    let name = file.name;
+    let bookExtension =
+      name.indexOf("mobi") > -1
+        ? "mobi"
+        : name.indexOf("azw3") > -1
+        ? "azw3"
+        : name.split(".").reverse()[0];
+    let bookName = name.substr(
       0,
-      file.name.length - bookExtension.length - 1
+      name.length - (bookExtension !== "txt" ? 8 : 3) - 1
     );
     console.log(file.name, bookName, bookExtension);
     file.mv(dirPath + `/${file.name}`, () => {
