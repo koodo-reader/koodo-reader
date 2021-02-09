@@ -7,6 +7,7 @@ import { Trans } from "react-i18next";
 import { HeaderProps, HeaderState } from "./interface";
 import OtherUtil from "../../utils/otherUtil";
 import UpdateInfo from "../../components/updateInfo";
+const isElectron = require("is-electron");
 
 class Header extends React.Component<HeaderProps, HeaderState> {
   constructor(props: HeaderProps) {
@@ -35,7 +36,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
 
         <div
           className="header-sort-container"
-          onClick={() => {
+          onMouseEnter={() => {
             this.handleSortBooks();
           }}
         >
@@ -63,7 +64,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
           <Trans>Backup and Restore</Trans>
         </div>
         <ImportLocal {...{ handleDrag: this.props.handleDrag }} />
-        <UpdateInfo />
+        {isElectron() && <UpdateInfo />}
       </div>
     );
   }

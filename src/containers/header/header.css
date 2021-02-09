@@ -7,22 +7,21 @@
 
 .header-sort-container {
   position: absolute;
-  left: 455px;
+  left: 475px;
   top: 29px;
   cursor: pointer;
   transition: 0.1s;
   width: 48px;
   height: 27px;
   padding-left: 8px;
-  transition: 0.1s;
+  transition: all 0.1s ease;
+  z-index: 10;
 }
-.header-sort-container:hover,
 .setting-icon-container:hover {
   background-color: rgba(75, 75, 75, 0.035);
   border-radius: 8px;
 }
-.header-sort-text,
-.download-demo-book {
+.header-sort-text {
   float: left;
   width: 32px;
   height: 16px;
@@ -30,6 +29,7 @@
   line-height: 27px;
   color: rgba(75, 75, 75, 1);
   opacity: 1;
+  font-weight: 500;
 }
 .header-sort-icon {
   float: left;
@@ -151,7 +151,7 @@
   font-size: 25px;
   line-height: 37px;
   position: absolute;
-  left: 525px;
+  left: 555px;
   top: 25px;
   color: rgba(75, 75, 75, 1);
   cursor: pointer;

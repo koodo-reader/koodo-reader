@@ -4,7 +4,7 @@
   display: flex;
   align-items: center;
   position: absolute;
-  left: 580px;
+  left: 620px;
   top: 18px;
   color: blue;
   cursor: pointer;
@@ -36,7 +36,7 @@
 .new-version-open {
   margin-left: 100px;
   margin-top: -10px;
-  width: 138px;
+  width: 128px;
   padding: 0px 10px;
   height: 42px;
   background: rgba(75, 75, 75, 1);
@@ -48,13 +48,14 @@
   cursor: pointer;
   z-index: 50;
   transition: 0.1s;
+  font-size: 14px;
 }
 .new-version-copy {
   margin-left: 142px;
   margin-top: 5px;
   color: rgba(75, 75, 75, 1);
   cursor: pointer;
-  font-size: 17px;
+  font-size: 14px;
   font-weight: 500;
   line-height: 25px;
 }

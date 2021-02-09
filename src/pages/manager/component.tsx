@@ -165,7 +165,7 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
         }
 
         {this.props.isMessage && <MessageBox />}
-        {this.props.isSortDisplay && <SortDialog />}
+        <SortDialog />
         {this.props.isBackup && <BackupDialog />}
         {this.props.isSettingOpen && <SettingDialog />}
         {(!books || books.length === 0) && this.state.totalBooks ? (
