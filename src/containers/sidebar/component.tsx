@@ -96,6 +96,9 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
         <div className="side-menu-container-parent">
           <ul className="side-menu-container">{renderSideMenu()}</ul>
         </div>
+        <div>
+          <Trans>Download Desktop Version</Trans>
+        </div>
       </div>
     );
   }
