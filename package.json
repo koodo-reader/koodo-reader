@@ -48,7 +48,7 @@
     "release": "electron-builder ",
     "prerelease": "npm run build",
     "prepack": "npm run build",
-    "predist": "npm run build"
+    "dist": "electron-builder"
   },
   "homepage": "./",
   "build": {

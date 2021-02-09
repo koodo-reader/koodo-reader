@@ -4,7 +4,7 @@ import { sideMenu } from "../../constants/sideMenu";
 import { Trans } from "react-i18next";
 import { SidebarProps, SidebarState } from "./interface";
 import { withRouter } from "react-router-dom";
-
+const isElectron = require("is-electron");
 class Sidebar extends React.Component<SidebarProps, SidebarState> {
   constructor(props: SidebarProps) {
     super(props);
@@ -96,7 +96,13 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
         <div className="side-menu-container-parent">
           <ul className="side-menu-container">{renderSideMenu()}</ul>
         </div>
-        <div>
+        <div
+          className="download-desktop-version"
+          style={isElectron() ? { display: "none" } : {}}
+          onClick={() => {
+            window.open("https://koodo.960960.xyz/download");
+          }}
+        >
           <Trans>Download Desktop Version</Trans>
         </div>
       </div>

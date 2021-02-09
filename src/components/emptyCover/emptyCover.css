@@ -21,6 +21,7 @@
   color: rgba(75, 75, 75, 0.8);
   width: 90px;
   text-align: left;
+  line-height: 18px;
   text-overflow: ellipsis;
   display: -webkit-box;
   -webkit-box-orient: vertical;
