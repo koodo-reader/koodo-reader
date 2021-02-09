@@ -21,6 +21,9 @@ export function handleSearchResults(searchResults: number[]) {
 export function handleSearch(isSearch: boolean) {
   return { type: "HANDLE_SEARCH", payload: isSearch };
 }
+export function handleDownloadDesk(isDownloadDesk: boolean) {
+  return { type: "HANDLE_DOWNLOAD_DESK", payload: isDownloadDesk };
+}
 export function handleSetting(isSettingOpen: boolean) {
   return { type: "HANDLE_SETTING", payload: isSettingOpen };
 }

@@ -230,5 +230,10 @@
   "Our Website": "欢迎访问我们的网站",
   "What's New": "新增功能",
   "Download Desktop Version": "下载客户端",
+  "Download": "前往下载",
+  "Use the fonts from your local computer": "支持设置电脑中的字体",
+  "Backup your data with Webdav": "支持 Webdav 备份方式",
+  "More formats supported": "支持更多的图书格式",
+  "Koodo Reader's web version are limited by the browser, for more powerful features, please download the desktop version.": "Koodo Reader 网页版受浏览器限制，部分功能仅客户端支持，请下载客户端版本再尝试",
   "What's been fixed": "问题修复"
 }

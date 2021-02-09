@@ -6,7 +6,12 @@ import { Trans } from "react-i18next";
 import { DropdownListProps, DropdownListState } from "./interface";
 import OtherUtil from "../../utils/otherUtil";
 const isElectron = require("is-electron");
-if (isElectron()) {
+if (
+  isElectron() &&
+  navigator.appVersion.indexOf("NT 6.1") === -1 &&
+  navigator.appVersion.indexOf("NT 5.1") === -1 &&
+  navigator.appVersion.indexOf("NT 6.0") === -1
+) {
   const { ipcRenderer } = window.require("electron");
   dropdownList[0].option = ipcRenderer.sendSync("fonts-ready", "ping");
   dropdownList[0].option.push("内嵌字体");

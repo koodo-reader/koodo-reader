@@ -114,7 +114,7 @@
   left: 690px;
   top: 29px;
   cursor: pointer;
-  color: blue;
+  color: #0078d4;
 }
 @media screen and (max-width: 1250px) {
   .download-demo-book {

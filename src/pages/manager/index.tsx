@@ -31,6 +31,7 @@ const mapStateToProps = (state: stateType) => {
     isSortDisplay: state.manager.isSortDisplay,
     isShowLoading: state.manager.isShowLoading,
     isShowNew: state.manager.isShowNew,
+    isDownloadDesk: state.manager.isDownloadDesk,
     isMessage: state.manager.isMessage,
     isBackup: state.backupPage.isBackup,
   };

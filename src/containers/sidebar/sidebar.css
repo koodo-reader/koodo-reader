@@ -149,3 +149,12 @@
   display: inline-block;
   margin-left: 13px;
 }
+.download-desktop-version {
+  font-size: 14px;
+  color: #0078d4;
+  text-align: center;
+  position: absolute;
+  bottom: 20px;
+  left: 55px;
+  cursor: pointer;
+}

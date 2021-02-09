@@ -5,14 +5,14 @@
   opacity: 1;
   position: absolute;
   left: 444px;
-  top: 28px;
+  top: 25px;
   z-index: 5;
   border-radius: 5px;
   transition: all 0.1s ease;
   overflow: hidden;
 }
 .sort-by-category {
-  margin-top: 26px;
+  margin-top: 29px;
 }
 .sort-by-category-list,
 .sort-by-order-list {

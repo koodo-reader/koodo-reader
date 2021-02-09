@@ -78,7 +78,7 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
         left: x - 200,
         top:
           document.body.clientHeight - e.clientY > 400
-            ? document.body.clientHeight - 420 - e.clientY
+            ? document.body.clientHeight - 310 - e.clientY
             : 200,
       },
       () => {
