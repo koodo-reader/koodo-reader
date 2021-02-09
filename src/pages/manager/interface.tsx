@@ -12,6 +12,7 @@ export interface ManagerProps extends RouteComponentProps<any> {
   shelfIndex: number;
   isOpenEditDialog: boolean;
   isOpenDeleteDialog: boolean;
+  isDownloadDesk: boolean;
   isOpenAddDialog: boolean;
   isBookSort: boolean;
   isSortDisplay: boolean;
