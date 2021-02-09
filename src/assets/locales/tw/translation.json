@@ -9,7 +9,7 @@
   "My Shelves": "我的書架",
   "Sort": "排序",
   "Import Failed": "導入失敗",
-  "New Version Available": "下載新版本",
+  "New Version": "新",
   "Access token expired": "憑證過期，重新取得中",
   "Access token received, please continue": "取得憑證成功，請繼續之前的操作",
   "Fetching Acess token failed": "取得憑證失敗",
@@ -230,6 +230,9 @@
   "For better user experince, please visit this site on a computer": "Koodo Reader專為桌面端設計打造，暫未適配移動端，請在電腦上打開本網站",
   "Sort by Recent": "按最近閱讀",
   "Cover Mode": "封面模式",
-
+  "is Available": "可以下载了",
+  "Update Complete": "更新成功",
+  "Changelog": "更新日志",
+  "Download Desktop Version": "下载客户端",
   "Bold Font": "字体加粗"
 }

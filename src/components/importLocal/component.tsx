@@ -80,7 +80,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
       : window.open(`${window.location.href.split("#")[0]}#/epub/${book.key}`);
   };
   handleAddBook = (book: BookModel) => {
-    return new Promise((resolve, reject) => {
+    return new Promise<void>((resolve, reject) => {
       let bookArr = [...this.props.books, ...this.props.deletedBooks];
       if (bookArr == null) {
         bookArr = [];
@@ -105,13 +105,16 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
           resolve();
         })
         .catch(() => {
+          setTimeout(() => {
+            this.props.handleLoadingDialog(false);
+          }, 1000);
           reject();
         });
     });
   };
   //获取书籍md5
   doIncrementalTest = (file: any) => {
-    return new Promise((resolve, reject) => {
+    return new Promise<void>((resolve, reject) => {
       //这里假设直接将文件选择框的dom引用传入
       //这里需要用到File的slice( )方法，以下是兼容写法
 
@@ -128,6 +131,9 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
       fileReader.onload = async (e) => {
         if (!e.target) {
           reject();
+          setTimeout(() => {
+            this.props.handleLoadingDialog(false);
+          }, 1000);
           throw new Error();
         }
         spark.appendBinary(e.target.result as any); // append array buffer
@@ -153,7 +159,8 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
   };
   handleBook = (file: any, md5: string) => {
     let extension = file.name.split(".")[file.name.split(".").length - 1];
-    return new Promise((resolve, reject) => {
+    let bookName = file.name.substr(0, file.name.length - extension.length - 1);
+    return new Promise<void>((resolve, reject) => {
       //md5重复不导入
       let isRepeat = false;
       if ([...this.props.books, ...this.props.deletedBooks].length > 0) {
@@ -174,11 +181,17 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
           if (!e.target) {
             this.props.handleMessage("Import Failed");
             this.props.handleMessageBox(true);
+            setTimeout(() => {
+              this.props.handleLoadingDialog(false);
+            }, 1000);
             reject();
             throw new Error();
           }
           if (extension === "pdf") {
             if (!e.target) {
+              setTimeout(() => {
+                this.props.handleLoadingDialog(false);
+              }, 1000);
               reject();
               throw new Error();
             }
@@ -212,7 +225,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                         publisher: string,
                         description: string;
                       [name, author, description, publisher] = [
-                        metadata.info.Title || file.name.split(".")[0],
+                        metadata.info.Title || bookName,
                         metadata.info.Author || "Unknown Authur",
                         "pdf",
                         metadata.info.publisher,
@@ -240,6 +253,9 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                 this.props.handleMessage("Import Failed");
                 this.props.handleMessageBox(true);
                 console.log("Error occurs");
+                setTimeout(() => {
+                  this.props.handleLoadingDialog(false);
+                }, 1000);
                 reject();
               });
           } else if (extension === "mobi" || extension === "azw3") {
@@ -247,6 +263,9 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
               this.props.handleMessage("Only Desktop support this format");
               this.props.handleMessageBox(true);
               console.log("Error occurs");
+              setTimeout(() => {
+                this.props.handleLoadingDialog(false);
+              }, 1000);
               reject();
               return;
             }
@@ -260,7 +279,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
               );
               let buf = iconv.encode(content, "UTF-8");
               let blobTemp: any = new Blob([buf], { type: "text/plain" });
-              let fileTemp = new File([blobTemp], file.name + ".txt", {
+              let fileTemp = new File([blobTemp], bookName + ".txt", {
                 lastModified: new Date().getTime(),
                 type: blobTemp.type,
               });
@@ -272,6 +291,9 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
               this.props.handleMessage("Only Desktop support this format");
               this.props.handleMessageBox(true);
               console.log("Error occurs");
+              setTimeout(() => {
+                this.props.handleLoadingDialog(false);
+              }, 1000);
               reject();
               return;
             }
@@ -287,14 +309,10 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
               .then((res) => {
                 let type = "application/octet-stream";
                 let blobTemp: any = new Blob([res.data], { type: type });
-                let fileTemp = new File(
-                  [blobTemp],
-                  file.name.split(".")[0] + ".epub",
-                  {
-                    lastModified: new Date().getTime(),
-                    type: blobTemp.type,
-                  }
-                );
+                let fileTemp = new File([blobTemp], bookName + ".epub", {
+                  lastModified: new Date().getTime(),
+                  type: blobTemp.type,
+                });
 
                 this.doIncrementalTest(fileTemp);
               })
@@ -302,6 +320,9 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                 this.props.handleMessage("Import Failed");
                 this.props.handleMessageBox(true);
                 console.log(err, "Error occurs");
+                setTimeout(() => {
+                  this.props.handleLoadingDialog(false);
+                }, 1000);
                 reject();
               });
           } else {
@@ -310,6 +331,9 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
             epub.loaded.metadata
               .then((metadata: any) => {
                 if (!e.target) {
+                  setTimeout(() => {
+                    this.props.handleLoadingDialog(false);
+                  }, 1000);
                   reject();
                   throw new Error();
                 }
@@ -338,7 +362,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                             ? "MOBI"
                             : publisher === "azw3"
                             ? "AZW3"
-                            : publisher === "azw3"
+                            : publisher === "txt"
                             ? "TXT"
                             : "EPUB";
                         key = new Date().getTime() + "";
@@ -395,6 +419,9 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                   })
                   .catch((err: any) => {
                     console.log(err, "err");
+                    setTimeout(() => {
+                      this.props.handleLoadingDialog(false);
+                    }, 1000);
                     reject();
                   });
               })
@@ -402,6 +429,9 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                 this.props.handleMessage("Import Failed");
                 this.props.handleMessageBox(true);
                 console.log("Error occurs");
+                setTimeout(() => {
+                  this.props.handleLoadingDialog(false);
+                }, 1000);
                 reject();
               });
           }

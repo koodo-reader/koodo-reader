@@ -54,7 +54,7 @@ class ImageViewer extends React.Component<ImageViewerProps, ImageViewerStates> {
       href.indexOf("OEBPS") === -1 &&
       href.indexOf("footnote") === -1 &&
       href.indexOf("blob") === -1 &&
-      href.indexOf(".html") === -1
+      href.indexOf(".htm") === -1
     ) {
       console.log(href);
       event.preventDefault();

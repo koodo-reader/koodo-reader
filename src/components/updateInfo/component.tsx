@@ -6,47 +6,52 @@ import { version } from "../../../package.json";
 import { Trans } from "react-i18next";
 import axios from "axios";
 import Lottie from "react-lottie";
-import animationData from "../../assets/new.json";
+import animationNew from "../../assets/new.json";
+import animationSuccess from "../../assets/success.json";
 import copy from "copy-text-to-clipboard";
+import OtherUtil from "../../utils/otherUtil";
 const isElectron = require("is-electron");
-const defaultOptions = {
+const newOptions = {
   loop: false,
   autoplay: true,
-  animationData: animationData,
+  animationData: animationNew,
   rendererSettings: {
     preserveAspectRatio: "xMidYMid slice",
   },
 };
-
+const successOptions = {
+  loop: false,
+  autoplay: true,
+  animationData: animationSuccess,
+  rendererSettings: {
+    preserveAspectRatio: "xMidYMid slice",
+  },
+};
 declare var window: any;
 
 class UpdateInfo extends React.Component<UpdateInfoProps, UpdateInfoState> {
   constructor(props: UpdateInfoProps) {
     super(props);
     this.state = {
-      downlownLink: "",
       updateLog: "",
+      isUpdated: false,
     };
   }
   componentDidMount() {
-    console.log(this.state.updateLog, "this.state.updateLog");
     !this.props.currentBook.key &&
       axios
         .get(`https://koodo.960960.xyz/api/update?name=${navigator.language}`)
         .then((res) => {
           console.log(res);
-          const download = res.data.download;
           const newVersion = res.data.log.version;
 
           if (version !== newVersion) {
             this.setState({ updateLog: res.data.log });
             this.props.handleNewDialog(true);
-
-            navigator.platform.indexOf("Linux") > -1
-              ? this.setState({ downlownLink: download[2].url })
-              : navigator.platform.indexOf("Mac") > -1
-              ? this.setState({ downlownLink: download[1].url })
-              : this.setState({ downlownLink: download[0].url });
+          } else if (OtherUtil.getReaderConfig("version") !== newVersion) {
+            this.setState({ isUpdated: true });
+            this.props.handleNewDialog(true);
+            OtherUtil.setReaderConfig("version", newVersion);
           }
         })
         .catch((err) => {
@@ -65,28 +70,39 @@ class UpdateInfo extends React.Component<UpdateInfoProps, UpdateInfoState> {
   };
   handleJump = () => {
     isElectron() &&
-      window.require("electron").shell.openExternal(this.state.downlownLink);
+      window
+        .require("electron")
+        .shell.openExternal(
+          this.state.isUpdated
+            ? "https://koodo.960960.xyz/log"
+            : "https://koodo.960960.xyz/download"
+        );
   };
   handleClose = () => {
-    this.setState({ updateLog: "" });
+    this.setState({ updateLog: "", isUpdated: false });
     this.props.handleNewDialog(false);
   };
   render() {
     return (
       <>
-        <div
-          className="update-info-container"
-          style={this.state.downlownLink ? {} : { display: "none" }}
-          onClick={() => {
-            this.handleJump();
-          }}
-        >
-          <Trans>New Version Available</Trans>
-        </div>
-        {this.state.updateLog && (
-          <div className="new-version">
+        {(this.state.updateLog || this.state.isUpdated) && (
+          <div
+            className="new-version"
+            style={
+              this.state.isUpdated
+                ? { height: "240px", top: "calc(50vh - 120px)" }
+                : {}
+            }
+          >
             <div className="new-version-title">
-              <Trans>New Version Available</Trans>
+              {this.state.isUpdated ? (
+                <Trans>Update Complete</Trans>
+              ) : (
+                <>
+                  {version + " "}
+                  <Trans>is Available</Trans>
+                </>
+              )}
             </div>
             <div
               className="setting-close-container"
@@ -98,39 +114,55 @@ class UpdateInfo extends React.Component<UpdateInfoProps, UpdateInfoState> {
             </div>
             <div className="update-dialog-info" style={{ height: 420 }}>
               <div className="new-version-animation">
-                <Lottie options={defaultOptions} height={240} width={240} />
+                {this.state.isUpdated ? (
+                  <Lottie options={successOptions} height={120} width={120} />
+                ) : (
+                  <Lottie options={newOptions} height={220} width={220} />
+                )}
               </div>
               <div
                 className="new-version-open"
                 onClick={() => {
                   this.handleJump();
                 }}
+                style={this.state.isUpdated ? { marginTop: "10px" } : {}}
               >
-                <Trans>Open link in browser</Trans>
+                {this.state.isUpdated ? (
+                  <>
+                    {version + " "}
+                    <Trans>Changelog</Trans>
+                  </>
+                ) : (
+                  <Trans>Open link in browser</Trans>
+                )}
               </div>
-              <div
-                className="new-version-copy"
-                onClick={() => {
-                  copy(this.state.downlownLink);
-                  this.props.handleMessage("Copy Successfully");
-                  this.props.handleMessageBox(true);
-                }}
-              >
-                <Trans>Copy Link</Trans>
-              </div>
+              {this.state.updateLog && (
+                <>
+                  <div
+                    className="new-version-copy"
+                    onClick={() => {
+                      copy("https://koodo.960960.xyz/download");
+                      this.props.handleMessage("Copy Successfully");
+                      this.props.handleMessageBox(true);
+                    }}
+                  >
+                    <Trans>Copy Link</Trans>
+                  </div>
 
-              <p className="update-dialog-new-title">
-                <Trans>What's New</Trans>
-              </p>
-              <ul className="update-dialog-new-container">
-                {this.renderList(this.state.updateLog.new)}
-              </ul>
-              <p className="update-dialog-fix-title">
-                <Trans>What's been fixed</Trans>
-              </p>
-              <ul className="update-dialog-fix-container">
-                {this.renderList(this.state.updateLog.fix)}
-              </ul>
+                  <p className="update-dialog-new-title">
+                    <Trans>What's New</Trans>
+                  </p>
+                  <ul className="update-dialog-new-container">
+                    {this.renderList(this.state.updateLog.new)}
+                  </ul>
+                  <p className="update-dialog-fix-title">
+                    <Trans>What's been fixed</Trans>
+                  </p>
+                  <ul className="update-dialog-fix-container">
+                    {this.renderList(this.state.updateLog.fix)}
+                  </ul>
+                </>
+              )}
             </div>
           </div>
         )}

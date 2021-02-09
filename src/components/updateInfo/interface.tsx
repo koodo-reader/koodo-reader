@@ -7,6 +7,6 @@ export interface UpdateInfoProps {
   handleNewDialog: (isShowNew: boolean) => void;
 }
 export interface UpdateInfoState {
-  downlownLink: string;
   updateLog: any;
+  isUpdated: boolean;
 }

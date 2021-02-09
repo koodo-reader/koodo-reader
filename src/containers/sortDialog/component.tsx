@@ -59,7 +59,12 @@ class SortDialog extends React.Component<SortDialogProps, SortDialogState> {
         onMouseLeave={() => {
           this.handleSortBooks();
         }}
-        style={this.state.isNote ? { height: "120px" } : {}}
+        style={
+          this.props.isSortDisplay
+            ? { boxShadow: "0px 0px 5px rgba(0, 0, 0, 0.18)" }
+            : { height: "20px" }
+        }
+        // style={this.state.isNote ? { height: "120px" } : {}}
       >
         {this.state.isNote ? (
           <ul className="sort-by-category">

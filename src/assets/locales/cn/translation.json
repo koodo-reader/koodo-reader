@@ -29,7 +29,9 @@
   "Dont't use mimical background": "不使用仿真背景",
   "Auto hide cursor when reading": "阅读时自动隐藏鼠标",
   "Sort": "排序",
-  "New Version Available": "下载新版本",
+  "is Available": "可以下载了",
+  "New Version": "新",
+  "Update Complete": "更新成功",
   "Access token expired": "凭证过期，重新获取中",
   "Access token received, please continue": "获取凭证成功，请继续之前的操作",
   "Fetching Acess token failed": "获取凭证失败",
@@ -224,7 +226,9 @@
   "Version": "版本号：",
   "Export Successfully": "导出成功",
   "Date": "更新日期：",
+  "Changelog": "更新日志",
   "Our Website": "欢迎访问我们的网站",
   "What's New": "新增功能",
+  "Download Desktop Version": "下载客户端",
   "What's been fixed": "问题修复"
 }
