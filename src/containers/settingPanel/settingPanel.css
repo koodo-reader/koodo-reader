@@ -29,7 +29,7 @@
   height: calc(100% - 55px);
   overflow-y: scroll;
   padding-right: 17px; /* Increase/decrease this value for cross-browser compatibility */
-  box-sizing: content-box;
+  box-sizing: border-box;
 
   /* display: none; */
 }
