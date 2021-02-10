@@ -38,7 +38,7 @@
   color: rgba(112, 112, 112, 1);
   position: absolute;
   bottom: 10px;
-  left: 10px;
+  left: 20px;
   font-size: 14px;
   transform: rotate(90deg);
   cursor: pointer;
@@ -52,7 +52,7 @@
   color: rgba(112, 112, 112, 1);
   position: absolute;
   bottom: 10px;
-  left: 370px;
+  left: 360px;
   font-size: 14px;
   transform: rotate(-90deg);
   cursor: pointer;

@@ -5,6 +5,12 @@ import { Trans } from "react-i18next";
 import { getParamsFromUrl } from "../../utils/syncUtils/common";
 import copy from "copy-text-to-clipboard";
 import { withRouter } from "react-router-dom";
+import { isMobile } from "react-device-detect";
+import OtherUtil from "../../utils/otherUtil";
+import DropboxUtil from "../../utils/syncUtils/dropbox";
+
+declare var window: any;
+
 class Redirect extends React.Component<RedirectProps, RedirectState> {
   timer!: NodeJS.Timeout;
   constructor(props: RedirectProps) {
@@ -16,7 +22,14 @@ class Redirect extends React.Component<RedirectProps, RedirectState> {
       token: "",
     };
   }
-
+  handleFinish = () => {
+    this.props.handleLoadingDialog(false);
+    alert("数据恢复成功");
+  };
+  showMessage = (message: string) => {
+    this.props.handleMessage(message);
+    this.props.handleMessageBox(true);
+  };
   componentDidMount() {
     //判断是否是获取token后的回调页面
     let url = document.location.href;
@@ -37,6 +50,11 @@ class Redirect extends React.Component<RedirectProps, RedirectState> {
       let params: any = getParamsFromUrl();
       this.setState({ token: params.access_token });
       this.setState({ isAuthed: true });
+      if (isMobile) {
+        OtherUtil.setReaderConfig(`dropbox_token`, params.access_token);
+        DropboxUtil.DownloadFile(this.handleFinish, this.showMessage);
+        window.postMessage(params.access_token);
+      }
       return false;
     }
   }
