@@ -10,6 +10,7 @@ import OtherUtil from "../../utils/otherUtil";
 import ReadingTime from "../../utils/readingTime";
 import { withRouter } from "react-router-dom";
 import { setInterval } from "timers";
+import { isMobile } from "react-device-detect";
 
 declare var document: any;
 
@@ -84,12 +85,14 @@ class OperationPanel extends React.Component<
 
     this.setState({ isFullScreen: true });
     OtherUtil.setReaderConfig("isFullScreen", "yes");
-    this.timer = setInterval(() => {
-      if (window.screenTop === 0) {
-        this.setState({ isFullScreen: false });
-        OtherUtil.setReaderConfig("isFullScreen", "no");
-      }
-    }, 1000);
+    if (!isMobile) {
+      this.timer = setInterval(() => {
+        if (window.screenTop === 0) {
+          this.setState({ isFullScreen: false });
+          OtherUtil.setReaderConfig("isFullScreen", "no");
+        }
+      }, 1000);
+    }
   }
   // 退出全屏模式
   handleExitFullScreen() {
