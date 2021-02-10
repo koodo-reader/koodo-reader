@@ -77,6 +77,7 @@
   opacity: 1;
   width: 100%;
   text-align: center;
+  cursor: pointer;
 }
 .icon-onedrive {
   font-size: 40px;

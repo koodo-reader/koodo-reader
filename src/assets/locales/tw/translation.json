@@ -240,5 +240,8 @@
   "Where is your data?": "选择资料来源",
   "Where to keep your data?": "选择资料存放位置",
   "Not supported yet": "暂不支持",
+  "Unauthorize": "取消授权",
+  "Unauthorize Successfully": "取消授权成功",
+
   "Bold Font": "字体加粗"
 }
