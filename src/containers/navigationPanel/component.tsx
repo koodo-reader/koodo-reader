@@ -182,7 +182,7 @@ class NavigationPanel extends React.Component<
         ) : (
           <>
             <div className="navigation-header">
-              <span
+              {/* <span
                 className={
                   this.state.isNavLocked
                     ? "icon-lock nav-lock-icon"
@@ -192,7 +192,7 @@ class NavigationPanel extends React.Component<
                 onClick={() => {
                   this.handleLock();
                 }}
-              ></span>
+              ></span> */}
               {this.state.cover &&
               this.props.currentBook.cover !== "noCover" &&
               this.props.currentBook.publisher !== "mobi" &&
