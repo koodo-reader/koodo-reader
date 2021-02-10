@@ -5,6 +5,7 @@ import PopupNote from "../../components/popupNote";
 import PopupOption from "../../components/popupOption";
 import PopupTrans from "../../components/popupTrans";
 import { PopupMenuProps, PopupMenuStates } from "./interface";
+import { isMobile } from "react-device-detect";
 
 declare var window: any;
 
@@ -34,7 +35,7 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
 
   componentDidMount() {
     this.props.rendition.on("rendered", () => {
-      new Promise((resolve, reject) => {
+      new Promise<void>((resolve, reject) => {
         this.getHighlighter();
         resolve();
       }).then(() => {
@@ -150,6 +151,11 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     let popupMenu = document.querySelector(".popup-menu-container");
 
     popupMenu!.setAttribute("style", `left:${posX}px;top:${posY}px`);
+    isMobile &&
+      popupMenu!.setAttribute(
+        "style",
+        `left:calc(50vw - 79px);top:calc(50vh - 86px)`
+      );
     this.setState({ rect: null });
   };
   //渲染高亮
@@ -249,7 +255,7 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     doc.getSelection()!.empty();
     this.props.handleMenuMode("menu");
     this.highlighter && this.highlighter.removeAllHighlights();
-    new Promise((resolve) => {
+    new Promise<void>((resolve) => {
       this.getHighlighter();
       resolve();
     }).then(() => {

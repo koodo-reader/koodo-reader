@@ -29,14 +29,12 @@ class Redirect extends React.Component<RedirectProps, RedirectState> {
     }
     if (url.indexOf("code") > -1) {
       let params: any = getParamsFromUrl();
-      console.log(params, "params");
       this.setState({ token: params.code });
       this.setState({ isAuthed: true });
       return false;
     }
     if (url.indexOf("access_token") > -1) {
       let params: any = getParamsFromUrl();
-      console.log(params, "params");
       this.setState({ token: params.access_token });
       this.setState({ isAuthed: true });
       return false;

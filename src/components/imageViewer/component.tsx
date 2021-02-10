@@ -34,7 +34,6 @@ class ImageViewer extends React.Component<ImageViewerProps, ImageViewerStates> {
   }
 
   showImage = (event: any) => {
-    console.log("object");
     if (this.props.isShow) {
       this.props.handleLeaveReader("left");
       this.props.handleLeaveReader("right");

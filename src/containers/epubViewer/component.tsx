@@ -96,6 +96,20 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
   }
   //进入阅读器
   handleEnterReader = (position: string) => {
+    if (
+      isMobile &&
+      (this.state.isOpenNavPanel ||
+        this.state.isOpenOperationPanel ||
+        this.state.isOpenProgressPanel ||
+        this.state.isOpenSettingPanel)
+    ) {
+      this.handleLeaveReader("left");
+      this.handleLeaveReader("right");
+      this.handleLeaveReader("bottom");
+      this.handleLeaveReader("top");
+      return;
+    }
+
     //控制上下左右的菜单的显示
     switch (position) {
       case "right":
@@ -204,7 +218,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         <div
           className="left-panel"
           onMouseEnter={() => {
-            if (this.state.isTouch || this.state.isOpenNavPanel) {
+            if (this.state.isTouch || this.state.isOpenNavPanel || isMobile) {
               return;
             }
             this.handleEnterReader("left");
@@ -216,7 +230,11 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         <div
           className="right-panel"
           onMouseEnter={() => {
-            if (this.state.isTouch || this.state.isOpenSettingPanel) {
+            if (
+              this.state.isTouch ||
+              this.state.isOpenSettingPanel ||
+              isMobile
+            ) {
               return;
             }
             this.handleEnterReader("right");
@@ -228,7 +246,11 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         <div
           className="top-panel"
           onMouseEnter={() => {
-            if (this.state.isTouch || this.state.isOpenOperationPanel) {
+            if (
+              this.state.isTouch ||
+              this.state.isOpenOperationPanel ||
+              isMobile
+            ) {
               return;
             }
             this.handleEnterReader("top");
@@ -240,7 +262,11 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         <div
           className="bottom-panel"
           onMouseEnter={() => {
-            if (this.state.isTouch || this.state.isOpenProgressPanel) {
+            if (
+              this.state.isTouch ||
+              this.state.isOpenProgressPanel ||
+              isMobile
+            ) {
               return;
             }
             this.handleEnterReader("bottom");
