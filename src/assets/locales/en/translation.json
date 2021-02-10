@@ -219,6 +219,7 @@
   "Download failed,network problem or no backup": "Download failed,network problem or no backup",
   "Upload failed, check your connection": "Upload failed, check your connection",
   "Version": "Version: ",
+  "Not supported yet": "Not supported yet",
   "Update to": "Update to",
   "Date": "Date: "
 }
