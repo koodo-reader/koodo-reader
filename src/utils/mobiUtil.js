@@ -378,10 +378,18 @@ class MobiFile {
       var content = this.read_text();
       var bookDoc = domParser.parseFromString(content, "text/html")
         .documentElement;
-      const lines = Array.from(bookDoc.querySelectorAll("p,b,font"));
+      const lines = Array.from(bookDoc.querySelectorAll("p,b,font,h3"));
+      console.log(bookDoc, lines);
+
       let parseContent = [];
       for (let i = 0, len = lines.length; i < len - 1; i++) {
-        parseContent.push(lines[i].innerText);
+        parseContent.push(
+          lines[i].tagName === "FONT" ||
+            lines[i].tagName === "B" ||
+            lines[i].tagName === "H3"
+            ? "*" + lines[i].innerText
+            : lines[i].innerText
+        );
         let imgDoms = lines[i].getElementsByTagName("img");
         if (imgDoms.length > 0) {
           for (let i = 0; i < imgDoms.length; i++) {
@@ -399,7 +407,9 @@ class MobiFile {
         parseContent.push("~image");
         for (let i = 0; i < imgDoms.length; i++) {
           const src = await this.render_image(imgDoms, i);
-          parseContent.push(src);
+          parseContent.push(
+            src + " " + imgDoms[i].width + " " + imgDoms[i].height
+          );
         }
         resolve(parseContent.join("\n    \n"));
       };
