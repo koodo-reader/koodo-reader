@@ -8,6 +8,7 @@ import ModeControl from "../../components/modeControl";
 import { SettingPanelProps, SettingPanelState } from "./interface";
 import { Trans } from "react-i18next";
 import OtherUtil from "../../utils/otherUtil";
+import { isMobile } from "react-device-detect";
 
 class SettingPanel extends React.Component<
   SettingPanelProps,
@@ -162,7 +163,7 @@ class SettingPanel extends React.Component<
           <Trans>Reading Option</Trans>
         </div>
         <div className="setting-panel">
-          <ModeControl />
+          {!isMobile && <ModeControl />}
           <ThemeList />
           <SliderList
             {...{
