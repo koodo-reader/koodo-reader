@@ -56,6 +56,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  font-weight: 500;
 }
 .active-selector {
   color: white;
@@ -155,6 +156,6 @@
   text-align: center;
   position: absolute;
   bottom: 20px;
-  left: 55px;
   cursor: pointer;
+  width: 200px;
 }
