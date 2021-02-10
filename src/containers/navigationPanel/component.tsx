@@ -20,7 +20,7 @@ class NavigationPanel extends React.Component<
     this.state = {
       currentTab: "contents",
       chapters: [],
-      cover: "",
+      cover: this.props.currentBook.cover,
       isSearch: false,
       searchList: null,
       startIndex: 0,
@@ -36,14 +36,6 @@ class NavigationPanel extends React.Component<
     this.setState({ searchList });
   };
   componentDidMount() {
-    this.props.currentEpub
-      .coverUrl()
-      .then((url: string) => {
-        this.setState({ cover: url });
-      })
-      .catch(() => {
-        console.log("Error occurs");
-      });
     this.props.handleFetchBookmarks();
   }
 
@@ -201,7 +193,11 @@ class NavigationPanel extends React.Component<
                   this.handleLock();
                 }}
               ></span>
-              {this.state.cover ? (
+              {this.state.cover &&
+              this.props.currentBook.cover !== "noCover" &&
+              this.props.currentBook.publisher !== "mobi" &&
+              this.props.currentBook.publisher !== "azw3" &&
+              this.props.currentBook.publisher !== "txt" ? (
                 <img className="book-cover" src={this.state.cover} alt="" />
               ) : (
                 <div className="book-cover">
