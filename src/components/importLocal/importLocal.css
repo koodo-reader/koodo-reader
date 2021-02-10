@@ -16,6 +16,7 @@
   cursor: pointer;
   z-index: 0;
   transition: 0.1s;
+  font-weight: 500;
 }
 .import-from-local:hover {
   background-color: rgba(75, 75, 75, 0.9);

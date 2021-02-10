@@ -84,7 +84,6 @@ class BackupDialog extends React.Component<
 
         case 3:
           if (!isElectron()) {
-            this.showMessage("Only Desktop support this service");
             this.props.handleDownloadDesk(true);
             break;
           }
