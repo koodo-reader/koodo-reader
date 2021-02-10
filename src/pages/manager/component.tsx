@@ -93,33 +93,33 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
 
   render() {
     let { books } = this.props;
-    if (isMobileOnly) {
-      return (
-        <>
-          <p className="waring-title">
-            <Trans>Warning</Trans>
-          </p>
-          <div className="mobile-warning">
-            <span>
-              <Trans>
-                For better user experince, please visit this site on a computer
-              </Trans>
-            </span>
-          </div>
-          <div>
-            <img
-              src={
-                process.env.NODE_ENV === "production"
-                  ? "./assets/empty.svg"
-                  : "../../assets/empty.svg"
-              }
-              alt=""
-              className="waring-pic"
-            />
-          </div>
-        </>
-      );
-    }
+    // if (isMobileOnly) {
+    //   return (
+    //     <>
+    //       <p className="waring-title">
+    //         <Trans>Warning</Trans>
+    //       </p>
+    //       <div className="mobile-warning">
+    //         <span>
+    //           <Trans>
+    //             For better user experince, please visit this site on a computer
+    //           </Trans>
+    //         </span>
+    //       </div>
+    //       <div>
+    //         <img
+    //           src={
+    //             process.env.NODE_ENV === "production"
+    //               ? "./assets/empty.svg"
+    //               : "../../assets/empty.svg"
+    //           }
+    //           alt=""
+    //           className="waring-pic"
+    //         />
+    //       </div>
+    //     </>
+    //   );
+    // }
     return (
       <div
         className="manager"
