@@ -7,17 +7,11 @@ import { Trans } from "react-i18next";
 import { PopupOptionProps } from "./interface";
 import ColorOption from "../colorOption";
 import RecordLocation from "../../utils/recordLocation";
-import { isMobile } from "react-device-detect";
 
 declare var window: any;
 
 class PopupOption extends React.Component<PopupOptionProps> {
   handleNote = () => {
-    if (isMobile) {
-      this.props.handleMessage("Not supported yet");
-      this.props.handleMessageBox(true);
-      return;
-    }
     this.props.handleChangeDirection(false);
     this.props.handleMenuMode("note");
     let rect = this.props.rect;

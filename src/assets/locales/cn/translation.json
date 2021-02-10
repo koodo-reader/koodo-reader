@@ -31,7 +31,10 @@
   "Sort": "排序",
   "Update to": "更新至",
   "Not supported yet": "暂不支持",
+  "Unauthorize": "取消授权",
   "New Version": "新",
+  "Unauthorize Successfully": "取消授权成功",
+
   "Update Complete": "更新成功",
   "Access token expired": "凭证过期，重新获取中",
   "Access token received, please continue": "获取凭证成功，请继续之前的操作",

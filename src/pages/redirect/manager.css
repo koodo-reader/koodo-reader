@@ -3,7 +3,7 @@
   height: 100%;
 }
 .token-dialog-token-text {
-  width: 94px;
+  width: 60%;
   height: 29px;
   background: rgba(255, 255, 255, 1);
   border: 2px solid rgba(45, 111, 200, 1);
@@ -14,9 +14,9 @@
   color: rgba(45, 111, 200, 1);
   text-align: center;
   cursor: pointer;
+  margin-left: 20%;
 }
 .auth-page-close-icon {
   font-size: 60px !important;
   float: none !important;
 }
-

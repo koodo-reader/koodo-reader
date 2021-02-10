@@ -131,9 +131,33 @@ class BackupDialog extends React.Component<
               <span
                 className={`icon-${item.icon} backup-page-list-icon`}
               ></span>
-              <div className="backup-page-list-title">
-                <Trans>{item.name}</Trans>
-              </div>
+              {OtherUtil.getReaderConfig("dropbox_token") && index === 1 ? (
+                <div
+                  className="backup-page-list-title"
+                  onClick={() => {
+                    OtherUtil.setReaderConfig("dropbox_token", "");
+                    this.showMessage("Unauthorize Successfully");
+                  }}
+                  style={{ color: "rgb(0, 120, 212)" }}
+                >
+                  <Trans>Unauthorize</Trans>
+                </div>
+              ) : OtherUtil.getReaderConfig("webdave_token") && index === 3 ? (
+                <div
+                  className="backup-page-list-title"
+                  onClick={() => {
+                    OtherUtil.setReaderConfig("dropbox_token", "");
+                    this.showMessage("Unauthorize Successfully");
+                  }}
+                  style={{ color: "rgb(0, 120, 212)" }}
+                >
+                  <Trans>Unauthorize</Trans>
+                </div>
+              ) : (
+                <div className="backup-page-list-title">
+                  <Trans>{item.name}</Trans>
+                </div>
+              )}
             </div>
           </li>
         );
