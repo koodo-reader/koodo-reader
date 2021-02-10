@@ -102,8 +102,8 @@ class UpdateInfo extends React.Component<UpdateInfoProps, UpdateInfoState> {
                 <Trans>Update Complete</Trans>
               ) : (
                 <>
-                  {version + " "}
-                  <Trans>is Available</Trans>
+                  <Trans>Update to</Trans>
+                  {" " + version}
                 </>
               )}
             </div>

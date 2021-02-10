@@ -11,13 +11,13 @@ const emptyCover = (props) => {
             props.format === "PDF"
               ? "rgba(55, 170, 81, 0.7)"
               : props.format === "TXT"
-              ? "rgba(203, 154, 52)"
+              ? "rgba(251, 191, 16)"
               : props.format === "EPUB"
               ? "rgba(33, 165, 241)"
               : props.format === "MOBI"
               ? "rgba(255, 108, 110)"
               : props.format === "AZW3"
-              ? "rgba(16, 115, 255)"
+              ? "rgba(55, 170, 81, 0.7)"
               : "rgba(255, 108, 110)",
         }}
       >

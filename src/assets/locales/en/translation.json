@@ -74,7 +74,7 @@
   "Bind": "Authorize",
   "Token": "Account",
   "Book not exsit": "Book not exsit",
-  "Token Info": "Please copy the following link and open in your browser to finish authorizing, once it's over, you'll get a bunch of codes, then fill the following box with the codes",
+  "Token Info": "Please copy the following link and open in your browser to authorize your account, fill in the following box with the codes you copy",
   "Copy Link": "Copy Link",
   "Copy Token": "Copy Token",
   "Copied": "Copied",
@@ -86,7 +86,7 @@
   "Authorize Successfully": "Authorize Successfully",
   "Authorize Failed": "Authorize Failed",
   "You can turn off this tab now": "You can turn off this tab now",
-  "Do you want to backup or restore?": "Do You Want To Backup Or Restore?",
+  "Do you want to backup or restore?": "Choose your operation",
   "Where is your data?": "Where is your data?",
   "Where to keep your data?": "Where to keep your data?",
   "I want to backup": "Backup",
@@ -228,5 +228,6 @@
   "Upload failed, check your connection": "Upload failed, check your connection",
   "That's all for the tutorial": "That's all for the tutorial",
   "Version": "Version: ",
+  "Update to": "Update to",
   "Date": "Date: "
 }
