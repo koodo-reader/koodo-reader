@@ -48,11 +48,6 @@ class SettingPanel extends React.Component<
     }
   };
   handleBold = () => {
-    console.log(
-      this.state.isBold,
-      this.props.currentEpub.rendition.themes,
-      "isbold"
-    );
     this.props.currentEpub.rendition.themes.default({
       "a, article, cite, code, div, li, p, pre, span, table": {
         "font-weight": `${this.state.isBold ? "bold !important" : ""}`,

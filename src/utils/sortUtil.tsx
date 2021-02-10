@@ -93,7 +93,6 @@ class SortUtil {
     if (bookSortCode.sort === 4) {
       let oldAuthorArr = getAuthorName(books);
       let authorArr = getAuthorName(books).sort();
-      console.log(books, oldAuthorArr, authorArr);
       if (bookSortCode.order === 1) {
         return getBookIndex(authorArr, oldAuthorArr);
       } else {

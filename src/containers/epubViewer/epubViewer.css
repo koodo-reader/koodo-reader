@@ -65,20 +65,20 @@
 }
 .left-panel {
   width: 50px;
-  height: 150px;
+  height: 200px;
   position: absolute;
   left: 0px;
-  top: calc(50% - 75px);
+  top: calc(50% - 100px);
   background-color: pink;
   z-index: 10;
   opacity: 0;
 }
 .right-panel {
   width: 50px;
-  height: 150px;
+  height: 200px;
   position: absolute;
   right: 0px;
-  top: calc(50% - 75px);
+  top: calc(50% - 100px);
   background-color: pink;
   z-index: 10;
   opacity: 0;
