@@ -4,6 +4,7 @@ import "./background.css";
 import { BackgroundProps, BackgroundState } from "./interface";
 import OtherUtil from "../../utils/otherUtil";
 import { Trans } from "react-i18next";
+import { isMobile } from "react-device-detect";
 
 class Background extends React.Component<BackgroundProps, BackgroundState> {
   isFirst: Boolean;
@@ -62,7 +63,7 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
               : "",
           }}
         >
-          {this.state.isShowHeader && this.state.currentChapter && (
+          {!isMobile && this.state.isShowHeader && this.state.currentChapter && (
             <p
               className="progress-chapter-name"
               style={
@@ -92,7 +93,7 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
               <Trans>{this.props.currentBook.name}</Trans>
             </p>
           )}
-          {this.state.isShowFooter && this.state.prevPage > 0 && (
+          {!isMobile && this.state.isShowFooter && this.state.prevPage > 0 && (
             <p
               className="background-page-left"
               style={

@@ -7,11 +7,11 @@
 
 .header-sort-container {
   position: absolute;
-  left: 445px;
+  left: 450px;
   top: 29px;
   cursor: pointer;
   transition: 0.1s;
-  width: 110px;
+  width: 100px;
   height: 27px;
   transition: all 0.1s ease;
   z-index: 10;
@@ -153,7 +153,7 @@
   font-size: 25px;
   line-height: 37px;
   position: absolute;
-  left: 555px;
+  left: 570px;
   top: 25px;
   color: rgba(75, 75, 75, 1);
   cursor: pointer;
