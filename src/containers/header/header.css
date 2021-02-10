@@ -7,15 +7,17 @@
 
 .header-sort-container {
   position: absolute;
-  left: 475px;
+  left: 445px;
   top: 29px;
   cursor: pointer;
   transition: 0.1s;
-  width: 48px;
+  width: 110px;
   height: 27px;
-  padding-left: 8px;
   transition: all 0.1s ease;
   z-index: 10;
+  text-align: center;
+  display: flex;
+  justify-content: center;
 }
 .setting-icon-container:hover {
   background-color: rgba(75, 75, 75, 0.035);
@@ -23,7 +25,6 @@
 }
 .header-sort-text {
   float: left;
-  width: 32px;
   height: 16px;
   font-size: 16px;
   line-height: 27px;
@@ -86,6 +87,7 @@
   position: fixed;
   right: 0px;
   top: 0px;
+  font-weight: 500;
 }
 .import-from-cloud:hover .animation-mask {
   transform: scaleX(1);

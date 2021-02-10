@@ -121,9 +121,6 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
       (extension === "txt" || extension === "mobi" || extension === "azw3")
     ) {
       this.props.handleLoadingDialog(false);
-      this.props.handleMessage("Only Desktop support this format");
-      this.props.handleMessageBox(true);
-      this.props.handleDownloadDesk(true);
       console.log("Error occurs");
       return new Promise<void>((resolve, reject) => {
         reject();

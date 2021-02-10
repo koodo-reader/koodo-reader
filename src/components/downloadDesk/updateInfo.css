@@ -1,16 +1,18 @@
 .download-desk-container {
-  width: 400px;
+  width: 454px;
   height: 480px;
   position: absolute;
-  left: calc(50vw - 200px);
+  left: calc(50vw - 225px);
   top: calc(50vh - 240px);
   background-color: white;
   z-index: 10;
   box-shadow: 0 0 12px rgba(75, 75, 75, 0.34);
+  animation: popup 0.1s ease-in-out 0s 1;
 }
 .download-desk-animation {
-  margin-left: 20px;
-  margin-top: 60px;
+  position: absolute;
+  left: 55px;
+  bottom: 0px;
 }
 .download-desk-title {
   font-size: 20px;
@@ -22,7 +24,7 @@
   margin-top: 20px;
 }
 .download-desk-subtile {
-  font-size: 14px;
+  font-size: 15px;
   color: rgba(75, 75, 75, 0.6);
   opacity: 1;
   font-weight: 500;
@@ -46,7 +48,7 @@
   line-height: 32px;
   text-align: center;
   color: white;
-  margin: 22px 150px;
+  margin: 22px 175px;
   position: absolute;
   cursor: pointer;
   z-index: 25;

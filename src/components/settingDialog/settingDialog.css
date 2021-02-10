@@ -100,10 +100,14 @@
 .about-this-project {
   position: absolute;
   bottom: 20px;
-  left: 100px;
-  width: 150px;
+  width: calc(100% - 40px);
   cursor: pointer;
   z-index: 10;
+  text-align: center;
+  display: flex;
+  justify-content: space-around;
+  padding: 20px;
+  padding-bottom: 10px;
 }
 .setting-subtitle {
   font-size: 15px;
