@@ -24,6 +24,11 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
     };
     this.isFirst = true;
   }
+  componentDidMount() {
+    if (isMobile) {
+      OtherUtil.setReaderConfig("readerMode", "continuous");
+    }
+  }
   componentWillReceiveProps(nextProps: BackgroundProps) {
     if (
       nextProps.currentEpub.rendition &&
@@ -63,15 +68,17 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
               : "",
           }}
         >
-          {!isMobile && this.state.isShowHeader && this.state.currentChapter && (
+          {this.state.isShowHeader && this.state.currentChapter && (
             <p
               className="progress-chapter-name"
               style={
-                this.state.isSingle
+                this.state.isSingle && !isMobile
                   ? {
                       left: `calc(50vw - 
                       270px)`,
                     }
+                  : isMobile
+                  ? { left: "auto", width: "100vw" }
                   : {}
               }
             >
@@ -82,26 +89,30 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
             <p
               className="progress-book-name"
               style={
-                this.state.isSingle
+                this.state.isSingle && !isMobile
                   ? {
                       right: `calc(50vw - 
                       270px)`,
                     }
+                  : isMobile
+                  ? { right: "auto", width: "100vw" }
                   : {}
               }
             >
               <Trans>{this.props.currentBook.name}</Trans>
             </p>
           )}
-          {!isMobile && this.state.isShowFooter && this.state.prevPage > 0 && (
+          {this.state.isShowFooter && this.state.prevPage > 0 && (
             <p
               className="background-page-left"
               style={
-                this.state.isSingle
+                this.state.isSingle && !isMobile
                   ? {
                       left: `calc(50vw - 
                       270px)`,
                     }
+                  : isMobile
+                  ? { left: "auto", width: "100vw" }
                   : {}
               }
             >
@@ -141,11 +152,13 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
           <p
             className="progress-chapter-name"
             style={
-              this.state.isSingle
+              this.state.isSingle && !isMobile
                 ? {
                     left: `calc(50vw - 
                       270px)`,
                   }
+                : isMobile
+                ? { left: "auto", width: "100vw" }
                 : {}
             }
           >
@@ -157,11 +170,13 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
           <p
             className="progress-book-name"
             style={
-              this.state.isSingle
+              this.state.isSingle && !isMobile
                 ? {
                     right: `calc(50vw - 
                       270px)`,
                   }
+                : isMobile
+                ? { right: "auto", width: "100vw" }
                 : {}
             }
           >
@@ -173,11 +188,13 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
           <p
             className="background-page-left"
             style={
-              this.state.isSingle
+              this.state.isSingle && !isMobile
                 ? {
                     left: `calc(50vw - 
                       270px)`,
                   }
+                : isMobile
+                ? { left: "auto", width: "100vw" }
                 : {}
             }
           >
