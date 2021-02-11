@@ -13,8 +13,10 @@ import Header from "./component";
 
 const mapStateToProps = (state: stateType) => {
   return {
-    books: state.manager.books,
     isSearch: state.manager.isSearch,
+    bookmarks: state.reader.bookmarks,
+    books: state.manager.books,
+    notes: state.reader.notes,
     isSortDisplay: state.manager.isSortDisplay,
   };
 };

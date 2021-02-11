@@ -46,7 +46,7 @@ class BookList extends React.Component<BookListProps, BookListState> {
     if (!this.props.books[0].cover) {
       let bookArr: any = this.props.books;
       for (let i = 0; i < bookArr.length; i++) {
-        await new Promise(async (resolve, reject) => {
+        await new Promise<void>(async (resolve, reject) => {
           let epub;
           if (bookArr[i].content) {
             epub = window.ePub(bookArr[i].content, {});

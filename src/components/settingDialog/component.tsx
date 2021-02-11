@@ -6,6 +6,7 @@ import { Trans } from "react-i18next";
 import i18n from "../../i18n";
 import { version } from "../../../package.json";
 import OtherUtil from "../../utils/otherUtil";
+import SyncUtil from "../../utils/syncUtils/common";
 const isElectron = require("is-electron");
 
 class SettingDialog extends React.Component<
@@ -76,7 +77,22 @@ class SettingDialog extends React.Component<
       : this.props.handleMessage("Turn On Successfully");
     this.props.handleMessageBox(true);
   };
-
+  handleChangeLocation = async () => {
+    const { dialog } = window.require("electron").remote;
+    var path = await dialog.showOpenDialog({
+      properties: ["openDirectory"],
+    });
+    SyncUtil.changeLocation(
+      OtherUtil.getReaderConfig("storageLocation"),
+      path.filePaths[0],
+      this.props.handleMessage,
+      this.props.handleMessageBox
+    );
+    OtherUtil.setReaderConfig("storageLocation", path.filePaths[0]);
+    document.getElementsByClassName(
+      "setting-dialog-location-title"
+    )[0].innerHTML = path.filePaths[0];
+  };
   render() {
     return (
       <div className="setting-dialog-container">
@@ -190,7 +206,25 @@ class SettingDialog extends React.Component<
               ></span>
             </span>
           </div>
+          {isElectron() && (
+            <>
+              <div className="setting-dialog-new-title">
+                <Trans>Change storage location</Trans>
 
+                <span
+                  className="change-location-button"
+                  onClick={() => {
+                    this.handleChangeLocation();
+                  }}
+                >
+                  <Trans>Change location</Trans>
+                </span>
+              </div>
+              <div className="setting-dialog-location-title">
+                {OtherUtil.getReaderConfig("storageLocation")}
+              </div>
+            </>
+          )}
           <div className="setting-dialog-new-title">
             <Trans>语言 / Language</Trans>
             <select
