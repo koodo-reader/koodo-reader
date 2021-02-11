@@ -218,7 +218,7 @@
   "Export Successfully": "導出成功",
   "Too many images": "圖書包含過多圖片會嚴重影響解析速度",
   "Margin": "頁邊距",
-  "Open link in browser": "使用瀏覽器打開",
+  "Open link in browser": "前往下载",
   "Server Address": "服務器地址",
   "Username": "用戶名",
   "Password": "密碼",
@@ -242,6 +242,10 @@
   "Not supported yet": "暂不支持",
   "Unauthorize": "取消授权",
   "Unauthorize Successfully": "取消授权成功",
+  "Change storage location": "更改存储位置",
+  "Change location": "更改",
+  "Change Successfully": "更改成功",
+  "Change Failed": "更改失败",
 
   "Bold Font": "字体加粗"
 }

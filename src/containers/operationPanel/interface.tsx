@@ -1,4 +1,5 @@
 import BookModel from "../../model/Book";
+import NoteModel from "../../model/Note";
 import BookmarkModel from "../../model/Bookmark";
 import { RouteComponentProps } from "react-router";
 
@@ -6,6 +7,8 @@ export interface OperationPanelProps extends RouteComponentProps<any> {
   currentEpub: any;
   currentBook: BookModel;
   bookmarks: BookmarkModel[];
+  notes: NoteModel[];
+  books: BookModel[];
   flattenChapters: any;
   locations: any;
   rendition: any;

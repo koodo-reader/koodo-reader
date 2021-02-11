@@ -171,7 +171,7 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
                 {...{
                   format: this.props.book.format,
                   title: this.props.book.name,
-                  scale: 1,
+                  scale: 1.15,
                 }}
               />
             </div>

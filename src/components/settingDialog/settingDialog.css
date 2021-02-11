@@ -29,6 +29,8 @@
   margin-top: 10px;
   margin-left: 30px;
   width: 280px;
+  display: flex;
+  justify-content: space-between;
 }
 .setting-dialog-list {
   font-size: 16px;
@@ -126,8 +128,6 @@
   color: rgba(75, 75, 75, 1);
   text-align: center;
   cursor: pointer;
-  position: relative;
-  left: 50px;
 }
 .lang-setting-option {
   font-size: 16px;
@@ -135,4 +135,37 @@
   line-height: 27px;
   color: rgba(75, 75, 75, 1);
   text-align: center;
+}
+.setting-dialog-location-title {
+  font-size: 12px;
+  color: rgba(75, 75, 75, 1);
+  font-weight: 500;
+  border: solid 1px black;
+  border-radius: 3px;
+  padding: 5px;
+  width: 75%;
+  margin-left: 10.5%;
+  text-overflow: ellipsis;
+  word-break: break-all;
+  margin-top: 6px;
+  margin-bottom: 10px;
+  background-color: rgba(75, 75, 75, 0.05);
+  user-select: text;
+}
+.change-location-button {
+  display: inline-block;
+  width: 60px;
+  height: 22px;
+  opacity: 1;
+  border-radius: 11px;
+  position: relative;
+  top: 4px;
+  left: 2px;
+  cursor: pointer;
+  font-size: 12px;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(75, 75, 75, 1);
 }

@@ -34,15 +34,15 @@
   width: 346px;
 }
 .new-version-open {
-  margin-left: 100px;
-  margin-top: -10px;
-  width: 128px;
+  margin-left: 115px;
+  margin-top: -5px;
+  width: 98px;
   padding: 0px 10px;
-  height: 42px;
+  height: 32px;
   background: rgba(75, 75, 75, 1);
   opacity: 1;
   border-radius: 25px;
-  line-height: 42px;
+  line-height: 32px;
   text-align: center;
   color: white;
   cursor: pointer;

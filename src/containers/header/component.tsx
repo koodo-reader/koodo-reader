@@ -7,6 +7,8 @@ import { Trans } from "react-i18next";
 import { HeaderProps, HeaderState } from "./interface";
 import OtherUtil from "../../utils/otherUtil";
 import UpdateInfo from "../../components/updateInfo";
+import SyncUtil from "../../utils/syncUtils/common";
+
 const isElectron = require("is-electron");
 
 class Header extends React.Component<HeaderProps, HeaderState> {
@@ -18,7 +20,14 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       isNewVersion: false,
     };
   }
-
+  componentDidMount() {
+    SyncUtil.moveData(
+      this.props.books,
+      this.props.notes,
+      this.props.bookmarks,
+      true
+    );
+  }
   handleSortBooks = () => {
     if (this.props.isSortDisplay) {
       this.props.handleSortDisplay(false);

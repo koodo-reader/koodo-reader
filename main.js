@@ -1,4 +1,11 @@
-const { app, BrowserWindow, ipcMain, screen, dialog } = require("electron");
+const {
+  remote,
+  app,
+  BrowserWindow,
+  ipcMain,
+  screen,
+  dialog,
+} = require("electron");
 const isDev = require("electron-is-dev");
 const path = require("path");
 const detect = require("detect-port");
@@ -6,6 +13,8 @@ let mainWin;
 let splash;
 app.disableHardwareAcceleration();
 const port = 3366;
+const configDir = (app || remote.app).getPath("userData");
+const dirPath = path.join(configDir, "uploads\\");
 
 app.on("ready", () => {
   const { width, height } = screen.getPrimaryDisplay().workAreaSize;
@@ -20,6 +29,7 @@ app.on("ready", () => {
           webSecurity: false,
           nodeIntegration: true,
           nativeWindowOpen: true,
+          enableRemoteModule: true,
           nodeIntegrationInSubFrames: true,
           allowRunningInsecureContent: true,
         },
@@ -82,7 +92,7 @@ app.on("ready", () => {
       });
       ipcMain.on("start-server", (event, arg) => {
         startExpress();
-        event.returnValue = "pong";
+        event.returnValue = dirPath + "data";
       });
       ipcMain.on("get-file-data", function (event) {
         var data = null;
@@ -110,17 +120,13 @@ const startExpress = () => {
   const cors = require("cors");
   const bodyParser = require("body-parser");
   const fileUpload = require("express-fileupload");
-  const path = require("path");
   const fs = require("fs");
   const chardet = require("chardet");
   const { readFileSync } = require("fs");
   const iconv = require("iconv-lite");
-  const electron = require("electron");
   const nodepub = require("nodepub");
   const request = require("request");
   const { createClient } = require("webdav");
-  const configDir = (electron.app || electron.remote.app).getPath("userData");
-  var dirPath = path.join(configDir, "uploads\\");
 
   if (!fs.existsSync(dirPath)) {
     fs.mkdirSync(dirPath);
@@ -364,6 +370,42 @@ const startExpress = () => {
         }
       });
     });
+  });
+  server.post("/move_data", async (req, res) => {
+    const { file } = req.files;
+    const { path, isMove } = req.body;
+    file.mv(dirPath + `/${file.name}`, async () => {
+      var AdmZip = require("adm-zip");
+
+      // reading archives
+      var zip = new AdmZip(dirPath + `/${file.name}`);
+      zip.extractAllTo(
+        /*target path*/ isMove === "no" ? path : dirPath + "/data",
+        /*overwrite*/ true
+      );
+      try {
+        fs.unlink(dirPath + `moveData.zip`, (err) => {
+          if (err) throw err;
+          console.log("successfully data deleted");
+        });
+      } catch (e) {
+        console.log(e);
+      }
+      res.send("success");
+    });
+  });
+  server.post("/change_location", async (req, res) => {
+    const { oldPath, newPath } = req.body;
+    var fs = require("fs-extra");
+    fs.copy(oldPath, newPath, function (err) {
+      if (err) return console.error(err);
+      fs.remove(oldPath, (err) => {
+        if (err) return console.error(err);
+        console.log("success!");
+      });
+      res.send("success");
+    });
+    // fs.move(oldPath, newPath, console.error);
   });
   async function start() {
     try {
