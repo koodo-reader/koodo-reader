@@ -1,7 +1,7 @@
 import localforage from "localforage";
 import NoteModel from "../../model/Note";
 import BookmarkModel from "../../model/Bookmark";
-import AddTrash from "../../utils/addTrash";
+import AddTrash from "../../utils/readUtils/addTrash";
 export function handleNotes(notes: NoteModel[]) {
   return { type: "HANDLE_NOTES", payload: notes };
 }
@@ -66,6 +66,7 @@ export function flatChapter(chapters: any) {
   }
   return newChapter;
 }
+
 export function handleFetchChapters(epub: any) {
   return (dispatch: (arg0: { type: string; payload: any }) => void) => {
     epub.loaded.navigation

@@ -11,6 +11,7 @@ export interface HeaderProps {
   handleSetting: (isSettingOpen: boolean) => void;
   handleMessageBox: (isShow: boolean) => void;
   handleMessage: (message: string) => void;
+  handleFetchBooks: () => void;
   handleBackupDialog: (isBackup: boolean) => void;
   handleDrag: (isDrag: boolean) => void;
 }

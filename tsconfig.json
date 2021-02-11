@@ -18,5 +18,6 @@
     "noImplicitAny": false
   },
   "include": ["src"],
+  "exclude": ["utils"],
   "paths": { "*": ["./node_modules/@types", "./types"] }
 }

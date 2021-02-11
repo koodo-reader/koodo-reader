@@ -8,6 +8,10 @@ function ab2str(buf) {
 var domParser = new DOMParser();
 
 class Buffer {
+  capacity: any;
+  fragment_list: any;
+  imageArray: any;
+  cur_fragment: Fragment;
   constructor(capacity) {
     this.capacity = capacity;
     this.fragment_list = [];
@@ -75,6 +79,9 @@ var copagesne_uint8array = function (buffers) {
 };
 
 class Fragment {
+  buffer: Uint8Array;
+  capacity: any;
+  size: number;
   constructor(capacity) {
     this.buffer = new Uint8Array(capacity);
     this.capacity = capacity;
@@ -135,6 +142,13 @@ var uncompression_lz77 = function (data) {
 };
 
 class MobiFile {
+  view: DataView;
+  buffer: ArrayBuffer;
+  offset: number;
+  header: any;
+  palm_header: any;
+  mobi_header: any;
+  reclist: any;
   constructor(data) {
     this.view = new DataView(data);
     this.buffer = this.view.buffer;
@@ -222,7 +236,7 @@ class MobiFile {
   // 读出文本内容
   read_text() {
     var text_end = this.palm_header.record_count;
-    var buffers = [];
+    var buffers: any = [];
     for (var i = 1; i <= text_end; i++) {
       buffers.push(this.read_text_record(i));
     }
@@ -262,7 +276,7 @@ class MobiFile {
   }
 
   load_pdbheader() {
-    var header = {};
+    var header: any = {};
     header.name = this.getStr(32);
     header.attr = this.getUint16();
     header.version = this.getUint16();
@@ -281,9 +295,9 @@ class MobiFile {
   }
 
   load_reclist() {
-    var reclist = [];
+    var reclist: any = [];
     for (var i = 0; i < this.header.record_num; i++) {
-      var record = {};
+      var record: any = {};
       record.offset = this.getUint32();
       // TODO(zz) change
       record.attr = this.getUint32();
@@ -297,7 +311,7 @@ class MobiFile {
   }
 
   load_record0_header() {
-    var p_header = {};
+    var p_header: any = {};
     var first_record = this.reclist[0];
     this.setoffset(first_record.offset);
 
@@ -313,7 +327,7 @@ class MobiFile {
   }
 
   load_mobi_header() {
-    var mobi_header = {};
+    var mobi_header: any = {};
 
     var start_offset = this.offset;
 
@@ -378,9 +392,9 @@ class MobiFile {
       var content = this.read_text();
       var bookDoc = domParser.parseFromString(content, "text/html")
         .documentElement;
-      const lines = Array.from(bookDoc.querySelectorAll("p,b,font,h3"));
+      const lines: any = Array.from(bookDoc.querySelectorAll("p,b,font,h3"));
 
-      let parseContent = [];
+      let parseContent: any = [];
       for (let i = 0, len = lines.length; i < len - 1; i++) {
         parseContent.push(
           lines[i].tagName === "FONT" ||
@@ -422,8 +436,8 @@ class MobiFile {
       var blob = this.read_image(idx - 1);
       var imgReader = new FileReader();
       imgReader.onload = (e) => {
-        imgDom.src = e.target.result;
-        resolve(e.target.result);
+        imgDom.src = e.target?.result;
+        resolve(e.target?.result);
       };
       imgReader.onerror = function (err) {
         reject(err);

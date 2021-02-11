@@ -202,6 +202,7 @@
   "Change location": "更改",
   "Change Successfully": "更改成功",
   "Change Failed": "更改失败",
+  "You successfully update to": "您已成功更新到",
   "Do you want to open this link in browser": "是否使用浏览器打开此链接",
   "Click the top-right button to add books": "请点击右上角的从本地导入按钮添加图书",
   "Webdav Info": "Webdav是一种简单高效的数据备份方式，这里推荐使用坚果云提供的Webdav服务",
