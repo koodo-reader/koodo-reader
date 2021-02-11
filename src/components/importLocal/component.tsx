@@ -15,6 +15,7 @@ import iconv from "iconv-lite";
 import isElectron from "is-electron";
 import { withRouter } from "react-router-dom";
 import RecentBooks from "../../utils/recordRecent";
+import OtherUtil from "../../utils/otherUtil";
 
 declare var window: any;
 var pdfjsLib = window["pdfjs-dist/build/pdf"];
@@ -29,7 +30,9 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
   componentDidMount() {
     if (isElectron()) {
       const { ipcRenderer } = window.require("electron");
-      ipcRenderer.sendSync("start-server", "ping");
+      let result = ipcRenderer.sendSync("start-server", "ping");
+      if (!OtherUtil.getReaderConfig("storageLocation"))
+        OtherUtil.setReaderConfig("storageLocation", result);
       var filePath = ipcRenderer.sendSync("get-file-data");
       if (filePath === null || filePath === ".") {
         console.log("There is no file");

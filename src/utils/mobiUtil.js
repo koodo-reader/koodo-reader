@@ -398,7 +398,7 @@ class MobiFile {
       }
       const handleImage = async () => {
         var imgDoms = bookDoc.getElementsByTagName("img");
-        if (imgDoms.length > 300) {
+        if (imgDoms.length > 500) {
           handleMessage("Too many images");
           handleMessageBox(true);
           resolve(parseContent.join("\n    \n"));

@@ -23,6 +23,8 @@ const mapStateToProps = (state: stateType) => {
     currentEpub: state.book.currentEpub,
     currentBook: state.book.currentBook,
     bookmarks: state.reader.bookmarks,
+    notes: state.reader.notes,
+    books: state.manager.books,
     locations: state.progressPanel.locations,
     flattenChapters: state.reader.flattenChapters,
   };

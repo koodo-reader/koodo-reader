@@ -142,11 +142,11 @@ class BackupDialog extends React.Component<
                 >
                   <Trans>Unauthorize</Trans>
                 </div>
-              ) : OtherUtil.getReaderConfig("webdave_token") && index === 3 ? (
+              ) : OtherUtil.getReaderConfig("webdav_token") && index === 3 ? (
                 <div
                   className="backup-page-list-title"
                   onClick={() => {
-                    OtherUtil.setReaderConfig("dropbox_token", "");
+                    OtherUtil.setReaderConfig("webdav_token", "");
                     this.showMessage("Unauthorize Successfully");
                   }}
                   style={{ color: "rgb(0, 120, 212)" }}
