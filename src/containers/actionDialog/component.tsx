@@ -3,7 +3,7 @@ import React from "react";
 import "./actionDialog.css";
 import { Trans } from "react-i18next";
 import { ActionDialogProps } from "./interface";
-import AddTrash from "../../utils/addTrash";
+import AddTrash from "../../utils/readUtils/addTrash";
 import FileSaver from "file-saver";
 import localforage from "localforage";
 import Parser from "html-react-parser";

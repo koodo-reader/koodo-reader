@@ -9,7 +9,7 @@ import ProgressPanel from "../progressPanel";
 import { ReaderProps, ReaderState } from "./interface";
 import { MouseEvent } from "../../utils/mouseEvent";
 import OtherUtil from "../../utils/otherUtil";
-import ReadingTime from "../../utils/readingTime";
+import ReadingTime from "../../utils/readUtils/readingTime";
 import { isMobile } from "react-device-detect";
 
 class Reader extends React.Component<ReaderProps, ReaderState> {

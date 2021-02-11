@@ -11,7 +11,7 @@ import "./manager.css";
 import { ManagerProps, ManagerState } from "./interface";
 import { Trans } from "react-i18next";
 import OtherUtil from "../../utils/otherUtil";
-import AddFavorite from "../../utils/addFavorite";
+import AddFavorite from "../../utils/readUtils/addFavorite";
 import SettingDialog from "../../components/settingDialog";
 import { isMobileOnly } from "react-device-detect";
 import { Route, Switch, Redirect } from "react-router-dom";

@@ -6,7 +6,7 @@ import Note from "../../model/Note";
 import { Trans } from "react-i18next";
 import { PopupOptionProps } from "./interface";
 import ColorOption from "../colorOption";
-import RecordLocation from "../../utils/recordLocation";
+import RecordLocation from "../../utils/readUtils/recordLocation";
 
 declare var window: any;
 

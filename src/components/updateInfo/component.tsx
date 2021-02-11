@@ -115,10 +115,19 @@ class UpdateInfo extends React.Component<UpdateInfoProps, UpdateInfoState> {
             >
               <span className="icon-close setting-close"></span>
             </div>
+            <div className="update-info-text">
+              <Trans>You successfully update to</Trans>
+              {" " + version}
+            </div>
             <div className="update-dialog-info" style={{ height: 420 }}>
               <div className="new-version-animation">
                 {this.state.isUpdated ? (
-                  <Lottie options={successOptions} height={80} width={80} />
+                  <Lottie
+                    options={successOptions}
+                    height={80}
+                    width={80}
+                    style={{ marginTop: "10px", marginBottom: "10px" }}
+                  />
                 ) : (
                   <Lottie options={newOptions} height={220} width={220} />
                 )}
