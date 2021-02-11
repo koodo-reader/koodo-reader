@@ -11,6 +11,7 @@ import ReadingTime from "../../utils/readingTime";
 import { withRouter } from "react-router-dom";
 import { setInterval } from "timers";
 import { isMobile } from "react-device-detect";
+import SyncUtil from "../../utils/syncUtils/common";
 
 declare var document: any;
 
@@ -168,7 +169,15 @@ class OperationPanel extends React.Component<
     this.props.handleSearch(false);
     this.props.handleOpenMenu(false);
     ReadingTime.setTime(this.props.currentBook.key, this.props.time);
-    window.close();
+    SyncUtil.moveData(
+      this.props.books,
+      this.props.notes,
+      this.props.bookmarks,
+      false
+    );
+    setTimeout(() => {
+      window.close();
+    }, 200);
     // this.props.history.push("/manager/home");
   }
 
