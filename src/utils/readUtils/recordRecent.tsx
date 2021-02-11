@@ -1,5 +1,5 @@
 // 记录书本打开记录
-import BookModel from "../model/Book";
+import BookModel from "../../model/Book";
 class RecordRecent {
   static setRecent(bookKey: string) {
     let bookArr =

@@ -4,10 +4,10 @@ import "./booklist.css";
 import BookCardItem from "../../components/bookCardtem";
 import BookListItem from "../../components/bookListItem";
 import BookCoverItem from "../../components/bookCoverItem";
-import AddFavorite from "../../utils/addFavorite";
-import RecordRecent from "../../utils/recordRecent";
-import ShelfUtil from "../../utils/shelfUtil";
-import SortUtil from "../../utils/sortUtil";
+import AddFavorite from "../../utils/readUtils/addFavorite";
+import RecordRecent from "../../utils/readUtils/recordRecent";
+import ShelfUtil from "../../utils/readUtils/shelfUtil";
+import SortUtil from "../../utils/readUtils/sortUtil";
 import BookModel from "../../model/Book";
 import { Trans, NamespacesConsumer } from "react-i18next";
 import { BookListProps, BookListState } from "./interface";
@@ -17,8 +17,8 @@ import DeletePopup from "../../components/deletePopup";
 import Empty from "../emptyPage";
 import { Redirect, withRouter } from "react-router-dom";
 import ViewMode from "../../components/viewMode";
-
-declare var window: any;
+import BackUtil from "../../utils/syncUtils/backupUtil";
+import isElectron from "is-electron";
 
 class BookList extends React.Component<BookListProps, BookListState> {
   constructor(props: BookListProps) {
@@ -40,45 +40,7 @@ class BookList extends React.Component<BookListProps, BookListState> {
     if (!this.props.books || !this.props.books[0]) {
       return <Redirect to="manager/empty" />;
     }
-    this.handleOldVersion();
   }
-  handleOldVersion = async () => {
-    if (!this.props.books[0].cover) {
-      let bookArr: any = this.props.books;
-      for (let i = 0; i < bookArr.length; i++) {
-        await new Promise<void>(async (resolve, reject) => {
-          let epub;
-          if (bookArr[i].content) {
-            epub = window.ePub(bookArr[i].content, {});
-            localforage.setItem(bookArr[i].key, bookArr[i].content).then(() => {
-              delete bookArr[i].content;
-            });
-          } else {
-            let data = await new Promise((resolve, reject) => {
-              localforage.getItem(bookArr[i].key).then((result) => {
-                resolve(result);
-              });
-            });
-            epub = window.ePub(data, {});
-          }
-
-          let url = await epub.coverUrl();
-          var reader = new FileReader();
-          let blob = await fetch(url).then((r) => r.blob());
-          reader.readAsDataURL(blob);
-          reader.onloadend = () => {
-            let cover = reader.result;
-            bookArr[i].cover = cover;
-            resolve();
-          };
-        });
-      }
-
-      localforage.setItem("books", bookArr).then(() => {
-        window.location.reload();
-      });
-    }
-  };
 
   handleKeyFilter = (items: any[], arr: string[]) => {
     let itemArr: any[] = [];
@@ -232,6 +194,20 @@ class BookList extends React.Component<BookListProps, BookListState> {
       !this.props.books[0]
     ) {
       return <Redirect to="/manager/empty" />;
+    }
+    if (isElectron()) {
+      localforage.getItem(this.props.books[0].key).then((result) => {
+        if (result) {
+          BackUtil.backup(
+            this.props.books,
+            this.props.notes,
+            this.props.bookmarks,
+            () => {},
+            4,
+            () => {}
+          );
+        }
+      });
     }
     const deletePopupProps = {
       mode: "shelf",

@@ -1,4 +1,4 @@
-import RestoreUtil from "../restoreUtil";
+import RestoreUtil from "./restoreUtil";
 import OtherUtil from "../otherUtil";
 import axios from "axios";
 import { config } from "../../constants/driveList";

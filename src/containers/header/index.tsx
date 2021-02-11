@@ -6,6 +6,7 @@ import {
   handleMessageBox,
   handleMessage,
   handleSetting,
+  handleFetchBooks,
 } from "../../store/actions/manager";
 import { handleBackupDialog } from "../../store/actions/backupPage";
 import { stateType } from "../../store";
@@ -26,6 +27,7 @@ const actionCreator = {
   handleMessage,
   handleBackupDialog,
   handleSetting,
+  handleFetchBooks,
 };
 export default connect(
   mapStateToProps,
