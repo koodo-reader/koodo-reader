@@ -1,4 +1,4 @@
-import RestoreUtil from "../restoreUtil";
+import RestoreUtil from "./restoreUtil";
 import OtherUtil from "../otherUtil";
 
 var Dropbox = (window as any).Dropbox;

@@ -122,3 +122,9 @@
   text-align: center;
   color: rgba(75, 75, 75, 1);
 }
+.update-info-text {
+  text-align: center;
+  font-size: 16px;
+  color: rgba(75, 75, 75, 0.7);
+  margin-top: 15px;
+}

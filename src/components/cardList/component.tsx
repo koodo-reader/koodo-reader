@@ -5,9 +5,9 @@ import NoteModel from "../../model/Note";
 import { Trans } from "react-i18next";
 import { CardListProps, CardListStates } from "./interface";
 import DeleteIcon from "../../components/deleteIcon";
-import RecordLocation from "../../utils/recordLocation";
+import RecordLocation from "../../utils/readUtils/recordLocation";
 import { withRouter } from "react-router-dom";
-import SortUtil from "../../utils/sortUtil";
+import SortUtil from "../../utils/readUtils/sortUtil";
 import { Redirect } from "react-router-dom";
 
 declare var window: any;

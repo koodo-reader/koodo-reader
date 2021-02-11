@@ -1,12 +1,44 @@
 import FileSaver from "file-saver";
-import BookModel from "../model/Book";
-import NoteModel from "../model/Note";
-import BookmarkModel from "../model/Bookmark";
-import DropboxUtil from "./syncUtils/dropbox";
-import WebdavUtil from "./syncUtils/webdav";
+import BookModel from "../../model/Book";
+import NoteModel from "../../model/Note";
+import BookmarkModel from "../../model/Bookmark";
+import DropboxUtil from "./dropbox";
+import WebdavUtil from "./webdav";
 import localforage from "localforage";
+import OtherUtil from "../otherUtil";
+import axios from "axios";
+import { config } from "../../constants/driveList";
+import BookUtil from "../bookUtil";
 
 let JSZip = (window as any).JSZip;
+
+const moveData = (blob, driveIndex, books: BookModel[] = []) => {
+  let file = new File([blob], "moveData.zip", {
+    lastModified: new Date().getTime(),
+    type: blob.type,
+  });
+  let formData = new FormData();
+  formData.append("file", file);
+  formData.append("path", OtherUtil.getReaderConfig("storageLocation"));
+  axios
+    .post(`${config.token_url}/move_data`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+      responseType: "blob",
+    })
+    .then(async (response: any) => {
+      if (driveIndex === 4) {
+        let deleteBooks = books.map((item) => {
+          return localforage.removeItem(item.key);
+        });
+        await Promise.all(deleteBooks);
+      }
+    })
+    .catch(function (error: any) {
+      console.error(error, "移动失败");
+    });
+};
 class BackupUtil {
   static backup = async (
     bookArr: BookModel[],
@@ -18,24 +50,21 @@ class BackupUtil {
   ) => {
     let zip = new JSZip();
     let books = bookArr;
-    let bookZip = zip.folder("book");
-    let data: any = [];
-    books &&
-      books.forEach((item) => {
-        data.push(localforage.getItem(item.key));
-        // let result = localforage.getItem(item.key);
-        // console.log(result);
-        // results.forEach((item) => {
-        //   epubZip.file(`${item.name}.epub`, item.content);
-        // });
-        // epubZip.file(`${item.name}.epub`, result);
-      });
-    let results = await Promise.all(data);
-    for (let i = 0; i < books.length; i++) {
-      if (books[i].description === "pdf") {
-        bookZip.file(`${books[i].name}.pdf`, results[i]);
-      } else {
-        bookZip.file(`${books[i].name}.epub`, results[i]);
+    //0表示备份到本地，1表示备份到dropbox,2表示备份到onedrive,3表示备份到dropbox, 4表示转移数据，5表示同步数据
+    if (driveIndex !== 5) {
+      let bookZip = zip.folder("book");
+      let data: any = [];
+      books &&
+        books.forEach((item) => {
+          data.push(
+            driveIndex === 4
+              ? localforage.getItem(item.key)
+              : BookUtil.fetchBook(item.key)
+          );
+        });
+      let results = await Promise.all(data);
+      for (let i = 0; i < books.length; i++) {
+        bookZip.file(`${books[i].key}`, results[i]);
       }
     }
     let configZip = zip.folder("config");
@@ -71,7 +100,7 @@ class BackupUtil {
 
     zip
       .generateAsync({ type: "blob" })
-      .then(function (blob: any) {
+      .then((blob: any) => {
         switch (driveIndex) {
           case 0:
             handleFinish();
@@ -96,6 +125,13 @@ class BackupUtil {
               handleFinish,
               showMessage
             );
+            break;
+          case 4:
+            moveData(blob, 4, books);
+
+            break;
+          case 5:
+            moveData(blob, 5);
             break;
           default:
             break;

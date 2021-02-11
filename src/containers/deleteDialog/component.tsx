@@ -1,15 +1,16 @@
 import React from "react";
 import "./deleteDialog.css";
-import DeleteUtil from "../../utils/deleteUtil";
+import DeleteUtil from "../../utils/readUtils/deleteUtil";
 import localforage from "localforage";
-import ShelfUtil from "../../utils/shelfUtil";
-import RecordRecent from "../../utils/recordRecent";
-import RecordLocation from "../../utils/recordLocation";
-import AddFavorite from "../../utils/addFavorite";
+import ShelfUtil from "../../utils/readUtils/shelfUtil";
+import RecordRecent from "../../utils/readUtils/recordRecent";
+import RecordLocation from "../../utils/readUtils/recordLocation";
+import AddFavorite from "../../utils/readUtils/addFavorite";
 import { Trans } from "react-i18next";
 import { DeleteDialogProps } from "./interface";
 import { withRouter } from "react-router-dom";
-import AddTrash from "../../utils/addTrash";
+import AddTrash from "../../utils/readUtils/addTrash";
+import BookUtil from "../../utils/bookUtil";
 
 class DeleteDialog extends React.Component<DeleteDialogProps> {
   handleCancel = () => {
@@ -60,26 +61,25 @@ class DeleteDialog extends React.Component<DeleteDialogProps> {
     this.props.handleMessageBox(true);
   };
   deleteBook = (key: string) => {
-    return new Promise((resolve, reject) => {
+    return new Promise<void>((resolve, reject) => {
       this.props.books &&
         localforage
           .setItem("books", DeleteUtil.deleteBook(this.props.books, key))
-          .then(() => {
-            localforage.removeItem(key).then(() => {
-              //从喜爱的图书中删除
-              AddFavorite.clear(key);
-              //从回收的图书中删除
-              AddTrash.clear(key);
-              //从书架删除
-              ShelfUtil.deletefromAllShelf(key);
-              //从阅读记录删除
-              RecordRecent.clear(key);
-              //删除阅读历史
-              RecordLocation.clear(key);
-              //删除书签，笔记，书摘，高亮
-              this.handleDeleteOther(key);
-              resolve();
-            });
+          .then(async () => {
+            await BookUtil.deleteBook(key);
+            //从喜爱的图书中删除
+            AddFavorite.clear(key);
+            //从回收的图书中删除
+            AddTrash.clear(key);
+            //从书架删除
+            ShelfUtil.deletefromAllShelf(key);
+            //从阅读记录删除
+            RecordRecent.clear(key);
+            //删除阅读历史
+            RecordLocation.clear(key);
+            //删除书签，笔记，书摘，高亮
+            this.handleDeleteOther(key);
+            resolve();
           })
           .catch(() => {
             reject();

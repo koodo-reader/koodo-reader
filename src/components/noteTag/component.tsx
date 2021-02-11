@@ -2,7 +2,7 @@
 import React from "react";
 import "./noteTag.css";
 import { NoteTagProps, NoteTagState } from "./interface";
-import TagUtil from "../../utils/tagUtil";
+import TagUtil from "../../utils/readUtils/tagUtil";
 import DeleteIcon from "../deleteIcon";
 import { Trans } from "react-i18next";
 

@@ -1,5 +1,5 @@
-import BookModel from "../model/Book";
-import NoteModel from "../model/Note";
+import BookModel from "../../model/Book";
+import NoteModel from "../../model/Note";
 import ReadingTime from "./readingTime";
 import RecordLocation from "./recordLocation";
 import _ from "underscore";

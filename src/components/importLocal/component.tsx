@@ -7,15 +7,16 @@ import SparkMD5 from "spark-md5";
 import { Trans } from "react-i18next";
 import Dropzone from "react-dropzone";
 import { ImportLocalProps, ImportLocalState } from "./interface";
-import RecordRecent from "../../utils/recordRecent";
+import RecordRecent from "../../utils/readUtils/recordRecent";
 import axios from "axios";
 import { config } from "../../constants/driveList";
 import MobiFile from "../../utils/mobiUtil";
 import iconv from "iconv-lite";
 import isElectron from "is-electron";
 import { withRouter } from "react-router-dom";
-import RecentBooks from "../../utils/recordRecent";
+import RecentBooks from "../../utils/readUtils/recordRecent";
 import OtherUtil from "../../utils/otherUtil";
+import BookUtil from "../../utils/bookUtil";
 
 declare var window: any;
 var pdfjsLib = window["pdfjs-dist/build/pdf"];
@@ -78,9 +79,8 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
 
   handleJump = (book: BookModel) => {
     RecentBooks.setRecent(book.key);
-    book.description === "pdf"
-      ? window.open(`./lib/pdf/viewer.html?file=${book.key}`)
-      : window.open(`${window.location.href.split("#")[0]}#/epub/${book.key}`);
+    BookUtil.RedirectBook(book);
+
   };
   handleAddBook = (book: BookModel) => {
     return new Promise<void>((resolve, reject) => {
@@ -125,6 +125,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
     ) {
       this.props.handleLoadingDialog(false);
       console.log("Error occurs");
+      this.props.handleDownloadDesk(true);
       return new Promise<void>((resolve, reject) => {
         reject();
       });
@@ -258,7 +259,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                         publisher
                       );
                       await this.handleAddBook(book);
-                      localforage.setItem(key, e.target!.result);
+                      BookUtil.addBook(key, e.target!.result as ArrayBuffer);
                       resolve();
                     });
                   });
@@ -278,7 +279,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
             reader.onload = async (event) => {
               const file_content = (event.target as any).result;
               let mobiFile = new MobiFile(file_content);
-              let content = await mobiFile.render(
+              let content: any = await mobiFile.render(
                 this.props.handleMessage,
                 this.props.handleMessageBox
               );
@@ -302,6 +303,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                 responseType: "blob",
               })
               .then((res) => {
+                console.log(res, "res");
                 let type = "application/octet-stream";
                 let blobTemp: any = new Blob([res.data], { type: type });
                 let fileTemp = new File([blobTemp], bookName + ".epub", {
@@ -372,7 +374,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                           publisher
                         );
                         await this.handleAddBook(book);
-                        localforage.setItem(key, e.target!.result);
+                        BookUtil.addBook(key, e.target!.result as ArrayBuffer);
                         resolve();
                       };
                     } else {
@@ -408,7 +410,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                         publisher
                       );
                       await this.handleAddBook(book);
-                      localforage.setItem(key, e.target!.result);
+                      BookUtil.addBook(key, e.target!.result as ArrayBuffer);
                       resolve();
                     }
                   })

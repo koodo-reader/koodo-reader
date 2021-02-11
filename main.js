@@ -127,7 +127,7 @@ const startExpress = () => {
   const nodepub = require("nodepub");
   const request = require("request");
   const { createClient } = require("webdav");
-
+  var AdmZip = require("adm-zip");
   if (!fs.existsSync(dirPath)) {
     fs.mkdirSync(dirPath);
     console.log("文件夹创建成功");
@@ -304,7 +304,9 @@ const startExpress = () => {
       epub.writeEPUB(
         function (e) {
           console.log("Error:", e);
-          res.send("失败了");
+          res.status(400).send({
+            message: "This is an error!",
+          });
         },
         dirPath,
         bookName,
@@ -342,7 +344,10 @@ const startExpress = () => {
 
       let stream = client.createWriteStream("/KoodoReader/data.zip", {}, () => {
         fs.unlink(dirPath + `/${file.name}`, (err) => {
-          if (err) throw err;
+          if (err)
+            res.status(400).send({
+              message: "This is an error!",
+            });
           console.log("successfully data deleted");
         });
         res.send("success");
@@ -357,7 +362,9 @@ const startExpress = () => {
       password,
     });
     if ((await client.exists("/KoodoReader/data.zip")) === false) {
-      res.send("error");
+      res.status(400).send({
+        message: "This is an error!",
+      });
     }
     let stream = fs.createWriteStream(dirPath + `/data.zip`);
     client.createReadStream("/KoodoReader/data.zip").pipe(stream);
@@ -373,44 +380,63 @@ const startExpress = () => {
   });
   server.post("/move_data", async (req, res) => {
     const { file } = req.files;
-    const { path, isMove } = req.body;
+    const { path } = req.body;
     file.mv(dirPath + `/${file.name}`, async () => {
-      var AdmZip = require("adm-zip");
-
-      // reading archives
       var zip = new AdmZip(dirPath + `/${file.name}`);
-      zip.extractAllTo(
-        /*target path*/ isMove === "no" ? path : dirPath + "/data",
-        /*overwrite*/ true
-      );
+      zip.extractAllTo(/*target path*/ path, /*overwrite*/ true);
       try {
-        fs.unlink(dirPath + `moveData.zip`, (err) => {
-          if (err) throw err;
+        fs.unlink(dirPath + `/${file.name}`, (err) => {
+          if (err) console.log(err);
           console.log("successfully data deleted");
+          res.send("success");
         });
       } catch (e) {
-        console.log(e);
+        res.status(400).send({
+          message: "This is an error!",
+        });
       }
-      res.send("success");
     });
   });
   server.post("/change_location", async (req, res) => {
     const { oldPath, newPath } = req.body;
-    var fs = require("fs-extra");
+    const fs = require("fs-extra");
     fs.copy(oldPath, newPath, function (err) {
       if (err) return console.error(err);
       fs.remove(oldPath, (err) => {
         if (err) return console.error(err);
         console.log("success!");
+        res.send("success");
       });
+    });
+    // fs.move(oldPath, newPath, console.error);
+  });
+  server.post("/add_book", async (req, res) => {
+    const { file } = req.files;
+    const { key, path } = req.body;
+    file.mv(path + `/book/${key}`, (err) => {
+      if (err) return console.error(err);
       res.send("success");
     });
+    // fs.move(oldPath, newPath, console.error);
+  });
+  server.post("/delete_book", async (req, res) => {
+    const { key, path } = req.body;
+    try {
+      fs.unlink(path + `/book/${key}`, (err) => {
+        if (err) throw err;
+        res.send("success");
+      });
+    } catch (e) {
+      console.log(e);
+      res.status(400).send({
+        message: "This is an error!",
+      });
+    }
     // fs.move(oldPath, newPath, console.error);
   });
   async function start() {
     try {
       const port = 3366;
-
       expressServer = await server.listen(port);
       console.log("started");
       const address = expressServer.address();

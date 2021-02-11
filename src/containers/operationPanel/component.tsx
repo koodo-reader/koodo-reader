@@ -4,14 +4,14 @@ import "./operationPanel.css";
 import Bookmark from "../../model/Bookmark";
 import { Trans } from "react-i18next";
 import localforage from "localforage";
-import RecordLocation from "../../utils/recordLocation";
+import RecordLocation from "../../utils/readUtils/recordLocation";
 import { OperationPanelProps, OperationPanelState } from "./interface";
 import OtherUtil from "../../utils/otherUtil";
-import ReadingTime from "../../utils/readingTime";
+import ReadingTime from "../../utils/readUtils/readingTime";
 import { withRouter } from "react-router-dom";
 import { setInterval } from "timers";
 import { isMobile } from "react-device-detect";
-import SyncUtil from "../../utils/syncUtils/common";
+import BackupUtil from "../../utils/syncUtils/backupUtil";
 
 declare var document: any;
 
@@ -169,11 +169,13 @@ class OperationPanel extends React.Component<
     this.props.handleSearch(false);
     this.props.handleOpenMenu(false);
     ReadingTime.setTime(this.props.currentBook.key, this.props.time);
-    SyncUtil.moveData(
+    BackupUtil.backup(
       this.props.books,
       this.props.notes,
       this.props.bookmarks,
-      false
+      () => {},
+      5,
+      () => {}
     );
     setTimeout(() => {
       window.close();

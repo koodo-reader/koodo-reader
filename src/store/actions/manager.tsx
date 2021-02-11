@@ -4,7 +4,7 @@ import BookModel from "../../model/Book";
 import BookmarkModel from "../../model/Bookmark";
 import NoteModel from "../../model/Note";
 import { Dispatch } from "redux";
-import AddTrash from "../../utils/addTrash";
+import AddTrash from "../../utils/readUtils/addTrash";
 
 export function handleNotes(notes: NoteModel[]) {
   return { type: "HANDLE_NOTES", payload: notes };

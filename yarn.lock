@@ -13382,6 +13382,13 @@ yauzl@^2.10.0:
     buffer-crc32 "~0.2.3"
     fd-slicer "~1.1.0"
 
+zip-a-folder@^0.0.12:
+  version "0.0.12"
+  resolved "https://registry.npm.taobao.org/zip-a-folder/download/zip-a-folder-0.0.12.tgz#73d05461c37c2d5f86b2c0743357d75e274e51d9"
+  integrity sha1-c9BUYcN8LV+GssB0M1fXXidOUdk=
+  dependencies:
+    archiver "^3.1.1"
+
 zip-stream@^2.1.2:
   version "2.1.3"
   resolved "https://registry.npm.taobao.org/zip-stream/download/zip-stream-2.1.3.tgz?cache=0&sync_timestamp=1595299284500&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fzip-stream%2Fdownload%2Fzip-stream-2.1.3.tgz#26cc4bdb93641a8590dd07112e1f77af1758865b"

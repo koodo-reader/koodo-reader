@@ -1,4 +1,4 @@
-import OtherUtil from "../utils/otherUtil";
+import OtherUtil from "../otherUtil";
 
 class styleUtil {
   // 为 iframe 添加默认的样式

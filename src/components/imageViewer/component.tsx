@@ -2,7 +2,7 @@
 import React from "react";
 import "./imageViewer.css";
 import { ImageViewerProps, ImageViewerStates } from "./interface";
-import StyleUtil from "../../utils/styleUtil";
+import StyleUtil from "../../utils/readUtils/styleUtil";
 import FileSaver from "file-saver";
 
 const isElectron = require("is-electron");

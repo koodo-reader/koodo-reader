@@ -1,6 +1,6 @@
-import BookModel from "../model/Book";
-import NoteModel from "../model/Note";
-import BookmarkModel from "../model/Bookmark";
+import BookModel from "../../model/Book";
+import NoteModel from "../../model/Note";
+import BookmarkModel from "../../model/Bookmark";
 class DeleteUtil {
   static deleteBook(books: BookModel[], bookKey: string) {
     books = books.filter((item) => item.key !== bookKey);

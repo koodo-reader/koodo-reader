@@ -1,17 +1,19 @@
 //卡片模式下的图书显示
 import React from "react";
-import RecentBooks from "../../utils/recordRecent";
+import RecentBooks from "../../utils/readUtils/recordRecent";
 import "./bookCoverItem.css";
 import { BookCoverProps, BookCoverState } from "./interface";
-import AddFavorite from "../../utils/addFavorite";
+import AddFavorite from "../../utils/readUtils/addFavorite";
 import ActionDialog from "../../containers/actionDialog";
 import OtherUtil from "../../utils/otherUtil";
 import { withRouter } from "react-router-dom";
-import RecordLocation from "../../utils/recordLocation";
+import RecordLocation from "../../utils/readUtils/recordLocation";
 import isElectron from "is-electron";
 import EmptyCover from "../emptyCover";
 import Parser from "html-react-parser";
 import { Trans } from "react-i18next";
+import BookUtil from "../../utils/bookUtil";
+
 declare var window: any;
 
 class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
@@ -41,11 +43,7 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
       !this.props.currentBook.key &&
       !filePath
     ) {
-      this.props.book.description === "pdf"
-        ? window.open(`./lib/pdf/viewer.html?file=${this.props.book.key}`)
-        : window.open(
-            `${window.location.href.split("#")[0]}#/epub/${this.props.book.key}`
-          );
+      BookUtil.RedirectBook(this.props.book);
     }
     this.props.handleReadingBook(this.props.book);
   }
@@ -113,11 +111,7 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
   handleJump = () => {
     RecentBooks.setRecent(this.props.book.key);
 
-    this.props.book.description === "pdf"
-      ? window.open(`./lib/pdf/viewer.html?file=${this.props.book.key}`)
-      : window.open(
-          `${window.location.href.split("#")[0]}#/epub/${this.props.book.key}`
-        );
+    BookUtil.RedirectBook(this.props.book);
   };
   render() {
     let percentage = RecordLocation.getCfi(this.props.book.key)

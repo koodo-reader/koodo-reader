@@ -2,8 +2,8 @@
 import React from "react";
 import "./backupDialog.css";
 import { driveList } from "../../constants/driveList";
-import BackupUtil from "../../utils/backupUtil";
-import RestoreUtil from "../../utils/restoreUtil";
+import BackupUtil from "../../utils/syncUtils/backupUtil";
+import RestoreUtil from "../../utils/syncUtils/restoreUtil";
 import { Trans } from "react-i18next";
 import DropboxUtil from "../../utils/syncUtils/dropbox";
 import WebdavUtil from "../../utils/syncUtils/webdav";

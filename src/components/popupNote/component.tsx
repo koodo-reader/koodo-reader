@@ -4,7 +4,7 @@ import "./popupNote.css";
 import Note from "../../model/Note";
 import localforage from "localforage";
 import { PopupNoteProps, PopupNoteState } from "./interface";
-import RecordLocation from "../../utils/recordLocation";
+import RecordLocation from "../../utils/readUtils/recordLocation";
 import NoteTag from "../noteTag";
 import NoteModel from "../../model/Note";
 import { Trans } from "react-i18next";

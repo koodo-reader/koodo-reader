@@ -36,7 +36,8 @@
     "react-router-dom": "^5.2.0",
     "request": "^2.88.2",
     "underscore": "^1.11.0",
-    "webdav": "^3.6.2"
+    "webdav": "^3.6.2",
+    "zip-a-folder": "^0.0.12"
   },
   "scripts": {
     "analyze": "source-map-explorer 'build/static/js/*.js'",

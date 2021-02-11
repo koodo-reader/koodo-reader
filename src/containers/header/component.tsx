@@ -7,7 +7,7 @@ import { Trans } from "react-i18next";
 import { HeaderProps, HeaderState } from "./interface";
 import OtherUtil from "../../utils/otherUtil";
 import UpdateInfo from "../../components/updateInfo";
-import SyncUtil from "../../utils/syncUtils/common";
+import RestoreUtil from "../../utils/syncUtils/restoreUtil";
 
 const isElectron = require("is-electron");
 
@@ -20,14 +20,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       isNewVersion: false,
     };
   }
-  componentDidMount() {
-    SyncUtil.moveData(
-      this.props.books,
-      this.props.notes,
-      this.props.bookmarks,
-      true
-    );
-  }
   handleSortBooks = () => {
     if (this.props.isSortDisplay) {
       this.props.handleSortDisplay(false);
@@ -35,7 +27,26 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       this.props.handleSortDisplay(true);
     }
   };
+  async componentDidMount() {
+    if (isElectron()) {
+      const fs = window.require("fs");
+      const { zip } = window.require("zip-a-folder");
+      let sourcePath =
+        OtherUtil.getReaderConfig("storageLocation") + "\\config";
+      let outPath =
+        OtherUtil.getReaderConfig("storageLocation") + "\\config.zip";
+      await zip(sourcePath, outPath);
 
+      var data = fs.readFileSync(outPath);
+      let blobTemp = new Blob([data], { type: "application/epub+zip" });
+      let fileTemp = new File([blobTemp], "config.zip", {
+        lastModified: new Date().getTime(),
+        type: blobTemp.type,
+      });
+      console.log(fileTemp, "file");
+      RestoreUtil.restore(fileTemp, this.props.handleFetchBooks, true);
+    }
+  }
   render() {
     return (
       <div className="header">

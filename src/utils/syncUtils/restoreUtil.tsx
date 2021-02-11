@@ -1,43 +1,9 @@
 import localforage from "localforage";
-import BookModel from "../model/Book";
 
 let JSZip = (window as any).JSZip;
 
 class RestoreUtil {
-  static importBooks = (
-    books: BookModel[],
-    file: any,
-    handleFinish: () => void
-  ) => {
-    let zip = new JSZip();
-    books.forEach((item, index) => {
-      zip
-        .loadAsync(file)
-        .then((content: any) => {
-          // you now have every files contained in the loaded zip
-          if (item.description === "pdf") {
-            return content.files[`book/${item.name}.pdf`].async("arraybuffer"); // a promise of "Hello World\n"
-          } else {
-            return content.files[`book/${item.name}.epub`].async("arraybuffer"); // a promise of "Hello World\n"
-          }
-        })
-        .then((book: any) => {
-          localforage.setItem(item.key, book);
-          // item.content = book;
-        })
-        .then(() => {
-          if (index === books.length - 1) {
-            localforage.setItem("books", books).then(() => {
-              handleFinish();
-            });
-          }
-        })
-        .catch(() => {
-          console.log("Error occurs");
-        });
-    });
-  };
-  static restore = (file: any, handleFinish: () => void) => {
+  static restore = (file: any, handleFinish: () => void, isSync = false) => {
     let configArr = [
       "notes",
       "books",
@@ -61,7 +27,9 @@ class RestoreUtil {
         .loadAsync(file)
         .then((content: any) => {
           // you now have every files contained in the loaded zip
-          return content.files[`config/${item}.json`].async("text"); // a promise of "Hello World\n"
+          return content.files[
+            isSync ? `${item}.json` : `config/${item}.json`
+          ].async("text"); // a promise of "Hello World\n"
         })
         .then((text: any) => {
           if (text) {
@@ -73,7 +41,7 @@ class RestoreUtil {
           }
         })
         .then(() => {
-          if (item === "books") {
+          if (item === "books" && !isSync) {
             localforage.getItem("books").then((value: any) => {
               let zip = new JSZip();
               value &&
@@ -81,7 +49,12 @@ class RestoreUtil {
                   zip
                     .loadAsync(file)
                     .then((content: any) => {
-                      // you now have every files contained in the loaded zip
+                      if (content.files[`book/${item.key}`]) {
+                        return content.files[`book/${item.key}`].async(
+                          "arraybuffer"
+                        );
+                      }
+
                       if (item.description === "pdf") {
                         return content.files[`book/${item.name}.pdf`].async(
                           "arraybuffer"

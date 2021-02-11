@@ -1,7 +1,7 @@
 //添加图书到书架的对话框
 import React, { Component } from "react";
 import "./addDialog.css";
-import ShelfUtil from "../../utils/shelfUtil";
+import ShelfUtil from "../../utils/readUtils/shelfUtil";
 import { Trans, NamespacesConsumer } from "react-i18next";
 import { AddDialogProps, AddDialogState } from "./interface";
 
