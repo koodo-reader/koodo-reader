@@ -20,6 +20,7 @@ class SettingDialog extends React.Component<
       isTouch: OtherUtil.getReaderConfig("isTouch") === "yes",
       isOpenBook: OtherUtil.getReaderConfig("isOpenBook") === "yes",
       isExpandContent: OtherUtil.getReaderConfig("isExpandContent") === "yes",
+      isAutoSync: OtherUtil.getReaderConfig("isAutoSync") === "yes",
     };
   }
   componentDidMount() {
@@ -66,6 +67,17 @@ class SettingDialog extends React.Component<
       : this.props.handleMessage("Turn On Successfully");
     this.props.handleMessageBox(true);
   };
+  handleAutoSync = () => {
+    this.setState({ isAutoSync: !this.state.isAutoSync });
+    OtherUtil.setReaderConfig(
+      "isAutoSync",
+      this.state.isAutoSync ? "no" : "yes"
+    );
+    this.state.isAutoSync
+      ? this.props.handleMessage("Turn Off Successfully")
+      : this.props.handleMessage("Turn On Successfully");
+    this.props.handleMessageBox(true);
+  };
   handleChangeOpen = () => {
     this.setState({ isOpenBook: !this.state.isOpenBook });
     OtherUtil.setReaderConfig(
@@ -82,12 +94,16 @@ class SettingDialog extends React.Component<
     var path = await dialog.showOpenDialog({
       properties: ["openDirectory"],
     });
-    SyncUtil.changeLocation(
-      OtherUtil.getReaderConfig("storageLocation"),
-      path.filePaths[0],
-      this.props.handleMessage,
-      this.props.handleMessageBox
-    );
+    const { ipcRenderer } = window.require("electron");
+    path.filePaths[0] &&
+      SyncUtil.changeLocation(
+        OtherUtil.getReaderConfig("storageLocation")
+          ? OtherUtil.getReaderConfig("storageLocation")
+          : ipcRenderer.sendSync("storage-location", "ping"),
+        path.filePaths[0],
+        this.props.handleMessage,
+        this.props.handleMessageBox
+      );
     OtherUtil.setReaderConfig("storageLocation", path.filePaths[0]);
     document.getElementsByClassName(
       "setting-dialog-location-title"
@@ -207,6 +223,37 @@ class SettingDialog extends React.Component<
             </span>
           </div>
           {isElectron() && (
+            <div className="setting-dialog-new-title">
+              <Trans>Sync data from storage</Trans>
+              <span
+                className="single-control-switch"
+                onClick={() => {
+                  this.handleAutoSync();
+                }}
+                style={
+                  this.state.isAutoSync
+                    ? { background: "rgba(46, 170, 220)", float: "right" }
+                    : { float: "right" }
+                }
+              >
+                <span
+                  className="single-control-button"
+                  style={
+                    this.state.isAutoSync
+                      ? {
+                          transform: "translateX(20px)",
+                          transition: "transform 0.5s ease",
+                        }
+                      : {
+                          transform: "translateX(0px)",
+                          transition: "transform 0.5s ease",
+                        }
+                  }
+                ></span>
+              </span>
+            </div>
+          )}
+          {isElectron() && (
             <>
               <div className="setting-dialog-new-title">
                 <Trans>Change storage location</Trans>
@@ -221,10 +268,15 @@ class SettingDialog extends React.Component<
                 </span>
               </div>
               <div className="setting-dialog-location-title">
-                {OtherUtil.getReaderConfig("storageLocation")}
+                {OtherUtil.getReaderConfig("storageLocation")
+                  ? OtherUtil.getReaderConfig("storageLocation")
+                  : window
+                      .require("electron")
+                      .ipcRenderer.sendSync("storage-location", "ping")}
               </div>
             </>
           )}
+
           <div className="setting-dialog-new-title">
             <Trans>语言 / Language</Trans>
             <select

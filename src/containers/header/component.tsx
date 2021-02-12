@@ -8,6 +8,7 @@ import { HeaderProps, HeaderState } from "./interface";
 import OtherUtil from "../../utils/otherUtil";
 import UpdateInfo from "../../components/updateInfo";
 import RestoreUtil from "../../utils/syncUtils/restoreUtil";
+import BackupUtil from "../../utils/syncUtils/backupUtil";
 
 const isElectron = require("is-electron");
 
@@ -31,11 +32,18 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     if (isElectron()) {
       const fs = window.require("fs");
       const { zip } = window.require("zip-a-folder");
-      let sourcePath =
-        OtherUtil.getReaderConfig("storageLocation") + "\\config";
-      let outPath =
-        OtherUtil.getReaderConfig("storageLocation") + "\\config.zip";
+      let storageLocation = OtherUtil.getReaderConfig("storageLocation")
+        ? OtherUtil.getReaderConfig("storageLocation")
+        : window
+            .require("electron")
+            .ipcRenderer.sendSync("storage-location", "ping");
+      let sourcePath = storageLocation + "\\config";
+      let outPath = storageLocation + "\\config.zip";
       await zip(sourcePath, outPath);
+      fs.unlink(outPath, (err) => {
+        if (err) throw err;
+        console.log("successfully config deleted");
+      });
 
       var data = fs.readFileSync(outPath);
       let blobTemp = new Blob([data], { type: "application/epub+zip" });
@@ -43,8 +51,23 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         lastModified: new Date().getTime(),
         type: blobTemp.type,
       });
-      console.log(fileTemp, "file");
-      RestoreUtil.restore(fileTemp, this.props.handleFetchBooks, true);
+
+      OtherUtil.getReaderConfig("isAutoSync") === "yes" &&
+        RestoreUtil.restore(
+          fileTemp,
+          () => {
+            isElectron() &&
+              BackupUtil.backup(
+                this.props.books,
+                this.props.notes,
+                this.props.bookmarks,
+                () => {},
+                5,
+                () => {}
+              );
+          },
+          true
+        );
     }
   }
   render() {

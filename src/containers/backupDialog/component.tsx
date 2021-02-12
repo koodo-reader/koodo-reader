@@ -11,7 +11,17 @@ import { BackupDialogProps, BackupDialogState } from "./interface";
 import TokenDialog from "../../components/tokenDialog";
 import OtherUtil from "../../utils/otherUtil";
 import isElectron from "is-electron";
+import Lottie from "react-lottie";
+import animationSuccess from "../../assets/success.json";
 
+const successOptions = {
+  loop: false,
+  autoplay: true,
+  animationData: animationSuccess,
+  rendererSettings: {
+    preserveAspectRatio: "xMidYMid slice",
+  },
+};
 class BackupDialog extends React.Component<
   BackupDialogProps,
   BackupDialogState
@@ -31,6 +41,15 @@ class BackupDialog extends React.Component<
   handleFinish = () => {
     this.setState({ currentStep: 2 });
     this.props.handleLoadingDialog(false);
+    isElectron() &&
+      BackupUtil.backup(
+        this.props.books,
+        this.props.notes,
+        this.props.bookmarks,
+        () => {},
+        5,
+        () => {}
+      );
   };
   handleRestoreToLocal = (event: any) => {
     event.preventDefault();
@@ -237,7 +256,7 @@ class BackupDialog extends React.Component<
         ) : (
           <div className="backup-page-finish-container">
             <div className="backup-page-finish">
-              <span className="icon-message backup-page-finish-icon"></span>
+              <Lottie options={successOptions} height={80} width={80} />
               <div className="backup-page-finish-text">
                 <Trans>
                   {this.state.isBackup === "yes"
