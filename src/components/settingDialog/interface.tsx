@@ -8,4 +8,5 @@ export interface SettingInfoState {
   isTouch: boolean;
   isOpenBook: boolean;
   isExpandContent: boolean;
+  isAutoSync: boolean;
 }

@@ -10,7 +10,7 @@ import OtherUtil from "../../utils/otherUtil";
 import ReadingTime from "../../utils/readUtils/readingTime";
 import { withRouter } from "react-router-dom";
 import { setInterval } from "timers";
-import { isMobile } from "react-device-detect";
+import { isMobile, isElectron } from "react-device-detect";
 import BackupUtil from "../../utils/syncUtils/backupUtil";
 
 declare var document: any;
@@ -169,14 +169,15 @@ class OperationPanel extends React.Component<
     this.props.handleSearch(false);
     this.props.handleOpenMenu(false);
     ReadingTime.setTime(this.props.currentBook.key, this.props.time);
-    BackupUtil.backup(
-      this.props.books,
-      this.props.notes,
-      this.props.bookmarks,
-      () => {},
-      5,
-      () => {}
-    );
+    isElectron &&
+      BackupUtil.backup(
+        this.props.books,
+        this.props.notes,
+        this.props.bookmarks,
+        () => {},
+        5,
+        () => {}
+      );
     setTimeout(() => {
       window.close();
     }, 200);

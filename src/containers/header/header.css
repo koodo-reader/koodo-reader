@@ -14,7 +14,7 @@
   width: 100px;
   height: 27px;
   transition: all 0.1s ease;
-  z-index: 10;
+  z-index: 9;
   text-align: center;
   display: flex;
   justify-content: center;
