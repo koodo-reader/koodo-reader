@@ -1,4 +1,5 @@
 import localforage from "localforage";
+import BookUtil from "../bookUtil";
 
 let JSZip = (window as any).JSZip;
 
@@ -65,10 +66,8 @@ class RestoreUtil {
                         ); // a promise of "Hello World\n"
                       }
                     })
-                    .then((book: any) => {
-                      localforage.setItem(item.key, book).then(() => {
-                        handleFinish();
-                      });
+                    .then(async (book: any) => {
+                      await BookUtil.addBook(item.key, book);
                     })
                     .catch((err: any) => {
                       console.log(err, "Error occurs");
@@ -81,6 +80,9 @@ class RestoreUtil {
           console.log(err, "Error happen");
         });
     });
+    setTimeout(() => {
+      handleFinish();
+    }, 1000);
   };
 }
 

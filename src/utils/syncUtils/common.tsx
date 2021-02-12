@@ -1,5 +1,8 @@
 import axios from "axios";
 import { config } from "../../constants/driveList";
+import OtherUtil from "../otherUtil";
+import BookModel from "../../model/Book";
+import localforage from "localforage";
 
 export function getParamsFromUrl() {
   var hashParams: any = {};
@@ -14,7 +17,40 @@ export function getParamsFromUrl() {
   }
   return hashParams;
 }
-
+export const moveData = (blob, driveIndex, books: BookModel[] = []) => {
+  let file = new File([blob], "moveData.zip", {
+    lastModified: new Date().getTime(),
+    type: blob.type,
+  });
+  let formData = new FormData();
+  formData.append("file", file);
+  formData.append(
+    "path",
+    OtherUtil.getReaderConfig("storageLocation")
+      ? OtherUtil.getReaderConfig("storageLocation")
+      : window
+          .require("electron")
+          .ipcRenderer.sendSync("storage-location", "ping")
+  );
+  axios
+    .post(`${config.token_url}/move_data`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+      responseType: "blob",
+    })
+    .then(async (response: any) => {
+      if (driveIndex === 4) {
+        let deleteBooks = books.map((item) => {
+          return localforage.removeItem(item.key);
+        });
+        await Promise.all(deleteBooks);
+      }
+    })
+    .catch(function (error: any) {
+      console.error(error, "移动失败");
+    });
+};
 class SyncUtil {
   static changeLocation(
     oldPath: string,

@@ -8,6 +8,17 @@ import { withRouter } from "react-router-dom";
 import { isMobile } from "react-device-detect";
 import OtherUtil from "../../utils/otherUtil";
 import DropboxUtil from "../../utils/syncUtils/dropbox";
+import Lottie from "react-lottie";
+import animationSuccess from "../../assets/success.json";
+
+const successOptions = {
+  loop: false,
+  autoplay: true,
+  animationData: animationSuccess,
+  rendererSettings: {
+    preserveAspectRatio: "xMidYMid slice",
+  },
+};
 
 declare var window: any;
 
@@ -65,7 +76,7 @@ class Redirect extends React.Component<RedirectProps, RedirectState> {
         <div className="backup-page-finish-container">
           <div className="backup-page-finish">
             {this.state.isAuthed ? (
-              <span className="icon-message backup-page-finish-icon"></span>
+              <Lottie options={successOptions} height={80} width={80} />
             ) : (
               <span className="icon-close auth-page-close-icon"></span>
             )}

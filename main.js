@@ -94,6 +94,9 @@ app.on("ready", () => {
         startExpress();
         event.returnValue = dirPath + "data";
       });
+      ipcMain.on("storage-location", (event, arg) => {
+        event.returnValue = dirPath + "data";
+      });
       ipcMain.on("get-file-data", function (event) {
         var data = null;
         if (process.platform == "win32" && process.argv.length >= 2) {
@@ -235,6 +238,8 @@ const startExpress = () => {
           const line = escapeHTML(lines[i]).trim();
           if (
             line.length < 30 &&
+            line.indexOf("[") === -1 &&
+            line.indexOf("(") === -1 &&
             (line.startsWith("CHAPTER ") ||
               line.startsWith("Chapter ") ||
               line.startsWith("序章") ||
@@ -246,8 +251,8 @@ const startExpress = () => {
               line.startsWith("后记") ||
               line.startsWith("后序") ||
               (line.indexOf("第") > -1 && line.indexOf("章") > -1) ||
-              (line.indexOf("第") > -1 && line.indexOf("回") > -1) ||
               (line.indexOf("第") > -1 && line.indexOf("节") > -1) ||
+              (line.indexOf("第") > -1 && line.indexOf("回") > -1) ||
               /^[\u4e00\u4e8c\u4e09\u56db\u4e94\u516d\u4e03\u516b\u4e5d\u5341\u767e\u5343\u4e07]+$/.test(
                 line
               ) ||
@@ -277,7 +282,7 @@ const startExpress = () => {
               } else {
                 content[content.length - 1].data += `<img src=" "/>`;
               }
-            } else {
+            } else if (!line.startsWith("*")) {
               content[
                 content.length - 1
               ].data += `<p style="text-indent:2em">${line}</p>`;
@@ -341,18 +346,34 @@ const startExpress = () => {
       if ((await client.exists("/KoodoReader")) === false) {
         await client.createDirectory("/KoodoReader");
       }
-
-      let stream = client.createWriteStream("/KoodoReader/data.zip", {}, () => {
-        fs.unlink(dirPath + `/${file.name}`, (err) => {
-          if (err)
-            res.status(400).send({
-              message: "This is an error!",
-            });
-          console.log("successfully data deleted");
-        });
-        res.send("success");
-      });
-      fs.createReadStream(dirPath + `/${file.name}`).pipe(stream);
+      let year = new Date().getFullYear(),
+        month = new Date().getMonth() + 1,
+        day = new Date().getDate();
+      let Datastream = client.createWriteStream(
+        "/KoodoReader/data.zip",
+        {},
+        () => {
+          fs.createReadStream(dirPath + `/${file.name}`).pipe(historystream);
+        }
+      );
+      let historystream = client.createWriteStream(
+        "/KoodoReader/" +
+          `${year}-${month <= 9 ? "0" + month : month}-${
+            day <= 9 ? "0" + day : day
+          }.zip`,
+        {},
+        () => {
+          fs.unlink(dirPath + `/${file.name}`, (err) => {
+            if (err)
+              res.status(400).send({
+                message: "This is an error!",
+              });
+            console.log("successfully data deleted");
+          });
+          res.send("success");
+        }
+      );
+      fs.createReadStream(dirPath + `/${file.name}`).pipe(Datastream);
     });
   });
   server.post("/webdav_download", async (req, res) => {

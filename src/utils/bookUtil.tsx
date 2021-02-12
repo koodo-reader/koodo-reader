@@ -12,7 +12,14 @@ class BookUtil {
         let formData = new FormData();
         formData.append("file", new Blob([buffer]));
         formData.append("key", key);
-        formData.append("path", OtherUtil.getReaderConfig("storageLocation"));
+        formData.append(
+          "path",
+          OtherUtil.getReaderConfig("storageLocation")
+            ? OtherUtil.getReaderConfig("storageLocation")
+            : window
+                .require("electron")
+                .ipcRenderer.sendSync("storage-location", "ping")
+        );
         axios
           .post(`${config.token_url}/add_book`, formData, {
             headers: {
@@ -39,7 +46,11 @@ class BookUtil {
         axios
           .post(`${config.token_url}/delete_book`, {
             key,
-            path: OtherUtil.getReaderConfig("storageLocation"),
+            path: OtherUtil.getReaderConfig("storageLocation")
+              ? OtherUtil.getReaderConfig("storageLocation")
+              : window
+                  .require("electron")
+                  .ipcRenderer.sendSync("storage-location", "ping"),
           })
           .then(function (response: any) {
             console.log(response, "删除成功");
@@ -59,7 +70,12 @@ class BookUtil {
       return new Promise<File>((resolve, reject) => {
         const fs = window.require("fs");
         var data = fs.readFileSync(
-          OtherUtil.getReaderConfig("storageLocation") + `\\book\\${key}`
+          (OtherUtil.getReaderConfig("storageLocation")
+            ? OtherUtil.getReaderConfig("storageLocation")
+            : window
+                .require("electron")
+                .ipcRenderer.sendSync("storage-location", "ping")) +
+            `\\book\\${key}`
         );
         let blobTemp = new Blob([data], { type: "application/epub+zip" });
         let fileTemp = new File([blobTemp], "data.epub", {

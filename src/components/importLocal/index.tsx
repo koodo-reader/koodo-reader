@@ -16,6 +16,8 @@ import ImportLocal from "./component";
 const mapStateToProps = (state: stateType) => {
   return {
     books: state.manager.books,
+    notes: state.reader.notes,
+    bookmarks: state.reader.bookmarks,
     deletedBooks: state.manager.deletedBooks,
   };
 };

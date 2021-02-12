@@ -17,6 +17,8 @@ cache:
 
 init:
   - git config --global core.autocrlf input
+  - ls -al
+  - sh: sudo apt-get update
 
 install:
   - git reset --hard HEAD
