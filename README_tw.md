@@ -48,7 +48,9 @@
 
 支持 **Windows** ， **macOS**， **Linux** 和 **網頁版**
 
-備份數據到 Dropbox 和 Webdav
+備份數據到 **Dropbox** 和 **Webdav**
+
+妳可以自定義源文件夾，利用 OneDrive、百度網盤、iCloud、Dropbox 等進行多設備同步
 
 雙頁模式，單頁模式，滾動模式
 
