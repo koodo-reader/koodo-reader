@@ -50,6 +50,8 @@ Platform support: **Windows** , **macOS**, **Linux** and **Web**
 
 Save your data to **Dropbox** or **Webdav**
 
+Customize the source folder and synchronize multiple devices using your favourite cloud drive
+
 Single-column, two-column, or continuous scrolling layouts
 
 Text-to-speech, Translation
