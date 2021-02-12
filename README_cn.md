@@ -48,9 +48,9 @@
 
 支持 **Windows** ， **macOS**， **Linux** 和 **网页版**
 
-你可以自定义源文件夹，利用 OneDrive、百度网盘、iCloud、Dropbox 等进行多设备同步
+备份数据到 **Dropbox** 和 **Webdav**
 
-备份数据到 Dropbox 和 Webdav
+你可以自定义源文件夹，利用 OneDrive、百度网盘、iCloud、Dropbox 等进行多设备同步
 
 双页模式，单页模式，滚动模式
 
