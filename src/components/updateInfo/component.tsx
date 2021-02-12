@@ -50,7 +50,7 @@ class UpdateInfo extends React.Component<UpdateInfoProps, UpdateInfoState> {
             this.props.handleNewDialog(true);
           } else if (
             OtherUtil.getReaderConfig("version") !== newVersion &&
-            OtherUtil.getReaderConfig("isFirst") !== "yes"
+            OtherUtil.getReaderConfig("isFirst")
           ) {
             this.setState({ isUpdated: true });
             this.props.handleNewDialog(true);
@@ -115,10 +115,12 @@ class UpdateInfo extends React.Component<UpdateInfoProps, UpdateInfoState> {
             >
               <span className="icon-close setting-close"></span>
             </div>
-            <div className="update-info-text">
-              <Trans>You successfully update to</Trans>
-              {" " + version}
-            </div>
+            {this.state.isUpdated && (
+              <div className="update-info-text">
+                <Trans>You successfully update to</Trans>
+                {" " + version}
+              </div>
+            )}
             <div className="update-dialog-info" style={{ height: 420 }}>
               <div className="new-version-animation">
                 {this.state.isUpdated ? (

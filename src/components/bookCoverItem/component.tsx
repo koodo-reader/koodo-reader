@@ -194,7 +194,7 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
               onClick={() => {
                 this.handleCancelLoveBook();
               }}
-              style={{ right: "300px" }}
+              style={{ right: "274px", bottom: "25px" }}
             ></span>
           ) : null}
 
@@ -229,7 +229,7 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
                 onClick={() => {
                   this.handleLoveBook();
                 }}
-                style={{ right: "270px", bottom: "55px" }}
+                style={{ right: "275px", bottom: "25px" }}
               ></span>
             </>
           ) : null}
