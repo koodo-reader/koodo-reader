@@ -50,7 +50,7 @@ Platform support: **Windows** , **macOS**, **Linux** and **Web**
 
 Save your data to **Dropbox** or **Webdav**
 
-Customize the source folder and synchronize multiple devices using your favourite cloud drive
+Customize the source folder and synchronize multiple devices using OneDrive, iCloud, Dropbox, etc.
 
 Single-column, two-column, or continuous scrolling layouts
 
