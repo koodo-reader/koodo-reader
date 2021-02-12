@@ -103,12 +103,7 @@
     "linux": {
       "icon": "assets/icons",
       "category": "Office",
-      "target": [
-        "AppImage",
-        "deb",
-        "rpm",
-        "snap"
-      ]
+      "target": "AppImage"
     },
     "portable": {
       "artifactName": "${productName}-${version}-Portable.${ext}"
