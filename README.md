@@ -34,10 +34,10 @@
 
 <div align="center">
   <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
-    <img src="https://i.loli.net/2020/07/18/5NhQZfxXRs8VO7c.png" >
+    <img src="https://i.loli.net/2021/02/13/JkIpcnlqNAW5bEy.png" >
   </a>
   <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
-    <img src="https://i.loli.net/2020/07/18/QHGNJStXsiLTvf3.png" >
+    <img src="https://i.loli.net/2021/02/13/nZxD7yOvw39BJNA.png" >
   </a>
   <br/>
 </div>
