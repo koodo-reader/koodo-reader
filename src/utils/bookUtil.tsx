@@ -77,6 +77,13 @@ class BookUtil {
                 .ipcRenderer.sendSync("storage-location", "ping")) +
             `\\book\\${key}`
         );
+        console.log(
+          OtherUtil.getReaderConfig("storageLocation")
+            ? OtherUtil.getReaderConfig("storageLocation")
+            : window
+                .require("electron")
+                .ipcRenderer.sendSync("storage-location", "ping")
+        );
         let blobTemp = new Blob([data], { type: "application/epub+zip" });
         let fileTemp = new File([blobTemp], "data.epub", {
           lastModified: new Date().getTime(),
