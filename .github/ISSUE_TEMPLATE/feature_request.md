@@ -6,7 +6,7 @@ labels: "Feature Request"
 assignees: ""
 ---
 
-<!-- This is issue template for feature request, please fill out your answer in the blank space. 这是一个报告bug的模板，请在尖括号的外面回答以下问题 -->
+<!-- This is issue template for feature request, please fill out your answer in the blank space. 这是一个提交需求的模板，请在尖括号的外面回答以下问题 -->
 
 ## Brief Introduction (介绍)
 
