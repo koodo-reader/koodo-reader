@@ -25,7 +25,7 @@ export const moveData = (blob, driveIndex, books: BookModel[] = []) => {
   let formData = new FormData();
   formData.append("file", file);
   formData.append(
-    "path",
+    "dataPath",
     OtherUtil.getReaderConfig("storageLocation")
       ? OtherUtil.getReaderConfig("storageLocation")
       : window

@@ -222,38 +222,29 @@ class BookList extends React.Component<BookListProps, BookListState> {
       <>
         {this.state.isOpenDelete && <DeletePopup {...deletePopupProps} />}
         <ViewMode />
-        {this.props.mode === "trash" ? (
-          <div
-            className="booklist-delete-container"
-            onClick={() => {
-              this.props.handleDeleteDialog(true);
+
+        <div className="booklist-shelf-container">
+          <p className="general-setting-title" style={{ display: "inline" }}>
+            <Trans>My Shelves</Trans>
+          </p>
+          <select
+            className="booklist-shelf-list"
+            onChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
+              this.handleShelfItem(event);
             }}
           >
-            <Trans>Delete All Books</Trans>
-          </div>
-        ) : (
-          <div className="booklist-shelf-container">
-            <p className="general-setting-title" style={{ display: "inline" }}>
-              <Trans>My Shelves</Trans>
-            </p>
-            <select
-              className="booklist-shelf-list"
-              onChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
-                this.handleShelfItem(event);
+            {this.renderShelfList()}
+          </select>
+          {this.state.shelfIndex > 0 ? (
+            <span
+              className="icon-trash delete-shelf-icon"
+              onClick={() => {
+                this.handleDeletePopup(true);
               }}
-            >
-              {this.renderShelfList()}
-            </select>
-            {this.state.shelfIndex > 0 ? (
-              <span
-                className="icon-trash delete-shelf-icon"
-                onClick={() => {
-                  this.handleDeletePopup(true);
-                }}
-              ></span>
-            ) : null}
-          </div>
-        )}
+            ></span>
+          ) : null}
+        </div>
+
         <div className="book-list-container-parent">
           <div className="book-list-container">
             <ul className="book-list-item-box">{this.renderBookList()}</ul>
