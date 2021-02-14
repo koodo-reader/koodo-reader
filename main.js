@@ -323,7 +323,7 @@ const startExpress = () => {
                 if (err) throw err;
                 console.log("successfully epub deleted");
               });
-              fs.unlink(path.join(dirPath + `/${file.name}`), (err) => {
+              fs.unlink(path.join(dirPath, file.name), (err) => {
                 if (err) throw err;
                 console.log("successfully file deleted");
               });
@@ -342,7 +342,7 @@ const startExpress = () => {
       username,
       password,
     });
-    file.mv(path.join(dirPath + `${file.name}`), async () => {
+    file.mv(path.join(dirPath, file.name), async () => {
       if ((await client.exists("/KoodoReader")) === false) {
         await client.createDirectory("/KoodoReader");
       }
@@ -353,7 +353,7 @@ const startExpress = () => {
         "/KoodoReader/data.zip",
         {},
         () => {
-          fs.createReadStream(path.join(dirPath, `${file.name}`)).pipe(
+          fs.createReadStream(path.join(dirPath, file.name)).pipe(
             historystream
           );
         }
@@ -365,7 +365,7 @@ const startExpress = () => {
           }.zip`,
         {},
         () => {
-          fs.unlink(path.join(dirPath, `${file.name}`), (err) => {
+          fs.unlink(path.join(dirPath, file.name), (err) => {
             if (err)
               res.status(400).send({
                 message: "This is an error!",
@@ -375,7 +375,7 @@ const startExpress = () => {
           res.send("success");
         }
       );
-      fs.createReadStream(path.join(dirPath, `${file.name}`)).pipe(Datastream);
+      fs.createReadStream(path.join(dirPath, file.name)).pipe(Datastream);
     });
   });
   server.post("/webdav_download", async (req, res) => {
@@ -459,7 +459,7 @@ const startExpress = () => {
   });
   server.post("/fetch_book", async (req, res) => {
     const { key, dataPath } = req.body;
-    var data = fs.readFileSync(path.join(dataPath + `book` + key));
+    var data = fs.readFileSync(path.join(dataPath, `book`, key));
     res.send(data);
   });
   async function start() {
