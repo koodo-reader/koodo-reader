@@ -37,13 +37,11 @@ assignees: ""
 
 <!--
   What currently happen? To help developers better navigate this problem, please attach some screenshots or files.
-
   Steps to reproduce the behavior:
   1. Go to '...'
   2. Click on '....'
   3. Scroll down to '....'
   4. See error
-
   描述 bug 细节，确认出现此问题的复现步骤，例如点击了哪里，发生了什么情况？
   你可以粘贴截图或附件。
 -->
