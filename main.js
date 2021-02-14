@@ -22,7 +22,6 @@ app.on("ready", () => {
     if (port == _port) {
       console.log("port is availible");
       mainWin = new BrowserWindow({
-        titleBarStyle: "none",
         width: 1030,
         height: 660,
         webPreferences: {
