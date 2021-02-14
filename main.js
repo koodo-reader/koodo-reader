@@ -454,6 +454,11 @@ const startExpress = () => {
     }
     // fs.move(oldPath, newPath, console.error);
   });
+  server.post("/fetch_book", async (req, res) => {
+    const { key, path } = req.body;
+    var data = fs.readFileSync(path + `\\book\\${key}`);
+    res.send(data);
+  });
   async function start() {
     try {
       const port = 3366;
