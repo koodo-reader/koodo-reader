@@ -68,65 +68,65 @@ class BookUtil {
   static fetchBook(key: string) {
     if (isElectron()) {
       return new Promise<File>((resolve, reject) => {
-        // axios
-        //   .post(
-        //     `${config.token_url}/fetch_book`,
-        //     {
-        //       key,
-        //       dataPath: OtherUtil.getReaderConfig("storageLocation")
-        //         ? OtherUtil.getReaderConfig("storageLocation")
-        //         : window
-        //             .require("electron")
-        //             .ipcRenderer.sendSync("storage-location", "ping"),
-        //     },
-        //     {
-        //       responseType: "blob",
-        //     }
+        axios
+          .post(
+            `${config.token_url}/fetch_book`,
+            {
+              key,
+              dataPath: OtherUtil.getReaderConfig("storageLocation")
+                ? OtherUtil.getReaderConfig("storageLocation")
+                : window
+                    .require("electron")
+                    .ipcRenderer.sendSync("storage-location", "ping"),
+            },
+            {
+              responseType: "blob",
+            }
+          )
+          .then(function (response: any) {
+            console.log(response, "删除成功");
+            let blobTemp = new Blob([response.data], {
+              type: "application/epub+zip",
+            });
+            let fileTemp = new File([blobTemp], "data.epub", {
+              lastModified: new Date().getTime(),
+              type: blobTemp.type,
+            });
+            resolve(fileTemp);
+          })
+          .catch(function (error: any) {
+            console.error(error, "删除失败");
+            reject();
+          });
+        // var fs = window.require("fs");
+        // var path = window.require("path");
+        // var data = fs.readFileSync(
+        //   path.join(
+        //     OtherUtil.getReaderConfig("storageLocation")
+        //       ? OtherUtil.getReaderConfig("storageLocation")
+        //       : window
+        //           .require("electron")
+        //           .ipcRenderer.sendSync("storage-location", "ping"),
+        //     `book`,
+        //     key
         //   )
-        //   .then(function (response: any) {
-        //     console.log(response, "删除成功");
-        //     let blobTemp = new Blob([response.data], {
-        //       type: "application/epub+zip",
-        //     });
-        //     let fileTemp = new File([blobTemp], "data.epub", {
-        //       lastModified: new Date().getTime(),
-        //       type: blobTemp.type,
-        //     });
-        //     resolve(fileTemp);
-        //   })
-        //   .catch(function (error: any) {
-        //     console.error(error, "删除失败");
-        //     reject();
-        //   });
-        var fs = window.require("fs");
-        var path = window.require("path");
-        var data = fs.readFileSync(
-          path.join(
-            OtherUtil.getReaderConfig("storageLocation")
-              ? OtherUtil.getReaderConfig("storageLocation")
-              : window
-                  .require("electron")
-                  .ipcRenderer.sendSync("storage-location", "ping"),
-            `book`,
-            key
-          )
-        );
-        console.log(
-          path.join(
-            (OtherUtil.getReaderConfig("storageLocation")
-              ? OtherUtil.getReaderConfig("storageLocation")
-              : window
-                  .require("electron")
-                  .ipcRenderer.sendSync("storage-location", "ping")) + "book",
-            key
-          )
-        );
-        let blobTemp = new Blob([data], { type: "application/epub+zip" });
-        let fileTemp = new File([blobTemp], "data.epub", {
-          lastModified: new Date().getTime(),
-          type: blobTemp.type,
-        });
-        resolve(fileTemp);
+        // );
+        // console.log(
+        //   path.join(
+        //     (OtherUtil.getReaderConfig("storageLocation")
+        //       ? OtherUtil.getReaderConfig("storageLocation")
+        //       : window
+        //           .require("electron")
+        //           .ipcRenderer.sendSync("storage-location", "ping")) + "book",
+        //     key
+        //   )
+        // );
+        // let blobTemp = new Blob([data], { type: "application/epub+zip" });
+        // let fileTemp = new File([blobTemp], "data.epub", {
+        //   lastModified: new Date().getTime(),
+        //   type: blobTemp.type,
+        // });
+        // resolve(fileTemp);
       });
     } else {
       return localforage.getItem(key);
