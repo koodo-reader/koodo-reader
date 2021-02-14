@@ -22,7 +22,7 @@ app.on("ready", () => {
     if (port == _port) {
       console.log("port is availible");
       mainWin = new BrowserWindow({
-        titleBarStyle: "hidden",
+        titleBarStyle: "none",
         width: 1030,
         height: 660,
         webPreferences: {
@@ -48,10 +48,10 @@ app.on("ready", () => {
           ? path.join(__dirname, "/public/assets/launch-page.html")
           : `file://${path.join(__dirname, "./build/assets/launch-page.html")}`
       );
-      if (!isDev) {
-        const { Menu } = require("electron");
-        Menu.setApplicationMenu(null);
-      }
+      // if (!isDev) {
+      //   const { Menu } = require("electron");
+      //   Menu.setApplicationMenu(null);
+      // }
 
       const urlLocation = isDev
         ? "http://localhost:3000"
