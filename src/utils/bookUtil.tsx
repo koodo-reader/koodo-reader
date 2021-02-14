@@ -13,7 +13,7 @@ class BookUtil {
         formData.append("file", new Blob([buffer]));
         formData.append("key", key);
         formData.append(
-          "path",
+          "dataPath",
           OtherUtil.getReaderConfig("storageLocation")
             ? OtherUtil.getReaderConfig("storageLocation")
             : window
@@ -46,7 +46,7 @@ class BookUtil {
         axios
           .post(`${config.token_url}/delete_book`, {
             key,
-            path: OtherUtil.getReaderConfig("storageLocation")
+            dataPath: OtherUtil.getReaderConfig("storageLocation")
               ? OtherUtil.getReaderConfig("storageLocation")
               : window
                   .require("electron")
@@ -73,7 +73,7 @@ class BookUtil {
         //     `${config.token_url}/fetch_book`,
         //     {
         //       key,
-        //       path: OtherUtil.getReaderConfig("storageLocation")
+        //       dataPath: OtherUtil.getReaderConfig("storageLocation")
         //         ? OtherUtil.getReaderConfig("storageLocation")
         //         : window
         //             .require("electron")
@@ -98,15 +98,28 @@ class BookUtil {
         //     console.error(error, "删除失败");
         //     reject();
         //   });
-        var remote = window.require("electron").remote;
-        var fs = remote.require("fs");
+        var fs = window.require("fs");
+        var path = window.require("path");
         var data = fs.readFileSync(
-          (OtherUtil.getReaderConfig("storageLocation")
-            ? OtherUtil.getReaderConfig("storageLocation")
-            : window
-                .require("electron")
-                .ipcRenderer.sendSync("storage-location", "ping")) +
-            `\\book\\${key}`
+          path.join(
+            OtherUtil.getReaderConfig("storageLocation")
+              ? OtherUtil.getReaderConfig("storageLocation")
+              : window
+                  .require("electron")
+                  .ipcRenderer.sendSync("storage-location", "ping"),
+            `book`,
+            key
+          )
+        );
+        console.log(
+          path.join(
+            (OtherUtil.getReaderConfig("storageLocation")
+              ? OtherUtil.getReaderConfig("storageLocation")
+              : window
+                  .require("electron")
+                  .ipcRenderer.sendSync("storage-location", "ping")) + "book",
+            key
+          )
         );
         let blobTemp = new Blob([data], { type: "application/epub+zip" });
         let fileTemp = new File([blobTemp], "data.epub", {

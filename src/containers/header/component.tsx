@@ -30,8 +30,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
   };
   async componentDidMount() {
     if (isElectron()) {
-      var remote = window.require("electron").remote;
-      var fs = remote.require("fs");
+      const fs = window.require("fs");
       const { zip } = window.require("zip-a-folder");
       let storageLocation = OtherUtil.getReaderConfig("storageLocation")
         ? OtherUtil.getReaderConfig("storageLocation")
