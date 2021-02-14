@@ -177,7 +177,7 @@ class SettingPanel extends React.Component<
           {this.state.readerMode && this.state.readerMode !== "double" ? (
             <SliderList
               {...{
-                maxValue: 2,
+                maxValue: 4,
                 minValue: 1,
                 mode: "scale",
               }}
