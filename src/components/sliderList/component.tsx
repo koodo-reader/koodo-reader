@@ -105,7 +105,7 @@ class SliderList extends React.Component<SliderListProps, SliderListState> {
             className="ultra-large-size"
             style={{ fontSize: "16px", right: "5px" }}
           >
-            2
+            4
           </span>
         ) : (
           <span
