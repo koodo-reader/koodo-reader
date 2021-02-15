@@ -31,14 +31,15 @@ class Header extends React.Component<HeaderProps, HeaderState> {
   async componentDidMount() {
     if (isElectron()) {
       const fs = window.require("fs");
+      const path = window.require("path");
       const { zip } = window.require("zip-a-folder");
       let storageLocation = OtherUtil.getReaderConfig("storageLocation")
         ? OtherUtil.getReaderConfig("storageLocation")
         : window
             .require("electron")
             .ipcRenderer.sendSync("storage-location", "ping");
-      let sourcePath = storageLocation + "\\config";
-      let outPath = storageLocation + "\\config.zip";
+      let sourcePath = path.join(storageLocation, "config");
+      let outPath = path.join(storageLocation, "config.zip");
       await zip(sourcePath, outPath);
       fs.unlink(outPath, (err) => {
         if (err) throw err;

@@ -103,7 +103,7 @@ class UpdateInfo extends React.Component<UpdateInfoProps, UpdateInfoState> {
               ) : (
                 <>
                   <Trans>Update to</Trans>
-                  {" " + version}
+                  {" " + this.state.updateLog.version}
                 </>
               )}
             </div>
