@@ -117,7 +117,7 @@ class BookUtil {
               ? OtherUtil.getReaderConfig("storageLocation")
               : window
                   .require("electron")
-                  .ipcRenderer.sendSync("storage-location", "ping")) + "book",
+                  .ipcRenderer.sendSync("storage-location", "ping")), "book",
             key
           )
         );
