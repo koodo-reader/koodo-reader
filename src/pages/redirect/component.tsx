@@ -63,8 +63,12 @@ class Redirect extends React.Component<RedirectProps, RedirectState> {
       this.setState({ isAuthed: true });
       if (isMobile) {
         OtherUtil.setReaderConfig(`dropbox_token`, params.access_token);
-        DropboxUtil.DownloadFile(this.handleFinish, this.showMessage);
-        window.postMessage(params.access_token);
+        DropboxUtil.DownloadFile(
+          () => {
+            window.ReactNativeWebView.postMessage(params.access_token);
+          },
+          () => {}
+        );
       }
       return false;
     }
