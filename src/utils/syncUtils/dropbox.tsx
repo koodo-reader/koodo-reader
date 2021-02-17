@@ -48,7 +48,7 @@ class DropboxUitl {
     return false;
   }
   static DownloadFile(
-    handleFinish: () => void,
+    handleFinish: (mobileData: string) => void,
     showMessage: (message: string) => void
   ) {
     var ACCESS_TOKEN = OtherUtil.getReaderConfig("dropbox_token") || "";

@@ -4,7 +4,11 @@ import BookUtil from "../bookUtil";
 let JSZip = (window as any).JSZip;
 
 class RestoreUtil {
-  static restore = (file: any, handleFinish: () => void, isSync = false) => {
+  static restore = (
+    file: any,
+    handleFinish: (mobileData) => void,
+    isSync = false
+  ) => {
     let configArr = [
       "notes",
       "books",
@@ -22,6 +26,7 @@ class RestoreUtil {
       "recordLocation",
     ];
     let zip = new JSZip();
+    let mobileObject: Object = {};
     // more files !
     configArr.forEach((item) => {
       zip
@@ -36,8 +41,10 @@ class RestoreUtil {
           if (text) {
             if (item === "notes" || item === "books" || item === "bookmarks") {
               localforage.setItem(item, JSON.parse(text));
+              mobileObject[item] = JSON.parse(text);
             } else {
               localStorage.setItem(item, text);
+              mobileObject[item] = JSON.parse(text);
             }
           }
         })
@@ -81,7 +88,7 @@ class RestoreUtil {
         });
     });
     setTimeout(() => {
-      handleFinish();
+      handleFinish(JSON.stringify(mobileObject));
     }, 1000);
   };
 }
