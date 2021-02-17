@@ -41,10 +41,10 @@ class RestoreUtil {
           if (text) {
             if (item === "notes" || item === "books" || item === "bookmarks") {
               localforage.setItem(item, JSON.parse(text));
-              mobileObject[item] = JSON.parse(text);
+              mobileObject[item] = text;
             } else {
               localStorage.setItem(item, text);
-              mobileObject[item] = JSON.parse(text);
+              mobileObject[item] = text;
             }
           }
         })
