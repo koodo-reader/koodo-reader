@@ -101,6 +101,13 @@ Make sure node's version on your computer is larger than 10.0.0, yarn and git is
    yarn
    yarn start
    ```
+## Docker
+
+You can run in docker compose
+
+```bash
+docker-compose up -d
+```
 
 ## Update
 
