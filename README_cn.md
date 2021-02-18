@@ -102,6 +102,14 @@ brew install --cask koodo-reader
    yarn start
    ```
 
+## Docker
+
+可以使用 `docker compose` 运行本项目
+
+```bash
+docker-compose up -d
+```
+
 ## 后续更新
 
 我会根据大家的反馈不定时更新，当有新版本更新时，您将自动收到更新提示
