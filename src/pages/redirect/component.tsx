@@ -47,17 +47,17 @@ class Redirect extends React.Component<RedirectProps, RedirectState> {
     if (document.location.hash === "#/") {
       this.props.history.push("/manager/home");
     }
-    if (url.indexOf("error") > -1) {
+    if (url.includes("error")) {
       this.setState({ isError: true });
       return false;
     }
-    if (url.indexOf("code") > -1) {
+    if (url.includes("code")) {
       let params: any = getParamsFromUrl();
       this.setState({ token: params.code });
       this.setState({ isAuthed: true });
       return false;
     }
-    if (url.indexOf("access_token") > -1) {
+    if (url.includes("access_token")) {
       let params: any = getParamsFromUrl();
       this.setState({ token: params.access_token });
       this.setState({ isAuthed: true });
@@ -71,6 +71,23 @@ class Redirect extends React.Component<RedirectProps, RedirectState> {
         );
       }
       return false;
+    }
+    if (url.includes("mobile_first_open")) {
+      DropboxUtil.DownloadFile(
+        (mobileData) => {
+          window.ReactNativeWebView.postMessage(mobileData);
+        },
+        () => {}
+      );
+    }
+    if (url.includes("mobile_sync")) {
+      DropboxUtil.DownloadFile(
+        (mobileData) => {
+          window.ReactNativeWebView.postMessage(mobileData);
+        },
+        () => {},
+        true
+      );
     }
   }
 

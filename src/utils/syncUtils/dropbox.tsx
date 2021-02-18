@@ -49,19 +49,22 @@ class DropboxUitl {
   }
   static DownloadFile(
     handleFinish: (mobileData: string) => void,
-    showMessage: (message: string) => void
+    showMessage: (message: string) => void,
+    isSync: boolean = false
   ) {
     var ACCESS_TOKEN = OtherUtil.getReaderConfig("dropbox_token") || "";
     var dbx = new Dropbox.Dropbox({ accessToken: ACCESS_TOKEN });
     dbx
       .filesDownload({
-        path: "/Apps/KoodoReader/data.zip",
+        path: isSync
+          ? "/Apps/KoodoReader/config.zip"
+          : "/Apps/KoodoReader/data.zip",
       })
       .then(function (data: any) {
         let file = data.fileBlob;
         file.lastModifiedDate = new Date();
         file.name = "data.zip";
-        RestoreUtil.restore(file, handleFinish);
+        RestoreUtil.restore(file, handleFinish, isSync);
       })
       .catch(function (error: any) {
         showMessage("Download failed,network problem or no backup");
