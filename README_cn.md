@@ -68,7 +68,7 @@
 
 ## 使用方法
 
-桌面端：[下载](https://koodo.960960.xyz/download) (需要科学上网)
+桌面端：[Github](https://github.com/troyeguo/koodo-reader/releases/latest) | [蓝奏云](https://wwa.lanzous.com/b0c90cieb) 密码：1234
 
 网页版：[前往](https://reader.960960.xyz) (需要科学上网)
 
