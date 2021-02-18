@@ -1,0 +1,15 @@
+{
+  "short_name": "Koodo Reader",
+  "name": "My First Progressive Web App",
+  "icons": [
+    {
+      "src": "favicon.png",
+      "sizes": "128x128",
+      "type": "image/png"
+    }
+  ],
+  "start_url": "/?utm_source=homescreen",
+  "background_color": "#fff",
+  "theme_color": "#FFE2B7",
+  "display": "standalone"
+}

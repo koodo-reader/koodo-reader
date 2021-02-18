@@ -41,11 +41,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       let sourcePath = path.join(storageLocation, "config");
       let outPath = path.join(storageLocation, "config.zip");
       await zip(sourcePath, outPath);
-      fs.unlink(outPath, (err) => {
-        if (err) throw err;
-        console.log("successfully config deleted");
-      });
-
       var data = fs.readFileSync(outPath);
       let blobTemp = new Blob([data], { type: "application/epub+zip" });
       let fileTemp = new File([blobTemp], "config.zip", {
