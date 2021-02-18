@@ -68,9 +68,9 @@
 
 ## 使用方法
 
-桌面端：[下载](https://koodo.960960.xyz/download) (vercel 被墙，需要科学上网)
+桌面端：[下载](https://koodo.960960.xyz/download) (需要科学上网)
 
-网页版：[前往](https://reader.960960.xyz) (vercel 被墙，需要科学上网)
+网页版：[前往](https://reader.960960.xyz) (需要科学上网)
 
 使用 [Homebrew](https://brew.sh/) 安装：
 
