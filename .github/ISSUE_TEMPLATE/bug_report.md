@@ -7,14 +7,12 @@ assignees: ""
 ---
 
 <!--
-  This is issue template for bug report, please fill out your answer in the blank space.
   Note: making sure you've already done the following things.
   - I've already installed the latest version of Koodo Reader
   - There are no similar issues on the issue list
   - I've already read the FAQ: https://koodo.960960.xyz/faq
 
-  这是一个报告bug的模板，请在尖括号(注释代码)的外面回答下面的问题
-  注意：请确认你已经做了下面这些事情。
+  请确认你已经做了下面这些事情。
   - 我已经安装了最新版的 Koodo Reader
   - 我已经搜索了已有的 Issues列表
   - 我已经阅读了 Koodo Reader 的 FAQ：https://koodo.960960.xyz/faq
