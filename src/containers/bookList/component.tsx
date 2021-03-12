@@ -13,7 +13,7 @@ import { Trans, NamespacesConsumer } from "react-i18next";
 import { BookListProps, BookListState } from "./interface";
 import OtherUtil from "../../utils/otherUtil";
 import localforage from "localforage";
-import DeletePopup from "../../components/deletePopup";
+import DeletePopup from "../../components/dialogs/deletePopup";
 import Empty from "../emptyPage";
 import { Redirect, withRouter } from "react-router-dom";
 import ViewMode from "../../components/viewMode";
@@ -188,6 +188,7 @@ class BookList extends React.Component<BookListProps, BookListState> {
     this.setState({ isOpenDelete });
   };
   render() {
+    console.log(this.props.isCollapsed);
     if (
       (this.state.favoriteBooks === 0 && this.props.mode === "favorite") ||
       !this.props.books ||
@@ -245,7 +246,14 @@ class BookList extends React.Component<BookListProps, BookListState> {
           ) : null}
         </div>
 
-        <div className="book-list-container-parent">
+        <div
+          className="book-list-container-parent"
+          style={
+            this.props.isCollapsed
+              ? { width: "calc(100vw - 70px)", left: "70px" }
+              : {}
+          }
+        >
           <div className="book-list-container">
             <ul className="book-list-item-box">{this.renderBookList()}</ul>
           </div>

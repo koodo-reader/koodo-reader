@@ -50,7 +50,9 @@ class ViewMode extends React.Component<ViewModeProps, ViewModeState> {
           }
         >
           <span className="icon-grid"></span>
-          <Trans>Card Mode</Trans>
+          <span className="view-name">
+            <Trans>Card Mode</Trans>
+          </span>
         </div>
         <div
           className="list-view-mode"
@@ -65,7 +67,10 @@ class ViewMode extends React.Component<ViewModeProps, ViewModeState> {
               : {}
           }
         >
-          <span className="icon-list"></span> <Trans>List Mode</Trans>
+          <span className="icon-list"></span>
+          <span className="view-name">
+            <Trans>List Mode</Trans>
+          </span>
         </div>
         <div
           className="list-view-mode"
@@ -80,7 +85,10 @@ class ViewMode extends React.Component<ViewModeProps, ViewModeState> {
               : {}
           }
         >
-          <span className="icon-cover"></span> <Trans>Cover Mode</Trans>
+          <span className="icon-cover" style={{ marginRight: 5 }}></span>
+          <span className="view-name">
+            <Trans>Cover Mode</Trans>
+          </span>
         </div>
       </div>
     );

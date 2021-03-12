@@ -46,7 +46,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "ele": "electron .",
-    "dev": "concurrently \"cross-env BROWSER=none npm start\" \"wait-on http://localhost:3000/ && nodemon --watch * --exec electron .\"",
+    "dev": "concurrently \"cross-env BROWSER=none npm start\" \"wait-on http://localhost:3000/ && nodemon --watch ./main.js --exec electron .\"",
     "pack": "electron-builder --dir",
     "release": "electron-builder ",
     "prerelease": "npm run build",
@@ -56,7 +56,7 @@
   "homepage": "./",
   "build": {
     "appId": "koodo.960960.xyz",
-    "productName": "Koodo Reader",
+    "productName": "KoodoReader",
     "copyright": "Copyright (c) 2020-2021 ${author}",
     "files": [
       "build/**/*",
@@ -110,7 +110,8 @@
     },
     "nsis": {
       "oneClick": false,
-      "allowToChangeInstallationDirectory": true
+      "allowToChangeInstallationDirectory": true,
+      "deleteAppDataOnUninstall": true
     }
   },
   "eslintConfig": {

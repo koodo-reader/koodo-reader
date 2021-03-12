@@ -20,6 +20,8 @@ const Router = () => {
         navigator.language === "zh-HK"
       ) {
         i18n.changeLanguage("cht");
+      } else if (navigator.language === "ru") {
+        i18n.changeLanguage("ru");
       } else {
         i18n.changeLanguage("en");
       }

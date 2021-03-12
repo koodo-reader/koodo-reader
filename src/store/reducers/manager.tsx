@@ -47,6 +47,7 @@ export function manager(
         ...state,
         isSearch: action.payload,
       };
+
     case "HANDLE_SETTING":
       return {
         ...state,

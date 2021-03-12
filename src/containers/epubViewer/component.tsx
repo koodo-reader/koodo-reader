@@ -1,11 +1,11 @@
 import React from "react";
 import ViewArea from "../viewArea";
 import Background from "../background";
-import SettingPanel from "../settingPanel";
-import NavigationPanel from "../navigationPanel";
-import OperationPanel from "../operationPanel";
+import SettingPanel from "../panels/settingPanel";
+import NavigationPanel from "../panels/navigationPanel";
+import OperationPanel from "../panels/operationPanel";
 import MessageBox from "../messageBox";
-import ProgressPanel from "../progressPanel";
+import ProgressPanel from "../panels/progressPanel";
 import { ReaderProps, ReaderState } from "./interface";
 import { MouseEvent } from "../../utils/mouseEvent";
 import OtherUtil from "../../utils/otherUtil";
@@ -29,7 +29,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
       isMessage: false,
       rendition: null,
       scale: OtherUtil.getReaderConfig("scale") || 1,
-      margin: OtherUtil.getReaderConfig("margin") || 30,
+      margin: parseInt(OtherUtil.getReaderConfig("margin")) || 30,
       time: ReadingTime.getTime(this.props.currentBook.key),
       isTouch: OtherUtil.getReaderConfig("isTouch") === "yes",
       readerMode: OtherUtil.getReaderConfig("readerMode") || "double",
@@ -369,8 +369,8 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
                 }
               : this.state.readerMode === "double"
               ? {
-                  left: this.state.margin + "px",
-                  right: this.state.margin + "px",
+                  left: this.state.margin - 40 + "px",
+                  right: this.state.margin - 40 + "px",
                 }
               : {}
           }

@@ -18,8 +18,7 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
     super(props);
     this.state = {
       isDeleteDialog: false,
-      isFavorite:
-        AddFavorite.getAllFavorite().indexOf(this.props.book.key) > -1,
+      isFavorite: AddFavorite.getAllFavorite().indexOf(this.props.book.key) > 1,
     };
   }
   componentDidMount() {

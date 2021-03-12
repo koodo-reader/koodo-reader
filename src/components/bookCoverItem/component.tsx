@@ -4,7 +4,7 @@ import RecentBooks from "../../utils/readUtils/recordRecent";
 import "./bookCoverItem.css";
 import { BookCoverProps, BookCoverState } from "./interface";
 import AddFavorite from "../../utils/readUtils/addFavorite";
-import ActionDialog from "../../containers/actionDialog";
+import ActionDialog from "../dialogs/actionDialog";
 import OtherUtil from "../../utils/otherUtil";
 import { withRouter } from "react-router-dom";
 import RecordLocation from "../../utils/readUtils/recordLocation";

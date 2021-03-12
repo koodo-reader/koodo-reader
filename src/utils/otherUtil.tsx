@@ -33,7 +33,7 @@ class OtherUtil {
   static MouseSearch(books: BookModel[]) {
     let keyword = (document.querySelector(
       ".header-search-box"
-    ) as HTMLInputElement).value;
+    ) as HTMLInputElement).value.toLowerCase();
     let bookNameArr: string[] = [];
     let AuthorNameArr: string[] = [];
     if (!books) return [];
@@ -56,8 +56,14 @@ class OtherUtil {
         bookNameArr.push(item.name.toLowerCase());
         AuthorNameArr.push(item.author.toLowerCase());
       });
-      let bookResults = this.fuzzyQuery(bookNameArr, event.target.value);
-      let authorResults = this.fuzzyQuery(AuthorNameArr, event.target.value);
+      let bookResults = this.fuzzyQuery(
+        bookNameArr,
+        event.target.value.toLowerCase()
+      );
+      let authorResults = this.fuzzyQuery(
+        AuthorNameArr,
+        event.target.value.toLowerCase()
+      );
       let results = this.MergeArray(bookResults, authorResults);
       return results;
     }
@@ -65,7 +71,7 @@ class OtherUtil {
   static MouseNoteSearch(notes: NoteModel[]) {
     let keyword = (document.querySelector(
       ".header-search-box"
-    ) as HTMLInputElement).value;
+    ) as HTMLInputElement).value.toLowerCase();
     let noteArr: string[] = [];
     let textArr: string[] = [];
     notes.forEach((item: NoteModel) => {
@@ -85,8 +91,14 @@ class OtherUtil {
         noteArr.push(item.notes.toLowerCase());
         textArr.push(item.text.toLowerCase());
       });
-      let noteResults = this.fuzzyQuery(noteArr, event.target.value);
-      let textResults = this.fuzzyQuery(textArr, event.target.value);
+      let noteResults = this.fuzzyQuery(
+        noteArr,
+        event.target.value.toLowerCase()
+      );
+      let textResults = this.fuzzyQuery(
+        textArr,
+        event.target.value.toLowerCase()
+      );
       let results = this.MergeArray(noteResults, textResults);
       return results;
     }
