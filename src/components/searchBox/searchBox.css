@@ -33,13 +33,19 @@ textarea::-ms-input-placeholder {
 }
 .header-search-text {
   position: absolute;
-  top: 11px;
+  top: 1px;
   right: -16px;
   font-size: 16px;
   display: inline-block;
-  width: 50px;
-  color: rgba(75, 75, 75, 1);
+  width: 40px;
+  height: 40px;
+  color: #8c8c8c;
   cursor: pointer;
+  margin-right: 5px;
+}
+.header-search-text:hover {
+  background-color: rgba(75, 75, 75, 0.035);
+  border-radius: 50%;
 }
 .search-text {
   font-size: 17px;

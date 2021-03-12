@@ -1,0 +1,204 @@
+.navigation-header {
+  position: fixed;
+  width: 299px;
+  height: 173px;
+  background: rgba(255, 255, 255, 1);
+  box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.16);
+  opacity: 1;
+  z-index: 10;
+}
+.book-cover {
+  float: left;
+  width: 91px;
+  height: 118px;
+  background: rgba(0, 0, 0, 0);
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.4);
+  position: relative;
+  left: 12px;
+  top: 14px;
+}
+/* .book-title-container {
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-start;
+} */
+.book-title {
+  height: 30px;
+  font-size: 15px;
+  line-height: 15px;
+  color: rgba(75, 75, 75, 1);
+  opacity: 1;
+  width: 150px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  height: 30px;
+  position: absolute;
+  left: 30px;
+  top: 20px;
+  position: relative;
+}
+.book-arthur {
+  height: 30px;
+  font-size: 15px;
+  line-height: 15px;
+  color: rgba(75, 75, 75, 0.65);
+  opacity: 1;
+  width: 150px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  height: 30px;
+  position: absolute;
+  left: 30px;
+  top: 10px;
+  position: relative;
+}
+
+.reading-duration {
+  position: absolute;
+  left: 120px;
+  top: 60px;
+  font-size: 14px;
+  line-height: 22px;
+  color: rgba(75, 75, 75, 1);
+}
+
+.book-content-title {
+  line-height: 27px;
+  opacity: 1;
+  cursor: pointer;
+}
+.book-bookmark-title {
+  line-height: 27px;
+  opacity: 1;
+  cursor: pointer;
+}
+.navigation-body-parent {
+  position: absolute;
+  top: 173px;
+  overflow: hidden;
+  width: 100%;
+  height: calc(100% - 173px);
+}
+.navigation-body {
+  width: 100%;
+  height: 100%;
+  padding-right: 17px; /* Increase/decrease this value for cross-browser compatibility */
+  box-sizing: border-box;
+
+  overflow-y: scroll;
+  z-index: 0;
+  overflow-x: hidden;
+}
+/* .navigation-body::-webkit-scrollbar {
+  display: none;
+} */
+.navigation-panel-empty-bookmark {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 15px;
+  color: rgba(75, 75, 75, 0.8);
+  line-height: 60px;
+}
+.navigation-navigation {
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+}
+.navigation-panel {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 299px;
+  height: 100%;
+  background: rgba(255, 255, 255, 1);
+  box-shadow: 0px 0px 16px rgba(0, 0, 0, 0.38);
+  opacity: 1;
+  z-index: 10;
+  animation: fade-left 0.2s ease-in-out 0s 1;
+}
+.navigation-search-box {
+  position: absolute;
+  left: 115px;
+  top: 90px;
+}
+.navigation-search-title {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: calc(100% - 44px);
+  height: 38px;
+  font-size: 16px;
+  color: rgba(75, 75, 75, 1);
+  margin: 6px 22px;
+}
+.nav-close-icon {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  font-size: 20px;
+  transition: 0.1s;
+  width: 38px;
+  height: 38px;
+}
+.nav-close-icon:hover {
+  background-color: rgba(75, 75, 75, 0.035);
+  border-radius: 50%;
+}
+.nav-search-list {
+  position: absolute;
+  left: 10px;
+  top: 110px;
+  right: 10px;
+  font-size: 15px;
+  height: calc(100vh - 150px);
+  overflow: scroll;
+}
+.nav-search-list-item {
+  border-bottom: 1px solid rgba(112, 112, 112, 0.1);
+  padding: 8px;
+  cursor: pointer;
+}
+.content-search-text {
+  color: red !important;
+  font-weight: 600 !important;
+}
+.nav-search-page {
+  position: absolute;
+  left: 40px;
+  bottom: 7px;
+  display: flex;
+  justify-content: space-around;
+  width: calc(100% - 80px);
+}
+.nav-search-page-item {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: rgba(75, 75, 75, 1);
+  border: 1px solid rgba(75, 75, 75, 1);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.active-page {
+  background-color: rgba(75, 75, 75, 1);
+  color: white;
+}
+.nav-lock-icon {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  font-size: 20px;
+  color: rgba(75, 75, 75, 0.3);
+  margin: 10px;
+  cursor: pointer;
+  font-size: 20px;
+}

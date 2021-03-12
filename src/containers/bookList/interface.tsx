@@ -9,6 +9,7 @@ export interface BookListProps extends RouteComponentProps<any> {
   shelfIndex: number;
   searchResults: number[];
   isSearch: boolean;
+  isCollapsed: boolean;
   isBookSort: boolean;
   viewMode: string;
   bookmarks: BookmarkModel[];

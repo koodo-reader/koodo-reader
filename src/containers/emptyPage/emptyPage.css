@@ -2,8 +2,8 @@
   position: absolute;
   top: 75px;
   left: 203px;
-  width: calc(100vw - 200px);
-  height: calc(100vh - 80px);
+  width: calc(100vw - 203px);
+  height: calc(100vh - 75px);
   overflow: hidden;
 }
 .empty-page-illustration {

@@ -1,6 +1,6 @@
 .single-control-container {
   width: calc(100% - 30px);
-  height: 80px;
+  height: 60px;
   margin: 0px 15px 0px 15px;
   display: flex;
   justify-content: space-around;

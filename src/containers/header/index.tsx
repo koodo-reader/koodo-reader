@@ -17,6 +17,8 @@ const mapStateToProps = (state: stateType) => {
     bookmarks: state.reader.bookmarks,
     books: state.manager.books,
     notes: state.reader.notes,
+    isCollapsed: state.sidebar.isCollapsed,
+
     isSortDisplay: state.manager.isSortDisplay,
   };
 };

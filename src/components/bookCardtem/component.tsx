@@ -4,7 +4,7 @@ import RecentBooks from "../../utils/readUtils/recordRecent";
 import "./bookCardItem.css";
 import { BookCardProps, BookCardState } from "./interface";
 import AddFavorite from "../../utils/readUtils/addFavorite";
-import ActionDialog from "../../containers/actionDialog";
+import ActionDialog from "../dialogs/actionDialog";
 import OtherUtil from "../../utils/otherUtil";
 import { withRouter } from "react-router-dom";
 import RecordLocation from "../../utils/readUtils/recordLocation";
