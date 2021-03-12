@@ -39,6 +39,7 @@
   margin-left: 16px;
   font-size: 15px;
   line-height: 31px;
+  border-radius: 5px;
 }
 .delete-shelf-icon {
   cursor: pointer;

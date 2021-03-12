@@ -2,10 +2,11 @@
   position: fixed;
   right: 160px;
   top: 0px;
+  width: 138px;
+
   margin-right: 20px;
   margin-top: 20px;
-  min-width: 138px;
-  padding: 0px 10px;
+  min-width: 42px;
   height: 42px;
   background: rgba(75, 75, 75, 1);
   opacity: 1;

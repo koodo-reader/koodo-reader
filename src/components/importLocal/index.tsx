@@ -18,6 +18,7 @@ const mapStateToProps = (state: stateType) => {
     books: state.manager.books,
     notes: state.reader.notes,
     bookmarks: state.reader.bookmarks,
+    isCollapsed: state.sidebar.isCollapsed,
     deletedBooks: state.manager.deletedBooks,
   };
 };

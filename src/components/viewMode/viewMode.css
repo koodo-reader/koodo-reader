@@ -16,7 +16,11 @@
   font-weight: 500;
   transition: all 0.1s ease;
 }
-
+.view-name {
+  display: inline-block;
+  width: 60px;
+  text-align: center;
+}
 .card-list-mode {
   max-width: 81px;
   height: 20px;

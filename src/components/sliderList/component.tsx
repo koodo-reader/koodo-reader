@@ -14,7 +14,7 @@ class SliderList extends React.Component<SliderListProps, SliderListState> {
           ? OtherUtil.getReaderConfig("fontSize") || "17"
           : this.props.mode === "scale"
           ? OtherUtil.getReaderConfig("scale") || "1"
-          : OtherUtil.getReaderConfig("margin") || "30",
+          : OtherUtil.getReaderConfig("margin") || "50",
     };
   }
 
@@ -66,13 +66,7 @@ class SliderList extends React.Component<SliderListProps, SliderListState> {
           )}
         </div>
 
-        <span className="ultra-small-size">
-          {this.props.mode === "fontSize"
-            ? "A"
-            : this.props.mode === "scale"
-            ? "1"
-            : "0"}
-        </span>
+        <span className="ultra-small-size">{this.props.minLabel}</span>
         <div className="font-size-selector">
           <input
             className="input-progress"
@@ -80,13 +74,7 @@ class SliderList extends React.Component<SliderListProps, SliderListState> {
             type="range"
             max={this.props.maxValue}
             min={this.props.minValue}
-            step={
-              this.props.mode === "fontSize"
-                ? "1"
-                : this.props.mode === "scale"
-                ? "0.1"
-                : "5"
-            }
+            step={this.props.step}
             onInput={(event) => {
               this.onValueChange(event);
             }}
@@ -94,27 +82,19 @@ class SliderList extends React.Component<SliderListProps, SliderListState> {
               this.onValueInput(event);
             }}
             onMouseUp={() => {
-              this.props.mode === "scale" && window.location.reload();
+              this.props.mode === "scale" ||
+                (this.props.mode === "margin" && window.location.reload());
             }}
           />
         </div>
-        {this.props.mode === "fontSize" ? (
-          <span className="ultra-large-size">A</span>
-        ) : this.props.mode === "scale" ? (
+        {
           <span
             className="ultra-large-size"
             style={{ fontSize: "16px", right: "5px" }}
           >
-            4
+            {this.props.maxLabel}
           </span>
-        ) : (
-          <span
-            className="ultra-large-size"
-            style={{ fontSize: "16px", right: "5px" }}
-          >
-            50
-          </span>
-        )}
+        }
       </div>
     );
   }

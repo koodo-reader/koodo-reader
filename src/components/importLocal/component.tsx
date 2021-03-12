@@ -483,11 +483,23 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
         multiple={true}
       >
         {({ getRootProps, getInputProps }) => (
-          <div className="import-from-local" {...getRootProps()}>
+          <div
+            className="import-from-local"
+            {...getRootProps()}
+            style={
+              this.props.isCollapsed && document.body.clientWidth < 950
+                ? { width: "42px" }
+                : {}
+            }
+          >
             <div className="animation-mask-local"></div>
-            <span>
-              <Trans>Import from Local</Trans>
-            </span>
+            {this.props.isCollapsed && document.body.clientWidth < 950 ? (
+              <span className="icon-export"></span>
+            ) : (
+              <span>
+                <Trans>Import from Local</Trans>
+              </span>
+            )}
 
             <input
               type="file"
