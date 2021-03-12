@@ -3,6 +3,9 @@ export interface SliderListProps {
   maxValue: string;
   minValue: string;
   mode: string;
+  step: number;
+  minLabel: string;
+  maxLabel: string;
   handleMessageBox: (isShow: boolean) => void;
   handleMessage: (message: string) => void;
 }

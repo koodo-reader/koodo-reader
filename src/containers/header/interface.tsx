@@ -4,6 +4,8 @@ import BookmarkModel from "../../model/Bookmark";
 export interface HeaderProps {
   isSearch: boolean;
   isSortDisplay: boolean;
+  isCollapsed: boolean;
+
   bookmarks: BookmarkModel[];
   notes: NoteModel[];
   books: BookModel[];

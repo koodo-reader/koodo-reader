@@ -33,6 +33,7 @@ export function handleViewMode(mode: string) {
 export function handleMessage(message: string) {
   return { type: "HANDLE_MESSAGE", payload: message };
 }
+
 export function handleMessageBox(isShow: boolean) {
   return { type: "HANDLE_MESSAGE_BOX", payload: isShow };
 }

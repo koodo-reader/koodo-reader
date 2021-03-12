@@ -1,24 +1,24 @@
 import React from "react";
 import Sidebar from "../../containers/sidebar";
 import Header from "../../containers/header";
-import DeleteDialog from "../../containers/deleteDialog";
-import EditDialog from "../../containers/editDialog";
-import AddDialog from "../../containers/addDialog";
-import SortDialog from "../../containers/sortDialog";
+import DeleteDialog from "../../components/dialogs/deleteDialog";
+import EditDialog from "../../components/dialogs/editDialog";
+import AddDialog from "../../components/dialogs/addDialog";
+import SortDialog from "../../components/dialogs/sortDialog";
 import MessageBox from "../../containers/messageBox";
-import BackupDialog from "../../containers/backupDialog";
+import BackupDialog from "../../components/dialogs/backupDialog";
 import "./manager.css";
 import { ManagerProps, ManagerState } from "./interface";
 import { Trans } from "react-i18next";
 import OtherUtil from "../../utils/otherUtil";
 import AddFavorite from "../../utils/readUtils/addFavorite";
-import SettingDialog from "../../components/settingDialog";
+import SettingDialog from "../../components/dialogs/settingDialog";
 import { isMobileOnly } from "react-device-detect";
 import { Route, Switch, Redirect } from "react-router-dom";
 import { routes } from "../../router/routes";
 import Arrow from "../../components/arrow";
-import LoadingDialog from "../../components/loadingDialog";
-import DownloadDesk from "../../components/downloadDesk";
+import LoadingDialog from "../../components/dialogs/loadingDialog";
+import DownloadDesk from "../../components/dialogs/downloadDesk";
 // declare var window: any;
 
 //判断是否为触控设备
@@ -167,7 +167,7 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
         }
 
         {this.props.isMessage && <MessageBox />}
-        <SortDialog />
+        {this.props.isSortDisplay && <SortDialog />}
         {this.props.isBackup && <BackupDialog />}
         {this.props.isSettingOpen && <SettingDialog />}
         {this.props.isDownloadDesk && !isElectron() && <DownloadDesk />}

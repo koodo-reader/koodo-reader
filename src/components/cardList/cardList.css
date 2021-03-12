@@ -53,7 +53,7 @@
   min-width: 330px;
   cursor: pointer;
   font-size: 16px;
-  width: calc(50vw - 110px);
+  width: calc(50vw - 135px);
   height: 146px;
   opacity: 1;
   border: 15px solid transparent;
@@ -140,6 +140,7 @@
 .card-list-container-box {
   margin-top: 40px;
   height: calc(100% - 89px);
+  width: 100%;
 }
 .icon-card-right {
   margin: 5px;

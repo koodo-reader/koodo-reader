@@ -7,6 +7,8 @@ export interface ImportLocalProps extends RouteComponentProps<any> {
   deletedBooks: BookModel[];
   dragItem: string;
   notes: NoteModel[];
+  isCollapsed: boolean;
+
   bookmarks: BookmarkModel[];
   handleMessageBox: (isShow: boolean) => void;
   handleMessage: (message: string) => void;

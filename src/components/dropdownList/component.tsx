@@ -2,7 +2,7 @@
 import React from "react";
 import { dropdownList } from "../../constants/dropdownList";
 import "./dropdownList.css";
-import { Trans } from "react-i18next";
+import { Trans, NamespacesConsumer } from "react-i18next";
 import { DropdownListProps, DropdownListState } from "./interface";
 import OtherUtil from "../../utils/otherUtil";
 const isElectron = require("is-electron");
@@ -14,7 +14,7 @@ if (
 ) {
   const { ipcRenderer } = window.require("electron");
   dropdownList[0].option = ipcRenderer.sendSync("fonts-ready", "ping");
-  dropdownList[0].option.push("内嵌字体");
+  dropdownList[0].option.push("Built-in font");
 }
 
 class DropdownList extends React.Component<
@@ -25,7 +25,9 @@ class DropdownList extends React.Component<
     super(props);
     this.state = {
       currentFontFamilyIndex: dropdownList[0].option.findIndex((item: any) => {
-        return item === (OtherUtil.getReaderConfig("fontFamily") || "内嵌字体");
+        return (
+          item === (OtherUtil.getReaderConfig("fontFamily") || "Built-in font")
+        );
       }),
       currentLineHeightIndex: dropdownList[1].option.findIndex((item: any) => {
         return item === (OtherUtil.getReaderConfig("lineHeight") || "1.25");
@@ -60,7 +62,7 @@ class DropdownList extends React.Component<
         });
         this.props.currentEpub.rendition.themes.default({
           "a, article, cite, code, div, li, p, pre, span, table": {
-            "font-family": `${arr[0] || "内嵌字体"} !important`,
+            "font-family": `${arr[0] || "Built-in font"} !important`,
           },
         });
         break;
@@ -95,13 +97,19 @@ class DropdownList extends React.Component<
             }}
           >
             {item.option.map((subItem: string, index: number) => (
-              <option
-                value={[subItem, index.toString()]}
-                className="general-setting-option"
-                key={index}
-              >
-                {subItem}
-              </option>
+              <NamespacesConsumer>
+                {(t) => {
+                  return (
+                    <option
+                      value={[subItem, index.toString()]}
+                      className="general-setting-option"
+                      key={index}
+                    >
+                      {t(subItem)}
+                    </option>
+                  );
+                }}
+              </NamespacesConsumer>
             ))}
           </select>
         </li>

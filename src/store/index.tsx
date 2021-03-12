@@ -79,6 +79,7 @@ export type stateType = {
     mode: string;
     shelfIndex: number;
     isDragToLove: boolean;
+    isCollapsed: boolean;
     isDragToDelete: boolean;
   };
   viewArea: {

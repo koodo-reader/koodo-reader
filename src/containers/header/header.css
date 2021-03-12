@@ -7,21 +7,21 @@
 
 .header-sort-container {
   position: absolute;
-  left: 450px;
+  left: 455px;
   top: 29px;
   cursor: pointer;
   transition: 0.1s;
-  width: 100px;
+  width: 150px;
   height: 27px;
   transition: all 0.1s ease;
-  z-index: 9;
+  z-index: 1;
   text-align: center;
   display: flex;
   justify-content: center;
 }
 .setting-icon-container:hover {
   background-color: rgba(75, 75, 75, 0.035);
-  border-radius: 8px;
+  border-radius: 50%;
 }
 .header-sort-text {
   float: left;
@@ -39,7 +39,7 @@
 }
 .only-local-container {
   position: absolute;
-  left: 540px;
+  left: 520px;
   margin-top: 29px;
 }
 .only-local-text {
@@ -71,12 +71,13 @@
 .import-from-cloud {
   margin-right: 20px;
   margin-top: 20px;
-  min-width: 138px;
+  width: 138px;
+  max-width: 158px;
   height: 42px;
   border: 2px solid #4b4b4b;
   background: white;
-  padding: 0px 10px;
   opacity: 1;
+  padding: 0 !important;
   border-radius: 25px;
   line-height: 38px;
   text-align: center;
@@ -98,15 +99,16 @@
 @media screen and (max-width: 950px) {
   .import-from-cloud {
     position: fixed;
-    left: 20px;
-    top: calc(100vh - 80px);
-    width: 158px;
+    left: 15px;
+    top: calc(100vh - 110px);
+    width: 138px;
   }
   .import-from-local {
     position: fixed !important;
-    left: 20px;
-    top: calc(100vh - 140px) !important;
-    width: 138px !important;
+    left: 15px;
+    top: calc(100vh - 170px) !important;
+    width: 138px;
+    padding: 0px !important;
   }
 }
 .download-demo-book {
@@ -140,7 +142,7 @@
 .header-search-container {
   position: absolute;
   top: 23px;
-  left: 210px;
+  left: 235px;
   width: 209px;
   height: 40px;
 }
@@ -148,15 +150,17 @@
   font-size: 25px;
 }
 .setting-icon-container {
-  width: 30px;
-  height: 35px;
+  width: 50px;
+  height: 50px;
   font-size: 25px;
   line-height: 37px;
   position: absolute;
-  left: 570px;
-  top: 25px;
+  left: 590px;
+  top: 20px;
   color: rgba(75, 75, 75, 1);
   cursor: pointer;
   transition: 0.1s;
-  padding-left: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

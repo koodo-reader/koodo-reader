@@ -1,7 +1,7 @@
 //阅读器图书内容区域
 import React from "react";
 import "./viewArea.css";
-import PopupMenu from "../popupMenu";
+import PopupMenu from "../../components/popups/popupMenu";
 import { ViewAreaProps, ViewAreaStates } from "./interface";
 import RecordLocation from "../../utils/readUtils/recordLocation";
 import OtherUtil from "../../utils/otherUtil";
@@ -26,7 +26,7 @@ class ViewArea extends React.Component<ViewAreaProps, ViewAreaStates> {
 
   componentDidMount() {
     let epub = this.props.currentEpub;
-    (window as any).rangy.init(); // 初始化
+    window.rangy.init(); // 初始化
     this.props.rendition.on("locationChanged", () => {
       this.props.handleReadingEpub(epub);
       this.props.handleOpenMenu(false);
@@ -102,7 +102,7 @@ class ViewArea extends React.Component<ViewAreaProps, ViewAreaStates> {
           OtherUtil.getReaderConfig("lineHeight") || "1.25"
         } !important`,
         "font-family": `${
-          OtherUtil.getReaderConfig("fontFamily") || "内嵌字体"
+          OtherUtil.getReaderConfig("fontFamily") || "Built-in font"
         } !important`,
         color: `${
           OtherUtil.getReaderConfig("backgroundColor") === "rgba(44,47,49,1)"

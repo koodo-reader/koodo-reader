@@ -4,7 +4,7 @@ export const dropdownList = [
     title: "Font Family",
     value: "fontFamily",
     option: [
-      "内嵌字体",
+      "Built-in font",
       "Helvetica",
       "Times New Roman",
       "Microsoft YaHei",

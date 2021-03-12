@@ -30,9 +30,9 @@
   text-align: left;
 }
 .font-size-selector {
-  width: 205px;
+  width: 200px;
   height: 28px;
-  margin: 0px !important;
+  margin-left: 0px !important;
   position: relative;
 }
 
@@ -47,7 +47,6 @@
 .font-size-demo {
   text-align: center;
   color: rgba(75, 75, 75, 1);
-  margin-left: 19px;
   position: relative;
   top: 10px;
 }

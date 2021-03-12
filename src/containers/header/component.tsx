@@ -75,7 +75,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
 
         <div
           className="header-sort-container"
-          onMouseEnter={() => {
+          onClick={() => {
             this.handleSortBooks();
           }}
         >
@@ -84,13 +84,13 @@ class Header extends React.Component<HeaderProps, HeaderState> {
           </span>
           <span className="icon-sort header-sort-icon"></span>
         </div>
-        <div className="setting-icon-container">
-          <span
-            className="icon-setting setting-icon"
-            onClick={() => {
-              this.props.handleSetting(true);
-            }}
-          ></span>
+        <div
+          className="setting-icon-container"
+          onClick={() => {
+            this.props.handleSetting(true);
+          }}
+        >
+          <span className="icon-setting setting-icon"></span>
         </div>
 
         <div
@@ -98,11 +98,27 @@ class Header extends React.Component<HeaderProps, HeaderState> {
           onClick={() => {
             this.props.handleBackupDialog(true);
           }}
+          style={
+            this.props.isCollapsed && document.body.clientWidth < 950
+              ? { width: "42px" }
+              : {}
+          }
         >
           <div className="animation-mask"></div>
-          <Trans>Backup and Restore</Trans>
+          {this.props.isCollapsed && document.body.clientWidth < 950 ? (
+            <span
+              className="icon-clockwise"
+              style={{ fontSize: "20px" }}
+            ></span>
+          ) : (
+            <Trans>Backup and Restore</Trans>
+          )}
         </div>
-        <ImportLocal {...{ handleDrag: this.props.handleDrag }} />
+        <ImportLocal
+          {...{
+            handleDrag: this.props.handleDrag,
+          }}
+        />
         {isElectron() && <UpdateInfo />}
       </div>
     );

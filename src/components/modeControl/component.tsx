@@ -1,7 +1,6 @@
 //阅读模式切换
 import React from "react";
 import "./modeControl.css";
-import { Trans } from "react-i18next";
 import { ModeControlProps, ModeControlState } from "./interface";
 import OtherUtil from "../../utils/otherUtil";
 
@@ -29,9 +28,6 @@ class ModeControl extends React.Component<ModeControlProps, ModeControlState> {
           style={this.state.readerMode === "single" ? {} : { opacity: 0.4 }}
         >
           <span className="icon-single-page single-page-icon"></span>
-          <div className="single-mode-text">
-            <Trans>Single-Page Mode</Trans>
-          </div>
         </div>
         <div
           className="double-mode-container"
@@ -41,9 +37,6 @@ class ModeControl extends React.Component<ModeControlProps, ModeControlState> {
           style={this.state.readerMode === "double" ? {} : { opacity: 0.4 }}
         >
           <span className="icon-two-page two-page-icon"></span>
-          <div className="double-mode-text">
-            <Trans>Double-Page Mode</Trans>
-          </div>
         </div>
 
         <div
@@ -54,9 +47,6 @@ class ModeControl extends React.Component<ModeControlProps, ModeControlState> {
           style={this.state.readerMode === "continuous" ? {} : { opacity: 0.4 }}
         >
           <span className="icon-scroll two-page-icon"></span>
-          <div className="double-mode-text">
-            <Trans>Continuous Scroll</Trans>
-          </div>
         </div>
       </div>
     );

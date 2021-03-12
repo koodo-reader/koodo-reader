@@ -3,10 +3,11 @@ import { connect } from "react-redux";
 import { stateType } from "../../store";
 import { withNamespaces } from "react-i18next";
 import Sidebar from "./component";
-import { handleSearch } from "../../store/actions/manager";
+import { handleSearch, handleSortDisplay } from "../../store/actions/manager";
 import {
   handleDragToLove,
   handleDragToDelete,
+  handleCollapse,
 } from "../../store/actions/sidebar";
 
 const mapStateToProps = (state: stateType) => {
@@ -17,6 +18,8 @@ const actionCreator = {
   handleSearch,
   handleDragToLove,
   handleDragToDelete,
+  handleSortDisplay,
+  handleCollapse,
 };
 
 export default connect(
