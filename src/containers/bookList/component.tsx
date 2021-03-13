@@ -193,7 +193,6 @@ class BookList extends React.Component<BookListProps, BookListState> {
     this.setState({ isOpenDelete });
   };
   render() {
-    console.log(this.props.isCollapsed);
     if (
       (this.state.favoriteBooks === 0 && this.props.mode === "favorite") ||
       !this.props.books ||
