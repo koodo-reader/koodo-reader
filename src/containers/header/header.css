@@ -7,7 +7,7 @@
 
 .header-sort-container {
   position: absolute;
-  left: 455px;
+  left: 465px;
   top: 29px;
   cursor: pointer;
   transition: 0.1s;
@@ -142,7 +142,7 @@
 .header-search-container {
   position: absolute;
   top: 23px;
-  left: 235px;
+  left: 250px;
   width: 209px;
   height: 40px;
 }
@@ -155,7 +155,7 @@
   font-size: 25px;
   line-height: 37px;
   position: absolute;
-  left: 590px;
+  left: 595px;
   top: 20px;
   color: rgba(75, 75, 75, 1);
   cursor: pointer;

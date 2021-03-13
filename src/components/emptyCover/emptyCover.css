@@ -20,6 +20,7 @@
   font-weight: 600;
   color: rgba(75, 75, 75, 0.8);
   width: 90%;
+  height: 80px;
   text-align: left;
   line-height: 18px;
   text-overflow: ellipsis;
@@ -29,7 +30,9 @@
   overflow: hidden;
   position: relative;
   margin-left: 5px;
-  margin-top: 20px;
+
+  display: flex;
+  align-items: center;
 }
 .cover-footer {
   width: 100%;

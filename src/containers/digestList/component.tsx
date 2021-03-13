@@ -54,7 +54,14 @@ class DigestList extends React.Component<DigestListProps, DigestListStates> {
     };
 
     return (
-      <div className="digest-list-container-parent">
+      <div
+        className="digest-list-container-parent"
+        style={
+          this.props.isCollapsed
+            ? { width: "calc(100vw - 70px)", left: "70px" }
+            : {}
+        }
+      >
         <div className="note-tags">
           <NoteTag {...{ handleTag: this.handleTag }} />
         </div>

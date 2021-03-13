@@ -9,6 +9,7 @@ const mapStateToProps = (state: stateType) => {
   return {
     digests: state.reader.digests,
     isSearch: state.manager.isSearch,
+    isCollapsed: state.sidebar.isCollapsed,
     searchResults: state.manager.searchResults,
   };
 };

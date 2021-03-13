@@ -7,6 +7,7 @@ import EmptyPage from "./component";
 const mapStateToProps = (state: stateType) => {
   return {
     mode: state.sidebar.mode,
+    isCollapsed: state.sidebar.isCollapsed,
   };
 };
 const actionCreator = {};

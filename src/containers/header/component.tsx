@@ -10,7 +10,7 @@ import UpdateInfo from "../../components/updateInfo";
 import RestoreUtil from "../../utils/syncUtils/restoreUtil";
 import BackupUtil from "../../utils/syncUtils/backupUtil";
 
-const isElectron = require("is-electron");
+import { isElectron } from "react-device-detect";
 
 class Header extends React.Component<HeaderProps, HeaderState> {
   constructor(props: HeaderProps) {
@@ -29,7 +29,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     }
   };
   async componentDidMount() {
-    if (isElectron()) {
+    if (isElectron) {
       const fs = window.require("fs");
       const path = window.require("path");
       const { zip } = window.require("zip-a-folder");
@@ -52,7 +52,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         RestoreUtil.restore(
           fileTemp,
           () => {
-            isElectron() &&
+            isElectron &&
               BackupUtil.backup(
                 this.props.books,
                 this.props.notes,
@@ -119,7 +119,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
             handleDrag: this.props.handleDrag,
           }}
         />
-        {isElectron() && <UpdateInfo />}
+        {isElectron && <UpdateInfo />}
       </div>
     );
   }

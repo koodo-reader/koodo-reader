@@ -12,7 +12,7 @@ import axios from "axios";
 import { config } from "../../constants/driveList";
 import MobiFile from "../../utils/mobiUtil";
 import iconv from "iconv-lite";
-import isElectron from "is-electron";
+import { isElectron } from "react-device-detect";
 import { withRouter } from "react-router-dom";
 import RecentBooks from "../../utils/readUtils/recordRecent";
 import OtherUtil from "../../utils/otherUtil";
@@ -30,7 +30,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
     };
   }
   componentDidMount() {
-    if (isElectron()) {
+    if (isElectron) {
       const { ipcRenderer } = window.require("electron");
       ipcRenderer.sendSync("start-server", "ping");
       if (!OtherUtil.getReaderConfig("storageLocation"))
@@ -108,7 +108,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
           setTimeout(() => {
             this.props.handleLoadingDialog(false);
           }, 1000);
-          if (isElectron()) {
+          if (isElectron) {
             BackupUtil.backup(
               bookArr,
               this.props.notes,
@@ -133,7 +133,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
     let extension = file.name.split(".")[file.name.split(".").length - 1];
     this.props.handleLoadingDialog(true);
     if (
-      !isElectron() &&
+      !isElectron &&
       (extension === "txt" || extension === "mobi" || extension === "azw3")
     ) {
       this.props.handleLoadingDialog(false);

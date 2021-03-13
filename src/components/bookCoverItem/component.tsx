@@ -8,7 +8,7 @@ import ActionDialog from "../dialogs/actionDialog";
 import OtherUtil from "../../utils/otherUtil";
 import { withRouter } from "react-router-dom";
 import RecordLocation from "../../utils/readUtils/recordLocation";
-import isElectron from "is-electron";
+import { isElectron } from "react-device-detect";
 import EmptyCover from "../emptyCover";
 import Parser from "html-react-parser";
 import { Trans } from "react-i18next";
@@ -32,7 +32,7 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
   componentDidMount() {
     let filePath = "";
     //控制是否自动打开本书
-    if (isElectron()) {
+    if (isElectron) {
       const { ipcRenderer } = window.require("electron");
       filePath = ipcRenderer.sendSync("get-file-data");
     }

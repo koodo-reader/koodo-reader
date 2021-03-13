@@ -206,7 +206,7 @@
   "Download": "Скачать",
   "Use the fonts from your local computer": "Используйте шрифты с локального компьютера",
   "Backup your data with Webdav": "Резервное копирование данных с помощью Webdav",
-  "More formats supported": "Больше поддерживаемых форматов",
+  "More formats supported": "Больше поддерживаемых форматов,mobi,azw3,txt",
   "Click the top-right button to add books": "Нажмите правую верхнюю кнопку, чтобы добавить книги",
   "Download Desktop Version": "Скачать настольную версию",
   "Koodo Reader's web version are limited by the browser, for more powerful features, please download the desktop version.": "Веб-версия функционально ограничена браузером, для более мощных функций скачайте настольную версию.",
@@ -230,5 +230,6 @@
   "Date": "Дата: ",
   "Unauthorize": "Неавторизирован",
   "Unauthorize Successfully": "Неавторизировано",
-  "Built-in font": "Built-in font"
+  "Built-in font": "Built-in font",
+  "View Mode": "View Mode"
 }

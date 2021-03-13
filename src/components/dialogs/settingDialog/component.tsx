@@ -7,7 +7,7 @@ import i18n from "../../../i18n";
 import { version } from "../../../../package.json";
 import OtherUtil from "../../../utils/otherUtil";
 import SyncUtil from "../../../utils/syncUtils/common";
-const isElectron = require("is-electron");
+import { isElectron } from "react-device-detect";
 
 class SettingDialog extends React.Component<
   SettingInfoProps,
@@ -53,7 +53,7 @@ class SettingDialog extends React.Component<
     this.props.handleMessageBox(true);
   };
   handleJump = (url: string) => {
-    isElectron()
+    isElectron
       ? window.require("electron").shell.openExternal(url)
       : window.open(url);
   };
@@ -109,7 +109,10 @@ class SettingDialog extends React.Component<
     OtherUtil.setReaderConfig("storageLocation", path.filePaths[0]);
     document.getElementsByClassName(
       "setting-dialog-location-title"
-    )[0].innerHTML = path.filePaths[0];
+    )[0].innerHTML =
+      path.filePaths[0] ||
+      OtherUtil.getReaderConfig("storageLocation") ||
+      ipcRenderer.sendSync("storage-location", "ping");
   };
   render() {
     return (
@@ -224,7 +227,7 @@ class SettingDialog extends React.Component<
               ></span>
             </span>
           </div>
-          {isElectron() && (
+          {isElectron && (
             <div className="setting-dialog-new-title">
               <Trans>Sync data from storage</Trans>
               <span
@@ -255,7 +258,7 @@ class SettingDialog extends React.Component<
               </span>
             </div>
           )}
-          {isElectron() && (
+          {isElectron && (
             <>
               <div className="setting-dialog-new-title">
                 <Trans>Change storage location</Trans>

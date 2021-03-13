@@ -18,7 +18,7 @@ import Empty from "../emptyPage";
 import { Redirect, withRouter } from "react-router-dom";
 import ViewMode from "../../components/viewMode";
 import BackUtil from "../../utils/syncUtils/backupUtil";
-import isElectron from "is-electron";
+import { isElectron } from "react-device-detect";
 
 class BookList extends React.Component<BookListProps, BookListState> {
   constructor(props: BookListProps) {
@@ -104,7 +104,12 @@ class BookList extends React.Component<BookListProps, BookListState> {
           //返回排序后的图书index
           SortUtil.sortBooks(this.props.books, this.props.bookSortCode) || []
         )
-      : this.handleKeyFilter(this.props.books, RecordRecent.getAllRecent());
+      : this.handleKeyFilter(
+          this.props.books,
+          this.props.bookSortCode.order === 1
+            ? RecordRecent.getAllRecent()
+            : RecordRecent.getAllRecent().reverse()
+        );
     if (this.props.mode === "shelf" && books.length === 0) {
       return (
         <div
@@ -196,7 +201,7 @@ class BookList extends React.Component<BookListProps, BookListState> {
     ) {
       return <Redirect to="/manager/empty" />;
     }
-    if (isElectron()) {
+    if (isElectron) {
       localforage.getItem(this.props.books[0].key).then((result) => {
         if (result) {
           BackUtil.backup(

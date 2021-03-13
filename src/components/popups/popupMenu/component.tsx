@@ -116,6 +116,7 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     if (note && note.notes) {
       dialog!.value = note.notes;
     }
+    dialog?.focus();
     this.props.handleNoteKey(key);
   };
   handleShowDelete = (deleteKey: string) => {

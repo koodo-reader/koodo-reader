@@ -162,7 +162,8 @@
   "Setting": "设置",
   "Turn on touch screen mode": "开启触控屏模式",
   "Auto open latest book": "自动打开上次阅读的图书",
-  "Project link": "项目地址",
+  "Project link": "开源地址",
+  "View Mode": "视图模式",
   "About author": "关于作者",
   "Official website": "官网主页",
   "Minute": "分钟",
@@ -244,7 +245,7 @@
   "Download": "前往下载",
   "Use the fonts from your local computer": "支持设置电脑中的字体",
   "Backup your data with Webdav": "支持 Webdav 备份方式",
-  "More formats supported": "支持更多的图书格式",
+  "More formats supported": "支持更多的图书格式，mobi、azw3、txt",
   "Koodo Reader's web version are limited by the browser, for more powerful features, please download the desktop version.": "网页版功能受浏览器限制，部分功能仅客户端支持",
   "What's been fixed": "问题修复"
 }

@@ -4,8 +4,7 @@ import "./imageViewer.css";
 import { ImageViewerProps, ImageViewerStates } from "./interface";
 import StyleUtil from "../../utils/readUtils/styleUtil";
 import FileSaver from "file-saver";
-
-const isElectron = require("is-electron");
+import { isElectron } from "react-device-detect";
 
 declare var window: any;
 
@@ -47,7 +46,7 @@ class ImageViewer extends React.Component<ImageViewerProps, ImageViewerStates> {
       event.target.parentNode.parentNode.href ||
       "";
     if (
-      isElectron() &&
+      isElectron &&
       href &&
       href.indexOf("OEBPF") === -1 &&
       href.indexOf("OEBPS") === -1 &&

@@ -5,9 +5,9 @@ import "./dropdownList.css";
 import { Trans, NamespacesConsumer } from "react-i18next";
 import { DropdownListProps, DropdownListState } from "./interface";
 import OtherUtil from "../../utils/otherUtil";
-const isElectron = require("is-electron");
+import { isElectron } from "react-device-detect";
 if (
-  isElectron() &&
+  isElectron &&
   navigator.appVersion.indexOf("NT 6.1") === -1 &&
   navigator.appVersion.indexOf("NT 5.1") === -1 &&
   navigator.appVersion.indexOf("NT 6.0") === -1

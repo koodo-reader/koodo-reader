@@ -10,7 +10,7 @@ import WebdavUtil from "../../../utils/syncUtils/webdav";
 import { BackupDialogProps, BackupDialogState } from "./interface";
 import TokenDialog from "../../tokenDialog";
 import OtherUtil from "../../../utils/otherUtil";
-import isElectron from "is-electron";
+import { isElectron } from "react-device-detect";
 import Lottie from "react-lottie";
 import animationSuccess from "../../../assets/success.json";
 
@@ -41,7 +41,7 @@ class BackupDialog extends React.Component<
   handleFinish = () => {
     this.setState({ currentStep: 2 });
     this.props.handleLoadingDialog(false);
-    isElectron() &&
+    isElectron &&
       BackupUtil.backup(
         this.props.books,
         this.props.notes,
@@ -102,7 +102,7 @@ class BackupDialog extends React.Component<
           break;
 
         case 3:
-          if (!isElectron()) {
+          if (!isElectron) {
             this.props.handleDownloadDesk(true);
             break;
           }
