@@ -28,7 +28,14 @@ class EmptyPage extends React.Component<EmptyPageProps, EmptyPageState> {
       });
     };
     return (
-      <div className="empty-page-container">
+      <div
+        className="empty-page-container"
+        style={
+          this.props.isCollapsed
+            ? { width: "calc(100vw - 100px)", left: "100px" }
+            : {}
+        }
+      >
         <div
           className="empty-illustration-container"
           style={{ width: "calc(100% - 50px)" }}

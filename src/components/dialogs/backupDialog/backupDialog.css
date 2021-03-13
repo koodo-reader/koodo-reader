@@ -173,7 +173,7 @@
   bottom: 100px;
   width: 150px;
   height: 100px;
-  z-index: 500;
+  z-index: 10;
   opacity: 0;
   cursor: pointer;
   font-size: 0;
