@@ -36,6 +36,8 @@
   "Duplicate Shelf": "Duplicate Shelf",
   "Reading Time": "Reading Time",
   "Content": "Content",
+  "Voice": "Voice",
+  "Speed": "Speed",
   "Bookmark": "Bookmark",
   "Single-Page Mode": "Single",
   "Double-Page Mode": "Double",
@@ -231,5 +233,7 @@
   "Update to": "Update to",
   "Date": "Date: ",
   "Unauthorize": "Unauthorize",
+  "Remember window's size from last read": "Remember window's size",
+  "Letter Spacing": "Letter Spacing",
   "Unauthorize Successfully": "Unauthorize Successfully"
 }

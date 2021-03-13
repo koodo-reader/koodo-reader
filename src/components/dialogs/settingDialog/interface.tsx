@@ -9,4 +9,5 @@ export interface SettingInfoState {
   isOpenBook: boolean;
   isExpandContent: boolean;
   isAutoSync: boolean;
+  isRememberSize: boolean;
 }

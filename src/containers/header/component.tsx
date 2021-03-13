@@ -6,7 +6,7 @@ import ImportLocal from "../../components/importLocal";
 import { Trans } from "react-i18next";
 import { HeaderProps, HeaderState } from "./interface";
 import OtherUtil from "../../utils/otherUtil";
-import UpdateInfo from "../../components/updateInfo";
+import UpdateInfo from "../../components/dialogs/updateInfo";
 import RestoreUtil from "../../utils/syncUtils/restoreUtil";
 import BackupUtil from "../../utils/syncUtils/backupUtil";
 
@@ -19,6 +19,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       isOnlyLocal: false,
       language: OtherUtil.getReaderConfig("lang"),
       isNewVersion: false,
+      width: document.body.clientWidth,
     };
   }
   handleSortBooks = () => {
@@ -89,6 +90,9 @@ class Header extends React.Component<HeaderProps, HeaderState> {
           true
         );
     }
+    window.addEventListener("resize", () => {
+      this.setState({ width: document.body.clientWidth });
+    });
   }
   render() {
     return (
@@ -129,7 +133,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
           }
         >
           <div className="animation-mask"></div>
-          {this.props.isCollapsed && document.body.clientWidth < 950 ? (
+          {this.props.isCollapsed && this.state.width < 950 ? (
             <span
               className="icon-clockwise"
               style={{ fontSize: "20px" }}

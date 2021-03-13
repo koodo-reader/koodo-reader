@@ -55,6 +55,7 @@
   position: relative;
   top: 3px;
   left: 2px;
+  cursor: pointer;
 }
 .single-control-button {
   display: inline-block;

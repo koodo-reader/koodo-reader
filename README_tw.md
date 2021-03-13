@@ -50,7 +50,7 @@
 
 備份數據到 **Dropbox** 和 **Webdav**
 
-妳可以自定義源文件夾，利用 OneDrive、百度網盤、iCloud、Dropbox 等進行多設備同步
+自定義源文件夾，利用 OneDrive、百度網盤、iCloud、Dropbox 等進行多設備同步
 
 雙頁模式，單頁模式，滾動模式
 
@@ -110,16 +110,18 @@ brew install --cask koodo-reader
 docker-compose up -d
 ```
 
-## 後續更新
+## 開發計劃
 
-我會根據大家的反饋不定時更新，當有新版本更新時，您將自動收到更新提示
+前往 [Trello](https://trello.com/b/dJ51EgHV/koodo-reader-开发路线图) 了解更多
 
 ## 貢獻
 
 | 貢獻          | 感謝                                                                                       |
 | :------------ | :----------------------------------------------------------------------------------------- |
 | 繁體中文翻譯  | [TobySkarting](https://github.com/TobySkarting), [playercd8](https://github.com/playercd8) |
+| 俄語翻譯      | [vanja-san](https://github.com/vanja-san)                                                  |
 | Homebrew 安裝 | [singularitti](https://github.com/singularitti)                                            |
+| Docker 安裝   | [yanickxia](https://github.com/yanickxia)                                                  |
 | 其他貢獻者    | [bamlan](https://github.com/bamlan)                                                        |
 
 ## 幫助
