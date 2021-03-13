@@ -20,5 +20,6 @@ export interface HeaderProps {
 export interface HeaderState {
   isOnlyLocal: boolean;
   language: string;
+  width: number;
   isNewVersion: boolean;
 }

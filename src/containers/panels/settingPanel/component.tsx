@@ -84,7 +84,8 @@ class SettingPanel extends React.Component<
             event.elapsedTime +
             " milliseconds."
         );
-        if (!this.state.isAudioOn || this.props.isReading) {
+        console.log(this.state.isAudioOn, this.props.isReading);
+        if (!(this.state.isAudioOn && this.props.isReading)) {
           return;
         }
         this.props.currentEpub.rendition.next().then(() => {
@@ -141,6 +142,8 @@ class SettingPanel extends React.Component<
       );
     });
   };
+  changeVoice = (e) => {};
+  changeSpeed = (e) => {};
   render() {
     return (
       <div className="setting-panel-parent">
@@ -180,60 +183,133 @@ class SettingPanel extends React.Component<
               step: 5,
             }}
           />
+          <SliderList
+            {...{
+              maxValue: 20,
+              minValue: 0,
+              mode: "letterSpacing",
+              minLabel: "0",
+              maxLabel: "20",
+              step: 1,
+            }}
+          />
           {this.state.readerMode && this.state.readerMode !== "double" ? (
             <SliderList
               {...{
-                maxValue: 4,
+                maxValue: 5,
                 minValue: 1,
                 mode: "scale",
                 minLabel: "1",
-                maxLabel: "4",
-                step: 0.1,
+                maxLabel: "5",
+                step: 0.2,
               }}
             />
           ) : null}
 
           <DropdownList />
           {this.state.isSupported ? (
-            <div className="single-control-switch-container">
-              <span className="single-control-switch-title">
-                <Trans>Turn on audio</Trans>
-              </span>
+            <>
+              <div className="single-control-switch-container">
+                <span className="single-control-switch-title">
+                  <Trans>Turn on audio</Trans>
+                </span>
 
-              <span
-                className="single-control-switch"
-                onClick={() => {
-                  if (this.props.locations) {
-                    this.handleChangeAudio();
-                  } else {
-                    this.props.handleMessage("Audio is not ready yet");
-                    this.props.handleMessageBox(true);
-                  }
-                }}
-                style={
-                  this.props.locations
-                    ? this.state.isAudioOn
-                      ? { background: "rgba(46, 170, 220)" }
-                      : {}
-                    : { opacity: 0.5 }
-                }
-              >
                 <span
-                  className="single-control-button"
+                  className="single-control-switch"
+                  onClick={() => {
+                    if (this.props.locations) {
+                      this.handleChangeAudio();
+                    } else {
+                      this.props.handleMessage("Audio is not ready yet");
+                      this.props.handleMessageBox(true);
+                    }
+                  }}
                   style={
-                    this.state.isAudioOn
-                      ? {
-                          transform: "translateX(20px)",
-                          transition: "transform 0.5s ease",
-                        }
-                      : {
-                          transform: "translateX(0px)",
-                          transition: "transform 0.5s ease",
-                        }
+                    this.props.locations
+                      ? this.state.isAudioOn
+                        ? { background: "rgba(46, 170, 220)" }
+                        : {}
+                      : { opacity: 0.5 }
                   }
-                ></span>
-              </span>
-            </div>
+                >
+                  <span
+                    className="single-control-button"
+                    style={
+                      this.state.isAudioOn
+                        ? {
+                            transform: "translateX(20px)",
+                            transition: "transform 0.5s ease",
+                          }
+                        : {
+                            transform: "translateX(0px)",
+                            transition: "transform 0.5s ease",
+                          }
+                    }
+                  ></span>
+                </span>
+              </div>
+              {this.state.isAudioOn && (
+                <div
+                  className="setting-dialog-new-title"
+                  style={{
+                    marginLeft: "20px",
+                    width: "88%",
+                    marginTop: "20px",
+                  }}
+                >
+                  <Trans>Voice</Trans>
+                  <select
+                    name=""
+                    className="lang-setting-dropdown"
+                    onChange={(event) => {
+                      this.changeVoice(event);
+                    }}
+                  >
+                    {window.speechSynthesis.getVoices().map((item, index) => {
+                      return (
+                        <option value="index" className="lang-setting-option">
+                          {item.name}
+                        </option>
+                      );
+                    })}
+                  </select>
+                </div>
+              )}
+              {this.state.isAudioOn && (
+                <div
+                  className="setting-dialog-new-title"
+                  style={{ marginLeft: "20px", width: "88%" }}
+                >
+                  <Trans>Speed</Trans>
+                  <select
+                    name=""
+                    className="lang-setting-dropdown"
+                    onChange={(event) => {
+                      this.changeSpeed(event);
+                    }}
+                  >
+                    <option value="zh" className="lang-setting-option">
+                      0.5
+                    </option>
+                    <option value="cht" className="lang-setting-option">
+                      0.75
+                    </option>
+                    <option value="en" className="lang-setting-option">
+                      1
+                    </option>
+                    <option value="ru" className="lang-setting-option">
+                      1.25
+                    </option>
+                    <option value="ru" className="lang-setting-option">
+                      1.5
+                    </option>
+                    <option value="ru" className="lang-setting-option">
+                      2
+                    </option>
+                  </select>
+                </div>
+              )}
+            </>
           ) : null}
           <div className="single-control-switch-container">
             <span className="single-control-switch-title">
@@ -267,12 +343,7 @@ class SettingPanel extends React.Component<
               ></span>
             </span>
           </div>
-          <div
-            className="single-control-switch-container"
-            style={
-              this.state.isAudioOn ? { background: "rgba(46, 170, 220)" } : {}
-            }
-          >
+          <div className="single-control-switch-container">
             <span className="single-control-switch-title">
               <Trans>Don't show footer</Trans>
             </span>
@@ -304,12 +375,7 @@ class SettingPanel extends React.Component<
               ></span>
             </span>
           </div>
-          <div
-            className="single-control-switch-container"
-            style={
-              this.state.isAudioOn ? { background: "rgba(46, 170, 220)" } : {}
-            }
-          >
+          <div className="single-control-switch-container">
             <span className="single-control-switch-title">
               <Trans>Don't show header</Trans>
             </span>

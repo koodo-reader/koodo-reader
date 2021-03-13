@@ -4,7 +4,7 @@ import "./updateInfo.css";
 import { DownloadDeskProps, DownloadDeskState } from "./interface";
 import { Trans } from "react-i18next";
 import Lottie from "react-lottie";
-import animationDownload from "../../../assets/download.json";
+import animationDownload from "../../../assets/lotties/download.json";
 
 const downloadOptions = {
   loop: true,

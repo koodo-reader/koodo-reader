@@ -5270,10 +5270,10 @@ expect@^24.9.0:
     jest-message-util "^24.9.0"
     jest-regex-util "^24.9.0"
 
-express-fileupload@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.npm.taobao.org/express-fileupload/download/express-fileupload-1.2.0.tgz#356c4dfd645be71ab9fb2f4e6d84eeb00d247979"
-  integrity sha1-NWxN/WRb5xq5+y9ObYTusA0keXk=
+express-fileupload@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.npm.taobao.org/express-fileupload/download/express-fileupload-1.2.1.tgz#73ac798bd14247d510adb1e439af2420c8367ded"
+  integrity sha1-c6x5i9FCR9UQrbHkOa8kIMg2fe0=
   dependencies:
     busboy "^0.3.1"
 
