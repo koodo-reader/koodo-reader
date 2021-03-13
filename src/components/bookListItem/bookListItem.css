@@ -15,7 +15,7 @@
 .book-item-list-title,
 .book-item-list-author {
   height: 30px;
-  width: 300px;
+  width: 350px;
   font-size: 17px;
   color: rgba(75, 75, 75, 1);
   opacity: 1;
@@ -29,7 +29,7 @@
 }
 
 .book-item-list-author {
-  width: 200px;
+  width: 150px;
 }
 .book-item-list-date,
 .book-item-list-percentage,

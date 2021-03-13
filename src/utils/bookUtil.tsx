@@ -1,13 +1,13 @@
 import axios from "axios";
 import { config } from "../constants/driveList";
 import OtherUtil from "./otherUtil";
-import isElectron from "is-electron";
+import { isElectron } from "react-device-detect";
 import localforage from "localforage";
 import BookModel from "../model/Book";
 
 class BookUtil {
   static addBook(key: string, buffer: ArrayBuffer) {
-    if (isElectron()) {
+    if (isElectron) {
       return new Promise<void>((resolve, reject) => {
         let formData = new FormData();
         formData.append("file", new Blob([buffer]));
@@ -41,7 +41,7 @@ class BookUtil {
     }
   }
   static deleteBook(key: string) {
-    if (isElectron()) {
+    if (isElectron) {
       return new Promise<void>((resolve, reject) => {
         axios
           .post(`${config.token_url}/delete_book`, {
@@ -66,7 +66,7 @@ class BookUtil {
     }
   }
   static fetchBook(key: string) {
-    if (isElectron()) {
+    if (isElectron) {
       return new Promise<File>((resolve, reject) => {
         // axios
         //   .post(
@@ -113,11 +113,12 @@ class BookUtil {
         );
         console.log(
           path.join(
-            (OtherUtil.getReaderConfig("storageLocation")
+            OtherUtil.getReaderConfig("storageLocation")
               ? OtherUtil.getReaderConfig("storageLocation")
               : window
                   .require("electron")
-                  .ipcRenderer.sendSync("storage-location", "ping")), "book",
+                  .ipcRenderer.sendSync("storage-location", "ping"),
+            "book",
             key
           )
         );
@@ -134,7 +135,7 @@ class BookUtil {
   }
   static async RedirectBook(book: BookModel) {
     if (book.description === "pdf") {
-      if (isElectron()) {
+      if (isElectron) {
         const file: any = await this.fetchBook(book.key);
         file.arrayBuffer().then(async (arrayBuffer) => {
           await localforage.setItem("pdf", arrayBuffer);

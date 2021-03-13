@@ -10,7 +10,7 @@ import animationNew from "../../assets/new.json";
 import animationSuccess from "../../assets/success.json";
 import copy from "copy-text-to-clipboard";
 import OtherUtil from "../../utils/otherUtil";
-const isElectron = require("is-electron");
+import { isElectron } from "react-device-detect";
 const newOptions = {
   loop: false,
   autoplay: true,
@@ -72,7 +72,7 @@ class UpdateInfo extends React.Component<UpdateInfoProps, UpdateInfoState> {
     });
   };
   handleJump = () => {
-    isElectron() &&
+    isElectron &&
       window
         .require("electron")
         .shell.openExternal(

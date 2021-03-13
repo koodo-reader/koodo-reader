@@ -1134,7 +1134,7 @@
   dependencies:
     regenerator-runtime "^0.13.4"
 
-"@babel/runtime@^7.0.0", "@babel/runtime@^7.10.1", "@babel/runtime@^7.10.2", "@babel/runtime@^7.10.3", "@babel/runtime@^7.3.1", "@babel/runtime@^7.3.4", "@babel/runtime@^7.4.5", "@babel/runtime@^7.5.1", "@babel/runtime@^7.5.5", "@babel/runtime@^7.7.2", "@babel/runtime@^7.8.4":
+"@babel/runtime@^7.0.0", "@babel/runtime@^7.10.1", "@babel/runtime@^7.10.2", "@babel/runtime@^7.10.3", "@babel/runtime@^7.3.4", "@babel/runtime@^7.4.5", "@babel/runtime@^7.5.1", "@babel/runtime@^7.5.5", "@babel/runtime@^7.7.2", "@babel/runtime@^7.8.4":
   version "7.11.2"
   resolved "https://registry.npm.taobao.org/@babel/runtime/download/@babel/runtime-7.11.2.tgz?cache=0&sync_timestamp=1596637803941&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40babel%2Fruntime%2Fdownload%2F%40babel%2Fruntime-7.11.2.tgz#f549c13c754cc40b87644b9fa9f09a6a95fe0736"
   integrity sha1-9UnBPHVMxAuHZEufqfCaapX+BzY=
@@ -1145,6 +1145,13 @@
   version "7.12.1"
   resolved "https://registry.npm.taobao.org/@babel/runtime/download/@babel/runtime-7.12.1.tgz?cache=0&sync_timestamp=1602801755591&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40babel%2Fruntime%2Fdownload%2F%40babel%2Fruntime-7.12.1.tgz#b4116a6b6711d010b2dad3b7b6e43bf1b9954740"
   integrity sha1-tBFqa2cR0BCy2tO3tuQ78bmVR0A=
+  dependencies:
+    regenerator-runtime "^0.13.4"
+
+"@babel/runtime@^7.12.0", "@babel/runtime@^7.13.6", "@babel/runtime@^7.3.1":
+  version "7.13.10"
+  resolved "https://registry.npm.taobao.org/@babel/runtime/download/@babel/runtime-7.13.10.tgz?cache=0&sync_timestamp=1615243322559&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40babel%2Fruntime%2Fdownload%2F%40babel%2Fruntime-7.13.10.tgz#47d42a57b6095f4468da440388fdbad8bebf0d7d"
+  integrity sha1-R9QqV7YJX0Ro2kQDiP262L6/DX0=
   dependencies:
     regenerator-runtime "^0.13.4"
 
@@ -1719,13 +1726,6 @@
     "@types/domutils" "*"
     "@types/node" "*"
 
-"@types/i18next-browser-languagedetector@^3.0.0":
-  version "3.0.0"
-  resolved "https://registry.npm.taobao.org/@types/i18next-browser-languagedetector/download/@types/i18next-browser-languagedetector-3.0.0.tgz#5117c813488ec5515f316fd0bbc32e4d03dbaf86"
-  integrity sha1-URfIE0iOxVFfMW/Qu8MuTQPbr4Y=
-  dependencies:
-    i18next-browser-languagedetector "*"
-
 "@types/i18next@^13.0.0":
   version "13.0.0"
   resolved "https://registry.npm.taobao.org/@types/i18next/download/@types/i18next-13.0.0.tgz#403ef338add0104e74d9759f1b39217e7c5d4084"
@@ -1821,13 +1821,6 @@
   integrity sha1-/kweEd/GcVVzPfpqplEItJcctCM=
   dependencies:
     "@types/react" "*"
-
-"@types/react-dropzone@^5.1.0":
-  version "5.1.0"
-  resolved "https://registry.npm.taobao.org/@types/react-dropzone/download/@types/react-dropzone-5.1.0.tgz#5e27eb0b1ccadd7964ce4d328e1926fcd1c1f1ef"
-  integrity sha1-XifrCxzK3Xlkzk0yjhkm/NHB8e8=
-  dependencies:
-    react-dropzone "*"
 
 "@types/react-i18next@^8.1.0":
   version "8.1.0"
@@ -2615,7 +2608,7 @@ atob@^2.1.2:
   resolved "https://registry.npm.taobao.org/atob/download/atob-2.1.2.tgz#6d9517eb9e030d2436666651e86bd9f6f13533c9"
   integrity sha1-bZUX654DDSQ2ZmZR6GvZ9vE1M8k=
 
-attr-accept@^2.0.0:
+attr-accept@^2.2.1:
   version "2.2.2"
   resolved "https://registry.npm.taobao.org/attr-accept/download/attr-accept-2.2.2.tgz?cache=0&sync_timestamp=1599616628316&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fattr-accept%2Fdownload%2Fattr-accept-2.2.2.tgz#646613809660110749e92f2c10833b70968d929b"
   integrity sha1-ZGYTgJZgEQdJ6S8sEIM7cJaNkps=
@@ -5482,12 +5475,12 @@ file-saver@^2.0.2:
   resolved "https://registry.npm.taobao.org/file-saver/download/file-saver-2.0.2.tgz#06d6e728a9ea2df2cce2f8d9e84dfcdc338ec17a"
   integrity sha1-BtbnKKnqLfLM4vjZ6E383DOOwXo=
 
-file-selector@^0.1.12:
-  version "0.1.13"
-  resolved "https://registry.npm.taobao.org/file-selector/download/file-selector-0.1.13.tgz#5efd977ca2bca1700992df1b10e254f4e73d2df4"
-  integrity sha1-Xv2XfKK8oXAJkt8bEOJU9Oc9LfQ=
+file-selector@^0.2.2:
+  version "0.2.4"
+  resolved "https://registry.npm.taobao.org/file-selector/download/file-selector-0.2.4.tgz#7b98286f9dbb9925f420130ea5ed0a69238d4d80"
+  integrity sha1-e5gob527mSX0IBMOpe0KaSONTYA=
   dependencies:
-    tslib "^2.0.1"
+    tslib "^2.0.3"
 
 file-uri-to-path@1.0.0:
   version "1.0.0"
@@ -6305,7 +6298,7 @@ html-minifier-terser@^5.0.1:
     relateurl "^0.2.7"
     terser "^4.6.3"
 
-html-parse-stringify2@2.0.1:
+html-parse-stringify2@2.0.1, html-parse-stringify2@^2.0.1:
   version "2.0.1"
   resolved "https://registry.npm.taobao.org/html-parse-stringify2/download/html-parse-stringify2-2.0.1.tgz#dc5670b7292ca158b7bc916c9a6735ac8872834a"
   integrity sha1-3FZwtyksoVi3vJFsmmc1rIhyg0o=
@@ -6426,14 +6419,21 @@ https-browserify@^1.0.0:
   resolved "https://registry.npm.taobao.org/https-browserify/download/https-browserify-1.0.0.tgz#ec06c10e0a34c0f2faf199f7fd7fc78fffd03c73"
   integrity sha1-7AbBDgo0wPL68Zn3/X/Hj//QPHM=
 
-i18next-browser-languagedetector@*:
+i18next-browser-languagedetector@^6.0.1:
   version "6.0.1"
   resolved "https://registry.npm.taobao.org/i18next-browser-languagedetector/download/i18next-browser-languagedetector-6.0.1.tgz#83654bc87302be2a6a5a75146ffea97b4ca268cf"
   integrity sha1-g2VLyHMCvipqWnUUb/6pe0yiaM8=
   dependencies:
     "@babel/runtime" "^7.5.5"
 
-i18next@*, i18next@^19.4.4:
+i18next@*:
+  version "19.9.2"
+  resolved "https://registry.npm.taobao.org/i18next/download/i18next-19.9.2.tgz#ea5a124416e3c5ab85fddca2c8e3c3669a8da397"
+  integrity sha1-6loSRBbjxauF/dyiyOPDZpqNo5c=
+  dependencies:
+    "@babel/runtime" "^7.12.0"
+
+i18next@^19.4.4:
   version "19.7.0"
   resolved "https://registry.npm.taobao.org/i18next/download/i18next-19.7.0.tgz#e637bbbf36481d34b7d5e6d3b04e1bb654bf2a26"
   integrity sha1-5je7vzZIHTS31ebTsE4btlS/KiY=
@@ -6812,11 +6812,6 @@ is-docker@^2.0.0:
   version "2.1.1"
   resolved "https://registry.npm.taobao.org/is-docker/download/is-docker-2.1.1.tgz?cache=0&sync_timestamp=1596559351223&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fis-docker%2Fdownload%2Fis-docker-2.1.1.tgz#4125a88e44e450d384e09047ede71adc2d144156"
   integrity sha1-QSWojkTkUNOE4JBH7eca3C0UQVY=
-
-is-electron@^2.2.0:
-  version "2.2.0"
-  resolved "https://registry.npm.taobao.org/is-electron/download/is-electron-2.2.0.tgz#8943084f09e8b731b3a7a0298a7b5d56f6b7eef0"
-  integrity sha1-iUMITwnotzGzp6ApintdVva37vA=
 
 is-extendable@^0.1.0, is-extendable@^0.1.1:
   version "0.1.1"
@@ -10446,13 +10441,13 @@ react-dom@^16.12.0:
     prop-types "^15.6.2"
     scheduler "^0.19.1"
 
-react-dropzone@*, react-dropzone@^11.0.1:
-  version "11.1.0"
-  resolved "https://registry.npm.taobao.org/react-dropzone/download/react-dropzone-11.1.0.tgz#c225f3c53450c80fbd80954361dc039090bfc14c"
-  integrity sha1-wiXzxTRQyA+9gJVDYdwDkJC/wUw=
+react-dropzone@^11.3.0:
+  version "11.3.0"
+  resolved "https://registry.npm.taobao.org/react-dropzone/download/react-dropzone-11.3.0.tgz?cache=0&sync_timestamp=1612318968129&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Freact-dropzone%2Fdownload%2Freact-dropzone-11.3.0.tgz#516561c5003e0c0f7d63bd5621f410b1b3496ab3"
+  integrity sha1-UWVhxQA+DA99Y71WIfQQsbNJarM=
   dependencies:
-    attr-accept "^2.0.0"
-    file-selector "^0.1.12"
+    attr-accept "^2.2.1"
+    file-selector "^0.2.2"
     prop-types "^15.7.2"
 
 react-error-overlay@^6.0.7:
@@ -10475,16 +10470,16 @@ react-hot-loader@^4.12.21:
     source-map "^0.7.3"
 
 react-i18next@*:
-  version "11.7.2"
-  resolved "https://registry.npm.taobao.org/react-i18next/download/react-i18next-11.7.2.tgz#b3cb94ad3b85c25e3d4802a141139d65238b976f"
-  integrity sha1-s8uUrTuFwl49SAKhQROdZSOLl28=
+  version "11.8.10"
+  resolved "https://registry.npm.taobao.org/react-i18next/download/react-i18next-11.8.10.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Freact-i18next%2Fdownload%2Freact-i18next-11.8.10.tgz#aa64bc20410ee8f660a5b918d53f4e41271edf00"
+  integrity sha1-qmS8IEEO6PZgpbkY1T9OQSce3wA=
   dependencies:
-    "@babel/runtime" "^7.3.1"
-    html-parse-stringify2 "2.0.1"
+    "@babel/runtime" "^7.13.6"
+    html-parse-stringify2 "^2.0.1"
 
-react-i18next@^9.0.10:
+react-i18next@9.0.10:
   version "9.0.10"
-  resolved "https://registry.npm.taobao.org/react-i18next/download/react-i18next-9.0.10.tgz#ba596b98e8dd06dbb805cf720147459ad55a3ada"
+  resolved "https://registry.npm.taobao.org/react-i18next/download/react-i18next-9.0.10.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Freact-i18next%2Fdownload%2Freact-i18next-9.0.10.tgz#ba596b98e8dd06dbb805cf720147459ad55a3ada"
   integrity sha1-ullrmOjdBtu4Bc9yAUdFmtVaOto=
   dependencies:
     "@babel/runtime" "^7.3.1"
@@ -12370,10 +12365,10 @@ tslib@^1.10.0, tslib@^1.8.1, tslib@^1.9.0:
   resolved "https://registry.npm.taobao.org/tslib/download/tslib-1.13.0.tgz?cache=0&sync_timestamp=1596751904317&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Ftslib%2Fdownload%2Ftslib-1.13.0.tgz#c881e13cc7015894ed914862d276436fa9a47043"
   integrity sha1-yIHhPMcBWJTtkUhi0nZDb6mkcEM=
 
-tslib@^2.0.1:
-  version "2.0.1"
-  resolved "https://registry.npm.taobao.org/tslib/download/tslib-2.0.1.tgz?cache=0&sync_timestamp=1596751904317&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Ftslib%2Fdownload%2Ftslib-2.0.1.tgz#410eb0d113e5b6356490eec749603725b021b43e"
-  integrity sha1-QQ6w0RPltjVkkO7HSWA3JbAhtD4=
+tslib@^2.0.3:
+  version "2.1.0"
+  resolved "https://registry.npm.taobao.org/tslib/download/tslib-2.1.0.tgz#da60860f1c2ecaa5703ab7d39bc05b6bf988b97a"
+  integrity sha1-2mCGDxwuyqVwOrfTm8Bba/mIuXo=
 
 tsutils@^3.17.1:
   version "3.17.1"
