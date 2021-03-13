@@ -77,7 +77,15 @@ class CardList extends React.Component<CardListProps, CardListStates> {
             onMouseLeave={() => {
               this.handleShowDelete("");
             }}
-            style={this.props.mode === "note" ? { height: "250px" } : {}}
+            style={
+              this.props.mode === "note" && !this.props.isCollapsed
+                ? { height: "250px" }
+                : this.props.mode === "note" && this.props.isCollapsed
+                ? { height: "250px", width: "calc(50vw - 70px)" }
+                : this.props.isCollapsed
+                ? { width: "calc(50vw - 70px)" }
+                : {}
+            }
           >
             <div className="card-list-item-card">
               <div style={{ position: "relative", bottom: "25px" }}>

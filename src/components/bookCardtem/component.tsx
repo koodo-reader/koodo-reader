@@ -8,7 +8,7 @@ import ActionDialog from "../dialogs/actionDialog";
 import OtherUtil from "../../utils/otherUtil";
 import { withRouter } from "react-router-dom";
 import RecordLocation from "../../utils/readUtils/recordLocation";
-import isElectron from "is-electron";
+import { isElectron } from "react-device-detect";
 import EmptyCover from "../emptyCover";
 import BookUtil from "../../utils/bookUtil";
 declare var window: any;
@@ -29,7 +29,7 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
   componentDidMount() {
     let filePath = "";
     //控制是否自动打开本书
-    if (isElectron()) {
+    if (isElectron) {
       const { ipcRenderer } = window.require("electron");
       filePath = ipcRenderer.sendSync("get-file-data");
     }
@@ -98,6 +98,9 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
   handleCancelLoveBook = () => {
     AddFavorite.clear(this.props.book.key);
     this.setState({ isFavorite: false });
+    if (Object.keys(AddFavorite.getAllFavorite()).length === 0) {
+      this.props.history.push("/manager/empty");
+    }
     this.props.handleMessage("Cancel Successfully");
     this.props.handleMessageBox(true);
   };

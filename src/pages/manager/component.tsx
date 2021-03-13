@@ -19,13 +19,14 @@ import { routes } from "../../router/routes";
 import Arrow from "../../components/arrow";
 import LoadingDialog from "../../components/dialogs/loadingDialog";
 import DownloadDesk from "../../components/dialogs/downloadDesk";
+import { isElectron } from "react-device-detect";
 // declare var window: any;
 
 //判断是否为触控设备
 const is_touch_device = () => {
   return "ontouchstart" in window;
 };
-const isElectron = require("is-electron");
+
 class Manager extends React.Component<ManagerProps, ManagerState> {
   timer!: NodeJS.Timeout;
   constructor(props: ManagerProps) {
@@ -170,7 +171,7 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
         {this.props.isSortDisplay && <SortDialog />}
         {this.props.isBackup && <BackupDialog />}
         {this.props.isSettingOpen && <SettingDialog />}
-        {this.props.isDownloadDesk && !isElectron() && <DownloadDesk />}
+        {this.props.isDownloadDesk && !isElectron && <DownloadDesk />}
         {(!books || books.length === 0) && this.state.totalBooks ? (
           <Redirect to="/manager/loading" />
         ) : (

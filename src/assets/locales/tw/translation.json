@@ -233,7 +233,7 @@
   "Download": "前往下载",
   "Use the fonts from your local computer": "使用电脑中的字体",
   "Backup your data with Webdav": "使用 Webdav 来备份和恢复数据",
-  "More formats supported": "支持更多的图书格式",
+  "More formats supported": "支持更多的图书格式，mobi、azw3、txt",
   "Download Desktop Version": "下载客户端",
   "Koodo Reader's web version are limited by the browser, for more powerful features, please download the desktop version.": "网页版功能受浏览器限制，部分功能仅客户端支持",
   "Do you want to backup or restore?": "选择您的操作",
@@ -248,5 +248,6 @@
   "Change Failed": "更改失败",
   "You successfully update to": "您已成功更新到",
   "Built-in font": "内嵌字体",
+  "View Mode": "视图模式",
   "Bold Font": "字体加粗"
 }

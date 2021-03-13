@@ -13,6 +13,8 @@
   margin-right: 10px;
   font-size: 13px;
   margin-top: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
 }
 .active-tag {
   background-color: #4b4b4b;
@@ -23,7 +25,7 @@
   line-height: 31px;
   color: #4b4b4b;
   opacity: 1;
-  margin-left: 10px;
+  margin-left: 20px;
   font-weight: 500;
 }
 .tag-container {
