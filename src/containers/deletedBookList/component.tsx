@@ -113,7 +113,14 @@ class BookList extends React.Component<BookListProps, BookListState> {
           <Trans>Delete All Books</Trans>
         </div>
 
-        <div className="book-list-container-parent">
+        <div
+          className="book-list-container-parent"
+          style={
+            this.props.isCollapsed
+              ? { width: "calc(100vw - 70px)", left: "70px" }
+              : {}
+          }
+        >
           <div className="book-list-container">
             <ul className="book-list-item-box">{this.renderBookList()}</ul>
           </div>
