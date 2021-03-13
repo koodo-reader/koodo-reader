@@ -1,7 +1,7 @@
-import BookList from "../containers/bookList";
-import DeletedBookList from "../containers/deletedBookList";
-import NoteList from "../containers/noteList";
-import DigestList from "../containers/digestList";
+import BookList from "../containers/lists/bookList";
+import DeletedBookList from "../containers/lists/deletedBookList";
+import NoteList from "../containers/lists/noteList";
+import DigestList from "../containers/lists/digestList";
 import EmptyPage from "../containers/emptyPage";
 import LoadingPage from "../containers/loadingPage";
 

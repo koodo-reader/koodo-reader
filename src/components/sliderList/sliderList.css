@@ -50,3 +50,12 @@
   position: relative;
   top: 10px;
 }
+.slide-icon {
+  font-size: 12px;
+  color: rgba(75, 75, 75, 1);
+  margin: 5px;
+  cursor: pointer;
+}
+.icon-add .slide-icon {
+  font-weight: 600 !important;
+}

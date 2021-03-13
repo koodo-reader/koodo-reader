@@ -35,10 +35,10 @@ app.on("ready", () => {
       ? path.join(__dirname, "/public/assets/launch-page.html")
       : `file://${path.join(__dirname, "./build/assets/launch-page.html")}`
   );
-  // if (isDev) {
-  //   const { Menu } = require("electron");
-  //   Menu.setApplicationMenu(null);
-  // }
+  if (!isDev) {
+    const { Menu } = require("electron");
+    Menu.setApplicationMenu(null);
+  }
 
   const urlLocation = isDev
     ? "http://localhost:3000"
@@ -54,13 +54,37 @@ app.on("ready", () => {
     "new-window",
     (event, url, frameName, disposition, options, additionalFeatures) => {
       event.preventDefault();
-      Object.assign(options, {
-        parent: mainWin,
-        width: width,
-        height: height,
-      });
-      event.newGuest = new BrowserWindow(options);
-      event.newGuest.maximize();
+      if (url.indexOf("full") > -1) {
+        Object.assign(options, {
+          parent: mainWin,
+          width: width,
+          height: height,
+        });
+        event.newGuest = new BrowserWindow(options);
+        event.newGuest.maximize();
+      } else {
+        var urlParams;
+
+        var match,
+          pl = /\+/g, // Regex for replacing addition symbol with a space
+          search = /([^&=]+)=?([^&]*)/g,
+          decode = function (s) {
+            return decodeURIComponent(s.replace(pl, " "));
+          },
+          query = url.split("?").reverse()[0];
+
+        urlParams = {};
+        while ((match = search.exec(query)))
+          urlParams[decode(match[1])] = decode(match[2]);
+        Object.assign(options, {
+          parent: mainWin,
+          width: parseInt(urlParams.width),
+          height: parseInt(urlParams.height),
+          x: parseInt(urlParams.x),
+          y: parseInt(urlParams.y),
+        });
+        event.newGuest = new BrowserWindow(options);
+      }
     }
   );
   mainWin.on("close", () => {

@@ -9,7 +9,7 @@ import { isMobile } from "react-device-detect";
 import OtherUtil from "../../utils/otherUtil";
 import DropboxUtil from "../../utils/syncUtils/dropbox";
 import Lottie from "react-lottie";
-import animationSuccess from "../../assets/success.json";
+import animationSuccess from "../../assets/lotties/success.json";
 
 const successOptions = {
   loop: false,

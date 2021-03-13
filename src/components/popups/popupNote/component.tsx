@@ -124,7 +124,7 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
           this.props.handleMessage("Delete Successfully");
           this.props.handleMessageBox(true);
           this.props.handleMenuMode("highlight");
-
+          this.props.handleFetchNotes();
           this.props.handleNoteKey("");
         });
       }

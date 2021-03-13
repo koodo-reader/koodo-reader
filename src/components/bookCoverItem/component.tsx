@@ -70,12 +70,12 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
   handleMoreAction = (event: any) => {
     const e = event || window.event;
     let x = e.clientX;
-    if (x > document.body.clientWidth - 300) {
+    if (x > document.body.clientWidth - 300 && !this.props.isCollapsed) {
       x = x - 180;
     }
     this.setState(
       {
-        left: x - 200,
+        left: this.props.isCollapsed ? x - 80 : x - 200,
         top:
           document.body.clientHeight - e.clientY > 260
             ? document.body.clientHeight - 420 - e.clientY

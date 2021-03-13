@@ -25,6 +25,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
     super(props);
     this.state = {
       isOpenFile: false,
+      width: document.body.clientWidth,
     };
   }
   componentDidMount() {
@@ -77,6 +78,9 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
           .catch((err) => console.error(err));
       }
     }
+    window.addEventListener("resize", () => {
+      this.setState({ width: document.body.clientWidth });
+    });
   }
 
   handleJump = (book: BookModel) => {
@@ -128,7 +132,6 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
   };
   //获取书籍md5
   doIncrementalTest = (file: any) => {
-
     let extension = file.name.split(".").reverse()[0];
     this.props.handleLoadingDialog(true);
     if (
@@ -317,7 +320,6 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
               }, 1000);
               reject();
             }
-            
           } else {
             let cover: any = "";
             const epub = window.ePub(e.target.result);
@@ -476,7 +478,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
             }
           >
             <div className="animation-mask-local"></div>
-            {this.props.isCollapsed && document.body.clientWidth < 950 ? (
+            {this.props.isCollapsed && this.state.width < 950 ? (
               <span className="icon-export"></span>
             ) : (
               <span>

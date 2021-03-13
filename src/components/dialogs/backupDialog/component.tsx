@@ -12,7 +12,7 @@ import TokenDialog from "../../tokenDialog";
 import OtherUtil from "../../../utils/otherUtil";
 import { isElectron } from "react-device-detect";
 import Lottie from "react-lottie";
-import animationSuccess from "../../../assets/success.json";
+import animationSuccess from "../../../assets/lotties/success.json";
 
 const successOptions = {
   loop: false,

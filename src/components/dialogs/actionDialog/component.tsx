@@ -7,6 +7,7 @@ import AddTrash from "../../../utils/readUtils/addTrash";
 import FileSaver from "file-saver";
 import localforage from "localforage";
 import Parser from "html-react-parser";
+import ShelfUtil from "../../../utils/readUtils/shelfUtil";
 class ActionDialog extends React.Component<ActionDialogProps> {
   handleDeleteBook = () => {
     this.props.handleReadingBook(this.props.currentBook);
@@ -140,10 +141,7 @@ class ActionDialog extends React.Component<ActionDialogProps> {
             <p className="action-dialog-book-publisher">
               <Trans>Book Name</Trans>:
             </p>
-            <p
-              className="action-dialog-book-title"
-              style={{ overflow: "scroll" }}
-            >
+            <p className="action-dialog-book-title">
               {this.props.currentBook.name}
             </p>
             <p className="action-dialog-book-publisher">
@@ -169,6 +167,20 @@ class ActionDialog extends React.Component<ActionDialogProps> {
               {new Date(parseInt(this.props.currentBook.key))
                 .toLocaleString()
                 .replace(/:\d{1,2}$/, " ")}
+            </p>
+          </div>
+          <div>
+            <p className="action-dialog-book-publisher">
+              <Trans>My Shelves</Trans>:
+            </p>
+            <p className="action-dialog-book-title">
+              {ShelfUtil.getBookPosition(this.props.currentBook.key).map(
+                (item) => (
+                  <>
+                    <Trans>{item}</Trans>&nbsp;
+                  </>
+                )
+              )}
             </p>
           </div>
           <div>

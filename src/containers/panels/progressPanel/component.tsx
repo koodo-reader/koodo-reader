@@ -4,7 +4,17 @@ import "./progressPanel.css";
 import RecordLocation from "../../../utils/readUtils/recordLocation";
 import { Trans } from "react-i18next";
 import { ProgressPanelProps, ProgressPanelState } from "./interface";
+import Lottie from "react-lottie";
+import animationSiri from "../../../assets/lotties/siri.json";
 
+const siriOptions = {
+  loop: true,
+  autoplay: true,
+  animationData: animationSiri,
+  rendererSettings: {
+    preserveAspectRatio: "xMidYMid slice",
+  },
+};
 class ProgressPanel extends React.Component<
   ProgressPanelProps,
   ProgressPanelState
@@ -113,19 +123,7 @@ class ProgressPanel extends React.Component<
     if (!this.props.locations) {
       return (
         <div className="progress-panel">
-          <div className="spinner" style={{ top: "40%" }}>
-            <div className="sk-chase">
-              <div className="sk-chase-dot"></div>
-              <div className="sk-chase-dot"></div>
-              <div className="sk-chase-dot"></div>
-              <div className="sk-chase-dot"></div>
-              <div className="sk-chase-dot"></div>
-              <div className="sk-chase-dot"></div>
-            </div>
-          </div>
-          <p className="progress-text">
-            <Trans>Loading</Trans>
-          </p>
+          <Lottie options={siriOptions} height={100} width={300} />
         </div>
       );
     }
