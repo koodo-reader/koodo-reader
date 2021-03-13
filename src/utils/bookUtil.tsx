@@ -100,7 +100,23 @@ class BookUtil {
         window.open(`./lib/pdf/viewer.html?file=${book.key}`);
       }
     } else {
-      window.open(`${window.location.href.split("#")[0]}#/epub/${book.key}`);
+      if (OtherUtil.getReaderConfig("isRememberSize") === "yes") {
+        window.open(
+          `${window.location.href.split("#")[0]}#/epub/${
+            book.key
+          }?width=${OtherUtil.getReaderConfig(
+            "windowWidth"
+          )}&height=${OtherUtil.getReaderConfig(
+            "windowHeight"
+          )}&x=${OtherUtil.getReaderConfig(
+            "windowX"
+          )}&y=${OtherUtil.getReaderConfig("windowY")}`
+        );
+      } else {
+        window.open(
+          `${window.location.href.split("#")[0]}#/epub/${book.key}?width=full`
+        );
+      }
     }
   }
   static parseBook(file: any) {

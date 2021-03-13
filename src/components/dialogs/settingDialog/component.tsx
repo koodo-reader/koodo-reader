@@ -18,6 +18,7 @@ class SettingDialog extends React.Component<
     this.state = {
       language: OtherUtil.getReaderConfig("lang"),
       isTouch: OtherUtil.getReaderConfig("isTouch") === "yes",
+      isRememberSize: OtherUtil.getReaderConfig("isRememberSize") === "yes",
       isOpenBook: OtherUtil.getReaderConfig("isOpenBook") === "yes",
       isExpandContent: OtherUtil.getReaderConfig("isExpandContent") === "yes",
       isAutoSync: OtherUtil.getReaderConfig("isAutoSync") === "yes",
@@ -87,6 +88,17 @@ class SettingDialog extends React.Component<
       this.state.isOpenBook ? "no" : "yes"
     );
     this.state.isOpenBook
+      ? this.props.handleMessage("Turn Off Successfully")
+      : this.props.handleMessage("Turn On Successfully");
+    this.props.handleMessageBox(true);
+  };
+  handleWindowSize = () => {
+    this.setState({ isRememberSize: !this.state.isRememberSize });
+    OtherUtil.setReaderConfig(
+      "isRememberSize",
+      this.state.isRememberSize ? "no" : "yes"
+    );
+    this.state.isRememberSize
       ? this.props.handleMessage("Turn Off Successfully")
       : this.props.handleMessage("Turn On Successfully");
     this.props.handleMessageBox(true);
@@ -197,6 +209,37 @@ class SettingDialog extends React.Component<
               ></span>
             </span>
           </div>
+          {isElectron && (
+            <div className="setting-dialog-new-title">
+              <Trans>Remember window's size from last read</Trans>
+              <span
+                className="single-control-switch"
+                onClick={() => {
+                  this.handleWindowSize();
+                }}
+                style={
+                  this.state.isRememberSize
+                    ? { background: "rgba(46, 170, 220)", float: "right" }
+                    : { float: "right" }
+                }
+              >
+                <span
+                  className="single-control-button"
+                  style={
+                    this.state.isRememberSize
+                      ? {
+                          transform: "translateX(20px)",
+                          transition: "transform 0.5s ease",
+                        }
+                      : {
+                          transform: "translateX(0px)",
+                          transition: "transform 0.5s ease",
+                        }
+                  }
+                ></span>
+              </span>
+            </div>
+          )}
 
           <div className="setting-dialog-new-title">
             <Trans>Default expand all content</Trans>

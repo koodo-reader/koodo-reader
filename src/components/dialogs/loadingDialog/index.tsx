@@ -1,7 +1,7 @@
 import React from "react";
 import "./loadingDialog.css";
 import Lottie from "react-lottie";
-import animationData from "../../../assets/loading.json";
+import animationData from "../../../assets/lotties/loading.json";
 import { Trans } from "react-i18next";
 const defaultOptions = {
   loop: true,

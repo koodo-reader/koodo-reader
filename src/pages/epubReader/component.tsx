@@ -8,7 +8,17 @@ import Reader from "../../containers/epubViewer";
 import { withRouter } from "react-router-dom";
 import _ from "underscore";
 import BookUtil from "../../utils/bookUtil";
+import Lottie from "react-lottie";
+import animationSiri from "../../assets/lotties/siri.json";
 
+const siriOptions = {
+  loop: true,
+  autoplay: true,
+  animationData: animationSiri,
+  rendererSettings: {
+    preserveAspectRatio: "xMidYMid slice",
+  },
+};
 declare var window: any;
 
 class EpubReader extends React.Component<EpubReaderProps, EpubReaderState> {
@@ -20,7 +30,7 @@ class EpubReader extends React.Component<EpubReaderProps, EpubReaderState> {
 
   componentWillMount() {
     let url = document.location.href.split("/");
-    let key = url[url.length - 1];
+    let key = url[url.length - 1].split("?")[0];
 
     localforage.getItem("books").then((result: any) => {
       let book = result[_.findIndex(result, { key })];
@@ -37,14 +47,7 @@ class EpubReader extends React.Component<EpubReaderProps, EpubReaderState> {
     if (!this.props.isReading) {
       return (
         <div className="spinner">
-          <div className="sk-chase">
-            <div className="sk-chase-dot"></div>
-            <div className="sk-chase-dot"></div>
-            <div className="sk-chase-dot"></div>
-            <div className="sk-chase-dot"></div>
-            <div className="sk-chase-dot"></div>
-            <div className="sk-chase-dot"></div>
-          </div>
+          <Lottie options={siriOptions} height={100} width={300} />
         </div>
       );
     }

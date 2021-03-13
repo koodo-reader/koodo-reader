@@ -19,6 +19,7 @@ const mapStateToProps = (state: stateType) => {
     isOpenActionDialog: state.book.isOpenActionDialog,
     isDragToLove: state.sidebar.isDragToLove,
     isDragToDelete: state.sidebar.isDragToDelete,
+    isCollapsed: state.sidebar.isCollapsed,
     dragItem: state.book.dragItem,
     currentBook: state.book.currentBook,
   };

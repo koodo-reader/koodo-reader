@@ -101,6 +101,7 @@ Make sure node's version on your computer is larger than 10.0.0, yarn and git is
    yarn
    yarn start
    ```
+
 ## Docker
 
 You can run in docker compose
@@ -109,22 +110,19 @@ You can run in docker compose
 docker-compose up -d
 ```
 
-## Update
+## Roadmap
 
-You will receive an update notification when you open the software.
+Check out Koodo's Roadmap on [Trello](https://trello.com/b/ms7CbYTi/roadmap-for-koodo-reader)
 
 ## Contribution
 
 | Contribution                        | Contributor                                                                                |
-| :---------------------------------- | :----------------------------------------------------------------------------------------- |
-| translation for traditional Chinese | [TobySkarting](https://github.com/TobySkarting), [playercd8](https://github.com/playercd8) |
+| :---------------------------------- | :----------------------------------------------------------------------------------------- | --- | ----------------------- | ----------------------------------------- |
+| translation for traditional Chinese | [TobySkarting](https://github.com/TobySkarting), [playercd8](https://github.com/playercd8) |     | translation for Russian | [vanja-san](https://github.com/vanja-san) |
 | installation for Homebrew           | [singularitti](https://github.com/singularitti)                                            |
+| installation for Docker             | [yanickxia](https://github.com/yanickxia)                                                  |
 | other contributors                  | [bamlan](https://github.com/bamlan)                                                        |
 
 ## Help
 
 Click [here](https://github.com/troyeguo/koodo-reader/issues) to report your issue, or visit [Website](https://koodo.960960.xyz/support) for more instruction.
-
-## Sponsor
-
-If you found this project helpful, please consider giving us a star.
