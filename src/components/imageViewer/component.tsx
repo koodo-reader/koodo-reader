@@ -39,12 +39,20 @@ class ImageViewer extends React.Component<ImageViewerProps, ImageViewerStates> {
       this.props.handleLeaveReader("top");
       this.props.handleLeaveReader("bottom");
     }
-    let href =
-      event.target.src ||
-      event.target.href ||
-      event.target.parentNode.href ||
-      event.target.parentNode.parentNode.href ||
-      "";
+    let href;
+    if (
+      event.target &&
+      event.target.parentNode &&
+      event.target.parentNode.parentNode
+    ) {
+      href =
+        event.target.src ||
+        event.target.href ||
+        event.target.parentNode.href ||
+        event.target.parentNode.parentNode.href ||
+        "";
+    }
+
     if (
       isElectron &&
       href &&
@@ -54,7 +62,6 @@ class ImageViewer extends React.Component<ImageViewerProps, ImageViewerStates> {
       href.indexOf("blob") === -1 &&
       href.indexOf(".htm") === -1
     ) {
-      console.log(href);
       event.preventDefault();
       const { shell } = window.require("electron");
       const { dialog } = window.require("electron").remote;

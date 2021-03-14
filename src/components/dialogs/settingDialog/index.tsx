@@ -10,7 +10,11 @@ import {
 import { stateType } from "../../../store";
 
 const mapStateToProps = (state: stateType) => {
-  return {};
+  return {
+    bookmarks: state.reader.bookmarks,
+    books: state.manager.books,
+    notes: state.reader.notes,
+  };
 };
 const actionCreator = { handleSetting, handleMessageBox, handleMessage };
 export default connect(

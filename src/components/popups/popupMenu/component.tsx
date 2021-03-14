@@ -137,7 +137,7 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
       this.props.menuMode === "note"
         ? this.props.currentEpub.rendition._layout.width - 240
         : this.props.currentEpub.rendition._layout.width - 150;
-    var posY;
+    let posY;
     //控制menu方向
     if (y < height) {
       this.props.handleChangeDirection(true);
