@@ -1,7 +1,7 @@
 {
   "name": "koodo-reader",
   "main": "main.js",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "An open-source eBook reader ",
   "author": {
     "name": "App by Troye",
@@ -57,7 +57,7 @@
   },
   "homepage": "./",
   "build": {
-    "appId": "koodo.960960.xyz",
+    "appId": "xyz.960960.koodo",
     "productName": "KoodoReader",
     "copyright": "Copyright (c) 2020-2021 ${author}",
     "files": [
@@ -72,6 +72,33 @@
     "publish": {
       "provider": "github"
     },
+    "fileAssociations": [
+      {
+        "ext": "epub",
+        "role": "Viewer",
+        "mimeType": "application/epub+zip"
+      },
+      {
+        "ext": "pdf",
+        "role": "Viewer",
+        "mimeType": "application/pdf"
+      },
+      {
+        "ext": "mobi",
+        "role": "Viewer",
+        "mimeType": "application/x-mobipocket-ebook"
+      },
+      {
+        "ext": "azw3",
+        "role": "Viewer",
+        "mimeType": "application/vnd.amazon.ebook"
+      },
+      {
+        "ext": "txt",
+        "role": "Viewer",
+        "mimeType": "text/plain"
+      }
+    ],
     "extends": null,
     "dmg": {
       "contents": [
@@ -89,6 +116,11 @@
       ]
     },
     "mac": {
+      "target": [
+        "zip",
+        "dmg",
+        "mas"
+      ],
       "icon": "assets/icons/icon.icns",
       "category": "public.app-category.productivity",
       "artifactName": "${productName}-${version}.${ext}"
@@ -96,7 +128,7 @@
     "win": {
       "target": [
         "nsis",
-        "portable"
+        "zip"
       ],
       "icon": "assets/icons/icon.ico",
       "artifactName": "${productName}-${version}.${ext}",
@@ -107,7 +139,7 @@
       "category": "Office",
       "target": "AppImage"
     },
-    "portable": {
+    "zip": {
       "artifactName": "${productName}-${version}-Portable.${ext}"
     },
     "nsis": {
@@ -158,7 +190,7 @@
     "classnames": "^2.2.6",
     "concurrently": "^5.0.1",
     "cross-env": "^6.0.3",
-    "electron": "^7.1.4",
+    "electron": "11.3.0",
     "electron-builder": "^22.3.6",
     "electron-is-dev": "^1.1.0",
     "file-saver": "^2.0.2",

@@ -1,11 +1,11 @@
 //修改阅读器背景色
 import React from "react";
-import { backgroundList, textList } from "../../constants/themeList";
-import StyleUtil from "../../utils/readUtils/styleUtil";
+import { backgroundList, textList } from "../../../constants/themeList";
+import StyleUtil from "../../../utils/readUtils/styleUtil";
 import "./themeList.css";
 import { Trans } from "react-i18next";
 import { ThemeListProps, ThemeListState } from "./interface";
-import OtherUtil from "../../utils/otherUtil";
+import OtherUtil from "../../../utils/otherUtil";
 import { Panel as ColorPickerPanel } from "rc-color-picker";
 import "rc-color-picker/assets/index.css";
 import _ from "underscore";
