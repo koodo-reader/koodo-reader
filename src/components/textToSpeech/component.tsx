@@ -50,21 +50,24 @@ class TextToSpeech extends React.Component<
         this.setState({ voices }, () => {
           this.setState({ isAudioOn: true }, () => {
             this.handleAudio();
-
-            document
-              .querySelector("#text-speech-speed")!
-              .children[
-                ["0.5", "0.75", "1", "1.25", "1.5", "2"].indexOf(
-                  OtherUtil.getReaderConfig("voiceSpeed") || "1"
-                )
-              ].setAttribute("selected", "selected");
-            console.log(document.querySelector("#text-speech-voice"));
-            document
-              .querySelector("#text-speech-voice")!
-              .children[OtherUtil.getReaderConfig("voiceIndex")].setAttribute(
-                "selected",
-                "selected"
-              );
+            try {
+              document
+                .querySelector("#text-speech-speed")!
+                .children[
+                  ["0.5", "0.75", "1", "1.25", "1.5", "2"].indexOf(
+                    OtherUtil.getReaderConfig("voiceSpeed") || "1"
+                  )
+                ].setAttribute("selected", "selected");
+              console.log(document.querySelector("#text-speech-voice"));
+              document
+                .querySelector("#text-speech-voice")!
+                .children[OtherUtil.getReaderConfig("voiceIndex")].setAttribute(
+                  "selected",
+                  "selected"
+                );
+            } catch (error) {
+              throw error;
+            }
           });
         });
       });
