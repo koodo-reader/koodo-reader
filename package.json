@@ -58,7 +58,7 @@
   "homepage": "./",
   "build": {
     "appId": "xyz.960960.koodo",
-    "productName": "KoodoReader",
+    "productName": "Koodo Reader",
     "copyright": "Copyright (c) 2020-2021 ${author}",
     "files": [
       "build/**/*",
@@ -116,11 +116,6 @@
       ]
     },
     "mac": {
-      "target": [
-        "zip",
-        "dmg",
-        "mas"
-      ],
       "icon": "assets/icons/icon.icns",
       "category": "public.app-category.productivity",
       "artifactName": "${productName}-${version}.${ext}"
@@ -128,7 +123,7 @@
     "win": {
       "target": [
         "nsis",
-        "zip"
+        "portable"
       ],
       "icon": "assets/icons/icon.ico",
       "artifactName": "${productName}-${version}.${ext}",
@@ -138,6 +133,9 @@
       "icon": "assets/icons",
       "category": "Office",
       "target": "AppImage"
+    },
+    "portable": {
+      "artifactName": "${productName}-${version}-Portable.${ext}"
     },
     "nsis": {
       "oneClick": false,
@@ -187,7 +185,7 @@
     "classnames": "^2.2.6",
     "concurrently": "^5.0.1",
     "cross-env": "^6.0.3",
-    "electron": "11.3.0",
+    "electron": "7.1.4",
     "electron-builder": "^22.3.6",
     "electron-is-dev": "^1.1.0",
     "file-saver": "^2.0.2",
