@@ -2,7 +2,56 @@ import OtherUtil from "./otherUtil";
 import { isElectron } from "react-device-detect";
 import localforage from "localforage";
 import BookModel from "../model/Book";
+const isTitle = (line: string, isSuccess: boolean) => {
+  return (
+    line.length < 30 &&
+    line.indexOf("[") === -1 &&
+    line.indexOf("(") === -1 &&
+    (line.startsWith("CHAPTER ") ||
+      line.startsWith("Chapter ") ||
+      line.startsWith("序章") ||
+      line.startsWith("前言") ||
+      (line.startsWith(isSuccess ? "@" : "*") && line !== "*") ||
+      line.startsWith("写在前面的话") ||
+      line.startsWith("后记") ||
+      line.startsWith("楔子") ||
+      line.startsWith("后记") ||
+      line.startsWith("后序") ||
+      (line.indexOf("第") > -1 && line.indexOf("章") > -1) ||
+      (line.indexOf("第") > -1 && line.indexOf("节") > -1) ||
+      (line.indexOf("第") > -1 && line.indexOf("回") > -1) ||
+      /^[\u4e00\u4e8c\u4e09\u56db\u4e94\u516d\u4e03\u516b\u4e5d\u5341\u767e\u5343\u4e07]+$/.test(
+        line
+      ) ||
+      /^\d+$/.test(line))
+  );
+};
+const escapeHTML = (str) => {
+  var escapeChars = {
+    "¢": "cent",
+    "£": "pound",
+    "¥": "yen",
+    "€": "euro",
+    "©": "copy",
+    "®": "reg",
+    "<": "lt",
+    ">": "gt",
+    '"': "quot",
+    "&": "amp",
+    "'": "#39",
+  };
 
+  var regexString = "[";
+  for (var key in escapeChars) {
+    regexString += key;
+  }
+  regexString += "]";
+
+  var regex = new RegExp(regexString, "g");
+  return str.replace(regex, function (m) {
+    return "&" + escapeChars[m] + ";";
+  });
+};
 class BookUtil {
   static addBook(key: string, buffer: ArrayBuffer) {
     if (isElectron) {
@@ -130,39 +179,6 @@ class BookUtil {
       const { remote, app } = window.require("electron");
       const configDir = (app || remote.app).getPath("userData");
       const dirPath = path.join(configDir, "uploads");
-      if (!fs.existsSync(dirPath)) {
-        fs.mkdirSync(dirPath);
-        console.log("文件夹创建成功");
-      } else {
-        console.log("文件夹已存在");
-      }
-      var escapeChars = {
-        "¢": "cent",
-        "£": "pound",
-        "¥": "yen",
-        "€": "euro",
-        "©": "copy",
-        "®": "reg",
-        "<": "lt",
-        ">": "gt",
-        '"': "quot",
-        "&": "amp",
-        "'": "#39",
-      };
-
-      var regexString = "[";
-      for (var key in escapeChars) {
-        regexString += key;
-      }
-      regexString += "]";
-
-      var regex = new RegExp(regexString, "g");
-
-      function escapeHTML(str) {
-        return str.replace(regex, function (m) {
-          return "&" + escapeChars[m] + ";";
-        });
-      }
       const name = file.name;
       let bookExtension =
         name.indexOf("mobi") > -1
@@ -216,28 +232,8 @@ class BookUtil {
           lines.splice(imgIndex, lineLength - imgIndex);
           for (let i = 0; i < lines.length; i++) {
             const line = escapeHTML(lines[i]).trim();
-            if (
-              line.length < 30 &&
-              line.indexOf("[") === -1 &&
-              line.indexOf("(") === -1 &&
-              (line.startsWith("CHAPTER ") ||
-                line.startsWith("Chapter ") ||
-                line.startsWith("序章") ||
-                line.startsWith("前言") ||
-                line.startsWith(isSuccess ? "@" : "*") ||
-                line.startsWith("写在前面的话") ||
-                line.startsWith("后记") ||
-                line.startsWith("楔子") ||
-                line.startsWith("后记") ||
-                line.startsWith("后序") ||
-                (line.indexOf("第") > -1 && line.indexOf("章") > -1) ||
-                (line.indexOf("第") > -1 && line.indexOf("节") > -1) ||
-                (line.indexOf("第") > -1 && line.indexOf("回") > -1) ||
-                /^[\u4e00\u4e8c\u4e09\u56db\u4e94\u516d\u4e03\u516b\u4e5d\u5341\u767e\u5343\u4e07]+$/.test(
-                  line
-                ) ||
-                /^\d+$/.test(line))
-            ) {
+            if (isTitle(line, isSuccess)) {
+              console.log(line);
               content.push({
                 title: line.startsWith("*") ? line.substr(1) : line,
                 data: "",
@@ -289,9 +285,6 @@ class BookUtil {
         epub.writeEPUB(
           function (e) {
             console.log("Error:", e);
-            // res.status(400).send({
-            //   message: "This is an error!",
-            // });
             reject(false);
           },
           dirPath,
@@ -305,7 +298,6 @@ class BookUtil {
             });
             try {
               const fs = window.require("fs-extra");
-
               fs.remove(path.join(dirPath, `${bookName}.epub`), (err) => {
                 if (err) throw err;
                 console.log("successfully epub deleted");

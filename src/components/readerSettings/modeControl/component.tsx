@@ -2,7 +2,7 @@
 import React from "react";
 import "./modeControl.css";
 import { ModeControlProps, ModeControlState } from "./interface";
-import OtherUtil from "../../utils/otherUtil";
+import OtherUtil from "../../../utils/otherUtil";
 import { Trans } from "react-i18next";
 
 class ModeControl extends React.Component<ModeControlProps, ModeControlState> {

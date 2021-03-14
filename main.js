@@ -56,7 +56,7 @@ app.on("ready", () => {
       event.preventDefault();
       if (url.indexOf("full") > -1) {
         Object.assign(options, {
-          parent: mainWin,
+          // parent: mainWin,
           width: width,
           height: height,
         });
