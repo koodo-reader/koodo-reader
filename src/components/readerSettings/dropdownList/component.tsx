@@ -1,11 +1,12 @@
 //图书样式设置的下拉菜单页面
 import React from "react";
-import { dropdownList } from "../../constants/dropdownList";
+import { dropdownList } from "../../../constants/dropdownList";
 import "./dropdownList.css";
 import { Trans, NamespacesConsumer } from "react-i18next";
 import { DropdownListProps, DropdownListState } from "./interface";
-import OtherUtil from "../../utils/otherUtil";
+import OtherUtil from "../../../utils/otherUtil";
 import { isElectron } from "react-device-detect";
+
 if (
   isElectron &&
   navigator.appVersion.indexOf("NT 6.1") === -1 &&

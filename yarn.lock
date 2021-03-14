@@ -1791,9 +1791,9 @@
   integrity sha1-oUXMC7FO+cR3c2G3u6+lz446y1o=
 
 "@types/node@^12.0.12":
-  version "12.12.56"
-  resolved "https://registry.npm.taobao.org/@types/node/download/@types/node-12.12.56.tgz#83591a89723d8ec3eaf722137e1784a7351edb6c"
-  integrity sha1-g1kaiXI9jsPq9yITfheEpzUe22w=
+  version "12.20.5"
+  resolved "https://registry.npm.taobao.org/@types/node/download/@types/node-12.20.5.tgz?cache=0&sync_timestamp=1615550662720&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40types%2Fnode%2Fdownload%2F%40types%2Fnode-12.20.5.tgz#4ca82a766f05c359fd6c77505007e5a272f4bb9b"
+  integrity sha1-TKgqdm8Fw1n9bHdQUAflonL0u5s=
 
 "@types/node@^13.13.2":
   version "13.13.17"
@@ -4786,10 +4786,10 @@ electron-to-chromium@^1.3.378, electron-to-chromium@^1.3.564:
   resolved "https://registry.npm.taobao.org/electron-to-chromium/download/electron-to-chromium-1.3.564.tgz?cache=0&sync_timestamp=1599566646599&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Felectron-to-chromium%2Fdownload%2Felectron-to-chromium-1.3.564.tgz#e9c319ae437b3eb8bbf3e3bae4bead5a21945961"
   integrity sha1-6cMZrkN7Pri78+O65L6tWiGUWWE=
 
-electron@^7.1.4:
-  version "7.3.3"
-  resolved "https://registry.npm.taobao.org/electron/download/electron-7.3.3.tgz#f61502a3d42d85adfecd8e37f98da449b591f8af"
-  integrity sha1-9hUCo9Qtha3+zY43+Y2kSbWR+K8=
+electron@11.3.0:
+  version "11.3.0"
+  resolved "https://registry.npm.taobao.org/electron/download/electron-11.3.0.tgz#87e8528fd23ae53b0eeb3a738f1fe0a3ad27c2db"
+  integrity sha1-h+hSj9I65TsO6zpzjx/go60nwts=
   dependencies:
     "@electron/get" "^1.0.1"
     "@types/node" "^12.0.12"

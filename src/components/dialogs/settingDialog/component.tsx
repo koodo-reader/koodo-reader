@@ -8,7 +8,7 @@ import { version } from "../../../../package.json";
 import OtherUtil from "../../../utils/otherUtil";
 import SyncUtil from "../../../utils/syncUtils/common";
 import { isElectron } from "react-device-detect";
-
+import BackupUtil from "../../../utils/syncUtils/backupUtil";
 class SettingDialog extends React.Component<
   SettingInfoProps,
   SettingInfoState
@@ -39,7 +39,21 @@ class SettingDialog extends React.Component<
         )
       ].setAttribute("selected", "selected");
   }
-
+  handleRest = (bool: boolean) => {
+    bool
+      ? this.props.handleMessage("Turn Off Successfully")
+      : this.props.handleMessage("Turn On Successfully");
+    this.props.handleMessageBox(true);
+    isElectron &&
+      BackupUtil.backup(
+        this.props.books,
+        this.props.notes,
+        this.props.bookmarks,
+        () => {},
+        5,
+        () => {}
+      );
+  };
   changeLanguage = (lng: string) => {
     i18n.changeLanguage(lng);
     this.setState({ language: lng });
@@ -48,10 +62,7 @@ class SettingDialog extends React.Component<
   handleChangeTouch = () => {
     this.setState({ isTouch: !this.state.isTouch });
     OtherUtil.setReaderConfig("isTouch", this.state.isTouch ? "no" : "yes");
-    this.state.isTouch
-      ? this.props.handleMessage("Turn Off Successfully")
-      : this.props.handleMessage("Turn On Successfully");
-    this.props.handleMessageBox(true);
+    this.handleRest(this.state.isTouch);
   };
   handleJump = (url: string) => {
     isElectron
@@ -65,10 +76,7 @@ class SettingDialog extends React.Component<
       "isExpandContent",
       this.state.isExpandContent ? "no" : "yes"
     );
-    this.state.isExpandContent
-      ? this.props.handleMessage("Turn Off Successfully")
-      : this.props.handleMessage("Turn On Successfully");
-    this.props.handleMessageBox(true);
+    this.handleRest(this.state.isExpandContent);
   };
   handleAutoSync = () => {
     this.setState({ isAutoSync: !this.state.isAutoSync });
@@ -76,10 +84,7 @@ class SettingDialog extends React.Component<
       "isAutoSync",
       this.state.isAutoSync ? "no" : "yes"
     );
-    this.state.isAutoSync
-      ? this.props.handleMessage("Turn Off Successfully")
-      : this.props.handleMessage("Turn On Successfully");
-    this.props.handleMessageBox(true);
+    this.handleRest(this.state.isAutoSync);
   };
   handleChangeOpen = () => {
     this.setState({ isOpenBook: !this.state.isOpenBook });
@@ -87,10 +92,7 @@ class SettingDialog extends React.Component<
       "isOpenBook",
       this.state.isOpenBook ? "no" : "yes"
     );
-    this.state.isOpenBook
-      ? this.props.handleMessage("Turn Off Successfully")
-      : this.props.handleMessage("Turn On Successfully");
-    this.props.handleMessageBox(true);
+    this.handleRest(this.state.isOpenBook);
   };
   handleWindowSize = () => {
     this.setState({ isRememberSize: !this.state.isRememberSize });
@@ -98,10 +100,7 @@ class SettingDialog extends React.Component<
       "isRememberSize",
       this.state.isRememberSize ? "no" : "yes"
     );
-    this.state.isRememberSize
-      ? this.props.handleMessage("Turn Off Successfully")
-      : this.props.handleMessage("Turn On Successfully");
-    this.props.handleMessageBox(true);
+    this.handleRest(this.state.isRememberSize);
   };
   handleChangeLocation = async () => {
     const { dialog } = window.require("electron").remote;

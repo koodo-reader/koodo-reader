@@ -2,8 +2,11 @@
 import { connect } from "react-redux";
 import { withNamespaces } from "react-i18next";
 import SliderList from "./component";
-import { handleMessageBox, handleMessage } from "../../store/actions/manager";
-import { stateType } from "../../store";
+import {
+  handleMessageBox,
+  handleMessage,
+} from "../../../store/actions/manager";
+import { stateType } from "../../../store";
 
 const mapStateToProps = (state: stateType) => {
   return { currentEpub: state.book.currentEpub };

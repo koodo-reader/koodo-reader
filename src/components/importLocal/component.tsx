@@ -38,9 +38,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
           ipcRenderer.sendSync("storage-location", "ping")
         );
       var filePath = ipcRenderer.sendSync("get-file-data");
-      if (filePath === null || filePath === ".") {
-        console.log("There is no file");
-      } else {
+      if (filePath && filePath !== ".") {
         // Do something with the file.
         fetch(filePath)
           .then((response) => response.body)

@@ -162,8 +162,6 @@ class OperationPanel extends React.Component<
   // 点击退出按钮的处理程序
   handleExit() {
     OtherUtil.setReaderConfig("isFullScreen", "no");
-    console.log(window.speechSynthesis, "window.speechSynthesis");
-
     window.speechSynthesis && window.speechSynthesis.cancel();
     if (this.state.isFullScreen) {
       this.handleExitFullScreen();

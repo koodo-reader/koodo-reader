@@ -17,22 +17,26 @@ class DeleteDialog extends React.Component<DeleteDialogProps> {
     this.props.handleDeleteDialog(false);
   };
   handleDeleteOther = (key: string) => {
-    if (this.props.bookmarks[0]) {
-      let bookmarkArr = DeleteUtil.deleteBookmarks(this.props.bookmarks, key);
-      if (bookmarkArr.length === 0) {
-        localforage.removeItem("bookmarks");
-      } else {
-        localforage.setItem("bookmarks", bookmarkArr);
+    return new Promise<void>(async (resolve, reject) => {
+      if (this.props.bookmarks[0]) {
+        let bookmarkArr = DeleteUtil.deleteBookmarks(this.props.bookmarks, key);
+        if (bookmarkArr.length === 0) {
+          await localforage.removeItem("bookmarks");
+        } else {
+          await localforage.setItem("bookmarks", bookmarkArr);
+        }
       }
-    }
-    if (this.props.notes) {
-      let noteArr = DeleteUtil.deleteNotes(this.props.notes, key);
-      if (noteArr.length === 0) {
-        localforage.removeItem("notes");
-      } else {
-        localforage.setItem("notes", noteArr);
+      if (this.props.notes) {
+        let noteArr = DeleteUtil.deleteNotes(this.props.notes, key);
+        if (noteArr.length === 0) {
+          await localforage.removeItem("notes");
+          resolve();
+        } else {
+          await localforage.setItem("notes", noteArr);
+          resolve();
+        }
       }
-    }
+    });
   };
   handleComfirm = async () => {
     //从列表删除和从图书库删除判断
@@ -78,7 +82,7 @@ class DeleteDialog extends React.Component<DeleteDialogProps> {
             //删除阅读历史
             RecordLocation.clear(key);
             //删除书签，笔记，书摘，高亮
-            this.handleDeleteOther(key);
+            await this.handleDeleteOther(key);
             resolve();
           })
           .catch(() => {

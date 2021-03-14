@@ -6,12 +6,6 @@ export interface SettingPanelProps {
   handleMessage: (message: string) => void;
 }
 export interface SettingPanelState {
-  isSupported: boolean;
-  isAudioOn: boolean;
   readerMode: string;
-  isUseBackground: boolean;
-  isShowFooter: boolean;
-  isBold: boolean;
-  isShowHeader: boolean;
   isSettingLocked: boolean;
 }

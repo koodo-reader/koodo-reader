@@ -3,7 +3,7 @@ import React from "react";
 import { Trans } from "react-i18next";
 import { SliderListProps, SliderListState } from "./interface";
 import "./sliderList.css";
-import OtherUtil from "../../utils/otherUtil";
+import OtherUtil from "../../../utils/otherUtil";
 
 class SliderList extends React.Component<SliderListProps, SliderListState> {
   constructor(props: SliderListProps) {
