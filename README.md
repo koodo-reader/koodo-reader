@@ -64,8 +64,6 @@ Support for Touch Screen
 
 Text highlight and underline
 
-Language support: Simplified Chinese, Traditional Chinese and English
-
 ## Installation
 
 Desktop Version: [Download](https://koodo.960960.xyz/download)
