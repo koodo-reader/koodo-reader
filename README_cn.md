@@ -64,8 +64,6 @@
 
 文字高亮和下划线标记
 
-简体中文，繁体中文，英文，多语言支持
-
 ## 使用方法
 
 桌面端：[Github](https://github.com/troyeguo/koodo-reader/releases/latest) | [蓝奏云](https://wwa.lanzous.com/b0c90cieb) 密码：1234
