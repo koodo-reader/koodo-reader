@@ -14,6 +14,7 @@ class TextToSpeech extends React.Component<
     this.state = {
       isSupported: false,
       isAudioOn: false,
+      voices: [],
     };
   }
   componentDidMount() {
@@ -30,8 +31,42 @@ class TextToSpeech extends React.Component<
       window.speechSynthesis.cancel();
       this.setState({ isAudioOn: false });
     } else {
-      this.setState({ isAudioOn: true }, () => {
-        this.handleAudio();
+      const setSpeech = () => {
+        return new Promise(function (resolve, reject) {
+          let synth = window.speechSynthesis;
+          let id;
+
+          id = setInterval(() => {
+            if (synth.getVoices().length !== 0) {
+              resolve(synth.getVoices());
+              clearInterval(id);
+            }
+          }, 10);
+        });
+      };
+
+      let s = setSpeech();
+      s.then((voices) => {
+        this.setState({ voices }, () => {
+          this.setState({ isAudioOn: true }, () => {
+            this.handleAudio();
+
+            document
+              .querySelector("#text-speech-speed")!
+              .children[
+                ["0.5", "0.75", "1", "1.25", "1.5", "2"].indexOf(
+                  OtherUtil.getReaderConfig("voiceSpeed") || "1"
+                )
+              ].setAttribute("selected", "selected");
+            console.log(document.querySelector("#text-speech-voice"));
+            document
+              .querySelector("#text-speech-voice")!
+              .children[OtherUtil.getReaderConfig("voiceIndex")].setAttribute(
+                "selected",
+                "selected"
+              );
+          });
+        });
       });
     }
   };
@@ -72,7 +107,6 @@ class TextToSpeech extends React.Component<
           event.elapsedTime +
           " milliseconds."
       );
-      console.log(this.state.isAudioOn, this.props.isReading);
       if (!(this.state.isAudioOn && this.props.isReading)) {
         return;
       }
@@ -126,7 +160,7 @@ class TextToSpeech extends React.Component<
                 ></span>
               </span>
             </div>
-            {this.state.isAudioOn && (
+            {this.state.isAudioOn && this.state.voices.length > 0 && (
               <div
                 className="setting-dialog-new-title"
                 style={{
@@ -139,12 +173,13 @@ class TextToSpeech extends React.Component<
                 <select
                   name=""
                   className="lang-setting-dropdown"
+                  id="text-speech-voice"
                   onChange={(event) => {
                     OtherUtil.setReaderConfig("voiceIndex", event.target.value);
                     window.speechSynthesis.cancel();
                   }}
                 >
-                  {window.speechSynthesis.getVoices().map((item, index) => {
+                  {this.state.voices.map((item, index) => {
                     return (
                       <option value={index} className="lang-setting-option">
                         {item.name}
@@ -162,6 +197,7 @@ class TextToSpeech extends React.Component<
                 <Trans>Speed</Trans>
                 <select
                   name=""
+                  id="text-speech-speed"
                   className="lang-setting-dropdown"
                   onChange={(event) => {
                     OtherUtil.setReaderConfig("voiceSpeed", event.target.value);
