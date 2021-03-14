@@ -139,9 +139,6 @@
       "category": "Office",
       "target": "AppImage"
     },
-    "zip": {
-      "artifactName": "${productName}-${version}-Portable.${ext}"
-    },
     "nsis": {
       "oneClick": false,
       "allowToChangeInstallationDirectory": true,
