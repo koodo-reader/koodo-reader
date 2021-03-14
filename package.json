@@ -139,8 +139,7 @@
     },
     "nsis": {
       "oneClick": false,
-      "allowToChangeInstallationDirectory": true,
-      "deleteAppDataOnUninstall": true
+      "allowToChangeInstallationDirectory": true
     }
   },
   "eslintConfig": {
