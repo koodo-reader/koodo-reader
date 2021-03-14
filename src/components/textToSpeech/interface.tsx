@@ -8,4 +8,5 @@ export interface TextToSpeechProps {
 export interface TextToSpeechState {
   isSupported: boolean;
   isAudioOn: boolean;
+  voices: any;
 }
