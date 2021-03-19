@@ -233,7 +233,6 @@ class BookUtil {
           for (let i = 0; i < lines.length; i++) {
             const line = escapeHTML(lines[i]).trim();
             if (isTitle(line, isSuccess)) {
-              console.log(line);
               content.push({
                 title: line.startsWith("*") ? line.substr(1) : line,
                 data: "",

@@ -4,7 +4,7 @@ import "./tokenDialog.css";
 import copy from "copy-text-to-clipboard";
 import { Trans } from "react-i18next";
 import { TokenDialogProps, TokenDialogState } from "./interface";
-import OtherUtil from "../../utils/otherUtil";
+import OtherUtil from "../../../utils/otherUtil";
 
 class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
   constructor(props: TokenDialogProps) {
