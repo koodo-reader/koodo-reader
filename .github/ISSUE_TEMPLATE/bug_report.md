@@ -27,11 +27,7 @@ assignees: ""
 
 ---
 
-## Expected behavior (期望行为)
-
-<!-- What do you expect to happen? 你期望会发生什么？-->
-
-## Current behavior (当前行为)
+## Bug details (具体描述)
 
 <!--
   What currently happen? To help developers better navigate this problem, please attach some screenshots or files.

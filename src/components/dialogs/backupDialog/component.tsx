@@ -8,7 +8,7 @@ import { Trans } from "react-i18next";
 import DropboxUtil from "../../../utils/syncUtils/dropbox";
 import WebdavUtil from "../../../utils/syncUtils/webdav";
 import { BackupDialogProps, BackupDialogState } from "./interface";
-import TokenDialog from "../../tokenDialog";
+import TokenDialog from "../tokenDialog";
 import OtherUtil from "../../../utils/otherUtil";
 import { isElectron } from "react-device-detect";
 import Lottie from "react-lottie";
