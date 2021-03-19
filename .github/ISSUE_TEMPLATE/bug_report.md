@@ -10,12 +10,12 @@ assignees: ""
   Note: making sure you've already done the following things.
   - I've already installed the latest version of Koodo Reader
   - There are no similar issues on the issue list
-  - I've already read the FAQ: https://koodo.960960.xyz/faq
+  - I've already read the help document: https://github.com/troyeguo/koodo-reader/issues/106
 
   请确认你已经做了下面这些事情。
   - 我已经安装了最新版的 Koodo Reader
   - 我已经搜索了已有的 Issues列表
-  - 我已经阅读了 Koodo Reader 的 FAQ：https://koodo.960960.xyz/faq
+  - 我已经阅读了 Koodo Reader 的帮助文档：https://github.com/troyeguo/koodo-reader/issues/106
 -->
 
 ## Envirment (操作环境)
