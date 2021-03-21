@@ -108,10 +108,6 @@ brew install --cask koodo-reader
 docker-compose up -d
 ```
 
-## 开发计划
-
-前往 [Trello](https://trello.com/b/dJ51EgHV/koodo-reader-开发路线图) 了解更多
-
 ## 贡献
 
 | 贡献          | 感谢                                                                                       |
