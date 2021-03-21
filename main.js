@@ -10,7 +10,7 @@ const dirPath = path.join(configDir, "uploads");
 app.on("ready", () => {
   const { width, height } = screen.getPrimaryDisplay().workAreaSize;
   mainWin = new BrowserWindow({
-    width: 1030,
+    width: 1050,
     height: 660,
     webPreferences: {
       webSecurity: false,
