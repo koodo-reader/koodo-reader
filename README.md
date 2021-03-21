@@ -108,10 +108,6 @@ You can run in docker compose
 docker-compose up -d
 ```
 
-## Roadmap
-
-Check out Koodo's Roadmap on [Trello](https://trello.com/b/ms7CbYTi/roadmap-for-koodo-reader)
-
 ## Contribution
 
 | Contribution                        | Contributor                                                                                |
