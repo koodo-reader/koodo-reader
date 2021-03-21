@@ -165,8 +165,7 @@
       "target": [
         "AppImage",
         "deb",
-        "rpm",
-        "snap"
+        "rpm"
       ]
     },
     "portable": {

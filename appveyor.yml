@@ -9,6 +9,8 @@ image:
   - macos
   - Ubuntu
 
+stack: node 10
+
 cache:
   - node_modules
   - '%APPDATA%\npm-cache'
