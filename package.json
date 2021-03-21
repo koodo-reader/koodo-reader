@@ -137,13 +137,6 @@
           ]
         },
         {
-          "target": "zip",
-          "arch": [
-            "x64",
-            "ia32"
-          ]
-        },
-        {
           "target": "portable",
           "arch": [
             "x64",
@@ -217,8 +210,8 @@
     "classnames": "^2.2.6",
     "concurrently": "^5.0.1",
     "cross-env": "^6.0.3",
-    "electron": "7.1.4",
-    "electron-builder": "^22.3.6",
+    "electron": "11.3.0",
+    "electron-builder": "^22.10.5",
     "electron-is-dev": "^1.1.0",
     "file-saver": "^2.0.2",
     "html-react-parser": "^0.13.0",
