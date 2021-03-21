@@ -152,7 +152,7 @@
         }
       ],
       "icon": "assets/icons/icon.ico",
-      "artifactName": "${productName}-${version}.${ext}",
+      "artifactName": "${productName}-${version}-${arch}.${ext}",
       "publisherName": "App by Troye"
     },
     "linux": {
