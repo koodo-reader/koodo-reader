@@ -7,6 +7,10 @@
     "name": "App by Troye",
     "email": "guo362429@gmail.com"
   },
+  "engines": {
+    "node": ">=10.0.0",
+    "npm": ">=6.0.0"
+  },
   "repository": "https://github.com/troyeguo/koodo-reader",
   "private": true,
   "dependencies": {
@@ -125,7 +129,7 @@
       ],
       "icon": "assets/icons/icon.icns",
       "category": "public.app-category.productivity",
-      "artifactName": "${productName}-${version}.${ext}"
+      "artifactName": "${productName}-${version}-${arch}.${ext}"
     },
     "win": {
       "target": [
@@ -166,7 +170,7 @@
       ]
     },
     "portable": {
-      "artifactName": "${productName}-${version}-Portable.${ext}"
+      "artifactName": "${productName}-${version}-Portable-${arch}.${ext}"
     },
     "nsis": {
       "oneClick": false,
