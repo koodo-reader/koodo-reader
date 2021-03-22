@@ -155,14 +155,13 @@
           "target": "AppImage"
         },
         {
-          "target": "deb",
-          "arch": [
-            "x64",
-            "ia32",
-            "arm64",
-            "universal",
-            "armv7l"
-          ]
+          "target": "deb"
+        },
+        {
+          "target": "snap"
+        },
+        {
+          "target": "rpm"
         }
       ]
     },
@@ -219,7 +218,7 @@
     "classnames": "^2.2.6",
     "concurrently": "^5.0.1",
     "cross-env": "^6.0.3",
-    "electron": "11.3.0",
+    "electron": "9.4.4",
     "electron-builder": "^22.10.5",
     "electron-is-dev": "^1.1.0",
     "file-saver": "^2.0.2",
