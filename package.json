@@ -152,8 +152,7 @@
       "category": "Office",
       "target": [
         "AppImage",
-        "deb",
-        "rpm"
+        "deb"
       ]
     },
     "portable": {
