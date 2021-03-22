@@ -141,6 +141,13 @@
           ]
         },
         {
+          "target": "zip",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        },
+        {
           "target": "portable",
           "arch": [
             "x64",
@@ -149,7 +156,7 @@
         }
       ],
       "icon": "assets/icons/icon.ico",
-      "artifactName": "${productName}-${version}.${ext}",
+      "artifactName": "${productName}-${version}-${arch}.${ext}",
       "publisherName": "App by Troye"
     },
     "linux": {
@@ -165,7 +172,7 @@
       ]
     },
     "portable": {
-      "artifactName": "${productName}-${version}-Portable.${ext}"
+      "artifactName": "${productName}-${version}-Portable-${arch}.${ext}"
     },
     "nsis": {
       "oneClick": false,
