@@ -2,7 +2,6 @@ const { remote, app, BrowserWindow, ipcMain, screen } = require("electron");
 const isDev = require("electron-is-dev");
 const path = require("path");
 let mainWin;
-let splash;
 app.disableHardwareAcceleration();
 const configDir = (app || remote.app).getPath("userData");
 const dirPath = path.join(configDir, "uploads");
@@ -20,21 +19,7 @@ app.on("ready", () => {
       nodeIntegrationInSubFrames: true,
       allowRunningInsecureContent: true,
     },
-    // show: false,
-    // transparent: true,
   });
-  // splash = new BrowserWindow({
-  //   width: 530,
-  //   height: 343,
-  //   frame: false,
-  //   transparent: true,
-  //   alwaysOnTop: isDev ? false : true,
-  // });
-  // splash.loadURL(
-  //   isDev
-  //     ? path.join(__dirname, "/public/assets/launch-page.html")
-  //     : `file://${path.join(__dirname, "./build/assets/launch-page.html")}`
-  // );
   if (!isDev) {
     const { Menu } = require("electron");
     Menu.setApplicationMenu(null);
@@ -44,12 +29,6 @@ app.on("ready", () => {
     ? "http://localhost:3000"
     : `file://${path.join(__dirname, "./build/index.html")}`;
   mainWin.loadURL(urlLocation);
-  // mainWin.webContents.on("did-finish-load", () => {
-  //   splash.destroy();
-  //   // mainWin.maximize();
-  //   // mainWin.webContents.setZoomFactor(1);
-  //   mainWin.show();
-  // });
   mainWin.webContents.on(
     "new-window",
     (event, url, frameName, disposition, options, additionalFeatures) => {
@@ -85,6 +64,11 @@ app.on("ready", () => {
         });
         event.newGuest = new BrowserWindow(options);
       }
+      mainWin.hide();
+      event.newGuest.on("close", () => {
+        mainWin.show();
+        event.newGuest = null;
+      });
     }
   );
   mainWin.on("close", () => {
@@ -101,10 +85,6 @@ app.on("ready", () => {
         console.log(err);
       });
   });
-  ipcMain.on("start-server", (event, arg) => {
-    // startExpress();
-    event.returnValue = path.join(dirPath, "data");
-  });
   ipcMain.on("storage-location", (event, arg) => {
     event.returnValue = path.join(dirPath, "data");
   });
@@ -120,4 +100,12 @@ app.on("ready", () => {
 
 app.on("window-all-closed", () => {
   app.quit();
+});
+app.on("second-instance", () => {
+  if (mainWin) {
+    if (mainWin.isMinimized()) {
+      mainWin.restore();
+    }
+    mainWin.show(); // focuses as well
+  }
 });

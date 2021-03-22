@@ -31,7 +31,6 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
   componentDidMount() {
     if (isElectron) {
       const { ipcRenderer } = window.require("electron");
-      ipcRenderer.sendSync("start-server", "ping");
       if (!OtherUtil.getReaderConfig("storageLocation"))
         OtherUtil.setReaderConfig(
           "storageLocation",
