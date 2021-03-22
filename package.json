@@ -134,29 +134,17 @@
     "win": {
       "target": [
         {
-          "target": "nsis",
-          "arch": [
-            "x64",
-            "ia32"
-          ]
+          "target": "nsis"
         },
         {
-          "target": "zip",
-          "arch": [
-            "x64",
-            "ia32"
-          ]
+          "target": "zip"
         },
         {
-          "target": "portable",
-          "arch": [
-            "x64",
-            "ia32"
-          ]
+          "target": "portable"
         }
       ],
       "icon": "assets/icons/icon.ico",
-      "artifactName": "${productName}-${version}-${arch}.${ext}",
+      "artifactName": "${productName}-${version}.${ext}",
       "publisherName": "App by Troye"
     },
     "linux": {
@@ -169,7 +157,7 @@
       ]
     },
     "portable": {
-      "artifactName": "${productName}-${version}-Portable-${arch}.${ext}"
+      "artifactName": "${productName}-${version}-Portable.${ext}"
     },
     "nsis": {
       "oneClick": false,
@@ -220,7 +208,7 @@
     "classnames": "^2.2.6",
     "concurrently": "^5.0.1",
     "cross-env": "^6.0.3",
-    "electron": "7.1.4",
+    "electron": "11.3.0",
     "electron-builder": "^22.10.5",
     "electron-is-dev": "^1.1.0",
     "file-saver": "^2.0.2",
