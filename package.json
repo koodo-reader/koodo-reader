@@ -230,7 +230,7 @@
     "file-saver": "^2.0.2",
     "html-react-parser": "^0.13.0",
     "localforage": "^1.7.3",
-    "node-sass": "^4.13.0",
+    "node-sass": "^4.13.1",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "react-hot-loader": "^4.12.21",
