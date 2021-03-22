@@ -20,21 +20,21 @@ app.on("ready", () => {
       nodeIntegrationInSubFrames: true,
       allowRunningInsecureContent: true,
     },
-    show: false,
+    // show: false,
     // transparent: true,
   });
-  splash = new BrowserWindow({
-    width: 530,
-    height: 343,
-    frame: false,
-    transparent: true,
-    alwaysOnTop: isDev ? false : true,
-  });
-  splash.loadURL(
-    isDev
-      ? path.join(__dirname, "/public/assets/launch-page.html")
-      : `file://${path.join(__dirname, "./build/assets/launch-page.html")}`
-  );
+  // splash = new BrowserWindow({
+  //   width: 530,
+  //   height: 343,
+  //   frame: false,
+  //   transparent: true,
+  //   alwaysOnTop: isDev ? false : true,
+  // });
+  // splash.loadURL(
+  //   isDev
+  //     ? path.join(__dirname, "/public/assets/launch-page.html")
+  //     : `file://${path.join(__dirname, "./build/assets/launch-page.html")}`
+  // );
   if (!isDev) {
     const { Menu } = require("electron");
     Menu.setApplicationMenu(null);
@@ -44,12 +44,12 @@ app.on("ready", () => {
     ? "http://localhost:3000"
     : `file://${path.join(__dirname, "./build/index.html")}`;
   mainWin.loadURL(urlLocation);
-  mainWin.webContents.on("did-finish-load", () => {
-    splash.destroy();
-    // mainWin.maximize();
-    // mainWin.webContents.setZoomFactor(1);
-    mainWin.show();
-  });
+  // mainWin.webContents.on("did-finish-load", () => {
+  //   splash.destroy();
+  //   // mainWin.maximize();
+  //   // mainWin.webContents.setZoomFactor(1);
+  //   mainWin.show();
+  // });
   mainWin.webContents.on(
     "new-window",
     (event, url, frameName, disposition, options, additionalFeatures) => {
