@@ -134,17 +134,26 @@
     "win": {
       "target": [
         {
-          "target": "nsis"
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
         },
         {
-          "target": "zip"
+          "target": "zip",
+          "arch": [
+            "x64"
+          ]
         },
         {
-          "target": "portable"
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
         }
       ],
       "icon": "assets/icons/icon.ico",
-      "artifactName": "${productName}-${version}.${ext}",
+      "artifactName": "${productName}-${version}-${arch}.${ext}",
       "publisherName": "App by Troye"
     },
     "linux": {
@@ -152,11 +161,12 @@
       "category": "Office",
       "target": [
         "AppImage",
-        "deb"
+        "deb",
+        "rpm"
       ]
     },
     "portable": {
-      "artifactName": "${productName}-${version}-Portable.${ext}"
+      "artifactName": "${productName}-${version}-Portable-${arch}.${ext}"
     },
     "nsis": {
       "oneClick": false,
