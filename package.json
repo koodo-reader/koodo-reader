@@ -162,6 +162,7 @@
       "target": [
         "AppImage",
         "deb",
+        "snap",
         "rpm"
       ]
     },
