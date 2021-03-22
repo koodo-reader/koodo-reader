@@ -17,7 +17,7 @@ addons:
       - libgnome-keyring-dev
       - icnsutils
 before_install:
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install --no-install-recommends -y icnsutils graphicsmagick xz-utils; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install --no-install-recommends -y icnsutils graphicsmagick xz-utils; then sudo snap install snapcraft --classic; then sudo apt-get install rpm -y; fi
 install:
   - nvm install 10
   - curl -o- -L https://yarnpkg.com/install.sh | bash
