@@ -151,8 +151,18 @@
       "icon": "assets/icons",
       "category": "Office",
       "target": [
-        "AppImage",
-        "deb"
+        {
+          "target": "AppImage"
+        },
+        {
+          "target": "deb",
+          "arch": [
+            "x64",
+            "x86",
+            "arm64",
+            "armv7l"
+          ]
+        }
       ]
     },
     "portable": {
