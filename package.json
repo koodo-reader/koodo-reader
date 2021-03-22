@@ -134,7 +134,10 @@
     "win": {
       "target": [
         {
-          "target": "nsis"
+          "target": "nsis",
+          "arch": [
+            "universal"
+          ]
         },
         {
           "target": "zip"
@@ -158,7 +161,7 @@
           "target": "deb",
           "arch": [
             "x64",
-            "x86",
+            "ia32",
             "arm64",
             "armv7l"
           ]
