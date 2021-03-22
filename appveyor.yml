@@ -18,7 +18,6 @@ cache:
 init:
   - git config --global core.autocrlf input
   - sudo snap install snapcraft --classic
-  - sudo apt-get install rpm
 
 install:
   - git reset --hard HEAD
