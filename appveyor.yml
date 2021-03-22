@@ -5,8 +5,6 @@ branches:
     - master
 
 image:
-  - Visual Studio 2019
-  - maco
   - Ubuntu
 
 stack: node 10
@@ -19,6 +17,8 @@ cache:
 
 init:
   - git config --global core.autocrlf input
+  - sudo snap install snapcraft --classic
+  - sudo apt-get install rpm
 
 install:
   - git reset --hard HEAD
