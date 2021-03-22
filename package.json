@@ -134,13 +134,25 @@
     "win": {
       "target": [
         {
-          "target": "nsis"
+          "target": "nsis",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
         },
         {
-          "target": "zip"
+          "target": "zip",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
         },
         {
-          "target": "portable"
+          "target": "portable",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
         }
       ],
       "icon": "assets/icons/icon.ico",
