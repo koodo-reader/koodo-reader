@@ -143,7 +143,19 @@ class BookUtil {
         reader.readAsArrayBuffer(file);
         reader.onload = async (event) => {
           await localforage.setItem("pdf", event.target!.result as any);
-          window.open(`./lib/pdf/viewer.html?file=pdf`);
+          if (OtherUtil.getReaderConfig("isRememberSize") === "yes") {
+            window.open(
+              `./lib/pdf/viewer.html?file=pdf&width=${OtherUtil.getReaderConfig(
+                "windowWidth"
+              )}&height=${OtherUtil.getReaderConfig(
+                "windowHeight"
+              )}&x=${OtherUtil.getReaderConfig(
+                "windowX"
+              )}&y=${OtherUtil.getReaderConfig("windowY")}`
+            );
+          } else {
+            window.open(`./lib/pdf/viewer.html?file=pdf&width=full`);
+          }
         };
       } else {
         window.open(`./lib/pdf/viewer.html?file=${book.key}`);
