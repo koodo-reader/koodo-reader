@@ -3635,7 +3635,6 @@
           evt.preventDefault();
         }
       }
-
       function beforeUnload(evt) {
         evt.preventDefault();
         evt.returnValue = "";
