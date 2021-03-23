@@ -7,6 +7,9 @@ const configDir = (app || remote.app).getPath("userData");
 const dirPath = path.join(configDir, "uploads");
 const singleInstance = app.requestSingleInstanceLock();
 var filePath = null;
+if (process.platform == "win32" && process.argv.length >= 2) {
+  filePath = process.argv[1];
+}
 
 // Single Instance Lock
 if (!singleInstance) {
@@ -39,9 +42,7 @@ app.on("ready", () => {
     const { Menu } = require("electron");
     Menu.setApplicationMenu(null);
   }
-  if (process.platform == "win32" && process.argv.length >= 2) {
-    filePath = process.argv[1];
-  }
+
   const urlLocation = isDev
     ? "http://localhost:3000"
     : `file://${path.join(__dirname, "./build/index.html")}`;
