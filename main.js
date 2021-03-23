@@ -5,6 +5,21 @@ let mainWin;
 app.disableHardwareAcceleration();
 const configDir = (app || remote.app).getPath("userData");
 const dirPath = path.join(configDir, "uploads");
+const singleInstance = app.requestSingleInstanceLock();
+var filePath = null;
+
+// Single Instance Lock
+if (!singleInstance) {
+  app.quit();
+} else {
+  app.on("second-instance", () => {
+    // Someone tried to run a second instance, it should focus the existing instance.
+    if (mainWin) {
+      if (!mainWin.isVisible()) mainWin.show();
+      mainWin.focus();
+    }
+  });
+}
 
 app.on("ready", () => {
   const { width, height } = screen.getPrimaryDisplay().workAreaSize;
@@ -24,7 +39,9 @@ app.on("ready", () => {
     const { Menu } = require("electron");
     Menu.setApplicationMenu(null);
   }
-
+  if (process.platform == "win32" && process.argv.length >= 2) {
+    filePath = process.argv[1];
+  }
   const urlLocation = isDev
     ? "http://localhost:3000"
     : `file://${path.join(__dirname, "./build/index.html")}`;
@@ -34,8 +51,9 @@ app.on("ready", () => {
     (event, url, frameName, disposition, options, additionalFeatures) => {
       event.preventDefault();
       if (url.indexOf("full") > -1) {
+        console.log("full");
         Object.assign(options, {
-          // parent: mainWin,
+          parent: mainWin,
           width: width,
           height: height,
         });
@@ -89,23 +107,13 @@ app.on("ready", () => {
     event.returnValue = path.join(dirPath, "data");
   });
   ipcMain.on("get-file-data", function (event) {
-    var data = null;
-    if (process.platform == "win32" && process.argv.length >= 2) {
-      var openFilePath = process.argv[1];
-      data = openFilePath;
-    }
-    event.returnValue = data;
+    event.returnValue = filePath;
   });
 });
 
 app.on("window-all-closed", () => {
   app.quit();
 });
-app.on("second-instance", () => {
-  if (mainWin) {
-    if (mainWin.isMinimized()) {
-      mainWin.restore();
-    }
-    mainWin.show(); // focuses as well
-  }
+app.on("open-file", (e, pathToFile) => {
+  filePath = pathToFile;
 });
