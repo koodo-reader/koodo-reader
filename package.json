@@ -78,31 +78,31 @@
       {
         "ext": "epub",
         "role": "Viewer",
-        "icon": "assets/icons/epub",
+        "icon": "assets/icons/epub.ico",
         "mimeType": "application/epub+zip"
       },
       {
         "ext": "pdf",
         "role": "Viewer",
-        "icon": "assets/icons/pdf",
+        "icon": "assets/icons/pdf.ico",
         "mimeType": "application/pdf"
       },
       {
         "ext": "mobi",
         "role": "Viewer",
-        "icon": "assets/icons/mobi",
+        "icon": "assets/icons/mobi.ico",
         "mimeType": "application/x-mobipocket-ebook"
       },
       {
         "ext": "azw3",
         "role": "Viewer",
-        "icon": "assets/icons/azw3",
+        "icon": "assets/icons/azw3.ico",
         "mimeType": "application/vnd.amazon.ebook"
       },
       {
         "ext": "txt",
         "role": "Viewer",
-        "icon": "assets/icons/txt",
+        "icon": "assets/icons/txt.ico",
         "mimeType": "text/plain"
       }
     ],
