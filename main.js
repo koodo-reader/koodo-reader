@@ -20,8 +20,6 @@ if (!singleInstance) {
     if (mainWin) {
       if (!mainWin.isVisible()) mainWin.show();
       mainWin.focus();
-      event.sender.send("open-book", filePath);
-      filePath = null;
     }
   });
 }
@@ -85,9 +83,10 @@ app.on("ready", () => {
         });
         event.newGuest = new BrowserWindow(options);
       }
-      mainWin.hide();
+      mainWin.minimize();
+      event.newGuest.show();
       event.newGuest.on("close", () => {
-        mainWin.show();
+        mainWin.restore();
         event.newGuest = null;
       });
     }
