@@ -15,11 +15,13 @@ if (process.platform == "win32" && process.argv.length >= 2) {
 if (!singleInstance) {
   app.quit();
 } else {
-  app.on("second-instance", () => {
-    // Someone tried to run a second instance, it should focus the existing instance.
+  app.on("second-instance", (event, argv, workingDir) => {
+    console.log(event, argv, workingDir);
     if (mainWin) {
       if (!mainWin.isVisible()) mainWin.show();
       mainWin.focus();
+      event.sender.send("open-book", filePath);
+      filePath = null;
     }
   });
 }
@@ -93,6 +95,7 @@ app.on("ready", () => {
   mainWin.on("close", () => {
     mainWin = null;
   });
+
   ipcMain.on("fonts-ready", (event, arg) => {
     const fontList = require("font-list");
     fontList
@@ -109,6 +112,7 @@ app.on("ready", () => {
   });
   ipcMain.on("get-file-data", function (event) {
     event.returnValue = filePath;
+    filePath = null;
   });
 });
 
