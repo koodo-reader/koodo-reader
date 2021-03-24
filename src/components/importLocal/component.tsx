@@ -36,50 +36,60 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
           "storageLocation",
           ipcRenderer.sendSync("storage-location", "ping")
         );
+      ipcRenderer.on("open-book", (event: any, result: string) => {
+        if (result && result !== ".") {
+          this.handleFilePath(result);
+        }
+      });
       var filePath = ipcRenderer.sendSync("get-file-data");
       if (filePath && filePath !== ".") {
-        // Do something with the file.
-        fetch(filePath)
-          .then((response) => response.body)
-          .then((body) => {
-            const reader = body!.getReader();
-            return new ReadableStream({
-              start(controller) {
-                return pump();
-                function pump(): any {
-                  return reader.read().then(({ done, value }) => {
-                    // When no more data needs to be consumed, close the stream
-                    if (done) {
-                      controller.close();
-                      return;
-                    }
-                    // Enqueue the next data chunk into our target stream
-                    controller.enqueue(value);
-                    return pump();
-                  });
-                }
-              },
-            });
-          })
-          .then((stream) => new Response(stream))
-          .then((response) => response.blob())
-          .then((blob) => {
-            let fileTemp = new File([blob], filePath.split("\\").reverse()[0], {
-              lastModified: new Date().getTime(),
-              type: blob.type,
-            });
-            this.setState({ isOpenFile: true }, () => {
-              this.doIncrementalTest(fileTemp);
-            });
-          })
-          .catch((err) => console.error(err));
+        this.handleFilePath(filePath);
       }
     }
     window.addEventListener("resize", () => {
       this.setState({ width: document.body.clientWidth });
     });
   }
-
+  handleFilePath = (filePath: string) => {
+    fetch(filePath)
+      .then((response) => response.body)
+      .then((body) => {
+        const reader = body!.getReader();
+        return new ReadableStream({
+          start(controller) {
+            return pump();
+            function pump(): any {
+              return reader.read().then(({ done, value }) => {
+                // When no more data needs to be consumed, close the stream
+                if (done) {
+                  controller.close();
+                  return;
+                }
+                // Enqueue the next data chunk into our target stream
+                controller.enqueue(value);
+                return pump();
+              });
+            }
+          },
+        });
+      })
+      .then((stream) => new Response(stream))
+      .then((response) => response.blob())
+      .then((blob) => {
+        let fileTemp = new File(
+          [blob],
+          "file." + filePath.split(".").reverse()[0],
+          {
+            lastModified: new Date().getTime(),
+            type: blob.type,
+          }
+        );
+        this.setState({ isOpenFile: true }, () => {
+          this.doIncrementalTest(fileTemp);
+        });
+      })
+      .catch((err) => console.error(err));
+  };
   handleJump = (book: BookModel) => {
     RecentBooks.setRecent(book.key);
     BookUtil.RedirectBook(book);
@@ -103,10 +113,13 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
             this.state.isOpenFile && this.handleJump(book);
             this.setState({ isOpenFile: false });
             this.props.history.push("/manager/home");
-          }, 1000);
-          setTimeout(() => {
-            this.props.handleLoadingDialog(false);
-          }, 1000);
+          }, 100);
+          setTimeout(
+            () => {
+              this.props.handleLoadingDialog(false);
+            },
+            this.state.isOpenFile ? 0 : 1000
+          );
           if (isElectron) {
             BackupUtil.backup(
               bookArr,
