@@ -20,6 +20,12 @@
  * Javascript code in this page
  */
 
+/**
+ * Modified by Troye Guo in 2021
+ * 1.Add codes from line 2678 to fetch file from indexDB
+ * 2.Add highlighter to the selected text
+ */
+
 /******/ (() => {
   // webpackBootstrap
   /******/ "use strict";
