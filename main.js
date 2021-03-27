@@ -47,10 +47,14 @@ app.on("ready", () => {
     "new-window",
     (event, url, frameName, disposition, options, additionalFeatures) => {
       event.preventDefault();
+      const { screen } = require("electron");
+      const { width, height } = screen.getPrimaryDisplay().workAreaSize;
       if (url.indexOf("full") > -1) {
         console.log("full");
         Object.assign(options, {
           parent: mainWin,
+          // width,
+          // height,
         });
         event.newGuest = new BrowserWindow(options);
         event.newGuest.maximize();
