@@ -1,7 +1,7 @@
 import RestoreUtil from "./restoreUtil";
 import OtherUtil from "../otherUtil";
 
-class WebdavUitl {
+class WebdavUtil {
   static UploadFile = async (
     file: any,
     handleFinish: () => void,
@@ -115,4 +115,4 @@ class WebdavUitl {
   };
 }
 
-export default WebdavUitl;
+export default WebdavUtil;
