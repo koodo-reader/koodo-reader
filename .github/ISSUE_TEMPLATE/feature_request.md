@@ -8,7 +8,6 @@ assignees: ""
 
 <!--
   Note: making sure you've already checked Koodo's roadmap, don't request any features listed in the roadmap
-
   提交之前，请先阅读 Koodo 的开发计划，确保您的需求不在开发计划中
 -->
 

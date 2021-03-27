@@ -23,8 +23,9 @@ if (!singleInstance) {
     }
   });
 }
-
+console.log("1");
 app.on("ready", () => {
+  console.log("2");
   const { width, height } = screen.getPrimaryDisplay().workAreaSize;
   mainWin = new BrowserWindow({
     width: 1050,
@@ -47,6 +48,7 @@ app.on("ready", () => {
     ? "http://localhost:3000"
     : `file://${path.join(__dirname, "./build/index.html")}`;
   mainWin.loadURL(urlLocation);
+  console.log("3");
   mainWin.webContents.on(
     "new-window",
     (event, url, frameName, disposition, options, additionalFeatures) => {

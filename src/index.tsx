@@ -10,7 +10,6 @@ import store from "./store";
 import Router from "./router/index";
 import * as serviceWorker from "./serviceWorker";
 import { isElectron } from "react-device-detect";
-
 ReactDOM.render(
   <Provider store={store}>
     <Router />
