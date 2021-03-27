@@ -9,7 +9,6 @@ import "./i18n";
 import store from "./store";
 import Router from "./router/index";
 import * as serviceWorker from "./serviceWorker";
-import { isElectron } from "react-device-detect";
 ReactDOM.render(
   <Provider store={store}>
     <Router />
@@ -20,8 +19,5 @@ ReactDOM.render(
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://bit.ly/CRA-PWA
-if (isElectron) {
-  serviceWorker.unregister();
-} else {
-  serviceWorker.register();
-}
+
+serviceWorker.unregister();
