@@ -40,9 +40,9 @@ app.on("ready", () => {
   const urlLocation = isDev
     ? "http://localhost:3000"
     : `file://${path.join(__dirname, "./build/index.html")}`;
+
   mainWin.loadURL(urlLocation);
   const { remote, ipcMain } = require("electron");
-
   mainWin.webContents.on(
     "new-window",
     (event, url, frameName, disposition, options, additionalFeatures) => {
@@ -53,8 +53,8 @@ app.on("ready", () => {
         console.log("full");
         Object.assign(options, {
           parent: mainWin,
-          // width,
-          // height,
+          width,
+          height,
         });
         event.newGuest = new BrowserWindow(options);
         event.newGuest.maximize();
