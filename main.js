@@ -1,5 +1,6 @@
 const { app, BrowserWindow } = require("electron");
 let mainWin;
+let readerWin;
 const singleInstance = app.requestSingleInstanceLock();
 var filePath = null;
 if (process.platform == "win32" && process.argv.length >= 2) {
@@ -84,7 +85,7 @@ app.on("ready", () => {
       mainWin.minimize();
       event.newGuest.show();
       event.newGuest.on("close", () => {
-        mainWin.restore();
+        mainWin.show();
         event.newGuest = null;
       });
     }
@@ -104,6 +105,7 @@ app.on("ready", () => {
         console.log(err);
       });
   });
+
   ipcMain.on("storage-location", (event, arg) => {
     const configDir = (app || remote.app).getPath("userData");
     const dirPath = path.join(configDir, "uploads");
