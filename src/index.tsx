@@ -10,7 +10,7 @@ import store from "./store";
 import Router from "./router/index";
 import * as serviceWorker from "./serviceWorker";
 let coverLoading: any = document.querySelector(".loading-cover");
-coverLoading.parentNode.removeChild(coverLoading);
+coverLoading && coverLoading.parentNode.removeChild(coverLoading);
 
 ReactDOM.render(
   <Provider store={store}>

@@ -151,6 +151,15 @@
     </div>
     <div id="root"></div>
     <canvas id="the-canvas"></canvas>
+    <script>
+      if (
+        document.location.href.indexOf("epub") > -1 ||
+        document.location.href.indexOf("pdf") > -1
+      ) {
+        let coverLoading = document.querySelector(".loading-cover");
+        coverLoading && coverLoading.parentNode.removeChild(coverLoading);
+      }
+    </script>
     <script
       type="text/javascript"
       src="%PUBLIC_URL%/lib/JSZip/jszip.min.js"
