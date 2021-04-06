@@ -1,6 +1,5 @@
 const { app, BrowserWindow } = require("electron");
 let mainWin;
-let readerWin;
 const singleInstance = app.requestSingleInstanceLock();
 var filePath = null;
 if (process.platform == "win32" && process.argv.length >= 2) {
@@ -48,14 +47,12 @@ app.on("ready", () => {
     "new-window",
     (event, url, frameName, disposition, options, additionalFeatures) => {
       event.preventDefault();
-      const { screen } = require("electron");
-      const { width, height } = screen.getPrimaryDisplay().workAreaSize;
       if (url.indexOf("full") > -1) {
         console.log("full");
         Object.assign(options, {
           parent: mainWin,
-          width,
-          height,
+          width: 1050,
+          height: 660,
         });
         event.newGuest = new BrowserWindow(options);
         event.newGuest.maximize();
@@ -82,11 +79,12 @@ app.on("ready", () => {
         });
         event.newGuest = new BrowserWindow(options);
       }
+      mainWin.blur();
       mainWin.minimize();
       event.newGuest.show();
       event.newGuest.on("close", () => {
-        mainWin.show();
         event.newGuest = null;
+        mainWin.restore();
       });
     }
   );
@@ -116,7 +114,6 @@ app.on("ready", () => {
     filePath = null;
   });
 });
-
 app.on("window-all-closed", () => {
   app.quit();
 });
