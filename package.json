@@ -166,6 +166,9 @@
         },
         {
           "target": "snap"
+        },
+        {
+          "target": "rpm"
         }
       ]
     },
