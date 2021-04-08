@@ -27,7 +27,6 @@ install:
   - yarn
 before_script:
   - git lfs pull
-  - sudo snap install snapcraft --classic
 script:
   - yarn release
 branches:
