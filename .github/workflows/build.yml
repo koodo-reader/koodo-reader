@@ -1,0 +1,48 @@
+name: "build-test"
+on: # rebuild any PRs and main branch changes
+  pull_request:
+  push:
+    branches:
+      - master
+      - "releases/*"
+
+jobs:
+  unit: # make sure build/ci work properly
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: |
+          npm install
+          npm run all
+  integration: # make sure the action works on a clean machine without building
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        project:
+          - core
+          - core18
+          - core20
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./
+        id: snapcraft
+        with:
+          path: "./test-projects/${{ matrix.project }}"
+      - uses: actions/upload-artifact@v2
+        with:
+          name: "snap"
+          path: ${{ steps.snapcraft.outputs.snap}}
+
+  check-runner: # make sure the action works on each VM image
+    strategy:
+      matrix:
+        runner:
+          - ubuntu-16.04
+          - ubuntu-18.04
+          - ubuntu-20.04
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./
+        with:
+          path: "./test-projects/core18"
