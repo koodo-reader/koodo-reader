@@ -9,6 +9,7 @@ icon: assets/icons/256x256.png
 
 apps:
   electronApp:
+    command: bin/koodo-reader
     plugs:
       - browser-support
       - desktop
