@@ -24,6 +24,7 @@ init:
       then
         sudo apt-get install --no-install-recommends -y icnsutils graphicsmagick xz-utils
         sudo apt-get install snapd
+        sudo apt-get install rpm
       fi
 
 install:
