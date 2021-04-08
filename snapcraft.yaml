@@ -1,0 +1,46 @@
+name: koodo-reader
+version: "0.1"
+summary: Koodo Reader is a full-featured ebook manager and reader
+description: |
+  A modern ebook manager and reader for epub, pdf, mobi, azw3 and txt, supporting Windows, macOS, Linux and Web.
+grade: stable
+confinement: strict
+
+apps:
+  asmstnote:
+    command: desktop-launch $SNAP/etc/koodo-reader/KoodoReader
+    plugs:
+      - browser-support
+      - network
+      - unity7
+      - gsettings
+
+parts:
+  src:
+    plugin: nodejs
+    source: .
+
+  deps:
+    plugin: nil
+    stage-packages:
+      - libgconf-2-4
+      - libnss3
+      - libxss1
+      - fontconfig-config
+
+  desktop-integration:
+    plugin: nil
+    stage-packages:
+      - libappindicator1
+      - libdbusmenu-glib4
+      - libnotify4
+      - libunity9
+
+  launcher:
+    plugin: dump
+    source: .
+    stage:
+      - etc/koodo-reader
+    organize:
+      dist/KoodoReader-linux-x64: etc/koodo-reader
+    after: [desktop-glib-only]
