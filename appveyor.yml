@@ -5,8 +5,8 @@ branches:
     - master
 
 image:
-  - Visual Studio 2019
-  - macos
+  #  - Visual Studio 2019
+  #  - macos
   - Ubuntu
 
 stack: node 10
@@ -23,14 +23,25 @@ init:
       if [ "${APPVEYOR_BUILD_WORKER_IMAGE}" == "Ubuntu" ]
       then
         sudo apt-get install --no-install-recommends -y icnsutils graphicsmagick xz-utils
-        sudo apt-get -y install snapd
-        sudo snap -y install snapcraft --classic
+        sudo apt-get install snapd
       fi
 
 install:
   - git reset --hard HEAD
   - npm install
   - node --version
+
+before_build:
+  - node --version
+  - npm --version
+  # Get new $SNAP_TOKEN with:
+  # $ snapcraft export-login --snaps bw --acls package_push,package_release -
+  - sh: |
+      if [ "${SNAP_TOKEN}" != "" ]
+      then
+        sudo snap install snapcraft --classic
+        echo "$SNAP_TOKEN" | snapcraft login --with -
+      fi
 
 build_script:
   - npm run release
