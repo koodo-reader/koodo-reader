@@ -19,8 +19,6 @@ cache:
 
 init:
   - git config --global core.autocrlf input
-
-before_install:
   - sh: |
       if [ "${APPVEYOR_BUILD_WORKER_IMAGE}" == "Ubuntu" ]
       then
