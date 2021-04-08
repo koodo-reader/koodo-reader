@@ -36,7 +36,7 @@ branches:
     - master
 deploy:
   provider: snap
-  snap: koodo-reader.snap
+  snap: *.snap
   channel: edge
   skip_cleanup: true
 notifications:

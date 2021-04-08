@@ -151,7 +151,7 @@
         }
       ],
       "icon": "assets/icons/icon.ico",
-      "artifactName": "${productName}-${version}-${arch}.${ext}",
+      "artifactName": "${productName}-${version}.${ext}",
       "publisherName": "App by Troye"
     },
     "linux": {
@@ -173,7 +173,7 @@
       ]
     },
     "portable": {
-      "artifactName": "${productName}-${version}-Portable-${arch}.${ext}"
+      "artifactName": "${productName}-${version}-Portable.${ext}"
     },
     "nsis": {
       "oneClick": false,
