@@ -170,7 +170,8 @@
         {
           "target": "rpm"
         }
-      ]
+      ],
+      "artifactName": "${productName}-${version}.${ext}"
     },
     "portable": {
       "artifactName": "${productName}-${version}-Portable.${ext}"
