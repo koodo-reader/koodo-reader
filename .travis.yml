@@ -20,7 +20,7 @@ addons:
 before_install:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install --no-install-recommends -y icnsutils graphicsmagick xz-utils; fi
   - sudo apt-get -y install snapd
-  - sudo snap install snapcraft --classic
+  - sudo snap -y install snapcraft --classic
 install:
   - nvm install 10
   - curl -o- -L https://yarnpkg.com/install.sh | bash
@@ -36,7 +36,7 @@ branches:
     - master
 deploy:
   provider: snap
-  snap: *.snap
+  snap: koodo-reader.snap
   channel: edge
   skip_cleanup: true
 notifications:
