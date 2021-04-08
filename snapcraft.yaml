@@ -1,0 +1,37 @@
+name: koodo-reader
+version: "1.2.4"
+summary: Koodo Reader is a full-featured ebook manager and reader
+description: |
+  A modern ebook manager and reader for epub, pdf, mobi, azw3 and txt, supporting Windows, macOS, Linux and Web.
+grade: stable
+confinement: strict
+icon: assets/icons/256x256.png
+
+apps:
+  electronApp:
+    plugs:
+      - browser-support
+      - desktop
+      - desktop-legacy
+      - gsettings
+      - home
+      - mount-observe
+      - network
+      - network-bind
+      - unity7
+      - x11
+    environment:
+      TMPDIR: $XDG_RUNTIME_DIR
+
+parts:
+  electronApp:
+    source: .
+    plugin: dump
+    stage-packages:
+      - libnotify4
+      - libnss3
+      - libpcre3
+      - libxss1
+      - libxtst6
+    after:
+      - desktop-gtk2
