@@ -1,5 +1,5 @@
 sudo: required
-dist: trusty
+dist: xenial
 language: c
 matrix:
   include:
@@ -18,7 +18,8 @@ addons:
       - icnsutils
       - rpm
 before_install:
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install --no-install-recommends -y icnsutils graphicsmagick xz-utils; fi
+  - sudo apt-get install --no-install-recommends -y icnsutils graphicsmagick xz-utils; fi
+  - sudo snap install snapcraft --classic; fi
 install:
   - nvm install 10
   - curl -o- -L https://yarnpkg.com/install.sh | bash
@@ -28,10 +29,14 @@ install:
 before_script:
   - git lfs pull
 script:
-  - sudo snap install snapcraft --classic
   - yarn release
 branches:
   only:
     - master
+deploy:
+  provider: snap
+  snap: koodo-reader.snap
+  channel: edge
+  skip_cleanup: true
 notifications:
   email: false
