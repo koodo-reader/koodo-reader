@@ -1,30 +1,11 @@
-name: "build-test"
-on: # rebuild any PRs and main branch changes
-  pull_request:
-  push:
-    branches:
-      - master
-      - "releases/*"
-
 jobs:
-  unit: # make sure build/ci work properly
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - run: |
-          npm install
-          npm run all
-  integration: # make sure the action works on a clean machine without building
-    # Only run integration test if we have access to secrets
-    if: github.event_name != 'pull_request'
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: snapcore/action-build@v1
         id: build
-        with:
-          path: "./sample-project"
-      - uses: ./
+      - uses: snapcore/action-publish@v1
         with:
           store_login: ${{ secrets.STORE_LOGIN }}
           snap: ${{ steps.build.outputs.snap }}
