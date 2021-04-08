@@ -7,6 +7,7 @@ branches:
 image:
   - Visual Studio 2019
   - macos
+  - Ubuntu
 
 stack: node 10
 
@@ -18,6 +19,15 @@ cache:
 
 init:
   - git config --global core.autocrlf input
+
+before_install:
+  - sh: |
+      if [ "${APPVEYOR_BUILD_WORKER_IMAGE}" == "Ubuntu" ]
+      then
+        sudo apt-get install --no-install-recommends -y icnsutils graphicsmagick xz-utils
+        sudo apt-get -y install snapd
+        sudo snap -y install snapcraft --classic
+      fi
 
 install:
   - git reset --hard HEAD
