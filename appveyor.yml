@@ -24,6 +24,7 @@ init:
       then
         sudo apt-get install --no-install-recommends -y icnsutils graphicsmagick xz-utils
         sudo apt-get install snapd
+        sudo snap install snapcraft --classic
         sudo apt-get install -y rpm
       fi
 
@@ -31,18 +32,6 @@ install:
   - git reset --hard HEAD
   - npm install
   - node --version
-
-before_build:
-  - node --version
-  - npm --version
-  # Get new $SNAP_TOKEN with:
-  # $ snapcraft export-login --snaps bw --acls package_push,package_release -
-  - sh: |
-      if [ "${SNAP_TOKEN}" != "" ]
-      then
-        sudo snap install snapcraft --classic
-        echo "$SNAP_TOKEN" | snapcraft login --with -
-      fi
 
 build_script:
   - npm run release
