@@ -1,0 +1,33 @@
+name: Build/release
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  release:
+    runs-on: ${{ matrix.os }}
+
+    # Platforms to build on/for
+    strategy:
+      matrix:
+        os: [macos-latest, ubuntu-latest, windows-latest]
+
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v2
+
+      - name: Install Node.js, NPM and Yarn
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12
+
+      - name: Install Snapcraft
+        uses: samuelmeuli/action-snapcraft@v1
+        # Only install Snapcraft on Ubuntu
+        if: startsWith(matrix.os, 'ubuntu')
+        with:
+          # Log in to Snap Store
+          snapcraft_token: ${{ secrets.snapcraft_token }}
