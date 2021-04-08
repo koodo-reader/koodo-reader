@@ -19,8 +19,8 @@ addons:
       - rpm
 before_install:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install --no-install-recommends -y icnsutils graphicsmagick xz-utils; fi
-  - sudo apt-get -y install snapd; fi
-  - sudo snap -y install snapcraft --classic; fi
+  - sudo apt-get -y install snapd
+  - sudo snap -y install snapcraft --classic
 install:
   - nvm install 10
   - curl -o- -L https://yarnpkg.com/install.sh | bash
