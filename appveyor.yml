@@ -5,8 +5,8 @@ branches:
     - master
 
 image:
-  #  - Visual Studio 2019
-  #  - macos
+  - Visual Studio 2019
+  - macos
   - Ubuntu
 
 stack: node 10
