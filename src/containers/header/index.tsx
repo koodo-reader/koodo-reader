@@ -6,6 +6,7 @@ import {
   handleMessageBox,
   handleMessage,
   handleSetting,
+  handleAbout,
 } from "../../store/actions/manager";
 import { handleBackupDialog } from "../../store/actions/backupPage";
 import { stateType } from "../../store";
@@ -14,6 +15,7 @@ import Header from "./component";
 const mapStateToProps = (state: stateType) => {
   return {
     isSearch: state.manager.isSearch,
+    isAboutOpen: state.manager.isAboutOpen,
     bookmarks: state.reader.bookmarks,
     books: state.manager.books,
     notes: state.reader.notes,
@@ -28,6 +30,7 @@ const actionCreator = {
   handleMessage,
   handleBackupDialog,
   handleSetting,
+  handleAbout,
 };
 export default connect(
   mapStateToProps,

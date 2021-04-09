@@ -1,8 +1,8 @@
 //右侧阅读选项面板
 import React from "react";
-import "./textToSpeech.css";
 import { TextToSpeechProps, TextToSpeechState } from "./interface";
 import { Trans } from "react-i18next";
+import { dropdownList } from "../../constants/dropdownList";
 import OtherUtil from "../../utils/otherUtil";
 
 class TextToSpeech extends React.Component<
@@ -57,7 +57,7 @@ class TextToSpeech extends React.Component<
               document
                 .querySelector("#text-speech-speed")!
                 .children[
-                  ["0.5", "0.75", "1", "1.25", "1.5", "2"].indexOf(
+                  dropdownList[2].option.indexOf(
                     OtherUtil.getReaderConfig("voiceSpeed") || "1"
                   )
                 ].setAttribute("selected", "selected");
@@ -169,6 +169,7 @@ class TextToSpeech extends React.Component<
                   marginLeft: "20px",
                   width: "88%",
                   marginTop: "20px",
+                  fontWeight: 500,
                 }}
               >
                 <Trans>Voice</Trans>
@@ -194,7 +195,7 @@ class TextToSpeech extends React.Component<
             {this.state.isAudioOn && (
               <div
                 className="setting-dialog-new-title"
-                style={{ marginLeft: "20px", width: "88%" }}
+                style={{ marginLeft: "20px", width: "88%", fontWeight: 500 }}
               >
                 <Trans>Speed</Trans>
                 <select
@@ -206,24 +207,11 @@ class TextToSpeech extends React.Component<
                     window.speechSynthesis.cancel();
                   }}
                 >
-                  <option value={0.5} className="lang-setting-option">
-                    0.5
-                  </option>
-                  <option value={0.75} className="lang-setting-option">
-                    0.75
-                  </option>
-                  <option value={1} className="lang-setting-option">
-                    1
-                  </option>
-                  <option value={1.25} className="lang-setting-option">
-                    1.25
-                  </option>
-                  <option value={1.5} className="lang-setting-option">
-                    1.5
-                  </option>
-                  <option value={2} className="lang-setting-option">
-                    2
-                  </option>
+                  {dropdownList[2].option.map((item) => (
+                    <option value={item} className="lang-setting-option">
+                      {item}
+                    </option>
+                  ))}
                 </select>
               </div>
             )}

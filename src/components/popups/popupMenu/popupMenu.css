@@ -29,3 +29,23 @@
 .icon-popup {
   color: white;
 }
+.popup-close {
+  position: absolute;
+  bottom: 70px;
+  right: -40px;
+  cursor: pointer;
+  background-color: rgba(75, 75, 75, 0.3);
+  color: white;
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+}
+.popup-close:hover {
+  opacity: 1;
+}

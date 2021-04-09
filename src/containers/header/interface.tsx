@@ -4,6 +4,7 @@ import BookmarkModel from "../../model/Bookmark";
 export interface HeaderProps {
   isSearch: boolean;
   isSortDisplay: boolean;
+  isAboutOpen: boolean;
   isCollapsed: boolean;
 
   bookmarks: BookmarkModel[];
@@ -11,6 +12,7 @@ export interface HeaderProps {
   books: BookModel[];
   handleSortDisplay: (isSortDisplay: boolean) => void;
   handleSetting: (isSettingOpen: boolean) => void;
+  handleAbout: (isAboutOpen: boolean) => void;
   handleMessageBox: (isShow: boolean) => void;
   handleMessage: (message: string) => void;
   handleBackupDialog: (isBackup: boolean) => void;

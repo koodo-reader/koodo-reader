@@ -17,6 +17,7 @@ const mapStateToProps = (state: stateType) => {
   return {
     digests: state.reader.digests,
     notes: state.reader.notes,
+    noteKey: state.reader.noteKey,
     currentEpub: state.book.currentEpub,
     currentBook: state.book.currentBook,
     isOpenMenu: state.viewArea.isOpenMenu,

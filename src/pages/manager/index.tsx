@@ -4,11 +4,21 @@ import {
   handleFetchBookSortCode,
   handleFetchList,
   handleMessageBox,
+  handleDownloadDesk,
+  handleLoadingDialog,
+  handleNewDialog,
+  handleSetting,
 } from "../../store/actions/manager";
+import { handleBackupDialog } from "../../store/actions/backupPage";
 import {
   handleFetchNotes,
   handleFetchBookmarks,
 } from "../../store/actions/reader";
+import {
+  handleEditDialog,
+  handleDeleteDialog,
+  handleAddDialog,
+} from "../../store/actions/book";
 import "./manager.css";
 import { stateType } from "../../store";
 import Manager from "./component";
@@ -27,6 +37,7 @@ const mapStateToProps = (state: stateType) => {
     isOpenDeleteDialog: state.book.isOpenDeleteDialog,
     isOpenAddDialog: state.book.isOpenAddDialog,
     isSettingOpen: state.manager.isSettingOpen,
+    isAboutOpen: state.manager.isAboutOpen,
     isBookSort: state.manager.isBookSort,
     isSortDisplay: state.manager.isSortDisplay,
     isShowLoading: state.manager.isShowLoading,
@@ -39,9 +50,17 @@ const mapStateToProps = (state: stateType) => {
 const actionCreator = {
   handleFetchBooks,
   handleFetchNotes,
+  handleSetting,
   handleFetchBookmarks,
   handleFetchBookSortCode,
   handleFetchList,
   handleMessageBox,
+  handleEditDialog,
+  handleDeleteDialog,
+  handleAddDialog,
+  handleDownloadDesk,
+  handleLoadingDialog,
+  handleNewDialog,
+  handleBackupDialog,
 };
 export default connect(mapStateToProps, actionCreator)(withRouter(Manager));

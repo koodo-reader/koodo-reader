@@ -158,7 +158,7 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
             <NoteTag
               {...{
                 handleTag: this.handleTag,
-                tag: this.props.noteKey ? note.tag : [],
+                tag: this.props.noteKey && note ? note.tag : [],
               }}
             />
           </div>
