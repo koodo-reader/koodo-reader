@@ -180,6 +180,13 @@
       "oneClick": false,
       "allowToChangeInstallationDirectory": true,
       "deleteAppDataOnUninstall": true
+    },
+    "snap": {
+      "publish": [
+        {
+          "provider": "github"
+        }
+      ]
     }
   },
   "eslintConfig": {
