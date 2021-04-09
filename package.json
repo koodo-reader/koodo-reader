@@ -133,11 +133,10 @@
       "target": [
         "nsis",
         "portable",
-        "zip",
-        "7z"
+        "zip"
       ],
       "icon": "assets/icons/icon.ico",
-      "artifactName": "${productName}-${version}.${ext}",
+      "artifactName": "${productName}-${version}-win.${ext}",
       "publisherName": "App by Troye"
     },
     "linux": {
@@ -163,6 +162,7 @@
       "artifactName": "${productName}-${version}-Portable.${ext}"
     },
     "nsis": {
+      "artifactName": "${productName}-${version}.${ext}",
       "oneClick": false,
       "allowToChangeInstallationDirectory": true,
       "deleteAppDataOnUninstall": true
