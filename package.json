@@ -133,7 +133,8 @@
       "target": [
         "nsis",
         "portable",
-        "zip"
+        "zip",
+        "7z"
       ],
       "icon": "assets/icons/icon.ico",
       "artifactName": "${productName}-${version}-win.${ext}",
