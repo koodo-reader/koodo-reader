@@ -232,5 +232,13 @@
   "Built-in font": "Built-in font",
   "Letter Spacing": "Letter Spacing",
   "Remember window's size from last read": "Remember window's size",
-  "View Mode": "View Mode"
+  "View Mode": "View Mode",
+  "Show sidebar": "Show sidebar",
+  "Sync": "Sync",
+  "Help": "Help",
+  "Feedback": "Feedback",
+  "Github Repo": "Github Repo",
+  "Search on the internet": "Search on the internet",
+  "Search in the book": "Search in the book",
+  "Collapse sidebar": "Collapse sidebar"
 }

@@ -14,6 +14,7 @@ export interface PopupMenuProps {
   cfiRange: any;
   contents: any;
   rect: any;
+  noteKey: string;
   handleNoteKey: (key: string) => void;
   handleMessageBox: (isShow: boolean) => void;
   handleMessage: (message: string) => void;

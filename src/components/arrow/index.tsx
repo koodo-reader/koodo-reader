@@ -13,7 +13,7 @@ const Arrow = () => {
         <g
           transform="translate(48 48) rotate(180)"
           fill="none"
-          stroke="rgba(255,255,255,0.4)"
+          stroke="rgba(75,75,75)"
           strokeWidth="1.5"
         >
           <circle cx="24" cy="24" r="24" stroke="none" />
@@ -32,14 +32,14 @@ const Arrow = () => {
             y2="59"
             transform="translate(804 163.5) rotate(180)"
             fill="none"
-            stroke="#fff"
+            stroke="rgba(75,75,75)"
             strokeLinecap="round"
             strokeWidth="2"
           />
           <path
             d="M4.5,0,9,8H0Z"
             transform="translate(799.5 100)"
-            fill="#fff"
+            fill="rgba(75,75,75)"
           />
         </g>
       </svg>

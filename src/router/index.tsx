@@ -1,4 +1,3 @@
-import { hot } from "react-hot-loader/root";
 import React, { useEffect } from "react";
 import { Route, Switch, HashRouter } from "react-router-dom";
 import Manager from "../pages/manager";
@@ -38,4 +37,4 @@ const Router = () => {
   );
 };
 
-export default hot(Router);
+export default Router;

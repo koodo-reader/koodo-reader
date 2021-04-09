@@ -56,15 +56,7 @@
   width: calc(100% - 10px);
   /* margin-left: 25px; */
 }
-.icon-check {
-  width: 16px;
-  height: 16px;
-  opacity: 1;
-  position: absolute;
-  top: 106px;
-  right: 25px;
-  cursor: pointer;
-}
+
 .delete-dialog-cancel {
   width: 60px;
   height: 26px;

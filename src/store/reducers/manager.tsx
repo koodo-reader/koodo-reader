@@ -4,6 +4,7 @@ const initState = {
   deletedBooks: [],
   searchResults: [],
   isSearch: false,
+  isAboutOpen: false,
   isBookSort: false,
   isNoteSort: false,
   isSettingOpen: false,
@@ -52,6 +53,11 @@ export function manager(
       return {
         ...state,
         isSettingOpen: action.payload,
+      };
+    case "HANDLE_ABOUT":
+      return {
+        ...state,
+        isAboutOpen: action.payload,
       };
     case "HANDLE_BOOK_SORT":
       return {
