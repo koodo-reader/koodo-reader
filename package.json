@@ -131,25 +131,10 @@
     },
     "win": {
       "target": [
-        {
-          "target": "nsis",
-          "arch": [
-            "ia32"
-          ]
-        },
-        {
-          "target": "zip",
-          "arch": [
-            "ia32"
-          ],
-          "artifactName": "${productName}-${version}-win.${ext}"
-        },
-        {
-          "target": "portable",
-          "arch": [
-            "ia32"
-          ]
-        }
+        "nsis",
+        "portable",
+        "zip",
+        "7z"
       ],
       "icon": "assets/icons/icon.ico",
       "artifactName": "${productName}-${version}.${ext}",
