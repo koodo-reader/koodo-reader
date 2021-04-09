@@ -3,13 +3,13 @@ import React from "react";
 import "./header.css";
 import SearchBox from "../../components/searchBox";
 import ImportLocal from "../../components/importLocal";
-import { Trans } from "react-i18next";
+import { Trans, NamespacesConsumer } from "react-i18next";
 import { HeaderProps, HeaderState } from "./interface";
 import OtherUtil from "../../utils/otherUtil";
 import UpdateInfo from "../../components/dialogs/updateInfo";
 import RestoreUtil from "../../utils/syncUtils/restoreUtil";
 import BackupUtil from "../../utils/syncUtils/backupUtil";
-
+import { Tooltip } from "react-tippy";
 import { isElectron } from "react-device-detect";
 
 class Header extends React.Component<HeaderProps, HeaderState> {
@@ -22,13 +22,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       width: document.body.clientWidth,
     };
   }
-  handleSortBooks = () => {
-    if (this.props.isSortDisplay) {
-      this.props.handleSortDisplay(false);
-    } else {
-      this.props.handleSortDisplay(true);
-    }
-  };
   async componentDidMount() {
     if (isElectron) {
       const fs = window.require("fs");
@@ -77,15 +70,14 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         RestoreUtil.restore(
           fileTemp,
           () => {
-            isElectron &&
-              BackupUtil.backup(
-                this.props.books,
-                this.props.notes,
-                this.props.bookmarks,
-                () => {},
-                5,
-                () => {}
-              );
+            BackupUtil.backup(
+              this.props.books,
+              this.props.notes,
+              this.props.bookmarks,
+              () => {},
+              5,
+              () => {}
+            );
           },
           true
         );
@@ -100,26 +92,48 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         <div className="header-search-container">
           <SearchBox />
         </div>
-
-        <div
-          className="header-sort-container"
-          onClick={() => {
-            this.handleSortBooks();
-          }}
-        >
-          <span className="header-sort-text">
-            <Trans>Sort</Trans>
-          </span>
-          <span className="icon-sort header-sort-icon"></span>
-        </div>
-        <div
-          className="setting-icon-container"
-          onClick={() => {
-            this.props.handleSetting(true);
-          }}
-        >
-          <span className="icon-setting setting-icon"></span>
-        </div>
+        <NamespacesConsumer>
+          {(t) => (
+            <>
+              <div
+                className="setting-icon-container"
+                onClick={() => {
+                  this.props.handleSortDisplay(!this.props.isSortDisplay);
+                }}
+                style={{ left: "490px", top: "18px" }}
+              >
+                <Tooltip title={t("Sort")} position="top" trigger="mouseenter">
+                  <span className="icon-sort-desc header-sort-icon"></span>
+                </Tooltip>
+              </div>
+              <div
+                className="setting-icon-container"
+                onClick={() => {
+                  this.props.handleAbout(!this.props.isAboutOpen);
+                }}
+              >
+                <Tooltip
+                  title={t("Setting")}
+                  position="top"
+                  trigger="mouseenter"
+                >
+                  <span className="icon-setting setting-icon"></span>
+                </Tooltip>
+              </div>
+              <div
+                className="setting-icon-container"
+                onClick={() => {
+                  this.props.handleAbout(true);
+                }}
+                style={{ left: "635px" }}
+              >
+                <Tooltip title={t("Sync")} position="top" trigger="mouseenter">
+                  <span className="icon-sync setting-icon"></span>
+                </Tooltip>
+              </div>
+            </>
+          )}
+        </NamespacesConsumer>
 
         <div
           className="import-from-cloud"
@@ -134,10 +148,20 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         >
           <div className="animation-mask"></div>
           {this.props.isCollapsed && this.state.width < 950 ? (
-            <span
-              className="icon-clockwise"
-              style={{ fontSize: "20px" }}
-            ></span>
+            <NamespacesConsumer>
+              {(t) => (
+                <Tooltip
+                  title={t("Backup and Restore")}
+                  position="top"
+                  trigger="mouseenter"
+                >
+                  <span
+                    className="icon-save"
+                    style={{ fontSize: "18px", fontWeight: 500 }}
+                  ></span>
+                </Tooltip>
+              )}
+            </NamespacesConsumer>
           ) : (
             <Trans>Backup and Restore</Trans>
           )}

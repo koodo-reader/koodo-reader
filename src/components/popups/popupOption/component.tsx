@@ -3,10 +3,12 @@ import React from "react";
 import "./popupOption.css";
 import localforage from "localforage";
 import Note from "../../../model/Note";
-import { Trans } from "react-i18next";
+import { NamespacesConsumer } from "react-i18next";
 import { PopupOptionProps } from "./interface";
 import ColorOption from "../../colorOption";
 import RecordLocation from "../../../utils/readUtils/recordLocation";
+import { Tooltip } from "react-tippy";
+import { popupList } from "../../../constants/popupList";
 
 declare var window: any;
 
@@ -120,67 +122,67 @@ class PopupOption extends React.Component<PopupOptionProps> {
       this.props.handleMenuMode("highlight");
     });
   };
-
+  handleSearchInternet = () => {};
+  handleSearchBook = () => {};
+  handleSpeak = () => {};
   render() {
     const renderMenuList = () => {
       return (
-        <>
-          <div className="menu-list">
-            <div
-              className="note-option"
-              onClick={() => {
-                this.handleNote();
-              }}
-            >
-              <div>
-                <span className="icon-note note-icon"></span>
-                <p>
-                  <Trans>Take Notes</Trans>
-                </p>
+        <NamespacesConsumer>
+          {(t) => (
+            <>
+              <div className="menu-list">
+                {popupList.map((item, index) => {
+                  return (
+                    <div
+                      key={item.name}
+                      className={item.name + "-option"}
+                      onClick={() => {
+                        switch (index) {
+                          case 0:
+                            this.handleNote();
+                            break;
+                          case 1:
+                            this.handleDigest();
+                            break;
+                          case 2:
+                            this.handleTrans();
+                            break;
+                          case 3:
+                            this.handleCopy();
+                            break;
+                          case 4:
+                            this.handleSearchBook();
+                            break;
+                          case 5:
+                            this.handleSearchInternet();
+                            break;
+                          case 6:
+                            this.handleSpeak();
+                            break;
+
+                          default:
+                            break;
+                        }
+                      }}
+                    >
+                      <Tooltip
+                        title={t(item.title)}
+                        position="top"
+                        trigger="mouseenter"
+                      >
+                        <span
+                          className={`icon-${item.icon} ${item.name}-icon`}
+                        ></span>
+                      </Tooltip>
+                    </div>
+                  );
+                })}
               </div>
-            </div>
-            <div
-              className="digest-option"
-              onClick={() => {
-                this.handleDigest();
-              }}
-            >
-              <div>
-                <span className="icon-collect digest-icon"></span>
-                <p>
-                  <Trans>Collect</Trans>
-                </p>
-              </div>
-            </div>
-            <div
-              className="translation-option"
-              onClick={() => {
-                this.handleTrans();
-              }}
-            >
-              <div>
-                <span className="icon-translation translation-icon"></span>
-                <p>
-                  <Trans>Translate</Trans>
-                </p>
-              </div>
-            </div>
-            <div
-              className="copy-option icon"
-              onClick={() => {
-                this.handleCopy();
-              }}
-            >
-              <div>
-                <span className="icon-copy copy-icon"></span>
-                <p>
-                  <Trans>Copy</Trans>
-                </p>
-              </div>
-            </div>
-          </div>
-          <ColorOption />
-        </>
+              <ColorOption />
+            </>
+          )}
+        </NamespacesConsumer>
       );
     };
     return renderMenuList();

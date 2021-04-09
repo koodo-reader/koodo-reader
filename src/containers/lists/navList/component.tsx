@@ -55,9 +55,12 @@ class NavList extends React.Component<NavListProps, NavListState> {
                 ? item.notes
                 : item.text}
             </p>
-            <span className="bookmark-page-list-item-title">
+            <div className="bookmark-page-list-item-title">
               <Trans>{item.chapter}</Trans>
-            </span>
+            </div>
+            <div className="book-bookmark-progress">
+              {Math.floor(item.percentage * 100)}%
+            </div>
             {this.state.deleteIndex === index ? (
               <DeleteIcon {...bookmarkProps} />
             ) : null}
@@ -69,9 +72,6 @@ class NavList extends React.Component<NavListProps, NavListState> {
               style={{ cursor: "pointer" }}
             >
               <Trans>Go To</Trans>
-            </div>
-            <div className="book-bookmark-progress">
-              {Math.floor(item.percentage * 100)}%
             </div>
           </li>
         );

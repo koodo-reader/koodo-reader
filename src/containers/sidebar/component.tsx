@@ -1,10 +1,12 @@
 import React from "react";
 import "./sidebar.css";
 import { sideMenu } from "../../constants/sideMenu";
-import { Trans } from "react-i18next";
+import { Trans, NamespacesConsumer } from "react-i18next";
 import { SidebarProps, SidebarState } from "./interface";
 import { withRouter } from "react-router-dom";
 import OtherUtil from "../../utils/otherUtil";
+import { Tooltip } from "react-tippy";
+
 class Sidebar extends React.Component<SidebarProps, SidebarState> {
   constructor(props: SidebarProps) {
     super(props);
@@ -40,66 +42,87 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
     const renderSideMenu = () => {
       return sideMenu.map((item, index) => {
         return (
-          <li
-            key={item.name}
-            className={
-              this.state.index === index
-                ? "active side-menu-item"
-                : "side-menu-item"
-            }
-            id={`sidebar-${item.icon}`}
-            onClick={() => {
-              this.handleSidebar(item.mode, index);
-            }}
-            onDrop={() => {
-              index === 1 && this.props.handleDragToLove(true);
-              index === 5 && this.props.handleDragToDelete(true);
-            }}
-            onMouseEnter={() => {
-              this.handleHover(index);
-            }}
-            onMouseLeave={() => {
-              this.handleHover(-1);
-            }}
-            style={this.state.isCollapsed ? { width: 40, marginLeft: 15 } : {}}
-          >
-            {this.state.index === index ? (
-              <div className="side-menu-selector-container"></div>
-            ) : null}
-            {this.state.hoverIndex === index ? (
-              <div className="side-menu-hover-container"></div>
-            ) : null}
-            <div
-              className={
-                this.state.index === index
-                  ? "side-menu-selector active-selector"
-                  : "side-menu-selector "
-              }
-            >
-              <div className="side-menu-icon">
-                <span
-                  className={
-                    this.state.index === index
-                      ? `icon-${item.icon}  active-icon`
-                      : `icon-${item.icon}`
-                  }
-                  style={this.state.isCollapsed ? { marginLeft: "-25px" } : {}}
-                ></span>
-              </div>
-
-              <span style={this.state.isCollapsed ? { display: "none" } : {}}>
-                <Trans>{item.name}</Trans>
-              </span>
-
-              <p
+          <NamespacesConsumer key={item.name}>
+            {(t) => (
+              <li
+                className={
+                  this.state.index === index
+                    ? "active side-menu-item"
+                    : "side-menu-item"
+                }
+                id={`sidebar-${item.icon}`}
+                onClick={() => {
+                  this.handleSidebar(item.mode, index);
+                }}
+                onDrop={() => {
+                  index === 1 && this.props.handleDragToLove(true);
+                  index === 5 && this.props.handleDragToDelete(true);
+                }}
+                onMouseEnter={() => {
+                  this.handleHover(index);
+                }}
+                onMouseLeave={() => {
+                  this.handleHover(-1);
+                }}
                 style={
-                  this.state.isCollapsed ? { display: "none" } : { opacity: 0 }
+                  this.state.isCollapsed ? { width: 40, marginLeft: 15 } : {}
                 }
               >
-                test
-              </p>
-            </div>
-          </li>
+                {this.state.index === index ? (
+                  <div className="side-menu-selector-container"></div>
+                ) : null}
+                {this.state.hoverIndex === index ? (
+                  <div className="side-menu-hover-container"></div>
+                ) : null}
+                <div
+                  className={
+                    this.state.index === index
+                      ? "side-menu-selector active-selector"
+                      : "side-menu-selector "
+                  }
+                >
+                  <Tooltip
+                    title={t(item.name)}
+                    position="top"
+                    trigger="mouseenter"
+                  >
+                    <div
+                      className="side-menu-icon"
+                      style={
+                        this.state.isCollapsed ? {} : { marginLeft: "38px" }
+                      }
+                    >
+                      <span
+                        className={
+                          this.state.index === index
+                            ? `icon-${item.icon}  active-icon`
+                            : `icon-${item.icon}`
+                        }
+                        style={
+                          this.state.isCollapsed ? { marginLeft: "-25px" } : {}
+                        }
+                      ></span>
+                    </div>
+                  </Tooltip>
+                  <span
+                    style={this.state.isCollapsed ? { display: "none" } : {}}
+                  >
+                    <Trans>{item.name}</Trans>
+                  </span>
+
+                  <p
+                    style={
+                      this.state.isCollapsed
+                        ? { display: "none" }
+                        : { opacity: 0 }
+                    }
+                  >
+                    test
+                  </p>
+                </div>
+              </li>
+            )}
+          </NamespacesConsumer>
         );
       });
     };
@@ -111,14 +134,26 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
             this.handleCollapse(!this.state.isCollapsed);
           }}
         >
-          <span className="icon-list sidebar-list"></span>
+          <NamespacesConsumer>
+            {(t) => (
+              <Tooltip
+                title={t(
+                  this.state.isCollapsed ? "Show sidebar" : "Collapse sidebar"
+                )}
+                position="top"
+                trigger="mouseenter"
+              >
+                <span className="icon-menu sidebar-list"></span>
+              </Tooltip>
+            )}
+          </NamespacesConsumer>
         </div>
 
         <img
           src={
             process.env.NODE_ENV === "production"
-              ? "./assets/logo.png"
-              : "../../assets/logo.png"
+              ? "./assets/label.png"
+              : "../../assets/label.png"
           }
           alt=""
           className="logo"

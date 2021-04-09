@@ -5,37 +5,15 @@
   margin-left: 190px;
 }
 
-.header-sort-container {
-  position: absolute;
-  left: 465px;
-  top: 29px;
-  cursor: pointer;
-  transition: 0.1s;
-  width: 150px;
-  height: 27px;
-  transition: all 0.1s ease;
-  z-index: 1;
-  text-align: center;
-  display: flex;
-  justify-content: center;
-}
 .setting-icon-container:hover {
   background-color: rgba(75, 75, 75, 0.035);
   border-radius: 50%;
 }
-.header-sort-text {
-  float: left;
-  height: 16px;
-  font-size: 16px;
-  line-height: 27px;
-  color: rgba(75, 75, 75, 1);
-  opacity: 1;
-  font-weight: 500;
-}
+
 .header-sort-icon {
   float: left;
-  margin-top: 8px;
-  font-size: 12px;
+  margin-top: 3px;
+  font-size: 26px;
 }
 .only-local-container {
   position: absolute;
@@ -79,7 +57,7 @@
   opacity: 1;
   padding: 0 !important;
   border-radius: 25px;
-  line-height: 38px;
+  line-height: 18px;
   text-align: center;
   color: #4b4b4b;
   box-sizing: border-box;
@@ -89,6 +67,9 @@
   right: 0px;
   top: 0px;
   font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .import-from-cloud:hover .animation-mask {
   transform: scaleX(1);
@@ -142,7 +123,7 @@
 .header-search-container {
   position: absolute;
   top: 23px;
-  left: 250px;
+  left: 235px;
   width: 209px;
   height: 40px;
 }
@@ -155,7 +136,7 @@
   font-size: 25px;
   line-height: 37px;
   position: absolute;
-  left: 595px;
+  left: 560px;
   top: 20px;
   color: rgba(75, 75, 75, 1);
   cursor: pointer;
