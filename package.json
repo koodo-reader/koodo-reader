@@ -141,7 +141,8 @@
           "target": "zip",
           "arch": [
             "ia32"
-          ]
+          ],
+          "artifactName": "${productName}-${version}-win.${ext}"
         },
         {
           "target": "portable",
