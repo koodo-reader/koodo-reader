@@ -27,6 +27,9 @@ export function handleDownloadDesk(isDownloadDesk: boolean) {
 export function handleSetting(isSettingOpen: boolean) {
   return { type: "HANDLE_SETTING", payload: isSettingOpen };
 }
+export function handleAbout(isAboutOpen: boolean) {
+  return { type: "HANDLE_ABOUT", payload: isAboutOpen };
+}
 export function handleViewMode(mode: string) {
   return { type: "HANDLE_VIEW_MODE", payload: mode };
 }

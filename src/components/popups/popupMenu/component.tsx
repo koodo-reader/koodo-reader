@@ -286,6 +286,12 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
             ) : this.props.menuMode === "trans" ? (
               <PopupTrans {...PopupProps} />
             ) : null}
+            <span
+              className="icon-close popup-close"
+              onClick={() => {
+                this.props.handleOpenMenu(false);
+              }}
+            ></span>
           </div>
           {this.props.isChangeDirection ? (
             <span

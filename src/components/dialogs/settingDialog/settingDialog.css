@@ -44,7 +44,7 @@
   margin: 20px 30px;
 }
 .setting-dialog-info {
-  height: 300px;
+  height: 400px;
   overflow-y: scroll;
   width: 346px;
 }
@@ -94,6 +94,7 @@
   transition: 0.1s;
   width: 38px;
   height: 38px;
+  cursor: pointer;
 }
 
 .setting-close-container:hover {

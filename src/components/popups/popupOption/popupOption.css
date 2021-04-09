@@ -4,13 +4,17 @@
   flex-wrap: wrap;
   width: 158px;
   height: 132px;
+  padding-left: 1px;
 }
 .note-option,
 .digest-option,
 .translation-option,
+.speaker-option,
+.search-book-option,
+.google-option,
 .copy-option {
-  height: 69px;
-  width: 69px;
+  height: 42px;
+  width: 42px;
   font-size: 14px !important;
   line-height: 15px !important;
   color: rgba(0, 0, 0, 0.8);
@@ -23,15 +27,21 @@
   /* align-items: center; */
   justify-content: center;
   font-weight: 500;
+  margin: 5px;
+  margin-bottom: 0px;
+  margin-top: 3px;
 }
 .note-option:hover,
 .digest-option:hover,
 .translation-option:hover,
+.speaker-option:hover,
+.search-book-option:hover,
+.google-option:hover,
 .copy-option:hover {
   background-color: rgba(75, 75, 75, 0.035);
   border-radius: 8px;
 }
-.digest-option {
+/* .digest-option {
   margin-top: 5px;
   margin-right: 10px;
 }
@@ -42,9 +52,14 @@
 .note-option {
   margin-top: 5px;
   margin-left: 10px;
-}
+} */
 .note-icon,
 .translation-icon,
+.speaker-icon,
+.search-book-icon,
+.google-icon,
+.baidu-icon,
+.bing-icon,
 .copy-icon,
 .digest-icon {
   line-height: 45px !important;
@@ -58,4 +73,20 @@
 }
 .note-icon {
   color: #109870;
+}
+.speaker-icon {
+  color: #517bc3;
+  font-size: 30px;
+}
+.search-book-icon {
+  color: #f48024;
+}
+.google-icon {
+  color: rgb(252, 204, 136);
+}
+.baidu-icon {
+  color: rgb(252, 204, 136);
+}
+.bing-icon {
+  color: rgb(252, 204, 136);
 }

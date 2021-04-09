@@ -98,13 +98,12 @@ class DropdownList extends React.Component<
             }}
           >
             {item.option.map((subItem: string, index: number) => (
-              <NamespacesConsumer>
+              <NamespacesConsumer key={index}>
                 {(t) => {
                   return (
                     <option
                       value={[subItem, index.toString()]}
                       className="general-setting-option"
-                      key={index}
                     >
                       {t(subItem)}
                     </option>

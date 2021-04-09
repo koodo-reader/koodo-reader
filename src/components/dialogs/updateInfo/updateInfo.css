@@ -47,6 +47,7 @@
   line-height: 25px;
   text-align: center;
   margin-left: 5px;
+  display: inline-block;
 }
 .update-dialog-new-title,
 .update-dialog-fix-title {

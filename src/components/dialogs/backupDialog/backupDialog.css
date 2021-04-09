@@ -22,6 +22,10 @@
     opacity: 0;
     transform: scale(0.95);
   }
+  80% {
+    opacity: 0.95;
+    transform: scale(1.005);
+  }
   100% {
     opacity: 1;
     transform: scale(1);
@@ -123,9 +127,11 @@
   color: rgba(75, 75, 75, 1);
   opacity: 1;
   text-align: center;
+  cursor: pointer;
 }
 .active {
   color: white;
+  cursor: pointer;
 }
 .icon-backup,
 .icon-restore {

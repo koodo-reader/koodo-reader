@@ -4,8 +4,9 @@ import "./importLocal.css";
 import BookModel from "../../model/Book";
 import localforage from "localforage";
 import SparkMD5 from "spark-md5";
-import { Trans } from "react-i18next";
+import { Trans, NamespacesConsumer } from "react-i18next";
 import Dropzone from "react-dropzone";
+import { Tooltip } from "react-tippy";
 import { ImportLocalProps, ImportLocalState } from "./interface";
 import RecordRecent from "../../utils/readUtils/recordRecent";
 import MobiFile from "../../utils/mobiUtil";
@@ -489,7 +490,20 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
           >
             <div className="animation-mask-local"></div>
             {this.props.isCollapsed && this.state.width < 950 ? (
-              <span className="icon-export"></span>
+              <NamespacesConsumer>
+                {(t) => (
+                  <Tooltip
+                    title={t("Import from Local")}
+                    position="top"
+                    trigger="mouseenter"
+                  >
+                    <span
+                      className="icon-save"
+                      style={{ fontSize: "18px", fontWeight: 500 }}
+                    ></span>
+                  </Tooltip>
+                )}
+              </NamespacesConsumer>
             ) : (
               <span>
                 <Trans>Import from Local</Trans>

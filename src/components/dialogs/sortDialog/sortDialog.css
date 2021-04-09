@@ -4,7 +4,7 @@
   background: rgba(255, 255, 255, 1);
   opacity: 1;
   position: absolute;
-  left: 455px;
+  left: 435px;
   top: 65px;
   z-index: 5;
   border-radius: 5px;
@@ -23,9 +23,13 @@
   color: rgba(75, 75, 75, 0.34);
   opacity: 1;
   line-height: 24px;
-  width: 100%;
-  text-align: center;
+  width: calc(100% - 30px);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   cursor: pointer;
+  padding-left: 15px;
+  padding-right: 15px;
 }
 .sort-dialog-seperator {
   width: 100%;

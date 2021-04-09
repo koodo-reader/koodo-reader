@@ -31,6 +31,7 @@
     "react-i18next": "9.0.10",
     "react-lottie": "^1.2.3",
     "react-router-dom": "^5.2.0",
+    "react-tippy": "^1.4.0",
     "request": "^2.88.2",
     "underscore": "^1.11.0",
     "webdav": "^3.6.2",
@@ -137,7 +138,7 @@
         "7z"
       ],
       "icon": "assets/icons/icon.ico",
-      "artifactName": "${productName}-${version}-win.${ext}",
+      "artifactName": "${productName}-${version}-Win.${ext}",
       "publisherName": "App by Troye"
     },
     "linux": {
@@ -230,7 +231,6 @@
     "nodemon": "^2.0.6",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "react-hot-loader": "^4.12.21",
     "react-redux": "^7.2.0",
     "react-scripts": "^4.0.3",
     "redux": "^4.0.5",

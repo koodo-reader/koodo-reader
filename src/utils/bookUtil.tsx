@@ -17,9 +17,15 @@ const isTitle = (line: string, isSuccess: boolean) => {
       line.startsWith("楔子") ||
       line.startsWith("后记") ||
       line.startsWith("后序") ||
-      (line.indexOf("第") > -1 && line.indexOf("章") > -1) ||
-      (line.indexOf("第") > -1 && line.indexOf("节") > -1) ||
-      (line.indexOf("第") > -1 && line.indexOf("回") > -1) ||
+      (line.indexOf("第") > -1 &&
+        line.indexOf("章") > -1 &&
+        line.indexOf("第") < line.indexOf("章")) ||
+      (line.indexOf("第") > -1 &&
+        line.indexOf("节") > -1 &&
+        line.indexOf("第") < line.indexOf("节")) ||
+      (line.indexOf("第") > -1 &&
+        line.indexOf("回") > -1 &&
+        line.indexOf("第") < line.indexOf("回")) ||
       /^[\u4e00\u4e8c\u4e09\u56db\u4e94\u516d\u4e03\u516b\u4e5d\u5341\u767e\u5343\u4e07]+$/.test(
         line
       ) ||

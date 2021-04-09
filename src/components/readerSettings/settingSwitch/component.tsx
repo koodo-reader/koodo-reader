@@ -1,6 +1,5 @@
 //右侧阅读选项面板
 import React from "react";
-import "./settingSwitch.css";
 import { SettingSwitchProps, SettingSwitchState } from "./interface";
 import { Trans } from "react-i18next";
 import TextToSpeech from "../../textToSpeech";

@@ -347,32 +347,6 @@ class SettingDialog extends React.Component<
               </option>
             </select>
           </div>
-          <div className="about-this-project">
-            <div
-              className="setting-dialog-subtitle"
-              onClick={() => {
-                this.handleJump("https://github.com/troyeguo/koodo-reader");
-              }}
-            >
-              <Trans>Project link</Trans>
-            </div>
-            <div
-              className="setting-dialog-subtitle"
-              onClick={() => {
-                this.handleJump("https://koodo.960960.xyz/");
-              }}
-            >
-              <Trans>Official website</Trans>
-            </div>
-            <div
-              className="setting-dialog-subtitle"
-              onClick={() => {
-                this.handleJump("https://960960.xyz");
-              }}
-            >
-              <Trans>About author</Trans>
-            </div>
-          </div>
         </div>
       </div>
     );

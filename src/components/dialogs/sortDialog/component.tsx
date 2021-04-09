@@ -83,6 +83,7 @@ class SortDialog extends React.Component<SortDialogProps, SortDialogState> {
                   }
                 >
                   <Trans>{item}</Trans>
+                  <span className="icon-message"></span>
                 </li>
               );
             })}
@@ -108,8 +109,12 @@ class SortDialog extends React.Component<SortDialogProps, SortDialogState> {
                       ? { color: "rgba(75, 75, 75, 1)" }
                       : {}
                   }
+                  key={index}
                 >
                   <Trans>{item}</Trans>
+                  {sortCode.sort === index && (
+                    <span className="icon-check"></span>
+                  )}
                 </li>
               );
             })}
@@ -125,6 +130,7 @@ class SortDialog extends React.Component<SortDialogProps, SortDialogState> {
             style={sortCode.order === 1 ? { color: "rgba(75, 75, 75, 1)" } : {}}
           >
             <Trans>Ascending Order</Trans>
+            {sortCode.order === 1 && <span className="icon-check"></span>}
           </li>
           <li
             className="sort-by-order-list"
@@ -134,6 +140,7 @@ class SortDialog extends React.Component<SortDialogProps, SortDialogState> {
             style={sortCode.order === 2 ? { color: "rgba(75, 75, 75, 1)" } : {}}
           >
             <Trans>Descending Order</Trans>
+            {sortCode.order === 2 && <span className="icon-check"></span>}
           </li>
         </ul>
       </div>

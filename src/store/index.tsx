@@ -39,6 +39,7 @@ export type stateType = {
     isSettingOpen: boolean;
     viewMode: string;
     isSortDisplay: boolean;
+    isAboutOpen: boolean;
     isShowLoading: boolean;
     isShowNew: boolean;
     isDownloadDesk: boolean;

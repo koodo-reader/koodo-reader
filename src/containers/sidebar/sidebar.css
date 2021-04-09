@@ -4,10 +4,10 @@
 }
 
 .logo {
-  width: 140px;
+  width: 125px;
   position: absolute;
-  top: 10px;
-  left: 75px;
+  top: 15px;
+  left: 70px;
 }
 .side-menu-container-parent {
   position: relative;
@@ -16,11 +16,15 @@
   height: 100%;
   overflow: hidden;
 }
+.sidebar-list {
+  margin-right: 5px;
+  font-size: 22px;
+}
 .sidebar-list-icon {
   width: 45px;
   height: 50px;
   position: absolute;
-  top: 15px !important;
+  top: 20px !important;
   left: 10px;
   cursor: pointer;
   font-size: 20px;
@@ -48,7 +52,7 @@
   /* float: left; */
   font-size: 17px;
   color: rgba(0, 0, 0, 1);
-  margin: 9px 12px 7px 38px;
+  margin: 9px 12px 7px 18px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -78,7 +82,7 @@
   line-height: 39px;
   z-index: 40;
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
   font-weight: 500;
 }
@@ -145,6 +149,9 @@
   position: absolute;
   z-index: -1;
   animation: popup 0.1s ease-in-out 0s 1;
+}
+.icon-digest {
+  font-size: 22px;
 }
 .side-menu-hover-container {
   width: 100%;
