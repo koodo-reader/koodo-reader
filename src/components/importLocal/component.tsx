@@ -16,7 +16,6 @@ import { withRouter } from "react-router-dom";
 import RecentBooks from "../../utils/readUtils/recordRecent";
 import OtherUtil from "../../utils/otherUtil";
 import BookUtil from "../../utils/bookUtil";
-import BackupUtil from "../../utils/syncUtils/backupUtil";
 
 declare var window: any;
 var pdfjsLib = window["pdfjs-dist/build/pdf"];
@@ -32,7 +31,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
   componentDidMount() {
     if (isElectron) {
       const { ipcRenderer } = window.require("electron");
-      if (!OtherUtil.getReaderConfig("storageLocation"))
+      if (!localStorage.getItem("storageLocation"))
         OtherUtil.setReaderConfig(
           "storageLocation",
           ipcRenderer.sendSync("storage-location", "ping")
@@ -121,16 +120,6 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
             },
             this.state.isOpenFile ? 0 : 1000
           );
-          if (isElectron) {
-            BackupUtil.backup(
-              bookArr,
-              this.props.notes,
-              this.props.bookmarks,
-              () => {},
-              5,
-              () => {}
-            );
-          }
           resolve();
         })
         .catch(() => {
@@ -498,7 +487,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                     trigger="mouseenter"
                   >
                     <span
-                      className="icon-save"
+                      className="icon-folder"
                       style={{ fontSize: "18px", fontWeight: 500 }}
                     ></span>
                   </Tooltip>

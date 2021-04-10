@@ -2,7 +2,7 @@
 import React from "react";
 import { TextToSpeechProps, TextToSpeechState } from "./interface";
 import { Trans } from "react-i18next";
-import { dropdownList } from "../../constants/dropdownList";
+import { speedList } from "../../constants/dropdownList";
 import OtherUtil from "../../utils/otherUtil";
 
 class TextToSpeech extends React.Component<
@@ -57,7 +57,7 @@ class TextToSpeech extends React.Component<
               document
                 .querySelector("#text-speech-speed")!
                 .children[
-                  dropdownList[2].option.indexOf(
+                  speedList.option.indexOf(
                     OtherUtil.getReaderConfig("voiceSpeed") || "1"
                   )
                 ].setAttribute("selected", "selected");
@@ -207,7 +207,7 @@ class TextToSpeech extends React.Component<
                     window.speechSynthesis.cancel();
                   }}
                 >
-                  {dropdownList[2].option.map((item) => (
+                  {speedList.option.map((item) => (
                     <option value={item} className="lang-setting-option">
                       {item}
                     </option>

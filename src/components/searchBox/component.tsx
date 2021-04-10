@@ -36,7 +36,7 @@ class SearchBox extends React.Component<SearchBoxProps> {
       return;
     }
     let value = (this.refs.searchBox as any).value.toLowerCase();
-    if (this.props.isNavSearch) {
+    if (this.props.isNavSearch || this.props.isReading) {
       value && this.search(value);
     }
     let results =

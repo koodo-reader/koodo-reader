@@ -10,6 +10,7 @@ import { withRouter } from "react-router-dom";
 import SortUtil from "../../../utils/readUtils/sortUtil";
 import { Redirect } from "react-router-dom";
 import OtherUtil from "../../../utils/otherUtil";
+import NoteTag from "../../../components/noteTag";
 
 declare var window: any;
 
@@ -111,7 +112,7 @@ class CardList extends React.Component<CardListProps, CardListStates> {
                 ) : null}
               </div>
               <div className="card-list-item-text-parent">
-                <div className="card-list-item-text">
+                <div className="card-list-item-note">
                   {this.props.mode === "note" ? item.notes : item.text}
                 </div>
               </div>
@@ -131,6 +132,22 @@ class CardList extends React.Component<CardListProps, CardListStates> {
                 <div className="card-list-item-chapter card-list-item-title">
                   》<Trans>{item.chapter}</Trans>
                 </div>
+              </div>
+              <div
+                className="note-tags"
+                style={{
+                  position: "absolute",
+                  bottom: "20px",
+                  height: "70px",
+                }}
+              >
+                <NoteTag
+                  {...{
+                    handleTag: () => {},
+                    tag: item.tag || [],
+                    isCard: true,
+                  }}
+                />
               </div>
               <div
                 onClick={() => {

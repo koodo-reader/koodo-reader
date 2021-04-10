@@ -42,7 +42,7 @@ class ActionDialog extends React.Component<ActionDialogProps> {
           style={{
             left: this.props.left,
             top: this.props.top,
-            minHeight: "40px",
+            maxHeight: "40px",
           }}
         >
           <div className="action-dialog-actions-container">
@@ -187,9 +187,9 @@ class ActionDialog extends React.Component<ActionDialogProps> {
             <p className="action-dialog-book-desc">
               <Trans>Description</Trans>:
             </p>
-            <p className="action-dialog-book-detail">
-              {Parser(this.props.currentBook.description)}
-            </p>
+            <div className="action-dialog-book-detail">
+              {Parser(this.props.currentBook.description || " ")}
+            </div>
           </div>
         </div>
       </div>

@@ -59,3 +59,10 @@
 .icon-add .slide-icon {
   font-weight: 600 !important;
 }
+.input-value {
+  width: 50px;
+  height: 20px;
+  border: 1.5px solid rgba(75, 75, 75, 1);
+  border-radius: 5px;
+  margin-left: 10px;
+}

@@ -11,7 +11,6 @@ if (!singleInstance) {
   app.quit();
 } else {
   app.on("second-instance", (event, argv, workingDir) => {
-    console.log(event, argv, workingDir);
     if (mainWin) {
       if (!mainWin.isVisible()) mainWin.show();
       mainWin.focus();

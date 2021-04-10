@@ -1,4 +1,3 @@
-import OtherUtil from "../otherUtil";
 import BookModel from "../../model/Book";
 import localforage from "localforage";
 
@@ -15,7 +14,12 @@ export function getParamsFromUrl() {
   }
   return hashParams;
 }
-export const moveData = (blob, driveIndex, books: BookModel[] = []) => {
+export const moveData = (
+  blob,
+  driveIndex,
+  books: BookModel[] = [],
+  handleFinish: () => void = () => {}
+) => {
   let file = new File([blob], "moveData.zip", {
     lastModified: new Date().getTime(),
     type: blob.type,
@@ -27,8 +31,8 @@ export const moveData = (blob, driveIndex, books: BookModel[] = []) => {
 
   const configDir = (app || remote.app).getPath("userData");
   const dirPath = path.join(configDir, "uploads");
-  const dataPath = OtherUtil.getReaderConfig("storageLocation")
-    ? OtherUtil.getReaderConfig("storageLocation")
+  const dataPath = localStorage.getItem("storageLocation")
+    ? localStorage.getItem("storageLocation")
     : window
         .require("electron")
         .ipcRenderer.sendSync("storage-location", "ping");
@@ -51,6 +55,9 @@ export const moveData = (blob, driveIndex, books: BookModel[] = []) => {
             return localforage.removeItem(item.key);
           });
           await Promise.all(deleteBooks);
+        }
+        if (driveIndex === 5) {
+          handleFinish();
         }
       });
     } catch (e) {

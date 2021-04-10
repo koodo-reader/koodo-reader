@@ -69,7 +69,7 @@ class NavigationPanel extends React.Component<
         return (
           <li
             className="nav-search-list-item"
-            key={item.cfi}
+            key={index}
             onClick={() => {
               this.props.currentEpub.rendition.display(item.cfi);
             }}
