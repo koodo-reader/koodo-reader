@@ -9,8 +9,21 @@ import ColorOption from "../../colorOption";
 import RecordLocation from "../../../utils/readUtils/recordLocation";
 import { Tooltip } from "react-tippy";
 import { popupList } from "../../../constants/popupList";
+import OtherUtil from "../../../utils/otherUtil";
+import { isElectron } from "react-device-detect";
 
 declare var window: any;
+const getSelection = () => {
+  let iframe = document.getElementsByTagName("iframe")[0];
+  if (!iframe) return;
+  let doc = iframe.contentDocument;
+  if (!doc) return;
+  let sel = doc.getSelection();
+  if (!sel) return;
+  let text = sel.toString();
+  text = text && text.trim();
+  return text;
+};
 
 class PopupOption extends React.Component<PopupOptionProps> {
   handleNote = () => {
@@ -54,16 +67,8 @@ class PopupOption extends React.Component<PopupOptionProps> {
     this.props.handleMessageBox(true);
   };
   handleTrans = () => {
-    let iframe = document.getElementsByTagName("iframe")[0];
-    if (!iframe) return;
-    let doc = iframe.contentDocument;
-    if (!doc) return;
-    let sel = doc.getSelection();
-    if (!sel) return;
-    let text = sel.toString();
-    text = text && text.trim();
     this.props.handleMenuMode("trans");
-    this.props.handleOriginalText(text);
+    this.props.handleOriginalText(getSelection() || "");
   };
   handleDigest = () => {
     let bookKey = this.props.currentBook.key;
@@ -122,9 +127,67 @@ class PopupOption extends React.Component<PopupOptionProps> {
       this.props.handleMenuMode("highlight");
     });
   };
-  handleSearchInternet = () => {};
-  handleSearchBook = () => {};
-  handleSpeak = () => {};
+  handleJump = (url: string) => {
+    isElectron
+      ? window.require("electron").shell.openExternal(url)
+      : window.open(url);
+  };
+  handleSearchInternet = () => {
+    switch (OtherUtil.getReaderConfig("searchEngine")) {
+      case "google":
+        this.handleJump("https://www.google.com/search?q=" + getSelection());
+        break;
+      case "baidu":
+        this.handleJump("https://www.baidu.com/s?wd=" + getSelection());
+        break;
+      case "bing":
+        this.handleJump("https://www.bing.com/search?q=" + getSelection());
+        break;
+      case "duckduckgo":
+        this.handleJump("https://duckduckgo.com/?q=" + getSelection());
+        break;
+      default:
+        this.handleJump(
+          navigator.language === "zh-CN"
+            ? "https://www.baidu.com/s?wd=" + getSelection()
+            : "https://www.google.com/search?q=" + getSelection()
+        );
+        break;
+    }
+  };
+  handleSearchBook = () => {
+    let leftPanel = document.querySelector(".left-panel");
+    const clickEvent = new MouseEvent("click", {
+      view: window,
+      bubbles: true,
+      cancelable: true,
+    });
+    leftPanel!.dispatchEvent(clickEvent);
+    const focusEvent = new MouseEvent("focus", {
+      view: window,
+      bubbles: true,
+      cancelable: true,
+    });
+    let searchBox: any = document.querySelector(".header-search-box");
+    searchBox.dispatchEvent(focusEvent);
+    let searchIcon = document.querySelector(".header-search-icon");
+    searchIcon?.dispatchEvent(clickEvent);
+    console.log(getSelection(), "getSelection()");
+    searchBox.value = getSelection() || "";
+    const keyEvent: any = new KeyboardEvent("keydown", {
+      bubbles: true,
+      cancelable: true,
+      keyCode: 13,
+    } as any);
+    searchBox.dispatchEvent(keyEvent);
+  };
+
+  handleSpeak = () => {
+    var msg = new SpeechSynthesisUtterance();
+    msg.text = getSelection() || "";
+    msg.voice = window.speechSynthesis.getVoices()[0];
+    window.speechSynthesis.speak(msg);
+  };
   render() {
     const renderMenuList = () => {
       return (

@@ -25,6 +25,7 @@
   cursor: pointer;
   position: relative;
   left: 15px;
+  border-radius: 5px;
 }
 .general-setting-option {
   font-size: 16px;

@@ -11,10 +11,10 @@ import RestoreUtil from "../../utils/syncUtils/restoreUtil";
 import BackupUtil from "../../utils/syncUtils/backupUtil";
 import { Tooltip } from "react-tippy";
 import { isElectron } from "react-device-detect";
-
 class Header extends React.Component<HeaderProps, HeaderState> {
   constructor(props: HeaderProps) {
     super(props);
+
     this.state = {
       isOnlyLocal: false,
       language: OtherUtil.getReaderConfig("lang"),
@@ -38,6 +38,12 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       } else {
         console.log("文件夹已存在");
       }
+      if (OtherUtil.getReaderConfig("storageLocation")) {
+        localStorage.setItem(
+          "storageLocation",
+          OtherUtil.getReaderConfig("storageLocation")
+        );
+      }
       if (!fs.existsSync(path.join(dirPath, `cover.png`))) {
         let stream = fs.createWriteStream(path.join(dirPath, `cover.png`));
         request(`https://koodo.960960.xyz/images/splash.png`)
@@ -50,42 +56,88 @@ class Header extends React.Component<HeaderProps, HeaderState> {
             }
           });
       }
-      const { zip } = window.require("zip-a-folder");
-      let storageLocation = OtherUtil.getReaderConfig("storageLocation")
-        ? OtherUtil.getReaderConfig("storageLocation")
-        : window
-            .require("electron")
-            .ipcRenderer.sendSync("storage-location", "ping");
-      let sourcePath = path.join(storageLocation, "config");
-      let outPath = path.join(storageLocation, "config.zip");
-      await zip(sourcePath, outPath);
-      var data = fs.readFileSync(outPath);
-      let blobTemp = new Blob([data], { type: "application/epub+zip" });
-      let fileTemp = new File([blobTemp], "config.zip", {
-        lastModified: new Date().getTime(),
-        type: blobTemp.type,
-      });
-
-      OtherUtil.getReaderConfig("isAutoSync") === "yes" &&
-        RestoreUtil.restore(
-          fileTemp,
-          () => {
-            BackupUtil.backup(
-              this.props.books,
-              this.props.notes,
-              this.props.bookmarks,
-              () => {},
-              5,
-              () => {}
-            );
-          },
-          true
-        );
     }
+
     window.addEventListener("resize", () => {
       this.setState({ width: document.body.clientWidth });
     });
   }
+
+  syncFromLocation = async () => {
+    const fs = window.require("fs");
+    const path = window.require("path");
+    const { zip } = window.require("zip-a-folder");
+    let storageLocation = localStorage.getItem("storageLocation")
+      ? localStorage.getItem("storageLocation")
+      : window
+          .require("electron")
+          .ipcRenderer.sendSync("storage-location", "ping");
+    let sourcePath = path.join(storageLocation, "config");
+    let outPath = path.join(storageLocation, "config.zip");
+    await zip(sourcePath, outPath);
+
+    var data = fs.readFileSync(outPath);
+
+    let blobTemp = new Blob([data], { type: "application/epub+zip" });
+    let fileTemp = new File([blobTemp], "config.zip", {
+      lastModified: new Date().getTime(),
+      type: blobTemp.type,
+    });
+
+    RestoreUtil.restore(
+      fileTemp,
+      () => {
+        BackupUtil.backup(
+          this.props.books,
+          this.props.notes,
+          this.props.bookmarks,
+          () => {
+            this.props.handleMessage("Sync Successfully");
+            this.props.handleMessageBox(true);
+          },
+          5,
+          () => {}
+        );
+      },
+      true
+    );
+  };
+  syncToLocation = () => {
+    const fs = window.require("fs");
+    const path = window.require("path");
+    let storageLocation = localStorage.getItem("storageLocation")
+      ? localStorage.getItem("storageLocation")
+      : window
+          .require("electron")
+          .ipcRenderer.sendSync("storage-location", "ping");
+    let sourcePath = path.join(storageLocation, "config", "readerConfig.json");
+    const readerConfig = JSON.parse(
+      fs.readFileSync(sourcePath, { encoding: "utf8", flag: "r" })
+    );
+    //如果同步文件夹的记录较新，就从同步文件夹同步数据到Koodo
+    if (
+      localStorage.getItem("lastSyncTime") &&
+      parseInt(readerConfig.lastSyncTime) >
+        parseInt(localStorage.getItem("lastSyncTime")!)
+    ) {
+      console.log(1);
+      this.syncFromLocation();
+    } else {
+      //否则就把Koodo中数据同步到同步文件夹
+      BackupUtil.backup(
+        this.props.books,
+        this.props.notes,
+        this.props.bookmarks,
+        () => {
+          this.props.handleMessage("Sync Successfully");
+          this.props.handleMessageBox(true);
+        },
+        5,
+        () => {}
+      );
+    }
+  };
+
   render() {
     return (
       <div className="header">
@@ -120,17 +172,23 @@ class Header extends React.Component<HeaderProps, HeaderState> {
                   <span className="icon-setting setting-icon"></span>
                 </Tooltip>
               </div>
-              <div
-                className="setting-icon-container"
-                onClick={() => {
-                  this.props.handleAbout(true);
-                }}
-                style={{ left: "635px" }}
-              >
-                <Tooltip title={t("Sync")} position="top" trigger="mouseenter">
-                  <span className="icon-sync setting-icon"></span>
-                </Tooltip>
-              </div>
+              {isElectron && (
+                <div
+                  className="setting-icon-container"
+                  onClick={() => {
+                    this.syncToLocation();
+                  }}
+                  style={{ left: "635px" }}
+                >
+                  <Tooltip
+                    title={t("Sync")}
+                    position="top"
+                    trigger="mouseenter"
+                  >
+                    <span className="icon-sync setting-icon"></span>
+                  </Tooltip>
+                </div>
+              )}
             </>
           )}
         </NamespacesConsumer>

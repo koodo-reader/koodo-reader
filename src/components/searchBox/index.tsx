@@ -9,6 +9,7 @@ const mapStateToProps = (state: stateType) => {
     notes: state.reader.notes,
     digests: state.reader.digests,
     isSearch: state.manager.isSearch,
+    isReading: state.book.isReading,
     currentEpub: state.book.currentEpub,
     tabMode: state.sidebar.mode,
     shelfIndex: state.sidebar.shelfIndex,
