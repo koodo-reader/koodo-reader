@@ -6,6 +6,7 @@ import { SidebarProps, SidebarState } from "./interface";
 import { withRouter } from "react-router-dom";
 import OtherUtil from "../../utils/otherUtil";
 import { Tooltip } from "react-tippy";
+import { isElectron } from "react-device-detect";
 
 class Sidebar extends React.Component<SidebarProps, SidebarState> {
   constructor(props: SidebarProps) {
@@ -37,6 +38,11 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
     this.setState({ isCollapsed });
     this.props.handleCollapse(isCollapsed);
     OtherUtil.setReaderConfig("isCollapsed", isCollapsed ? "yes" : "no");
+  };
+  handleJump = (url: string) => {
+    isElectron
+      ? window.require("electron").shell.openExternal(url)
+      : window.open(url);
   };
   render() {
     const renderSideMenu = () => {
@@ -156,6 +162,9 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
               : "../../assets/label.png"
           }
           alt=""
+          onClick={() => {
+            this.handleJump("https://koodo.960960.xyz");
+          }}
           className="logo"
         />
         <div className="side-menu-container-parent">

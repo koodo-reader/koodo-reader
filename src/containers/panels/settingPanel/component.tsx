@@ -60,6 +60,7 @@ class SettingPanel extends React.Component<
               minLabel: "13",
               maxLabel: "31",
               step: 1,
+              title: "Font Size",
             }}
           />
           <SliderList
@@ -70,6 +71,7 @@ class SettingPanel extends React.Component<
               minLabel: "0",
               maxLabel: "80",
               step: 5,
+              title: "Margin",
             }}
           />
           <SliderList
@@ -80,6 +82,7 @@ class SettingPanel extends React.Component<
               minLabel: "0",
               maxLabel: "20",
               step: 1,
+              title: "Letter Spacing",
             }}
           />
           {this.state.readerMode && this.state.readerMode !== "double" ? (
@@ -91,6 +94,7 @@ class SettingPanel extends React.Component<
                 minLabel: "1",
                 maxLabel: "5",
                 step: 0.2,
+                title: "Scale",
               }}
             />
           ) : null}

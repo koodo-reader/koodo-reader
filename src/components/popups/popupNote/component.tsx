@@ -56,9 +56,7 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
       if (currentChapter) {
         chapter = currentChapter.label.trim(" ");
       }
-
       const cfi = RecordLocation.getCfi(this.props.currentBook.key).cfi;
-
       let iframe = document.getElementsByTagName("iframe")[0];
       if (!iframe) return;
       let doc = iframe.contentDocument;

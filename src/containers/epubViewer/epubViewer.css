@@ -109,6 +109,9 @@
   position: absolute;
   top: 0px;
   left: calc(50% - 206px);
+  z-index: 15;
+
+  transition: transform 0.5s ease;
 }
 .progress-panel-container {
   width: 412px;
@@ -116,6 +119,9 @@
   position: absolute;
   bottom: 0px;
   left: calc(50% - 206px);
+  z-index: 15;
+
+  transition: transform 0.5s ease;
 }
 .setting-panel-container {
   width: 299px;
@@ -123,6 +129,8 @@
   position: absolute;
   bottom: 0px;
   right: 0px;
+  transition: transform 0.5s ease;
+  z-index: 15;
 }
 .navigation-panel-container {
   width: 299px;
@@ -130,6 +138,8 @@
   position: absolute;
   bottom: 0px;
   left: 0px;
+  transition: transform 0.5s ease;
+  z-index: 15;
 }
 .view-area-page {
   position: absolute;

@@ -23,14 +23,16 @@ class DropboxUitl {
       .then(function (response: any) {
         console.log(response, "上传成功");
         dbx
-          .filesUpload({
-            path:
+          .filesCopyV2({
+            from_path: "/Apps/KoodoReader/data.zip",
+            to_path:
               "/Apps/KoodoReader/" +
               `${year}-${month <= 9 ? "0" + month : month}-${
                 day <= 9 ? "0" + day : day
               }.zip`,
-            contents: file,
-            mode: { ".tag": "overwrite" },
+            allow_shared_folder: true,
+            autorename: true,
+            allow_ownership_transfer: true,
           })
           .then(function (response: any) {
             console.log(response, "上传成功");
