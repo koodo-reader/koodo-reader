@@ -89,10 +89,6 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
   handleDrag = (isDrag: boolean) => {
     this.setState({ isDrag });
   };
-  componentWillUnmout() {
-    clearTimeout(this.timer);
-  }
-
   render() {
     let { books } = this.props;
     if (isMobileOnly) {
@@ -152,7 +148,6 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
           <div
             className="drag-background"
             onClick={() => {
-              console.log(this.props, "gsagf");
               this.props.handleEditDialog(false);
               this.props.handleDeleteDialog(false);
               this.props.handleAddDialog(false);

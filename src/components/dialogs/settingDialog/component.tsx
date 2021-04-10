@@ -8,7 +8,11 @@ import { version } from "../../../../package.json";
 import OtherUtil from "../../../utils/otherUtil";
 import SyncUtil from "../../../utils/syncUtils/common";
 import { isElectron } from "react-device-detect";
-import BackupUtil from "../../../utils/syncUtils/backupUtil";
+import {
+  settingList,
+  langList,
+  searchList,
+} from "../../../constants/settingList";
 class SettingDialog extends React.Component<
   SettingInfoProps,
   SettingInfoState
@@ -21,7 +25,7 @@ class SettingDialog extends React.Component<
       isRememberSize: OtherUtil.getReaderConfig("isRememberSize") === "yes",
       isOpenBook: OtherUtil.getReaderConfig("isOpenBook") === "yes",
       isExpandContent: OtherUtil.getReaderConfig("isExpandContent") === "yes",
-      isAutoSync: OtherUtil.getReaderConfig("isAutoSync") === "yes",
+      searchEngine: navigator.language === "zh-CN" ? "baidu" : "google",
     };
   }
   componentDidMount() {
@@ -44,20 +48,15 @@ class SettingDialog extends React.Component<
       ? this.props.handleMessage("Turn Off Successfully")
       : this.props.handleMessage("Turn On Successfully");
     this.props.handleMessageBox(true);
-    isElectron &&
-      BackupUtil.backup(
-        this.props.books,
-        this.props.notes,
-        this.props.bookmarks,
-        () => {},
-        5,
-        () => {}
-      );
   };
   changeLanguage = (lng: string) => {
     i18n.changeLanguage(lng);
     this.setState({ language: lng });
     OtherUtil.setReaderConfig("lang", lng);
+  };
+  changeSearch = (searchEngine: string) => {
+    this.setState({ searchEngine });
+    OtherUtil.setReaderConfig("searchEngine", searchEngine);
   };
   handleChangeTouch = () => {
     this.setState({ isTouch: !this.state.isTouch });
@@ -78,14 +77,7 @@ class SettingDialog extends React.Component<
     );
     this.handleRest(this.state.isExpandContent);
   };
-  handleAutoSync = () => {
-    this.setState({ isAutoSync: !this.state.isAutoSync });
-    OtherUtil.setReaderConfig(
-      "isAutoSync",
-      this.state.isAutoSync ? "no" : "yes"
-    );
-    this.handleRest(this.state.isAutoSync);
-  };
+
   handleChangeOpen = () => {
     this.setState({ isOpenBook: !this.state.isOpenBook });
     OtherUtil.setReaderConfig(
@@ -110,19 +102,19 @@ class SettingDialog extends React.Component<
     const { ipcRenderer } = window.require("electron");
     path.filePaths[0] &&
       SyncUtil.changeLocation(
-        OtherUtil.getReaderConfig("storageLocation")
-          ? OtherUtil.getReaderConfig("storageLocation")
+        localStorage.getItem("storageLocation")
+          ? localStorage.getItem("storageLocation")
           : ipcRenderer.sendSync("storage-location", "ping"),
         path.filePaths[0],
         this.props.handleMessage,
         this.props.handleMessageBox
       );
-    OtherUtil.setReaderConfig("storageLocation", path.filePaths[0]);
+    localStorage.setItem("storageLocation", path.filePaths[0]);
     document.getElementsByClassName(
       "setting-dialog-location-title"
     )[0].innerHTML =
       path.filePaths[0] ||
-      OtherUtil.getReaderConfig("storageLocation") ||
+      localStorage.getItem("storageLocation") ||
       ipcRenderer.sendSync("storage-location", "ping");
   };
   render() {
@@ -145,161 +137,61 @@ class SettingDialog extends React.Component<
         </div>
 
         <div className="setting-dialog-info">
-          <div className="setting-dialog-new-title">
-            {this.state.isTouch ? (
-              <Trans>Turn off touch screen mode</Trans>
-            ) : (
-              <Trans>Turn on touch screen mode</Trans>
-            )}
-
-            <span
-              className="single-control-switch"
-              onClick={() => {
-                this.handleChangeTouch();
-              }}
-              style={
-                this.state.isTouch
-                  ? { background: "rgba(46, 170, 220)", float: "right" }
-                  : { float: "right" }
-              }
-            >
-              <span
-                className="single-control-button"
+          {settingList.map((item, index) => {
+            return (
+              <div
+                className="setting-dialog-new-title"
+                key={item.title}
                 style={
-                  this.state.isTouch
-                    ? {
-                        transform: "translateX(20px)",
-                        transition: "transform 0.5s ease",
-                      }
-                    : {
-                        transform: "translateX(0px)",
-                        transition: "transform 0.5s ease",
-                      }
-                }
-              ></span>
-            </span>
-          </div>
-          <div className="setting-dialog-new-title">
-            <Trans>Auto open latest book</Trans>
-            <span
-              className="single-control-switch"
-              onClick={() => {
-                this.handleChangeOpen();
-              }}
-              style={
-                this.state.isOpenBook
-                  ? { background: "rgba(46, 170, 220)", float: "right" }
-                  : { float: "right" }
-              }
-            >
-              <span
-                className="single-control-button"
-                style={
-                  this.state.isOpenBook
-                    ? {
-                        transform: "translateX(20px)",
-                        transition: "transform 0.5s ease",
-                      }
-                    : {
-                        transform: "translateX(0px)",
-                        transition: "transform 0.5s ease",
-                      }
-                }
-              ></span>
-            </span>
-          </div>
-          {isElectron && (
-            <div className="setting-dialog-new-title">
-              <Trans>Remember window's size from last read</Trans>
-              <span
-                className="single-control-switch"
-                onClick={() => {
-                  this.handleWindowSize();
-                }}
-                style={
-                  this.state.isRememberSize
-                    ? { background: "rgba(46, 170, 220)", float: "right" }
-                    : { float: "right" }
+                  item.isElectron ? (isElectron ? {} : { display: "none" }) : {}
                 }
               >
+                <Trans>{item.title}</Trans>
                 <span
-                  className="single-control-button"
+                  className="single-control-switch"
+                  onClick={() => {
+                    switch (index) {
+                      case 0:
+                        this.handleChangeTouch();
+                        break;
+                      case 1:
+                        this.handleChangeOpen();
+                        break;
+                      case 2:
+                        this.handleWindowSize();
+                        break;
+                      case 3:
+                        this.handleExpandContent();
+                        break;
+                      default:
+                        break;
+                    }
+                  }}
                   style={
-                    this.state.isRememberSize
-                      ? {
-                          transform: "translateX(20px)",
-                          transition: "transform 0.5s ease",
-                        }
-                      : {
-                          transform: "translateX(0px)",
-                          transition: "transform 0.5s ease",
-                        }
+                    this.state[item.propName]
+                      ? { background: "rgba(46, 170, 220)", float: "right" }
+                      : { float: "right" }
                   }
-                ></span>
-              </span>
-            </div>
-          )}
+                >
+                  <span
+                    className="single-control-button"
+                    style={
+                      this.state[item.propName]
+                        ? {
+                            transform: "translateX(20px)",
+                            transition: "transform 0.5s ease",
+                          }
+                        : {
+                            transform: "translateX(0px)",
+                            transition: "transform 0.5s ease",
+                          }
+                    }
+                  ></span>
+                </span>
+              </div>
+            );
+          })}
 
-          <div className="setting-dialog-new-title">
-            <Trans>Default expand all content</Trans>
-            <span
-              className="single-control-switch"
-              onClick={() => {
-                this.handleExpandContent();
-              }}
-              style={
-                this.state.isExpandContent
-                  ? { background: "rgba(46, 170, 220)", float: "right" }
-                  : { float: "right" }
-              }
-            >
-              <span
-                className="single-control-button"
-                style={
-                  this.state.isExpandContent
-                    ? {
-                        transform: "translateX(20px)",
-                        transition: "transform 0.5s ease",
-                      }
-                    : {
-                        transform: "translateX(0px)",
-                        transition: "transform 0.5s ease",
-                      }
-                }
-              ></span>
-            </span>
-          </div>
-          {isElectron && (
-            <div className="setting-dialog-new-title">
-              <Trans>Sync data from storage</Trans>
-              <span
-                className="single-control-switch"
-                onClick={() => {
-                  this.handleAutoSync();
-                }}
-                style={
-                  this.state.isAutoSync
-                    ? { background: "rgba(46, 170, 220)", float: "right" }
-                    : { float: "right" }
-                }
-              >
-                <span
-                  className="single-control-button"
-                  style={
-                    this.state.isAutoSync
-                      ? {
-                          transform: "translateX(20px)",
-                          transition: "transform 0.5s ease",
-                        }
-                      : {
-                          transform: "translateX(0px)",
-                          transition: "transform 0.5s ease",
-                        }
-                  }
-                ></span>
-              </span>
-            </div>
-          )}
           {isElectron && (
             <>
               <div className="setting-dialog-new-title">
@@ -315,8 +207,8 @@ class SettingDialog extends React.Component<
                 </span>
               </div>
               <div className="setting-dialog-location-title">
-                {OtherUtil.getReaderConfig("storageLocation")
-                  ? OtherUtil.getReaderConfig("storageLocation")
+                {localStorage.getItem("storageLocation")
+                  ? localStorage.getItem("storageLocation")
                   : window
                       .require("electron")
                       .ipcRenderer.sendSync("storage-location", "ping")}
@@ -333,18 +225,27 @@ class SettingDialog extends React.Component<
                 this.changeLanguage(event.target.value);
               }}
             >
-              <option value="zh" className="lang-setting-option">
-                简体中文
-              </option>
-              <option value="cht" className="lang-setting-option">
-                繁體中文
-              </option>
-              <option value="en" className="lang-setting-option">
-                English
-              </option>
-              <option value="ru" className="lang-setting-option">
-                русский
-              </option>
+              {langList.map((item) => (
+                <option value={item.value} className="lang-setting-option">
+                  {item.label}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="setting-dialog-new-title">
+            <Trans>Default search engine</Trans>
+            <select
+              name=""
+              className="lang-setting-dropdown"
+              onChange={(event) => {
+                this.changeSearch(event.target.value);
+              }}
+            >
+              {searchList.map((item) => (
+                <option value={item.value} className="lang-setting-option">
+                  {item.label}
+                </option>
+              ))}
             </select>
           </div>
         </div>

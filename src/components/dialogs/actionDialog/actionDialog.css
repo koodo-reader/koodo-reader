@@ -4,7 +4,7 @@
   background: rgba(255, 255, 255, 1);
   box-shadow: 0px 0px 16px rgba(0, 0, 0, 0.34);
   opacity: 1;
-  position: absolute;
+  position: fixed;
   z-index: 9;
   animation: popup 0.1s ease-in-out 0s 1;
   border-radius: 10px;
@@ -39,18 +39,16 @@
   color: #4b4b4b;
 }
 .action-dialog-book-info {
-  padding-left: 10px;
-  padding-right: 10px;
-  padding-bottom: 5px;
+  margin: 10px;
   overflow-y: scroll;
-  height: 195px;
+  height: 185px;
 }
 .action-dialog-book-title {
   font-size: 15px;
   font-weight: 500;
   line-height: 17px;
   opacity: 0.8;
-  max-height: 60px;
+  max-height: 190px;
   margin-bottom: 10px;
 }
 .action-dialog-book-author,

@@ -63,8 +63,8 @@ class BookUtil {
     if (isElectron) {
       const fs = window.require("fs");
       const path = window.require("path");
-      const dataPath = OtherUtil.getReaderConfig("storageLocation")
-        ? OtherUtil.getReaderConfig("storageLocation")
+      const dataPath = localStorage.getItem("storageLocation")
+        ? localStorage.getItem("storageLocation")
         : window
             .require("electron")
             .ipcRenderer.sendSync("storage-location", "ping");
@@ -95,8 +95,8 @@ class BookUtil {
     if (isElectron) {
       const fs = window.require("fs-extra");
       const path = window.require("path");
-      const dataPath = OtherUtil.getReaderConfig("storageLocation")
-        ? OtherUtil.getReaderConfig("storageLocation")
+      const dataPath = localStorage.getItem("storageLocation")
+        ? localStorage.getItem("storageLocation")
         : window
             .require("electron")
             .ipcRenderer.sendSync("storage-location", "ping");
@@ -121,8 +121,8 @@ class BookUtil {
         var path = window.require("path");
         var data = fs.readFileSync(
           path.join(
-            OtherUtil.getReaderConfig("storageLocation")
-              ? OtherUtil.getReaderConfig("storageLocation")
+            localStorage.getItem("storageLocation")
+              ? localStorage.getItem("storageLocation")
               : window
                   .require("electron")
                   .ipcRenderer.sendSync("storage-location", "ping"),
@@ -151,7 +151,7 @@ class BookUtil {
           await localforage.setItem("pdf", event.target!.result as any);
           if (OtherUtil.getReaderConfig("isRememberSize") === "yes") {
             window.open(
-              `./lib/pdf/viewer.html?file=pdf&width=${OtherUtil.getReaderConfig(
+              `./lib/pdf/web/viewer.html?file=pdf&width=${OtherUtil.getReaderConfig(
                 "windowWidth"
               )}&height=${OtherUtil.getReaderConfig(
                 "windowHeight"
@@ -160,11 +160,11 @@ class BookUtil {
               )}&y=${OtherUtil.getReaderConfig("windowY")}`
             );
           } else {
-            window.open(`./lib/pdf/viewer.html?file=pdf&width=full`);
+            window.open(`./lib/pdf/web/viewer.html?file=pdf&width=full`);
           }
         };
       } else {
-        window.open(`./lib/pdf/viewer.html?file=${book.key}`);
+        window.open(`./lib/pdf/web/viewer.html?file=${book.key}`);
       }
     } else {
       if (OtherUtil.getReaderConfig("isRememberSize") === "yes") {

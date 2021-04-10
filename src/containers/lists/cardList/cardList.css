@@ -54,7 +54,7 @@
   cursor: pointer;
   font-size: 16px;
   width: calc(50vw - 135px);
-  height: 146px;
+  height: 176px;
   opacity: 1;
   border: 15px solid transparent;
   font-size: 14px;
@@ -99,12 +99,22 @@
 }
 .card-list-item-text-note {
   position: absolute;
-  top: 100px;
+  top: 90px;
   width: 100%;
   height: 104px;
   color: rgba(75, 75, 75, 0.68);
 }
 .card-list-item-text {
+  width: calc(100% - 20px);
+  height: 53px;
+  overflow-y: scroll;
+  margin: 14px 10px 0px 10px;
+  position: absolute;
+  cursor: text;
+  line-height: 18px;
+  font-size: 16px;
+}
+.card-list-item-note {
   width: calc(100% - 20px);
   height: 73px;
   overflow-y: scroll;

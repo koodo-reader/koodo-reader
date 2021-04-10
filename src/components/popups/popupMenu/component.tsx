@@ -6,6 +6,7 @@ import PopupOption from "../popupOption";
 import PopupTrans from "../popupTrans";
 import { PopupMenuProps, PopupMenuStates } from "./interface";
 import { isMobile } from "react-device-detect";
+import OtherUtil from "../../../utils/otherUtil";
 
 declare var window: any;
 
@@ -128,9 +129,13 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     this.props.handleChangeDirection(false);
     // const rect = this.rect;
     let height = 200;
-    let x = rect.x % this.props.currentEpub.rendition._layout.width;
+    let x =
+      OtherUtil.getReaderConfig("readerMode") === "single"
+        ? rect.x
+        : OtherUtil.getReaderConfig("readerMode") === "continuous"
+        ? rect.right
+        : rect.x % this.props.currentEpub.rendition._layout.width;
     let y = rect.y % this.props.currentEpub.rendition._layout.height;
-
     let posX = x + rect.width / 2 - 20;
     //防止menu超出图书
     let rightEdge =
@@ -291,6 +296,7 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
               onClick={() => {
                 this.props.handleOpenMenu(false);
               }}
+              style={this.props.isChangeDirection ? { top: "170px" } : {}}
             ></span>
           </div>
           {this.props.isChangeDirection ? (

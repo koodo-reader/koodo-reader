@@ -35,26 +35,27 @@ class WebdavUtil {
         day = new Date().getDate();
       let Datastream = client.createWriteStream(
         "/KoodoReader/data.zip",
-        {},
+        { overwrite: true },
         () => {
-          fs.createReadStream(path.join(dirPath, file.name)).pipe(
-            historystream
-          );
-        }
-      );
-      let historystream = client.createWriteStream(
-        "/KoodoReader/" +
-          `${year}-${month <= 9 ? "0" + month : month}-${
-            day <= 9 ? "0" + day : day
-          }.zip`,
-        {},
-        () => {
-          const fs = window.require("fs-extra");
-          fs.remove(path.join(dirPath, file.name), (err) => {
-            if (err) showMessage("Upload failed, check your connection");
-            console.log("successfully data deleted");
-          });
-          handleFinish();
+          client
+            .copyFile(
+              "/KoodoReader/data.zip",
+              "/KoodoReader/" +
+                `${year}-${month <= 9 ? "0" + month : month}-${
+                  day <= 9 ? "0" + day : day
+                }.zip`
+            )
+            .then(() => {
+              const fs_extra = window.require("fs-extra");
+              fs_extra.remove(path.join(dirPath, file.name), (err) => {
+                if (err) showMessage("Upload failed, check your connection");
+                console.log("successfully data deleted");
+              });
+              handleFinish();
+            })
+            .catch(() => {
+              showMessage("Upload failed, check your connection");
+            });
         }
       );
       fs.createReadStream(path.join(dirPath, file.name)).pipe(Datastream);

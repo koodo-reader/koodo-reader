@@ -41,15 +41,6 @@ class BackupDialog extends React.Component<
   handleFinish = () => {
     this.setState({ currentStep: 2 });
     this.props.handleLoadingDialog(false);
-    isElectron &&
-      BackupUtil.backup(
-        this.props.books,
-        this.props.notes,
-        this.props.bookmarks,
-        () => {},
-        5,
-        () => {}
-      );
   };
   handleRestoreToLocal = (event: any) => {
     event.preventDefault();

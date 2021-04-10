@@ -4,6 +4,7 @@ export interface SearchBoxProps {
   books: BookModel[];
   isSearch: boolean;
   isNavSearch: boolean;
+  isReading: boolean;
   mode: string;
   tabMode: string;
   notes: NoteModel[];

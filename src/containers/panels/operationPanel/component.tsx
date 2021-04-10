@@ -9,9 +9,7 @@ import { OperationPanelProps, OperationPanelState } from "./interface";
 import OtherUtil from "../../../utils/otherUtil";
 import ReadingTime from "../../../utils/readUtils/readingTime";
 import { withRouter } from "react-router-dom";
-import { setInterval } from "timers";
-import { isMobile, isElectron } from "react-device-detect";
-import BackupUtil from "../../../utils/syncUtils/backupUtil";
+import { isMobile } from "react-device-detect";
 
 declare var document: any;
 
@@ -37,6 +35,14 @@ class OperationPanel extends React.Component<
     };
     this.timeStamp = Date.now();
     this.speed = 30000;
+  }
+  componentDidMount() {
+    window.addEventListener("resize", () => {
+      if (window.screenLeft !== 0 || window.screenTop !== 0) {
+        this.setState({ isFullScreen: false });
+        OtherUtil.setReaderConfig("isFullScreen", "no");
+      }
+    });
   }
   componentWillReceiveProps(nextProps: OperationPanelProps) {
     if (
@@ -71,6 +77,7 @@ class OperationPanel extends React.Component<
       ? this.handleFullScreen()
       : this.handleExitFullScreen();
   }
+
   //控制进入全屏
   handleFullScreen() {
     let de: any = document.documentElement;
@@ -87,12 +94,13 @@ class OperationPanel extends React.Component<
     this.setState({ isFullScreen: true });
     OtherUtil.setReaderConfig("isFullScreen", "yes");
     if (!isMobile) {
-      this.timer = setInterval(() => {
-        if (window.screenTop === 0) {
-          this.setState({ isFullScreen: false });
-          OtherUtil.setReaderConfig("isFullScreen", "no");
-        }
-      }, 1000);
+      // setInterval(() => {
+      //   console.log(window.screenTop);
+      //   if (window.screenTop === 0) {
+      //     this.setState({ isFullScreen: false });
+      //     OtherUtil.setReaderConfig("isFullScreen", "no");
+      //   }
+      // }, 1000);
     }
   }
   // 退出全屏模式
@@ -147,7 +155,13 @@ class OperationPanel extends React.Component<
         .percentage
         ? RecordLocation.getCfi(this.props.currentBook.key).percentage
         : 0;
-      let bookmark = new Bookmark(bookKey, cfi, text, percentage, chapter);
+      let bookmark = new Bookmark(
+        bookKey,
+        cfi,
+        text.substr(0, 200),
+        percentage,
+        chapter
+      );
       let bookmarkArr = this.props.bookmarks ?? [];
       bookmarkArr.push(bookmark);
       this.props.handleBookmarks(bookmarkArr);
@@ -170,23 +184,11 @@ class OperationPanel extends React.Component<
     this.props.handleSearch(false);
     this.props.handleOpenMenu(false);
     ReadingTime.setTime(this.props.currentBook.key, this.props.time);
-    isElectron &&
-      BackupUtil.backup(
-        this.props.books,
-        this.props.notes,
-        this.props.bookmarks,
-        () => {},
-        5,
-        () => {}
-      );
     OtherUtil.setReaderConfig("windowWidth", document.body.clientWidth);
     OtherUtil.setReaderConfig("windowHeight", document.body.clientHeight);
     OtherUtil.setReaderConfig("windowX", window.screenX + "");
     OtherUtil.setReaderConfig("windowY", window.screenY + "");
-    setTimeout(() => {
-      window.close();
-    }, 200);
-    // this.props.history.push("/manager/home");
+    window.close();
   }
 
   render() {

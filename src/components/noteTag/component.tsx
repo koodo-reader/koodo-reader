@@ -77,20 +77,21 @@ class NoteTag extends React.Component<NoteTagProps, NoteTagState> {
   };
   render() {
     const renderTag = () => {
-      let noteTags = TagUtil.getAllTags();
+      let noteTags = this.props.isCard ? this.props.tag : TagUtil.getAllTags();
       return noteTags.map((item: any, index: number) => {
         return (
           <li
             key={item}
             className={
-              this.state.tagIndex.indexOf(index) > -1
+              this.state.tagIndex.indexOf(index) > -1 && !this.props.isCard
                 ? "tag-list-item active-tag "
                 : "tag-list-item"
             }
           >
             <div className="delete-tag-container">
               {this.state.tagIndex.indexOf(index) > -1 &&
-              !this.props.isReading ? (
+              !this.props.isReading &&
+              !this.props.isCard ? (
                 <DeleteIcon
                   {...{
                     tagName: item,
@@ -118,35 +119,37 @@ class NoteTag extends React.Component<NoteTagProps, NoteTagState> {
         className="note-tag-container"
         style={this.props.isReading ? { width: "1999px" } : {}}
       >
-        {this.props.isReading ? null : (
+        {this.props.isReading || this.props.isCard ? null : (
           <span className="tag-title">
             <Trans>All Tags</Trans>
           </span>
         )}
 
         <ul className="tag-container">
-          <li
-            className="tag-list-item-new"
-            onClick={() => {
-              this.handleInput();
-            }}
-            style={this.state.isInput ? { width: "80px" } : {}}
-          >
-            <div className="center">
-              {this.state.isInput ? (
-                <input
-                  type="text"
-                  name="newTag"
-                  id="newTag"
-                  onBlur={(event) => {
-                    this.handleAddTag(event);
-                  }}
-                />
-              ) : (
-                <span className="icon-add"></span>
-              )}
-            </div>
-          </li>
+          {!this.props.isCard && (
+            <li
+              className="tag-list-item-new"
+              onClick={() => {
+                this.handleInput();
+              }}
+              style={this.state.isInput ? { width: "80px" } : {}}
+            >
+              <div className="center">
+                {this.state.isInput ? (
+                  <input
+                    type="text"
+                    name="newTag"
+                    id="newTag"
+                    onBlur={(event) => {
+                      this.handleAddTag(event);
+                    }}
+                  />
+                ) : (
+                  <span className="icon-add"></span>
+                )}
+              </div>
+            </li>
+          )}
           {renderTag()}
         </ul>
       </div>

@@ -16,7 +16,8 @@
   border-bottom: 10px solid transparent;
   position: fixed;
   top: 5px;
-  right: 50px;
+  right: 70px;
+  z-index: 15;
 }
 .bookmark,
 .bookmark:before,

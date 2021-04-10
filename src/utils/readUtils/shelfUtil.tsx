@@ -56,7 +56,6 @@ class ShelfUtil {
     let obj = JSON.parse(json!) || defaultShelf;
     let shelfList: string[] = [];
     for (let item in obj) {
-      console.log(item, obj);
       if (obj[item] && obj[item].indexOf(bookKey) > -1) {
         shelfList.push(item);
       }

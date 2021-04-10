@@ -238,7 +238,15 @@
   "Help": "Help",
   "Feedback": "Feedback",
   "Github Repo": "Github Repo",
+  "left": "Align left",
+  "justify": "Justify",
+  "right": "Align right",
+  "Text Align": "Text Align",
+  "Sync Successfully": "Sync Successfully",
+  "Permanently Delete": "Permanently Delete",
+
   "Search on the internet": "Search on the internet",
   "Search in the book": "Search in the book",
+  "Default search engine": "Default search engine",
   "Collapse sidebar": "Collapse sidebar"
 }

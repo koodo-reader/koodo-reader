@@ -75,10 +75,10 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
     }
     this.setState(
       {
-        left: this.props.isCollapsed ? x - 80 : x - 200,
+        left: x,
         top:
-          document.body.clientHeight - e.clientY > 260
-            ? document.body.clientHeight - 420 - e.clientY
+          document.body.clientHeight - e.clientY > 300
+            ? e.clientY
             : e.clientY - 300,
       },
       () => {

@@ -11,9 +11,9 @@ export interface SettingInfoProps {
 }
 export interface SettingInfoState {
   language: string;
+  searchEngine: string;
   isTouch: boolean;
   isOpenBook: boolean;
   isExpandContent: boolean;
-  isAutoSync: boolean;
   isRememberSize: boolean;
 }
