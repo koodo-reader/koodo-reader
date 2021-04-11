@@ -9,7 +9,6 @@ import { OperationPanelProps, OperationPanelState } from "./interface";
 import OtherUtil from "../../../utils/otherUtil";
 import ReadingTime from "../../../utils/readUtils/readingTime";
 import { withRouter } from "react-router-dom";
-import { isMobile } from "react-device-detect";
 
 declare var document: any;
 
