@@ -172,7 +172,6 @@ class PopupOption extends React.Component<PopupOptionProps> {
     searchBox.dispatchEvent(focusEvent);
     let searchIcon = document.querySelector(".header-search-icon");
     searchIcon?.dispatchEvent(clickEvent);
-    console.log(getSelection(), "getSelection()");
     searchBox.value = getSelection() || "";
     const keyEvent: any = new KeyboardEvent("keydown", {
       bubbles: true,
