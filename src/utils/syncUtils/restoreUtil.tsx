@@ -15,6 +15,7 @@ class RestoreUtil {
       "bookmarks",
       "readerConfig",
       "noteTags",
+      "themeColors",
       "bookSortCode",
       "noteSortCode",
       "readingTime",

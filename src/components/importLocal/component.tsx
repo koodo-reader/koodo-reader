@@ -14,7 +14,6 @@ import iconv from "iconv-lite";
 import { isElectron } from "react-device-detect";
 import { withRouter } from "react-router-dom";
 import RecentBooks from "../../utils/readUtils/recordRecent";
-import OtherUtil from "../../utils/otherUtil";
 import BookUtil from "../../utils/bookUtil";
 
 declare var window: any;
@@ -26,16 +25,19 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
     this.state = {
       isOpenFile: false,
       width: document.body.clientWidth,
+      filePath: "",
     };
   }
   componentDidMount() {
     if (isElectron) {
       const { ipcRenderer } = window.require("electron");
-      if (!localStorage.getItem("storageLocation"))
-        OtherUtil.setReaderConfig(
+      if (!localStorage.getItem("storageLocation")) {
+        localStorage.setItem(
           "storageLocation",
           ipcRenderer.sendSync("storage-location", "ping")
         );
+      }
+
       ipcRenderer.on("open-book", (event: any, result: string) => {
         if (result && result !== ".") {
           this.handleFilePath(result);
@@ -43,7 +45,9 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
       });
       var filePath = ipcRenderer.sendSync("get-file-data");
       if (filePath && filePath !== ".") {
-        this.handleFilePath(filePath);
+        this.setState({ filePath }, () => {
+          this.handleFilePath(filePath);
+        });
       }
     }
     window.addEventListener("resize", () => {
@@ -84,8 +88,8 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
             type: blob.type,
           }
         );
-        this.setState({ isOpenFile: true }, () => {
-          this.doIncrementalTest(fileTemp);
+        this.setState({ isOpenFile: true }, async () => {
+          await this.doIncrementalTest(fileTemp);
         });
       })
       .catch((err) => console.error(err));
@@ -197,10 +201,16 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
       if ([...this.props.books, ...this.props.deletedBooks].length > 0) {
         [...this.props.books, ...this.props.deletedBooks].forEach((item) => {
           if (item.md5 === md5) {
-            isRepeat = true;
-            this.props.handleMessage("Duplicate Book");
-            this.props.handleMessageBox(true);
-            resolve();
+            if (this.state.filePath) {
+              this.props.handleLoadingDialog(false);
+              this.handleJump(item);
+              this.setState({ filePath: "" });
+            } else {
+              isRepeat = true;
+              this.props.handleMessage("Duplicate Book");
+              this.props.handleMessageBox(true);
+              resolve();
+            }
           }
         });
       }
@@ -304,14 +314,15 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                 lastModified: new Date().getTime(),
                 type: blobTemp.type,
               });
-              this.doIncrementalTest(fileTemp);
+              await this.doIncrementalTest(fileTemp);
+              resolve();
             };
             reader.readAsArrayBuffer(file);
           } else if (extension === "txt") {
-            console.log(file, "import");
             let result = await BookUtil.parseBook(file);
             if (result) {
-              this.doIncrementalTest(result);
+              await this.doIncrementalTest(result);
+              resolve();
             } else {
               this.props.handleMessage("Import Failed");
               this.props.handleMessageBox(true);
@@ -441,22 +452,6 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
         onDrop={async (acceptedFiles) => {
           this.props.handleDrag(false);
           for (let i = 0; i < acceptedFiles.length; i++) {
-            let extension = acceptedFiles[i].name.split(".")[
-              acceptedFiles[i].name.split(".").length - 1
-            ];
-            if (
-              acceptedFiles.length > 1 &&
-              (extension === "mobi" ||
-                extension === "txt" ||
-                extension === "azw3")
-            ) {
-              this.props.handleMessage(
-                "Batch import only support epub or pdf files"
-              );
-              this.props.handleMessageBox(true);
-              return;
-            }
-
             //异步解析文件
             await this.doIncrementalTest(acceptedFiles[i]);
           }

@@ -38,7 +38,11 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       } else {
         console.log("文件夹已存在");
       }
-      if (OtherUtil.getReaderConfig("storageLocation")) {
+
+      if (
+        OtherUtil.getReaderConfig("storageLocation") &&
+        !localStorage.getItem("storageLocation")
+      ) {
         localStorage.setItem(
           "storageLocation",
           OtherUtil.getReaderConfig("storageLocation")

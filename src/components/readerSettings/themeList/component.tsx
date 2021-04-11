@@ -8,25 +8,28 @@ import { ThemeListProps, ThemeListState } from "./interface";
 import OtherUtil from "../../../utils/otherUtil";
 import { Panel as ColorPickerPanel } from "rc-color-picker";
 import "rc-color-picker/assets/index.css";
-import _ from "underscore";
+import ThemeUtil from "../../../utils/readUtils/themeUtil";
 
 class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
   constructor(props: ThemeListProps) {
     super(props);
     this.state = {
-      currentBackgroundIndex: backgroundList.findIndex((item) => {
-        return (
-          item.theme ===
-          (OtherUtil.getReaderConfig("backgroundColor") ||
-            "rgba(255,255,255,1)")
-        );
-      }),
-      currentTextIndex: textList.findIndex((item) => {
-        return (
-          item.theme ===
-          (OtherUtil.getReaderConfig("textColor") || "rgba(0,0,0,1)")
-        );
-      }),
+      currentBackgroundIndex: backgroundList
+        .concat(ThemeUtil.getAllThemes())
+        .findIndex((item) => {
+          return (
+            item ===
+            (OtherUtil.getReaderConfig("backgroundColor") ||
+              "rgba(255,255,255,1)")
+          );
+        }),
+      currentTextIndex: textList
+        .concat(ThemeUtil.getAllThemes())
+        .findIndex((item) => {
+          return (
+            item === (OtherUtil.getReaderConfig("textColor") || "rgba(0,0,0,1)")
+          );
+        }),
       isShowTextPicker: false,
       isShowBgPicker: false,
     };
@@ -65,15 +68,23 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
     StyleUtil.addDefaultCss();
   };
   handleColorTextPicker = (isShowTextPicker: boolean) => {
+    if (!isShowTextPicker) {
+      ThemeUtil.setThemes(OtherUtil.getReaderConfig("textColor"));
+    }
     this.setState({ isShowTextPicker });
   };
   handleColorBgPicker = (isShowBgPicker: boolean) => {
+    if (!isShowBgPicker) {
+      ThemeUtil.setThemes(OtherUtil.getReaderConfig("backgroundColor"));
+    }
     this.setState({ isShowBgPicker });
   };
   handleChooseTextColor = (color) => {
     if (typeof color !== "object") {
       this.setState({
-        currentTextIndex: _.findLastIndex(textList, { theme: color }),
+        currentTextIndex: textList
+          .concat(ThemeUtil.getAllThemes())
+          .indexOf(color),
       });
     }
     OtherUtil.setReaderConfig(
@@ -88,38 +99,58 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
   };
   render() {
     const renderBackgroundColorList = () => {
-      return backgroundList.map((item, index) => {
-        return (
-          <li
-            key={item.id}
-            className={
-              index === this.state.currentBackgroundIndex
-                ? "active-color background-color-circle"
-                : "background-color-circle"
-            }
-            onClick={() => {
-              this.handleChangeBgColor(item.theme, index);
-            }}
-            style={{ backgroundColor: item.theme }}
-          ></li>
-        );
-      });
+      return backgroundList
+        .concat(ThemeUtil.getAllThemes())
+        .map((item, index) => {
+          return (
+            <li
+              key={item}
+              className={
+                index === this.state.currentBackgroundIndex
+                  ? "active-color background-color-circle"
+                  : "background-color-circle"
+              }
+              onClick={() => {
+                this.handleChangeBgColor(item, index);
+              }}
+              style={{ backgroundColor: item }}
+            >
+              {index > 3 && index === this.state.currentBackgroundIndex && (
+                <span
+                  className="icon-close"
+                  onClick={() => {
+                    ThemeUtil.clear(item);
+                  }}
+                ></span>
+              )}
+            </li>
+          );
+        });
     };
     const renderTextColorList = () => {
-      return textList.map((item, index) => {
+      return textList.concat(ThemeUtil.getAllThemes()).map((item, index) => {
         return (
           <li
-            key={item.id}
+            key={item}
             className={
               index === this.state.currentTextIndex
                 ? "active-color background-color-circle"
                 : "background-color-circle"
             }
             onClick={() => {
-              this.handleChooseTextColor(item.theme);
+              this.handleChooseTextColor(item);
             }}
-            style={{ backgroundColor: item.theme }}
-          ></li>
+            style={{ backgroundColor: item }}
+          >
+            {index > 3 && index === this.state.currentTextIndex && (
+              <span
+                className="icon-close"
+                onClick={() => {
+                  ThemeUtil.clear(item);
+                }}
+              ></span>
+            )}
+          </li>
         );
       });
     };
@@ -129,16 +160,16 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
           <Trans>Background Color</Trans>
         </div>
         <ul className="background-color-list">
-          {renderBackgroundColorList()}
           <li
             className="background-color-circle"
-            style={{ textAlign: "center", lineHeight: "35px" }}
             onClick={() => {
               this.handleColorBgPicker(!this.state.isShowBgPicker);
             }}
           >
             <span className="icon-more"></span>
           </li>
+
+          {renderBackgroundColorList()}
         </ul>
         {this.state.isShowBgPicker && (
           <ColorPickerPanel
@@ -156,20 +187,16 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
           <Trans>Text Color</Trans>
         </div>
         <ul className="background-color-list">
-          {renderTextColorList()}
-
           <li
             className="background-color-circle"
-            style={{ textAlign: "center", lineHeight: "35px" }}
             onClick={() => {
               this.handleColorTextPicker(!this.state.isShowTextPicker);
             }}
           >
-            <span
-              className="icon-more"
-              style={{ transform: "rotate(-90deg)" }}
-            ></span>
+            <span className="icon-more"></span>
           </li>
+
+          {renderTextColorList()}
         </ul>
         {this.state.isShowTextPicker && (
           <ColorPickerPanel

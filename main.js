@@ -47,7 +47,6 @@ app.on("ready", () => {
     (event, url, frameName, disposition, options, additionalFeatures) => {
       event.preventDefault();
       if (url.indexOf("full") > -1) {
-        console.log("full");
         Object.assign(options, {
           parent: mainWin,
           width: 1050,

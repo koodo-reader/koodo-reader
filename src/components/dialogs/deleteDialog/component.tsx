@@ -66,7 +66,6 @@ class DeleteDialog extends React.Component<DeleteDialogProps> {
     this.props.handleMessageBox(true);
   };
   deleteBook = (key: string) => {
-    console.log("object");
     return new Promise<void>((resolve, reject) => {
       this.props.books &&
         localforage

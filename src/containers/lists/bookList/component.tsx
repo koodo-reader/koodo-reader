@@ -37,7 +37,6 @@ class BookList extends React.Component<BookListProps, BookListState> {
     }
   }
   componentDidMount() {
-    console.log(this.props.books);
     if (!this.props.books || !this.props.books[0]) {
       return <Redirect to="manager/empty" />;
     }
