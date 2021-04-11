@@ -93,15 +93,6 @@ class OperationPanel extends React.Component<
 
     this.setState({ isFullScreen: true });
     OtherUtil.setReaderConfig("isFullScreen", "yes");
-    if (!isMobile) {
-      // setInterval(() => {
-      //   console.log(window.screenTop);
-      //   if (window.screenTop === 0) {
-      //     this.setState({ isFullScreen: false });
-      //     OtherUtil.setReaderConfig("isFullScreen", "no");
-      //   }
-      // }, 1000);
-    }
   }
   // 退出全屏模式
   handleExitFullScreen() {

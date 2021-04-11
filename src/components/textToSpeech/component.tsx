@@ -104,11 +104,6 @@ class TextToSpeech extends React.Component<
     msg.rate = speed;
     window.speechSynthesis.speak(msg);
     msg.onend = (event) => {
-      console.log(
-        "Utterance has finished being spoken after " +
-          event.elapsedTime +
-          " milliseconds."
-      );
       if (!(this.state.isAudioOn && this.props.isReading)) {
         return;
       }

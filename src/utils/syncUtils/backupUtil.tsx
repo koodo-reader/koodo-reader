@@ -49,6 +49,7 @@ class BackupUtil {
       .file("books.json", JSON.stringify(books))
       .file("bookmarks.json", JSON.stringify(bookmarks))
       .file("readerConfig.json", localStorage.getItem("readerConfig") || "")
+      .file("themeColors.json", localStorage.getItem("themeColors") || "")
       .file(
         "bookSortCode.json",
         localStorage.getItem("bookSortCode") ||

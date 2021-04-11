@@ -33,17 +33,14 @@ class SliderList extends React.Component<SliderListProps, SliderListState> {
       const scale = event.target.value;
       this.setState({ value: scale });
       OtherUtil.setReaderConfig("scale", scale);
-      window.location.reload();
     } else if (this.props.mode === "letterSpacing") {
       const letterSpacing = event.target.value;
       this.setState({ value: letterSpacing });
       OtherUtil.setReaderConfig("letterSpacing", letterSpacing);
-      window.location.reload();
     } else {
       const margin = event.target.value;
       this.setState({ value: margin });
       OtherUtil.setReaderConfig("margin", margin);
-      window.location.reload();
     }
   };
   //使进度百分比随拖动实时变化
@@ -71,8 +68,13 @@ class SliderList extends React.Component<SliderListProps, SliderListState> {
             className="input-value"
             defaultValue={this.state.value}
             type="number"
-            onBlur={this.onValueChange}
+            step={this.props.title === "Scale" ? "0.1" : "1"}
+            onBlur={(event) => {
+              this.onValueChange(event);
+              window.location.reload();
+            }}
           />
+          <span style={{ marginLeft: "10px" }}>{this.state.value}</span>
         </div>
 
         <span className="ultra-small-size">{this.props.minLabel}</span>

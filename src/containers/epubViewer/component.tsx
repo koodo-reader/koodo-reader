@@ -89,7 +89,6 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
       OtherUtil.setReaderConfig("isFirst", "no");
     }
     window.addEventListener("resize", () => {
-      console.log(OtherUtil.getReaderConfig("readerMode"));
       if (
         document.body.clientWidth < 780 &&
         (!OtherUtil.getReaderConfig("readerMode") ||
