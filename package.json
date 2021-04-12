@@ -122,8 +122,6 @@
           "target": "dmg",
           "arch": [
             "x64",
-            "armv7l",
-            "ia32",
             "arm64"
           ]
         }
