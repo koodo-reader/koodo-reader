@@ -9,8 +9,8 @@ export interface BackgroundProps {
 }
 export interface BackgroundState {
   isSingle: boolean;
-  isShowFooter: boolean;
-  isShowHeader: boolean;
+  isHideFooter: boolean;
+  isHideHeader: boolean;
   isUseBackground: boolean;
   currentChapter: string;
   prevPage: number;

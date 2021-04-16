@@ -7,7 +7,10 @@ export interface SettingSwitchProps {
 }
 export interface SettingSwitchState {
   isUseBackground: boolean;
-  isShowFooter: boolean;
+  isHideFooter: boolean;
   isBold: boolean;
-  isShowHeader: boolean;
+  isShadow: boolean;
+  isUnderline: boolean;
+  isItalic: boolean;
+  isHideHeader: boolean;
 }

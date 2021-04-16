@@ -9,10 +9,8 @@ import RecordLocation from "../../../utils/readUtils/recordLocation";
 import { withRouter } from "react-router-dom";
 import SortUtil from "../../../utils/readUtils/sortUtil";
 import { Redirect } from "react-router-dom";
-import OtherUtil from "../../../utils/otherUtil";
 import NoteTag from "../../../components/noteTag";
-
-declare var window: any;
+import BookUtil from "../../../utils/bookUtil";
 
 class CardList extends React.Component<CardListProps, CardListStates> {
   constructor(props: CardListProps) {
@@ -50,23 +48,7 @@ class CardList extends React.Component<CardListProps, CardListStates> {
       return;
     }
     RecordLocation.recordCfi(bookKey, cfi, percentage);
-    if (OtherUtil.getReaderConfig("isRememberSize") === "yes") {
-      window.open(
-        `${window.location.href.split("#")[0]}#/epub/${
-          book.key
-        }?width=${OtherUtil.getReaderConfig(
-          "windowWidth"
-        )}&height=${OtherUtil.getReaderConfig(
-          "windowHeight"
-        )}&x=${OtherUtil.getReaderConfig(
-          "windowX"
-        )}&y=${OtherUtil.getReaderConfig("windowY")}`
-      );
-    } else {
-      window.open(
-        `${window.location.href.split("#")[0]}#/epub/${book.key}?width=full`
-      );
-    }
+    BookUtil.RedirectBook(book);
   };
   render() {
     let { cards } = this.props;

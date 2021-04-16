@@ -3,6 +3,7 @@ import React, { Component } from "react";
 import ShelfUtil from "../../../utils/readUtils/shelfUtil";
 import { Trans, NamespacesConsumer } from "react-i18next";
 import { AddDialogProps, AddDialogState } from "./interface";
+import "./addDialog.css";
 
 class AddDialog extends Component<AddDialogProps, AddDialogState> {
   constructor(props: AddDialogProps) {

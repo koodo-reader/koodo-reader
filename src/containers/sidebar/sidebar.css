@@ -8,6 +8,7 @@
   position: absolute;
   top: 15px;
   left: 70px;
+  cursor: pointer;
 }
 .side-menu-container-parent {
   position: relative;
@@ -68,7 +69,7 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   margin-left: -20px;
-  margin-bottom: 15px;
+  margin-bottom: 10px;
   color: rgba(75, 75, 75, 1);
   position: relative;
   bottom: 1px;
@@ -82,7 +83,6 @@
   line-height: 39px;
   z-index: 40;
   display: flex;
-  justify-content: space-between;
   align-items: center;
   font-weight: 500;
 }

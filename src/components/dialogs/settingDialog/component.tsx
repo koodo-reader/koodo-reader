@@ -25,6 +25,7 @@ class SettingDialog extends React.Component<
       isRememberSize: OtherUtil.getReaderConfig("isRememberSize") === "yes",
       isOpenBook: OtherUtil.getReaderConfig("isOpenBook") === "yes",
       isExpandContent: OtherUtil.getReaderConfig("isExpandContent") === "yes",
+      isDisableUpdate: OtherUtil.getReaderConfig("isDisableUpdate") === "yes",
       searchEngine: navigator.language === "zh-CN" ? "baidu" : "google",
     };
   }
@@ -76,6 +77,14 @@ class SettingDialog extends React.Component<
       this.state.isExpandContent ? "no" : "yes"
     );
     this.handleRest(this.state.isExpandContent);
+  };
+  handleDisableUpdate = () => {
+    this.setState({ isDisableUpdate: !this.state.isDisableUpdate });
+    OtherUtil.setReaderConfig(
+      "isDisableUpdate",
+      this.state.isDisableUpdate ? "no" : "yes"
+    );
+    this.handleRest(this.state.isDisableUpdate);
   };
 
   handleChangeOpen = () => {
@@ -163,6 +172,9 @@ class SettingDialog extends React.Component<
                       case 3:
                         this.handleExpandContent();
                         break;
+                      case 4:
+                        this.handleDisableUpdate();
+                        break;
                       default:
                         break;
                     }
@@ -217,7 +229,7 @@ class SettingDialog extends React.Component<
           )}
 
           <div className="setting-dialog-new-title">
-            <Trans>语言 / Language</Trans>
+            <Trans>Language</Trans>
             <select
               name=""
               className="lang-setting-dropdown"

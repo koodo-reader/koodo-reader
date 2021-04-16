@@ -140,8 +140,8 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     //防止menu超出图书
     let rightEdge =
       this.props.menuMode === "note"
-        ? this.props.currentEpub.rendition._layout.width - 240
-        : this.props.currentEpub.rendition._layout.width - 150;
+        ? this.props.currentEpub.rendition._layout.width - 310
+        : this.props.currentEpub.rendition._layout.width - 200;
     let posY;
     //控制menu方向
     if (y < height) {
@@ -150,9 +150,7 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     } else {
       posY = y - height / 2 - 57;
     }
-
     posX = posX > rightEdge ? rightEdge : posX;
-
     this.props.handleOpenMenu(true);
     let popupMenu = document.querySelector(".popup-menu-container");
 
@@ -255,6 +253,7 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
       "line-2",
       "line-3",
     ];
+    if (!this.highlighter) return;
     this.highlighter.highlightSelection(classes[color]);
     this.props.handleMenuMode("menu");
     this.props.handleOpenMenu(false);

@@ -95,11 +95,36 @@ class ViewArea extends React.Component<ViewAreaProps, ViewAreaStates> {
               ? `${OtherUtil.getReaderConfig("letterSpacing")}px`
               : ""
           } !important`,
+          "text-align": `${
+            OtherUtil.getReaderConfig("textAlign")
+              ? `${OtherUtil.getReaderConfig("textAlign")}`
+              : ""
+          } !important`,
           "font-weight": `${
             OtherUtil.getReaderConfig("isBold") === "yes"
               ? "bold !important"
               : ""
           }`,
+          "font-style": `${
+            OtherUtil.getReaderConfig("isItalic") === "yes"
+              ? "italic !important"
+              : ""
+          }`,
+          "text-shadow": `${
+            OtherUtil.getReaderConfig("isShadow") === "yes"
+              ? "2px 2px 2px #cccccc !important"
+              : ""
+          }`,
+          "text-decoration": `${
+            OtherUtil.getReaderConfig("isUnderline") === "yes"
+              ? "underline !important"
+              : ""
+          }`,
+          "p, div, table": {
+            "margin-bottom": `${
+              OtherUtil.getReaderConfig("paraSpacing") || 0
+            }px !important`,
+          },
         },
       });
     });
@@ -127,9 +152,34 @@ class ViewArea extends React.Component<ViewAreaProps, ViewAreaStates> {
             ? "white"
             : ""
         } !important`,
+        "text-align": `${
+          OtherUtil.getReaderConfig("textAlign")
+            ? `${OtherUtil.getReaderConfig("textAlign")}`
+            : ""
+        } !important`,
         "font-weight": `${
           OtherUtil.getReaderConfig("isBold") === "yes" ? "bold !important" : ""
         }`,
+        "font-style": `${
+          OtherUtil.getReaderConfig("isItalic") === "yes"
+            ? "italic !important"
+            : ""
+        }`,
+        "text-shadow": `${
+          OtherUtil.getReaderConfig("isShadow") === "yes"
+            ? "2px 2px 2px #cccccc !important"
+            : ""
+        }`,
+        "text-decoration": `${
+          OtherUtil.getReaderConfig("isUnderline") === "yes"
+            ? "underline !important"
+            : ""
+        }`,
+      },
+      "p, div, table": {
+        "margin-bottom": `${
+          OtherUtil.getReaderConfig("paraSpacing") || 0
+        }px !important`,
       },
     });
     this.props.rendition.display(

@@ -29,28 +29,16 @@ class PopupOption extends React.Component<PopupOptionProps> {
   handleNote = () => {
     this.props.handleChangeDirection(false);
     this.props.handleMenuMode("note");
-    let rect = this.props.rect;
-    let x = rect.x % this.props.currentEpub.rendition._layout.width;
-    let y = rect.y % this.props.currentEpub.rendition._layout.height;
-    let height = 200;
-    let posX = x + rect.width / 2 - 20;
-    //防止menu超出图书
-    let rightEdge = this.props.currentEpub.rendition._layout.width - 200;
-    var posY;
-    //控制menu方向
-    if (y < height) {
-      this.props.handleChangeDirection(true);
-      posY = y + 77;
-    } else {
-      posY = y - height / 2 - rect.height;
+
+    let popupMenu: any = document.querySelector(".popup-menu-container");
+    let posX = popupMenu?.style.left;
+    let posY = popupMenu?.style.top;
+    posX = parseInt(posX.substr(0, posX.length - 2));
+    posY = parseInt(posY.substr(0, posY.length - 2));
+    let rightEdge = this.props.currentEpub.rendition._layout.width - 310;
+    if (posX > rightEdge) {
+      popupMenu.setAttribute("style", `left:${rightEdge}px;top:${posY}px`);
     }
-
-    posY = posY < 6 ? 6 : posY;
-    posX = posX < 10 ? 10 : x > rightEdge ? rightEdge : posX;
-
-    let popupMenu = document.querySelector(".popup-menu-container");
-    popupMenu &&
-      popupMenu.setAttribute("style", `left:${posX}px;top:${posY}px`);
   };
   handleCopy = () => {
     let iframe = document.getElementsByTagName("iframe")[0];
@@ -145,6 +133,12 @@ class PopupOption extends React.Component<PopupOptionProps> {
         break;
       case "duckduckgo":
         this.handleJump("https://duckduckgo.com/?q=" + getSelection());
+        break;
+      case "yandex":
+        this.handleJump("https://yandex.com/search/?text=" + getSelection());
+        break;
+      case "yahoo":
+        this.handleJump("https://search.yahoo.com/search?p=" + getSelection());
         break;
       default:
         this.handleJump(

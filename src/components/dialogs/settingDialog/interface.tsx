@@ -15,5 +15,6 @@ export interface SettingInfoState {
   isTouch: boolean;
   isOpenBook: boolean;
   isExpandContent: boolean;
+  isDisableUpdate: boolean;
   isRememberSize: boolean;
 }

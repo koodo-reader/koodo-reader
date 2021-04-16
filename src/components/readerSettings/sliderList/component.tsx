@@ -15,7 +15,9 @@ class SliderList extends React.Component<SliderListProps, SliderListState> {
           ? OtherUtil.getReaderConfig("scale") || "1"
           : this.props.mode === "letterSpacing"
           ? OtherUtil.getReaderConfig("letterSpacing") || "0"
-          : OtherUtil.getReaderConfig("margin") || "50",
+          : this.props.mode === "paraSpacing"
+          ? OtherUtil.getReaderConfig("paraSpacing") || "0"
+          : OtherUtil.getReaderConfig("margin") || "60",
     };
   }
 
@@ -37,6 +39,10 @@ class SliderList extends React.Component<SliderListProps, SliderListState> {
       const letterSpacing = event.target.value;
       this.setState({ value: letterSpacing });
       OtherUtil.setReaderConfig("letterSpacing", letterSpacing);
+    } else if (this.props.mode === "paraSpacing") {
+      const paraSpacing = event.target.value;
+      this.setState({ value: paraSpacing });
+      OtherUtil.setReaderConfig("paraSpacing", paraSpacing);
     } else {
       const margin = event.target.value;
       this.setState({ value: margin });
@@ -63,7 +69,7 @@ class SliderList extends React.Component<SliderListProps, SliderListState> {
     return (
       <div className="font-size-setting">
         <div className="font-size-title">
-          <Trans>{this.props.title}</Trans>&nbsp;
+          <Trans>{this.props.title}</Trans>
           <input
             className="input-value"
             defaultValue={this.state.value}
