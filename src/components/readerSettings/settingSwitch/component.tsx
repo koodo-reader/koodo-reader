@@ -4,6 +4,7 @@ import { SettingSwitchProps, SettingSwitchState } from "./interface";
 import { Trans } from "react-i18next";
 import TextToSpeech from "../../textToSpeech";
 import OtherUtil from "../../../utils/otherUtil";
+import { readerSettingList } from "../../../constants/settingList";
 
 class SettingSwitch extends React.Component<
   SettingSwitchProps,
@@ -13,21 +14,40 @@ class SettingSwitch extends React.Component<
     super(props);
     this.state = {
       isBold: OtherUtil.getReaderConfig("isBold") === "yes",
+      isUnderline: OtherUtil.getReaderConfig("isUnderline") === "yes",
+      isShadow: OtherUtil.getReaderConfig("isShadow") === "yes",
+      isItalic: OtherUtil.getReaderConfig("isItalic") === "yes",
       isUseBackground: OtherUtil.getReaderConfig("isUseBackground") === "yes",
-      isShowFooter: OtherUtil.getReaderConfig("isShowFooter") !== "no",
-      isShowHeader: OtherUtil.getReaderConfig("isShowHeader") !== "no",
+      isHideFooter: OtherUtil.getReaderConfig("isHideFooter") === "yes",
+      isHideHeader: OtherUtil.getReaderConfig("isHideHeader") === "yes",
     };
   }
 
   handleBold = () => {
-    this.props.currentEpub.rendition.themes.default({
-      "a, article, cite, code, div, li, p, pre, span, table": {
-        "font-weight": `${this.state.isBold ? "bold !important" : ""}`,
-      },
+    this.setState({ isBold: !this.state.isBold }, () => {
+      OtherUtil.setReaderConfig("isBold", this.state.isBold ? "yes" : "no");
     });
-    this.setState({ isBold: !this.state.isBold });
-    OtherUtil.setReaderConfig("isBold", this.state.isBold ? "no" : "yes");
-    window.location.reload();
+  };
+  handleItalic = () => {
+    this.setState({ isItalic: !this.state.isItalic }, () => {
+      OtherUtil.setReaderConfig("isItalic", this.state.isItalic ? "yes" : "no");
+      window.location.reload();
+    });
+  };
+  handleShadow = () => {
+    this.setState({ isShadow: !this.state.isShadow }, () => {
+      OtherUtil.setReaderConfig("isShadow", this.state.isShadow ? "yes" : "no");
+      window.location.reload();
+    });
+  };
+  handleUnderline = () => {
+    this.setState({ isUnderline: !this.state.isUnderline }, () => {
+      OtherUtil.setReaderConfig(
+        "isUnderline",
+        this.state.isUnderline ? "yes" : "no"
+      );
+      window.location.reload();
+    });
   };
   handleChangeBackground = () => {
     this.setState({ isUseBackground: !this.state.isUseBackground });
@@ -42,12 +62,12 @@ class SettingSwitch extends React.Component<
     window.location.reload();
   };
   handleFooter = () => {
-    this.setState({ isShowFooter: !this.state.isShowFooter });
+    this.setState({ isHideFooter: !this.state.isHideFooter });
     OtherUtil.setReaderConfig(
-      "isShowFooter",
-      this.state.isShowFooter ? "no" : "yes"
+      "isHideFooter",
+      this.state.isHideFooter ? "no" : "yes"
     );
-    this.state.isShowFooter
+    this.state.isHideFooter
       ? this.props.handleMessage("Turn On Successfully")
       : this.props.handleMessage("Turn Off Successfully");
     this.props.handleMessageBox(true);
@@ -56,12 +76,12 @@ class SettingSwitch extends React.Component<
     }, 500);
   };
   handleHeader = () => {
-    this.setState({ isShowHeader: !this.state.isShowHeader });
+    this.setState({ isHideHeader: !this.state.isHideHeader });
     OtherUtil.setReaderConfig(
-      "isShowHeader",
-      this.state.isShowHeader ? "no" : "yes"
+      "isHideHeader",
+      this.state.isHideHeader ? "no" : "yes"
     );
-    this.state.isShowHeader
+    this.state.isHideHeader
       ? this.props.handleMessage("Turn On Successfully")
       : this.props.handleMessage("Turn Off Successfully");
     this.props.handleMessageBox(true);
@@ -74,133 +94,64 @@ class SettingSwitch extends React.Component<
     return (
       <>
         <TextToSpeech />
-        <div className="single-control-switch-container">
-          <span className="single-control-switch-title">
-            <Trans>Bold Font</Trans>
-          </span>
+        {readerSettingList.map((item) => (
+          <div className="single-control-switch-container">
+            <span className="single-control-switch-title">
+              <Trans>{item.title}</Trans>
+            </span>
 
-          <span
-            className="single-control-switch"
-            onClick={() => {
-              this.handleBold();
-            }}
-            style={
-              this.state.isBold
-                ? { background: "rgba(46, 170, 220)", float: "right" }
-                : { float: "right" }
-            }
-          >
             <span
-              className="single-control-button"
+              className="single-control-switch"
+              onClick={() => {
+                switch (item.propName) {
+                  case "isBold":
+                    this.handleBold();
+                    break;
+                  case "isItalic":
+                    this.handleItalic();
+                    break;
+                  case "isUnderline":
+                    this.handleUnderline();
+                    break;
+                  case "isShadow":
+                    this.handleShadow();
+                    break;
+                  case "isHideFooter":
+                    this.handleFooter();
+                    break;
+                  case "isHideHeader":
+                    this.handleHeader();
+                    break;
+                  case "isUseBackground":
+                    this.handleChangeBackground();
+                    break;
+                  default:
+                    break;
+                }
+              }}
               style={
-                !this.state.isBold
-                  ? {
-                      transform: "translateX(0px)",
-                      transition: "transform 0.5s ease",
-                    }
-                  : {
-                      transform: "translateX(20px)",
-                      transition: "transform 0.5s ease",
-                    }
+                this.state[item.propName]
+                  ? { background: "rgba(46, 170, 220)", float: "right" }
+                  : { float: "right" }
               }
-            ></span>
-          </span>
-        </div>
-        <div className="single-control-switch-container">
-          <span className="single-control-switch-title">
-            <Trans>Don't show footer</Trans>
-          </span>
-
-          <span
-            className="single-control-switch"
-            onClick={() => {
-              this.handleFooter();
-            }}
-            style={
-              !this.state.isShowFooter
-                ? { background: "rgba(46, 170, 220)", float: "right" }
-                : { float: "right" }
-            }
-          >
-            <span
-              className="single-control-button"
-              style={
-                this.state.isShowFooter
-                  ? {
-                      transform: "translateX(0px)",
-                      transition: "transform 0.5s ease",
-                    }
-                  : {
-                      transform: "translateX(20px)",
-                      transition: "transform 0.5s ease",
-                    }
-              }
-            ></span>
-          </span>
-        </div>
-        <div className="single-control-switch-container">
-          <span className="single-control-switch-title">
-            <Trans>Don't show header</Trans>
-          </span>
-
-          <span
-            className="single-control-switch"
-            onClick={() => {
-              this.handleHeader();
-            }}
-            style={
-              !this.state.isShowHeader
-                ? { background: "rgba(46, 170, 220)", float: "right" }
-                : { float: "right" }
-            }
-          >
-            <span
-              className="single-control-button"
-              style={
-                this.state.isShowHeader
-                  ? {
-                      transform: "translateX(0px)",
-                      transition: "transform 0.5s ease",
-                    }
-                  : {
-                      transform: "translateX(20px)",
-                      transition: "transform 0.5s ease",
-                    }
-              }
-            ></span>
-          </span>
-        </div>
-        <div className="single-control-switch-container">
-          <span className="single-control-switch-title">
-            <Trans>Dont't use mimical background</Trans>
-          </span>
-          <span
-            className="single-control-switch"
-            onClick={() => {
-              this.handleChangeBackground();
-            }}
-            style={
-              this.state.isUseBackground
-                ? { background: "rgba(46, 170, 220)", float: "right" }
-                : { float: "right" }
-            }
-          >
-            <span
-              className="single-control-button"
-              style={
-                this.state.isUseBackground
-                  ? {
-                      transform: "translateX(20px)",
-                      transition: "transform 0.5s ease",
-                    }
-                  : {
-                      transform: "translateX(0px)",
-                      transition: "transform 0.5s ease",
-                    }
-              }
-            ></span>
-          </span>
-        </div>
+            >
+              <span
+                className="single-control-button"
+                style={
+                  !this.state[item.propName]
+                    ? {
+                        transform: "translateX(0px)",
+                        transition: "transform 0.5s ease",
+                      }
+                    : {
+                        transform: "translateX(20px)",
+                        transition: "transform 0.5s ease",
+                      }
+                }
+              ></span>
+            </span>
+          </div>
+        ))}
       </>
     );
   }

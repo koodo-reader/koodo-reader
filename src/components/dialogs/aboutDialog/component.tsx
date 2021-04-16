@@ -15,6 +15,7 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
       : window.open(url);
     this.props.handleAbout(false);
   };
+
   render() {
     return (
       <div
@@ -43,9 +44,7 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
           <li
             className="sort-by-category-list"
             onClick={() => {
-              this.handleJump(
-                "https://github.com/troyeguo/koodo-reader/issues"
-              );
+              this.handleJump("https://koodo.960960.xyz/support");
             }}
             style={{ color: "rgba(75, 75, 75, 1)" }}
           >
@@ -54,13 +53,36 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
           <li
             className="sort-by-category-list"
             onClick={() => {
-              this.handleJump(
-                "https://github.com/troyeguo/koodo-reader/issues/106"
-              );
+              if (navigator.language.indexOf("zh") > -1) {
+                this.handleJump(
+                  "https://www.notion.so/troyeguo/e9c4e5755d564b0db6340eeba6d9ece9?v=7c8fcbed9adf4592ada95cfd593868c9"
+                );
+              } else {
+                this.handleJump(
+                  "https://www.notion.so/troyeguo/01aaa516687c418499f713d34793b9ad?v=54d51fe1688a4f8ab5784b17e4df3308"
+                );
+              }
             }}
             style={{ color: "rgba(75, 75, 75, 1)" }}
           >
             <Trans>Help</Trans>
+          </li>
+          <li
+            className="sort-by-category-list"
+            onClick={() => {
+              if (navigator.language.indexOf("zh") > -1) {
+                this.handleJump(
+                  "https://www.notion.so/troyeguo/215baeda57804fd29dbb0e91d1e6a021?v=360c00183d944b598668f34c255edfd7"
+                );
+              } else {
+                this.handleJump(
+                  "https://www.notion.so/troyeguo/d1c19a132932465bae1d89dd963c92ea?v=ca8aa69cf25849c18c92b92ba868663b"
+                );
+              }
+            }}
+            style={{ color: "rgba(75, 75, 75, 1)" }}
+          >
+            <Trans>Roadmap</Trans>
           </li>
           <li
             className="sort-by-category-list"
@@ -78,7 +100,7 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
             }}
             style={{ color: "rgba(75, 75, 75, 1)" }}
           >
-            <Trans>About author</Trans>
+            <Trans>About developer</Trans>
           </li>
           <li
             className="sort-by-category-list"
