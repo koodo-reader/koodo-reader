@@ -121,7 +121,7 @@
   "Turn on touch screen mode": "Режим сенсорного экрана",
   "Auto open latest book": "Автооткрывать последнюю книгу",
   "Project link": "О проекте",
-  "About author": "Об авторе",
+  "About developer": "Об авторе",
   "Official website": "Наш сайт",
   "Please import less than 10 books": "Импортируйте менее 10 книг",
   "Please delete some books before import": "Удалите несколько книг перед импортом",
@@ -185,7 +185,7 @@
   "Export Successfully": "Экспортирование завершено",
   "Change Failed": "Не удалось изменить",
   "You successfully update to": "Вы успешно обновились до",
-
+  "Language": "Язык",
   "Deleted Books": "Корзина",
   "Delete All Books": "Удалить все книги",
   "Sort by Duration": "Длительности",
@@ -248,5 +248,12 @@
   "Search on the internet": "Search on the internet",
   "Search in the book": "Search in the book",
   "Default search engine": "Default search engine",
+  "Roadmap": "Roadmap",
+  "Paragraph Spacing": "Paragraph Spacing",
+  "Italic": "Italic",
+  "Text Underline": "Text Underline",
+  "Text Shadow": "Text Shadow",
+
+  "Disable update notification": "Disable update notification",
   "Collapse sidebar": "Collapse sidebar"
 }

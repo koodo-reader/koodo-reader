@@ -115,16 +115,6 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
                   >
                     <Trans>{item.name}</Trans>
                   </span>
-
-                  <p
-                    style={
-                      this.state.isCollapsed
-                        ? { display: "none" }
-                        : { opacity: 0 }
-                    }
-                  >
-                    test
-                  </p>
                 </div>
               </li>
             )}

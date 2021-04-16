@@ -174,7 +174,7 @@ class BookList extends React.Component<BookListProps, BookListState> {
     let shelfTitle = Object.keys(shelfList);
     return shelfTitle.map((item, index) => {
       return (
-        <NamespacesConsumer key={index}>
+        <NamespacesConsumer key={item}>
           {(t) => (
             <option
               value={[item, index.toString()]}

@@ -125,7 +125,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         parseInt(readerConfig.lastSyncTime) >
           parseInt(localStorage.getItem("lastSyncTime")!)
       ) {
-        console.log(1);
         this.syncFromLocation();
       } else {
         //否则就把Koodo中数据同步到同步文件夹
@@ -247,7 +246,10 @@ class Header extends React.Component<HeaderProps, HeaderState> {
             handleDrag: this.props.handleDrag,
           }}
         />
-        {isElectron && <UpdateInfo />}
+        {isElectron &&
+          OtherUtil.getReaderConfig("isDisableUpdate") !== "yes" && (
+            <UpdateInfo />
+          )}
       </div>
     );
   }

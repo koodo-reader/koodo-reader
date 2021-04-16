@@ -42,6 +42,9 @@ class OperationPanel extends React.Component<
         OtherUtil.setReaderConfig("isFullScreen", "no");
       }
     });
+    window.onbeforeunload = () => {
+      this.handleExit();
+    };
   }
   componentWillReceiveProps(nextProps: OperationPanelProps) {
     if (

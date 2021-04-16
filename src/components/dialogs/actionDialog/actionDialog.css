@@ -39,7 +39,7 @@
   color: #4b4b4b;
 }
 .action-dialog-book-info {
-  margin: 10px;
+  margin-left: 10px;
   overflow-y: scroll;
   height: 185px;
 }
