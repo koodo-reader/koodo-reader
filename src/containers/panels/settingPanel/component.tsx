@@ -69,7 +69,7 @@ class SettingPanel extends React.Component<
               minValue: 0,
               mode: "margin",
               minLabel: "0",
-              maxLabel: "80",
+              maxLabel: "100",
               step: 5,
               title: "Margin",
             }}
@@ -85,14 +85,25 @@ class SettingPanel extends React.Component<
               title: "Letter Spacing",
             }}
           />
+          <SliderList
+            {...{
+              maxValue: 40,
+              minValue: 0,
+              mode: "paraSpacing",
+              minLabel: "0",
+              maxLabel: "40",
+              step: 1,
+              title: "Paragraph Spacing",
+            }}
+          />
           {this.state.readerMode && this.state.readerMode !== "double" ? (
             <SliderList
               {...{
-                maxValue: 5,
+                maxValue: 2,
                 minValue: 1,
                 mode: "scale",
                 minLabel: "1",
-                maxLabel: "5",
+                maxLabel: "2",
                 step: 0.2,
                 title: "Scale",
               }}

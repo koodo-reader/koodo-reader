@@ -19,6 +19,16 @@ export const settingList = [
     title: "Default expand all content",
     propName: "isExpandContent",
   },
+  {
+    isElectron: true,
+    title: "Disable update notification",
+    propName: "isDisableUpdate",
+  },
+  {
+    isElectron: false,
+    title: "Collapse sidebar",
+    propName: "isCollapsed",
+  },
 ];
 export const langList = [
   { label: "简体中文", value: "zh" },
@@ -28,7 +38,39 @@ export const langList = [
 ];
 export const searchList = [
   { label: "Google", value: "google" },
-  { label: "百度", value: "baidu" },
+  { label: "Baidu", value: "baidu" },
   { label: "Bing", value: "bing" },
   { label: "DuckDuckGo", value: "duckduckgo" },
+  { label: "Yandex", value: "yandex" },
+  { label: "Yahoo", value: "yahoo" },
+];
+export const readerSettingList = [
+  {
+    title: "Bold Font",
+    propName: "isBold",
+  },
+  {
+    title: "Italic",
+    propName: "isItalic",
+  },
+  {
+    title: "Text Underline",
+    propName: "isUnderline",
+  },
+  {
+    title: "Text Shadow",
+    propName: "isShadow",
+  },
+  {
+    title: "Don't show footer",
+    propName: "isHideFooter",
+  },
+  {
+    title: "Don't show header",
+    propName: "isHideHeader",
+  },
+  {
+    title: "Dont't use mimical background",
+    propName: "isUseBackground",
+  },
 ];

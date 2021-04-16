@@ -5,7 +5,9 @@ var filePath = null;
 if (process.platform == "win32" && process.argv.length >= 2) {
   filePath = process.argv[1];
 }
-
+// var ua = require("universal-analytics");
+// var visitor = ua("UA-149740367-3");
+// visitor.pageview("/").send();
 // Single Instance Lock
 if (!singleInstance) {
   app.quit();
@@ -42,6 +44,8 @@ app.on("ready", () => {
 
   mainWin.loadURL(urlLocation);
   const { remote, ipcMain } = require("electron");
+  const { ebtMain } = require("electron-baidu-tongji");
+  ebtMain(ipcMain, isDev);
   mainWin.webContents.on(
     "new-window",
     (event, url, frameName, disposition, options, additionalFeatures) => {
@@ -58,7 +62,7 @@ app.on("ready", () => {
         var urlParams;
 
         var match,
-          pl = /\+/g, // Regex for replacing addition symbol with a space
+          pl = /\+/g,
           search = /([^&=]+)=?([^&]*)/g,
           decode = function (s) {
             return decodeURIComponent(s.replace(pl, " "));
@@ -77,12 +81,12 @@ app.on("ready", () => {
         });
         event.newGuest = new BrowserWindow(options);
       }
-      mainWin.blur();
-      mainWin.minimize();
-      event.newGuest.show();
+      mainWin.on("minimize", () => {
+        event.newGuest && event.newGuest.show();
+      });
+
       event.newGuest.on("close", () => {
         event.newGuest = null;
-        mainWin.restore();
       });
     }
   );

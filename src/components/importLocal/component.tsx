@@ -240,54 +240,34 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
               .getDocument({ data: e.target.result })
               .promise.then((pdfDoc_: any) => {
                 let pdfDoc = pdfDoc_;
-                pdfDoc.getMetadata().then((metadata: any) => {
-                  pdfDoc.getPage(1).then((page: any) => {
-                    var scale = 1.5;
-                    var viewport = page.getViewport({
-                      scale: scale,
-                    });
-                    var canvas: any = document.getElementById("the-canvas");
-                    var context = canvas.getContext("2d");
-                    canvas.height =
-                      viewport.height ||
-                      viewport.viewBox[3]; /* viewport.height is NaN */
-                    canvas.width =
-                      viewport.width ||
-                      viewport.viewBox[2]; /* viewport.width is also NaN */
-                    var task = page.render({
-                      canvasContext: context,
-                      viewport: viewport,
-                    });
-                    task.promise.then(async () => {
-                      let cover: any = canvas.toDataURL("image/jpeg");
-                      let key: string,
-                        name: string,
-                        author: string,
-                        publisher: string,
-                        description: string;
-                      [name, author, description, publisher] = [
-                        metadata.info.Title || bookName,
-                        metadata.info.Author || "Unknown Authur",
-                        "pdf",
-                        metadata.info.publisher,
-                      ];
-                      let format = "PDF";
-                      key = new Date().getTime() + "";
-                      let book = new BookModel(
-                        key,
-                        name,
-                        author,
-                        description,
-                        md5,
-                        cover,
-                        format,
-                        publisher
-                      );
-                      await this.handleAddBook(book);
-                      BookUtil.addBook(key, e.target!.result as ArrayBuffer);
-                      resolve();
-                    });
-                  });
+                pdfDoc.getMetadata().then(async (metadata: any) => {
+                  let cover: any = "noCover";
+                  let key: string,
+                    name: string,
+                    author: string,
+                    publisher: string,
+                    description: string;
+                  [name, author, description, publisher] = [
+                    metadata.info.Title || bookName,
+                    metadata.info.Author || "Unknown Authur",
+                    "pdf",
+                    metadata.info.publisher,
+                  ];
+                  let format = "PDF";
+                  key = new Date().getTime() + "";
+                  let book = new BookModel(
+                    key,
+                    name,
+                    author,
+                    description,
+                    md5,
+                    cover,
+                    format,
+                    publisher
+                  );
+                  await this.handleAddBook(book);
+                  BookUtil.addBook(key, e.target!.result as ArrayBuffer);
+                  resolve();
                 });
               })
               .catch((err: any) => {
