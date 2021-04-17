@@ -20,11 +20,7 @@ class ColorOption extends React.Component<ColorProps, ColorStates> {
           <div
             className="line-option"
             style={{
-              border: `${
-                this.props.color === index + 4
-                  ? "2px solid rgba(75,75,75,1)"
-                  : ""
-              }`,
+              border: `${this.props.color === index + 4 ? "" : "2px"}`,
             }}
             key={item}
             onClick={() => {
@@ -46,9 +42,7 @@ class ColorOption extends React.Component<ColorProps, ColorStates> {
             className="color-option"
             style={{
               backgroundColor: item,
-              border: `${
-                this.props.color === index ? "2px solid rgba(75,75,75,1)" : ""
-              }`,
+              border: `${this.props.color === index ? "" : "0px"}`,
             }}
             key={item}
             onClick={() => {

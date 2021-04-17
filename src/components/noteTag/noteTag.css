@@ -1,8 +1,6 @@
 .tag-list-item {
   min-width: 45px;
   height: 20px;
-  background: #ffffff;
-  border: 1.5px solid #4b4b4b;
   opacity: 1;
   border-radius: 12px;
   display: flex;
@@ -16,14 +14,10 @@
   padding-left: 5px;
   padding-right: 5px;
 }
-.active-tag {
-  background-color: #4b4b4b;
-  color: white;
-}
+
 .tag-title {
-  font-size: 16px;
+  font-size: 15px;
   line-height: 31px;
-  color: #4b4b4b;
   opacity: 1;
   margin-left: 20px;
   font-weight: 500;
@@ -38,7 +32,6 @@
   border: none;
   border-radius: 10px;
   height: 100%;
-  background-color: rgba(75, 75, 75, 0.1);
   padding-left: 10px;
 }
 #newTag:focus {
@@ -47,8 +40,6 @@
 .tag-list-item-new {
   width: 20px;
   height: 20px;
-  background: #ffffff;
-  border: 1.5px solid #4b4b4b;
   opacity: 1;
   border-radius: 12px;
   display: flex;
@@ -62,6 +53,9 @@
   position: relative;
   bottom: 1px;
   box-sizing: border-box;
+}
+.icon-add {
+  font-weight: bold;
 }
 .delete-tag-container {
   position: relative;

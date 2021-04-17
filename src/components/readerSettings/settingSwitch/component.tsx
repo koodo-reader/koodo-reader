@@ -31,13 +31,17 @@ class SettingSwitch extends React.Component<
   handleItalic = () => {
     this.setState({ isItalic: !this.state.isItalic }, () => {
       OtherUtil.setReaderConfig("isItalic", this.state.isItalic ? "yes" : "no");
-      window.location.reload();
+      setTimeout(() => {
+        window.location.reload();
+      }, 500);
     });
   };
   handleShadow = () => {
     this.setState({ isShadow: !this.state.isShadow }, () => {
       OtherUtil.setReaderConfig("isShadow", this.state.isShadow ? "yes" : "no");
-      window.location.reload();
+      setTimeout(() => {
+        window.location.reload();
+      }, 500);
     });
   };
   handleUnderline = () => {
@@ -46,7 +50,9 @@ class SettingSwitch extends React.Component<
         "isUnderline",
         this.state.isUnderline ? "yes" : "no"
       );
-      window.location.reload();
+      setTimeout(() => {
+        window.location.reload();
+      }, 500);
     });
   };
   handleChangeBackground = () => {
@@ -59,7 +65,9 @@ class SettingSwitch extends React.Component<
       ? this.props.handleMessage("Turn Off Successfully")
       : this.props.handleMessage("Turn On Successfully");
     this.props.handleMessageBox(true);
-    window.location.reload();
+    setTimeout(() => {
+      window.location.reload();
+    }, 500);
   };
   handleFooter = () => {
     this.setState({ isHideFooter: !this.state.isHideFooter });
