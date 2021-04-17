@@ -34,7 +34,6 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: white;
   box-sizing: border-box;
   z-index: -10;
   display: flex;
@@ -120,7 +119,6 @@
   bottom: 0px;
   left: calc(50% - 206px);
   z-index: 15;
-
   transition: transform 0.5s ease;
 }
 .setting-panel-container {
@@ -155,10 +153,8 @@
 .previous-chapter-single-container {
   width: 50px !important;
   height: 50px !important;
-  background-color: rgba(112, 112, 112, 1);
   border-radius: 50%;
   opacity: 1;
-  color: white;
   position: absolute;
   bottom: 20px;
   left: 20px;
@@ -174,10 +170,8 @@
 .next-chapter-single-container {
   width: 50px;
   height: 50px;
-  background-color: rgba(112, 112, 112, 1);
   border-radius: 50%;
   opacity: 1;
-  color: white;
   position: absolute;
   bottom: 20px;
   right: 20px;
@@ -223,7 +217,6 @@
   align-items: center;
 }
 .reader-setting-icon-container:hover {
-  background-color: rgba(75, 75, 75, 0.07);
   border-radius: 50%;
   opacity: 0.5;
 }

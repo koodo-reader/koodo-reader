@@ -7,14 +7,12 @@
 .single-page-icon,
 .two-page-icon {
   font-size: 60px;
-  color: rgba(75, 75, 75, 1);
   text-align: center;
 }
 .single-mode-text,
 .double-mode-text {
   font-size: 14px;
   line-height: 27px;
-  color: rgba(75, 75, 75, 1);
   opacity: 1;
   text-align: center;
 }

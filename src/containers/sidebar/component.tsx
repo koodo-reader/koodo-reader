@@ -71,7 +71,7 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
                   this.handleHover(-1);
                 }}
                 style={
-                  this.state.isCollapsed ? { width: 40, marginLeft: 15 } : {}
+                  this.props.isCollapsed ? { width: 40, marginLeft: 15 } : {}
                 }
               >
                 {this.state.index === index ? (
@@ -95,7 +95,7 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
                     <div
                       className="side-menu-icon"
                       style={
-                        this.state.isCollapsed ? {} : { marginLeft: "38px" }
+                        this.props.isCollapsed ? {} : { marginLeft: "38px" }
                       }
                     >
                       <span
@@ -105,13 +105,13 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
                             : `icon-${item.icon}`
                         }
                         style={
-                          this.state.isCollapsed ? { marginLeft: "-25px" } : {}
+                          this.props.isCollapsed ? { marginLeft: "-25px" } : {}
                         }
                       ></span>
                     </div>
                   </Tooltip>
                   <span
-                    style={this.state.isCollapsed ? { display: "none" } : {}}
+                    style={this.props.isCollapsed ? { display: "none" } : {}}
                   >
                     <Trans>{item.name}</Trans>
                   </span>
@@ -134,7 +134,7 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
             {(t) => (
               <Tooltip
                 title={t(
-                  this.state.isCollapsed ? "Show sidebar" : "Collapse sidebar"
+                  this.props.isCollapsed ? "Show sidebar" : "Collapse sidebar"
                 )}
                 position="top"
                 trigger="mouseenter"
@@ -147,9 +147,9 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
 
         <img
           src={
-            process.env.NODE_ENV === "production"
-              ? "./assets/label.png"
-              : "../../assets/label.png"
+            OtherUtil.getReaderConfig("isDisplayDark") === "yes"
+              ? "./assets/label_light.png"
+              : "./assets/label.png"
           }
           alt=""
           onClick={() => {

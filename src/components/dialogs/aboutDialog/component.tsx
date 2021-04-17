@@ -25,8 +25,7 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
         }}
         style={{
           left: "525px",
-          boxShadow: "0px 0px 5px rgba(0, 0, 0, 0.18)",
-          height: "155px",
+          height: "180px",
           width: "120px",
         }}
       >
@@ -37,7 +36,6 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
               this.props.handleSetting(true);
               this.props.handleAbout(false);
             }}
-            style={{ color: "rgba(75, 75, 75, 1)" }}
           >
             <Trans>Setting</Trans>
           </li>
@@ -46,7 +44,6 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
             onClick={() => {
               this.handleJump("https://koodo.960960.xyz/support");
             }}
-            style={{ color: "rgba(75, 75, 75, 1)" }}
           >
             <Trans>Feedback</Trans>
           </li>
@@ -63,7 +60,6 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
                 );
               }
             }}
-            style={{ color: "rgba(75, 75, 75, 1)" }}
           >
             <Trans>Help</Trans>
           </li>
@@ -80,7 +76,6 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
                 );
               }
             }}
-            style={{ color: "rgba(75, 75, 75, 1)" }}
           >
             <Trans>Roadmap</Trans>
           </li>
@@ -89,7 +84,6 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
             onClick={() => {
               this.handleJump("https://koodo.960960.xyz");
             }}
-            style={{ color: "rgba(75, 75, 75, 1)" }}
           >
             <Trans>Our Website</Trans>
           </li>
@@ -98,7 +92,6 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
             onClick={() => {
               this.handleJump("https://960960.xyz");
             }}
-            style={{ color: "rgba(75, 75, 75, 1)" }}
           >
             <Trans>About developer</Trans>
           </li>
@@ -107,7 +100,6 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
             onClick={() => {
               this.handleJump("https://github.com/troyeguo/koodo-reader");
             }}
-            style={{ color: "rgba(75, 75, 75, 1)" }}
           >
             <Trans>Github Repo</Trans>
           </li>

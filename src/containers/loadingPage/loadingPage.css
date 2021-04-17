@@ -27,9 +27,7 @@
 .loading-page-cover {
   width: 105px;
   height: 137px;
-  background: rgba(75, 75, 75, 0.67);
-  box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.22);
-  /* opacity: 0.4; */
+  opacity: 0.6;
   margin: 15px 15px 37px 15px;
   cursor: pointer;
   animation: changeColor 1s linear infinite;
@@ -44,7 +42,6 @@
 .loading-page-title {
   height: 30px;
   font-size: 15px;
-  color: rgba(75, 75, 75, 1);
   opacity: 1;
   text-align: center;
   text-overflow: ellipsis;

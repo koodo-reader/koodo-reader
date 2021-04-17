@@ -392,16 +392,12 @@ class MobiFile {
       var content = this.read_text();
       var bookDoc = domParser.parseFromString(content, "text/html")
         .documentElement;
-      const lines: any = Array.from(bookDoc.querySelectorAll("p,b,font,h3"));
+      let lines: any = Array.from(bookDoc.querySelectorAll("p,b,font,h3,h1"));
       let parseContent: any = [];
       for (let i = 0, len = lines.length; i < len - 1; i++) {
-        parseContent.push(
-          lines[i].tagName === "FONT" ||
-            lines[i].tagName === "B" ||
-            lines[i].tagName === "H3"
-            ? "*" + lines[i].innerText
-            : lines[i].innerText
-        );
+        lines[i].innerText &&
+          lines[i].innerText !== parseContent[parseContent.length - 1] &&
+          parseContent.push(lines[i].innerText);
         let imgDoms = lines[i].getElementsByTagName("img");
         if (imgDoms.length > 0) {
           for (let i = 0; i < imgDoms.length; i++) {

@@ -15,6 +15,7 @@ import { isElectron } from "react-device-detect";
 import { withRouter } from "react-router-dom";
 import RecentBooks from "../../utils/readUtils/recordRecent";
 import BookUtil from "../../utils/bookUtil";
+import FileSaver from "file-saver";
 
 declare var window: any;
 var pdfjsLib = window["pdfjs-dist/build/pdf"];
@@ -82,7 +83,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
       .then((blob) => {
         let fileTemp = new File(
           [blob],
-          "file." + filePath.split(".").reverse()[0],
+          filePath.split("/").reverse()[0] || filePath.split("\\").reverse()[0],
           {
             lastModified: new Date().getTime(),
             type: blob.type,
@@ -162,7 +163,6 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
         currentChunk = 0,
         spark = new SparkMD5(), //创建SparkMD5的实例
         fileReader = new FileReader();
-
       fileReader.onload = async (e) => {
         if (!e.target) {
           reject();
@@ -228,6 +228,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
             reject();
             throw new Error();
           }
+
           if (extension === "pdf") {
             if (!e.target) {
               setTimeout(() => {
@@ -294,6 +295,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                 lastModified: new Date().getTime(),
                 type: blobTemp.type,
               });
+              FileSaver.saveAs(fileTemp);
               await this.doIncrementalTest(fileTemp);
               resolve();
             };
@@ -459,11 +461,12 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                   <Tooltip
                     title={t("Import from Local")}
                     position="top"
+                    style={{ height: "20px" }}
                     trigger="mouseenter"
                   >
                     <span
                       className="icon-folder"
-                      style={{ fontSize: "18px", fontWeight: 500 }}
+                      style={{ fontSize: "15px", fontWeight: 500 }}
                     ></span>
                   </Tooltip>
                 )}

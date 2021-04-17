@@ -29,14 +29,13 @@
   left: 10px;
   cursor: pointer;
   font-size: 20px;
-  color: rgba(75, 75, 75, 1);
+
   display: flex;
   justify-content: center;
   align-items: center;
   padding-left: 5px;
 }
 .sidebar-list-icon:hover {
-  background-color: rgba(75, 75, 75, 0.035);
   border-radius: 50%;
 }
 .side-menu-container {
@@ -52,7 +51,6 @@
 .side-menu-icon {
   /* float: left; */
   font-size: 17px;
-  color: rgba(0, 0, 0, 1);
   margin: 9px 12px 7px 18px;
   display: flex;
   justify-content: center;
@@ -63,14 +61,13 @@
 .side-menu-item {
   margin-top: 2px;
   list-style-type: none;
-  font-size: 16px;
+  font-size: 15px;
   width: 100%;
   cursor: pointer;
   text-overflow: ellipsis;
   white-space: nowrap;
   margin-left: -20px;
   margin-bottom: 10px;
-  color: rgba(75, 75, 75, 1);
   position: relative;
   bottom: 1px;
   overflow: hidden;
@@ -79,16 +76,13 @@
 .side-menu-selector {
   width: 100%;
   height: 39px;
-  color: rgba(75, 75, 75, 1);
   line-height: 39px;
   z-index: 40;
   display: flex;
   align-items: center;
   font-weight: 500;
 }
-.active-selector {
-  color: white;
-}
+
 .shelf-list-container-parent {
   margin-top: 20px;
   height: 140px;
@@ -115,7 +109,6 @@
   white-space: nowrap;
   margin-bottom: 15px;
   margin-left: 31px;
-  color: rgba(75, 75, 75, 0.5);
   opacity: 1;
 }
 
@@ -123,21 +116,13 @@
   font-size: 13px;
 }
 
-.active-icon {
-  color: white;
-}
-.inactive-selector {
-  background-color: #fff;
-}
 .side-menu-shelf {
   margin-left: 45px;
   margin-top: 25px;
   cursor: pointer;
-  color: rgba(75, 75, 75, 1);
 }
 .active-shelf {
-  color: black;
-  font-size: 16px;
+  font-size: 15px;
   margin-left: 27px;
 }
 .side-menu-selector-container {
@@ -145,7 +130,6 @@
   height: 39px;
   border-radius: 25px;
   line-height: 39px;
-  background-color: rgba(75, 75, 75, 1);
   position: absolute;
   z-index: -1;
   animation: popup 0.1s ease-in-out 0s 1;
@@ -158,7 +142,6 @@
   height: 39px;
   border-radius: 25px;
   line-height: 39px;
-  background-color: rgba(75, 75, 75, 0.05);
   position: absolute;
   z-index: -1;
   animation: slidein 0.1s ease-in-out 0s 1;
@@ -181,15 +164,7 @@
   display: inline-block;
   margin-left: 13px;
 }
-.download-desktop-version {
-  font-size: 14px;
-  color: #0078d4;
-  text-align: center;
-  position: absolute;
-  bottom: 20px;
-  cursor: pointer;
-  width: 180px;
-}
+
 .icon-idea {
   font-size: 20px;
 }

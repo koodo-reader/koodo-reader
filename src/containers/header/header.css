@@ -6,7 +6,6 @@
 }
 
 .setting-icon-container:hover {
-  background-color: rgba(75, 75, 75, 0.035);
   border-radius: 50%;
 }
 
@@ -22,9 +21,8 @@
 }
 .only-local-text {
   float: left;
-  font-size: 16px;
+  font-size: 15px;
   line-height: 27px;
-  color: rgba(75, 75, 75, 1);
   opacity: 1;
 }
 .only-local-icon {
@@ -34,7 +32,6 @@
   width: 30px;
   height: 16px;
   border-radius: 10px;
-  background-color: black;
   cursor: pointer;
 }
 .only-local-slider {
@@ -44,7 +41,6 @@
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  background-color: white;
 }
 .import-from-cloud {
   margin-right: 20px;
@@ -52,14 +48,12 @@
   width: 138px;
   max-width: 158px;
   height: 42px;
-  border: 2px solid #4b4b4b;
-  background: white;
   opacity: 1;
   padding: 0 !important;
   border-radius: 25px;
+  font-size: 15px;
   line-height: 18px;
   text-align: center;
-  color: #4b4b4b;
   box-sizing: border-box;
   cursor: pointer;
   transition: 0.2s;
@@ -113,7 +107,6 @@
   position: absolute;
   top: 0px;
   left: 0px;
-  background-color: rgba(75, 75, 75, 0.05);
   transition: 0.1s;
   transform: scaleX(0);
   transform-origin: left;
@@ -135,11 +128,10 @@
   width: 50px;
   height: 50px;
   font-size: 25px;
-  line-height: 37px;
+  line-height: 50px;
   position: absolute;
   left: 560px;
   top: 20px;
-  color: rgba(75, 75, 75, 1);
   cursor: pointer;
   transition: 0.1s;
   display: flex;

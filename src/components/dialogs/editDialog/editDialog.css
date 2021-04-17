@@ -1,21 +1,18 @@
 .edit-dialog-container {
   width: 309px;
   height: 189px;
-  background: rgba(255, 255, 255, 1);
-  box-shadow: 0px 0px 16px rgba(0, 0, 0, 0.34);
   opacity: 1;
   position: absolute;
   left: calc(50% - 155px);
   top: calc(50% - 95px);
   z-index: 10;
   animation: popup 0.1s ease-in-out 0s 1;
-  border-radius: 10px;
+  border-radius: 5px;
 }
 .edit-dialog-title {
   width: 120px;
   height: 20px;
-  font-size: 20px;
-  color: rgba(75, 75, 75, 1);
+  font-size: 18px;
   opacity: 1;
   width: 100%;
   text-align: center;
@@ -26,7 +23,6 @@
   width: 100%;
   font-size: 16px;
   line-height: 14px;
-  color: rgba(75, 75, 75, 1);
   opacity: 1;
   position: absolute;
   top: 55px;
@@ -39,21 +35,18 @@
 }
 .edit-dialog-book-name-box {
   float: left;
-  width: 169px;
+  width: 190px;
   height: 31px;
-  border: 2px solid rgba(75, 75, 75, 1);
   opacity: 1;
   box-sizing: border-box;
-  margin-left: 16px;
   padding-left: 5px;
   font-size: 15px;
   border-radius: 5px;
 }
 .edit-dialog-book-author-container {
   width: 100%;
-  font-size: 16px;
+  font-size: 15px;
   line-height: 14px;
-  color: rgba(75, 75, 75, 1);
   opacity: 1;
   position: absolute;
   top: 95px;
@@ -66,12 +59,10 @@
 }
 .edit-dialog-book-author-box {
   float: left;
-  width: 169px;
+  width: 190px;
   height: 31px;
-  border: 2px solid rgba(75, 75, 75, 1);
   opacity: 1;
   box-sizing: border-box;
-  margin-left: 16px;
   padding-left: 5px;
   font-size: 15px;
   border-radius: 5px;
@@ -79,17 +70,14 @@
 .edit-dialog-cancel {
   width: 60px;
   height: 26px;
-  background: rgba(255, 255, 255, 1);
-  border: 2px solid rgba(75, 75, 75, 1);
   opacity: 1;
   position: absolute;
   left: 147px;
   top: 144px;
 
-  font-size: 14px;
+  font-size: 13px;
   border-radius: 5px;
   line-height: 26px;
-  color: rgba(75, 75, 75, 1);
   opacity: 1;
   text-align: center;
   cursor: pointer;
@@ -97,15 +85,13 @@
 .edit-dialog-comfirm {
   width: 64px;
   height: 30px;
-  background: rgba(75, 75, 75, 1);
   opacity: 1;
   position: absolute;
   left: 227px;
   top: 144px;
-  font-size: 14px;
+  font-size: 13px;
   border-radius: 5px;
   line-height: 30px;
-  color: white;
   opacity: 1;
   text-align: center;
   cursor: pointer;
