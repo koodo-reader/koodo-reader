@@ -137,7 +137,7 @@
   "Turn on touch screen mode": "Turn on touch screen mode",
   "Auto open latest book": "Auto open last-read book",
   "Project link": "About Project",
-  "About developer": "About developer",
+  "About developer": "Developer",
   "Official website": "Our Website",
   "Please import less than 10 books": "Please import less than 10 books",
   "Please delete some books before import": "Please delete some books before import",
@@ -230,6 +230,8 @@
   "Backup your data with Webdav": "Backup your data with Webdav",
   "More formats supported": "More formats supported, mobi, azw3, txt",
   "Click the top-right button to add books": "Click the top-right button to add books",
+  "Turn on dark mode": "Turn on dark mode",
+
   "View Mode": "View Mode",
   "Download Desktop Version": "Download Desktop Version",
   "Koodo Reader's web version are limited by the browser, for more powerful features, please download the desktop version.": "Web version are functionally limited by the browser, for more powerful features, please download the desktop version.",

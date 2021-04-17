@@ -26,6 +26,7 @@ class SettingDialog extends React.Component<
       isOpenBook: OtherUtil.getReaderConfig("isOpenBook") === "yes",
       isExpandContent: OtherUtil.getReaderConfig("isExpandContent") === "yes",
       isDisableUpdate: OtherUtil.getReaderConfig("isDisableUpdate") === "yes",
+      isDisplayDark: OtherUtil.getReaderConfig("isDisplayDark") === "yes",
       searchEngine: navigator.language === "zh-CN" ? "baidu" : "google",
     };
   }
@@ -126,6 +127,17 @@ class SettingDialog extends React.Component<
       localStorage.getItem("storageLocation") ||
       ipcRenderer.sendSync("storage-location", "ping");
   };
+  handleDisplayDark = () => {
+    this.setState({ isDisplayDark: !this.state.isDisplayDark });
+    OtherUtil.setReaderConfig(
+      "isDisplayDark",
+      this.state.isDisplayDark ? "no" : "yes"
+    );
+    this.handleRest(this.state.isDisplayDark);
+    setTimeout(() => {
+      window.location.reload();
+    }, 500);
+  };
   render() {
     return (
       <div className="setting-dialog-container">
@@ -174,6 +186,9 @@ class SettingDialog extends React.Component<
                         break;
                       case 4:
                         this.handleDisableUpdate();
+                        break;
+                      case 5:
+                        this.handleDisplayDark();
                         break;
                       default:
                         break;

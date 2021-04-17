@@ -4,9 +4,8 @@
   height: 70px;
 }
 .font-size-title {
-  font-size: 16px;
+  font-size: 15px;
   line-height: 27px;
-  color: rgba(75, 75, 75, 1);
   padding-bottom: 10px;
   font-weight: 500;
   margin-bottom: -5px;
@@ -14,9 +13,8 @@
 }
 .ultra-small-size {
   float: left;
-  font-size: 16px;
+  font-size: 15px;
   line-height: 27px;
-  color: rgba(75, 75, 75, 1);
   position: relative;
 }
 
@@ -24,7 +22,6 @@
   float: right;
   font-size: 40px;
   line-height: 68px;
-  color: rgba(75, 75, 75, 1);
   position: relative;
   bottom: 49px;
   text-align: left;
@@ -42,17 +39,15 @@
   margin-top: 8px;
   float: left;
   display: block;
-  font-size: 12px;
+  font-size: 13px;
 }
 .font-size-demo {
   text-align: center;
-  color: rgba(75, 75, 75, 1);
   position: relative;
   top: 10px;
 }
 .slide-icon {
   font-size: 12px;
-  color: rgba(75, 75, 75, 1);
   margin: 5px;
   cursor: pointer;
 }
@@ -62,7 +57,6 @@
 .input-value {
   width: 50px;
   height: 20px;
-  border: 1.5px solid rgba(75, 75, 75, 1);
   border-radius: 5px;
   margin-left: 10px;
 }
