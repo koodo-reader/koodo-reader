@@ -5,19 +5,16 @@
   left: calc(50% - 227px);
   top: calc(50% - 139px);
   overflow: hidden;
-  background: rgba(255, 255, 255, 1);
-  box-shadow: 0px 0px 16px rgba(0, 0, 0, 0.34);
   opacity: 1;
   z-index: 20;
   animation: popup 0.1s ease-in-out 0s 1;
-  border-radius: 10px;
+  border-radius: 5px;
 }
 
 .token-dialog-title {
   width: 120px;
   height: 20px;
-  font-size: 20px;
-  color: rgba(75, 75, 75, 1);
+  font-size: 18px;
   opacity: 1;
   width: 100%;
   text-align: center;
@@ -28,10 +25,9 @@
 .token-dialog-info-text {
   width: 416px;
   height: 46px;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 500;
   line-height: 20px;
-  color: rgba(75, 75, 75, 1);
   opacity: 1;
   text-align: center;
   overflow-y: scroll;
@@ -42,13 +38,12 @@
 .token-dialog-link-text {
   width: 94px;
   height: 29px;
-  background: rgba(255, 255, 255, 1);
   border: 2px solid rgba(45, 111, 200, 1);
   opacity: 1;
   position: absolute;
   left: 181px;
   top: 100px;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
   line-height: 29px;
   color: rgba(45, 111, 200, 1);
@@ -60,12 +55,9 @@
 .token-dialog-token-box {
   width: 382px;
   height: 70px;
-  background: rgba(246, 246, 246, 1);
-  border: 2px solid rgba(112, 112, 112, 1);
   opacity: 1;
   font-size: 13px;
   line-height: 14px;
-  color: rgba(75, 75, 75, 1);
   opacity: 1;
   position: absolute;
   top: 144px;
@@ -77,12 +69,9 @@
 .token-dialog-password-box {
   width: 322px;
   height: 28px;
-  background: rgba(246, 246, 246, 1);
-  border: 2px solid rgba(112, 112, 112, 1);
   opacity: 1;
   font-size: 13px;
   line-height: 14px;
-  color: rgba(75, 75, 75, 1);
   opacity: 1;
   margin-left: 60px;
   margin-top: 10px;
@@ -92,15 +81,12 @@
 .token-dialog-cancel {
   width: 60px;
   height: 26px;
-  background: rgba(255, 255, 255, 1);
-  border: 2px solid rgba(75, 75, 75, 1);
   opacity: 1;
   position: absolute;
   left: 157px;
   top: 236px;
-  font-size: 14px;
+  font-size: 13px;
   line-height: 26px;
-  color: rgba(75, 75, 75, 1);
   opacity: 1;
   text-align: center;
   cursor: pointer;
@@ -109,14 +95,12 @@
 .token-dialog-comfirm {
   width: 64px;
   height: 30px;
-  background: rgba(75, 75, 75, 1);
   opacity: 1;
   position: absolute;
   left: 237px;
   top: 236px;
-  font-size: 14px;
+  font-size: 13px;
   line-height: 30px;
-  color: white;
   opacity: 1;
   text-align: center;
   cursor: pointer;

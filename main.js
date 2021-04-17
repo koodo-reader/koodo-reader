@@ -44,8 +44,6 @@ app.on("ready", () => {
 
   mainWin.loadURL(urlLocation);
   const { remote, ipcMain } = require("electron");
-  const { ebtMain } = require("electron-baidu-tongji");
-  ebtMain(ipcMain, isDev);
   mainWin.webContents.on(
     "new-window",
     (event, url, frameName, disposition, options, additionalFeatures) => {
@@ -81,9 +79,10 @@ app.on("ready", () => {
         });
         event.newGuest = new BrowserWindow(options);
       }
-      mainWin.on("minimize", () => {
-        event.newGuest && event.newGuest.show();
-      });
+      mainWin &&
+        mainWin.on("minimize", () => {
+          event.newGuest && event.newGuest.show();
+        });
 
       event.newGuest.on("close", () => {
         event.newGuest = null;

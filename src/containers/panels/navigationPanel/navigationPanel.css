@@ -2,8 +2,6 @@
   position: fixed;
   width: 299px;
   height: 173px;
-  background: rgba(255, 255, 255, 1);
-  box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.16);
   opacity: 1;
   z-index: 10;
 }
@@ -11,8 +9,6 @@
   float: left;
   width: 91px;
   height: 118px;
-  background: rgba(0, 0, 0, 0);
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.4);
   position: relative;
   left: 12px;
   top: 14px;
@@ -26,7 +22,6 @@
   height: 30px;
   font-size: 15px;
   line-height: 15px;
-  color: rgba(75, 75, 75, 1);
   opacity: 1;
   width: 150px;
   text-overflow: ellipsis;
@@ -42,7 +37,6 @@
   height: 30px;
   font-size: 15px;
   line-height: 15px;
-  color: rgba(75, 75, 75, 0.65);
   opacity: 1;
   width: 150px;
   text-overflow: ellipsis;
@@ -61,7 +55,6 @@
   top: 60px;
   font-size: 14px;
   line-height: 22px;
-  color: rgba(75, 75, 75, 1);
 }
 
 .book-content-title {
@@ -99,7 +92,6 @@
   justify-content: center;
   align-items: center;
   font-size: 15px;
-  color: rgba(75, 75, 75, 0.8);
   line-height: 60px;
 }
 .navigation-navigation {
@@ -116,8 +108,6 @@
   left: 0px;
   width: 299px;
   height: 100%;
-  background: rgba(255, 255, 255, 1);
-  box-shadow: 0px 0px 16px rgba(0, 0, 0, 0.38);
   opacity: 1;
   z-index: 10;
   animation: fade-left 0.2s ease-in-out 0s 1;
@@ -133,8 +123,7 @@
   align-items: center;
   width: calc(100% - 44px);
   height: 38px;
-  font-size: 16px;
-  color: rgba(75, 75, 75, 1);
+  font-size: 15px;
   margin: 6px 22px;
   font-weight: 500;
 }
@@ -148,7 +137,6 @@
   height: 38px;
 }
 .nav-close-icon:hover {
-  background-color: rgba(75, 75, 75, 0.035);
   border-radius: 50%;
 }
 .nav-search-list {
@@ -161,7 +149,6 @@
   overflow: scroll;
 }
 .nav-search-list-item {
-  border-bottom: 1px solid rgba(112, 112, 112, 0.1);
   padding: 8px;
   cursor: pointer;
 }
@@ -184,21 +171,16 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  color: rgba(75, 75, 75, 1);
-  border: 1px solid rgba(75, 75, 75, 1);
   cursor: pointer;
   transition: all 0.3s ease;
 }
-.active-page {
-  background-color: rgba(75, 75, 75, 1);
-  color: white;
-}
+
 .nav-lock-icon {
   position: absolute;
   top: 0px;
   right: 0px;
   font-size: 20px;
-  color: rgba(75, 75, 75, 0.3);
+  opacity: 0.3;
   margin: 10px;
   cursor: pointer;
   font-size: 20px;

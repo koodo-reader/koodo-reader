@@ -2,12 +2,7 @@
   width: 264px;
   height: 172px;
 }
-.note-return-button {
-  position: absolute;
-  left: 13px;
-  top: 12px;
-  font-size: 18px;
-}
+
 .editor-box-parent {
   position: absolute;
   left: 10px;
@@ -19,7 +14,7 @@
   border: none;
   outline: none;
   resize: none;
-  font-size: 16px;
+  font-size: 15px;
   width: 100%;
   height: 70%;
   line-height: 18px;
@@ -27,27 +22,24 @@
 }
 
 .editor-box::placeholder {
-  font-size: 16px;
+  font-size: 15px;
   line-height: 15px;
-  color: rgba(133, 133, 133, 1);
   opacity: 0.6;
   position: relative;
   top: 6px;
   font-weight: 500;
 }
 .editor-box::-ms-input-placeholder {
-  font-size: 16px;
+  font-size: 15px;
   line-height: 15px;
-  color: rgba(133, 133, 133, 1);
   opacity: 0.6;
   position: relative;
   top: 6px;
   font-weight: 500;
 }
 .editor-box::-moz-placeholder {
-  font-size: 16px;
+  font-size: 15px;
   line-height: 15px;
-  color: rgba(133, 133, 133, 1);
   opacity: 0.6;
   position: relative;
   top: 6px;
@@ -64,14 +56,12 @@
 .confirm-button {
   font-size: 15px;
   line-height: 15px;
-  color: rgba(0, 0, 0, 1);
   opacity: 1;
   cursor: pointer;
 }
 .cancel-button {
   font-size: 15px;
   line-height: 15px;
-  color: rgba(0, 0, 0, 1);
   opacity: 1;
   cursor: pointer;
   margin-right: 20px;

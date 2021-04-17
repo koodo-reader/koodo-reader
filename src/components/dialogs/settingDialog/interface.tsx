@@ -14,6 +14,7 @@ export interface SettingInfoState {
   searchEngine: string;
   isTouch: boolean;
   isOpenBook: boolean;
+  isDisplayDark: boolean;
   isExpandContent: boolean;
   isDisableUpdate: boolean;
   isRememberSize: boolean;

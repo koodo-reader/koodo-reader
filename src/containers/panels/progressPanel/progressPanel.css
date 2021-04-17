@@ -1,6 +1,5 @@
 .progress-text {
-  font-size: 14px;
-  color: rgba(75, 75, 75, 1);
+  font-size: 15px;
   width: 100%;
   margin-top: 75px;
   text-align: center;
@@ -21,8 +20,6 @@
 .progress-slide-circle {
   width: 15px;
   height: 15px;
-  background: rgba(255, 255, 255, 1);
-  border: 2px solid rgba(112, 112, 112, 1);
   border-radius: 50%;
   opacity: 1;
   position: absolute;
@@ -32,28 +29,24 @@
 .previous-chapter {
   width: 25px !important;
   height: 25px !important;
-  border: 2px solid rgba(112, 112, 112, 1);
   border-radius: 50%;
   opacity: 1;
-  color: rgba(112, 112, 112, 1);
   position: absolute;
   bottom: 10px;
   left: 20px;
-  font-size: 14px;
+  font-size: 15px;
   transform: rotate(90deg);
   cursor: pointer;
 }
 .next-chapter {
   width: 25px;
   height: 25px;
-  border: 2px solid rgba(112, 112, 112, 1);
   border-radius: 50%;
   opacity: 1;
-  color: rgba(112, 112, 112, 1);
   position: absolute;
   bottom: 10px;
   left: 360px;
-  font-size: 14px;
+  font-size: 15px;
   transform: rotate(-90deg);
   cursor: pointer;
 }
@@ -101,7 +94,6 @@ input[type="range"]:focus {
 input[type="range"]::-webkit-slider-thumb {
   width: 20px;
   height: 20px;
-  background: rgba(255, 255, 255, 1);
   border: 2px solid rgba(112, 112, 112, 1);
   border-radius: 50%;
   opacity: 1;
@@ -109,12 +101,12 @@ input[type="range"]::-webkit-slider-thumb {
   bottom: 9px;
   cursor: pointer;
   box-sizing: border-box;
+  background: rgba(255, 255, 255, 1);
 }
 
 input[type="range"]::-moz-range-thumb {
   width: 20px;
   height: 20px;
-  background: rgba(255, 255, 255, 1);
   border: 2px solid rgba(112, 112, 112, 1);
   border-radius: 50%;
   opacity: 1;
@@ -122,12 +114,12 @@ input[type="range"]::-moz-range-thumb {
   bottom: 9px;
   cursor: pointer;
   box-sizing: border-box;
+  background: rgba(255, 255, 255, 1);
 }
 
 input[type="range"]::-ms-thumb {
   width: 20px;
   height: 20px;
-  background: rgba(255, 255, 255, 1);
   border: 2px solid rgba(112, 112, 112, 1);
   border-radius: 50%;
   opacity: 1;
@@ -135,12 +127,11 @@ input[type="range"]::-ms-thumb {
   bottom: 9px;
   cursor: pointer;
   box-sizing: border-box;
+  background: rgba(255, 255, 255, 1);
 }
 .progress-panel {
   width: 412px !important;
   height: 100px;
-  background: rgba(255, 255, 255, 1);
-  box-shadow: 0px 0px 16px rgba(0, 0, 0, 0.38);
   opacity: 1;
   position: absolute;
   bottom: 0px;
@@ -159,7 +150,6 @@ input[type="range"]::-ms-thumb {
   border: none;
   height: 20px;
   border-radius: 5px;
-  background-color: rgba(75, 75, 75, 0.1);
   padding-left: 10px;
   margin-right: 5px;
   margin-left: 5px;

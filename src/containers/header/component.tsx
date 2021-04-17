@@ -231,8 +231,8 @@ class Header extends React.Component<HeaderProps, HeaderState> {
                   trigger="mouseenter"
                 >
                   <span
-                    className="icon-save"
-                    style={{ fontSize: "18px", fontWeight: 500 }}
+                    className="icon-share"
+                    style={{ fontSize: "15px", fontWeight: 600 }}
                   ></span>
                 </Tooltip>
               )}

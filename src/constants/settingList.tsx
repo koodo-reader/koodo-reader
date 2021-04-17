@@ -26,8 +26,8 @@ export const settingList = [
   },
   {
     isElectron: false,
-    title: "Collapse sidebar",
-    propName: "isCollapsed",
+    title: "Turn on dark mode",
+    propName: "isDisplayDark",
   },
 ];
 export const langList = [

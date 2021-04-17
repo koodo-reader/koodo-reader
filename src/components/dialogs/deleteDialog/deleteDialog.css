@@ -1,21 +1,18 @@
 .delete-dialog-container {
   width: 319px;
   height: 199px;
-  background: rgba(255, 255, 255, 1);
-  box-shadow: 0px 0px 16px rgba(0, 0, 0, 0.34);
   opacity: 1;
   position: fixed;
   left: calc(50% - 160px);
   top: calc(50% - 100px);
   z-index: 10;
   animation: popup 0.1s ease-in-out 0s 1;
-  border-radius: 10px;
+  border-radius: 5px;
 }
 .delete-dialog-title {
   width: 120px;
   height: 25px;
-  font-size: 20px;
-  color: rgba(75, 75, 75, 1);
+  font-size: 18px;
   opacity: 1;
   width: 100%;
   text-align: center;
@@ -29,7 +26,6 @@
   width: calc(100% - 20px);
   line-height: 25px;
   font-size: 18px;
-  color: rgba(75, 75, 75, 1);
   opacity: 1;
   text-align: center;
   text-overflow: ellipsis;
@@ -44,10 +40,9 @@
   padding-right: 10px;
 }
 .delete-dialog-other-option {
-  font-size: 14px;
+  font-size: 13px;
   text-align: center;
   line-height: 14px;
-  color: rgba(75, 75, 75, 1);
   opacity: 1;
   position: absolute;
   top: 106px;
@@ -60,18 +55,15 @@
 .delete-dialog-cancel {
   width: 60px;
   height: 26px;
-  background: rgba(255, 255, 255, 1);
-  border: 2px solid rgba(75, 75, 75, 1);
   opacity: 1;
   position: absolute;
   left: 147px;
   top: 154px;
   border-radius: 5px;
 
-  font-size: 14px;
+  font-size: 13px;
 
   line-height: 26px;
-  color: rgba(75, 75, 75, 1);
   opacity: 1;
   text-align: center;
   cursor: pointer;
@@ -79,14 +71,12 @@
 .delete-dialog-comfirm {
   width: 64px;
   height: 30px;
-  background: rgba(75, 75, 75, 1);
   opacity: 1;
   position: absolute;
   left: 227px;
   top: 154px;
-  font-size: 14px;
+  font-size: 13px;
   line-height: 30px;
-  color: white;
   opacity: 1;
   text-align: center;
   cursor: pointer;
@@ -95,9 +85,7 @@
 .delete-dialog-uncheck-icon {
   width: 12px;
   height: 12px;
-  background: white;
-  border: 1.7px solid black;
-  border-radius: 4px;
+  border-radius: 5px;
   opacity: 1;
   position: absolute;
   top: 106px;

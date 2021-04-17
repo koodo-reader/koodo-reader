@@ -8,8 +8,6 @@
 .book-item-cover {
   width: 105px;
   height: 137px;
-  background: white;
-  box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.22);
   opacity: 1;
   margin: 15px 15px 5px 15px;
   cursor: pointer;
@@ -21,7 +19,6 @@
   height: 39px;
   font-size: 15px;
   line-height: 17px;
-  color: rgba(75, 75, 75, 1);
   opacity: 1;
   text-align: center;
   text-overflow: ellipsis;
@@ -34,7 +31,6 @@
 .book-item-config {
   width: 105px;
   height: 35px;
-  background: rgba(0, 0, 0, 0.5);
   position: relative;
   bottom: 71px;
   left: 15px;
@@ -62,9 +58,7 @@
   top: 23px;
   right: 17px;
   font-size: 18px;
-  color: white;
   cursor: pointer;
-  text-shadow: 0px 0px 5px rgba(75, 75, 75, 0.6);
   animation: slide-down-rotate 0.1s ease-in-out 0s 1;
 }
 .reading-progress-icon {
@@ -74,10 +68,8 @@
   width: 31px;
   height: 31px;
   border-radius: 50%;
-  background-color: rgba(75, 75, 75, 0.2);
   font-size: 15px;
   line-height: 31px;
-  color: white;
   cursor: pointer;
   transform: scale(0.9);
   animation: slide-down 0.1s ease-in-out 0s 1;
@@ -121,10 +113,8 @@
   bottom: 45px;
   right: 20px;
   font-size: 18px;
-  color: white;
   cursor: pointer;
   z-index: 1;
-  text-shadow: 0px 0px 5px rgba(75, 75, 75, 0.6);
   animation: slide-up 0.1s ease-in-out 0s 1;
 }
 .book-loved-icon {
@@ -135,7 +125,6 @@
   color: #f87356;
   cursor: pointer;
   z-index: 2;
-  text-shadow: 0px 0px 5px rgba(75, 75, 75, 0.6);
 }
 .action-dialog-parent {
   position: fixed;

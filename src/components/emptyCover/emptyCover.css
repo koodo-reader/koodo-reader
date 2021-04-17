@@ -9,16 +9,15 @@
   height: 30px;
   margin-top: 10px;
   line-height: 30px;
-  color: rgba(255, 255, 255, 0.9);
   font-weight: 500;
   text-indent: 10px;
-  font-size: 14px;
+  font-size: 15px;
 }
 .cover-title {
   float: left;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 600;
-  color: rgba(75, 75, 75, 0.8);
+  opacity: 0.9;
   width: 90%;
   height: 80px;
   text-align: left;
@@ -37,9 +36,9 @@
 .cover-footer {
   width: 100%;
   text-align: left;
-  font-size: 12px;
-  color: rgba(75, 75, 75, 0.4);
+  font-size: 13px;
+  opacity: 0.3;
   position: absolute;
-  bottom: 8px;
-  margin-left: 16px;
+  bottom: 6px;
+  margin-left: 13px;
 }

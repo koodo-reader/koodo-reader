@@ -107,9 +107,9 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
           <div>
             <img
               src={
-                process.env.NODE_ENV === "production"
-                  ? "./assets/empty.svg"
-                  : "../../assets/empty.svg"
+                OtherUtil.getReaderConfig("isDisplayDark") === "yes"
+                  ? "./assets/empty_light.svg"
+                  : "./assets/empty.svg"
               }
               alt=""
               className="waring-pic"

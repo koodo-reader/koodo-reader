@@ -253,38 +253,45 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
               : {}
           }
         >
-          <div
-            className="spine-shadow-left"
-            style={
-              this.state.isSingle ||
-              (OtherUtil.getReaderConfig("backgroundColor") &&
-                (OtherUtil.getReaderConfig("backgroundColor") ===
-                  "rgba(44,47,49,1)" ||
-                  OtherUtil.getReaderConfig("backgroundColor").startsWith("#")))
-                ? { display: "none" }
-                : {}
-            }
-          ></div>
+          {OtherUtil.getReaderConfig("isDisplayDark") !== "yes" && (
+            <div
+              className="spine-shadow-left"
+              style={
+                this.state.isSingle ||
+                (OtherUtil.getReaderConfig("backgroundColor") &&
+                  (OtherUtil.getReaderConfig("isDisplayDark") === "yes" ||
+                    OtherUtil.getReaderConfig("backgroundColor") ===
+                      "rgba(44,47,49,1)" ||
+                    OtherUtil.getReaderConfig("backgroundColor").startsWith(
+                      "#"
+                    )))
+                  ? { display: "none" }
+                  : {}
+              }
+            ></div>
+          )}
           <div
             className="book-spine"
             style={this.state.isSingle ? { display: "none" } : {}}
           ></div>
-          <div
-            className="spine-shadow-right"
-            style={
-              OtherUtil.getReaderConfig("backgroundColor") &&
-              (OtherUtil.getReaderConfig("backgroundColor") ===
-                "rgba(44,47,49,1)" ||
-                OtherUtil.getReaderConfig("backgroundColor").startsWith("#"))
-                ? { display: "none" }
-                : this.state.isSingle
-                ? {
-                    position: "relative",
-                    right: 0,
-                  }
-                : {}
-            }
-          ></div>
+          {OtherUtil.getReaderConfig("isDisplayDark") !== "yes" && (
+            <div
+              className="spine-shadow-right"
+              style={
+                OtherUtil.getReaderConfig("backgroundColor") &&
+                (OtherUtil.getReaderConfig("backgroundColor") ===
+                  "rgba(44,47,49,1)" ||
+                  OtherUtil.getReaderConfig("backgroundColor").startsWith("#"))
+                  ? { display: "none" }
+                  : this.state.isSingle
+                  ? {
+                      position: "relative",
+                      right: 0,
+                    }
+                  : {}
+              }
+            ></div>
+          )}
         </div>
 
         <div

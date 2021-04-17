@@ -3,7 +3,6 @@
   right: -28px;
   top: 72px;
   font-size: 14px;
-  color: rgba(75, 75, 75, 1);
   margin-right: 30px;
   clear: both;
   width: 110px;
@@ -11,7 +10,6 @@
   height: 20px;
   overflow: hidden;
   padding: 10px;
-  background-color: white;
   border-radius: 5px;
   font-weight: 500;
   transition: all 0.1s ease;

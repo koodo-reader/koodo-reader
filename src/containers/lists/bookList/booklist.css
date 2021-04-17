@@ -28,12 +28,12 @@
   line-height: 30px;
   color: rgb(231, 69, 69);
   cursor: pointer;
+  border-radius: 5px;
 }
 
 .booklist-shelf-list {
   width: 169px;
   height: 31px;
-  border: 2px solid rgba(75, 75, 75, 1);
   opacity: 1;
   box-sizing: border-box;
   margin-left: 16px;

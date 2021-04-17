@@ -3,25 +3,21 @@
   right: 160px;
   top: 0px;
   width: 138px;
-
   margin-right: 20px;
   margin-top: 20px;
   min-width: 42px;
   height: 42px;
-  background: rgba(75, 75, 75, 1);
   opacity: 1;
   border-radius: 25px;
   line-height: 42px;
   text-align: center;
-  color: white;
   cursor: pointer;
   z-index: 0;
+  font-size: 15px;
   transition: 0.1s;
   font-weight: 500;
 }
-.import-from-local:hover {
-  background-color: rgba(75, 75, 75, 0.9);
-}
+
 .import-book-box {
   position: relative;
   bottom: 67px;

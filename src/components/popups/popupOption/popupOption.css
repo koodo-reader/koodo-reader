@@ -17,7 +17,6 @@
   width: 42px;
   font-size: 14px !important;
   line-height: 15px !important;
-  color: rgba(0, 0, 0, 0.8);
   opacity: 1;
   text-align: center;
   display: flex;
@@ -38,21 +37,9 @@
 .search-book-option:hover,
 .google-option:hover,
 .copy-option:hover {
-  background-color: rgba(75, 75, 75, 0.035);
-  border-radius: 8px;
+  border-radius: 5px;
 }
-/* .digest-option {
-  margin-top: 5px;
-  margin-right: 10px;
-}
-.translation-option {
-  margin-left: 10px;
-  font-size: 15px;
-}
-.note-option {
-  margin-top: 5px;
-  margin-left: 10px;
-} */
+
 .note-icon,
 .translation-icon,
 .speaker-icon,

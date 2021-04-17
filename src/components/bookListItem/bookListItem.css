@@ -7,8 +7,6 @@
 .book-item-list-cover {
   width: 57px;
   height: 74px;
-  background: rgba(0, 0, 0, 0);
-  box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.22);
   opacity: 1;
   cursor: pointer;
 }
@@ -16,8 +14,7 @@
 .book-item-list-author {
   height: 30px;
   width: 350px;
-  font-size: 17px;
-  color: rgba(75, 75, 75, 1);
+  font-size: 15px;
   opacity: 1;
   text-align: center;
   text-overflow: ellipsis;
@@ -36,8 +33,7 @@
 .book-item-list-config {
   height: 30px;
   width: 120px;
-  font-size: 17px;
-  color: rgba(75, 75, 75, 1);
+  font-size: 15px;
   opacity: 1;
   text-align: center;
   margin: 22px 10px;

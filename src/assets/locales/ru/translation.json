@@ -147,8 +147,8 @@
   "Next Chapter": "Следующая глава",
   "Prev Chapter": "Предыдущая глава",
   "Less": "Меньше",
-  "Current Reading Time": "Время использования：{{count}} мин.",
-  "Finish Reading Time": "Осталось времени：{{count}} мин.",
+  "Current Reading Time": "Время использования：{{count}} min",
+  "Finish Reading Time": "Осталось времени：{{count}} min",
   "Book Page": "Страница {{count}}",
   "Current Chapter Pages": "Страницы",
   "Chapter Redirect": "Главы",
@@ -244,6 +244,7 @@
   "Text Align": "Text Align",
   "Sync Successfully": "Sync Successfully",
   "Permanently Delete": "Permanently Delete",
+  "Turn on dark mode": "Turn on dark mode",
 
   "Search on the internet": "Search on the internet",
   "Search in the book": "Search in the book",

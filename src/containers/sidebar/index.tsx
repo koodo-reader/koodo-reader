@@ -11,7 +11,7 @@ import {
 } from "../../store/actions/sidebar";
 
 const mapStateToProps = (state: stateType) => {
-  return { mode: state.sidebar.mode };
+  return { mode: state.sidebar.mode, isCollapsed: state.sidebar.isCollapsed };
 };
 const actionCreator = {
   handleMode,

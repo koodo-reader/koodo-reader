@@ -1,7 +1,6 @@
 .sort-dialog-container {
   width: 160px;
   height: 220px;
-  background: rgba(255, 255, 255, 1);
   opacity: 1;
   position: absolute;
   left: 435px;
@@ -17,10 +16,9 @@
 }
 .sort-by-category-list,
 .sort-by-order-list {
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 500;
   line-height: 18px;
-  color: rgba(75, 75, 75, 0.34);
   opacity: 1;
   line-height: 24px;
   width: calc(100% - 30px);
@@ -34,7 +32,5 @@
 .sort-dialog-seperator {
   width: 100%;
   height: 0px;
-  border: 0.5px solid rgba(0, 0, 0, 1);
-  opacity: 0.1;
   margin: 6px 0px;
 }

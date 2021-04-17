@@ -2,6 +2,7 @@ import { RouteComponentProps } from "react-router";
 
 export interface SidebarProps extends RouteComponentProps<any> {
   mode: string;
+  isCollapsed: boolean;
   handleMode: (mode: string) => void;
   handleSearch: (isSearch: boolean) => void;
   handleCollapse: (isCollapsed: boolean) => void;

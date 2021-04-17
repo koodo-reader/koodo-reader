@@ -4,6 +4,7 @@ import "./emptyPage.css";
 import { emptyList } from "../../constants/emptyList";
 import { Trans } from "react-i18next";
 import { EmptyPageProps, EmptyPageState } from "./interface";
+import OtherUtil from "../../utils/otherUtil";
 
 class EmptyPage extends React.Component<EmptyPageProps, EmptyPageState> {
   render() {
@@ -42,9 +43,9 @@ class EmptyPage extends React.Component<EmptyPageProps, EmptyPageState> {
         >
           <img
             src={
-              process.env.NODE_ENV === "production"
-                ? "./assets/empty.svg"
-                : "../../assets/empty.svg"
+              OtherUtil.getReaderConfig("isDisplayDark") === "yes"
+                ? "./assets/empty_light.svg"
+                : "./assets/empty.svg"
             }
             alt=""
             className="empty-page-illustration"

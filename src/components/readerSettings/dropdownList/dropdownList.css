@@ -6,8 +6,7 @@
   width: calc(100% - 44px);
 }
 .general-setting-title {
-  font-size: 16px;
-  color: rgba(75, 75, 75, 1);
+  font-size: 15px;
   font-weight: 500;
   margin-top: 15px;
   margin-bottom: 10px;
@@ -16,11 +15,8 @@
   width: 220px;
   height: 30px;
   margin-right: 5px;
-  background: rgba(255, 255, 255, 1);
-  border: 2px solid rgba(112, 112, 112, 1);
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 500;
-  color: rgba(75, 75, 75, 1);
   text-align: center;
   cursor: pointer;
   position: relative;
@@ -28,9 +24,8 @@
   border-radius: 5px;
 }
 .general-setting-option {
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 500;
   line-height: 27px;
-  color: rgba(75, 75, 75, 1);
   text-align: center;
 }

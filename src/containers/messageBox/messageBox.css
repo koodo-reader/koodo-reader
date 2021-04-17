@@ -1,8 +1,6 @@
 .message-box-container {
   max-width: 900px;
   height: 45px;
-  background: rgb(70, 70, 70);
-  box-shadow: 0px 0px 16px rgba(0, 0, 0, 0.38);
   opacity: 1;
   border-radius: 22px;
   z-index: 50;
@@ -12,7 +10,6 @@
   height: 45px;
   font-size: 17px;
   line-height: 45px;
-  color: rgba(220, 220, 220, 1);
   opacity: 1;
   display: inline-block;
   margin-left: 15px;
@@ -25,7 +22,6 @@
   line-height: 45px;
   margin-left: 30px;
   position: relative;
-  color: white;
 }
 .message-box-container-parent {
   width: 100%;

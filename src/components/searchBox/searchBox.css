@@ -1,14 +1,12 @@
 .header-search-box {
   width: 150px;
   height: 38px;
-  background: rgba(191, 191, 191, 0.28);
   border-radius: 19px;
   border-style: none;
   outline: none;
   padding-left: 20px;
   padding-right: 40px;
-  font-size: 16px;
-  color: rgba(75, 75, 75, 0.8);
+  font-size: 15px;
 }
 input::-webkit-input-placeholder,
 input::-moz-placeholder,
@@ -16,9 +14,8 @@ input::-ms-input-placeholder,
 textarea::-webkit-input-placeholder,
 textarea::-moz-placeholder,
 textarea::-ms-input-placeholder {
-  font-size: 16px;
+  font-size: 15px;
   line-height: 27px;
-  color: rgba(75, 75, 75, 0.8);
   /* opacity: 1; */
 }
 .header-search-icon {
@@ -27,7 +24,7 @@ textarea::-ms-input-placeholder {
   right: -6px;
   font-size: 22px;
   display: inline-block;
-  color: rgba(75, 75, 75, 0.6);
+  opacity: 0.6;
   cursor: pointer;
   margin-right: 10px;
 }
@@ -35,20 +32,18 @@ textarea::-ms-input-placeholder {
   position: absolute;
   top: 1px;
   right: -16px;
-  font-size: 16px;
+  font-size: 15px;
   display: inline-block;
   width: 40px;
   height: 40px;
-  color: #8c8c8c;
   cursor: pointer;
   margin-right: 5px;
 }
 .header-search-text:hover {
-  background-color: rgba(75, 75, 75, 0.035);
   border-radius: 50%;
 }
 .search-text {
-  font-size: 17px;
+  font-size: 18px;
   position: relative;
   right: 180px;
   bottom: 4px;

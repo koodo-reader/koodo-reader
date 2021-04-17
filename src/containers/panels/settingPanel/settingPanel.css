@@ -4,7 +4,6 @@
   align-items: center;
   width: calc(100% - 44px);
   height: 38px;
-  color: rgba(75, 75, 75, 1);
   font-weight: 500;
   margin: 4px 22px;
 }
@@ -15,15 +14,12 @@
   width: 299px;
   height: 100%;
   overflow: hidden;
-  box-shadow: 0px 0px 16px rgba(0, 0, 0, 0.38);
   animation: fade-right 0.2s ease-in-out 0s 1;
   z-index: 10;
-  background: rgba(255, 255, 255, 1);
   opacity: 1;
 }
 
 .setting-panel {
-  background: rgba(255, 255, 255, 1);
   opacity: 1;
   width: 100%;
   height: calc(100% - 55px);
@@ -40,16 +36,14 @@
   cursor: pointer;
 }
 .single-control-switch-title {
-  font-size: 16px;
+  font-size: 15px;
   line-height: 16px;
-  color: rgba(75, 75, 75, 1);
   font-weight: 500;
 }
 .single-control-switch {
   display: inline-block;
   width: 40px;
   height: 20px;
-  background: rgba(75, 75, 75, 1);
   opacity: 1;
   border-radius: 10px;
   position: relative;
@@ -62,7 +56,6 @@
   height: 16px;
   width: 16px;
   border-radius: 50%;
-  background-color: white;
   margin: 2px;
 }
 .lock-icon {
@@ -70,7 +63,7 @@
   top: 0px;
   left: 0px;
   font-size: 20px;
-  color: rgba(75, 75, 75, 0.3);
+  opacity: 0.3;
   margin: 10px;
   cursor: pointer;
   font-size: 20px;

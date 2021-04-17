@@ -29,9 +29,7 @@ class ViewMode extends React.Component<ViewModeProps, ViewModeState> {
                     this.handleChange(item.mode);
                   }}
                   style={
-                    this.props.viewMode !== item.mode
-                      ? { color: "rgba(75,75,75,0.5)" }
-                      : {}
+                    this.props.viewMode !== item.mode ? { opacity: 0.5 } : {}
                   }
                 >
                   <span className={`icon-${item.icon}`}></span>

@@ -150,11 +150,6 @@ body {
   user-select: none;
 }
 
-body {
-  -webkit-tap-highlight-color: transparent;
-  background-color: white;
-}
-
 html,
 body {
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,

@@ -138,7 +138,7 @@ class CardList extends React.Component<CardListProps, CardListStates> {
               >
                 <div
                   className="card-list-item-show-more"
-                  style={{ color: "rgba(75,75,75,0.8)", bottom: "10px" }}
+                  style={{ bottom: "10px" }}
                 >
                   {this.props.mode === "note" ? (
                     <Trans>{"More Notes"}</Trans>
