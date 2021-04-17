@@ -15,7 +15,6 @@ import { isElectron } from "react-device-detect";
 import { withRouter } from "react-router-dom";
 import RecentBooks from "../../utils/readUtils/recordRecent";
 import BookUtil from "../../utils/bookUtil";
-import FileSaver from "file-saver";
 
 declare var window: any;
 var pdfjsLib = window["pdfjs-dist/build/pdf"];
@@ -295,7 +294,6 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                 lastModified: new Date().getTime(),
                 type: blobTemp.type,
               });
-              FileSaver.saveAs(fileTemp);
               await this.doIncrementalTest(fileTemp);
               resolve();
             };
