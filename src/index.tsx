@@ -10,16 +10,17 @@ import "./i18n";
 import store from "./store";
 import Router from "./router/index";
 import OtherUtil from "./utils/otherUtil";
-const addStyle = (url: string) => {
+const addStyle = (url) => {
   const style = document.createElement("link");
   style.href = url;
   style.rel = "stylesheet";
+  // style.async = true;
   document.head.appendChild(style);
 };
 if (OtherUtil.getReaderConfig("isDisplayDark") === "yes") {
-  addStyle("/assets/dark.css");
+  addStyle("./assets/styles/dark.css");
 } else {
-  addStyle("/assets/default.css");
+  addStyle("./assets/styles/default.css");
 }
 
 let coverLoading: any = document.querySelector(".loading-cover");
