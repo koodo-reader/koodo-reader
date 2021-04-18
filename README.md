@@ -62,7 +62,9 @@ Adjust font, line-spacing, background color, text color and margins
 
 Support for Touch Screen
 
-Text highlight and underline
+Night mode and Theme color
+
+Text highlight, underline, Italic and shadow
 
 ## Installation
 
