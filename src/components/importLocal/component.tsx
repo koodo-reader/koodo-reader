@@ -25,7 +25,6 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
     this.state = {
       isOpenFile: false,
       width: document.body.clientWidth,
-      filePath: "",
     };
   }
   componentDidMount() {
@@ -37,62 +36,81 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
           ipcRenderer.sendSync("storage-location", "ping")
         );
       }
-
-      ipcRenderer.on("open-book", (event: any, result: string) => {
-        if (result && result !== ".") {
-          this.handleFilePath(result);
-        }
-      });
       var filePath = ipcRenderer.sendSync("get-file-data");
       if (filePath && filePath !== ".") {
-        this.setState({ filePath }, () => {
-          this.handleFilePath(filePath);
-        });
+        this.handleFilePath(filePath);
       }
     }
     window.addEventListener("resize", () => {
       this.setState({ width: document.body.clientWidth });
     });
   }
-  handleFilePath = (filePath: string) => {
-    fetch(filePath)
-      .then((response) => response.body)
-      .then((body) => {
-        const reader = body!.getReader();
-        return new ReadableStream({
-          start(controller) {
-            return pump();
-            function pump(): any {
-              return reader.read().then(({ done, value }) => {
-                // When no more data needs to be consumed, close the stream
-                if (done) {
-                  controller.close();
-                  return;
-                }
-                // Enqueue the next data chunk into our target stream
-                controller.enqueue(value);
-                return pump();
-              });
-            }
-          },
-        });
-      })
-      .then((stream) => new Response(stream))
-      .then((response) => response.blob())
-      .then((blob) => {
-        let fileTemp = new File(
-          [blob],
-          filePath.split("/").reverse()[0] || filePath.split("\\").reverse()[0],
-          {
-            lastModified: new Date().getTime(),
-            type: blob.type,
+  handleFilePath = async (filePath: string) => {
+    var crypto = window.require("crypto");
+    var fs = window.require("fs");
+
+    var md5sum = crypto.createHash("md5");
+    var s = fs.ReadStream(filePath);
+    s.on("data", function (d) {
+      md5sum.update(d);
+    });
+
+    s.on("end", () => {
+      var md5 = md5sum.digest("hex");
+      if ([...this.props.books, ...this.props.deletedBooks].length > 0) {
+        let isRepeat = false;
+        let repeatBook: BookModel | null = null;
+        [...this.props.books, ...this.props.deletedBooks].forEach((item) => {
+          if (item.md5 === md5) {
+            isRepeat = true;
+            repeatBook = item;
           }
-        );
-        this.setState({ isOpenFile: true }, async () => {
-          await this.doIncrementalTest(fileTemp);
         });
-      })
-      .catch((err) => console.error(err));
+        if (isRepeat && repeatBook) {
+          this.props.handleLoadingDialog(false);
+          this.handleJump(repeatBook);
+        } else {
+          fetch(filePath)
+            .then((response) => response.body)
+            .then((body) => {
+              const reader = body!.getReader();
+              return new ReadableStream({
+                start(controller) {
+                  return pump();
+                  function pump(): any {
+                    return reader.read().then(({ done, value }) => {
+                      if (done) {
+                        controller.close();
+                        return;
+                      }
+                      controller.enqueue(value);
+                      return pump();
+                    });
+                  }
+                },
+              });
+            })
+            .then((stream) => new Response(stream))
+            .then((response) => response.blob())
+            .then((blob) => {
+              let fileTemp = new File(
+                [blob],
+                window.navigator.platform.indexOf("Win") > -1
+                  ? filePath.split("\\").reverse()[0]
+                  : filePath.split("/").reverse()[0],
+                {
+                  lastModified: new Date().getTime(),
+                  type: blob.type,
+                }
+              );
+              this.setState({ isOpenFile: true }, async () => {
+                await this.getMd5WithBrowser(fileTemp);
+              });
+            })
+            .catch((err) => console.error(err));
+        }
+      }
+    });
   };
   handleJump = (book: BookModel) => {
     RecentBooks.setRecent(book.key);
@@ -135,7 +153,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
     });
   };
   //获取书籍md5
-  doIncrementalTest = (file: any) => {
+  getMd5WithBrowser = (file: any) => {
     let extension = file.name.split(".").reverse()[0];
     this.props.handleLoadingDialog(true);
     if (
@@ -191,6 +209,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
       loadNext();
     });
   };
+
   handleBook = (file: any, md5: string) => {
     let extension = file.name.split(".").reverse()[0];
     let bookName = file.name.substr(0, file.name.length - extension.length - 1);
@@ -200,16 +219,10 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
       if ([...this.props.books, ...this.props.deletedBooks].length > 0) {
         [...this.props.books, ...this.props.deletedBooks].forEach((item) => {
           if (item.md5 === md5) {
-            if (this.state.filePath) {
-              this.props.handleLoadingDialog(false);
-              this.handleJump(item);
-              this.setState({ filePath: "" });
-            } else {
-              isRepeat = true;
-              this.props.handleMessage("Duplicate Book");
-              this.props.handleMessageBox(true);
-              resolve();
-            }
+            isRepeat = true;
+            this.props.handleMessage("Duplicate Book");
+            this.props.handleMessageBox(true);
+            resolve();
           }
         });
       }
@@ -294,14 +307,14 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                 lastModified: new Date().getTime(),
                 type: blobTemp.type,
               });
-              await this.doIncrementalTest(fileTemp);
+              await this.getMd5WithBrowser(fileTemp);
               resolve();
             };
             reader.readAsArrayBuffer(file);
           } else if (extension === "txt") {
             let result = await BookUtil.parseBook(file);
             if (result) {
-              await this.doIncrementalTest(result);
+              await this.getMd5WithBrowser(result);
               resolve();
             } else {
               this.props.handleMessage("Import Failed");
@@ -433,7 +446,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
           this.props.handleDrag(false);
           for (let i = 0; i < acceptedFiles.length; i++) {
             //异步解析文件
-            await this.doIncrementalTest(acceptedFiles[i]);
+            await this.getMd5WithBrowser(acceptedFiles[i]);
           }
           setTimeout(() => {
             this.props.handleLoadingDialog(false);

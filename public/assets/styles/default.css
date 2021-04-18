@@ -122,6 +122,9 @@ textarea::-ms-input-placeholder,
 .copy-option:hover {
   background-color: rgba(75, 75, 75, 0.035);
 }
+.drag-background {
+  background-color: #f6f6f6;
+}
 .book-item-cover,
 .book-cover,
 .book-cover-item-cover,
@@ -181,7 +184,6 @@ textarea::-ms-input-placeholder,
 .general-setting-dropdown,
 .card-list-item-card,
 .navigation-header,
-.book-list-view,
 .import-from-cloud,
 .only-local-slider,
 .background,
