@@ -77,6 +77,7 @@ class SliderList extends React.Component<SliderListProps, SliderListState> {
             step={this.props.title === "Scale" ? "0.1" : "1"}
             onBlur={(event) => {
               this.onValueChange(event);
+
               window.location.reload();
             }}
           />
@@ -99,7 +100,7 @@ class SliderList extends React.Component<SliderListProps, SliderListState> {
               this.onValueInput(event);
             }}
             onMouseUp={() => {
-              this.props.mode !== "fontSize" && window.location.reload();
+              window.location.reload();
             }}
           />
         </div>
