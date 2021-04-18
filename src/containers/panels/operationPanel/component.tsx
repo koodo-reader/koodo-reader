@@ -181,7 +181,6 @@ class OperationPanel extends React.Component<
     OtherUtil.setReaderConfig("windowHeight", document.body.clientHeight);
     OtherUtil.setReaderConfig("windowX", window.screenX + "");
     OtherUtil.setReaderConfig("windowY", window.screenY + "");
-    window.close();
   }
 
   render() {
@@ -228,6 +227,7 @@ class OperationPanel extends React.Component<
           className="exit-reading-button"
           onClick={() => {
             this.handleExit();
+            window.close();
           }}
         >
           <span className="icon-exit exit-reading-icon"></span>
