@@ -11,7 +11,7 @@
   width: 255px;
   max-height: 198px;
   font-size: 13px;
-  line-height: 18px;
+  line-height: 15px;
   opacity: 1;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -48,7 +48,7 @@
   font-size: 13px;
   opacity: 1;
   float: left;
-  line-height: 18px;
+  line-height: 15px;
 }
 .book-bookmark-link {
   float: left;

@@ -70,7 +70,6 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
     if (x > document.body.clientWidth - 300) {
       x = x - 180;
     }
-    console.log(document.body.clientHeight - e.clientY);
     this.setState(
       {
         left: x,
