@@ -137,13 +137,16 @@ textarea::-ms-input-placeholder,
 .input-value,
 .tag-list-item-new,
 .tag-list-item,
+.setting-panel-parent {
+  background: rgba(47, 52, 55, 1);
+  box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.2);
+}
 .book-item-cover,
 .book-cover,
 .book-cover-item-cover,
-.book-item-list-cover,
-.setting-panel-parent {
+.book-item-list-cover {
   background: rgba(47, 52, 55, 1);
-  box-shadow: 0px 0px 10px rgba(30, 30, 30, 1);
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
 }
 .backup-page-backup-selector,
 .message-box-container {
