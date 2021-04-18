@@ -40,7 +40,7 @@
   margin: 20px 30px;
 }
 .setting-dialog-info {
-  height: 420px;
+  height: 370px;
   overflow-y: scroll;
   width: 346px;
 }
@@ -90,18 +90,7 @@
 .setting-close-container:hover {
   border-radius: 50%;
 }
-.about-this-project {
-  position: absolute;
-  bottom: 20px;
-  width: calc(100% - 40px);
-  cursor: pointer;
-  z-index: 10;
-  text-align: center;
-  display: flex;
-  justify-content: space-around;
-  padding: 20px;
-  padding-bottom: 10px;
-}
+
 .setting-subtitle {
   font-size: 15px;
   margin: 5px;
