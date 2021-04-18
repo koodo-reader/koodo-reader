@@ -52,12 +52,12 @@
 }
 
 .previous-chapter-icon {
-  line-height: 25px !important;
-  margin-left: 6px !important;
+  line-height: 27px !important;
+  margin-left: 5px !important;
 }
 .next-chapter-icon {
-  line-height: 25px !important;
-  margin-left: 6px !important;
+  line-height: 27px !important;
+  margin-left: 5px !important;
 }
 input[type="range"] {
   -webkit-appearance: none;

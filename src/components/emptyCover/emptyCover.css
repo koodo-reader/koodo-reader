@@ -16,10 +16,10 @@
 .cover-title {
   float: left;
   font-size: 15px;
-  font-weight: 600;
+  font-weight: 500;
   opacity: 0.9;
   width: 90%;
-  height: 80px;
+  height: 54px;
   text-align: left;
   line-height: 18px;
   text-overflow: ellipsis;
@@ -28,10 +28,8 @@
   -webkit-line-clamp: 3;
   overflow: hidden;
   position: relative;
+  top: 10px;
   margin-left: 5px;
-
-  display: flex;
-  align-items: center;
 }
 .cover-footer {
   width: 100%;

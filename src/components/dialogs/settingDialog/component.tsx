@@ -13,6 +13,8 @@ import {
   langList,
   searchList,
 } from "../../../constants/settingList";
+import { themeList } from "../../../constants/themeList";
+import _ from "underscore";
 class SettingDialog extends React.Component<
   SettingInfoProps,
   SettingInfoState
@@ -28,6 +30,9 @@ class SettingDialog extends React.Component<
       isDisableUpdate: OtherUtil.getReaderConfig("isDisableUpdate") === "yes",
       isDisplayDark: OtherUtil.getReaderConfig("isDisplayDark") === "yes",
       searchEngine: navigator.language === "zh-CN" ? "baidu" : "google",
+      currentThemeIndex: _.findLastIndex(themeList, {
+        name: OtherUtil.getReaderConfig("themeColor"),
+      }),
     };
   }
   componentDidMount() {
@@ -133,10 +138,22 @@ class SettingDialog extends React.Component<
       "isDisplayDark",
       this.state.isDisplayDark ? "no" : "yes"
     );
-    this.handleRest(this.state.isDisplayDark);
-    setTimeout(() => {
+    if (isElectron) {
+      this.props.handleMessage("Try refresh or restart");
+      this.props.handleMessageBox(true);
+    } else {
       window.location.reload();
-    }, 500);
+    }
+  };
+  handleTheme = (name: string, index: number) => {
+    this.setState({ currentThemeIndex: index });
+    OtherUtil.setReaderConfig("themeColor", name);
+    if (isElectron) {
+      this.props.handleMessage("Try refresh or restart");
+      this.props.handleMessageBox(true);
+    } else {
+      window.location.reload();
+    }
   };
   render() {
     return (
@@ -218,6 +235,25 @@ class SettingDialog extends React.Component<
               </div>
             );
           })}
+          <div className="setting-dialog-new-title">
+            <Trans>Theme Color</Trans>
+            <ul className="theme-setting-container">
+              {themeList.map((item, index) => (
+                <li
+                  key={item.id}
+                  className={
+                    index === this.state.currentThemeIndex
+                      ? "active-color theme-setting-item"
+                      : "theme-setting-item"
+                  }
+                  onClick={() => {
+                    this.handleTheme(item.name, index);
+                  }}
+                  style={{ backgroundColor: item.color }}
+                ></li>
+              ))}
+            </ul>
+          </div>
 
           {isElectron && (
             <>

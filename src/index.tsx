@@ -22,7 +22,11 @@ if (OtherUtil.getReaderConfig("isDisplayDark") === "yes") {
 } else {
   addStyle("./assets/styles/default.css");
 }
-
+OtherUtil.getReaderConfig("themeColor") &&
+  OtherUtil.getReaderConfig("themeColor") !== "default" &&
+  addStyle(
+    "./assets/styles/" + OtherUtil.getReaderConfig("themeColor") + ".css"
+  );
 let coverLoading: any = document.querySelector(".loading-cover");
 coverLoading && coverLoading.parentNode.removeChild(coverLoading);
 
