@@ -10,6 +10,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  font-weight: 500;
 }
 .exit-reading-icon {
   font-size: 21px;
@@ -32,6 +33,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  font-weight: 500;
 }
 .add-bookmark-icon {
   font-size: 20px;
@@ -55,6 +57,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  font-weight: 500;
 }
 .enter-fullscreen-icon {
   font-size: 19px;

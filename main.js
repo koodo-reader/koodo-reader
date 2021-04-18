@@ -5,9 +5,6 @@ var filePath = null;
 if (process.platform == "win32" && process.argv.length >= 2) {
   filePath = process.argv[1];
 }
-// var ua = require("universal-analytics");
-// var visitor = ua("UA-149740367-3");
-// visitor.pageview("/").send();
 // Single Instance Lock
 if (!singleInstance) {
   app.quit();
@@ -33,10 +30,10 @@ app.on("ready", () => {
     },
   });
   const isDev = require("electron-is-dev");
-  // if (!isDev) {
-  //   const { Menu } = require("electron");
-  //   Menu.setApplicationMenu(null);
-  // }
+  if (!isDev) {
+    const { Menu } = require("electron");
+    Menu.setApplicationMenu(null);
+  }
   const path = require("path");
   const urlLocation = isDev
     ? "http://localhost:3000"

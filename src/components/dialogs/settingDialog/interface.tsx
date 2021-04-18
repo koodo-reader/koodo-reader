@@ -18,4 +18,5 @@ export interface SettingInfoState {
   isExpandContent: boolean;
   isDisableUpdate: boolean;
   isRememberSize: boolean;
+  currentThemeIndex: number;
 }

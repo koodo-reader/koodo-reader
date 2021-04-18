@@ -57,7 +57,7 @@
   opacity: 1;
   border: 15px solid transparent;
   font-size: 15px;
-  line-height: 14px;
+  line-height: 18px;
   opacity: 1;
   position: relative;
   bottom: 10px;
@@ -73,7 +73,7 @@
   -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
   height: 18px;
-  line-height: 16px;
+  line-height: 18px;
   font-size: 15px;
   max-width: 130px;
 }
@@ -153,7 +153,7 @@
 .card-list-item-show-more {
   width: 100%;
   font-size: 15px;
-  line-height: 17px;
+  line-height: 18px;
   opacity: 1;
   text-align: center;
   position: absolute;
@@ -163,7 +163,7 @@
 .card-list-show-more-icon {
   /* display: block; */
   font-size: 13px;
-  line-height: 13px;
+  line-height: 15px;
   opacity: 1;
   text-align: center;
   position: absolute;

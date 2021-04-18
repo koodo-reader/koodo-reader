@@ -14,7 +14,7 @@
 .book-item-list-author {
   height: 30px;
   width: 350px;
-  font-size: 15px;
+  font-size: 18px;
   opacity: 1;
   text-align: center;
   text-overflow: ellipsis;
@@ -23,6 +23,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  line-height: 20px;
 }
 
 .book-item-list-author {

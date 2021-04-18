@@ -68,13 +68,29 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
     StyleUtil.addDefaultCss();
   };
   handleColorTextPicker = (isShowTextPicker: boolean) => {
-    if (!isShowTextPicker) {
+    if (
+      !isShowTextPicker &&
+      textList.concat(ThemeUtil.getAllThemes()).findIndex((item) => {
+        return (
+          item === (OtherUtil.getReaderConfig("textColor") || "rgba(0,0,0,1)")
+        );
+      }) === -1
+    ) {
       ThemeUtil.setThemes(OtherUtil.getReaderConfig("textColor"));
     }
     this.setState({ isShowTextPicker });
   };
   handleColorBgPicker = (isShowBgPicker: boolean) => {
-    if (!isShowBgPicker) {
+    if (
+      !isShowBgPicker &&
+      backgroundList.concat(ThemeUtil.getAllThemes()).findIndex((item) => {
+        return (
+          item ===
+          (OtherUtil.getReaderConfig("backgroundColor") ||
+            "rgba(255,255,255,1)")
+        );
+      }) === -1
+    ) {
       ThemeUtil.setThemes(OtherUtil.getReaderConfig("backgroundColor"));
     }
     this.setState({ isShowBgPicker });
@@ -104,7 +120,7 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
         .map((item, index) => {
           return (
             <li
-              key={item}
+              key={item + index}
               className={
                 index === this.state.currentBackgroundIndex
                   ? "active-color background-color-circle"
@@ -131,7 +147,7 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
       return textList.concat(ThemeUtil.getAllThemes()).map((item, index) => {
         return (
           <li
-            key={item}
+            key={item + index}
             className={
               index === this.state.currentTextIndex
                 ? "active-color background-color-circle"

@@ -15,7 +15,7 @@
   font-weight: 500;
   line-height: 15px;
   opacity: 1;
-  margin: 20px 0px 10px;
+  margin: 15px 0px 10px;
   text-align: center;
   width: 346px;
 }
@@ -40,7 +40,7 @@
   margin: 20px 30px;
 }
 .setting-dialog-info {
-  height: 400px;
+  height: 420px;
   overflow-y: scroll;
   width: 346px;
 }
@@ -149,5 +149,18 @@
   font-size: 13px;
   display: flex;
   justify-content: center;
+  align-items: center;
+}
+.theme-setting-item {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+.theme-setting-container {
+  width: 150px;
+  height: 30px;
+  display: flex;
+  justify-content: space-between;
   align-items: center;
 }

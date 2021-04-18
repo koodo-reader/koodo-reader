@@ -12,10 +12,28 @@ export const textList = [
 ];
 export const themeList = [
   {
-    primaryColor: "rgb(75,75,75)",
-    secondColor: "rgb(237,237,237)",
-    textPrimaryColor: "rgb(75,75,75)",
-    textsecondColor: "rgb(140,140,140)",
-    complementaryColors: "rgb(255,255,255)",
+    id: 0,
+    color: "rgba(75, 75, 75, 1)",
+    name: "default",
+  },
+  {
+    id: 1,
+    color: "rgba(1, 121, 202, 1)",
+    name: "blue",
+  },
+  {
+    id: 2,
+    color: "rgba(0, 143, 145, 1)",
+    name: "green",
+  },
+  {
+    id: 3,
+    color: "rgba(241, 100, 100, 1)",
+    name: "red",
+  },
+  {
+    id: 4,
+    color: "rgba(104, 103, 209, 1)",
+    name: "purple",
   },
 ];

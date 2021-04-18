@@ -21,6 +21,7 @@
 .book-title {
   height: 30px;
   font-size: 15px;
+  font-weight: 600;
   line-height: 15px;
   opacity: 1;
   width: 150px;

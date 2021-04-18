@@ -1,0 +1,80 @@
+.delete-digest-button,
+.add-dialog-comfirm,
+.backup-page-backup-selector,
+.delete-dialog-comfirm,
+.book-item-config,
+.book-cover-item-config,
+.side-menu-selector-container,
+.download-desk-button,
+.edit-dialog-comfirm,
+.change-location-button,
+.token-dialog-comfirm,
+.new-version-open,
+.update-dialog-container-button,
+.import-from-local,
+.active-tag,
+.single-control-switch,
+.side-menu-selector-container,
+.previous-chapter-single-container,
+.next-chapter-single-container,
+.book-bookmark-link,
+.tag-list-item,
+.message-box-container,
+.only-local-icon,
+.popup-close {
+  background-color: rgba(1, 121, 202, 1);
+}
+
+.header-search-box,
+input::-webkit-input-placeholder,
+input::-moz-placeholder,
+input::-ms-input-placeholder,
+textarea::-webkit-input-placeholder,
+textarea::-moz-placeholder,
+textarea::-ms-input-placeholder,
+.editor-box::-ms-input-placeholder,
+.editor-box::-moz-placeholder,
+.header-search-text,
+.card-list-item-show-more,
+.editor-box::placeholder {
+  color: rgba(1, 121, 202, 0.8);
+}
+.single-control-container,
+.book-list-view {
+  color: rgba(1, 121, 202, 1);
+}
+.reading-progress-icon,
+.header-search-box,
+#jumpPage,
+#jumpChapter,
+#newTag {
+  background-color: rgba(1, 121, 202, 0.1);
+}
+.backup-page-close-icon:hover,
+.sidebar-list-icon:hover,
+.nav-close-icon:hover,
+.setting-close-container:hover,
+.side-menu-hover-container,
+.setting-dialog-location-title,
+.note-option:hover,
+.digest-option:hover,
+.translation-option:hover,
+.speaker-option:hover,
+.search-book-option:hover,
+.google-option:hover,
+.header-search-text:hover,
+.reader-setting-icon-container:hover,
+.setting-icon-container:hover,
+.animation-mask,
+.animation-mask-local,
+.copy-option:hover {
+  background-color: rgba(1, 121, 202, 0.035);
+}
+
+.book-content-name,
+.book-subcontent-name,
+.book-bookmark-list,
+.nav-search-list-item,
+.sort-dialog-seperator {
+  border-bottom: 1px solid rgba(1, 121, 202, 0.1);
+}

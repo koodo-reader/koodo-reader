@@ -88,6 +88,10 @@ class ViewArea extends React.Component<ViewAreaProps, ViewAreaStates> {
           color: `${
             OtherUtil.getReaderConfig("textColor")
               ? OtherUtil.getReaderConfig("textColor")
+              : OtherUtil.getReaderConfig("backgroundColor") ===
+                  "rgba(44,47,49,1)" ||
+                OtherUtil.getReaderConfig("isDisplayDark") === "yes"
+              ? "white"
               : ""
           } !important`,
           "letter-spacing": `${
@@ -148,7 +152,11 @@ class ViewArea extends React.Component<ViewAreaProps, ViewAreaStates> {
           OtherUtil.getReaderConfig("fontFamily") || "Built-in font"
         } !important`,
         color: `${
-          OtherUtil.getReaderConfig("backgroundColor") === "rgba(44,47,49,1)"
+          OtherUtil.getReaderConfig("textColor")
+            ? OtherUtil.getReaderConfig("textColor")
+            : OtherUtil.getReaderConfig("backgroundColor") ===
+                "rgba(44,47,49,1)" ||
+              OtherUtil.getReaderConfig("isDisplayDark") === "yes"
             ? "white"
             : ""
         } !important`,

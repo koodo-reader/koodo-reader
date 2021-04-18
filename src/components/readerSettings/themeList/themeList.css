@@ -30,6 +30,7 @@
   display: inline-block;
   width: 35px;
   height: 35px;
+  font-size: 20px;
   border-radius: 50%;
   opacity: 1;
   cursor: pointer;
@@ -40,11 +41,11 @@
 
 .background-color-circle .icon-more {
   position: absolute;
-  margin: 9px;
+  margin: 8px;
 }
 .background-color-circle .icon-close {
   position: absolute;
   margin: 6px;
-  font-size: 15px;
+  font-size: 19px;
   opacity: 0.7;
 }
