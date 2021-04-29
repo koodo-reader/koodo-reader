@@ -20,16 +20,6 @@
 
 </div>
 
-<div align="center">
-  <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
-    <img src="https://img.shields.io/github/release/troyeguo/koodo-reader.svg?style=flat-square" alt="">
-  </a>
-
-  <a href="https://github.com/troyeguo/koodo-reader/blob/master/LICENSE">
-    <img src="https://img.shields.io/github/license/troyeguo/koodo-reader.svg?style=flat-square" alt="">
-  </a>
-</div>
-
 ## 预览
 
 <div align="center">
