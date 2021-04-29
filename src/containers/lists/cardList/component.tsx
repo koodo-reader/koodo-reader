@@ -43,7 +43,7 @@ class CardList extends React.Component<CardListProps, CardListStates> {
       }
     }
     if (!book) {
-      this.props.handleMessage("Book not exsit");
+      this.props.handleMessage("Book not exist");
       this.props.handleMessageBox(true);
       return;
     }
