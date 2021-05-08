@@ -20,10 +20,8 @@ assignees: ""
 
 ## Envirment
 
-| Key              | Value |
-| ---------------- | ----- |
-| Operating System |       |
-| App Version      |       |
+Operating System(操作系统):
+App Version(应用版本):
 
 ---
 
