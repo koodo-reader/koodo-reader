@@ -10,24 +10,24 @@ assignees: ""
   Note: making sure you've already done the following things.
   - I've already installed the latest version of Koodo Reader
   - There are no similar issues on the issue list
-  - I've already read the help document: https://github.com/troyeguo/koodo-reader/issues/106
+  - I've already read the help document: https://www.notion.so/troyeguo/01aaa516687c418499f713d34793b9ad?v=54d51fe1688a4f8ab5784b17e4df3308
 
   请确认你已经做了下面这些事情。
   - 我已经安装了最新版的 Koodo Reader
   - 我已经搜索了已有的 Issues列表
-  - 我已经阅读了 Koodo Reader 的帮助文档：https://github.com/troyeguo/koodo-reader/issues/106
+  - 我已经阅读了 Koodo Reader 的帮助文档：https://www.notion.so/troyeguo/e9c4e5755d564b0db6340eeba6d9ece9?v=7c8fcbed9adf4592ada95cfd593868c9
 -->
 
-## Envirment (操作环境)
+## Envirment
 
-| Key(名称)                   | Value(值) |
-| --------------------------- | --------- |
-| Operating System (操作系统) |           |
-| App Version (应用版本)      |           |
+| Key              | Value |
+| ---------------- | ----- |
+| Operating System |       |
+| App Version      |       |
 
 ---
 
-## Bug details (具体描述)
+## Bug details
 
 <!--
   What currently happen? To help developers better navigate this problem, please attach some screenshots or files.
