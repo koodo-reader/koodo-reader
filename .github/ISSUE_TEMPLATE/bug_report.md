@@ -18,12 +18,3 @@ Operating System:
 App Version:
 
 Bug details:
-
-<!--
-  What currently happen? To help developers better navigate this problem, please attach some screenshots or files.
-  Steps to reproduce the behavior:
-  1. Go to '...'
-  2. Click on '....'
-  3. Scroll down to '....'
-  4. See error
--->
