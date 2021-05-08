@@ -13,8 +13,4 @@ assignees: ""
 
 Brief Introduction:
 
-<!--Introduction about this feature-->
-
 Details:
-
-<!-- Details about this feature, please ignore this part, if this is small feature.-->
