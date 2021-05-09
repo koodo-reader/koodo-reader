@@ -2,7 +2,7 @@
 name: Feature Request
 about: What feature do you think is missing in Koodo Reader
 title: ""
-labels: "feature"
+labels: "enhancement"
 assignees: ""
 ---
 
