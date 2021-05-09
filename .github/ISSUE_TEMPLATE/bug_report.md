@@ -19,6 +19,6 @@ App Version:
 
 Bug details:
 
-Screenshot or video(Optinal):
+Screenshot or video (Optional):
 
-Download link to the ebook(Optinal):
+Download link to the ebook (Optional):
