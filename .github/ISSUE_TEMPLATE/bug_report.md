@@ -18,3 +18,7 @@ Operating System:
 App Version:
 
 Bug details:
+
+Screenshot or video(Optinal):
+
+Download link to the ebook(Optinal):
