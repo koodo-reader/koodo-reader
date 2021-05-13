@@ -58,7 +58,7 @@
 
 ## 使用方法
 
-桌面端：[Github](https://github.com/troyeguo/koodo-reader/releases/latest) | [蓝奏云](https://wwa.lanzous.com/b0c90cieb) 密码：1234 | [历史版本](https://wwa.lanzous.com/b0c97tupi) 密码：1234
+桌面端：[Github](https://github.com/troyeguo/koodo-reader/releases/latest) | [蓝奏云](https://wwa.lanzoui.com/b0c90cieb) 密码：1234 | [历史版本](https://wwa.lanzoui.com/b0c97tupi) 密码：1234
 
 网页版：[前往](https://reader.960960.xyz)
 
