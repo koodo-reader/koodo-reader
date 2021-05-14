@@ -5,7 +5,6 @@ import PopupNote from "../popupNote";
 import PopupOption from "../popupOption";
 import PopupTrans from "../popupTrans";
 import { PopupMenuProps, PopupMenuStates } from "./interface";
-import { isMobile } from "react-device-detect";
 import OtherUtil from "../../../utils/otherUtil";
 
 declare var window: any;
@@ -155,11 +154,6 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     let popupMenu = document.querySelector(".popup-menu-container");
 
     popupMenu!.setAttribute("style", `left:${posX}px;top:${posY}px`);
-    isMobile &&
-      popupMenu!.setAttribute(
-        "style",
-        `left:calc(50vw - 79px);top:calc(50vh - 86px)`
-      );
     this.setState({ rect: null });
   };
   //渲染高亮

@@ -166,7 +166,9 @@ class BookUtil {
         reader.readAsArrayBuffer(file);
         reader.onload = async (event) => {
           await localforage.setItem("pdf", event.target!.result as any);
-          if (OtherUtil.getReaderConfig("isRememberSize") === "yes") {
+          if (OtherUtil.getReaderConfig("isAutoFullscreen") === "yes") {
+            window.open(`./lib/pdf/web/viewer.html?file=pdf&width=full`);
+          } else {
             window.open(
               `./lib/pdf/web/viewer.html?file=pdf&width=${OtherUtil.getReaderConfig(
                 "windowWidth"
@@ -176,15 +178,17 @@ class BookUtil {
                 "windowX"
               )}&y=${OtherUtil.getReaderConfig("windowY")}`
             );
-          } else {
-            window.open(`./lib/pdf/web/viewer.html?file=pdf&width=full`);
           }
         };
       } else {
         window.open(`./lib/pdf/web/viewer.html?file=${book.key}`);
       }
     } else {
-      if (OtherUtil.getReaderConfig("isRememberSize") === "yes") {
+      if (OtherUtil.getReaderConfig("isAutoFullscreen") === "yes") {
+        window.open(
+          `${window.location.href.split("#")[0]}#/epub/${book.key}?width=full`
+        );
+      } else {
         window.open(
           `${window.location.href.split("#")[0]}#/epub/${
             book.key
@@ -195,10 +199,6 @@ class BookUtil {
           )}&x=${OtherUtil.getReaderConfig(
             "windowX"
           )}&y=${OtherUtil.getReaderConfig("windowY")}`
-        );
-      } else {
-        window.open(
-          `${window.location.href.split("#")[0]}#/epub/${book.key}?width=full`
         );
       }
     }

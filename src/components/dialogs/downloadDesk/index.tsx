@@ -2,7 +2,6 @@
 import { connect } from "react-redux";
 import { handleDownloadDesk } from "../../../store/actions/manager";
 import DownloadDesk from "./component";
-import { withNamespaces } from "react-i18next";
 import { stateType } from "../../../store";
 
 const mapStateToProps = (state: stateType) => {
@@ -11,7 +10,4 @@ const mapStateToProps = (state: stateType) => {
 const actionCreator = {
   handleDownloadDesk,
 };
-export default connect(
-  mapStateToProps,
-  actionCreator
-)(withNamespaces()(DownloadDesk as any));
+export default connect(mapStateToProps, actionCreator)(DownloadDesk);

@@ -6,7 +6,7 @@ import {
 } from "../../../store/actions/manager";
 import { handleTokenDialog } from "../../../store/actions/backupPage";
 import { stateType } from "../../../store";
-import { withNamespaces } from "react-i18next";
+import { withTranslation } from "react-i18next";
 import TokenDialog from "./component";
 const mapStateToProps = (state: stateType) => {
   return {
@@ -26,4 +26,4 @@ const actionCreator = {
 export default connect(
   mapStateToProps,
   actionCreator
-)(withNamespaces()(TokenDialog as any));
+)(withTranslation()(TokenDialog as any));

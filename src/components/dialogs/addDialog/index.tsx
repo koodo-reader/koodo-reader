@@ -9,7 +9,7 @@ import {
   handleActionDialog,
 } from "../../../store/actions/book";
 import { stateType } from "../../../store";
-import { withNamespaces } from "react-i18next";
+import { withTranslation } from "react-i18next";
 import AddDialog from "./component";
 import { handleMode, handleShelfIndex } from "../../../store/actions/sidebar";
 
@@ -34,4 +34,4 @@ const actionCreator = {
 export default connect(
   mapStateToProps,
   actionCreator
-)(withNamespaces()(AddDialog as any));
+)(withTranslation()(AddDialog as any));

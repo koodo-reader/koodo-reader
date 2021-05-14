@@ -9,6 +9,7 @@ export interface SidebarProps extends RouteComponentProps<any> {
   handleDragToLove: (isDragToLove: boolean) => void;
   handleDragToDelete: (isDragToLove: boolean) => void;
   handleSortDisplay: (isSortDisplay: boolean) => void;
+  t: (title: string) => string;
 }
 
 export interface SidebarState {

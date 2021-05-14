@@ -9,7 +9,7 @@ import RecordRecent from "../../../utils/readUtils/recordRecent";
 import ShelfUtil from "../../../utils/readUtils/shelfUtil";
 import SortUtil from "../../../utils/readUtils/sortUtil";
 import BookModel from "../../../model/Book";
-import { Trans, NamespacesConsumer } from "react-i18next";
+import { Trans } from "react-i18next";
 import { BookListProps, BookListState } from "./interface";
 import OtherUtil from "../../../utils/otherUtil";
 import localforage from "localforage";
@@ -174,18 +174,14 @@ class BookList extends React.Component<BookListProps, BookListState> {
     let shelfTitle = Object.keys(shelfList);
     return shelfTitle.map((item, index) => {
       return (
-        <NamespacesConsumer key={item}>
-          {(t) => (
-            <option
-              value={[item, index.toString()]}
-              key={index}
-              className="add-dialog-shelf-list-option"
-              selected={this.props.shelfIndex === index ? true : false}
-            >
-              {t(item === "New" ? "All Books" : item)}
-            </option>
-          )}
-        </NamespacesConsumer>
+        <option
+          value={[item, index.toString()]}
+          key={index}
+          className="add-dialog-shelf-list-option"
+          selected={this.props.shelfIndex === index ? true : false}
+        >
+          {this.props.t(item === "New" ? "All Books" : item)}
+        </option>
       );
     });
   };

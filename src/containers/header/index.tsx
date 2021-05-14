@@ -1,6 +1,6 @@
 //header 页面
 import { connect } from "react-redux";
-import { withNamespaces } from "react-i18next";
+import { withTranslation } from "react-i18next";
 import {
   handleSortDisplay,
   handleMessageBox,
@@ -35,4 +35,4 @@ const actionCreator = {
 export default connect(
   mapStateToProps,
   actionCreator
-)(withNamespaces()(Header as any));
+)(withTranslation()(Header as any));

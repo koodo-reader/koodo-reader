@@ -13,7 +13,7 @@ import {
   handleOriginalText,
 } from "../../../store/actions/reader";
 import { stateType } from "../../../store";
-import { withNamespaces } from "react-i18next";
+import { withTranslation } from "react-i18next";
 import PopupOption from "./component";
 const mapStateToProps = (state: stateType) => {
   return {
@@ -37,4 +37,4 @@ const actionCreator = {
 export default connect(
   mapStateToProps,
   actionCreator
-)(withNamespaces()(PopupOption as any));
+)(withTranslation()(PopupOption as any));
