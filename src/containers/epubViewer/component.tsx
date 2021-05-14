@@ -10,7 +10,6 @@ import { ReaderProps, ReaderState } from "./interface";
 import { MouseEvent } from "../../utils/mouseEvent";
 import OtherUtil from "../../utils/otherUtil";
 import ReadingTime from "../../utils/readUtils/readingTime";
-import { isMobile } from "react-device-detect";
 
 class Reader extends React.Component<ReaderProps, ReaderState> {
   messageTimer!: NodeJS.Timeout;
@@ -61,13 +60,8 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
     (window as any).rangy.init(); // 初始化
     this.rendition = epub.renderTo(page, {
       manager:
-        this.state.readerMode === "continuous" || isMobile
-          ? "continuous"
-          : "default",
-      flow:
-        this.state.readerMode === "continuous" || isMobile
-          ? "scrolled"
-          : "auto",
+        this.state.readerMode === "continuous" ? "continuous" : "default",
+      flow: this.state.readerMode === "continuous" ? "scrolled" : "auto",
       width: "100%",
       height: "100%",
       snap: true,
@@ -102,20 +96,6 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
 
   //进入阅读器
   handleEnterReader = (position: string) => {
-    if (
-      isMobile &&
-      (this.state.isOpenNavPanel ||
-        this.state.isOpenOperationPanel ||
-        this.state.isOpenProgressPanel ||
-        this.state.isOpenSettingPanel)
-    ) {
-      this.handleLeaveReader("left");
-      this.handleLeaveReader("right");
-      this.handleLeaveReader("bottom");
-      this.handleLeaveReader("top");
-      return;
-    }
-
     //控制上下左右的菜单的显示
     switch (position) {
       case "right":
@@ -195,7 +175,6 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
           onClick={() => {
             this.prevPage();
           }}
-          style={isMobile ? { display: "none" } : {}}
         >
           <span className="icon-dropdown previous-chapter-single"></span>
         </div>
@@ -204,7 +183,6 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
           onClick={() => {
             this.nextPage();
           }}
-          style={isMobile ? { display: "none" } : {}}
         >
           <span className="icon-dropdown next-chapter-single"></span>
         </div>
@@ -216,7 +194,6 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
             this.handleEnterReader("bottom");
             this.handleEnterReader("top");
           }}
-          style={isMobile ? { display: "none" } : {}}
         >
           <span className="icon-grid reader-setting-icon"></span>
         </div>
@@ -224,7 +201,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         <div
           className="left-panel"
           onMouseEnter={() => {
-            if (this.state.isTouch || this.state.isOpenNavPanel || isMobile) {
+            if (this.state.isTouch || this.state.isOpenNavPanel) {
               return;
             }
             this.handleEnterReader("left");
@@ -236,11 +213,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         <div
           className="right-panel"
           onMouseEnter={() => {
-            if (
-              this.state.isTouch ||
-              this.state.isOpenSettingPanel ||
-              isMobile
-            ) {
+            if (this.state.isTouch || this.state.isOpenSettingPanel) {
               return;
             }
             this.handleEnterReader("right");
@@ -252,11 +225,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         <div
           className="top-panel"
           onMouseEnter={() => {
-            if (
-              this.state.isTouch ||
-              this.state.isOpenOperationPanel ||
-              isMobile
-            ) {
+            if (this.state.isTouch || this.state.isOpenOperationPanel) {
               return;
             }
             this.handleEnterReader("top");
@@ -268,11 +237,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         <div
           className="bottom-panel"
           onMouseEnter={() => {
-            if (
-              this.state.isTouch ||
-              this.state.isOpenProgressPanel ||
-              isMobile
-            ) {
+            if (this.state.isTouch || this.state.isOpenProgressPanel) {
               return;
             }
             this.handleEnterReader("bottom");

@@ -1,5 +1,6 @@
 export interface ThemeListProps {
   currentEpub: any;
+  t:(title:string)=>string
 }
 
 export interface ThemeListState {

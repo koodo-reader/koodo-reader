@@ -1,7 +1,7 @@
 import { handleMode } from "../../store/actions/sidebar";
 import { connect } from "react-redux";
 import { stateType } from "../../store";
-import { withNamespaces } from "react-i18next";
+import { withTranslation } from "react-i18next";
 import Sidebar from "./component";
 import { handleSearch, handleSortDisplay } from "../../store/actions/manager";
 import {
@@ -25,4 +25,4 @@ const actionCreator = {
 export default connect(
   mapStateToProps,
   actionCreator
-)(withNamespaces()(Sidebar as any));
+)(withTranslation()(Sidebar as any));

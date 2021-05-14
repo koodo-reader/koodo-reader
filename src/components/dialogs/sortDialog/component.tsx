@@ -103,7 +103,10 @@ class SortDialog extends React.Component<SortDialogProps, SortDialogState> {
                 >
                   <Trans>{item}</Trans>
                   {sortCode.sort === index && (
-                    <span className="icon-check"></span>
+                    <span
+                      className="icon-check"
+                      style={{ fontWeight: "bold" }}
+                    ></span>
                   )}
                 </li>
               );
@@ -120,7 +123,12 @@ class SortDialog extends React.Component<SortDialogProps, SortDialogState> {
             style={sortCode.order === 1 ? {} : { opacity: 0.34 }}
           >
             <Trans>Ascending Order</Trans>
-            {sortCode.order === 1 && <span className="icon-check"></span>}
+            {sortCode.order === 1 && (
+              <span
+                className="icon-check"
+                style={{ fontWeight: "bold" }}
+              ></span>
+            )}
           </li>
           <li
             className="sort-by-order-list"
@@ -130,7 +138,12 @@ class SortDialog extends React.Component<SortDialogProps, SortDialogState> {
             style={sortCode.order === 2 ? {} : { opacity: 0.34 }}
           >
             <Trans>Descending Order</Trans>
-            {sortCode.order === 2 && <span className="icon-check"></span>}
+            {sortCode.order === 2 && (
+              <span
+                className="icon-check"
+                style={{ fontWeight: "bold" }}
+              ></span>
+            )}
           </li>
         </ul>
       </div>

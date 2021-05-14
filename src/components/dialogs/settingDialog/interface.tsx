@@ -5,6 +5,7 @@ export interface SettingInfoProps {
   handleSetting: (isSettingOpen: boolean) => void;
   handleMessage: (message: string) => void;
   handleMessageBox: (isShow: boolean) => void;
+  t: (title: string) => string;
   bookmarks: BookmarkModel[];
   notes: NoteModel[];
   books: BookModel[];
@@ -17,6 +18,6 @@ export interface SettingInfoState {
   isDisplayDark: boolean;
   isExpandContent: boolean;
   isDisableUpdate: boolean;
-  isRememberSize: boolean;
+  isAutoFullscreen: boolean;
   currentThemeIndex: number;
 }

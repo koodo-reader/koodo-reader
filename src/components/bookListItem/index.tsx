@@ -7,7 +7,7 @@ import {
   handleReadingBook,
   handleDragItem,
 } from "../../store/actions/book";
-import { withNamespaces } from "react-i18next";
+import { withTranslation } from "react-i18next";
 import {
   handleMessageBox,
   handleMessage,
@@ -45,4 +45,4 @@ const actionCreator = {
 export default connect(
   mapStateToProps,
   actionCreator
-)(withNamespaces()(BookItem as any));
+)(withTranslation()(BookItem as any));

@@ -11,7 +11,6 @@ import {
   handleActionDialog,
 } from "../../../store/actions/book";
 import { stateType } from "../../../store";
-import { withNamespaces } from "react-i18next";
 import EditDialog from "./component";
 
 const mapStateToProps = (state: stateType) => {
@@ -31,7 +30,4 @@ const actionCreator = {
   handleMessageBox,
   handleMessage,
 };
-export default connect(
-  mapStateToProps,
-  actionCreator
-)(withNamespaces()(EditDialog as any));
+export default connect(mapStateToProps, actionCreator)(EditDialog);

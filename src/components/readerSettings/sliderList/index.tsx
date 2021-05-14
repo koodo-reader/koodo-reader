@@ -1,6 +1,6 @@
 //字体大小选择页面
 import { connect } from "react-redux";
-import { withNamespaces } from "react-i18next";
+import { withTranslation } from "react-i18next";
 import SliderList from "./component";
 import {
   handleMessageBox,
@@ -18,4 +18,4 @@ const actionCreator = {
 export default connect(
   mapStateToProps,
   actionCreator
-)(withNamespaces()(SliderList as any));
+)(withTranslation()(SliderList as any));

@@ -1,7 +1,6 @@
 import React from "react";
 import "./sidebar.css";
 import { sideMenu } from "../../constants/sideMenu";
-import { Trans, NamespacesConsumer } from "react-i18next";
 import { SidebarProps, SidebarState } from "./interface";
 import { withRouter } from "react-router-dom";
 import OtherUtil from "../../utils/otherUtil";
@@ -48,77 +47,68 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
     const renderSideMenu = () => {
       return sideMenu.map((item, index) => {
         return (
-          <NamespacesConsumer key={item.name}>
-            {(t) => (
-              <li
-                className={
-                  this.state.index === index
-                    ? "active side-menu-item"
-                    : "side-menu-item"
-                }
-                id={`sidebar-${item.icon}`}
-                onClick={() => {
-                  this.handleSidebar(item.mode, index);
-                }}
-                onDrop={() => {
-                  index === 1 && this.props.handleDragToLove(true);
-                  index === 5 && this.props.handleDragToDelete(true);
-                }}
-                onMouseEnter={() => {
-                  this.handleHover(index);
-                }}
-                onMouseLeave={() => {
-                  this.handleHover(-1);
-                }}
-                style={
-                  this.props.isCollapsed ? { width: 40, marginLeft: 15 } : {}
-                }
+          <li
+            key={item.name}
+            className={
+              this.state.index === index
+                ? "active side-menu-item"
+                : "side-menu-item"
+            }
+            id={`sidebar-${item.icon}`}
+            onClick={() => {
+              this.handleSidebar(item.mode, index);
+            }}
+            onDrop={() => {
+              index === 1 && this.props.handleDragToLove(true);
+              index === 5 && this.props.handleDragToDelete(true);
+            }}
+            onMouseEnter={() => {
+              this.handleHover(index);
+            }}
+            onMouseLeave={() => {
+              this.handleHover(-1);
+            }}
+            style={this.props.isCollapsed ? { width: 40, marginLeft: 15 } : {}}
+          >
+            {this.state.index === index ? (
+              <div className="side-menu-selector-container"></div>
+            ) : null}
+            {this.state.hoverIndex === index ? (
+              <div className="side-menu-hover-container"></div>
+            ) : null}
+            <div
+              className={
+                this.state.index === index
+                  ? "side-menu-selector active-selector"
+                  : "side-menu-selector "
+              }
+            >
+              <Tooltip
+                title={this.props.t(item.name)}
+                position="top"
+                trigger="mouseenter"
               >
-                {this.state.index === index ? (
-                  <div className="side-menu-selector-container"></div>
-                ) : null}
-                {this.state.hoverIndex === index ? (
-                  <div className="side-menu-hover-container"></div>
-                ) : null}
                 <div
-                  className={
-                    this.state.index === index
-                      ? "side-menu-selector active-selector"
-                      : "side-menu-selector "
-                  }
+                  className="side-menu-icon"
+                  style={this.props.isCollapsed ? {} : { marginLeft: "38px" }}
                 >
-                  <Tooltip
-                    title={t(item.name)}
-                    position="top"
-                    trigger="mouseenter"
-                  >
-                    <div
-                      className="side-menu-icon"
-                      style={
-                        this.props.isCollapsed ? {} : { marginLeft: "38px" }
-                      }
-                    >
-                      <span
-                        className={
-                          this.state.index === index
-                            ? `icon-${item.icon}  active-icon`
-                            : `icon-${item.icon}`
-                        }
-                        style={
-                          this.props.isCollapsed ? { marginLeft: "-25px" } : {}
-                        }
-                      ></span>
-                    </div>
-                  </Tooltip>
                   <span
-                    style={this.props.isCollapsed ? { display: "none" } : {}}
-                  >
-                    <Trans>{item.name}</Trans>
-                  </span>
+                    className={
+                      this.state.index === index
+                        ? `icon-${item.icon}  active-icon`
+                        : `icon-${item.icon}`
+                    }
+                    style={
+                      this.props.isCollapsed ? { marginLeft: "-25px" } : {}
+                    }
+                  ></span>
                 </div>
-              </li>
-            )}
-          </NamespacesConsumer>
+              </Tooltip>
+              <span style={this.props.isCollapsed ? { display: "none" } : {}}>
+                {this.props.t(item.name)}
+              </span>
+            </div>
+          </li>
         );
       });
     };
@@ -130,19 +120,15 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
             this.handleCollapse(!this.state.isCollapsed);
           }}
         >
-          <NamespacesConsumer>
-            {(t) => (
-              <Tooltip
-                title={t(
-                  this.props.isCollapsed ? "Show sidebar" : "Collapse sidebar"
-                )}
-                position="top"
-                trigger="mouseenter"
-              >
-                <span className="icon-menu sidebar-list"></span>
-              </Tooltip>
+          <Tooltip
+            title={this.props.t(
+              this.props.isCollapsed ? "Show sidebar" : "Collapse sidebar"
             )}
-          </NamespacesConsumer>
+            position="top"
+            trigger="mouseenter"
+          >
+            <span className="icon-menu sidebar-list"></span>
+          </Tooltip>
         </div>
 
         <img

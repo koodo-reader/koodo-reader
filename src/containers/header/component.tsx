@@ -3,7 +3,7 @@ import React from "react";
 import "./header.css";
 import SearchBox from "../../components/searchBox";
 import ImportLocal from "../../components/importLocal";
-import { Trans, NamespacesConsumer } from "react-i18next";
+import { Trans } from "react-i18next";
 import { HeaderProps, HeaderState } from "./interface";
 import OtherUtil from "../../utils/otherUtil";
 import UpdateInfo from "../../components/dialogs/updateInfo";
@@ -161,54 +161,55 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         <div className="header-search-container">
           <SearchBox />
         </div>
-        <NamespacesConsumer>
-          {(t) => (
-            <>
-              <div
-                className="setting-icon-container"
-                onClick={() => {
-                  this.props.handleSortDisplay(!this.props.isSortDisplay);
-                }}
-                style={{ left: "490px", top: "18px" }}
+
+        <>
+          <div
+            className="setting-icon-container"
+            onClick={() => {
+              this.props.handleSortDisplay(!this.props.isSortDisplay);
+            }}
+            style={{ left: "490px", top: "18px" }}
+          >
+            <Tooltip
+              title={this.props.t("Sort")}
+              position="top"
+              trigger="mouseenter"
+            >
+              <span className="icon-sort-desc header-sort-icon"></span>
+            </Tooltip>
+          </div>
+          <div
+            className="setting-icon-container"
+            onClick={() => {
+              this.props.handleAbout(!this.props.isAboutOpen);
+            }}
+          >
+            <Tooltip
+              title={this.props.t("Setting")}
+              position="top"
+              trigger="mouseenter"
+            >
+              <span className="icon-setting setting-icon"></span>
+            </Tooltip>
+          </div>
+          {isElectron && (
+            <div
+              className="setting-icon-container"
+              onClick={() => {
+                this.syncToLocation();
+              }}
+              style={{ left: "635px" }}
+            >
+              <Tooltip
+                title={this.props.t("Sync")}
+                position="top"
+                trigger="mouseenter"
               >
-                <Tooltip title={t("Sort")} position="top" trigger="mouseenter">
-                  <span className="icon-sort-desc header-sort-icon"></span>
-                </Tooltip>
-              </div>
-              <div
-                className="setting-icon-container"
-                onClick={() => {
-                  this.props.handleAbout(!this.props.isAboutOpen);
-                }}
-              >
-                <Tooltip
-                  title={t("Setting")}
-                  position="top"
-                  trigger="mouseenter"
-                >
-                  <span className="icon-setting setting-icon"></span>
-                </Tooltip>
-              </div>
-              {isElectron && (
-                <div
-                  className="setting-icon-container"
-                  onClick={() => {
-                    this.syncToLocation();
-                  }}
-                  style={{ left: "635px" }}
-                >
-                  <Tooltip
-                    title={t("Sync")}
-                    position="top"
-                    trigger="mouseenter"
-                  >
-                    <span className="icon-sync setting-icon"></span>
-                  </Tooltip>
-                </div>
-              )}
-            </>
+                <span className="icon-sync setting-icon"></span>
+              </Tooltip>
+            </div>
           )}
-        </NamespacesConsumer>
+        </>
 
         <div
           className="import-from-cloud"
@@ -223,20 +224,16 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         >
           <div className="animation-mask"></div>
           {this.props.isCollapsed && this.state.width < 950 ? (
-            <NamespacesConsumer>
-              {(t) => (
-                <Tooltip
-                  title={t("Backup and Restore")}
-                  position="top"
-                  trigger="mouseenter"
-                >
-                  <span
-                    className="icon-share"
-                    style={{ fontSize: "15px", fontWeight: 600 }}
-                  ></span>
-                </Tooltip>
-              )}
-            </NamespacesConsumer>
+            <Tooltip
+              title={this.props.t("Backup and Restore")}
+              position="top"
+              trigger="mouseenter"
+            >
+              <span
+                className="icon-share"
+                style={{ fontSize: "15px", fontWeight: 600 }}
+              ></span>
+            </Tooltip>
           ) : (
             <Trans>Backup and Restore</Trans>
           )}

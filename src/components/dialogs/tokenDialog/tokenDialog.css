@@ -38,7 +38,6 @@
 .token-dialog-link-text {
   width: 94px;
   height: 29px;
-  border: 2px solid rgba(45, 111, 200, 1);
   opacity: 1;
   position: absolute;
   left: 181px;
@@ -46,7 +45,6 @@
   font-size: 13px;
   font-weight: 500;
   line-height: 29px;
-  color: rgba(45, 111, 200, 1);
   text-align: center;
   cursor: pointer;
   border-radius: 5px;
