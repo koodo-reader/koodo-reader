@@ -18,6 +18,7 @@
   text-align: center;
   position: absolute;
   top: 22px;
+  font-weight: 500;
 }
 
 .delete-dialog-book-title {
@@ -42,7 +43,7 @@
 .delete-dialog-other-option {
   font-size: 13px;
   text-align: center;
-  line-height: 14px;
+  line-height: 18px;
   opacity: 1;
   position: absolute;
   top: 106px;
@@ -73,7 +74,7 @@
   height: 30px;
   opacity: 1;
   position: absolute;
-  left: 227px;
+  left: 220px;
   top: 154px;
   font-size: 13px;
   line-height: 30px;

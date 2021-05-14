@@ -2,6 +2,19 @@ import BookModel from "../model/Book";
 import NoteModel from "../model/Note";
 
 class OtherUtil {
+  static addStyle = (url: string) => {
+    const style = document.createElement("link");
+    style.href = url;
+    style.rel = "stylesheet";
+    document.head.appendChild(style);
+  };
+  static applyTheme() {
+    this.getReaderConfig("themeColor") &&
+      this.getReaderConfig("themeColor") !== "default" &&
+      this.addStyle(
+        "./assets/styles/" + this.getReaderConfig("themeColor") + ".css"
+      );
+  }
   static fuzzyQuery(list: string[], keyWord: string) {
     var arr: number[] = [];
     for (var i = 0; i < list.length; i++) {
@@ -13,19 +26,19 @@ class OtherUtil {
   }
   static MergeArray(arr1: number[], arr2: number[]) {
     var _arr: number[] = [];
-    for (let i = 0; i < arr1.length; i++) {
-      _arr.push(arr1[i]);
+    for (let item of _arr) {
+      _arr.push(item);
     }
-    for (let i = 0; i < arr2.length; i++) {
+    for (let item of arr2) {
       var flag = true;
-      for (let j = 0; j < arr1.length; j++) {
-        if (arr2[i] === arr1[j]) {
+      for (let subitem of arr1) {
+        if (item === subitem) {
           flag = false;
           break;
         }
       }
       if (flag) {
-        _arr.push(arr2[i]);
+        _arr.push(item);
       }
     }
     return _arr;
@@ -43,8 +56,7 @@ class OtherUtil {
     });
     let bookResults = this.fuzzyQuery(bookNameArr, keyword);
     let authorResults = this.fuzzyQuery(AuthorNameArr, keyword);
-    let results = this.MergeArray(bookResults, authorResults);
-    return results;
+    return this.MergeArray(bookResults, authorResults);
   }
   static KeySearch(event: any, books: BookModel[]) {
     if (event && event.keyCode === 13) {
@@ -64,8 +76,7 @@ class OtherUtil {
         AuthorNameArr,
         event.target.value.toLowerCase()
       );
-      let results = this.MergeArray(bookResults, authorResults);
-      return results;
+      return this.MergeArray(bookResults, authorResults);
     }
   }
   static MouseNoteSearch(notes: NoteModel[]) {

@@ -6,7 +6,7 @@ import {
   handleNewDialog,
 } from "../../../store/actions/manager";
 import UpdateInfo from "./component";
-import { withNamespaces } from "react-i18next";
+import { withTranslation } from "react-i18next";
 import { stateType } from "../../../store";
 
 const mapStateToProps = (state: stateType) => {
@@ -23,4 +23,4 @@ const actionCreator = {
 export default connect(
   mapStateToProps,
   actionCreator
-)(withNamespaces()(UpdateInfo as any));
+)(withTranslation()(UpdateInfo as any));

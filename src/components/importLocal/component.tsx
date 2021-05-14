@@ -4,7 +4,7 @@ import "./importLocal.css";
 import BookModel from "../../model/Book";
 import localforage from "localforage";
 import SparkMD5 from "spark-md5";
-import { Trans, NamespacesConsumer } from "react-i18next";
+import { Trans } from "react-i18next";
 import Dropzone from "react-dropzone";
 import { Tooltip } from "react-tippy";
 import { ImportLocalProps, ImportLocalState } from "./interface";
@@ -467,21 +467,17 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
           >
             <div className="animation-mask-local"></div>
             {this.props.isCollapsed && this.state.width < 950 ? (
-              <NamespacesConsumer>
-                {(t) => (
-                  <Tooltip
-                    title={t("Import from Local")}
-                    position="top"
-                    style={{ height: "20px" }}
-                    trigger="mouseenter"
-                  >
-                    <span
-                      className="icon-folder"
-                      style={{ fontSize: "15px", fontWeight: 500 }}
-                    ></span>
-                  </Tooltip>
-                )}
-              </NamespacesConsumer>
+              <Tooltip
+                title={this.props.t("Import from Local")}
+                position="top"
+                style={{ height: "20px" }}
+                trigger="mouseenter"
+              >
+                <span
+                  className="icon-folder"
+                  style={{ fontSize: "15px", fontWeight: 500 }}
+                ></span>
+              </Tooltip>
             ) : (
               <span>
                 <Trans>Import from Local</Trans>

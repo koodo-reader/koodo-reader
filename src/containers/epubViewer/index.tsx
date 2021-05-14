@@ -12,7 +12,6 @@ import "./epubViewer.css";
 import { connect } from "react-redux";
 import { stateType } from "../../store";
 import Reader from "./component";
-import { withNamespaces } from "react-i18next";
 
 const mapStateToProps = (state: stateType) => {
   return {
@@ -29,7 +28,4 @@ const actionCreator = {
   handleFetchPercentage,
   handleFetchBooks,
 };
-export default connect(
-  mapStateToProps,
-  actionCreator
-)(withNamespaces()(Reader as any));
+export default connect(mapStateToProps, actionCreator)(Reader);

@@ -1,4 +1,5 @@
 const path = require("path");
+const HardSourceWebpackPlugin = require("hard-source-webpack-plugin");
 
 module.exports = {
   target: "electron-main",
@@ -13,4 +14,5 @@ module.exports = {
   node: {
     __dirname: false,
   },
+  plugins: [new HardSourceWebpackPlugin()],
 };

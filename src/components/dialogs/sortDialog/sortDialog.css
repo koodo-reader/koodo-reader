@@ -1,9 +1,9 @@
 .sort-dialog-container {
-  width: 160px;
+  width: 180px;
   height: 220px;
   opacity: 1;
   position: absolute;
-  left: 435px;
+  left: 425px;
   top: 65px;
   z-index: 5;
   border-radius: 5px;

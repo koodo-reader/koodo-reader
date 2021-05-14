@@ -8,6 +8,7 @@ export interface NavigationPanelProps {
   time: number;
   handleFetchBookmarks: () => void;
   handleSearch: (isSearch: boolean) => void;
+  t: (title: string) => string;
 }
 
 export interface NavigationPanelState {

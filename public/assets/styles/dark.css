@@ -1,4 +1,5 @@
-body {
+body,
+.editor-box {
   -webkit-tap-highlight-color: transparent;
   background: rgba(47, 52, 55, 1);
   color: rgba(235, 235, 235, 1);
@@ -42,6 +43,8 @@ body {
 .line-option,
 .original-text-box,
 .trans-text-box,
+.token-dialog-link-text,
+.token-dialog-token-text,
 .nav-search-page-item {
   border: 2px solid rgba(235, 235, 235, 1);
 }
@@ -53,10 +56,7 @@ input::-ms-input-placeholder,
 textarea::-webkit-input-placeholder,
 textarea::-moz-placeholder,
 textarea::-ms-input-placeholder,
-.editor-box::-ms-input-placeholder,
-.editor-box::-moz-placeholder,
-.header-search-text,
-.editor-box::placeholder {
+.header-search-text {
   color: rgba(235, 235, 235, 0.8);
 }
 .delete-digest-button,
@@ -73,8 +73,6 @@ textarea::-ms-input-placeholder,
 .new-version-open,
 .update-dialog-container-button,
 .import-from-local,
-.active-tag,
-.single-control-switch,
 .side-menu-selector-container,
 .previous-chapter-single-container,
 .next-chapter-single-container,
@@ -145,8 +143,8 @@ textarea::-ms-input-placeholder,
 .book-cover,
 .book-cover-item-cover,
 .book-item-list-cover {
-  background: rgba(47, 52, 55, 1);
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+  background: rgba(235, 235, 235, 0.1);
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.18);
 }
 .backup-page-backup-selector,
 .message-box-container {
@@ -192,13 +190,19 @@ textarea::-ms-input-placeholder,
 .progress-slide-circle {
   background: rgba(47, 52, 55, 1);
 }
-
+.single-control-switch,
+::-webkit-scrollbar-thumb,
+::-webkit-scrollbar-thumb:hover,
+.active-tag,
+.sk-chase-dot:before {
+  background-color: rgba(235, 235, 235, 1);
+}
 .exit-reading-text,
 .add-bookmark-text,
+.token-dialog-token-text,
 .enter-fullscreen-text,
 .reading-progress-icon,
 .image-operation,
-.popup-menu-triangle-up,
 .add-bookmark-icon,
 .active-page,
 .exit-reading-icon,
@@ -207,10 +211,10 @@ textarea::-ms-input-placeholder,
 .active-selector,
 .enter-fullscreen-icon,
 .icon-popup,
+.token-dialog-link-text,
+.token-dialog-token-text,
 .delete-dialog-uncheck-icon,
-.book-bookmark-link {
-  color: rgba(235, 235, 235, 1);
-}
+.book-bookmark-link,
 .general-setting-dropdown,
 #jumpPage,
 #jumpChapter,
@@ -232,4 +236,9 @@ textarea::-ms-input-placeholder,
 .nav-search-list-item,
 .sort-dialog-seperator {
   border-bottom: 1px solid rgba(235, 235, 235, 0.5);
+}
+.popup-menu-triangle-up,
+.active-tag,
+.popup-menu-triangle-down {
+  color: rgba(47, 52, 55, 1);
 }

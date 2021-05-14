@@ -34,6 +34,7 @@
   justify-content: center;
   align-items: center;
   padding-left: 5px;
+  transition: 0.2s;
 }
 .sidebar-list-icon:hover {
   border-radius: 50%;
