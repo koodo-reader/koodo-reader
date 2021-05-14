@@ -8,6 +8,7 @@ export interface AddDialogProps {
   handleMessageBox: (isShow: boolean) => void;
   handleMode: (mode: string) => void;
   handleShelfIndex: (shelfIndex: number) => void;
+  t: (title: string) => string;
 }
 export interface AddDialogState {
   isNew: boolean;

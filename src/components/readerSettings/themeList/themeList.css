@@ -35,6 +35,7 @@
   opacity: 1;
   cursor: pointer;
   margin: 7px;
+  margin-top: 3px;
   box-sizing: border-box;
   position: relative;
 }
@@ -42,6 +43,11 @@
 .background-color-circle .icon-more {
   position: absolute;
   margin: 8px;
+}
+.background-color-circle .icon-check {
+  position: absolute;
+  margin: 8px;
+  font-weight: bold;
 }
 .background-color-circle .icon-close {
   position: absolute;

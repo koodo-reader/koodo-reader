@@ -17,7 +17,7 @@ export const dropdownList = [
     id: 2,
     title: "Line Height",
     value: "lineHeight",
-    option: ["1.25", "1", "1.25", "1.5", "1.75", "2"],
+    option: ["1", "1.25", "1.5", "1.75", "2"],
   },
   {
     id: 3,

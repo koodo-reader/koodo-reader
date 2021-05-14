@@ -1,4 +1,6 @@
 const { app, BrowserWindow } = require("electron");
+const { ebtMain } = require("electron-baidu-tongji");
+
 let mainWin;
 const singleInstance = app.requestSingleInstanceLock();
 var filePath = null;
@@ -34,6 +36,7 @@ app.on("ready", () => {
     const { Menu } = require("electron");
     Menu.setApplicationMenu(null);
   }
+
   const path = require("path");
   const urlLocation = isDev
     ? "http://localhost:3000"
@@ -41,6 +44,7 @@ app.on("ready", () => {
 
   mainWin.loadURL(urlLocation);
   const { remote, ipcMain } = require("electron");
+  ebtMain(ipcMain, isDev);
   mainWin.webContents.on(
     "new-window",
     (event, url, frameName, disposition, options, additionalFeatures) => {

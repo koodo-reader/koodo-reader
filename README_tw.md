@@ -16,7 +16,7 @@
 </h3>
 <div align="center">
 
-[下載](https://koodo.960960.xyz/download) | [官網](https://koodo.960960.xyz)
+[下載](https://koodo.960960.xyz/download) | [官網](https://koodo.960960.xyz) | [反饋](https://koodo.960960.xyz/support) | [文檔](https://www.notion.so/troyeguo/e9c4e5755d564b0db6340eeba6d9ece9?v=7c8fcbed9adf4592ada95cfd593868c9) | [計劃](https://www.notion.so/troyeguo/215baeda57804fd29dbb0e91d1e6a021?v=360c00183d944b598668f34c255edfd7)
 
 </div>
 
@@ -68,6 +68,12 @@
 brew install --cask koodo-reader
 ```
 
+使用 Docker 安裝：
+
+```bash
+docker-compose up -d
+```
+
 ## 運行源碼
 
 請確保您電腦的 node 的版本大於 10.0.0，已配置好 yarn，git 的運行環境。
@@ -91,14 +97,6 @@ brew install --cask koodo-reader
    yarn
    yarn start
    ```
-
-## Docker
-
-可以使用 `docker compose` 運行本項目
-
-```bash
-docker-compose up -d
-```
 
 ## 貢獻
 

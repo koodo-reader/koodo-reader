@@ -1,7 +1,7 @@
 //我的书摘页面
 import { connect } from "react-redux";
 import { stateType } from "../../../store";
-import { withNamespaces } from "react-i18next";
+import { withTranslation } from "react-i18next";
 import CardList from "./component";
 import { handleReadingBook } from "../../../store/actions/book";
 import {
@@ -29,4 +29,4 @@ const actionCreator = {
 export default connect(
   mapStateToProps,
   actionCreator
-)(withNamespaces()(CardList as any));
+)(withTranslation()(CardList as any));

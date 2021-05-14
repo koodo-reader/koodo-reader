@@ -58,10 +58,6 @@ class DeleteIcon extends React.Component<DeleteIconProps, DeleteIconStates> {
         }
       }
     });
-    // if (this.props.isReading && this.props.mode === "notes") {
-    //   this.props.renderHighlighters();
-    //   this.props.handleShowDelete("");
-    // }
   };
   handleDeletePopup = (isOpenDelete: boolean) => {
     this.setState({ isOpenDelete });

@@ -130,13 +130,11 @@
 
 ::-webkit-scrollbar-thumb {
   border-radius: 0;
-  background-color: rgba(95, 95, 95, 0.4);
   transition: all 0.2s;
   border-radius: 0.5rem;
+  opacity: 0.5;
 }
-::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(95, 95, 95, 0.7);
-}
+
 .card-list-item-title {
   float: left;
   /* width: 100px; */
@@ -147,7 +145,11 @@
   width: 100%;
 }
 .icon-card-right {
-  margin: 5px;
+  margin-left: 5px;
+  line-height: 18px;
+  display: inline-block;
+  position: relative;
+  top: 2px;
 }
 
 .card-list-item-show-more {
@@ -163,7 +165,7 @@
 .card-list-show-more-icon {
   /* display: block; */
   font-size: 13px;
-  line-height: 15px;
+  line-height: 18px;
   opacity: 1;
   text-align: center;
   position: absolute;

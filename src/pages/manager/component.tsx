@@ -14,14 +14,12 @@ import { Trans } from "react-i18next";
 import OtherUtil from "../../utils/otherUtil";
 import AddFavorite from "../../utils/readUtils/addFavorite";
 import SettingDialog from "../../components/dialogs/settingDialog";
-import { isMobileOnly } from "react-device-detect";
+import { isMobileOnly, isElectron } from "react-device-detect";
 import { Route, Switch, Redirect } from "react-router-dom";
 import { routes } from "../../router/routes";
 import Arrow from "../../components/arrow";
 import LoadingDialog from "../../components/dialogs/loadingDialog";
 import DownloadDesk from "../../components/dialogs/downloadDesk";
-import { isElectron } from "react-device-detect";
-// declare var window: any;
 
 //判断是否为触控设备
 const is_touch_device = () => {

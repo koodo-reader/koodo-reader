@@ -23,7 +23,6 @@
 .action-dialog-edit {
   cursor: pointer;
   display: flex;
-  justify-content: space-between;
   align-items: center;
   margin: 8px 15px;
 }
@@ -32,6 +31,8 @@
   font-size: 15px;
   text-align: center;
   line-height: 25px;
+  margin-left: 15px;
+  font-weight: 500;
 }
 .action-dialog-book-info {
   margin-left: 10px;
@@ -50,7 +51,7 @@
 .action-dialog-book-publisher,
 .action-dialog-book-added {
   font-size: 15px;
-  line-height: 16px;
+  line-height: 18px;
 }
 .action-dialog-book-detail {
   /* width: 80%; */

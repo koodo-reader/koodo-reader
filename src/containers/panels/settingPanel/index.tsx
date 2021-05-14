@@ -1,4 +1,4 @@
-import { withNamespaces } from "react-i18next";
+import { withTranslation } from "react-i18next";
 import { connect } from "react-redux";
 import SettingPanel from "./component";
 import { stateType } from "../../../store";
@@ -18,4 +18,4 @@ const actionCreator = { handleMessageBox, handleMessage };
 export default connect(
   mapStateToProps,
   actionCreator
-)(withNamespaces()(SettingPanel as any));
+)(withTranslation()(SettingPanel as any));

@@ -101,8 +101,8 @@
   line-height: 17px;
   opacity: 1;
   text-align: left;
-  overflow: scroll;
   position: relative;
+  overflow-y: scroll;
   float: left;
 }
 @keyframes slide-down {

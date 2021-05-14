@@ -1,6 +1,6 @@
 import { connect } from "react-redux";
 import { stateType } from "../../../store";
-import { withNamespaces } from "react-i18next";
+import { withTranslation } from "react-i18next";
 import ProgressPanel from "./component";
 
 const mapStateToProps = (state: stateType) => {
@@ -16,4 +16,4 @@ const actionCreator = {};
 export default connect(
   mapStateToProps,
   actionCreator
-)(withNamespaces()(ProgressPanel as any));
+)(withTranslation()(ProgressPanel as any));

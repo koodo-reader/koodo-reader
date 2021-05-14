@@ -11,8 +11,8 @@ export const settingList = [
   },
   {
     isElectron: true,
-    title: "Remember window's size from last read",
-    propName: "isRememberSize",
+    title: "Auto open book in fullscreen",
+    propName: "isAutoFullscreen",
   },
   {
     isElectron: false,
@@ -26,7 +26,7 @@ export const settingList = [
   },
   {
     isElectron: false,
-    title: "Turn on dark mode",
+    title: "Turn on night mode",
     propName: "isDisplayDark",
   },
 ];

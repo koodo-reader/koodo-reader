@@ -39,14 +39,7 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
           >
             <Trans>Setting</Trans>
           </li>
-          <li
-            className="sort-by-category-list"
-            onClick={() => {
-              this.handleJump("https://koodo.960960.xyz/support");
-            }}
-          >
-            <Trans>Feedback</Trans>
-          </li>
+
           <li
             className="sort-by-category-list"
             onClick={() => {
@@ -62,6 +55,14 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
             }}
           >
             <Trans>Help</Trans>
+          </li>
+          <li
+            className="sort-by-category-list"
+            onClick={() => {
+              this.handleJump("https://koodo.960960.xyz/support");
+            }}
+          >
+            <Trans>Feedback</Trans>
           </li>
           <li
             className="sort-by-category-list"

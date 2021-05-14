@@ -9,7 +9,7 @@ import ReaderSwitch from "../../../components/readerSettings/settingSwitch";
 import { SettingPanelProps, SettingPanelState } from "./interface";
 import { Trans } from "react-i18next";
 import OtherUtil from "../../../utils/otherUtil";
-import { isMobile } from "react-device-detect";
+import { Tooltip } from "react-tippy";
 
 class SettingPanel extends React.Component<
   SettingPanelProps,
@@ -36,21 +36,28 @@ class SettingPanel extends React.Component<
   render() {
     return (
       <div className="setting-panel-parent">
-        <span
-          className={
-            this.state.isSettingLocked
-              ? "icon-lock lock-icon"
-              : "icon-unlock lock-icon"
-          }
-          onClick={() => {
-            this.handleLock();
-          }}
-        ></span>
+        <Tooltip
+          title={this.props.t(this.state.isSettingLocked ? "Unlock" : "Lock")}
+          position="bottom"
+          trigger="mouseenter"
+          style={{ height: "30px", display: "inline-block", float: "left" }}
+        >
+          <span
+            className={
+              this.state.isSettingLocked
+                ? "icon-lock lock-icon"
+                : "icon-unlock lock-icon"
+            }
+            onClick={() => {
+              this.handleLock();
+            }}
+          ></span>
+        </Tooltip>
         <div className="setting-panel-title">
           <Trans>Reading Option</Trans>
         </div>
         <div className="setting-panel">
-          {!isMobile && <ModeControl />}
+          <ModeControl />
           <ThemeList />
           <SliderList
             {...{
@@ -87,11 +94,11 @@ class SettingPanel extends React.Component<
           />
           <SliderList
             {...{
-              maxValue: 40,
+              maxValue: 60,
               minValue: 0,
               mode: "paraSpacing",
               minLabel: "0",
-              maxLabel: "40",
+              maxLabel: "60",
               step: 1,
               title: "Paragraph Spacing",
             }}
@@ -99,11 +106,11 @@ class SettingPanel extends React.Component<
           {this.state.readerMode && this.state.readerMode !== "double" ? (
             <SliderList
               {...{
-                maxValue: 2,
+                maxValue: 3,
                 minValue: 1,
                 mode: "scale",
                 minLabel: "1",
-                maxLabel: "2",
+                maxLabel: "3",
                 step: 0.2,
                 title: "Scale",
               }}

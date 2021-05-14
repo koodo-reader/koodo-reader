@@ -7,7 +7,6 @@ import {
 import { handleMode, handleShelfIndex } from "../../../store/actions/sidebar";
 import { handleDeleteDialog } from "../../../store/actions/book";
 import { stateType } from "../../../store";
-import { withNamespaces } from "react-i18next";
 import BookList from "./component";
 
 const mappropsToProps = (state: stateType) => {
@@ -29,7 +28,4 @@ const actionCreator = {
   handleDeleteDialog,
   handleFetchBooks,
 };
-export default connect(
-  mappropsToProps,
-  actionCreator
-)(withNamespaces()(BookList as any));
+export default connect(mappropsToProps, actionCreator)(BookList);

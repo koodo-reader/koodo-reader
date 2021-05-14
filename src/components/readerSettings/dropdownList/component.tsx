@@ -2,7 +2,7 @@
 import React from "react";
 import { dropdownList } from "../../../constants/dropdownList";
 import "./dropdownList.css";
-import { Trans, NamespacesConsumer } from "react-i18next";
+import { Trans } from "react-i18next";
 import { DropdownListProps, DropdownListState } from "./interface";
 import OtherUtil from "../../../utils/otherUtil";
 import { isElectron } from "react-device-detect";
@@ -116,18 +116,13 @@ class DropdownList extends React.Component<
             }}
           >
             {item.option.map((subItem: string, index: number) => (
-              <NamespacesConsumer key={index}>
-                {(t) => {
-                  return (
-                    <option
-                      value={[subItem, index.toString()]}
-                      className="general-setting-option"
-                    >
-                      {t(subItem)}
-                    </option>
-                  );
-                }}
-              </NamespacesConsumer>
+              <option
+                value={[subItem, index.toString()]}
+                key={index}
+                className="general-setting-option"
+              >
+                {this.props.t(subItem)}
+              </option>
             ))}
           </select>
         </li>

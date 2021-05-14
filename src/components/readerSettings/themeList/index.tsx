@@ -1,5 +1,5 @@
 import { connect } from "react-redux";
-import { withNamespaces } from "react-i18next";
+import { withTranslation } from "react-i18next";
 import ThemeList from "./component";
 import { stateType } from "../../../store";
 const mapStateToProps = (state: stateType) => {
@@ -11,4 +11,4 @@ const actionCreator = {};
 export default connect(
   mapStateToProps,
   actionCreator
-)(withNamespaces()(ThemeList as any));
+)(withTranslation()(ThemeList as any));

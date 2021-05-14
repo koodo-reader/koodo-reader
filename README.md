@@ -16,7 +16,7 @@
 </h3>
 <div align="center">
 
-[Download](https://koodo.960960.xyz/download) | [Website](https://koodo.960960.xyz)
+[Download](https://koodo.960960.xyz/download) | [Website](https://koodo.960960.xyz) | [Feedback](https://koodo.960960.xyz/support) | [Document](https://www.notion.so/troyeguo/01aaa516687c418499f713d34793b9ad?v=54d51fe1688a4f8ab5784b17e4df3308) | [Roadmap](https://www.notion.so/troyeguo/d1c19a132932465bae1d89dd963c92ea?v=ca8aa69cf25849c18c92b92ba868663b)
 
 </div>
 
@@ -68,6 +68,12 @@ Install with [Homebrew](https://brew.sh/):
 brew install --cask koodo-reader
 ```
 
+Install with Docker:
+
+```bash
+docker-compose up -d
+```
+
 ## Develop
 
 Make sure node's version on your computer is larger than 10.0.0, yarn and git is in place.
@@ -91,14 +97,6 @@ Make sure node's version on your computer is larger than 10.0.0, yarn and git is
    yarn
    yarn start
    ```
-
-## Docker
-
-You can run in docker compose
-
-```bash
-docker-compose up -d
-```
 
 ## Contribution
 

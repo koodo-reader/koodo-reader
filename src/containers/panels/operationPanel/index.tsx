@@ -9,7 +9,7 @@ import {
   handleShowBookmark,
 } from "../../../store/actions/viewArea";
 import { stateType } from "../../../store";
-import { withNamespaces } from "react-i18next";
+import { withTranslation } from "react-i18next";
 import {
   handleMessageBox,
   handleMessage,
@@ -42,4 +42,4 @@ const actionCreator = {
 export default connect(
   mapStateToProps,
   actionCreator
-)(withNamespaces()(OperationPanel as any));
+)(withTranslation()(OperationPanel as any));

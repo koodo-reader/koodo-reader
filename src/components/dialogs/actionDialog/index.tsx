@@ -12,7 +12,7 @@ import {
   handleFetchBooks,
 } from "../../../store/actions/manager";
 import { stateType } from "../../../store";
-import { withNamespaces } from "react-i18next";
+import { withTranslation } from "react-i18next";
 import ActionDialog from "./component";
 
 const mapStateToProps = (state: stateType) => {
@@ -35,4 +35,4 @@ const actionCreator = {
 export default connect(
   mapStateToProps,
   actionCreator
-)(withNamespaces()(ActionDialog as any));
+)(withTranslation()(ActionDialog as any));

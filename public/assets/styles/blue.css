@@ -12,16 +12,13 @@
 .new-version-open,
 .update-dialog-container-button,
 .import-from-local,
-.active-tag,
 .single-control-switch,
 .side-menu-selector-container,
 .previous-chapter-single-container,
 .next-chapter-single-container,
 .book-bookmark-link,
-.tag-list-item,
 .message-box-container,
-.only-local-icon,
-.popup-close {
+.only-local-icon {
   background-color: rgba(1, 121, 202, 1);
 }
 
@@ -32,11 +29,8 @@ input::-ms-input-placeholder,
 textarea::-webkit-input-placeholder,
 textarea::-moz-placeholder,
 textarea::-ms-input-placeholder,
-.editor-box::-ms-input-placeholder,
-.editor-box::-moz-placeholder,
 .header-search-text,
-.card-list-item-show-more,
-.editor-box::placeholder {
+.card-list-item-show-more {
   color: rgba(1, 121, 202, 0.8);
 }
 .single-control-container,

@@ -6,7 +6,7 @@ export const viewMode = [
   },
   {
     name: "List Mode",
-    icon: "list",
+    icon: "menu",
     mode: "list",
   },
 

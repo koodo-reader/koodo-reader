@@ -5,7 +5,6 @@ import { Trans } from "react-i18next";
 import { getParamsFromUrl } from "../../utils/syncUtils/common";
 import copy from "copy-text-to-clipboard";
 import { withRouter } from "react-router-dom";
-import { isMobile } from "react-device-detect";
 import OtherUtil from "../../utils/otherUtil";
 import DropboxUtil from "../../utils/syncUtils/dropbox";
 import Lottie from "react-lottie";
@@ -61,15 +60,6 @@ class Redirect extends React.Component<RedirectProps, RedirectState> {
       let params: any = getParamsFromUrl();
       this.setState({ token: params.access_token });
       this.setState({ isAuthed: true });
-      if (isMobile) {
-        OtherUtil.setReaderConfig(`dropbox_token`, params.access_token);
-        DropboxUtil.DownloadFile(
-          (mobileData) => {
-            window.ReactNativeWebView.postMessage(mobileData);
-          },
-          () => {}
-        );
-      }
       return false;
     }
     if (url.indexOf("mobile_first_open") > -1) {

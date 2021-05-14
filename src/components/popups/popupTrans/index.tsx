@@ -4,7 +4,7 @@ import {
   handleMenuMode,
 } from "../../../store/actions/viewArea";
 import { stateType } from "../../../store";
-import { withNamespaces } from "react-i18next";
+import { withTranslation } from "react-i18next";
 import PopupNote from "./component";
 const mapStateToProps = (state: stateType) => {
   return {
@@ -18,4 +18,4 @@ const actionCreator = {
 export default connect(
   mapStateToProps,
   actionCreator
-)(withNamespaces()(PopupNote as any));
+)(withTranslation()(PopupNote as any));

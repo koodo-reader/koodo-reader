@@ -8,6 +8,7 @@ import { version } from "../../../../package.json";
 import OtherUtil from "../../../utils/otherUtil";
 import SyncUtil from "../../../utils/syncUtils/common";
 import { isElectron } from "react-device-detect";
+import { Tooltip } from "react-tippy";
 import {
   settingList,
   langList,
@@ -24,7 +25,7 @@ class SettingDialog extends React.Component<
     this.state = {
       language: OtherUtil.getReaderConfig("lang"),
       isTouch: OtherUtil.getReaderConfig("isTouch") === "yes",
-      isRememberSize: OtherUtil.getReaderConfig("isRememberSize") === "yes",
+      isAutoFullscreen: OtherUtil.getReaderConfig("isAutoFullscreen") === "yes",
       isOpenBook: OtherUtil.getReaderConfig("isOpenBook") === "yes",
       isExpandContent: OtherUtil.getReaderConfig("isExpandContent") === "yes",
       isDisableUpdate: OtherUtil.getReaderConfig("isDisableUpdate") === "yes",
@@ -102,12 +103,12 @@ class SettingDialog extends React.Component<
     this.handleRest(this.state.isOpenBook);
   };
   handleWindowSize = () => {
-    this.setState({ isRememberSize: !this.state.isRememberSize });
+    this.setState({ isAutoFullscreen: !this.state.isAutoFullscreen });
     OtherUtil.setReaderConfig(
-      "isRememberSize",
-      this.state.isRememberSize ? "no" : "yes"
+      "isAutoFullscreen",
+      this.state.isAutoFullscreen ? "no" : "yes"
     );
-    this.handleRest(this.state.isRememberSize);
+    this.handleRest(this.state.isAutoFullscreen);
   };
   handleChangeLocation = async () => {
     const { dialog } = window.require("electron").remote;
@@ -211,11 +212,7 @@ class SettingDialog extends React.Component<
                         break;
                     }
                   }}
-                  style={
-                    this.state[item.propName]
-                      ? { background: "rgba(46, 170, 220)", float: "right" }
-                      : { float: "right" }
-                  }
+                  style={this.state[item.propName] ? {} : { opacity: 0.6 }}
                 >
                   <span
                     className="single-control-button"
@@ -239,18 +236,24 @@ class SettingDialog extends React.Component<
             <Trans>Theme Color</Trans>
             <ul className="theme-setting-container">
               {themeList.map((item, index) => (
-                <li
+                <Tooltip
                   key={item.id}
-                  className={
-                    index === this.state.currentThemeIndex
-                      ? "active-color theme-setting-item"
-                      : "theme-setting-item"
-                  }
-                  onClick={() => {
-                    this.handleTheme(item.name, index);
-                  }}
-                  style={{ backgroundColor: item.color }}
-                ></li>
+                  title={this.props.t(item.title)}
+                  position="top"
+                  trigger="mouseenter"
+                >
+                  <li
+                    className={
+                      index === this.state.currentThemeIndex
+                        ? "active-color theme-setting-item"
+                        : "theme-setting-item"
+                    }
+                    onClick={() => {
+                      this.handleTheme(item.name, index);
+                    }}
+                    style={{ backgroundColor: item.color }}
+                  ></li>
+                </Tooltip>
               ))}
             </ul>
           </div>
@@ -289,7 +292,11 @@ class SettingDialog extends React.Component<
               }}
             >
               {langList.map((item) => (
-                <option value={item.value} className="lang-setting-option">
+                <option
+                  value={item.value}
+                  key={item.value}
+                  className="lang-setting-option"
+                >
                   {item.label}
                 </option>
               ))}
@@ -305,7 +312,11 @@ class SettingDialog extends React.Component<
               }}
             >
               {searchList.map((item) => (
-                <option value={item.value} className="lang-setting-option">
+                <option
+                  value={item.value}
+                  key={item.value}
+                  className="lang-setting-option"
+                >
                   {item.label}
                 </option>
               ))}
