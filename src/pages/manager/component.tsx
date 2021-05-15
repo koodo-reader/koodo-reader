@@ -41,14 +41,6 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
       token: "",
     };
   }
-  //从indexdb里读取书籍
-  UNSAFE_componentWillMount() {
-    this.props.handleFetchBooks();
-    this.props.handleFetchNotes();
-    this.props.handleFetchBookmarks();
-    this.props.handleFetchBookSortCode();
-    this.props.handleFetchList();
-  }
 
   UNSAFE_componentWillReceiveProps(nextProps: ManagerProps) {
     if (nextProps.books && this.state.totalBooks !== nextProps.books.length) {
@@ -82,6 +74,11 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
     if (is_touch_device() && !OtherUtil.getReaderConfig("isTouch")) {
       OtherUtil.setReaderConfig("isTouch", "yes");
     }
+    this.props.handleFetchBooks();
+    this.props.handleFetchNotes();
+    this.props.handleFetchBookmarks();
+    this.props.handleFetchBookSortCode();
+    this.props.handleFetchList();
   }
 
   handleDrag = (isDrag: boolean) => {

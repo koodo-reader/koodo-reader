@@ -1,0 +1,13 @@
+.ebook-viewer {
+  height: 100vh;
+  width: 80vw;
+  position: absolute;
+  top: 20px;
+  left: 10vw;
+  overflow-y: scroll;
+  text-indent: 2rem;
+  font-family: STFangSong, Helvetica, Arial, Vernada, Tahoma, STXihei, SimSun,
+    Heiti, sans-serif;
+  line-height: 150%;
+  color: black;
+}

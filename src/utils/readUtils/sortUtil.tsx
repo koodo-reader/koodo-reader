@@ -188,6 +188,40 @@ class SortUtil {
       return noteObj || {};
     }
   }
+  static setBookSortCode(sortCode: number, orderCode: number) {
+    let json =
+      localStorage.getItem("bookSortCode") ||
+      JSON.stringify({ sort: 0, order: 1 });
+    let obj = json ? JSON.parse(json) : { sort: 0, order: 1 };
+    obj.sort = sortCode;
+    obj.order = orderCode;
+    localStorage.setItem("bookSortCode", JSON.stringify(obj));
+  }
+
+  static getBookSortCode() {
+    let json =
+      localStorage.getItem("bookSortCode") ||
+      JSON.stringify({ sort: 0, order: 1 });
+    let obj = JSON.parse(json) || { sort: 0, order: 1 };
+    return obj || null;
+  }
+  static setNoteSortCode(sort: number, order: number) {
+    let json =
+      localStorage.getItem("noteSortCode") ||
+      JSON.stringify({ sort: 2, order: 2 });
+    let obj = json ? JSON.parse(json) : { sort: 2, order: 2 };
+    obj.sort = sort;
+    obj.order = order;
+    localStorage.setItem("noteSortCode", JSON.stringify(obj));
+  }
+
+  static getNoteSortCode() {
+    let json =
+      localStorage.getItem("noteSortCode") ||
+      JSON.stringify({ sort: 2, order: 2 });
+    let obj = JSON.parse(json) || { sort: 2, order: 2 };
+    return obj || null;
+  }
 }
 
 export default SortUtil;

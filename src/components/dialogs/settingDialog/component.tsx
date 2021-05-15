@@ -24,29 +24,18 @@ class SettingDialog extends React.Component<
   constructor(props: SettingInfoProps) {
     super(props);
     this.state = {
-      language: OtherUtil.getReaderConfig("lang"),
       isTouch: OtherUtil.getReaderConfig("isTouch") === "yes",
       isAutoFullscreen: OtherUtil.getReaderConfig("isAutoFullscreen") === "yes",
       isOpenBook: OtherUtil.getReaderConfig("isOpenBook") === "yes",
       isExpandContent: OtherUtil.getReaderConfig("isExpandContent") === "yes",
       isDisableUpdate: OtherUtil.getReaderConfig("isDisableUpdate") === "yes",
       isDisplayDark: OtherUtil.getReaderConfig("isDisplayDark") === "yes",
-      searchEngine: navigator.language === "zh-CN" ? "baidu" : "google",
-      systemFont: OtherUtil.getReaderConfig("systemFont"),
       currentThemeIndex: _.findLastIndex(themeList, {
         name: OtherUtil.getReaderConfig("themeColor"),
       }),
     };
   }
   componentDidMount() {
-    //兼容之前的版本
-    const lng = OtherUtil.getReaderConfig("lang");
-    if (lng) {
-      this.setState({
-        language: lng,
-      });
-    }
-
     OtherUtil.getReaderConfig("systemFont") &&
       document
         .getElementsByClassName("lang-setting-dropdown")[0]
@@ -79,17 +68,10 @@ class SettingDialog extends React.Component<
   };
   changeLanguage = (lng: string) => {
     i18n.changeLanguage(lng);
-    this.setState({ language: lng });
     OtherUtil.setReaderConfig("lang", lng);
   };
   changeSearch = (searchEngine: string) => {
-    this.setState({ searchEngine });
     OtherUtil.setReaderConfig("searchEngine", searchEngine);
-  };
-  handleChangeTouch = () => {
-    this.setState({ isTouch: !this.state.isTouch });
-    OtherUtil.setReaderConfig("isTouch", this.state.isTouch ? "no" : "yes");
-    this.handleRest(this.state.isTouch);
   };
   changeFont = (font: string) => {
     let body = document.getElementsByTagName("body")[0];
@@ -101,40 +83,12 @@ class SettingDialog extends React.Component<
       ? window.require("electron").shell.openExternal(url)
       : window.open(url);
   };
-
-  handleExpandContent = () => {
-    this.setState({ isExpandContent: !this.state.isExpandContent });
-    OtherUtil.setReaderConfig(
-      "isExpandContent",
-      this.state.isExpandContent ? "no" : "yes"
-    );
-    this.handleRest(this.state.isExpandContent);
-  };
-  handleDisableUpdate = () => {
-    this.setState({ isDisableUpdate: !this.state.isDisableUpdate });
-    OtherUtil.setReaderConfig(
-      "isDisableUpdate",
-      this.state.isDisableUpdate ? "no" : "yes"
-    );
-    this.handleRest(this.state.isDisableUpdate);
+  handleSetting = (stateName: string) => {
+    this.setState({ [stateName]: !this.state[stateName] } as any);
+    OtherUtil.setReaderConfig(stateName, this.state[stateName] ? "no" : "yes");
+    this.handleRest(this.state[stateName]);
   };
 
-  handleChangeOpen = () => {
-    this.setState({ isOpenBook: !this.state.isOpenBook });
-    OtherUtil.setReaderConfig(
-      "isOpenBook",
-      this.state.isOpenBook ? "no" : "yes"
-    );
-    this.handleRest(this.state.isOpenBook);
-  };
-  handleWindowSize = () => {
-    this.setState({ isAutoFullscreen: !this.state.isAutoFullscreen });
-    OtherUtil.setReaderConfig(
-      "isAutoFullscreen",
-      this.state.isAutoFullscreen ? "no" : "yes"
-    );
-    this.handleRest(this.state.isAutoFullscreen);
-  };
   handleChangeLocation = async () => {
     const { dialog } = window.require("electron").remote;
     var path = await dialog.showOpenDialog({
@@ -216,19 +170,11 @@ class SettingDialog extends React.Component<
                   onClick={() => {
                     switch (index) {
                       case 0:
-                        this.handleChangeTouch();
-                        break;
                       case 1:
-                        this.handleChangeOpen();
-                        break;
                       case 2:
-                        this.handleWindowSize();
-                        break;
                       case 3:
-                        this.handleExpandContent();
-                        break;
                       case 4:
-                        this.handleDisableUpdate();
+                        this.handleSetting(item.propName);
                         break;
                       case 5:
                         this.handleDisplayDark();
