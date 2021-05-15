@@ -386,7 +386,7 @@ class MobiFile {
     span.innerHTML = s;
     return span.textContent || span.innerText;
   }
-  render(handleMessage, handleMessageBox) {
+  render(isElectron: boolean = false) {
     return new Promise((resolve, reject) => {
       this.load();
       var content = this.read_text();
@@ -407,11 +407,7 @@ class MobiFile {
       }
       const handleImage = async () => {
         var imgDoms = bookDoc.getElementsByTagName("img");
-        if (imgDoms.length > 500) {
-          handleMessage("Too many images");
-          handleMessageBox(true);
-          resolve(parseContent.join("\n    \n"));
-        }
+
         parseContent.push("~image");
         for (let i = 0; i < imgDoms.length; i++) {
           const src = await this.render_image(imgDoms, i);
@@ -419,7 +415,11 @@ class MobiFile {
             src + " " + imgDoms[i].width + " " + imgDoms[i].height
           );
         }
-        resolve(parseContent.join("\n    \n"));
+        if (imgDoms.length > 200 || !isElectron) {
+          resolve(bookDoc);
+        } else {
+          resolve(parseContent.join("\n    \n"));
+        }
       };
       handleImage();
     });

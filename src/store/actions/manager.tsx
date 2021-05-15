@@ -1,5 +1,6 @@
 import localforage from "localforage";
 import OtherUtil from "../../utils/otherUtil";
+import SortUtil from "../../utils/readUtils/sortUtil";
 import BookModel from "../../model/Book";
 import BookmarkModel from "../../model/Bookmark";
 import NoteModel from "../../model/Note";
@@ -86,7 +87,7 @@ export function handleFetchBooks(isTrash = false) {
 }
 export function handleFetchBookSortCode() {
   return (dispatch: Dispatch) => {
-    let bookSortCode = OtherUtil.getBookSortCode();
+    let bookSortCode = SortUtil.getBookSortCode();
     dispatch(handleBookSortCode(bookSortCode));
   };
 }
@@ -102,11 +103,12 @@ const handleKeyRemove = (items: any[], arr: string[]) => {
   if (!arr[0]) {
     return items;
   }
-  for (let i = 0; i < items.length; i++) {
-    if (arr.indexOf(items[i].key) === -1) {
-      itemArr.push(items[i]);
+  for (let item of items) {
+    if (arr.indexOf(item.key) === -1) {
+      itemArr.push(item);
     }
   }
+
   return itemArr;
 };
 const handleKeyFilter = (items: any[], arr: string[]) => {
@@ -114,9 +116,9 @@ const handleKeyFilter = (items: any[], arr: string[]) => {
     return [];
   }
   let itemArr: any[] = [];
-  for (let i = 0; i < items.length; i++) {
-    if (arr.indexOf(items[i].key) > -1) {
-      itemArr.push(items[i]);
+  for (let item of items) {
+    if (arr.indexOf(item.key) > -1) {
+      itemArr.push(item);
     }
   }
   return itemArr;

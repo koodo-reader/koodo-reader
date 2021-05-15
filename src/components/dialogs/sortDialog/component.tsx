@@ -1,7 +1,7 @@
 //排序弹窗
 import React from "react";
 import "./sortDialog.css";
-import OtherUtil from "../../../utils/otherUtil";
+import SortUtil from "../../../utils/readUtils/sortUtil";
 import { Trans } from "react-i18next";
 import { SortDialogProps, SortDialogState } from "./interface";
 
@@ -19,13 +19,13 @@ class SortDialog extends React.Component<SortDialogProps, SortDialogState> {
       noteSortCode.sort = code;
       this.props.handleNoteSortCode(noteSortCode);
       this.props.handleNoteSort(true);
-      OtherUtil.setNoteSortCode(code, this.props.noteSortCode.order);
+      SortUtil.setNoteSortCode(code, this.props.noteSortCode.order);
     } else {
       let bookSortCode = this.props.bookSortCode;
       bookSortCode.sort = code;
       this.props.handleBookSortCode(bookSortCode);
       this.props.handleBookSort(true);
-      OtherUtil.setBookSortCode(code, this.props.bookSortCode.order);
+      SortUtil.setBookSortCode(code, this.props.bookSortCode.order);
     }
   };
   handleOrder = (code: number) => {
@@ -33,13 +33,13 @@ class SortDialog extends React.Component<SortDialogProps, SortDialogState> {
       let noteSortCode = this.props.noteSortCode;
       noteSortCode.order = code;
       this.props.handleNoteSort(true);
-      OtherUtil.setNoteSortCode(this.props.noteSortCode.sort, code);
+      SortUtil.setNoteSortCode(this.props.noteSortCode.sort, code);
       this.props.handleNoteSortCode(noteSortCode);
     } else {
       let bookSortCode = this.props.bookSortCode;
       bookSortCode.order = code;
       this.props.handleBookSort(true);
-      OtherUtil.setBookSortCode(this.props.bookSortCode.sort, code);
+      SortUtil.setBookSortCode(this.props.bookSortCode.sort, code);
       this.props.handleBookSortCode(bookSortCode);
     }
   };

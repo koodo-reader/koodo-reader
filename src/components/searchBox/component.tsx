@@ -1,7 +1,7 @@
 //搜索框
 import React from "react";
 import "./searchBox.css";
-import OtherUtil from "../../utils/otherUtil";
+import SearchUtil from "../../utils/searchUtil";
 import { SearchBoxProps } from "./interface";
 class SearchBox extends React.Component<SearchBoxProps> {
   componentDidMount() {
@@ -20,12 +20,12 @@ class SearchBox extends React.Component<SearchBoxProps> {
     }
     let results =
       this.props.tabMode === "note"
-        ? OtherUtil.MouseNoteSearch(
+        ? SearchUtil.MouseNoteSearch(
             this.props.notes.filter((item) => item.notes !== "")
           )
         : this.props.tabMode === "digest"
-        ? OtherUtil.MouseNoteSearch(this.props.digests)
-        : OtherUtil.MouseSearch(this.props.books);
+        ? SearchUtil.MouseNoteSearch(this.props.digests)
+        : SearchUtil.MouseSearch(this.props.books);
     if (results) {
       this.props.handleSearchResults(results);
       this.props.handleSearch(true);
@@ -41,13 +41,13 @@ class SearchBox extends React.Component<SearchBoxProps> {
     }
     let results =
       this.props.tabMode === "note"
-        ? OtherUtil.KeyNoteSearch(
+        ? SearchUtil.KeyNoteSearch(
             event,
             this.props.notes.filter((item) => item.notes !== "")
           )
         : this.props.tabMode === "digest"
-        ? OtherUtil.KeyNoteSearch(event, this.props.digests)
-        : OtherUtil.KeySearch(event, this.props.books);
+        ? SearchUtil.KeyNoteSearch(event, this.props.digests)
+        : SearchUtil.KeySearch(event, this.props.books);
     if (results) {
       this.props.handleSearchResults(results);
       this.props.handleSearch(true);

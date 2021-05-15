@@ -1,4 +1,4 @@
-import OtherUtil from "../../utils/otherUtil";
+import SortUtil from "../../utils/readUtils/sortUtil";
 const initState = {
   books: null,
   deletedBooks: [],
@@ -14,7 +14,7 @@ const initState = {
   isDownloadDesk: false,
   isShowNew: false,
   bookSortCode: { sort: 0, order: 1 },
-  noteSortCode: OtherUtil.getNoteSortCode(),
+  noteSortCode: SortUtil.getNoteSortCode(),
   isMessage: false,
   message: "Add Successfully",
 };
