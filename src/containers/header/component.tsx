@@ -168,6 +168,9 @@ class Header extends React.Component<HeaderProps, HeaderState> {
             onClick={() => {
               this.props.handleSortDisplay(!this.props.isSortDisplay);
             }}
+            onMouseLeave={() => {
+              this.props.handleSortDisplay(false);
+            }}
             style={{ left: "490px", top: "18px" }}
           >
             <Tooltip
@@ -182,6 +185,9 @@ class Header extends React.Component<HeaderProps, HeaderState> {
             className="setting-icon-container"
             onClick={() => {
               this.props.handleAbout(!this.props.isAboutOpen);
+            }}
+            onMouseLeave={() => {
+              this.props.handleAbout(false);
             }}
           >
             <Tooltip

@@ -100,7 +100,7 @@
   opacity: 0.6;
 }
 .card-list-item-text {
-  width: calc(100% - 20px);
+  width: calc(100% - 25px);
   height: 53px;
   overflow-y: scroll;
   margin: 14px 10px 0px 10px;
@@ -108,9 +108,10 @@
   cursor: text;
   line-height: 18px;
   font-size: 15px;
+  padding-right: 5px;
 }
 .card-list-item-note {
-  width: calc(100% - 20px);
+  width: calc(100% - 25px);
   height: 73px;
   overflow-y: scroll;
   margin: 14px 10px 0px 10px;
@@ -118,6 +119,7 @@
   cursor: text;
   line-height: 18px;
   font-size: 15px;
+  padding-right: 5px;
 }
 ::-webkit-scrollbar {
   width: 0.3rem;

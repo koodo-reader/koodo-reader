@@ -14318,7 +14318,14 @@ wbuf@^1.1.0, wbuf@^1.7.3:
   dependencies:
     minimalistic-assert "^1.0.0"
 
-webdav@^3.6.2:
+webdav-fs@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.nlark.com/webdav-fs/download/webdav-fs-3.0.0.tgz#2e6a71c4595e7ce26e2cdef92f57086032ef3a2b"
+  integrity sha1-LmpxxFlefOJuLN75L1cIYDLvOis=
+  dependencies:
+    webdav "^3.4.0"
+
+webdav@^3.4.0, webdav@^3.6.2:
   version "3.6.2"
   resolved "https://registry.npm.taobao.org/webdav/download/webdav-3.6.2.tgz#76e3d8e950e80698a2f1db23ef2496888662cbeb"
   integrity sha1-duPY6VDoBpii8dsj7ySWiIZiy+s=

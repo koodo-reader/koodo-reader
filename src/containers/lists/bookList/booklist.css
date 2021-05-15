@@ -11,11 +11,8 @@
   height: 100%;
   display: flex;
   flex-wrap: wrap;
-  overflow-y: scroll;
   align-content: flex-start;
   user-select: text;
-  padding-right: 17px; /* Increase/decrease this value for cross-browser compatibility */
-  box-sizing: content-box; /* So the width will be 100% + 17px */
 }
 .booklist-delete-container {
   position: absolute;
