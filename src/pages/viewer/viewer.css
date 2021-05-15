@@ -11,3 +11,8 @@
   line-height: 150%;
   color: black;
 }
+.ebook-parent {
+  margin: 0;
+  height: 100vh;
+  overflow-y: scroll;
+}

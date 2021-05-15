@@ -9,7 +9,11 @@ import BookUtil from "../../utils/bookUtil";
 import Lottie from "react-lottie";
 import animationSiri from "../../assets/lotties/siri.json";
 import MobiParser from "../../utils/mobiParser";
+import marked from "marked";
 import "./viewer.css";
+import OtherUtil from "../../utils/otherUtil";
+
+declare var window: any;
 
 const siriOptions = {
   loop: true,
@@ -39,11 +43,30 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           this.handleMobi(result as ArrayBuffer);
         } else if (book.format === "TXT") {
           this.handleTxt(result as ArrayBuffer);
+        } else if (book.format === "DJVU") {
+          this.handleDjvu(result as ArrayBuffer);
+        } else if (book.format === "MD") {
+          this.handleMD(result as ArrayBuffer);
         }
         this.props.handleReadingState(true);
         RecentBooks.setRecent(key);
       });
     });
+    document
+      .querySelectorAll('style,link[rel="stylesheet"]')
+      .forEach((item) => item.remove());
+    window.onbeforeunload = () => {
+      this.handleExit();
+    };
+  }
+  // 点击退出按钮的处理程序
+  handleExit() {
+    this.props.handleReadingState(false);
+
+    OtherUtil.setReaderConfig("windowWidth", document.body.clientWidth + "");
+    OtherUtil.setReaderConfig("windowHeight", document.body.clientHeight + "");
+    OtherUtil.setReaderConfig("windowX", window.screenX + "");
+    OtherUtil.setReaderConfig("windowY", window.screenY + "");
   }
   handleMobi = async (result: ArrayBuffer) => {
     let mobiFile = new MobiParser(result);
@@ -52,7 +75,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     if (!viewer?.innerHTML) return;
     viewer.innerHTML = content.outerHTML;
   };
-  handleTxt = async (result: ArrayBuffer) => {
+  handleTxt = (result: ArrayBuffer) => {
     var blob = new Blob([result], { type: "text/plain" });
     var reader = new FileReader();
     reader.onload = function (evt) {
@@ -60,6 +83,24 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       console.log(evt.target?.result, viewer, document);
       if (!viewer?.innerText) return;
       viewer.innerText = evt.target?.result as any;
+    };
+    reader.readAsText(blob, "UTF-8");
+  };
+  handleDjvu = async (result: ArrayBuffer) => {
+    setTimeout(() => {
+      var ViewerInstance = new window.DjVu.Viewer();
+      ViewerInstance.render(document.querySelector(".ebook-parent"));
+      ViewerInstance.loadDocument(result);
+    }, 100);
+  };
+  handleMD = (result: ArrayBuffer) => {
+    var blob = new Blob([result], { type: "text/plain" });
+    var reader = new FileReader();
+    reader.onload = function (evt) {
+      let viewer: HTMLElement | null = document.querySelector(".ebook-parent");
+      console.log(evt.target?.result, viewer, document);
+      if (!viewer?.innerHTML) return;
+      viewer.innerHTML = marked(evt.target?.result as any);
     };
     reader.readAsText(blob, "UTF-8");
   };
@@ -71,7 +112,11 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         </div>
       );
     }
-    return <div className="ebook-viewer">Loading</div>;
+    return (
+      <div className="ebook-parent">
+        <div className="ebook-viewer">Loading</div>
+      </div>
+    );
   }
 }
 export default withRouter(Viewer as any);
