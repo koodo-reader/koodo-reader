@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { Route, Switch, HashRouter } from "react-router-dom";
 import Manager from "../pages/manager";
 import EpubReader from "../pages/epubReader";
+import Viewer from "../pages/viewer";
 import _Redirect from "../pages/redirect";
 import i18n from "../i18n";
 import OtherUtil from "../utils/otherUtil";
@@ -31,6 +32,9 @@ const Router = () => {
       <Switch>
         <Route component={Manager} path="/manager" />
         <Route component={EpubReader} path="/epub" />
+        <Route component={Viewer} path="/mobi" />
+        <Route component={Viewer} path="/azw3" />
+        <Route component={Viewer} path="/txt" />
         <Route component={_Redirect} path="/" />
       </Switch>
     </HashRouter>

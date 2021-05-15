@@ -8,7 +8,7 @@ import { Provider } from "react-redux";
 import "./i18n";
 import store from "./store";
 import Router from "./router/index";
-import OtherUtil from "./utils/otherUtil";
+import StyleUtil from "./utils/readUtils/styleUtil";
 import { isElectron } from "react-device-detect";
 import { dropdownList } from "./constants/dropdownList";
 
@@ -28,7 +28,7 @@ if (
   dropdownList[0].option = ipcRenderer.sendSync("fonts-ready", "ping");
   dropdownList[0].option.push("Built-in font");
 }
-OtherUtil.applyTheme();
+StyleUtil.applyTheme();
 let coverLoading: any = document.querySelector(".loading-cover");
 coverLoading && coverLoading.parentNode.removeChild(coverLoading);
 

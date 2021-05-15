@@ -1,8 +1,9 @@
+//卡片模式下的图书显示
 import React from "react";
 import RecentBooks from "../../utils/readUtils/recordRecent";
-import { EpubReaderProps, EpubReaderState } from "./interface";
+import { DjvuReaderProps, DjvuReaderState } from "./interface";
 import localforage from "localforage";
-import Reader from "../../containers/epubViewer";
+
 import { withRouter } from "react-router-dom";
 import _ from "underscore";
 import BookUtil from "../../utils/bookUtil";
@@ -19,9 +20,9 @@ const siriOptions = {
 };
 declare var window: any;
 
-class EpubReader extends React.Component<EpubReaderProps, EpubReaderState> {
+class DjvuReader extends React.Component<DjvuReaderProps, DjvuReaderState> {
   epub: any;
-  constructor(props: EpubReaderProps) {
+  constructor(props: DjvuReaderProps) {
     super(props);
     this.state = {};
   }
@@ -49,7 +50,7 @@ class EpubReader extends React.Component<EpubReaderProps, EpubReaderState> {
         </div>
       );
     }
-    return <Reader />;
+    return <div className="djvu-viewer"></div>;
   }
 }
-export default withRouter(EpubReader);
+export default withRouter(DjvuReader as any);
