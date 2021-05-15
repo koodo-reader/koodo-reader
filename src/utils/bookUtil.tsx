@@ -266,8 +266,8 @@ class BookUtil {
             return item.startsWith("data");
           });
           lines.splice(imgIndex, lineLength - imgIndex);
-          for (let i = 0; i < lines.length; i++) {
-            const line = escapeHTML(lines[i]).trim();
+          for (let item of lines) {
+            const line = escapeHTML(item).trim();
             if (isTitle(line)) {
               content.push({
                 title: line,
@@ -306,12 +306,8 @@ class BookUtil {
           });
         };
         analyzeChapter();
-
-        for (let i = 0; i < contentFilter.length; i++) {
-          epub.addSection(
-            contentFilter[i].title,
-            `<h1>${contentFilter[i].title}</h1>` + contentFilter[i].data
-          );
+        for (let item of contentFilter) {
+          epub.addSection(item.title, `<h1>${item.title}</h1>` + item.data);
         }
 
         epub.writeEPUB(

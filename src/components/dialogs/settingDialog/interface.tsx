@@ -13,6 +13,7 @@ export interface SettingInfoProps {
 export interface SettingInfoState {
   language: string;
   searchEngine: string;
+  systemFont: string;
   isTouch: boolean;
   isOpenBook: boolean;
   isDisplayDark: boolean;

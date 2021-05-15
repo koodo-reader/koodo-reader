@@ -8,6 +8,7 @@ import { version } from "../../../../package.json";
 import OtherUtil from "../../../utils/otherUtil";
 import SyncUtil from "../../../utils/syncUtils/common";
 import { isElectron } from "react-device-detect";
+import { dropdownList } from "../../../constants/dropdownList";
 import { Tooltip } from "react-tippy";
 import {
   settingList,
@@ -31,25 +32,44 @@ class SettingDialog extends React.Component<
       isDisableUpdate: OtherUtil.getReaderConfig("isDisableUpdate") === "yes",
       isDisplayDark: OtherUtil.getReaderConfig("isDisplayDark") === "yes",
       searchEngine: navigator.language === "zh-CN" ? "baidu" : "google",
+      systemFont: OtherUtil.getReaderConfig("systemFont"),
       currentThemeIndex: _.findLastIndex(themeList, {
         name: OtherUtil.getReaderConfig("themeColor"),
       }),
     };
   }
   componentDidMount() {
+    //兼容之前的版本
     const lng = OtherUtil.getReaderConfig("lang");
     if (lng) {
       this.setState({
         language: lng,
       });
     }
+
+    OtherUtil.getReaderConfig("systemFont") &&
+      document
+        .getElementsByClassName("lang-setting-dropdown")[0]
+        ?.children[
+          dropdownList[0].option.indexOf(
+            OtherUtil.getReaderConfig("systemFont")
+          )
+        ].setAttribute("selected", "selected");
     document
-      .querySelector(".lang-setting-dropdown")
+      .getElementsByClassName("lang-setting-dropdown")[1]
       ?.children[
         ["zh", "cht", "en", "ru"].indexOf(
-          OtherUtil.getReaderConfig("lang") || "zh"
+          OtherUtil.getReaderConfig("lang") ||
+            (navigator.language.indexOf("zh") > -1 ? "zh" : "en")
         )
       ].setAttribute("selected", "selected");
+    document.getElementsByClassName("lang-setting-dropdown")[2]?.children[
+      _.findLastIndex(searchList, {
+        value:
+          OtherUtil.getReaderConfig("searchEngine") ||
+          (navigator.language === "zh-CN" ? "baidu" : "google"),
+      })
+    ].setAttribute("selected", "selected");
   }
   handleRest = (bool: boolean) => {
     bool
@@ -70,6 +90,11 @@ class SettingDialog extends React.Component<
     this.setState({ isTouch: !this.state.isTouch });
     OtherUtil.setReaderConfig("isTouch", this.state.isTouch ? "no" : "yes");
     this.handleRest(this.state.isTouch);
+  };
+  changeFont = (font: string) => {
+    let body = document.getElementsByTagName("body")[0];
+    body.setAttribute("style", "font-family:" + font + "!important");
+    OtherUtil.setReaderConfig("systemFont", font);
   };
   handleJump = (url: string) => {
     isElectron
@@ -281,6 +306,22 @@ class SettingDialog extends React.Component<
               </div>
             </>
           )}
+          <div className="setting-dialog-new-title">
+            <Trans>System Font</Trans>
+            <select
+              name=""
+              className="lang-setting-dropdown"
+              onChange={(event) => {
+                this.changeFont(event.target.value);
+              }}
+            >
+              {dropdownList[0].option.map((item) => (
+                <option value={item} key={item} className="lang-setting-option">
+                  {item}
+                </option>
+              ))}
+            </select>
+          </div>
 
           <div className="setting-dialog-new-title">
             <Trans>Language</Trans>
