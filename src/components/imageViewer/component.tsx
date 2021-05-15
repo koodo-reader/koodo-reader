@@ -52,7 +52,6 @@ class ImageViewer extends React.Component<ImageViewerProps, ImageViewerStates> {
         event.target.parentNode.parentNode.href ||
         "";
     }
-    console.log(href);
     if (
       isElectron &&
       href &&

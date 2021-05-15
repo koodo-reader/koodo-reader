@@ -7,7 +7,7 @@ import {
   handleReadingEpub,
 } from "../../store/actions/book";
 import { handleMessageBox, handleMessage } from "../../store/actions/manager";
-import Book from "./component";
+import EpubReader from "./component";
 import { stateType } from "../../store";
 
 const mapStateToProps = (state: stateType) => {
@@ -25,4 +25,4 @@ const actionCreator = {
   handleMessageBox,
   handleMessage,
 };
-export default connect(mapStateToProps, actionCreator)(Book);
+export default connect(mapStateToProps, actionCreator)(EpubReader);

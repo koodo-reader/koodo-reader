@@ -1,7 +1,5 @@
-//卡片模式下的图书显示
 import React from "react";
 import RecentBooks from "../../utils/readUtils/recordRecent";
-// import "./bookCardItem.css";
 import { EpubReaderProps, EpubReaderState } from "./interface";
 import localforage from "localforage";
 import Reader from "../../containers/epubViewer";

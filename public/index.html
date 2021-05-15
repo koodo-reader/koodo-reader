@@ -173,7 +173,10 @@
       document.head.appendChild(style);
       if (
         document.location.href.indexOf("epub") > -1 ||
-        document.location.href.indexOf("pdf") > -1
+        document.location.href.indexOf("pdf") > -1 ||
+        document.location.href.indexOf("mobi") > -1 ||
+        document.location.href.indexOf("txt") > -1 ||
+        document.location.href.indexOf("azw3") > -1
       ) {
         let coverLoading = document.querySelector(".loading-cover");
         coverLoading && coverLoading.parentNode.removeChild(coverLoading);
@@ -218,6 +221,11 @@
     <script
       type="text/javascript"
       src="%PUBLIC_URL%/lib/Hammer/hammer.min.js"
+    ></script>
+    <script type="text/javascript" src="%PUBLIC_URL%/lib/djvu/djvu.js"></script>
+    <script
+      type="text/javascript"
+      src="%PUBLIC_URL%/lib/djvu/djvu_viewer.js"
     ></script>
     <script>
       var _hmt = _hmt || [];

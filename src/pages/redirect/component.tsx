@@ -6,7 +6,6 @@ import { getParamsFromUrl } from "../../utils/syncUtils/common";
 import copy from "copy-text-to-clipboard";
 import { withRouter } from "react-router-dom";
 import OtherUtil from "../../utils/otherUtil";
-import DropboxUtil from "../../utils/syncUtils/dropbox";
 import Lottie from "react-lottie";
 import animationSuccess from "../../assets/lotties/success.json";
 
@@ -18,8 +17,6 @@ const successOptions = {
     preserveAspectRatio: "xMidYMid slice",
   },
 };
-
-declare var window: any;
 
 class Redirect extends React.Component<RedirectProps, RedirectState> {
   timer!: NodeJS.Timeout;
@@ -61,23 +58,6 @@ class Redirect extends React.Component<RedirectProps, RedirectState> {
       this.setState({ token: params.access_token });
       this.setState({ isAuthed: true });
       return false;
-    }
-    if (url.indexOf("mobile_first_open") > -1) {
-      DropboxUtil.DownloadFile(
-        (mobileData) => {
-          window.ReactNativeWebView.postMessage(mobileData);
-        },
-        () => {}
-      );
-    }
-    if (url.indexOf("mobile_sync") > -1) {
-      DropboxUtil.DownloadFile(
-        (mobileData) => {
-          window.ReactNativeWebView.postMessage(mobileData);
-        },
-        () => {},
-        true
-      );
     }
   }
 

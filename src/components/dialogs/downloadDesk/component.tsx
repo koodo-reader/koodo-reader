@@ -51,9 +51,6 @@ class DownloadDesk extends React.Component<
         </div>
         <div className="download-desk-feature-container">
           <div className="download-desk-feature-item">
-            <Trans>More formats supported</Trans>
-          </div>
-          <div className="download-desk-feature-item">
             <Trans>Use the fonts from your local computer</Trans>
           </div>
           <div className="download-desk-feature-item">

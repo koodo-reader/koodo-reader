@@ -89,8 +89,8 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
           OtherUtil.getReaderConfig("readerMode") === "double")
       ) {
         OtherUtil.setReaderConfig("readerMode", "single");
-        window.location.reload();
       }
+      window.location.reload();
     });
   }
 

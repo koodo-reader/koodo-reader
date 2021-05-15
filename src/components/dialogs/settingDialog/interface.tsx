@@ -11,9 +11,6 @@ export interface SettingInfoProps {
   books: BookModel[];
 }
 export interface SettingInfoState {
-  language: string;
-  searchEngine: string;
-  systemFont: string;
   isTouch: boolean;
   isOpenBook: boolean;
   isDisplayDark: boolean;
