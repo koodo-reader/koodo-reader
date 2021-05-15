@@ -7,12 +7,7 @@ class WebdavUtil {
     handleFinish: () => void,
     showMessage: (message: string) => void
   ) => {
-    const fs = window.require("fs");
-    const path = window.require("path");
     const { createClient } = window.require("webdav");
-    const { remote, app } = window.require("electron");
-    const configDir = (app || remote.app).getPath("userData");
-    const dirPath = path.join(configDir, "uploads");
     let { url, username, password } = JSON.parse(
       OtherUtil.getReaderConfig("webdav_token") || ""
     );
@@ -20,46 +15,34 @@ class WebdavUtil {
       username,
       password,
     });
-    var reader = new FileReader();
-    reader.readAsArrayBuffer(file);
-    reader.onload = async (event) => {
-      fs.writeFileSync(
-        path.join(dirPath, file.name),
-        Buffer.from(event.target!.result as any)
-      );
-      if ((await client.exists("/KoodoReader")) === false) {
-        await client.createDirectory("/KoodoReader");
-      }
+    var wfs = window.require("webdav-fs")(url, {
+      username: username,
+      password: password,
+    });
+    if ((await client.exists("/KoodoReader")) === false) {
+      await client.createDirectory("/KoodoReader");
+    }
+    wfs.writeFile("/KoodoReader/data.zip", file, "binary", function (err) {
+      console.log(err);
+      if (err) showMessage("Upload failed, check your connection");
       let year = new Date().getFullYear(),
         month = new Date().getMonth() + 1,
         day = new Date().getDate();
-      let Datastream = client.createWriteStream(
-        "/KoodoReader/data.zip",
-        { overwrite: true },
-        () => {
-          client
-            .copyFile(
-              "/KoodoReader/data.zip",
-              "/KoodoReader/" +
-                `${year}-${month <= 9 ? "0" + month : month}-${
-                  day <= 9 ? "0" + day : day
-                }.zip`
-            )
-            .then(() => {
-              const fs_extra = window.require("fs-extra");
-              fs_extra.remove(path.join(dirPath, file.name), (err) => {
-                if (err) showMessage("Upload failed, check your connection");
-                console.log("successfully data deleted");
-              });
-              handleFinish();
-            })
-            .catch(() => {
-              showMessage("Upload failed, check your connection");
-            });
-        }
-      );
-      fs.createReadStream(path.join(dirPath, file.name)).pipe(Datastream);
-    };
+      client
+        .copyFile(
+          "/KoodoReader/data.zip",
+          "/KoodoReader/" +
+            `${year}-${month <= 9 ? "0" + month : month}-${
+              day <= 9 ? "0" + day : day
+            }.zip`
+        )
+        .then(() => {
+          handleFinish();
+        })
+        .catch(() => {
+          showMessage("Upload failed, check your connection");
+        });
+    });
 
     return false;
   };
@@ -102,9 +85,9 @@ class WebdavUtil {
           });
           RestoreUtil.restore(fileTemp, handleFinish);
           try {
-            const fs = window.require("fs-extra");
-            fs.remove(path.join(dirPath, `data.zip`), (err) => {
-              if (err) throw err;
+            const fs_extra = window.require("fs-extra");
+            fs_extra.remove(path.join(dirPath, `data.zip`), (error: any) => {
+              if (error) throw error;
             });
           } catch (e) {
             console.log("error removing ", path.join(dirPath, `data.zip`));

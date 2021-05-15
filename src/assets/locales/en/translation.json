@@ -26,6 +26,7 @@
   "New Version": "New",
   "Customize": "Customize",
   "Auto open book in fullscreen": "Auto open book in fullscreen",
+  "System Font": "System Font",
 
   "Access token expired": "Access token expired, refetching token",
   "Access token received, please continue": "Access token received, please continue",

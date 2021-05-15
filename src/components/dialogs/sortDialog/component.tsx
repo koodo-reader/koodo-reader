@@ -43,13 +43,7 @@ class SortDialog extends React.Component<SortDialogProps, SortDialogState> {
       this.props.handleBookSortCode(bookSortCode);
     }
   };
-  handleSortBooks = () => {
-    if (this.props.isSortDisplay) {
-      this.props.handleSortDisplay(false);
-    } else {
-      this.props.handleSortDisplay(true);
-    }
-  };
+
   render() {
     let sortCode = this.state.isNote
       ? this.props.noteSortCode
@@ -58,10 +52,12 @@ class SortDialog extends React.Component<SortDialogProps, SortDialogState> {
       <div
         className="sort-dialog-container"
         onMouseLeave={() => {
-          this.handleSortBooks();
+          this.props.handleSortDisplay(false);
+        }}
+        onMouseEnter={() => {
+          this.props.handleSortDisplay(true);
         }}
         style={this.state.isNote ? { height: "120px" } : {}}
-        // style={this.state.isNote ? { height: "120px" } : {}}
       >
         {this.state.isNote ? (
           <ul className="sort-by-category">

@@ -69,47 +69,47 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
         if (isRepeat && repeatBook) {
           this.props.handleLoadingDialog(false);
           this.handleJump(repeatBook);
-        } else {
-          fetch(filePath)
-            .then((response) => response.body)
-            .then((body) => {
-              const reader = body!.getReader();
-              return new ReadableStream({
-                start(controller) {
-                  return pump();
-                  function pump(): any {
-                    return reader.read().then(({ done, value }) => {
-                      if (done) {
-                        controller.close();
-                        return;
-                      }
-                      controller.enqueue(value);
-                      return pump();
-                    });
-                  }
-                },
-              });
-            })
-            .then((stream) => new Response(stream))
-            .then((response) => response.blob())
-            .then((blob) => {
-              let fileTemp = new File(
-                [blob],
-                window.navigator.platform.indexOf("Win") > -1
-                  ? filePath.split("\\").reverse()[0]
-                  : filePath.split("/").reverse()[0],
-                {
-                  lastModified: new Date().getTime(),
-                  type: blob.type,
-                }
-              );
-              this.setState({ isOpenFile: true }, async () => {
-                await this.getMd5WithBrowser(fileTemp);
-              });
-            })
-            .catch((err) => console.error(err));
+          return;
         }
       }
+      fetch(filePath)
+        .then((response) => response.body)
+        .then((body) => {
+          const reader = body!.getReader();
+          return new ReadableStream({
+            start(controller) {
+              return pump();
+              function pump(): any {
+                return reader.read().then(({ done, value }) => {
+                  if (done) {
+                    controller.close();
+                    return;
+                  }
+                  controller.enqueue(value);
+                  return pump();
+                });
+              }
+            },
+          });
+        })
+        .then((stream) => new Response(stream))
+        .then((response) => response.blob())
+        .then((blob) => {
+          let fileTemp = new File(
+            [blob],
+            window.navigator.platform.indexOf("Win") > -1
+              ? filePath.split("\\").reverse()[0]
+              : filePath.split("/").reverse()[0],
+            {
+              lastModified: new Date().getTime(),
+              type: blob.type,
+            }
+          );
+          this.setState({ isOpenFile: true }, async () => {
+            await this.getMd5WithBrowser(fileTemp);
+          });
+        })
+        .catch((err) => console.error(err));
     });
   };
   handleJump = (book: BookModel) => {
@@ -136,12 +136,6 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
             this.setState({ isOpenFile: false });
             this.props.history.push("/manager/home");
           }, 100);
-          setTimeout(
-            () => {
-              this.props.handleLoadingDialog(false);
-            },
-            this.state.isOpenFile ? 0 : 1000
-          );
           resolve();
         })
         .catch(() => {
