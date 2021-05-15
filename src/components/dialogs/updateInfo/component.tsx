@@ -44,18 +44,19 @@ class UpdateInfo extends React.Component<UpdateInfoProps, UpdateInfoState> {
         .then((res) => {
           console.log(res);
           const newVersion = res.data.log.version;
-
-          if (version !== newVersion) {
-            this.setState({ updateLog: res.data.log });
-            this.props.handleNewDialog(true);
-          } else if (
-            OtherUtil.getReaderConfig("version") !== newVersion &&
-            OtherUtil.getReaderConfig("isFirst")
-          ) {
-            this.setState({ isUpdated: true });
-            this.props.handleNewDialog(true);
-            OtherUtil.setReaderConfig("version", newVersion);
-          }
+          setTimeout(() => {
+            if (version !== newVersion) {
+              this.setState({ updateLog: res.data.log });
+              this.props.handleNewDialog(true);
+            } else if (
+              OtherUtil.getReaderConfig("version") !== newVersion &&
+              OtherUtil.getReaderConfig("isFirst")
+            ) {
+              this.setState({ isUpdated: true });
+              this.props.handleNewDialog(true);
+              OtherUtil.setReaderConfig("version", newVersion);
+            }
+          }, 2000);
         })
         .catch((err) => {
           console.log(err);
@@ -65,7 +66,7 @@ class UpdateInfo extends React.Component<UpdateInfoProps, UpdateInfoState> {
     return arr.map((item, index) => {
       return (
         <li className="update-dialog-list" key={index}>
-          <span >{index + 1 + ". "}</span>
+          <span>{index + 1 + ". "}</span>
           <span>{item}</span>
         </li>
       );

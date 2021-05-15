@@ -12,7 +12,7 @@ export interface DeleteDialogProps extends RouteComponentProps<any> {
   digests: NoteModel[];
   mode: string;
   shelfIndex: number;
-  handleFetchBooks: () => void;
+  handleFetchBooks: (isTrash: boolean) => void;
   handleDeleteDialog: (isShow: boolean) => void;
   handleActionDialog: (isShow: boolean) => void;
   handleFetchBookmarks: () => void;

@@ -52,7 +52,7 @@ class ImageViewer extends React.Component<ImageViewerProps, ImageViewerStates> {
         event.target.parentNode.parentNode.href ||
         "";
     }
-
+    console.log(href);
     if (
       isElectron &&
       href &&
@@ -60,6 +60,7 @@ class ImageViewer extends React.Component<ImageViewerProps, ImageViewerStates> {
       href.indexOf("OEBPS") === -1 &&
       href.indexOf("footnote") === -1 &&
       href.indexOf("blob") === -1 &&
+      href.indexOf("data:application") === -1 &&
       href.indexOf(".htm") === -1
     ) {
       event.preventDefault();

@@ -69,6 +69,10 @@ textarea::-ms-input-placeholder,
 .token-dialog-token-text {
   color: rgba(75, 75, 75, 0.8);
 }
+::-webkit-scrollbar-thumb,
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(75, 75, 75, 0.5);
+}
 .delete-digest-button,
 .add-dialog-comfirm,
 .backup-page-backup-selector,
@@ -91,8 +95,6 @@ textarea::-ms-input-placeholder,
 .book-bookmark-link,
 .message-box-container,
 .popup-close,
-::-webkit-scrollbar-thumb,
-::-webkit-scrollbar-thumb:hover,
 .only-local-icon,
 .popup-close,
 .sk-chase-dot:before {
