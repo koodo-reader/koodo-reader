@@ -24,6 +24,7 @@
     "fs-extra": "^9.1.0",
     "i18next": "^20.2.2",
     "iconv-lite": "^0.6.2",
+    "marked": "^2.0.3",
     "md5": "^2.3.0",
     "nodepub": "^2.2.0",
     "rc-color-picker": "^1.2.6",
