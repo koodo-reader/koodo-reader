@@ -127,6 +127,7 @@ class BackupDialog extends React.Component<
   };
   render() {
     const renderDrivePage = () => {
+      !isElectron && driveList.pop();
       return driveList.map((item, index) => {
         return (
           <li

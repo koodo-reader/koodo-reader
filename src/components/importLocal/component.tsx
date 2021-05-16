@@ -209,11 +209,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                 resolve();
               };
             }
-          } else if (
-            extension === "djvu" ||
-            extension === "md" ||
-            extension === "fb2"
-          ) {
+          } else if (extension === "djvu" || extension === "md") {
             let reader = new FileReader();
             reader.onload = async (event) => {
               const file_content = (event.target as any).result;
@@ -254,7 +250,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
             await this.getMd5WithBrowser(item);
           }
         }}
-        accept={[".epub", ".pdf", ".txt", ".mobi", ".azw3", ".djvu", ".md",]}
+        accept={[".epub", ".pdf", ".txt", ".mobi", ".azw3", ".djvu", ".md"]}
         multiple={true}
       >
         {({ getRootProps, getInputProps }) => (

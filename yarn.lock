@@ -2179,6 +2179,11 @@
   resolved "https://registry.npm.taobao.org/@types/json5/download/@types/json5-0.0.29.tgz#ee28707ae94e11d2b827bcbe5270bcea7f3e71ee"
   integrity sha1-7ihweulOEdK4J7y+UnC86n8+ce4=
 
+"@types/marked@^2.0.2":
+  version "2.0.2"
+  resolved "https://registry.npm.taobao.org/@types/marked/download/@types/marked-2.0.2.tgz#33a15106383f6e42cd6bdd38093e6b19904e29e1"
+  integrity sha1-M6FRBjg/bkLNa904CT5rGZBOKeE=
+
 "@types/md5@^2.2.0":
   version "2.2.0"
   resolved "https://registry.npm.taobao.org/@types/md5/download/@types/md5-2.2.0.tgz#cd82e16b95973f94bb03dee40c5b6be4a7fb7fb4"
@@ -2243,6 +2248,20 @@
   version "16.9.8"
   resolved "https://registry.npm.taobao.org/@types/react-dom/download/@types/react-dom-16.9.8.tgz#fe4c1e11dfc67155733dfa6aa65108b4971cb423"
   integrity sha1-/kweEd/GcVVzPfpqplEItJcctCM=
+  dependencies:
+    "@types/react" "*"
+
+"@types/react-i18next@^8.1.0":
+  version "8.1.0"
+  resolved "https://registry.nlark.com/@types/react-i18next/download/@types/react-i18next-8.1.0.tgz#5faacbfe7dc0f24729c1df6914610bfe861a50de"
+  integrity sha1-X6rL/n3A8kcpwd9pFGEL/oYaUN4=
+  dependencies:
+    react-i18next "*"
+
+"@types/react-lottie@^1.2.5":
+  version "1.2.5"
+  resolved "https://registry.npm.taobao.org/@types/react-lottie/download/@types/react-lottie-1.2.5.tgz#659322961de534227ba354109342cad967d98841"
+  integrity sha1-ZZMilh3lNCJ7o1QQk0LK2WfZiEE=
   dependencies:
     "@types/react" "*"
 
@@ -7377,10 +7396,10 @@ human-signals@^1.1.1:
   resolved "https://registry.npm.taobao.org/human-signals/download/human-signals-1.1.1.tgz#c5b1cd14f50aeae09ab6c59fe63ba3395fe4dfa3"
   integrity sha1-xbHNFPUK6uCatsWf5jujOV/k36M=
 
-i18next@^20.2.2:
-  version "20.2.2"
-  resolved "https://registry.nlark.com/i18next/download/i18next-20.2.2.tgz#175644829dcf35546ba8c174583acfe449e4ef1a"
-  integrity sha1-F1ZEgp3PNVRrqMF0WDrP5Enk7xo=
+i18next@^20.2.4:
+  version "20.2.4"
+  resolved "https://registry.nlark.com/i18next/download/i18next-20.2.4.tgz#972220f19dfef0075a70890d3e8b1f7cf64c5bd6"
+  integrity sha1-lyIg8Z3+8AdacIkNPosffPZMW9Y=
   dependencies:
     "@babel/runtime" "^7.12.0"
 
@@ -11620,7 +11639,7 @@ react-error-overlay@^6.0.9:
   resolved "https://registry.npm.taobao.org/react-error-overlay/download/react-error-overlay-6.0.9.tgz#3c743010c9359608c375ecd6bc76f35d93995b0a"
   integrity sha1-PHQwEMk1lgjDdezWvHbzXZOZWwo=
 
-react-i18next@^11.8.15:
+react-i18next@*, react-i18next@^11.8.15:
   version "11.8.15"
   resolved "https://registry.nlark.com/react-i18next/download/react-i18next-11.8.15.tgz#89450d585298f18d4a8eb1628b0868863f3a4767"
   integrity sha1-iUUNWFKY8Y1KjrFiiwhohj86R2c=
