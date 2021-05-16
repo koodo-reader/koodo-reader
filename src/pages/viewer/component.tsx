@@ -68,7 +68,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     var reader = new FileReader();
     reader.onload = function (evt) {
       let viewer: HTMLElement | null = document.querySelector(".ebook-viewer");
-      console.log(evt.target?.result, viewer, document);
       if (!viewer?.innerText) return;
       viewer.innerText = evt.target?.result as any;
     };
@@ -79,7 +78,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     var reader = new FileReader();
     reader.onload = function (evt) {
       let viewer: HTMLElement | null = document.querySelector(".ebook-viewer");
-      console.log(evt.target?.result, viewer, document);
       if (!viewer?.innerHTML) return;
       viewer.innerHTML = marked(evt.target?.result as any);
     };

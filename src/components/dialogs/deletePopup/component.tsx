@@ -1,5 +1,4 @@
 import React from "react";
-// import "./deletePopup.css";
 import { Trans } from "react-i18next";
 import { DeletePopupProps } from "./interface";
 
