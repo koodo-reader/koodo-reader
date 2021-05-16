@@ -6,23 +6,12 @@ import localforage from "localforage";
 import { withRouter } from "react-router-dom";
 import _ from "underscore";
 import BookUtil from "../../utils/bookUtil";
-import Lottie from "react-lottie";
-import animationSiri from "../../assets/lotties/siri.json";
 import MobiParser from "../../utils/mobiParser";
 import marked from "marked";
 import "./viewer.css";
 import OtherUtil from "../../utils/otherUtil";
 
 declare var window: any;
-
-const siriOptions = {
-  loop: true,
-  autoplay: true,
-  animationData: animationSiri,
-  rendererSettings: {
-    preserveAspectRatio: "xMidYMid slice",
-  },
-};
 
 class Viewer extends React.Component<ViewerProps, ViewerState> {
   epub: any;
@@ -43,8 +32,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           this.handleMobi(result as ArrayBuffer);
         } else if (book.format === "TXT") {
           this.handleTxt(result as ArrayBuffer);
-        } else if (book.format === "DJVU") {
-          this.handleDjvu(result as ArrayBuffer);
         } else if (book.format === "MD") {
           this.handleMD(result as ArrayBuffer);
         }
@@ -52,9 +39,10 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         RecentBooks.setRecent(key);
       });
     });
-    document
-      .querySelectorAll('style,link[rel="stylesheet"]')
-      .forEach((item) => item.remove());
+    document.location.href.indexOf("md") > -1 &&
+      document
+        .querySelectorAll('style,link[rel="stylesheet"]')
+        .forEach((item) => item.remove());
     window.onbeforeunload = () => {
       this.handleExit();
     };
@@ -86,18 +74,11 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     };
     reader.readAsText(blob, "UTF-8");
   };
-  handleDjvu = async (result: ArrayBuffer) => {
-    setTimeout(() => {
-      var ViewerInstance = new window.DjVu.Viewer();
-      ViewerInstance.render(document.querySelector(".ebook-parent"));
-      ViewerInstance.loadDocument(result);
-    }, 100);
-  };
   handleMD = (result: ArrayBuffer) => {
     var blob = new Blob([result], { type: "text/plain" });
     var reader = new FileReader();
     reader.onload = function (evt) {
-      let viewer: HTMLElement | null = document.querySelector(".ebook-parent");
+      let viewer: HTMLElement | null = document.querySelector(".ebook-viewer");
       console.log(evt.target?.result, viewer, document);
       if (!viewer?.innerHTML) return;
       viewer.innerHTML = marked(evt.target?.result as any);
@@ -105,18 +86,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     reader.readAsText(blob, "UTF-8");
   };
   render() {
-    if (!this.props.isReading) {
-      return (
-        <div className="spinner">
-          <Lottie options={siriOptions} height={100} width={300} />
-        </div>
-      );
-    }
-    return (
-      <div className="ebook-parent">
-        <div className="ebook-viewer">Loading</div>
-      </div>
-    );
+    return <div className="ebook-viewer">Loading</div>;
   }
 }
 export default withRouter(Viewer as any);

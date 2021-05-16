@@ -19,7 +19,7 @@ import { Route, Switch, Redirect } from "react-router-dom";
 import { routes } from "../../router/routes";
 import Arrow from "../../components/arrow";
 import LoadingDialog from "../../components/dialogs/loadingDialog";
-import DownloadDesk from "../../components/dialogs/downloadDesk";
+import DownloadDesk from "../../components/dialogs/TipDialog";
 
 //判断是否为触控设备
 const is_touch_device = () => {
