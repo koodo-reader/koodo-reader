@@ -20,6 +20,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       language: OtherUtil.getReaderConfig("lang"),
       isNewVersion: false,
       width: document.body.clientWidth,
+      isdataChange: false,
     };
   }
   async componentDidMount() {
@@ -60,6 +61,31 @@ class Header extends React.Component<HeaderProps, HeaderState> {
             }
           });
       }
+      //Check for data update
+      let storageLocation = localStorage.getItem("storageLocation")
+        ? localStorage.getItem("storageLocation")
+        : window
+            .require("electron")
+            .ipcRenderer.sendSync("storage-location", "ping");
+      let sourcePath = path.join(
+        storageLocation,
+        "config",
+        "readerConfig.json"
+      );
+      try {
+        const readerConfig = JSON.parse(
+          fs.readFileSync(sourcePath, { encoding: "utf8", flag: "r" })
+        );
+        if (
+          localStorage.getItem("lastSyncTime") &&
+          parseInt(readerConfig.lastSyncTime) >
+            parseInt(localStorage.getItem("lastSyncTime")!)
+        ) {
+          this.setState({ isdataChange: true });
+        }
+      } catch (error) {
+        throw error;
+      }
     }
 
     window.addEventListener("resize", () => {
@@ -98,6 +124,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
           () => {
             this.props.handleMessage("Sync Successfully");
             this.props.handleMessageBox(true);
+            this.setState({ isdataChange: false });
           },
           5,
           () => {}
@@ -107,6 +134,11 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     );
   };
   syncToLocation = () => {
+    if (OtherUtil.getReaderConfig("isFirst") !== "no") {
+      this.props.handleTipDialog(true);
+      OtherUtil.setReaderConfig("isFirst", "no");
+      return;
+    }
     const fs = window.require("fs");
     const path = window.require("path");
     let storageLocation = localStorage.getItem("storageLocation")
@@ -207,11 +239,22 @@ class Header extends React.Component<HeaderProps, HeaderState> {
               style={{ left: "635px" }}
             >
               <Tooltip
-                title={this.props.t("Sync")}
+                title={this.props.t(
+                  this.state.isdataChange
+                    ? "Data change detected, whether to update?"
+                    : "Sync"
+                )}
                 position="top"
                 trigger="mouseenter"
               >
-                <span className="icon-sync setting-icon"></span>
+                <span
+                  className="icon-sync setting-icon"
+                  style={
+                    this.state.isdataChange
+                      ? { color: "rgb(35, 170, 242)" }
+                      : {}
+                  }
+                ></span>
               </Tooltip>
             </div>
           )}

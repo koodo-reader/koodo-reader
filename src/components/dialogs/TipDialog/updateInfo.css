@@ -1,8 +1,8 @@
 .download-desk-container {
-  width: 454px;
+  width: 400px;
   height: 480px;
   position: absolute;
-  left: calc(50vw - 225px);
+  left: calc(50vw - 200px);
   top: calc(50vh - 240px);
   z-index: 10;
   animation: popup 0.1s ease-in-out 0s 1;
@@ -10,7 +10,7 @@
 }
 .download-desk-animation {
   position: absolute;
-  left: 55px;
+  left: 25px;
   bottom: 0px;
 }
 .download-desk-title {
@@ -34,7 +34,9 @@
   font-size: 15px;
   line-height: 23px;
   font-weight: 500;
-  text-align: center;
+  margin: 30px;
+  margin-top: 0px;
+  text-indent: 2rem;
 }
 .download-desk-button {
   width: 100px;

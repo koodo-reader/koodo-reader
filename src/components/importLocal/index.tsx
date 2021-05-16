@@ -6,7 +6,7 @@ import {
   handleMessage,
   handleFetchBooks,
   handleLoadingDialog,
-  handleDownloadDesk,
+  handleTipDialog,
 } from "../../store/actions/manager";
 import { handleReadingBook } from "../../store/actions/book";
 import { stateType } from "../../store";
@@ -28,7 +28,7 @@ const actionCreator = {
   handleFetchBooks,
   handleReadingBook,
   handleLoadingDialog,
-  handleDownloadDesk,
+  handleTipDialog,
 };
 export default connect(
   mapStateToProps,

@@ -10,6 +10,8 @@ import SyncUtil from "../../../utils/syncUtils/common";
 import { isElectron } from "react-device-detect";
 import { dropdownList } from "../../../constants/dropdownList";
 import { Tooltip } from "react-tippy";
+import RestoreUtil from "../../../utils/syncUtils/restoreUtil";
+import BackupUtil from "../../../utils/syncUtils/backupUtil";
 import {
   settingList,
   langList,
@@ -88,7 +90,45 @@ class SettingDialog extends React.Component<
     OtherUtil.setReaderConfig(stateName, this.state[stateName] ? "no" : "yes");
     this.handleRest(this.state[stateName]);
   };
+  syncFromLocation = async () => {
+    const fs = window.require("fs");
+    const path = window.require("path");
+    const { zip } = window.require("zip-a-folder");
+    let storageLocation = localStorage.getItem("storageLocation")
+      ? localStorage.getItem("storageLocation")
+      : window
+          .require("electron")
+          .ipcRenderer.sendSync("storage-location", "ping");
+    let sourcePath = path.join(storageLocation, "config");
+    let outPath = path.join(storageLocation, "config.zip");
+    await zip(sourcePath, outPath);
 
+    var data = fs.readFileSync(outPath);
+
+    let blobTemp = new Blob([data], { type: "application/epub+zip" });
+    let fileTemp = new File([blobTemp], "config.zip", {
+      lastModified: new Date().getTime(),
+      type: blobTemp.type,
+    });
+
+    RestoreUtil.restore(
+      fileTemp,
+      () => {
+        BackupUtil.backup(
+          this.props.books,
+          this.props.notes,
+          this.props.bookmarks,
+          () => {
+            this.props.handleMessage("Change Successfully");
+            this.props.handleMessageBox(true);
+          },
+          5,
+          () => {}
+        );
+      },
+      true
+    );
+  };
   handleChangeLocation = async () => {
     const { dialog } = window.require("electron").remote;
     var path = await dialog.showOpenDialog({
@@ -102,7 +142,8 @@ class SettingDialog extends React.Component<
           : ipcRenderer.sendSync("storage-location", "ping"),
         path.filePaths[0],
         this.props.handleMessage,
-        this.props.handleMessageBox
+        this.props.handleMessageBox,
+        this.syncFromLocation
       );
     localStorage.setItem("storageLocation", path.filePaths[0]);
     document.getElementsByClassName(

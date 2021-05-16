@@ -17,6 +17,8 @@ export interface HeaderProps {
   handleMessage: (message: string) => void;
   handleBackupDialog: (isBackup: boolean) => void;
   handleDrag: (isDrag: boolean) => void;
+  handleTipDialog: (isTipDialog: boolean) => void;
+
   t: (title: string) => string;
 }
 
@@ -25,4 +27,5 @@ export interface HeaderState {
   language: string;
   width: number;
   isNewVersion: boolean;
+  isdataChange: boolean;
 }

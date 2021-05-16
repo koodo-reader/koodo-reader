@@ -1,4 +1,4 @@
-export interface DownloadDeskProps {
-  handleDownloadDesk: (isDownloadDesk: boolean) => void;
+export interface TipDialogProps {
+  handleTipDialog: (isTipDialog: boolean) => void;
 }
-export interface DownloadDeskState {}
+export interface TipDialogState {}

@@ -75,13 +75,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
       time += 1;
       this.setState({ time });
     }, 1000);
-    if (OtherUtil.getReaderConfig("isFirst") !== "no") {
-      this.handleEnterReader("left");
-      this.handleEnterReader("right");
-      this.handleEnterReader("bottom");
-      this.handleEnterReader("top");
-      OtherUtil.setReaderConfig("isFirst", "no");
-    }
+
     window.addEventListener("resize", () => {
       if (
         document.body.clientWidth < 780 &&

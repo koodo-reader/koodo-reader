@@ -1,13 +1,13 @@
 //左下角的图标外链
 import { connect } from "react-redux";
-import { handleDownloadDesk } from "../../../store/actions/manager";
-import DownloadDesk from "./component";
+import { handleTipDialog } from "../../../store/actions/manager";
+import TipDialog from "./component";
 import { stateType } from "../../../store";
 
 const mapStateToProps = (state: stateType) => {
   return {};
 };
 const actionCreator = {
-  handleDownloadDesk,
+  handleTipDialog,
 };
-export default connect(mapStateToProps, actionCreator)(DownloadDesk);
+export default connect(mapStateToProps, actionCreator)(TipDialog);

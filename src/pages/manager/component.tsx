@@ -14,12 +14,12 @@ import { Trans } from "react-i18next";
 import OtherUtil from "../../utils/otherUtil";
 import AddFavorite from "../../utils/readUtils/addFavorite";
 import SettingDialog from "../../components/dialogs/settingDialog";
-import { isMobileOnly, isElectron } from "react-device-detect";
+import { isMobileOnly } from "react-device-detect";
 import { Route, Switch, Redirect } from "react-router-dom";
 import { routes } from "../../router/routes";
 import Arrow from "../../components/arrow";
 import LoadingDialog from "../../components/dialogs/loadingDialog";
-import DownloadDesk from "../../components/dialogs/TipDialog";
+import TipDialog from "../../components/dialogs/TipDialog";
 
 //判断是否为触控设备
 const is_touch_device = () => {
@@ -146,7 +146,7 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
               this.props.handleEditDialog(false);
               this.props.handleDeleteDialog(false);
               this.props.handleAddDialog(false);
-              this.props.handleDownloadDesk(false);
+              this.props.handleTipDialog(false);
               this.props.handleLoadingDialog(false);
               this.props.handleNewDialog(false);
               this.props.handleBackupDialog(false);
@@ -159,7 +159,7 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
               this.props.isOpenDeleteDialog ||
               this.props.isOpenEditDialog ||
               this.props.isOpenAddDialog ||
-              this.props.isDownloadDesk ||
+              this.props.isTipDialog ||
               this.props.isShowLoading
                 ? {}
                 : {
@@ -174,7 +174,7 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
         {this.props.isAboutOpen && <AboutDialog />}
         {this.props.isBackup && <BackupDialog />}
         {this.props.isSettingOpen && <SettingDialog />}
-        {this.props.isDownloadDesk && !isElectron && <DownloadDesk />}
+        {this.props.isTipDialog && <TipDialog />}
         {(!books || books.length === 0) && this.state.totalBooks ? (
           <Redirect to="/manager/loading" />
         ) : (
