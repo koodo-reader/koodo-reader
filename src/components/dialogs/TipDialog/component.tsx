@@ -14,7 +14,6 @@ const downloadOptions = {
     preserveAspectRatio: "xMidYMid slice",
   },
 };
-declare var window: any;
 
 class DownloadDesk extends React.Component<
   DownloadDeskProps,
@@ -57,14 +56,7 @@ class DownloadDesk extends React.Component<
             <Trans>Backup your data with Webdav</Trans>
           </div>
         </div>
-        <div
-          className="download-desk-button"
-          onClick={() => {
-            window.open("https://koodo.960960.xyz/download");
-          }}
-        >
-          <Trans>Download</Trans>
-        </div>
+
         <div className="download-desk-animation">
           <Lottie options={downloadOptions} height={250} width={350} />
         </div>
