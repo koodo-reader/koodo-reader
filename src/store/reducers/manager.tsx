@@ -11,7 +11,7 @@ const initState = {
   viewMode: "card",
   isSortDisplay: false,
   isShowLoading: false,
-  isDownloadDesk: false,
+  isTipDialog: false,
   isShowNew: false,
   bookSortCode: { sort: 0, order: 1 },
   noteSortCode: SortUtil.getNoteSortCode(),
@@ -38,10 +38,10 @@ export function manager(
         ...state,
         searchResults: action.payload,
       };
-    case "HANDLE_DOWNLOAD_DESK":
+    case "HANDLE_TIP_DIALOG":
       return {
         ...state,
-        isDownloadDesk: action.payload,
+        isTipDialog: action.payload,
       };
     case "HANDLE_SEARCH":
       return {

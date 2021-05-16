@@ -8,7 +8,7 @@ import {
   handleMessageBox,
   handleMessage,
   handleLoadingDialog,
-  handleDownloadDesk,
+  handleTipDialog,
 } from "../../../store/actions/manager";
 import { stateType } from "../../../store";
 import BackupDialog from "./component";
@@ -28,6 +28,6 @@ const actionCreator = {
   handleMessage,
   handleTokenDialog,
   handleLoadingDialog,
-  handleDownloadDesk,
+  handleTipDialog,
 };
 export default connect(mapStateToProps, actionCreator)(BackupDialog);

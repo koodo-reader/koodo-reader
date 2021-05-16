@@ -1,7 +1,7 @@
 //提示更新的文字
 import React from "react";
 import "./updateInfo.css";
-import { DownloadDeskProps, DownloadDeskState } from "./interface";
+import { TipDialogProps, TipDialogState } from "./interface";
 import { Trans } from "react-i18next";
 import Lottie from "react-lottie";
 import animationDownload from "../../../assets/lotties/download.json";
@@ -15,17 +15,14 @@ const downloadOptions = {
   },
 };
 
-class DownloadDesk extends React.Component<
-  DownloadDeskProps,
-  DownloadDeskState
-> {
-  constructor(props: DownloadDeskProps) {
+class TipDialog extends React.Component<TipDialogProps, TipDialogState> {
+  constructor(props: TipDialogProps) {
     super(props);
     this.state = {};
   }
 
   handleClose = () => {
-    this.props.handleDownloadDesk(false);
+    this.props.handleTipDialog(false);
   };
   render() {
     return (
@@ -40,20 +37,19 @@ class DownloadDesk extends React.Component<
         </div>
 
         <div className="download-desk-title">
-          <Trans>Download Desktop Version</Trans>
+          <Trans>Tips</Trans>
         </div>
         <div className="download-desk-subtile">
-          <Trans>
-            Koodo Reader's web version are limited by the browser, for more
-            powerful features, please download the desktop version.
-          </Trans>
+          <Trans>How sync works</Trans>
         </div>
         <div className="download-desk-feature-container">
           <div className="download-desk-feature-item">
-            <Trans>Use the fonts from your local computer</Trans>
-          </div>
-          <div className="download-desk-feature-item">
-            <Trans>Backup your data with Webdav</Trans>
+            <Trans>
+              You need to manually change the storage location to the same sync
+              folder on different computers. When you click the sync button,
+              Koodo Reader will automatically upload or download the data from
+              this folder according the timestamp.
+            </Trans>
           </div>
         </div>
 
@@ -65,4 +61,4 @@ class DownloadDesk extends React.Component<
   }
 }
 
-export default DownloadDesk;
+export default TipDialog;

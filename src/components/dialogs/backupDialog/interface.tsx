@@ -8,7 +8,7 @@ export interface BackupDialogProps {
   handleMessage: (message: string) => void;
   handleMessageBox: (isShow: boolean) => void;
   handleLoadingDialog: (isShowLoading: boolean) => void;
-  handleDownloadDesk: (isDownloadDesk: boolean) => void;
+  handleTipDialog: (isTipDialog: boolean) => void;
   isOpenTokenDialog: boolean;
   books: BookModel[];
   notes: NoteModel[];
