@@ -56,7 +56,7 @@ class UpdateInfo extends React.Component<UpdateInfoProps, UpdateInfoState> {
               this.props.handleNewDialog(true);
               OtherUtil.setReaderConfig("version", newVersion);
             }
-          }, 2000);
+          }, 1000);
         })
         .catch((err) => {
           console.log(err);
