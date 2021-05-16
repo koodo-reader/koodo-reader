@@ -34,7 +34,7 @@
 
 ## 特色
 
-支持阅读 **epub** , **pdf**, **mobi**, **azw3** 和 **txt** 格式的图书
+支持阅读 **epub** , **pdf**, **mobi**, **azw3**, **txt**, **Markdown** 和 **djvu** 格式的图书
 
 支持 **Windows** ， **macOS**， **Linux** 和 **网页版**
 
