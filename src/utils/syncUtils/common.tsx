@@ -70,15 +70,30 @@ class SyncUtil {
     oldPath: string,
     newPath: string,
     handleMessage: (message: string) => void,
-    handleMessageBox: (isShow: boolean) => void
+    handleMessageBox: (isShow: boolean) => void,
+    syncFromLocation: () => void = () => {}
   ) {
     const fs = window.require("fs-extra");
     try {
-      fs.copy(oldPath, newPath, function (err) {
-        if (err) return;
-        fs.emptyDirSync(oldPath);
-        handleMessage("Change Successfully");
-        handleMessageBox(true);
+      fs.readdir(newPath, (err, files: string[]) => {
+        console.log(files);
+        let isConfiged: boolean = false;
+        files.forEach((file: string) => {
+          if (file === "config.zip") {
+            isConfiged = true;
+          }
+        });
+        if (isConfiged) {
+          localStorage.setItem("storageLocation", newPath);
+          syncFromLocation();
+        } else {
+          fs.copy(oldPath, newPath, function (err) {
+            if (err) return;
+            fs.emptyDirSync(oldPath);
+            handleMessage("Change Successfully");
+            handleMessageBox(true);
+          });
+        }
       });
     } catch (error) {
       handleMessage("Change Failed");

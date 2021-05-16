@@ -67,7 +67,6 @@ app.on("ready", () => {
             return decodeURIComponent(s.replace(pl, " "));
           },
           query = url.split("?").reverse()[0];
-
         urlParams = {};
         while ((match = search.exec(query)))
           urlParams[decode(match[1])] = decode(match[2]);

@@ -93,10 +93,6 @@ class BackupDialog extends React.Component<
           break;
 
         case 3:
-          if (!isElectron) {
-            this.props.handleDownloadDesk(true);
-            break;
-          }
           if (!OtherUtil.getReaderConfig("webdav_token")) {
             this.props.handleTokenDialog(true);
             break;
