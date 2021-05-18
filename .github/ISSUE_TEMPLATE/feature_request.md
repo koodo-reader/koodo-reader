@@ -7,7 +7,7 @@ assignees: ""
 ---
 
 <!--
-  Note: making sure you've already checked Koodo's roadmap, don't request any features already listed in the roadmap. Also don't request multiple features in one issue.
+  Note: making sure you've already checked Koodo's roadmap, don't request any features already listed in the roadmap.
   https://www.notion.so/troyeguo/d1c19a132932465bae1d89dd963c92ea?v=ca8aa69cf25849c18c92b92ba868663b
 -->
 
