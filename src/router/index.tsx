@@ -3,7 +3,9 @@ import { Route, Switch, HashRouter } from "react-router-dom";
 import Manager from "../pages/manager";
 import EpubReader from "../pages/epubReader";
 import Viewer from "../pages/viewer";
+import Fb2Reader from "../pages/fb2Reader";
 import DjvuReader from "../pages/djvuReader";
+import ComicReader from "../pages/comicReader";
 import _Redirect from "../pages/redirect";
 import i18n from "../i18n";
 import OtherUtil from "../utils/otherUtil";
@@ -38,6 +40,10 @@ const Router = () => {
         <Route component={Viewer} path="/azw3" />
         <Route component={Viewer} path="/txt" />
         <Route component={Viewer} path="/md" />
+        <Route component={Fb2Reader} path="/fb2" />
+        <Route component={ComicReader} path="/cbr" />
+        <Route component={ComicReader} path="/cbz" />
+        <Route component={ComicReader} path="/cbt" />
         <Route component={_Redirect} path="/" />
       </Switch>
     </HashRouter>
