@@ -67,14 +67,13 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     viewer.innerHTML = content.outerHTML;
   };
   handleTxt = (result: ArrayBuffer) => {
-    var blob = new Blob([result], { type: "text/plain" });
-    var reader = new FileReader();
-    reader.onload = function (evt) {
-      let viewer: HTMLElement | null = document.querySelector(".ebook-viewer");
-      if (!viewer?.innerText) return;
-      viewer.innerText = evt.target?.result as any;
-    };
-    reader.readAsText(blob, "UTF-8");
+    let viewer: HTMLElement | null = document.querySelector(".ebook-viewer");
+    let text = iconv.decode(
+      Buffer.from(result),
+      chardet.detect(Buffer.from(result)) as string
+    );
+    if (!viewer?.innerText) return;
+    viewer.innerText = text;
   };
   handleMD = (result: ArrayBuffer) => {
     var blob = new Blob([result], { type: "text/plain" });
