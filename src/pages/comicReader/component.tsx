@@ -13,8 +13,8 @@ import { mimetype } from "../../constants/mimetype";
 
 declare var window: any;
 
-let JSZip = (window as any).JSZip;
-let Unrar = (window as any).Unrar;
+let JSZip = window.JSZip;
+let Unrar = window.Unrar;
 
 class Viewer extends React.Component<ViewerProps, ViewerState> {
   epub: any;
