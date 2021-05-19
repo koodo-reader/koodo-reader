@@ -8628,6 +8628,11 @@ js-base64@^2.1.8:
   resolved "https://registry.npm.taobao.org/js-tokens/download/js-tokens-4.0.0.tgz#19203fb59991df98e3a287050d4647cdeaf32499"
   integrity sha1-GSA/tZmR35jjoocFDUZHzerzJJk=
 
+js-untar@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.nlark.com/js-untar/download/js-untar-2.0.0.tgz#b452d28dedd3b0be92c2ac9a7d70f612a93c7453"
+  integrity sha1-tFLSje3TsL6SwqyafXD2Eqk8dFM=
+
 js-yaml@^3.13.1:
   version "3.14.0"
   resolved "https://registry.npm.taobao.org/js-yaml/download/js-yaml-3.14.0.tgz?cache=0&sync_timestamp=1590172281856&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fjs-yaml%2Fdownload%2Fjs-yaml-3.14.0.tgz#a7a34170f26a21bb162424d8adacb4113a69e482"
