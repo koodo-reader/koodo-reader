@@ -177,6 +177,8 @@
         document.location.href.indexOf("mobi") > -1 ||
         document.location.href.indexOf("txt") > -1 ||
         document.location.href.indexOf("djvu") > -1 ||
+        document.location.href.indexOf("rtf") > -1 ||
+        document.location.href.indexOf("docx") > -1 ||
         document.location.href.indexOf("fb2") > -1 ||
         document.location.href.indexOf("cbr") > -1 ||
         document.location.href.indexOf("cbt") > -1 ||
@@ -236,6 +238,10 @@
     <script
       type="text/javascript"
       src="%PUBLIC_URL%/lib/djvu/djvu_viewer.js"
+    ></script>
+    <script
+      type="text/javascript"
+      src="%PUBLIC_URL%/lib/mammoth/mammoth.browser.min.js"
     ></script>
     <script>
       var _hmt = _hmt || [];

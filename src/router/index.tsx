@@ -39,7 +39,9 @@ const Router = () => {
         <Route component={Viewer} path="/mobi" />
         <Route component={Viewer} path="/azw3" />
         <Route component={Viewer} path="/txt" />
+        <Route component={Viewer} path="/docx" />
         <Route component={Viewer} path="/md" />
+        <Route component={Viewer} path="/rtf" />
         <Route component={Fb2Reader} path="/fb2" />
         <Route component={ComicReader} path="/cbr" />
         <Route component={ComicReader} path="/cbz" />
