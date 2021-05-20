@@ -12,6 +12,7 @@ import "./viewer.css";
 import OtherUtil from "../../utils/otherUtil";
 import iconv from "iconv-lite";
 import chardet from "chardet";
+import rtfToHTML from "@iarna/rtf-to-html";
 
 declare var window: any;
 
@@ -38,6 +39,10 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           this.handleMD(result as ArrayBuffer);
         } else if (book.format === "FB2") {
           this.handleFb2(result as ArrayBuffer);
+        } else if (book.format === "RTF") {
+          this.handleRtf(result as ArrayBuffer);
+        } else if (book.format === "DOCX") {
+          this.handleDocx(result as ArrayBuffer);
         }
         this.props.handleReadingState(true);
         RecentBooks.setRecent(key);
@@ -93,6 +98,24 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     let viewer: HTMLElement | null = document.querySelector(".ebook-viewer");
     if (!viewer?.innerHTML) return;
     viewer.innerHTML = str;
+  };
+  handleRtf = (result: ArrayBuffer) => {
+    let text = iconv.decode(
+      Buffer.from(result),
+      chardet.detect(Buffer.from(result)) as string
+    );
+    rtfToHTML.fromString(text, (err: any, html: any) => {
+      let viewer: HTMLElement | null = document.querySelector(".ebook-viewer");
+      if (!viewer?.innerHTML) return;
+      viewer.innerHTML = html;
+    });
+  };
+  handleDocx = (result: ArrayBuffer) => {
+    window.mammoth.convertToHtml({ arrayBuffer: result }).then((res: any) => {
+      let viewer: HTMLElement | null = document.querySelector(".ebook-viewer");
+      if (!viewer?.innerHTML) return;
+      viewer.innerHTML = res.value;
+    });
   };
   render() {
     return <div className="ebook-viewer">Loading</div>;

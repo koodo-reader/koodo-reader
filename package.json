@@ -14,6 +14,7 @@
   "repository": "https://github.com/troyeguo/koodo-reader",
   "private": false,
   "dependencies": {
+    "@iarna/rtf-to-html": "^1.1.0",
     "adm-zip": "^0.5.2",
     "axios": "^0.19.2",
     "chardet": "^1.3.0",
