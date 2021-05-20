@@ -211,10 +211,12 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
             }
           } else if (
             extension === "djvu" ||
+            extension === "docx" ||
             extension === "md" ||
             extension === "cbz" ||
             extension === "cbr" ||
             extension === "cbt" ||
+            extension === "rtf" ||
             extension === "fb2"
           ) {
             let reader = new FileReader();
@@ -264,6 +266,8 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
           ".mobi",
           ".azw3",
           ".djvu",
+          ".docx",
+          ".rtf",
           ".md",
           ".fb2",
           ".cbz",

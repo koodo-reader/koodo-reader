@@ -1495,6 +1495,13 @@
   dependencies:
     "@hapi/hoek" "^8.3.0"
 
+"@iarna/rtf-to-html@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.nlark.com/@iarna/rtf-to-html/download/@iarna/rtf-to-html-1.1.0.tgz#f6950f376865f995e9b8d815fe89e9bf3e1236ee"
+  integrity sha1-9pUPN2hl+ZXpuNgV/onpvz4SNu4=
+  dependencies:
+    rtf-parser "^1.0.4"
+
 "@istanbuljs/load-nyc-config@^1.0.0":
   version "1.1.0"
   resolved "https://registry.npm.taobao.org/@istanbuljs/load-nyc-config/download/@istanbuljs/load-nyc-config-1.1.0.tgz#fd3db1d59ecf7cf121e80650bb86712f9b55eced"
@@ -7411,7 +7418,7 @@ iconv-corefoundation@^1.1.5:
     cli-truncate "^1.1.0"
     node-addon-api "^1.6.3"
 
-iconv-lite@0.4.24:
+iconv-lite@0.4.24, iconv-lite@^0.4.15:
   version "0.4.24"
   resolved "https://registry.npm.taobao.org/iconv-lite/download/iconv-lite-0.4.24.tgz?cache=0&sync_timestamp=1594184325364&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Ficonv-lite%2Fdownload%2Ficonv-lite-0.4.24.tgz#2022b4b25fbddc21d2f524974a474aafe733908b"
   integrity sha1-ICK0sl+93CHS9SSXSkdKr+czkIs=
@@ -12389,6 +12396,14 @@ rsvp@^4.8.4:
   version "4.8.5"
   resolved "https://registry.npm.taobao.org/rsvp/download/rsvp-4.8.5.tgz#c8f155311d167f68f21e168df71ec5b083113734"
   integrity sha1-yPFVMR0Wf2jyHhaN9x7FsIMRNzQ=
+
+rtf-parser@^1.0.4:
+  version "1.3.3"
+  resolved "https://registry.nlark.com/rtf-parser/download/rtf-parser-1.3.3.tgz#41a10484fd3837c85c9e83d8da2b16829db6f2a9"
+  integrity sha1-QaEEhP04N8hcnoPY2isWgp228qk=
+  dependencies:
+    iconv-lite "^0.4.15"
+    readable-stream "^2.2.2"
 
 run-parallel@^1.1.9:
   version "1.2.0"
