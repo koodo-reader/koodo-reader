@@ -33,10 +33,10 @@ app.on("ready", () => {
     },
   });
   const isDev = require("electron-is-dev");
-  if (!isDev) {
-    const { Menu } = require("electron");
-    Menu.setApplicationMenu(null);
-  }
+  // if (!isDev) {
+  //   const { Menu } = require("electron");
+  //   Menu.setApplicationMenu(null);
+  // }
 
   const path = require("path");
   const urlLocation = isDev
@@ -71,7 +71,8 @@ app.on("ready", () => {
           "pdf",
           "web",
           "viewer.html"
-        )}+"?"+${url.split("?")[1]}`;
+        )}?${url.split("?")[1]}`;
+
     if (url.indexOf("full") > -1) {
       Object.assign(options, {
         width: 1050,
