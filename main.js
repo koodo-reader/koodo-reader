@@ -2,6 +2,7 @@ const { app, BrowserWindow } = require("electron");
 const { ebtMain } = require("electron-baidu-tongji");
 
 let mainWin;
+let readerWindow;
 const singleInstance = app.requestSingleInstanceLock();
 var filePath = null;
 if (process.platform == "win32" && process.argv.length >= 2) {
@@ -32,10 +33,10 @@ app.on("ready", () => {
     },
   });
   const isDev = require("electron-is-dev");
-  if (!isDev) {
-    const { Menu } = require("electron");
-    Menu.setApplicationMenu(null);
-  }
+  // if (!isDev) {
+  //   const { Menu } = require("electron");
+  //   Menu.setApplicationMenu(null);
+  // }
 
   const path = require("path");
   const urlLocation = isDev
@@ -45,54 +46,66 @@ app.on("ready", () => {
   mainWin.loadURL(urlLocation);
   const { remote, ipcMain } = require("electron");
   ebtMain(ipcMain, isDev);
-  mainWin.webContents.on(
-    "new-window",
-    (event, url, frameName, disposition, options, additionalFeatures) => {
-      event.preventDefault();
-      if (url.indexOf("full") > -1) {
-        Object.assign(options, {
-          parent: mainWin,
-          width: 1050,
-          height: 660,
-        });
-        event.newGuest = new BrowserWindow(options);
-        event.newGuest.maximize();
-      } else {
-        var urlParams;
-
-        var match,
-          pl = /\+/g,
-          search = /([^&=]+)=?([^&]*)/g,
-          decode = function (s) {
-            return decodeURIComponent(s.replace(pl, " "));
-          },
-          query = url.split("?").reverse()[0];
-        urlParams = {};
-        while ((match = search.exec(query)))
-          urlParams[decode(match[1])] = decode(match[2]);
-        Object.assign(options, {
-          parent: mainWin,
-          width: parseInt(urlParams.width),
-          height: parseInt(urlParams.height),
-          x: parseInt(urlParams.x),
-          y: parseInt(urlParams.y),
-        });
-        event.newGuest = new BrowserWindow(options);
-      }
-      mainWin &&
-        mainWin.on("minimize", () => {
-          event.newGuest && event.newGuest.show();
-        });
-
-      event.newGuest.on("close", () => {
-        event.newGuest = null;
-      });
-    }
-  );
   mainWin.on("close", () => {
     mainWin = null;
   });
+  ipcMain.on("open-book", (event, arg) => {
+    let url = arg;
 
+    let options = {
+      webPreferences: {
+        webSecurity: false,
+        nodeIntegration: true,
+        nativeWindowOpen: true,
+        enableRemoteModule: true,
+        nodeIntegrationInSubFrames: true,
+        allowRunningInsecureContent: true,
+      },
+    };
+    if (url.indexOf("full") > -1) {
+      Object.assign(options, {
+        width: 1050,
+        height: 660,
+      });
+      readerWindow = new BrowserWindow(options);
+      readerWindow.loadURL(
+        url.indexOf("pdf") > -1
+          ? isDev
+            ? "http://localhost:3000/" + url
+            : `file://${path.join(__dirname, "./build/", url)}`
+          : url
+      );
+      readerWindow.maximize();
+    } else {
+      var urlParams;
+
+      var match,
+        pl = /\+/g,
+        search = /([^&=]+)=?([^&]*)/g,
+        decode = function (s) {
+          return decodeURIComponent(s.replace(pl, " "));
+        },
+        query = url.split("?").reverse()[0];
+      urlParams = {};
+      while ((match = search.exec(query)))
+        urlParams[decode(match[1])] = decode(match[2]);
+      Object.assign(options, {
+        width: parseInt(urlParams.width),
+        height: parseInt(urlParams.height),
+        x: parseInt(urlParams.x),
+        y: parseInt(urlParams.y),
+      });
+      readerWindow = new BrowserWindow(options);
+      readerWindow.loadURL(url);
+    }
+    readerWindow.on("close", () => {
+      readerWindow = null;
+    });
+    event.returnValue = "success";
+    readerWindow.on("close", () => {
+      readerWindow = null;
+    });
+  });
   ipcMain.on("fonts-ready", (event, arg) => {
     const fontList = require("font-list");
     fontList
