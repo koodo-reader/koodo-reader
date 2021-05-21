@@ -2,7 +2,6 @@ import OtherUtil from "./otherUtil";
 import { isElectron } from "react-device-detect";
 import localforage from "localforage";
 import BookModel from "../model/Book";
-
 class BookUtil {
   static addBook(key: string, buffer: ArrayBuffer) {
     if (isElectron) {
@@ -95,36 +94,65 @@ class BookUtil {
     let ref =
       book.description === "readonly" ? book.format.toLowerCase() : "epub";
     if (OtherUtil.getReaderConfig("isAutoFullscreen") === "yes") {
-      window.open(
-        `${window.location.href.split("#")[0]}#/${ref}/${book.key}?width=full`
-      );
+      if (isElectron) {
+        const { ipcRenderer } = window.require("electron");
+        ipcRenderer.sendSync(
+          "open-book",
+          `${window.location.href.split("#")[0]}#/${ref}/${book.key}?width=full`
+        );
+      } else {
+        window.open(
+          `${window.location.href.split("#")[0]}#/${ref}/${book.key}?width=full`
+        );
+      }
     } else {
-      window.open(
-        `${window.location.href.split("#")[0]}#/${ref}/${
-          book.key
-        }?width=${OtherUtil.getReaderConfig(
-          "windowWidth"
-        )}&height=${OtherUtil.getReaderConfig(
-          "windowHeight"
-        )}&x=${OtherUtil.getReaderConfig(
-          "windowX"
-        )}&y=${OtherUtil.getReaderConfig("windowY")}`
-      );
+      if (isElectron) {
+        const { ipcRenderer } = window.require("electron");
+        ipcRenderer.sendSync(
+          "open-book",
+          `${window.location.href.split("#")[0]}#/${ref}/${
+            book.key
+          }?width=${OtherUtil.getReaderConfig(
+            "windowWidth"
+          )}&height=${OtherUtil.getReaderConfig(
+            "windowHeight"
+          )}&x=${OtherUtil.getReaderConfig(
+            "windowX"
+          )}&y=${OtherUtil.getReaderConfig("windowY")}`
+        );
+      } else {
+        window.open(
+          `${window.location.href.split("#")[0]}#/${ref}/${
+            book.key
+          }?width=${OtherUtil.getReaderConfig(
+            "windowWidth"
+          )}&height=${OtherUtil.getReaderConfig(
+            "windowHeight"
+          )}&x=${OtherUtil.getReaderConfig(
+            "windowX"
+          )}&y=${OtherUtil.getReaderConfig("windowY")}`
+        );
+      }
     }
   }
   static async RedirectBook(book: BookModel) {
     if (book.description === "pdf") {
       if (isElectron) {
+        const { ipcRenderer } = window.require("electron");
         const file: any = await this.fetchBook(book.key);
         var reader = new FileReader();
         reader.readAsArrayBuffer(file);
         reader.onload = async (event) => {
           await localforage.setItem("pdf", event.target!.result as any);
           if (OtherUtil.getReaderConfig("isAutoFullscreen") === "yes") {
-            window.open(`./lib/pdf/web/viewer.html?file=pdf&width=full`);
+            ipcRenderer.sendSync(
+              "open-book",
+              `lib/pdf/web/viewer.html?file=pdf&width=full`
+            );
           } else {
-            window.open(
-              `./lib/pdf/web/viewer.html?file=pdf&width=${OtherUtil.getReaderConfig(
+            ipcRenderer.sendSync(
+              "open-book",
+              `lib/pdf/web/viewer.html?file=pdf&width=${OtherUtil.getReaderConfig(
                 "windowWidth"
               )}&height=${OtherUtil.getReaderConfig(
                 "windowHeight"
