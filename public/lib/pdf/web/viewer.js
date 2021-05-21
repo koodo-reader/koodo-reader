@@ -3156,14 +3156,32 @@
       let webViewerOpenFileViaURL;
       {
         webViewerOpenFileViaURL = function (file) {
-          (localforage || window.localforage)
-            .getItem(file)
-            .then(function (result) {
-              PDFViewerApplication.open(result);
-            })
-            .catch((err) => {
-              console.log(err);
-            });
+          if (window.require) {
+            var fs = window.require("fs");
+            var path = window.require("path");
+            var data = fs.readFileSync(
+              path.join(
+                localStorage.getItem("storageLocation")
+                  ? localStorage.getItem("storageLocation")
+                  : window
+                      .require("electron")
+                      .ipcRenderer.sendSync("storage-location", "ping"),
+                `book`,
+                file
+              )
+            );
+            PDFViewerApplication.open(new Uint8Array(data).buffer);
+          } else {
+            (localforage || window.localforage)
+              .getItem(file)
+              .then(function (result) {
+                PDFViewerApplication.open(result);
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+          }
+
           // if (file && file.lastIndexOf("file:", 0) === 0) {
           //   PDFViewerApplication.setTitleUsingUrl(file);
           //   const xhr = new XMLHttpRequest();
