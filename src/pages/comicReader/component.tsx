@@ -116,6 +116,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     });
   };
   handleCbr = (result: ArrayBuffer) => {
+    console.log(window);
     let unrar = new Unrar(result);
     var entries = unrar.getEntries();
     for (let item of entries) {
