@@ -139,37 +139,31 @@ class BookUtil {
     if (book.description === "pdf") {
       if (isElectron) {
         const { ipcRenderer } = window.require("electron");
-        const file: any = await this.fetchBook(book.key);
-        var reader = new FileReader();
-        reader.readAsArrayBuffer(file);
-        reader.onload = async (event) => {
-          await localforage.setItem("pdf", event.target!.result as any);
-          if (OtherUtil.getReaderConfig("isAutoFullscreen") === "yes") {
-            ipcRenderer.sendSync(
-              "open-book",
-              `${
-                window.navigator.platform.indexOf("Win") > -1
-                  ? "lib/pdf/web/"
-                  : "lib\\pdf\\web\\"
-              }viewer.html?file=pdf&width=full`
-            );
-          } else {
-            ipcRenderer.sendSync(
-              "open-book",
-              `${
-                window.navigator.platform.indexOf("Win") > -1
-                  ? "lib/pdf/web/"
-                  : "lib\\pdf\\web\\"
-              }viewer.html?file=pdf&width=${OtherUtil.getReaderConfig(
-                "windowWidth"
-              )}&height=${OtherUtil.getReaderConfig(
-                "windowHeight"
-              )}&x=${OtherUtil.getReaderConfig(
-                "windowX"
-              )}&y=${OtherUtil.getReaderConfig("windowY")}`
-            );
-          }
-        };
+        if (OtherUtil.getReaderConfig("isAutoFullscreen") === "yes") {
+          ipcRenderer.sendSync(
+            "open-book",
+            `${
+              window.navigator.platform.indexOf("Win") > -1
+                ? "lib/pdf/web/"
+                : "lib\\pdf\\web\\"
+            }viewer.html?file=${book.key}&width=full`
+          );
+        } else {
+          ipcRenderer.sendSync(
+            "open-book",
+            `${
+              window.navigator.platform.indexOf("Win") > -1
+                ? "lib/pdf/web/"
+                : "lib\\pdf\\web\\"
+            }viewer.html?file=${book.key}&width=${OtherUtil.getReaderConfig(
+              "windowWidth"
+            )}&height=${OtherUtil.getReaderConfig(
+              "windowHeight"
+            )}&x=${OtherUtil.getReaderConfig(
+              "windowX"
+            )}&y=${OtherUtil.getReaderConfig("windowY")}`
+          );
+        }
       } else {
         window.open(`./lib/pdf/web/viewer.html?file=${book.key}`);
       }
