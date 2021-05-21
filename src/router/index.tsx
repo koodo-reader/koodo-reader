@@ -3,7 +3,6 @@ import { Route, Switch, HashRouter } from "react-router-dom";
 import Manager from "../pages/manager";
 import EpubReader from "../pages/epubReader";
 import Viewer from "../pages/viewer";
-import Fb2Reader from "../pages/fb2Reader";
 import DjvuReader from "../pages/djvuReader";
 import ComicReader from "../pages/comicReader";
 import _Redirect from "../pages/redirect";
@@ -42,7 +41,7 @@ const Router = () => {
         <Route component={Viewer} path="/docx" />
         <Route component={Viewer} path="/md" />
         <Route component={Viewer} path="/rtf" />
-        <Route component={Fb2Reader} path="/fb2" />
+        <Route component={Viewer} path="/fb2" />
         <Route component={ComicReader} path="/cbr" />
         <Route component={ComicReader} path="/cbz" />
         <Route component={ComicReader} path="/cbt" />
