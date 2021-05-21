@@ -147,12 +147,20 @@ class BookUtil {
           if (OtherUtil.getReaderConfig("isAutoFullscreen") === "yes") {
             ipcRenderer.sendSync(
               "open-book",
-              `lib/pdf/web/viewer.html?file=pdf&width=full`
+              `${
+                window.navigator.platform.indexOf("Win") > -1
+                  ? "lib/pdf/web/"
+                  : "lib\\pdf\\web\\"
+              }viewer.html?file=pdf&width=full`
             );
           } else {
             ipcRenderer.sendSync(
               "open-book",
-              `lib/pdf/web/viewer.html?file=pdf&width=${OtherUtil.getReaderConfig(
+              `${
+                window.navigator.platform.indexOf("Win") > -1
+                  ? "lib/pdf/web/"
+                  : "lib\\pdf\\web\\"
+              }viewer.html?file=pdf&width=${OtherUtil.getReaderConfig(
                 "windowWidth"
               )}&height=${OtherUtil.getReaderConfig(
                 "windowHeight"
