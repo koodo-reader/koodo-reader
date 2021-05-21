@@ -13,7 +13,7 @@ import OtherUtil from "../../utils/otherUtil";
 import iconv from "iconv-lite";
 import chardet from "chardet";
 import rtfToHTML from "@iarna/rtf-to-html";
-
+import { xmlBookTagFilter, xmlBookToObj } from "../../utils/xmlUtil";
 declare var window: any;
 
 class Viewer extends React.Component<ViewerProps, ViewerState> {
@@ -43,6 +43,8 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           this.handleRtf(result as ArrayBuffer);
         } else if (book.format === "DOCX") {
           this.handleDocx(result as ArrayBuffer);
+        } else if (book.format === "FB2") {
+          this.handleFb2(result as ArrayBuffer);
         }
         this.props.handleReadingState(true);
         RecentBooks.setRecent(key);
@@ -90,15 +92,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     };
     reader.readAsText(blob, "UTF-8");
   };
-  handleFb2 = (result: ArrayBuffer) => {
-    let str = iconv.decode(
-      Buffer.from(result),
-      chardet.detect(Buffer.from(result)) as string
-    );
-    let viewer: HTMLElement | null = document.querySelector(".ebook-viewer");
-    if (!viewer?.innerHTML) return;
-    viewer.innerHTML = str;
-  };
   handleRtf = (result: ArrayBuffer) => {
     let text = iconv.decode(
       Buffer.from(result),
@@ -116,6 +109,18 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       if (!viewer?.innerHTML) return;
       viewer.innerHTML = res.value;
     });
+  };
+  handleFb2 = (result: ArrayBuffer) => {
+    let fb2Str = iconv.decode(
+      Buffer.from(result),
+      chardet.detect(Buffer.from(result)) as string
+    );
+    let bookObj = xmlBookToObj(Buffer.from(result));
+    bookObj += xmlBookTagFilter(fb2Str);
+    console.log(bookObj, "bookboj");
+    let viewer: HTMLElement | null = document.querySelector(".ebook-viewer");
+    if (!viewer?.innerHTML) return;
+    viewer.innerHTML = bookObj;
   };
   render() {
     return <div className="ebook-viewer">Loading</div>;
