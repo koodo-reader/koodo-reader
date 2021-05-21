@@ -62,19 +62,23 @@ app.on("ready", () => {
         allowRunningInsecureContent: true,
       },
     };
+    let pdfLocation = isDev
+      ? "http://localhost:3000/" + url
+      : `file://${path.join(
+          __dirname,
+          "./build",
+          "lib",
+          "pdf",
+          "web",
+          "viewer.html"
+        )}+"?"+${url.split("?")[1]}`;
     if (url.indexOf("full") > -1) {
       Object.assign(options, {
         width: 1050,
         height: 660,
       });
       readerWindow = new BrowserWindow(options);
-      readerWindow.loadURL(
-        url.indexOf("pdf") > -1
-          ? isDev
-            ? "http://localhost:3000/" + url
-            : `file://${path.join(__dirname, "./build/", url)}`
-          : url
-      );
+      readerWindow.loadURL(url.indexOf("pdf") > -1 ? pdfLocation : url);
       readerWindow.maximize();
     } else {
       var urlParams;
@@ -96,7 +100,7 @@ app.on("ready", () => {
         y: parseInt(urlParams.y),
       });
       readerWindow = new BrowserWindow(options);
-      readerWindow.loadURL(url);
+      readerWindow.loadURL(url.indexOf("pdf") > -1 ? pdfLocation : url);
     }
     readerWindow.on("close", () => {
       readerWindow = null;
