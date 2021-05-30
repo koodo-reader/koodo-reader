@@ -14,7 +14,6 @@ import iconv from "iconv-lite";
 import chardet from "chardet";
 import rtfToHTML from "@iarna/rtf-to-html";
 import { xmlBookTagFilter, xmlBookToObj } from "../../utils/xmlUtil";
-import { mimetype } from "../../constants/mimetype";
 declare var window: any;
 
 class Viewer extends React.Component<ViewerProps, ViewerState> {
@@ -46,13 +45,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           this.handleDocx(result as ArrayBuffer);
         } else if (book.format === "FB2") {
           this.handleFb2(result as ArrayBuffer);
-        } else if (
-          book.format === "HTML" ||
-          book.format === "HTM" ||
-          book.format === "XML" ||
-          book.format === "XHTML"
-        ) {
-          this.handleHtml(result as ArrayBuffer, book.format);
         }
         this.props.handleReadingState(true);
         RecentBooks.setRecent(key);
@@ -76,18 +68,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     OtherUtil.setReaderConfig("windowX", window.screenX + "");
     OtherUtil.setReaderConfig("windowY", window.screenY + "");
   }
-  handleHtml = (result: ArrayBuffer, format: string) => {
-    var blob = new Blob([result], {
-      type: mimetype[format.toLocaleLowerCase()],
-    });
-    var reader = new FileReader();
-    reader.onload = function (evt) {
-      let viewer: HTMLElement | null = document.querySelector(".ebook-viewer");
-      if (!viewer?.innerHTML) return;
-      viewer.innerHTML = evt.target?.result as any;
-    };
-    reader.readAsText(blob, "UTF-8");
-  };
+
   handleMobi = async (result: ArrayBuffer) => {
     let mobiFile = new MobiParser(result);
     let content: any = await mobiFile.render();
