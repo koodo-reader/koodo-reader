@@ -214,6 +214,10 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
             extension === "docx" ||
             extension === "md" ||
             extension === "cbz" ||
+            extension === "tml" ||
+            extension === "html" ||
+            extension === "xml" ||
+            extension === "xhtml" ||
             extension === "cbr" ||
             extension === "cbt" ||
             extension === "rtf" ||
@@ -266,6 +270,10 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
           ".mobi",
           ".azw3",
           ".djvu",
+          ".htm",
+          ".html",
+          ".xml",
+          ".xhtml",
           ".docx",
           ".rtf",
           ".md",
