@@ -1,0 +1,7 @@
+.ebook-viewer {
+  height: 100vh;
+  overflow-y: scroll;
+  text-indent: 2rem;
+  line-height: 150%;
+  color: black;
+}
