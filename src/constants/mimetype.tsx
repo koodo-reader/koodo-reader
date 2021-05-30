@@ -9,4 +9,8 @@ export const mimetype = {
   rar: "application/x-rar-compressed",
   "7z": "application/x-7z-compressed",
   tar: "application/x-tar",
+  html: "text/html",
+  htm: "text/html",
+  xml: "text/xml",
+  xhtml: "application/xhtml+xml",
 };
