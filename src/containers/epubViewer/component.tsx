@@ -163,7 +163,12 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         this.state.isOpenSettingPanel,
     };
     return (
-      <div className="viewer">
+      <div
+        className="viewer"
+        style={{
+          filter: `brightness(${OtherUtil.getReaderConfig("brightness") || 1})`,
+        }}
+      >
         <div
           className="previous-chapter-single-container"
           onClick={() => {

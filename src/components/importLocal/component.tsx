@@ -148,7 +148,8 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
             result = await addPdf(
               e.target.result as ArrayBuffer,
               md5,
-              bookName
+              bookName,
+              file.size
             );
             if (!result) {
               this.props.handleMessage("Import Failed");
@@ -171,7 +172,12 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
               let mobiFile = new MobiParser(file_content);
               let content: any = await mobiFile.render(isElectron);
               if (typeof content === "object") {
-                result = BookUtil.generateBook(bookName, extension, md5);
+                result = BookUtil.generateBook(
+                  bookName,
+                  extension,
+                  md5,
+                  file.size
+                );
                 await this.handleAddBook(result);
                 BookUtil.addBook(result.key, file_content as ArrayBuffer);
                 resolve();
@@ -203,7 +209,12 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
               let reader = new FileReader();
               reader.readAsArrayBuffer(file);
               reader.onload = async (event) => {
-                result = BookUtil.generateBook(bookName, extension, md5);
+                result = BookUtil.generateBook(
+                  bookName,
+                  extension,
+                  md5,
+                  file.size
+                );
                 await this.handleAddBook(result);
                 BookUtil.addBook(result.key, (event.target as any).result);
                 resolve();
@@ -226,7 +237,12 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
             let reader = new FileReader();
             reader.onload = async (event) => {
               const file_content = (event.target as any).result;
-              result = BookUtil.generateBook(bookName, extension, md5);
+              result = BookUtil.generateBook(
+                bookName,
+                extension,
+                md5,
+                file.size
+              );
               await this.handleAddBook(result);
               BookUtil.addBook(result.key, file_content as ArrayBuffer);
               resolve();

@@ -135,16 +135,19 @@ class SettingDialog extends React.Component<
       properties: ["openDirectory"],
     });
     const { ipcRenderer } = window.require("electron");
-    path.filePaths[0] &&
-      SyncUtil.changeLocation(
-        localStorage.getItem("storageLocation")
-          ? localStorage.getItem("storageLocation")
-          : ipcRenderer.sendSync("storage-location", "ping"),
-        path.filePaths[0],
-        this.props.handleMessage,
-        this.props.handleMessageBox,
-        this.syncFromLocation
-      );
+    if (!path.filePaths[0]) {
+      return;
+    }
+    console.log(path.filePaths[0]);
+    SyncUtil.changeLocation(
+      localStorage.getItem("storageLocation")
+        ? localStorage.getItem("storageLocation")
+        : ipcRenderer.sendSync("storage-location", "ping"),
+      path.filePaths[0],
+      this.props.handleMessage,
+      this.props.handleMessageBox,
+      this.syncFromLocation
+    );
     localStorage.setItem("storageLocation", path.filePaths[0]);
     document.getElementsByClassName(
       "setting-dialog-location-title"
@@ -304,7 +307,7 @@ class SettingDialog extends React.Component<
             >
               {dropdownList[0].option.map((item) => (
                 <option value={item} key={item} className="lang-setting-option">
-                  {item}
+                  {this.props.t(item)}
                 </option>
               ))}
             </select>

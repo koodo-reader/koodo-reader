@@ -13,6 +13,7 @@
   margin-top: 5px;
   padding-left: 5px;
   padding-right: 5px;
+  font-weight: 500;
 }
 
 .tag-title {
@@ -26,7 +27,11 @@
   display: inline-block;
   margin: 0px 10px;
 }
-
+.tag-dropdown-icon {
+  margin-left: 10px;
+  line-height: 30px;
+  cursor: pointer;
+}
 #newTag {
   width: 100%;
   border: none;

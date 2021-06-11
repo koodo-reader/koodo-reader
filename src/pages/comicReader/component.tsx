@@ -97,7 +97,8 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     let url = this.base64ArrayBuffer(content);
 
     let imageDom = document.createElement("img");
-    imageDom.src = "data:" + mimetype[extension] + ";base64," + url;
+    imageDom.src =
+      "data:" + mimetype[extension.toLowerCase()] + ";base64," + url;
     let viewer: HTMLElement | null = document.querySelector(".ebook-viewer");
     if (!viewer?.innerHTML) return;
     viewer.appendChild(imageDom);
@@ -116,7 +117,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     });
   };
   handleCbr = (result: ArrayBuffer) => {
-    console.log(window);
     let unrar = new Unrar(result);
     var entries = unrar.getEntries();
     for (let item of entries) {
