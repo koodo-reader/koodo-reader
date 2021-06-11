@@ -134,11 +134,9 @@ class TextToSpeech extends React.Component<
                   }
                 }}
                 style={
-                  this.props.locations
-                    ? this.state.isAudioOn
-                      ? { background: "rgba(46, 170, 220)" }
-                      : {}
-                    : { opacity: 0.5 }
+                  this.props.locations && this.state.isAudioOn
+                    ? {}
+                    : { opacity: 0.6 }
                 }
               >
                 <span

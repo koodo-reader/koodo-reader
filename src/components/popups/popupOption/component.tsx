@@ -28,7 +28,9 @@ class PopupOption extends React.Component<PopupOptionProps> {
   handleNote = () => {
     this.props.handleChangeDirection(false);
     this.props.handleMenuMode("note");
-
+    this.handleEdge();
+  };
+  handleEdge = () => {
     let popupMenu: any = document.querySelector(".popup-menu-container");
     let posX = popupMenu?.style.left;
     let posY = popupMenu?.style.top;
@@ -56,6 +58,7 @@ class PopupOption extends React.Component<PopupOptionProps> {
   handleTrans = () => {
     this.props.handleMenuMode("trans");
     this.props.handleOriginalText(getSelection() || "");
+    this.handleEdge();
   };
   handleDigest = () => {
     let bookKey = this.props.currentBook.key;

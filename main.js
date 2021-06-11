@@ -114,7 +114,7 @@ app.on("ready", () => {
   ipcMain.on("fonts-ready", (event, arg) => {
     const fontList = require("font-list");
     fontList
-      .getFonts()
+      .getFonts({ disableQuoting: true })
       .then((fonts) => {
         event.returnValue = fonts;
       })

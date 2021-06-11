@@ -9,13 +9,14 @@
   width: 105px;
   height: 137px;
   opacity: 1;
-  margin: 15px 15px 5px 15px;
+  margin: 10px 15px 5px 15px;
   cursor: pointer;
   overflow: hidden;
 }
 .book-item-title {
   width: 80%;
   margin-left: 10%;
+  margin-bottom: 5px;
   height: 33px;
   font-size: 15px;
   line-height: 17px;

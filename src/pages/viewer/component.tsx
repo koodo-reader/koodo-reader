@@ -120,7 +120,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     );
     let bookObj = xmlBookToObj(Buffer.from(result));
     bookObj += xmlBookTagFilter(fb2Str);
-    console.log(bookObj, "bookboj");
     let viewer: HTMLElement | null = document.querySelector(".ebook-viewer");
     if (!viewer?.innerHTML) return;
     viewer.innerHTML = bookObj;

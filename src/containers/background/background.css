@@ -65,6 +65,27 @@
   position: absolute;
   right: calc(50% - 68px);
 }
+.dark-spine-shadow-left {
+  width: 68px;
+  height: 100%;
+  background: url("../../assets/dark-gradient-left.png") repeat-y;
+  z-index: 10;
+  margin: 0;
+  z-index: 10;
+  position: absolute;
+  left: calc(50% - 68px);
+}
+
+.dark-spine-shadow-right {
+  width: 68px;
+  height: 100%;
+  background: url("../../assets/dark-gradient-right.png") repeat-y;
+  z-index: 10;
+  margin: 0;
+  box-sizing: border-box;
+  position: absolute;
+  right: calc(50% - 68px);
+}
 .single-background {
   width: 60vw;
   left: 20vw;

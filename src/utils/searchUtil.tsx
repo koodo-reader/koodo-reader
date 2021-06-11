@@ -3,7 +3,7 @@ import NoteModel from "../model/Note";
 class SearchUtil {
   static MergeArray(arr1: number[], arr2: number[]) {
     var _arr: number[] = [];
-    for (let item of _arr) {
+    for (let item of arr1) {
       _arr.push(item);
     }
     for (let item of arr2) {
@@ -23,7 +23,8 @@ class SearchUtil {
   static fuzzyQuery(list: string[], keyWord: string) {
     var arr: number[] = [];
     for (var i = 0; i < list.length; i++) {
-      if (list[i].match(keyWord) != null) {
+      console.log(list[i], keyWord, i);
+      if (list[i].indexOf(keyWord) > -1) {
         arr.push(i);
       }
     }
@@ -42,9 +43,11 @@ class SearchUtil {
     });
     let bookResults = this.fuzzyQuery(bookNameArr, keyword);
     let authorResults = this.fuzzyQuery(AuthorNameArr, keyword);
+
     return this.MergeArray(bookResults, authorResults);
   }
   static KeySearch(event: any, books: BookModel[]) {
+    console.log("asgasgfsjjgj", books);
     if (event && event.keyCode === 13) {
       let bookNameArr: string[] = [];
       let AuthorNameArr: string[] = [];
@@ -62,6 +65,11 @@ class SearchUtil {
         AuthorNameArr,
         event.target.value.toLowerCase()
       );
+      console.log(
+        event.target.value.toLowerCase(),
+        this.MergeArray(bookResults, authorResults)
+      );
+
       return this.MergeArray(bookResults, authorResults);
     }
   }

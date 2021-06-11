@@ -171,7 +171,12 @@ class BookUtil {
       this.openBook(book);
     }
   }
-  static generateBook(bookName: string, extension: string, md5: string) {
+  static generateBook(
+    bookName: string,
+    extension: string,
+    md5: string,
+    size: number
+  ) {
     let cover: any = "noCover";
     let key: string,
       name: string,
@@ -194,7 +199,8 @@ class BookUtil {
       md5,
       cover,
       format,
-      publisher
+      publisher,
+      size
     );
   }
 }

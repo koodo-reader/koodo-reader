@@ -17,6 +17,8 @@ class SliderList extends React.Component<SliderListProps, SliderListState> {
           ? OtherUtil.getReaderConfig("letterSpacing") || "0"
           : this.props.mode === "paraSpacing"
           ? OtherUtil.getReaderConfig("paraSpacing") || "0"
+          : this.props.mode === "brightness"
+          ? OtherUtil.getReaderConfig("brightness") || "1"
           : OtherUtil.getReaderConfig("margin") || "60",
     };
   }
@@ -43,6 +45,10 @@ class SliderList extends React.Component<SliderListProps, SliderListState> {
       const paraSpacing = event.target.value;
       this.setState({ value: paraSpacing });
       OtherUtil.setReaderConfig("paraSpacing", paraSpacing);
+    } else if (this.props.mode === "brightness") {
+      const brightness = event.target.value;
+      this.setState({ value: brightness });
+      OtherUtil.setReaderConfig("brightness", brightness);
     } else {
       const margin = event.target.value;
       this.setState({ value: margin });
@@ -74,7 +80,11 @@ class SliderList extends React.Component<SliderListProps, SliderListState> {
             className="input-value"
             defaultValue={this.state.value}
             type="number"
-            step={this.props.title === "Scale" ? "0.1" : "1"}
+            step={
+              this.props.title === "Scale" || this.props.title === "Brightness"
+                ? "0.1"
+                : "1"
+            }
             onBlur={(event) => {
               this.onValueChange(event);
 

@@ -195,7 +195,7 @@
   "Sort by Percentage": "Проценту",
   "This action will remove all the books in recycle bin,together with their notes, bookmarks and digests": "Это действие навсегда удалит все книги из корзины вместе с их заметками, закладками и дайджестами.",
   "Batch import only support epub or pdf files": "Пакетный импорт поддерживает только файлы в формате epub или pdf",
-  "Drag any book to the Deleted tab to add it to Recycle Bin": "Здесь будут показаны удалённые книги.",
+  "The deleted books will show up here": "Здесь будут показаны удалённые книги.",
   "Empty Recycle Bin": "Корзина пустая",
   "Hi! Stranger": "Здравствуй! Друг",
   "Skip": "Пропустить",
@@ -261,11 +261,14 @@
   "Auto open book in fullscreen": "Auto open book in fullscreen",
   "System Font": "System Font",
   "Tips": "Tips",
+  "Brightness": "Brightness",
   "How sync works": "How sync works",
   "You need to manually change the storage location to the same sync folder on different computers. When you click the sync button, Koodo Reader will automatically upload or download the data from this folder according the timestamp.": "You need to manually change the storage location to the same sync folder on different computers. When you click the sync button, Koodo Reader will automatically upload or download the data from this folder according the timestamp.",
   "Purple": "Purple",
   "Please choose an empty folder": "Please choose an empty folder",
   "Data change detected, whether to update?": "Data change detected, whether to update?",
+  "Unlock": "Unlock",
+  "Lock": "Lock",
   "Disable update notification": "Disable update notification",
   "Collapse sidebar": "Collapse sidebar"
 }

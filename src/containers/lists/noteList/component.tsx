@@ -78,7 +78,7 @@ class NoteList extends React.Component<NoteListProps, NoteListState> {
               zIndex: -1,
             }}
           >
-            <Empty />
+            {this.state.tag.length === 0 && <Empty />}
           </div>
         ) : (
           <CardList {...noteProps} />

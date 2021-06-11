@@ -13,6 +13,7 @@ class NoteTag extends React.Component<NoteTagProps, NoteTagState> {
       tagIndex: [],
       isInput: false,
       deleteIndex: -1,
+      isShowTags: false,
     };
   }
   componentDidMount() {
@@ -75,6 +76,9 @@ class NoteTag extends React.Component<NoteTagProps, NoteTagState> {
       document.getElementById("newTag")?.focus();
     });
   };
+  handleShowTags = (bool: boolean) => {
+    this.setState({ isShowTags: bool });
+  };
   render() {
     const renderTag = () => {
       let noteTags = this.props.isCard ? this.props.tag : TagUtil.getAllTags();
@@ -120,38 +124,46 @@ class NoteTag extends React.Component<NoteTagProps, NoteTagState> {
         style={this.props.isReading ? { width: "1999px" } : {}}
       >
         {this.props.isReading || this.props.isCard ? null : (
-          <span className="tag-title">
+          <div className="tag-title">
             <Trans>All Tags</Trans>
-          </span>
+            <span
+              className="icon-dropdown tag-dropdown-icon"
+              onClick={() => {
+                this.handleShowTags(!this.state.isShowTags);
+              }}
+            ></span>
+          </div>
         )}
 
-        <ul className="tag-container">
-          {!this.props.isCard && (
-            <li
-              className="tag-list-item-new"
-              onClick={() => {
-                this.handleInput();
-              }}
-              style={this.state.isInput ? { width: "80px" } : {}}
-            >
-              <div className="center">
-                {this.state.isInput ? (
-                  <input
-                    type="text"
-                    name="newTag"
-                    id="newTag"
-                    onBlur={(event) => {
-                      this.handleAddTag(event);
-                    }}
-                  />
-                ) : (
-                  <span className="icon-add"></span>
-                )}
-              </div>
-            </li>
-          )}
-          {renderTag()}
-        </ul>
+        {(this.state.isShowTags || this.props.isReading) && (
+          <ul className="tag-container">
+            {!this.props.isCard && (
+              <li
+                className="tag-list-item-new"
+                onClick={() => {
+                  this.handleInput();
+                }}
+                style={this.state.isInput ? { width: "80px" } : {}}
+              >
+                <div className="center">
+                  {this.state.isInput ? (
+                    <input
+                      type="text"
+                      name="newTag"
+                      id="newTag"
+                      onBlur={(event) => {
+                        this.handleAddTag(event);
+                      }}
+                    />
+                  ) : (
+                    <span className="icon-add"></span>
+                  )}
+                </div>
+              </li>
+            )}
+            {renderTag()}
+          </ul>
+        )}
       </div>
     );
   }

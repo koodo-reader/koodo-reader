@@ -18,17 +18,15 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
     if (lng === "cn") {
       lng = "zh";
     }
+    let originalText = this.props.originalText.replace(/(\r\n|\n|\r)/gm, "");
+
     var script = document.createElement("script");
     script.type = "text/javascript";
-    script.src = `https://fanyi-api.baidu.com/api/trans/vip/translate?q=${
-      this.props.originalText
-    }&from=auto&to=${
+    script.src = `https://fanyi-api.baidu.com/api/trans/vip/translate?q=${originalText}&from=auto&to=${
       lng || "zh"
     }&appid=20200802000531425&salt=1435660288&sign=${md5(
-      "20200802000531425" +
-        this.props.originalText +
-        "1435660288" +
-        "sJRHTorJq8j8_ru2GkHl"
+      // eslint-disable-next-line
+      "20200802000531425" + originalText + "1435660288" + "sJRHTorJq8j8_ru2GkHl"
     )}&callback=handleCallback`;
     document.head.appendChild(script);
     (window as any).handleCallback = (res: any) => {

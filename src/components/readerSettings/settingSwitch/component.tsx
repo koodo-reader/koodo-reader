@@ -26,6 +26,9 @@ class SettingSwitch extends React.Component<
   handleBold = () => {
     this.setState({ isBold: !this.state.isBold }, () => {
       OtherUtil.setReaderConfig("isBold", this.state.isBold ? "yes" : "no");
+      setTimeout(() => {
+        window.location.reload();
+      }, 500);
     });
   };
   handleItalic = () => {
@@ -137,11 +140,7 @@ class SettingSwitch extends React.Component<
                     break;
                 }
               }}
-              style={
-                this.state[item.propName]
-                  ? { background: "rgba(46, 170, 220)", float: "right" }
-                  : { float: "right" }
-              }
+              style={this.state[item.propName] ? {} : { opacity: 0.6 }}
             >
               <span
                 className="single-control-button"

@@ -6,7 +6,7 @@ const initState = {
   chapters: null,
   currentChapter: "",
   flattenChapters: null,
-  color: 0,
+  color: OtherUtil.getReaderConfig("isDisplayDark") === "yes" ? 3 : 0,
   noteKey: "",
   originalText: "",
   readerMode: OtherUtil.getReaderConfig("readerMode") || "double",

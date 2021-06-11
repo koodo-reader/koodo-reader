@@ -6,6 +6,7 @@ body,
 }
 
 .book-content-name,
+.delete-tag-container,
 .book-subcontent-name {
   color: rgba(75, 75, 75, 1);
 }
@@ -97,6 +98,7 @@ textarea::-ms-input-placeholder,
 .popup-close,
 .only-local-icon,
 .popup-close,
+.active-page,
 .sk-chase-dot:before {
   background-color: rgba(75, 75, 75, 1);
   color: rgba(255, 255, 255, 1);

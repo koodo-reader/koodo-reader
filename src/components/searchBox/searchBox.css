@@ -31,12 +31,12 @@ textarea::-ms-input-placeholder {
 }
 .header-search-text {
   position: absolute;
-  top: 1px;
-  right: -16px;
+  top: 0px;
+  right: -15px;
   font-size: 15px;
   display: inline-block;
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   cursor: pointer;
   margin-right: 5px;
 }

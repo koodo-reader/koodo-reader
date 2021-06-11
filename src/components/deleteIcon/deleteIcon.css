@@ -12,7 +12,7 @@
 }
 .delete-digest-icon {
   position: relative;
-  left: 10px !important;
-  bottom: 10px !important;
+  left: 11px !important;
+  bottom: 13px !important;
   transform: scale(0.6);
 }
