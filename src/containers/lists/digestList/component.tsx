@@ -76,7 +76,7 @@ class DigestList extends React.Component<DigestListProps, DigestListStates> {
               zIndex: -1,
             }}
           >
-            <Empty />
+            {this.state.tag.length === 0 && <Empty />}
           </div>
         ) : (
           <CardList {...noteProps} />

@@ -2,7 +2,12 @@ import BookModel from "../model/Book";
 
 declare var window: any;
 var pdfjsLib = window["pdfjs-dist/build/pdf"];
-export const addPdf = (data: ArrayBuffer, md5: string, bookName: string) => {
+export const addPdf = (
+  data: ArrayBuffer,
+  md5: string,
+  bookName: string,
+  size: number
+) => {
   return new Promise<BookModel | boolean>((resolve, reject) => {
     pdfjsLib
       .getDocument({ data: data })
@@ -31,7 +36,8 @@ export const addPdf = (data: ArrayBuffer, md5: string, bookName: string) => {
             md5,
             cover,
             format,
-            publisher
+            publisher,
+            size
           );
           resolve(book);
         });

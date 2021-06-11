@@ -76,7 +76,6 @@ class SyncUtil {
     const fs = window.require("fs-extra");
     try {
       fs.readdir(newPath, (err, files: string[]) => {
-        console.log(files);
         let isConfiged: boolean = false;
         files.forEach((file: string) => {
           if (file === "config.zip") {

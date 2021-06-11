@@ -13,6 +13,7 @@ const mapStateToProps = (state: stateType) => {
   return {
     currentBook: state.book.currentBook,
     books: state.manager.books,
+    isShowNew: state.manager.isShowNew,
   };
 };
 const actionCreator = {

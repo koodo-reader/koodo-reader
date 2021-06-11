@@ -8,6 +8,7 @@ body,
 .book-content-name,
 .booklist-shelf-list,
 .lang-setting-dropdown,
+.delete-tag-container,
 .book-subcontent-name {
   color: rgba(235, 235, 235, 1);
 }
@@ -194,6 +195,7 @@ textarea::-ms-input-placeholder,
 ::-webkit-scrollbar-thumb,
 ::-webkit-scrollbar-thumb:hover,
 .active-tag,
+.active-page,
 .sk-chase-dot:before {
   background-color: rgba(235, 235, 235, 1);
 }
@@ -204,7 +206,6 @@ textarea::-ms-input-placeholder,
 .reading-progress-icon,
 .image-operation,
 .add-bookmark-icon,
-.active-page,
 .exit-reading-icon,
 .message-box-icon,
 .active-icon,
@@ -227,6 +228,7 @@ textarea::-ms-input-placeholder,
 .book-more-action,
 .reading-progress-icon,
 .book-love-icon,
+input,
 .input-value {
   color: rgba(235, 235, 235, 1);
 }
@@ -239,6 +241,7 @@ textarea::-ms-input-placeholder,
 }
 .popup-menu-triangle-up,
 .active-tag,
+.active-page,
 .popup-menu-triangle-down {
   color: rgba(47, 52, 55, 1);
 }

@@ -86,100 +86,103 @@ class UpdateInfo extends React.Component<UpdateInfoProps, UpdateInfoState> {
     this.setState({ updateLog: "", isUpdated: false });
     this.props.handleNewDialog(false);
   };
+
   render() {
+    console.log(this.props.isShowNew);
     return (
       <>
-        {(this.state.updateLog || this.state.isUpdated) && (
-          <div
-            className="new-version"
-            style={
-              this.state.isUpdated
-                ? { height: "240px", top: "calc(50vh - 120px)" }
-                : {}
-            }
-          >
-            <div className="new-version-title">
-              {this.state.isUpdated ? (
-                <Trans>Update Complete</Trans>
-              ) : (
-                <>
-                  <Trans>Update to</Trans>
-                  {" " + this.state.updateLog.version}
-                </>
-              )}
-            </div>
+        {(this.state.updateLog || this.state.isUpdated) &&
+          this.props.isShowNew && (
             <div
-              className="setting-close-container"
-              onClick={() => {
-                this.handleClose();
-              }}
+              className="new-version"
+              style={
+                this.state.isUpdated
+                  ? { height: "240px", top: "calc(50vh - 120px)" }
+                  : {}
+              }
             >
-              <span className="icon-close setting-close"></span>
-            </div>
-            {this.state.isUpdated && (
-              <div className="update-info-text">
-                <Trans>You successfully update to</Trans>
-                {" " + version}
-              </div>
-            )}
-            <div className="update-dialog-info" style={{ height: 420 }}>
-              <div className="new-version-animation">
+              <div className="new-version-title">
                 {this.state.isUpdated ? (
-                  <Lottie
-                    options={successOptions}
-                    height={80}
-                    width={80}
-                    style={{ marginTop: "10px", marginBottom: "10px" }}
-                  />
+                  <Trans>Update Complete</Trans>
                 ) : (
-                  <Lottie options={newOptions} height={220} width={220} />
+                  <>
+                    <Trans>Update to</Trans>
+                    {" " + this.state.updateLog.version}
+                  </>
                 )}
               </div>
               <div
-                className="new-version-open"
+                className="setting-close-container"
                 onClick={() => {
-                  this.handleJump();
+                  this.handleClose();
                 }}
-                style={this.state.isUpdated ? { marginTop: "10px" } : {}}
               >
-                {this.state.isUpdated ? (
+                <span className="icon-close setting-close"></span>
+              </div>
+              {this.state.isUpdated && (
+                <div className="update-info-text">
+                  <Trans>You successfully update to</Trans>
+                  {" " + version}
+                </div>
+              )}
+              <div className="update-dialog-info" style={{ height: 420 }}>
+                <div className="new-version-animation">
+                  {this.state.isUpdated ? (
+                    <Lottie
+                      options={successOptions}
+                      height={80}
+                      width={80}
+                      style={{ marginTop: "10px", marginBottom: "10px" }}
+                    />
+                  ) : (
+                    <Lottie options={newOptions} height={220} width={220} />
+                  )}
+                </div>
+                <div
+                  className="new-version-open"
+                  onClick={() => {
+                    this.handleJump();
+                  }}
+                  style={this.state.isUpdated ? { marginTop: "10px" } : {}}
+                >
+                  {this.state.isUpdated ? (
+                    <>
+                      <Trans>Changelog</Trans>
+                    </>
+                  ) : (
+                    <Trans>Open link in browser</Trans>
+                  )}
+                </div>
+                {this.state.updateLog && (
                   <>
-                    <Trans>Changelog</Trans>
+                    <div
+                      className="new-version-copy"
+                      onClick={() => {
+                        copy("https://koodo.960960.xyz/download");
+                        this.props.handleMessage("Copy Successfully");
+                        this.props.handleMessageBox(true);
+                      }}
+                    >
+                      <Trans>Copy Link</Trans>
+                    </div>
+
+                    <p className="update-dialog-new-title">
+                      <Trans>What's New</Trans>
+                    </p>
+                    <ul className="update-dialog-new-container">
+                      {this.renderList(this.state.updateLog.new)}
+                    </ul>
+                    <p className="update-dialog-fix-title">
+                      <Trans>What's been fixed</Trans>
+                    </p>
+                    <ul className="update-dialog-fix-container">
+                      {this.renderList(this.state.updateLog.fix)}
+                    </ul>
                   </>
-                ) : (
-                  <Trans>Open link in browser</Trans>
                 )}
               </div>
-              {this.state.updateLog && (
-                <>
-                  <div
-                    className="new-version-copy"
-                    onClick={() => {
-                      copy("https://koodo.960960.xyz/download");
-                      this.props.handleMessage("Copy Successfully");
-                      this.props.handleMessageBox(true);
-                    }}
-                  >
-                    <Trans>Copy Link</Trans>
-                  </div>
-
-                  <p className="update-dialog-new-title">
-                    <Trans>What's New</Trans>
-                  </p>
-                  <ul className="update-dialog-new-container">
-                    {this.renderList(this.state.updateLog.new)}
-                  </ul>
-                  <p className="update-dialog-fix-title">
-                    <Trans>What's been fixed</Trans>
-                  </p>
-                  <ul className="update-dialog-fix-container">
-                    {this.renderList(this.state.updateLog.fix)}
-                  </ul>
-                </>
-              )}
             </div>
-          </div>
-        )}
+          )}
       </>
     );
   }

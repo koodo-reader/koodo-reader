@@ -7,6 +7,7 @@ class Book {
   cover: string;
   format: string;
   publisher: string;
+  size: number;
   constructor(
     key: string,
     name: string,
@@ -15,7 +16,8 @@ class Book {
     md5: string,
     cover: string,
     format: string,
-    publisher: string
+    publisher: string,
+    size: number
   ) {
     this.key = key; // 数据库的键
     this.name = name; // 书籍名
@@ -25,6 +27,7 @@ class Book {
     this.cover = cover;
     this.format = format;
     this.publisher = publisher;
+    this.size = size;
   }
 }
 

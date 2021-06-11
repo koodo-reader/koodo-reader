@@ -6525,10 +6525,10 @@ follow-redirects@^1.10.0:
   resolved "https://registry.npm.taobao.org/follow-redirects/download/follow-redirects-1.13.1.tgz?cache=0&sync_timestamp=1607916846877&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Ffollow-redirects%2Fdownload%2Ffollow-redirects-1.13.1.tgz#5f69b813376cee4fd0474a3aba835df04ab763b7"
   integrity sha1-X2m4Ezds7k/QR0o6uoNd8Eq3Y7c=
 
-font-list@^1.2.11:
-  version "1.2.11"
-  resolved "https://registry.npm.taobao.org/font-list/download/font-list-1.2.11.tgz#c6253ebf7e20a6d54618995e0728234eab775c00"
-  integrity sha1-xiU+v34gptVGGJleBygjTqt3XAA=
+font-list@^1.2.15:
+  version "1.2.15"
+  resolved "https://registry.nlark.com/font-list/download/font-list-1.2.15.tgz#dc5fa7038fa77aa60ed7faf66522aed872d9f395"
+  integrity sha1-3F+nA4+neqYO1/r2ZSKu2HLZ85U=
 
 for-in@^1.0.2:
   version "1.0.2"
