@@ -34,6 +34,6 @@ export const emptyList = [
   {
     mode: "trash",
     main: "Empty Recycle Bin",
-    sub: "Drag any book to the Deleted tab to add it to Recycle Bin",
+    sub: "The deleted books will show up here",
   },
 ];

@@ -90,7 +90,10 @@
 .setting-close-container:hover {
   border-radius: 50%;
 }
-
+.setting-close {
+  margin-right: 10px;
+  margin-top: 10px;
+}
 .setting-subtitle {
   font-size: 15px;
   margin: 5px;
