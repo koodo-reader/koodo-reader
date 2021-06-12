@@ -34,7 +34,7 @@
 
 ## Feature
 
-Format support: **epub**, **pdf**, **mobi**, **azw3**, **txt**, **markdown**,, **djvu**, **docx**, **rtf**, **cbz**, **cbr**, **cbt**, **fb2**, **html** and **xml**
+Format support: **epub**, **pdf**, **mobi**, **azw3**, **txt**, **markdown**, **djvu**, **docx**, **rtf**, **cbz**, **cbr**, **cbt**, **fb2**, **html** and **xml**
 
 Platform support: **Windows** , **macOS**, **Linux** and **Web**
 
