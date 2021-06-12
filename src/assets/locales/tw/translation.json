@@ -253,6 +253,7 @@
   "Feedback": "反馈建议",
   "Default search engine": "默认搜索引擎",
   "Github Repo": "Github 仓库",
+  "Turn on auto update": "开启自动更新",
   "Text Align": "文字对齐",
   "left": "左对齐",
   "justify": "两端对齐",
@@ -282,5 +283,6 @@
   "You need to manually change the storage location to the same sync folder on different computers. When you click the sync button, Koodo Reader will automatically upload or download the data from this folder according the timestamp.": "同步功能需要配合第三方同步盘实现，在不同电脑上把数据存储位置修改为同一个同步文件夹，手动点击同步按钮后，Koodo会把同步文件夹中的数据更新到软件中，从而实现同步。",
   "Please choose an empty folder": "请选择空文件夹",
   "Data change detected, whether to update?": "检测到数据变化，是否更新",
+  "Auto Update relys on Github Release for package hosting, if your internet doesn't have stable connection to Github, we highly recommand you to turn off this option": "自动更新功能依赖Github，如果您本地网络无法稳定访问Github，则不建议开启此功能，开启之后，将不再单独提供更新提醒。",
   "Bold Font": "字体加粗"
 }

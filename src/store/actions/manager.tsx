@@ -25,6 +25,9 @@ export function handleSearch(isSearch: boolean) {
 export function handleTipDialog(isTipDialog: boolean) {
   return { type: "HANDLE_TIP_DIALOG", payload: isTipDialog };
 }
+export function handleTip(tip: string) {
+  return { type: "HANDLE_TIP", payload: tip };
+}
 export function handleSetting(isSettingOpen: boolean) {
   return { type: "HANDLE_SETTING", payload: isSettingOpen };
 }
