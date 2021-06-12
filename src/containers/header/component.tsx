@@ -137,6 +137,9 @@ class Header extends React.Component<HeaderProps, HeaderState> {
   syncToLocation = () => {
     if (OtherUtil.getReaderConfig("isFirst") !== "no") {
       this.props.handleTipDialog(true);
+      this.props.handleTip(
+        "You need to manually change the storage location to the same sync folder on different computers. When you click the sync button, Koodo Reader will automatically upload or download the data from this folder according the timestamp."
+      );
       OtherUtil.setReaderConfig("isFirst", "no");
       return;
     }

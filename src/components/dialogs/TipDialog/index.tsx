@@ -5,7 +5,7 @@ import TipDialog from "./component";
 import { stateType } from "../../../store";
 
 const mapStateToProps = (state: stateType) => {
-  return {};
+  return { tip: state.manager.tip };
 };
 const actionCreator = {
   handleTipDialog,

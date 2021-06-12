@@ -14,7 +14,6 @@ export interface ImportLocalProps extends RouteComponentProps<any> {
   handleMessage: (message: string) => void;
   handleFetchBooks: () => void;
   handleDrag: (isDrag: boolean) => void;
-  handleTipDialog: (isTipDialog: boolean) => void;
   handleReadingBook: (book: BookModel) => void;
   t: (title: string) => string;
 }

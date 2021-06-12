@@ -47,6 +47,7 @@ export type stateType = {
     noteSortCode: { sort: number; order: number };
     isMessage: boolean;
     message: string;
+    tip: string;
   };
   book: {
     isOpenEditDialog: boolean;

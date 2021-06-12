@@ -3,6 +3,8 @@ import NoteModel from "../../../model/Note";
 import BookmarkModel from "../../../model/Bookmark";
 export interface SettingInfoProps {
   handleSetting: (isSettingOpen: boolean) => void;
+  handleTipDialog: (isTipDialog: boolean) => void;
+  handleTip: (tip: string) => void;
   handleMessage: (message: string) => void;
   handleMessageBox: (isShow: boolean) => void;
   t: (title: string) => string;

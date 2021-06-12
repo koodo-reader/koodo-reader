@@ -17,6 +17,7 @@ const initState = {
   noteSortCode: SortUtil.getNoteSortCode(),
   isMessage: false,
   message: "Add Successfully",
+  tip: "",
 };
 export function manager(
   state = initState,
@@ -42,6 +43,11 @@ export function manager(
       return {
         ...state,
         isTipDialog: action.payload,
+      };
+    case "HANDLE_TIP":
+      return {
+        ...state,
+        tip: action.payload,
       };
     case "HANDLE_SEARCH":
       return {

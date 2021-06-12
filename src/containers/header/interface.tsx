@@ -18,6 +18,7 @@ export interface HeaderProps {
   handleBackupDialog: (isBackup: boolean) => void;
   handleDrag: (isDrag: boolean) => void;
   handleTipDialog: (isTipDialog: boolean) => void;
+  handleTip: (tip: string) => void;
 
   t: (title: string) => string;
 }

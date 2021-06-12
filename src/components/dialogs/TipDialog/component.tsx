@@ -33,28 +33,21 @@ class TipDialog extends React.Component<TipDialogProps, TipDialogState> {
             this.handleClose();
           }}
         >
-          <span className="icon-close"></span>
+          <span className="icon-close tip-close-icon"></span>
         </div>
 
         <div className="download-desk-title">
           <Trans>Tips</Trans>
         </div>
-        <div className="download-desk-subtile">
-          <Trans>How sync works</Trans>
-        </div>
+
         <div className="download-desk-feature-container">
           <div className="download-desk-feature-item">
-            <Trans>
-              You need to manually change the storage location to the same sync
-              folder on different computers. When you click the sync button,
-              Koodo Reader will automatically upload or download the data from
-              this folder according the timestamp.
-            </Trans>
+            <Trans>{this.props.tip}</Trans>
           </div>
         </div>
 
         <div className="download-desk-animation">
-          <Lottie options={downloadOptions} height={250} width={350} />
+          <Lottie options={downloadOptions} height={220} width={300} />
         </div>
       </div>
     );
