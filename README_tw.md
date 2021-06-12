@@ -34,7 +34,7 @@
 
 ## 特色
 
-支持閱讀 **epub**, **pdf**, **mobi**, **azw3**, **txt**, **markdown**,, **djvu**, **docx**, **rtf**, **cbz**, **cbr**, **cbt**, **fb2**, **html** 和 **xml** 格式的圖書
+支持閱讀 **epub**, **pdf**, **mobi**, **azw3**, **txt**, **markdown**, **djvu**, **docx**, **rtf**, **cbz**, **cbr**, **cbt**, **fb2**, **html** 和 **xml** 格式的圖書
 
 支持 **Windows** ， **macOS**， **Linux** 和 **網頁版**
 
