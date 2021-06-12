@@ -36,12 +36,6 @@ class OperationPanel extends React.Component<
     this.speed = 30000;
   }
   componentDidMount() {
-    window.addEventListener("resize", () => {
-      if (window.screenLeft !== 0 || window.screenTop !== 0) {
-        this.setState({ isFullScreen: false });
-        OtherUtil.setReaderConfig("isFullScreen", "no");
-      }
-    });
     window.onbeforeunload = () => {
       this.handleExit();
     };

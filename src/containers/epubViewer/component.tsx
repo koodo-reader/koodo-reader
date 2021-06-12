@@ -55,6 +55,12 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
     }
   }
   componentDidMount() {
+    this.handleRenderBook();
+    window.addEventListener("resize", () => {
+      this.handleRenderBook();
+    });
+  }
+  handleRenderBook = () => {
     let page = document.querySelector("#page-area");
     let epub = this.props.currentEpub;
     (window as any).rangy.init(); // 初始化
@@ -75,18 +81,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
       time += 1;
       this.setState({ time });
     }, 1000);
-
-    window.addEventListener("resize", () => {
-      if (
-        document.body.clientWidth < 780 &&
-        (!OtherUtil.getReaderConfig("readerMode") ||
-          OtherUtil.getReaderConfig("readerMode") === "double")
-      ) {
-        OtherUtil.setReaderConfig("readerMode", "single");
-        window.location.reload();
-      }
-    });
-  }
+  };
 
   //进入阅读器
   handleEnterReader = (position: string) => {
@@ -166,7 +161,11 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
       <div
         className="viewer"
         style={{
-          filter: `brightness(${OtherUtil.getReaderConfig("brightness") || 1})`,
+          filter: `brightness(${
+            OtherUtil.getReaderConfig("brightness") || 1
+          }) invert(${
+            OtherUtil.getReaderConfig("isInvert") === "yes" ? 1 : 0
+          })`,
         }}
       >
         <div

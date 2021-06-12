@@ -23,7 +23,7 @@ export const emptyList = [
   {
     mode: "digest",
     main: "Empty Digest",
-    sub: "Select any text and click the Collect button on the popup Menu",
+    sub: "Select any text and click the Highlight button on the popup Menu",
   },
   {
     mode: "shelf",

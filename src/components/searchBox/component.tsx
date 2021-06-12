@@ -48,7 +48,6 @@ class SearchBox extends React.Component<SearchBoxProps> {
         : this.props.tabMode === "digest"
         ? SearchUtil.KeyNoteSearch(event, this.props.digests)
         : SearchUtil.KeySearch(event, this.props.books);
-    console.log(this.props.tabMode, results, event);
     if (results) {
       this.props.handleSearchResults(results);
       this.props.handleSearch(true);

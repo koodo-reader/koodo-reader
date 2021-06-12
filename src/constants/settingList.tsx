@@ -62,6 +62,10 @@ export const readerSettingList = [
     propName: "isShadow",
   },
   {
+    title: "Invert color",
+    propName: "isInvert",
+  },
+  {
     title: "Don't show footer",
     propName: "isHideFooter",
   },

@@ -24,17 +24,17 @@
 
 <div align="center">
   <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
-    <img src="https://i.loli.net/2021/02/13/JkIpcnlqNAW5bEy.png" >
+    <img src="./assets/cover1.png" style="box-shadow: 0 0 10px #ccc">
   </a>
   <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
-    <img src="https://i.loli.net/2021/02/13/nZxD7yOvw39BJNA.png" >
+    <img src="./assets/cover2.png" style="box-shadow: 0 0 10px #ccc">
   </a>
   <br/>
 </div>
 
 ## Feature
 
-Format support: **epub**, **pdf**, **mobi**, **azw3**, **txt**, **Markdown**, and **djvu**
+Format support: **epub**, **pdf**, **mobi**, **azw3**, **txt**, **markdown**,, **djvu**, **docx**, **rtf**, **cbz**, **cbr**, **cbt**, **fb2**, **html** and **xml**
 
 Platform support: **Windows** , **macOS**, **Linux** and **Web**
 
@@ -44,17 +44,17 @@ Customize the source folder and synchronize multiple devices using OneDrive, iCl
 
 Single-column, two-column, or continuous scrolling layouts
 
-Text-to-speech, Translation
+Text-to-speech, translation, progress slider, touch screen support, batch import
 
-Bookmark, Note, Digest, Shelf and Tag
+Add bookmarks, notes, digests to your books
 
-Adjust font, line-spacing, background color, text color and margins
+Origanize your books and notes with shelf and tag
 
-Support for Touch Screen
+Adjust font size, font family, line-spacing, paragraph spacing, background color, text color, margins, and brightness
 
 Night mode and Theme color
 
-Text highlight, underline, Italic and shadow
+Text highlight, underline, boldness, italics and shadow
 
 ## Installation
 

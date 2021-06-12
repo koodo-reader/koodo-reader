@@ -4,6 +4,8 @@ import { Trans } from "react-i18next";
 import { SliderListProps, SliderListState } from "./interface";
 import "./sliderList.css";
 import OtherUtil from "../../../utils/otherUtil";
+import { isElectron } from "react-device-detect";
+
 class SliderList extends React.Component<SliderListProps, SliderListState> {
   constructor(props: SliderListProps) {
     super(props);
@@ -22,7 +24,14 @@ class SliderList extends React.Component<SliderListProps, SliderListState> {
           : OtherUtil.getReaderConfig("margin") || "60",
     };
   }
-
+  handleRest = () => {
+    if (isElectron) {
+      this.props.handleMessage("Take effect at next startup");
+      this.props.handleMessageBox(true);
+    } else {
+      window.location.reload();
+    }
+  };
   onValueChange = (event: any) => {
     if (this.props.mode === "fontSize") {
       const fontSize = event.target.value;
@@ -88,7 +97,7 @@ class SliderList extends React.Component<SliderListProps, SliderListState> {
             onBlur={(event) => {
               this.onValueChange(event);
 
-              window.location.reload();
+              this.handleRest();
             }}
           />
           <span style={{ marginLeft: "10px" }}>{this.state.value}</span>
@@ -110,7 +119,7 @@ class SliderList extends React.Component<SliderListProps, SliderListState> {
               this.onValueInput(event);
             }}
             onMouseUp={() => {
-              window.location.reload();
+              this.handleRest();
             }}
           />
         </div>

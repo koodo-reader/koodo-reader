@@ -237,7 +237,7 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
                 : {}
             }
           >
-            {OtherUtil.getReaderConfig("isDisplayDark") !== "yes" ||
+            {OtherUtil.getReaderConfig("isDisplayDark") !== "yes" &&
             OtherUtil.getReaderConfig("backgroundColor") !==
               "rgba(44,47,49,1)" ? (
               <div
@@ -270,7 +270,7 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
               className="book-spine"
               style={this.state.isSingle ? { display: "none" } : {}}
             ></div>
-            {OtherUtil.getReaderConfig("isDisplayDark") !== "yes" ||
+            {OtherUtil.getReaderConfig("isDisplayDark") !== "yes" &&
             OtherUtil.getReaderConfig("backgroundColor") !==
               "rgba(44,47,49,1)" ? (
               <div
