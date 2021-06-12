@@ -2,6 +2,8 @@ import OtherUtil from "./otherUtil";
 import { isElectron } from "react-device-detect";
 import localforage from "localforage";
 import BookModel from "../model/Book";
+import RecordLocation from "./readUtils/recordLocation";
+
 class BookUtil {
   static addBook(key: string, buffer: ArrayBuffer) {
     if (isElectron) {
@@ -91,6 +93,12 @@ class BookUtil {
   }
 
   static openBook(book: BookModel) {
+    const windowWidth = RecordLocation.getScrollHeight(book.key).scroll
+      ? RecordLocation.getScrollHeight(book.key).width
+      : OtherUtil.getReaderConfig("windowWidth");
+    const windowHeight = RecordLocation.getScrollHeight(book.key).scroll
+      ? RecordLocation.getScrollHeight(book.key).height
+      : OtherUtil.getReaderConfig("windowHeight");
     let ref =
       book.description === "readonly" ? book.format.toLowerCase() : "epub";
     if (OtherUtil.getReaderConfig("isAutoFullscreen") === "yes") {
@@ -112,11 +120,7 @@ class BookUtil {
           "open-book",
           `${window.location.href.split("#")[0]}#/${ref}/${
             book.key
-          }?width=${OtherUtil.getReaderConfig(
-            "windowWidth"
-          )}&height=${OtherUtil.getReaderConfig(
-            "windowHeight"
-          )}&x=${OtherUtil.getReaderConfig(
+          }?width=${windowWidth}&height=${windowHeight}&x=${OtherUtil.getReaderConfig(
             "windowX"
           )}&y=${OtherUtil.getReaderConfig("windowY")}`
         );
@@ -124,11 +128,7 @@ class BookUtil {
         window.open(
           `${window.location.href.split("#")[0]}#/${ref}/${
             book.key
-          }?width=${OtherUtil.getReaderConfig(
-            "windowWidth"
-          )}&height=${OtherUtil.getReaderConfig(
-            "windowHeight"
-          )}&x=${OtherUtil.getReaderConfig(
+          }?width=${windowWidth}&height=${windowHeight}&x=${OtherUtil.getReaderConfig(
             "windowX"
           )}&y=${OtherUtil.getReaderConfig("windowY")}`
         );
@@ -136,6 +136,12 @@ class BookUtil {
     }
   }
   static async RedirectBook(book: BookModel) {
+    const windowWidth = RecordLocation.getScrollHeight(book.key).scroll
+      ? RecordLocation.getScrollHeight(book.key).width
+      : OtherUtil.getReaderConfig("windowWidth");
+    const windowHeight = RecordLocation.getScrollHeight(book.key).scroll
+      ? RecordLocation.getScrollHeight(book.key).height
+      : OtherUtil.getReaderConfig("windowHeight");
     if (book.description === "pdf") {
       if (isElectron) {
         const { ipcRenderer } = window.require("electron");
@@ -155,11 +161,9 @@ class BookUtil {
               window.navigator.platform.indexOf("Win") > -1
                 ? "lib/pdf/web/"
                 : "lib\\pdf\\web\\"
-            }viewer.html?file=${book.key}&width=${OtherUtil.getReaderConfig(
-              "windowWidth"
-            )}&height=${OtherUtil.getReaderConfig(
-              "windowHeight"
-            )}&x=${OtherUtil.getReaderConfig(
+            }viewer.html?file=${
+              book.key
+            }&width=${windowWidth}&height=${windowHeight}&x=${OtherUtil.getReaderConfig(
               "windowX"
             )}&y=${OtherUtil.getReaderConfig("windowY")}`
           );

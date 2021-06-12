@@ -5,6 +5,7 @@ import { ModeControlProps, ModeControlState } from "./interface";
 import OtherUtil from "../../../utils/otherUtil";
 import { Trans } from "react-i18next";
 import { Tooltip } from "react-tippy";
+import { isElectron } from "react-device-detect";
 
 class ModeControl extends React.Component<ModeControlProps, ModeControlState> {
   constructor(props: ModeControlProps) {
@@ -17,7 +18,12 @@ class ModeControl extends React.Component<ModeControlProps, ModeControlState> {
   handleChangeMode = (mode: string) => {
     this.setState({ readerMode: mode });
     OtherUtil.setReaderConfig("readerMode", mode);
-    window.location.reload();
+    if (isElectron) {
+      this.props.handleMessage("Take effect at next startup");
+      this.props.handleMessageBox(true);
+    } else {
+      window.location.reload();
+    }
   };
   render() {
     return (
