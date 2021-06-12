@@ -12,6 +12,23 @@ class RecordLocation {
     let obj = JSON.parse(json!) || {};
     return obj[bookKey] || {};
   }
+  static recordScrollHeight(
+    bookKey: string,
+    width: number,
+    height: number,
+    scroll: number
+  ) {
+    let json = localStorage.getItem("recordLocation");
+    let obj = JSON.parse(json!) || {};
+    obj[bookKey] = { width, height, scroll };
+    localStorage.setItem("recordLocation", JSON.stringify(obj));
+  }
+
+  static getScrollHeight(bookKey: string) {
+    let json = localStorage.getItem("recordLocation");
+    let obj = JSON.parse(json!) || {};
+    return obj[bookKey] || {};
+  }
   static getAllCfi() {
     let json = localStorage.getItem("recordLocation");
     let obj = JSON.parse(json!) || {};

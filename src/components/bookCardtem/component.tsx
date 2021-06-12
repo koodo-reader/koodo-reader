@@ -110,7 +110,6 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
   };
   handleJump = () => {
     RecentBooks.setRecent(this.props.book.key);
-
     BookUtil.RedirectBook(this.props.book);
   };
   render() {

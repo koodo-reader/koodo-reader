@@ -9,4 +9,6 @@ export interface ViewerProps {
   handleMessage: (message: string) => void;
   handleMessageBox: (isShow: boolean) => void;
 }
-export interface ViewerState {}
+export interface ViewerState {
+  key: string;
+}

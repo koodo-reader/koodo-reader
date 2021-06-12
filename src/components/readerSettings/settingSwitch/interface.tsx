@@ -12,5 +12,6 @@ export interface SettingSwitchState {
   isShadow: boolean;
   isUnderline: boolean;
   isItalic: boolean;
+  isInvert: boolean;
   isHideHeader: boolean;
 }
