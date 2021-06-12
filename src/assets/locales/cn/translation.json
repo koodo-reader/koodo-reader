@@ -233,6 +233,8 @@
   "Do you want to open this link in browser": "是否使用浏览器打开此链接",
   "Click the top-right button to add books": "请点击右上角的从本地导入按钮添加图书",
   "Webdav Info": "Webdav是一种简单高效的数据备份方式，这里推荐使用坚果云提供的Webdav服务",
+  "Turn on auto update": "开启自动更新",
+  "Auto Update relys on Github Release for package hosting, if your internet doesn't have stable connection to Github, we highly recommand you to turn off this option": "自动更新功能依赖Github，如果您本地网络无法稳定访问Github，则不建议开启此功能，开启之后，将不再单独提供更新提醒。",
   "No Favorite Books": "您喜爱的图书为空",
   "Move your mouse on the top of any book, click the heart icon to add it to your favorite books": "将鼠标移动到任意书本上方，点击心形图标将图书添加到您喜爱的图书",
   "Click on any book to read": "点击任意一本书开始阅读",

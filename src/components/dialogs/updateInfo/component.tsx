@@ -47,6 +47,7 @@ class UpdateInfo extends React.Component<UpdateInfoProps, UpdateInfoState> {
           setTimeout(() => {
             if (version !== newVersion) {
               this.setState({ updateLog: res.data.log });
+
               this.props.handleNewDialog(true);
             } else if (
               OtherUtil.getReaderConfig("version") !== newVersion &&
@@ -56,7 +57,7 @@ class UpdateInfo extends React.Component<UpdateInfoProps, UpdateInfoState> {
               this.props.handleNewDialog(true);
               OtherUtil.setReaderConfig("version", newVersion);
             }
-          }, 1000);
+          }, 500);
         })
         .catch((err) => {
           console.log(err);

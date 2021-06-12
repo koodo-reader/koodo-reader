@@ -6,6 +6,8 @@ import {
   handleSetting,
   handleMessageBox,
   handleMessage,
+  handleTipDialog,
+  handleTip,
 } from "../../../store/actions/manager";
 import { stateType } from "../../../store";
 
@@ -16,7 +18,13 @@ const mapStateToProps = (state: stateType) => {
     notes: state.reader.notes,
   };
 };
-const actionCreator = { handleSetting, handleMessageBox, handleMessage };
+const actionCreator = {
+  handleSetting,
+  handleTipDialog,
+  handleTip,
+  handleMessageBox,
+  handleMessage,
+};
 export default connect(
   mapStateToProps,
   actionCreator

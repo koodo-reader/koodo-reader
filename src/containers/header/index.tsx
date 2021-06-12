@@ -8,6 +8,7 @@ import {
   handleSetting,
   handleAbout,
   handleTipDialog,
+  handleTip,
 } from "../../store/actions/manager";
 import { handleBackupDialog } from "../../store/actions/backupPage";
 import { stateType } from "../../store";
@@ -33,6 +34,7 @@ const actionCreator = {
   handleSetting,
   handleAbout,
   handleTipDialog,
+  handleTip,
 };
 export default connect(
   mapStateToProps,

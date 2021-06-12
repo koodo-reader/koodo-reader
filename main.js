@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require("electron");
+const { app, BrowserWindow, dialog, shell } = require("electron");
 const { ebtMain } = require("electron-baidu-tongji");
 
 let mainWin;
@@ -49,6 +49,7 @@ app.on("ready", () => {
   mainWin.on("close", () => {
     mainWin = null;
   });
+
   ipcMain.on("open-book", (event, arg) => {
     let url = arg;
 

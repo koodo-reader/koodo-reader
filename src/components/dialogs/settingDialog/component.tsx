@@ -32,6 +32,7 @@ class SettingDialog extends React.Component<
       isExpandContent: OtherUtil.getReaderConfig("isExpandContent") === "yes",
       isDisableUpdate: OtherUtil.getReaderConfig("isDisableUpdate") === "yes",
       isDisplayDark: OtherUtil.getReaderConfig("isDisplayDark") === "yes",
+
       currentThemeIndex: _.findLastIndex(themeList, {
         name: OtherUtil.getReaderConfig("themeColor"),
       }),
@@ -169,6 +170,7 @@ class SettingDialog extends React.Component<
       window.location.reload();
     }
   };
+
   handleTheme = (name: string, index: number) => {
     this.setState({ currentThemeIndex: index });
     OtherUtil.setReaderConfig("themeColor", name);
