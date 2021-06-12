@@ -243,7 +243,8 @@
   "More formats supported": "More formats supported, mobi, azw3, txt",
   "Click the top-right button to add books": "Click the top-right button to add books",
   "Turn on night mode": "Turn on night mode",
-
+  "Turn on auto update": "Turn on auto update",
+  "Auto Update relys on Github Release for package hosting, if your internet doesn't have stable connection to Github, we highly recommand you to turn off this option": "Auto Update relys on Github Release for package hosting, if your internet doesn't have stable connection to Github, we highly recommand you to turn off this option",
   "View Mode": "View Mode",
   "Download Desktop Version": "Download Desktop Version",
   "Koodo Reader's web version are limited by the browser, for more powerful features, please download the desktop version.": "Web version are functionally limited by the browser, for more powerful features, please download the desktop version.",
