@@ -89,7 +89,6 @@ class UpdateInfo extends React.Component<UpdateInfoProps, UpdateInfoState> {
   };
 
   render() {
-    console.log(this.props.isShowNew);
     return (
       <>
         {(this.state.updateLog || this.state.isUpdated) &&

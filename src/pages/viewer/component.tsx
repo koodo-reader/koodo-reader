@@ -14,19 +14,21 @@ import iconv from "iconv-lite";
 import chardet from "chardet";
 import rtfToHTML from "@iarna/rtf-to-html";
 import { xmlBookTagFilter, xmlBookToObj } from "../../utils/xmlUtil";
+import RecordLocation from "../../utils/readUtils/recordLocation";
+
 declare var window: any;
 
 class Viewer extends React.Component<ViewerProps, ViewerState> {
   epub: any;
   constructor(props: ViewerProps) {
     super(props);
-    this.state = {};
+    this.state = { key: "" };
   }
 
   componentDidMount() {
     let url = document.location.href.split("/");
     let key = url[url.length - 1].split("?")[0];
-
+    this.setState({ key });
     localforage.getItem("books").then((result: any) => {
       let book = result[_.findIndex(result, { key })];
       BookUtil.fetchBook(key, true).then((result) => {
@@ -51,10 +53,16 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       });
     });
 
-    // document
-    //   .querySelectorAll('style,link[rel="stylesheet"]')
-    //   .forEach((item) => item.remove());
-
+    document.documentElement.style.height = "auto";
+    document.documentElement.style.overflow = "auto";
+    window.addEventListener("wheel", (event) => {
+      RecordLocation.recordScrollHeight(
+        key,
+        document.body.clientWidth,
+        document.body.clientHeight,
+        document.scrollingElement!.scrollTop
+      );
+    });
     window.onbeforeunload = () => {
       this.handleExit();
     };
@@ -68,13 +76,19 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     OtherUtil.setReaderConfig("windowX", window.screenX + "");
     OtherUtil.setReaderConfig("windowY", window.screenY + "");
   }
-
+  handleJump = () => {
+    document.scrollingElement!.scrollTo(
+      0,
+      RecordLocation.getScrollHeight(this.state.key).scroll
+    );
+  };
   handleMobi = async (result: ArrayBuffer) => {
     let mobiFile = new MobiParser(result);
     let content: any = await mobiFile.render();
     let viewer: HTMLElement | null = document.querySelector(".ebook-viewer");
     if (!viewer?.innerHTML) return;
     viewer.innerHTML = content.outerHTML;
+    this.handleJump();
   };
   handleTxt = (result: ArrayBuffer) => {
     let viewer: HTMLElement | null = document.querySelector(".ebook-viewer");
@@ -84,14 +98,16 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     );
     if (!viewer?.innerText) return;
     viewer.innerText = text;
+    this.handleJump();
   };
   handleMD = (result: ArrayBuffer) => {
     var blob = new Blob([result], { type: "text/plain" });
     var reader = new FileReader();
-    reader.onload = function (evt) {
+    reader.onload = (evt) => {
       let viewer: HTMLElement | null = document.querySelector(".ebook-viewer");
       if (!viewer?.innerHTML) return;
       viewer.innerHTML = marked(evt.target?.result as any);
+      this.handleJump();
     };
     reader.readAsText(blob, "UTF-8");
   };
@@ -104,6 +120,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       let viewer: HTMLElement | null = document.querySelector(".ebook-viewer");
       if (!viewer?.innerHTML) return;
       viewer.innerHTML = html;
+      this.handleJump();
     });
   };
   handleDocx = (result: ArrayBuffer) => {
@@ -111,6 +128,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       let viewer: HTMLElement | null = document.querySelector(".ebook-viewer");
       if (!viewer?.innerHTML) return;
       viewer.innerHTML = res.value;
+      this.handleJump();
     });
   };
   handleFb2 = (result: ArrayBuffer) => {
@@ -123,6 +141,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     let viewer: HTMLElement | null = document.querySelector(".ebook-viewer");
     if (!viewer?.innerHTML) return;
     viewer.innerHTML = bookObj;
+    this.handleJump();
   };
   render() {
     return <div className="ebook-viewer">Loading</div>;

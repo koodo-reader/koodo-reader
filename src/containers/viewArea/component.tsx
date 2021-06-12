@@ -41,6 +41,9 @@ class ViewArea extends React.Component<ViewAreaProps, ViewAreaStates> {
       this.props.handleReadingEpub(epub);
       this.props.handleOpenMenu(false);
       const currentLocation = this.props.rendition.currentLocation();
+      if (!currentLocation.start) {
+        return;
+      }
       const cfi = currentLocation.start.cfi;
       this.props.handleShowBookmark(
         this.props.bookmarks &&

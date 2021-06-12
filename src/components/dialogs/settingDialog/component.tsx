@@ -139,7 +139,6 @@ class SettingDialog extends React.Component<
     if (!path.filePaths[0]) {
       return;
     }
-    console.log(path.filePaths[0]);
     SyncUtil.changeLocation(
       localStorage.getItem("storageLocation")
         ? localStorage.getItem("storageLocation")
@@ -164,7 +163,7 @@ class SettingDialog extends React.Component<
       this.state.isDisplayDark ? "no" : "yes"
     );
     if (isElectron) {
-      this.props.handleMessage("Try refresh or restart");
+      this.props.handleMessage("Take effect at next startup");
       this.props.handleMessageBox(true);
     } else {
       window.location.reload();
@@ -175,7 +174,7 @@ class SettingDialog extends React.Component<
     this.setState({ currentThemeIndex: index });
     OtherUtil.setReaderConfig("themeColor", name);
     if (isElectron) {
-      this.props.handleMessage("Try refresh or restart");
+      this.props.handleMessage("Take effect at next startup");
       this.props.handleMessageBox(true);
     } else {
       window.location.reload();

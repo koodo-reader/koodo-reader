@@ -23,7 +23,6 @@ class SearchUtil {
   static fuzzyQuery(list: string[], keyWord: string) {
     var arr: number[] = [];
     for (var i = 0; i < list.length; i++) {
-      console.log(list[i], keyWord, i);
       if (list[i].indexOf(keyWord) > -1) {
         arr.push(i);
       }
@@ -47,7 +46,6 @@ class SearchUtil {
     return this.MergeArray(bookResults, authorResults);
   }
   static KeySearch(event: any, books: BookModel[]) {
-    console.log("asgasgfsjjgj", books);
     if (event && event.keyCode === 13) {
       let bookNameArr: string[] = [];
       let AuthorNameArr: string[] = [];

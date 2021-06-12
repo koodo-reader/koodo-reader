@@ -10,6 +10,7 @@ import "./viewer.css";
 import untar from "js-untar";
 import OtherUtil from "../../utils/otherUtil";
 import { mimetype } from "../../constants/mimetype";
+import RecordLocation from "../../utils/readUtils/recordLocation";
 
 declare var window: any;
 
@@ -20,13 +21,13 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
   epub: any;
   constructor(props: ViewerProps) {
     super(props);
-    this.state = {};
+    this.state = { key: "" };
   }
 
   componentDidMount() {
     let url = document.location.href.split("/");
     let key = url[url.length - 1].split("?")[0];
-
+    this.setState({ key });
     localforage.getItem("books").then((result: any) => {
       let book = result[_.findIndex(result, { key })];
       BookUtil.fetchBook(key, true).then((result) => {
@@ -42,15 +43,22 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         RecentBooks.setRecent(key);
       });
     });
-    document
-      .querySelectorAll('style,link[rel="stylesheet"]')
-      .forEach((item) => item.remove());
+    document.documentElement.style.height = "auto";
+    document.documentElement.style.overflow = "auto";
+    window.addEventListener("wheel", (event) => {
+      RecordLocation.recordScrollHeight(
+        key,
+        document.body.clientWidth,
+        document.body.clientHeight,
+        document.scrollingElement!.scrollTop
+      );
+    });
     window.onbeforeunload = () => {
-      this.handleExit();
+      this.handleExit(key);
     };
   }
   // 点击退出按钮的处理程序
-  handleExit() {
+  handleExit(key: string) {
     this.props.handleReadingState(false);
 
     OtherUtil.setReaderConfig("windowWidth", document.body.clientWidth + "");
@@ -99,6 +107,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     let imageDom = document.createElement("img");
     imageDom.src =
       "data:" + mimetype[extension.toLowerCase()] + ";base64," + url;
+    imageDom.setAttribute("style", "width: 100%");
     let viewer: HTMLElement | null = document.querySelector(".ebook-viewer");
     if (!viewer?.innerHTML) return;
     viewer.appendChild(imageDom);
@@ -108,12 +117,17 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
   };
   handleCbz = (result: ArrayBuffer) => {
     let zip = new JSZip();
-    zip.loadAsync(result).then((contents) => {
-      Object.keys(contents.files).forEach(async (filename) => {
+    zip.loadAsync(result).then(async (contents) => {
+      for (let filename of Object.keys(contents.files).sort()) {
         const content = await zip.file(filename).async("arraybuffer");
         const extension = filename.split(".").reverse()[0];
         this.addImage(content, extension);
-      });
+      }
+
+      document.scrollingElement!.scrollTo(
+        0,
+        RecordLocation.getScrollHeight(this.state.key).scroll
+      );
     });
   };
   handleCbr = (result: ArrayBuffer) => {
@@ -127,6 +141,10 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       const extension = item.name.split(".").reverse()[0];
       this.addImage(fileData, extension);
     }
+    document.scrollingElement!.scrollTo(
+      0,
+      RecordLocation.getScrollHeight(this.state.key).scroll
+    );
   };
   handleCbt = (result: ArrayBuffer) => {
     untar(result).then(
@@ -135,6 +153,10 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           const extension = item.name.split(".").reverse()[0];
           this.addImage(item.buffer, extension);
         }
+        document.scrollingElement!.scrollTo(
+          0,
+          RecordLocation.getScrollHeight(this.state.key).scroll
+        );
         // onSuccess
       },
       function (err) {

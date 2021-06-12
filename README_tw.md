@@ -24,17 +24,17 @@
 
 <div align="center">
   <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
-    <img src="https://i.loli.net/2020/07/18/5NhQZfxXRs8VO7c.png" >
+    <img src="./assets/cover1.png" style="box-shadow: 0 0 10px #ccc">
   </a>
   <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
-    <img src="https://i.loli.net/2020/07/18/QHGNJStXsiLTvf3.png" >
+    <img src="./assets/cover2.png" style="box-shadow: 0 0 10px #ccc">
   </a>
   <br/>
 </div>
 
 ## 特色
 
-支持閱讀 **epub**, **pdf**, **mobi**, **azw3**, **txt**, **Markdown** 和 **djvu** 格式的圖書
+支持閱讀 **epub**, **pdf**, **mobi**, **azw3**, **txt**, **markdown**,, **djvu**, **docx**, **rtf**, **cbz**, **cbr**, **cbt**, **fb2**, **html** 和 **xml** 格式的圖書
 
 支持 **Windows** ， **macOS**， **Linux** 和 **網頁版**
 
@@ -44,17 +44,13 @@
 
 雙頁模式，單頁模式，滾動模式
 
-聽書功能，翻譯功能
+聽書功能，翻譯功能，觸控屏手勢支持，批量導入圖書
 
-目錄，書簽，筆記，書摘，書架，標簽
+支持目錄，書簽，筆記，書摘，書架，標簽
 
-自定義字體，字體大小，行間距，閱讀背景色，文字顏色
+自定義字體，字體大小，行間距，段落間距，閱讀背景色，文字顏色，屏幕亮度，文字下劃線、斜體、文字陰影、字體粗細
 
-觸控屏手勢支持
-
-黑夜模式和主題色
-
-文字高亮和下劃線標記
+黑夜模式和主題色設置
 
 ## 使用方法
 
