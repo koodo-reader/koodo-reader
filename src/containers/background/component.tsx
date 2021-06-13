@@ -219,92 +219,90 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
               : {}
           }
         ></div>
-        {this.state.currentChapter && (
-          <div
-            className="background-box3"
-            style={
-              document.body.clientWidth < 570
-                ? { left: 5, right: 10 }
-                : this.state.isSingle
-                ? {
-                    left: `calc(50vw - ${
-                      270 * parseFloat(this.state.scale)
-                    }px - 9px)`,
-                    right: `calc(50vw - ${
-                      270 * parseFloat(this.state.scale)
-                    }px - 9px)`,
-                  }
-                : {}
-            }
-          >
-            {OtherUtil.getReaderConfig("isDisplayDark") !== "yes" &&
-            OtherUtil.getReaderConfig("backgroundColor") !==
-              "rgba(44,47,49,1)" ? (
-              <div
-                className="spine-shadow-left"
-                style={
-                  this.state.isSingle ||
-                  (OtherUtil.getReaderConfig("backgroundColor") &&
-                    OtherUtil.getReaderConfig("backgroundColor").startsWith(
-                      "#"
-                    ))
-                    ? { display: "none" }
-                    : {}
+
+        <div
+          className="background-box3"
+          style={
+            document.body.clientWidth < 570
+              ? { left: 5, right: 10 }
+              : this.state.isSingle
+              ? {
+                  left: `calc(50vw - ${
+                    270 * parseFloat(this.state.scale)
+                  }px - 9px)`,
+                  right: `calc(50vw - ${
+                    270 * parseFloat(this.state.scale)
+                  }px - 9px)`,
                 }
-              ></div>
-            ) : (
-              <div
-                className="dark-spine-shadow-left"
-                style={
-                  this.state.isSingle ||
-                  (OtherUtil.getReaderConfig("backgroundColor") &&
-                    OtherUtil.getReaderConfig("backgroundColor").startsWith(
-                      "#"
-                    ))
-                    ? { display: "none" }
-                    : {}
-                }
-              ></div>
-            )}
+              : {}
+          }
+        >
+          {(!OtherUtil.getReaderConfig("backgroundColor") &&
+            OtherUtil.getReaderConfig("isDisplayDark") === "yes") ||
+          OtherUtil.getReaderConfig("backgroundColor") ===
+            "rgba(44,47,49,1)" ? (
             <div
-              className="book-spine"
-              style={this.state.isSingle ? { display: "none" } : {}}
+              className="dark-spine-shadow-left"
+              style={
+                this.state.isSingle ||
+                (OtherUtil.getReaderConfig("backgroundColor") &&
+                  OtherUtil.getReaderConfig("backgroundColor").startsWith("#"))
+                  ? { display: "none" }
+                  : {}
+              }
             ></div>
-            {OtherUtil.getReaderConfig("isDisplayDark") !== "yes" &&
-            OtherUtil.getReaderConfig("backgroundColor") !==
-              "rgba(44,47,49,1)" ? (
-              <div
-                className="spine-shadow-right"
-                style={
-                  OtherUtil.getReaderConfig("backgroundColor") &&
-                  OtherUtil.getReaderConfig("backgroundColor").startsWith("#")
-                    ? { display: "none" }
-                    : this.state.isSingle
-                    ? {
-                        position: "relative",
-                        right: 0,
-                      }
-                    : {}
-                }
-              ></div>
-            ) : (
-              <div
-                className="dark-spine-shadow-right"
-                style={
-                  OtherUtil.getReaderConfig("backgroundColor") &&
-                  OtherUtil.getReaderConfig("backgroundColor").startsWith("#")
-                    ? { display: "none" }
-                    : this.state.isSingle
-                    ? {
-                        position: "relative",
-                        right: 0,
-                      }
-                    : {}
-                }
-              ></div>
-            )}
-          </div>
-        )}
+          ) : (
+            <div
+              className="spine-shadow-left"
+              style={
+                this.state.isSingle ||
+                (OtherUtil.getReaderConfig("backgroundColor") &&
+                  OtherUtil.getReaderConfig("backgroundColor").startsWith("#"))
+                  ? { display: "none" }
+                  : {}
+              }
+            ></div>
+          )}
+          <div
+            className="book-spine"
+            style={this.state.isSingle ? { display: "none" } : {}}
+          ></div>
+          {(!OtherUtil.getReaderConfig("backgroundColor") &&
+            OtherUtil.getReaderConfig("isDisplayDark") === "yes") ||
+          OtherUtil.getReaderConfig("backgroundColor") ===
+            "rgba(44,47,49,1)" ? (
+            <div
+              className="dark-spine-shadow-right"
+              style={
+                OtherUtil.getReaderConfig("backgroundColor") &&
+                OtherUtil.getReaderConfig("backgroundColor").startsWith("#")
+                  ? { display: "none" }
+                  : this.state.isSingle
+                  ? {
+                      position: "relative",
+                      right: 0,
+                    }
+                  : {}
+              }
+            ></div>
+          ) : (
+            <div
+              className="spine-shadow-right"
+              style={
+                OtherUtil.getReaderConfig("backgroundColor") &&
+                OtherUtil.getReaderConfig("backgroundColor").startsWith("#")
+                  ? { display: "none" }
+                  : this.state.isSingle
+                  ? {
+                      position: "relative",
+                      right: 0,
+                    }
+                  : {}
+              }
+            ></div>
+          )}
+        </div>
+
         <div
           className="background-box1"
           style={

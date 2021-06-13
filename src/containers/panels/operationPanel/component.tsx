@@ -232,7 +232,12 @@ class OperationPanel extends React.Component<
         <div
           className="add-bookmark-button"
           onClick={() => {
-            this.handleAddBookmark();
+            if (this.props.currentEpub.rendition) {
+              this.handleAddBookmark();
+            } else {
+              this.props.handleMessage("Not supported yet");
+              this.props.handleMessageBox(true);
+            }
           }}
         >
           <span className="icon-add add-bookmark-icon"></span>
