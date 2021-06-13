@@ -23,7 +23,8 @@ class HtmlReader extends React.Component<ViewerProps, ViewerState> {
         key,
         document.body.clientWidth,
         document.body.clientHeight,
-        document.scrollingElement!.scrollTop
+        document.scrollingElement!.scrollTop,
+        document.scrollingElement!.scrollHeight
       );
     });
 

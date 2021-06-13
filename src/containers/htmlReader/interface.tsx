@@ -3,6 +3,8 @@ export interface ReaderProps {
   currentEpub: any;
   currentBook: BookModel;
   isMessage: boolean;
+  percentage: number;
+
   handleFetchNotes: () => void;
   handleFetchBooks: () => void;
   handleFetchBookmarks: () => void;

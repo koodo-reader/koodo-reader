@@ -36,7 +36,7 @@
 
 支持阅读 **epub**, **pdf**, **mobi**, **azw3**, **txt**, **markdown**, **djvu**, **docx**, **rtf**, **cbz**, **cbr**, **cbt**, **fb2**, **html** 和 **xml** 格式的图书
 
-支持 **Windows** ， **macOS**， **Linux** 和 **网页版**
+支持 **Windows**，**macOS**，**Linux** 和 **网页版**
 
 备份数据到 **Dropbox** 和 **Webdav**
 

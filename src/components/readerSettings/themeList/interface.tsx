@@ -1,6 +1,8 @@
 export interface ThemeListProps {
   currentEpub: any;
-  t:(title:string)=>string
+  t: (title: string) => string;
+  handleMessageBox: (isShow: boolean) => void;
+  handleMessage: (message: string) => void;
 }
 
 export interface ThemeListState {

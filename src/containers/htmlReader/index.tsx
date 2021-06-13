@@ -3,7 +3,7 @@ import {
   handleFetchBookmarks,
   handleFetchChapters,
 } from "../../store/actions/reader";
-import { handleFetchPercentage } from "../../store/actions/progressPanel";
+
 import {
   handleMessageBox,
   handleFetchBooks,
@@ -17,6 +17,7 @@ const mapStateToProps = (state: stateType) => {
     currentEpub: state.book.currentEpub,
     currentBook: state.book.currentBook,
     isMessage: state.manager.isMessage,
+    percentage: state.progressPanel.percentage,
   };
 };
 const actionCreator = {
@@ -24,7 +25,6 @@ const actionCreator = {
   handleFetchBookmarks,
   handleFetchChapters,
   handleMessageBox,
-  handleFetchPercentage,
   handleFetchBooks,
 };
 export default connect(mapStateToProps, actionCreator)(Reader);

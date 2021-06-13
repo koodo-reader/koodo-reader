@@ -4,7 +4,10 @@ import { SettingSwitchProps, SettingSwitchState } from "./interface";
 import { Trans } from "react-i18next";
 import TextToSpeech from "../../textToSpeech";
 import OtherUtil from "../../../utils/otherUtil";
-import { readerSettingList } from "../../../constants/settingList";
+import {
+  readerSettingList,
+  htmlSettingList,
+} from "../../../constants/settingList";
 import { isElectron } from "react-device-detect";
 
 class SettingSwitch extends React.Component<
@@ -121,8 +124,11 @@ class SettingSwitch extends React.Component<
   render() {
     return (
       <>
-        <TextToSpeech />
-        {readerSettingList.map((item) => (
+        {this.props.currentEpub.rendition && <TextToSpeech />}
+        {(this.props.currentEpub.rendition
+          ? readerSettingList
+          : htmlSettingList
+        ).map((item) => (
           <div className="single-control-switch-container" key={item.title}>
             <span className="single-control-switch-title">
               <Trans>{item.title}</Trans>

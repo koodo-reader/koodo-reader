@@ -78,3 +78,21 @@ export const readerSettingList = [
     propName: "isUseBackground",
   },
 ];
+export const htmlSettingList = [
+  {
+    title: "Bold Font",
+    propName: "isBold",
+  },
+  {
+    title: "Italic",
+    propName: "isItalic",
+  },
+  {
+    title: "Text Underline",
+    propName: "isUnderline",
+  },
+  {
+    title: "Text Shadow",
+    propName: "isShadow",
+  },
+];

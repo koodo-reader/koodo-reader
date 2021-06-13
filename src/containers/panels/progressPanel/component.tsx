@@ -55,6 +55,12 @@ class ProgressPanel extends React.Component<
       }
       this.setState({ currentChapter: chapter });
     }
+    if (nextProps.currentBook.key) {
+      this.props.handleFetchPercentage(this.props.currentBook);
+    }
+    if (nextProps.percentage) {
+      this.setState({ displayPercentage: nextProps.percentage });
+    }
   }
   //WARNING! To be deprecated in React v17. Use componentDidMount instead.
   onProgressChange = (event: any) => {
@@ -69,6 +75,9 @@ class ProgressPanel extends React.Component<
     this.setState({ displayPercentage: event.target.value / 100 });
   };
   previourChapter = () => {
+    if (!this.props.currentEpub.rendition) {
+      return;
+    }
     const currentLocation = this.props.currentEpub.rendition.currentLocation();
     if (!currentLocation.start) return;
     let chapterIndex = currentLocation.start.index;
@@ -120,7 +129,7 @@ class ProgressPanel extends React.Component<
   };
   handleJumpPage = (event: any) => {};
   render() {
-    if (!this.props.locations) {
+    if (!this.props.locations && this.props.currentEpub.rendition) {
       return (
         <div className="progress-panel">
           <Lottie options={siriOptions} height={100} width={300} />

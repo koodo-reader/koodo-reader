@@ -32,13 +32,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
       readerMode: OtherUtil.getReaderConfig("readerMode") || "double",
     };
   }
-  componentWillMount() {
-    // this.props.handleFetchBookmarks();
-    // this.props.handleFetchPercentage(this.props.currentBook);
-    // this.props.handleFetchNotes();
-    // this.props.handleFetchBooks();
-    // this.props.handleFetchChapters(this.props.currentEpub);
-  }
+
   UNSAFE_componentWillReceiveProps(nextProps: ReaderProps) {
     this.setState({
       isMessage: nextProps.isMessage,
@@ -258,7 +252,9 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
                 }
           }
         >
-          <ProgressPanel {...{ time: this.state.time }} />
+          {this.props.currentEpub.rendition && (
+            <ProgressPanel {...{ time: this.state.time }} />
+          )}
         </div>
         <div
           className="operation-panel-container"

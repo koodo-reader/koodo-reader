@@ -7,7 +7,7 @@ class styleUtil {
     if (!iframe) return;
     let doc = iframe.contentDocument;
     if (!doc) return;
-    let css = this.getDefaultCss() + this.getCustomCss();
+    let css = this.getDefaultCss();
     let style = doc.getElementById("default-style");
     let background = document.querySelector(".background");
     if (!background) return;
@@ -101,7 +101,7 @@ class styleUtil {
           : ""
       };margin-bottom: ${
         OtherUtil.getReaderConfig("paraSpacing") || 0
-      }px !important;`;
+      }px !important;padding:0`;
     } else {
       return {
         "a, article, cite, code, div, li, p, pre, span, table": {
@@ -166,6 +166,7 @@ class styleUtil {
     style.rel = "stylesheet";
     document.head.appendChild(style);
   };
+
   static applyTheme() {
     OtherUtil.getReaderConfig("themeColor") &&
       OtherUtil.getReaderConfig("themeColor") !== "default" &&
