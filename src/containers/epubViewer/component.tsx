@@ -1,345 +1,126 @@
+//阅读器图书内容区域
 import React from "react";
-import ViewArea from "../viewArea";
-import Background from "../background";
-import SettingPanel from "../panels/settingPanel";
-import NavigationPanel from "../panels/navigationPanel";
-import OperationPanel from "../panels/operationPanel";
-import MessageBox from "../messageBox";
-import ProgressPanel from "../panels/progressPanel";
-import { ReaderProps, ReaderState } from "./interface";
-import { MouseEvent } from "../../utils/mouseEvent";
+import "./viewArea.css";
+import PopupMenu from "../../components/popups/popupMenu";
+import { ViewAreaProps, ViewAreaStates } from "./interface";
+import RecordLocation from "../../utils/readUtils/recordLocation";
 import OtherUtil from "../../utils/otherUtil";
-import ReadingTime from "../../utils/readUtils/readingTime";
+import BookmarkModel from "../../model/Bookmark";
+import StyleUtil from "../../utils/readUtils/styleUtil";
+import ImageViewer from "../../components/imageViewer";
+import Lottie from "react-lottie";
+import animationSiri from "../../assets/lotties/siri.json";
 
-class Reader extends React.Component<ReaderProps, ReaderState> {
-  messageTimer!: NodeJS.Timeout;
-  tickTimer!: NodeJS.Timeout;
-  rendition: any;
+const siriOptions = {
+  loop: true,
+  autoplay: true,
+  animationData: animationSiri,
+  rendererSettings: {
+    preserveAspectRatio: "xMidYMid slice",
+  },
+};
+declare var window: any;
 
-  constructor(props: ReaderProps) {
+class ViewArea extends React.Component<ViewAreaProps, ViewAreaStates> {
+  isFirst: boolean;
+  constructor(props: ViewAreaProps) {
     super(props);
     this.state = {
-      isOpenSettingPanel:
-        OtherUtil.getReaderConfig("isSettingLocked") === "yes" ? true : false,
-      isOpenOperationPanel: false,
-      isOpenProgressPanel: false,
-      isOpenNavPanel:
-        OtherUtil.getReaderConfig("isNavLocked") === "yes" ? true : false,
-      isMessage: false,
-      rendition: null,
-      scale: OtherUtil.getReaderConfig("scale") || 1,
-      margin: parseInt(OtherUtil.getReaderConfig("margin")) || 30,
-      time: ReadingTime.getTime(this.props.currentBook.key),
-      isTouch: OtherUtil.getReaderConfig("isTouch") === "yes",
-      readerMode: OtherUtil.getReaderConfig("readerMode") || "double",
+      cfiRange: null,
+      contents: null,
+      rect: null,
+      loading: true,
     };
+    this.isFirst = true;
   }
-  componentWillMount() {
-    this.props.handleFetchBookmarks();
-    this.props.handleFetchPercentage(this.props.currentBook);
-    this.props.handleFetchNotes();
-    this.props.handleFetchBooks();
-    this.props.handleFetchChapters(this.props.currentEpub);
-  }
-  UNSAFE_componentWillReceiveProps(nextProps: ReaderProps) {
-    this.setState({
-      isMessage: nextProps.isMessage,
-    });
 
-    //控制消息提示两秒之后消失
-    if (nextProps.isMessage) {
-      this.messageTimer = setTimeout(() => {
-        this.props.handleMessageBox(false);
-        this.setState({ isMessage: false });
-      }, 2000);
-    }
-  }
   componentDidMount() {
-    this.handleRenderBook();
-    window.addEventListener("resize", () => {
-      this.handleRenderBook();
-    });
-  }
-  handleRenderBook = () => {
-    let page = document.querySelector("#page-area");
     let epub = this.props.currentEpub;
-    (window as any).rangy.init(); // 初始化
-    this.rendition = epub.renderTo(page, {
-      manager:
-        this.state.readerMode === "continuous" ? "continuous" : "default",
-      flow: this.state.readerMode === "continuous" ? "scrolled" : "auto",
-      width: "100%",
-      height: "100%",
-      snap: true,
-      spread:
-        OtherUtil.getReaderConfig("readerMode") === "single" ? "none" : "",
+    window.rangy.init(); // 初始化
+    this.props.rendition.on("locationChanged", () => {
+      this.props.handleReadingEpub(epub);
+      this.props.handleOpenMenu(false);
+      const currentLocation = this.props.rendition.currentLocation();
+      if (!currentLocation.start) {
+        return;
+      }
+      const cfi = currentLocation.start.cfi;
+      this.props.handleShowBookmark(
+        this.props.bookmarks &&
+          this.props.bookmarks.filter(
+            (item: BookmarkModel) => item.cfi === cfi
+          )[0]
+          ? true
+          : false
+      );
+
+      if (!this.isFirst && this.props.locations) {
+        let percentage = this.props.locations.percentageFromCfi(cfi);
+        RecordLocation.recordCfi(this.props.currentBook.key, cfi, percentage);
+        this.props.handlePercentage(percentage);
+      } else if (!this.isFirst) {
+        //如果过暂时没有解析出locations，就直接记录cfi
+        RecordLocation.recordCfi(
+          this.props.currentBook.key,
+          cfi,
+          RecordLocation.getCfi(this.props.currentBook.key).percentage
+        );
+      }
+      this.isFirst = false;
     });
-    this.setState({ rendition: this.rendition });
-    this.state.readerMode !== "continuous" && MouseEvent(this.rendition); // 绑定事件
-    this.tickTimer = setInterval(() => {
-      let time = this.state.time;
-      time += 1;
-      this.setState({ time });
-    }, 1000);
-  };
+    this.props.rendition.on("rendered", () => {
+      this.setState({ loading: false });
+      let iframe = document.getElementsByTagName("iframe")[0];
+      if (!iframe) return;
+      let doc = iframe.contentDocument;
+      if (!doc) {
+        return;
+      }
+      StyleUtil.addDefaultCss();
+      this.props.rendition.themes.default(StyleUtil.getCustomCss(false));
+    });
+    this.props.rendition.on("selected", (cfiRange: any, contents: any) => {
+      var range = contents.range(cfiRange);
+      var rect = range.getBoundingClientRect();
+      this.setState({ cfiRange, contents, rect });
+    });
+    this.props.rendition.themes.default(StyleUtil.getCustomCss(false));
+    this.props.rendition.display(
+      RecordLocation.getCfi(this.props.currentBook.key) === null
+        ? null
+        : RecordLocation.getCfi(this.props.currentBook.key).cfi
+    );
+  }
 
-  //进入阅读器
-  handleEnterReader = (position: string) => {
-    //控制上下左右的菜单的显示
-    switch (position) {
-      case "right":
-        this.setState({
-          isOpenSettingPanel: this.state.isOpenSettingPanel ? false : true,
-        });
-        break;
-      case "left":
-        this.setState({
-          isOpenNavPanel: this.state.isOpenNavPanel ? false : true,
-        });
-        break;
-      case "top":
-        this.setState({
-          isOpenOperationPanel: this.state.isOpenOperationPanel ? false : true,
-        });
-        break;
-      case "bottom":
-        this.setState({
-          isOpenProgressPanel: this.state.isOpenProgressPanel ? false : true,
-        });
-        break;
-      default:
-        break;
-    }
-  };
-  //退出阅读器
-  handleLeaveReader = (position: string) => {
-    //控制上下左右的菜单的显示
-    switch (position) {
-      case "right":
-        if (OtherUtil.getReaderConfig("isSettingLocked") === "yes") {
-          break;
-        } else {
-          this.setState({ isOpenSettingPanel: false });
-          break;
-        }
-
-      case "left":
-        if (OtherUtil.getReaderConfig("isNavLocked") === "yes") {
-          break;
-        } else {
-          this.setState({ isOpenNavPanel: false });
-          break;
-        }
-      case "top":
-        this.setState({ isOpenOperationPanel: false });
-        break;
-      case "bottom":
-        this.setState({ isOpenProgressPanel: false });
-        break;
-      default:
-        break;
-    }
-  };
-  nextPage = () => {
-    this.state.rendition.next();
-  };
-  prevPage = () => {
-    this.state.rendition.prev();
-  };
   render() {
-    const renditionProps = {
-      rendition: this.state.rendition,
-      handleLeaveReader: this.handleLeaveReader,
-      handleEnterReader: this.handleEnterReader,
-      isShow:
-        this.state.isOpenNavPanel ||
-        this.state.isOpenOperationPanel ||
-        this.state.isOpenProgressPanel ||
-        this.state.isOpenSettingPanel,
+    const popupMenuProps = {
+      rendition: this.props.rendition,
+      cfiRange: this.state.cfiRange,
+      contents: this.state.contents,
+      rect: this.state.rect,
     };
     return (
-      <div
-        className="viewer"
-        style={{
-          filter: `brightness(${
-            OtherUtil.getReaderConfig("brightness") || 1
-          }) invert(${
-            OtherUtil.getReaderConfig("isInvert") === "yes" ? 1 : 0
-          })`,
-        }}
-      >
-        <div
-          className="previous-chapter-single-container"
-          onClick={() => {
-            this.prevPage();
+      <div className="view-area">
+        <ImageViewer
+          {...{
+            isShow: this.props.isShow,
+            rendition: this.props.rendition,
+            handleEnterReader: this.props.handleEnterReader,
+            handleLeaveReader: this.props.handleLeaveReader,
           }}
-        >
-          <span className="icon-dropdown previous-chapter-single"></span>
-        </div>
-        <div
-          className="next-chapter-single-container"
-          onClick={() => {
-            this.nextPage();
-          }}
-        >
-          <span className="icon-dropdown next-chapter-single"></span>
-        </div>
-        <div
-          className="reader-setting-icon-container"
-          onClick={() => {
-            this.handleEnterReader("left");
-            this.handleEnterReader("right");
-            this.handleEnterReader("bottom");
-            this.handleEnterReader("top");
-          }}
-        >
-          <span className="icon-grid reader-setting-icon"></span>
-        </div>
-        {this.state.isMessage ? <MessageBox /> : null}
-        <div
-          className="left-panel"
-          onMouseEnter={() => {
-            if (this.state.isTouch || this.state.isOpenNavPanel) {
-              return;
-            }
-            this.handleEnterReader("left");
-          }}
-          onClick={() => {
-            this.handleEnterReader("left");
-          }}
-        ></div>
-        <div
-          className="right-panel"
-          onMouseEnter={() => {
-            if (this.state.isTouch || this.state.isOpenSettingPanel) {
-              return;
-            }
-            this.handleEnterReader("right");
-          }}
-          onClick={() => {
-            this.handleEnterReader("right");
-          }}
-        ></div>
-        <div
-          className="top-panel"
-          onMouseEnter={() => {
-            if (this.state.isTouch || this.state.isOpenOperationPanel) {
-              return;
-            }
-            this.handleEnterReader("top");
-          }}
-          onClick={() => {
-            this.handleEnterReader("top");
-          }}
-        ></div>
-        <div
-          className="bottom-panel"
-          onMouseEnter={() => {
-            if (this.state.isTouch || this.state.isOpenProgressPanel) {
-              return;
-            }
-            this.handleEnterReader("bottom");
-          }}
-          onClick={() => {
-            this.handleEnterReader("bottom");
-          }}
-        ></div>
-
-        {this.state.rendition && this.props.currentEpub.rendition && (
-          <ViewArea {...renditionProps} />
-        )}
-        <div
-          className="setting-panel-container"
-          onMouseLeave={(event) => {
-            this.handleLeaveReader("right");
-          }}
-          style={
-            this.state.isOpenSettingPanel
-              ? {}
-              : {
-                  transform: "translateX(309px)",
-                }
-          }
-        >
-          <SettingPanel />
-        </div>
-        <div
-          className="navigation-panel-container"
-          onMouseLeave={(event) => {
-            this.handleLeaveReader("left");
-          }}
-          style={
-            this.state.isOpenNavPanel
-              ? {}
-              : {
-                  transform: "translateX(-309px)",
-                }
-          }
-        >
-          <NavigationPanel {...{ time: this.state.time }} />
-        </div>
-        <div
-          className="progress-panel-container"
-          onMouseLeave={(event) => {
-            this.handleLeaveReader("bottom");
-          }}
-          style={
-            this.state.isOpenProgressPanel
-              ? {}
-              : {
-                  transform: "translateY(110px)",
-                }
-          }
-        >
-          <ProgressPanel {...{ time: this.state.time }} />
-        </div>
-        <div
-          className="operation-panel-container"
-          onMouseLeave={(event) => {
-            this.handleLeaveReader("top");
-          }}
-          style={
-            this.state.isOpenOperationPanel
-              ? {}
-              : {
-                  transform: "translateY(-110px)",
-                }
-          }
-        >
-          <OperationPanel {...{ time: this.state.time }} />
-        </div>
-
-        <div
-          className="view-area-page"
-          id="page-area"
-          style={
-            document.body.clientWidth < 570
-              ? { left: 0, right: 0 }
-              : this.state.readerMode === "continuous"
-              ? {
-                  left: `calc(50vw - ${270 * parseFloat(this.state.scale)}px)`,
-                  right: `calc(50vw - ${270 * parseFloat(this.state.scale)}px)`,
-                  top: "75px",
-                  bottom: "75px",
-                }
-              : this.state.readerMode === "single"
-              ? {
-                  left: `calc(50vw - ${270 * parseFloat(this.state.scale)}px)`,
-                  right: `calc(50vw - ${270 * parseFloat(this.state.scale)}px)`,
-                }
-              : this.state.readerMode === "double"
-              ? {
-                  left: this.state.margin - 40 + "px",
-                  right: this.state.margin - 40 + "px",
-                }
-              : {}
-          }
-        ></div>
-
-        <Background {...{ time: this.state.time }} />
+        />
+        <PopupMenu {...popupMenuProps} />
+        {this.state.loading ? (
+          <div className="spinner">
+            <Lottie options={siriOptions} height={100} width={300} />
+          </div>
+        ) : null}
+        <>
+          {this.props.isShowBookmark ? <div className="bookmark"></div> : null}
+        </>
       </div>
     );
   }
 }
 
-export default Reader;
+export default ViewArea;
