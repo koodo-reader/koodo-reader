@@ -59,15 +59,14 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         RecentBooks.setRecent(key);
       });
     });
-    // document.documentElement.style.height = "auto";
-    // document.documentElement.style.overflow = "auto";
 
     window.frames[0].document.addEventListener("wheel", (event) => {
       RecordLocation.recordScrollHeight(
         key,
         document.body.clientWidth,
         document.body.clientHeight,
-        window.frames[0].document.scrollingElement!.scrollTop
+        window.frames[0].document.scrollingElement!.scrollTop,
+        window.frames[0].document.scrollingElement!.scrollHeight
       );
     });
     window.frames[0].document.addEventListener("click", (event) => {
@@ -165,8 +164,17 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       <iframe
         className="ebook-viewer"
         title="html-viewer"
-        width="100%"
+        width={`${
+          100 * parseFloat(OtherUtil.getReaderConfig("scale") || "1")
+        }%`}
         height="100%"
+        style={{
+          marginLeft: `${
+            (100 *
+              (1 - parseFloat(OtherUtil.getReaderConfig("scale") || "1"))) /
+            2
+          }%`,
+        }}
       >
         Loading
       </iframe>

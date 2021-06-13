@@ -50,7 +50,8 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         key,
         document.body.clientWidth,
         document.body.clientHeight,
-        window.frames[0].document.scrollingElement!.scrollTop
+        window.frames[0].document.scrollingElement!.scrollTop,
+        window.frames[0].document.scrollingElement!.scrollHeight
       );
     });
     window.onbeforeunload = () => {
