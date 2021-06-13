@@ -7,6 +7,7 @@ import {
   handleReadingEpub,
 } from "../../store/actions/book";
 import { handleMessageBox, handleMessage } from "../../store/actions/manager";
+import { handleHtmlBook } from "../../store/actions/reader";
 import Viewer from "./component";
 import { stateType } from "../../store";
 
@@ -24,5 +25,6 @@ const actionCreator = {
   handleActionDialog,
   handleMessageBox,
   handleMessage,
+  handleHtmlBook,
 };
 export default connect(mapStateToProps, actionCreator)(Viewer as any);

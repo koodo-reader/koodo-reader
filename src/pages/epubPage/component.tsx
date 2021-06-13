@@ -2,7 +2,7 @@ import React from "react";
 import RecentBooks from "../../utils/readUtils/recordRecent";
 import { EpubReaderProps, EpubReaderState } from "./interface";
 import localforage from "localforage";
-import Reader from "../../containers/epubViewer";
+import Reader from "../../containers/epubReader";
 import { withRouter } from "react-router-dom";
 import _ from "underscore";
 import BookUtil from "../../utils/bookUtil";

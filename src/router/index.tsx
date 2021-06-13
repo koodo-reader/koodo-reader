@@ -1,11 +1,10 @@
 import React, { useEffect } from "react";
 import { Route, Switch, HashRouter } from "react-router-dom";
 import Manager from "../pages/manager";
-import EpubReader from "../pages/epubReader";
-import Viewer from "../pages/viewer";
+import EpubReader from "../pages/epubPage";
+import HtmlReader from "../containers/htmlReader";
 import DjvuReader from "../pages/djvuReader";
 import ComicReader from "../pages/comicReader";
-import HtmlViewer from "../pages/htmlViewer";
 import _Redirect from "../pages/redirect";
 import i18n from "../i18n";
 import OtherUtil from "../utils/otherUtil";
@@ -34,22 +33,23 @@ const Router = () => {
     <HashRouter>
       <Switch>
         <Route component={Manager} path="/manager" />
-        <Route component={EpubReader} path="/epub" />{" "}
+        <Route component={EpubReader} path="/epub" />
         <Route component={DjvuReader} path="/djvu" />
-        <Route component={Viewer} path="/mobi" />
-        <Route component={Viewer} path="/azw3" />
-        <Route component={Viewer} path="/txt" />
-        <Route component={Viewer} path="/docx" />
-        <Route component={Viewer} path="/md" />
-        <Route component={HtmlViewer} path="/html" />
-        <Route component={HtmlViewer} path="/htm" />
-        <Route component={HtmlViewer} path="/xml" />
-        <Route component={HtmlViewer} path="/xhtml" />
-        <Route component={Viewer} path="/rtf" />
-        <Route component={Viewer} path="/fb2" />
+        <Route component={HtmlReader} path="/mobi" />
+        <Route component={HtmlReader} path="/azw3" />
+        <Route component={HtmlReader} path="/txt" />
+        <Route component={HtmlReader} path="/docx" />
+        <Route component={HtmlReader} path="/md" />
+        <Route component={HtmlReader} path="/rtf" />
+        <Route component={HtmlReader} path="/fb2" />
         <Route component={ComicReader} path="/cbr" />
         <Route component={ComicReader} path="/cbz" />
-        <Route component={ComicReader} path="/cbt" />
+        <Route component={ComicReader} path="/cbt" />{" "}
+        <Route component={HtmlReader} path="/html" />
+        <Route component={HtmlReader} path="/htm" />
+        <Route component={HtmlReader} path="/xml" />
+        <Route component={HtmlReader} path="/xhtml" />
+        <Route component={HtmlReader} path="/href" />
         <Route component={_Redirect} path="/" />
       </Switch>
     </HashRouter>
