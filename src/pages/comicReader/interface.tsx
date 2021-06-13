@@ -11,4 +11,5 @@ export interface ViewerProps {
 }
 export interface ViewerState {
   key: string;
+  comicScale: string;
 }

@@ -1,7 +1,10 @@
-/* html,
-body {
-  width: auto;
-  height: auto;
-  overflow: auto;
-  user-select: none;
-} */
+.comic-scale {
+  width: 100px !important;
+  height: 50px;
+  opacity: 1;
+  position: absolute;
+  bottom: 0px;
+  left: calc(50% - 50px);
+  z-index: 10;
+  animation: fade-up 0.1s ease-in-out 0s 1;
+}
