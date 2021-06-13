@@ -4,7 +4,6 @@ import "./viewArea.css";
 import PopupMenu from "../../components/popups/popupMenu";
 import { ViewAreaProps, ViewAreaStates } from "./interface";
 import RecordLocation from "../../utils/readUtils/recordLocation";
-import OtherUtil from "../../utils/otherUtil";
 import BookmarkModel from "../../model/Bookmark";
 import StyleUtil from "../../utils/readUtils/styleUtil";
 import ImageViewer from "../../components/imageViewer";

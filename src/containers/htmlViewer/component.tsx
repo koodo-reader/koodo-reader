@@ -89,36 +89,40 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     OtherUtil.setReaderConfig("windowX", window.screenX + "");
     OtherUtil.setReaderConfig("windowY", window.screenY + "");
   }
-  handleRest = () => {
+  handleRest = (docStr: string) => {
+    let htmlParser = new HtmlParser(
+      new DOMParser().parseFromString(docStr, "text/html")
+    );
+    this.props.handleHtmlBook({
+      doc: htmlParser.getAnchoredDoc(),
+      chapters: htmlParser.getContentList(),
+      subitems: [],
+    });
+    window.frames[0].document.body.innerHTML = htmlParser.getAnchoredDoc().documentElement.outerHTML;
     styleUtil.addHtmlCss();
     window.frames[0].document.scrollingElement!.scrollTo(
       0,
       RecordLocation.getScrollHeight(this.state.key).scroll
     );
   };
+
   handleMobi = async (result: ArrayBuffer) => {
     let mobiFile = new MobiParser(result);
     let content: any = await mobiFile.render();
-    window.frames[0].document.body.innerHTML = content.outerHTML;
-    this.handleRest();
+    this.handleRest(content.outerHTML);
   };
   handleTxt = (result: ArrayBuffer) => {
     let text = iconv.decode(
       Buffer.from(result),
       chardet.detect(Buffer.from(result)) as string
     );
-
-    window.frames[0].document.body.innerText = text;
-    this.handleRest();
+    this.handleRest(`<p>${text}</p>`);
   };
   handleMD = (result: ArrayBuffer) => {
     var blob = new Blob([result], { type: "text/plain" });
     var reader = new FileReader();
     reader.onload = (evt) => {
-      window.frames[0].document.body.innerHTML = marked(
-        evt.target?.result as any
-      );
-      this.handleRest();
+      this.handleRest(marked(evt.target?.result as any));
     };
     reader.readAsText(blob, "UTF-8");
   };
@@ -128,26 +132,12 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       chardet.detect(Buffer.from(result)) as string
     );
     rtfToHTML.fromString(text, (err: any, html: any) => {
-      window.frames[0].document.body.innerHTML = html;
-      this.handleRest();
+      this.handleRest(html);
     });
   };
   handleDocx = (result: ArrayBuffer) => {
     window.mammoth.convertToHtml({ arrayBuffer: result }).then((res: any) => {
-      let viewer: any = document.querySelector(".ebook-viewer");
-      if (!viewer?.innerHTML) return;
-
-      let htmlParser = new HtmlParser(
-        new DOMParser().parseFromString(res.value, "text/html")
-      );
-      this.props.handleHtmlBook({
-        doc: htmlParser.getAnchoredDoc(),
-        chapters: htmlParser.getContentList(),
-        subitems: [],
-      });
-      window.frames[0].document.body.innerHTML = htmlParser.getAnchoredDoc().documentElement.outerHTML;
-
-      this.handleRest();
+      this.handleRest(res.value);
     });
   };
   handleFb2 = (result: ArrayBuffer) => {
@@ -157,9 +147,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     );
     let bookObj = xmlBookToObj(Buffer.from(result));
     bookObj += xmlBookTagFilter(fb2Str);
-
-    window.frames[0].document.body.innerHTML = bookObj;
-    this.handleRest();
+    this.handleRest(bookObj);
   };
   handleHtml = (result: ArrayBuffer, format: string) => {
     var blob = new Blob([result], {
@@ -168,8 +156,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     var reader = new FileReader();
     reader.onload = (evt) => {
       const html = evt.target?.result as any;
-      window.frames[0].document.body.innerHTML = html;
-      this.handleRest();
+      this.handleRest(html);
     };
     reader.readAsText(blob, "UTF-8");
   };
