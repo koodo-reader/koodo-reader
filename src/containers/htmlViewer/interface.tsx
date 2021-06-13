@@ -1,4 +1,5 @@
 import BookModel from "../../model/Book";
+import HtmlBookModel from "../../model/HtmlBook";
 
 export interface ViewerProps {
   book: BookModel;
@@ -8,6 +9,8 @@ export interface ViewerProps {
   handleReadingBook: (book: BookModel) => void;
   handleMessage: (message: string) => void;
   handleMessageBox: (isShow: boolean) => void;
+  handleHtmlBook: (htmlBook: HtmlBookModel) => void;
+  handleLeaveReader: (position: string) => void;
 }
 export interface ViewerState {
   key: string;
