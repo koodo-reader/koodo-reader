@@ -11,7 +11,6 @@ import untar from "js-untar";
 import OtherUtil from "../../utils/otherUtil";
 import { mimetype } from "../../constants/mimetype";
 import RecordLocation from "../../utils/readUtils/recordLocation";
-
 declare var window: any;
 
 let JSZip = window.JSZip;
@@ -21,13 +20,35 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
   epub: any;
   constructor(props: ViewerProps) {
     super(props);
-    this.state = { key: "" };
+    this.state = { key: "", comicScale: "" };
   }
 
   componentDidMount() {
     let url = document.location.href.split("/");
     let key = url[url.length - 1].split("?")[0];
     this.setState({ key });
+    this.handleRender(key);
+    document
+      .getElementsByClassName("lang-setting-dropdown")[0]
+      ?.children[
+        ["25%", "50%", "75%", "100%"].indexOf(
+          OtherUtil.getReaderConfig("comicScale") || "100%"
+        )
+      ].setAttribute("selected", "selected");
+    window.frames[0].document.addEventListener("wheel", (event) => {
+      RecordLocation.recordScrollHeight(
+        key,
+        document.body.clientWidth,
+        document.body.clientHeight,
+        window.frames[0].document.scrollingElement!.scrollTop,
+        window.frames[0].document.scrollingElement!.scrollHeight
+      );
+    });
+    window.onbeforeunload = () => {
+      this.handleExit(key);
+    };
+  }
+  handleRender = (key: string) => {
     localforage.getItem("books").then((result: any) => {
       let book = result[_.findIndex(result, { key })];
       BookUtil.fetchBook(key, true).then((result) => {
@@ -43,21 +64,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         RecentBooks.setRecent(key);
       });
     });
-    // document.documentElement.style.height = "auto";
-    // document.documentElement.style.overflow = "auto";
-    window.frames[0].document.addEventListener("wheel", (event) => {
-      RecordLocation.recordScrollHeight(
-        key,
-        document.body.clientWidth,
-        document.body.clientHeight,
-        window.frames[0].document.scrollingElement!.scrollTop,
-        window.frames[0].document.scrollingElement!.scrollHeight
-      );
-    });
-    window.onbeforeunload = () => {
-      this.handleExit(key);
-    };
-  }
+  };
   // 点击退出按钮的处理程序
   handleExit(key: string) {
     this.props.handleReadingState(false);
@@ -108,7 +115,10 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     let imageDom = document.createElement("img");
     imageDom.src =
       "data:" + mimetype[extension.toLowerCase()] + ";base64," + url;
-    imageDom.setAttribute("style", "width: 100%");
+    imageDom.setAttribute(
+      "style",
+      "width: " + OtherUtil.getReaderConfig("comicScale") || "100%"
+    );
     window.frames[0].document.body.appendChild(imageDom);
     let loading = window.frames[0].document.querySelector("p");
     if (!loading) return;
@@ -170,14 +180,36 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
   };
   render() {
     return (
-      <iframe
-        className="ebook-viewer"
-        title="html-viewer"
-        width="100%"
-        height="100%"
-      >
-        <p>Loading</p>
-      </iframe>
+      <>
+        <iframe
+          className="ebook-viewer"
+          title="html-viewer"
+          width="100%"
+          height="100%"
+        >
+          <p>Loading</p>
+        </iframe>
+        <div className="comic-scale">
+          <select
+            name=""
+            className="lang-setting-dropdown"
+            id="text-speech-voice"
+            onChange={(event) => {
+              OtherUtil.setReaderConfig("comicScale", event.target.value);
+              window.frames[0].document.body.innerHTML = "";
+              this.handleRender(this.state.key);
+            }}
+          >
+            {["25%", "50%", "75%", "100%"].map((item, index) => {
+              return (
+                <option value={item} className="lang-setting-option">
+                  {item}
+                </option>
+              );
+            })}
+          </select>
+        </div>
+      </>
     );
   }
 }
