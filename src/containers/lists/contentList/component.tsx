@@ -17,18 +17,48 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
 
   componentWillMount() {
     //获取目录
-    this.props.currentEpub.loaded.navigation
-      .then((chapters: any) => {
-        this.setState({ chapters: chapters.toc });
-      })
-      .catch(() => {
-        console.log("Error occurs");
-      });
+    if (this.props.currentEpub.loaded) {
+      this.props.currentEpub.loaded.navigation
+        .then((chapters: any) => {
+          this.setState({ chapters: chapters.toc });
+        })
+        .catch(() => {
+          console.log("Error occurs");
+        });
+    }
   }
   handleJump(event: any) {
     event.preventDefault();
     let href = event.target.getAttribute("href");
-    this.props.currentEpub.rendition.display(href);
+    if (this.props.currentEpub.rendition) {
+      this.props.currentEpub.rendition.display(href);
+    } else {
+      // let a = document.createElement("a");
+      // a.href = href;
+      // a.innerHTML = "testastas";
+      // window.frames[0].document.body.appendChild(a);
+      let id = href.substr(1);
+      console.log(
+        id,
+        window.frames[0].document,
+        window.frames[0].document.getElementById(id)
+      );
+      var top = window.frames[0].document.getElementById(id)?.offsetTop; //Getting Y of target element
+      if (!top) return;
+      window.frames[0].scrollTo(0, top);
+      // window.frames[0].location.href = href;
+      // const clickEvent = new MouseEvent("click", {
+      //   view: window,
+      //   bubbles: true,
+      //   cancelable: true,
+      // });
+      // a.dispatchEvent(clickEvent);
+    }
+  }
+  UNSAFE_componentWillReceiveProps(nextProps: ContentListProps) {
+    if (nextProps.htmlBook !== this.props.htmlBook) {
+      this.setState({ chapters: nextProps.htmlBook.chapters });
+    }
   }
   render() {
     const renderContentList = (items: any, level: number) => {

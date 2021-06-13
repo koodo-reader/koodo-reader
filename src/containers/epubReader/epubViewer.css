@@ -67,7 +67,7 @@
   height: 200px;
   position: absolute;
   left: 0px;
-  top: calc(50% - 100px);
+  top: calc(50vh - 100px);
   background-color: pink;
   z-index: 10;
   opacity: 0;
@@ -77,7 +77,7 @@
   height: 200px;
   position: absolute;
   right: 0px;
-  top: calc(50% - 100px);
+  top: calc(50vh - 100px);
   background-color: pink;
   z-index: 10;
   opacity: 0;
@@ -86,7 +86,7 @@
   width: 200px;
   height: 50px;
   position: absolute;
-  right: calc(50% - 100px);
+  right: calc(50vw - 100px);
   top: 0px;
   background-color: pink;
   z-index: 10;
@@ -96,8 +96,8 @@
   width: 200px;
   height: 50px;
   position: absolute;
-  right: calc(50% - 100px);
-  bottom: 0px;
+  right: calc(50vw - 100px);
+  top: calc(100vh - 50px);
   background-color: pink;
   z-index: 10;
   opacity: 0;
@@ -107,7 +107,7 @@
   height: 60px;
   position: absolute;
   top: 0px;
-  left: calc(50% - 206px);
+  left: calc(50vw - 206px);
   z-index: 15;
 
   transition: transform 0.5s ease;
@@ -116,8 +116,8 @@
   width: 412px;
   height: 60px;
   position: absolute;
-  bottom: 0px;
-  left: calc(50% - 206px);
+  top: calc(100vh - 60px);
+  left: calc(50vw - 206px);
   z-index: 15;
   transition: transform 0.5s ease;
 }
@@ -125,7 +125,7 @@
   width: 299px;
   height: 100vh;
   position: absolute;
-  bottom: 0px;
+  top: 0px;
   right: 0px;
   transition: transform 0.5s ease;
   z-index: 15;
@@ -134,7 +134,7 @@
   width: 299px;
   height: 100vh;
   position: absolute;
-  bottom: 0px;
+  top: 0px;
   left: 0px;
   transition: transform 0.5s ease;
   z-index: 15;

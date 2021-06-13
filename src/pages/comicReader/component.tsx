@@ -43,14 +43,14 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         RecentBooks.setRecent(key);
       });
     });
-    document.documentElement.style.height = "auto";
-    document.documentElement.style.overflow = "auto";
-    window.addEventListener("wheel", (event) => {
+    // document.documentElement.style.height = "auto";
+    // document.documentElement.style.overflow = "auto";
+    window.frames[0].document.addEventListener("wheel", (event) => {
       RecordLocation.recordScrollHeight(
         key,
         document.body.clientWidth,
         document.body.clientHeight,
-        document.scrollingElement!.scrollTop
+        window.frames[0].document.scrollingElement!.scrollTop
       );
     });
     window.onbeforeunload = () => {
@@ -108,12 +108,16 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     imageDom.src =
       "data:" + mimetype[extension.toLowerCase()] + ";base64," + url;
     imageDom.setAttribute("style", "width: 100%");
-    let viewer: HTMLElement | null = document.querySelector(".ebook-viewer");
-    if (!viewer?.innerHTML) return;
-    viewer.appendChild(imageDom);
-    let loading = document.querySelector("p");
+    window.frames[0].document.body.appendChild(imageDom);
+    let loading = window.frames[0].document.querySelector("p");
     if (!loading) return;
-    viewer.removeChild(loading);
+    window.frames[0].document.body.removeChild(loading);
+  };
+  handleJump = () => {
+    window.frames[0].document.scrollingElement!.scrollTo(
+      0,
+      RecordLocation.getScrollHeight(this.state.key).scroll
+    );
   };
   handleCbz = (result: ArrayBuffer) => {
     let zip = new JSZip();
@@ -123,11 +127,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         const extension = filename.split(".").reverse()[0];
         this.addImage(content, extension);
       }
-
-      document.scrollingElement!.scrollTo(
-        0,
-        RecordLocation.getScrollHeight(this.state.key).scroll
-      );
+      this.handleJump();
     });
   };
   handleCbr = (result: ArrayBuffer) => {
@@ -169,9 +169,14 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
   };
   render() {
     return (
-      <div className="ebook-viewer">
+      <iframe
+        className="ebook-viewer"
+        title="html-viewer"
+        width="100%"
+        height="100%"
+      >
         <p>Loading</p>
-      </div>
+      </iframe>
     );
   }
 }

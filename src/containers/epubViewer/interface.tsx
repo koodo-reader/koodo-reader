@@ -1,26 +1,26 @@
 import BookModel from "../../model/Book";
-export interface ReaderProps {
-  currentEpub: any;
-  currentBook: BookModel;
-  isMessage: boolean;
-  handleFetchNotes: () => void;
-  handleFetchBooks: () => void;
-  handleFetchBookmarks: () => void;
-  handleMessageBox: (isShow: boolean) => void;
-  handleFetchPercentage: (currentBook: BookModel) => void;
-  handleFetchChapters: (currentEpub: any) => void;
-}
+import BookmarkModel from "../../model/Bookmark";
 
-export interface ReaderState {
-  isOpenSettingPanel: boolean;
-  isOpenOperationPanel: boolean;
-  isOpenProgressPanel: boolean;
-  isOpenNavPanel: boolean;
-  isMessage: boolean;
-  isTouch: boolean;
-  readerMode: string;
+export interface ViewAreaProps {
   rendition: any;
-  time: number;
-  scale: string;
-  margin: number;
+  currentBook: BookModel;
+  currentEpub: any;
+  bookmarks: BookmarkModel[];
+  locations: any;
+  isShowBookmark: boolean;
+  chapters: any[];
+  isShow: boolean;
+  handleLeaveReader: (position: string) => void;
+  handleEnterReader: (position: string) => void;
+  handlePercentage: (percentage: number) => void;
+  handleOpenMenu: (isOpenMenu: boolean) => void;
+  handleShowBookmark: (isShowBookmark: boolean) => void;
+  handleReadingEpub: (epub: object) => void;
+}
+export interface ViewAreaStates {
+  loading: boolean;
+  cfiRange: any;
+  contents: any;
+  // rendition: any;
+  rect: any;
 }

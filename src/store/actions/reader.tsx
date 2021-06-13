@@ -1,6 +1,7 @@
 import localforage from "localforage";
 import NoteModel from "../../model/Note";
 import BookmarkModel from "../../model/Bookmark";
+import HtmlBookModel from "../../model/HtmlBook";
 import AddTrash from "../../utils/readUtils/addTrash";
 export function handleNotes(notes: NoteModel[]) {
   return { type: "HANDLE_NOTES", payload: notes };
@@ -17,7 +18,9 @@ export function handleBookmarks(bookmarks: BookmarkModel[]) {
 export function handleDigests(digests: NoteModel[]) {
   return { type: "HANDLE_DIGESTS", payload: digests };
 }
-
+export function handleHtmlBook(htmlBook: HtmlBookModel) {
+  return { type: "HANDLE_HTML_BOOK", payload: htmlBook };
+}
 export function handleCurrentChapter(currentChapter: string) {
   return { type: "HANDLE_CURRENT_CHAPTER", payload: currentChapter };
 }
