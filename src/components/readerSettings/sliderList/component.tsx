@@ -37,11 +37,12 @@ class SliderList extends React.Component<SliderListProps, SliderListState> {
       const fontSize = event.target.value;
       this.setState({ value: fontSize });
       OtherUtil.setReaderConfig("fontSize", fontSize);
-      this.props.currentEpub.rendition.themes.default({
-        "a, article, cite, code, div, li, p, pre, span, table": {
-          "font-size": `${fontSize || 17}px !important`,
-        },
-      });
+      this.props.currentEpub.rendition &&
+        this.props.currentEpub.rendition.themes.default({
+          "a, article, cite, code, div, li, p, pre, span, table": {
+            "font-size": `${fontSize || 17}px !important`,
+          },
+        });
     } else if (this.props.mode === "scale") {
       const scale = event.target.value;
       this.setState({ value: scale });
