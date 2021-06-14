@@ -4,8 +4,8 @@
 
 </div>
 
-<div align="center" width="128px" height="128px">
-<img src="https://i.loli.net/2020/04/26/wrO8EPokvUQWaf5.png" />
+<div align="center">
+<img src="./assets/icons/256x256.png" width="96px" height="96px"/>
 </div>
 
 <h1 align="center">
