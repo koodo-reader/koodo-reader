@@ -167,7 +167,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
           .require("electron")
           .ipcRenderer.sendSync("storage-location", "ping");
     let sourcePath = path.join(storageLocation, "config", "readerConfig.json");
-    let readerConfig: any;
     fs.readFile(sourcePath, "utf8", (err, data) => {
       if (err) {
         BackupUtil.backup(
