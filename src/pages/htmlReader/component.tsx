@@ -198,6 +198,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
           onClick={() => {
             this.handleEnterReader("bottom");
           }}
+          style={this.props.currentEpub ? {} : { display: "none" }}
         ></div>
         <Viewer {...renditionProps} />
         <div
