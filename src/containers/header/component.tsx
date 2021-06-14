@@ -73,10 +73,12 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         "readerConfig.json"
       );
       //Detect data modification
-      try {
-        const readerConfig = JSON.parse(
-          fs.readFileSync(sourcePath, { encoding: "utf8", flag: "r" })
-        );
+      fs.readFile(sourcePath, "utf8", (err, data) => {
+        if (err) {
+          console.error(err);
+          return;
+        }
+        const readerConfig = JSON.parse(data);
         if (
           localStorage.getItem("lastSyncTime") &&
           parseInt(readerConfig.lastSyncTime) >
@@ -84,9 +86,21 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         ) {
           this.setState({ isdataChange: true });
         }
-      } catch (error) {
-        throw error;
-      }
+      });
+      // try {
+      //   const readerConfig = JSON.parse(
+      //     fs.readFileSync(sourcePath, { encoding: "utf8", flag: "r" })
+      //   );
+      //   if (
+      //     localStorage.getItem("lastSyncTime") &&
+      //     parseInt(readerConfig.lastSyncTime) >
+      //       parseInt(localStorage.getItem("lastSyncTime")!)
+      //   ) {
+      //     this.setState({ isdataChange: true });
+      //   }
+      // } catch (error) {
+      //   throw error;
+      // }
     }
 
     window.addEventListener("resize", () => {
