@@ -112,16 +112,10 @@ app.on("ready", () => {
       readerWindow = null;
     });
   });
-  ipcMain.on("fonts-ready", (event, arg) => {
+  ipcMain.handle("fonts-ready", async (event, arg) => {
     const fontList = require("font-list");
-    fontList
-      .getFonts({ disableQuoting: true })
-      .then((fonts) => {
-        event.returnValue = fonts;
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    const fonts = await fontList.getFonts({ disableQuoting: true });
+    return fonts;
   });
 
   ipcMain.on("storage-location", (event, arg) => {

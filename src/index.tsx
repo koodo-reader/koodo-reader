@@ -25,12 +25,12 @@ if (
   navigator.appVersion.indexOf("NT 6.0") === -1
 ) {
   const { ipcRenderer } = window.require("electron");
-  dropdownList[0].option = ipcRenderer.sendSync("fonts-ready", "ping");
-  dropdownList[0].option.push("Built-in font");
+  ipcRenderer.invoke("fonts-ready", "ping").then((result) => {
+    dropdownList[0].option = result;
+    dropdownList[0].option.push("Built-in font");
+  });
 }
 StyleUtil.applyTheme();
-let coverLoading: any = document.querySelector(".loading-cover");
-coverLoading && coverLoading.parentNode.removeChild(coverLoading);
 
 ReactDOM.render(
   <Provider store={store}>
