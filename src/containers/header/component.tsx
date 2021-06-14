@@ -166,24 +166,44 @@ class Header extends React.Component<HeaderProps, HeaderState> {
           .ipcRenderer.sendSync("storage-location", "ping");
     let sourcePath = path.join(storageLocation, "config", "readerConfig.json");
     let readerConfig: any;
-    try {
-      readerConfig = JSON.parse(
-        fs.readFileSync(sourcePath, { encoding: "utf8", flag: "r" })
-      );
-    } catch (error) {
-      BackupUtil.backup(
-        this.props.books,
-        this.props.notes,
-        this.props.bookmarks,
-        () => {
-          this.props.handleMessage("Sync Successfully");
-          this.props.handleMessageBox(true);
-        },
-        5,
-        () => {}
-      );
-      return;
-    }
+    fs.readFile(sourcePath, "utf8", (err, data) => {
+      if (err) {
+        BackupUtil.backup(
+          this.props.books,
+          this.props.notes,
+          this.props.bookmarks,
+          () => {
+            this.props.handleMessage("Sync Successfully");
+            this.props.handleMessageBox(true);
+          },
+          5,
+          () => {}
+        );
+        return;
+      }
+      const readerConfig = JSON.parse(data);
+      if (
+        readerConfig &&
+        localStorage.getItem("lastSyncTime") &&
+        parseInt(readerConfig.lastSyncTime) >
+          parseInt(localStorage.getItem("lastSyncTime")!)
+      ) {
+        this.syncFromLocation();
+      } else {
+        //否则就把Koodo中数据同步到同步文件夹
+        BackupUtil.backup(
+          this.props.books,
+          this.props.notes,
+          this.props.bookmarks,
+          () => {
+            this.props.handleMessage("Sync Successfully");
+            this.props.handleMessageBox(true);
+          },
+          5,
+          () => {}
+        );
+      }
+    });
     //如果同步文件夹的记录较新，就从同步文件夹同步数据到Koodo
 
     if (
