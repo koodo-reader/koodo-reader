@@ -20,7 +20,10 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
   epub: any;
   constructor(props: ViewerProps) {
     super(props);
-    this.state = { key: "", comicScale: "" };
+    this.state = {
+      key: "",
+      comicScale: OtherUtil.getReaderConfig("comicScale") || "100%",
+    };
   }
 
   componentDidMount() {
@@ -117,7 +120,9 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       "data:" + mimetype[extension.toLowerCase()] + ";base64," + url;
     imageDom.setAttribute(
       "style",
-      "width: " + OtherUtil.getReaderConfig("comicScale") || "100%"
+      `width:${OtherUtil.getReaderConfig("comicScale") || "100%"};margin-left:${
+        OtherUtil.getReaderConfig("comicScale") === "75%" ? "12.5%" : "0%"
+      }`
     );
     window.frames[0].document.body.appendChild(imageDom);
     let loading = window.frames[0].document.querySelector("p");

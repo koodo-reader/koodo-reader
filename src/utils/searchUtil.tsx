@@ -63,10 +63,6 @@ class SearchUtil {
         AuthorNameArr,
         event.target.value.toLowerCase()
       );
-      console.log(
-        event.target.value.toLowerCase(),
-        this.MergeArray(bookResults, authorResults)
-      );
 
       return this.MergeArray(bookResults, authorResults);
     }

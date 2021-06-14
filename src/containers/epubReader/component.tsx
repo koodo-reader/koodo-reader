@@ -56,6 +56,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
   }
   componentDidMount() {
     this.handleRenderBook();
+    this.props.handleRenderFunc(this.handleRenderBook);
     window.addEventListener("resize", () => {
       this.handleRenderBook();
     });
@@ -63,24 +64,34 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
   handleRenderBook = () => {
     let page = document.querySelector("#page-area");
     let epub = this.props.currentEpub;
-    (window as any).rangy.init(); // 初始化
-    this.rendition = epub.renderTo(page, {
-      manager:
-        this.state.readerMode === "continuous" ? "continuous" : "default",
-      flow: this.state.readerMode === "continuous" ? "scrolled" : "auto",
-      width: "100%",
-      height: "100%",
-      snap: true,
-      spread:
-        OtherUtil.getReaderConfig("readerMode") === "single" ? "none" : "",
+    if (page?.innerHTML) {
+      page.innerHTML = "";
+    }
+    this.setState({ rendition: null }, () => {
+      (window as any).rangy.init(); // 初始化
+      this.rendition = epub.renderTo(page, {
+        manager:
+          this.state.readerMode === "continuous" ? "continuous" : "default",
+        flow: this.state.readerMode === "continuous" ? "scrolled" : "auto",
+        width: "100%",
+        height: "100%",
+        snap: true,
+        spread:
+          OtherUtil.getReaderConfig("readerMode") === "single" ? "none" : "",
+      });
+      this.setState({ rendition: this.rendition });
+      this.state.readerMode !== "continuous" && MouseEvent(this.rendition); // 绑定事件
+      this.tickTimer = setInterval(() => {
+        let time = this.state.time;
+        time += 1;
+        //解决快速翻页过程中图书消失的bug
+        let renderedBook = document.querySelector(".epub-view");
+        if (renderedBook && !renderedBook.innerHTML) {
+          this.handleRenderBook();
+        }
+        this.setState({ time });
+      }, 1000);
     });
-    this.setState({ rendition: this.rendition });
-    this.state.readerMode !== "continuous" && MouseEvent(this.rendition); // 绑定事件
-    this.tickTimer = setInterval(() => {
-      let time = this.state.time;
-      time += 1;
-      this.setState({ time });
-    }, 1000);
   };
 
   //进入阅读器
@@ -160,13 +171,13 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
     return (
       <div
         className="viewer"
-        style={{
-          filter: `brightness(${
-            OtherUtil.getReaderConfig("brightness") || 1
-          }) invert(${
-            OtherUtil.getReaderConfig("isInvert") === "yes" ? 1 : 0
-          })`,
-        }}
+        // style={{
+        //   filter: `brightness(${
+        //     OtherUtil.getReaderConfig("brightness") || 1
+        //   }) invert(${
+        //     OtherUtil.getReaderConfig("isInvert") === "yes" ? 1 : 0
+        //   })`,
+        // }}
       >
         <div
           className="previous-chapter-single-container"

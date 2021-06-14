@@ -9,7 +9,10 @@ import {
 import { stateType } from "../../../store";
 
 const mapStateToProps = (state: stateType) => {
-  return { currentEpub: state.book.currentEpub };
+  return {
+    currentEpub: state.book.currentEpub,
+    renderFunc: state.book.renderFunc,
+  };
 };
 const actionCreator = {
   handleMessageBox,
