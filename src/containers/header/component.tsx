@@ -24,7 +24,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     };
   }
   componentDidMount() {
-    console.log(localStorage.getItem("lastSyncTime"), "localStorage1");
     if (isElectron) {
       const fs = window.require("fs");
       const path = window.require("path");
@@ -80,7 +79,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
           return;
         }
         const readerConfig = JSON.parse(data);
-        console.log(localStorage.getItem("lastSyncTime"), "localStorage2");
         if (
           localStorage.getItem("lastSyncTime") &&
           parseInt(readerConfig.lastSyncTime) >
@@ -185,11 +183,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       }
       const readerConfig = JSON.parse(data);
 
-      console.log(
-        localStorage.getItem("lastSyncTime"),
-        readerConfig.lastSyncTime,
-        "localStorage3"
-      );
       if (
         readerConfig &&
         localStorage.getItem("lastSyncTime") &&

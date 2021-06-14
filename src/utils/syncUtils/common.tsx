@@ -62,24 +62,6 @@ export const moveData = (
     if (driveIndex === 5) {
       handleFinish();
     }
-    // try {
-    //   const fs = window.require("fs-extra");
-
-    //   fs.remove(path.join(dirPath, file.name), async (err) => {
-    //     if (err) console.log(err);
-    //     if (driveIndex === 4) {
-    //       let deleteBooks = books.map((item) => {
-    //         return localforage.removeItem(item.key);
-    //       });
-    //       await Promise.all(deleteBooks);
-    //     }
-    //     if (driveIndex === 5) {
-    //       handleFinish();
-    //     }
-    //   });
-    // } catch (e) {
-    //   console.error(e, "移动失败");
-    // }
   };
 };
 
