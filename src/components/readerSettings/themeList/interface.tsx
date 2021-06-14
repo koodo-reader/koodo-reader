@@ -3,6 +3,7 @@ export interface ThemeListProps {
   t: (title: string) => string;
   handleMessageBox: (isShow: boolean) => void;
   handleMessage: (message: string) => void;
+  renderFunc: () => void;
 }
 
 export interface ThemeListState {

@@ -59,6 +59,7 @@ export type stateType = {
     dragItem: string;
     currentBook: BookModel;
     currentEpub: any;
+    renderFunc: () => void;
   };
   backupPage: {
     isBackup: boolean;

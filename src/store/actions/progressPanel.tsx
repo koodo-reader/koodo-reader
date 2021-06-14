@@ -15,7 +15,6 @@ export function handleFetchPercentage(book: { key: string }) {
     } else {
       percentage = RecordLocation.getCfi(book.key).percentage;
     }
-    console.log(book.key, percentage, RecordLocation.getScrollHeight(book.key));
     dispatch(handlePercentage(percentage));
   };
 }

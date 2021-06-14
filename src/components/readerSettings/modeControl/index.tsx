@@ -9,7 +9,10 @@ import ModeControl from "./component";
 import { stateType } from "../../../store";
 
 const mapStateToProps = (state: stateType) => {
-  return {};
+  return {
+    currentEpub: state.book.currentEpub,
+    renderFunc: state.book.renderFunc,
+  };
 };
 const actionCreator = { handleMessageBox, handleMessage };
 export default connect(

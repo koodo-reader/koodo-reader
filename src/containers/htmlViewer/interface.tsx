@@ -5,6 +5,9 @@ export interface ViewerProps {
   book: BookModel;
   currentBook: BookModel;
   isReading: boolean;
+  htmlBook: HtmlBookModel;
+  handleRenderFunc: (renderFunc: () => void) => void;
+
   handleReadingState: (isReading: boolean) => void;
   handleReadingBook: (book: BookModel) => void;
   handleMessage: (message: string) => void;

@@ -4,6 +4,7 @@ export interface SettingSwitchProps {
   isReading: boolean;
   handleMessageBox: (isShow: boolean) => void;
   handleMessage: (message: string) => void;
+  renderFunc: () => void;
 }
 export interface SettingSwitchState {
   isUseBackground: boolean;
