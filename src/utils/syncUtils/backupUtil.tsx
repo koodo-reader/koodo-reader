@@ -40,7 +40,6 @@ class BackupUtil {
       }
     } else {
       let timestamp = new Date().getTime().toString();
-      console.log(timestamp, "timestamp");
       OtherUtil.setReaderConfig("lastSyncTime", timestamp);
 
       localStorage.setItem("lastSyncTime", timestamp);
