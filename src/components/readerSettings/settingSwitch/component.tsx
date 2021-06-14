@@ -118,7 +118,7 @@ class SettingSwitch extends React.Component<
   render() {
     return (
       <>
-        {this.props.currentEpub && <TextToSpeech />}
+        {this.props.currentEpub.archived && <TextToSpeech />}
         {(this.props.currentEpub.rendition
           ? readerSettingList
           : htmlSettingList
