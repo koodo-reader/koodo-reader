@@ -25,24 +25,22 @@ class SliderList extends React.Component<SliderListProps, SliderListState> {
     };
   }
   handleRest = () => {
-    if (isElectron) {
-      this.props.handleMessage("Take effect at next startup");
-      this.props.handleMessageBox(true);
-    } else {
-      window.location.reload();
+    if (this.props.mode === "scale") {
+      if (isElectron) {
+        this.props.handleMessage("Take effect at next startup");
+        this.props.handleMessageBox(true);
+      } else {
+        window.location.reload();
+      }
+      return;
     }
+    this.props.renderFunc();
   };
   onValueChange = (event: any) => {
     if (this.props.mode === "fontSize") {
       const fontSize = event.target.value;
       this.setState({ value: fontSize });
       OtherUtil.setReaderConfig("fontSize", fontSize);
-      this.props.currentEpub.rendition &&
-        this.props.currentEpub.rendition.themes.default({
-          "a, article, cite, code, div, li, p, pre, span, table": {
-            "font-size": `${fontSize || 17}px !important`,
-          },
-        });
     } else if (this.props.mode === "scale") {
       const scale = event.target.value;
       this.setState({ value: scale });
@@ -97,7 +95,6 @@ class SliderList extends React.Component<SliderListProps, SliderListState> {
             }
             onBlur={(event) => {
               this.onValueChange(event);
-
               this.handleRest();
             }}
           />

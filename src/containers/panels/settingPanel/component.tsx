@@ -57,7 +57,7 @@ class SettingPanel extends React.Component<
           <Trans>Reading Option</Trans>
         </div>
         <div className="setting-panel">
-          {this.props.currentEpub.rendition && <ModeControl />}
+          {this.props.currentEpub && <ModeControl />}
           <ThemeList />
           <SliderList
             {...{
@@ -70,7 +70,7 @@ class SettingPanel extends React.Component<
               title: "Font Size",
             }}
           />
-          {this.props.currentEpub.rendition && (
+          {this.props.currentEpub && (
             <SliderList
               {...{
                 maxValue: 80,
@@ -94,7 +94,7 @@ class SettingPanel extends React.Component<
               title: "Letter Spacing",
             }}
           />
-          {this.props.currentEpub.rendition && (
+          {this.props.currentEpub && (
             <SliderList
               {...{
                 maxValue: 60,

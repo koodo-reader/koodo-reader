@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { Route, Switch, HashRouter } from "react-router-dom";
 import Manager from "../pages/manager";
 import EpubReader from "../pages/epubPage";
-import HtmlReader from "../containers/htmlReader";
+import HtmlReader from "../pages/htmlReader";
 import DjvuReader from "../pages/djvuReader";
 import ComicReader from "../pages/comicReader";
 import _Redirect from "../pages/redirect";

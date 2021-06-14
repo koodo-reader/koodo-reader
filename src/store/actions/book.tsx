@@ -8,6 +8,9 @@ export function handleDeleteDialog(mode: boolean) {
 export function handleAddDialog(mode: boolean) {
   return { type: "HANDLE_ADD_DIALOG", payload: mode };
 }
+export function handleRenderFunc(renderFunc: () => void) {
+  return { type: "HANDLE_RENDER_FUNC", payload: renderFunc };
+}
 export function handleActionDialog(mode: boolean) {
   return { type: "HANDLE_ACTION_DIALOG", payload: mode };
 }

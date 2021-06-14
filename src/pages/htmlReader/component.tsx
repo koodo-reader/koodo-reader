@@ -1,13 +1,13 @@
 import React from "react";
-import SettingPanel from "../panels/settingPanel";
-import NavigationPanel from "../panels/navigationPanel";
-import OperationPanel from "../panels/operationPanel";
-import MessageBox from "../messageBox";
-import ProgressPanel from "../panels/progressPanel";
+import SettingPanel from "../../containers/panels/settingPanel";
+import NavigationPanel from "../../containers/panels/navigationPanel";
+import OperationPanel from "../../containers/panels/operationPanel";
+import MessageBox from "../../containers/messageBox";
+import ProgressPanel from "../../containers/panels/progressPanel";
 import { ReaderProps, ReaderState } from "./interface";
 import OtherUtil from "../../utils/otherUtil";
 import ReadingTime from "../../utils/readUtils/readingTime";
-import Viewer from "../htmlViewer";
+import Viewer from "../../containers/htmlViewer";
 
 class Reader extends React.Component<ReaderProps, ReaderState> {
   messageTimer!: NodeJS.Timeout;
@@ -122,16 +122,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         this.state.isOpenSettingPanel,
     };
     return (
-      <div
-        className="viewer"
-        style={{
-          filter: `brightness(${
-            OtherUtil.getReaderConfig("brightness") || 1
-          }) invert(${
-            OtherUtil.getReaderConfig("isInvert") === "yes" ? 1 : 0
-          })`,
-        }}
-      >
+      <div className="viewer">
         <div
           className="previous-chapter-single-container"
           onClick={() => {
