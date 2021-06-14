@@ -23,7 +23,8 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       isdataChange: false,
     };
   }
-  async componentDidMount() {
+  componentDidMount() {
+    console.log(localStorage.getItem("lastSyncTime"), "localStorage1");
     if (isElectron) {
       const fs = window.require("fs");
       const path = window.require("path");
@@ -79,6 +80,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
           return;
         }
         const readerConfig = JSON.parse(data);
+        console.log(localStorage.getItem("lastSyncTime"), "localStorage2");
         if (
           localStorage.getItem("lastSyncTime") &&
           parseInt(readerConfig.lastSyncTime) >
@@ -183,7 +185,12 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         return;
       }
       const readerConfig = JSON.parse(data);
-      console.log(3);
+
+      console.log(
+        localStorage.getItem("lastSyncTime"),
+        readerConfig.lastSyncTime,
+        "localStorage3"
+      );
       if (
         readerConfig &&
         localStorage.getItem("lastSyncTime") &&
@@ -208,27 +215,27 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     });
     //如果同步文件夹的记录较新，就从同步文件夹同步数据到Koodo
 
-    if (
-      readerConfig &&
-      localStorage.getItem("lastSyncTime") &&
-      parseInt(readerConfig.lastSyncTime) >
-        parseInt(localStorage.getItem("lastSyncTime")!)
-    ) {
-      this.syncFromLocation();
-    } else {
-      //否则就把Koodo中数据同步到同步文件夹
-      BackupUtil.backup(
-        this.props.books,
-        this.props.notes,
-        this.props.bookmarks,
-        () => {
-          this.props.handleMessage("Sync Successfully");
-          this.props.handleMessageBox(true);
-        },
-        5,
-        () => {}
-      );
-    }
+    // if (
+    //   readerConfig &&
+    //   localStorage.getItem("lastSyncTime") &&
+    //   parseInt(readerConfig.lastSyncTime) >
+    //     parseInt(localStorage.getItem("lastSyncTime")!)
+    // ) {
+    //   this.syncFromLocation();
+    // } else {
+    //   //否则就把Koodo中数据同步到同步文件夹
+    //   BackupUtil.backup(
+    //     this.props.books,
+    //     this.props.notes,
+    //     this.props.bookmarks,
+    //     () => {
+    //       this.props.handleMessage("Sync Successfully");
+    //       this.props.handleMessageBox(true);
+    //     },
+    //     5,
+    //     () => {}
+    //   );
+    // }
   };
 
   render() {
