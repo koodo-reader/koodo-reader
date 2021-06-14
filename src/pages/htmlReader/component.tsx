@@ -187,19 +187,20 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
             this.handleEnterReader("top");
           }}
         ></div>
-        <div
-          className="bottom-panel"
-          onMouseEnter={() => {
-            if (this.state.isTouch || this.state.isOpenProgressPanel) {
-              return;
-            }
-            this.handleEnterReader("bottom");
-          }}
-          onClick={() => {
-            this.handleEnterReader("bottom");
-          }}
-          style={this.props.currentEpub ? {} : { display: "none" }}
-        ></div>
+        {this.props.currentEpub.archived && (
+          <div
+            className="bottom-panel"
+            onMouseEnter={() => {
+              if (this.state.isTouch || this.state.isOpenProgressPanel) {
+                return;
+              }
+              this.handleEnterReader("bottom");
+            }}
+            onClick={() => {
+              this.handleEnterReader("bottom");
+            }}
+          ></div>
+        )}
         <Viewer {...renditionProps} />
         <div
           className="setting-panel-container"
@@ -231,23 +232,23 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         >
           <NavigationPanel {...{ time: this.state.time }} />
         </div>
-        <div
-          className="progress-panel-container"
-          onMouseLeave={(event) => {
-            this.handleLeaveReader("bottom");
-          }}
-          style={
-            this.state.isOpenProgressPanel
-              ? {}
-              : {
-                  transform: "translateY(110px)",
-                }
-          }
-        >
-          {this.props.currentEpub.rendition && (
+        {this.props.currentEpub.archived && (
+          <div
+            className="progress-panel-container"
+            onMouseLeave={(event) => {
+              this.handleLeaveReader("bottom");
+            }}
+            style={
+              this.state.isOpenProgressPanel
+                ? {}
+                : {
+                    transform: "translateY(110px)",
+                  }
+            }
+          >
             <ProgressPanel {...{ time: this.state.time }} />
-          )}
-        </div>
+          </div>
+        )}
         <div
           className="operation-panel-container"
           onMouseLeave={(event) => {
