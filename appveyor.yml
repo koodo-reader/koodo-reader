@@ -20,7 +20,7 @@ cache:
 init:
   - git config --global core.autocrlf input
   - sh: |
-      if [ "${APPVEYOR_BUILD_WORKER_IMAGE}" == "Ubuntu" ]
+      if [ "${APPVEYOR_BUILD_WORKER_IMAGE}" == "Ubuntu2004" ]
       then
         sudo apt-get install --no-install-recommends -y icnsutils graphicsmagick xz-utils
         sudo apt-get install snapd
