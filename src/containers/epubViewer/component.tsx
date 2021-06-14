@@ -1,6 +1,5 @@
 //阅读器图书内容区域
 import React from "react";
-import "./viewArea.css";
 import PopupMenu from "../../components/popups/popupMenu";
 import { ViewAreaProps, ViewAreaStates } from "./interface";
 import RecordLocation from "../../utils/readUtils/recordLocation";
@@ -20,7 +19,7 @@ const siriOptions = {
 };
 declare var window: any;
 
-class ViewArea extends React.Component<ViewAreaProps, ViewAreaStates> {
+class EpubViewer extends React.Component<ViewAreaProps, ViewAreaStates> {
   isFirst: boolean;
   constructor(props: ViewAreaProps) {
     super(props);
@@ -122,4 +121,4 @@ class ViewArea extends React.Component<ViewAreaProps, ViewAreaStates> {
   }
 }
 
-export default ViewArea;
+export default EpubViewer;

@@ -9,6 +9,7 @@ export interface SliderListProps {
   maxLabel: string;
   handleMessageBox: (isShow: boolean) => void;
   handleMessage: (message: string) => void;
+  renderFunc: () => void;
 }
 export interface SliderListState {
   value: string;

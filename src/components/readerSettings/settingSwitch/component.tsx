@@ -8,7 +8,6 @@ import {
   readerSettingList,
   htmlSettingList,
 } from "../../../constants/settingList";
-import { isElectron } from "react-device-detect";
 
 class SettingSwitch extends React.Component<
   SettingSwitchProps,
@@ -28,12 +27,7 @@ class SettingSwitch extends React.Component<
     };
   }
   handleRest = () => {
-    if (isElectron) {
-      this.props.handleMessage("Take effect at next startup");
-      this.props.handleMessageBox(true);
-    } else {
-      window.location.reload();
-    }
+    this.props.renderFunc();
   };
   handleBold = () => {
     this.setState({ isBold: !this.state.isBold }, () => {
@@ -124,7 +118,7 @@ class SettingSwitch extends React.Component<
   render() {
     return (
       <>
-        {this.props.currentEpub.rendition && <TextToSpeech />}
+        {this.props.currentEpub && <TextToSpeech />}
         {(this.props.currentEpub.rendition
           ? readerSettingList
           : htmlSettingList

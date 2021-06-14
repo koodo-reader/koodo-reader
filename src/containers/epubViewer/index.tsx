@@ -7,6 +7,7 @@ import {
   handleShowBookmark,
 } from "../../store/actions/viewArea";
 import { handleReadingEpub } from "../../store/actions/book";
+import "./index.css";
 
 const mapStateToProps = (state: stateType) => {
   return {

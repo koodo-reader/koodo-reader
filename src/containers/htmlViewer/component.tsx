@@ -59,7 +59,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         RecentBooks.setRecent(key);
       });
     });
-
+    this.props.handleRenderFunc(this.handleRenderHtml);
     window.frames[0].document.addEventListener("wheel", (event) => {
       RecordLocation.recordScrollHeight(
         key,
@@ -97,14 +97,18 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       chapters: htmlParser.getContentList(),
       subitems: [],
     });
-    window.frames[0].document.body.innerHTML = htmlParser.getAnchoredDoc().documentElement.outerHTML;
+    this.handleRenderHtml();
+  };
+  handleRenderHtml = () => {
+    window.frames[0].document.body.innerHTML = "";
+    window.frames[0].document.body.innerHTML = (this.props.htmlBook
+      .doc as any).documentElement.outerHTML;
     styleUtil.addHtmlCss();
     window.frames[0].document.scrollingElement!.scrollTo(
       0,
       RecordLocation.getScrollHeight(this.state.key).scroll
     );
   };
-
   handleMobi = async (result: ArrayBuffer) => {
     let mobiFile = new MobiParser(result);
     let content: any = await mobiFile.render();
@@ -165,14 +169,14 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         className="ebook-viewer"
         title="html-viewer"
         width={`${
-          100 * parseFloat(OtherUtil.getReaderConfig("scale") || "1")
+          (100 * parseFloat(OtherUtil.getReaderConfig("scale") || "1")) / 2
         }%`}
         height="100%"
         style={{
           marginLeft: `${
             (100 *
-              (1 - parseFloat(OtherUtil.getReaderConfig("scale") || "1"))) /
-            2
+              (2 - parseFloat(OtherUtil.getReaderConfig("scale") || "1"))) /
+            4
           }%`,
         }}
       >

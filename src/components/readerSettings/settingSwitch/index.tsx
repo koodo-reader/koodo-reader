@@ -12,6 +12,7 @@ const mapStateToProps = (state: stateType) => {
     currentEpub: state.book.currentEpub,
     locations: state.progressPanel.locations,
     isReading: state.book.isReading,
+    renderFunc: state.book.renderFunc,
   };
 };
 const actionCreator = { handleMessageBox, handleMessage };

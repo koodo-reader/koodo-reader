@@ -9,6 +9,7 @@ import {
 const mapStateToProps = (state: stateType) => {
   return {
     currentEpub: state.book.currentEpub,
+    renderFunc: state.book.renderFunc,
   };
 };
 const actionCreator = { handleMessageBox, handleMessage };

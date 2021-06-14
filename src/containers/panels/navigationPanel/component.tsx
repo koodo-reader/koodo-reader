@@ -238,7 +238,7 @@ class NavigationPanel extends React.Component<
                 &nbsp;
                 <Trans>Minute</Trans>
               </span>
-              {this.props.currentEpub.rendition && (
+              {this.props.currentEpub && (
                 <div className="navigation-search-box">
                   <SearchBox {...searchProps} />
                 </div>

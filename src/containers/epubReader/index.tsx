@@ -8,7 +8,8 @@ import {
   handleMessageBox,
   handleFetchBooks,
 } from "../../store/actions/manager";
-import "./epubViewer.css";
+import { handleRenderFunc } from "../../store/actions/book";
+import "./index.css";
 import { connect } from "react-redux";
 import { stateType } from "../../store";
 import Reader from "./component";
@@ -27,5 +28,6 @@ const actionCreator = {
   handleMessageBox,
   handleFetchPercentage,
   handleFetchBooks,
+  handleRenderFunc,
 };
 export default connect(mapStateToProps, actionCreator)(Reader);

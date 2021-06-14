@@ -13,7 +13,11 @@ class styleUtil {
     if (!background) return;
     background!.setAttribute(
       "style",
-      `background-color:${OtherUtil.getReaderConfig("backgroundColor")}`
+      `background-color:${OtherUtil.getReaderConfig(
+        "backgroundColor"
+      )};filter: brightness(${
+        OtherUtil.getReaderConfig("brightness") || 1
+      }) invert(${OtherUtil.getReaderConfig("isInvert") === "yes" ? 1 : 0})`
     );
     if (!doc.head) {
       return;
@@ -38,7 +42,11 @@ class styleUtil {
     if (!background) return;
     background!.setAttribute(
       "style",
-      `background-color:${OtherUtil.getReaderConfig("backgroundColor")}`
+      `background-color:${OtherUtil.getReaderConfig(
+        "backgroundColor"
+      )};filter: brightness(${
+        OtherUtil.getReaderConfig("brightness") || 1
+      }) invert(${OtherUtil.getReaderConfig("isInvert") === "yes" ? 1 : 0})`
     );
     window.frames[0].document.body.setAttribute(
       "style",

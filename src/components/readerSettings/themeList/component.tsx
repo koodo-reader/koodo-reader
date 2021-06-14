@@ -10,7 +10,6 @@ import { Panel as ColorPickerPanel } from "rc-color-picker";
 import "rc-color-picker/assets/index.css";
 import ThemeUtil from "../../../utils/readUtils/themeUtil";
 import { Tooltip } from "react-tippy";
-import { isElectron } from "react-device-detect";
 
 class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
   constructor(props: ThemeListProps) {
@@ -75,12 +74,7 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
     }
   };
   handleRest = () => {
-    if (isElectron) {
-      this.props.handleMessage("Take effect at next startup");
-      this.props.handleMessageBox(true);
-    } else {
-      window.location.reload();
-    }
+    this.props.renderFunc();
   };
   handleChooseBgColor = (color) => {
     OtherUtil.setReaderConfig("backgroundColor", color.color);
@@ -134,9 +128,7 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
           } !important`,
         },
       });
-    if (!isElectron) {
-      window.location.reload();
-    }
+    this.handleRest();
   };
   render() {
     const renderBackgroundColorList = () => {
