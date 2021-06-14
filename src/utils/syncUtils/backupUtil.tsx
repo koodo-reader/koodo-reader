@@ -20,7 +20,6 @@ class BackupUtil {
     driveIndex: number,
     showMessage: (message: string) => void
   ) => {
-    console.log(3);
     let zip = new JSZip();
     let books = bookArr;
     //0表示备份到本地，1表示备份到dropbox,2表示备份到onedrive,3表示备份到webdav，4表示转移数据，5表示同步数据到本地
@@ -108,7 +107,6 @@ class BackupUtil {
 
             break;
           case 5:
-            console.log(2);
             handleFinish();
             moveData(blob, 5, [], handleFinish);
 
