@@ -5,7 +5,7 @@ import BookmarkModel from "../../model/Bookmark";
 import DropboxUtil from "./dropbox";
 import WebdavUtil from "./webdav";
 import localforage from "localforage";
-import { moveData } from "./common";
+import SyncUtil, { moveData } from "./common";
 import BookUtil from "../bookUtil";
 import OtherUtil from "../otherUtil";
 
@@ -40,7 +40,9 @@ class BackupUtil {
       }
     } else {
       let timestamp = new Date().getTime().toString();
+      console.log(timestamp, "timestamp");
       OtherUtil.setReaderConfig("lastSyncTime", timestamp);
+
       localStorage.setItem("lastSyncTime", timestamp);
     }
     let configZip = zip.folder("config");
@@ -108,7 +110,7 @@ class BackupUtil {
             break;
           case 5:
             handleFinish();
-            moveData(blob, 5, [], handleFinish);
+            SyncUtil.syncData(blob, 5, [], handleFinish);
 
             break;
           default:
