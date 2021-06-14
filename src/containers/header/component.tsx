@@ -179,9 +179,11 @@ class Header extends React.Component<HeaderProps, HeaderState> {
           5,
           () => {}
         );
+        console.log(err);
         return;
       }
       const readerConfig = JSON.parse(data);
+      console.log(3);
       if (
         readerConfig &&
         localStorage.getItem("lastSyncTime") &&

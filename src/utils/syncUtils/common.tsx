@@ -20,6 +20,7 @@ export const moveData = (
   books: BookModel[] = [],
   handleFinish: () => void = () => {}
 ) => {
+  console.log(1);
   let file = new File([blob], "moveData.zip", {
     lastModified: new Date().getTime(),
     type: blob.type,
@@ -39,21 +40,32 @@ export const moveData = (
   var reader = new FileReader();
   reader.readAsArrayBuffer(file);
   reader.onload = async (event) => {
-    fs.writeFileSync(
+    console.log(4);
+    fs.writeFile(
       path.join(dirPath, file.name),
-      Buffer.from(event.target!.result as any)
+      Buffer.from(event.target!.result as any),
+      async (err, data) => {
+        console.log(5);
+        if (err) {
+          console.log(err);
+          return;
+        }
+        console.log(data);
+        const zip = new AdmZip(path.join(dirPath, file.name));
+        console.log(zip, path.join(dirPath, file.name), "zip");
+        zip.extractAllTo(/*target path*/ dataPath, /*overwrite*/ true);
+        if (driveIndex === 4) {
+          let deleteBooks = books.map((item) => {
+            return localforage.removeItem(item.key);
+          });
+          await Promise.all(deleteBooks);
+        }
+        if (driveIndex === 5) {
+          handleFinish();
+        }
+      }
     );
-    var zip = new AdmZip(path.join(dirPath, file.name));
-    zip.extractAllTo(/*target path*/ dataPath, /*overwrite*/ true);
-    if (driveIndex === 4) {
-      let deleteBooks = books.map((item) => {
-        return localforage.removeItem(item.key);
-      });
-      await Promise.all(deleteBooks);
-    }
-    if (driveIndex === 5) {
-      handleFinish();
-    }
+
     // try {
     //   const fs = window.require("fs-extra");
 
