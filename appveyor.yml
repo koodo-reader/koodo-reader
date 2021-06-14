@@ -7,7 +7,7 @@ branches:
 image:
   - Visual Studio 2019
   - macos
-  - Ubuntu
+  - Ubuntu2004
 
 stack: node 10
 
