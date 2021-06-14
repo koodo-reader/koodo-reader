@@ -1,4 +1,4 @@
-const { app, BrowserWindow, dialog, shell } = require("electron");
+const { app, BrowserWindow } = require("electron");
 const { ebtMain } = require("electron-baidu-tongji");
 
 let mainWin;
@@ -33,10 +33,10 @@ app.on("ready", () => {
     },
   });
   const isDev = require("electron-is-dev");
-  // if (!isDev) {
-  //   const { Menu } = require("electron");
-  //   Menu.setApplicationMenu(null);
-  // }
+  if (!isDev) {
+    const { Menu } = require("electron");
+    Menu.setApplicationMenu(null);
+  }
 
   const path = require("path");
   const urlLocation = isDev
