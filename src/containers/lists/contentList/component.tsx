@@ -40,11 +40,7 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
       this.props.currentEpub.rendition.display(href);
     } else {
       let id = href.substr(1);
-      console.log(
-        id,
-        window.frames[0].document,
-        window.frames[0].document.getElementById(id)
-      );
+
       var top = window.frames[0].document.getElementById(id)?.offsetTop;
       if (!top) return;
       window.frames[0].scrollTo(0, top);
