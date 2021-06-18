@@ -8,6 +8,7 @@ import {
   readerSettingList,
   htmlSettingList,
 } from "../../../constants/settingList";
+import { isElectron } from "react-device-detect";
 
 class SettingSwitch extends React.Component<
   SettingSwitchProps,
@@ -28,6 +29,14 @@ class SettingSwitch extends React.Component<
   }
   handleRest = () => {
     this.props.renderFunc();
+  };
+  _handleRest = () => {
+    if (isElectron) {
+      this.props.handleMessage("Take effect at next startup");
+      this.props.handleMessageBox(true);
+    } else {
+      window.location.reload();
+    }
   };
   handleBold = () => {
     this.setState({ isBold: !this.state.isBold }, () => {
@@ -83,7 +92,7 @@ class SettingSwitch extends React.Component<
       : this.props.handleMessage("Turn On Successfully");
     this.props.handleMessageBox(true);
     setTimeout(() => {
-      this.handleRest();
+      this._handleRest();
     }, 500);
   };
   handleFooter = () => {
@@ -97,7 +106,7 @@ class SettingSwitch extends React.Component<
       : this.props.handleMessage("Turn Off Successfully");
     this.props.handleMessageBox(true);
     setTimeout(() => {
-      this.handleRest();
+      this._handleRest();
     }, 500);
   };
   handleHeader = () => {
@@ -111,7 +120,7 @@ class SettingSwitch extends React.Component<
       : this.props.handleMessage("Turn Off Successfully");
     this.props.handleMessageBox(true);
     setTimeout(() => {
-      this.handleRest();
+      this._handleRest();
     }, 500);
   };
 

@@ -31,6 +31,9 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         RecentBooks.setRecent(key);
       });
     });
+    document
+      .querySelector(".ebook-viewer")
+      ?.setAttribute("style", "height:100%");
     window.onbeforeunload = () => {
       this.handleExit();
     };

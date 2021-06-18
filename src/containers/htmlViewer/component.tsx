@@ -11,12 +11,13 @@ import marked from "marked";
 import iconv from "iconv-lite";
 import chardet from "chardet";
 import rtfToHTML from "@iarna/rtf-to-html";
-import { xmlBookTagFilter, xmlBookToObj } from "../../utils/xmlUtil";
+import { xmlBookTagFilter, xmlBookToObj, txtToHtml } from "../../utils/xmlUtil";
 import HtmlParser from "../../utils/htmlParser";
 import OtherUtil from "../../utils/otherUtil";
 import RecordLocation from "../../utils/readUtils/recordLocation";
 import { mimetype } from "../../constants/mimetype";
 import styleUtil from "../../utils/readUtils/styleUtil";
+import { setInterval } from "timers";
 
 declare var window: any;
 
@@ -60,33 +61,29 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       });
     });
     this.props.handleRenderFunc(this.handleRenderHtml);
-    window.frames[0].document.addEventListener("wheel", (event) => {
-      RecordLocation.recordScrollHeight(
-        key,
-        document.body.clientWidth,
-        document.body.clientHeight,
-        window.frames[0].document.scrollingElement!.scrollTop,
-        window.frames[0].document.scrollingElement!.scrollHeight
-      );
-    });
+    setInterval(() => {
+      this.handleRecord();
+    }, 1000);
     window.frames[0].document.addEventListener("click", (event) => {
       this.props.handleLeaveReader("left");
       this.props.handleLeaveReader("right");
       this.props.handleLeaveReader("top");
       this.props.handleLeaveReader("bottom");
     });
-
-    window.onbeforeunload = () => {
-      this.handleExit();
-    };
   }
-  handleExit() {
-    this.props.handleReadingState(false);
 
+  handleRecord() {
     OtherUtil.setReaderConfig("windowWidth", document.body.clientWidth + "");
     OtherUtil.setReaderConfig("windowHeight", document.body.clientHeight + "");
     OtherUtil.setReaderConfig("windowX", window.screenX + "");
     OtherUtil.setReaderConfig("windowY", window.screenY + "");
+    RecordLocation.recordScrollHeight(
+      this.state.key,
+      document.body.clientWidth,
+      document.body.clientHeight,
+      window.frames[0].document.scrollingElement!.scrollTop,
+      window.frames[0].document.scrollingElement!.scrollHeight
+    );
   }
   handleRest = (docStr: string) => {
     let htmlParser = new HtmlParser(
@@ -119,7 +116,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       Buffer.from(result),
       chardet.detect(Buffer.from(result)) as string
     );
-    this.handleRest(`<p>${text}</p>`);
+    this.handleRest(txtToHtml(text));
   };
   handleMD = (result: ArrayBuffer) => {
     var blob = new Blob([result], { type: "text/plain" });

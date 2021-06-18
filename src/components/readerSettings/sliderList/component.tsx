@@ -25,7 +25,7 @@ class SliderList extends React.Component<SliderListProps, SliderListState> {
     };
   }
   handleRest = () => {
-    if (this.props.mode === "scale") {
+    if (this.props.mode === "scale" || this.props.mode === "margin") {
       if (isElectron) {
         this.props.handleMessage("Take effect at next startup");
         this.props.handleMessageBox(true);
