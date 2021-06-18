@@ -275,7 +275,7 @@ class BackupDialog extends React.Component<
             this.handleClose();
           }}
         >
-          <span className="icon-close "></span>
+          <span className="icon-close backup-close-icon"></span>
         </div>
 
         {this.state.currentStep === 1 ? (

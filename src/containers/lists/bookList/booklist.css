@@ -3,8 +3,9 @@
   top: 115px;
   left: 190px;
   width: calc(100% - 190px);
-  height: calc(100% - 110px);
+  height: calc(100% - 115px);
   overflow: visible;
+  margin-bottom: 5px;
 }
 .book-list-container {
   width: 100%;
