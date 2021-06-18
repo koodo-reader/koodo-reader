@@ -197,6 +197,7 @@ class BookList extends React.Component<BookListProps, BookListState> {
       return <Redirect to="/manager/empty" />;
     }
     if (isElectron) {
+      //兼容之前的版本
       localforage.getItem(this.props.books[0].key).then((result) => {
         if (result) {
           BackUtil.backup(
