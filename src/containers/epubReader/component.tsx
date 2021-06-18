@@ -60,11 +60,32 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
     window.addEventListener("resize", () => {
       this.handleRenderBook();
     });
+    this.tickTimer = setInterval(() => {
+      let time = this.state.time;
+      time += 1;
+      let page = document.querySelector("#page-area");
+      //解决快速翻页过程中图书消失的bug
+      let renderedBook = document.querySelector(".epub-view");
+      if (
+        (renderedBook &&
+          !renderedBook.innerHTML &&
+          this.state.readerMode !== "continuous") ||
+        page!.getElementsByClassName("epub-container").length > 1 ||
+        !page?.innerHTML
+      ) {
+        this.handleRenderBook();
+      }
+      this.setState({ time });
+      this.handleRecord();
+    }, 1000);
+  }
+  componentWillUnmount() {
+    clearInterval(this.tickTimer);
   }
   handleRenderBook = () => {
     let page = document.querySelector("#page-area");
     let epub = this.props.currentEpub;
-    if (page!.getElementsByTagName("*").length > 0) {
+    if (page!.innerHTML) {
       page!.innerHTML = "";
     }
 
@@ -82,23 +103,6 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
       });
       this.setState({ rendition: this.rendition });
       this.state.readerMode !== "continuous" && MouseEvent(this.rendition); // 绑定事件
-      this.tickTimer = setInterval(() => {
-        let time = this.state.time;
-        time += 1;
-        let page = document.querySelector("#page-area");
-        //解决快速翻页过程中图书消失的bug
-        let renderedBook = document.querySelector(".epub-view");
-        if (
-          (renderedBook &&
-            !renderedBook.innerHTML &&
-            this.state.readerMode !== "continuous") ||
-          page!.getElementsByClassName("epub-container").length > 1
-        ) {
-          this.handleRenderBook();
-        }
-        this.setState({ time });
-        this.handleRecord();
-      }, 1000);
     });
   };
   handleRecord() {
