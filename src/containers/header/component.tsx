@@ -111,7 +111,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       lastModified: new Date().getTime(),
       type: blobTemp.type,
     });
-    console.log(fileTemp);
     RestoreUtil.restore(
       fileTemp,
       () => {
