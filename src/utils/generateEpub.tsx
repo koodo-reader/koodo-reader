@@ -1,4 +1,4 @@
-const isTitle = (line: string) => {
+export const isTitle = (line: string) => {
   return (
     line.length < 30 &&
     line.indexOf("[") === -1 &&
