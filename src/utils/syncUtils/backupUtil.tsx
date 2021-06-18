@@ -22,7 +22,7 @@ class BackupUtil {
   ) => {
     let zip = new JSZip();
     let books = bookArr;
-    //0表示备份到本地，1表示备份到dropbox,2表示备份到onedrive,3表示备份到webdav，4表示转移数据，5表示同步数据到本地
+    //0表示备份到本地，1表示备份到dropbox,2表示备份到onedrive,3表示备份到webdav，4表示把indexeddb中的数据转移到uploads文件夹中，5表示同步数据到本地
     if (driveIndex !== 5) {
       let bookZip = zip.folder("book");
       let data: any = [];

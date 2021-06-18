@@ -30,7 +30,9 @@ class RestoreUtil {
         .loadAsync(file)
         .then((content: any) => {
           // you now have every files contained in the loaded zip
-          return content.files[`config/${item}.json`].async("text"); // a promise of "Hello World\n"
+          return content.files[
+            isSync ? `${item}.json` : `config/${item}.json`
+          ].async("text"); // a promise of "Hello World\n"
         })
         .then((text: any) => {
           if (text) {
