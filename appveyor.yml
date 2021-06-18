@@ -7,20 +7,14 @@ branches:
 image:
   - Visual Studio 2019
   - macos
-  - Ubuntu
+  - Ubuntu2004
 
 stack: node 10
-
-cache:
-  - node_modules
-  - '%APPDATA%\npm-cache'
-  - '%USERPROFILE%\.electron'
-  - '%USERPROFILE%\AppData\Local\Yarn\cache'
 
 init:
   - git config --global core.autocrlf input
   - sh: |
-      if [ "${APPVEYOR_BUILD_WORKER_IMAGE}" == "Ubuntu" ]
+      if [ "${APPVEYOR_BUILD_WORKER_IMAGE}" == "Ubuntu2004" ]
       then
         sudo apt-get install --no-install-recommends -y icnsutils graphicsmagick xz-utils
         sudo apt-get install snapd

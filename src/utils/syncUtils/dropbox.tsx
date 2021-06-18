@@ -50,7 +50,7 @@ class DropboxUitl {
     return false;
   }
   static DownloadFile(
-    handleFinish: (mobileData: string) => void,
+    handleFinish: () => void,
     showMessage: (message: string) => void,
     isSync: boolean = false
   ) {

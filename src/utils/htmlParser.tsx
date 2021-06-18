@@ -16,8 +16,8 @@ class HtmlParser {
       let random = Math.floor(Math.random() * 900) + 100;
       this.contentTitleList.push({
         label: this.contentList[i].innerText,
-        id: this.contentList[i].innerText.replaceAll(" ", "_") + random,
-        href: "#" + this.contentList[i].innerText.replaceAll(" ", "_") + random,
+        id: this.contentList[i].innerText.replace(/ /g, "_") + random,
+        href: "#" + this.contentList[i].innerText.replace(/ /g, "_") + random,
         subitems: [],
       });
     }

@@ -157,10 +157,13 @@ class ActionDialog extends React.Component<ActionDialogProps> {
           </div>
           <div>
             <p className="action-dialog-book-publisher">
-              <Trans>File Size</Trans>:
+              <Trans>File size</Trans>:
             </p>
             <p className="action-dialog-book-title">
-              {parseInt(this.props.currentBook.size / 1024 + "")} Kb
+              {this.props.currentBook.size
+                ? parseInt(this.props.currentBook.size / 1024 + "") + "Kb"
+                : // eslint-disable-next-line
+                  "0" + "Kb"}
             </p>
           </div>
           <div>

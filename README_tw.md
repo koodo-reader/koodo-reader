@@ -4,8 +4,8 @@
 
 </div>
 
-<div align="center" width="128px" height="128px">
-<img src="https://i.loli.net/2020/04/26/wrO8EPokvUQWaf5.png" />
+<div align="center" >
+<img src="./assets/icons/256x256.png" width="96px" height="96px"/>
 </div>
 
 <h1 align="center">
@@ -34,7 +34,7 @@
 
 ## 特色
 
-支持閱讀 **epub**, **pdf**, **mobi**, **azw3**, **txt**, **markdown**, **djvu**, **docx**, **rtf**, **cbz**, **cbr**, **cbt**, **fb2**, **html** 和 **xml** 格式的圖書
+支持閱讀 **epub**, **pdf**, **mobi**, **azw3**, **txt**, **md**, **djvu**, **docx**, **rtf**, **cbz**, **cbr**, **cbt**, **fb2**, **html** 和 **xml** 格式的圖書
 
 支持 **Windows**，**macOS**，**Linux** 和**網頁版**
 

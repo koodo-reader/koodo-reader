@@ -17,11 +17,11 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
   constructor(props: ReaderProps) {
     super(props);
     this.state = {
-      isOpenSettingPanel:
+      isOpenRightPanel:
         OtherUtil.getReaderConfig("isSettingLocked") === "yes" ? true : false,
-      isOpenOperationPanel: false,
-      isOpenProgressPanel: false,
-      isOpenNavPanel:
+      isOpenTopPanel: false,
+      isOpenBottomPanel: false,
+      isOpenLeftPanel:
         OtherUtil.getReaderConfig("isNavLocked") === "yes" ? true : false,
       isMessage: false,
       rendition: null,
@@ -53,22 +53,22 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
     switch (position) {
       case "right":
         this.setState({
-          isOpenSettingPanel: this.state.isOpenSettingPanel ? false : true,
+          isOpenRightPanel: this.state.isOpenRightPanel ? false : true,
         });
         break;
       case "left":
         this.setState({
-          isOpenNavPanel: this.state.isOpenNavPanel ? false : true,
+          isOpenLeftPanel: this.state.isOpenLeftPanel ? false : true,
         });
         break;
       case "top":
         this.setState({
-          isOpenOperationPanel: this.state.isOpenOperationPanel ? false : true,
+          isOpenTopPanel: this.state.isOpenTopPanel ? false : true,
         });
         break;
       case "bottom":
         this.setState({
-          isOpenProgressPanel: this.state.isOpenProgressPanel ? false : true,
+          isOpenBottomPanel: this.state.isOpenBottomPanel ? false : true,
         });
         break;
       default:
@@ -83,7 +83,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         if (OtherUtil.getReaderConfig("isSettingLocked") === "yes") {
           break;
         } else {
-          this.setState({ isOpenSettingPanel: false });
+          this.setState({ isOpenRightPanel: false });
           break;
         }
 
@@ -91,14 +91,14 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         if (OtherUtil.getReaderConfig("isNavLocked") === "yes") {
           break;
         } else {
-          this.setState({ isOpenNavPanel: false });
+          this.setState({ isOpenLeftPanel: false });
           break;
         }
       case "top":
-        this.setState({ isOpenOperationPanel: false });
+        this.setState({ isOpenTopPanel: false });
         break;
       case "bottom":
-        this.setState({ isOpenProgressPanel: false });
+        this.setState({ isOpenBottomPanel: false });
         break;
       default:
         break;
@@ -116,29 +116,13 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
       handleLeaveReader: this.handleLeaveReader,
       handleEnterReader: this.handleEnterReader,
       isShow:
-        this.state.isOpenNavPanel ||
-        this.state.isOpenOperationPanel ||
-        this.state.isOpenProgressPanel ||
-        this.state.isOpenSettingPanel,
+        this.state.isOpenLeftPanel ||
+        this.state.isOpenTopPanel ||
+        this.state.isOpenBottomPanel ||
+        this.state.isOpenRightPanel,
     };
     return (
       <div className="viewer">
-        <div
-          className="previous-chapter-single-container"
-          onClick={() => {
-            this.prevPage();
-          }}
-        >
-          <span className="icon-dropdown previous-chapter-single"></span>
-        </div>
-        <div
-          className="next-chapter-single-container"
-          onClick={() => {
-            this.nextPage();
-          }}
-        >
-          <span className="icon-dropdown next-chapter-single"></span>
-        </div>
         <div
           className="reader-setting-icon-container"
           onClick={() => {
@@ -154,7 +138,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         <div
           className="left-panel"
           onMouseEnter={() => {
-            if (this.state.isTouch || this.state.isOpenNavPanel) {
+            if (this.state.isTouch || this.state.isOpenLeftPanel) {
               return;
             }
             this.handleEnterReader("left");
@@ -166,7 +150,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         <div
           className="right-panel"
           onMouseEnter={() => {
-            if (this.state.isTouch || this.state.isOpenSettingPanel) {
+            if (this.state.isTouch || this.state.isOpenRightPanel) {
               return;
             }
             this.handleEnterReader("right");
@@ -178,7 +162,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         <div
           className="top-panel"
           onMouseEnter={() => {
-            if (this.state.isTouch || this.state.isOpenOperationPanel) {
+            if (this.state.isTouch || this.state.isOpenTopPanel) {
               return;
             }
             this.handleEnterReader("top");
@@ -187,18 +171,20 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
             this.handleEnterReader("top");
           }}
         ></div>
-        <div
-          className="bottom-panel"
-          onMouseEnter={() => {
-            if (this.state.isTouch || this.state.isOpenProgressPanel) {
-              return;
-            }
-            this.handleEnterReader("bottom");
-          }}
-          onClick={() => {
-            this.handleEnterReader("bottom");
-          }}
-        ></div>
+        {this.props.currentEpub.archived && (
+          <div
+            className="bottom-panel"
+            onMouseEnter={() => {
+              if (this.state.isTouch || this.state.isOpenBottomPanel) {
+                return;
+              }
+              this.handleEnterReader("bottom");
+            }}
+            onClick={() => {
+              this.handleEnterReader("bottom");
+            }}
+          ></div>
+        )}
         <Viewer {...renditionProps} />
         <div
           className="setting-panel-container"
@@ -206,7 +192,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
             this.handleLeaveReader("right");
           }}
           style={
-            this.state.isOpenSettingPanel
+            this.state.isOpenRightPanel
               ? {}
               : {
                   transform: "translateX(309px)",
@@ -221,7 +207,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
             this.handleLeaveReader("left");
           }}
           style={
-            this.state.isOpenNavPanel
+            this.state.isOpenLeftPanel
               ? {}
               : {
                   transform: "translateX(-309px)",
@@ -230,30 +216,30 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         >
           <NavigationPanel {...{ time: this.state.time }} />
         </div>
-        <div
-          className="progress-panel-container"
-          onMouseLeave={(event) => {
-            this.handleLeaveReader("bottom");
-          }}
-          style={
-            this.state.isOpenProgressPanel
-              ? {}
-              : {
-                  transform: "translateY(110px)",
-                }
-          }
-        >
-          {this.props.currentEpub.rendition && (
+        {this.props.currentEpub.archived && (
+          <div
+            className="progress-panel-container"
+            onMouseLeave={(event) => {
+              this.handleLeaveReader("bottom");
+            }}
+            style={
+              this.state.isOpenBottomPanel
+                ? {}
+                : {
+                    transform: "translateY(110px)",
+                  }
+            }
+          >
             <ProgressPanel {...{ time: this.state.time }} />
-          )}
-        </div>
+          </div>
+        )}
         <div
           className="operation-panel-container"
           onMouseLeave={(event) => {
             this.handleLeaveReader("top");
           }}
           style={
-            this.state.isOpenOperationPanel
+            this.state.isOpenTopPanel
               ? {}
               : {
                   transform: "translateY(-110px)",

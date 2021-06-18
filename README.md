@@ -4,8 +4,8 @@
 
 </div>
 
-<div align="center" width="128px" height="128px">
-<img src="https://i.loli.net/2020/04/26/wrO8EPokvUQWaf5.png" />
+<div align="center" >
+<img src="./assets/icons/256x256.png" width="96px" height="96px"/>
 </div>
 
 <h1 align="center">
@@ -34,7 +34,7 @@
 
 ## Feature
 
-Format support: **epub**, **pdf**, **mobi**, **azw3**, **txt**, **markdown**, **djvu**, **docx**, **rtf**, **cbz**, **cbr**, **cbt**, **fb2**, **html** and **xml**
+Format support: **epub**, **pdf**, **mobi**, **azw3**, **txt**, **md**, **djvu**, **docx**, **rtf**, **cbz**, **cbr**, **cbt**, **fb2**, **html** and **xml**
 
 Platform support: **Windows** , **macOS**, **Linux** and **Web**
 
@@ -52,7 +52,7 @@ Origanize your books and notes with shelf and tag
 
 Adjust font size, font family, line-spacing, paragraph spacing, background color, text color, margins, and brightness
 
-Night mode and Theme color
+Night mode and theme color
 
 Text highlight, underline, boldness, italics and shadow
 
