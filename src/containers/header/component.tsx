@@ -24,7 +24,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     };
   }
   componentDidMount() {
-    console.log(localStorage.getItem("lastSyncTime"), "localStorage1");
     if (isElectron) {
       const fs = window.require("fs");
       const path = window.require("path");
@@ -80,7 +79,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
           return;
         }
         const readerConfig = JSON.parse(data);
-        console.log(localStorage.getItem("lastSyncTime"), "localStorage2");
         if (
           localStorage.getItem("lastSyncTime") &&
           parseInt(readerConfig.lastSyncTime) >
@@ -89,20 +87,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
           this.setState({ isdataChange: true });
         }
       });
-      // try {
-      //   const readerConfig = JSON.parse(
-      //     fs.readFileSync(sourcePath, { encoding: "utf8", flag: "r" })
-      //   );
-      //   if (
-      //     localStorage.getItem("lastSyncTime") &&
-      //     parseInt(readerConfig.lastSyncTime) >
-      //       parseInt(localStorage.getItem("lastSyncTime")!)
-      //   ) {
-      //     this.setState({ isdataChange: true });
-      //   }
-      // } catch (error) {
-      //   throw error;
-      // }
     }
 
     window.addEventListener("resize", () => {
@@ -113,15 +97,12 @@ class Header extends React.Component<HeaderProps, HeaderState> {
   syncFromLocation = async () => {
     const fs = window.require("fs");
     const path = window.require("path");
-    const { zip } = window.require("zip-a-folder");
     let storageLocation = localStorage.getItem("storageLocation")
       ? localStorage.getItem("storageLocation")
       : window
           .require("electron")
           .ipcRenderer.sendSync("storage-location", "ping");
-    let sourcePath = path.join(storageLocation, "config");
     let outPath = path.join(storageLocation, "config.zip");
-    await zip(sourcePath, outPath);
 
     var data = fs.readFileSync(outPath);
 
@@ -130,22 +111,36 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       lastModified: new Date().getTime(),
       type: blobTemp.type,
     });
-
+    console.log(fileTemp);
     RestoreUtil.restore(
       fileTemp,
       () => {
-        BackupUtil.backup(
-          this.props.books,
-          this.props.notes,
-          this.props.bookmarks,
-          () => {
-            this.props.handleMessage("Sync Successfully");
-            this.props.handleMessageBox(true);
-            this.setState({ isdataChange: false });
-          },
-          5,
-          () => {}
+        this.setState({ isdataChange: false });
+        //Check for data update
+        let storageLocation = localStorage.getItem("storageLocation")
+          ? localStorage.getItem("storageLocation")
+          : window
+              .require("electron")
+              .ipcRenderer.sendSync("storage-location", "ping");
+        let sourcePath = path.join(
+          storageLocation,
+          "config",
+          "readerConfig.json"
         );
+
+        fs.readFile(sourcePath, "utf8", (err, data) => {
+          if (err) {
+            console.error(err);
+            return;
+          }
+          const readerConfig = JSON.parse(data);
+          if (
+            localStorage.getItem("lastSyncTime") &&
+            readerConfig.lastSyncTime
+          ) {
+            localStorage.setItem("lastSyncTime", readerConfig.lastSyncTime);
+          }
+        });
       },
       true
     );
@@ -185,11 +180,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       }
       const readerConfig = JSON.parse(data);
 
-      console.log(
-        localStorage.getItem("lastSyncTime"),
-        readerConfig.lastSyncTime,
-        "localStorage3"
-      );
       if (
         readerConfig &&
         localStorage.getItem("lastSyncTime") &&
@@ -212,29 +202,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         );
       }
     });
-    //如果同步文件夹的记录较新，就从同步文件夹同步数据到Koodo
-
-    // if (
-    //   readerConfig &&
-    //   localStorage.getItem("lastSyncTime") &&
-    //   parseInt(readerConfig.lastSyncTime) >
-    //     parseInt(localStorage.getItem("lastSyncTime")!)
-    // ) {
-    //   this.syncFromLocation();
-    // } else {
-    //   //否则就把Koodo中数据同步到同步文件夹
-    //   BackupUtil.backup(
-    //     this.props.books,
-    //     this.props.notes,
-    //     this.props.bookmarks,
-    //     () => {
-    //       this.props.handleMessage("Sync Successfully");
-    //       this.props.handleMessageBox(true);
-    //     },
-    //     5,
-    //     () => {}
-    //   );
-    // }
   };
 
   render() {
