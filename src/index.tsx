@@ -12,6 +12,16 @@ import StyleUtil from "./utils/readUtils/styleUtil";
 import { isElectron } from "react-device-detect";
 import { dropdownList } from "./constants/dropdownList";
 
+let coverLoading: any = document.querySelector(".loading-cover");
+coverLoading && coverLoading.parentNode.removeChild(coverLoading);
+
+ReactDOM.render(
+  <Provider store={store}>
+    <Router />
+  </Provider>,
+  document.getElementById("root")
+);
+
 if (isElectron) {
   const { ipcRenderer } = window.require("electron");
   const { ebtRenderer } = window.require("electron-baidu-tongji");
@@ -29,12 +39,3 @@ if (
   dropdownList[0].option.push("Built-in font");
 }
 StyleUtil.applyTheme();
-let coverLoading: any = document.querySelector(".loading-cover");
-coverLoading && coverLoading.parentNode.removeChild(coverLoading);
-
-ReactDOM.render(
-  <Provider store={store}>
-    <Router />
-  </Provider>,
-  document.getElementById("root")
-);
