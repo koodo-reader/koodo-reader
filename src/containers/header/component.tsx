@@ -97,12 +97,15 @@ class Header extends React.Component<HeaderProps, HeaderState> {
   syncFromLocation = async () => {
     const fs = window.require("fs");
     const path = window.require("path");
+    const { zip } = window.require("zip-a-folder");
     let storageLocation = localStorage.getItem("storageLocation")
       ? localStorage.getItem("storageLocation")
       : window
           .require("electron")
           .ipcRenderer.sendSync("storage-location", "ping");
+    let sourcePath = path.join(storageLocation, "config");
     let outPath = path.join(storageLocation, "config.zip");
+    await zip(sourcePath, outPath);
 
     var data = fs.readFileSync(outPath);
 
