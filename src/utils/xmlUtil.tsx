@@ -1,4 +1,5 @@
 import xml2js from "xml2js";
+import { isTitle } from "./generateEpub";
 export const xmlBookToObj = (xml) => {
   var objBook: any = {};
   var informBook;
@@ -49,4 +50,18 @@ export const xmlBookTagFilter = (bookString) => {
   bookBody = bookBody.replace(regExpTitleClose, "</h3>");
 
   return bookBody;
+};
+export const txtToHtml = (text: string) => {
+  const lines = text.split("\n");
+  let html: string = "";
+  for (let item of lines) {
+    if (item.trim()) {
+      if (isTitle(item.trim())) {
+        html += `<h1>${item}</h1>`;
+      } else {
+        html += `<p>${item}</p>`;
+      }
+    }
+  }
+  return html;
 };
