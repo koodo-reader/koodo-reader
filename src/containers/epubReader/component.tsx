@@ -19,11 +19,11 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
   constructor(props: ReaderProps) {
     super(props);
     this.state = {
-      isOpenSettingPanel:
+      isOpenRightPanel:
         OtherUtil.getReaderConfig("isSettingLocked") === "yes" ? true : false,
-      isOpenOperationPanel: false,
-      isOpenProgressPanel: false,
-      isOpenNavPanel:
+      isOpenTopPanel: false,
+      isOpenBottomPanel: false,
+      isOpenLeftPanel:
         OtherUtil.getReaderConfig("isNavLocked") === "yes" ? true : false,
       isMessage: false,
       rendition: null,
@@ -64,9 +64,10 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
   handleRenderBook = () => {
     let page = document.querySelector("#page-area");
     let epub = this.props.currentEpub;
-    if (page?.innerHTML) {
-      page.innerHTML = "";
+    if (page!.getElementsByTagName("*").length > 0) {
+      page!.innerHTML = "";
     }
+
     this.setState({ rendition: null }, () => {
       (window as any).rangy.init(); // 初始化
       this.rendition = epub.renderTo(page, {
@@ -84,38 +85,52 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
       this.tickTimer = setInterval(() => {
         let time = this.state.time;
         time += 1;
+        let page = document.querySelector("#page-area");
         //解决快速翻页过程中图书消失的bug
         let renderedBook = document.querySelector(".epub-view");
-        if (renderedBook && !renderedBook.innerHTML) {
+        if (
+          (renderedBook &&
+            !renderedBook.innerHTML &&
+            this.state.readerMode !== "continuous") ||
+          page!.getElementsByClassName("epub-container").length > 1
+        ) {
           this.handleRenderBook();
         }
         this.setState({ time });
+        this.handleRecord();
       }, 1000);
     });
   };
+  handleRecord() {
+    OtherUtil.setReaderConfig("isFullScreen", "no");
 
+    OtherUtil.setReaderConfig("windowWidth", document.body.clientWidth + "");
+    OtherUtil.setReaderConfig("windowHeight", document.body.clientHeight + "");
+    OtherUtil.setReaderConfig("windowX", window.screenX + "");
+    OtherUtil.setReaderConfig("windowY", window.screenY + "");
+  }
   //进入阅读器
   handleEnterReader = (position: string) => {
     //控制上下左右的菜单的显示
     switch (position) {
       case "right":
         this.setState({
-          isOpenSettingPanel: this.state.isOpenSettingPanel ? false : true,
+          isOpenRightPanel: this.state.isOpenRightPanel ? false : true,
         });
         break;
       case "left":
         this.setState({
-          isOpenNavPanel: this.state.isOpenNavPanel ? false : true,
+          isOpenLeftPanel: this.state.isOpenLeftPanel ? false : true,
         });
         break;
       case "top":
         this.setState({
-          isOpenOperationPanel: this.state.isOpenOperationPanel ? false : true,
+          isOpenTopPanel: this.state.isOpenTopPanel ? false : true,
         });
         break;
       case "bottom":
         this.setState({
-          isOpenProgressPanel: this.state.isOpenProgressPanel ? false : true,
+          isOpenBottomPanel: this.state.isOpenBottomPanel ? false : true,
         });
         break;
       default:
@@ -130,7 +145,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         if (OtherUtil.getReaderConfig("isSettingLocked") === "yes") {
           break;
         } else {
-          this.setState({ isOpenSettingPanel: false });
+          this.setState({ isOpenRightPanel: false });
           break;
         }
 
@@ -138,14 +153,14 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         if (OtherUtil.getReaderConfig("isNavLocked") === "yes") {
           break;
         } else {
-          this.setState({ isOpenNavPanel: false });
+          this.setState({ isOpenLeftPanel: false });
           break;
         }
       case "top":
-        this.setState({ isOpenOperationPanel: false });
+        this.setState({ isOpenTopPanel: false });
         break;
       case "bottom":
-        this.setState({ isOpenProgressPanel: false });
+        this.setState({ isOpenBottomPanel: false });
         break;
       default:
         break;
@@ -163,10 +178,10 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
       handleLeaveReader: this.handleLeaveReader,
       handleEnterReader: this.handleEnterReader,
       isShow:
-        this.state.isOpenNavPanel ||
-        this.state.isOpenOperationPanel ||
-        this.state.isOpenProgressPanel ||
-        this.state.isOpenSettingPanel,
+        this.state.isOpenLeftPanel ||
+        this.state.isOpenTopPanel ||
+        this.state.isOpenBottomPanel ||
+        this.state.isOpenRightPanel,
     };
     return (
       <div
@@ -210,7 +225,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         <div
           className="left-panel"
           onMouseEnter={() => {
-            if (this.state.isTouch || this.state.isOpenNavPanel) {
+            if (this.state.isTouch || this.state.isOpenLeftPanel) {
               return;
             }
             this.handleEnterReader("left");
@@ -222,7 +237,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         <div
           className="right-panel"
           onMouseEnter={() => {
-            if (this.state.isTouch || this.state.isOpenSettingPanel) {
+            if (this.state.isTouch || this.state.isOpenRightPanel) {
               return;
             }
             this.handleEnterReader("right");
@@ -234,7 +249,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         <div
           className="top-panel"
           onMouseEnter={() => {
-            if (this.state.isTouch || this.state.isOpenOperationPanel) {
+            if (this.state.isTouch || this.state.isOpenTopPanel) {
               return;
             }
             this.handleEnterReader("top");
@@ -246,7 +261,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         <div
           className="bottom-panel"
           onMouseEnter={() => {
-            if (this.state.isTouch || this.state.isOpenProgressPanel) {
+            if (this.state.isTouch || this.state.isOpenBottomPanel) {
               return;
             }
             this.handleEnterReader("bottom");
@@ -265,7 +280,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
             this.handleLeaveReader("right");
           }}
           style={
-            this.state.isOpenSettingPanel
+            this.state.isOpenRightPanel
               ? {}
               : {
                   transform: "translateX(309px)",
@@ -280,7 +295,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
             this.handleLeaveReader("left");
           }}
           style={
-            this.state.isOpenNavPanel
+            this.state.isOpenLeftPanel
               ? {}
               : {
                   transform: "translateX(-309px)",
@@ -295,7 +310,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
             this.handleLeaveReader("bottom");
           }}
           style={
-            this.state.isOpenProgressPanel
+            this.state.isOpenBottomPanel
               ? {}
               : {
                   transform: "translateY(110px)",
@@ -310,7 +325,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
             this.handleLeaveReader("top");
           }}
           style={
-            this.state.isOpenOperationPanel
+            this.state.isOpenTopPanel
               ? {}
               : {
                   transform: "translateY(-110px)",

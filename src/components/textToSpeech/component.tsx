@@ -103,10 +103,14 @@ class TextToSpeech extends React.Component<
     msg.voice = window.speechSynthesis.getVoices()[voiceIndex];
     msg.rate = speed;
     window.speechSynthesis.speak(msg);
+    msg.onerror = (err) => {
+      console.log(err);
+    };
     msg.onend = (event) => {
       if (!(this.state.isAudioOn && this.props.isReading)) {
         return;
       }
+
       this.props.currentEpub.rendition.next().then(() => {
         this.handleAudio();
       });
