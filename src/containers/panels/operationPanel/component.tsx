@@ -164,9 +164,9 @@ class OperationPanel extends React.Component<
   handleExit() {
     OtherUtil.setReaderConfig("isFullScreen", "no");
     window.speechSynthesis && window.speechSynthesis.cancel();
-    if (this.state.isFullScreen) {
-      this.handleExitFullScreen();
-    }
+
+    this.handleExitFullScreen();
+
     this.props.handleReadingState(false);
     this.props.handleSearch(false);
     this.props.handleOpenMenu(false);
