@@ -67,13 +67,15 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
       //解决快速翻页过程中图书消失的bug
       let renderedBook = document.querySelector(".epub-view");
       if (
-        (renderedBook &&
-          !renderedBook.innerHTML &&
-          this.state.readerMode !== "continuous") ||
-        page!.getElementsByClassName("epub-container").length > 1 ||
-        !page?.innerHTML
+        renderedBook &&
+        !renderedBook.innerHTML &&
+        this.state.readerMode !== "continuous"
       ) {
         this.handleRenderBook();
+      }
+      let ele = page!.getElementsByClassName("epub-container")[0];
+      if (page!.getElementsByClassName("epub-container").length > 1 && ele) {
+        ele.parentNode?.removeChild(ele);
       }
       this.setState({ time });
       this.handleRecord();
@@ -188,16 +190,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         this.state.isOpenRightPanel,
     };
     return (
-      <div
-        className="viewer"
-        // style={{
-        //   filter: `brightness(${
-        //     OtherUtil.getReaderConfig("brightness") || 1
-        //   }) invert(${
-        //     OtherUtil.getReaderConfig("isInvert") === "yes" ? 1 : 0
-        //   })`,
-        // }}
-      >
+      <div className="viewer">
         <div
           className="previous-chapter-single-container"
           onClick={() => {

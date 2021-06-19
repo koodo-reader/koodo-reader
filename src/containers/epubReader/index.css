@@ -143,8 +143,8 @@
   position: absolute;
   left: 0px;
   right: 0px;
-  top: 30px;
-  bottom: 30px;
+  top: 25px;
+  bottom: 20px;
   /* width: calc(100% - 100px);
   height: calc(100% - 100px); */
   z-index: 0;
