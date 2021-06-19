@@ -71,7 +71,18 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       this.props.handleLeaveReader("bottom");
     });
   }
-
+  handleIframeHeight = () => {
+    let iFrame: any = document.getElementsByTagName("iframe")[0];
+    var body = iFrame.contentWindow.document.body,
+      html = iFrame.contentWindow.document.documentElement;
+    iFrame.height = Math.max(
+      body.scrollHeight,
+      body.offsetHeight,
+      html.clientHeight,
+      html.scrollHeight,
+      html.offsetHeight
+    );
+  };
   handleRecord() {
     OtherUtil.setReaderConfig("windowWidth", document.body.clientWidth + "");
     OtherUtil.setReaderConfig("windowHeight", document.body.clientHeight + "");
@@ -81,8 +92,8 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       this.state.key,
       document.body.clientWidth,
       document.body.clientHeight,
-      window.frames[0].document.scrollingElement!.scrollTop,
-      window.frames[0].document.scrollingElement!.scrollHeight
+      document.getElementsByClassName("ebook-viewer")[0].scrollTop,
+      document.getElementsByClassName("ebook-viewer")[0].scrollHeight
     );
   }
   handleRest = (docStr: string) => {
@@ -101,10 +112,12 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     window.frames[0].document.body.innerHTML = (this.props.htmlBook
       .doc as any).documentElement.outerHTML;
     styleUtil.addHtmlCss();
-    window.frames[0].document.scrollingElement!.scrollTo(
-      0,
-      RecordLocation.getScrollHeight(this.state.key).scroll
-    );
+    setTimeout(() => {
+      document
+        .getElementsByClassName("ebook-viewer")[0]
+        .scrollTo(0, RecordLocation.getScrollHeight(this.state.key).scroll);
+    }, 1);
+    this.handleIframeHeight();
   };
   handleMobi = async (result: ArrayBuffer) => {
     let mobiFile = new MobiParser(result);
@@ -162,23 +175,25 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
   };
   render() {
     return (
-      <iframe
+      <div
         className="ebook-viewer"
-        title="html-viewer"
-        width={`${
-          (100 * parseFloat(OtherUtil.getReaderConfig("scale") || "1")) / 2
-        }%`}
-        height="100%"
         style={{
+          width: `${
+            (100 * parseFloat(OtherUtil.getReaderConfig("scale") || "1")) / 2
+          }%`,
+          height: "100%",
           marginLeft: `${
             (100 *
               (2 - parseFloat(OtherUtil.getReaderConfig("scale") || "1"))) /
             4
           }%`,
+          overflowY: "scroll",
         }}
       >
-        Loading
-      </iframe>
+        <iframe title="html-viewer" width="100%">
+          Loading
+        </iframe>
+      </div>
     );
   }
 }

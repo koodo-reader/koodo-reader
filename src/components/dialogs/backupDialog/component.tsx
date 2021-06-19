@@ -41,6 +41,7 @@ class BackupDialog extends React.Component<
   handleFinish = () => {
     this.setState({ currentStep: 2 });
     this.props.handleLoadingDialog(false);
+    this.showMessage("Sync Successfully");
   };
   handleRestoreToLocal = (event: any) => {
     event.preventDefault();
