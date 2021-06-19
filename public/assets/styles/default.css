@@ -167,7 +167,7 @@ textarea::-ms-input-placeholder,
 .message-box-container {
   box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.3);
 }
-::-webkit-scrollbar,
+
 .tag-list-item {
   background-color: white;
 }
