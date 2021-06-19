@@ -253,6 +253,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
             <div
               className="setting-icon-container"
               onClick={() => {
+                // this.syncFromLocation();
                 this.syncToLocation();
               }}
               style={{ left: "635px" }}
