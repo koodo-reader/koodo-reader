@@ -31,7 +31,9 @@ class RestoreUtil {
         .then((content: any) => {
           // you now have every files contained in the loaded zip
           return content.files[
-            isSync ? `${item}.json` : `config/${item}.json`
+            content.files[`${item}.json`]
+              ? `${item}.json`
+              : `config/${item}.json`
           ].async("text"); // a promise of "Hello World\n"
         })
         .then((text: any) => {
@@ -48,6 +50,7 @@ class RestoreUtil {
             localforage.getItem("books").then((value: any) => {
               let zip = new JSZip();
               value &&
+                value.length > 0 &&
                 value.forEach((item: any) => {
                   zip
                     .loadAsync(file)
@@ -57,12 +60,15 @@ class RestoreUtil {
                           "arraybuffer"
                         );
                       }
-
-                      if (item.description === "pdf") {
+                      //兼容之前的版本
+                      if (
+                        content.files[`book/${item.name}.pdf`] &&
+                        item.description === "pdf"
+                      ) {
                         return content.files[`book/${item.name}.pdf`].async(
                           "arraybuffer"
                         ); // a promise of "Hello World\n"
-                      } else {
+                      } else if (content.files[`book/${item.name}.epub`]) {
                         return content.files[`book/${item.name}.epub`].async(
                           "arraybuffer"
                         ); // a promise of "Hello World\n"
