@@ -1,4 +1,4 @@
-import BookModel from "../model/Book";
+import BookModel from "../../model/Book";
 
 declare var window: any;
 var pdfjsLib = window["pdfjs-dist/build/pdf"];

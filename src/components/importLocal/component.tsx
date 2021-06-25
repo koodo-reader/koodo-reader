@@ -3,22 +3,25 @@ import React from "react";
 import "./importLocal.css";
 import BookModel from "../../model/Book";
 import localforage from "localforage";
-import { fetchMD5 } from "../../utils/md5Util";
-import { addEpub } from "../../utils/epubUtil";
+import { fetchMD5 } from "../../utils/fileUtils/md5Util";
+import { addEpub } from "../../utils/fileUtils/epubUtil";
 import { Trans } from "react-i18next";
 import Dropzone from "react-dropzone";
 import { Tooltip } from "react-tippy";
 import { ImportLocalProps, ImportLocalState } from "./interface";
 import RecordRecent from "../../utils/readUtils/recordRecent";
-import MobiParser from "../../utils/mobiParser";
+import MobiParser from "../../utils/fileUtils/mobiParser";
 import iconv from "iconv-lite";
 import { isElectron } from "react-device-detect";
 import { withRouter } from "react-router-dom";
 import RecentBooks from "../../utils/readUtils/recordRecent";
-import BookUtil from "../../utils/bookUtil";
-import { generateEpub } from "../../utils/generateEpub";
-import { addPdf } from "../../utils/pdfUtil";
-import { fetchFileFromPath, fetchMD5FromPath } from "../../utils/fileUtil";
+import BookUtil from "../../utils/fileUtils/bookUtil";
+import { generateEpub } from "../../utils/fileUtils/generateEpub";
+import { addPdf } from "../../utils/fileUtils/pdfUtil";
+import {
+  fetchFileFromPath,
+  fetchMD5FromPath,
+} from "../../utils/fileUtils/fileUtil";
 
 declare var window: any;
 
