@@ -5,7 +5,7 @@ import localforage from "localforage";
 import Reader from "../../containers/epubReader";
 import { withRouter } from "react-router-dom";
 import _ from "underscore";
-import BookUtil from "../../utils/bookUtil";
+import BookUtil from "../../utils/fileUtils/bookUtil";
 import Lottie from "react-lottie";
 import "../../assets/styles/reset.css";
 import animationSiri from "../../assets/lotties/siri.json";

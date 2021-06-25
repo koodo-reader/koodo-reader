@@ -1,5 +1,5 @@
 import React from "react";
-import ViewArea from "../epubViewer";
+import EpubViewer from "../epubViewer";
 import Background from "../background";
 import SettingPanel from "../panels/settingPanel";
 import NavigationPanel from "../panels/navigationPanel";
@@ -269,7 +269,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         ></div>
 
         {this.state.rendition && this.props.currentEpub.rendition && (
-          <ViewArea {...renditionProps} />
+          <EpubViewer {...renditionProps} />
         )}
         <div
           className="setting-panel-container"
