@@ -10,7 +10,6 @@ import WebdavUtil from "../../../utils/syncUtils/webdav";
 import { BackupDialogProps, BackupDialogState } from "./interface";
 import TokenDialog from "../tokenDialog";
 import OtherUtil from "../../../utils/otherUtil";
-import { isElectron } from "react-device-detect";
 import Lottie from "react-lottie";
 import animationSuccess from "../../../assets/lotties/success.json";
 
@@ -124,7 +123,6 @@ class BackupDialog extends React.Component<
   };
   render() {
     const renderDrivePage = () => {
-      !isElectron && driveList.pop();
       return driveList.map((item, index) => {
         return (
           <li
@@ -171,10 +169,16 @@ class BackupDialog extends React.Component<
         );
       });
     };
+    console.log(
+      driveList,
+      this.state.currentDrive,
+      driveList[this.state.currentDrive!]
+    );
     const dialogProps = {
       driveName: driveList[this.state.currentDrive!].icon,
       url: driveList[this.state.currentDrive!].url,
     };
+
     return (
       <div className="backup-page-container">
         {this.props.isOpenTokenDialog ? <TokenDialog {...dialogProps} /> : null}

@@ -6,7 +6,7 @@ import DropboxUtil from "./dropbox";
 import WebdavUtil from "./webdav";
 import localforage from "localforage";
 import SyncUtil, { moveData } from "./common";
-import BookUtil from "../bookUtil";
+import BookUtil from "../fileUtils/bookUtil";
 import OtherUtil from "../otherUtil";
 
 let JSZip = (window as any).JSZip;

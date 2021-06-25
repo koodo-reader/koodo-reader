@@ -5,14 +5,18 @@ import { ViewerProps, ViewerState } from "./interface";
 import localforage from "localforage";
 import { withRouter } from "react-router-dom";
 import _ from "underscore";
-import BookUtil from "../../utils/bookUtil";
-import MobiParser from "../../utils/mobiParser";
+import BookUtil from "../../utils/fileUtils/bookUtil";
+import MobiParser from "../../utils/fileUtils/mobiParser";
 import marked from "marked";
 import iconv from "iconv-lite";
 import chardet from "chardet";
 import rtfToHTML from "@iarna/rtf-to-html";
-import { xmlBookTagFilter, xmlBookToObj, txtToHtml } from "../../utils/xmlUtil";
-import HtmlParser from "../../utils/htmlParser";
+import {
+  xmlBookTagFilter,
+  xmlBookToObj,
+  txtToHtml,
+} from "../../utils/fileUtils/xmlUtil";
+import HtmlParser from "../../utils/fileUtils/htmlParser";
 import OtherUtil from "../../utils/otherUtil";
 import RecordLocation from "../../utils/readUtils/recordLocation";
 import { mimetype } from "../../constants/mimetype";

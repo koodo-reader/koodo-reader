@@ -5,7 +5,7 @@ import { ViewerProps, ViewerState } from "./interface";
 import localforage from "localforage";
 import { withRouter } from "react-router-dom";
 import _ from "underscore";
-import BookUtil from "../../utils/bookUtil";
+import BookUtil from "../../utils/fileUtils/bookUtil";
 import "./viewer.css";
 import untar from "js-untar";
 import OtherUtil from "../../utils/otherUtil";

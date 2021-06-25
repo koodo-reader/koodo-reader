@@ -10,7 +10,7 @@ import { withRouter } from "react-router-dom";
 import RecordLocation from "../../utils/readUtils/recordLocation";
 import { isElectron } from "react-device-detect";
 import EmptyCover from "../emptyCover";
-import BookUtil from "../../utils/bookUtil";
+import BookUtil from "../../utils/fileUtils/bookUtil";
 declare var window: any;
 
 class BookCardItem extends React.Component<BookCardProps, BookCardState> {

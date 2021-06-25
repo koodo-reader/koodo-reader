@@ -10,7 +10,7 @@ import { Trans } from "react-i18next";
 import { DeleteDialogProps } from "./interface";
 import { withRouter } from "react-router-dom";
 import AddTrash from "../../../utils/readUtils/addTrash";
-import BookUtil from "../../../utils/bookUtil";
+import BookUtil from "../../../utils/fileUtils/bookUtil";
 
 class DeleteDialog extends React.Component<DeleteDialogProps> {
   handleCancel = () => {

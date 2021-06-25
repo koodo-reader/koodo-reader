@@ -10,7 +10,7 @@ import RecentBooks from "../../utils/readUtils/recordRecent";
 import OtherUtil from "../../utils/otherUtil";
 import AddTrash from "../../utils/readUtils/addTrash";
 import EmptyCover from "../emptyCover";
-import BookUtil from "../../utils/bookUtil";
+import BookUtil from "../../utils/fileUtils/bookUtil";
 
 class BookListItem extends React.Component<BookItemProps, BookItemState> {
   epub: any;

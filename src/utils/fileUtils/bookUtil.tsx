@@ -1,8 +1,8 @@
-import OtherUtil from "./otherUtil";
+import OtherUtil from "../otherUtil";
 import { isElectron } from "react-device-detect";
 import localforage from "localforage";
-import BookModel from "../model/Book";
-import RecordLocation from "./readUtils/recordLocation";
+import BookModel from "../../model/Book";
+import RecordLocation from "../readUtils/recordLocation";
 
 class BookUtil {
   static addBook(key: string, buffer: ArrayBuffer) {
