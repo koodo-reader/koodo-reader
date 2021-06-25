@@ -1,4 +1,4 @@
-import BookModel from "../model/Book";
+import BookModel from "../../model/Book";
 
 declare var window: any;
 export const addEpub = (file: any, md5: string) => {

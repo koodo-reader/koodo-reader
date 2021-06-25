@@ -12,7 +12,7 @@ import { isElectron } from "react-device-detect";
 import EmptyCover from "../emptyCover";
 import Parser from "html-react-parser";
 import { Trans } from "react-i18next";
-import BookUtil from "../../utils/bookUtil";
+import BookUtil from "../../utils/fileUtils/bookUtil";
 
 declare var window: any;
 

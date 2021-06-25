@@ -1,5 +1,5 @@
 import localforage from "localforage";
-import BookUtil from "../bookUtil";
+import BookUtil from "../fileUtils/bookUtil";
 
 let JSZip = (window as any).JSZip;
 

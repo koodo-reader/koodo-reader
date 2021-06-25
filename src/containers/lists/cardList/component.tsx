@@ -10,7 +10,7 @@ import { withRouter } from "react-router-dom";
 import SortUtil from "../../../utils/readUtils/sortUtil";
 import { Redirect } from "react-router-dom";
 import NoteTag from "../../../components/noteTag";
-import BookUtil from "../../../utils/bookUtil";
+import BookUtil from "../../../utils/fileUtils/bookUtil";
 
 class CardList extends React.Component<CardListProps, CardListStates> {
   constructor(props: CardListProps) {
