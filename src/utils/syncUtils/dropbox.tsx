@@ -15,7 +15,7 @@ class DropboxUtil {
       day = new Date().getDate();
     var dbx = new Dropbox.Dropbox({ accessToken: ACCESS_TOKEN });
     const file = new File([blob], "data.zip");
-    console.log(file);
+
     dbx
       .filesUpload({
         path: "/data.zip",
@@ -59,7 +59,6 @@ class DropboxUtil {
         path: isSync ? "/config.zip" : "/data.zip",
       })
       .then(function (data: any) {
-        console.log(data);
         let file = data.result.fileBlob;
         file.lastModifiedDate = new Date();
         file.name = "data.zip";
