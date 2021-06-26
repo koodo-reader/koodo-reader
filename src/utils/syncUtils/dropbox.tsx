@@ -3,9 +3,9 @@ import OtherUtil from "../otherUtil";
 
 var Dropbox = (window as any).Dropbox;
 
-class DropboxUitl {
+class DropboxUtil {
   static UploadFile(
-    file: any,
+    blob: any,
     handleFinish: () => void,
     showMessage: (message: string) => void
   ) {
@@ -14,25 +14,23 @@ class DropboxUitl {
       month = new Date().getMonth() + 1,
       day = new Date().getDate();
     var dbx = new Dropbox.Dropbox({ accessToken: ACCESS_TOKEN });
+    const file = new File([blob], "data.zip");
+    console.log(file);
     dbx
       .filesUpload({
-        path: "/Apps/KoodoReader/data.zip",
+        path: "/data.zip",
         contents: file,
-        mode: { ".tag": "overwrite" },
       })
       .then(function (response: any) {
         console.log(response, "上传成功");
         dbx
           .filesCopyV2({
-            from_path: "/Apps/KoodoReader/data.zip",
+            from_path: "/data.zip",
             to_path:
-              "/Apps/KoodoReader/" +
+              "/" +
               `${year}-${month <= 9 ? "0" + month : month}-${
                 day <= 9 ? "0" + day : day
               }.zip`,
-            allow_shared_folder: true,
-            autorename: true,
-            allow_ownership_transfer: true,
           })
           .then(function (response: any) {
             console.log(response, "上传成功");
@@ -58,12 +56,11 @@ class DropboxUitl {
     var dbx = new Dropbox.Dropbox({ accessToken: ACCESS_TOKEN });
     dbx
       .filesDownload({
-        path: isSync
-          ? "/Apps/KoodoReader/config.zip"
-          : "/Apps/KoodoReader/data.zip",
+        path: isSync ? "/config.zip" : "/data.zip",
       })
       .then(function (data: any) {
-        let file = data.fileBlob;
+        console.log(data);
+        let file = data.result.fileBlob;
         file.lastModifiedDate = new Date();
         file.name = "data.zip";
         RestoreUtil.restore(file, handleFinish, isSync);
@@ -78,4 +75,4 @@ class DropboxUitl {
   }
 }
 
-export default DropboxUitl;
+export default DropboxUtil;
