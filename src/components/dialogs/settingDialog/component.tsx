@@ -32,7 +32,8 @@ class SettingDialog extends React.Component<
       isExpandContent: OtherUtil.getReaderConfig("isExpandContent") === "yes",
       isDisableUpdate: OtherUtil.getReaderConfig("isDisableUpdate") === "yes",
       isDisplayDark: OtherUtil.getReaderConfig("isDisplayDark") === "yes",
-
+      isDisableAnalytics:
+        OtherUtil.getReaderConfig("isDisableAnalytics") === "yes",
       currentThemeIndex: _.findLastIndex(themeList, {
         name: OtherUtil.getReaderConfig("themeColor"),
       }),
@@ -219,9 +220,10 @@ class SettingDialog extends React.Component<
                       case 2:
                       case 3:
                       case 4:
+                      case 5:
                         this.handleSetting(item.propName);
                         break;
-                      case 5:
+                      case 6:
                         this.handleDisplayDark();
                         break;
                       default:

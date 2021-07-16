@@ -2,7 +2,7 @@
 import { connect } from "react-redux";
 import { stateType } from "../../store";
 import Background from "./component";
-import { handleFetchLocations } from "../../store/actions/progressPanel";
+import { handleFetchLocations } from "../../store/actions";
 
 const mapStateToProps = (state: stateType) => {
   return {

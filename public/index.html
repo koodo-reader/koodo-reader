@@ -132,10 +132,16 @@
     <script>
       var _hmt = _hmt || [];
       (function () {
-        var hm = document.createElement("script");
-        hm.src = "https://hm.baidu.com/hm.js?358570be1bfc40e01db43adefade5ad5";
-        var s = document.getElementsByTagName("script")[0];
-        s.parentNode.insertBefore(hm, s);
+        if (
+          JSON.parse(localStorage.getItem("readerConfig") || "{}")
+            .isDisableAnalytics !== "yes"
+        ) {
+          var hm = document.createElement("script");
+          hm.src =
+            "https://hm.baidu.com/hm.js?358570be1bfc40e01db43adefade5ad5";
+          var s = document.getElementsByTagName("script")[0];
+          s.parentNode.insertBefore(hm, s);
+        }
       })();
     </script>
   </body>

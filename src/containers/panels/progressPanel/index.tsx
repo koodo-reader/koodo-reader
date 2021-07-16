@@ -2,7 +2,7 @@ import { connect } from "react-redux";
 import { stateType } from "../../../store";
 import { withTranslation } from "react-i18next";
 import ProgressPanel from "./component";
-import { handleFetchPercentage } from "../../../store/actions/progressPanel";
+import { handleFetchPercentage } from "../../../store/actions";
 const mapStateToProps = (state: stateType) => {
   return {
     currentEpub: state.book.currentEpub,

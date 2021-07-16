@@ -2,7 +2,7 @@ import { withTranslation } from "react-i18next";
 import { connect } from "react-redux";
 import TextToSpeech from "./component";
 import { stateType } from "../../store";
-import { handleMessageBox, handleMessage } from "../../store/actions/manager";
+import { handleMessageBox, handleMessage } from "../../store/actions";
 
 const mapStateToProps = (state: stateType) => {
   return {

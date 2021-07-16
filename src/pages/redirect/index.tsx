@@ -5,7 +5,7 @@ import {
   handleMessageBox,
   handleMessage,
   handleLoadingDialog,
-} from "../../store/actions/manager";
+} from "../../store/actions";
 import Redirect from "./component";
 const mapStateToProps = (state: stateType) => {
   return {};
