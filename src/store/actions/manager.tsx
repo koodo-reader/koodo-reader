@@ -2,14 +2,9 @@ import localforage from "localforage";
 import OtherUtil from "../../utils/otherUtil";
 import SortUtil from "../../utils/readUtils/sortUtil";
 import BookModel from "../../model/Book";
-import BookmarkModel from "../../model/Bookmark";
-import NoteModel from "../../model/Note";
 import { Dispatch } from "redux";
 import AddTrash from "../../utils/readUtils/addTrash";
 
-export function handleNotes(notes: NoteModel[]) {
-  return { type: "HANDLE_NOTES", payload: notes };
-}
 export function handleBooks(books: BookModel[]) {
   return { type: "HANDLE_BOOKS", payload: books };
 }
@@ -72,9 +67,7 @@ export function handleNoteSortCode(noteSortCode: {
 }) {
   return { type: "HANDLE_NOTE_SORT_CODE", payload: noteSortCode };
 }
-export function handleBookmarks(bookmarks: BookmarkModel[]) {
-  return { type: "HANDLE_BOOKMARKS", payload: bookmarks };
-}
+
 export function handleFetchBooks(isTrash = false) {
   return (dispatch: Dispatch) => {
     localforage.getItem("books", async (err, value) => {

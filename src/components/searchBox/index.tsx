@@ -1,5 +1,5 @@
 import { connect } from "react-redux";
-import { handleSearchResults, handleSearch } from "../../store/actions/manager";
+import { handleSearchResults, handleSearch } from "../../store/actions";
 import { stateType } from "../../store";
 import { withTranslation } from "react-i18next";
 import SearchBox from "./component";

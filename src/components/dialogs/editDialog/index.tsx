@@ -5,11 +5,8 @@ import {
   handleFetchBooks,
   handleMessageBox,
   handleMessage,
-} from "../../../store/actions/manager";
-import {
-  handleEditDialog,
-  handleActionDialog,
-} from "../../../store/actions/book";
+} from "../../../store/actions";
+import { handleEditDialog, handleActionDialog } from "../../../store/actions";
 import { stateType } from "../../../store";
 import EditDialog from "./component";
 

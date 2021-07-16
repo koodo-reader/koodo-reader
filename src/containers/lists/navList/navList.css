@@ -69,6 +69,7 @@
   width: 140px;
   overflow: hidden;
   height: 18px;
+  margin-top: -3px;
   text-overflow: ellipsis;
   float: left;
 }

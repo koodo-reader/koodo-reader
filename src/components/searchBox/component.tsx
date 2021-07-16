@@ -103,7 +103,7 @@ class SearchBox extends React.Component<SearchBoxProps> {
               : this.props.tabMode === "note"
               ? this.props.t("Search my notes")
               : this.props.tabMode === "digest"
-              ? this.props.t("Search my digests")
+              ? this.props.t("Search my highlights")
               : this.props.t("Search my library")
           }
           style={

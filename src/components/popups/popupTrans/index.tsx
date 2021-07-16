@@ -1,8 +1,5 @@
 import { connect } from "react-redux";
-import {
-  handleOpenMenu,
-  handleMenuMode,
-} from "../../../store/actions/viewArea";
+import { handleOpenMenu, handleMenuMode } from "../../../store/actions";
 import { stateType } from "../../../store";
 import { withTranslation } from "react-i18next";
 import PopupNote from "./component";

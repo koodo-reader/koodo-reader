@@ -3,10 +3,7 @@ import { connect } from "react-redux";
 import { stateType } from "../../../store";
 import { withTranslation } from "react-i18next";
 import NavList from "./component";
-import {
-  handleMessageBox,
-  handleMessage,
-} from "../../../store/actions/manager";
+import { handleMessageBox, handleMessage } from "../../../store/actions";
 const mapStateToProps = (state: stateType) => {
   return {
     currentBook: state.book.currentBook,

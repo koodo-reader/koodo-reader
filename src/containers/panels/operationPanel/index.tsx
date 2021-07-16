@@ -3,19 +3,15 @@ import { connect } from "react-redux";
 import {
   handleBookmarks,
   handleFetchBookmarks,
-} from "../../../store/actions/reader";
-import {
   handleOpenMenu,
   handleShowBookmark,
-} from "../../../store/actions/viewArea";
-import { stateType } from "../../../store";
-import { withTranslation } from "react-i18next";
-import {
   handleMessageBox,
   handleMessage,
   handleSearch,
-} from "../../../store/actions/manager";
-import { handleReadingState } from "../../../store/actions/book";
+  handleReadingState,
+} from "../../../store/actions";
+import { stateType } from "../../../store";
+import { withTranslation } from "react-i18next";
 import OperationPanel from "./component";
 
 const mapStateToProps = (state: stateType) => {

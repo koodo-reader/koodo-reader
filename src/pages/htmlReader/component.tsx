@@ -40,7 +40,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
 
     //控制消息提示两秒之后消失
     if (nextProps.isMessage) {
-      this.messageTimer = setTimeout(() => {
+      this.messageTimer = global.setTimeout(() => {
         this.props.handleMessageBox(false);
         this.setState({ isMessage: false });
       }, 2000);

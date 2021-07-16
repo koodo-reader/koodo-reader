@@ -1,13 +1,14 @@
-//我的书摘页面
+//我的高亮页面
 import { connect } from "react-redux";
 import { stateType } from "../../store";
 import {
   handleFetchBookmarks,
   handleFetchNotes,
-} from "../../store/actions/reader";
-import { handleShowBookmark } from "../../store/actions/viewArea";
+  handleShowBookmark,
+  handleMessageBox,
+  handleMessage,
+} from "../../store/actions";
 import DeleteIcon from "./component";
-import { handleMessageBox, handleMessage } from "../../store/actions/manager";
 const mapStateToProps = (state: stateType) => {
   return {
     digests: state.reader.digests,

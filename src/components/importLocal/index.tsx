@@ -6,8 +6,8 @@ import {
   handleMessage,
   handleFetchBooks,
   handleLoadingDialog,
-} from "../../store/actions/manager";
-import { handleReadingBook } from "../../store/actions/book";
+} from "../../store/actions";
+import { handleReadingBook } from "../../store/actions";
 import { stateType } from "../../store";
 import { withTranslation } from "react-i18next";
 import ImportLocal from "./component";

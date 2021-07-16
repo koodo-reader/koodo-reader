@@ -5,12 +5,12 @@ import {
   handleReadingBook,
   handleDragItem,
   handleDeleteDialog,
-} from "../../store/actions/book";
-import { handleMessageBox, handleMessage } from "../../store/actions/manager";
-import {
+  handleMessageBox,
+  handleMessage,
   handleDragToLove,
   handleDragToDelete,
-} from "../../store/actions/sidebar";
+} from "../../store/actions";
+
 import Book from "./component";
 import { stateType } from "../../store";
 

@@ -18,6 +18,7 @@ export interface SettingInfoState {
   isDisplayDark: boolean;
   isExpandContent: boolean;
   isDisableUpdate: boolean;
+  isDisableAnalytics: boolean;
   isAutoFullscreen: boolean;
   currentThemeIndex: number;
 }

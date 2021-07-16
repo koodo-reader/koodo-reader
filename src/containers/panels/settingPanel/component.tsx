@@ -61,11 +61,11 @@ class SettingPanel extends React.Component<
           <ThemeList />
           <SliderList
             {...{
-              maxValue: 31,
+              maxValue: 40,
               minValue: 13,
               mode: "fontSize",
               minLabel: "13",
-              maxLabel: "31",
+              maxLabel: "40",
               step: 1,
               title: "Font Size",
             }}

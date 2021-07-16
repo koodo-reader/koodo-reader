@@ -6,17 +6,14 @@ import {
   handleAddDialog,
   handleReadingBook,
   handleDragItem,
-} from "../../store/actions/book";
-import { withTranslation } from "react-i18next";
-import {
   handleMessageBox,
   handleMessage,
   handleFetchBooks,
-} from "../../store/actions/manager";
-import {
   handleDragToLove,
   handleDragToDelete,
-} from "../../store/actions/sidebar";
+} from "../../store/actions";
+import { withTranslation } from "react-i18next";
+
 import { stateType } from "../../store";
 import BookItem from "./component";
 const mapStateToProps = (state: stateType) => {
