@@ -228,6 +228,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
               title={this.props.t("Sort")}
               position="top"
               trigger="mouseenter"
+              distance={20}
             >
               <span className="icon-sort-desc header-sort-icon"></span>
             </Tooltip>

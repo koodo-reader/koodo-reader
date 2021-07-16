@@ -1,9 +1,8 @@
 //左下角的图标外链
 import { connect } from "react-redux";
-import { handleColor } from "../../store/actions/reader";
+import { handleColor, handleSelection } from "../../store/actions";
 import { stateType } from "../../store";
 import About from "./component";
-import { handleSelection } from "../../store/actions/viewArea";
 const mapStateToProps = (state: stateType) => {
   return {
     color: state.reader.color,

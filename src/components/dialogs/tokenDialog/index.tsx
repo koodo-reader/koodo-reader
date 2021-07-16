@@ -3,8 +3,8 @@ import { connect } from "react-redux";
 import {
   handleMessageBox,
   handleMessage,
-} from "../../../store/actions/manager";
-import { handleTokenDialog } from "../../../store/actions/backupPage";
+  handleTokenDialog,
+} from "../../../store/actions";
 import { stateType } from "../../../store";
 import { withTranslation } from "react-i18next";
 import TokenDialog from "./component";

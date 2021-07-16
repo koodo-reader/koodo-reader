@@ -4,7 +4,7 @@ import {
   handleMessageBox,
   handleMessage,
   handleNewDialog,
-} from "../../../store/actions/manager";
+} from "../../../store/actions";
 import UpdateInfo from "./component";
 import { withTranslation } from "react-i18next";
 import { stateType } from "../../../store";

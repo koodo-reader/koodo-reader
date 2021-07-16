@@ -3,15 +3,11 @@ import {
   handleFetchBooks,
   handleMessageBox,
   handleMessage,
-} from "../../../store/actions/manager";
-import {
   handleDeleteDialog,
   handleActionDialog,
-} from "../../../store/actions/book";
-import {
   handleFetchBookmarks,
   handleFetchNotes,
-} from "../../../store/actions/reader";
+} from "../../../store/actions";
 import { stateType } from "../../../store";
 import DeleteDialog from "./component";
 

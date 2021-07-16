@@ -3,9 +3,10 @@ import { connect } from "react-redux";
 import {
   handleFetchList,
   handleFetchBooks,
-} from "../../../store/actions/manager";
-import { handleMode, handleShelfIndex } from "../../../store/actions/sidebar";
-import { handleDeleteDialog } from "../../../store/actions/book";
+  handleMode,
+  handleShelfIndex,
+  handleDeleteDialog,
+} from "../../../store/actions";
 import { stateType } from "../../../store";
 import BookList from "./component";
 

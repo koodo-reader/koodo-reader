@@ -16,7 +16,7 @@ export const sideMenu = [
     mode: "note",
   },
   {
-    name: "My Digests",
+    name: "My Highlights",
     icon: "digest",
     mode: "digest",
   },

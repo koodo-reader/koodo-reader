@@ -9,8 +9,8 @@ import {
   handleAbout,
   handleTipDialog,
   handleTip,
-} from "../../store/actions/manager";
-import { handleBackupDialog } from "../../store/actions/backupPage";
+  handleBackupDialog,
+} from "../../store/actions";
 import { stateType } from "../../store";
 import Header from "./component";
 

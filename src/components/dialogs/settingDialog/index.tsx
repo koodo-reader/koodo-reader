@@ -8,7 +8,7 @@ import {
   handleMessage,
   handleTipDialog,
   handleTip,
-} from "../../../store/actions/manager";
+} from "../../../store/actions";
 import { stateType } from "../../../store";
 
 const mapStateToProps = (state: stateType) => {

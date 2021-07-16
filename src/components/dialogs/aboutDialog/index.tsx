@@ -1,5 +1,5 @@
 import { connect } from "react-redux";
-import { handleSetting, handleAbout } from "../../../store/actions/manager";
+import { handleSetting, handleAbout } from "../../../store/actions";
 import { stateType } from "../../../store";
 import AboutDialog from "./component";
 

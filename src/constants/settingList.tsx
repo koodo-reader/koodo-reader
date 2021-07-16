@@ -26,6 +26,11 @@ export const settingList = [
   },
   {
     isElectron: false,
+    title: "Disable analytics service",
+    propName: "isDisableAnalytics",
+  },
+  {
+    isElectron: false,
     title: "Turn on night mode",
     propName: "isDisplayDark",
   },
@@ -76,6 +81,10 @@ export const readerSettingList = [
   {
     title: "Dont't use mimical background",
     propName: "isUseBackground",
+  },
+  {
+    title: "Hide navigation button",
+    propName: "isHidePageButton",
   },
 ];
 export const htmlSettingList = [

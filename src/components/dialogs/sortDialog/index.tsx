@@ -5,7 +5,7 @@ import {
   handleSortDisplay,
   handleBookSort,
   handleNoteSort,
-} from "../../../store/actions/manager";
+} from "../../../store/actions";
 import { stateType } from "../../../store";
 import SortDialog from "./component";
 

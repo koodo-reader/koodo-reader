@@ -40,13 +40,13 @@ Platform support: **Windows** , **macOS**, **Linux** and **Web**
 
 Save your data to **Dropbox** or **Webdav**
 
-Customize the source folder and synchronize multiple devices using OneDrive, iCloud, Dropbox, etc.
+Customize the source folder and synchronize among multiple devices using OneDrive, iCloud, Dropbox, etc.
 
 Single-column, two-column, or continuous scrolling layouts
 
 Text-to-speech, translation, progress slider, touch screen support, batch import
 
-Add bookmarks, notes, digests to your books
+Add bookmarks, notes, highlights to your books
 
 Origanize your books and notes with shelf and tag
 

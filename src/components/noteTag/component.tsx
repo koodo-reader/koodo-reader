@@ -77,7 +77,16 @@ class NoteTag extends React.Component<NoteTagProps, NoteTagState> {
     });
   };
   handleShowTags = (bool: boolean) => {
-    this.setState({ isShowTags: bool });
+    this.setState({ isShowTags: bool }, () => {
+      if (document.querySelector(".card-list-container")) {
+        (document.querySelector(".card-list-container") as any)!.setAttribute(
+          "style",
+          `height:calc(100% - ${
+            (document.querySelector(".card-list-container") as any)!.offsetTop
+          }px)`
+        );
+      }
+    });
   };
   render() {
     const renderTag = () => {
@@ -131,6 +140,9 @@ class NoteTag extends React.Component<NoteTagProps, NoteTagState> {
               onClick={() => {
                 this.handleShowTags(!this.state.isShowTags);
               }}
+              style={
+                !this.state.isShowTags ? {} : { transform: "rotate(-90deg)" }
+              }
             ></span>
           </div>
         )}

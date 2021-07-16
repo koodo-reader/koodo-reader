@@ -2,12 +2,9 @@ import {
   handleFetchNotes,
   handleFetchBookmarks,
   handleFetchChapters,
-} from "../../store/actions/reader";
-
-import {
   handleMessageBox,
   handleFetchBooks,
-} from "../../store/actions/manager";
+} from "../../store/actions";
 import { connect } from "react-redux";
 import { stateType } from "../../store";
 import Reader from "./component";

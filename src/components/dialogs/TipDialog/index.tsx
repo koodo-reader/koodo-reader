@@ -1,6 +1,6 @@
 //左下角的图标外链
 import { connect } from "react-redux";
-import { handleTipDialog } from "../../../store/actions/manager";
+import { handleTipDialog } from "../../../store/actions";
 import TipDialog from "./component";
 import { stateType } from "../../../store";
 

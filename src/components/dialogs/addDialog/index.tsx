@@ -3,15 +3,14 @@ import { connect } from "react-redux";
 import {
   handleMessageBox,
   handleMessage,
-} from "../../../store/actions/manager";
-import {
   handleAddDialog,
   handleActionDialog,
-} from "../../../store/actions/book";
+  handleMode,
+  handleShelfIndex,
+} from "../../../store/actions";
 import { stateType } from "../../../store";
 import { withTranslation } from "react-i18next";
 import AddDialog from "./component";
-import { handleMode, handleShelfIndex } from "../../../store/actions/sidebar";
 
 const mapStateToProps = (state: stateType) => {
   return {

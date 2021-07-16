@@ -10,8 +10,6 @@
   width: 100%;
   height: calc(100% - 38px);
   overflow-y: scroll;
-  padding-right: 17px; /* Increase/decrease this value for cross-browser compatibility */
-  box-sizing: content-box; /* So the width will be 100% + 17px */
   display: flex;
   flex-wrap: wrap;
   overflow-y: scroll;

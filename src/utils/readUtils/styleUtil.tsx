@@ -66,7 +66,7 @@ class styleUtil {
     let colors = ["#FBF1D1", "#EFEEB0", "#CAEFC9", "#76BEE9"];
     let lines = ["#FF0000", "#000080", "#0000FF", "#2EFF2E"];
 
-    return `::selection{background:#f3a6a68c}::-moz-selection{background:#f3a6a68c}[class*=color-]:hover{cursor:pointer;background-image:linear-gradient(0,rgba(0,0,0,.075),rgba(0,0,0,.075))}.color-0{background-color:${colors[0]}}.color-1{background-color:${colors[1]}}.color-2{background-color:${colors[2]}}.color-3{background-color:${colors[3]}}.line-0{border-bottom:2px solid ${lines[0]}}.line-1{border-bottom:2px solid ${lines[1]}}.line-2{border-bottom:2px solid ${lines[2]}}.line-3{border-bottom:2px solid ${lines[3]}}}img{max-width:100%}`;
+    return `::selection{background:#f3a6a68c}::-moz-selection{background:#f3a6a68c}[class*=color-]:hover{cursor:pointer;background-image:linear-gradient(0,rgba(0,0,0,.075),rgba(0,0,0,.075))}.color-0{background-color:${colors[0]}}.color-1{background-color:${colors[1]}}.color-2{background-color:${colors[2]}}.color-3{background-color:${colors[3]}}.line-0{border-bottom:2px solid ${lines[0]}}.line-1{border-bottom:2px solid ${lines[1]}}.line-2{border-bottom:2px solid ${lines[2]}}.line-3{border-bottom:2px solid ${lines[3]}}}img{max-width:100% !important}`;
   }
   static getCustomCss(isJSON: boolean = true) {
     if (isJSON) {
@@ -109,7 +109,7 @@ class styleUtil {
           : ""
       };margin-bottom: ${
         OtherUtil.getReaderConfig("paraSpacing") || 0
-      }px !important;padding:0`;
+      }px !important;padding:0;word-wrap: break-word;`;
     } else {
       return {
         "a, article, cite, code, div, li, p, pre, span, table": {

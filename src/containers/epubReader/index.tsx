@@ -2,13 +2,12 @@ import {
   handleFetchNotes,
   handleFetchBookmarks,
   handleFetchChapters,
-} from "../../store/actions/reader";
-import { handleFetchPercentage } from "../../store/actions/progressPanel";
-import {
+  handleFetchPercentage,
   handleMessageBox,
   handleFetchBooks,
-} from "../../store/actions/manager";
-import { handleRenderFunc } from "../../store/actions/book";
+  handleRenderFunc,
+} from "../../store/actions";
+
 import "./index.css";
 import { connect } from "react-redux";
 import { stateType } from "../../store";

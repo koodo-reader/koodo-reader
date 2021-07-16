@@ -1,7 +1,7 @@
 {
   "name": "koodo-reader",
   "main": "main.js",
-  "version": "1.2.7",
+  "version": "1.2.8",
   "description": "An open-source eBook reader",
   "author": {
     "name": "App by Troye",
@@ -35,7 +35,6 @@
     "react-i18next": "^11.8.15",
     "react-lottie": "^1.2.3",
     "react-router-dom": "^5.2.0",
-    "react-script": "^2.0.5",
     "react-tippy": "^1.4.0",
     "request": "^2.88.2",
     "underscore": "^1.11.0",
@@ -99,12 +98,6 @@
         "role": "Viewer",
         "icon": "assets/icons/azw3",
         "mimeType": "application/vnd.amazon.ebook"
-      },
-      {
-        "ext": "txt",
-        "role": "Viewer",
-        "icon": "assets/icons/txt",
-        "mimeType": "text/plain"
       }
     ],
     "extends": null,
@@ -149,7 +142,7 @@
       "publisherName": "App by Troye"
     },
     "linux": {
-      "icon": "assets/icons",
+      "icon": "assets/icons/256x256.png",
       "category": "Office",
       "target": [
         {
@@ -210,11 +203,7 @@
     ]
   },
   "devDependencies": {
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.3.2",
-    "@testing-library/user-event": "^7.1.2",
     "@types/file-saver": "^2.0.1",
-    "@types/jest": "^25.2.1",
     "@types/marked": "^2.0.2",
     "@types/md5": "^2.2.0",
     "@types/node": "^13.13.2",

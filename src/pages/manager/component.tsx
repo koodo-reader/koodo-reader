@@ -65,20 +65,22 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
       });
     }
     if (nextProps.isMessage) {
-      this.timer = setTimeout(() => {
+      this.timer = global.setTimeout(() => {
         this.props.handleMessageBox(false);
       }, 2000);
     }
   }
-  componentDidMount() {
-    if (is_touch_device() && !OtherUtil.getReaderConfig("isTouch")) {
-      OtherUtil.setReaderConfig("isTouch", "yes");
-    }
+  UNSAFE_componentWillMount() {
     this.props.handleFetchBooks();
     this.props.handleFetchNotes();
     this.props.handleFetchBookmarks();
     this.props.handleFetchBookSortCode();
     this.props.handleFetchList();
+  }
+  componentDidMount() {
+    if (is_touch_device() && !OtherUtil.getReaderConfig("isTouch")) {
+      OtherUtil.setReaderConfig("isTouch", "yes");
+    }
   }
 
   handleDrag = (isDrag: boolean) => {

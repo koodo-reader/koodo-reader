@@ -21,7 +21,6 @@ import OtherUtil from "../../utils/otherUtil";
 import RecordLocation from "../../utils/readUtils/recordLocation";
 import { mimetype } from "../../constants/mimetype";
 import styleUtil from "../../utils/readUtils/styleUtil";
-import { setInterval } from "timers";
 
 declare var window: any;
 
@@ -65,9 +64,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       });
     });
     this.props.handleRenderFunc(this.handleRenderHtml);
-    setInterval(() => {
-      this.handleRecord();
-    }, 1000);
+
     window.frames[0].document.addEventListener("click", (event) => {
       this.props.handleLeaveReader("left");
       this.props.handleLeaveReader("right");
@@ -79,13 +76,14 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     let iFrame: any = document.getElementsByTagName("iframe")[0];
     var body = iFrame.contentWindow.document.body,
       html = iFrame.contentWindow.document.documentElement;
-    iFrame.height = Math.max(
-      body.scrollHeight,
-      body.offsetHeight,
-      html.clientHeight,
-      html.scrollHeight,
-      html.offsetHeight
-    );
+    iFrame.height =
+      Math.max(
+        body.scrollHeight,
+        body.offsetHeight,
+        html.clientHeight,
+        html.scrollHeight,
+        html.offsetHeight
+      ) + 1000;
   };
   handleRecord() {
     OtherUtil.setReaderConfig("windowWidth", document.body.clientWidth + "");
@@ -116,12 +114,45 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     window.frames[0].document.body.innerHTML = (this.props.htmlBook
       .doc as any).documentElement.outerHTML;
     styleUtil.addHtmlCss();
+    this.handleIframeHeight();
+
     setTimeout(() => {
       document
         .getElementsByClassName("ebook-viewer")[0]
         .scrollTo(0, RecordLocation.getScrollHeight(this.state.key).scroll);
+      let iframe = document.getElementsByTagName("iframe")[0];
+      if (!iframe) return;
+      let doc = iframe.contentDocument;
+      if (!doc) {
+        return;
+      }
+      let imgs = doc.getElementsByTagName("img");
+      for (let item of imgs) {
+        item.setAttribute("style", "max-width: 100%");
+      }
+      this.bindEvent(doc);
     }, 1);
-    this.handleIframeHeight();
+  };
+  bindEvent = (doc: any) => {
+    let isFirefox = navigator.userAgent.indexOf("Firefox") > -1;
+    // 鼠标滚轮翻页
+    if (isFirefox) {
+      doc.addEventListener(
+        "DOMMouseScroll",
+        () => {
+          this.handleRecord();
+        },
+        false
+      );
+    } else {
+      doc.addEventListener(
+        "mousewheel",
+        () => {
+          this.handleRecord();
+        },
+        false
+      );
+    }
   };
   handleMobi = async (result: ArrayBuffer) => {
     let mobiFile = new MobiParser(result);
