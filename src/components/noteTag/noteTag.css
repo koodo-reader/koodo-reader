@@ -22,15 +22,20 @@
   opacity: 1;
   margin-left: 20px;
   font-weight: 500;
+  width: 90px;
 }
 .tag-container {
   display: inline-block;
   margin: 0px 10px;
 }
 .tag-dropdown-icon {
+  float: right;
   margin-left: 10px;
+  position: relative;
+  top: 2px;
   line-height: 30px;
   cursor: pointer;
+  transition: transform 0.1s ease;
 }
 #newTag {
   width: 100%;

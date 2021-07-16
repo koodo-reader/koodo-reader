@@ -2,14 +2,13 @@
 import {
   handleBackupDialog,
   handleTokenDialog,
-} from "../../../store/actions/backupPage";
-import { connect } from "react-redux";
-import {
   handleMessageBox,
   handleMessage,
   handleLoadingDialog,
   handleTipDialog,
-} from "../../../store/actions/manager";
+} from "../../../store/actions";
+import { connect } from "react-redux";
+
 import { stateType } from "../../../store";
 import BackupDialog from "./component";
 

@@ -3,7 +3,7 @@ import {
   handleFetchBooks,
   handleMessageBox,
   handleMessage,
-} from "../../../store/actions/manager";
+} from "../../../store/actions";
 import { stateType } from "../../../store";
 import { withTranslation } from "react-i18next";
 import DeletePopup from "./component";

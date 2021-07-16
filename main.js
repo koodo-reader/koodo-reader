@@ -31,6 +31,7 @@ app.on("ready", () => {
       nodeIntegrationInSubFrames: true,
       allowRunningInsecureContent: true,
     },
+    // icon: path.join(__dirname, "/assets/icons/256x256.png"),
   });
   const isDev = require("electron-is-dev");
   if (!isDev) {

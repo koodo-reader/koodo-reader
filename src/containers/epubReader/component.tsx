@@ -48,7 +48,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
 
     //控制消息提示两秒之后消失
     if (nextProps.isMessage) {
-      this.messageTimer = setTimeout(() => {
+      this.messageTimer = global.setTimeout(() => {
         this.props.handleMessageBox(false);
         this.setState({ isMessage: false });
       }, 2000);
@@ -60,7 +60,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
     window.addEventListener("resize", () => {
       this.handleRenderBook();
     });
-    this.tickTimer = setInterval(() => {
+    this.tickTimer = global.setInterval(() => {
       let time = this.state.time;
       time += 1;
       let page = document.querySelector("#page-area");
@@ -191,22 +191,26 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
     };
     return (
       <div className="viewer">
-        <div
-          className="previous-chapter-single-container"
-          onClick={() => {
-            this.prevPage();
-          }}
-        >
-          <span className="icon-dropdown previous-chapter-single"></span>
-        </div>
-        <div
-          className="next-chapter-single-container"
-          onClick={() => {
-            this.nextPage();
-          }}
-        >
-          <span className="icon-dropdown next-chapter-single"></span>
-        </div>
+        {OtherUtil.getReaderConfig("isHidePageButton") !== "yes" && (
+          <>
+            <div
+              className="previous-chapter-single-container"
+              onClick={() => {
+                this.prevPage();
+              }}
+            >
+              <span className="icon-dropdown previous-chapter-single"></span>
+            </div>
+            <div
+              className="next-chapter-single-container"
+              onClick={() => {
+                this.nextPage();
+              }}
+            >
+              <span className="icon-dropdown next-chapter-single"></span>
+            </div>
+          </>
+        )}
         <div
           className="reader-setting-icon-container"
           onClick={() => {

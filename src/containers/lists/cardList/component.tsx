@@ -1,4 +1,4 @@
-//我的书摘，笔记的卡片
+//我的高亮，笔记的卡片
 import React from "react";
 import "./cardList.css";
 import NoteModel from "../../../model/Note";

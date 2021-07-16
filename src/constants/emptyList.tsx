@@ -2,7 +2,7 @@ export const emptyList = [
   {
     mode: "home",
     main: "Empty Library",
-    sub: "Click the top-right button to add books",
+    sub: "Click the import button to add books",
   },
   {
     mode: "favorite",

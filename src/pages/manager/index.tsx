@@ -8,17 +8,14 @@ import {
   handleLoadingDialog,
   handleNewDialog,
   handleSetting,
-} from "../../store/actions/manager";
-import { handleBackupDialog } from "../../store/actions/backupPage";
-import {
+  handleBackupDialog,
   handleFetchNotes,
   handleFetchBookmarks,
-} from "../../store/actions/reader";
-import {
   handleEditDialog,
   handleDeleteDialog,
   handleAddDialog,
-} from "../../store/actions/book";
+} from "../../store/actions";
+
 import "./manager.css";
 import { stateType } from "../../store";
 import Manager from "./component";
