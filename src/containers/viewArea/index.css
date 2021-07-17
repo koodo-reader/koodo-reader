@@ -1,0 +1,35 @@
+.popup-menu-container {
+  position: absolute;
+  left: 100px;
+  top: 100px;
+  z-index: 20;
+  animation: popup 0.075s ease-in-out 0s 1;
+}
+.bookmark {
+  height: 40px;
+  width: 20px;
+  padding: 0px;
+  -webkit-transform: rotate(0deg) skew(0deg);
+  transform: rotate(0deg) skew(0deg);
+  border-left: 10px solid red;
+  border-right: 10px solid red;
+  border-bottom: 10px solid transparent;
+  position: fixed;
+  top: 5px;
+  right: 70px;
+  z-index: 15;
+}
+.bookmark,
+.bookmark:before,
+.bookmark:after {
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+}
+.spinner {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin-left: -150px;
+  margin-top: -50px;
+}

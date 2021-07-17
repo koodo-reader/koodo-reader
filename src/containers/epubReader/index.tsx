@@ -2,13 +2,13 @@ import {
   handleFetchNotes,
   handleFetchBookmarks,
   handleFetchChapters,
-  handleFetchPercentage,
+} from "../../store/actions/reader";
+import { handleFetchPercentage } from "../../store/actions/progressPanel";
+import {
   handleMessageBox,
   handleFetchBooks,
-  handleRenderFunc,
-} from "../../store/actions";
-
-import "./index.css";
+} from "../../store/actions/manager";
+import "./epubViewer.css";
 import { connect } from "react-redux";
 import { stateType } from "../../store";
 import Reader from "./component";
@@ -27,6 +27,5 @@ const actionCreator = {
   handleMessageBox,
   handleFetchPercentage,
   handleFetchBooks,
-  handleRenderFunc,
 };
 export default connect(mapStateToProps, actionCreator)(Reader);

@@ -1,6 +1,7 @@
-const { app, BrowserWindow, nativeImage } = require("electron");
+const { app, BrowserWindow, Menu, remote, ipcMain } = require("electron");
 const { ebtMain } = require("electron-baidu-tongji");
 const path = require("path");
+const isDev = require("electron-is-dev");
 let mainWin;
 let readerWindow;
 const singleInstance = app.requestSingleInstanceLock();
@@ -38,9 +39,8 @@ app.on("ready", () => {
   };
 
   mainWin = new BrowserWindow(option);
-  const isDev = require("electron-is-dev");
+
   if (!isDev) {
-    const { Menu } = require("electron");
     Menu.setApplicationMenu(null);
   }
 
@@ -49,7 +49,7 @@ app.on("ready", () => {
     : `file://${path.join(__dirname, "./build/index.html")}`;
 
   mainWin.loadURL(urlLocation);
-  const { remote, ipcMain } = require("electron");
+
   ebtMain(ipcMain, isDev);
   mainWin.on("close", () => {
     mainWin = null;
