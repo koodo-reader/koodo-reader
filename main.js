@@ -1,6 +1,6 @@
 const { app, BrowserWindow } = require("electron");
 const { ebtMain } = require("electron-baidu-tongji");
-
+const path = require("path");
 let mainWin;
 let readerWindow;
 const singleInstance = app.requestSingleInstanceLock();
@@ -42,7 +42,6 @@ app.on("ready", () => {
     Menu.setApplicationMenu(null);
   }
 
-  const path = require("path");
   const urlLocation = isDev
     ? "http://localhost:3000"
     : `file://${path.join(__dirname, "./build/index.html")}`;
@@ -112,6 +111,7 @@ app.on("ready", () => {
       readerWindow.loadURL(url.indexOf("pdf") > -1 ? pdfLocation : url);
     }
     readerWindow.on("close", () => {
+      readerWindow.destroy();
       readerWindow = null;
     });
     event.returnValue = "success";
