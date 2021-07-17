@@ -6,6 +6,7 @@ export interface UpdateInfoProps {
   handleMessage: (message: string) => void;
   handleMessageBox: (isShow: boolean) => void;
   handleNewDialog: (isShowNew: boolean) => void;
+  handleNewWarning: (isNewWarning: boolean) => void;
 }
 export interface UpdateInfoState {
   updateLog: any;

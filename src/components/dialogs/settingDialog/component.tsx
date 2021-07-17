@@ -65,9 +65,7 @@ class SettingDialog extends React.Component<
     ].setAttribute("selected", "selected");
   }
   handleRest = (bool: boolean) => {
-    bool
-      ? this.props.handleMessage("Turn Off Successfully")
-      : this.props.handleMessage("Turn On Successfully");
+    this.props.handleMessage("Change Successfully");
     this.props.handleMessageBox(true);
   };
   changeLanguage = (lng: string) => {

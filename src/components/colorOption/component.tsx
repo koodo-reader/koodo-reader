@@ -1,5 +1,6 @@
 //高亮，下划线颜色选择
 import React from "react";
+import OtherUtil from "../../utils/otherUtil";
 import "./colorOption.css";
 import { ColorProps, ColorStates } from "./interface";
 
@@ -7,10 +8,10 @@ class ColorOption extends React.Component<ColorProps, ColorStates> {
   constructor(props: ColorProps) {
     super(props);
     this.state = {
-      isLine: false,
+      isLine: this.props.color > 3 ? true : false,
     };
   }
-  handleChangeOptiion = () => {
+  handleChangeOption = () => {
     this.setState({ isLine: !this.state.isLine });
   };
   render() {
@@ -25,6 +26,10 @@ class ColorOption extends React.Component<ColorProps, ColorStates> {
             key={item}
             onClick={() => {
               this.props.handleColor(index + 4);
+              OtherUtil.setReaderConfig(
+                "highlightIndex",
+                (index + 4).toString()
+              );
             }}
           >
             <div
@@ -47,6 +52,7 @@ class ColorOption extends React.Component<ColorProps, ColorStates> {
             key={item}
             onClick={() => {
               this.props.handleColor(index);
+              OtherUtil.setReaderConfig("highlightIndex", index.toString());
             }}
           ></div>
         );
@@ -58,7 +64,7 @@ class ColorOption extends React.Component<ColorProps, ColorStates> {
         <span
           className="icon-sort popup-color-more"
           onClick={() => {
-            this.handleChangeOptiion();
+            this.handleChangeOption();
           }}
         ></span>
         {this.state.isLine && renderLine()}

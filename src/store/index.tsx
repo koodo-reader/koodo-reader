@@ -43,6 +43,7 @@ export type stateType = {
     isAboutOpen: boolean;
     isShowLoading: boolean;
     isShowNew: boolean;
+    isNewWarning: boolean;
     isTipDialog: boolean;
     bookSortCode: { sort: number; order: number };
     noteSortCode: { sort: number; order: number };

@@ -56,18 +56,17 @@ class SettingSwitch extends React.Component<
     this.setState({ [stateName]: !this.state[stateName] } as any);
     OtherUtil.setReaderConfig(stateName, this.state[stateName] ? "no" : "yes");
 
-    this.state[stateName]
-      ? this.props.handleMessage("Turn On Successfully")
-      : this.props.handleMessage("Turn Off Successfully");
+    this.props.handleMessage("Change Successfully");
     this.props.handleMessageBox(true);
     setTimeout(() => {
       this._handleRest();
     }, 500);
   };
   render() {
+    console.log(this.props.currentEpub);
     return (
       <>
-        {this.props.currentEpub.archived && <TextToSpeech />}
+        {Object.keys(this.props.currentEpub).length !== 0 && <TextToSpeech />}
         {(this.props.currentEpub.rendition
           ? readerSettingList
           : htmlSettingList

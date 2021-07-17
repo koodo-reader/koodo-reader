@@ -4,6 +4,7 @@ import {
   handleMessageBox,
   handleMessage,
   handleNewDialog,
+  handleNewWarning,
 } from "../../../store/actions";
 import UpdateInfo from "./component";
 import { withTranslation } from "react-i18next";
@@ -20,6 +21,7 @@ const actionCreator = {
   handleMessageBox,
   handleMessage,
   handleNewDialog,
+  handleNewWarning,
 };
 export default connect(
   mapStateToProps,

@@ -26,11 +26,15 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
         onMouseEnter={() => {
           this.props.handleAbout(true);
         }}
-        style={{
-          left: "525px",
-          height: "180px",
-          width: "120px",
-        }}
+        style={
+          this.props.isNewWarning
+            ? { left: "525px", height: "200px", width: "120px" }
+            : {
+                left: "525px",
+                height: "180px",
+                width: "120px",
+              }
+        }
       >
         <ul className="sort-by-category">
           <li
@@ -107,6 +111,17 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
           >
             <Trans>Github Repo</Trans>
           </li>
+          {this.props.isNewWarning && (
+            <li
+              className="sort-by-category-list"
+              onClick={() => {
+                this.handleJump("https://koodo.960960.xyz/download");
+              }}
+              style={{ color: "rgb(35, 170, 242)" }}
+            >
+              <Trans>New Version</Trans>
+            </li>
+          )}
         </ul>
       </div>
     );

@@ -247,7 +247,12 @@ class Header extends React.Component<HeaderProps, HeaderState> {
               position="top"
               trigger="mouseenter"
             >
-              <span className="icon-setting setting-icon"></span>
+              <span
+                className="icon-setting setting-icon"
+                style={
+                  this.props.isNewWarning ? { color: "rgb(35, 170, 242)" } : {}
+                }
+              ></span>
             </Tooltip>
           </div>
           {isElectron && (
@@ -313,10 +318,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
             handleDrag: this.props.handleDrag,
           }}
         />
-        {isElectron &&
-          OtherUtil.getReaderConfig("isDisableUpdate") !== "yes" && (
-            <UpdateInfo />
-          )}
+        {isElectron && <UpdateInfo />}
       </div>
     );
   }
