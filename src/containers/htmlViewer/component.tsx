@@ -21,6 +21,7 @@ import OtherUtil from "../../utils/otherUtil";
 import RecordLocation from "../../utils/readUtils/recordLocation";
 import { mimetype } from "../../constants/mimetype";
 import styleUtil from "../../utils/readUtils/styleUtil";
+import { isElectron } from "react-device-detect";
 
 declare var window: any;
 
@@ -127,11 +128,25 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         return;
       }
       let imgs = doc.getElementsByTagName("img");
+      let links = doc.getElementsByTagName("a");
+      console.log(links);
+      for (let item of links) {
+        item.addEventListener("click", (e) => {
+          e.preventDefault();
+          console.log(item);
+          this.handleJump(item.href);
+        });
+      }
       for (let item of imgs) {
         item.setAttribute("style", "max-width: 100%");
       }
       this.bindEvent(doc);
     }, 1);
+  };
+  handleJump = (url: string) => {
+    isElectron
+      ? window.require("electron").shell.openExternal(url)
+      : window.open(url);
   };
   bindEvent = (doc: any) => {
     let isFirefox = navigator.userAgent.indexOf("Firefox") > -1;

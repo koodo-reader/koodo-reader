@@ -6,6 +6,7 @@ export interface HeaderProps {
   isSortDisplay: boolean;
   isAboutOpen: boolean;
   isCollapsed: boolean;
+  isNewWarning: boolean;
 
   bookmarks: BookmarkModel[];
   notes: NoteModel[];

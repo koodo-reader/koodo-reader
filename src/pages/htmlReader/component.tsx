@@ -171,7 +171,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
             this.handleEnterReader("top");
           }}
         ></div>
-        {this.props.currentEpub.archived && (
+        {Object.keys(this.props.currentEpub).length !== 0 && (
           <div
             className="bottom-panel"
             onMouseEnter={() => {
@@ -216,7 +216,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         >
           <NavigationPanel {...{ time: this.state.time }} />
         </div>
-        {this.props.currentEpub.archived && (
+        {Object.keys(this.props.currentEpub).length !== 0 && (
           <div
             className="progress-panel-container"
             onMouseLeave={(event) => {

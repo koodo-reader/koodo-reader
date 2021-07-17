@@ -6,7 +6,11 @@ const initState = {
   chapters: null,
   currentChapter: "",
   flattenChapters: null,
-  color: OtherUtil.getReaderConfig("isDisplayDark") === "yes" ? 3 : 0,
+  color: parseInt(OtherUtil.getReaderConfig("highlightIndex"))
+    ? parseInt(OtherUtil.getReaderConfig("highlightIndex"))
+    : OtherUtil.getReaderConfig("isDisplayDark") === "yes"
+    ? 3
+    : 0,
   noteKey: "",
   originalText: "",
   htmlBook: null,
