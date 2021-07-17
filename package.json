@@ -50,7 +50,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "ele": "electron .",
-    "dev": "concurrently \"cross-env BROWSER=none npm start\" \"wait-on http://localhost:3000/ && nodemon --watch * --exec electron .\"",
+    "dev": "concurrently \"cross-env BROWSER=none npm start\" \"wait-on http://localhost:3000/ && nodemon --watch main.js --exec electron .\"",
     "pack": "electron-builder --dir",
     "release": "electron-builder",
     "prerelease": "npm run build",
