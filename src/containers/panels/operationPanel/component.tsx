@@ -163,13 +163,11 @@ class OperationPanel extends React.Component<
   // 点击退出按钮的处理程序
   handleExit() {
     OtherUtil.setReaderConfig("isFullScreen", "no");
-    window.speechSynthesis && window.speechSynthesis.cancel();
-
-    this.handleExitFullScreen();
-
-    this.props.handleReadingState(false);
-    this.props.handleSearch(false);
-    this.props.handleOpenMenu(false);
+    // window.speechSynthesis && window.speechSynthesis.cancel();
+    // this.handleExitFullScreen();
+    // this.props.handleReadingState(false);
+    // this.props.handleSearch(false);
+    // this.props.handleOpenMenu(false);
     ReadingTime.setTime(this.props.currentBook.key, this.props.time);
     OtherUtil.setReaderConfig("windowWidth", document.body.clientWidth);
     OtherUtil.setReaderConfig("windowHeight", document.body.clientHeight);
