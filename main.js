@@ -20,7 +20,7 @@ if (!singleInstance) {
   });
 }
 app.on("ready", () => {
-  mainWin = new BrowserWindow({
+  let option = {
     width: 1050,
     height: 660,
     webPreferences: {
@@ -31,8 +31,11 @@ app.on("ready", () => {
       nodeIntegrationInSubFrames: true,
       allowRunningInsecureContent: true,
     },
-    // icon: path.join(__dirname, "/assets/icons/256x256.png"),
-  });
+  };
+  if (process.platform === "linux") {
+    option.icon = path.join(__dirname, "/assets/icons/256x256.png");
+  }
+  mainWin = new BrowserWindow(option);
   const isDev = require("electron-is-dev");
   if (!isDev) {
     const { Menu } = require("electron");
@@ -64,6 +67,9 @@ app.on("ready", () => {
         allowRunningInsecureContent: true,
       },
     };
+    if (process.platform === "linux") {
+      options.icon = path.join(__dirname, "/assets/icons/256x256.png");
+    }
     let pdfLocation = isDev
       ? "http://localhost:3000/" + url
       : `file://${path.join(

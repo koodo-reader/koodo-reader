@@ -35,7 +35,7 @@
 
 - Platform support: **Windows** , **macOS**, **Linux** and **Web**
 
-- ave your data to **Dropbox** or **Webdav**
+- Save your data to **Dropbox** or **Webdav**
 
 - Customize the source folder and synchronize among multiple devices using OneDrive, iCloud, Dropbox, etc.
 
