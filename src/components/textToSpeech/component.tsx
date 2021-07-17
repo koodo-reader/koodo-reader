@@ -32,7 +32,7 @@ class TextToSpeech extends React.Component<
       this.setState({ isAudioOn: false });
     } else {
       const setSpeech = () => {
-        return new Promise(function (resolve, reject) {
+        return new Promise((resolve, reject) => {
           let synth = window.speechSynthesis;
           let id;
 
@@ -40,6 +40,8 @@ class TextToSpeech extends React.Component<
             if (synth.getVoices().length !== 0) {
               resolve(synth.getVoices());
               clearInterval(id);
+            } else {
+              this.setState({ isSupported: false });
             }
           }, 10);
         });
