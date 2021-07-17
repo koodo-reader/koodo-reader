@@ -51,17 +51,17 @@
 
 ## 使用方法
 
-桌面端：[點我前往](https://koodo.960960.xyz/download)
+- 桌面端：[點我前往](https://koodo.960960.xyz/download)
 
-網頁版：[點我前往](https://reader.960960.xyz)
+- 網頁版：[點我前往](https://reader.960960.xyz)
 
-使用 [Homebrew](https://brew.sh/) 安裝：
+- 使用 [Homebrew](https://brew.sh/) 安裝：
 
 ```shell
 brew install --cask koodo-reader
 ```
 
-使用 Docker 安裝：
+- 使用 Docker 安裝：
 
 ```bash
 docker-compose up -d
