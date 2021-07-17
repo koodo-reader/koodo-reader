@@ -31,7 +31,7 @@ app.on("ready", () => {
       nodeIntegrationInSubFrames: true,
       allowRunningInsecureContent: true,
     },
-    icon: nativeImage.createFromPath("assets/icons/256x256.png"),
+    icon: path.join(__dirname, "assets", "icons", "256x256.png"),
   };
 
   mainWin = new BrowserWindow(option);
@@ -64,7 +64,7 @@ app.on("ready", () => {
         nodeIntegrationInSubFrames: true,
         allowRunningInsecureContent: true,
       },
-      icon: nativeImage.createFromPath("assets/icons/256x256.png"),
+      icon: path.join(__dirname, "assets", "icons", "256x256.png"),
     };
 
     let pdfLocation = isDev
