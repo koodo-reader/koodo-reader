@@ -11,6 +11,7 @@ const initState = {
   viewMode: "card",
   isSortDisplay: false,
   isShowLoading: false,
+  isNewWarning: false,
   isTipDialog: false,
   isShowNew: false,
   bookSortCode: { sort: 0, order: 1 },
@@ -95,6 +96,11 @@ export function manager(
       return {
         ...state,
         isShowNew: action.payload,
+      };
+    case "HANDLE_NEW_WARNING":
+      return {
+        ...state,
+        isNewWarning: action.payload,
       };
     case "HANDLE_MESSAGE":
       return {
