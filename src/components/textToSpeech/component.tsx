@@ -108,11 +108,13 @@ class TextToSpeech extends React.Component<
     msg.onerror = (err) => {
       console.log(err);
     };
+
     msg.onend = (event) => {
+      console.log(event, "event", new Date().getTime());
       if (!(this.state.isAudioOn && this.props.isReading)) {
         return;
       }
-
+      console.log(event, "event1", new Date().getTime());
       this.props.currentEpub.rendition.next().then(() => {
         this.handleAudio();
       });
