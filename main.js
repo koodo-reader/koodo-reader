@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require("electron");
+const { app, BrowserWindow, nativeImage } = require("electron");
 const { ebtMain } = require("electron-baidu-tongji");
 const path = require("path");
 let mainWin;
@@ -31,7 +31,7 @@ app.on("ready", () => {
       nodeIntegrationInSubFrames: true,
       allowRunningInsecureContent: true,
     },
-    icon: path.join(__dirname, "assets", "icons", "256x256.png"),
+    icon: nativeImage.createFromPath("assets/icons/256x256.png"),
   };
 
   mainWin = new BrowserWindow(option);
@@ -64,7 +64,7 @@ app.on("ready", () => {
         nodeIntegrationInSubFrames: true,
         allowRunningInsecureContent: true,
       },
-      icon: path.join(__dirname, "assets", "icons", "256x256.png"),
+      icon: nativeImage.createFromPath("assets/icons/256x256.png"),
     };
 
     let pdfLocation = isDev
