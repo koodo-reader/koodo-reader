@@ -31,27 +31,27 @@
 
 ## Feature
 
-Format support: **epub**, **pdf**, **mobi**, **azw3**, **txt**, **md**, **djvu**, **docx**, **rtf**, **cbz**, **cbr**, **cbt**, **fb2**, **html** and **xml**
+- Format support: **epub**, **pdf**, **mobi**, **azw3**, **txt**, **md**, **djvu**, **docx**, **rtf**, **cbz**, **cbr**, **cbt**, **fb2**, **html** and **xml**
 
-Platform support: **Windows** , **macOS**, **Linux** and **Web**
+- Platform support: **Windows** , **macOS**, **Linux** and **Web**
 
-Save your data to **Dropbox** or **Webdav**
+- ave your data to **Dropbox** or **Webdav**
 
-Customize the source folder and synchronize among multiple devices using OneDrive, iCloud, Dropbox, etc.
+- Customize the source folder and synchronize among multiple devices using OneDrive, iCloud, Dropbox, etc.
 
-Single-column, two-column, or continuous scrolling layouts
+- Single-column, two-column, or continuous scrolling layouts
 
-Text-to-speech, translation, progress slider, touch screen support, batch import
+- Text-to-speech, translation, progress slider, touch screen support, batch import
 
-Add bookmarks, notes, highlights to your books
+- Add bookmarks, notes, highlights to your books
 
-Origanize your books and notes with shelf and tag
+- Origanize your books and notes with shelf and tag
 
-Adjust font size, font family, line-spacing, paragraph spacing, background color, text color, margins, and brightness
+- Adjust font size, font family, line-spacing, paragraph spacing, background color, text color, margins, and brightness
 
-Night mode and theme color
+- Night mode and theme color
 
-Text highlight, underline, boldness, italics and shadow
+- Text highlight, underline, boldness, italics and shadow
 
 ## Installation
 
