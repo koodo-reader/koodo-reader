@@ -20,14 +20,9 @@
 
 </div>
 
-## 预览
-
 <div align="center">
   <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
-    <img src="./assets/cover1.png" style="box-shadow: 0 0 10px #ccc">
-  </a>
-  <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
-    <img src="./assets/cover2.png" style="box-shadow: 0 0 10px #ccc">
+    <img src="./assets/demo.png" >
   </a>
   <br/>
 </div>

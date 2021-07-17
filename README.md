@@ -19,15 +19,9 @@
 [Download](https://koodo.960960.xyz/download) | [Website](https://koodo.960960.xyz) | [Feedback](https://koodo.960960.xyz/support) | [Document](https://www.notion.so/troyeguo/01aaa516687c418499f713d34793b9ad?v=54d51fe1688a4f8ab5784b17e4df3308) | [Roadmap](https://www.notion.so/troyeguo/d1c19a132932465bae1d89dd963c92ea?v=ca8aa69cf25849c18c92b92ba868663b)
 
 </div>
-
-## Preview
-
 <div align="center">
   <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
-    <img src="./assets/cover1.png" style="box-shadow: 0 0 10px #ccc">
-  </a>
-  <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
-    <img src="./assets/cover2.png" style="box-shadow: 0 0 10px #ccc">
+    <img src="./assets/demo.png" >
   </a>
   <br/>
 </div>
