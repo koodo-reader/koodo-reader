@@ -20,6 +20,7 @@ const mapStateToProps = (state: stateType) => {
     isAboutOpen: state.manager.isAboutOpen,
     bookmarks: state.reader.bookmarks,
     books: state.manager.books,
+    isNewWarning: state.manager.isNewWarning,
     notes: state.reader.notes,
     isCollapsed: state.sidebar.isCollapsed,
 

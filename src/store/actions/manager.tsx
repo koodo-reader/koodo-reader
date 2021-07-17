@@ -48,6 +48,9 @@ export function handleLoadingDialog(isShowLoading: boolean) {
 export function handleNewDialog(isShowNew: boolean) {
   return { type: "HANDLE_SHOW_NEW", payload: isShowNew };
 }
+export function handleNewWarning(isNewWarning: boolean) {
+  return { type: "HANDLE_NEW_WARNING", payload: isNewWarning };
+}
 export function handleBookSort(isBookSort: boolean) {
   return { type: "HANDLE_BOOK_SORT", payload: isBookSort };
 }

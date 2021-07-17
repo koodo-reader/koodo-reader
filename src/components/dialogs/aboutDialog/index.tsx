@@ -7,6 +7,7 @@ const mapStateToProps = (state: stateType) => {
   return {
     isSettingOpen: state.manager.isSettingOpen,
     isAboutOpen: state.manager.isAboutOpen,
+    isNewWarning: state.manager.isNewWarning,
   };
 };
 const actionCreator = {
