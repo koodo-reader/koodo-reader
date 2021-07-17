@@ -881,6 +881,11 @@ See https://github.com/adobe-type-tools/cmap-resources
         readerConfig[key] = value;
         localStorage.setItem("readerConfig", JSON.stringify(readerConfig));
       };
+      var getReaderConfig = (key) => {
+        let readerConfig =
+          JSON.parse(localStorage.getItem("readerConfig")) || {};
+        return readerConfig[key];
+      };
     </script>
   </body>
 </html>
