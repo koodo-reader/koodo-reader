@@ -182,7 +182,6 @@
   "Only Desktop support this format": "僅客戶端版本支持 mobi 和 txt 格式",
   "Only Desktop support this service": "僅客戶端支持該備份方式",
   "Please Wait a moment": "請稍侯",
-
   "It seems like you're lost": "妳要訪問的內容走丟了",
   "Return to home": "返回主頁",
   "Deleted Books": "我的回收",
@@ -260,7 +259,6 @@
   "justify": "兩端對齊",
   "right": "右對齊",
   "Understand": "我知道了",
-
   "Sync Successfully": "同步成功",
   "Permanently Delete": "永久刪除",
   "Roadmap": "開發計劃",
@@ -289,5 +287,9 @@
   "File size": "文件大小",
   "Take effect at next startup": "下次打開圖書生效",
   "Auto Update relys on Github Release for package hosting, if your internet doesn't have stable connection to Github, we highly recommand you to turn off this option": "自動更新功能依賴Github，如果您本地網絡無法穩定訪問Github，則不建議開啟此功能，開啟之後，將不再單獨提供更新提醒。",
-  "Bold Font": "字體加粗"
+  "Bold Font": "字體加粗",
+  "Disable analytics service": "关闭统计功能",
+  "Hide navigation button": "不显示翻页按钮",
+  "More": "显示笔记出处",
+  "Sync data from storage": "从存储位置同步数据"
 }
