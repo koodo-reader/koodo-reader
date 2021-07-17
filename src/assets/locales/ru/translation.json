@@ -257,7 +257,6 @@
   "Blue": "Blue",
   "Red": "Red",
   "Understand": "Understand",
-
   "Customize": "Customize",
   "Green": "Green",
   "Auto open book in fullscreen": "Auto open book in fullscreen",
@@ -268,7 +267,6 @@
   "File size": "File size",
   "Take effect at next startup": "Take effect at next startup",
   "Invert color": "Invert color",
-
   "Auto Update relys on Github Release for package hosting, if your internet doesn't have stable connection to Github, we highly recommand you to turn off this option": "Auto Update relys on Github Release for package hosting, if your internet doesn't have stable connection to Github, we highly recommand you to turn off this option",
   "How sync works": "How sync works",
   "You need to manually change the storage location to the same sync folder on different computers. When you click the sync button, Koodo Reader will automatically upload or download the data from this folder according the timestamp.": "You need to manually change the storage location to the same sync folder on different computers. When you click the sync button, Koodo Reader will automatically upload or download the data from this folder according the timestamp.",
@@ -278,5 +276,22 @@
   "Unlock": "Unlock",
   "Lock": "Lock",
   "Disable update notification": "Disable update notification",
-  "Collapse sidebar": "Collapse sidebar"
+  "Collapse sidebar": "Collapse sidebar",
+  "Speak the text": "Speak the text",
+  "Disable analytics service": "Disable analytics service",
+  "Hide navigation button": "Hide navigation button",
+  "More": "More",
+  "Collect": "Collect",
+  "Copy": "Copy",
+  "Sync data from storage": "Sync data from storage",
+  "Move your mouse on the top edge of the reader": "Move your mouse on the top edge of the reader",
+  "Choose your action to this book": "Choose your action to this book",
+  "Edit": "Edit",
+  "Add": "Add",
+  "What's new about this version": "What's new about this version",
+  "Our Website": "Our Website",
+  "What's New": "What's New",
+  "What's been fixed": "What's been fixed",
+  "Voice": "Voice",
+  "Speed": "Speed"
 }

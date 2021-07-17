@@ -55,7 +55,8 @@
     "release": "electron-builder",
     "prerelease": "npm run build",
     "prepack": "npm run build",
-    "dist": "electron-builder"
+    "dist": "electron-builder",
+    "trans": "nodemon i18n.js"
   },
   "homepage": "./",
   "build": {

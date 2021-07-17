@@ -115,9 +115,6 @@ app.on("ready", () => {
       readerWindow = null;
     });
     event.returnValue = "success";
-    readerWindow.on("close", () => {
-      readerWindow = null;
-    });
   });
   ipcMain.handle("fonts-ready", async (event, arg) => {
     const fontList = require("font-list");
