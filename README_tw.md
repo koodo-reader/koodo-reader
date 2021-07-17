@@ -20,6 +20,8 @@
 
 </div>
 
+## 預覽
+
 <div align="center">
   <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
     <img src="./assets/demo.png" >
