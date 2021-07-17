@@ -55,17 +55,17 @@
 
 ## Installation
 
-Desktop Version: [Download](https://koodo.960960.xyz/download)
+- Desktop Version: [Download](https://koodo.960960.xyz/download)
 
-Web Version：[Preview](https://reader.960960.xyz)
+- Web Version：[Preview](https://reader.960960.xyz)
 
-Install with [Homebrew](https://brew.sh/):
+- Install with [Homebrew](https://brew.sh/):
 
 ```shell
 brew install --cask koodo-reader
 ```
 
-Install with Docker:
+- Install with Docker:
 
 ```bash
 docker-compose up -d

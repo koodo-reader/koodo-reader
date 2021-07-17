@@ -12,7 +12,6 @@
   "Text Align": "Text Align",
   "Sync Successfully": "Sync Successfully",
   "Permanently Delete": "Permanently Delete",
-
   "Default search engine": "Default search engine",
   "Built-in font": "Built-in font",
   "Cover Mode": "Cover",
@@ -27,7 +26,6 @@
   "Customize": "Customize",
   "Auto open book in fullscreen": "Auto open book in fullscreen",
   "System Font": "System Font",
-
   "Access token expired": "Access token expired, refetching token",
   "Access token received, please continue": "Access token received, please continue",
   "Changelog": "Changelog",
@@ -105,7 +103,6 @@
   "Select": "Select",
   "Coming Soon": "Coming Soon",
   "Understand": "Understand",
-
   "Authorize Successfully": "Authorize Successfully",
   "Authorize Failed": "Authorize Failed",
   "Do you want to backup or restore?": "Choose your operation",
@@ -261,7 +258,6 @@
   "Empty Digest": "Empty Digest",
   "Select any text and click the Highlight button on the popup Menu": "Select any text and click the Highlight button on the popup menu",
   "Invert color": "Invert color",
-
   "Empty Shelf": "Empty Shelf",
   "Move your mouse on the top of any book": "Move your mouse on top of any book, then click the more icon to add the book to the shelf",
   "Download failed, network problem or no backup": "Download failed,network problem or no backup",
@@ -277,5 +273,25 @@
   "Unauthorize": "Unauthorize",
   "Remember window's size from last read": "Remember window's size",
   "Letter Spacing": "Letter Spacing",
-  "Unauthorize Successfully": "Unauthorize Successfully"
+  "Unauthorize Successfully": "Unauthorize Successfully",
+  "Download Demo Book": "Download Demo Book",
+  "Extra Large": "Extra Large",
+  "Ultra Large": "Ultra Large",
+  "Disable analytics service": "Disable analytics service",
+  "Hide navigation button": "Hide navigation button",
+  "More": "More",
+  "Collect": "Collect",
+  "Copy": "Copy",
+  "Hi! Stranger": "Hi! Stranger",
+  "Sync data from storage": "Sync data from storage",
+  "Click on any book to read": "Click on any book to read",
+  "Move your mouse on the top edge of the reader": "Move your mouse on the top edge of the reader",
+  "Download failed,network problem or no backup": "Download failed,network problem or no backup",
+  "Choose your action to this book": "Choose your action to this book",
+  "Edit": "Edit",
+  "Add": "Add",
+  "What's new about this version": "What's new about this version",
+  "Our Website": "Our Website",
+  "What's New": "What's New",
+  "What's been fixed": "What's been fixed"
 }
