@@ -110,6 +110,10 @@ class BookList extends React.Component<BookListProps, BookListState> {
             ? RecordRecent.getAllRecent()
             : RecordRecent.getAllRecent().reverse()
         );
+    console.log(
+      SortUtil.sortBooks(this.props.books, this.props.bookSortCode),
+      books
+    );
     if (this.props.mode === "shelf" && books.length === 0) {
       return (
         <div
