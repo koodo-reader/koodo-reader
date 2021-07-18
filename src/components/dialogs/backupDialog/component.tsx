@@ -169,11 +169,7 @@ class BackupDialog extends React.Component<
         );
       });
     };
-    console.log(
-      driveList,
-      this.state.currentDrive,
-      driveList[this.state.currentDrive!]
-    );
+
     const dialogProps = {
       driveName: driveList[this.state.currentDrive!].icon,
       url: driveList[this.state.currentDrive!].url,
