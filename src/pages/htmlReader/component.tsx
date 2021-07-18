@@ -3,7 +3,7 @@ import SettingPanel from "../../containers/panels/settingPanel";
 import NavigationPanel from "../../containers/panels/navigationPanel";
 import OperationPanel from "../../containers/panels/operationPanel";
 import MessageBox from "../../containers/messageBox";
-import ProgressPanel from "../../containers/panels/progressPanel";
+import ProgressPanel from "../../containers/panels/htmlProgressPanel";
 import { ReaderProps, ReaderState } from "./interface";
 import OtherUtil from "../../utils/otherUtil";
 import ReadingTime from "../../utils/readUtils/readingTime";
@@ -104,12 +104,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         break;
     }
   };
-  nextPage = () => {
-    this.state.rendition.next();
-  };
-  prevPage = () => {
-    this.state.rendition.prev();
-  };
+
   render() {
     const renditionProps = {
       rendition: this.state.rendition,
@@ -171,20 +166,18 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
             this.handleEnterReader("top");
           }}
         ></div>
-        {Object.keys(this.props.currentEpub).length !== 0 && (
-          <div
-            className="bottom-panel"
-            onMouseEnter={() => {
-              if (this.state.isTouch || this.state.isOpenBottomPanel) {
-                return;
-              }
-              this.handleEnterReader("bottom");
-            }}
-            onClick={() => {
-              this.handleEnterReader("bottom");
-            }}
-          ></div>
-        )}
+        <div
+          className="bottom-panel"
+          onMouseEnter={() => {
+            if (this.state.isTouch || this.state.isOpenBottomPanel) {
+              return;
+            }
+            this.handleEnterReader("bottom");
+          }}
+          onClick={() => {
+            this.handleEnterReader("bottom");
+          }}
+        ></div>
         <Viewer {...renditionProps} />
         <div
           className="setting-panel-container"
@@ -216,23 +209,21 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         >
           <NavigationPanel {...{ time: this.state.time }} />
         </div>
-        {Object.keys(this.props.currentEpub).length !== 0 && (
-          <div
-            className="progress-panel-container"
-            onMouseLeave={(event) => {
-              this.handleLeaveReader("bottom");
-            }}
-            style={
-              this.state.isOpenBottomPanel
-                ? {}
-                : {
-                    transform: "translateY(110px)",
-                  }
-            }
-          >
-            <ProgressPanel {...{ time: this.state.time }} />
-          </div>
-        )}
+        <div
+          className="progress-panel-container"
+          onMouseLeave={(event) => {
+            this.handleLeaveReader("bottom");
+          }}
+          style={
+            this.state.isOpenBottomPanel
+              ? {}
+              : {
+                  transform: "translateY(110px)",
+                }
+          }
+        >
+          <ProgressPanel {...{ time: this.state.time }} />
+        </div>
         <div
           className="operation-panel-container"
           onMouseLeave={(event) => {

@@ -21,9 +21,6 @@ if (!singleInstance) {
   });
 }
 app.on("ready", () => {
-  let iconPath = isDev
-    ? "http://localhost:3000/favicon.png"
-    : `file://${path.join(__dirname, "./build", "assets", "favicon.png")}`;
   let option = {
     width: 1050,
     height: 660,
@@ -36,9 +33,6 @@ app.on("ready", () => {
       allowRunningInsecureContent: true,
     },
   };
-  if (process.platform === "linux") {
-    option.icon = iconPath;
-  }
 
   mainWin = new BrowserWindow(option);
 
@@ -70,9 +64,6 @@ app.on("ready", () => {
         allowRunningInsecureContent: true,
       },
     };
-    if (process.platform === "linux") {
-      options.icon = iconPath;
-    }
     let pdfLocation = isDev
       ? "http://localhost:3000/" + url
       : `file://${path.join(
