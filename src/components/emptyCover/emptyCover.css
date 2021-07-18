@@ -30,6 +30,7 @@
   position: relative;
   top: 10px;
   margin-left: 5px;
+  word-wrap: break-word;
 }
 .cover-footer {
   width: 100%;
