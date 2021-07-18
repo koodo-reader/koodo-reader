@@ -174,7 +174,8 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
               const file_content = (event.target as any).result;
               let mobiFile = new MobiParser(file_content);
               let content: any = await mobiFile.render(isElectron);
-              if (typeof content === "object") {
+              //包含太多图片或者文件大于5m就不转换
+              if (typeof content === "object" || file.size / 1024 / 1024 > 10) {
                 result = BookUtil.generateBook(
                   bookName,
                   extension,

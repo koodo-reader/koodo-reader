@@ -281,7 +281,7 @@
   "System Font": "系統字體",
   "Tips": "提示",
   "How sync works": "同步是如何實現的？",
-  "You need to manually change the storage location to the same sync folder on different computers. When you click the sync button, Koodo Reader will automatically upload or download the data from this folder according the timestamp.": "同步功能需要配合第三方同步盤實現，在不同電腦上把數據存儲位置修改為同一個同步文件夾，手動點擊同步按鈕後，Koodo會把同步文件夾中的數據更新到軟件中，從而實現同步。",
+  "You need to manually change the storage location to the same sync folder on different computers. When you click the sync button, Koodo Reader will automatically upload or download the data from this folder according the timestamp.": "同步功能需要配合第三方同步盤實現，在不同電腦上把數據存儲位置修改為同一個網盤文件夾，點擊同步按鈕後，Koodo會自動進行數據的雙向同步。目前該功能還處在測試階段，請謹慎使用。",
   "Please choose an empty folder": "請選擇空文件夾",
   "Data change detected, whether to update?": "檢測到數據變化，是否更新",
   "File size": "文件大小",

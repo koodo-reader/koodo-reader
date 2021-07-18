@@ -17,7 +17,7 @@ import DeletePopup from "../../../components/dialogs/deletePopup";
 import Empty from "../../emptyPage";
 import { Redirect, withRouter } from "react-router-dom";
 import ViewMode from "../../../components/viewMode";
-import BackUtil from "../../../utils/syncUtils/backupUtil";
+import { backup } from "../../../utils/syncUtils/backupUtil";
 import { isElectron } from "react-device-detect";
 
 class BookList extends React.Component<BookListProps, BookListState> {
@@ -126,7 +126,6 @@ class BookList extends React.Component<BookListProps, BookListState> {
         </div>
       );
     }
-
     return books.map((item: BookModel, index: number) => {
       return this.props.viewMode === "list" ? (
         <BookListItem
@@ -200,13 +199,11 @@ class BookList extends React.Component<BookListProps, BookListState> {
       //兼容之前的版本
       localforage.getItem(this.props.books[0].key).then((result) => {
         if (result) {
-          BackUtil.backup(
+          backup(
             this.props.books,
             this.props.notes,
             this.props.bookmarks,
-            () => {},
-            4,
-            () => {}
+            false
           );
         }
       });

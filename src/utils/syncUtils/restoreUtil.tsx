@@ -1,97 +1,21 @@
-import localforage from "localforage";
-import BookUtil from "../fileUtils/bookUtil";
+import { unzipBook, unzipConfig } from "./common";
 
-let JSZip = (window as any).JSZip;
-
-class RestoreUtil {
-  static restore = (file: any, handleFinish: () => void, isSync = false) => {
-    let configArr = [
-      "notes",
-      "books",
-      "bookmarks",
-      "readerConfig",
-      "noteTags",
-      "themeColors",
-      "bookSortCode",
-      "noteSortCode",
-      "readingTime",
-      "recentBooks",
-      "favoriteBooks",
-      "favoriteBooks",
-      "shelfList",
-      "pdfjs.history",
-      "recordLocation",
-    ];
-    let zip = new JSZip();
-
-    // more files !
-    configArr.forEach((item) => {
-      zip
-        .loadAsync(file)
-        .then((content: any) => {
-          // you now have every files contained in the loaded zip
-          return content.files[
-            content.files[`${item}.json`]
-              ? `${item}.json`
-              : `config/${item}.json`
-          ].async("text"); // a promise of "Hello World\n"
-        })
-        .then((text: any) => {
-          if (text) {
-            if (item === "notes" || item === "books" || item === "bookmarks") {
-              localforage.setItem(item, JSON.parse(text));
-            } else {
-              localStorage.setItem(item, text);
-            }
-          }
-        })
-        .then(() => {
-          if (item === "books" && !isSync) {
-            localforage.getItem("books").then((value: any) => {
-              let zip = new JSZip();
-              value &&
-                value.length > 0 &&
-                value.forEach((item: any) => {
-                  zip
-                    .loadAsync(file)
-                    .then((content: any) => {
-                      if (content.files[`book/${item.key}`]) {
-                        return content.files[`book/${item.key}`].async(
-                          "arraybuffer"
-                        );
-                      }
-                      //兼容之前的版本
-                      if (
-                        content.files[`book/${item.name}.pdf`] &&
-                        item.description === "pdf"
-                      ) {
-                        return content.files[`book/${item.name}.pdf`].async(
-                          "arraybuffer"
-                        ); // a promise of "Hello World\n"
-                      } else if (content.files[`book/${item.name}.epub`]) {
-                        return content.files[`book/${item.name}.epub`].async(
-                          "arraybuffer"
-                        ); // a promise of "Hello World\n"
-                      }
-                    })
-                    .then(async (book: any) => {
-                      await BookUtil.addBook(item.key, book);
-                    })
-                    .catch((err: any) => {
-                      console.log(err, "Error occurs");
-                    });
-                });
-            });
-          }
-        })
-        .catch((err: any) => {
-          console.log(err, "Error happen");
-        });
-    });
-    setTimeout(() => {
-      handleFinish();
-    }, 1000);
-  };
-}
-
-export default RestoreUtil;
+export const restore = (file: any, isSync = false) => {
+  return new Promise<boolean>(async (resolve, reject) => {
+    let result = await unzipConfig(file);
+    if (result) {
+      if (isSync) {
+        resolve(true);
+      } else {
+        let res = await unzipBook(file);
+        if (res) {
+          resolve(true);
+        } else {
+          resolve(false);
+        }
+      }
+    } else {
+      resolve(false);
+    }
+  });
+};
