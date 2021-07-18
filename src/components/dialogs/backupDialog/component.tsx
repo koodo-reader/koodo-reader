@@ -2,8 +2,8 @@
 import React from "react";
 import "./backupDialog.css";
 import { driveList } from "../../../constants/driveList";
-import BackupUtil from "../../../utils/syncUtils/backupUtil";
-import RestoreUtil from "../../../utils/syncUtils/restoreUtil";
+import { backup } from "../../../utils/syncUtils/backupUtil";
+import { restore } from "../../../utils/syncUtils/restoreUtil";
 import { Trans } from "react-i18next";
 import DropboxUtil from "../../../utils/syncUtils/dropbox";
 import WebdavUtil from "../../../utils/syncUtils/webdav";
@@ -12,7 +12,7 @@ import TokenDialog from "../tokenDialog";
 import OtherUtil from "../../../utils/otherUtil";
 import Lottie from "react-lottie";
 import animationSuccess from "../../../assets/lotties/success.json";
-
+import FileSaver from "file-saver";
 const successOptions = {
   loop: false,
   autoplay: true,
@@ -42,26 +42,40 @@ class BackupDialog extends React.Component<
     this.props.handleLoadingDialog(false);
     this.showMessage("Sync Successfully");
   };
-  handleRestoreToLocal = (event: any) => {
+  handleRestoreToLocal = async (event: any) => {
     event.preventDefault();
-    RestoreUtil.restore(event.target.files[0], this.handleFinish);
+    let result = await restore(event.target.files[0]);
+    if (result) {
+      this.handleFinish();
+    }
   };
   showMessage = (message: string) => {
     this.props.handleMessage(message);
     this.props.handleMessageBox(true);
   };
   handleDrive = (index: number) => {
-    this.setState({ currentDrive: index }, () => {
+    let year = new Date().getFullYear(),
+      month = new Date().getMonth() + 1,
+      day = new Date().getDate();
+    this.setState({ currentDrive: index }, async () => {
       switch (index) {
         case 0:
-          BackupUtil.backup(
+          let blob: Blob | boolean = await backup(
             this.props.books,
             this.props.notes,
             this.props.bookmarks,
-            this.handleFinish,
-            0,
-            this.showMessage
+            false
           );
+          if (!blob) {
+            this.showMessage("Backup Failed");
+          }
+          FileSaver.saveAs(
+            blob as Blob,
+            `${year}-${month <= 9 ? "0" + month : month}-${
+              day <= 9 ? "0" + day : day
+            }.zip`
+          );
+          this.handleFinish();
           break;
         case 1:
           if (!OtherUtil.getReaderConfig("dropbox_token")) {
@@ -73,18 +87,32 @@ class BackupDialog extends React.Component<
             this.showMessage("Uploading");
             this.props.handleLoadingDialog(true);
 
-            BackupUtil.backup(
+            let blob: Blob | boolean = await backup(
               this.props.books,
               this.props.notes,
               this.props.bookmarks,
-              this.handleFinish,
-              1,
-              this.showMessage
+              false
             );
+            if (!blob) {
+              this.showMessage("Backup Failed");
+              this.props.handleLoadingDialog(false);
+            }
+            let result = await DropboxUtil.UploadFile(blob);
+            if (result) {
+              this.handleFinish();
+            } else {
+              this.showMessage("Upload failed, check your connection");
+            }
           } else {
             this.props.handleLoadingDialog(true);
             this.showMessage("Downloading");
-            DropboxUtil.DownloadFile(this.handleFinish, this.showMessage);
+            let result = await DropboxUtil.DownloadFile();
+            if (result) {
+              this.handleFinish();
+            } else {
+              this.showMessage("Download failed,network problem or no backup");
+              this.props.handleLoadingDialog(false);
+            }
           }
 
           break;
@@ -101,19 +129,39 @@ class BackupDialog extends React.Component<
             this.showMessage("Uploading");
             this.props.handleLoadingDialog(true);
 
-            BackupUtil.backup(
+            let blob: any = await backup(
               this.props.books,
               this.props.notes,
               this.props.bookmarks,
-              this.handleFinish,
-              3,
-              this.showMessage
+              false
             );
+            if (!blob) {
+              this.showMessage("Backup Failed");
+              this.props.handleLoadingDialog(false);
+            }
+
+            let result = await WebdavUtil.UploadFile(
+              new File([blob], "data.zip", {
+                lastModified: new Date().getTime(),
+                type: blob.type,
+              })
+            );
+            if (result) {
+              this.handleFinish();
+            } else {
+              this.showMessage("Upload failed, check your connection");
+              this.props.handleLoadingDialog(false);
+            }
           } else {
             this.showMessage("Downloading");
             this.props.handleLoadingDialog(true);
 
-            WebdavUtil.DownloadFile(this.handleFinish, this.showMessage);
+            let result = await WebdavUtil.DownloadFile();
+            if (!result) {
+              this.showMessage("Download failed,network problem or no backup");
+            } else {
+              this.handleFinish();
+            }
           }
           break;
         default:

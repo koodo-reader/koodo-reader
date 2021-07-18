@@ -6,12 +6,11 @@ import { Trans } from "react-i18next";
 import i18n from "../../../i18n";
 import { version } from "../../../../package.json";
 import OtherUtil from "../../../utils/otherUtil";
-import SyncUtil from "../../../utils/syncUtils/common";
+import { changePath } from "../../../utils/syncUtils/common";
 import { isElectron } from "react-device-detect";
 import { dropdownList } from "../../../constants/dropdownList";
 import { Tooltip } from "react-tippy";
-import RestoreUtil from "../../../utils/syncUtils/restoreUtil";
-import BackupUtil from "../../../utils/syncUtils/backupUtil";
+import { restore } from "../../../utils/syncUtils/restoreUtil";
 import {
   settingList,
   langList,
@@ -111,23 +110,14 @@ class SettingDialog extends React.Component<
       type: blobTemp.type,
     });
 
-    RestoreUtil.restore(
-      fileTemp,
-      () => {
-        BackupUtil.backup(
-          this.props.books,
-          this.props.notes,
-          this.props.bookmarks,
-          () => {
-            this.props.handleMessage("Change Successfully");
-            this.props.handleMessageBox(true);
-          },
-          5,
-          () => {}
-        );
-      },
-      true
-    );
+    let result = await restore(fileTemp, true);
+    if (result) {
+      this.props.handleMessage("Change Successfully");
+      this.props.handleMessageBox(true);
+    } else {
+      this.props.handleMessage("Change Failed");
+      this.props.handleMessageBox(true);
+    }
   };
   handleChangeLocation = async () => {
     const { dialog } = window.require("electron").remote;
@@ -138,15 +128,21 @@ class SettingDialog extends React.Component<
     if (!path.filePaths[0]) {
       return;
     }
-    SyncUtil.changeLocation(
+    let result = await changePath(
       localStorage.getItem("storageLocation")
         ? localStorage.getItem("storageLocation")
         : ipcRenderer.sendSync("storage-location", "ping"),
-      path.filePaths[0],
-      this.props.handleMessage,
-      this.props.handleMessageBox,
-      this.syncFromLocation
+      path.filePaths[0]
     );
+    if (result === 1) {
+      this.syncFromLocation();
+    } else if (result === 2) {
+      this.props.handleMessage("Change Successfully");
+      this.props.handleMessageBox(true);
+    } else {
+      this.props.handleMessage("Change Failed");
+      this.props.handleMessageBox(true);
+    }
     localStorage.setItem("storageLocation", path.filePaths[0]);
     document.getElementsByClassName(
       "setting-dialog-location-title"
