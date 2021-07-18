@@ -126,6 +126,7 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
             )}
             position="top"
             trigger="mouseenter"
+            distance={25}
           >
             <span className="icon-menu sidebar-list"></span>
           </Tooltip>
