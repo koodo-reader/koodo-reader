@@ -17,4 +17,5 @@ export interface ViewerProps {
 }
 export interface ViewerState {
   key: string;
+  isLoading: boolean;
 }
