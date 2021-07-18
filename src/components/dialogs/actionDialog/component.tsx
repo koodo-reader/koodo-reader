@@ -161,7 +161,7 @@ class ActionDialog extends React.Component<ActionDialogProps> {
             </p>
             <p className="action-dialog-book-title">
               {this.props.currentBook.size
-                ? this.props.currentBook.size / 1024 > 1
+                ? this.props.currentBook.size / 1024 / 1024 > 1
                   ? parseFloat(
                       this.props.currentBook.size / 1024 / 1024 + ""
                     ).toFixed(2) + "Mb"
