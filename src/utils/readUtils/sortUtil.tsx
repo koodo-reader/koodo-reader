@@ -80,6 +80,7 @@ class SortUtil {
     }
     if (bookSortCode.sort === 3) {
       let durationKeys = getDurationArr();
+
       let bookKeys = getBookKey(books);
       if (bookSortCode.order === 1) {
         return getBookIndex(_.union(durationKeys, bookKeys), bookKeys);
