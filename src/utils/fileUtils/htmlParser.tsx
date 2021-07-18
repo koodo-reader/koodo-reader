@@ -9,15 +9,13 @@ class HtmlParser {
     this.getContent(bookDoc);
   }
   getContent(bookDoc: HTMLElement) {
-    this.contentList = Array.from(
-      bookDoc.querySelectorAll("h1,h2,h3,h4,h5,font")
-    );
+    this.contentList = Array.from(bookDoc.querySelectorAll("h1,h2,h3,h4,h5,b"));
     for (let i = 0; i < this.contentList.length; i++) {
-      let random = Math.floor(Math.random() * 900) + 100;
+      let random = Math.floor(Math.random() * 900000) + 100000;
       this.contentTitleList.push({
         label: this.contentList[i].innerText,
-        id: this.contentList[i].innerText.replace(/ /g, "_") + random,
-        href: "#" + this.contentList[i].innerText.replace(/ /g, "_") + random,
+        id: "title" + random,
+        href: "#title" + random,
         subitems: [],
       });
     }

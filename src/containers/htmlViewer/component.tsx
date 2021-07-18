@@ -22,14 +22,23 @@ import RecordLocation from "../../utils/readUtils/recordLocation";
 import { mimetype } from "../../constants/mimetype";
 import styleUtil from "../../utils/readUtils/styleUtil";
 import { isElectron } from "react-device-detect";
+import Lottie from "react-lottie";
+import animationSiri from "../../assets/lotties/siri.json";
 
 declare var window: any;
-
+const siriOptions = {
+  loop: true,
+  autoplay: true,
+  animationData: animationSiri,
+  rendererSettings: {
+    preserveAspectRatio: "xMidYMid slice",
+  },
+};
 class Viewer extends React.Component<ViewerProps, ViewerState> {
   epub: any;
   constructor(props: ViewerProps) {
     super(props);
-    this.state = { key: "" };
+    this.state = { key: "", isLoading: true };
   }
 
   componentDidMount() {
@@ -84,7 +93,15 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         html.clientHeight,
         html.scrollHeight,
         html.offsetHeight
-      ) + 1000;
+      ) * 2;
+    setTimeout(() => {
+      let iFrame: any = document.getElementsByTagName("iframe")[0];
+      let body = iFrame.contentWindow.document.body;
+      let items = body.querySelectorAll("p", "a");
+      let lastchild = items[items.length - 1];
+      if (!lastchild) return;
+      iFrame.height = lastchild.offsetTop + 400;
+    }, 500);
   };
   handleRecord() {
     OtherUtil.setReaderConfig("windowWidth", document.body.clientWidth + "");
@@ -114,6 +131,8 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     window.frames[0].document.body.innerHTML = "";
     window.frames[0].document.body.innerHTML = (this.props.htmlBook
       .doc as any).documentElement.outerHTML;
+    this.setState({ isLoading: false });
+
     styleUtil.addHtmlCss();
     this.handleIframeHeight();
 
@@ -129,11 +148,9 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       }
       let imgs = doc.getElementsByTagName("img");
       let links = doc.getElementsByTagName("a");
-      console.log(links);
       for (let item of links) {
         item.addEventListener("click", (e) => {
           e.preventDefault();
-          console.log(item);
           this.handleJump(item.href);
         });
       }
@@ -225,25 +242,32 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
   };
   render() {
     return (
-      <div
-        className="ebook-viewer"
-        style={{
-          width: `${
-            (100 * parseFloat(OtherUtil.getReaderConfig("scale") || "1")) / 2
-          }%`,
-          height: "100%",
-          marginLeft: `${
-            (100 *
-              (2 - parseFloat(OtherUtil.getReaderConfig("scale") || "1"))) /
-            4
-          }%`,
-          overflowY: "scroll",
-        }}
-      >
-        <iframe title="html-viewer" width="100%">
-          Loading
-        </iframe>
-      </div>
+      <>
+        {this.state.isLoading && (
+          <div className="spinner">
+            <Lottie options={siriOptions} height={100} width={300} />
+          </div>
+        )}
+        <div
+          className="ebook-viewer"
+          style={{
+            width: `${
+              (100 * parseFloat(OtherUtil.getReaderConfig("scale") || "1")) / 2
+            }%`,
+            height: "100%",
+            marginLeft: `${
+              (100 *
+                (2 - parseFloat(OtherUtil.getReaderConfig("scale") || "1"))) /
+              4
+            }%`,
+            overflowY: "scroll",
+          }}
+        >
+          <iframe title="html-viewer" width="100%">
+            Loading
+          </iframe>
+        </div>
+      </>
     );
   }
 }
