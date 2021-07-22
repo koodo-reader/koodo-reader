@@ -21,6 +21,9 @@ if (!singleInstance) {
   });
 }
 app.on("ready", () => {
+  let iconPath = isDev
+    ? path.join(__dirname, "assets", "icons", "256x256.png")
+    : `file://${path.join(__dirname, "./assets/icons/256x256.png")}`;
   let option = {
     width: 1050,
     height: 660,
@@ -32,6 +35,7 @@ app.on("ready", () => {
       nodeIntegrationInSubFrames: true,
       allowRunningInsecureContent: true,
     },
+    icon: iconPath,
   };
 
   mainWin = new BrowserWindow(option);
@@ -63,6 +67,7 @@ app.on("ready", () => {
         nodeIntegrationInSubFrames: true,
         allowRunningInsecureContent: true,
       },
+      icon: iconPath,
     };
     let pdfLocation = isDev
       ? "http://localhost:3000/" + url
