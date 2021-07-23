@@ -33,7 +33,7 @@
 .book-item-list-percentage,
 .book-item-list-config {
   height: 30px;
-  width: 120px;
+  min-width: 180px;
   font-size: 15px;
   opacity: 1;
   text-align: center;
