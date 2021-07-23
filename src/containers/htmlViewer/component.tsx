@@ -97,10 +97,14 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     setTimeout(() => {
       let iFrame: any = document.getElementsByTagName("iframe")[0];
       let body = iFrame.contentWindow.document.body;
-      let items = body.querySelectorAll("p", "a");
-      let lastchild = items[items.length - 1];
+      let lastchild = body.lastElementChild;
+      let lastEle = body.lastChild;
       if (!lastchild) return;
-      iFrame.height = lastchild.offsetTop + 400;
+      iFrame.height =
+        Math.max(
+          lastchild.clientHeight + lastchild.offsetTop,
+          lastEle.clientHeight + lastEle.offsetTop
+        ) + 400;
     }, 500);
   };
   handleRecord() {

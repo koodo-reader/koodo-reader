@@ -153,6 +153,7 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
               this.props.handleNewDialog(false);
               this.props.handleBackupDialog(false);
               this.props.handleSetting(false);
+              this.handleDrag(false);
             }}
             style={
               this.props.isSettingOpen ||
