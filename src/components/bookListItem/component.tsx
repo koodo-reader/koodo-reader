@@ -11,6 +11,8 @@ import OtherUtil from "../../utils/otherUtil";
 import AddTrash from "../../utils/readUtils/addTrash";
 import EmptyCover from "../emptyCover";
 import BookUtil from "../../utils/fileUtils/bookUtil";
+import FileSaver from "file-saver";
+import localforage from "localforage";
 
 class BookListItem extends React.Component<BookItemProps, BookItemState> {
   epub: any;
@@ -195,6 +197,22 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
               className="icon-edit list-icon"
               onClick={() => {
                 this.handleEditBook();
+              }}
+            ></span>
+            <span
+              className="icon-export list-icon"
+              onClick={() => {
+                localforage
+                  .getItem(this.props.currentBook.key)
+                  .then((result: any) => {
+                    this.props.handleMessage("Export Successfully");
+                    this.props.handleMessageBox(true);
+                    FileSaver.saveAs(
+                      new Blob([result]),
+                      this.props.currentBook.name +
+                        `.${this.props.currentBook.format.toLocaleLowerCase()}`
+                    );
+                  });
               }}
             ></span>
           </div>

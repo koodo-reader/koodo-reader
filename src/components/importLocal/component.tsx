@@ -46,6 +46,10 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
       if (filePath && filePath !== ".") {
         this.handleFilePath(filePath);
       }
+      ipcRenderer.on("double-click-to-open-book", (evt: any, message: any) => {
+        console.log(message.filePath);
+        this.handleFilePath(filePath);
+      });
     }
     window.addEventListener("resize", () => {
       this.setState({ width: document.body.clientWidth });
@@ -175,7 +179,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
               let mobiFile = new MobiParser(file_content);
               let content: any = await mobiFile.render(isElectron);
               //包含太多图片或者文件大于5m就不转换
-              if (typeof content === "object" || file.size / 1024 / 1024 > 10) {
+              if (typeof content === "object" || file.size / 1024 / 1024 > 5) {
                 result = BookUtil.generateBook(
                   bookName,
                   extension,
