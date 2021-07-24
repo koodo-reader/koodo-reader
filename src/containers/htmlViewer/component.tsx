@@ -4,7 +4,6 @@ import RecentBooks from "../../utils/readUtils/recordRecent";
 import { ViewerProps, ViewerState } from "./interface";
 import localforage from "localforage";
 import { withRouter } from "react-router-dom";
-import _ from "underscore";
 import BookUtil from "../../utils/fileUtils/bookUtil";
 import MobiParser from "../../utils/fileUtils/mobiParser";
 import marked from "marked";
@@ -24,7 +23,7 @@ import styleUtil from "../../utils/readUtils/styleUtil";
 import { isElectron } from "react-device-detect";
 import Lottie from "react-lottie";
 import animationSiri from "../../assets/lotties/siri.json";
-
+import _ from "underscore";
 declare var window: any;
 const siriOptions = {
   loop: true,
@@ -99,12 +98,40 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       let body = iFrame.contentWindow.document.body;
       let lastchild = body.lastElementChild;
       let lastEle = body.lastChild;
-      if (!lastchild) return;
+      let items = body.querySelectorAll("a", "p");
+      let lastItem = items[items.length - 1];
+      let nodeHeight = 0;
+
+      if (!lastchild && !lastItem && !lastEle) return;
+      if (lastEle.nodeType === 3 && !lastchild && !lastItem) return;
+
+      if (lastEle.nodeType === 3) {
+        if (document.createRange) {
+          let range = document.createRange();
+          range.selectNodeContents(lastEle);
+          if (range.getBoundingClientRect) {
+            let rect = range.getBoundingClientRect();
+            if (rect) {
+              nodeHeight = rect.bottom - rect.top;
+            }
+          }
+        }
+      }
+
       iFrame.height =
         Math.max(
-          lastchild.clientHeight + lastchild.offsetTop,
-          lastEle.clientHeight + lastEle.offsetTop
-        ) + 400;
+          _.isElement(lastchild)
+            ? lastchild.clientHeight + (lastchild as any).offsetTop
+            : 0,
+          _.isElement(lastEle)
+            ? lastEle.clientHeight + (lastEle as any).offsetTop
+            : 0,
+          _.isElement(lastItem)
+            ? lastItem.clientHeight + (lastItem as any).offsetTop
+            : 0
+        ) +
+        400 +
+        (lastEle.nodeType === 3 ? nodeHeight : 0);
     }, 500);
   };
   handleRecord() {
