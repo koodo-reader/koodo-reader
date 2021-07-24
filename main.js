@@ -1,7 +1,18 @@
-const { app, BrowserWindow, Menu, remote, ipcMain } = require("electron");
+const {
+  app,
+  BrowserWindow,
+  Menu,
+  remote,
+  ipcMain,
+  dialog,
+} = require("electron");
 const { ebtMain } = require("electron-baidu-tongji");
 const path = require("path");
 const isDev = require("electron-is-dev");
+const fs = require("fs");
+const configDir = (app || remote.app).getPath("userData");
+const dirPath = path.join(configDir, "uploads");
+
 let mainWin;
 let readerWindow;
 const singleInstance = app.requestSingleInstanceLock();
@@ -12,14 +23,17 @@ if (process.platform == "win32" && process.argv.length >= 2) {
 // Single Instance Lock
 if (!singleInstance) {
   app.quit();
+  if (filePath) {
+    fs.writeFileSync(
+      path.join(dirPath, "log.json"),
+      JSON.stringify({ filePath })
+    );
+  }
 } else {
   app.on("second-instance", (event, argv, workingDir) => {
     if (mainWin) {
       if (!mainWin.isVisible()) mainWin.show();
       mainWin.focus();
-    }
-    if (filePath) {
-      mainWin.webContents.send("double-click-to-open-book", { filePath });
     }
   });
 }
@@ -121,11 +135,18 @@ app.on("ready", () => {
   });
 
   ipcMain.on("storage-location", (event, arg) => {
-    const configDir = (app || remote.app).getPath("userData");
-    const dirPath = path.join(configDir, "uploads");
     event.returnValue = path.join(dirPath, "data");
   });
   ipcMain.on("get-file-data", function (event) {
+    if (process.platform == "win32") {
+      const _data = JSON.parse(
+        fs.readFileSync(path.join(dirPath, "log.json"), "utf8") || "{}"
+      );
+      if (_data && _data.filePath) {
+        filePath = _data.filePath;
+        fs.writeFileSync(path.join(dirPath, "log.json"), "");
+      }
+    }
     event.returnValue = filePath;
     filePath = null;
   });
