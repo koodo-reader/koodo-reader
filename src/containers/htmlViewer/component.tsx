@@ -98,8 +98,22 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       let body = iFrame.contentWindow.document.body;
       let lastchild = body.lastElementChild;
       let lastEle = body.lastChild;
-      let items = body.querySelectorAll("a", "p");
-      let lastItem = items[items.length - 1];
+      let itemAs = body.querySelectorAll("a");
+      let itemPs = body.querySelectorAll("p");
+      let lastItemA = itemAs[itemAs.length - 1];
+      let lastItemP = itemPs[itemPs.length - 1];
+      let lastItem;
+      if (_.isElement(lastItemA) && _.isElement(lastItemP)) {
+        if (
+          lastItemA.clientHeight + (lastItemA as any).offsetTop >
+          lastItemP.clientHeight + (lastItemP as any).offsetTop
+        ) {
+          lastItem = lastItemA;
+        } else {
+          lastItem = lastItemP;
+        }
+      }
+
       let nodeHeight = 0;
 
       if (!lastchild && !lastItem && !lastEle) return;
