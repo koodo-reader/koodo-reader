@@ -22,7 +22,7 @@ export const emptyList = [
   },
   {
     mode: "digest",
-    main: "Empty Digest",
+    main: "Empty Highlight",
     sub: "Select any text and click the Highlight button on the popup Menu",
   },
   {

@@ -45,7 +45,6 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
 
       const filePath = ipcRenderer.sendSync("get-file-data");
       if (filePath && filePath !== ".") {
-        console.log(filePath, "filePath");
         this.handleFilePath(filePath);
       }
       window.addEventListener(
@@ -53,7 +52,6 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
         (event) => {
           const _filePath = ipcRenderer.sendSync("get-file-data");
           if (_filePath && _filePath !== ".") {
-            console.log(_filePath, "filePath");
             this.handleFilePath(_filePath);
           }
         },
