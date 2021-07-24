@@ -3,8 +3,6 @@ const translationCN = require("./src/assets/locales/cn/translation.json");
 const translationRU = require("./src/assets/locales/ru/translation.json");
 const translationTW = require("./src/assets/locales/tw/translation.json");
 
-console.log(typeof translationCN);
-
 for (let item in translationCN) {
   if (!translationEN[item]) {
     translationEN[item] = item;
