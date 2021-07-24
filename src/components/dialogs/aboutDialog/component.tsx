@@ -28,7 +28,7 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
         }}
         style={
           this.props.isNewWarning
-            ? { left: "525px", height: "220px", width: "120px" }
+            ? { left: "525px", height: "225px", width: "120px" }
             : {
                 left: "525px",
                 height: "200px",
