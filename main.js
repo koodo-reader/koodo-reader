@@ -5,7 +5,6 @@ const isDev = require("electron-is-dev");
 const fs = require("fs");
 const configDir = (app || remote.app).getPath("userData");
 const dirPath = path.join(configDir, "uploads");
-fs.writeFileSync(path.join(dirPath, "log.json"), "");
 let mainWin;
 let readerWindow;
 const singleInstance = app.requestSingleInstanceLock();
@@ -131,12 +130,14 @@ app.on("ready", () => {
     event.returnValue = path.join(dirPath, "data");
   });
   ipcMain.on("get-file-data", function (event) {
-    const _data = JSON.parse(
-      fs.readFileSync(path.join(dirPath, "log.json"), "utf8") || "{}"
-    );
-    if (_data && _data.filePath) {
-      filePath = _data.filePath;
-      fs.writeFileSync(path.join(dirPath, "log.json"), "");
+    if (fs.existsSync(path.join(dirPath, "log.json"))) {
+      const _data = JSON.parse(
+        fs.readFileSync(path.join(dirPath, "log.json"), "utf8") || "{}"
+      );
+      if (_data && _data.filePath) {
+        filePath = _data.filePath;
+        fs.writeFileSync(path.join(dirPath, "log.json"), "");
+      }
     }
 
     event.returnValue = filePath;
