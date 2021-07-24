@@ -1,18 +1,11 @@
-const {
-  app,
-  BrowserWindow,
-  Menu,
-  remote,
-  ipcMain,
-  dialog,
-} = require("electron");
+const { app, BrowserWindow, Menu, remote, ipcMain } = require("electron");
 const { ebtMain } = require("electron-baidu-tongji");
 const path = require("path");
 const isDev = require("electron-is-dev");
 const fs = require("fs");
 const configDir = (app || remote.app).getPath("userData");
 const dirPath = path.join(configDir, "uploads");
-
+fs.writeFileSync(path.join(dirPath, "log.json"), "");
 let mainWin;
 let readerWindow;
 const singleInstance = app.requestSingleInstanceLock();
