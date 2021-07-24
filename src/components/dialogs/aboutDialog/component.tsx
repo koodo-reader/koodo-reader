@@ -28,10 +28,10 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
         }}
         style={
           this.props.isNewWarning
-            ? { left: "525px", height: "200px", width: "120px" }
+            ? { left: "525px", height: "220px", width: "120px" }
             : {
                 left: "525px",
-                height: "180px",
+                height: "200px",
                 width: "120px",
               }
         }
@@ -70,6 +70,14 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
             }}
           >
             <Trans>Feedback</Trans>
+          </li>
+          <li
+            className="sort-by-category-list"
+            onClick={() => {
+              this.handleJump("https://forms.office.com/r/tgD1ZizHB2");
+            }}
+          >
+            <Trans>Survey</Trans>
           </li>
           <li
             className="sort-by-category-list"
