@@ -138,15 +138,14 @@ app.on("ready", () => {
     event.returnValue = path.join(dirPath, "data");
   });
   ipcMain.on("get-file-data", function (event) {
-    if (process.platform == "win32") {
-      const _data = JSON.parse(
-        fs.readFileSync(path.join(dirPath, "log.json"), "utf8") || "{}"
-      );
-      if (_data && _data.filePath) {
-        filePath = _data.filePath;
-        fs.writeFileSync(path.join(dirPath, "log.json"), "");
-      }
+    const _data = JSON.parse(
+      fs.readFileSync(path.join(dirPath, "log.json"), "utf8") || "{}"
+    );
+    if (_data && _data.filePath) {
+      filePath = _data.filePath;
+      fs.writeFileSync(path.join(dirPath, "log.json"), "");
     }
+
     event.returnValue = filePath;
     filePath = null;
   });
