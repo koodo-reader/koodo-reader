@@ -42,14 +42,23 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
           ipcRenderer.sendSync("storage-location", "ping")
         );
       }
-      var filePath = ipcRenderer.sendSync("get-file-data");
+
+      const filePath = ipcRenderer.sendSync("get-file-data");
       if (filePath && filePath !== ".") {
+        console.log(filePath, "filePath");
         this.handleFilePath(filePath);
       }
-      ipcRenderer.on("double-click-to-open-book", (evt: any, message: any) => {
-        console.log(message.filePath);
-        this.handleFilePath(filePath);
-      });
+      window.addEventListener(
+        "focus",
+        (event) => {
+          const _filePath = ipcRenderer.sendSync("get-file-data");
+          if (_filePath && _filePath !== ".") {
+            console.log(_filePath, "filePath");
+            this.handleFilePath(_filePath);
+          }
+        },
+        false
+      );
     }
     window.addEventListener("resize", () => {
       this.setState({ width: document.body.clientWidth });
