@@ -2,7 +2,7 @@
   "name": "koodo-reader",
   "main": "main.js",
   "version": "1.2.9",
-  "description": "An open-source eBook reader",
+  "description": "A cross-platform ebook reader",
   "author": {
     "name": "App by Troye",
     "email": "guo362429@gmail.com"
