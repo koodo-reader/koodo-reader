@@ -101,15 +101,6 @@ class Redirect extends React.Component<RedirectProps, RedirectState> {
 
     return (
       <div className="manager">
-        <img
-          src={
-            process.env.NODE_ENV === "production"
-              ? "./assets/logo.png"
-              : "../../assets/logo.png"
-          }
-          alt=""
-          className="logo"
-        />
         <div className="empty-page-info-container" style={{ margin: 100 }}>
           <div className="empty-page-info-main">
             <Trans>It seems like you're lost</Trans>
