@@ -5,7 +5,7 @@
 </div>
 
 <div align="center" >
-<img src="./assets/icons/256x256.png" width="96px" height="96px"/>
+<img src="https://i.loli.net/2021/07/30/ZKNMmz54Q3uqlrW.png" width="96px" height="96px"/>
 </div>
 
 <h1 align="center">
