@@ -24,7 +24,7 @@
 
 <div align="center">
   <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
-    <img src="./assets/demo.png" >
+    <img src="https://i.loli.net/2021/07/30/p7RlUIBv2LVtTPq.png" >
   </a>
   <br/>
 </div>
