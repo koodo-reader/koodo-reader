@@ -116,7 +116,6 @@ app.on("ready", () => {
     }
     readerWindow.on("close", () => {
       readerWindow.destroy();
-      readerWindow = null;
     });
     event.returnValue = "success";
   });
