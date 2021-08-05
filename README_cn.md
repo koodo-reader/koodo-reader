@@ -12,16 +12,14 @@
   Koodo Reader
 </h2>
 
-<h3 align="center">
+<div align="center">
   一个跨平台的电子书阅读器
-</h3>
+</div>
 <div align="center">
 
 [下载](https://koodo.960960.xyz/download) | [预览](https://reader.960960.xyz) | [反馈](https://koodo.960960.xyz/support) | [文档](https://www.notion.so/troyeguo/e9c4e5755d564b0db6340eeba6d9ece9?v=7c8fcbed9adf4592ada95cfd593868c9)
 
 </div>
-
-<hr/>
 
 ## 预览
 

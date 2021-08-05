@@ -12,16 +12,14 @@
   Koodo Reader
 </h2>
 
-<h3 align="center">
+<div align="center">
   A cross-platform ebook reader
-</h3>
+</div>
 <div align="center">
 
 [Download](https://koodo.960960.xyz/download) | [Preview](https://reader.960960.xyz) | [Feedback](https://koodo.960960.xyz/support) | [Document](https://www.notion.so/troyeguo/01aaa516687c418499f713d34793b9ad?v=54d51fe1688a4f8ab5784b17e4df3308)
 
 </div>
-
-<hr/>
 
 ## Preview
 
