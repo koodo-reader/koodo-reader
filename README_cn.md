@@ -16,7 +16,7 @@
 </h3>
 <div align="center">
 
-[English](https://github.com/troyeguo/koodo-reader/blob/master/README.md) | [下载](https://koodo.960960.xyz/download) | [预览](https://reader.960960.xyz) | [反馈](https://koodo.960960.xyz/support) | [文档](https://www.notion.so/troyeguo/e9c4e5755d564b0db6340eeba6d9ece9?v=7c8fcbed9adf4592ada95cfd593868c9)
+[下载](https://koodo.960960.xyz/download) | [预览](https://reader.960960.xyz) | [反馈](https://koodo.960960.xyz/support) | [文档](https://www.notion.so/troyeguo/e9c4e5755d564b0db6340eeba6d9ece9?v=7c8fcbed9adf4592ada95cfd593868c9)
 
 </div>
 
