@@ -1,6 +1,6 @@
 <div align="center">
 
-[简体中文](https://github.com/troyeguo/koodo-reader/blob/master/README_cn.md) | [繁體中文](https://github.com/troyeguo/koodo-reader/blob/master/README_tw.md) | English
+[简体中文](https://github.com/troyeguo/koodo-reader/blob/master/README_cn.md) | English
 
 </div>
 
@@ -95,16 +95,10 @@ Make sure node's version on your computer is larger than 10.0.0, yarn and git is
    yarn start
    ```
 
-## Contribution
+## License
 
-| Contribution                        | Contributor                                                                                |
-| :---------------------------------- | :----------------------------------------------------------------------------------------- |
-| translation for traditional Chinese | [TobySkarting](https://github.com/TobySkarting), [playercd8](https://github.com/playercd8) |
-| translation for Russian             | [vanja-san](https://github.com/vanja-san)                                                  |
-| installation for Homebrew           | [singularitti](https://github.com/singularitti)                                            |
-| installation for Docker             | [yanickxia](https://github.com/yanickxia)                                                  |
-| other contributors                  | [bamlan](https://github.com/bamlan)                                                        |
+This project is generally licensed under AGPL3.0, but any kind of modification of source code for commercial projects or any forms of alternation on logo or name are forbidden.
 
 ## Help
 
-Click [here](https://github.com/troyeguo/koodo-reader/issues) to report your issue, or visit [Website](https://koodo.960960.xyz/support) for more instruction.
+Click [here](https://github.com/troyeguo/koodo-reader/issues) to report your issue.
