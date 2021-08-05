@@ -1,8 +1,8 @@
-<div align="left">
+<h4 align="left">
 
-**简体中文** | [**English**](https://github.com/troyeguo/koodo-reader/blob/master/README.md)
+简体中文 | [English](https://github.com/troyeguo/koodo-reader/blob/master/README.md)
 
-</div>
+</h4>
 
 <div align="center">
 
