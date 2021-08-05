@@ -1,6 +1,6 @@
 <div align="left">
 
-[简体中文](https://github.com/troyeguo/koodo-reader/blob/master/README_cn.md) | English
+[**简体中文**](https://github.com/troyeguo/koodo-reader/blob/master/README_cn.md) | **English**
 
 </div>
 
@@ -8,9 +8,10 @@
 <img src="https://i.loli.net/2021/07/30/ZKNMmz54Q3uqlrW.png" width="96px" height="96px"/>
 </div>
 
-<h1 align="center">
+<h2 align="center">
   Koodo Reader
-</h1>
+</h2>
+
 <h3 align="center">
   A cross-platform ebook reader
 </h3>
@@ -19,6 +20,8 @@
 [Download](https://koodo.960960.xyz/download) | [Preview](https://reader.960960.xyz) | [Feedback](https://koodo.960960.xyz/support) | [Document](https://www.notion.so/troyeguo/01aaa516687c418499f713d34793b9ad?v=54d51fe1688a4f8ab5784b17e4df3308)
 
 </div>
+
+<hr/>
 
 ## Preview
 

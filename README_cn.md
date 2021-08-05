@@ -1,6 +1,6 @@
 <div align="left">
 
-简体中文 | [English](https://github.com/troyeguo/koodo-reader/blob/master/README.md)
+**简体中文** | [**English**](https://github.com/troyeguo/koodo-reader/blob/master/README.md)
 
 </div>
 
@@ -8,9 +8,10 @@
 <img src="https://i.loli.net/2021/07/30/ZKNMmz54Q3uqlrW.png" width="96px" height="96px"/>
 </div>
 
-<h1 align="center">
+<h2 align="center">
   Koodo Reader
-</h1>
+</h2>
+
 <h3 align="center">
   一个跨平台的电子书阅读器
 </h3>
@@ -19,6 +20,8 @@
 [下载](https://koodo.960960.xyz/download) | [预览](https://reader.960960.xyz) | [反馈](https://koodo.960960.xyz/support) | [文档](https://www.notion.so/troyeguo/e9c4e5755d564b0db6340eeba6d9ece9?v=7c8fcbed9adf4592ada95cfd593868c9)
 
 </div>
+
+<hr/>
 
 ## 预览
 
@@ -91,6 +94,6 @@ docker-compose up -d
    yarn start
    ```
 
-## 许可
+## 许可说明
 
 本项目禁止任何商业项目二开使用，任何组织和个人不得修改本软件名字和 logo 重新分发。在不违背上述条件的前提下，本项目采用 AGPL3.0 协议
