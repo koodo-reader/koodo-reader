@@ -8,13 +8,13 @@
 <img src="https://i.loli.net/2021/07/30/ZKNMmz54Q3uqlrW.png" width="96px" height="96px"/>
 </div>
 
-<h2 align="center">
+<h1 align="center">
   Koodo Reader
-</h2>
+</h1>
 
-<div align="center">
+<h3 align="center">
   A cross-platform ebook reader
-</div>
+</h3>
 <div align="center">
 
 [Download](https://koodo.960960.xyz/download) | [Preview](https://reader.960960.xyz) | [Feedback](https://koodo.960960.xyz/support) | [Document](https://www.notion.so/troyeguo/01aaa516687c418499f713d34793b9ad?v=54d51fe1688a4f8ab5784b17e4df3308)

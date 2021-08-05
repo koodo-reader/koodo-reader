@@ -5,16 +5,18 @@
 </div>
 
 <div align="center">
-<img src="https://i.loli.net/2021/07/30/ZKNMmz54Q3uqlrW.png" width="96px" height="96px"/>
+
+  <img src="https://i.loli.net/2021/07/30/ZKNMmz54Q3uqlrW.png" width="96px" height="96px"/>
 </div>
 
-<h2 align="center">
+<h1 align="center">
   Koodo Reader
-</h2>
+</h1>
 
-<div align="center">
+<h3 align="center">
   一个跨平台的电子书阅读器
-</div>
+</h3>
+
 <div align="center">
 
 [下载](https://koodo.960960.xyz/download) | [预览](https://reader.960960.xyz) | [反馈](https://koodo.960960.xyz/support) | [文档](https://www.notion.so/troyeguo/e9c4e5755d564b0db6340eeba6d9ece9?v=7c8fcbed9adf4592ada95cfd593868c9)
