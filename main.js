@@ -115,7 +115,7 @@ app.on("ready", () => {
       readerWindow.loadURL(url.indexOf("pdf") > -1 ? pdfLocation : url);
     }
     readerWindow.on("close", () => {
-      readerWindow.destroy();
+      readerWindow && readerWindow.destroy();
     });
     event.returnValue = "success";
   });
