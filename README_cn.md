@@ -1,4 +1,4 @@
-<div align="center">
+<div align="left">
 
 简体中文 | [English](https://github.com/troyeguo/koodo-reader/blob/master/README.md)
 
@@ -16,7 +16,7 @@
 </h3>
 <div align="center">
 
-[下载](https://koodo.960960.xyz/download) | [官网](https://koodo.960960.xyz) | [反馈](https://koodo.960960.xyz/support) | [文档](https://www.notion.so/troyeguo/e9c4e5755d564b0db6340eeba6d9ece9?v=7c8fcbed9adf4592ada95cfd593868c9) | [计划](https://www.notion.so/troyeguo/215baeda57804fd29dbb0e91d1e6a021?v=360c00183d944b598668f34c255edfd7)
+[English](https://github.com/troyeguo/koodo-reader/blob/master/README.md) | [下载](https://koodo.960960.xyz/download) | [预览](https://reader.960960.xyz) | [反馈](https://koodo.960960.xyz/support) | [文档](https://www.notion.so/troyeguo/e9c4e5755d564b0db6340eeba6d9ece9?v=7c8fcbed9adf4592ada95cfd593868c9)
 
 </div>
 
@@ -94,7 +94,3 @@ docker-compose up -d
 ## 许可
 
 本项目禁止任何商业项目二开使用，任何组织和个人不得修改本软件名字和 logo 重新分发。在不违背上述条件的前提下，本项目采用 AGPL3.0 协议
-
-## 帮助
-
-您可以在[issue](https://github.com/troyeguo/koodo-reader/issues)提问。

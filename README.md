@@ -1,4 +1,4 @@
-<div align="center">
+<div align="left">
 
 [简体中文](https://github.com/troyeguo/koodo-reader/blob/master/README_cn.md) | English
 
@@ -16,7 +16,7 @@
 </h3>
 <div align="center">
 
-[Download](https://koodo.960960.xyz/download) | [Website](https://koodo.960960.xyz) | [Feedback](https://koodo.960960.xyz/support) | [Document](https://www.notion.so/troyeguo/01aaa516687c418499f713d34793b9ad?v=54d51fe1688a4f8ab5784b17e4df3308) | [Roadmap](https://www.notion.so/troyeguo/d1c19a132932465bae1d89dd963c92ea?v=ca8aa69cf25849c18c92b92ba868663b)
+[Download](https://koodo.960960.xyz/download) | [Preview](https://reader.960960.xyz) | [Feedback](https://koodo.960960.xyz/support) | [Document](https://www.notion.so/troyeguo/01aaa516687c418499f713d34793b9ad?v=54d51fe1688a4f8ab5784b17e4df3308)
 
 </div>
 
@@ -98,7 +98,3 @@ Make sure node's version on your computer is larger than 10.0.0, yarn and git is
 ## License
 
 This project is generally licensed under AGPL3.0, but any kind of modification of source code for commercial projects or any forms of alternation on logo or name are forbidden.
-
-## Help
-
-Click [here](https://github.com/troyeguo/koodo-reader/issues) to report your issue.
