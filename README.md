@@ -98,4 +98,4 @@ Make sure node's version on your computer is larger than 10.0.0, yarn and git is
 
 ## License
 
-This project is generally licensed under AGPL3.0, but any kind of modification of source code for commercial projects or any forms of alternation on logo or name are forbidden.
+This project is generally licensed under AGPL3.0, but any kind of modification of source code for commercial projects or alternation on logo or name are not allowed.
