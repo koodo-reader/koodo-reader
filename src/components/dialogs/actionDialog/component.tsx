@@ -1,4 +1,3 @@
-//对图书操作的菜单
 import React from "react";
 import "./actionDialog.css";
 import { Trans } from "react-i18next";

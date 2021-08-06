@@ -1,4 +1,3 @@
-//图书加载前的动画
 import React from "react";
 import "./loadingPage.css";
 import { LoadingPageProps } from "./interface";

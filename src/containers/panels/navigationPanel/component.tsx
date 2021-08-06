@@ -1,4 +1,3 @@
-//左侧图书导航面板
 import React from "react";
 import "./navigationPanel.css";
 import ContentList from "../../lists/contentList";

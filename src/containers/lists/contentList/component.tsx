@@ -1,4 +1,3 @@
-//图书导航栏的目录列表
 import React from "react";
 import "./contentList.css";
 import { ContentListProps, ContentListState } from "./interface";

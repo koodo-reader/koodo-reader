@@ -1,4 +1,3 @@
-//修改阅读器背景色
 import React from "react";
 import { backgroundList, textList } from "../../../constants/themeList";
 import StyleUtil from "../../../utils/readUtils/styleUtil";

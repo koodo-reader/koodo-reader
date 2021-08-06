@@ -1,4 +1,3 @@
-//header 页面
 import { connect } from "react-redux";
 import { withTranslation } from "react-i18next";
 import {

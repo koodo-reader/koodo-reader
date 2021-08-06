@@ -1,4 +1,3 @@
-//编辑图书对话框
 import { connect } from "react-redux";
 import "./editDialog.css";
 import {

@@ -1,4 +1,3 @@
-//全部图书，最近阅读，搜索结果，排序结果的数据
 import { connect } from "react-redux";
 import {
   handleFetchList,

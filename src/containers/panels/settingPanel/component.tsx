@@ -1,4 +1,3 @@
-//右侧阅读选项面板
 import React from "react";
 import "./settingPanel.css";
 import ThemeList from "../../../components/readerSettings/themeList";

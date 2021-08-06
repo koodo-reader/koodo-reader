@@ -1,4 +1,3 @@
-//消息提示
 import React from "react";
 import "./messageBox.css";
 import { Trans } from "react-i18next";
