@@ -1,4 +1,3 @@
-//高亮，下划线颜色选择
 import React from "react";
 import OtherUtil from "../../utils/otherUtil";
 import "./colorOption.css";

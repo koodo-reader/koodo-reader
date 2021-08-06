@@ -1,4 +1,3 @@
-// 阅读期间自动记录当前阅读位置
 class RecordLocation {
   static recordCfi(bookKey: string, cfi: string, percentage: number) {
     let json = localStorage.getItem("recordLocation");

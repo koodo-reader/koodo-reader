@@ -1,4 +1,3 @@
-//我的笔记页面
 import React from "react";
 import "./noteList.css";
 import { NoteListProps, NoteListState } from "./interface";

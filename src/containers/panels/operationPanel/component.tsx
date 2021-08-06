@@ -1,4 +1,3 @@
-//顶部图书操作面板
 import React from "react";
 import "./operationPanel.css";
 import Bookmark from "../../../model/Bookmark";

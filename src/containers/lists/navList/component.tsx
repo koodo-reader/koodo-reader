@@ -1,4 +1,3 @@
-//图书导航栏页面的书签，笔记，书摘页面
 import React from "react";
 import "./navList.css";
 import { Trans } from "react-i18next";
