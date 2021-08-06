@@ -1,4 +1,3 @@
-//右侧阅读选项面板
 import React from "react";
 import { TextToSpeechProps, TextToSpeechState } from "./interface";
 import { Trans } from "react-i18next";

@@ -1,4 +1,3 @@
-//消息提示
 import { connect } from "react-redux";
 import { stateType } from "../../store";
 import MessageBox from "./component";

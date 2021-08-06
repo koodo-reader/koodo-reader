@@ -1,4 +1,3 @@
-//从本地导入书籍
 import React from "react";
 import "./importLocal.css";
 import BookModel from "../../model/Book";

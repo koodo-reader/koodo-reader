@@ -1,4 +1,3 @@
-//卡片模式下的图书显示
 import { connect } from "react-redux";
 import {
   handleActionDialog,

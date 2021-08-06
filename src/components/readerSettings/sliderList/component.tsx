@@ -1,4 +1,3 @@
-//字体大小选择页面
 import React from "react";
 import { Trans } from "react-i18next";
 import { SliderListProps, SliderListState } from "./interface";

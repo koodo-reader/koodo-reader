@@ -1,4 +1,3 @@
-//提示更新的文字
 import React from "react";
 import "./updateInfo.css";
 import { TipDialogProps, TipDialogState } from "./interface";

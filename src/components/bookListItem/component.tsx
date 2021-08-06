@@ -1,4 +1,3 @@
-//控制列表模式下的图书显示
 import React from "react";
 import "./bookListItem.css";
 import RecordLocation from "../../utils/readUtils/recordLocation";

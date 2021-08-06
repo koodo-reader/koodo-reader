@@ -1,4 +1,3 @@
-//图书样式设置的下拉菜单页面
 import { connect } from "react-redux";
 import { withTranslation } from "react-i18next";
 import DropdownList from "./component";

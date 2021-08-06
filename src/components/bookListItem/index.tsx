@@ -1,4 +1,3 @@
-//控制列表模式下的图书显示
 import { connect } from "react-redux";
 import {
   handleEditDialog,

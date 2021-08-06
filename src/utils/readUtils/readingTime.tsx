@@ -1,4 +1,3 @@
-// 记录书本打开记录
 class ReadingTime {
   static setTime(bookKey: string, time: number) {
     let json = localStorage.getItem("readingTime");

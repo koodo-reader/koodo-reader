@@ -1,4 +1,3 @@
-//为空页面
 import React from "react";
 import "./emptyPage.css";
 import { emptyList } from "../../constants/emptyList";

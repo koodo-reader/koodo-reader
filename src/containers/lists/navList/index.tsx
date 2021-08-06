@@ -1,4 +1,3 @@
-//图书导航栏页面的书签页面
 import { connect } from "react-redux";
 import { stateType } from "../../../store";
 import { withTranslation } from "react-i18next";

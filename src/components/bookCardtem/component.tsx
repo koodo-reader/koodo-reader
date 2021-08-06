@@ -1,4 +1,3 @@
-//卡片模式下的图书显示
 import React from "react";
 import RecentBooks from "../../utils/readUtils/recordRecent";
 import "./bookCardItem.css";

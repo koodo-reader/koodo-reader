@@ -1,4 +1,3 @@
-//从本地导入书籍
 import "./importLocal.css";
 import { connect } from "react-redux";
 import {

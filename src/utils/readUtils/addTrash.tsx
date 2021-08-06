@@ -1,4 +1,3 @@
-// 记录书本打开记录
 import BookModel from "../../model/Book";
 class AddTrash {
   static setTrash(bookKey: string) {

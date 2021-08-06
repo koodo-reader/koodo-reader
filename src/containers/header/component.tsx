@@ -1,4 +1,3 @@
-//header 页面
 import React from "react";
 import "./header.css";
 import SearchBox from "../../components/searchBox";

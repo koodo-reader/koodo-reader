@@ -1,8 +1,8 @@
-<h4 align="left">
+<div align="left">
 
 [简体中文](https://github.com/troyeguo/koodo-reader/blob/master/README_cn.md) | English
 
-</h4>
+</div>
 
 <div align="center" >
 <img src="https://i.loli.net/2021/07/30/ZKNMmz54Q3uqlrW.png" width="96px" height="96px"/>

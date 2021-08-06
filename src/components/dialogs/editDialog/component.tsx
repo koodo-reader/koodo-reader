@@ -1,4 +1,3 @@
-//编辑图书对话框
 import React from "react";
 import "./editDialog.css";
 import localforage from "localforage";

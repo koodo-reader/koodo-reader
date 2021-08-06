@@ -1,4 +1,3 @@
-//图书操作页面
 import { connect } from "react-redux";
 import {
   handleBookmarks,

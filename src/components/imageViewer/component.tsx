@@ -1,4 +1,3 @@
-//阅读器图书内容区域
 import React from "react";
 import "./imageViewer.css";
 import { ImageViewerProps, ImageViewerStates } from "./interface";

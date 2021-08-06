@@ -1,4 +1,3 @@
-//提示更新的文字
 import React from "react";
 import "./updateInfo.css";
 import { UpdateInfoProps, UpdateInfoState } from "./interface";

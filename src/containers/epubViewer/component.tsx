@@ -1,4 +1,3 @@
-//阅读器图书内容区域
 import React from "react";
 import PopupMenu from "../../components/popups/popupMenu";
 import { ViewAreaProps, ViewAreaStates } from "./interface";

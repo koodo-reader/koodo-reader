@@ -1,4 +1,3 @@
-//左下角的图标外链
 import { connect } from "react-redux";
 import { handleColor, handleSelection } from "../../store/actions";
 import { stateType } from "../../store";

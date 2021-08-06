@@ -1,4 +1,3 @@
-// 记录书本打开记录
 const defaultShelf = {
   New: null,
   Study: [],

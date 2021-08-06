@@ -1,4 +1,3 @@
-//添加图书到书架的对话框
 import { connect } from "react-redux";
 import {
   handleMessageBox,

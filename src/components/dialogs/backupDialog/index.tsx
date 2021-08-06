@@ -1,4 +1,3 @@
-//备份和恢复页面
 import {
   handleBackupDialog,
   handleTokenDialog,

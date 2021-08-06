@@ -1,4 +1,3 @@
-//字体大小选择页面
 import { connect } from "react-redux";
 import { withTranslation } from "react-i18next";
 import SliderList from "./component";

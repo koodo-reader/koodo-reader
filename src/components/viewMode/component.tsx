@@ -1,4 +1,3 @@
-//为空页面
 import React from "react";
 import "./viewMode.css";
 import { ViewModeProps, ViewModeState } from "./interface";

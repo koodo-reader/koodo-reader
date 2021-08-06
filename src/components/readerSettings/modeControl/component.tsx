@@ -1,4 +1,3 @@
-//阅读模式切换
 import React from "react";
 import "./modeControl.css";
 import { ModeControlProps, ModeControlState } from "./interface";
