@@ -1,4 +1,3 @@
-//为空页面
 import { connect } from "react-redux";
 import { stateType } from "../../store";
 import EmptyPage from "./component";

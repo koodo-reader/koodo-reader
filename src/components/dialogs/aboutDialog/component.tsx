@@ -1,4 +1,3 @@
-//排序弹窗
 import React from "react";
 import { Trans } from "react-i18next";
 import { AboutDialogProps, AboutDialogState } from "./interface";

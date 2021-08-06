@@ -1,4 +1,3 @@
-//底部阅读进度面板
 import React from "react";
 import "./progressPanel.css";
 import RecordLocation from "../../../utils/readUtils/recordLocation";

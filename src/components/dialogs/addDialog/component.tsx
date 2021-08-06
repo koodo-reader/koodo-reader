@@ -1,4 +1,3 @@
-//添加图书到书架的对话框
 import React, { Component } from "react";
 import ShelfUtil from "../../../utils/readUtils/shelfUtil";
 import { Trans } from "react-i18next";

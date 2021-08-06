@@ -1,4 +1,3 @@
-//左下角的图标外链
 import React from "react";
 import "./settingDialog.css";
 import { SettingInfoProps, SettingInfoState } from "./interface";

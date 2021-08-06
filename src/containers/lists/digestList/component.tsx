@@ -1,4 +1,3 @@
-//我的高亮页面
 import React from "react";
 import "./digestList.css";
 import { DigestListProps, DigestListStates } from "./interface";

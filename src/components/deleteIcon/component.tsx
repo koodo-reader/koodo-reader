@@ -1,4 +1,3 @@
-//我的高亮页面
 import React from "react";
 import "./deleteIcon.css";
 import { DeleteIconProps, DeleteIconStates } from "./interface";

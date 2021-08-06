@@ -1,4 +1,3 @@
-//选中文字后的弹窗，四个按钮
 import React from "react";
 import "./popupOption.css";
 import localforage from "localforage";

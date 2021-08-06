@@ -1,4 +1,3 @@
-//我的高亮页面
 import { connect } from "react-redux";
 import { stateType } from "../../../store";
 import DigestList from "./component";

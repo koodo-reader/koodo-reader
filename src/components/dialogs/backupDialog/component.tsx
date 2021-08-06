@@ -1,4 +1,3 @@
-//备份和恢复页面
 import React from "react";
 import "./backupDialog.css";
 import { driveList } from "../../../constants/driveList";

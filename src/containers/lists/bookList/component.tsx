@@ -1,4 +1,3 @@
-//全部图书，最近阅读，搜索结果，排序结果的数据
 import React from "react";
 import "./booklist.css";
 import BookCardItem from "../../../components/bookCardtem";
