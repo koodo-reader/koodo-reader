@@ -34,6 +34,14 @@
   <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
     <img src="https://i.loli.net/2021/08/08/LeEN9gnOvFmfVWA.png" >
   </a>
+  <b>列表模式</b>
+  <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
+    <img src="https://i.loli.net/2021/08/08/JyNHfThMs184Um2.png" >
+  </a>
+  <b>封面模式</b>
+  <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
+    <img src="https://i.loli.net/2021/08/08/76zkDEAobd4qsmR.png" >
+  </a>
   <b>批注选项</b>
   <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
     <img src="https://i.loli.net/2021/08/08/G7WvUQFTrEpSCKg.png" >
