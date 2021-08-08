@@ -26,19 +26,19 @@
 ## 预览
 
 <div align="center">
-  主页：
+  <b>主页</b>
   <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
     <img src="https://i.loli.net/2021/08/08/I37WPYFJcC1jltn.png" >
   </a>
-  阅读菜单：
+  <b>阅读菜单</b>
   <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
     <img src="https://i.loli.net/2021/08/08/LeEN9gnOvFmfVWA.png" >
   </a>
-  批注选项：
+  <b>批注选项</b>
   <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
     <img src="https://i.loli.net/2021/08/08/G7WvUQFTrEpSCKg.png" >
   </a>
-  黑夜模式和主题色：
+  <b>黑夜模式和主题色</b>
   <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
     <img src="https://i.loli.net/2021/08/08/ynqUNpX93xZefdw.png" >
   </a>
