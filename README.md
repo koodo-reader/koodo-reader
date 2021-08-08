@@ -25,7 +25,7 @@
 
 <div align="center">
   <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
-    <img src="https://i.loli.net/2021/08/08/DlIE3kga6xBHPnT.png" >
+    <img src="https://i.loli.net/2021/08/08/I37WPYFJcC1jltn.png" >
   </a>
   <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
     <img src="https://i.loli.net/2021/08/08/LeEN9gnOvFmfVWA.png" >
@@ -34,10 +34,8 @@
     <img src="https://i.loli.net/2021/08/08/G7WvUQFTrEpSCKg.png" >
   </a>
   <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
-    <img src="https://i.loli.net/2021/08/08/TJctVQiqNdjenOW.png" >
+    <img src="https://i.loli.net/2021/08/08/ynqUNpX93xZefdw.png" >
   </a>
-
-  <br/>
 </div>
 
 ## Feature
