@@ -38,7 +38,7 @@
   <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
     <img src="https://i.loli.net/2021/08/08/G7WvUQFTrEpSCKg.png" >
   </a>
-  <b>备份与恢复</b>
+  <b>备份和恢复</b>
   <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
     <img src="https://i.loli.net/2021/08/08/aRIAiYT2dGJQhC1.png" >
   </a>
