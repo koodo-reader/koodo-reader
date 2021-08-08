@@ -38,6 +38,10 @@
   <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
     <img src="https://i.loli.net/2021/08/08/G7WvUQFTrEpSCKg.png" >
   </a>
+  <b>备份与恢复</b>
+  <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
+    <img src="https://i.loli.net/2021/08/08/aRIAiYT2dGJQhC1.png" >
+  </a>
   <b>黑夜模式和主题色</b>
   <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
     <img src="https://i.loli.net/2021/08/08/ynqUNpX93xZefdw.png" >
