@@ -27,9 +27,17 @@
 
 <div align="center">
   <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
-    <img src="https://i.loli.net/2021/07/30/p7RlUIBv2LVtTPq.png" >
+    <img src="https://i.loli.net/2021/08/08/DlIE3kga6xBHPnT.png" >
   </a>
-  <br/>
+  <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
+    <img src="https://i.loli.net/2021/08/08/LeEN9gnOvFmfVWA.png" >
+  </a>
+  <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
+    <img src="https://i.loli.net/2021/08/08/G7WvUQFTrEpSCKg.png" >
+  </a>
+  <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
+    <img src="https://i.loli.net/2021/08/08/TJctVQiqNdjenOW.png" >
+  </a>
 </div>
 
 ## 特色
