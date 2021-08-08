@@ -24,15 +24,19 @@
 ## Preview
 
 <div align="center">
+  Home page:
   <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
     <img src="https://i.loli.net/2021/08/08/I37WPYFJcC1jltn.png" >
   </a>
+  Primary menu:
   <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
     <img src="https://i.loli.net/2021/08/08/LeEN9gnOvFmfVWA.png" >
   </a>
+  Annotations:
   <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
     <img src="https://i.loli.net/2021/08/08/G7WvUQFTrEpSCKg.png" >
   </a>
+  Dark mode and theme color:
   <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
     <img src="https://i.loli.net/2021/08/08/ynqUNpX93xZefdw.png" >
   </a>
