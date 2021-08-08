@@ -40,6 +40,11 @@
   <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
     <img src="https://i.loli.net/2021/08/08/ynqUNpX93xZefdw.png" >
   </a>
+  <b>Backup and restore</b>
+  <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
+    <img src="https://i.loli.net/2021/08/08/aRIAiYT2dGJQhC1.png" >
+  </a>
+  
 </div>
 
 ## Feature
