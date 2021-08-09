@@ -62,29 +62,32 @@ export const moveData = (
   var reader = new FileReader();
   reader.readAsArrayBuffer(file);
   reader.onload = async (event) => {
-    fs.writeFileSync(
+    fs.writeFile(
       path.join(dirPath, file.name),
-      Buffer.from(event.target!.result as any)
-    );
-    var zip = new AdmZip(path.join(dirPath, file.name));
-    zip.extractAllTo(/*target path*/ dataPath, /*overwrite*/ true);
-    const fs_extra = window.require("fs-extra");
-    fs_extra.copy(
-      path.join(dirPath, file.name),
-      path.join(dataPath, file.name),
-      function (err) {
-        if (err) return;
+      Buffer.from(event.target!.result as any),
+      async (err: any) => {
+        if (err) throw err;
+        var zip = new AdmZip(path.join(dirPath, file.name));
+        zip.extractAllTo(/*target path*/ dataPath, /*overwrite*/ true);
+        const fs_extra = window.require("fs-extra");
+        fs_extra.copy(
+          path.join(dirPath, file.name),
+          path.join(dataPath, file.name),
+          function (err) {
+            if (err) return;
+          }
+        );
+        if (driveIndex === 4) {
+          let deleteBooks = books.map((item) => {
+            return localforage.removeItem(item.key);
+          });
+          await Promise.all(deleteBooks);
+        }
+        if (driveIndex === 5) {
+          handleFinish();
+        }
       }
     );
-    if (driveIndex === 4) {
-      let deleteBooks = books.map((item) => {
-        return localforage.removeItem(item.key);
-      });
-      await Promise.all(deleteBooks);
-    }
-    if (driveIndex === 5) {
-      handleFinish();
-    }
   };
 };
 //改变数据存储路径
@@ -133,22 +136,27 @@ export const syncData = (blob: Blob, books: BookModel[] = [], isSync: true) => {
     var reader = new FileReader();
     reader.readAsArrayBuffer(file);
     reader.onload = async (event) => {
-      fs.writeFileSync(
+      fs.writeFile(
         path.join(dataPath, file.name),
-        Buffer.from(event.target!.result as any)
-      );
-      var zip = new AdmZip(path.join(dataPath, file.name));
-      zip.extractAllTo(/*target path*/ dataPath, /*overwrite*/ true);
+        Buffer.from(event.target!.result as any),
+        async (err: any) => {
+          if (err) {
+            throw err;
+          }
+          var zip = new AdmZip(path.join(dataPath, file.name));
+          zip.extractAllTo(/*target path*/ dataPath, /*overwrite*/ true);
 
-      if (!isSync) {
-        let deleteBooks = books.map((item) => {
-          return localforage.removeItem(item.key);
-        });
-        await Promise.all(deleteBooks);
-        resolve(true);
-      } else {
-        resolve(true);
-      }
+          if (!isSync) {
+            let deleteBooks = books.map((item) => {
+              return localforage.removeItem(item.key);
+            });
+            await Promise.all(deleteBooks);
+            resolve(true);
+          } else {
+            resolve(true);
+          }
+        }
+      );
     };
   });
 };

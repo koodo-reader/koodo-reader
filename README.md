@@ -24,36 +24,12 @@
 ## Preview
 
 <div align="center">
-  <b>Home page</b>
   <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
     <img src="https://i.loli.net/2021/08/08/I37WPYFJcC1jltn.png" >
   </a>
-  <b>List mode</b>
   <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
-    <img src="https://i.loli.net/2021/08/08/JyNHfThMs184Um2.png" >
+    <img src="https://i.loli.net/2021/08/09/OLuQkzNnAHFPr16.png" >
   </a>
-  <b>Cover mode</b>
-  <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
-    <img src="https://i.loli.net/2021/08/08/76zkDEAobd4qsmR.png" >
-  </a>
-  <b>Reader menu</b>
-  <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
-    <img src="https://i.loli.net/2021/08/08/LeEN9gnOvFmfVWA.png" >
-  </a>
-  <b>Annotation</b>
-  <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
-    <img src="https://i.loli.net/2021/08/08/G7WvUQFTrEpSCKg.png" >
-  </a>
-  <b>Backup and restore</b>
-  <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
-    <img src="https://i.loli.net/2021/08/08/aRIAiYT2dGJQhC1.png" >
-  </a>
-  <b>Dark mode and theme color</b>
-  <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
-    <img src="https://i.loli.net/2021/08/08/ynqUNpX93xZefdw.png" >
-  </a>
-  
-  
 </div>
 
 ## Feature
@@ -97,6 +73,40 @@ brew install --cask koodo-reader
 ```bash
 docker-compose up -d
 ```
+
+## Screenshot
+
+<div align="center">
+  <b>List mode</b>
+  <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
+    <img src="https://i.loli.net/2021/08/08/JyNHfThMs184Um2.png" >
+  </a>
+  <b>Cover mode</b>
+  <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
+    <img src="https://i.loli.net/2021/08/08/76zkDEAobd4qsmR.png" >
+  </a>
+  <b>Reader menu</b>
+  <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
+    <img src="https://i.loli.net/2021/08/08/LeEN9gnOvFmfVWA.png" >
+  </a>
+  <b>Annotation</b>
+  <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
+    <img src="https://i.loli.net/2021/08/08/G7WvUQFTrEpSCKg.png" >
+  </a>
+  <b>Backup and restore</b>
+  <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
+    <img src="https://i.loli.net/2021/08/08/aRIAiYT2dGJQhC1.png" >
+  </a>
+  <b>Dark mode and theme color</b>
+  <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
+    <img src="https://i.loli.net/2021/08/08/ynqUNpX93xZefdw.png" >
+  </a>
+  <b>Note management</b>
+  <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
+    <img src="https://i.loli.net/2021/08/09/sARQBoefvGklHwC.png" >
+  </a>
+  
+</div>
 
 ## Develop
 

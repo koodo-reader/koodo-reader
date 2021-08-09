@@ -19,11 +19,15 @@ class BookUtil {
         reader.readAsArrayBuffer(new Blob([buffer]));
         reader.onload = async (event) => {
           try {
-            fs.writeFileSync(
+            fs.writeFile(
               path.join(dataPath, "book", key),
-              Buffer.from(event.target!.result as any)
+              Buffer.from(event.target!.result as any),
+              (err: any) => {
+                if (err) throw err;
+                console.log("The file has been saved!");
+                resolve();
+              }
             );
-            resolve();
           } catch (error) {
             reject();
             throw error;

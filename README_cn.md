@@ -26,33 +26,11 @@
 ## 预览
 
 <div align="center">
-  <b>主页</b>
   <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
     <img src="https://i.loli.net/2021/08/08/I37WPYFJcC1jltn.png" >
   </a>
-  <b>列表模式</b>
   <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
-    <img src="https://i.loli.net/2021/08/08/JyNHfThMs184Um2.png" >
-  </a>
-  <b>封面模式</b>
-  <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
-    <img src="https://i.loli.net/2021/08/08/76zkDEAobd4qsmR.png" >
-  </a>
-  <b>阅读菜单</b>
-  <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
-    <img src="https://i.loli.net/2021/08/08/LeEN9gnOvFmfVWA.png" >
-  </a>
-  <b>批注选项</b>
-  <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
-    <img src="https://i.loli.net/2021/08/08/G7WvUQFTrEpSCKg.png" >
-  </a>
-  <b>备份和恢复</b>
-  <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
-    <img src="https://i.loli.net/2021/08/08/aRIAiYT2dGJQhC1.png" >
-  </a>
-  <b>黑夜模式和主题色</b>
-  <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
-    <img src="https://i.loli.net/2021/08/08/ynqUNpX93xZefdw.png" >
+    <img src="https://i.loli.net/2021/08/09/OLuQkzNnAHFPr16.png" >
   </a>
 </div>
 
@@ -93,6 +71,39 @@ brew install --cask koodo-reader
 ```bash
 docker-compose up -d
 ```
+
+## 截图
+
+<div align="center">
+  <b>列表模式</b>
+  <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
+    <img src="https://i.loli.net/2021/08/08/JyNHfThMs184Um2.png" >
+  </a>
+  <b>封面模式</b>
+  <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
+    <img src="https://i.loli.net/2021/08/08/76zkDEAobd4qsmR.png" >
+  </a>
+  <b>阅读菜单</b>
+  <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
+    <img src="https://i.loli.net/2021/08/08/LeEN9gnOvFmfVWA.png" >
+  </a>
+  <b>批注选项</b>
+  <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
+    <img src="https://i.loli.net/2021/08/08/G7WvUQFTrEpSCKg.png" >
+  </a>
+  <b>备份和恢复</b>
+  <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
+    <img src="https://i.loli.net/2021/08/08/aRIAiYT2dGJQhC1.png" >
+  </a>
+  <b>黑夜模式和主题色</b>
+  <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
+    <img src="https://i.loli.net/2021/08/08/ynqUNpX93xZefdw.png" >
+  </a>
+  <b>笔记管理</b>
+  <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
+    <img src="https://i.loli.net/2021/08/09/sARQBoefvGklHwC.png" >
+  </a>
+</div>
 
 ## 运行源码
 
