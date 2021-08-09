@@ -27,6 +27,9 @@
   <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
     <img src="https://i.loli.net/2021/08/08/I37WPYFJcC1jltn.png" >
   </a>
+  <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
+    <img src="https://i.loli.net/2021/08/08/G7WvUQFTrEpSCKg.png" >
+  </a>
 </div>
 
 ## Feature
@@ -86,23 +89,19 @@ docker-compose up -d
   <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
     <img src="https://i.loli.net/2021/08/08/LeEN9gnOvFmfVWA.png" >
   </a>
-  <b>Annotation</b>
-  <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
-    <img src="https://i.loli.net/2021/08/08/G7WvUQFTrEpSCKg.png" >
-  </a>
   <b>Backup and restore</b>
   <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
-    <img src="https://i.loli.net/2021/08/08/aRIAiYT2dGJQhC1.png" >
+  <img src="https://i.loli.net/2021/08/08/aRIAiYT2dGJQhC1.png" >
   </a>
   <b>Dark mode and theme color</b>
   <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
-    <img src="https://i.loli.net/2021/08/08/ynqUNpX93xZefdw.png" >
+  <img src="https://i.loli.net/2021/08/08/ynqUNpX93xZefdw.png" >
   </a>
   <b>Note management</b>
   <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
-    <img src="https://i.loli.net/2021/08/09/sARQBoefvGklHwC.png" >
+  <img src="https://i.loli.net/2021/08/09/sARQBoefvGklHwC.png" >
   </a>
-  
+
 </div>
 
 ## Develop

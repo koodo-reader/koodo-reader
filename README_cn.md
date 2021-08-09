@@ -29,6 +29,9 @@
   <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
     <img src="https://i.loli.net/2021/08/08/I37WPYFJcC1jltn.png" >
   </a>
+  <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
+    <img src="https://i.loli.net/2021/08/08/G7WvUQFTrEpSCKg.png" >
+  </a>
 </div>
 
 ## 特色
@@ -83,10 +86,6 @@ docker-compose up -d
   <b>阅读菜单</b>
   <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
     <img src="https://i.loli.net/2021/08/08/LeEN9gnOvFmfVWA.png" >
-  </a>
-  <b>批注选项</b>
-  <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
-    <img src="https://i.loli.net/2021/08/08/G7WvUQFTrEpSCKg.png" >
   </a>
   <b>备份和恢复</b>
   <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
