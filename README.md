@@ -27,9 +27,6 @@
   <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
     <img src="https://i.loli.net/2021/08/08/I37WPYFJcC1jltn.png" >
   </a>
-  <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
-    <img src="https://i.loli.net/2021/08/09/OLuQkzNnAHFPr16.png" >
-  </a>
 </div>
 
 ## Feature
