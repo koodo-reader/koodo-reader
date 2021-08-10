@@ -35,33 +35,21 @@
 ## Feature
 
 - Format support: **epub**, **pdf**, **mobi**, **azw3**, **txt**, **md**, **djvu**, **docx**, **rtf**, **cbz**, **cbr**, **cbt**, **fb2**, **html** and **xml**
-
 - Platform support: **Windows** , **macOS**, **Linux** and **Web**
-
 - Save your data to **Dropbox** or **Webdav**
-
 - Customize the source folder and synchronize among multiple devices using OneDrive, iCloud, Dropbox, etc.
-
 - Single-column, two-column, or continuous scrolling layouts
-
 - Text-to-speech, translation, progress slider, touch screen support, batch import
-
 - Add bookmarks, notes, highlights to your books
-
 - Origanize your books and notes with shelf and tag
-
 - Adjust font size, font family, line-spacing, paragraph spacing, background color, text color, margins, and brightness
-
 - Night mode and theme color
-
 - Text highlight, underline, boldness, italics and shadow
 
 ## Installation
 
 - Desktop Version: [Download](https://koodo.960960.xyz/download)
-
 - Web Version：[Preview](https://reader.960960.xyz)
-
 - Install with [Homebrew](https://brew.sh/):
 
 ```shell
