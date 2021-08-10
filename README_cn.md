@@ -37,29 +37,19 @@
 ## 特色
 
 - 支持阅读 **epub**, **pdf**, **mobi**, **azw3**, **txt**, **md**, **djvu**, **docx**, **rtf**, **cbz**, **cbr**, **cbt**, **fb2**, **html** 和 **xml** 格式的图书
-
 - 支持 **Windows**，**macOS**，**Linux** 和 **网页版**
-
 - 备份数据到 **Dropbox** 和 **Webdav**
-
 - 自定义源文件夹，利用 OneDrive、百度网盘、iCloud、Dropbox 等进行多设备同步
-
 - 双页模式，单页模式，滚动模式
-
 - 听书功能，翻译功能，触控屏支持，批量导入图书
-
 - 支持目录，书签，笔记，高亮，书架，标签
-
 - 自定义字体，字体大小，行间距，段落间距，阅读背景色，文字颜色，屏幕亮度，文字下划线、斜体、文字阴影、字体粗细
-
 - 黑夜模式和主题色设置
 
 ## 使用方法
 
 - 桌面端：[Github](https://github.com/troyeguo/koodo-reader/releases/latest) | [蓝奏云](https://wwa.lanzoui.com/b0c90cieb) 密码：1234 | [历史版本](https://wwa.lanzoui.com/b0c97tupi) 密码：1234
-
 - 网页版：[前往](https://reader.960960.xyz)
-
 - 使用 [Homebrew](https://brew.sh/) 安装：
 
 ```shell
