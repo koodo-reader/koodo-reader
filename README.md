@@ -17,7 +17,7 @@
 </h3>
 <div align="center">
 
-[Download](https://koodo.960960.xyz/download) | [Preview](https://reader.960960.xyz) | [Feedback](https://koodo.960960.xyz/support) | [Document](https://www.notion.so/troyeguo/01aaa516687c418499f713d34793b9ad?v=54d51fe1688a4f8ab5784b17e4df3308)
+[Download](https://koodo.960960.xyz/download) | [Preview](https://koodo-reader.vercel.app/) | [Feedback](https://koodo.960960.xyz/support) | [Document](https://www.notion.so/troyeguo/01aaa516687c418499f713d34793b9ad?v=54d51fe1688a4f8ab5784b17e4df3308)
 
 </div>
 
@@ -57,7 +57,7 @@
 ## Installation
 
 - Desktop Version: [Download](https://koodo.960960.xyz/download)
-- Web Version：[Preview](https://reader.960960.xyz)
+- Web Version：[Preview](https://koodo-reader.vercel.app/)
 - Install with [Homebrew](https://brew.sh/):
 
 ```shell
