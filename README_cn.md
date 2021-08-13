@@ -37,14 +37,14 @@
 ## 特色
 
 - 支持阅读格式：
-  - EPUB (.epub)
-  - 扫描文档 (.pdf, .djvu)
-  - Kindle (.azw3, .mobi)
-  - 纯文本 (.txt)
-  - 漫画 (.cbr, .cbz, .cbt)
-  - 富文本 (.md, .docx, .rtf)
-  - 超文本 (.html, .xml)
-  - FB2 (.fb2)
+  - EPUB (**.epub**)
+  - 扫描文档 (**.pdf**, **.djvu**)
+  - Kindle (**.azw3**, **.mobi**)
+  - 纯文本 (**.txt**)
+  - 漫画 (**.cbr**, **.cbz**, **.cbt**)
+  - 富文本 (**.md**, **.docx**, **.rtf**)
+  - 超文本 (**.html**, **.xml**)
+  - FB2 (**.fb2**)
 - 支持 **Windows**，**macOS**，**Linux** 和 **网页版**
 - 备份数据到 **Dropbox** 和 **Webdav**
 - 自定义源文件夹，利用 OneDrive、百度网盘、iCloud、Dropbox 等进行多设备同步
