@@ -12,7 +12,7 @@ import StyleUtil from "./utils/readUtils/styleUtil";
 import { isElectron } from "react-device-detect";
 import { dropdownList } from "./constants/dropdownList";
 import OtherUtil from "./utils/otherUtil";
-
+import ga from "./utils/analytics";
 let coverLoading: any = document.querySelector(".loading-cover");
 coverLoading && coverLoading.parentNode.removeChild(coverLoading);
 
@@ -23,6 +23,11 @@ ReactDOM.render(
   document.getElementById("root")
 );
 
+if (isElectron && OtherUtil.getReaderConfig("isDisableAnalytics") !== "yes") {
+  ga.event("Client", "show", {
+    evLabel: "startup",
+  });
+}
 if (
   isElectron &&
   navigator.appVersion.indexOf("NT 6.1") === -1 &&
