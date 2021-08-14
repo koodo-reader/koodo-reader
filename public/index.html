@@ -27,6 +27,26 @@
     <noscript>You need to enable JavaScript to run this app.</noscript>
 
     <div id="root"></div>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=UA-149740367-3"
+    ></script>
+    <script>
+      if (
+        JSON.parse(localStorage.getItem("readerConfig") || "{}")
+          .isDisableAnalytics !== "yes"
+      ) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag() {
+          dataLayer.push(arguments);
+        }
+        gtag("js", new Date());
+
+        gtag("config", "UA-149740367-3");
+      }
+    </script>
+
     <script>
       const style = document.createElement("link");
       style.rel = "stylesheet";
@@ -129,20 +149,5 @@
       type="text/javascript"
       src="%PUBLIC_URL%/lib/mammoth/mammoth.browser.min.js"
     ></script>
-    <script>
-      var _hmt = _hmt || [];
-      (function () {
-        if (
-          JSON.parse(localStorage.getItem("readerConfig") || "{}")
-            .isDisableAnalytics !== "yes"
-        ) {
-          var hm = document.createElement("script");
-          hm.src =
-            "https://hm.baidu.com/hm.js?358570be1bfc40e01db43adefade5ad5";
-          var s = document.getElementsByTagName("script")[0];
-          s.parentNode.insertBefore(hm, s);
-        }
-      })();
-    </script>
   </body>
 </html>
