@@ -23,12 +23,6 @@ ReactDOM.render(
   document.getElementById("root")
 );
 
-if (isElectron && OtherUtil.getReaderConfig("isDisableAnalytics") !== "yes") {
-  const { ipcRenderer } = window.require("electron");
-  const { ebtRenderer } = window.require("electron-baidu-tongji");
-  const BAIDU_SITE_ID = "358570be1bfc40e01db43adefade5ad5";
-  ebtRenderer(ipcRenderer, BAIDU_SITE_ID, Router);
-}
 if (
   isElectron &&
   navigator.appVersion.indexOf("NT 6.1") === -1 &&
