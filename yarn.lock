@@ -4051,7 +4051,7 @@ component-classes@^1.2.5:
   dependencies:
     component-indexof "0.0.3"
 
-component-emitter@^1.2.1, component-emitter@^1.3.0:
+component-emitter@^1.2.1:
   version "1.3.0"
   resolved "https://registry.nlark.com/component-emitter/download/component-emitter-1.3.0.tgz#16e4070fba8ae29b679f2215853ee181ab2eabc0"
   integrity sha1-FuQHD7qK4ptnnyIVhT7hgasuq8A=
@@ -4213,11 +4213,6 @@ cookie@0.4.0:
   version "0.4.0"
   resolved "https://registry.npm.taobao.org/cookie/download/cookie-0.4.0.tgz#beb437e7022b3b6d49019d088665303ebe9c14ba"
   integrity sha1-vrQ35wIrO21JAZ0IhmUwPr6cFLo=
-
-cookiejar@^2.1.2:
-  version "2.1.2"
-  resolved "https://registry.npm.taobao.org/cookiejar/download/cookiejar-2.1.2.tgz#dd8a235530752f988f9a0844f3fc589e3111125c"
-  integrity sha1-3YojVTB1L5iPmghE8/xYnjERElw=
 
 copy-concurrently@^1.0.0:
   version "1.0.5"
@@ -5142,13 +5137,6 @@ ejs@^3.1.5, ejs@^3.1.6:
   dependencies:
     jake "^10.6.1"
 
-electron-baidu-tongji@^1.0.5:
-  version "1.0.5"
-  resolved "https://registry.nlark.com/electron-baidu-tongji/download/electron-baidu-tongji-1.0.5.tgz#44919d812f5cb53339938ef8e6ed8c5a816c6ccd"
-  integrity sha1-RJGdgS9ctTM5k4745u2MWoFsbM0=
-  dependencies:
-    superagent "^6.1.0"
-
 electron-builder@^22.10.5:
   version "22.11.7"
   resolved "https://registry.nlark.com/electron-builder/download/electron-builder-22.11.7.tgz#cd97a0d9f6e6d388112e66b4376de431cca4d596"
@@ -5883,11 +5871,6 @@ fast-levenshtein@^2.0.6, fast-levenshtein@~2.0.6:
   resolved "https://registry.nlark.com/fast-levenshtein/download/fast-levenshtein-2.0.6.tgz#3d8a5c66883a16a30ca8643e851f19baa7797917"
   integrity sha1-PYpcZog6FqMMqGQ+hR8Zuqd5eRc=
 
-fast-safe-stringify@^2.0.7:
-  version "2.0.7"
-  resolved "https://registry.npm.taobao.org/fast-safe-stringify/download/fast-safe-stringify-2.0.7.tgz#124aa885899261f68aedb42a7c080de9da608743"
-  integrity sha1-EkqohYmSYfaK7bQqfAgN6dpgh0M=
-
 fast-xml-parser@^3.17.4:
   version "3.19.0"
   resolved "https://registry.npm.taobao.org/fast-xml-parser/download/fast-xml-parser-3.19.0.tgz#cb637ec3f3999f51406dd8ff0e6fc4d83e520d01"
@@ -6131,11 +6114,6 @@ form-data@~2.3.2:
     asynckit "^0.4.0"
     combined-stream "^1.0.6"
     mime-types "^2.1.12"
-
-formidable@^1.2.2:
-  version "1.2.2"
-  resolved "https://registry.npm.taobao.org/formidable/download/formidable-1.2.2.tgz#bf69aea2972982675f00865342b982986f6b8dd9"
-  integrity sha1-v2muopcpgmdfAIZTQrmCmG9rjdk=
 
 forwarded@0.2.0:
   version "0.2.0"
@@ -8755,7 +8733,7 @@ merge2@^1.3.0:
   resolved "https://registry.npm.taobao.org/merge2/download/merge2-1.4.1.tgz#4368892f885e907455a6fd7dc55c0c9d404990ae"
   integrity sha1-Q2iJL4hekHRVpv19xVwMnUBJkK4=
 
-methods@^1.1.2, methods@~1.1.2:
+methods@~1.1.2:
   version "1.1.2"
   resolved "https://registry.npm.taobao.org/methods/download/methods-1.1.2.tgz#5529a4d67654134edcc5266656835b0f851afcee"
   integrity sha1-VSmk1nZUE07cxSZmVoNbD4Ua/O4=
@@ -8817,7 +8795,7 @@ mime@1.6.0:
   resolved "https://registry.nlark.com/mime/download/mime-1.6.0.tgz#32cd9e5c64553bd58d19a568af452acff04981b1"
   integrity sha1-Ms2eXGRVO9WNGaVor0Uqz/BJgbE=
 
-mime@^2.4.4, mime@^2.4.6, mime@^2.5.2:
+mime@^2.4.4, mime@^2.5.2:
   version "2.5.2"
   resolved "https://registry.nlark.com/mime/download/mime-2.5.2.tgz#6e3dc6cc2b9510643830e5f19d5cb753da5eeabe"
   integrity sha1-bj3GzCuVEGQ4MOXxnVy3U9pe6r4=
@@ -10791,13 +10769,6 @@ qs@6.7.0:
   resolved "https://registry.npm.taobao.org/qs/download/qs-6.7.0.tgz#41dc1a015e3d581f1621776be31afb2876a9b1bc"
   integrity sha1-QdwaAV49WB8WIXdr4xr7KHapsbw=
 
-qs@^6.9.4:
-  version "6.10.1"
-  resolved "https://registry.npm.taobao.org/qs/download/qs-6.10.1.tgz#4931482fa8d647a5aab799c5271d2133b981fb6a"
-  integrity sha1-STFIL6jWR6Wqt5nFJx0hM7mB+2o=
-  dependencies:
-    side-channel "^1.0.4"
-
 qs@~6.5.2:
   version "6.5.2"
   resolved "https://registry.npm.taobao.org/qs/download/qs-6.5.2.tgz#cb3ae806e8740444584ef154ce8ee98d403f3e36"
@@ -12659,23 +12630,6 @@ sumchecker@^3.0.1:
   integrity sha1-Y3fplnlauwttNI6bPh37JDRajkI=
   dependencies:
     debug "^4.1.0"
-
-superagent@^6.1.0:
-  version "6.1.0"
-  resolved "https://registry.npm.taobao.org/superagent/download/superagent-6.1.0.tgz#09f08807bc41108ef164cfb4be293cebd480f4a6"
-  integrity sha1-CfCIB7xBEI7xZM+0vik869SA9KY=
-  dependencies:
-    component-emitter "^1.3.0"
-    cookiejar "^2.1.2"
-    debug "^4.1.1"
-    fast-safe-stringify "^2.0.7"
-    form-data "^3.0.0"
-    formidable "^1.2.2"
-    methods "^1.1.2"
-    mime "^2.4.6"
-    qs "^6.9.4"
-    readable-stream "^3.6.0"
-    semver "^7.3.2"
 
 supports-color@^2.0.0:
   version "2.0.0"

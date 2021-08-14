@@ -1,5 +1,4 @@
 const { app, BrowserWindow, Menu, remote, ipcMain } = require("electron");
-const { ebtMain } = require("electron-baidu-tongji");
 const path = require("path");
 const isDev = require("electron-is-dev");
 const fs = require("fs");
@@ -55,7 +54,6 @@ app.on("ready", () => {
 
   mainWin.loadURL(urlLocation);
 
-  ebtMain(ipcMain, isDev);
   mainWin.on("close", () => {
     mainWin = null;
   });
