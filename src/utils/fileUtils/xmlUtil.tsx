@@ -1,5 +1,5 @@
 import xml2js from "xml2js";
-import { isTitle } from "./generateEpub";
+import { isTitle } from "./titleUtil";
 export const xmlBookToObj = (xml) => {
   var objBook: any = {};
   var informBook;
@@ -54,9 +54,23 @@ export const xmlBookTagFilter = (bookString) => {
 export const txtToHtml = (text: string) => {
   const lines = text.split("\n");
   let html: string = "";
+  let isContainDI = false;
+  let isContainChapter = false;
+  let isContainCHAPTER = false;
   for (let item of lines) {
     if (item.trim()) {
-      if (isTitle(item.trim())) {
+      if (
+        isTitle(item.trim(), isContainDI, isContainChapter, isContainCHAPTER)
+      ) {
+        if (item.trim().startsWith("第")) {
+          isContainChapter = true;
+        }
+        if (item.trim().startsWith("Chapter")) {
+          isContainDI = true;
+        }
+        if (item.trim().startsWith("CHAPTER")) {
+          isContainCHAPTER = true;
+        }
         html += `<h1>${item}</h1>`;
       } else {
         html += `<p>${item}</p>`;

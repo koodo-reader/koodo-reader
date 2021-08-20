@@ -8,6 +8,7 @@ import { OperationPanelProps, OperationPanelState } from "./interface";
 import OtherUtil from "../../../utils/otherUtil";
 import ReadingTime from "../../../utils/readUtils/readingTime";
 import { withRouter } from "react-router-dom";
+import { isElectron } from "react-device-detect";
 
 declare var document: any;
 
@@ -168,10 +169,14 @@ class OperationPanel extends React.Component<
     // this.props.handleSearch(false);
     // this.props.handleOpenMenu(false);
     ReadingTime.setTime(this.props.currentBook.key, this.props.time);
-    OtherUtil.setReaderConfig("windowWidth", document.body.clientWidth);
-    OtherUtil.setReaderConfig("windowHeight", document.body.clientHeight);
-    OtherUtil.setReaderConfig("windowX", window.screenX + "");
-    OtherUtil.setReaderConfig("windowY", window.screenY + "");
+    if (isElectron) {
+      const { remote } = window.require("electron");
+      let bounds = remote.getCurrentWindow().getBounds();
+      OtherUtil.setReaderConfig("windowWidth", bounds.width);
+      OtherUtil.setReaderConfig("windowHeight", bounds.height);
+      OtherUtil.setReaderConfig("windowX", bounds.x);
+      OtherUtil.setReaderConfig("windowY", bounds.y);
+    }
   }
 
   render() {

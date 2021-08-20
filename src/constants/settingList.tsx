@@ -41,6 +41,7 @@ export const langList = [
   { label: "English", value: "en" },
   { label: "русский", value: "ru" },
 ];
+
 export const searchList = [
   { label: "Google", value: "google" },
   { label: "Baidu", value: "baidu" },

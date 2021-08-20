@@ -69,6 +69,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         }
         this.props.handleReadingState(true);
         RecentBooks.setRecent(key);
+        document.title = book.name + " - Koodo Reader";
       });
     });
     this.props.handleRenderFunc(this.handleRenderHtml);
@@ -148,10 +149,14 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     }, 500);
   };
   handleRecord() {
-    OtherUtil.setReaderConfig("windowWidth", document.body.clientWidth + "");
-    OtherUtil.setReaderConfig("windowHeight", document.body.clientHeight + "");
-    OtherUtil.setReaderConfig("windowX", window.screenX + "");
-    OtherUtil.setReaderConfig("windowY", window.screenY + "");
+    if (isElectron) {
+      const { remote } = window.require("electron");
+      let bounds = remote.getCurrentWindow().getBounds();
+      OtherUtil.setReaderConfig("windowWidth", bounds.width);
+      OtherUtil.setReaderConfig("windowHeight", bounds.height);
+      OtherUtil.setReaderConfig("windowX", bounds.x);
+      OtherUtil.setReaderConfig("windowY", bounds.y);
+    }
     RecordLocation.recordScrollHeight(
       this.state.key,
       document.body.clientWidth,

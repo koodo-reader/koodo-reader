@@ -33,26 +33,7 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
     }
     this.props.handleReadingBook(this.props.book);
   }
-  componentWillReceiveProps(nextProps: BookItemProps) {
-    if (nextProps.isDragToLove !== this.props.isDragToLove) {
-      if (
-        nextProps.isDragToLove &&
-        this.props.dragItem === this.props.book.key
-      ) {
-        this.handleLoveBook();
-        this.props.handleDragToLove(false);
-      }
-    }
-    if (nextProps.isDragToDelete !== this.props.isDragToDelete) {
-      if (
-        nextProps.isDragToDelete &&
-        this.props.dragItem === this.props.book.key
-      ) {
-        this.handleDeleteBook();
-        this.props.handleDragToDelete(false);
-      }
-    }
-  }
+
   handleDeleteBook = () => {
     this.props.handleDeleteDialog(true);
     this.props.handleReadingBook(this.props.book);
@@ -106,24 +87,12 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
             onClick={() => {
               this.handleJump();
             }}
-            onDragStart={() => {
-              this.props.handleDragItem(this.props.book.key);
-            }}
-            onDragEnd={() => {
-              this.props.handleDragItem("");
-            }}
           />
         ) : (
           <div
             className="book-item-list-cover"
             onClick={() => {
               this.handleJump();
-            }}
-            onDragStart={() => {
-              this.props.handleDragItem(this.props.book.key);
-            }}
-            onDragEnd={() => {
-              this.props.handleDragItem("");
             }}
           >
             <EmptyCover

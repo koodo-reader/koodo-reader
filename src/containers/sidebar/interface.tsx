@@ -6,8 +6,6 @@ export interface SidebarProps extends RouteComponentProps<any> {
   handleMode: (mode: string) => void;
   handleSearch: (isSearch: boolean) => void;
   handleCollapse: (isCollapsed: boolean) => void;
-  handleDragToLove: (isDragToLove: boolean) => void;
-  handleDragToDelete: (isDragToLove: boolean) => void;
   handleSortDisplay: (isSortDisplay: boolean) => void;
   t: (title: string) => string;
 }

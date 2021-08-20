@@ -2,8 +2,6 @@ import OtherUtil from "../../utils/otherUtil";
 const initState = {
   mode: "home",
   shelfIndex: -1,
-  isDragToLove: false,
-  isDragToDelete: false,
   isCollapsed: OtherUtil.getReaderConfig("isCollapsed") === "yes",
 };
 export function sidebar(
@@ -25,16 +23,6 @@ export function sidebar(
       return {
         ...state,
         isCollapsed: action.payload,
-      };
-    case "HANDLE_DRAG_TO_LOVE":
-      return {
-        ...state,
-        isDragToLove: action.payload,
-      };
-    case "HANDLE_DRAG_TO_DELETE":
-      return {
-        ...state,
-        isDragToDelete: action.payload,
       };
     default:
       return state;

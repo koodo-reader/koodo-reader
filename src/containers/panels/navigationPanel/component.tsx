@@ -288,7 +288,7 @@ class NavigationPanel extends React.Component<
                     this.handleChangeTab("digests");
                   }}
                 >
-                  <Trans>Digest</Trans>
+                  <Trans>Highlight</Trans>
                 </span>
               </div>
             </div>

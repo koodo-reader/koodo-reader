@@ -49,7 +49,6 @@
 - Single-column, two-column, or continuous scrolling layouts
 - Text-to-speech, translation, progress slider, touch screen support, batch import
 - Add bookmarks, notes, highlights to your books
-- Origanize your books and notes with shelf and tag
 - Adjust font size, font family, line-spacing, paragraph spacing, background color, text color, margins, and brightness
 - Night mode and theme color
 - Text highlight, underline, boldness, italics and shadow

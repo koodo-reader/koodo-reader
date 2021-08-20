@@ -126,22 +126,6 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
         }}
       >
         {this.state.isDrag && !this.props.dragItem && (
-          <div className="drag-background">
-            <div className="drag-info">
-              <Arrow />
-              <p className="arrow-text">
-                <Trans>Drop your books here</Trans>
-              </p>
-            </div>
-          </div>
-        )}
-        <Sidebar />
-        <Header {...{ handleDrag: this.handleDrag }} />
-        {this.props.isOpenDeleteDialog && <DeleteDialog />}
-        {this.props.isOpenEditDialog && <EditDialog />}
-        {this.props.isOpenAddDialog && <AddDialog />}
-        {this.props.isShowLoading && <LoadingDialog />}
-        {
           <div
             className="drag-background"
             onClick={() => {
@@ -163,15 +147,28 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
               this.props.isOpenEditDialog ||
               this.props.isOpenAddDialog ||
               this.props.isTipDialog ||
-              this.props.isShowLoading
+              this.props.isShowLoading ||
+              this.state.isDrag
                 ? {}
                 : {
                     display: "none",
                   }
             }
-          ></div>
-        }
-
+          >
+            <div className="drag-info">
+              <Arrow />
+              <p className="arrow-text">
+                <Trans>Drop your books here</Trans>
+              </p>
+            </div>
+          </div>
+        )}
+        <Sidebar />
+        <Header {...{ handleDrag: this.handleDrag }} />
+        {this.props.isOpenDeleteDialog && <DeleteDialog />}
+        {this.props.isOpenEditDialog && <EditDialog />}
+        {this.props.isOpenAddDialog && <AddDialog />}
+        {this.props.isShowLoading && <LoadingDialog />}
         {this.props.isMessage && <MessageBox />}
         {this.props.isSortDisplay && <SortDialog />}
         {this.props.isAboutOpen && <AboutDialog />}
