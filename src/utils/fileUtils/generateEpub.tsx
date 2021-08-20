@@ -1,50 +1,5 @@
-export const isTitle = (line: string) => {
-  return (
-    line.length < 30 &&
-    line.indexOf("[") === -1 &&
-    line.indexOf("(") === -1 &&
-    (line.startsWith("CHAPTER ") ||
-      line.startsWith("Chapter ") ||
-      line.startsWith("序章") ||
-      line.startsWith("前言") ||
-      line.startsWith("写在前面的话") ||
-      line.startsWith("后记") ||
-      line.startsWith("楔子") ||
-      line.startsWith("后记") ||
-      line.startsWith("后序") ||
-      (line.indexOf("第") > -1 &&
-        line.indexOf("章") > -1 &&
-        line.indexOf("第") < line.indexOf("章")) ||
-      (line.indexOf("第") > -1 &&
-        line.indexOf("节") > -1 &&
-        line.indexOf("第") < line.indexOf("节")) ||
-      (line.indexOf("第") > -1 &&
-        line.indexOf("回") > -1 &&
-        line.indexOf("第") < line.indexOf("回")) ||
-      (line.indexOf("第") > -1 &&
-        line.indexOf("卷") > -1 &&
-        line.indexOf("第") < line.indexOf("卷")) ||
-      (line.indexOf("第") > -1 &&
-        line.indexOf("部") > -1 &&
-        line.indexOf("第") < line.indexOf("部")) ||
-      (line.indexOf("第") > -1 &&
-        line.indexOf("辑") > -1 &&
-        line.indexOf("第") < line.indexOf("辑")) ||
-      (line.indexOf("第") > -1 &&
-        line.indexOf("集") > -1 &&
-        line.indexOf("第") < line.indexOf("集")) ||
-      (line.indexOf("第") > -1 &&
-        line.indexOf("话") > -1 &&
-        line.indexOf("第") < line.indexOf("话")) ||
-      (line.indexOf("第") > -1 &&
-        line.indexOf("篇") > -1 &&
-        line.indexOf("第") < line.indexOf("篇")) ||
-      /^[\u4e00\u4e8c\u4e09\u56db\u4e94\u516d\u4e03\u516b\u4e5d\u5341\u767e\u5343\u4e07]+$/.test(
-        line
-      ) ||
-      /^\d+$/.test(line))
-  );
-};
+import { isTitle } from "./titleUtil";
+
 const escapeHTML = (str) => {
   var escapeChars = {
     "¢": "cent",
@@ -72,7 +27,7 @@ const escapeHTML = (str) => {
   });
 };
 export const generateEpub = (file: any) => {
-  return new Promise<File | boolean>((resolve, reject) => {
+  return new Promise<File | number>((resolve, reject) => {
     const fs = window.require("fs");
     const path = window.require("path");
     const chardet = window.require("chardet");
@@ -124,7 +79,6 @@ export const generateEpub = (file: any) => {
             path.join(dirPath, `cover.png`)
           );
           let content: any = [];
-          let contentFilter: any = [];
           const analyzeChapter = () => {
             const data = readFileSync(path.join(dirPath, file.name), {
               encoding: "binary",
@@ -137,9 +91,23 @@ export const generateEpub = (file: any) => {
               return item.startsWith("data");
             });
             lines.splice(imgIndex, lineLength - imgIndex);
+            let isContainDI = false;
+            let isContainChapter = false;
+            let isContainCHAPTER = false;
             for (let item of lines) {
               const line = escapeHTML(item).trim();
-              if (isTitle(line)) {
+              if (
+                isTitle(line, isContainDI, isContainChapter, isContainCHAPTER)
+              ) {
+                if (line.startsWith("第")) {
+                  isContainDI = true;
+                }
+                if (line.startsWith("Chapter")) {
+                  isContainChapter = true;
+                }
+                if (line.startsWith("CHAPTER")) {
+                  isContainCHAPTER = true;
+                }
                 content.push({
                   title: line,
                   data: "",
@@ -172,19 +140,19 @@ export const generateEpub = (file: any) => {
                 }
               }
             }
-            contentFilter = content.filter((item) => {
-              return item.data.trim() && item.data.trim().length > 50;
-            });
           };
           analyzeChapter();
-          for (let item of contentFilter) {
+          if (content.length < 3) {
+            resolve(2);
+          }
+          for (let item of content) {
             epub.addSection(item.title, `<h1>${item.title}</h1>` + item.data);
           }
 
           epub.writeEPUB(
             function (e) {
               console.log("Error:", e);
-              reject(false);
+              resolve(1);
             },
             dirPath,
             bookName,
@@ -212,7 +180,7 @@ export const generateEpub = (file: any) => {
                 resolve(fileTemp);
               } catch (e) {
                 console.log("error removing ");
-                reject(false);
+                resolve(1);
               }
             }
           );

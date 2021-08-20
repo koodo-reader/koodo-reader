@@ -19,7 +19,7 @@
 .book-bookmark-link,
 .message-box-container,
 .only-local-icon {
-  background-color: rgba(0, 143, 145, 1);
+  background-color: rgba(0, 143, 145, 1) !important;
 }
 
 .header-search-box,
@@ -31,18 +31,18 @@ textarea::-moz-placeholder,
 textarea::-ms-input-placeholder,
 .header-search-text,
 .card-list-item-show-more {
-  color: rgba(0, 143, 145, 0.8);
+  color: rgba(0, 143, 145, 0.8) !important;
 }
 .single-control-container,
 .book-list-view {
-  color: rgba(0, 143, 145, 1);
+  color: rgba(0, 143, 145, 1) !important;
 }
 .reading-progress-icon,
 .header-search-box,
 #jumpPage,
 #jumpChapter,
 #newTag {
-  background-color: rgba(0, 143, 145, 0.1);
+  background-color: rgba(0, 143, 145, 0.1) !important;
 }
 .backup-page-close-icon:hover,
 .sidebar-list-icon:hover,
@@ -62,7 +62,7 @@ textarea::-ms-input-placeholder,
 .animation-mask,
 .animation-mask-local,
 .copy-option:hover {
-  background-color: rgba(0, 143, 145, 0.035);
+  background-color: rgba(0, 143, 145, 0.035) !important;
 }
 
 .book-content-name,
@@ -70,5 +70,5 @@ textarea::-ms-input-placeholder,
 .book-bookmark-list,
 .nav-search-list-item,
 .sort-dialog-seperator {
-  border-bottom: 1px solid rgba(0, 143, 145, 0.1);
+  border-bottom: 1px solid rgba(0, 143, 145, 0.1) !important;
 }

@@ -9,7 +9,7 @@ import BookUtil from "../../utils/fileUtils/bookUtil";
 import Lottie from "react-lottie";
 import "../../assets/styles/reset.css";
 import animationSiri from "../../assets/lotties/siri.json";
-
+import BookModel from "../../model/Book";
 const siriOptions = {
   loop: true,
   autoplay: true,
@@ -32,12 +32,13 @@ class EpubReader extends React.Component<EpubReaderProps, EpubReaderState> {
     let key = url[url.length - 1].split("?")[0];
 
     localforage.getItem("books").then((result: any) => {
-      let book = result[_.findIndex(result, { key })];
+      let book: BookModel = result[_.findIndex(result, { key })];
       BookUtil.fetchBook(key).then((result) => {
         this.props.handleReadingBook(book);
         this.props.handleReadingEpub(window.ePub(result, {}));
         this.props.handleReadingState(true);
         RecentBooks.setRecent(key);
+        document.title = book.name + " - Koodo Reader";
       });
     });
   }
