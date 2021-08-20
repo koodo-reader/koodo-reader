@@ -8,8 +8,6 @@ import {
   handleMessageBox,
   handleMessage,
   handleFetchBooks,
-  handleDragToLove,
-  handleDragToDelete,
 } from "../../store/actions";
 import { withTranslation } from "react-i18next";
 
@@ -20,8 +18,6 @@ const mapStateToProps = (state: stateType) => {
     isReading: state.book.isReading,
     percentage: state.progressPanel.percentage,
     currentBook: state.book.currentBook,
-    isDragToLove: state.sidebar.isDragToLove,
-    isDragToDelete: state.sidebar.isDragToDelete,
     dragItem: state.book.dragItem,
     mode: state.sidebar.mode,
   };
@@ -34,8 +30,6 @@ const actionCreator = {
   handleMessageBox,
   handleMessage,
   handleDragItem,
-  handleDragToLove,
-  handleDragToDelete,
   handleFetchBooks,
 };
 export default connect(

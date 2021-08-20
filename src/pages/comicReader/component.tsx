@@ -10,6 +10,8 @@ import untar from "js-untar";
 import OtherUtil from "../../utils/otherUtil";
 import { mimetype } from "../../constants/mimetype";
 import RecordLocation from "../../utils/readUtils/recordLocation";
+import { isElectron } from "react-device-detect";
+
 declare var window: any;
 
 let JSZip = window.JSZip;
@@ -64,6 +66,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         }
         this.props.handleReadingState(true);
         RecentBooks.setRecent(key);
+        document.title = book.name + " - Koodo Reader";
       });
     });
   };
@@ -71,10 +74,14 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
   handleExit(key: string) {
     this.props.handleReadingState(false);
 
-    OtherUtil.setReaderConfig("windowWidth", document.body.clientWidth + "");
-    OtherUtil.setReaderConfig("windowHeight", document.body.clientHeight + "");
-    OtherUtil.setReaderConfig("windowX", window.screenX + "");
-    OtherUtil.setReaderConfig("windowY", window.screenY + "");
+    if (isElectron) {
+      const { remote } = window.require("electron");
+      let bounds = remote.getCurrentWindow().getBounds();
+      OtherUtil.setReaderConfig("windowWidth", bounds.width);
+      OtherUtil.setReaderConfig("windowHeight", bounds.height);
+      OtherUtil.setReaderConfig("windowX", bounds.x);
+      OtherUtil.setReaderConfig("windowY", bounds.y);
+    }
   }
   base64ArrayBuffer = (arrayBuffer) => {
     var base64 = "";

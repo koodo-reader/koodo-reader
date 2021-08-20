@@ -84,9 +84,7 @@ export type stateType = {
   sidebar: {
     mode: string;
     shelfIndex: number;
-    isDragToLove: boolean;
     isCollapsed: boolean;
-    isDragToDelete: boolean;
   };
   viewArea: {
     selection: string;

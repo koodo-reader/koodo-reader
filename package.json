@@ -54,6 +54,32 @@
     "xml2js": "^0.4.23",
     "zip-a-folder": "^0.0.12"
   },
+  "devDependencies": {
+    "@types/file-saver": "^2.0.1",
+    "@types/marked": "^2.0.2",
+    "@types/md5": "^2.2.0",
+    "@types/node": "^13.13.2",
+    "@types/react": "^16.9.34",
+    "@types/react-dom": "^16.9.6",
+    "@types/react-i18next": "^8.1.0",
+    "@types/react-lottie": "^1.2.5",
+    "@types/react-redux": "^7.1.7",
+    "@types/react-router-dom": "^5.1.6",
+    "@types/spark-md5": "^3.0.2",
+    "@types/underscore": "^1.10.24",
+    "classnames": "^2.2.6",
+    "concurrently": "^5.0.1",
+    "cross-env": "^6.0.3",
+    "electron": "11.4.1",
+    "electron-builder": "^22.10.5",
+    "hard-source-webpack-plugin": "^0.13.1",
+    "node-sass": "^4.13.0",
+    "nodemon": "^2.0.6",
+    "sass-loader": "^8.0.0",
+    "source-map-explorer": "^2.5.2",
+    "typescript": "^3.8.3",
+    "wait-on": "^3.3.0"
+  },
   "scripts": {
     "analyze": "source-map-explorer 'build/static/js/*.js'",
     "start": "react-scripts start",
@@ -90,26 +116,87 @@
       {
         "ext": "epub",
         "role": "Viewer",
-        "icon": "assets/icons/epub",
         "mimeType": "application/epub+zip"
       },
       {
         "ext": "pdf",
         "role": "Viewer",
-        "icon": "assets/icons/pdf",
         "mimeType": "application/pdf"
       },
       {
         "ext": "mobi",
         "role": "Viewer",
-        "icon": "assets/icons/mobi",
         "mimeType": "application/x-mobipocket-ebook"
       },
       {
         "ext": "azw3",
         "role": "Viewer",
-        "icon": "assets/icons/azw3",
         "mimeType": "application/vnd.amazon.ebook"
+      },
+      {
+        "ext": "txt",
+        "role": "Viewer",
+        "mimeType": "text/plain"
+      },
+      {
+        "ext": "djvu",
+        "role": "Viewer",
+        "mimeType": "image/vnd.djvu"
+      },
+      {
+        "ext": "cbz",
+        "role": "Viewer",
+        "mimeType": "application/x-cbz"
+      },
+      {
+        "ext": "cbr",
+        "role": "Viewer",
+        "mimeType": "application/x-cbr"
+      },
+      {
+        "ext": "cbt",
+        "role": "Viewer",
+        "mimeType": "application/x-cbt"
+      },
+      {
+        "ext": "md",
+        "role": "Viewer",
+        "mimeType": "text/markdown"
+      },
+      {
+        "ext": "docx",
+        "role": "Viewer",
+        "mimeType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+      },
+      {
+        "ext": "rtf",
+        "role": "Viewer",
+        "mimeType": "application/rtf"
+      },
+      {
+        "ext": "fb2",
+        "role": "Viewer",
+        "mimeType": "application/x-fictionbook+xml"
+      },
+      {
+        "ext": "html",
+        "role": "Viewer",
+        "mimeType": "text/html"
+      },
+      {
+        "ext": "htm",
+        "role": "Viewer",
+        "mimeType": "text/html"
+      },
+      {
+        "ext": "xhtml",
+        "role": "Viewer",
+        "mimeType": "application/xhtml+xml"
+      },
+      {
+        "ext": "xml",
+        "role": "Viewer",
+        "mimeType": "application/xhtml+xml"
       }
     ],
     "extends": null,
@@ -213,31 +300,5 @@
         "react-hot-loader/babel"
       ]
     ]
-  },
-  "devDependencies": {
-    "@types/file-saver": "^2.0.1",
-    "@types/marked": "^2.0.2",
-    "@types/md5": "^2.2.0",
-    "@types/node": "^13.13.2",
-    "@types/react": "^16.9.34",
-    "@types/react-dom": "^16.9.6",
-    "@types/react-i18next": "^8.1.0",
-    "@types/react-lottie": "^1.2.5",
-    "@types/react-redux": "^7.1.7",
-    "@types/react-router-dom": "^5.1.6",
-    "@types/spark-md5": "^3.0.2",
-    "@types/underscore": "^1.10.24",
-    "classnames": "^2.2.6",
-    "concurrently": "^5.0.1",
-    "cross-env": "^6.0.3",
-    "electron": "11.4.1",
-    "electron-builder": "^22.10.5",
-    "hard-source-webpack-plugin": "^0.13.1",
-    "node-sass": "^4.13.0",
-    "nodemon": "^2.0.6",
-    "sass-loader": "^8.0.0",
-    "source-map-explorer": "^2.5.2",
-    "typescript": "^3.8.3",
-    "wait-on": "^3.3.0"
   }
 }

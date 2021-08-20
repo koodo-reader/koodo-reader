@@ -10,7 +10,7 @@ import { ReaderProps, ReaderState } from "./interface";
 import { MouseEvent } from "../../utils/mouseEvent";
 import OtherUtil from "../../utils/otherUtil";
 import ReadingTime from "../../utils/readUtils/readingTime";
-
+import { isElectron } from "react-device-detect";
 class Reader extends React.Component<ReaderProps, ReaderState> {
   messageTimer!: NodeJS.Timeout;
   tickTimer!: NodeJS.Timeout;
@@ -109,11 +109,14 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
   };
   handleRecord() {
     OtherUtil.setReaderConfig("isFullScreen", "no");
-
-    OtherUtil.setReaderConfig("windowWidth", document.body.clientWidth + "");
-    OtherUtil.setReaderConfig("windowHeight", document.body.clientHeight + "");
-    OtherUtil.setReaderConfig("windowX", window.screenX + "");
-    OtherUtil.setReaderConfig("windowY", window.screenY + "");
+    if (isElectron) {
+      const { remote } = window.require("electron");
+      let bounds = remote.getCurrentWindow().getBounds();
+      OtherUtil.setReaderConfig("windowWidth", bounds.width);
+      OtherUtil.setReaderConfig("windowHeight", bounds.height);
+      OtherUtil.setReaderConfig("windowX", bounds.x);
+      OtherUtil.setReaderConfig("windowY", bounds.y);
+    }
   }
   //进入阅读器
   handleEnterReader = (position: string) => {

@@ -114,7 +114,9 @@ class BookUtil {
         );
       } else {
         window.open(
-          `${window.location.href.split("#")[0]}#/${ref}/${book.key}?width=full`
+          `${window.location.href.split("#")[0]}#/${ref}/${
+            book.key
+          }?width=full&title=${book.name}`
         );
       }
     } else {
@@ -134,7 +136,7 @@ class BookUtil {
             book.key
           }?width=${windowWidth}&height=${windowHeight}&x=${OtherUtil.getReaderConfig(
             "windowX"
-          )}&y=${OtherUtil.getReaderConfig("windowY")}`
+          )}&y=${OtherUtil.getReaderConfig("windowY")}&title=${book.name}`
         );
       }
     }

@@ -58,10 +58,6 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
             onClick={() => {
               this.handleSidebar(item.mode, index);
             }}
-            onDrop={() => {
-              index === 1 && this.props.handleDragToLove(true);
-              index === 5 && this.props.handleDragToDelete(true);
-            }}
             onMouseEnter={() => {
               this.handleHover(index);
             }}

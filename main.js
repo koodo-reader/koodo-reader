@@ -45,7 +45,7 @@ app.on("ready", () => {
   mainWin = new BrowserWindow(option);
 
   if (!isDev) {
-    // Menu.setApplicationMenu(null);
+    Menu.setApplicationMenu(null);
   }
 
   const urlLocation = isDev
@@ -81,7 +81,18 @@ app.on("ready", () => {
           "web",
           "viewer.html"
         )}?${url.split("?")[1]}`;
+    var urlParams;
 
+    var match,
+      pl = /\+/g,
+      search = /([^&=]+)=?([^&]*)/g,
+      decode = function (s) {
+        return decodeURIComponent(s.replace(pl, " "));
+      },
+      query = url.split("?").reverse()[0];
+    urlParams = {};
+    while ((match = search.exec(query)))
+      urlParams[decode(match[1])] = decode(match[2]);
     if (url.indexOf("full") > -1) {
       Object.assign(options, {
         width: 1050,
@@ -91,18 +102,6 @@ app.on("ready", () => {
       readerWindow.loadURL(url.indexOf("pdf") > -1 ? pdfLocation : url);
       readerWindow.maximize();
     } else {
-      var urlParams;
-
-      var match,
-        pl = /\+/g,
-        search = /([^&=]+)=?([^&]*)/g,
-        decode = function (s) {
-          return decodeURIComponent(s.replace(pl, " "));
-        },
-        query = url.split("?").reverse()[0];
-      urlParams = {};
-      while ((match = search.exec(query)))
-        urlParams[decode(match[1])] = decode(match[2]);
       Object.assign(options, {
         width: parseInt(urlParams.width),
         height: parseInt(urlParams.height),
@@ -115,6 +114,7 @@ app.on("ready", () => {
     readerWindow.on("close", () => {
       readerWindow && readerWindow.destroy();
     });
+
     event.returnValue = "success";
   });
   ipcMain.handle("fonts-ready", async (event, arg) => {
