@@ -292,6 +292,7 @@ export const zipConfig = (
         )
         .file("readingTime.json", localStorage.getItem("readingTime") || "")
         .file("recentBooks.json", localStorage.getItem("recentBooks") || [])
+        .file("deletedBooks.json", localStorage.getItem("deletedBooks") || [])
         .file("favoriteBooks.json", localStorage.getItem("favoriteBooks") || [])
         .file("shelfList.json", localStorage.getItem("shelfList") || [])
         .file("noteTags.json", localStorage.getItem("noteTags") || [])

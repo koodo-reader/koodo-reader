@@ -2,8 +2,6 @@ import {
   handleMode,
   handleSearch,
   handleSortDisplay,
-  handleDragToLove,
-  handleDragToDelete,
   handleCollapse,
 } from "../../store/actions";
 import { connect } from "react-redux";
@@ -17,8 +15,6 @@ const mapStateToProps = (state: stateType) => {
 const actionCreator = {
   handleMode,
   handleSearch,
-  handleDragToLove,
-  handleDragToDelete,
   handleSortDisplay,
   handleCollapse,
 };

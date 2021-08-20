@@ -30,6 +30,9 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
     this.state = {
       isOpenFile: false,
       width: document.body.clientWidth,
+      //是否解析出kindle格式的目录
+      isKindleSuccess: true,
+      tempFile: null,
     };
   }
   componentDidMount() {
@@ -129,6 +132,9 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
 
   handleBook = (file: any, md5: string) => {
     let extension = file.name.split(".").reverse()[0];
+    if (extension === "mobi" || extension === "azw3") {
+      this.setState({ tempFile: file });
+    }
     let bookName = file.name.substr(0, file.name.length - extension.length - 1);
     let result: BookModel | Boolean;
     return new Promise<void>((resolve, reject) => {
@@ -185,7 +191,11 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
               let mobiFile = new MobiParser(file_content);
               let content: any = await mobiFile.render(isElectron);
               //包含太多图片或者文件大于5m就不转换
-              if (typeof content === "object" || file.size / 1024 / 1024 > 5) {
+              if (
+                typeof content === "object" ||
+                file.size / 1024 / 1024 > 5 ||
+                !this.state.isKindleSuccess
+              ) {
                 result = BookUtil.generateBook(
                   bookName,
                   extension,
@@ -194,6 +204,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                 );
                 await this.handleAddBook(result);
                 BookUtil.addBook(result.key, file_content as ArrayBuffer);
+                this.setState({ isKindleSuccess: true });
                 resolve();
               } else {
                 let buf = iconv.encode(content, "UTF-8");
@@ -210,14 +221,35 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
           } else if (extension === "txt") {
             if (isElectron) {
               let _result = await generateEpub(file);
-              if (_result) {
-                await this.getMd5WithBrowser(_result);
-                resolve();
-              } else {
+              if (_result === 1) {
                 this.props.handleMessage("Import Failed");
                 this.props.handleMessageBox(true);
 
                 reject();
+              } else if (
+                _result === 2 &&
+                (bookName.indexOf("mobi") > -1 || bookName.indexOf("azw3") > -1)
+              ) {
+                this.setState({ isKindleSuccess: false });
+                await this.getMd5WithBrowser(this.state.tempFile);
+                resolve();
+                // let reader = new FileReader();
+                // reader.onload = async (event) => {
+                //   const file_content = (event.target as any).result;
+                //   result = BookUtil.generateBook(
+                //     bookName,
+                //     extension,
+                //     md5,
+                //     file.size
+                //   );
+                //   await this.handleAddBook(result);
+                //   BookUtil.addBook(result.key, file_content as ArrayBuffer);
+                //   resolve();
+                // };
+                // reader.readAsArrayBuffer(file);
+              } else {
+                await this.getMd5WithBrowser(_result);
+                resolve();
               }
             } else {
               let reader = new FileReader();
