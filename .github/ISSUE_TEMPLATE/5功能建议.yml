@@ -1,0 +1,36 @@
+name: 功能建议
+about: 我希望 Koodo Reader 增加这个功能
+labels: "feature request"
+
+body:
+  - type: checkboxes
+    id: testing
+    attributes:
+      label: 我已经阅读了Koodo的开发计划，没有找到类似的需求
+      options:
+        - label: "是"
+        - label: "否"
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: testing
+    attributes:
+      label: 这个Issue没有同时提多个需求.
+      options:
+        - label: "是"
+        - label: "否"
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: 简单介绍
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: 细节描述
+    validations:
+      required: true
