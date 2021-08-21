@@ -25,13 +25,14 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
     };
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     let filePath = "";
     //控制是否自动打开本书
     if (isElectron) {
       const { ipcRenderer } = window.require("electron");
-      filePath = await ipcRenderer.sendSync("get-file-data");
+      filePath = ipcRenderer.sendSync("get-file-data");
     }
+    console.log(filePath, "filePath");
 
     if (
       OtherUtil.getReaderConfig("isOpenBook") === "yes" &&

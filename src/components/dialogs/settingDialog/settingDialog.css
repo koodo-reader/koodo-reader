@@ -156,3 +156,10 @@
   justify-content: space-between;
   align-items: center;
 }
+.setting-option-subtitle {
+  font-size: 12px;
+  opacity: 0.8;
+  margin-left: 30px;
+  margin-right: 25px;
+  line-height: 15px;
+}

@@ -313,7 +313,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
             top: "20px",
             bottom: "20px",
             overflowY: "scroll",
-            zIndex: 10,
+            zIndex: 5,
           }}
         >
           <iframe title="html-viewer" width="100%">

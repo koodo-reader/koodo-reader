@@ -38,15 +38,29 @@ class DropdownList extends React.Component<
       ipcRenderer.invoke("fonts-ready", "ping").then((result) => {
         dropdownList[0].option = result;
         dropdownList[0].option.push("Built-in font");
+        this.setState(
+          {
+            currentFontFamilyIndex: dropdownList[0].option.findIndex(
+              (item: any) => {
+                return (
+                  item ===
+                  (OtherUtil.getReaderConfig("fontFamily") || "Built-in font")
+                );
+              }
+            ),
+          },
+          () => {
+            document
+              .querySelector(".paragraph-character-setting")!
+              .children[0].children[1].children[
+                this.state.currentFontFamilyIndex === -1
+                  ? 0
+                  : this.state.currentFontFamilyIndex
+              ].setAttribute("selected", "selected");
+          }
+        );
       });
     }
-    document
-      .querySelector(".paragraph-character-setting")!
-      .children[0].children[1].children[
-        this.state.currentFontFamilyIndex === -1
-          ? 0
-          : this.state.currentFontFamilyIndex
-      ].setAttribute("selected", "selected");
 
     document
       .querySelector(".paragraph-character-setting")!

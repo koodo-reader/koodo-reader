@@ -9,7 +9,6 @@ body:
       description: https://www.notion.so/troyeguo/215baeda57804fd29dbb0e91d1e6a021?v=360c00183d944b598668f34c255edfd7
       options:
         - label: "是"
-        - label: "否"
     validations:
       required: true
 
@@ -19,7 +18,6 @@ body:
       label: 这个Issue没有同时提多个需求.
       options:
         - label: "是"
-        - label: "否"
     validations:
       required: true
 

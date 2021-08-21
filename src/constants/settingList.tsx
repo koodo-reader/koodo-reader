@@ -2,21 +2,28 @@ export const settingList = [
   {
     isElectron: false,
     title: "Turn on touch screen mode",
+    desc:
+      "Reader menu will not be triggered by hovering but clicking on the area",
     propName: "isTouch",
   },
   {
     isElectron: false,
     title: "Auto open latest book",
+    desc:
+      "The book that you read from last time will be open automatically when launching",
     propName: "isOpenBook",
   },
   {
     isElectron: true,
     title: "Auto open book in fullscreen",
+    desc:
+      "Reader window will be maximized to fit the screen when opening a book",
     propName: "isAutoFullscreen",
   },
   {
     isElectron: false,
     title: "Default expand all content",
+    desc: "All the folded content will be expanded in the navigation panel",
     propName: "isExpandContent",
   },
   {

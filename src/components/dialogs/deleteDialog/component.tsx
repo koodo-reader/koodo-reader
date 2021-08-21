@@ -56,7 +56,6 @@ class DeleteDialog extends React.Component<DeleteDialogProps> {
       this.props.handleFetchBookmarks();
       this.props.handleFetchNotes();
     } else if (this.props.isSelectBook) {
-      console.log(this.props.selectedBooks, "this.props.selectedBooks");
       this.props.selectedBooks.forEach((item) => {
         AddTrash.setTrash(item);
         //从喜爱的图书中删除

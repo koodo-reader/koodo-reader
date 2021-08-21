@@ -197,49 +197,52 @@ class SettingDialog extends React.Component<
           {settingList.map((item, index) => {
             return (
               <div
-                className="setting-dialog-new-title"
-                key={item.title}
                 style={
                   item.isElectron ? (isElectron ? {} : { display: "none" }) : {}
                 }
               >
-                <Trans>{item.title}</Trans>
-                <span
-                  className="single-control-switch"
-                  onClick={() => {
-                    switch (index) {
-                      case 0:
-                      case 1:
-                      case 2:
-                      case 3:
-                      case 4:
-                      case 5:
-                        this.handleSetting(item.propName);
-                        break;
-                      case 6:
-                        this.handleDisplayDark();
-                        break;
-                      default:
-                        break;
-                    }
-                  }}
-                  style={this.state[item.propName] ? {} : { opacity: 0.6 }}
-                >
+                <div className="setting-dialog-new-title" key={item.title}>
+                  <Trans>{item.title}</Trans>
                   <span
-                    className="single-control-button"
-                    style={
-                      this.state[item.propName]
-                        ? {
-                            transform: "translateX(20px)",
-                            transition: "transform 0.5s ease",
-                          }
-                        : {
-                            transform: "translateX(0px)",
-                            transition: "transform 0.5s ease",
-                          }
-                    }
-                  ></span>
-                </span>
+                    className="single-control-switch"
+                    onClick={() => {
+                      switch (index) {
+                        case 0:
+                        case 1:
+                        case 2:
+                        case 3:
+                        case 4:
+                        case 5:
+                          this.handleSetting(item.propName);
+                          break;
+                        case 6:
+                          this.handleDisplayDark();
+                          break;
+                        default:
+                          break;
+                      }
+                    }}
+                    style={this.state[item.propName] ? {} : { opacity: 0.6 }}
+                  >
+                    <span
+                      className="single-control-button"
+                      style={
+                        this.state[item.propName]
+                          ? {
+                              transform: "translateX(20px)",
+                              transition: "transform 0.5s ease",
+                            }
+                          : {
+                              transform: "translateX(0px)",
+                              transition: "transform 0.5s ease",
+                            }
+                      }
+                    ></span>
+                  </span>
+                </div>
+                <p className="setting-option-subtitle">
+                  <Trans>{item.desc}</Trans>
+                </p>
               </div>
             );
           })}

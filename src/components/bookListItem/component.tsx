@@ -12,6 +12,7 @@ import EmptyCover from "../emptyCover";
 import BookUtil from "../../utils/fileUtils/bookUtil";
 import FileSaver from "file-saver";
 import localforage from "localforage";
+import { isElectron } from "react-device-detect";
 
 class BookListItem extends React.Component<BookItemProps, BookItemState> {
   epub: any;
@@ -23,11 +24,17 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
     };
   }
   componentDidMount() {
+    let filePath = "";
     //控制是否自动打开本书
+    if (isElectron) {
+      const { ipcRenderer } = window.require("electron");
+      filePath = ipcRenderer.sendSync("get-file-data");
+    }
     if (
       OtherUtil.getReaderConfig("isOpenBook") === "yes" &&
       RecentBooks.getAllRecent()[0] === this.props.book.key &&
-      !this.props.currentBook.key
+      !this.props.currentBook.key &&
+      !filePath
     ) {
       BookUtil.RedirectBook(this.props.book);
     }

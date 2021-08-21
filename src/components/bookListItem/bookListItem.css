@@ -2,7 +2,7 @@
   display: flex;
   justify-content: space-between;
   margin: 18px;
-  margin-right: 50px;
+  margin-right: 18px;
 }
 .book-item-list-cover {
   width: 57px;

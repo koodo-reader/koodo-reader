@@ -55,9 +55,11 @@
 
 ## Installation
 
-- Desktop Version: [Download](https://koodo.960960.xyz/download)
+- Desktop Version:
+  - Stable Version: [Download](https://koodo.960960.xyz/download)
+  - Developer Version: [Download](https://github.com/troyeguo/koodo-reader/releases/latest)
 - Web Version：[Preview](https://koodo-reader.vercel.app/)
-- Install with [Homebrew](https://brew.sh/):
+- Install with Homebrew:
 
 ```shell
 brew install --cask koodo-reader

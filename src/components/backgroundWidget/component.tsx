@@ -9,11 +9,24 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
     super(props);
     this.state = {
       isSingle:
-        OtherUtil.getReaderConfig("readerMode") &&
-        OtherUtil.getReaderConfig("readerMode") !== "double",
+        (OtherUtil.getReaderConfig("readerMode") &&
+          OtherUtil.getReaderConfig("readerMode") !== "double") ||
+        !this.props.currentEpub.archived,
       scale: OtherUtil.getReaderConfig("scale") || 1,
     };
     this.isFirst = true;
+  }
+  componentDidMount() {
+    let background = document.querySelector(".background");
+    if (!background) return;
+    background!.setAttribute(
+      "style",
+      `background-color:${OtherUtil.getReaderConfig(
+        "backgroundColor"
+      )};filter: brightness(${
+        OtherUtil.getReaderConfig("brightness") || 1
+      }) invert(${OtherUtil.getReaderConfig("isInvert") === "yes" ? 1 : 0})`
+    );
   }
 
   render() {

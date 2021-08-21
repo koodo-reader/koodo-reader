@@ -17,7 +17,6 @@ class NoteTag extends React.Component<NoteTagProps, NoteTagState> {
     };
   }
   componentDidMount() {
-    console.log("tests");
     if (this.props.isReading) {
       this.setState({ tagIndex: this.tagToIndex(this.props.tag) });
     }
@@ -92,7 +91,6 @@ class NoteTag extends React.Component<NoteTagProps, NoteTagState> {
   render() {
     const renderTag = () => {
       let noteTags = this.props.isCard ? this.props.tag : TagUtil.getAllTags();
-      console.log(noteTags, "noteTags");
       return noteTags.map((item: any, index: number) => {
         return (
           <li
