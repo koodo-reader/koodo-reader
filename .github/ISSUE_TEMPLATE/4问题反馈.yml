@@ -1,8 +1,6 @@
 name: 问题反馈
-about: 我在使用 Koodo Reader 时遇到了问题
+description: 我在使用 Koodo Reader 时遇到了问题
 labels: "bug"
-assignees: ""
-
 body:
   - type: markdown
     attributes:

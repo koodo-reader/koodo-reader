@@ -1,7 +1,6 @@
 name: Feature Request
-about: What feature do you think is missing in Koodo Reader
+description: What feature do you think is missing in Koodo Reader
 labels: "feature request"
-
 body:
   - type: checkboxes
     id: testing
