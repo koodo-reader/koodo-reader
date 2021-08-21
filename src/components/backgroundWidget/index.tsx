@@ -3,7 +3,7 @@ import { stateType } from "../../store";
 import Background from "./component";
 
 const mapStateToProps = (state: stateType) => {
-  return {};
+  return { currentEpub: state.book.currentEpub };
 };
 const actionCreator = {};
 export default connect(mapStateToProps, actionCreator)(Background);

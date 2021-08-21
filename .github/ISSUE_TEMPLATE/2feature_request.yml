@@ -9,7 +9,6 @@ body:
       description: https://www.notion.so/troyeguo/d1c19a132932465bae1d89dd963c92ea?v=ca8aa69cf25849c18c92b92ba868663b
       options:
         - label: "Yes"
-        - label: "No"
     validations:
       required: true
 
@@ -19,7 +18,6 @@ body:
       label: This issue only contains one feature request.
       options:
         - label: "Yes"
-        - label: "No"
     validations:
       required: true
 
