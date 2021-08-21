@@ -15,19 +15,20 @@ export const isTitle = (
       line.startsWith("写在前面的话") ||
       line.startsWith("后记") ||
       line.startsWith("楔子") ||
-      line.startsWith("后记") ||
       line.startsWith("后序") ||
       line.startsWith("寫在前面的話") ||
-      line.startsWith("後記") ||
-      line.startsWith("楔子") ||
       line.startsWith("後記") ||
       line.startsWith("後序") ||
       (line.startsWith("第") && startWithDI(line)) ||
       (!isContainDI &&
         !isContainChapter &&
         !isContainCHAPTER &&
-        line.indexOf("第") > 1 &&
-        line[line.indexOf("第") - 1] === " " &&
+        line.indexOf("第") > -1 &&
+        (line[line.indexOf("第") - 1] === " " ||
+          line[line.indexOf("第") - 1] === "　" ||
+          line[line.indexOf("第") - 1] === "、" ||
+          line[line.indexOf("第") - 1] === "：" ||
+          line[line.indexOf("第") - 1] === ":") &&
         startWithDI(line.substr(line.indexOf("第")))) ||
       (!isContainDI &&
         !isContainChapter &&
@@ -72,16 +73,7 @@ const startWithDI = (line: string) => {
     "篇",
   ];
   let flag = false;
-  console.log(line);
   for (let i = 0; i < keywords.length; i++) {
-    console.log(
-      line,
-      line[line.indexOf(keywords[i]) + 1] === " ",
-      line[line.indexOf(keywords[i]) + 1] === "　",
-      line[line.indexOf(keywords[i]) + 1] === "、",
-      line[line.indexOf(keywords[i]) + 1] === "：",
-      line[line.indexOf(keywords[i]) + 1] === ":"
-    );
     if (
       (line.indexOf(keywords[i]) > -1 &&
         (line[line.indexOf(keywords[i]) + 1] === " " ||
@@ -92,7 +84,7 @@ const startWithDI = (line: string) => {
       !line[line.indexOf(keywords[i]) + 1]
     ) {
       if (
-        /^[\u4e00\u4e8c\u4e09\u56db\u4e94\u516d\u4e03\u516b\u4e5d\u5341\u767e\u5343\u4e07]+$/.test(
+        /^[\u4e00\u4e8c\u4e09\u56db\u4e94\u516d\u4e03\u516b\u4e5d\u5341\u767e\u5343\u4e07\u842c]+$/.test(
           line.substring(1, line.indexOf(keywords[i]))
         ) ||
         /^\d+$/.test(line.substring(1, line.indexOf(keywords[i])))
@@ -107,13 +99,13 @@ const startWithDI = (line: string) => {
 
 const startWithNumAndSpace = (line: string) => {
   if (
-    /^[\u4e00\u4e8c\u4e09\u56db\u4e94\u516d\u4e03\u516b\u4e5d\u5341\u767e\u5343\u4e07]+$/.test(
+    /^[\u4e00\u4e8c\u4e09\u56db\u4e94\u516d\u4e03\u516b\u4e5d\u5341\u767e\u5343\u4e07\u842c]+$/.test(
       line.substring(0, line.indexOf(" "))
     )
   )
     return true;
   if (
-    /^[\u4e00\u4e8c\u4e09\u56db\u4e94\u516d\u4e03\u516b\u4e5d\u5341\u767e\u5343\u4e07]+$/.test(
+    /^[\u4e00\u4e8c\u4e09\u56db\u4e94\u516d\u4e03\u516b\u4e5d\u5341\u767e\u5343\u4e07\u842c]+$/.test(
       line.substring(0, line.indexOf("　"))
     )
   )
@@ -125,13 +117,13 @@ const startWithNumAndSpace = (line: string) => {
 };
 const startWithNumAndColon = (line: string) => {
   if (
-    /^[\u4e00\u4e8c\u4e09\u56db\u4e94\u516d\u4e03\u516b\u4e5d\u5341\u767e\u5343\u4e07]+$/.test(
+    /^[\u4e00\u4e8c\u4e09\u56db\u4e94\u516d\u4e03\u516b\u4e5d\u5341\u767e\u5343\u4e07\u842c]+$/.test(
       line.substring(0, line.indexOf(":"))
     )
   )
     return true;
   if (
-    /^[\u4e00\u4e8c\u4e09\u56db\u4e94\u516d\u4e03\u516b\u4e5d\u5341\u767e\u5343\u4e07]+$/.test(
+    /^[\u4e00\u4e8c\u4e09\u56db\u4e94\u516d\u4e03\u516b\u4e5d\u5341\u767e\u5343\u4e07\u842c]+$/.test(
       line.substring(0, line.indexOf("："))
     )
   )
@@ -143,7 +135,7 @@ const startWithNumAndColon = (line: string) => {
 };
 const startWithNumAndPause = (line: string) => {
   if (
-    /^[\u4e00\u4e8c\u4e09\u56db\u4e94\u516d\u4e03\u516b\u4e5d\u5341\u767e\u5343\u4e07]+$/.test(
+    /^[\u4e00\u4e8c\u4e09\u56db\u4e94\u516d\u4e03\u516b\u4e5d\u5341\u767e\u5343\u4e07\u842c]+$/.test(
       line.substring(0, line.indexOf("、"))
     )
   )

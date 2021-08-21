@@ -220,7 +220,6 @@ class BookList extends React.Component<BookListProps, BookListState> {
       <>
         {this.state.isOpenDelete && <DeletePopup {...deletePopupProps} />}
         <ViewMode />
-
         <div className="booklist-shelf-container">
           <p className="general-setting-title" style={{ display: "inline" }}>
             <Trans>My Shelves</Trans>
