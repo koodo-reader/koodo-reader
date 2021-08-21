@@ -45,11 +45,11 @@ body:
     validations:
       required: true
 
-  - type: textarea
+  - type: input
     id: version
     attributes:
       label: Koodo Reader 版本
-      description: 您可以在设置->版本号查看
+      placeholder: 您可以在设置->版本号查看
     validations:
       required: true
 
@@ -57,7 +57,7 @@ body:
     id: bug
     attributes:
       label: 我遇到的问题
-      description: 描述您遇到的问题以及如何复现该问题
+      placeholder: 描述您遇到的问题以及如何复现该问题
     validations:
       required: true
 
@@ -65,7 +65,7 @@ body:
     id: screenshot
     attributes:
       label: 截图或录像
-      description: 截图和录像会帮助开发者定位问题
+      placeholder: 截图和录像会帮助开发者定位问题
     validations:
       required: false
 
@@ -73,6 +73,6 @@ body:
     id: download
     attributes:
       label: 图书的下载链接
-      description: 您遇到问题时正在阅读的图书
+      placeholder: 您遇到问题时正在阅读的图书
     validations:
       required: false
