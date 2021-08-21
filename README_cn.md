@@ -56,9 +56,11 @@
 
 ## 使用方法
 
-- 桌面端：[Github](https://github.com/troyeguo/koodo-reader/releases/latest) | [蓝奏云](https://wwa.lanzoui.com/b0c90cieb) 密码：1234 | [历史版本](https://wwa.lanzoui.com/b0c97tupi) 密码：1234
+- 桌面端：
+  - 稳定版：[蓝奏云](https://wwa.lanzoui.com/b0c90cieb) 密码：1234 | [历史版本](https://wwa.lanzoui.com/b0c97tupi) 密码：1234
+  - 开发版：[Github Release](https://github.com/troyeguo/koodo-reader/releases/latest)
 - 网页版：[前往](https://koodo-reader.vercel.app/)
-- 使用 [Homebrew](https://brew.sh/) 安装：
+- 使用 Homebrew 安装：
 
 ```shell
 brew install --cask koodo-reader
