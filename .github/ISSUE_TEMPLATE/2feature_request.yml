@@ -6,6 +6,7 @@ body:
     id: testing1
     attributes:
       label: I've read Koodo's roadmap, there is no similar feature.
+      description: https://www.notion.so/troyeguo/d1c19a132932465bae1d89dd963c92ea?v=ca8aa69cf25849c18c92b92ba868663b
       options:
         - label: "Yes"
         - label: "No"
