@@ -13,12 +13,22 @@ assignees: ""
   - I've already read the Q&A document: https://www.notion.so/troyeguo/01aaa516687c418499f713d34793b9ad?v=54d51fe1688a4f8ab5784b17e4df3308
 -->
 
-Operating System:
+## Operating System
 
-App Version:
+<!-- Specify which OS you are using. -->
 
-Bug details:
+## App Version
 
-Screenshot or video (Optional):
+<!-- Specify which version of Koodo Reader you are using. -->
 
-Download link to the ebook (Optional):
+## Bug details
+
+<!-- Please describe your problem in detail -->
+
+## Screenshot or video (Optional)
+
+<!-- Screenshot or video will help us identify the problem -->
+
+## Download link to the ebook (Optional)
+
+<!-- Attach your books if you think it's helpful -->

@@ -127,6 +127,15 @@
   cursor: pointer;
   z-index: 2;
 }
+.book-selected-icon {
+  position: absolute;
+  bottom: 44px;
+  right: 19px;
+  font-size: 20px;
+  color: #f87356;
+  cursor: pointer;
+  z-index: 2;
+}
 .action-dialog-parent {
   position: fixed;
   top: 0px;

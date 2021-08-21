@@ -118,6 +118,16 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
               src={this.props.book.cover}
               alt=""
               onClick={() => {
+                if (this.props.isSelectBook) {
+                  this.props.handleSelectedBooks(
+                    this.props.isSelected
+                      ? this.props.selectedBooks.filter(
+                          (item) => item !== this.props.book.key
+                        )
+                      : [...this.props.selectedBooks, this.props.book.key]
+                  );
+                  return;
+                }
                 this.handleJump();
               }}
             />
@@ -125,6 +135,16 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
             <div
               className="book-item-cover"
               onClick={() => {
+                if (this.props.isSelectBook) {
+                  this.props.handleSelectedBooks(
+                    this.props.isSelected
+                      ? this.props.selectedBooks.filter(
+                          (item) => item !== this.props.book.key
+                        )
+                      : [...this.props.selectedBooks, this.props.book.key]
+                  );
+                  return;
+                }
                 this.handleJump();
               }}
             >
@@ -148,8 +168,11 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
               }}
             ></span>
           ) : null}
+          {this.props.isSelectBook && this.props.isSelected ? (
+            <span className="icon-message book-selected-icon"></span>
+          ) : null}
 
-          {this.state.isOpenConfig ? (
+          {this.state.isOpenConfig && !this.props.isSelectBook ? (
             <>
               {this.props.book.format !== "PDF" && (
                 <div className="reading-progress-icon">

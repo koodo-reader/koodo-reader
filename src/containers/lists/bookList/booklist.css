@@ -53,5 +53,18 @@
 .booklist-shelf-container {
   position: absolute;
   top: 80px;
-  left: calc(50% - 125px);
+  left: calc(50% - 100px);
+}
+.booklist-manage-container {
+  position: absolute;
+  top: 85px;
+  left: 205px;
+  cursor: pointer;
+}
+.book-manage-title {
+  font-size: 15px;
+  font-weight: 500;
+  margin-top: 15px;
+  margin-bottom: 10px;
+  margin-left: 20px;
 }
