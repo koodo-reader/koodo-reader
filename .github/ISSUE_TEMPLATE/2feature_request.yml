@@ -1,0 +1,38 @@
+name: Feature Request
+about: What feature do you think is missing in Koodo Reader
+labels: "feature request"
+
+body:
+  - type: checkboxes
+    id: testing
+    attributes:
+      label: I've read Koodo's roadmap, there is no similar feature.
+      options:
+        - label: "Yes"
+        - label: "No"
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: testing
+    attributes:
+      label: This issue only contains one feature request.
+      options:
+        - label: "Yes"
+        - label: "No"
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Brief Introduction
+      description: Brief introduction to this feature
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Details
+      description: More details about this feature
+    validations:
+      required: true

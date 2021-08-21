@@ -1,0 +1,81 @@
+name: 问题反馈
+about: 我在使用 Koodo Reader 时遇到了问题
+labels: "bug"
+assignees: ""
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please [search for existing issues](https://github.com/troyeguo/koodo-reader/issues) before creating a new one.
+
+  - type: checkboxes
+    id: testing
+    attributes:
+      label: 我已经安装了最新版的 Koodo Reader
+      options:
+        - label: "是"
+        - label: "否"
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: testing
+    attributes:
+      label: 我已经搜索了已有的 Issues列表，没有找到类似的issue
+      options:
+        - label: "是"
+        - label: "否"
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: testing
+    attributes:
+      label: 我已经阅读了 Koodo Reader 的帮助文档，仍然无法解决
+      description: https://www.notion.so/troyeguo/01aaa516687c418499f713d34793b9ad?v=54d51fe1688a4f8ab5784b17e4df3308
+      options:
+        - label: "是"
+        - label: "否"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: os
+    attributes:
+      label: 操作系统
+      options:
+        - Windows
+        - macOS
+        - Linux
+        - 网页版
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Koodo Reader 版本
+      description: 您可以在设置->版本号查看
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: 我遇到的问题
+      description: 描述您遇到的问题以及如何复现该问题
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: 截图或录像
+      description: 截图和录像会帮助开发者定位问题
+    validations:
+      required: false
+
+  - type: textarea
+    attributes:
+      label: 图书的下载链接
+      description: 您遇到问题时正在阅读的图书
+    validations:
+      required: false
