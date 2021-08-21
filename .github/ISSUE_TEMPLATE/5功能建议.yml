@@ -26,6 +26,7 @@ body:
     id: introduction
     attributes:
       label: 简单介绍
+      placeholder: 关于这个需求的简单介绍
     validations:
       required: true
 
@@ -33,5 +34,6 @@ body:
     id: detail
     attributes:
       label: 细节描述
+      placeholder: 关于这个需求的细节描述
     validations:
       required: true
