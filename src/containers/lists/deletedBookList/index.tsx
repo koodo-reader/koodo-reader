@@ -19,6 +19,7 @@ const mappropsToProps = (state: stateType) => {
     viewMode: state.manager.viewMode,
     bookSortCode: state.manager.bookSortCode,
     noteSortCode: state.manager.noteSortCode,
+    selectedBooks: state.manager.selectedBooks,
   };
 };
 const actionCreator = {

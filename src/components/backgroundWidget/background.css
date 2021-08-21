@@ -90,24 +90,7 @@
   width: 60vw;
   left: 20vw;
 }
-.progress-chapter-name,
-.progress-book-name {
-  width: 540px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
-  position: absolute;
-  top: 5px;
-  line-height: 30px;
-  text-align: center;
-  opacity: 0.3;
-}
-.progress-chapter-name {
-  left: calc(25% - 270px);
-}
-.progress-book-name {
-  right: calc(25% - 270px);
-}
+
 .background-page-left,
 .background-page-right {
   width: 540px;

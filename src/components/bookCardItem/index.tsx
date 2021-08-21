@@ -6,6 +6,7 @@ import {
   handleDeleteDialog,
   handleMessageBox,
   handleMessage,
+  handleSelectedBooks,
 } from "../../store/actions";
 
 import Book from "./component";
@@ -16,6 +17,8 @@ const mapStateToProps = (state: stateType) => {
     isOpenActionDialog: state.book.isOpenActionDialog,
     dragItem: state.book.dragItem,
     currentBook: state.book.currentBook,
+    isSelectBook: state.manager.isSelectBook,
+    selectedBooks: state.manager.selectedBooks,
   };
 };
 const actionCreator = {
@@ -25,5 +28,6 @@ const actionCreator = {
   handleMessage,
   handleDragItem,
   handleDeleteDialog,
+  handleSelectedBooks,
 };
 export default connect(mapStateToProps, actionCreator)(Book);

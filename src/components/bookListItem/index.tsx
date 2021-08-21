@@ -8,6 +8,7 @@ import {
   handleMessageBox,
   handleMessage,
   handleFetchBooks,
+  handleSelectedBooks,
 } from "../../store/actions";
 import { withTranslation } from "react-i18next";
 
@@ -31,6 +32,7 @@ const actionCreator = {
   handleMessage,
   handleDragItem,
   handleFetchBooks,
+  handleSelectedBooks,
 };
 export default connect(
   mapStateToProps,

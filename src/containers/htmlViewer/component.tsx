@@ -23,6 +23,8 @@ import { isElectron } from "react-device-detect";
 import Lottie from "react-lottie";
 import animationSiri from "../../assets/lotties/siri.json";
 import _ from "underscore";
+import BackgroundWidget from "../../components/backgroundWidget";
+
 declare var window: any;
 const siriOptions = {
   loop: true,
@@ -36,7 +38,11 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
   epub: any;
   constructor(props: ViewerProps) {
     super(props);
-    this.state = { key: "", isLoading: true };
+    this.state = {
+      key: "",
+      isLoading: true,
+      scale: OtherUtil.getReaderConfig("scale") || 1,
+    };
   }
 
   componentDidMount() {
@@ -297,25 +303,24 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
             <Lottie options={siriOptions} height={100} width={300} />
           </div>
         )}
+
         <div
           className="ebook-viewer"
           style={{
-            width: `${
-              (100 * parseFloat(OtherUtil.getReaderConfig("scale") || "1")) / 2
-            }%`,
-            height: "100%",
-            marginLeft: `${
-              (100 *
-                (2 - parseFloat(OtherUtil.getReaderConfig("scale") || "1"))) /
-              4
-            }%`,
+            position: "absolute",
+            left: `calc(50vw - ${270 * parseFloat(this.state.scale)}px + 9px)`,
+            right: `calc(50vw - ${270 * parseFloat(this.state.scale)}px + 7px)`,
+            top: "20px",
+            bottom: "20px",
             overflowY: "scroll",
+            zIndex: 10,
           }}
         >
           <iframe title="html-viewer" width="100%">
             Loading
           </iframe>
         </div>
+        <BackgroundWidget />
       </>
     );
   }

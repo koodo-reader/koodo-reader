@@ -44,6 +44,8 @@ export type stateType = {
     isShowLoading: boolean;
     isShowNew: boolean;
     isNewWarning: boolean;
+    isSelectBook: boolean;
+    selectedBooks: string[];
     isTipDialog: boolean;
     bookSortCode: { sort: number; order: number };
     noteSortCode: { sort: number; order: number };

@@ -12,15 +12,18 @@ export interface BookListProps extends RouteComponentProps<any> {
   isCollapsed: boolean;
   isBookSort: boolean;
   viewMode: string;
+  selectedBooks: string[];
   bookmarks: BookmarkModel[];
   notes: NoteModel[];
   bookSortCode: { sort: number; order: number };
   noteSortCode: { sort: number; order: number };
   handleFetchList: () => void;
+  handleAddDialog: (isShow: boolean) => void;
   handleMode: (mode: string) => void;
   handleShelfIndex: (index: number) => void;
   handleDeleteDialog: (isShow: boolean) => void;
   handleFetchBooks: (isTrash: boolean) => void;
+
   t: (title: string) => string;
 }
 export interface BookListState {
