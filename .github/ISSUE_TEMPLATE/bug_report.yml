@@ -1,0 +1,93 @@
+name: "Bug Report"
+description: Create a report to help us improve
+labels: "🐛 Bug"
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please [search for existing issues](https://github.com/WeakAuras/WeakAuras2/issues) before creating a new one.
+
+  - type: textarea
+    attributes:
+      label: Description
+      description: What did you expect to happen and what happened instead?
+    validations:
+      required: true
+
+  - type: input
+    attributes:
+      label: WeakAuras Version
+      description: |
+        You can see the current version in the title bar of the options window, if the options do not open, check the CurseForge app or the `## Version:` field in the WeakAuras.toc file.
+      placeholder: "WeakAuras 2.2.0"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: flavor
+    attributes:
+      label: World of Warcraft Flavor
+      description: What version of World of Warcraft are are you running?
+      options:
+        - Retail (Default)
+        - Classic
+        - The Burning Crusade
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: testing
+    attributes:
+      label: Tested with only WeakAuras
+      description: Did you try having WeakAuras as the only enabled addon and everything else (especially something like ElvUI) disabled?
+      options:
+        - label: "Yes"
+        - label: "No"
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Lua Error
+      description: |
+        Do you have an error log of what happened? If you don't see any errors, make sure that error reporting is enabled (`/console scriptErrors 1`) or install [BugSack](https://www.curseforge.com/wow/addons/bugsack) & [BugGrabber](https://www.curseforge.com/wow/addons/bug-grabber), yes both are needed.
+        Note that if the error looks like `[string "--[[ Error in ' my awesome aura' ]` then the bug is in the aura that got mentioned, not in WeakAuras itself.
+    validations:
+      required: false
+
+  - type: textarea
+    attributes:
+      label: Reproduction Steps
+      description: Please list out the steps to reproduce your bug.
+      placeholder: |
+        1. Go to '...'
+        2. Click on '....'
+        3. Scroll down to '....'
+        4. See error
+    validations:
+      required: true
+
+  - type: input
+    attributes:
+      label: Last Good Version
+      description: |
+        Was it working in a previous version? If yes, which was the last good one?
+      placeholder: "WeakAuras 2.1.0"
+    validations:
+      required: false
+
+  - type: textarea
+    attributes:
+      label: Screenshots
+      description: If applicable, add screenshots to help explain your problem.
+      placeholder: Click here to attach your screenshots via the editor button in the top right.
+    validations:
+      required: false
+
+  - type: textarea
+    attributes:
+      label: Export String
+      description: If you do not know which aura is causing issues for you, please attach a ZIP archive of your WeakAuras SavedVariables file, it's the `WeakAuras.lua` file in `World of Warcraft\_retail_\WTF\Account\YOUR_ACCOUNT\SavedVariables\`. In case you do, please export the string and paste it below.
+      placeholder: Paste your exported WeakAuras string here.
+    validations:
+      required: false
