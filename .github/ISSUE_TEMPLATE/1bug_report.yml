@@ -26,7 +26,7 @@ body:
   - type: checkboxes
     id: testing3
     attributes:
-      label: I've already read the Q&A document, still can't solve it.
+      label: I've already read the Q&A document, still can't work it out.
       description: https://www.notion.so/troyeguo/01aaa516687c418499f713d34793b9ad?v=54d51fe1688a4f8ab5784b17e4df3308
       options:
         - label: "Yes"
@@ -47,11 +47,11 @@ body:
     validations:
       required: true
 
-  - type: textarea
+  - type: input
     id: app_version
     attributes:
       label: App Version
-      description: which version of Koodo Reader you are using ?
+      placeholder: which version of Koodo Reader you are using ?
     validations:
       required: true
 
@@ -59,7 +59,7 @@ body:
     id: bug_detail
     attributes:
       label: Bug Detail
-      description: Please describe your problem in detail
+      placeholder: Please describe your problem in detail
     validations:
       required: true
 
@@ -67,8 +67,7 @@ body:
     id: screenshot
     attributes:
       label: Screenshots
-      description: If applicable, add screenshots to help explain your problem.
-      placeholder: Click here to attach your screenshots via the editor button in the top right.
+      placeholder: If applicable, add screenshots to help explain your problem.
     validations:
       required: false
 
@@ -76,7 +75,6 @@ body:
     id: download
     attributes:
       label: Download link
-      description: Attach your book if you think it's helpful
-      placeholder: Download link to your book
+      placeholder: Attach your book if you think it's helpful
     validations:
       required: false
