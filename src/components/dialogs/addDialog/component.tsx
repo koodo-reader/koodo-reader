@@ -46,8 +46,14 @@ class AddDialog extends Component<AddDialogProps, AddDialogState> {
       this.props.handleMessageBox(true);
       return;
     }
+    if (this.props.isSelectBook) {
+      this.props.selectedBooks.forEach((item) => {
+        ShelfUtil.setShelf(shelfTitle, item);
+      });
+    } else {
+      ShelfUtil.setShelf(shelfTitle, this.props.currentBook.key);
+    }
 
-    ShelfUtil.setShelf(shelfTitle, this.props.currentBook.key);
     this.props.handleAddDialog(false);
     this.props.handleMessage("Add Successfully");
     this.props.handleMessageBox(true);

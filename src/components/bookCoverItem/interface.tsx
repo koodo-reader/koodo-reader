@@ -7,11 +7,15 @@ export interface BookCoverProps extends RouteComponentProps<any> {
   isOpenActionDialog: boolean;
   isCollapsed: boolean;
   dragItem: string;
+  isSelectBook: boolean;
+  isSelected: boolean;
+  selectedBooks: string[];
   handleReadingBook: (book: BookModel) => void;
   handleActionDialog: (isShowActionDialog: boolean) => void;
   handleMessage: (message: string) => void;
   handleMessageBox: (isShow: boolean) => void;
   handleDragItem: (key: string) => void;
+  handleSelectedBooks: (selectedBooks: string[]) => void;
   handleDeleteDialog: (isShow: boolean) => void;
 }
 export interface BookCoverState {
