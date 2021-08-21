@@ -3,7 +3,7 @@ description: What feature do you think is missing in Koodo Reader
 labels: "feature request"
 body:
   - type: checkboxes
-    id: testing
+    id: testing1
     attributes:
       label: I've read Koodo's roadmap, there is no similar feature.
       options:
@@ -13,7 +13,7 @@ body:
       required: true
 
   - type: checkboxes
-    id: testing
+    id: testing2
     attributes:
       label: This issue only contains one feature request.
       options:
@@ -23,6 +23,7 @@ body:
       required: true
 
   - type: textarea
+    id: introduction
     attributes:
       label: Brief Introduction
       description: Brief introduction to this feature
@@ -30,6 +31,7 @@ body:
       required: true
 
   - type: textarea
+    id: detail
     attributes:
       label: Details
       description: More details about this feature

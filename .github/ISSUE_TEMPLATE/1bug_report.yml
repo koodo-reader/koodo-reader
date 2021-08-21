@@ -1,10 +1,10 @@
 name: Bug Report
-about: Things don't work as intended
+description: Things don't work as intended
 labels: "bug"
 
 body:
   - type: checkboxes
-    id: testing
+    id: testing1
     attributes:
       label: I've already installed the latest version of Koodo Reader
       options:
@@ -14,7 +14,7 @@ body:
       required: true
 
   - type: checkboxes
-    id: testing
+    id: testing2
     attributes:
       label: There are no similar issues on the issue list
       options:
@@ -24,7 +24,7 @@ body:
       required: true
 
   - type: checkboxes
-    id: testing
+    id: testing3
     attributes:
       label: I've already read the Q&A document, still can't solve it.
       description: https://www.notion.so/troyeguo/01aaa516687c418499f713d34793b9ad?v=54d51fe1688a4f8ab5784b17e4df3308
@@ -48,6 +48,7 @@ body:
       required: true
 
   - type: textarea
+    id: app_version
     attributes:
       label: App Version
       description: which version of Koodo Reader you are using ?
@@ -55,6 +56,7 @@ body:
       required: true
 
   - type: textarea
+    id: bug_detail
     attributes:
       label: Bug Detail
       description: Please describe your problem in detail
@@ -62,6 +64,7 @@ body:
       required: true
 
   - type: textarea
+    id: screenshot
     attributes:
       label: Screenshots
       description: If applicable, add screenshots to help explain your problem.
@@ -70,6 +73,7 @@ body:
       required: false
 
   - type: textarea
+    id: download
     attributes:
       label: Download link
       description: Attach your book if you think it's helpful
