@@ -1,6 +1,6 @@
 import React from "react";
 import EpubViewer from "../epubViewer";
-import Background from "../background";
+import Background from "../epubBackground";
 import SettingPanel from "../panels/settingPanel";
 import NavigationPanel from "../panels/navigationPanel";
 import OperationPanel from "../panels/operationPanel";

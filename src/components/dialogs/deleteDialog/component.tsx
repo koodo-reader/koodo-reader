@@ -55,6 +55,15 @@ class DeleteDialog extends React.Component<DeleteDialogProps> {
       this.props.handleFetchBooks(true);
       this.props.handleFetchBookmarks();
       this.props.handleFetchNotes();
+    } else if (this.props.isSelectBook) {
+      console.log(this.props.selectedBooks, "this.props.selectedBooks");
+      this.props.selectedBooks.forEach((item) => {
+        AddTrash.setTrash(item);
+        //从喜爱的图书中删除
+        AddFavorite.clear(item);
+      });
+      this.props.handleSelectedBooks([]);
+      this.props.handleFetchBooks(false);
     } else {
       AddTrash.setTrash(this.props.currentBook.key);
       //从喜爱的图书中删除
@@ -111,7 +120,16 @@ class DeleteDialog extends React.Component<DeleteDialogProps> {
         {this.props.mode === "trash" ? null : (
           <div className="delete-dialog-book">
             <div className="delete-dialog-book-title">
-              {this.props.currentBook.name}
+              {this.props.isSelectBook ? (
+                <Trans
+                  i18nKey="Total books"
+                  count={this.props.selectedBooks.length}
+                >
+                  {"Total " + this.props.selectedBooks.length + " books"}
+                </Trans>
+              ) : (
+                this.props.currentBook.name
+              )}
             </div>
           </div>
         )}

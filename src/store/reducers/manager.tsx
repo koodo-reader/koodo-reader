@@ -17,8 +17,10 @@ const initState = {
   bookSortCode: { sort: 0, order: 1 },
   noteSortCode: SortUtil.getNoteSortCode(),
   isMessage: false,
+  isSelectBook: false,
   message: "Add Successfully",
   tip: "",
+  selectedBooks: [],
 };
 export function manager(
   state = initState,
@@ -39,6 +41,16 @@ export function manager(
       return {
         ...state,
         searchResults: action.payload,
+      };
+    case "HANDLE_SELECT_BOOK":
+      return {
+        ...state,
+        isSelectBook: action.payload,
+      };
+    case "HANDLE_SELECTED_BOOKS":
+      return {
+        ...state,
+        selectedBooks: action.payload,
       };
     case "HANDLE_TIP_DIALOG":
       return {

@@ -1,7 +1,8 @@
 import React from "react";
 import "./booklist.css";
-import Book from "../../../components/bookCardtem";
-import BookItem from "../../../components/bookListItem";
+import BookCardItem from "../../../components/bookCardItem";
+import BookCoverItem from "../../../components/bookCoverItem";
+import BookListItem from "../../../components/bookListItem";
 import AddTrash from "../../../utils/readUtils/addTrash";
 import RecordRecent from "../../../utils/readUtils/recordRecent";
 import SortUtil from "../../../utils/readUtils/sortUtil";
@@ -87,14 +88,24 @@ class BookList extends React.Component<BookListProps, BookListState> {
 
     return books.map((item: BookModel, index: number) => {
       return this.props.viewMode === "list" ? (
-        <BookItem
+        <BookListItem
           {...{
             key: item.key,
             book: item,
           }}
         />
+      ) : this.props.viewMode === "list" ? (
+        <BookCardItem
+          key={item.key}
+          book={item}
+          isSelected={this.props.selectedBooks.indexOf(item.key) > -1}
+        />
       ) : (
-        <Book key={item.key} book={item} />
+        <BookCoverItem
+          key={item.key}
+          book={item}
+          isSelected={this.props.selectedBooks.indexOf(item.key) > -1}
+        />
       );
     });
   };
