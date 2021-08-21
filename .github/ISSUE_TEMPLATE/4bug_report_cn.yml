@@ -8,7 +8,6 @@ body:
       label: 我已经安装了最新版的 Koodo Reader
       options:
         - label: "是"
-        - label: "否"
     validations:
       required: true
 
@@ -18,7 +17,6 @@ body:
       label: 我已经搜索了已有的 Issues列表，没有找到类似的issue
       options:
         - label: "是"
-        - label: "否"
     validations:
       required: true
 
@@ -29,7 +27,6 @@ body:
       description: https://www.notion.so/troyeguo/e9c4e5755d564b0db6340eeba6d9ece9?v=7c8fcbed9adf4592ada95cfd593868c9
       options:
         - label: "是"
-        - label: "否"
     validations:
       required: true
 
