@@ -1,7 +1,6 @@
 name: 功能建议
-about: 我希望 Koodo Reader 增加这个功能
+description: 我希望 Koodo Reader 增加这个功能
 labels: "feature request"
-
 body:
   - type: checkboxes
     id: testing
