@@ -1,0 +1,78 @@
+name: Bug Report
+about: Things don't work as intended
+labels: "bug"
+
+body:
+  - type: checkboxes
+    id: testing
+    attributes:
+      label: I've already installed the latest version of Koodo Reader
+      options:
+        - label: "Yes"
+        - label: "No"
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: testing
+    attributes:
+      label: There are no similar issues on the issue list
+      options:
+        - label: "Yes"
+        - label: "No"
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: testing
+    attributes:
+      label: I've already read the Q&A document, still can't solve it.
+      description: https://www.notion.so/troyeguo/01aaa516687c418499f713d34793b9ad?v=54d51fe1688a4f8ab5784b17e4df3308
+      options:
+        - label: "Yes"
+        - label: "No"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating System
+      description: which OS you are using ?
+      options:
+        - Windows
+        - macOS
+        - Linux
+        - Web
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: App Version
+      description: which version of Koodo Reader you are using ?
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Bug Detail
+      description: Please describe your problem in detail
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Screenshots
+      description: If applicable, add screenshots to help explain your problem.
+      placeholder: Click here to attach your screenshots via the editor button in the top right.
+    validations:
+      required: false
+
+  - type: textarea
+    attributes:
+      label: Download link
+      description: Attach your book if you think it's helpful
+      placeholder: Download link to your book
+    validations:
+      required: false
