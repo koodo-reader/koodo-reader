@@ -6,7 +6,8 @@ body:
   - type: checkboxes
     id: testing1
     attributes:
-      label: I've already installed the latest version of Koodo Reader
+      label: I've already installed the latest developer version of Koodo Reader, this problem still exsits
+      description: https://github.com/troyeguo/koodo-reader/releases/latest
       options:
         - label: "Yes"
     validations:
@@ -48,7 +49,7 @@ body:
     id: app_version
     attributes:
       label: App Version
-      placeholder: which version of Koodo Reader you are using ?
+      placeholder: You can found app version in Setting->Version
     validations:
       required: true
 
