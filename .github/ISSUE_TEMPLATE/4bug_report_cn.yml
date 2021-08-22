@@ -5,7 +5,8 @@ body:
   - type: checkboxes
     id: testing1
     attributes:
-      label: 我已经安装了最新版的 Koodo Reader
+      label: 我已经安装了最新开发版的 Koodo Reader，这个问题仍然存在
+      description: https://github.com/troyeguo/koodo-reader/releases/latest
       options:
         - label: "是"
     validations:
