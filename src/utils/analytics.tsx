@@ -28,12 +28,14 @@ class Analytics {
       callback(this.clientId);
     }
     if (OtherUtil.getReaderConfig("uuid")) {
-      this.clientId = OtherUtil.getReaderConfig("uuid");
-      callback(OtherUtil.getReaderConfig("uuid"));
+      let uuid = OtherUtil.getReaderConfig("uuid");
+      this.clientId = uuid;
+      callback(uuid);
     } else {
       let uuid = uuidv4();
-      this.clientId = OtherUtil.getReaderConfig(uuid);
-      callback(OtherUtil.setReaderConfig("uuid", uuid));
+      OtherUtil.setReaderConfig("uuid", uuid);
+      this.clientId = uuid;
+      callback(uuid);
     }
   }
 

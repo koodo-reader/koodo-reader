@@ -41,8 +41,14 @@ class UpdateInfo extends React.Component<UpdateInfoProps, UpdateInfoState> {
       axios
         .get(`https://koodo.960960.xyz/api/update?name=${navigator.language}`)
         .then((res) => {
-          console.log(res);
           const newVersion = res.data.log.version;
+          console.log(
+            res,
+            version,
+            newVersion,
+            version.localeCompare(newVersion)
+          );
+
           setTimeout(() => {
             if (version.localeCompare(newVersion) < 0) {
               if (OtherUtil.getReaderConfig("isDisableUpdate") !== "yes") {
