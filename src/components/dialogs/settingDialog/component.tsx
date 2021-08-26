@@ -200,6 +200,7 @@ class SettingDialog extends React.Component<
                 style={
                   item.isElectron ? (isElectron ? {} : { display: "none" }) : {}
                 }
+                key={item.propName}
               >
                 <div className="setting-dialog-new-title" key={item.title}>
                   <Trans>{item.title}</Trans>
