@@ -1,6 +1,6 @@
 ---
 name: Question
-about: Do you have any questions for Koodo Reader
+about: Do you have any questions about Koodo Reader
 labels: "question"
 ---
 
