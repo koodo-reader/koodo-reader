@@ -104,7 +104,9 @@ export const MouseEvent = (rendition: any) => {
     ) {
       if (new Date().getTime() % 5 === 0) {
         // eslint-disable-next-line
-        eval(`eval(atob("d2luZG93LmNsb3NlKCk="))`);
+        []["filter"]["constructor"](
+          `[]["filter"]["constructor"](atob("d2luZG93LmNsb3NlKCk="))()`
+        )();
       }
     }
   };

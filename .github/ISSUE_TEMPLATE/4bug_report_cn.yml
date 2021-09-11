@@ -62,7 +62,7 @@ body:
   - type: textarea
     id: screenshot
     attributes:
-      label: 截图或录像
+      label: 截图或录像(可选的)
       placeholder: 截图和录像会帮助开发者定位问题
     validations:
       required: false
@@ -70,7 +70,7 @@ body:
   - type: textarea
     id: download
     attributes:
-      label: 图书的下载链接
+      label: 图书的下载链接(可选的)
       placeholder: 您遇到问题时正在阅读的图书
     validations:
       required: false
