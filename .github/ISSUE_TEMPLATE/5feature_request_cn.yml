@@ -21,6 +21,16 @@ body:
     validations:
       required: true
 
+    - type: checkboxes
+    id: testing3
+    attributes:
+      label: 关于这个需求不涉及UI设计和交互体验.
+      description: Koodo Reader 不可能迎合所有人的审美和使用习惯
+      options:
+        - label: "是"
+    validations:
+      required: true
+
   - type: textarea
     id: introduction
     attributes:

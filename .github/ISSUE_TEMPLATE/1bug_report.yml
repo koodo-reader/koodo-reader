@@ -64,7 +64,7 @@ body:
   - type: textarea
     id: screenshot
     attributes:
-      label: Screenshots
+      label: Screenshots (Optional)
       placeholder: If applicable, add screenshots to help explain your problem.
     validations:
       required: false
@@ -72,7 +72,7 @@ body:
   - type: textarea
     id: download
     attributes:
-      label: Download link
+      label: Download link (Optional)
       placeholder: Attach your book if you think it's helpful
     validations:
       required: false
