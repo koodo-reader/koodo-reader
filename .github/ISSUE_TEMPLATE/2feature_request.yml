@@ -21,6 +21,16 @@ body:
     validations:
       required: true
 
+  - type: checkboxes
+    id: testing3
+    attributes:
+      label: This feature is not UI and UX-related.
+      description: Koodo Reader can't cater to all users' need.
+      options:
+        - label: "Yes"
+    validations:
+      required: true
+
   - type: textarea
     id: introduction
     attributes:
