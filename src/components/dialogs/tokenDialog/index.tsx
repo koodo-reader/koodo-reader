@@ -1,9 +1,5 @@
 import { connect } from "react-redux";
-import {
-  handleMessageBox,
-  handleMessage,
-  handleTokenDialog,
-} from "../../../store/actions";
+import { handleTokenDialog } from "../../../store/actions";
 import { stateType } from "../../../store";
 import { withTranslation } from "react-i18next";
 import TokenDialog from "./component";
@@ -19,8 +15,6 @@ const mapStateToProps = (state: stateType) => {
 };
 const actionCreator = {
   handleTokenDialog,
-  handleMessageBox,
-  handleMessage,
 };
 export default connect(
   mapStateToProps,

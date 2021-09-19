@@ -17,10 +17,9 @@ export interface OperationPanelProps extends RouteComponentProps<any> {
   handleReadingState: (isReading: boolean) => void;
   handleFetchBookmarks: () => void;
   handleSearch: (isSearch: boolean) => void;
-  handleMessageBox: (isShow: boolean) => void;
-  handleMessage: (message: string) => void;
   handleOpenMenu: (isOpenMenu: boolean) => void;
   handleShowBookmark: (isShowBookmark: boolean) => void;
+  t: (title: string) => string;
 }
 
 export interface OperationPanelState {

@@ -2,7 +2,7 @@ import React from "react";
 import SettingPanel from "../../containers/panels/settingPanel";
 import NavigationPanel from "../../containers/panels/navigationPanel";
 import OperationPanel from "../../containers/panels/operationPanel";
-import MessageBox from "../../containers/messageBox";
+import { Toaster } from "react-hot-toast";
 import ProgressPanel from "../../containers/panels/htmlProgressPanel";
 import { ReaderProps, ReaderState } from "./interface";
 import OtherUtil from "../../utils/otherUtil";
@@ -23,28 +23,14 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
       isOpenBottomPanel: false,
       isOpenLeftPanel:
         OtherUtil.getReaderConfig("isNavLocked") === "yes" ? true : false,
-      isMessage: false,
       rendition: null,
       scale: OtherUtil.getReaderConfig("scale") || 1,
       margin: parseInt(OtherUtil.getReaderConfig("margin")) || 30,
       time: ReadingTime.getTime(this.props.currentBook.key),
       isTouch: OtherUtil.getReaderConfig("isTouch") === "yes",
+      isPreventTrigger: OtherUtil.getReaderConfig("isPreventTrigger") === "yes",
       readerMode: OtherUtil.getReaderConfig("readerMode") || "double",
     };
-  }
-
-  UNSAFE_componentWillReceiveProps(nextProps: ReaderProps) {
-    this.setState({
-      isMessage: nextProps.isMessage,
-    });
-
-    //控制消息提示两秒之后消失
-    if (nextProps.isMessage) {
-      this.messageTimer = global.setTimeout(() => {
-        this.props.handleMessageBox(false);
-        this.setState({ isMessage: false });
-      }, 2000);
-    }
   }
 
   //进入阅读器
@@ -129,11 +115,16 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         >
           <span className="icon-grid reader-setting-icon"></span>
         </div>
-        {this.state.isMessage ? <MessageBox /> : null}
+        <Toaster />
+
         <div
           className="left-panel"
           onMouseEnter={() => {
-            if (this.state.isTouch || this.state.isOpenLeftPanel) {
+            if (
+              this.state.isTouch ||
+              this.state.isOpenLeftPanel ||
+              this.state.isPreventTrigger
+            ) {
               return;
             }
             this.handleEnterReader("left");
@@ -145,7 +136,11 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         <div
           className="right-panel"
           onMouseEnter={() => {
-            if (this.state.isTouch || this.state.isOpenRightPanel) {
+            if (
+              this.state.isTouch ||
+              this.state.isOpenRightPanel ||
+              this.state.isPreventTrigger
+            ) {
               return;
             }
             this.handleEnterReader("right");
@@ -157,7 +152,11 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         <div
           className="top-panel"
           onMouseEnter={() => {
-            if (this.state.isTouch || this.state.isOpenTopPanel) {
+            if (
+              this.state.isTouch ||
+              this.state.isOpenTopPanel ||
+              this.state.isPreventTrigger
+            ) {
               return;
             }
             this.handleEnterReader("top");
@@ -169,7 +168,11 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         <div
           className="bottom-panel"
           onMouseEnter={() => {
-            if (this.state.isTouch || this.state.isOpenBottomPanel) {
+            if (
+              this.state.isTouch ||
+              this.state.isOpenBottomPanel ||
+              this.state.isPreventTrigger
+            ) {
               return;
             }
             this.handleEnterReader("bottom");

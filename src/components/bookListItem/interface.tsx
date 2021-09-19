@@ -14,8 +14,7 @@ export interface BookItemProps extends RouteComponentProps<any> {
   handleEditDialog: (isShow: boolean) => void;
   handleDeleteDialog: (isShow: boolean) => void;
   handleAddDialog: (isShow: boolean) => void;
-  handleMessage: (message: string) => void;
-  handleMessageBox: (isShow: boolean) => void;
+  t: (title: string) => string;
   handleDragItem: (key: string) => void;
   handleFetchBooks: () => void;
   handleSelectedBooks: (selectedBooks: string[]) => void;

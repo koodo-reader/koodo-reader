@@ -4,8 +4,6 @@ import {
   handleFetchBookmarks,
   handleOpenMenu,
   handleShowBookmark,
-  handleMessageBox,
-  handleMessage,
   handleSearch,
   handleReadingState,
 } from "../../../store/actions";
@@ -28,8 +26,6 @@ const actionCreator = {
   handleBookmarks,
   handleReadingState,
   handleFetchBookmarks,
-  handleMessageBox,
-  handleMessage,
   handleOpenMenu,
   handleShowBookmark,
   handleSearch,

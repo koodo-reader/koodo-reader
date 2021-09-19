@@ -3,8 +3,6 @@ import {
   handleDeleteDialog,
   handleSelectBook,
   handleAddDialog,
-  handleMessageBox,
-  handleMessage,
   handleSelectedBooks,
 } from "../../store/actions";
 import { stateType } from "../../store";
@@ -24,8 +22,6 @@ const actionCreator = {
   handleSelectBook,
   handleAddDialog,
   handleSelectedBooks,
-  handleMessageBox,
-  handleMessage,
 };
 export default connect(
   mappropsToProps,

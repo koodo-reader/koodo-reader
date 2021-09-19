@@ -62,15 +62,25 @@
     opacity: 1;
   }
 }
+.panel-icon {
+  color: white;
+  font-size: 20px;
+  opacity: 0.9;
+}
 .left-panel {
   width: 50px;
   height: 200px;
   position: absolute;
   left: 0px;
   top: calc(50vh - 100px);
-  background-color: pink;
+  background-color: rgba(75, 75, 75, 0.3);
+  border-bottom-right-radius: 50px;
+  border-top-right-radius: 50px;
   z-index: 10;
   opacity: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .right-panel {
   width: 50px;
@@ -78,9 +88,13 @@
   position: absolute;
   right: 0px;
   top: calc(50vh - 100px);
-  background-color: pink;
+  background-color: rgba(75, 75, 75, 0.3);
+  border-bottom-left-radius: 50px;
+  border-top-left-radius: 50px;
   z-index: 10;
-  opacity: 0;
+  opacity: 0;  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .top-panel {
   width: 200px;
@@ -88,9 +102,13 @@
   position: absolute;
   right: calc(50vw - 100px);
   top: 0px;
-  background-color: pink;
+  background-color: rgba(75, 75, 75, 0.3);
+  border-bottom-left-radius: 50px;
+  border-bottom-right-radius: 50px;
   z-index: 10;
-  opacity: 0;
+  opacity: 0;  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .bottom-panel {
   width: 200px;
@@ -98,9 +116,13 @@
   position: absolute;
   right: calc(50vw - 100px);
   top: calc(100vh - 50px);
-  background-color: pink;
+  background-color: rgba(75, 75, 75, 0.3);
+  border-top-left-radius: 50px;
+  border-top-right-radius: 50px;
   z-index: 10;
-  opacity: 0;
+  opacity: 0;  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .operation-panel-container {
   width: 412px;
@@ -151,11 +173,11 @@
   user-select: text;
 }
 .previous-chapter-single-container {
-  width: 50px !important;
-  height: 50px !important;
+  width: 40px !important;
+  height: 40px !important;
   border-radius: 50%;
   position: absolute;
-  bottom: 20px;
+  bottom: 15px;
   left: 20px;
   font-size: 30px;
   transform: rotate(90deg);
@@ -167,11 +189,11 @@
   z-index: 5;
 }
 .next-chapter-single-container {
-  width: 50px;
-  height: 50px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   position: absolute;
-  bottom: 20px;
+  bottom: 15px;
   right: 20px;
   transform: rotate(-90deg);
   cursor: pointer;
@@ -203,9 +225,9 @@
   width: 50px;
   height: 50px;
   position: absolute;
-  top: 0px;
-  right: 20px;
-  font-size: 22px;
+  top: -3px;
+  right: 5px;
+  font-size: 20px;
   cursor: pointer;
   z-index: 10;
   transition: 0.1s;

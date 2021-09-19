@@ -7,9 +7,8 @@ export interface SliderListProps {
   title: string;
   minLabel: string;
   maxLabel: string;
-  handleMessageBox: (isShow: boolean) => void;
-  handleMessage: (message: string) => void;
   renderFunc: () => void;
+  t: (title: string) => string;
 }
 export interface SliderListState {
   value: string;

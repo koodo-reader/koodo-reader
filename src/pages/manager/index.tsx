@@ -3,7 +3,6 @@ import {
   handleFetchBooks,
   handleFetchBookSortCode,
   handleFetchList,
-  handleMessageBox,
   handleTipDialog,
   handleLoadingDialog,
   handleNewDialog,
@@ -40,7 +39,6 @@ const mapStateToProps = (state: stateType) => {
     isShowLoading: state.manager.isShowLoading,
     isShowNew: state.manager.isShowNew,
     isTipDialog: state.manager.isTipDialog,
-    isMessage: state.manager.isMessage,
     isBackup: state.backupPage.isBackup,
   };
 };
@@ -51,7 +49,6 @@ const actionCreator = {
   handleFetchBookmarks,
   handleFetchBookSortCode,
   handleFetchList,
-  handleMessageBox,
   handleEditDialog,
   handleDeleteDialog,
   handleAddDialog,

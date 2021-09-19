@@ -10,6 +10,8 @@ import Lottie from "react-lottie";
 import "../../assets/styles/reset.css";
 import animationSiri from "../../assets/lotties/siri.json";
 import BookModel from "../../model/Book";
+import { Toaster } from "react-hot-toast";
+
 const siriOptions = {
   loop: true,
   autoplay: true,
@@ -51,7 +53,12 @@ class EpubReader extends React.Component<EpubReaderProps, EpubReaderState> {
         </div>
       );
     }
-    return <Reader />;
+    return (
+      <>
+        <Toaster />
+        <Reader />
+      </>
+    );
   }
 }
 export default withRouter(EpubReader);

@@ -8,11 +8,10 @@ export interface PopupNoteProps {
   color: number;
   noteKey: string;
   handleNoteKey: (key: string) => void;
-  handleMessageBox: (isShow: boolean) => void;
-  handleMessage: (message: string) => void;
   handleOpenMenu: (isOpenMenu: boolean) => void;
   handleMenuMode: (menu: string) => void;
   handleFetchNotes: () => void;
+  t: (title: string) => string;
 }
 export interface PopupNoteState {
   tag: string[];

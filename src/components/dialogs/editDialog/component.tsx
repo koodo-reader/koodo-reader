@@ -3,7 +3,7 @@ import "./editDialog.css";
 import localforage from "localforage";
 import { Trans } from "react-i18next";
 import { EditDialogProps, EditDialogState } from "./interface";
-
+import toast from "react-hot-toast";
 class EditDialog extends React.Component<EditDialogProps, EditDialogState> {
   constructor(props: EditDialogProps) {
     super(props);
@@ -44,8 +44,7 @@ class EditDialog extends React.Component<EditDialogProps, EditDialogState> {
       this.props.handleEditDialog(false);
       this.props.handleFetchBooks();
     });
-    this.props.handleMessage("Edit Successfully");
-    this.props.handleMessageBox(true);
+    toast.success(this.props.t("Edit Successfully"));
     this.props.handleActionDialog(false);
   };
   render() {

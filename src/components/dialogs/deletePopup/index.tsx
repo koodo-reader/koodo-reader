@@ -1,9 +1,5 @@
 import { connect } from "react-redux";
-import {
-  handleFetchBooks,
-  handleMessageBox,
-  handleMessage,
-} from "../../../store/actions";
+import { handleFetchBooks } from "../../../store/actions";
 import { stateType } from "../../../store";
 import { withTranslation } from "react-i18next";
 import DeletePopup from "./component";
@@ -13,8 +9,6 @@ const mapStateToProps = (state: stateType) => {
 };
 const actionCreator = {
   handleFetchBooks,
-  handleMessageBox,
-  handleMessage,
 };
 export default connect(
   mapStateToProps,

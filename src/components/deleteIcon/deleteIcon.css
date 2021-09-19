@@ -5,14 +5,16 @@
   cursor: pointer;
   text-align: center;
   position: absolute;
-  top: 2px !important;
-  right: -2px !important;
+  top: 5px !important;
+  right: 5px !important;
   z-index: 10;
   animation: popup 0.1s ease-in-out 0s 1;
 }
 .delete-digest-icon {
   position: relative;
-  left: 12px !important;
-  bottom: 13.5px !important;
-  transform: scale(0.6);
+  float: right;
+  font-size: 12px;
+  margin-right: 3px;
+  margin-top: 3px;
+  cursor: pointer;
 }

@@ -1,9 +1,7 @@
 import GA from "electron-google-analytics";
-import { v4 as uuidv4 } from "uuid";
 import * as pkg from "../../package.json";
-import OtherUtil from "./otherUtil";
 
-const isDevelopment = process.env.NODE_ENV !== "production";
+const isDevelopment = process.env.NODE_ENV === "development";
 
 interface EvOptions {
   evLabel?: any;
@@ -27,16 +25,12 @@ class Analytics {
     if (this.clientId) {
       callback(this.clientId);
     }
-    if (OtherUtil.getReaderConfig("uuid")) {
-      let uuid = OtherUtil.getReaderConfig("uuid");
-      this.clientId = uuid;
-      callback(uuid);
-    } else {
-      let uuid = uuidv4();
-      OtherUtil.setReaderConfig("uuid", uuid);
-      this.clientId = uuid;
-      callback(uuid);
-    }
+    var macaddress = window.require("macaddress");
+    macaddress.one((err: any, mac: string) => {
+      console.log(mac);
+      this.clientId = mac;
+      callback(mac);
+    });
   }
 
   public async pageView(url: string, title?: string) {

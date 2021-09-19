@@ -2,8 +2,6 @@ import { connect } from "react-redux";
 import { withTranslation } from "react-i18next";
 import {
   handleSortDisplay,
-  handleMessageBox,
-  handleMessage,
   handleSetting,
   handleAbout,
   handleTipDialog,
@@ -28,8 +26,6 @@ const mapStateToProps = (state: stateType) => {
 };
 const actionCreator = {
   handleSortDisplay,
-  handleMessageBox,
-  handleMessage,
   handleBackupDialog,
   handleSetting,
   handleAbout,

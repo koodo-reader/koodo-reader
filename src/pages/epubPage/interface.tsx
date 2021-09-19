@@ -10,9 +10,6 @@ export interface EpubReaderProps extends RouteComponentProps<any> {
   handleReadingBook: (book: BookModel) => void;
   handleReadingEpub: (epub: object) => void;
   handleActionDialog: (isShowActionDialog: boolean) => void;
-  handleMessage: (message: string) => void;
-  handleMessageBox: (isShow: boolean) => void;
+  t: (title: string) => string;
 }
-export interface EpubReaderState {
-  
-}
+export interface EpubReaderState {}
