@@ -57,7 +57,8 @@ export const addEpub = (file: any, md5: string) => {
                     cover,
                     format,
                     publisher,
-                    file.size
+                    file.size,
+                    file.path
                   );
                   resolve(book);
                 };
@@ -92,7 +93,8 @@ export const addEpub = (file: any, md5: string) => {
                   cover,
                   format,
                   publisher,
-                  file.size
+                  file.size,
+                  file.path
                 );
 
                 resolve(book);
