@@ -35,7 +35,7 @@ class EpubReader extends React.Component<EpubReaderProps, EpubReaderState> {
 
     localforage.getItem("books").then((result: any) => {
       let book: BookModel = result[_.findIndex(result, { key })];
-      BookUtil.fetchBook(key).then((result) => {
+      BookUtil.fetchBook(key, false, book.path).then((result) => {
         this.props.handleReadingBook(book);
         this.props.handleReadingEpub(window.ePub(result, {}));
         this.props.handleReadingState(true);

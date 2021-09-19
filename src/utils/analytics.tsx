@@ -27,7 +27,6 @@ class Analytics {
     }
     var macaddress = window.require("macaddress");
     macaddress.one((err: any, mac: string) => {
-      console.log(mac);
       this.clientId = mac;
       callback(mac);
     });
