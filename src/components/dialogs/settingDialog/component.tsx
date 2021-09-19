@@ -26,6 +26,8 @@ class SettingDialog extends React.Component<
     super(props);
     this.state = {
       isTouch: OtherUtil.getReaderConfig("isTouch") === "yes",
+      isImportPath: OtherUtil.getReaderConfig("isImportPath") === "yes",
+      isMergeWord: OtherUtil.getReaderConfig("isMergeWord") === "yes",
       isPreventTrigger: OtherUtil.getReaderConfig("isPreventTrigger") === "yes",
       isAutoFullscreen: OtherUtil.getReaderConfig("isAutoFullscreen") === "yes",
       isOpenBook: OtherUtil.getReaderConfig("isOpenBook") === "yes",
@@ -169,6 +171,17 @@ class SettingDialog extends React.Component<
       window.location.reload();
     }
   };
+  handleMergeWord = () => {
+    this.handleSetting("isMergeWord");
+    OtherUtil.setReaderConfig("readerMode", "single");
+    OtherUtil.setReaderConfig("textColor", "rgba(0,0,0,1)");
+    OtherUtil.setReaderConfig("backgroundColor", "rgba(255,255,255,1)");
+    OtherUtil.setReaderConfig("isAutoFullscreen", "no");
+    OtherUtil.setReaderConfig("isHideBackground", "yes");
+    OtherUtil.setReaderConfig("isHidePageButton", "yes");
+    OtherUtil.setReaderConfig("isHideHeader", "yes");
+    OtherUtil.setReaderConfig("isHideFooter", "yes");
+  };
   render() {
     return (
       <div className="setting-dialog-container">
@@ -202,19 +215,15 @@ class SettingDialog extends React.Component<
                   <span
                     className="single-control-switch"
                     onClick={() => {
-                      switch (index) {
-                        case 0:
-                        case 1:
-                        case 2:
-                        case 3:
-                        case 4:
-                        case 5:
-                          this.handleSetting(item.propName);
+                      switch (item.propName) {
+                        case "isMergeWord":
+                          this.handleMergeWord();
                           break;
-                        case 6:
+                        case "isDisplayDark":
                           this.handleDisplayDark();
                           break;
                         default:
+                          this.handleSetting(item.propName);
                           break;
                       }
                     }}

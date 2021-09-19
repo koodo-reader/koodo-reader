@@ -13,6 +13,8 @@ export interface SettingInfoProps {
 export interface SettingInfoState {
   isTouch: boolean;
   isPreventTrigger: boolean;
+  isMergeWord: boolean;
+  isImportPath: boolean;
   isOpenBook: boolean;
   isDisplayDark: boolean;
   isExpandContent: boolean;

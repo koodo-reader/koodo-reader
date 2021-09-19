@@ -55,7 +55,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
   handleRender = (key: string) => {
     localforage.getItem("books").then((result: any) => {
       let book = result[_.findIndex(result, { key })];
-      BookUtil.fetchBook(key, true).then((result) => {
+      BookUtil.fetchBook(key, true, book.path).then((result) => {
         this.props.handleReadingBook(book);
         if (book.format === "CBR") {
           this.handleCbr(result as ArrayBuffer);

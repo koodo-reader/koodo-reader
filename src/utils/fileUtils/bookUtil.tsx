@@ -19,15 +19,11 @@ class BookUtil {
         reader.readAsArrayBuffer(new Blob([buffer]));
         reader.onload = async (event) => {
           try {
-            fs.writeFile(
+            fs.writeFileSync(
               path.join(dataPath, "book", key),
-              Buffer.from(event.target!.result as any),
-              (err: any) => {
-                if (err) throw err;
-                console.log("The file has been saved!");
-                resolve();
-              }
+              Buffer.from(event.target!.result as any)
             );
+            resolve();
           } catch (error) {
             reject();
             throw error;
@@ -64,21 +60,28 @@ class BookUtil {
       return localforage.removeItem(key);
     }
   }
-  static fetchBook(key: string, isArrayBuffer: boolean = false) {
+  static fetchBook(
+    key: string,
+    isArrayBuffer: boolean = false,
+    bookPath: string = ""
+  ) {
     if (isElectron) {
       return new Promise<File | ArrayBuffer>((resolve, reject) => {
         var fs = window.require("fs");
         var path = window.require("path");
+
         var data = fs.readFileSync(
-          path.join(
-            localStorage.getItem("storageLocation")
-              ? localStorage.getItem("storageLocation")
-              : window
-                  .require("electron")
-                  .ipcRenderer.sendSync("storage-location", "ping"),
-            `book`,
-            key
-          )
+          bookPath && fs.existsSync(bookPath)
+            ? bookPath
+            : path.join(
+                localStorage.getItem("storageLocation")
+                  ? localStorage.getItem("storageLocation")
+                  : window
+                      .require("electron")
+                      .ipcRenderer.sendSync("storage-location", "ping"),
+                `book`,
+                key
+              )
         );
         let blobTemp = new Blob([data]);
         let fileTemp = new File([blobTemp], "data", {
@@ -108,6 +111,7 @@ class BookUtil {
     if (OtherUtil.getReaderConfig("isAutoFullscreen") === "yes") {
       if (isElectron) {
         const { ipcRenderer } = window.require("electron");
+
         ipcRenderer.sendSync(
           "open-book",
           `${window.location.href.split("#")[0]}#/${ref}/${book.key}?width=full`
@@ -122,13 +126,16 @@ class BookUtil {
     } else {
       if (isElectron) {
         const { ipcRenderer } = window.require("electron");
+
         ipcRenderer.sendSync(
           "open-book",
           `${window.location.href.split("#")[0]}#/${ref}/${
             book.key
           }?width=${windowWidth}&height=${windowHeight}&x=${OtherUtil.getReaderConfig(
             "windowX"
-          )}&y=${OtherUtil.getReaderConfig("windowY")}`
+          )}&y=${OtherUtil.getReaderConfig(
+            "windowY"
+          )}&isMergeWord=${OtherUtil.getReaderConfig("isMergeWord")}`
         );
       } else {
         window.open(
@@ -185,7 +192,8 @@ class BookUtil {
     bookName: string,
     extension: string,
     md5: string,
-    size: number
+    size: number,
+    path: string
   ) {
     let cover: any = "noCover";
     let key: string,
@@ -210,7 +218,8 @@ class BookUtil {
       cover,
       format,
       publisher,
-      size
+      size,
+      path
     );
   }
 }

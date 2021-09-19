@@ -6,7 +6,8 @@ export const addPdf = (
   data: ArrayBuffer,
   md5: string,
   bookName: string,
-  size: number
+  size: number,
+  path: string
 ) => {
   return new Promise<BookModel | boolean>((resolve, reject) => {
     pdfjsLib
@@ -37,7 +38,8 @@ export const addPdf = (
             cover,
             format,
             publisher,
-            size
+            size,
+            path
           );
           resolve(book);
         });

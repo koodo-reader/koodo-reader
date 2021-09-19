@@ -107,6 +107,9 @@ app.on("ready", () => {
         height: parseInt(urlParams.height),
         x: parseInt(urlParams.x),
         y: parseInt(urlParams.y),
+        frame: urlParams.isMergeWord === "yes" ? false : true,
+        hasShadow: urlParams.isMergeWord === "yes" ? false : true,
+        transparent: urlParams.isMergeWord === "yes" ? true : false,
       });
       readerWindow = new BrowserWindow(options);
       readerWindow.loadURL(url.indexOf("pdf") > -1 ? pdfLocation : url);
@@ -114,13 +117,7 @@ app.on("ready", () => {
     readerWindow.on("close", () => {
       readerWindow && readerWindow.destroy();
     });
-
     event.returnValue = "success";
-  });
-  ipcMain.handle("fonts-ready", async (event, arg) => {
-    const fontList = require("font-list");
-    const fonts = await fontList.getFonts({ disableQuoting: true });
-    return fonts;
   });
 
   ipcMain.on("storage-location", (event, arg) => {

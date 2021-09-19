@@ -51,7 +51,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     this.setState({ key });
     localforage.getItem("books").then((result: any) => {
       let book = result[_.findIndex(result, { key })];
-      BookUtil.fetchBook(key, true).then((result) => {
+      BookUtil.fetchBook(key, true, book.path).then((result) => {
         this.props.handleReadingBook(book);
         if (book.format === "MOBI" || book.format === "AZW3") {
           this.handleMobi(result as ArrayBuffer);

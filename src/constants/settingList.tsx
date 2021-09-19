@@ -13,6 +13,20 @@ export const settingList = [
     propName: "isPreventTrigger",
   },
   {
+    isElectron: true,
+    title: "Import books as referrence",
+    desc:
+      "The imported books will not be copied to library, only linked to the original book path",
+    propName: "isImportPath",
+  },
+  {
+    isElectron: true,
+    title: "Merge reader into Word",
+    desc:
+      "Get rid of window Frame and mimical background, make reader hide into Word or any text editor, and can't be detected",
+    propName: "isMergeWord",
+  },
+  {
     isElectron: false,
     title: "Auto open latest book",
     desc:

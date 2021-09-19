@@ -81,6 +81,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
 }
 .right-panel {
   width: 50px;
@@ -92,9 +93,11 @@
   border-bottom-left-radius: 50px;
   border-top-left-radius: 50px;
   z-index: 10;
-  opacity: 0;  display: flex;
+  opacity: 0;
+  display: flex;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
 }
 .top-panel {
   width: 200px;
@@ -106,9 +109,11 @@
   border-bottom-left-radius: 50px;
   border-bottom-right-radius: 50px;
   z-index: 10;
-  opacity: 0;  display: flex;
+  opacity: 0;
+  display: flex;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
 }
 .bottom-panel {
   width: 200px;
@@ -120,9 +125,11 @@
   border-top-left-radius: 50px;
   border-top-right-radius: 50px;
   z-index: 10;
-  opacity: 0;  display: flex;
+  opacity: 0;
+  display: flex;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
 }
 .operation-panel-container {
   width: 412px;
