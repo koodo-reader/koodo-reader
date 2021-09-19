@@ -4,10 +4,11 @@ import {
   handleFetchBooks,
   handleMode,
   handleShelfIndex,
-} from "../../../store/actions";
-import { stateType } from "../../../store";
+  handleDeleteDialog,
+} from "../../store/actions";
+import { stateType } from "../../store";
 import { withTranslation } from "react-i18next";
-import BookList from "./component";
+import ShelfChooser from "./component";
 
 const mappropsToProps = (state: stateType) => {
   return {
@@ -31,9 +32,10 @@ const actionCreator = {
   handleFetchList,
   handleMode,
   handleShelfIndex,
+  handleDeleteDialog,
   handleFetchBooks,
 };
 export default connect(
   mappropsToProps,
   actionCreator
-)(withTranslation()(BookList as any));
+)(withTranslation()(ShelfChooser as any));

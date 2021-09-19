@@ -1,7 +1,7 @@
 import React from "react";
 import { Trans } from "react-i18next";
 import { DeletePopupProps } from "./interface";
-
+import toast from "react-hot-toast";
 class DeletePopup extends React.Component<DeletePopupProps> {
   handleCancel = () => {
     this.props.handleDeletePopup(false);
@@ -10,8 +10,7 @@ class DeletePopup extends React.Component<DeletePopupProps> {
     //从列表删除和从图书库删除判断
     this.props.handleDeletePopup(false);
     this.props.handleDeleteOpearion();
-    this.props.handleMessage("Delete Successfully");
-    this.props.handleMessageBox(true);
+    toast.success(this.props.t("Delete Successfully"));
   };
   render() {
     return (

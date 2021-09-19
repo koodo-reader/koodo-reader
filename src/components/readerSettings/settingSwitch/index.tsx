@@ -2,7 +2,6 @@ import { withTranslation } from "react-i18next";
 import { connect } from "react-redux";
 import SettingSwitch from "./component";
 import { stateType } from "../../../store";
-import { handleMessageBox, handleMessage } from "../../../store/actions";
 
 const mapStateToProps = (state: stateType) => {
   return {
@@ -12,7 +11,7 @@ const mapStateToProps = (state: stateType) => {
     renderFunc: state.book.renderFunc,
   };
 };
-const actionCreator = { handleMessageBox, handleMessage };
+const actionCreator = {};
 export default connect(
   mapStateToProps,
   actionCreator

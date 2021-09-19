@@ -2,9 +2,15 @@ export const settingList = [
   {
     isElectron: false,
     title: "Turn on touch screen mode",
+    desc: "Gesture and UI optimization for touch screen",
+    propName: "isTouch",
+  },
+  {
+    isElectron: false,
+    title: "Prevent accidental trigger",
     desc:
       "Reader menu will not be triggered by hovering but clicking on the area",
-    propName: "isTouch",
+    propName: "isPreventTrigger",
   },
   {
     isElectron: false,
@@ -88,7 +94,7 @@ export const readerSettingList = [
   },
   {
     title: "Dont't use mimical background",
-    propName: "isUseBackground",
+    propName: "isHideBackground",
   },
   {
     title: "Hide navigation button",
@@ -111,5 +117,9 @@ export const htmlSettingList = [
   {
     title: "Text Shadow",
     propName: "isShadow",
+  },
+  {
+    title: "Dont't use mimical background",
+    propName: "isHideBackground",
   },
 ];

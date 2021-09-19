@@ -1,10 +1,5 @@
 import { connect } from "react-redux";
-import {
-  handleMessageBox,
-  handleMessage,
-  handleNewDialog,
-  handleNewWarning,
-} from "../../../store/actions";
+import { handleNewDialog, handleNewWarning } from "../../../store/actions";
 import UpdateInfo from "./component";
 import { withTranslation } from "react-i18next";
 import { stateType } from "../../../store";
@@ -17,8 +12,6 @@ const mapStateToProps = (state: stateType) => {
   };
 };
 const actionCreator = {
-  handleMessageBox,
-  handleMessage,
   handleNewDialog,
   handleNewWarning,
 };

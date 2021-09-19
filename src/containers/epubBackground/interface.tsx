@@ -11,7 +11,7 @@ export interface BackgroundState {
   isSingle: boolean;
   isHideFooter: boolean;
   isHideHeader: boolean;
-  isUseBackground: boolean;
+  isHideBackground: boolean;
   currentChapter: string;
   prevPage: number;
   nextPage: number;

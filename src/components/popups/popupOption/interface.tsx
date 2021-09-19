@@ -11,8 +11,6 @@ export interface PopupOptionProps {
   rect: DOMRect;
   cfiRange: string;
   contents: any;
-  handleMessageBox: (isShow: boolean) => void;
-  handleMessage: (message: string) => void;
   handleOpenMenu: (isOpenMenu: boolean) => void;
   handleMenuMode: (menu: string) => void;
   handleFetchNotes: () => void;

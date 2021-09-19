@@ -1,11 +1,6 @@
 import "./importLocal.css";
 import { connect } from "react-redux";
-import {
-  handleMessageBox,
-  handleMessage,
-  handleFetchBooks,
-  handleLoadingDialog,
-} from "../../store/actions";
+import { handleFetchBooks, handleLoadingDialog } from "../../store/actions";
 import { handleReadingBook } from "../../store/actions";
 import { stateType } from "../../store";
 import { withTranslation } from "react-i18next";
@@ -21,8 +16,6 @@ const mapStateToProps = (state: stateType) => {
   };
 };
 const actionCreator = {
-  handleMessageBox,
-  handleMessage,
   handleFetchBooks,
   handleReadingBook,
   handleLoadingDialog,

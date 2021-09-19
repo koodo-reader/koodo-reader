@@ -5,8 +5,6 @@ export interface SettingInfoProps {
   handleSetting: (isSettingOpen: boolean) => void;
   handleTipDialog: (isTipDialog: boolean) => void;
   handleTip: (tip: string) => void;
-  handleMessage: (message: string) => void;
-  handleMessageBox: (isShow: boolean) => void;
   t: (title: string) => string;
   bookmarks: BookmarkModel[];
   notes: NoteModel[];
@@ -14,6 +12,7 @@ export interface SettingInfoProps {
 }
 export interface SettingInfoState {
   isTouch: boolean;
+  isPreventTrigger: boolean;
   isOpenBook: boolean;
   isDisplayDark: boolean;
   isExpandContent: boolean;

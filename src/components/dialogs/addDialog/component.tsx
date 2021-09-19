@@ -3,6 +3,7 @@ import ShelfUtil from "../../../utils/readUtils/shelfUtil";
 import { Trans } from "react-i18next";
 import { AddDialogProps, AddDialogState } from "./interface";
 import "./addDialog.css";
+import toast from "react-hot-toast";
 
 class AddDialog extends Component<AddDialogProps, AddDialogState> {
   constructor(props: AddDialogProps) {
@@ -26,15 +27,13 @@ class AddDialog extends Component<AddDialogProps, AddDialogState> {
     if (this.state.isNew) {
       shelfTitle = inputElement.value;
       if (shelfList.hasOwnProperty(shelfTitle)) {
-        this.props.handleMessage("Duplicate Shelf");
-        this.props.handleMessageBox(true);
+        toast(this.props.t("Duplicate Shelf"));
         return;
       }
     }
     //未填书架名提醒
     if (!shelfTitle) {
-      this.props.handleMessage("Empty Shelf Title");
-      this.props.handleMessageBox(true);
+      toast(this.props.t("Empty Shelf Title"));
       return;
     }
     //判断书架中是否已有该图书
@@ -42,8 +41,7 @@ class AddDialog extends Component<AddDialogProps, AddDialogState> {
       shelfList[`${shelfTitle}`] &&
       shelfList[`${shelfTitle}`].indexOf(this.props.currentBook.key) > -1
     ) {
-      this.props.handleMessage("Duplicate Book");
-      this.props.handleMessageBox(true);
+      toast(this.props.t("Duplicate Book"));
       return;
     }
     if (this.props.isSelectBook) {
@@ -55,8 +53,7 @@ class AddDialog extends Component<AddDialogProps, AddDialogState> {
     }
 
     this.props.handleAddDialog(false);
-    this.props.handleMessage("Add Successfully");
-    this.props.handleMessageBox(true);
+    toast.success(this.props.t("Add Successfully"));
     this.props.handleActionDialog(false);
     this.props.handleMode("shelf");
     this.props.handleShelfIndex(shelfIndex);

@@ -10,6 +10,8 @@ import RecordLocation from "../../utils/readUtils/recordLocation";
 import { isElectron } from "react-device-detect";
 import EmptyCover from "../emptyCover";
 import BookUtil from "../../utils/fileUtils/bookUtil";
+import toast from "react-hot-toast";
+
 declare var window: any;
 
 class BookCardItem extends React.Component<BookCardProps, BookCardState> {
@@ -73,8 +75,7 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
   handleLoveBook = () => {
     AddFavorite.setFavorite(this.props.book.key);
     this.setState({ isFavorite: true });
-    this.props.handleMessage("Add Successfully");
-    this.props.handleMessageBox(true);
+    toast.success(this.props.t("Add Successfully"));
   };
   handleCancelLoveBook = () => {
     AddFavorite.clear(this.props.book.key);
@@ -82,8 +83,7 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
     if (Object.keys(AddFavorite.getAllFavorite()).length === 0) {
       this.props.history.push("/manager/empty");
     }
-    this.props.handleMessage("Cancel Successfully");
-    this.props.handleMessageBox(true);
+    toast.success(this.props.t("Cancel Successfully"));
   };
   //控制按钮的弹出
   handleConfig = (mode: boolean) => {

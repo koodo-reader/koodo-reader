@@ -9,7 +9,7 @@ import OtherUtil from "../../../utils/otherUtil";
 import ReadingTime from "../../../utils/readUtils/readingTime";
 import { withRouter } from "react-router-dom";
 import { isElectron } from "react-device-detect";
-
+import toast from "react-hot-toast";
 declare var document: any;
 
 class OperationPanel extends React.Component<
@@ -154,8 +154,7 @@ class OperationPanel extends React.Component<
       this.props.handleBookmarks(bookmarkArr);
       localforage.setItem("bookmarks", bookmarkArr);
       this.setState({ isBookmark: true });
-      this.props.handleMessage("Add Successfully");
-      this.props.handleMessageBox(true);
+      toast.success(this.props.t("Add Successfully"));
       this.props.handleShowBookmark(true);
     });
   }
@@ -237,8 +236,7 @@ class OperationPanel extends React.Component<
             if (this.props.currentEpub.rendition) {
               this.handleAddBookmark();
             } else {
-              this.props.handleMessage("Not supported yet");
-              this.props.handleMessageBox(true);
+              toast(this.props.t("Not supported yet"));
             }
           }}
         >
