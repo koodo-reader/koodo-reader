@@ -14,13 +14,10 @@ export interface HeaderProps {
   handleSortDisplay: (isSortDisplay: boolean) => void;
   handleSetting: (isSettingOpen: boolean) => void;
   handleAbout: (isAboutOpen: boolean) => void;
-  handleMessageBox: (isShow: boolean) => void;
-  handleMessage: (message: string) => void;
   handleBackupDialog: (isBackup: boolean) => void;
   handleDrag: (isDrag: boolean) => void;
   handleTipDialog: (isTipDialog: boolean) => void;
   handleTip: (tip: string) => void;
-
   t: (title: string) => string;
 }
 

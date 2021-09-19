@@ -1,6 +1,5 @@
 export interface DeletePopupProps {
-  handleMessageBox: (isShow: boolean) => void;
-  handleMessage: (message: string) => void;
+  t: (title: string) => string;
   name: string;
   title: string;
   description: string;

@@ -49,8 +49,6 @@ export type stateType = {
     isTipDialog: boolean;
     bookSortCode: { sort: number; order: number };
     noteSortCode: { sort: number; order: number };
-    isMessage: boolean;
-    message: string;
     tip: string;
   };
   book: {

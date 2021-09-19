@@ -3,8 +3,7 @@ import NoteModel from "../../../model/Note";
 import BookmarkModel from "../../../model/Bookmark";
 
 export interface EditDialogProps {
-  handleMessage: (message: string) => void;
-  handleMessageBox: (isShow: boolean) => void;
+  t: (title: string) => string;
   handleFetchBooks: () => void;
   handleEditDialog: (isShow: boolean) => void;
   handleActionDialog: (isShow: boolean) => void;

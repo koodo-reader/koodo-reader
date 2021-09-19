@@ -32,13 +32,7 @@ export function handleAbout(isAboutOpen: boolean) {
 export function handleViewMode(mode: string) {
   return { type: "HANDLE_VIEW_MODE", payload: mode };
 }
-export function handleMessage(message: string) {
-  return { type: "HANDLE_MESSAGE", payload: message };
-}
 
-export function handleMessageBox(isShow: boolean) {
-  return { type: "HANDLE_MESSAGE_BOX", payload: isShow };
-}
 export function handleSortDisplay(isSortDisplay: boolean) {
   return { type: "HANDLE_SORT_DISPLAY", payload: isSortDisplay };
 }

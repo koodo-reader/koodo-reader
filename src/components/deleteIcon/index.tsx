@@ -4,8 +4,6 @@ import {
   handleFetchBookmarks,
   handleFetchNotes,
   handleShowBookmark,
-  handleMessageBox,
-  handleMessage,
 } from "../../store/actions";
 import DeleteIcon from "./component";
 const mapStateToProps = (state: stateType) => {
@@ -19,8 +17,6 @@ const mapStateToProps = (state: stateType) => {
 const actionCreator = {
   handleFetchBookmarks,
   handleFetchNotes,
-  handleMessageBox,
-  handleMessage,
   handleShowBookmark,
 };
 export default connect(mapStateToProps, actionCreator)(DeleteIcon as any);

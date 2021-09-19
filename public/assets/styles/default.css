@@ -19,7 +19,7 @@ body,
 .clockwise-icon,
 .counterclockwise-icon,
 .book-more-action {
-  text-shadow: 0px 0px 5px rgba(75, 75, 75, 0.6);
+  text-shadow: 0px 0px 5px rgba(75, 75, 75, 0.3);
 }
 .add-dialog-shelf-list-box,
 .add-dialog-shelf-list-option,

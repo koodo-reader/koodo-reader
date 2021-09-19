@@ -6,7 +6,7 @@ import { BookListProps, BookListState } from "./interface";
 import localforage from "localforage";
 import { withRouter } from "react-router-dom";
 import FileSaver from "file-saver";
-
+import toast from "react-hot-toast";
 class SelectBook extends React.Component<BookListProps, BookListState> {
   constructor(props: BookListProps) {
     super(props);
@@ -73,8 +73,7 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
                         }`
                     );
                   });
-                this.props.handleMessage("Export Successfully");
-                this.props.handleMessageBox(true);
+                toast.success(this.props.t("Export Successfully"));
               }}
             >
               <Trans>Export</Trans>

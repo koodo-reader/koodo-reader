@@ -5,8 +5,6 @@ import {
   handleAddDialog,
   handleActionDialog,
   handleReadingBook,
-  handleMessageBox,
-  handleMessage,
   handleFetchBooks,
 } from "../../../store/actions";
 
@@ -27,8 +25,6 @@ const actionCreator = {
   handleDeleteDialog,
   handleReadingBook,
   handleActionDialog,
-  handleMessageBox,
-  handleMessage,
   handleFetchBooks,
 };
 export default connect(

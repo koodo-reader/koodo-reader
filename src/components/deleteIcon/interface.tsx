@@ -13,8 +13,7 @@ export interface DeleteIconProps {
   handleFetchBookmarks: () => void;
   renderHighlighters: () => void;
   handleShowDelete: (Deletekey: string) => void;
-  handleMessageBox: (isShow: boolean) => void;
-  handleMessage: (message: string) => void;
+  t: (title: string) => string;
   handleShowBookmark: (isShowBookmark: boolean) => void;
   handleChangeTag: (index: number) => void;
 }

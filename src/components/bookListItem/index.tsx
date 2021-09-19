@@ -5,8 +5,6 @@ import {
   handleAddDialog,
   handleReadingBook,
   handleDragItem,
-  handleMessageBox,
-  handleMessage,
   handleFetchBooks,
   handleSelectedBooks,
 } from "../../store/actions";
@@ -28,8 +26,6 @@ const actionCreator = {
   handleEditDialog,
   handleDeleteDialog,
   handleAddDialog,
-  handleMessageBox,
-  handleMessage,
   handleDragItem,
   handleFetchBooks,
   handleSelectedBooks,

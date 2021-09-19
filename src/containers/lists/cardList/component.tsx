@@ -10,7 +10,7 @@ import SortUtil from "../../../utils/readUtils/sortUtil";
 import { Redirect } from "react-router-dom";
 import NoteTag from "../../../components/noteTag";
 import BookUtil from "../../../utils/fileUtils/bookUtil";
-
+import toast from "react-hot-toast";
 class CardList extends React.Component<CardListProps, CardListStates> {
   constructor(props: CardListProps) {
     super(props);
@@ -42,8 +42,7 @@ class CardList extends React.Component<CardListProps, CardListStates> {
       }
     }
     if (!book) {
-      this.props.handleMessage("Book not exist");
-      this.props.handleMessageBox(true);
+      toast(this.props.t("Book not exist"));
       return;
     }
     RecordLocation.recordCfi(bookKey, cfi, percentage);
@@ -118,8 +117,9 @@ class CardList extends React.Component<CardListProps, CardListStates> {
                 className="note-tags"
                 style={{
                   position: "absolute",
-                  bottom: "20px",
-                  height: "70px",
+                  bottom: "60px",
+                  height: "30px",
+                  overflow: "hidden",
                 }}
               >
                 <NoteTag

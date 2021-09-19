@@ -21,7 +21,7 @@ import {
   fetchFileFromPath,
   fetchMD5FromPath,
 } from "../../utils/fileUtils/fileUtil";
-
+import toast from "react-hot-toast";
 declare var window: any;
 
 class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
@@ -66,7 +66,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
   }
   handleFilePath = async (filePath: string) => {
     let md5 = await fetchMD5FromPath(filePath);
-    if ([...this.props.books, ...this.props.deletedBooks].length > 0) {
+    if ([...(this.props.books || []), ...this.props.deletedBooks].length > 0) {
       let isRepeat = false;
       let repeatBook: BookModel | null = null;
       [...this.props.books, ...this.props.deletedBooks].forEach((item) => {
@@ -102,8 +102,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
         .setItem("books", bookArr)
         .then(() => {
           this.props.handleFetchBooks();
-          this.props.handleMessage("Add Successfully");
-          this.props.handleMessageBox(true);
+          toast.success(this.props.t("Add Successfully"));
           setTimeout(() => {
             this.state.isOpenFile && this.handleJump(book);
             this.setState({ isOpenFile: false });
@@ -144,8 +143,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
         [...this.props.books, ...this.props.deletedBooks].forEach((item) => {
           if (item.md5 === md5) {
             isRepeat = true;
-            this.props.handleMessage("Duplicate Book");
-            this.props.handleMessageBox(true);
+            toast.error(this.props.t("Duplicate Book"));
             resolve();
           }
         });
@@ -156,9 +154,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
         reader.readAsArrayBuffer(file);
         reader.onload = async (e) => {
           if (!e.target) {
-            this.props.handleMessage("Import Failed");
-            this.props.handleMessageBox(true);
-
+            toast.error(this.props.t("Import Failed"));
             reject();
             throw new Error();
           }
@@ -171,9 +167,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
               file.size
             );
             if (!result) {
-              this.props.handleMessage("Import Failed");
-              this.props.handleMessageBox(true);
-
+              toast.error(this.props.t("Import Failed"));
               reject();
               throw new Error();
             } else {
@@ -222,9 +216,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
             if (isElectron) {
               let _result = await generateEpub(file);
               if (_result === 1) {
-                this.props.handleMessage("Import Failed");
-                this.props.handleMessageBox(true);
-
+                toast.error(this.props.t("Import Failed"));
                 reject();
               } else if (
                 _result === 2 &&
@@ -297,9 +289,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
           } else {
             result = await addEpub(file, md5);
             if (!result) {
-              this.props.handleMessage("Import Failed");
-              this.props.handleMessageBox(true);
-
+              toast.error(this.props.t("Import Failed"));
               reject();
               throw new Error();
             } else {

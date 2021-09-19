@@ -11,7 +11,7 @@ import { DeleteDialogProps } from "./interface";
 import { withRouter } from "react-router-dom";
 import AddTrash from "../../../utils/readUtils/addTrash";
 import BookUtil from "../../../utils/fileUtils/bookUtil";
-
+import toast from "react-hot-toast";
 class DeleteDialog extends React.Component<DeleteDialogProps> {
   handleCancel = () => {
     this.props.handleDeleteDialog(false);
@@ -71,8 +71,7 @@ class DeleteDialog extends React.Component<DeleteDialogProps> {
     }
 
     this.props.handleDeleteDialog(false);
-    this.props.handleMessage("Delete Successfully");
-    this.props.handleMessageBox(true);
+    toast.success(this.props.t("Delete Successfully"));
   };
   deleteBook = (key: string) => {
     return new Promise<void>((resolve, reject) => {
