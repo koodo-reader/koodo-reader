@@ -18,7 +18,7 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
       scale: OtherUtil.getReaderConfig("scale") || 1,
       isHideFooter: OtherUtil.getReaderConfig("isHideFooter") === "yes",
       isHideHeader: OtherUtil.getReaderConfig("isHideHeader") === "yes",
-      isUseBackground: OtherUtil.getReaderConfig("isUseBackground") === "yes",
+      isHideBackground: OtherUtil.getReaderConfig("isHideBackground") === "yes",
     };
     this.isFirst = true;
   }
@@ -52,81 +52,6 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
   }
 
   render() {
-    if (this.state.isUseBackground) {
-      return (
-        <div
-          className="background"
-          style={{
-            color: OtherUtil.getReaderConfig("textColor")
-              ? OtherUtil.getReaderConfig("textColor")
-              : "",
-          }}
-        >
-          {!this.state.isHideHeader && this.state.currentChapter && (
-            <p
-              className="progress-chapter-name"
-              style={
-                this.state.isSingle
-                  ? {
-                      left: `calc(50vw - 
-                      270px)`,
-                    }
-                  : {}
-              }
-            >
-              <Trans>{this.state.currentChapter}</Trans>
-            </p>
-          )}
-          {!this.state.isHideHeader && !this.state.isSingle && (
-            <p
-              className="progress-book-name"
-              style={
-                this.state.isSingle
-                  ? {
-                      right: `calc(50vw - 
-                      270px)`,
-                    }
-                  : {}
-              }
-            >
-              <Trans>{this.props.currentBook.name}</Trans>
-            </p>
-          )}
-          {!this.state.isHideFooter && this.state.prevPage > 0 && (
-            <p
-              className="background-page-left"
-              style={
-                this.state.isSingle
-                  ? {
-                      left: `calc(50vw - 
-                      270px)`,
-                    }
-                  : {}
-              }
-            >
-              <Trans i18nKey="Book Page" count={this.state.prevPage}>
-                Page
-                {{
-                  count: this.state.prevPage,
-                }}
-              </Trans>
-            </p>
-          )}
-          {!this.state.isHideFooter &&
-            this.state.nextPage > 0 &&
-            !this.state.isSingle && (
-              <p className="background-page-right">
-                <Trans i18nKey="Book Page" count={this.state.nextPage}>
-                  Page
-                  {{
-                    count: this.state.nextPage,
-                  }}
-                </Trans>
-              </p>
-            )}
-        </div>
-      );
-    }
     return (
       <div
         className="background"
@@ -200,7 +125,7 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
               </Trans>
             </p>
           )}
-        <BackgroundWidget />
+        {this.state.isHideBackground ? null : <BackgroundWidget />}
       </div>
     );
   }

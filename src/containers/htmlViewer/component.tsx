@@ -320,7 +320,9 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
             Loading
           </iframe>
         </div>
-        <BackgroundWidget />
+        {OtherUtil.getReaderConfig("isHideBackground") === "yes" ? null : (
+          <BackgroundWidget />
+        )}
       </>
     );
   }

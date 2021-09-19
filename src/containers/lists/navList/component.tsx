@@ -3,6 +3,7 @@ import "./navList.css";
 import { Trans } from "react-i18next";
 import { NavListProps, NavListState } from "./interface";
 import DeleteIcon from "../../../components/deleteIcon";
+import toast from "react-hot-toast";
 class NavList extends React.Component<NavListProps, NavListState> {
   constructor(props: NavListProps) {
     super(props);
@@ -13,8 +14,7 @@ class NavList extends React.Component<NavListProps, NavListState> {
   //跳转到图书的指定位置
   handleJump(cfi: string) {
     if (!cfi) {
-      this.props.handleMessage("Wrong bookmark");
-      this.props.handleMessageBox(true);
+      toast(this.props.t("Wrong bookmark"));
       return;
     }
     this.props.currentEpub.rendition.display(cfi);

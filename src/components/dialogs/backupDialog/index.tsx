@@ -1,13 +1,11 @@
 import {
   handleBackupDialog,
   handleTokenDialog,
-  handleMessageBox,
-  handleMessage,
   handleLoadingDialog,
   handleTipDialog,
 } from "../../../store/actions";
 import { connect } from "react-redux";
-
+import { withTranslation } from "react-i18next";
 import { stateType } from "../../../store";
 import BackupDialog from "./component";
 
@@ -22,10 +20,11 @@ const mapStateToProps = (state: stateType) => {
 };
 const actionCreator = {
   handleBackupDialog,
-  handleMessageBox,
-  handleMessage,
   handleTokenDialog,
   handleLoadingDialog,
   handleTipDialog,
 };
-export default connect(mapStateToProps, actionCreator)(BackupDialog);
+export default connect(
+  mapStateToProps,
+  actionCreator
+)(withTranslation()(BackupDialog));

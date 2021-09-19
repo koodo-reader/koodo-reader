@@ -8,7 +8,7 @@ import RecordLocation from "../../../utils/readUtils/recordLocation";
 import NoteTag from "../../noteTag";
 import NoteModel from "../../../model/Note";
 import { Trans } from "react-i18next";
-
+import toast from "react-hot-toast";
 declare var window: any;
 
 class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
@@ -37,8 +37,7 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
       });
       localforage.setItem("notes", this.props.notes).then(() => {
         this.props.handleOpenMenu(false);
-        this.props.handleMessage("Add Successfully");
-        this.props.handleMessageBox(true);
+        toast.success(this.props.t("Add Successfully"));
         this.props.handleFetchNotes();
         this.props.handleMenuMode("highlight");
         this.props.handleNoteKey("");
@@ -99,8 +98,7 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
       noteArr.push(note);
       localforage.setItem("notes", noteArr).then(() => {
         this.props.handleOpenMenu(false);
-        this.props.handleMessage("Add Successfully");
-        this.props.handleMessageBox(true);
+        toast.success(this.props.t("Add Successfully"));
         this.props.handleFetchNotes();
         this.props.handleMenuMode("highlight");
       });
@@ -119,8 +117,7 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
         localforage.setItem("notes", this.props.notes).then(() => {
           this.props.handleOpenMenu(false);
           this.props.handleMenuMode("menu");
-          this.props.handleMessage("Delete Successfully");
-          this.props.handleMessageBox(true);
+          toast.success(this.props.t("Delete Successfully"));
           this.props.handleMenuMode("highlight");
           this.props.handleFetchNotes();
           this.props.handleNoteKey("");

@@ -3,9 +3,8 @@
   top: 115px;
   left: 190px;
   width: calc(100% - 190px);
-  height: calc(100% - 115px);
+  height: calc(100% - 125px);
   overflow: visible;
-  margin-bottom: 5px;
 }
 .book-list-container {
   width: 100%;
@@ -53,7 +52,7 @@
 .booklist-shelf-container {
   position: absolute;
   top: 80px;
-  left: calc(50% - 100px);
+  left: calc(50% - 125px);
 }
 .booklist-manage-container {
   position: absolute;

@@ -13,7 +13,7 @@ import BookUtil from "../../utils/fileUtils/bookUtil";
 import FileSaver from "file-saver";
 import localforage from "localforage";
 import { isElectron } from "react-device-detect";
-
+import toast from "react-hot-toast";
 class BookListItem extends React.Component<BookItemProps, BookItemState> {
   epub: any;
   constructor(props: BookItemProps) {
@@ -56,19 +56,16 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
   handleLoveBook = () => {
     AddFavorite.setFavorite(this.props.book.key);
     this.setState({ isFavorite: true });
-    this.props.handleMessage("Add Successfully");
-    this.props.handleMessageBox(true);
+    toast.success(this.props.t("Add Successfully"));
   };
   handleCancelLoveBook = () => {
     AddFavorite.clear(this.props.book.key);
     this.setState({ isFavorite: false });
-    this.props.handleMessage("Cancel Successfully");
-    this.props.handleMessageBox(true);
+    toast.success(this.props.t("Cancel Successfully"));
   };
   handleResoreBook = () => {
     AddTrash.clear(this.props.currentBook.key);
-    this.props.handleMessage("Restore Successfully");
-    this.props.handleMessageBox(true);
+    toast.success(this.props.t("Restore Successfully"));
     this.props.handleFetchBooks();
   };
   handleJump = () => {
@@ -180,8 +177,8 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
                 localforage
                   .getItem(this.props.currentBook.key)
                   .then((result: any) => {
-                    this.props.handleMessage("Export Successfully");
-                    this.props.handleMessageBox(true);
+                    toast.success(this.props.t("Export Successfully"));
+
                     FileSaver.saveAs(
                       new Blob([result]),
                       this.props.currentBook.name +

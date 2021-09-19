@@ -5,7 +5,7 @@
 .original-text-box,
 .trans-text-box {
   width: 230px;
-  height: 63px;
+  height: 100px;
   opacity: 1;
   border-radius: 5px;
   position: absolute;
@@ -21,11 +21,12 @@
   bottom: 8px;
   right: 20px;
 }
-.original-text-box {
-  left: 16px;
-  top: 15px;
-}
 .trans-text-box {
   left: 16px;
-  top: 90px;
+  top: 16px;
+}
+.target-lang-container {
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
 }

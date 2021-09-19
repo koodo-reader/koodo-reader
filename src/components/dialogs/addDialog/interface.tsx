@@ -6,11 +6,9 @@ export interface AddDialogProps {
   currentBook: BookModel;
   selectedBooks: string[];
   isSelectBook: boolean;
-  handleMessage: (message: string) => void;
-  handleMessageBox: (isShow: boolean) => void;
+  t: (title: string) => string;
   handleMode: (mode: string) => void;
   handleShelfIndex: (shelfIndex: number) => void;
-  t: (title: string) => string;
   handleSelectedBooks: (selectedBooks: string[]) => void;
 }
 export interface AddDialogState {

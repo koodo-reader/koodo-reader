@@ -6483,6 +6483,11 @@ globule@^1.0.0:
     lodash "~4.17.10"
     minimatch "~3.0.2"
 
+goober@^2.0.35:
+  version "2.0.41"
+  resolved "https://registry.yarnpkg.com/goober/-/goober-2.0.41.tgz#0a3d786ff9917bcf2a096eef703bf717838cbec9"
+  integrity sha512-kwjegMT5018zWydhOQlQneCgCtrKJaPsru7TaBWmTYV0nsMeUrM6L6O8JmNYb9UbPMgWcmtf+9p4Y3oJabIH1A==
+
 got@^9.6.0:
   version "9.6.0"
   resolved "https://registry.npm.taobao.org/got/download/got-9.6.0.tgz?cache=0&sync_timestamp=1614332618324&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fgot%2Fdownload%2Fgot-9.6.0.tgz#edf45e7d67f99545705de1f7bbeeeb121765ed85"
@@ -8609,6 +8614,11 @@ lru-cache@^6.0.0:
   integrity sha1-bW/mVw69lqr5D8rR2vo7JWbbOpQ=
   dependencies:
     yallist "^4.0.0"
+
+macaddress@^0.5.2:
+  version "0.5.2"
+  resolved "https://registry.yarnpkg.com/macaddress/-/macaddress-0.5.2.tgz#0ed6c836da3b182e4400bc4594083cdd33511cc4"
+  integrity sha512-cYYBbT3b84hTEHssWE6OmsuqF/NiLXE2RGK9Sc9SwwE9kMoKrbaUAJtKs6ucd0FFgZjXE1Wm3hoGEEYas0N6EA==
 
 magic-string@^0.25.0, magic-string@^0.25.7:
   version "0.25.7"
@@ -11004,6 +11014,13 @@ react-error-overlay@^6.0.9:
   version "6.0.9"
   resolved "https://registry.npm.taobao.org/react-error-overlay/download/react-error-overlay-6.0.9.tgz?cache=0&sync_timestamp=1612387724751&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Freact-error-overlay%2Fdownload%2Freact-error-overlay-6.0.9.tgz#3c743010c9359608c375ecd6bc76f35d93995b0a"
   integrity sha1-PHQwEMk1lgjDdezWvHbzXZOZWwo=
+
+react-hot-toast@^2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/react-hot-toast/-/react-hot-toast-2.1.1.tgz#56409ab406b534e9e58274cf98d80355ba0fdda0"
+  integrity sha512-Odrp4wue0fHh0pOfZt5H+9nWCMtqs3wdlFSzZPp7qsxfzmbE26QmGWIh6hG43CukiPeOjA8WQhBJU8JwtWvWbQ==
+  dependencies:
+    goober "^2.0.35"
 
 react-i18next@*, react-i18next@^11.8.15:
   version "11.11.1"
@@ -13469,11 +13486,6 @@ uuid@^8.3.0:
   version "8.3.2"
   resolved "https://registry.nlark.com/uuid/download/uuid-8.3.2.tgz#80d5b5ced271bb9af6c445f21a1a04c606cefbe2"
   integrity sha1-gNW1ztJxu5r2xEXyGhoExgbO++I=
-
-uuid@^8.3.2:
-  version "8.3.2"
-  resolved "https://registry.yarnpkg.com/uuid/-/uuid-8.3.2.tgz#80d5b5ced271bb9af6c445f21a1a04c606cefbe2"
-  integrity sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==
 
 v8-compile-cache@^2.0.3:
   version "2.3.0"

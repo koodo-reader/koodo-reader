@@ -5,8 +5,7 @@ import BookmarkModel from "../../../model/Bookmark";
 export interface BackupDialogProps {
   handleBackupDialog: (isBackup: boolean) => void;
   handleTokenDialog: (isOpenTokenDialog: boolean) => void;
-  handleMessage: (message: string) => void;
-  handleMessageBox: (isShow: boolean) => void;
+  t: (title: string) => string;
   handleLoadingDialog: (isShowLoading: boolean) => void;
   handleTipDialog: (isTipDialog: boolean) => void;
   isOpenTokenDialog: boolean;

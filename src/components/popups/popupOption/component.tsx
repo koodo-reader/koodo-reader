@@ -9,7 +9,7 @@ import { Tooltip } from "react-tippy";
 import { popupList } from "../../../constants/popupList";
 import OtherUtil from "../../../utils/otherUtil";
 import { isElectron } from "react-device-detect";
-
+import toast from "react-hot-toast";
 declare var window: any;
 const getSelection = () => {
   let iframe = document.getElementsByTagName("iframe")[0];
@@ -51,8 +51,7 @@ class PopupOption extends React.Component<PopupOptionProps> {
       : console.log("copied!");
     this.props.handleOpenMenu(false);
     doc.getSelection()!.empty();
-    this.props.handleMessage("Copy Successfully");
-    this.props.handleMessageBox(true);
+    toast.success(this.props.t("Copy Successfully"));
   };
   handleTrans = () => {
     this.props.handleMenuMode("trans");
@@ -110,8 +109,7 @@ class PopupOption extends React.Component<PopupOptionProps> {
     noteArr.push(digest);
     localforage.setItem("notes", noteArr).then(() => {
       this.props.handleOpenMenu(false);
-      this.props.handleMessage("Add Successfully");
-      this.props.handleMessageBox(true);
+      toast.success(this.props.t("Add Successfully"));
       this.props.handleFetchNotes();
       this.props.handleMenuMode("highlight");
     });

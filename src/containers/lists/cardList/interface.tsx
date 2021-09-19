@@ -14,8 +14,7 @@ export interface CardListProps extends RouteComponentProps<any> {
   isCollapsed: boolean;
   noteSortCode: { sort: number; order: number };
   handleReadingBook: (currentBook: BookModel) => void;
-  handleMessage: (message: string) => void;
-  handleMessageBox: (isShow: boolean) => void;
+  t: (title: string) => string;
 }
 export interface CardListStates {
   deleteKey: string;

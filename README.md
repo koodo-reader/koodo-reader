@@ -103,7 +103,7 @@ docker-compose up -d
 
 ## Develop
 
-Make sure node's version on your computer is larger than 10.0.0, yarn and git is in place.
+Make sure that you have installed yarn and git, node's version on your computer is larger than 14.0.0.
 
 1. Download the repo
 

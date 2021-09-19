@@ -3,8 +3,6 @@ import SettingDialog from "./component";
 import { withTranslation } from "react-i18next";
 import {
   handleSetting,
-  handleMessageBox,
-  handleMessage,
   handleTipDialog,
   handleTip,
 } from "../../../store/actions";
@@ -21,8 +19,6 @@ const actionCreator = {
   handleSetting,
   handleTipDialog,
   handleTip,
-  handleMessageBox,
-  handleMessage,
 };
 export default connect(
   mapStateToProps,

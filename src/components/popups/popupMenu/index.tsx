@@ -3,13 +3,13 @@ import {
   handleOpenMenu,
   handleMenuMode,
   handleChangeDirection,
-  handleMessageBox,
-  handleMessage,
   handleNoteKey,
 } from "../../../store/actions";
 import { connect } from "react-redux";
 import { stateType } from "../../../store";
 import PopupMenu from "./component";
+import { withTranslation } from "react-i18next";
+
 const mapStateToProps = (state: stateType) => {
   return {
     digests: state.reader.digests,
@@ -28,8 +28,9 @@ const actionCreator = {
   handleOpenMenu,
   handleMenuMode,
   handleChangeDirection,
-  handleMessageBox,
-  handleMessage,
   handleNoteKey,
 };
-export default connect(mapStateToProps, actionCreator)(PopupMenu);
+export default connect(
+  mapStateToProps,
+  actionCreator
+)(withTranslation()(PopupMenu));

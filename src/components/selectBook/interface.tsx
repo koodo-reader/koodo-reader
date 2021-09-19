@@ -8,9 +8,7 @@ export interface BookListProps extends RouteComponentProps<any> {
   isCollapsed: boolean;
   selectedBooks: string[];
   handleAddDialog: (isShow: boolean) => void;
-  handleMessageBox: (isShow: boolean) => void;
-  handleMessage: (message: string) => void;
-
+  t: (title: string) => string;
   handleDeleteDialog: (isShow: boolean) => void;
   handleSelectBook: (isSelectBook: boolean) => void;
   handleSelectedBooks: (selectedBooks: string[]) => void;

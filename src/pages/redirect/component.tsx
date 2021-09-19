@@ -8,7 +8,7 @@ import { withRouter } from "react-router-dom";
 import OtherUtil from "../../utils/otherUtil";
 import Lottie from "react-lottie";
 import animationSuccess from "../../assets/lotties/success.json";
-
+import toast, { Toaster } from "react-hot-toast";
 const successOptions = {
   loop: false,
   autoplay: true,
@@ -34,8 +34,7 @@ class Redirect extends React.Component<RedirectProps, RedirectState> {
     alert("数据恢复成功");
   };
   showMessage = (message: string) => {
-    this.props.handleMessage(message);
-    this.props.handleMessageBox(true);
+    toast(this.props.t(message));
   };
   componentDidMount() {
     //判断是否是获取token后的回调页面
@@ -124,6 +123,7 @@ class Redirect extends React.Component<RedirectProps, RedirectState> {
           alt=""
           className="empty-page-illustration"
         />
+        <Toaster />
       </div>
     );
   }

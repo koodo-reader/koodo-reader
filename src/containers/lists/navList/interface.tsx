@@ -8,8 +8,7 @@ export interface NavListProps {
   notes: NoteModel[];
   digests: NoteModel[];
   currentTab: string;
-  handleMessage: (message: string) => void;
-  handleMessageBox: (isShow: boolean) => void;
+  t: (title: string) => string;
 }
 export interface NavListState {
   deleteIndex: number;

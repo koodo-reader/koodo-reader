@@ -16,7 +16,6 @@ const initState = {
   isShowNew: false,
   bookSortCode: { sort: 0, order: 1 },
   noteSortCode: SortUtil.getNoteSortCode(),
-  isMessage: false,
   isSelectBook: false,
   message: "Add Successfully",
   tip: "",
@@ -114,16 +113,7 @@ export function manager(
         ...state,
         isNewWarning: action.payload,
       };
-    case "HANDLE_MESSAGE":
-      return {
-        ...state,
-        message: action.payload,
-      };
-    case "HANDLE_MESSAGE_BOX":
-      return {
-        ...state,
-        isMessage: action.payload,
-      };
+
     case "HANDLE_SORT_CODE":
       return {
         ...state,

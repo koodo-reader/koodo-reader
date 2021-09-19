@@ -16,8 +16,7 @@ export interface PopupMenuProps {
   rect: any;
   noteKey: string;
   handleNoteKey: (key: string) => void;
-  handleMessageBox: (isShow: boolean) => void;
-  handleMessage: (message: string) => void;
+  t: (title: string) => string;
   handleOpenMenu: (isOpenMenu: boolean) => void;
   handleMenuMode: (menu: string) => void;
   handleChangeDirection: (isChangeDirection: boolean) => void;

@@ -2,8 +2,7 @@ export interface TextToSpeechProps {
   currentEpub: any;
   locations: any;
   isReading: boolean;
-  handleMessageBox: (isShow: boolean) => void;
-  handleMessage: (message: string) => void;
+  t: (title: string) => string;
 }
 export interface TextToSpeechState {
   isSupported: boolean;

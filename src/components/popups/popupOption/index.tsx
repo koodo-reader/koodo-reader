@@ -1,5 +1,4 @@
 import { connect } from "react-redux";
-import { handleMessageBox, handleMessage } from "../../../store/actions";
 import {
   handleOpenMenu,
   handleMenuMode,
@@ -20,8 +19,6 @@ const mapStateToProps = (state: stateType) => {
   };
 };
 const actionCreator = {
-  handleMessageBox,
-  handleMessage,
   handleOpenMenu,
   handleMenuMode,
   handleFetchNotes,

@@ -4,8 +4,6 @@ import {
   handleReadingState,
   handleReadingBook,
   handleReadingEpub,
-  handleMessageBox,
-  handleMessage,
   handleHtmlBook,
   handleRenderFunc,
 } from "../../store/actions";
@@ -25,8 +23,6 @@ const actionCreator = {
   handleReadingBook,
   handleReadingEpub,
   handleActionDialog,
-  handleMessageBox,
-  handleMessage,
   handleHtmlBook,
   handleRenderFunc,
 };

@@ -17,6 +17,7 @@ import {
 } from "../../../constants/settingList";
 import { themeList } from "../../../constants/themeList";
 import _ from "underscore";
+import toast from "react-hot-toast";
 class SettingDialog extends React.Component<
   SettingInfoProps,
   SettingInfoState
@@ -25,6 +26,7 @@ class SettingDialog extends React.Component<
     super(props);
     this.state = {
       isTouch: OtherUtil.getReaderConfig("isTouch") === "yes",
+      isPreventTrigger: OtherUtil.getReaderConfig("isPreventTrigger") === "yes",
       isAutoFullscreen: OtherUtil.getReaderConfig("isAutoFullscreen") === "yes",
       isOpenBook: OtherUtil.getReaderConfig("isOpenBook") === "yes",
       isExpandContent: OtherUtil.getReaderConfig("isExpandContent") === "yes",
@@ -63,8 +65,7 @@ class SettingDialog extends React.Component<
     ].setAttribute("selected", "selected");
   }
   handleRest = (bool: boolean) => {
-    this.props.handleMessage("Change Successfully");
-    this.props.handleMessageBox(true);
+    toast.success(this.props.t("Change Successfully"));
   };
   changeLanguage = (lng: string) => {
     i18n.changeLanguage(lng);
@@ -111,11 +112,9 @@ class SettingDialog extends React.Component<
 
     let result = await restore(fileTemp, true);
     if (result) {
-      this.props.handleMessage("Change Successfully");
-      this.props.handleMessageBox(true);
+      toast.success(this.props.t("Change Successfully"));
     } else {
-      this.props.handleMessage("Change Failed");
-      this.props.handleMessageBox(true);
+      toast.error(this.props.t("Change Failed"));
     }
   };
   handleChangeLocation = async () => {
@@ -136,11 +135,9 @@ class SettingDialog extends React.Component<
     if (result === 1) {
       this.syncFromLocation();
     } else if (result === 2) {
-      this.props.handleMessage("Change Successfully");
-      this.props.handleMessageBox(true);
+      toast.success(this.props.t("Change Successfully"));
     } else {
-      this.props.handleMessage("Change Failed");
-      this.props.handleMessageBox(true);
+      toast.error(this.props.t("Change Failed"));
     }
     localStorage.setItem("storageLocation", path.filePaths[0]);
     document.getElementsByClassName(
@@ -157,8 +154,7 @@ class SettingDialog extends React.Component<
       this.state.isDisplayDark ? "no" : "yes"
     );
     if (isElectron) {
-      this.props.handleMessage("Try refresh or restart");
-      this.props.handleMessageBox(true);
+      toast(this.props.t("Try refresh or restart"));
     } else {
       window.location.reload();
     }
@@ -168,8 +164,7 @@ class SettingDialog extends React.Component<
     this.setState({ currentThemeIndex: index });
     OtherUtil.setReaderConfig("themeColor", name);
     if (isElectron) {
-      this.props.handleMessage("Try refresh or restart");
-      this.props.handleMessageBox(true);
+      toast(this.props.t("Try refresh or restart"));
     } else {
       window.location.reload();
     }

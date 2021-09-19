@@ -8,23 +8,20 @@ import RecordRecent from "../../../utils/readUtils/recordRecent";
 import ShelfUtil from "../../../utils/readUtils/shelfUtil";
 import SortUtil from "../../../utils/readUtils/sortUtil";
 import BookModel from "../../../model/Book";
-import { Trans } from "react-i18next";
 import { BookListProps, BookListState } from "./interface";
 import OtherUtil from "../../../utils/otherUtil";
 import localforage from "localforage";
-import DeletePopup from "../../../components/dialogs/deletePopup";
 import Empty from "../../emptyPage";
 import { Redirect, withRouter } from "react-router-dom";
 import ViewMode from "../../../components/viewMode";
 import { backup } from "../../../utils/syncUtils/backupUtil";
 import { isElectron } from "react-device-detect";
 import SelectBook from "../../../components/selectBook";
+import ShelfChooser from "../../../components/ShelfChooser";
 class BookList extends React.Component<BookListProps, BookListState> {
   constructor(props: BookListProps) {
     super(props);
     this.state = {
-      shelfIndex: 0,
-      isOpenDelete: false,
       favoriteBooks: Object.keys(AddFavorite.getAllFavorite()).length,
     };
   }
@@ -69,11 +66,6 @@ class BookList extends React.Component<BookListProps, BookListState> {
     });
     return shelfItems;
   }
-  //控制卡片模式和列表模式的切换
-  handleChange = (mode: string) => {
-    OtherUtil.setReaderConfig("viewMode", mode);
-    this.props.handleFetchList();
-  };
 
   //根据搜索图书index获取到搜索出的图书
   handleIndexFilter = (items: any, arr: number[]) => {
@@ -151,47 +143,7 @@ class BookList extends React.Component<BookListProps, BookListState> {
       );
     });
   };
-  //切换书架
-  handleShelfItem = (event: any) => {
-    let index = event.target.value.split(",")[1];
-    this.setState({ shelfIndex: index });
-    this.props.handleShelfIndex(index);
-    if (index > 0) {
-      this.props.handleMode("shelf");
-    } else {
-      this.props.handleMode("home");
-    }
-  };
-  handleDeleteShelf = () => {
-    if (this.state.shelfIndex < 1) return;
-    let shelfTitles = Object.keys(ShelfUtil.getShelf());
-    //获取当前书架名
-    let currentShelfTitle = shelfTitles[this.state.shelfIndex];
-    ShelfUtil.removeShelf(currentShelfTitle);
-    this.setState({ shelfIndex: 0 }, () => {
-      this.props.handleShelfIndex(0);
-      this.props.handleMode("shelf");
-    });
-  };
-  renderShelfList = () => {
-    let shelfList = ShelfUtil.getShelf();
-    let shelfTitle = Object.keys(shelfList);
-    return shelfTitle.map((item, index) => {
-      return (
-        <option
-          value={[item, index.toString()]}
-          key={index}
-          className="add-dialog-shelf-list-option"
-          selected={this.props.shelfIndex === index ? true : false}
-        >
-          {this.props.t(item === "New" ? "All Books" : item)}
-        </option>
-      );
-    });
-  };
-  handleDeletePopup = (isOpenDelete: boolean) => {
-    this.setState({ isOpenDelete });
-  };
+
   render() {
     if (
       (this.state.favoriteBooks === 0 && this.props.mode === "favorite") ||
@@ -213,41 +165,13 @@ class BookList extends React.Component<BookListProps, BookListState> {
         }
       });
     }
-    const deletePopupProps = {
-      mode: "shelf",
-      name: Object.keys(ShelfUtil.getShelf())[this.state.shelfIndex],
-      title: "Delete this shelf",
-      description: "This action will clear and remove this shelf",
-      handleDeletePopup: this.handleDeletePopup,
-      handleDeleteOpearion: this.handleDeleteShelf,
-    };
+
     OtherUtil.setReaderConfig("totalBooks", this.props.books.length.toString());
     return (
       <>
-        {this.state.isOpenDelete && <DeletePopup {...deletePopupProps} />}
         <ViewMode />
         <SelectBook />
-        <div className="booklist-shelf-container">
-          <p className="general-setting-title" style={{ display: "inline" }}>
-            <Trans>My Shelves</Trans>
-          </p>
-          <select
-            className="booklist-shelf-list"
-            onChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
-              this.handleShelfItem(event);
-            }}
-          >
-            {this.renderShelfList()}
-          </select>
-          {this.state.shelfIndex > 0 ? (
-            <span
-              className="icon-trash delete-shelf-icon"
-              onClick={() => {
-                this.handleDeletePopup(true);
-              }}
-            ></span>
-          ) : null}
-        </div>
+        <ShelfChooser />
         <div
           className="book-list-container-parent"
           style={

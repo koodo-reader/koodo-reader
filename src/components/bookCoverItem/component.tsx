@@ -12,7 +12,7 @@ import EmptyCover from "../emptyCover";
 import Parser from "html-react-parser";
 import { Trans } from "react-i18next";
 import BookUtil from "../../utils/fileUtils/bookUtil";
-
+import toast from "react-hot-toast";
 declare var window: any;
 
 class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
@@ -75,14 +75,12 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
   handleLoveBook = () => {
     AddFavorite.setFavorite(this.props.book.key);
     this.setState({ isFavorite: true });
-    this.props.handleMessage("Add Successfully");
-    this.props.handleMessageBox(true);
+    toast.success(this.props.t("Add Successfully"));
   };
   handleCancelLoveBook = () => {
     AddFavorite.clear(this.props.book.key);
     this.setState({ isFavorite: false });
-    this.props.handleMessage("Cancel Successfully");
-    this.props.handleMessageBox(true);
+    toast.success(this.props.t("Cancel Successfully"));
   };
   //控制按钮的弹出
   handleConfig = (mode: boolean) => {

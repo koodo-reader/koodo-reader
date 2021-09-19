@@ -4,7 +4,6 @@ import {
   handleFetchBooks,
   handleMode,
   handleShelfIndex,
-  handleDeleteDialog,
 } from "../../../store/actions";
 import { stateType } from "../../../store";
 import { withTranslation } from "react-i18next";
@@ -32,7 +31,6 @@ const actionCreator = {
   handleFetchList,
   handleMode,
   handleShelfIndex,
-  handleDeleteDialog,
   handleFetchBooks,
 };
 export default connect(

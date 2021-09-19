@@ -6,7 +6,6 @@ export interface ViewerProps {
   isReading: boolean;
   handleReadingState: (isReading: boolean) => void;
   handleReadingBook: (book: BookModel) => void;
-  handleMessage: (message: string) => void;
-  handleMessageBox: (isShow: boolean) => void;
+  t: (title: string) => string;
 }
 export interface ViewerState {}

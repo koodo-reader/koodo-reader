@@ -166,7 +166,6 @@
   "This action will clear and remove this shelf": "此操作會清空並刪除此書架",
   "Delete this tag": "刪除此標簽",
   "This action will clear and remove this tag": "此操作會清空並刪除此標簽",
-  "Scale": "頁面縮放",
   "Next Chapter": "下壹章",
   "Don't show footer": "不顯示頁腳",
   "Don't show header": "不顯示頁眉",
@@ -292,5 +291,6 @@
   "Hide navigation button": "不显示翻页按钮",
   "More": "显示笔记出处",
   "Survey": "用戶調查",
-  "Sync data from storage": "从存储位置同步数据"
+  "Sync data from storage": "从存储位置同步数据",
+  "Scale": "页面宽度"
 }

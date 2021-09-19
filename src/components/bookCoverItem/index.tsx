@@ -4,12 +4,11 @@ import {
   handleReadingBook,
   handleDragItem,
   handleDeleteDialog,
-  handleMessageBox,
-  handleMessage,
   handleSelectedBooks,
 } from "../../store/actions";
 import BookCoverItem from "./component";
 import { stateType } from "../../store";
+import { withTranslation } from "react-i18next";
 
 const mapStateToProps = (state: stateType) => {
   return {
@@ -24,10 +23,11 @@ const mapStateToProps = (state: stateType) => {
 const actionCreator = {
   handleReadingBook,
   handleActionDialog,
-  handleMessageBox,
-  handleMessage,
   handleDragItem,
   handleDeleteDialog,
   handleSelectedBooks,
 };
-export default connect(mapStateToProps, actionCreator)(BookCoverItem);
+export default connect(
+  mapStateToProps,
+  actionCreator
+)(withTranslation()(BookCoverItem));

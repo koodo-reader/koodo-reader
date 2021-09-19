@@ -20,6 +20,5 @@ export interface DeleteDialogProps extends RouteComponentProps<any> {
   handleFetchBookmarks: () => void;
   handleSelectedBooks: (selectedBooks: string[]) => void;
   handleFetchNotes: () => void;
-  handleMessageBox: (isShow: boolean) => void;
-  handleMessage: (message: string) => void;
+  t: (title: string) => string;
 }

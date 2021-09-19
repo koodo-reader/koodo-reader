@@ -3,6 +3,7 @@ import { TextToSpeechProps, TextToSpeechState } from "./interface";
 import { Trans } from "react-i18next";
 import { speedList } from "../../constants/dropdownList";
 import OtherUtil from "../../utils/otherUtil";
+import toast from "react-hot-toast";
 
 class TextToSpeech extends React.Component<
   TextToSpeechProps,
@@ -134,8 +135,7 @@ class TextToSpeech extends React.Component<
                   if (this.props.locations) {
                     this.handleChangeAudio();
                   } else {
-                    this.props.handleMessage("Audio is not ready yet");
-                    this.props.handleMessageBox(true);
+                    toast(this.props.t("Audio is not ready yet"));
                   }
                 }}
                 style={

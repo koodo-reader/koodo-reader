@@ -14,10 +14,10 @@
   z-index: 5;
 }
 .image-operation {
-  position: absolute;
-  left: calc(50% - 172px);
+  position: fixed;
+  left: calc(50% - 160px);
   bottom: 30px;
-  font-size: 30px;
+  font-size: 25px;
   z-index: 6;
 }
 .zoom-in-icon,

@@ -4,7 +4,7 @@ import copy from "copy-text-to-clipboard";
 import { Trans } from "react-i18next";
 import { TokenDialogProps, TokenDialogState } from "./interface";
 import OtherUtil from "../../../utils/otherUtil";
-
+import toast from "react-hot-toast";
 class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
   constructor(props: TokenDialogProps) {
     super(props);
@@ -20,8 +20,7 @@ class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
     ) as HTMLTextAreaElement).value;
     OtherUtil.setReaderConfig(`${this.props.driveName}_token`, token);
     this.props.handleTokenDialog(false);
-    this.props.handleMessage("Add Successfully");
-    this.props.handleMessageBox(true);
+    toast.success(this.props.t("Add Successfully"));
   };
   handleDavComfirm = () => {
     let url: string = (document.querySelector(
@@ -38,8 +37,7 @@ class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
       JSON.stringify({ url, username, password })
     );
     this.props.handleTokenDialog(false);
-    this.props.handleMessage("Add Successfully");
-    this.props.handleMessageBox(true);
+    toast.success(this.props.t("Add Successfully"));
   };
   render() {
     return (
@@ -101,8 +99,7 @@ class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
                 className="token-dialog-link-text"
                 onClick={() => {
                   copy(this.props.url);
-                  this.props.handleMessage("Copy Successfully");
-                  this.props.handleMessageBox(true);
+                  toast.success(this.props.t("Copy Successfully"));
                 }}
               >
                 <Trans>Copy Link</Trans>

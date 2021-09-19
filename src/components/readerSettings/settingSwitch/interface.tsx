@@ -3,12 +3,11 @@ export interface SettingSwitchProps {
   locations: any;
   isReading: boolean;
   htmlBook;
-  handleMessageBox: (isShow: boolean) => void;
-  handleMessage: (message: string) => void;
   renderFunc: () => void;
+  t: (title: string) => string;
 }
 export interface SettingSwitchState {
-  isUseBackground: boolean;
+  isHideBackground: boolean;
   isHideFooter: boolean;
   isBold: boolean;
   isShadow: boolean;

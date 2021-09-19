@@ -7,6 +7,7 @@ import FileSaver from "file-saver";
 import localforage from "localforage";
 import Parser from "html-react-parser";
 import ShelfUtil from "../../../utils/readUtils/shelfUtil";
+import toast from "react-hot-toast";
 class ActionDialog extends React.Component<ActionDialogProps> {
   handleDeleteBook = () => {
     this.props.handleReadingBook(this.props.currentBook);
@@ -26,8 +27,7 @@ class ActionDialog extends React.Component<ActionDialogProps> {
   handleRestoreBook = () => {
     AddTrash.clear(this.props.currentBook.key);
     this.props.handleActionDialog(false);
-    this.props.handleMessage("Restore Successfully");
-    this.props.handleMessageBox(true);
+    toast.success(this.props.t("Restore Successfully"));
     this.props.handleFetchBooks();
   };
   render() {
@@ -112,8 +112,7 @@ class ActionDialog extends React.Component<ActionDialogProps> {
               localforage
                 .getItem(this.props.currentBook.key)
                 .then((result: any) => {
-                  this.props.handleMessage("Export Successfully");
-                  this.props.handleMessageBox(true);
+                  toast.success(this.props.t("Export Successfully"));
                   FileSaver.saveAs(
                     new Blob([result]),
                     this.props.currentBook.name +
