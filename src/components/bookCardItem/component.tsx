@@ -34,7 +34,6 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
       const { ipcRenderer } = window.require("electron");
       filePath = ipcRenderer.sendSync("get-file-data");
     }
-    console.log(filePath, "filePath");
 
     if (
       OtherUtil.getReaderConfig("isOpenBook") === "yes" &&
