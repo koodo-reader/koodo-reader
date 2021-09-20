@@ -3159,17 +3159,23 @@
           if (window.require) {
             var fs = window.require("fs");
             var path = window.require("path");
-            var data = fs.readFileSync(
-              path.join(
-                localStorage.getItem("storageLocation")
-                  ? localStorage.getItem("storageLocation")
-                  : window
-                      .require("electron")
-                      .ipcRenderer.sendSync("storage-location", "ping"),
-                `book`,
-                file
-              )
+            var filePath = localStorage.getItem("pdfPath");
+            var libPath = path.join(
+              localStorage.getItem("storageLocation")
+                ? localStorage.getItem("storageLocation")
+                : window
+                    .require("electron")
+                    .ipcRenderer.sendSync("storage-location", "ping"),
+              `book`,
+              file
             );
+            var data;
+            if (fs.existsSync(filePath)) {
+              data = fs.readFileSync(filePath);
+            } else if (fs.existsSync(libPath)) {
+              data = fs.readFileSync(libPath);
+            }
+            localStorage.setItem("pdfPath", "");
             PDFViewerApplication.open(new Uint8Array(data).buffer);
           } else {
             (localforage || window.localforage)

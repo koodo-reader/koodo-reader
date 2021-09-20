@@ -7,6 +7,7 @@ import {
 import { connect } from "react-redux";
 import { stateType } from "../../store";
 import Reader from "./component";
+import { withTranslation } from "react-i18next";
 
 const mapStateToProps = (state: stateType) => {
   return {
@@ -21,4 +22,7 @@ const actionCreator = {
   handleFetchChapters,
   handleFetchBooks,
 };
-export default connect(mapStateToProps, actionCreator)(Reader);
+export default connect(
+  mapStateToProps,
+  actionCreator
+)(withTranslation()(Reader));

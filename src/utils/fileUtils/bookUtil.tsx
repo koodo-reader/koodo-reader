@@ -162,6 +162,7 @@ class BookUtil {
     if (book.description === "pdf") {
       if (isElectron) {
         const { ipcRenderer } = window.require("electron");
+        localStorage.setItem("pdfPath", book.path);
         if (OtherUtil.getReaderConfig("isAutoFullscreen") === "yes") {
           ipcRenderer.sendSync(
             "open-book",

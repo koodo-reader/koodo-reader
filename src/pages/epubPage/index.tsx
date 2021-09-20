@@ -7,6 +7,7 @@ import {
 } from "../../store/actions";
 import EpubReader from "./component";
 import { stateType } from "../../store";
+import { withTranslation } from "react-i18next";
 
 const mapStateToProps = (state: stateType) => {
   return {
@@ -21,4 +22,7 @@ const actionCreator = {
   handleReadingEpub,
   handleActionDialog,
 };
-export default connect(mapStateToProps, actionCreator)(EpubReader);
+export default connect(
+  mapStateToProps,
+  actionCreator
+)(withTranslation()(EpubReader));
