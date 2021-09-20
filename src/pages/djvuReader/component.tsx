@@ -8,6 +8,7 @@ import BookUtil from "../../utils/fileUtils/bookUtil";
 import "./viewer.css";
 import OtherUtil from "../../utils/otherUtil";
 import { isElectron } from "react-device-detect";
+import { toast } from "react-hot-toast";
 
 declare var window: any;
 
@@ -25,6 +26,10 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     localforage.getItem("books").then((result: any) => {
       let book = result[_.findIndex(result, { key })];
       BookUtil.fetchBook(key, true, book.path).then((result) => {
+        if (!result) {
+          toast.error(this.props.t("Book not exsits"));
+          return;
+        }
         this.props.handleReadingBook(book);
         this.handleDjvu(result as ArrayBuffer);
         this.props.handleReadingState(true);

@@ -1,6 +1,6 @@
 .sort-dialog-container {
   width: 180px;
-  height: 220px;
+  height: 263px;
   opacity: 1;
   position: absolute;
   left: 425px;
@@ -18,9 +18,8 @@
 .sort-by-order-list {
   font-size: 15px;
   font-weight: 500;
-  line-height: 18px;
   opacity: 1;
-  line-height: 24px;
+  line-height: 30px;
   width: calc(100% - 30px);
   display: flex;
   justify-content: space-between;

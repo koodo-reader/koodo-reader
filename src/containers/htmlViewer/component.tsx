@@ -24,6 +24,7 @@ import Lottie from "react-lottie";
 import animationSiri from "../../assets/lotties/siri.json";
 import _ from "underscore";
 import BackgroundWidget from "../../components/backgroundWidget";
+import toast from "react-hot-toast";
 
 declare var window: any;
 const siriOptions = {
@@ -52,6 +53,10 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     localforage.getItem("books").then((result: any) => {
       let book = result[_.findIndex(result, { key })];
       BookUtil.fetchBook(key, true, book.path).then((result) => {
+        if (!result) {
+          toast.error(this.props.t("Book not exsits"));
+          return;
+        }
         this.props.handleReadingBook(book);
         if (book.format === "MOBI" || book.format === "AZW3") {
           this.handleMobi(result as ArrayBuffer);
@@ -175,6 +180,11 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     let htmlParser = new HtmlParser(
       new DOMParser().parseFromString(docStr, "text/html")
     );
+    console.log({
+      doc: htmlParser.getAnchoredDoc(),
+      chapters: htmlParser.getContentList(),
+      subitems: [],
+    });
     this.props.handleHtmlBook({
       doc: htmlParser.getAnchoredDoc(),
       chapters: htmlParser.getContentList(),

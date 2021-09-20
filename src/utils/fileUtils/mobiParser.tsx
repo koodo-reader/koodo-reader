@@ -392,7 +392,9 @@ class MobiFile {
       var content = this.read_text();
       var bookDoc = domParser.parseFromString(content, "text/html")
         .documentElement;
-      let lines: any = Array.from(bookDoc.querySelectorAll("p,b,font,h3,h1"));
+      let lines: any = Array.from(
+        bookDoc.querySelectorAll("p,b,font,h3,h2,h1")
+      );
       let parseContent: any = [];
       for (let i = 0, len = lines.length; i < len - 1; i++) {
         lines[i].innerText &&

@@ -79,6 +79,10 @@ export const searchList = [
 ];
 export const readerSettingList = [
   {
+    title: "Text Indent",
+    propName: "isIndent",
+  },
+  {
     title: "Bold Font",
     propName: "isBold",
   },
@@ -116,6 +120,10 @@ export const readerSettingList = [
   },
 ];
 export const htmlSettingList = [
+  {
+    title: "Text Indent",
+    propName: "isIndent",
+  },
   {
     title: "Bold Font",
     propName: "isBold",
