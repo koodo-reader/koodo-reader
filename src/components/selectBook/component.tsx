@@ -21,7 +21,7 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
     return (
       <div
         className="booklist-manage-container"
-        style={this.props.isCollapsed ? { left: "80px" } : {}}
+        style={this.props.isCollapsed ? { left: "75px" } : {}}
       >
         <span
           onClick={() => {
@@ -30,7 +30,7 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
               this.props.handleSelectedBooks([]);
             }
           }}
-          className="general-setting-title"
+          className="book-manage-title"
         >
           <Trans>{this.props.isSelectBook ? "Cancel" : "Select"}</Trans>
         </span>
@@ -73,6 +73,10 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
                         }`
                     );
                   });
+                this.props.handleSelectBook(!this.props.isSelectBook);
+                if (this.props.isSelectBook) {
+                  this.props.handleSelectedBooks([]);
+                }
                 toast.success(this.props.t("Export Successfully"));
               }}
             >
