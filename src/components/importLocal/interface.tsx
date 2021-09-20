@@ -18,7 +18,6 @@ export interface ImportLocalProps extends RouteComponentProps<any> {
 export interface ImportLocalState {
   isOpenFile: boolean;
   isKindleSuccess: boolean;
-  isImportPath: boolean;
   tempFile: any;
   width: number;
 }

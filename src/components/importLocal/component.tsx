@@ -33,7 +33,6 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
       width: document.body.clientWidth,
       //是否解析出kindle格式的目录
       isKindleSuccess: true,
-      isImportPath: OtherUtil.getReaderConfig("isImportPath") === "yes",
 
       tempFile: null,
     };
@@ -183,7 +182,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
               throw new Error();
             } else {
               await this.handleAddBook(result as BookModel);
-              !this.state.isImportPath &&
+              OtherUtil.getReaderConfig("isImportPath") !== "yes" &&
                 BookUtil.addBook(
                   (result as BookModel).key,
                   e.target!.result as ArrayBuffer
@@ -210,7 +209,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                   file.path
                 );
                 await this.handleAddBook(result);
-                !this.state.isImportPath &&
+                OtherUtil.getReaderConfig("isImportPath") !== "yes" &&
                   BookUtil.addBook(result.key, file_content as ArrayBuffer);
                 this.setState({ isKindleSuccess: true });
                 resolve();
@@ -269,7 +268,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                   file.path
                 );
                 await this.handleAddBook(result);
-                !this.state.isImportPath &&
+                OtherUtil.getReaderConfig("isImportPath") !== "yes" &&
                   BookUtil.addBook(result.key, (event.target as any).result);
                 resolve();
               };
@@ -299,7 +298,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                 file.path
               );
               await this.handleAddBook(result);
-              !this.state.isImportPath &&
+              OtherUtil.getReaderConfig("isImportPath") !== "yes" &&
                 BookUtil.addBook(result.key, file_content as ArrayBuffer);
               resolve();
             };
@@ -312,7 +311,8 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
               throw new Error();
             } else {
               await this.handleAddBook(result as BookModel);
-              !this.state.isImportPath &&
+              (OtherUtil.getReaderConfig("isImportPath") !== "yes" ||
+                (result as BookModel).format !== "EPUB") &&
                 BookUtil.addBook(
                   (result as BookModel).key,
                   e.target!.result as ArrayBuffer

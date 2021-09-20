@@ -21,7 +21,6 @@ export const isTitle = (
       line.startsWith("寫在前面的話") ||
       line.startsWith("後記") ||
       line.startsWith("後序") ||
-      /^\d+$/.test(line) ||
       /(?=[MDCLXVI])M*(C[MD]|D?C{0,3})(X[CL]|L?X{0,3})(I[XV]|V?I{0,3})$/.test(
         line
       ) ||

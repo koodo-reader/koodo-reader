@@ -38,4 +38,4 @@ const actionCreator = {
 export default connect(
   mappropsToProps,
   actionCreator
-)(withTranslation()(ShelfChooser as any));
+)(withTranslation()(ShelfChooser));
