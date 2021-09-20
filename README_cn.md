@@ -5,8 +5,7 @@
 </div>
 
 <div align="center">
-
-  <img src="./assets/screenshots/ia_100000171.png" width="96px" height="96px"/>
+  <img src="https://i.loli.net/2021/07/30/ZKNMmz54Q3uqlrW.png" width="96px" height="96px"/>
 </div>
 
 <h1 align="center">
@@ -77,30 +76,29 @@ docker-compose up -d
 <div align="center">
   <b>列表模式</b>
   <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
-    <img src="./assets/screenshots/ia_100000174.png" >
+    <img src="https://i.loli.net/2021/08/08/JyNHfThMs184Um2.png" >
   </a>
   <b>封面模式</b>
   <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
-    <img src="./assets/screenshots/ia_100000175.png" >
+    <img src="https://i.loli.net/2021/08/08/76zkDEAobd4qsmR.png" >
   </a>
   <b>阅读菜单</b>
   <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
-    <img src="./assets/screenshots/ia_100000176.png" >
+    <img src="https://i.loli.net/2021/08/08/LeEN9gnOvFmfVWA.png" >
   </a>
   <b>备份和恢复</b>
   <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
-    <img src="./assets/screenshots/ia_100000177.png" >
+    <img src="https://i.loli.net/2021/08/08/aRIAiYT2dGJQhC1.png" >
   </a>
   <b>黑夜模式和主题色</b>
   <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
-    <img src="./assets/screenshots/ia_100000178.png" >
+    <img src="https://i.loli.net/2021/08/08/ynqUNpX93xZefdw.png" >
   </a>
   <b>笔记管理</b>
   <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
-    <img src="./assets/screenshots/ia_100000179.png" >
+    <img src="https://i.loli.net/2021/08/09/sARQBoefvGklHwC.png" >
   </a>
 </div>
-
 ## 运行源码
 
 请确保您电脑的 node 的版本大于 10.0.0，已配置好 yarn，git 的运行环境。
