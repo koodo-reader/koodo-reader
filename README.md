@@ -25,10 +25,10 @@
 
 <div align="center">
   <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
-    <img src="./assets/screenshots/ia_100000172.png" >
+    <img src="https://i.loli.net/2021/08/08/I37WPYFJcC1jltn.png" >
   </a>
   <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
-    <img src="./assets/screenshots/ia_100000173.png" >
+    <img src="https://i.loli.net/2021/08/08/G7WvUQFTrEpSCKg.png" >
   </a>
 </div>
 
