@@ -14,6 +14,7 @@ import {
   handleDeleteDialog,
   handleAddDialog,
 } from "../../store/actions";
+import { withTranslation } from "react-i18next";
 
 import "./manager.css";
 import { stateType } from "../../store";
@@ -57,4 +58,7 @@ const actionCreator = {
   handleNewDialog,
   handleBackupDialog,
 };
-export default connect(mapStateToProps, actionCreator)(withRouter(Manager));
+export default connect(
+  mapStateToProps,
+  actionCreator
+)(withTranslation()(withRouter(Manager)));

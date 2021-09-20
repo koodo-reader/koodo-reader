@@ -233,7 +233,10 @@
     },
     "win": {
       "target": [
-        "nsis"
+        "nsis",
+        "portable",
+        "zip",
+        "7z"
       ],
       "icon": "assets/icons/icon.ico",
       "artifactName": "${productName}-${version}-Win.${ext}",

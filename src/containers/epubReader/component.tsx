@@ -210,7 +210,9 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
             this.handleEnterReader("bottom");
             this.handleEnterReader("top");
           }}
-        ></div>
+        >
+          <span className="icon-grid reader-setting-icon"></span>
+        </div>
         <div
           className="left-panel"
           onMouseEnter={() => {
