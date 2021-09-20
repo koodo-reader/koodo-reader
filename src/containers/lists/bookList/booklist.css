@@ -57,13 +57,12 @@
 .booklist-manage-container {
   position: absolute;
   top: 85px;
-  left: 205px;
+  left: 195px;
   cursor: pointer;
 }
 .book-manage-title {
   font-size: 15px;
   font-weight: 500;
-  margin-top: 15px;
-  margin-bottom: 10px;
-  margin-left: 20px;
+  padding: 6px 10px;
+  border-radius: 5px;
 }

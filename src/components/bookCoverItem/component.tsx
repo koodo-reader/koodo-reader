@@ -87,6 +87,16 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
     this.setState({ isOpenConfig: mode });
   };
   handleJump = () => {
+    if (this.props.isSelectBook) {
+      this.props.handleSelectedBooks(
+        this.props.isSelected
+          ? this.props.selectedBooks.filter(
+              (item) => item !== this.props.book.key
+            )
+          : [...this.props.selectedBooks, this.props.book.key]
+      );
+      return;
+    }
     RecentBooks.setRecent(this.props.book.key);
 
     BookUtil.RedirectBook(this.props.book);
@@ -117,16 +127,6 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
               src={this.props.book.cover}
               alt=""
               onClick={() => {
-                if (this.props.isSelectBook) {
-                  this.props.handleSelectedBooks(
-                    this.props.isSelected
-                      ? this.props.selectedBooks.filter(
-                          (item) => item !== this.props.book.key
-                        )
-                      : [...this.props.selectedBooks, this.props.book.key]
-                  );
-                  return;
-                }
                 this.handleJump();
               }}
             />
@@ -134,16 +134,6 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
             <div
               className="book-cover-item-cover"
               onClick={() => {
-                if (this.props.isSelectBook) {
-                  this.props.handleSelectedBooks(
-                    this.props.isSelected
-                      ? this.props.selectedBooks.filter(
-                          (item) => item !== this.props.book.key
-                        )
-                      : [...this.props.selectedBooks, this.props.book.key]
-                  );
-                  return;
-                }
                 this.handleJump();
               }}
             >

@@ -3,6 +3,7 @@ import BookModel from "../../../model/Book";
 export interface AddDialogProps {
   handleAddDialog: (isShow: boolean) => void;
   handleActionDialog: (isShow: boolean) => void;
+  handleSelectBook: (isSelectBook: boolean) => void;
   currentBook: BookModel;
   selectedBooks: string[];
   isSelectBook: boolean;

@@ -28,9 +28,17 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
     )}&callback=handleCallback`;
     document.head.appendChild(script);
     (window as any).handleCallback = (res: any) => {
-      this.setState({
-        translatedText: res.trans_result ? res.trans_result[0].dst : "出错了",
-      });
+      if (res.error_code && res.error_code === 54003) {
+        this.setState({
+          translatedText: this.props.t("Reach frequency limit"),
+        });
+      } else {
+        this.setState({
+          translatedText: res.trans_result
+            ? res.trans_result[0].dst
+            : this.props.t("Error happens"),
+        });
+      }
     };
   };
   render() {

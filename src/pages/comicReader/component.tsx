@@ -11,6 +11,7 @@ import OtherUtil from "../../utils/otherUtil";
 import { mimetype } from "../../constants/mimetype";
 import RecordLocation from "../../utils/readUtils/recordLocation";
 import { isElectron } from "react-device-detect";
+import { toast } from "react-hot-toast";
 
 declare var window: any;
 
@@ -56,6 +57,10 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     localforage.getItem("books").then((result: any) => {
       let book = result[_.findIndex(result, { key })];
       BookUtil.fetchBook(key, true, book.path).then((result) => {
+        if (!result) {
+          toast.error(this.props.t("Book not exsits"));
+          return;
+        }
         this.props.handleReadingBook(book);
         if (book.format === "CBR") {
           this.handleCbr(result as ArrayBuffer);

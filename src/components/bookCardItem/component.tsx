@@ -89,6 +89,16 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
     this.setState({ isOpenConfig: mode });
   };
   handleJump = () => {
+    if (this.props.isSelectBook) {
+      this.props.handleSelectedBooks(
+        this.props.isSelected
+          ? this.props.selectedBooks.filter(
+              (item) => item !== this.props.book.key
+            )
+          : [...this.props.selectedBooks, this.props.book.key]
+      );
+      return;
+    }
     RecentBooks.setRecent(this.props.book.key);
     BookUtil.RedirectBook(this.props.book);
   };
@@ -118,16 +128,6 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
               src={this.props.book.cover}
               alt=""
               onClick={() => {
-                if (this.props.isSelectBook) {
-                  this.props.handleSelectedBooks(
-                    this.props.isSelected
-                      ? this.props.selectedBooks.filter(
-                          (item) => item !== this.props.book.key
-                        )
-                      : [...this.props.selectedBooks, this.props.book.key]
-                  );
-                  return;
-                }
                 this.handleJump();
               }}
             />
@@ -135,16 +135,6 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
             <div
               className="book-item-cover"
               onClick={() => {
-                if (this.props.isSelectBook) {
-                  this.props.handleSelectedBooks(
-                    this.props.isSelected
-                      ? this.props.selectedBooks.filter(
-                          (item) => item !== this.props.book.key
-                        )
-                      : [...this.props.selectedBooks, this.props.book.key]
-                  );
-                  return;
-                }
                 this.handleJump();
               }}
             >

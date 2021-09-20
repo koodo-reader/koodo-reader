@@ -10,7 +10,7 @@ import Lottie from "react-lottie";
 import "../../assets/styles/reset.css";
 import animationSiri from "../../assets/lotties/siri.json";
 import BookModel from "../../model/Book";
-import { Toaster } from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 
 const siriOptions = {
   loop: true,
@@ -36,6 +36,10 @@ class EpubReader extends React.Component<EpubReaderProps, EpubReaderState> {
     localforage.getItem("books").then((result: any) => {
       let book: BookModel = result[_.findIndex(result, { key })];
       BookUtil.fetchBook(key, false, book.path).then((result) => {
+        if (!result) {
+          toast.error(this.props.t("Book not exsits"));
+          return;
+        }
         this.props.handleReadingBook(book);
         this.props.handleReadingEpub(window.ePub(result, {}));
         this.props.handleReadingState(true);

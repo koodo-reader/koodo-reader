@@ -19,6 +19,7 @@ export interface ReaderState {
   isTouch: boolean;
   isPreventTrigger: boolean;
   readerMode: string;
+  hoverPanel: string;
   rendition: any;
   time: number;
   scale: string;

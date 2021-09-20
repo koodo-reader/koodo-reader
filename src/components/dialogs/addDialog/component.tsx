@@ -48,6 +48,10 @@ class AddDialog extends Component<AddDialogProps, AddDialogState> {
       this.props.selectedBooks.forEach((item) => {
         ShelfUtil.setShelf(shelfTitle, item);
       });
+      this.props.handleSelectBook(!this.props.isSelectBook);
+      if (this.props.isSelectBook) {
+        this.props.handleSelectedBooks([]);
+      }
     } else {
       ShelfUtil.setShelf(shelfTitle, this.props.currentBook.key);
     }

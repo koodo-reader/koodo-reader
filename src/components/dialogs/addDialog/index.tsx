@@ -3,7 +3,7 @@ import {
   handleAddDialog,
   handleActionDialog,
   handleMode,
-  handleShelfIndex,
+  handleShelfIndex,handleSelectBook,
   handleSelectedBooks,
 } from "../../../store/actions";
 import { stateType } from "../../../store";
@@ -24,7 +24,7 @@ const mapStateToProps = (state: stateType) => {
 };
 const actionCreator = {
   handleAddDialog,
-  handleActionDialog,
+  handleActionDialog,handleSelectBook,
   handleMode,
   handleShelfIndex,
   handleSelectedBooks,

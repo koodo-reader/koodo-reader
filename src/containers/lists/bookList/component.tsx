@@ -124,6 +124,7 @@ class BookList extends React.Component<BookListProps, BookListState> {
           {...{
             key: item.key,
             book: item,
+            isSelected: this.props.selectedBooks.indexOf(item.key) > -1,
           }}
         />
       ) : this.props.viewMode === "card" ? (

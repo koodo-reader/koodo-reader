@@ -3,6 +3,7 @@
   justify-content: space-between;
   margin: 18px;
   margin-right: 25px;
+  position: relative;
 }
 .book-item-list-cover {
   width: 57px;

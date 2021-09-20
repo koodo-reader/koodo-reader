@@ -66,23 +66,27 @@ class BookUtil {
     bookPath: string = ""
   ) {
     if (isElectron) {
-      return new Promise<File | ArrayBuffer>((resolve, reject) => {
+      return new Promise<File | ArrayBuffer | boolean>((resolve, reject) => {
         var fs = window.require("fs");
         var path = window.require("path");
-
-        var data = fs.readFileSync(
-          bookPath && fs.existsSync(bookPath)
-            ? bookPath
-            : path.join(
-                localStorage.getItem("storageLocation")
-                  ? localStorage.getItem("storageLocation")
-                  : window
-                      .require("electron")
-                      .ipcRenderer.sendSync("storage-location", "ping"),
-                `book`,
-                key
-              )
+        let _bookPath = path.join(
+          localStorage.getItem("storageLocation")
+            ? localStorage.getItem("storageLocation")
+            : window
+                .require("electron")
+                .ipcRenderer.sendSync("storage-location", "ping"),
+          `book`,
+          key
         );
+        var data;
+        if (bookPath && fs.existsSync(bookPath)) {
+          data = fs.readFileSync(bookPath);
+        } else if (fs.existsSync(_bookPath)) {
+          data = fs.readFileSync(_bookPath);
+        } else {
+          resolve(false);
+        }
+
         let blobTemp = new Blob([data]);
         let fileTemp = new File([blobTemp], "data", {
           lastModified: new Date().getTime(),

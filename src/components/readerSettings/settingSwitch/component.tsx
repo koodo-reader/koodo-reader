@@ -17,6 +17,7 @@ class SettingSwitch extends React.Component<
     super(props);
     this.state = {
       isBold: OtherUtil.getReaderConfig("isBold") === "yes",
+      isIndent: OtherUtil.getReaderConfig("isIndent") === "yes",
       isUnderline: OtherUtil.getReaderConfig("isUnderline") === "yes",
       isShadow: OtherUtil.getReaderConfig("isShadow") === "yes",
       isItalic: OtherUtil.getReaderConfig("isItalic") === "yes",
@@ -63,7 +64,7 @@ class SettingSwitch extends React.Component<
     return (
       <>
         {Object.keys(this.props.currentEpub).length !== 0 && <TextToSpeech />}
-        {(this.props.currentEpub.rendition
+        {(this.props.currentEpub.archived
           ? readerSettingList
           : htmlSettingList
         ).map((item) => (
@@ -78,6 +79,9 @@ class SettingSwitch extends React.Component<
                 switch (item.propName) {
                   case "isBold":
                     this._handleChange("isBold");
+                    break;
+                  case "isIndent":
+                    this._handleChange("isIndent");
                     break;
                   case "isItalic":
                     this._handleChange("isItalic");

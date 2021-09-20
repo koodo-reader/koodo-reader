@@ -24,7 +24,7 @@
   cursor: pointer;
   display: flex;
   align-items: center;
-  margin: 8px 15px;
+  padding: 4px 15px;
 }
 
 .action-name {

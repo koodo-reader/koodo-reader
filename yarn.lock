@@ -1730,6 +1730,14 @@
     "@svgr/plugin-svgo" "^5.5.0"
     loader-utils "^2.0.0"
 
+"@szhsin/react-menu@^2.0.1":
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@szhsin/react-menu/-/react-menu-2.0.1.tgz#0b6cdc5337f7da921d02df6350746138957227b5"
+  integrity sha512-pKwvRe22ByxBXwCjalaU8KI+HdVZc1YTh2oj44p+EfxsPeV7wjfydjmhqBJAEFJFiQqGkdo7ACwJVRmoaUycFw==
+  dependencies:
+    prop-types "^15.7.2"
+    react-transition-state "^0.3.0"
+
 "@szmarczak/http-timer@^1.1.2":
   version "1.1.2"
   resolved "https://registry.npm.taobao.org/@szmarczak/http-timer/download/@szmarczak/http-timer-1.1.2.tgz#b1665e2c461a2cd92f4c1bbf50d5454de0d4b421"
@@ -6091,10 +6099,10 @@ follow-redirects@^1.0.0, follow-redirects@^1.10.0:
   resolved "https://registry.nlark.com/follow-redirects/download/follow-redirects-1.14.1.tgz?cache=0&sync_timestamp=1620555246888&other_urls=https%3A%2F%2Fregistry.nlark.com%2Ffollow-redirects%2Fdownload%2Ffollow-redirects-1.14.1.tgz#d9114ded0a1cfdd334e164e6662ad02bfd91ff43"
   integrity sha1-2RFN7Qoc/dM04WTmZirQK/2R/0M=
 
-font-list@1.2.15:
-  version "1.2.15"
-  resolved "https://registry.nlark.com/font-list/download/font-list-1.2.15.tgz#dc5fa7038fa77aa60ed7faf66522aed872d9f395"
-  integrity sha1-3F+nA4+neqYO1/r2ZSKu2HLZ85U=
+font-list@^1.3.1:
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/font-list/-/font-list-1.3.1.tgz#b6527e94045601b92971572220ce691714452aed"
+  integrity sha512-/TvQbGLIdyfH4SBZkDwWlX0JNDVH98Q29SkgMJlIdmc4ObKu+RnB/B493lskB2Z8XZ2FZ532QOem4/PDgtoXUQ==
 
 for-in@^1.0.2:
   version "1.0.2"
@@ -11176,6 +11184,11 @@ react-tippy@^1.4.0:
   integrity sha1-6Ki0CF7JheXJT+EokYtzO1iKFGU=
   dependencies:
     popper.js "^1.11.1"
+
+react-transition-state@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/react-transition-state/-/react-transition-state-0.3.0.tgz#31dcf3cc95dc6eab4243fbdbdf665de2e4174438"
+  integrity sha512-SwfZCOk9nIPCAz/9wC9t/eS5ut7pkSrQoJGJ+xPPbXLQP52ySLjf5fvBX6ySKk8Al0qXM8MM1NU152CFfpFXaQ==
 
 react@^17.0.2:
   version "17.0.2"

@@ -65,6 +65,7 @@
   justify-content: center;
   align-items: center;
   opacity: 0.5;
+  border-radius: 10px;
 }
 
 .backup-page-list-icon {
@@ -137,13 +138,15 @@
   margin-top: 10px;
 }
 .backup-page-next {
-  font-size: 18px;
+  font-size: 16px;
   line-height: 20px;
   opacity: 1;
   position: absolute;
-  bottom: 21px;
-  right: 37px;
+  bottom: 11px;
+  right: 27px;
   cursor: pointer;
+  padding: 10px;
+  border-radius: 5px;
 }
 .backup-page-previous {
   font-size: 18px;

@@ -128,6 +128,14 @@ textarea::-ms-input-placeholder,
 .setting-icon-container:hover,
 .animation-mask,
 .animation-mask-local,
+.sort-by-category-list:hover,
+.sort-by-order-list:hover,
+.action-dialog-add:hover,
+.action-dialog-delete:hover,
+.action-dialog-edit:hover,
+.backup-page-next:hover,
+.backup-page-list-item:hover,
+.book-manage-title:hover,
 .copy-option:hover {
   background-color: rgba(75, 75, 75, 0.035);
 }
