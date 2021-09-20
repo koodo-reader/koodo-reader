@@ -6,7 +6,7 @@
 
 <div align="center">
 
-  <img src="https://i.loli.net/2021/07/30/ZKNMmz54Q3uqlrW.png" width="96px" height="96px"/>
+  <img src="./assets/screenshots/ia_100000171.png" width="96px" height="96px"/>
 </div>
 
 <h1 align="center">
@@ -27,10 +27,10 @@
 
 <div align="center">
   <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
-    <img src="https://i.loli.net/2021/08/08/I37WPYFJcC1jltn.png" >
+    <img src="./assets/screenshots/ia_100000172.png" >
   </a>
   <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
-    <img src="https://i.loli.net/2021/08/08/G7WvUQFTrEpSCKg.png" >
+    <img src="./assets/screenshots/ia_100000173.png" >
   </a>
 </div>
 
@@ -77,27 +77,27 @@ docker-compose up -d
 <div align="center">
   <b>列表模式</b>
   <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
-    <img src="https://i.loli.net/2021/08/08/JyNHfThMs184Um2.png" >
+    <img src="./assets/screenshots/ia_100000174.png" >
   </a>
   <b>封面模式</b>
   <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
-    <img src="https://i.loli.net/2021/08/08/76zkDEAobd4qsmR.png" >
+    <img src="./assets/screenshots/ia_100000175.png" >
   </a>
   <b>阅读菜单</b>
   <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
-    <img src="https://i.loli.net/2021/08/08/LeEN9gnOvFmfVWA.png" >
+    <img src="./assets/screenshots/ia_100000176.png" >
   </a>
   <b>备份和恢复</b>
   <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
-    <img src="https://i.loli.net/2021/08/08/aRIAiYT2dGJQhC1.png" >
+    <img src="./assets/screenshots/ia_100000177.png" >
   </a>
   <b>黑夜模式和主题色</b>
   <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
-    <img src="https://i.loli.net/2021/08/08/ynqUNpX93xZefdw.png" >
+    <img src="./assets/screenshots/ia_100000178.png" >
   </a>
   <b>笔记管理</b>
   <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
-    <img src="https://i.loli.net/2021/08/09/sARQBoefvGklHwC.png" >
+    <img src="./assets/screenshots/ia_100000179.png" >
   </a>
 </div>
 
