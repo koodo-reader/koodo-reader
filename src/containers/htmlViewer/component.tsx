@@ -180,11 +180,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     let htmlParser = new HtmlParser(
       new DOMParser().parseFromString(docStr, "text/html")
     );
-    console.log({
-      doc: htmlParser.getAnchoredDoc(),
-      chapters: htmlParser.getContentList(),
-      subitems: [],
-    });
+
     this.props.handleHtmlBook({
       doc: htmlParser.getAnchoredDoc(),
       chapters: htmlParser.getContentList(),

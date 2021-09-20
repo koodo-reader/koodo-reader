@@ -94,7 +94,7 @@ class BookList extends React.Component<BookListProps, BookListState> {
             book: item,
           }}
         />
-      ) : this.props.viewMode === "list" ? (
+      ) : this.props.viewMode === "card" ? (
         <BookCardItem
           key={item.key}
           book={item}
