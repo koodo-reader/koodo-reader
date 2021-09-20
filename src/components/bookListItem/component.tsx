@@ -69,6 +69,16 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
     this.props.handleFetchBooks();
   };
   handleJump = () => {
+    if (this.props.isSelectBook) {
+      this.props.handleSelectedBooks(
+        this.props.isSelected
+          ? this.props.selectedBooks.filter(
+              (item) => item !== this.props.book.key
+            )
+          : [...this.props.selectedBooks, this.props.book.key]
+      );
+      return;
+    }
     RecentBooks.setRecent(this.props.book.key);
     BookUtil.RedirectBook(this.props.book);
   };
@@ -108,6 +118,12 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
             />
           </div>
         )}
+        {this.props.isSelectBook && this.props.isSelected ? (
+          <span
+            className="icon-message book-selected-icon"
+            style={{ left: "35px", bottom: "5px" }}
+          ></span>
+        ) : null}
         <p
           className="book-item-list-title"
           onClick={() => {

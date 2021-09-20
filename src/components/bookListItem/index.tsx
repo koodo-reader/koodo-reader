@@ -19,6 +19,8 @@ const mapStateToProps = (state: stateType) => {
     currentBook: state.book.currentBook,
     dragItem: state.book.dragItem,
     mode: state.sidebar.mode,
+    isSelectBook: state.manager.isSelectBook,
+    selectedBooks: state.manager.selectedBooks,
   };
 };
 const actionCreator = {

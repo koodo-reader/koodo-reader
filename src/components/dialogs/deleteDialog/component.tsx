@@ -41,6 +41,15 @@ class DeleteDialog extends React.Component<DeleteDialogProps> {
   handleComfirm = async () => {
     //从列表删除和从图书库删除判断
     if (this.props.mode === "shelf") {
+      if (this.props.isSelectBook) {
+        this.props.selectedBooks.forEach((item) => {
+          ShelfUtil.clearShelf(this.props.shelfIndex, item);
+        });
+        this.props.handleSelectedBooks([]);
+        this.props.handleFetchBooks(false);
+        this.props.handleSelectBook(!this.props.isSelectBook);
+        return;
+      }
       ShelfUtil.clearShelf(this.props.shelfIndex, this.props.currentBook.key);
     } else if (this.props.mode === "trash") {
       let keyArr = AddTrash.getAllTrash();
@@ -63,6 +72,7 @@ class DeleteDialog extends React.Component<DeleteDialogProps> {
       });
       this.props.handleSelectedBooks([]);
       this.props.handleFetchBooks(false);
+      this.props.handleSelectBook(!this.props.isSelectBook);
     } else {
       AddTrash.setTrash(this.props.currentBook.key);
       //从喜爱的图书中删除

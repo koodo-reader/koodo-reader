@@ -57,7 +57,7 @@ class SortDialog extends React.Component<SortDialogProps, SortDialogState> {
         onMouseEnter={() => {
           this.props.handleSortDisplay(true);
         }}
-        style={this.state.isNote ? { height: "120px" } : {}}
+        style={this.state.isNote ? { height: "150px" } : {}}
       >
         {this.state.isNote ? (
           <ul className="sort-by-category">

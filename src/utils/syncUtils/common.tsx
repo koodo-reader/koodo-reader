@@ -168,7 +168,7 @@ export const zipBook = (zip: any, books: BookModel[]) => {
     try {
       let results = await Promise.all(data);
       for (let i = 0; i < books.length; i++) {
-        bookZip.file(`${books[i].key}`, results[i]);
+        results[i] && bookZip.file(`${books[i].key}`, results[i]);
       }
       resolve(true);
     } catch (error) {

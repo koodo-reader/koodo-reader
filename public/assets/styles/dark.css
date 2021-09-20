@@ -110,7 +110,15 @@ textarea::-ms-input-placeholder,
 .setting-icon-container:hover,
 .animation-mask,
 .animation-mask-local,
-.copy-option:hover {
+.sort-by-category-list:hover,
+.sort-by-order-list:hover,
+.action-dialog-add:hover,
+.action-dialog-delete:hover,
+.action-dialog-edit:hover,
+.backup-page-next:hover,
+.book-manage-title:hover,
+.backup-page-list-item:hover,
+Z .copy-option:hover {
   background-color: rgba(235, 235, 235, 0.035);
 }
 .drag-background {

@@ -21,6 +21,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         OtherUtil.getReaderConfig("isSettingLocked") === "yes" ? true : false,
       isOpenTopPanel: false,
       isOpenBottomPanel: false,
+      hoverPanel: "",
       isOpenLeftPanel:
         OtherUtil.getReaderConfig("isNavLocked") === "yes" ? true : false,
       rendition: null,
@@ -125,14 +126,21 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
               this.state.isOpenLeftPanel ||
               this.state.isPreventTrigger
             ) {
+              this.setState({ hoverPanel: "left" });
               return;
             }
             this.handleEnterReader("left");
           }}
+          onMouseLeave={() => {
+            this.setState({ hoverPanel: "" });
+          }}
+          style={this.state.hoverPanel === "left" ? { opacity: 0.5 } : {}}
           onClick={() => {
             this.handleEnterReader("left");
           }}
-        ></div>
+        >
+          <span className="icon-grid panel-icon"></span>
+        </div>
         <div
           className="right-panel"
           onMouseEnter={() => {
@@ -141,14 +149,21 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
               this.state.isOpenRightPanel ||
               this.state.isPreventTrigger
             ) {
+              this.setState({ hoverPanel: "right" });
               return;
             }
             this.handleEnterReader("right");
           }}
+          onMouseLeave={() => {
+            this.setState({ hoverPanel: "" });
+          }}
+          style={this.state.hoverPanel === "right" ? { opacity: 0.5 } : {}}
           onClick={() => {
             this.handleEnterReader("right");
           }}
-        ></div>
+        >
+          <span className="icon-grid panel-icon"></span>
+        </div>
         <div
           className="top-panel"
           onMouseEnter={() => {
@@ -157,14 +172,21 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
               this.state.isOpenTopPanel ||
               this.state.isPreventTrigger
             ) {
+              this.setState({ hoverPanel: "top" });
               return;
             }
             this.handleEnterReader("top");
           }}
+          style={this.state.hoverPanel === "top" ? { opacity: 0.5 } : {}}
+          onMouseLeave={() => {
+            this.setState({ hoverPanel: "" });
+          }}
           onClick={() => {
             this.handleEnterReader("top");
           }}
-        ></div>
+        >
+          <span className="icon-grid panel-icon"></span>
+        </div>
         <div
           className="bottom-panel"
           onMouseEnter={() => {
@@ -173,14 +195,21 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
               this.state.isOpenBottomPanel ||
               this.state.isPreventTrigger
             ) {
+              this.setState({ hoverPanel: "bottom" });
               return;
             }
             this.handleEnterReader("bottom");
           }}
+          style={this.state.hoverPanel === "bottom" ? { opacity: 0.5 } : {}}
+          onMouseLeave={() => {
+            this.setState({ hoverPanel: "" });
+          }}
           onClick={() => {
             this.handleEnterReader("bottom");
           }}
-        ></div>
+        >
+          <span className="icon-grid panel-icon"></span>
+        </div>
         <Viewer {...renditionProps} />
         <div
           className="setting-panel-container"

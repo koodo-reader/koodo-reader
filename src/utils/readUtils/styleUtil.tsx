@@ -103,6 +103,8 @@ class styleUtil {
         OtherUtil.getReaderConfig("isShadow") === "yes"
           ? "2px 2px 2px #cccccc !important"
           : ""
+      };text-indent: ${
+        OtherUtil.getReaderConfig("isIndent") === "yes" ? "2rem" : ""
       };text-decoration: ${
         OtherUtil.getReaderConfig("isUnderline") === "yes"
           ? "underline !important"
@@ -144,6 +146,11 @@ class styleUtil {
           "font-weight": `${
             OtherUtil.getReaderConfig("isBold") === "yes"
               ? "bold !important"
+              : ""
+          }`,
+          "text-indent": `${
+            OtherUtil.getReaderConfig("isIndent") === "yes"
+              ? "2rem"
               : ""
           }`,
           "font-style": `${
