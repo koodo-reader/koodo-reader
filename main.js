@@ -45,7 +45,7 @@ app.on("ready", () => {
   mainWin = new BrowserWindow(option);
 
   if (!isDev) {
-    // Menu.setApplicationMenu(null);
+    Menu.setApplicationMenu(null);
   }
 
   const urlLocation = isDev
