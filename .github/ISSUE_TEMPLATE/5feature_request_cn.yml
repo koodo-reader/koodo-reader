@@ -5,6 +5,7 @@ body:
   - type: textarea
     id: detail
     attributes:
-      label: test
+      label: 细节描述
+      placeholder: 关于这个需求的细节描述
     validations:
       required: true
