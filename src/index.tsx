@@ -16,13 +16,6 @@ import ga from "./utils/analytics";
 let coverLoading: any = document.querySelector(".loading-cover");
 coverLoading && coverLoading.parentNode.removeChild(coverLoading);
 
-ReactDOM.render(
-  <Provider store={store}>
-    <Router />
-  </Provider>,
-  document.getElementById("root")
-);
-
 if (isElectron && OtherUtil.getReaderConfig("isDisableAnalytics") !== "yes") {
   ga.event("Client", "show", {
     evLabel: "startup",
