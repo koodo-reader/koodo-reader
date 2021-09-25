@@ -2,7 +2,6 @@
   "compilerOptions": {
     "target": "es5",
     "lib": ["dom", "dom.iterable", "esnext"],
-    "jsx": "react-jsx",
     "allowJs": true,
     "skipLibCheck": true,
     "downlevelIteration": true,
@@ -15,6 +14,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
+    "jsx": "react",
     "noImplicitAny": false,
     "noFallthroughCasesInSwitch": true
   },
