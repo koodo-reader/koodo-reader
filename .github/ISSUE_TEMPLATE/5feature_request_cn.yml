@@ -1,7 +1,15 @@
-name: Feature Request1
+name: 功能建议
 description: 我希望 Koodo Reader 增加这个功能
 labels: "feature request"
 body:
+  - type: textarea
+    id: introduction
+    attributes:
+      label: 简单介绍
+      placeholder: 关于这个需求的简单介绍
+    validations:
+      required: true
+
   - type: textarea
     id: detail
     attributes:
