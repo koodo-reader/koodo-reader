@@ -1,4 +1,4 @@
-name: Bug Report1
+name: 问题反馈
 description: 我在使用 Koodo Reader 时遇到了问题
 labels: "bug"
 body:
@@ -8,7 +8,7 @@ body:
       label: 我已经安装了最新开发版的 Koodo Reader，这个问题仍然存在
       description: https://github.com/troyeguo/koodo-reader/releases/latest
       options:
-        - label: "是"
+        - label: "Yes"
     validations:
       required: true
 
@@ -17,7 +17,7 @@ body:
     attributes:
       label: 我已经搜索了已有的 Issues列表，没有找到类似的issue
       options:
-        - label: "是"
+        - label: "Yes"
     validations:
       required: true
 
@@ -27,7 +27,7 @@ body:
       label: 我已经阅读了 Koodo Reader 的帮助文档，仍然无法解决
       description: https://www.notion.so/troyeguo/e9c4e5755d564b0db6340eeba6d9ece9?v=7c8fcbed9adf4592ada95cfd593868c9
       options:
-        - label: "是"
+        - label: "Yes"
     validations:
       required: true
 
