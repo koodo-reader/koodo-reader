@@ -14,7 +14,6 @@
   "repository": "https://github.com/troyeguo/koodo-reader",
   "private": false,
   "dependencies": {
-    "@szhsin/react-menu": "^2.0.1",
     "adm-zip": "^0.5.2",
     "axios": "^0.19.2",
     "chardet": "^1.3.0",
@@ -35,6 +34,7 @@
   },
   "devDependencies": {
     "@iarna/rtf-to-html": "^1.1.0",
+    "@szhsin/react-menu": "^2.0.1",
     "@types/file-saver": "^2.0.1",
     "@types/marked": "^2.0.2",
     "@types/md5": "^2.2.0",
@@ -50,7 +50,7 @@
     "classnames": "^2.2.6",
     "concurrently": "^5.0.1",
     "cross-env": "^6.0.3",
-    "electron": "11.4.1",
+    "electron": "^15.0.0",
     "electron-builder": "^22.10.5",
     "file-saver": "^2.0.2",
     "hard-source-webpack-plugin": "^0.13.1",
@@ -117,86 +117,103 @@
     "fileAssociations": [
       {
         "ext": "epub",
+        "icon": "assets/icons/book",
         "role": "Viewer",
         "mimeType": "application/epub+zip"
       },
       {
         "ext": "pdf",
+        "icon": "assets/icons/book",
         "role": "Viewer",
         "mimeType": "application/pdf"
       },
       {
         "ext": "mobi",
+        "icon": "assets/icons/book",
         "role": "Viewer",
         "mimeType": "application/x-mobipocket-ebook"
       },
       {
         "ext": "azw3",
+        "icon": "assets/icons/book",
         "role": "Viewer",
         "mimeType": "application/vnd.amazon.ebook"
       },
       {
         "ext": "txt",
+        "icon": "assets/icons/book",
         "role": "Viewer",
         "mimeType": "text/plain"
       },
       {
         "ext": "djvu",
+        "icon": "assets/icons/book",
         "role": "Viewer",
         "mimeType": "image/vnd.djvu"
       },
       {
         "ext": "cbz",
+        "icon": "assets/icons/book",
         "role": "Viewer",
         "mimeType": "application/x-cbz"
       },
       {
         "ext": "cbr",
+        "icon": "assets/icons/book",
         "role": "Viewer",
         "mimeType": "application/x-cbr"
       },
       {
         "ext": "cbt",
+        "icon": "assets/icons/book",
         "role": "Viewer",
         "mimeType": "application/x-cbt"
       },
       {
         "ext": "md",
+        "icon": "assets/icons/book",
         "role": "Viewer",
         "mimeType": "text/markdown"
       },
       {
         "ext": "docx",
+        "icon": "assets/icons/book",
         "role": "Viewer",
         "mimeType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
       },
       {
         "ext": "rtf",
+        "icon": "assets/icons/book",
         "role": "Viewer",
         "mimeType": "application/rtf"
       },
       {
         "ext": "fb2",
+        "icon": "assets/icons/book",
         "role": "Viewer",
         "mimeType": "application/x-fictionbook+xml"
       },
       {
         "ext": "html",
+        "icon": "assets/icons/book",
         "role": "Viewer",
         "mimeType": "text/html"
       },
       {
         "ext": "htm",
+        "icon": "assets/icons/book",
         "role": "Viewer",
         "mimeType": "text/html"
       },
       {
         "ext": "xhtml",
+        "icon": "assets/icons/book",
         "role": "Viewer",
         "mimeType": "application/xhtml+xml"
       },
       {
         "ext": "xml",
+        "icon": "assets/icons/book",
         "role": "Viewer",
         "mimeType": "application/xhtml+xml"
       }
@@ -266,8 +283,9 @@
     },
     "nsis": {
       "artifactName": "${productName}-${version}.${ext}",
-      "oneClick": true,
-      "deleteAppDataOnUninstall": true
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "deleteAppDataOnUninstall": false
     },
     "snap": {
       "publish": [

@@ -49,11 +49,10 @@ export const moveData = (
   });
   const fs = window.require("fs");
   const path = window.require("path");
-  const { remote, app } = window.require("electron");
   const AdmZip = window.require("adm-zip");
 
-  const configDir = (app || remote.app).getPath("userData");
-  const dirPath = path.join(configDir, "uploads");
+  const { ipcRenderer } = window.require("electron");
+  const dirPath = ipcRenderer.sendSync("user-data", "ping");
   const dataPath = localStorage.getItem("storageLocation")
     ? localStorage.getItem("storageLocation")
     : window

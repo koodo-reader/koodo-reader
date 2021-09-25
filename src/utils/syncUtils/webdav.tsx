@@ -47,9 +47,8 @@ class WebdavUtil {
       const fs = window.require("fs");
       const path = window.require("path");
       const { createClient } = window.require("webdav");
-      const { remote, app } = window.require("electron");
-      const configDir = (app || remote.app).getPath("userData");
-      const dirPath = path.join(configDir, "uploads");
+      const { ipcRenderer } = window.require("electron");
+      const dirPath = ipcRenderer.sendSync("user-data", "ping");
       const request = window.require("request");
       let { url, username, password } = JSON.parse(
         OtherUtil.getReaderConfig("webdav_token") || ""

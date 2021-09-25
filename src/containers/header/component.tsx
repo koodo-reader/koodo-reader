@@ -29,9 +29,8 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       const fs = window.require("fs");
       const path = window.require("path");
       const request = window.require("request");
-      const { remote, app } = window.require("electron");
-      const configDir = (app || remote.app).getPath("userData");
-      const dirPath = path.join(configDir, "uploads");
+      const { ipcRenderer } = window.require("electron");
+      const dirPath = ipcRenderer.sendSync("user-data", "ping");
       if (!fs.existsSync(dirPath)) {
         fs.mkdirSync(dirPath);
         fs.mkdirSync(path.join(dirPath, "data"));

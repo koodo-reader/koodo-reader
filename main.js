@@ -1,8 +1,8 @@
-const { app, BrowserWindow, Menu, remote, ipcMain } = require("electron");
+const { app, BrowserWindow, Menu, ipcMain } = require("electron");
 const path = require("path");
 const isDev = require("electron-is-dev");
 const fs = require("fs");
-const configDir = (app || remote.app).getPath("userData");
+const configDir = app.getPath("userData");
 const dirPath = path.join(configDir, "uploads");
 let mainWin;
 let readerWindow;
@@ -35,8 +35,8 @@ app.on("ready", () => {
     webPreferences: {
       webSecurity: false,
       nodeIntegration: true,
+      contextIsolation: false,
       nativeWindowOpen: true,
-      enableRemoteModule: true,
       nodeIntegrationInSubFrames: true,
       allowRunningInsecureContent: true,
     },
@@ -65,8 +65,8 @@ app.on("ready", () => {
       webPreferences: {
         webSecurity: false,
         nodeIntegration: true,
+        contextIsolation: false,
         nativeWindowOpen: true,
-        enableRemoteModule: true,
         nodeIntegrationInSubFrames: true,
         allowRunningInsecureContent: true,
       },
@@ -117,11 +117,18 @@ app.on("ready", () => {
     readerWindow.on("close", () => {
       readerWindow && readerWindow.destroy();
     });
+
     event.returnValue = "success";
   });
 
   ipcMain.on("storage-location", (event, arg) => {
     event.returnValue = path.join(dirPath, "data");
+  });
+  ipcMain.on("user-data", (event, arg) => {
+    event.returnValue = dirPath;
+  });
+  ipcMain.on("reader-bounds", (event, arg) => {
+    event.returnValue = readerWindow ? readerWindow.getBounds() : {};
   });
   ipcMain.on("get-file-data", function (event) {
     if (fs.existsSync(path.join(dirPath, "log.json"))) {
