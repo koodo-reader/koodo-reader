@@ -98,8 +98,8 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
   handleRecord() {
     OtherUtil.setReaderConfig("isFullScreen", "no");
     if (isElectron) {
-      const { remote } = window.require("electron");
-      let bounds = remote.getCurrentWindow().getBounds();
+      const { ipcRenderer } = window.require("electron");
+      let bounds = ipcRenderer.sendSync("reader-bounds", "ping");
       OtherUtil.setReaderConfig("windowWidth", bounds.width);
       OtherUtil.setReaderConfig("windowHeight", bounds.height);
       OtherUtil.setReaderConfig("windowX", bounds.x);

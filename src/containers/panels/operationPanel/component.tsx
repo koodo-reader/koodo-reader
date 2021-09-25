@@ -169,8 +169,8 @@ class OperationPanel extends React.Component<
     // this.props.handleOpenMenu(false);
     ReadingTime.setTime(this.props.currentBook.key, this.props.time);
     if (isElectron) {
-      const { remote } = window.require("electron");
-      let bounds = remote.getCurrentWindow().getBounds();
+      const { ipcRenderer } = window.require("electron");
+      let bounds = ipcRenderer.sendSync("reader-bounds", "ping");
       OtherUtil.setReaderConfig("windowWidth", bounds.width);
       OtherUtil.setReaderConfig("windowHeight", bounds.height);
       OtherUtil.setReaderConfig("windowX", bounds.x);
