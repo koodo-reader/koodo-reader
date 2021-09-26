@@ -10,7 +10,6 @@ export const addEpub = (file: any, md5: string) => {
         reject(false);
         throw new Error();
       }
-
       let cover: any = "";
       const epub = window.ePub(e.target.result);
       epub.loaded.metadata
