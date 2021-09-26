@@ -50,7 +50,7 @@
     "classnames": "^2.2.6",
     "concurrently": "^5.0.1",
     "cross-env": "^6.0.3",
-    "electron": "^15.0.0",
+    "electron": "11.4.1",
     "electron-builder": "^22.10.5",
     "file-saver": "^2.0.2",
     "hard-source-webpack-plugin": "^0.13.1",
@@ -140,12 +140,6 @@
         "mimeType": "application/vnd.amazon.ebook"
       },
       {
-        "ext": "txt",
-        "icon": "assets/icons/book",
-        "role": "Viewer",
-        "mimeType": "text/plain"
-      },
-      {
         "ext": "djvu",
         "icon": "assets/icons/book",
         "role": "Viewer",
@@ -170,52 +164,10 @@
         "mimeType": "application/x-cbt"
       },
       {
-        "ext": "md",
-        "icon": "assets/icons/book",
-        "role": "Viewer",
-        "mimeType": "text/markdown"
-      },
-      {
-        "ext": "docx",
-        "icon": "assets/icons/book",
-        "role": "Viewer",
-        "mimeType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-      },
-      {
-        "ext": "rtf",
-        "icon": "assets/icons/book",
-        "role": "Viewer",
-        "mimeType": "application/rtf"
-      },
-      {
         "ext": "fb2",
         "icon": "assets/icons/book",
         "role": "Viewer",
         "mimeType": "application/x-fictionbook+xml"
-      },
-      {
-        "ext": "html",
-        "icon": "assets/icons/book",
-        "role": "Viewer",
-        "mimeType": "text/html"
-      },
-      {
-        "ext": "htm",
-        "icon": "assets/icons/book",
-        "role": "Viewer",
-        "mimeType": "text/html"
-      },
-      {
-        "ext": "xhtml",
-        "icon": "assets/icons/book",
-        "role": "Viewer",
-        "mimeType": "application/xhtml+xml"
-      },
-      {
-        "ext": "xml",
-        "icon": "assets/icons/book",
-        "role": "Viewer",
-        "mimeType": "application/xhtml+xml"
       }
     ],
     "extends": null,

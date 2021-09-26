@@ -167,7 +167,6 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
             reject();
             throw new Error();
           }
-
           if (extension === "pdf") {
             result = await addPdf(
               e.target.result as ArrayBuffer,
@@ -228,6 +227,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
           } else if (extension === "txt") {
             if (isElectron) {
               let _result = await generateEpub(file);
+
               if (_result === 1) {
                 toast.error(this.props.t("Import Failed"));
                 reject();

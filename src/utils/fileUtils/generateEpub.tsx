@@ -36,6 +36,7 @@ export const generateEpub = (file: any) => {
     const nodepub = window.require("nodepub");
     const { ipcRenderer } = window.require("electron");
     const dirPath = ipcRenderer.sendSync("user-data", "ping");
+    console.log(dirPath);
     const name = file.name;
     let bookExtension =
       name.indexOf("mobi") > -1
