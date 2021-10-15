@@ -5,7 +5,7 @@ export interface ProgressPanelProps {
   currentEpub: any;
   currentBook: BookModel;
   isReading: boolean;
-
+  t: (title: string) => string;
   percentage: number;
   handleFetchPercentage: (currentBook: BookModel) => void;
   htmlBook: HtmlBookModel;

@@ -18,7 +18,7 @@
 
 <div align="center">
 
-[下载](https://koodo.960960.xyz/zh/download) | [预览](https://koodo-reader.vercel.app/) | [反馈](https://koodo.960960.xyz/zh/support) | [文档](https://www.notion.so/troyeguo/e9c4e5755d564b0db6340eeba6d9ece9?v=7c8fcbed9adf4592ada95cfd593868c9)
+[下载](https://koodo.960960.xyz/zh/download) | [预览](https://koodo-reader.vercel.app/) | [计划](https://troyeguo.notion.site/215baeda57804fd29dbb0e91d1e6a021?v=360c00183d944b598668f34c255edfd7) | [文档](https://troyeguo.notion.site/Koodo-Reader-0c9c7ccdc5104a54825dfc72f1c84bea)
 
 </div>
 
@@ -59,6 +59,12 @@
   - 稳定版 (推荐下载)：[蓝奏云](https://wwa.lanzoui.com/b0c90cieb) 密码：1234 | [历史版本](https://wwa.lanzoui.com/b0c97tupi) 密码：1234
   - 开发版：[Github Release](https://github.com/troyeguo/koodo-reader/releases/latest) （包含新功能和 bug 修复，但也可能引入更多未知 bug）
 - 网页版：[前往](https://koodo-reader.vercel.app/)
+- 使用 Chocolatey 安装：
+
+```shell
+choco install koodo-reader
+```
+
 - 使用 Homebrew 安装：
 
 ```shell

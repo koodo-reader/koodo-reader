@@ -120,11 +120,8 @@ class SettingDialog extends React.Component<
     }
   };
   handleChangeLocation = async () => {
-    const { dialog } = window.require("electron").remote;
-    var path = await dialog.showOpenDialog({
-      properties: ["openDirectory"],
-    });
     const { ipcRenderer } = window.require("electron");
+    const path = await ipcRenderer.invoke("change-path");
     if (!path.filePaths[0]) {
       return;
     }

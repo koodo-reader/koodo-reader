@@ -53,6 +53,8 @@ class TextToSpeech extends React.Component<
           this.setState({ isAudioOn: true }, () => {
             this.handleAudio();
             if (
+              document.querySelector("#text-speech-speed") &&
+              document.querySelector("#text-speech-voice") &&
               document.querySelector("#text-speech-speed")!.children[0] &&
               document.querySelector("#text-speech-voice")!.children[0]
             ) {
