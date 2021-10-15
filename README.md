@@ -17,7 +17,7 @@
 </h3>
 <div align="center">
 
-[Download](https://koodo.960960.xyz/en/download) | [Preview](https://koodo-reader.vercel.app/) | [Feedback](https://koodo.960960.xyz/en/support) | [Document](https://www.notion.so/troyeguo/01aaa516687c418499f713d34793b9ad?v=54d51fe1688a4f8ab5784b17e4df3308)
+[Download](https://koodo.960960.xyz/en/download) | [Preview](https://koodo-reader.vercel.app/) | [Roadmap](https://troyeguo.notion.site/d1c19a132932465bae1d89dd963c92ea?v=ca8aa69cf25849c18c92b92ba868663b) | [Document](https://troyeguo.notion.site/Koodo-Reader-Document-9c767af3d66c459db996bdd08a34c34b)
 
 </div>
 
@@ -59,6 +59,12 @@
   - Stable Version (Recommended): [Download](https://koodo.960960.xyz/en/download)
   - Developer Version: [Download](https://github.com/troyeguo/koodo-reader/releases/latest) ( With new feature and bug fix, but may induce some unknown bugs)
 - Web Version：[Preview](https://koodo-reader.vercel.app/)
+- Install with Chocolatey:
+
+```shell
+choco install koodo-reader
+```
+
 - Install with Homebrew:
 
 ```shell

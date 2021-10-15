@@ -5,7 +5,7 @@ import { Trans } from "react-i18next";
 import { ProgressPanelProps, ProgressPanelState } from "./interface";
 import Lottie from "react-lottie";
 import animationSiri from "../../../assets/lotties/siri.json";
-
+import { Tooltip } from "react-tippy";
 const siriOptions = {
   loop: true,
   autoplay: true,
@@ -206,15 +206,28 @@ class ProgressPanel extends React.Component<
             this.previourChapter();
           }}
         >
-          <span className="icon-dropdown previous-chapter-icon"> </span>
+          <Tooltip
+            title={this.props.t("Prev Chapter")}
+            position="top"
+            trigger="mouseenter"
+          >
+            <span className="icon-dropdown previous-chapter-icon"> </span>
+          </Tooltip>
         </div>
+
         <div
           className="next-chapter"
           onClick={() => {
             this.nextChapter();
           }}
         >
-          <span className="icon-dropdown next-chapter-icon"></span>
+          <Tooltip
+            title={this.props.t("Next Chapter")}
+            position="top"
+            trigger="mouseenter"
+          >
+            <span className="icon-dropdown next-chapter-icon"></span>
+          </Tooltip>
         </div>
       </div>
     );
