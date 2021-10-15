@@ -23,7 +23,7 @@ export const settingList = [
     isElectron: true,
     title: "Merge reader into Word",
     desc:
-      "Get rid of window Frame and mimical background, make reader hide into Word or any text editor, and can't be detected",
+      "Get rid of window frame and mimical background, make reader hide into Word or any text editor, and can't be detected",
     propName: "isMergeWord",
   },
   {

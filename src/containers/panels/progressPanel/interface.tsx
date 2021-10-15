@@ -7,6 +7,7 @@ export interface ProgressPanelProps {
   locations: any;
   flattenChapters: any;
   handleFetchPercentage: (currentBook: BookModel) => void;
+  t: (title: string) => string;
 }
 export interface ProgressPanelState {
   displayPercentage: number;

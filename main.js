@@ -1,4 +1,4 @@
-const { app, BrowserWindow, Menu, ipcMain } = require("electron");
+const { app, BrowserWindow, Menu, ipcMain, dialog } = require("electron");
 const path = require("path");
 const isDev = require("electron-is-dev");
 const fs = require("fs");
@@ -39,6 +39,7 @@ app.on("ready", () => {
       nativeWindowOpen: true,
       nodeIntegrationInSubFrames: true,
       allowRunningInsecureContent: true,
+      enableRemoteModule: true,
     },
   };
 
@@ -69,6 +70,7 @@ app.on("ready", () => {
         nativeWindowOpen: true,
         nodeIntegrationInSubFrames: true,
         allowRunningInsecureContent: true,
+        enableRemoteModule: true,
       },
     };
     let pdfLocation = isDev
@@ -116,11 +118,19 @@ app.on("ready", () => {
     }
     readerWindow.on("close", () => {
       readerWindow && readerWindow.destroy();
+      readerWindow = null;
     });
 
     event.returnValue = "success";
   });
 
+  ipcMain.handle("change-path", async (event) => {
+    var path = await dialog.showOpenDialog({
+      properties: ["openDirectory"],
+    });
+
+    return path;
+  });
   ipcMain.on("storage-location", (event, arg) => {
     event.returnValue = path.join(dirPath, "data");
   });
@@ -128,7 +138,11 @@ app.on("ready", () => {
     event.returnValue = dirPath;
   });
   ipcMain.on("reader-bounds", (event, arg) => {
-    event.returnValue = readerWindow ? readerWindow.getBounds() : {};
+    if (readerWindow) {
+      event.returnValue = readerWindow.getBounds();
+    } else {
+      event.returnValue = {};
+    }
   });
   ipcMain.on("get-file-data", function (event) {
     if (fs.existsSync(path.join(dirPath, "log.json"))) {
