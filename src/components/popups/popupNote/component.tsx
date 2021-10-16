@@ -160,7 +160,7 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
 
           <div className="note-button-container">
             <span
-              className="cancel-button"
+              className="book-manage-title"
               onClick={() => {
                 this.handleClose();
               }}
@@ -172,7 +172,7 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
               )}
             </span>
             <span
-              className="confirm-button"
+              className="book-manage-title"
               onClick={() => {
                 this.createNote();
               }}

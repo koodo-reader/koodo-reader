@@ -9,7 +9,6 @@ import { ReaderProps, ReaderState } from "./interface";
 import { MouseEvent } from "../../utils/mouseEvent";
 import OtherUtil from "../../utils/otherUtil";
 import ReadingTime from "../../utils/readUtils/readingTime";
-import { isElectron } from "react-device-detect";
 class Reader extends React.Component<ReaderProps, ReaderState> {
   messageTimer!: NodeJS.Timeout;
   tickTimer!: NodeJS.Timeout;
@@ -61,12 +60,12 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
       ) {
         this.handleRenderBook();
       }
-      let ele = page!.getElementsByClassName("epub-container")[0];
-      if (page!.getElementsByClassName("epub-container").length > 1 && ele) {
+      if (!page) return;
+      let ele = page.getElementsByClassName("epub-container")[0];
+      if (page.getElementsByClassName("epub-container").length > 1 && ele) {
         ele.parentNode?.removeChild(ele);
       }
       this.setState({ time });
-      this.handleRecord();
     }, 1000);
   }
   componentWillUnmount() {
@@ -75,8 +74,9 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
   handleRenderBook = () => {
     let page = document.querySelector("#page-area");
     let epub = this.props.currentEpub;
-    if (page!.innerHTML) {
-      page!.innerHTML = "";
+    if (!page) return;
+    if (page.innerHTML) {
+      page.innerHTML = "";
     }
 
     this.setState({ rendition: null }, () => {
@@ -95,17 +95,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
       this.state.readerMode !== "continuous" && MouseEvent(this.rendition); // 绑定事件
     });
   };
-  handleRecord() {
-    OtherUtil.setReaderConfig("isFullScreen", "no");
-    if (isElectron) {
-      const { ipcRenderer } = window.require("electron");
-      let bounds = ipcRenderer.sendSync("reader-bounds", "ping");
-      OtherUtil.setReaderConfig("windowWidth", bounds.width);
-      OtherUtil.setReaderConfig("windowHeight", bounds.height);
-      OtherUtil.setReaderConfig("windowX", bounds.x);
-      OtherUtil.setReaderConfig("windowY", bounds.y);
-    }
-  }
+
   //进入阅读器
   handleEnterReader = (position: string) => {
     //控制上下左右的菜单的显示
@@ -202,17 +192,19 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
             </div>
           </>
         )}
-        <div
-          className="reader-setting-icon-container"
-          onClick={() => {
-            this.handleEnterReader("left");
-            this.handleEnterReader("right");
-            this.handleEnterReader("bottom");
-            this.handleEnterReader("top");
-          }}
-        >
-          <span className="icon-grid reader-setting-icon"></span>
-        </div>
+        {OtherUtil.getReaderConfig("isHideMenuButton") !== "yes" && (
+          <div
+            className="reader-setting-icon-container"
+            onClick={() => {
+              this.handleEnterReader("left");
+              this.handleEnterReader("right");
+              this.handleEnterReader("bottom");
+              this.handleEnterReader("top");
+            }}
+          >
+            <span className="icon-grid reader-setting-icon"></span>
+          </div>
+        )}
         <div
           className="left-panel"
           onMouseEnter={() => {

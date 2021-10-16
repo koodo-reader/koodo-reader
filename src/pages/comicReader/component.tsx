@@ -10,7 +10,6 @@ import untar from "js-untar";
 import OtherUtil from "../../utils/otherUtil";
 import { mimetype } from "../../constants/mimetype";
 import RecordLocation from "../../utils/readUtils/recordLocation";
-import { isElectron } from "react-device-detect";
 import { toast } from "react-hot-toast";
 
 declare var window: any;
@@ -45,13 +44,10 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         key,
         document.body.clientWidth,
         document.body.clientHeight,
-        window.frames[0].document.scrollingElement!.scrollTop,
-        window.frames[0].document.scrollingElement!.scrollHeight
+        window.frames[0].document.scrollingElement?.scrollTop,
+        window.frames[0].document.scrollingElement?.scrollHeight
       );
     });
-    window.onbeforeunload = () => {
-      this.handleExit(key);
-    };
   }
   handleRender = (key: string) => {
     localforage.getItem("books").then((result: any) => {
@@ -75,19 +71,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       });
     });
   };
-  // 点击退出按钮的处理程序
-  handleExit(key: string) {
-    this.props.handleReadingState(false);
 
-    if (isElectron) {
-      const { ipcRenderer } = window.require("electron");
-      let bounds = ipcRenderer.sendSync("reader-bounds", "ping");
-      OtherUtil.setReaderConfig("windowWidth", bounds.width);
-      OtherUtil.setReaderConfig("windowHeight", bounds.height);
-      OtherUtil.setReaderConfig("windowX", bounds.x);
-      OtherUtil.setReaderConfig("windowY", bounds.y);
-    }
-  }
   base64ArrayBuffer = (arrayBuffer) => {
     var base64 = "";
     var encodings =
@@ -141,7 +125,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     window.frames[0].document.body.removeChild(loading);
   };
   handleJump = () => {
-    window.frames[0].document.scrollingElement!.scrollTo(
+    window.frames[0].document.scrollingElement?.scrollTo(
       0,
       RecordLocation.getScrollHeight(this.state.key).scroll
     );
@@ -168,7 +152,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       const extension = item.name.split(".").reverse()[0];
       this.addImage(fileData, extension);
     }
-    document.scrollingElement!.scrollTo(
+    document.scrollingElement?.scrollTo(
       0,
       RecordLocation.getScrollHeight(this.state.key).scroll
     );
@@ -180,7 +164,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           const extension = item.name.split(".").reverse()[0];
           this.addImage(item.buffer, extension);
         }
-        document.scrollingElement!.scrollTo(
+        document.scrollingElement?.scrollTo(
           0,
           RecordLocation.getScrollHeight(this.state.key).scroll
         );

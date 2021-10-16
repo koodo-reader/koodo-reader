@@ -51,11 +51,11 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
             onClick={() => {
               if (navigator.language.indexOf("zh") > -1) {
                 this.handleJump(
-                  "https://www.notion.so/troyeguo/e9c4e5755d564b0db6340eeba6d9ece9?v=7c8fcbed9adf4592ada95cfd593868c9"
+                  "https://troyeguo.notion.site/Koodo-Reader-0c9c7ccdc5104a54825dfc72f1c84bea"
                 );
               } else {
                 this.handleJump(
-                  "https://www.notion.so/troyeguo/01aaa516687c418499f713d34793b9ad?v=54d51fe1688a4f8ab5784b17e4df3308"
+                  "https://troyeguo.notion.site/Koodo-Reader-Document-9c767af3d66c459db996bdd08a34c34b"
                 );
               }
             }}

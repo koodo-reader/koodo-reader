@@ -127,6 +127,9 @@
   text-align: center;
   cursor: pointer;
 }
+.backup-page-backup:hover {
+  border-radius: 10px;
+}
 .active {
   color: white;
   cursor: pointer;

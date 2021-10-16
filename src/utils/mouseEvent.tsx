@@ -18,7 +18,7 @@ export const MouseEvent = (rendition: any) => {
       }, 100);
       return false;
     }
-    if (event.keyCode === 39 || event.keyCode === 40) {
+    if (event.keyCode === 39 || event.keyCode === 40 || event.keyCode === 32) {
       rendition.next();
       lock = true;
       setTimeout(function () {

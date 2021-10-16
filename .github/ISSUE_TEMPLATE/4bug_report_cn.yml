@@ -25,7 +25,7 @@ body:
     id: testing3
     attributes:
       label: 我已经阅读了 Koodo Reader 的帮助文档，仍然无法解决
-      description: https://www.notion.so/troyeguo/e9c4e5755d564b0db6340eeba6d9ece9?v=7c8fcbed9adf4592ada95cfd593868c9
+      description: https://troyeguo.notion.site/Koodo-Reader-0c9c7ccdc5104a54825dfc72f1c84bea
       options:
         - label: "Yes"
     validations:

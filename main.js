@@ -1,6 +1,8 @@
 const { app, BrowserWindow, Menu, ipcMain, dialog } = require("electron");
 const path = require("path");
 const isDev = require("electron-is-dev");
+const Store = require("electron-store");
+const store = new Store();
 const fs = require("fs");
 const configDir = app.getPath("userData");
 const dirPath = path.join(configDir, "uploads");
@@ -59,8 +61,8 @@ app.on("ready", () => {
     mainWin = null;
   });
 
-  ipcMain.on("open-book", (event, arg) => {
-    let url = arg;
+  ipcMain.handle("open-book", (event, config) => {
+    let { url, isMergeWord, isFullscreen } = config;
 
     let options = {
       webPreferences: {
@@ -83,19 +85,8 @@ app.on("ready", () => {
           "web",
           "viewer.html"
         )}?${url.split("?")[1]}`;
-    var urlParams;
 
-    var match,
-      pl = /\+/g,
-      search = /([^&=]+)=?([^&]*)/g,
-      decode = function (s) {
-        return decodeURIComponent(s.replace(pl, " "));
-      },
-      query = url.split("?").reverse()[0];
-    urlParams = {};
-    while ((match = search.exec(query)))
-      urlParams[decode(match[1])] = decode(match[2]);
-    if (url.indexOf("full") > -1) {
+    if (isFullscreen === "yes") {
       Object.assign(options, {
         width: 1050,
         height: 660,
@@ -105,18 +96,25 @@ app.on("ready", () => {
       readerWindow.maximize();
     } else {
       Object.assign(options, {
-        width: parseInt(urlParams.width),
-        height: parseInt(urlParams.height),
-        x: parseInt(urlParams.x),
-        y: parseInt(urlParams.y),
-        frame: urlParams.isMergeWord === "yes" ? false : true,
-        hasShadow: urlParams.isMergeWord === "yes" ? false : true,
-        transparent: urlParams.isMergeWord === "yes" ? true : false,
+        width: parseInt(store.get("windowWidth")),
+        height: parseInt(store.get("windowHeight")),
+        x: parseInt(store.get("windowX")),
+        y: parseInt(store.get("windowY")),
+        frame: isMergeWord === "yes" ? false : true,
+        hasShadow: isMergeWord === "yes" ? false : true,
+        transparent: isMergeWord === "yes" ? true : false,
       });
       readerWindow = new BrowserWindow(options);
       readerWindow.loadURL(url.indexOf("pdf") > -1 ? pdfLocation : url);
     }
     readerWindow.on("close", () => {
+      let bounds = readerWindow.getBounds();
+      store.set({
+        windowWidth: bounds.width,
+        windowHeight: bounds.height,
+        windowX: bounds.x,
+        windowY: bounds.y,
+      });
       readerWindow && readerWindow.destroy();
       readerWindow = null;
     });
@@ -137,13 +135,7 @@ app.on("ready", () => {
   ipcMain.on("user-data", (event, arg) => {
     event.returnValue = dirPath;
   });
-  ipcMain.on("reader-bounds", (event, arg) => {
-    if (readerWindow) {
-      event.returnValue = readerWindow.getBounds();
-    } else {
-      event.returnValue = {};
-    }
-  });
+
   ipcMain.on("get-file-data", function (event) {
     if (fs.existsSync(path.join(dirPath, "log.json"))) {
       const _data = JSON.parse(

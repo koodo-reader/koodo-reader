@@ -125,6 +125,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
   getMd5WithBrowser = async (file: any) => {
     return new Promise<void>(async (resolve, reject) => {
       const md5 = await fetchMD5(file);
+
       if (!md5) {
         reject();
       } else {
@@ -184,7 +185,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
               OtherUtil.getReaderConfig("isImportPath") !== "yes" &&
                 BookUtil.addBook(
                   (result as BookModel).key,
-                  e.target!.result as ArrayBuffer
+                  e.target?.result as ArrayBuffer
                 );
               resolve();
             }
@@ -315,7 +316,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                 (result as BookModel).format !== "EPUB") &&
                 BookUtil.addBook(
                   (result as BookModel).key,
-                  e.target!.result as ArrayBuffer
+                  e.target?.result as ArrayBuffer
                 );
               resolve();
             }

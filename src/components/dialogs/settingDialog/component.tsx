@@ -168,17 +168,7 @@ class SettingDialog extends React.Component<
       window.location.reload();
     }
   };
-  handleMergeWord = () => {
-    this.handleSetting("isMergeWord");
-    OtherUtil.setReaderConfig("readerMode", "single");
-    OtherUtil.setReaderConfig("textColor", "rgba(0,0,0,1)");
-    OtherUtil.setReaderConfig("backgroundColor", "rgba(255,255,255,1)");
-    OtherUtil.setReaderConfig("isAutoFullscreen", "no");
-    OtherUtil.setReaderConfig("isHideBackground", "yes");
-    OtherUtil.setReaderConfig("isHidePageButton", "yes");
-    OtherUtil.setReaderConfig("isHideHeader", "yes");
-    OtherUtil.setReaderConfig("isHideFooter", "yes");
-  };
+
   render() {
     return (
       <div className="setting-dialog-container">
@@ -213,9 +203,6 @@ class SettingDialog extends React.Component<
                     className="single-control-switch"
                     onClick={() => {
                       switch (item.propName) {
-                        case "isMergeWord":
-                          this.handleMergeWord();
-                          break;
                         case "isDisplayDark":
                           this.handleDisplayDark();
                           break;

@@ -79,10 +79,10 @@ class NoteTag extends React.Component<NoteTagProps, NoteTagState> {
   handleShowTags = (bool: boolean) => {
     this.setState({ isShowTags: bool }, () => {
       if (document.querySelector(".card-list-container")) {
-        (document.querySelector(".card-list-container") as any)!.setAttribute(
+        (document.querySelector(".card-list-container") as any)?.setAttribute(
           "style",
           `height:calc(100% - ${
-            (document.querySelector(".card-list-container") as any)!.offsetTop
+            (document.querySelector(".card-list-container") as any)?.offsetTop
           }px)`
         );
       }

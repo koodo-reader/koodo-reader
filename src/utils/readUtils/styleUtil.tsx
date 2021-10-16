@@ -11,7 +11,7 @@ class styleUtil {
     let style = doc.getElementById("default-style");
     let background = document.querySelector(".background");
     if (!background) return;
-    background!.setAttribute(
+    background.setAttribute(
       "style",
       `background-color:${OtherUtil.getReaderConfig(
         "backgroundColor"
@@ -40,7 +40,7 @@ class styleUtil {
     let style = doc.getElementById("default-style");
     let background = document.querySelector(".viewer");
     if (!background) return;
-    background!.setAttribute(
+    background.setAttribute(
       "style",
       `background-color:${OtherUtil.getReaderConfig(
         "backgroundColor"
@@ -149,9 +149,7 @@ class styleUtil {
               : ""
           }`,
           "text-indent": `${
-            OtherUtil.getReaderConfig("isIndent") === "yes"
-              ? "2rem"
-              : ""
+            OtherUtil.getReaderConfig("isIndent") === "yes" ? "2rem" : ""
           }`,
           "font-style": `${
             OtherUtil.getReaderConfig("isItalic") === "yes"
