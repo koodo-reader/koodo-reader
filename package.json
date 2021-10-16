@@ -205,8 +205,7 @@
         {
           "target": "nsis",
           "arch": [
-            "x64",
-            "ia32"
+            "x64"
           ]
         },
         {
@@ -236,18 +235,10 @@
       "icon": "assets/icons",
       "category": "Office",
       "target": [
-        {
-          "target": "AppImage"
-        },
-        {
-          "target": "deb"
-        },
-        {
-          "target": "snap"
-        },
-        {
-          "target": "rpm"
-        }
+        "AppImage",
+        "deb",
+        "snap",
+        "rpm"
       ],
       "artifactName": "${productName}-${version}.${ext}"
     },
