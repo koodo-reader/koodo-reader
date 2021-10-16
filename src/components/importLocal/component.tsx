@@ -122,10 +122,15 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
           toast.success(this.props.t("Add Successfully"));
           setTimeout(() => {
             this.state.isOpenFile && this.handleJump(book);
-            this.setState({ isOpenFile: false });
-            if (OtherUtil.getReaderConfig("isOpenInMain") !== "yes") {
-              this.props.history.push("/manager/home");
+            if (
+              OtherUtil.getReaderConfig("isOpenInMain") === "yes" &&
+              this.state.isOpenFile
+            ) {
+              this.setState({ isOpenFile: false });
+              return;
             }
+            this.setState({ isOpenFile: false });
+            this.props.history.push("/manager/home");
           }, 100);
           resolve();
         })
