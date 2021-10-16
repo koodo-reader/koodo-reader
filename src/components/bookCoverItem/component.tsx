@@ -48,6 +48,7 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
   }
 
   handleMoreAction = (event: any) => {
+    event.preventDefault();
     const e = event || window.event;
     let x = e.clientX;
     if (x > document.body.clientWidth - 300 && !this.props.isCollapsed) {
