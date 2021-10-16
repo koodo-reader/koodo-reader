@@ -137,7 +137,9 @@ app.on("ready", () => {
   ipcMain.on("user-data", (event, arg) => {
     event.returnValue = dirPath;
   });
-
+  ipcMain.on("get-dirname", (event, arg) => {
+    event.returnValue = __dirname;
+  });
   ipcMain.on("get-file-data", function (event) {
     if (fs.existsSync(path.join(dirPath, "log.json"))) {
       const _data = JSON.parse(
