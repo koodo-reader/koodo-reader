@@ -142,9 +142,12 @@ class BookUtil {
   }
   static getBookUrl(book: BookModel) {
     if (book.description === "pdf") {
-      const isDev = window.require("electron-is-dev");
       if (isElectron) {
+        const isDev = window.require("electron-is-dev");
         const path = window.require("path");
+        const { ipcRenderer } = window.require("electron");
+        localStorage.setItem("pdfPath", book.path);
+        const __dirname = ipcRenderer.sendSync("get-dirname", "ping");
         let pdfLocation = isDev
           ? "http://localhost:3000/"
           : `file://${path.join(
@@ -160,9 +163,7 @@ class BookUtil {
             ? "lib/pdf/web/"
             : "lib\\pdf\\web\\"
         }viewer.html?file=${book.key}`;
-        return isDev
-          ? pdfLocation + url
-          : `${pdfLocation}?${url.split("?")[1]}`;
+        return isDev ? pdfLocation + url : `${pdfLocation}?file=${book.key}`;
       } else {
         return `./lib/pdf/web/viewer.html?file=${book.key}`;
       }
