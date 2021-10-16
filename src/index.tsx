@@ -13,6 +13,7 @@ import { isElectron } from "react-device-detect";
 import { dropdownList } from "./constants/dropdownList";
 import OtherUtil from "./utils/otherUtil";
 import ga from "./utils/analytics";
+
 ReactDOM.render(
   <Provider store={store}>
     <Router />
