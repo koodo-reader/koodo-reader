@@ -42,7 +42,7 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
                 this.props.handleAddDialog(true);
               }}
             >
-              <Trans>Add to Shelf</Trans>
+              <Trans>Add</Trans>
             </span>
             <span
               className="book-manage-title"

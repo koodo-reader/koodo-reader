@@ -116,6 +116,9 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
           onMouseLeave={() => {
             this.handleConfig(false);
           }}
+          onContextMenu={(event) => {
+            this.handleMoreAction(event);
+          }}
         >
           {this.props.book.cover &&
           this.props.book.cover !== "noCover" &&
@@ -164,7 +167,7 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
               <Trans>Empty</Trans>
             )}
           </div>
-          {this.state.isFavorite ? (
+          {this.state.isFavorite && !this.props.isSelectBook ? (
             <span
               className="icon-love book-loved-icon"
               onClick={() => {

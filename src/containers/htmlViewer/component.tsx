@@ -160,14 +160,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     }, 500);
   };
   handleRecord() {
-    if (isElectron) {
-      const { ipcRenderer } = window.require("electron");
-      let bounds = ipcRenderer.sendSync("reader-bounds", "ping");
-      OtherUtil.setReaderConfig("windowWidth", bounds.width);
-      OtherUtil.setReaderConfig("windowHeight", bounds.height);
-      OtherUtil.setReaderConfig("windowX", bounds.x);
-      OtherUtil.setReaderConfig("windowY", bounds.y);
-    }
+
 
     RecordLocation.recordScrollHeight(
       this.state.key,
@@ -209,8 +202,8 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         return;
       }
 
-      let imgs = doc!.getElementsByTagName("img");
-      let links = doc!.getElementsByTagName("a");
+      let imgs = doc.getElementsByTagName("img");
+      let links = doc.getElementsByTagName("a");
       for (let item of links) {
         item.addEventListener("click", (e) => {
           e.preventDefault();

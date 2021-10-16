@@ -26,6 +26,7 @@ class SettingSwitch extends React.Component<
       isHideFooter: OtherUtil.getReaderConfig("isHideFooter") === "yes",
       isHideHeader: OtherUtil.getReaderConfig("isHideHeader") === "yes",
       isHidePageButton: OtherUtil.getReaderConfig("isHidePageButton") === "yes",
+      isHideMenuButton: OtherUtil.getReaderConfig("isHideMenuButton") === "yes",
     };
   }
   handleRest = () => {
@@ -106,6 +107,9 @@ class SettingSwitch extends React.Component<
                     break;
                   case "isHidePageButton":
                     this.handleChange("isHidePageButton");
+                    break;
+                  case "isHideMenuButton":
+                    this.handleChange("isHideMenuButton");
                     break;
                   default:
                     break;

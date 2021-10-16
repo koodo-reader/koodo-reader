@@ -6,8 +6,6 @@ import { withRouter } from "react-router-dom";
 import _ from "underscore";
 import BookUtil from "../../utils/fileUtils/bookUtil";
 import "./viewer.css";
-import OtherUtil from "../../utils/otherUtil";
-import { isElectron } from "react-device-detect";
 import { toast } from "react-hot-toast";
 
 declare var window: any;
@@ -40,22 +38,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     document
       .querySelector(".ebook-viewer")
       ?.setAttribute("style", "height:100%");
-    window.onbeforeunload = () => {
-      this.handleExit();
-    };
-  }
-  // 点击退出按钮的处理程序
-  handleExit() {
-    this.props.handleReadingState(false);
-
-    if (isElectron) {
-      const { ipcRenderer } = window.require("electron");
-      let bounds = ipcRenderer.sendSync("reader-bounds", "ping");
-      OtherUtil.setReaderConfig("windowWidth", bounds.width);
-      OtherUtil.setReaderConfig("windowHeight", bounds.height);
-      OtherUtil.setReaderConfig("windowX", bounds.x);
-      OtherUtil.setReaderConfig("windowY", bounds.y);
-    }
   }
 
   handleDjvu = async (result: ArrayBuffer) => {

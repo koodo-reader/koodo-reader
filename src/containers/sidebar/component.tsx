@@ -25,6 +25,7 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
   }
   handleSidebar = (mode: string, index: number) => {
     this.setState({ index: index });
+    this.props.handleSelectBook(false);
     this.props.history.push(`/manager/${mode}`);
     this.props.handleMode(mode);
     this.props.handleSearch(false);
