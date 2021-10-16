@@ -212,15 +212,19 @@
         {
           "target": "zip",
           "arch": [
-            "x64",
-            "ia32"
+            "x64"
           ]
         },
         {
           "target": "portable",
           "arch": [
-            "x64",
-            "ia32"
+            "x64"
+          ]
+        },
+        {
+          "target": "7z",
+          "arch": [
+            "x64"
           ]
         }
       ],
