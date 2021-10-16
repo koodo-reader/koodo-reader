@@ -44,27 +44,17 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
   componentDidMount() {
     this.handleRenderBook();
     this.props.handleRenderFunc(this.handleRenderBook);
+    var doit;
     window.addEventListener("resize", () => {
-      this.handleRenderBook();
+      if (OtherUtil.getReaderConfig("readerMode") === "single") {
+        return;
+      }
+      clearTimeout(doit);
+      doit = setTimeout(this.handleRenderBook, 100);
     });
     this.tickTimer = global.setInterval(() => {
       let time = this.state.time;
       time += 1;
-      let page = document.querySelector("#page-area");
-      //解决快速翻页过程中图书消失的bug
-      let renderedBook = document.querySelector(".epub-view");
-      if (
-        renderedBook &&
-        !renderedBook.innerHTML &&
-        this.state.readerMode !== "continuous"
-      ) {
-        this.handleRenderBook();
-      }
-      if (!page) return;
-      let ele = page.getElementsByClassName("epub-container")[0];
-      if (page.getElementsByClassName("epub-container").length > 1 && ele) {
-        ele.parentNode?.removeChild(ele);
-      }
       this.setState({ time });
     }, 1000);
   }

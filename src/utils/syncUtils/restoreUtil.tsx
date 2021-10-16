@@ -1,6 +1,6 @@
 import { unzipBook, unzipConfig } from "./common";
 
-export const restore = (file: any, isSync = false) => {
+export const restore = (file: File, isSync = false) => {
   return new Promise<boolean>(async (resolve, reject) => {
     let result = await unzipConfig(file);
     if (result) {
