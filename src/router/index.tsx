@@ -44,7 +44,7 @@ const Router = () => {
         <Route component={HtmlReader} path="/fb2" />
         <Route component={ComicReader} path="/cbr" />
         <Route component={ComicReader} path="/cbz" />
-        <Route component={ComicReader} path="/cbt" />{" "}
+        <Route component={ComicReader} path="/cbt" />
         <Route component={HtmlReader} path="/html" />
         <Route component={HtmlReader} path="/htm" />
         <Route component={HtmlReader} path="/xml" />

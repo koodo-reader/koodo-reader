@@ -18,6 +18,8 @@ export interface SettingInfoState {
   isOpenBook: boolean;
   isDisplayDark: boolean;
   isExpandContent: boolean;
+  isPreventSleep: boolean;
+  isOpenInMain: boolean;
   isDisableUpdate: boolean;
   isDisableAnalytics: boolean;
   isAutoFullscreen: boolean;

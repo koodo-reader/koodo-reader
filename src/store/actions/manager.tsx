@@ -73,7 +73,7 @@ export function handleNoteSortCode(noteSortCode: {
 
 export function handleFetchBooks(isTrash = false) {
   return (dispatch: Dispatch) => {
-    localforage.getItem("books", async (err, value) => {
+    localforage.getItem("books", (err, value) => {
       let bookArr: any = value;
       let keyArr = AddTrash.getAllTrash();
       if (isTrash) {

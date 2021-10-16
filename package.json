@@ -202,10 +202,27 @@
     },
     "win": {
       "target": [
-        "nsis",
-        "portable",
-        "zip",
-        "7z"
+        {
+          "target": "nsis",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        },
+        {
+          "target": "zip",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        }
       ],
       "icon": "assets/icons/icon.ico",
       "artifactName": "${productName}-${version}-Win.${ext}",

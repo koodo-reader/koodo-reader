@@ -11,6 +11,7 @@ import { Redirect } from "react-router-dom";
 import NoteTag from "../../../components/noteTag";
 import BookUtil from "../../../utils/fileUtils/bookUtil";
 import toast from "react-hot-toast";
+import OtherUtil from "../../../utils/otherUtil";
 class CardList extends React.Component<CardListProps, CardListStates> {
   constructor(props: CardListProps) {
     super(props);
@@ -46,7 +47,15 @@ class CardList extends React.Component<CardListProps, CardListStates> {
       return;
     }
     RecordLocation.recordCfi(bookKey, cfi, percentage);
-    BookUtil.RedirectBook(book);
+    if (OtherUtil.getReaderConfig("isOpenInMain") === "yes") {
+      if (book.description === "pdf") {
+        window.location.href = BookUtil.getBookUrl(book);
+      } else {
+        this.props.history.push(BookUtil.getBookUrl(book));
+      }
+    } else {
+      BookUtil.RedirectBook(book);
+    }
   };
   render() {
     let { cards } = this.props;
