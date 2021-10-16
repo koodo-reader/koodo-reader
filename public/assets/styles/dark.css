@@ -112,6 +112,7 @@ textarea::-ms-input-placeholder,
 .animation-mask-local,
 .sort-by-category-list:hover,
 .sort-by-order-list:hover,
+.backup-page-backup:hover,
 .action-dialog-add:hover,
 .action-dialog-delete:hover,
 .action-dialog-edit:hover,
@@ -122,7 +123,7 @@ Z .copy-option:hover {
   background-color: rgba(235, 235, 235, 0.035);
 }
 .drag-background {
-  background-color: rgba(71, 76, 80, 1);
+  background: hsla(0, 0%, 0%, 0.5);
 }
 .action-dialog-container,
 .add-dialog-container,

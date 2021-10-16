@@ -117,6 +117,9 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
           onMouseLeave={() => {
             this.handleConfig(false);
           }}
+          onContextMenu={(event) => {
+            this.handleMoreAction(event);
+          }}
         >
           {this.props.book.cover &&
           this.props.book.cover !== "noCover" &&
@@ -150,7 +153,7 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
 
           <p className="book-item-title">{this.props.book.name}</p>
 
-          {this.state.isFavorite ? (
+          {this.state.isFavorite && !this.props.isSelectBook ? (
             <span
               className="icon-love book-loved-icon"
               onClick={() => {

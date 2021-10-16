@@ -23,12 +23,12 @@ export const settingList = [
     isElectron: true,
     title: "Merge reader into Word",
     desc:
-      "Get rid of window frame and mimical background, make reader hide into Word or any text editor, and can't be detected",
+      "Get rid of window frame, make reader hide into Word or any text editor, and can't be detected. You need to set up the reader's position, size and style first.",
     propName: "isMergeWord",
   },
   {
     isElectron: false,
-    title: "Auto open latest book",
+    title: "Auto open last-read book",
     desc:
       "The book that you read from last time will be open automatically when launching",
     propName: "isOpenBook",
@@ -117,6 +117,10 @@ export const readerSettingList = [
   {
     title: "Hide navigation button",
     propName: "isHidePageButton",
+  },
+  {
+    title: "Hide menu button",
+    propName: "isHideMenuButton",
   },
 ];
 export const htmlSettingList = [

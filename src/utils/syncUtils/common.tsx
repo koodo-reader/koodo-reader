@@ -61,9 +61,10 @@ export const moveData = (
   var reader = new FileReader();
   reader.readAsArrayBuffer(file);
   reader.onload = async (event) => {
+    if (!event.target) return;
     fs.writeFileSync(
       path.join(dirPath, file.name),
-      Buffer.from(event.target!.result as any)
+      Buffer.from(event.target.result as any)
     );
     var zip = new AdmZip(path.join(dirPath, file.name));
     zip.extractAllTo(/*target path*/ dataPath, /*overwrite*/ true);
@@ -132,9 +133,10 @@ export const syncData = (blob: Blob, books: BookModel[] = [], isSync: true) => {
     var reader = new FileReader();
     reader.readAsArrayBuffer(file);
     reader.onload = async (event) => {
+      if (!event.target) return;
       fs.writeFileSync(
         path.join(dataPath, file.name),
-        Buffer.from(event.target!.result as any)
+        Buffer.from(event.target.result as any)
       );
       var zip = new AdmZip(path.join(dataPath, file.name));
       zip.extractAllTo(/*target path*/ dataPath, /*overwrite*/ true);

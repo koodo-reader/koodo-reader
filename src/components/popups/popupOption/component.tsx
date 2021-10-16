@@ -50,7 +50,7 @@ class PopupOption extends React.Component<PopupOptionProps> {
       ? console.log("failed to copy text to clipboard")
       : console.log("copied!");
     this.props.handleOpenMenu(false);
-    doc.getSelection()!.empty();
+    doc.getSelection()?.empty();
     toast.success(this.props.t("Copy Successfully"));
   };
   handleTrans = () => {
@@ -155,7 +155,8 @@ class PopupOption extends React.Component<PopupOptionProps> {
       bubbles: true,
       cancelable: true,
     });
-    leftPanel!.dispatchEvent(clickEvent);
+    if (!leftPanel) return;
+    leftPanel.dispatchEvent(clickEvent);
     const focusEvent = new MouseEvent("focus", {
       view: window,
       bubbles: true,

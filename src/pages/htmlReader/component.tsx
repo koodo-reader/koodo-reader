@@ -105,17 +105,19 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
     };
     return (
       <div className="viewer">
-        <div
-          className="reader-setting-icon-container"
-          onClick={() => {
-            this.handleEnterReader("left");
-            this.handleEnterReader("right");
-            this.handleEnterReader("bottom");
-            this.handleEnterReader("top");
-          }}
-        >
-          <span className="icon-grid reader-setting-icon"></span>
-        </div>
+        {OtherUtil.getReaderConfig("isHideMenuButton") !== "yes" && (
+          <div
+            className="reader-setting-icon-container"
+            onClick={() => {
+              this.handleEnterReader("left");
+              this.handleEnterReader("right");
+              this.handleEnterReader("bottom");
+              this.handleEnterReader("top");
+            }}
+          >
+            <span className="icon-grid reader-setting-icon"></span>
+          </div>
+        )}
         <Toaster />
 
         <div

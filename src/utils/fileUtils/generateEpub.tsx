@@ -51,9 +51,10 @@ export const generateEpub = (file: any) => {
     var reader = new FileReader();
     reader.readAsArrayBuffer(file);
     reader.onload = (event) => {
+      if (!event.target) return;
       fs.writeFileSync(
         path.join(dirPath, file.name),
-        Buffer.from(event.target!.result as any)
+        Buffer.from(event.target.result as any)
       );
       var metadata = {
         id: new Date().getTime(),

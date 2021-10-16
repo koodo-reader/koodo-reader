@@ -26,7 +26,7 @@ body:
     id: testing3
     attributes:
       label: I've already read the Q&A document, still can't solve it.
-      description: https://www.notion.so/troyeguo/01aaa516687c418499f713d34793b9ad?v=54d51fe1688a4f8ab5784b17e4df3308
+      description: https://troyeguo.notion.site/Koodo-Reader-Document-9c767af3d66c459db996bdd08a34c34b
       options:
         - label: "Yes"
     validations:

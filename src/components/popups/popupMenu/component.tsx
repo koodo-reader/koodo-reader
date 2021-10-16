@@ -111,9 +111,10 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
   };
   handleClickHighlighter = (key: string) => {
     let dialog: HTMLInputElement | null = document.querySelector(".editor-box");
+    if (!dialog) return;
     let note = this.props.notes.filter((item) => item.key === key)[0];
     if (note && note.notes) {
-      dialog!.value = note.notes;
+      dialog.value = note.notes;
     }
     dialog?.focus();
     this.props.handleNoteKey(key);
@@ -152,7 +153,7 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     this.props.handleOpenMenu(true);
     let popupMenu = document.querySelector(".popup-menu-container");
 
-    popupMenu!.setAttribute("style", `left:${posX}px;top:${posY}px`);
+    popupMenu?.setAttribute("style", `left:${posX}px;top:${posY}px`);
     this.setState({ rect: null });
   };
   //渲染高亮
@@ -169,7 +170,7 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
       (item: any) => item.chapterIndex === chapterIndex
     );
     let iframe = document.getElementsByTagName("iframe")[0];
-    let iWin = iframe.contentWindow || iframe.contentDocument!.defaultView;
+    let iWin = iframe.contentWindow || iframe.contentDocument?.defaultView;
     this.highlighter && this.highlighter.removeAllHighlights(); // 为了避免下次反序列化失败，必须先清除已有的高亮
 
     let classes = [
@@ -203,7 +204,7 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
         }
       });
     if (!iWin || !iWin.getSelection()) return;
-    iWin.getSelection()!.empty(); // 清除文本选取
+    iWin.getSelection()?.empty(); // 清除文本选取
     // this.props.isOpenMenu &&
     //   window.rangy.deserializeSelection(serial, null, iWin); // （为了选取文本后不被上一行代码清除掉）恢复原本的文本选取
   };
@@ -221,9 +222,9 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
       this.props.handleOpenMenu(false);
       this.props.handleNoteKey("");
     }
-
+    if (!sel) return;
     // 使弹出菜单更加灵活可控;
-    if (sel!.isCollapsed) {
+    if (sel.isCollapsed) {
       this.props.isOpenMenu && this.props.handleOpenMenu(false);
       this.props.handleMenuMode("menu");
       this.props.handleNoteKey("");
@@ -253,7 +254,8 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     this.highlighter.highlightSelection(classes[color]);
     this.props.handleMenuMode("menu");
     this.props.handleOpenMenu(false);
-    doc.getSelection()!.empty();
+
+    doc.getSelection()?.empty();
     this.props.handleMenuMode("menu");
     this.highlighter && this.highlighter.removeAllHighlights();
     new Promise<void>((resolve) => {

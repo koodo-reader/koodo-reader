@@ -17,4 +17,5 @@ export interface SettingSwitchState {
   isInvert: boolean;
   isHideHeader: boolean;
   isHidePageButton: boolean;
+  isHideMenuButton: boolean;
 }

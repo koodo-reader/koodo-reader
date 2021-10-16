@@ -121,6 +121,7 @@ textarea::-ms-input-placeholder,
 .digest-option:hover,
 .translation-option:hover,
 .speaker-option:hover,
+.backup-page-backup:hover,
 .search-book-option:hover,
 .google-option:hover,
 .header-search-text:hover,
@@ -140,7 +141,7 @@ textarea::-ms-input-placeholder,
   background-color: rgba(75, 75, 75, 0.035);
 }
 .drag-background {
-  background-color: #f6f6f6;
+  background: hsla(0, 0%, 100%, 0.5);
 }
 
 .action-dialog-container,

@@ -47,11 +47,12 @@
 }
 .note-button-container {
   position: absolute;
-  bottom: 15px;
-  right: 15px;
+  bottom: 5px;
+  right: 25px;
   width: 120px;
   display: flex;
   justify-content: space-between;
+  cursor: pointer;
 }
 .confirm-button {
   font-size: 15px;

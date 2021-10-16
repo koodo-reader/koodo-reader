@@ -19,7 +19,7 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
   componentDidMount() {
     let background = document.querySelector(".background");
     if (!background) return;
-    background!.setAttribute(
+    background?.setAttribute(
       "style",
       `background-color:${OtherUtil.getReaderConfig(
         "backgroundColor"
