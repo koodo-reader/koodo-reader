@@ -42,7 +42,7 @@ const getPercentageArr = () => {
   let locationObj = RecordLocation.getAllCfi();
   var sortable: any = [];
   for (let obj in locationObj) {
-    sortable.push([obj, locationObj[obj].percentage]);
+    sortable.push([obj, locationObj[obj].percentage || 0]);
   }
   sortable.sort(function (a, b) {
     return a[1] - b[1];

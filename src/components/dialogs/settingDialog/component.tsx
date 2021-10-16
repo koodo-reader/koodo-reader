@@ -32,6 +32,8 @@ class SettingDialog extends React.Component<
       isAutoFullscreen: OtherUtil.getReaderConfig("isAutoFullscreen") === "yes",
       isOpenBook: OtherUtil.getReaderConfig("isOpenBook") === "yes",
       isExpandContent: OtherUtil.getReaderConfig("isExpandContent") === "yes",
+      isPreventSleep: OtherUtil.getReaderConfig("isPreventSleep") === "yes",
+      isOpenInMain: OtherUtil.getReaderConfig("isOpenInMain") === "yes",
       isDisableUpdate: OtherUtil.getReaderConfig("isDisableUpdate") === "yes",
       isDisplayDark: OtherUtil.getReaderConfig("isDisplayDark") === "yes",
       isDisableAnalytics:
@@ -168,7 +170,20 @@ class SettingDialog extends React.Component<
       window.location.reload();
     }
   };
-
+  handleMergeWord = () => {
+    if (this.state.isOpenInMain && !this.state.isMergeWord) {
+      toast("Please turn off open books in main window");
+      return;
+    }
+    this.handleSetting("isMergeWord");
+  };
+  handleOpenInMain = () => {
+    if (this.state.isMergeWord && !this.state.isOpenInMain) {
+      toast("Please turn off merge with word");
+      return;
+    }
+    this.handleSetting("isOpenInMain");
+  };
   render() {
     return (
       <div className="setting-dialog-container">
@@ -205,6 +220,12 @@ class SettingDialog extends React.Component<
                       switch (item.propName) {
                         case "isDisplayDark":
                           this.handleDisplayDark();
+                          break;
+                        case "isMergeWord":
+                          this.handleMergeWord();
+                          break;
+                        case "isOpenInMain":
+                          this.handleOpenInMain();
                           break;
                         default:
                           this.handleSetting(item.propName);

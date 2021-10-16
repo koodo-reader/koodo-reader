@@ -243,7 +243,7 @@ export const unzipBook = (file: File) => {
                 ); // a promise of "Hello World\n"
               }
             })
-            .then(async (book: any) => {
+            .then(async (book: ArrayBuffer) => {
               await BookUtil.addBook(item.key, book);
               count++;
               if (count === value.length) {

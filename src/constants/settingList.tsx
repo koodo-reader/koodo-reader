@@ -14,7 +14,7 @@ export const settingList = [
   },
   {
     isElectron: true,
-    title: "Import books as referrence",
+    title: "Import books as link",
     desc:
       "The imported books will not be copied to library, only linked to the original book path",
     propName: "isImportPath",
@@ -45,6 +45,19 @@ export const settingList = [
     title: "Default expand all content",
     desc: "All the folded content will be expanded in the navigation panel",
     propName: "isExpandContent",
+  },
+  {
+    isElectron: false,
+    title: "Disable screen blanking",
+    desc: "When Koodo is running, your computer won't enter sleep mode",
+    propName: "isPreventSleep",
+  },
+  {
+    isElectron: false,
+    title: "Open books in the main window",
+    desc:
+      "Book won't be opened in a seperate window but directly opened in the main window",
+    propName: "isOpenInMain",
   },
   {
     isElectron: true,

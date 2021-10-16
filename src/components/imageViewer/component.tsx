@@ -39,9 +39,7 @@ class ImageViewer extends React.Component<ImageViewerProps, ImageViewerStates> {
       this.props.handleLeaveReader("bottom");
     }
     let href;
-    console.log(
-      event.target.innerText.indexOf("http") > -1 && event.target.innerText
-    );
+
     if (
       event.target &&
       event.target.parentNode &&

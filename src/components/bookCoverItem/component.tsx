@@ -42,9 +42,17 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
       !this.props.currentBook.key &&
       !filePath
     ) {
-      BookUtil.RedirectBook(this.props.book);
+      this.props.handleReadingBook(this.props.book);
+      if (OtherUtil.getReaderConfig("isOpenInMain") === "yes") {
+        if (this.props.book.description === "pdf") {
+          window.location.href = BookUtil.getBookUrl(this.props.book);
+        } else {
+          this.props.history.push(BookUtil.getBookUrl(this.props.book));
+        }
+      } else {
+        BookUtil.RedirectBook(this.props.book);
+      }
     }
-    this.props.handleReadingBook(this.props.book);
   }
 
   handleMoreAction = (event: any) => {
@@ -100,7 +108,15 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
     }
     RecentBooks.setRecent(this.props.book.key);
 
-    BookUtil.RedirectBook(this.props.book);
+    if (OtherUtil.getReaderConfig("isOpenInMain") === "yes") {
+      if (this.props.book.description === "pdf") {
+        window.location.href = BookUtil.getBookUrl(this.props.book);
+      } else {
+        this.props.history.push(BookUtil.getBookUrl(this.props.book));
+      }
+    } else {
+      BookUtil.RedirectBook(this.props.book);
+    }
   };
   render() {
     let percentage = RecordLocation.getCfi(this.props.book.key)
