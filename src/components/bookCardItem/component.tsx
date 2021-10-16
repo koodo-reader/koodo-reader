@@ -47,6 +47,7 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
   }
 
   handleMoreAction = (event: any) => {
+    event.preventDefault();
     const e = event || window.event;
     let x = e.clientX;
     if (x > document.body.clientWidth - 300) {
