@@ -22,7 +22,8 @@ export const fetchFileFromPath = (filePath: string) => {
     fetch(filePath)
       .then((response) => response.body)
       .then((body) => {
-        const reader = body!.getReader();
+        if (!body) return;
+        const reader = body.getReader();
         return new ReadableStream({
           start(controller) {
             return pump();
