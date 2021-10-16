@@ -24,6 +24,7 @@ import {
 import toast from "react-hot-toast";
 import OtherUtil from "../../utils/otherUtil";
 declare var window: any;
+let clickFilePath = "";
 
 class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
   constructor(props: ImportLocalProps) {
@@ -67,6 +68,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
     });
   }
   handleFilePath = async (filePath: string) => {
+    clickFilePath = filePath;
     let md5 = await fetchMD5FromPath(filePath);
     if ([...(this.props.books || []), ...this.props.deletedBooks].length > 0) {
       let isRepeat = false;
@@ -92,7 +94,16 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
   };
   handleJump = (book: BookModel) => {
     RecentBooks.setRecent(book.key);
-    BookUtil.RedirectBook(book);
+    if (OtherUtil.getReaderConfig("isOpenInMain") === "yes") {
+      if (book.description === "pdf") {
+        window.location.href = BookUtil.getBookUrl(book);
+      } else {
+        this.props.history.push(BookUtil.getBookUrl(book));
+      }
+    } else {
+      BookUtil.RedirectBook(book);
+      this.props.history.push("/manager/home");
+    }
   };
   handleAddBook = (book: BookModel) => {
     return new Promise<void>((resolve, reject) => {
@@ -107,11 +118,14 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
         .setItem("books", bookArr)
         .then(() => {
           this.props.handleFetchBooks();
+
           toast.success(this.props.t("Add Successfully"));
           setTimeout(() => {
             this.state.isOpenFile && this.handleJump(book);
             this.setState({ isOpenFile: false });
-            this.props.history.push("/manager/home");
+            if (OtherUtil.getReaderConfig("isOpenInMain") !== "yes") {
+              this.props.history.push("/manager/home");
+            }
           }, 100);
           resolve();
         })
@@ -174,8 +188,9 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
               md5,
               bookName,
               file.size,
-              file.path
+              file.path || clickFilePath
             );
+            clickFilePath = "";
             if (!result) {
               toast.error(this.props.t("Import Failed"));
               reject();
@@ -187,6 +202,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                   (result as BookModel).key,
                   e.target?.result as ArrayBuffer
                 );
+
               resolve();
             }
           } else if (extension === "mobi" || extension === "azw3") {
@@ -206,8 +222,9 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                   extension,
                   md5,
                   file.size,
-                  file.path
+                  file.path || clickFilePath
                 );
+                clickFilePath = "";
                 await this.handleAddBook(result);
                 OtherUtil.getReaderConfig("isImportPath") !== "yes" &&
                   BookUtil.addBook(result.key, file_content as ArrayBuffer);
@@ -266,8 +283,9 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                   extension,
                   md5,
                   file.size,
-                  file.path
+                  file.path || clickFilePath
                 );
+                clickFilePath = "";
                 await this.handleAddBook(result);
                 OtherUtil.getReaderConfig("isImportPath") !== "yes" &&
                   BookUtil.addBook(result.key, (event.target as any).result);
@@ -296,8 +314,9 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                 extension,
                 md5,
                 file.size,
-                file.path
+                file.path || clickFilePath
               );
+              clickFilePath = "";
               await this.handleAddBook(result);
               OtherUtil.getReaderConfig("isImportPath") !== "yes" &&
                 BookUtil.addBook(result.key, file_content as ArrayBuffer);
@@ -305,7 +324,8 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
             };
             reader.readAsArrayBuffer(file);
           } else {
-            result = await addEpub(file, md5);
+            result = await addEpub(file, md5, clickFilePath);
+            clickFilePath = "";
             if (!result) {
               toast.error(this.props.t("Import Failed"));
               reject();

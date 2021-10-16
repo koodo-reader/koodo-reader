@@ -42,7 +42,7 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
                 this.props.handleAddDialog(true);
               }}
             >
-              <Trans>Add</Trans>
+              <Trans>Add to Shelf</Trans>
             </span>
             <span
               className="book-manage-title"
@@ -82,6 +82,16 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
             >
               <Trans>Export</Trans>
             </span>
+            <span
+              className="book-manage-title"
+              onClick={() => {
+                this.props.handleSelectedBooks(
+                  this.props.books.map((item) => item.key)
+                );
+              }}
+            >
+              <Trans>Select All</Trans>
+            </span>{" "}
           </>
         )}
       </div>

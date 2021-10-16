@@ -10,6 +10,7 @@ export interface BookListProps extends RouteComponentProps<any> {
   isSearch: boolean;
   isCollapsed: boolean;
   isBookSort: boolean;
+  isSelectBook: boolean;
   viewMode: string;
   selectedBooks: string[];
   bookmarks: BookmarkModel[];

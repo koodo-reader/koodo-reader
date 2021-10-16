@@ -172,7 +172,7 @@ class BookList extends React.Component<BookListProps, BookListState> {
       <>
         <ViewMode />
         <SelectBook />
-        <ShelfChooser />
+        {!this.props.isSelectBook && <ShelfChooser />}
         <div
           className="book-list-container-parent"
           style={

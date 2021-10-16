@@ -103,16 +103,33 @@ class BookUtil {
     }
   }
 
-  static openBook(book: BookModel) {
+  static async RedirectBook(book: BookModel) {
     let ref =
       book.description === "readonly" ? book.format.toLowerCase() : "epub";
-    if (OtherUtil.getReaderConfig("isAutoFullscreen") === "yes") {
+    if (book.description === "pdf") {
       if (isElectron) {
         const { ipcRenderer } = window.require("electron");
+        localStorage.setItem("pdfPath", book.path);
 
         ipcRenderer.invoke("open-book", {
+          url: `${
+            window.navigator.platform.indexOf("Win") > -1
+              ? "lib/pdf/web/"
+              : "lib\\pdf\\web\\"
+          }viewer.html?file=${book.key}`,
+          isFullscreen: OtherUtil.getReaderConfig("isAutoFullscreen"),
+          isPreventSleep: OtherUtil.getReaderConfig("isPreventSleep"),
+        });
+      } else {
+        window.open(`./lib/pdf/web/viewer.html?file=${book.key}`);
+      }
+    } else {
+      if (isElectron) {
+        const { ipcRenderer } = window.require("electron");
+        ipcRenderer.invoke("open-book", {
           url: `${window.location.href.split("#")[0]}#/${ref}/${book.key}`,
-          isFullscreen: "yes",
+          isFullscreen: OtherUtil.getReaderConfig("isAutoFullscreen"),
+          isPreventSleep: OtherUtil.getReaderConfig("isPreventSleep"),
         });
       } else {
         window.open(
@@ -121,51 +138,38 @@ class BookUtil {
           }`
         );
       }
-    } else {
-      if (isElectron) {
-        const { ipcRenderer } = window.require("electron");
-
-        ipcRenderer.invoke("open-book", {
-          url: `${window.location.href.split("#")[0]}#/${ref}/${book.key}`,
-          isMergeWord: OtherUtil.getReaderConfig("isMergeWord"),
-        });
-      } else {
-        window.open(
-          `${window.location.href.split("#")[0]}#/${ref}/${book.key}?&title=${
-            book.name
-          }`
-        );
-      }
     }
   }
-  static async RedirectBook(book: BookModel) {
+  static getBookUrl(book: BookModel) {
     if (book.description === "pdf") {
+      const isDev = window.require("electron-is-dev");
       if (isElectron) {
-        const { ipcRenderer } = window.require("electron");
-        localStorage.setItem("pdfPath", book.path);
-        if (OtherUtil.getReaderConfig("isAutoFullscreen") === "yes") {
-          ipcRenderer.invoke("open-book", {
-            url: `${
-              window.navigator.platform.indexOf("Win") > -1
-                ? "lib/pdf/web/"
-                : "lib\\pdf\\web\\"
-            }viewer.html?file=${book.key}`,
-            isFullscreen: "yes",
-          });
-        } else {
-          ipcRenderer.invoke("open-book", {
-            url: `${
-              window.navigator.platform.indexOf("Win") > -1
-                ? "lib/pdf/web/"
-                : "lib\\pdf\\web\\"
-            }viewer.html?file=${book.key}`,
-          });
-        }
+        const path = window.require("path");
+        let pdfLocation = isDev
+          ? "http://localhost:3000/"
+          : `file://${path.join(
+              __dirname,
+              "./build",
+              "lib",
+              "pdf",
+              "web",
+              "viewer.html"
+            )}`;
+        let url = `${
+          window.navigator.platform.indexOf("Win") > -1
+            ? "lib/pdf/web/"
+            : "lib\\pdf\\web\\"
+        }viewer.html?file=${book.key}`;
+        return isDev
+          ? pdfLocation + url
+          : `${pdfLocation}?${url.split("?")[1]}`;
       } else {
-        window.open(`./lib/pdf/web/viewer.html?file=${book.key}`);
+        return `./lib/pdf/web/viewer.html?file=${book.key}`;
       }
     } else {
-      this.openBook(book);
+      let ref =
+        book.description === "readonly" ? book.format.toLowerCase() : "epub";
+      return `/${ref}/${book.key}`;
     }
   }
   static generateBook(

@@ -3161,11 +3161,7 @@
             var path = window.require("path");
             var filePath = localStorage.getItem("pdfPath");
             var libPath = path.join(
-              localStorage.getItem("storageLocation")
-                ? localStorage.getItem("storageLocation")
-                : window
-                    .require("electron")
-                    .ipcRenderer.sendSync("storage-location", "ping"),
+              localStorage.getItem("storageLocation"),
               `book`,
               file
             );

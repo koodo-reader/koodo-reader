@@ -68,7 +68,13 @@ class OperationPanel extends React.Component<
       ? this.handleFullScreen()
       : this.handleExitFullScreen();
   }
-
+  // 点击退出按钮的处理程序
+  handleExit() {
+    OtherUtil.setReaderConfig("isFullScreen", "no");
+    this.props.handleReadingState(false);
+    window.speechSynthesis.cancel();
+    ReadingTime.setTime(this.props.currentBook.key, this.props.time);
+  }
   //控制进入全屏
   handleFullScreen() {
     let de: any = document.documentElement;
@@ -197,7 +203,13 @@ class OperationPanel extends React.Component<
         <div
           className="exit-reading-button"
           onClick={() => {
-            window.close();
+            this.handleExit();
+            if (OtherUtil.getReaderConfig("isOpenInMain") === "yes") {
+              this.props.history.push("/manager/home");
+              document.title = "Koodo Reader";
+            } else {
+              window.close();
+            }
           }}
         >
           <span className="icon-exit exit-reading-icon"></span>

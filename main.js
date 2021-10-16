@@ -1,4 +1,10 @@
-const { app, BrowserWindow, Menu, ipcMain, dialog } = require("electron");
+const {
+  app,
+  BrowserWindow,
+  ipcMain,
+  dialog,
+  powerSaveBlocker,
+} = require("electron");
 const path = require("path");
 const isDev = require("electron-is-dev");
 const Store = require("electron-store");
@@ -13,6 +19,20 @@ var filePath = null;
 if (process.platform == "win32" && process.argv.length >= 2) {
   filePath = process.argv[1];
 }
+let options = {
+  width: 1050,
+  height: 660,
+  webPreferences: {
+    webSecurity: false,
+    nodeIntegration: true,
+    contextIsolation: false,
+    nativeWindowOpen: true,
+    nodeIntegrationInSubFrames: true,
+    allowRunningInsecureContent: true,
+    enableRemoteModule: true,
+  },
+};
+
 // Single Instance Lock
 if (!singleInstance) {
   app.quit();
@@ -31,30 +51,14 @@ if (!singleInstance) {
   });
 }
 app.on("ready", () => {
-  let option = {
-    width: 1050,
-    height: 660,
-    webPreferences: {
-      webSecurity: false,
-      nodeIntegration: true,
-      contextIsolation: false,
-      nativeWindowOpen: true,
-      nodeIntegrationInSubFrames: true,
-      allowRunningInsecureContent: true,
-      enableRemoteModule: true,
-    },
-  };
-
-  mainWin = new BrowserWindow(option);
+  mainWin = new BrowserWindow(options);
 
   if (!isDev) {
-    Menu.setApplicationMenu(null);
+    // Menu.setApplicationMenu(null);
   }
-
   const urlLocation = isDev
     ? "http://localhost:3000"
     : `file://${path.join(__dirname, "./build/index.html")}`;
-
   mainWin.loadURL(urlLocation);
 
   mainWin.on("close", () => {
@@ -62,21 +66,14 @@ app.on("ready", () => {
   });
 
   ipcMain.handle("open-book", (event, config) => {
-    let { url, isMergeWord, isFullscreen } = config;
-
-    let options = {
-      webPreferences: {
-        webSecurity: false,
-        nodeIntegration: true,
-        contextIsolation: false,
-        nativeWindowOpen: true,
-        nodeIntegrationInSubFrames: true,
-        allowRunningInsecureContent: true,
-        enableRemoteModule: true,
-      },
-    };
+    let { url, isMergeWord, isFullscreen, isPreventSleep } = config;
+    let id;
+    if (isPreventSleep === "yes") {
+      id = powerSaveBlocker.start("prevent-display-sleep");
+      console.log(powerSaveBlocker.isStarted(id));
+    }
     let pdfLocation = isDev
-      ? "http://localhost:3000/" + url
+      ? "http://localhost:3000/"
       : `file://${path.join(
           __dirname,
           "./build",
@@ -84,13 +81,12 @@ app.on("ready", () => {
           "pdf",
           "web",
           "viewer.html"
-        )}?${url.split("?")[1]}`;
+        )}`;
+    pdfLocation = isDev
+      ? pdfLocation + url
+      : `${pdfLocation}?${url.split("?")[1]}`;
 
     if (isFullscreen === "yes") {
-      Object.assign(options, {
-        width: 1050,
-        height: 660,
-      });
       readerWindow = new BrowserWindow(options);
       readerWindow.loadURL(url.indexOf("pdf") > -1 ? pdfLocation : url);
       readerWindow.maximize();
@@ -108,15 +104,20 @@ app.on("ready", () => {
       readerWindow.loadURL(url.indexOf("pdf") > -1 ? pdfLocation : url);
     }
     readerWindow.on("close", () => {
-      let bounds = readerWindow.getBounds();
-      store.set({
-        windowWidth: bounds.width,
-        windowHeight: bounds.height,
-        windowX: bounds.x,
-        windowY: bounds.y,
-      });
-      readerWindow && readerWindow.destroy();
-      readerWindow = null;
+      if (readerWindow) {
+        let bounds = readerWindow.getBounds();
+        store.set({
+          windowWidth: bounds.width,
+          windowHeight: bounds.height,
+          windowX: bounds.x,
+          windowY: bounds.y,
+        });
+      }
+      if (isPreventSleep) {
+        id && powerSaveBlocker.stop(id);
+      }
+      // readerWindow && readerWindow.destroy();
+      // readerWindow = null;
     });
 
     event.returnValue = "success";
