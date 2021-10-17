@@ -8,6 +8,7 @@ export const isTitle = (
     line.length < 30 &&
     line.indexOf("[") === -1 &&
     line.indexOf("(") === -1 &&
+    line.indexOf("。") === -1 &&
     (line.startsWith("CHAPTER") ||
       line.startsWith("Chapter") ||
       line.startsWith("序章") ||
@@ -21,12 +22,8 @@ export const isTitle = (
       line.startsWith("寫在前面的話") ||
       line.startsWith("後記") ||
       line.startsWith("後序") ||
-      /(?=[MDCLXVI])M*(C[MD]|D?C{0,3})(X[CL]|L?X{0,3})(I[XV]|V?I{0,3})$/.test(
-        line
-      ) ||
       (line.startsWith("第") && startWithDI(line)) ||
       (line.startsWith("卷") && startWithJUAN(line)) ||
-      startWithRomanNum(line) ||
       (!isContainDI &&
         !isContainChapter &&
         !isContainCHAPTER &&
@@ -127,27 +124,7 @@ const startWithJUAN = (line: string) => {
     return true;
   return false;
 };
-const startWithRomanNum = (line: string) => {
-  if (
-    /(?=[MDCLXVI])M*(C[MD]|D?C{0,3})(X[CL]|L?X{0,3})(I[XV]|V?I{0,3})$/.test(
-      line.substring(0, line.indexOf(" "))
-    )
-  )
-    return true;
-  if (
-    /(?=[MDCLXVI])M*(C[MD]|D?C{0,3})(X[CL]|L?X{0,3})(I[XV]|V?I{0,3})$/.test(
-      line.substring(0, line.indexOf("."))
-    )
-  )
-    return true;
-  if (
-    /(?=[MDCLXVI])M*(C[MD]|D?C{0,3})(X[CL]|L?X{0,3})(I[XV]|V?I{0,3})$/.test(
-      line.trim()
-    )
-  )
-    return true;
-  return false;
-};
+
 const startWithNumAndSpace = (line: string) => {
   if (
     /^[\u4e00\u4e8c\u4e09\u56db\u4e94\u516d\u4e03\u516b\u4e5d\u5341\u767e\u5343\u4e07\u842c]+$/.test(

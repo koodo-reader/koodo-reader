@@ -29,6 +29,7 @@ class SettingSwitch extends React.Component<
       isHideMenuButton: OtherUtil.getReaderConfig("isHideMenuButton") === "yes",
     };
   }
+
   handleRest = () => {
     this.props.renderFunc();
   };
@@ -65,7 +66,7 @@ class SettingSwitch extends React.Component<
     return (
       <>
         {Object.keys(this.props.currentEpub).length !== 0 && <TextToSpeech />}
-        {(this.props.currentEpub.archived
+        {(this.props.currentBook.description !== "readonly"
           ? readerSettingList
           : htmlSettingList
         ).map((item) => (

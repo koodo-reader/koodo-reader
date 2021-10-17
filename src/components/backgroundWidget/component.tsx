@@ -11,7 +11,7 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
       isSingle:
         (OtherUtil.getReaderConfig("readerMode") &&
           OtherUtil.getReaderConfig("readerMode") !== "double") ||
-        !this.props.currentEpub.archived,
+        this.props.currentBook.description === "readonly",
       scale: OtherUtil.getReaderConfig("scale") || 1,
     };
     this.isFirst = true;

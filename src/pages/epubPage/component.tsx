@@ -41,6 +41,7 @@ class EpubReader extends React.Component<EpubReaderProps, EpubReaderState> {
           return;
         }
         this.props.handleReadingBook(book);
+
         this.props.handleReadingEpub(window.ePub(result, {}));
         this.props.handleReadingState(true);
         RecentBooks.setRecent(key);
