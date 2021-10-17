@@ -25,7 +25,7 @@ import animationSiri from "../../assets/lotties/siri.json";
 import _ from "underscore";
 import BackgroundWidget from "../../components/backgroundWidget";
 import toast from "react-hot-toast";
-
+let isFirst = true;
 declare var window: any;
 const siriOptions = {
   loop: true,
@@ -35,6 +35,8 @@ const siriOptions = {
     preserveAspectRatio: "xMidYMid slice",
   },
 };
+let url = document.location.href.split("/");
+let key = url[url.length - 1].split("?")[0];
 class Viewer extends React.Component<ViewerProps, ViewerState> {
   epub: any;
   constructor(props: ViewerProps) {
@@ -43,12 +45,11 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       key: "",
       isLoading: true,
       scale: OtherUtil.getReaderConfig("scale") || 1,
+      chapterCount: RecordLocation.getScrollHeight(key).count || 0,
     };
   }
 
   componentDidMount() {
-    let url = document.location.href.split("/");
-    let key = url[url.length - 1].split("?")[0];
     this.setState({ key });
     localforage.getItem("books").then((result: any) => {
       let book = result[_.findIndex(result, { key })];
@@ -167,7 +168,8 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       document.body.clientWidth,
       document.body.clientHeight,
       document.getElementsByClassName("ebook-viewer")[0].scrollTop,
-      document.getElementsByClassName("ebook-viewer")[0].scrollHeight
+      document.getElementsByClassName("ebook-viewer")[0].scrollHeight,
+      this.state.chapterCount
     );
   }
   handleRest = (docStr: string) => {
@@ -179,22 +181,38 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       doc: htmlParser.getAnchoredDoc(),
       chapters: htmlParser.getContentList(),
       subitems: [],
+      chapterDoc:
+        htmlParser.getChapter(
+          htmlParser.getAnchoredDoc().body.innerHTML,
+          htmlParser.getContentList()
+        ) || [],
     });
+
     this.handleRenderHtml();
   };
   handleRenderHtml = () => {
     window.frames[0].document.body.innerHTML = "";
-    window.frames[0].document.body.innerHTML = (this.props.htmlBook
-      .doc as any).documentElement.outerHTML;
+    window.frames[0].document.body.innerHTML = this.props.htmlBook.chapterDoc[
+      3 * this.state.chapterCount
+    ].concat(
+      this.props.htmlBook.chapterDoc[3 * this.state.chapterCount + 1] || "",
+      this.props.htmlBook.chapterDoc[3 * this.state.chapterCount + 2] || ""
+    );
     this.setState({ isLoading: false });
 
     styleUtil.addHtmlCss();
     this.handleIframeHeight();
 
     setTimeout(() => {
-      document
-        .getElementsByClassName("ebook-viewer")[0]
-        .scrollTo(0, RecordLocation.getScrollHeight(this.state.key).scroll);
+      if (isFirst) {
+        document
+          .getElementsByClassName("ebook-viewer")[0]
+          .scrollTo(0, RecordLocation.getScrollHeight(this.state.key).scroll);
+        isFirst = true;
+      } else {
+        document.getElementsByClassName("ebook-viewer")[0].scrollTo(0, 0);
+      }
+
       let iframe = document.getElementsByTagName("iframe")[0];
       if (!iframe) return;
       let doc = iframe.contentDocument;
@@ -222,6 +240,27 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       ? window.require("electron").shell.openExternal(url)
       : window.open(url);
   };
+  handleTurnChapter = () => {
+    var element = document.getElementsByClassName("ebook-viewer")[0];
+
+    if (
+      Math.abs(
+        element.scrollHeight - element.scrollTop - element.clientHeight
+      ) < 10
+    ) {
+      console.log("scrolled");
+
+      if (
+        this.state.chapterCount >=
+        this.props.htmlBook.chapterDoc.length / 3 - 1
+      ) {
+        return;
+      }
+      this.setState({ chapterCount: this.state.chapterCount + 1 }, () => {
+        this.handleRenderHtml();
+      });
+    }
+  };
   bindEvent = (doc: any) => {
     let isFirefox = navigator.userAgent.indexOf("Firefox") > -1;
     // 鼠标滚轮翻页
@@ -231,14 +270,16 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         "DOMMouseScroll",
         () => {
           this.handleRecord();
+          this.handleTurnChapter();
         },
         false
       );
     } else {
       doc.addEventListener(
         "mousewheel",
-        () => {
+        (event) => {
           this.handleRecord();
+          this.handleTurnChapter();
         },
         false
       );
