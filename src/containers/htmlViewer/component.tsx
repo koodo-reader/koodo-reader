@@ -79,6 +79,8 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           this.handleHtml(result as ArrayBuffer, book.format);
         }
         this.props.handleReadingState(true);
+        this.props.handleReadingBook(book);
+
         RecentBooks.setRecent(key);
         document.title = book.name + " - Koodo Reader";
       });
@@ -160,8 +162,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     }, 500);
   };
   handleRecord() {
-
-
     RecordLocation.recordScrollHeight(
       this.state.key,
       document.body.clientWidth,
@@ -323,9 +323,10 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
             Loading
           </iframe>
         </div>
-        {OtherUtil.getReaderConfig("isHideBackground") === "yes" ? null : (
+        {OtherUtil.getReaderConfig("isHideBackground") === "yes" ? null : this
+            .props.currentBook.key ? (
           <BackgroundWidget />
-        )}
+        ) : null}
       </>
     );
   }

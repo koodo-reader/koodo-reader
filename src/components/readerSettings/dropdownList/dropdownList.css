@@ -10,7 +10,6 @@
   font-weight: 500;
   margin-top: 15px;
   margin-bottom: 10px;
-
 }
 .general-setting-dropdown {
   width: 220px;
@@ -28,5 +27,5 @@
   font-size: 15px;
   font-weight: 500;
   line-height: 27px;
-  text-align: center;
+  text-align: left;
 }

@@ -28,7 +28,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       RecentBooks.setRecent(key);
       this.props.handleReadingBook(book);
       this.setState({ title: book.name + " - Koodo Reader" });
-      this.setState({ href: BookUtil.getBookUrl(book) });
+      this.setState({ href: BookUtil.getPDFUrl(book) });
     });
     document
       .querySelector(".ebook-viewer")

@@ -53,6 +53,7 @@
   font-size: 15px;
   line-height: 31px;
   cursor: pointer;
+  text-align: left;
 }
 .add-dialog-new-shelf-container {
   width: 100%;

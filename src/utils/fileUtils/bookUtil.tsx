@@ -105,74 +105,60 @@ class BookUtil {
 
   static async RedirectBook(book: BookModel) {
     let ref =
-      book.description === "readonly" ? book.format.toLowerCase() : "epub";
-    if (book.description === "pdf") {
-      if (isElectron) {
-        const { ipcRenderer } = window.require("electron");
-        localStorage.setItem("pdfPath", book.path);
+      book.description === "readonly" || book.description === "pdf"
+        ? book.format.toLowerCase()
+        : "epub";
 
-        ipcRenderer.invoke("open-book", {
-          url: `${
-            window.navigator.platform.indexOf("Win") > -1
-              ? "lib/pdf/web/"
-              : "lib\\pdf\\web\\"
-          }viewer.html?file=${book.key}`,
-          isFullscreen: OtherUtil.getReaderConfig("isAutoFullscreen"),
-          isPreventSleep: OtherUtil.getReaderConfig("isPreventSleep"),
-        });
-      } else {
-        window.open(`./lib/pdf/web/viewer.html?file=${book.key}`);
-      }
+    if (isElectron) {
+      const { ipcRenderer } = window.require("electron");
+      ipcRenderer.invoke("open-book", {
+        url: `${window.location.href.split("#")[0]}#/${ref}/${book.key}`,
+        isFullscreen: OtherUtil.getReaderConfig("isAutoFullscreen"),
+        isPreventSleep: OtherUtil.getReaderConfig("isPreventSleep"),
+      });
     } else {
-      if (isElectron) {
-        const { ipcRenderer } = window.require("electron");
-        ipcRenderer.invoke("open-book", {
-          url: `${window.location.href.split("#")[0]}#/${ref}/${book.key}`,
-          isFullscreen: OtherUtil.getReaderConfig("isAutoFullscreen"),
-          isPreventSleep: OtherUtil.getReaderConfig("isPreventSleep"),
-        });
-      } else {
-        window.open(
-          `${window.location.href.split("#")[0]}#/${ref}/${book.key}?title=${
-            book.name
-          }`
-        );
-      }
+      window.open(
+        `${window.location.href.split("#")[0]}#/${ref}/${book.key}?title=${
+          book.name
+        }`
+      );
     }
   }
   static getBookUrl(book: BookModel) {
-    if (book.description === "pdf") {
-      if (isElectron) {
-        const path = window.require("path");
-        const { ipcRenderer } = window.require("electron");
-        localStorage.setItem("pdfPath", book.path);
-        const __dirname = ipcRenderer.sendSync("get-dirname", "ping");
-        let pdfLocation =
-          document.URL.indexOf("localhost") > -1
-            ? "http://localhost:3000/"
-            : `file://${path.join(
-                __dirname,
-                "./build",
-                "lib",
-                "pdf",
-                "web",
-                "viewer.html"
-              )}`;
-        let url = `${
-          window.navigator.platform.indexOf("Win") > -1
-            ? "lib/pdf/web/"
-            : "lib\\pdf\\web\\"
-        }viewer.html?file=${book.key}`;
-        return document.URL.indexOf("localhost") > -1
-          ? pdfLocation + url
-          : `${pdfLocation}?file=${book.key}`;
-      } else {
-        return `./lib/pdf/web/viewer.html?file=${book.key}`;
-      }
+    console.log(book);
+    let ref =
+      book.description === "readonly" || book.description === "pdf"
+        ? book.format.toLowerCase()
+        : "epub";
+    return `/${ref}/${book.key}`;
+  }
+  static getPDFUrl(book: BookModel) {
+    if (isElectron) {
+      const path = window.require("path");
+      const { ipcRenderer } = window.require("electron");
+      localStorage.setItem("pdfPath", book.path);
+      const __dirname = ipcRenderer.sendSync("get-dirname", "ping");
+      let pdfLocation =
+        document.URL.indexOf("localhost") > -1
+          ? "http://localhost:3000/"
+          : `file://${path.join(
+              __dirname,
+              "./build",
+              "lib",
+              "pdf",
+              "web",
+              "viewer.html"
+            )}`;
+      let url = `${
+        window.navigator.platform.indexOf("Win") > -1
+          ? "lib/pdf/web/"
+          : "lib\\pdf\\web\\"
+      }viewer.html?file=${book.key}`;
+      return document.URL.indexOf("localhost") > -1
+        ? pdfLocation + url
+        : `${pdfLocation}?file=${book.key}`;
     } else {
-      let ref =
-        book.description === "readonly" ? book.format.toLowerCase() : "epub";
-      return `/${ref}/${book.key}`;
+      return `./lib/pdf/web/viewer.html?file=${book.key}`;
     }
   }
   static generateBook(

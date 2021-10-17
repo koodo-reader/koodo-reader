@@ -76,6 +76,7 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
     if (is_touch_device() && !OtherUtil.getReaderConfig("isTouch")) {
       OtherUtil.setReaderConfig("isTouch", "yes");
     }
+    this.props.handleReadingState(false);
   }
 
   handleDrag = (isDrag: boolean) => {

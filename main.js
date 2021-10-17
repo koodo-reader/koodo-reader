@@ -73,23 +73,10 @@ app.on("ready", () => {
       id = powerSaveBlocker.start("prevent-display-sleep");
       console.log(powerSaveBlocker.isStarted(id));
     }
-    let pdfLocation = isDev
-      ? "http://localhost:3000/"
-      : `file://${path.join(
-          __dirname,
-          "./build",
-          "lib",
-          "pdf",
-          "web",
-          "viewer.html"
-        )}`;
-    pdfLocation = isDev
-      ? pdfLocation + url
-      : `${pdfLocation}?${url.split("?")[1]}`;
-
+    console.log(url);
     if (isFullscreen === "yes") {
       readerWindow = new BrowserWindow(options);
-      readerWindow.loadURL(url.indexOf("pdf") > -1 ? pdfLocation : url);
+      readerWindow.loadURL(url);
       readerWindow.maximize();
     } else {
       Object.assign(options, {
@@ -102,7 +89,7 @@ app.on("ready", () => {
         transparent: isMergeWord === "yes" ? true : false,
       });
       readerWindow = new BrowserWindow(options);
-      readerWindow.loadURL(url.indexOf("pdf") > -1 ? pdfLocation : url);
+      readerWindow.loadURL(url);
     }
     readerWindow.on("close", () => {
       if (readerWindow) {

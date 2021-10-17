@@ -13,6 +13,7 @@ import {
   handleEditDialog,
   handleDeleteDialog,
   handleAddDialog,
+  handleReadingState,
 } from "../../store/actions";
 import { withTranslation } from "react-i18next";
 
@@ -57,6 +58,7 @@ const actionCreator = {
   handleLoadingDialog,
   handleNewDialog,
   handleBackupDialog,
+  handleReadingState,
 };
 export default connect(
   mapStateToProps,

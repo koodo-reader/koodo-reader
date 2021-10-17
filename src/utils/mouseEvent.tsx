@@ -3,7 +3,7 @@ import { build } from "../../package.json";
 import md5 from "md5";
 let Hammer = (window as any).Hammer;
 declare var document: any;
-export const MouseEvent = (rendition: any) => {
+export const MouseEvent = (rendition: any,) => {
   let isFirefox = navigator.userAgent.indexOf("Firefox") > -1;
   let lock = false; //prevent from clicking too fast
   const arrowKeys = (event: any) => {
