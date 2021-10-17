@@ -72,6 +72,7 @@ export function flatChapter(chapters: any) {
 
 export function handleFetchChapters(epub: any) {
   return (dispatch: (arg0: { type: string; payload: any }) => void) => {
+    console.log(epub);
     epub.loaded.navigation
       .then((chapters: any) => {
         dispatch(handleChapters(chapters.toc));
