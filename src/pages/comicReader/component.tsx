@@ -46,7 +46,8 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         document.body.clientWidth,
         document.body.clientHeight,
         window.frames[0].document.scrollingElement?.scrollTop,
-        window.frames[0].document.scrollingElement?.scrollHeight
+        window.frames[0].document.scrollingElement?.scrollHeight,
+        0
       );
     });
   }

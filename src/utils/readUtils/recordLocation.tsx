@@ -16,11 +16,12 @@ class RecordLocation {
     width: number,
     height: number,
     scroll: number,
-    length: number
+    length: number,
+    count: number
   ) {
     let json = localStorage.getItem("recordLocation");
     let obj = JSON.parse(json!) || {};
-    obj[bookKey] = { width, height, scroll, length };
+    obj[bookKey] = { width, height, scroll, length, count };
     localStorage.setItem("recordLocation", JSON.stringify(obj));
   }
 

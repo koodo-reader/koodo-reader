@@ -17,4 +17,5 @@ export interface ViewerState {
   key: string;
   scale: string;
   isLoading: boolean;
+  chapterCount: number;
 }
