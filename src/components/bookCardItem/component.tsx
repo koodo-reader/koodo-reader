@@ -43,11 +43,7 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
     ) {
       this.props.handleReadingBook(this.props.book);
       if (OtherUtil.getReaderConfig("isOpenInMain") === "yes") {
-        if (this.props.book.description === "pdf") {
-          this.props.history.push("/pdf/" + this.props.book.key);
-        } else {
-          this.props.history.push(BookUtil.getBookUrl(this.props.book));
-        }
+        this.props.history.push(BookUtil.getBookUrl(this.props.book));
       } else {
         BookUtil.RedirectBook(this.props.book);
       }
@@ -112,11 +108,7 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
     RecentBooks.setRecent(this.props.book.key);
     this.props.handleReadingBook(this.props.book);
     if (OtherUtil.getReaderConfig("isOpenInMain") === "yes") {
-      if (this.props.book.description === "pdf") {
-        this.props.history.push("/pdf/" + this.props.book.key);
-      } else {
-        this.props.history.push(BookUtil.getBookUrl(this.props.book));
-      }
+      this.props.history.push(BookUtil.getBookUrl(this.props.book));
     } else {
       BookUtil.RedirectBook(this.props.book);
     }
