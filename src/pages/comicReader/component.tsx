@@ -11,6 +11,7 @@ import OtherUtil from "../../utils/otherUtil";
 import { mimetype } from "../../constants/mimetype";
 import RecordLocation from "../../utils/readUtils/recordLocation";
 import { toast } from "react-hot-toast";
+import BackToMain from "../../components/backToMain";
 
 declare var window: any;
 
@@ -189,6 +190,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         >
           <p>Loading</p>
         </iframe>
+        <BackToMain />
         <div className="comic-scale">
           <select
             name=""

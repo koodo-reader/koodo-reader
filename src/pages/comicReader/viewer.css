@@ -3,7 +3,7 @@
   height: 50px;
   opacity: 1;
   position: absolute;
-  bottom: 0px;
+  bottom: 15px;
   left: calc(50% - 50px);
   z-index: 10;
   animation: fade-up 0.1s ease-in-out 0s 1;

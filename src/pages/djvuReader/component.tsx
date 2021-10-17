@@ -7,6 +7,7 @@ import _ from "underscore";
 import BookUtil from "../../utils/fileUtils/bookUtil";
 import "./viewer.css";
 import { toast } from "react-hot-toast";
+import BackToMain from "../../components/backToMain";
 
 declare var window: any;
 
@@ -37,7 +38,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     });
     document
       .querySelector(".ebook-viewer")
-      ?.setAttribute("style", "height:100%");
+      ?.setAttribute("style", "height:100vh");
   }
 
   handleDjvu = async (result: ArrayBuffer) => {
@@ -49,7 +50,12 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
   };
 
   render() {
-    return <div className="ebook-viewer">Loading</div>;
+    return (
+      <div>
+        <div className="ebook-viewer">Loading</div>
+        <BackToMain />
+      </div>
+    );
   }
 }
 export default withRouter(Viewer as any);
