@@ -1,0 +1,17 @@
+.back-main-container {
+  position: fixed;
+  bottom: 30px;
+  right: 50px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: rgba(75, 75, 75, 0.4);
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+.back-home {
+  color: white;
+}

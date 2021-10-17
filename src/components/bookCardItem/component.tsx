@@ -111,7 +111,8 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
     RecentBooks.setRecent(this.props.book.key);
     if (OtherUtil.getReaderConfig("isOpenInMain") === "yes") {
       if (this.props.book.description === "pdf") {
-        window.location.href = BookUtil.getBookUrl(this.props.book);
+        // window.location.href = BookUtil.getBookUrl(this.props.book);
+        this.props.history.push("/pdf/" + this.props.book.key);
       } else {
         this.props.history.push(BookUtil.getBookUrl(this.props.book));
       }

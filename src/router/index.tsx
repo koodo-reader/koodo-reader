@@ -5,6 +5,7 @@ import EpubReader from "../pages/epubPage";
 import HtmlReader from "../pages/htmlReader";
 import DjvuReader from "../pages/djvuReader";
 import ComicReader from "../pages/comicReader";
+import PDFReader from "../pages/pdfReader";
 import _Redirect from "../pages/redirect";
 import i18n from "../i18n";
 import OtherUtil from "../utils/otherUtil";
@@ -50,6 +51,7 @@ const Router = () => {
         <Route component={HtmlReader} path="/xml" />
         <Route component={HtmlReader} path="/xhtml" />
         <Route component={HtmlReader} path="/href" />
+        <Route component={PDFReader} path="/pdf" />
         <Route component={_Redirect} path="/" />
       </Switch>
     </HashRouter>
