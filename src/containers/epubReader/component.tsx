@@ -9,6 +9,7 @@ import { ReaderProps, ReaderState } from "./interface";
 import { MouseEvent } from "../../utils/mouseEvent";
 import OtherUtil from "../../utils/otherUtil";
 import ReadingTime from "../../utils/readUtils/readingTime";
+let lock = false;
 class Reader extends React.Component<ReaderProps, ReaderState> {
   messageTimer!: NodeJS.Timeout;
   tickTimer!: NodeJS.Timeout;
@@ -144,10 +145,22 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
     }
   };
   nextPage = () => {
+    if (lock) return;
     this.state.rendition.next();
+    lock = true;
+    setTimeout(function () {
+      lock = false;
+    }, 300);
+    return false;
   };
   prevPage = () => {
+    if (lock) return;
     this.state.rendition.prev();
+    lock = true;
+    setTimeout(function () {
+      lock = false;
+    }, 300);
+    return false;
   };
   render() {
     const renditionProps = {
