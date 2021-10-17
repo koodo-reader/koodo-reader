@@ -57,6 +57,16 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
       let time = this.state.time;
       time += 1;
       this.setState({ time });
+
+      //解决快速翻页过程中图书消失的bug
+      let renderedBook = document.querySelector(".epub-view");
+      if (
+        renderedBook &&
+        !renderedBook.innerHTML &&
+        this.state.readerMode !== "continuous"
+      ) {
+        this.handleRenderBook();
+      }
     }, 1000);
   }
   componentWillUnmount() {
