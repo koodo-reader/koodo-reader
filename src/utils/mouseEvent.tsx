@@ -15,7 +15,7 @@ export const MouseEvent = (rendition: any) => {
       lock = true;
       setTimeout(function () {
         lock = false;
-      }, 100);
+      }, 300);
       return false;
     }
     if (event.keyCode === 39 || event.keyCode === 40 || event.keyCode === 32) {
@@ -23,7 +23,7 @@ export const MouseEvent = (rendition: any) => {
       lock = true;
       setTimeout(function () {
         lock = false;
-      }, 100);
+      }, 300);
       return false;
     }
   };
@@ -35,7 +35,7 @@ export const MouseEvent = (rendition: any) => {
       lock = true;
       setTimeout(function () {
         lock = false;
-      }, 100);
+      }, 300);
       return false;
     }
     if (event.detail > 0) {
@@ -43,7 +43,7 @@ export const MouseEvent = (rendition: any) => {
       lock = true;
       setTimeout(function () {
         lock = false;
-      }, 100);
+      }, 300);
       return false;
     }
   };
@@ -55,7 +55,7 @@ export const MouseEvent = (rendition: any) => {
       lock = true;
       setTimeout(function () {
         lock = false;
-      }, 100);
+      }, 300);
       return false;
     }
     if (event.wheelDelta < 0) {
@@ -63,7 +63,7 @@ export const MouseEvent = (rendition: any) => {
       lock = true;
       setTimeout(function () {
         lock = false;
-      }, 100);
+      }, 300);
       return false;
     }
   };
@@ -75,7 +75,7 @@ export const MouseEvent = (rendition: any) => {
       lock = true;
       setTimeout(function () {
         lock = false;
-      }, 100);
+      }, 300);
       return false;
     }
     if (event.type === "panright" || event.type === "pandown") {
@@ -83,7 +83,7 @@ export const MouseEvent = (rendition: any) => {
       lock = true;
       setTimeout(function () {
         lock = false;
-      }, 100);
+      }, 300);
       return false;
     }
   };

@@ -5,54 +5,47 @@ import localforage from "localforage";
 import { withRouter } from "react-router-dom";
 import _ from "underscore";
 import BookUtil from "../../utils/fileUtils/bookUtil";
-import "./viewer.css";
-import { toast } from "react-hot-toast";
 import BackToMain from "../../components/backToMain";
-
-declare var window: any;
+import "./viewer.css";
 
 class Viewer extends React.Component<ViewerProps, ViewerState> {
   epub: any;
   constructor(props: ViewerProps) {
     super(props);
-    this.state = {};
+    this.state = {
+      href: "",
+      title: "",
+    };
   }
 
   componentDidMount() {
     let url = document.location.href.split("/");
     let key = url[url.length - 1].split("?")[0];
-
     localforage.getItem("books").then((result: any) => {
       let book = result[_.findIndex(result, { key })];
-      BookUtil.fetchBook(key, true, book.path).then((result) => {
-        if (!result) {
-          toast.error(this.props.t("Book not exsits"));
-          return;
-        }
-        this.props.handleReadingBook(book);
-        this.handleDjvu(result as ArrayBuffer);
-        this.props.handleReadingState(true);
-        RecentBooks.setRecent(key);
-        document.title = book.name + " - Koodo Reader";
-      });
+      document.title = book.name + " - Koodo Reader";
+      this.props.handleReadingState(true);
+      RecentBooks.setRecent(key);
+      this.props.handleReadingBook(book);
+      this.setState({ title: book.name + " - Koodo Reader" });
+      this.setState({ href: BookUtil.getBookUrl(book) });
     });
     document
       .querySelector(".ebook-viewer")
-      ?.setAttribute("style", "height:100vh");
+      ?.setAttribute("style", "height:100%");
   }
-
-  handleDjvu = async (result: ArrayBuffer) => {
-    setTimeout(() => {
-      var ViewerInstance = new window.DjVu.Viewer();
-      ViewerInstance.render(document.querySelector(".ebook-viewer"));
-      ViewerInstance.loadDocument(result);
-    }, 100);
-  };
 
   render() {
     return (
-      <div>
-        <div className="ebook-viewer">Loading</div>
+      <div className="ebook-viewer">
+        <iframe
+          src={this.state.href}
+          title={this.state.title}
+          width="100%"
+          height="100%"
+        >
+          Loading
+        </iframe>
         <BackToMain />
       </div>
     );
