@@ -107,7 +107,7 @@ class SettingPanel extends React.Component<
             />
           )}
           {(this.state.readerMode && this.state.readerMode !== "double") ||
-          !this.props.currentEpub.archived ? (
+          this.props.currentBook.description === "readonly" ? (
             <SliderList
               {...{
                 maxValue: 3,

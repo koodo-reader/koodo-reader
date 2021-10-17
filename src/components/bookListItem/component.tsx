@@ -39,7 +39,7 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
       this.props.handleReadingBook(this.props.book);
       if (OtherUtil.getReaderConfig("isOpenInMain") === "yes") {
         if (this.props.book.description === "pdf") {
-          window.location.href = BookUtil.getBookUrl(this.props.book);
+          this.props.history.push("/pdf/" + this.props.book.key);
         } else {
           this.props.history.push(BookUtil.getBookUrl(this.props.book));
         }
@@ -88,9 +88,10 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
       return;
     }
     RecentBooks.setRecent(this.props.book.key);
+    this.props.handleReadingBook(this.props.book);
     if (OtherUtil.getReaderConfig("isOpenInMain") === "yes") {
       if (this.props.book.description === "pdf") {
-        window.location.href = BookUtil.getBookUrl(this.props.book);
+        this.props.history.push("/pdf/" + this.props.book.key);
       } else {
         this.props.history.push(BookUtil.getBookUrl(this.props.book));
       }

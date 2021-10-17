@@ -1,5 +1,7 @@
+import BookModel from "../../../model/Book";
 export interface SettingSwitchProps {
   currentEpub: any;
+  currentBook: BookModel;
   locations: any;
   isReading: boolean;
   htmlBook;

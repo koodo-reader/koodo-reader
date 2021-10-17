@@ -44,7 +44,7 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
       this.props.handleReadingBook(this.props.book);
       if (OtherUtil.getReaderConfig("isOpenInMain") === "yes") {
         if (this.props.book.description === "pdf") {
-          window.location.href = BookUtil.getBookUrl(this.props.book);
+          this.props.history.push("/pdf/" + this.props.book.key);
         } else {
           this.props.history.push(BookUtil.getBookUrl(this.props.book));
         }
@@ -90,6 +90,7 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
     this.setState({ isFavorite: false });
     if (Object.keys(AddFavorite.getAllFavorite()).length === 0) {
       this.props.history.push("/manager/empty");
+      document.title = "Koodo Reader";
     }
     toast.success(this.props.t("Cancel Successfully"));
   };
@@ -109,9 +110,9 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
       return;
     }
     RecentBooks.setRecent(this.props.book.key);
+    this.props.handleReadingBook(this.props.book);
     if (OtherUtil.getReaderConfig("isOpenInMain") === "yes") {
       if (this.props.book.description === "pdf") {
-        // window.location.href = BookUtil.getBookUrl(this.props.book);
         this.props.history.push("/pdf/" + this.props.book.key);
       } else {
         this.props.history.push(BookUtil.getBookUrl(this.props.book));

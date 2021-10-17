@@ -13,6 +13,7 @@ const mapStateToProps = (state: stateType) => {
   return {
     isOpenActionDialog: state.book.isOpenActionDialog,
     currentBook: state.book.currentBook,
+    currentEpub: state.book.currentEpub,
     isReading: state.book.isReading,
   };
 };
