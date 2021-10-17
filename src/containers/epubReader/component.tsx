@@ -150,7 +150,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
     lock = true;
     setTimeout(function () {
       lock = false;
-    }, 300);
+    }, 400);
     return false;
   };
   prevPage = () => {
@@ -159,7 +159,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
     lock = true;
     setTimeout(function () {
       lock = false;
-    }, 300);
+    }, 400);
     return false;
   };
   render() {
