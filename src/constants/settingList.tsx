@@ -47,7 +47,7 @@ export const settingList = [
     propName: "isExpandContent",
   },
   {
-    isElectron: false,
+    isElectron: true,
     title: "Disable screen blanking",
     desc: "When Koodo is running, your computer won't enter sleep mode",
     propName: "isPreventSleep",
