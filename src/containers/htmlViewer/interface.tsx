@@ -4,6 +4,7 @@ import HtmlBookModel from "../../model/HtmlBook";
 export interface ViewerProps {
   book: BookModel;
   currentBook: BookModel;
+  books: BookModel[];
   isReading: boolean;
   htmlBook: HtmlBookModel;
   handleRenderFunc: (renderFunc: () => void) => void;
