@@ -102,7 +102,6 @@ class BookUtil {
       return localforage.getItem(key);
     }
   }
-
   static async RedirectBook(book: BookModel) {
     let ref =
       book.description === "readonly" || book.description === "pdf"
@@ -172,11 +171,13 @@ class BookUtil {
       name: string,
       author: string,
       publisher: string,
-      description: string;
-    [name, author, description, publisher] = [
+      description: string,
+      charset: string;
+    [name, author, description, publisher, charset] = [
       bookName,
       "Unknown Authur",
       "readonly",
+      "",
       "",
     ];
     let format = extension.toUpperCase();
@@ -191,7 +192,8 @@ class BookUtil {
       format,
       publisher,
       size,
-      path
+      path,
+      charset
     );
   }
 }
