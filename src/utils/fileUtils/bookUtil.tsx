@@ -125,7 +125,6 @@ class BookUtil {
     }
   }
   static getBookUrl(book: BookModel) {
-    console.log(book);
     let ref =
       book.description === "readonly" || book.description === "pdf"
         ? book.format.toLowerCase()

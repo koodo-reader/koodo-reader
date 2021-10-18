@@ -78,6 +78,7 @@ export type stateType = {
     chapters: any[];
     flattenChapters: any;
     noteKey: string;
+    currentChapter: string;
     originalText: string;
     htmlBook: HtmlBookModel;
   };

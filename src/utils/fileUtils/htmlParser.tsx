@@ -43,19 +43,19 @@ class HtmlParser {
     });
   }
   getChapter(bookStr: string, contentList: any) {
-    // console.log(bookStr, contentList);
+    if (contentList.length === 0) return [bookStr];
     let chapterDoc: string[] = [];
     let chapterStr = "";
-    console.log(contentList);
 
     for (let i = 0; i < contentList.length; i++) {
       if (!bookStr) return;
       chapterStr = bookStr.split(contentList[i].id)[0];
-
       bookStr =
-        '<h1 id="' + contentList[i].id + bookStr.split(contentList[i].id)[1];
+        chapterStr.substring(chapterStr.lastIndexOf("<")) +
+        contentList[i].id +
+        bookStr.split(contentList[i].id)[1];
 
-      chapterDoc.push(chapterStr.substring(0, chapterStr.length - 8));
+      chapterDoc.push(chapterStr.substring(0, chapterStr.lastIndexOf("<")));
       if (i === contentList.length - 1) {
         chapterDoc.push(bookStr);
       }
