@@ -315,37 +315,10 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     if (!this.props.currentBook.charset) {
       await this.handleCharset(result);
     }
-    let text: string[] = [];
-    if (isElectron) {
-      var fs = window.require("fs"),
-        es = window.require("event-stream");
-      var s = fs
-        .createReadStream(this.props.currentBook.path)
-        .pipe(es.split())
-        .pipe(
-          es
-            .mapSync((line) => {
-              s.pause();
-              text.push(line);
-              // text += line;
-              s.resume();
-            })
-            .on("error", (err) => {
-              console.log("Error while reading file.", err);
-            })
-            .on("end", () => {
-              console.log("Read entire file.");
-              // console.log(text);
-              // console.log(text);
-              this.handleRest(txtToHtml(text));
-            })
-        );
-    } else {
-      text = iconv
-        .decode(Buffer.from(result), this.props.currentBook.charset || "utf8")
-        .split("\n");
-      this.handleRest(txtToHtml(text));
-    }
+    let text = iconv
+      .decode(Buffer.from(result), this.props.currentBook.charset || "utf8")
+      .split("\n");
+    this.handleRest(txtToHtml(text));
   };
   handleMD = (result: ArrayBuffer) => {
     var blob = new Blob([result], { type: "text/plain" });
