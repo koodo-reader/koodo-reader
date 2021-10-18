@@ -22,7 +22,7 @@ class ProgressPanel extends React.Component<
     super(props);
     this.state = {
       displayPercentage: this.props.percentage ? this.props.percentage : 0,
-      currentChapter: "",
+
       currentPage: 0,
       totalPage: 0,
       currentChapterIndex: 0,
@@ -44,15 +44,6 @@ class ProgressPanel extends React.Component<
         totalPage: currentLocation.start.displayed.total,
         currentChapterIndex: currentLocation.start.index,
       });
-      let chapterHref = currentLocation.start.href;
-      let chapter = "Unknown Chapter";
-      let currentChapter = this.props.flattenChapters.filter(
-        (item: any) => item.href.split("#")[0] === chapterHref
-      )[0];
-      if (currentChapter) {
-        chapter = currentChapter.label.trim(" ");
-      }
-      this.setState({ currentChapter: chapter });
     }
     if (nextProps.currentBook.key) {
       this.props.handleFetchPercentage(this.props.currentBook);

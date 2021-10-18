@@ -25,7 +25,7 @@ import animationSiri from "../../assets/lotties/siri.json";
 import _ from "underscore";
 import BackgroundWidget from "../../components/backgroundWidget";
 import toast from "react-hot-toast";
-let isFirst = true;
+
 declare var window: any;
 const siriOptions = {
   loop: true,
@@ -44,6 +44,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     this.state = {
       key: "",
       isLoading: true,
+      isFirst: true,
       scale: OtherUtil.getReaderConfig("scale") || 1,
       chapterCount: RecordLocation.getScrollHeight(key).count || 0,
     };
@@ -86,6 +87,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         document.title = book.name + " - Koodo Reader";
       });
     });
+
     this.props.handleRenderFunc(this.handleRenderHtml);
 
     window.frames[0].document.addEventListener("click", (event) => {
@@ -176,8 +178,8 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     let htmlParser = new HtmlParser(
       new DOMParser().parseFromString(docStr, "text/html")
     );
-
     this.props.handleHtmlBook({
+      key: this.state.key,
       doc: htmlParser.getAnchoredDoc(),
       chapters: htmlParser.getContentList(),
       subitems: [],
@@ -187,28 +189,37 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           htmlParser.getContentList()
         ) || [],
     });
-
     this.handleRenderHtml();
   };
-  handleRenderHtml = () => {
+  handleRenderHtml = (id: string = "") => {
     window.frames[0].document.body.innerHTML = "";
+
+    id &&
+      this.setState({
+        chapterCount:
+          _.findIndex(this.props.htmlBook.chapters, {
+            id: id,
+          }) + 1,
+      });
     window.frames[0].document.body.innerHTML = this.props.htmlBook.chapterDoc[
-      3 * this.state.chapterCount
-    ].concat(
-      this.props.htmlBook.chapterDoc[3 * this.state.chapterCount + 1] || "",
-      this.props.htmlBook.chapterDoc[3 * this.state.chapterCount + 2] || ""
-    );
+      id
+        ? _.findIndex(this.props.htmlBook.chapters, {
+            id,
+          }) + 1
+        : this.state.chapterCount
+    ];
+    // this.props.handleCurrentChapter("");
     this.setState({ isLoading: false });
 
     styleUtil.addHtmlCss();
     this.handleIframeHeight();
 
     setTimeout(() => {
-      if (isFirst) {
+      if (this.state.isFirst) {
         document
           .getElementsByClassName("ebook-viewer")[0]
           .scrollTo(0, RecordLocation.getScrollHeight(this.state.key).scroll);
-        isFirst = true;
+        this.setState({ isFirst: false });
       } else {
         document.getElementsByClassName("ebook-viewer")[0].scrollTo(0, 0);
       }
@@ -248,11 +259,9 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         element.scrollHeight - element.scrollTop - element.clientHeight
       ) < 10
     ) {
-      console.log("scrolled");
-
       if (
-        this.state.chapterCount >=
-        this.props.htmlBook.chapterDoc.length / 3 - 1
+        this.state.chapterCount ===
+        this.props.htmlBook.chapterDoc.length - 1
       ) {
         return;
       }
@@ -293,8 +302,11 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
   handleTxt = (result: ArrayBuffer) => {
     let text = iconv.decode(
       Buffer.from(result),
-      chardet.detect(Buffer.from(result)) as string
+      this.props.currentBook.size / 1024 / 1024 > 1
+        ? "utf8"
+        : (chardet.detect(Buffer.from(result)) as string)
     );
+
     this.handleRest(txtToHtml(text));
   };
   handleMD = (result: ArrayBuffer) => {
@@ -308,7 +320,9 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
   handleRtf = (result: ArrayBuffer) => {
     let text = iconv.decode(
       Buffer.from(result),
-      chardet.detect(Buffer.from(result)) as string
+      this.props.currentBook.size / 1024 / 1024 > 1
+        ? "utf8"
+        : (chardet.detect(Buffer.from(result)) as string)
     );
     rtfToHTML.fromString(text, (err: any, html: any) => {
       this.handleRest(html);
@@ -322,7 +336,9 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
   handleFb2 = (result: ArrayBuffer) => {
     let fb2Str = iconv.decode(
       Buffer.from(result),
-      chardet.detect(Buffer.from(result)) as string
+      this.props.currentBook.size / 1024 / 1024 > 1
+        ? "utf8"
+        : (chardet.detect(Buffer.from(result)) as string)
     );
     let bookObj = xmlBookToObj(Buffer.from(result));
     bookObj += xmlBookTagFilter(fb2Str);
