@@ -299,15 +299,53 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     let content: any = await mobiFile.render();
     this.handleRest(content.outerHTML);
   };
-  handleTxt = (result: ArrayBuffer) => {
-    let text = iconv.decode(
-      Buffer.from(result),
-      this.props.currentBook.size / 1024 / 1024 > 1
-        ? "utf8"
-        : (chardet.detect(Buffer.from(result)) as string)
-    );
-
-    this.handleRest(txtToHtml(text));
+  handleCharset = (result: ArrayBuffer) => {
+    return new Promise<void>(async (resolve, reject) => {
+      let { books } = this.props;
+      books.forEach((item) => {
+        if (item.key === this.props.currentBook.key) {
+          item.charset = chardet.detect(Buffer.from(result)) || "";
+        }
+      });
+      await localforage.setItem("books", books);
+      resolve();
+    });
+  };
+  handleTxt = async (result: ArrayBuffer) => {
+    if (!this.props.currentBook.charset) {
+      await this.handleCharset(result);
+    }
+    let text: string[] = [];
+    if (isElectron) {
+      var fs = window.require("fs"),
+        es = window.require("event-stream");
+      var s = fs
+        .createReadStream(this.props.currentBook.path)
+        .pipe(es.split())
+        .pipe(
+          es
+            .mapSync((line) => {
+              s.pause();
+              text.push(line);
+              // text += line;
+              s.resume();
+            })
+            .on("error", (err) => {
+              console.log("Error while reading file.", err);
+            })
+            .on("end", () => {
+              console.log("Read entire file.");
+              // console.log(text);
+              // console.log(text);
+              this.handleRest(txtToHtml(text));
+            })
+        );
+    } else {
+      text = iconv
+        .decode(Buffer.from(result), this.props.currentBook.charset || "utf8")
+        .split("\n");
+      this.handleRest(txtToHtml(text));
+    }
   };
   handleMD = (result: ArrayBuffer) => {
     var blob = new Blob([result], { type: "text/plain" });
@@ -317,12 +355,13 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     };
     reader.readAsText(blob, "UTF-8");
   };
-  handleRtf = (result: ArrayBuffer) => {
+  handleRtf = async (result: ArrayBuffer) => {
+    if (!this.props.currentBook.charset) {
+      await this.handleCharset(result);
+    }
     let text = iconv.decode(
       Buffer.from(result),
-      this.props.currentBook.size / 1024 / 1024 > 1
-        ? "utf8"
-        : (chardet.detect(Buffer.from(result)) as string)
+      this.props.currentBook.charset || "utf8"
     );
     rtfToHTML.fromString(text, (err: any, html: any) => {
       this.handleRest(html);
@@ -333,12 +372,13 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       this.handleRest(res.value);
     });
   };
-  handleFb2 = (result: ArrayBuffer) => {
+  handleFb2 = async (result: ArrayBuffer) => {
+    if (!this.props.currentBook.charset) {
+      await this.handleCharset(result);
+    }
     let fb2Str = iconv.decode(
       Buffer.from(result),
-      this.props.currentBook.size / 1024 / 1024 > 1
-        ? "utf8"
-        : (chardet.detect(Buffer.from(result)) as string)
+      this.props.currentBook.charset || "utf8"
     );
     let bookObj = xmlBookToObj(Buffer.from(result));
     bookObj += xmlBookTagFilter(fb2Str);

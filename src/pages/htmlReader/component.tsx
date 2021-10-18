@@ -33,7 +33,9 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
       readerMode: OtherUtil.getReaderConfig("readerMode") || "double",
     };
   }
-
+  componentWillMount() {
+    this.props.handleFetchBooks();
+  }
   //进入阅读器
   handleEnterReader = (position: string) => {
     //控制上下左右的菜单的显示

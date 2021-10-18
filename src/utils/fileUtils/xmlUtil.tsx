@@ -51,8 +51,7 @@ export const xmlBookTagFilter = (bookString) => {
 
   return bookBody;
 };
-export const txtToHtml = (text: string) => {
-  const lines = text.split("\n");
+export const txtToHtml = (lines: string[]) => {
   let html: string = "";
   let isContainDI = false;
   let isContainChapter = false;
@@ -60,6 +59,7 @@ export const txtToHtml = (text: string) => {
   for (let item of lines) {
     if (item.trim()) {
       if (
+        lines.length < 50000 &&
         isTitle(item.trim(), isContainDI, isContainChapter, isContainCHAPTER)
       ) {
         if (item.trim().startsWith("第")) {
