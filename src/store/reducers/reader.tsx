@@ -6,6 +6,7 @@ const initState = {
   chapters: null,
   currentChapter: "",
   flattenChapters: null,
+
   color: parseInt(OtherUtil.getReaderConfig("highlightIndex"))
     ? parseInt(OtherUtil.getReaderConfig("highlightIndex"))
     : OtherUtil.getReaderConfig("isDisplayDark") === "yes"
@@ -31,6 +32,11 @@ export function reader(
         ...state,
         notes: action.payload,
       };
+    case "HANDLE_CURRENT_CHAPTER":
+      return {
+        ...state,
+        currentChapter: action.payload,
+      };
     case "HANDLE_ORIGINAL_TEXT":
       return {
         ...state,
@@ -46,6 +52,7 @@ export function reader(
         ...state,
         color: action.payload,
       };
+
     case "HANDLE_NOTE_KEY":
       return {
         ...state,

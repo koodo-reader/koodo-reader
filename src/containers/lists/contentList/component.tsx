@@ -2,6 +2,8 @@ import React from "react";
 import "./contentList.css";
 import { ContentListProps, ContentListState } from "./interface";
 import OtherUtil from "../../../utils/otherUtil";
+import RecordLocation from "../../../utils/readUtils/recordLocation";
+import _ from "underscore";
 class ContentList extends React.Component<ContentListProps, ContentListState> {
   constructor(props: ContentListProps) {
     super(props);
@@ -9,6 +11,7 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
       chapters: [],
       isCollapsed: true,
       currentIndex: -1,
+      currentChapter: "",
       isExpandContent: OtherUtil.getReaderConfig("isExpandContent") === "yes",
     };
     this.handleJump = this.handleJump.bind(this);
@@ -39,10 +42,18 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
       this.props.currentEpub.rendition.display(href);
     } else {
       let id = href.substr(1);
-
-      var top = window.frames[0].document.getElementById(id)?.offsetTop;
-      if (!top) return;
-      document.getElementsByClassName("ebook-viewer")[0].scrollTo(0, top);
+      RecordLocation.recordScrollHeight(
+        this.props.htmlBook.key,
+        document.body.clientWidth,
+        document.body.clientHeight,
+        0,
+        1,
+        _.findIndex(this.state.chapters, { id })
+      );
+      this.props.renderFunc(id);
+      // var top = window.frames[0].document.getElementById(id)?.offsetTop;
+      // if (!top) return;
+      // document.getElementsByClassName("ebook-viewer")[0].scrollTo(0, top);
     }
   }
   UNSAFE_componentWillReceiveProps(nextProps: ContentListProps) {

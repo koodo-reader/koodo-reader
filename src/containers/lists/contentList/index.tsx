@@ -6,6 +6,7 @@ const mapStateToProps = (state: stateType) => {
     currentEpub: state.book.currentEpub,
     chapters: state.reader.chapters,
     htmlBook: state.reader.htmlBook,
+    renderFunc: state.book.renderFunc,
   };
 };
 const actionCreator = {};
