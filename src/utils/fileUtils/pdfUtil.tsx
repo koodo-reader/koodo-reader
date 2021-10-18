@@ -10,6 +10,7 @@ export const addPdf = (
   path: string
 ) => {
   return new Promise<BookModel | boolean>((resolve, reject) => {
+    let charset = "";
     pdfjsLib
       .getDocument({ data: data })
       .promise.then((pdfDoc_: any) => {
@@ -39,7 +40,8 @@ export const addPdf = (
             format,
             publisher,
             size,
-            path
+            path,
+            charset
           );
           resolve(book);
         });
