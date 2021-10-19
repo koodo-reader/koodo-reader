@@ -51,26 +51,24 @@ export const xmlBookTagFilter = (bookString) => {
 
   return bookBody;
 };
-export const txtToHtml = (lines: string[]) => {
+export const txtToHtml = (lines: string[], content: string[]) => {
   let html: string = "";
-  let isContainDI = false;
-  let isContainChapter = false;
-  let isContainCHAPTER = false;
+  let isStartWithKeyword = false;
   for (let item of lines) {
     if (item.trim()) {
       if (
         lines.length < 50000 &&
-        isTitle(item.trim(), isContainDI, isContainChapter, isContainCHAPTER)
+        (content.indexOf(item) > -1 || isTitle(item.trim(), isStartWithKeyword))
       ) {
-        if (item.trim().startsWith("第")) {
-          isContainChapter = true;
+        //只要出现以第，chapter，CHAPTER开头的章节，就不再检测不以这些字开头的段落
+        if (
+          item.trim().startsWith("第") ||
+          item.trim().startsWith("Chapter") ||
+          item.trim().startsWith("CHAPTER")
+        ) {
+          isStartWithKeyword = true;
         }
-        if (item.trim().startsWith("Chapter")) {
-          isContainDI = true;
-        }
-        if (item.trim().startsWith("CHAPTER")) {
-          isContainCHAPTER = true;
-        }
+
         html += `<h1>${item}</h1>`;
       } else {
         html += `<p>${item}</p>`;

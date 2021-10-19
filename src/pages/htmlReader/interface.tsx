@@ -9,6 +9,7 @@ export interface ReaderProps {
   handleFetchBookmarks: () => void;
   handleFetchPercentage: (currentBook: BookModel) => void;
   handleFetchChapters: (currentEpub: any) => void;
+  handleReadingBook: (book: BookModel) => void;
 }
 
 export interface ReaderState {

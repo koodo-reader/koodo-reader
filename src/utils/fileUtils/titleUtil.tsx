@@ -1,9 +1,18 @@
-export const isTitle = (
-  line: string,
-  isContainDI: boolean = false,
-  isContainChapter: boolean = false,
-  isContainCHAPTER: boolean = false
-) => {
+let keywords = [
+  "章",
+  "节",
+  "回",
+  "節",
+  "卷",
+  "部",
+  "輯",
+  "辑",
+  "話",
+  "集",
+  "话",
+  "篇",
+];
+export const isTitle = (line: string, isStartWithKeyword: boolean = false) => {
   return (
     line.length < 30 &&
     line.indexOf("[") === -1 &&
@@ -24,9 +33,7 @@ export const isTitle = (
       line.startsWith("後序") ||
       (line.startsWith("第") && startWithDI(line)) ||
       (line.startsWith("卷") && startWithJUAN(line)) ||
-      (!isContainDI &&
-        !isContainChapter &&
-        !isContainCHAPTER &&
+      (!isStartWithKeyword &&
         line.indexOf("第") > -1 &&
         (line[line.indexOf("第") - 1] === " " ||
           line[line.indexOf("第") - 1] === "　" ||
@@ -34,48 +41,22 @@ export const isTitle = (
           line[line.indexOf("第") - 1] === "：" ||
           line[line.indexOf("第") - 1] === ":") &&
         startWithDI(line.substr(line.indexOf("第")))) ||
-      (!isContainDI &&
-        !isContainChapter &&
-        !isContainCHAPTER &&
+      (!isStartWithKeyword &&
         line.indexOf(" ") &&
         startWithNumAndSpace(line)) ||
-      (!isContainDI &&
-        !isContainChapter &&
-        !isContainCHAPTER &&
+      (!isStartWithKeyword &&
         line.indexOf("　") &&
         startWithNumAndSpace(line)) ||
-      (!isContainDI &&
-        !isContainChapter &&
-        !isContainCHAPTER &&
+      (!isStartWithKeyword &&
         line.indexOf("、") &&
         startWithNumAndPause(line)) ||
-      (!isContainDI &&
-        !isContainChapter &&
-        !isContainCHAPTER &&
+      (!isStartWithKeyword &&
         line.indexOf("：") &&
         startWithNumAndColon(line)) ||
-      (!isContainDI &&
-        !isContainChapter &&
-        !isContainCHAPTER &&
-        line.indexOf(":") &&
-        startWithNumAndColon(line)))
+      (!isStartWithKeyword && line.indexOf(":") && startWithNumAndColon(line)))
   );
 };
 const startWithDI = (line: string) => {
-  let keywords = [
-    "章",
-    "节",
-    "回",
-    "節",
-    "卷",
-    "部",
-    "輯",
-    "辑",
-    "話",
-    "集",
-    "话",
-    "篇",
-  ];
   let flag = false;
   for (let i = 0; i < keywords.length; i++) {
     if (

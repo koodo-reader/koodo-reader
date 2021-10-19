@@ -232,7 +232,7 @@
   "Tips": "Tips",
   "Brightness": "Brightness",
   "How sync works": "How sync works",
-  "You need to manually change the storage location to the same sync folder on different computers. When you click the sync button, Koodo Reader will automatically upload or download the data from this folder according the timestamp.": "You need to change the storage location to the same cloud drive folder on different computers. When you click the sync button, Koodo Reader will automatically upload or download the data from this folder and keep your data synchronized among all your computers. Please change storage location in Setting->Change storage location",
+  "You need to manually change the storage location to the same sync folder on different computers. When you click the sync button, Koodo Reader will automatically upload or download the data from this folder according the timestamp.": "You need to change the storage location to the same cloud drive folder on different computers. When you click the sync button, Koodo Reader will automatically upload or download your data from this folder and keep data synchronized across all you computers. Please change storage location in Setting->Change storage location",
   "Line Height": "Line Height",
   "Please choose an empty folder": "Please choose an empty folder",
   "Data change detected, whether to update?": "Data change detected, whether to update?",

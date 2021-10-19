@@ -10,6 +10,7 @@ class Book {
   size: number;
   path:string;
   charset:string;
+  content:string;
   constructor(
     key: string,
     name: string,
@@ -22,6 +23,7 @@ class Book {
     size: number,
     path:string,
     charset:string,
+    content:string,
   ) {
     this.key = key; // 数据库的键
     this.name = name; // 书籍名
@@ -34,6 +36,7 @@ class Book {
     this.size = size;
     this.path=path;
     this.charset=charset;
+    this.content=content;
   }
 }
 
