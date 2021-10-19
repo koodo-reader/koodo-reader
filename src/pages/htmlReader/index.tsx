@@ -3,6 +3,7 @@ import {
   handleFetchBookmarks,
   handleFetchChapters,
   handleFetchBooks,
+  handleReadingBook,
 } from "../../store/actions";
 import { connect } from "react-redux";
 import { stateType } from "../../store";
@@ -21,6 +22,7 @@ const actionCreator = {
   handleFetchBookmarks,
   handleFetchChapters,
   handleFetchBooks,
+  handleReadingBook,
 };
 export default connect(
   mapStateToProps,

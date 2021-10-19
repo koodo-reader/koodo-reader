@@ -73,7 +73,7 @@ app.on("ready", () => {
       id = powerSaveBlocker.start("prevent-display-sleep");
       console.log(powerSaveBlocker.isStarted(id));
     }
-    console.log(url);
+
     if (isFullscreen === "yes") {
       readerWindow = new BrowserWindow(options);
       readerWindow.loadURL(url);
@@ -91,8 +91,8 @@ app.on("ready", () => {
       readerWindow = new BrowserWindow(options);
       readerWindow.loadURL(url);
     }
-    readerWindow.on("close", () => {
-      if (readerWindow) {
+    readerWindow.on("close", (event) => {
+      if (!readerWindow.isDestroyed()) {
         let bounds = readerWindow.getBounds();
         store.set({
           windowWidth: bounds.width,
@@ -101,7 +101,7 @@ app.on("ready", () => {
           windowY: bounds.y,
         });
       }
-      if (isPreventSleep) {
+      if (isPreventSleep && !readerWindow.isDestroyed()) {
         id && powerSaveBlocker.stop(id);
       }
       // readerWindow && readerWindow.destroy();

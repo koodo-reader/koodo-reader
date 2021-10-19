@@ -20,72 +20,58 @@ import RecordLocation from "../../utils/readUtils/recordLocation";
 import { mimetype } from "../../constants/mimetype";
 import styleUtil from "../../utils/readUtils/styleUtil";
 import { isElectron } from "react-device-detect";
-import Lottie from "react-lottie";
-import animationSiri from "../../assets/lotties/siri.json";
 import _ from "underscore";
 import BackgroundWidget from "../../components/backgroundWidget";
 import toast from "react-hot-toast";
 
 declare var window: any;
-const siriOptions = {
-  loop: true,
-  autoplay: true,
-  animationData: animationSiri,
-  rendererSettings: {
-    preserveAspectRatio: "xMidYMid slice",
-  },
-};
-let url = document.location.href.split("/");
-let key = url[url.length - 1].split("?")[0];
+
 class Viewer extends React.Component<ViewerProps, ViewerState> {
   epub: any;
   constructor(props: ViewerProps) {
     super(props);
     this.state = {
       key: "",
-      isLoading: true,
+
       isFirst: true,
       scale: OtherUtil.getReaderConfig("scale") || 1,
-      chapterCount: RecordLocation.getScrollHeight(key).count || 0,
+      chapterCount:
+        RecordLocation.getScrollHeight(this.props.currentBook.key).count || 0,
     };
   }
 
   componentDidMount() {
-    this.setState({ key });
-    localforage.getItem("books").then((result: any) => {
-      let book = result[_.findIndex(result, { key })];
-      BookUtil.fetchBook(key, true, book.path).then((result) => {
-        if (!result) {
-          toast.error(this.props.t("Book not exsits"));
-          return;
-        }
-        this.props.handleReadingBook(book);
-        if (book.format === "MOBI" || book.format === "AZW3") {
-          this.handleMobi(result as ArrayBuffer);
-        } else if (book.format === "TXT") {
-          this.handleTxt(result as ArrayBuffer);
-        } else if (book.format === "MD") {
-          this.handleMD(result as ArrayBuffer);
-        } else if (book.format === "FB2") {
-          this.handleFb2(result as ArrayBuffer);
-        } else if (book.format === "RTF") {
-          this.handleRtf(result as ArrayBuffer);
-        } else if (book.format === "DOCX") {
-          this.handleDocx(result as ArrayBuffer);
-        } else if (
-          book.format === "HTML" ||
-          book.format === "XHTML" ||
-          book.format === "HTM" ||
-          book.format === "XML"
-        ) {
-          this.handleHtml(result as ArrayBuffer, book.format);
-        }
-        this.props.handleReadingState(true);
-        this.props.handleReadingBook(book);
+    let { key, path, format, name } = this.props.currentBook;
+    BookUtil.fetchBook(key, true, path).then((result) => {
+      if (!result) {
+        toast.error(this.props.t("Book not exsits"));
+        return;
+      }
 
-        RecentBooks.setRecent(key);
-        document.title = book.name + " - Koodo Reader";
-      });
+      if (format === "MOBI" || format === "AZW3") {
+        this.handleMobi(result as ArrayBuffer);
+      } else if (format === "TXT") {
+        this.handleTxt(result as ArrayBuffer);
+      } else if (format === "MD") {
+        this.handleMD(result as ArrayBuffer);
+      } else if (format === "FB2") {
+        this.handleFb2(result as ArrayBuffer);
+      } else if (format === "RTF") {
+        this.handleRtf(result as ArrayBuffer);
+      } else if (format === "DOCX") {
+        this.handleDocx(result as ArrayBuffer);
+      } else if (
+        format === "HTML" ||
+        format === "XHTML" ||
+        format === "HTM" ||
+        format === "XML"
+      ) {
+        this.handleHtml(result as ArrayBuffer, format);
+      }
+      this.props.handleReadingState(true);
+
+      RecentBooks.setRecent(this.props.currentBook.key);
+      document.title = name + " - Koodo Reader";
     });
 
     this.props.handleRenderFunc(this.handleRenderHtml);
@@ -109,6 +95,14 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         html.scrollHeight,
         html.offsetHeight
       ) * 2;
+    console.log(
+      iFrame.height,
+      body.scrollHeight,
+      body.offsetHeight,
+      html.clientHeight,
+      html.scrollHeight,
+      html.offsetHeight
+    );
     setTimeout(() => {
       let iFrame: any = document.getElementsByTagName("iframe")[0];
       let body = iFrame.contentWindow.document.body;
@@ -118,7 +112,8 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       let itemPs = body.querySelectorAll("p");
       let lastItemA = itemAs[itemAs.length - 1];
       let lastItemP = itemPs[itemPs.length - 1];
-      let lastItem;
+
+      let lastItem = lastItemP || lastItemA;
       if (_.isElement(lastItemA) && _.isElement(lastItemP)) {
         if (
           lastItemA.clientHeight + (lastItemA as any).offsetTop >
@@ -129,7 +124,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           lastItem = lastItemP;
         }
       }
-
       let nodeHeight = 0;
 
       if (!lastchild && !lastItem && !lastEle) return;
@@ -162,11 +156,19 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         ) +
         400 +
         (lastEle.nodeType === 3 ? nodeHeight : 0);
+      console.log(
+        iFrame.height,
+        lastchild,
+        lastEle,
+        lastItem,
+
+        nodeHeight
+      );
     }, 500);
   };
   handleRecord() {
     RecordLocation.recordScrollHeight(
-      this.state.key,
+      this.props.currentBook.key,
       document.body.clientWidth,
       document.body.clientHeight,
       document.getElementsByClassName("ebook-viewer")[0].scrollTop,
@@ -176,10 +178,14 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
   }
   handleRest = (docStr: string) => {
     let htmlParser = new HtmlParser(
-      new DOMParser().parseFromString(docStr, "text/html")
+      new DOMParser().parseFromString(docStr, "text/html"),
+      this.props.currentBook.format,
+      this.props.currentBook.content
+        ? JSON.parse(this.props.currentBook.content)
+        : []
     );
     this.props.handleHtmlBook({
-      key: this.state.key,
+      key: this.props.currentBook.key,
       doc: htmlParser.getAnchoredDoc(),
       chapters: htmlParser.getContentList(),
       subitems: [],
@@ -208,8 +214,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           }) + 1
         : this.state.chapterCount
     ];
-    // this.props.handleCurrentChapter("");
-    this.setState({ isLoading: false });
 
     styleUtil.addHtmlCss();
     this.handleIframeHeight();
@@ -218,7 +222,10 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       if (this.state.isFirst) {
         document
           .getElementsByClassName("ebook-viewer")[0]
-          .scrollTo(0, RecordLocation.getScrollHeight(this.state.key).scroll);
+          .scrollTo(
+            0,
+            RecordLocation.getScrollHeight(this.props.currentBook.key).scroll
+          );
         this.setState({ isFirst: false });
       } else {
         document.getElementsByClassName("ebook-viewer")[0].scrollTo(0, 0);
@@ -297,64 +304,134 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
   handleMobi = async (result: ArrayBuffer) => {
     let mobiFile = new MobiParser(result);
     let content: any = await mobiFile.render();
+
+    // if (!this.props.currentBook.content) {
+    //   await this.handleChapter(content.outerHTML);
+    // }
     this.handleRest(content.outerHTML);
   };
-  handleCharset = (result: ArrayBuffer) => {
+  handleChapter = (docStr: string) => {
     return new Promise<void>(async (resolve, reject) => {
       let { books } = this.props;
+      let htmlParser = new HtmlParser(
+        new DOMParser().parseFromString(docStr, "text/html"),
+        this.props.currentBook.format,
+        this.props.currentBook.content
+          ? JSON.parse(this.props.currentBook.content)
+          : []
+      );
       books.forEach((item) => {
         if (item.key === this.props.currentBook.key) {
-          item.charset = chardet.detect(Buffer.from(result)) || "";
+          item.content = JSON.stringify(htmlParser.getChapterList());
+          this.props.handleReadingBook(item);
         }
       });
       await localforage.setItem("books", books);
+      // this.props.handleFetchBooks();
       resolve();
     });
   };
+  handleCharset = (result: ArrayBuffer) => {
+    return new Promise<string>(async (resolve, reject) => {
+      let { books } = this.props;
+      let charset = "";
+      books.forEach((item) => {
+        if (item.key === this.props.currentBook.key) {
+          charset = chardet.detect(Buffer.from(result)) || "";
+          item.charset = charset;
+          this.props.handleReadingBook(item);
+        }
+      });
+
+      await localforage.setItem("books", books);
+      // this.props.handleFetchBooks();
+      resolve(charset);
+    });
+  };
   handleTxt = async (result: ArrayBuffer) => {
+    let charset = "";
     if (!this.props.currentBook.charset) {
-      await this.handleCharset(result);
+      charset = await this.handleCharset(result);
     }
     let text = iconv
-      .decode(Buffer.from(result), this.props.currentBook.charset || "utf8")
+      .decode(
+        Buffer.from(result),
+        this.props.currentBook.charset || charset || "utf8"
+      )
       .split("\n");
-    this.handleRest(txtToHtml(text));
+    let docStr = "";
+    for (
+      let chapterCount = 0;
+      chapterCount < text.length / 50000;
+      chapterCount++
+    ) {
+      docStr += txtToHtml(
+        chapterCount === Math.floor(text.length / 50000)
+          ? text.slice(chapterCount * 50000, text.length)
+          : text.slice(chapterCount * 50000, chapterCount * 50000 + 50000),
+        this.props.currentBook.content
+          ? JSON.parse(this.props.currentBook.content)
+          : []
+      );
+    }
+    if (!this.props.currentBook.content) {
+      await this.handleChapter(docStr);
+    }
+
+    this.handleRest(docStr);
   };
   handleMD = (result: ArrayBuffer) => {
     var blob = new Blob([result], { type: "text/plain" });
     var reader = new FileReader();
-    reader.onload = (evt) => {
-      this.handleRest(marked(evt.target?.result as any));
+    reader.onload = async (evt) => {
+      let docStr = marked(evt.target?.result as any);
+      if (!this.props.currentBook.content) {
+        await this.handleChapter(docStr);
+      }
+      this.handleRest(docStr);
     };
     reader.readAsText(blob, "UTF-8");
   };
   handleRtf = async (result: ArrayBuffer) => {
+    let charset = "";
     if (!this.props.currentBook.charset) {
-      await this.handleCharset(result);
+      charset = await this.handleCharset(result);
     }
     let text = iconv.decode(
       Buffer.from(result),
-      this.props.currentBook.charset || "utf8"
+      this.props.currentBook.charset || charset || "utf8"
     );
-    rtfToHTML.fromString(text, (err: any, html: any) => {
+    rtfToHTML.fromString(text, async (err: any, html: any) => {
+      if (!this.props.currentBook.content) {
+        await this.handleChapter(html);
+      }
       this.handleRest(html);
     });
   };
   handleDocx = (result: ArrayBuffer) => {
-    window.mammoth.convertToHtml({ arrayBuffer: result }).then((res: any) => {
-      this.handleRest(res.value);
-    });
+    window.mammoth
+      .convertToHtml({ arrayBuffer: result })
+      .then(async (res: any) => {
+        if (!this.props.currentBook.content) {
+          await this.handleChapter(res.value);
+        }
+        this.handleRest(res.value);
+      });
   };
   handleFb2 = async (result: ArrayBuffer) => {
+    let charset = "";
     if (!this.props.currentBook.charset) {
-      await this.handleCharset(result);
+      charset = await this.handleCharset(result);
     }
     let fb2Str = iconv.decode(
       Buffer.from(result),
-      this.props.currentBook.charset || "utf8"
+      this.props.currentBook.charset || charset || "utf8"
     );
     let bookObj = xmlBookToObj(Buffer.from(result));
     bookObj += xmlBookTagFilter(fb2Str);
+    if (!this.props.currentBook.content) {
+      await this.handleChapter(bookObj);
+    }
     this.handleRest(bookObj);
   };
   handleHtml = (result: ArrayBuffer, format: string) => {
@@ -362,8 +439,11 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       type: mimetype[format.toLocaleLowerCase()],
     });
     var reader = new FileReader();
-    reader.onload = (evt) => {
+    reader.onload = async (evt) => {
       const html = evt.target?.result as any;
+      if (!this.props.currentBook.content) {
+        await this.handleChapter(html);
+      }
       this.handleRest(html);
     };
     reader.readAsText(blob, "UTF-8");
@@ -371,12 +451,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
   render() {
     return (
       <>
-        {this.state.isLoading && (
-          <div className="spinner">
-            <Lottie options={siriOptions} height={100} width={300} />
-          </div>
-        )}
-
         <div
           className="ebook-viewer"
           style={{

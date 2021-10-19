@@ -2,6 +2,7 @@ function ab2str(buf) {
   if (buf instanceof ArrayBuffer) {
     buf = new Uint8Array(buf);
   }
+
   return new TextDecoder("utf-8").decode(buf);
 }
 
@@ -149,6 +150,7 @@ class MobiFile {
   palm_header: any;
   mobi_header: any;
   reclist: any;
+
   constructor(data) {
     this.view = new DataView(data);
     this.buffer = this.view.buffer;
@@ -251,7 +253,6 @@ class MobiFile {
 
     var data = new Uint8Array(this.buffer.slice(begin, end));
     var ex = this.get_record_extrasize(data, flags);
-
     data = new Uint8Array(this.buffer.slice(begin, end - ex));
     if (this.palm_header.compression === 2) {
       var buffer = uncompression_lz77(data);
@@ -303,6 +304,7 @@ class MobiFile {
       record.attr = this.getUint32();
       reclist.push(record);
     }
+
     return reclist;
   }
   load_record0() {
@@ -337,7 +339,6 @@ class MobiFile {
     mobi_header.text_encoding = this.getUint32();
     mobi_header.uid = this.getUint32();
     mobi_header.generator_version = this.getUint32();
-
     this.skip(40);
 
     mobi_header.first_nonbook_index = this.getUint32();
@@ -386,42 +387,20 @@ class MobiFile {
     span.innerHTML = s;
     return span.textContent || span.innerText;
   }
-  render(isElectron: boolean = false) {
+  render() {
     return new Promise((resolve, reject) => {
       this.load();
       var content = this.read_text();
       var bookDoc = domParser.parseFromString(content, "text/html")
         .documentElement;
-      let lines: any = Array.from(
-        bookDoc.querySelectorAll("p,b,font,h3,h2,h1")
-      );
-      let parseContent: any = [];
-      for (let i = 0, len = lines.length; i < len - 1; i++) {
-        lines[i].innerText &&
-          lines[i].innerText !== parseContent[parseContent.length - 1] &&
-          parseContent.push(lines[i].innerText);
-        let imgDoms = lines[i].getElementsByTagName("img");
-        if (imgDoms.length > 0) {
-          for (let i = 0; i < imgDoms.length; i++) {
-            parseContent.push("#image");
-          }
-        }
-      }
+
       const handleImage = async () => {
         var imgDoms = bookDoc.getElementsByTagName("img");
-
-        parseContent.push("~image");
         for (let i = 0; i < imgDoms.length; i++) {
-          const src = await this.render_image(imgDoms, i);
-          parseContent.push(
-            src + " " + imgDoms[i].width + " " + imgDoms[i].height
-          );
+          await this.render_image(imgDoms, i);
         }
-        if (imgDoms.length > 200 || !isElectron) {
-          resolve(bookDoc);
-        } else {
-          resolve(parseContent.join("\n    \n"));
-        }
+
+        resolve(bookDoc);
       };
       handleImage();
     });
