@@ -8,6 +8,8 @@ import { ReaderProps, ReaderState } from "./interface";
 import OtherUtil from "../../utils/otherUtil";
 import ReadingTime from "../../utils/readUtils/readingTime";
 import Viewer from "../../containers/htmlViewer";
+import _ from "underscore";
+import localforage from "localforage";
 
 class Reader extends React.Component<ReaderProps, ReaderState> {
   messageTimer!: NodeJS.Timeout;
@@ -34,7 +36,13 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
     };
   }
   componentWillMount() {
+    let url = document.location.href.split("/");
+    let key = url[url.length - 1].split("?")[0];
     this.props.handleFetchBooks();
+    localforage.getItem("books").then((result: any) => {
+      let book = result[_.findIndex(result, { key })];
+      this.props.handleReadingBook(book);
+    });
   }
   //进入阅读器
   handleEnterReader = (position: string) => {
@@ -214,7 +222,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         >
           <span className="icon-grid panel-icon"></span>
         </div>
-        <Viewer {...renditionProps} />
+        {this.props.currentBook.key && <Viewer {...renditionProps} />}
         <div
           className="setting-panel-container"
           onMouseLeave={(event) => {

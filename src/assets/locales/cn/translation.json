@@ -243,7 +243,7 @@
   "Line Height": "行间距",
   "Tips": "提示",
   "How sync works": "同步是如何实现的？",
-  "You need to manually change the storage location to the same sync folder on different computers. When you click the sync button, Koodo Reader will automatically upload or download the data from this folder according the timestamp.": "同步功能需要配合第三方同步盘实现，在不同电脑上把数据存储位置修改为同一个网盘文件夹，点击同步按钮后，Koodo会自动进行数据的双向同步。前往设置->修改数据存储位置处修改",
+  "You need to manually change the storage location to the same sync folder on different computers. When you click the sync button, Koodo Reader will automatically upload or download the data from this folder according the timestamp.": "同步功能需要配合第三方同步盘实现，在不同电脑上把数据存储位置修改为同一个网盘文件夹。当在其中一台电脑上点击同步后，Koodo中的数据就会更新到这个文件夹中，另外一台电脑中检测到数据变化，同步的按钮就会变蓝，提示有数据可以更新，点击同步按钮后，就会把同步文件夹中的数据更新到Koodo中，从而实现同步。前往设置->修改数据存储位置处修改",
   "Please choose an empty folder": "请选择空文件夹",
   "Data change detected, whether to update?": "检测到数据变化，是否更新",
   "Empty Library": "图书库为空",
