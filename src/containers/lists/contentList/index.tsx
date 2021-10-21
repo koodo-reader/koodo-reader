@@ -1,6 +1,7 @@
 import { connect } from "react-redux";
 import { stateType } from "../../../store";
 import ContentList from "./component";
+import { handleCurrentChapter } from "../../../store/actions";
 const mapStateToProps = (state: stateType) => {
   return {
     currentEpub: state.book.currentEpub,
@@ -9,5 +10,5 @@ const mapStateToProps = (state: stateType) => {
     renderFunc: state.book.renderFunc,
   };
 };
-const actionCreator = {};
+const actionCreator = { handleCurrentChapter };
 export default connect(mapStateToProps, actionCreator)(ContentList);

@@ -5,7 +5,7 @@ export interface SettingSwitchProps {
   locations: any;
   isReading: boolean;
   htmlBook;
-  renderFunc: () => void;
+  renderFunc: (id: string) => void;
   t: (title: string) => string;
 }
 export interface SettingSwitchState {
