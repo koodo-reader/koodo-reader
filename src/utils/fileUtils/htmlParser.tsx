@@ -19,18 +19,10 @@ class HtmlParser {
     this.contentList = Array.from(
       bookDoc.querySelectorAll("h1,h2,h3,h4,h5,b,font")
     );
-    if (this.content.length > 0) {
-      this.contentList = this.contentList.filter(
-        (item) => this.content.indexOf(item.innerText) > -1
-      );
-    } else if (this.format !== "TXT") {
-      let contents = this.contentList.filter((item: any, index: number) => {
-        return isTitle(item.innerText.trim());
-      }) as any;
-      if (contents.length > 3) {
-        this.contentList = contents;
-      }
-    }
+
+    this.contentList = this.contentList.filter((item) =>
+      isTitle(item.innerText.trim().replace(/(\r\n|\n|\r)/gm, ""))
+    );
 
     for (let i = 0; i < this.contentList.length; i++) {
       let random = Math.floor(Math.random() * 900000) + 100000;
@@ -58,7 +50,7 @@ class HtmlParser {
       }
     });
   }
-  getChapterList() {
+  getChapterTitleList() {
     return this.contentList
       .filter((item, index) => {
         if (index > 0) {

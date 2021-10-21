@@ -1,11 +1,11 @@
 import React from "react";
 import "./progressPanel.css";
-import RecordLocation from "../../../utils/readUtils/recordLocation";
 import { Trans } from "react-i18next";
 import { ProgressPanelProps, ProgressPanelState } from "./interface";
 import Lottie from "react-lottie";
 import animationSiri from "../../../assets/lotties/siri.json";
 import { Tooltip } from "react-tippy";
+import _ from "underscore";
 
 const siriOptions = {
   loop: true,
@@ -23,99 +23,80 @@ class ProgressPanel extends React.Component<
     super(props);
     this.state = {
       displayPercentage: this.props.percentage ? this.props.percentage : 0,
-      currentChapter: "",
+      currentChapter: this.props.currentChapter,
       currentChapterIndex: 0,
-      chapters: [],
     };
   }
   componentWillReceiveProps(nextProps: ProgressPanelProps) {
-    if (nextProps.currentBook && nextProps.htmlBook) {
-      setTimeout(() => {
-        let scrollTop =
-          RecordLocation.getCfi(nextProps.currentBook.key).scroll || 0;
-        let length =
-          RecordLocation.getCfi(nextProps.currentBook.key).length || 1;
-        this.setState({
-          displayPercentage: scrollTop / length,
-        });
-        let _chapters: { top: number; label: string }[] = [];
-        let _index = 0;
-        let iframe = document.getElementsByTagName("iframe")[0];
-        if (!iframe) return;
-        let doc = iframe.contentDocument;
-        if (!doc) {
-          return;
-        }
-        for (let chapter of nextProps.htmlBook.chapters) {
-          let top = doc.getElementById(chapter.id)?.offsetTop;
-
-          top && _chapters.push({ top, label: chapter.label });
-          if (top && top < scrollTop) {
-            _index++;
-          } else {
-            this.setState({
-              currentChapter: chapter.label,
-              currentChapterIndex: _index,
-            });
-          }
-        }
-        this.setState({ chapters: _chapters });
-      }, 1000);
+    if (nextProps.currentChapter && nextProps.htmlBook) {
+      this.setState({
+        currentChapter: nextProps.currentChapter,
+        currentChapterIndex:
+          _.findIndex(nextProps.htmlBook.chapters, {
+            id: nextProps.currentChapter,
+          }) > -1
+            ? _.findIndex(nextProps.htmlBook.chapters, {
+                id: nextProps.currentChapter,
+              })
+            : 0,
+        displayPercentage:
+          _.findIndex(nextProps.htmlBook.chapters, {
+            id: nextProps.currentChapter,
+          }) / nextProps.htmlBook.chapters.length,
+      });
     }
   }
 
   onProgressChange = (event: any) => {
     const percentage = event.target.value / 100;
-    let iFrame: any = document.getElementsByTagName("iframe")[0];
-    let body = iFrame.contentWindow.document.body,
-      html = iFrame.contentWindow.document.documentElement;
-    let height = Math.max(
-      body.scrollHeight,
-      body.offsetHeight,
-      html.clientHeight,
-      html.scrollHeight,
-      html.offsetHeight
-    );
-    document
-      .getElementsByClassName("ebook-viewer")[0]
-      .scrollTo(0, height * percentage);
+    if (this.props.htmlBook.chapters.length > 0) {
+      this.props.renderFunc(
+        this.props.htmlBook.chapters[
+          Math.floor(this.props.htmlBook.chapters.length * percentage)
+        ].id
+      );
+    }
   };
   //使进度百分比随拖动实时变化
   onProgressInput = (event: any) => {
     this.setState({ displayPercentage: event.target.value / 100 });
   };
-  previourChapter = () => {
-    let scrollTop = RecordLocation.getCfi(this.props.currentBook.key).scroll;
-    for (let i = 0; i < this.state.chapters.length; i++) {
-      if (scrollTop < this.state.chapters[i].top) {
-        document
-          .getElementsByClassName("ebook-viewer")[0]
-          .scrollTo(0, this.state.chapters[i - 1].top);
-        break;
-      }
+  nextChapter = () => {
+    if (this.props.htmlBook.chapters.length > 0) {
+      this.props.renderFunc(
+        this.props.htmlBook.chapters[
+          _.findIndex(this.props.htmlBook.chapters, {
+            id: this.props.currentChapter,
+          }) <
+          this.props.htmlBook.chapters.length - 1
+            ? _.findIndex(this.props.htmlBook.chapters, {
+                id: this.props.currentChapter,
+              }) + 1
+            : this.props.htmlBook.chapters.length - 1
+        ].id
+      );
     }
   };
-  nextChapter = () => {
-    let scrollTop = RecordLocation.getCfi(this.props.currentBook.key).scroll;
-    for (let i = 0; i < this.state.chapters.length; i++) {
-      if (scrollTop < this.state.chapters[i].top) {
-        document
-          .getElementsByClassName("ebook-viewer")[0]
-          .scrollTo(0, this.state.chapters[i].top);
-        break;
-      }
+  prevChapter = () => {
+    if (this.props.htmlBook.chapters.length > 0) {
+      this.props.renderFunc(
+        this.props.htmlBook.chapters[
+          _.findIndex(this.props.htmlBook.chapters, {
+            id: this.props.currentChapter,
+          }) > 0
+            ? _.findIndex(this.props.htmlBook.chapters, {
+                id: this.props.currentChapter,
+              }) - 1
+            : 0
+        ].id
+      );
     }
   };
   handleJumpChapter = (event: any) => {
-    if (!event.target.value) return;
-    if (event.target.value > this.state.chapters.length) {
-      document
-        .getElementsByClassName("ebook-viewer")[0]
-        .scrollTo(0, this.state.chapters[this.state.chapters.length - 1].top);
-    } else {
-      document
-        .getElementsByClassName("ebook-viewer")[0]
-        .scrollTo(0, this.state.chapters[event.target.value - 1].top);
+    if (this.props.htmlBook.chapters.length > 0) {
+      this.props.renderFunc(
+        this.props.htmlBook.chapters[event.target.value].id
+      );
     }
   };
   render() {
@@ -178,7 +159,7 @@ class ProgressPanel extends React.Component<
         <div
           className="previous-chapter"
           onClick={() => {
-            this.previourChapter();
+            this.prevChapter();
           }}
         >
           <Tooltip

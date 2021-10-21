@@ -13,15 +13,12 @@ class RecordLocation {
   }
   static recordScrollHeight(
     bookKey: string,
-    width: number,
-    height: number,
-    scroll: number,
-    length: number,
-    count: number
+    text: string,
+    chapterTitle: string
   ) {
     let json = localStorage.getItem("recordLocation");
     let obj = JSON.parse(json!) || {};
-    obj[bookKey] = { width, height, scroll, length, count };
+    obj[bookKey] = { text: text, chapterTitle };
     localStorage.setItem("recordLocation", JSON.stringify(obj));
   }
 

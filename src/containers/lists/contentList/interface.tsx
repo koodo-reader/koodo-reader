@@ -4,6 +4,7 @@ export interface ContentListProps {
   chapters: any;
   htmlBook: HtmlBookModel;
   renderFunc: (id: string) => void;
+  handleCurrentChapter: (currentChapter: string) => void;
 }
 export interface ContentListState {
   chapters: any;
