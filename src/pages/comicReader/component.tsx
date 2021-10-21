@@ -20,12 +20,15 @@ let Unrar = window.Unrar;
 
 class Viewer extends React.Component<ViewerProps, ViewerState> {
   epub: any;
+  lock: boolean;
+
   constructor(props: ViewerProps) {
     super(props);
     this.state = {
       key: "",
       comicScale: OtherUtil.getReaderConfig("comicScale") || "100%",
     };
+    this.lock = false;
   }
 
   componentDidMount() {
@@ -41,15 +44,37 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         )
       ].setAttribute("selected", "selected");
     window.frames[0].document.addEventListener("wheel", (event) => {
-      RecordLocation.recordScrollHeight(
-        key,
-        document.body.clientWidth,
-        document.body.clientHeight,
-        window.frames[0].document.scrollingElement?.scrollTop,
-        window.frames[0].document.scrollingElement?.scrollHeight,
-        0
-      );
+      this.handleRecord();
     });
+  }
+  isScrolledIntoView = (el: HTMLElement) => {
+    var rect = el.getBoundingClientRect();
+    var elemBottom = rect.bottom;
+    var screen = document.getElementById("root");
+    var isVisible =
+      elemBottom > 0 && elemBottom < (screen as HTMLElement).offsetHeight;
+
+    return isVisible;
+  };
+  handleRecord() {
+    if (this.lock) return;
+
+    RecordLocation.recordScrollHeight(
+      this.props.currentBook.key,
+      (Array.from(
+        window.frames[0].document.getElementsByTagName("img")
+      ).filter((s) => this.isScrolledIntoView(s as any))[0] as HTMLElement)
+        ? (Array.from(
+            window.frames[0].document.getElementsByTagName("img")
+          ).filter((s) => this.isScrolledIntoView(s as any))[0] as HTMLElement)
+            .id
+        : "",
+      ""
+    );
+    this.lock = true;
+    setTimeout(() => {
+      this.lock = false;
+    }, 1000);
   }
   handleRender = (key: string) => {
     localforage.getItem("books").then((result: any) => {
@@ -109,12 +134,13 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
 
     return base64;
   };
-  addImage = (content: ArrayBuffer, extension: string) => {
+  addImage = (content: ArrayBuffer, extension: string, index: number) => {
     let url = this.base64ArrayBuffer(content);
 
     let imageDom = document.createElement("img");
     imageDom.src =
       "data:" + mimetype[extension.toLowerCase()] + ";base64," + url;
+    imageDom.id = index + "";
     imageDom.setAttribute(
       "style",
       `width:${OtherUtil.getReaderConfig("comicScale") || "100%"};margin-left:${
@@ -129,16 +155,36 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
   handleJump = () => {
     window.frames[0].document.scrollingElement?.scrollTo(
       0,
-      RecordLocation.getScrollHeight(this.state.key).scroll
+      RecordLocation.getScrollHeight(this.props.currentBook.key).text &&
+        (Array.from(
+          window.frames[0].document.getElementsByTagName("img")
+        ).filter(
+          (s) =>
+            (s as HTMLElement).id ===
+            RecordLocation.getScrollHeight(this.props.currentBook.key).text
+        )[0] as HTMLElement)
+        ? (Array.from(
+            window.frames[0].document.getElementsByTagName("img")
+          ).filter(
+            (s) =>
+              (s as HTMLElement).id ===
+              RecordLocation.getScrollHeight(this.props.currentBook.key).text
+          )[0] as HTMLElement).offsetTop
+        : 0
     );
   };
   handleCbz = (result: ArrayBuffer) => {
     let zip = new JSZip();
     zip.loadAsync(result).then(async (contents) => {
-      for (let filename of Object.keys(contents.files).sort()) {
-        const content = await zip.file(filename).async("arraybuffer");
-        const extension = filename.split(".").reverse()[0];
-        this.addImage(content, extension);
+      for (let i = 0; i < Object.keys(contents.files).sort().length; i++) {
+        const content = await zip
+          .file(Object.keys(contents.files).sort()[i])
+          .async("arraybuffer");
+        const extension = Object.keys(contents.files)
+          .sort()
+          [i].split(".")
+          .reverse()[0];
+        this.addImage(content, extension, i);
       }
       this.handleJump();
     });
@@ -146,13 +192,13 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
   handleCbr = (result: ArrayBuffer) => {
     let unrar = new Unrar(result);
     var entries = unrar.getEntries();
-    for (let item of entries) {
-      var fileData = unrar.decompress(item.name);
+    for (let i = 0; i < entries.length; i++) {
+      var fileData = unrar.decompress(entries[i].name);
       if (!fileData) {
         console.log("decompress failed...");
       }
-      const extension = item.name.split(".").reverse()[0];
-      this.addImage(fileData, extension);
+      const extension = entries[i].name.split(".").reverse()[0];
+      this.addImage(fileData, extension, i);
     }
     document.scrollingElement?.scrollTo(
       0,
@@ -162,9 +208,9 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
   handleCbt = (result: ArrayBuffer) => {
     untar(result).then(
       (extractedFiles) => {
-        for (let item of extractedFiles) {
-          const extension = item.name.split(".").reverse()[0];
-          this.addImage(item.buffer, extension);
+        for (let i = 0; i < extractedFiles.length; i++) {
+          const extension = extractedFiles[i].name.split(".").reverse()[0];
+          this.addImage(extractedFiles[i].buffer, extension, i);
         }
         document.scrollingElement?.scrollTo(
           0,

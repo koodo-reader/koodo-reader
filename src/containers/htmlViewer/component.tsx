@@ -5,7 +5,6 @@ import localforage from "localforage";
 import { withRouter } from "react-router-dom";
 import BookUtil from "../../utils/fileUtils/bookUtil";
 import MobiParser from "../../utils/fileUtils/mobiParser";
-import marked from "marked";
 import iconv from "iconv-lite";
 import chardet from "chardet";
 import rtfToHTML from "@iarna/rtf-to-html";
@@ -28,6 +27,7 @@ declare var window: any;
 
 class Viewer extends React.Component<ViewerProps, ViewerState> {
   epub: any;
+  lock: boolean;
   constructor(props: ViewerProps) {
     super(props);
     this.state = {
@@ -35,9 +35,11 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
 
       isFirst: true,
       scale: OtherUtil.getReaderConfig("scale") || 1,
-      chapterCount:
-        RecordLocation.getScrollHeight(this.props.currentBook.key).count || 0,
+      chapterTitle:
+        RecordLocation.getScrollHeight(this.props.currentBook.key)
+          .chapterTitle || "",
     };
+    this.lock = false;
   }
 
   componentDidMount() {
@@ -95,14 +97,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         html.scrollHeight,
         html.offsetHeight
       ) * 2;
-    console.log(
-      iFrame.height,
-      body.scrollHeight,
-      body.offsetHeight,
-      html.clientHeight,
-      html.scrollHeight,
-      html.offsetHeight
-    );
+
     setTimeout(() => {
       let iFrame: any = document.getElementsByTagName("iframe")[0];
       let body = iFrame.contentWindow.document.body;
@@ -154,27 +149,29 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
             ? lastItem.clientHeight + (lastItem as any).offsetTop
             : 0
         ) +
-        400 +
+        600 +
         (lastEle.nodeType === 3 ? nodeHeight : 0);
-      console.log(
-        iFrame.height,
-        lastchild,
-        lastEle,
-        lastItem,
-
-        nodeHeight
-      );
     }, 500);
   };
   handleRecord() {
+    if (this.lock) return;
+
     RecordLocation.recordScrollHeight(
       this.props.currentBook.key,
-      document.body.clientWidth,
-      document.body.clientHeight,
-      document.getElementsByClassName("ebook-viewer")[0].scrollTop,
-      document.getElementsByClassName("ebook-viewer")[0].scrollHeight,
-      this.state.chapterCount
+      (Array.from(
+        window.frames[0].document.getElementsByTagName("p")
+      ).filter((s) => this.isScrolledIntoView(s as any))[0] as HTMLElement)
+        ? (Array.from(
+            window.frames[0].document.getElementsByTagName("p")
+          ).filter((s) => this.isScrolledIntoView(s as any))[0] as HTMLElement)
+            .innerText
+        : "",
+      this.state.chapterTitle
     );
+    this.lock = true;
+    setTimeout(() => {
+      this.lock = false;
+    }, 500);
   }
   handleRest = (docStr: string) => {
     let htmlParser = new HtmlParser(
@@ -197,34 +194,77 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     });
     this.handleRenderHtml();
   };
+  isScrolledIntoView = (el: HTMLElement) => {
+    var rect = el.getBoundingClientRect();
+    var elemTop = rect.top;
+    var viewer = document.getElementsByClassName("ebook-viewer")[0];
+    var screen = document.getElementsByClassName("viewer")[0];
+    var isVisible =
+      elemTop >= viewer.scrollTop &&
+      elemTop <= viewer.scrollTop + (screen as HTMLElement).offsetHeight;
+
+    return isVisible;
+  };
   handleRenderHtml = (id: string = "") => {
+    if (id === "html-render") {
+      styleUtil.addHtmlCss();
+      this.handleIframeHeight();
+
+      return;
+    }
     window.frames[0].document.body.innerHTML = "";
 
     id &&
       this.setState({
-        chapterCount:
+        chapterTitle: this.props.htmlBook.chapters[
           _.findIndex(this.props.htmlBook.chapters, {
             id: id,
-          }) + 1,
+          }) + 1
+        ].label,
       });
+    console.log(
+      this.props.htmlBook.chapterDoc,
+      this.props.htmlBook.chapters,
+      this.state.chapterTitle
+    );
     window.frames[0].document.body.innerHTML = this.props.htmlBook.chapterDoc[
       id
         ? _.findIndex(this.props.htmlBook.chapters, {
             id,
           }) + 1
-        : this.state.chapterCount
+        : _.findIndex(this.props.htmlBook.chapters, {
+            label: this.state.chapterTitle,
+          }) + 1
     ];
-
+    this.props.handleCurrentChapter(id);
     styleUtil.addHtmlCss();
     this.handleIframeHeight();
 
     setTimeout(() => {
-      if (this.state.isFirst) {
+      console.log(this.state.isFirst, id);
+      if (this.state.isFirst || id === "html-render") {
         document
           .getElementsByClassName("ebook-viewer")[0]
           .scrollTo(
             0,
-            RecordLocation.getScrollHeight(this.props.currentBook.key).scroll
+            RecordLocation.getScrollHeight(this.props.currentBook.key).text &&
+              (Array.from(
+                window.frames[0].document.getElementsByTagName("p")
+              ).filter(
+                (s) =>
+                  (s as HTMLElement).innerText ===
+                  RecordLocation.getScrollHeight(this.props.currentBook.key)
+                    .text
+              )[0] as HTMLElement)
+              ? (Array.from(
+                  window.frames[0].document.getElementsByTagName("p")
+                ).filter(
+                  (s) =>
+                    (s as HTMLElement).innerText ===
+                    RecordLocation.getScrollHeight(this.props.currentBook.key)
+                      .text
+                )[0] as HTMLElement).offsetTop
+              : 0
           );
         this.setState({ isFirst: false });
       } else {
@@ -267,14 +307,25 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       ) < 10
     ) {
       if (
-        this.state.chapterCount ===
-        this.props.htmlBook.chapterDoc.length - 1
+        _.findIndex(this.props.htmlBook.chapters, {
+          label: this.state.chapterTitle,
+        }) ===
+        this.props.htmlBook.chapters.length - 1
       ) {
         return;
       }
-      this.setState({ chapterCount: this.state.chapterCount + 1 }, () => {
-        this.handleRenderHtml();
-      });
+      this.setState(
+        {
+          chapterTitle: this.props.htmlBook.chapters[
+            _.findIndex(this.props.htmlBook.chapters, {
+              label: this.state.chapterTitle,
+            }) + 1
+          ].label,
+        },
+        () => {
+          this.handleRenderHtml();
+        }
+      );
     }
   };
   bindEvent = (doc: any) => {
@@ -303,11 +354,9 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
   };
   handleMobi = async (result: ArrayBuffer) => {
     let mobiFile = new MobiParser(result);
+
     let content: any = await mobiFile.render();
 
-    // if (!this.props.currentBook.content) {
-    //   await this.handleChapter(content.outerHTML);
-    // }
     this.handleRest(content.outerHTML);
   };
   handleChapter = (docStr: string) => {
@@ -322,7 +371,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       );
       books.forEach((item) => {
         if (item.key === this.props.currentBook.key) {
-          item.content = JSON.stringify(htmlParser.getChapterList());
+          item.content = JSON.stringify(htmlParser.getChapterTitleList());
           this.props.handleReadingBook(item);
         }
       });
@@ -359,32 +408,32 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         this.props.currentBook.charset || charset || "utf8"
       )
       .split("\n");
+    console.log(
+      text,
+      iconv.decode(
+        Buffer.from(result),
+        this.props.currentBook.charset || charset || "utf8"
+      )
+    );
     let docStr = "";
-    for (
-      let chapterCount = 0;
-      chapterCount < text.length / 50000;
-      chapterCount++
-    ) {
-      docStr += txtToHtml(
-        chapterCount === Math.floor(text.length / 50000)
-          ? text.slice(chapterCount * 50000, text.length)
-          : text.slice(chapterCount * 50000, chapterCount * 50000 + 50000),
-        this.props.currentBook.content
-          ? JSON.parse(this.props.currentBook.content)
-          : []
-      );
-    }
+    docStr = txtToHtml(
+      text,
+      this.props.currentBook.content
+        ? JSON.parse(this.props.currentBook.content)
+        : [],
+      RecordLocation.getCfi(this.props.currentBook.key).chapterTitle
+    );
+
     if (!this.props.currentBook.content) {
       await this.handleChapter(docStr);
     }
-
     this.handleRest(docStr);
   };
   handleMD = (result: ArrayBuffer) => {
     var blob = new Blob([result], { type: "text/plain" });
     var reader = new FileReader();
     reader.onload = async (evt) => {
-      let docStr = marked(evt.target?.result as any);
+      let docStr = window.marked(evt.target?.result as any);
       if (!this.props.currentBook.content) {
         await this.handleChapter(docStr);
       }
@@ -401,6 +450,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       Buffer.from(result),
       this.props.currentBook.charset || charset || "utf8"
     );
+
     rtfToHTML.fromString(text, async (err: any, html: any) => {
       if (!this.props.currentBook.content) {
         await this.handleChapter(html);

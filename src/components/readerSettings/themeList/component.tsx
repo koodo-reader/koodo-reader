@@ -73,7 +73,7 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
     }
   };
   handleRest = () => {
-    this.props.renderFunc();
+    this.props.renderFunc("html-render");
   };
   handleChooseBgColor = (color) => {
     OtherUtil.setReaderConfig("backgroundColor", color.color);

@@ -14,10 +14,11 @@ export interface ViewerProps {
   handleHtmlBook: (htmlBook: HtmlBookModel) => void;
   handleLeaveReader: (position: string) => void;
   handleFetchBooks: () => void;
+  handleCurrentChapter: (currentChapter) => void;
 }
 export interface ViewerState {
   key: string;
   scale: string;
   isFirst: boolean;
-  chapterCount: number;
+  chapterTitle: string;
 }

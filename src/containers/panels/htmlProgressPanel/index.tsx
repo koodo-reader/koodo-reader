@@ -9,7 +9,9 @@ const mapStateToProps = (state: stateType) => {
     currentBook: state.book.currentBook,
     isReading: state.book.isReading,
     percentage: state.progressPanel.percentage,
+    currentChapter: state.reader.currentChapter,
     htmlBook: state.reader.htmlBook,
+    renderFunc: state.book.renderFunc,
   };
 };
 const actionCreator = { handleFetchPercentage };

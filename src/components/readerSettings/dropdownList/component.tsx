@@ -75,7 +75,7 @@ class DropdownList extends React.Component<
       ].setAttribute("selected", "selected");
   }
   handleRest = () => {
-    this.props.renderFunc();
+    this.props.renderFunc("html-render");
   };
   //切换不同的样式
   handleView(event: any, option: string) {

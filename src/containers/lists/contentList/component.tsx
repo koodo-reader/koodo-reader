@@ -44,16 +44,11 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
       let id = href.substr(1);
       RecordLocation.recordScrollHeight(
         this.props.htmlBook.key,
-        document.body.clientWidth,
-        document.body.clientHeight,
-        0,
-        1,
-        _.findIndex(this.state.chapters, { id })
+        "",
+        this.state.chapters[_.findIndex(this.state.chapters, { id })].label
       );
+      this.props.handleCurrentChapter(id);
       this.props.renderFunc(id);
-      // var top = window.frames[0].document.getElementById(id)?.offsetTop;
-      // if (!top) return;
-      // document.getElementsByClassName("ebook-viewer")[0].scrollTo(0, top);
     }
   }
   UNSAFE_componentWillReceiveProps(nextProps: ContentListProps) {

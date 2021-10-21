@@ -31,7 +31,7 @@ class SettingSwitch extends React.Component<
   }
 
   handleRest = () => {
-    this.props.renderFunc();
+    this.props.renderFunc("html-render");
   };
   _handleRest = () => {
     if (isElectron) {

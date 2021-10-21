@@ -14,6 +14,7 @@ let keywords = [
 ];
 export const isTitle = (line: string, isStartWithKeyword: boolean = false) => {
   return (
+    line &&
     line.length < 30 &&
     line.indexOf("[") === -1 &&
     line.indexOf("(") === -1 &&
@@ -54,6 +55,29 @@ export const isTitle = (line: string, isStartWithKeyword: boolean = false) => {
         line.indexOf("：") &&
         startWithNumAndColon(line)) ||
       (!isStartWithKeyword && line.indexOf(":") && startWithNumAndColon(line)))
+  );
+};
+export const isTitleLite = (line: string) => {
+  return (
+    line.length < 30 &&
+    line.indexOf("[") === -1 &&
+    line.indexOf("(") === -1 &&
+    line.indexOf("。") === -1 &&
+    (line.startsWith("CHAPTER") ||
+      line.startsWith("Chapter") ||
+      line.startsWith("序章") ||
+      line.startsWith("前言") ||
+      line.startsWith("声明") ||
+      line.startsWith("聲明") ||
+      line.startsWith("写在前面的话") ||
+      line.startsWith("后记") ||
+      line.startsWith("楔子") ||
+      line.startsWith("后序") ||
+      line.startsWith("寫在前面的話") ||
+      line.startsWith("後記") ||
+      line.startsWith("後序") ||
+      line.startsWith("第") ||
+      line.startsWith("卷"))
   );
 };
 const startWithDI = (line: string) => {
