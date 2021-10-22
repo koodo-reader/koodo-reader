@@ -9,14 +9,7 @@ export function handlePercentage(percentage: number) {
 export function handleFetchPercentage(book: BookModel) {
   return (dispatch: (arg0: { type: string; payload: any }) => void) => {
     let percentage;
-    if (RecordLocation.getScrollHeight(book.key).chapter) {
-      percentage =
-        JSON.parse(book.content || "[]").lastIndexOf(
-          RecordLocation.getScrollHeight(book.key).chapter
-        ) / JSON.parse(book.content || "[]").length;
-    } else {
-      percentage = RecordLocation.getCfi(book.key).percentage;
-    }
+    percentage = RecordLocation.getCfi(book.key).percentage;
     dispatch(handlePercentage(percentage));
   };
 }

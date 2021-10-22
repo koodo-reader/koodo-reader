@@ -33,15 +33,15 @@ class ProgressPanel extends React.Component<
         currentChapter: nextProps.currentChapter,
         currentChapterIndex:
           _.findIndex(nextProps.htmlBook.chapters, {
-            id: nextProps.currentChapter,
+            label: nextProps.currentChapter,
           }) > -1
             ? _.findIndex(nextProps.htmlBook.chapters, {
-                id: nextProps.currentChapter,
+                label: nextProps.currentChapter,
               })
             : 0,
         displayPercentage:
           _.findIndex(nextProps.htmlBook.chapters, {
-            id: nextProps.currentChapter,
+            label: nextProps.currentChapter,
           }) / nextProps.htmlBook.chapters.length,
       });
     }
@@ -53,7 +53,7 @@ class ProgressPanel extends React.Component<
       this.props.renderFunc(
         this.props.htmlBook.chapters[
           Math.floor(this.props.htmlBook.chapters.length * percentage)
-        ].id
+        ].label
       );
     }
   };
@@ -66,14 +66,14 @@ class ProgressPanel extends React.Component<
       this.props.renderFunc(
         this.props.htmlBook.chapters[
           _.findIndex(this.props.htmlBook.chapters, {
-            id: this.props.currentChapter,
+            label: this.props.currentChapter,
           }) <
           this.props.htmlBook.chapters.length - 1
             ? _.findIndex(this.props.htmlBook.chapters, {
-                id: this.props.currentChapter,
+                label: this.props.currentChapter,
               }) + 1
             : this.props.htmlBook.chapters.length - 1
-        ].id
+        ].label
       );
     }
   };
@@ -82,20 +82,20 @@ class ProgressPanel extends React.Component<
       this.props.renderFunc(
         this.props.htmlBook.chapters[
           _.findIndex(this.props.htmlBook.chapters, {
-            id: this.props.currentChapter,
+            label: this.props.currentChapter,
           }) > 0
             ? _.findIndex(this.props.htmlBook.chapters, {
-                id: this.props.currentChapter,
+                label: this.props.currentChapter,
               }) - 1
             : 0
-        ].id
+        ].label
       );
     }
   };
   handleJumpChapter = (event: any) => {
     if (this.props.htmlBook.chapters.length > 0) {
       this.props.renderFunc(
-        this.props.htmlBook.chapters[event.target.value].id
+        this.props.htmlBook.chapters[event.target.value].label
       );
     }
   };
