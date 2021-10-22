@@ -61,12 +61,15 @@ export const txtToHtml = (
   let _chapter = chapter.replace(/(\r\n|\n|\r)/gm, "");
   let _lines = lines.map((item) => item.replace(/(\r\n|\n|\r)/gm, ""));
   let startIndex = _lines.indexOf(_chapter) > -1 ? _lines.indexOf(_chapter) : 0;
-  console.log(startIndex, chapter, lines);
   if (lines.length > 50000) {
     for (
-      let i = startIndex;
+      let i = startIndex > 25000 ? startIndex - 25000 : 0;
       i <
-      (startIndex < lines.length - 50000 ? startIndex + 50000 : lines.length);
+      (startIndex < lines.length - 25000
+        ? startIndex > 25000
+          ? startIndex + 25000
+          : 50000
+        : lines.length);
       i++
     ) {
       if (lines[i].trim()) {

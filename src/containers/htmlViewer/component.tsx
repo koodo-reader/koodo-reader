@@ -149,7 +149,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
             ? lastItem.clientHeight + (lastItem as any).offsetTop
             : 0
         ) +
-        600 +
+        500 +
         (lastEle.nodeType === 3 ? nodeHeight : 0);
     }, 500);
   };
@@ -176,21 +176,27 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
   handleRest = (docStr: string) => {
     let htmlParser = new HtmlParser(
       new DOMParser().parseFromString(docStr, "text/html"),
-      this.props.currentBook.format,
-      this.props.currentBook.content
-        ? JSON.parse(this.props.currentBook.content)
-        : []
+      this.props.currentBook.format
     );
+
     this.props.handleHtmlBook({
       key: this.props.currentBook.key,
       doc: htmlParser.getAnchoredDoc(),
-      chapters: htmlParser.getContentList(),
+      chapters:
+        this.props.currentBook.format === "MOBI" ||
+        this.props.currentBook.format === "AZW3"
+          ? (htmlParser.getMobiContent(
+              htmlParser.getAnchoredDoc().body.innerHTML
+            ) as any)
+          : htmlParser.getContent(htmlParser.getAnchoredDoc()),
       subitems: [],
       chapterDoc:
-        htmlParser.getChapter(
-          htmlParser.getAnchoredDoc().body.innerHTML,
-          htmlParser.getContentList()
-        ) || [],
+        this.props.currentBook.format === "MOBI" ||
+        this.props.currentBook.format === "AZW3"
+          ? (htmlParser.getMobiChapter(
+              htmlParser.getAnchoredDoc().body.innerHTML
+            ) as any)
+          : htmlParser.getChapter(htmlParser.getAnchoredDoc().body.innerHTML),
     });
     this.handleRenderHtml();
   };
@@ -205,8 +211,8 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
 
     return isVisible;
   };
-  handleRenderHtml = (id: string = "") => {
-    if (id === "html-render") {
+  handleRenderHtml = (label: string = "") => {
+    if (label === "html-render") {
       styleUtil.addHtmlCss();
       this.handleIframeHeight();
 
@@ -214,35 +220,32 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     }
     window.frames[0].document.body.innerHTML = "";
 
-    id &&
+    label &&
       this.setState({
-        chapterTitle: this.props.htmlBook.chapters[
-          _.findIndex(this.props.htmlBook.chapters, {
-            id: id,
-          }) + 1
-        ].label,
+        chapterTitle: label,
       });
     console.log(
-      this.props.htmlBook.chapterDoc,
-      this.props.htmlBook.chapters,
-      this.state.chapterTitle
+      this.props.htmlBook,
+      label,
+      label
+        ? _.findIndex(this.props.htmlBook.chapterDoc, { title: label })
+        : _.findIndex(this.props.htmlBook.chapterDoc, {
+            title: this.state.chapterTitle,
+          }) + 1
     );
     window.frames[0].document.body.innerHTML = this.props.htmlBook.chapterDoc[
-      id
-        ? _.findIndex(this.props.htmlBook.chapters, {
-            id,
+      label
+        ? _.findIndex(this.props.htmlBook.chapterDoc, { title: label })
+        : _.findIndex(this.props.htmlBook.chapterDoc, {
+            title: this.state.chapterTitle,
           }) + 1
-        : _.findIndex(this.props.htmlBook.chapters, {
-            label: this.state.chapterTitle,
-          }) + 1
-    ];
-    this.props.handleCurrentChapter(id);
+    ].text;
+    this.props.handleCurrentChapter(label);
     styleUtil.addHtmlCss();
     this.handleIframeHeight();
 
     setTimeout(() => {
-      console.log(this.state.isFirst, id);
-      if (this.state.isFirst || id === "html-render") {
+      if (this.state.isFirst || label === "html-render") {
         document
           .getElementsByClassName("ebook-viewer")[0]
           .scrollTo(
@@ -364,10 +367,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       let { books } = this.props;
       let htmlParser = new HtmlParser(
         new DOMParser().parseFromString(docStr, "text/html"),
-        this.props.currentBook.format,
-        this.props.currentBook.content
-          ? JSON.parse(this.props.currentBook.content)
-          : []
+        this.props.currentBook.format
       );
       books.forEach((item) => {
         if (item.key === this.props.currentBook.key) {
@@ -408,25 +408,13 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         this.props.currentBook.charset || charset || "utf8"
       )
       .split("\n");
-    console.log(
-      text,
-      iconv.decode(
-        Buffer.from(result),
-        this.props.currentBook.charset || charset || "utf8"
-      )
-    );
+
     let docStr = "";
     docStr = txtToHtml(
       text,
-      this.props.currentBook.content
-        ? JSON.parse(this.props.currentBook.content)
-        : [],
       RecordLocation.getCfi(this.props.currentBook.key).chapterTitle
     );
 
-    if (!this.props.currentBook.content) {
-      await this.handleChapter(docStr);
-    }
     this.handleRest(docStr);
   };
   handleMD = (result: ArrayBuffer) => {
@@ -434,9 +422,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     var reader = new FileReader();
     reader.onload = async (evt) => {
       let docStr = window.marked(evt.target?.result as any);
-      if (!this.props.currentBook.content) {
-        await this.handleChapter(docStr);
-      }
       this.handleRest(docStr);
     };
     reader.readAsText(blob, "UTF-8");
@@ -452,9 +437,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     );
 
     rtfToHTML.fromString(text, async (err: any, html: any) => {
-      if (!this.props.currentBook.content) {
-        await this.handleChapter(html);
-      }
       this.handleRest(html);
     });
   };
@@ -462,9 +444,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     window.mammoth
       .convertToHtml({ arrayBuffer: result })
       .then(async (res: any) => {
-        if (!this.props.currentBook.content) {
-          await this.handleChapter(res.value);
-        }
         this.handleRest(res.value);
       });
   };
@@ -479,9 +458,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     );
     let bookObj = xmlBookToObj(Buffer.from(result));
     bookObj += xmlBookTagFilter(fb2Str);
-    if (!this.props.currentBook.content) {
-      await this.handleChapter(bookObj);
-    }
     this.handleRest(bookObj);
   };
   handleHtml = (result: ArrayBuffer, format: string) => {
@@ -491,9 +467,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     var reader = new FileReader();
     reader.onload = async (evt) => {
       const html = evt.target?.result as any;
-      if (!this.props.currentBook.content) {
-        await this.handleChapter(html);
-      }
       this.handleRest(html);
     };
     reader.readAsText(blob, "UTF-8");

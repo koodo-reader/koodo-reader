@@ -172,7 +172,7 @@ class SettingDialog extends React.Component<
   };
   handleMergeWord = () => {
     if (this.state.isOpenInMain && !this.state.isMergeWord) {
-      toast("Please turn off open books in main window");
+      toast("Please turn off open books in the main window");
       return;
     }
     this.handleSetting("isMergeWord");
