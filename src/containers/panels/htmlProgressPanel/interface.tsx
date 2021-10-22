@@ -8,7 +8,6 @@ export interface ProgressPanelProps {
   currentChapter: string;
   t: (title: string) => string;
   percentage: number;
-  handleFetchPercentage: (currentBook: BookModel) => void;
   htmlBook: HtmlBookModel;
   renderFunc: (id: string) => void;
 }

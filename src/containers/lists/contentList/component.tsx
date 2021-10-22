@@ -47,8 +47,12 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
         "",
         this.state.chapters[_.findIndex(this.state.chapters, { id })].label
       );
-      this.props.handleCurrentChapter(id);
-      this.props.renderFunc(id);
+      this.props.handleCurrentChapter(
+        this.state.chapters[_.findIndex(this.state.chapters, { id })].label
+      );
+      this.props.renderFunc(
+        this.state.chapters[_.findIndex(this.state.chapters, { id })].label
+      );
     }
   }
   UNSAFE_componentWillReceiveProps(nextProps: ContentListProps) {
