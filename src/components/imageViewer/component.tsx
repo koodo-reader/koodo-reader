@@ -56,6 +56,7 @@ class ImageViewer extends React.Component<ImageViewerProps, ImageViewerStates> {
     }
     if (
       href &&
+      href.indexOf("http") === 0 &&
       href.indexOf("OEBPF") === -1 &&
       href.indexOf("OEBPS") === -1 &&
       href.indexOf("footnote") === -1 &&

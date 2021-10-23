@@ -51,70 +51,29 @@ export const xmlBookTagFilter = (bookString) => {
 
   return bookBody;
 };
-export const txtToHtml = (
-  lines: string[],
-  content: string[],
-  chapter: string = ""
-) => {
+export const txtToHtml = (lines: string[]) => {
   let html: string = "";
   let isStartWithKeyword = false;
-  let _chapter = chapter.replace(/(\r\n|\n|\r)/gm, "");
-  let _lines = lines.map((item) => item.replace(/(\r\n|\n|\r)/gm, ""));
-  let startIndex = _lines.indexOf(_chapter) > -1 ? _lines.indexOf(_chapter) : 0;
-  if (lines.length > 50000) {
-    for (
-      let i = startIndex > 25000 ? startIndex - 25000 : 0;
-      i <
-      (startIndex < lines.length - 25000
-        ? startIndex > 25000
-          ? startIndex + 25000
-          : 50000
-        : lines.length);
-      i++
-    ) {
-      if (lines[i].trim()) {
-        if (
-          content.indexOf(lines[i]) > -1 ||
-          isTitle(lines[i].trim(), isStartWithKeyword)
-        ) {
-          //只要出现以第，chapter，CHAPTER开头的章节，就不再检测不以这些字开头的段落
-          if (
-            lines[i].trim().startsWith("第") ||
-            lines[i].trim().startsWith("Chapter") ||
-            lines[i].trim().startsWith("CHAPTER")
-          ) {
-            isStartWithKeyword = true;
-          }
 
-          html += `<h1>${lines[i]}</h1>`;
-        } else {
-          html += `<p>${lines[i]}</p>`;
-        }
-      }
-    }
-  } else {
-    for (let item of lines) {
-      if (item.trim()) {
+  for (let item of lines) {
+    if (item.trim()) {
+      if (isTitle(item.trim(), isStartWithKeyword)) {
+        //只要出现以第，chapter，CHAPTER开头的章节，就不再检测不以这些字开头的段落
         if (
-          content.indexOf(item) > -1 ||
-          isTitle(item.trim(), isStartWithKeyword)
+          item.trim().startsWith("第") ||
+          item.trim().startsWith("Chapter") ||
+          item.trim().startsWith("CHAPTER")
         ) {
-          //只要出现以第，chapter，CHAPTER开头的章节，就不再检测不以这些字开头的段落
-          if (
-            item.trim().startsWith("第") ||
-            item.trim().startsWith("Chapter") ||
-            item.trim().startsWith("CHAPTER")
-          ) {
-            isStartWithKeyword = true;
-          }
-
-          html += `<h1>${item}</h1>`;
-        } else {
-          html += `<p>${item}</p>`;
+          isStartWithKeyword = true;
         }
+
+        html += `<h1>${item}</h1>`;
+      } else {
+        html += `<p>${item}</p>`;
       }
     }
   }
+  // }
 
   return html;
 };
