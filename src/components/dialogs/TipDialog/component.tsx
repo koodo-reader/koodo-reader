@@ -49,7 +49,7 @@ class TipDialog extends React.Component<TipDialogProps, TipDialogState> {
           onClick={() => {
             this.handleClose();
           }}
-          style={{ marginTop: "10px" }}
+          style={{ marginTop: "-10px" }}
         >
           <Trans>Understand</Trans>
         </div>

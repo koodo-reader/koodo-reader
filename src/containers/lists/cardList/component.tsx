@@ -48,11 +48,7 @@ class CardList extends React.Component<CardListProps, CardListStates> {
     }
     RecordLocation.recordCfi(bookKey, cfi, percentage);
     if (OtherUtil.getReaderConfig("isOpenInMain") === "yes") {
-      if (book.description === "pdf") {
-        window.location.href = BookUtil.getBookUrl(book);
-      } else {
-        this.props.history.push(BookUtil.getBookUrl(book));
-      }
+      this.props.history.push(BookUtil.getBookUrl(book));
     } else {
       BookUtil.RedirectBook(book);
     }
