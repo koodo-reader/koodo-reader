@@ -13,12 +13,27 @@ class HtmlParser {
     this.format = format;
   }
   getContent(bookDoc: HTMLElement) {
-    this.contentList = Array.from(bookDoc.querySelectorAll("h1,h2,h3,h4,h5,b"));
-
-    this.contentList = this.contentList.filter((item) =>
-      isTitle(item.innerText.trim().replace(/(\r\n|\n|\r)/gm, ""))
-    );
-
+    this.contentList = Array.from(bookDoc.querySelectorAll("h1"));
+    let isStartWithKeyword = false;
+    if (this.contentList.length === 0) {
+      this.contentList = Array.from(bookDoc.querySelectorAll("p")).filter(
+        (item) => {
+          if (
+            item.innerText.trim().startsWith("第") ||
+            item.innerText.trim().startsWith("Chapter") ||
+            item.innerText.trim().startsWith("CHAPTER")
+          ) {
+            isStartWithKeyword = true;
+          }
+          return isTitle(item.innerText.trim(), isStartWithKeyword);
+        }
+      );
+    }
+    if (this.contentList.length === 0) {
+      this.contentList.push(bookDoc.querySelector("p") as any);
+    }
+    console.log(this.contentList);
+    // return;
     for (let i = 0; i < this.contentList.length; i++) {
       let random = Math.floor(Math.random() * 900000) + 100000;
       this.contentTitleList.push({
@@ -30,7 +45,15 @@ class HtmlParser {
     }
     for (let i = 0; i < this.contentList.length; i++) {
       this.contentList[i].id = this.contentTitleList[i].id;
+      var newItem = document.createElement("span");
+      var textnode = document.createTextNode("pagebreak");
+      newItem.appendChild(textnode);
+      this.contentList[i].parentNode!.insertBefore(
+        newItem,
+        this.contentList[i]
+      );
     }
+
     return this.contentTitleList;
   }
 
@@ -50,44 +73,39 @@ class HtmlParser {
   }
   getChapter(bookStr: string) {
     if (this.contentTitleList.length === 0) return [bookStr];
-    let chapterList: string[] = [];
-    let chapterStr = "";
-
-    for (let i = 0; i < this.contentTitleList.length; i++) {
-      if (!bookStr) return;
-      chapterStr = bookStr.split(this.contentTitleList[i].id)[0];
-      bookStr =
-        chapterStr.substring(chapterStr.lastIndexOf("<")) +
-        this.contentTitleList[i].id +
-        bookStr.split(this.contentTitleList[i].id)[1];
-
-      chapterStr.substring(0, chapterStr.lastIndexOf("<")) &&
-        chapterList.push(chapterStr.substring(0, chapterStr.lastIndexOf("<")));
-      if (i === this.contentTitleList.length - 1) {
-        chapterList.push(bookStr);
-      }
-    }
+    let chapterList: string[] = bookStr.split("<span>pagebreak</span>");
+    console.log(chapterList);
     let chapterObj: { title: string; text: string }[] = [];
     for (let i = 0; i < chapterList.length; i++) {
-      if (chapterList.length === this.contentTitleList.length) {
-        chapterObj.push({
-          title: this.contentTitleList[i].label,
-          text: chapterList[i],
-        });
-      } else {
-        if (i === 0) {
-          chapterObj.push({ title: "Forword", text: chapterList[i] });
-        } else {
+      let chapterDoc = new DOMParser().parseFromString(
+        chapterList[i],
+        "text/html"
+      );
+      if (
+        chapterDoc.body.innerText.trim() ||
+        chapterDoc.getElementsByTagName("img").length > 0
+      ) {
+        if (chapterList.length === this.contentTitleList.length) {
           chapterObj.push({
-            title: this.contentTitleList[i - 1].label,
+            title: this.contentTitleList[i].label,
             text: chapterList[i],
           });
+        } else {
+          if (i === 0) {
+            chapterObj.push({ title: "Forword", text: chapterList[i] });
+          } else {
+            chapterObj.push({
+              title: this.contentTitleList[i - 1].label,
+              text: chapterList[i],
+            });
+          }
         }
       }
     }
     return chapterObj;
   }
   getMobiChapter(bookStr: string) {
+    console.log(this.bookDoc);
     let chapterList = bookStr.split("<mbp:pagebreak>");
     let chapterObj: { title: string; text: string }[] = [];
     for (let i = 0; i < chapterList.length; i++) {
@@ -106,7 +124,10 @@ class HtmlParser {
               )[0] as HTMLElement).innerText
             : chapterDoc.body.innerText.substring(0, 10).trim()
             ? chapterDoc.body.innerText.substring(0, 10).trim()
-            : "cover",
+            : "image" +
+              (chapterDoc.getElementsByTagName("img")[0] as any).getAttribute(
+                "recindex"
+              ),
           text: chapterList[i],
         });
       }
@@ -120,6 +141,7 @@ class HtmlParser {
         contentList[i],
         "text/html"
       );
+
       if (
         chapterDoc.body.innerText.trim() ||
         chapterDoc.getElementsByTagName("img").length > 0
@@ -132,7 +154,10 @@ class HtmlParser {
               )[0] as HTMLElement).innerText
             : chapterDoc.body.innerText.substring(0, 10).trim()
             ? chapterDoc.body.innerText.substring(0, 10).trim()
-            : "cover",
+            : "image" +
+              (chapterDoc.getElementsByTagName("img")[0] as any).getAttribute(
+                "recindex"
+              ),
           id: "title" + random,
           href: "#title" + random,
           subitems: [],
