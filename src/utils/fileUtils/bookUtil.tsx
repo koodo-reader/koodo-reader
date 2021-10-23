@@ -112,6 +112,7 @@ class BookUtil {
       const { ipcRenderer } = window.require("electron");
       ipcRenderer.invoke("open-book", {
         url: `${window.location.href.split("#")[0]}#/${ref}/${book.key}`,
+        isMergeWord: OtherUtil.getReaderConfig("isMergeWord"),
         isFullscreen: OtherUtil.getReaderConfig("isAutoFullscreen"),
         isPreventSleep: OtherUtil.getReaderConfig("isPreventSleep"),
       });

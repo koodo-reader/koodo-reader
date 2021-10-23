@@ -171,7 +171,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     this.lock = true;
     setTimeout(() => {
       this.lock = false;
-    }, 500);
+    }, 200);
   }
   handleRest = (docStr: string) => {
     let htmlParser = new HtmlParser(
@@ -183,16 +183,14 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       key: this.props.currentBook.key,
       doc: htmlParser.getAnchoredDoc(),
       chapters:
-        this.props.currentBook.format === "MOBI" ||
-        this.props.currentBook.format === "AZW3"
+        this.props.currentBook.format === "MOBI"
           ? (htmlParser.getMobiContent(
               htmlParser.getAnchoredDoc().body.innerHTML
             ) as any)
           : htmlParser.getContent(htmlParser.getAnchoredDoc()),
       subitems: [],
       chapterDoc:
-        this.props.currentBook.format === "MOBI" ||
-        this.props.currentBook.format === "AZW3"
+        this.props.currentBook.format === "MOBI"
           ? (htmlParser.getMobiChapter(
               htmlParser.getAnchoredDoc().body.innerHTML
             ) as any)
@@ -224,21 +222,23 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       this.setState({
         chapterTitle: label,
       });
-    console.log(
-      this.props.htmlBook,
-      label,
-      label
-        ? _.findIndex(this.props.htmlBook.chapterDoc, { title: label })
-        : _.findIndex(this.props.htmlBook.chapterDoc, {
-            title: this.state.chapterTitle,
-          }) + 1
-    );
+
     window.frames[0].document.body.innerHTML = this.props.htmlBook.chapterDoc[
       label
-        ? _.findIndex(this.props.htmlBook.chapterDoc, { title: label })
+        ? _.findIndex(this.props.htmlBook.chapterDoc, { title: label }) > -1
+          ? _.findIndex(this.props.htmlBook.chapterDoc, { title: label })
+          : 0
         : _.findIndex(this.props.htmlBook.chapterDoc, {
             title: this.state.chapterTitle,
+          }) +
+            1 <=
+          this.props.htmlBook.chapterDoc.length - 1
+        ? _.findIndex(this.props.htmlBook.chapterDoc, {
+            title: this.state.chapterTitle,
           }) + 1
+        : _.findIndex(this.props.htmlBook.chapterDoc, {
+            title: this.state.chapterTitle,
+          })
     ].text;
     this.props.handleCurrentChapter(label);
     styleUtil.addHtmlCss();
@@ -410,10 +410,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       .split("\n");
 
     let docStr = "";
-    docStr = txtToHtml(
-      text,
-      RecordLocation.getCfi(this.props.currentBook.key).chapterTitle
-    );
+    docStr = txtToHtml(text);
 
     this.handleRest(docStr);
   };
