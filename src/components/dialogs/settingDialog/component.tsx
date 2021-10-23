@@ -30,6 +30,7 @@ class SettingDialog extends React.Component<
       isMergeWord: OtherUtil.getReaderConfig("isMergeWord") === "yes",
       isPreventTrigger: OtherUtil.getReaderConfig("isPreventTrigger") === "yes",
       isAutoFullscreen: OtherUtil.getReaderConfig("isAutoFullscreen") === "yes",
+      isPreventAdd: OtherUtil.getReaderConfig("isPreventAdd") === "yes",
       isOpenBook: OtherUtil.getReaderConfig("isOpenBook") === "yes",
       isExpandContent: OtherUtil.getReaderConfig("isExpandContent") === "yes",
       isPreventSleep: OtherUtil.getReaderConfig("isPreventSleep") === "yes",
@@ -136,6 +137,7 @@ class SettingDialog extends React.Component<
     if (result === 1) {
       this.syncFromLocation();
     } else if (result === 2) {
+      this.props.handleFetchBooks();
       toast.success(this.props.t("Change Successfully"));
     } else {
       toast.error(this.props.t("Change Failed"));

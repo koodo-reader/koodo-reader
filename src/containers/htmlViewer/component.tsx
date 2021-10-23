@@ -362,24 +362,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
 
     this.handleRest(content.outerHTML);
   };
-  handleChapter = (docStr: string) => {
-    return new Promise<void>(async (resolve, reject) => {
-      let { books } = this.props;
-      let htmlParser = new HtmlParser(
-        new DOMParser().parseFromString(docStr, "text/html"),
-        this.props.currentBook.format
-      );
-      books.forEach((item) => {
-        if (item.key === this.props.currentBook.key) {
-          item.content = JSON.stringify(htmlParser.getChapterTitleList());
-          this.props.handleReadingBook(item);
-        }
-      });
-      await localforage.setItem("books", books);
-      // this.props.handleFetchBooks();
-      resolve();
-    });
-  };
   handleCharset = (result: ArrayBuffer) => {
     return new Promise<string>(async (resolve, reject) => {
       let { books } = this.props;

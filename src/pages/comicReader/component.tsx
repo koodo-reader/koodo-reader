@@ -78,7 +78,15 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
   }
   handleRender = (key: string) => {
     localforage.getItem("books").then((result: any) => {
-      let book = result[_.findIndex(result, { key })];
+      let book;
+      //兼容在主窗口打开
+      if (this.props.currentBook.key) {
+        book = this.props.currentBook;
+      } else {
+        book =
+          result[_.findIndex(result, { key })] ||
+          JSON.parse(localStorage.getItem("tempBook") || "{}");
+      }
       BookUtil.fetchBook(key, true, book.path).then((result) => {
         if (!result) {
           toast.error(this.props.t("Book not exsits"));

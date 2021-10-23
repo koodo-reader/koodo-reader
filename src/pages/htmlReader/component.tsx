@@ -40,7 +40,15 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
     let key = url[url.length - 1].split("?")[0];
     this.props.handleFetchBooks();
     localforage.getItem("books").then((result: any) => {
-      let book = result[_.findIndex(result, { key })];
+      let book;
+      //兼容在主窗口打开
+      if (this.props.currentBook.key) {
+        book = this.props.currentBook;
+      } else {
+        book =
+          result[_.findIndex(result, { key })] ||
+          JSON.parse(localStorage.getItem("tempBook") || "{}");
+      }
       this.props.handleReadingBook(book);
     });
   }

@@ -6,6 +6,7 @@ export interface SettingInfoProps {
   handleTipDialog: (isTipDialog: boolean) => void;
   handleTip: (tip: string) => void;
   t: (title: string) => string;
+  handleFetchBooks: () => void;
   bookmarks: BookmarkModel[];
   notes: NoteModel[];
   books: BookModel[];
@@ -23,5 +24,6 @@ export interface SettingInfoState {
   isDisableUpdate: boolean;
   isDisableAnalytics: boolean;
   isAutoFullscreen: boolean;
+  isPreventAdd: boolean;
   currentThemeIndex: number;
 }

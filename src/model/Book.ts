@@ -8,9 +8,8 @@ class Book {
   format: string;
   publisher: string;
   size: number;
-  path:string;
-  charset:string;
-  content:string;
+  path: string;
+  charset: string;
   constructor(
     key: string,
     name: string,
@@ -21,9 +20,8 @@ class Book {
     format: string,
     publisher: string,
     size: number,
-    path:string,
-    charset:string,
-    content:string,
+    path: string,
+    charset: string
   ) {
     this.key = key; // 数据库的键
     this.name = name; // 书籍名
@@ -34,9 +32,8 @@ class Book {
     this.format = format;
     this.publisher = publisher;
     this.size = size;
-    this.path=path;
-    this.charset=charset;
-    this.content=content;
+    this.path = path;
+    this.charset = charset;
   }
 }
 
