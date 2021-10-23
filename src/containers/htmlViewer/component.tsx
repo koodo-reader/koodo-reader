@@ -222,7 +222,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       this.setState({
         chapterTitle: label,
       });
-
     window.frames[0].document.body.innerHTML = this.props.htmlBook.chapterDoc[
       label
         ? _.findIndex(this.props.htmlBook.chapterDoc, { title: label }) > -1
@@ -230,12 +229,8 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           : 0
         : _.findIndex(this.props.htmlBook.chapterDoc, {
             title: this.state.chapterTitle,
-          }) +
-            1 <=
-          this.props.htmlBook.chapterDoc.length - 1
-        ? _.findIndex(this.props.htmlBook.chapterDoc, {
-            title: this.state.chapterTitle,
-          }) + 1
+          }) === -1
+        ? 0
         : _.findIndex(this.props.htmlBook.chapterDoc, {
             title: this.state.chapterTitle,
           })
@@ -317,6 +312,11 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       ) {
         return;
       }
+      console.log(
+        _.findIndex(this.props.htmlBook.chapters, {
+          label: this.state.chapterTitle,
+        })
+      );
       this.setState(
         {
           chapterTitle: this.props.htmlBook.chapters[
