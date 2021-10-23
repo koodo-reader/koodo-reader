@@ -22,6 +22,7 @@ export const isTitle = (line: string, isStartWithKeyword: boolean = false) => {
     (line.startsWith("CHAPTER") ||
       line.startsWith("Chapter") ||
       line.startsWith("序章") ||
+      line.startsWith("序言") ||
       line.startsWith("前言") ||
       line.startsWith("声明") ||
       line.startsWith("聲明") ||

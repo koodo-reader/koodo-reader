@@ -28,7 +28,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     if (isElectron) {
       const fs = window.require("fs");
       const path = window.require("path");
-      const request = window.require("request");
       const { ipcRenderer } = window.require("electron");
       const dirPath = ipcRenderer.sendSync("user-data", "ping");
       if (!fs.existsSync(dirPath)) {
@@ -49,18 +48,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
           OtherUtil.getReaderConfig("storageLocation")
         );
       }
-      if (!fs.existsSync(path.join(dirPath, `cover.png`))) {
-        let stream = fs.createWriteStream(path.join(dirPath, `cover.png`));
-        request(`https://koodo.960960.xyz/images/splash.png`)
-          .pipe(stream)
-          .on("close", function (err) {
-            if (err) {
-              console.log(err);
-            } else {
-              console.log("文件下载完毕");
-            }
-          });
-      }
+
       //Check for data update
       let storageLocation = localStorage.getItem("storageLocation")
         ? localStorage.getItem("storageLocation")

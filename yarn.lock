@@ -8394,11 +8394,6 @@ klona@^2.0.4:
   resolved "https://registry.npm.taobao.org/klona/download/klona-2.0.4.tgz#7bb1e3affb0cb8624547ef7e8f6708ea2e39dfc0"
   integrity sha1-e7Hjr/sMuGJFR+9+j2cI6i4538A=
 
-koodo-parser@1.0.4:
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/koodo-parser/-/koodo-parser-1.0.4.tgz#4a1bb0c9fc9f318f5435b30fb180d7c01f945196"
-  integrity sha512-UTMy4D6ZXkfpFKPLZqgN8IXXN8v3b68x75gLZQ6iRbclbPLQaNWaKclV0rVxfqOh0H1WTyoQJpQbeCfYn4qcQQ==
-
 language-subtag-registry@~0.3.2:
   version "0.3.21"
   resolved "https://registry.npm.taobao.org/language-subtag-registry/download/language-subtag-registry-0.3.21.tgz?cache=0&sync_timestamp=1603782998188&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Flanguage-subtag-registry%2Fdownload%2Flanguage-subtag-registry-0.3.21.tgz#04ac218bea46f04cb039084602c6da9e788dd45a"
