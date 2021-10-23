@@ -3,7 +3,6 @@ import { TextToSpeechProps, TextToSpeechState } from "./interface";
 import { Trans } from "react-i18next";
 import { speedList } from "../../constants/dropdownList";
 import OtherUtil from "../../utils/otherUtil";
-import toast from "react-hot-toast";
 
 class TextToSpeech extends React.Component<
   TextToSpeechProps,
@@ -134,17 +133,9 @@ class TextToSpeech extends React.Component<
               <span
                 className="single-control-switch"
                 onClick={() => {
-                  if (this.props.locations) {
-                    this.handleChangeAudio();
-                  } else {
-                    toast(this.props.t("Audio is not ready yet"));
-                  }
+                  this.handleChangeAudio();
                 }}
-                style={
-                  this.props.locations && this.state.isAudioOn
-                    ? {}
-                    : { opacity: 0.6 }
-                }
+                style={this.state.isAudioOn ? {} : { opacity: 0.6 }}
               >
                 <span
                   className="single-control-button"

@@ -210,6 +210,8 @@
   "Deselect All": "全不选",
   "Minute": "分钟",
   "Empty": "这里什么都没有",
+  "Open book without adding it to library": "打开图书但不添加到书库",
+  "When opening books in the file manager with Koodo, the opened books won't be added to the library": "当您使用Koodo打开文件夹中的图书时，图书不会被添加到书库中",
   "Less": "收起",
   "Disable analytics service": "关闭统计功能",
   "Hide navigation button": "不显示翻页按钮",

@@ -11,9 +11,7 @@ import { ImportLocalProps, ImportLocalState } from "./interface";
 import RecordRecent from "../../utils/readUtils/recordRecent";
 import { isElectron } from "react-device-detect";
 import { withRouter } from "react-router-dom";
-import RecentBooks from "../../utils/readUtils/recordRecent";
 import BookUtil from "../../utils/fileUtils/bookUtil";
-import { addPdf } from "../../utils/fileUtils/pdfUtil";
 import {
   fetchFileFromPath,
   fetchMD5FromPath,
@@ -86,20 +84,38 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
     });
   };
   handleJump = (book: BookModel) => {
-    RecentBooks.setRecent(book.key);
     if (OtherUtil.getReaderConfig("isOpenInMain") === "yes") {
-      if (book.description === "pdf") {
-        window.location.href = BookUtil.getBookUrl(book);
-      } else {
-        this.props.history.push(BookUtil.getBookUrl(book));
-      }
+      this.props.history.push(BookUtil.getBookUrl(book));
+      this.props.handleReadingBook(book);
     } else {
+      localStorage.setItem("tempBook", JSON.stringify(book));
       BookUtil.RedirectBook(book);
       this.props.history.push("/manager/home");
     }
   };
-  handleAddBook = (book: BookModel) => {
+  handleAddBook = (book: BookModel, buffer: ArrayBuffer) => {
     return new Promise<void>((resolve, reject) => {
+      if (this.state.isOpenFile) {
+        OtherUtil.getReaderConfig("isImportPath") !== "yes" &&
+          OtherUtil.getReaderConfig("isPreventAdd") !== "yes" &&
+          BookUtil.addBook(book.key, buffer);
+        if (OtherUtil.getReaderConfig("isPreventAdd") === "yes") {
+          this.handleJump(book);
+          if (
+            OtherUtil.getReaderConfig("isOpenInMain") === "yes" &&
+            this.state.isOpenFile
+          ) {
+            this.setState({ isOpenFile: false });
+          }
+
+          resolve();
+          return;
+        }
+      } else {
+        OtherUtil.getReaderConfig("isImportPath") !== "yes" &&
+          BookUtil.addBook(book.key, buffer);
+      }
+
       let bookArr = [...(this.props.books || []), ...this.props.deletedBooks];
       if (bookArr == null) {
         bookArr = [];
@@ -177,30 +193,8 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
             reject();
             throw new Error();
           }
-          if (extension === "pdf") {
-            result = await addPdf(
-              e.target.result as ArrayBuffer,
-              md5,
-              bookName,
-              file.size,
-              file.path || clickFilePath
-            );
-            clickFilePath = "";
-            if (!result) {
-              toast.error(this.props.t("Import Failed"));
-              reject();
-              throw new Error();
-            } else {
-              await this.handleAddBook(result as BookModel);
-              OtherUtil.getReaderConfig("isImportPath") !== "yes" &&
-                BookUtil.addBook(
-                  (result as BookModel).key,
-                  e.target?.result as ArrayBuffer
-                );
-
-              resolve();
-            }
-          } else if (
+          if (
+            extension === "pdf" ||
             extension === "azw3" ||
             extension === "mobi" ||
             extension === "txt" ||
@@ -228,9 +222,8 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                 file.path || clickFilePath
               );
               clickFilePath = "";
-              await this.handleAddBook(result);
-              OtherUtil.getReaderConfig("isImportPath") !== "yes" &&
-                BookUtil.addBook(result.key, file_content as ArrayBuffer);
+              await this.handleAddBook(result, file_content as ArrayBuffer);
+
               resolve();
             };
             reader.readAsArrayBuffer(file);
@@ -242,13 +235,11 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
               reject();
               throw new Error();
             } else {
-              await this.handleAddBook(result as BookModel);
-              (OtherUtil.getReaderConfig("isImportPath") !== "yes" ||
-                (result as BookModel).format !== "EPUB") &&
-                BookUtil.addBook(
-                  (result as BookModel).key,
-                  e.target?.result as ArrayBuffer
-                );
+              await this.handleAddBook(
+                result as BookModel,
+                e.target?.result as ArrayBuffer
+              );
+
               resolve();
             }
           }

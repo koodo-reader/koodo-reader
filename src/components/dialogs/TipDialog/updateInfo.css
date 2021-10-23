@@ -15,7 +15,7 @@
 .download-desk-animation {
   position: absolute;
   left: 25px;
-  bottom: 0px;
+  bottom: -20px;
 }
 .download-desk-title {
   font-size: 18px;
@@ -39,7 +39,7 @@
   line-height: 23px;
   font-weight: 500;
   margin: 30px;
-  margin-top: 30px;
+  margin-top: 10px;
   text-indent: 2rem;
 }
 .download-desk-button {
@@ -48,7 +48,7 @@
   opacity: 1;
   line-height: 32px;
   text-align: center;
-  margin: 22px 175px;
+  margin: 12px 175px;
   position: absolute;
   cursor: pointer;
   z-index: 25;

@@ -32,7 +32,6 @@ class HtmlParser {
     if (this.contentList.length === 0) {
       this.contentList.push(bookDoc.querySelector("p") as any);
     }
-    console.log(this.contentList);
     // return;
     for (let i = 0; i < this.contentList.length; i++) {
       let random = Math.floor(Math.random() * 900000) + 100000;
@@ -74,7 +73,6 @@ class HtmlParser {
   getChapter(bookStr: string) {
     if (this.contentTitleList.length === 0) return [bookStr];
     let chapterList: string[] = bookStr.split("<span>pagebreak</span>");
-    console.log(chapterList);
     let chapterObj: { title: string; text: string }[] = [];
     for (let i = 0; i < chapterList.length; i++) {
       let chapterDoc = new DOMParser().parseFromString(
@@ -105,7 +103,6 @@ class HtmlParser {
     return chapterObj;
   }
   getMobiChapter(bookStr: string) {
-    console.log(this.bookDoc);
     let chapterList = bookStr.split("<mbp:pagebreak>");
     let chapterObj: { title: string; text: string }[] = [];
     for (let i = 0; i < chapterList.length; i++) {

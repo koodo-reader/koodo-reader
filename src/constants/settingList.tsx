@@ -53,6 +53,13 @@ export const settingList = [
     propName: "isPreventSleep",
   },
   {
+    isElectron: true,
+    title: "Open book without adding it to library",
+    desc:
+      "When opening books in the file manager with Koodo, the opened books won't be added to the library",
+    propName: "isPreventAdd",
+  },
+  {
     isElectron: false,
     title: "Open books in the main window",
     desc:

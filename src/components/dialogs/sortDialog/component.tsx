@@ -72,7 +72,10 @@ class SortDialog extends React.Component<SortDialogProps, SortDialogState> {
                 >
                   <Trans>{item}</Trans>
                   {sortCode.sort === index + 1 && (
-                    <span className="icon-check"></span>
+                    <span
+                      className="icon-check"
+                      style={{ fontWeight: "bold" }}
+                    ></span>
                   )}
                 </li>
               );

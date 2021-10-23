@@ -41,6 +41,7 @@ class BackupDialog extends React.Component<
     this.setState({ currentStep: 2 });
     this.props.handleLoadingDialog(false);
     this.showMessage("Excute Successfully");
+    this.props.handleFetchBooks();
   };
   handleRestoreToLocal = async (event: any) => {
     event.preventDefault();
