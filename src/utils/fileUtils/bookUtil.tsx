@@ -173,13 +173,12 @@ class BookUtil {
       author: string,
       publisher: string,
       description: string,
-      charset: string,
-      content: string;
-    [name, author, description, publisher, charset, content] = [
+      charset: string;
+
+    [name, author, description, publisher, charset] = [
       bookName,
       "Unknown Authur",
       "readonly",
-      "",
       "",
       "",
     ];
@@ -196,8 +195,7 @@ class BookUtil {
       publisher,
       size,
       path,
-      charset,
-      content
+      charset
     );
   }
 }

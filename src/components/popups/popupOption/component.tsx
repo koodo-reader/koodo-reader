@@ -115,7 +115,6 @@ class PopupOption extends React.Component<PopupOptionProps> {
     });
   };
   handleJump = (url: string) => {
-    console.log("test1", url);
     isElectron
       ? window.require("electron").shell.openExternal(url)
       : window.open(url);

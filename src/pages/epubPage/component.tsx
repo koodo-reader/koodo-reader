@@ -9,7 +9,6 @@ import BookUtil from "../../utils/fileUtils/bookUtil";
 import Lottie from "react-lottie";
 import "../../assets/styles/reset.css";
 import animationSiri from "../../assets/lotties/siri.json";
-import BookModel from "../../model/Book";
 import toast, { Toaster } from "react-hot-toast";
 
 const siriOptions = {
@@ -34,7 +33,15 @@ class EpubReader extends React.Component<EpubReaderProps, EpubReaderState> {
     let key = url[url.length - 1].split("?")[0];
 
     localforage.getItem("books").then((result: any) => {
-      let book: BookModel = result[_.findIndex(result, { key })];
+      let book;
+      //兼容在主窗口打开
+      if (this.props.currentBook.key) {
+        book = this.props.currentBook;
+      } else {
+        book =
+          result[_.findIndex(result, { key })] ||
+          JSON.parse(localStorage.getItem("tempBook") || "{}");
+      }
       BookUtil.fetchBook(key, false, book.path).then((result) => {
         if (!result) {
           toast.error(this.props.t("Book not exsits"));

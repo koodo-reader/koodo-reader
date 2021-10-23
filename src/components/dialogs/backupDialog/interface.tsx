@@ -8,6 +8,7 @@ export interface BackupDialogProps {
   t: (title: string) => string;
   handleLoadingDialog: (isShowLoading: boolean) => void;
   handleTipDialog: (isTipDialog: boolean) => void;
+  handleFetchBooks: () => void;
   isOpenTokenDialog: boolean;
   books: BookModel[];
   notes: NoteModel[];

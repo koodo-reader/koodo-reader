@@ -5,6 +5,7 @@ import {
   handleSetting,
   handleTipDialog,
   handleTip,
+  handleFetchBooks,
 } from "../../../store/actions";
 import { stateType } from "../../../store";
 
@@ -19,6 +20,7 @@ const actionCreator = {
   handleSetting,
   handleTipDialog,
   handleTip,
+  handleFetchBooks,
 };
 export default connect(
   mapStateToProps,

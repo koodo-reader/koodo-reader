@@ -22,7 +22,15 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     let url = document.location.href.split("/");
     let key = url[url.length - 1].split("?")[0];
     localforage.getItem("books").then((result: any) => {
-      let book = result[_.findIndex(result, { key })];
+      let book;
+      if (this.props.currentBook.key) {
+        book = this.props.currentBook;
+      } else {
+        book =
+          result[_.findIndex(result, { key })] ||
+          JSON.parse(localStorage.getItem("tempBook") || "{}");
+      }
+
       document.title = book.name + " - Koodo Reader";
       this.props.handleReadingState(true);
       RecentBooks.setRecent(key);
