@@ -228,6 +228,7 @@
         }
       ],
       "icon": "assets/icons/icon.ico",
+      "artifactName": "${productName}-${version}-${arch}-Win.${ext}",
       "publisherName": "App by Troye"
     },
     "linux": {
