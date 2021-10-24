@@ -210,7 +210,8 @@
         {
           "target": "zip",
           "arch": [
-            "x64"
+            "x64",
+            "ia32"
           ]
         },
         {
@@ -222,13 +223,11 @@
         {
           "target": "7z",
           "arch": [
-            "x64",
-            "ia32"
+            "x64"
           ]
         }
       ],
       "icon": "assets/icons/icon.ico",
-      "artifactName": "${productName}-${version}-Win.${ext}",
       "publisherName": "App by Troye"
     },
     "linux": {
