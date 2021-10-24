@@ -56,7 +56,7 @@
 ## 使用方法
 
 - 桌面端：
-  - 稳定版 (推荐下载)：[官网](https://koodo.960960.xyz/zh/download)（感谢 [GitHub Proxy](https://ghproxy.com/) 提供下载中转）
+  - 稳定版 (推荐下载)：[官网](https://koodo.960960.xyz/zh/download)（感谢 [GitHub Proxy](https://ghproxy.com/) 提供下载中转服务）
   - 开发版：[Github Release](https://github.com/troyeguo/koodo-reader/releases/latest) （包含新功能和 bug 修复，但也可能引入更多未知 bug）
 - 网页版：[前往](https://koodo-reader.vercel.app/)
 - 使用 Chocolatey 安装：
