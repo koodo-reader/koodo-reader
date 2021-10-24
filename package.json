@@ -1,7 +1,7 @@
 {
   "name": "koodo-reader",
   "main": "main.js",
-  "version": "1.3.3",
+  "version": "1.3.4",
   "description": "A cross-platform ebook reader",
   "author": {
     "name": "App by Troye",
@@ -204,7 +204,9 @@
         {
           "target": "nsis",
           "arch": [
-            "x64"
+            "x64",
+            "arm64",
+            "ia32"
           ]
         },
         {
