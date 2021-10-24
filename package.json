@@ -91,7 +91,6 @@
     "dev": "concurrently \"cross-env BROWSER=none npm start\" \"wait-on http://localhost:3000/ && nodemon --watch main.js --exec electron .\"",
     "pack": "electron-builder --dir",
     "release": "electron-builder",
-    "release:x64": "electron-builder --win --x64 --publish always",
     "prerelease": "npm run build",
     "prepack": "npm run build",
     "dist": "electron-builder",
@@ -203,16 +202,29 @@
     "win": {
       "target": [
         {
-          "target": "nsis"
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
         },
         {
-          "target": "zip"
+          "target": "zip",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
         },
         {
-          "target": "portable"
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
         },
         {
-          "target": "7z"
+          "target": "7z",
+          "arch": [
+            "x64"
+          ]
         }
       ],
       "icon": "assets/icons/icon.ico",
@@ -234,7 +246,7 @@
       "artifactName": "${productName}-${version}-Portable.${ext}"
     },
     "nsis": {
-      "artifactName": "${productName}-${version}-${arch}.${ext}",
+      "artifactName": "${productName}-${version}.${ext}",
       "oneClick": false,
       "allowToChangeInstallationDirectory": true,
       "deleteAppDataOnUninstall": false
