@@ -204,8 +204,12 @@
         {
           "target": "nsis",
           "arch": [
-            "x64",
-            "arm64",
+            "x64"
+          ]
+        },
+        {
+          "target": "nsis",
+          "arch": [
             "ia32"
           ]
         },
@@ -247,7 +251,7 @@
       "artifactName": "${productName}-${version}-Portable.${ext}"
     },
     "nsis": {
-      "artifactName": "${productName}-${version}.${ext}",
+      "artifactName": "${productName}-${version}-${arch}.${ext}",
       "oneClick": false,
       "allowToChangeInstallationDirectory": true,
       "deleteAppDataOnUninstall": false
