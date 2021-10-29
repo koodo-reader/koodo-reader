@@ -1,5 +1,5 @@
 import React from "react";
-import OtherUtil from "../../utils/otherUtil";
+import StorageUtil from "../../utils/storageUtil";
 import "./colorOption.css";
 import { ColorProps, ColorStates } from "./interface";
 
@@ -25,7 +25,7 @@ class ColorOption extends React.Component<ColorProps, ColorStates> {
             key={item}
             onClick={() => {
               this.props.handleColor(index + 4);
-              OtherUtil.setReaderConfig(
+              StorageUtil.setReaderConfig(
                 "highlightIndex",
                 (index + 4).toString()
               );
@@ -51,7 +51,7 @@ class ColorOption extends React.Component<ColorProps, ColorStates> {
             key={item}
             onClick={() => {
               this.props.handleColor(index);
-              OtherUtil.setReaderConfig("highlightIndex", index.toString());
+              StorageUtil.setReaderConfig("highlightIndex", index.toString());
             }}
           ></div>
         );

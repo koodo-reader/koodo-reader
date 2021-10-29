@@ -11,7 +11,7 @@ import Router from "./router/index";
 import StyleUtil from "./utils/readUtils/styleUtil";
 import { isElectron } from "react-device-detect";
 import { dropdownList } from "./constants/dropdownList";
-import OtherUtil from "./utils/otherUtil";
+import StorageUtil from "./utils/storageUtil";
 import ga from "./utils/analytics";
 
 ReactDOM.render(
@@ -24,7 +24,7 @@ ReactDOM.render(
 let coverLoading: any = document.querySelector(".loading-cover");
 coverLoading && coverLoading.parentNode.removeChild(coverLoading);
 
-if (isElectron && OtherUtil.getReaderConfig("isDisableAnalytics") !== "yes") {
+if (isElectron && StorageUtil.getReaderConfig("isDisableAnalytics") !== "yes") {
   ga.event("Client", "show", {
     evLabel: "startup",
   });

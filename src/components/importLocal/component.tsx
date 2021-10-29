@@ -17,7 +17,7 @@ import {
   fetchMD5FromPath,
 } from "../../utils/fileUtils/fileUtil";
 import toast from "react-hot-toast";
-import OtherUtil from "../../utils/otherUtil";
+import StorageUtil from "../../utils/storageUtil";
 declare var window: any;
 let clickFilePath = "";
 
@@ -84,7 +84,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
     });
   };
   handleJump = (book: BookModel) => {
-    if (OtherUtil.getReaderConfig("isOpenInMain") === "yes") {
+    if (StorageUtil.getReaderConfig("isOpenInMain") === "yes") {
       this.props.history.push(BookUtil.getBookUrl(book));
       this.props.handleReadingBook(book);
     } else {
@@ -96,13 +96,13 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
   handleAddBook = (book: BookModel, buffer: ArrayBuffer) => {
     return new Promise<void>((resolve, reject) => {
       if (this.state.isOpenFile) {
-        OtherUtil.getReaderConfig("isImportPath") !== "yes" &&
-          OtherUtil.getReaderConfig("isPreventAdd") !== "yes" &&
+        StorageUtil.getReaderConfig("isImportPath") !== "yes" &&
+          StorageUtil.getReaderConfig("isPreventAdd") !== "yes" &&
           BookUtil.addBook(book.key, buffer);
-        if (OtherUtil.getReaderConfig("isPreventAdd") === "yes") {
+        if (StorageUtil.getReaderConfig("isPreventAdd") === "yes") {
           this.handleJump(book);
           if (
-            OtherUtil.getReaderConfig("isOpenInMain") === "yes" &&
+            StorageUtil.getReaderConfig("isOpenInMain") === "yes" &&
             this.state.isOpenFile
           ) {
             this.setState({ isOpenFile: false });
@@ -112,7 +112,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
           return;
         }
       } else {
-        OtherUtil.getReaderConfig("isImportPath") !== "yes" &&
+        StorageUtil.getReaderConfig("isImportPath") !== "yes" &&
           BookUtil.addBook(book.key, buffer);
       }
 
@@ -132,7 +132,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
           setTimeout(() => {
             this.state.isOpenFile && this.handleJump(book);
             if (
-              OtherUtil.getReaderConfig("isOpenInMain") === "yes" &&
+              StorageUtil.getReaderConfig("isOpenInMain") === "yes" &&
               this.state.isOpenFile
             ) {
               this.setState({ isOpenFile: false });

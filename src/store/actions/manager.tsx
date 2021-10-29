@@ -1,5 +1,5 @@
 import localforage from "localforage";
-import OtherUtil from "../../utils/otherUtil";
+import StorageUtil from "../../utils/storageUtil";
 import SortUtil from "../../utils/readUtils/sortUtil";
 import BookModel from "../../model/Book";
 import { Dispatch } from "redux";
@@ -92,7 +92,7 @@ export function handleFetchBookSortCode() {
 }
 export function handleFetchList() {
   return (dispatch: Dispatch) => {
-    let viewMode = OtherUtil.getReaderConfig("viewMode") || "card";
+    let viewMode = StorageUtil.getReaderConfig("viewMode") || "card";
     dispatch(handleViewMode(viewMode));
   };
 }

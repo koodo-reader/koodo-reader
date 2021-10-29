@@ -1,7 +1,7 @@
 import React from "react";
 import "./background.css";
 import { BackgroundProps, BackgroundState } from "./interface";
-import OtherUtil from "../../utils/otherUtil";
+import StorageUtil from "../../utils/storageUtil";
 import { Trans } from "react-i18next";
 import BackgroundWidget from "../../components/backgroundWidget";
 class Background extends React.Component<BackgroundProps, BackgroundState> {
@@ -10,15 +10,16 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
     super(props);
     this.state = {
       isSingle:
-        OtherUtil.getReaderConfig("readerMode") &&
-        OtherUtil.getReaderConfig("readerMode") !== "double",
+        StorageUtil.getReaderConfig("readerMode") &&
+        StorageUtil.getReaderConfig("readerMode") !== "double",
       currentChapter: "",
       prevPage: 0,
       nextPage: 0,
-      scale: OtherUtil.getReaderConfig("scale") || 1,
-      isHideFooter: OtherUtil.getReaderConfig("isHideFooter") === "yes",
-      isHideHeader: OtherUtil.getReaderConfig("isHideHeader") === "yes",
-      isHideBackground: OtherUtil.getReaderConfig("isHideBackground") === "yes",
+      scale: StorageUtil.getReaderConfig("scale") || 1,
+      isHideFooter: StorageUtil.getReaderConfig("isHideFooter") === "yes",
+      isHideHeader: StorageUtil.getReaderConfig("isHideHeader") === "yes",
+      isHideBackground:
+        StorageUtil.getReaderConfig("isHideBackground") === "yes",
     };
     this.isFirst = true;
   }
@@ -56,8 +57,8 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
       <div
         className="background"
         style={{
-          color: OtherUtil.getReaderConfig("textColor")
-            ? OtherUtil.getReaderConfig("textColor")
+          color: StorageUtil.getReaderConfig("textColor")
+            ? StorageUtil.getReaderConfig("textColor")
             : "",
         }}
       >
