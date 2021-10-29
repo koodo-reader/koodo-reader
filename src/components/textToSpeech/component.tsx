@@ -2,7 +2,7 @@ import React from "react";
 import { TextToSpeechProps, TextToSpeechState } from "./interface";
 import { Trans } from "react-i18next";
 import { speedList } from "../../constants/dropdownList";
-import OtherUtil from "../../utils/otherUtil";
+import StorageUtil from "../../utils/storageUtil";
 
 class TextToSpeech extends React.Component<
   TextToSpeechProps,
@@ -61,13 +61,13 @@ class TextToSpeech extends React.Component<
                 .querySelector("#text-speech-speed")!
                 .children[
                   speedList.option.indexOf(
-                    OtherUtil.getReaderConfig("voiceSpeed") || "1"
+                    StorageUtil.getReaderConfig("voiceSpeed") || "1"
                   )
                 ].setAttribute("selected", "selected");
               document
                 .querySelector("#text-speech-voice")!
                 .children[
-                  OtherUtil.getReaderConfig("voiceIndex") || 0
+                  StorageUtil.getReaderConfig("voiceIndex") || 0
                 ].setAttribute("selected", "selected");
             }
           });
@@ -95,8 +95,8 @@ class TextToSpeech extends React.Component<
         .replace(/\f/g, "");
       this.handleSpeech(
         text,
-        OtherUtil.getReaderConfig("voiceIndex") || 0,
-        OtherUtil.getReaderConfig("voiceSpeed") || 1
+        StorageUtil.getReaderConfig("voiceIndex") || 0,
+        StorageUtil.getReaderConfig("voiceSpeed") || 1
       );
     });
   };
@@ -169,7 +169,10 @@ class TextToSpeech extends React.Component<
                   className="lang-setting-dropdown"
                   id="text-speech-voice"
                   onChange={(event) => {
-                    OtherUtil.setReaderConfig("voiceIndex", event.target.value);
+                    StorageUtil.setReaderConfig(
+                      "voiceIndex",
+                      event.target.value
+                    );
                     window.speechSynthesis.cancel();
                   }}
                 >
@@ -194,7 +197,10 @@ class TextToSpeech extends React.Component<
                   id="text-speech-speed"
                   className="lang-setting-dropdown"
                   onChange={(event) => {
-                    OtherUtil.setReaderConfig("voiceSpeed", event.target.value);
+                    StorageUtil.setReaderConfig(
+                      "voiceSpeed",
+                      event.target.value
+                    );
                     window.speechSynthesis.cancel();
                   }}
                 >

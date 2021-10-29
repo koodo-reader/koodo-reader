@@ -2,7 +2,7 @@ import React from "react";
 import { Trans } from "react-i18next";
 import { SliderListProps, SliderListState } from "./interface";
 import "./sliderList.css";
-import OtherUtil from "../../../utils/otherUtil";
+import StorageUtil from "../../../utils/storageUtil";
 import { isElectron } from "react-device-detect";
 import toast from "react-hot-toast";
 class SliderList extends React.Component<SliderListProps, SliderListState> {
@@ -11,16 +11,16 @@ class SliderList extends React.Component<SliderListProps, SliderListState> {
     this.state = {
       value:
         this.props.mode === "fontSize"
-          ? OtherUtil.getReaderConfig("fontSize") || "17"
+          ? StorageUtil.getReaderConfig("fontSize") || "17"
           : this.props.mode === "scale"
-          ? OtherUtil.getReaderConfig("scale") || "1"
+          ? StorageUtil.getReaderConfig("scale") || "1"
           : this.props.mode === "letterSpacing"
-          ? OtherUtil.getReaderConfig("letterSpacing") || "0"
+          ? StorageUtil.getReaderConfig("letterSpacing") || "0"
           : this.props.mode === "paraSpacing"
-          ? OtherUtil.getReaderConfig("paraSpacing") || "0"
+          ? StorageUtil.getReaderConfig("paraSpacing") || "0"
           : this.props.mode === "brightness"
-          ? OtherUtil.getReaderConfig("brightness") || "1"
-          : OtherUtil.getReaderConfig("margin") || "60",
+          ? StorageUtil.getReaderConfig("brightness") || "1"
+          : StorageUtil.getReaderConfig("margin") || "60",
     };
   }
   handleRest = () => {
@@ -38,27 +38,27 @@ class SliderList extends React.Component<SliderListProps, SliderListState> {
     if (this.props.mode === "fontSize") {
       const fontSize = event.target.value;
       this.setState({ value: fontSize });
-      OtherUtil.setReaderConfig("fontSize", fontSize);
+      StorageUtil.setReaderConfig("fontSize", fontSize);
     } else if (this.props.mode === "scale") {
       const scale = event.target.value;
       this.setState({ value: scale });
-      OtherUtil.setReaderConfig("scale", scale);
+      StorageUtil.setReaderConfig("scale", scale);
     } else if (this.props.mode === "letterSpacing") {
       const letterSpacing = event.target.value;
       this.setState({ value: letterSpacing });
-      OtherUtil.setReaderConfig("letterSpacing", letterSpacing);
+      StorageUtil.setReaderConfig("letterSpacing", letterSpacing);
     } else if (this.props.mode === "paraSpacing") {
       const paraSpacing = event.target.value;
       this.setState({ value: paraSpacing });
-      OtherUtil.setReaderConfig("paraSpacing", paraSpacing);
+      StorageUtil.setReaderConfig("paraSpacing", paraSpacing);
     } else if (this.props.mode === "brightness") {
       const brightness = event.target.value;
       this.setState({ value: brightness });
-      OtherUtil.setReaderConfig("brightness", brightness);
+      StorageUtil.setReaderConfig("brightness", brightness);
     } else {
       const margin = event.target.value;
       this.setState({ value: margin });
-      OtherUtil.setReaderConfig("margin", margin);
+      StorageUtil.setReaderConfig("margin", margin);
     }
   };
   //使进度百分比随拖动实时变化

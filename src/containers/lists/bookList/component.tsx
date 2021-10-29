@@ -9,7 +9,7 @@ import ShelfUtil from "../../../utils/readUtils/shelfUtil";
 import SortUtil from "../../../utils/readUtils/sortUtil";
 import BookModel from "../../../model/Book";
 import { BookListProps, BookListState } from "./interface";
-import OtherUtil from "../../../utils/otherUtil";
+import StorageUtil from "../../../utils/storageUtil";
 import localforage from "localforage";
 import Empty from "../../emptyPage";
 import { Redirect, withRouter } from "react-router-dom";
@@ -167,7 +167,10 @@ class BookList extends React.Component<BookListProps, BookListState> {
       });
     }
 
-    OtherUtil.setReaderConfig("totalBooks", this.props.books.length.toString());
+    StorageUtil.setReaderConfig(
+      "totalBooks",
+      this.props.books.length.toString()
+    );
     return (
       <>
         <ViewMode />

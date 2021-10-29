@@ -21,10 +21,11 @@
 }
 .setting-dialog-new-title {
   font-size: 15px;
-  line-height: 25px;
+  line-height: 20px;
   opacity: 1;
   margin-top: 10px;
   margin-left: 30px;
+  margin-bottom: 5px;
   width: 280px;
   display: flex;
   justify-content: space-between;

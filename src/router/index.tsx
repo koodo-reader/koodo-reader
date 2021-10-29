@@ -8,11 +8,11 @@ import ComicReader from "../pages/comicReader";
 import PDFReader from "../pages/pdfReader";
 import _Redirect from "../pages/redirect";
 import i18n from "../i18n";
-import OtherUtil from "../utils/otherUtil";
+import StorageUtil from "../utils/storageUtil";
 
 const Router = () => {
   useEffect(() => {
-    const lng = OtherUtil.getReaderConfig("lang");
+    const lng = StorageUtil.getReaderConfig("lang");
     if (lng) {
       i18n.changeLanguage(lng);
     } else {

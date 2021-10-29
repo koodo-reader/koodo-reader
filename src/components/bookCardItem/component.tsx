@@ -4,7 +4,7 @@ import "./bookCardItem.css";
 import { BookCardProps, BookCardState } from "./interface";
 import AddFavorite from "../../utils/readUtils/addFavorite";
 import ActionDialog from "../dialogs/actionDialog";
-import OtherUtil from "../../utils/otherUtil";
+import StorageUtil from "../../utils/storageUtil";
 import { withRouter } from "react-router-dom";
 import RecordLocation from "../../utils/readUtils/recordLocation";
 import { isElectron } from "react-device-detect";
@@ -36,13 +36,13 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
     }
 
     if (
-      OtherUtil.getReaderConfig("isOpenBook") === "yes" &&
+      StorageUtil.getReaderConfig("isOpenBook") === "yes" &&
       RecentBooks.getAllRecent()[0] === this.props.book.key &&
       !this.props.currentBook.key &&
       !filePath
     ) {
       this.props.handleReadingBook(this.props.book);
-      if (OtherUtil.getReaderConfig("isOpenInMain") === "yes") {
+      if (StorageUtil.getReaderConfig("isOpenInMain") === "yes") {
         this.props.history.push(BookUtil.getBookUrl(this.props.book));
       } else {
         BookUtil.RedirectBook(this.props.book);
@@ -107,7 +107,7 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
     }
     RecentBooks.setRecent(this.props.book.key);
     this.props.handleReadingBook(this.props.book);
-    if (OtherUtil.getReaderConfig("isOpenInMain") === "yes") {
+    if (StorageUtil.getReaderConfig("isOpenInMain") === "yes") {
       this.props.history.push(BookUtil.getBookUrl(this.props.book));
     } else {
       BookUtil.RedirectBook(this.props.book);

@@ -3,7 +3,7 @@ import "./sidebar.css";
 import { sideMenu } from "../../constants/sideMenu";
 import { SidebarProps, SidebarState } from "./interface";
 import { withRouter } from "react-router-dom";
-import OtherUtil from "../../utils/otherUtil";
+import StorageUtil from "../../utils/storageUtil";
 import { Tooltip } from "react-tippy";
 import { isElectron } from "react-device-detect";
 
@@ -13,7 +13,8 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
     this.state = {
       index: 0,
       hoverIndex: -1,
-      isCollapsed: OtherUtil.getReaderConfig("isCollapsed") === "yes" || false,
+      isCollapsed:
+        StorageUtil.getReaderConfig("isCollapsed") === "yes" || false,
     };
   }
   componentDidMount() {
@@ -37,7 +38,7 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
   handleCollapse = (isCollapsed: boolean) => {
     this.setState({ isCollapsed });
     this.props.handleCollapse(isCollapsed);
-    OtherUtil.setReaderConfig("isCollapsed", isCollapsed ? "yes" : "no");
+    StorageUtil.setReaderConfig("isCollapsed", isCollapsed ? "yes" : "no");
   };
   handleJump = (url: string) => {
     isElectron
@@ -131,7 +132,7 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
 
         <img
           src={
-            OtherUtil.getReaderConfig("isDisplayDark") === "yes"
+            StorageUtil.getReaderConfig("isDisplayDark") === "yes"
               ? "./assets/label_light.png"
               : "./assets/label.png"
           }

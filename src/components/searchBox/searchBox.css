@@ -16,7 +16,7 @@ textarea::-webkit-input-placeholder,
 textarea::-moz-placeholder,
 textarea::-ms-input-placeholder {
   font-size: 15px;
-  line-height: 27px;
+  line-height: 38px;
   /* opacity: 1; */
 }
 .header-search-icon {

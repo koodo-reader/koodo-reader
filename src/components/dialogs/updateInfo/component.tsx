@@ -8,7 +8,7 @@ import Lottie from "react-lottie";
 import animationNew from "../../../assets/lotties/new.json";
 import animationSuccess from "../../../assets/lotties/success.json";
 import copy from "copy-text-to-clipboard";
-import OtherUtil from "../../../utils/otherUtil";
+import StorageUtil from "../../../utils/storageUtil";
 import { isElectron } from "react-device-detect";
 import toast from "react-hot-toast";
 const newOptions = {
@@ -52,19 +52,19 @@ class UpdateInfo extends React.Component<UpdateInfoProps, UpdateInfoState> {
 
           setTimeout(() => {
             if (version.localeCompare(newVersion) < 0) {
-              if (OtherUtil.getReaderConfig("isDisableUpdate") !== "yes") {
+              if (StorageUtil.getReaderConfig("isDisableUpdate") !== "yes") {
                 this.setState({ updateLog: res.data.log });
                 this.props.handleNewDialog(true);
               } else {
                 this.props.handleNewWarning(true);
               }
             } else if (
-              OtherUtil.getReaderConfig("version") !== newVersion &&
-              OtherUtil.getReaderConfig("isFirst")
+              StorageUtil.getReaderConfig("version") !== newVersion &&
+              StorageUtil.getReaderConfig("isFirst")
             ) {
               this.setState({ isUpdated: true });
               this.props.handleNewDialog(true);
-              OtherUtil.setReaderConfig("version", newVersion);
+              StorageUtil.setReaderConfig("version", newVersion);
             }
           }, 500);
         })

@@ -7,21 +7,11 @@ import ColorOption from "../../colorOption";
 import RecordLocation from "../../../utils/readUtils/recordLocation";
 import { Tooltip } from "react-tippy";
 import { popupList } from "../../../constants/popupList";
-import OtherUtil from "../../../utils/otherUtil";
+import StorageUtil from "../../../utils/storageUtil";
 import { isElectron } from "react-device-detect";
 import toast from "react-hot-toast";
+import { getSelection } from "../../../utils/mouseEvent";
 declare var window: any;
-const getSelection = () => {
-  let iframe = document.getElementsByTagName("iframe")[0];
-  if (!iframe) return;
-  let doc = iframe.contentDocument;
-  if (!doc) return;
-  let sel = doc.getSelection();
-  if (!sel) return;
-  let text = sel.toString();
-  text = text && text.trim();
-  return text;
-};
 
 class PopupOption extends React.Component<PopupOptionProps> {
   handleNote = () => {
@@ -120,7 +110,7 @@ class PopupOption extends React.Component<PopupOptionProps> {
       : window.open(url);
   };
   handleSearchInternet = () => {
-    switch (OtherUtil.getReaderConfig("searchEngine")) {
+    switch (StorageUtil.getReaderConfig("searchEngine")) {
       case "google":
         this.handleJump("https://www.google.com/search?q=" + getSelection());
         break;

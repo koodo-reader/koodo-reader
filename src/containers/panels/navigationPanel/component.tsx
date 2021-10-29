@@ -7,7 +7,7 @@ import { NavigationPanelProps, NavigationPanelState } from "./interface";
 import SearchBox from "../../../components/searchBox";
 import Parser from "html-react-parser";
 import EmptyCover from "../../../components/emptyCover";
-import OtherUtil from "../../../utils/otherUtil";
+import StorageUtil from "../../../utils/storageUtil";
 import { Tooltip } from "react-tippy";
 
 class NavigationPanel extends React.Component<
@@ -26,7 +26,7 @@ class NavigationPanel extends React.Component<
       startIndex: 0,
       currentIndex: 0,
       isNavLocked:
-        OtherUtil.getReaderConfig("isNavLocked") === "yes" ? true : false,
+        StorageUtil.getReaderConfig("isNavLocked") === "yes" ? true : false,
     };
   }
   handleSearchState = (isSearch: boolean) => {
@@ -44,7 +44,7 @@ class NavigationPanel extends React.Component<
   };
   handleLock = () => {
     this.setState({ isNavLocked: !this.state.isNavLocked }, () => {
-      OtherUtil.setReaderConfig(
+      StorageUtil.setReaderConfig(
         "isNavLocked",
         this.state.isNavLocked ? "yes" : "no"
       );

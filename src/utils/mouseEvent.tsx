@@ -1,12 +1,27 @@
-import OtherUtil from "./otherUtil";
+import StorageUtil from "./storageUtil";
 import { build } from "../../package.json";
 import md5 from "md5";
 let Hammer = (window as any).Hammer;
 declare var document: any;
-export const MouseEvent = (rendition: any,) => {
+export const getSelection = () => {
+  let iframe = document.getElementsByTagName("iframe")[0];
+  if (!iframe) return;
+  let doc = iframe.contentDocument;
+  if (!doc) return;
+  let sel = doc.getSelection();
+  if (!sel) return;
+  let text = sel.toString();
+  text = text && text.trim();
+  return text;
+};
+
+export const MouseEvent = (rendition: any) => {
   let isFirefox = navigator.userAgent.indexOf("Firefox") > -1;
   let lock = false; //prevent from clicking too fast
   const arrowKeys = (event: any) => {
+    if (getSelection()) {
+      return;
+    }
     // event.preventDefault();
     if (lock) return;
 
@@ -118,7 +133,7 @@ export const MouseEvent = (rendition: any,) => {
     if (!doc) {
       return;
     }
-    if (OtherUtil.getReaderConfig("isTouch") === "yes") {
+    if (StorageUtil.getReaderConfig("isTouch") === "yes") {
       const mc = new Hammer(doc);
       mc.on("panleft panright panup pandown", (event: any) => {
         gesture(event);

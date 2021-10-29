@@ -1,0 +1,4 @@
+.ebook-viewer {
+  overflow-y: scroll;
+  z-index: 5;
+}

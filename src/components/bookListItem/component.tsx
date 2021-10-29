@@ -6,7 +6,7 @@ import { Trans } from "react-i18next";
 import AddFavorite from "../../utils/readUtils/addFavorite";
 import { withRouter } from "react-router-dom";
 import RecentBooks from "../../utils/readUtils/recordRecent";
-import OtherUtil from "../../utils/otherUtil";
+import StorageUtil from "../../utils/storageUtil";
 import AddTrash from "../../utils/readUtils/addTrash";
 import EmptyCover from "../emptyCover";
 import BookUtil from "../../utils/fileUtils/bookUtil";
@@ -31,13 +31,13 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
       filePath = ipcRenderer.sendSync("get-file-data");
     }
     if (
-      OtherUtil.getReaderConfig("isOpenBook") === "yes" &&
+      StorageUtil.getReaderConfig("isOpenBook") === "yes" &&
       RecentBooks.getAllRecent()[0] === this.props.book.key &&
       !this.props.currentBook.key &&
       !filePath
     ) {
       this.props.handleReadingBook(this.props.book);
-      if (OtherUtil.getReaderConfig("isOpenInMain") === "yes") {
+      if (StorageUtil.getReaderConfig("isOpenInMain") === "yes") {
         this.props.history.push(BookUtil.getBookUrl(this.props.book));
       } else {
         BookUtil.RedirectBook(this.props.book);
@@ -85,7 +85,7 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
     }
     RecentBooks.setRecent(this.props.book.key);
     this.props.handleReadingBook(this.props.book);
-    if (OtherUtil.getReaderConfig("isOpenInMain") === "yes") {
+    if (StorageUtil.getReaderConfig("isOpenInMain") === "yes") {
       this.props.history.push(BookUtil.getBookUrl(this.props.book));
     } else {
       BookUtil.RedirectBook(this.props.book);

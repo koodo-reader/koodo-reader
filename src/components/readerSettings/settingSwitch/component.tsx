@@ -2,7 +2,7 @@ import React from "react";
 import { SettingSwitchProps, SettingSwitchState } from "./interface";
 import { Trans } from "react-i18next";
 import TextToSpeech from "../../textToSpeech";
-import OtherUtil from "../../../utils/otherUtil";
+import StorageUtil from "../../../utils/storageUtil";
 import {
   readerSettingList,
   htmlSettingList,
@@ -16,17 +16,20 @@ class SettingSwitch extends React.Component<
   constructor(props: SettingSwitchProps) {
     super(props);
     this.state = {
-      isBold: OtherUtil.getReaderConfig("isBold") === "yes",
-      isIndent: OtherUtil.getReaderConfig("isIndent") === "yes",
-      isUnderline: OtherUtil.getReaderConfig("isUnderline") === "yes",
-      isShadow: OtherUtil.getReaderConfig("isShadow") === "yes",
-      isItalic: OtherUtil.getReaderConfig("isItalic") === "yes",
-      isInvert: OtherUtil.getReaderConfig("isInvert") === "yes",
-      isHideBackground: OtherUtil.getReaderConfig("isHideBackground") === "yes",
-      isHideFooter: OtherUtil.getReaderConfig("isHideFooter") === "yes",
-      isHideHeader: OtherUtil.getReaderConfig("isHideHeader") === "yes",
-      isHidePageButton: OtherUtil.getReaderConfig("isHidePageButton") === "yes",
-      isHideMenuButton: OtherUtil.getReaderConfig("isHideMenuButton") === "yes",
+      isBold: StorageUtil.getReaderConfig("isBold") === "yes",
+      isIndent: StorageUtil.getReaderConfig("isIndent") === "yes",
+      isUnderline: StorageUtil.getReaderConfig("isUnderline") === "yes",
+      isShadow: StorageUtil.getReaderConfig("isShadow") === "yes",
+      isItalic: StorageUtil.getReaderConfig("isItalic") === "yes",
+      isInvert: StorageUtil.getReaderConfig("isInvert") === "yes",
+      isHideBackground:
+        StorageUtil.getReaderConfig("isHideBackground") === "yes",
+      isHideFooter: StorageUtil.getReaderConfig("isHideFooter") === "yes",
+      isHideHeader: StorageUtil.getReaderConfig("isHideHeader") === "yes",
+      isHidePageButton:
+        StorageUtil.getReaderConfig("isHidePageButton") === "yes",
+      isHideMenuButton:
+        StorageUtil.getReaderConfig("isHideMenuButton") === "yes",
     };
   }
 
@@ -43,7 +46,7 @@ class SettingSwitch extends React.Component<
 
   _handleChange = (stateName: string) => {
     this.setState({ [stateName]: !this.state[stateName] } as any, () => {
-      OtherUtil.setReaderConfig(
+      StorageUtil.setReaderConfig(
         stateName,
         this.state[stateName] ? "yes" : "no"
       );
@@ -55,7 +58,10 @@ class SettingSwitch extends React.Component<
 
   handleChange = (stateName: string) => {
     this.setState({ [stateName]: !this.state[stateName] } as any);
-    OtherUtil.setReaderConfig(stateName, this.state[stateName] ? "no" : "yes");
+    StorageUtil.setReaderConfig(
+      stateName,
+      this.state[stateName] ? "no" : "yes"
+    );
 
     toast(this.props.t("Change Successfully"));
     setTimeout(() => {
