@@ -1,8 +1,7 @@
 import React from "react";
 import "./contentList.css";
 import { ContentListProps, ContentListState } from "./interface";
-import OtherUtil from "../../../utils/otherUtil";
-import RecordLocation from "../../../utils/readUtils/recordLocation";
+import StorageUtil from "../../../utils/storageUtil";
 import _ from "underscore";
 class ContentList extends React.Component<ContentListProps, ContentListState> {
   constructor(props: ContentListProps) {
@@ -12,7 +11,7 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
       isCollapsed: true,
       currentIndex: -1,
       currentChapter: "",
-      isExpandContent: OtherUtil.getReaderConfig("isExpandContent") === "yes",
+      isExpandContent: StorageUtil.getReaderConfig("isExpandContent") === "yes",
     };
     this.handleJump = this.handleJump.bind(this);
   }
@@ -42,17 +41,10 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
       this.props.currentEpub.rendition.display(href);
     } else {
       let id = href.substr(1);
-      RecordLocation.recordScrollHeight(
-        this.props.htmlBook.key,
-        "",
-        this.state.chapters[_.findIndex(this.state.chapters, { id })].label
-      );
-      this.props.handleCurrentChapter(
-        this.state.chapters[_.findIndex(this.state.chapters, { id })].label
-      );
-      this.props.renderFunc(
-        this.state.chapters[_.findIndex(this.state.chapters, { id })].label
-      );
+      let title = this.state.chapters[_.findIndex(this.state.chapters, { id })]
+        .label;
+      this.props.htmlBook.rendition.goToChapter(title);
+      this.props.handleCurrentChapter(title);
     }
   }
   UNSAFE_componentWillReceiveProps(nextProps: ContentListProps) {

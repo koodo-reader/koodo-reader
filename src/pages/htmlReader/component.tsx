@@ -5,7 +5,7 @@ import OperationPanel from "../../containers/panels/operationPanel";
 import { Toaster } from "react-hot-toast";
 import ProgressPanel from "../../containers/panels/htmlProgressPanel";
 import { ReaderProps, ReaderState } from "./interface";
-import OtherUtil from "../../utils/otherUtil";
+import StorageUtil from "../../utils/storageUtil";
 import ReadingTime from "../../utils/readUtils/readingTime";
 import Viewer from "../../containers/htmlViewer";
 import _ from "underscore";
@@ -20,19 +20,20 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
     super(props);
     this.state = {
       isOpenRightPanel:
-        OtherUtil.getReaderConfig("isSettingLocked") === "yes" ? true : false,
+        StorageUtil.getReaderConfig("isSettingLocked") === "yes" ? true : false,
       isOpenTopPanel: false,
       isOpenBottomPanel: false,
       hoverPanel: "",
       isOpenLeftPanel:
-        OtherUtil.getReaderConfig("isNavLocked") === "yes" ? true : false,
+        StorageUtil.getReaderConfig("isNavLocked") === "yes" ? true : false,
       rendition: null,
-      scale: OtherUtil.getReaderConfig("scale") || 1,
-      margin: parseInt(OtherUtil.getReaderConfig("margin")) || 30,
+      scale: StorageUtil.getReaderConfig("scale") || 1,
+      margin: parseInt(StorageUtil.getReaderConfig("margin")) || 30,
       time: ReadingTime.getTime(this.props.currentBook.key),
-      isTouch: OtherUtil.getReaderConfig("isTouch") === "yes",
-      isPreventTrigger: OtherUtil.getReaderConfig("isPreventTrigger") === "yes",
-      readerMode: OtherUtil.getReaderConfig("readerMode") || "double",
+      isTouch: StorageUtil.getReaderConfig("isTouch") === "yes",
+      isPreventTrigger:
+        StorageUtil.getReaderConfig("isPreventTrigger") === "yes",
+      readerMode: StorageUtil.getReaderConfig("readerMode") || "double",
     };
   }
   componentWillMount() {
@@ -85,7 +86,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
     //控制上下左右的菜单的显示
     switch (position) {
       case "right":
-        if (OtherUtil.getReaderConfig("isSettingLocked") === "yes") {
+        if (StorageUtil.getReaderConfig("isSettingLocked") === "yes") {
           break;
         } else {
           this.setState({ isOpenRightPanel: false });
@@ -93,7 +94,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         }
 
       case "left":
-        if (OtherUtil.getReaderConfig("isNavLocked") === "yes") {
+        if (StorageUtil.getReaderConfig("isNavLocked") === "yes") {
           break;
         } else {
           this.setState({ isOpenLeftPanel: false });
@@ -123,7 +124,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
     };
     return (
       <div className="viewer">
-        {OtherUtil.getReaderConfig("isHideMenuButton") !== "yes" && (
+        {StorageUtil.getReaderConfig("isHideMenuButton") !== "yes" && (
           <div
             className="reader-setting-icon-container"
             onClick={() => {

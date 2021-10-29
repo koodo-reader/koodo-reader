@@ -1,7 +1,7 @@
 import React from "react";
 import "./loadingPage.css";
 import { LoadingPageProps } from "./interface";
-import OtherUtil from "../../utils/otherUtil";
+import StorageUtil from "../../utils/storageUtil";
 import { Redirect } from "react-router-dom";
 
 class LoadingPage extends React.Component<LoadingPageProps> {
@@ -12,12 +12,12 @@ class LoadingPage extends React.Component<LoadingPageProps> {
     let arr: number[] = [];
     for (
       let i = 0;
-      i < parseInt(OtherUtil.getReaderConfig("totalBooks") || "0");
+      i < parseInt(StorageUtil.getReaderConfig("totalBooks") || "0");
       i++
     ) {
       arr.push(i);
     }
-    if (OtherUtil.getReaderConfig("viewMode") !== "list") {
+    if (StorageUtil.getReaderConfig("viewMode") !== "list") {
       const renderLoadingCard = () => {
         return arr.map((item, index) => {
           return (

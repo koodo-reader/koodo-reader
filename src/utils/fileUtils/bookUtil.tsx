@@ -1,4 +1,4 @@
-import OtherUtil from "../otherUtil";
+import StorageUtil from "../storageUtil";
 import { isElectron } from "react-device-detect";
 import localforage from "localforage";
 import BookModel from "../../model/Book";
@@ -112,9 +112,9 @@ class BookUtil {
       const { ipcRenderer } = window.require("electron");
       ipcRenderer.invoke("open-book", {
         url: `${window.location.href.split("#")[0]}#/${ref}/${book.key}`,
-        isMergeWord: OtherUtil.getReaderConfig("isMergeWord"),
-        isFullscreen: OtherUtil.getReaderConfig("isAutoFullscreen"),
-        isPreventSleep: OtherUtil.getReaderConfig("isPreventSleep"),
+        isMergeWord: StorageUtil.getReaderConfig("isMergeWord"),
+        isFullscreen: StorageUtil.getReaderConfig("isAutoFullscreen"),
+        isPreventSleep: StorageUtil.getReaderConfig("isPreventSleep"),
       });
     } else {
       window.open(

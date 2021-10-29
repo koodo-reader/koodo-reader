@@ -4,7 +4,7 @@ import { PopupTransProps, PopupTransState } from "./interface";
 import md5 from "md5";
 import { Trans } from "react-i18next";
 import { translationList } from "../../../constants/translationList";
-import OtherUtil from "../../../utils/otherUtil";
+import StorageUtil from "../../../utils/storageUtil";
 
 class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
   constructor(props: PopupTransProps) {
@@ -21,7 +21,7 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
     var script = document.createElement("script");
     script.type = "text/javascript";
     script.src = `https://fanyi-api.baidu.com/api/trans/vip/translate?q=${text}&from=auto&to=${
-      OtherUtil.getReaderConfig("transTarget") || "auto"
+      StorageUtil.getReaderConfig("transTarget") || "auto"
     }&appid=20200802000531425&salt=1435660288&sign=${md5(
       // eslint-disable-next-line
       "20200802000531425" + text + "1435660288" + "sJRHTorJq8j8_ru2GkHl"
@@ -55,7 +55,7 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
               style={{ width: "100px" }}
               onChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
                 let targetLang = event.target.value;
-                OtherUtil.setReaderConfig("transTarget", targetLang);
+                StorageUtil.setReaderConfig("transTarget", targetLang);
                 this.handleTrans(
                   this.props.originalText.replace(/(\r\n|\n|\r)/gm, "")
                 );
@@ -68,7 +68,7 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
                     key={index}
                     className="add-dialog-shelf-list-option"
                     selected={
-                      OtherUtil.getReaderConfig("transTarget") === item.value
+                      StorageUtil.getReaderConfig("transTarget") === item.value
                         ? true
                         : false
                     }

@@ -7,7 +7,7 @@ import OperationPanel from "../panels/operationPanel";
 import ProgressPanel from "../panels/progressPanel";
 import { ReaderProps, ReaderState } from "./interface";
 import { MouseEvent } from "../../utils/mouseEvent";
-import OtherUtil from "../../utils/otherUtil";
+import StorageUtil from "../../utils/storageUtil";
 import ReadingTime from "../../utils/readUtils/readingTime";
 let lock = false;
 class Reader extends React.Component<ReaderProps, ReaderState> {
@@ -19,19 +19,20 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
     super(props);
     this.state = {
       isOpenRightPanel:
-        OtherUtil.getReaderConfig("isSettingLocked") === "yes" ? true : false,
+        StorageUtil.getReaderConfig("isSettingLocked") === "yes" ? true : false,
       isOpenTopPanel: false,
       isOpenBottomPanel: false,
       isOpenLeftPanel:
-        OtherUtil.getReaderConfig("isNavLocked") === "yes" ? true : false,
+        StorageUtil.getReaderConfig("isNavLocked") === "yes" ? true : false,
       rendition: null,
       hoverPanel: "",
-      scale: OtherUtil.getReaderConfig("scale") || 1,
-      margin: parseInt(OtherUtil.getReaderConfig("margin")) || 30,
+      scale: StorageUtil.getReaderConfig("scale") || 1,
+      margin: parseInt(StorageUtil.getReaderConfig("margin")) || 30,
       time: ReadingTime.getTime(this.props.currentBook.key),
-      isTouch: OtherUtil.getReaderConfig("isTouch") === "yes",
-      isPreventTrigger: OtherUtil.getReaderConfig("isPreventTrigger") === "yes",
-      readerMode: OtherUtil.getReaderConfig("readerMode") || "double",
+      isTouch: StorageUtil.getReaderConfig("isTouch") === "yes",
+      isPreventTrigger:
+        StorageUtil.getReaderConfig("isPreventTrigger") === "yes",
+      readerMode: StorageUtil.getReaderConfig("readerMode") || "double",
     };
   }
   componentWillMount() {
@@ -47,7 +48,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
     this.props.handleRenderFunc(this.handleRenderBook);
     var doit;
     window.addEventListener("resize", () => {
-      if (OtherUtil.getReaderConfig("readerMode") === "single") {
+      if (StorageUtil.getReaderConfig("readerMode") === "single") {
         return;
       }
       clearTimeout(doit);
@@ -90,7 +91,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         height: "100%",
         snap: true,
         spread:
-          OtherUtil.getReaderConfig("readerMode") === "single" ? "none" : "",
+          StorageUtil.getReaderConfig("readerMode") === "single" ? "none" : "",
       });
       this.setState({ rendition: this.rendition });
       this.state.readerMode !== "continuous" && MouseEvent(this.rendition); // 绑定事件
@@ -130,7 +131,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
     //控制上下左右的菜单的显示
     switch (position) {
       case "right":
-        if (OtherUtil.getReaderConfig("isSettingLocked") === "yes") {
+        if (StorageUtil.getReaderConfig("isSettingLocked") === "yes") {
           break;
         } else {
           this.setState({ isOpenRightPanel: false });
@@ -138,7 +139,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         }
 
       case "left":
-        if (OtherUtil.getReaderConfig("isNavLocked") === "yes") {
+        if (StorageUtil.getReaderConfig("isNavLocked") === "yes") {
           break;
         } else {
           this.setState({ isOpenLeftPanel: false });
@@ -185,7 +186,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
     };
     return (
       <div className="viewer">
-        {OtherUtil.getReaderConfig("isHidePageButton") !== "yes" && (
+        {StorageUtil.getReaderConfig("isHidePageButton") !== "yes" && (
           <>
             <div
               className="previous-chapter-single-container"
@@ -205,7 +206,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
             </div>
           </>
         )}
-        {OtherUtil.getReaderConfig("isHideMenuButton") !== "yes" && (
+        {StorageUtil.getReaderConfig("isHideMenuButton") !== "yes" && (
           <div
             className="reader-setting-icon-container"
             onClick={() => {

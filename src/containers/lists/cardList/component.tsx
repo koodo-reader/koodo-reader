@@ -11,7 +11,7 @@ import { Redirect } from "react-router-dom";
 import NoteTag from "../../../components/noteTag";
 import BookUtil from "../../../utils/fileUtils/bookUtil";
 import toast from "react-hot-toast";
-import OtherUtil from "../../../utils/otherUtil";
+import StorageUtil from "../../../utils/storageUtil";
 class CardList extends React.Component<CardListProps, CardListStates> {
   constructor(props: CardListProps) {
     super(props);
@@ -47,7 +47,7 @@ class CardList extends React.Component<CardListProps, CardListStates> {
       return;
     }
     RecordLocation.recordCfi(bookKey, cfi, percentage);
-    if (OtherUtil.getReaderConfig("isOpenInMain") === "yes") {
+    if (StorageUtil.getReaderConfig("isOpenInMain") === "yes") {
       this.props.history.push(BookUtil.getBookUrl(book));
     } else {
       BookUtil.RedirectBook(book);

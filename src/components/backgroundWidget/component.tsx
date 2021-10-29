@@ -1,7 +1,7 @@
 import React from "react";
 import "./background.css";
 import { BackgroundProps, BackgroundState } from "./interface";
-import OtherUtil from "../../utils/otherUtil";
+import StorageUtil from "../../utils/storageUtil";
 
 class Background extends React.Component<BackgroundProps, BackgroundState> {
   isFirst: Boolean;
@@ -9,10 +9,10 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
     super(props);
     this.state = {
       isSingle:
-        (OtherUtil.getReaderConfig("readerMode") &&
-          OtherUtil.getReaderConfig("readerMode") !== "double") ||
+        (StorageUtil.getReaderConfig("readerMode") &&
+          StorageUtil.getReaderConfig("readerMode") !== "double") ||
         this.props.currentBook.description === "readonly",
-      scale: OtherUtil.getReaderConfig("scale") || 1,
+      scale: StorageUtil.getReaderConfig("scale") || 1,
     };
     this.isFirst = true;
   }
@@ -21,11 +21,11 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
     if (!background) return;
     background?.setAttribute(
       "style",
-      `background-color:${OtherUtil.getReaderConfig(
+      `background-color:${StorageUtil.getReaderConfig(
         "backgroundColor"
       )};filter: brightness(${
-        OtherUtil.getReaderConfig("brightness") || 1
-      }) invert(${OtherUtil.getReaderConfig("isInvert") === "yes" ? 1 : 0})`
+        StorageUtil.getReaderConfig("brightness") || 1
+      }) invert(${StorageUtil.getReaderConfig("isInvert") === "yes" ? 1 : 0})`
     );
   }
 
@@ -68,16 +68,18 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
               : {}
           }
         >
-          {(!OtherUtil.getReaderConfig("backgroundColor") &&
-            OtherUtil.getReaderConfig("isDisplayDark") === "yes") ||
-          OtherUtil.getReaderConfig("backgroundColor") ===
+          {(!StorageUtil.getReaderConfig("backgroundColor") &&
+            StorageUtil.getReaderConfig("isDisplayDark") === "yes") ||
+          StorageUtil.getReaderConfig("backgroundColor") ===
             "rgba(44,47,49,1)" ? (
             <div
               className="dark-spine-shadow-left"
               style={
                 this.state.isSingle ||
-                (OtherUtil.getReaderConfig("backgroundColor") &&
-                  OtherUtil.getReaderConfig("backgroundColor").startsWith("#"))
+                (StorageUtil.getReaderConfig("backgroundColor") &&
+                  StorageUtil.getReaderConfig("backgroundColor").startsWith(
+                    "#"
+                  ))
                   ? { display: "none" }
                   : {}
               }
@@ -87,8 +89,10 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
               className="spine-shadow-left"
               style={
                 this.state.isSingle ||
-                (OtherUtil.getReaderConfig("backgroundColor") &&
-                  OtherUtil.getReaderConfig("backgroundColor").startsWith("#"))
+                (StorageUtil.getReaderConfig("backgroundColor") &&
+                  StorageUtil.getReaderConfig("backgroundColor").startsWith(
+                    "#"
+                  ))
                   ? { display: "none" }
                   : {}
               }
@@ -98,15 +102,15 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
             className="book-spine"
             style={this.state.isSingle ? { display: "none" } : {}}
           ></div>
-          {(!OtherUtil.getReaderConfig("backgroundColor") &&
-            OtherUtil.getReaderConfig("isDisplayDark") === "yes") ||
-          OtherUtil.getReaderConfig("backgroundColor") ===
+          {(!StorageUtil.getReaderConfig("backgroundColor") &&
+            StorageUtil.getReaderConfig("isDisplayDark") === "yes") ||
+          StorageUtil.getReaderConfig("backgroundColor") ===
             "rgba(44,47,49,1)" ? (
             <div
               className="dark-spine-shadow-right"
               style={
-                OtherUtil.getReaderConfig("backgroundColor") &&
-                OtherUtil.getReaderConfig("backgroundColor").startsWith("#")
+                StorageUtil.getReaderConfig("backgroundColor") &&
+                StorageUtil.getReaderConfig("backgroundColor").startsWith("#")
                   ? { display: "none" }
                   : this.state.isSingle
                   ? {
@@ -120,8 +124,8 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
             <div
               className="spine-shadow-right"
               style={
-                OtherUtil.getReaderConfig("backgroundColor") &&
-                OtherUtil.getReaderConfig("backgroundColor").startsWith("#")
+                StorageUtil.getReaderConfig("backgroundColor") &&
+                StorageUtil.getReaderConfig("backgroundColor").startsWith("#")
                   ? { display: "none" }
                   : this.state.isSingle
                   ? {

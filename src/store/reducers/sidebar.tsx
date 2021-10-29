@@ -1,8 +1,8 @@
-import OtherUtil from "../../utils/otherUtil";
+import StorageUtil from "../../utils/storageUtil";
 const initState = {
   mode: "home",
   shelfIndex: -1,
-  isCollapsed: OtherUtil.getReaderConfig("isCollapsed") === "yes",
+  isCollapsed: StorageUtil.getReaderConfig("isCollapsed") === "yes",
 };
 export function sidebar(
   state = initState,
