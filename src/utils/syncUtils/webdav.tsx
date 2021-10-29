@@ -1,12 +1,12 @@
 import { restore } from "./restoreUtil";
-import OtherUtil from "../otherUtil";
+import StorageUtil from "../storageUtil";
 
 class WebdavUtil {
   static UploadFile = async (file: any) => {
     return new Promise<boolean>(async (resolve, reject) => {
       const { createClient } = window.require("webdav");
       let { url, username, password } = JSON.parse(
-        OtherUtil.getReaderConfig("webdav_token") || ""
+        StorageUtil.getReaderConfig("webdav_token") || ""
       );
       const client = createClient(url, {
         username,
@@ -51,7 +51,7 @@ class WebdavUtil {
       const dirPath = ipcRenderer.sendSync("user-data", "ping");
       const request = window.require("request");
       let { url, username, password } = JSON.parse(
-        OtherUtil.getReaderConfig("webdav_token") || ""
+        StorageUtil.getReaderConfig("webdav_token") || ""
       );
       const client = createClient(url, {
         username,

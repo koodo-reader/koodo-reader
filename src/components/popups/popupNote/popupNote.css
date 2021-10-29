@@ -47,7 +47,7 @@
 }
 .note-button-container {
   position: absolute;
-  bottom: 5px;
+  bottom: 10px;
   right: 25px;
   width: 120px;
   display: flex;

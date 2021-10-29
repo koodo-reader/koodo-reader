@@ -4,7 +4,7 @@ import { dropdownList } from "../../../constants/dropdownList";
 import "./dropdownList.css";
 import { Trans } from "react-i18next";
 import { DropdownListProps, DropdownListState } from "./interface";
-import OtherUtil from "../../../utils/otherUtil";
+import StorageUtil from "../../../utils/storageUtil";
 import { isElectron } from "react-device-detect";
 class DropdownList extends React.Component<
   DropdownListProps,
@@ -15,14 +15,15 @@ class DropdownList extends React.Component<
     this.state = {
       currentFontFamilyIndex: dropdownList[0].option.findIndex((item: any) => {
         return (
-          item === (OtherUtil.getReaderConfig("fontFamily") || "Built-in font")
+          item ===
+          (StorageUtil.getReaderConfig("fontFamily") || "Built-in font")
         );
       }),
       currentLineHeightIndex: dropdownList[1].option.findIndex((item: any) => {
-        return item === (OtherUtil.getReaderConfig("lineHeight") || "1.25");
+        return item === (StorageUtil.getReaderConfig("lineHeight") || "1.25");
       }),
       currentTextAlignIndex: dropdownList[2].option.findIndex((item: any) => {
-        return item === (OtherUtil.getReaderConfig("textAlign") || "left");
+        return item === (StorageUtil.getReaderConfig("textAlign") || "left");
       }),
     };
   }
@@ -44,7 +45,7 @@ class DropdownList extends React.Component<
               (item: any) => {
                 return (
                   item ===
-                  (OtherUtil.getReaderConfig("fontFamily") || "Built-in font")
+                  (StorageUtil.getReaderConfig("fontFamily") || "Built-in font")
                 );
               }
             ),
@@ -80,7 +81,7 @@ class DropdownList extends React.Component<
   //切换不同的样式
   handleView(event: any, option: string) {
     let arr = event.target.value.split(",");
-    OtherUtil.setReaderConfig(option, arr[0]);
+    StorageUtil.setReaderConfig(option, arr[0]);
     switch (option) {
       case "fontFamily":
         this.setState({

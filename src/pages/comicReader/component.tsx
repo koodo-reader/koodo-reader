@@ -7,7 +7,7 @@ import _ from "underscore";
 import BookUtil from "../../utils/fileUtils/bookUtil";
 import "./viewer.css";
 import untar from "js-untar";
-import OtherUtil from "../../utils/otherUtil";
+import StorageUtil from "../../utils/storageUtil";
 import { mimetype } from "../../constants/mimetype";
 import RecordLocation from "../../utils/readUtils/recordLocation";
 import { toast } from "react-hot-toast";
@@ -26,7 +26,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     super(props);
     this.state = {
       key: "",
-      comicScale: OtherUtil.getReaderConfig("comicScale") || "100%",
+      comicScale: StorageUtil.getReaderConfig("comicScale") || "100%",
     };
     this.lock = false;
   }
@@ -40,7 +40,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       .getElementsByClassName("lang-setting-dropdown")[0]
       ?.children[
         ["25%", "50%", "75%", "100%"].indexOf(
-          OtherUtil.getReaderConfig("comicScale") || "100%"
+          StorageUtil.getReaderConfig("comicScale") || "100%"
         )
       ].setAttribute("selected", "selected");
     window.frames[0].document.addEventListener("wheel", (event) => {
@@ -69,6 +69,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           ).filter((s) => this.isScrolledIntoView(s as any))[0] as HTMLElement)
             .id
         : "",
+      "",
       ""
     );
     this.lock = true;
@@ -151,8 +152,10 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     imageDom.id = index + "";
     imageDom.setAttribute(
       "style",
-      `width:${OtherUtil.getReaderConfig("comicScale") || "100%"};margin-left:${
-        OtherUtil.getReaderConfig("comicScale") === "75%" ? "12.5%" : "0%"
+      `width:${
+        StorageUtil.getReaderConfig("comicScale") || "100%"
+      };margin-left:${
+        StorageUtil.getReaderConfig("comicScale") === "75%" ? "12.5%" : "0%"
       }`
     );
     window.frames[0].document.body.appendChild(imageDom);
@@ -252,7 +255,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
             className="lang-setting-dropdown"
             id="text-speech-voice"
             onChange={(event) => {
-              OtherUtil.setReaderConfig("comicScale", event.target.value);
+              StorageUtil.setReaderConfig("comicScale", event.target.value);
               window.frames[0].document.body.innerHTML = "";
               this.handleRender(this.state.key);
             }}

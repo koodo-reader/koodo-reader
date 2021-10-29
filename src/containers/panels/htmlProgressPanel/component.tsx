@@ -50,7 +50,7 @@ class ProgressPanel extends React.Component<
   onProgressChange = (event: any) => {
     const percentage = event.target.value / 100;
     if (this.props.htmlBook.chapters.length > 0) {
-      this.props.renderFunc(
+      this.props.htmlBook.rendition.goToChapter(
         this.props.htmlBook.chapters[
           Math.floor(this.props.htmlBook.chapters.length * percentage)
         ].label
@@ -63,7 +63,7 @@ class ProgressPanel extends React.Component<
   };
   nextChapter = () => {
     if (this.props.htmlBook.chapters.length > 0) {
-      this.props.renderFunc(
+      this.props.htmlBook.rendition.goToChapter(
         this.props.htmlBook.chapters[
           _.findIndex(this.props.htmlBook.chapters, {
             label: this.props.currentChapter,
@@ -79,7 +79,7 @@ class ProgressPanel extends React.Component<
   };
   prevChapter = () => {
     if (this.props.htmlBook.chapters.length > 0) {
-      this.props.renderFunc(
+      this.props.htmlBook.rendition.goToChapter(
         this.props.htmlBook.chapters[
           _.findIndex(this.props.htmlBook.chapters, {
             label: this.props.currentChapter,
@@ -94,7 +94,7 @@ class ProgressPanel extends React.Component<
   };
   handleJumpChapter = (event: any) => {
     if (this.props.htmlBook.chapters.length > 0) {
-      this.props.renderFunc(
+      this.props.htmlBook.rendition.goToChapter(
         this.props.htmlBook.chapters[event.target.value].label
       );
     }

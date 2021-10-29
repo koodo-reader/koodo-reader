@@ -4,7 +4,7 @@ import PopupNote from "../popupNote";
 import PopupOption from "../popupOption";
 import PopupTrans from "../popupTrans";
 import { PopupMenuProps, PopupMenuStates } from "./interface";
-import OtherUtil from "../../../utils/otherUtil";
+import StorageUtil from "../../../utils/storageUtil";
 
 declare var window: any;
 
@@ -129,9 +129,9 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     // const rect = this.rect;
     let height = 200;
     let x =
-      OtherUtil.getReaderConfig("readerMode") === "single"
+      StorageUtil.getReaderConfig("readerMode") === "single"
         ? rect.x
-        : OtherUtil.getReaderConfig("readerMode") === "continuous"
+        : StorageUtil.getReaderConfig("readerMode") === "continuous"
         ? rect.right
         : rect.x % this.props.currentEpub.rendition._layout.width;
     let y = rect.y % this.props.currentEpub.rendition._layout.height;

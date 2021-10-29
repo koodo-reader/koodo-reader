@@ -1,21 +1,18 @@
 class HtmlBook {
   key: string;
-  doc: HTMLElement;
   chapters: { label: string; id: string; href: string }[];
   subitems: any;
-  chapterDoc: { title: string; text: string }[];
+  rendition: any;
   constructor(
     key: string,
-    doc: HTMLElement,
     chapters: { label: string; id: string; href: string }[],
     subitems: any,
-    chapterDoc: { title: string; text: string }[]
+    rendition: any
   ) {
     this.key = key;
-    this.doc = doc;
     this.chapters = chapters;
     this.subitems = subitems;
-    this.chapterDoc = chapterDoc;
+    this.rendition = rendition;
   }
 }
 

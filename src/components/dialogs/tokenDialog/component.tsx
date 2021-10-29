@@ -3,7 +3,7 @@ import "./tokenDialog.css";
 import copy from "copy-text-to-clipboard";
 import { Trans } from "react-i18next";
 import { TokenDialogProps, TokenDialogState } from "./interface";
-import OtherUtil from "../../../utils/otherUtil";
+import StorageUtil from "../../../utils/storageUtil";
 import toast from "react-hot-toast";
 class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
   constructor(props: TokenDialogProps) {
@@ -18,7 +18,7 @@ class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
     let token: string = (document.querySelector(
       ".token-dialog-token-box"
     ) as HTMLTextAreaElement).value;
-    OtherUtil.setReaderConfig(`${this.props.driveName}_token`, token);
+    StorageUtil.setReaderConfig(`${this.props.driveName}_token`, token);
     this.props.handleTokenDialog(false);
     toast.success(this.props.t("Add Successfully"));
   };
@@ -32,7 +32,7 @@ class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
     let password: string = (document.querySelector(
       ".token-dialog-password-box"
     ) as HTMLTextAreaElement).value;
-    OtherUtil.setReaderConfig(
+    StorageUtil.setReaderConfig(
       `${this.props.driveName}_token`,
       JSON.stringify({ url, username, password })
     );
@@ -54,7 +54,7 @@ class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
               <div
                 className="token-dialog-info-text"
                 style={
-                  OtherUtil.getReaderConfig("lang") === "en"
+                  StorageUtil.getReaderConfig("lang") === "en"
                     ? { fontSize: "14px" }
                     : {}
                 }
@@ -88,7 +88,7 @@ class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
               <div
                 className="token-dialog-info-text"
                 style={
-                  OtherUtil.getReaderConfig("lang") === "en"
+                  StorageUtil.getReaderConfig("lang") === "en"
                     ? { fontSize: "14px" }
                     : {}
                 }

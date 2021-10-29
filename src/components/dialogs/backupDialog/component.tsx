@@ -8,7 +8,7 @@ import DropboxUtil from "../../../utils/syncUtils/dropbox";
 import WebdavUtil from "../../../utils/syncUtils/webdav";
 import { BackupDialogProps, BackupDialogState } from "./interface";
 import TokenDialog from "../tokenDialog";
-import OtherUtil from "../../../utils/otherUtil";
+import StorageUtil from "../../../utils/storageUtil";
 import Lottie from "react-lottie";
 import animationSuccess from "../../../assets/lotties/success.json";
 import FileSaver from "file-saver";
@@ -79,7 +79,7 @@ class BackupDialog extends React.Component<
           this.handleFinish();
           break;
         case 1:
-          if (!OtherUtil.getReaderConfig("dropbox_token")) {
+          if (!StorageUtil.getReaderConfig("dropbox_token")) {
             this.props.handleTokenDialog(true);
             break;
           }
@@ -122,7 +122,7 @@ class BackupDialog extends React.Component<
           break;
 
         case 3:
-          if (!OtherUtil.getReaderConfig("webdav_token")) {
+          if (!StorageUtil.getReaderConfig("webdav_token")) {
             this.props.handleTokenDialog(true);
             break;
           }
@@ -186,22 +186,22 @@ class BackupDialog extends React.Component<
               <span
                 className={`icon-${item.icon} backup-page-list-icon`}
               ></span>
-              {OtherUtil.getReaderConfig("dropbox_token") && index === 1 ? (
+              {StorageUtil.getReaderConfig("dropbox_token") && index === 1 ? (
                 <div
                   className="backup-page-list-title"
                   onClick={() => {
-                    OtherUtil.setReaderConfig("dropbox_token", "");
+                    StorageUtil.setReaderConfig("dropbox_token", "");
                     this.showMessage("Unauthorize Successfully");
                   }}
                   style={{ color: "rgb(0, 120, 212)" }}
                 >
                   <Trans>Unauthorize</Trans>
                 </div>
-              ) : OtherUtil.getReaderConfig("webdav_token") && index === 3 ? (
+              ) : StorageUtil.getReaderConfig("webdav_token") && index === 3 ? (
                 <div
                   className="backup-page-list-title"
                   onClick={() => {
-                    OtherUtil.setReaderConfig("webdav_token", "");
+                    StorageUtil.setReaderConfig("webdav_token", "");
                     this.showMessage("Unauthorize Successfully");
                   }}
                   style={{ color: "rgb(0, 120, 212)" }}

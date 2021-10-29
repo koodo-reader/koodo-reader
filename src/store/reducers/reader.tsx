@@ -1,4 +1,4 @@
-import OtherUtil from "../../utils/otherUtil";
+import StorageUtil from "../../utils/storageUtil";
 const initState = {
   bookmarks: [],
   notes: [],
@@ -7,15 +7,15 @@ const initState = {
   currentChapter: "",
   flattenChapters: null,
 
-  color: parseInt(OtherUtil.getReaderConfig("highlightIndex"))
-    ? parseInt(OtherUtil.getReaderConfig("highlightIndex"))
-    : OtherUtil.getReaderConfig("isDisplayDark") === "yes"
+  color: parseInt(StorageUtil.getReaderConfig("highlightIndex"))
+    ? parseInt(StorageUtil.getReaderConfig("highlightIndex"))
+    : StorageUtil.getReaderConfig("isDisplayDark") === "yes"
     ? 3
     : 0,
   noteKey: "",
   originalText: "",
   htmlBook: null,
-  readerMode: OtherUtil.getReaderConfig("readerMode") || "double",
+  readerMode: StorageUtil.getReaderConfig("readerMode") || "double",
 };
 export function reader(
   state = initState,

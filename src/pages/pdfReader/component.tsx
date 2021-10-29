@@ -6,7 +6,6 @@ import { withRouter } from "react-router-dom";
 import _ from "underscore";
 import BookUtil from "../../utils/fileUtils/bookUtil";
 import BackToMain from "../../components/backToMain";
-import "./viewer.css";
 
 class Viewer extends React.Component<ViewerProps, ViewerState> {
   epub: any;

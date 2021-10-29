@@ -1,4 +1,4 @@
-import OtherUtil from "../otherUtil";
+import StorageUtil from "../storageUtil";
 
 class styleUtil {
   // 为 iframe 添加默认的样式
@@ -13,45 +13,15 @@ class styleUtil {
     if (!background) return;
     background.setAttribute(
       "style",
-      `background-color:${OtherUtil.getReaderConfig(
+      `background-color:${StorageUtil.getReaderConfig(
         "backgroundColor"
       )};filter: brightness(${
-        OtherUtil.getReaderConfig("brightness") || 1
-      }) invert(${OtherUtil.getReaderConfig("isInvert") === "yes" ? 1 : 0})`
+        StorageUtil.getReaderConfig("brightness") || 1
+      }) invert(${StorageUtil.getReaderConfig("isInvert") === "yes" ? 1 : 0})`
     );
     if (!doc.head) {
       return;
     }
-    if (!style) {
-      style = doc.createElement("style");
-      style.id = "default-style";
-      style.textContent = css;
-      doc.head.appendChild(style);
-      return;
-    }
-    style.textContent = css;
-  }
-  static addHtmlCss() {
-    let iframe = document.getElementsByTagName("iframe")[0];
-    if (!iframe) return;
-    let doc = iframe.contentDocument;
-    if (!doc) return;
-    let css = this.getDefaultCss();
-    let style = doc.getElementById("default-style");
-    let background = document.querySelector(".viewer");
-    if (!background) return;
-    background.setAttribute(
-      "style",
-      `background-color:${OtherUtil.getReaderConfig(
-        "backgroundColor"
-      )};filter: brightness(${
-        OtherUtil.getReaderConfig("brightness") || 1
-      }) invert(${OtherUtil.getReaderConfig("isInvert") === "yes" ? 1 : 0})`
-    );
-    window.frames[0].document.body.setAttribute(
-      "style",
-      this.getCustomCss() as string
-    );
     if (!style) {
       style = doc.createElement("style");
       style.id = "default-style";
@@ -71,103 +41,103 @@ class styleUtil {
   static getCustomCss(isJSON: boolean = true) {
     if (isJSON) {
       return `font-size: ${
-        OtherUtil.getReaderConfig("fontSize") || 17
+        StorageUtil.getReaderConfig("fontSize") || 17
       }px !important;line-height: ${
-        OtherUtil.getReaderConfig("lineHeight") || "1.25"
+        StorageUtil.getReaderConfig("lineHeight") || "1.25"
       } !important;font-family: ${
-        OtherUtil.getReaderConfig("fontFamily") || "Helvetica"
+        StorageUtil.getReaderConfig("fontFamily") || "Helvetica"
       } !important;color: ${
-        OtherUtil.getReaderConfig("textColor")
-          ? OtherUtil.getReaderConfig("textColor")
-          : OtherUtil.getReaderConfig("backgroundColor") ===
+        StorageUtil.getReaderConfig("textColor")
+          ? StorageUtil.getReaderConfig("textColor")
+          : StorageUtil.getReaderConfig("backgroundColor") ===
               "rgba(44,47,49,1)" ||
-            OtherUtil.getReaderConfig("isDisplayDark") === "yes"
+            StorageUtil.getReaderConfig("isDisplayDark") === "yes"
           ? "white"
           : ""
       } !important;letter-spacing: ${
-        OtherUtil.getReaderConfig("letterSpacing")
-          ? OtherUtil.getReaderConfig("letterSpacing")
+        StorageUtil.getReaderConfig("letterSpacing")
+          ? StorageUtil.getReaderConfig("letterSpacing")
           : ""
       }px !important;text-align: ${
-        OtherUtil.getReaderConfig("textAlign")
-          ? OtherUtil.getReaderConfig("textAlign")
+        StorageUtil.getReaderConfig("textAlign")
+          ? StorageUtil.getReaderConfig("textAlign")
           : ""
       } !important;
       font-weight: ${
-        OtherUtil.getReaderConfig("isBold") === "yes" ? "bold !important" : ""
+        StorageUtil.getReaderConfig("isBold") === "yes" ? "bold !important" : ""
       };font-style: ${
-        OtherUtil.getReaderConfig("isItalic") === "yes"
+        StorageUtil.getReaderConfig("isItalic") === "yes"
           ? "italic !important"
           : ""
       };text-shadow: ${
-        OtherUtil.getReaderConfig("isShadow") === "yes"
+        StorageUtil.getReaderConfig("isShadow") === "yes"
           ? "2px 2px 2px #cccccc !important"
           : ""
       };text-indent: ${
-        OtherUtil.getReaderConfig("isIndent") === "yes" ? "2rem" : ""
+        StorageUtil.getReaderConfig("isIndent") === "yes" ? "2rem" : ""
       };text-decoration: ${
-        OtherUtil.getReaderConfig("isUnderline") === "yes"
+        StorageUtil.getReaderConfig("isUnderline") === "yes"
           ? "underline !important"
           : ""
       };margin-bottom: ${
-        OtherUtil.getReaderConfig("paraSpacing") || 0
+        StorageUtil.getReaderConfig("paraSpacing") || 0
       }px !important;padding:0;word-wrap: break-word;`;
     } else {
       return {
         "a, article, cite, code, div, li, p, pre, span, table": {
           "font-size": `${
-            OtherUtil.getReaderConfig("fontSize") || 17
+            StorageUtil.getReaderConfig("fontSize") || 17
           }px !important`,
           "line-height": `${
-            OtherUtil.getReaderConfig("lineHeight") || "1.25"
+            StorageUtil.getReaderConfig("lineHeight") || "1.25"
           } !important`,
           "font-family": `${
-            OtherUtil.getReaderConfig("fontFamily") || "Helvetica"
+            StorageUtil.getReaderConfig("fontFamily") || "Helvetica"
           } !important`,
           color: `${
-            OtherUtil.getReaderConfig("textColor")
-              ? OtherUtil.getReaderConfig("textColor")
-              : OtherUtil.getReaderConfig("backgroundColor") ===
+            StorageUtil.getReaderConfig("textColor")
+              ? StorageUtil.getReaderConfig("textColor")
+              : StorageUtil.getReaderConfig("backgroundColor") ===
                   "rgba(44,47,49,1)" ||
-                OtherUtil.getReaderConfig("isDisplayDark") === "yes"
+                StorageUtil.getReaderConfig("isDisplayDark") === "yes"
               ? "white"
               : ""
           } !important`,
           "letter-spacing": `${
-            OtherUtil.getReaderConfig("letterSpacing")
-              ? `${OtherUtil.getReaderConfig("letterSpacing")}px`
+            StorageUtil.getReaderConfig("letterSpacing")
+              ? `${StorageUtil.getReaderConfig("letterSpacing")}px`
               : ""
           } !important`,
           "text-align": `${
-            OtherUtil.getReaderConfig("textAlign")
-              ? `${OtherUtil.getReaderConfig("textAlign")}`
+            StorageUtil.getReaderConfig("textAlign")
+              ? `${StorageUtil.getReaderConfig("textAlign")}`
               : ""
           } !important`,
           "font-weight": `${
-            OtherUtil.getReaderConfig("isBold") === "yes"
+            StorageUtil.getReaderConfig("isBold") === "yes"
               ? "bold !important"
               : ""
           }`,
           "text-indent": `${
-            OtherUtil.getReaderConfig("isIndent") === "yes" ? "2rem" : ""
+            StorageUtil.getReaderConfig("isIndent") === "yes" ? "2rem" : ""
           }`,
           "font-style": `${
-            OtherUtil.getReaderConfig("isItalic") === "yes"
+            StorageUtil.getReaderConfig("isItalic") === "yes"
               ? "italic !important"
               : ""
           }`,
           "text-shadow": `${
-            OtherUtil.getReaderConfig("isShadow") === "yes"
+            StorageUtil.getReaderConfig("isShadow") === "yes"
               ? "2px 2px 2px #cccccc !important"
               : ""
           }`,
           "text-decoration": `${
-            OtherUtil.getReaderConfig("isUnderline") === "yes"
+            StorageUtil.getReaderConfig("isUnderline") === "yes"
               ? "underline !important"
               : ""
           }`,
           "margin-bottom": `${
-            OtherUtil.getReaderConfig("paraSpacing") || 0
+            StorageUtil.getReaderConfig("paraSpacing") || 0
           }px !important`,
         },
       };
@@ -181,10 +151,10 @@ class styleUtil {
   };
 
   static applyTheme() {
-    OtherUtil.getReaderConfig("themeColor") &&
-      OtherUtil.getReaderConfig("themeColor") !== "default" &&
+    StorageUtil.getReaderConfig("themeColor") &&
+      StorageUtil.getReaderConfig("themeColor") !== "default" &&
       this.addStyle(
-        "./assets/styles/" + OtherUtil.getReaderConfig("themeColor") + ".css"
+        "./assets/styles/" + StorageUtil.getReaderConfig("themeColor") + ".css"
       );
   }
 }

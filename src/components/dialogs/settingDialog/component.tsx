@@ -4,7 +4,7 @@ import { SettingInfoProps, SettingInfoState } from "./interface";
 import { Trans } from "react-i18next";
 import i18n from "../../../i18n";
 import { version } from "../../../../package.json";
-import OtherUtil from "../../../utils/otherUtil";
+import StorageUtil from "../../../utils/storageUtil";
 import { changePath } from "../../../utils/syncUtils/common";
 import { isElectron } from "react-device-detect";
 import { dropdownList } from "../../../constants/dropdownList";
@@ -25,46 +25,48 @@ class SettingDialog extends React.Component<
   constructor(props: SettingInfoProps) {
     super(props);
     this.state = {
-      isTouch: OtherUtil.getReaderConfig("isTouch") === "yes",
-      isImportPath: OtherUtil.getReaderConfig("isImportPath") === "yes",
-      isMergeWord: OtherUtil.getReaderConfig("isMergeWord") === "yes",
-      isPreventTrigger: OtherUtil.getReaderConfig("isPreventTrigger") === "yes",
-      isAutoFullscreen: OtherUtil.getReaderConfig("isAutoFullscreen") === "yes",
-      isPreventAdd: OtherUtil.getReaderConfig("isPreventAdd") === "yes",
-      isOpenBook: OtherUtil.getReaderConfig("isOpenBook") === "yes",
-      isExpandContent: OtherUtil.getReaderConfig("isExpandContent") === "yes",
-      isPreventSleep: OtherUtil.getReaderConfig("isPreventSleep") === "yes",
-      isOpenInMain: OtherUtil.getReaderConfig("isOpenInMain") === "yes",
-      isDisableUpdate: OtherUtil.getReaderConfig("isDisableUpdate") === "yes",
-      isDisplayDark: OtherUtil.getReaderConfig("isDisplayDark") === "yes",
+      isTouch: StorageUtil.getReaderConfig("isTouch") === "yes",
+      isImportPath: StorageUtil.getReaderConfig("isImportPath") === "yes",
+      isMergeWord: StorageUtil.getReaderConfig("isMergeWord") === "yes",
+      isPreventTrigger:
+        StorageUtil.getReaderConfig("isPreventTrigger") === "yes",
+      isAutoFullscreen:
+        StorageUtil.getReaderConfig("isAutoFullscreen") === "yes",
+      isPreventAdd: StorageUtil.getReaderConfig("isPreventAdd") === "yes",
+      isOpenBook: StorageUtil.getReaderConfig("isOpenBook") === "yes",
+      isExpandContent: StorageUtil.getReaderConfig("isExpandContent") === "yes",
+      isPreventSleep: StorageUtil.getReaderConfig("isPreventSleep") === "yes",
+      isOpenInMain: StorageUtil.getReaderConfig("isOpenInMain") === "yes",
+      isDisableUpdate: StorageUtil.getReaderConfig("isDisableUpdate") === "yes",
+      isDisplayDark: StorageUtil.getReaderConfig("isDisplayDark") === "yes",
       isDisableAnalytics:
-        OtherUtil.getReaderConfig("isDisableAnalytics") === "yes",
+        StorageUtil.getReaderConfig("isDisableAnalytics") === "yes",
       currentThemeIndex: _.findLastIndex(themeList, {
-        name: OtherUtil.getReaderConfig("themeColor"),
+        name: StorageUtil.getReaderConfig("themeColor"),
       }),
     };
   }
   componentDidMount() {
-    OtherUtil.getReaderConfig("systemFont") &&
+    StorageUtil.getReaderConfig("systemFont") &&
       document
         .getElementsByClassName("lang-setting-dropdown")[0]
         ?.children[
           dropdownList[0].option.indexOf(
-            OtherUtil.getReaderConfig("systemFont")
+            StorageUtil.getReaderConfig("systemFont")
           )
         ].setAttribute("selected", "selected");
     document
       .getElementsByClassName("lang-setting-dropdown")[1]
       ?.children[
         ["zh", "cht", "en", "ru"].indexOf(
-          OtherUtil.getReaderConfig("lang") ||
+          StorageUtil.getReaderConfig("lang") ||
             (navigator.language.indexOf("zh") > -1 ? "zh" : "en")
         )
       ].setAttribute("selected", "selected");
     document.getElementsByClassName("lang-setting-dropdown")[2]?.children[
       _.findLastIndex(searchList, {
         value:
-          OtherUtil.getReaderConfig("searchEngine") ||
+          StorageUtil.getReaderConfig("searchEngine") ||
           (navigator.language === "zh-CN" ? "baidu" : "google"),
       })
     ].setAttribute("selected", "selected");
@@ -74,15 +76,15 @@ class SettingDialog extends React.Component<
   };
   changeLanguage = (lng: string) => {
     i18n.changeLanguage(lng);
-    OtherUtil.setReaderConfig("lang", lng);
+    StorageUtil.setReaderConfig("lang", lng);
   };
   changeSearch = (searchEngine: string) => {
-    OtherUtil.setReaderConfig("searchEngine", searchEngine);
+    StorageUtil.setReaderConfig("searchEngine", searchEngine);
   };
   changeFont = (font: string) => {
     let body = document.getElementsByTagName("body")[0];
     body.setAttribute("style", "font-family:" + font + "!important");
-    OtherUtil.setReaderConfig("systemFont", font);
+    StorageUtil.setReaderConfig("systemFont", font);
   };
   handleJump = (url: string) => {
     isElectron
@@ -91,7 +93,10 @@ class SettingDialog extends React.Component<
   };
   handleSetting = (stateName: string) => {
     this.setState({ [stateName]: !this.state[stateName] } as any);
-    OtherUtil.setReaderConfig(stateName, this.state[stateName] ? "no" : "yes");
+    StorageUtil.setReaderConfig(
+      stateName,
+      this.state[stateName] ? "no" : "yes"
+    );
     this.handleRest(this.state[stateName]);
   };
   syncFromLocation = async () => {
@@ -152,7 +157,7 @@ class SettingDialog extends React.Component<
   };
   handleDisplayDark = () => {
     this.setState({ isDisplayDark: !this.state.isDisplayDark });
-    OtherUtil.setReaderConfig(
+    StorageUtil.setReaderConfig(
       "isDisplayDark",
       this.state.isDisplayDark ? "no" : "yes"
     );
@@ -165,7 +170,7 @@ class SettingDialog extends React.Component<
 
   handleTheme = (name: string, index: number) => {
     this.setState({ currentThemeIndex: index });
-    OtherUtil.setReaderConfig("themeColor", name);
+    StorageUtil.setReaderConfig("themeColor", name);
     if (isElectron) {
       toast(this.props.t("Try refresh or restart"));
     } else {
@@ -215,7 +220,10 @@ class SettingDialog extends React.Component<
                 key={item.propName}
               >
                 <div className="setting-dialog-new-title" key={item.title}>
-                  <Trans>{item.title}</Trans>
+                  <span style={{ width: "250px" }}>
+                    <Trans>{item.title}</Trans>
+                  </span>
+
                   <span
                     className="single-control-switch"
                     onClick={() => {

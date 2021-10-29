@@ -5,7 +5,7 @@ import { Trans } from "react-i18next";
 import localforage from "localforage";
 import RecordLocation from "../../../utils/readUtils/recordLocation";
 import { OperationPanelProps, OperationPanelState } from "./interface";
-import OtherUtil from "../../../utils/otherUtil";
+import StorageUtil from "../../../utils/storageUtil";
 import ReadingTime from "../../../utils/readUtils/readingTime";
 import { withRouter } from "react-router-dom";
 import toast from "react-hot-toast";
@@ -23,7 +23,7 @@ class OperationPanel extends React.Component<
     super(props);
     this.state = {
       isFullScreen:
-        OtherUtil.getReaderConfig("isFullScreen") === "yes" ? true : false, // 是否进入全屏模式
+        StorageUtil.getReaderConfig("isFullScreen") === "yes" ? true : false, // 是否进入全屏模式
       isBookmark: false, // 是否添加书签
       time: 0,
       currentPercentage: RecordLocation.getCfi(this.props.currentBook.key)
@@ -70,7 +70,7 @@ class OperationPanel extends React.Component<
   }
   // 点击退出按钮的处理程序
   handleExit() {
-    OtherUtil.setReaderConfig("isFullScreen", "no");
+    StorageUtil.setReaderConfig("isFullScreen", "no");
     this.props.handleReadingState(false);
     window.speechSynthesis.cancel();
     ReadingTime.setTime(this.props.currentBook.key, this.props.time);
@@ -90,7 +90,7 @@ class OperationPanel extends React.Component<
     }
 
     this.setState({ isFullScreen: true });
-    OtherUtil.setReaderConfig("isFullScreen", "yes");
+    StorageUtil.setReaderConfig("isFullScreen", "yes");
   }
   // 退出全屏模式
   handleExitFullScreen() {
@@ -108,7 +108,7 @@ class OperationPanel extends React.Component<
     }
 
     this.setState({ isFullScreen: false });
-    OtherUtil.setReaderConfig("isFullScreen", "no");
+    StorageUtil.setReaderConfig("isFullScreen", "no");
   }
   handleAddBookmark() {
     let bookKey = this.props.currentBook.key;
@@ -205,7 +205,7 @@ class OperationPanel extends React.Component<
           className="exit-reading-button"
           onClick={() => {
             this.handleExit();
-            if (OtherUtil.getReaderConfig("isOpenInMain") === "yes") {
+            if (StorageUtil.getReaderConfig("isOpenInMain") === "yes") {
               this.props.history.push("/manager/home");
               document.title = "Koodo Reader";
             } else {

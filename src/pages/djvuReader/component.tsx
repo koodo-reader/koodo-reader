@@ -5,7 +5,6 @@ import localforage from "localforage";
 import { withRouter } from "react-router-dom";
 import _ from "underscore";
 import BookUtil from "../../utils/fileUtils/bookUtil";
-import "./viewer.css";
 import { toast } from "react-hot-toast";
 import BackToMain from "../../components/backToMain";
 

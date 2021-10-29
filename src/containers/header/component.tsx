@@ -4,7 +4,7 @@ import SearchBox from "../../components/searchBox";
 import ImportLocal from "../../components/importLocal";
 import { Trans } from "react-i18next";
 import { HeaderProps, HeaderState } from "./interface";
-import OtherUtil from "../../utils/otherUtil";
+import StorageUtil from "../../utils/storageUtil";
 import UpdateInfo from "../../components/dialogs/updateInfo";
 import { restore } from "../../utils/syncUtils/restoreUtil";
 import { backup } from "../../utils/syncUtils/backupUtil";
@@ -18,7 +18,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
 
     this.state = {
       isOnlyLocal: false,
-      language: OtherUtil.getReaderConfig("lang"),
+      language: StorageUtil.getReaderConfig("lang"),
       isNewVersion: false,
       width: document.body.clientWidth,
       isdataChange: false,
@@ -40,12 +40,12 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       }
 
       if (
-        OtherUtil.getReaderConfig("storageLocation") &&
+        StorageUtil.getReaderConfig("storageLocation") &&
         !localStorage.getItem("storageLocation")
       ) {
         localStorage.setItem(
           "storageLocation",
-          OtherUtil.getReaderConfig("storageLocation")
+          StorageUtil.getReaderConfig("storageLocation")
         );
       }
 
@@ -135,12 +135,12 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     }
   };
   handleSync = () => {
-    if (OtherUtil.getReaderConfig("isFirst") !== "no") {
+    if (StorageUtil.getReaderConfig("isFirst") !== "no") {
       this.props.handleTipDialog(true);
       this.props.handleTip(
         "You need to manually change the storage location to the same sync folder on different computers. When you click the sync button, Koodo Reader will automatically upload or download the data from this folder according the timestamp."
       );
-      OtherUtil.setReaderConfig("isFirst", "no");
+      StorageUtil.setReaderConfig("isFirst", "no");
       return;
     }
     const fs = window.require("fs");
@@ -172,7 +172,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
   };
   syncToLocation = async () => {
     let timestamp = new Date().getTime().toString();
-    OtherUtil.setReaderConfig("lastSyncTime", timestamp);
+    StorageUtil.setReaderConfig("lastSyncTime", timestamp);
     localStorage.setItem("lastSyncTime", timestamp);
     let result = await backup(
       this.props.books,
