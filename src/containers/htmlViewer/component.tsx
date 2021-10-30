@@ -13,6 +13,8 @@ import RecordLocation from "../../utils/readUtils/recordLocation";
 import { mimetype } from "../../constants/mimetype";
 import BackgroundWidget from "../../components/backgroundWidget";
 import toast from "react-hot-toast";
+import StyleUtil from "../../utils/readUtils/styleUtil";
+import "./index.css";
 
 declare var window: any;
 
@@ -30,11 +32,18 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       chapterTitle:
         RecordLocation.getScrollHeight(this.props.currentBook.key)
           .chapterTitle || "",
+      readerMode: StorageUtil.getReaderConfig("readerMode") || "double",
+      margin: parseInt(StorageUtil.getReaderConfig("margin")) || 30,
     };
     this.lock = false;
   }
 
   componentDidMount() {
+    this.handleRenderBook();
+
+    this.props.handleRenderFunc(this.handleRenderBook);
+  }
+  handleRenderBook = () => {
     let { key, path, format, name } = this.props.currentBook;
     BookUtil.fetchBook(key, true, path).then((result) => {
       if (!result) {
@@ -69,10 +78,10 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       RecentBooks.setRecent(this.props.currentBook.key);
       document.title = name + " - Koodo Reader";
     });
-
-    // this.props.handleRenderFunc(this.handleRenderHtml);
-  }
+  };
   handleRest = (rendition: any) => {
+    StyleUtil.addDefaultCss();
+    rendition.setStyle(StyleUtil.getCustomCss(true));
     let bookLocation = RecordLocation.getScrollHeight(
       this.props.currentBook.key
     );
@@ -87,20 +96,22 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       this.props.handleLeaveReader("top");
       this.props.handleLeaveReader("bottom");
     });
+
     let iframe = document.getElementsByTagName("iframe")[0];
     if (!iframe) return;
     let doc = iframe.contentDocument;
     if (!doc) return;
     let isFirefox = navigator.userAgent.indexOf("Firefox") > -1;
+    let postion = rendition.getPosition();
     if (isFirefox) {
       doc.addEventListener(
         "DOMMouseScroll",
         (event) => {
           RecordLocation.recordScrollHeight(
             this.props.htmlBook.key,
-            StorageUtil.getKookitConfig("text"),
-            StorageUtil.getKookitConfig("chapterTitle"),
-            StorageUtil.getKookitConfig("count")
+            postion.text,
+            postion.chapterTitle,
+            postion.count
           );
         },
         false
@@ -127,16 +138,16 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     });
   };
   handleMobi = async (result: ArrayBuffer) => {
-    let rendition = new MobiRender(result, "single");
+    let rendition = new MobiRender(result, this.state.readerMode);
     await rendition.renderTo(
-      document.getElementsByClassName("ebook-viewer")[0]
+      document.getElementsByClassName("html-viewer-page")[0]
     );
     this.handleRest(rendition);
   };
   handleAzw3 = async (result: ArrayBuffer) => {
-    let rendition = new Azw3Render(result, "continuous");
+    let rendition = new Azw3Render(result, this.state.readerMode);
     await rendition.renderTo(
-      document.getElementsByClassName("ebook-viewer")[0]
+      document.getElementsByClassName("html-viewer-page")[0]
     );
     this.handleRest(rendition);
   };
@@ -164,11 +175,11 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     }
     let rendition = new TxtRender(
       result,
-      "single",
+      this.state.readerMode,
       this.props.currentBook.charset || charset || "utf8"
     );
     await rendition.renderTo(
-      document.getElementsByClassName("ebook-viewer")[0]
+      document.getElementsByClassName("html-viewer-page")[0]
     );
     this.handleRest(rendition);
   };
@@ -177,9 +188,9 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     var reader = new FileReader();
     reader.onload = async (evt) => {
       let docStr = window.marked(evt.target?.result as any);
-      let rendition = new StrRender(docStr, "continuous");
+      let rendition = new StrRender(docStr, this.state.readerMode);
       await rendition.renderTo(
-        document.getElementsByClassName("ebook-viewer")[0]
+        document.getElementsByClassName("html-viewer-page")[0]
       );
       this.handleRest(rendition);
     };
@@ -196,9 +207,9 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     );
 
     rtfToHTML.fromString(text, async (err: any, html: any) => {
-      let rendition = new StrRender(html, "continuous");
+      let rendition = new StrRender(html, this.state.readerMode);
       await rendition.renderTo(
-        document.getElementsByClassName("ebook-viewer")[0]
+        document.getElementsByClassName("html-viewer-page")[0]
       );
       this.handleRest(rendition);
     });
@@ -207,9 +218,9 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     window.mammoth
       .convertToHtml({ arrayBuffer: result })
       .then(async (res: any) => {
-        let rendition = new StrRender(res.value, "continuous");
+        let rendition = new StrRender(res.value, this.state.readerMode);
         await rendition.renderTo(
-          document.getElementsByClassName("ebook-viewer")[0]
+          document.getElementsByClassName("html-viewer-page")[0]
         );
         this.handleRest(rendition);
       });
@@ -225,9 +236,9 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     );
     let bookObj = xmlBookToObj(Buffer.from(result));
     bookObj += xmlBookTagFilter(fb2Str);
-    let rendition = new StrRender(bookObj, "continuous");
+    let rendition = new StrRender(bookObj, this.state.readerMode);
     await rendition.renderTo(
-      document.getElementsByClassName("ebook-viewer")[0]
+      document.getElementsByClassName("html-viewer-page")[0]
     );
     this.handleRest(rendition);
   };
@@ -238,28 +249,49 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     var reader = new FileReader();
     reader.onload = async (evt) => {
       const html = evt.target?.result as any;
-      let rendition = new StrRender(html, "continuous");
+      let rendition = new StrRender(html, this.state.readerMode);
       await rendition.renderTo(
-        document.getElementsByClassName("ebook-viewer")[0]
+        document.getElementsByClassName("html-viewer-page")[0]
       );
       this.handleRest(rendition);
     };
     reader.readAsText(blob, "UTF-8");
   };
   render() {
-    console.log(parseFloat(this.state.scale));
     return (
       <>
         <div
-          className="ebook-viewer"
-          style={{
-            position: "absolute",
-            left: `calc(50vw - ${270 * parseFloat(this.state.scale)}px + 9px)`,
-            right: `calc(50vw - ${270 * parseFloat(this.state.scale)}px + 7px)`,
-            top: "20px",
-            bottom: "20px",
-            zIndex: 5,
-          }}
+          className="html-viewer-page"
+          style={
+            document.body.clientWidth < 570
+              ? { left: 0, right: 0 }
+              : this.state.readerMode === "continuous"
+              ? {
+                  left: `calc(50vw - ${
+                    270 * parseFloat(this.state.scale)
+                  }px + 9px)`,
+                  right: `calc(50vw - ${
+                    270 * parseFloat(this.state.scale)
+                  }px + 7px)`,
+                  overflowY: "scroll",
+                  overflowX: "hidden",
+                }
+              : this.state.readerMode === "single"
+              ? {
+                  left: `calc(50vw - ${
+                    270 * parseFloat(this.state.scale)
+                  }px + 9px)`,
+                  right: `calc(50vw - ${
+                    270 * parseFloat(this.state.scale)
+                  }px + 7px)`,
+                }
+              : this.state.readerMode === "double"
+              ? {
+                  left: this.state.margin + 10 + "px",
+                  right: this.state.margin + 10 + "px",
+                }
+              : {}
+          }
         ></div>
         {StorageUtil.getReaderConfig("isHideBackground") === "yes" ? null : this
             .props.currentBook.key ? (

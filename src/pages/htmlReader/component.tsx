@@ -124,6 +124,26 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
     };
     return (
       <div className="viewer">
+        {StorageUtil.getReaderConfig("isHidePageButton") !== "yes" && (
+          <>
+            <div
+              className="previous-chapter-single-container"
+              onClick={() => {
+                this.props.htmlBook.rendition.prevPage();
+              }}
+            >
+              <span className="icon-dropdown previous-chapter-single"></span>
+            </div>
+            <div
+              className="next-chapter-single-container"
+              onClick={() => {
+                this.props.htmlBook.rendition.nextPage();
+              }}
+            >
+              <span className="icon-dropdown next-chapter-single"></span>
+            </div>
+          </>
+        )}
         {StorageUtil.getReaderConfig("isHideMenuButton") !== "yes" && (
           <div
             className="reader-setting-icon-container"

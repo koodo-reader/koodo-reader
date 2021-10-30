@@ -3,10 +3,7 @@ import { SettingSwitchProps, SettingSwitchState } from "./interface";
 import { Trans } from "react-i18next";
 import TextToSpeech from "../../textToSpeech";
 import StorageUtil from "../../../utils/storageUtil";
-import {
-  readerSettingList,
-  htmlSettingList,
-} from "../../../constants/settingList";
+import { readerSettingList } from "../../../constants/settingList";
 import { isElectron } from "react-device-detect";
 import toast from "react-hot-toast";
 class SettingSwitch extends React.Component<
@@ -33,9 +30,6 @@ class SettingSwitch extends React.Component<
     };
   }
 
-  handleRest = () => {
-    this.props.renderFunc("html-render");
-  };
   _handleRest = () => {
     if (isElectron) {
       toast(this.props.t("Take effect at next startup"));
@@ -51,7 +45,7 @@ class SettingSwitch extends React.Component<
         this.state[stateName] ? "yes" : "no"
       );
       setTimeout(() => {
-        this.handleRest();
+        this.props.renderFunc();
       }, 500);
     });
   };
@@ -72,10 +66,7 @@ class SettingSwitch extends React.Component<
     return (
       <>
         {Object.keys(this.props.currentEpub).length !== 0 && <TextToSpeech />}
-        {(this.props.currentBook.description !== "readonly"
-          ? readerSettingList
-          : htmlSettingList
-        ).map((item) => (
+        {readerSettingList.map((item) => (
           <div className="single-control-switch-container" key={item.title}>
             <span className="single-control-switch-title">
               <Trans>{item.title}</Trans>

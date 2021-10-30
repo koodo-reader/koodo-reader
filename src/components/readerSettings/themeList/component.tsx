@@ -68,14 +68,12 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
         });
     }
     if (!this.props.currentEpub.rendition) {
-      this.handleRest();
+      this.props.renderFunc();
     } else {
       StyleUtil.addDefaultCss();
     }
   };
-  handleRest = () => {
-    this.props.renderFunc("html-render");
-  };
+
   handleChooseBgColor = (color) => {
     StorageUtil.setReaderConfig("backgroundColor", color.color);
     StyleUtil.addDefaultCss();
@@ -128,7 +126,7 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
           } !important`,
         },
       });
-    this.handleRest();
+    this.props.renderFunc();
   };
   render() {
     const renderBackgroundColorList = () => {
