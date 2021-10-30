@@ -179,14 +179,14 @@ class SettingDialog extends React.Component<
   };
   handleMergeWord = () => {
     if (this.state.isOpenInMain && !this.state.isMergeWord) {
-      toast("Please turn off open books in the main window");
+      toast(this.props.t("Please turn off open books in the main window"));
       return;
     }
     this.handleSetting("isMergeWord");
   };
   handleOpenInMain = () => {
     if (this.state.isMergeWord && !this.state.isOpenInMain) {
-      toast("Please turn off merge with word");
+      toast(this.props.t("Please turn off merge with word first"));
       return;
     }
     this.handleSetting("isOpenInMain");

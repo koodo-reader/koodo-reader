@@ -59,12 +59,6 @@
   - Stable Version (Recommended): [Download](https://koodo.960960.xyz/en/download)
   - Developer Version: [Download](https://github.com/troyeguo/koodo-reader/releases/latest) ( With new feature and bug fix, but may induce some unknown bugs)
 - Web Version：[Preview](https://koodo-reader.vercel.app/)
-- Install with Chocolatey:
-
-```shell
-choco install koodo-reader
-```
-
 - Install with Homebrew:
 
 ```shell

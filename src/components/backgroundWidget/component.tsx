@@ -9,9 +9,8 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
     super(props);
     this.state = {
       isSingle:
-        (StorageUtil.getReaderConfig("readerMode") &&
-          StorageUtil.getReaderConfig("readerMode") !== "double") ||
-        this.props.currentBook.description === "readonly",
+        StorageUtil.getReaderConfig("readerMode") &&
+        StorageUtil.getReaderConfig("readerMode") !== "double",
       scale: StorageUtil.getReaderConfig("scale") || 1,
     };
     this.isFirst = true;

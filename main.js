@@ -17,7 +17,7 @@ let mainWin;
 let readerWindow;
 const singleInstance = app.requestSingleInstanceLock();
 var filePath = null;
-if (process.platform == "win32" && process.argv.length >= 2) {
+if (process.platform != "darwin" && process.argv.length >= 2) {
   filePath = process.argv[1];
 }
 let options = {

@@ -32,7 +32,7 @@ class SliderList extends React.Component<SliderListProps, SliderListState> {
       }
       return;
     }
-    this.props.renderFunc("html-render");
+    this.props.renderFunc();
   };
   onValueChange = (event: any) => {
     if (this.props.mode === "fontSize") {
