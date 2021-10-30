@@ -15,6 +15,7 @@ const mapStateToProps = (state: stateType) => {
     currentEpub: state.book.currentEpub,
     currentBook: state.book.currentBook,
     percentage: state.progressPanel.percentage,
+    htmlBook: state.reader.htmlBook,
   };
 };
 const actionCreator = {
