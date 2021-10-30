@@ -129,7 +129,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
             <div
               className="previous-chapter-single-container"
               onClick={() => {
-                this.props.htmlBook.rendition.prevPage();
+                this.props.htmlBook.rendition.prev();
               }}
             >
               <span className="icon-dropdown previous-chapter-single"></span>
@@ -137,7 +137,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
             <div
               className="next-chapter-single-container"
               onClick={() => {
-                this.props.htmlBook.rendition.nextPage();
+                this.props.htmlBook.rendition.next();
               }}
             >
               <span className="icon-dropdown next-chapter-single"></span>
