@@ -42,6 +42,14 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     this.handleRenderBook();
 
     this.props.handleRenderFunc(this.handleRenderBook);
+    var doit;
+    window.addEventListener("resize", () => {
+      if (StorageUtil.getReaderConfig("readerMode") === "single") {
+        return;
+      }
+      clearTimeout(doit);
+      doit = setTimeout(this.handleRenderBook, 100);
+    });
   }
   handleRenderBook = () => {
     let { key, path, format, name } = this.props.currentBook;
