@@ -15,6 +15,7 @@ import BackgroundWidget from "../../components/backgroundWidget";
 import toast from "react-hot-toast";
 import StyleUtil from "../../utils/readUtils/styleUtil";
 import "./index.css";
+import { HtmlMouseEvent } from "../../utils/mouseEvent";
 
 declare var window: any;
 
@@ -104,40 +105,8 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       this.props.handleLeaveReader("top");
       this.props.handleLeaveReader("bottom");
     });
-
-    let iframe = document.getElementsByTagName("iframe")[0];
-    if (!iframe) return;
-    let doc = iframe.contentDocument;
-    if (!doc) return;
-    let isFirefox = navigator.userAgent.indexOf("Firefox") > -1;
-    let postion = rendition.getPosition();
-    if (isFirefox) {
-      doc.addEventListener(
-        "DOMMouseScroll",
-        (event) => {
-          RecordLocation.recordScrollHeight(
-            this.props.htmlBook.key,
-            postion.text,
-            postion.chapterTitle,
-            postion.count
-          );
-        },
-        false
-      );
-    } else {
-      doc.addEventListener(
-        "mousewheel",
-        (event) => {
-          RecordLocation.recordScrollHeight(
-            this.props.htmlBook.key,
-            StorageUtil.getKookitConfig("text"),
-            StorageUtil.getKookitConfig("chapterTitle"),
-            StorageUtil.getKookitConfig("count")
-          );
-        },
-        false
-      );
-    }
+    this.state.readerMode !== "continunous" &&
+      HtmlMouseEvent(rendition, this.props.currentBook.key);
     this.props.handleHtmlBook({
       key: this.props.currentBook.key,
       chapters: rendition.getChapter(),
