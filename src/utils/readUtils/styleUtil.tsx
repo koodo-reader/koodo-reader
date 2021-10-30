@@ -3,13 +3,10 @@ import StorageUtil from "../storageUtil";
 class styleUtil {
   // 为 iframe 添加默认的样式
   static addDefaultCss() {
-    let iframe = document.getElementsByTagName("iframe")[0];
-    if (!iframe) return;
-    let doc = iframe.contentDocument;
+    let doc = window.frames[0].document;
     if (!doc) return;
     let css = this.getDefaultCss();
-    let style = doc.getElementById("default-style");
-    let background = document.querySelector(".background");
+    let background = document.querySelector(".viewer");
     if (!background) return;
     background.setAttribute(
       "style",
@@ -22,14 +19,11 @@ class styleUtil {
     if (!doc.head) {
       return;
     }
-    if (!style) {
-      style = doc.createElement("style");
-      style.id = "default-style";
-      style.textContent = css;
-      doc.head.appendChild(style);
-      return;
-    }
+
+    let style = doc.createElement("style");
+    style.id = "default-style";
     style.textContent = css;
+    doc.head.appendChild(style);
   }
   // 获取为文档默认应用的css样式
   static getDefaultCss() {

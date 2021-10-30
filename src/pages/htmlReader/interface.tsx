@@ -1,9 +1,11 @@
 import BookModel from "../../model/Book";
+import HtmlBookModel from "../../model/HtmlBook";
 export interface ReaderProps {
   currentEpub: any;
   currentBook: BookModel;
   percentage: number;
   t: (title: string) => string;
+  htmlBook: HtmlBookModel;
   handleFetchNotes: () => void;
   handleFetchBooks: () => void;
   handleFetchBookmarks: () => void;

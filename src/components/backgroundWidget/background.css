@@ -41,7 +41,7 @@
   border: 2px solid rgba(191, 191, 191, 1);
   border-left: none;
   box-sizing: border-box;
-  z-index: 15;
+  z-index: 10;
 }
 
 .spine-shadow-left {

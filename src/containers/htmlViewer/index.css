@@ -1,0 +1,9 @@
+.html-viewer-page {
+  position: absolute;
+  left: 20px;
+  right: 20px;
+  top: 40px;
+  bottom: 40px;
+  z-index: 5;
+  user-select: text;
+}

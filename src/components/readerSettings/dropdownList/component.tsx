@@ -75,9 +75,7 @@ class DropdownList extends React.Component<
         this.state.currentTextAlignIndex
       ].setAttribute("selected", "selected");
   }
-  handleRest = () => {
-    this.props.renderFunc("html-render");
-  };
+
   //切换不同的样式
   handleView(event: any, option: string) {
     let arr = event.target.value.split(",");
@@ -105,7 +103,7 @@ class DropdownList extends React.Component<
       default:
         break;
     }
-    this.handleRest();
+    this.props.renderFunc();
   }
   render() {
     const renderParagraphCharacter = () => {

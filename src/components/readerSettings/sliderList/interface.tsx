@@ -7,7 +7,7 @@ export interface SliderListProps {
   title: string;
   minLabel: string;
   maxLabel: string;
-  renderFunc: (id: string) => void;
+  renderFunc: () => void;
   t: (title: string) => string;
 }
 export interface SliderListState {

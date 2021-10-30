@@ -176,7 +176,7 @@
   bottom: 25px;
   /* width: calc(100% - 100px);
   height: calc(100% - 100px); */
-  z-index: 0;
+  z-index: 5;
   user-select: text;
 }
 .previous-chapter-single-container {
@@ -208,7 +208,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 5;
+  z-index: 10;
 }
 .next-chapter-single-container:hover {
   opacity: 0.7;

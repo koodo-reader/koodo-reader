@@ -21,4 +21,6 @@ export interface ViewerState {
   scale: string;
   isFirst: boolean;
   chapterTitle: string;
+  margin: number;
+  readerMode: string;
 }
