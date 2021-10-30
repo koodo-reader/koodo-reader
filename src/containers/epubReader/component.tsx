@@ -6,7 +6,7 @@ import NavigationPanel from "../panels/navigationPanel";
 import OperationPanel from "../panels/operationPanel";
 import ProgressPanel from "../panels/progressPanel";
 import { ReaderProps, ReaderState } from "./interface";
-import { MouseEvent } from "../../utils/mouseEvent";
+import { EpubMouseEvent } from "../../utils/mouseEvent";
 import StorageUtil from "../../utils/storageUtil";
 import ReadingTime from "../../utils/readUtils/readingTime";
 let lock = false;
@@ -94,7 +94,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
           StorageUtil.getReaderConfig("readerMode") === "single" ? "none" : "",
       });
       this.setState({ rendition: this.rendition });
-      this.state.readerMode !== "continuous" && MouseEvent(this.rendition); // 绑定事件
+      this.state.readerMode !== "continuous" && EpubMouseEvent(this.rendition); // 绑定事件
     });
   };
 
