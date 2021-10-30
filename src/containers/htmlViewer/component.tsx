@@ -105,8 +105,12 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       this.props.handleLeaveReader("top");
       this.props.handleLeaveReader("bottom");
     });
-    this.state.readerMode !== "continunous" &&
-      HtmlMouseEvent(rendition, this.props.currentBook.key);
+
+    HtmlMouseEvent(
+      rendition,
+      this.props.currentBook.key,
+      this.state.readerMode
+    );
     this.props.handleHtmlBook({
       key: this.props.currentBook.key,
       chapters: rendition.getChapter(),
@@ -235,6 +239,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     reader.readAsText(blob, "UTF-8");
   };
   render() {
+    console.log(this.state.readerMode);
     return (
       <>
         <div
@@ -242,7 +247,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           style={
             document.body.clientWidth < 570
               ? { left: 0, right: 0 }
-              : this.state.readerMode === "continuous"
+              : this.state.readerMode === "scroll"
               ? {
                   left: `calc(50vw - ${
                     270 * parseFloat(this.state.scale)
@@ -257,10 +262,10 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
               ? {
                   left: `calc(50vw - ${
                     270 * parseFloat(this.state.scale)
-                  }px + 9px)`,
+                  }px + 15px)`,
                   right: `calc(50vw - ${
                     270 * parseFloat(this.state.scale)
-                  }px + 7px)`,
+                  }px + 15px)`,
                 }
               : this.state.readerMode === "double"
               ? {

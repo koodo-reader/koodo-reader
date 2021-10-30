@@ -64,7 +64,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
       if (
         renderedBook &&
         !renderedBook.innerHTML &&
-        this.state.readerMode !== "continuous"
+        this.state.readerMode !== "scroll"
       ) {
         this.handleRenderBook();
       }
@@ -84,9 +84,8 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
     this.setState({ rendition: null }, () => {
       (window as any).rangy.init(); // 初始化
       this.rendition = epub.renderTo(page, {
-        manager:
-          this.state.readerMode === "continuous" ? "continuous" : "default",
-        flow: this.state.readerMode === "continuous" ? "scrolled" : "auto",
+        manager: this.state.readerMode === "scroll" ? "continuous" : "default",
+        flow: this.state.readerMode === "scroll" ? "scrolled" : "auto",
         width: "100%",
         height: "100%",
         snap: true,
@@ -94,7 +93,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
           StorageUtil.getReaderConfig("readerMode") === "single" ? "none" : "",
       });
       this.setState({ rendition: this.rendition });
-      this.state.readerMode !== "continuous" && EpubMouseEvent(this.rendition); // 绑定事件
+      this.state.readerMode !== "scroll" && EpubMouseEvent(this.rendition); // 绑定事件
     });
   };
 
@@ -381,7 +380,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
           style={
             document.body.clientWidth < 570
               ? { left: 0, right: 0 }
-              : this.state.readerMode === "continuous"
+              : this.state.readerMode === "scroll"
               ? {
                   left: `calc(50vw - ${270 * parseFloat(this.state.scale)}px)`,
                   right: `calc(50vw - ${270 * parseFloat(this.state.scale)}px)`,
