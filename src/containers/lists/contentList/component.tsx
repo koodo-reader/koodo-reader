@@ -82,7 +82,9 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
               onClick={this.handleJump}
               className="book-content-name"
             >
-              {item.label}
+              {item.label.indexOf("#") > -1
+                ? item.label.split("#")[0]
+                : item.label}
             </a>
             {item.subitems.length > 0 &&
             (this.state.currentIndex === index ||
