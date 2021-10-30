@@ -18,7 +18,7 @@
 
 <div align="center">
 
-[下载](https://koodo.960960.xyz/zh/download) | [预览](https://koodo-reader.vercel.app/) | [计划](https://troyeguo.notion.site/215baeda57804fd29dbb0e91d1e6a021?v=360c00183d944b598668f34c255edfd7) | [文档](https://troyeguo.notion.site/Koodo-Reader-0c9c7ccdc5104a54825dfc72f1c84bea)
+[下载](https://koodo.960960.xyz/zh/download) | [预览](https://koodo-reader.vercel.app) | [计划](https://troyeguo.notion.site/215baeda57804fd29dbb0e91d1e6a021?v=360c00183d944b598668f34c255edfd7) | [文档](https://troyeguo.notion.site/Koodo-Reader-0c9c7ccdc5104a54825dfc72f1c84bea)
 
 </div>
 
@@ -58,7 +58,7 @@
 - 桌面端：
   - 稳定版 (推荐下载)：[官网](https://koodo.960960.xyz/zh/download)（感谢 [GitHub Proxy](https://ghproxy.com/) 提供下载加速服务）
   - 开发版：[Github Release](https://github.com/troyeguo/koodo-reader/releases/latest) （包含新功能和 bug 修复，但也可能引入更多未知 bug）
-- 网页版：[前往](https://koodo-reader.vercel.app/)
+- 网页版：[前往](https://koodo-reader.vercel.app)
 - 使用 Homebrew 安装：
 
 ```shell
