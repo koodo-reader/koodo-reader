@@ -94,6 +94,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     let bookLocation = RecordLocation.getScrollHeight(
       this.props.currentBook.key
     );
+
     rendition.goToPosition(
       bookLocation.text,
       bookLocation.chapterTitle,
@@ -239,7 +240,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     reader.readAsText(blob, "UTF-8");
   };
   render() {
-    console.log(this.state.readerMode);
     return (
       <>
         <div
