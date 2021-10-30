@@ -131,7 +131,7 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     let x =
       StorageUtil.getReaderConfig("readerMode") === "single"
         ? rect.x
-        : StorageUtil.getReaderConfig("readerMode") === "continuous"
+        : StorageUtil.getReaderConfig("readerMode") === "scroll"
         ? rect.right
         : rect.x % this.props.currentEpub.rendition._layout.width;
     let y = rect.y % this.props.currentEpub.rendition._layout.height;

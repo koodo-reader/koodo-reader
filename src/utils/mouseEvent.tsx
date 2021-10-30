@@ -82,7 +82,12 @@ const gesture = (rendition: any, type: string) => {
   }
 };
 
-const bindEvent = (rendition: any, doc: any, key: string = "") => {
+const bindEvent = (
+  rendition: any,
+  doc: any,
+  key: string = "",
+  readerMode: string = ""
+) => {
   doc.addEventListener("keydown", (event) => {
     arrowKeys(rendition, event.keyCode);
     if (key) {
@@ -98,7 +103,11 @@ const bindEvent = (rendition: any, doc: any, key: string = "") => {
   doc.addEventListener(
     "mousewheel",
     (event) => {
-      mouseChrome(rendition, event.wheelDelta);
+      if (readerMode === "scroll") {
+        rendition.record();
+      } else {
+        mouseChrome(rendition, event.wheelDelta);
+      }
       if (key) {
         let postion = rendition.getPosition();
         RecordLocation.recordScrollHeight(
@@ -111,7 +120,21 @@ const bindEvent = (rendition: any, doc: any, key: string = "") => {
     },
     false
   );
-
+  if (StorageUtil.getReaderConfig("isTouch") === "yes") {
+    const mc = new Hammer(doc);
+    mc.on("panleft panright panup pandown", (event: any) => {
+      gesture(rendition, event.type);
+      if (key) {
+        let postion = rendition.getPosition();
+        RecordLocation.recordScrollHeight(
+          key,
+          postion.text,
+          postion.chapterTitle,
+          postion.count
+        );
+      }
+    });
+  }
   if (
     build &&
     build.productName &&
@@ -133,13 +156,6 @@ export const EpubMouseEvent = (rendition: any) => {
     if (!doc) {
       return;
     }
-    if (StorageUtil.getReaderConfig("isTouch") === "yes") {
-      const mc = new Hammer(doc);
-      mc.on("panleft panright panup pandown", (event: any) => {
-        gesture(rendition, event.type);
-      });
-    }
-
     // navigate with mousewheel
     window.addEventListener("keydown", (event) => {
       arrowKeys(rendition, event.keyCode);
@@ -147,26 +163,17 @@ export const EpubMouseEvent = (rendition: any) => {
     bindEvent(rendition, doc);
   });
 };
-export const HtmlMouseEvent = (rendition: any, key: string) => {
+export const HtmlMouseEvent = (
+  rendition: any,
+  key: string,
+  readerMode: string
+) => {
   let iframe = document.getElementsByTagName("iframe")[0];
   if (!iframe) return;
   let doc = iframe.contentDocument;
   if (!doc) {
     return;
   }
-  if (StorageUtil.getReaderConfig("isTouch") === "yes") {
-    const mc = new Hammer(doc);
-    mc.on("panleft panright panup pandown", (event: any) => {
-      gesture(rendition, event.type);
 
-      let postion = rendition.getPosition();
-      RecordLocation.recordScrollHeight(
-        key,
-        postion.text,
-        postion.chapterTitle,
-        postion.count
-      );
-    });
-  }
-  bindEvent(rendition, doc, key);
+  bindEvent(rendition, doc, key, readerMode);
 };
