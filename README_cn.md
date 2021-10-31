@@ -99,6 +99,7 @@ docker-compose up -d
     <img src="https://i.loli.net/2021/08/09/sARQBoefvGklHwC.png" >
   </a>
 </div>
+
 ## 运行源码
 
 请确保您电脑的 node 的版本大于 10.0.0，已配置好 yarn，git 的运行环境。
