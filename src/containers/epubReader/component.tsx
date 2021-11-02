@@ -84,7 +84,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
     this.setState({ rendition: null }, () => {
       (window as any).rangy.init(); // 初始化
       this.rendition = epub.renderTo(page, {
-        manager: this.state.readerMode === "scroll" ? "continuous" : "default",
+        manager: "default",
         flow: this.state.readerMode === "scroll" ? "scrolled" : "auto",
         width: "100%",
         height: "100%",
