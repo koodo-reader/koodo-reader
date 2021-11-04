@@ -126,7 +126,3 @@ Make sure that you have installed yarn and git, node's version on your computer 
    yarn
    yarn start
    ```
-
-## License
-
-This project is generally licensed under AGPL3.0, but any kind of modification of source code for commercial projects or alternation on logo or name are not allowed.
