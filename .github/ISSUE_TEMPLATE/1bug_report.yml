@@ -35,13 +35,19 @@ body:
   - type: dropdown
     id: os
     attributes:
-      label: Operating System
+      label: Operating system or browser
       description: which OS you are using ?
       options:
-        - Windows
-        - macOS
-        - Linux
-        - Web
+        - Windows 10 and below
+        - Windows 11
+        - macOS 10 and below
+        - macOS 11
+        - macOS 12
+        - Ubuntu
+        - Other Linux distribution
+        - Chrome/Edge
+        - Firefox
+        - IE
     validations:
       required: true
 
