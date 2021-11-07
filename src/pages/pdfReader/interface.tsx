@@ -11,4 +11,7 @@ export interface ViewerProps {
 export interface ViewerState {
   href: string;
   title: string;
+  cfiRange: any;
+  contents: any;
+  rect: any;
 }
