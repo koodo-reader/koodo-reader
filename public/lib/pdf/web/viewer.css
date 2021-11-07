@@ -73,15 +73,14 @@
   z-index: -1;
   cursor: default;
   -webkit-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
-          user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 .textLayer .endOfContent.active {
   top: 0;
 }
-
 
 .annotationLayer section {
   position: absolute;
@@ -216,8 +215,8 @@
 .annotationLayer .buttonWidgetAnnotation.checkBox input,
 .annotationLayer .buttonWidgetAnnotation.radioButton input {
   -webkit-appearance: none;
-     -moz-appearance: none;
-          appearance: none;
+  -moz-appearance: none;
+  appearance: none;
   padding: 0;
 }
 
@@ -292,7 +291,7 @@
   border: 9px solid transparent;
   background-clip: content-box;
   -o-border-image: url(images/shadow.png) 9 9 repeat;
-     border-image: url(images/shadow.png) 9 9 repeat;
+  border-image: url(images/shadow.png) 9 9 repeat;
   background-color: rgba(255, 255, 255, 1);
 }
 
@@ -552,10 +551,9 @@ body {
 }
 
 @media (prefers-color-scheme: dark) {
-
   body {
-  background-color: rgba(42, 42, 46, 1);
-  background-color: var(--body-bg-color);
+    background-color: rgba(42, 42, 46, 1);
+    background-color: var(--body-bg-color);
   }
 }
 
@@ -567,34 +565,30 @@ body {
 }
 
 @media (prefers-color-scheme: dark) {
-
   body {
-  scrollbar-color: rgba(121, 121, 123, 1) rgba(35, 35, 39, 1);
-  scrollbar-color: var(--scrollbar-color) var(--scrollbar-bg-color);
+    scrollbar-color: rgba(121, 121, 123, 1) rgba(35, 35, 39, 1);
+    scrollbar-color: var(--scrollbar-color) var(--scrollbar-bg-color);
   }
 }
 
 @media (prefers-color-scheme: dark) {
-
   body {
-  scrollbar-color: rgba(121, 121, 123, 1) rgba(35, 35, 39, 1);
-  scrollbar-color: var(--scrollbar-color) var(--scrollbar-bg-color);
+    scrollbar-color: rgba(121, 121, 123, 1) rgba(35, 35, 39, 1);
+    scrollbar-color: var(--scrollbar-color) var(--scrollbar-bg-color);
   }
 }
 
 @media (prefers-color-scheme: dark) {
-
   body {
-  scrollbar-color: rgba(121, 121, 123, 1) rgba(35, 35, 39, 1);
-  scrollbar-color: var(--scrollbar-color) var(--scrollbar-bg-color);
+    scrollbar-color: rgba(121, 121, 123, 1) rgba(35, 35, 39, 1);
+    scrollbar-color: var(--scrollbar-color) var(--scrollbar-bg-color);
   }
 }
 
 @media (prefers-color-scheme: dark) {
-
   body {
-  scrollbar-color: rgba(121, 121, 123, 1) rgba(35, 35, 39, 1);
-  scrollbar-color: var(--scrollbar-color) var(--scrollbar-bg-color);
+    scrollbar-color: rgba(121, 121, 123, 1) rgba(35, 35, 39, 1);
+    scrollbar-color: var(--scrollbar-color) var(--scrollbar-bg-color);
   }
 }
 
@@ -606,34 +600,30 @@ input {
 }
 
 @media (prefers-color-scheme: dark) {
-
   input {
-  scrollbar-color: rgba(121, 121, 123, 1) rgba(35, 35, 39, 1);
-  scrollbar-color: var(--scrollbar-color) var(--scrollbar-bg-color);
+    scrollbar-color: rgba(121, 121, 123, 1) rgba(35, 35, 39, 1);
+    scrollbar-color: var(--scrollbar-color) var(--scrollbar-bg-color);
   }
 }
 
 @media (prefers-color-scheme: dark) {
-
   input {
-  scrollbar-color: rgba(121, 121, 123, 1) rgba(35, 35, 39, 1);
-  scrollbar-color: var(--scrollbar-color) var(--scrollbar-bg-color);
+    scrollbar-color: rgba(121, 121, 123, 1) rgba(35, 35, 39, 1);
+    scrollbar-color: var(--scrollbar-color) var(--scrollbar-bg-color);
   }
 }
 
 @media (prefers-color-scheme: dark) {
-
   input {
-  scrollbar-color: rgba(121, 121, 123, 1) rgba(35, 35, 39, 1);
-  scrollbar-color: var(--scrollbar-color) var(--scrollbar-bg-color);
+    scrollbar-color: rgba(121, 121, 123, 1) rgba(35, 35, 39, 1);
+    scrollbar-color: var(--scrollbar-color) var(--scrollbar-bg-color);
   }
 }
 
 @media (prefers-color-scheme: dark) {
-
   input {
-  scrollbar-color: rgba(121, 121, 123, 1) rgba(35, 35, 39, 1);
-  scrollbar-color: var(--scrollbar-color) var(--scrollbar-bg-color);
+    scrollbar-color: rgba(121, 121, 123, 1) rgba(35, 35, 39, 1);
+    scrollbar-color: var(--scrollbar-color) var(--scrollbar-bg-color);
   }
 }
 
@@ -645,34 +635,30 @@ button {
 }
 
 @media (prefers-color-scheme: dark) {
-
   button {
-  scrollbar-color: rgba(121, 121, 123, 1) rgba(35, 35, 39, 1);
-  scrollbar-color: var(--scrollbar-color) var(--scrollbar-bg-color);
+    scrollbar-color: rgba(121, 121, 123, 1) rgba(35, 35, 39, 1);
+    scrollbar-color: var(--scrollbar-color) var(--scrollbar-bg-color);
   }
 }
 
 @media (prefers-color-scheme: dark) {
-
   button {
-  scrollbar-color: rgba(121, 121, 123, 1) rgba(35, 35, 39, 1);
-  scrollbar-color: var(--scrollbar-color) var(--scrollbar-bg-color);
+    scrollbar-color: rgba(121, 121, 123, 1) rgba(35, 35, 39, 1);
+    scrollbar-color: var(--scrollbar-color) var(--scrollbar-bg-color);
   }
 }
 
 @media (prefers-color-scheme: dark) {
-
   button {
-  scrollbar-color: rgba(121, 121, 123, 1) rgba(35, 35, 39, 1);
-  scrollbar-color: var(--scrollbar-color) var(--scrollbar-bg-color);
+    scrollbar-color: rgba(121, 121, 123, 1) rgba(35, 35, 39, 1);
+    scrollbar-color: var(--scrollbar-color) var(--scrollbar-bg-color);
   }
 }
 
 @media (prefers-color-scheme: dark) {
-
   button {
-  scrollbar-color: rgba(121, 121, 123, 1) rgba(35, 35, 39, 1);
-  scrollbar-color: var(--scrollbar-color) var(--scrollbar-bg-color);
+    scrollbar-color: rgba(121, 121, 123, 1) rgba(35, 35, 39, 1);
+    scrollbar-color: var(--scrollbar-color) var(--scrollbar-bg-color);
   }
 }
 
@@ -684,34 +670,30 @@ select {
 }
 
 @media (prefers-color-scheme: dark) {
-
   select {
-  scrollbar-color: rgba(121, 121, 123, 1) rgba(35, 35, 39, 1);
-  scrollbar-color: var(--scrollbar-color) var(--scrollbar-bg-color);
+    scrollbar-color: rgba(121, 121, 123, 1) rgba(35, 35, 39, 1);
+    scrollbar-color: var(--scrollbar-color) var(--scrollbar-bg-color);
   }
 }
 
 @media (prefers-color-scheme: dark) {
-
   select {
-  scrollbar-color: rgba(121, 121, 123, 1) rgba(35, 35, 39, 1);
-  scrollbar-color: var(--scrollbar-color) var(--scrollbar-bg-color);
+    scrollbar-color: rgba(121, 121, 123, 1) rgba(35, 35, 39, 1);
+    scrollbar-color: var(--scrollbar-color) var(--scrollbar-bg-color);
   }
 }
 
 @media (prefers-color-scheme: dark) {
-
   select {
-  scrollbar-color: rgba(121, 121, 123, 1) rgba(35, 35, 39, 1);
-  scrollbar-color: var(--scrollbar-color) var(--scrollbar-bg-color);
+    scrollbar-color: rgba(121, 121, 123, 1) rgba(35, 35, 39, 1);
+    scrollbar-color: var(--scrollbar-color) var(--scrollbar-bg-color);
   }
 }
 
 @media (prefers-color-scheme: dark) {
-
   select {
-  scrollbar-color: rgba(121, 121, 123, 1) rgba(35, 35, 39, 1);
-  scrollbar-color: var(--scrollbar-color) var(--scrollbar-bg-color);
+    scrollbar-color: rgba(121, 121, 123, 1) rgba(35, 35, 39, 1);
+    scrollbar-color: var(--scrollbar-color) var(--scrollbar-bg-color);
   }
 }
 
@@ -724,9 +706,9 @@ select {
 
 .pdfViewer.enablePermissions .textLayer > span {
   -webkit-user-select: none !important;
-     -moz-user-select: none !important;
-      -ms-user-select: none !important;
-          user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+  user-select: none !important;
   cursor: not-allowed;
 }
 
@@ -739,7 +721,7 @@ select {
   overflow: hidden;
   cursor: none;
   -webkit-user-select: none;
-          user-select: none;
+  user-select: none;
 }
 
 #viewerContainer.pdfPresentationMode:-moz-full-screen {
@@ -751,7 +733,7 @@ select {
   overflow: hidden;
   cursor: none;
   -moz-user-select: none;
-       user-select: none;
+  user-select: none;
 }
 
 #viewerContainer.pdfPresentationMode:-ms-fullscreen {
@@ -763,7 +745,7 @@ select {
   overflow: hidden;
   cursor: none;
   -ms-user-select: none;
-      user-select: none;
+  user-select: none;
 }
 
 #viewerContainer.pdfPresentationMode:fullscreen {
@@ -775,9 +757,9 @@ select {
   overflow: hidden;
   cursor: none;
   -webkit-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
-          user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 .pdfPresentationMode:-webkit-full-screen a:not(.internalLink) {
@@ -853,9 +835,9 @@ html[dir="rtl"] #sidebarContainer {
   transition-duration: 0s;
   /* Prevent e.g. the thumbnails being selected when the sidebar is resized. */
   -webkit-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
-          user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 #outerContainer.sidebarMoving #sidebarContainer,
@@ -953,10 +935,9 @@ html[dir="rtl"]
 }
 
 @media (prefers-color-scheme: dark) {
-
   #toolbarSidebar {
-  background-color: rgba(50, 50, 52, 1);
-  background-color: var(--sidebar-bg-color);
+    background-color: rgba(50, 50, 52, 1);
+    background-color: var(--sidebar-bg-color);
   }
 }
 html[dir="ltr"] #toolbarSidebar {
@@ -1007,18 +988,16 @@ html[dir="rtl"] #sidebarResizer {
 }
 
 @media (prefers-color-scheme: dark) {
-
   #toolbarContainer {
-  box-shadow: 0 1px 0 rgba(12, 12, 13, 1);
-  box-shadow: 0 1px 0 var(--toolbar-border-color);
+    box-shadow: 0 1px 0 rgba(12, 12, 13, 1);
+    box-shadow: 0 1px 0 var(--toolbar-border-color);
   }
 }
 
 @media (prefers-color-scheme: dark) {
-
   #toolbarContainer {
-  background-color: rgba(56, 56, 61, 1);
-  background-color: var(--toolbar-bg-color);
+    background-color: rgba(56, 56, 61, 1);
+    background-color: var(--toolbar-bg-color);
   }
 }
 
@@ -1032,18 +1011,16 @@ html[dir="rtl"] #sidebarResizer {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .findbar {
-  box-shadow: 0 1px 0 rgba(12, 12, 13, 1);
-  box-shadow: 0 1px 0 var(--toolbar-border-color);
+    box-shadow: 0 1px 0 rgba(12, 12, 13, 1);
+    box-shadow: 0 1px 0 var(--toolbar-border-color);
   }
 }
 
 @media (prefers-color-scheme: dark) {
-
   .findbar {
-  background-color: rgba(56, 56, 61, 1);
-  background-color: var(--toolbar-bg-color);
+    background-color: rgba(56, 56, 61, 1);
+    background-color: var(--toolbar-bg-color);
   }
 }
 
@@ -1057,18 +1034,16 @@ html[dir="rtl"] #sidebarResizer {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .secondaryToolbar {
-  box-shadow: 0 1px 0 rgba(12, 12, 13, 1);
-  box-shadow: 0 1px 0 var(--toolbar-border-color);
+    box-shadow: 0 1px 0 rgba(12, 12, 13, 1);
+    box-shadow: 0 1px 0 var(--toolbar-border-color);
   }
 }
 
 @media (prefers-color-scheme: dark) {
-
   .secondaryToolbar {
-  background-color: rgba(56, 56, 61, 1);
-  background-color: var(--toolbar-bg-color);
+    background-color: rgba(56, 56, 61, 1);
+    background-color: var(--toolbar-bg-color);
   }
 }
 
@@ -1092,18 +1067,16 @@ html[dir="rtl"] #sidebarResizer {
 }
 
 @media (prefers-color-scheme: dark) {
-
   #loadingBar {
-  border-bottom: 1px solid rgba(12, 12, 13, 1);
-  border-bottom: 1px solid var(--toolbar-border-color);
+    border-bottom: 1px solid rgba(12, 12, 13, 1);
+    border-bottom: 1px solid var(--toolbar-border-color);
   }
 }
 
 @media (prefers-color-scheme: dark) {
-
   #loadingBar {
-  background-color: rgba(42, 42, 46, 1);
-  background-color: var(--body-bg-color);
+    background-color: rgba(42, 42, 46, 1);
+    background-color: var(--body-bg-color);
   }
 }
 html[dir="ltr"] #loadingBar {
@@ -1146,10 +1119,9 @@ html[dir="rtl"] #outerContainer.sidebarOpen #loadingBar {
 }
 
 @media (prefers-color-scheme: dark) {
-
   #loadingBar .progress {
-  background-color: rgba(0, 96, 223, 1);
-  background-color: var(--progressBar-color);
+    background-color: rgba(0, 96, 223, 1);
+    background-color: var(--progressBar-color);
   }
 }
 
@@ -1178,10 +1150,9 @@ html[dir="rtl"] #outerContainer.sidebarOpen #loadingBar {
 }
 
 @media (prefers-color-scheme: dark) {
-
   #loadingBar .progress.indeterminate {
-  background-color: rgba(40, 40, 43, 1);
-  background-color: var(--progressBar-indeterminate-bg-color);
+    background-color: rgba(40, 40, 43, 1);
+    background-color: var(--progressBar-indeterminate-bg-color);
   }
 }
 
@@ -1210,222 +1181,213 @@ html[dir="rtl"] #outerContainer.sidebarOpen #loadingBar {
     var(--progressBar-indeterminate-blend-color) 100px
   );
   -webkit-animation: progressIndeterminate 1s linear infinite;
-          animation: progressIndeterminate 1s linear infinite;
+  animation: progressIndeterminate 1s linear infinite;
 }
 
 @media (prefers-color-scheme: dark) {
-
   #loadingBar .progress.indeterminate .glimmer {
-  background: repeating-linear-gradient(
-    135deg,
-    rgba(20, 68, 133, 1) 0,
-    rgba(40, 40, 43, 1) 5px,
-    rgba(40, 40, 43, 1) 45px,
-    rgba(0, 96, 223, 1) 55px,
-    rgba(0, 96, 223, 1) 95px,
-    rgba(20, 68, 133, 1) 100px
-  );
-  background: repeating-linear-gradient(
-    135deg,
-    var(--progressBar-indeterminate-blend-color) 0,
-    var(--progressBar-indeterminate-bg-color) 5px,
-    var(--progressBar-indeterminate-bg-color) 45px,
-    var(--progressBar-color) 55px,
-    var(--progressBar-color) 95px,
-    var(--progressBar-indeterminate-blend-color) 100px
-  );
+    background: repeating-linear-gradient(
+      135deg,
+      rgba(20, 68, 133, 1) 0,
+      rgba(40, 40, 43, 1) 5px,
+      rgba(40, 40, 43, 1) 45px,
+      rgba(0, 96, 223, 1) 55px,
+      rgba(0, 96, 223, 1) 95px,
+      rgba(20, 68, 133, 1) 100px
+    );
+    background: repeating-linear-gradient(
+      135deg,
+      var(--progressBar-indeterminate-blend-color) 0,
+      var(--progressBar-indeterminate-bg-color) 5px,
+      var(--progressBar-indeterminate-bg-color) 45px,
+      var(--progressBar-color) 55px,
+      var(--progressBar-color) 95px,
+      var(--progressBar-indeterminate-blend-color) 100px
+    );
   }
 }
 
 @media (prefers-color-scheme: dark) {
-
   #loadingBar .progress.indeterminate .glimmer {
-  background: repeating-linear-gradient(
-    135deg,
-    rgba(20, 68, 133, 1) 0,
-    rgba(40, 40, 43, 1) 5px,
-    rgba(40, 40, 43, 1) 45px,
-    rgba(0, 96, 223, 1) 55px,
-    rgba(0, 96, 223, 1) 95px,
-    rgba(20, 68, 133, 1) 100px
-  );
-  background: repeating-linear-gradient(
-    135deg,
-    var(--progressBar-indeterminate-blend-color) 0,
-    var(--progressBar-indeterminate-bg-color) 5px,
-    var(--progressBar-indeterminate-bg-color) 45px,
-    var(--progressBar-color) 55px,
-    var(--progressBar-color) 95px,
-    var(--progressBar-indeterminate-blend-color) 100px
-  );
+    background: repeating-linear-gradient(
+      135deg,
+      rgba(20, 68, 133, 1) 0,
+      rgba(40, 40, 43, 1) 5px,
+      rgba(40, 40, 43, 1) 45px,
+      rgba(0, 96, 223, 1) 55px,
+      rgba(0, 96, 223, 1) 95px,
+      rgba(20, 68, 133, 1) 100px
+    );
+    background: repeating-linear-gradient(
+      135deg,
+      var(--progressBar-indeterminate-blend-color) 0,
+      var(--progressBar-indeterminate-bg-color) 5px,
+      var(--progressBar-indeterminate-bg-color) 45px,
+      var(--progressBar-color) 55px,
+      var(--progressBar-color) 95px,
+      var(--progressBar-indeterminate-blend-color) 100px
+    );
   }
 }
 
 @media (prefers-color-scheme: dark) {
-
   #loadingBar .progress.indeterminate .glimmer {
-  background: repeating-linear-gradient(
-    135deg,
-    rgba(20, 68, 133, 1) 0,
-    rgba(40, 40, 43, 1) 5px,
-    rgba(40, 40, 43, 1) 45px,
-    rgba(0, 96, 223, 1) 55px,
-    rgba(0, 96, 223, 1) 95px,
-    rgba(20, 68, 133, 1) 100px
-  );
-  background: repeating-linear-gradient(
-    135deg,
-    var(--progressBar-indeterminate-blend-color) 0,
-    var(--progressBar-indeterminate-bg-color) 5px,
-    var(--progressBar-indeterminate-bg-color) 45px,
-    var(--progressBar-color) 55px,
-    var(--progressBar-color) 95px,
-    var(--progressBar-indeterminate-blend-color) 100px
-  );
+    background: repeating-linear-gradient(
+      135deg,
+      rgba(20, 68, 133, 1) 0,
+      rgba(40, 40, 43, 1) 5px,
+      rgba(40, 40, 43, 1) 45px,
+      rgba(0, 96, 223, 1) 55px,
+      rgba(0, 96, 223, 1) 95px,
+      rgba(20, 68, 133, 1) 100px
+    );
+    background: repeating-linear-gradient(
+      135deg,
+      var(--progressBar-indeterminate-blend-color) 0,
+      var(--progressBar-indeterminate-bg-color) 5px,
+      var(--progressBar-indeterminate-bg-color) 45px,
+      var(--progressBar-color) 55px,
+      var(--progressBar-color) 95px,
+      var(--progressBar-indeterminate-blend-color) 100px
+    );
   }
 }
 
 @media (prefers-color-scheme: dark) {
-
   #loadingBar .progress.indeterminate .glimmer {
-  background: repeating-linear-gradient(
-    135deg,
-    rgba(20, 68, 133, 1) 0,
-    rgba(40, 40, 43, 1) 5px,
-    rgba(40, 40, 43, 1) 45px,
-    rgba(0, 96, 223, 1) 55px,
-    rgba(0, 96, 223, 1) 95px,
-    rgba(20, 68, 133, 1) 100px
-  );
-  background: repeating-linear-gradient(
-    135deg,
-    var(--progressBar-indeterminate-blend-color) 0,
-    var(--progressBar-indeterminate-bg-color) 5px,
-    var(--progressBar-indeterminate-bg-color) 45px,
-    var(--progressBar-color) 55px,
-    var(--progressBar-color) 95px,
-    var(--progressBar-indeterminate-blend-color) 100px
-  );
+    background: repeating-linear-gradient(
+      135deg,
+      rgba(20, 68, 133, 1) 0,
+      rgba(40, 40, 43, 1) 5px,
+      rgba(40, 40, 43, 1) 45px,
+      rgba(0, 96, 223, 1) 55px,
+      rgba(0, 96, 223, 1) 95px,
+      rgba(20, 68, 133, 1) 100px
+    );
+    background: repeating-linear-gradient(
+      135deg,
+      var(--progressBar-indeterminate-blend-color) 0,
+      var(--progressBar-indeterminate-bg-color) 5px,
+      var(--progressBar-indeterminate-bg-color) 45px,
+      var(--progressBar-color) 55px,
+      var(--progressBar-color) 95px,
+      var(--progressBar-indeterminate-blend-color) 100px
+    );
   }
 }
 
 @media (prefers-color-scheme: dark) {
-
   #loadingBar .progress.indeterminate .glimmer {
-  background: repeating-linear-gradient(
-    135deg,
-    rgba(20, 68, 133, 1) 0,
-    rgba(40, 40, 43, 1) 5px,
-    rgba(40, 40, 43, 1) 45px,
-    rgba(0, 96, 223, 1) 55px,
-    rgba(0, 96, 223, 1) 95px,
-    rgba(20, 68, 133, 1) 100px
-  );
-  background: repeating-linear-gradient(
-    135deg,
-    var(--progressBar-indeterminate-blend-color) 0,
-    var(--progressBar-indeterminate-bg-color) 5px,
-    var(--progressBar-indeterminate-bg-color) 45px,
-    var(--progressBar-color) 55px,
-    var(--progressBar-color) 95px,
-    var(--progressBar-indeterminate-blend-color) 100px
-  );
+    background: repeating-linear-gradient(
+      135deg,
+      rgba(20, 68, 133, 1) 0,
+      rgba(40, 40, 43, 1) 5px,
+      rgba(40, 40, 43, 1) 45px,
+      rgba(0, 96, 223, 1) 55px,
+      rgba(0, 96, 223, 1) 95px,
+      rgba(20, 68, 133, 1) 100px
+    );
+    background: repeating-linear-gradient(
+      135deg,
+      var(--progressBar-indeterminate-blend-color) 0,
+      var(--progressBar-indeterminate-bg-color) 5px,
+      var(--progressBar-indeterminate-bg-color) 45px,
+      var(--progressBar-color) 55px,
+      var(--progressBar-color) 95px,
+      var(--progressBar-indeterminate-blend-color) 100px
+    );
   }
 }
 
 @media (prefers-color-scheme: dark) {
-
   #loadingBar .progress.indeterminate .glimmer {
-  background: repeating-linear-gradient(
-    135deg,
-    rgba(20, 68, 133, 1) 0,
-    rgba(40, 40, 43, 1) 5px,
-    rgba(40, 40, 43, 1) 45px,
-    rgba(0, 96, 223, 1) 55px,
-    rgba(0, 96, 223, 1) 95px,
-    rgba(20, 68, 133, 1) 100px
-  );
-  background: repeating-linear-gradient(
-    135deg,
-    var(--progressBar-indeterminate-blend-color) 0,
-    var(--progressBar-indeterminate-bg-color) 5px,
-    var(--progressBar-indeterminate-bg-color) 45px,
-    var(--progressBar-color) 55px,
-    var(--progressBar-color) 95px,
-    var(--progressBar-indeterminate-blend-color) 100px
-  );
+    background: repeating-linear-gradient(
+      135deg,
+      rgba(20, 68, 133, 1) 0,
+      rgba(40, 40, 43, 1) 5px,
+      rgba(40, 40, 43, 1) 45px,
+      rgba(0, 96, 223, 1) 55px,
+      rgba(0, 96, 223, 1) 95px,
+      rgba(20, 68, 133, 1) 100px
+    );
+    background: repeating-linear-gradient(
+      135deg,
+      var(--progressBar-indeterminate-blend-color) 0,
+      var(--progressBar-indeterminate-bg-color) 5px,
+      var(--progressBar-indeterminate-bg-color) 45px,
+      var(--progressBar-color) 55px,
+      var(--progressBar-color) 95px,
+      var(--progressBar-indeterminate-blend-color) 100px
+    );
   }
 }
 
 @media (prefers-color-scheme: dark) {
-
   #loadingBar .progress.indeterminate .glimmer {
-  background: repeating-linear-gradient(
-    135deg,
-    rgba(20, 68, 133, 1) 0,
-    rgba(40, 40, 43, 1) 5px,
-    rgba(40, 40, 43, 1) 45px,
-    rgba(0, 96, 223, 1) 55px,
-    rgba(0, 96, 223, 1) 95px,
-    rgba(20, 68, 133, 1) 100px
-  );
-  background: repeating-linear-gradient(
-    135deg,
-    var(--progressBar-indeterminate-blend-color) 0,
-    var(--progressBar-indeterminate-bg-color) 5px,
-    var(--progressBar-indeterminate-bg-color) 45px,
-    var(--progressBar-color) 55px,
-    var(--progressBar-color) 95px,
-    var(--progressBar-indeterminate-blend-color) 100px
-  );
+    background: repeating-linear-gradient(
+      135deg,
+      rgba(20, 68, 133, 1) 0,
+      rgba(40, 40, 43, 1) 5px,
+      rgba(40, 40, 43, 1) 45px,
+      rgba(0, 96, 223, 1) 55px,
+      rgba(0, 96, 223, 1) 95px,
+      rgba(20, 68, 133, 1) 100px
+    );
+    background: repeating-linear-gradient(
+      135deg,
+      var(--progressBar-indeterminate-blend-color) 0,
+      var(--progressBar-indeterminate-bg-color) 5px,
+      var(--progressBar-indeterminate-bg-color) 45px,
+      var(--progressBar-color) 55px,
+      var(--progressBar-color) 95px,
+      var(--progressBar-indeterminate-blend-color) 100px
+    );
   }
 }
 
 @media (prefers-color-scheme: dark) {
-
   #loadingBar .progress.indeterminate .glimmer {
-  background: repeating-linear-gradient(
-    135deg,
-    rgba(20, 68, 133, 1) 0,
-    rgba(40, 40, 43, 1) 5px,
-    rgba(40, 40, 43, 1) 45px,
-    rgba(0, 96, 223, 1) 55px,
-    rgba(0, 96, 223, 1) 95px,
-    rgba(20, 68, 133, 1) 100px
-  );
-  background: repeating-linear-gradient(
-    135deg,
-    var(--progressBar-indeterminate-blend-color) 0,
-    var(--progressBar-indeterminate-bg-color) 5px,
-    var(--progressBar-indeterminate-bg-color) 45px,
-    var(--progressBar-color) 55px,
-    var(--progressBar-color) 95px,
-    var(--progressBar-indeterminate-blend-color) 100px
-  );
+    background: repeating-linear-gradient(
+      135deg,
+      rgba(20, 68, 133, 1) 0,
+      rgba(40, 40, 43, 1) 5px,
+      rgba(40, 40, 43, 1) 45px,
+      rgba(0, 96, 223, 1) 55px,
+      rgba(0, 96, 223, 1) 95px,
+      rgba(20, 68, 133, 1) 100px
+    );
+    background: repeating-linear-gradient(
+      135deg,
+      var(--progressBar-indeterminate-blend-color) 0,
+      var(--progressBar-indeterminate-bg-color) 5px,
+      var(--progressBar-indeterminate-bg-color) 45px,
+      var(--progressBar-color) 55px,
+      var(--progressBar-color) 95px,
+      var(--progressBar-indeterminate-blend-color) 100px
+    );
   }
 }
 
 @media (prefers-color-scheme: dark) {
-
   #loadingBar .progress.indeterminate .glimmer {
-  background: repeating-linear-gradient(
-    135deg,
-    rgba(20, 68, 133, 1) 0,
-    rgba(40, 40, 43, 1) 5px,
-    rgba(40, 40, 43, 1) 45px,
-    rgba(0, 96, 223, 1) 55px,
-    rgba(0, 96, 223, 1) 95px,
-    rgba(20, 68, 133, 1) 100px
-  );
-  background: repeating-linear-gradient(
-    135deg,
-    var(--progressBar-indeterminate-blend-color) 0,
-    var(--progressBar-indeterminate-bg-color) 5px,
-    var(--progressBar-indeterminate-bg-color) 45px,
-    var(--progressBar-color) 55px,
-    var(--progressBar-color) 95px,
-    var(--progressBar-indeterminate-blend-color) 100px
-  );
+    background: repeating-linear-gradient(
+      135deg,
+      rgba(20, 68, 133, 1) 0,
+      rgba(40, 40, 43, 1) 5px,
+      rgba(40, 40, 43, 1) 45px,
+      rgba(0, 96, 223, 1) 55px,
+      rgba(0, 96, 223, 1) 95px,
+      rgba(20, 68, 133, 1) 100px
+    );
+    background: repeating-linear-gradient(
+      135deg,
+      var(--progressBar-indeterminate-blend-color) 0,
+      var(--progressBar-indeterminate-bg-color) 5px,
+      var(--progressBar-indeterminate-bg-color) 45px,
+      var(--progressBar-color) 55px,
+      var(--progressBar-color) 95px,
+      var(--progressBar-indeterminate-blend-color) 100px
+    );
   }
 }
 
@@ -1452,10 +1414,9 @@ html[dir="rtl"] #outerContainer.sidebarOpen #loadingBar {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .findbar {
-  background-color: rgba(56, 56, 61, 1);
-  background-color: var(--toolbar-bg-color);
+    background-color: rgba(56, 56, 61, 1);
+    background-color: var(--toolbar-bg-color);
   }
 }
 .findbar > div {
@@ -1498,26 +1459,23 @@ html[dir="rtl"] .findbar .splitToolbarButton {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .findbar .splitToolbarButton > .toolbarButton {
-  border-bottom: 1px solid rgba(115, 115, 115, 1);
-  border-bottom: 1px solid var(--field-border-color);
+    border-bottom: 1px solid rgba(115, 115, 115, 1);
+    border-bottom: 1px solid var(--field-border-color);
   }
 }
 
 @media (prefers-color-scheme: dark) {
-
   .findbar .splitToolbarButton > .toolbarButton {
-  border-top: 1px solid rgba(115, 115, 115, 1);
-  border-top: 1px solid var(--field-border-color);
+    border-top: 1px solid rgba(115, 115, 115, 1);
+    border-top: 1px solid var(--field-border-color);
   }
 }
 
 @media (prefers-color-scheme: dark) {
-
   .findbar .splitToolbarButton > .toolbarButton {
-  background-color: rgba(89, 89, 89, 1);
-  background-color: var(--findbar-nextprevious-btn-bg-color);
+    background-color: rgba(89, 89, 89, 1);
+    background-color: var(--findbar-nextprevious-btn-bg-color);
   }
 }
 
@@ -1535,10 +1493,9 @@ html[dir="ltr"] .findbar .splitToolbarButton > .findNext {
   border-right: 1px solid var(--field-border-color);
 }
 @media (prefers-color-scheme: dark) {
-
   html[dir="ltr"] .findbar .splitToolbarButton > .findNext {
-  border-right: 1px solid rgba(115, 115, 115, 1);
-  border-right: 1px solid var(--field-border-color);
+    border-right: 1px solid rgba(115, 115, 115, 1);
+    border-right: 1px solid var(--field-border-color);
   }
 }
 html[dir="rtl"] .findbar .splitToolbarButton > .findNext {
@@ -1548,10 +1505,9 @@ html[dir="rtl"] .findbar .splitToolbarButton > .findNext {
   border-left: 1px solid var(--field-border-color);
 }
 @media (prefers-color-scheme: dark) {
-
   html[dir="rtl"] .findbar .splitToolbarButton > .findNext {
-  border-left: 1px solid rgba(115, 115, 115, 1);
-  border-left: 1px solid var(--field-border-color);
+    border-left: 1px solid rgba(115, 115, 115, 1);
+    border-left: 1px solid var(--field-border-color);
   }
 }
 
@@ -1561,9 +1517,9 @@ html[dir="rtl"] .findbar .splitToolbarButton > .findNext {
 
 .findbar label {
   -webkit-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
-          user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 .findbar label:hover {
@@ -1572,10 +1528,9 @@ html[dir="rtl"] .findbar .splitToolbarButton > .findNext {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .findbar label:hover {
-  background-color: rgba(102, 102, 103, 1);
-  background-color: var(--button-hover-color);
+    background-color: rgba(102, 102, 103, 1);
+    background-color: var(--button-hover-color);
   }
 }
 
@@ -1585,10 +1540,9 @@ html[dir="rtl"] .findbar .splitToolbarButton > .findNext {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .findbar input:focus + label {
-  background-color: rgba(102, 102, 103, 1);
-  background-color: var(--button-hover-color);
+    background-color: rgba(102, 102, 103, 1);
+    background-color: var(--button-hover-color);
   }
 }
 
@@ -1607,10 +1561,9 @@ html[dir="rtl"] #findInput {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .findbar .toolbarField[type="checkbox"]:checked + .toolbarLabel {
-  background-color: rgba(0, 0, 0, 0.3) !important;
-  background-color: var(--toggled-btn-bg-color) !important;
+    background-color: rgba(0, 0, 0, 0.3) !important;
+    background-color: var(--toggled-btn-bg-color) !important;
   }
 }
 
@@ -1636,10 +1589,9 @@ html[dir="rtl"] #findInput {
   background-position: 98%;
 }
 @media (prefers-color-scheme: dark) {
-
   #findInput[data-status="pending"] {
-  background-image: url(images/loading-dark.svg);
-  background-image: var(--loading-icon);
+    background-image: url(images/loading-dark.svg);
+    background-image: var(--loading-icon);
   }
 }
 html[dir="rtl"] #findInput[data-status="pending"] {
@@ -1658,10 +1610,9 @@ html[dir="rtl"] #findInput[data-status="pending"] {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .secondaryToolbar {
-  background-color: rgba(74, 74, 79, 1);
-  background-color: var(--doorhanger-bg-color);
+    background-color: rgba(74, 74, 79, 1);
+    background-color: var(--doorhanger-bg-color);
   }
 }
 html[dir="ltr"] .secondaryToolbar {
@@ -1686,37 +1637,31 @@ html[dir="rtl"] .secondaryToolbar {
 
 .doorHanger {
   border-radius: 2px;
-  box-shadow: 0 1px 5px rgba(12, 12, 13, 0.2),
-    0 0 0 1px rgba(12, 12, 13, 0.2);
+  box-shadow: 0 1px 5px rgba(12, 12, 13, 0.2), 0 0 0 1px rgba(12, 12, 13, 0.2);
   box-shadow: 0 1px 5px var(--doorhanger-border-color),
     0 0 0 1px var(--doorhanger-border-color);
 }
 
 @media (prefers-color-scheme: dark) {
-
   .doorHanger {
-  box-shadow: 0 1px 5px rgba(39, 39, 43, 1),
-    0 0 0 1px rgba(39, 39, 43, 1);
-  box-shadow: 0 1px 5px var(--doorhanger-border-color),
-    0 0 0 1px var(--doorhanger-border-color);
+    box-shadow: 0 1px 5px rgba(39, 39, 43, 1), 0 0 0 1px rgba(39, 39, 43, 1);
+    box-shadow: 0 1px 5px var(--doorhanger-border-color),
+      0 0 0 1px var(--doorhanger-border-color);
   }
 }
 
 .doorHangerRight {
   border-radius: 2px;
-  box-shadow: 0 1px 5px rgba(12, 12, 13, 0.2),
-    0 0 0 1px rgba(12, 12, 13, 0.2);
+  box-shadow: 0 1px 5px rgba(12, 12, 13, 0.2), 0 0 0 1px rgba(12, 12, 13, 0.2);
   box-shadow: 0 1px 5px var(--doorhanger-border-color),
     0 0 0 1px var(--doorhanger-border-color);
 }
 
 @media (prefers-color-scheme: dark) {
-
   .doorHangerRight {
-  box-shadow: 0 1px 5px rgba(39, 39, 43, 1),
-    0 0 0 1px rgba(39, 39, 43, 1);
-  box-shadow: 0 1px 5px var(--doorhanger-border-color),
-    0 0 0 1px var(--doorhanger-border-color);
+    box-shadow: 0 1px 5px rgba(39, 39, 43, 1), 0 0 0 1px rgba(39, 39, 43, 1);
+    box-shadow: 0 1px 5px var(--doorhanger-border-color),
+      0 0 0 1px var(--doorhanger-border-color);
   }
 }
 .doorHanger:after,
@@ -1740,10 +1685,9 @@ html[dir="rtl"] .secondaryToolbar {
   border-bottom-color: var(--toolbar-bg-color);
 }
 @media (prefers-color-scheme: dark) {
-
   .doorHanger:after {
-  border-bottom-color: rgba(56, 56, 61, 1);
-  border-bottom-color: var(--toolbar-bg-color);
+    border-bottom-color: rgba(56, 56, 61, 1);
+    border-bottom-color: var(--toolbar-bg-color);
   }
 }
 .doorHangerRight:after {
@@ -1751,10 +1695,9 @@ html[dir="rtl"] .secondaryToolbar {
   border-bottom-color: var(--doorhanger-bg-color);
 }
 @media (prefers-color-scheme: dark) {
-
   .doorHangerRight:after {
-  border-bottom-color: rgba(74, 74, 79, 1);
-  border-bottom-color: var(--doorhanger-bg-color);
+    border-bottom-color: rgba(74, 74, 79, 1);
+    border-bottom-color: var(--doorhanger-bg-color);
   }
 }
 .doorHanger:before {
@@ -1763,10 +1706,9 @@ html[dir="rtl"] .secondaryToolbar {
   border-width: 9px;
 }
 @media (prefers-color-scheme: dark) {
-
   .doorHanger:before {
-  border-bottom-color: rgba(39, 39, 43, 1);
-  border-bottom-color: var(--doorhanger-border-color);
+    border-bottom-color: rgba(39, 39, 43, 1);
+    border-bottom-color: var(--doorhanger-border-color);
   }
 }
 .doorHangerRight:before {
@@ -1775,10 +1717,9 @@ html[dir="rtl"] .secondaryToolbar {
   border-width: 9px;
 }
 @media (prefers-color-scheme: dark) {
-
   .doorHangerRight:before {
-  border-bottom-color: rgba(39, 39, 43, 1);
-  border-bottom-color: var(--doorhanger-border-color);
+    border-bottom-color: rgba(39, 39, 43, 1);
+    border-bottom-color: var(--doorhanger-border-color);
   }
 }
 
@@ -1882,10 +1823,9 @@ html[dir="rtl"] .splitToolbarButton > .toolbarButton {
   background-color: var(--overlay-button-bg-color);
 }
 @media (prefers-color-scheme: dark) {
-
   .overlayButton {
-  background-color: rgba(92, 92, 97, 1);
-  background-color: var(--overlay-button-bg-color);
+    background-color: rgba(92, 92, 97, 1);
+    background-color: var(--overlay-button-bg-color);
   }
 }
 
@@ -1895,10 +1835,9 @@ html[dir="rtl"] .splitToolbarButton > .toolbarButton {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .overlayButton:hover {
-  background-color: rgba(115, 115, 115, 1);
-  background-color: var(--overlay-button-hover-color);
+    background-color: rgba(115, 115, 115, 1);
+    background-color: var(--overlay-button-hover-color);
   }
 }
 
@@ -1908,10 +1847,9 @@ html[dir="rtl"] .splitToolbarButton > .toolbarButton {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .overlayButton:focus {
-  background-color: rgba(115, 115, 115, 1);
-  background-color: var(--overlay-button-hover-color);
+    background-color: rgba(115, 115, 115, 1);
+    background-color: var(--overlay-button-hover-color);
   }
 }
 
@@ -1939,10 +1877,9 @@ html[dir="rtl"] .splitToolbarButton > .toolbarButton {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .splitToolbarButton > .toolbarButton:hover {
-  background-color: rgba(102, 102, 103, 1);
-  background-color: var(--button-hover-color);
+    background-color: rgba(102, 102, 103, 1);
+    background-color: var(--button-hover-color);
   }
 }
 
@@ -1953,10 +1890,9 @@ html[dir="rtl"] .splitToolbarButton > .toolbarButton {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .splitToolbarButton > .toolbarButton:focus {
-  background-color: rgba(102, 102, 103, 1);
-  background-color: var(--button-hover-color);
+    background-color: rgba(102, 102, 103, 1);
+    background-color: var(--button-hover-color);
   }
 }
 
@@ -1967,10 +1903,9 @@ html[dir="rtl"] .splitToolbarButton > .toolbarButton {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .dropdownToolbarButton:hover {
-  background-color: rgba(102, 102, 103, 1);
-  background-color: var(--button-hover-color);
+    background-color: rgba(102, 102, 103, 1);
+    background-color: var(--button-hover-color);
   }
 }
 
@@ -1981,10 +1916,9 @@ html[dir="rtl"] .splitToolbarButton > .toolbarButton {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .toolbarButton.textButton:hover {
-  background-color: rgba(102, 102, 103, 1);
-  background-color: var(--button-hover-color);
+    background-color: rgba(102, 102, 103, 1);
+    background-color: var(--button-hover-color);
   }
 }
 
@@ -1995,10 +1929,9 @@ html[dir="rtl"] .splitToolbarButton > .toolbarButton {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .toolbarButton.textButton:focus {
-  background-color: rgba(102, 102, 103, 1);
-  background-color: var(--button-hover-color);
+    background-color: rgba(102, 102, 103, 1);
+    background-color: var(--button-hover-color);
   }
 }
 .splitToolbarButton > .toolbarButton {
@@ -2022,10 +1955,9 @@ html[dir="rtl"] .splitToolbarButton > .toolbarButton:first-child {
   margin: 4px 0;
 }
 @media (prefers-color-scheme: dark) {
-
   .splitToolbarButtonSeparator {
-  background-color: rgba(0, 0, 0, 0.3);
-  background-color: var(--separator-color);
+    background-color: rgba(0, 0, 0, 0.3);
+    background-color: var(--separator-color);
   }
 }
 
@@ -2037,10 +1969,9 @@ html[dir="rtl"] .splitToolbarButton > .toolbarButton:first-child {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .findbar .splitToolbarButtonSeparator {
-  background-color: rgba(115, 115, 115, 1);
-  background-color: var(--field-border-color);
+    background-color: rgba(115, 115, 115, 1);
+    background-color: var(--field-border-color);
   }
 }
 
@@ -2062,18 +1993,17 @@ html[dir="rtl"] .splitToolbarButtonSeparator {
   font-size: 12px;
   line-height: 14px;
   -webkit-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
-          user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
   cursor: default;
   box-sizing: border-box;
 }
 
 @media (prefers-color-scheme: dark) {
-
   .toolbarButton {
-  color: rgba(249, 249, 250, 1);
-  color: var(--main-color);
+    color: rgba(249, 249, 250, 1);
+    color: var(--main-color);
   }
 }
 
@@ -2088,18 +2018,17 @@ html[dir="rtl"] .splitToolbarButtonSeparator {
   font-size: 12px;
   line-height: 14px;
   -webkit-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
-          user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
   cursor: default;
   box-sizing: border-box;
 }
 
 @media (prefers-color-scheme: dark) {
-
   .dropdownToolbarButton {
-  color: rgba(249, 249, 250, 1);
-  color: var(--main-color);
+    color: rgba(249, 249, 250, 1);
+    color: var(--main-color);
   }
 }
 
@@ -2114,18 +2043,17 @@ html[dir="rtl"] .splitToolbarButtonSeparator {
   font-size: 12px;
   line-height: 14px;
   -webkit-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
-          user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
   cursor: default;
   box-sizing: border-box;
 }
 
 @media (prefers-color-scheme: dark) {
-
   .secondaryToolbarButton {
-  color: rgba(249, 249, 250, 1);
-  color: var(--main-color);
+    color: rgba(249, 249, 250, 1);
+    color: var(--main-color);
   }
 }
 
@@ -2140,18 +2068,17 @@ html[dir="rtl"] .splitToolbarButtonSeparator {
   font-size: 12px;
   line-height: 14px;
   -webkit-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
-          user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
   cursor: default;
   box-sizing: border-box;
 }
 
 @media (prefers-color-scheme: dark) {
-
   .overlayButton {
-  color: rgba(249, 249, 250, 1);
-  color: var(--main-color);
+    color: rgba(249, 249, 250, 1);
+    color: var(--main-color);
   }
 }
 
@@ -2169,10 +2096,9 @@ html[dir="rtl"] #toolbarViewerLeft > .toolbarButton:first-child {
   background-color: var(--button-hover-color);
 }
 @media (prefers-color-scheme: dark) {
-
   .toolbarButton:hover {
-  background-color: rgba(102, 102, 103, 1);
-  background-color: var(--button-hover-color);
+    background-color: rgba(102, 102, 103, 1);
+    background-color: var(--button-hover-color);
   }
 }
 .toolbarButton:focus {
@@ -2180,10 +2106,9 @@ html[dir="rtl"] #toolbarViewerLeft > .toolbarButton:first-child {
   background-color: var(--button-hover-color);
 }
 @media (prefers-color-scheme: dark) {
-
   .toolbarButton:focus {
-  background-color: rgba(102, 102, 103, 1);
-  background-color: var(--button-hover-color);
+    background-color: rgba(102, 102, 103, 1);
+    background-color: var(--button-hover-color);
   }
 }
 .secondaryToolbarButton:hover {
@@ -2191,10 +2116,9 @@ html[dir="rtl"] #toolbarViewerLeft > .toolbarButton:first-child {
   background-color: var(--doorhanger-hover-color);
 }
 @media (prefers-color-scheme: dark) {
-
   .secondaryToolbarButton:hover {
-  background-color: rgba(93, 94, 98, 1);
-  background-color: var(--doorhanger-hover-color);
+    background-color: rgba(93, 94, 98, 1);
+    background-color: var(--doorhanger-hover-color);
   }
 }
 .secondaryToolbarButton:focus {
@@ -2202,10 +2126,9 @@ html[dir="rtl"] #toolbarViewerLeft > .toolbarButton:first-child {
   background-color: var(--doorhanger-hover-color);
 }
 @media (prefers-color-scheme: dark) {
-
   .secondaryToolbarButton:focus {
-  background-color: rgba(93, 94, 98, 1);
-  background-color: var(--doorhanger-hover-color);
+    background-color: rgba(93, 94, 98, 1);
+    background-color: var(--doorhanger-hover-color);
   }
 }
 
@@ -2215,10 +2138,9 @@ html[dir="rtl"] #toolbarViewerLeft > .toolbarButton:first-child {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .toolbarButton.toggled {
-  background-color: rgba(0, 0, 0, 0.3);
-  background-color: var(--toggled-btn-bg-color);
+    background-color: rgba(0, 0, 0, 0.3);
+    background-color: var(--toggled-btn-bg-color);
   }
 }
 
@@ -2228,10 +2150,9 @@ html[dir="rtl"] #toolbarViewerLeft > .toolbarButton:first-child {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .splitToolbarButton.toggled > .toolbarButton.toggled {
-  background-color: rgba(0, 0, 0, 0.3);
-  background-color: var(--toggled-btn-bg-color);
+    background-color: rgba(0, 0, 0, 0.3);
+    background-color: var(--toggled-btn-bg-color);
   }
 }
 
@@ -2241,10 +2162,9 @@ html[dir="rtl"] #toolbarViewerLeft > .toolbarButton:first-child {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .secondaryToolbarButton.toggled {
-  background-color: rgba(0, 0, 0, 0.3);
-  background-color: var(--toggled-btn-bg-color);
+    background-color: rgba(0, 0, 0, 0.3);
+    background-color: var(--toggled-btn-bg-color);
   }
 }
 
@@ -2254,10 +2174,9 @@ html[dir="rtl"] #toolbarViewerLeft > .toolbarButton:first-child {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .toolbarButton.toggled:hover:active {
-  background-color: rgba(0, 0, 0, 0.4);
-  background-color: var(--toggled-hover-active-btn-color);
+    background-color: rgba(0, 0, 0, 0.4);
+    background-color: var(--toggled-hover-active-btn-color);
   }
 }
 
@@ -2267,10 +2186,9 @@ html[dir="rtl"] #toolbarViewerLeft > .toolbarButton:first-child {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .splitToolbarButton.toggled > .toolbarButton.toggled:hover:active {
-  background-color: rgba(0, 0, 0, 0.4);
-  background-color: var(--toggled-hover-active-btn-color);
+    background-color: rgba(0, 0, 0, 0.4);
+    background-color: var(--toggled-hover-active-btn-color);
   }
 }
 
@@ -2280,10 +2198,9 @@ html[dir="rtl"] #toolbarViewerLeft > .toolbarButton:first-child {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .secondaryToolbarButton.toggled:hover:active {
-  background-color: rgba(0, 0, 0, 0.4);
-  background-color: var(--toggled-hover-active-btn-color);
+    background-color: rgba(0, 0, 0, 0.4);
+    background-color: var(--toggled-hover-active-btn-color);
   }
 }
 
@@ -2297,10 +2214,9 @@ html[dir="rtl"] #toolbarViewerLeft > .toolbarButton:first-child {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .dropdownToolbarButton {
-  background-color: rgba(74, 74, 79, 1);
-  background-color: var(--dropdown-btn-bg-color);
+    background-color: rgba(74, 74, 79, 1);
+    background-color: var(--dropdown-btn-bg-color);
   }
 }
 .dropdownToolbarButton::after {
@@ -2334,18 +2250,16 @@ html[dir="rtl"] .dropdownToolbarButton::after {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .dropdownToolbarButton > select {
-  background-color: rgba(74, 74, 79, 1);
-  background-color: var(--dropdown-btn-bg-color);
+    background-color: rgba(74, 74, 79, 1);
+    background-color: var(--dropdown-btn-bg-color);
   }
 }
 
 @media (prefers-color-scheme: dark) {
-
   .dropdownToolbarButton > select {
-  color: rgba(249, 249, 250, 1);
-  color: var(--main-color);
+    color: rgba(249, 249, 250, 1);
+    color: var(--main-color);
   }
 }
 html[dir="ltr"] .dropdownToolbarButton > select {
@@ -2359,10 +2273,9 @@ html[dir="rtl"] .dropdownToolbarButton > select {
   background-color: var(--button-hover-color);
 }
 @media (prefers-color-scheme: dark) {
-
   .dropdownToolbarButton > select:hover {
-  background-color: rgba(102, 102, 103, 1);
-  background-color: var(--button-hover-color);
+    background-color: rgba(102, 102, 103, 1);
+    background-color: var(--button-hover-color);
   }
 }
 
@@ -2372,10 +2285,9 @@ html[dir="rtl"] .dropdownToolbarButton > select {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .dropdownToolbarButton > select:focus {
-  background-color: rgba(102, 102, 103, 1);
-  background-color: var(--button-hover-color);
+    background-color: rgba(102, 102, 103, 1);
+    background-color: var(--button-hover-color);
   }
 }
 
@@ -2385,10 +2297,9 @@ html[dir="rtl"] .dropdownToolbarButton > select {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .dropdownToolbarButton > select > option {
-  background: rgba(74, 74, 79, 1);
-  background: var(--doorhanger-bg-color);
+    background: rgba(74, 74, 79, 1);
+    background: var(--doorhanger-bg-color);
   }
 }
 
@@ -2422,10 +2333,9 @@ html[dir="rtl"] .dropdownToolbarButton > select {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .toolbarButton::before {
-  background-color: rgba(255, 255, 255, 1);
-  background-color: var(--toolbar-icon-bg-color);
+    background-color: rgba(255, 255, 255, 1);
+    background-color: var(--toolbar-icon-bg-color);
   }
 }
 
@@ -2445,10 +2355,9 @@ html[dir="rtl"] .dropdownToolbarButton > select {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .secondaryToolbarButton::before {
-  background-color: rgba(255, 255, 255, 1);
-  background-color: var(--toolbar-icon-bg-color);
+    background-color: rgba(255, 255, 255, 1);
+    background-color: var(--toolbar-icon-bg-color);
   }
 }
 
@@ -2468,10 +2377,9 @@ html[dir="rtl"] .dropdownToolbarButton > select {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .dropdownToolbarButton::after {
-  background-color: rgba(255, 255, 255, 1);
-  background-color: var(--toolbar-icon-bg-color);
+    background-color: rgba(255, 255, 255, 1);
+    background-color: var(--toolbar-icon-bg-color);
   }
 }
 
@@ -2491,10 +2399,9 @@ html[dir="rtl"] .dropdownToolbarButton > select {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .treeItemToggler::before {
-  background-color: rgba(255, 255, 255, 1);
-  background-color: var(--toolbar-icon-bg-color);
+    background-color: rgba(255, 255, 255, 1);
+    background-color: var(--toolbar-icon-bg-color);
   }
 }
 
@@ -2854,10 +2761,9 @@ html[dir="rtl"] .secondaryToolbarButton > span {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .verticalToolbarSeparator {
-  background-color: rgba(0, 0, 0, 0.3);
-  background-color: var(--separator-color);
+    background-color: rgba(0, 0, 0, 0.3);
+    background-color: var(--separator-color);
   }
 }
 html[dir="ltr"] .verticalToolbarSeparator {
@@ -2877,10 +2783,9 @@ html[dir="rtl"] .verticalToolbarSeparator {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .horizontalToolbarSeparator {
-  border-top: 1px solid rgba(92, 92, 97, 1);
-  border-top: 1px solid var(--doorhanger-separator-color);
+    border-top: 1px solid rgba(92, 92, 97, 1);
+    border-top: 1px solid var(--doorhanger-separator-color);
   }
 }
 
@@ -2904,26 +2809,23 @@ html[dir="rtl"] .verticalToolbarSeparator {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .toolbarField {
-  color: rgba(250, 250, 250, 1);
-  color: var(--field-color);
+    color: rgba(250, 250, 250, 1);
+    color: var(--field-color);
   }
 }
 
 @media (prefers-color-scheme: dark) {
-
   .toolbarField {
-  border-color: rgba(115, 115, 115, 1);
-  border-color: var(--field-border-color);
+    border-color: rgba(115, 115, 115, 1);
+    border-color: var(--field-border-color);
   }
 }
 
 @media (prefers-color-scheme: dark) {
-
   .toolbarField {
-  background-color: rgba(64, 64, 68, 1);
-  background-color: var(--field-bg-color);
+    background-color: rgba(64, 64, 68, 1);
+    background-color: var(--field-bg-color);
   }
 }
 
@@ -2956,10 +2858,9 @@ html[dir="rtl"] .toolbarField[type="checkbox"] {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .toolbarField.pageNumber.visiblePageIsLoading {
-  background-image: url(images/loading-dark.svg);
-  background-image: var(--loading-icon);
+    background-image: url(images/loading-dark.svg);
+    background-image: var(--loading-icon);
   }
 }
 
@@ -2985,17 +2886,16 @@ html[dir="rtl"] .toolbarField[type="checkbox"] {
   line-height: 14px;
   text-align: left;
   -webkit-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
-          user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
   cursor: default;
 }
 
 @media (prefers-color-scheme: dark) {
-
   .toolbarLabel {
-  color: rgba(249, 249, 250, 1);
-  color: var(--main-color);
+    color: rgba(249, 249, 250, 1);
+    color: var(--main-color);
   }
 }
 
@@ -3071,10 +2971,9 @@ a:focus > .thumbnail > .thumbnailSelectionRing {
 }
 
 @media (prefers-color-scheme: dark) {
-
   a:focus > .thumbnail > .thumbnailSelectionRing {
-  background-color: rgba(255, 255, 255, 0.15);
-  background-color: var(--sidebaritem-bg-color);
+    background-color: rgba(255, 255, 255, 0.15);
+    background-color: var(--sidebaritem-bg-color);
   }
 }
 
@@ -3086,10 +2985,9 @@ a:focus > .thumbnail > .thumbnailSelectionRing {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .thumbnail:hover > .thumbnailSelectionRing {
-  background-color: rgba(255, 255, 255, 0.15);
-  background-color: var(--sidebaritem-bg-color);
+    background-color: rgba(255, 255, 255, 0.15);
+    background-color: var(--sidebaritem-bg-color);
   }
 }
 
@@ -3105,10 +3003,9 @@ a:focus > .thumbnail > .thumbnailSelectionRing {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .thumbnail.selected > .thumbnailSelectionRing {
-  background-color: rgba(255, 255, 255, 0.15);
-  background-color: var(--sidebaritem-bg-color);
+    background-color: rgba(255, 255, 255, 0.15);
+    background-color: var(--sidebaritem-bg-color);
   }
 }
 
@@ -3123,9 +3020,9 @@ a:focus > .thumbnail > .thumbnailSelectionRing {
   overflow: auto;
   -webkit-overflow-scrolling: touch;
   -webkit-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
-          user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 html[dir="ltr"] .treeWithDeepNesting > .treeItem,
@@ -3152,18 +3049,17 @@ html[dir="rtl"] .treeItem > .treeItems {
   font-size: 13px;
   line-height: 15px;
   -webkit-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
-          user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
   white-space: normal;
   cursor: pointer;
 }
 
 @media (prefers-color-scheme: dark) {
-
   .treeItem > a {
-  color: rgba(255, 255, 255, 0.8);
-  color: var(--treeitem-color);
+    color: rgba(255, 255, 255, 0.8);
+    color: var(--treeitem-color);
   }
 }
 html[dir="ltr"] .treeItem > a {
@@ -3228,18 +3124,16 @@ html[dir="rtl"] .treeItemToggler::before {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .treeItem.selected > a {
-  color: rgba(255, 255, 255, 0.9);
-  color: var(--treeitem-selected-color);
+    color: rgba(255, 255, 255, 0.9);
+    color: var(--treeitem-selected-color);
   }
 }
 
 @media (prefers-color-scheme: dark) {
-
   .treeItem.selected > a {
-  background-color: rgba(255, 255, 255, 0.25);
-  background-color: var(--treeitem-selected-bg-color);
+    background-color: rgba(255, 255, 255, 0.25);
+    background-color: var(--treeitem-selected-bg-color);
   }
 }
 
@@ -3253,18 +3147,16 @@ html[dir="rtl"] .treeItemToggler::before {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .treeItemToggler:hover {
-  color: rgba(255, 255, 255, 0.9);
-  color: var(--treeitem-hover-color);
+    color: rgba(255, 255, 255, 0.9);
+    color: var(--treeitem-hover-color);
   }
 }
 
 @media (prefers-color-scheme: dark) {
-
   .treeItemToggler:hover {
-  background-color: rgba(255, 255, 255, 0.15);
-  background-color: var(--sidebaritem-bg-color);
+    background-color: rgba(255, 255, 255, 0.15);
+    background-color: var(--sidebaritem-bg-color);
   }
 }
 
@@ -3278,18 +3170,16 @@ html[dir="rtl"] .treeItemToggler::before {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .treeItemToggler:hover + a {
-  color: rgba(255, 255, 255, 0.9);
-  color: var(--treeitem-hover-color);
+    color: rgba(255, 255, 255, 0.9);
+    color: var(--treeitem-hover-color);
   }
 }
 
 @media (prefers-color-scheme: dark) {
-
   .treeItemToggler:hover + a {
-  background-color: rgba(255, 255, 255, 0.15);
-  background-color: var(--sidebaritem-bg-color);
+    background-color: rgba(255, 255, 255, 0.15);
+    background-color: var(--sidebaritem-bg-color);
   }
 }
 
@@ -3303,18 +3193,16 @@ html[dir="rtl"] .treeItemToggler::before {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .treeItemToggler:hover ~ .treeItems {
-  color: rgba(255, 255, 255, 0.9);
-  color: var(--treeitem-hover-color);
+    color: rgba(255, 255, 255, 0.9);
+    color: var(--treeitem-hover-color);
   }
 }
 
 @media (prefers-color-scheme: dark) {
-
   .treeItemToggler:hover ~ .treeItems {
-  background-color: rgba(255, 255, 255, 0.15);
-  background-color: var(--sidebaritem-bg-color);
+    background-color: rgba(255, 255, 255, 0.15);
+    background-color: var(--sidebaritem-bg-color);
   }
 }
 
@@ -3328,18 +3216,16 @@ html[dir="rtl"] .treeItemToggler::before {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .treeItem > a:hover {
-  color: rgba(255, 255, 255, 0.9);
-  color: var(--treeitem-hover-color);
+    color: rgba(255, 255, 255, 0.9);
+    color: var(--treeitem-hover-color);
   }
 }
 
 @media (prefers-color-scheme: dark) {
-
   .treeItem > a:hover {
-  background-color: rgba(255, 255, 255, 0.15);
-  background-color: var(--sidebaritem-bg-color);
+    background-color: rgba(255, 255, 255, 0.15);
+    background-color: var(--sidebaritem-bg-color);
   }
 }
 
@@ -3366,18 +3252,16 @@ html[dir="rtl"] .treeItemToggler::before {
 }
 
 @media (prefers-color-scheme: dark) {
-
   #errorWrapper {
-  color: rgba(249, 249, 250, 1);
-  color: var(--main-color);
+    color: rgba(249, 249, 250, 1);
+    color: var(--main-color);
   }
 }
 
 @media (prefers-color-scheme: dark) {
-
   #errorWrapper {
-  background: none repeat scroll 0 0 rgba(199, 17, 17, 1);
-  background: none repeat scroll 0 0 var(--errorWrapper-bg-color);
+    background: none repeat scroll 0 0 rgba(199, 17, 17, 1);
+    background: none repeat scroll 0 0 var(--errorWrapper-bg-color);
   }
 }
 
@@ -3402,26 +3286,23 @@ html[dir="rtl"] .treeItemToggler::before {
 }
 
 @media (prefers-color-scheme: dark) {
-
   #errorMoreInfo {
-  border: 1px solid rgba(115, 115, 115, 1);
-  border: 1px solid var(--field-border-color);
+    border: 1px solid rgba(115, 115, 115, 1);
+    border: 1px solid var(--field-border-color);
   }
 }
 
 @media (prefers-color-scheme: dark) {
-
   #errorMoreInfo {
-  color: rgba(250, 250, 250, 1);
-  color: var(--field-color);
+    color: rgba(250, 250, 250, 1);
+    color: var(--field-color);
   }
 }
 
 @media (prefers-color-scheme: dark) {
-
   #errorMoreInfo {
-  background-color: rgba(64, 64, 68, 1);
-  background-color: var(--field-bg-color);
+    background-color: rgba(64, 64, 68, 1);
+    background-color: var(--field-bg-color);
   }
 }
 
@@ -3466,18 +3347,16 @@ html[dir="rtl"] .treeItemToggler::before {
 }
 
 @media (prefers-color-scheme: dark) {
-
   #overlayContainer > .container > .dialog {
-  background-color: rgba(74, 74, 79, 1);
-  background-color: var(--doorhanger-bg-color);
+    background-color: rgba(74, 74, 79, 1);
+    background-color: var(--doorhanger-bg-color);
   }
 }
 
 @media (prefers-color-scheme: dark) {
-
   #overlayContainer > .container > .dialog {
-  color: rgba(249, 249, 250, 1);
-  color: var(--main-color);
+    color: rgba(249, 249, 250, 1);
+    color: var(--main-color);
   }
 }
 
@@ -3503,10 +3382,9 @@ html[dir="rtl"] .treeItemToggler::before {
 }
 
 @media (prefers-color-scheme: dark) {
-
   .dialog .separator {
-  background-color: rgba(0, 0, 0, 0.3);
-  background-color: var(--separator-color);
+    background-color: rgba(0, 0, 0, 0.3);
+    background-color: var(--separator-color);
   }
 }
 
