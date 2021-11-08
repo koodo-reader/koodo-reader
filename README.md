@@ -59,6 +59,13 @@
   - Stable Version (Recommended): [Download](https://koodo.960960.xyz/en/download)
   - Developer Version: [Download](https://github.com/troyeguo/koodo-reader/releases/latest) ( With new feature and bug fix, but may induce some unknown bugs)
 - Web Version：[Preview](https://koodo-reader.vercel.app)
+- Install with Scoop:
+
+```shell
+scoop bucket add hola_bucket https://github.com/CALMorACT/hola_bucket.git
+scoop install koodo
+```
+
 - Install with Homebrew:
 
 ```shell
