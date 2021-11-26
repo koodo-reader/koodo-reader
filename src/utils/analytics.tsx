@@ -8,7 +8,7 @@ interface EvOptions {
   evValue?: any;
 }
 
-const hostname = "https://koodo-reader.vercel.app";
+const hostname = "https://reader.960960.xyz";
 
 class Analytics {
   private readonly ga: any;
