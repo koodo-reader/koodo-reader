@@ -100,32 +100,6 @@
   overflow-x: hidden;
 }
 
-.shelf-list-item {
-  list-style-type: none;
-  line-height: 28px;
-  font-size: 14px;
-  width: 140px;
-  cursor: pointer;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  margin-bottom: 15px;
-  margin-left: 31px;
-  opacity: 1;
-}
-
-.sidebar-dropdown {
-  font-size: 13px;
-}
-
-.side-menu-shelf {
-  margin-left: 45px;
-  margin-top: 25px;
-  cursor: pointer;
-}
-.active-shelf {
-  font-size: 15px;
-  margin-left: 27px;
-}
 .side-menu-selector-container {
   width: 100%;
   height: 39px;

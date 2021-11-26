@@ -62,8 +62,8 @@
 - Install with Scoop:
 
 ```shell
-scoop bucket add hola_bucket https://github.com/CALMorACT/hola_bucket.git
-scoop install koodo
+scoop bucket add dorado https://github.com/chawyehsu/dorado
+scoop install dorado/koodo-reader
 ```
 
 - Install with Homebrew:

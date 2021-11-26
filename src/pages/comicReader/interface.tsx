@@ -11,4 +11,7 @@ export interface ViewerProps {
 export interface ViewerState {
   key: string;
   comicScale: string;
+  readerMode: string;
+  scale: string;
+  margin: number;
 }

@@ -16,10 +16,14 @@ import toast from "react-hot-toast";
 import StyleUtil from "../../utils/readUtils/styleUtil";
 import "./index.css";
 import { HtmlMouseEvent } from "../../utils/mouseEvent";
+import untar from "js-untar";
 
 declare var window: any;
 
-const { MobiRender, Azw3Render, TxtRender, StrRender } = window.Kookit;
+const { MobiRender, Azw3Render, TxtRender, StrRender, ComicRender } =
+  window.Kookit;
+let Unrar = window.Unrar;
+let JSZip = window.JSZip;
 
 class Viewer extends React.Component<ViewerProps, ViewerState> {
   epub: any;
@@ -81,6 +85,12 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         format === "XML"
       ) {
         this.handleHtml(result as ArrayBuffer, format);
+      } else if (format === "CBR") {
+        this.handleCbr(result as ArrayBuffer);
+      } else if (format === "CBT") {
+        this.handleCbt(result as ArrayBuffer);
+      } else if (format === "CBZ") {
+        this.handleCbz(result as ArrayBuffer);
       }
       this.props.handleReadingState(true);
 
@@ -88,6 +98,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       document.title = name + " - Koodo Reader";
     });
   };
+
   handleRest = (rendition: any) => {
     StyleUtil.addDefaultCss();
     rendition.setStyle(StyleUtil.getCustomCss(true));
@@ -118,6 +129,69 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       subitems: [],
       rendition: rendition,
     });
+  };
+  handleCbr = async (result: ArrayBuffer) => {
+    let unrar = new Unrar(result);
+    var entries = unrar.getEntries();
+    let bookLocation = RecordLocation.getScrollHeight(
+      this.props.currentBook.key
+    );
+    let rendition = new ComicRender(
+      entries.map((item: any) => item.name),
+      unrar,
+      this.state.readerMode,
+      "cbr"
+    );
+    await rendition.renderTo(
+      document.getElementsByClassName("html-viewer-page")[0],
+      parseInt(bookLocation.count || "0")
+    );
+    this.handleRest(rendition);
+  };
+  handleCbz = (result: ArrayBuffer) => {
+    let zip = new JSZip();
+    let bookLocation = RecordLocation.getScrollHeight(
+      this.props.currentBook.key
+    );
+    zip.loadAsync(result).then(async (contents) => {
+      let rendition = new ComicRender(
+        Object.keys(contents.files).sort(),
+        zip,
+        this.state.readerMode,
+        "cbz"
+      );
+      await rendition.renderTo(
+        document.getElementsByClassName("html-viewer-page")[0],
+        parseInt(bookLocation.count || "0")
+      );
+      this.handleRest(rendition);
+    });
+  };
+  handleCbt = (result: ArrayBuffer) => {
+    let bookLocation = RecordLocation.getScrollHeight(
+      this.props.currentBook.key
+    );
+    untar(result).then(
+      async (extractedFiles) => {
+        let rendition = new ComicRender(
+          extractedFiles.map((item: any) => item.name),
+          extractedFiles,
+          this.state.readerMode,
+          "cbt"
+        );
+        await rendition.renderTo(
+          document.getElementsByClassName("html-viewer-page")[0],
+          parseInt(bookLocation.count || "0")
+        );
+        this.handleRest(rendition);
+      },
+      function (err) {
+        // onError
+      },
+      function (extractedFile) {
+        // onProgress
+      }
+    );
   };
   handleMobi = async (result: ArrayBuffer) => {
     let rendition = new MobiRender(result, this.state.readerMode);
