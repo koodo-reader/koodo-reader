@@ -1,7 +1,7 @@
 export const config = {
   callback_url:
     process.env.NODE_ENV === "production"
-      ? "https://koodo-reader.vercel.app"
+      ? "https://reader.960960.xyz"
       : "http://localhost:3000",
   token_url:
     process.env.NODE_ENV === "production"
