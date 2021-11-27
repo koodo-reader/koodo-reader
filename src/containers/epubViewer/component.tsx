@@ -98,14 +98,16 @@ class EpubViewer extends React.Component<ViewAreaProps, ViewAreaStates> {
     };
     return (
       <div className="view-area">
-        <ImageViewer
-          {...{
-            isShow: this.props.isShow,
-            rendition: this.props.rendition,
-            handleEnterReader: this.props.handleEnterReader,
-            handleLeaveReader: this.props.handleLeaveReader,
-          }}
-        />
+        {!this.state.loading && (
+          <ImageViewer
+            {...{
+              isShow: this.props.isShow,
+              rendition: this.props.rendition,
+              handleEnterReader: this.props.handleEnterReader,
+              handleLeaveReader: this.props.handleLeaveReader,
+            }}
+          />
+        )}
         <PopupMenu {...popupMenuProps} />
         {this.state.loading ? (
           <div className="spinner">

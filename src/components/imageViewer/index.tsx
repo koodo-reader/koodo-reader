@@ -3,7 +3,9 @@ import { stateType } from "../../store";
 import ImageViewer from "./component";
 import { withTranslation } from "react-i18next";
 const mapStateToProps = (state: stateType) => {
-  return {};
+  return {
+    currentBook: state.book.currentBook,
+  };
 };
 const actionCreator = {};
 
