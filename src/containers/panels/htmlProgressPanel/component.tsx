@@ -2,19 +2,9 @@ import React from "react";
 import "./progressPanel.css";
 import { Trans } from "react-i18next";
 import { ProgressPanelProps, ProgressPanelState } from "./interface";
-import Lottie from "react-lottie";
-import animationSiri from "../../../assets/lotties/siri.json";
 import { Tooltip } from "react-tippy";
 import _ from "underscore";
 
-const siriOptions = {
-  loop: true,
-  autoplay: true,
-  animationData: animationSiri,
-  rendererSettings: {
-    preserveAspectRatio: "xMidYMid slice",
-  },
-};
 class ProgressPanel extends React.Component<
   ProgressPanelProps,
   ProgressPanelState
@@ -101,11 +91,7 @@ class ProgressPanel extends React.Component<
   };
   render() {
     if (!this.props.htmlBook) {
-      return (
-        <div className="progress-panel">
-          <Lottie options={siriOptions} height={100} width={300} />
-        </div>
-      );
+      return <div className="progress-panel">Loading</div>;
     }
 
     return (
