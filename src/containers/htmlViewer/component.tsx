@@ -316,12 +316,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     reader.readAsText(blob, "UTF-8");
   };
   render() {
-    const imageViewerProps = {
-      isShow: this.props.isShow,
-      rendition: this.props.rendition,
-      handleEnterReader: this.props.handleEnterReader,
-      handleLeaveReader: this.props.handleLeaveReader,
-    };
     return (
       <>
         <div
@@ -361,7 +355,16 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
             .props.currentBook.key ? (
           <BackgroundWidget />
         ) : null}
-        {this.props.htmlBook && <ImageViewer {...imageViewerProps} />}
+        {this.props.htmlBook && (
+          <ImageViewer
+            {...{
+              isShow: this.props.isShow,
+              rendition: this.props.htmlBook.rendition,
+              handleEnterReader: this.props.handleEnterReader,
+              handleLeaveReader: this.props.handleLeaveReader,
+            }}
+          />
+        )}
       </>
     );
   }
