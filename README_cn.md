@@ -25,12 +25,8 @@
 ## 预览
 
 <div align="center">
-  <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
-    <img src="https://i.loli.net/2021/08/08/I37WPYFJcC1jltn.png" >
-  </a>
-  <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
-    <img src="https://i.loli.net/2021/08/08/G7WvUQFTrEpSCKg.png" >
-  </a>
+  <img src="https://i.loli.net/2021/08/08/I37WPYFJcC1jltn.png" >
+  <img src="https://i.loli.net/2021/08/08/G7WvUQFTrEpSCKg.png" >
 </div>
 
 ## 特色
@@ -82,29 +78,17 @@ docker-compose up -d
 
 <div align="center">
   <b>列表模式</b>
-  <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
-    <img src="https://i.loli.net/2021/08/08/JyNHfThMs184Um2.png" >
-  </a>
+  <img src="https://i.loli.net/2021/08/08/JyNHfThMs184Um2.png" >
   <b>封面模式</b>
-  <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
-    <img src="https://i.loli.net/2021/08/08/76zkDEAobd4qsmR.png" >
-  </a>
+  <img src="https://i.loli.net/2021/08/08/76zkDEAobd4qsmR.png" >
   <b>阅读菜单</b>
-  <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
-    <img src="https://i.loli.net/2021/08/08/LeEN9gnOvFmfVWA.png" >
-  </a>
+  <img src="https://i.loli.net/2021/08/08/LeEN9gnOvFmfVWA.png" >
   <b>备份和恢复</b>
-  <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
-    <img src="https://i.loli.net/2021/08/08/aRIAiYT2dGJQhC1.png" >
-  </a>
+  <img src="https://i.loli.net/2021/08/08/aRIAiYT2dGJQhC1.png" >
   <b>黑夜模式和主题色</b>
-  <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
-    <img src="https://i.loli.net/2021/08/08/ynqUNpX93xZefdw.png" >
-  </a>
+  <img src="https://i.loli.net/2021/08/08/ynqUNpX93xZefdw.png" >
   <b>笔记管理</b>
-  <a href="https://github.com/troyeguo/koodo-reader/releases/latest">
-    <img src="https://i.loli.net/2021/08/09/sARQBoefvGklHwC.png" >
-  </a>
+  <img src="https://i.loli.net/2021/08/09/sARQBoefvGklHwC.png" >
 </div>
 
 ## 运行源码

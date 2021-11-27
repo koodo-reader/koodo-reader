@@ -7,10 +7,8 @@ import axios from "axios";
 import Lottie from "react-lottie";
 import animationNew from "../../../assets/lotties/new.json";
 import animationSuccess from "../../../assets/lotties/success.json";
-import copy from "copy-text-to-clipboard";
 import StorageUtil from "../../../utils/storageUtil";
 import { isElectron } from "react-device-detect";
-import toast from "react-hot-toast";
 const newOptions = {
   loop: false,
   autoplay: true,
@@ -164,16 +162,6 @@ class UpdateInfo extends React.Component<UpdateInfoProps, UpdateInfoState> {
                 </div>
                 {this.state.updateLog && (
                   <>
-                    <div
-                      className="new-version-copy"
-                      onClick={() => {
-                        copy("https://koodo.960960.xyz/en/download");
-                        toast.success(this.props.t("Copy Successfully"));
-                      }}
-                    >
-                      <Trans>Copy Link</Trans>
-                    </div>
-
                     <p className="update-dialog-new-title">
                       <Trans>What's New</Trans>
                     </p>
