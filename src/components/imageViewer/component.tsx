@@ -19,29 +19,19 @@ class ImageViewer extends React.Component<ImageViewerProps, ImageViewerStates> {
   }
 
   componentDidMount() {
-    if (this.props.currentBook.format === "EPUB") {
-      this.props.rendition.on("rendered", () => {
-        let iframe = document.getElementsByTagName("iframe")[0];
-        if (!iframe) return;
-        let doc = iframe.contentDocument;
-        if (!doc) {
-          return;
-        }
-
-        StyleUtil.addDefaultCss();
-        doc.addEventListener("click", this.showImage, false);
-      });
-    } else {
+    console.log("jhjfh", this.props.rendition);
+    this.props.rendition.on("rendered", () => {
+      console.log("asfasdgs");
       let iframe = document.getElementsByTagName("iframe")[0];
       if (!iframe) return;
       let doc = iframe.contentDocument;
       if (!doc) {
         return;
       }
-
+      console.log("45345");
       StyleUtil.addDefaultCss();
       doc.addEventListener("click", this.showImage, false);
-    }
+    });
   }
 
   showImage = (event: any) => {
