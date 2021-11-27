@@ -17,6 +17,7 @@ import StyleUtil from "../../utils/readUtils/styleUtil";
 import "./index.css";
 import { HtmlMouseEvent } from "../../utils/mouseEvent";
 import untar from "js-untar";
+import ImageViewer from "../../components/imageViewer";
 
 declare var window: any;
 
@@ -123,6 +124,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       this.props.currentBook.key,
       this.state.readerMode
     );
+    console.log(rendition.getChapter());
     this.props.handleHtmlBook({
       key: this.props.currentBook.key,
       chapters: rendition.getChapter(),
@@ -353,6 +355,16 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
             .props.currentBook.key ? (
           <BackgroundWidget />
         ) : null}
+        {this.props.htmlBook && (
+          <ImageViewer
+            {...{
+              isShow: this.props.isShow,
+              rendition: this.props.htmlBook.rendition,
+              handleEnterReader: this.props.handleEnterReader,
+              handleLeaveReader: this.props.handleLeaveReader,
+            }}
+          />
+        )}
       </>
     );
   }
