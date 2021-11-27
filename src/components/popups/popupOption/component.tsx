@@ -11,6 +11,7 @@ import StorageUtil from "../../../utils/storageUtil";
 import { isElectron } from "react-device-detect";
 import toast from "react-hot-toast";
 import { getSelection } from "../../../utils/mouseEvent";
+import copy from "copy-text-to-clipboard";
 declare var window: any;
 
 class PopupOption extends React.Component<PopupOptionProps> {
@@ -35,10 +36,7 @@ class PopupOption extends React.Component<PopupOptionProps> {
     if (!iframe) return;
     let doc = iframe.contentDocument;
     if (!doc) return;
-    let text = doc.execCommand("copy", false);
-    !text
-      ? console.log("failed to copy text to clipboard")
-      : console.log("copied!");
+    copy(getSelection());
     this.props.handleOpenMenu(false);
     doc.getSelection()?.empty();
     toast.success(this.props.t("Copy Successfully"));

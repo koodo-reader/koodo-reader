@@ -29,14 +29,10 @@ class DropdownList extends React.Component<
   }
   componentDidMount() {
     //使下拉菜单选中预设的值
-    if (
-      isElectron &&
-      navigator.appVersion.indexOf("NT 6.1") === -1 &&
-      navigator.appVersion.indexOf("NT 5.1") === -1 &&
-      navigator.appVersion.indexOf("NT 6.0") === -1
-    ) {
+    if (isElectron) {
       const fontList = window.require("font-list");
       fontList.getFonts({ disableQuoting: true }).then((result) => {
+        if (!result || result.length === 0) return;
         dropdownList[0].option = result;
         dropdownList[0].option.push("Built-in font");
         this.setState(
