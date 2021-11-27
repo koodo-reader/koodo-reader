@@ -3,7 +3,6 @@ import "./background.css";
 import { BackgroundProps, BackgroundState } from "./interface";
 import StorageUtil from "../../utils/storageUtil";
 import { Trans } from "react-i18next";
-import BackgroundWidget from "../../components/backgroundWidget";
 class Background extends React.Component<BackgroundProps, BackgroundState> {
   isFirst: Boolean;
   constructor(props: any) {
@@ -18,8 +17,6 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
       scale: StorageUtil.getReaderConfig("scale") || 1,
       isHideFooter: StorageUtil.getReaderConfig("isHideFooter") === "yes",
       isHideHeader: StorageUtil.getReaderConfig("isHideHeader") === "yes",
-      isHideBackground:
-        StorageUtil.getReaderConfig("isHideBackground") === "yes",
     };
     this.isFirst = true;
   }
@@ -30,7 +27,8 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
       nextProps.currentEpub.rendition.location &&
       this.props.currentEpub.rendition
     ) {
-      const currentLocation = this.props.currentEpub.rendition.currentLocation();
+      const currentLocation =
+        this.props.currentEpub.rendition.currentLocation();
       if (!currentLocation.start) {
         return;
       }
@@ -126,7 +124,6 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
               </Trans>
             </p>
           )}
-        {this.state.isHideBackground ? null : <BackgroundWidget />}
       </div>
     );
   }
