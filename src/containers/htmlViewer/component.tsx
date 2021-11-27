@@ -18,6 +18,7 @@ import "./index.css";
 import { HtmlMouseEvent } from "../../utils/mouseEvent";
 import untar from "js-untar";
 import ImageViewer from "../../components/imageViewer";
+import Chinese from "chinese-s2t";
 
 declare var window: any;
 
@@ -124,13 +125,36 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       this.props.currentBook.key,
       this.state.readerMode
     );
-    console.log(rendition.getChapter());
+
     this.props.handleHtmlBook({
       key: this.props.currentBook.key,
       chapters: rendition.getChapter(),
       subitems: [],
       rendition: rendition,
     });
+    if (
+      StorageUtil.getReaderConfig("convertChinese") &&
+      StorageUtil.getReaderConfig("convertChinese") !== "Default"
+    ) {
+      let iframe = document.getElementsByTagName("iframe")[0];
+      if (!iframe) return;
+      let doc = iframe.contentDocument;
+      if (!doc) {
+        return;
+      }
+      if (
+        StorageUtil.getReaderConfig("convertChinese") ===
+        "Simplified To Traditional"
+      ) {
+        doc.querySelectorAll("p").forEach((item) => {
+          item.innerText = Chinese.s2t(item.innerText);
+        });
+      } else {
+        doc.querySelectorAll("p").forEach((item) => {
+          item.innerText = Chinese.t2s(item.innerText);
+        });
+      }
+    }
   };
   handleCbr = async (result: ArrayBuffer) => {
     let unrar = new Unrar(result);

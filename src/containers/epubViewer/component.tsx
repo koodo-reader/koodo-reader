@@ -7,7 +7,8 @@ import StyleUtil from "../../utils/readUtils/styleUtil";
 import ImageViewer from "../../components/imageViewer";
 import Lottie from "react-lottie";
 import animationSiri from "../../assets/lotties/siri.json";
-
+import Chinese from "chinese-s2t";
+import StorageUtil from "../../utils/storageUtil";
 const siriOptions = {
   loop: true,
   autoplay: true,
@@ -75,6 +76,23 @@ class EpubViewer extends React.Component<ViewAreaProps, ViewAreaStates> {
       }
       StyleUtil.addDefaultCss();
       this.props.rendition.themes.default(StyleUtil.getCustomCss(false));
+      if (
+        StorageUtil.getReaderConfig("convertChinese") &&
+        StorageUtil.getReaderConfig("convertChinese") !== "Default"
+      ) {
+        if (
+          StorageUtil.getReaderConfig("convertChinese") ===
+          "Simplified To Traditional"
+        ) {
+          doc.querySelectorAll("p").forEach((item) => {
+            item.innerText = Chinese.s2t(item.innerText);
+          });
+        } else {
+          doc.querySelectorAll("p").forEach((item) => {
+            item.innerText = Chinese.t2s(item.innerText);
+          });
+        }
+      }
     });
     this.props.rendition.on("selected", (cfiRange: any, contents: any) => {
       var range = contents.range(cfiRange);

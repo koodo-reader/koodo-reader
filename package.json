@@ -17,6 +17,7 @@
     "adm-zip": "^0.5.2",
     "axios": "^0.19.2",
     "chardet": "^1.3.0",
+    "chinese-s2t": "^1.0.0",
     "copy-text-to-clipboard": "^2.2.0",
     "electron-google-analytics": "^1.0.2",
     "electron-is-dev": "^1.1.0",

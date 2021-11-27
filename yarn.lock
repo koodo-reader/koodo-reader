@@ -3780,6 +3780,11 @@ check-types@^11.1.1:
   resolved "https://registry.npm.taobao.org/check-types/download/check-types-11.1.2.tgz#86a7c12bf5539f6324eb0e70ca8896c0e38f3e2f"
   integrity sha1-hqfBK/VTn2Mk6w5wyoiWwOOPPi8=
 
+chinese-s2t@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/chinese-s2t/-/chinese-s2t-1.0.0.tgz#d3bf5c7990d68fe33ca26e0cfca0d2358554dde8"
+  integrity sha1-079ceZDWj+M8om4M/KDSNYVU3eg=
+
 chokidar@^2.1.8:
   version "2.1.8"
   resolved "https://registry.nlark.com/chokidar/download/chokidar-2.1.8.tgz#804b3a7b6a99358c3c5c61e71d8728f041cff917"
