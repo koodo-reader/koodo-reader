@@ -93,7 +93,7 @@
   "Bind": "Authorize",
   "Token": "Account",
   "Book not exist": "Book not exist",
-  "Token Info": "Please copy the following link and open in your browser to authorize your account, and fill the following box with the token",
+  "Token Info": "Please authorize your account, and fill the following box with the token",
   "Copy Link": "Copy Link",
   "Copy Token": "Copy Token",
   "Copied": "Copied",

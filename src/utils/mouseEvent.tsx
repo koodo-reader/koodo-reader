@@ -104,7 +104,6 @@ const bindEvent = (
     "mousewheel",
     (event) => {
       if (readerMode === "scroll") {
-        console.log("gasgs");
         rendition.record();
       } else {
         mouseChrome(rendition, event.wheelDelta);

@@ -33,6 +33,7 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
       this.setState({
         chapters: this.props.htmlBook.chapters,
       });
+    // console.log(this.props.htmlBook.chapters);
   }
   handleJump(event: any) {
     event.preventDefault();
@@ -41,8 +42,8 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
       this.props.currentEpub.rendition.display(href);
     } else {
       let id = href.substr(1);
-      let title = this.state.chapters[_.findIndex(this.state.chapters, { id })]
-        .label;
+      let title =
+        this.state.chapters[_.findIndex(this.state.chapters, { id })].label;
       this.props.htmlBook.rendition.goToChapter(title);
       this.props.handleCurrentChapter(title);
     }
