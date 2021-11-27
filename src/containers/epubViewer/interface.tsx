@@ -18,7 +18,6 @@ export interface ViewAreaProps {
   handleReadingEpub: (epub: object) => void;
 }
 export interface ViewAreaStates {
-  loading: boolean;
   cfiRange: any;
   contents: any;
   // rendition: any;

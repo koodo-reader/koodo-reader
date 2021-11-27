@@ -6,19 +6,9 @@ import Reader from "../../containers/epubReader";
 import { withRouter } from "react-router-dom";
 import _ from "underscore";
 import BookUtil from "../../utils/fileUtils/bookUtil";
-import Lottie from "react-lottie";
 import "../../assets/styles/reset.css";
-import animationSiri from "../../assets/lotties/siri.json";
 import toast, { Toaster } from "react-hot-toast";
 
-const siriOptions = {
-  loop: true,
-  autoplay: true,
-  animationData: animationSiri,
-  rendererSettings: {
-    preserveAspectRatio: "xMidYMid slice",
-  },
-};
 declare var window: any;
 
 class EpubReader extends React.Component<EpubReaderProps, EpubReaderState> {
@@ -59,11 +49,7 @@ class EpubReader extends React.Component<EpubReaderProps, EpubReaderState> {
 
   render() {
     if (!this.props.isReading) {
-      return (
-        <div className="spinner">
-          <Lottie options={siriOptions} height={100} width={300} />
-        </div>
-      );
+      return null;
     }
     return (
       <>
