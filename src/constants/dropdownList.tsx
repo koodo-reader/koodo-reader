@@ -25,6 +25,16 @@ export const dropdownList = [
     value: "textAlign",
     option: ["left", "justify", "right"],
   },
+  {
+    id: 4,
+    title: "Chinese Coversion",
+    value: "convertChinese",
+    option: [
+      "Default",
+      "Simplified To Traditional",
+      "Traditional To Simplified",
+    ],
+  },
 ];
 export const speedList = {
   id: 3,
