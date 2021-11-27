@@ -24,4 +24,5 @@ export interface ReaderState {
   time: number;
   scale: string;
   margin: number;
+  isHideBackground: boolean;
 }

@@ -1,6 +1,6 @@
 import React from "react";
 import EpubViewer from "../epubViewer";
-import Background from "../epubBackground";
+import PageWidget from "../pageWidget";
 import SettingPanel from "../panels/settingPanel";
 import NavigationPanel from "../panels/navigationPanel";
 import OperationPanel from "../panels/operationPanel";
@@ -9,6 +9,7 @@ import { ReaderProps, ReaderState } from "./interface";
 import { EpubMouseEvent } from "../../utils/mouseEvent";
 import StorageUtil from "../../utils/storageUtil";
 import ReadingTime from "../../utils/readUtils/readingTime";
+import Background from "../../components/background";
 let lock = false;
 class Reader extends React.Component<ReaderProps, ReaderState> {
   messageTimer!: NodeJS.Timeout;
@@ -33,6 +34,8 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
       isPreventTrigger:
         StorageUtil.getReaderConfig("isPreventTrigger") === "yes",
       readerMode: StorageUtil.getReaderConfig("readerMode") || "double",
+      isHideBackground:
+        StorageUtil.getReaderConfig("isHideBackground") === "yes",
     };
   }
   componentWillMount() {
@@ -402,8 +405,9 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         >
           <span className="icon-grid reader-setting-icon"></span>
         </div>
+        {this.state.isHideBackground ? null : <Background />}
 
-        <Background {...{ time: this.state.time }} />
+        <PageWidget {...{ time: this.state.time }} />
       </div>
     );
   }
