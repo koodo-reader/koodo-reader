@@ -7,4 +7,5 @@ export interface DropdownListState {
   currentFontFamilyIndex: number;
   currentLineHeightIndex: number;
   currentTextAlignIndex: number;
+  chineseConversionIndex: number;
 }
