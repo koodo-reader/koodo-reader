@@ -11,7 +11,7 @@ import { xmlBookTagFilter, xmlBookToObj } from "../../utils/fileUtils/xmlUtil";
 import StorageUtil from "../../utils/storageUtil";
 import RecordLocation from "../../utils/readUtils/recordLocation";
 import { mimetype } from "../../constants/mimetype";
-import BackgroundWidget from "../../components/backgroundWidget";
+import BackgroundWidget from "../../components/background";
 import toast from "react-hot-toast";
 import StyleUtil from "../../utils/readUtils/styleUtil";
 import "./index.css";
@@ -316,6 +316,12 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     reader.readAsText(blob, "UTF-8");
   };
   render() {
+    const imageViewerProps = {
+      isShow: this.props.isShow,
+      rendition: this.props.rendition,
+      handleEnterReader: this.props.handleEnterReader,
+      handleLeaveReader: this.props.handleLeaveReader,
+    };
     return (
       <>
         <div
@@ -355,16 +361,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
             .props.currentBook.key ? (
           <BackgroundWidget />
         ) : null}
-        {this.props.htmlBook && (
-          <ImageViewer
-            {...{
-              isShow: this.props.isShow,
-              rendition: this.props.htmlBook.rendition,
-              handleEnterReader: this.props.handleEnterReader,
-              handleLeaveReader: this.props.handleLeaveReader,
-            }}
-          />
-        )}
+        {this.props.htmlBook && <ImageViewer {...imageViewerProps} />}
       </>
     );
   }
