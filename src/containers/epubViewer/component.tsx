@@ -5,18 +5,9 @@ import RecordLocation from "../../utils/readUtils/recordLocation";
 import BookmarkModel from "../../model/Bookmark";
 import StyleUtil from "../../utils/readUtils/styleUtil";
 import ImageViewer from "../../components/imageViewer";
-import Lottie from "react-lottie";
-import animationSiri from "../../assets/lotties/siri.json";
 import Chinese from "chinese-s2t";
 import StorageUtil from "../../utils/storageUtil";
-const siriOptions = {
-  loop: true,
-  autoplay: true,
-  animationData: animationSiri,
-  rendererSettings: {
-    preserveAspectRatio: "xMidYMid slice",
-  },
-};
+
 declare var window: any;
 
 class EpubViewer extends React.Component<ViewAreaProps, ViewAreaStates> {
@@ -27,7 +18,6 @@ class EpubViewer extends React.Component<ViewAreaProps, ViewAreaStates> {
       cfiRange: null,
       contents: null,
       rect: null,
-      loading: true,
     };
     this.isFirst = true;
   }
@@ -67,7 +57,6 @@ class EpubViewer extends React.Component<ViewAreaProps, ViewAreaStates> {
       this.isFirst = false;
     });
     this.props.rendition.on("rendered", () => {
-      this.setState({ loading: false });
       let iframe = document.getElementsByTagName("iframe")[0];
       if (!iframe) return;
       let doc = iframe.contentDocument;
@@ -125,11 +114,6 @@ class EpubViewer extends React.Component<ViewAreaProps, ViewAreaStates> {
         <ImageViewer {...imageViewerProps} />
 
         <PopupMenu {...popupMenuProps} />
-        {this.state.loading ? (
-          <div className="spinner">
-            <Lottie options={siriOptions} height={100} width={300} />
-          </div>
-        ) : null}
         <>
           {this.props.isShowBookmark ? <div className="bookmark"></div> : null}
         </>
