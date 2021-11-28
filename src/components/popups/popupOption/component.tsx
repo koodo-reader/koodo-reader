@@ -12,6 +12,7 @@ import { isElectron } from "react-device-detect";
 import toast from "react-hot-toast";
 import { getSelection } from "../../../utils/mouseEvent";
 import copy from "copy-text-to-clipboard";
+import { getHightlightCoords } from "../../../utils/fileUtils/pdfUtil";
 declare var window: any;
 
 class PopupOption extends React.Component<PopupOptionProps> {
@@ -51,6 +52,10 @@ class PopupOption extends React.Component<PopupOptionProps> {
     let cfi = "";
     if (this.props.currentBook.format === "EPUB") {
       cfi = RecordLocation.getCfi(this.props.currentBook.key).cfi;
+    } else if (this.props.currentBook.format === "PDF") {
+      cfi = JSON.stringify(
+        RecordLocation.getPDFlocation(this.props.currentBook.md5)
+      );
     } else {
       cfi = JSON.stringify(
         RecordLocation.getScrollHeight(this.props.currentBook.key)
@@ -69,7 +74,10 @@ class PopupOption extends React.Component<PopupOptionProps> {
     let charRange = window.rangy
       .getSelection(iframe)
       .saveCharacterRanges(doc.body)[0];
-    let range = JSON.stringify(charRange);
+    let range =
+      this.props.currentBook.format === "PDF"
+        ? JSON.stringify(getHightlightCoords())
+        : JSON.stringify(charRange);
     let text = doc.getSelection()?.toString();
     if (!text) return;
     text = text.replace(/\s\s/g, "");

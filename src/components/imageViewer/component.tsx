@@ -19,7 +19,6 @@ class ImageViewer extends React.Component<ImageViewerProps, ImageViewerStates> {
   }
 
   componentDidMount() {
-    console.log(this.props.rendition);
     this.props.rendition.on("rendered", () => {
       let iframe = document.getElementsByTagName("iframe")[0];
       if (!iframe) return;

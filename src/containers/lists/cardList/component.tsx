@@ -49,6 +49,9 @@ class CardList extends React.Component<CardListProps, CardListStates> {
     }
     if (book.format === "EPUB") {
       RecordLocation.recordCfi(bookKey, cfi, percentage);
+    } else if (book.format === "PDF") {
+      let bookLocation = JSON.parse(cfi) || {};
+      RecordLocation.recordPDFlocation(book.md5, bookLocation);
     } else {
       let bookLocation = JSON.parse(cfi) || {};
       RecordLocation.recordScrollHeight(

@@ -43,7 +43,6 @@ export function handleFetchNotes() {
         noteArr = value;
       }
       let keyArr = AddTrash.getAllTrash();
-      console.log(noteArr, "noteArr");
       dispatch(handleNotes(handleKeyRemove(noteArr, keyArr)));
       dispatch(
         handleDigests(
