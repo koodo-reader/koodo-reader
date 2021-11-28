@@ -2,6 +2,7 @@ import StorageUtil from "./storageUtil";
 import { build } from "../../package.json";
 import md5 from "md5";
 import RecordLocation from "./readUtils/recordLocation";
+import { isElectron } from "react-device-detect";
 let Hammer = (window as any).Hammer;
 declare var document: any;
 export const getSelection = () => {
@@ -17,7 +18,7 @@ export const getSelection = () => {
 };
 let lock = false; //prevent from clicking too fast
 const arrowKeys = (rendition: any, keyCode: number) => {
-  if (getSelection()) {
+  if (document.querySelector(".editor-box")) {
     return;
   }
   // event.preventDefault();
@@ -29,7 +30,7 @@ const arrowKeys = (rendition: any, keyCode: number) => {
     lock = true;
     setTimeout(function () {
       lock = false;
-    }, 400);
+    }, 100);
     return false;
   }
   if (keyCode === 39 || keyCode === 40 || keyCode === 32) {
@@ -37,7 +38,17 @@ const arrowKeys = (rendition: any, keyCode: number) => {
     lock = true;
     setTimeout(function () {
       lock = false;
-    }, 400);
+    }, 100);
+    return false;
+  }
+  if (keyCode === 123) {
+    if (isElectron) {
+      window.require("electron").ipcRenderer.sendSync("switch-moyu", "ping");
+    }
+    lock = true;
+    setTimeout(function () {
+      lock = false;
+    }, 100);
     return false;
   }
 };
@@ -49,7 +60,7 @@ const mouseChrome = (rendition: any, wheelDelta: number) => {
     lock = true;
     setTimeout(function () {
       lock = false;
-    }, 400);
+    }, 100);
     return false;
   }
   if (wheelDelta < 0) {
@@ -57,7 +68,7 @@ const mouseChrome = (rendition: any, wheelDelta: number) => {
     lock = true;
     setTimeout(function () {
       lock = false;
-    }, 400);
+    }, 100);
     return false;
   }
 };
@@ -69,7 +80,7 @@ const gesture = (rendition: any, type: string) => {
     lock = true;
     setTimeout(function () {
       lock = false;
-    }, 400);
+    }, 100);
     return false;
   }
   if (type === "panright" || type === "pandown") {
@@ -77,7 +88,7 @@ const gesture = (rendition: any, type: string) => {
     lock = true;
     setTimeout(function () {
       lock = false;
-    }, 400);
+    }, 100);
     return false;
   }
 };
@@ -175,6 +186,9 @@ export const HtmlMouseEvent = (
   if (!doc) {
     return;
   }
-
+  // navigate with mousewheel
+  window.addEventListener("keydown", (event) => {
+    arrowKeys(rendition, event.keyCode);
+  });
   bindEvent(rendition, doc, key, readerMode);
 };

@@ -27,7 +27,6 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
   createNote() {
     let notes = (document.querySelector(".editor-box") as HTMLInputElement)
       .value;
-
     if (this.props.noteKey) {
       //编辑笔记
       this.props.notes.forEach((item) => {
