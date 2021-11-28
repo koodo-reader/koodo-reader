@@ -117,9 +117,9 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
         className="manager"
         onDragEnter={() => {
           !this.props.dragItem && this.handleDrag(true);
-          (document.getElementsByClassName(
-            "import-from-local"
-          )[0] as any).style.zIndex = "50";
+          (
+            document.getElementsByClassName("import-from-local")[0] as any
+          ).style.zIndex = "50";
         }}
       >
         {!this.props.dragItem && (

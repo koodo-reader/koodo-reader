@@ -37,6 +37,7 @@ class PopupOption extends React.Component<PopupOptionProps> {
     if (!iframe) return;
     let doc = iframe.contentDocument;
     if (!doc) return;
+    console.log(getSelection());
     copy(getSelection());
     this.props.handleOpenMenu(false);
     doc.getSelection()?.empty();
@@ -105,6 +106,19 @@ class PopupOption extends React.Component<PopupOptionProps> {
       this.props.handleFetchNotes();
       this.props.handleMenuMode("highlight");
     });
+    // let classes = [
+    //   "color-0",
+    //   "color-1",
+    //   "color-2",
+    //   "color-3",
+    //   "line-0",
+    //   "line-1",
+    //   "line-2",
+    //   "line-3",
+    // ];
+    // if (this.props.currentBook.format === "PDF") {
+    //   showHighlight(JSON.parse(range), classes[color]);
+    // }
   };
   handleJump = (url: string) => {
     isElectron

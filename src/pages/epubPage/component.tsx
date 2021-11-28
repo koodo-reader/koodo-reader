@@ -8,6 +8,7 @@ import _ from "underscore";
 import BookUtil from "../../utils/fileUtils/bookUtil";
 import "../../assets/styles/reset.css";
 import toast, { Toaster } from "react-hot-toast";
+import StorageUtil from "../../utils/storageUtil";
 
 declare var window: any;
 
@@ -19,6 +20,12 @@ class EpubReader extends React.Component<EpubReaderProps, EpubReaderState> {
   }
 
   componentWillMount() {
+    if (StorageUtil.getReaderConfig("isMergeWord") === "yes") {
+      console.log(document.querySelector("body"));
+      document
+        .querySelector("body")
+        ?.setAttribute("style", "background-color: rgba(0,0,0,0)");
+    }
     let url = document.location.href.split("/");
     let key = url[url.length - 1].split("?")[0];
 

@@ -33,7 +33,6 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
       this.setState({
         chapters: this.props.htmlBook.chapters,
       });
-    // console.log(this.props.htmlBook.chapters);
   }
   handleJump(event: any) {
     event.preventDefault();

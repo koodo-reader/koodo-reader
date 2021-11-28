@@ -7,11 +7,8 @@ import _ from "underscore";
 import BookUtil from "../../utils/fileUtils/bookUtil";
 import BackToMain from "../../components/backToMain";
 import PopupMenu from "../../components/popups/popupMenu";
-import {
-  showHighlight,
-  getHightlightCoords,
-} from "../../utils/fileUtils/pdfUtil";
-
+import RecordLocation from "../../utils/readUtils/recordLocation";
+import { Toaster } from "react-hot-toast";
 class Viewer extends React.Component<ViewerProps, ViewerState> {
   epub: any;
   constructor(props: ViewerProps) {
@@ -60,6 +57,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       let doc: any =
         iframe.contentWindow || iframe.contentDocument?.defaultView;
       this.setState({ loading: false });
+
       doc.document.addEventListener("mouseup", () => {
         if (!doc!.getSelection()) return;
         var rect = doc!.getSelection()!.getRangeAt(0).getBoundingClientRect();
@@ -88,8 +86,11 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
               rect: this.state.rect,
               pageWidth: this.state.pageWidth,
               pageHeight: this.state.pageHeight,
-              chapterIndex: 0,
-              chapter: "test",
+              chapterIndex: RecordLocation.getPDFlocation(
+                this.props.currentBook.md5
+              ).page,
+              chapter: RecordLocation.getPDFlocation(this.props.currentBook.md5)
+                .page,
             }}
           />
         )}
@@ -101,7 +102,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         >
           Loading
         </iframe>
-        <BackToMain />
+        <BackToMain /> <Toaster />
       </div>
     );
   }

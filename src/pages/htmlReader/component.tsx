@@ -36,6 +36,14 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
       readerMode: StorageUtil.getReaderConfig("readerMode") || "double",
     };
   }
+  componentDidMount() {
+    if (StorageUtil.getReaderConfig("isMergeWord") === "yes") {
+      console.log(document.querySelector("body"));
+      document
+        .querySelector("body")
+        ?.setAttribute("style", "background-color: rgba(0,0,0,0)");
+    }
+  }
   componentWillMount() {
     let url = document.location.href.split("/");
     let key = url[url.length - 1].split("?")[0];

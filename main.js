@@ -68,6 +68,12 @@ app.on("ready", () => {
 
   ipcMain.handle("open-book", (event, config) => {
     let { url, isMergeWord, isFullscreen, isPreventSleep } = config;
+    store.set({
+      url,
+      isMergeWord: isMergeWord ? isMergeWord : "no",
+      isFullscreen: isFullscreen ? isFullscreen : "no",
+      isPreventSleep: isPreventSleep ? isPreventSleep : "no",
+    });
     let id;
     if (isPreventSleep === "yes") {
       id = powerSaveBlocker.start("prevent-display-sleep");
@@ -123,6 +129,47 @@ app.on("ready", () => {
   });
   ipcMain.on("user-data", (event, arg) => {
     event.returnValue = dirPath;
+  });
+  ipcMain.on("switch-moyu", (event, arg) => {
+    let id;
+    if (store.get("isPreventSleep") === "yes") {
+      id = powerSaveBlocker.start("prevent-display-sleep");
+      console.log(powerSaveBlocker.isStarted(id));
+    }
+    if (!readerWindow.isDestroyed()) {
+      readerWindow.close();
+      Object.assign(options, {
+        width: parseInt(store.get("windowWidth")),
+        height: parseInt(store.get("windowHeight")),
+        x: parseInt(store.get("windowX")),
+        y: parseInt(store.get("windowY")),
+        frame: store.get("isMergeWord") !== "yes" ? false : true,
+        hasShadow: store.get("isMergeWord") !== "yes" ? false : true,
+        transparent: store.get("isMergeWord") !== "yes" ? true : false,
+      });
+      store.set(
+        "isMergeWord",
+        store.get("isMergeWord") !== "yes" ? "yes" : "no"
+      );
+      readerWindow = new BrowserWindow(options);
+      readerWindow.loadURL(store.get("url"));
+      readerWindow.on("close", (event) => {
+        if (!readerWindow.isDestroyed()) {
+          let bounds = readerWindow.getBounds();
+          store.set({
+            windowWidth: bounds.width,
+            windowHeight: bounds.height,
+            windowX: bounds.x,
+            windowY: bounds.y,
+          });
+        }
+        if (store.get("isPreventSleep") && !readerWindow.isDestroyed()) {
+          id && powerSaveBlocker.stop(id);
+        }
+        // readerWindow && readerWindow.destroy();
+        // readerWindow = null;
+      });
+    }
   });
   ipcMain.on("get-dirname", (event, arg) => {
     event.returnValue = __dirname;

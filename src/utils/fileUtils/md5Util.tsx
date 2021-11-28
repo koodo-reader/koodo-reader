@@ -1,4 +1,5 @@
 import SparkMD5 from "spark-md5";
+
 declare var window: any;
 var pdfjsLib = window["pdfjs-dist/build/pdf"];
 export const fetchMD5 = (file: any) => {

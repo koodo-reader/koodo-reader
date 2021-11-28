@@ -112,22 +112,24 @@ class ImageViewer extends React.Component<ImageViewerProps, ImageViewerStates> {
   handleZoomIn = () => {
     let image: any = document.querySelector(".image");
     if (image.style.width === "200vw" || image.style.height === "200vh") return;
+    console.log(image.style);
     this.setState({ zoomIndex: this.state.zoomIndex + 1 }, () => {
       if (this.state.imageRatio === "horizontal") {
         image.style.width = `${60 + this.state.zoomIndex * 10}vw`;
       } else {
-        image.style.height = `${90 + 10 * this.state.zoomIndex}vh`;
+        image.style.height = `${100 + 10 * this.state.zoomIndex}vh`;
       }
     });
   };
   handleZoomOut = () => {
     let image: any = document.querySelector(".image");
     if (image.style.width === "10vw" || image.style.height === "10vh") return;
+    console.log(image.style.height);
     this.setState({ zoomIndex: this.state.zoomIndex - 1 }, () => {
       if (this.state.imageRatio === "horizontal") {
         image.style.width = `${60 + this.state.zoomIndex * 10}vw`;
       } else {
-        image.style.height = `${90 + 10 * this.state.zoomIndex}vh`;
+        image.style.height = `${100 + 10 * this.state.zoomIndex}vh`;
       }
     });
   };
@@ -172,7 +174,7 @@ class ImageViewer extends React.Component<ImageViewerProps, ImageViewerStates> {
           style={
             this.state.imageRatio === "horizontal"
               ? { width: "60vw" }
-              : { height: "90vh" }
+              : { height: "100vh" }
           }
         />
         <div className="image-operation">
