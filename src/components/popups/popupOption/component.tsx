@@ -26,7 +26,7 @@ class PopupOption extends React.Component<PopupOptionProps> {
     let posY = popupMenu?.style.top;
     posX = parseInt(posX.substr(0, posX.length - 2));
     posY = parseInt(posY.substr(0, posY.length - 2));
-    let rightEdge = this.props.currentEpub.rendition._layout.width - 310;
+    let rightEdge = this.props.pageWidth - 310;
     if (posX > rightEdge) {
       popupMenu.setAttribute("style", `left:${rightEdge}px;top:${posY}px`);
     }
@@ -48,18 +48,14 @@ class PopupOption extends React.Component<PopupOptionProps> {
   };
   handleDigest = () => {
     let bookKey = this.props.currentBook.key;
-    const currentLocation = this.props.currentEpub.rendition.currentLocation();
-    let chapterHref = currentLocation.start.href;
-    let chapterIndex = currentLocation.start.index;
-    let chapter = "Unknown Chapter";
-    let currentChapter = this.props.flattenChapters.filter(
-      (item: any) => item.href.split("#")[0] === chapterHref
-    )[0];
-    if (currentChapter) {
-      chapter = currentChapter.label.trim(" ");
+    let cfi = "";
+    if (this.props.currentBook.format === "EPUB") {
+      cfi = RecordLocation.getCfi(this.props.currentBook.key).cfi;
+    } else {
+      cfi = JSON.stringify(
+        RecordLocation.getScrollHeight(this.props.currentBook.key)
+      );
     }
-    const cfi = RecordLocation.getCfi(this.props.currentBook.key).cfi;
-
     let percentage = RecordLocation.getCfi(this.props.currentBook.key)
       .percentage
       ? RecordLocation.getCfi(this.props.currentBook.key).percentage
@@ -83,8 +79,8 @@ class PopupOption extends React.Component<PopupOptionProps> {
     text = text.replace(/\f/g, "");
     let digest = new Note(
       bookKey,
-      chapter,
-      chapterIndex,
+      this.props.chapter,
+      this.props.chapterIndex,
       text,
       cfi,
       range,

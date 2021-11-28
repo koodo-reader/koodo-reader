@@ -90,6 +90,7 @@ const bindEvent = (
 ) => {
   doc.addEventListener("keydown", (event) => {
     arrowKeys(rendition, event.keyCode);
+    //使用Key判断是否是htmlBook
     if (key) {
       let postion = rendition.getPosition();
       RecordLocation.recordScrollHeight(

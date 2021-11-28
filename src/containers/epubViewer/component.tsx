@@ -15,9 +15,12 @@ class EpubViewer extends React.Component<ViewAreaProps, ViewAreaStates> {
   constructor(props: ViewAreaProps) {
     super(props);
     this.state = {
-      cfiRange: null,
-      contents: null,
+      // cfiRange: null,
       rect: null,
+      chapterIndex: 0,
+      chapter: "",
+      pageWidth: 0,
+      pageHeight: 0,
     };
     this.isFirst = true;
   }
@@ -63,6 +66,22 @@ class EpubViewer extends React.Component<ViewAreaProps, ViewAreaStates> {
       if (!doc) {
         return;
       }
+      const currentLocation = this.props.rendition.currentLocation();
+      let chapterHref = currentLocation.start.href;
+      if (!currentLocation || !currentLocation.start) return;
+      this.setState({
+        chapterIndex: currentLocation.start.index,
+        pageWidth: this.props.currentEpub.rendition._layout.width,
+        pageHeight: this.props.currentEpub.rendition._layout.height,
+      });
+      let chapter = "Unknown Chapter";
+      let currentChapter = this.props.flattenChapters.filter(
+        (item: any) => item.href.split("#")[0] === chapterHref
+      )[0];
+      if (currentChapter) {
+        chapter = currentChapter.label.trim(" ");
+      }
+      this.setState({ chapter });
       StyleUtil.addDefaultCss();
       this.props.rendition.themes.default(StyleUtil.getCustomCss(false));
       if (
@@ -86,7 +105,7 @@ class EpubViewer extends React.Component<ViewAreaProps, ViewAreaStates> {
     this.props.rendition.on("selected", (cfiRange: any, contents: any) => {
       var range = contents.range(cfiRange);
       var rect = range.getBoundingClientRect();
-      this.setState({ cfiRange, contents, rect });
+      this.setState({ rect });
     });
     this.props.rendition.themes.default(StyleUtil.getCustomCss(false));
     this.props.rendition.display(
@@ -99,9 +118,11 @@ class EpubViewer extends React.Component<ViewAreaProps, ViewAreaStates> {
   render() {
     const popupMenuProps = {
       rendition: this.props.rendition,
-      cfiRange: this.state.cfiRange,
-      contents: this.state.contents,
       rect: this.state.rect,
+      pageWidth: this.state.pageWidth,
+      pageHeight: this.state.pageHeight,
+      chapterIndex: this.state.chapterIndex,
+      chapter: this.state.chapter,
     };
     const imageViewerProps = {
       isShow: this.props.isShow,

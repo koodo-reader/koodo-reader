@@ -7,11 +7,12 @@ import BookUtil from "../../utils/fileUtils/bookUtil";
 import iconv from "iconv-lite";
 import chardet from "chardet";
 import rtfToHTML from "@iarna/rtf-to-html";
+import PopupMenu from "../../components/popups/popupMenu";
 import { xmlBookTagFilter, xmlBookToObj } from "../../utils/fileUtils/xmlUtil";
 import StorageUtil from "../../utils/storageUtil";
 import RecordLocation from "../../utils/readUtils/recordLocation";
 import { mimetype } from "../../constants/mimetype";
-import BackgroundWidget from "../../components/background";
+import Background from "../../components/background";
 import toast from "react-hot-toast";
 import StyleUtil from "../../utils/readUtils/styleUtil";
 import "./index.css";
@@ -19,6 +20,7 @@ import { HtmlMouseEvent } from "../../utils/mouseEvent";
 import untar from "js-untar";
 import ImageViewer from "../../components/imageViewer";
 import Chinese from "chinese-s2t";
+import _ from "underscore";
 
 declare var window: any;
 
@@ -33,6 +35,9 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
   constructor(props: ViewerProps) {
     super(props);
     this.state = {
+      cfiRange: null,
+      contents: null,
+      rect: null,
       key: "",
       isFirst: true,
       scale: StorageUtil.getReaderConfig("scale") || 1,
@@ -41,10 +46,18 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           .chapterTitle || "",
       readerMode: StorageUtil.getReaderConfig("readerMode") || "double",
       margin: parseInt(StorageUtil.getReaderConfig("margin")) || 30,
+      chapterIndex: 0,
+      chapter: "",
+      pageWidth: 0,
+      pageHeight: 0,
     };
     this.lock = false;
   }
-
+  componentWillMount() {
+    this.props.handleFetchBookmarks();
+    this.props.handleFetchNotes();
+    this.props.handleFetchBooks();
+  }
   componentDidMount() {
     this.handleRenderBook();
 
@@ -104,15 +117,15 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
   handleRest = (rendition: any) => {
     StyleUtil.addDefaultCss();
     rendition.setStyle(StyleUtil.getCustomCss(true));
-    let bookLocation = RecordLocation.getScrollHeight(
-      this.props.currentBook.key
-    );
+    let bookLocation: { text: string; count: string; chapterTitle: string } =
+      RecordLocation.getScrollHeight(this.props.currentBook.key);
 
     rendition.goToPosition(
       bookLocation.text,
       bookLocation.chapterTitle,
       bookLocation.count
     );
+
     window.frames[0].document.addEventListener("click", (event) => {
       this.props.handleLeaveReader("left");
       this.props.handleLeaveReader("right");
@@ -132,16 +145,39 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       subitems: [],
       rendition: rendition,
     });
+    this.setState({
+      pageWidth: rendition.getPageSize().width,
+      pageHeight: rendition.getPageSize().height,
+    });
+    if (this.props.currentBook.format.startsWith("CB")) {
+      this.setState({
+        chapter:
+          this.props.htmlBook.chapters[parseInt(bookLocation.count)].label,
+        chapterIndex: parseInt(bookLocation.count),
+      });
+    } else {
+      this.setState({
+        chapter: bookLocation.chapterTitle,
+        chapterIndex: _.findLastIndex(this.props.htmlBook.chapters, {
+          label: bookLocation.chapterTitle,
+        }),
+      });
+    }
+    let iframe = document.getElementsByTagName("iframe")[0];
+    if (!iframe) return;
+    let doc = iframe.contentDocument;
+    if (!doc) {
+      return;
+    }
+    doc.addEventListener("mouseup", () => {
+      if (!doc!.getSelection()) return;
+      var rect = doc!.getSelection()!.getRangeAt(0).getBoundingClientRect();
+      this.setState({ rect });
+    });
     if (
       StorageUtil.getReaderConfig("convertChinese") &&
       StorageUtil.getReaderConfig("convertChinese") !== "Default"
     ) {
-      let iframe = document.getElementsByTagName("iframe")[0];
-      if (!iframe) return;
-      let doc = iframe.contentDocument;
-      if (!doc) {
-        return;
-      }
       if (
         StorageUtil.getReaderConfig("convertChinese") ===
         "Simplified To Traditional"
@@ -377,8 +413,20 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         ></div>
         {StorageUtil.getReaderConfig("isHideBackground") === "yes" ? null : this
             .props.currentBook.key ? (
-          <BackgroundWidget />
+          <Background />
         ) : null}
+        {this.props.htmlBook && (
+          <PopupMenu
+            {...{
+              rendition: this.props.htmlBook.rendition,
+              rect: this.state.rect,
+              pageWidth: this.state.pageWidth,
+              pageHeight: this.state.pageHeight,
+              chapterIndex: this.state.chapterIndex,
+              chapter: this.state.chapter,
+            }}
+          />
+        )}
         {this.props.htmlBook && (
           <ImageViewer
             {...{
