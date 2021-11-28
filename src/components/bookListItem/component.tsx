@@ -103,14 +103,16 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
         this.props.book.publisher !== "mobi" &&
         this.props.book.publisher !== "azw3" &&
         this.props.book.publisher !== "txt" ? (
-          <img
-            className="book-item-list-cover"
-            src={this.props.book.cover}
-            alt=""
-            onClick={() => {
-              this.handleJump();
-            }}
-          />
+          <div className="book-item-list-cover">
+            <img
+              className="book-item-list-cover-item"
+              src={this.props.book.cover}
+              alt=""
+              onClick={() => {
+                this.handleJump();
+              }}
+            />
+          </div>
         ) : (
           <div
             className="book-item-list-cover"

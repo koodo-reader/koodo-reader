@@ -119,7 +119,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     rendition.setStyle(StyleUtil.getCustomCss(true));
     let bookLocation: { text: string; count: string; chapterTitle: string } =
       RecordLocation.getScrollHeight(this.props.currentBook.key);
-
     rendition.goToPosition(
       bookLocation.text,
       bookLocation.chapterTitle,
@@ -150,10 +149,12 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       pageHeight: rendition.getPageSize().height,
     });
     if (this.props.currentBook.format.startsWith("CB")) {
+      console.log(this.props.htmlBook.chapters);
       this.setState({
         chapter:
-          this.props.htmlBook.chapters[parseInt(bookLocation.count)].label,
-        chapterIndex: parseInt(bookLocation.count),
+          this.props.htmlBook.chapters[parseInt(bookLocation.count || "0")]
+            .label,
+        chapterIndex: parseInt(bookLocation.count || "0"),
       });
     } else {
       this.setState({
