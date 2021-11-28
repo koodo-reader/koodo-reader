@@ -17,7 +17,8 @@ export interface ViewerProps {
   handleLeaveReader: (position: string) => void;
   handleEnterReader: (position: string) => void;
   handleFetchBooks: () => void;
-  handleCurrentChapter: (currentChapter) => void;
+  handleFetchNotes: () => void;
+  handleFetchBookmarks: () => void;
 }
 export interface ViewerState {
   key: string;
@@ -26,4 +27,11 @@ export interface ViewerState {
   chapterTitle: string;
   margin: number;
   readerMode: string;
+  chapter: string;
+  chapterIndex: number;
+  pageWidth: number;
+  pageHeight: number;
+  cfiRange: any;
+  contents: any;
+  rect: any;
 }
