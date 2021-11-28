@@ -60,8 +60,9 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     // 注意点一
     // 为了每次切换章节时都有与当前文档相关联的 pen
     let iframe = document.getElementsByTagName("iframe")[0];
+
     if (!iframe) return;
-    let doc = iframe.contentDocument;
+    let doc: any = iframe.contentDocument;
     if (!doc) return;
     this.highlighter = window.rangy.createHighlighter(doc);
     let classes = [
@@ -86,8 +87,10 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
             if (!doc) return;
             this.props.handleMenuMode("note");
             let sel = doc.getSelection();
+            console.log(doc, sel);
             if (!sel) return;
             let range = sel.getRangeAt(0);
+            console.log(range, "range");
             this.setState({ rect: range.getBoundingClientRect() }, () => {
               this.showMenu();
               this.handleClickHighlighter(event.currentTarget.dataset.key);
@@ -153,14 +156,12 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
   //渲染高亮
   renderHighlighters = () => {
     let highlighters: any = this.props.notes;
-    console.log(this.props.notes, "highlighters");
     if (!highlighters) return;
     let highlightersByChapter = highlighters.filter(
       (item: any) =>
         item.chapterIndex === this.props.chapterIndex &&
         item.chapter === this.props.chapter
     );
-    console.log(highlightersByChapter);
     let iframe = document.getElementsByTagName("iframe")[0];
     let iWin = iframe.contentWindow || iframe.contentDocument?.defaultView;
     this.highlighter && this.highlighter.removeAllHighlights(); // 为了避免下次反序列化失败，必须先清除已有的高亮
@@ -183,9 +184,9 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
           try {
             let temp = JSON.parse(item.range);
             temp = [temp];
-            window.rangy
-              .getSelection(iframe)
-              .restoreCharacterRanges(iframe.contentDocument, temp);
+            let doc = iframe.contentDocument;
+            console.log(doc, temp);
+            window.rangy.getSelection(iframe).restoreCharacterRanges(doc, temp);
           } catch (e) {
             console.warn(
               "Exception has been caught when restore character ranges."

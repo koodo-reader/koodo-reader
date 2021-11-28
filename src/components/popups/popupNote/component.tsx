@@ -9,6 +9,7 @@ import NoteTag from "../../noteTag";
 import NoteModel from "../../../model/Note";
 import { Trans } from "react-i18next";
 import toast from "react-hot-toast";
+import { getHightlightCoords } from "../../../utils/fileUtils/pdfUtil";
 declare var window: any;
 
 class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
@@ -48,8 +49,14 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
       let cfi = "";
       if (this.props.currentBook.format === "EPUB") {
         cfi = RecordLocation.getCfi(this.props.currentBook.key).cfi;
+      } else if (this.props.currentBook.format === "PDF") {
+        cfi = JSON.stringify(
+          RecordLocation.getPDFlocation(this.props.currentBook.md5)
+        );
       } else {
-        cfi = JSON.stringify(RecordLocation.getScrollHeight);
+        cfi = JSON.stringify(
+          RecordLocation.getScrollHeight(this.props.currentBook.key)
+        );
       }
 
       let iframe = document.getElementsByTagName("iframe")[0];
@@ -61,7 +68,10 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
       let charRange = window.rangy
         .getSelection(iframe)
         .saveCharacterRanges(doc.body)[0];
-      let range = JSON.stringify(charRange);
+      let range =
+        this.props.currentBook.format === "PDF"
+          ? JSON.stringify(getHightlightCoords())
+          : JSON.stringify(charRange);
       let text = doc.getSelection()?.toString();
       if (!text) {
         return;
