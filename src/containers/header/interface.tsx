@@ -18,6 +18,7 @@ export interface HeaderProps {
   handleDrag: (isDrag: boolean) => void;
   handleTipDialog: (isTipDialog: boolean) => void;
   handleTip: (tip: string) => void;
+  handleFetchBooks: () => void;
   t: (title: string) => string;
 }
 

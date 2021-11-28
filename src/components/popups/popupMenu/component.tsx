@@ -5,6 +5,7 @@ import PopupOption from "../popupOption";
 import PopupTrans from "../popupTrans";
 import { PopupMenuProps, PopupMenuStates } from "./interface";
 import StorageUtil from "../../../utils/storageUtil";
+let colors = ["#fac106", "#ebe702", "#0be603", "#0493e6"];
 
 declare var window: any;
 
@@ -41,6 +42,15 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
       let doc = iframe.contentDocument;
       if (!doc) return;
       doc.addEventListener("mousedown", this.openMenu);
+      if (this.props.currentBook.format === "PDF") {
+        setTimeout(() => {
+          this.renderHighlighters();
+        }, 1000);
+
+        doc.addEventListener("mousewheel", () => {
+          this.renderHighlighters();
+        });
+      }
     });
   }
   componentWillReceiveProps(nextProps: PopupMenuProps) {
@@ -80,23 +90,7 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
         ignoreWhiteSpace: true,
         elementTagName: "span",
         elementProperties: {
-          onclick: (event: any) => {
-            let iframe = document.getElementsByTagName("iframe")[0];
-            if (!iframe) return;
-            let doc = iframe.contentDocument;
-            if (!doc) return;
-            this.props.handleMenuMode("note");
-            let sel = doc.getSelection();
-            console.log(doc, sel);
-            if (!sel) return;
-            let range = sel.getRangeAt(0);
-            console.log(range, "range");
-            this.setState({ rect: range.getBoundingClientRect() }, () => {
-              this.showMenu();
-              this.handleClickHighlighter(event.currentTarget.dataset.key);
-              event.stopPropagation();
-            });
-          },
+          onclick: this.handleNoteClick,
         },
         onElementCreate: (element: any) => {
           element.dataset.key = this.key;
@@ -105,6 +99,70 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
       let applier = window.rangy.createClassApplier(item, config);
       this.highlighter.addClassApplier(applier);
     });
+  };
+  handleNoteClick = (event: any) => {
+    let iframe = document.getElementsByTagName("iframe")[0];
+    if (!iframe) return;
+    let doc = iframe.contentDocument;
+    if (!doc) return;
+    this.props.handleMenuMode("note");
+    let sel = doc.getSelection();
+    if (!sel) return;
+    let range = sel.getRangeAt(0);
+    sel.removeAllRanges();
+    sel.addRange(range);
+    this.setState({ rect: range.getBoundingClientRect() }, () => {
+      this.showMenu();
+      this.handleClickHighlighter(event.currentTarget.dataset.key);
+      event.stopPropagation();
+    });
+  };
+  handlePDFClick = (event: any) => {
+    this.props.handleMenuMode("note");
+    this.setState({ rect: event.currentTarget.getBoundingClientRect() }, () => {
+      this.showMenu();
+      this.handleClickHighlighter(event.currentTarget.getAttribute("key"));
+      event.stopPropagation();
+    });
+  };
+
+  showHighlight = (selected: any, colorCode: string, noteKey: string) => {
+    let iframe = document.getElementsByTagName("iframe")[0];
+    let iWin: any = iframe.contentWindow || iframe.contentDocument?.defaultView;
+    var pageIndex = selected.page;
+    if (!iWin.PDFViewerApplication.pdfViewer) return;
+    var page = iWin.PDFViewerApplication.pdfViewer.getPageView(pageIndex);
+    if (page && page.textLayer && page.textLayer.textLayerDiv) {
+      var pageElement = page.textLayer.textLayerDiv;
+
+      var viewport = page.viewport;
+      selected.coords.forEach((rect) => {
+        var bounds = viewport.convertToViewportRectangle(rect);
+        var el = iWin.document.createElement("div");
+        el.setAttribute(
+          "style",
+          "position: absolute;" +
+            "background-color: " +
+            colors[colorCode.split("-")[1]] +
+            "; left:" +
+            Math.min(bounds[0], bounds[2]) +
+            "px; top:" +
+            Math.min(bounds[1], bounds[3]) +
+            "px;" +
+            "width:" +
+            Math.abs(bounds[0] - bounds[2]) +
+            "px; height:" +
+            Math.abs(bounds[1] - bounds[3]) +
+            "px; z-index: 10;"
+        );
+        el.setAttribute("key", noteKey);
+        el.addEventListener("click", (event: any) => {
+          this.handlePDFClick(event);
+        });
+
+        pageElement.appendChild(el);
+      });
+    }
   };
   handleClickHighlighter = (key: string) => {
     let dialog: HTMLInputElement | null = document.querySelector(".editor-box");
@@ -163,6 +221,7 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
         item.chapter === this.props.chapter
     );
     let iframe = document.getElementsByTagName("iframe")[0];
+    if (!iframe || !iframe.contentWindow) return;
     let iWin = iframe.contentWindow || iframe.contentDocument?.defaultView;
     this.highlighter && this.highlighter.removeAllHighlights(); // 为了避免下次反序列化失败，必须先清除已有的高亮
 
@@ -182,18 +241,28 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
         //控制渲染指定图书的指定高亮
         if (item.bookKey === this.props.currentBook.key) {
           try {
-            let temp = JSON.parse(item.range);
-            temp = [temp];
-            let doc = iframe.contentDocument;
-            console.log(doc, temp);
-            window.rangy.getSelection(iframe).restoreCharacterRanges(doc, temp);
+            if (this.props.currentBook.format === "PDF") {
+              this.showHighlight(
+                JSON.parse(item.range),
+                classes[item.color],
+                item.key
+              );
+            } else {
+              let temp = JSON.parse(item.range);
+              temp = [temp];
+              let doc = iframe.contentDocument;
+              window.rangy
+                .getSelection(iframe)
+                .restoreCharacterRanges(doc, temp);
+              this.highlighter.highlightSelection(classes[item.color]);
+            }
           } catch (e) {
             console.warn(
+              e,
               "Exception has been caught when restore character ranges."
             );
             return;
           }
-          this.highlighter.highlightSelection(classes[item.color]);
         }
       });
     if (!iWin || !iWin.getSelection()) return;

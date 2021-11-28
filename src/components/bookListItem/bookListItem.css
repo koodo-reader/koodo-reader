@@ -11,6 +11,10 @@
   opacity: 1;
   cursor: pointer;
 }
+.book-item-list-cover-item {
+  width: 57px;
+  height: 74px;
+}
 .book-item-list-title,
 .book-item-list-author {
   height: 30px;
