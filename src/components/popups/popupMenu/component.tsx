@@ -15,8 +15,6 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
   mode: string;
   showNote: boolean;
   isFirstShow: boolean;
-  cfiRange: any;
-  contents: any;
   rect: any;
   constructor(props: PopupMenuProps) {
     super(props);
@@ -26,8 +24,6 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     this.mode = "";
     this.state = {
       deleteKey: "",
-      cfiRange: this.props.cfiRange,
-      contents: this.props.contents,
       rect: this.props.rect,
     };
   }
@@ -48,11 +44,9 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     });
   }
   componentWillReceiveProps(nextProps: PopupMenuProps) {
-    if (nextProps.cfiRange !== this.props.cfiRange) {
+    if (nextProps.rect !== this.props.rect) {
       this.setState(
         {
-          cfiRange: nextProps.cfiRange,
-          contents: nextProps.contents,
           rect: nextProps.rect,
         },
         () => {
@@ -133,14 +127,14 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
         ? rect.x
         : StorageUtil.getReaderConfig("readerMode") === "scroll"
         ? rect.right
-        : rect.x % this.props.currentEpub.rendition._layout.width;
-    let y = rect.y % this.props.currentEpub.rendition._layout.height;
+        : rect.x % this.props.pageWidth;
+    let y = rect.y % this.props.pageHeight;
     let posX = x + rect.width / 2 - 20;
     //防止menu超出图书
     let rightEdge =
       this.props.menuMode === "note" || this.props.menuMode === "trans"
-        ? this.props.currentEpub.rendition._layout.width - 310
-        : this.props.currentEpub.rendition._layout.width - 200;
+        ? this.props.pageWidth - 310
+        : this.props.pageWidth - 200;
     let posY: number;
     //控制menu方向
     if (y < height) {
@@ -159,16 +153,14 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
   //渲染高亮
   renderHighlighters = () => {
     let highlighters: any = this.props.notes;
+    console.log(this.props.notes, "highlighters");
     if (!highlighters) return;
-    if (!this.props.rendition || !this.props.rendition.currentLocation) {
-      return;
-    }
-    const currentLocation = this.props.rendition.currentLocation();
-    if (!currentLocation || !currentLocation.start) return;
-    let chapterIndex = currentLocation.start.index;
     let highlightersByChapter = highlighters.filter(
-      (item: any) => item.chapterIndex === chapterIndex
+      (item: any) =>
+        item.chapterIndex === this.props.chapterIndex &&
+        item.chapter === this.props.chapter
     );
+    console.log(highlightersByChapter);
     let iframe = document.getElementsByTagName("iframe")[0];
     let iWin = iframe.contentWindow || iframe.contentDocument?.defaultView;
     this.highlighter && this.highlighter.removeAllHighlights(); // 为了避免下次反序列化失败，必须先清除已有的高亮
@@ -270,9 +262,10 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
       this.handleHighlight();
     }
     const PopupProps = {
-      cfiRange: this.props.cfiRange,
-      contents: this.props.contents,
-      rect: this.props.rect,
+      pageWidth: this.props.pageWidth,
+      pageHeight: this.props.pageHeight,
+      chapterIndex: this.props.chapterIndex,
+      chapter: this.props.chapter,
     };
     return (
       <div>

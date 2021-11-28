@@ -8,6 +8,10 @@ import {
   handleRenderFunc,
   handleFetchBooks,
   handleCurrentChapter,
+  handleFetchNotes,
+  handleFetchBookmarks,
+  handleFetchChapters,
+  handleFetchPercentage,
 } from "../../store/actions";
 import Viewer from "./component";
 import { stateType } from "../../store";
@@ -31,6 +35,10 @@ const actionCreator = {
   handleRenderFunc,
   handleFetchBooks,
   handleCurrentChapter,
+  handleFetchNotes,
+  handleFetchBookmarks,
+  handleFetchChapters,
+  handleFetchPercentage,
 };
 export default connect(
   mapStateToProps,

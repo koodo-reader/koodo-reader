@@ -45,17 +45,13 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
     } else {
       //创建笔记
       let bookKey = this.props.currentBook.key;
-      const currentLocation = this.props.currentEpub.rendition.currentLocation();
-      let chapterHref = currentLocation.start.href;
-      let chapterIndex = currentLocation.start.index;
-      let chapter = "Unknown Chapter";
-      let currentChapter = this.props.flattenChapters.filter(
-        (item: any) => item.href.split("#")[0] === chapterHref
-      )[0];
-      if (currentChapter) {
-        chapter = currentChapter.label.trim(" ");
+      let cfi = "";
+      if (this.props.currentBook.format === "EPUB") {
+        cfi = RecordLocation.getCfi(this.props.currentBook.key).cfi;
+      } else {
+        cfi = JSON.stringify(RecordLocation.getScrollHeight);
       }
-      const cfi = RecordLocation.getCfi(this.props.currentBook.key).cfi;
+
       let iframe = document.getElementsByTagName("iframe")[0];
       if (!iframe) return;
       let doc = iframe.contentDocument;
@@ -84,8 +80,8 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
       let tag = this.state.tag;
       let note = new Note(
         bookKey,
-        chapter,
-        chapterIndex,
+        this.props.chapter,
+        this.props.chapterIndex,
         text,
         cfi,
         range,

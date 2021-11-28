@@ -6,6 +6,7 @@ export interface ViewAreaProps {
   currentBook: BookModel;
   currentEpub: any;
   bookmarks: BookmarkModel[];
+  flattenChapters: any;
   locations: any;
   isShowBookmark: boolean;
   chapters: any[];
@@ -18,8 +19,10 @@ export interface ViewAreaProps {
   handleReadingEpub: (epub: object) => void;
 }
 export interface ViewAreaStates {
-  cfiRange: any;
-  contents: any;
-  // rendition: any;
+  // cfiRange: any;
   rect: any;
+  chapterIndex: number;
+  chapter: string;
+  pageWidth: number;
+  pageHeight: number;
 }
