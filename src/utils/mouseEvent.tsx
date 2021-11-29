@@ -57,7 +57,7 @@ const arrowKeys = (rendition: any, keyCode: number) => {
   }
   if (keyCode === 9) {
     if (isElectron) {
-      window.require("electron").ipcRenderer.sendSync("hide-reader", "ping");
+      window.require("electron").ipcRenderer.sendSync("close-reader", "ping");
     }
     lock = true;
     setTimeout(function () {
