@@ -6,6 +6,7 @@ import PopupTrans from "../popupTrans";
 import { PopupMenuProps, PopupMenuStates } from "./interface";
 import StorageUtil from "../../../utils/storageUtil";
 let colors = ["#fac106", "#ebe702", "#0be603", "#0493e6"];
+let lines = ["#FF0000", "#000080", "#0000FF", "#2EFF2E"];
 
 declare var window: any;
 
@@ -132,18 +133,26 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     var pageIndex = selected.page;
     if (!iWin.PDFViewerApplication.pdfViewer) return;
     var page = iWin.PDFViewerApplication.pdfViewer.getPageView(pageIndex);
-    if (page && page.textLayer && page.textLayer.textLayerDiv) {
-      var pageElement = page.textLayer.textLayerDiv;
+    if (page && page.div && page.textLayer && page.textLayer.textLayerDiv) {
+      var pageElement =
+        colorCode.indexOf("color") > -1
+          ? page.textLayer.textLayerDiv
+          : page.div;
 
       var viewport = page.viewport;
       selected.coords.forEach((rect) => {
         var bounds = viewport.convertToViewportRectangle(rect);
         var el = iWin.document.createElement("div");
+
         el.setAttribute(
           "style",
           "position: absolute;" +
-            "background-color: " +
-            colors[colorCode.split("-")[1]] +
+            (colorCode.indexOf("color") > -1
+              ? "background-color: "
+              : "border-bottom: ") +
+            (colorCode.indexOf("color") > -1
+              ? colors[colorCode.split("-")[1]]
+              : `2px solid ${lines[colorCode.split("-")[1]]}`) +
             "; left:" +
             Math.min(bounds[0], bounds[2]) +
             "px; top:" +
@@ -153,7 +162,7 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
             Math.abs(bounds[0] - bounds[2]) +
             "px; height:" +
             Math.abs(bounds[1] - bounds[3]) +
-            "px; z-index: 10;"
+            "px; z-index:0;"
         );
         el.setAttribute("key", noteKey);
         el.addEventListener("click", (event: any) => {

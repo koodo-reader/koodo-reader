@@ -130,6 +130,13 @@ app.on("ready", () => {
   ipcMain.on("user-data", (event, arg) => {
     event.returnValue = dirPath;
   });
+  ipcMain.on("hide-reader", (event, arg) => {
+    if (!readerWindow.isDestroyed()) {
+      if (readerWindow.isFocused()) {
+        readerWindow.minimize();
+      }
+    }
+  });
   ipcMain.on("switch-moyu", (event, arg) => {
     let id;
     if (store.get("isPreventSleep") === "yes") {

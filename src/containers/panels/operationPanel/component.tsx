@@ -41,7 +41,8 @@ class OperationPanel extends React.Component<
       nextProps.currentEpub.rendition.location &&
       this.props.currentEpub.rendition
     ) {
-      const currentLocation = this.props.currentEpub.rendition.currentLocation();
+      const currentLocation =
+        this.props.currentEpub.rendition.currentLocation();
       if (!currentLocation.start) {
         return;
       }
@@ -60,6 +61,51 @@ class OperationPanel extends React.Component<
           1000,
       });
       // let nextPercentage = section.start.percentage;
+    }
+  }
+  componentDidMount() {
+    const exitHandler = () => {
+      if (
+        document.webkitIsFullScreen ||
+        document.mozFullScreen ||
+        document.msFullscreenElement !== null
+      ) {
+        this.setState({ isFullScreen: !this.state.isFullScreen });
+        StorageUtil.setReaderConfig(
+          "isFullScreen",
+          this.state.isFullScreen ? "no" : "yes"
+        );
+      }
+    };
+    if (document.addEventListener) {
+      document.addEventListener(
+        "fullscreenchange",
+        () => {
+          exitHandler();
+        },
+        false
+      );
+      document.addEventListener(
+        "mozfullscreenchange",
+        () => {
+          exitHandler();
+        },
+        false
+      );
+      document.addEventListener(
+        "MSFullscreenChange",
+        () => {
+          exitHandler();
+        },
+        false
+      );
+      document.addEventListener(
+        "webkitfullscreenchange",
+        () => {
+          exitHandler();
+        },
+        false
+      );
     }
   }
   // 点击切换全屏按钮触发
@@ -89,8 +135,8 @@ class OperationPanel extends React.Component<
       de.msRequestFullscreen();
     }
 
-    this.setState({ isFullScreen: true });
-    StorageUtil.setReaderConfig("isFullScreen", "yes");
+    // this.setState({ isFullScreen: true });
+    // StorageUtil.setReaderConfig("isFullScreen", "yes");
   }
   // 退出全屏模式
   handleExitFullScreen() {
@@ -107,8 +153,8 @@ class OperationPanel extends React.Component<
       document.webkitExitFullscreen();
     }
 
-    this.setState({ isFullScreen: false });
-    StorageUtil.setReaderConfig("isFullScreen", "no");
+    // this.setState({ isFullScreen: false });
+    // StorageUtil.setReaderConfig("isFullScreen", "no");
   }
   handleAddBookmark() {
     let bookKey = this.props.currentBook.key;

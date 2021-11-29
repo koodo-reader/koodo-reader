@@ -15,6 +15,7 @@ class SettingSwitch extends React.Component<
     this.state = {
       isBold: StorageUtil.getReaderConfig("isBold") === "yes",
       isIndent: StorageUtil.getReaderConfig("isIndent") === "yes",
+      isSliding: StorageUtil.getReaderConfig("isSliding") === "yes",
       isUnderline: StorageUtil.getReaderConfig("isUnderline") === "yes",
       isShadow: StorageUtil.getReaderConfig("isShadow") === "yes",
       isItalic: StorageUtil.getReaderConfig("isItalic") === "yes",
@@ -44,6 +45,7 @@ class SettingSwitch extends React.Component<
         stateName,
         this.state[stateName] ? "yes" : "no"
       );
+      toast(this.props.t("Change Successfully"));
       setTimeout(() => {
         this.props.renderFunc();
       }, 500);
@@ -81,6 +83,9 @@ class SettingSwitch extends React.Component<
                     break;
                   case "isIndent":
                     this._handleChange("isIndent");
+                    break;
+                  case "isSliding":
+                    this._handleChange("isSliding");
                     break;
                   case "isItalic":
                     this._handleChange("isItalic");

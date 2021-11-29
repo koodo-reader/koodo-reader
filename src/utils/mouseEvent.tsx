@@ -43,7 +43,21 @@ const arrowKeys = (rendition: any, keyCode: number) => {
   }
   if (keyCode === 123) {
     if (isElectron) {
+      StorageUtil.setReaderConfig(
+        "isMergeWord",
+        StorageUtil.getReaderConfig("isMergeWord") === "yes" ? "no" : "yes"
+      );
       window.require("electron").ipcRenderer.sendSync("switch-moyu", "ping");
+    }
+    lock = true;
+    setTimeout(function () {
+      lock = false;
+    }, 100);
+    return false;
+  }
+  if (keyCode === 9) {
+    if (isElectron) {
+      window.require("electron").ipcRenderer.sendSync("hide-reader", "ping");
     }
     lock = true;
     setTimeout(function () {
@@ -180,15 +194,17 @@ export const HtmlMouseEvent = (
   key: string,
   readerMode: string
 ) => {
-  let iframe = document.getElementsByTagName("iframe")[0];
-  if (!iframe) return;
-  let doc = iframe.contentDocument;
-  if (!doc) {
-    return;
-  }
-  // navigate with mousewheel
-  window.addEventListener("keydown", (event) => {
-    arrowKeys(rendition, event.keyCode);
+  rendition.on("rendered", () => {
+    let iframe = document.getElementsByTagName("iframe")[0];
+    if (!iframe) return;
+    let doc = iframe.contentDocument;
+    if (!doc) {
+      return;
+    }
+    // navigate with mousewheel
+    window.addEventListener("keydown", (event) => {
+      arrowKeys(rendition, event.keyCode);
+    });
+    bindEvent(rendition, doc, key, readerMode);
   });
-  bindEvent(rendition, doc, key, readerMode);
 };

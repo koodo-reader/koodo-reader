@@ -38,7 +38,6 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
   }
   componentDidMount() {
     if (StorageUtil.getReaderConfig("isMergeWord") === "yes") {
-      console.log(document.querySelector("body"));
       document
         .querySelector("body")
         ?.setAttribute("style", "background-color: rgba(0,0,0,0)");
