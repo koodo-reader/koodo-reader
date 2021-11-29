@@ -6,19 +6,23 @@
 .book-content-name {
   display: block;
   padding: 10px 0px;
-  width: 94%;
+  width: 90%;
   font-size: 15px;
   line-height: 18px;
   opacity: 1;
   float: left;
   transition: none;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  overflow: hidden;
 }
 .book-subcontent-name {
   display: block;
   width: 220px;
   float: left;
   font-size: 13px;
-
   line-height: 15px;
   opacity: 0.64;
   padding: 8px;
