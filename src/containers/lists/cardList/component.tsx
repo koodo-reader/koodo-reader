@@ -130,7 +130,7 @@ class CardList extends React.Component<CardListProps, CardListStates> {
                   {this.handleBookName(item.bookKey)}
                 </div>
                 <div className="card-list-item-chapter card-list-item-title">
-                  》<Trans>{item.chapter}</Trans>
+                  》{item.chapter}
                 </div>
               </div>
               <div

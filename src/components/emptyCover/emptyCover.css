@@ -34,10 +34,9 @@
 }
 .cover-footer {
   width: 100%;
-  text-align: left;
+  text-align: center;
   font-size: 13px;
   opacity: 0.3;
   position: absolute;
   bottom: 6px;
-  margin-left: 13px;
 }

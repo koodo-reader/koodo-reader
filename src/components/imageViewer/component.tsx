@@ -112,7 +112,6 @@ class ImageViewer extends React.Component<ImageViewerProps, ImageViewerStates> {
   handleZoomIn = () => {
     let image: any = document.querySelector(".image");
     if (image.style.width === "200vw" || image.style.height === "200vh") return;
-    console.log(image.style);
     this.setState({ zoomIndex: this.state.zoomIndex + 1 }, () => {
       if (this.state.imageRatio === "horizontal") {
         image.style.width = `${60 + this.state.zoomIndex * 10}vw`;
@@ -124,7 +123,6 @@ class ImageViewer extends React.Component<ImageViewerProps, ImageViewerStates> {
   handleZoomOut = () => {
     let image: any = document.querySelector(".image");
     if (image.style.width === "10vw" || image.style.height === "10vh") return;
-    console.log(image.style.height);
     this.setState({ zoomIndex: this.state.zoomIndex - 1 }, () => {
       if (this.state.imageRatio === "horizontal") {
         image.style.width = `${60 + this.state.zoomIndex * 10}vw`;
