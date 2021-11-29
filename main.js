@@ -130,20 +130,20 @@ app.on("ready", () => {
   ipcMain.on("user-data", (event, arg) => {
     event.returnValue = dirPath;
   });
-  ipcMain.on("hide-reader", (event, arg) => {
-    if (!readerWindow.isDestroyed()) {
-      if (readerWindow.isFocused()) {
-        readerWindow.minimize();
-      }
+  ipcMain.on("close-reader", (event, arg) => {
+    if (readerWindow && readerWindow.isFocused()) {
+      readerWindow.destroy();
     }
+    event.returnvalue = false;
   });
   ipcMain.on("switch-moyu", (event, arg) => {
     let id;
+    console.log(readerWindow);
     if (store.get("isPreventSleep") === "yes") {
       id = powerSaveBlocker.start("prevent-display-sleep");
       console.log(powerSaveBlocker.isStarted(id));
     }
-    if (!readerWindow.isDestroyed()) {
+    if (readerWindow) {
       readerWindow.close();
       Object.assign(options, {
         width: parseInt(store.get("windowWidth")),
@@ -177,6 +177,7 @@ app.on("ready", () => {
         // readerWindow = null;
       });
     }
+    event.returnvalue = false;
   });
   ipcMain.on("get-dirname", (event, arg) => {
     event.returnValue = __dirname;

@@ -187,6 +187,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
       if (!isRepeat) {
         let reader = new FileReader();
         reader.readAsArrayBuffer(file);
+
         reader.onload = async (e) => {
           if (!e.target) {
             toast.error(this.props.t("Import Failed"));

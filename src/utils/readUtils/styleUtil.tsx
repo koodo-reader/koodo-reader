@@ -10,9 +10,11 @@ class styleUtil {
     if (!background) return;
     background.setAttribute(
       "style",
-      `background-color:${StorageUtil.getReaderConfig(
-        "backgroundColor"
-      )};filter: brightness(${
+      `background-color:${
+        StorageUtil.getReaderConfig("isMergeWord") === "yes"
+          ? "rgba(0,0,0,0)"
+          : StorageUtil.getReaderConfig("backgroundColor")
+      };filter: brightness(${
         StorageUtil.getReaderConfig("brightness") || 1
       }) invert(${StorageUtil.getReaderConfig("isInvert") === "yes" ? 1 : 0})`
     );
