@@ -145,21 +145,26 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       pageWidth: rendition.getPageSize().width,
       pageHeight: rendition.getPageSize().height,
     });
-    if (this.props.currentBook.format.startsWith("CB")) {
-      this.setState({
-        chapter:
-          this.props.htmlBook.chapters[parseInt(bookLocation.count || "0")]
-            .label,
-        chapterIndex: parseInt(bookLocation.count || "0"),
-      });
-    } else {
-      this.setState({
-        chapter: bookLocation.chapterTitle,
-        chapterIndex: _.findLastIndex(this.props.htmlBook.chapters, {
-          label: bookLocation.chapterTitle,
-        }),
-      });
-    }
+    rendition.on("rendered", () => {
+      let bookLocation: { text: string; count: string; chapterTitle: string } =
+        RecordLocation.getScrollHeight(this.props.currentBook.key);
+      if (this.props.currentBook.format.startsWith("CB")) {
+        this.setState({
+          chapter:
+            this.props.htmlBook.chapters[parseInt(bookLocation.count || "0")]
+              .label,
+          chapterIndex: parseInt(bookLocation.count || "0"),
+        });
+      } else {
+        this.setState({
+          chapter: bookLocation.chapterTitle,
+          chapterIndex: _.findLastIndex(this.props.htmlBook.chapters, {
+            label: bookLocation.chapterTitle,
+          }),
+        });
+      }
+    });
+
     let iframe = document.getElementsByTagName("iframe")[0];
     if (!iframe) return;
     let doc = iframe.contentDocument;
