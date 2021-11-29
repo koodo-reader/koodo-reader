@@ -4,11 +4,9 @@ class styleUtil {
   // 为 iframe 添加默认的样式
   static addDefaultCss() {
     let doc = window.frames[0].document;
-    console.log(doc, "doc");
     if (!doc) return;
     let css = this.getDefaultCss();
     let background = document.querySelector(".viewer");
-    console.log(background, "background");
     if (!background) return;
     background.setAttribute(
       "style",
