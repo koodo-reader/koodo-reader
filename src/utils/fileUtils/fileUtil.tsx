@@ -19,45 +19,23 @@ export const fetchMD5FromPath = (filePath: string) => {
 };
 export const fetchFileFromPath = (filePath: string) => {
   return new Promise<File>((resolve, reject) => {
-    fetch(filePath)
-      .then((response) => response.body)
-      .then((body) => {
-        if (!body) return;
-        const reader = body.getReader();
-        return new ReadableStream({
-          start(controller) {
-            return pump();
-            function pump(): any {
-              return reader.read().then(({ done, value }) => {
-                if (done) {
-                  controller.close();
-                  return;
-                }
-                controller.enqueue(value);
-                return pump();
-              });
-            }
-          },
-        });
-      })
-      .then((stream) => new Response(stream))
-      .then((response) => response.blob())
-      .then((blob) => {
-        let fileTemp = new File(
-          [blob],
-          window.navigator.platform.indexOf("Win") > -1
-            ? filePath.split("\\").reverse()[0]
-            : filePath.split("/").reverse()[0],
-          {
-            lastModified: new Date().getTime(),
-            type: blob.type,
-          }
-        );
-        resolve(fileTemp);
-      })
-      .catch((err) => {
+    const fs = window.require("fs");
+
+    fs.readFile(filePath, (err, data) => {
+      if (err) {
         console.error(err);
-        reject();
-      });
+        return;
+      }
+      const file = new File(
+        [data],
+        window.navigator.platform.indexOf("Win") > -1
+          ? filePath.split("\\").reverse()[0]
+          : filePath.split("/").reverse()[0],
+        {
+          lastModified: new Date().getTime(),
+        }
+      );
+      resolve(file);
+    });
   });
 };
