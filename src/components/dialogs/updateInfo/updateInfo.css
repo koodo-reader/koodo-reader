@@ -56,11 +56,11 @@
   font-size: 15px;
   line-height: 18px;
   opacity: 1;
-  margin: 7px;
+  margin: 12px;
 }
 .update-dialog-new-container,
 .update-dialog-fix-container {
-  margin: 20px 30px;
+  margin: 20px 10px;
 }
 .update-dialog-info {
   margin-top: 10px;
