@@ -59,13 +59,16 @@
 }
 .backup-page-list-item {
   float: left;
-  width: 150px;
+  width: 130px;
   height: 100px;
   display: flex;
   justify-content: center;
   align-items: center;
   opacity: 0.5;
   border-radius: 10px;
+  box-sizing: border-box;
+  margin-right: 10px;
+  margin-left: 10px;
 }
 
 .backup-page-list-icon {
