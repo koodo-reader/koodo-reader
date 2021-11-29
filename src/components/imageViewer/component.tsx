@@ -117,6 +117,7 @@ class ImageViewer extends React.Component<ImageViewerProps, ImageViewerStates> {
         image.style.width = `${60 + this.state.zoomIndex * 10}vw`;
       } else {
         image.style.height = `${100 + 10 * this.state.zoomIndex}vh`;
+        image.style.marginTop = `${10 * this.state.zoomIndex}vh`;
       }
     });
   };

@@ -51,9 +51,6 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
     this.props.handleRenderFunc(this.handleRenderBook);
     var doit;
     window.addEventListener("resize", () => {
-      if (StorageUtil.getReaderConfig("readerMode") === "single") {
-        return;
-      }
       clearTimeout(doit);
       doit = setTimeout(this.handleRenderBook, 100);
     });
