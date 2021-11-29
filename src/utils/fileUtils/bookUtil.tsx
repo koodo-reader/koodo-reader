@@ -2,6 +2,7 @@ import StorageUtil from "../storageUtil";
 import { isElectron } from "react-device-detect";
 import localforage from "localforage";
 import BookModel from "../../model/Book";
+import toast from "react-hot-toast";
 
 class BookUtil {
   static addBook(key: string, buffer: ArrayBuffer) {
@@ -60,6 +61,37 @@ class BookUtil {
       return localforage.removeItem(key);
     }
   }
+  static isBookExist(key: string, bookPath: string = "") {
+    return new Promise<boolean>((resolve, reject) => {
+      if (isElectron) {
+        var fs = window.require("fs");
+        var path = window.require("path");
+        let _bookPath = path.join(
+          localStorage.getItem("storageLocation")
+            ? localStorage.getItem("storageLocation")
+            : window
+                .require("electron")
+                .ipcRenderer.sendSync("storage-location", "ping"),
+          `book`,
+          key
+        );
+
+        if ((bookPath && fs.existsSync(bookPath)) || fs.existsSync(_bookPath)) {
+          resolve(true);
+        } else {
+          resolve(false);
+        }
+      } else {
+        localforage.getItem(key).then((result) => {
+          if (result) {
+            resolve(true);
+          } else {
+            resolve(false);
+          }
+        });
+      }
+    });
+  }
   static fetchBook(
     key: string,
     isArrayBuffer: boolean = false,
@@ -103,6 +135,10 @@ class BookUtil {
     }
   }
   static async RedirectBook(book: BookModel) {
+    if (!(await this.isBookExist(book.key, book.path))) {
+      toast.error("Book not exist");
+      return;
+    }
     let ref =
       book.description === "readonly" || book.description === "pdf"
         ? book.format.toLowerCase()

@@ -149,7 +149,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       pageHeight: rendition.getPageSize().height,
     });
     if (this.props.currentBook.format.startsWith("CB")) {
-      console.log(this.props.htmlBook.chapters);
       this.setState({
         chapter:
           this.props.htmlBook.chapters[parseInt(bookLocation.count || "0")]
@@ -203,7 +202,8 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       entries.map((item: any) => item.name),
       unrar,
       this.state.readerMode,
-      "cbr"
+      "cbr",
+      StorageUtil.getReaderConfig("isSliding") === "yes" ? true : false
     );
     await rendition.renderTo(
       document.getElementsByClassName("html-viewer-page")[0],
@@ -221,7 +221,8 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         Object.keys(contents.files).sort(),
         zip,
         this.state.readerMode,
-        "cbz"
+        "cbz",
+        StorageUtil.getReaderConfig("isSliding") === "yes" ? true : false
       );
       await rendition.renderTo(
         document.getElementsByClassName("html-viewer-page")[0],
@@ -240,7 +241,8 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           extractedFiles.map((item: any) => item.name),
           extractedFiles,
           this.state.readerMode,
-          "cbt"
+          "cbt",
+          StorageUtil.getReaderConfig("isSliding") === "yes" ? true : false
         );
         await rendition.renderTo(
           document.getElementsByClassName("html-viewer-page")[0],
@@ -257,14 +259,22 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     );
   };
   handleMobi = async (result: ArrayBuffer) => {
-    let rendition = new MobiRender(result, this.state.readerMode);
+    let rendition = new MobiRender(
+      result,
+      this.state.readerMode,
+      StorageUtil.getReaderConfig("isSliding") === "yes" ? true : false
+    );
     await rendition.renderTo(
       document.getElementsByClassName("html-viewer-page")[0]
     );
     this.handleRest(rendition);
   };
   handleAzw3 = async (result: ArrayBuffer) => {
-    let rendition = new Azw3Render(result, this.state.readerMode);
+    let rendition = new Azw3Render(
+      result,
+      this.state.readerMode,
+      StorageUtil.getReaderConfig("isSliding") === "yes" ? true : false
+    );
     await rendition.renderTo(
       document.getElementsByClassName("html-viewer-page")[0]
     );
@@ -295,7 +305,8 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     let rendition = new TxtRender(
       result,
       this.state.readerMode,
-      this.props.currentBook.charset || charset || "utf8"
+      this.props.currentBook.charset || charset || "utf8",
+      StorageUtil.getReaderConfig("isSliding") === "yes" ? true : false
     );
     await rendition.renderTo(
       document.getElementsByClassName("html-viewer-page")[0]
@@ -307,7 +318,11 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     var reader = new FileReader();
     reader.onload = async (evt) => {
       let docStr = window.marked(evt.target?.result as any);
-      let rendition = new StrRender(docStr, this.state.readerMode);
+      let rendition = new StrRender(
+        docStr,
+        this.state.readerMode,
+        StorageUtil.getReaderConfig("isSliding") === "yes" ? true : false
+      );
       await rendition.renderTo(
         document.getElementsByClassName("html-viewer-page")[0]
       );
@@ -326,7 +341,11 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     );
 
     rtfToHTML.fromString(text, async (err: any, html: any) => {
-      let rendition = new StrRender(html, this.state.readerMode);
+      let rendition = new StrRender(
+        html,
+        this.state.readerMode,
+        StorageUtil.getReaderConfig("isSliding") === "yes" ? true : false
+      );
       await rendition.renderTo(
         document.getElementsByClassName("html-viewer-page")[0]
       );
@@ -337,7 +356,11 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     window.mammoth
       .convertToHtml({ arrayBuffer: result })
       .then(async (res: any) => {
-        let rendition = new StrRender(res.value, this.state.readerMode);
+        let rendition = new StrRender(
+          res.value,
+          this.state.readerMode,
+          StorageUtil.getReaderConfig("isSliding") === "yes" ? true : false
+        );
         await rendition.renderTo(
           document.getElementsByClassName("html-viewer-page")[0]
         );
@@ -355,7 +378,11 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     );
     let bookObj = xmlBookToObj(Buffer.from(result));
     bookObj += xmlBookTagFilter(fb2Str);
-    let rendition = new StrRender(bookObj, this.state.readerMode);
+    let rendition = new StrRender(
+      bookObj,
+      this.state.readerMode,
+      StorageUtil.getReaderConfig("isSliding") === "yes" ? true : false
+    );
     await rendition.renderTo(
       document.getElementsByClassName("html-viewer-page")[0]
     );
@@ -368,7 +395,11 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     var reader = new FileReader();
     reader.onload = async (evt) => {
       const html = evt.target?.result as any;
-      let rendition = new StrRender(html, this.state.readerMode);
+      let rendition = new StrRender(
+        html,
+        this.state.readerMode,
+        StorageUtil.getReaderConfig("isSliding") === "yes" ? true : false
+      );
       await rendition.renderTo(
         document.getElementsByClassName("html-viewer-page")[0]
       );

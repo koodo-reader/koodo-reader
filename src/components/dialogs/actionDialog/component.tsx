@@ -41,7 +41,7 @@ class ActionDialog extends React.Component<ActionDialogProps> {
           style={{
             left: this.props.left,
             top: this.props.top,
-            maxHeight: "37px",
+            maxHeight: "45px",
             paddingTop: "3px",
           }}
         >

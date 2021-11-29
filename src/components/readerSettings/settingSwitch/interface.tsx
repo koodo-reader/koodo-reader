@@ -14,6 +14,7 @@ export interface SettingSwitchState {
   isHideFooter: boolean;
   isBold: boolean;
   isIndent: boolean;
+  isSliding: boolean;
   isShadow: boolean;
   isUnderline: boolean;
   isItalic: boolean;

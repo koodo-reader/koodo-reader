@@ -37,7 +37,6 @@ class PopupOption extends React.Component<PopupOptionProps> {
     if (!iframe) return;
     let doc = iframe.contentDocument;
     if (!doc) return;
-    console.log(getSelection());
     copy(getSelection());
     this.props.handleOpenMenu(false);
     doc.getSelection()?.empty();
