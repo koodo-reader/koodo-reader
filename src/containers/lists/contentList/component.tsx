@@ -43,7 +43,6 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
       let id = href.substr(1);
       let title =
         this.state.chapters[_.findIndex(this.state.chapters, { id })].label;
-      console.log(title, "title");
       this.props.htmlBook.rendition.goToChapter(title);
       this.props.handleCurrentChapter(title);
     }
