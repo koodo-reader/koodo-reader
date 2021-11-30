@@ -18,7 +18,6 @@ export const getSelection = () => {
 };
 let lock = false; //prevent from clicking too fast
 const arrowKeys = (rendition: any, keyCode: number, event: any) => {
-  event.preventDefault();
   if (document.querySelector(".editor-box")) {
     return;
   }
@@ -26,6 +25,7 @@ const arrowKeys = (rendition: any, keyCode: number, event: any) => {
   if (lock) return;
 
   if (keyCode === 37 || keyCode === 38) {
+    event.preventDefault();
     rendition.prev();
 
     lock = true;
@@ -35,6 +35,7 @@ const arrowKeys = (rendition: any, keyCode: number, event: any) => {
     return false;
   }
   if (keyCode === 39 || keyCode === 40 || keyCode === 32) {
+    event.preventDefault();
     rendition.next();
     lock = true;
     setTimeout(function () {
@@ -44,6 +45,7 @@ const arrowKeys = (rendition: any, keyCode: number, event: any) => {
   }
   if (keyCode === 123) {
     if (isElectron) {
+      event.preventDefault();
       StorageUtil.setReaderConfig(
         "isMergeWord",
         StorageUtil.getReaderConfig("isMergeWord") === "yes" ? "no" : "yes"
@@ -58,6 +60,7 @@ const arrowKeys = (rendition: any, keyCode: number, event: any) => {
   }
   if (keyCode === 9) {
     if (isElectron) {
+      event.preventDefault();
       window.require("electron").ipcRenderer.invoke("hide-reader", "ping");
     }
     lock = true;

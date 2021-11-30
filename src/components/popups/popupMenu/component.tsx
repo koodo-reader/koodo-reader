@@ -32,6 +32,7 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
 
   componentDidMount() {
     this.props.rendition.on("rendered", () => {
+      console.log("rendered");
       new Promise<void>((resolve, reject) => {
         this.getHighlighter();
         resolve();
@@ -228,12 +229,21 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     let highlighters: any = this.props.notes;
     if (!highlighters) return;
     let highlightersByChapter = highlighters.filter((item: any) => {
+      console.log(
+        item.chapterIndex,
+        this.props.chapterIndex,
+        item.chapter,
+        this.props.chapter,
+        item.bookKey,
+        this.props.currentBook.key
+      );
       return (
         item.chapterIndex === this.props.chapterIndex &&
         item.chapter === this.props.chapter &&
         item.bookKey === this.props.currentBook.key
       );
     });
+
     let iframe = document.getElementsByTagName("iframe")[0];
     if (!iframe || !iframe.contentWindow) return;
     let iWin = iframe.contentWindow || iframe.contentDocument?.defaultView;
@@ -249,6 +259,7 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
       "line-2",
       "line-3",
     ];
+
     highlightersByChapter &&
       highlightersByChapter.forEach((item: any) => {
         this.key = item.key;
