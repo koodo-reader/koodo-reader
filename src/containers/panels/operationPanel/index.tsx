@@ -6,6 +6,7 @@ import {
   handleShowBookmark,
   handleSearch,
   handleReadingState,
+  handleHtmlBook,
 } from "../../../store/actions";
 import { stateType } from "../../../store";
 import { withTranslation } from "react-i18next";
@@ -18,6 +19,7 @@ const mapStateToProps = (state: stateType) => {
     bookmarks: state.reader.bookmarks,
     notes: state.reader.notes,
     books: state.manager.books,
+    htmlBook: state.reader.htmlBook,
     locations: state.progressPanel.locations,
     flattenChapters: state.reader.flattenChapters,
   };
@@ -29,6 +31,7 @@ const actionCreator = {
   handleOpenMenu,
   handleShowBookmark,
   handleSearch,
+  handleHtmlBook,
 };
 export default connect(
   mapStateToProps,

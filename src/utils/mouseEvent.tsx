@@ -17,7 +17,8 @@ export const getSelection = () => {
   return text;
 };
 let lock = false; //prevent from clicking too fast
-const arrowKeys = (rendition: any, keyCode: number) => {
+const arrowKeys = (rendition: any, keyCode: number, event: any) => {
+  event.preventDefault();
   if (document.querySelector(".editor-box")) {
     return;
   }
@@ -57,7 +58,7 @@ const arrowKeys = (rendition: any, keyCode: number) => {
   }
   if (keyCode === 9) {
     if (isElectron) {
-      window.require("electron").ipcRenderer.sendSync("close-reader", "ping");
+      window.require("electron").ipcRenderer.invoke("hide-reader", "ping");
     }
     lock = true;
     setTimeout(function () {
@@ -114,7 +115,7 @@ const bindEvent = (
   readerMode: string = ""
 ) => {
   doc.addEventListener("keydown", (event) => {
-    arrowKeys(rendition, event.keyCode);
+    arrowKeys(rendition, event.keyCode, event);
     //使用Key判断是否是htmlBook
     if (key) {
       let postion = rendition.getPosition();
@@ -184,7 +185,7 @@ export const EpubMouseEvent = (rendition: any) => {
     }
     // navigate with mousewheel
     window.addEventListener("keydown", (event) => {
-      arrowKeys(rendition, event.keyCode);
+      arrowKeys(rendition, event.keyCode, event);
     });
     bindEvent(rendition, doc);
   });
@@ -203,7 +204,7 @@ export const HtmlMouseEvent = (
     }
     // navigate with mousewheel
     window.addEventListener("keydown", (event) => {
-      arrowKeys(rendition, event.keyCode);
+      arrowKeys(rendition, event.keyCode, event);
       if (key) {
         let postion = rendition.getPosition();
         RecordLocation.recordScrollHeight(

@@ -249,7 +249,6 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
       "line-2",
       "line-3",
     ];
-
     highlightersByChapter &&
       highlightersByChapter.forEach((item: any) => {
         this.key = item.key;
@@ -344,6 +343,7 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
   }
   render() {
     if (this.props.menuMode === "highlight") {
+      // this.getHighlighter();
       this.handleHighlight();
     }
     const PopupProps = {

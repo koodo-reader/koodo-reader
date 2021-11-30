@@ -130,15 +130,19 @@ app.on("ready", () => {
   ipcMain.on("user-data", (event, arg) => {
     event.returnValue = dirPath;
   });
-  ipcMain.on("close-reader", (event, arg) => {
+  ipcMain.handle("hide-reader", (event, arg) => {
     if (readerWindow && readerWindow.isFocused()) {
-      readerWindow.destroy();
+      readerWindow.minimize();
+      event.returnvalue = true;
+    } else if (mainWin && mainWin.isFocused()) {
+      mainWin.minimize();
+      event.returnvalue = true;
+    } else {
+      event.returnvalue = false;
     }
-    event.returnvalue = false;
   });
   ipcMain.on("switch-moyu", (event, arg) => {
     let id;
-    console.log(readerWindow);
     if (store.get("isPreventSleep") === "yes") {
       id = powerSaveBlocker.start("prevent-display-sleep");
       console.log(powerSaveBlocker.isStarted(id));
