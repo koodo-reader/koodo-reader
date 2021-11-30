@@ -37,12 +37,13 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
   handleJump(event: any) {
     event.preventDefault();
     let href = event.target.getAttribute("href");
-    if (this.props.currentEpub.rendition) {
+    if (this.props.currentEpub && this.props.currentEpub.loaded) {
       this.props.currentEpub.rendition.display(href);
     } else {
       let id = href.substr(1);
       let title =
         this.state.chapters[_.findIndex(this.state.chapters, { id })].label;
+      console.log(title, "title");
       this.props.htmlBook.rendition.goToChapter(title);
       this.props.handleCurrentChapter(title);
     }
