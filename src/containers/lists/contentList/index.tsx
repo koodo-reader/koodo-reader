@@ -5,6 +5,7 @@ import { handleCurrentChapter } from "../../../store/actions";
 const mapStateToProps = (state: stateType) => {
   return {
     currentEpub: state.book.currentEpub,
+    currentBook: state.book.currentBook,
     chapters: state.reader.chapters,
     htmlBook: state.reader.htmlBook,
     renderFunc: state.book.renderFunc,
