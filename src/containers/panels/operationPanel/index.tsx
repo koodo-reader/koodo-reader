@@ -8,6 +8,7 @@ import {
   handleReadingState,
   handleHtmlBook,
   handleReadingBook,
+  handleReadingEpub,
 } from "../../../store/actions";
 import { stateType } from "../../../store";
 import { withTranslation } from "react-i18next";
@@ -34,6 +35,7 @@ const actionCreator = {
   handleSearch,
   handleHtmlBook,
   handleReadingBook,
+  handleReadingEpub,
 };
 export default connect(
   mapStateToProps,

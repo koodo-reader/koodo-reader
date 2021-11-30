@@ -12,11 +12,11 @@
   opacity: 1;
   float: left;
   transition: none;
-  text-overflow: ellipsis;
+  /* text-overflow: ellipsis;
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 1;
-  overflow: hidden;
+  overflow: hidden; */
 }
 .book-subcontent-name {
   display: block;
