@@ -23,7 +23,7 @@
 }
 
 .token-dialog-info-text {
-  width: 416px;
+  width: 90%;
   height: 46px;
   font-size: 15px;
   font-weight: 500;
@@ -31,8 +31,8 @@
   opacity: 1;
   text-align: center;
   overflow-y: scroll;
-  margin-top: 15px;
-  margin-left: 13px;
+  margin-top: 10px;
+  margin-left: 5%;
 }
 
 .token-dialog-link-text {

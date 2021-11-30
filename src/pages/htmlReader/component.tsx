@@ -10,6 +10,7 @@ import ReadingTime from "../../utils/readUtils/readingTime";
 import Viewer from "../../containers/htmlViewer";
 import _ from "underscore";
 import localforage from "localforage";
+import RecordLocation from "../../utils/readUtils/recordLocation";
 
 class Reader extends React.Component<ReaderProps, ReaderState> {
   messageTimer!: NodeJS.Timeout;
@@ -137,6 +138,13 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
               className="previous-chapter-single-container"
               onClick={() => {
                 this.props.htmlBook.rendition.prev();
+                let postion = this.props.htmlBook.rendition.getPosition();
+                RecordLocation.recordScrollHeight(
+                  this.props.currentBook.key,
+                  postion.text,
+                  postion.chapterTitle,
+                  postion.count
+                );
               }}
             >
               <span className="icon-dropdown previous-chapter-single"></span>
@@ -145,6 +153,13 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
               className="next-chapter-single-container"
               onClick={() => {
                 this.props.htmlBook.rendition.next();
+                let postion = this.props.htmlBook.rendition.getPosition();
+                RecordLocation.recordScrollHeight(
+                  this.props.currentBook.key,
+                  postion.text,
+                  postion.chapterTitle,
+                  postion.count
+                );
               }}
             >
               <span className="icon-dropdown next-chapter-single"></span>

@@ -104,6 +104,7 @@
   position: relative;
   overflow-y: scroll;
   float: left;
+  overflow-x: hidden;
 }
 @keyframes slide-down {
   0% {
