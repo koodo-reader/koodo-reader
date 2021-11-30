@@ -121,6 +121,9 @@ class OperationPanel extends React.Component<
     window.speechSynthesis.cancel();
     ReadingTime.setTime(this.props.currentBook.key, this.props.time);
     this.handleExitFullScreen();
+    if (this.props.htmlBook) {
+      this.props.handleHtmlBook(null);
+    }
   }
   //控制进入全屏
   handleFullScreen() {
