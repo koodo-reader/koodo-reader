@@ -195,10 +195,13 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     let x =
       StorageUtil.getReaderConfig("readerMode") === "single"
         ? rect.x
+        : this.props.currentBook.format === "PDF"
+        ? rect.left
         : StorageUtil.getReaderConfig("readerMode") === "scroll"
         ? rect.right
         : rect.x % this.props.pageWidth;
     let y = rect.y % this.props.pageHeight;
+
     let posX = x + rect.width / 2 - 20;
     //防止menu超出图书
     let rightEdge =
@@ -224,11 +227,13 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
   renderHighlighters = () => {
     let highlighters: any = this.props.notes;
     if (!highlighters) return;
-    let highlightersByChapter = highlighters.filter(
-      (item: any) =>
+    let highlightersByChapter = highlighters.filter((item: any) => {
+      return (
         item.chapterIndex === this.props.chapterIndex &&
-        item.chapter === this.props.chapter
-    );
+        item.chapter === this.props.chapter &&
+        item.bookKey === this.props.currentBook.key
+      );
+    });
     let iframe = document.getElementsByTagName("iframe")[0];
     if (!iframe || !iframe.contentWindow) return;
     let iWin = iframe.contentWindow || iframe.contentDocument?.defaultView;

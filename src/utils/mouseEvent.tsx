@@ -204,6 +204,15 @@ export const HtmlMouseEvent = (
     // navigate with mousewheel
     window.addEventListener("keydown", (event) => {
       arrowKeys(rendition, event.keyCode);
+      if (key) {
+        let postion = rendition.getPosition();
+        RecordLocation.recordScrollHeight(
+          key,
+          postion.text,
+          postion.chapterTitle,
+          postion.count
+        );
+      }
     });
     bindEvent(rendition, doc, key, readerMode);
   });
