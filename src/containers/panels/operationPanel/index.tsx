@@ -7,6 +7,7 @@ import {
   handleSearch,
   handleReadingState,
   handleHtmlBook,
+  handleReadingBook,
 } from "../../../store/actions";
 import { stateType } from "../../../store";
 import { withTranslation } from "react-i18next";
@@ -32,6 +33,7 @@ const actionCreator = {
   handleShowBookmark,
   handleSearch,
   handleHtmlBook,
+  handleReadingBook,
 };
 export default connect(
   mapStateToProps,

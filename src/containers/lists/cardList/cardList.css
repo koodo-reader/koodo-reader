@@ -101,6 +101,7 @@
   width: calc(100% - 25px);
   height: 53px;
   overflow-y: scroll;
+  overflow-x: hidden;
   margin: 14px 10px 0px 10px;
   position: absolute;
   cursor: text;
@@ -118,6 +119,7 @@
   line-height: 18px;
   font-size: 15px;
   padding-right: 5px;
+  overflow-x: hidden;
 }
 ::-webkit-scrollbar {
   width: 5px;

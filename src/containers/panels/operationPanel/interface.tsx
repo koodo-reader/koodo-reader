@@ -21,6 +21,8 @@ export interface OperationPanelProps extends RouteComponentProps<any> {
   handleSearch: (isSearch: boolean) => void;
   handleOpenMenu: (isOpenMenu: boolean) => void;
   handleShowBookmark: (isShowBookmark: boolean) => void;
+  handleReadingBook: (currentBook: BookModel | object) => void;
+
   t: (title: string) => string;
   handleHtmlBook: (htmlBook: HtmlBookModel | null) => void;
 }

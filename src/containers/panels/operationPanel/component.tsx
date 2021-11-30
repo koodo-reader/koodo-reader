@@ -124,6 +124,9 @@ class OperationPanel extends React.Component<
     if (this.props.htmlBook) {
       this.props.handleHtmlBook(null);
     }
+    if (this.props.currentBook.key) {
+      this.props.handleReadingBook({});
+    }
   }
   //控制进入全屏
   handleFullScreen() {
