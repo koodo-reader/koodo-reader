@@ -146,8 +146,13 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       pageHeight: rendition.getPageSize().height,
     });
     rendition.on("rendered", () => {
-      let bookLocation: { text: string; count: string; chapterTitle: string } =
-        RecordLocation.getScrollHeight(this.props.currentBook.key);
+      let bookLocation = rendition.getPosition();
+      RecordLocation.recordScrollHeight(
+        this.props.currentBook.key,
+        bookLocation.text,
+        bookLocation.chapterTitle,
+        bookLocation.count
+      );
       if (this.props.currentBook.format.startsWith("CB")) {
         this.setState({
           chapter:
