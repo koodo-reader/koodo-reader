@@ -145,14 +145,15 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       pageWidth: rendition.getPageSize().width,
       pageHeight: rendition.getPageSize().height,
     });
+    let iframe = document.getElementsByTagName("iframe")[0];
+    if (!iframe) return;
+    let doc = iframe.contentDocument;
+    if (!doc) {
+      return;
+    }
     rendition.on("rendered", () => {
-      let bookLocation = rendition.getPosition();
-      RecordLocation.recordScrollHeight(
-        this.props.currentBook.key,
-        bookLocation.text,
-        bookLocation.chapterTitle,
-        bookLocation.count
-      );
+      let bookLocation: { text: string; count: string; chapterTitle: string } =
+        RecordLocation.getScrollHeight(this.props.currentBook.key);
       if (this.props.currentBook.format.startsWith("CB")) {
         this.setState({
           chapter:
@@ -168,36 +169,30 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           }),
         });
       }
+      if (
+        StorageUtil.getReaderConfig("convertChinese") &&
+        StorageUtil.getReaderConfig("convertChinese") !== "Default"
+      ) {
+        if (
+          StorageUtil.getReaderConfig("convertChinese") ===
+          "Simplified To Traditional"
+        ) {
+          doc!.querySelectorAll("p").forEach((item) => {
+            item.innerText = Chinese.s2t(item.innerText);
+          });
+        } else {
+          doc!.querySelectorAll("p").forEach((item) => {
+            item.innerText = Chinese.t2s(item.innerText);
+          });
+        }
+      }
     });
 
-    let iframe = document.getElementsByTagName("iframe")[0];
-    if (!iframe) return;
-    let doc = iframe.contentDocument;
-    if (!doc) {
-      return;
-    }
     doc.addEventListener("mouseup", () => {
       if (!doc!.getSelection()) return;
       var rect = doc!.getSelection()!.getRangeAt(0).getBoundingClientRect();
       this.setState({ rect });
     });
-    if (
-      StorageUtil.getReaderConfig("convertChinese") &&
-      StorageUtil.getReaderConfig("convertChinese") !== "Default"
-    ) {
-      if (
-        StorageUtil.getReaderConfig("convertChinese") ===
-        "Simplified To Traditional"
-      ) {
-        doc.querySelectorAll("p").forEach((item) => {
-          item.innerText = Chinese.s2t(item.innerText);
-        });
-      } else {
-        doc.querySelectorAll("p").forEach((item) => {
-          item.innerText = Chinese.t2s(item.innerText);
-        });
-      }
-    }
   };
   handleCbr = async (result: ArrayBuffer) => {
     let unrar = new Unrar(result);
