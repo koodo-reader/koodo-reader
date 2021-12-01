@@ -3,6 +3,7 @@ import "./contentList.css";
 import { ContentListProps, ContentListState } from "./interface";
 import StorageUtil from "../../../utils/storageUtil";
 import _ from "underscore";
+import RecordLocation from "../../../utils/readUtils/recordLocation";
 class ContentList extends React.Component<ContentListProps, ContentListState> {
   constructor(props: ContentListProps) {
     super(props);
@@ -43,6 +44,12 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
       let id = href.substr(1);
       let title =
         this.state.chapters[_.findIndex(this.state.chapters, { id })].label;
+      RecordLocation.recordScrollHeight(
+        this.props.currentBook.key,
+        "",
+        title,
+        ""
+      );
       this.props.htmlBook.rendition.goToChapter(title);
       this.props.handleCurrentChapter(title);
     }
