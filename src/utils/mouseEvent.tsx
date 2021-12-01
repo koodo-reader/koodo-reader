@@ -50,7 +50,7 @@ const arrowKeys = (rendition: any, keyCode: number, event: any) => {
         "isMergeWord",
         StorageUtil.getReaderConfig("isMergeWord") === "yes" ? "no" : "yes"
       );
-      window.require("electron").ipcRenderer.sendSync("switch-moyu", "ping");
+      window.require("electron").ipcRenderer.invoke("switch-moyu", "ping");
     }
     lock = true;
     setTimeout(function () {
