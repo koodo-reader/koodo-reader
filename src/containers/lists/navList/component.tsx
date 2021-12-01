@@ -17,17 +17,28 @@ class NavList extends React.Component<NavListProps, NavListState> {
       toast(this.props.t("Wrong bookmark"));
       return;
     }
-    this.props.currentEpub.rendition.display(cfi);
+    if (this.props.currentBook.format === "EPUB") {
+      this.props.currentEpub.rendition.display(cfi);
+    } else {
+      let bookLocation = JSON.parse(cfi) || {};
+      this.props.htmlBook.rendition.goToPosition(
+        bookLocation.text,
+        bookLocation.chapterTitle,
+        bookLocation.count
+      );
+    }
   }
   handleShowDelete = (index: number) => {
     this.setState({ deleteIndex: index });
   };
   render() {
-    let currentData: any = ((this.props.currentTab === "bookmarks"
-      ? this.props.bookmarks
-      : this.props.currentTab === "notes"
-      ? this.props.notes.filter((item) => item.notes !== "")
-      : this.props.digests) as any).filter((item: any) => {
+    let currentData: any = (
+      (this.props.currentTab === "bookmarks"
+        ? this.props.bookmarks
+        : this.props.currentTab === "notes"
+        ? this.props.notes.filter((item) => item.notes !== "")
+        : this.props.digests) as any
+    ).filter((item: any) => {
       return item.bookKey === this.props.currentBook.key;
     });
     const renderBookNavList = () => {

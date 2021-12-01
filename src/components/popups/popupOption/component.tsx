@@ -13,6 +13,7 @@ import toast from "react-hot-toast";
 import { getSelection } from "../../../utils/mouseEvent";
 import copy from "copy-text-to-clipboard";
 import { getHightlightCoords } from "../../../utils/fileUtils/pdfUtil";
+
 declare var window: any;
 
 class PopupOption extends React.Component<PopupOptionProps> {
@@ -71,9 +72,12 @@ class PopupOption extends React.Component<PopupOptionProps> {
     if (!iframe) return;
     let doc = iframe.contentDocument;
     if (!doc) return;
-    let charRange = window.rangy
-      .getSelection(iframe)
-      .saveCharacterRanges(doc.body)[0];
+    let charRange;
+    if (this.props.currentBook.format !== "PDF") {
+      charRange = window.rangy
+        .getSelection(iframe)
+        .saveCharacterRanges(doc.body)[0];
+    }
     let range =
       this.props.currentBook.format === "PDF"
         ? JSON.stringify(getHightlightCoords())

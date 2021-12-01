@@ -141,7 +141,7 @@ app.on("ready", () => {
       event.returnvalue = false;
     }
   });
-  ipcMain.on("switch-moyu", (event, arg) => {
+  ipcMain.handle("switch-moyu", (event, arg) => {
     let id;
     if (store.get("isPreventSleep") === "yes") {
       id = powerSaveBlocker.start("prevent-display-sleep");

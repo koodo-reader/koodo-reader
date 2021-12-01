@@ -53,8 +53,8 @@ class DeleteDialog extends React.Component<DeleteDialogProps> {
       ShelfUtil.clearShelf(this.props.shelfIndex, this.props.currentBook.key);
     } else if (this.props.mode === "trash") {
       let keyArr = AddTrash.getAllTrash();
-      for (let item of keyArr) {
-        await this.deleteBook(item);
+      for (let i = 0; i < keyArr.length; i++) {
+        await this.deleteBook(keyArr[i]);
       }
 
       if (this.props.books.length === 1) {
