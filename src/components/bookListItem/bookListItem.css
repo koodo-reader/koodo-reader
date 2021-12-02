@@ -38,7 +38,6 @@
   width: 150px;
 }
 .book-item-list-date,
-.book-item-list-percentage,
 .book-item-list-config {
   height: 30px;
   min-width: 180px;
@@ -57,4 +56,10 @@
 }
 .book-item-list-percentage {
   max-width: 50px;
+  height: 30px;
+  font-size: 15px;
+  opacity: 1;
+  text-align: center;
+  margin: 22px 10px;
+  line-height: 30px;
 }
