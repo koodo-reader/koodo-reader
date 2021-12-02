@@ -70,6 +70,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
   }
   handleRenderBook = () => {
     let { key, path, format, name } = this.props.currentBook;
+    this.props.handleHtmlBook(null);
     BookUtil.fetchBook(key, true, path).then((result) => {
       if (!result) {
         toast.error(this.props.t("Book not exsits"));
@@ -145,6 +146,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       pageWidth: rendition.getPageSize().width,
       pageHeight: rendition.getPageSize().height,
     });
+
     let iframe = document.getElementsByTagName("iframe")[0];
     if (!iframe) return;
     let doc = iframe.contentDocument;
@@ -163,10 +165,13 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         });
       } else {
         this.setState({
-          chapter: bookLocation.chapterTitle,
-          chapterIndex: _.findLastIndex(this.props.htmlBook.chapters, {
-            label: bookLocation.chapterTitle,
-          }),
+          chapter:
+            bookLocation.chapterTitle || this.props.htmlBook.chapters[0].label,
+          chapterIndex: bookLocation.chapterTitle
+            ? _.findLastIndex(this.props.htmlBook.chapters, {
+                label: bookLocation.chapterTitle,
+              })
+            : 0,
         });
       }
       if (

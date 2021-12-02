@@ -94,7 +94,7 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
           onclick: this.handleNoteClick,
         },
         onElementCreate: (element: any) => {
-          element.dataset.key = this.key;
+          element.dataset.key = this.key || this.props.notes[0].key;
         },
       };
       let applier = window.rangy.createClassApplier(item, config);
@@ -191,10 +191,12 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     if (!rect) return;
     this.props.handleChangeDirection(false);
     // const rect = this.rect;
+    let iframe = document.getElementsByTagName("iframe")[0];
+    if (!iframe || !iframe.parentElement) return;
     let height = 200;
     let x =
       StorageUtil.getReaderConfig("readerMode") === "single"
-        ? rect.x
+        ? rect.x + iframe.parentElement.offsetLeft
         : this.props.currentBook.format === "PDF"
         ? rect.left
         : StorageUtil.getReaderConfig("readerMode") === "scroll"
@@ -228,7 +230,6 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     let highlighters: any = this.props.notes;
     if (!highlighters) return;
     let highlightersByChapter = highlighters.filter((item: any) => {
-
       return (
         item.chapterIndex === this.props.chapterIndex &&
         item.chapter === this.props.chapter &&

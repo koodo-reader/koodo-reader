@@ -46,16 +46,16 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
         this.state.chapters[_.findIndex(this.state.chapters, { id })].label;
       RecordLocation.recordScrollHeight(
         this.props.currentBook.key,
-        "",
+        "test",
         title,
-        ""
+        "test"
       );
       this.props.htmlBook.rendition.goToChapter(title);
       this.props.handleCurrentChapter(title);
     }
   }
   UNSAFE_componentWillReceiveProps(nextProps: ContentListProps) {
-    if (nextProps.htmlBook !== this.props.htmlBook) {
+    if (nextProps.htmlBook && nextProps.htmlBook !== this.props.htmlBook) {
       this.setState({ chapters: nextProps.htmlBook.chapters });
     }
   }

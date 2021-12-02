@@ -13,7 +13,7 @@ export interface ViewerProps {
   t: (title: string) => string;
   handleReadingState: (isReading: boolean) => void;
   handleReadingBook: (book: BookModel) => void;
-  handleHtmlBook: (htmlBook: HtmlBookModel) => void;
+  handleHtmlBook: (htmlBook: HtmlBookModel | null) => void;
   handleLeaveReader: (position: string) => void;
   handleEnterReader: (position: string) => void;
   handleFetchBooks: () => void;
