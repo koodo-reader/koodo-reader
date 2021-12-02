@@ -122,7 +122,7 @@
   overflow-x: hidden;
 }
 ::-webkit-scrollbar {
-  width: 5px;
+  width: 7px;
   height: 0.5rem;
 }
 
