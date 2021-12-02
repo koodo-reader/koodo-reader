@@ -39,13 +39,13 @@
 }
 .book-item-list-date,
 .book-item-list-config {
-  height: 30px;
+  height: 25px;
   min-width: 180px;
   font-size: 15px;
   opacity: 1;
   text-align: center;
   margin: 22px 10px;
-  line-height: 30px;
+  line-height: 38px;
 }
 .book-item-list-config {
   cursor: pointer;
