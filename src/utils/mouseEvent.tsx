@@ -5,6 +5,11 @@ import RecordLocation from "./readUtils/recordLocation";
 import { isElectron } from "react-device-detect";
 let Hammer = (window as any).Hammer;
 declare var document: any;
+const sleep = (ms: number) => {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+};
+let throttleTime =
+  StorageUtil.getReaderConfig("isSliding") === "yes" ? 1000 : 100;
 export const getSelection = () => {
   let iframe = document.getElementsByTagName("iframe")[0];
   if (!iframe) return;
@@ -31,7 +36,7 @@ const arrowKeys = (rendition: any, keyCode: number, event: any) => {
     lock = true;
     setTimeout(function () {
       lock = false;
-    }, 100);
+    }, throttleTime);
     return false;
   }
   if (keyCode === 39 || keyCode === 40 || keyCode === 32) {
@@ -40,7 +45,7 @@ const arrowKeys = (rendition: any, keyCode: number, event: any) => {
     lock = true;
     setTimeout(function () {
       lock = false;
-    }, 100);
+    }, throttleTime);
     return false;
   }
   if (keyCode === 123) {
@@ -55,7 +60,7 @@ const arrowKeys = (rendition: any, keyCode: number, event: any) => {
     lock = true;
     setTimeout(function () {
       lock = false;
-    }, 100);
+    }, throttleTime);
     return false;
   }
   if (keyCode === 9) {
@@ -66,7 +71,7 @@ const arrowKeys = (rendition: any, keyCode: number, event: any) => {
     lock = true;
     setTimeout(function () {
       lock = false;
-    }, 100);
+    }, throttleTime);
     return false;
   }
 };
@@ -78,7 +83,7 @@ const mouseChrome = (rendition: any, wheelDelta: number) => {
     lock = true;
     setTimeout(function () {
       lock = false;
-    }, 100);
+    }, throttleTime);
     return false;
   }
   if (wheelDelta < 0) {
@@ -86,7 +91,7 @@ const mouseChrome = (rendition: any, wheelDelta: number) => {
     lock = true;
     setTimeout(function () {
       lock = false;
-    }, 100);
+    }, throttleTime);
     return false;
   }
 };
@@ -98,7 +103,7 @@ const gesture = (rendition: any, type: string) => {
     lock = true;
     setTimeout(function () {
       lock = false;
-    }, 100);
+    }, throttleTime);
     return false;
   }
   if (type === "panright" || type === "pandown") {
@@ -106,7 +111,7 @@ const gesture = (rendition: any, type: string) => {
     lock = true;
     setTimeout(function () {
       lock = false;
-    }, 100);
+    }, throttleTime);
     return false;
   }
 };
@@ -117,10 +122,13 @@ const bindEvent = (
   key: string = "",
   readerMode: string = ""
 ) => {
-  doc.addEventListener("keydown", (event) => {
+  doc.addEventListener("keydown", async (event) => {
     arrowKeys(rendition, event.keyCode, event);
     //使用Key判断是否是htmlBook
     if (key) {
+      if (StorageUtil.getReaderConfig("isSliding") === "yes") {
+        await sleep(500);
+      }
       let postion = rendition.getPosition();
       RecordLocation.recordScrollHeight(
         key,
@@ -132,13 +140,16 @@ const bindEvent = (
   });
   doc.addEventListener(
     "mousewheel",
-    (event) => {
+    async (event) => {
       if (readerMode === "scroll") {
         rendition.record();
       } else {
         mouseChrome(rendition, event.wheelDelta);
       }
       if (key) {
+        if (StorageUtil.getReaderConfig("isSliding") === "yes") {
+          await sleep(500);
+        }
         let postion = rendition.getPosition();
         RecordLocation.recordScrollHeight(
           key,
@@ -152,9 +163,12 @@ const bindEvent = (
   );
   if (StorageUtil.getReaderConfig("isTouch") === "yes") {
     const mc = new Hammer(doc);
-    mc.on("panleft panright panup pandown", (event: any) => {
+    mc.on("panleft panright panup pandown", async (event: any) => {
       gesture(rendition, event.type);
       if (key) {
+        if (StorageUtil.getReaderConfig("isSliding") === "yes") {
+          await sleep(500);
+        }
         let postion = rendition.getPosition();
         RecordLocation.recordScrollHeight(
           key,
@@ -206,18 +220,26 @@ export const HtmlMouseEvent = (
       return;
     }
     // navigate with mousewheel
-    window.addEventListener("keydown", (event) => {
-      arrowKeys(rendition, event.keyCode, event);
-      if (key) {
-        let postion = rendition.getPosition();
-        RecordLocation.recordScrollHeight(
-          key,
-          postion.text,
-          postion.chapterTitle,
-          postion.count
-        );
-      }
-    });
+    window.addEventListener(
+      "keydown",
+      async (event) => {
+        arrowKeys(rendition, event.keyCode, event);
+        event.preventDefault();
+        if (key) {
+          if (StorageUtil.getReaderConfig("isSliding") === "yes") {
+            await sleep(500);
+          }
+          let postion = rendition.getPosition();
+          RecordLocation.recordScrollHeight(
+            key,
+            postion.text,
+            postion.chapterTitle,
+            postion.count
+          );
+        }
+      },
+      false
+    );
     bindEvent(rendition, doc, key, readerMode);
   });
 };

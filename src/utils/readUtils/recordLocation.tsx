@@ -19,6 +19,7 @@ class RecordLocation {
     chapterTitle: string,
     count: string
   ) {
+    if (!text || !chapterTitle || !count) return;
     let json = localStorage.getItem("recordLocation");
     let obj = JSON.parse(json || "{}");
     obj[bookKey] = { text, chapterTitle, count };

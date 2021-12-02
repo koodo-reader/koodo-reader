@@ -14,7 +14,7 @@ export const xmlBookToObj = (xml) => {
     objBook.title = bookDesc["book-title"][0];
     informBook = "<h2>" + objBook.title + "</h2>";
 
-    if (bookDesc["author"][0]["first-name"]) {
+    if (bookDesc["author"] && bookDesc["author"][0]["first-name"]) {
       objBook.firstName = bookDesc["author"][0]["first-name"][0];
       informBook += "<h3>" + objBook.firstName;
       if (bookDesc["author"][0]["last-name"]) {

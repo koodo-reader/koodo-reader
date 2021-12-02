@@ -22,15 +22,15 @@
   height: 54px;
   text-align: left;
   line-height: 18px;
+  position: relative;
+  top: 10px;
+  margin-left: 5px;
+  word-wrap: break-word;
   text-overflow: ellipsis;
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 3;
   overflow: hidden;
-  position: relative;
-  top: 10px;
-  margin-left: 5px;
-  word-wrap: break-word;
 }
 .cover-footer {
   width: 100%;

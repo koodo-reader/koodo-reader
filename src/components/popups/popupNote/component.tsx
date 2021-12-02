@@ -64,9 +64,13 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
       if (!doc) {
         return;
       }
-      let charRange = window.rangy
-        .getSelection(iframe)
-        .saveCharacterRanges(doc.body)[0];
+      let charRange;
+      if (this.props.currentBook.format !== "PDF") {
+        charRange = window.rangy
+          .getSelection(iframe)
+          .saveCharacterRanges(doc.body)[0];
+      }
+
       let range =
         this.props.currentBook.format === "PDF"
           ? JSON.stringify(getHightlightCoords())
@@ -80,13 +84,17 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
       text = text.replace(/\n/g, "");
       text = text.replace(/\t/g, "");
       text = text.replace(/\f/g, "");
-      let percentage = RecordLocation.getCfi(this.props.currentBook.key)
-        .percentage
-        ? RecordLocation.getCfi(this.props.currentBook.key).percentage
-        : 0;
+      let percentage = 0;
+      if (this.props.currentBook.format === "EPUB") {
+        percentage = RecordLocation.getCfi(this.props.currentBook.key)
+          .percentage
+          ? RecordLocation.getCfi(this.props.currentBook.key).percentage
+          : 0;
+      }
 
       let color = this.props.color || 0;
       let tag = this.state.tag;
+
       let note = new Note(
         bookKey,
         this.props.chapter,
@@ -99,6 +107,7 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
         color,
         tag
       );
+
       let noteArr = this.props.notes;
       noteArr.push(note);
       localforage.setItem("notes", noteArr).then(() => {

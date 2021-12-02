@@ -17,20 +17,23 @@
 }
 .book-item-list-title,
 .book-item-list-author {
-  height: 30px;
+  max-height: 60px;
   width: 350px;
   font-size: 18px;
   opacity: 1;
   text-align: center;
-  text-overflow: ellipsis;
+  vertical-align: middle;
   cursor: pointer;
-  margin: 22px 10px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  margin: 7px 10px;
   line-height: 20px;
+  word-wrap: break-word;
+  display: table;
+  overflow: hidden;
 }
-
+.book-item-list-subtitle {
+  display: table-cell;
+  vertical-align: middle;
+}
 .book-item-list-author {
   width: 150px;
 }

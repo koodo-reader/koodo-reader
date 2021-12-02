@@ -19,7 +19,7 @@ export const getHightlightCoords = () => {
     } else if (
       Math.abs(
         tempRect[tempRect.length - 1].bottom - selectionRects[i].bottom
-      ) < 3
+      ) < 5
     ) {
       if (tempRect[tempRect.length - 1].left > selectionRects[i].left) {
         tempRect[tempRect.length - 1].left = selectionRects[i].left;

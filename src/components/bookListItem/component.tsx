@@ -141,13 +141,19 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
             this.handleJump();
           }}
         >
-          {this.props.book.name}
+          <span className="book-item-list-subtitle">
+            {this.props.book.name}
+          </span>
         </p>
 
         <p className="book-item-list-author">
-          <Trans>
-            {this.props.book.author ? this.props.book.author : "Unknown Authur"}
-          </Trans>
+          <span className="book-item-list-subtitle">
+            <Trans>
+              {this.props.book.author
+                ? this.props.book.author
+                : "Unknown Authur"}
+            </Trans>
+          </span>
         </p>
         <p className="book-item-list-percentage">
           {percentage ? Math.round(percentage * 100) : 0}%
