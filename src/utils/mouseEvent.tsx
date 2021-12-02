@@ -26,7 +26,7 @@ const arrowKeys = (rendition: any, keyCode: number, event: any) => {
   if (document.querySelector(".editor-box")) {
     return;
   }
-  // event.preventDefault();
+
   if (lock) return;
 
   if (keyCode === 37 || keyCode === 38) {
@@ -224,7 +224,7 @@ export const HtmlMouseEvent = (
       "keydown",
       async (event) => {
         arrowKeys(rendition, event.keyCode, event);
-        event.preventDefault();
+
         if (key) {
           if (StorageUtil.getReaderConfig("isSliding") === "yes") {
             await sleep(500);
