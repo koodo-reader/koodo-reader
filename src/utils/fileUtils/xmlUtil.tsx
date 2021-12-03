@@ -6,6 +6,7 @@ export const xmlBookToObj = (xml) => {
   parser.parseString(xml, function (err, result) {
     if (err) {
       console.log("Error with parsing xml" + err);
+      return "";
     }
 
     var fictionBook = result.FictionBook;
