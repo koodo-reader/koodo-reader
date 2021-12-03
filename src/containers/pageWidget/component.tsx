@@ -60,70 +60,72 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
             : "",
         }}
       >
-        {!this.state.isHideHeader && this.state.currentChapter && (
-          <p
-            className="progress-chapter-name"
-            style={
-              this.state.isSingle
-                ? {
-                    left: `calc(50vw - 
+        <div className="header-container">
+          {!this.state.isHideHeader && this.state.currentChapter && (
+            <p
+              className="progress-chapter-name"
+              style={
+                this.state.isSingle
+                  ? {
+                      left: `calc(50vw - 
                       270px)`,
-                  }
-                : {}
-            }
-          >
-            <Trans>{this.state.currentChapter}</Trans>
-          </p>
-        )}
-
-        {!this.state.isHideHeader && !this.state.isSingle && (
-          <p
-            className="progress-book-name"
-            style={
-              this.state.isSingle
-                ? {
-                    right: `calc(50vw - 
+                    }
+                  : {}
+              }
+            >
+              <Trans>{this.state.currentChapter}</Trans>
+            </p>
+          )}
+          {!this.state.isHideHeader && !this.state.isSingle && (
+            <p
+              className="progress-book-name"
+              style={
+                this.state.isSingle
+                  ? {
+                      right: `calc(50vw - 
                       270px)`,
-                  }
-                : {}
-            }
-          >
-            <Trans>{this.props.currentBook.name}</Trans>
-          </p>
-        )}
-
-        {!this.state.isHideFooter && this.state.prevPage > 0 && (
-          <p
-            className="background-page-left"
-            style={
-              this.state.isSingle
-                ? {
-                    left: `calc(50vw - 
+                    }
+                  : {}
+              }
+            >
+              <Trans>{this.props.currentBook.name}</Trans>
+            </p>
+          )}
+        </div>
+        <div className="footer-container">
+          {!this.state.isHideFooter && this.state.prevPage > 0 && (
+            <p
+              className="background-page-left"
+              style={
+                this.state.isSingle
+                  ? {
+                      left: `calc(50vw - 
                       270px)`,
-                  }
-                : {}
-            }
-          >
-            <Trans i18nKey="Book Page" count={this.state.prevPage}>
-              Page
-              {{
-                count: this.state.prevPage,
-              }}
-            </Trans>
-          </p>
-        )}
-        {!this.state.isHideFooter &&
-          this.state.nextPage > 0 &&
-          !this.state.isSingle && (
-            <p className="background-page-right">
-              <Trans i18nKey="Book Page" count={this.state.nextPage}>
+                    }
+                  : {}
+              }
+            >
+              <Trans i18nKey="Book Page" count={this.state.prevPage}>
                 Page
                 {{
-                  count: this.state.nextPage,
+                  count: this.state.prevPage,
                 }}
               </Trans>
             </p>
           )}
+          {!this.state.isHideFooter &&
+            this.state.nextPage > 0 &&
+            !this.state.isSingle && (
+              <p className="background-page-right">
+                <Trans i18nKey="Book Page" count={this.state.nextPage}>
+                  Page
+                  {{
+                    count: this.state.nextPage,
+                  }}
+                </Trans>
+              </p>
+            )}
+        </div>
       </div>
     );
   }

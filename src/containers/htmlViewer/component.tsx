@@ -383,7 +383,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       Buffer.from(result),
       this.props.currentBook.charset || charset || "utf8"
     );
-    let bookObj = xmlBookToObj(Buffer.from(result));
+    let bookObj = xmlBookToObj(Buffer.from(result)) || "";
     bookObj += xmlBookTagFilter(fb2Str);
     let rendition = new StrRender(
       bookObj,
@@ -419,6 +419,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       <>
         <div
           className="html-viewer-page"
+          id="page-area"
           style={
             document.body.clientWidth < 570
               ? { left: 0, right: 0 }

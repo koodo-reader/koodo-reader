@@ -3,9 +3,7 @@ import "./imageViewer.css";
 import { ImageViewerProps, ImageViewerStates } from "./interface";
 import StyleUtil from "../../utils/readUtils/styleUtil";
 import FileSaver from "file-saver";
-import { isElectron } from "react-device-detect";
-
-declare var window: any;
+import { handleLinkJump } from "../../utils/readUtils/linkUtil";
 
 class ImageViewer extends React.Component<ImageViewerProps, ImageViewerStates> {
   constructor(props: ImageViewerProps) {
@@ -39,40 +37,7 @@ class ImageViewer extends React.Component<ImageViewerProps, ImageViewerStates> {
       this.props.handleLeaveReader("top");
       this.props.handleLeaveReader("bottom");
     }
-    let href;
-
-    if (
-      event.target &&
-      event.target.parentNode &&
-      event.target.parentNode.parentNode
-    ) {
-      href =
-        (event.target.innerText.indexOf("http") > -1 &&
-          event.target.innerText) ||
-        event.target.src ||
-        event.target.href ||
-        event.target.parentNode.href ||
-        event.target.parentNode.parentNode.href ||
-        "";
-    }
-    if (
-      href &&
-      href.indexOf("http") === 0 &&
-      href.indexOf("OEBPF") === -1 &&
-      href.indexOf("OEBPS") === -1 &&
-      href.indexOf("footnote") === -1 &&
-      href.indexOf("blob") === -1 &&
-      href.indexOf("data:application") === -1 &&
-      href.indexOf(".htm") === -1
-    ) {
-      event.preventDefault();
-      if (isElectron) {
-        const { shell } = window.require("electron");
-        shell.openExternal(href);
-      } else {
-        window.open(href);
-      }
-    }
+    handleLinkJump(event);
     if (!event.target.src) {
       return;
     }

@@ -140,9 +140,8 @@
 }
 .nav-search-list {
   position: absolute;
-  left: 10px;
-  top: 110px;
-  right: 10px;
+  padding: 10px;
+  top: 100px;
   font-size: 15px;
   height: calc(100vh - 150px);
   overflow: scroll;

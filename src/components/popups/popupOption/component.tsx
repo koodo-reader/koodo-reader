@@ -23,12 +23,18 @@ class PopupOption extends React.Component<PopupOptionProps> {
     this.handleEdge();
   };
   handleEdge = () => {
+    let page: any = { offsetLeft: 0 };
+    if (this.props.currentBook.format !== "PDF") {
+      page = document.getElementById("page-area");
+      if (!page.clientWidth) return;
+    }
     let popupMenu: any = document.querySelector(".popup-menu-container");
     let posX = popupMenu?.style.left;
     let posY = popupMenu?.style.top;
     posX = parseInt(posX.substr(0, posX.length - 2));
     posY = parseInt(posY.substr(0, posY.length - 2));
-    let rightEdge = this.props.pageWidth - 310;
+    let rightEdge = this.props.pageWidth - 310 + page.offsetLeft * 2;
+
     if (posX > rightEdge) {
       popupMenu.setAttribute("style", `left:${rightEdge}px;top:${posY}px`);
     }
@@ -182,6 +188,7 @@ class PopupOption extends React.Component<PopupOptionProps> {
       keyCode: 13,
     } as any);
     searchBox.dispatchEvent(keyEvent);
+    this.props.handleOpenMenu(false);
   };
 
   handleSpeak = () => {

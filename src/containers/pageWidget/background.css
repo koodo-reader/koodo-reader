@@ -1,18 +1,37 @@
 .progress-chapter-name,
 .progress-book-name {
-  width: 540px;
+  max-width: 45vw;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
-  position: absolute;
-  top: 5px;
   line-height: 30px;
   text-align: center;
   opacity: 0.3;
 }
-.progress-chapter-name {
-  left: calc(25% - 270px);
+.header-container,
+.footer-container {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  height: 30px;
 }
-.progress-book-name {
-  right: calc(25% - 270px);
+.header-container {
+  position: absolute;
+  top: 3px;
+}
+.footer-container {
+  position: absolute;
+  bottom: 3px;
+}
+
+.background-page-left,
+.background-page-right {
+  max-width: 45vw;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  line-height: 30px;
+  text-align: center;
+  font-size: 14px;
+  opacity: 0.3;
 }

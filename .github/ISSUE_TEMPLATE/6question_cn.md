@@ -5,5 +5,5 @@ labels: "question"
 ---
 
 <!--
-  这个issue模板是回答和Koodo Reader有关的问题，问题反馈和功能建议请使用对应的的issue模板
+  这个issue模板是用来回答和Koodo Reader有关的问题，问题反馈和功能建议请使用对应的模板
 -->
