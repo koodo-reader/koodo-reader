@@ -4,6 +4,7 @@
   margin: 18px;
   margin-right: 25px;
   position: relative;
+  max-height: 74px;
 }
 .book-item-list-cover {
   width: 57px;
@@ -33,6 +34,7 @@
 .book-item-list-subtitle {
   display: table-cell;
   vertical-align: middle;
+  height: 60px;
 }
 .book-item-list-author {
   width: 150px;

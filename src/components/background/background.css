@@ -90,23 +90,3 @@
   width: 60vw;
   left: 20vw;
 }
-
-.background-page-left,
-.background-page-right {
-  width: 540px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
-  position: absolute;
-  bottom: 5px;
-  line-height: 30px;
-  text-align: center;
-  font-size: 14px;
-  opacity: 0.3;
-}
-.background-page-left {
-  left: calc(25% - 270px);
-}
-.background-page-right {
-  right: calc(25% - 270px);
-}
