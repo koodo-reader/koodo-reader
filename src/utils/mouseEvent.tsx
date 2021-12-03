@@ -126,15 +126,14 @@ const bindEvent = (
     arrowKeys(rendition, event.keyCode, event);
     //使用Key判断是否是htmlBook
     if (key) {
-      if (StorageUtil.getReaderConfig("isSliding") === "yes") {
-        await sleep(500);
-      }
-      let postion = rendition.getPosition();
+      await sleep(500);
+
+      let position = rendition.getPosition();
       RecordLocation.recordScrollHeight(
         key,
-        postion.text,
-        postion.chapterTitle,
-        postion.count
+        position.text,
+        position.chapterTitle,
+        position.count
       );
     }
   });
@@ -142,20 +141,20 @@ const bindEvent = (
     "mousewheel",
     async (event) => {
       if (readerMode === "scroll") {
+        await sleep(200);
         rendition.record();
       } else {
         mouseChrome(rendition, event.wheelDelta);
       }
       if (key) {
-        if (StorageUtil.getReaderConfig("isSliding") === "yes") {
-          await sleep(500);
-        }
-        let postion = rendition.getPosition();
+        await sleep(500);
+
+        let position = rendition.getPosition();
         RecordLocation.recordScrollHeight(
           key,
-          postion.text,
-          postion.chapterTitle,
-          postion.count
+          position.text,
+          position.chapterTitle,
+          position.count
         );
       }
     },
@@ -166,15 +165,14 @@ const bindEvent = (
     mc.on("panleft panright panup pandown", async (event: any) => {
       gesture(rendition, event.type);
       if (key) {
-        if (StorageUtil.getReaderConfig("isSliding") === "yes") {
-          await sleep(500);
-        }
-        let postion = rendition.getPosition();
+        await sleep(500);
+
+        let position = rendition.getPosition();
         RecordLocation.recordScrollHeight(
           key,
-          postion.text,
-          postion.chapterTitle,
-          postion.count
+          position.text,
+          position.chapterTitle,
+          position.count
         );
       }
     });
@@ -226,15 +224,14 @@ export const HtmlMouseEvent = (
         arrowKeys(rendition, event.keyCode, event);
 
         if (key) {
-          if (StorageUtil.getReaderConfig("isSliding") === "yes") {
-            await sleep(500);
-          }
-          let postion = rendition.getPosition();
+          await sleep(500);
+
+          let position = rendition.getPosition();
           RecordLocation.recordScrollHeight(
             key,
-            postion.text,
-            postion.chapterTitle,
-            postion.count
+            position.text,
+            position.chapterTitle,
+            position.count
           );
         }
       },
