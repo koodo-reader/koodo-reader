@@ -140,15 +140,16 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
               className="previous-chapter-single-container"
               onClick={async () => {
                 this.props.htmlBook.rendition.prev();
-                if (StorageUtil.getReaderConfig("isSliding") === "yes") {
-                  await sleep(500);
-                }
-                let postion = this.props.htmlBook.rendition.getPosition();
+
+                await sleep(500);
+
+                let position = this.props.htmlBook.rendition.getPosition();
+
                 RecordLocation.recordScrollHeight(
                   this.props.currentBook.key,
-                  postion.text,
-                  postion.chapterTitle,
-                  postion.count
+                  position.text,
+                  position.chapterTitle,
+                  position.count
                 );
               }}
             >
@@ -158,15 +159,16 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
               className="next-chapter-single-container"
               onClick={async () => {
                 this.props.htmlBook.rendition.next();
-                if (StorageUtil.getReaderConfig("isSliding") === "yes") {
-                  await sleep(500);
-                }
-                let postion = this.props.htmlBook.rendition.getPosition();
+
+                await sleep(500);
+
+                let position = this.props.htmlBook.rendition.getPosition();
+                console.log(position, "position");
                 RecordLocation.recordScrollHeight(
                   this.props.currentBook.key,
-                  postion.text,
-                  postion.chapterTitle,
-                  postion.count
+                  position.text,
+                  position.chapterTitle,
+                  position.count
                 );
               }}
             >
