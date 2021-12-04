@@ -126,8 +126,6 @@ const bindEvent = (
     arrowKeys(rendition, event.keyCode, event);
     //使用Key判断是否是htmlBook
     if (key) {
-      await sleep(500);
-
       let position = rendition.getPosition();
       RecordLocation.recordScrollHeight(
         key,
@@ -147,8 +145,6 @@ const bindEvent = (
         mouseChrome(rendition, event.wheelDelta);
       }
       if (key) {
-        await sleep(500);
-
         let position = rendition.getPosition();
         RecordLocation.recordScrollHeight(
           key,
@@ -165,8 +161,6 @@ const bindEvent = (
     mc.on("panleft panright panup pandown", async (event: any) => {
       gesture(rendition, event.type);
       if (key) {
-        await sleep(500);
-
         let position = rendition.getPosition();
         RecordLocation.recordScrollHeight(
           key,
@@ -224,8 +218,6 @@ export const HtmlMouseEvent = (
         arrowKeys(rendition, event.keyCode, event);
 
         if (key) {
-          await sleep(500);
-
           let position = rendition.getPosition();
           RecordLocation.recordScrollHeight(
             key,

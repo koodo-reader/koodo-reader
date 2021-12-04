@@ -11,9 +11,7 @@ import Viewer from "../../containers/htmlViewer";
 import _ from "underscore";
 import localforage from "localforage";
 import RecordLocation from "../../utils/readUtils/recordLocation";
-const sleep = (ms: number) => {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-};
+
 class Reader extends React.Component<ReaderProps, ReaderState> {
   messageTimer!: NodeJS.Timeout;
   tickTimer!: NodeJS.Timeout;
@@ -140,9 +138,6 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
               className="previous-chapter-single-container"
               onClick={async () => {
                 this.props.htmlBook.rendition.prev();
-
-                await sleep(500);
-
                 let position = this.props.htmlBook.rendition.getPosition();
 
                 RecordLocation.recordScrollHeight(
@@ -159,11 +154,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
               className="next-chapter-single-container"
               onClick={async () => {
                 this.props.htmlBook.rendition.next();
-
-                await sleep(500);
-
                 let position = this.props.htmlBook.rendition.getPosition();
-                console.log(position, "position");
                 RecordLocation.recordScrollHeight(
                   this.props.currentBook.key,
                   position.text,
