@@ -122,7 +122,7 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
             <li
               className="sort-by-category-list"
               onClick={() => {
-                this.handleJump("https://koodo.960960.xyz/en/download");
+                this.handleJump("https://koodo.960960.xyz/en");
               }}
               style={{ color: "rgb(35, 170, 242)" }}
             >

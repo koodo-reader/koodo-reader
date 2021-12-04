@@ -87,7 +87,7 @@ class UpdateInfo extends React.Component<UpdateInfoProps, UpdateInfoState> {
         .shell.openExternal(
           this.state.isUpdated
             ? "https://koodo.960960.xyz/en/log"
-            : "https://koodo.960960.xyz/en/download"
+            : "https://koodo.960960.xyz/en"
         );
   };
   handleClose = () => {
