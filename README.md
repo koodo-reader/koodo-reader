@@ -33,7 +33,7 @@
 - Format support:
   - EPUB (**.epub**)
   - Scanned document (**.pdf**, **.djvu**)
-  - Kindle (**.azw3**) and Mobipocket (**.mobi**)
+  - DRM-free Mobipocket (**.mobi**) and Kindle (**.azw3**)
   - Plain text (**.txt**)
   - FictionBook (**.fb2**)
   - Comic book archive (**.cbr**, **.cbz**, **.cbt**)
