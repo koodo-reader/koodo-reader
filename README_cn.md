@@ -18,7 +18,7 @@
 
 <div align="center">
 
-[下载](https://koodo.960960.xyz/zh) | [预览](https://reader.960960.xyz) | [计划](https://troyeguo.notion.site/215baeda57804fd29dbb0e91d1e6a021?v=360c00183d944b598668f34c255edfd7) | [文档](https://troyeguo.notion.site/Koodo-Reader-0c9c7ccdc5104a54825dfc72f1c84bea)
+[下载客户端](https://koodo.960960.xyz/zh) | [在线预览](https://reader.960960.xyz) | [开发计划](https://troyeguo.notion.site/215baeda57804fd29dbb0e91d1e6a021?v=360c00183d944b598668f34c255edfd7) | [帮助文档](https://troyeguo.notion.site/Koodo-Reader-0c9c7ccdc5104a54825dfc72f1c84bea)
 
 </div>
 
