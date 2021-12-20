@@ -9,8 +9,7 @@ body:
       description: https://www.notion.so/troyeguo/d1c19a132932465bae1d89dd963c92ea?v=ca8aa69cf25849c18c92b92ba868663b
       options:
         - label: "Yes"
-    validations:
-      required: true
+          required: true
 
   - type: checkboxes
     id: testing2
@@ -18,8 +17,7 @@ body:
       label: This issue only requests one feature.
       options:
         - label: "Yes"
-    validations:
-      required: true
+          required: true
 
   - type: textarea
     id: introduction
