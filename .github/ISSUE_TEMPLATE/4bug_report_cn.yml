@@ -15,7 +15,7 @@ body:
   - type: checkboxes
     id: testing2
     attributes:
-      label: 我已经搜索了已有的 Issues列表，没有找到类似的issue
+      label: 我已经搜索了已有的 issue 列表，没有找到类似的 issue
       options:
         - label: "Yes"
     validations:
@@ -36,14 +36,14 @@ body:
     attributes:
       label: 操作系统或浏览器
       options:
-        - Windows 10及以下
+        - Windows 10 及以下
         - Windows 11
-        - macOS 10及以下
+        - macOS 10 及以下
         - macOS 11
         - macOS 12
         - Ubuntu
-        - 其他Linux发行版
-        - Chrome及其他Chromium浏览器(包括Edge和所有国产浏览器)
+        - 其他 Linux 发行版
+        - Chrome 及其他 Chromium 浏览器(包括 Edge 和所有国产浏览器)
         - Firefox
         - IE
     validations:
