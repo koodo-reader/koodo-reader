@@ -9,8 +9,7 @@ body:
       description: https://github.com/troyeguo/koodo-reader/releases/latest
       options:
         - label: "Yes"
-    validations:
-      required: true
+          required: true
 
   - type: checkboxes
     id: testing2
@@ -18,8 +17,7 @@ body:
       label: 我已经搜索了已有的 issue 列表，没有找到类似的 issue
       options:
         - label: "Yes"
-    validations:
-      required: true
+          required: true
 
   - type: checkboxes
     id: testing3
@@ -28,8 +26,7 @@ body:
       description: https://troyeguo.notion.site/Koodo-Reader-0c9c7ccdc5104a54825dfc72f1c84bea
       options:
         - label: "Yes"
-    validations:
-      required: true
+          required: true
 
   - type: dropdown
     id: os

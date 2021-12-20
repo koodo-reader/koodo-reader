@@ -10,8 +10,7 @@ body:
       description: https://github.com/troyeguo/koodo-reader/releases/latest
       options:
         - label: "Yes"
-    validations:
-      required: true
+          required: true
 
   - type: checkboxes
     id: testing2
@@ -19,8 +18,7 @@ body:
       label: There are no similar issues on the issue list
       options:
         - label: "Yes"
-    validations:
-      required: true
+          required: true
 
   - type: checkboxes
     id: testing3
@@ -29,8 +27,7 @@ body:
       description: https://troyeguo.notion.site/Koodo-Reader-Document-9c767af3d66c459db996bdd08a34c34b
       options:
         - label: "Yes"
-    validations:
-      required: true
+          required: true
 
   - type: dropdown
     id: os
