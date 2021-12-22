@@ -70,11 +70,11 @@ body:
     validations:
       required: false
 
-  - type: input
+  - type: textarea
     id: download
     attributes:
       label: 图书文件(可选的)
       description: https://www.dropbox.com/request/1YGG5Eqo1nE3QUHlPxR8
-      placeholder: 通过上面的链接给我们发送图书文件，或者其他网盘下载链接
+      placeholder: 通过上面的链接先我们发送图书文件，或在此粘贴网盘下载链接
     validations:
       required: false
