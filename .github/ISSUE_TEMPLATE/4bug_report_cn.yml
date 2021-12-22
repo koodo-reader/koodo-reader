@@ -73,7 +73,8 @@ body:
   - type: textarea
     id: download
     attributes:
-      label: 图书的下载链接(可选的)
+      label: 图书的下载链接(可选的)      
+      description: 通过此链接发送您的文件: https://www.dropbox.com/request/1YGG5Eqo1nE3QUHlPxR8
       placeholder: 您遇到问题时正在阅读的图书
     validations:
       required: false
