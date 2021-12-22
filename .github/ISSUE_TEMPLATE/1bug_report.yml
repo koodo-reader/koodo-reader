@@ -68,7 +68,7 @@ body:
     id: screenshot
     attributes:
       label: Screenshots (Optional)
-      placeholder: If applicable, add screenshots to help explain your problem.
+      placeholder: Drag your screenshots or videos here to upload them
     validations:
       required: false
 
