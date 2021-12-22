@@ -72,7 +72,7 @@ body:
     validations:
       required: false
 
-  - type: textarea
+  - type: input
     id: download
     attributes:
       label: Files (Optional)
