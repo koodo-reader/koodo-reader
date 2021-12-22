@@ -72,11 +72,11 @@ body:
     validations:
       required: false
 
-  - type: input
+  - type: textarea
     id: download
     attributes:
       label: Files (Optional)
       description: https://www.dropbox.com/request/1YGG5Eqo1nE3QUHlPxR8
-      placeholder: Send us the ebook files via the above link or whatever suits you
+      placeholder: Send us the ebook files via the above link or paste the download link of your ebook files in this area
     validations:
       required: false
