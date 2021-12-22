@@ -75,8 +75,8 @@ body:
   - type: input
     id: download
     attributes:
-      label: Files (Optional)
+      label: EBook Files (Optional)
       description: https://www.dropbox.com/request/1YGG5Eqo1nE3QUHlPxR8
-      placeholder: Attach your book if you think it's helpful
+      placeholder: Send us the ebook files via the above link or whatever suits you
     validations:
       required: false
