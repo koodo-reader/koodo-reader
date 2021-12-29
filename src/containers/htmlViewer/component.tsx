@@ -8,7 +8,11 @@ import iconv from "iconv-lite";
 import chardet from "chardet";
 import rtfToHTML from "@iarna/rtf-to-html";
 import PopupMenu from "../../components/popups/popupMenu";
-import { xmlBookTagFilter, xmlBookToObj } from "../../utils/fileUtils/xmlUtil";
+import {
+  xmlBookTagFilter,
+  xmlBookToObj,
+  xmlImageHandler,
+} from "../../utils/fileUtils/xmlUtil";
 import StorageUtil from "../../utils/storageUtil";
 import RecordLocation from "../../utils/readUtils/recordLocation";
 import { mimetype } from "../../constants/mimetype";
@@ -21,7 +25,6 @@ import untar from "js-untar";
 import ImageViewer from "../../components/imageViewer";
 import Chinese from "chinese-s2t";
 import _ from "underscore";
-
 declare var window: any;
 
 const { MobiRender, Azw3Render, TxtRender, StrRender, ComicRender } =
@@ -374,6 +377,14 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         this.handleRest(rendition);
       });
   };
+  toBuffer(ab) {
+    const buf = Buffer.alloc(ab.byteLength);
+    const view = new Uint8Array(ab);
+    for (let i = 0; i < buf.length; ++i) {
+      buf[i] = view[i];
+    }
+    return buf;
+  }
   handleFb2 = async (result: ArrayBuffer) => {
     let charset = "";
     if (!this.props.currentBook.charset) {
@@ -383,8 +394,9 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       Buffer.from(result),
       this.props.currentBook.charset || charset || "utf8"
     );
-    let bookObj = xmlBookToObj(Buffer.from(result)) || "";
-    bookObj += xmlBookTagFilter(fb2Str);
+    let bookObj = "";
+    bookObj += xmlBookTagFilter(Buffer.from(result), fb2Str);
+
     let rendition = new StrRender(
       bookObj,
       this.state.readerMode,
