@@ -8,11 +8,7 @@ import iconv from "iconv-lite";
 import chardet from "chardet";
 import rtfToHTML from "@iarna/rtf-to-html";
 import PopupMenu from "../../components/popups/popupMenu";
-import {
-  xmlBookTagFilter,
-  xmlBookToObj,
-  xmlImageHandler,
-} from "../../utils/fileUtils/xmlUtil";
+import { xmlBookParser } from "../../utils/fileUtils/xmlUtil";
 import StorageUtil from "../../utils/storageUtil";
 import RecordLocation from "../../utils/readUtils/recordLocation";
 import { mimetype } from "../../constants/mimetype";
@@ -162,9 +158,9 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       if (this.props.currentBook.format.startsWith("CB")) {
         this.setState({
           chapter:
-            this.props.htmlBook.chapters[parseInt(bookLocation.count || "0")]
+            this.props.htmlBook.chapters[parseInt(bookLocation.count) || 0]
               .label,
-          chapterIndex: parseInt(bookLocation.count || "0"),
+          chapterIndex: parseInt(bookLocation.count) || 0,
         });
       } else {
         this.setState({
@@ -217,7 +213,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     );
     await rendition.renderTo(
       document.getElementsByClassName("html-viewer-page")[0],
-      parseInt(bookLocation.count || "0")
+      parseInt(bookLocation.count) || 0
     );
     this.handleRest(rendition);
   };
@@ -236,7 +232,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       );
       await rendition.renderTo(
         document.getElementsByClassName("html-viewer-page")[0],
-        parseInt(bookLocation.count || "0")
+        parseInt(bookLocation.count) || 0
       );
       this.handleRest(rendition);
     });
@@ -256,7 +252,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         );
         await rendition.renderTo(
           document.getElementsByClassName("html-viewer-page")[0],
-          parseInt(bookLocation.count || "0")
+          parseInt(bookLocation.count) || 0
         );
         this.handleRest(rendition);
       },
@@ -394,9 +390,8 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       Buffer.from(result),
       this.props.currentBook.charset || charset || "utf8"
     );
-    let bookObj = "";
-    bookObj += xmlBookTagFilter(Buffer.from(result), fb2Str);
-
+    let bookObj = xmlBookParser(Buffer.from(result), fb2Str);
+    console.log(bookObj);
     let rendition = new StrRender(
       bookObj,
       this.state.readerMode,
