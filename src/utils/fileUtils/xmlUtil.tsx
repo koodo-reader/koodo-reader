@@ -34,7 +34,7 @@ export const xmlBookToObj = (xml) => {
   return informBook;
 };
 
-export const xmlBookTagFilter = (xml: any, bookString: string) => {
+export const xmlBookParser = (xml: any, bookString: string) => {
   var regExpTagDelete = /<epigraph>|<\/epigraph>|<empty-line\/>|/gi;
   var regExpTitleOpen = /<title>/gi;
   var regExpTitleClose = /<\/title>/gi;
@@ -67,7 +67,7 @@ export const xmlImageHandler = (xml: any, bookString: string) => {
         for (let j = 0; j < fictionBook.binary.length; j++) {
           if (strArr[i].startsWith(fictionBook.binary[j]["$"].id)) {
             strArr[i] =
-              '<img alt="poster" src="' +
+              '<img alt="poster" width="100%" src="' +
               "data:image/jpeg;base64," +
               fictionBook.binary[j]["_"] +
               strArr[i].slice(fictionBook.binary[j]["$"].id.length);

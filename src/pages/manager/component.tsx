@@ -31,8 +31,7 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
   constructor(props: ManagerProps) {
     super(props);
     this.state = {
-      totalBooks:
-        parseInt(StorageUtil.getReaderConfig("totalBooks") || "0") || 0,
+      totalBooks: parseInt(StorageUtil.getReaderConfig("totalBooks")) || 0,
       favoriteBooks: Object.keys(AddFavorite.getAllFavorite()).length,
       isAuthed: false,
       isError: false,
