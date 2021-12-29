@@ -12,7 +12,7 @@ class LoadingPage extends React.Component<LoadingPageProps> {
     let arr: number[] = [];
     for (
       let i = 0;
-      i < parseInt(StorageUtil.getReaderConfig("totalBooks") || "0");
+      i < parseInt(StorageUtil.getReaderConfig("totalBooks")) || 0;
       i++
     ) {
       arr.push(i);
