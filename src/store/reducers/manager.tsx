@@ -4,7 +4,7 @@ const initState = {
   searchResults: [],
   isSearch: false,
   isAboutOpen: false,
-  isBookSort: false,
+  isBookSort: localStorage.getItem("bookSortCode") ? true : false,
   isNoteSort: false,
   isSettingOpen: false,
   viewMode: "card",

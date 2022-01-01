@@ -11,7 +11,9 @@ const sleep = (ms: number) => {
 let throttleTime =
   StorageUtil.getReaderConfig("isSliding") === "yes" ? 1000 : 100;
 export const getSelection = () => {
-  let iframe = document.getElementsByTagName("iframe")[0];
+  let pageArea = document.getElementById("page-area");
+  if (!pageArea) return;
+  let iframe = pageArea.getElementsByTagName("iframe")[0];
   if (!iframe) return;
   let doc = iframe.contentDocument;
   if (!doc) return;
@@ -127,11 +129,12 @@ const bindEvent = (
     //使用Key判断是否是htmlBook
     if (key) {
       let position = rendition.getPosition();
-      RecordLocation.recordScrollHeight(
+      RecordLocation.recordHtmlLocation(
         key,
         position.text,
         position.chapterTitle,
-        position.count
+        position.count,
+        position.percentage
       );
     }
   });
@@ -146,11 +149,12 @@ const bindEvent = (
       }
       if (key) {
         let position = rendition.getPosition();
-        RecordLocation.recordScrollHeight(
+        RecordLocation.recordHtmlLocation(
           key,
           position.text,
           position.chapterTitle,
-          position.count
+          position.count,
+          position.percentage
         );
       }
     },
@@ -162,11 +166,12 @@ const bindEvent = (
       gesture(rendition, event.type);
       if (key) {
         let position = rendition.getPosition();
-        RecordLocation.recordScrollHeight(
+        RecordLocation.recordHtmlLocation(
           key,
           position.text,
           position.chapterTitle,
-          position.count
+          position.count,
+          position.percentage
         );
       }
     });
@@ -186,7 +191,9 @@ const bindEvent = (
 };
 export const EpubMouseEvent = (rendition: any) => {
   rendition.on("rendered", () => {
-    let iframe = document.getElementsByTagName("iframe")[0];
+    let pageArea = document.getElementById("page-area");
+    if (!pageArea) return;
+    let iframe = pageArea.getElementsByTagName("iframe")[0];
     if (!iframe) return;
     let doc = iframe.contentDocument;
     if (!doc) {
@@ -205,7 +212,9 @@ export const HtmlMouseEvent = (
   readerMode: string
 ) => {
   rendition.on("rendered", () => {
-    let iframe = document.getElementsByTagName("iframe")[0];
+    let pageArea = document.getElementById("page-area");
+    if (!pageArea) return;
+    let iframe = pageArea.getElementsByTagName("iframe")[0];
     if (!iframe) return;
     let doc = iframe.contentDocument;
     if (!doc) {
@@ -219,11 +228,12 @@ export const HtmlMouseEvent = (
 
         if (key) {
           let position = rendition.getPosition();
-          RecordLocation.recordScrollHeight(
+          RecordLocation.recordHtmlLocation(
             key,
             position.text,
             position.chapterTitle,
-            position.count
+            position.count,
+            position.percentage
           );
         }
       },

@@ -17,7 +17,11 @@ class ProgressPanel extends React.Component<
       currentChapterIndex: 0,
     };
   }
+  componentDidMount() {
+    console.log(this.props.percentage);
+  }
   componentWillReceiveProps(nextProps: ProgressPanelProps) {
+    console.log(nextProps.currentChapter, nextProps.htmlBook);
     if (nextProps.currentChapter && nextProps.htmlBook) {
       this.setState({
         currentChapter: nextProps.currentChapter,
@@ -34,6 +38,9 @@ class ProgressPanel extends React.Component<
             label: nextProps.currentChapter,
           }) / nextProps.htmlBook.chapters.length,
       });
+    }
+    if (nextProps.percentage) {
+      this.setState({ displayPercentage: nextProps.percentage });
     }
   }
 

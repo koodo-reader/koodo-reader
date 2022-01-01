@@ -50,15 +50,17 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
         cfi = RecordLocation.getCfi(this.props.currentBook.key).cfi;
       } else if (this.props.currentBook.format === "PDF") {
         cfi = JSON.stringify(
-          RecordLocation.getPDFlocation(this.props.currentBook.md5)
+          RecordLocation.getPDFLocation(this.props.currentBook.md5)
         );
       } else {
         cfi = JSON.stringify(
-          RecordLocation.getScrollHeight(this.props.currentBook.key)
+          RecordLocation.getHtmlLocation(this.props.currentBook.key)
         );
       }
 
-      let iframe = document.getElementsByTagName("iframe")[0];
+      let pageArea = document.getElementById("page-area");
+      if (!pageArea) return;
+      let iframe = pageArea.getElementsByTagName("iframe")[0];
       if (!iframe) return;
       let doc = iframe.contentDocument;
       if (!doc) {

@@ -4,6 +4,7 @@ import {
   handleFetchChapters,
   handleFetchBooks,
   handleReadingBook,
+  handleFetchPercentage,
 } from "../../store/actions";
 import { connect } from "react-redux";
 import { stateType } from "../../store";
@@ -24,6 +25,7 @@ const actionCreator = {
   handleFetchChapters,
   handleFetchBooks,
   handleReadingBook,
+  handleFetchPercentage,
 };
 export default connect(
   mapStateToProps,

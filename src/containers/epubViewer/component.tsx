@@ -60,7 +60,9 @@ class EpubViewer extends React.Component<ViewAreaProps, ViewAreaStates> {
       this.isFirst = false;
     });
     this.props.rendition.on("rendered", () => {
-      let iframe = document.getElementsByTagName("iframe")[0];
+      let pageArea = document.getElementById("page-area");
+      if (!pageArea) return;
+      let iframe = pageArea.getElementsByTagName("iframe")[0];
       if (!iframe) return;
       let doc = iframe.contentDocument;
       if (!doc) {
@@ -93,20 +95,46 @@ class EpubViewer extends React.Component<ViewAreaProps, ViewAreaStates> {
           "Simplified To Traditional"
         ) {
           doc.querySelectorAll("p").forEach((item) => {
-            item.innerText = Chinese.s2t(item.innerText);
+            item.innerHTML = item.innerHTML.replace(
+              item.innerText,
+              Chinese.s2t(item.innerText)
+            );
           });
         } else {
           doc.querySelectorAll("p").forEach((item) => {
-            item.innerText = Chinese.t2s(item.innerText);
+            item.innerHTML = item.innerHTML.replace(
+              item.innerText,
+              Chinese.t2s(item.innerText)
+            );
           });
         }
       }
     });
-    this.props.rendition.on("selected", (cfiRange: any, contents: any) => {
-      var range = contents.range(cfiRange);
-      var rect = range.getBoundingClientRect();
-      this.setState({ rect });
-    });
+
+    this.props.rendition.on(
+      "selected",
+      (cfiRange: any, contents: any, event: any) => {
+        var range = contents.range(cfiRange);
+        let rect;
+        if (range) {
+          rect = range.getBoundingClientRect();
+        } else {
+          let pageArea = document.getElementById("page-area");
+          if (!pageArea) return;
+          let iframe = pageArea.getElementsByTagName("iframe")[0];
+
+          if (!iframe) return;
+          let doc = iframe.contentDocument;
+          if (!doc) {
+            return;
+          }
+          if (!doc.getSelection()) return;
+          rect = doc!.getSelection()!.getRangeAt(0).getBoundingClientRect();
+        }
+
+        this.setState({ rect });
+      }
+    );
     this.props.rendition.themes.default(StyleUtil.getCustomCss(false));
     this.props.rendition.display(
       RecordLocation.getCfi(this.props.currentBook.key) === null

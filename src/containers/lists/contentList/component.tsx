@@ -39,16 +39,21 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
     event.preventDefault();
     let href = event.target.getAttribute("href");
     if (this.props.currentEpub && this.props.currentEpub.loaded) {
-      this.props.currentEpub.rendition.display(href);
+      let _href =
+        this.props.currentEpub.spine.items.filter(
+          (item) => item.href.indexOf(href) > -1
+        )[0].href || href;
+      this.props.currentEpub.rendition.display(_href);
     } else {
       let id = href.substr(1);
       let title =
         this.state.chapters[_.findIndex(this.state.chapters, { id })].label;
-      RecordLocation.recordScrollHeight(
+      RecordLocation.recordHtmlLocation(
         this.props.currentBook.key,
         "test",
         title,
-        "test"
+        "test",
+        "0"
       );
       this.props.htmlBook.rendition.goToChapter(title);
       this.props.handleCurrentChapter(title);

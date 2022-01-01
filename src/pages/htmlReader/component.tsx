@@ -59,6 +59,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
           JSON.parse(localStorage.getItem("tempBook") || "{}");
       }
       this.props.handleReadingBook(book);
+      this.props.handleFetchPercentage(book);
     });
   }
   //进入阅读器
@@ -140,11 +141,12 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
                 this.props.htmlBook.rendition.prev();
                 let position = this.props.htmlBook.rendition.getPosition();
 
-                RecordLocation.recordScrollHeight(
+                RecordLocation.recordHtmlLocation(
                   this.props.currentBook.key,
                   position.text,
                   position.chapterTitle,
-                  position.count
+                  position.count,
+                  position.percentage
                 );
               }}
             >
@@ -155,11 +157,12 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
               onClick={async () => {
                 this.props.htmlBook.rendition.next();
                 let position = this.props.htmlBook.rendition.getPosition();
-                RecordLocation.recordScrollHeight(
+                RecordLocation.recordHtmlLocation(
                   this.props.currentBook.key,
                   position.text,
                   position.chapterTitle,
-                  position.count
+                  position.count,
+                  position.percentage
                 );
               }}
             >

@@ -52,7 +52,10 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     document
       .querySelector(".ebook-viewer")
       ?.setAttribute("style", "height:100%");
-    let iframe = document.getElementsByTagName("iframe")[0];
+    let pageArea = document.getElementById("page-area");
+    if (!pageArea) return;
+    let iframe = pageArea.getElementsByTagName("iframe")[0];
+    if (!iframe) return;
     iframe.onload = () => {
       let doc: any =
         iframe.contentWindow || iframe.contentDocument?.defaultView;
