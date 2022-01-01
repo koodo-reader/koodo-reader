@@ -1,7 +1,7 @@
 import React from "react";
 import "./contentList.css";
 import { ContentListProps, ContentListState } from "./interface";
-import StorageUtil from "../../../utils/storageUtil";
+import StorageUtil from "../../../utils/serviceUtils/storageUtil";
 import _ from "underscore";
 import RecordLocation from "../../../utils/readUtils/recordLocation";
 class ContentList extends React.Component<ContentListProps, ContentListState> {

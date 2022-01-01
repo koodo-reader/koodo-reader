@@ -27,10 +27,10 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
         }}
         style={
           this.props.isNewWarning
-            ? { left: "510px", height: "280px", width: "150px" }
+            ? { left: "510px", width: "150px" }
             : {
                 left: "510px",
-                height: "250px",
+
                 width: "150px",
               }
         }
@@ -73,14 +73,6 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
           <li
             className="sort-by-category-list"
             onClick={() => {
-              this.handleJump("https://forms.office.com/r/tgD1ZizHB2");
-            }}
-          >
-            <Trans>Survey</Trans>
-          </li>
-          <li
-            className="sort-by-category-list"
-            onClick={() => {
               if (navigator.language.indexOf("zh") > -1) {
                 this.handleJump(
                   "https://www.notion.so/troyeguo/215baeda57804fd29dbb0e91d1e6a021?v=360c00183d944b598668f34c255edfd7"
@@ -101,14 +93,6 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
             }}
           >
             <Trans>Our Website</Trans>
-          </li>
-          <li
-            className="sort-by-category-list"
-            onClick={() => {
-              this.handleJump("https://960960.xyz");
-            }}
-          >
-            <Trans>About developer</Trans>
           </li>
           <li
             className="sort-by-category-list"

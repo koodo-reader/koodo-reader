@@ -4,7 +4,7 @@ import { PopupTransProps, PopupTransState } from "./interface";
 import md5 from "md5";
 import { Trans } from "react-i18next";
 import { translationList } from "../../../constants/translationList";
-import StorageUtil from "../../../utils/storageUtil";
+import StorageUtil from "../../../utils/serviceUtils/storageUtil";
 
 class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
   constructor(props: PopupTransProps) {

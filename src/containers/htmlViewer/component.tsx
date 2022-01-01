@@ -9,19 +9,21 @@ import chardet from "chardet";
 import rtfToHTML from "@iarna/rtf-to-html";
 import PopupMenu from "../../components/popups/popupMenu";
 import { xmlBookParser } from "../../utils/fileUtils/xmlUtil";
-import StorageUtil from "../../utils/storageUtil";
+import StorageUtil from "../../utils/serviceUtils/storageUtil";
 import RecordLocation from "../../utils/readUtils/recordLocation";
 import { mimetype } from "../../constants/mimetype";
 import Background from "../../components/background";
 import toast from "react-hot-toast";
 import StyleUtil from "../../utils/readUtils/styleUtil";
 import "./index.css";
-import { HtmlMouseEvent } from "../../utils/mouseEvent";
+import { HtmlMouseEvent } from "../../utils/serviceUtils/mouseEvent";
 import untar from "js-untar";
 import ImageViewer from "../../components/imageViewer";
-import Chinese from "chinese-s2t";
 import _ from "underscore";
 import { removeExtraQuestionMark } from "../../utils/fileUtils/rtfUtil";
+import { getIframeDoc } from "../../utils/serviceUtils/docUtil";
+import { tsTransform } from "../../utils/serviceUtils/langUtil";
+
 declare var window: any;
 
 const { MobiRender, Azw3Render, TxtRender, StrRender, ComicRender } =
@@ -122,15 +124,8 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       bookLocation.chapterTitle,
       bookLocation.count
     );
-    let pageArea = document.getElementById("page-area");
-    if (!pageArea) return;
-    let iframe = pageArea.getElementsByTagName("iframe")[0];
-
-    if (!iframe) return;
-    let doc = iframe.contentDocument;
-    if (!doc) {
-      return;
-    }
+    let doc = getIframeDoc();
+    if (!doc) return;
     doc.addEventListener("click", (event) => {
       this.props.handleLeaveReader("left");
       this.props.handleLeaveReader("right");
@@ -176,29 +171,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
             : 0,
         });
       }
-      if (
-        StorageUtil.getReaderConfig("convertChinese") &&
-        StorageUtil.getReaderConfig("convertChinese") !== "Default"
-      ) {
-        if (
-          StorageUtil.getReaderConfig("convertChinese") ===
-          "Simplified To Traditional"
-        ) {
-          doc!.querySelectorAll("p").forEach((item) => {
-            item.innerHTML = item.innerHTML.replace(
-              item.innerText,
-              Chinese.s2t(item.innerText)
-            );
-          });
-        } else {
-          doc!.querySelectorAll("p").forEach((item) => {
-            item.innerHTML = item.innerHTML.replace(
-              item.innerText,
-              Chinese.t2s(item.innerText)
-            );
-          });
-        }
-      }
+      tsTransform();
     });
 
     doc.addEventListener("mouseup", () => {
