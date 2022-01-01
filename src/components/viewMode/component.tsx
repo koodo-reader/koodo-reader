@@ -1,7 +1,7 @@
 import React from "react";
 import "./viewMode.css";
 import { ViewModeProps, ViewModeState } from "./interface";
-import StorageUtil from "../../utils/storageUtil";
+import StorageUtil from "../../utils/serviceUtils/storageUtil";
 import { Tooltip } from "react-tippy";
 import { viewMode } from "../../constants/viewMode";
 

@@ -5,7 +5,7 @@ import OperationPanel from "../../containers/panels/operationPanel";
 import { Toaster } from "react-hot-toast";
 import ProgressPanel from "../../containers/panels/htmlProgressPanel";
 import { ReaderProps, ReaderState } from "./interface";
-import StorageUtil from "../../utils/storageUtil";
+import StorageUtil from "../../utils/serviceUtils/storageUtil";
 import ReadingTime from "../../utils/readUtils/readingTime";
 import Viewer from "../../containers/htmlViewer";
 import _ from "underscore";

@@ -1,5 +1,5 @@
-import BookModel from "../model/Book";
-import NoteModel from "../model/Note";
+import BookModel from "../../model/Book";
+import NoteModel from "../../model/Note";
 class SearchUtil {
   static MergeArray(arr1: number[], arr2: number[]) {
     var _arr: number[] = [];
@@ -30,9 +30,9 @@ class SearchUtil {
     return arr;
   }
   static MouseSearch(books: BookModel[]) {
-    let keyword = (document.querySelector(
-      ".header-search-box"
-    ) as HTMLInputElement).value.toLowerCase();
+    let keyword = (
+      document.querySelector(".header-search-box") as HTMLInputElement
+    ).value.toLowerCase();
     let bookNameArr: string[] = [];
     let AuthorNameArr: string[] = [];
     if (!books) return [];
@@ -68,9 +68,9 @@ class SearchUtil {
     }
   }
   static MouseNoteSearch(notes: NoteModel[]) {
-    let keyword = (document.querySelector(
-      ".header-search-box"
-    ) as HTMLInputElement).value.toLowerCase();
+    let keyword = (
+      document.querySelector(".header-search-box") as HTMLInputElement
+    ).value.toLowerCase();
     let noteArr: string[] = [];
     let textArr: string[] = [];
     notes.forEach((item: NoteModel) => {

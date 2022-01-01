@@ -10,7 +10,7 @@ import BackupDialog from "../../components/dialogs/backupDialog";
 import "./manager.css";
 import { ManagerProps, ManagerState } from "./interface";
 import { Trans } from "react-i18next";
-import StorageUtil from "../../utils/storageUtil";
+import StorageUtil from "../../utils/serviceUtils/storageUtil";
 import AddFavorite from "../../utils/readUtils/addFavorite";
 import SettingDialog from "../../components/dialogs/settingDialog";
 import { isMobileOnly } from "react-device-detect";

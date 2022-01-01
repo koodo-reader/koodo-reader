@@ -7,12 +7,13 @@ import ColorOption from "../../colorOption";
 import RecordLocation from "../../../utils/readUtils/recordLocation";
 import { Tooltip } from "react-tippy";
 import { popupList } from "../../../constants/popupList";
-import StorageUtil from "../../../utils/storageUtil";
+import StorageUtil from "../../../utils/serviceUtils/storageUtil";
 import { isElectron } from "react-device-detect";
 import toast from "react-hot-toast";
-import { getSelection } from "../../../utils/mouseEvent";
+import { getSelection } from "../../../utils/serviceUtils/mouseEvent";
 import copy from "copy-text-to-clipboard";
 import { getHightlightCoords } from "../../../utils/fileUtils/pdfUtil";
+import { getIframeDoc } from "../../../utils/serviceUtils/docUtil";
 
 declare var window: any;
 
@@ -40,14 +41,12 @@ class PopupOption extends React.Component<PopupOptionProps> {
     }
   };
   handleCopy = () => {
-    let pageArea = document.getElementById("page-area");
-    if (!pageArea) return;
-    let iframe = pageArea.getElementsByTagName("iframe")[0];
-    if (!iframe) return;
-    let doc = iframe.contentDocument;
-    if (!doc) return;
-    copy(getSelection());
+    let text = getSelection();
+    if (!text) return;
+    copy(text);
     this.props.handleOpenMenu(false);
+    let doc = getIframeDoc();
+    if (!doc) return;
     doc.getSelection()?.empty();
     toast.success(this.props.t("Copy Successfully"));
   };
