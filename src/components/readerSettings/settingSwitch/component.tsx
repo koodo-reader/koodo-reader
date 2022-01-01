@@ -2,7 +2,7 @@ import React from "react";
 import { SettingSwitchProps, SettingSwitchState } from "./interface";
 import { Trans } from "react-i18next";
 import TextToSpeech from "../../textToSpeech";
-import StorageUtil from "../../../utils/storageUtil";
+import StorageUtil from "../../../utils/serviceUtils/storageUtil";
 import { readerSettingList } from "../../../constants/settingList";
 import { isElectron } from "react-device-detect";
 import toast from "react-hot-toast";

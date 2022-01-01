@@ -11,8 +11,8 @@ import Router from "./router/index";
 import StyleUtil from "./utils/readUtils/styleUtil";
 import { isElectron } from "react-device-detect";
 import { dropdownList } from "./constants/dropdownList";
-import StorageUtil from "./utils/storageUtil";
-import ga from "./utils/analytics";
+import StorageUtil from "./utils/serviceUtils/storageUtil";
+import ga from "./utils/serviceUtils/analytics";
 
 ReactDOM.render(
   <Provider store={store}>
@@ -28,6 +28,8 @@ if (isElectron && StorageUtil.getReaderConfig("isDisableAnalytics") !== "yes") {
   ga.event("Client", "show", {
     evLabel: "startup",
   });
+} else if (StorageUtil.getReaderConfig("isDisableAnalytics") === "yes") {
+  ga.removeScript();
 }
 if (isElectron) {
   const fontList = window.require("font-list");

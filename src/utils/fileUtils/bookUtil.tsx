@@ -1,4 +1,4 @@
-import StorageUtil from "../storageUtil";
+import StorageUtil from "../serviceUtils/storageUtil";
 import { isElectron } from "react-device-detect";
 import localforage from "localforage";
 import BookModel from "../../model/Book";
@@ -139,10 +139,7 @@ class BookUtil {
       toast.error("Book not exist");
       return;
     }
-    let ref =
-      book.description === "readonly" || book.description === "pdf"
-        ? book.format.toLowerCase()
-        : "epub";
+    let ref = book.format.toLowerCase();
 
     if (isElectron) {
       const { ipcRenderer } = window.require("electron");
@@ -164,10 +161,7 @@ class BookUtil {
     }
   }
   static getBookUrl(book: BookModel) {
-    let ref =
-      book.description === "readonly" || book.description === "pdf"
-        ? book.format.toLowerCase()
-        : "epub";
+    let ref = book.format.toLowerCase();
     return `/${ref}/${book.key}`;
   }
   static getPDFUrl(book: BookModel) {
@@ -217,7 +211,7 @@ class BookUtil {
     [name, author, description, publisher, charset] = [
       bookName,
       "Unknown Authur",
-      "readonly",
+      "",
       "",
       "",
     ];

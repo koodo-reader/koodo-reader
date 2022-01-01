@@ -7,7 +7,7 @@ import DjvuReader from "../pages/djvuReader";
 import PDFReader from "../pages/pdfReader";
 import _Redirect from "../pages/redirect";
 import i18n from "../i18n";
-import StorageUtil from "../utils/storageUtil";
+import StorageUtil from "../utils/serviceUtils/storageUtil";
 
 const Router = () => {
   useEffect(() => {

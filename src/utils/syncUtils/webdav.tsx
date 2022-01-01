@@ -1,5 +1,5 @@
 import { restore } from "./restoreUtil";
-import StorageUtil from "../storageUtil";
+import StorageUtil from "../serviceUtils/storageUtil";
 
 class WebdavUtil {
   static UploadFile = async (file: any) => {
