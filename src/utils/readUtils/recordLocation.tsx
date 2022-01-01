@@ -13,34 +13,35 @@ class RecordLocation {
     let obj = JSON.parse(json || "{}");
     return obj[bookKey] || {};
   }
-  static recordScrollHeight(
+  static recordHtmlLocation(
     bookKey: string,
     text: string,
     chapterTitle: string,
-    count: string
+    count: string,
+    percentage: string
   ) {
     if (
-      (!text || !chapterTitle || !count) &&
+      (!text || !chapterTitle || !count || !percentage) &&
       document.location.href.indexOf("/cb") === -1
     )
       return;
     let json = localStorage.getItem("recordLocation");
     let obj = JSON.parse(json || "{}");
-    obj[bookKey] = { text, chapterTitle, count };
+    obj[bookKey] = { text, chapterTitle, count, percentage };
     localStorage.setItem("recordLocation", JSON.stringify(obj));
   }
 
-  static getScrollHeight(bookKey: string) {
+  static getHtmlLocation(bookKey: string) {
     let json = localStorage.getItem("recordLocation");
     let obj = JSON.parse(json || "{}");
     return obj[bookKey] || {};
   }
-  static getPDFlocation(fingerprint: string) {
+  static getPDFLocation(fingerprint: string) {
     let json = localStorage.getItem("pdfjs.history");
     let arr = JSON.parse(json || "{}").files || [];
     return arr[_.findLastIndex(arr, { fingerprint })] || {};
   }
-  static recordPDFlocation(fingerprint: string, obj: object) {
+  static recordPDFLocation(fingerprint: string, obj: object) {
     let json = localStorage.getItem("pdfjs.history");
     let _obj = JSON.parse(json || "{}");
     _obj.files[_.findLastIndex(_obj.files, { fingerprint })] = obj;

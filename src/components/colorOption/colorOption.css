@@ -28,7 +28,8 @@
   cursor: pointer;
 }
 .line-option {
-  width: 30px;
+  width: 25px;
+  margin-right: 5px;
   height: 25px;
   border-radius: 50%;
   opacity: 1;

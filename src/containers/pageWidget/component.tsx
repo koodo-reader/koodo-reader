@@ -39,9 +39,12 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
         nextPage: currentLocation.end.displayed.page,
       });
       let chapterHref = currentLocation.start.href;
+
       let chapter = "Unknown Chapter";
       let currentChapter = this.props.flattenChapters.filter(
-        (item: any) => item.href.split("#")[0] === chapterHref
+        (item: any) =>
+          item.href.indexOf(chapterHref) > -1 ||
+          chapterHref.indexOf(item.href) > -1
       )[0];
       if (currentChapter) {
         chapter = currentChapter.label.trim(" ");
@@ -63,7 +66,7 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
         <div className="header-container">
           {!this.state.isHideHeader && this.state.currentChapter && (
             <p
-              className="progress-chapter-name"
+              className="header-chapter-name"
               style={
                 this.state.isSingle
                   ? {
@@ -73,12 +76,12 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
                   : {}
               }
             >
-              <Trans>{this.state.currentChapter}</Trans>
+              {this.state.currentChapter}
             </p>
           )}
           {!this.state.isHideHeader && !this.state.isSingle && (
             <p
-              className="progress-book-name"
+              className="header-book-name"
               style={
                 this.state.isSingle
                   ? {
@@ -88,7 +91,7 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
                   : {}
               }
             >
-              <Trans>{this.props.currentBook.name}</Trans>
+              {this.props.currentBook.name}
             </p>
           )}
         </div>

@@ -19,6 +19,7 @@ export interface ViewerProps {
   handleFetchBooks: () => void;
   handleFetchNotes: () => void;
   handleFetchBookmarks: () => void;
+  handleCurrentChapter: (currentChapter: string) => void;
 }
 export interface ViewerState {
   key: string;
