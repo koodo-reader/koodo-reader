@@ -1,4 +1,4 @@
-import StorageUtil from "../../utils/storageUtil";
+import StorageUtil from "../../utils/serviceUtils/storageUtil";
 const initState = {
   bookmarks: [],
   notes: [],

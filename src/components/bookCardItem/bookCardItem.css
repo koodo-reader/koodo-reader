@@ -136,6 +136,15 @@
   cursor: pointer;
   z-index: 2;
 }
+.book-deselect-icon {
+  position: absolute;
+  bottom: 44px;
+  right: 19px;
+  font-size: 20px;
+  color: #eee;
+  cursor: pointer;
+  z-index: 2;
+}
 .action-dialog-parent {
   position: fixed;
   top: 0px;

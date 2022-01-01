@@ -17,7 +17,7 @@ import {
   fetchMD5FromPath,
 } from "../../utils/fileUtils/fileUtil";
 import toast from "react-hot-toast";
-import StorageUtil from "../../utils/storageUtil";
+import StorageUtil from "../../utils/serviceUtils/storageUtil";
 declare var window: any;
 let clickFilePath = "";
 

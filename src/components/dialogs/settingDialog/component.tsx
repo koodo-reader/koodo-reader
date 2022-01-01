@@ -4,7 +4,7 @@ import { SettingInfoProps, SettingInfoState } from "./interface";
 import { Trans } from "react-i18next";
 import i18n from "../../../i18n";
 import { version } from "../../../../package.json";
-import StorageUtil from "../../../utils/storageUtil";
+import StorageUtil from "../../../utils/serviceUtils/storageUtil";
 import { changePath } from "../../../utils/syncUtils/common";
 import { isElectron } from "react-device-detect";
 import { dropdownList } from "../../../constants/dropdownList";
@@ -161,6 +161,14 @@ class SettingDialog extends React.Component<
       "isDisplayDark",
       this.state.isDisplayDark ? "no" : "yes"
     );
+    if (StorageUtil.getReaderConfig("isDisplayDark") === "yes") {
+      StorageUtil.setReaderConfig("backgroundColor", "rgba(44,47,49,1)");
+      StorageUtil.setReaderConfig("textColor", "rgba(255,255,255,1)");
+    } else {
+      StorageUtil.setReaderConfig("backgroundColor", "rgba(255,255,255,1)");
+      StorageUtil.setReaderConfig("textColor", "rgba(0,0,0,1)");
+    }
+
     if (isElectron) {
       toast(this.props.t("Try refresh or restart"));
     } else {

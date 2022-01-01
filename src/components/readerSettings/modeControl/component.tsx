@@ -1,7 +1,7 @@
 import React from "react";
 import "./modeControl.css";
 import { ModeControlProps, ModeControlState } from "./interface";
-import StorageUtil from "../../../utils/storageUtil";
+import StorageUtil from "../../../utils/serviceUtils/storageUtil";
 import { Trans } from "react-i18next";
 import { Tooltip } from "react-tippy";
 import { isElectron } from "react-device-detect";

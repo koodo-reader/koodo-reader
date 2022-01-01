@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import "./tokenDialog.css";
 import { Trans } from "react-i18next";
 import { TokenDialogProps, TokenDialogState } from "./interface";
-import StorageUtil from "../../../utils/storageUtil";
+import StorageUtil from "../../../utils/serviceUtils/storageUtil";
 import toast from "react-hot-toast";
 import { isElectron } from "react-device-detect";
 class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {

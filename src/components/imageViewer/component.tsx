@@ -4,6 +4,7 @@ import { ImageViewerProps, ImageViewerStates } from "./interface";
 import StyleUtil from "../../utils/readUtils/styleUtil";
 import FileSaver from "file-saver";
 import { handleLinkJump } from "../../utils/readUtils/linkUtil";
+import { getIframeDoc } from "../../utils/serviceUtils/docUtil";
 
 class ImageViewer extends React.Component<ImageViewerProps, ImageViewerStates> {
   constructor(props: ImageViewerProps) {
@@ -18,16 +19,8 @@ class ImageViewer extends React.Component<ImageViewerProps, ImageViewerStates> {
 
   componentDidMount() {
     this.props.rendition.on("rendered", () => {
-      let pageArea = document.getElementById("page-area");
-      if (!pageArea) return;
-      let iframe = pageArea.getElementsByTagName("iframe")[0];
-
-      if (!iframe) return;
-      let doc = iframe.contentDocument;
-      if (!doc) {
-        return;
-      }
-
+      let doc = getIframeDoc();
+      if (!doc) return;
       StyleUtil.addDefaultCss();
       doc.addEventListener("click", this.showImage, false);
     });

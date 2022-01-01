@@ -4,7 +4,7 @@ import "./bookCardItem.css";
 import { BookCardProps, BookCardState } from "./interface";
 import AddFavorite from "../../utils/readUtils/addFavorite";
 import ActionDialog from "../dialogs/actionDialog";
-import StorageUtil from "../../utils/storageUtil";
+import StorageUtil from "../../utils/serviceUtils/storageUtil";
 import { withRouter } from "react-router-dom";
 import RecordLocation from "../../utils/readUtils/recordLocation";
 import { isElectron } from "react-device-detect";
@@ -174,6 +174,8 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
           ) : null}
           {this.props.isSelectBook && this.props.isSelected ? (
             <span className="icon-message book-selected-icon"></span>
+          ) : this.props.isSelectBook ? (
+            <span className="icon-message book-deselect-icon"></span>
           ) : null}
 
           {this.state.isOpenConfig && !this.props.isSelectBook ? (

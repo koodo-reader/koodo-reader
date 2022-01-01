@@ -1,17 +1,11 @@
-import StorageUtil from "../storageUtil";
+import { getIframeDoc } from "../serviceUtils/docUtil";
+import StorageUtil from "../serviceUtils/storageUtil";
 
 class styleUtil {
   // 为 iframe 添加默认的样式
   static addDefaultCss() {
-    let pageArea = document.getElementById("page-area");
-    if (!pageArea) return;
-    let iframe = pageArea.getElementsByTagName("iframe")[0];
-
-    if (!iframe) return;
-    let doc = iframe.contentDocument;
-    if (!doc) {
-      return;
-    }
+    let doc = getIframeDoc();
+    if (!doc) return;
 
     let css = this.getDefaultCss();
     let background = document.querySelector(".viewer");

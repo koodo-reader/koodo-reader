@@ -1,5 +1,5 @@
 import GA from "electron-google-analytics";
-import * as pkg from "../../package.json";
+import * as pkg from "../../../package.json";
 
 const isDevelopment = process.env.NODE_ENV === "development";
 
@@ -63,6 +63,11 @@ class Analytics {
         console.error(e);
       }
     });
+  }
+  public removeScript() {
+    let elem = document.getElementById("analytic");
+    if (!elem || !elem.parentNode) return;
+    elem.parentNode.removeChild(elem);
   }
 }
 

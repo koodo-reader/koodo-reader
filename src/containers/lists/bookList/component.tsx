@@ -9,7 +9,7 @@ import ShelfUtil from "../../../utils/readUtils/shelfUtil";
 import SortUtil from "../../../utils/readUtils/sortUtil";
 import BookModel from "../../../model/Book";
 import { BookListProps, BookListState } from "./interface";
-import StorageUtil from "../../../utils/storageUtil";
+import StorageUtil from "../../../utils/serviceUtils/storageUtil";
 import localforage from "localforage";
 import Empty from "../../emptyPage";
 import { Redirect, withRouter } from "react-router-dom";

@@ -5,8 +5,8 @@ import RecordLocation from "../../utils/readUtils/recordLocation";
 import BookmarkModel from "../../model/Bookmark";
 import StyleUtil from "../../utils/readUtils/styleUtil";
 import ImageViewer from "../../components/imageViewer";
-import Chinese from "chinese-s2t";
-import StorageUtil from "../../utils/storageUtil";
+import { getIframeDoc } from "../../utils/serviceUtils/docUtil";
+import { tsTransform } from "../../utils/serviceUtils/langUtil";
 
 declare var window: any;
 
@@ -60,14 +60,8 @@ class EpubViewer extends React.Component<ViewAreaProps, ViewAreaStates> {
       this.isFirst = false;
     });
     this.props.rendition.on("rendered", () => {
-      let pageArea = document.getElementById("page-area");
-      if (!pageArea) return;
-      let iframe = pageArea.getElementsByTagName("iframe")[0];
-      if (!iframe) return;
-      let doc = iframe.contentDocument;
-      if (!doc) {
-        return;
-      }
+      let doc = getIframeDoc();
+      if (!doc) return;
       const currentLocation = this.props.rendition.currentLocation();
       let chapterHref = currentLocation.start.href;
       if (!currentLocation || !currentLocation.start) return;
@@ -86,29 +80,7 @@ class EpubViewer extends React.Component<ViewAreaProps, ViewAreaStates> {
       this.setState({ chapter });
       StyleUtil.addDefaultCss();
       this.props.rendition.themes.default(StyleUtil.getCustomCss(false));
-      if (
-        StorageUtil.getReaderConfig("convertChinese") &&
-        StorageUtil.getReaderConfig("convertChinese") !== "Default"
-      ) {
-        if (
-          StorageUtil.getReaderConfig("convertChinese") ===
-          "Simplified To Traditional"
-        ) {
-          doc.querySelectorAll("p").forEach((item) => {
-            item.innerHTML = item.innerHTML.replace(
-              item.innerText,
-              Chinese.s2t(item.innerText)
-            );
-          });
-        } else {
-          doc.querySelectorAll("p").forEach((item) => {
-            item.innerHTML = item.innerHTML.replace(
-              item.innerText,
-              Chinese.t2s(item.innerText)
-            );
-          });
-        }
-      }
+      tsTransform();
     });
 
     this.props.rendition.on(
@@ -119,15 +91,8 @@ class EpubViewer extends React.Component<ViewAreaProps, ViewAreaStates> {
         if (range) {
           rect = range.getBoundingClientRect();
         } else {
-          let pageArea = document.getElementById("page-area");
-          if (!pageArea) return;
-          let iframe = pageArea.getElementsByTagName("iframe")[0];
-
-          if (!iframe) return;
-          let doc = iframe.contentDocument;
-          if (!doc) {
-            return;
-          }
+          let doc = getIframeDoc();
+          if (!doc) return;
           if (!doc.getSelection()) return;
           rect = doc!.getSelection()!.getRangeAt(0).getBoundingClientRect();
         }

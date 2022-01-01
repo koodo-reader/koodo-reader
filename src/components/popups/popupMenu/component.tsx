@@ -4,7 +4,11 @@ import PopupNote from "../popupNote";
 import PopupOption from "../popupOption";
 import PopupTrans from "../popupTrans";
 import { PopupMenuProps, PopupMenuStates } from "./interface";
-import StorageUtil from "../../../utils/storageUtil";
+import StorageUtil from "../../../utils/serviceUtils/storageUtil";
+import {
+  getIframeDoc,
+  getPDFIframeDoc,
+} from "../../../utils/serviceUtils/docUtil";
 let colors = ["#fac106", "#ebe702", "#0be603", "#0493e6"];
 let lines = ["#FF0000", "#000080", "#0000FF", "#2EFF2E"];
 
@@ -38,12 +42,7 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
       }).then(() => {
         this.renderHighlighters();
       });
-      let pageArea = document.getElementById("page-area");
-      if (!pageArea) return;
-      let iframe = pageArea.getElementsByTagName("iframe")[0];
-
-      if (!iframe) return;
-      let doc = iframe.contentDocument;
+      let doc = getIframeDoc();
       if (!doc) return;
       doc.addEventListener("mousedown", this.openMenu);
       if (this.props.currentBook.format === "PDF") {
@@ -73,12 +72,7 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
   getHighlighter = () => {
     // 注意点一
     // 为了每次切换章节时都有与当前文档相关联的 pen
-    let pageArea = document.getElementById("page-area");
-    if (!pageArea) return;
-    let iframe = pageArea.getElementsByTagName("iframe")[0];
-
-    if (!iframe) return;
-    let doc: any = iframe.contentDocument;
+    let doc = getIframeDoc();
     if (!doc) return;
     this.highlighter = window.rangy.createHighlighter(doc);
     let classes = [
@@ -110,11 +104,7 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     });
   };
   handleNoteClick = (event: any) => {
-    let pageArea = document.getElementById("page-area");
-    if (!pageArea) return;
-    let iframe = pageArea.getElementsByTagName("iframe")[0];
-    if (!iframe) return;
-    let doc = iframe.contentDocument;
+    let doc = getIframeDoc();
     if (!doc) return;
     this.props.handleMenuMode("note");
     let sel = doc.getSelection();
@@ -138,11 +128,8 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
   };
 
   showHighlight = (selected: any, colorCode: string, noteKey: string) => {
-    let pageArea = document.getElementById("page-area");
-    if (!pageArea) return;
-    let iframe = pageArea.getElementsByTagName("iframe")[0];
-    if (!iframe) return;
-    let iWin: any = iframe.contentWindow || iframe.contentDocument?.defaultView;
+    let iWin = getPDFIframeDoc();
+    if (!iWin) return;
     var pageIndex = selected.page;
     if (!iWin.PDFViewerApplication.pdfViewer) return;
     var page = iWin.PDFViewerApplication.pdfViewer.getPageView(pageIndex);

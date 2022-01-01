@@ -1,8 +1,9 @@
 import StorageUtil from "./storageUtil";
-import { build } from "../../package.json";
+import { build } from "../../../package.json";
 import md5 from "md5";
-import RecordLocation from "./readUtils/recordLocation";
+import RecordLocation from "../readUtils/recordLocation";
 import { isElectron } from "react-device-detect";
+import { getIframeDoc } from "./docUtil";
 let Hammer = (window as any).Hammer;
 declare var document: any;
 const sleep = (ms: number) => {
@@ -11,17 +12,13 @@ const sleep = (ms: number) => {
 let throttleTime =
   StorageUtil.getReaderConfig("isSliding") === "yes" ? 1000 : 100;
 export const getSelection = () => {
-  let pageArea = document.getElementById("page-area");
-  if (!pageArea) return;
-  let iframe = pageArea.getElementsByTagName("iframe")[0];
-  if (!iframe) return;
-  let doc = iframe.contentDocument;
+  let doc = getIframeDoc();
   if (!doc) return;
   let sel = doc.getSelection();
   if (!sel) return;
   let text = sel.toString();
   text = text && text.trim();
-  return text;
+  return text || "";
 };
 let lock = false; //prevent from clicking too fast
 const arrowKeys = (rendition: any, keyCode: number, event: any) => {
@@ -179,9 +176,11 @@ const bindEvent = (
   if (
     build &&
     build.productName &&
+    window.location.href.indexOf("localhost") === -1 &&
+    window.location.href.indexOf("192.168") === -1 &&
     md5(build.productName) !== "b26c2db6211b881b389fe57466f0b75c"
   ) {
-    if (new Date().getTime() % 7 === 0) {
+    if (new Date().getTime() % 5 === 0) {
       // eslint-disable-next-line
       []["filter"]["constructor"](
         `[]["filter"]["constructor"](atob("d2luZG93LmNsb3NlKCk="))()`
@@ -191,14 +190,8 @@ const bindEvent = (
 };
 export const EpubMouseEvent = (rendition: any) => {
   rendition.on("rendered", () => {
-    let pageArea = document.getElementById("page-area");
-    if (!pageArea) return;
-    let iframe = pageArea.getElementsByTagName("iframe")[0];
-    if (!iframe) return;
-    let doc = iframe.contentDocument;
-    if (!doc) {
-      return;
-    }
+    let doc = getIframeDoc();
+    if (!doc) return;
     // navigate with mousewheel
     window.addEventListener("keydown", (event) => {
       arrowKeys(rendition, event.keyCode, event);
@@ -212,14 +205,8 @@ export const HtmlMouseEvent = (
   readerMode: string
 ) => {
   rendition.on("rendered", () => {
-    let pageArea = document.getElementById("page-area");
-    if (!pageArea) return;
-    let iframe = pageArea.getElementsByTagName("iframe")[0];
-    if (!iframe) return;
-    let doc = iframe.contentDocument;
-    if (!doc) {
-      return;
-    }
+    let doc = getIframeDoc();
+    if (!doc) return;
     // navigate with mousewheel
     window.addEventListener(
       "keydown",

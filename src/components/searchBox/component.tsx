@@ -1,7 +1,7 @@
 //搜索框
 import React from "react";
 import "./searchBox.css";
-import SearchUtil from "../../utils/searchUtil";
+import SearchUtil from "../../utils/serviceUtils/searchUtil";
 import { SearchBoxProps } from "./interface";
 class SearchBox extends React.Component<SearchBoxProps> {
   componentDidMount() {

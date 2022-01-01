@@ -1,5 +1,5 @@
 import React from "react";
-import StorageUtil from "../../utils/storageUtil";
+import StorageUtil from "../../utils/serviceUtils/storageUtil";
 import "./colorOption.css";
 import { ColorProps, ColorStates } from "./interface";
 

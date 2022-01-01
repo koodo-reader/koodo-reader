@@ -8,7 +8,7 @@ import _ from "underscore";
 import BookUtil from "../../utils/fileUtils/bookUtil";
 import "../../assets/styles/reset.css";
 import toast, { Toaster } from "react-hot-toast";
-import StorageUtil from "../../utils/storageUtil";
+import StorageUtil from "../../utils/serviceUtils/storageUtil";
 
 declare var window: any;
 
