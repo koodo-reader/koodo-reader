@@ -21,6 +21,7 @@ import untar from "js-untar";
 import ImageViewer from "../../components/imageViewer";
 import Chinese from "chinese-s2t";
 import _ from "underscore";
+import { removeExtraQuestionMark } from "../../utils/fileUtils/rtfUtil";
 declare var window: any;
 
 const { MobiRender, Azw3Render, TxtRender, StrRender, ComicRender } =
@@ -41,7 +42,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       isFirst: true,
       scale: StorageUtil.getReaderConfig("scale") || 1,
       chapterTitle:
-        RecordLocation.getScrollHeight(this.props.currentBook.key)
+        RecordLocation.getHtmlLocation(this.props.currentBook.key)
           .chapterTitle || "",
       readerMode: StorageUtil.getReaderConfig("readerMode") || "double",
       margin: parseInt(StorageUtil.getReaderConfig("margin")) || 30,
@@ -115,14 +116,22 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     StyleUtil.addDefaultCss();
     rendition.setStyle(StyleUtil.getCustomCss(true));
     let bookLocation: { text: string; count: string; chapterTitle: string } =
-      RecordLocation.getScrollHeight(this.props.currentBook.key);
+      RecordLocation.getHtmlLocation(this.props.currentBook.key);
     rendition.goToPosition(
       bookLocation.text,
       bookLocation.chapterTitle,
       bookLocation.count
     );
+    let pageArea = document.getElementById("page-area");
+    if (!pageArea) return;
+    let iframe = pageArea.getElementsByTagName("iframe")[0];
 
-    window.frames[0].document.addEventListener("click", (event) => {
+    if (!iframe) return;
+    let doc = iframe.contentDocument;
+    if (!doc) {
+      return;
+    }
+    doc.addEventListener("click", (event) => {
       this.props.handleLeaveReader("left");
       this.props.handleLeaveReader("right");
       this.props.handleLeaveReader("top");
@@ -145,16 +154,10 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       pageWidth: rendition.getPageSize().width,
       pageHeight: rendition.getPageSize().height,
     });
-
-    let iframe = document.getElementsByTagName("iframe")[0];
-    if (!iframe) return;
-    let doc = iframe.contentDocument;
-    if (!doc) {
-      return;
-    }
     rendition.on("rendered", () => {
       let bookLocation: { text: string; count: string; chapterTitle: string } =
-        RecordLocation.getScrollHeight(this.props.currentBook.key);
+        RecordLocation.getHtmlLocation(this.props.currentBook.key);
+      this.props.handleCurrentChapter(bookLocation.chapterTitle);
       if (this.props.currentBook.format.startsWith("CB")) {
         this.setState({
           chapter:
@@ -182,11 +185,17 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           "Simplified To Traditional"
         ) {
           doc!.querySelectorAll("p").forEach((item) => {
-            item.innerText = Chinese.s2t(item.innerText);
+            item.innerHTML = item.innerHTML.replace(
+              item.innerText,
+              Chinese.s2t(item.innerText)
+            );
           });
         } else {
           doc!.querySelectorAll("p").forEach((item) => {
-            item.innerText = Chinese.t2s(item.innerText);
+            item.innerHTML = item.innerHTML.replace(
+              item.innerText,
+              Chinese.t2s(item.innerText)
+            );
           });
         }
       }
@@ -201,7 +210,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
   handleCbr = async (result: ArrayBuffer) => {
     let unrar = new Unrar(result);
     var entries = unrar.getEntries();
-    let bookLocation = RecordLocation.getScrollHeight(
+    let bookLocation = RecordLocation.getHtmlLocation(
       this.props.currentBook.key
     );
     let rendition = new ComicRender(
@@ -219,7 +228,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
   };
   handleCbz = (result: ArrayBuffer) => {
     let zip = new JSZip();
-    let bookLocation = RecordLocation.getScrollHeight(
+    let bookLocation = RecordLocation.getHtmlLocation(
       this.props.currentBook.key
     );
     zip.loadAsync(result).then(async (contents) => {
@@ -238,7 +247,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     });
   };
   handleCbt = (result: ArrayBuffer) => {
-    let bookLocation = RecordLocation.getScrollHeight(
+    let bookLocation = RecordLocation.getHtmlLocation(
       this.props.currentBook.key
     );
     untar(result).then(
@@ -348,7 +357,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
 
     rtfToHTML.fromString(text, async (err: any, html: any) => {
       let rendition = new StrRender(
-        html,
+        removeExtraQuestionMark(html),
         this.state.readerMode,
         StorageUtil.getReaderConfig("isSliding") === "yes" ? true : false
       );
@@ -391,7 +400,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       this.props.currentBook.charset || charset || "utf8"
     );
     let bookObj = xmlBookParser(Buffer.from(result), fb2Str);
-    console.log(bookObj);
     let rendition = new StrRender(
       bookObj,
       this.state.readerMode,

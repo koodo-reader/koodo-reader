@@ -3,8 +3,16 @@ import StorageUtil from "../storageUtil";
 class styleUtil {
   // 为 iframe 添加默认的样式
   static addDefaultCss() {
-    let doc = window.frames[0].document;
-    if (!doc) return;
+    let pageArea = document.getElementById("page-area");
+    if (!pageArea) return;
+    let iframe = pageArea.getElementsByTagName("iframe")[0];
+
+    if (!iframe) return;
+    let doc = iframe.contentDocument;
+    if (!doc) {
+      return;
+    }
+
     let css = this.getDefaultCss();
     let background = document.querySelector(".viewer");
     if (!background) return;
@@ -88,7 +96,7 @@ class styleUtil {
             StorageUtil.getReaderConfig("lineHeight") || "1.25"
           } !important`,
           "font-family": `${
-            StorageUtil.getReaderConfig("fontFamily") || "Helvetica"
+            StorageUtil.getReaderConfig("fontFamily") || ""
           } !important`,
           color: `${
             StorageUtil.getReaderConfig("textColor")

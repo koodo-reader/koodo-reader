@@ -38,7 +38,10 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
       }).then(() => {
         this.renderHighlighters();
       });
-      let iframe = document.getElementsByTagName("iframe")[0];
+      let pageArea = document.getElementById("page-area");
+      if (!pageArea) return;
+      let iframe = pageArea.getElementsByTagName("iframe")[0];
+
       if (!iframe) return;
       let doc = iframe.contentDocument;
       if (!doc) return;
@@ -70,7 +73,9 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
   getHighlighter = () => {
     // 注意点一
     // 为了每次切换章节时都有与当前文档相关联的 pen
-    let iframe = document.getElementsByTagName("iframe")[0];
+    let pageArea = document.getElementById("page-area");
+    if (!pageArea) return;
+    let iframe = pageArea.getElementsByTagName("iframe")[0];
 
     if (!iframe) return;
     let doc: any = iframe.contentDocument;
@@ -105,7 +110,9 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     });
   };
   handleNoteClick = (event: any) => {
-    let iframe = document.getElementsByTagName("iframe")[0];
+    let pageArea = document.getElementById("page-area");
+    if (!pageArea) return;
+    let iframe = pageArea.getElementsByTagName("iframe")[0];
     if (!iframe) return;
     let doc = iframe.contentDocument;
     if (!doc) return;
@@ -131,7 +138,10 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
   };
 
   showHighlight = (selected: any, colorCode: string, noteKey: string) => {
-    let iframe = document.getElementsByTagName("iframe")[0];
+    let pageArea = document.getElementById("page-area");
+    if (!pageArea) return;
+    let iframe = pageArea.getElementsByTagName("iframe")[0];
+    if (!iframe) return;
     let iWin: any = iframe.contentWindow || iframe.contentDocument?.defaultView;
     var pageIndex = selected.page;
     if (!iWin.PDFViewerApplication.pdfViewer) return;
@@ -212,6 +222,7 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     let y = rect.y % this.props.pageHeight;
     let posX = x + rect.width / 2 - 20;
     //防止menu超出图书
+    console.log(this.props.pageWidth, page.offsetLeft);
     let rightEdge =
       this.props.menuMode === "note" || this.props.menuMode === "trans"
         ? this.props.pageWidth - 310 + page.offsetLeft * 2
@@ -226,6 +237,7 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     }
     posX = posX > rightEdge ? rightEdge : posX;
     this.props.handleOpenMenu(true);
+    console.log(rightEdge, posX, posY);
     let popupMenu = document.querySelector(".popup-menu-container");
     popupMenu?.setAttribute("style", `left:${posX}px;top:${posY}px`);
     this.setState({ rect: null });
@@ -241,7 +253,9 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
         item.bookKey === this.props.currentBook.key
       );
     });
-    let iframe = document.getElementsByTagName("iframe")[0];
+    let pageArea = document.getElementById("page-area");
+    if (!pageArea) return;
+    let iframe = pageArea.getElementsByTagName("iframe")[0];
     if (!iframe || !iframe.contentWindow) return;
     let iWin = iframe.contentWindow || iframe.contentDocument?.defaultView;
     this.highlighter && this.highlighter.removeAllHighlights(); // 为了避免下次反序列化失败，必须先清除已有的高亮
@@ -295,7 +309,10 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
   //控制弹窗
   openMenu = () => {
     this.setState({ deleteKey: "" });
-    let iframe = document.getElementsByTagName("iframe")[0];
+    let pageArea = document.getElementById("page-area");
+    if (!pageArea) return;
+    let iframe = pageArea.getElementsByTagName("iframe")[0];
+    if (!iframe) return;
     let doc = iframe.contentDocument;
     if (!doc) return;
     let sel = doc.getSelection();
@@ -319,7 +336,9 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
   };
   //添加高亮
   handleHighlight() {
-    let iframe = document.getElementsByTagName("iframe")[0];
+    let pageArea = document.getElementById("page-area");
+    if (!pageArea) return;
+    let iframe = pageArea.getElementsByTagName("iframe")[0];
     if (!iframe) return;
     let doc = iframe.contentDocument;
     if (!doc) return;

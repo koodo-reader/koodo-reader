@@ -1,6 +1,6 @@
-.progress-chapter-name,
-.progress-book-name {
-  max-width: 45vw;
+.header-chapter-name,
+.header-book-name {
+  width: 45vw;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;

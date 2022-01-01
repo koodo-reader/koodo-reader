@@ -1,5 +1,8 @@
 export const getHightlightCoords = () => {
-  let iframe = document.getElementsByTagName("iframe")[0];
+  let pageArea = document.getElementById("page-area");
+  if (!pageArea) return;
+  let iframe = pageArea.getElementsByTagName("iframe")[0];
+  if (!iframe) return;
   let iWin: any = iframe.contentWindow || iframe.contentDocument?.defaultView;
   var pageIndex = iWin!.PDFViewerApplication.pdfViewer.currentPageNumber - 1;
   var page = iWin!.PDFViewerApplication.pdfViewer.getPageView(pageIndex);
