@@ -8,8 +8,11 @@ export function handlePercentage(percentage: number) {
 }
 export function handleFetchPercentage(book: BookModel) {
   return (dispatch: (arg0: { type: string; payload: any }) => void) => {
-    let percentage;
-    percentage = RecordLocation.getCfi(book.key).percentage;
+    let percentage =
+      book.format === "EPUB"
+        ? RecordLocation.getCfi(book.key).percentage
+        : RecordLocation.getHtmlLocation(book.key).percentage;
+
     dispatch(handlePercentage(percentage));
   };
 }
