@@ -209,7 +209,6 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     let y = rect.y % this.props.pageHeight;
     let posX = x + rect.width / 2 - 20;
     //防止menu超出图书
-    console.log(this.props.pageWidth, page.offsetLeft);
     let rightEdge =
       this.props.menuMode === "note" || this.props.menuMode === "trans"
         ? this.props.pageWidth - 310 + page.offsetLeft * 2
@@ -224,7 +223,6 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     }
     posX = posX > rightEdge ? rightEdge : posX;
     this.props.handleOpenMenu(true);
-    console.log(rightEdge, posX, posY);
     let popupMenu = document.querySelector(".popup-menu-container");
     popupMenu?.setAttribute("style", `left:${posX}px;top:${posY}px`);
     this.setState({ rect: null });

@@ -215,15 +215,28 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
             let reader = new FileReader();
             reader.onload = async (event) => {
               const file_content = (event.target as any).result;
-              result = BookUtil.generateBook(
+              result = await BookUtil.generateBook(
                 bookName,
                 extension,
                 md5,
                 file.size,
-                file.path || clickFilePath
+                file.path || clickFilePath,
+                file_content
               );
               clickFilePath = "";
-              await this.handleAddBook(result, file_content as ArrayBuffer);
+              if (!result) {
+                toast.error(
+                  this.props.t(
+                    "You may see this error when the book you're importing is not supported by Koodo Reader, try converting it with Calibre"
+                  )
+                );
+                reject();
+                return;
+              }
+              await this.handleAddBook(
+                result as BookModel,
+                file_content as ArrayBuffer
+              );
 
               resolve();
             };

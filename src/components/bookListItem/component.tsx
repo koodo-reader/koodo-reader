@@ -98,22 +98,10 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
 
     return (
       <div className="book-list-item-container">
-        {this.props.book.cover &&
-        this.props.book.cover !== "noCover" &&
-        this.props.book.publisher !== "mobi" &&
-        this.props.book.publisher !== "azw3" &&
-        this.props.book.publisher !== "txt" ? (
-          <div className="book-item-list-cover">
-            <img
-              className="book-item-list-cover-item"
-              src={this.props.book.cover}
-              alt=""
-              onClick={() => {
-                this.handleJump();
-              }}
-            />
-          </div>
-        ) : (
+        {!this.props.book.cover ||
+        this.props.book.cover === "noCover" ||
+        (this.props.book.format === "PDF" &&
+          StorageUtil.getReaderConfig("isPDFCover") !== "yes") ? (
           <div
             className="book-item-list-cover"
             onClick={() => {
@@ -125,6 +113,17 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
                 format: this.props.book.format,
                 title: this.props.book.name,
                 scale: 0.54,
+              }}
+            />
+          </div>
+        ) : (
+          <div className="book-item-list-cover">
+            <img
+              className="book-item-list-cover-item"
+              src={this.props.book.cover}
+              alt=""
+              onClick={() => {
+                this.handleJump();
               }}
             />
           </div>
