@@ -51,7 +51,7 @@
     "concurrently": "^5.0.1",
     "cross-env": "^6.0.3",
     "electron": "14.2.1",
-    "electron-builder": "22.13.1",
+    "electron-builder": "22.10.5",
     "file-saver": "^2.0.2",
     "hard-source-webpack-plugin": "^0.13.1",
     "html-react-parser": "^0.13.0",
