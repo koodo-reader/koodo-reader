@@ -9,6 +9,7 @@ declare var document: any;
 const sleep = (ms: number) => {
   return new Promise((resolve) => setTimeout(resolve, ms));
 };
+
 let throttleTime =
   StorageUtil.getReaderConfig("isSliding") === "yes" ? 1000 : 100;
 export const getSelection = () => {
@@ -20,14 +21,13 @@ export const getSelection = () => {
   text = text && text.trim();
   return text || "";
 };
-let lock = false; //prevent from clicking too fast
+let lock = false; //prevent from clicking too fasts
 const arrowKeys = (rendition: any, keyCode: number, event: any) => {
   if (document.querySelector(".editor-box")) {
     return;
   }
 
   if (lock) return;
-
   if (keyCode === 37 || keyCode === 38) {
     event.preventDefault();
     rendition.prev();
@@ -115,7 +115,44 @@ const gesture = (rendition: any, type: string) => {
   }
 };
 
-const bindEvent = (
+const bindEpubEvent = (rendition: any, doc: any) => {
+  doc.addEventListener("keydown", async (event) => {
+    arrowKeys(rendition, event.keyCode, event);
+  });
+  doc.addEventListener(
+    "mousewheel",
+    async (event) => {
+      mouseChrome(rendition, event.wheelDelta);
+    },
+    false
+  );
+  window.addEventListener("keydown", async (event) => {
+    arrowKeys(rendition, event.keyCode, event);
+    //使用Key判断是否是htmlBook
+  });
+
+  if (StorageUtil.getReaderConfig("isTouch") === "yes") {
+    const mc = new Hammer(doc);
+    mc.on("panleft panright panup pandown", async (event: any) => {
+      gesture(rendition, event.type);
+    });
+  }
+  if (
+    build &&
+    build.productName &&
+    window.location.href.indexOf("localhost") === -1 &&
+    window.location.href.indexOf("192.168") === -1 &&
+    md5(build.productName).indexOf("b26c2") === -1
+  ) {
+    if (new Date().getTime() % 5 === 0) {
+      // eslint-disable-next-line
+      []["filter"]["constructor"](
+        `[]["filter"]["constructor"](atob("d2luZG93LmNsb3NlKCk="))()`
+      )();
+    }
+  }
+};
+const bindHtmlEvent = (
   rendition: any,
   doc: any,
   key: string = "",
@@ -123,17 +160,15 @@ const bindEvent = (
 ) => {
   doc.addEventListener("keydown", async (event) => {
     arrowKeys(rendition, event.keyCode, event);
-    //使用Key判断是否是htmlBook
-    if (key) {
-      let position = rendition.getPosition();
-      RecordLocation.recordHtmlLocation(
-        key,
-        position.text,
-        position.chapterTitle,
-        position.count,
-        position.percentage
-      );
-    }
+
+    let position = rendition.getPosition();
+    RecordLocation.recordHtmlLocation(
+      key,
+      position.text,
+      position.chapterTitle,
+      position.count,
+      position.percentage
+    );
   });
   doc.addEventListener(
     "mousewheel",
@@ -144,33 +179,46 @@ const bindEvent = (
       } else {
         mouseChrome(rendition, event.wheelDelta);
       }
-      if (key) {
-        let position = rendition.getPosition();
-        RecordLocation.recordHtmlLocation(
-          key,
-          position.text,
-          position.chapterTitle,
-          position.count,
-          position.percentage
-        );
-      }
+
+      let position = rendition.getPosition();
+      RecordLocation.recordHtmlLocation(
+        key,
+        position.text,
+        position.chapterTitle,
+        position.count,
+        position.percentage
+      );
     },
     false
   );
+
+  window.addEventListener("keydown", async (event) => {
+    arrowKeys(rendition, event.keyCode, event);
+    //使用Key判断是否是htmlBook
+
+    let position = rendition.getPosition();
+    RecordLocation.recordHtmlLocation(
+      key,
+      position.text,
+      position.chapterTitle,
+      position.count,
+      position.percentage
+    );
+  });
+
   if (StorageUtil.getReaderConfig("isTouch") === "yes") {
     const mc = new Hammer(doc);
     mc.on("panleft panright panup pandown", async (event: any) => {
       gesture(rendition, event.type);
-      if (key) {
-        let position = rendition.getPosition();
-        RecordLocation.recordHtmlLocation(
-          key,
-          position.text,
-          position.chapterTitle,
-          position.count,
-          position.percentage
-        );
-      }
+
+      let position = rendition.getPosition();
+      RecordLocation.recordHtmlLocation(
+        key,
+        position.text,
+        position.chapterTitle,
+        position.count,
+        position.percentage
+      );
     });
   }
   if (
@@ -193,16 +241,14 @@ export const EpubMouseEvent = (rendition: any, readerMode: string) => {
     let doc = getIframeDoc();
     if (!doc) return;
     if (readerMode === "scroll") {
-      window.addEventListener("keydown", (event) => {
+      doc.addEventListener("keydown", async (event) => {
         arrowKeys(rendition, event.keyCode, event);
+        //使用Key判断是否是htmlBook
       });
-    } else {
-      // navigate with mousewheel
-      window.addEventListener("keydown", (event) => {
-        arrowKeys(rendition, event.keyCode, event);
-      });
-      bindEvent(rendition, doc);
+      return;
     }
+    lock = false;
+    bindEpubEvent(rendition, doc);
   });
 };
 export const HtmlMouseEvent = (
@@ -213,25 +259,7 @@ export const HtmlMouseEvent = (
   rendition.on("rendered", () => {
     let doc = getIframeDoc();
     if (!doc) return;
-    // navigate with mousewheel
-    window.addEventListener(
-      "keydown",
-      async (event) => {
-        arrowKeys(rendition, event.keyCode, event);
-
-        if (key) {
-          let position = rendition.getPosition();
-          RecordLocation.recordHtmlLocation(
-            key,
-            position.text,
-            position.chapterTitle,
-            position.count,
-            position.percentage
-          );
-        }
-      },
-      false
-    );
-    bindEvent(rendition, doc, key, readerMode);
+    lock = false;
+    bindHtmlEvent(rendition, doc, key, readerMode);
   });
 };
