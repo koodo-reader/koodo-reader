@@ -22,11 +22,12 @@ class ImageViewer extends React.Component<ImageViewerProps, ImageViewerStates> {
       let doc = getIframeDoc();
       if (!doc) return;
       StyleUtil.addDefaultCss();
-      doc.addEventListener("click", this.showImage, false);
+      doc.addEventListener("click", this.showImage);
     });
   }
 
   showImage = (event: any) => {
+    event.preventDefault();
     if (this.props.isShow) {
       this.props.handleLeaveReader("left");
       this.props.handleLeaveReader("right");
@@ -58,7 +59,7 @@ class ImageViewer extends React.Component<ImageViewerProps, ImageViewerStates> {
     img.src = event.target.src;
     let image: HTMLImageElement | null = document.querySelector(".image");
     if (image) {
-      image.src = event.target.src;
+      image!.src = event.target.src;
       this.setState({ isShowImage: true });
     }
   };

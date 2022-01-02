@@ -69,7 +69,7 @@ export const addEpub = (
                   resolve(book);
                 };
               } else {
-                cover = "noCover";
+                cover = "";
                 let key: string,
                   name: string,
                   author: string,
@@ -81,14 +81,7 @@ export const addEpub = (
                   metadata.description,
                   metadata.publisher,
                 ];
-                let format =
-                  publisher === "mobi"
-                    ? "MOBI"
-                    : publisher === "azw3"
-                    ? "AZW3"
-                    : publisher === "txt"
-                    ? "TXT"
-                    : "EPUB";
+                let format = "EPUB";
                 key = new Date().getTime() + "";
                 let book = new BookModel(
                   key,

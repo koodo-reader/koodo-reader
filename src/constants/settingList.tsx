@@ -71,6 +71,11 @@ export const settingList = [
   },
   {
     isElectron: false,
+    title: "Use first page as PDF cover",
+    propName: "isPDFCover",
+  },
+  {
+    isElectron: false,
     title: "Turn on night mode",
     propName: "isDisplayDark",
   },
@@ -89,7 +94,10 @@ export const searchList = [
   { label: "DuckDuckGo", value: "duckduckgo" },
   { label: "Yandex", value: "yandex" },
   { label: "Yahoo", value: "yahoo" },
+  { label: "Baidu Baike", value: "baike" },
+  { label: "Wikipedia", value: "wiki" },
 ];
+
 export const readerSettingList = [
   {
     title: "Sliding Animation",
