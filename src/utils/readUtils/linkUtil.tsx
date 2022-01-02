@@ -2,6 +2,7 @@ import { isElectron } from "react-device-detect";
 
 export const handleLinkJump = (event: any) => {
   let href;
+
   if (
     event.target &&
     event.target.parentNode &&
@@ -17,6 +18,7 @@ export const handleLinkJump = (event: any) => {
   }
   if (
     href &&
+    href.indexOf("../") === -1 &&
     href.indexOf("http") === 0 &&
     href.indexOf("OEBPF") === -1 &&
     href.indexOf("OEBPS") === -1 &&
@@ -25,7 +27,6 @@ export const handleLinkJump = (event: any) => {
     href.indexOf("data:application") === -1 &&
     href.indexOf(".htm") === -1
   ) {
-    event.preventDefault();
     if (isElectron) {
       const { shell } = window.require("electron");
       shell.openExternal(href);
