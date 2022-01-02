@@ -20,6 +20,8 @@ export interface HeaderProps {
   handleTip: (tip: string) => void;
   handleFetchBooks: () => void;
   t: (title: string) => string;
+  handleFetchNotes: () => void;
+  handleFetchBookmarks: () => void;
 }
 
 export interface HeaderState {

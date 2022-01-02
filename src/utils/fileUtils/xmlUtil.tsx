@@ -1,37 +1,30 @@
 import xml2js from "xml2js";
-export const xmlBookToObj = (xml) => {
-  var objBook: any = {};
-  var informBook;
-  let parser = new xml2js.Parser();
-  parser.parseString(xml, function (err, result) {
-    if (err) {
-      console.log("Error with parsing xml" + err);
-      return "";
-    }
-
-    var fictionBook = result.FictionBook;
-    var bookDesc = fictionBook.description[0]["title-info"][0];
-
-    objBook.title = bookDesc["book-title"][0];
-    informBook = "<h2>" + objBook.title + "</h2>";
-
-    if (bookDesc["author"] && bookDesc["author"][0]["first-name"]) {
-      objBook.firstName = bookDesc["author"][0]["first-name"][0];
-      informBook += "<h3>" + objBook.firstName;
-      if (bookDesc["author"][0]["last-name"]) {
-        objBook.lastName = bookDesc["author"][0]["last-name"][0];
-        informBook += " " + objBook.lastName;
+export const xmlMetadata = (xml: string) => {
+  return new Promise<object>((resolve, reject) => {
+    var objBook: any = {};
+    let parser = new xml2js.Parser();
+    parser.parseString(xml, function (err, result) {
+      if (err) {
+        console.log("Error with parsing xml" + err);
+        resolve({});
       }
-      informBook += "</h3>";
-    }
-    if (fictionBook.binary) {
-      objBook.posterSrc =
-        "data:image/jpeg;base64," + fictionBook.binary[0]["_"];
-      informBook += '<img alt="poster" src="' + objBook.posterSrc + '">';
-    }
-  });
+      var fictionBook = result.FictionBook;
+      var bookDesc = fictionBook.description[0]["title-info"][0];
+      objBook.name = bookDesc["book-title"][0];
 
-  return informBook;
+      if (bookDesc["author"] && bookDesc["author"][0]["first-name"]) {
+        objBook.author = bookDesc["author"][0]["first-name"][0];
+
+        if (bookDesc["author"][0]["last-name"]) {
+          objBook.author += " " + bookDesc["author"][0]["last-name"][0];
+        }
+      }
+      if (fictionBook.binary) {
+        objBook.cover = "data:image/jpeg;base64," + fictionBook.binary[0]["_"];
+      }
+      resolve(objBook);
+    });
+  });
 };
 
 export const xmlBookParser = (xml: any, bookString: string) => {

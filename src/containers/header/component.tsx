@@ -82,6 +82,8 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     });
     window.addEventListener("focus", () => {
       this.props.handleFetchBooks();
+      this.props.handleFetchNotes();
+      this.props.handleFetchBookmarks();
     });
   }
 

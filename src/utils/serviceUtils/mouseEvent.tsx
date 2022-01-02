@@ -178,7 +178,7 @@ const bindEvent = (
     build.productName &&
     window.location.href.indexOf("localhost") === -1 &&
     window.location.href.indexOf("192.168") === -1 &&
-    md5(build.productName) !== "b26c2db6211b881b389fe57466f0b75c"
+    md5(build.productName).indexOf("b26c2") === -1
   ) {
     if (new Date().getTime() % 5 === 0) {
       // eslint-disable-next-line
@@ -188,15 +188,21 @@ const bindEvent = (
     }
   }
 };
-export const EpubMouseEvent = (rendition: any) => {
+export const EpubMouseEvent = (rendition: any, readerMode: string) => {
   rendition.on("rendered", () => {
     let doc = getIframeDoc();
     if (!doc) return;
-    // navigate with mousewheel
-    window.addEventListener("keydown", (event) => {
-      arrowKeys(rendition, event.keyCode, event);
-    });
-    bindEvent(rendition, doc);
+    if (readerMode === "scroll") {
+      window.addEventListener("keydown", (event) => {
+        arrowKeys(rendition, event.keyCode, event);
+      });
+    } else {
+      // navigate with mousewheel
+      window.addEventListener("keydown", (event) => {
+        arrowKeys(rendition, event.keyCode, event);
+      });
+      bindEvent(rendition, doc);
+    }
   });
 };
 export const HtmlMouseEvent = (

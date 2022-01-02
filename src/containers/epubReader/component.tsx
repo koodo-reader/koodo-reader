@@ -93,7 +93,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
           StorageUtil.getReaderConfig("readerMode") === "single" ? "none" : "",
       });
       this.setState({ rendition: this.rendition });
-      this.state.readerMode !== "scroll" && EpubMouseEvent(this.rendition); // 绑定事件
+      EpubMouseEvent(this.rendition, this.state.readerMode); // 绑定事件
     });
   };
 

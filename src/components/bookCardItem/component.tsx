@@ -118,6 +118,7 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
       ? RecordLocation.getCfi(this.props.book.key).percentage
       : 0;
     const actionProps = { left: this.state.left, top: this.state.top };
+
     return (
       <>
         <div
@@ -132,20 +133,10 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
             this.handleMoreAction(event);
           }}
         >
-          {this.props.book.cover &&
-          this.props.book.cover !== "noCover" &&
-          this.props.book.publisher !== "mobi" &&
-          this.props.book.publisher !== "azw3" &&
-          this.props.book.publisher !== "txt" ? (
-            <img
-              className="book-item-cover"
-              src={this.props.book.cover}
-              alt=""
-              onClick={() => {
-                this.handleJump();
-              }}
-            />
-          ) : (
+          {!this.props.book.cover ||
+          this.props.book.cover === "noCover" ||
+          (this.props.book.format === "PDF" &&
+            StorageUtil.getReaderConfig("isPDFCover") !== "yes") ? (
             <div
               className="book-item-cover"
               onClick={() => {
@@ -160,6 +151,15 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
                 }}
               />
             </div>
+          ) : (
+            <img
+              className="book-item-cover"
+              src={this.props.book.cover}
+              alt=""
+              onClick={() => {
+                this.handleJump();
+              }}
+            />
           )}
 
           <p className="book-item-title">{this.props.book.name}</p>

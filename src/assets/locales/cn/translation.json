@@ -327,5 +327,13 @@
   "Remember window's size from last read": "记忆阅读器窗口大小",
   "Letter Spacing": "字间距",
   "Survey": "用户调查",
+  "You may see this error when the book you're importing is not supported by Koodo Reader, try converting it with Calibre": "导入失败，可能原因是 Koodo Reader 不支持该电子书，请使用 Calibre 转化后导入",
+  "Use first page as PDF cover": "使用 PDF 首页作为封面",
+  "Bing": "必应",
+  "Google": "谷歌",
+  "Yahoo": "雅虎",
+  "Baidu": "百度",
+  "Baidu Baike": "百度百科",
+  "Wikipedia": "维基百科",
   "Sliding Animation": "翻页动画"
 }

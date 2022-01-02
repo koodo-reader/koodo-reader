@@ -206,10 +206,7 @@ class NavigationPanel extends React.Component<
               </Tooltip>
 
               {this.state.cover &&
-              this.props.currentBook.cover !== "noCover" &&
-              this.props.currentBook.publisher !== "mobi" &&
-              this.props.currentBook.publisher !== "azw3" &&
-              this.props.currentBook.publisher !== "txt" ? (
+              this.props.currentBook.cover !== "noCover" ? (
                 <img className="book-cover" src={this.state.cover} alt="" />
               ) : (
                 <div className="book-cover">

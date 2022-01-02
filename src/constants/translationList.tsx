@@ -2,6 +2,7 @@ export const translationList = [
   {
     name: "简体中文",
     value: "zh",
+    lang: "zh-CN",
   },
   {
     name: "繁体中文",

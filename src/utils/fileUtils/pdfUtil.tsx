@@ -1,3 +1,5 @@
+declare var window: any;
+var pdfjsLib = window["pdfjs-dist/build/pdf"];
 export const getHightlightCoords = () => {
   let pageArea = document.getElementById("page-area");
   if (!pageArea) return;
@@ -47,4 +49,37 @@ export const getHightlightCoords = () => {
       );
   });
   return { page: pageIndex, coords: selected };
+};
+export const getPDFCover = (file: ArrayBuffer) => {
+  return new Promise<string>((resolve, reject) => {
+    pdfjsLib
+      .getDocument({ data: file })
+      .promise.then((pdfDoc: any) => {
+        pdfDoc.getPage(1).then((page: any) => {
+          var scale = 1.5;
+          var viewport = page.getViewport({
+            scale: scale,
+          });
+          var canvas: any = document.getElementById("the-canvas");
+          var context = canvas.getContext("2d");
+          canvas.height =
+            viewport.height || viewport.viewBox[3]; /* viewport.height is NaN */
+          canvas.width =
+            viewport.width ||
+            viewport.viewBox[2]; /* viewport.width is also NaN */
+          var task = page.render({
+            canvasContext: context,
+            viewport: viewport,
+          });
+          task.promise.then(async () => {
+            let cover: any = canvas.toDataURL("image/jpeg");
+
+            resolve(cover);
+          });
+        });
+      })
+      .catch((err: any) => {
+        resolve("");
+      });
+  });
 };

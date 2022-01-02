@@ -3,7 +3,15 @@ import { isElectron } from "react-device-detect";
 import localforage from "localforage";
 import BookModel from "../../model/Book";
 import toast from "react-hot-toast";
+import { getPDFCover } from "./pdfUtil";
+import chardet from "chardet";
+import iconv from "iconv-lite";
+import { xmlMetadata } from "./xmlUtil";
+// import { base64ArrayBuffer } from "./coverUtil";
+declare var window: any;
+const { MobiRender, Azw3Render } = window.Kookit;
 
+// let Unrar = window.Unrar;
 class BookUtil {
   static addBook(key: string, buffer: ArrayBuffer) {
     if (isElectron) {
@@ -198,38 +206,89 @@ class BookUtil {
     extension: string,
     md5: string,
     size: number,
-    path: string
+    path: string,
+    file_content: ArrayBuffer
   ) {
-    let cover: any = "noCover";
-    let key: string,
-      name: string,
-      author: string,
-      publisher: string,
-      description: string,
-      charset: string;
+    return new Promise<BookModel | boolean>(async (resolve, reject) => {
+      let cover: any = "";
+      let key: string,
+        name: string,
+        author: string,
+        publisher: string,
+        description: string,
+        charset: string;
+      [name, author, description, publisher, charset] = [
+        bookName,
+        "Unknown Authur",
+        "",
+        "",
+        "",
+      ];
+      switch (extension) {
+        case "pdf":
+          cover = await getPDFCover(file_content);
+          break;
+        case "mobi":
+          let mobiRendition = new MobiRender(
+            file_content,
+            "scroll",
+            StorageUtil.getReaderConfig("isSliding") === "yes" ? true : false
+          );
+          if (mobiRendition.getMetadata().compression === 17480) {
+            resolve(false);
+          }
+          break;
+        case "azw3":
+          let azw3Rendition = new Azw3Render(
+            file_content,
+            "scroll",
+            StorageUtil.getReaderConfig("isSliding") === "yes" ? true : false
+          );
+          if (azw3Rendition.getMetadata().compression === 17480) {
+            resolve(false);
+          }
+          break;
+        case "fb2":
+          charset = chardet.detect(Buffer.from(file_content)) || "";
+          let fb2Str = iconv.decode(
+            Buffer.from(file_content),
+            charset || "utf8"
+          );
+          let fb2Obj: any = await xmlMetadata(fb2Str);
+          cover = fb2Obj.cover;
+          name = fb2Obj.name;
+          author = fb2Obj.author;
+          break;
+        // case "cbr":
+        //   let unrar = new Unrar(file_content);
+        //   let buffer = unrar.decompress(
+        //     unrar.getEntries().map((item: any) => item.name)[0]
+        //   );
+        //   cover = base64ArrayBuffer(buffer);
+        //   break;
 
-    [name, author, description, publisher, charset] = [
-      bookName,
-      "Unknown Authur",
-      "",
-      "",
-      "",
-    ];
-    let format = extension.toUpperCase();
-    key = new Date().getTime() + "";
-    return new BookModel(
-      key,
-      name,
-      author,
-      description,
-      md5,
-      cover,
-      format,
-      publisher,
-      size,
-      path,
-      charset
-    );
+        default:
+          break;
+      }
+
+      let format = extension.toUpperCase();
+      key = new Date().getTime() + "";
+      resolve(
+        new BookModel(
+          key,
+          name,
+          author,
+          description,
+          md5,
+          cover,
+          format,
+          publisher,
+          size,
+          path,
+          charset
+        )
+      );
+    });
   }
 }
 

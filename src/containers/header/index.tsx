@@ -8,6 +8,8 @@ import {
   handleTip,
   handleBackupDialog,
   handleFetchBooks,
+  handleFetchNotes,
+  handleFetchBookmarks,
 } from "../../store/actions";
 import { stateType } from "../../store";
 import Header from "./component";
@@ -33,6 +35,8 @@ const actionCreator = {
   handleTipDialog,
   handleTip,
   handleFetchBooks,
+  handleFetchNotes,
+  handleFetchBookmarks,
 };
 export default connect(
   mapStateToProps,

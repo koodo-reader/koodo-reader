@@ -65,12 +65,7 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
 
                     FileSaver.saveAs(
                       new Blob([result]),
-                      item.name +
-                        `.${
-                          item.format !== "EPUB" && item.cover !== "noCover"
-                            ? "epub"
-                            : item.format.toLocaleLowerCase()
-                        }`
+                      item.name + `.${item.format.toLocaleLowerCase()}`
                     );
                   });
                 this.props.handleSelectBook(!this.props.isSelectBook);

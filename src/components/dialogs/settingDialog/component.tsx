@@ -41,6 +41,7 @@ class SettingDialog extends React.Component<
       isDisplayDark: StorageUtil.getReaderConfig("isDisplayDark") === "yes",
       isDisableAnalytics:
         StorageUtil.getReaderConfig("isDisableAnalytics") === "yes",
+      isPDFCover: StorageUtil.getReaderConfig("isPDFCover") === "yes",
       currentThemeIndex: _.findLastIndex(themeList, {
         name: StorageUtil.getReaderConfig("themeColor"),
       }),
@@ -375,7 +376,7 @@ class SettingDialog extends React.Component<
                   key={item.value}
                   className="lang-setting-option"
                 >
-                  {item.label}
+                  {this.props.t(item.label)}
                 </option>
               ))}
             </select>
