@@ -76,6 +76,6 @@ body:
     id: download
     attributes:
       label: Files (Optional)
-      placeholder: Compress your files into a zip file, drag and drop here
+      placeholder: Compress your files into a zip file, drag and drop here after clicking on this box
     validations:
       required: false
