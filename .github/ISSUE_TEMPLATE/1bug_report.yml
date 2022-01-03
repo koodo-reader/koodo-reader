@@ -76,7 +76,6 @@ body:
     id: download
     attributes:
       label: Files (Optional)
-      description: https://www.dropbox.com/request/1YGG5Eqo1nE3QUHlPxR8
-      placeholder: Send us the ebook files via the above link or paste the download link of your ebook files in this area
+      placeholder: Compress your files into a zip file, drag and drop here
     validations:
       required: false
