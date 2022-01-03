@@ -66,7 +66,7 @@ body:
     id: screenshot
     attributes:
       label: 截图或录像(可选的)
-      placeholder: 将截图或录像文件拖动到这里，文件会自动上传
+      placeholder: 将截图或录像文件拖动到这里上传
     validations:
       required: false
 
@@ -74,6 +74,6 @@ body:
     id: download
     attributes:
       label: 图书文件(可选的)
-      placeholder: 将文件压缩为zip包后，拖拽到此处上传
+      placeholder: 将文件压缩为zip包后，点击此对话框，拖拽压缩包到此处上传
     validations:
       required: false
