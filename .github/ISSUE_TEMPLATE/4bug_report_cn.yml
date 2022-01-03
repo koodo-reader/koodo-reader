@@ -74,7 +74,6 @@ body:
     id: download
     attributes:
       label: 图书文件(可选的)
-      description: https://www.dropbox.com/request/1YGG5Eqo1nE3QUHlPxR8
-      placeholder: 通过上面的链接向我们发送图书文件，或在此粘贴下载链接
+      placeholder: 将文件压缩为zip包后，拖拽到此处上传
     validations:
       required: false
