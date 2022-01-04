@@ -52,7 +52,7 @@
 ## 使用方法
 
 - 桌面端：
-  - 稳定版 (推荐下载)：[官网](https://koodo.960960.xyz/zh)（感谢 [GitHub Proxy](https://ghproxy.com/) 提供下载加速服务）
+  - 稳定版 (推荐下载)：[官网](https://koodo.960960.xyz/zh)（感谢 [@stilleshan](https://www.ioiox.com/donate.html) 提供下载加速服务）
   - 开发版：[Github Release](https://github.com/troyeguo/koodo-reader/releases/latest) （包含新功能和 bug 修复，但也可能引入更多未知 bug）
 - 网页版：[前往](https://reader.960960.xyz)
 - 使用 Scoop 安装：
