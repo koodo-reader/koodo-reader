@@ -5237,10 +5237,10 @@ electron-to-chromium@^1.3.564, electron-to-chromium@^1.3.723:
   resolved "https://registry.nlark.com/electron-to-chromium/download/electron-to-chromium-1.3.768.tgz?cache=0&sync_timestamp=1625537062320&other_urls=https%3A%2F%2Fregistry.nlark.com%2Felectron-to-chromium%2Fdownload%2Felectron-to-chromium-1.3.768.tgz#bbe47394f0073c947168589b7d19388518a7a9a9"
   integrity sha1-u+RzlPAHPJRxaFibfRk4hRinqak=
 
-electron@14.2.1:
-  version "14.2.1"
-  resolved "https://registry.yarnpkg.com/electron/-/electron-14.2.1.tgz#ee8b9cfa8c04ad4d9456daa5bbac562c2c2517a1"
-  integrity sha512-20cLOVpmjIgYMgsDLpI36VQhv0bIy54sSBAP3rLFtrs/kVVHLu0educMVZkkMm5GJPd2vvU4mcK7f43JgVRcNg==
+electron@14.1.1:
+  version "14.1.1"
+  resolved "https://registry.yarnpkg.com/electron/-/electron-14.1.1.tgz#643726fe1fd4ad77fbb3a75b211005ed01357485"
+  integrity sha512-eaqaxMq/auE5VDIzYYqDUgZg+68Uiv+8jAQUXqLh8G58kOxqRL9Jw4TJ/w2/KXwWGaVPaUStbvO9BtqVZant+A==
   dependencies:
     "@electron/get" "^1.0.1"
     "@types/node" "^14.6.2"
