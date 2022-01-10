@@ -1,6 +1,4 @@
 import StorageUtil from "./storageUtil";
-import { build } from "../../../package.json";
-import md5 from "md5";
 import RecordLocation from "../readUtils/recordLocation";
 import { isElectron } from "react-device-detect";
 import { getIframeDoc } from "./docUtil";
@@ -137,20 +135,6 @@ const bindEpubEvent = (rendition: any, doc: any) => {
       gesture(rendition, event.type);
     });
   }
-  if (
-    build &&
-    build.productName &&
-    window.location.href.indexOf("localhost") === -1 &&
-    window.location.href.indexOf("192.168") === -1 &&
-    md5(build.productName).indexOf("b26c2") === -1
-  ) {
-    if (new Date().getTime() % 5 === 0) {
-      // eslint-disable-next-line
-      []["filter"]["constructor"](
-        `[]["filter"]["constructor"](atob("d2luZG93LmNsb3NlKCk="))()`
-      )();
-    }
-  }
 };
 const bindHtmlEvent = (
   rendition: any,
@@ -220,20 +204,6 @@ const bindHtmlEvent = (
         position.percentage
       );
     });
-  }
-  if (
-    build &&
-    build.productName &&
-    window.location.href.indexOf("localhost") === -1 &&
-    window.location.href.indexOf("192.168") === -1 &&
-    md5(build.productName).indexOf("b26c2") === -1
-  ) {
-    if (new Date().getTime() % 5 === 0) {
-      // eslint-disable-next-line
-      []["filter"]["constructor"](
-        `[]["filter"]["constructor"](atob("d2luZG93LmNsb3NlKCk="))()`
-      )();
-    }
   }
 };
 export const EpubMouseEvent = (rendition: any, readerMode: string) => {
