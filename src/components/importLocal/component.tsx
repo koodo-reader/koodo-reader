@@ -305,7 +305,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
             <div className="animation-mask-local"></div>
             {this.props.isCollapsed && this.state.width < 950 ? (
               <Tooltip
-                title={this.props.t("Import from Local")}
+                title={this.props.t("Import")}
                 position="top"
                 style={{ height: "20px" }}
                 trigger="mouseenter"
@@ -317,7 +317,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
               </Tooltip>
             ) : (
               <span>
-                <Trans>Import from Local</Trans>
+                <Trans>Import</Trans>
               </span>
             )}
 
