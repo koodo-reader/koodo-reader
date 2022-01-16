@@ -163,7 +163,7 @@ class CardList extends React.Component<CardListProps, CardListStates> {
                   {this.props.mode === "note" ? (
                     <Trans>{"More Notes"}</Trans>
                   ) : (
-                    <Trans>{"More Highlights"}</Trans>
+                    <Trans>{"Show in the book"}</Trans>
                   )}
 
                   <span className="icon-dropdown icon-card-right"></span>

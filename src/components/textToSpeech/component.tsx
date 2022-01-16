@@ -127,7 +127,7 @@ class TextToSpeech extends React.Component<
           <>
             <div className="single-control-switch-container">
               <span className="single-control-switch-title">
-                <Trans>Turn on audio</Trans>
+                <Trans>Turn on text-to-speech</Trans>
               </span>
 
               <span

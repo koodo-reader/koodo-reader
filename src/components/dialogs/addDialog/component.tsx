@@ -33,7 +33,7 @@ class AddDialog extends Component<AddDialogProps, AddDialogState> {
     }
     //未填书架名提醒
     if (!shelfTitle) {
-      toast(this.props.t("Empty Shelf Title"));
+      toast(this.props.t("Shelf Title is Empty"));
       return;
     }
     //判断书架中是否已有该图书
