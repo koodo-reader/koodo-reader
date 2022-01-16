@@ -1,17 +1,17 @@
 export const viewMode = [
   {
-    name: "Card Mode",
+    name: "Card",
     icon: "grid",
     mode: "card",
   },
   {
-    name: "List Mode",
+    name: "List",
     icon: "menu",
     mode: "list",
   },
 
   {
-    name: "Cover Mode",
+    name: "Cover",
     icon: "cover",
     mode: "cover",
   },

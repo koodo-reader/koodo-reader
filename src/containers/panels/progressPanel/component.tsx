@@ -118,7 +118,7 @@ class ProgressPanel extends React.Component<
       <div className="progress-panel">
         <p className="progress-text" style={{ marginTop: 10 }}>
           <span>
-            <Trans>Current Progress</Trans>:{" "}
+            <Trans>Progress</Trans>:{" "}
             {Math.round(
               this.state.displayPercentage > 1
                 ? 100
@@ -131,7 +131,7 @@ class ProgressPanel extends React.Component<
         <p className="progress-text" style={{ marginTop: 0 }}>
           {this.state.currentPage > 0 ? (
             <>
-              <Trans>Current Chapter Pages</Trans>
+              <Trans>Pages</Trans>
               <input
                 type="text"
                 name="jumpPage"
@@ -142,7 +142,7 @@ class ProgressPanel extends React.Component<
                 value={this.state.currentPage}
               />
               <span>/ {this.state.totalPage}</span>&nbsp;&nbsp;&nbsp;
-              <Trans>Chapter Redirect</Trans>
+              <Trans>Chapters</Trans>
               <input
                 type="text"
                 name="jumpChapter"
