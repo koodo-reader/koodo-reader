@@ -102,7 +102,7 @@ class ProgressPanel extends React.Component<
       <div className="progress-panel">
         <p className="progress-text" style={{ marginTop: 10 }}>
           <span>
-            <Trans>Current Progress</Trans>:{" "}
+            <Trans>Progress</Trans>:{" "}
             {Math.round(
               this.state.displayPercentage > 1
                 ? 100
@@ -113,7 +113,7 @@ class ProgressPanel extends React.Component<
         </p>
 
         <p className="progress-text" style={{ marginTop: 0 }}>
-          <Trans>Chapter Redirect</Trans>
+          <Trans>Chapters</Trans>
           <input
             type="text"
             name="jumpChapter"

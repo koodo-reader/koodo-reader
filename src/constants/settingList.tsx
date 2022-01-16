@@ -37,7 +37,7 @@ export const settingList = [
   },
   {
     isElectron: false,
-    title: "Default expand all content",
+    title: "Auto expand content",
     desc: "All the folded content will be expanded in the navigation panel",
     propName: "isExpandContent",
   },
@@ -108,7 +108,7 @@ export const readerSettingList = [
     propName: "isIndent",
   },
   {
-    title: "Bold Font",
+    title: "Bold",
     propName: "isBold",
   },
   {
@@ -116,11 +116,11 @@ export const readerSettingList = [
     propName: "isItalic",
   },
   {
-    title: "Text Underline",
+    title: "Text underline",
     propName: "isUnderline",
   },
   {
-    title: "Text Shadow",
+    title: "Text shadow",
     propName: "isShadow",
   },
   {
@@ -128,15 +128,15 @@ export const readerSettingList = [
     propName: "isInvert",
   },
   {
-    title: "Don't show footer",
+    title: "Hide footer",
     propName: "isHideFooter",
   },
   {
-    title: "Don't show header",
+    title: "Hide header",
     propName: "isHideHeader",
   },
   {
-    title: "Dont't use mimical background",
+    title: "Hide mimical background",
     propName: "isHideBackground",
   },
   {

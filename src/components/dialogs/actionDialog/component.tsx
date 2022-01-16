@@ -183,7 +183,7 @@ class ActionDialog extends React.Component<ActionDialogProps> {
           </div>
           <div>
             <p className="action-dialog-book-publisher">
-              <Trans>My Shelves</Trans>:
+              <Trans>Shelf</Trans>:
             </p>
             <p className="action-dialog-book-title">
               {ShelfUtil.getBookPosition(this.props.currentBook.key).map(

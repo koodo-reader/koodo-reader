@@ -121,7 +121,7 @@ class SortDialog extends React.Component<SortDialogProps, SortDialogState> {
             }}
             style={sortCode.order === 1 ? {} : { opacity: 0.34 }}
           >
-            <Trans>Ascending Order</Trans>
+            <Trans>Ascend</Trans>
             {sortCode.order === 1 && (
               <span
                 className="icon-check"
@@ -136,7 +136,7 @@ class SortDialog extends React.Component<SortDialogProps, SortDialogState> {
             }}
             style={sortCode.order === 2 ? {} : { opacity: 0.34 }}
           >
-            <Trans>Descending Order</Trans>
+            <Trans>Descend</Trans>
             {sortCode.order === 2 && (
               <span
                 className="icon-check"

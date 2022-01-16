@@ -53,7 +53,7 @@ class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
       <div className="token-dialog-container">
         <div className="token-dialog-box">
           <div className="token-dialog-title">
-            <Trans>Bind</Trans>
+            <Trans>Authorize</Trans>
             &nbsp;
             {this.props.driveName}&nbsp;
             <Trans>Token</Trans>
@@ -102,7 +102,10 @@ class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
                     : {}
                 }
               >
-                <Trans>Token Info</Trans>
+                <Trans>
+                  Please authorize your account, and fill the following box with
+                  the token
+                </Trans>
               </div>
               <div
                 className="token-dialog-link-text"

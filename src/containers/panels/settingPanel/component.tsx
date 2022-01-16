@@ -117,7 +117,7 @@ class SettingPanel extends React.Component<
                 minLabel: "0.5",
                 maxLabel: "3",
                 step: 0.1,
-                title: "Scale",
+                title: "Page Width",
               }}
             />
           ) : null}

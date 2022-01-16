@@ -157,7 +157,7 @@ class UpdateInfo extends React.Component<UpdateInfoProps, UpdateInfoState> {
                       <Trans>Changelog</Trans>
                     </>
                   ) : (
-                    <Trans>Open link in browser</Trans>
+                    <Trans>Download</Trans>
                   )}
                 </div>
                 {this.state.updateLog && (

@@ -91,7 +91,7 @@ class ShelfChooser extends React.Component<
           style={this.props.isCollapsed ? {} : { left: "calc(50% - 60px)" }}
         >
           <p className="general-setting-title" style={{ display: "inline" }}>
-            <Trans>My Shelves</Trans>
+            <Trans>Shelf</Trans>
           </p>
           <select
             className="booklist-shelf-list"

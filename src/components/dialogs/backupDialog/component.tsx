@@ -85,7 +85,7 @@ class BackupDialog extends React.Component<
           }
 
           if (this.state.isBackup === "yes") {
-            this.showMessage("Uploading");
+            this.showMessage("Uploading, please wait");
             this.props.handleLoadingDialog(true);
 
             let blob: Blob | boolean = await backup(
@@ -106,7 +106,7 @@ class BackupDialog extends React.Component<
             }
           } else {
             this.props.handleLoadingDialog(true);
-            this.showMessage("Downloading");
+            this.showMessage("Downloading, please wait");
             let result = await DropboxUtil.DownloadFile();
             if (result) {
               this.handleFinish();
@@ -127,7 +127,7 @@ class BackupDialog extends React.Component<
             break;
           }
           if (this.state.isBackup === "yes") {
-            this.showMessage("Uploading");
+            this.showMessage("Uploading, please wait");
             this.props.handleLoadingDialog(true);
 
             let blob: any = await backup(
@@ -154,7 +154,7 @@ class BackupDialog extends React.Component<
               this.props.handleLoadingDialog(false);
             }
           } else {
-            this.showMessage("Downloading");
+            this.showMessage("Downloading, please wait");
             this.props.handleLoadingDialog(true);
 
             let result = await WebdavUtil.DownloadFile();
@@ -229,7 +229,7 @@ class BackupDialog extends React.Component<
         {this.props.isOpenTokenDialog ? <TokenDialog {...dialogProps} /> : null}
         {this.state.currentStep === 0 ? (
           <div className="backup-page-title">
-            <Trans>Do you want to backup or restore?</Trans>
+            <Trans>Choose your operation</Trans>
           </div>
         ) : this.state.currentStep === 1 && this.state.isBackup === "yes" ? (
           <div className="backup-page-title">
@@ -254,7 +254,7 @@ class BackupDialog extends React.Component<
             >
               <span className="icon-backup"></span>
               <div>
-                <Trans>I want to backup</Trans>
+                <Trans>Backup</Trans>
               </div>
             </div>
 
