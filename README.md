@@ -117,3 +117,7 @@ Make sure that you have installed yarn and git, node's version on your computer 
    yarn
    yarn start
    ```
+
+## Translation
+
+Koodo Reader use POEditor to manage localization, Visit [here](https://poeditor.com/join/project?hash=fk4qbQTlsk) to edit current translation or add new language
