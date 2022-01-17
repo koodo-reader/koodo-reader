@@ -1,6 +1,6 @@
 {
   "Download Demo Book": "下載範例圖書",
-  "All Books": "全部圖書",
+  "Books": "全部圖書",
   "Recent": "最近閱讀",
   "Bookmarks": "我的書籤",
   "Favorites": "我的最愛",
@@ -17,7 +17,7 @@
   "Downloading, please wait": "下載中，請稍候",
   "Uploading, please wait": "上傳中，請稍候",
   "Import": "從本機導入",
-  "Backup": "備份和還原",
+  "Backup": "備份",
   "Search my library": "搜尋我的書庫",
   "Card": "卡片模式",
   "List": "列表模式",
