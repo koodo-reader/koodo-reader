@@ -13,6 +13,10 @@
 - 请勿修改组件样式
 - 请勿修改变量名，方法名，项目结构
 
+## 翻译指南
+
+您可以通过 Koodo Reader 的[在线翻译工具](https://poeditor.com/join/project?hash=fk4qbQTlsk)，完善现有翻译（尤其是繁体中文，目前大部分翻译都是使用繁简转换工具实现的），也可以添加新的语言。
+
 ## 其他贡献方式
 
 您可以在[Issues](https://github.com/troyeguo/koodo-reader/issues)提交新需求和新 Bug。或者帮助解决[Discussions](https://github.com/troyeguo/koodo-reader/discussions)中其他用户遇到的问题。
