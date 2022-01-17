@@ -270,7 +270,7 @@ class BackupDialog extends React.Component<
             >
               <span className="icon-restore"></span>
               <div>
-                <Trans>I want to restore</Trans>
+                <Trans>Restore</Trans>
               </div>
             </div>
           </div>
