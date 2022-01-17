@@ -52,7 +52,7 @@ class ShelfChooser extends React.Component<
           className="add-dialog-shelf-list-option"
           selected={this.props.shelfIndex === index ? true : false}
         >
-          {this.props.t(item === "New" ? "All Books" : item)}
+          {this.props.t(item === "New" ? "Books" : item)}
         </option>
       );
     });

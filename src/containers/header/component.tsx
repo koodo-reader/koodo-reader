@@ -212,7 +212,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
             style={{ left: "490px", top: "18px" }}
           >
             <Tooltip
-              title={this.props.t("Sort")}
+              title={this.props.t("Sort by")}
               position="top"
               trigger="mouseenter"
               distance={20}
@@ -287,7 +287,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
           <div className="animation-mask"></div>
           {this.props.isCollapsed && this.state.width < 950 ? (
             <Tooltip
-              title={this.props.t("Backup and Restore")}
+              title={this.props.t("Backup")}
               position="top"
               trigger="mouseenter"
             >
@@ -297,7 +297,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
               ></span>
             </Tooltip>
           ) : (
-            <Trans>Backup and Restore</Trans>
+            <Trans>Backup</Trans>
           )}
         </div>
         <ImportLocal
