@@ -55,22 +55,24 @@ class SettingDialog extends React.Component<
           dropdownList[0].option.indexOf(
             StorageUtil.getReaderConfig("systemFont")
           )
-        ].setAttribute("selected", "selected");
+        ]?.setAttribute("selected", "selected");
     document
       .getElementsByClassName("lang-setting-dropdown")[1]
       ?.children[
-        ["zh", "cht", "en", "ru"].indexOf(
-          StorageUtil.getReaderConfig("lang") ||
-            (navigator.language.indexOf("zh") > -1 ? "zh" : "en")
-        )
-      ].setAttribute("selected", "selected");
+        langList
+          .map((item) => item.value)
+          .indexOf(
+            StorageUtil.getReaderConfig("lang") ||
+              (navigator.language.indexOf("zh") > -1 ? "zh" : "en")
+          )
+      ]?.setAttribute("selected", "selected");
     document.getElementsByClassName("lang-setting-dropdown")[2]?.children[
       _.findLastIndex(searchList, {
         value:
           StorageUtil.getReaderConfig("searchEngine") ||
           (navigator.language === "zh-CN" ? "baidu" : "google"),
       })
-    ].setAttribute("selected", "selected");
+    ]?.setAttribute("selected", "selected");
   }
   handleRest = (bool: boolean) => {
     toast.success(this.props.t("Change Successfully"));
