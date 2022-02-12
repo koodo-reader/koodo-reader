@@ -27,7 +27,7 @@ export const dropdownList = [
   },
   {
     id: 4,
-    title: "Chinese Coversion",
+    title: "Chinese Conversion",
     value: "convertChinese",
     option: [
       "Default",
