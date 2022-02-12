@@ -100,7 +100,7 @@
   "build": {
     "appId": "xyz.960960.koodo",
     "productName": "Koodo Reader",
-    "copyright": "Copyright (c) 2020-2021 ${author}",
+    "copyright": "Copyright (c) 2021-2022 ${author}",
     "files": [
       "build/**/*",
       "node_modules/**/*",

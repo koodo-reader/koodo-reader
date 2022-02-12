@@ -94,6 +94,7 @@ export const searchList = [
   { label: "DuckDuckGo", value: "duckduckgo" },
   { label: "Yandex", value: "yandex" },
   { label: "Yahoo", value: "yahoo" },
+  { label: "Naver", value: "naver" },
   { label: "Baidu Baike", value: "baike" },
   { label: "Wikipedia", value: "wiki" },
 ];

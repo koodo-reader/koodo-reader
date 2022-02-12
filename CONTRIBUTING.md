@@ -5,7 +5,7 @@ You can find features to work on through our [Roadmap](https://www.notion.so/tro
 - Make sure you're already familiar with our project structure, code style, naming style.
 - Does not upgrade or degrade dependency version, this could potentially break the project
 - Does not modify current variable or function names, unless it's a typo
-- Does not modify component style or add new style
+- Does not modify component style
 
 ## Translation Contributing Guide
 

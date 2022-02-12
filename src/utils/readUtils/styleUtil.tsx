@@ -43,7 +43,7 @@ class styleUtil {
       }px !important;line-height: ${
         StorageUtil.getReaderConfig("lineHeight") || "1.25"
       } !important;font-family: ${
-        StorageUtil.getReaderConfig("fontFamily") || "Helvetica"
+        StorageUtil.getReaderConfig("fontFamily") || ""
       } !important;color: ${
         StorageUtil.getReaderConfig("textColor")
           ? StorageUtil.getReaderConfig("textColor")
