@@ -65,9 +65,13 @@ class SettingSwitch extends React.Component<
     }, 500);
   };
   render() {
+    console.log(
+      this.props.currentEpub,
+      Object.keys(this.props.currentEpub).length
+    );
     return (
       <>
-        {Object.keys(this.props.currentEpub).length !== 0 && <TextToSpeech />}
+        <TextToSpeech />
         {readerSettingList.map((item) => (
           <div className="single-control-switch-container" key={item.title}>
             <span className="single-control-switch-title">

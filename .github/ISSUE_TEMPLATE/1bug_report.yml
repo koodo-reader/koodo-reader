@@ -16,6 +16,7 @@ body:
     id: testing2
     attributes:
       label: There are no similar issues on the issue list
+      description: https://github.com/troyeguo/koodo-reader/issues
       options:
         - label: "Yes"
           required: true

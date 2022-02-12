@@ -15,6 +15,7 @@ body:
     id: testing2
     attributes:
       label: 我已经搜索了已有的 issue 列表，没有找到类似的 issue
+      description: https://github.com/troyeguo/koodo-reader/issues
       options:
         - label: "Yes"
           required: true

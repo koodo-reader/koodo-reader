@@ -157,11 +157,17 @@ class PopupOption extends React.Component<PopupOptionProps> {
       case "yahoo":
         this.handleJump("https://search.yahoo.com/search?p=" + getSelection());
         break;
+      case "naver":
+        this.handleJump(
+          "https://search.naver.com/search.naver?where=nexearch&sm=top_hty&fbm=1&ie=utf8&query=" +
+            getSelection()
+        );
+        break;
       case "baike":
         this.handleJump("https://baike.baidu.com/item/" + getSelection());
         break;
       case "wiki":
-        this.handleJump("https://wikipedia.org/wiki/" + getSelection());
+        this.handleJump("https://en.wikipedia.org/wiki/" + getSelection());
         break;
       default:
         this.handleJump(
