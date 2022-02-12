@@ -22,8 +22,14 @@ const Router = () => {
         navigator.language === "zh-HK"
       ) {
         i18n.changeLanguage("cht");
-      } else if (navigator.language === "ru") {
+      } else if (navigator.language.startsWith("ru")) {
         i18n.changeLanguage("ru");
+      } else if (navigator.language.startsWith("fr")) {
+        i18n.changeLanguage("fr");
+      } else if (navigator.language.startsWith("es")) {
+        i18n.changeLanguage("es");
+      } else if (navigator.language.startsWith("pt")) {
+        i18n.changeLanguage("ptBR");
       } else {
         i18n.changeLanguage("en");
       }
