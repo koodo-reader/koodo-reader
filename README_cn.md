@@ -117,4 +117,4 @@ docker-compose up -d
 
 ## 贡献翻译
 
-您可以通过 Koodo Reader 的[在线翻译工具](https://poeditor.com/join/project?hash=fk4qbQTlsk)，完善现有翻译（尤其是繁体中文，目前大部分翻译都是使用繁简转换工具实现的），也可以添加新的语言。
+您可以通过 Koodo Reader 的[在线翻译工具](https://poeditor.com/join/project?hash=fk4qbQTlsk)，完善现有翻译，也可以添加新的语言。

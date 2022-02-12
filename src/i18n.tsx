@@ -4,6 +4,9 @@ import translationEN from "./assets/locales/en/translation.json";
 import translationCN from "./assets/locales/cn/translation.json";
 import translationTW from "./assets/locales/tw/translation.json";
 import translationRU from "./assets/locales/ru/translation.json";
+import translationFR from "./assets/locales/fr/translation.json";
+import translationES from "./assets/locales/es/translation.json";
+import translationPTBR from "./assets/locales/pt-BR/translation.json";
 
 // the translations
 const resources = {
@@ -18,6 +21,15 @@ const resources = {
   },
   ru: {
     translation: translationRU,
+  },
+  es: {
+    translation: translationES,
+  },
+  fr: {
+    translation: translationFR,
+  },
+  ptBR: {
+    translation: translationPTBR,
   },
 };
 
