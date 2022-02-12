@@ -128,6 +128,7 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
           }}
           onMouseLeave={() => {
             this.handleConfig(false);
+            this.props.handleActionDialog(false);
           }}
           onContextMenu={(event) => {
             this.handleMoreAction(event);

@@ -100,6 +100,7 @@
   "Use first page as PDF cover": "使用 PDF 首页作为封面",
   "You may see this error when the book you're importing is not supported by Koodo Reader, try converting it with Calibre": "暂不支持此图书，请尝试使用 Calibre 转化之后重新导入",
   "Simplified To Traditional": "简体转繁体",
+  "Shelf title can't be pure number": "书架名不能是纯数字",
   "Traditional To Simplified": "繁体转简体",
   "Shelf Title is Empty": "书架名为空",
   "Copy Link Successfully": "链接复制成功",

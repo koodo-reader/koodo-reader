@@ -17,7 +17,7 @@ import ViewMode from "../../../components/viewMode";
 import { backup } from "../../../utils/syncUtils/backupUtil";
 import { isElectron } from "react-device-detect";
 import SelectBook from "../../../components/selectBook";
-import ShelfChooser from "../../../components/ShelfChooser";
+import ShelfChooser from "../../../components/shelfSelector";
 class BookList extends React.Component<BookListProps, BookListState> {
   constructor(props: BookListProps) {
     super(props);
@@ -78,9 +78,9 @@ class BookList extends React.Component<BookListProps, BookListState> {
   };
   renderBookList = () => {
     //根据不同的场景获取不同的图书数据
-    let books = this.props.isSearch
+    let books = this.props.isSearch //搜索图书
       ? this.handleIndexFilter(this.props.books, this.props.searchResults)
-      : this.props.shelfIndex > 0
+      : this.props.shelfIndex > 0 //展示书架
       ? this.handleShelf(this.props.books, this.props.shelfIndex)
       : this.props.mode === "favorite" && !this.props.isBookSort
       ? this.handleKeyFilter(this.props.books, AddFavorite.getAllFavorite())

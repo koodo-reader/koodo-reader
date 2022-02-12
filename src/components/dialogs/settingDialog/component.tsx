@@ -86,7 +86,7 @@ class SettingDialog extends React.Component<
   };
   changeFont = (font: string) => {
     let body = document.getElementsByTagName("body")[0];
-    body.setAttribute("style", "font-family:" + font + "!important");
+    body?.setAttribute("style", "font-family:" + font + "!important");
     StorageUtil.setReaderConfig("systemFont", font);
   };
   handleJump = (url: string) => {

@@ -77,7 +77,7 @@ class SettingPanel extends React.Component<
                 minValue: 0,
                 mode: "margin",
                 minLabel: "0",
-                maxLabel: "100",
+                maxLabel: "80",
                 step: 5,
                 title: "Margin",
               }}

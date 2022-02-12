@@ -67,7 +67,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       doc.document.addEventListener("mouseup", () => {
         if (!doc!.getSelection()) return;
         var rect = doc!.getSelection()!.getRangeAt(0).getBoundingClientRect();
-
         this.setState({
           rect,
           pageWidth: doc.document.body.scrollWidth,
@@ -80,7 +79,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
 
   render() {
     return (
-      <div className="ebook-viewer">
+      <div className="ebook-viewer" id="page-area">
         {!this.state.loading && (
           <PopupMenu
             {...{

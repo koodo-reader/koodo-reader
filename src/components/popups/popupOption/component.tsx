@@ -37,7 +37,7 @@ class PopupOption extends React.Component<PopupOptionProps> {
     let rightEdge = this.props.pageWidth - 310 + page.offsetLeft * 2;
 
     if (posX > rightEdge) {
-      popupMenu.setAttribute("style", `left:${rightEdge}px;top:${posY}px`);
+      popupMenu?.setAttribute("style", `left:${rightEdge}px;top:${posY}px`);
     }
   };
   handleCopy = () => {

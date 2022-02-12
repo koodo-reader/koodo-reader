@@ -65,10 +65,6 @@ class SettingSwitch extends React.Component<
     }, 500);
   };
   render() {
-    console.log(
-      this.props.currentEpub,
-      Object.keys(this.props.currentEpub).length
-    );
     return (
       <>
         <TextToSpeech />

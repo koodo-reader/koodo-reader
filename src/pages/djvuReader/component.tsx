@@ -59,7 +59,9 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
   render() {
     return (
       <div>
-        <div className="ebook-viewer">Loading</div>
+        <div className="ebook-viewer" id="page-area">
+          Loading
+        </div>
         <BackToMain />
       </div>
     );
