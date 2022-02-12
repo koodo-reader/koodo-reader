@@ -21,7 +21,10 @@ export const getSelection = () => {
 };
 let lock = false; //prevent from clicking too fasts
 const arrowKeys = (rendition: any, keyCode: number, event: any) => {
-  if (document.querySelector(".editor-box")) {
+  if (
+    document.querySelector(".editor-box") ||
+    document.querySelector(".navigation-search-title")
+  ) {
     return;
   }
 
@@ -114,24 +117,32 @@ const gesture = (rendition: any, type: string) => {
 };
 
 const bindEpubEvent = (rendition: any, doc: any) => {
-  doc.addEventListener("keydown", async (event) => {
-    arrowKeys(rendition, event.keyCode, event);
-  });
+  doc.addEventListener(
+    "keydown",
+    (event) => {
+      arrowKeys(rendition, event.keyCode, event);
+    },
+    false
+  );
   doc.addEventListener(
     "mousewheel",
-    async (event) => {
+    (event) => {
       mouseChrome(rendition, event.wheelDelta);
     },
     false
   );
-  window.addEventListener("keydown", async (event) => {
-    arrowKeys(rendition, event.keyCode, event);
-    //使用Key判断是否是htmlBook
-  });
+  window.addEventListener(
+    "keydown",
+    (event) => {
+      arrowKeys(rendition, event.keyCode, event);
+      //使用Key判断是否是htmlBook
+    },
+    false
+  );
 
   if (StorageUtil.getReaderConfig("isTouch") === "yes") {
     const mc = new Hammer(doc);
-    mc.on("panleft panright panup pandown", async (event: any) => {
+    mc.on("panleft panright panup pandown", (event: any) => {
       gesture(rendition, event.type);
     });
   }
@@ -142,7 +153,7 @@ const bindHtmlEvent = (
   key: string = "",
   readerMode: string = ""
 ) => {
-  doc.addEventListener("keydown", async (event) => {
+  doc.addEventListener("keydown", (event) => {
     arrowKeys(rendition, event.keyCode, event);
 
     let position = rendition.getPosition();
@@ -176,7 +187,7 @@ const bindHtmlEvent = (
     false
   );
 
-  window.addEventListener("keydown", async (event) => {
+  window.addEventListener("keydown", (event) => {
     arrowKeys(rendition, event.keyCode, event);
     //使用Key判断是否是htmlBook
 
@@ -192,7 +203,7 @@ const bindHtmlEvent = (
 
   if (StorageUtil.getReaderConfig("isTouch") === "yes") {
     const mc = new Hammer(doc);
-    mc.on("panleft panright panup pandown", async (event: any) => {
+    mc.on("panleft panright panup pandown", (event: any) => {
       gesture(rendition, event.type);
 
       let position = rendition.getPosition();
@@ -211,7 +222,7 @@ export const EpubMouseEvent = (rendition: any, readerMode: string) => {
     let doc = getIframeDoc();
     if (!doc) return;
     if (readerMode === "scroll") {
-      doc.addEventListener("keydown", async (event) => {
+      doc.addEventListener("keydown", (event) => {
         arrowKeys(rendition, event.keyCode, event);
         //使用Key判断是否是htmlBook
       });
