@@ -44,7 +44,7 @@ class styleUtil {
         StorageUtil.getReaderConfig("lineHeight") || "1.25"
       } !important;font-family: ${
         StorageUtil.getReaderConfig("fontFamily") || ""
-      } !important;color: ${
+      } !important;background-color: transparent !important;color: ${
         StorageUtil.getReaderConfig("textColor")
           ? StorageUtil.getReaderConfig("textColor")
           : StorageUtil.getReaderConfig("backgroundColor") ===
@@ -82,7 +82,7 @@ class styleUtil {
       }px !important;padding:0;word-wrap: break-word;`;
     } else {
       return {
-        "a, article, cite, code, div, li, p, pre, span, table": {
+        "a, article, cite, code, div, li, p, pre, span, table, body": {
           "font-size": `${
             StorageUtil.getReaderConfig("fontSize") || 17
           }px !important`,
@@ -92,6 +92,7 @@ class styleUtil {
           "font-family": `${
             StorageUtil.getReaderConfig("fontFamily") || ""
           } !important`,
+          "background-color": "transparent !important",
           color: `${
             StorageUtil.getReaderConfig("textColor")
               ? StorageUtil.getReaderConfig("textColor")

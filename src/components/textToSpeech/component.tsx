@@ -63,12 +63,12 @@ class TextToSpeech extends React.Component<
                   speedList.option.indexOf(
                     StorageUtil.getReaderConfig("voiceSpeed") || "1"
                   )
-                ].setAttribute("selected", "selected");
+                ]?.setAttribute("selected", "selected");
               document
                 .querySelector("#text-speech-voice")!
                 .children[
                   StorageUtil.getReaderConfig("voiceIndex") || 0
-                ].setAttribute("selected", "selected");
+                ]?.setAttribute("selected", "selected");
             }
           });
         });

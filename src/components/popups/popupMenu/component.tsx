@@ -144,7 +144,7 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
         var bounds = viewport.convertToViewportRectangle(rect);
         var el = iWin.document.createElement("div");
 
-        el.setAttribute(
+        el?.setAttribute(
           "style",
           "position: absolute;" +
             (colorCode.indexOf("color") > -1
@@ -164,8 +164,8 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
             Math.abs(bounds[1] - bounds[3]) +
             "px; z-index:0;"
         );
-        el.setAttribute("key", noteKey);
-        el.addEventListener("click", (event: any) => {
+        el?.setAttribute("key", noteKey);
+        el?.addEventListener("click", (event: any) => {
           this.handlePDFClick(event);
         });
 
