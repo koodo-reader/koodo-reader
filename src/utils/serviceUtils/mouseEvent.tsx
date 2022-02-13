@@ -48,32 +48,7 @@ const arrowKeys = (rendition: any, keyCode: number, event: any) => {
     }, throttleTime);
     return false;
   }
-  if (keyCode === 123) {
-    if (isElectron) {
-      event.preventDefault();
-      StorageUtil.setReaderConfig(
-        "isMergeWord",
-        StorageUtil.getReaderConfig("isMergeWord") === "yes" ? "no" : "yes"
-      );
-      window.require("electron").ipcRenderer.invoke("switch-moyu", "ping");
-    }
-    lock = true;
-    setTimeout(function () {
-      lock = false;
-    }, throttleTime);
-    return false;
-  }
-  if (keyCode === 9) {
-    if (isElectron) {
-      event.preventDefault();
-      window.require("electron").ipcRenderer.invoke("hide-reader", "ping");
-    }
-    lock = true;
-    setTimeout(function () {
-      lock = false;
-    }, throttleTime);
-    return false;
-  }
+  handleShortcut(event, keyCode);
 };
 
 const mouseChrome = (rendition: any, wheelDelta: number) => {
@@ -88,6 +63,35 @@ const mouseChrome = (rendition: any, wheelDelta: number) => {
   }
   if (wheelDelta < 0) {
     rendition.next();
+    lock = true;
+    setTimeout(function () {
+      lock = false;
+    }, throttleTime);
+    return false;
+  }
+};
+
+const handleShortcut = (event: any, keyCode: number) => {
+  if (keyCode === 9) {
+    if (isElectron) {
+      event.preventDefault();
+      window.require("electron").ipcRenderer.invoke("hide-reader", "ping");
+    }
+    lock = true;
+    setTimeout(function () {
+      lock = false;
+    }, throttleTime);
+    return false;
+  }
+  if (keyCode === 123) {
+    if (isElectron) {
+      event.preventDefault();
+      StorageUtil.setReaderConfig(
+        "isMergeWord",
+        StorageUtil.getReaderConfig("isMergeWord") === "yes" ? "no" : "yes"
+      );
+      window.require("electron").ipcRenderer.invoke("switch-moyu", "ping");
+    }
     lock = true;
     setTimeout(function () {
       lock = false;
@@ -242,5 +246,21 @@ export const HtmlMouseEvent = (
     if (!doc) return;
     lock = false;
     bindHtmlEvent(rendition, doc, key, readerMode);
+  });
+};
+export const pdfMouseEvent = () => {
+  let pageArea = document.getElementById("page-area");
+  if (!pageArea) return;
+  let iframe = pageArea.getElementsByTagName("iframe")[0];
+  if (!iframe) return;
+  let doc: any = iframe.contentWindow || iframe.contentDocument?.defaultView;
+
+  doc.document.addEventListener("keydown", (event) => {
+    handleShortcut(event, event.keyCode);
+  });
+};
+export const djvuMouseEvent = () => {
+  document.addEventListener("keydown", (event) => {
+    handleShortcut(event, event.keyCode);
   });
 };

@@ -49,7 +49,9 @@ class styleUtil {
           ? StorageUtil.getReaderConfig("textColor")
           : StorageUtil.getReaderConfig("backgroundColor") ===
               "rgba(44,47,49,1)" ||
-            StorageUtil.getReaderConfig("isDisplayDark") === "yes"
+            StorageUtil.getReaderConfig("appSkin") === "night" ||
+            (StorageUtil.getReaderConfig("appSkin") === "system" &&
+              StorageUtil.getReaderConfig("isOSNight") === "yes")
           ? "white"
           : ""
       } !important;letter-spacing: ${
@@ -98,7 +100,9 @@ class styleUtil {
               ? StorageUtil.getReaderConfig("textColor")
               : StorageUtil.getReaderConfig("backgroundColor") ===
                   "rgba(44,47,49,1)" ||
-                StorageUtil.getReaderConfig("isDisplayDark") === "yes"
+                StorageUtil.getReaderConfig("appSkin") === "night" ||
+                (StorageUtil.getReaderConfig("appSkin") === "system" &&
+                  StorageUtil.getReaderConfig("isOSNight") === "yes")
               ? "white"
               : ""
           } !important`,

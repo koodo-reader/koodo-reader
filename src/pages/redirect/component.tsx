@@ -116,7 +116,9 @@ class Redirect extends React.Component<RedirectProps, RedirectState> {
         </div>
         <img
           src={
-            StorageUtil.getReaderConfig("isDisplayDark") === "yes"
+            StorageUtil.getReaderConfig("appSkin") === "night" ||
+            (StorageUtil.getReaderConfig("appSkin") === "system" &&
+              StorageUtil.getReaderConfig("isOSNight") === "yes")
               ? "./assets/empty_light.svg"
               : "./assets/empty.svg"
           }

@@ -68,7 +68,9 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
           }
         >
           {(!StorageUtil.getReaderConfig("backgroundColor") &&
-            StorageUtil.getReaderConfig("isDisplayDark") === "yes") ||
+            (StorageUtil.getReaderConfig("appSkin") === "night" ||
+              (StorageUtil.getReaderConfig("appSkin") === "system" &&
+                StorageUtil.getReaderConfig("isOSNight") === "yes"))) ||
           StorageUtil.getReaderConfig("backgroundColor") ===
             "rgba(44,47,49,1)" ? (
             <div
@@ -102,7 +104,7 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
             style={this.state.isSingle ? { display: "none" } : {}}
           ></div>
           {(!StorageUtil.getReaderConfig("backgroundColor") &&
-            StorageUtil.getReaderConfig("isDisplayDark") === "yes") ||
+            StorageUtil.getReaderConfig("appSkin") === "night") ||
           StorageUtil.getReaderConfig("backgroundColor") ===
             "rgba(44,47,49,1)" ? (
             <div

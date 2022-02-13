@@ -9,6 +9,7 @@ import BackToMain from "../../components/backToMain";
 import PopupMenu from "../../components/popups/popupMenu";
 import { Toaster } from "react-hot-toast";
 import { handleLinkJump } from "../../utils/readUtils/linkUtil";
+import { pdfMouseEvent } from "../../utils/serviceUtils/mouseEvent";
 class Viewer extends React.Component<ViewerProps, ViewerState> {
   epub: any;
   constructor(props: ViewerProps) {
@@ -60,10 +61,12 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       let doc: any =
         iframe.contentWindow || iframe.contentDocument?.defaultView;
       this.setState({ loading: false });
+      pdfMouseEvent();
       doc.document.addEventListener("click", (event: any) => {
         event.preventDefault();
         handleLinkJump(event);
       });
+
       doc.document.addEventListener("mouseup", () => {
         if (!doc!.getSelection()) return;
         var rect = doc!.getSelection()!.getRangeAt(0).getBoundingClientRect();

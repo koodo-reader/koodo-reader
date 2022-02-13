@@ -5,6 +5,7 @@ const {
   ipcMain,
   dialog,
   powerSaveBlocker,
+  nativeTheme,
 } = require("electron");
 const path = require("path");
 const isDev = require("electron-is-dev");
@@ -51,7 +52,7 @@ if (!singleInstance) {
     }
   });
 }
-app.on("ready", () => {
+const createMainWin = () => {
   mainWin = new BrowserWindow(options);
 
   if (!isDev) {
@@ -85,7 +86,8 @@ app.on("ready", () => {
       readerWindow.loadURL(url);
       readerWindow.maximize();
     } else {
-      Object.assign(options, {
+      readerWindow = new BrowserWindow({
+        ...options,
         width: parseInt(store.get("windowWidth")),
         height: parseInt(store.get("windowHeight")),
         x: parseInt(store.get("windowX")),
@@ -94,7 +96,6 @@ app.on("ready", () => {
         hasShadow: isMergeWord === "yes" ? false : true,
         transparent: isMergeWord === "yes" ? true : false,
       });
-      readerWindow = new BrowserWindow(options);
       readerWindow.loadURL(url);
     }
     readerWindow.on("close", (event) => {
@@ -145,6 +146,17 @@ app.on("ready", () => {
     mainWin.webContents.openDevTools();
     event.returnvalue = true;
   });
+  ipcMain.handle("focus-on-main", (event, arg) => {
+    if (mainWin) {
+      if (!mainWin.isVisible()) mainWin.show();
+      mainWin.focus();
+    }
+  });
+  ipcMain.handle("create-new-main", (event, arg) => {
+    if (!mainWin) {
+      createMainWin();
+    }
+  });
   ipcMain.handle("switch-moyu", (event, arg) => {
     let id;
     if (store.get("isPreventSleep") === "yes") {
@@ -190,6 +202,12 @@ app.on("ready", () => {
   ipcMain.on("get-dirname", (event, arg) => {
     event.returnValue = __dirname;
   });
+  ipcMain.on("system-color", (event, arg) => {
+    event.returnValue = nativeTheme.shouldUseDarkColors || false;
+  });
+  ipcMain.on("check-main-open", (event, arg) => {
+    event.returnValue = mainWin ? true : false;
+  });
   ipcMain.on("get-file-data", function (event) {
     if (fs.existsSync(path.join(dirPath, "log.json"))) {
       const _data = JSON.parse(
@@ -204,6 +222,9 @@ app.on("ready", () => {
     event.returnValue = filePath;
     filePath = null;
   });
+};
+app.on("ready", () => {
+  createMainWin();
 });
 app.on("window-all-closed", () => {
   app.quit();
