@@ -75,6 +75,11 @@ export const settingList = [
     propName: "isPDFCover",
   },
   {
+    isElectron: true,
+    title: "Open url with built-in browser",
+    propName: "isUseBuiltIn",
+  },
+  {
     isElectron: false,
     title: "Turn on night mode",
     propName: "isDisplayDark",

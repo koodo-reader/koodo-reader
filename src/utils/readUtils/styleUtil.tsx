@@ -44,7 +44,7 @@ class styleUtil {
         StorageUtil.getReaderConfig("lineHeight") || "1.25"
       } !important;font-family: ${
         StorageUtil.getReaderConfig("fontFamily") || ""
-      } !important;background-color: transparent !important;color: ${
+      } !important;background-color: transparent;color: ${
         StorageUtil.getReaderConfig("textColor")
           ? StorageUtil.getReaderConfig("textColor")
           : StorageUtil.getReaderConfig("backgroundColor") ===
@@ -92,7 +92,7 @@ class styleUtil {
           "font-family": `${
             StorageUtil.getReaderConfig("fontFamily") || ""
           } !important`,
-          "background-color": "transparent !important",
+          "background-color": "transparent",
           color: `${
             StorageUtil.getReaderConfig("textColor")
               ? StorageUtil.getReaderConfig("textColor")

@@ -70,6 +70,7 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
     this.props.handleFetchNotes();
     this.props.handleFetchBookmarks();
     this.props.handleFetchBookSortCode();
+    this.props.handleFetchNoteSortCode();
     this.props.handleFetchList();
   }
   componentDidMount() {

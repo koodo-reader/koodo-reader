@@ -48,6 +48,8 @@ class DeleteDialog extends React.Component<DeleteDialogProps> {
         this.props.handleSelectedBooks([]);
         this.props.handleFetchBooks(false);
         this.props.handleSelectBook(!this.props.isSelectBook);
+        this.props.handleDeleteDialog(false);
+        toast.success(this.props.t("Delete Successfully"));
         return;
       }
       ShelfUtil.clearShelf(this.props.shelfIndex, this.props.currentBook.key);

@@ -8,12 +8,12 @@ import RecordLocation from "../../../utils/readUtils/recordLocation";
 import { Tooltip } from "react-tippy";
 import { popupList } from "../../../constants/popupList";
 import StorageUtil from "../../../utils/serviceUtils/storageUtil";
-import { isElectron } from "react-device-detect";
 import toast from "react-hot-toast";
 import { getSelection } from "../../../utils/serviceUtils/mouseEvent";
 import copy from "copy-text-to-clipboard";
 import { getHightlightCoords } from "../../../utils/fileUtils/pdfUtil";
 import { getIframeDoc } from "../../../utils/serviceUtils/docUtil";
+import { openExternalUrl } from "../../../utils/serviceUtils/urlUtil";
 
 declare var window: any;
 
@@ -133,9 +133,7 @@ class PopupOption extends React.Component<PopupOptionProps> {
     // }
   };
   handleJump = (url: string) => {
-    isElectron
-      ? window.require("electron").shell.openExternal(url)
-      : window.open(url);
+    openExternalUrl(url);
   };
   handleSearchInternet = () => {
     switch (StorageUtil.getReaderConfig("searchEngine")) {

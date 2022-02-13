@@ -1,7 +1,6 @@
 import React from "react";
 import "./imageViewer.css";
 import { ImageViewerProps, ImageViewerStates } from "./interface";
-import StyleUtil from "../../utils/readUtils/styleUtil";
 import FileSaver from "file-saver";
 import { handleLinkJump } from "../../utils/readUtils/linkUtil";
 import { getIframeDoc } from "../../utils/serviceUtils/docUtil";
@@ -21,7 +20,7 @@ class ImageViewer extends React.Component<ImageViewerProps, ImageViewerStates> {
     this.props.rendition.on("rendered", () => {
       let doc = getIframeDoc();
       if (!doc) return;
-      StyleUtil.addDefaultCss();
+      // StyleUtil.addDefaultCss();
       doc.addEventListener("click", this.showImage);
     });
   }

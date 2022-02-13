@@ -5,7 +5,7 @@ import { SidebarProps, SidebarState } from "./interface";
 import { withRouter } from "react-router-dom";
 import StorageUtil from "../../utils/serviceUtils/storageUtil";
 import { Tooltip } from "react-tippy";
-import { isElectron } from "react-device-detect";
+import { openExternalUrl } from "../../utils/serviceUtils/urlUtil";
 
 class Sidebar extends React.Component<SidebarProps, SidebarState> {
   constructor(props: SidebarProps) {
@@ -29,6 +29,7 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
     this.props.handleSelectBook(false);
     this.props.history.push(`/manager/${mode}`);
     this.props.handleMode(mode);
+    this.props.handleShelfIndex(-1);
     this.props.handleSearch(false);
     this.props.handleSortDisplay(false);
   };
@@ -41,9 +42,7 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
     StorageUtil.setReaderConfig("isCollapsed", isCollapsed ? "yes" : "no");
   };
   handleJump = (url: string) => {
-    isElectron
-      ? window.require("electron").shell.openExternal(url)
-      : window.open(url);
+    openExternalUrl(url);
   };
   render() {
     const renderSideMenu = () => {

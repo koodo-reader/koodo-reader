@@ -18,6 +18,7 @@ import {
 import { themeList } from "../../../constants/themeList";
 import _ from "underscore";
 import toast from "react-hot-toast";
+import { openExternalUrl } from "../../../utils/serviceUtils/urlUtil";
 class SettingDialog extends React.Component<
   SettingInfoProps,
   SettingInfoState
@@ -41,6 +42,7 @@ class SettingDialog extends React.Component<
       isDisplayDark: StorageUtil.getReaderConfig("isDisplayDark") === "yes",
       isDisableAnalytics:
         StorageUtil.getReaderConfig("isDisableAnalytics") === "yes",
+      isUseBuiltIn: StorageUtil.getReaderConfig("isUseBuiltIn") === "yes",
       isPDFCover: StorageUtil.getReaderConfig("isPDFCover") === "yes",
       currentThemeIndex: _.findLastIndex(themeList, {
         name: StorageUtil.getReaderConfig("themeColor"),
@@ -90,9 +92,7 @@ class SettingDialog extends React.Component<
     StorageUtil.setReaderConfig("systemFont", font);
   };
   handleJump = (url: string) => {
-    isElectron
-      ? window.require("electron").shell.openExternal(url)
-      : window.open(url);
+    openExternalUrl(url);
   };
   handleSetting = (stateName: string) => {
     this.setState({ [stateName]: !this.state[stateName] } as any);

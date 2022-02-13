@@ -2,6 +2,7 @@ import { connect } from "react-redux";
 import {
   handleFetchBooks,
   handleFetchBookSortCode,
+  handleFetchNoteSortCode,
   handleFetchList,
   handleTipDialog,
   handleLoadingDialog,
@@ -50,6 +51,7 @@ const actionCreator = {
   handleSetting,
   handleFetchBookmarks,
   handleFetchBookSortCode,
+  handleFetchNoteSortCode,
   handleFetchList,
   handleEditDialog,
   handleDeleteDialog,

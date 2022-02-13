@@ -173,10 +173,11 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
               }}
             ></span>
           ) : null}
-          {this.props.isSelectBook && this.props.isSelected ? (
-            <span className="icon-message book-selected-icon"></span>
-          ) : this.props.isSelectBook ? (
-            <span className="icon-message book-deselect-icon"></span>
+          {this.props.isSelectBook ? (
+            <span
+              className="icon-message book-selected-icon"
+              style={this.props.isSelected ? {} : { color: "#eee" }}
+            ></span>
           ) : null}
 
           {this.state.isOpenConfig && !this.props.isSelectBook ? (

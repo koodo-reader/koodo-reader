@@ -90,6 +90,12 @@ export function handleFetchBookSortCode() {
     dispatch(handleBookSortCode(bookSortCode));
   };
 }
+export function handleFetchNoteSortCode() {
+  return (dispatch: Dispatch) => {
+    let noteSortCode = SortUtil.getNoteSortCode();
+    dispatch(handleNoteSortCode(noteSortCode));
+  };
+}
 export function handleFetchList() {
   return (dispatch: Dispatch) => {
     let viewMode = StorageUtil.getReaderConfig("viewMode") || "card";

@@ -34,11 +34,12 @@
   "Authorizing, please wait": "授权中，请稍候",
   "Downloading, please wait": "下载中，请稍候",
   "Uploading, please wait": "上传中，请稍候",
-  "Import": "从本地导入",
+  "Import": "导入图书",
   "Backup": "备份",
   "Search my library": "搜索我的书库",
   "Search my notes": "搜索我的笔记",
   "Search my highlights": "搜索我的高亮",
+  "Open Console": "打开控制台",
   "Card": "卡片模式",
   "List": "列表模式",
   "Work": "工作学习",
@@ -331,5 +332,6 @@
   "Please turn off open books in the main window": "请关闭直接在主窗口打开图书的选项",
   "This action will delete all the notes, bookmarks and digests of this book": "这一操作会删除本书的所有的笔记、高亮和书签",
   "More formats supported": "支持更多格式",
+  "Open url with built-in browser": "使用内置浏览器打开链接",
   "Koodo Reader's web version are limited by the browser, for more powerful features, please download the desktop version.": "Koodo Reader 网页版受到浏览器限制，请下载桌面版以体验完整功能。"
 }
