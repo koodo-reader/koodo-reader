@@ -22,7 +22,7 @@ class RecordLocation {
   ) {
     if (
       (!text || !chapterTitle || !count || !percentage) &&
-      document.location.href.indexOf("/cb") === -1
+      document.location.href.indexOf("/cb") === -1 //漫画的情况，cbr,cbt,cbz
     )
       return;
     let json = localStorage.getItem("recordLocation");

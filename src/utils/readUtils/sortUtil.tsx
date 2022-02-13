@@ -54,6 +54,15 @@ class SortUtil {
     books: BookModel[],
     bookSortCode: { sort: number; order: number }
   ) {
+    if (bookSortCode.sort === 0) {
+      let oldNameArr = getBookName(books);
+
+      if (bookSortCode.order === 1) {
+        return getBookIndex(oldNameArr, oldNameArr);
+      } else {
+        return getBookIndex(oldNameArr, oldNameArr).reverse();
+      }
+    }
     if (bookSortCode.sort === 1) {
       let oldNameArr = getBookName(books);
       let nameArr = getBookName(books).sort();

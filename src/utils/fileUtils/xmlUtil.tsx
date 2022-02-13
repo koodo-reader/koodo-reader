@@ -60,7 +60,7 @@ export const xmlImageHandler = (xml: any, bookString: string) => {
         for (let j = 0; j < fictionBook.binary.length; j++) {
           if (strArr[i].startsWith(fictionBook.binary[j]["$"].id)) {
             strArr[i] =
-              '<img alt="poster" width="100%" src="' +
+              '<img alt="poster" style="max-width: 100%; max-height: 100%" src="' +
               "data:image/jpeg;base64," +
               fictionBook.binary[j]["_"] +
               strArr[i].slice(fictionBook.binary[j]["$"].id.length);

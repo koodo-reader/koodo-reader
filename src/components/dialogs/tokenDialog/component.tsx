@@ -4,7 +4,7 @@ import { Trans } from "react-i18next";
 import { TokenDialogProps, TokenDialogState } from "./interface";
 import StorageUtil from "../../../utils/serviceUtils/storageUtil";
 import toast from "react-hot-toast";
-import { isElectron } from "react-device-detect";
+import { openExternalUrl } from "../../../utils/serviceUtils/urlUtil";
 class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
   constructor(props: TokenDialogProps) {
     super(props);
@@ -44,9 +44,7 @@ class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
     toast.success(this.props.t("Add Successfully"));
   };
   handleJump = (url: string) => {
-    isElectron
-      ? window.require("electron").shell.openExternal(url)
-      : window.open(url);
+    openExternalUrl(url);
   };
   render() {
     return (

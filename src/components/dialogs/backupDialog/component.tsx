@@ -13,6 +13,7 @@ import Lottie from "react-lottie";
 import animationSuccess from "../../../assets/lotties/success.json";
 import FileSaver from "file-saver";
 import toast from "react-hot-toast";
+import { isElectron } from "react-device-detect";
 const successOptions = {
   loop: false,
   autoplay: true,
@@ -178,6 +179,13 @@ class BackupDialog extends React.Component<
             key={item.id}
             className="backup-page-list-item"
             onClick={() => {
+              //webdav is avavilible on desktop
+              if (index === 3 && !isElectron) {
+                toast(
+                  "Koodo Reader's web version are limited by the browser, for more powerful features, please download the desktop version."
+                );
+                return;
+              }
               this.handleDrive(index);
             }}
             style={index !== 2 ? { opacity: 1 } : {}}
