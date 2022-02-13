@@ -9,7 +9,9 @@ const initState = {
 
   color: parseInt(StorageUtil.getReaderConfig("highlightIndex"))
     ? parseInt(StorageUtil.getReaderConfig("highlightIndex"))
-    : StorageUtil.getReaderConfig("isDisplayDark") === "yes"
+    : StorageUtil.getReaderConfig("appSkin") === "night" ||
+      (StorageUtil.getReaderConfig("appSkin") === "system" &&
+        StorageUtil.getReaderConfig("isOSNight") === "yes")
     ? 3
     : 0,
   noteKey: "",

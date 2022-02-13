@@ -131,7 +131,9 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
 
         <img
           src={
-            StorageUtil.getReaderConfig("isDisplayDark") === "yes"
+            StorageUtil.getReaderConfig("appSkin") === "night" ||
+            (StorageUtil.getReaderConfig("appSkin") === "system" &&
+              StorageUtil.getReaderConfig("isOSNight") === "yes")
               ? "./assets/label_light.png"
               : "./assets/label.png"
           }
