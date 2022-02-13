@@ -141,6 +141,10 @@ app.on("ready", () => {
       event.returnvalue = false;
     }
   });
+  ipcMain.handle("open-console", (event, arg) => {
+    mainWin.webContents.openDevTools();
+    event.returnvalue = true;
+  });
   ipcMain.handle("switch-moyu", (event, arg) => {
     let id;
     if (store.get("isPreventSleep") === "yes") {

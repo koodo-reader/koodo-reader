@@ -2,6 +2,7 @@ import React from "react";
 import { Trans } from "react-i18next";
 import { AboutDialogProps, AboutDialogState } from "./interface";
 import { isElectron } from "react-device-detect";
+import { openExternalUrl } from "../../../utils/serviceUtils/urlUtil";
 
 class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
   constructor(props: AboutDialogProps) {
@@ -9,9 +10,7 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
     this.state = {};
   }
   handleJump = (url: string) => {
-    isElectron
-      ? window.require("electron").shell.openExternal(url)
-      : window.open(url);
+    openExternalUrl(url);
     this.props.handleAbout(false);
   };
 
@@ -102,6 +101,18 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
           >
             <Trans>Github Repo</Trans>
           </li>
+          {isElectron && (
+            <li
+              className="sort-by-category-list"
+              onClick={() => {
+                window
+                  .require("electron")
+                  .ipcRenderer.invoke("open-console", "ping");
+              }}
+            >
+              <Trans>Open Console</Trans>
+            </li>
+          )}
           {this.props.isNewWarning && (
             <li
               className="sort-by-category-list"

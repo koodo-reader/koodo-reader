@@ -44,6 +44,7 @@ class ShelfChooser extends React.Component<
   renderShelfList = () => {
     let shelfList = ShelfUtil.getShelf();
     let shelfTitle = Object.keys(shelfList);
+
     return shelfTitle.map((item, index) => {
       return (
         <option
