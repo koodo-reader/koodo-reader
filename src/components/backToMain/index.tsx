@@ -4,15 +4,34 @@ import { withRouter } from "react-router-dom";
 import { stateType } from "../../store";
 import { connect } from "react-redux";
 import { handleReadingState } from "../../store/actions";
+import { isElectron } from "react-device-detect";
 
 const BackToMain = (props: any) => {
   return (
     <div
       className="back-main-container"
       onClick={() => {
-        props.history.push("/manager/home");
-        document.title = "Koodo Reader";
-        props.handleReadingState(false);
+        if (isElectron) {
+          if (
+            window
+              .require("electron")
+              .ipcRenderer.sendSync("check-main-open", "ping")
+          ) {
+            window
+              .require("electron")
+              .ipcRenderer.invoke("focus-on-main", "ping");
+            window.close();
+          } else {
+            window
+              .require("electron")
+              .ipcRenderer.invoke("create-new-main", "ping");
+            window.close();
+          }
+        } else {
+          props.history.push("/manager/home");
+          document.title = "Koodo Reader";
+          props.handleReadingState(false);
+        }
       }}
       style={document.URL.indexOf("djvu") > -1 ? { bottom: "60px" } : {}}
     >

@@ -13,16 +13,15 @@ import { isElectron } from "react-device-detect";
 import { dropdownList } from "./constants/dropdownList";
 import StorageUtil from "./utils/serviceUtils/storageUtil";
 import ga from "./utils/serviceUtils/analytics";
-
+import { initSystemFont, initTheme } from "./utils/serviceUtils/launchUtil";
+initTheme();
+initSystemFont();
 ReactDOM.render(
   <Provider store={store}>
     <Router />
   </Provider>,
   document.getElementById("root")
 );
-
-let coverLoading: any = document.querySelector(".loading-cover");
-coverLoading && coverLoading.parentNode.removeChild(coverLoading);
 
 if (isElectron && StorageUtil.getReaderConfig("isDisableAnalytics") !== "yes") {
   ga.event("Client", "show", {

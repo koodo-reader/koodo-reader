@@ -42,7 +42,9 @@ class EmptyPage extends React.Component<EmptyPageProps, EmptyPageState> {
         >
           <img
             src={
-              StorageUtil.getReaderConfig("isDisplayDark") === "yes"
+              StorageUtil.getReaderConfig("appSkin") === "night" ||
+              (StorageUtil.getReaderConfig("appSkin") === "system" &&
+                StorageUtil.getReaderConfig("isOSNight") === "yes")
                 ? "./assets/empty_light.svg"
                 : "./assets/empty.svg"
             }
