@@ -79,11 +79,6 @@ export const settingList = [
     title: "Open url with built-in browser",
     propName: "isUseBuiltIn",
   },
-  {
-    isElectron: false,
-    title: "Turn on night mode",
-    propName: "isDisplayDark",
-  },
 ];
 export const langList = [
   { label: "简体中文", value: "zh" },
@@ -106,6 +101,11 @@ export const searchList = [
   { label: "Naver", value: "naver" },
   { label: "Baidu Baike", value: "baike" },
   { label: "Wikipedia", value: "wiki" },
+];
+export const skinList = [
+  { label: "Light Mode", value: "light" },
+  { label: "Night Mode", value: "night" },
+  { label: "Follow OS", value: "system" },
 ];
 
 export const readerSettingList = [

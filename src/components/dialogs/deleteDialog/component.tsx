@@ -158,8 +158,9 @@ class DeleteDialog extends React.Component<DeleteDialogProps> {
         ) : (
           <div className="delete-dialog-other-option">
             <Trans>
-              This action will move this book and its the notes, bookmarks and
-              digests of this book to the recycle bin
+              {
+                "This action will move this book and its the notes, bookmarks and highlights of this book to the recycle bin"
+              }
             </Trans>
           </div>
         )}
