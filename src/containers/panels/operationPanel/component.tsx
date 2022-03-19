@@ -46,13 +46,10 @@ class OperationPanel extends React.Component<
       if (!currentLocation.start) {
         return;
       }
-      if (
-        this.props.currentEpub.rendition.currentLocation().percentage !==
-        nextProps.currentEpub.rendition.currentLocation().percentage
-      ) {
-        this.speed = Date.now() - this.timeStamp;
-        this.timeStamp = Date.now();
-      }
+
+      this.speed = Date.now() - this.timeStamp;
+      this.timeStamp = Date.now();
+
       this.setState({
         timeLeft:
           ((currentLocation.start.displayed.total -
@@ -61,6 +58,14 @@ class OperationPanel extends React.Component<
           1000,
       });
       // let nextPercentage = section.start.percentage;
+    }
+    if (nextProps.htmlBook) {
+      let pageProgress = nextProps.htmlBook.rendition.getProgress();
+      this.setState({
+        timeLeft:
+          ((pageProgress.totalPage - pageProgress.currentPage) * this.speed) /
+          1000,
+      });
     }
   }
   componentDidMount() {
@@ -163,56 +168,72 @@ class OperationPanel extends React.Component<
     // this.setState({ isFullScreen: false });
     // StorageUtil.setReaderConfig("isFullScreen", "no");
   }
-  handleAddBookmark() {
+  handleAddBookmark = async () => {
     let bookKey = this.props.currentBook.key;
-    const currentLocation = this.props.currentEpub.rendition.currentLocation();
-    let chapterHref = currentLocation.start.href;
-    let chapter = "Unknown Chapter";
-    let currentChapter = this.props.flattenChapters.filter(
-      (item: any) =>
-        chapterHref.indexOf(item.href.split("#")[0]) > -1 ||
-        item.href.split("#")[0].indexOf(chapterHref) > -1
-    )[0];
-    if (currentChapter) {
-      chapter = currentChapter.label.trim(" ");
-    }
-    const cfibase = currentLocation.start.cfi
-      .replace(/!.*/, "")
-      .replace("epubcfi(", "");
-    const cfistart = currentLocation.start.cfi
-      .replace(/.*!/, "")
-      .replace(/\)/, "");
-    const cfiend = currentLocation.end.cfi.replace(/.*!/, "").replace(/\)/, "");
-    const cfiRange = `epubcfi(${cfibase}!,${cfistart},${cfiend})`;
-    const cfi = RecordLocation.getCfi(this.props.currentBook.key).cfi;
-    this.props.currentEpub.getRange(cfiRange).then((range: any) => {
-      if (!range) return;
-      let text = range.toString();
-      text = text.replace(/\s\s/g, "");
-      text = text.replace(/\r/g, "");
-      text = text.replace(/\n/g, "");
-      text = text.replace(/\t/g, "");
-      text = text.replace(/\f/g, "");
-      let percentage = RecordLocation.getCfi(this.props.currentBook.key)
-        .percentage
+    let text = "";
+    let chapter = "";
+    let cfi = "";
+    let percentage = 0;
+    if (this.props.currentBook.format === "EPUB") {
+      const currentLocation =
+        this.props.currentEpub.rendition.currentLocation();
+      let chapterHref = currentLocation.start.href;
+      chapter = "Unknown Chapter";
+      let currentChapter = this.props.flattenChapters.filter(
+        (item: any) =>
+          chapterHref.indexOf(item.href.split("#")[0]) > -1 ||
+          item.href.split("#")[0].indexOf(chapterHref) > -1
+      )[0];
+      if (currentChapter) {
+        chapter = currentChapter.label.trim(" ");
+      }
+      const cfibase = currentLocation.start.cfi
+        .replace(/!.*/, "")
+        .replace("epubcfi(", "");
+      const cfistart = currentLocation.start.cfi
+        .replace(/.*!/, "")
+        .replace(/\)/, "");
+      const cfiend = currentLocation.end.cfi
+        .replace(/.*!/, "")
+        .replace(/\)/, "");
+      const cfiRange = `epubcfi(${cfibase}!,${cfistart},${cfiend})`;
+      cfi = RecordLocation.getCfi(this.props.currentBook.key).cfi;
+      let range = await this.props.currentEpub.getRange(cfiRange);
+      text = range.toString();
+      percentage = RecordLocation.getCfi(this.props.currentBook.key).percentage
         ? RecordLocation.getCfi(this.props.currentBook.key).percentage
         : 0;
-      let bookmark = new Bookmark(
-        bookKey,
-        cfi,
-        text.substr(0, 200),
-        percentage,
-        chapter
-      );
-      let bookmarkArr = this.props.bookmarks ?? [];
-      bookmarkArr.push(bookmark);
-      this.props.handleBookmarks(bookmarkArr);
-      localforage.setItem("bookmarks", bookmarkArr);
-      this.setState({ isBookmark: true });
-      toast.success(this.props.t("Add Successfully"));
-      this.props.handleShowBookmark(true);
-    });
-  }
+    } else {
+      let bookLocation = RecordLocation.getHtmlLocation(bookKey);
+      text = bookLocation.text;
+      chapter = bookLocation.chapterTitle;
+      percentage = bookLocation.percentage;
+
+      cfi = JSON.stringify(bookLocation);
+    }
+
+    text = text
+      .replace(/\s\s/g, "")
+      .replace(/\r/g, "")
+      .replace(/\n/g, "")
+      .replace(/\t/g, "")
+      .replace(/\f/g, "");
+
+    let bookmark = new Bookmark(
+      bookKey,
+      cfi,
+      text.substr(0, 200),
+      percentage,
+      chapter
+    );
+    let bookmarkArr = this.props.bookmarks ?? [];
+    bookmarkArr.push(bookmark);
+    this.props.handleBookmarks(bookmarkArr);
+    localforage.setItem("bookmarks", bookmarkArr);
+    this.setState({ isBookmark: true });
+    toast.success(this.props.t("Add Successfully"));
+    this.props.handleShowBookmark(true);
+  };
 
   render() {
     return (
@@ -237,7 +258,7 @@ class OperationPanel extends React.Component<
                   )
                 ),
               }}
-              Minutes
+              min
             </Trans>
           </span>
           &nbsp;&nbsp;&nbsp;
@@ -250,7 +271,7 @@ class OperationPanel extends React.Component<
               {{
                 count: `${Math.ceil(this.state.timeLeft / 60)}`,
               }}
-              Minutes
+              min
             </Trans>
           </span>
         </div>
@@ -258,6 +279,7 @@ class OperationPanel extends React.Component<
           className="exit-reading-button"
           onClick={() => {
             this.handleExit();
+
             if (StorageUtil.getReaderConfig("isOpenInMain") === "yes") {
               this.props.history.push("/manager/home");
               document.title = "Koodo Reader";
@@ -274,11 +296,7 @@ class OperationPanel extends React.Component<
         <div
           className="add-bookmark-button"
           onClick={() => {
-            if (this.props.currentEpub.rendition) {
-              this.handleAddBookmark();
-            } else {
-              toast(this.props.t("Not supported yet"));
-            }
+            this.handleAddBookmark();
           }}
         >
           <span className="icon-add add-bookmark-icon"></span>

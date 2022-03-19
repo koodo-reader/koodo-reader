@@ -54,7 +54,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
       clearTimeout(doit);
       doit = setTimeout(this.handleRenderBook, 100);
     });
-    this.tickTimer = global.setInterval(() => {
+    this.tickTimer = setInterval(() => {
       let time = this.state.time;
       time += 1;
       this.setState({ time });

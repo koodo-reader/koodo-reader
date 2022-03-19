@@ -14,7 +14,6 @@ class NavigationPanel extends React.Component<
   NavigationPanelProps,
   NavigationPanelState
 > {
-  timer: any;
   constructor(props: NavigationPanelProps) {
     super(props);
     this.state = {
@@ -71,7 +70,16 @@ class NavigationPanel extends React.Component<
             className="nav-search-list-item"
             key={index}
             onClick={() => {
-              this.props.currentEpub.rendition.display(item.cfi);
+              if (this.props.currentBook.format === "EPUB") {
+                this.props.currentEpub.rendition.display(item.cfi);
+              } else {
+                let bookLocation = JSON.parse(item.cfi) || {};
+                this.props.htmlBook.rendition.goToPosition(
+                  bookLocation.text,
+                  bookLocation.chapterTitle,
+                  bookLocation.count
+                );
+              }
             }}
           >
             {Parser(item.excerpt)}
@@ -103,7 +111,11 @@ class NavigationPanel extends React.Component<
         );
       }
     } else {
-      for (let i = 0; i < 5; i++) {
+      for (
+        let i = 0;
+        i < (total - startIndex < 5 ? total - startIndex : 5);
+        i++
+      ) {
         let isShow = currentIndex > 2 ? i === 2 : currentIndex === i;
         pageList.push(
           <li
@@ -129,6 +141,11 @@ class NavigationPanel extends React.Component<
             {i + startIndex + 1}
           </li>
         );
+      }
+      if (total - startIndex < 5) {
+        for (let i = 0; i < 6 - pageList.length; i++) {
+          pageList.push(<li className="nav-search-page-item">EOF</li>);
+        }
       }
     }
     return pageList;
@@ -168,7 +185,7 @@ class NavigationPanel extends React.Component<
                 className="navigation-search-title"
                 style={{ height: "20px", margin: "0px 25px 13px" }}
               >
-                <Trans>Search the book</Trans>
+                <Trans>Search in the book</Trans>
               </div>
               <SearchBox {...searchProps} />
             </div>
@@ -231,14 +248,11 @@ class NavigationPanel extends React.Component<
               </p>
               <span className="reading-duration">
                 <Trans>Reading Time</Trans>: {Math.floor(this.props.time / 60)}
-                &nbsp;
-                <Trans>Minute</Trans>
+                &nbsp; min
               </span>
-              {Object.keys(this.props.currentEpub).length !== 0 && (
-                <div className="navigation-search-box">
-                  <SearchBox {...searchProps} />
-                </div>
-              )}
+              <div className="navigation-search-box">
+                <SearchBox {...searchProps} />
+              </div>
 
               <div className="navigation-navigation">
                 <span

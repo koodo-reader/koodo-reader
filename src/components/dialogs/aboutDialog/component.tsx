@@ -96,6 +96,16 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
           <li
             className="sort-by-category-list"
             onClick={() => {
+              this.handleJump(
+                "https://poeditor.com/join/project?hash=fk4qbQTlsk"
+              );
+            }}
+          >
+            <Trans>Translation</Trans>
+          </li>
+          <li
+            className="sort-by-category-list"
+            onClick={() => {
               this.handleJump("https://github.com/troyeguo/koodo-reader");
             }}
           >

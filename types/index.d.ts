@@ -3,4 +3,3 @@ declare module "react-tippy" {}
 declare module "js-untar" {}
 declare module "@iarna/rtf-to-html" {}
 declare module "font-list" {}
-declare module "koodo-parser" {}

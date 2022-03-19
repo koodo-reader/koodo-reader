@@ -3,6 +3,7 @@ import NoteModel from "../../model/Note";
 import ReadingTime from "./readingTime";
 import RecordLocation from "./recordLocation";
 import _ from "underscore";
+import RecordRecent from "./recordRecent";
 const getBookName = (books: BookModel[]) => {
   return books.map((item) => item.name);
 };
@@ -13,6 +14,7 @@ const getBookKey = (books: BookModel[]) => {
   return books.map((item) => item.key);
 };
 const getBookIndex = (nameArr: string[], oldNameArr: string[]) => {
+  console.log(nameArr, oldNameArr, "getasgasg");
   let indexArr: number[] = [];
   for (let i = 0; i < nameArr.length; i++) {
     if (oldNameArr.indexOf(nameArr[i]) > -1) {
@@ -24,9 +26,14 @@ const getBookIndex = (nameArr: string[], oldNameArr: string[]) => {
       );
     }
   }
-  return indexArr;
+  return indexArr.length < nameArr.length
+    ? indexArr.concat(
+        nameArr
+          .map((item, index) => index)
+          .filter((item) => indexArr.indexOf(item) === -1)
+      )
+    : indexArr;
 };
-
 const getDurationArr = () => {
   let durationObj = ReadingTime.getAllTime();
   var sortable: any[] = [];
@@ -47,20 +54,20 @@ const getPercentageArr = () => {
   sortable.sort(function (a, b) {
     return a[1] - b[1];
   });
-  return Object.keys(locationObj);
+  return sortable.map((item) => item[0]);
 };
 class SortUtil {
   static sortBooks(
     books: BookModel[],
     bookSortCode: { sort: number; order: number }
   ) {
+    let oldRecentArr = books.map((item) => item.key);
+    let recentArr = RecordRecent.getAllRecent();
     if (bookSortCode.sort === 0) {
-      let oldNameArr = getBookName(books);
-
       if (bookSortCode.order === 1) {
-        return getBookIndex(oldNameArr, oldNameArr);
+        return getBookIndex(recentArr, oldRecentArr);
       } else {
-        return getBookIndex(oldNameArr, oldNameArr).reverse();
+        return getBookIndex(recentArr, oldRecentArr).reverse();
       }
     }
     if (bookSortCode.sort === 1) {
@@ -109,12 +116,9 @@ class SortUtil {
       let percentagenKeys = getPercentageArr();
       let bookKeys = getBookKey(books);
       if (bookSortCode.order === 1) {
-        return getBookIndex(
-          _.union(percentagenKeys, bookKeys),
-          bookKeys
-        ).reverse();
+        return getBookIndex(percentagenKeys, bookKeys);
       } else {
-        return getBookIndex(_.union(percentagenKeys, bookKeys), bookKeys);
+        return getBookIndex(percentagenKeys, bookKeys).reverse();
       }
     }
   }
@@ -132,7 +136,7 @@ class SortUtil {
             "" + item.date.year + "-" + item.date.month + "-" + item.date.day
         )
       );
-      if (noteSortCode.order === 1) {
+      if (noteSortCode.order === 2) {
         dateArr.sort();
       } else {
         dateArr.sort().reverse();
@@ -167,7 +171,7 @@ class SortUtil {
             ].name
         )
       );
-      if (noteSortCode.order === 1) {
+      if (noteSortCode.order === 2) {
         nameArr.sort();
       } else {
         nameArr.sort().reverse();

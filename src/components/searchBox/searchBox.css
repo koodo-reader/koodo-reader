@@ -39,6 +39,9 @@ textarea::-ms-input-placeholder {
   height: 44px;
   cursor: pointer;
   margin-right: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .header-search-text:hover {
   border-radius: 50%;

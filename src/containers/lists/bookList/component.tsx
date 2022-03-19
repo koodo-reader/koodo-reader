@@ -4,7 +4,6 @@ import BookCardItem from "../../../components/bookCardItem";
 import BookListItem from "../../../components/bookListItem";
 import BookCoverItem from "../../../components/bookCoverItem";
 import AddFavorite from "../../../utils/readUtils/addFavorite";
-import RecordRecent from "../../../utils/readUtils/recordRecent";
 import ShelfUtil from "../../../utils/readUtils/shelfUtil";
 import SortUtil from "../../../utils/readUtils/sortUtil";
 import BookModel from "../../../model/Book";
@@ -73,7 +72,7 @@ class BookList extends React.Component<BookListProps, BookListState> {
     arr.forEach((item) => {
       items[item] && itemArr.push(items[item]);
     });
-
+    console.log(items, arr, itemArr);
     return itemArr;
   };
   renderBookList = () => {
@@ -95,18 +94,14 @@ class BookList extends React.Component<BookListProps, BookListState> {
           //返回排序后的图书index
           SortUtil.sortBooks(this.props.books, this.props.bookSortCode) || []
         )
-      : this.props.isBookSort && this.props.bookSortCode.sort !== 0
+      : this.props.isBookSort
       ? this.handleIndexFilter(
           this.props.books,
           //返回排序后的图书index
           SortUtil.sortBooks(this.props.books, this.props.bookSortCode) || []
         )
-      : this.handleKeyFilter(
-          this.props.books,
-          this.props.bookSortCode.order === 1
-            ? RecordRecent.getAllRecent()
-            : RecordRecent.getAllRecent().reverse()
-        );
+      : this.props.books;
+
     if (this.props.mode === "shelf" && books.length === 0) {
       return (
         <div
