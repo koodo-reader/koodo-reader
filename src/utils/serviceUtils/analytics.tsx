@@ -16,7 +16,7 @@ class Analytics {
   private clientId: any;
 
   constructor() {
-    this.ga = new GA("UA-149740367-3", { debug: isDevelopment });
+    this.ga = new GA("G-LW49EYTQWY", { debug: isDevelopment });
 
     this.ga.set("version", (pkg as any).version);
   }

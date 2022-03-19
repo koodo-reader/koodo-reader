@@ -7,10 +7,12 @@ const mapStateToProps = (state: stateType) => {
   return {
     books: state.manager.books,
     notes: state.reader.notes,
+    htmlBook: state.reader.htmlBook,
     digests: state.reader.digests,
     isSearch: state.manager.isSearch,
     isReading: state.book.isReading,
     currentEpub: state.book.currentEpub,
+    currentBook: state.book.currentBook,
     tabMode: state.sidebar.mode,
     shelfIndex: state.sidebar.shelfIndex,
   };
