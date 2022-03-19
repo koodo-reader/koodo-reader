@@ -93,10 +93,8 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
           onclick: this.handleNoteClick,
         },
         onElementCreate: (element: any) => {
-          setTimeout(() => {
-            element.dataset.key =
-              this.key || this.props.notes[this.props.notes.length - 1].key;
-          }, 100);
+          element.dataset.key =
+            this.key || this.props.notes[this.props.notes.length - 1].key;
         },
       };
       let applier = window.rangy.createClassApplier(item, config);
@@ -238,6 +236,12 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
         item.bookKey === this.props.currentBook.key
       );
     });
+    console.log(
+      this.props.currentBook.key,
+      this.props.chapter,
+      this.props.chapterIndex,
+      highlighters
+    );
     let pageArea = document.getElementById("page-area");
     if (!pageArea) return;
     let iframe = pageArea.getElementsByTagName("iframe")[0];
@@ -255,7 +259,7 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
       "line-2",
       "line-3",
     ];
-
+    console.log(highlightersByChapter, "highlightersByChapter");
     highlightersByChapter &&
       highlightersByChapter.forEach((item: any) => {
         this.key = item.key;

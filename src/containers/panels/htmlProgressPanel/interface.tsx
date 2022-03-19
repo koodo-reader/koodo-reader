@@ -15,4 +15,6 @@ export interface ProgressPanelState {
   displayPercentage: number;
   currentChapter: string;
   currentChapterIndex: number;
+  currentPage: number;
+  totalPage: number;
 }

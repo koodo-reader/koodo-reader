@@ -15,12 +15,17 @@ class ProgressPanel extends React.Component<
       displayPercentage: this.props.percentage ? this.props.percentage : 0,
       currentChapter: this.props.currentChapter,
       currentChapterIndex: 0,
+      currentPage: 0,
+      totalPage: 0,
     };
   }
-  componentDidMount() {}
+
   componentWillReceiveProps(nextProps: ProgressPanelProps) {
     if (nextProps.currentChapter && nextProps.htmlBook) {
+      let pageProgress = nextProps.htmlBook.rendition.getProgress();
       this.setState({
+        currentPage: pageProgress.currentPage,
+        totalPage: pageProgress.totalPage,
         currentChapter: nextProps.currentChapter,
         currentChapterIndex:
           _.findIndex(nextProps.htmlBook.chapters, {
@@ -111,8 +116,15 @@ class ProgressPanel extends React.Component<
             %&nbsp;&nbsp;&nbsp;
           </span>
         </p>
-
         <p className="progress-text" style={{ marginTop: 0 }}>
+          <Trans>Pages</Trans>
+          <input
+            type="text"
+            name="jumpPage"
+            id="jumpPage"
+            value={this.state.currentPage}
+          />
+          <span>/ {this.state.totalPage}</span>&nbsp;&nbsp;&nbsp;
           <Trans>Chapters</Trans>
           <input
             type="text"

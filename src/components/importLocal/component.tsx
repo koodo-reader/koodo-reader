@@ -12,10 +12,7 @@ import RecordRecent from "../../utils/readUtils/recordRecent";
 import { isElectron } from "react-device-detect";
 import { withRouter } from "react-router-dom";
 import BookUtil from "../../utils/fileUtils/bookUtil";
-import {
-  fetchFileFromPath,
-  fetchMD5FromPath,
-} from "../../utils/fileUtils/fileUtil";
+import { fetchFileFromPath } from "../../utils/fileUtils/fileUtil";
 import toast from "react-hot-toast";
 import StorageUtil from "../../utils/serviceUtils/storageUtil";
 declare var window: any;
@@ -60,7 +57,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
   }
   handleFilePath = async (filePath: string) => {
     clickFilePath = filePath;
-    let md5 = await fetchMD5FromPath(filePath);
+    let md5 = await fetchMD5(await fetchFileFromPath(filePath));
     if ([...(this.props.books || []), ...this.props.deletedBooks].length > 0) {
       let isRepeat = false;
       let repeatBook: BookModel | null = null;
@@ -175,7 +172,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
       ) {
         [...(this.props.books || []), ...this.props.deletedBooks].forEach(
           (item) => {
-            if (item.md5 === md5) {
+            if (item.md5 === md5 && item.size === file.size) {
               isRepeat = true;
               toast.error(this.props.t("Duplicate Book"));
               resolve();

@@ -182,7 +182,9 @@ class BackupDialog extends React.Component<
               //webdav is avavilible on desktop
               if (index === 3 && !isElectron) {
                 toast(
-                  "Koodo Reader's web version are limited by the browser, for more powerful features, please download the desktop version."
+                  this.props.t(
+                    "Koodo Reader's web version are limited by the browser, for more powerful features, please download the desktop version."
+                  )
                 );
                 return;
               }
@@ -261,7 +263,7 @@ class BackupDialog extends React.Component<
               }}
             >
               <span className="icon-backup"></span>
-              <div>
+              <div style={{ lineHeight: 1.25 }}>
                 <Trans>Backup</Trans>
               </div>
             </div>

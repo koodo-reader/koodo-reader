@@ -134,6 +134,9 @@
   transition: 0.1s;
   width: 38px;
   height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .nav-close-icon:hover {
   border-radius: 50%;
@@ -141,9 +144,9 @@
 .nav-search-list {
   position: absolute;
   padding: 10px;
-  top: 100px;
+  top: 110px;
   font-size: 15px;
-  height: calc(100vh - 150px);
+  height: calc(100vh - 170px);
   overflow: scroll;
 }
 .nav-search-list-item {
@@ -161,6 +164,7 @@
   display: flex;
   justify-content: space-around;
   width: calc(100% - 80px);
+  margin-top: 10px;
 }
 .nav-search-page-item {
   width: 30px;

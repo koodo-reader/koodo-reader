@@ -222,6 +222,16 @@ class SettingDialog extends React.Component<
         <p className="setting-subtitle">
           <Trans>Version</Trans>
           {version}
+          &nbsp;&nbsp;
+          <Trans>
+            {StorageUtil.getReaderConfig("appInfo") === "new"
+              ? "New Version Available"
+              : StorageUtil.getReaderConfig("appInfo") === "stable"
+              ? "Latest Stable Version"
+              : StorageUtil.getReaderConfig("appInfo") === "dev"
+              ? "Developer Version"
+              : ""}
+          </Trans>
         </p>
         <div
           className="setting-close-container"

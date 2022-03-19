@@ -1,5 +1,6 @@
 import BookModel from "../../model/Book";
 import NoteModel from "../../model/Note";
+import htmlBookModel from "../../model/HtmlBook";
 export interface SearchBoxProps {
   books: BookModel[];
   isSearch: boolean;
@@ -12,6 +13,8 @@ export interface SearchBoxProps {
   width: string;
   height: string;
   currentEpub: any;
+  currentBook: any;
+  htmlBook: htmlBookModel;
   shelfIndex: number;
   handleSearchResults: (results: number[]) => void;
   handleSearch: (isSearch: boolean) => void;

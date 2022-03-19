@@ -3,6 +3,7 @@ import React from "react";
 import "./searchBox.css";
 import SearchUtil from "../../utils/serviceUtils/searchUtil";
 import { SearchBoxProps } from "./interface";
+
 class SearchBox extends React.Component<SearchBoxProps> {
   componentDidMount() {
     if (this.props.isNavSearch) {
@@ -53,17 +54,21 @@ class SearchBox extends React.Component<SearchBoxProps> {
       this.props.handleSearch(true);
     }
   };
-  search = (q: string) => {
-    this.doSearch(q).then((result) => {
-      let searchList = result.map((item: any) => {
+  search = async (q: string) => {
+    let searchList =
+      this.props.currentBook.format === "EPUB"
+        ? await this.doSearch(q)
+        : this.props.htmlBook.rendition.doSearch(q);
+
+    this.props.handleSearchList(
+      searchList.map((item: any) => {
         item.excerpt = item.excerpt.replace(
           q,
           `<span class="content-search-text">${q}</span>`
         );
         return item;
-      });
-      this.props.handleSearchList(searchList);
-    });
+      })
+    );
   };
   doSearch = (q: string) => {
     return Promise.all(
@@ -99,7 +104,7 @@ class SearchBox extends React.Component<SearchBoxProps> {
           }}
           placeholder={
             this.props.isNavSearch || this.props.mode === "nav"
-              ? this.props.t("Search the book")
+              ? this.props.t("Search in the book")
               : this.props.tabMode === "note"
               ? this.props.t("Search my notes")
               : this.props.tabMode === "digest"

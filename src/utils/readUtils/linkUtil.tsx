@@ -1,4 +1,4 @@
-import { isElectron } from "react-device-detect";
+import { openExternalUrl } from "../serviceUtils/urlUtil";
 
 export const handleLinkJump = (event: any) => {
   let href;
@@ -27,11 +27,6 @@ export const handleLinkJump = (event: any) => {
     href.indexOf("data:application") === -1 &&
     href.indexOf(".htm") === -1
   ) {
-    if (isElectron) {
-      const { shell } = window.require("electron");
-      shell.openExternal(href);
-    } else {
-      window.open(href);
-    }
+    openExternalUrl(href);
   }
 };

@@ -13,6 +13,9 @@ export const fetchMD5 = (file: any) => {
             .getDocument({ data: (ev.target as any).result })
             .promise.then((pdfDoc: any) => {
               resolve(pdfDoc._pdfInfo.fingerprint);
+            })
+            .catch((err: any) => {
+              resolve(file.name + "-" + file.size);
             });
         };
       } else {

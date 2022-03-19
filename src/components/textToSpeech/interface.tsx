@@ -1,6 +1,11 @@
+import BookModel from "../../model/Book";
+import HtmlBook from "../../model/HtmlBook";
+
 export interface TextToSpeechProps {
   currentEpub: any;
   locations: any;
+  currentBook: BookModel;
+  htmlBook: HtmlBook;
   isReading: boolean;
   t: (title: string) => string;
 }

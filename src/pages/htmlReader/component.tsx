@@ -43,6 +43,11 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         .querySelector("body")
         ?.setAttribute("style", "background-color: rgba(0,0,0,0)");
     }
+    this.tickTimer = setInterval(() => {
+      let time = this.state.time;
+      time += 1;
+      this.setState({ time });
+    }, 1000);
   }
   componentWillMount() {
     let url = document.location.href.split("/");

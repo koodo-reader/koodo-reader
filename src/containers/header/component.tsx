@@ -5,7 +5,7 @@ import ImportLocal from "../../components/importLocal";
 import { Trans } from "react-i18next";
 import { HeaderProps, HeaderState } from "./interface";
 import StorageUtil from "../../utils/serviceUtils/storageUtil";
-import UpdateInfo from "../../components/dialogs/updateInfo";
+import UpdateInfo from "../../components/dialogs/updateDialog";
 import { restore } from "../../utils/syncUtils/restoreUtil";
 import { backup } from "../../utils/syncUtils/backupUtil";
 import { Tooltip } from "react-tippy";

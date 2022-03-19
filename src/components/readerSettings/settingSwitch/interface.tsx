@@ -1,11 +1,11 @@
 import BookModel from "../../../model/Book";
-import HtmlBook from "../../../model/HtmlBook";
+import HtmlBookModel from "../../../model/HtmlBook";
 export interface SettingSwitchProps {
   currentEpub: any;
   currentBook: BookModel;
   locations: any;
   isReading: boolean;
-  htmlBook: HtmlBook;
+  htmlBook: HtmlBookModel;
   renderFunc: () => void;
   t: (title: string) => string;
 }

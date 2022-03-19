@@ -64,11 +64,26 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     this.handleRenderBook();
 
     this.props.handleRenderFunc(this.handleRenderBook);
+
     var doit;
     window.addEventListener("resize", () => {
       clearTimeout(doit);
       doit = setTimeout(this.handleRenderBook, 100);
     });
+    let reader = document.querySelector("#page-area");
+    //解决文字遮挡问题
+    if (reader) {
+      console.log(reader.getAttribute("style"));
+      reader.setAttribute(
+        "style",
+        reader.getAttribute("style") +
+          "width:" +
+          (parseInt(reader.clientWidth + "") % 2
+            ? parseInt(reader.clientWidth + "") - 1
+            : parseInt(reader.clientWidth + "")) +
+          "px"
+      );
+    }
   }
   handleRenderBook = () => {
     let { key, path, format, name } = this.props.currentBook;
@@ -161,6 +176,13 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           chapterIndex: parseInt(bookLocation.count) || 0,
         });
       } else {
+        // console.log(
+        //   "rendered",
+        //   bookLocation.chapterTitle,
+        //   _.findLastIndex(this.props.htmlBook.chapters, {
+        //     label: bookLocation.chapterTitle,
+        //   })
+        // );
         this.setState({
           chapter:
             bookLocation.chapterTitle || this.props.htmlBook.chapters[0].label,

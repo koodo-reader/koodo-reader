@@ -109,7 +109,6 @@ class ProgressPanel extends React.Component<
       });
     }
   };
-  handleJumpPage = (event: any) => {};
   render() {
     if (!this.props.locations && this.props.currentEpub.rendition) {
       return <div className="progress-panel">Loading</div>;
@@ -136,9 +135,6 @@ class ProgressPanel extends React.Component<
                 type="text"
                 name="jumpPage"
                 id="jumpPage"
-                onBlur={(event) => {
-                  this.handleJumpPage(event);
-                }}
                 value={this.state.currentPage}
               />
               <span>/ {this.state.totalPage}</span>&nbsp;&nbsp;&nbsp;
