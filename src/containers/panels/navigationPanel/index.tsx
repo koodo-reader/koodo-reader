@@ -10,6 +10,7 @@ const mapStateToProps = (state: stateType) => {
     currentEpub: state.book.currentEpub,
     currentBook: state.book.currentBook,
     bookmarks: state.reader.bookmarks,
+    htmlBook: state.reader.htmlBook,
   };
 };
 const actionCreator = { handleFetchBookmarks, handleSearch };

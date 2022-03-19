@@ -8,7 +8,7 @@ import Lottie from "react-lottie";
 import animationNew from "../../../assets/lotties/new.json";
 import animationSuccess from "../../../assets/lotties/success.json";
 import StorageUtil from "../../../utils/serviceUtils/storageUtil";
-import { isElectron } from "react-device-detect";
+import { openExternalUrl } from "../../../utils/serviceUtils/urlUtil";
 const newOptions = {
   loop: false,
   autoplay: true,
@@ -25,7 +25,6 @@ const successOptions = {
     preserveAspectRatio: "xMidYMid slice",
   },
 };
-declare var window: any;
 
 class UpdateInfo extends React.Component<UpdateInfoProps, UpdateInfoState> {
   constructor(props: UpdateInfoProps) {
@@ -64,6 +63,14 @@ class UpdateInfo extends React.Component<UpdateInfoProps, UpdateInfoState> {
               this.props.handleNewDialog(true);
               StorageUtil.setReaderConfig("version", newVersion);
             }
+            StorageUtil.setReaderConfig(
+              "appInfo",
+              version.localeCompare(newVersion) < 0
+                ? "new"
+                : version.localeCompare(newVersion) === 0
+                ? "stable"
+                : "dev"
+            );
           }, 500);
         })
         .catch((err) => {
@@ -80,16 +87,7 @@ class UpdateInfo extends React.Component<UpdateInfoProps, UpdateInfoState> {
       );
     });
   };
-  handleJump = () => {
-    isElectron &&
-      window
-        .require("electron")
-        .shell.openExternal(
-          this.state.isUpdated
-            ? "https://koodo.960960.xyz/en/log"
-            : "https://koodo.960960.xyz/en"
-        );
-  };
+
   handleClose = () => {
     this.setState({ updateLog: "", isUpdated: false });
     this.props.handleNewDialog(false);
@@ -148,7 +146,11 @@ class UpdateInfo extends React.Component<UpdateInfoProps, UpdateInfoState> {
                 <div
                   className="new-version-open"
                   onClick={() => {
-                    this.handleJump();
+                    openExternalUrl(
+                      this.state.isUpdated
+                        ? "https://koodo.960960.xyz/en/log"
+                        : "https://koodo.960960.xyz/en"
+                    );
                   }}
                   style={this.state.isUpdated ? { marginTop: "10px" } : {}}
                 >
