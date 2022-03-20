@@ -160,7 +160,7 @@ const bindHtmlEvent = (
   doc.addEventListener("keydown", (event) => {
     arrowKeys(rendition, event.keyCode, event);
 
-    let position = rendition.getPosition();
+    let position = JSON.parse(rendition.getPosition());
     RecordLocation.recordHtmlLocation(
       key,
       position.text,
@@ -179,7 +179,7 @@ const bindHtmlEvent = (
         mouseChrome(rendition, event.wheelDelta);
       }
 
-      let position = rendition.getPosition();
+      let position = JSON.parse(rendition.getPosition());
       RecordLocation.recordHtmlLocation(
         key,
         position.text,
@@ -195,7 +195,7 @@ const bindHtmlEvent = (
     arrowKeys(rendition, event.keyCode, event);
     //使用Key判断是否是htmlBook
 
-    let position = rendition.getPosition();
+    let position = JSON.parse(rendition.getPosition());
     RecordLocation.recordHtmlLocation(
       key,
       position.text,
@@ -210,7 +210,7 @@ const bindHtmlEvent = (
     mc.on("panleft panright panup pandown", (event: any) => {
       gesture(rendition, event.type);
 
-      let position = rendition.getPosition();
+      let position = JSON.parse(rendition.getPosition());
       RecordLocation.recordHtmlLocation(
         key,
         position.text,
