@@ -159,15 +159,18 @@ const bindHtmlEvent = (
 ) => {
   doc.addEventListener("keydown", (event) => {
     arrowKeys(rendition, event.keyCode, event);
-
-    let position = JSON.parse(rendition.getPosition());
-    RecordLocation.recordHtmlLocation(
-      key,
-      position.text,
-      position.chapterTitle,
-      position.count,
-      position.percentage
-    );
+    let position = rendition.getPosition();
+    if (rendition.epub) {
+      RecordLocation.recordCfi(key, position.cfi, position.percentage);
+    } else {
+      RecordLocation.recordHtmlLocation(
+        key,
+        position.text,
+        position.chapterTitle,
+        position.count,
+        position.percentage
+      );
+    }
   });
   doc.addEventListener(
     "mousewheel",
@@ -179,14 +182,18 @@ const bindHtmlEvent = (
         mouseChrome(rendition, event.wheelDelta);
       }
 
-      let position = JSON.parse(rendition.getPosition());
-      RecordLocation.recordHtmlLocation(
-        key,
-        position.text,
-        position.chapterTitle,
-        position.count,
-        position.percentage
-      );
+      let position = rendition.getPosition();
+      if (rendition.epub) {
+        RecordLocation.recordCfi(key, position.cfi, position.percentage);
+      } else {
+        RecordLocation.recordHtmlLocation(
+          key,
+          position.text,
+          position.chapterTitle,
+          position.count,
+          position.percentage
+        );
+      }
     },
     false
   );
@@ -195,22 +202,10 @@ const bindHtmlEvent = (
     arrowKeys(rendition, event.keyCode, event);
     //使用Key判断是否是htmlBook
 
-    let position = JSON.parse(rendition.getPosition());
-    RecordLocation.recordHtmlLocation(
-      key,
-      position.text,
-      position.chapterTitle,
-      position.count,
-      position.percentage
-    );
-  });
-
-  if (StorageUtil.getReaderConfig("isTouch") === "yes") {
-    const mc = new Hammer(doc);
-    mc.on("panleft panright panup pandown", (event: any) => {
-      gesture(rendition, event.type);
-
-      let position = JSON.parse(rendition.getPosition());
+    let position = rendition.getPosition();
+    if (rendition.epub) {
+      RecordLocation.recordCfi(key, position.cfi, position.percentage);
+    } else {
       RecordLocation.recordHtmlLocation(
         key,
         position.text,
@@ -218,6 +213,26 @@ const bindHtmlEvent = (
         position.count,
         position.percentage
       );
+    }
+  });
+
+  if (StorageUtil.getReaderConfig("isTouch") === "yes") {
+    const mc = new Hammer(doc);
+    mc.on("panleft panright panup pandown", (event: any) => {
+      gesture(rendition, event.type);
+
+      let position = rendition.getPosition();
+      if (rendition.epub) {
+        RecordLocation.recordCfi(key, position.cfi, position.percentage);
+      } else {
+        RecordLocation.recordHtmlLocation(
+          key,
+          position.text,
+          position.chapterTitle,
+          position.count,
+          position.percentage
+        );
+      }
     });
   }
 };

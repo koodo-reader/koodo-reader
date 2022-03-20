@@ -43,7 +43,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
     this.props.handleFetchPercentage(this.props.currentBook);
     this.props.handleFetchNotes();
     this.props.handleFetchBooks();
-    this.props.handleFetchChapters(this.props.currentEpub);
+    // this.props.handleFetchChapters(this.props.currentEpub);
   }
 
   componentDidMount() {
