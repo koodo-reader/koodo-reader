@@ -19,45 +19,72 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
 
   componentWillMount() {
     //获取目录
-    if (this.props.currentEpub.loaded) {
-      this.props.currentEpub.loaded.navigation
-        .then((chapters: any) => {
-          this.setState({ chapters: chapters.toc });
-        })
-        .catch(() => {
-          console.log("Error occurs");
-        });
-    }
+    // if (this.props.currentEpub.loaded) {
+    //   this.props.currentEpub.loaded.navigation
+    //     .then((chapters: any) => {
+    //       this.setState({ chapters: chapters.toc });
+    //     })
+    //     .catch(() => {
+    //       console.log("Error occurs");
+    //     });
+    // }
   }
   componentDidMount() {
     this.props.htmlBook &&
       this.setState({
         chapters: this.props.htmlBook.chapters,
       });
+    console.log(this.props.htmlBook);
+  }
+  flatChapter(chapters: any) {
+    let newChapter: any = [];
+    for (let i = 0; i < chapters.length; i++) {
+      if (chapters[i].subitems[0]) {
+        newChapter.push(chapters[i]);
+        newChapter = newChapter.concat(this.flatChapter(chapters[i].subitems));
+      } else {
+        newChapter.push(chapters[i]);
+      }
+    }
+    return newChapter;
   }
   handleJump(event: any) {
     event.preventDefault();
     let href = event.target.getAttribute("href");
-    if (this.props.currentEpub && this.props.currentEpub.loaded) {
-      let _href =
-        this.props.currentEpub.spine.items.filter(
-          (item) => item.href.indexOf(href) > -1
-        )[0].href || href;
-      this.props.currentEpub.rendition.display(_href);
-    } else {
-      let id = href.substr(1);
-      let title =
-        this.state.chapters[_.findIndex(this.state.chapters, { id })].label;
-      RecordLocation.recordHtmlLocation(
-        this.props.currentBook.key,
-        "test",
-        title,
-        "test",
-        "0"
-      );
-      this.props.htmlBook.rendition.goToChapter(title);
-      this.props.handleCurrentChapter(title);
-    }
+
+    let flattenChapters = this.flatChapter(this.state.chapters);
+
+    let title = flattenChapters[_.findIndex(flattenChapters, { href })].label;
+    console.log(href, _.findIndex(flattenChapters, { href }), flattenChapters);
+    RecordLocation.recordHtmlLocation(
+      this.props.currentBook.key,
+      "test",
+      title,
+      "test",
+      "0"
+    );
+    this.props.htmlBook.rendition.goToChapter(title);
+    this.props.handleCurrentChapter(title);
+    // if (this.props.currentEpub && this.props.currentEpub.loaded) {
+    //   let _href =
+    //     this.props.currentEpub.spine.items.filter(
+    //       (item) => item.href.indexOf(href) > -1
+    //     )[0].href || href;
+    //   this.props.currentEpub.rendition.display(_href);
+    // } else {
+    //   let id = href.substr(1);
+    //   let title =
+    //     this.state.chapters[_.findIndex(this.state.chapters, { id })].label;
+    //   RecordLocation.recordHtmlLocation(
+    //     this.props.currentBook.key,
+    //     "test",
+    //     title,
+    //     "test",
+    //     "0"
+    //   );
+    //   this.props.htmlBook.rendition.goToChapter(title);
+    //   this.props.handleCurrentChapter(title);
+    // }
   }
   UNSAFE_componentWillReceiveProps(nextProps: ContentListProps) {
     if (nextProps.htmlBook && nextProps.htmlBook !== this.props.htmlBook) {

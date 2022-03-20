@@ -3,7 +3,6 @@ import "./importLocal.css";
 import BookModel from "../../model/Book";
 import localforage from "localforage";
 import { fetchMD5 } from "../../utils/fileUtils/md5Util";
-import { addEpub } from "../../utils/fileUtils/epubUtil";
 import { Trans } from "react-i18next";
 import Dropzone from "react-dropzone";
 import { Tooltip } from "react-tippy";
@@ -191,69 +190,36 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
             reject();
             throw new Error();
           }
-          if (
-            extension === "pdf" ||
-            extension === "azw3" ||
-            extension === "mobi" ||
-            extension === "txt" ||
-            extension === "djvu" ||
-            extension === "docx" ||
-            extension === "md" ||
-            extension === "cbz" ||
-            extension === "tml" ||
-            extension === "html" ||
-            extension === "xml" ||
-            extension === "xhtml" ||
-            extension === "cbr" ||
-            extension === "cbt" ||
-            extension === "rtf" ||
-            extension === "fb2"
-          ) {
-            let reader = new FileReader();
-            reader.onload = async (event) => {
-              const file_content = (event.target as any).result;
-              result = await BookUtil.generateBook(
-                bookName,
-                extension,
-                md5,
-                file.size,
-                file.path || clickFilePath,
-                file_content
-              );
-              clickFilePath = "";
-              if (!result) {
-                toast.error(
-                  this.props.t(
-                    "You may see this error when the book you're importing is not supported by Koodo Reader, try converting it with Calibre"
-                  )
-                );
-                reject();
-                return;
-              }
-              await this.handleAddBook(
-                result as BookModel,
-                file_content as ArrayBuffer
-              );
 
-              resolve();
-            };
-            reader.readAsArrayBuffer(file);
-          } else {
-            result = await addEpub(file, md5, clickFilePath);
+          let reader = new FileReader();
+          reader.onload = async (event) => {
+            const file_content = (event.target as any).result;
+            result = await BookUtil.generateBook(
+              bookName,
+              extension,
+              md5,
+              file.size,
+              file.path || clickFilePath,
+              file_content
+            );
             clickFilePath = "";
             if (!result) {
-              toast.error(this.props.t("Import Failed"));
-              reject();
-              throw new Error();
-            } else {
-              await this.handleAddBook(
-                result as BookModel,
-                e.target?.result as ArrayBuffer
+              toast.error(
+                this.props.t(
+                  "You may see this error when the book you're importing is not supported by Koodo Reader, try converting it with Calibre"
+                )
               );
-
-              resolve();
+              reject();
+              return;
             }
-          }
+            await this.handleAddBook(
+              result as BookModel,
+              file_content as ArrayBuffer
+            );
+
+            resolve();
+          };
+          reader.readAsArrayBuffer(file);
         };
       }
     });
