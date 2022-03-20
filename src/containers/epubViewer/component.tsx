@@ -103,7 +103,7 @@ class EpubViewer extends React.Component<ViewAreaProps, ViewAreaStates> {
     this.props.rendition.themes.default(StyleUtil.getCustomCss(false));
     this.props.rendition.display(
       RecordLocation.getCfi(this.props.currentBook.key) === null
-        ? null
+        ? ""
         : RecordLocation.getCfi(this.props.currentBook.key).cfi
     );
   }

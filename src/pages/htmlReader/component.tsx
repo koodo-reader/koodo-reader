@@ -144,7 +144,9 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
               className="previous-chapter-single-container"
               onClick={async () => {
                 this.props.htmlBook.rendition.prev();
-                let position = this.props.htmlBook.rendition.getPosition();
+                let position = JSON.parse(
+                  this.props.htmlBook.rendition.getPosition()
+                );
 
                 RecordLocation.recordHtmlLocation(
                   this.props.currentBook.key,
@@ -161,7 +163,9 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
               className="next-chapter-single-container"
               onClick={async () => {
                 this.props.htmlBook.rendition.next();
-                let position = this.props.htmlBook.rendition.getPosition();
+                let position = JSON.parse(
+                  this.props.htmlBook.rendition.getPosition()
+                );
                 RecordLocation.recordHtmlLocation(
                   this.props.currentBook.key,
                   position.text,
