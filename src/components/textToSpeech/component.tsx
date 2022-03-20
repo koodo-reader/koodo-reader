@@ -77,25 +77,25 @@ class TextToSpeech extends React.Component<
   };
   handleAudio = async () => {
     let text = "";
-    if (this.props.currentBook.format === "EPUB") {
-      const currentLocation =
-        this.props.currentEpub.rendition.currentLocation();
-      const cfibase = currentLocation.start.cfi
-        .replace(/!.*/, "")
-        .replace("epubcfi(", "");
-      const cfistart = currentLocation.start.cfi
-        .replace(/.*!/, "")
-        .replace(/\)/, "");
-      const cfiend = currentLocation.end.cfi
-        .replace(/.*!/, "")
-        .replace(/\)/, "");
-      const cfiRange = `epubcfi(${cfibase}!,${cfistart},${cfiend})`;
-      let range = await this.props.currentEpub.getRange(cfiRange);
-      text = range.toString();
-    } else {
-      text = this.props.htmlBook.rendition.visibleText();
-    }
-
+    // if (this.props.currentBook.format === "EPUB") {
+    //   const currentLocation =
+    //     this.props.currentEpub.rendition.currentLocation();
+    //   const cfibase = currentLocation.start.cfi
+    //     .replace(/!.*/, "")
+    //     .replace("epubcfi(", "");
+    //   const cfistart = currentLocation.start.cfi
+    //     .replace(/.*!/, "")
+    //     .replace(/\)/, "");
+    //   const cfiend = currentLocation.end.cfi
+    //     .replace(/.*!/, "")
+    //     .replace(/\)/, "");
+    //   const cfiRange = `epubcfi(${cfibase}!,${cfistart},${cfiend})`;
+    //   let range = await this.props.currentEpub.getRange(cfiRange);
+    //   text = range.toString();
+    // } else {
+    //   text = this.props.htmlBook.rendition.visibleText();
+    // }
+    text = this.props.htmlBook.rendition.visibleText();
     text = text
       .replace(/\s\s/g, "")
       .replace(/\r/g, "")
@@ -122,14 +122,16 @@ class TextToSpeech extends React.Component<
       if (!(this.state.isAudioOn && this.props.isReading)) {
         return;
       }
-      if (this.props.currentBook.format === "EPUB") {
-        this.props.currentEpub.rendition.next().then(() => {
-          this.handleAudio();
-        });
-      } else {
-        this.props.htmlBook.rendition.next();
-        this.handleAudio();
-      }
+      this.props.htmlBook.rendition.next();
+      this.handleAudio();
+      // if (this.props.currentBook.format === "EPUB") {
+      //   this.props.currentEpub.rendition.next().then(() => {
+      //     this.handleAudio();
+      //   });
+      // } else {
+      //   this.props.htmlBook.rendition.next();
+      //   this.handleAudio();
+      // }
     };
   };
 

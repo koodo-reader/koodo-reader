@@ -14,7 +14,6 @@ const getBookKey = (books: BookModel[]) => {
   return books.map((item) => item.key);
 };
 const getBookIndex = (nameArr: string[], oldNameArr: string[]) => {
-  console.log(nameArr, oldNameArr, "getasgasg");
   let indexArr: number[] = [];
   for (let i = 0; i < nameArr.length; i++) {
     if (oldNameArr.indexOf(nameArr[i]) > -1) {

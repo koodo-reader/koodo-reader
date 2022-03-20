@@ -9,7 +9,7 @@ import iconv from "iconv-lite";
 import { xmlMetadata } from "./xmlUtil";
 // import { base64ArrayBuffer } from "./coverUtil";
 declare var window: any;
-const { MobiRender, Azw3Render } = window.Kookit;
+const { MobiRender, Azw3Render, EpubRender } = window.Kookit;
 
 // let Unrar = window.Unrar;
 class BookUtil {
@@ -227,6 +227,22 @@ class BookUtil {
       switch (extension) {
         case "pdf":
           cover = await getPDFCover(file_content);
+          break;
+        case "epub":
+          let epubRendition = new EpubRender(
+            file_content,
+            "scroll",
+            StorageUtil.getReaderConfig("isSliding") === "yes" ? true : false
+          );
+          let metadata = await epubRendition.getMetadata();
+
+          [name, author, description, publisher, cover] = [
+            metadata.title,
+            metadata.creator,
+            metadata.description,
+            metadata.publisher,
+            metadata.cover,
+          ];
           break;
         case "mobi":
           let mobiRendition = new MobiRender(

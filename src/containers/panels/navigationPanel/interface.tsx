@@ -16,7 +16,6 @@ export interface NavigationPanelProps {
 export interface NavigationPanelState {
   currentTab: string;
   chapters: any;
-  cover: string;
   startIndex: number;
   currentIndex: number;
   isSearch: boolean;

@@ -51,6 +51,28 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
       }
       this.setState({ currentChapter: chapter });
     }
+    if (nextProps.htmlBook) {
+      let pageInfo = nextProps.htmlBook.rendition.getProgress();
+      if (nextProps.htmlBook.rendition.epub) {
+        this.setState({
+          prevPage: pageInfo.prevPage,
+          nextPage: pageInfo.nextPage,
+          currentChapter: this.props.currentChapter,
+        });
+      } else {
+        this.setState({
+          currentChapter: this.props.currentChapter,
+          prevPage: this.state.isSingle
+            ? pageInfo.currentPage
+            : pageInfo.currentPage * 2 - 1,
+          nextPage: this.state.isSingle
+            ? pageInfo.currentPage
+            : pageInfo.currentPage * 2,
+        });
+      }
+
+      // console.log(pageInfo, "pageInfo");
+    }
   }
 
   render() {

@@ -19,7 +19,6 @@ class NavigationPanel extends React.Component<
     this.state = {
       currentTab: "contents",
       chapters: [],
-      cover: this.props.currentBook.cover,
       isSearch: false,
       searchList: null,
       startIndex: 0,
@@ -75,9 +74,11 @@ class NavigationPanel extends React.Component<
               } else {
                 let bookLocation = JSON.parse(item.cfi) || {};
                 this.props.htmlBook.rendition.goToPosition(
-                  bookLocation.text,
-                  bookLocation.chapterTitle,
-                  bookLocation.count
+                  JSON.stringify({
+                    text: bookLocation.text,
+                    chapterTitle: bookLocation.chapterTitle,
+                    count: bookLocation.count,
+                  })
                 );
               }
             }}
@@ -222,9 +223,13 @@ class NavigationPanel extends React.Component<
                 ></span>
               </Tooltip>
 
-              {this.state.cover &&
+              {this.props.currentBook.cover &&
               this.props.currentBook.cover !== "noCover" ? (
-                <img className="book-cover" src={this.state.cover} alt="" />
+                <img
+                  className="book-cover"
+                  src={this.props.currentBook.cover}
+                  alt=""
+                />
               ) : (
                 <div className="book-cover">
                   <EmptyCover

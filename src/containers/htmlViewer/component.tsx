@@ -26,8 +26,14 @@ import { tsTransform } from "../../utils/serviceUtils/langUtil";
 
 declare var window: any;
 
-const { MobiRender, Azw3Render, TxtRender, StrRender, ComicRender } =
-  window.Kookit;
+const {
+  MobiRender,
+  Azw3Render,
+  EpubRender,
+  TxtRender,
+  StrRender,
+  ComicRender,
+} = window.Kookit;
 let Unrar = window.Unrar;
 let JSZip = window.JSZip;
 
@@ -73,7 +79,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     let reader = document.querySelector("#page-area");
     //解决文字遮挡问题
     if (reader) {
-      console.log(reader.getAttribute("style"));
       reader.setAttribute(
         "style",
         reader.getAttribute("style") +
@@ -98,6 +103,8 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         this.handleMobi(result as ArrayBuffer);
       } else if (format === "AZW3") {
         this.handleAzw3(result as ArrayBuffer);
+      } else if (format === "EPUB") {
+        this.handleEpub(result as ArrayBuffer);
       } else if (format === "TXT") {
         this.handleTxt(result as ArrayBuffer);
       } else if (format === "MD") {
@@ -129,17 +136,27 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     });
   };
 
-  handleRest = (rendition: any) => {
+  handleRest = async (rendition: any) => {
     StyleUtil.addDefaultCss();
     rendition.setStyle(StyleUtil.getCustomCss(true));
-    let bookLocation: { text: string; count: string; chapterTitle: string } =
-      RecordLocation.getHtmlLocation(this.props.currentBook.key);
+    let bookLocation: {
+      text: string;
+      count: string;
+      chapterTitle: string;
+      cfi: string;
+      percentage: string;
+    } = RecordLocation.getHtmlLocation(this.props.currentBook.key);
     rendition.goToPosition(
-      bookLocation.text,
-      bookLocation.chapterTitle,
-      bookLocation.count
+      JSON.stringify({
+        text: bookLocation.text,
+        chapterTitle: bookLocation.chapterTitle,
+        count: bookLocation.count,
+        cfi: bookLocation.cfi,
+        percentage: bookLocation.percentage,
+      })
     );
     let doc = getIframeDoc();
+
     if (!doc) return;
     doc.addEventListener("click", (event) => {
       this.props.handleLeaveReader("left");
@@ -153,10 +170,15 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       this.props.currentBook.key,
       this.state.readerMode
     );
-
     this.props.handleHtmlBook({
       key: this.props.currentBook.key,
-      chapters: rendition.getChapter(),
+      chapters: await rendition.getChapter(),
+      subitems: [],
+      rendition: rendition,
+    });
+    console.log({
+      key: this.props.currentBook.key,
+      chapters: await rendition.getChapter(),
       subitems: [],
       rendition: rendition,
     });
@@ -176,13 +198,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           chapterIndex: parseInt(bookLocation.count) || 0,
         });
       } else {
-        // console.log(
-        //   "rendered",
-        //   bookLocation.chapterTitle,
-        //   _.findLastIndex(this.props.htmlBook.chapters, {
-        //     label: bookLocation.chapterTitle,
-        //   })
-        // );
         this.setState({
           chapter:
             bookLocation.chapterTitle || this.props.htmlBook.chapters[0].label,
@@ -274,6 +289,18 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       this.state.readerMode,
       StorageUtil.getReaderConfig("isSliding") === "yes" ? true : false
     );
+    await rendition.renderTo(
+      document.getElementsByClassName("html-viewer-page")[0]
+    );
+    this.handleRest(rendition);
+  };
+  handleEpub = async (result: ArrayBuffer) => {
+    let rendition = new EpubRender(
+      result,
+      this.state.readerMode,
+      StorageUtil.getReaderConfig("isSliding") === "yes" ? true : false
+    );
+    console.log(rendition);
     await rendition.renderTo(
       document.getElementsByClassName("html-viewer-page")[0]
     );
