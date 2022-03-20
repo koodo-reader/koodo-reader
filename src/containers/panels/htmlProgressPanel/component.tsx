@@ -4,6 +4,7 @@ import { Trans } from "react-i18next";
 import { ProgressPanelProps, ProgressPanelState } from "./interface";
 import { Tooltip } from "react-tippy";
 import _ from "underscore";
+import StorageUtil from "../../../utils/serviceUtils/storageUtil";
 
 class ProgressPanel extends React.Component<
   ProgressPanelProps,
@@ -23,6 +24,7 @@ class ProgressPanel extends React.Component<
   componentWillReceiveProps(nextProps: ProgressPanelProps) {
     if (nextProps.currentChapter && nextProps.htmlBook) {
       let pageProgress = nextProps.htmlBook.rendition.getProgress();
+      // console.log(pageProgress);
       this.setState({
         currentPage: pageProgress.currentPage,
         totalPage: pageProgress.totalPage,
@@ -122,9 +124,19 @@ class ProgressPanel extends React.Component<
             type="text"
             name="jumpPage"
             id="jumpPage"
-            value={this.state.currentPage}
+            value={
+              StorageUtil.getReaderConfig("readerMode") !== "double"
+                ? this.state.currentPage
+                : this.state.currentPage * 2 - 1
+            }
           />
-          <span>/ {this.state.totalPage}</span>&nbsp;&nbsp;&nbsp;
+          <span>
+            /{" "}
+            {StorageUtil.getReaderConfig("readerMode") !== "double"
+              ? this.state.totalPage
+              : this.state.totalPage * 2 - 2}
+          </span>
+          &nbsp;&nbsp;&nbsp;
           <Trans>Chapters</Trans>
           <input
             type="text"

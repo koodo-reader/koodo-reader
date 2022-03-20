@@ -2,3 +2,252 @@
   overflow-y: scroll;
   z-index: 5;
 }
+.viewer {
+  height: 100%;
+}
+.view-area {
+  height: 100%;
+  touch-action: none;
+  position: relative;
+}
+
+@keyframes fade-right {
+  0% {
+    transform: translateX(200px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0px);
+    opacity: 1;
+  }
+}
+
+@keyframes fade-left {
+  0% {
+    transform: translateX(-200px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0px);
+    opacity: 1;
+  }
+}
+.background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  z-index: -10;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@keyframes fade-down {
+  0% {
+    transform: translateY(-60px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0px);
+    opacity: 1;
+  }
+}
+
+@keyframes fade-up {
+  0% {
+    transform: translateY(60px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0px);
+    opacity: 1;
+  }
+}
+.panel-icon {
+  color: white;
+  font-size: 20px;
+  opacity: 0.9;
+}
+.left-panel {
+  width: 50px;
+  height: 250px;
+  position: absolute;
+  left: 0px;
+  top: calc(50vh - 125px);
+  background-color: rgba(75, 75, 75, 0.3);
+  border-bottom-right-radius: 50px;
+  border-top-right-radius: 50px;
+  z-index: 10;
+  opacity: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+.right-panel {
+  width: 50px;
+  height: 250px;
+  position: absolute;
+  right: 0px;
+  top: calc(50vh - 125px);
+  background-color: rgba(75, 75, 75, 0.3);
+  border-bottom-left-radius: 50px;
+  border-top-left-radius: 50px;
+  z-index: 10;
+  opacity: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+.top-panel {
+  width: 250px;
+  height: 50px;
+  position: absolute;
+  right: calc(50vw - 125px);
+  top: 0px;
+  background-color: rgba(75, 75, 75, 0.3);
+  border-bottom-left-radius: 50px;
+  border-bottom-right-radius: 50px;
+  z-index: 10;
+  opacity: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+.bottom-panel {
+  width: 250px;
+  height: 50px;
+  position: absolute;
+  right: calc(50vw - 125px);
+  top: calc(100vh - 50px);
+  background-color: rgba(75, 75, 75, 0.3);
+  border-top-left-radius: 50px;
+  border-top-right-radius: 50px;
+  z-index: 10;
+  opacity: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+.operation-panel-container {
+  width: 412px;
+  height: 60px;
+  position: absolute;
+  top: 0px;
+  left: calc(50vw - 206px);
+  z-index: 15;
+
+  transition: transform 0.5s ease;
+}
+.progress-panel-container {
+  width: 412px;
+  height: 60px;
+  position: absolute;
+  top: calc(100vh - 60px);
+  left: calc(50vw - 206px);
+  z-index: 15;
+  transition: transform 0.5s ease;
+}
+.setting-panel-container {
+  width: 299px;
+  height: 100vh;
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  transition: transform 0.5s ease;
+  z-index: 15;
+}
+.navigation-panel-container {
+  width: 299px;
+  height: 100vh;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  transition: transform 0.5s ease;
+  z-index: 15;
+}
+.view-area-page {
+  position: absolute;
+  left: 0px;
+  right: 0px;
+  top: 28px;
+  bottom: 25px;
+  /* width: calc(100% - 100px);
+  height: calc(100% - 100px); */
+  z-index: 5;
+  user-select: text;
+}
+.previous-chapter-single-container {
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 50%;
+  position: absolute;
+  bottom: 15px;
+  left: 20px;
+  font-size: 30px;
+  transform: rotate(90deg);
+  cursor: pointer;
+  opacity: 0.2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+}
+.next-chapter-single-container {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  position: absolute;
+  bottom: 15px;
+  right: 20px;
+  transform: rotate(-90deg);
+  cursor: pointer;
+  opacity: 0.2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+}
+.next-chapter-single-container:hover {
+  opacity: 0.7;
+}
+.previous-chapter-single-container:hover {
+  opacity: 0.5;
+}
+.previous-chapter-single {
+  height: 20px;
+  font-size: 20px;
+}
+.next-chapter-single {
+  font-size: 20px;
+  height: 20px;
+}
+.reader-setting-icon {
+  margin: 8px;
+  opacity: 0.5;
+}
+.reader-setting-icon-container {
+  width: 50px;
+  height: 50px;
+  position: absolute;
+  top: -3px;
+  right: 5px;
+  font-size: 20px;
+  cursor: pointer;
+  z-index: 10;
+  transition: 0.1s;
+  line-height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: 0, 2s;
+}
+.reader-setting-icon-container:hover {
+  border-radius: 50%;
+}
