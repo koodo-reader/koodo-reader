@@ -5,7 +5,6 @@ import { stateType } from "../../store";
 
 const mapStateToProps = (state: stateType) => {
   return {
-    currentEpub: state.book.currentEpub,
     currentBook: state.book.currentBook,
     htmlBook: state.reader.htmlBook,
     locations: state.progressPanel.locations,

@@ -4,7 +4,6 @@ import HtmlBookModel from "../../../model/HtmlBook";
 import NoteModel from "../../../model/Note";
 export interface NavListProps {
   currentBook: BookModel;
-  currentEpub: any;
   bookmarks: BookmarkModel[];
   notes: NoteModel[];
   htmlBook: HtmlBookModel;

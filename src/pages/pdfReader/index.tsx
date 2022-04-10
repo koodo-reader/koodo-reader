@@ -3,7 +3,6 @@ import {
   handleActionDialog,
   handleReadingState,
   handleReadingBook,
-  handleReadingEpub,
   handleFetchNotes,
   handleFetchBookmarks,
   handleFetchBooks,
@@ -22,7 +21,6 @@ const mapStateToProps = (state: stateType) => {
 const actionCreator = {
   handleReadingState,
   handleReadingBook,
-  handleReadingEpub,
   handleActionDialog,
   handleFetchNotes,
   handleFetchBookmarks,

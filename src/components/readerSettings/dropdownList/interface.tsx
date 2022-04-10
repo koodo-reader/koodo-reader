@@ -1,5 +1,4 @@
 export interface DropdownListProps {
-  currentEpub: any;
   t: (title: string) => string;
   renderFunc: () => void;
 }

@@ -120,37 +120,6 @@ const gesture = (rendition: any, type: string) => {
   }
 };
 
-const bindEpubEvent = (rendition: any, doc: any) => {
-  doc.addEventListener(
-    "keydown",
-    (event) => {
-      arrowKeys(rendition, event.keyCode, event);
-    },
-    false
-  );
-  doc.addEventListener(
-    "mousewheel",
-    (event) => {
-      mouseChrome(rendition, event.wheelDelta);
-    },
-    false
-  );
-  window.addEventListener(
-    "keydown",
-    (event) => {
-      arrowKeys(rendition, event.keyCode, event);
-      //使用Key判断是否是htmlBook
-    },
-    false
-  );
-
-  if (StorageUtil.getReaderConfig("isTouch") === "yes") {
-    const mc = new Hammer(doc);
-    mc.on("panleft panright panup pandown", (event: any) => {
-      gesture(rendition, event.type);
-    });
-  }
-};
 const handleLocation = (key: string, rendition: any) => {
   setTimeout(async () => {
     let position = await rendition.getPosition();
@@ -204,21 +173,6 @@ const bindHtmlEvent = (
       handleLocation(key, rendition);
     });
   }
-};
-export const EpubMouseEvent = (rendition: any, readerMode: string) => {
-  rendition.on("rendered", () => {
-    let doc = getIframeDoc();
-    if (!doc) return;
-    if (readerMode === "scroll") {
-      doc.addEventListener("keydown", (event) => {
-        arrowKeys(rendition, event.keyCode, event);
-        //使用Key判断是否是htmlBook
-      });
-      return;
-    }
-    lock = false;
-    bindEpubEvent(rendition, doc);
-  });
 };
 export const HtmlMouseEvent = (
   rendition: any,
