@@ -59,29 +59,29 @@ class EpubViewer extends React.Component<ViewAreaProps, ViewAreaStates> {
       }
       this.isFirst = false;
     });
-    this.props.rendition.on("rendered", () => {
-      let doc = getIframeDoc();
-      if (!doc) return;
-      const currentLocation = this.props.rendition.currentLocation();
-      let chapterHref = currentLocation.start.href;
-      if (!currentLocation || !currentLocation.start) return;
-      this.setState({
-        chapterIndex: currentLocation.start.index,
-        pageWidth: this.props.currentEpub.rendition._layout.width,
-        pageHeight: this.props.currentEpub.rendition._layout.height,
-      });
-      let chapter = "Unknown Chapter";
-      let currentChapter = this.props.flattenChapters.filter(
-        (item: any) => item.href.split("#")[0] === chapterHref
-      )[0];
-      if (currentChapter) {
-        chapter = currentChapter.label.trim(" ");
-      }
-      this.setState({ chapter });
-      StyleUtil.addDefaultCss();
-      this.props.rendition.themes.default(StyleUtil.getCustomCss(false));
-      tsTransform();
-    });
+    // this.props.rendition.on("rendered", () => {
+    //   let doc = getIframeDoc();
+    //   if (!doc) return;
+    //   const currentLocation = this.props.rendition.currentLocation();
+    //   let chapterHref = currentLocation.start.href;
+    //   if (!currentLocation || !currentLocation.start) return;
+    //   this.setState({
+    //     chapterIndex: currentLocation.start.index,
+    //     pageWidth: this.props.currentEpub.rendition._layout.width,
+    //     pageHeight: this.props.currentEpub.rendition._layout.height,
+    //   });
+    //   let chapter = "Unknown Chapter";
+    //   let currentChapter = this.props.flattenChapters.filter(
+    //     (item: any) => item.href.split("#")[0] === chapterHref
+    //   )[0];
+    //   if (currentChapter) {
+    //     chapter = currentChapter.label.trim(" ");
+    //   }
+    //   this.setState({ chapter });
+    //   StyleUtil.addDefaultCss();
+    //   this.props.rendition.themes.default(StyleUtil.getCustomCss(false));
+    //   tsTransform();
+    // });
 
     this.props.rendition.on(
       "selected",

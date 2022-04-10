@@ -188,7 +188,6 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     let rect = this.state.rect;
     if (!rect) return;
     this.props.handleChangeDirection(false);
-    // const rect = this.rect;
     let page: any = { offsetLeft: 0 };
     if (this.props.currentBook.format !== "PDF") {
       page = document.getElementById("page-area");

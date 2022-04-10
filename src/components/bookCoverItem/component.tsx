@@ -111,8 +111,8 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
     }
   };
   render() {
-    let percentage = RecordLocation.getCfi(this.props.book.key)
-      ? RecordLocation.getCfi(this.props.book.key).percentage
+    let percentage = RecordLocation.getHtmlLocation(this.props.book.key)
+      ? RecordLocation.getHtmlLocation(this.props.book.key).percentage
       : 0;
     const actionProps = { left: this.state.left, top: this.state.top };
     return (
