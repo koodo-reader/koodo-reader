@@ -9,7 +9,6 @@ const mapStateToProps = (state: stateType) => {
     currentBook: state.book.currentBook,
     percentage: state.progressPanel.percentage,
     locations: state.progressPanel.locations,
-    flattenChapters: state.reader.flattenChapters,
   };
 };
 const actionCreator = { handleFetchPercentage };

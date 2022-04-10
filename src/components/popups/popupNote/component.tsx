@@ -46,9 +46,7 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
       //创建笔记
       let bookKey = this.props.currentBook.key;
       let cfi = "";
-      if (this.props.currentBook.format === "EPUB") {
-        cfi = RecordLocation.getCfi(this.props.currentBook.key).cfi;
-      } else if (this.props.currentBook.format === "PDF") {
+      if (this.props.currentBook.format === "PDF") {
         cfi = JSON.stringify(
           RecordLocation.getPDFLocation(this.props.currentBook.md5)
         );
@@ -87,12 +85,6 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
       text = text.replace(/\t/g, "");
       text = text.replace(/\f/g, "");
       let percentage = 0;
-      if (this.props.currentBook.format === "EPUB") {
-        percentage = RecordLocation.getCfi(this.props.currentBook.key)
-          .percentage
-          ? RecordLocation.getCfi(this.props.currentBook.key).percentage
-          : 0;
-      }
 
       let color = this.props.color || 0;
       let tag = this.state.tag;

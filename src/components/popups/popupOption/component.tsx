@@ -58,9 +58,7 @@ class PopupOption extends React.Component<PopupOptionProps> {
   handleDigest = () => {
     let bookKey = this.props.currentBook.key;
     let cfi = "";
-    if (this.props.currentBook.format === "EPUB") {
-      cfi = RecordLocation.getCfi(this.props.currentBook.key).cfi;
-    } else if (this.props.currentBook.format === "PDF") {
+    if (this.props.currentBook.format === "PDF") {
       cfi = JSON.stringify(
         RecordLocation.getPDFLocation(this.props.currentBook.md5)
       );
@@ -69,9 +67,9 @@ class PopupOption extends React.Component<PopupOptionProps> {
         RecordLocation.getHtmlLocation(this.props.currentBook.key)
       );
     }
-    let percentage = RecordLocation.getCfi(this.props.currentBook.key)
+    let percentage = RecordLocation.getHtmlLocation(this.props.currentBook.key)
       .percentage
-      ? RecordLocation.getCfi(this.props.currentBook.key).percentage
+      ? RecordLocation.getHtmlLocation(this.props.currentBook.key).percentage
       : 0;
     let color = this.props.color;
     let notes = "";
@@ -118,19 +116,6 @@ class PopupOption extends React.Component<PopupOptionProps> {
       this.props.handleFetchNotes();
       this.props.handleMenuMode("highlight");
     });
-    // let classes = [
-    //   "color-0",
-    //   "color-1",
-    //   "color-2",
-    //   "color-3",
-    //   "line-0",
-    //   "line-1",
-    //   "line-2",
-    //   "line-3",
-    // ];
-    // if (this.props.currentBook.format === "PDF") {
-    //   showHighlight(JSON.parse(range), classes[color]);
-    // }
   };
   handleJump = (url: string) => {
     openExternalUrl(url);

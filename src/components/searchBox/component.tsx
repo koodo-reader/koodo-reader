@@ -55,10 +55,7 @@ class SearchBox extends React.Component<SearchBoxProps> {
     }
   };
   search = async (q: string) => {
-    let searchList =
-      this.props.currentBook.format === "EPUB"
-        ? await this.props.htmlBook.rendition.doSearch(q)
-        : this.props.htmlBook.rendition.doSearch(q);
+    let searchList = await this.props.htmlBook.rendition.doSearch(q);
 
     this.props.handleSearchList(
       searchList.map((item: any) => {

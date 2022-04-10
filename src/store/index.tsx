@@ -76,7 +76,6 @@ export type stateType = {
     digests: NoteModel[];
     color: number;
     chapters: any[];
-    flattenChapters: any;
     noteKey: string;
     currentChapter: string;
     originalText: string;

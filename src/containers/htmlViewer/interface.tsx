@@ -35,4 +35,5 @@ export interface ViewerState {
   cfiRange: any;
   contents: any;
   rect: any;
+  rendition: any;
 }

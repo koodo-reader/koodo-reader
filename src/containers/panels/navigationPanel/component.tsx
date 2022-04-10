@@ -69,18 +69,16 @@ class NavigationPanel extends React.Component<
             className="nav-search-list-item"
             key={index}
             onClick={() => {
-              if (this.props.currentBook.format === "EPUB") {
-                this.props.currentEpub.rendition.display(item.cfi);
-              } else {
-                let bookLocation = JSON.parse(item.cfi) || {};
-                this.props.htmlBook.rendition.goToPosition(
-                  JSON.stringify({
-                    text: bookLocation.text,
-                    chapterTitle: bookLocation.chapterTitle,
-                    count: bookLocation.count,
-                  })
-                );
-              }
+              let bookLocation = JSON.parse(item.cfi) || {};
+              this.props.htmlBook.rendition.goToPosition(
+                JSON.stringify({
+                  text: bookLocation.text,
+                  chapterTitle: bookLocation.chapterTitle,
+                  count: bookLocation.count,
+                  percentage: bookLocation.percentage,
+                  cfi: bookLocation.cfi,
+                })
+              );
             }}
           >
             {Parser(item.excerpt)}

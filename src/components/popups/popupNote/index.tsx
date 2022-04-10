@@ -14,7 +14,6 @@ const mapStateToProps = (state: stateType) => {
     currentBook: state.book.currentBook,
     notes: state.reader.notes,
     color: state.reader.color,
-    flattenChapters: state.reader.flattenChapters,
     noteKey: state.reader.noteKey,
   };
 };

@@ -5,7 +5,6 @@ const initState = {
   digests: [],
   chapters: null,
   currentChapter: "",
-  flattenChapters: null,
 
   color: parseInt(StorageUtil.getReaderConfig("highlightIndex"))
     ? parseInt(StorageUtil.getReaderConfig("highlightIndex"))
@@ -74,11 +73,6 @@ export function reader(
       return {
         ...state,
         chapters: action.payload,
-      };
-    case "HANDLE_FLATTEN_CHAPTERS":
-      return {
-        ...state,
-        flattenChapters: action.payload,
       };
     default:
       return state;
