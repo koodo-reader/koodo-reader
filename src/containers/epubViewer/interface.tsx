@@ -6,7 +6,6 @@ export interface ViewAreaProps {
   currentBook: BookModel;
   currentEpub: any;
   bookmarks: BookmarkModel[];
-  flattenChapters: any;
   locations: any;
   isShowBookmark: boolean;
   chapters: any[];

@@ -21,10 +21,9 @@ class ProgressPanel extends React.Component<
     };
   }
 
-  componentWillReceiveProps(nextProps: ProgressPanelProps) {
+  async componentWillReceiveProps(nextProps: ProgressPanelProps) {
     if (nextProps.currentChapter && nextProps.htmlBook) {
-      let pageProgress = nextProps.htmlBook.rendition.getProgress();
-      // console.log(pageProgress);
+      let pageProgress = await nextProps.htmlBook.rendition.getProgress();
       this.setState({
         currentPage: pageProgress.currentPage,
         totalPage: pageProgress.totalPage,

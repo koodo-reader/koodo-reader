@@ -92,8 +92,8 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
     }
   };
   render() {
-    let percentage = RecordLocation.getCfi(this.props.book.key)
-      ? RecordLocation.getCfi(this.props.book.key).percentage
+    let percentage = RecordLocation.getHtmlLocation(this.props.book.key)
+      ? RecordLocation.getHtmlLocation(this.props.book.key).percentage
       : 0;
 
     return (

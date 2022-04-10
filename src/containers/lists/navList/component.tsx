@@ -23,18 +23,10 @@ class NavList extends React.Component<NavListProps, NavListState> {
         text: bookLocation.text,
         chapterTitle: bookLocation.chapterTitle,
         count: bookLocation.count,
+        percentage: bookLocation.percentage,
+        cfi: bookLocation.cfi,
       })
     );
-    // if (this.props.currentBook.format === "EPUB") {
-    //   this.props.currentEpub.rendition.display(cfi);
-    // } else {
-    //   let bookLocation = JSON.parse(cfi) || {};
-    //   this.props.htmlBook.rendition.goToPosition(
-    //     bookLocation.text,
-    //     bookLocation.chapterTitle,
-    //     bookLocation.count
-    //   );
-    // }
   }
   handleShowDelete = (index: number) => {
     this.setState({ deleteIndex: index });
