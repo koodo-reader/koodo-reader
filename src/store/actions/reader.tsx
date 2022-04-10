@@ -27,9 +27,6 @@ export function handleCurrentChapter(currentChapter: string) {
 export function handleChapters(chapters: any) {
   return { type: "HANDLE_CHAPTERS", payload: chapters };
 }
-export function handleFlattenChapters(flattenChapters: any) {
-  return { type: "HANDLE_FLATTEN_CHAPTERS", payload: flattenChapters };
-}
 export function handleNoteKey(key: string) {
   return { type: "HANDLE_NOTE_KEY", payload: key };
 }
@@ -75,7 +72,6 @@ export function handleFetchChapters(epub: any) {
     epub.loaded.navigation
       .then((chapters: any) => {
         dispatch(handleChapters(chapters.toc));
-        dispatch(handleFlattenChapters(flatChapter(chapters.toc)));
       })
       .catch(() => {
         console.log("Error occurs");

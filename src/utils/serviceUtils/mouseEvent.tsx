@@ -151,26 +151,28 @@ const bindEpubEvent = (rendition: any, doc: any) => {
     });
   }
 };
+const handleLocation = (key: string, rendition: any) => {
+  setTimeout(async () => {
+    let position = await rendition.getPosition();
+    RecordLocation.recordHtmlLocation(
+      key,
+      position.text,
+      position.chapterTitle,
+      position.count,
+      position.percentage,
+      position.cfi
+    );
+  }, 1000);
+};
 const bindHtmlEvent = (
   rendition: any,
   doc: any,
   key: string = "",
   readerMode: string = ""
 ) => {
-  doc.addEventListener("keydown", (event) => {
+  doc.addEventListener("keydown", async (event) => {
     arrowKeys(rendition, event.keyCode, event);
-    let position = rendition.getPosition();
-    if (rendition.epub) {
-      RecordLocation.recordCfi(key, position.cfi, position.percentage);
-    } else {
-      RecordLocation.recordHtmlLocation(
-        key,
-        position.text,
-        position.chapterTitle,
-        position.count,
-        position.percentage
-      );
-    }
+    handleLocation(key, rendition);
   });
   doc.addEventListener(
     "mousewheel",
@@ -182,57 +184,24 @@ const bindHtmlEvent = (
         mouseChrome(rendition, event.wheelDelta);
       }
 
-      let position = rendition.getPosition();
-      if (rendition.epub) {
-        RecordLocation.recordCfi(key, position.cfi, position.percentage);
-      } else {
-        RecordLocation.recordHtmlLocation(
-          key,
-          position.text,
-          position.chapterTitle,
-          position.count,
-          position.percentage
-        );
-      }
+      handleLocation(key, rendition);
     },
     false
   );
 
-  window.addEventListener("keydown", (event) => {
+  window.addEventListener("keydown", async (event) => {
     arrowKeys(rendition, event.keyCode, event);
     //使用Key判断是否是htmlBook
 
-    let position = rendition.getPosition();
-    if (rendition.epub) {
-      RecordLocation.recordCfi(key, position.cfi, position.percentage);
-    } else {
-      RecordLocation.recordHtmlLocation(
-        key,
-        position.text,
-        position.chapterTitle,
-        position.count,
-        position.percentage
-      );
-    }
+    handleLocation(key, rendition);
   });
 
   if (StorageUtil.getReaderConfig("isTouch") === "yes") {
     const mc = new Hammer(doc);
-    mc.on("panleft panright panup pandown", (event: any) => {
+    mc.on("panleft panright panup pandown", async (event: any) => {
       gesture(rendition, event.type);
 
-      let position = rendition.getPosition();
-      if (rendition.epub) {
-        RecordLocation.recordCfi(key, position.cfi, position.percentage);
-      } else {
-        RecordLocation.recordHtmlLocation(
-          key,
-          position.text,
-          position.chapterTitle,
-          position.count,
-          position.percentage
-        );
-      }
+      handleLocation(key, rendition);
     });
   }
 };

@@ -23,7 +23,6 @@ const mapStateToProps = (state: stateType) => {
     books: state.manager.books,
     htmlBook: state.reader.htmlBook,
     locations: state.progressPanel.locations,
-    flattenChapters: state.reader.flattenChapters,
   };
 };
 const actionCreator = {

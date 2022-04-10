@@ -47,9 +47,8 @@ class CardList extends React.Component<CardListProps, CardListStates> {
       toast(this.props.t("Book not exist"));
       return;
     }
-    if (book.format === "EPUB") {
-      RecordLocation.recordCfi(bookKey, cfi, percentage);
-    } else if (book.format === "PDF") {
+
+    if (book.format === "PDF") {
       let bookLocation = JSON.parse(cfi) || {};
       RecordLocation.recordPDFLocation(book.md5, bookLocation);
     } else {
@@ -59,7 +58,8 @@ class CardList extends React.Component<CardListProps, CardListStates> {
         bookLocation.text,
         bookLocation.chapterTitle,
         bookLocation.count,
-        bookLocation.percentage
+        bookLocation.percentage,
+        bookLocation.cfi
       );
     }
 

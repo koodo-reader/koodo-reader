@@ -4,7 +4,6 @@ export interface PopupNoteProps {
   currentEpub: any;
   currentBook: BookModel;
   notes: NoteModel[];
-  flattenChapters: any;
   color: number;
   noteKey: string;
   pageWidth: number;

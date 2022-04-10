@@ -17,8 +17,6 @@ import "./index.css";
 class Reader extends React.Component<ReaderProps, ReaderState> {
   messageTimer!: NodeJS.Timeout;
   tickTimer!: NodeJS.Timeout;
-  rendition: any;
-
   constructor(props: ReaderProps) {
     super(props);
     this.state = {
@@ -29,7 +27,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
       hoverPanel: "",
       isOpenLeftPanel:
         StorageUtil.getReaderConfig("isNavLocked") === "yes" ? true : false,
-      rendition: null,
+
       scale: StorageUtil.getReaderConfig("scale") || 1,
       margin: parseInt(StorageUtil.getReaderConfig("margin")) || 30,
       time: ReadingTime.getTime(this.props.currentBook.key),
@@ -126,10 +124,21 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         break;
     }
   };
-
+  handleLocation = () => {
+    setTimeout(async () => {
+      let position = await this.props.htmlBook.rendition.getPosition();
+      RecordLocation.recordHtmlLocation(
+        this.props.currentBook.key,
+        position.text,
+        position.chapterTitle,
+        position.count,
+        position.percentage,
+        position.cfi
+      );
+    }, 500);
+  };
   render() {
     const renditionProps = {
-      rendition: this.state.rendition,
       handleLeaveReader: this.handleLeaveReader,
       handleEnterReader: this.handleEnterReader,
       isShow:
@@ -146,22 +155,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
               className="previous-chapter-single-container"
               onClick={async () => {
                 this.props.htmlBook.rendition.prev();
-                let position = this.props.htmlBook.rendition.getPosition();
-                if (this.props.htmlBook.rendition.epub) {
-                  RecordLocation.recordCfi(
-                    this.props.currentBook.key,
-                    position.cfi,
-                    position.percentage
-                  );
-                } else {
-                  RecordLocation.recordHtmlLocation(
-                    this.props.currentBook.key,
-                    position.text,
-                    position.chapterTitle,
-                    position.count,
-                    position.percentage
-                  );
-                }
+                this.handleLocation();
               }}
             >
               <span className="icon-dropdown previous-chapter-single"></span>
@@ -170,14 +164,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
               className="next-chapter-single-container"
               onClick={async () => {
                 this.props.htmlBook.rendition.next();
-                let position = this.props.htmlBook.rendition.getPosition();
-                RecordLocation.recordHtmlLocation(
-                  this.props.currentBook.key,
-                  position.text,
-                  position.chapterTitle,
-                  position.count,
-                  position.percentage
-                );
+                this.handleLocation();
               }}
             >
               <span className="icon-dropdown next-chapter-single"></span>
@@ -350,7 +337,9 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
                 }
           }
         >
-          <OperationPanel {...{ time: this.state.time }} />
+          {this.props.htmlBook && (
+            <OperationPanel {...{ time: this.state.time }} />
+          )}
         </div>
         <PageWidget {...{ time: this.state.time }} />
       </div>

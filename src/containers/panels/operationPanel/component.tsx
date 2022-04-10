@@ -26,8 +26,10 @@ class OperationPanel extends React.Component<
         StorageUtil.getReaderConfig("isFullScreen") === "yes" ? true : false, // 是否进入全屏模式
       isBookmark: false, // 是否添加书签
       time: 0,
-      currentPercentage: RecordLocation.getCfi(this.props.currentBook.key)
-        ? RecordLocation.getCfi(this.props.currentBook.key).percentage
+      currentPercentage: RecordLocation.getHtmlLocation(
+        this.props.currentBook.key
+      )
+        ? RecordLocation.getHtmlLocation(this.props.currentBook.key).percentage
         : 0,
       timeLeft: 0,
     };
@@ -35,39 +37,6 @@ class OperationPanel extends React.Component<
     this.speed = 30000;
   }
 
-  componentWillReceiveProps(nextProps: OperationPanelProps) {
-    if (
-      nextProps.currentEpub.rendition &&
-      nextProps.currentEpub.rendition.location &&
-      this.props.currentEpub.rendition
-    ) {
-      const currentLocation =
-        this.props.currentEpub.rendition.currentLocation();
-      if (!currentLocation.start) {
-        return;
-      }
-
-      this.speed = Date.now() - this.timeStamp;
-      this.timeStamp = Date.now();
-
-      this.setState({
-        timeLeft:
-          ((currentLocation.start.displayed.total -
-            currentLocation.start.displayed.page) *
-            this.speed) /
-          1000,
-      });
-      // let nextPercentage = section.start.percentage;
-    }
-    if (nextProps.htmlBook) {
-      let pageProgress = nextProps.htmlBook.rendition.getProgress();
-      this.setState({
-        timeLeft:
-          ((pageProgress.totalPage - pageProgress.currentPage) * this.speed) /
-          1000,
-      });
-    }
-  }
   componentDidMount() {
     const exitHandler = () => {
       if (
@@ -112,6 +81,16 @@ class OperationPanel extends React.Component<
         false
       );
     }
+    this.props.htmlBook.rendition.on("page-changed", async () => {
+      this.speed = Date.now() - this.timeStamp;
+      this.timeStamp = Date.now();
+      let pageProgress = await this.props.htmlBook.rendition.getProgress();
+      this.setState({
+        timeLeft:
+          ((pageProgress.totalPage - pageProgress.currentPage) * this.speed) /
+          1000,
+      });
+    });
   }
   // 点击切换全屏按钮触发
   handleScreen() {
@@ -170,47 +149,12 @@ class OperationPanel extends React.Component<
   }
   handleAddBookmark = async () => {
     let bookKey = this.props.currentBook.key;
-    let text = "";
-    let chapter = "";
-    let cfi = "";
-    let percentage = 0;
-    if (this.props.currentBook.format === "EPUB") {
-      const currentLocation =
-        this.props.currentEpub.rendition.currentLocation();
-      let chapterHref = currentLocation.start.href;
-      chapter = "Unknown Chapter";
-      let currentChapter = this.props.flattenChapters.filter(
-        (item: any) =>
-          chapterHref.indexOf(item.href.split("#")[0]) > -1 ||
-          item.href.split("#")[0].indexOf(chapterHref) > -1
-      )[0];
-      if (currentChapter) {
-        chapter = currentChapter.label.trim(" ");
-      }
-      const cfibase = currentLocation.start.cfi
-        .replace(/!.*/, "")
-        .replace("epubcfi(", "");
-      const cfistart = currentLocation.start.cfi
-        .replace(/.*!/, "")
-        .replace(/\)/, "");
-      const cfiend = currentLocation.end.cfi
-        .replace(/.*!/, "")
-        .replace(/\)/, "");
-      const cfiRange = `epubcfi(${cfibase}!,${cfistart},${cfiend})`;
-      cfi = RecordLocation.getCfi(this.props.currentBook.key).cfi;
-      let range = await this.props.currentEpub.getRange(cfiRange);
-      text = range.toString();
-      percentage = RecordLocation.getCfi(this.props.currentBook.key).percentage
-        ? RecordLocation.getCfi(this.props.currentBook.key).percentage
-        : 0;
-    } else {
-      let bookLocation = RecordLocation.getHtmlLocation(bookKey);
-      text = bookLocation.text;
-      chapter = bookLocation.chapterTitle;
-      percentage = bookLocation.percentage;
+    let bookLocation = RecordLocation.getHtmlLocation(bookKey);
+    let text = bookLocation.text;
+    let chapter = bookLocation.chapterTitle;
+    let percentage = bookLocation.percentage;
 
-      cfi = JSON.stringify(bookLocation);
-    }
+    let cfi = JSON.stringify(bookLocation);
 
     text = text
       .replace(/\s\s/g, "")
@@ -242,21 +186,11 @@ class OperationPanel extends React.Component<
           <span>
             <Trans
               i18nKey="Current Reading Time"
-              count={Math.floor(
-                (this.props.time -
-                  ReadingTime.getTime(this.props.currentBook.key)) /
-                  60
-              )}
+              count={Math.floor(Math.abs(Math.floor(this.props.time / 60)))}
             >
               Current Reading Time:
               {{
-                count: Math.abs(
-                  Math.floor(
-                    (this.props.time -
-                      ReadingTime.getTime(this.props.currentBook.key)) /
-                      60
-                  )
-                ),
+                count: Math.abs(Math.floor(this.props.time / 60)),
               }}
               min
             </Trans>

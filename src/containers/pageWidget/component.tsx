@@ -21,57 +21,19 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
     this.isFirst = true;
   }
 
-  componentWillReceiveProps(nextProps: BackgroundProps) {
-    if (
-      nextProps.currentEpub.rendition &&
-      nextProps.currentEpub.rendition.location &&
-      this.props.currentEpub.rendition
-    ) {
-      const currentLocation =
-        this.props.currentEpub.rendition.currentLocation();
-      if (!currentLocation.start) {
-        return;
-      }
-      this.isFirst && this.props.handleFetchLocations(this.props.currentEpub);
-      this.isFirst = false;
-      this.setState({
-        prevPage: currentLocation.start.displayed.page,
-        nextPage: currentLocation.end.displayed.page,
-      });
-      let chapterHref = currentLocation.start.href;
-
-      let chapter = "Unknown Chapter";
-      let currentChapter = this.props.flattenChapters.filter(
-        (item: any) =>
-          item.href.indexOf(chapterHref) > -1 ||
-          chapterHref.indexOf(item.href) > -1
-      )[0];
-      if (currentChapter) {
-        chapter = currentChapter.label.trim(" ");
-      }
-      this.setState({ currentChapter: chapter });
-    }
+  async componentWillReceiveProps(nextProps: BackgroundProps) {
     if (nextProps.htmlBook) {
-      let pageInfo = nextProps.htmlBook.rendition.getProgress();
-      if (nextProps.htmlBook.rendition.epub) {
-        this.setState({
-          prevPage: pageInfo.prevPage,
-          nextPage: pageInfo.nextPage,
-          currentChapter: this.props.currentChapter,
-        });
-      } else {
-        this.setState({
-          currentChapter: this.props.currentChapter,
-          prevPage: this.state.isSingle
-            ? pageInfo.currentPage
-            : pageInfo.currentPage * 2 - 1,
-          nextPage: this.state.isSingle
-            ? pageInfo.currentPage
-            : pageInfo.currentPage * 2,
-        });
-      }
+      let pageInfo = await nextProps.htmlBook.rendition.getProgress();
 
-      // console.log(pageInfo, "pageInfo");
+      this.setState({
+        currentChapter: this.props.currentChapter,
+        prevPage: this.state.isSingle
+          ? pageInfo.currentPage
+          : pageInfo.currentPage * 2 - 1,
+        nextPage: this.state.isSingle
+          ? pageInfo.currentPage
+          : pageInfo.currentPage * 2,
+      });
     }
   }
 

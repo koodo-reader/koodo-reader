@@ -23,7 +23,6 @@ export interface ReaderState {
   isPreventTrigger: boolean;
   readerMode: string;
   hoverPanel: string;
-  rendition: any;
   time: number;
   scale: string;
   margin: number;

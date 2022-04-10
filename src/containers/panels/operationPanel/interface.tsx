@@ -11,7 +11,6 @@ export interface OperationPanelProps extends RouteComponentProps<any> {
   notes: NoteModel[];
   books: BookModel[];
   htmlBook: HtmlBookModel;
-  flattenChapters: any;
   locations: any;
   rendition: any;
   time: number;
