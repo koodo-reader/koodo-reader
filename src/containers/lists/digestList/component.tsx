@@ -13,7 +13,7 @@ class DigestList extends React.Component<DigestListProps, DigestListStates> {
       tag: [],
     };
   }
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.props.handleFetchNotes();
   }
   handleFilter = (items: any, arr: number[]) => {

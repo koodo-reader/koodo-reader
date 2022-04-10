@@ -13,7 +13,7 @@ class NoteList extends React.Component<NoteListProps, NoteListState> {
       tag: [],
     };
   }
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.props.handleFetchNotes();
   }
   handleTag = (tag: string[]) => {

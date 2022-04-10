@@ -1,7 +1,6 @@
 import BookModel from "../../../model/Book";
 import NoteModel from "../../../model/Note";
 export interface PopupNoteProps {
-  currentEpub: any;
   currentBook: BookModel;
   notes: NoteModel[];
   color: number;

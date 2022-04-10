@@ -16,7 +16,6 @@ import toast from "react-hot-toast";
 declare var window: any;
 
 class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
-  epub: any;
   constructor(props: BookCoverProps) {
     super(props);
     this.state = {

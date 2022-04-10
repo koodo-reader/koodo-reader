@@ -3,7 +3,6 @@ import BookmarkModel from "../../../model/Bookmark";
 import HtmlBookModel from "../../../model/HtmlBook";
 
 export interface NavigationPanelProps {
-  currentEpub: any;
   currentBook: BookModel;
   htmlBook: HtmlBookModel;
   bookmarks: BookmarkModel[];

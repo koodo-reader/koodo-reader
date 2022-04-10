@@ -24,7 +24,7 @@ class BookList extends React.Component<BookListProps, BookListState> {
       favoriteBooks: Object.keys(AddFavorite.getAllFavorite()).length,
     };
   }
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     if (this.props.mode === "trash") {
       this.props.handleFetchBooks(true);
     } else {

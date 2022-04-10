@@ -3,7 +3,6 @@ import BookModel from "../../../model/Book";
 export interface ActionDialogProps {
   book: BookModel;
   currentBook: BookModel;
-  currentEpub: any;
   left: number;
   top: number;
   mode: string;

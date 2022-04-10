@@ -1,13 +1,11 @@
 import BookModel from "../../model/Book";
 import HtmlBookModel from "../../model/HtmlBook";
 export interface BackgroundProps {
-  currentEpub: any;
   currentBook: BookModel;
   locations: any;
   currentChapter: string;
   htmlBook: HtmlBookModel;
   time: number;
-  handleFetchLocations: (currentEpub: any) => void;
 }
 export interface BackgroundState {
   isSingle: boolean;

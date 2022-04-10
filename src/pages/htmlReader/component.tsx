@@ -4,7 +4,7 @@ import SettingPanel from "../../containers/panels/settingPanel";
 import NavigationPanel from "../../containers/panels/navigationPanel";
 import OperationPanel from "../../containers/panels/operationPanel";
 import { Toaster } from "react-hot-toast";
-import ProgressPanel from "../../containers/panels/htmlProgressPanel";
+import ProgressPanel from "../../containers/panels/progressPanel";
 import { ReaderProps, ReaderState } from "./interface";
 import StorageUtil from "../../utils/serviceUtils/storageUtil";
 import ReadingTime from "../../utils/readUtils/readingTime";
@@ -49,7 +49,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
       this.setState({ time });
     }, 1000);
   }
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     let url = document.location.href.split("/");
     let key = url[url.length - 1].split("?")[0];
     this.props.handleFetchBooks();

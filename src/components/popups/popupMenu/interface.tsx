@@ -2,7 +2,6 @@ import BookModel from "../../../model/Book";
 import NoteModel from "../../../model/Note";
 
 export interface PopupMenuProps {
-  currentEpub: any;
   currentBook: BookModel;
   isOpenMenu: boolean;
   isChangeDirection: boolean;

@@ -1,5 +1,4 @@
 export interface ThemeListProps {
-  currentEpub: any;
   t: (title: string) => string;
   renderFunc: () => void;
 }

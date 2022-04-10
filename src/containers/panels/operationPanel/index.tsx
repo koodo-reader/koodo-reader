@@ -8,7 +8,6 @@ import {
   handleReadingState,
   handleHtmlBook,
   handleReadingBook,
-  handleReadingEpub,
 } from "../../../store/actions";
 import { stateType } from "../../../store";
 import { withTranslation } from "react-i18next";
@@ -16,7 +15,6 @@ import OperationPanel from "./component";
 
 const mapStateToProps = (state: stateType) => {
   return {
-    currentEpub: state.book.currentEpub,
     currentBook: state.book.currentBook,
     bookmarks: state.reader.bookmarks,
     notes: state.reader.notes,
@@ -34,7 +32,6 @@ const actionCreator = {
   handleSearch,
   handleHtmlBook,
   handleReadingBook,
-  handleReadingEpub,
 };
 export default connect(
   mapStateToProps,

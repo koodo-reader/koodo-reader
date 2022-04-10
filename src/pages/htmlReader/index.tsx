@@ -1,7 +1,6 @@
 import {
   handleFetchNotes,
   handleFetchBookmarks,
-  handleFetchChapters,
   handleFetchBooks,
   handleReadingBook,
   handleFetchPercentage,
@@ -13,7 +12,6 @@ import { withTranslation } from "react-i18next";
 
 const mapStateToProps = (state: stateType) => {
   return {
-    currentEpub: state.book.currentEpub,
     currentBook: state.book.currentBook,
     percentage: state.progressPanel.percentage,
     htmlBook: state.reader.htmlBook,
@@ -22,7 +20,6 @@ const mapStateToProps = (state: stateType) => {
 const actionCreator = {
   handleFetchNotes,
   handleFetchBookmarks,
-  handleFetchChapters,
   handleFetchBooks,
   handleReadingBook,
   handleFetchPercentage,

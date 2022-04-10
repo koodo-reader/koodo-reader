@@ -5,7 +5,6 @@ import About from "./component";
 const mapStateToProps = (state: stateType) => {
   return {
     color: state.reader.color,
-    currentEpub: state.book.currentEpub,
     currentBook: state.book.currentBook,
   };
 };

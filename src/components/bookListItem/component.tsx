@@ -15,7 +15,6 @@ import localforage from "localforage";
 import { isElectron } from "react-device-detect";
 import toast from "react-hot-toast";
 class BookListItem extends React.Component<BookItemProps, BookItemState> {
-  epub: any;
   constructor(props: BookItemProps) {
     super(props);
     this.state = {

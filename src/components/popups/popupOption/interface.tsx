@@ -2,7 +2,6 @@ import BookModel from "../../../model/Book";
 import NoteModel from "../../../model/Note";
 export interface PopupOptionProps {
   currentBook: BookModel;
-  currentEpub: any;
   selection: string;
   digests: NoteModel[];
   notes: NoteModel[];

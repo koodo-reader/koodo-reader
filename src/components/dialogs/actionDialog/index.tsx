@@ -15,7 +15,6 @@ import ActionDialog from "./component";
 const mapStateToProps = (state: stateType) => {
   return {
     mode: state.sidebar.mode,
-    currentEpub: state.book.currentEpub,
     currentBook: state.book.currentBook,
   };
 };
