@@ -12,13 +12,13 @@ class NavList extends React.Component<NavListProps, NavListState> {
     };
   }
   //跳转到图书的指定位置
-  handleJump(cfi: string) {
+  async handleJump(cfi: string) {
     if (!cfi) {
       toast(this.props.t("Wrong bookmark"));
       return;
     }
     let bookLocation = JSON.parse(cfi) || {};
-    this.props.htmlBook.rendition.goToPosition(
+    await this.props.htmlBook.rendition.goToPosition(
       JSON.stringify({
         text: bookLocation.text,
         chapterTitle: bookLocation.chapterTitle,

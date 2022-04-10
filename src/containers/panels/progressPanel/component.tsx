@@ -35,7 +35,7 @@ class ProgressPanel extends React.Component<
               return item;
             }),
             {
-              label: nextProps.currentChapter,
+              label: nextProps.currentChapter.trim(),
             }
           ) > -1
             ? _.findIndex(
@@ -44,7 +44,7 @@ class ProgressPanel extends React.Component<
                   return item;
                 }),
                 {
-                  label: nextProps.currentChapter,
+                  label: nextProps.currentChapter.trim(),
                 }
               )
             : 0,
@@ -55,7 +55,7 @@ class ProgressPanel extends React.Component<
               return item;
             }),
             {
-              label: nextProps.currentChapter,
+              label: nextProps.currentChapter.trim(),
             }
           ) /
           nextProps.htmlBook.flattenChapters.map((item) => {
@@ -93,7 +93,7 @@ class ProgressPanel extends React.Component<
               return item;
             }),
             {
-              label: this.props.currentChapter,
+              label: this.props.currentChapter.trim(),
             }
           ) <
           this.props.htmlBook.flattenChapters.length - 1
@@ -103,7 +103,7 @@ class ProgressPanel extends React.Component<
                   return item;
                 }),
                 {
-                  label: this.props.currentChapter,
+                  label: this.props.currentChapter.trim(),
                 }
               ) + 1
             : this.props.htmlBook.flattenChapters.length - 1
@@ -121,7 +121,7 @@ class ProgressPanel extends React.Component<
               return item;
             }),
             {
-              label: this.props.currentChapter,
+              label: this.props.currentChapter.trim(),
             }
           ) > 0
             ? _.findIndex(
@@ -130,7 +130,7 @@ class ProgressPanel extends React.Component<
                   return item;
                 }),
                 {
-                  label: this.props.currentChapter,
+                  label: this.props.currentChapter.trim(),
                 }
               ) - 1
             : 0

@@ -6,6 +6,7 @@ export interface BackgroundProps {
   currentChapter: string;
   htmlBook: HtmlBookModel;
   time: number;
+  isShowBookmark: boolean;
 }
 export interface BackgroundState {
   isSingle: boolean;

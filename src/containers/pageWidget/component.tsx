@@ -113,6 +113,9 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
               </p>
             )}
         </div>
+        <>
+          {this.props.isShowBookmark ? <div className="bookmark"></div> : null}
+        </>
       </div>
     );
   }

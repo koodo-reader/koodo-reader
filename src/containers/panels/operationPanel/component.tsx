@@ -90,6 +90,7 @@ class OperationPanel extends React.Component<
           ((pageProgress.totalPage - pageProgress.currentPage) * this.speed) /
           1000,
       });
+      this.props.handleShowBookmark(false);
     });
   }
   // 点击切换全屏按钮触发
@@ -151,7 +152,9 @@ class OperationPanel extends React.Component<
     let percentage = bookLocation.percentage;
 
     let cfi = JSON.stringify(bookLocation);
-
+    if (!text) {
+      text = await this.props.htmlBook.rendition.visibleText();
+    }
     text = text
       .replace(/\s\s/g, "")
       .replace(/\r/g, "")
@@ -166,7 +169,7 @@ class OperationPanel extends React.Component<
       percentage,
       chapter
     );
-    let bookmarkArr = this.props.bookmarks ?? [];
+    let bookmarkArr = this.props.bookmarks;
     bookmarkArr.push(bookmark);
     this.props.handleBookmarks(bookmarkArr);
     localforage.setItem("bookmarks", bookmarkArr);

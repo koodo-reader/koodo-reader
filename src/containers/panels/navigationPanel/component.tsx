@@ -68,9 +68,9 @@ class NavigationPanel extends React.Component<
           <li
             className="nav-search-list-item"
             key={index}
-            onClick={() => {
+            onClick={async () => {
               let bookLocation = JSON.parse(item.cfi) || {};
-              this.props.htmlBook.rendition.goToPosition(
+              await this.props.htmlBook.rendition.goToPosition(
                 JSON.stringify({
                   text: bookLocation.text,
                   chapterTitle: bookLocation.chapterTitle,

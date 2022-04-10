@@ -8,6 +8,7 @@ const mapStateToProps = (state: stateType) => {
     locations: state.progressPanel.locations,
     currentChapter: state.reader.currentChapter,
     htmlBook: state.reader.htmlBook,
+    isShowBookmark: state.viewArea.isShowBookmark,
   };
 };
 const actionCreator = {};

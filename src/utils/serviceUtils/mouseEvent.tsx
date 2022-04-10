@@ -131,7 +131,7 @@ const handleLocation = (key: string, rendition: any) => {
       position.percentage,
       position.cfi
     );
-  }, 1000);
+  }, 500);
 };
 const bindHtmlEvent = (
   rendition: any,
