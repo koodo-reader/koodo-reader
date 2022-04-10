@@ -138,6 +138,9 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
               onClick={() => {
                 this.handleJump();
               }}
+              onTouchStart={() => {
+                this.handleJump();
+              }}
             >
               <EmptyCover
                 {...{
@@ -153,6 +156,9 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
               src={this.props.book.cover}
               alt=""
               onClick={() => {
+                this.handleJump();
+              }}
+              onTouchStart={() => {
                 this.handleJump();
               }}
             />

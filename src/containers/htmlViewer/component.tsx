@@ -145,23 +145,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
   };
 
   handleRest = async (rendition: any) => {
-    let bookLocation: {
-      text: string;
-      count: string;
-      chapterTitle: string;
-      percentage: string;
-      cfi: string;
-    } = RecordLocation.getHtmlLocation(this.props.currentBook.key);
-    rendition.goToPosition(
-      JSON.stringify({
-        text: bookLocation.text,
-        chapterTitle: bookLocation.chapterTitle,
-        count: bookLocation.count,
-        percentage: bookLocation.percentage,
-        cfi: bookLocation.cfi,
-      })
-    );
-
     HtmlMouseEvent(
       rendition,
       this.props.currentBook.key,
@@ -181,13 +164,33 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       pageWidth: rendition.getPageSize().width,
       pageHeight: rendition.getPageSize().height,
     });
-    rendition.on("rendered", () => {
-      StyleUtil.addDefaultCss();
-      rendition.setStyle(
-        StyleUtil.getCustomCss(
-          this.props.currentBook.format === "EPUB" ? false : true
-        )
+
+    StyleUtil.addDefaultCss();
+    rendition.setStyle(
+      StyleUtil.getCustomCss(
+        this.props.currentBook.format === "EPUB" ? false : true
+      )
+    );
+    //epub定位问题
+    if (this.props.currentBook.format !== "EPUB") {
+      let bookLocation: {
+        text: string;
+        count: string;
+        chapterTitle: string;
+        percentage: string;
+        cfi: string;
+      } = RecordLocation.getHtmlLocation(this.props.currentBook.key);
+      await rendition.goToPosition(
+        JSON.stringify({
+          text: bookLocation.text,
+          chapterTitle: bookLocation.chapterTitle,
+          count: bookLocation.count,
+          percentage: bookLocation.percentage,
+          cfi: bookLocation.cfi,
+        })
       );
+    }
+    rendition.on("rendered", () => {
       let bookLocation: { text: string; count: string; chapterTitle: string } =
         RecordLocation.getHtmlLocation(this.props.currentBook.key);
       this.props.handleCurrentChapter(bookLocation.chapterTitle);
@@ -211,7 +214,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
                   return item;
                 }),
                 {
-                  label: bookLocation.chapterTitle,
+                  label: bookLocation.chapterTitle.trim(),
                 }
               )
             : 0,
@@ -316,8 +319,16 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       this.state.readerMode,
       StorageUtil.getReaderConfig("isSliding") === "yes" ? true : false
     );
+    let bookLocation: {
+      text: string;
+      count: string;
+      chapterTitle: string;
+      percentage: string;
+      cfi: string;
+    } = RecordLocation.getHtmlLocation(this.props.currentBook.key);
     await rendition.renderTo(
-      document.getElementsByClassName("html-viewer-page")[0]
+      document.getElementsByClassName("html-viewer-page")[0],
+      bookLocation.cfi
     );
     this.handleRest(rendition);
   };

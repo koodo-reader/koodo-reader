@@ -5,13 +5,17 @@ import { stateType } from "../../store";
 import { connect } from "react-redux";
 import { handleReadingState } from "../../store/actions";
 import { isElectron } from "react-device-detect";
+import StorageUtil from "../../utils/serviceUtils/storageUtil";
 
 const BackToMain = (props: any) => {
   return (
     <div
       className="back-main-container"
       onClick={() => {
-        if (isElectron) {
+        if (
+          isElectron &&
+          StorageUtil.getReaderConfig("isOpenInMain") !== "yes"
+        ) {
           if (
             window
               .require("electron")
