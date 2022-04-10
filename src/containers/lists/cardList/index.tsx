@@ -8,7 +8,6 @@ const mapStateToProps = (state: stateType) => {
   return {
     digests: state.reader.digests,
     isCollapsed: state.sidebar.isCollapsed,
-    currentEpub: state.book.currentEpub,
     currentBook: state.book.currentBook,
     bookmarks: state.reader.bookmarks,
     chapters: state.reader.chapters,

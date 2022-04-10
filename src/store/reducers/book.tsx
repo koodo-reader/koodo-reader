@@ -6,7 +6,6 @@ const initState = {
   isReading: false,
   dragItem: "",
   currentBook: {},
-  currentEpub: {},
   renderFunc: () => {},
 };
 export function book(
@@ -48,12 +47,6 @@ export function book(
       return {
         ...state,
         currentBook: action.payload,
-      };
-
-    case "HANDLE_READING_EPUB":
-      return {
-        ...state,
-        currentEpub: action.payload,
       };
     case "HANDLE_DRAG_ITEM":
       return {

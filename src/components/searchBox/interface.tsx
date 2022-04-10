@@ -12,7 +12,6 @@ export interface SearchBoxProps {
   digests: NoteModel[];
   width: string;
   height: string;
-  currentEpub: any;
   currentBook: any;
   htmlBook: htmlBookModel;
   shelfIndex: number;

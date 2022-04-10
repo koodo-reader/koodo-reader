@@ -56,7 +56,7 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
       }
     });
   }
-  componentWillReceiveProps(nextProps: PopupMenuProps) {
+  UNSAFE_componentWillReceiveProps(nextProps: PopupMenuProps) {
     if (nextProps.rect !== this.props.rect) {
       this.setState(
         {
@@ -235,7 +235,6 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
         item.bookKey === this.props.currentBook.key
       );
     });
-
     let pageArea = document.getElementById("page-area");
     if (!pageArea) return;
     let iframe = pageArea.getElementsByTagName("iframe")[0];

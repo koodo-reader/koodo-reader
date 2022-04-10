@@ -1,5 +1,4 @@
 export interface SliderListProps {
-  currentEpub: any;
   maxValue: string;
   minValue: string;
   mode: string;

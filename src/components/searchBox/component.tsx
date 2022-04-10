@@ -67,16 +67,7 @@ class SearchBox extends React.Component<SearchBoxProps> {
       })
     );
   };
-  // doSearch = (q: string) => {
-  //   return Promise.all(
-  //     this.props.currentEpub.spine.spineItems.map((item: any) =>
-  //       item
-  //         .load(this.props.currentEpub.load.bind(this.props.currentEpub))
-  //         .then(item.find.bind(item, q))
-  //         .finally(item.unload.bind(item))
-  //     )
-  //   ).then((results: any) => Promise.resolve([].concat.apply([], results)));
-  // };
+
   handleCancel = () => {
     if (this.props.isNavSearch) {
       this.props.handleSearchList(null);

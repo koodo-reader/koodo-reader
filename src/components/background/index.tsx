@@ -4,7 +4,6 @@ import Background from "./component";
 
 const mapStateToProps = (state: stateType) => {
   return {
-    currentEpub: state.book.currentEpub,
     currentBook: state.book.currentBook,
   };
 };
