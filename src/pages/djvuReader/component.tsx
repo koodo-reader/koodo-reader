@@ -12,7 +12,6 @@ import { djvuMouseEvent } from "../../utils/serviceUtils/mouseEvent";
 declare var window: any;
 
 class Viewer extends React.Component<ViewerProps, ViewerState> {
-  epub: any;
   constructor(props: ViewerProps) {
     super(props);
     this.state = {};

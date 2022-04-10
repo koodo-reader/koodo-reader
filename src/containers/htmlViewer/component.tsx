@@ -38,7 +38,6 @@ let Unrar = window.Unrar;
 let JSZip = window.JSZip;
 
 class Viewer extends React.Component<ViewerProps, ViewerState> {
-  epub: any;
   lock: boolean;
   constructor(props: ViewerProps) {
     super(props);
@@ -62,7 +61,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     };
     this.lock = false;
   }
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.props.handleFetchBookmarks();
     this.props.handleFetchNotes();
     this.props.handleFetchBooks();
@@ -101,6 +100,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       this.state.rendition.removeContent();
     }
     this.handlePageWidth();
+    window.rangy.init();
     BookUtil.fetchBook(key, true, path).then((result) => {
       if (!result) {
         toast.error(this.props.t("Book not exsits"));
@@ -145,12 +145,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
   };
 
   handleRest = async (rendition: any) => {
-    StyleUtil.addDefaultCss();
-    rendition.setStyle(
-      StyleUtil.getCustomCss(
-        this.props.currentBook.format === "EPUB" ? false : true
-      )
-    );
     let bookLocation: {
       text: string;
       count: string;
@@ -188,38 +182,34 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       pageHeight: rendition.getPageSize().height,
     });
     rendition.on("rendered", () => {
+      StyleUtil.addDefaultCss();
+      rendition.setStyle(
+        StyleUtil.getCustomCss(
+          this.props.currentBook.format === "EPUB" ? false : true
+        )
+      );
       let bookLocation: { text: string; count: string; chapterTitle: string } =
         RecordLocation.getHtmlLocation(this.props.currentBook.key);
       this.props.handleCurrentChapter(bookLocation.chapterTitle);
       if (this.props.currentBook.format.startsWith("CB")) {
         this.setState({
           chapter:
-            this.props.htmlBook.chapters[parseInt(bookLocation.count) || 0]
-              .label,
+            this.props.htmlBook.flattenChapters[
+              parseInt(bookLocation.count) || 0
+            ].label,
           chapterIndex: parseInt(bookLocation.count) || 0,
         });
       } else {
-        console.log(
-          bookLocation,
-          this.props.htmlBook.chapters,
-          this.props.htmlBook.rendition
-            .flatChapter(this.props.htmlBook.chapters)
-            .map((item) => {
-              item.label = item.label.trim();
-              return item;
-            })
-        );
         this.setState({
           chapter:
-            bookLocation.chapterTitle || this.props.htmlBook.chapters[0].label,
+            bookLocation.chapterTitle ||
+            this.props.htmlBook.flattenChapters[0].label,
           chapterIndex: bookLocation.chapterTitle
             ? _.findLastIndex(
-                this.props.htmlBook.rendition
-                  .flatChapter(this.props.htmlBook.chapters)
-                  .map((item) => {
-                    item.label = item.label.trim();
-                    return item;
-                  }),
+                this.props.htmlBook.flattenChapters.map((item) => {
+                  item.label = item.label.trim();
+                  return item;
+                }),
                 {
                   label: bookLocation.chapterTitle,
                 }
@@ -229,17 +219,14 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       }
       tsTransform();
       let doc = getIframeDoc();
-      console.log(doc, "adoasgsg");
       if (!doc) return;
       doc.addEventListener("click", (event) => {
-        console.log("clciked");
         this.props.handleLeaveReader("left");
         this.props.handleLeaveReader("right");
         this.props.handleLeaveReader("top");
         this.props.handleLeaveReader("bottom");
       });
       doc.addEventListener("mouseup", () => {
-        console.log("selected");
         if (!doc!.getSelection()) return;
         var rect = doc!.getSelection()!.getRangeAt(0).getBoundingClientRect();
         this.setState({ rect });

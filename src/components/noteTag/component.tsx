@@ -21,7 +21,7 @@ class NoteTag extends React.Component<NoteTagProps, NoteTagState> {
       this.setState({ tagIndex: this.tagToIndex(this.props.tag) });
     }
   }
-  componentWillReceiveProps(nextProps: NoteTagProps) {
+  UNSAFE_componentWillReceiveProps(nextProps: NoteTagProps) {
     if (
       this.props.isReading &&
       nextProps.tag &&

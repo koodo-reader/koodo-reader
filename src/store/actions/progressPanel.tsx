@@ -13,15 +13,3 @@ export function handleFetchPercentage(book: BookModel) {
     dispatch(handlePercentage(percentage));
   };
 }
-export function handleFetchLocations(epub: any) {
-  return (dispatch: (arg0: { type: string; payload: any }) => void) => {
-    epub.locations
-      .generate()
-      .then((result: any) => {
-        dispatch(handleLocations(epub.locations));
-      })
-      .catch(() => {
-        console.log("Error occurs");
-      });
-  };
-}

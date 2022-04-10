@@ -15,7 +15,6 @@ import toast from "react-hot-toast";
 declare var window: any;
 
 class BookCardItem extends React.Component<BookCardProps, BookCardState> {
-  epub: any;
   constructor(props: BookCardProps) {
     super(props);
     this.state = {

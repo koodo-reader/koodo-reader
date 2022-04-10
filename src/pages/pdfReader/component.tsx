@@ -11,7 +11,6 @@ import { Toaster } from "react-hot-toast";
 import { handleLinkJump } from "../../utils/readUtils/linkUtil";
 import { pdfMouseEvent } from "../../utils/serviceUtils/mouseEvent";
 class Viewer extends React.Component<ViewerProps, ViewerState> {
-  epub: any;
   constructor(props: ViewerProps) {
     super(props);
     this.state = {
@@ -25,7 +24,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       loading: true,
     };
   }
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.props.handleFetchBookmarks();
     this.props.handleFetchNotes();
     this.props.handleFetchBooks();

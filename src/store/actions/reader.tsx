@@ -67,17 +67,6 @@ export function flatChapter(chapters: any) {
   return newChapter;
 }
 
-export function handleFetchChapters(epub: any) {
-  return (dispatch: (arg0: { type: string; payload: any }) => void) => {
-    epub.loaded.navigation
-      .then((chapters: any) => {
-        dispatch(handleChapters(chapters.toc));
-      })
-      .catch(() => {
-        console.log("Error occurs");
-      });
-  };
-}
 export function handleFetchBookmarks() {
   return (
     dispatch: (arg0: { type: string; payload: BookmarkModel[] }) => void
