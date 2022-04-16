@@ -3,6 +3,7 @@ import React from "react";
 import "./searchBox.css";
 import SearchUtil from "../../utils/serviceUtils/searchUtil";
 import { SearchBoxProps } from "./interface";
+import StorageUtil from "../../utils/serviceUtils/storageUtil";
 
 class SearchBox extends React.Component<SearchBoxProps> {
   componentDidMount() {
@@ -104,6 +105,20 @@ class SearchBox extends React.Component<SearchBoxProps> {
               ? { width: this.props.width, height: this.props.height }
               : { paddingRight: "50px" }
           }
+          onCompositionStart={() => {
+            if (StorageUtil.getReaderConfig("isNavLocked") === "yes") {
+              return;
+            } else {
+              StorageUtil.setReaderConfig("isTempLocked", "yes");
+              StorageUtil.setReaderConfig("isNavLocked", "yes");
+            }
+          }}
+          onCompositionEnd={() => {
+            if (StorageUtil.getReaderConfig("isTempLocked") === "yes") {
+              StorageUtil.setReaderConfig("isNavLocked", "");
+              StorageUtil.setReaderConfig("isTempLocked", "");
+            }
+          }}
         />
         {this.props.isSearch ? (
           <span

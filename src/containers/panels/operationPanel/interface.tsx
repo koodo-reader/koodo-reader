@@ -26,7 +26,6 @@ export interface OperationPanelProps extends RouteComponentProps<any> {
 }
 
 export interface OperationPanelState {
-  isFullScreen: boolean;
   isBookmark: boolean;
   time: number;
   currentPercentage: number;

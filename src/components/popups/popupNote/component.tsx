@@ -10,8 +10,18 @@ import NoteModel from "../../../model/Note";
 import { Trans } from "react-i18next";
 import toast from "react-hot-toast";
 import { getHightlightCoords } from "../../../utils/fileUtils/pdfUtil";
+import { getPDFIframeDoc } from "../../../utils/serviceUtils/docUtil";
 declare var window: any;
-
+let classes = [
+  "color-0",
+  "color-1",
+  "color-2",
+  "color-3",
+  "line-0",
+  "line-1",
+  "line-2",
+  "line-3",
+];
 class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
   constructor(props: PopupNoteProps) {
     super(props);
@@ -23,6 +33,25 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
   }
   handleTag = (tag: string[]) => {
     this.setState({ tag });
+  };
+  removePDFHighlight = (selected: any, colorCode: string, noteKey: string) => {
+    let iWin = getPDFIframeDoc();
+    if (!iWin) return;
+    var pageIndex = selected.page;
+    if (!iWin.PDFViewerApplication.pdfViewer) return;
+    var page = iWin.PDFViewerApplication.pdfViewer.getPageView(pageIndex);
+    if (page && page.div && page.textLayer && page.textLayer.textLayerDiv) {
+      var pageElement =
+        colorCode.indexOf("color") > -1
+          ? page.textLayer.textLayerDiv
+          : page.div;
+      let noteElements = pageElement.querySelectorAll(".pdf-note");
+      noteElements.forEach((item: Element) => {
+        if (item.getAttribute("key") === noteKey) {
+          item.parentNode?.removeChild(item);
+        }
+      });
+    }
   };
   createNote() {
     let notes = (document.querySelector(".editor-box") as HTMLInputElement)
@@ -114,10 +143,12 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
   }
   handleClose = () => {
     let noteIndex = -1;
+    let note: NoteModel;
     if (this.props.noteKey) {
       this.props.notes.forEach((item, index) => {
         if (item.key === this.props.noteKey) {
           noteIndex = index;
+          note = item;
         }
       });
       if (noteIndex > -1) {
@@ -125,6 +156,11 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
         localforage.setItem("notes", this.props.notes).then(() => {
           this.props.handleOpenMenu(false);
           this.props.handleMenuMode("menu");
+          this.removePDFHighlight(
+            JSON.parse(note.range),
+            classes[note.color],
+            note.key
+          );
           toast.success(this.props.t("Delete Successfully"));
           this.props.handleMenuMode("highlight");
           this.props.handleFetchNotes();

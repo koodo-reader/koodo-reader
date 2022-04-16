@@ -169,7 +169,7 @@ class ProgressPanel extends React.Component<
             type="text"
             name="jumpPage"
             id="jumpPage"
-            defaultValue={
+            value={
               StorageUtil.getReaderConfig("readerMode") !== "double"
                 ? this.state.currentPage
                 : this.state.currentPage * 2 - 1

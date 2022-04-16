@@ -157,6 +157,18 @@ const createMainWin = () => {
       createMainWin();
     }
   });
+  ipcMain.handle("enter-fullscreen", () => {
+    if (readerWindow) {
+      readerWindow.setFullScreen(true);
+      console.log("enter full");
+    }
+  });
+  ipcMain.handle("exit-fullscreen", () => {
+    if (readerWindow) {
+      readerWindow.setFullScreen(false);
+      console.log("exit full");
+    }
+  });
   ipcMain.handle("switch-moyu", (event, arg) => {
     let id;
     if (store.get("isPreventSleep") === "yes") {

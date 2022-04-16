@@ -125,7 +125,7 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     });
   };
 
-  showHighlight = (selected: any, colorCode: string, noteKey: string) => {
+  showPDFHighlight = (selected: any, colorCode: string, noteKey: string) => {
     let iWin = getPDFIframeDoc();
     if (!iWin) return;
     var pageIndex = selected.page;
@@ -163,6 +163,7 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
             "px; z-index:0;"
         );
         el?.setAttribute("key", noteKey);
+        el?.setAttribute("class", "pdf-note");
         el?.addEventListener("click", (event: any) => {
           this.handlePDFClick(event);
         });
@@ -171,6 +172,7 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
       });
     }
   };
+
   handleClickHighlighter = (key: string) => {
     let dialog: HTMLInputElement | null = document.querySelector(".editor-box");
     if (!dialog) return;
@@ -259,7 +261,7 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
         if (item.bookKey === this.props.currentBook.key) {
           try {
             if (this.props.currentBook.format === "PDF") {
-              this.showHighlight(
+              this.showPDFHighlight(
                 JSON.parse(item.range),
                 classes[item.color],
                 item.key
