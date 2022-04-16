@@ -23,6 +23,8 @@ const Router = () => {
         i18n.changeLanguage("cht");
       } else if (navigator.language.startsWith("ru")) {
         i18n.changeLanguage("ru");
+      } else if (navigator.language.startsWith("jp")) {
+        i18n.changeLanguage("jp");
       } else if (navigator.language.startsWith("fr")) {
         i18n.changeLanguage("fr");
       } else if (navigator.language.startsWith("es")) {

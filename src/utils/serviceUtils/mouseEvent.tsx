@@ -77,11 +77,27 @@ const handleShortcut = (event: any, keyCode: number) => {
       event.preventDefault();
       window.require("electron").ipcRenderer.invoke("hide-reader", "ping");
     }
-    lock = true;
-    setTimeout(function () {
-      lock = false;
-    }, throttleTime);
-    return false;
+  }
+  if (keyCode === 27) {
+    if (isElectron) {
+      StorageUtil.setReaderConfig("isFullscreen", "no");
+    }
+  }
+  if (keyCode === 122) {
+    if (isElectron) {
+      event.preventDefault();
+      if (StorageUtil.getReaderConfig("isFullscreen") === "yes") {
+        window
+          .require("electron")
+          .ipcRenderer.invoke("exit-fullscreen", "ping");
+        StorageUtil.setReaderConfig("isFullscreen", "no");
+      } else {
+        window
+          .require("electron")
+          .ipcRenderer.invoke("enter-fullscreen", "ping");
+        StorageUtil.setReaderConfig("isFullscreen", "yes");
+      }
+    }
   }
   if (keyCode === 123) {
     if (isElectron) {
@@ -92,12 +108,12 @@ const handleShortcut = (event: any, keyCode: number) => {
       );
       window.require("electron").ipcRenderer.invoke("switch-moyu", "ping");
     }
-    lock = true;
-    setTimeout(function () {
-      lock = false;
-    }, throttleTime);
-    return false;
   }
+  lock = true;
+  setTimeout(function () {
+    lock = false;
+  }, throttleTime);
+  return false;
 };
 
 const gesture = (rendition: any, type: string) => {
