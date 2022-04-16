@@ -142,9 +142,6 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
               onClick={() => {
                 this.handleJump();
               }}
-              onTouchStart={() => {
-                this.handleJump();
-              }}
             >
               <EmptyCover
                 {...{
@@ -160,9 +157,6 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
               src={this.props.book.cover}
               alt=""
               onClick={() => {
-                this.handleJump();
-              }}
-              onTouchStart={() => {
                 this.handleJump();
               }}
             />

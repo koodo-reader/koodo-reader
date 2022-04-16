@@ -171,25 +171,24 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         this.props.currentBook.format === "EPUB" ? false : true
       )
     );
-    //epub定位问题
-    if (this.props.currentBook.format !== "EPUB") {
-      let bookLocation: {
-        text: string;
-        count: string;
-        chapterTitle: string;
-        percentage: string;
-        cfi: string;
-      } = RecordLocation.getHtmlLocation(this.props.currentBook.key);
-      await rendition.goToPosition(
-        JSON.stringify({
-          text: bookLocation.text,
-          chapterTitle: bookLocation.chapterTitle,
-          count: bookLocation.count,
-          percentage: bookLocation.percentage,
-          cfi: bookLocation.cfi,
-        })
-      );
-    }
+
+    let bookLocation: {
+      text: string;
+      count: string;
+      chapterTitle: string;
+      percentage: string;
+      cfi: string;
+    } = RecordLocation.getHtmlLocation(this.props.currentBook.key);
+    await rendition.goToPosition(
+      JSON.stringify({
+        text: bookLocation.text,
+        chapterTitle: bookLocation.chapterTitle,
+        count: bookLocation.count,
+        percentage: bookLocation.percentage,
+        cfi: bookLocation.cfi,
+      })
+    );
+
     rendition.on("rendered", () => {
       let bookLocation: { text: string; count: string; chapterTitle: string } =
         RecordLocation.getHtmlLocation(this.props.currentBook.key);
@@ -206,18 +205,21 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         this.setState({
           chapter:
             bookLocation.chapterTitle ||
-            this.props.htmlBook.flattenChapters[0].label,
-          chapterIndex: bookLocation.chapterTitle
-            ? _.findLastIndex(
-                this.props.htmlBook.flattenChapters.map((item) => {
-                  item.label = item.label.trim();
-                  return item;
-                }),
-                {
-                  label: bookLocation.chapterTitle.trim(),
-                }
-              )
-            : 0,
+            (this.props.htmlBook
+              ? this.props.htmlBook.flattenChapters[0].label
+              : "Unknown Chapter"),
+          chapterIndex:
+            bookLocation.chapterTitle && this.props.htmlBook
+              ? _.findLastIndex(
+                  this.props.htmlBook.flattenChapters.map((item) => {
+                    item.label = item.label.trim();
+                    return item;
+                  }),
+                  {
+                    label: bookLocation.chapterTitle.trim(),
+                  }
+                )
+              : 0,
         });
       }
       tsTransform();
@@ -478,6 +480,10 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     reader.readAsText(blob, "UTF-8");
   };
   render() {
+    let extraMargin =
+      this.props.currentBook.format === "EPUB"
+        ? (document.body.clientWidth - 2 * this.state.margin - 20) / 24
+        : 0;
     return (
       <>
         <div
@@ -490,10 +496,10 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
               ? {
                   left: `calc(50vw - ${
                     270 * parseFloat(this.state.scale)
-                  }px + 9px)`,
+                  }px + 20px)`,
                   right: `calc(50vw - ${
                     270 * parseFloat(this.state.scale)
-                  }px + 7px)`,
+                  }px + 15px)`,
                   overflowY: "scroll",
                   overflowX: "hidden",
                 }
@@ -508,8 +514,8 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
                 }
               : this.state.readerMode === "double"
               ? {
-                  left: this.state.margin + 10 + "px",
-                  right: this.state.margin + 10 + "px",
+                  left: this.state.margin + 10 - extraMargin + "px",
+                  right: this.state.margin + 10 - extraMargin + "px",
                 }
               : {}
           }

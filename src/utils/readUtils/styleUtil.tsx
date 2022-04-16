@@ -81,7 +81,7 @@ class styleUtil {
           : ""
       };margin-bottom: ${
         StorageUtil.getReaderConfig("paraSpacing") || 0
-      }px !important;padding:0;word-wrap: break-word;`;
+      }px !important;padding:0px;word-wrap: break-word;`;
     } else {
       return {
         "a, article, cite, code, div, li, p, pre, span, table, body": {
@@ -142,6 +142,9 @@ class styleUtil {
           "margin-bottom": `${
             StorageUtil.getReaderConfig("paraSpacing") || 0
           }px !important`,
+        },
+        body: {
+          padding: "0px !important",
         },
       };
     }
