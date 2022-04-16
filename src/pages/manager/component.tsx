@@ -13,7 +13,7 @@ import { Trans } from "react-i18next";
 import StorageUtil from "../../utils/serviceUtils/storageUtil";
 import AddFavorite from "../../utils/readUtils/addFavorite";
 import SettingDialog from "../../components/dialogs/settingDialog";
-import { isMobileOnly } from "react-device-detect";
+import { isMobile } from "react-device-detect";
 import { Route, Switch, Redirect } from "react-router-dom";
 import { routes } from "../../router/routes";
 import Arrow from "../../components/arrow";
@@ -85,7 +85,7 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
   };
   render() {
     let { books } = this.props;
-    if (isMobileOnly) {
+    if (isMobile) {
       return (
         <>
           <p className="waring-title">

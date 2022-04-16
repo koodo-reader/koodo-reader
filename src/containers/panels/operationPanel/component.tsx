@@ -22,8 +22,6 @@ class OperationPanel extends React.Component<
   constructor(props: OperationPanelProps) {
     super(props);
     this.state = {
-      isFullScreen:
-        StorageUtil.getReaderConfig("isFullScreen") === "yes" ? true : false, // 是否进入全屏模式
       isBookmark: false, // 是否添加书签
       time: 0,
       currentPercentage: RecordLocation.getHtmlLocation(
@@ -38,49 +36,6 @@ class OperationPanel extends React.Component<
   }
 
   componentDidMount() {
-    const exitHandler = () => {
-      if (
-        document.webkitIsFullScreen ||
-        document.mozFullScreen ||
-        document.msFullscreenElement !== null
-      ) {
-        this.setState({ isFullScreen: !this.state.isFullScreen });
-        StorageUtil.setReaderConfig(
-          "isFullScreen",
-          this.state.isFullScreen ? "no" : "yes"
-        );
-      }
-    };
-    if (document.addEventListener) {
-      document.addEventListener(
-        "fullscreenchange",
-        () => {
-          exitHandler();
-        },
-        false
-      );
-      document.addEventListener(
-        "mozfullscreenchange",
-        () => {
-          exitHandler();
-        },
-        false
-      );
-      document.addEventListener(
-        "MSFullscreenChange",
-        () => {
-          exitHandler();
-        },
-        false
-      );
-      document.addEventListener(
-        "webkitfullscreenchange",
-        () => {
-          exitHandler();
-        },
-        false
-      );
-    }
     this.props.htmlBook.rendition.on("page-changed", async () => {
       this.speed = Date.now() - this.timeStamp;
       this.timeStamp = Date.now();
@@ -95,13 +50,13 @@ class OperationPanel extends React.Component<
   }
   // 点击切换全屏按钮触发
   handleScreen() {
-    !this.state.isFullScreen
+    StorageUtil.getReaderConfig("isFullscreen") !== "yes"
       ? this.handleFullScreen()
       : this.handleExitFullScreen();
   }
   // 点击退出按钮的处理程序
   handleExit() {
-    StorageUtil.setReaderConfig("isFullScreen", "no");
+    StorageUtil.setReaderConfig("isFullscreen", "no");
     this.props.handleReadingState(false);
     window.speechSynthesis.cancel();
     ReadingTime.setTime(this.props.currentBook.key, this.props.time);
@@ -115,16 +70,8 @@ class OperationPanel extends React.Component<
     let de: any = document.documentElement;
     if (de.requestFullscreen) {
       de.requestFullscreen();
-    } else if (de.mozRequestFullScreen) {
-      de.mozRequestFullScreen();
-    } else if (de.webkitRequestFullscreen) {
-      de.webkitRequestFullscreen();
-    } else if (de.msRequestFullscreen) {
-      de.msRequestFullscreen();
     }
-
-    // this.setState({ isFullScreen: true });
-    // StorageUtil.setReaderConfig("isFullScreen", "yes");
+    StorageUtil.setReaderConfig("isFullscreen", "yes");
   }
   // 退出全屏模式
   handleExitFullScreen() {
@@ -133,16 +80,8 @@ class OperationPanel extends React.Component<
 
     if (document.exitFullscreen) {
       document.exitFullscreen();
-    } else if (document.msExitFullscreen) {
-      document.msExitFullscreen();
-    } else if (document.mozCancelFullScreen) {
-      document.mozCancelFullScreen();
-    } else if (document.webkitExitFullscreen) {
-      document.webkitExitFullscreen();
     }
-
-    // this.setState({ isFullScreen: false });
-    // StorageUtil.setReaderConfig("isFullScreen", "no");
+    StorageUtil.setReaderConfig("isFullscreen", "no");
   }
   handleAddBookmark = async () => {
     let bookKey = this.props.currentBook.key;
@@ -244,7 +183,7 @@ class OperationPanel extends React.Component<
           }}
         >
           <span className="icon-fullscreen enter-fullscreen-icon"></span>
-          {!this.state.isFullScreen ? (
+          {StorageUtil.getReaderConfig("isFullscreen") !== "yes" ? (
             <span className="enter-fullscreen-text">
               <Trans>Enter Fullscreen</Trans>
             </span>

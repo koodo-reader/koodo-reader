@@ -85,10 +85,11 @@ export const langList = [
   { label: "繁體中文", value: "cht" },
   { label: "English", value: "en" },
   { label: "русский", value: "ru" },
-  { label: "فارسی", value: "fa" },
   { label: "Español", value: "es" },
   { label: "Français", value: "fr" },
   { label: "Português", value: "ptBR" },
+  { label: "فارسی", value: "fa" },
+  { label: "日本語", value: "jp" },
 ];
 
 export const searchList = [
