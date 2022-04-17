@@ -25,7 +25,7 @@ import { getIframeDoc } from "../../utils/serviceUtils/docUtil";
 import { tsTransform } from "../../utils/serviceUtils/langUtil";
 
 declare var window: any;
-
+let lock = false; //prevent from clicking too fasts
 const {
   MobiRender,
   Azw3Render,
@@ -74,7 +74,21 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     var doit;
     window.addEventListener("resize", () => {
       clearTimeout(doit);
-      doit = setTimeout(this.handleRenderBook, 100);
+      let reader = document.querySelector("#page-area");
+      //解决文字遮挡问题
+      if (
+        reader &&
+        reader.getAttribute("style") &&
+        reader.getAttribute("style")!.indexOf("width") > -1
+      ) {
+        reader.setAttribute(
+          "style",
+          reader
+            .getAttribute("style")!
+            .substring(0, reader.getAttribute("style")!.indexOf("width"))
+        );
+      }
+      doit = setTimeout(this.handleRenderBook, 1000);
     });
   }
   handlePageWidth = () => {
@@ -88,18 +102,21 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           (parseInt(reader.clientWidth + "") % 2
             ? parseInt(reader.clientWidth + "") - 1
             : parseInt(reader.clientWidth + "")) +
-          "px"
+          "px; "
       );
     }
   };
   handleRenderBook = () => {
+    if (lock) return;
     let { key, path, format, name } = this.props.currentBook;
     this.props.handleHtmlBook(null);
     let doc = getIframeDoc();
     if (doc && this.state.rendition) {
       this.state.rendition.removeContent();
     }
+
     this.handlePageWidth();
+
     window.rangy.init();
     BookUtil.fetchBook(key, true, path).then((result) => {
       if (!result) {
@@ -164,7 +181,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       pageWidth: rendition.getPageSize().width,
       pageHeight: rendition.getPageSize().height,
     });
-
     StyleUtil.addDefaultCss();
     rendition.setStyle(
       StyleUtil.getCustomCss(
@@ -236,6 +252,11 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         var rect = doc!.getSelection()!.getRangeAt(0).getBoundingClientRect();
         this.setState({ rect });
       });
+      lock = true;
+      setTimeout(function () {
+        lock = false;
+      }, 1000);
+      return false;
     });
   };
   handleCbr = async (result: ArrayBuffer) => {

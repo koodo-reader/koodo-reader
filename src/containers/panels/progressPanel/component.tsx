@@ -190,7 +190,7 @@ class ProgressPanel extends React.Component<
             onBlur={(event) => {
               this.handleJumpChapter(event);
             }}
-            defaultValue={this.state.currentChapterIndex}
+            value={this.state.currentChapterIndex}
           />
           <span>/ {this.props.htmlBook.flattenChapters.length}</span>
         </p>
