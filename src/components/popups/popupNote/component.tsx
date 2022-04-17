@@ -156,11 +156,14 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
         localforage.setItem("notes", this.props.notes).then(() => {
           this.props.handleOpenMenu(false);
           this.props.handleMenuMode("menu");
-          this.removePDFHighlight(
-            JSON.parse(note.range),
-            classes[note.color],
-            note.key
-          );
+          if (this.props.currentBook.format === "PDF") {
+            this.removePDFHighlight(
+              JSON.parse(note.range),
+              classes[note.color],
+              note.key
+            );
+          }
+
           toast.success(this.props.t("Delete Successfully"));
           this.props.handleMenuMode("highlight");
           this.props.handleFetchNotes();
