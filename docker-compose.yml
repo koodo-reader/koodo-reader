@@ -1,6 +1,10 @@
-version: "3"
+version: '3.5'
 services:
   koodo:
-    build: .
+    container_name: koodo
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
-      - "80:80"
+      - "80:80/tcp"
+    restart: unless-stopped
