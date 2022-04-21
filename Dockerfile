@@ -1,4 +1,4 @@
-FROM node:14-slim as builder
+FROM node:18-slim as builder
 RUN apt-get update && apt-get install -y jq curl wget python
 WORKDIR /app
 
