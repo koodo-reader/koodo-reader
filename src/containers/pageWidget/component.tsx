@@ -11,7 +11,6 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
       isSingle:
         StorageUtil.getReaderConfig("readerMode") &&
         StorageUtil.getReaderConfig("readerMode") !== "double",
-      currentChapter: "",
       prevPage: 0,
       nextPage: 0,
       scale: StorageUtil.getReaderConfig("scale") || 1,
@@ -22,17 +21,18 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
   }
 
   async UNSAFE_componentWillReceiveProps(nextProps: BackgroundProps) {
-    if (nextProps.htmlBook) {
-      let pageInfo = await nextProps.htmlBook.rendition.getProgress();
+    if (nextProps.htmlBook !== this.props.htmlBook) {
+      nextProps.htmlBook.rendition.on("page-changed", async () => {
+        let pageInfo = await nextProps.htmlBook.rendition.getProgress();
 
-      this.setState({
-        currentChapter: this.props.currentChapter,
-        prevPage: this.state.isSingle
-          ? pageInfo.currentPage
-          : pageInfo.currentPage * 2 - 1,
-        nextPage: this.state.isSingle
-          ? pageInfo.currentPage
-          : pageInfo.currentPage * 2,
+        this.setState({
+          prevPage: this.state.isSingle
+            ? pageInfo.currentPage
+            : pageInfo.currentPage * 2 - 1,
+          nextPage: this.state.isSingle
+            ? pageInfo.currentPage
+            : pageInfo.currentPage * 2,
+        });
       });
     }
   }
@@ -48,7 +48,7 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
         }}
       >
         <div className="header-container">
-          {!this.state.isHideHeader && this.state.currentChapter && (
+          {!this.state.isHideHeader && this.props.currentChapter && (
             <p
               className="header-chapter-name"
               style={
@@ -60,7 +60,7 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
                   : {}
               }
             >
-              {this.state.currentChapter}
+              {this.props.currentChapter}
             </p>
           )}
           {!this.state.isHideHeader && !this.state.isSingle && (

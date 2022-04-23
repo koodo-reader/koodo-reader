@@ -307,7 +307,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
                 }
           }
         >
-          <NavigationPanel {...{ time: this.state.time }} />
+          <NavigationPanel />
         </div>
         <div
           className="progress-panel-container"
@@ -341,7 +341,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
             <OperationPanel {...{ time: this.state.time }} />
           )}
         </div>
-        <PageWidget {...{ time: this.state.time }} />
+        <PageWidget />
       </div>
     );
   }

@@ -10,7 +10,6 @@ export interface ContentListProps {
 export interface ContentListState {
   chapters: any;
   currentIndex: number;
-  currentChapter: string;
   isCollapsed: boolean;
   isExpandContent: boolean;
 }

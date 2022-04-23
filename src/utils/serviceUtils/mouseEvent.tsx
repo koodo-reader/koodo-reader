@@ -149,7 +149,7 @@ const handleLocation = (key: string, rendition: any) => {
     );
   }, 500);
 };
-const bindHtmlEvent = (
+export const bindHtmlEvent = (
   rendition: any,
   doc: any,
   key: string = "",

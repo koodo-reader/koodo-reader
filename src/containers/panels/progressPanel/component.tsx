@@ -13,9 +13,6 @@ class ProgressPanel extends React.Component<
   constructor(props: ProgressPanelProps) {
     super(props);
     this.state = {
-      displayPercentage: this.props.percentage ? this.props.percentage : 0,
-      currentChapter: this.props.currentChapter,
-      currentChapterIndex: 0,
       currentPage: 0,
       totalPage: 0,
     };
@@ -27,45 +24,21 @@ class ProgressPanel extends React.Component<
       this.setState({
         currentPage: pageProgress.currentPage,
         totalPage: pageProgress.totalPage,
-        currentChapter: nextProps.currentChapter,
-        currentChapterIndex:
-          _.findIndex(
-            nextProps.htmlBook.flattenChapters.map((item) => {
-              item.label = item.label.trim();
-              return item;
-            }),
-            {
-              label: nextProps.currentChapter.trim(),
-            }
-          ) > -1
-            ? _.findIndex(
-                nextProps.htmlBook.flattenChapters.map((item) => {
-                  item.label = item.label.trim();
-                  return item;
-                }),
-                {
-                  label: nextProps.currentChapter.trim(),
-                }
-              )
-            : 0,
-        displayPercentage:
-          _.findIndex(
-            nextProps.htmlBook.flattenChapters.map((item) => {
-              item.label = item.label.trim();
-              return item;
-            }),
-            {
-              label: nextProps.currentChapter.trim(),
-            }
-          ) /
-          nextProps.htmlBook.flattenChapters.map((item) => {
-            item.label = item.label.trim();
-            return item;
-          }).length,
+        // displayPercentage:
+        //   _.findIndex(
+        //     nextProps.htmlBook.flattenChapters.map((item) => {
+        //       item.label = item.label.trim();
+        //       return item;
+        //     }),
+        //     {
+        //       label: nextProps.currentChapter.trim(),
+        //     }
+        //   ) /
+        //   nextProps.htmlBook.flattenChapters.map((item) => {
+        //     item.label = item.label.trim();
+        //     return item;
+        //   }).length,
       });
-    }
-    if (nextProps.percentage) {
-      this.setState({ displayPercentage: nextProps.percentage });
     }
   }
 
@@ -78,10 +51,6 @@ class ProgressPanel extends React.Component<
         ].label
       );
     }
-  };
-  //使进度百分比随拖动实时变化
-  onProgressInput = (event: any) => {
-    this.setState({ displayPercentage: event.target.value / 100 });
   };
   nextChapter = () => {
     if (this.props.htmlBook.flattenChapters.length > 0) {
@@ -149,20 +118,19 @@ class ProgressPanel extends React.Component<
     if (!this.props.htmlBook) {
       return <div className="progress-panel">Loading</div>;
     }
-
     return (
       <div className="progress-panel">
-        <p className="progress-text" style={{ marginTop: 10 }}>
-          <span>
-            <Trans>Progress</Trans>:{" "}
-            {Math.round(
-              this.state.displayPercentage > 1
-                ? 100
-                : this.state.displayPercentage * 100
-            )}
-            %&nbsp;&nbsp;&nbsp;
-          </span>
-        </p>
+        {this.props.percentage && (
+          <p className="progress-text" style={{ marginTop: 10 }}>
+            <span>
+              <Trans>Progress</Trans>:{" "}
+              {Math.round(
+                this.props.percentage > 1 ? 100 : this.props.percentage * 100
+              )}
+              %&nbsp;&nbsp;&nbsp;
+            </span>
+          </p>
+        )}
         <p className="progress-text" style={{ marginTop: 0 }}>
           <Trans>Pages</Trans>
           <input
@@ -190,14 +158,14 @@ class ProgressPanel extends React.Component<
             onBlur={(event) => {
               this.handleJumpChapter(event);
             }}
-            value={this.state.currentChapterIndex}
+            value={this.props.currentChapterIndex}
           />
           <span>/ {this.props.htmlBook.flattenChapters.length}</span>
         </p>
         <div>
           <input
             className="input-progress"
-            defaultValue={Math.round(this.state.displayPercentage * 100)}
+            defaultValue={Math.round(this.props.percentage * 100)}
             type="range"
             max="100"
             min="0"
@@ -207,9 +175,6 @@ class ProgressPanel extends React.Component<
             }}
             onTouchEnd={(event) => {
               this.onProgressChange(event);
-            }}
-            onChange={(event) => {
-              this.onProgressInput(event);
             }}
             style={{ width: 300, left: 50, top: 73 }}
           />

@@ -77,6 +77,7 @@ export type stateType = {
     chapters: any[];
     noteKey: string;
     currentChapter: string;
+    currentChapterIndex: number;
     originalText: string;
     htmlBook: HtmlBookModel;
   };

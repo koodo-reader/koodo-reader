@@ -38,11 +38,12 @@ class ActionDialog extends React.Component<ActionDialogProps> {
           onMouseLeave={() => {
             this.props.handleActionDialog(false);
           }}
+          onMouseEnter={() => {
+            this.props.handleActionDialog(true);
+          }}
           style={{
             left: this.props.left,
             top: this.props.top,
-            maxHeight: "45px",
-            paddingTop: "3px",
           }}
         >
           <div className="action-dialog-actions-container">

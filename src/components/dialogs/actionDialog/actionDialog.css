@@ -1,6 +1,6 @@
 .action-dialog-container {
   width: 200px;
-  height: 340px;
+  /* height: 340px; */
   opacity: 1;
   position: fixed;
   z-index: 9;
@@ -8,6 +8,7 @@
   border-radius: 5px;
   overflow: hidden;
   overflow-x: hidden;
+  padding-bottom: 5px;
 }
 
 .action-dialog-actions-container {

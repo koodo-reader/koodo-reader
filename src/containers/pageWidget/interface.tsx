@@ -4,15 +4,14 @@ export interface BackgroundProps {
   currentBook: BookModel;
   locations: any;
   currentChapter: string;
+  currentChapterIndex: number;
   htmlBook: HtmlBookModel;
-  time: number;
   isShowBookmark: boolean;
 }
 export interface BackgroundState {
   isSingle: boolean;
   isHideFooter: boolean;
   isHideHeader: boolean;
-  currentChapter: string;
   prevPage: number;
   nextPage: number;
   scale: string;
