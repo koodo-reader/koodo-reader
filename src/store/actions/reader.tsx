@@ -24,6 +24,9 @@ export function handleHtmlBook(htmlBook: HtmlBookModel) {
 export function handleCurrentChapter(currentChapter: string) {
   return { type: "HANDLE_CURRENT_CHAPTER", payload: currentChapter };
 }
+export function handleCurrentChapterIndex(currentChapterIndex: number) {
+  return { type: "HANDLE_CURRENT_CHAPTER_INDEX", payload: currentChapterIndex };
+}
 export function handleChapters(chapters: any) {
   return { type: "HANDLE_CHAPTERS", payload: chapters };
 }

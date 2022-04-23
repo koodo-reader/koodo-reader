@@ -5,6 +5,7 @@ const initState = {
   digests: [],
   chapters: null,
   currentChapter: "",
+  currentChapterIndex: 0,
 
   color: parseInt(StorageUtil.getReaderConfig("highlightIndex"))
     ? parseInt(StorageUtil.getReaderConfig("highlightIndex"))
@@ -37,6 +38,11 @@ export function reader(
       return {
         ...state,
         currentChapter: action.payload,
+      };
+    case "HANDLE_CURRENT_CHAPTER_INDEX":
+      return {
+        ...state,
+        currentChapterIndex: action.payload,
       };
     case "HANDLE_ORIGINAL_TEXT":
       return {

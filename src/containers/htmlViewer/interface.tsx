@@ -20,6 +20,9 @@ export interface ViewerProps {
   handleFetchNotes: () => void;
   handleFetchBookmarks: () => void;
   handleCurrentChapter: (currentChapter: string) => void;
+  handleCurrentChapterIndex: (currentChapterIndex: number) => void;
+  handlePercentage: (percentage: number) => void;
+  handleFetchPercentage: (book: BookModel) => void;
 }
 export interface ViewerState {
   key: string;
@@ -27,6 +30,7 @@ export interface ViewerState {
   isFirst: boolean;
   chapterTitle: string;
   margin: number;
+  extraMargin: number;
   readerMode: string;
   chapter: string;
   chapterIndex: number;
