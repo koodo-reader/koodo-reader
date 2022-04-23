@@ -11,7 +11,6 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
       chapters: [],
       isCollapsed: true,
       currentIndex: -1,
-      currentChapter: "",
       isExpandContent: StorageUtil.getReaderConfig("isExpandContent") === "yes",
     };
     this.handleJump = this.handleJump.bind(this);

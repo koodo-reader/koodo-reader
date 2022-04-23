@@ -243,6 +243,9 @@ class BookUtil {
             metadata.publisher,
             metadata.cover,
           ];
+          if (cover.indexOf("image") === -1) {
+            cover = "";
+          }
           break;
         case "mobi":
           let mobiRendition = new MobiRender(

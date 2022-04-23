@@ -227,13 +227,13 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     this.setState({ rect: null });
   };
   //渲染高亮
-  renderHighlighters = () => {
+  renderHighlighters = async () => {
     let highlighters: any = this.props.notes;
     if (!highlighters) return;
     let highlightersByChapter = highlighters.filter((item: any) => {
       return (
-        item.chapterIndex === this.props.chapterIndex &&
-        item.chapter === this.props.chapter &&
+        (item.chapterIndex === this.props.chapterIndex ||
+          item.chapter === this.props.chapter) &&
         item.bookKey === this.props.currentBook.key
       );
     });

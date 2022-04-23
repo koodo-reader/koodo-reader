@@ -33,12 +33,12 @@ class CardList extends React.Component<CardListProps, CardListStates> {
   handleShowDelete = (deleteKey: string) => {
     this.setState({ deleteKey });
   };
-  handleJump = (cfi: string, bookKey: string, percentage: number) => {
+  handleJump = (note: NoteModel) => {
     let { books } = this.props;
     let book: BookModel | null = null;
     //根据bookKey获取指定的book和epub
     for (let i = 0; i < books.length; i++) {
-      if (books[i].key === bookKey) {
+      if (books[i].key === note.bookKey) {
         book = books[i];
         break;
       }
@@ -49,12 +49,19 @@ class CardList extends React.Component<CardListProps, CardListStates> {
     }
 
     if (book.format === "PDF") {
-      let bookLocation = JSON.parse(cfi) || {};
+      let bookLocation = JSON.parse(note.cfi) || {};
       RecordLocation.recordPDFLocation(book.md5, bookLocation);
     } else {
-      let bookLocation = JSON.parse(cfi) || {};
+      let bookLocation: any = {};
+      //兼容1.4.2之前的版本
+      try {
+        bookLocation = JSON.parse(note.cfi) || {};
+      } catch (error) {
+        bookLocation.cfi = note.cfi;
+        bookLocation.chapterTitle = note.chapter;
+      }
       RecordLocation.recordHtmlLocation(
-        bookKey,
+        note.bookKey,
         bookLocation.text,
         bookLocation.chapterTitle,
         bookLocation.count,
@@ -153,7 +160,7 @@ class CardList extends React.Component<CardListProps, CardListStates> {
               </div>
               <div
                 onClick={() => {
-                  this.handleJump(item.cfi, item.bookKey, item.percentage);
+                  this.handleJump(item);
                 }}
               >
                 <div
