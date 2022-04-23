@@ -16,7 +16,10 @@ import Background from "../../components/background";
 import toast from "react-hot-toast";
 import StyleUtil from "../../utils/readUtils/styleUtil";
 import "./index.css";
-import { HtmlMouseEvent } from "../../utils/serviceUtils/mouseEvent";
+import {
+  bindHtmlEvent,
+  HtmlMouseEvent,
+} from "../../utils/serviceUtils/mouseEvent";
 import untar from "js-untar";
 import ImageViewer from "../../components/imageViewer";
 import _ from "underscore";
@@ -53,6 +56,13 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           .chapterTitle || "",
       readerMode: StorageUtil.getReaderConfig("readerMode") || "double",
       margin: parseInt(StorageUtil.getReaderConfig("margin")) || 30,
+      extraMargin:
+        this.props.currentBook.format === "EPUB"
+          ? (document.body.clientWidth -
+              2 * (parseInt(StorageUtil.getReaderConfig("margin")) || 30) -
+              20) /
+            24
+          : 0,
       chapterIndex: 0,
       chapter: "",
       pageWidth: 0,
@@ -87,6 +97,21 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
             .getAttribute("style")!
             .substring(0, reader.getAttribute("style")!.indexOf("width"))
         );
+        this.handlePageWidth();
+      }
+      if (this.props.currentBook.format === "EPUB") {
+        setTimeout(() => {
+          let doc = getIframeDoc();
+
+          bindHtmlEvent(
+            this.props.htmlBook.rendition,
+            doc,
+            this.props.currentBook.key,
+            this.state.readerMode
+          );
+        }, 500);
+
+        return;
       }
       doit = setTimeout(this.handleRenderBook, 1000);
     });
@@ -205,10 +230,9 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       })
     );
 
-    rendition.on("rendered", () => {
+    rendition.on("rendered", async () => {
       let bookLocation: { text: string; count: string; chapterTitle: string } =
         RecordLocation.getHtmlLocation(this.props.currentBook.key);
-      this.props.handleCurrentChapter(bookLocation.chapterTitle);
       if (this.props.currentBook.format.startsWith("CB")) {
         this.setState({
           chapter:
@@ -218,24 +242,29 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           chapterIndex: parseInt(bookLocation.count) || 0,
         });
       } else {
+        let chapter =
+          bookLocation.chapterTitle ||
+          (this.props.htmlBook
+            ? this.props.htmlBook.flattenChapters[0].label
+            : "Unknown Chapter");
+        let chapterIndex =
+          bookLocation.chapterTitle && this.props.htmlBook
+            ? _.findLastIndex(
+                this.props.htmlBook.flattenChapters.map((item) => {
+                  item.label = item.label.trim();
+                  return item;
+                }),
+                {
+                  label: bookLocation.chapterTitle.trim(),
+                }
+              )
+            : 0;
+        this.props.handleCurrentChapter(chapter);
+        this.props.handleCurrentChapterIndex(chapterIndex);
+        this.props.handleFetchPercentage(this.props.currentBook);
         this.setState({
-          chapter:
-            bookLocation.chapterTitle ||
-            (this.props.htmlBook
-              ? this.props.htmlBook.flattenChapters[0].label
-              : "Unknown Chapter"),
-          chapterIndex:
-            bookLocation.chapterTitle && this.props.htmlBook
-              ? _.findLastIndex(
-                  this.props.htmlBook.flattenChapters.map((item) => {
-                    item.label = item.label.trim();
-                    return item;
-                  }),
-                  {
-                    label: bookLocation.chapterTitle.trim(),
-                  }
-                )
-              : 0,
+          chapter,
+          chapterIndex,
         });
       }
       tsTransform();
@@ -501,10 +530,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     reader.readAsText(blob, "UTF-8");
   };
   render() {
-    let extraMargin =
-      this.props.currentBook.format === "EPUB"
-        ? (document.body.clientWidth - 2 * this.state.margin - 20) / 24
-        : 0;
     return (
       <>
         <div
@@ -535,8 +560,8 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
                 }
               : this.state.readerMode === "double"
               ? {
-                  left: this.state.margin + 10 - extraMargin + "px",
-                  right: this.state.margin + 10 - extraMargin + "px",
+                  left: this.state.margin + 10 - this.state.extraMargin + "px",
+                  right: this.state.margin + 10 - this.state.extraMargin + "px",
                 }
               : {}
           }
