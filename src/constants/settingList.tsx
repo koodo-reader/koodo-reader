@@ -90,6 +90,9 @@ export const langList = [
   { label: "Português", value: "ptBR" },
   { label: "فارسی", value: "fa" },
   { label: "日本語", value: "jp" },
+  { label: "čeština", value: "cs" },
+  { label: "Deutsch", value: "de" },
+  { label: "한국인", value: "ko" },
 ];
 
 export const searchList = [

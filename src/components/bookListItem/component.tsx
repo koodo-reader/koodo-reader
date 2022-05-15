@@ -139,10 +139,14 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
             />
           </div>
         )}
-        {this.props.isSelectBook && this.props.isSelected ? (
+        {this.props.isSelectBook ? (
           <span
             className="icon-message book-selected-icon"
-            style={{ left: "35px", bottom: "5px" }}
+            style={
+              this.props.isSelected
+                ? { left: "35px", bottom: "5px" }
+                : { left: "35px", bottom: "5px", color: "#eee" }
+            }
           ></span>
         ) : null}
         <p
