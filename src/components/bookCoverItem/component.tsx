@@ -175,19 +175,14 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
               <Trans>Empty</Trans>
             )}
           </div>
-          {this.state.isFavorite && !this.props.isSelectBook ? (
-            <span
-              className="icon-love book-loved-icon"
-              onClick={() => {
-                this.handleCancelLoveBook();
-              }}
-              style={{ right: "274px", bottom: "25px" }}
-            ></span>
-          ) : null}
-          {this.props.isSelectBook && this.props.isSelected ? (
+          {this.props.isSelectBook ? (
             <span
               className="icon-message book-selected-icon"
-              style={{ right: "274px", bottom: "25px" }}
+              style={
+                this.props.isSelected
+                  ? { right: "274px", bottom: "25px" }
+                  : { right: "274px", bottom: "25px", color: "#eee" }
+              }
             ></span>
           ) : null}
           {this.state.isOpenConfig && !this.props.isSelectBook ? (

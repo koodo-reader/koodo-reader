@@ -152,6 +152,8 @@
 .nav-search-list-item {
   padding: 8px;
   cursor: pointer;
+  word-break: break-all;
+  word-wrap: break-word;
 }
 .content-search-text {
   color: red !important;
