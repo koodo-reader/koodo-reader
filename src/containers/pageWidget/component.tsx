@@ -21,7 +21,7 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
   }
 
   async UNSAFE_componentWillReceiveProps(nextProps: BackgroundProps) {
-    if (nextProps.htmlBook !== this.props.htmlBook) {
+    if (nextProps.htmlBook !== this.props.htmlBook && nextProps.htmlBook) {
       nextProps.htmlBook.rendition.on("page-changed", async () => {
         let pageInfo = await nextProps.htmlBook.rendition.getProgress();
 

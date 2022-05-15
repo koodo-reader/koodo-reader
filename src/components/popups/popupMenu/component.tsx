@@ -291,6 +291,7 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
   };
   //控制弹窗
   openMenu = () => {
+    console.log("openmenu");
     this.setState({ deleteKey: "" });
     let pageArea = document.getElementById("page-area");
     if (!pageArea) return;

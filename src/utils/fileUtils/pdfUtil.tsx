@@ -55,7 +55,9 @@ export const getPDFCover = (file: ArrayBuffer) => {
     pdfjsLib
       .getDocument({ data: file })
       .promise.then((pdfDoc: any) => {
+        console.log(pdfDoc, "pdfDoc");
         pdfDoc.getPage(1).then((page: any) => {
+          console.log(page, "page");
           var scale = 1.5;
           var viewport = page.getViewport({
             scale: scale,

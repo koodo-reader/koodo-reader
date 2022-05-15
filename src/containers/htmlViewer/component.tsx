@@ -102,7 +102,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       if (this.props.currentBook.format === "EPUB") {
         setTimeout(() => {
           let doc = getIframeDoc();
-
+          console.log(this.props.htmlBook.rendition);
           bindHtmlEvent(
             this.props.htmlBook.rendition,
             doc,
@@ -570,7 +570,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
             .props.currentBook.key ? (
           <Background />
         ) : null}
-        {this.props.htmlBook && (
+        {this.props.htmlBook ? (
           <PopupMenu
             {...{
               rendition: this.props.htmlBook.rendition,
@@ -581,6 +581,8 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
               chapter: this.state.chapter,
             }}
           />
+        ) : (
+          <span className="test">test</span>
         )}
         {this.props.htmlBook && (
           <ImageViewer

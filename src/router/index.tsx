@@ -33,6 +33,10 @@ const Router = () => {
         i18n.changeLanguage("ptBR");
       } else if (navigator.language.startsWith("fa")) {
         i18n.changeLanguage("fa");
+      } else if (navigator.language.startsWith("cs")) {
+        i18n.changeLanguage("cs");
+      } else if (navigator.language.startsWith("de")) {
+        i18n.changeLanguage("de");
       } else {
         i18n.changeLanguage("en");
       }

@@ -160,7 +160,10 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
   };
 
   handleBook = (file: any, md5: string) => {
-    let extension = file.name.split(".").reverse()[0];
+    let extension = (file.name as string)
+      .split(".")
+      .reverse()[0]
+      .toLocaleLowerCase();
     let bookName = file.name.substr(0, file.name.length - extension.length - 1);
     let result: BookModel | Boolean;
     return new Promise<void>((resolve, reject) => {
