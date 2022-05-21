@@ -1,5 +1,5 @@
 export interface ModeControlProps {
-  renderFunc: () => void;
+  renderBookFunc: () => void;
   t: (title: string) => string;
 }
 

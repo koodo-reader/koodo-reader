@@ -1,6 +1,6 @@
 export interface ThemeListProps {
   t: (title: string) => string;
-  renderFunc: () => void;
+  renderBookFunc: () => void;
 }
 
 export interface ThemeListState {
