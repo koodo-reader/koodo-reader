@@ -9,6 +9,8 @@ import StorageUtil from "../../../utils/serviceUtils/storageUtil";
 import ReadingTime from "../../../utils/readUtils/readingTime";
 import { withRouter } from "react-router-dom";
 import toast from "react-hot-toast";
+import { HtmlMouseEvent } from "../../../utils/serviceUtils/mouseEvent";
+import storageUtil from "../../../utils/serviceUtils/storageUtil";
 declare var document: any;
 
 class OperationPanel extends React.Component<
@@ -46,6 +48,12 @@ class OperationPanel extends React.Component<
           1000,
       });
       this.props.handleShowBookmark(false);
+
+      HtmlMouseEvent(
+        this.props.htmlBook.rendition,
+        this.props.currentBook.key,
+        storageUtil.getReaderConfig("readerMode")
+      );
     });
   }
   // 点击切换全屏按钮触发

@@ -47,7 +47,7 @@ class SettingSwitch extends React.Component<
       );
       toast(this.props.t("Change Successfully"));
       setTimeout(() => {
-        this.props.renderFunc();
+        this.props.renderBookFunc();
       }, 500);
     });
   };

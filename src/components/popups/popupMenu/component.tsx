@@ -36,24 +36,10 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
 
   componentDidMount() {
     this.props.rendition.on("rendered", () => {
-      new Promise<void>((resolve, reject) => {
-        this.getHighlighter();
-        resolve();
-      }).then(() => {
-        this.renderHighlighters();
-      });
-      let doc = getIframeDoc();
-      if (!doc) return;
-      doc.addEventListener("mousedown", this.openMenu);
-      if (this.props.currentBook.format === "PDF") {
-        setTimeout(() => {
-          this.renderHighlighters();
-        }, 1000);
-
-        doc.addEventListener("mousewheel", () => {
-          this.renderHighlighters();
-        });
-      }
+      setTimeout(() => {
+        this.handleRenderHighlight();
+        this.props.handleRenderNoteFunc(this.handleRenderHighlight);
+      }, 500);
     });
   }
   UNSAFE_componentWillReceiveProps(nextProps: PopupMenuProps) {
@@ -68,6 +54,26 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
       );
     }
   }
+  handleRenderHighlight = () => {
+    new Promise<void>((resolve, reject) => {
+      this.getHighlighter();
+      resolve();
+    }).then(() => {
+      this.renderHighlighters();
+    });
+    let doc = getIframeDoc();
+    if (!doc) return;
+    doc.addEventListener("mousedown", this.openMenu);
+    if (this.props.currentBook.format === "PDF") {
+      setTimeout(() => {
+        this.renderHighlighters();
+      }, 1000);
+
+      doc.addEventListener("mousewheel", () => {
+        this.renderHighlighters();
+      });
+    }
+  };
   //新建高亮
   getHighlighter = () => {
     // 注意点一
@@ -237,13 +243,13 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
         item.bookKey === this.props.currentBook.key
       );
     });
+
     let pageArea = document.getElementById("page-area");
     if (!pageArea) return;
     let iframe = pageArea.getElementsByTagName("iframe")[0];
     if (!iframe || !iframe.contentWindow) return;
     let iWin = iframe.contentWindow || iframe.contentDocument?.defaultView;
     this.highlighter && this.highlighter.removeAllHighlights(); // 为了避免下次反序列化失败，必须先清除已有的高亮
-
     let classes = [
       "color-0",
       "color-1",
@@ -291,7 +297,6 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
   };
   //控制弹窗
   openMenu = () => {
-    console.log("openmenu");
     this.setState({ deleteKey: "" });
     let pageArea = document.getElementById("page-area");
     if (!pageArea) return;

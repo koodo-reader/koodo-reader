@@ -22,6 +22,7 @@ export interface PopupMenuProps {
   handleOpenMenu: (isOpenMenu: boolean) => void;
   handleMenuMode: (menu: string) => void;
   handleChangeDirection: (isChangeDirection: boolean) => void;
+  handleRenderNoteFunc: (renderNoteFunc: () => void) => void;
 }
 export interface PopupMenuStates {
   deleteKey: string;

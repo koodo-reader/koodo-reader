@@ -59,7 +59,8 @@ export type stateType = {
     isReading: boolean;
     dragItem: string;
     currentBook: BookModel;
-    renderFunc: () => void;
+    renderBookFunc: () => void;
+    renderNoteFunc: () => void;
   };
   backupPage: {
     isBackup: boolean;

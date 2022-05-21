@@ -10,7 +10,7 @@ const mapStateToProps = (state: stateType) => {
     htmlBook: state.reader.htmlBook,
     currentChapterIndex: state.reader.currentChapterIndex,
     currentChapter: state.reader.currentChapter,
-    renderFunc: state.book.renderFunc,
+    renderBookFunc: state.book.renderBookFunc,
   };
 };
 const actionCreator = {};

@@ -8,7 +8,7 @@ const mapStateToProps = (state: stateType) => {
     currentBook: state.book.currentBook,
     locations: state.progressPanel.locations,
     isReading: state.book.isReading,
-    renderFunc: state.book.renderFunc,
+    renderBookFunc: state.book.renderBookFunc,
   };
 };
 const actionCreator = {};
