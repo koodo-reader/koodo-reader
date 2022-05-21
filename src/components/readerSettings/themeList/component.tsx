@@ -101,7 +101,7 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
       "textColor",
       typeof color === "object" ? color.color : color
     );
-    this.props.renderFunc();
+    this.props.renderBookFunc();
   };
   render() {
     const renderBackgroundColorList = () => {

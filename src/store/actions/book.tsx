@@ -8,8 +8,11 @@ export function handleDeleteDialog(mode: boolean) {
 export function handleAddDialog(mode: boolean) {
   return { type: "HANDLE_ADD_DIALOG", payload: mode };
 }
-export function handleRenderFunc(renderFunc: () => void) {
-  return { type: "HANDLE_RENDER_FUNC", payload: renderFunc };
+export function handleRenderBookFunc(renderBookFunc: () => void) {
+  return { type: "HANDLE_RENDER_BOOK_FUNC", payload: renderBookFunc };
+}
+export function handleRenderNoteFunc(renderNoteFunc: () => void) {
+  return { type: "HANDLE_RENDER_NOTE_FUNC", payload: renderNoteFunc };
 }
 export function handleActionDialog(mode: boolean) {
   return { type: "HANDLE_ACTION_DIALOG", payload: mode };

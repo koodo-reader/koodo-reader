@@ -4,6 +4,7 @@ import {
   handleMenuMode,
   handleChangeDirection,
   handleNoteKey,
+  handleRenderNoteFunc,
 } from "../../../store/actions";
 import { connect } from "react-redux";
 import { stateType } from "../../../store";
@@ -28,6 +29,7 @@ const actionCreator = {
   handleMenuMode,
   handleChangeDirection,
   handleNoteKey,
+  handleRenderNoteFunc,
 };
 export default connect(
   mapStateToProps,

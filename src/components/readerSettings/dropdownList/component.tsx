@@ -114,7 +114,7 @@ class DropdownList extends React.Component<
       default:
         break;
     }
-    this.props.renderFunc();
+    this.props.renderBookFunc();
   }
   render() {
     const renderParagraphCharacter = () => {
