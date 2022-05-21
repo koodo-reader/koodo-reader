@@ -7,7 +7,7 @@ const mapStateToProps = (state: stateType) => {
     currentBook: state.book.currentBook,
     chapters: state.reader.chapters,
     htmlBook: state.reader.htmlBook,
-    renderFunc: state.book.renderFunc,
+    renderBookFunc: state.book.renderBookFunc,
   };
 };
 const actionCreator = { handleCurrentChapter };

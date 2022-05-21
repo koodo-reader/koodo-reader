@@ -6,7 +6,8 @@ const initState = {
   isReading: false,
   dragItem: "",
   currentBook: {},
-  renderFunc: () => {},
+  renderBookFunc: () => {},
+  renderNoteFunc: () => {},
 };
 export function book(
   state = initState,
@@ -23,10 +24,15 @@ export function book(
         ...state,
         isOpenDeleteDialog: action.payload,
       };
-    case "HANDLE_RENDER_FUNC":
+    case "HANDLE_RENDER_BOOK_FUNC":
       return {
         ...state,
-        renderFunc: action.payload,
+        renderBookFunc: action.payload,
+      };
+    case "HANDLE_RENDER_NOTE_FUNC":
+      return {
+        ...state,
+        renderNoteFunc: action.payload,
       };
     case "HANDLE_ADD_DIALOG":
       return {

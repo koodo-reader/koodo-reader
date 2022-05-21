@@ -9,7 +9,7 @@ export interface ProgressPanelProps {
   t: (title: string) => string;
   percentage: number;
   htmlBook: HtmlBookModel;
-  renderFunc: (id: string) => void;
+  renderBookFunc: (id: string) => void;
 }
 export interface ProgressPanelState {
   currentPage: number;

@@ -79,11 +79,10 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
   componentDidMount() {
     this.handleRenderBook();
 
-    this.props.handleRenderFunc(this.handleRenderBook);
+    this.props.handleRenderBookFunc(this.handleRenderBook);
 
-    var doit;
     window.addEventListener("resize", () => {
-      clearTimeout(doit);
+      if (lock) return;
       let reader = document.querySelector("#page-area");
       //解决文字遮挡问题
       if (
@@ -100,20 +99,26 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         this.handlePageWidth();
       }
       if (this.props.currentBook.format === "EPUB") {
-        setTimeout(() => {
-          let doc = getIframeDoc();
-          console.log(this.props.htmlBook.rendition);
-          bindHtmlEvent(
-            this.props.htmlBook.rendition,
-            doc,
-            this.props.currentBook.key,
-            this.state.readerMode
-          );
-        }, 500);
-
-        return;
+        let doc = getIframeDoc();
+        if (!doc) return;
+        bindHtmlEvent(
+          this.props.htmlBook.rendition,
+          doc,
+          this.props.currentBook.key,
+          this.state.readerMode
+        );
+        this.handleBindGesture();
+        StyleUtil.addDefaultCss();
+        this.props.renderNoteFunc();
+      } else {
+        this.handleRenderBook();
       }
-      doit = setTimeout(this.handleRenderBook, 1000);
+
+      lock = true;
+      setTimeout(function () {
+        lock = false;
+      }, 100);
+      return false;
     });
   }
   handlePageWidth = () => {
@@ -231,6 +236,8 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     );
 
     rendition.on("rendered", async () => {
+
+      await this.handleLocation();
       let bookLocation: { text: string; count: string; chapterTitle: string } =
         RecordLocation.getHtmlLocation(this.props.currentBook.key);
       if (this.props.currentBook.format.startsWith("CB")) {
@@ -267,25 +274,40 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           chapterIndex,
         });
       }
+      StyleUtil.addDefaultCss();
       tsTransform();
-      let doc = getIframeDoc();
-      if (!doc) return;
-      doc.addEventListener("click", (event) => {
-        this.props.handleLeaveReader("left");
-        this.props.handleLeaveReader("right");
-        this.props.handleLeaveReader("top");
-        this.props.handleLeaveReader("bottom");
-      });
-      doc.addEventListener("mouseup", () => {
-        if (!doc!.getSelection()) return;
-        var rect = doc!.getSelection()!.getRangeAt(0).getBoundingClientRect();
-        this.setState({ rect });
-      });
+      this.handleBindGesture();
       lock = true;
       setTimeout(function () {
         lock = false;
       }, 1000);
       return false;
+    });
+  };
+  handleLocation = async () => {
+    let position = await this.props.htmlBook.rendition.getPosition();
+    RecordLocation.recordHtmlLocation(
+      this.props.currentBook.key,
+      position.text,
+      position.chapterTitle,
+      position.count,
+      position.percentage,
+      position.cfi
+    );
+  };
+  handleBindGesture = () => {
+    let doc = getIframeDoc();
+    if (!doc) return;
+    doc.addEventListener("click", (event) => {
+      this.props.handleLeaveReader("left");
+      this.props.handleLeaveReader("right");
+      this.props.handleLeaveReader("top");
+      this.props.handleLeaveReader("bottom");
+    });
+    doc.addEventListener("mouseup", () => {
+      if (!doc!.getSelection()) return;
+      var rect = doc!.getSelection()!.getRangeAt(0).getBoundingClientRect();
+      this.setState({ rect });
     });
   };
   handleCbr = async (result: ArrayBuffer) => {
@@ -581,9 +603,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
               chapter: this.state.chapter,
             }}
           />
-        ) : (
-          <span className="test">test</span>
-        )}
+        ) : null}
         {this.props.htmlBook && (
           <ImageViewer
             {...{

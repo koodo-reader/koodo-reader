@@ -30,7 +30,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
 
       scale: StorageUtil.getReaderConfig("scale") || 1,
       margin: parseInt(StorageUtil.getReaderConfig("margin")) || 30,
-      time: ReadingTime.getTime(this.props.currentBook.key),
+      time: 0,
       isTouch: StorageUtil.getReaderConfig("isTouch") === "yes",
       isPreventTrigger:
         StorageUtil.getReaderConfig("isPreventTrigger") === "yes",
@@ -43,10 +43,18 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         .querySelector("body")
         ?.setAttribute("style", "background-color: rgba(0,0,0,0)");
     }
+
     this.tickTimer = setInterval(() => {
-      let time = this.state.time;
-      time += 1;
-      this.setState({ time });
+      if (this.state.time === 0 && this.props.currentBook.key) {
+        this.setState({
+          time: ReadingTime.getTime(this.props.currentBook.key),
+        });
+      } else if (this.state.time > 0) {
+        let time = this.state.time;
+        time += 1;
+        this.setState({ time });
+        ReadingTime.setTime(this.props.currentBook.key, time);
+      }
     }, 1000);
   }
   UNSAFE_componentWillMount() {
@@ -124,18 +132,17 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         break;
     }
   };
-  handleLocation = () => {
-    setTimeout(async () => {
-      let position = await this.props.htmlBook.rendition.getPosition();
-      RecordLocation.recordHtmlLocation(
-        this.props.currentBook.key,
-        position.text,
-        position.chapterTitle,
-        position.count,
-        position.percentage,
-        position.cfi
-      );
-    }, 500);
+  handleLocation = async () => {
+    let position = await this.props.htmlBook.rendition.getPosition();
+
+    RecordLocation.recordHtmlLocation(
+      this.props.currentBook.key,
+      position.text,
+      position.chapterTitle,
+      position.count,
+      position.percentage,
+      position.cfi
+    );
   };
   render() {
     const renditionProps = {
@@ -155,7 +162,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
               className="previous-chapter-single-container"
               onClick={async () => {
                 this.props.htmlBook.rendition.prev();
-                this.handleLocation();
+                await this.handleLocation();
               }}
             >
               <span className="icon-dropdown previous-chapter-single"></span>
@@ -164,7 +171,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
               className="next-chapter-single-container"
               onClick={async () => {
                 this.props.htmlBook.rendition.next();
-                this.handleLocation();
+                await this.handleLocation();
               }}
             >
               <span className="icon-dropdown next-chapter-single"></span>
@@ -307,7 +314,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
                 }
           }
         >
-          <NavigationPanel />
+          <NavigationPanel {...{ time: this.state.time }} />
         </div>
         <div
           className="progress-panel-container"

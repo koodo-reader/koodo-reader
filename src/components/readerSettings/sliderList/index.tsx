@@ -5,7 +5,7 @@ import { stateType } from "../../../store";
 
 const mapStateToProps = (state: stateType) => {
   return {
-    renderFunc: state.book.renderFunc,
+    renderBookFunc: state.book.renderBookFunc,
   };
 };
 const actionCreator = {};

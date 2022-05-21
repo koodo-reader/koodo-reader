@@ -136,18 +136,16 @@ const gesture = (rendition: any, type: string) => {
   }
 };
 
-const handleLocation = (key: string, rendition: any) => {
-  setTimeout(async () => {
-    let position = await rendition.getPosition();
-    RecordLocation.recordHtmlLocation(
-      key,
-      position.text,
-      position.chapterTitle,
-      position.count,
-      position.percentage,
-      position.cfi
-    );
-  }, 500);
+const handleLocation = async (key: string, rendition: any) => {
+  let position = await rendition.getPosition();
+  RecordLocation.recordHtmlLocation(
+    key,
+    position.text,
+    position.chapterTitle,
+    position.count,
+    position.percentage,
+    position.cfi
+  );
 };
 export const bindHtmlEvent = (
   rendition: any,
@@ -157,7 +155,7 @@ export const bindHtmlEvent = (
 ) => {
   doc.addEventListener("keydown", async (event) => {
     arrowKeys(rendition, event.keyCode, event);
-    handleLocation(key, rendition);
+    await handleLocation(key, rendition);
   });
   doc.addEventListener(
     "mousewheel",
@@ -169,7 +167,7 @@ export const bindHtmlEvent = (
         mouseChrome(rendition, event.wheelDelta);
       }
 
-      handleLocation(key, rendition);
+      await handleLocation(key, rendition);
     },
     false
   );
@@ -178,7 +176,7 @@ export const bindHtmlEvent = (
     arrowKeys(rendition, event.keyCode, event);
     //使用Key判断是否是htmlBook
 
-    handleLocation(key, rendition);
+    await handleLocation(key, rendition);
   });
 
   if (StorageUtil.getReaderConfig("isTouch") === "yes") {
@@ -186,7 +184,7 @@ export const bindHtmlEvent = (
     mc.on("panleft panright panup pandown", async (event: any) => {
       gesture(rendition, event.type);
 
-      handleLocation(key, rendition);
+      await handleLocation(key, rendition);
     });
   }
 };
