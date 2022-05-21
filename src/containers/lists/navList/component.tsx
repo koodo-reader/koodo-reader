@@ -17,7 +17,16 @@ class NavList extends React.Component<NavListProps, NavListState> {
       toast(this.props.t("Wrong bookmark"));
       return;
     }
-    let bookLocation = JSON.parse(cfi) || {};
+    console.log(cfi);
+    let bookLocation;
+    try {
+      bookLocation = JSON.parse(cfi) || {};
+    } catch (error) {
+      bookLocation = {
+        cfi: cfi,
+      };
+    }
+
     await this.props.htmlBook.rendition.goToPosition(
       JSON.stringify({
         text: bookLocation.text,
