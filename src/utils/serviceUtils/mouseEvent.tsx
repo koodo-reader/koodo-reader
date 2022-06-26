@@ -172,6 +172,7 @@ export const bindHtmlEvent = (
         if (new Date().getTime() - timeStamp > 100) {
           Math.abs(event.deltaX) === 0 && mouseChrome(rendition, event.deltaY);
           timeStamp = new Date().getTime();
+          timeCount = 0;
         } else if (timeCount > 10 && new Date().getTime() - timeStamp > 0) {
           Math.abs(event.deltaX) === 0 && mouseChrome(rendition, event.deltaY);
           timeCount = 0;
