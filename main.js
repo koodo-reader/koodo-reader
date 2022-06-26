@@ -41,7 +41,8 @@ if (!singleInstance) {
   if (filePath) {
     fs.writeFileSync(
       path.join(dirPath, "log.json"),
-      JSON.stringify({ filePath })
+      JSON.stringify({ filePath }),
+      "utf8"
     );
   }
 } else {
@@ -88,8 +89,8 @@ const createMainWin = () => {
     } else {
       readerWindow = new BrowserWindow({
         ...options,
-        width: parseInt(store.get("windowWidth")),
-        height: parseInt(store.get("windowHeight")),
+        width: parseInt(store.get("windowWidth") || 1050),
+        height: parseInt(store.get("windowHeight") || 660),
         x: parseInt(store.get("windowX")),
         y: parseInt(store.get("windowY")),
         frame: isMergeWord === "yes" ? false : true,
@@ -178,8 +179,8 @@ const createMainWin = () => {
     if (readerWindow) {
       readerWindow.close();
       Object.assign(options, {
-        width: parseInt(store.get("windowWidth")),
-        height: parseInt(store.get("windowHeight")),
+        width: parseInt(store.get("windowWidth") || 1050),
+        height: parseInt(store.get("windowHeight") || 660),
         x: parseInt(store.get("windowX")),
         y: parseInt(store.get("windowY")),
         frame: store.get("isMergeWord") !== "yes" ? false : true,
@@ -223,11 +224,11 @@ const createMainWin = () => {
   ipcMain.on("get-file-data", function (event) {
     if (fs.existsSync(path.join(dirPath, "log.json"))) {
       const _data = JSON.parse(
-        fs.readFileSync(path.join(dirPath, "log.json")) || "{}"
+        fs.readFileSync(path.join(dirPath, "log.json"), "utf8") || "{}"
       );
       if (_data && _data.filePath) {
         filePath = _data.filePath;
-        fs.writeFileSync(path.join(dirPath, "log.json"), "");
+        fs.writeFileSync(path.join(dirPath, "log.json"), "", "utf8");
       }
     }
 
