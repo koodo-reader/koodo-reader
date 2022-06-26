@@ -47,7 +47,11 @@ class ProgressPanel extends React.Component<
     if (this.props.htmlBook.flattenChapters.length > 0) {
       this.props.htmlBook.rendition.goToChapter(
         this.props.htmlBook.flattenChapters[
-          Math.floor(this.props.htmlBook.flattenChapters.length * percentage)
+          percentage === 1
+            ? this.props.htmlBook.flattenChapters.length - 1
+            : Math.floor(
+                this.props.htmlBook.flattenChapters.length * percentage
+              )
         ].label
       );
     }
@@ -120,17 +124,16 @@ class ProgressPanel extends React.Component<
     }
     return (
       <div className="progress-panel">
-        {this.props.percentage && (
-          <p className="progress-text" style={{ marginTop: 10 }}>
-            <span>
-              <Trans>Progress</Trans>:{" "}
-              {Math.round(
-                this.props.percentage > 1 ? 100 : this.props.percentage * 100
-              )}
-              %&nbsp;&nbsp;&nbsp;
-            </span>
-          </p>
-        )}
+        <p className="progress-text" style={{ marginTop: 10 }}>
+          <span>
+            <Trans>Progress</Trans>:{" "}
+            {Math.round(
+              this.props.percentage > 1 ? 100 : this.props.percentage * 100
+            )}
+            %&nbsp;&nbsp;&nbsp;
+          </span>
+        </p>
+
         <p className="progress-text" style={{ marginTop: 0 }}>
           <Trans>Pages</Trans>
           <input
@@ -158,7 +161,11 @@ class ProgressPanel extends React.Component<
             onBlur={(event) => {
               this.handleJumpChapter(event);
             }}
-            value={this.props.currentChapterIndex}
+            value={
+              this.props.currentChapterIndex === -1
+                ? this.props.htmlBook.flattenChapters.length
+                : this.props.currentChapterIndex + 1
+            }
           />
           <span>/ {this.props.htmlBook.flattenChapters.length}</span>
         </p>

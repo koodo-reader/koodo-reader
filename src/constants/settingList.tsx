@@ -92,7 +92,7 @@ export const langList = [
   { label: "日本語", value: "jp" },
   { label: "čeština", value: "cs" },
   { label: "Deutsch", value: "de" },
-  { label: "한국인", value: "ko" },
+  { label: "한국어", value: "ko" },
 ];
 
 export const searchList = [
