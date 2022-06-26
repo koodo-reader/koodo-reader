@@ -15,33 +15,29 @@ class ProgressPanel extends React.Component<
     this.state = {
       currentPage: 0,
       totalPage: 0,
+      isSingle:
+        StorageUtil.getReaderConfig("readerMode") &&
+        StorageUtil.getReaderConfig("readerMode") !== "double",
     };
   }
 
   async UNSAFE_componentWillReceiveProps(nextProps: ProgressPanelProps) {
-    if (nextProps.currentChapter && nextProps.htmlBook) {
-      let pageProgress = await nextProps.htmlBook.rendition.getProgress();
-      this.setState({
-        currentPage: pageProgress.currentPage,
-        totalPage: pageProgress.totalPage,
-        // displayPercentage:
-        //   _.findIndex(
-        //     nextProps.htmlBook.flattenChapters.map((item) => {
-        //       item.label = item.label.trim();
-        //       return item;
-        //     }),
-        //     {
-        //       label: nextProps.currentChapter.trim(),
-        //     }
-        //   ) /
-        //   nextProps.htmlBook.flattenChapters.map((item) => {
-        //     item.label = item.label.trim();
-        //     return item;
-        //   }).length,
+    if (nextProps.htmlBook !== this.props.htmlBook && nextProps.htmlBook) {
+      await this.handlePageNum(nextProps.htmlBook.rendition);
+      nextProps.htmlBook.rendition.on("page-changed", async () => {
+        await this.handlePageNum(nextProps.htmlBook.rendition);
       });
     }
   }
-
+  async handlePageNum(rendition) {
+    let pageInfo = await rendition.getProgress();
+    this.setState({
+      currentPage: this.state.isSingle
+        ? pageInfo.currentPage
+        : pageInfo.currentPage * 2 - 1,
+      totalPage: pageInfo.totalPage,
+    });
+  }
   onProgressChange = (event: any) => {
     const percentage = event.target.value / 100;
     if (this.props.htmlBook.flattenChapters.length > 0) {
@@ -140,18 +136,9 @@ class ProgressPanel extends React.Component<
             type="text"
             name="jumpPage"
             id="jumpPage"
-            value={
-              StorageUtil.getReaderConfig("readerMode") !== "double"
-                ? this.state.currentPage
-                : this.state.currentPage * 2 - 1
-            }
+            value={this.state.currentPage}
           />
-          <span>
-            /{" "}
-            {StorageUtil.getReaderConfig("readerMode") !== "double"
-              ? this.state.totalPage
-              : this.state.totalPage * 2 - 2}
-          </span>
+          <span>/ {this.state.totalPage}</span>
           &nbsp;&nbsp;&nbsp;
           <Trans>Chapters</Trans>
           <input
