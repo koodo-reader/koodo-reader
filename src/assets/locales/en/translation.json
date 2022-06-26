@@ -243,7 +243,7 @@
   "Tips": "Tips",
   "Brightness": "Brightness",
   "How sync works": "How sync works",
-  "You need to manually change the storage location to the same sync folder on different computers. When you click the sync button, Koodo Reader will automatically upload or download the data from this folder according the timestamp.": "You need to change the storage location to the same cloud drive folder on different computers. When you click the sync button, Koodo Reader will automatically upload or download your data from this folder and keep data synchronized across all you computers. Visit our document for more instructions.",
+  "Sync function works with third-party cloud drive. You need to manually change the storage location to the same sync folder on different computers. When you click the sync button, Koodo Reader will automatically upload or download the data from this folder according the timestamp.": "Sync function works with third-party cloud drive. You need to change the storage location to the same cloud drive folder on different computers. When you click the sync button, Koodo Reader will automatically upload or download your data from this folder and keep data synchronized across all you computers. Visit our document for more instructions.",
   "Line Height": "Line Height",
   "Please turn off open books in the main window first": "Please turn off open books in the main window first",
   "Please turn off merge with word first": "Please turn off merge with word first",

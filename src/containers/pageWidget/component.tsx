@@ -3,6 +3,7 @@ import "./background.css";
 import { BackgroundProps, BackgroundState } from "./interface";
 import StorageUtil from "../../utils/serviceUtils/storageUtil";
 import { Trans } from "react-i18next";
+import RecordLocation from "../../utils/readUtils/recordLocation";
 class Background extends React.Component<BackgroundProps, BackgroundState> {
   isFirst: Boolean;
   constructor(props: any) {
@@ -22,19 +23,34 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
 
   async UNSAFE_componentWillReceiveProps(nextProps: BackgroundProps) {
     if (nextProps.htmlBook !== this.props.htmlBook && nextProps.htmlBook) {
+      await this.handlePageNum(nextProps.htmlBook.rendition);
       nextProps.htmlBook.rendition.on("page-changed", async () => {
-        let pageInfo = await nextProps.htmlBook.rendition.getProgress();
-
-        this.setState({
-          prevPage: this.state.isSingle
-            ? pageInfo.currentPage
-            : pageInfo.currentPage * 2 - 1,
-          nextPage: this.state.isSingle
-            ? pageInfo.currentPage
-            : pageInfo.currentPage * 2,
-        });
+        await this.handlePageNum(nextProps.htmlBook.rendition);
+        await this.handleLocation();
       });
     }
+  }
+  handleLocation = async () => {
+    let position = await this.props.htmlBook.rendition.getPosition();
+    RecordLocation.recordHtmlLocation(
+      this.props.currentBook.key,
+      position.text,
+      position.chapterTitle,
+      position.count,
+      position.percentage,
+      position.cfi
+    );
+  };
+  async handlePageNum(rendition) {
+    let pageInfo = await rendition.getProgress();
+    this.setState({
+      prevPage: this.state.isSingle
+        ? pageInfo.currentPage
+        : pageInfo.currentPage * 2 - 1,
+      nextPage: this.state.isSingle
+        ? pageInfo.currentPage
+        : pageInfo.currentPage * 2,
+    });
   }
 
   render() {
@@ -63,21 +79,23 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
               {this.props.currentChapter}
             </p>
           )}
-          {!this.state.isHideHeader && !this.state.isSingle && (
-            <p
-              className="header-book-name"
-              style={
-                this.state.isSingle
-                  ? {
-                      right: `calc(50vw - 
+          {!this.state.isHideHeader &&
+            this.props.currentChapter &&
+            !this.state.isSingle && (
+              <p
+                className="header-book-name"
+                style={
+                  this.state.isSingle
+                    ? {
+                        right: `calc(50vw - 
                       270px)`,
-                    }
-                  : {}
-              }
-            >
-              {this.props.currentBook.name}
-            </p>
-          )}
+                      }
+                    : {}
+                }
+              >
+                {this.props.currentBook.name}
+              </p>
+            )}
         </div>
         <div className="footer-container">
           {!this.state.isHideFooter && this.state.prevPage > 0 && (
