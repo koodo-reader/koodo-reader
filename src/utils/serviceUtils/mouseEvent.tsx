@@ -51,9 +51,9 @@ const arrowKeys = (rendition: any, keyCode: number, event: any) => {
   handleShortcut(event, keyCode);
 };
 
-const mouseChrome = (rendition: any, wheelDelta: number) => {
+const mouseChrome = (rendition: any, deltaY: number) => {
   if (lock) return;
-  if (wheelDelta > 0) {
+  if (deltaY < 0) {
     rendition.prev();
     lock = true;
     setTimeout(function () {
@@ -61,7 +61,7 @@ const mouseChrome = (rendition: any, wheelDelta: number) => {
     }, throttleTime);
     return false;
   }
-  if (wheelDelta < 0) {
+  if (deltaY > 0) {
     rendition.next();
     lock = true;
     setTimeout(function () {
@@ -157,14 +157,23 @@ export const bindHtmlEvent = (
     arrowKeys(rendition, event.keyCode, event);
     await handleLocation(key, rendition);
   });
+  //判断是否正在使用笔记本电脑的的触控板
+
   doc.addEventListener(
-    "mousewheel",
+    "wheel",
     async (event) => {
       if (readerMode === "scroll") {
         await sleep(200);
         rendition.record();
       } else {
-        mouseChrome(rendition, event.wheelDelta);
+        if (
+          event.wheelDeltaY
+            ? event.wheelDeltaY === -3 * event.deltaY
+            : event.deltaMode === 0
+        ) {
+          throttleTime = 1000;
+        }
+        Math.abs(event.deltaX) === 0 && mouseChrome(rendition, event.deltaY);
       }
 
       await handleLocation(key, rendition);

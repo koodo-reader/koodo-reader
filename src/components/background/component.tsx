@@ -20,9 +20,9 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
     if (!background) return;
     background?.setAttribute(
       "style",
-      `background-color:${StorageUtil.getReaderConfig(
-        "backgroundColor"
-      )};filter: brightness(${
+      `background-color:${
+        StorageUtil.getReaderConfig("backgroundColor") || "rgba(255,255,255,1)"
+      };filter: brightness(${
         StorageUtil.getReaderConfig("brightness") || 1
       }) invert(${StorageUtil.getReaderConfig("isInvert") === "yes" ? 1 : 0})`
     );
