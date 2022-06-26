@@ -14,4 +14,5 @@ export interface ProgressPanelProps {
 export interface ProgressPanelState {
   currentPage: number;
   totalPage: number;
+  isSingle: boolean;
 }
