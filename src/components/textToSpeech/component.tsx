@@ -24,6 +24,8 @@ class TextToSpeech extends React.Component<
       window.speechSynthesis && window.speechSynthesis.cancel();
       this.setState({ isAudioOn: false });
     }
+    let synth = window.speechSynthesis;
+    synth.getVoices();
   }
   handleChangeAudio = () => {
     if (this.state.isAudioOn) {
