@@ -232,7 +232,7 @@
   "Tips": "Tips",
   "Brightness": "Brillo",
   "How sync works": "Cómo funciona la Sincronización",
-  "You need to manually change the storage location to the same sync folder on different computers. When you click the sync button, Koodo Reader will automatically upload or download the data from this folder according the timestamp.": "Necesita cambiar la ubicación de almacenamiento a la misma capeta de la nube en los diferentes dispositivos. Cuando de click en el botón de sincronización, Koodo Reader automáticamente subirá y descargará los datos de ésta carpeta y mantendrá sincronizados los datos a través de sus dispositivos. Visite nuestro Documento para más instrucciones.",
+  "Sync function works with third-party cloud drive. You need to manually change the storage location to the same sync folder on different computers. When you click the sync button, Koodo Reader will automatically upload or download the data from this folder according the timestamp.": "Necesita cambiar la ubicación de almacenamiento a la misma capeta de la nube en los diferentes dispositivos. Cuando de click en el botón de sincronización, Koodo Reader automáticamente subirá y descargará los datos de ésta carpeta y mantendrá sincronizados los datos a través de sus dispositivos. Visite nuestro Documento para más instrucciones.",
   "Line Height": "Tamaño de Línea",
   "Please turn off open books in the main window first": "Por favor cierre los libros abiertos de la ventana principal",
   "Please turn off merge with word first": "Por favor desactive Juntar con Word",

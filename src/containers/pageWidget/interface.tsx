@@ -7,6 +7,8 @@ export interface BackgroundProps {
   currentChapterIndex: number;
   htmlBook: HtmlBookModel;
   isShowBookmark: boolean;
+  handleCurrentChapter: (currentChapter: string) => void;
+  handleCurrentChapterIndex: (currentChapterIndex: number) => void;
 }
 export interface BackgroundState {
   isSingle: boolean;

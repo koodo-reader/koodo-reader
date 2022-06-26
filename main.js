@@ -223,7 +223,7 @@ const createMainWin = () => {
   ipcMain.on("get-file-data", function (event) {
     if (fs.existsSync(path.join(dirPath, "log.json"))) {
       const _data = JSON.parse(
-        fs.readFileSync(path.join(dirPath, "log.json"), "utf8") || "{}"
+        fs.readFileSync(path.join(dirPath, "log.json")) || "{}"
       );
       if (_data && _data.filePath) {
         filePath = _data.filePath;

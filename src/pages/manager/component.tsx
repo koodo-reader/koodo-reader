@@ -23,7 +23,7 @@ import { Toaster } from "react-hot-toast";
 
 //判断是否为触控设备
 const is_touch_device = () => {
-  return "ontouchstart" in window;
+  return "ontouchstart" in window || navigator.maxTouchPoints > 0;
 };
 
 class Manager extends React.Component<ManagerProps, ManagerState> {

@@ -232,7 +232,7 @@
   "Tips": "Советы",
   "Brightness": "Яркость",
   "How sync works": "Как работает синхронизация",
-  "You need to manually change the storage location to the same sync folder on different computers. When you click the sync button, Koodo Reader will automatically upload or download the data from this folder according the timestamp.": "Вам нужно изменить место хранения на одну и ту же папку облачного диска на разных компьютерах. Когда вы нажмете кнопку синхронизации, Koodo Reader будет автоматически загружать или скачивать ваши данные из этой папки и синхронизировать их на всех ваших компьютерах. Посетите наш документ для получения более подробных инструкций.",
+  "Sync function works with third-party cloud drive. You need to manually change the storage location to the same sync folder on different computers. When you click the sync button, Koodo Reader will automatically upload or download the data from this folder according the timestamp.": "Вам нужно изменить место хранения на одну и ту же папку облачного диска на разных компьютерах. Когда вы нажмете кнопку синхронизации, Koodo Reader будет автоматически загружать или скачивать ваши данные из этой папки и синхронизировать их на всех ваших компьютерах. Посетите наш документ для получения более подробных инструкций.",
   "Line Height": "Высота строки",
   "Please turn off open books in the main window first": "Пожалуйста, сначала отключите открытые книги в главном окне",
   "Please turn off merge with word first": "Please turn off merge with word first",

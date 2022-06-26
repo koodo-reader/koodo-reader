@@ -15,7 +15,8 @@ class styleUtil {
       `background-color:${
         StorageUtil.getReaderConfig("isMergeWord") === "yes"
           ? "rgba(0,0,0,0)"
-          : StorageUtil.getReaderConfig("backgroundColor")
+          : StorageUtil.getReaderConfig("backgroundColor") ||
+            "rgba(255,255,255,1)"
       };filter: brightness(${
         StorageUtil.getReaderConfig("brightness") || 1
       }) invert(${StorageUtil.getReaderConfig("isInvert") === "yes" ? 1 : 0})`

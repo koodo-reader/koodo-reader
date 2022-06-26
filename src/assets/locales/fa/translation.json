@@ -235,7 +235,7 @@
   "Tips": "راهنما ها",
   "Brightness": "روشنایی",
   "How sync works": "همگام سازی جطور کار میکند",
-  "You need to manually change the storage location to the same sync folder on different computers. When you click the sync button, Koodo Reader will automatically upload or download the data from this folder according the timestamp.": "باید محل ذخیره سازی را به همان پوشه درایو ابری در رایانه های مختلف تغییر دهید. وقتی روی دکمه همگام‌سازی کلیک می‌کنید، کودو ریدر به‌طور خودکار داده‌های شما را از این پوشه آپلود یا دانلود می‌کند و داده‌ها را در همه رایانه‌های شما همگام‌سازی می‌کند. برای دستورالعمل های بیشتر از سند ما دیدن کنید.",
+  "Sync function works with third-party cloud drive. You need to manually change the storage location to the same sync folder on different computers. When you click the sync button, Koodo Reader will automatically upload or download the data from this folder according the timestamp.": "باید محل ذخیره سازی را به همان پوشه درایو ابری در رایانه های مختلف تغییر دهید. وقتی روی دکمه همگام‌سازی کلیک می‌کنید، کودو ریدر به‌طور خودکار داده‌های شما را از این پوشه آپلود یا دانلود می‌کند و داده‌ها را در همه رایانه‌های شما همگام‌سازی می‌کند. برای دستورالعمل های بیشتر از سند ما دیدن کنید.",
   "Line Height": "ارتفاع خط",
   "Please turn off open books in the main window first": "لطفاً ابتدا کتابهای باز را در پنجره اصلی خاموش کنید",
   "Please turn off merge with word first": "لطفاً ابتدا ادغام با کلمه را خاموش کنید",

@@ -238,7 +238,7 @@
   "Tips": "提示",
   "Brightness": "屏幕亮度",
   "How sync works": "同步是如何实现的？",
-  "You need to manually change the storage location to the same sync folder on different computers. When you click the sync button, Koodo Reader will automatically upload or download the data from this folder according the timestamp.": "同步功能需要配合第三方同步盘实现，在不同电脑上把数据存储位置修改为同一个网盘文件夹。当在其中一台电脑上点击同步后，Koodo中的数据就会更新到这个文件夹中。经过网盘同步后，在另一台电脑上打开Koodo，点击同步按钮，数据就会同步到Koodo中。具体操作方法请查看帮助文档。",
+  "Sync function works with third-party cloud drive. You need to manually change the storage location to the same sync folder on different computers. When you click the sync button, Koodo Reader will automatically upload or download the data from this folder according the timestamp.": "同步功能需要配合第三方同步盘实现，在不同电脑上把数据存储位置修改为同一个网盘文件夹。当在其中一台电脑上点击同步后，Koodo中的数据就会更新到这个文件夹中。经过网盘同步后，在另一台电脑上打开Koodo，点击同步按钮，数据就会同步到Koodo中。具体操作方法请查看帮助文档。",
   "Line Height": "行间距",
   "Please turn off open books in the main window first": "请关闭直接在主窗口打开图书",
   "Please turn off merge with word first": "请关闭摸鱼模式",

@@ -96,7 +96,8 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
             .getAttribute("style")!
             .substring(0, reader.getAttribute("style")!.indexOf("width"))
         );
-        this.handlePageWidth();
+        StorageUtil.getReaderConfig("readerMode") !== "scroll" &&
+          this.handlePageWidth();
       }
       if (this.props.currentBook.format === "EPUB") {
         let doc = getIframeDoc();
@@ -145,7 +146,8 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       this.state.rendition.removeContent();
     }
 
-    this.handlePageWidth();
+    StorageUtil.getReaderConfig("readerMode") !== "scroll" &&
+      this.handlePageWidth();
 
     window.rangy.init();
     BookUtil.fetchBook(key, true, path).then((result) => {
@@ -206,7 +208,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       rendition: rendition,
     });
     this.setState({ rendition });
-
     this.setState({
       pageWidth: rendition.getPageSize().width,
       pageHeight: rendition.getPageSize().height,
@@ -217,26 +218,27 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         this.props.currentBook.format === "EPUB" ? false : true
       )
     );
-
-    let bookLocation: {
-      text: string;
-      count: string;
-      chapterTitle: string;
-      percentage: string;
-      cfi: string;
-    } = RecordLocation.getHtmlLocation(this.props.currentBook.key);
-    await rendition.goToPosition(
-      JSON.stringify({
-        text: bookLocation.text,
-        chapterTitle: bookLocation.chapterTitle,
-        count: bookLocation.count,
-        percentage: bookLocation.percentage,
-        cfi: bookLocation.cfi,
-      })
-    );
+    if (this.props.currentBook.format !== "EPUB") {
+      let bookLocation: {
+        text: string;
+        count: string;
+        chapterTitle: string;
+        percentage: string;
+        cfi: string;
+      } = RecordLocation.getHtmlLocation(this.props.currentBook.key);
+      await rendition.goToPosition(
+        JSON.stringify({
+          text: bookLocation.text,
+          chapterTitle: bookLocation.chapterTitle,
+          count: bookLocation.count,
+          percentage: bookLocation.percentage,
+          cfi: bookLocation.cfi,
+          isFirst: true,
+        })
+      );
+    }
 
     rendition.on("rendered", async () => {
-
       await this.handleLocation();
       let bookLocation: { text: string; count: string; chapterTitle: string } =
         RecordLocation.getHtmlLocation(this.props.currentBook.key);

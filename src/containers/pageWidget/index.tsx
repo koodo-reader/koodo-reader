@@ -1,7 +1,10 @@
 import { connect } from "react-redux";
 import { stateType } from "../../store";
 import Background from "./component";
-
+import {
+  handleCurrentChapter,
+  handleCurrentChapterIndex,
+} from "../../store/actions";
 const mapStateToProps = (state: stateType) => {
   return {
     currentBook: state.book.currentBook,
@@ -12,5 +15,5 @@ const mapStateToProps = (state: stateType) => {
     isShowBookmark: state.viewArea.isShowBookmark,
   };
 };
-const actionCreator = {};
+const actionCreator = { handleCurrentChapter, handleCurrentChapterIndex };
 export default connect(mapStateToProps, actionCreator)(Background);
