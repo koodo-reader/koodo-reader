@@ -7,8 +7,6 @@ declare var document: any;
 const sleep = (ms: number) => {
   return new Promise((resolve) => setTimeout(resolve, ms));
 };
-let timeStamp = 0;
-let timeCount = 0;
 
 let throttleTime =
   StorageUtil.getReaderConfig("isSliding") === "yes" ? 1000 : 100;
@@ -168,16 +166,7 @@ export const bindHtmlEvent = (
         await sleep(200);
         rendition.record();
       } else {
-        timeCount++;
-        if (new Date().getTime() - timeStamp > 100) {
-          Math.abs(event.deltaX) === 0 && mouseChrome(rendition, event.deltaY);
-          timeStamp = new Date().getTime();
-          timeCount = 0;
-        } else if (timeCount > 10 && new Date().getTime() - timeStamp > 0) {
-          Math.abs(event.deltaX) === 0 && mouseChrome(rendition, event.deltaY);
-          timeCount = 0;
-          timeStamp = new Date().getTime() + 2000;
-        }
+        Math.abs(event.deltaX) === 0 && mouseChrome(rendition, event.deltaY);
       }
 
       await handleLocation(key, rendition);
