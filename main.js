@@ -41,8 +41,7 @@ if (!singleInstance) {
   if (filePath) {
     fs.writeFileSync(
       path.join(dirPath, "log.json"),
-      JSON.stringify({ filePath }),
-      "utf8"
+      JSON.stringify({ filePath })
     );
   }
 } else {
@@ -224,11 +223,11 @@ const createMainWin = () => {
   ipcMain.on("get-file-data", function (event) {
     if (fs.existsSync(path.join(dirPath, "log.json"))) {
       const _data = JSON.parse(
-        fs.readFileSync(path.join(dirPath, "log.json"), "utf8") || "{}"
+        fs.readFileSync(path.join(dirPath, "log.json")) || "{}"
       );
       if (_data && _data.filePath) {
         filePath = _data.filePath;
-        fs.writeFileSync(path.join(dirPath, "log.json"), "", "utf8");
+        fs.writeFileSync(path.join(dirPath, "log.json"), "");
       }
     }
 
