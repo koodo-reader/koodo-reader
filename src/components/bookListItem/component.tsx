@@ -165,7 +165,7 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
             <Trans>
               {this.props.book.author
                 ? this.props.book.author
-                : "Unknown Authur"}
+                : "Unknown Author"}
             </Trans>
           </span>
         </p>
