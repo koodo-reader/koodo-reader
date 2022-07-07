@@ -219,7 +219,7 @@ class BookUtil {
         charset: string;
       [name, author, description, publisher, charset] = [
         bookName,
-        "Unknown Authur",
+        "Unknown Author",
         "",
         "",
         "",
