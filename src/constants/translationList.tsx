@@ -100,4 +100,8 @@ export const translationList = [
     name: "Tiếng Việt",
     value: "vie",
   },
+  {
+    name: "فارسی",
+    value: "per",
+  },
 ];
