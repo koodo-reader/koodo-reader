@@ -185,4 +185,4 @@ class DeleteDialog extends React.Component<DeleteDialogProps> {
   }
 }
 
-export default withRouter(DeleteDialog);
+export default withRouter(DeleteDialog as any);

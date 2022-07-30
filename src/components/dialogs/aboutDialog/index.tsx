@@ -14,4 +14,4 @@ const actionCreator = {
   handleSetting,
   handleAbout,
 };
-export default connect(mapStateToProps, actionCreator)(AboutDialog);
+export default connect(mapStateToProps, actionCreator)(AboutDialog as any);

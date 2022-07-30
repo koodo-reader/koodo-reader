@@ -12,4 +12,4 @@ const actionCreator = {
   handleColor,
   handleSelection,
 };
-export default connect(mapStateToProps, actionCreator)(About);
+export default connect(mapStateToProps, actionCreator)(About as any);
