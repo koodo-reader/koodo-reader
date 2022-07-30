@@ -7,7 +7,7 @@ import {
   handleSelectedBooks,
 } from "../../store/actions";
 import { withTranslation } from "react-i18next";
-import Book from "./component";
+import BookCardItem from "./component";
 import { stateType } from "../../store";
 
 const mapStateToProps = (state: stateType) => {
@@ -29,4 +29,4 @@ const actionCreator = {
 export default connect(
   mapStateToProps,
   actionCreator
-)(withTranslation()(Book as any));
+)(withTranslation()(BookCardItem as any) as any);
