@@ -229,4 +229,4 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
     );
   }
 }
-export default withRouter(BookCoverItem);
+export default withRouter(BookCoverItem as any);

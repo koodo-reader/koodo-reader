@@ -23,4 +23,4 @@ const actionCreator = {
 export default connect(
   mapStateToProps,
   actionCreator
-)(withTranslation()(DeleteIcon as any));
+)(withTranslation()(DeleteIcon as any) as any);

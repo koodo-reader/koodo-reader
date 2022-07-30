@@ -221,4 +221,4 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
     );
   }
 }
-export default withRouter(BookCardItem);
+export default withRouter(BookCardItem as any);

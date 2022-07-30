@@ -11,7 +11,7 @@ import {
 import { withTranslation } from "react-i18next";
 
 import { stateType } from "../../store";
-import BookItem from "./component";
+import BookListItem from "./component";
 const mapStateToProps = (state: stateType) => {
   return {
     isReading: state.book.isReading,
@@ -35,4 +35,4 @@ const actionCreator = {
 export default connect(
   mapStateToProps,
   actionCreator
-)(withTranslation()(BookItem as any));
+)(withTranslation()(BookListItem as any) as any);

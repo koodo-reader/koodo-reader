@@ -29,4 +29,4 @@ const actionCreator = {
 export default connect(
   mapStateToProps,
   actionCreator
-)(withTranslation()(ActionDialog as any));
+)(withTranslation()(ActionDialog as any) as any);
