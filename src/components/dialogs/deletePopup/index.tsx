@@ -13,4 +13,4 @@ const actionCreator = {
 export default connect(
   mapStateToProps,
   actionCreator
-)(withTranslation()(DeletePopup as any));
+)(withTranslation()(DeletePopup as any) as any);

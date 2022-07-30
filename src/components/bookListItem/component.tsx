@@ -231,4 +231,4 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
   }
 }
 
-export default withRouter(BookListItem);
+export default withRouter(BookListItem as any);

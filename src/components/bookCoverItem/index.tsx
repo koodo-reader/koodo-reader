@@ -30,4 +30,4 @@ const actionCreator = {
 export default connect(
   mapStateToProps,
   actionCreator
-)(withTranslation()(BookCoverItem));
+)(withTranslation()(BookCoverItem as any) as any);

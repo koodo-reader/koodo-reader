@@ -37,6 +37,8 @@ const Router = () => {
         i18n.changeLanguage("cs");
       } else if (navigator.language.startsWith("de")) {
         i18n.changeLanguage("de");
+      } else if (navigator.language.startsWith("pl")) {
+        i18n.changeLanguage("pl");
       } else {
         i18n.changeLanguage("en");
       }

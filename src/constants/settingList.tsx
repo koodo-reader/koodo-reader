@@ -93,6 +93,7 @@ export const langList = [
   { label: "čeština", value: "cs" },
   { label: "Deutsch", value: "de" },
   { label: "한국어", value: "ko" },
+  { label: "Polski", value: "pl" },
 ];
 
 export const searchList = [

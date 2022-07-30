@@ -24,4 +24,4 @@ const actionCreator = {
 export default connect(
   mapStateToProps,
   actionCreator
-)(withTranslation()(EditDialog));
+)(withTranslation()(EditDialog as any) as any);

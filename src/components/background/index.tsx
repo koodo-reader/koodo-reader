@@ -8,4 +8,4 @@ const mapStateToProps = (state: stateType) => {
   };
 };
 const actionCreator = {};
-export default connect(mapStateToProps, actionCreator)(Background);
+export default connect(mapStateToProps, actionCreator)(Background as any);

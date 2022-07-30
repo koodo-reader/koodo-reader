@@ -38,4 +38,4 @@ const actionCreator = {
 export default connect(
   mapStateToProps,
   actionCreator
-)(withTranslation()(DeleteDialog));
+)(withTranslation()(DeleteDialog as any) as any);
