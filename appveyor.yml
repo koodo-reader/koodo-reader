@@ -6,7 +6,7 @@ branches:
 
 image:
   - Visual Studio 2019
-  - macos
+  - macos-mojave
   - Ubuntu2004
 
 stack: node 14
