@@ -6,13 +6,21 @@ branches:
 
 image:
   - Visual Studio 2019
-  - macos-mojave
+  - macos
   - Ubuntu2004
 
 stack: node 14
 
 init:
   - git config --global core.autocrlf input
+  - sh: |
+      if [ "${APPVEYOR_BUILD_WORKER_IMAGE}" == "macos" ]
+      then
+        python --version
+        brew upgrade python3
+        brew link --overwrite python@3.8
+        python --version
+      fi
   - sh: |
       if [ "${APPVEYOR_BUILD_WORKER_IMAGE}" == "Ubuntu2004" ]
       then
