@@ -68,10 +68,12 @@ class BookList extends React.Component<BookListProps, BookListState> {
 
   //根据搜索图书index获取到搜索出的图书
   handleIndexFilter = (items: any, arr: number[]) => {
+    console.log(items, arr);
     let itemArr: any[] = [];
     arr.forEach((item) => {
       items[item] && itemArr.push(items[item]);
     });
+    console.log(itemArr, "itemArr");
     return itemArr;
   };
   renderBookList = () => {
@@ -85,21 +87,17 @@ class BookList extends React.Component<BookListProps, BookListState> {
           //返回排序后的图书index
           SortUtil.sortBooks(this.props.books, this.props.bookSortCode) || []
         )
-      : this.props.mode === "favorite" && !this.props.isBookSort
-      ? this.handleKeyFilter(this.props.books, AddFavorite.getAllFavorite())
-      : this.props.mode === "favorite" && this.props.isBookSort
+      : this.props.mode === "favorite"
       ? this.handleIndexFilter(
           this.handleKeyFilter(this.props.books, AddFavorite.getAllFavorite()),
           //返回排序后的图书index
           SortUtil.sortBooks(this.props.books, this.props.bookSortCode) || []
         )
-      : this.props.isBookSort
-      ? this.handleIndexFilter(
+      : this.handleIndexFilter(
           this.props.books,
           //返回排序后的图书index
           SortUtil.sortBooks(this.props.books, this.props.bookSortCode) || []
-        )
-      : this.props.books;
+        );
 
     if (this.props.mode === "shelf" && books.length === 0) {
       return (
@@ -117,11 +115,12 @@ class BookList extends React.Component<BookListProps, BookListState> {
         </div>
       );
     }
+    console.log(books, "books");
     return books.map((item: BookModel, index: number) => {
       return this.props.viewMode === "list" ? (
         <BookListItem
           {...{
-            key: item.key,
+            key: index,
             book: item,
             isSelected: this.props.selectedBooks.indexOf(item.key) > -1,
           }}
@@ -129,7 +128,7 @@ class BookList extends React.Component<BookListProps, BookListState> {
       ) : this.props.viewMode === "card" ? (
         <BookCardItem
           {...{
-            key: item.key,
+            key: index,
             book: item,
             isSelected: this.props.selectedBooks.indexOf(item.key) > -1,
           }}
@@ -137,7 +136,7 @@ class BookList extends React.Component<BookListProps, BookListState> {
       ) : (
         <BookCoverItem
           {...{
-            key: item.key,
+            key: index,
             book: item,
             isSelected: this.props.selectedBooks.indexOf(item.key) > -1,
           }}
