@@ -68,12 +68,10 @@ class BookList extends React.Component<BookListProps, BookListState> {
 
   //根据搜索图书index获取到搜索出的图书
   handleIndexFilter = (items: any, arr: number[]) => {
-    console.log(items, arr);
     let itemArr: any[] = [];
     arr.forEach((item) => {
       items[item] && itemArr.push(items[item]);
     });
-    console.log(itemArr, "itemArr");
     return itemArr;
   };
   renderBookList = () => {
@@ -115,7 +113,6 @@ class BookList extends React.Component<BookListProps, BookListState> {
         </div>
       );
     }
-    console.log(books, "books");
     return books.map((item: BookModel, index: number) => {
       return this.props.viewMode === "list" ? (
         <BookListItem
