@@ -5,7 +5,7 @@ branches:
     - master
 
 image:
-  - macos
+  - macOS
   - Ubuntu2004
 
 stack: node 14
@@ -13,20 +13,12 @@ stack: node 14
 init:
   - git config --global core.autocrlf input
   - sh: |
-      if [ "${APPVEYOR_BUILD_WORKER_IMAGE}" == "macos" ]
+      if [ "${APPVEYOR_BUILD_WORKER_IMAGE}" == "macOS" ]
       then
         python --version
         brew upgrade python3
         brew link --overwrite python@3.8
         python --version
-      fi
-  - sh: |
-      if [ "${APPVEYOR_BUILD_WORKER_IMAGE}" == "Ubuntu2004" ]
-      then
-        sudo apt-get install --no-install-recommends -y icnsutils graphicsmagick xz-utils
-        sudo apt-get install snapd
-        sudo snap install snapcraft --classic
-        sudo apt-get install -y rpm
       fi
 
 install:
