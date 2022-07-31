@@ -16,7 +16,7 @@ init:
       if [ "${APPVEYOR_BUILD_WORKER_IMAGE}" == "macOS" ]
       then
         python --version
-        brew upgrade python3
+        brew install python3
         brew link --overwrite python@3.8
         python --version
       fi
