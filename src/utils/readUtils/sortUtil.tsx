@@ -62,62 +62,62 @@ class SortUtil {
   ) {
     let oldRecentArr = books.map((item) => item.key);
     let recentArr = RecordRecent.getAllRecent();
-    if (bookSortCode.sort === 0) {
-      if (bookSortCode.order === 1) {
-        return getBookIndex(recentArr, oldRecentArr);
-      } else {
-        return getBookIndex(recentArr, oldRecentArr).reverse();
-      }
-    }
     if (bookSortCode.sort === 1) {
-      let oldNameArr = getBookName(books);
-      let nameArr = getBookName(books).sort();
       if (bookSortCode.order === 1) {
-        return getBookIndex(nameArr, oldNameArr);
+        return getBookIndex(recentArr, oldRecentArr).reverse();
       } else {
-        return getBookIndex(nameArr, oldNameArr).reverse();
+        return getBookIndex(recentArr, oldRecentArr);
       }
     }
     if (bookSortCode.sort === 2) {
+      let oldNameArr = getBookName(books);
+      let nameArr = getBookName(books).sort();
+      if (bookSortCode.order === 1) {
+        return getBookIndex(nameArr, oldNameArr).reverse();
+      } else {
+        return getBookIndex(nameArr, oldNameArr);
+      }
+    }
+    if (bookSortCode.sort === 3) {
       let nameArr: number[] = [];
       for (let i = 0; i < books.length; i++) {
         nameArr.push(i);
       }
       if (bookSortCode.order === 1) {
-        return nameArr;
-      } else {
         return nameArr.reverse();
+      } else {
+        return nameArr;
       }
     }
-    if (bookSortCode.sort === 3) {
+    if (bookSortCode.sort === 4) {
       let durationKeys = getDurationArr();
 
       let bookKeys = getBookKey(books);
       if (bookSortCode.order === 1) {
-        return getBookIndex(_.union(durationKeys, bookKeys), bookKeys);
-      } else {
         return getBookIndex(
           _.union(durationKeys, bookKeys),
           bookKeys
         ).reverse();
-      }
-    }
-    if (bookSortCode.sort === 4) {
-      let oldAuthorArr = getAuthorName(books);
-      let authorArr = getAuthorName(books).sort();
-      if (bookSortCode.order === 1) {
-        return getBookIndex(authorArr, oldAuthorArr);
       } else {
-        return getBookIndex(authorArr, oldAuthorArr).reverse();
+        return getBookIndex(_.union(durationKeys, bookKeys), bookKeys);
       }
     }
     if (bookSortCode.sort === 5) {
+      let oldAuthorArr = getAuthorName(books);
+      let authorArr = getAuthorName(books).sort();
+      if (bookSortCode.order === 1) {
+        return getBookIndex(authorArr, oldAuthorArr).reverse();
+      } else {
+        return getBookIndex(authorArr, oldAuthorArr);
+      }
+    }
+    if (bookSortCode.sort === 6) {
       let percentagenKeys = getPercentageArr();
       let bookKeys = getBookKey(books);
       if (bookSortCode.order === 1) {
-        return getBookIndex(percentagenKeys, bookKeys);
-      } else {
         return getBookIndex(percentagenKeys, bookKeys).reverse();
+      } else {
+        return getBookIndex(percentagenKeys, bookKeys);
       }
     }
   }
@@ -135,7 +135,7 @@ class SortUtil {
             "" + item.date.year + "-" + item.date.month + "-" + item.date.day
         )
       );
-      if (noteSortCode.order === 2) {
+      if (noteSortCode.order === 1) {
         dateArr.sort();
       } else {
         dateArr.sort().reverse();
@@ -170,7 +170,7 @@ class SortUtil {
             ].name
         )
       );
-      if (noteSortCode.order === 2) {
+      if (noteSortCode.order === 1) {
         nameArr.sort();
       } else {
         nameArr.sort().reverse();
@@ -200,8 +200,8 @@ class SortUtil {
   static setBookSortCode(sortCode: number, orderCode: number) {
     let json =
       localStorage.getItem("bookSortCode") ||
-      JSON.stringify({ sort: 0, order: 1 });
-    let obj = json ? JSON.parse(json) : { sort: 0, order: 1 };
+      JSON.stringify({ sort: 1, order: 2 });
+    let obj = json ? JSON.parse(json) : { sort: 1, order: 2 };
     obj.sort = sortCode;
     obj.order = orderCode;
     localStorage.setItem("bookSortCode", JSON.stringify(obj));
@@ -210,15 +210,15 @@ class SortUtil {
   static getBookSortCode() {
     let json =
       localStorage.getItem("bookSortCode") ||
-      JSON.stringify({ sort: 0, order: 1 });
-    let obj = JSON.parse(json) || { sort: 0, order: 1 };
+      JSON.stringify({ sort: 1, order: 2 });
+    let obj = JSON.parse(json) || { sort: 1, order: 2 };
     return obj || null;
   }
   static setNoteSortCode(sort: number, order: number) {
     let json =
       localStorage.getItem("noteSortCode") ||
-      JSON.stringify({ sort: 2, order: 1 });
-    let obj = json ? JSON.parse(json) : { sort: 2, order: 1 };
+      JSON.stringify({ sort: 2, order: 2 });
+    let obj = json ? JSON.parse(json) : { sort: 2, order: 2 };
     obj.sort = sort;
     obj.order = order;
     localStorage.setItem("noteSortCode", JSON.stringify(obj));
@@ -227,8 +227,8 @@ class SortUtil {
   static getNoteSortCode() {
     let json =
       localStorage.getItem("noteSortCode") ||
-      JSON.stringify({ sort: 2, order: 1 });
-    let obj = JSON.parse(json) || { sort: 2, order: 1 };
+      JSON.stringify({ sort: 2, order: 2 });
+    let obj = JSON.parse(json) || { sort: 2, order: 2 };
     return obj || null;
   }
 }

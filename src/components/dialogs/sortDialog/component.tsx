@@ -95,13 +95,13 @@ class SortDialog extends React.Component<SortDialogProps, SortDialogState> {
                 <li
                   className="sort-by-category-list"
                   onClick={() => {
-                    this.handleSort(index);
+                    this.handleSort(index + 1);
                   }}
-                  style={sortCode.sort === index ? {} : { opacity: 0.34 }}
-                  key={index}
+                  style={sortCode.sort === index + 1 ? {} : { opacity: 0.34 }}
+                  key={index + 1}
                 >
                   <Trans>{item}</Trans>
-                  {sortCode.sort === index && (
+                  {sortCode.sort === index + 1 && (
                     <span
                       className="icon-check"
                       style={{ fontWeight: "bold" }}

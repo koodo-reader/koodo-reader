@@ -40,6 +40,7 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
       this.props.htmlBook.flattenChapters[
         _.findIndex(this.props.htmlBook.flattenChapters, { href })
       ].label;
+    console.log(href, this.props.htmlBook.flattenChapters, title);
     RecordLocation.recordHtmlLocation(
       this.props.currentBook.key,
       "test",
