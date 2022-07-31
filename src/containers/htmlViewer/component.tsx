@@ -213,6 +213,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       pageHeight: rendition.getPageSize().height,
     });
     StyleUtil.addDefaultCss();
+    tsTransform();
     rendition.setStyle(
       StyleUtil.getCustomCss(
         this.props.currentBook.format === "EPUB" ? false : true
