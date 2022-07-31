@@ -62,7 +62,7 @@ class SortUtil {
   ) {
     let oldRecentArr = books.map((item) => item.key);
     let recentArr = RecordRecent.getAllRecent();
-    if (bookSortCode.sort === 1) {
+    if (bookSortCode.sort === 1 || bookSortCode.sort === 0) {
       if (bookSortCode.order === 1) {
         return getBookIndex(recentArr, oldRecentArr).reverse();
       } else {
