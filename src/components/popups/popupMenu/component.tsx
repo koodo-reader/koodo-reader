@@ -243,7 +243,6 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
         item.bookKey === this.props.currentBook.key
       );
     });
-
     let pageArea = document.getElementById("page-area");
     if (!pageArea) return;
     let iframe = pageArea.getElementsByTagName("iframe")[0];

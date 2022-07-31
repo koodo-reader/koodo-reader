@@ -13,17 +13,21 @@ export const tsTransform = () => {
       "Simplified To Traditional"
     ) {
       doc.querySelectorAll("p").forEach((item) => {
-        item.innerHTML = item.innerHTML.replace(
-          item.innerText,
-          Chinese.s2t(item.innerText)
-        );
+        item.innerHTML = item.innerHTML
+          .split("")
+          .map((item) => Chinese.s2t(item))
+          .join("");
+        // item.innerHTML = item.innerHTML.replace(
+        //   item.innerText,
+        //   Chinese.s2t(item.innerText)
+        // );
       });
     } else {
       doc.querySelectorAll("p").forEach((item) => {
-        item.innerHTML = item.innerHTML.replace(
-          item.innerText,
-          Chinese.t2s(item.innerText)
-        );
+        item.innerHTML = item.innerHTML
+          .split("")
+          .map((item) => Chinese.t2s(item))
+          .join("");
       });
     }
   }

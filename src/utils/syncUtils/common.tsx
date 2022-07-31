@@ -276,7 +276,7 @@ export const zipConfig = (
         .file(
           "bookSortCode.json",
           localStorage.getItem("bookSortCode") ||
-            JSON.stringify({ sort: 0, order: 2 })
+            JSON.stringify({ sort: 1, order: 2 })
         )
         .file(
           "noteSortCode.json",
