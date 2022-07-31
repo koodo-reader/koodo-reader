@@ -28,14 +28,11 @@ class DeleteDialog extends React.Component<DeleteDialogProps> {
         this.props.handleFetchBookmarks();
       }
       if (this.props.notes) {
-        console.log(key, 2);
         let noteArr = DeleteUtil.deleteNotes(this.props.notes, key);
-        console.log(noteArr, 3);
         if (noteArr.length === 0) {
           await localforage.removeItem("notes");
           resolve();
         } else {
-          console.log(key, 5);
           await localforage.setItem("notes", noteArr);
           resolve();
         }
@@ -61,7 +58,6 @@ class DeleteDialog extends React.Component<DeleteDialogProps> {
     } else if (this.props.mode === "trash") {
       let keyArr = AddTrash.getAllTrash();
       for (let i = 0; i < keyArr.length; i++) {
-        console.log(i, keyArr[i]);
         await this.deleteBook(keyArr[i]);
       }
 
@@ -109,7 +105,6 @@ class DeleteDialog extends React.Component<DeleteDialogProps> {
             //删除阅读历史
             RecordLocation.clear(key);
             //删除书签，笔记，书摘，高亮
-            console.log(key, 1);
             await this.handleDeleteOther(key);
             resolve();
           })
