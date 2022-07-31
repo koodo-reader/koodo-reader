@@ -1,7 +1,7 @@
 {
   "name": "koodo-reader",
   "main": "main.js",
-  "version": "1.4.6",
+  "version": "1.4.7",
   "description": "A cross-platform ebook reader",
   "author": {
     "name": "App by Troye",
@@ -31,6 +31,7 @@
     "macaddress": "^0.5.2",
     "react-hot-toast": "^2.1.1",
     "request": "^2.88.2",
+    "ssh2-sftp-client": "^9.0.2",
     "underscore": "^1.11.0",
     "webdav": "^3.6.2",
     "webdav-fs": "^3.0.0",
