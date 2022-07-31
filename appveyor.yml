@@ -5,7 +5,8 @@ branches:
     - master
 
 image:
-  - macOS
+  - Visual Studio 2019
+  - macos
   - Ubuntu2004
 
 stack: node 14
@@ -13,12 +14,12 @@ stack: node 14
 init:
   - git config --global core.autocrlf input
   - sh: |
-      if [ "${APPVEYOR_BUILD_WORKER_IMAGE}" == "macOS" ]
+      if [ "${APPVEYOR_BUILD_WORKER_IMAGE}" == "Ubuntu2004" ]
       then
-        python --version
-        brew install python3
-        brew link --overwrite python@3.8
-        python --version
+        sudo apt-get install --no-install-recommends -y icnsutils graphicsmagick xz-utils
+        sudo apt-get install snapd
+        sudo snap install snapcraft --classic
+        sudo apt-get install -y rpm
       fi
 
 install:
