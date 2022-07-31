@@ -29,7 +29,7 @@ let options = {
     nodeIntegration: true,
     contextIsolation: false,
     nativeWindowOpen: true,
-    nodeIntegrationInSubFrames: false,
+    nodeIntegrationInSubFrames: true,
     allowRunningInsecureContent: true,
     enableRemoteModule: true,
   },
@@ -70,6 +70,9 @@ const createMainWin = () => {
 
   ipcMain.handle("open-book", (event, config) => {
     let { url, isMergeWord, isFullscreen, isPreventSleep } = config;
+    if (url.indexOf("/epub/") > -1) {
+      options.webPreferences.nodeIntegrationInSubFrames = false;
+    }
     store.set({
       url,
       isMergeWord: isMergeWord ? isMergeWord : "no",
@@ -187,6 +190,9 @@ const createMainWin = () => {
         hasShadow: store.get("isMergeWord") !== "yes" ? false : true,
         transparent: store.get("isMergeWord") !== "yes" ? true : false,
       });
+      if (store.get("url").indexOf("/epub/") > -1) {
+        options.webPreferences.nodeIntegrationInSubFrames = false;
+      }
       store.set(
         "isMergeWord",
         store.get("isMergeWord") !== "yes" ? "yes" : "no"
