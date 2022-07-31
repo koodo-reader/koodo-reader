@@ -26,7 +26,7 @@ install:
   - git reset --hard HEAD
   - npm install node-sass@4.14.1
   - node --version
-  - npm install --no-optional
+  - npm install
 
 build_script:
   - npm run release
