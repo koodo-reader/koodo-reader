@@ -22,4 +22,5 @@ export interface BookCoverState {
   isFavorite: boolean;
   left: number;
   top: number;
+  direction: string;
 }

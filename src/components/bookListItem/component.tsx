@@ -20,6 +20,7 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
       isDeleteDialog: false,
       isFavorite:
         AddFavorite.getAllFavorite().indexOf(this.props.book.key) > -1,
+      direction: "horizontal",
     };
   }
   componentDidMount() {
@@ -118,6 +119,7 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
             onClick={() => {
               this.handleJump();
             }}
+            style={{ display: "block" }}
           >
             <EmptyCover
               {...{
@@ -128,13 +130,32 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
             />
           </div>
         ) : (
-          <div className="book-item-list-cover">
+          <div
+            className="book-item-list-cover"
+            onClick={() => {
+              this.handleJump();
+            }}
+          >
             <img
-              className="book-item-list-cover-item"
               src={this.props.book.cover}
               alt=""
-              onClick={() => {
-                this.handleJump();
+              style={
+                this.state.direction === "horizontal"
+                  ? { width: "100%" }
+                  : { height: "100%" }
+              }
+              onLoad={(res: any) => {
+                console.log(res.target.naturalHeight / res.target.naturalWidth);
+                if (
+                  res.target.naturalHeight / res.target.naturalWidth >
+                  74 / 57
+                ) {
+                  console.log("horizontal");
+                  this.setState({ direction: "horizontal" });
+                } else {
+                  console.log("vertical");
+                  this.setState({ direction: "vertical" });
+                }
               }}
             />
           </div>

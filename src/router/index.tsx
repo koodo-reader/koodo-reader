@@ -21,6 +21,8 @@ const Router = () => {
         navigator.language === "zh-HK"
       ) {
         i18n.changeLanguage("cht");
+      } else if (navigator.language.startsWith("ro")) {
+        i18n.changeLanguage("ro");
       } else if (navigator.language.startsWith("ru")) {
         i18n.changeLanguage("ru");
       } else if (navigator.language.startsWith("jp")) {

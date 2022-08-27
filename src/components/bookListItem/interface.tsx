@@ -22,4 +22,5 @@ export interface BookItemProps extends RouteComponentProps<any> {
 export interface BookItemState {
   isDeleteDialog: boolean;
   isFavorite: boolean;
+  direction: string;
 }
