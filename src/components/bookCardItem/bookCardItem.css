@@ -12,6 +12,9 @@
   margin: 15px 15px 5px 15px;
   cursor: pointer;
   overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .book-item-title {
   width: 80%;

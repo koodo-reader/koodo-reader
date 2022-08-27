@@ -24,6 +24,7 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
         AddFavorite.getAllFavorite().indexOf(this.props.book.key) > -1,
       left: 0,
       top: 0,
+      direction: "horizontal",
     };
   }
 
@@ -138,6 +139,7 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
               onClick={() => {
                 this.handleJump();
               }}
+              style={{ display: "block" }}
             >
               <EmptyCover
                 {...{
@@ -148,14 +150,37 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
               />
             </div>
           ) : (
-            <img
+            <div
               className="book-cover-item-cover"
-              src={this.props.book.cover}
-              alt=""
               onClick={() => {
                 this.handleJump();
               }}
-            />
+            >
+              <img
+                src={this.props.book.cover}
+                alt=""
+                style={
+                  this.state.direction === "horizontal"
+                    ? { width: "100%" }
+                    : { height: "100%" }
+                }
+                onLoad={(res: any) => {
+                  console.log(
+                    res.target.naturalHeight / res.target.naturalWidth
+                  );
+                  if (
+                    res.target.naturalHeight / res.target.naturalWidth >
+                    170 / 120
+                  ) {
+                    console.log("horizontal");
+                    this.setState({ direction: "horizontal" });
+                  } else {
+                    console.log("vertical");
+                    this.setState({ direction: "vertical" });
+                  }
+                }}
+              />
+            </div>
           )}
 
           <p className="book-cover-item-title">{this.props.book.name}</p>

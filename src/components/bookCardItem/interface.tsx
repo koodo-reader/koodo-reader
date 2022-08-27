@@ -21,4 +21,5 @@ export interface BookCardState {
   isFavorite: boolean;
   left: number;
   top: number;
+  direction: string;
 }

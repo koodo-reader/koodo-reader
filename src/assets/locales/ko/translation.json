@@ -232,7 +232,7 @@
   "Tips": "제시",
   "Brightness": "화면 밝기",
   "How sync works": "동기화 작동 방식",
-  "You need to manually change the storage location to the same sync folder on different computers. When you click the sync button, Koodo Reader will automatically upload or download the data from this folder according the timestamp.": "동기화 기능은 타사 동기화 디스크 구현에 맞추어 다른 컴퓨터에서 데이터 저장 위치를 동일한 디스크 폴더로 수정해야 합니다. 한 컴퓨터에서 동기화를 클릭하면 쿠도리더의 데이터가 이 폴더에 업데이트 됩니다. 네트워크 디스크 동기화 후 다른 컴퓨터에서 쿠도리더를 열고 동기화 버튼을 누르면 데이터가 쿠도리더와 동기화 됩니다. 구체적인 조작방법은 도움말에서 확인하세요.",
+  "Sync function works with third-party cloud drive. You need to manually change the storage location to the same sync folder on different computers. When you click the sync button, Koodo Reader will automatically upload or download the data from this folder according the timestamp.": "동기화 기능은 타사 동기화 디스크 구현에 맞추어 다른 컴퓨터에서 데이터 저장 위치를 동일한 디스크 폴더로 수정해야 합니다. 한 컴퓨터에서 동기화를 클릭하면 쿠도리더의 데이터가 이 폴더에 업데이트 됩니다. 네트워크 디스크 동기화 후 다른 컴퓨터에서 쿠도리더를 열고 동기화 버튼을 누르면 데이터가 쿠도리더와 동기화 됩니다. 구체적인 조작방법은 도움말에서 확인하세요.",
   "Line Height": "줄 간격",
   "Please turn off open books in the main window first": "먼저 기본 창에 열어둔 책을 닫으세요",
   "Please turn off merge with word first": "먼저 몰래 읽기 모드를 끄세요",

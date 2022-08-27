@@ -13,6 +13,9 @@
   cursor: pointer;
   overflow: hidden;
   float: left;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .book-cover-item-title {
   width: 240px;
