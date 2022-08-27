@@ -82,7 +82,7 @@ class styleUtil {
           : ""
       };margin-bottom: ${
         StorageUtil.getReaderConfig("paraSpacing") || 0
-      }px !important;padding:0px;word-wrap: break-word;`;
+      }px !important;padding:0px 5px !important;word-wrap: break-word;`;
     } else {
       return {
         "a, article, cite, code, div, li, p, pre, span, table, body": {
@@ -142,10 +142,10 @@ class styleUtil {
           }`,
           "margin-bottom": `${
             StorageUtil.getReaderConfig("paraSpacing") || 0
-          }px !important`,
+          }px !important; word-wrap: break-word;`,
         },
         body: {
-          padding: "0px !important",
+          padding: "0px 5px !important",
         },
       };
     }
