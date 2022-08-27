@@ -11,11 +11,9 @@
   height: 74px;
   opacity: 1;
   cursor: pointer;
+  overflow: hidden;
 }
-.book-item-list-cover-item {
-  width: 57px;
-  height: 74px;
-}
+
 .book-item-list-title,
 .book-item-list-author {
   max-height: 60px;

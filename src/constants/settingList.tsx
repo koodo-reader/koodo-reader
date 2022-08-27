@@ -84,7 +84,7 @@ export const langList = [
   { label: "简体中文", value: "zh" },
   { label: "繁體中文", value: "cht" },
   { label: "English", value: "en" },
-  { label: "русский", value: "ru" },
+  { label: "Pусский", value: "ru" },
   { label: "Español", value: "es" },
   { label: "Français", value: "fr" },
   { label: "Português", value: "ptBR" },
@@ -94,6 +94,7 @@ export const langList = [
   { label: "Deutsch", value: "de" },
   { label: "한국어", value: "ko" },
   { label: "Polski", value: "pl" },
+  { label: "Română", value: "ro" },
 ];
 
 export const searchList = [
