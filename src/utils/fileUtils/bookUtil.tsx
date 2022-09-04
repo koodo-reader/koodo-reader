@@ -28,6 +28,9 @@ class BookUtil {
         reader.onload = async (event) => {
           if (!event.target) return;
           try {
+            if (!fs.existsSync(path.join(dataPath, "book"))) {
+              fs.mkdirSync(path.join(dataPath, "book"));
+            }
             fs.writeFileSync(
               path.join(dataPath, "book", key),
               Buffer.from(event.target.result as any)
