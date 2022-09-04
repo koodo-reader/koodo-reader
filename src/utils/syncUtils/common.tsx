@@ -62,6 +62,9 @@ export const moveData = (
   reader.readAsArrayBuffer(file);
   reader.onload = async (event) => {
     if (!event.target) return;
+    if (!fs.existsSync(path.join(dirPath))) {
+      fs.mkdirSync(path.join(dirPath));
+    }
     fs.writeFileSync(
       path.join(dirPath, file.name),
       Buffer.from(event.target.result as any)
@@ -134,6 +137,9 @@ export const syncData = (blob: Blob, books: BookModel[] = [], isSync: true) => {
     reader.readAsArrayBuffer(file);
     reader.onload = async (event) => {
       if (!event.target) return;
+      if (!fs.existsSync(path.join(dataPath))) {
+        fs.mkdirSync(path.join(dataPath));
+      }
       fs.writeFileSync(
         path.join(dataPath, file.name),
         Buffer.from(event.target.result as any)
