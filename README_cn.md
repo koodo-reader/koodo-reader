@@ -1,6 +1,6 @@
 <div align="left">
 
-简体中文 | [English](https://github.com/troyeguo/koodo-reader/blob/master/README.md)
+简体中文 | [Português](https://github.com/troyeguo/koodo-reader/blob/master/README_pt.md) | [English](https://github.com/troyeguo/koodo-reader/blob/master/README.md)
 
 </div>
 
@@ -93,7 +93,7 @@ docker-compose up -d
 
 ## 运行源码
 
-请确保您电脑的 node 的版本大于 10.0.0，已配置好 yarn，git 的运行环境。
+请确保您电脑的 node 的版本为 14.x.x，已配置好 yarn，git 的运行环境。
 
 1. 将项目源码下载到本地
 

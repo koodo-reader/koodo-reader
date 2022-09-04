@@ -1,6 +1,6 @@
 <div align="left">
 
-[简体中文](https://github.com/troyeguo/koodo-reader/blob/master/README_cn.md) | English
+[简体中文](https://github.com/troyeguo/koodo-reader/blob/master/README_cn.md) | [Português](https://github.com/troyeguo/koodo-reader/blob/master/README_pt.md) |English
 
 </div>
 
@@ -96,7 +96,7 @@ docker-compose up -d
 
 ## Develop
 
-Make sure that you have installed yarn and git, node's version on your computer is larger than 14.0.0.
+Make sure that you have installed yarn and git, node's version on your computer is 14.x.x.
 
 1. Download the repo
 

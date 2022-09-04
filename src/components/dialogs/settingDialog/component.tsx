@@ -332,7 +332,7 @@ class SettingDialog extends React.Component<
                     this.handleChangeLocation();
                   }}
                 >
-                  <Trans>Change location</Trans>
+                  <Trans>Select</Trans>
                 </span>
               </div>
               <div className="setting-dialog-location-title">

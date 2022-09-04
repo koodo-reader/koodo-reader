@@ -64,6 +64,7 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     let doc = getIframeDoc();
     if (!doc) return;
     doc.addEventListener("mousedown", this.openMenu);
+    doc.addEventListener("touchend", this.openMenu);
     if (this.props.currentBook.format === "PDF") {
       setTimeout(() => {
         this.renderHighlighters();

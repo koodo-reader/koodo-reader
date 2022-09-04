@@ -135,13 +135,14 @@
   opacity: 1;
   border-radius: 11px;
   position: relative;
-  top: 4px;
+  top: 0px;
   left: 2px;
   cursor: pointer;
   font-size: 13px;
   display: flex;
   justify-content: center;
   align-items: center;
+  line-height: 1;
 }
 .theme-setting-item {
   width: 25px;

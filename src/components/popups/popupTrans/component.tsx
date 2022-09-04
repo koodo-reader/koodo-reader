@@ -69,9 +69,10 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
             </p>
             <select
               className="booklist-shelf-list"
-              style={{ width: "80px", marginLeft: "10px" }}
+              style={{ width: "75px", marginLeft: "10px" }}
               onChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
                 StorageUtil.setReaderConfig("transService", event.target.value);
+                StorageUtil.setReaderConfig("transTarget", "en");
                 this.setState({ translateService: event.target.value });
                 this.handleTrans(
                   this.props.originalText.replace(/(\r\n|\n|\r)/gm, "")
@@ -97,7 +98,7 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
             </select>
             <select
               className="booklist-shelf-list"
-              style={{ width: "100px", marginLeft: "10px" }}
+              style={{ width: "75px", marginLeft: "10px" }}
               onChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
                 let targetLang = event.target.value;
                 StorageUtil.setReaderConfig("transTarget", targetLang);
