@@ -216,7 +216,8 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     tsTransform();
     rendition.setStyle(
       StyleUtil.getCustomCss(
-        this.props.currentBook.format === "EPUB" ? false : true
+        this.props.currentBook.format === "EPUB" ? false : true,
+        StorageUtil.getReaderConfig("readerMode") === "scroll"
       )
     );
     if (this.props.currentBook.format !== "EPUB") {
@@ -496,6 +497,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     window.mammoth
       .convertToHtml({ arrayBuffer: result })
       .then(async (res: any) => {
+        console.log(res.value);
         let rendition = new StrRender(
           res.value,
           this.state.readerMode,
@@ -504,6 +506,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         await rendition.renderTo(
           document.getElementsByClassName("html-viewer-page")[0]
         );
+        console.log("rendered");
         this.handleRest(rendition);
       });
   };
