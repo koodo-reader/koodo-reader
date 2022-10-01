@@ -66,14 +66,16 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         handleLinkJump(event);
       });
 
-      doc.document.addEventListener("mouseup", () => {
-        if (!doc!.getSelection()) return;
-        var rect = doc!.getSelection()!.getRangeAt(0).getBoundingClientRect();
-        this.setState({
-          rect,
-          pageWidth: doc.document.body.scrollWidth,
-          pageHeight: doc.document.body.scrollHeight,
-        });
+      doc.document.addEventListener("mouseup", (e) => {
+        if(e.button === 2) {
+          if (!doc!.getSelection()) return;
+          var rect = doc!.getSelection()!.getRangeAt(0).getBoundingClientRect();
+          this.setState({
+            rect,
+            pageWidth: doc.document.body.scrollWidth,
+            pageHeight: doc.document.body.scrollHeight,
+          });
+        }
         // iWin.getSelection() && showHighlight(getHightlightCoords());
       });
     };

@@ -308,10 +308,12 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       this.props.handleLeaveReader("top");
       this.props.handleLeaveReader("bottom");
     });
-    doc.addEventListener("mouseup", () => {
-      if (!doc!.getSelection()) return;
-      var rect = doc!.getSelection()!.getRangeAt(0).getBoundingClientRect();
-      this.setState({ rect });
+    doc.addEventListener("mouseup", (e) => {
+      if(e.button === 2) {
+        if (!doc!.getSelection()) return;
+        var rect = doc!.getSelection()!.getRangeAt(0).getBoundingClientRect();
+        this.setState({ rect });
+      }
     });
   };
   handleCbr = async (result: ArrayBuffer) => {
