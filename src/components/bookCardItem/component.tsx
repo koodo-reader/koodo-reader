@@ -169,17 +169,12 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
                     : { height: "100%" }
                 }
                 onLoad={(res: any) => {
-                  console.log(
-                    res.target.naturalHeight / res.target.naturalWidth
-                  );
                   if (
                     res.target.naturalHeight / res.target.naturalWidth >
                     137 / 105
                   ) {
-                    console.log("horizontal");
                     this.setState({ direction: "horizontal" });
                   } else {
-                    console.log("vertical");
                     this.setState({ direction: "vertical" });
                   }
                 }}

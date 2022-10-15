@@ -37,7 +37,7 @@ class Analytics {
       try {
         await this.ga.pageview(hostname, url, title, 1, clientId);
       } catch (e) {
-        console.error(e);
+        console.log(e);
       }
     });
   }
@@ -50,7 +50,7 @@ class Analytics {
           clientID: clientId,
         });
       } catch (e) {
-        console.error(e);
+        console.log(e);
       }
     });
   }
@@ -60,7 +60,7 @@ class Analytics {
       try {
         await this.ga.exception(exDesc, exFatal);
       } catch (e) {
-        console.error(e);
+        console.log(e);
       }
     });
   }

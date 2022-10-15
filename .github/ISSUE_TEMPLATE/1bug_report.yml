@@ -69,7 +69,7 @@ body:
     id: screenshot
     attributes:
       label: Screenshots (Optional)
-      placeholder: Clicking on this box and drag your screenshots or videos here to upload them
+      placeholder: Clicking on this box and drag your screenshots or videos here to upload. Make sure the screenshots or videos are displayed normally after submitting the issue
     validations:
       required: false
 
@@ -77,6 +77,6 @@ body:
     id: download
     attributes:
       label: Files (Optional)
-      placeholder: 1. Compress your files into a zip file; 2. Clicking on this box; 3. Drag and drop here
+      placeholder: 1. Compress your files into a zip file; 2. Clicking on this box; 3. Drag and drop here; 4.  Make sure the file is downloadable after submitting the issue
     validations:
       required: false

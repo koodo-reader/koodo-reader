@@ -51,7 +51,7 @@ class BookUtil {
   }
   static deleteBook(key: string) {
     if (isElectron) {
-      const fs = window.require("fs-extra");
+      const fs_extra = window.require("fs-extra");
       const path = window.require("path");
       const dataPath = localStorage.getItem("storageLocation")
         ? localStorage.getItem("storageLocation")
@@ -60,7 +60,7 @@ class BookUtil {
             .ipcRenderer.sendSync("storage-location", "ping");
       return new Promise<void>((resolve, reject) => {
         try {
-          fs.remove(path.join(dataPath, `book`, key), (err) => {
+          fs_extra.remove(path.join(dataPath, `book`, key), (err) => {
             if (err) throw err;
             resolve();
           });
@@ -212,7 +212,7 @@ class BookUtil {
     path: string,
     file_content: ArrayBuffer
   ) {
-    return new Promise<BookModel | boolean>(async (resolve, reject) => {
+    return new Promise<BookModel | string>(async (resolve, reject) => {
       let cover: any = "";
       let key: string,
         name: string,
@@ -230,6 +230,9 @@ class BookUtil {
       switch (extension) {
         case "pdf":
           cover = await getPDFCover(file_content);
+          if (cover.indexOf("image") === -1) {
+            cover = "";
+          }
           break;
         case "epub":
           let epubRendition = new EpubRender(
@@ -238,6 +241,12 @@ class BookUtil {
             StorageUtil.getReaderConfig("isSliding") === "yes" ? true : false
           );
           let metadata = await epubRendition.getMetadata();
+          if (metadata === "timeout_error") {
+            resolve("get_metadata_error");
+            break;
+          } else if (!metadata.title) {
+            break;
+          }
 
           [name, author, description, publisher, cover] = [
             metadata.title,
@@ -257,7 +266,7 @@ class BookUtil {
             StorageUtil.getReaderConfig("isSliding") === "yes" ? true : false
           );
           if (mobiRendition.getMetadata().compression === 17480) {
-            resolve(false);
+            resolve("parse_kindle_error");
           }
           break;
         case "azw3":
@@ -267,7 +276,7 @@ class BookUtil {
             StorageUtil.getReaderConfig("isSliding") === "yes" ? true : false
           );
           if (azw3Rendition.getMetadata().compression === 17480) {
-            resolve(false);
+            resolve("parse_kindle_error");
           }
           break;
         case "fb2":

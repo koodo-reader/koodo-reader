@@ -165,17 +165,12 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
                     : { height: "100%" }
                 }
                 onLoad={(res: any) => {
-                  console.log(
-                    res.target.naturalHeight / res.target.naturalWidth
-                  );
                   if (
                     res.target.naturalHeight / res.target.naturalWidth >
                     170 / 120
                   ) {
-                    console.log("horizontal");
                     this.setState({ direction: "horizontal" });
                   } else {
-                    console.log("vertical");
                     this.setState({ direction: "vertical" });
                   }
                 }}
