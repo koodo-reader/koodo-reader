@@ -72,6 +72,8 @@ const createMainWin = () => {
     let { url, isMergeWord, isFullscreen, isPreventSleep } = config;
     if (url.indexOf("/epub/") > -1) {
       options.webPreferences.nodeIntegrationInSubFrames = false;
+    } else {
+      options.webPreferences.nodeIntegrationInSubFrames = true;
     }
     store.set({
       url,

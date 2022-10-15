@@ -20,7 +20,7 @@ class DropboxUtil {
           resolve(true);
         })
         .catch(function (error: any) {
-          console.error(error, "上传失败");
+          console.log(error, "上传失败");
           resolve(false);
         });
     });
@@ -53,12 +53,12 @@ class DropboxUtil {
               }
             })
             .catch(function (error: any) {
-              console.error(error);
+              console.log(error);
               resolve(false);
             });
         })
         .catch(function (error) {
-          console.error(error);
+          console.log(error);
         });
     });
   }

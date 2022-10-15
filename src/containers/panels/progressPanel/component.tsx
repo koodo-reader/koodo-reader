@@ -136,7 +136,7 @@ class ProgressPanel extends React.Component<
             type="text"
             name="jumpPage"
             id="jumpPage"
-            value={this.state.currentPage}
+            defaultValue={this.state.currentPage}
           />
           <span>/ {this.state.totalPage}</span>
           &nbsp;&nbsp;&nbsp;
@@ -148,7 +148,7 @@ class ProgressPanel extends React.Component<
             onBlur={(event) => {
               this.handleJumpChapter(event);
             }}
-            value={
+            defaultValue={
               this.props.currentChapterIndex === -1
                 ? this.props.htmlBook.flattenChapters.length
                 : this.props.currentChapterIndex + 1

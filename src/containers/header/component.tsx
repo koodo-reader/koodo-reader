@@ -63,7 +63,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       //Detect data modification
       fs.readFile(sourcePath, "utf8", (err, data) => {
         if (err) {
-          console.error(err);
+          console.log(err);
           return;
         }
         const readerConfig = JSON.parse(data);
@@ -124,7 +124,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
 
       fs.readFile(sourcePath, "utf8", (err, data) => {
         if (err) {
-          console.error(err);
+          console.log(err);
           return;
         }
         const readerConfig = JSON.parse(data);
@@ -159,6 +159,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     fs.readFile(sourcePath, "utf8", async (err, data) => {
       if (err || !data) {
         this.syncToLocation();
+        return;
       }
       const readerConfig = JSON.parse(data);
 

@@ -34,7 +34,6 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
           });
         })
         .catch((err) => {
-          console.error(err);
           this.setState({
             translatedText: this.props.t("Error happens"),
           });
@@ -43,7 +42,6 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
       const translate = window.require("@vitalets/google-translate-api");
       translate(text, {
         to: StorageUtil.getReaderConfig("transTarget") || "en",
-        tld: navigator.language === "zh-CN" ? "cn" : "com",
       })
         .then((res) => {
           this.setState({
@@ -51,7 +49,6 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
           });
         })
         .catch((err) => {
-          console.log(err);
           this.setState({
             translatedText: this.props.t("Error happens"),
           });

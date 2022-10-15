@@ -23,7 +23,7 @@ export const fetchFileFromPath = (filePath: string) => {
 
     fs.readFile(filePath, (err, data) => {
       if (err) {
-        console.error(err);
+        console.log(err);
         return;
       }
       const file = new File(

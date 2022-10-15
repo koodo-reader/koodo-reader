@@ -50,7 +50,7 @@ class CardList extends React.Component<CardListProps, CardListStates> {
 
     if (book.format === "PDF") {
       let bookLocation = JSON.parse(note.cfi) || {};
-      RecordLocation.recordPDFLocation(book.md5, bookLocation);
+      RecordLocation.recordPDFLocation(book.md5.split("-")[0], bookLocation);
     } else {
       let bookLocation: any = {};
       //兼容1.4.2之前的版本

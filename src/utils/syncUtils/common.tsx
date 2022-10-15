@@ -5,23 +5,22 @@ import NoteModel from "../../model/Note";
 import BookmarkModel from "../../model/Bookmark";
 import { isElectron } from "react-device-detect";
 
-let JSZip = (window as any).JSZip;
 let configArr = [
-  "notes",
-  "books",
-  "bookmarks",
-  "readerConfig",
-  "noteTags",
-  "themeColors",
-  "bookSortCode",
-  "noteSortCode",
-  "readingTime",
-  "recentBooks",
-  "favoriteBooks",
-  "favoriteBooks",
-  "shelfList",
-  "pdfjs.history",
-  "recordLocation",
+  "notes.json",
+  "books.json",
+  "bookmarks.json",
+  "readerConfig.json",
+  "noteTags.json",
+  "themeColors.json",
+  "bookSortCode.json",
+  "noteSortCode.json",
+  "readingTime.json",
+  "recentBooks.json",
+  "favoriteBooks.json",
+  "favoriteBooks.json",
+  "shelfList.json",
+  "pdfjs.history.json",
+  "recordLocation.json",
 ];
 export function getParamsFromUrl() {
   var hashParams: any = {};
@@ -184,86 +183,59 @@ export const zipBook = (zip: any, books: BookModel[]) => {
   });
 };
 
-export const unzipConfig = (file: File) => {
+export const unzipConfig = (zipEntries: any) => {
   return new Promise<boolean>((resolve, reject) => {
-    let zip = new JSZip();
-    let count = 0;
-    configArr.forEach((item) => {
-      zip
-        .loadAsync(file)
-        .then((content: any) => {
-          return content.files[
-            content.files[`${item}.json`]
-              ? `${item}.json`
-              : `config/${item}.json`
-          ].async("text");
-        })
-        .then(async (text: any) => {
-          if (text) {
-            if (item === "notes" || item === "books" || item === "bookmarks") {
-              localforage.setItem(item, JSON.parse(text));
-            } else {
-              localStorage.setItem(item, text);
-            }
-          }
-          count++;
-          if (count === configArr.length) {
-            resolve(true);
-          }
-        })
-        .catch((err: any) => {
-          reject(false);
-          console.log(err, "Error happen");
-        });
+    zipEntries.forEach(function (zipEntry) {
+      let text = zipEntry.getData().toString("utf8");
+      if (configArr.indexOf(zipEntry.name) > -1 && text) {
+        if (
+          zipEntry.name === "notes.json" ||
+          zipEntry.name === "books.json" ||
+          zipEntry.name === "bookmarks.json"
+        ) {
+          localforage.setItem(zipEntry.name.split(".")[0], JSON.parse(text));
+        } else if (zipEntry.name === "pdfjs.history.json") {
+          localStorage.setItem("pdfjs.history", text);
+        } else {
+          localStorage.setItem(zipEntry.name.split(".")[0], text);
+        }
+      }
     });
+    resolve(true);
   });
 };
 
-export const unzipBook = (file: File) => {
+const toArrayBuffer = (buf) => {
+  const ab = new ArrayBuffer(buf.length);
+  const view = new Uint8Array(ab);
+  for (let i = 0; i < buf.length; ++i) {
+    view[i] = buf[i];
+  }
+  return ab;
+};
+export const unzipBook = (zipEntries: any) => {
   return new Promise<boolean>((resolve, reject) => {
     localforage.getItem("books").then((value: any) => {
-      let zip = new JSZip();
       let count = 0;
       value &&
         value.length > 0 &&
         value.forEach((item: any) => {
-          zip
-            .loadAsync(file)
-            .then((content: any) => {
-              if (content.files[`book/${item.key}`]) {
-                return content.files[`book/${item.key}`].async("arraybuffer");
-              } else if (content.files[`${item.key}`]) {
-                return content.files[`${item.key}`].async("arraybuffer");
-              }
-              if (
-                content.files[`book/${item.name}.pdf`] &&
-                item.description === "pdf"
-              ) {
-                //兼容之前的版本
-                return content.files[`book/${item.name}.pdf`].async(
-                  "arraybuffer"
-                ); // a promise of "Hello World\n"
-              } else if (content.files[`book/${item.name}.epub`]) {
-                return content.files[`book/${item.name}.epub`].async(
-                  "arraybuffer"
-                ); // a promise of "Hello World\n"
-              }
-            })
-            .then(async (book: ArrayBuffer) => {
-              await BookUtil.addBook(item.key, book);
+          zipEntries.forEach(async (zipEntry) => {
+            if (zipEntry.name === item.key) {
+              await BookUtil.addBook(
+                item.key,
+                toArrayBuffer(zipEntry.getData())
+              );
               count++;
               if (count === value.length) {
                 resolve(true);
               }
-            })
-            .catch((err: any) => {
-              resolve(false);
-            });
+            }
+          });
         });
     });
   });
 };
-
 export const zipConfig = (
   zip: any,
   books: BookModel[],
