@@ -274,7 +274,16 @@ class BackupDialog extends React.Component<
                   ? "backup-page-backup active"
                   : "backup-page-backup"
               }
-              onClick={() => {
+              onClick={(event) => {
+                if (!isElectron) {
+                  event.preventDefault();
+                  toast(
+                    this.props.t(
+                      "Koodo Reader's web version are limited by the browser, for more powerful features, please download the desktop version."
+                    )
+                  );
+                  return;
+                }
                 this.setState({ isBackup: "no" });
               }}
             >
