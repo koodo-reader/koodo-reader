@@ -77,8 +77,6 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
   };
   //新建高亮
   getHighlighter = () => {
-    // 注意点一
-    // 为了每次切换章节时都有与当前文档相关联的 pen
     let doc = getIframeDoc();
     if (!doc) return;
     this.highlighter = window.rangy.createHighlighter(doc);
@@ -290,6 +288,7 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
           }
         }
       });
+    this.key = "";
     if (!iWin || !iWin.getSelection()) return;
     iWin.getSelection()?.empty(); // 清除文本选取
     // this.props.isOpenMenu &&

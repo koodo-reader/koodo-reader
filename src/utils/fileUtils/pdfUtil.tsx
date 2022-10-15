@@ -52,6 +52,10 @@ export const getHightlightCoords = () => {
 };
 export const getPDFCover = (file: ArrayBuffer) => {
   return new Promise<string>((resolve, reject) => {
+    let fileSize = file.byteLength / 1024 / 1024;
+    setTimeout(() => {
+      resolve("");
+    }, Math.ceil(fileSize / 10) * 1000);
     pdfjsLib
       .getDocument({ data: file })
       .promise.then((pdfDoc: any) => {

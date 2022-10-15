@@ -77,7 +77,9 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
       let cfi = "";
       if (this.props.currentBook.format === "PDF") {
         cfi = JSON.stringify(
-          RecordLocation.getPDFLocation(this.props.currentBook.md5)
+          RecordLocation.getPDFLocation(
+            this.props.currentBook.md5.split("-")[0]
+          )
         );
       } else {
         cfi = JSON.stringify(

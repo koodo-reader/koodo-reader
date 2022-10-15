@@ -43,14 +43,9 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         .querySelector("body")
         ?.setAttribute("style", "background-color: rgba(0,0,0,0)");
     }
-
+    let time = ReadingTime.getTime(this.props.currentBook.key) || 0;
     this.tickTimer = setInterval(() => {
-      if (this.state.time === 0 && this.props.currentBook.key) {
-        this.setState({
-          time: ReadingTime.getTime(this.props.currentBook.key),
-        });
-      } else if (this.state.time > 0) {
-        let time = this.state.time;
+      if (this.props.currentBook.key) {
         time += 1;
         this.setState({ time });
         ReadingTime.setTime(this.props.currentBook.key, time);
