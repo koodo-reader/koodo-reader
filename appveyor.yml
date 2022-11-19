@@ -9,7 +9,7 @@ image:
   - macos
   - Ubuntu2004
 
-stack: node 14
+stack: node 16
 
 init:
   - git config --global core.autocrlf input
