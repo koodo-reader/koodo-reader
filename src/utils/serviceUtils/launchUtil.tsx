@@ -14,6 +14,9 @@ export const initTheme = () => {
       window.matchMedia("(prefers-color-scheme: dark)").matches;
   }
   StorageUtil.setReaderConfig("isOSNight", isNight ? "yes" : "no");
+  if (!StorageUtil.getReaderConfig("appSkin")) {
+    StorageUtil.setReaderConfig("appSkin", "system");
+  }
   if (
     StorageUtil.getReaderConfig("appSkin") === "night" ||
     (StorageUtil.getReaderConfig("appSkin") === "system" &&
