@@ -88,15 +88,12 @@
   "scripts": {
     "analyze": "source-map-explorer 'build/static/js/*.js'",
     "start": "react-scripts start",
-    "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "ele": "electron .",
     "dev": "concurrently \"cross-env BROWSER=none npm start\" \"wait-on http://localhost:3000/ && nodemon --watch main.js --exec electron .\"",
-    "pack": "electron-builder --dir",
     "release": "electron-builder",
     "prerelease": "npm run build",
-    "prepack": "npm run build",
     "dist": "electron-builder",
     "trans": "nodemon i18n.js"
   },
