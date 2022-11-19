@@ -96,9 +96,7 @@
     "pack": "electron-builder --dir",
     "release": "electron-builder",
     "prerelease": "npm run build",
-    "preelectron-release": "npm run build",
     "prepack": "npm run build",
-    "preelectron-pack": "npm run build",
     "dist": "electron-builder",
     "trans": "nodemon i18n.js"
   },
