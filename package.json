@@ -93,9 +93,6 @@
     "eject": "react-scripts eject",
     "ele": "electron .",
     "dev": "concurrently \"cross-env BROWSER=none npm start\" \"wait-on http://localhost:3000/ && nodemon --watch main.js --exec electron .\"",
-    "release": "electron-builder",
-    "prerelease": "npm run build",
-    "dist": "electron-builder",
     "trans": "nodemon i18n.js"
   },
   "homepage": "./",
