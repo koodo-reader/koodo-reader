@@ -18,7 +18,7 @@
     "noImplicitAny": false,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src"],
+  "include": ["src", "public/lib/MathJax/MathJax.js"],
   "exclude": ["utils"],
   "paths": {
     "*": ["./node_modules/@types", "./types"]

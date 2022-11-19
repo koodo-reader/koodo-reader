@@ -194,6 +194,8 @@ const createMainWin = () => {
       });
       if (store.get("url").indexOf("/epub/") > -1) {
         options.webPreferences.nodeIntegrationInSubFrames = false;
+      } else {
+        options.webPreferences.nodeIntegrationInSubFrames = true;
       }
       store.set(
         "isMergeWord",

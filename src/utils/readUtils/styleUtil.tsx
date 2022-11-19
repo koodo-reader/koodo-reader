@@ -145,7 +145,7 @@ class styleUtil {
           }px !important; word-wrap: break-word;`,
         },
         body: {
-          padding: isScroll ? "0px 5px !important" : "0px !important",
+          padding: isScroll ? "0px 8px !important" : "0px !important",
         },
       };
     }
