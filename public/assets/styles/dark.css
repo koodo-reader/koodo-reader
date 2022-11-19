@@ -120,6 +120,7 @@ textarea::-ms-input-placeholder,
 .backup-page-next:hover,
 .book-manage-title:hover,
 .backup-page-list-item:hover,
+.restore-file:hover,
 Z .copy-option:hover {
   background-color: rgba(235, 235, 235, 0.035);
 }

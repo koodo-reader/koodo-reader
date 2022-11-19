@@ -97,12 +97,8 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
           BookUtil.addBook(book.key, buffer);
         if (StorageUtil.getReaderConfig("isPreventAdd") === "yes") {
           this.handleJump(book);
-          if (
-            StorageUtil.getReaderConfig("isOpenInMain") === "yes" &&
-            this.state.isOpenFile
-          ) {
-            this.setState({ isOpenFile: false });
-          }
+
+          this.setState({ isOpenFile: false });
 
           return resolve();
         }

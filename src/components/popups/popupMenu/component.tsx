@@ -386,7 +386,7 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
               onClick={() => {
                 this.props.handleOpenMenu(false);
               }}
-              style={this.props.isChangeDirection ? { top: "170px" } : {}}
+              style={this.props.isChangeDirection ? { top: "180px" } : {}}
             ></span>
           </div>
           {this.props.isChangeDirection ? (

@@ -12,7 +12,6 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
     super(props);
     this.state = {
       translatedText: "",
-      translateService: "Google",
     };
   }
   componentDidMount() {
@@ -70,7 +69,6 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
               onChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
                 StorageUtil.setReaderConfig("transService", event.target.value);
                 StorageUtil.setReaderConfig("transTarget", "en");
-                this.setState({ translateService: event.target.value });
                 this.handleTrans(
                   this.props.originalText.replace(/(\r\n|\n|\r)/gm, "")
                 );
@@ -104,7 +102,7 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
                 );
               }}
             >
-              {(this.state.translateService === "Google"
+              {(StorageUtil.getReaderConfig("transService") === "Google"
                 ? Object.keys(googleTransList)
                 : Object.keys(bingTransList)
               ).map((item, index) => {
@@ -120,7 +118,7 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
                     }
                   >
                     {
-                      (this.state.translateService === "Google"
+                      (StorageUtil.getReaderConfig("transService") === "Google"
                         ? Object.values(googleTransList)
                         : Object.values(bingTransList))[index]
                     }

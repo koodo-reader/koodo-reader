@@ -137,6 +137,7 @@ textarea::-ms-input-placeholder,
 .action-dialog-edit:hover,
 .backup-page-next:hover,
 .backup-page-list-item:hover,
+.restore-file:hover,
 .book-manage-title:hover,
 .copy-option:hover {
   background-color: rgba(75, 75, 75, 0.035);

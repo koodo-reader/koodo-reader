@@ -78,7 +78,7 @@ class SettingDialog extends React.Component<
     ]?.setAttribute("selected", "selected");
     document.getElementsByClassName("lang-setting-dropdown")[3]?.children[
       _.findLastIndex(skinList, {
-        value: StorageUtil.getReaderConfig("appSkin") || "light",
+        value: StorageUtil.getReaderConfig("appSkin") || "system",
       })
     ]?.setAttribute("selected", "selected");
   }
