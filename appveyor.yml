@@ -9,7 +9,7 @@ image:
   - macos
   - Ubuntu2004
 
-stack: node 16
+stack: node 14
 
 init:
   - git config --global core.autocrlf input
@@ -21,18 +21,13 @@ init:
         sudo snap install snapcraft --classic
         sudo apt-get install -y rpm
       fi
-      if [ "${APPVEYOR_BUILD_WORKER_IMAGE}" == "Visual Studio 2019" ]
-      then
-        install --global windows-build-tools
-        npm config set python "C:\Python27\python.exe"
-      fi
 
 install:
   - git reset --hard HEAD
   - node --version
-  - yarn
+  - npm install
 
 build_script:
-  - yarn release
+  - npm run release
 
 test: off
