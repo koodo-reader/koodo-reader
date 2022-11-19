@@ -88,6 +88,7 @@
   "scripts": {
     "analyze": "source-map-explorer 'build/static/js/*.js'",
     "start": "react-scripts start",
+    "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "ele": "electron .",
