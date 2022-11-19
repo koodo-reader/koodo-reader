@@ -24,9 +24,8 @@ init:
 
 install:
   - git reset --hard HEAD
-  - yarn add node-sass@4.14.1
   - node --version
-  - yarn install
+  - yarn
 
 build_script:
   - yarn release
