@@ -178,13 +178,23 @@
   position: absolute;
   left: 0px;
   bottom: 100px;
-  width: 150px;
+  width: 130px;
   height: 100px;
   z-index: 10;
-  opacity: 0;
+  opacity: 0.5;
   cursor: pointer;
   font-size: 0;
+  border-radius: 10px;
+  box-sizing: border-box;
+  margin-right: 10px;
+  margin-left: 10px;
   /* background-color: pink; */
+}
+::-webkit-file-upload-button {
+  display: none;
+}
+::file-selector-button {
+  display: none;
 }
 .backup-page-finish-container {
   width: 100%;
