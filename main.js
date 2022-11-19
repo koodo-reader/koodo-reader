@@ -57,7 +57,7 @@ const createMainWin = () => {
   mainWin = new BrowserWindow(options);
 
   if (!isDev) {
-    // Menu.setApplicationMenu(null);
+    Menu.setApplicationMenu(null);
   }
   const urlLocation = isDev
     ? "http://localhost:3000"
