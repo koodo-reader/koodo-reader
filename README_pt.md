@@ -62,6 +62,12 @@ scoop bucket add dorado https://github.com/chawyehsu/dorado
 scoop install dorado/koodo-reader
 ```
 
+- Instalar com o Winget:
+
+```shell
+winget install -e AppbyTroye.KoodoReader
+```
+
 - Instalar com o Homebrew:
 
 ```shell
