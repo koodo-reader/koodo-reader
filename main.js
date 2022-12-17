@@ -128,7 +128,6 @@ const createMainWin = () => {
     var path = await dialog.showOpenDialog({
       properties: ["openDirectory"],
     });
-
     return path;
   });
   ipcMain.on("storage-location", (event, arg) => {
