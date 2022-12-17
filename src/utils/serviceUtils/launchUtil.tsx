@@ -16,6 +16,8 @@ export const initTheme = () => {
   StorageUtil.setReaderConfig("isOSNight", isNight ? "yes" : "no");
   if (!StorageUtil.getReaderConfig("appSkin")) {
     StorageUtil.setReaderConfig("appSkin", "system");
+    if (isNight) {
+    }
   }
   if (
     StorageUtil.getReaderConfig("appSkin") === "night" ||

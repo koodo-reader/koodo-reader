@@ -147,7 +147,7 @@
   top: 110px;
   font-size: 15px;
   height: calc(100vh - 170px);
-  overflow: scroll;
+  overflow-y: scroll;
 }
 .nav-search-list-item {
   padding: 8px;
