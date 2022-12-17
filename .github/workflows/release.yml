@@ -3,6 +3,9 @@ name: Build/release
 on:
   push:
     branches: [master]
+    tags:
+      # Build on every tag in the form v1.2.3-something.4
+      - "v*"
   pull_request:
     branches: [master]
 
