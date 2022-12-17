@@ -147,6 +147,7 @@ const createMainWin = () => {
       event.returnvalue = false;
     }
   });
+
   ipcMain.handle("open-console", (event, arg) => {
     mainWin.webContents.openDevTools();
     event.returnvalue = true;
