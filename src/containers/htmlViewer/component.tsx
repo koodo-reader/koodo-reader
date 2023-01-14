@@ -1,44 +1,33 @@
 import React from "react";
 import RecentBooks from "../../utils/readUtils/recordRecent";
 import { ViewerProps, ViewerState } from "./interface";
-import localforage from "localforage";
 import { withRouter } from "react-router-dom";
 import BookUtil from "../../utils/fileUtils/bookUtil";
-import iconv from "iconv-lite";
-import chardet from "chardet";
-// import rtfToHTML from "@iarna/rtf-to-html";
 import PopupMenu from "../../components/popups/popupMenu";
-// import { xmlBookParser } from "../../utils/fileUtils/xmlUtil";
 import StorageUtil from "../../utils/serviceUtils/storageUtil";
 import RecordLocation from "../../utils/readUtils/recordLocation";
 import { mimetype } from "../../constants/mimetype";
 import Background from "../../components/background";
 import toast from "react-hot-toast";
+import * as jschardet from "jschardet";
+// import rtfToHTML from "@iarna/rtf-to-html";
 import StyleUtil from "../../utils/readUtils/styleUtil";
 import "./index.css";
 import {
   bindHtmlEvent,
   HtmlMouseEvent,
 } from "../../utils/serviceUtils/mouseEvent";
-import untar from "js-untar";
 import ImageViewer from "../../components/imageViewer";
 import _ from "underscore";
-import { removeExtraQuestionMark } from "../../utils/fileUtils/rtfUtil";
 import { getIframeDoc } from "../../utils/serviceUtils/docUtil";
 import { tsTransform } from "../../utils/serviceUtils/langUtil";
+import localforage from "localforage";
+import { removeExtraQuestionMark } from "../../utils/commonUtil";
 
 declare var window: any;
 let lock = false; //prevent from clicking too fasts
-const {
-  MobiRender,
-  Azw3Render,
-  EpubRender,
-  TxtRender,
-  StrRender,
-  ComicRender,
-} = window.Kookit;
-let Unrar = window.Unrar;
-let JSZip = window.JSZip;
+const { MobiRender, EpubRender, Fb2Render, TxtRender, StrRender, ComicRender } =
+  window.Kookit;
 
 class Viewer extends React.Component<ViewerProps, ViewerState> {
   lock: boolean;
@@ -160,10 +149,8 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         return;
       }
 
-      if (format === "MOBI") {
+      if (format === "MOBI" || format === "AZW3") {
         this.handleMobi(result as ArrayBuffer);
-      } else if (format === "AZW3") {
-        this.handleAzw3(result as ArrayBuffer);
       } else if (format === "EPUB") {
         this.handleEpub(result as ArrayBuffer);
       } else if (format === "TXT") {
@@ -183,12 +170,8 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         format === "XML"
       ) {
         this.handleHtml(result as ArrayBuffer, format);
-      } else if (format === "CBR") {
-        this.handleCbr(result as ArrayBuffer);
-      } else if (format === "CBT") {
-        this.handleCbt(result as ArrayBuffer);
-      } else if (format === "CBZ") {
-        this.handleCbz(result as ArrayBuffer);
+      } else if (format === "CBR" || format === "CBT" || format === "CBZ") {
+        this.handleComic(result as ArrayBuffer, format);
       }
       this.props.handleReadingState(true);
 
@@ -318,17 +301,40 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       this.setState({ rect });
     });
   };
-  handleCbr = async (result: ArrayBuffer) => {
-    let unrar = new Unrar(result);
-    var entries = unrar.getEntries();
+  toBuffer(ab) {
+    const buf = Buffer.alloc(ab.byteLength);
+    const view = new Uint8Array(ab);
+    for (let i = 0; i < buf.length; ++i) {
+      buf[i] = view[i];
+    }
+    return buf;
+  }
+  handleCharset = (bufferStr: string) => {
+    return new Promise<string>(async (resolve, reject) => {
+      let { books } = this.props;
+      let charset = "";
+      books.forEach((item) => {
+        if (item.key === this.props.currentBook.key) {
+          charset = jschardet.detect(bufferStr).encoding || "utf-8";
+          item.charset = charset;
+          this.props.handleReadingBook(item);
+        }
+      });
+
+      await localforage.setItem("books", books);
+      // this.props.handleFetchBooks();
+      resolve(charset);
+    });
+  };
+  handleComic = async (result: ArrayBuffer, format: string) => {
     let bookLocation = RecordLocation.getHtmlLocation(
       this.props.currentBook.key
     );
+    console.log(ComicRender, result, format);
     let rendition = new ComicRender(
-      entries.map((item: any) => item.name),
-      unrar,
+      result,
       this.state.readerMode,
-      "cbr",
+      format,
       StorageUtil.getReaderConfig("isSliding") === "yes" ? true : false
     );
     await rendition.renderTo(
@@ -336,53 +342,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       parseInt(bookLocation.count) || 0
     );
     this.handleRest(rendition);
-  };
-  handleCbz = (result: ArrayBuffer) => {
-    let zip = new JSZip();
-    let bookLocation = RecordLocation.getHtmlLocation(
-      this.props.currentBook.key
-    );
-    zip.loadAsync(result).then(async (contents) => {
-      let rendition = new ComicRender(
-        Object.keys(contents.files).sort(),
-        zip,
-        this.state.readerMode,
-        "cbz",
-        StorageUtil.getReaderConfig("isSliding") === "yes" ? true : false
-      );
-      await rendition.renderTo(
-        document.getElementsByClassName("html-viewer-page")[0],
-        parseInt(bookLocation.count) || 0
-      );
-      this.handleRest(rendition);
-    });
-  };
-  handleCbt = (result: ArrayBuffer) => {
-    let bookLocation = RecordLocation.getHtmlLocation(
-      this.props.currentBook.key
-    );
-    untar(result).then(
-      async (extractedFiles) => {
-        let rendition = new ComicRender(
-          extractedFiles.map((item: any) => item.name),
-          extractedFiles,
-          this.state.readerMode,
-          "cbt",
-          StorageUtil.getReaderConfig("isSliding") === "yes" ? true : false
-        );
-        await rendition.renderTo(
-          document.getElementsByClassName("html-viewer-page")[0],
-          parseInt(bookLocation.count) || 0
-        );
-        this.handleRest(rendition);
-      },
-      function (err) {
-        // onError
-      },
-      function (extractedFile) {
-        // onProgress
-      }
-    );
   };
   handleMobi = async (result: ArrayBuffer) => {
     let rendition = new MobiRender(
@@ -414,38 +373,15 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     );
     this.handleRest(rendition);
   };
-  handleAzw3 = async (result: ArrayBuffer) => {
-    let rendition = new Azw3Render(
-      result,
-      this.state.readerMode,
-      StorageUtil.getReaderConfig("isSliding") === "yes" ? true : false
-    );
-    await rendition.renderTo(
-      document.getElementsByClassName("html-viewer-page")[0]
-    );
-    this.handleRest(rendition);
-  };
-  handleCharset = (result: ArrayBuffer) => {
-    return new Promise<string>(async (resolve, reject) => {
-      let { books } = this.props;
-      let charset = "";
-      books.forEach((item) => {
-        if (item.key === this.props.currentBook.key) {
-          charset = chardet.detect(Buffer.from(result)) || "";
-          item.charset = charset;
-          this.props.handleReadingBook(item);
-        }
-      });
-
-      await localforage.setItem("books", books);
-      // this.props.handleFetchBooks();
-      resolve(charset);
-    });
-  };
   handleTxt = async (result: ArrayBuffer) => {
+    const array = new Uint8Array(result as ArrayBuffer);
+    let bufferStr = "";
+    for (let i = 0; i < array.length; ++i) {
+      bufferStr += String.fromCharCode(array[i]);
+    }
     let charset = "";
     if (!this.props.currentBook.charset) {
-      charset = await this.handleCharset(result);
+      charset = await this.handleCharset(bufferStr);
     }
     let rendition = new TxtRender(
       result,
@@ -476,15 +412,18 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     reader.readAsText(blob, "UTF-8");
   };
   handleRtf = async (result: ArrayBuffer) => {
+    const array = new Uint8Array(result as ArrayBuffer);
+    let bufferStr = "";
+    for (let i = 0; i < array.length; ++i) {
+      bufferStr += String.fromCharCode(array[i]);
+    }
     let charset = "";
     if (!this.props.currentBook.charset) {
-      charset = await this.handleCharset(result);
+      charset = await this.handleCharset(bufferStr);
     }
-    let text = iconv.decode(
-      Buffer.from(result),
+    let text = new TextDecoder(
       this.props.currentBook.charset || charset || "utf8"
-    );
-
+    ).decode(result);
     // rtfToHTML.fromString(text, async (err: any, html: any) => {
     //   let rendition = new StrRender(
     //     removeExtraQuestionMark(html),
@@ -512,33 +451,16 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         this.handleRest(rendition);
       });
   };
-  toBuffer(ab) {
-    const buf = Buffer.alloc(ab.byteLength);
-    const view = new Uint8Array(ab);
-    for (let i = 0; i < buf.length; ++i) {
-      buf[i] = view[i];
-    }
-    return buf;
-  }
   handleFb2 = async (result: ArrayBuffer) => {
-    let charset = "";
-    if (!this.props.currentBook.charset) {
-      charset = await this.handleCharset(result);
-    }
-    let fb2Str = iconv.decode(
-      Buffer.from(result),
-      this.props.currentBook.charset || charset || "utf8"
+    let rendition = new Fb2Render(
+      result,
+      this.state.readerMode,
+      StorageUtil.getReaderConfig("isSliding") === "yes" ? true : false
     );
-    // let bookObj = xmlBookParser(Buffer.from(result), fb2Str);
-    // let rendition = new StrRender(
-    //   bookObj,
-    //   this.state.readerMode,
-    //   StorageUtil.getReaderConfig("isSliding") === "yes" ? true : false
-    // );
-    // await rendition.renderTo(
-    //   document.getElementsByClassName("html-viewer-page")[0]
-    // );
-    // this.handleRest(rendition);
+    await rendition.renderTo(
+      document.getElementsByClassName("html-viewer-page")[0]
+    );
+    this.handleRest(rendition);
   };
   handleHtml = (result: ArrayBuffer, format: string) => {
     var blob = new Blob([result], {
