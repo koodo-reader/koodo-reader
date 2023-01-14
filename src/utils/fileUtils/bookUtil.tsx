@@ -4,12 +4,8 @@ import localforage from "localforage";
 import BookModel from "../../model/Book";
 import toast from "react-hot-toast";
 import { getPDFCover } from "./pdfUtil";
-import chardet from "chardet";
-import iconv from "iconv-lite";
-// import { xmlMetadata } from "./xmlUtil";
-// import { base64ArrayBuffer } from "./coverUtil";
 declare var window: any;
-const { MobiRender, Azw3Render, EpubRender } = window.Kookit;
+const { MobiRender, EpubRender, Fb2Render, ComicRender } = window.Kookit;
 
 // let Unrar = window.Unrar;
 class BookUtil {
@@ -227,6 +223,8 @@ class BookUtil {
         "",
         "",
       ];
+      let metadata: any;
+      let rendition: any;
       switch (extension) {
         case "pdf":
           cover = await getPDFCover(file_content);
@@ -235,12 +233,8 @@ class BookUtil {
           }
           break;
         case "epub":
-          let epubRendition = new EpubRender(
-            file_content,
-            "scroll",
-            StorageUtil.getReaderConfig("isSliding") === "yes" ? true : false
-          );
-          let metadata = await epubRendition.getMetadata();
+          rendition = new EpubRender(file_content, "scroll", false);
+          metadata = await rendition.getMetadata();
           if (metadata === "timeout_error") {
             resolve("get_metadata_error");
             break;
@@ -260,43 +254,43 @@ class BookUtil {
           }
           break;
         case "mobi":
-          let mobiRendition = new MobiRender(
-            file_content,
-            "scroll",
-            StorageUtil.getReaderConfig("isSliding") === "yes" ? true : false
-          );
-          if (mobiRendition.getMetadata().compression === 17480) {
-            resolve("parse_kindle_error");
-          }
-          break;
         case "azw3":
-          let azw3Rendition = new Azw3Render(
-            file_content,
-            "scroll",
-            StorageUtil.getReaderConfig("isSliding") === "yes" ? true : false
-          );
-          if (azw3Rendition.getMetadata().compression === 17480) {
-            resolve("parse_kindle_error");
-          }
+          console.log(file_content);
+          rendition = new MobiRender(file_content, "scroll", false);
+          console.log(rendition);
+          metadata = await rendition.getMetadata();
+          [name, author, description, publisher, cover] = [
+            metadata.title,
+            metadata.creator,
+            metadata.description,
+            metadata.publisher,
+            metadata.cover,
+          ];
           break;
         case "fb2":
-          charset = chardet.detect(Buffer.from(file_content)) || "";
-          let fb2Str = iconv.decode(
-            Buffer.from(file_content),
-            charset || "utf8"
-          );
-          // let fb2Obj: any = await xmlMetadata(fb2Str);
-          // cover = fb2Obj.cover;
-          // name = fb2Obj.name;
-          // author = fb2Obj.author;
+          rendition = new Fb2Render(file_content, "scroll", false);
+          metadata = await rendition.getMetadata();
+          console.log(metadata);
+          [name, author, description, publisher, cover] = [
+            metadata.title,
+            metadata.creator,
+            metadata.description,
+            metadata.publisher,
+            metadata.cover,
+          ];
           break;
-        // case "cbr":
-        //   let unrar = new Unrar(file_content);
-        //   let buffer = unrar.decompress(
-        //     unrar.getEntries().map((item: any) => item.name)[0]
-        //   );
-        //   cover = base64ArrayBuffer(buffer);
-        //   break;
+        case "cbr":
+        case "cbt":
+        case "cbz":
+          rendition = new ComicRender(
+            file_content,
+            "scroll",
+            extension.toUpperCase(),
+            false
+          );
+          metadata = await rendition.getMetadata();
+          cover = metadata.cover;
+          break;
 
         default:
           break;
