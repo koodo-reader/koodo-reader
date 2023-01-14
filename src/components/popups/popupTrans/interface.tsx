@@ -6,4 +6,6 @@ export interface PopupTransProps {
 }
 export interface PopupTransState {
   translatedText: string;
+  transService: string;
+  transTarget: string;
 }

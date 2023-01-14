@@ -1,7 +1,7 @@
 import React from "react";
 import "./updateInfo.css";
 import { UpdateInfoProps, UpdateInfoState } from "./interface";
-import { version } from "../../../../package.json";
+import packageInfo from "../../../../package.json";
 import { Trans } from "react-i18next";
 import axios from "axios";
 import Lottie from "react-lottie";
@@ -42,13 +42,13 @@ class UpdateInfo extends React.Component<UpdateInfoProps, UpdateInfoState> {
           const newVersion = res.data.log.version;
           console.log(
             res,
-            version,
+            packageInfo.version,
             newVersion,
-            version.localeCompare(newVersion)
+            packageInfo.version.localeCompare(newVersion)
           );
 
           setTimeout(() => {
-            if (version.localeCompare(newVersion) < 0) {
+            if (packageInfo.version.localeCompare(newVersion) < 0) {
               if (StorageUtil.getReaderConfig("isDisableUpdate") !== "yes") {
                 this.setState({ updateLog: res.data.log });
                 this.props.handleNewDialog(true);
@@ -65,9 +65,9 @@ class UpdateInfo extends React.Component<UpdateInfoProps, UpdateInfoState> {
             }
             StorageUtil.setReaderConfig(
               "appInfo",
-              version.localeCompare(newVersion) < 0
+              packageInfo.version.localeCompare(newVersion) < 0
                 ? "new"
-                : version.localeCompare(newVersion) === 0
+                : packageInfo.version.localeCompare(newVersion) === 0
                 ? "stable"
                 : "dev"
             );
@@ -127,7 +127,7 @@ class UpdateInfo extends React.Component<UpdateInfoProps, UpdateInfoState> {
               {this.state.isUpdated && (
                 <div className="update-info-text">
                   <Trans>You successfully update to</Trans>
-                  {" " + version}
+                  {" " + packageInfo.version}
                 </div>
               )}
               <div className="update-dialog-info" style={{ height: 420 }}>

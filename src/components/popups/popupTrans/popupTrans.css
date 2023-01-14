@@ -27,6 +27,10 @@
 }
 .target-lang-container {
   position: absolute;
+  width: calc(100% - 32px);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   bottom: 16px;
   left: 16px;
 }
