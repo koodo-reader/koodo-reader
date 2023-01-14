@@ -3,7 +3,7 @@ import "./settingDialog.css";
 import { SettingInfoProps, SettingInfoState } from "./interface";
 import { Trans } from "react-i18next";
 import i18n from "../../../i18n";
-import { version } from "../../../../package.json";
+import packageInfo from "../../../../package.json";
 import StorageUtil from "../../../utils/serviceUtils/storageUtil";
 import { changePath } from "../../../utils/syncUtils/common";
 import { isElectron } from "react-device-detect";
@@ -41,8 +41,6 @@ class SettingDialog extends React.Component<
       isOpenInMain: StorageUtil.getReaderConfig("isOpenInMain") === "yes",
       isDisableUpdate: StorageUtil.getReaderConfig("isDisableUpdate") === "yes",
       appSkin: StorageUtil.getReaderConfig("appSkin"),
-      isDisableAnalytics:
-        StorageUtil.getReaderConfig("isDisableAnalytics") === "yes",
       isUseBuiltIn: StorageUtil.getReaderConfig("isUseBuiltIn") === "yes",
       isPDFCover: StorageUtil.getReaderConfig("isPDFCover") === "yes",
       currentThemeIndex: _.findLastIndex(themeList, {
@@ -205,6 +203,12 @@ class SettingDialog extends React.Component<
       return;
     }
     this.handleSetting("isMergeWord");
+    this.handleMoyu();
+  };
+  handleMoyu = () => {
+    if (StorageUtil.getReaderConfig("isMergeWord") === "yes") {
+      StorageUtil.setReaderConfig("isHideBackground", "yes");
+    }
   };
   handleOpenInMain = () => {
     if (this.state.isMergeWord && !this.state.isOpenInMain) {
@@ -221,7 +225,7 @@ class SettingDialog extends React.Component<
         </p>
         <p className="setting-subtitle">
           <Trans>Version</Trans>
-          {version}
+          {packageInfo.version}
           &nbsp;&nbsp;
           <Trans>
             {StorageUtil.getReaderConfig("appInfo") === "new"

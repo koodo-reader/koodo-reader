@@ -22,7 +22,6 @@ export interface SettingInfoState {
   isPreventSleep: boolean;
   isOpenInMain: boolean;
   isDisableUpdate: boolean;
-  isDisableAnalytics: boolean;
   isUseBuiltIn: boolean;
   isPDFCover: boolean;
   isAutoFullscreen: boolean;
