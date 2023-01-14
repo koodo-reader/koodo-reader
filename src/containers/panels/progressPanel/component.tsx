@@ -15,6 +15,8 @@ class ProgressPanel extends React.Component<
     this.state = {
       currentPage: 0,
       totalPage: 0,
+      targetChapter: 0,
+      targetPage: 0,
       isSingle:
         StorageUtil.getReaderConfig("readerMode") &&
         StorageUtil.getReaderConfig("readerMode") !== "double",
@@ -108,9 +110,10 @@ class ProgressPanel extends React.Component<
     }
   };
   handleJumpChapter = (event: any) => {
+    let targetChapter = parseInt(event.target.value.trim()) - 1;
     if (this.props.htmlBook.flattenChapters.length > 0) {
       this.props.htmlBook.rendition.goToChapter(
-        this.props.htmlBook.flattenChapters[event.target.value].label
+        this.props.htmlBook.flattenChapters[targetChapter].label
       );
     }
   };
@@ -136,7 +139,26 @@ class ProgressPanel extends React.Component<
             type="text"
             name="jumpPage"
             id="jumpPage"
-            defaultValue={this.state.currentPage}
+            value={
+              this.state.targetPage
+                ? this.state.targetPage
+                : this.state.currentPage
+            }
+            onFocus={() => {
+              this.setState({ targetPage: " " });
+            }}
+            onChange={(event) => {
+              let fieldVal = event.target.value;
+              this.setState({ targetPage: fieldVal });
+            }}
+            onBlur={(event) => {
+              if (event.target.value.trim()) {
+                // this.handleJumpChapter(event);
+                this.setState({ targetPage: "" });
+              } else {
+                this.setState({ targetPage: "" });
+              }
+            }}
           />
           <span>/ {this.state.totalPage}</span>
           &nbsp;&nbsp;&nbsp;
@@ -145,14 +167,28 @@ class ProgressPanel extends React.Component<
             type="text"
             name="jumpChapter"
             id="jumpChapter"
-            onBlur={(event) => {
-              this.handleJumpChapter(event);
-            }}
-            defaultValue={
-              this.props.currentChapterIndex === -1
+            value={
+              this.state.targetChapter
+                ? this.state.targetChapter
+                : this.props.currentChapterIndex === -1
                 ? this.props.htmlBook.flattenChapters.length
                 : this.props.currentChapterIndex + 1
             }
+            onFocus={() => {
+              this.setState({ targetChapter: " " });
+            }}
+            onChange={(event) => {
+              let fieldVal = event.target.value;
+              this.setState({ targetChapter: fieldVal });
+            }}
+            onBlur={(event) => {
+              if (event.target.value.trim()) {
+                this.handleJumpChapter(event);
+                this.setState({ targetChapter: "" });
+              } else {
+                this.setState({ targetChapter: "" });
+              }
+            }}
           />
           <span>/ {this.props.htmlBook.flattenChapters.length}</span>
         </p>

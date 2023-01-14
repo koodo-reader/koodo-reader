@@ -6,9 +6,9 @@ import { withRouter } from "react-router-dom";
 import BookUtil from "../../utils/fileUtils/bookUtil";
 import iconv from "iconv-lite";
 import chardet from "chardet";
-import rtfToHTML from "@iarna/rtf-to-html";
+// import rtfToHTML from "@iarna/rtf-to-html";
 import PopupMenu from "../../components/popups/popupMenu";
-import { xmlBookParser } from "../../utils/fileUtils/xmlUtil";
+// import { xmlBookParser } from "../../utils/fileUtils/xmlUtil";
 import StorageUtil from "../../utils/serviceUtils/storageUtil";
 import RecordLocation from "../../utils/readUtils/recordLocation";
 import { mimetype } from "../../constants/mimetype";
@@ -108,6 +108,10 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           this.props.currentBook.key,
           this.state.readerMode
         );
+        this.setState({
+          pageWidth: this.props.htmlBook.rendition.getPageSize().width,
+          pageHeight: this.props.htmlBook.rendition.getPageSize().height,
+        });
         this.handleBindGesture();
         StyleUtil.addDefaultCss();
         this.props.renderNoteFunc();
@@ -481,17 +485,17 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       this.props.currentBook.charset || charset || "utf8"
     );
 
-    rtfToHTML.fromString(text, async (err: any, html: any) => {
-      let rendition = new StrRender(
-        removeExtraQuestionMark(html),
-        this.state.readerMode,
-        StorageUtil.getReaderConfig("isSliding") === "yes" ? true : false
-      );
-      await rendition.renderTo(
-        document.getElementsByClassName("html-viewer-page")[0]
-      );
-      this.handleRest(rendition);
-    });
+    // rtfToHTML.fromString(text, async (err: any, html: any) => {
+    //   let rendition = new StrRender(
+    //     removeExtraQuestionMark(html),
+    //     this.state.readerMode,
+    //     StorageUtil.getReaderConfig("isSliding") === "yes" ? true : false
+    //   );
+    //   await rendition.renderTo(
+    //     document.getElementsByClassName("html-viewer-page")[0]
+    //   );
+    //   this.handleRest(rendition);
+    // });
   };
   handleDocx = (result: ArrayBuffer) => {
     window.mammoth
@@ -525,16 +529,16 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       Buffer.from(result),
       this.props.currentBook.charset || charset || "utf8"
     );
-    let bookObj = xmlBookParser(Buffer.from(result), fb2Str);
-    let rendition = new StrRender(
-      bookObj,
-      this.state.readerMode,
-      StorageUtil.getReaderConfig("isSliding") === "yes" ? true : false
-    );
-    await rendition.renderTo(
-      document.getElementsByClassName("html-viewer-page")[0]
-    );
-    this.handleRest(rendition);
+    // let bookObj = xmlBookParser(Buffer.from(result), fb2Str);
+    // let rendition = new StrRender(
+    //   bookObj,
+    //   this.state.readerMode,
+    //   StorageUtil.getReaderConfig("isSliding") === "yes" ? true : false
+    // );
+    // await rendition.renderTo(
+    //   document.getElementsByClassName("html-viewer-page")[0]
+    // );
+    // this.handleRest(rendition);
   };
   handleHtml = (result: ArrayBuffer, format: string) => {
     var blob = new Blob([result], {

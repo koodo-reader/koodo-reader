@@ -66,11 +66,6 @@ export const settingList = [
   },
   {
     isElectron: false,
-    title: "Disable analytics service",
-    propName: "isDisableAnalytics",
-  },
-  {
-    isElectron: false,
     title: "Use first page as PDF cover",
     propName: "isPDFCover",
   },
