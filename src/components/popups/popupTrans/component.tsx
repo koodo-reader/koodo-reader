@@ -12,6 +12,8 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
     super(props);
     this.state = {
       translatedText: "",
+      transService: StorageUtil.getReaderConfig("transService"),
+      transTarget: StorageUtil.getReaderConfig("transTarget"),
     };
   }
   componentDidMount() {
@@ -33,6 +35,7 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
           });
         })
         .catch((err) => {
+          console.log(err);
           this.setState({
             translatedText: this.props.t("Error happens"),
           });
@@ -48,6 +51,7 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
           });
         })
         .catch((err) => {
+          console.log(err);
           this.setState({
             translatedText: this.props.t("Error happens"),
           });
@@ -65,10 +69,18 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
             </p>
             <select
               className="booklist-shelf-list"
-              style={{ width: "75px", marginLeft: "10px" }}
+              style={{ width: "75px", margin: 0 }}
               onChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
-                StorageUtil.setReaderConfig("transService", event.target.value);
                 StorageUtil.setReaderConfig("transTarget", "en");
+                this.setState({ transService: event.target.value }, () => {
+                  StorageUtil.setReaderConfig(
+                    "transService",
+                    event.target.value
+                  );
+                });
+                this.setState({ transTarget: "en" }, () => {
+                  StorageUtil.setReaderConfig("transTarget", "en");
+                });
                 this.handleTrans(
                   this.props.originalText.replace(/(\r\n|\n|\r)/gm, "")
                 );
@@ -80,11 +92,7 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
                     value={item}
                     key={index}
                     className="add-dialog-shelf-list-option"
-                    selected={
-                      StorageUtil.getReaderConfig("transService") === item
-                        ? true
-                        : false
-                    }
+                    selected={this.state.transService === item ? true : false}
                   >
                     {item}
                   </option>
@@ -93,7 +101,7 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
             </select>
             <select
               className="booklist-shelf-list"
-              style={{ width: "75px", marginLeft: "10px" }}
+              style={{ width: "75px", margin: 0 }}
               onChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
                 let targetLang = event.target.value;
                 StorageUtil.setReaderConfig("transTarget", targetLang);
@@ -102,7 +110,7 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
                 );
               }}
             >
-              {(StorageUtil.getReaderConfig("transService") === "Google"
+              {(this.state.transService === "Google"
                 ? Object.keys(googleTransList)
                 : Object.keys(bingTransList)
               ).map((item, index) => {
@@ -118,7 +126,7 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
                     }
                   >
                     {
-                      (StorageUtil.getReaderConfig("transService") === "Google"
+                      (this.state.transService === "Google"
                         ? Object.values(googleTransList)
                         : Object.values(bingTransList))[index]
                     }

@@ -6,7 +6,7 @@ import toast from "react-hot-toast";
 import { getPDFCover } from "./pdfUtil";
 import chardet from "chardet";
 import iconv from "iconv-lite";
-import { xmlMetadata } from "./xmlUtil";
+// import { xmlMetadata } from "./xmlUtil";
 // import { base64ArrayBuffer } from "./coverUtil";
 declare var window: any;
 const { MobiRender, Azw3Render, EpubRender } = window.Kookit;
@@ -285,10 +285,10 @@ class BookUtil {
             Buffer.from(file_content),
             charset || "utf8"
           );
-          let fb2Obj: any = await xmlMetadata(fb2Str);
-          cover = fb2Obj.cover;
-          name = fb2Obj.name;
-          author = fb2Obj.author;
+          // let fb2Obj: any = await xmlMetadata(fb2Str);
+          // cover = fb2Obj.cover;
+          // name = fb2Obj.name;
+          // author = fb2Obj.author;
           break;
         // case "cbr":
         //   let unrar = new Unrar(file_content);
