@@ -26,7 +26,6 @@ class ProgressPanel extends React.Component<
     if (nextProps.htmlBook !== this.props.htmlBook && nextProps.htmlBook) {
       await this.handlePageNum(nextProps.htmlBook.rendition);
       nextProps.htmlBook.rendition.on("page-changed", async () => {
-        console.log("page-changed");
         await this.handlePageNum(nextProps.htmlBook.rendition);
       });
     }

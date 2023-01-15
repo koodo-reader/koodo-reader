@@ -57,18 +57,6 @@ export function handleFetchNotes() {
     });
   };
 }
-export function flatChapter(chapters: any) {
-  let newChapter: any = [];
-  for (let i = 0; i < chapters.length; i++) {
-    if (chapters[i].subitems[0]) {
-      newChapter.push(chapters[i]);
-      newChapter = newChapter.concat(flatChapter(chapters[i].subitems));
-    } else {
-      newChapter.push(chapters[i]);
-    }
-  }
-  return newChapter;
-}
 
 export function handleFetchBookmarks() {
   return (

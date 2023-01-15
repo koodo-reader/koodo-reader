@@ -241,18 +241,20 @@ class BookUtil {
           }
           break;
         case "epub":
+          console.log("epubsdfsdf");
           rendition = new EpubRender(file_content, "scroll", false);
           metadata = await rendition.getMetadata();
+          console.log(metadata);
           if (metadata === "timeout_error") {
             resolve("get_metadata_error");
             break;
-          } else if (!metadata.title) {
+          } else if (!metadata.name) {
             break;
           }
 
           [name, author, description, publisher, cover] = [
-            metadata.title,
-            metadata.creator,
+            metadata.name,
+            metadata.author,
             metadata.description,
             metadata.publisher,
             metadata.cover,
@@ -263,13 +265,11 @@ class BookUtil {
           break;
         case "mobi":
         case "azw3":
-          console.log(file_content);
           rendition = new MobiRender(file_content, "scroll", false);
-          console.log(rendition);
           metadata = await rendition.getMetadata();
           [name, author, description, publisher, cover] = [
-            metadata.title,
-            metadata.creator,
+            metadata.name,
+            metadata.author,
             metadata.description,
             metadata.publisher,
             metadata.cover,
@@ -278,10 +278,9 @@ class BookUtil {
         case "fb2":
           rendition = new Fb2Render(file_content, "scroll", false);
           metadata = await rendition.getMetadata();
-          console.log(metadata);
           [name, author, description, publisher, cover] = [
-            metadata.title,
-            metadata.creator,
+            metadata.name,
+            metadata.author,
             metadata.description,
             metadata.publisher,
             metadata.cover,
@@ -299,11 +298,10 @@ class BookUtil {
           metadata = await rendition.getMetadata();
           cover = metadata.cover;
           break;
-
         default:
           break;
       }
-
+      console.log(name);
       let format = extension.toUpperCase();
       key = new Date().getTime() + "";
       resolve(

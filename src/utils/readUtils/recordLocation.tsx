@@ -51,7 +51,6 @@ class RecordLocation {
         percentage,
         cfi,
       };
-      console.log(obj);
       localStorage.setItem("recordLocation", JSON.stringify(obj));
     }
   }

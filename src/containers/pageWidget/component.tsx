@@ -25,16 +25,13 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
     if (nextProps.htmlBook !== this.props.htmlBook && nextProps.htmlBook) {
       await this.handlePageNum(nextProps.htmlBook.rendition);
       nextProps.htmlBook.rendition.on("page-changed", async () => {
-        console.log("page-changed");
         await this.handlePageNum(nextProps.htmlBook.rendition);
-        console.log("change- page");
         await this.handleLocation();
       });
     }
   }
   handleLocation = async () => {
     let position = await this.props.htmlBook.rendition.getPosition();
-    console.log(position);
     RecordLocation.recordHtmlLocation(
       this.props.currentBook.key,
       position.text,
