@@ -40,7 +40,7 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
       if (StorageUtil.getReaderConfig("isOpenInMain") === "yes") {
         this.props.history.push(BookUtil.getBookUrl(this.props.book));
       } else {
-        BookUtil.RedirectBook(this.props.book);
+        BookUtil.RedirectBook(this.props.book, this.props.t);
       }
     }
   }
@@ -88,7 +88,7 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
     if (StorageUtil.getReaderConfig("isOpenInMain") === "yes") {
       this.props.history.push(BookUtil.getBookUrl(this.props.book));
     } else {
-      BookUtil.RedirectBook(this.props.book);
+      BookUtil.RedirectBook(this.props.book, this.props.t);
     }
   };
   handleExportBook() {

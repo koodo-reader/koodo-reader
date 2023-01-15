@@ -45,7 +45,7 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
       if (StorageUtil.getReaderConfig("isOpenInMain") === "yes") {
         this.props.history.push(BookUtil.getBookUrl(this.props.book));
       } else {
-        BookUtil.RedirectBook(this.props.book);
+        BookUtil.RedirectBook(this.props.book, this.props.t);
       }
     }
   }
@@ -110,7 +110,7 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
     if (StorageUtil.getReaderConfig("isOpenInMain") === "yes") {
       this.props.history.push(BookUtil.getBookUrl(this.props.book));
     } else {
-      BookUtil.RedirectBook(this.props.book);
+      BookUtil.RedirectBook(this.props.book, this.props.t);
     }
   };
   render() {

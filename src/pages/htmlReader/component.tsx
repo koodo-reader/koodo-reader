@@ -134,6 +134,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
       this.props.currentBook.key,
       position.text,
       position.chapterTitle,
+      position.chapterDocIndex,
       position.count,
       position.percentage,
       position.cfi

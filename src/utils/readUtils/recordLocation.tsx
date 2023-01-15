@@ -17,6 +17,7 @@ class RecordLocation {
     bookKey: string,
     text: string,
     chapterTitle: string,
+    chapterDocIndex: string,
     count: string,
     percentage: string,
     cfi: string = ""
@@ -24,17 +25,33 @@ class RecordLocation {
     if (cfi) {
       let json = localStorage.getItem("recordLocation");
       let obj = JSON.parse(json || "{}");
-      obj[bookKey] = { text, chapterTitle, count, percentage, cfi };
+      obj[bookKey] = {
+        text,
+        chapterTitle,
+        chapterDocIndex,
+        count,
+        percentage,
+        cfi,
+      };
       localStorage.setItem("recordLocation", JSON.stringify(obj));
     } else {
       if (
-        (!text || !chapterTitle || !count || !percentage) &&
+        (!text || !chapterTitle || !chapterDocIndex || !count || !percentage) &&
         document.location.href.indexOf("/cb") === -1 //漫画的情况，cbr,cbt,cbz
       )
         return;
+
       let json = localStorage.getItem("recordLocation");
       let obj = JSON.parse(json || "{}");
-      obj[bookKey] = { text, chapterTitle, count, percentage, cfi };
+      obj[bookKey] = {
+        text,
+        chapterTitle,
+        chapterDocIndex,
+        count,
+        percentage,
+        cfi,
+      };
+      console.log(obj);
       localStorage.setItem("recordLocation", JSON.stringify(obj));
     }
   }

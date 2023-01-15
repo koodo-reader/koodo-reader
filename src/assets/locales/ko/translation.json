@@ -314,7 +314,6 @@
   "Reader window will be maximized to fit the screen when opening a book": "책을 열면 책 읽기 창을 화면에 맞춰 최대로 엽니다",
   "Open books in the main window": "기본 창에서 책을 엽니다",
   "Book won't be opened in a seperate window but directly opened in the main window": "책은 개별 창으로 열리지 않고 기본 창에서 바로 열립니다.",
-  "Book not exsits": "없는 책입니다",
   "Reach frequency limit": "요청 빈도 제한에 도달",
   "Error happens": "오류 발생",
   "Text Indent": "들여쓰기",
