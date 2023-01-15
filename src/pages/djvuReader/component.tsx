@@ -33,7 +33,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       }
       BookUtil.fetchBook(key, true, book.path).then((result) => {
         if (!result) {
-          toast.error(this.props.t("Book not exsits"));
+          toast.error(this.props.t("Book not exsit"));
           return;
         }
         this.props.handleReadingBook(book);

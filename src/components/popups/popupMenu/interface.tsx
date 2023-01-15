@@ -15,7 +15,7 @@ export interface PopupMenuProps {
   noteKey: string;
   pageWidth: number;
   pageHeight: number;
-  chapterIndex: number;
+  chapterDocIndex: number;
   chapter: string;
   handleNoteKey: (key: string) => void;
   t: (title: string) => string;

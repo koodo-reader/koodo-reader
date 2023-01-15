@@ -10,7 +10,7 @@ export interface PopupOptionProps {
   cfiRange: string;
   pageWidth: number;
   pageHeight: number;
-  chapterIndex: number;
+  chapterDocIndex: number;
   chapter: string;
   handleOpenMenu: (isOpenMenu: boolean) => void;
   handleMenuMode: (menu: string) => void;

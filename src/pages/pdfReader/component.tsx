@@ -93,7 +93,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
               rect: this.state.rect,
               pageWidth: this.state.pageWidth,
               pageHeight: this.state.pageHeight,
-              chapterIndex: 0,
+              chapterDocIndex: 0,
               chapter: "0",
             }}
           />

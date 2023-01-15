@@ -3,7 +3,6 @@ import "./progressPanel.css";
 import { Trans } from "react-i18next";
 import { ProgressPanelProps, ProgressPanelState } from "./interface";
 import { Tooltip } from "react-tippy";
-import _ from "underscore";
 import StorageUtil from "../../../utils/serviceUtils/storageUtil";
 
 class ProgressPanel extends React.Component<
@@ -27,6 +26,7 @@ class ProgressPanel extends React.Component<
     if (nextProps.htmlBook !== this.props.htmlBook && nextProps.htmlBook) {
       await this.handlePageNum(nextProps.htmlBook.rendition);
       nextProps.htmlBook.rendition.on("page-changed", async () => {
+        console.log("page-changed");
         await this.handlePageNum(nextProps.htmlBook.rendition);
       });
     }
@@ -50,71 +50,35 @@ class ProgressPanel extends React.Component<
             : Math.floor(
                 this.props.htmlBook.flattenChapters.length * percentage
               )
-        ].label
+        ].index.toString()
       );
     }
   };
   nextChapter = () => {
     if (this.props.htmlBook.flattenChapters.length > 0) {
       this.props.htmlBook.rendition.goToChapter(
-        this.props.htmlBook.flattenChapters[
-          _.findIndex(
-            this.props.htmlBook.flattenChapters.map((item) => {
-              item.label = item.label.trim();
-              return item;
-            }),
-            {
-              label: this.props.currentChapter.trim(),
-            }
-          ) <
-          this.props.htmlBook.flattenChapters.length - 1
-            ? _.findIndex(
-                this.props.htmlBook.flattenChapters.map((item) => {
-                  item.label = item.label.trim();
-                  return item;
-                }),
-                {
-                  label: this.props.currentChapter.trim(),
-                }
-              ) + 1
-            : this.props.htmlBook.flattenChapters.length - 1
-        ].label
+        (this.props.currentChapterIndex <
+        this.props.htmlBook.flattenChapters.length - 1
+          ? this.props.currentChapterIndex + 1
+          : this.props.htmlBook.flattenChapters.length - 1
+        ).toString()
       );
     }
   };
   prevChapter = () => {
     if (this.props.htmlBook.flattenChapters.length > 0) {
       this.props.htmlBook.rendition.goToChapter(
-        this.props.htmlBook.flattenChapters[
-          _.findIndex(
-            this.props.htmlBook.flattenChapters.map((item) => {
-              item.label = item.label.trim();
-              return item;
-            }),
-            {
-              label: this.props.currentChapter.trim(),
-            }
-          ) > 0
-            ? _.findIndex(
-                this.props.htmlBook.flattenChapters.map((item) => {
-                  item.label = item.label.trim();
-                  return item;
-                }),
-                {
-                  label: this.props.currentChapter.trim(),
-                }
-              ) - 1
-            : 0
-        ].label
+        (this.props.currentChapterIndex > 0
+          ? this.props.currentChapterIndex - 1
+          : 0
+        ).toString()
       );
     }
   };
   handleJumpChapter = (event: any) => {
     let targetChapter = parseInt(event.target.value.trim()) - 1;
     if (this.props.htmlBook.flattenChapters.length > 0) {
-      this.props.htmlBook.rendition.goToChapter(
-        this.props.htmlBook.flattenChapters[targetChapter].label
-      );
+      this.props.htmlBook.rendition.goToChapter(targetChapter.toString());
     }
   };
   render() {

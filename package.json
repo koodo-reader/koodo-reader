@@ -15,6 +15,7 @@
   "private": false,
   "resolutions": {},
   "dependencies": {
+    "@iarna/rtf-to-html": "^1.1.0",
     "@types/chardet": "^0.8.1",
     "@vitalets/google-translate-api": "^8.0.0",
     "adm-zip": "^0.5.2",
@@ -27,7 +28,6 @@
     "font-list": "^1.4.5",
     "fs-extra": "^9.1.0",
     "jschardet": "^3.0.0",
-    "node-polyfill-webpack-plugin": "^2.0.1",
     "react-hot-toast": "^2.1.1",
     "request": "^2.88.2",
     "underscore": "^1.11.0",
