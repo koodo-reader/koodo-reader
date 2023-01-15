@@ -314,7 +314,6 @@
   "Reader window will be maximized to fit the screen when opening a book": "図書を開くと、ウィンドウが自動的に最大化されます",
   "Open books in the main window": "メインウィンドウで直接図書を開く",
   "Book won't be opened in a seperate window but directly opened in the main window": "図書は別々のウィンドウで開くのではなく、メインウィンドウで直接開く",
-  "Book not exsits": "図書ファイルは存在しません",
   "Reach frequency limit": "要求の頻度が速すぎる",
   "Error happens": "エラー発生",
   "Text Indent": "最初の行のインデント",

@@ -52,7 +52,10 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
               20) /
             24
           : 0,
-      chapterIndex: 0,
+      chapterDocIndex: parseInt(
+        RecordLocation.getHtmlLocation(this.props.currentBook.key)
+          .chapterDocIndex || 0
+      ),
       chapter: "",
       pageWidth: 0,
       pageHeight: 0,
@@ -145,7 +148,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     window.rangy.init();
     BookUtil.fetchBook(key, true, path).then((result) => {
       if (!result) {
-        toast.error(this.props.t("Book not exsits"));
+        toast.error(this.props.t("Book not exsit"));
         return;
       }
 
@@ -160,7 +163,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       } else if (format === "FB2") {
         this.handleFb2(result as ArrayBuffer);
       } else if (format === "RTF") {
-        this.handleRtf(result as ArrayBuffer);
+        this.handleRtf(key);
       } else if (format === "DOCX") {
         this.handleDocx(result as ArrayBuffer);
       } else if (
@@ -212,6 +215,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         text: string;
         count: string;
         chapterTitle: string;
+        chapterDocIndex: string;
         percentage: string;
         cfi: string;
       } = RecordLocation.getHtmlLocation(this.props.currentBook.key);
@@ -219,6 +223,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         JSON.stringify({
           text: bookLocation.text,
           chapterTitle: bookLocation.chapterTitle,
+          chapterDocIndex: bookLocation.chapterDocIndex,
           count: bookLocation.count,
           percentage: bookLocation.percentage,
           cfi: bookLocation.cfi,
@@ -228,41 +233,52 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     }
 
     rendition.on("rendered", async () => {
+      console.log("rendered");
       await this.handleLocation();
-      let bookLocation: { text: string; count: string; chapterTitle: string } =
-        RecordLocation.getHtmlLocation(this.props.currentBook.key);
+      let bookLocation: {
+        text: string;
+        count: string;
+        chapterTitle: string;
+        chapterDocIndex: string;
+      } = RecordLocation.getHtmlLocation(this.props.currentBook.key);
       if (this.props.currentBook.format.startsWith("CB")) {
         this.setState({
           chapter:
             this.props.htmlBook.flattenChapters[
               parseInt(bookLocation.count) || 0
-            ].label,
-          chapterIndex: parseInt(bookLocation.count) || 0,
+            ].title,
+          chapterDocIndex: parseInt(bookLocation.count) || 0,
         });
       } else {
         let chapter =
           bookLocation.chapterTitle ||
           (this.props.htmlBook
-            ? this.props.htmlBook.flattenChapters[0].label
+            ? this.props.htmlBook.flattenChapters[0].title
             : "Unknown Chapter");
-        let chapterIndex =
-          bookLocation.chapterTitle && this.props.htmlBook
-            ? _.findLastIndex(
-                this.props.htmlBook.flattenChapters.map((item) => {
-                  item.label = item.label.trim();
-                  return item;
-                }),
-                {
-                  label: bookLocation.chapterTitle.trim(),
-                }
-              )
-            : 0;
+        let chapterDocIndex = 0;
+        if (bookLocation.chapterDocIndex) {
+          chapterDocIndex = parseInt(bookLocation.chapterDocIndex);
+        } else {
+          chapterDocIndex =
+            bookLocation.chapterTitle && this.props.htmlBook
+              ? _.findLastIndex(
+                  this.props.htmlBook.flattenChapters.map((item) => {
+                    item.title = item.title.trim();
+                    return item;
+                  }),
+                  {
+                    title: bookLocation.chapterTitle.trim(),
+                  }
+                )
+              : 0;
+        }
+        console.log(chapter, chapterDocIndex);
         this.props.handleCurrentChapter(chapter);
-        this.props.handleCurrentChapterIndex(chapterIndex);
+        this.props.handleCurrentChapterIndex(chapterDocIndex);
         this.props.handleFetchPercentage(this.props.currentBook);
         this.setState({
           chapter,
-          chapterIndex,
+          chapterDocIndex,
         });
       }
       StyleUtil.addDefaultCss();
@@ -277,10 +293,12 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
   };
   handleLocation = async () => {
     let position = await this.props.htmlBook.rendition.getPosition();
+    console.log(position);
     RecordLocation.recordHtmlLocation(
       this.props.currentBook.key,
       position.text,
       position.chapterTitle,
+      position.chapterDocIndex,
       position.count,
       position.percentage,
       position.cfi
@@ -301,14 +319,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       this.setState({ rect });
     });
   };
-  toBuffer(ab) {
-    const buf = Buffer.alloc(ab.byteLength);
-    const view = new Uint8Array(ab);
-    for (let i = 0; i < buf.length; ++i) {
-      buf[i] = view[i];
-    }
-    return buf;
-  }
   handleCharset = (bufferStr: string) => {
     return new Promise<string>(async (resolve, reject) => {
       let { books } = this.props;
@@ -320,9 +330,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           this.props.handleReadingBook(item);
         }
       });
-
       await localforage.setItem("books", books);
-      // this.props.handleFetchBooks();
       resolve(charset);
     });
   };
@@ -364,6 +372,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       text: string;
       count: string;
       chapterTitle: string;
+      chapterDocIndex: string;
       percentage: string;
       cfi: string;
     } = RecordLocation.getHtmlLocation(this.props.currentBook.key);
@@ -411,30 +420,34 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     };
     reader.readAsText(blob, "UTF-8");
   };
-  handleRtf = async (result: ArrayBuffer) => {
-    const array = new Uint8Array(result as ArrayBuffer);
-    let bufferStr = "";
-    for (let i = 0; i < array.length; ++i) {
-      bufferStr += String.fromCharCode(array[i]);
-    }
-    let charset = "";
-    if (!this.props.currentBook.charset) {
-      charset = await this.handleCharset(bufferStr);
-    }
-    let text = new TextDecoder(
-      this.props.currentBook.charset || charset || "utf8"
-    ).decode(result);
-    // rtfToHTML.fromString(text, async (err: any, html: any) => {
-    //   let rendition = new StrRender(
-    //     removeExtraQuestionMark(html),
-    //     this.state.readerMode,
-    //     StorageUtil.getReaderConfig("isSliding") === "yes" ? true : false
-    //   );
-    //   await rendition.renderTo(
-    //     document.getElementsByClassName("html-viewer-page")[0]
-    //   );
-    //   this.handleRest(rendition);
-    // });
+  handleRtf = async (key: string) => {
+    const rtfToHTML = window.require("@iarna/rtf-to-html");
+    const fs = window.require("fs");
+    const path = window.require("path");
+    let bookPath = path.join(
+      localStorage.getItem("storageLocation")
+        ? localStorage.getItem("storageLocation")
+        : window
+            .require("electron")
+            .ipcRenderer.sendSync("storage-location", "ping"),
+      `book`,
+      key
+    );
+    console.log(bookPath);
+    fs.createReadStream(bookPath).pipe(
+      rtfToHTML(async (err, html) => {
+        console.log(err, html);
+        let rendition = new StrRender(
+          removeExtraQuestionMark(html),
+          this.state.readerMode,
+          StorageUtil.getReaderConfig("isSliding") === "yes" ? true : false
+        );
+        await rendition.renderTo(
+          document.getElementsByClassName("html-viewer-page")[0]
+        );
+        this.handleRest(rendition);
+      })
+    );
   };
   handleDocx = (result: ArrayBuffer) => {
     window.mammoth
@@ -529,7 +542,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
               rect: this.state.rect,
               pageWidth: this.state.pageWidth,
               pageHeight: this.state.pageHeight,
-              chapterIndex: this.state.chapterIndex,
+              chapterDocIndex: this.state.chapterDocIndex,
               chapter: this.state.chapter,
             }}
           />

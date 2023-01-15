@@ -30,6 +30,7 @@ class NavList extends React.Component<NavListProps, NavListState> {
       JSON.stringify({
         text: bookLocation.text,
         chapterTitle: bookLocation.chapterTitle,
+        chapterDocIndex: bookLocation.chapterDocIndex,
         count: bookLocation.count,
         percentage: bookLocation.percentage,
         cfi: bookLocation.cfi,

@@ -74,6 +74,7 @@ class NavigationPanel extends React.Component<
                 JSON.stringify({
                   text: bookLocation.text,
                   chapterTitle: bookLocation.chapterTitle,
+                  chapterDocIndex: bookLocation.chapterDocIndex,
                   count: bookLocation.count,
                   percentage: bookLocation.percentage,
                   cfi: bookLocation.cfi,

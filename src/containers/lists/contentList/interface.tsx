@@ -6,6 +6,7 @@ export interface ContentListProps {
   htmlBook: HtmlBookModel;
   renderBookFunc: (id: string) => void;
   handleCurrentChapter: (currentChapter: string) => void;
+  handleCurrentChapterIndex: (currentChapterIndex: number) => void;
 }
 export interface ContentListState {
   chapters: any;

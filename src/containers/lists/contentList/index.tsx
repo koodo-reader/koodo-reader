@@ -1,7 +1,10 @@
 import { connect } from "react-redux";
 import { stateType } from "../../../store";
 import ContentList from "./component";
-import { handleCurrentChapter } from "../../../store/actions";
+import {
+  handleCurrentChapter,
+  handleCurrentChapterIndex,
+} from "../../../store/actions";
 const mapStateToProps = (state: stateType) => {
   return {
     currentBook: state.book.currentBook,
@@ -10,5 +13,5 @@ const mapStateToProps = (state: stateType) => {
     renderBookFunc: state.book.renderBookFunc,
   };
 };
-const actionCreator = { handleCurrentChapter };
+const actionCreator = { handleCurrentChapter, handleCurrentChapterIndex };
 export default connect(mapStateToProps, actionCreator)(ContentList);

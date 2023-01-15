@@ -36,20 +36,23 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
   handleJump(event: any) {
     event.preventDefault();
     let href = event.target.getAttribute("href");
-    let title =
-      this.props.htmlBook.flattenChapters[
-        _.findIndex(this.props.htmlBook.flattenChapters, { href })
-      ].label;
+    let chapterIndex = _.findIndex(this.props.htmlBook.flattenChapters, {
+      href,
+    });
+    let title = this.props.htmlBook.flattenChapters[chapterIndex].title;
+    let index = this.props.htmlBook.flattenChapters[chapterIndex].index;
     RecordLocation.recordHtmlLocation(
       this.props.currentBook.key,
       "test",
       title,
+      index.toString(),
       "test",
       "0",
       ""
     );
-    this.props.htmlBook.rendition.goToChapter(title);
+    this.props.htmlBook.rendition.goToChapter(index.toString());
     this.props.handleCurrentChapter(title);
+    this.props.handleCurrentChapterIndex(index);
   }
   UNSAFE_componentWillReceiveProps(nextProps: ContentListProps) {
     if (nextProps.htmlBook && nextProps.htmlBook !== this.props.htmlBook) {
@@ -86,9 +89,9 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
               onClick={this.handleJump}
               className="book-content-name"
             >
-              {item.label.indexOf("#") > -1
-                ? item.label.split("#")[0]
-                : item.label}
+              {item.title.indexOf("#") > -1
+                ? item.title.split("#")[0]
+                : item.title}
             </a>
             {item.subitems.length > 0 &&
             (this.state.currentIndex === index ||

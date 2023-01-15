@@ -141,9 +141,9 @@ class BookUtil {
       return localforage.getItem(key);
     }
   }
-  static async RedirectBook(book: BookModel) {
+  static async RedirectBook(book: BookModel, t: (string) => string) {
     if (!(await this.isBookExist(book.key, book.path))) {
-      toast.error("Book not exist");
+      toast.error(t("Book not exist"));
       return;
     }
     let ref = book.format.toLowerCase();
@@ -160,6 +160,14 @@ class BookUtil {
         isPreventSleep: StorageUtil.getReaderConfig("isPreventSleep"),
       });
     } else {
+      if (ref === "rtf") {
+        toast(
+          t(
+            "Koodo Reader's web version are limited by the browser, for more powerful features, please download the desktop version."
+          )
+        );
+        return;
+      }
       window.open(
         `${window.location.href.split("#")[0]}#/${ref}/${book.key}?title=${
           book.name

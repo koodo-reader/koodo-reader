@@ -314,7 +314,6 @@
   "Reader window will be maximized to fit the screen when opening a book": "打開圖書時，窗口自動最大化",
   "Open books in the main window": "直接在主窗口打開圖書",
   "Book won't be opened in a seperate window but directly opened in the main window": "圖書不會在一個單獨的窗口打開，而是直接在主窗口打開",
-  "Book not exsits": "圖書文件不存在",
   "Reach frequency limit": "請求頻率太快",
   "Error happens": "出錯了",
   "Text Indent": "首行縮進",

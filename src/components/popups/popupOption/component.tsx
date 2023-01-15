@@ -108,7 +108,7 @@ class PopupOption extends React.Component<PopupOptionProps> {
     let digest = new Note(
       bookKey,
       this.props.chapter,
-      this.props.chapterIndex,
+      this.props.chapterDocIndex,
       text,
       cfi,
       range,

@@ -64,6 +64,7 @@ class CardList extends React.Component<CardListProps, CardListStates> {
         note.bookKey,
         bookLocation.text,
         bookLocation.chapterTitle,
+        bookLocation.chapterDocIndex,
         bookLocation.count,
         bookLocation.percentage,
         bookLocation.cfi
@@ -73,7 +74,7 @@ class CardList extends React.Component<CardListProps, CardListStates> {
     if (StorageUtil.getReaderConfig("isOpenInMain") === "yes") {
       this.props.history.push(BookUtil.getBookUrl(book));
     } else {
-      BookUtil.RedirectBook(book);
+      BookUtil.RedirectBook(book, this.props.t);
     }
   };
   render() {
