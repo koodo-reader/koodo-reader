@@ -21,24 +21,13 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
         chapters: this.props.htmlBook.chapters,
       });
   }
-  flatChapter(chapters: any) {
-    let newChapter: any = [];
-    for (let i = 0; i < chapters.length; i++) {
-      if (chapters[i].subitems[0]) {
-        newChapter.push(chapters[i]);
-        newChapter = newChapter.concat(this.flatChapter(chapters[i].subitems));
-      } else {
-        newChapter.push(chapters[i]);
-      }
-    }
-    return newChapter;
-  }
   handleJump(event: any) {
     event.preventDefault();
     let href = event.target.getAttribute("href");
     let chapterIndex = _.findIndex(this.props.htmlBook.flattenChapters, {
       href,
     });
+    console.log(chapterIndex, this.props.htmlBook.flattenChapters);
     let title = this.props.htmlBook.flattenChapters[chapterIndex].title;
     let index = this.props.htmlBook.flattenChapters[chapterIndex].index;
     RecordLocation.recordHtmlLocation(
@@ -60,12 +49,14 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
     }
   }
   render() {
+    console.log(this.state.chapters);
     const renderContentList = (items: any, level: number) => {
       level++;
       return items.map((item: any, index: number) => {
         return (
           <li key={index} className="book-content-list">
-            {item.subitems.length > 0 &&
+            {item.subitems &&
+              item.subitems.length > 0 &&
               level <= 2 &&
               !this.state.isExpandContent && (
                 <span
@@ -89,11 +80,10 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
               onClick={this.handleJump}
               className="book-content-name"
             >
-              {item.title.indexOf("#") > -1
-                ? item.title.split("#")[0]
-                : item.title}
+              {item.title}
             </a>
-            {item.subitems.length > 0 &&
+            {item.subitems &&
+            item.subitems.length > 0 &&
             (this.state.currentIndex === index ||
               level > 2 ||
               this.state.isExpandContent) ? (
