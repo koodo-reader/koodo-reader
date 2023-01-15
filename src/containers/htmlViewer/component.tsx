@@ -13,10 +13,7 @@ import * as jschardet from "jschardet";
 // import rtfToHTML from "@iarna/rtf-to-html";
 import StyleUtil from "../../utils/readUtils/styleUtil";
 import "./index.css";
-import {
-  bindHtmlEvent,
-  HtmlMouseEvent,
-} from "../../utils/serviceUtils/mouseEvent";
+import { HtmlMouseEvent } from "../../utils/serviceUtils/mouseEvent";
 import ImageViewer from "../../components/imageViewer";
 import _ from "underscore";
 import { getIframeDoc } from "../../utils/serviceUtils/docUtil";
@@ -45,13 +42,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           .chapterTitle || "",
       readerMode: StorageUtil.getReaderConfig("readerMode") || "double",
       margin: parseInt(StorageUtil.getReaderConfig("margin")) || 30,
-      extraMargin:
-        this.props.currentBook.format === "EPUB"
-          ? (document.body.clientWidth -
-              2 * (parseInt(StorageUtil.getReaderConfig("margin")) || 30) -
-              20) /
-            24
-          : 0,
+      extraMargin: 0,
       chapterDocIndex: parseInt(
         RecordLocation.getHtmlLocation(this.props.currentBook.key)
           .chapterDocIndex || 0
@@ -91,25 +82,8 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         StorageUtil.getReaderConfig("readerMode") !== "scroll" &&
           this.handlePageWidth();
       }
-      if (this.props.currentBook.format === "EPUB") {
-        let doc = getIframeDoc();
-        if (!doc) return;
-        bindHtmlEvent(
-          this.props.htmlBook.rendition,
-          doc,
-          this.props.currentBook.key,
-          this.state.readerMode
-        );
-        this.setState({
-          pageWidth: this.props.htmlBook.rendition.getPageSize().width,
-          pageHeight: this.props.htmlBook.rendition.getPageSize().height,
-        });
-        this.handleBindGesture();
-        StyleUtil.addDefaultCss();
-        this.props.renderNoteFunc();
-      } else {
-        this.handleRenderBook();
-      }
+
+      this.handleRenderBook();
 
       lock = true;
       setTimeout(function () {
@@ -206,34 +180,31 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     tsTransform();
     rendition.setStyle(
       StyleUtil.getCustomCss(
-        this.props.currentBook.format === "EPUB" ? false : true,
+        true,
         StorageUtil.getReaderConfig("readerMode") === "scroll"
       )
     );
-    if (this.props.currentBook.format !== "EPUB") {
-      let bookLocation: {
-        text: string;
-        count: string;
-        chapterTitle: string;
-        chapterDocIndex: string;
-        percentage: string;
-        cfi: string;
-      } = RecordLocation.getHtmlLocation(this.props.currentBook.key);
-      await rendition.goToPosition(
-        JSON.stringify({
-          text: bookLocation.text,
-          chapterTitle: bookLocation.chapterTitle,
-          chapterDocIndex: bookLocation.chapterDocIndex,
-          count: bookLocation.count,
-          percentage: bookLocation.percentage,
-          cfi: bookLocation.cfi,
-          isFirst: true,
-        })
-      );
-    }
+    let bookLocation: {
+      text: string;
+      count: string;
+      chapterTitle: string;
+      chapterDocIndex: string;
+      percentage: string;
+      cfi: string;
+    } = RecordLocation.getHtmlLocation(this.props.currentBook.key);
+    await rendition.goToPosition(
+      JSON.stringify({
+        text: bookLocation.text,
+        chapterTitle: bookLocation.chapterTitle,
+        chapterDocIndex: bookLocation.chapterDocIndex,
+        count: bookLocation.count,
+        percentage: bookLocation.percentage,
+        cfi: bookLocation.cfi,
+        isFirst: true,
+      })
+    );
 
     rendition.on("rendered", async () => {
-      console.log("rendered");
       await this.handleLocation();
       let bookLocation: {
         text: string;
@@ -272,7 +243,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
                 )
               : 0;
         }
-        console.log(chapter, chapterDocIndex);
         this.props.handleCurrentChapter(chapter);
         this.props.handleCurrentChapterIndex(chapterDocIndex);
         this.props.handleFetchPercentage(this.props.currentBook);
@@ -293,7 +263,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
   };
   handleLocation = async () => {
     let position = await this.props.htmlBook.rendition.getPosition();
-    console.log(position);
     RecordLocation.recordHtmlLocation(
       this.props.currentBook.key,
       position.text,
@@ -338,7 +307,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     let bookLocation = RecordLocation.getHtmlLocation(
       this.props.currentBook.key
     );
-    console.log(ComicRender, result, format);
     let rendition = new ComicRender(
       result,
       this.state.readerMode,
@@ -433,10 +401,8 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       `book`,
       key
     );
-    console.log(bookPath);
     fs.createReadStream(bookPath).pipe(
       rtfToHTML(async (err, html) => {
-        console.log(err, html);
         let rendition = new StrRender(
           removeExtraQuestionMark(html),
           this.state.readerMode,
