@@ -34,7 +34,7 @@ export interface ViewerState {
   extraMargin: number;
   readerMode: string;
   chapter: string;
-  chapterIndex: number;
+  chapterDocIndex: number;
   pageWidth: number;
   pageHeight: number;
   cfiRange: any;

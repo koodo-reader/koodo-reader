@@ -85,7 +85,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
       this.props.handleReadingBook(book);
     } else {
       localStorage.setItem("tempBook", JSON.stringify(book));
-      BookUtil.RedirectBook(book);
+      BookUtil.RedirectBook(book, this.props.t);
       this.props.history.push("/manager/home");
     }
   };

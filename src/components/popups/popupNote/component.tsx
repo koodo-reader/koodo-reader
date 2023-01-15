@@ -123,7 +123,7 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
       let note = new Note(
         bookKey,
         this.props.chapter,
-        this.props.chapterIndex,
+        this.props.chapterDocIndex,
         text,
         cfi,
         range,
