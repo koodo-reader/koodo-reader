@@ -143,6 +143,7 @@ const handleLocation = async (key: string, rendition: any) => {
     position.text,
     position.chapterTitle,
     position.chapterDocIndex,
+    position.chapterHref,
     position.count,
     position.percentage,
     position.cfi

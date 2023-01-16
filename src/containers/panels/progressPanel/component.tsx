@@ -42,42 +42,35 @@ class ProgressPanel extends React.Component<
   onProgressChange = (event: any) => {
     const percentage = event.target.value / 100;
     if (this.props.htmlBook.flattenChapters.length > 0) {
+      let chapterIndex =
+        percentage === 1
+          ? this.props.htmlBook.flattenChapters.length - 1
+          : Math.floor(this.props.htmlBook.flattenChapters.length * percentage);
       this.props.htmlBook.rendition.goToChapter(
-        this.props.htmlBook.flattenChapters[
-          percentage === 1
-            ? this.props.htmlBook.flattenChapters.length - 1
-            : Math.floor(
-                this.props.htmlBook.flattenChapters.length * percentage
-              )
-        ].index.toString()
+        this.props.htmlBook.flattenChapters[chapterIndex].index.toString(),
+        this.props.htmlBook.flattenChapters[chapterIndex].href,
+        ""
       );
     }
   };
   nextChapter = () => {
     if (this.props.htmlBook.flattenChapters.length > 0) {
-      this.props.htmlBook.rendition.goToChapter(
-        (this.props.currentChapterIndex <
-        this.props.htmlBook.flattenChapters.length - 1
-          ? this.props.currentChapterIndex + 1
-          : this.props.htmlBook.flattenChapters.length - 1
-        ).toString()
-      );
+      this.props.htmlBook.rendition.nextChapter();
     }
   };
   prevChapter = () => {
     if (this.props.htmlBook.flattenChapters.length > 0) {
-      this.props.htmlBook.rendition.goToChapter(
-        (this.props.currentChapterIndex > 0
-          ? this.props.currentChapterIndex - 1
-          : 0
-        ).toString()
-      );
+      this.props.htmlBook.rendition.prevChapter();
     }
   };
   handleJumpChapter = (event: any) => {
     let targetChapter = parseInt(event.target.value.trim()) - 1;
     if (this.props.htmlBook.flattenChapters.length > 0) {
-      this.props.htmlBook.rendition.goToChapter(targetChapter.toString());
+      this.props.htmlBook.rendition.goToChapter(
+        this.props.htmlBook.flattenChapters[targetChapter].index,
+        this.props.htmlBook.flattenChapters[targetChapter].href,
+        ""
+      );
     }
   };
   render() {

@@ -18,9 +18,10 @@ class RecordLocation {
     text: string,
     chapterTitle: string,
     chapterDocIndex: string,
+    chapterHref: string,
     count: string,
     percentage: string,
-    cfi: string = ""
+    cfi: string
   ) {
     if (cfi) {
       let json = localStorage.getItem("recordLocation");
@@ -29,6 +30,7 @@ class RecordLocation {
         text,
         chapterTitle,
         chapterDocIndex,
+        chapterHref,
         count,
         percentage,
         cfi,
@@ -36,7 +38,12 @@ class RecordLocation {
       localStorage.setItem("recordLocation", JSON.stringify(obj));
     } else {
       if (
-        (!text || !chapterTitle || !chapterDocIndex || !count || !percentage) &&
+        (!text ||
+          !chapterTitle ||
+          !chapterDocIndex ||
+          !chapterHref ||
+          !count ||
+          !percentage) &&
         document.location.href.indexOf("/cb") === -1 //漫画的情况，cbr,cbt,cbz
       )
         return;
@@ -47,6 +54,7 @@ class RecordLocation {
         text,
         chapterTitle,
         chapterDocIndex,
+        chapterHref,
         count,
         percentage,
         cfi,
