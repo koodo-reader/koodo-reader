@@ -75,6 +75,7 @@ class NavigationPanel extends React.Component<
                   text: bookLocation.text,
                   chapterTitle: bookLocation.chapterTitle,
                   chapterDocIndex: bookLocation.chapterDocIndex,
+                  chapterHref: bookLocation.chapterHref,
                   count: bookLocation.count,
                   percentage: bookLocation.percentage,
                   cfi: bookLocation.cfi,

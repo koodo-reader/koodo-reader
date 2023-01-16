@@ -3,7 +3,6 @@ import "./contentList.css";
 import { ContentListProps, ContentListState } from "./interface";
 import StorageUtil from "../../../utils/serviceUtils/storageUtil";
 import _ from "underscore";
-import RecordLocation from "../../../utils/readUtils/recordLocation";
 class ContentList extends React.Component<ContentListProps, ContentListState> {
   constructor(props: ContentListProps) {
     super(props);
@@ -30,16 +29,7 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
     console.log(chapterIndex, this.props.htmlBook.flattenChapters);
     let title = this.props.htmlBook.flattenChapters[chapterIndex].title;
     let index = this.props.htmlBook.flattenChapters[chapterIndex].index;
-    RecordLocation.recordHtmlLocation(
-      this.props.currentBook.key,
-      "test",
-      title,
-      index.toString(),
-      "test",
-      "0",
-      ""
-    );
-    this.props.htmlBook.rendition.goToChapter(index.toString());
+    this.props.htmlBook.rendition.goToChapter(index.toString(), href, "");
     this.props.handleCurrentChapter(title);
     this.props.handleCurrentChapterIndex(index);
   }

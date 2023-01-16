@@ -31,6 +31,7 @@ class NavList extends React.Component<NavListProps, NavListState> {
         text: bookLocation.text,
         chapterTitle: bookLocation.chapterTitle,
         chapterDocIndex: bookLocation.chapterDocIndex,
+        chapterHref: bookLocation.chapterHref,
         count: bookLocation.count,
         percentage: bookLocation.percentage,
         cfi: bookLocation.cfi,
