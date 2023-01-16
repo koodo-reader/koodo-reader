@@ -127,14 +127,15 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         break;
     }
   };
-  handleLocation = async () => {
-    let position = await this.props.htmlBook.rendition.getPosition();
+  handleLocation = () => {
+    let position = this.props.htmlBook.rendition.getPosition();
 
     RecordLocation.recordHtmlLocation(
       this.props.currentBook.key,
       position.text,
       position.chapterTitle,
       position.chapterDocIndex,
+      position.chapterHref,
       position.count,
       position.percentage,
       position.cfi
@@ -165,9 +166,9 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
             </div>
             <div
               className="next-chapter-single-container"
-              onClick={async () => {
+              onClick={() => {
                 this.props.htmlBook.rendition.next();
-                await this.handleLocation();
+                this.handleLocation();
               }}
             >
               <span className="icon-dropdown next-chapter-single"></span>
