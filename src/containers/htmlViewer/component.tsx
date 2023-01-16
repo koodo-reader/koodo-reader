@@ -189,15 +189,17 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       count: string;
       chapterTitle: string;
       chapterDocIndex: string;
+      chapterHref: string;
       percentage: string;
       cfi: string;
     } = RecordLocation.getHtmlLocation(this.props.currentBook.key);
     await rendition.goToPosition(
       JSON.stringify({
-        text: bookLocation.text,
-        chapterTitle: bookLocation.chapterTitle,
-        chapterDocIndex: bookLocation.chapterDocIndex,
-        count: bookLocation.count,
+        text: bookLocation.text || "",
+        chapterTitle: bookLocation.chapterTitle || "",
+        chapterDocIndex: bookLocation.chapterDocIndex || 0,
+        chapterHref: bookLocation.chapterHref || "",
+        count: bookLocation.count || 0,
         percentage: bookLocation.percentage,
         cfi: bookLocation.cfi,
         isFirst: true,
@@ -211,6 +213,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         count: string;
         chapterTitle: string;
         chapterDocIndex: string;
+        chapterHref: string;
       } = RecordLocation.getHtmlLocation(this.props.currentBook.key);
       if (this.props.currentBook.format.startsWith("CB")) {
         this.setState({
@@ -268,6 +271,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       position.text,
       position.chapterTitle,
       position.chapterDocIndex,
+      position.chapterHref,
       position.count,
       position.percentage,
       position.cfi
@@ -341,6 +345,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       count: string;
       chapterTitle: string;
       chapterDocIndex: string;
+      chapterHref: string;
       percentage: string;
       cfi: string;
     } = RecordLocation.getHtmlLocation(this.props.currentBook.key);
