@@ -83,7 +83,7 @@ class TextToSpeech extends React.Component<
     if (StorageUtil.getReaderConfig("isSliding") === "yes") {
       await sleep(1000);
     }
-    text = await this.props.htmlBook.rendition.visibleText();
+    text = this.props.htmlBook.rendition.visibleText();
     text = text
       .replace(/\s\s/g, "")
       .replace(/\r/g, "")

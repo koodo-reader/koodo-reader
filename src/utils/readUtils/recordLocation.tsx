@@ -38,16 +38,10 @@ class RecordLocation {
       localStorage.setItem("recordLocation", JSON.stringify(obj));
     } else {
       if (
-        (!text ||
-          !chapterTitle ||
-          !chapterDocIndex ||
-          !chapterHref ||
-          !count ||
-          !percentage) &&
+        (!text || !chapterTitle || !chapterDocIndex || !count || !percentage) &&
         document.location.href.indexOf("/cb") === -1 //漫画的情况，cbr,cbt,cbz
       )
         return;
-
       let json = localStorage.getItem("recordLocation");
       let obj = JSON.parse(json || "{}");
       obj[bookKey] = {

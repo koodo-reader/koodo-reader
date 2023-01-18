@@ -86,8 +86,8 @@ class NavList extends React.Component<NavListProps, NavListState> {
             ) : null}
             <div
               className="book-bookmark-link"
-              onClick={() => {
-                this.handleJump(item.cfi);
+              onClick={async () => {
+                await this.handleJump(item.cfi);
               }}
               style={{ cursor: "pointer" }}
             >

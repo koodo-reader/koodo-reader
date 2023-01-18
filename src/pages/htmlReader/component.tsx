@@ -159,7 +159,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
               className="previous-chapter-single-container"
               onClick={async () => {
                 this.props.htmlBook.rendition.prev();
-                await this.handleLocation();
+                this.handleLocation();
               }}
             >
               <span className="icon-dropdown previous-chapter-single"></span>
