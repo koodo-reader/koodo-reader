@@ -20,7 +20,7 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
         chapters: this.props.htmlBook.chapters,
       });
   }
-  handleJump(event: any) {
+  async handleJump(event: any) {
     event.preventDefault();
     let href = event.target.getAttribute("href");
     let chapterIndex = _.findIndex(this.props.htmlBook.flattenChapters, {
@@ -29,7 +29,7 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
     console.log(chapterIndex, this.props.htmlBook.flattenChapters);
     let title = this.props.htmlBook.flattenChapters[chapterIndex].title;
     let index = this.props.htmlBook.flattenChapters[chapterIndex].index;
-    this.props.htmlBook.rendition.goToChapter(index.toString(), href, "");
+    await this.props.htmlBook.rendition.goToChapter(index.toString(), href, "");
     this.props.handleCurrentChapter(title);
     this.props.handleCurrentChapterIndex(index);
   }
