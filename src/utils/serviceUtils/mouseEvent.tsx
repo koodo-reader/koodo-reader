@@ -136,8 +136,8 @@ const gesture = (rendition: any, type: string) => {
   }
 };
 
-const handleLocation = async (key: string, rendition: any) => {
-  let position = await rendition.getPosition();
+const handleLocation = (key: string, rendition: any) => {
+  let position = rendition.getPosition();
   RecordLocation.recordHtmlLocation(
     key,
     position.text,
