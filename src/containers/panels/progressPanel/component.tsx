@@ -22,16 +22,16 @@ class ProgressPanel extends React.Component<
     };
   }
 
-  async UNSAFE_componentWillReceiveProps(nextProps: ProgressPanelProps) {
+  UNSAFE_componentWillReceiveProps(nextProps: ProgressPanelProps) {
     if (nextProps.htmlBook !== this.props.htmlBook && nextProps.htmlBook) {
-      await this.handlePageNum(nextProps.htmlBook.rendition);
+      this.handlePageNum(nextProps.htmlBook.rendition);
       nextProps.htmlBook.rendition.on("page-changed", async () => {
-        await this.handlePageNum(nextProps.htmlBook.rendition);
+        this.handlePageNum(nextProps.htmlBook.rendition);
       });
     }
   }
-  async handlePageNum(rendition) {
-    let pageInfo = await rendition.getProgress();
+  handlePageNum(rendition) {
+    let pageInfo = rendition.getProgress();
     this.setState({
       currentPage: this.state.isSingle
         ? pageInfo.currentPage
@@ -39,14 +39,14 @@ class ProgressPanel extends React.Component<
       totalPage: pageInfo.totalPage,
     });
   }
-  onProgressChange = (event: any) => {
+  onProgressChange = async (event: any) => {
     const percentage = event.target.value / 100;
     if (this.props.htmlBook.flattenChapters.length > 0) {
       let chapterIndex =
         percentage === 1
           ? this.props.htmlBook.flattenChapters.length - 1
           : Math.floor(this.props.htmlBook.flattenChapters.length * percentage);
-      this.props.htmlBook.rendition.goToChapter(
+      await this.props.htmlBook.rendition.goToChapter(
         this.props.htmlBook.flattenChapters[chapterIndex].index.toString(),
         this.props.htmlBook.flattenChapters[chapterIndex].href,
         ""
@@ -63,10 +63,10 @@ class ProgressPanel extends React.Component<
       this.props.htmlBook.rendition.prevChapter();
     }
   };
-  handleJumpChapter = (event: any) => {
+  handleJumpChapter = async (event: any) => {
     let targetChapter = parseInt(event.target.value.trim()) - 1;
     if (this.props.htmlBook.flattenChapters.length > 0) {
-      this.props.htmlBook.rendition.goToChapter(
+      await this.props.htmlBook.rendition.goToChapter(
         this.props.htmlBook.flattenChapters[targetChapter].index,
         this.props.htmlBook.flattenChapters[targetChapter].href,
         ""

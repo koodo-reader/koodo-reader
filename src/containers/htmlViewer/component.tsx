@@ -163,7 +163,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       this.props.currentBook.key,
       this.state.readerMode
     );
-    let chapters = await rendition.getChapter();
+    let chapters = rendition.getChapter();
     let flattenChapters = rendition.flatChapter(chapters);
     this.props.handleHtmlBook({
       key: this.props.currentBook.key,
@@ -206,8 +206,8 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       })
     );
 
-    rendition.on("rendered", async () => {
-      await this.handleLocation();
+    rendition.on("rendered", () => {
+      this.handleLocation();
       let bookLocation: {
         text: string;
         count: string;
@@ -264,8 +264,8 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       return false;
     });
   };
-  handleLocation = async () => {
-    let position = await this.props.htmlBook.rendition.getPosition();
+  handleLocation = () => {
+    let position = this.props.htmlBook.rendition.getPosition();
     RecordLocation.recordHtmlLocation(
       this.props.currentBook.key,
       position.text,
@@ -321,7 +321,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       document.getElementsByClassName("html-viewer-page")[0],
       parseInt(bookLocation.count) || 0
     );
-    this.handleRest(rendition);
+    await this.handleRest(rendition);
   };
   handleMobi = async (result: ArrayBuffer) => {
     let rendition = new MobiRender(
@@ -332,7 +332,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     await rendition.renderTo(
       document.getElementsByClassName("html-viewer-page")[0]
     );
-    this.handleRest(rendition);
+    await this.handleRest(rendition);
   };
   handleEpub = async (result: ArrayBuffer) => {
     let rendition = new EpubRender(
@@ -353,7 +353,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       document.getElementsByClassName("html-viewer-page")[0],
       bookLocation.cfi
     );
-    this.handleRest(rendition);
+    await this.handleRest(rendition);
   };
   handleTxt = async (result: ArrayBuffer) => {
     const array = new Uint8Array(result as ArrayBuffer);
@@ -374,7 +374,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     await rendition.renderTo(
       document.getElementsByClassName("html-viewer-page")[0]
     );
-    this.handleRest(rendition);
+    await this.handleRest(rendition);
   };
   handleMD = (result: ArrayBuffer) => {
     var blob = new Blob([result], { type: "text/plain" });
@@ -389,7 +389,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       await rendition.renderTo(
         document.getElementsByClassName("html-viewer-page")[0]
       );
-      this.handleRest(rendition);
+      await this.handleRest(rendition);
     };
     reader.readAsText(blob, "UTF-8");
   };
@@ -416,7 +416,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         await rendition.renderTo(
           document.getElementsByClassName("html-viewer-page")[0]
         );
-        this.handleRest(rendition);
+        await this.handleRest(rendition);
       })
     );
   };
@@ -432,7 +432,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         await rendition.renderTo(
           document.getElementsByClassName("html-viewer-page")[0]
         );
-        this.handleRest(rendition);
+        await this.handleRest(rendition);
       });
   };
   handleFb2 = async (result: ArrayBuffer) => {
@@ -444,7 +444,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     await rendition.renderTo(
       document.getElementsByClassName("html-viewer-page")[0]
     );
-    this.handleRest(rendition);
+    await this.handleRest(rendition);
   };
   handleHtml = (result: ArrayBuffer, format: string) => {
     var blob = new Blob([result], {
@@ -461,7 +461,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       await rendition.renderTo(
         document.getElementsByClassName("html-viewer-page")[0]
       );
-      this.handleRest(rendition);
+      await this.handleRest(rendition);
     };
     reader.readAsText(blob, "UTF-8");
   };
