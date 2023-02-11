@@ -12,5 +12,6 @@ export const mimetype = {
   html: "text/html",
   htm: "text/html",
   xml: "text/xml",
-  xhtml: "application/xhtml+xml",
+  xhtml: "text/html",
+  mhtml: "application/x-mimearchive",
 };
