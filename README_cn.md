@@ -34,12 +34,12 @@
 - 支持阅读格式：
   - EPUB (**.epub**)
   - 扫描文档 (**.pdf**, **.djvu**)
-  - Kindle (**.azw3**, **.mobi**)
+  - Kindle (**.azw3**, **.mobi**, **.azw**)
   - 纯文本 (**.txt**)
-  - 漫画 (**.cbr**, **.cbz**, **.cbt**)
+  - 漫画 (**.cbr**, **.cbz**, **.cbt**, **.cb7**)
   - 富文本 (**.md**, **.docx**, **.rtf**)
   - FB2 (**.fb2**)
-  - 超文本 (**.html**, **.xml**, **.xhtml**, **.htm**)
+  - 超文本 (**.html**, **.xml**, **.xhtml**, **.htm**, **.htm**)
 - 支持 **Windows**，**macOS**，**Linux** 和 **网页版**
 - 备份数据到 **Dropbox** 和 **Webdav**
 - 自定义源文件夹，利用 OneDrive、百度网盘、iCloud、Dropbox 等进行多设备同步
@@ -64,7 +64,8 @@ scoop install dorado/koodo-reader
 
 - 使用 Winget 安装：
 
-- 
+-
+
 ```shell
 winget install -e AppbyTroye.KoodoReader
 ```
