@@ -14,3 +14,8 @@ export const removeExtraQuestionMark = (html: any) => {
     .replaceAll("‘?", "‘")
     .replaceAll("“?", "“");
 };
+export const copyArrayBuffer = (src) => {
+  var dst = new ArrayBuffer(src.byteLength);
+  new Uint8Array(dst).set(new Uint8Array(src));
+  return dst;
+};

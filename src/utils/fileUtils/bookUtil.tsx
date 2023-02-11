@@ -4,6 +4,7 @@ import localforage from "localforage";
 import BookModel from "../../model/Book";
 import toast from "react-hot-toast";
 import { getPDFCover } from "./pdfUtil";
+import { copyArrayBuffer } from "../commonUtil";
 declare var window: any;
 const { MobiRender, EpubRender, Fb2Render, ComicRender } = window.Kookit;
 
@@ -241,10 +242,8 @@ class BookUtil {
           }
           break;
         case "epub":
-          console.log("epubsdfsdf");
           rendition = new EpubRender(file_content, "scroll", false);
           metadata = await rendition.getMetadata();
-          console.log(metadata);
           if (metadata === "timeout_error") {
             resolve("get_metadata_error");
             break;
@@ -264,6 +263,7 @@ class BookUtil {
           }
           break;
         case "mobi":
+        case "azw":
         case "azw3":
           rendition = new MobiRender(file_content, "scroll", false);
           metadata = await rendition.getMetadata();
@@ -289,8 +289,9 @@ class BookUtil {
         case "cbr":
         case "cbt":
         case "cbz":
+        case "cb7":
           rendition = new ComicRender(
-            file_content,
+            copyArrayBuffer(file_content),
             "scroll",
             extension.toUpperCase(),
             false
@@ -301,7 +302,6 @@ class BookUtil {
         default:
           break;
       }
-      console.log(name);
       let format = extension.toUpperCase();
       key = new Date().getTime() + "";
       resolve(

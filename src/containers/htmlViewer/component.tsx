@@ -126,7 +126,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         return;
       }
 
-      if (format === "MOBI" || format === "AZW3") {
+      if (format === "MOBI" || format === "AZW3" || format === "AZW") {
         this.handleMobi(result as ArrayBuffer);
       } else if (format === "EPUB") {
         this.handleEpub(result as ArrayBuffer);
@@ -143,11 +143,17 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       } else if (
         format === "HTML" ||
         format === "XHTML" ||
+        format === "MHTML" ||
         format === "HTM" ||
         format === "XML"
       ) {
         this.handleHtml(result as ArrayBuffer, format);
-      } else if (format === "CBR" || format === "CBT" || format === "CBZ") {
+      } else if (
+        format === "CBR" ||
+        format === "CBT" ||
+        format === "CBZ" ||
+        format === "CB7"
+      ) {
         this.handleComic(result as ArrayBuffer, format);
       }
       this.props.handleReadingState(true);

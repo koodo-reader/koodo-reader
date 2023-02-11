@@ -37,10 +37,7 @@ class RecordLocation {
       };
       localStorage.setItem("recordLocation", JSON.stringify(obj));
     } else {
-      if (
-        (!text || !chapterTitle || !chapterDocIndex || !count || !percentage) &&
-        document.location.href.indexOf("/cb") === -1 //漫画的情况，cbr,cbt,cbz
-      )
+      if (!text || !chapterTitle || !chapterDocIndex || !count || !percentage)
         return;
       let json = localStorage.getItem("recordLocation");
       let obj = JSON.parse(json || "{}");

@@ -200,14 +200,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
               file_content
             );
             clickFilePath = "";
-            if (result === "parse_kindle_error") {
-              toast.error(
-                this.props.t(
-                  "You may see this error when the book you're importing is not supported by Koodo Reader, try converting it with Calibre"
-                )
-              );
-              return resolve();
-            } else if (result === "get_metadata_error") {
+            if (result === "get_metadata_error") {
               toast.error(this.props.t("Import Failed"));
               return resolve();
             }
@@ -239,11 +232,13 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
           ".txt",
           ".mobi",
           ".azw3",
+          ".azw",
           ".djvu",
           ".htm",
           ".html",
           ".xml",
           ".xhtml",
+          ".mhtml",
           ".docx",
           ".rtf",
           ".md",
@@ -251,6 +246,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
           ".cbz",
           ".cbt",
           ".cbr",
+          ".cb7",
         ]}
         multiple={true}
       >
