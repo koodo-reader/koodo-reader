@@ -26,7 +26,6 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
     let chapterIndex = _.findIndex(this.props.htmlBook.flattenChapters, {
       href,
     });
-    console.log(chapterIndex, this.props.htmlBook.flattenChapters);
     let title = this.props.htmlBook.flattenChapters[chapterIndex].title;
     let index = this.props.htmlBook.flattenChapters[chapterIndex].index;
     await this.props.htmlBook.rendition.goToChapter(index.toString(), href, "");
@@ -39,7 +38,6 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
     }
   }
   render() {
-    console.log(this.state.chapters);
     const renderContentList = (items: any, level: number) => {
       level++;
       return items.map((item: any, index: number) => {

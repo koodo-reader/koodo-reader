@@ -33,12 +33,12 @@
 - Format support:
   - EPUB (**.epub**)
   - Scanned document (**.pdf**, **.djvu**)
-  - DRM-free Mobipocket (**.mobi**) and Kindle (**.azw3**)
+  - DRM-free Mobipocket (**.mobi**) and Kindle (**.azw3**, **.azw**)
   - Plain text (**.txt**)
   - FictionBook (**.fb2**)
-  - Comic book archive (**.cbr**, **.cbz**, **.cbt**)
+  - Comic book archive (**.cbr**, **.cbz**, **.cbt**, **.cb7**)
   - Rich text (**.md**, **.docx**, **.rtf**)
-  - Hyper Text (**.html**, **.xml**, **.xhtml**, **.htm**)
+  - Hyper Text (**.html**, **.xml**, **.xhtml**, **.htm**, **.htm**)
 - Platform support: **Windows**, **macOS**, **Linux** and **Web**
 - Save your data to **Dropbox** or **Webdav**
 - Customize the source folder and synchronize among multiple devices using OneDrive, iCloud, Dropbox, etc.
