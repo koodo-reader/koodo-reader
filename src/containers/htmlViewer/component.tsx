@@ -15,7 +15,6 @@ import StyleUtil from "../../utils/readUtils/styleUtil";
 import "./index.css";
 import { HtmlMouseEvent } from "../../utils/serviceUtils/mouseEvent";
 import ImageViewer from "../../components/imageViewer";
-import _ from "underscore";
 import { getIframeDoc } from "../../utils/serviceUtils/docUtil";
 import { tsTransform } from "../../utils/serviceUtils/langUtil";
 import localforage from "localforage";
@@ -241,7 +240,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         } else {
           chapterDocIndex =
             bookLocation.chapterTitle && this.props.htmlBook
-              ? _.findLastIndex(
+              ? window._.findLastIndex(
                   this.props.htmlBook.flattenChapters.map((item) => {
                     item.title = item.title.trim();
                     return item;
