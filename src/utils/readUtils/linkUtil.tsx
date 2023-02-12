@@ -1,6 +1,6 @@
 import { openExternalUrl } from "../serviceUtils/urlUtil";
 
-export const handleLinkJump = (event: any) => {
+export const handleLinkJump = (event: any, rendition: any = {}) => {
   let href;
 
   if (
@@ -16,7 +16,10 @@ export const handleLinkJump = (event: any) => {
       event.target.parentNode.parentNode.href ||
       "";
   }
-  if (
+  console.log(href);
+  if (href.indexOf("#") > -1) {
+    rendition.goToAnchor(href);
+  } else if (
     href &&
     href.indexOf("../") === -1 &&
     href.indexOf("http") === 0 &&
@@ -24,8 +27,7 @@ export const handleLinkJump = (event: any) => {
     href.indexOf("OEBPS") === -1 &&
     href.indexOf("footnote") === -1 &&
     href.indexOf("blob") === -1 &&
-    href.indexOf("data:application") === -1 &&
-    href.indexOf(".htm") === -1
+    href.indexOf("data:application") === -1
   ) {
     openExternalUrl(href);
   }
