@@ -2,7 +2,6 @@ import BookModel from "../../model/Book";
 import NoteModel from "../../model/Note";
 import ReadingTime from "./readingTime";
 import RecordLocation from "./recordLocation";
-import _ from "underscore";
 import RecordRecent from "./recordRecent";
 const getBookName = (books: BookModel[]) => {
   return books.map((item) => item.name);
@@ -95,11 +94,11 @@ class SortUtil {
       let bookKeys = getBookKey(books);
       if (bookSortCode.order === 1) {
         return getBookIndex(
-          _.union(durationKeys, bookKeys),
+          window._.union(durationKeys, bookKeys),
           bookKeys
         ).reverse();
       } else {
-        return getBookIndex(_.union(durationKeys, bookKeys), bookKeys);
+        return getBookIndex(window._.union(durationKeys, bookKeys), bookKeys);
       }
     }
     if (bookSortCode.sort === 5) {
@@ -128,8 +127,8 @@ class SortUtil {
   ) {
     if (noteSortCode.sort === 2) {
       //使书摘从晚到早排序
-      let noteArr = _.clone(notes).reverse();
-      let dateArr = _.uniq(
+      let noteArr = window._.clone(notes).reverse();
+      let dateArr = window._.uniq(
         notes.map(
           (item) =>
             "" + item.date.year + "-" + item.date.month + "-" + item.date.day
@@ -159,12 +158,12 @@ class SortUtil {
     }
     if (noteSortCode.sort === 1) {
       //使书摘从晚到早排序
-      let noteArr = _.clone(notes).reverse();
-      let nameArr = _.uniq(
+      let noteArr = window._.clone(notes).reverse();
+      let nameArr = window._.uniq(
         notes.map(
           (item) =>
             books[
-              _.findLastIndex(books, {
+              window._.findLastIndex(books, {
                 key: item.bookKey,
               })
             ].name
@@ -185,7 +184,7 @@ class SortUtil {
           if (
             name ===
             books[
-              _.findLastIndex(books, {
+              window._.findLastIndex(books, {
                 key: note.bookKey,
               })
             ].name

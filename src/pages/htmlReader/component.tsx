@@ -9,7 +9,6 @@ import { ReaderProps, ReaderState } from "./interface";
 import StorageUtil from "../../utils/serviceUtils/storageUtil";
 import ReadingTime from "../../utils/readUtils/readingTime";
 import Viewer from "../../containers/htmlViewer";
-import _ from "underscore";
 import localforage from "localforage";
 import RecordLocation from "../../utils/readUtils/recordLocation";
 import "./index.css";
@@ -63,7 +62,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         book = this.props.currentBook;
       } else {
         book =
-          result[_.findIndex(result, { key })] ||
+          result[window._.findIndex(result, { key })] ||
           JSON.parse(localStorage.getItem("tempBook") || "{}");
       }
       this.props.handleReadingBook(book);
