@@ -17,7 +17,6 @@ import {
   skinList,
 } from "../../../constants/settingList";
 import { themeList } from "../../../constants/themeList";
-import _ from "underscore";
 import toast from "react-hot-toast";
 import { openExternalUrl } from "../../../utils/serviceUtils/urlUtil";
 class SettingDialog extends React.Component<
@@ -43,7 +42,7 @@ class SettingDialog extends React.Component<
       appSkin: StorageUtil.getReaderConfig("appSkin"),
       isUseBuiltIn: StorageUtil.getReaderConfig("isUseBuiltIn") === "yes",
       isPDFCover: StorageUtil.getReaderConfig("isPDFCover") === "yes",
-      currentThemeIndex: _.findLastIndex(themeList, {
+      currentThemeIndex: window._.findLastIndex(themeList, {
         name: StorageUtil.getReaderConfig("themeColor"),
       }),
     };
@@ -68,14 +67,14 @@ class SettingDialog extends React.Component<
           )
       ]?.setAttribute("selected", "selected");
     document.getElementsByClassName("lang-setting-dropdown")[2]?.children[
-      _.findLastIndex(searchList, {
+      window._.findLastIndex(searchList, {
         value:
           StorageUtil.getReaderConfig("searchEngine") ||
           (navigator.language === "zh-CN" ? "baidu" : "google"),
       })
     ]?.setAttribute("selected", "selected");
     document.getElementsByClassName("lang-setting-dropdown")[3]?.children[
-      _.findLastIndex(skinList, {
+      window._.findLastIndex(skinList, {
         value: StorageUtil.getReaderConfig("appSkin") || "system",
       })
     ]?.setAttribute("selected", "selected");

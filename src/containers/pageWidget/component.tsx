@@ -32,7 +32,6 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
   }
   handleLocation = () => {
     let position = this.props.htmlBook.rendition.getPosition();
-    console.log(position);
     RecordLocation.recordHtmlLocation(
       this.props.currentBook.key,
       position.text,

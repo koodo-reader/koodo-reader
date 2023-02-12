@@ -2,7 +2,6 @@ import React from "react";
 import "./contentList.css";
 import { ContentListProps, ContentListState } from "./interface";
 import StorageUtil from "../../../utils/serviceUtils/storageUtil";
-import _ from "underscore";
 class ContentList extends React.Component<ContentListProps, ContentListState> {
   constructor(props: ContentListProps) {
     super(props);
@@ -23,12 +22,16 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
   async handleJump(event: any) {
     event.preventDefault();
     let href = event.target.getAttribute("href");
-    let chapterIndex = _.findIndex(this.props.htmlBook.flattenChapters, {
+    let chapterIndex = window._.findIndex(this.props.htmlBook.flattenChapters, {
       href,
     });
     let title = this.props.htmlBook.flattenChapters[chapterIndex].title;
     let index = this.props.htmlBook.flattenChapters[chapterIndex].index;
-    await this.props.htmlBook.rendition.goToChapter(index.toString(), href, "");
+    await this.props.htmlBook.rendition.goToChapter(
+      index.toString(),
+      href,
+      title
+    );
     this.props.handleCurrentChapter(title);
     this.props.handleCurrentChapterIndex(index);
   }
