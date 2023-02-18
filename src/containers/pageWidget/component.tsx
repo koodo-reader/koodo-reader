@@ -21,11 +21,11 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
     this.isFirst = true;
   }
 
-  UNSAFE_componentWillReceiveProps(nextProps: BackgroundProps) {
+  async UNSAFE_componentWillReceiveProps(nextProps: BackgroundProps) {
     if (nextProps.htmlBook !== this.props.htmlBook && nextProps.htmlBook) {
-      this.handlePageNum(nextProps.htmlBook.rendition);
-      nextProps.htmlBook.rendition.on("page-changed", () => {
-        this.handlePageNum(nextProps.htmlBook.rendition);
+      await this.handlePageNum(nextProps.htmlBook.rendition);
+      nextProps.htmlBook.rendition.on("page-changed", async () => {
+        await this.handlePageNum(nextProps.htmlBook.rendition);
         this.handleLocation();
       });
     }
@@ -43,8 +43,8 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
       position.cfi
     );
   };
-  handlePageNum(rendition) {
-    let pageInfo = rendition.getProgress();
+  async handlePageNum(rendition) {
+    let pageInfo = await rendition.getProgress();
     this.setState({
       prevPage: this.state.isSingle
         ? pageInfo.currentPage
