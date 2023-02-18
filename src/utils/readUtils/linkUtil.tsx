@@ -18,7 +18,16 @@ export const handleLinkJump = async (event: any, rendition: any = {}) => {
   }
   console.log(href);
   if (href.indexOf("#") > -1) {
-    await rendition.goToAnchor(href);
+    let pageArea = document.getElementById("page-area");
+    if (!pageArea) return;
+    let iframe = pageArea.getElementsByTagName("iframe")[0];
+    if (!iframe) return;
+    let doc: any = iframe.contentDocument;
+    if (!doc) {
+      return;
+    }
+    let id = href.split("#").reverse()[0];
+    await rendition.goToNode(doc.body.querySelector("#" + id) || doc.body);
   } else if (
     href &&
     href.indexOf("../") === -1 &&

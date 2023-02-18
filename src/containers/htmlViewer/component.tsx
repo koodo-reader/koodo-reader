@@ -10,7 +10,6 @@ import { mimetype } from "../../constants/mimetype";
 import Background from "../../components/background";
 import toast from "react-hot-toast";
 import * as jschardet from "jschardet";
-// import rtfToHTML from "@iarna/rtf-to-html";
 import StyleUtil from "../../utils/readUtils/styleUtil";
 import "./index.css";
 import { HtmlMouseEvent } from "../../utils/serviceUtils/mouseEvent";
@@ -19,6 +18,7 @@ import { getIframeDoc } from "../../utils/serviceUtils/docUtil";
 import { tsTransform } from "../../utils/serviceUtils/langUtil";
 import localforage from "localforage";
 import { removeExtraQuestionMark } from "../../utils/commonUtil";
+import CFI from "epub-cfi-resolver";
 
 declare var window: any;
 let lock = false; //prevent from clicking too fasts
@@ -196,18 +196,35 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       percentage: string;
       cfi: string;
     } = RecordLocation.getHtmlLocation(this.props.currentBook.key);
-    await rendition.goToPosition(
-      JSON.stringify({
-        text: bookLocation.text || "",
-        chapterTitle: bookLocation.chapterTitle || "",
-        chapterDocIndex: bookLocation.chapterDocIndex || 0,
-        chapterHref: bookLocation.chapterHref || "",
-        count: bookLocation.count || 0,
-        percentage: bookLocation.percentage,
-        cfi: bookLocation.cfi,
-        isFirst: true,
-      })
-    );
+    //兼容1.5.1及之前的版本
+    if (bookLocation.cfi) {
+      let cfiObj = new CFI(bookLocation.cfi);
+      let pageArea = document.getElementById("page-area");
+      if (!pageArea) return;
+      let iframe = pageArea.getElementsByTagName("iframe")[0];
+      if (!iframe) return;
+      let doc: any = iframe.contentDocument;
+      if (!doc) {
+        return;
+      }
+      var bookmark = cfiObj.resolveLast(doc, {
+        ignoreIDs: true,
+      });
+      await rendition.goToNode(bookmark.node.parentElement);
+    } else {
+      await rendition.goToPosition(
+        JSON.stringify({
+          text: bookLocation.text || "",
+          chapterTitle: bookLocation.chapterTitle || "",
+          chapterDocIndex: bookLocation.chapterDocIndex || 0,
+          chapterHref: bookLocation.chapterHref || "",
+          count: bookLocation.count || 0,
+          percentage: bookLocation.percentage,
+          cfi: bookLocation.cfi,
+          isFirst: true,
+        })
+      );
+    }
 
     rendition.on("rendered", () => {
       this.handleLocation();
