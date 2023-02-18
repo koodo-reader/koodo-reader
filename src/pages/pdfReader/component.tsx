@@ -60,13 +60,15 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         iframe.contentWindow || iframe.contentDocument?.defaultView;
       this.setState({ loading: false });
       pdfMouseEvent();
-      doc.document.addEventListener("click", (event: any) => {
+      doc.document.addEventListener("click", async (event: any) => {
         event.preventDefault();
-        handleLinkJump(event);
+        await handleLinkJump(event);
       });
 
       doc.document.addEventListener("mouseup", () => {
-        if (!doc!.getSelection()) return;
+        if (!doc!.getSelection() || doc!.getSelection().rangeCount === 0)
+          return;
+
         var rect = doc!.getSelection()!.getRangeAt(0).getBoundingClientRect();
         this.setState({
           rect,
