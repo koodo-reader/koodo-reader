@@ -198,6 +198,11 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     } = RecordLocation.getHtmlLocation(this.props.currentBook.key);
     //兼容1.5.1及之前的版本
     if (bookLocation.cfi) {
+      await rendition.goToChapter(
+        bookLocation.chapterDocIndex,
+        bookLocation.chapterHref,
+        bookLocation.chapterTitle
+      );
       let cfiObj = new CFI(bookLocation.cfi);
       let pageArea = document.getElementById("page-area");
       if (!pageArea) return;
@@ -210,6 +215,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       var bookmark = cfiObj.resolveLast(doc, {
         ignoreIDs: true,
       });
+
       await rendition.goToNode(bookmark.node.parentElement);
     } else {
       await rendition.goToPosition(
