@@ -23,7 +23,7 @@ class SliderList extends React.Component<SliderListProps, SliderListState> {
           : StorageUtil.getReaderConfig("margin") || "60",
     };
   }
-  handleRest = () => {
+  handleRest = async () => {
     if (this.props.mode === "scale" || this.props.mode === "margin") {
       if (isElectron) {
         toast(this.props.t("Take effect at next startup"));

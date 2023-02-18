@@ -22,8 +22,6 @@ import { removeExtraQuestionMark } from "../../utils/commonUtil";
 
 declare var window: any;
 let lock = false; //prevent from clicking too fasts
-const { MobiRender, EpubRender, Fb2Render, TxtRender, StrRender, ComicRender } =
-  window.Kookit;
 
 class Viewer extends React.Component<ViewerProps, ViewerState> {
   lock: boolean;
@@ -292,7 +290,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       this.props.handleLeaveReader("bottom");
     });
     doc.addEventListener("mouseup", () => {
-      if (!doc!.getSelection()) return;
+      if (!doc!.getSelection() || doc!.getSelection()!.rangeCount === 0) return;
       var rect = doc!.getSelection()!.getRangeAt(0).getBoundingClientRect();
       this.setState({ rect });
     });
@@ -316,11 +314,10 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     let bookLocation = RecordLocation.getHtmlLocation(
       this.props.currentBook.key
     );
-    let rendition = new ComicRender(
+    let rendition = new window.Kookit.ComicRender(
       result,
       this.state.readerMode,
-      format,
-      StorageUtil.getReaderConfig("isSliding") === "yes" ? true : false
+      format
     );
     await rendition.renderTo(
       document.getElementsByClassName("html-viewer-page")[0],
@@ -329,22 +326,14 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     await this.handleRest(rendition);
   };
   handleMobi = async (result: ArrayBuffer) => {
-    let rendition = new MobiRender(
-      result,
-      this.state.readerMode,
-      StorageUtil.getReaderConfig("isSliding") === "yes" ? true : false
-    );
+    let rendition = new window.Kookit.MobiRender(result, this.state.readerMode);
     await rendition.renderTo(
       document.getElementsByClassName("html-viewer-page")[0]
     );
     await this.handleRest(rendition);
   };
   handleEpub = async (result: ArrayBuffer) => {
-    let rendition = new EpubRender(
-      result,
-      this.state.readerMode,
-      StorageUtil.getReaderConfig("isSliding") === "yes" ? true : false
-    );
+    let rendition = new window.Kookit.EpubRender(result, this.state.readerMode);
     let bookLocation: {
       text: string;
       count: string;
@@ -370,11 +359,10 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     if (!this.props.currentBook.charset) {
       charset = await this.handleCharset(bufferStr);
     }
-    let rendition = new TxtRender(
+    let rendition = new window.Kookit.TxtRender(
       result,
       this.state.readerMode,
-      this.props.currentBook.charset || charset || "utf8",
-      StorageUtil.getReaderConfig("isSliding") === "yes" ? true : false
+      this.props.currentBook.charset || charset || "utf8"
     );
     await rendition.renderTo(
       document.getElementsByClassName("html-viewer-page")[0]
@@ -386,10 +374,9 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     var reader = new FileReader();
     reader.onload = async (evt) => {
       let docStr = window.marked(evt.target?.result as any);
-      let rendition = new StrRender(
+      let rendition = new window.Kookit.StrRender(
         docStr,
-        this.state.readerMode,
-        StorageUtil.getReaderConfig("isSliding") === "yes" ? true : false
+        this.state.readerMode
       );
       await rendition.renderTo(
         document.getElementsByClassName("html-viewer-page")[0]
@@ -413,10 +400,9 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     );
     fs.createReadStream(bookPath).pipe(
       rtfToHTML(async (err, html) => {
-        let rendition = new StrRender(
+        let rendition = new window.Kookit.StrRender(
           removeExtraQuestionMark(html),
-          this.state.readerMode,
-          StorageUtil.getReaderConfig("isSliding") === "yes" ? true : false
+          this.state.readerMode
         );
         await rendition.renderTo(
           document.getElementsByClassName("html-viewer-page")[0]
@@ -429,10 +415,9 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     window.mammoth
       .convertToHtml({ arrayBuffer: result })
       .then(async (res: any) => {
-        let rendition = new StrRender(
+        let rendition = new window.Kookit.StrRender(
           res.value,
-          this.state.readerMode,
-          StorageUtil.getReaderConfig("isSliding") === "yes" ? true : false
+          this.state.readerMode
         );
         await rendition.renderTo(
           document.getElementsByClassName("html-viewer-page")[0]
@@ -441,11 +426,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       });
   };
   handleFb2 = async (result: ArrayBuffer) => {
-    let rendition = new Fb2Render(
-      result,
-      this.state.readerMode,
-      StorageUtil.getReaderConfig("isSliding") === "yes" ? true : false
-    );
+    let rendition = new window.Kookit.Fb2Render(result, this.state.readerMode);
     await rendition.renderTo(
       document.getElementsByClassName("html-viewer-page")[0]
     );
@@ -458,11 +439,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     var reader = new FileReader();
     reader.onload = async (evt) => {
       const html = evt.target?.result as any;
-      let rendition = new StrRender(
-        html,
-        this.state.readerMode,
-        StorageUtil.getReaderConfig("isSliding") === "yes" ? true : false
-      );
+      let rendition = new window.Kookit.StrRender(html, this.state.readerMode);
       await rendition.renderTo(
         document.getElementsByClassName("html-viewer-page")[0]
       );
