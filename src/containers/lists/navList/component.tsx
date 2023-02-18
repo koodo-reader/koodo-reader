@@ -28,6 +28,11 @@ class NavList extends React.Component<NavListProps, NavListState> {
     }
     //兼容1.5.1及之前的版本
     if (bookLocation.cfi) {
+      await this.props.htmlBook.rendition.goToChapter(
+        bookLocation.chapterDocIndex,
+        bookLocation.chapterHref,
+        bookLocation.chapterTitle
+      );
       let cfiObj = new CFI(bookLocation.cfi);
       let pageArea = document.getElementById("page-area");
       if (!pageArea) return;
