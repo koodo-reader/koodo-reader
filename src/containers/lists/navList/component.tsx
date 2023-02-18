@@ -4,6 +4,7 @@ import { Trans } from "react-i18next";
 import { NavListProps, NavListState } from "./interface";
 import DeleteIcon from "../../../components/deleteIcon";
 import toast from "react-hot-toast";
+import CFI from "epub-cfi-resolver";
 class NavList extends React.Component<NavListProps, NavListState> {
   constructor(props: NavListProps) {
     super(props);
@@ -25,18 +26,34 @@ class NavList extends React.Component<NavListProps, NavListState> {
         cfi: cfi,
       };
     }
-
-    await this.props.htmlBook.rendition.goToPosition(
-      JSON.stringify({
-        text: bookLocation.text,
-        chapterTitle: bookLocation.chapterTitle,
-        chapterDocIndex: bookLocation.chapterDocIndex,
-        chapterHref: bookLocation.chapterHref,
-        count: bookLocation.count,
-        percentage: bookLocation.percentage,
-        cfi: bookLocation.cfi,
-      })
-    );
+    //兼容1.5.1及之前的版本
+    if (bookLocation.cfi) {
+      let cfiObj = new CFI(bookLocation.cfi);
+      let pageArea = document.getElementById("page-area");
+      if (!pageArea) return;
+      let iframe = pageArea.getElementsByTagName("iframe")[0];
+      if (!iframe) return;
+      let doc: any = iframe.contentDocument;
+      if (!doc) {
+        return;
+      }
+      var bookmark = cfiObj.resolveLast(doc, {
+        ignoreIDs: true,
+      });
+      await this.props.htmlBook.rendition.goToNode(bookmark.node.parentElement);
+    } else {
+      await this.props.htmlBook.rendition.goToPosition(
+        JSON.stringify({
+          text: bookLocation.text,
+          chapterTitle: bookLocation.chapterTitle,
+          chapterDocIndex: bookLocation.chapterDocIndex,
+          chapterHref: bookLocation.chapterHref,
+          count: bookLocation.count,
+          percentage: bookLocation.percentage,
+          cfi: bookLocation.cfi,
+        })
+      );
+    }
   }
   handleShowDelete = (index: number) => {
     this.setState({ deleteIndex: index });
