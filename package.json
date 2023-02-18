@@ -25,6 +25,7 @@
     "copy-text-to-clipboard": "^2.2.0",
     "electron-is-dev": "^1.1.0",
     "electron-store": "^8.0.1",
+    "epub-cfi-resolver": "^1.0.2",
     "font-list": "^1.4.5",
     "fs-extra": "^9.1.0",
     "jschardet": "^3.0.0",
