@@ -46,8 +46,8 @@ class SettingSwitch extends React.Component<
         this.state[stateName] ? "yes" : "no"
       );
       toast(this.props.t("Change Successfully"));
-      setTimeout(() => {
-        this.props.renderBookFunc();
+      setTimeout(async () => {
+        await this.props.renderBookFunc();
       }, 500);
     });
   };

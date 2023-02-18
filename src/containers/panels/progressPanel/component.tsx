@@ -21,22 +21,23 @@ class ProgressPanel extends React.Component<
         StorageUtil.getReaderConfig("readerMode") !== "double",
     };
   }
-
-  UNSAFE_componentWillReceiveProps(nextProps: ProgressPanelProps) {
+  async UNSAFE_componentWillReceiveProps(nextProps: ProgressPanelProps) {
     if (nextProps.htmlBook !== this.props.htmlBook && nextProps.htmlBook) {
-      this.handlePageNum(nextProps.htmlBook.rendition);
+      await this.handlePageNum(nextProps.htmlBook.rendition);
       nextProps.htmlBook.rendition.on("page-changed", async () => {
-        this.handlePageNum(nextProps.htmlBook.rendition);
+        await this.handlePageNum(nextProps.htmlBook.rendition);
       });
     }
   }
-  handlePageNum(rendition) {
-    let pageInfo = rendition.getProgress();
+  async handlePageNum(rendition) {
+    let pageInfo = await rendition.getProgress();
     this.setState({
       currentPage: this.state.isSingle
         ? pageInfo.currentPage
         : pageInfo.currentPage * 2 - 1,
-      totalPage: pageInfo.totalPage,
+      totalPage: this.state.isSingle
+        ? pageInfo.totalPage
+        : (pageInfo.totalPage - 1) * 2,
     });
   }
   onProgressChange = async (event: any) => {
@@ -53,14 +54,14 @@ class ProgressPanel extends React.Component<
       );
     }
   };
-  nextChapter = () => {
+  nextChapter = async () => {
     if (this.props.htmlBook.flattenChapters.length > 0) {
-      this.props.htmlBook.rendition.nextChapter();
+      await this.props.htmlBook.rendition.nextChapter();
     }
   };
-  prevChapter = () => {
+  prevChapter = async () => {
     if (this.props.htmlBook.flattenChapters.length > 0) {
-      this.props.htmlBook.rendition.prevChapter();
+      await this.props.htmlBook.rendition.prevChapter();
     }
   };
   handleJumpChapter = async (event: any) => {

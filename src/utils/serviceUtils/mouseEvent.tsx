@@ -2,14 +2,14 @@ import StorageUtil from "./storageUtil";
 import RecordLocation from "../readUtils/recordLocation";
 import { isElectron } from "react-device-detect";
 import { getIframeDoc } from "./docUtil";
-let Hammer = (window as any).Hammer;
+declare var window: any;
 declare var document: any;
 const sleep = (ms: number) => {
   return new Promise((resolve) => setTimeout(resolve, ms));
 };
 
 let throttleTime =
-  StorageUtil.getReaderConfig("isSliding") === "yes" ? 1000 : 100;
+  StorageUtil.getReaderConfig("isSliding") === "yes" ? 1000 : 300;
 export const getSelection = () => {
   let doc = getIframeDoc();
   if (!doc) return;
@@ -20,54 +20,30 @@ export const getSelection = () => {
   return text || "";
 };
 let lock = false; //prevent from clicking too fasts
-const arrowKeys = (rendition: any, keyCode: number, event: any) => {
+const arrowKeys = async (rendition: any, keyCode: number, event: any) => {
   if (
     document.querySelector(".editor-box") ||
     document.querySelector(".navigation-search-title")
   ) {
     return;
   }
-
-  if (lock) return;
   if (keyCode === 37 || keyCode === 38) {
     event.preventDefault();
-    rendition.prev();
-
-    lock = true;
-    setTimeout(function () {
-      lock = false;
-    }, throttleTime);
-    return false;
+    await rendition.prev();
   }
   if (keyCode === 39 || keyCode === 40 || keyCode === 32) {
     event.preventDefault();
-    rendition.next();
-    lock = true;
-    setTimeout(function () {
-      lock = false;
-    }, throttleTime);
-    return false;
+    await rendition.next();
   }
   handleShortcut(event, keyCode);
 };
 
-const mouseChrome = (rendition: any, deltaY: number) => {
-  if (lock) return;
+const mouseChrome = async (rendition: any, deltaY: number) => {
   if (deltaY < 0) {
-    rendition.prev();
-    lock = true;
-    setTimeout(function () {
-      lock = false;
-    }, throttleTime);
-    return false;
+    await rendition.prev();
   }
   if (deltaY > 0) {
-    rendition.next();
-    lock = true;
-    setTimeout(function () {
-      lock = false;
-    }, throttleTime);
-    return false;
+    await rendition.next();
   }
 };
 
@@ -109,30 +85,14 @@ const handleShortcut = (event: any, keyCode: number) => {
       window.require("electron").ipcRenderer.invoke("switch-moyu", "ping");
     }
   }
-  lock = true;
-  setTimeout(function () {
-    lock = false;
-  }, throttleTime);
-  return false;
 };
 
-const gesture = (rendition: any, type: string) => {
-  if (lock) return;
+const gesture = async (rendition: any, type: string) => {
   if (type === "panleft" || type === "panup") {
-    rendition.next();
-    lock = true;
-    setTimeout(function () {
-      lock = false;
-    }, throttleTime);
-    return false;
+    await rendition.next();
   }
   if (type === "panright" || type === "pandown") {
-    rendition.prev();
-    lock = true;
-    setTimeout(function () {
-      lock = false;
-    }, throttleTime);
-    return false;
+    await rendition.prev();
   }
 };
 
@@ -156,39 +116,50 @@ export const bindHtmlEvent = (
   readerMode: string = ""
 ) => {
   doc.addEventListener("keydown", async (event) => {
-    arrowKeys(rendition, event.keyCode, event);
-    await handleLocation(key, rendition);
+    if (lock) return;
+    lock = true;
+    await arrowKeys(rendition, event.keyCode, event);
+    handleLocation(key, rendition);
+    setTimeout(() => (lock = false), throttleTime);
   });
   //判断是否正在使用笔记本电脑的的触控板
 
   doc.addEventListener(
     "wheel",
     async (event) => {
+      if (lock) return;
+      lock = true;
       if (readerMode === "scroll") {
         await sleep(200);
-        rendition.record();
+        await rendition.record();
       } else {
-        Math.abs(event.deltaX) === 0 && mouseChrome(rendition, event.deltaY);
+        if (Math.abs(event.deltaX) === 0) {
+          await mouseChrome(rendition, event.deltaY);
+        }
       }
-
-      await handleLocation(key, rendition);
+      handleLocation(key, rendition);
+      setTimeout(() => (lock = false), throttleTime);
     },
     false
   );
 
   window.addEventListener("keydown", async (event) => {
-    arrowKeys(rendition, event.keyCode, event);
+    if (lock) return;
+    lock = true;
+    await arrowKeys(rendition, event.keyCode, event);
     //使用Key判断是否是htmlBook
-
-    await handleLocation(key, rendition);
+    handleLocation(key, rendition);
+    setTimeout(() => (lock = false), throttleTime);
   });
 
   if (StorageUtil.getReaderConfig("isTouch") === "yes") {
-    const mc = new Hammer(doc);
+    const mc = new window.Hammer(doc);
     mc.on("panleft panright panup pandown", async (event: any) => {
-      gesture(rendition, event.type);
-
-      await handleLocation(key, rendition);
+      if (lock) return;
+      lock = true;
+      await gesture(rendition, event.type);
+      handleLocation(key, rendition);
+      setTimeout(() => (lock = false), throttleTime);
     });
   }
 };
@@ -212,11 +183,17 @@ export const pdfMouseEvent = () => {
   let doc: any = iframe.contentWindow || iframe.contentDocument?.defaultView;
 
   doc.document.addEventListener("keydown", (event) => {
+    if (lock) return;
+    lock = true;
     handleShortcut(event, event.keyCode);
+    setTimeout(() => (lock = false), throttleTime);
   });
 };
 export const djvuMouseEvent = () => {
   document.addEventListener("keydown", (event) => {
+    if (lock) return;
+    lock = true;
     handleShortcut(event, event.keyCode);
+    setTimeout(() => (lock = false), throttleTime);
   });
 };

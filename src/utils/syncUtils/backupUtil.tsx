@@ -2,8 +2,7 @@ import BookModel from "../../model/Book";
 import NoteModel from "../../model/Note";
 import BookmarkModel from "../../model/Bookmark";
 import { zipBook, zipConfig } from "./common";
-
-let JSZip = (window as any).JSZip;
+declare var window: any;
 
 export const backup = (
   bookArr: BookModel[],
@@ -12,7 +11,7 @@ export const backup = (
   isSync: boolean
 ) => {
   return new Promise<Blob | boolean>(async (resolve, reject) => {
-    let zip = new JSZip();
+    let zip = new window.JSZip();
     let books = bookArr;
     //0表示备份到本地，1表示备份到dropbox,2表示备份到onedrive,3表示备份到webdav，4表示把indexeddb中的数据转移到uploads文件夹中，5表示同步数据到本地
     let result = await zipConfig(zip, books, notes, bookmarks);

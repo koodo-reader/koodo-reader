@@ -157,7 +157,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
             <div
               className="previous-chapter-single-container"
               onClick={async () => {
-                this.props.htmlBook.rendition.prev();
+                await this.props.htmlBook.rendition.prev();
                 this.handleLocation();
               }}
             >
@@ -165,8 +165,8 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
             </div>
             <div
               className="next-chapter-single-container"
-              onClick={() => {
-                this.props.htmlBook.rendition.next();
+              onClick={async () => {
+                await this.props.htmlBook.rendition.next();
                 this.handleLocation();
               }}
             >

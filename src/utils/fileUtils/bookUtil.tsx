@@ -6,9 +6,7 @@ import toast from "react-hot-toast";
 import { getPDFCover } from "./pdfUtil";
 import { copyArrayBuffer } from "../commonUtil";
 declare var window: any;
-const { MobiRender, EpubRender, Fb2Render, ComicRender } = window.Kookit;
 
-// let Unrar = window.Unrar;
 class BookUtil {
   static addBook(key: string, buffer: ArrayBuffer) {
     if (isElectron) {
@@ -217,6 +215,7 @@ class BookUtil {
     path: string,
     file_content: ArrayBuffer
   ) {
+    const { MobiRender, EpubRender, Fb2Render, ComicRender } = window.Kookit;
     return new Promise<BookModel | string>(async (resolve, reject) => {
       let cover: any = "";
       let key: string,
@@ -242,7 +241,7 @@ class BookUtil {
           }
           break;
         case "epub":
-          rendition = new EpubRender(file_content, "scroll", false);
+          rendition = new EpubRender(file_content, "scroll");
           metadata = await rendition.getMetadata();
           if (metadata === "timeout_error") {
             resolve("get_metadata_error");
@@ -265,7 +264,7 @@ class BookUtil {
         case "mobi":
         case "azw":
         case "azw3":
-          rendition = new MobiRender(file_content, "scroll", false);
+          rendition = new MobiRender(file_content, "scroll");
           metadata = await rendition.getMetadata();
           [name, author, description, publisher, cover] = [
             metadata.name,
@@ -276,7 +275,7 @@ class BookUtil {
           ];
           break;
         case "fb2":
-          rendition = new Fb2Render(file_content, "scroll", false);
+          rendition = new Fb2Render(file_content, "scroll");
           metadata = await rendition.getMetadata();
           [name, author, description, publisher, cover] = [
             metadata.name,
@@ -293,8 +292,7 @@ class BookUtil {
           rendition = new ComicRender(
             copyArrayBuffer(file_content),
             "scroll",
-            extension.toUpperCase(),
-            false
+            extension.toUpperCase()
           );
           metadata = await rendition.getMetadata();
           cover = metadata.cover;

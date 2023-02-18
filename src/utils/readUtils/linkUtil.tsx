@@ -1,6 +1,6 @@
 import { openExternalUrl } from "../serviceUtils/urlUtil";
 
-export const handleLinkJump = (event: any, rendition: any = {}) => {
+export const handleLinkJump = async (event: any, rendition: any = {}) => {
   let href;
 
   if (
@@ -18,7 +18,7 @@ export const handleLinkJump = (event: any, rendition: any = {}) => {
   }
   console.log(href);
   if (href.indexOf("#") > -1) {
-    rendition.goToAnchor(href);
+    await rendition.goToAnchor(href);
   } else if (
     href &&
     href.indexOf("../") === -1 &&

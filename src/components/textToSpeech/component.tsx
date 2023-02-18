@@ -106,11 +106,11 @@ class TextToSpeech extends React.Component<
       console.log(err);
     };
 
-    msg.onend = (event) => {
+    msg.onend = async (event) => {
       if (!(this.state.isAudioOn && this.props.isReading)) {
         return;
       }
-      this.props.htmlBook.rendition.next();
+      await this.props.htmlBook.rendition.next();
       this.handleAudio();
     };
   };

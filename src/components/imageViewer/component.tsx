@@ -25,7 +25,7 @@ class ImageViewer extends React.Component<ImageViewerProps, ImageViewerStates> {
     });
   }
 
-  showImage = (event: any) => {
+  showImage = async (event: any) => {
     event.preventDefault();
     if (this.props.isShow) {
       this.props.handleLeaveReader("left");
@@ -33,7 +33,7 @@ class ImageViewer extends React.Component<ImageViewerProps, ImageViewerStates> {
       this.props.handleLeaveReader("top");
       this.props.handleLeaveReader("bottom");
     }
-    handleLinkJump(event, this.props.rendition);
+    await handleLinkJump(event, this.props.rendition);
     if (!event.target.src) {
       return;
     }

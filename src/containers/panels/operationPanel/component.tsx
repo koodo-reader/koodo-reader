@@ -38,10 +38,10 @@ class OperationPanel extends React.Component<
   }
 
   componentDidMount() {
-    this.props.htmlBook.rendition.on("page-changed", () => {
+    this.props.htmlBook.rendition.on("page-changed", async () => {
       this.speed = Date.now() - this.timeStamp;
       this.timeStamp = Date.now();
-      let pageProgress = this.props.htmlBook.rendition.getProgress();
+      let pageProgress = await this.props.htmlBook.rendition.getProgress();
       this.setState({
         timeLeft:
           ((pageProgress.totalPage - pageProgress.currentPage) * this.speed) /

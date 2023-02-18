@@ -1,13 +1,12 @@
 import { restore } from "./restoreUtil";
 import StorageUtil from "../serviceUtils/storageUtil";
-
-var Dropbox = (window as any).Dropbox;
+declare var window: any;
 
 class DropboxUtil {
   static UploadFile(blob: any) {
     return new Promise<boolean>((resolve, reject) => {
       var ACCESS_TOKEN = StorageUtil.getReaderConfig("dropbox_token") || "";
-      var dbx = new Dropbox.Dropbox({ accessToken: ACCESS_TOKEN });
+      var dbx = new window.Dropbox.Dropbox({ accessToken: ACCESS_TOKEN });
       const file = new File([blob], "data.zip");
       let date = new Date().getTime();
       dbx
@@ -28,7 +27,7 @@ class DropboxUtil {
   static DownloadFile() {
     return new Promise<boolean>((resolve, reject) => {
       var ACCESS_TOKEN = StorageUtil.getReaderConfig("dropbox_token") || "";
-      var dbx = new Dropbox.Dropbox({ accessToken: ACCESS_TOKEN });
+      var dbx = new window.Dropbox.Dropbox({ accessToken: ACCESS_TOKEN });
       dbx
         .filesListFolder({ path: "" })
         .then(function (response) {
