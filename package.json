@@ -109,6 +109,74 @@
     "publish": {
       "provider": "github"
     },
+    "fileAssociations": [
+      {
+        "ext": "epub",
+        "icon": "assets/icon/epub",
+        "role": "Viewer",
+        "mimeType": "application/epub+zip"
+      },
+      {
+        "ext": "pdf",
+        "icon": "assets/icon/pdf",
+        "role": "Viewer",
+        "mimeType": "application/pdf"
+      },
+      {
+        "ext": "mobi",
+        "icon": "assets/icon/mobi",
+        "role": "Viewer",
+        "mimeType": "application/x-mobipocket-ebook"
+      },
+      {
+        "ext": "azw3",
+        "icon": "assets/icon/azw3",
+        "role": "Viewer",
+        "mimeType": "application/vnd.amazon.ebook"
+      },
+      {
+        "ext": "azw",
+        "icon": "assets/icon/azw3",
+        "role": "Viewer",
+        "mimeType": "application/vnd.amazon.ebook"
+      },
+      {
+        "ext": "djvu",
+        "icon": "assets/icon/pdf",
+        "role": "Viewer",
+        "mimeType": "image/vnd.djvu"
+      },
+      {
+        "ext": "cbz",
+        "icon": "assets/icon/comic",
+        "role": "Viewer",
+        "mimeType": "application/x-cbz"
+      },
+      {
+        "ext": "cbr",
+        "icon": "assets/icon/comic",
+        "role": "Viewer",
+        "mimeType": "application/x-cbr"
+      },
+      {
+        "ext": "cbt",
+        "icon": "assets/icon/comic",
+        "role": "Viewer",
+        "mimeType": "application/x-cbt"
+      },
+      {
+        "ext": "cb7",
+        "icon": "assets/icon/comic",
+        "role": "Viewer",
+        "mimeType": "application/x-cb7"
+      },
+      {
+        "ext": "fb2",
+        "icon": "assets/icon/fb2",
+        "role": "Viewer",
+        "mimeType": "application/x-fictionbook+xml"
+      }
+    ],
     "extends": null,
     "dmg": {
       "contents": [
@@ -135,7 +203,7 @@
           ]
         }
       ],
-      "icon": "assets/icons/icon.icns",
+      "icon": "assets/icon/icon.icns",
       "category": "public.app-category.productivity",
       "artifactName": "${productName}-${version}-${arch}.${ext}"
     },
@@ -161,7 +229,7 @@
           ]
         }
       ],
-      "icon": "assets/icons/icon.ico",
+      "icon": "assets/icon/icon.ico",
       "artifactName": "${productName}-${version}-${arch}-Win.${ext}",
       "publisherName": "App by Troye"
     },
