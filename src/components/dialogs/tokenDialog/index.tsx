@@ -19,4 +19,4 @@ const actionCreator = {
 export default connect(
   mapStateToProps,
   actionCreator
-)(withTranslation()(TokenDialog as any));
+)(withTranslation()(TokenDialog as any) as any);

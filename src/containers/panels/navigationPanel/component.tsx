@@ -8,8 +8,9 @@ import SearchBox from "../../../components/searchBox";
 import Parser from "html-react-parser";
 import EmptyCover from "../../../components/emptyCover";
 import StorageUtil from "../../../utils/serviceUtils/storageUtil";
-import { Tooltip } from "react-tippy";
+
 import CFI from "epub-cfi-resolver";
+import { getTooltip } from "../../../utils/commonUtil";
 class NavigationPanel extends React.Component<
   NavigationPanelProps,
   NavigationPanelState
@@ -224,28 +225,33 @@ class NavigationPanel extends React.Component<
         ) : (
           <>
             <div className="navigation-header">
-              <Tooltip
-                title={this.props.t(this.state.isNavLocked ? "Unlock" : "Lock")}
-                position="bottom"
-                trigger="mouseenter"
-                style={{
-                  position: "absolute",
-                  top: 0,
-                  right: 0,
-                  height: "30px",
-                }}
-              >
-                <span
-                  className={
-                    this.state.isNavLocked
-                      ? "icon-lock nav-lock-icon"
-                      : "icon-unlock nav-lock-icon"
-                  }
-                  onClick={() => {
-                    this.handleLock();
-                  }}
-                ></span>
-              </Tooltip>
+              {getTooltip(
+                (
+                  <span
+                    className={
+                      this.state.isNavLocked
+                        ? "icon-lock nav-lock-icon"
+                        : "icon-unlock nav-lock-icon"
+                    }
+                    onClick={() => {
+                      this.handleLock();
+                    }}
+                  ></span>
+                ) as any,
+                {
+                  title: this.props.t(
+                    this.state.isNavLocked ? "Unlock" : "Lock"
+                  ),
+                  position: "bottom",
+                  style: {
+                    position: "absolute",
+                    top: 0,
+                    right: 0,
+                    height: "30px",
+                  },
+                  trigger: "mouseenter",
+                }
+              )}
 
               {this.props.currentBook.cover &&
               this.props.currentBook.cover !== "noCover" ? (

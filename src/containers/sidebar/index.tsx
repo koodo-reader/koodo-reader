@@ -26,4 +26,4 @@ const actionCreator = {
 export default connect(
   mapStateToProps,
   actionCreator
-)(withTranslation()(Sidebar as any));
+)(withTranslation()(Sidebar as any) as any);

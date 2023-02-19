@@ -8,4 +8,4 @@ const mapStateToProps = (state: stateType) => {
   };
 };
 const actionCreator = {};
-export default connect(mapStateToProps, actionCreator)(LoadingPage);
+export default connect(mapStateToProps, actionCreator)(LoadingPage as any);

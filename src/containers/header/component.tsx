@@ -8,10 +8,11 @@ import StorageUtil from "../../utils/serviceUtils/storageUtil";
 import UpdateInfo from "../../components/dialogs/updateDialog";
 import { restore } from "../../utils/syncUtils/restoreUtil";
 import { backup } from "../../utils/syncUtils/backupUtil";
-import { Tooltip } from "react-tippy";
+
 import { isElectron } from "react-device-detect";
 import { syncData } from "../../utils/syncUtils/common";
 import toast from "react-hot-toast";
+import { getTooltip } from "../../utils/commonUtil";
 class Header extends React.Component<HeaderProps, HeaderState> {
   constructor(props: HeaderProps) {
     super(props);
@@ -212,14 +213,15 @@ class Header extends React.Component<HeaderProps, HeaderState> {
             }}
             style={{ left: "490px", top: "18px" }}
           >
-            <Tooltip
-              title={this.props.t("Sort by")}
-              position="top"
-              trigger="mouseenter"
-              distance={20}
-            >
-              <span className="icon-sort-desc header-sort-icon"></span>
-            </Tooltip>
+            {getTooltip(
+              <span className="icon-sort-desc header-sort-icon"></span>,
+              {
+                title: this.props.t("Sort by"),
+                position: "top",
+                distance: 20,
+                trigger: "mouseenter",
+              }
+            )}
           </div>
           <div
             className="setting-icon-container"
@@ -230,18 +232,23 @@ class Header extends React.Component<HeaderProps, HeaderState> {
               this.props.handleAbout(false);
             }}
           >
-            <Tooltip
-              title={this.props.t("Setting")}
-              position="top"
-              trigger="mouseenter"
-            >
-              <span
-                className="icon-setting setting-icon"
-                style={
-                  this.props.isNewWarning ? { color: "rgb(35, 170, 242)" } : {}
-                }
-              ></span>
-            </Tooltip>
+            {getTooltip(
+              (
+                <span
+                  className="icon-setting setting-icon"
+                  style={
+                    this.props.isNewWarning
+                      ? { color: "rgb(35, 170, 242)" }
+                      : {}
+                  }
+                ></span>
+              ) as any,
+              {
+                title: this.props.t("Setting"),
+                position: "top",
+                trigger: "mouseenter",
+              }
+            )}
           </div>
           {isElectron && (
             <div
@@ -252,24 +259,27 @@ class Header extends React.Component<HeaderProps, HeaderState> {
               }}
               style={{ left: "635px" }}
             >
-              <Tooltip
-                title={this.props.t(
-                  this.state.isdataChange
-                    ? "Data change detected, whether to update?"
-                    : "Sync"
-                )}
-                position="top"
-                trigger="mouseenter"
-              >
-                <span
-                  className="icon-sync setting-icon"
-                  style={
+              {getTooltip(
+                (
+                  <span
+                    className="icon-sync setting-icon"
+                    style={
+                      this.state.isdataChange
+                        ? { color: "rgb(35, 170, 242)" }
+                        : {}
+                    }
+                  ></span>
+                ) as any,
+                {
+                  title: this.props.t(
                     this.state.isdataChange
-                      ? { color: "rgb(35, 170, 242)" }
-                      : {}
-                  }
-                ></span>
-              </Tooltip>
+                      ? "Data change detected, whether to update?"
+                      : "Sync"
+                  ),
+                  position: "top",
+                  trigger: "mouseenter",
+                }
+              )}
             </div>
           )}
         </>
@@ -287,16 +297,20 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         >
           <div className="animation-mask"></div>
           {this.props.isCollapsed && this.state.width < 950 ? (
-            <Tooltip
-              title={this.props.t("Backup")}
-              position="top"
-              trigger="mouseenter"
-            >
-              <span
-                className="icon-share"
-                style={{ fontSize: "15px", fontWeight: 600 }}
-              ></span>
-            </Tooltip>
+            getTooltip(
+              (
+                <span
+                  className="icon-share"
+                  style={{ fontSize: "15px", fontWeight: 600 }}
+                ></span>
+              ) as any,
+              {
+                title: this.props.t("Backup"),
+                position: "top",
+                distance: 20,
+                trigger: "mouseenter",
+              }
+            )
           ) : (
             <Trans>Backup</Trans>
           )}

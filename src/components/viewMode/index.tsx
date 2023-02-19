@@ -12,4 +12,4 @@ const actionCreator = { handleFetchList };
 export default connect(
   mapStateToProps,
   actionCreator
-)(withTranslation()(ViewMode as any));
+)(withTranslation()(ViewMode as any) as any);

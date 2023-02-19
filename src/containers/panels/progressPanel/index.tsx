@@ -17,4 +17,4 @@ const actionCreator = {};
 export default connect(
   mapStateToProps,
   actionCreator
-)(withTranslation()(ProgressPanel as any));
+)(withTranslation()(ProgressPanel as any) as any);
