@@ -135,6 +135,12 @@
         "mimeType": "application/vnd.amazon.ebook"
       },
       {
+        "ext": "azw",
+        "icon": "assets/icons/azw3",
+        "role": "Viewer",
+        "mimeType": "application/vnd.amazon.ebook"
+      },
+      {
         "ext": "djvu",
         "icon": "assets/icons/pdf",
         "role": "Viewer",
@@ -157,6 +163,12 @@
         "icon": "assets/icons/comic",
         "role": "Viewer",
         "mimeType": "application/x-cbt"
+      },
+      {
+        "ext": "cb7",
+        "icon": "assets/icons/comic",
+        "role": "Viewer",
+        "mimeType": "application/x-cb7"
       },
       {
         "ext": "fb2",
