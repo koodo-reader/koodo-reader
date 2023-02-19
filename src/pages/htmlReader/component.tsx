@@ -33,7 +33,6 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
       isTouch: StorageUtil.getReaderConfig("isTouch") === "yes",
       isPreventTrigger:
         StorageUtil.getReaderConfig("isPreventTrigger") === "yes",
-      readerMode: StorageUtil.getReaderConfig("readerMode") || "double",
     };
   }
   componentDidMount() {
