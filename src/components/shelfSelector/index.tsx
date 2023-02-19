@@ -8,7 +8,7 @@ import {
 } from "../../store/actions";
 import { stateType } from "../../store";
 import { withTranslation } from "react-i18next";
-import ShelfChooser from "./component";
+import ShelfSelector from "./component";
 
 const mappropsToProps = (state: stateType) => {
   return {
@@ -38,4 +38,4 @@ const actionCreator = {
 export default connect(
   mappropsToProps,
   actionCreator
-)(withTranslation()(ShelfChooser));
+)(withTranslation()(ShelfSelector as any) as any);

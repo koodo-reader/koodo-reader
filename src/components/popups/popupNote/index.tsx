@@ -25,4 +25,4 @@ const actionCreator = {
 export default connect(
   mapStateToProps,
   actionCreator
-)(withTranslation()(PopupNote as any));
+)(withTranslation()(PopupNote as any) as any);

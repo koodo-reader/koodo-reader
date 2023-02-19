@@ -12,4 +12,4 @@ const actionCreator = {};
 export default connect(
   mapStateToProps,
   actionCreator
-)(withTranslation()(DropdownList as any));
+)(withTranslation()(DropdownList as any) as any);

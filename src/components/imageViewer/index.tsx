@@ -12,4 +12,4 @@ const actionCreator = {};
 export default connect(
   mapStateToProps,
   actionCreator
-)(withTranslation()(ImageViewer as any));
+)(withTranslation()(ImageViewer as any) as any);

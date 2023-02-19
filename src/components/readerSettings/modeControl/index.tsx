@@ -12,4 +12,4 @@ const actionCreator = {};
 export default connect(
   mapStateToProps,
   actionCreator
-)(withTranslation()(ModeControl as any));
+)(withTranslation()(ModeControl as any) as any);

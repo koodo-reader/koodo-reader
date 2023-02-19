@@ -16,4 +16,4 @@ const actionCreator = {};
 export default connect(
   mapStateToProps,
   actionCreator
-)(withTranslation()(NavList as any));
+)(withTranslation()(NavList as any) as any);

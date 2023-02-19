@@ -23,4 +23,4 @@ const actionCreator = {
 export default connect(
   mapStateToProps,
   actionCreator
-)(withTranslation()(SearchBox as any));
+)(withTranslation()(SearchBox as any) as any);
