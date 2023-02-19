@@ -67,7 +67,6 @@ const createMainWin = () => {
   mainWin.on("close", () => {
     mainWin = null;
   });
-
   ipcMain.handle("open-book", (event, config) => {
     let { url, isMergeWord, isFullscreen, isPreventSleep } = config;
     options.webPreferences.nodeIntegrationInSubFrames = true;
