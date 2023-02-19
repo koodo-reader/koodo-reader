@@ -25,7 +25,7 @@ jobs:
       - name: Install Node.js, NPM and Yarn
         uses: actions/setup-node@v1
         with:
-          node-version: 12
+          node-version: 16
 
       - name: Install Snapcraft
         uses: samuelmeuli/action-snapcraft@v1.2.0
@@ -42,7 +42,7 @@ jobs:
           mkdir -p ~/private_keys/
           echo '${{ secrets.api_key }}' > ~/private_keys/AuthKey_${{ secrets.api_key_id }}.p8
       - name: Build/release Electron app
-        uses: samuelmeuli/action-electron-builder@v1.6.0
+        uses: paneron/action-electron-builder@v1.8.1
         with:
           build_script_name: "build"
           # GitHub token, automatically provided to the action
