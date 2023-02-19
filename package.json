@@ -1,7 +1,7 @@
 {
   "name": "koodo-reader",
   "main": "main.js",
-  "version": "1.5.1",
+  "version": "1.5.2",
   "description": "A cross-platform ebook reader",
   "author": {
     "name": "App by Troye",
@@ -21,7 +21,6 @@
     "adm-zip": "^0.5.2",
     "axios": "^0.19.2",
     "bing-translate-api": "^2.7.0",
-    "chinese-s2t": "^1.0.0",
     "copy-text-to-clipboard": "^2.2.0",
     "electron-is-dev": "^1.1.0",
     "electron-store": "^8.0.1",
@@ -29,6 +28,7 @@
     "font-list": "^1.4.5",
     "fs-extra": "^9.1.0",
     "jschardet": "^3.0.0",
+    "mhtml2html": "^3.0.0",
     "react-hot-toast": "^2.1.1",
     "request": "^2.88.2",
     "webdav": "^3.6.2",

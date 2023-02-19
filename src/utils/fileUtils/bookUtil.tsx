@@ -251,11 +251,11 @@ class BookUtil {
           }
 
           [name, author, description, publisher, cover] = [
-            metadata.name,
-            metadata.author,
-            metadata.description,
-            metadata.publisher,
-            metadata.cover,
+            metadata.name || bookName,
+            metadata.author || "Unknown Author",
+            metadata.description || "",
+            metadata.publisher || "",
+            metadata.cover || "",
           ];
           if (cover.indexOf("image") === -1) {
             cover = "";
@@ -267,22 +267,22 @@ class BookUtil {
           rendition = new MobiRender(file_content, "scroll");
           metadata = await rendition.getMetadata();
           [name, author, description, publisher, cover] = [
-            metadata.name,
-            metadata.author,
-            metadata.description,
-            metadata.publisher,
-            metadata.cover,
+            metadata.name || bookName,
+            metadata.author || "Unknown Author",
+            metadata.description || "",
+            metadata.publisher || "",
+            metadata.cover || "",
           ];
           break;
         case "fb2":
           rendition = new Fb2Render(file_content, "scroll");
           metadata = await rendition.getMetadata();
           [name, author, description, publisher, cover] = [
-            metadata.name,
-            metadata.author,
-            metadata.description,
-            metadata.publisher,
-            metadata.cover,
+            metadata.name || bookName,
+            metadata.author || "Unknown Author",
+            metadata.description || "",
+            metadata.publisher || "",
+            metadata.cover || "",
           ];
           break;
         case "cbr":
