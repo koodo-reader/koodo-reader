@@ -53,7 +53,7 @@ class CardList extends React.Component<CardListProps, CardListStates> {
       RecordLocation.recordPDFLocation(book.md5.split("-")[0], bookLocation);
     } else {
       let bookLocation: any = {};
-      //兼容1.4.2之前的版本
+      //compatile wiht lower version(1.4.2)
       try {
         bookLocation = JSON.parse(note.cfi) || {};
       } catch (error) {

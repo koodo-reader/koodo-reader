@@ -168,6 +168,10 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
       if (
         [...(this.props.books || []), ...this.props.deletedBooks].length > 0
       ) {
+        console.log(
+          [...(this.props.books || []), ...this.props.deletedBooks],
+          md5
+        );
         [...(this.props.books || []), ...this.props.deletedBooks].forEach(
           (item) => {
             if (item.md5 === md5 && item.size === file.size) {

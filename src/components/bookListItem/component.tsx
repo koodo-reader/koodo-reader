@@ -44,7 +44,14 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
       }
     }
   }
-
+  UNSAFE_componentWillReceiveProps(nextProps: BookItemProps) {
+    if (nextProps.book.key !== this.props.book.key) {
+      this.setState({
+        isFavorite:
+          AddFavorite.getAllFavorite().indexOf(nextProps.book.key) > -1,
+      });
+    }
+  }
   handleDeleteBook = () => {
     this.props.handleDeleteDialog(true);
     this.props.handleReadingBook(this.props.book);
