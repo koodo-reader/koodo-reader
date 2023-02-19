@@ -36,4 +36,4 @@ const actionCreator = {
 export default connect(
   mapStateToProps,
   actionCreator
-)(withTranslation()(OperationPanel as any));
+)(withTranslation()(OperationPanel as any) as any);

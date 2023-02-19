@@ -5,7 +5,7 @@ import localforage from "localforage";
 import { fetchMD5 } from "../../utils/fileUtils/md5Util";
 import { Trans } from "react-i18next";
 import Dropzone from "react-dropzone";
-import { Tooltip } from "react-tippy";
+
 import { ImportLocalProps, ImportLocalState } from "./interface";
 import RecordRecent from "../../utils/readUtils/recordRecent";
 import { isElectron } from "react-device-detect";
@@ -14,6 +14,7 @@ import BookUtil from "../../utils/fileUtils/bookUtil";
 import { fetchFileFromPath } from "../../utils/fileUtils/fileUtil";
 import toast from "react-hot-toast";
 import StorageUtil from "../../utils/serviceUtils/storageUtil";
+import { getTooltip } from "../../utils/commonUtil";
 declare var window: any;
 let clickFilePath = "";
 
@@ -266,17 +267,20 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
           >
             <div className="animation-mask-local"></div>
             {this.props.isCollapsed && this.state.width < 950 ? (
-              <Tooltip
-                title={this.props.t("Import")}
-                position="top"
-                style={{ height: "20px" }}
-                trigger="mouseenter"
-              >
-                <span
-                  className="icon-folder"
-                  style={{ fontSize: "15px", fontWeight: 500 }}
-                ></span>
-              </Tooltip>
+              getTooltip(
+                (
+                  <span
+                    className="icon-folder"
+                    style={{ fontSize: "15px", fontWeight: 500 }}
+                  ></span>
+                ) as any,
+                {
+                  title: this.props.t("Import"),
+                  position: "top",
+                  style: { height: "20px" },
+                  trigger: "mouseenter",
+                }
+              )
             ) : (
               <span>
                 <Trans>Import</Trans>
@@ -297,4 +301,4 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
   }
 }
 
-export default withRouter(ImportLocal);
+export default withRouter(ImportLocal as any);

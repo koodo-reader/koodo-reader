@@ -14,4 +14,4 @@ const mapStateToProps = (state: stateType) => {
   };
 };
 const actionCreator = { handleCurrentChapter, handleCurrentChapterIndex };
-export default connect(mapStateToProps, actionCreator)(ContentList);
+export default connect(mapStateToProps, actionCreator)(ContentList as any);

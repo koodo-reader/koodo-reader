@@ -44,4 +44,4 @@ const actionCreator = {
 export default connect(
   mapStateToProps,
   actionCreator
-)(withTranslation()(Viewer as any));
+)(withTranslation()(Viewer as any) as any);

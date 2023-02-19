@@ -11,4 +11,4 @@ const actionCreator = { handleLoadingDialog };
 export default connect(
   mapStateToProps,
   actionCreator
-)(withTranslation()(Redirect));
+)(withTranslation()(Redirect as any) as any);

@@ -65,4 +65,4 @@ const actionCreator = {
 export default connect(
   mapStateToProps,
   actionCreator
-)(withTranslation()(withRouter(Manager)));
+)(withTranslation()(withRouter(Manager as any) as any) as any);

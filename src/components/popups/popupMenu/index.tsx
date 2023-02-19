@@ -34,4 +34,4 @@ const actionCreator = {
 export default connect(
   mapStateToProps,
   actionCreator
-)(withTranslation()(PopupMenu));
+)(withTranslation()(PopupMenu as any) as any);

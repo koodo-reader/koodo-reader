@@ -2,8 +2,9 @@ import React from "react";
 import "./progressPanel.css";
 import { Trans } from "react-i18next";
 import { ProgressPanelProps, ProgressPanelState } from "./interface";
-import { Tooltip } from "react-tippy";
+
 import StorageUtil from "../../../utils/serviceUtils/storageUtil";
+import { getTooltip } from "../../../utils/commonUtil";
 
 class ProgressPanel extends React.Component<
   ProgressPanelProps,
@@ -173,13 +174,16 @@ class ProgressPanel extends React.Component<
             this.prevChapter();
           }}
         >
-          <Tooltip
-            title={this.props.t("Prev Chapter")}
-            position="top"
-            trigger="mouseenter"
-          >
-            <span className="icon-dropdown previous-chapter-icon"> </span>
-          </Tooltip>
+          {getTooltip(
+            (
+              <span className="icon-dropdown previous-chapter-icon"> </span>
+            ) as any,
+            {
+              title: this.props.t("Prev Chapter"),
+              position: "top",
+              trigger: "mouseenter",
+            }
+          )}
         </div>
 
         <div
@@ -188,13 +192,14 @@ class ProgressPanel extends React.Component<
             this.nextChapter();
           }}
         >
-          <Tooltip
-            title={this.props.t("Next Chapter")}
-            position="top"
-            trigger="mouseenter"
-          >
-            <span className="icon-dropdown next-chapter-icon"></span>
-          </Tooltip>
+          {getTooltip(
+            (<span className="icon-dropdown next-chapter-icon"></span>) as any,
+            {
+              title: this.props.t("Next Chapter"),
+              position: "top",
+              trigger: "mouseenter",
+            }
+          )}
         </div>
       </div>
     );
