@@ -19,6 +19,7 @@ import { tsTransform } from "../../utils/serviceUtils/langUtil";
 import localforage from "localforage";
 import { removeExtraQuestionMark } from "../../utils/commonUtil";
 import CFI from "epub-cfi-resolver";
+import mhtml2html from "mhtml2html";
 
 declare var window: any;
 let lock = false; //prevent from clicking too fasts
@@ -196,7 +197,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       percentage: string;
       cfi: string;
     } = RecordLocation.getHtmlLocation(this.props.currentBook.key);
-    //兼容1.5.1及之前的版本
+    //compatile wiht lower version(1.5.1)
     if (bookLocation.cfi) {
       await rendition.goToChapter(
         bookLocation.chapterDocIndex,
@@ -461,7 +462,11 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     });
     var reader = new FileReader();
     reader.onload = async (evt) => {
-      const html = evt.target?.result as any;
+      let html = evt.target?.result as any;
+      if (format === "MHTML") {
+        html =
+          mhtml2html.convert(html).window.document.documentElement.innerHTML;
+      }
       let rendition = new window.Kookit.StrRender(html, this.state.readerMode);
       await rendition.renderTo(
         document.getElementsByClassName("html-viewer-page")[0]

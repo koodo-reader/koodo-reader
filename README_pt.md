@@ -38,7 +38,7 @@
   - FictionBook (**.fb2**)
   - Arquivo de quadrinhos (**.cbr**, **.cbz**, **.cbt**, **.cb7**)
   - Texto rico (**.md**, **.docx**, **.rtf**)
-  - Hiper texto (**.html**, **.xml**, **.xhtml**, **.htm**, **.htm**)
+  - Hiper texto (**.html**, **.xml**, **.xhtml**, **.mhtml**, **.htm**, **.htm**)
 - Plataformas suportadas : **Windows**, **macOS**, **Linux** e **Web**
 - Guarde seus dados no **Dropbox** ou **Webdav**
 - Personalize a pasta de origem e sincronize entre varios dispositivos usando OneDrive, iCloud, Dropbox, etc..

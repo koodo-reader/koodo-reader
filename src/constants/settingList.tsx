@@ -85,6 +85,8 @@ export const langList = [
   { label: "Português", value: "ptBR" },
   { label: "فارسی", value: "fa" },
   { label: "日本語", value: "jp" },
+  { label: "Türkçe", value: "tr" },
+  { label: "عربي", value: "ar" },
   { label: "čeština", value: "cs" },
   { label: "Deutsch", value: "de" },
   { label: "한국어", value: "ko" },
