@@ -16,4 +16,4 @@ const actionCreator = {
 export default connect(
   mapStateToProps,
   actionCreator
-)(withTranslation()(NoteTag as any));
+)(withTranslation()(NoteTag as any) as any);

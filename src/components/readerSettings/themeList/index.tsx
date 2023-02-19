@@ -12,4 +12,4 @@ const actionCreator = {};
 export default connect(
   mapStateToProps,
   actionCreator
-)(withTranslation()(ThemeList as any));
+)(withTranslation()(ThemeList as any) as any);

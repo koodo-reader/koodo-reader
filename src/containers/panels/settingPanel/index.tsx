@@ -14,4 +14,4 @@ const actionCreator = {};
 export default connect(
   mapStateToProps,
   actionCreator
-)(withTranslation()(SettingPanel as any));
+)(withTranslation()(SettingPanel as any) as any);

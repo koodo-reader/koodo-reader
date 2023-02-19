@@ -16,4 +16,4 @@ const actionCreator = { handleFetchBookmarks, handleSearch };
 export default connect(
   mapStateToProps,
   actionCreator
-)(withTranslation()(NavigationPanel as any));
+)(withTranslation()(NavigationPanel as any) as any);

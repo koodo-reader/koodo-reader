@@ -13,4 +13,4 @@ const actionCreator = {};
 export default connect(
   mapStateToProps,
   actionCreator
-)(withTranslation()(EmptyPage as any));
+)(withTranslation()(EmptyPage as any) as any);

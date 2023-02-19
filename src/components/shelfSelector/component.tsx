@@ -1,17 +1,17 @@
 import React from "react";
 import ShelfUtil from "../../utils/readUtils/shelfUtil";
 import { Trans } from "react-i18next";
-import { ShelfChooserProps, ShelfChooserState } from "./interface";
+import { ShelfSelectorProps, ShelfSelectorState } from "./interface";
 import localforage from "localforage";
 import DeletePopup from "../dialogs/deletePopup";
 import { withRouter } from "react-router-dom";
 import { backup } from "../../utils/syncUtils/backupUtil";
 import { isElectron } from "react-device-detect";
-class ShelfChooser extends React.Component<
-  ShelfChooserProps,
-  ShelfChooserState
+class ShelfSelector extends React.Component<
+  ShelfSelectorProps,
+  ShelfSelectorState
 > {
-  constructor(props: ShelfChooserProps) {
+  constructor(props: ShelfSelectorProps) {
     super(props);
     this.state = {
       shelfIndex: 0,
@@ -116,4 +116,4 @@ class ShelfChooser extends React.Component<
   }
 }
 
-export default withRouter(ShelfChooser);
+export default withRouter(ShelfSelector);

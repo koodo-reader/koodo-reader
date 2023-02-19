@@ -12,4 +12,4 @@ const mapStateToProps = (state: stateType) => {
   };
 };
 const actionCreator = { handleFetchNotes };
-export default connect(mapStateToProps, actionCreator)(NoteList);
+export default connect(mapStateToProps, actionCreator)(NoteList as any);

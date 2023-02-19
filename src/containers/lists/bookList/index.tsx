@@ -36,4 +36,4 @@ const actionCreator = {
 export default connect(
   mappropsToProps,
   actionCreator
-)(withTranslation()(BookList as any));
+)(withTranslation()(BookList as any) as any);

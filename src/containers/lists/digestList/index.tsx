@@ -12,4 +12,4 @@ const mapStateToProps = (state: stateType) => {
   };
 };
 const actionCreator = { handleFetchNotes };
-export default connect(mapStateToProps, actionCreator)(DigestList);
+export default connect(mapStateToProps, actionCreator)(DigestList as any);

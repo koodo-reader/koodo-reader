@@ -27,4 +27,4 @@ const actionCreator = {
 export default connect(
   mapStateToProps,
   actionCreator
-)(withTranslation()(Reader));
+)(withTranslation()(Reader as any) as any);

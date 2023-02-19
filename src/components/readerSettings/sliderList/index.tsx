@@ -12,4 +12,4 @@ const actionCreator = {};
 export default connect(
   mapStateToProps,
   actionCreator
-)(withTranslation()(SliderList as any));
+)(withTranslation()(SliderList as any) as any);

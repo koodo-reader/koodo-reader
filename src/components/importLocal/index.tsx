@@ -23,4 +23,4 @@ const actionCreator = {
 export default connect(
   mapStateToProps,
   actionCreator
-)(withTranslation()(ImportLocal as any));
+)(withTranslation()(ImportLocal as any) as any);

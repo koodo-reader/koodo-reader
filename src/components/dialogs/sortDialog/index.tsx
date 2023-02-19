@@ -24,4 +24,4 @@ const actionCreator = {
   handleBookSort,
   handleNoteSort,
 };
-export default connect(mapStateToProps, actionCreator)(SortDialog);
+export default connect(mapStateToProps, actionCreator)(SortDialog as any);

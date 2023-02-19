@@ -15,4 +15,4 @@ const actionCreator = {};
 export default connect(
   mapStateToProps,
   actionCreator
-)(withTranslation()(TextToSpeech as any));
+)(withTranslation()(TextToSpeech as any) as any);

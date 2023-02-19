@@ -5,7 +5,7 @@ import Note from "../../../model/Note";
 import { PopupOptionProps } from "./interface";
 import ColorOption from "../../colorOption";
 import RecordLocation from "../../../utils/readUtils/recordLocation";
-import { Tooltip } from "react-tippy";
+
 import { popupList } from "../../../constants/popupList";
 import StorageUtil from "../../../utils/serviceUtils/storageUtil";
 import toast from "react-hot-toast";
@@ -15,6 +15,7 @@ import { getHightlightCoords } from "../../../utils/fileUtils/pdfUtil";
 import { getIframeDoc } from "../../../utils/serviceUtils/docUtil";
 import { openExternalUrl } from "../../../utils/serviceUtils/urlUtil";
 import { isElectron } from "react-device-detect";
+import { getTooltip } from "../../../utils/commonUtil";
 
 declare var window: any;
 
@@ -243,15 +244,19 @@ class PopupOption extends React.Component<PopupOptionProps> {
                     }
                   }}
                 >
-                  <Tooltip
-                    title={this.props.t(item.title)}
-                    position="top"
-                    trigger="mouseenter"
-                  >
-                    <span
-                      className={`icon-${item.icon} ${item.name}-icon`}
-                    ></span>
-                  </Tooltip>
+                  {getTooltip(
+                    (
+                      <span
+                        className={`icon-${item.icon} ${item.name}-icon`}
+                      ></span>
+                    ) as any,
+                    {
+                      title: this.props.t(item.title),
+                      position: "top",
+                      style: { height: "20px" },
+                      trigger: "mouseenter",
+                    }
+                  )}
                 </div>
               );
             })}

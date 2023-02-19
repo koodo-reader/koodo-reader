@@ -199,4 +199,4 @@ class CardList extends React.Component<CardListProps, CardListStates> {
   }
 }
 
-export default withRouter(CardList);
+export default withRouter(CardList as any);

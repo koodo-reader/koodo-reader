@@ -26,4 +26,4 @@ const actionCreator = {
 export default connect(
   mapStateToProps,
   actionCreator
-)(withTranslation()(PopupOption as any));
+)(withTranslation()(PopupOption as any) as any);

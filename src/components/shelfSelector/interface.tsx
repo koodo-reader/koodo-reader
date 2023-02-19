@@ -3,7 +3,7 @@ import NoteModel from "../../model/Note";
 import BookmarkModel from "../../model/Bookmark";
 
 import { RouteComponentProps } from "react-router";
-export interface ShelfChooserProps extends RouteComponentProps<any> {
+export interface ShelfSelectorProps extends RouteComponentProps<any> {
   books: BookModel[];
   mode: string;
   shelfIndex: number;
@@ -19,7 +19,7 @@ export interface ShelfChooserProps extends RouteComponentProps<any> {
   handleFetchBooks: (isTrash: boolean) => void;
   t: (title: string) => string;
 }
-export interface ShelfChooserState {
+export interface ShelfSelectorState {
   shelfIndex: number;
   isOpenDelete: boolean;
 }

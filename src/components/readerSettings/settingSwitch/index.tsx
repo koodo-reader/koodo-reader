@@ -15,4 +15,4 @@ const actionCreator = {};
 export default connect(
   mapStateToProps,
   actionCreator
-)(withTranslation()(SettingSwitch as any));
+)(withTranslation()(SettingSwitch as any) as any);

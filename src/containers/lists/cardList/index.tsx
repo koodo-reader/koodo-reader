@@ -21,4 +21,4 @@ const actionCreator = {
 export default connect(
   mapStateToProps,
   actionCreator
-)(withTranslation()(CardList as any));
+)(withTranslation()(CardList as any) as any);

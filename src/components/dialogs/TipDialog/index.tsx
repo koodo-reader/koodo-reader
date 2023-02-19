@@ -9,4 +9,4 @@ const mapStateToProps = (state: stateType) => {
 const actionCreator = {
   handleTipDialog,
 };
-export default connect(mapStateToProps, actionCreator)(TipDialog);
+export default connect(mapStateToProps, actionCreator)(TipDialog as any);

@@ -16,4 +16,4 @@ const mapStateToProps = (state: stateType) => {
   };
 };
 const actionCreator = { handleCurrentChapter, handleCurrentChapterIndex };
-export default connect(mapStateToProps, actionCreator)(Background);
+export default connect(mapStateToProps, actionCreator)(Background as any);
