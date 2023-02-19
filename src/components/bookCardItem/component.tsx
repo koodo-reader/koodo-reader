@@ -49,6 +49,14 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
       }
     }
   }
+  UNSAFE_componentWillReceiveProps(nextProps: BookCardProps) {
+    if (nextProps.book.key !== this.props.book.key) {
+      this.setState({
+        isFavorite:
+          AddFavorite.getAllFavorite().indexOf(nextProps.book.key) > -1,
+      });
+    }
+  }
 
   handleMoreAction = (event: any) => {
     event.preventDefault();
@@ -221,12 +229,14 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
                   this.handleMoreAction(event);
                 }}
               ></span>
-              <span
-                className="icon-love book-love-icon"
-                onClick={() => {
-                  this.handleLoveBook();
-                }}
-              ></span>
+              {!this.state.isFavorite && (
+                <span
+                  className="icon-love book-love-icon"
+                  onClick={() => {
+                    this.handleLoveBook();
+                  }}
+                ></span>
+              )}
             </>
           ) : null}
         </div>

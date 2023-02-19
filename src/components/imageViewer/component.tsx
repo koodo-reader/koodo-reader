@@ -34,7 +34,12 @@ class ImageViewer extends React.Component<ImageViewerProps, ImageViewerStates> {
       this.props.handleLeaveReader("bottom");
     }
     await handleLinkJump(event, this.props.rendition);
-    if (!event.target.src) {
+    if (
+      !event.target.src ||
+      event.target.href ||
+      event.target.parentNode.href ||
+      event.target.parentNode.parentNode.href
+    ) {
       return;
     }
     if (this.state.isShowImage) {

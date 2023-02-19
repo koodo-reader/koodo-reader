@@ -10,13 +10,12 @@ export const handleLinkJump = async (event: any, rendition: any = {}) => {
   ) {
     href =
       (event.target.innerText.indexOf("http") > -1 && event.target.innerText) ||
-      event.target.src ||
       event.target.href ||
       event.target.parentNode.href ||
       event.target.parentNode.parentNode.href ||
+      event.target.src ||
       "";
   }
-  console.log(href);
   if (href.indexOf("#") > -1) {
     let pageArea = document.getElementById("page-area");
     if (!pageArea) return;

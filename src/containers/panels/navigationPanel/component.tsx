@@ -70,7 +70,7 @@ class NavigationPanel extends React.Component<
             key={index}
             onClick={async () => {
               let bookLocation = JSON.parse(item.cfi) || {};
-              //兼容1.5.1及之前的版本
+              //compatile with lower version(1.5.1)
               if (bookLocation.cfi) {
                 await this.props.htmlBook.rendition.goToChapter(
                   bookLocation.chapterDocIndex,

@@ -7,7 +7,12 @@ const getBookName = (books: BookModel[]) => {
   return books.map((item) => item.name);
 };
 const getAuthorName = (books: BookModel[]) => {
-  return books.map((item) => item.author);
+  return window._.sortBy(
+    books.map((item) => {
+      return { key: item.key, author: item.author };
+    }),
+    "author"
+  ).map((item) => item.key);
 };
 const getBookKey = (books: BookModel[]) => {
   return books.map((item) => item.key);
@@ -15,22 +20,17 @@ const getBookKey = (books: BookModel[]) => {
 const getBookIndex = (nameArr: string[], oldNameArr: string[]) => {
   let indexArr: number[] = [];
   for (let i = 0; i < nameArr.length; i++) {
-    if (oldNameArr.indexOf(nameArr[i]) > -1) {
-      //如果索引数组已经包含该索引，就把它放在随后一位，取数组长度为索引
-      indexArr.push(
-        indexArr.indexOf(oldNameArr.indexOf(nameArr[i])) > -1
-          ? indexArr.length
-          : oldNameArr.indexOf(nameArr[i])
-      );
-    }
+    //如果索引数组已经包含该索引，就把它放在随后一位，取数组长度为索引
+    indexArr.push(oldNameArr.indexOf(nameArr[i]));
   }
-  return indexArr.length < nameArr.length
-    ? indexArr.concat(
-        nameArr
-          .map((item, index) => index)
-          .filter((item) => indexArr.indexOf(item) === -1)
-      )
-    : indexArr;
+  if (indexArr.length < oldNameArr.length) {
+    oldNameArr.forEach((item) => {
+      if (nameArr.indexOf(item) === -1) {
+        indexArr.push(indexArr.length);
+      }
+    });
+  }
+  return indexArr;
 };
 const getDurationArr = () => {
   let durationObj = ReadingTime.getAllTime();
@@ -102,8 +102,8 @@ class SortUtil {
       }
     }
     if (bookSortCode.sort === 5) {
-      let oldAuthorArr = getAuthorName(books);
-      let authorArr = getAuthorName(books).sort();
+      let oldAuthorArr = getBookKey(books);
+      let authorArr = getAuthorName(books);
       if (bookSortCode.order === 1) {
         return getBookIndex(authorArr, oldAuthorArr).reverse();
       } else {
