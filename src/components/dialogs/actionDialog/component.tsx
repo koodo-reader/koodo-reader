@@ -5,6 +5,8 @@ import { ActionDialogProps } from "./interface";
 import AddTrash from "../../../utils/readUtils/addTrash";
 import FileSaver from "file-saver";
 import Parser from "html-react-parser";
+import * as DOMPurify from "dompurify";
+
 import ShelfUtil from "../../../utils/readUtils/shelfUtil";
 import toast from "react-hot-toast";
 import BookUtil from "../../../utils/fileUtils/bookUtil";
@@ -204,7 +206,9 @@ class ActionDialog extends React.Component<ActionDialogProps> {
               <Trans>Description</Trans>:
             </p>
             <div className="action-dialog-book-detail">
-              {Parser(this.props.currentBook.description || " ")}
+              {Parser(
+                DOMPurify.sanitize(this.props.currentBook.description) || " "
+              )}
             </div>
           </div>
         </div>

@@ -8,7 +8,7 @@ import SearchBox from "../../../components/searchBox";
 import Parser from "html-react-parser";
 import EmptyCover from "../../../components/emptyCover";
 import StorageUtil from "../../../utils/serviceUtils/storageUtil";
-
+import * as DOMPurify from "dompurify";
 import CFI from "epub-cfi-resolver";
 import { getTooltip } from "../../../utils/commonUtil";
 class NavigationPanel extends React.Component<
@@ -108,7 +108,7 @@ class NavigationPanel extends React.Component<
               }
             }}
           >
-            {Parser(item.excerpt)}
+            {Parser(DOMPurify.sanitize(item.excerpt))}
           </li>
         );
       });

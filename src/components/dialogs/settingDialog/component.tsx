@@ -46,6 +46,13 @@ class SettingDialog extends React.Component<
       currentThemeIndex: window._.findLastIndex(themeList, {
         name: StorageUtil.getReaderConfig("themeColor"),
       }),
+      storageLocation: isElectron
+        ? localStorage.getItem("storageLocation")
+          ? localStorage.getItem("storageLocation")
+          : window
+              .require("electron")
+              .ipcRenderer.sendSync("storage-location", "ping")
+        : "",
     };
   }
   componentDidMount() {
@@ -180,6 +187,7 @@ class SettingDialog extends React.Component<
       toast.error(this.props.t("Change Failed"));
     }
     localStorage.setItem("storageLocation", path.filePaths[0]);
+    this.setState({ storageLocation: path.filePaths[0] });
     document.getElementsByClassName(
       "setting-dialog-location-title"
     )[0].innerHTML =
@@ -342,11 +350,7 @@ class SettingDialog extends React.Component<
                 </span>
               </div>
               <div className="setting-dialog-location-title">
-                {localStorage.getItem("storageLocation")
-                  ? localStorage.getItem("storageLocation")
-                  : window
-                      .require("electron")
-                      .ipcRenderer.sendSync("storage-location", "ping")}
+                {this.state.storageLocation}
               </div>
             </>
           )}

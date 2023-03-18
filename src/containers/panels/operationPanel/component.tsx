@@ -66,6 +66,7 @@ class OperationPanel extends React.Component<
   handleExit() {
     StorageUtil.setReaderConfig("isFullscreen", "no");
     this.props.handleReadingState(false);
+    this.props.handleSearch(false);
     window.speechSynthesis.cancel();
     ReadingTime.setTime(this.props.currentBook.key, this.props.time);
     this.handleExitFullScreen();
@@ -206,4 +207,4 @@ class OperationPanel extends React.Component<
   }
 }
 
-export default withRouter(OperationPanel);
+export default withRouter(OperationPanel as any);

@@ -82,6 +82,8 @@ brew install --cask koodo-reader
 docker-compose up -d
 ```
 
+<a href="https://flathub.org/apps/details/io.github.troyeguo.koodo-reader"><img height="50" alt="Download on Flathub" src="https://flathub.org/assets/badges/flathub-badge-en.png"/></a>
+
 ## 截图
 
 <div align="center">
