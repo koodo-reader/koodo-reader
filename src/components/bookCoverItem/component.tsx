@@ -10,6 +10,8 @@ import RecordLocation from "../../utils/readUtils/recordLocation";
 import { isElectron } from "react-device-detect";
 import EmptyCover from "../emptyCover";
 import Parser from "html-react-parser";
+import * as DOMPurify from "dompurify";
+
 import { Trans } from "react-i18next";
 import BookUtil from "../../utils/fileUtils/bookUtil";
 import toast from "react-hot-toast";
@@ -197,7 +199,7 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
           <div className="book-cover-item-desc">
             <Trans>Description</Trans>:&nbsp;
             {this.props.book.description ? (
-              Parser(this.props.book.description)
+              Parser(DOMPurify.sanitize(this.props.book.description))
             ) : (
               <Trans>Empty</Trans>
             )}
