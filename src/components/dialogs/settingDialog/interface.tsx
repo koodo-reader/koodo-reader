@@ -16,6 +16,7 @@ export interface SettingInfoState {
   isPreventTrigger: boolean;
   isMergeWord: boolean;
   appSkin: string;
+  storageLocation: string;
   isImportPath: boolean;
   isOpenBook: boolean;
   isExpandContent: boolean;
