@@ -324,8 +324,9 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       var rect = doc!.getSelection()!.getRangeAt(0).getBoundingClientRect();
       this.setState({ rect });
     });
-    doc.addEventListener("dblclick", (event) => {
+    doc.addEventListener("contextmenu", (event) => {
       event.preventDefault();
+      if (!this.state.isDisablePopup) return;
       if (!doc!.getSelection() || doc!.getSelection()!.rangeCount === 0) return;
       var rect = doc!.getSelection()!.getRangeAt(0).getBoundingClientRect();
       this.setState({ rect });
