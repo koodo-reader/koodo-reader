@@ -31,7 +31,6 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     this.state = {
       deleteKey: "",
       rect: this.props.rect,
-      isDisablePopup: StorageUtil.getReaderConfig("isDisablePopup") === "yes",
     };
   }
 
