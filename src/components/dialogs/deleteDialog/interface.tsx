@@ -23,3 +23,7 @@ export interface DeleteDialogProps extends RouteComponentProps<any> {
   handleFetchNotes: () => void;
   t: (title: string) => string;
 }
+export interface DeleteDialogState {
+  isDeleteShelfBook: boolean;
+  isDisableTrashBin: boolean;
+}

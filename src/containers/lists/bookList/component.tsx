@@ -22,6 +22,7 @@ class BookList extends React.Component<BookListProps, BookListState> {
     super(props);
     this.state = {
       favoriteBooks: Object.keys(AddFavorite.getAllFavorite()).length,
+      isHideShelfBook: StorageUtil.getReaderConfig("isHideShelfBook") === "yes",
     };
   }
   UNSAFE_componentWillMount() {
@@ -74,6 +75,11 @@ class BookList extends React.Component<BookListProps, BookListState> {
     });
     return itemArr;
   };
+  handleFilterShelfBook = (items: BookModel[]) => {
+    return items.filter((item) => {
+      return ShelfUtil.getBookPosition(item.key).length === 0;
+    });
+  };
   renderBookList = () => {
     //根据不同的场景获取不同的图书数据
 
@@ -85,9 +91,15 @@ class BookList extends React.Component<BookListProps, BookListState> {
           //返回排序后的图书index
           SortUtil.sortBooks(this.props.books, this.props.bookSortCode) || []
         )
-      : this.props.mode === "favorite"
+      : this.props.mode === "favorite" //我的喜爱
       ? this.handleIndexFilter(
           this.handleKeyFilter(this.props.books, AddFavorite.getAllFavorite()),
+          //返回排序后的图书index
+          SortUtil.sortBooks(this.props.books, this.props.bookSortCode) || []
+        )
+      : this.state.isHideShelfBook //我的喜爱
+      ? this.handleIndexFilter(
+          this.handleFilterShelfBook(this.props.books),
           //返回排序后的图书index
           SortUtil.sortBooks(this.props.books, this.props.bookSortCode) || []
         )
@@ -96,7 +108,6 @@ class BookList extends React.Component<BookListProps, BookListState> {
           //返回排序后的图书index
           SortUtil.sortBooks(this.props.books, this.props.bookSortCode) || []
         );
-
     if (this.props.mode === "shelf" && books.length === 0) {
       return (
         <div

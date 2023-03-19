@@ -116,4 +116,4 @@ class ShelfSelector extends React.Component<
   }
 }
 
-export default withRouter(ShelfSelector);
+export default withRouter(ShelfSelector as any);
