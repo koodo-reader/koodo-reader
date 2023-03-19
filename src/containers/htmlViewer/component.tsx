@@ -242,45 +242,37 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         chapterDocIndex: string;
         chapterHref: string;
       } = RecordLocation.getHtmlLocation(this.props.currentBook.key);
-      if (this.props.currentBook.format.startsWith("CB")) {
-        this.setState({
-          chapter:
-            this.props.htmlBook.flattenChapters[
-              parseInt(bookLocation.count) || 0
-            ].title,
-          chapterDocIndex: parseInt(bookLocation.count) || 0,
-        });
+
+      let chapter =
+        bookLocation.chapterTitle ||
+        (this.props.htmlBook
+          ? this.props.htmlBook.flattenChapters[0].title
+          : "Unknown Chapter");
+      let chapterDocIndex = 0;
+      if (bookLocation.chapterDocIndex) {
+        chapterDocIndex = parseInt(bookLocation.chapterDocIndex);
       } else {
-        let chapter =
-          bookLocation.chapterTitle ||
-          (this.props.htmlBook
-            ? this.props.htmlBook.flattenChapters[0].title
-            : "Unknown Chapter");
-        let chapterDocIndex = 0;
-        if (bookLocation.chapterDocIndex) {
-          chapterDocIndex = parseInt(bookLocation.chapterDocIndex);
-        } else {
-          chapterDocIndex =
-            bookLocation.chapterTitle && this.props.htmlBook
-              ? window._.findLastIndex(
-                  this.props.htmlBook.flattenChapters.map((item) => {
-                    item.title = item.title.trim();
-                    return item;
-                  }),
-                  {
-                    title: bookLocation.chapterTitle.trim(),
-                  }
-                )
-              : 0;
-        }
-        this.props.handleCurrentChapter(chapter);
-        this.props.handleCurrentChapterIndex(chapterDocIndex);
-        this.props.handleFetchPercentage(this.props.currentBook);
-        this.setState({
-          chapter,
-          chapterDocIndex,
-        });
+        chapterDocIndex =
+          bookLocation.chapterTitle && this.props.htmlBook
+            ? window._.findLastIndex(
+                this.props.htmlBook.flattenChapters.map((item) => {
+                  item.title = item.title.trim();
+                  return item;
+                }),
+                {
+                  title: bookLocation.chapterTitle.trim(),
+                }
+              )
+            : 0;
       }
+      this.props.handleCurrentChapter(chapter);
+      this.props.handleCurrentChapterIndex(chapterDocIndex);
+      this.props.handleFetchPercentage(this.props.currentBook);
+      this.setState({
+        chapter,
+        chapterDocIndex,
+      });
+      this.handleContentScroll(chapter, chapterDocIndex);
       StyleUtil.addDefaultCss();
       tsTransform();
       this.handleBindGesture();
@@ -290,6 +282,17 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       }, 1000);
       return false;
     });
+  };
+  handleContentScroll = (chapter: string, chapterIndex: number) => {
+    let contentBody = document.getElementsByClassName("navigation-body")[0];
+    let contentList = contentBody.getElementsByTagName("a");
+    let targetContent = Array.from(contentList).filter(
+      (item, index) => item.textContent === chapter && index === chapterIndex
+    );
+    if (targetContent.length > 0) {
+      contentBody.scrollTo(0, targetContent[0].offsetTop);
+      targetContent[0].setAttribute("style", "color:red; font-weight: bold");
+    }
   };
   handleLocation = () => {
     let position = this.props.htmlBook.rendition.getPosition();

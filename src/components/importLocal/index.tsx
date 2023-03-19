@@ -13,6 +13,8 @@ const mapStateToProps = (state: stateType) => {
     bookmarks: state.reader.bookmarks,
     isCollapsed: state.sidebar.isCollapsed,
     deletedBooks: state.manager.deletedBooks,
+    mode: state.sidebar.mode,
+    shelfIndex: state.sidebar.shelfIndex,
   };
 };
 const actionCreator = {

@@ -13,7 +13,6 @@ export const tsTransform = () => {
       StorageUtil.getReaderConfig("convertChinese") ===
       "Simplified To Traditional"
     ) {
-      console.log(window);
       doc.querySelectorAll("p").forEach((item) => {
         item.innerHTML = item.innerHTML
           .split("")
