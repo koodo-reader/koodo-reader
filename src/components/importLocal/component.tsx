@@ -15,6 +15,7 @@ import { fetchFileFromPath } from "../../utils/fileUtils/fileUtil";
 import toast from "react-hot-toast";
 import StorageUtil from "../../utils/serviceUtils/storageUtil";
 import { getTooltip } from "../../utils/commonUtil";
+import ShelfUtil from "../../utils/readUtils/shelfUtil";
 declare var window: any;
 let clickFilePath = "";
 
@@ -119,7 +120,10 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
         .setItem("books", bookArr)
         .then(() => {
           this.props.handleFetchBooks();
-
+          if (this.props.mode === "shelf") {
+            let shelfTitles = Object.keys(ShelfUtil.getShelf());
+            ShelfUtil.setShelf(shelfTitles[this.props.shelfIndex], book.key);
+          }
           toast.success(this.props.t("Add Successfully"));
           setTimeout(() => {
             this.state.isOpenFile && this.handleJump(book);

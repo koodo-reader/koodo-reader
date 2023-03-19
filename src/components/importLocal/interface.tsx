@@ -8,7 +8,8 @@ export interface ImportLocalProps extends RouteComponentProps<any> {
   dragItem: string;
   notes: NoteModel[];
   isCollapsed: boolean;
-
+  mode: string;
+  shelfIndex: number;
   bookmarks: BookmarkModel[];
   handleFetchBooks: () => void;
   handleDrag: (isDrag: boolean) => void;

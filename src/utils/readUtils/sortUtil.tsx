@@ -30,7 +30,13 @@ const getBookIndex = (nameArr: string[], oldNameArr: string[]) => {
       }
     });
   }
-  return indexArr;
+  return [
+    ...new Set(
+      indexArr.map((item) => {
+        return item - Math.min(...indexArr);
+      })
+    ),
+  ];
 };
 const getDurationArr = () => {
   let durationObj = ReadingTime.getAllTime();

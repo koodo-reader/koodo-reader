@@ -338,5 +338,11 @@
   "Please turn off open books in the main window": "Please turn off open books in the main window",
   "This action will delete all the notes, bookmarks and digests of this book": "This action will delete all the notes, bookmarks and digests of this book",
   "More formats supported": "More formats supported",
-  "Koodo Reader's web version are limited by the browser, for more powerful features, please download the desktop version.": "Koodo Reader's web version are limited by the browser, for more powerful features, please download the desktop version."
+  "Koodo Reader's web version are limited by the browser, for more powerful features, please download the desktop version.": "Koodo Reader's web version are limited by the browser, for more powerful features, please download the desktop version.",
+  "Disable trash bin": "Disable trash bin",
+  "When deleting books, they will be deleted permanetly instead of sending to trash bin": "When deleting books, they will be deleted permanetly instead of sending to trash bin",
+  "Hide books already added to the shelf": "Hide books already added to the shelf",
+  "Hide books which have been added to the shelf, so they won't show up in home page": "Hide books which have been added to the shelf, so they won't show up in home page",
+  "Delete book from shelf also deleting book itself": "Delete book from shelf also deleting book itself",
+  "When deleting book from shelf, the book will be deleted as well": "When deleting book from shelf, the book will be deleted as well"
 }
