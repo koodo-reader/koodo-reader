@@ -30,6 +30,7 @@ export interface ViewerState {
   scale: string;
   isFirst: boolean;
   chapterTitle: string;
+  isDisablePopup: boolean;
   margin: number;
   extraMargin: number;
   readerMode: string;
