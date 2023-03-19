@@ -1,7 +1,7 @@
 {
   "name": "koodo-reader",
   "main": "main.js",
-  "version": "1.5.2",
+  "version": "1.5.3",
   "description": "A cross-platform ebook reader",
   "author": {
     "name": "App by Troye",
@@ -213,7 +213,8 @@
         {
           "target": "nsis",
           "arch": [
-            "x64"
+            "x64",
+            "arm64"
           ]
         },
         {
@@ -238,10 +239,46 @@
       "icon": "assets/icons",
       "category": "Office",
       "target": [
-        "AppImage",
-        "deb",
-        "snap",
-        "rpm"
+        {
+          "target": "snap",
+          "arch": [
+            "arm64",
+            "armv7l",
+            "x64"
+          ]
+        },
+        {
+          "target": "deb",
+          "arch": [
+            "arm64",
+            "armv7l",
+            "x64"
+          ]
+        },
+        {
+          "target": "zip",
+          "arch": [
+            "arm64",
+            "armv7l",
+            "x64"
+          ]
+        },
+        {
+          "target": "rpm",
+          "arch": [
+            "arm64",
+            "armv7l",
+            "x64"
+          ]
+        },
+        {
+          "target": "AppImage",
+          "arch": [
+            "arm64",
+            "armv7l",
+            "x64"
+          ]
+        }
       ],
       "artifactName": "${productName}-${version}.${ext}"
     },

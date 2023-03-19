@@ -37,6 +37,11 @@ class SettingDialog extends React.Component<
       isPreventAdd: StorageUtil.getReaderConfig("isPreventAdd") === "yes",
       isOpenBook: StorageUtil.getReaderConfig("isOpenBook") === "yes",
       isExpandContent: StorageUtil.getReaderConfig("isExpandContent") === "yes",
+      isDisableTrashBin:
+        StorageUtil.getReaderConfig("isDisableTrashBin") === "yes",
+      isDeleteShelfBook:
+        StorageUtil.getReaderConfig("isDeleteShelfBook") === "yes",
+      isHideShelfBook: StorageUtil.getReaderConfig("isHideShelfBook") === "yes",
       isPreventSleep: StorageUtil.getReaderConfig("isPreventSleep") === "yes",
       isOpenInMain: StorageUtil.getReaderConfig("isOpenInMain") === "yes",
       isDisableUpdate: StorageUtil.getReaderConfig("isDisableUpdate") === "yes",

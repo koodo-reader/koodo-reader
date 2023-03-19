@@ -7,12 +7,25 @@ import RecordRecent from "../../../utils/readUtils/recordRecent";
 import RecordLocation from "../../../utils/readUtils/recordLocation";
 import AddFavorite from "../../../utils/readUtils/addFavorite";
 import { Trans } from "react-i18next";
-import { DeleteDialogProps } from "./interface";
+import { DeleteDialogProps, DeleteDialogState } from "./interface";
 import { withRouter } from "react-router-dom";
 import AddTrash from "../../../utils/readUtils/addTrash";
 import BookUtil from "../../../utils/fileUtils/bookUtil";
 import toast from "react-hot-toast";
-class DeleteDialog extends React.Component<DeleteDialogProps> {
+import StorageUtil from "../../../utils/serviceUtils/storageUtil";
+class DeleteDialog extends React.Component<
+  DeleteDialogProps,
+  DeleteDialogState
+> {
+  constructor(props: DeleteDialogProps) {
+    super(props);
+    this.state = {
+      isDeleteShelfBook:
+        StorageUtil.getReaderConfig("isDeleteShelfBook") === "yes",
+      isDisableTrashBin:
+        StorageUtil.getReaderConfig("isDisableTrashBin") === "yes",
+    };
+  }
   handleCancel = () => {
     this.props.handleDeleteDialog(false);
   };
@@ -41,8 +54,9 @@ class DeleteDialog extends React.Component<DeleteDialogProps> {
     });
   };
   handleComfirm = async () => {
+    console.log(this.state.isDisableTrashBin);
     //从列表删除和从图书库删除判断
-    if (this.props.mode === "shelf") {
+    if (this.props.mode === "shelf" && !this.state.isDeleteShelfBook) {
       if (this.props.isSelectBook) {
         this.props.selectedBooks.forEach((item) => {
           ShelfUtil.clearShelf(this.props.shelfIndex, item);
@@ -64,6 +78,28 @@ class DeleteDialog extends React.Component<DeleteDialogProps> {
       if (this.props.books.length === 1) {
         this.props.history.push("/manager/empty");
       }
+      this.props.handleFetchBooks(false);
+      this.props.handleFetchBooks(true);
+      this.props.handleFetchBookmarks();
+      this.props.handleFetchNotes();
+    } else if (this.state.isDisableTrashBin) {
+      if (this.props.isSelectBook) {
+        for (let i = 0; i < this.props.selectedBooks.length; i++) {
+          await this.deleteBook(this.props.selectedBooks[i]);
+          AddTrash.setTrash(this.props.selectedBooks[i]);
+          //从喜爱的图书中删除
+          AddFavorite.clear(this.props.selectedBooks[i]);
+        }
+        this.props.handleSelectedBooks([]);
+        this.props.handleFetchBooks(false);
+        this.props.handleSelectBook(!this.props.isSelectBook);
+      } else {
+        await this.deleteBook(this.props.currentBook.key);
+        AddTrash.setTrash(this.props.currentBook.key);
+        //从喜爱的图书中删除
+        AddFavorite.clear(this.props.currentBook.key);
+      }
+
       this.props.handleFetchBooks(false);
       this.props.handleFetchBooks(true);
       this.props.handleFetchBookmarks();
@@ -116,7 +152,7 @@ class DeleteDialog extends React.Component<DeleteDialogProps> {
   render() {
     return (
       <div className="delete-dialog-container">
-        {this.props.mode === "shelf" ? (
+        {this.props.mode === "shelf" && !this.state.isDeleteShelfBook ? (
           <div className="delete-dialog-title">
             <Trans>Delete from Shelf</Trans>
           </div>
@@ -146,11 +182,11 @@ class DeleteDialog extends React.Component<DeleteDialogProps> {
           </div>
         )}
 
-        {this.props.mode === "shelf" ? (
+        {this.props.mode === "shelf" && !this.state.isDeleteShelfBook ? (
           <div className="delete-dialog-other-option">
             <Trans>This action won't delete the original book</Trans>
           </div>
-        ) : this.props.mode === "trash" ? (
+        ) : this.props.mode === "trash" || this.state.isDisableTrashBin ? (
           <div className="delete-dialog-other-option" style={{ top: "80px" }}>
             <Trans>
               This action will remove all the books in recycle bin,together with
