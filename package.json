@@ -242,8 +242,6 @@
         {
           "target": "snap",
           "arch": [
-            "arm64",
-            "armv7l",
             "x64"
           ]
         },
@@ -251,15 +249,12 @@
           "target": "deb",
           "arch": [
             "arm64",
-            "armv7l",
             "x64"
           ]
         },
         {
           "target": "rpm",
           "arch": [
-            "arm64",
-            "armv7l",
             "x64"
           ]
         },
@@ -267,7 +262,6 @@
           "target": "AppImage",
           "arch": [
             "arm64",
-            "armv7l",
             "x64"
           ]
         }
