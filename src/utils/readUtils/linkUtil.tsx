@@ -27,7 +27,7 @@ export const handleLinkJump = async (event: any, rendition: any = {}) => {
     }
     let id = href.split("#").reverse()[0];
     await rendition.goToNode(doc.body.querySelector("#" + id) || doc.body);
-  } else if (rendition.resolveChapter(href)) {
+  } else if (href && rendition.resolveChapter(href)) {
     let chapterInfo = rendition.resolveChapter(href);
     rendition.goToChapter(
       chapterInfo.index,

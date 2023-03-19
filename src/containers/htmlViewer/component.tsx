@@ -39,6 +39,8 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         RecordLocation.getHtmlLocation(this.props.currentBook.key)
           .chapterTitle || "",
       readerMode: StorageUtil.getReaderConfig("readerMode") || "double",
+      isDisablePopup: StorageUtil.getReaderConfig("isDisablePopup") === "yes",
+
       margin: parseInt(StorageUtil.getReaderConfig("margin")) || 30,
       extraMargin: 0,
       chapterDocIndex: parseInt(
@@ -317,6 +319,13 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       this.props.handleLeaveReader("bottom");
     });
     doc.addEventListener("mouseup", () => {
+      if (this.state.isDisablePopup) return;
+      if (!doc!.getSelection() || doc!.getSelection()!.rangeCount === 0) return;
+      var rect = doc!.getSelection()!.getRangeAt(0).getBoundingClientRect();
+      this.setState({ rect });
+    });
+    doc.addEventListener("dblclick", (event) => {
+      event.preventDefault();
       if (!doc!.getSelection() || doc!.getSelection()!.rangeCount === 0) return;
       var rect = doc!.getSelection()!.getRangeAt(0).getBoundingClientRect();
       this.setState({ rect });
