@@ -26,6 +26,7 @@ export interface PopupMenuProps {
 }
 export interface PopupMenuStates {
   deleteKey: string;
+  isDisablePopup: boolean;
   // cfiRange: string;
   rect: DOMRect | null;
 }

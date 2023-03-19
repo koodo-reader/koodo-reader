@@ -43,6 +43,12 @@ export const settingList = [
   },
   {
     isElectron: false,
+    title: "Disable popup when selecting texts",
+    desc: "No popup when selecting text, turn it on when you want Koodo to work with other third-party translation or notation service, right clicking on the selected text will trigger popup again",
+    propName: "isDisablePopup",
+  },
+  {
+    isElectron: false,
     title: "Disable trash bin",
     desc: "When deleting books, they will be deleted permanetly instead of sending to trash bin",
     propName: "isDisableTrashBin",

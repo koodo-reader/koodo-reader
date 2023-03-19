@@ -213,15 +213,15 @@
         {
           "target": "nsis",
           "arch": [
-            "x64",
-            "arm64"
+            "x64"
           ]
         },
         {
           "target": "zip",
           "arch": [
             "x64",
-            "ia32"
+            "ia32",
+            "arm64"
           ]
         },
         {
@@ -256,14 +256,6 @@
           ]
         },
         {
-          "target": "zip",
-          "arch": [
-            "arm64",
-            "armv7l",
-            "x64"
-          ]
-        },
-        {
           "target": "rpm",
           "arch": [
             "arm64",
@@ -280,7 +272,7 @@
           ]
         }
       ],
-      "artifactName": "${productName}-${version}.${ext}"
+      "artifactName": "${productName}-${version}-${arch}.${ext}"
     },
     "portable": {
       "artifactName": "${productName}-${version}-Portable.${ext}"

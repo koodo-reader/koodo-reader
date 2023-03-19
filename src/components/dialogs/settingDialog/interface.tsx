@@ -20,6 +20,7 @@ export interface SettingInfoState {
   isImportPath: boolean;
   isOpenBook: boolean;
   isExpandContent: boolean;
+  isDisablePopup: boolean;
   isDisableTrashBin: boolean;
   isDeleteShelfBook: boolean;
   isPreventSleep: boolean;
