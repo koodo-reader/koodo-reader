@@ -140,9 +140,17 @@ class BookUtil {
       return localforage.getItem(key);
     }
   }
-  static async RedirectBook(book: BookModel, t: (string) => string) {
+  static async RedirectBook(
+    book: BookModel,
+    t: (string) => string,
+    history: any
+  ) {
     if (!(await this.isBookExist(book.key, book.path))) {
       toast.error(t("Book not exist"));
+      return;
+    }
+    if (StorageUtil.getReaderConfig("isOpenInMain") === "yes") {
+      history.push(BookUtil.getBookUrl(book));
       return;
     }
     let ref = book.format.toLowerCase();

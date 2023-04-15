@@ -51,8 +51,10 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
     }, 1000);
   }
   UNSAFE_componentWillMount() {
-    let url = document.location.href.split("/");
-    let key = url[url.length - 1].split("?")[0];
+    let url = document.location.href;
+    let firstIndexOfQuestion = url.indexOf("?");
+    let lastIndexOfSlash = url.lastIndexOf("/", firstIndexOfQuestion);
+    let key = url.substring(lastIndexOfSlash + 1, firstIndexOfQuestion);
     this.props.handleFetchBooks();
     localforage.getItem("books").then((result: any) => {
       let book;
