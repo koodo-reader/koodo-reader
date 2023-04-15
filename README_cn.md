@@ -83,7 +83,8 @@ docker-compose up -d
 - 使用 Flathub 安装：
 
 ```shell
-flatpak install io.github.troyeguo.koodo-reader
+flatpak install flathub io.github.troyeguo.koodo-reader
+flatpak run io.github.troyeguo.koodo-reader
 ```
 
 <a href="https://flathub.org/apps/details/io.github.troyeguo.koodo-reader"><img height="50" alt="Download on Flathub" src="https://flathub.org/assets/badges/flathub-badge-en.png"/></a>
