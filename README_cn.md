@@ -64,8 +64,6 @@ scoop install dorado/koodo-reader
 
 - 使用 Winget 安装：
 
--
-
 ```shell
 winget install -e AppbyTroye.KoodoReader
 ```
@@ -80,6 +78,12 @@ brew install --cask koodo-reader
 
 ```bash
 docker-compose up -d
+```
+
+- 使用 Flathub 安装：
+
+```shell
+flatpak install io.github.troyeguo.koodo-reader
 ```
 
 <a href="https://flathub.org/apps/details/io.github.troyeguo.koodo-reader"><img height="50" alt="Download on Flathub" src="https://flathub.org/assets/badges/flathub-badge-en.png"/></a>

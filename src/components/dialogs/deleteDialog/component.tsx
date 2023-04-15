@@ -54,74 +54,71 @@ class DeleteDialog extends React.Component<
     });
   };
   handleComfirm = async () => {
-    console.log(this.state.isDisableTrashBin);
     //从列表删除和从图书库删除判断
     if (this.props.mode === "shelf" && !this.state.isDeleteShelfBook) {
-      if (this.props.isSelectBook) {
-        this.props.selectedBooks.forEach((item) => {
-          ShelfUtil.clearShelf(this.props.shelfIndex, item);
-        });
-        this.props.handleSelectedBooks([]);
-        this.props.handleFetchBooks(false);
-        this.props.handleSelectBook(!this.props.isSelectBook);
-        this.props.handleDeleteDialog(false);
-        toast.success(this.props.t("Delete Successfully"));
-        return;
-      }
-      ShelfUtil.clearShelf(this.props.shelfIndex, this.props.currentBook.key);
+      this.deleteBookFromShelf();
     } else if (this.props.mode === "trash") {
-      let keyArr = AddTrash.getAllTrash();
-      for (let i = 0; i < keyArr.length; i++) {
-        await this.deleteBook(keyArr[i]);
-      }
-
-      if (this.props.books.length === 1) {
-        this.props.history.push("/manager/empty");
-      }
-      this.props.handleFetchBooks(false);
-      this.props.handleFetchBooks(true);
-      this.props.handleFetchBookmarks();
-      this.props.handleFetchNotes();
+      await this.deleteAllBookInTrash();
     } else if (this.state.isDisableTrashBin) {
-      if (this.props.isSelectBook) {
-        for (let i = 0; i < this.props.selectedBooks.length; i++) {
-          await this.deleteBook(this.props.selectedBooks[i]);
-          AddTrash.setTrash(this.props.selectedBooks[i]);
-          //从喜爱的图书中删除
-          AddFavorite.clear(this.props.selectedBooks[i]);
-        }
-        this.props.handleSelectedBooks([]);
-        this.props.handleFetchBooks(false);
-        this.props.handleSelectBook(!this.props.isSelectBook);
-      } else {
-        await this.deleteBook(this.props.currentBook.key);
-        AddTrash.setTrash(this.props.currentBook.key);
-        //从喜爱的图书中删除
-        AddFavorite.clear(this.props.currentBook.key);
-      }
-
-      this.props.handleFetchBooks(false);
-      this.props.handleFetchBooks(true);
-      this.props.handleFetchBookmarks();
-      this.props.handleFetchNotes();
-    } else if (this.props.isSelectBook) {
-      this.props.selectedBooks.forEach((item) => {
-        AddTrash.setTrash(item);
-        //从喜爱的图书中删除
-        AddFavorite.clear(item);
-      });
-      this.props.handleSelectedBooks([]);
-      this.props.handleFetchBooks(false);
-      this.props.handleSelectBook(!this.props.isSelectBook);
+      this.deleteBooks();
+      await this.deleteAllBookInTrash();
     } else {
-      AddTrash.setTrash(this.props.currentBook.key);
-      //从喜爱的图书中删除
-      AddFavorite.clear(this.props.currentBook.key);
-      this.props.handleFetchBooks(false);
+      this.deleteBooks();
     }
 
     this.props.handleDeleteDialog(false);
     toast.success(this.props.t("Delete Successfully"));
+  };
+  deleteBookFromShelf = () => {
+    if (this.props.isSelectBook) {
+      this.props.selectedBooks.forEach((item) => {
+        ShelfUtil.clearShelf(this.props.shelfIndex, item);
+      });
+      this.props.handleSelectedBooks([]);
+      this.props.handleFetchBooks(false);
+      this.props.handleSelectBook(!this.props.isSelectBook);
+      this.props.handleDeleteDialog(false);
+      toast.success(this.props.t("Delete Successfully"));
+      return;
+    }
+    ShelfUtil.clearShelf(this.props.shelfIndex, this.props.currentBook.key);
+  };
+  deleteAllBookInTrash = async () => {
+    let keyArr = AddTrash.getAllTrash();
+    for (let i = 0; i < keyArr.length; i++) {
+      await this.deleteBook(keyArr[i]);
+    }
+
+    if (this.props.books.length === 1) {
+      this.props.history.push("/manager/empty");
+    }
+    this.props.handleFetchBooks(false);
+    this.props.handleFetchBooks(true);
+    this.props.handleFetchBookmarks();
+    this.props.handleFetchNotes();
+  };
+  deleteBooks = () => {
+    if (this.props.isSelectBook) {
+      this.deleteSelectedBook();
+    } else {
+      this.deleteCurrentBook();
+    }
+  };
+  deleteSelectedBook = () => {
+    this.props.selectedBooks.forEach((item) => {
+      AddTrash.setTrash(item);
+      //从喜爱的图书中删除
+      AddFavorite.clear(item);
+    });
+    this.props.handleSelectedBooks([]);
+    this.props.handleFetchBooks(false);
+    this.props.handleSelectBook(!this.props.isSelectBook);
+  };
+  deleteCurrentBook = () => {
+    AddTrash.setTrash(this.props.currentBook.key);
+    //从喜爱的图书中删除
+    AddFavorite.clear(this.props.currentBook.key);
+    this.props.handleFetchBooks(false);
   };
   deleteBook = (key: string) => {
     return new Promise<void>((resolve, reject) => {
@@ -183,22 +180,28 @@ class DeleteDialog extends React.Component<
         )}
 
         {this.props.mode === "shelf" && !this.state.isDeleteShelfBook ? (
-          <div className="delete-dialog-other-option">
+          <div className="delete-dialog-other-option" style={{ top: "100px" }}>
             <Trans>This action won't delete the original book</Trans>
           </div>
-        ) : this.props.mode === "trash" || this.state.isDisableTrashBin ? (
+        ) : this.props.mode === "trash" ? (
           <div className="delete-dialog-other-option" style={{ top: "80px" }}>
             <Trans>
               This action will remove all the books in recycle bin,together with
               their notes, bookmarks and digests
             </Trans>
           </div>
-        ) : (
-          <div className="delete-dialog-other-option">
+        ) : this.state.isDisableTrashBin ? (
+          <div className="delete-dialog-other-option" style={{ top: "100px" }}>
             <Trans>
-              {
-                "This action will move this book and its the notes, bookmarks and highlights of this book to the recycle bin"
-              }
+              This action will permanently delete the selected books, together
+              with their notes, bookmarks and digests
+            </Trans>
+          </div>
+        ) : (
+          <div className="delete-dialog-other-option" style={{ top: "100px" }}>
+            <Trans>
+              This action will move this book and its the notes, bookmarks and
+              highlights of this book to the recycle bin
             </Trans>
           </div>
         )}
