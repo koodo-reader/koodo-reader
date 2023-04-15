@@ -42,11 +42,8 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
       !filePath
     ) {
       this.props.handleReadingBook(this.props.book);
-      if (StorageUtil.getReaderConfig("isOpenInMain") === "yes") {
-        this.props.history.push(BookUtil.getBookUrl(this.props.book));
-      } else {
-        BookUtil.RedirectBook(this.props.book, this.props.t);
-      }
+
+      BookUtil.RedirectBook(this.props.book, this.props.t, this.props.history);
     }
   }
   UNSAFE_componentWillReceiveProps(nextProps: BookCardProps) {
@@ -115,11 +112,7 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
     }
     RecentBooks.setRecent(this.props.book.key);
     this.props.handleReadingBook(this.props.book);
-    if (StorageUtil.getReaderConfig("isOpenInMain") === "yes") {
-      this.props.history.push(BookUtil.getBookUrl(this.props.book));
-    } else {
-      BookUtil.RedirectBook(this.props.book, this.props.t);
-    }
+    BookUtil.RedirectBook(this.props.book, this.props.t, this.props.history);
   };
   render() {
     let percentage = RecordLocation.getHtmlLocation(this.props.book.key)

@@ -116,6 +116,10 @@ export const langList = [
   { label: "한국어", value: "ko" },
   { label: "Polski", value: "pl" },
   { label: "Română", value: "ro" },
+  { label: "แบบไทย", value: "th" },
+  { label: "italiano", value: "it" },
+  { label: "Nederlands", value: "nl" },
+  { label: "বাংলা", value: "bn" },
 ];
 
 export const searchList = [

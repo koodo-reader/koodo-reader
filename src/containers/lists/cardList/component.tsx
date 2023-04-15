@@ -11,7 +11,6 @@ import { Redirect } from "react-router-dom";
 import NoteTag from "../../../components/noteTag";
 import BookUtil from "../../../utils/fileUtils/bookUtil";
 import toast from "react-hot-toast";
-import StorageUtil from "../../../utils/serviceUtils/storageUtil";
 import BookModel from "../../../model/Book";
 class CardList extends React.Component<CardListProps, CardListStates> {
   constructor(props: CardListProps) {
@@ -72,11 +71,7 @@ class CardList extends React.Component<CardListProps, CardListStates> {
       );
     }
 
-    if (StorageUtil.getReaderConfig("isOpenInMain") === "yes") {
-      this.props.history.push(BookUtil.getBookUrl(book));
-    } else {
-      BookUtil.RedirectBook(book, this.props.t);
-    }
+    BookUtil.RedirectBook(book, this.props.t, this.props.history);
   };
   render() {
     let { cards } = this.props;

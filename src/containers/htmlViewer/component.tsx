@@ -125,7 +125,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         toast.error(this.props.t("Book not exsit"));
         return;
       }
-
       if (format === "MOBI" || format === "AZW3" || format === "AZW") {
         this.handleMobi(result as ArrayBuffer);
       } else if (format === "EPUB") {
@@ -274,7 +273,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         chapter,
         chapterDocIndex,
       });
-      this.handleContentScroll(chapter, chapterDocIndex);
+      this.handleContentScroll(chapter, bookLocation.chapterHref);
       StyleUtil.addDefaultCss();
       tsTransform();
       this.handleBindGesture();
@@ -285,12 +284,16 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       return false;
     });
   };
-  handleContentScroll = (chapter: string, chapterIndex: number) => {
+  handleContentScroll = (chapter: string, chapterHref: string) => {
+    let chapterIndex = window._.findIndex(this.props.htmlBook.flattenChapters, {
+      href: chapterHref,
+    });
     let contentBody = document.getElementsByClassName("navigation-body")[0];
     let contentList = contentBody.getElementsByTagName("a");
-    let targetContent = Array.from(contentList).filter(
-      (item, index) => item.textContent === chapter && index === chapterIndex
-    );
+    let targetContent = Array.from(contentList).filter((item, index) => {
+      item.setAttribute("style", "");
+      return item.textContent === chapter && index === chapterIndex;
+    });
     if (targetContent.length > 0) {
       contentBody.scrollTo(0, targetContent[0].offsetTop);
       targetContent[0].setAttribute("style", "color:red; font-weight: bold");
@@ -325,8 +328,8 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       this.setState({ rect });
     });
     doc.addEventListener("contextmenu", (event) => {
-      event.preventDefault();
       if (!this.state.isDisablePopup) return;
+      event.preventDefault();
       if (!doc!.getSelection() || doc!.getSelection()!.rangeCount === 0) return;
       var rect = doc!.getSelection()!.getRangeAt(0).getBoundingClientRect();
       this.setState({ rect });
@@ -499,10 +502,10 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
               ? { left: 0, right: 0 }
               : this.state.readerMode === "scroll"
               ? {
-                  left: `calc(50vw - ${
+                  paddingLeft: `calc(50vw - ${
                     270 * parseFloat(this.state.scale)
                   }px + 20px)`,
-                  right: `calc(50vw - ${
+                  paddingRight: `calc(50vw - ${
                     270 * parseFloat(this.state.scale)
                   }px + 15px)`,
                   overflowY: "scroll",

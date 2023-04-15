@@ -37,11 +37,7 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
       !filePath
     ) {
       this.props.handleReadingBook(this.props.book);
-      if (StorageUtil.getReaderConfig("isOpenInMain") === "yes") {
-        this.props.history.push(BookUtil.getBookUrl(this.props.book));
-      } else {
-        BookUtil.RedirectBook(this.props.book, this.props.t);
-      }
+      BookUtil.RedirectBook(this.props.book, this.props.t, this.props.history);
     }
   }
   UNSAFE_componentWillReceiveProps(nextProps: BookItemProps) {
@@ -92,11 +88,7 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
     }
     RecentBooks.setRecent(this.props.book.key);
     this.props.handleReadingBook(this.props.book);
-    if (StorageUtil.getReaderConfig("isOpenInMain") === "yes") {
-      this.props.history.push(BookUtil.getBookUrl(this.props.book));
-    } else {
-      BookUtil.RedirectBook(this.props.book, this.props.t);
-    }
+    BookUtil.RedirectBook(this.props.book, this.props.t, this.props.history);
   };
   handleExportBook() {
     BookUtil.fetchBook(this.props.book.key, true, this.props.book.path).then(

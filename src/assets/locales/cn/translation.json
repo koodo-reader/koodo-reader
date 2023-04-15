@@ -350,5 +350,6 @@
   "Hide books already added to the shelf": "隐藏添加到书架的图书",
   "Hide books which have been added to the shelf, so they won't show up in home page": "当把图书添加到书架后，该图书就不会展示在主页书架中",
   "Delete book from shelf also deleting book itself": "直接删除从书架中移除的图书",
-  "When deleting book from shelf, the book will be deleted as well": "在书架中执行删除操作时，不仅会从书架删除，还会直接将其删除到回收站"
+  "When deleting book from shelf, the book will be deleted as well": "在书架中执行删除操作时，不仅会从书架删除，还会直接将其删除到回收站",
+  "This action will permanently delete the selected books, together with their notes, bookmarks and digests": "此操作会彻底删除所有选中的图书，以及它们的书签，笔记和高亮"
 }

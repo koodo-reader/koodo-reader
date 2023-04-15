@@ -21,12 +21,14 @@
         width: 100%;
       }
     </style>
+    <script
+      type="text/javascript"
+      src="%PUBLIC_URL%/lib/kookit/kookit.min.js"
+    ></script>
     <script>
       var script = document.createElement("script");
       if (document.location.href.indexOf("localhost:3000") > -1) {
         script.src = "http://127.0.0.1:5500/dist/kookit.umd.js";
-      } else {
-        script.src = "%PUBLIC_URL%/lib/kookit/kookit.min.js";
       }
       document.head.appendChild(script);
     </script>
@@ -37,10 +39,7 @@
 
     <div id="root"></div>
     <canvas id="the-canvas"></canvas>
-    <!-- <script
-      type="text/javascript"
-      src="%PUBLIC_URL%/lib/kookit/kookit.min.js"
-    ></script> -->
+
     <script
       type="text/javascript"
       src="%PUBLIC_URL%/lib/JSZip/jszip.min.js"

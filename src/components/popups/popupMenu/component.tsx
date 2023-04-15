@@ -237,8 +237,7 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     if (!highlighters) return;
     let highlightersByChapter = highlighters.filter((item: any) => {
       return (
-        (item.chapterDocIndex === this.props.chapterDocIndex ||
-          item.chapter === this.props.chapter) &&
+        item.chapterIndex === this.props.chapterDocIndex &&
         item.bookKey === this.props.currentBook.key
       );
     });

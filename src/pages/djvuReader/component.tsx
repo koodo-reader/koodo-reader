@@ -17,8 +17,10 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
   }
 
   componentDidMount() {
-    let url = document.location.href.split("/");
-    let key = url[url.length - 1].split("?")[0];
+    let url = document.location.href;
+    let firstIndexOfQuestion = url.indexOf("?");
+    let lastIndexOfSlash = url.lastIndexOf("/", firstIndexOfQuestion);
+    let key = url.substring(lastIndexOfSlash + 1, firstIndexOfQuestion);
 
     localforage.getItem("books").then((result: any) => {
       let book;

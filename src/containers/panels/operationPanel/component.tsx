@@ -47,7 +47,7 @@ class OperationPanel extends React.Component<
           ((pageProgress.totalPage - pageProgress.currentPage) * this.speed) /
           1000,
       });
-      this.props.handleShowBookmark(false);
+      this.handleDisplayBookmark();
 
       HtmlMouseEvent(
         this.props.htmlBook.rendition,
@@ -125,7 +125,23 @@ class OperationPanel extends React.Component<
     toast.success(this.props.t("Add Successfully"));
     this.props.handleShowBookmark(true);
   };
-
+  handleDisplayBookmark() {
+    this.props.handleShowBookmark(false);
+    let bookLocation: {
+      text: string;
+      count: string;
+      chapterTitle: string;
+      chapterDocIndex: string;
+      chapterHref: string;
+      percentage: string;
+      cfi: string;
+    } = RecordLocation.getHtmlLocation(this.props.currentBook.key);
+    this.props.bookmarks.forEach((item) => {
+      if (item.cfi === JSON.stringify(bookLocation)) {
+        this.props.handleShowBookmark(true);
+      }
+    });
+  }
   render() {
     return (
       <div className="book-operation-panel">

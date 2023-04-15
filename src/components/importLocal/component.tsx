@@ -83,11 +83,11 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
   };
   handleJump = (book: BookModel) => {
     if (StorageUtil.getReaderConfig("isOpenInMain") === "yes") {
-      this.props.history.push(BookUtil.getBookUrl(book));
+      BookUtil.RedirectBook(book, this.props.t, this.props.history);
       this.props.handleReadingBook(book);
     } else {
       localStorage.setItem("tempBook", JSON.stringify(book));
-      BookUtil.RedirectBook(book, this.props.t);
+      BookUtil.RedirectBook(book, this.props.t, this.props.history);
       this.props.history.push("/manager/home");
     }
   };
@@ -173,10 +173,6 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
       if (
         [...(this.props.books || []), ...this.props.deletedBooks].length > 0
       ) {
-        console.log(
-          [...(this.props.books || []), ...this.props.deletedBooks],
-          md5
-        );
         [...(this.props.books || []), ...this.props.deletedBooks].forEach(
           (item) => {
             if (item.md5 === md5 && item.size === file.size) {

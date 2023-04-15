@@ -27,6 +27,14 @@ const Router = () => {
         i18n.changeLanguage("ru");
       } else if (navigator.language.startsWith("jp")) {
         i18n.changeLanguage("jp");
+      } else if (navigator.language.startsWith("it")) {
+        i18n.changeLanguage("it");
+      } else if (navigator.language.startsWith("nl")) {
+        i18n.changeLanguage("nl");
+      } else if (navigator.language.startsWith("bn")) {
+        i18n.changeLanguage("bn");
+      } else if (navigator.language.startsWith("th")) {
+        i18n.changeLanguage("th");
       } else if (navigator.language.startsWith("tr")) {
         i18n.changeLanguage("tr");
       } else if (navigator.language.startsWith("ar")) {
