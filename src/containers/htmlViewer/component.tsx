@@ -20,6 +20,7 @@ import localforage from "localforage";
 import { removeExtraQuestionMark } from "../../utils/commonUtil";
 import CFI from "epub-cfi-resolver";
 import mhtml2html from "mhtml2html";
+import rtfToHTML from "@iarna/rtf-to-html";
 
 declare var window: any;
 let lock = false; //prevent from clicking too fasts
@@ -136,7 +137,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       } else if (format === "FB2") {
         this.handleFb2(result as ArrayBuffer);
       } else if (format === "RTF") {
-        this.handleRtf(key);
+        this.handleRtf(result as ArrayBuffer);
       } else if (format === "DOCX") {
         this.handleDocx(result as ArrayBuffer);
       } else if (
@@ -289,6 +290,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       href: chapterHref,
     });
     let contentBody = document.getElementsByClassName("navigation-body")[0];
+    if (!contentBody) return;
     let contentList = contentBody.getElementsByTagName("a");
     let targetContent = Array.from(contentList).filter((item, index) => {
       item.setAttribute("style", "");
@@ -425,31 +427,22 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     };
     reader.readAsText(blob, "UTF-8");
   };
-  handleRtf = async (key: string) => {
-    const rtfToHTML = window.require("@iarna/rtf-to-html");
-    const fs = window.require("fs");
-    const path = window.require("path");
-    let bookPath = path.join(
-      localStorage.getItem("storageLocation")
-        ? localStorage.getItem("storageLocation")
-        : window
-            .require("electron")
-            .ipcRenderer.sendSync("storage-location", "ping"),
-      `book`,
-      key
-    );
-    fs.createReadStream(bookPath).pipe(
-      rtfToHTML(async (err, html) => {
-        let rendition = new window.Kookit.StrRender(
-          removeExtraQuestionMark(html),
-          this.state.readerMode
-        );
-        await rendition.renderTo(
-          document.getElementsByClassName("html-viewer-page")[0]
-        );
-        await this.handleRest(rendition);
-      })
-    );
+  handleRtf = async (result: ArrayBuffer) => {
+    const array = new Uint8Array(result as ArrayBuffer);
+    let bufferStr = "";
+    for (let i = 0; i < array.length; ++i) {
+      bufferStr += String.fromCharCode(array[i]);
+    }
+    rtfToHTML.fromString(bufferStr, async (err: any, html: any) => {
+      let rendition = new window.Kookit.StrRender(
+        removeExtraQuestionMark(html),
+        this.state.readerMode
+      );
+      await rendition.renderTo(
+        document.getElementsByClassName("html-viewer-page")[0]
+      );
+      await this.handleRest(rendition);
+    });
   };
   handleDocx = (result: ArrayBuffer) => {
     window.mammoth
