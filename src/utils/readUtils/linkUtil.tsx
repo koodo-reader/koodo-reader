@@ -25,12 +25,15 @@ export const handleLinkJump = async (event: any, rendition: any = {}) => {
     if (!doc) {
       return;
     }
-    let chapterInfo = rendition.resolveChapter(href);
-    rendition.goToChapter(
-      chapterInfo.index,
-      chapterInfo.href,
-      chapterInfo.title
-    );
+    if (href.indexOf("/#") === -1) {
+      let chapterInfo = rendition.resolveChapter(href);
+      rendition.goToChapter(
+        chapterInfo.index,
+        chapterInfo.href,
+        chapterInfo.title
+      );
+    }
+
     let id = href.split("#").reverse()[0];
     await rendition.goToNode(doc.body.querySelector("#" + id) || doc.body);
   } else if (href && rendition.resolveChapter(href)) {
