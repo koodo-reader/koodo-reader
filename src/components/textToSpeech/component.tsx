@@ -126,10 +126,7 @@ class TextToSpeech extends React.Component<
   };
   async handleRead() {
     let text = this.state.nodeList[this.state.nodeIndex];
-    let style =
-      "background: " +
-      (StorageUtil.getReaderConfig("backgroundColor") || "#f3a6a68c");
-    console.log(text, style);
+    let style = "background: #f3a6a68c";
     this.props.htmlBook.rendition.highlightNode(text, style);
     text = text
       .replace(/\s\s/g, "")

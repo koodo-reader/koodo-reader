@@ -11,7 +11,6 @@ import { withRouter } from "react-router-dom";
 import toast from "react-hot-toast";
 import { HtmlMouseEvent } from "../../../utils/serviceUtils/mouseEvent";
 import storageUtil from "../../../utils/serviceUtils/storageUtil";
-import { getIframeDoc } from "../../../utils/serviceUtils/docUtil";
 import EdgeUtil from "../../../utils/serviceUtils/edgeUtil";
 declare var document: any;
 
@@ -56,23 +55,6 @@ class OperationPanel extends React.Component<
         this.props.currentBook.key,
         storageUtil.getReaderConfig("readerMode")
       );
-    });
-    let doc = getIframeDoc();
-    if (!doc) return;
-    doc.addEventListener("keydown", (event) => {
-      if (event.keyCode === 27) {
-        this.handleExit();
-      }
-    });
-    document.addEventListener("keydown", (event) => {
-      if (event.keyCode === 27) {
-        this.handleExit();
-      }
-    });
-    window.addEventListener("keydown", (event) => {
-      if (event.keyCode === 27) {
-        this.handleExit();
-      }
     });
   }
   handleShortcut() {}
