@@ -8,7 +8,6 @@ import SettingSwitch from "../../../components/readerSettings/settingSwitch";
 import { SettingPanelProps, SettingPanelState } from "./interface";
 import { Trans } from "react-i18next";
 import StorageUtil from "../../../utils/serviceUtils/storageUtil";
-import { getTooltip } from "../../../utils/commonUtil";
 
 class SettingPanel extends React.Component<
   SettingPanelProps,
@@ -35,26 +34,17 @@ class SettingPanel extends React.Component<
   render() {
     return (
       <div className="setting-panel-parent">
-        {getTooltip(
-          (
-            <span
-              className={
-                this.state.isSettingLocked
-                  ? "icon-lock lock-icon"
-                  : "icon-unlock lock-icon"
-              }
-              onClick={() => {
-                this.handleLock();
-              }}
-            ></span>
-          ) as any,
-          {
-            title: this.props.t(this.state.isSettingLocked ? "Unlock" : "Lock"),
-            position: "bottom",
-            trigger: "mouseenter",
-            style: { height: "30px", display: "inline-block", float: "left" },
+        <span
+          className={
+            this.state.isSettingLocked
+              ? "icon-lock lock-icon"
+              : "icon-unlock lock-icon"
           }
-        )}
+          onClick={() => {
+            this.handleLock();
+          }}
+        ></span>
+
         <div className="setting-panel-title">
           <Trans>Reading Option</Trans>
         </div>

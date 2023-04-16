@@ -11,7 +11,6 @@ import ThemeUtil from "../../../utils/readUtils/themeUtil";
 
 import toast from "react-hot-toast";
 import { isElectron } from "react-device-detect";
-import { getTooltip } from "../../../utils/commonUtil";
 
 class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
   constructor(props: ThemeListProps) {
@@ -167,28 +166,17 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
           <Trans>Background Color</Trans>
         </div>
         <ul className="background-color-list">
-          {getTooltip(
-            (
-              <li
-                className="background-color-circle"
-                onClick={() => {
-                  this.handleColorBgPicker(!this.state.isShowBgPicker);
-                }}
-              >
-                <span
-                  className={
-                    this.state.isShowBgPicker ? "icon-check" : "icon-more"
-                  }
-                ></span>
-              </li>
-            ) as any,
-            {
-              title: this.props.t("Customize"),
-              position: "top",
-              trigger: "mouseenter",
-              style: { display: "inline-block" },
-            }
-          )}
+          <li
+            className="background-color-circle"
+            onClick={() => {
+              this.handleColorBgPicker(!this.state.isShowBgPicker);
+            }}
+          >
+            <span
+              className={this.state.isShowBgPicker ? "icon-check" : "icon-more"}
+            ></span>
+          </li>
+
           {renderBackgroundColorList()}
         </ul>
         {this.state.isShowBgPicker && (
@@ -207,28 +195,18 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
           <Trans>Text Color</Trans>
         </div>
         <ul className="background-color-list">
-          {getTooltip(
-            (
-              <li
-                className="background-color-circle"
-                onClick={() => {
-                  this.handleColorTextPicker(!this.state.isShowTextPicker);
-                }}
-              >
-                <span
-                  className={
-                    this.state.isShowTextPicker ? "icon-check" : "icon-more"
-                  }
-                ></span>
-              </li>
-            ) as any,
-            {
-              title: this.props.t("Customize"),
-              position: "top",
-              trigger: "mouseenter",
-              style: { display: "inline-block" },
-            }
-          )}
+          <li
+            className="background-color-circle"
+            onClick={() => {
+              this.handleColorTextPicker(!this.state.isShowTextPicker);
+            }}
+          >
+            <span
+              className={
+                this.state.isShowTextPicker ? "icon-check" : "icon-more"
+              }
+            ></span>
+          </li>
 
           {renderTextColorList()}
         </ul>
