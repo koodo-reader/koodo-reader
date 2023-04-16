@@ -35,7 +35,7 @@ const arrowKeys = async (rendition: any, keyCode: number, event: any) => {
     event.preventDefault();
     await rendition.next();
   }
-  handleShortcut(event, keyCode);
+  handleShortcut(event);
 };
 
 const mouseChrome = async (rendition: any, deltaY: number) => {
@@ -47,19 +47,19 @@ const mouseChrome = async (rendition: any, deltaY: number) => {
   }
 };
 
-const handleShortcut = (event: any, keyCode: number) => {
-  if (keyCode === 9) {
+const handleShortcut = (event: any) => {
+  if (event.keyCode === 9) {
     if (isElectron) {
       event.preventDefault();
       window.require("electron").ipcRenderer.invoke("hide-reader", "ping");
     }
   }
-  if (keyCode === 27) {
+  if (event.keyCode === 27) {
     if (isElectron) {
       StorageUtil.setReaderConfig("isFullscreen", "no");
     }
   }
-  if (keyCode === 122) {
+  if (event.keyCode === 122) {
     if (isElectron) {
       event.preventDefault();
       if (StorageUtil.getReaderConfig("isFullscreen") === "yes") {
@@ -75,7 +75,7 @@ const handleShortcut = (event: any, keyCode: number) => {
       }
     }
   }
-  if (keyCode === 123) {
+  if (event.keyCode === 123) {
     if (isElectron) {
       event.preventDefault();
       StorageUtil.setReaderConfig(
@@ -185,7 +185,7 @@ export const pdfMouseEvent = () => {
   doc.document.addEventListener("keydown", (event) => {
     if (lock) return;
     lock = true;
-    handleShortcut(event, event.keyCode);
+    handleShortcut(event);
     setTimeout(() => (lock = false), throttleTime);
   });
 };
@@ -193,7 +193,7 @@ export const djvuMouseEvent = () => {
   document.addEventListener("keydown", (event) => {
     if (lock) return;
     lock = true;
-    handleShortcut(event, event.keyCode);
+    handleShortcut(event);
     setTimeout(() => (lock = false), throttleTime);
   });
 };

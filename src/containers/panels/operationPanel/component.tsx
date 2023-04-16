@@ -11,6 +11,7 @@ import { withRouter } from "react-router-dom";
 import toast from "react-hot-toast";
 import { HtmlMouseEvent } from "../../../utils/serviceUtils/mouseEvent";
 import storageUtil from "../../../utils/serviceUtils/storageUtil";
+import { getIframeDoc } from "../../../utils/serviceUtils/docUtil";
 declare var document: any;
 
 class OperationPanel extends React.Component<
@@ -55,7 +56,25 @@ class OperationPanel extends React.Component<
         storageUtil.getReaderConfig("readerMode")
       );
     });
+    let doc = getIframeDoc();
+    if (!doc) return;
+    doc.addEventListener("keydown", (event) => {
+      if (event.keyCode === 27) {
+        this.handleExit();
+      }
+    });
+    document.addEventListener("keydown", (event) => {
+      if (event.keyCode === 27) {
+        this.handleExit();
+      }
+    });
+    window.addEventListener("keydown", (event) => {
+      if (event.keyCode === 27) {
+        this.handleExit();
+      }
+    });
   }
+  handleShortcut() {}
   // 点击切换全屏按钮触发
   handleScreen() {
     StorageUtil.getReaderConfig("isFullscreen") !== "yes"
@@ -72,6 +91,12 @@ class OperationPanel extends React.Component<
     this.handleExitFullScreen();
     if (this.props.htmlBook) {
       this.props.handleHtmlBook(null);
+    }
+    if (StorageUtil.getReaderConfig("isOpenInMain") === "yes") {
+      this.props.history.push("/manager/home");
+      document.title = "Koodo Reader";
+    } else {
+      window.close();
     }
   }
   //控制进入全屏
@@ -101,7 +126,7 @@ class OperationPanel extends React.Component<
 
     let cfi = JSON.stringify(bookLocation);
     if (!text) {
-      text = this.props.htmlBook.rendition.visibleText();
+      text = this.props.htmlBook.rendition.visibleText().join(" ");
     }
     text = text
       .replace(/\s\s/g, "")
@@ -176,13 +201,6 @@ class OperationPanel extends React.Component<
           className="exit-reading-button"
           onClick={() => {
             this.handleExit();
-
-            if (StorageUtil.getReaderConfig("isOpenInMain") === "yes") {
-              this.props.history.push("/manager/home");
-              document.title = "Koodo Reader";
-            } else {
-              window.close();
-            }
           }}
         >
           <span className="icon-exit exit-reading-icon"></span>

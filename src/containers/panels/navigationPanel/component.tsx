@@ -105,6 +105,14 @@ class NavigationPanel extends React.Component<
                     cfi: bookLocation.cfi,
                   })
                 );
+                let style =
+                  "background: " +
+                  (StorageUtil.getReaderConfig("backgroundColor") ||
+                    "#f3a6a68c");
+                this.props.htmlBook.rendition.highlightNode(
+                  bookLocation.text,
+                  style
+                );
               }
             }}
           >

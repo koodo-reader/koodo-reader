@@ -25,7 +25,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       isdataChange: false,
     };
   }
-  componentDidMount() {
+  async componentDidMount() {
     if (isElectron) {
       const fs = window.require("fs");
       const path = window.require("path");
