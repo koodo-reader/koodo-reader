@@ -10,7 +10,7 @@ import EmptyCover from "../../../components/emptyCover";
 import StorageUtil from "../../../utils/serviceUtils/storageUtil";
 import * as DOMPurify from "dompurify";
 import CFI from "epub-cfi-resolver";
-import { getTooltip } from "../../../utils/commonUtil";
+
 class NavigationPanel extends React.Component<
   NavigationPanelProps,
   NavigationPanelState
@@ -233,33 +233,16 @@ class NavigationPanel extends React.Component<
         ) : (
           <>
             <div className="navigation-header">
-              {getTooltip(
-                (
-                  <span
-                    className={
-                      this.state.isNavLocked
-                        ? "icon-lock nav-lock-icon"
-                        : "icon-unlock nav-lock-icon"
-                    }
-                    onClick={() => {
-                      this.handleLock();
-                    }}
-                  ></span>
-                ) as any,
-                {
-                  title: this.props.t(
-                    this.state.isNavLocked ? "Unlock" : "Lock"
-                  ),
-                  position: "bottom",
-                  style: {
-                    position: "absolute",
-                    top: 0,
-                    right: 0,
-                    height: "30px",
-                  },
-                  trigger: "mouseenter",
+              <span
+                className={
+                  this.state.isNavLocked
+                    ? "icon-lock nav-lock-icon"
+                    : "icon-unlock nav-lock-icon"
                 }
-              )}
+                onClick={() => {
+                  this.handleLock();
+                }}
+              ></span>
 
               {this.props.currentBook.cover &&
               this.props.currentBook.cover !== "noCover" ? (

@@ -19,7 +19,6 @@ import {
 import { themeList } from "../../../constants/themeList";
 import toast from "react-hot-toast";
 import { openExternalUrl } from "../../../utils/serviceUtils/urlUtil";
-import { getTooltip } from "../../../utils/commonUtil";
 class SettingDialog extends React.Component<
   SettingInfoProps,
   SettingInfoState
@@ -316,28 +315,19 @@ class SettingDialog extends React.Component<
           <div className="setting-dialog-new-title">
             <Trans>Theme Color</Trans>
             <ul className="theme-setting-container">
-              {themeList.map((item, index) =>
-                getTooltip(
-                  (
-                    <li
-                      className={
-                        index === this.state.currentThemeIndex
-                          ? "active-color theme-setting-item"
-                          : "theme-setting-item"
-                      }
-                      onClick={() => {
-                        this.handleTheme(item.name, index);
-                      }}
-                      style={{ backgroundColor: item.color }}
-                    ></li>
-                  ) as any,
-                  {
-                    title: item.title,
-                    position: "top",
-                    trigger: "mouseenter",
+              {themeList.map((item, index) => (
+                <li
+                  className={
+                    index === this.state.currentThemeIndex
+                      ? "active-color theme-setting-item"
+                      : "theme-setting-item"
                   }
-                )
-              )}
+                  onClick={() => {
+                    this.handleTheme(item.name, index);
+                  }}
+                  style={{ backgroundColor: item.color }}
+                ></li>
+              ))}
             </ul>
           </div>
 
