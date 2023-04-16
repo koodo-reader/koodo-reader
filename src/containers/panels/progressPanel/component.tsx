@@ -4,7 +4,6 @@ import { Trans } from "react-i18next";
 import { ProgressPanelProps, ProgressPanelState } from "./interface";
 
 import StorageUtil from "../../../utils/serviceUtils/storageUtil";
-import { getTooltip } from "../../../utils/commonUtil";
 
 class ProgressPanel extends React.Component<
   ProgressPanelProps,
@@ -182,16 +181,7 @@ class ProgressPanel extends React.Component<
             this.prevChapter();
           }}
         >
-          {getTooltip(
-            (
-              <span className="icon-dropdown previous-chapter-icon"> </span>
-            ) as any,
-            {
-              title: this.props.t("Prev Chapter"),
-              position: "top",
-              trigger: "mouseenter",
-            }
-          )}
+          <span className="icon-dropdown previous-chapter-icon"> </span>
         </div>
 
         <div
@@ -200,14 +190,7 @@ class ProgressPanel extends React.Component<
             this.nextChapter();
           }}
         >
-          {getTooltip(
-            (<span className="icon-dropdown next-chapter-icon"></span>) as any,
-            {
-              title: this.props.t("Next Chapter"),
-              position: "top",
-              trigger: "mouseenter",
-            }
-          )}
+          <span className="icon-dropdown next-chapter-icon"></span>
         </div>
       </div>
     );

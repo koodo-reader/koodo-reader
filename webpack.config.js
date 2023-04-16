@@ -9,10 +9,19 @@ module.exports = {
     filename: "main.js",
   },
   resolve: {
-    extensions: [".ts", ".js", ".tsx"],
+    extensions: [".ts", "*", ".mjs", ".js", ".json", ".tsx"],
   },
   node: {
     __dirname: false,
+  },
+  module: {
+    rules: [
+      {
+        test: /\.mjs$/,
+        include: /node_modules/,
+        type: "javascript/auto",
+      },
+    ],
   },
   plugins: [new HardSourceWebpackPlugin()],
 };

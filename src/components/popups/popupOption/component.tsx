@@ -15,7 +15,6 @@ import { getHightlightCoords } from "../../../utils/fileUtils/pdfUtil";
 import { getIframeDoc } from "../../../utils/serviceUtils/docUtil";
 import { openExternalUrl } from "../../../utils/serviceUtils/urlUtil";
 import { isElectron } from "react-device-detect";
-import { getTooltip } from "../../../utils/commonUtil";
 
 declare var window: any;
 
@@ -244,19 +243,9 @@ class PopupOption extends React.Component<PopupOptionProps> {
                     }
                   }}
                 >
-                  {getTooltip(
-                    (
-                      <span
-                        className={`icon-${item.icon} ${item.name}-icon`}
-                      ></span>
-                    ) as any,
-                    {
-                      title: this.props.t(item.title),
-                      position: "top",
-                      style: { height: "20px" },
-                      trigger: "mouseenter",
-                    }
-                  )}
+                  <span
+                    className={`icon-${item.icon} ${item.name}-icon`}
+                  ></span>
                 </div>
               );
             })}

@@ -19,7 +19,6 @@
   },
   "dependencies": {
     "@iarna/rtf-to-html": "^1.1.0",
-    "@types/chardet": "^0.8.1",
     "@vitalets/google-translate-api": "^8.0.0",
     "adm-zip": "^0.5.2",
     "axios": "^0.19.2",
@@ -41,6 +40,7 @@
     "zip-a-folder": "^0.0.12"
   },
   "devDependencies": {
+    "@types/chardet": "^0.8.1",
     "@types/express": "^4.17.15",
     "@types/file-saver": "^2.0.1",
     "@types/i18next": "^13.0.0",
@@ -79,7 +79,6 @@
     "react-redux": "^7.2.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
-    "react-tippy": "^1.4.0",
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
     "sass-loader": "^8.0.0",
