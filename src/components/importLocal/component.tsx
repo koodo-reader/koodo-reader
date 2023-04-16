@@ -14,7 +14,7 @@ import BookUtil from "../../utils/fileUtils/bookUtil";
 import { fetchFileFromPath } from "../../utils/fileUtils/fileUtil";
 import toast from "react-hot-toast";
 import StorageUtil from "../../utils/serviceUtils/storageUtil";
-import { getTooltip } from "../../utils/commonUtil";
+
 import ShelfUtil from "../../utils/readUtils/shelfUtil";
 declare var window: any;
 let clickFilePath = "";
@@ -267,20 +267,10 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
           >
             <div className="animation-mask-local"></div>
             {this.props.isCollapsed && this.state.width < 950 ? (
-              getTooltip(
-                (
-                  <span
-                    className="icon-folder"
-                    style={{ fontSize: "15px", fontWeight: 500 }}
-                  ></span>
-                ) as any,
-                {
-                  title: this.props.t("Import"),
-                  position: "top",
-                  style: { height: "20px" },
-                  trigger: "mouseenter",
-                }
-              )
+              <span
+                className="icon-folder"
+                style={{ fontSize: "15px", fontWeight: 500 }}
+              ></span>
             ) : (
               <span>
                 <Trans>Import</Trans>
