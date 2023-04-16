@@ -12,6 +12,7 @@ import toast from "react-hot-toast";
 import { HtmlMouseEvent } from "../../../utils/serviceUtils/mouseEvent";
 import storageUtil from "../../../utils/serviceUtils/storageUtil";
 import { getIframeDoc } from "../../../utils/serviceUtils/docUtil";
+import EdgeUtil from "../../../utils/serviceUtils/edgeUtil";
 declare var document: any;
 
 class OperationPanel extends React.Component<
@@ -87,6 +88,7 @@ class OperationPanel extends React.Component<
     this.props.handleReadingState(false);
     this.props.handleSearch(false);
     window.speechSynthesis.cancel();
+    EdgeUtil.pauseAudio();
     ReadingTime.setTime(this.props.currentBook.key, this.props.time);
     this.handleExitFullScreen();
     if (this.props.htmlBook) {

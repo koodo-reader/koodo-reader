@@ -129,6 +129,7 @@ class TextToSpeech extends React.Component<
     let style =
       "background: " +
       (StorageUtil.getReaderConfig("backgroundColor") || "#f3a6a68c");
+    console.log(text, style);
     this.props.htmlBook.rendition.highlightNode(text, style);
     text = text
       .replace(/\s\s/g, "")
@@ -230,6 +231,7 @@ class TextToSpeech extends React.Component<
                       event.target.value
                     );
                     window.speechSynthesis.cancel();
+                    EdgeUtil.pauseAudio();
                   }}
                 >
                   {this.state.voices.map((item, index) => {
@@ -262,6 +264,7 @@ class TextToSpeech extends React.Component<
                       event.target.value
                     );
                     window.speechSynthesis.cancel();
+                    EdgeUtil.pauseAudio();
                   }}
                 >
                   {speedList.option.map((item) => (
