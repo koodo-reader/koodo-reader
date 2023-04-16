@@ -13,7 +13,10 @@
   },
   "repository": "https://github.com/troyeguo/koodo-reader",
   "private": false,
-  "resolutions": {},
+  "resolutions": {
+    "//": "See https://github.com/facebook/create-react-app/issues/11773",
+    "react-error-overlay": "6.0.9"
+  },
   "dependencies": {
     "@iarna/rtf-to-html": "^1.1.0",
     "@types/chardet": "^0.8.1",
