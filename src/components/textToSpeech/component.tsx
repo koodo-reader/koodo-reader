@@ -5,6 +5,7 @@ import { speedList } from "../../constants/dropdownList";
 import StorageUtil from "../../utils/serviceUtils/storageUtil";
 import { sleep } from "../../utils/commonUtil";
 import EdgeUtil from "../../utils/serviceUtils/edgeUtil";
+import { isElectron } from "react-device-detect";
 
 class TextToSpeech extends React.Component<
   TextToSpeechProps,
@@ -32,7 +33,7 @@ class TextToSpeech extends React.Component<
     }
     let synth = window.speechSynthesis;
     synth.getVoices();
-    this.setState({ edgeVoices: await EdgeUtil.getVoiceList() });
+    isElectron && this.setState({ edgeVoices: await EdgeUtil.getVoiceList() });
   }
   handleChangeAudio = () => {
     if (this.state.isAudioOn) {
