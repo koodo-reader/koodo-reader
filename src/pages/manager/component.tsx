@@ -21,11 +21,6 @@ import LoadingDialog from "../../components/dialogs/loadingDialog";
 import TipDialog from "../../components/dialogs/TipDialog";
 import { Toaster } from "react-hot-toast";
 
-//判断是否为触控设备
-const is_touch_device = () => {
-  return "ontouchstart" in window || navigator.maxTouchPoints > 0;
-};
-
 class Manager extends React.Component<ManagerProps, ManagerState> {
   timer!: NodeJS.Timeout;
   constructor(props: ManagerProps) {
@@ -74,9 +69,6 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
     this.props.handleFetchList();
   }
   componentDidMount() {
-    if (is_touch_device() && !StorageUtil.getReaderConfig("isTouch")) {
-      StorageUtil.setReaderConfig("isTouch", "yes");
-    }
     this.props.handleReadingState(false);
   }
 
@@ -85,7 +77,7 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
   };
   render() {
     let { books } = this.props;
-    if (isMobile) {
+    if (isMobile && document.location.href.indexOf("192.168") === -1) {
       return (
         <>
           <p className="waring-title">

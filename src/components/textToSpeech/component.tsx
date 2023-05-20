@@ -125,27 +125,44 @@ class TextToSpeech extends React.Component<
     }
   };
   async handleRead() {
-    let text = this.state.nodeList[this.state.nodeIndex];
+    let currentText = this.state.nodeList[this.state.nodeIndex];
+
     let style = "background: #f3a6a68c";
-    this.props.htmlBook.rendition.highlightNode(text, style);
-    text = text
+    this.props.htmlBook.rendition.highlightNode(currentText, style);
+    currentText = currentText
       .replace(/\s\s/g, "")
       .replace(/\r/g, "")
       .replace(/\n/g, "")
       .replace(/\t/g, "")
       .replace(/\f/g, "");
+    let nextText = "";
+    if (this.state.nodeIndex < this.state.nodeList.length - 1) {
+      nextText = this.state.nodeList[this.state.nodeIndex + 1];
+      nextText = nextText
+        .replace(/\s\s/g, "")
+        .replace(/\r/g, "")
+        .replace(/\n/g, "")
+        .replace(/\t/g, "")
+        .replace(/\f/g, "");
+    }
     await this.handleSpeech(
-      text,
+      currentText,
+      nextText,
       StorageUtil.getReaderConfig("voiceIndex") || 0,
       StorageUtil.getReaderConfig("voiceSpeed") || 1
     );
     this.setState({ nodeIndex: this.state.nodeIndex + 1 });
   }
-  handleSpeech = async (text: string, voiceIndex: number, speed: number) => {
+  handleSpeech = async (
+    currentText: string,
+    nextText: string,
+    voiceIndex: number,
+    speed: number
+  ) => {
     if (voiceIndex > this.state.nativeVoices.length) {
       let edgeVoice =
         this.state.edgeVoices[voiceIndex - this.state.nativeVoices.length];
-      await EdgeUtil.readAloud(text, edgeVoice.ShortName);
+      await EdgeUtil.readAloud(currentText, nextText, edgeVoice.ShortName);
       let player = EdgeUtil.getPlayer();
 
       player.onended = async (event) => {
@@ -157,7 +174,7 @@ class TextToSpeech extends React.Component<
       };
     } else {
       var msg = new SpeechSynthesisUtterance();
-      msg.text = text;
+      msg.text = currentText;
       msg.voice = window.speechSynthesis.getVoices()[voiceIndex];
       msg.rate = speed;
       window.speechSynthesis.speak(msg);

@@ -89,7 +89,11 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
                       ? `icon-${item.icon}  active-icon`
                       : `icon-${item.icon}`
                   }
-                  style={this.props.isCollapsed ? { marginLeft: "-25px" } : {}}
+                  style={
+                    this.props.isCollapsed
+                      ? { position: "fixed", marginLeft: "-6px" }
+                      : {}
+                  }
                 ></span>
               </div>
 

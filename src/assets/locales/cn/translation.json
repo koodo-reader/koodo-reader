@@ -90,6 +90,7 @@
   "Descend": "降序",
   "Ascend": "升序",
   "Sort by Name": "按书名",
+  "Turn on Bionic Reading": "开启仿生阅读",
   "Token": "凭证",
   "Book not exist": "书籍不存在",
   "Please authorize your account, and fill the following box with the token": "登录授权后，您将获得一串代码，请将代码填入以下输入框即可完成绑定",
