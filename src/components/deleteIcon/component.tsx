@@ -28,6 +28,7 @@ class DeleteIcon extends React.Component<DeleteIconProps, DeleteIconStates> {
     deleteItems.forEach((item: any, index: number) => {
       if (this.props.mode === "tags") {
         item === this.props.tagName && TagUtil.clear(item);
+        this.handleDeleteTagFromNote(item);
         return;
       }
       if (item.key === this.props.itemKey) {
@@ -54,6 +55,17 @@ class DeleteIcon extends React.Component<DeleteIconProps, DeleteIconStates> {
             });
         }
       }
+    });
+  };
+  handleDeleteTagFromNote = (tagName: string) => {
+    let noteList = this.props.notes.map((item) => {
+      return {
+        ...item,
+        tag: item.tag.filter((subitem) => subitem !== tagName),
+      };
+    });
+    localforage.setItem("notes", noteList).then(() => {
+      this.props.handleFetchNotes();
     });
   };
   handleDeletePopup = (isOpenDelete: boolean) => {

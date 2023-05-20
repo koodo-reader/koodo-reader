@@ -20,6 +20,7 @@ class SettingSwitch extends React.Component<
       isShadow: StorageUtil.getReaderConfig("isShadow") === "yes",
       isItalic: StorageUtil.getReaderConfig("isItalic") === "yes",
       isInvert: StorageUtil.getReaderConfig("isInvert") === "yes",
+      isBionic: StorageUtil.getReaderConfig("isBionic") === "yes",
       isHideBackground:
         StorageUtil.getReaderConfig("isHideBackground") === "yes",
       isHideFooter: StorageUtil.getReaderConfig("isHideFooter") === "yes",
@@ -98,6 +99,9 @@ class SettingSwitch extends React.Component<
                     break;
                   case "isInvert":
                     this._handleChange("isInvert");
+                    break;
+                  case "isBionic":
+                    this._handleChange("isBionic");
                     break;
                   case "isHideFooter":
                     this.handleChange("isHideFooter");
