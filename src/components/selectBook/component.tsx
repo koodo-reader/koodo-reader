@@ -103,4 +103,4 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
   }
 }
 
-export default withRouter(SelectBook);
+export default withRouter(SelectBook as any);

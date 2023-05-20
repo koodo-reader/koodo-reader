@@ -108,7 +108,7 @@ class BookList extends React.Component<BookListProps, BookListState> {
           //返回排序后的图书index
           SortUtil.sortBooks(this.props.books, this.props.bookSortCode) || []
         );
-    if (this.props.mode === "shelf" && books.length === 0) {
+    if (books.length === 0) {
       return (
         <div
           style={{
@@ -183,7 +183,9 @@ class BookList extends React.Component<BookListProps, BookListState> {
       <>
         <ViewMode />
         <SelectBook />
-        {!this.props.isSelectBook && <ShelfSelector />}
+        <div style={this.props.isSelectBook ? { display: "none" } : {}}>
+          <ShelfSelector />
+        </div>
         <div
           className="book-list-container-parent"
           style={
