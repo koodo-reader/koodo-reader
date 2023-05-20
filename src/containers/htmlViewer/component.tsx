@@ -21,6 +21,7 @@ import { removeExtraQuestionMark } from "../../utils/commonUtil";
 import CFI from "epub-cfi-resolver";
 import mhtml2html from "mhtml2html";
 import rtfToHTML from "@iarna/rtf-to-html";
+import { binicReadingProcess } from "../../utils/serviceUtils/bionicUtil";
 
 declare var window: any;
 let lock = false; //prevent from clicking too fasts
@@ -184,6 +185,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     });
     StyleUtil.addDefaultCss();
     tsTransform();
+    binicReadingProcess();
     rendition.setStyle(
       StyleUtil.getCustomCss(
         true,
@@ -277,6 +279,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       this.handleContentScroll(chapter, bookLocation.chapterHref);
       StyleUtil.addDefaultCss();
       tsTransform();
+      binicReadingProcess();
       this.handleBindGesture();
       lock = true;
       setTimeout(function () {
@@ -294,7 +297,9 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     let contentList = contentBody.getElementsByTagName("a");
     let targetContent = Array.from(contentList).filter((item, index) => {
       item.setAttribute("style", "");
-      return item.textContent === chapter && index === chapterIndex;
+      return (
+        item.textContent === chapter && Math.abs(index - chapterIndex) <= 1
+      );
     });
     if (targetContent.length > 0) {
       contentBody.scrollTo(0, targetContent[0].offsetTop);

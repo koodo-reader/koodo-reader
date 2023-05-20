@@ -18,6 +18,7 @@ export interface SettingSwitchState {
   isUnderline: boolean;
   isItalic: boolean;
   isInvert: boolean;
+  isBionic: boolean;
   isHideHeader: boolean;
   isHidePageButton: boolean;
   isHideMenuButton: boolean;

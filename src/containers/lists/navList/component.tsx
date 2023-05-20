@@ -5,7 +5,6 @@ import { NavListProps, NavListState } from "./interface";
 import DeleteIcon from "../../../components/deleteIcon";
 import toast from "react-hot-toast";
 import CFI from "epub-cfi-resolver";
-import StorageUtil from "../../../utils/serviceUtils/storageUtil";
 class NavList extends React.Component<NavListProps, NavListState> {
   constructor(props: NavListProps) {
     super(props);
@@ -15,6 +14,7 @@ class NavList extends React.Component<NavListProps, NavListState> {
   }
   //跳转到图书的指定位置
   async handleJump(cfi: string) {
+    //书签跳转
     if (!cfi) {
       toast(this.props.t("Wrong bookmark"));
       return;
@@ -59,9 +59,7 @@ class NavList extends React.Component<NavListProps, NavListState> {
           cfi: bookLocation.cfi,
         })
       );
-      let style =
-        "background: " +
-        (StorageUtil.getReaderConfig("backgroundColor") || "#f3a6a68c");
+      let style = "background: #f3a6a68c";
       this.props.htmlBook.rendition.highlightNode(bookLocation.text, style);
     }
   }

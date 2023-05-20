@@ -169,6 +169,10 @@ export const readerSettingList = [
     propName: "isInvert",
   },
   {
+    title: "Turn on Bionic Reading",
+    propName: "isBionic",
+  },
+  {
     title: "Hide footer",
     propName: "isHideFooter",
   },

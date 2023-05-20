@@ -21,17 +21,14 @@ export const getSelection = () => {
 };
 let lock = false; //prevent from clicking too fasts
 const arrowKeys = async (rendition: any, keyCode: number, event: any) => {
-  if (
-    document.querySelector(".editor-box") ||
-    document.querySelector(".navigation-search-title")
-  ) {
+  if (document.querySelector(".editor-box")) {
     return;
   }
   if (keyCode === 37 || keyCode === 38) {
     event.preventDefault();
     await rendition.prev();
   }
-  if (keyCode === 39 || keyCode === 40 || keyCode === 32) {
+  if (keyCode === 39 || keyCode === 40) {
     event.preventDefault();
     await rendition.next();
   }
