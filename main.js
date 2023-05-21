@@ -16,7 +16,6 @@ const configDir = app.getPath("userData");
 const { ra } = require("./edge-tts");
 const dirPath = path.join(configDir, "uploads");
 let mainWin;
-let readerWindow;
 const singleInstance = app.requestSingleInstanceLock();
 var filePath = null;
 if (process.platform != "darwin" && process.argv.length >= 2) {
@@ -149,6 +148,11 @@ const createMainWin = () => {
   ipcMain.handle("open-console", (event, arg) => {
     mainWin.webContents.openDevTools();
     event.returnvalue = true;
+  });
+  ipcMain.handle("reload", (event, arg) => {
+    if (readerWindow) {
+      readerWindow.reload();
+    }
   });
   ipcMain.handle("focus-on-main", (event, arg) => {
     if (mainWin) {

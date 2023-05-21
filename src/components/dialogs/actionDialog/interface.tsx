@@ -1,7 +1,11 @@
 import BookModel from "../../../model/Book";
+import NoteModel from "../../../model/Note";
 
 export interface ActionDialogProps {
   book: BookModel;
+  books: BookModel[];
+  deletedBooks: BookModel[];
+  notes: NoteModel[];
   currentBook: BookModel;
   left: number;
   top: number;
@@ -15,4 +19,7 @@ export interface ActionDialogProps {
   handleEditDialog: (isShow: boolean) => void;
   handleAddDialog: (isShow: boolean) => void;
   handleActionDialog: (isShow: boolean) => void;
+}
+export interface ActionDialogState {
+  isShowExport: boolean;
 }
