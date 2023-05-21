@@ -5,6 +5,7 @@ import { NavListProps, NavListState } from "./interface";
 import DeleteIcon from "../../../components/deleteIcon";
 import toast from "react-hot-toast";
 import CFI from "epub-cfi-resolver";
+import RecordLocation from "../../../utils/readUtils/recordLocation";
 class NavList extends React.Component<NavListProps, NavListState> {
   constructor(props: NavListProps) {
     super(props);
@@ -59,9 +60,25 @@ class NavList extends React.Component<NavListProps, NavListState> {
           cfi: bookLocation.cfi,
         })
       );
-      let style = "background: #f3a6a68c";
-      this.props.htmlBook.rendition.highlightNode(bookLocation.text, style);
     }
+    this.handleDisplayBookmark();
+  }
+  handleDisplayBookmark() {
+    this.props.handleShowBookmark(false);
+    let bookLocation: {
+      text: string;
+      count: string;
+      chapterTitle: string;
+      chapterDocIndex: string;
+      chapterHref: string;
+      percentage: string;
+      cfi: string;
+    } = RecordLocation.getHtmlLocation(this.props.currentBook.key);
+    this.props.bookmarks.forEach((item) => {
+      if (item.cfi === JSON.stringify(bookLocation)) {
+        this.props.handleShowBookmark(true);
+      }
+    });
   }
   handleShowDelete = (index: number) => {
     this.setState({ deleteIndex: index });

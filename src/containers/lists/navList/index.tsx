@@ -1,6 +1,7 @@
 import { connect } from "react-redux";
 import { stateType } from "../../../store";
 import { withTranslation } from "react-i18next";
+import { handleShowBookmark } from "../../../store/actions";
 import NavList from "./component";
 const mapStateToProps = (state: stateType) => {
   return {
@@ -12,7 +13,7 @@ const mapStateToProps = (state: stateType) => {
     digests: state.reader.digests,
   };
 };
-const actionCreator = {};
+const actionCreator = { handleShowBookmark };
 export default connect(
   mapStateToProps,
   actionCreator

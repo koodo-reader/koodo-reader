@@ -4,6 +4,8 @@ import BookmarkModel from "../../model/Bookmark";
 import { RouteComponentProps } from "react-router";
 export interface BookListProps extends RouteComponentProps<any> {
   books: BookModel[];
+  notes: NoteModel[];
+  deletedBooks: BookModel[];
   isSelectBook: boolean;
   isCollapsed: boolean;
   selectedBooks: string[];

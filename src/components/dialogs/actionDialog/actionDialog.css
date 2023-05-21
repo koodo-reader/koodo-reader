@@ -41,6 +41,7 @@
   margin-left: 10px;
   overflow-y: scroll;
   height: 185px;
+  text-align: left;
 }
 .action-dialog-book-title {
   font-size: 15px;

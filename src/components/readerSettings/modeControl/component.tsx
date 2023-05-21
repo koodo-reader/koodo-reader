@@ -5,7 +5,6 @@ import StorageUtil from "../../../utils/serviceUtils/storageUtil";
 import { Trans } from "react-i18next";
 
 import { isElectron } from "react-device-detect";
-import toast from "react-hot-toast";
 
 class ModeControl extends React.Component<ModeControlProps, ModeControlState> {
   constructor(props: ModeControlProps) {
@@ -19,7 +18,7 @@ class ModeControl extends React.Component<ModeControlProps, ModeControlState> {
     this.setState({ readerMode: mode });
     StorageUtil.setReaderConfig("readerMode", mode);
     if (isElectron) {
-      toast(this.props.t("Take effect at next startup"));
+      window.require("electron").ipcRenderer.invoke("reload", "ping");
     } else {
       window.location.reload();
     }

@@ -3,10 +3,13 @@ import AddFavorite from "../../utils/readUtils/addFavorite";
 import BookModel from "../../model/Book";
 import { Trans } from "react-i18next";
 import { BookListProps, BookListState } from "./interface";
-import localforage from "localforage";
 import { withRouter } from "react-router-dom";
-import FileSaver from "file-saver";
 import toast from "react-hot-toast";
+import {
+  exportBooks,
+  exportHighlights,
+  exportNotes,
+} from "../../utils/syncUtils/exportUtil";
 class SelectBook extends React.Component<BookListProps, BookListState> {
   constructor(props: BookListProps) {
     super(props);
@@ -53,28 +56,90 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
             </span>
             <span
               className="book-manage-title"
-              onClick={() => {
-                this.props.books
-                  .filter(
+              onClick={async () => {
+                if (
+                  this.props.books.filter(
                     (item: BookModel) =>
                       this.props.selectedBooks.indexOf(item.key) > -1
-                  )
-                  .forEach(async (item: BookModel) => {
-                    let result: any = await localforage.getItem(item.key);
-
-                    FileSaver.saveAs(
-                      new Blob([result]),
-                      item.name + `.${item.format.toLocaleLowerCase()}`
-                    );
-                  });
-                this.props.handleSelectBook(!this.props.isSelectBook);
-                if (this.props.isSelectBook) {
-                  this.props.handleSelectedBooks([]);
+                  ).length > 0
+                ) {
+                  await exportBooks(
+                    this.props.books.filter(
+                      (item: BookModel) =>
+                        this.props.selectedBooks.indexOf(item.key) > -1
+                    )
+                  );
+                  toast.success(this.props.t("Export Successfully"));
+                } else {
+                  toast(this.props.t("Nothing to export"));
                 }
-                toast.success(this.props.t("Export Successfully"));
               }}
             >
-              <Trans>Export</Trans>
+              <Trans>Export Books</Trans>
+            </span>
+            <span
+              className="book-manage-title"
+              onClick={async () => {
+                let selectedBooks = this.props.books.filter(
+                  (item: BookModel) =>
+                    this.props.selectedBooks.indexOf(item.key) > -1
+                );
+                if (
+                  this.props.notes.filter(
+                    (item) =>
+                      selectedBooks.filter(
+                        (subitem) => subitem.key === item.bookKey
+                      ).length > 0 && item.notes !== ""
+                  ).length > 0
+                ) {
+                  exportNotes(
+                    this.props.notes.filter(
+                      (item) =>
+                        selectedBooks.filter(
+                          (subitem) => subitem.key === item.bookKey
+                        ).length > 0 && item.notes !== ""
+                    ),
+                    selectedBooks
+                  );
+                  toast.success(this.props.t("Export Successfully"));
+                } else {
+                  toast(this.props.t("Nothing to export"));
+                }
+              }}
+            >
+              <Trans>Export Notes</Trans>
+            </span>
+            <span
+              className="book-manage-title"
+              onClick={async () => {
+                let selectedBooks = this.props.books.filter(
+                  (item: BookModel) =>
+                    this.props.selectedBooks.indexOf(item.key) > -1
+                );
+                if (
+                  this.props.notes.filter(
+                    (item) =>
+                      selectedBooks.filter(
+                        (subitem) => subitem.key === item.bookKey
+                      ).length > 0 && item.notes === ""
+                  ).length > 0
+                ) {
+                  exportHighlights(
+                    this.props.notes.filter(
+                      (item) =>
+                        selectedBooks.filter(
+                          (subitem) => subitem.key === item.bookKey
+                        ).length > 0 && item.notes === ""
+                    ),
+                    selectedBooks
+                  );
+                  toast.success(this.props.t("Export Successfully"));
+                } else {
+                  toast(this.props.t("Nothing to export"));
+                }
+              }}
+            >
+              <Trans>Export Highlights</Trans>
             </span>
             <span
               className="book-manage-title"

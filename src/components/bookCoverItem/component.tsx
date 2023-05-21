@@ -125,7 +125,7 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
           }}
           onMouseLeave={() => {
             this.handleConfig(false);
-            this.props.handleActionDialog(false);
+            // this.props.handleActionDialog(false);
           }}
           onContextMenu={(event) => {
             this.handleMoreAction(event);

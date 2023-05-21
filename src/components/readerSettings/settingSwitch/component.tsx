@@ -34,7 +34,7 @@ class SettingSwitch extends React.Component<
 
   _handleRest = () => {
     if (isElectron) {
-      toast(this.props.t("Take effect at next startup"));
+      window.require("electron").ipcRenderer.invoke("reload", "ping");
     } else {
       window.location.reload();
     }

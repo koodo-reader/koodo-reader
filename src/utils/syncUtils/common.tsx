@@ -4,6 +4,7 @@ import BookUtil from "../fileUtils/bookUtil";
 import NoteModel from "../../model/Note";
 import BookmarkModel from "../../model/Bookmark";
 import { isElectron } from "react-device-detect";
+declare var window: any;
 
 let configArr = [
   "notes.json",
@@ -277,4 +278,11 @@ export const zipConfig = (
       resolve(false);
     }
   });
+};
+export const zipFilesToBlob = (buffers: ArrayBuffer[], names: string[]) => {
+  var zip = new window.JSZip();
+  for (let index = 0; index < buffers.length; index++) {
+    zip.file(names[index], buffers[index]);
+  }
+  return zip.generateAsync({ type: "blob" });
 };
