@@ -9,7 +9,6 @@ import RecordLocation from "../../utils/readUtils/recordLocation";
 import { mimetype } from "../../constants/mimetype";
 import Background from "../../components/background";
 import toast from "react-hot-toast";
-import * as jschardet from "jschardet";
 import StyleUtil from "../../utils/readUtils/styleUtil";
 import "./index.css";
 import { HtmlMouseEvent } from "../../utils/serviceUtils/mouseEvent";
@@ -348,7 +347,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       let charset = "";
       books.forEach((item) => {
         if (item.key === this.props.currentBook.key) {
-          charset = jschardet.detect(bufferStr).encoding || "utf-8";
+          charset = window.jschardet.detect(bufferStr).encoding || "utf-8";
           item.charset = charset;
           this.props.handleReadingBook(item);
         }
@@ -403,9 +402,9 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       bufferStr += String.fromCharCode(array[i]);
     }
     let charset = "";
-    if (!this.props.currentBook.charset) {
-      charset = await this.handleCharset(bufferStr);
-    }
+    // if (!this.props.currentBook.charset) {
+    charset = await this.handleCharset(bufferStr);
+    // }
     let rendition = new window.Kookit.TxtRender(
       result,
       this.state.readerMode,
