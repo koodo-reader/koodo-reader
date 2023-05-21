@@ -140,6 +140,11 @@ class BookUtil {
       return localforage.getItem(key);
     }
   }
+  static FetchAllBooks(Books: BookModel[]) {
+    return Books.map((item) => {
+      return this.fetchBook(item.key, true, item.path);
+    });
+  }
   static async RedirectBook(
     book: BookModel,
     t: (string) => string,

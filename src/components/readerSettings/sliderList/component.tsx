@@ -4,11 +4,12 @@ import { SliderListProps, SliderListState } from "./interface";
 import "./sliderList.css";
 import StorageUtil from "../../../utils/serviceUtils/storageUtil";
 import { isElectron } from "react-device-detect";
-import toast from "react-hot-toast";
 class SliderList extends React.Component<SliderListProps, SliderListState> {
   constructor(props: SliderListProps) {
     super(props);
     this.state = {
+      isTyping: false,
+      inputValue: "",
       value:
         this.props.mode === "fontSize"
           ? StorageUtil.getReaderConfig("fontSize") || "17"
@@ -26,7 +27,7 @@ class SliderList extends React.Component<SliderListProps, SliderListState> {
   handleRest = async () => {
     if (this.props.mode === "scale" || this.props.mode === "margin") {
       if (isElectron) {
-        toast(this.props.t("Take effect at next startup"));
+        window.require("electron").ipcRenderer.invoke("reload", "ping");
       } else {
         window.location.reload();
       }
@@ -84,7 +85,9 @@ class SliderList extends React.Component<SliderListProps, SliderListState> {
           <Trans>{this.props.title}</Trans>
           <input
             className="input-value"
-            defaultValue={this.state.value}
+            value={
+              this.state.isTyping ? this.state.inputValue : this.state.value
+            }
             type="number"
             step={
               this.props.title === "Page Width" ||
@@ -92,8 +95,16 @@ class SliderList extends React.Component<SliderListProps, SliderListState> {
                 ? "0.1"
                 : "1"
             }
+            onChange={(event) => {
+              let fieldVal = event.target.value;
+              this.setState({ inputValue: fieldVal });
+            }}
+            onFocus={() => {
+              this.setState({ isTyping: true });
+            }}
             onBlur={(event) => {
               this.onValueChange(event);
+              this.setState({ isTyping: false });
               this.handleRest();
             }}
           />
@@ -104,7 +115,7 @@ class SliderList extends React.Component<SliderListProps, SliderListState> {
         <div className="font-size-selector">
           <input
             className="input-progress"
-            defaultValue={this.state.value}
+            value={this.state.value}
             type="range"
             max={this.props.maxValue}
             min={this.props.minValue}

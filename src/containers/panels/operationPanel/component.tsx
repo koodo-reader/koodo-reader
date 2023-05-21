@@ -57,6 +57,7 @@ class OperationPanel extends React.Component<
       );
     });
   }
+
   handleShortcut() {}
   // 点击切换全屏按钮触发
   handleScreen() {

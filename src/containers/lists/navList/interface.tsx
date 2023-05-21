@@ -10,6 +10,7 @@ export interface NavListProps {
   digests: NoteModel[];
   currentTab: string;
   t: (title: string) => string;
+  handleShowBookmark: (isShowBookmark: boolean) => void;
 }
 export interface NavListState {
   deleteIndex: number;

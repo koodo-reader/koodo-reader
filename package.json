@@ -1,7 +1,7 @@
 {
   "name": "koodo-reader",
   "main": "main.js",
-  "version": "1.5.4",
+  "version": "1.5.5",
   "description": "A cross-platform ebook reader",
   "author": {
     "name": "App by Troye",
@@ -37,6 +37,7 @@
     "webdav": "^3.6.2",
     "webdav-fs": "^3.0.0",
     "ws": "^8.13.0",
+    "xlsx": "^0.18.5",
     "zip-a-folder": "^0.0.12"
   },
   "devDependencies": {
@@ -253,6 +254,7 @@
           "target": "deb",
           "arch": [
             "arm64",
+            "ia32",
             "x64"
           ]
         },
@@ -266,6 +268,7 @@
           "target": "AppImage",
           "arch": [
             "arm64",
+            "ia32",
             "x64"
           ]
         }

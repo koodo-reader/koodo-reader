@@ -16,6 +16,9 @@ const mapStateToProps = (state: stateType) => {
   return {
     mode: state.sidebar.mode,
     currentBook: state.book.currentBook,
+    books: state.manager.books,
+    notes: state.reader.notes,
+    deletedBooks: state.manager.deletedBooks,
   };
 };
 const actionCreator = {

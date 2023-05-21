@@ -7,12 +7,13 @@ class EdgeUtil {
   static async readAloud(
     currentText: string,
     nextText: string,
-    voiceName: string
+    voiceName: string,
+    speed: number = 0
   ) {
     let audioBuffer =
       this.nextAudioBuffer ||
       (await window.require("electron").ipcRenderer.invoke("edge-tts", {
-        text: this.createSSML(currentText, voiceName),
+        text: this.createSSML(currentText, voiceName, speed),
         format: "",
       }));
 
@@ -25,7 +26,7 @@ class EdgeUtil {
     this.nextAudioBuffer =
       nextText &&
       (await window.require("electron").ipcRenderer.invoke("edge-tts", {
-        text: this.createSSML(nextText, voiceName),
+        text: this.createSSML(nextText, voiceName, speed),
         format: "",
       }));
   }
@@ -38,7 +39,7 @@ class EdgeUtil {
   static getPlayer() {
     return this.player;
   }
-  static createSSML(text: string, voiceName: string) {
+  static createSSML(text: string, voiceName: string, speed: number) {
     let ssml =
       // eslint-disable-next-line
       '\
@@ -47,7 +48,10 @@ class EdgeUtil {
       voiceName +
       // eslint-disable-next-line
       '">\
-              <prosody rate="0%" pitch="0%">\
+              <prosody rate="' +
+      speed +
+      // eslint-disable-next-line
+      '%" pitch="0%">\
                   ' +
       text +
       // eslint-disable-next-line
