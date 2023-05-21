@@ -8,8 +8,6 @@ import StorageUtil from "../../../utils/serviceUtils/storageUtil";
 import { Panel as ColorPickerPanel } from "rc-color-picker";
 import "rc-color-picker/assets/index.css";
 import ThemeUtil from "../../../utils/readUtils/themeUtil";
-
-import toast from "react-hot-toast";
 import { isElectron } from "react-device-detect";
 
 class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
@@ -51,7 +49,7 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
       StorageUtil.setReaderConfig("textColor", "rgba(0,0,0,1)");
     }
     if (isElectron) {
-      toast(this.props.t("Take effect at next startup"));
+      window.require("electron").ipcRenderer.invoke("reload", "ping");
     } else {
       window.location.reload();
     }
