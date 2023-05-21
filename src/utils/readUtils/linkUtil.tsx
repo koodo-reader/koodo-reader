@@ -17,6 +17,7 @@ export const handleLinkJump = async (event: any, rendition: any = {}) => {
       "";
   }
   if (href && href.indexOf("#") > -1) {
+    console.log(href, "href");
     let pageArea = document.getElementById("page-area");
     if (!pageArea) return;
     let iframe = pageArea.getElementsByTagName("iframe")[0];
