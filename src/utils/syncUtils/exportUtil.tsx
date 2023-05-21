@@ -3,7 +3,7 @@ import BookModel from "../../model/Book";
 import NoteModel from "../../model/Note";
 import BookUtil from "../fileUtils/bookUtil";
 import { zipFilesToBlob } from "./common";
-import * as XLSX from "xlsx";
+declare var window: any;
 let year = new Date().getFullYear(),
   month = new Date().getMonth() + 1,
   day = new Date().getDate();
@@ -28,8 +28,8 @@ export const exportBooks = async (books: BookModel[]) => {
 };
 
 export const exportNotes = (notes: NoteModel[], books: BookModel[]) => {
-  var wb = XLSX.utils.book_new();
-  var ws = XLSX.utils.json_to_sheet(
+  var wb = window.XLSX.utils.book_new();
+  var ws = window.XLSX.utils.json_to_sheet(
     notes.map((item) => {
       return {
         ...item,
@@ -49,8 +49,8 @@ export const exportNotes = (notes: NoteModel[], books: BookModel[]) => {
       };
     })
   );
-  XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
-  XLSX.writeFile(
+  window.XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+  window.XLSX.writeFile(
     wb,
     "KoodoReader-Note-" +
       `${year}-${month <= 9 ? "0" + month : month}-${
@@ -63,8 +63,8 @@ export const exportHighlights = (
   highlights: NoteModel[],
   books: BookModel[]
 ) => {
-  var wb = XLSX.utils.book_new();
-  var ws = XLSX.utils.json_to_sheet(
+  var wb = window.XLSX.utils.book_new();
+  var ws = window.XLSX.utils.json_to_sheet(
     highlights.map((item) => {
       let highlight = {
         ...item,
@@ -86,8 +86,8 @@ export const exportHighlights = (
       return rest;
     })
   );
-  XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
-  XLSX.writeFile(
+  window.XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+  window.XLSX.writeFile(
     wb,
     "KoodoReader-Highlight-" +
       `${year}-${month <= 9 ? "0" + month : month}-${
