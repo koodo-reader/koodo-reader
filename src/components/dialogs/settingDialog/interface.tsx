@@ -28,6 +28,7 @@ export interface SettingInfoState {
   isDisableUpdate: boolean;
   isUseBuiltIn: boolean;
   isPDFCover: boolean;
+  isHideHome: boolean;
   isAutoFullscreen: boolean;
   isHideShelfBook: boolean;
   isPreventAdd: boolean;
