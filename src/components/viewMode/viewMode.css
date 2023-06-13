@@ -1,11 +1,13 @@
-.book-list-view {
+/* 规范部分按钮布局 @author Ayres @date 06/13 20:30 */
+/* 去除部分按钮布局的padding，使用弹性布局代替绝对布局 */
+
+.book-list-view { 
   position: absolute;
   right: -28px;
   top: 72px;
   font-size: 14px;
   margin-right: 30px;
   clear: both;
-  width: 110px;
   z-index: 1;
   height: 20px;
   overflow: hidden;
@@ -13,6 +15,7 @@
   border-radius: 5px;
   font-weight: 500;
   transition: all 0.1s ease;
+  display:flex;
 }
 .view-name {
   display: inline-block;
@@ -23,11 +26,21 @@
   width: 20px;
   height: 20px;
   line-height: 17px;
+  border-radius: 4px;
   cursor: pointer;
   padding: 5px;
-  padding-right: 10px;
   display: inline-block;
   font-size: 17px;
+  background:#f5f5f5;
+  margin-left: 10px;
+  display: flex;
+  align-items:center;
+  justify-content: center;
+
+}
+
+.card-list-mode>span{
+  color:#333;
 }
 
 .book-list-item-box {
@@ -40,8 +53,6 @@
 .icon-grid,
 .icon-list {
   position: relative;
-  top: 1px;
-  margin-right: 5px;
 }
 .view-mode-down {
   position: absolute;

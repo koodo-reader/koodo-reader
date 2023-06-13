@@ -7,7 +7,9 @@
   padding-left: 20px;
   padding-right: 40px;
   font-size: 15px;
-  padding-top: 5px;
+  /* 搜索框未对齐问题 @author Ayres @date 06/13 20:17 */
+  padding-top: 2.5px;
+  padding-bottom:2.5px;
 }
 input::-webkit-input-placeholder,
 input::-moz-placeholder,

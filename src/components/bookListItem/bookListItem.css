@@ -53,6 +53,12 @@
 .list-icon {
   margin: 15px 10px;
   font-size: 20px;
+  opacity: .7;
+  font-size:16px;
+  transition: .3s all ease;
+}
+.list-icon:hover{
+  opacity:1;
 }
 .book-item-list-percentage {
   max-width: 50px;
