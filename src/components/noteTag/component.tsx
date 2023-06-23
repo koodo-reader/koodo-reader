@@ -135,15 +135,20 @@ class NoteTag extends React.Component<NoteTagProps, NoteTagState> {
         {this.props.isReading || this.props.isCard ? null : (
           <div className="tag-title">
             <Trans>All Tags</Trans>
-            <span
-              className="icon-dropdown tag-dropdown-icon"
-              onClick={() => {
-                this.handleShowTags(!this.state.isShowTags);
-              }}
+            <div
+              className="note-tag-show-icon"
               style={
-                !this.state.isShowTags ? {} : { transform: "rotate(-90deg)" }
+                !this.state.isShowTags ? { transform: "rotate(-90deg)" } : {}
               }
-            ></span>
+            >
+              <span
+                className="icon-dropdown tag-dropdown-icon"
+                onClick={() => {
+                  this.handleShowTags(!this.state.isShowTags);
+                }}
+                style={{ float: "unset", margin: "0px" }}
+              ></span>
+            </div>
           </div>
         )}
 

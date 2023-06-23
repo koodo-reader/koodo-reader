@@ -22,7 +22,6 @@
   opacity: 1;
   margin-left: 20px;
   font-weight: 500;
-  width: 90px;
 }
 .tag-container {
   display: inline-block;
@@ -36,6 +35,12 @@
   line-height: 30px;
   cursor: pointer;
   transition: transform 0.1s ease;
+}
+.note-tag-show-icon {
+  transform-origin: center center;
+  display: inline-block;
+  transition: transform 0.1s ease;
+  margin: 5px;
 }
 #newTag {
   width: 100%;
