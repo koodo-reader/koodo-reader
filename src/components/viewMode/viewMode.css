@@ -1,17 +1,14 @@
 .book-list-view {
-  position: absolute;
-  right: -28px;
-  top: 72px;
   font-size: 14px;
-  margin-right: 30px;
   clear: both;
-  width: 110px;
+  width: 100px;
   z-index: 1;
   height: 20px;
   overflow: hidden;
-  padding: 10px;
-  border-radius: 5px;
   font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
   transition: all 0.1s ease;
 }
 .view-name {
@@ -20,11 +17,8 @@
   text-align: center;
 }
 .card-list-mode {
-  width: 20px;
-  height: 20px;
   line-height: 17px;
   cursor: pointer;
-  padding: 5px;
   padding-right: 10px;
   display: inline-block;
   font-size: 17px;

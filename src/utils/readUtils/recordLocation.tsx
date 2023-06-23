@@ -19,7 +19,8 @@ class RecordLocation {
     chapterHref: string,
     count: string,
     percentage: string,
-    cfi: string
+    cfi: string,
+    page: string
   ) {
     if (cfi) {
       let json = localStorage.getItem("recordLocation");
@@ -32,11 +33,11 @@ class RecordLocation {
         count,
         percentage,
         cfi,
+        page,
       };
       localStorage.setItem("recordLocation", JSON.stringify(obj));
     } else {
-      if (!text || !chapterTitle || !chapterDocIndex || !count || !percentage)
-        return;
+      if (!chapterDocIndex) return;
       let json = localStorage.getItem("recordLocation");
       let obj = JSON.parse(json || "{}");
       obj[bookKey] = {
@@ -47,6 +48,7 @@ class RecordLocation {
         count,
         percentage,
         cfi,
+        page,
       };
       localStorage.setItem("recordLocation", JSON.stringify(obj));
     }

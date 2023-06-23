@@ -181,11 +181,21 @@ class BookList extends React.Component<BookListProps, BookListState> {
     );
     return (
       <>
-        <ViewMode />
-        <SelectBook />
-        <div style={this.props.isSelectBook ? { display: "none" } : {}}>
-          <ShelfSelector />
+        <div
+          className="book-list-header"
+          style={
+            this.props.isCollapsed
+              ? { width: "calc(100% - 70px)", left: "70px" }
+              : {}
+          }
+        >
+          <SelectBook />
+          <div style={this.props.isSelectBook ? { display: "none" } : {}}>
+            <ShelfSelector />
+          </div>
+          <ViewMode />
         </div>
+
         <div
           className="book-list-container-parent"
           style={

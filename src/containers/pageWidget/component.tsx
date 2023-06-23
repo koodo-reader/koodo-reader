@@ -40,7 +40,8 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
       position.chapterHref,
       position.count,
       position.percentage,
-      position.cfi
+      position.cfi,
+      position.page
     );
   };
   async handlePageNum(rendition) {

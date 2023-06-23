@@ -93,10 +93,10 @@ export const settingList = [
     title: "Use first page as PDF cover",
     propName: "isPDFCover",
   },
-    {
+  {
     isElectron: false,
-    title: "Hide home button in PDF reader",
-    propName: "isHideHome",
+    title: "Hide floating button in PDF reader",
+    propName: "isHideFloating",
   },
   {
     isElectron: true,
@@ -125,6 +125,9 @@ export const langList = [
   { label: "italiano", value: "it" },
   { label: "Nederlands", value: "nl" },
   { label: "বাংলা", value: "bn" },
+  { label: "български", value: "bg" },
+  { label: "bahasa Indonesia", value: "id" },
+  { label: "հայերեն", value: "hy" },
 ];
 
 export const searchList = [

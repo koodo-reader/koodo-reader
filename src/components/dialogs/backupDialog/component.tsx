@@ -263,7 +263,7 @@ class BackupDialog extends React.Component<
               }}
             >
               <span className="icon-backup"></span>
-              <div style={{ lineHeight: 1.25 }}>
+              <div style={{ lineHeight: 1.0 }}>
                 <Trans>Backup</Trans>
               </div>
             </div>

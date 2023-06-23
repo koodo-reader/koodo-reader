@@ -38,9 +38,12 @@ const BackToMain = (props: any) => {
         }
       }}
       style={
-        StorageUtil.getReaderConfig("isHideHome") === "yes" && 
-        document.URL.indexOf("pdf") > -1 ? { display: "none" } : 
-        document.URL.indexOf("djvu") > -1 ? { bottom: "60px" } : {}
+        StorageUtil.getReaderConfig("isHideFloating") === "yes" &&
+        document.URL.indexOf("pdf") > -1
+          ? { display: "none" }
+          : document.URL.indexOf("djvu") > -1
+          ? { bottom: "60px" }
+          : {}
       }
     >
       <span className="icon-home back-home"></span>

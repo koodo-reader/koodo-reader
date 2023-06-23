@@ -1,7 +1,6 @@
 .font-size-setting {
   width: calc(100% - 44px);
   margin: 0px 22px;
-  height: 70px;
 }
 .font-size-title {
   font-size: 15px;
@@ -58,5 +57,4 @@
   width: 50px;
   height: 20px;
   border-radius: 5px;
-  margin-left: 10px;
 }

@@ -32,7 +32,6 @@ export interface ViewerState {
   chapterTitle: string;
   isDisablePopup: boolean;
   margin: number;
-  extraMargin: number;
   readerMode: string;
   chapter: string;
   chapterDocIndex: number;

@@ -42,8 +42,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       readerMode: StorageUtil.getReaderConfig("readerMode") || "double",
       isDisablePopup: StorageUtil.getReaderConfig("isDisablePopup") === "yes",
 
-      margin: parseInt(StorageUtil.getReaderConfig("margin")) || 30,
-      extraMargin: 0,
+      margin: parseInt(StorageUtil.getReaderConfig("margin")) || 0,
       chapterDocIndex: parseInt(
         RecordLocation.getHtmlLocation(this.props.currentBook.key)
           .chapterDocIndex || 0
@@ -170,6 +169,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       this.state.readerMode
     );
     let chapters = rendition.getChapter();
+    let chapterDocs = rendition.getChapterDoc();
     let flattenChapters = rendition.flatChapter(chapters);
     this.props.handleHtmlBook({
       key: this.props.currentBook.key,
@@ -199,6 +199,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       chapterHref: string;
       percentage: string;
       cfi: string;
+      page: string;
     } = RecordLocation.getHtmlLocation(this.props.currentBook.key);
     //compatile wiht lower version(1.5.1)
     if (bookLocation.cfi) {
@@ -221,13 +222,14 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       });
 
       await rendition.goToNode(bookmark.node.parentElement);
-    } else {
+    } else if (chapterDocs.length > 0) {
       await rendition.goToPosition(
         JSON.stringify({
           text: bookLocation.text || "",
-          chapterTitle: bookLocation.chapterTitle || "",
+          chapterTitle: bookLocation.chapterTitle || chapterDocs[0].title,
+          page: bookLocation.page || "",
           chapterDocIndex: bookLocation.chapterDocIndex || 0,
-          chapterHref: bookLocation.chapterHref || "",
+          chapterHref: bookLocation.chapterHref || chapterDocs[0].href,
           count: bookLocation.count || 0,
           percentage: bookLocation.percentage,
           cfi: bookLocation.cfi,
@@ -288,6 +290,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     });
   };
   handleContentScroll = (chapter: string, chapterHref: string) => {
+    if (!chapterHref) return;
     let chapterIndex = window._.findIndex(this.props.htmlBook.flattenChapters, {
       href: chapterHref,
     });
@@ -315,7 +318,8 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       position.chapterHref,
       position.count,
       position.percentage,
-      position.cfi
+      position.cfi,
+      position.page
     );
   };
   handleBindGesture = () => {
@@ -402,9 +406,9 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       bufferStr += String.fromCharCode(array[i]);
     }
     let charset = "";
-    // if (!this.props.currentBook.charset) {
-    charset = await this.handleCharset(bufferStr);
-    // }
+    if (!this.props.currentBook.charset) {
+      charset = await this.handleCharset(bufferStr);
+    }
     let rendition = new window.Kookit.TxtRender(
       result,
       this.state.readerMode,
@@ -492,21 +496,25 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     return (
       <>
         <div
-          className="html-viewer-page"
+          className={
+            this.state.readerMode === "scroll"
+              ? "html-viewer-page scrolling-html-viewer-page"
+              : "html-viewer-page"
+          }
           id="page-area"
           style={
             document.body.clientWidth < 570
               ? { left: 0, right: 0 }
               : this.state.readerMode === "scroll"
               ? {
-                  paddingLeft: `calc(50vw - ${
+                  marginLeft: `calc(50vw - ${
                     270 * parseFloat(this.state.scale)
-                  }px + 20px)`,
-                  paddingRight: `calc(50vw - ${
+                  }px)`,
+                  marginRight: `calc(50vw - ${
                     270 * parseFloat(this.state.scale)
-                  }px + 15px)`,
-                  overflowY: "scroll",
-                  overflowX: "hidden",
+                  }px)`,
+                  paddingLeft: "20px",
+                  paddingRight: "15px",
                 }
               : this.state.readerMode === "single"
               ? {
@@ -519,8 +527,8 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
                 }
               : this.state.readerMode === "double"
               ? {
-                  left: this.state.margin + 10 - this.state.extraMargin + "px",
-                  right: this.state.margin + 10 - this.state.extraMargin + "px",
+                  left: 40 + this.state.margin + "px",
+                  right: 40 + this.state.margin + "px",
                 }
               : {}
           }

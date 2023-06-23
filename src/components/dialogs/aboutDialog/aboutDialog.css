@@ -1,9 +1,5 @@
 .icon-export-all {
-  margin-left: 5px;
   line-height: 18px;
   display: inline-block;
-  position: relative;
-  top: 2px;
-  left: 5px;
   transform: rotate(-90deg) scale(0.7);
 }

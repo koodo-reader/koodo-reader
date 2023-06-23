@@ -97,7 +97,13 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
                 ></span>
               </div>
 
-              <span style={this.props.isCollapsed ? { display: "none" } : {}}>
+              <span
+                style={
+                  this.props.isCollapsed
+                    ? { display: "none", width: "70%" }
+                    : { width: "60%" }
+                }
+              >
                 {this.props.t(item.name)}
               </span>
             </div>
@@ -128,6 +134,7 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
           onClick={() => {
             this.handleJump("https://koodo.960960.xyz");
           }}
+          style={this.state.isCollapsed ? { display: "none" } : {}}
           className="logo"
         />
         <div className="side-menu-container-parent">

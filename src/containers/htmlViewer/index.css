@@ -7,6 +7,18 @@
   z-index: 5;
   user-select: text;
 }
+.scrolling-html-viewer-page {
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+.scrolling-html-viewer-page:hover::-webkit-scrollbar-thumb,
+.scrolling-html-viewer-page:active::-webkit-scrollbar-thumb,
+.scrolling-html-viewer-page:focus::-webkit-scrollbar-thumb {
+  display: block;
+}
+.scrolling-html-viewer-page::-webkit-scrollbar-thumb {
+  display: none;
+}
 .popup-menu-container {
   position: absolute;
   left: 100px;

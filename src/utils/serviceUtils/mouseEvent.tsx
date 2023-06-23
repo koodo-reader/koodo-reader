@@ -103,7 +103,8 @@ const handleLocation = (key: string, rendition: any) => {
     position.chapterHref,
     position.count,
     position.percentage,
-    position.cfi
+    position.cfi,
+    position.page
   );
 };
 export const bindHtmlEvent = (
@@ -120,7 +121,6 @@ export const bindHtmlEvent = (
     setTimeout(() => (lock = false), throttleTime);
   });
   //判断是否正在使用笔记本电脑的的触控板
-
   doc.addEventListener(
     "wheel",
     async (event) => {

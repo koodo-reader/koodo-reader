@@ -26,9 +26,6 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
       hoverPanel: "",
       isOpenLeftPanel:
         StorageUtil.getReaderConfig("isNavLocked") === "yes" ? true : false,
-
-      scale: StorageUtil.getReaderConfig("scale") || 1,
-      margin: parseInt(StorageUtil.getReaderConfig("margin")) || 30,
       time: 0,
       isTouch: StorageUtil.getReaderConfig("isTouch") === "yes",
       isPreventTrigger:
@@ -138,7 +135,8 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
       position.chapterHref,
       position.count,
       position.percentage,
-      position.cfi
+      position.cfi,
+      position.page
     );
   };
   render() {

@@ -2,7 +2,6 @@ import { openExternalUrl } from "../serviceUtils/urlUtil";
 
 export const handleLinkJump = async (event: any, rendition: any = {}) => {
   let href;
-
   if (
     event.target &&
     event.target.parentNode &&
@@ -10,14 +9,13 @@ export const handleLinkJump = async (event: any, rendition: any = {}) => {
   ) {
     href =
       (event.target.innerText.indexOf("http") > -1 && event.target.innerText) ||
-      event.target.href ||
-      event.target.parentNode.href ||
-      event.target.parentNode.parentNode.href ||
-      event.target.src ||
+      event.target.getAttribute("href") ||
+      event.target.parentNode.getAttribute("href") ||
+      event.target.parentNode.parentNode.getAttribute("href") ||
+      event.target.getAttribute("src") ||
       "";
   }
   if (href && href.indexOf("#") > -1) {
-    console.log(href, "href");
     let pageArea = document.getElementById("page-area");
     if (!pageArea) return;
     let iframe = pageArea.getElementsByTagName("iframe")[0];

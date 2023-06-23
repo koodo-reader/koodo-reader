@@ -21,13 +21,19 @@ class SliderList extends React.Component<SliderListProps, SliderListState> {
           ? StorageUtil.getReaderConfig("paraSpacing") || "0"
           : this.props.mode === "brightness"
           ? StorageUtil.getReaderConfig("brightness") || "1"
-          : StorageUtil.getReaderConfig("margin") || "60",
+          : StorageUtil.getReaderConfig("margin") || "0",
     };
   }
   handleRest = async () => {
     if (this.props.mode === "scale" || this.props.mode === "margin") {
       if (isElectron) {
-        window.require("electron").ipcRenderer.invoke("reload", "ping");
+        if (StorageUtil.getReaderConfig("isOpenInMain") === "yes") {
+          window.require("electron").ipcRenderer.invoke("reload-main", "ping");
+        } else {
+          window
+            .require("electron")
+            .ipcRenderer.invoke("reload-reader", "ping");
+        }
       } else {
         window.location.reload();
       }
@@ -82,7 +88,10 @@ class SliderList extends React.Component<SliderListProps, SliderListState> {
     return (
       <div className="font-size-setting">
         <div className="font-size-title">
-          <Trans>{this.props.title}</Trans>
+          <span style={{ marginRight: "10px" }}>
+            <Trans>{this.props.title}</Trans>
+          </span>
+
           <input
             className="input-value"
             value={
@@ -129,13 +138,11 @@ class SliderList extends React.Component<SliderListProps, SliderListState> {
             onMouseUp={() => {
               this.handleRest();
             }}
+            style={{ position: "absolute", bottom: "11px" }}
           />
         </div>
         {
-          <span
-            className="ultra-large-size"
-            style={{ fontSize: "16px", right: "5px" }}
-          >
+          <span className="ultra-large-size" style={{ fontSize: "16px" }}>
             {this.props.maxLabel}
           </span>
         }

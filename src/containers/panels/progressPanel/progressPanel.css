@@ -31,9 +31,6 @@
   height: 25px !important;
   border-radius: 50%;
   opacity: 1;
-  position: absolute;
-  bottom: 10px;
-  left: 20px;
   font-size: 15px;
   transform: rotate(90deg);
   cursor: pointer;
@@ -43,9 +40,6 @@
   height: 25px;
   border-radius: 50%;
   opacity: 1;
-  position: absolute;
-  bottom: 10px;
-  left: 360px;
   font-size: 15px;
   transform: rotate(-90deg);
   cursor: pointer;
@@ -62,7 +56,6 @@
 input[type="range"] {
   -webkit-appearance: none;
   width: 200px;
-  position: absolute;
 }
 input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
@@ -130,20 +123,16 @@ input[type="range"]::-ms-thumb {
   background: rgba(255, 255, 255, 1);
 }
 .progress-panel {
-  width: 412px !important;
+  width: 450px !important;
   height: 100px;
   opacity: 1;
   position: absolute;
   bottom: 0px;
-  left: calc(50% - 206px);
+  left: calc(50% - 225px);
   z-index: 10;
   animation: fade-up 0.1s ease-in-out 0s 1;
 }
-.input-progress {
-  position: absolute;
-  top: 10px;
-  left: 20px;
-}
+
 #jumpPage,
 #jumpChapter {
   width: 30px;

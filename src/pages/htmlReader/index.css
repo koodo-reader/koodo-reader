@@ -136,21 +136,21 @@
   cursor: pointer;
 }
 .operation-panel-container {
-  width: 412px;
+  width: 450px;
   height: 60px;
   position: absolute;
   top: 0px;
-  left: calc(50vw - 206px);
+  left: calc(50vw - 225px);
   z-index: 15;
 
   transition: transform 0.5s ease;
 }
 .progress-panel-container {
-  width: 412px;
+  width: 450px;
   height: 60px;
   position: absolute;
   top: calc(100vh - 60px);
-  left: calc(50vw - 206px);
+  left: calc(50vw - 225px);
   z-index: 15;
   transition: transform 0.5s ease;
 }

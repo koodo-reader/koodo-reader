@@ -10,6 +10,7 @@ import {
   exportNotes,
 } from "../../../utils/syncUtils/exportUtil";
 import "./aboutDialog.css";
+import StorageUtil from "../../../utils/serviceUtils/storageUtil";
 
 class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
   constructor(props: AboutDialogProps) {
@@ -34,15 +35,7 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
           onMouseEnter={() => {
             this.props.handleAbout(true);
           }}
-          style={
-            this.props.isNewWarning
-              ? { left: "510px", width: "150px" }
-              : {
-                  left: "510px",
-
-                  width: "150px",
-                }
-          }
+          style={{ left: "495px" }}
         >
           <ul className="sort-by-category">
             <li
@@ -58,7 +51,10 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
             <li
               className="sort-by-category-list"
               onClick={() => {
-                if (navigator.language.indexOf("zh") > -1) {
+                if (
+                  StorageUtil.getReaderConfig("lang") === "zh" ||
+                  StorageUtil.getReaderConfig("lang") === "cht"
+                ) {
                   this.handleJump(
                     "https://troyeguo.notion.site/Koodo-Reader-0c9c7ccdc5104a54825dfc72f1c84bea"
                   );
@@ -82,7 +78,10 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
             <li
               className="sort-by-category-list"
               onClick={() => {
-                if (navigator.language.indexOf("zh") > -1) {
+                if (
+                  StorageUtil.getReaderConfig("lang") === "zh" ||
+                  StorageUtil.getReaderConfig("lang") === "cht"
+                ) {
                   this.handleJump(
                     "https://www.notion.so/troyeguo/215baeda57804fd29dbb0e91d1e6a021?v=360c00183d944b598668f34c255edfd7"
                   );
@@ -121,18 +120,6 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
             >
               <Trans>Github Repo</Trans>
             </li>
-            <li
-              className="sort-by-category-list"
-              onMouseEnter={() => {
-                this.setState({ isShowExportAll: true });
-              }}
-              onMouseLeave={(event) => {
-                event.stopPropagation();
-              }}
-            >
-              <Trans>Export All</Trans>
-              <span className="icon-dropdown icon-export-all"></span>
-            </li>
 
             {isElectron && (
               <li
@@ -157,6 +144,19 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
                 <Trans>New Version</Trans>
               </li>
             )}
+            <li
+              className="sort-by-category-list"
+              onMouseEnter={() => {
+                this.setState({ isShowExportAll: true });
+              }}
+              onMouseLeave={(event) => {
+                this.setState({ isShowExportAll: false });
+                event.stopPropagation();
+              }}
+            >
+              <Trans>Export All</Trans>
+              <span className="icon-dropdown icon-export-all"></span>
+            </li>
           </ul>
         </div>
         <div
@@ -165,11 +165,15 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
             this.state.isShowExportAll
               ? {
                   position: "absolute",
-                  left: "662px",
+                  left: "675px",
                   top: "250px",
                 }
               : { display: "none" }
           }
+          onMouseEnter={(event) => {
+            this.setState({ isShowExportAll: true });
+            event?.stopPropagation();
+          }}
           onMouseLeave={() => {
             this.setState({ isShowExportAll: false });
             this.props.handleAbout(false);

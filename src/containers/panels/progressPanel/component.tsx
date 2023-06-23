@@ -37,7 +37,11 @@ class ProgressPanel extends React.Component<
   }
   handleCurrentChapterIndex = (rendition) => {
     let position = rendition.getPosition();
+
     let href = position.chapterHref;
+    if (!href) {
+      return;
+    }
     let chapterIndex = window._.findIndex(this.props.htmlBook.flattenChapters, {
       href,
     });
@@ -157,7 +161,23 @@ class ProgressPanel extends React.Component<
           />
           <span>/ {this.props.htmlBook.flattenChapters.length}</span>
         </p>
-        <div>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            width: "90%",
+            marginLeft: "5%",
+          }}
+        >
+          <div
+            className="previous-chapter"
+            onClick={() => {
+              this.prevChapter();
+            }}
+          >
+            <span className="icon-dropdown previous-chapter-icon"> </span>
+          </div>
           <input
             className="input-progress"
             defaultValue={Math.round(this.props.percentage * 100)}
@@ -171,26 +191,16 @@ class ProgressPanel extends React.Component<
             onTouchEnd={(event) => {
               this.onProgressChange(event);
             }}
-            style={{ width: 300, left: 50, top: 73 }}
+            style={{ width: "80%" }}
           />
-        </div>
-
-        <div
-          className="previous-chapter"
-          onClick={() => {
-            this.prevChapter();
-          }}
-        >
-          <span className="icon-dropdown previous-chapter-icon"> </span>
-        </div>
-
-        <div
-          className="next-chapter"
-          onClick={() => {
-            this.nextChapter();
-          }}
-        >
-          <span className="icon-dropdown next-chapter-icon"></span>
+          <div
+            className="next-chapter"
+            onClick={() => {
+              this.nextChapter();
+            }}
+          >
+            <span className="icon-dropdown next-chapter-icon"></span>
+          </div>
         </div>
       </div>
     );
