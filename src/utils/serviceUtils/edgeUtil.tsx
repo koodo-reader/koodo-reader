@@ -10,25 +10,45 @@ class EdgeUtil {
     voiceName: string,
     speed: number = 0
   ) {
-    let audioBuffer =
-      this.nextAudioBuffer ||
-      (await window.require("electron").ipcRenderer.invoke("edge-tts", {
-        text: this.createSSML(currentText, voiceName, speed),
-        format: "",
-      }));
-
-    let ctx = new AudioContext();
-    let audio = await ctx.decodeAudioData(this.toArrayBuffer(audioBuffer));
-    this.player = ctx.createBufferSource();
-    this.player.buffer = audio;
-    this.player.connect(ctx.destination);
-    this.player.start(ctx.currentTime);
-    this.nextAudioBuffer =
-      nextText &&
-      (await window.require("electron").ipcRenderer.invoke("edge-tts", {
-        text: this.createSSML(nextText, voiceName, speed),
-        format: "",
-      }));
+    return new Promise<string>(async (resolve, reject) => {
+      let audioBuffer =
+        this.nextAudioBuffer ||
+        (await window.require("electron").ipcRenderer.invoke("edge-tts", {
+          text: this.createSSML(currentText, voiceName, speed),
+          format: "",
+        }));
+      console.log(currentText, "currentText");
+      let ctx = new AudioContext();
+      ctx
+        .decodeAudioData(this.toArrayBuffer(audioBuffer))
+        .then(async (res) => {
+          console.log(res);
+          let audio = res;
+          this.player = ctx.createBufferSource();
+          this.player.buffer = audio;
+          this.player.connect(ctx.destination);
+          this.player.start(ctx.currentTime);
+          this.nextAudioBuffer =
+            nextText &&
+            (await window.require("electron").ipcRenderer.invoke("edge-tts", {
+              text: this.createSSML(nextText, voiceName, speed),
+              format: "",
+            }));
+          console.log(nextText, "nextText");
+          resolve("success");
+        })
+        .catch(async (err) => {
+          console.log(err);
+          this.nextAudioBuffer =
+            nextText &&
+            (await window.require("electron").ipcRenderer.invoke("edge-tts", {
+              text: this.createSSML(nextText, voiceName, speed),
+              format: "",
+            }));
+          console.log(nextText, "nextText");
+          resolve("failed");
+        });
+    });
   }
   static pauseAudio() {
     if (this.player && this.player.stop) {

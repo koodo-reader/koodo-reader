@@ -18,17 +18,16 @@ class ViewMode extends React.Component<ViewModeProps, ViewModeState> {
     return (
       <div className="book-list-view">
         {viewMode.map((item) => (
-          <>
-            <div
-              className="card-list-mode"
-              onClick={() => {
-                this.handleChange(item.mode);
-              }}
-              style={this.props.viewMode !== item.mode ? { opacity: 0.5 } : {}}
-            >
-              <span className={`icon-${item.icon}`}></span>
-            </div>
-          </>
+          <div
+            className="card-list-mode"
+            onClick={() => {
+              this.handleChange(item.mode);
+            }}
+            style={this.props.viewMode !== item.mode ? { opacity: 0.5 } : {}}
+            key={item.mode}
+          >
+            <span className={`icon-${item.icon}`}></span>
+          </div>
         ))}
       </div>
     );

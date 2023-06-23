@@ -87,11 +87,11 @@ class ShelfSelector extends React.Component<
     return (
       <>
         {this.state.isOpenDelete && <DeletePopup {...deletePopupProps} />}
-        <div
-          className="booklist-shelf-container"
-          style={this.props.isCollapsed ? {} : { left: "calc(50% - 60px)" }}
-        >
-          <p className="general-setting-title" style={{ display: "inline" }}>
+        <div className="booklist-shelf-container">
+          <p
+            className="general-setting-title"
+            style={{ float: "left", height: "100%" }}
+          >
             <Trans>Shelf</Trans>
           </p>
           <select

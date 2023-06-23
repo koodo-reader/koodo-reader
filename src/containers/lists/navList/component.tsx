@@ -58,6 +58,7 @@ class NavList extends React.Component<NavListProps, NavListState> {
           count: bookLocation.count,
           percentage: bookLocation.percentage,
           cfi: bookLocation.cfi,
+          page: bookLocation.page,
         })
       );
     }

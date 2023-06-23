@@ -49,7 +49,11 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
       StorageUtil.setReaderConfig("textColor", "rgba(0,0,0,1)");
     }
     if (isElectron) {
-      window.require("electron").ipcRenderer.invoke("reload", "ping");
+      if (StorageUtil.getReaderConfig("isOpenInMain") === "yes") {
+        window.require("electron").ipcRenderer.invoke("reload-main", "ping");
+      } else {
+        window.require("electron").ipcRenderer.invoke("reload-reader", "ping");
+      }
     } else {
       window.location.reload();
     }

@@ -103,6 +103,7 @@ class NavigationPanel extends React.Component<
                     count: bookLocation.count,
                     percentage: bookLocation.percentage,
                     cfi: bookLocation.cfi,
+                    page: bookLocation.page,
                   })
                 );
                 let style = "background: #f3a6a68c";

@@ -109,13 +109,16 @@ class TextToSpeech extends React.Component<
     });
   };
   handleAudio = async () => {
+    console.log(6);
     if (StorageUtil.getReaderConfig("isSliding") === "yes") {
       await sleep(1000);
     }
     if (this.state.nodeIndex === 0) {
+      console.log(7);
       this.setState(
         { nodeList: this.props.htmlBook.rendition.visibleText() },
         async () => {
+          console.log(8);
           await this.handleRead();
         }
       );
@@ -125,6 +128,7 @@ class TextToSpeech extends React.Component<
         await this.handleAudio();
       });
     } else {
+      console.log(9);
       await this.handleRead();
     }
   };
@@ -149,6 +153,7 @@ class TextToSpeech extends React.Component<
         .replace(/\t/g, "")
         .replace(/\f/g, "");
     }
+    console.log(1);
     await this.handleSpeech(
       currentText,
       nextText,
@@ -166,18 +171,28 @@ class TextToSpeech extends React.Component<
     if (voiceIndex > this.state.nativeVoices.length) {
       let edgeVoice =
         this.state.edgeVoices[voiceIndex - this.state.nativeVoices.length];
-      await EdgeUtil.readAloud(
+      console.log(2);
+      let res = await EdgeUtil.readAloud(
         currentText,
         nextText,
         edgeVoice.ShortName,
         speed * 100 - 100
       );
-      let player = EdgeUtil.getPlayer();
-
-      player.onended = async (event) => {
+      if (res === "failed") {
         if (!(this.state.isAudioOn && this.props.isReading)) {
           return;
         }
+        await this.handleAudio();
+      }
+      let player = EdgeUtil.getPlayer();
+      console.log(3);
+      console.log(player);
+      player.onended = async (event) => {
+        console.log(4);
+        if (!(this.state.isAudioOn && this.props.isReading)) {
+          return;
+        }
+        console.log(5);
         // await this.props.htmlBook.rendition.next();
         await this.handleAudio();
       };
@@ -253,7 +268,7 @@ class TextToSpeech extends React.Component<
                       "voiceIndex",
                       event.target.value
                     );
-                    toast("Take effect in a while");
+                    toast(this.props.t("Take effect in a while"));
                   }}
                 >
                   {this.state.voices.map((item, index) => {
@@ -285,7 +300,7 @@ class TextToSpeech extends React.Component<
                       "voiceSpeed",
                       event.target.value
                     );
-                    toast("Take effect in a while");
+                    toast(this.props.t("Take effect in a while"));
                   }}
                 >
                   {speedList.option.map((item) => (

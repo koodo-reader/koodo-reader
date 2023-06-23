@@ -9,6 +9,9 @@ import translationRO from "./assets/locales/ro/translation.json";
 import translationPL from "./assets/locales/pl/translation.json";
 import translationCS from "./assets/locales/cs/translation.json";
 import translationJP from "./assets/locales/jp/translation.json";
+import translationID from "./assets/locales/id/translation.json";
+import translationHY from "./assets/locales/hy/translation.json";
+import translationBG from "./assets/locales/bg/translation.json";
 import translationIT from "./assets/locales/it/translation.json";
 import translationBN from "./assets/locales/bn/translation.json";
 import translationNL from "./assets/locales/nl/translation.json";
@@ -48,6 +51,15 @@ const resources = {
   },
   jp: {
     translation: translationJP,
+  },
+  id: {
+    translation: translationID,
+  },
+  hy: {
+    translation: translationHY,
+  },
+  bg: {
+    translation: translationBG,
   },
   nl: {
     translation: translationNL,
