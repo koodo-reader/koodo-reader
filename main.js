@@ -149,9 +149,14 @@ const createMainWin = () => {
     mainWin.webContents.openDevTools();
     event.returnvalue = true;
   });
-  ipcMain.handle("reload", (event, arg) => {
+  ipcMain.handle("reload-reader", (event, arg) => {
     if (readerWindow) {
       readerWindow.reload();
+    }
+  });
+  ipcMain.handle("reload-main", (event, arg) => {
+    if (mainWin) {
+      mainWin.reload();
     }
   });
   ipcMain.handle("focus-on-main", (event, arg) => {

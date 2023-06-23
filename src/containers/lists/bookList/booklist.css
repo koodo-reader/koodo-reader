@@ -1,10 +1,19 @@
 .book-list-container-parent {
   position: absolute;
   top: 115px;
-  left: 190px;
-  width: calc(100% - 190px);
+  left: 220px;
+  width: calc(100% - 220px);
   height: calc(100% - 125px);
   overflow: visible;
+}
+.book-list-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: absolute;
+  top: 85px;
+  left: 220px;
+  width: calc(100% - 220px);
 }
 .book-list-container {
   width: 100%;
@@ -18,7 +27,6 @@
   position: absolute;
   top: 80px;
   left: calc(50vw);
-  width: 150px;
   border: 2px solid rgb(231, 69, 69);
   text-align: center;
   height: 30px;
@@ -26,6 +34,8 @@
   color: rgb(231, 69, 69);
   cursor: pointer;
   border-radius: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
 .booklist-shelf-list {
@@ -50,14 +60,12 @@
   margin-right: 2px;
 }
 .booklist-shelf-container {
-  position: absolute;
-  top: 80px;
-  left: calc(50% - 125px);
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 .booklist-manage-container {
-  position: absolute;
-  top: 85px;
-  left: 195px;
   cursor: pointer;
 }
 .book-manage-title {

@@ -102,8 +102,12 @@ class SearchBox extends React.Component<SearchBoxProps> {
           }
           style={
             this.props.mode === "nav"
-              ? { width: this.props.width, height: this.props.height }
-              : { paddingRight: "50px" }
+              ? {
+                  width: this.props.width,
+                  height: this.props.height,
+                  paddingRight: "30px",
+                }
+              : {}
           }
           onCompositionStart={() => {
             if (StorageUtil.getReaderConfig("isNavLocked") === "yes") {

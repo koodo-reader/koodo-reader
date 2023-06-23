@@ -35,10 +35,10 @@ class ImageViewer extends React.Component<ImageViewerProps, ImageViewerStates> {
     }
     await handleLinkJump(event, this.props.rendition);
     if (
-      !event.target.src ||
-      event.target.href ||
-      event.target.parentNode.href ||
-      event.target.parentNode.parentNode.href
+      !event.target.getAttribute("src") ||
+      event.target.getAttribute("href") ||
+      event.target.parentNode.getAttribute("href") ||
+      event.target.parentNode.parentNode.getAttribute("href")
     ) {
       return;
     }

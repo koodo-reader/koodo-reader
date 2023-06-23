@@ -18,7 +18,11 @@ class ModeControl extends React.Component<ModeControlProps, ModeControlState> {
     this.setState({ readerMode: mode });
     StorageUtil.setReaderConfig("readerMode", mode);
     if (isElectron) {
-      window.require("electron").ipcRenderer.invoke("reload", "ping");
+      if (StorageUtil.getReaderConfig("isOpenInMain") === "yes") {
+        window.require("electron").ipcRenderer.invoke("reload-main", "ping");
+      } else {
+        window.require("electron").ipcRenderer.invoke("reload-reader", "ping");
+      }
     } else {
       window.location.reload();
     }

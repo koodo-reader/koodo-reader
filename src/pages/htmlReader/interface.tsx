@@ -21,6 +21,4 @@ export interface ReaderState {
   isPreventTrigger: boolean;
   hoverPanel: string;
   time: number;
-  scale: string;
-  margin: number;
 }

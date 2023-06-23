@@ -145,4 +145,4 @@ class BookList extends React.Component<BookListProps, BookListState> {
   }
 }
 
-export default withRouter(BookList);
+export default withRouter(BookList as any);

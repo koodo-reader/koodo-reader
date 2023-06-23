@@ -67,7 +67,8 @@ class CardList extends React.Component<CardListProps, CardListStates> {
         bookLocation.chapterHref,
         bookLocation.count,
         bookLocation.percentage,
-        bookLocation.cfi
+        bookLocation.cfi,
+        bookLocation.page
       );
     }
 
