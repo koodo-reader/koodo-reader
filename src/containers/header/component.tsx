@@ -198,7 +198,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       <div className="header">
         <div
           className="header-search-container"
-          style={this.props.isCollapsed ? { left: "75px", width: "369px" } : {}}
+          style={this.props.isCollapsed ? { left: "80px", width: "369px" } : {}}
         >
           <SearchBox />
         </div>

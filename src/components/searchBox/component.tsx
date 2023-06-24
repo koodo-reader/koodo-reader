@@ -137,13 +137,15 @@ class SearchBox extends React.Component<SearchBoxProps> {
             <span className="icon-close"></span>
           </span>
         ) : (
-          <span
-            className="icon-search header-search-icon"
-            onClick={() => {
-              this.handleMouse();
-            }}
-            style={this.props.mode === "nav" ? { right: "5px" } : {}}
-          ></span>
+          <span className="header-search-text">
+            <span
+              className="icon-search header-search-icon"
+              onClick={() => {
+                this.handleMouse();
+              }}
+              style={this.props.mode === "nav" ? { right: "5px" } : {}}
+            ></span>
+          </span>
         )}
       </div>
     );

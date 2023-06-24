@@ -280,7 +280,7 @@ class NavigationPanel extends React.Component<
 
               <div className="navigation-navigation">
                 <span
-                  className="book-content-title"
+                  className="book-bookmark-title"
                   onClick={() => {
                     this.handleChangeTab("contents");
                   }}

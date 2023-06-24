@@ -11,6 +11,13 @@ export const getIframeDoc = () => {
   }
   return doc;
 };
+export const getIframeWin = () => {
+  let pageArea = document.getElementById("page-area");
+  if (!pageArea) return null;
+  let iframe = pageArea.getElementsByTagName("iframe")[0];
+  if (!iframe) return null;
+  return iframe;
+};
 export const getPDFIframeDoc = () => {
   let pageArea = document.getElementById("page-area");
   if (!pageArea) return null;

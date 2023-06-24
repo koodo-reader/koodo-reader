@@ -1,11 +1,12 @@
 .header-search-box {
-  width: 100%;
+  width: calc(100% - 20px);
   height: 38px;
   border-radius: 22px;
   border-style: none;
   outline: none;
-  padding-left: 20px;
   font-size: 15px;
+  padding: 0px;
+  padding-left: 20px;
 }
 input::-webkit-input-placeholder,
 input::-moz-placeholder,
@@ -15,28 +16,24 @@ textarea::-moz-placeholder,
 textarea::-ms-input-placeholder {
   font-size: 15px;
   line-height: 38px;
+
   /* opacity: 1; */
 }
 .header-search-icon {
-  position: absolute;
-  top: 10px;
-  right: -6px;
   font-size: 22px;
   display: inline-block;
   opacity: 0.6;
   cursor: pointer;
-  margin-right: 10px;
 }
 .header-search-text {
   position: absolute;
   top: 0px;
-  right: -15px;
+  right: 0px;
   font-size: 15px;
   display: inline-block;
-  width: 44px;
-  height: 44px;
+  width: 40px;
+  height: 100%;
   cursor: pointer;
-  margin-right: 5px;
   display: flex;
   align-items: center;
   justify-content: center;

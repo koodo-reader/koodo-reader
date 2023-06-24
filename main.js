@@ -15,6 +15,7 @@ const fs = require("fs");
 const configDir = app.getPath("userData");
 const { ra } = require("./edge-tts");
 const dirPath = path.join(configDir, "uploads");
+const { Blob } = require("buffer");
 let mainWin;
 const singleInstance = app.requestSingleInstanceLock();
 var filePath = null;
@@ -119,8 +120,28 @@ const createMainWin = () => {
     event.returnValue = "success";
   });
   ipcMain.handle("edge-tts", async (event, config) => {
+    console.log(dirPath);
     let { text } = config;
-    return await ra(text);
+    let audioName = new Date().getTime() + ".webm";
+    if (!fs.existsSync(path.join(dirPath, "tts"))) {
+      fs.mkdirSync(path.join(dirPath, "tts"));
+      fs.writeFileSync(path.join(dirPath, "tts", audioName), await ra(text));
+      console.log("文件夹创建成功");
+    } else {
+      fs.writeFileSync(path.join(dirPath, "tts", audioName), await ra(text));
+      console.log("文件夹已存在");
+    }
+
+    return path.join(dirPath, "tts", audioName);
+  });
+  ipcMain.handle("clear-tts", async (event, config) => {
+    if (!fs.existsSync(path.join(dirPath, "tts"))) {
+      return "pong";
+    } else {
+      const fsExtra = require("fs-extra");
+      fsExtra.emptyDirSync(path.join(dirPath, "tts"));
+      return "pong";
+    }
   });
   ipcMain.handle("change-path", async (event) => {
     var path = await dialog.showOpenDialog({
