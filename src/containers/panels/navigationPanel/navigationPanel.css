@@ -72,7 +72,8 @@
   line-height: 27px;
   opacity: 1;
   cursor: pointer;
-  width: 23%;
+  max-width: 40%;
+  overflow-x: hidden;
   text-align: center;
   margin: 1% 1%;
 }

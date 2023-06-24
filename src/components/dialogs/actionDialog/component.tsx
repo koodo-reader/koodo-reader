@@ -22,6 +22,7 @@ class ActionDialog extends React.Component<
     super(props);
     this.state = {
       isShowExport: false,
+      isExceed: false,
     };
   }
   handleDeleteBook = () => {
@@ -125,8 +126,15 @@ class ActionDialog extends React.Component<
             </div>
             <div
               className="action-dialog-edit"
-              onMouseEnter={() => {
+              onMouseEnter={(event) => {
                 this.setState({ isShowExport: true });
+                const e = event || window.event;
+                let x = e.clientX;
+                if (x > document.body.clientWidth - 300) {
+                  this.setState({ isExceed: true });
+                } else {
+                  this.setState({ isExceed: false });
+                }
               }}
               onMouseLeave={(event) => {
                 this.setState({ isShowExport: false });
@@ -241,7 +249,7 @@ class ActionDialog extends React.Component<
             this.state.isShowExport
               ? {
                   position: "absolute",
-                  left: this.props.left,
+                  left: this.props.left + (this.state.isExceed ? -400 : 0),
                   top: this.props.top + 70,
                 }
               : { display: "none" }

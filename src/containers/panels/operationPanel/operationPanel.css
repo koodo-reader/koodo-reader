@@ -18,16 +18,18 @@
   text-overflow: ellipsis;
   width: 80%;
   display: flex;
+  justify-content: center;
   align-items: center;
 }
 .exit-reading-icon {
+  display: inline-block;
   font-size: 21px;
+  margin-right: 10px;
 }
 .exit-reading-text {
   font-size: 13px;
   line-height: 37px;
   opacity: 1;
-  margin-left: 10px;
 }
 .add-bookmark-button {
   float: left;
@@ -55,6 +57,8 @@
   line-height: 14px;
   opacity: 1;
   margin-left: 10px;
+  display: block;
+  width: 70%;
 }
 .enter-fullscreen-button {
   float: left;

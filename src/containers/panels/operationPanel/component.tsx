@@ -191,10 +191,12 @@ class OperationPanel extends React.Component<
           }}
         >
           <div className="operation-button-container">
-            <span className="icon-exit exit-reading-icon"></span>
-            <span className="exit-reading-text">
-              <Trans>Exit</Trans>
-            </span>
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <span className="icon-exit exit-reading-icon"></span>
+              <span className="exit-reading-text">
+                <Trans>Exit</Trans>
+              </span>
+            </div>
           </div>
         </div>
         <div
@@ -204,10 +206,12 @@ class OperationPanel extends React.Component<
           }}
         >
           <div className="operation-button-container">
-            <span className="icon-add add-bookmark-icon"></span>
-            <span className="add-bookmark-text">
-              <Trans>Add Bookmark</Trans>
-            </span>
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <span className="icon-add add-bookmark-icon"></span>
+              <span className="add-bookmark-text">
+                <Trans>Add Bookmark</Trans>
+              </span>
+            </div>
           </div>
         </div>
         <div
@@ -217,16 +221,18 @@ class OperationPanel extends React.Component<
           }}
         >
           <div className="operation-button-container">
-            <span className="icon-fullscreen enter-fullscreen-icon"></span>
-            {StorageUtil.getReaderConfig("isFullscreen") !== "yes" ? (
-              <span className="enter-fullscreen-text">
-                <Trans>Enter Fullscreen</Trans>
-              </span>
-            ) : (
-              <span className="enter-fullscreen-text">
-                <Trans>Exit Fullscreen</Trans>
-              </span>
-            )}
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <span className="icon-fullscreen enter-fullscreen-icon"></span>
+              {StorageUtil.getReaderConfig("isFullscreen") !== "yes" ? (
+                <span className="enter-fullscreen-text">
+                  <Trans>Enter Fullscreen</Trans>
+                </span>
+              ) : (
+                <span className="enter-fullscreen-text">
+                  <Trans>Exit Fullscreen</Trans>
+                </span>
+              )}
+            </div>
           </div>
         </div>
       </div>

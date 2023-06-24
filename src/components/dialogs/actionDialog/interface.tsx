@@ -22,4 +22,5 @@ export interface ActionDialogProps {
 }
 export interface ActionDialogState {
   isShowExport: boolean;
+  isExceed: boolean;
 }
