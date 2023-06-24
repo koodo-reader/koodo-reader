@@ -7,22 +7,26 @@ import { sleep } from "../../utils/commonUtil";
 import EdgeUtil from "../../utils/serviceUtils/edgeUtil";
 import { isElectron } from "react-device-detect";
 import toast from "react-hot-toast";
+import RecordLocation from "../../utils/readUtils/recordLocation";
 
 class TextToSpeech extends React.Component<
   TextToSpeechProps,
   TextToSpeechState
 > {
+  nodeList: string[];
+  voices: any;
+  edgeVoices: any;
+  nativeVoices: any;
   constructor(props: TextToSpeechProps) {
     super(props);
     this.state = {
       isSupported: false,
       isAudioOn: false,
-      voices: [],
-      edgeVoices: [],
-      nativeVoices: [],
-      nodeIndex: 0,
-      nodeList: [],
     };
+    this.nodeList = [];
+    this.voices = [];
+    this.edgeVoices = [];
+    this.nativeVoices = [];
   }
   async componentDidMount() {
     if ("speechSynthesis" in window) {
@@ -34,7 +38,9 @@ class TextToSpeech extends React.Component<
     }
     let synth = window.speechSynthesis;
     synth.getVoices();
-    isElectron && this.setState({ edgeVoices: await EdgeUtil.getVoiceList() });
+    if (isElectron) {
+      this.edgeVoices = await EdgeUtil.getVoiceList();
+    }
   }
   handleChangeAudio = () => {
     if (this.state.isAudioOn) {
@@ -64,155 +70,160 @@ class TextToSpeech extends React.Component<
 
     let s = setSpeech();
     s.then(async (voices: any) => {
-      this.setState({ nativeVoices: voices });
-      this.setState(
-        {
-          voices: [
-            ...voices,
-            ...this.state.edgeVoices.map((item) => {
-              return {
-                name:
-                  item.FriendlyName.split("-")[1].trim() +
-                  " " +
-                  item.Gender +
-                  " " +
-                  item.FriendlyName.split(" ")[1],
-              };
-            }),
-          ],
-        },
-        () => {
-          this.setState({ isAudioOn: true }, () => {
-            this.handleAudio();
-            if (
-              document.querySelector("#text-speech-speed") &&
-              document.querySelector("#text-speech-voice") &&
-              document.querySelector("#text-speech-speed")!.children[0] &&
-              document.querySelector("#text-speech-voice")!.children[0]
-            ) {
-              document
-                .querySelector("#text-speech-speed")!
-                .children[
-                  speedList.option.indexOf(
-                    StorageUtil.getReaderConfig("voiceSpeed") || "1"
-                  )
-                ]?.setAttribute("selected", "selected");
-              document
-                .querySelector("#text-speech-voice")!
-                .children[
-                  StorageUtil.getReaderConfig("voiceIndex") || 0
-                ]?.setAttribute("selected", "selected");
-            }
-          });
-        }
-      );
+      this.nativeVoices = voices;
+      this.voices = [
+        ...voices,
+        ...this.edgeVoices.map((item) => {
+          return {
+            name:
+              item.FriendlyName.split("-")[1].trim() +
+              " " +
+              item.Gender +
+              " " +
+              item.FriendlyName.split(" ")[1],
+          };
+        }),
+      ];
+      this.setState({ isAudioOn: true }, () => {
+        this.handleAudio();
+        this.handleSelect();
+      });
     });
   };
+  handleSelect = () => {
+    if (
+      document.querySelector("#text-speech-speed") &&
+      document.querySelector("#text-speech-voice") &&
+      document.querySelector("#text-speech-speed")!.children[0] &&
+      document.querySelector("#text-speech-voice")!.children[0]
+    ) {
+      document
+        .querySelector("#text-speech-speed")!
+        .children[
+          speedList.option.indexOf(
+            StorageUtil.getReaderConfig("voiceSpeed") || "1"
+          )
+        ]?.setAttribute("selected", "selected");
+      document
+        .querySelector("#text-speech-voice")!
+        .children[StorageUtil.getReaderConfig("voiceIndex") || 0]?.setAttribute(
+          "selected",
+          "selected"
+        );
+    }
+  };
   handleAudio = async () => {
-    console.log(6);
     if (StorageUtil.getReaderConfig("isSliding") === "yes") {
       await sleep(1000);
     }
-    if (this.state.nodeIndex === 0) {
-      console.log(7);
-      this.setState(
-        { nodeList: this.props.htmlBook.rendition.visibleText() },
-        async () => {
-          console.log(8);
-          await this.handleRead();
-        }
-      );
-    } else if (this.state.nodeIndex === this.state.nodeList.length) {
-      await this.props.htmlBook.rendition.next();
-      this.setState({ nodeIndex: 0 }, async () => {
-        await this.handleAudio();
-      });
-    } else {
-      console.log(9);
-      await this.handleRead();
-    }
+    this.nodeList = this.props.htmlBook.rendition
+      .visibleText()
+      .filter((item: string) => item && item.trim());
+    await this.handleRead();
   };
   async handleRead() {
-    let currentText = this.state.nodeList[this.state.nodeIndex];
-
-    let style = "background: #f3a6a68c";
-    this.props.htmlBook.rendition.highlightNode(currentText, style);
-    currentText = currentText
-      .replace(/\s\s/g, "")
-      .replace(/\r/g, "")
-      .replace(/\n/g, "")
-      .replace(/\t/g, "")
-      .replace(/\f/g, "");
-    let nextText = "";
-    if (this.state.nodeIndex < this.state.nodeList.length - 1) {
-      nextText = this.state.nodeList[this.state.nodeIndex + 1];
-      nextText = nextText
-        .replace(/\s\s/g, "")
-        .replace(/\r/g, "")
-        .replace(/\n/g, "")
-        .replace(/\t/g, "")
-        .replace(/\f/g, "");
-    }
-    console.log(1);
-    await this.handleSpeech(
-      currentText,
-      nextText,
-      StorageUtil.getReaderConfig("voiceIndex") || 0,
-      StorageUtil.getReaderConfig("voiceSpeed") || 1
-    );
-    this.setState({ nodeIndex: this.state.nodeIndex + 1 });
-  }
-  handleSpeech = async (
-    currentText: string,
-    nextText: string,
-    voiceIndex: number,
-    speed: number
-  ) => {
-    if (voiceIndex > this.state.nativeVoices.length) {
-      let edgeVoice =
-        this.state.edgeVoices[voiceIndex - this.state.nativeVoices.length];
-      console.log(2);
-      let res = await EdgeUtil.readAloud(
-        currentText,
-        nextText,
-        edgeVoice.ShortName,
+    let voiceIndex = StorageUtil.getReaderConfig("voiceIndex") || 0;
+    let speed = StorageUtil.getReaderConfig("voiceSpeed") || 1;
+    if (voiceIndex > this.nativeVoices.length) {
+      EdgeUtil.setAudioPaths();
+      await EdgeUtil.cacheAudio(
+        [this.nodeList[0]],
+        this.edgeVoices[voiceIndex - this.nativeVoices.length].ShortName,
         speed * 100 - 100
       );
-      if (res === "failed") {
-        if (!(this.state.isAudioOn && this.props.isReading)) {
-          return;
-        }
-        await this.handleAudio();
-      }
-      let player = EdgeUtil.getPlayer();
-      console.log(3);
-      console.log(player);
-      player.onended = async (event) => {
-        console.log(4);
-        if (!(this.state.isAudioOn && this.props.isReading)) {
-          return;
-        }
-        console.log(5);
-        // await this.props.htmlBook.rendition.next();
-        await this.handleAudio();
-      };
-    } else {
-      var msg = new SpeechSynthesisUtterance();
-      msg.text = currentText;
-      msg.voice = window.speechSynthesis.getVoices()[voiceIndex];
-      msg.rate = speed;
-      window.speechSynthesis.speak(msg);
-      msg.onerror = (err) => {
-        console.log(err);
-      };
-
-      msg.onend = async (event) => {
-        if (!(this.state.isAudioOn && this.props.isReading)) {
-          return;
-        }
-        await this.handleAudio();
-      };
     }
+    setTimeout(async () => {
+      if (voiceIndex > this.nativeVoices.length) {
+        await EdgeUtil.cacheAudio(
+          this.nodeList.slice(1),
+          this.edgeVoices[voiceIndex - this.nativeVoices.length].ShortName,
+          speed * 100 - 100
+        );
+      }
+    }, 1);
+
+    for (let index = 0; index < this.nodeList.length; index++) {
+      let currentText = this.nodeList[index];
+      let style = "background: #f3a6a68c";
+      this.props.htmlBook.rendition.highlightNode(currentText, style);
+      if (
+        index >= EdgeUtil.getAudioPaths().length - 1 &&
+        voiceIndex > this.nativeVoices.length
+      ) {
+        while (true) {
+          if (index < EdgeUtil.getAudioPaths().length - 1) break;
+          await new Promise((resolve) => setTimeout(resolve, 500));
+        }
+      }
+
+      let res = await this.handleSpeech(
+        index,
+        StorageUtil.getReaderConfig("voiceIndex") || 0,
+        StorageUtil.getReaderConfig("voiceSpeed") || 1
+      );
+      if (res === "end") {
+        break;
+      }
+    }
+    if (this.state.isAudioOn && this.props.isReading) {
+      await window.require("electron").ipcRenderer.invoke("clear-tts");
+      await this.props.htmlBook.rendition.next();
+      let position = this.props.htmlBook.rendition.getPosition();
+      RecordLocation.recordHtmlLocation(
+        this.props.currentBook.key,
+        position.text,
+        position.chapterTitle,
+        position.chapterDocIndex,
+        position.chapterHref,
+        position.count,
+        position.percentage,
+        position.cfi,
+        position.page
+      );
+      this.nodeList = [];
+      await this.handleAudio();
+    }
+  }
+  handleSpeech = async (index: number, voiceIndex: number, speed: number) => {
+    return new Promise<string>(async (resolve, reject) => {
+      if (voiceIndex > this.nativeVoices.length) {
+        let res = await EdgeUtil.readAloud(index);
+        if (res === "loaderror") {
+          resolve("start");
+        } else {
+          let player = EdgeUtil.getPlayer();
+          player.on("end", async () => {
+            if (!(this.state.isAudioOn && this.props.isReading)) {
+              resolve("end");
+            }
+            resolve("start");
+          });
+        }
+      } else {
+        var msg = new SpeechSynthesisUtterance();
+        msg.text = this.nodeList[index]
+          .replace(/\s\s/g, "")
+          .replace(/\r/g, "")
+          .replace(/\n/g, "")
+          .replace(/\t/g, "")
+          .replace(/\f/g, "");
+
+        msg.voice = window.speechSynthesis.getVoices()[voiceIndex];
+        msg.rate = speed;
+        window.speechSynthesis.speak(msg);
+        msg.onerror = (err) => {
+          console.log(err);
+          resolve("start");
+        };
+
+        msg.onend = async (event) => {
+          if (!(this.state.isAudioOn && this.props.isReading)) {
+            resolve("end");
+          }
+          resolve("start");
+        };
+      }
+    });
   };
 
   render() {
@@ -248,7 +259,7 @@ class TextToSpeech extends React.Component<
                 ></span>
               </span>
             </div>
-            {this.state.isAudioOn && this.state.voices.length > 0 && (
+            {this.state.isAudioOn && this.voices.length > 0 && (
               <div
                 className="setting-dialog-new-title"
                 style={{
@@ -271,7 +282,7 @@ class TextToSpeech extends React.Component<
                     toast(this.props.t("Take effect in a while"));
                   }}
                 >
-                  {this.state.voices.map((item, index) => {
+                  {this.voices.map((item, index) => {
                     return (
                       <option
                         value={index}

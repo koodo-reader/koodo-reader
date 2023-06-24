@@ -7,10 +7,22 @@ export const getHightlightCoords = () => {
   if (!iframe) return;
   let iWin: any = iframe.contentWindow || iframe.contentDocument?.defaultView;
   var pageIndex = iWin!.PDFViewerApplication.pdfViewer.currentPageNumber - 1;
-  var page = iWin!.PDFViewerApplication.pdfViewer.getPageView(pageIndex);
-  var pageRect = page.canvas.getClientRects()[0];
   var selectionRects = iWin.getSelection()!.getRangeAt(0).getClientRects();
+
+  var page = iWin!.PDFViewerApplication.pdfViewer.getPageView(pageIndex);
   var viewport = page.viewport;
+  var pageRect = page.canvas.getClientRects()[0];
+  //处理双页模式的情况
+  if (iWin!.PDFViewerApplication.pdfViewer.spreadMode === 1) {
+    if (selectionRects.length > 0) {
+      if (selectionRects[0].left > pageRect.right) {
+        pageIndex++;
+        page = iWin!.PDFViewerApplication.pdfViewer.getPageView(pageIndex);
+        viewport = page.viewport;
+        pageRect = page.canvas.getClientRects()[0];
+      }
+    }
+  }
   let tempRect: { bottom: number; top: number; left: number; right: number }[] =
     [];
   for (let i = 0; i < selectionRects.length; i++) {

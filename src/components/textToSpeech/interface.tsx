@@ -11,9 +11,4 @@ export interface TextToSpeechProps {
 export interface TextToSpeechState {
   isSupported: boolean;
   isAudioOn: boolean;
-  voices: any;
-  edgeVoices: any;
-  nativeVoices: any;
-  nodeIndex: number;
-  nodeList: string[];
 }
