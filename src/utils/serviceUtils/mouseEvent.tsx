@@ -1,7 +1,7 @@
 import StorageUtil from "./storageUtil";
 import RecordLocation from "../readUtils/recordLocation";
 import { isElectron } from "react-device-detect";
-import { getIframeDoc } from "./docUtil";
+import { getIframeDoc, getIframeWin } from "./docUtil";
 declare var window: any;
 declare var document: any;
 const sleep = (ms: number) => {
@@ -20,15 +20,20 @@ export const getSelection = () => {
   return text || "";
 };
 let lock = false; //prevent from clicking too fasts
-const arrowKeys = async (rendition: any, keyCode: number, event: any) => {
+const arrowKeys = async (
+  rendition: any,
+  keyCode: number,
+  event: any,
+  readerMode: string
+) => {
   if (document.querySelector(".editor-box")) {
     return;
   }
-  if (keyCode === 37 || keyCode === 38) {
+  if (readerMode === "scroll" && (keyCode === 38 || keyCode === 40)) {
+  } else if (keyCode === 37 || keyCode === 38) {
     event.preventDefault();
     await rendition.prev();
-  }
-  if (keyCode === 39 || keyCode === 40) {
+  } else if (keyCode === 39 || keyCode === 40) {
     event.preventDefault();
     await rendition.next();
   }
@@ -116,7 +121,7 @@ export const bindHtmlEvent = (
   doc.addEventListener("keydown", async (event) => {
     if (lock) return;
     lock = true;
-    await arrowKeys(rendition, event.keyCode, event);
+    await arrowKeys(rendition, event.keyCode, event, readerMode);
     handleLocation(key, rendition);
     setTimeout(() => (lock = false), throttleTime);
   });
@@ -143,7 +148,7 @@ export const bindHtmlEvent = (
   window.addEventListener("keydown", async (event) => {
     if (lock) return;
     lock = true;
-    await arrowKeys(rendition, event.keyCode, event);
+    await arrowKeys(rendition, event.keyCode, event, readerMode);
     //使用Key判断是否是htmlBook
     handleLocation(key, rendition);
     setTimeout(() => (lock = false), throttleTime);
@@ -166,6 +171,9 @@ export const HtmlMouseEvent = (
   readerMode: string
 ) => {
   rendition.on("rendered", () => {
+    let iframe = getIframeWin();
+    if (!iframe) return;
+    iframe?.focus();
     let doc = getIframeDoc();
     if (!doc) return;
     lock = false;
