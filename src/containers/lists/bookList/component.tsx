@@ -9,7 +9,7 @@ import SortUtil from "../../../utils/readUtils/sortUtil";
 import BookModel from "../../../model/Book";
 import { BookListProps, BookListState } from "./interface";
 import StorageUtil from "../../../utils/serviceUtils/storageUtil";
-import localforage from "localforage";
+
 import Empty from "../../emptyPage";
 import { Redirect, withRouter } from "react-router-dom";
 import ViewMode from "../../../components/viewMode";
@@ -17,6 +17,7 @@ import { backup } from "../../../utils/syncUtils/backupUtil";
 import { isElectron } from "react-device-detect";
 import SelectBook from "../../../components/selectBook";
 import ShelfSelector from "../../../components/shelfSelector";
+declare var window: any;
 class BookList extends React.Component<BookListProps, BookListState> {
   constructor(props: BookListProps) {
     super(props);
@@ -163,7 +164,7 @@ class BookList extends React.Component<BookListProps, BookListState> {
     }
     if (isElectron) {
       //兼容之前的版本
-      localforage.getItem(this.props.books[0].key).then((result) => {
+      window.localforage.getItem(this.props.books[0].key).then((result) => {
         if (result) {
           backup(
             this.props.books,

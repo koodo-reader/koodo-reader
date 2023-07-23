@@ -10,9 +10,10 @@ import StorageUtil from "../../utils/serviceUtils/storageUtil";
 import AddTrash from "../../utils/readUtils/addTrash";
 import EmptyCover from "../emptyCover";
 import BookUtil from "../../utils/fileUtils/bookUtil";
-import FileSaver from "file-saver";
+
 import { isElectron } from "react-device-detect";
 import toast from "react-hot-toast";
+declare var window: any;
 class BookListItem extends React.Component<BookItemProps, BookItemState> {
   constructor(props: BookItemProps) {
     super(props);
@@ -94,7 +95,7 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
     BookUtil.fetchBook(this.props.book.key, true, this.props.book.path).then(
       (result: any) => {
         toast.success(this.props.t("Export Successfully"));
-        FileSaver.saveAs(
+        window.saveAs(
           new Blob([result]),
           this.props.book.name +
             `.${this.props.book.format.toLocaleLowerCase()}`

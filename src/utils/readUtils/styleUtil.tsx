@@ -35,120 +35,65 @@ class styleUtil {
     let colors = ["#FBF1D1", "#EFEEB0", "#CAEFC9", "#76BEE9"];
     let lines = ["#FF0000", "#000080", "#0000FF", "#2EFF2E"];
 
-    return `::selection{background:#f3a6a68c}::-moz-selection{background:#f3a6a68c}[class*=color-]:hover{cursor:pointer;background-image:linear-gradient(0,rgba(0,0,0,.075),rgba(0,0,0,.075))}.color-0{background-color:${colors[0]}}.color-1{background-color:${colors[1]}}.color-2{background-color:${colors[2]}}.color-3{background-color:${colors[3]}}.line-0{border-bottom:2px solid ${lines[0]}}.line-1{border-bottom:2px solid ${lines[1]}}.line-2{border-bottom:2px solid ${lines[2]}}.line-3{border-bottom:2px solid ${lines[3]}}}img{max-width:100% !important}`;
+    return `::selection{background:#f3a6a68c}::-moz-selection{background:#f3a6a68c}[class*=color-]:hover{cursor:pointer;background-image:linear-gradient(0,rgba(0,0,0,.075),rgba(0,0,0,.075))}.color-0{background-color:${
+      colors[0]
+    }}.color-1{background-color:${colors[1]}}.color-2{background-color:${
+      colors[2]
+    }}.color-3{background-color:${colors[3]}}.line-0{border-bottom:2px solid ${
+      lines[0]
+    }}.line-1{border-bottom:2px solid ${
+      lines[1]
+    }}.line-2{border-bottom:2px solid ${
+      lines[2]
+    }}.line-3{border-bottom:2px solid ${
+      lines[3]
+    }}}img{max-width:100% !important}.kookit-text{${this.getCustomCss()}}`;
   }
-  static getCustomCss(isJSON: boolean = true, isScroll: boolean = false) {
-    if (isJSON) {
-      return `font-size: ${
-        StorageUtil.getReaderConfig("fontSize") || 17
-      }px !important;line-height: ${
-        StorageUtil.getReaderConfig("lineHeight") || "1.25"
-      } !important;font-family: ${
-        StorageUtil.getReaderConfig("fontFamily") || ""
-      } !important;background-color: transparent;color: ${
-        StorageUtil.getReaderConfig("textColor")
-          ? StorageUtil.getReaderConfig("textColor")
-          : StorageUtil.getReaderConfig("backgroundColor") ===
-              "rgba(44,47,49,1)" ||
-            StorageUtil.getReaderConfig("appSkin") === "night" ||
-            (StorageUtil.getReaderConfig("appSkin") === "system" &&
-              StorageUtil.getReaderConfig("isOSNight") === "yes")
-          ? "white"
-          : ""
-      } !important;letter-spacing: ${
-        StorageUtil.getReaderConfig("letterSpacing")
-          ? StorageUtil.getReaderConfig("letterSpacing")
-          : ""
-      }px !important;text-align: ${
-        StorageUtil.getReaderConfig("textAlign")
-          ? StorageUtil.getReaderConfig("textAlign")
-          : ""
-      } !important;
+  static getCustomCss() {
+    return `font-size: ${
+      StorageUtil.getReaderConfig("fontSize") || 17
+    }px !important;line-height: ${
+      StorageUtil.getReaderConfig("lineHeight") || "1.25"
+    } !important;font-family: ${
+      StorageUtil.getReaderConfig("fontFamily") || ""
+    } !important;background-color: transparent;color: ${
+      StorageUtil.getReaderConfig("textColor")
+        ? StorageUtil.getReaderConfig("textColor")
+        : StorageUtil.getReaderConfig("backgroundColor") ===
+            "rgba(44,47,49,1)" ||
+          StorageUtil.getReaderConfig("appSkin") === "night" ||
+          (StorageUtil.getReaderConfig("appSkin") === "system" &&
+            StorageUtil.getReaderConfig("isOSNight") === "yes")
+        ? "white"
+        : ""
+    } !important;letter-spacing: ${
+      StorageUtil.getReaderConfig("letterSpacing")
+        ? StorageUtil.getReaderConfig("letterSpacing")
+        : ""
+    }px !important;text-align: ${
+      StorageUtil.getReaderConfig("textAlign")
+        ? StorageUtil.getReaderConfig("textAlign")
+        : ""
+    } !important;
       font-weight: ${
         StorageUtil.getReaderConfig("isBold") === "yes" ? "bold !important" : ""
       };font-style: ${
-        StorageUtil.getReaderConfig("isItalic") === "yes"
-          ? "italic !important"
-          : ""
-      };text-shadow: ${
-        StorageUtil.getReaderConfig("isShadow") === "yes"
-          ? "2px 2px 2px #cccccc !important"
-          : ""
-      };text-indent: ${
-        StorageUtil.getReaderConfig("isIndent") === "yes" ? "2rem" : ""
-      };text-decoration: ${
-        StorageUtil.getReaderConfig("isUnderline") === "yes"
-          ? "underline !important"
-          : ""
-      };margin-bottom: ${
-        StorageUtil.getReaderConfig("paraSpacing") || 0
-      }px !important;padding:0px !important;word-wrap: break-word;`;
-    } else {
-      return {
-        "a, article, cite, code, div, li, p, pre, span, table, body": {
-          "font-size": `${
-            StorageUtil.getReaderConfig("fontSize") || 17
-          }px !important`,
-          "line-height": `${
-            StorageUtil.getReaderConfig("lineHeight") || "1.25"
-          } !important`,
-          "font-family": `${
-            StorageUtil.getReaderConfig("fontFamily") || ""
-          } !important`,
-          "background-color": "transparent",
-          color: `${
-            StorageUtil.getReaderConfig("textColor")
-              ? StorageUtil.getReaderConfig("textColor")
-              : StorageUtil.getReaderConfig("backgroundColor") ===
-                  "rgba(44,47,49,1)" ||
-                StorageUtil.getReaderConfig("appSkin") === "night" ||
-                (StorageUtil.getReaderConfig("appSkin") === "system" &&
-                  StorageUtil.getReaderConfig("isOSNight") === "yes")
-              ? "white"
-              : ""
-          } !important`,
-          "letter-spacing": `${
-            StorageUtil.getReaderConfig("letterSpacing")
-              ? `${StorageUtil.getReaderConfig("letterSpacing")}px`
-              : ""
-          } !important`,
-          "text-align": `${
-            StorageUtil.getReaderConfig("textAlign")
-              ? `${StorageUtil.getReaderConfig("textAlign")}`
-              : ""
-          } !important`,
-          "font-weight": `${
-            StorageUtil.getReaderConfig("isBold") === "yes"
-              ? "bold !important"
-              : ""
-          }`,
-          "text-indent": `${
-            StorageUtil.getReaderConfig("isIndent") === "yes" ? "2rem" : ""
-          }`,
-          "font-style": `${
-            StorageUtil.getReaderConfig("isItalic") === "yes"
-              ? "italic !important"
-              : ""
-          }`,
-          "text-shadow": `${
-            StorageUtil.getReaderConfig("isShadow") === "yes"
-              ? "2px 2px 2px #cccccc !important"
-              : ""
-          }`,
-          "text-decoration": `${
-            StorageUtil.getReaderConfig("isUnderline") === "yes"
-              ? "underline !important"
-              : ""
-          }`,
-          "margin-bottom": `${
-            StorageUtil.getReaderConfig("paraSpacing") || 0
-          }px !important; word-wrap: break-word;`,
-        },
-        body: {
-          padding: isScroll ? "0px 8px !important" : "0px !important",
-        },
-      };
-    }
+      StorageUtil.getReaderConfig("isItalic") === "yes"
+        ? "italic !important"
+        : ""
+    };text-shadow: ${
+      StorageUtil.getReaderConfig("isShadow") === "yes"
+        ? "2px 2px 2px #cccccc !important"
+        : ""
+    };text-indent: ${
+      StorageUtil.getReaderConfig("isIndent") === "yes" ? "2rem" : ""
+    };text-decoration: ${
+      StorageUtil.getReaderConfig("isUnderline") === "yes"
+        ? "underline !important"
+        : ""
+    };margin-bottom: ${
+      StorageUtil.getReaderConfig("paraSpacing") || 0
+    }px !important;padding:0px !important;word-wrap: break-word;`;
   }
   static addStyle = (url: string) => {
     const style = document.createElement("link");

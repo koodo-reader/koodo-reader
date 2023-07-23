@@ -2,7 +2,7 @@ import React from "react";
 import "./operationPanel.css";
 import Bookmark from "../../../model/Bookmark";
 import { Trans } from "react-i18next";
-import localforage from "localforage";
+
 import RecordLocation from "../../../utils/readUtils/recordLocation";
 import { OperationPanelProps, OperationPanelState } from "./interface";
 import StorageUtil from "../../../utils/serviceUtils/storageUtil";
@@ -13,7 +13,7 @@ import { HtmlMouseEvent } from "../../../utils/serviceUtils/mouseEvent";
 import storageUtil from "../../../utils/serviceUtils/storageUtil";
 import EdgeUtil from "../../../utils/serviceUtils/edgeUtil";
 declare var document: any;
-
+declare var window: any;
 class OperationPanel extends React.Component<
   OperationPanelProps,
   OperationPanelState
@@ -132,7 +132,7 @@ class OperationPanel extends React.Component<
     let bookmarkArr = this.props.bookmarks;
     bookmarkArr.push(bookmark);
     this.props.handleBookmarks(bookmarkArr);
-    localforage.setItem("bookmarks", bookmarkArr);
+    window.localforage.setItem("bookmarks", bookmarkArr);
     this.setState({ isBookmark: true });
     toast.success(this.props.t("Add Successfully"));
     this.props.handleShowBookmark(true);

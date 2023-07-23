@@ -39,6 +39,7 @@
   font-size: 15px;
   line-height: 16px;
   font-weight: 500;
+  max-width: calc(100% - 40px);
 }
 .single-control-switch {
   display: inline-block;

@@ -1,7 +1,7 @@
 import React from "react";
 import RecentBooks from "../../utils/readUtils/recordRecent";
 import { ViewerProps, ViewerState } from "./interface";
-import localforage from "localforage";
+
 import { withRouter } from "react-router-dom";
 import BookUtil from "../../utils/fileUtils/bookUtil";
 import BackToMain from "../../components/backToMain";
@@ -9,6 +9,7 @@ import PopupMenu from "../../components/popups/popupMenu";
 import { Toaster } from "react-hot-toast";
 import { handleLinkJump } from "../../utils/readUtils/linkUtil";
 import { pdfMouseEvent } from "../../utils/serviceUtils/mouseEvent";
+declare var window: any;
 class Viewer extends React.Component<ViewerProps, ViewerState> {
   constructor(props: ViewerProps) {
     super(props);
@@ -33,7 +34,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     let firstIndexOfQuestion = url.indexOf("?");
     let lastIndexOfSlash = url.lastIndexOf("/", firstIndexOfQuestion);
     let key = url.substring(lastIndexOfSlash + 1, firstIndexOfQuestion);
-    localforage.getItem("books").then((result: any) => {
+    window.localforage.getItem("books").then((result: any) => {
       let book;
       if (this.props.currentBook.key) {
         book = this.props.currentBook;

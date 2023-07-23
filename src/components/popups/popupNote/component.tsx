@@ -2,7 +2,7 @@
 import React from "react";
 import "./popupNote.css";
 import Note from "../../../model/Note";
-import localforage from "localforage";
+
 import { PopupNoteProps, PopupNoteState } from "./interface";
 import RecordLocation from "../../../utils/readUtils/recordLocation";
 import NoteTag from "../../noteTag";
@@ -75,7 +75,7 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
           item.cfi = cfi;
         }
       });
-      localforage.setItem("notes", this.props.notes).then(() => {
+      window.localforage.setItem("notes", this.props.notes).then(() => {
         this.props.handleOpenMenu(false);
         toast.success(this.props.t("Add Successfully"));
         this.props.handleFetchNotes();
@@ -134,7 +134,7 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
 
       let noteArr = this.props.notes;
       noteArr.push(note);
-      localforage.setItem("notes", noteArr).then(() => {
+      window.localforage.setItem("notes", noteArr).then(() => {
         this.props.handleOpenMenu(false);
         toast.success(this.props.t("Add Successfully"));
         this.props.handleFetchNotes();
@@ -154,7 +154,7 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
       });
       if (noteIndex > -1) {
         this.props.notes.splice(noteIndex, 1);
-        localforage.setItem("notes", this.props.notes).then(() => {
+        window.localforage.setItem("notes", this.props.notes).then(() => {
           this.props.handleOpenMenu(false);
           this.props.handleMenuMode("menu");
           if (this.props.currentBook.format === "PDF") {
