@@ -1,6 +1,6 @@
 .header-search-box {
   width: calc(100% - 20px);
-  height: 38px;
+  height: 39px;
   border-radius: 22px;
   border-style: none;
   outline: none;
@@ -8,16 +8,13 @@
   padding: 0px;
   padding-left: 20px;
 }
-input::-webkit-input-placeholder,
-input::-moz-placeholder,
-input::-ms-input-placeholder,
-textarea::-webkit-input-placeholder,
-textarea::-moz-placeholder,
-textarea::-ms-input-placeholder {
+.header-search-box::placeholder {
   font-size: 15px;
-  line-height: 38px;
-
-  /* opacity: 1; */
+  line-height: 39px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  width: calc(100% - 40px);
 }
 .header-search-icon {
   font-size: 22px;

@@ -84,6 +84,12 @@ export const settingList = [
     propName: "isOpenInMain",
   },
   {
+    isElectron: false,
+    title: "Auto precache books after import",
+    desc: "Precache books after import to increase opening speed, Koodo will generate a precache version of the original book and save it into your library",
+    propName: "isPrecacheBook",
+  },
+  {
     isElectron: true,
     title: "Disable update notification",
     propName: "isDisableUpdate",

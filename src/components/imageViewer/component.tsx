@@ -1,10 +1,10 @@
 import React from "react";
 import "./imageViewer.css";
 import { ImageViewerProps, ImageViewerStates } from "./interface";
-import FileSaver from "file-saver";
+
 import { handleLinkJump } from "../../utils/readUtils/linkUtil";
 import { getIframeDoc } from "../../utils/serviceUtils/docUtil";
-
+declare var window: any;
 class ImageViewer extends React.Component<ImageViewerProps, ImageViewerStates> {
   constructor(props: ImageViewerProps) {
     super(props);
@@ -101,7 +101,7 @@ class ImageViewer extends React.Component<ImageViewerProps, ImageViewerStates> {
   handleSave = async () => {
     let image: any = document.querySelector(".image");
     let blob = await fetch(image.src).then((r) => r.blob());
-    FileSaver.saveAs(blob, `${new Date().toLocaleDateString()}`);
+    window.saveAs(blob, `${new Date().toLocaleDateString()}`);
   };
   handleClock = () => {
     let image: any = document.querySelector(".image");

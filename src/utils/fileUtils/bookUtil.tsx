@@ -1,6 +1,6 @@
 import StorageUtil from "../serviceUtils/storageUtil";
 import { isElectron } from "react-device-detect";
-import localforage from "localforage";
+
 import BookModel from "../../model/Book";
 import toast from "react-hot-toast";
 import { getPDFCover } from "./pdfUtil";
@@ -41,7 +41,7 @@ class BookUtil {
         };
       });
     } else {
-      return localforage.setItem(key, buffer);
+      return window.localforage.setItem(key, buffer);
     }
   }
   static deleteBook(key: string) {
@@ -64,7 +64,7 @@ class BookUtil {
         }
       });
     } else {
-      return localforage.removeItem(key);
+      return window.localforage.removeItem(key);
     }
   }
   static isBookExist(key: string, bookPath: string = "") {
@@ -82,13 +82,18 @@ class BookUtil {
           key
         );
 
-        if ((bookPath && fs.existsSync(bookPath)) || fs.existsSync(_bookPath)) {
+        if (key.startsWith("cache")) {
+          resolve(fs.existsSync(_bookPath));
+        } else if (
+          (bookPath && fs.existsSync(bookPath)) ||
+          fs.existsSync(_bookPath)
+        ) {
           resolve(true);
         } else {
           resolve(false);
         }
       } else {
-        localforage.getItem(key).then((result) => {
+        window.localforage.getItem(key).then((result) => {
           if (result) {
             resolve(true);
           } else {
@@ -98,7 +103,7 @@ class BookUtil {
       }
     });
   }
-  static fetchBook(
+  static fetchBook1(
     key: string,
     isArrayBuffer: boolean = false,
     bookPath: string = ""
@@ -137,7 +142,49 @@ class BookUtil {
         }
       });
     } else {
-      return localforage.getItem(key);
+      return window.localforage.getItem(key);
+    }
+  }
+  static fetchBook(
+    key: string,
+    isArrayBuffer: boolean = false,
+    bookPath: string = ""
+  ) {
+    if (isElectron) {
+      return new Promise<File | ArrayBuffer | boolean>((resolve, reject) => {
+        var fs = window.require("fs");
+        var path = window.require("path");
+        let _bookPath = path.join(
+          localStorage.getItem("storageLocation")
+            ? localStorage.getItem("storageLocation")
+            : window
+                .require("electron")
+                .ipcRenderer.sendSync("storage-location", "ping"),
+          `book`,
+          key
+        );
+        var data;
+        if (fs.existsSync(_bookPath)) {
+          data = fs.readFileSync(_bookPath);
+        } else if (bookPath && fs.existsSync(bookPath)) {
+          data = fs.readFileSync(bookPath);
+        } else {
+          resolve(false);
+        }
+
+        let blobTemp = new Blob([data]);
+        let fileTemp = new File([blobTemp], "data", {
+          lastModified: new Date().getTime(),
+          type: blobTemp.type,
+        });
+        if (isArrayBuffer) {
+          resolve(new Uint8Array(data).buffer);
+        } else {
+          resolve(fileTemp);
+        }
+      });
+    } else {
+      return window.localforage.getItem(key);
     }
   }
   static FetchAllBooks(Books: BookModel[]) {
@@ -214,6 +261,49 @@ class BookUtil {
       return `./lib/pdf/web/viewer.html?file=${book.key}`;
     }
   }
+  static getRendtion = (
+    result: ArrayBuffer,
+    format: string,
+    readerMode: string,
+    charset: string
+  ) => {
+    let rendition;
+    if (format === "CACHE") {
+      rendition = new window.Kookit.CacheRender(result, readerMode);
+    } else if (format === "MOBI" || format === "AZW3" || format === "AZW") {
+      rendition = new window.Kookit.MobiRender(result, readerMode);
+    } else if (format === "EPUB") {
+      rendition = new window.Kookit.EpubRender(result, readerMode);
+    } else if (format === "TXT") {
+      rendition = new window.Kookit.TxtRender(result, readerMode, charset);
+    } else if (format === "MD") {
+      rendition = new window.Kookit.EpubRender(result, readerMode);
+    } else if (format === "FB2") {
+      rendition = new window.Kookit.Fb2Render(result, readerMode);
+    } else if (format === "DOCX") {
+      rendition = new window.Kookit.DocxRender(result, readerMode);
+    } else if (
+      format === "HTML" ||
+      format === "XHTML" ||
+      format === "MHTML" ||
+      format === "HTM" ||
+      format === "XML"
+    ) {
+      rendition = new window.Kookit.HtmlRender(result, readerMode, format);
+    } else if (
+      format === "CBR" ||
+      format === "CBT" ||
+      format === "CBZ" ||
+      format === "CB7"
+    ) {
+      rendition = new window.Kookit.ComicRender(
+        copyArrayBuffer(result),
+        readerMode,
+        format
+      );
+    }
+    return rendition;
+  };
   static generateBook(
     bookName: string,
     extension: string,
@@ -222,7 +312,6 @@ class BookUtil {
     path: string,
     file_content: ArrayBuffer
   ) {
-    const { MobiRender, EpubRender, Fb2Render, ComicRender } = window.Kookit;
     return new Promise<BookModel | string>(async (resolve, reject) => {
       let cover: any = "";
       let key: string,
@@ -239,7 +328,13 @@ class BookUtil {
         "",
       ];
       let metadata: any;
-      let rendition: any;
+      let rendition = BookUtil.getRendtion(
+        file_content,
+        extension.toUpperCase(),
+        "",
+        ""
+      );
+
       switch (extension) {
         case "pdf":
           cover = await getPDFCover(file_content);
@@ -248,7 +343,6 @@ class BookUtil {
           }
           break;
         case "epub":
-          rendition = new EpubRender(file_content, "scroll");
           metadata = await rendition.getMetadata();
           if (metadata === "timeout_error") {
             resolve("get_metadata_error");
@@ -271,7 +365,6 @@ class BookUtil {
         case "mobi":
         case "azw":
         case "azw3":
-          rendition = new MobiRender(file_content, "scroll");
           metadata = await rendition.getMetadata();
           [name, author, description, publisher, cover] = [
             metadata.name || bookName,
@@ -282,7 +375,6 @@ class BookUtil {
           ];
           break;
         case "fb2":
-          rendition = new Fb2Render(file_content, "scroll");
           metadata = await rendition.getMetadata();
           [name, author, description, publisher, cover] = [
             metadata.name || bookName,
@@ -296,19 +388,24 @@ class BookUtil {
         case "cbt":
         case "cbz":
         case "cb7":
-          rendition = new ComicRender(
-            copyArrayBuffer(file_content),
-            "scroll",
-            extension.toUpperCase()
-          );
           metadata = await rendition.getMetadata();
           cover = metadata.cover;
+          break;
+        case "txt":
+          metadata = await rendition.getMetadata();
+          charset = metadata.charset;
           break;
         default:
           break;
       }
       let format = extension.toUpperCase();
       key = new Date().getTime() + "";
+      if (StorageUtil.getReaderConfig("isPrecacheBook") === "yes") {
+        let cache = await rendition.preCache(file_content);
+        if (cache !== "err") {
+          BookUtil.addBook("cache-" + key, cache);
+        }
+      }
       resolve(
         new BookModel(
           key,

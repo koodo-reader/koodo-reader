@@ -37,7 +37,7 @@
   - Plain text (**.txt**)
   - FictionBook (**.fb2**)
   - Comic book archive (**.cbr**, **.cbz**, **.cbt**, **.cb7**)
-  - Rich text (**.md**, **.docx**, **.rtf**)
+  - Rich text (**.md**, **.docx**)
   - Hyper Text (**.html**, **.xml**, **.xhtml**, **.mhtml**, **.htm**, **.htm**)
 - Platform support: **Windows**, **macOS**, **Linux** and **Web**
 - Save your data to **Dropbox** or **Webdav**

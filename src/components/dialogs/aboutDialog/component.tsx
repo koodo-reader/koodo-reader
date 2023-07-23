@@ -83,11 +83,11 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
                   StorageUtil.getReaderConfig("lang") === "cht"
                 ) {
                   this.handleJump(
-                    "https://www.notion.so/troyeguo/215baeda57804fd29dbb0e91d1e6a021?v=360c00183d944b598668f34c255edfd7"
+                    "https://troyeguo.notion.site/215baeda57804fd29dbb0e91d1e6a021?v=360c00183d944b598668f34c255edfd7"
                   );
                 } else {
                   this.handleJump(
-                    "https://www.notion.so/troyeguo/d1c19a132932465bae1d89dd963c92ea?v=ca8aa69cf25849c18c92b92ba868663b"
+                    "https://troyeguo.notion.site/d1c19a132932465bae1d89dd963c92ea?v=ca8aa69cf25849c18c92b92ba868663b"
                   );
                 }
               }}

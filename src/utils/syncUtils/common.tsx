@@ -1,5 +1,5 @@
 import BookModel from "../../model/Book";
-import localforage from "localforage";
+
 import BookUtil from "../fileUtils/bookUtil";
 import NoteModel from "../../model/Note";
 import BookmarkModel from "../../model/Bookmark";
@@ -81,7 +81,7 @@ export const moveData = (
     );
     if (driveIndex === 4) {
       let deleteBooks = books.map((item) => {
-        return localforage.removeItem(item.key);
+        return window.localforage.removeItem(item.key);
       });
       await Promise.all(deleteBooks);
     }
@@ -149,7 +149,7 @@ export const syncData = (blob: Blob, books: BookModel[] = [], isSync: true) => {
 
       if (!isSync) {
         let deleteBooks = books.map((item) => {
-          return localforage.removeItem(item.key);
+          return window.localforage.removeItem(item.key);
         });
         await Promise.all(deleteBooks);
         resolve(true);
@@ -168,7 +168,7 @@ export const zipBook = (zip: any, books: BookModel[]) => {
       books.forEach((item) => {
         data.push(
           !isElectron
-            ? localforage.getItem(item.key)
+            ? window.localforage.getItem(item.key)
             : BookUtil.fetchBook(item.key, false, item.path)
         );
       });
@@ -194,7 +194,10 @@ export const unzipConfig = (zipEntries: any) => {
           zipEntry.name === "books.json" ||
           zipEntry.name === "bookmarks.json"
         ) {
-          localforage.setItem(zipEntry.name.split(".")[0], JSON.parse(text));
+          window.localforage.setItem(
+            zipEntry.name.split(".")[0],
+            JSON.parse(text)
+          );
         } else if (zipEntry.name === "pdfjs.history.json") {
           localStorage.setItem("pdfjs.history", text);
         } else {
@@ -216,7 +219,7 @@ const toArrayBuffer = (buf) => {
 };
 export const unzipBook = (zipEntries: any) => {
   return new Promise<boolean>((resolve, reject) => {
-    localforage.getItem("books").then((value: any) => {
+    window.localforage.getItem("books").then((value: any) => {
       let count = 0;
       value &&
         value.length > 0 &&

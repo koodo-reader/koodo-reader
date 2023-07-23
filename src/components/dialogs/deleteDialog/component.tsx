@@ -1,7 +1,7 @@
 import React from "react";
 import "./deleteDialog.css";
 import DeleteUtil from "../../../utils/readUtils/deleteUtil";
-import localforage from "localforage";
+
 import ShelfUtil from "../../../utils/readUtils/shelfUtil";
 import RecordRecent from "../../../utils/readUtils/recordRecent";
 import RecordLocation from "../../../utils/readUtils/recordLocation";
@@ -13,6 +13,7 @@ import AddTrash from "../../../utils/readUtils/addTrash";
 import BookUtil from "../../../utils/fileUtils/bookUtil";
 import toast from "react-hot-toast";
 import StorageUtil from "../../../utils/serviceUtils/storageUtil";
+declare var window: any;
 class DeleteDialog extends React.Component<
   DeleteDialogProps,
   DeleteDialogState
@@ -34,19 +35,19 @@ class DeleteDialog extends React.Component<
       if (this.props.bookmarks) {
         let bookmarkArr = DeleteUtil.deleteBookmarks(this.props.bookmarks, key);
         if (bookmarkArr.length === 0) {
-          await localforage.removeItem("bookmarks");
+          await window.localforage.removeItem("bookmarks");
         } else {
-          await localforage.setItem("bookmarks", bookmarkArr);
+          await window.localforage.setItem("bookmarks", bookmarkArr);
         }
         this.props.handleFetchBookmarks();
       }
       if (this.props.notes) {
         let noteArr = DeleteUtil.deleteNotes(this.props.notes, key);
         if (noteArr.length === 0) {
-          await localforage.removeItem("notes");
+          await window.localforage.removeItem("notes");
           resolve();
         } else {
-          await localforage.setItem("notes", noteArr);
+          await window.localforage.setItem("notes", noteArr);
           resolve();
         }
         this.props.handleFetchNotes();
@@ -123,10 +124,11 @@ class DeleteDialog extends React.Component<
   deleteBook = (key: string) => {
     return new Promise<void>((resolve, reject) => {
       this.props.books &&
-        localforage
+        window.localforage
           .setItem("books", DeleteUtil.deleteBook(this.props.books, key))
           .then(async () => {
             await BookUtil.deleteBook(key);
+            await BookUtil.deleteBook("cache-" + key);
             //从喜爱的图书中删除
             AddFavorite.clear(key);
             //从回收的图书中删除

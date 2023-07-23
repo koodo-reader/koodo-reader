@@ -139,8 +139,15 @@ const createMainWin = () => {
       return "pong";
     } else {
       const fsExtra = require("fs-extra");
-      fsExtra.emptyDirSync(path.join(dirPath, "tts"));
-      return "pong";
+      try {
+        await fsExtra.remove(path.join(dirPath, "tts"));
+        await fsExtra.mkdir(path.join(dirPath, "tts"));
+        console.log("success!");
+        return "pong";
+      } catch (err) {
+        console.error(err);
+        return "pong";
+      }
     }
   });
   ipcMain.handle("change-path", async (event) => {

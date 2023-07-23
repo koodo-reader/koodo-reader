@@ -37,7 +37,7 @@
   - Kindle (**.azw3**, **.mobi**, **.azw**)
   - 纯文本 (**.txt**)
   - 漫画 (**.cbr**, **.cbz**, **.cbt**, **.cb7**)
-  - 富文本 (**.md**, **.docx**, **.rtf**)
+  - 富文本 (**.md**, **.docx**)
   - FB2 (**.fb2**)
   - 超文本 (**.html**, **.xml**, **.xhtml**, **.mhtml**, **.htm**, **.htm**)
 - 支持 **Windows**，**macOS**，**Linux** 和 **网页版**

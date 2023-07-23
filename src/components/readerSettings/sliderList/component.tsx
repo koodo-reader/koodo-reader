@@ -119,33 +119,32 @@ class SliderList extends React.Component<SliderListProps, SliderListState> {
           />
           <span style={{ marginLeft: "10px" }}>{this.state.value}</span>
         </div>
-
-        <span className="ultra-small-size">{this.props.minLabel}</span>
-        <div className="font-size-selector">
-          <input
-            className="input-progress"
-            value={this.state.value}
-            type="range"
-            max={this.props.maxValue}
-            min={this.props.minValue}
-            step={this.props.step}
-            onInput={(event) => {
-              this.onValueChange(event);
-            }}
-            onChange={(event) => {
-              this.onValueInput(event);
-            }}
-            onMouseUp={() => {
-              this.handleRest();
-            }}
-            style={{ position: "absolute", bottom: "11px" }}
-          />
-        </div>
-        {
+        <div style={{ display: "flex", justifyContent: "space-around" }}>
+          <span className="ultra-small-size">{this.props.minLabel}</span>
+          <div className="font-size-selector">
+            <input
+              className="input-progress"
+              value={this.state.value}
+              type="range"
+              max={this.props.maxValue}
+              min={this.props.minValue}
+              step={this.props.step}
+              onInput={(event) => {
+                this.onValueChange(event);
+              }}
+              onChange={(event) => {
+                this.onValueInput(event);
+              }}
+              onMouseUp={() => {
+                this.handleRest();
+              }}
+              style={{ position: "absolute", bottom: "11px" }}
+            />
+          </div>
           <span className="ultra-large-size" style={{ fontSize: "16px" }}>
             {this.props.maxLabel}
           </span>
-        }
+        </div>
       </div>
     );
   }

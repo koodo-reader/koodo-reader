@@ -1,7 +1,7 @@
 import React from "react";
 import RecentBooks from "../../utils/readUtils/recordRecent";
 import { ViewerProps, ViewerState } from "./interface";
-import localforage from "localforage";
+
 import { withRouter } from "react-router-dom";
 import BookUtil from "../../utils/fileUtils/bookUtil";
 import { toast } from "react-hot-toast";
@@ -22,7 +22,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     let lastIndexOfSlash = url.lastIndexOf("/", firstIndexOfQuestion);
     let key = url.substring(lastIndexOfSlash + 1, firstIndexOfQuestion);
 
-    localforage.getItem("books").then((result: any) => {
+    window.localforage.getItem("books").then((result: any) => {
       let book;
       //兼容在主窗口打开
       if (this.props.currentBook.key) {

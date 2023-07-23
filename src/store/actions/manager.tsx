@@ -1,10 +1,9 @@
-import localforage from "localforage";
 import StorageUtil from "../../utils/serviceUtils/storageUtil";
 import SortUtil from "../../utils/readUtils/sortUtil";
 import BookModel from "../../model/Book";
 import { Dispatch } from "redux";
 import AddTrash from "../../utils/readUtils/addTrash";
-
+declare var window: any;
 export function handleBooks(books: BookModel[]) {
   return { type: "HANDLE_BOOKS", payload: books };
 }
@@ -73,7 +72,7 @@ export function handleNoteSortCode(noteSortCode: {
 
 export function handleFetchBooks(isTrash = false) {
   return (dispatch: Dispatch) => {
-    localforage.getItem("books", (err, value) => {
+    window.localforage.getItem("books", (err, value) => {
       let bookArr: any = value;
       let keyArr = AddTrash.getAllTrash();
       if (isTrash) {
