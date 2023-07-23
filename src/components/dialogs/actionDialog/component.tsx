@@ -3,7 +3,7 @@ import "./actionDialog.css";
 import { Trans } from "react-i18next";
 import { ActionDialogProps, ActionDialogState } from "./interface";
 import AddTrash from "../../../utils/readUtils/addTrash";
-import FileSaver from "file-saver";
+
 import Parser from "html-react-parser";
 import * as DOMPurify from "dompurify";
 
@@ -14,6 +14,7 @@ import {
   exportHighlights,
   exportNotes,
 } from "../../../utils/syncUtils/exportUtil";
+declare var window: any;
 class ActionDialog extends React.Component<
   ActionDialogProps,
   ActionDialogState
@@ -144,10 +145,14 @@ class ActionDialog extends React.Component<
             >
               <p className="action-name" style={{ marginLeft: "0px" }}>
                 <span
-                  className="icon-export view-icon"
-                  style={{ marginRight: "15px" }}
+                  className="icon-more view-icon"
+                  style={{
+                    display: "inline-block",
+                    marginRight: "15px",
+                    transform: "rotate(90deg)",
+                  }}
                 ></span>
-                <Trans>Export</Trans>
+                <Trans>More Actions</Trans>
               </p>
 
               <span
@@ -248,8 +253,8 @@ class ActionDialog extends React.Component<
           style={
             this.state.isShowExport
               ? {
-                  position: "absolute",
-                  left: this.props.left + (this.state.isExceed ? -400 : 0),
+                  position: "fixed",
+                  left: this.props.left + (this.state.isExceed ? -200 : 200),
                   top: this.props.top + 70,
                 }
               : { display: "none" }
@@ -264,7 +269,7 @@ class ActionDialog extends React.Component<
                 this.props.currentBook.path
               ).then((result: any) => {
                 toast.success(this.props.t("Export Successfully"));
-                FileSaver.saveAs(
+                window.saveAs(
                   new Blob([result]),
                   this.props.currentBook.name +
                     `.${this.props.currentBook.format.toLocaleLowerCase()}`
@@ -272,7 +277,6 @@ class ActionDialog extends React.Component<
               });
             }}
           >
-            <span className="icon-export view-icon"></span>
             <p className="action-name">
               <Trans>Export Books</Trans>
             </p>
@@ -299,7 +303,6 @@ class ActionDialog extends React.Component<
               }
             }}
           >
-            <span className="icon-export view-icon"></span>
             <p className="action-name">
               <Trans>Export Notes</Trans>
             </p>
@@ -326,9 +329,50 @@ class ActionDialog extends React.Component<
               }
             }}
           >
-            <span className="icon-export view-icon"></span>
             <p className="action-name">
               <Trans>Export Highlights</Trans>
+            </p>
+          </div>
+          <div
+            className="action-dialog-edit"
+            onClick={() => {
+              BookUtil.fetchBook(
+                this.props.currentBook.key,
+                true,
+                this.props.currentBook.path
+              ).then(async (result: any) => {
+                let rendition = BookUtil.getRendtion(
+                  result,
+                  this.props.currentBook.format,
+                  "",
+                  this.props.currentBook.charset
+                );
+                let cache = await rendition.preCache(result);
+                if (cache !== "err") {
+                  BookUtil.addBook(
+                    "cache-" + this.props.currentBook.key,
+                    cache
+                  );
+                  toast.success(this.props.t("Precache Successfully"));
+                } else {
+                  toast.error(this.props.t("Precache failed"));
+                }
+              });
+            }}
+          >
+            <p className="action-name">
+              <Trans>Precache</Trans>
+            </p>
+          </div>
+          <div
+            className="action-dialog-edit"
+            onClick={async () => {
+              await BookUtil.deleteBook("cache-" + this.props.currentBook.key);
+              toast.success(this.props.t("Delete Successfully"));
+            }}
+          >
+            <p className="action-name">
+              <Trans>Delete Precache</Trans>
             </p>
           </div>
         </div>

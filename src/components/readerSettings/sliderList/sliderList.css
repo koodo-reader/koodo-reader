@@ -20,9 +20,8 @@
 .ultra-large-size {
   float: right;
   font-size: 40px;
-  line-height: 68px;
+  line-height: 28px;
   position: relative;
-  bottom: 49px;
   text-align: left;
 }
 .font-size-selector {

@@ -42,6 +42,7 @@ class AddDialog extends Component<AddDialogProps, AddDialogState> {
     }
     //判断书架中是否已有该图书
     if (
+      !this.props.isSelectBook &&
       shelfList[`${shelfTitle}`] &&
       shelfList[`${shelfTitle}`].indexOf(this.props.currentBook.key) > -1
     ) {

@@ -6,7 +6,6 @@ import BookUtil from "../../utils/fileUtils/bookUtil";
 import PopupMenu from "../../components/popups/popupMenu";
 import StorageUtil from "../../utils/serviceUtils/storageUtil";
 import RecordLocation from "../../utils/readUtils/recordLocation";
-import { mimetype } from "../../constants/mimetype";
 import Background from "../../components/background";
 import toast from "react-hot-toast";
 import StyleUtil from "../../utils/readUtils/styleUtil";
@@ -15,11 +14,7 @@ import { HtmlMouseEvent } from "../../utils/serviceUtils/mouseEvent";
 import ImageViewer from "../../components/imageViewer";
 import { getIframeDoc } from "../../utils/serviceUtils/docUtil";
 import { tsTransform } from "../../utils/serviceUtils/langUtil";
-import localforage from "localforage";
-import { removeExtraQuestionMark } from "../../utils/commonUtil";
 import CFI from "epub-cfi-resolver";
-import mhtml2html from "mhtml2html";
-import rtfToHTML from "@iarna/rtf-to-html";
 import { binicReadingProcess } from "../../utils/serviceUtils/bionicUtil";
 
 declare var window: any;
@@ -107,7 +102,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       );
     }
   };
-  handleRenderBook = () => {
+  handleRenderBook = async () => {
     if (lock) return;
     let { key, path, format, name } = this.props.currentBook;
     this.props.handleHtmlBook(null);
@@ -120,46 +115,30 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       this.handlePageWidth();
 
     window.rangy.init();
-    BookUtil.fetchBook(key, true, path).then((result) => {
-      if (!result) {
-        toast.error(this.props.t("Book not exsit"));
-        return;
-      }
-      if (format === "MOBI" || format === "AZW3" || format === "AZW") {
-        this.handleMobi(result as ArrayBuffer);
-      } else if (format === "EPUB") {
-        this.handleEpub(result as ArrayBuffer);
-      } else if (format === "TXT") {
-        this.handleTxt(result as ArrayBuffer);
-      } else if (format === "MD") {
-        this.handleMD(result as ArrayBuffer);
-      } else if (format === "FB2") {
-        this.handleFb2(result as ArrayBuffer);
-      } else if (format === "RTF") {
-        this.handleRtf(result as ArrayBuffer);
-      } else if (format === "DOCX") {
-        this.handleDocx(result as ArrayBuffer);
-      } else if (
-        format === "HTML" ||
-        format === "XHTML" ||
-        format === "MHTML" ||
-        format === "HTM" ||
-        format === "XML"
-      ) {
-        this.handleHtml(result as ArrayBuffer, format);
-      } else if (
-        format === "CBR" ||
-        format === "CBT" ||
-        format === "CBZ" ||
-        format === "CB7"
-      ) {
-        this.handleComic(result as ArrayBuffer, format);
-      }
-      this.props.handleReadingState(true);
+    let isCacheExsit = await BookUtil.isBookExist("cache-" + key, path);
+    BookUtil.fetchBook(isCacheExsit ? "cache-" + key : key, true, path).then(
+      async (result: any) => {
+        if (!result) {
+          toast.error(this.props.t("Book not exsit"));
+          return;
+        }
+        let rendition = BookUtil.getRendtion(
+          result,
+          isCacheExsit ? "CACHE" : format,
+          this.state.readerMode,
+          this.props.currentBook.charset
+        );
 
-      RecentBooks.setRecent(this.props.currentBook.key);
-      document.title = name + " - Koodo Reader";
-    });
+        await rendition.renderTo(
+          document.getElementsByClassName("html-viewer-page")[0]
+        );
+        await this.handleRest(rendition);
+        this.props.handleReadingState(true);
+
+        RecentBooks.setRecent(this.props.currentBook.key);
+        document.title = name + " - Koodo Reader";
+      }
+    );
   };
 
   handleRest = async (rendition: any) => {
@@ -185,12 +164,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     StyleUtil.addDefaultCss();
     tsTransform();
     binicReadingProcess();
-    rendition.setStyle(
-      StyleUtil.getCustomCss(
-        true,
-        StorageUtil.getReaderConfig("readerMode") === "scroll"
-      )
-    );
+    rendition.setStyle(StyleUtil.getCustomCss());
     let bookLocation: {
       text: string;
       count: string;
@@ -344,153 +318,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       var rect = doc!.getSelection()!.getRangeAt(0).getBoundingClientRect();
       this.setState({ rect });
     });
-  };
-  handleCharset = (bufferStr: string) => {
-    return new Promise<string>(async (resolve, reject) => {
-      let { books } = this.props;
-      let charset = "";
-      books.forEach((item) => {
-        if (item.key === this.props.currentBook.key) {
-          charset = window.jschardet.detect(bufferStr).encoding || "utf-8";
-          item.charset = charset;
-          this.props.handleReadingBook(item);
-        }
-      });
-      await localforage.setItem("books", books);
-      resolve(charset);
-    });
-  };
-  handleComic = async (result: ArrayBuffer, format: string) => {
-    let bookLocation = RecordLocation.getHtmlLocation(
-      this.props.currentBook.key
-    );
-    let rendition = new window.Kookit.ComicRender(
-      result,
-      this.state.readerMode,
-      format
-    );
-    await rendition.renderTo(
-      document.getElementsByClassName("html-viewer-page")[0],
-      parseInt(bookLocation.count) || 0
-    );
-    await this.handleRest(rendition);
-  };
-  handleMobi = async (result: ArrayBuffer) => {
-    let rendition = new window.Kookit.MobiRender(result, this.state.readerMode);
-    await rendition.renderTo(
-      document.getElementsByClassName("html-viewer-page")[0]
-    );
-    await this.handleRest(rendition);
-  };
-  handleEpub = async (result: ArrayBuffer) => {
-    let rendition = new window.Kookit.EpubRender(result, this.state.readerMode);
-    let bookLocation: {
-      text: string;
-      count: string;
-      chapterTitle: string;
-      chapterDocIndex: string;
-      chapterHref: string;
-      percentage: string;
-      cfi: string;
-    } = RecordLocation.getHtmlLocation(this.props.currentBook.key);
-    await rendition.renderTo(
-      document.getElementsByClassName("html-viewer-page")[0],
-      bookLocation.cfi
-    );
-    await this.handleRest(rendition);
-  };
-  handleTxt = async (result: ArrayBuffer) => {
-    const array = new Uint8Array(result as ArrayBuffer);
-    let bufferStr = "";
-    for (let i = 0; i < array.length; ++i) {
-      bufferStr += String.fromCharCode(array[i]);
-    }
-    let charset = "";
-    if (!this.props.currentBook.charset) {
-      charset = await this.handleCharset(bufferStr);
-    }
-    let rendition = new window.Kookit.TxtRender(
-      result,
-      this.state.readerMode,
-      this.props.currentBook.charset || charset || "utf8"
-    );
-    await rendition.renderTo(
-      document.getElementsByClassName("html-viewer-page")[0]
-    );
-    await this.handleRest(rendition);
-  };
-  handleMD = (result: ArrayBuffer) => {
-    var blob = new Blob([result], { type: "text/plain" });
-    var reader = new FileReader();
-    reader.onload = async (evt) => {
-      let docStr = window.marked(evt.target?.result as any);
-      let rendition = new window.Kookit.StrRender(
-        docStr,
-        this.state.readerMode
-      );
-      await rendition.renderTo(
-        document.getElementsByClassName("html-viewer-page")[0]
-      );
-      await this.handleRest(rendition);
-    };
-    reader.readAsText(blob, "UTF-8");
-  };
-  handleRtf = async (result: ArrayBuffer) => {
-    const array = new Uint8Array(result as ArrayBuffer);
-    let bufferStr = "";
-    for (let i = 0; i < array.length; ++i) {
-      bufferStr += String.fromCharCode(array[i]);
-    }
-    rtfToHTML.fromString(bufferStr, async (err: any, html: any) => {
-      let rendition = new window.Kookit.StrRender(
-        removeExtraQuestionMark(html),
-        this.state.readerMode
-      );
-      await rendition.renderTo(
-        document.getElementsByClassName("html-viewer-page")[0]
-      );
-      await this.handleRest(rendition);
-    });
-  };
-  handleDocx = (result: ArrayBuffer) => {
-    window.mammoth
-      .convertToHtml({ arrayBuffer: result })
-      .then(async (res: any) => {
-        let rendition = new window.Kookit.StrRender(
-          res.value,
-          this.state.readerMode
-        );
-        await rendition.renderTo(
-          document.getElementsByClassName("html-viewer-page")[0]
-        );
-        await this.handleRest(rendition);
-      });
-  };
-  handleFb2 = async (result: ArrayBuffer) => {
-    let rendition = new window.Kookit.Fb2Render(result, this.state.readerMode);
-    await rendition.renderTo(
-      document.getElementsByClassName("html-viewer-page")[0]
-    );
-    await this.handleRest(rendition);
-  };
-  handleHtml = (result: ArrayBuffer, format: string) => {
-    var blob = new Blob([result], {
-      type: mimetype[format.toLocaleLowerCase()],
-    });
-    var reader = new FileReader();
-    reader.onload = async (evt) => {
-      let html = evt.target?.result as any;
-      if (format === "MHTML") {
-        html =
-          mhtml2html.convert(html).window.document.documentElement.innerHTML;
-      }
-      let rendition = new window.Kookit.StrRender(html, this.state.readerMode);
-      await rendition.renderTo(
-        document.getElementsByClassName("html-viewer-page")[0]
-      );
-      await this.handleRest(rendition);
-    };
-    reader.readAsText(blob, "UTF-8");
   };
   render() {
     return (

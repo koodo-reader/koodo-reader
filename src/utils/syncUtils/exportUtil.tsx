@@ -1,4 +1,3 @@
-import FileSaver from "file-saver";
 import BookModel from "../../model/Book";
 import NoteModel from "../../model/Note";
 import BookUtil from "../fileUtils/bookUtil";
@@ -18,7 +17,7 @@ export const exportBooks = async (books: BookModel[]) => {
     return item.name + `.${item.format.toLocaleLowerCase()}`;
   });
 
-  FileSaver.saveAs(
+  window.saveAs(
     await zipFilesToBlob(booksBuffers, bookNames),
     "KoodoReader-Book-" +
       `${year}-${month <= 9 ? "0" + month : month}-${

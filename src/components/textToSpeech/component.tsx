@@ -117,7 +117,7 @@ class TextToSpeech extends React.Component<
       await sleep(1000);
     }
     this.nodeList = this.props.htmlBook.rendition
-      .visibleText()
+      .audioText()
       .filter((item: string) => item && item.trim());
     await this.handleRead();
   };
@@ -146,8 +146,9 @@ class TextToSpeech extends React.Component<
       let currentText = this.nodeList[index];
       let style = "background: #f3a6a68c";
       this.props.htmlBook.rendition.highlightNode(currentText, style);
+
       if (
-        index >= EdgeUtil.getAudioPaths().length - 1 &&
+        index > EdgeUtil.getAudioPaths().length - 1 &&
         voiceIndex > this.nativeVoices.length
       ) {
         while (true) {
@@ -155,19 +156,26 @@ class TextToSpeech extends React.Component<
           await new Promise((resolve) => setTimeout(resolve, 500));
         }
       }
-
       let res = await this.handleSpeech(
         index,
         StorageUtil.getReaderConfig("voiceIndex") || 0,
         StorageUtil.getReaderConfig("voiceSpeed") || 1
       );
+      if (
+        this.nodeList[index] ===
+          this.props.htmlBook.rendition.visibleText()[
+            this.props.htmlBook.rendition.visibleText().length - 1
+          ] &&
+        voiceIndex > this.nativeVoices.length
+      ) {
+        await this.props.htmlBook.rendition.next();
+      }
       if (res === "end") {
         break;
       }
     }
     if (this.state.isAudioOn && this.props.isReading) {
       await window.require("electron").ipcRenderer.invoke("clear-tts");
-      await this.props.htmlBook.rendition.next();
       let position = this.props.htmlBook.rendition.getPosition();
       RecordLocation.recordHtmlLocation(
         this.props.currentBook.key,

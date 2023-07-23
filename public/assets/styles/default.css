@@ -59,12 +59,7 @@ body,
   border: 2px solid rgba(75, 75, 75, 1);
 }
 .header-search-box,
-input::-webkit-input-placeholder,
-input::-moz-placeholder,
-input::-ms-input-placeholder,
-textarea::-webkit-input-placeholder,
-textarea::-moz-placeholder,
-textarea::-ms-input-placeholder,
+.header-search-box::placeholder,
 .header-search-text,
 .card-list-item-show-more,
 .token-dialog-link-text,

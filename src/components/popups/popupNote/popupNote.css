@@ -48,8 +48,8 @@
 .note-button-container {
   position: absolute;
   bottom: 10px;
-  right: 25px;
-  width: 120px;
+  right: 10px;
+  max-width: calc(100% - 60px);
   display: flex;
   justify-content: space-between;
   cursor: pointer;
