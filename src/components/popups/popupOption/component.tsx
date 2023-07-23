@@ -1,6 +1,6 @@
 import React from "react";
 import "./popupOption.css";
-import localforage from "localforage";
+
 import Note from "../../../model/Note";
 import { PopupOptionProps } from "./interface";
 import ColorOption from "../../colorOption";
@@ -119,7 +119,7 @@ class PopupOption extends React.Component<PopupOptionProps> {
     );
     let noteArr = this.props.notes;
     noteArr.push(digest);
-    localforage.setItem("notes", noteArr).then(() => {
+    window.localforage.setItem("notes", noteArr).then(() => {
       this.props.handleOpenMenu(false);
       toast.success(this.props.t("Add Successfully"));
       this.props.handleFetchNotes();

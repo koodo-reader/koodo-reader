@@ -102,7 +102,6 @@ const Router = () => {
         <Route component={HtmlReader} path="/txt" />
         <Route component={HtmlReader} path="/docx" />
         <Route component={HtmlReader} path="/md" />
-        <Route component={HtmlReader} path="/rtf" />
         <Route component={HtmlReader} path="/fb2" />
         <Route component={HtmlReader} path="/html" />
         <Route component={HtmlReader} path="/htm" />

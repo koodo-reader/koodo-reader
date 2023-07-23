@@ -24,8 +24,8 @@ export const handleLinkJump = async (event: any, rendition: any = {}) => {
     if (!doc) {
       return;
     }
-    if (href.indexOf("/#") === -1) {
-      let chapterInfo = rendition.resolveChapter(href);
+    if (href.indexOf("#") !== 0) {
+      let chapterInfo = rendition.resolveChapter(href.split("#")[0]);
       await rendition.goToChapter(
         chapterInfo.index,
         chapterInfo.href,

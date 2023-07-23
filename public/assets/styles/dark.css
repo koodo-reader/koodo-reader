@@ -52,12 +52,7 @@ body,
 }
 
 .header-search-box,
-input::-webkit-input-placeholder,
-input::-moz-placeholder,
-input::-ms-input-placeholder,
-textarea::-webkit-input-placeholder,
-textarea::-moz-placeholder,
-textarea::-ms-input-placeholder,
+.header-search-box::placeholder,
 .header-search-text {
   color: rgba(235, 235, 235, 0.8);
 }

@@ -1,7 +1,7 @@
 import React from "react";
 import "./importLocal.css";
 import BookModel from "../../model/Book";
-import localforage from "localforage";
+
 import { fetchMD5 } from "../../utils/fileUtils/md5Util";
 import { Trans } from "react-i18next";
 import Dropzone from "react-dropzone";
@@ -116,7 +116,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
       bookArr.push(book);
       this.props.handleReadingBook(book);
       RecordRecent.setRecent(book.key);
-      localforage
+      window.localforage
         .setItem("books", bookArr)
         .then(() => {
           this.props.handleFetchBooks();
@@ -245,7 +245,6 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
           ".xhtml",
           ".mhtml",
           ".docx",
-          ".rtf",
           ".md",
           ".fb2",
           ".cbz",

@@ -37,7 +37,6 @@ class RecordLocation {
       };
       localStorage.setItem("recordLocation", JSON.stringify(obj));
     } else {
-      if (!chapterDocIndex) return;
       let json = localStorage.getItem("recordLocation");
       let obj = JSON.parse(json || "{}");
       obj[bookKey] = {

@@ -9,10 +9,10 @@ import { ReaderProps, ReaderState } from "./interface";
 import StorageUtil from "../../utils/serviceUtils/storageUtil";
 import ReadingTime from "../../utils/readUtils/readingTime";
 import Viewer from "../../containers/htmlViewer";
-import localforage from "localforage";
+
 import RecordLocation from "../../utils/readUtils/recordLocation";
 import "./index.css";
-
+declare var window: any;
 class Reader extends React.Component<ReaderProps, ReaderState> {
   messageTimer!: NodeJS.Timeout;
   tickTimer!: NodeJS.Timeout;
@@ -53,7 +53,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
     let lastIndexOfSlash = url.lastIndexOf("/", firstIndexOfQuestion);
     let key = url.substring(lastIndexOfSlash + 1, firstIndexOfQuestion);
     this.props.handleFetchBooks();
-    localforage.getItem("books").then((result: any) => {
+    window.localforage.getItem("books").then((result: any) => {
       let book;
       //兼容在主窗口打开
       if (this.props.currentBook.key) {

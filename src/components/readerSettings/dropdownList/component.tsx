@@ -64,6 +64,14 @@ class DropdownList extends React.Component<
           }
         );
       });
+    } else {
+      document
+        .querySelector(".paragraph-character-setting")!
+        .children[0].children[1].children[
+          this.state.currentFontFamilyIndex === -1
+            ? 0
+            : this.state.currentFontFamilyIndex
+        ]?.setAttribute("selected", "selected");
     }
 
     document
