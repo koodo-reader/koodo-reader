@@ -89,9 +89,11 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
   handleCancelLoveBook = () => {
     AddFavorite.clear(this.props.book.key);
     this.setState({ isFavorite: false });
-    if (Object.keys(AddFavorite.getAllFavorite()).length === 0) {
+    if (
+      Object.keys(AddFavorite.getAllFavorite()).length === 0 &&
+      this.props.mode === "favorite"
+    ) {
       this.props.history.push("/manager/empty");
-      document.title = "Koodo Reader";
     }
     toast.success(this.props.t("Cancel Successfully"));
   };

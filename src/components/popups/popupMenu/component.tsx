@@ -237,11 +237,18 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     let highlighters: any = this.props.notes;
     if (!highlighters) return;
     let highlightersByChapter = highlighters.filter((item: NoteModel) => {
-      return (
-        item.chapter ===
-          this.props.rendition.getChapterDoc()[this.props.chapterDocIndex]
-            .title && item.bookKey === this.props.currentBook.key
-      );
+      if (this.props.currentBook.format !== "PDF") {
+        return (
+          item.chapter ===
+            this.props.rendition.getChapterDoc()[this.props.chapterDocIndex]
+              .label && item.bookKey === this.props.currentBook.key
+        );
+      } else {
+        return (
+          item.chapterIndex === this.props.chapterDocIndex &&
+          item.bookKey === this.props.currentBook.key
+        );
+      }
     });
     let pageArea = document.getElementById("page-area");
     if (!pageArea) return;

@@ -12,6 +12,8 @@ import { withTranslation } from "react-i18next";
 
 const mapStateToProps = (state: stateType) => {
   return {
+    mode: state.sidebar.mode,
+
     isOpenActionDialog: state.book.isOpenActionDialog,
     isCollapsed: state.sidebar.isCollapsed,
     dragItem: state.book.dragItem,
