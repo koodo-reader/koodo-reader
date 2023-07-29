@@ -10,6 +10,7 @@ import {
   exportHighlights,
   exportNotes,
 } from "../../utils/syncUtils/exportUtil";
+import BookUtil from "../../utils/fileUtils/bookUtil";
 class SelectBook extends React.Component<BookListProps, BookListState> {
   constructor(props: BookListProps) {
     super(props);
@@ -140,6 +141,72 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
               }}
             >
               <Trans>Export Highlights</Trans>
+            </span>
+            <span
+              className="book-manage-title"
+              onClick={async () => {
+                if (
+                  this.props.books.filter(
+                    (item: BookModel) =>
+                      this.props.selectedBooks.indexOf(item.key) > -1
+                  ).length > 0
+                ) {
+                  let selectedBooks = this.props.books.filter(
+                    (item: BookModel) =>
+                      this.props.selectedBooks.indexOf(item.key) > -1
+                  );
+                  if (selectedBooks.length === 0) {
+                    toast(this.props.t("Nothing to precache"));
+                    return;
+                  }
+                  for (let index = 0; index < selectedBooks.length; index++) {
+                    const selectedBook = selectedBooks[index];
+                    toast(this.props.t("Precaching"));
+                    let result = await BookUtil.fetchBook(
+                      selectedBook.key,
+                      true,
+                      selectedBook.path
+                    );
+                    let rendition = BookUtil.getRendtion(
+                      result,
+                      selectedBook.format,
+                      "",
+                      selectedBook.charset
+                    );
+                    let cache = await rendition.preCache(result);
+                    if (cache !== "err") {
+                      BookUtil.addBook("cache-" + selectedBook.key, cache);
+                      toast.success(this.props.t("Precaching Successfully"));
+                    } else {
+                      toast.error(this.props.t("Precaching failed"));
+                    }
+                  }
+                } else {
+                  toast(this.props.t("Nothing to precache"));
+                }
+              }}
+            >
+              <Trans>Precache</Trans>
+            </span>
+            <span
+              className="book-manage-title"
+              onClick={async () => {
+                let selectedBooks = this.props.books.filter(
+                  (item: BookModel) =>
+                    this.props.selectedBooks.indexOf(item.key) > -1
+                );
+                if (selectedBooks.length === 0) {
+                  toast(this.props.t("Nothing to delete"));
+                  return;
+                }
+                for (let index = 0; index < selectedBooks.length; index++) {
+                  const selectedBook = selectedBooks[index];
+                  await BookUtil.deleteBook("cache-" + selectedBook.key);
+                  toast.success(this.props.t("Delete Successfully"));
+                }
+              }}
+            >
+              <Trans>Delete Precache</Trans>
             </span>
             <span
               className="book-manage-title"

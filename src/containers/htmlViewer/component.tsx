@@ -200,7 +200,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       await rendition.goToPosition(
         JSON.stringify({
           text: bookLocation.text || "",
-          chapterTitle: bookLocation.chapterTitle || chapterDocs[0].title,
+          chapterTitle: bookLocation.chapterTitle || chapterDocs[0].label,
           page: bookLocation.page || "",
           chapterDocIndex: bookLocation.chapterDocIndex || 0,
           chapterHref: bookLocation.chapterHref || chapterDocs[0].href,
@@ -225,7 +225,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       let chapter =
         bookLocation.chapterTitle ||
         (this.props.htmlBook
-          ? this.props.htmlBook.flattenChapters[0].title
+          ? this.props.htmlBook.flattenChapters[0].label
           : "Unknown Chapter");
       let chapterDocIndex = 0;
       if (bookLocation.chapterDocIndex) {
@@ -235,7 +235,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           bookLocation.chapterTitle && this.props.htmlBook
             ? window._.findLastIndex(
                 this.props.htmlBook.flattenChapters.map((item) => {
-                  item.title = item.title.trim();
+                  item.label = item.label.trim();
                   return item;
                 }),
                 {

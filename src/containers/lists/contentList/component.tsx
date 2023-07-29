@@ -25,7 +25,7 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
     let chapterIndex = window._.findIndex(this.props.htmlBook.flattenChapters, {
       href,
     });
-    let title = this.props.htmlBook.flattenChapters[chapterIndex].title;
+    let title = this.props.htmlBook.flattenChapters[chapterIndex].label;
     let index = this.props.htmlBook.flattenChapters[chapterIndex].index;
     await this.props.htmlBook.rendition.goToChapter(
       index.toString(),
@@ -71,7 +71,7 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
               onClick={this.handleJump}
               className="book-content-name"
             >
-              {item.title}
+              {item.label}
             </a>
             {item.subitems &&
             item.subitems.length > 0 &&

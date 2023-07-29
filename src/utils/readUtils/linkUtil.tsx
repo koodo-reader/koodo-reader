@@ -29,7 +29,7 @@ export const handleLinkJump = async (event: any, rendition: any = {}) => {
       await rendition.goToChapter(
         chapterInfo.index,
         chapterInfo.href,
-        chapterInfo.title
+        chapterInfo.label
       );
     }
 
@@ -40,7 +40,7 @@ export const handleLinkJump = async (event: any, rendition: any = {}) => {
     await rendition.goToChapter(
       chapterInfo.index,
       chapterInfo.href,
-      chapterInfo.title
+      chapterInfo.label
     );
   } else if (
     href &&

@@ -336,6 +336,7 @@ class ActionDialog extends React.Component<
           <div
             className="action-dialog-edit"
             onClick={() => {
+              toast(this.props.t("Precaching"));
               BookUtil.fetchBook(
                 this.props.currentBook.key,
                 true,
@@ -353,9 +354,9 @@ class ActionDialog extends React.Component<
                     "cache-" + this.props.currentBook.key,
                     cache
                   );
-                  toast.success(this.props.t("Precache Successfully"));
+                  toast.success(this.props.t("Precaching Successfully"));
                 } else {
-                  toast.error(this.props.t("Precache failed"));
+                  toast.error(this.props.t("Precaching failed"));
                 }
               });
             }}

@@ -1,13 +1,13 @@
 class HtmlBook {
   key: string;
-  chapters: { title: string; id: string; href: string; index: number }[];
-  flattenChapters: { title: string; id: string; href: string; index: number }[];
+  chapters: { label: string; id: string; href: string; index: number }[];
+  flattenChapters: { label: string; id: string; href: string; index: number }[];
   rendition: any;
   constructor(
     key: string,
-    chapters: { title: string; id: string; href: string; index: number }[],
+    chapters: { label: string; id: string; href: string; index: number }[],
     flattenChapters: {
-      title: string;
+      label: string;
       id: string;
       href: string;
       index: number;

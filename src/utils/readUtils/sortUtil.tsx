@@ -21,7 +21,8 @@ const getBookIndex = (nameArr: string[], oldNameArr: string[]) => {
   let indexArr: number[] = [];
   for (let i = 0; i < nameArr.length; i++) {
     //如果索引数组已经包含该索引，就把它放在随后一位，取数组长度为索引
-    indexArr.push(oldNameArr.indexOf(nameArr[i]));
+    oldNameArr.indexOf(nameArr[i]) > -1 &&
+      indexArr.push(oldNameArr.indexOf(nameArr[i]));
   }
   if (indexArr.length < oldNameArr.length) {
     oldNameArr.forEach((item) => {
