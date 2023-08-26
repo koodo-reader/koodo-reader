@@ -20,6 +20,7 @@ import Arrow from "../../components/arrow";
 import LoadingDialog from "../../components/dialogs/loadingDialog";
 import TipDialog from "../../components/dialogs/TipDialog";
 import { Toaster } from "react-hot-toast";
+import DetailDialog from "../../components/dialogs/detailDialog";
 
 class Manager extends React.Component<ManagerProps, ManagerState> {
   timer!: NodeJS.Timeout;
@@ -124,6 +125,7 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
               this.props.handleDeleteDialog(false);
               this.props.handleAddDialog(false);
               this.props.handleTipDialog(false);
+              this.props.handleDetailDialog(false);
               this.props.handleLoadingDialog(false);
               this.props.handleNewDialog(false);
               this.props.handleBackupDialog(false);
@@ -168,6 +170,7 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
         {this.props.isBackup && <BackupDialog />}
         {this.props.isSettingOpen && <SettingDialog />}
         {this.props.isTipDialog && <TipDialog />}
+        {this.props.isDetailDialog && <DetailDialog />}
         {(!books || books.length === 0) && this.state.totalBooks ? (
           <Redirect to="/manager/loading" />
         ) : (

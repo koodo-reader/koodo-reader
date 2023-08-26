@@ -4,8 +4,8 @@ import { Trans } from "react-i18next";
 import TextToSpeech from "../../textToSpeech";
 import StorageUtil from "../../../utils/serviceUtils/storageUtil";
 import { readerSettingList } from "../../../constants/settingList";
-import { isElectron } from "react-device-detect";
 import toast from "react-hot-toast";
+import BookUtil from "../../../utils/fileUtils/bookUtil";
 class SettingSwitch extends React.Component<
   SettingSwitchProps,
   SettingSwitchState
@@ -33,15 +33,7 @@ class SettingSwitch extends React.Component<
   }
 
   _handleRest = () => {
-    if (isElectron) {
-      if (StorageUtil.getReaderConfig("isOpenInMain") === "yes") {
-        window.require("electron").ipcRenderer.invoke("reload-main", "ping");
-      } else {
-        window.require("electron").ipcRenderer.invoke("reload-reader", "ping");
-      }
-    } else {
-      window.location.reload();
-    }
+    BookUtil.reloadBooks();
   };
 
   _handleChange = (stateName: string) => {

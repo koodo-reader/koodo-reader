@@ -81,7 +81,6 @@ body,
   color: rgba(235, 235, 235, 1);
 }
 
-.reading-progress-icon,
 .header-search-box,
 #jumpPage,
 #jumpChapter,
@@ -146,6 +145,7 @@ Z .copy-option:hover {
   background: rgba(47, 52, 55, 1);
   box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.2);
 }
+.book-item-image,
 .book-item-cover,
 .book-cover,
 .book-cover-item-cover,
@@ -207,7 +207,6 @@ Z .copy-option:hover {
 .add-bookmark-text,
 .token-dialog-token-text,
 .enter-fullscreen-text,
-.reading-progress-icon,
 .image-operation,
 .add-bookmark-icon,
 .exit-reading-icon,

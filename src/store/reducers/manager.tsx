@@ -12,6 +12,7 @@ const initState = {
   isShowLoading: false,
   isNewWarning: false,
   isTipDialog: false,
+  isDetailDialog: false,
   isShowNew: false,
   bookSortCode: { sort: 1, order: 2 },
   noteSortCode: { sort: 2, order: 2 },
@@ -54,6 +55,11 @@ export function manager(
       return {
         ...state,
         isTipDialog: action.payload,
+      };
+    case "HANDLE_DETAIL_DIALOG":
+      return {
+        ...state,
+        isDetailDialog: action.payload,
       };
     case "HANDLE_TIP":
       return {

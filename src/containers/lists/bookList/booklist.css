@@ -1,6 +1,6 @@
 .book-list-container-parent {
   position: absolute;
-  top: 115px;
+  top: 125px;
   left: 220px;
   width: calc(100% - 220px);
   height: calc(100% - 125px);
@@ -55,9 +55,6 @@
 }
 .icon-cover {
   font-weight: 500;
-  position: relative;
-  top: 1px;
-  margin-right: 2px;
 }
 .booklist-shelf-container {
   height: 100%;
