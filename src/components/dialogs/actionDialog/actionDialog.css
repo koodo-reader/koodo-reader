@@ -47,6 +47,14 @@
   text-align: left;
   overflow-x: hidden;
 }
+.action-dialog-book-info:hover::-webkit-scrollbar-thumb,
+.action-dialog-book-info:active::-webkit-scrollbar-thumb,
+.action-dialog-book-info:focus::-webkit-scrollbar-thumb {
+  display: block;
+}
+.action-dialog-book-info::-webkit-scrollbar-thumb {
+  display: none;
+}
 .action-dialog-book-title {
   font-size: 15px;
   font-weight: 500;

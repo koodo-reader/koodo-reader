@@ -1,25 +1,29 @@
 .book-list-cover-item {
   width: 400px;
-  height: 200px;
+  /* height: 200px; */
   float: left;
   overflow: hidden;
   position: relative;
 }
+.book-cover-item-header {
+  width: 150px;
+}
 .book-cover-item-cover {
-  width: 120px;
-  height: 170px;
+  /* height: 170px; */
   opacity: 1;
-  margin: 15px 15px 5px 15px;
+  width: 120px;
+  margin: 5px 15px 15px 15px;
   cursor: pointer;
-  overflow: hidden;
+  /* overflow: hidden; */
   float: left;
   display: flex;
   justify-content: center;
   align-items: center;
+  border-radius: 3px;
 }
 .book-cover-item-title {
   width: 240px;
-  margin-top: 30px;
+  margin-top: 10px;
   height: 35px;
   font-size: 15px;
   line-height: 17px;
@@ -75,27 +79,7 @@
     transform: translateY(0px);
   }
 }
-.book-more-action {
-  position: absolute;
-  top: 23px;
-  right: 17px;
-  font-size: 18px;
-  cursor: pointer;
-  animation: slide-down-rotate 0.1s ease-in-out 0s 1;
-}
-.reading-progress-icon {
-  position: absolute;
-  top: 18px;
-  left: 17px;
-  width: 31px;
-  height: 31px;
-  border-radius: 50%;
-  font-size: 15px;
-  line-height: 31px;
-  cursor: pointer;
-  transform: scale(0.9);
-  animation: slide-down 0.1s ease-in-out 0s 1;
-}
+
 .book-cover-item-desc {
   width: 240px;
   margin-top: 5px;
@@ -142,22 +126,4 @@
 .reading-percentage-char {
   display: inline-block;
   transform: scale(0.5) translate(-5px, 2px);
-}
-.book-love-icon {
-  position: absolute;
-  bottom: 45px;
-  right: 20px;
-  font-size: 18px;
-  cursor: pointer;
-  z-index: 1;
-  animation: slide-up 0.1s ease-in-out 0s 1;
-}
-.book-loved-icon {
-  position: absolute;
-  bottom: 44px;
-  right: 19px;
-  font-size: 20px;
-  color: #f87356;
-  cursor: pointer;
-  z-index: 2;
 }

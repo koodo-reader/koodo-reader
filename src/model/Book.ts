@@ -8,6 +8,7 @@ class Book {
   format: string;
   publisher: string;
   size: number;
+  page: number;
   path: string;
   charset: string;
   constructor(
@@ -20,6 +21,7 @@ class Book {
     format: string,
     publisher: string,
     size: number,
+    page: number,
     path: string,
     charset: string
   ) {
@@ -32,6 +34,7 @@ class Book {
     this.format = format;
     this.publisher = publisher;
     this.size = size;
+    this.page = page;
     this.path = path;
     this.charset = charset;
   }

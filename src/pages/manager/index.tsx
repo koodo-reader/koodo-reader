@@ -5,6 +5,7 @@ import {
   handleFetchNoteSortCode,
   handleFetchList,
   handleTipDialog,
+  handleDetailDialog,
   handleLoadingDialog,
   handleNewDialog,
   handleSetting,
@@ -42,6 +43,7 @@ const mapStateToProps = (state: stateType) => {
     isShowLoading: state.manager.isShowLoading,
     isShowNew: state.manager.isShowNew,
     isTipDialog: state.manager.isTipDialog,
+    DetailDialog: state.manager.isDetailDialog,
     isBackup: state.backupPage.isBackup,
   };
 };
@@ -57,6 +59,7 @@ const actionCreator = {
   handleDeleteDialog,
   handleAddDialog,
   handleTipDialog,
+  handleDetailDialog,
   handleLoadingDialog,
   handleNewDialog,
   handleBackupDialog,

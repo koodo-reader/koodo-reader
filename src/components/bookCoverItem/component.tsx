@@ -21,7 +21,6 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
   constructor(props: BookCoverProps) {
     super(props);
     this.state = {
-      isOpenConfig: false,
       isFavorite:
         AddFavorite.getAllFavorite().indexOf(this.props.book.key) > -1,
       left: 0,
@@ -98,10 +97,6 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
     }
     toast.success(this.props.t("Cancel Successfully"));
   };
-  //控制按钮的弹出
-  handleConfig = (mode: boolean) => {
-    this.setState({ isOpenConfig: mode });
-  };
   handleJump = () => {
     if (this.props.isSelectBook) {
       this.props.handleSelectedBooks(
@@ -118,59 +113,111 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
     BookUtil.RedirectBook(this.props.book, this.props.t, this.props.history);
   };
   render() {
-    let percentage = RecordLocation.getHtmlLocation(this.props.book.key)
-      ? RecordLocation.getHtmlLocation(this.props.book.key).percentage
-      : 0;
+    let percentage = "0";
+    if (this.props.book.format === "PDF") {
+      if (
+        RecordLocation.getPDFLocation(this.props.book.md5.split("-")[0]) &&
+        RecordLocation.getPDFLocation(this.props.book.md5.split("-")[0]).page &&
+        this.props.book.page
+      ) {
+        percentage =
+          RecordLocation.getPDFLocation(this.props.book.md5.split("-")[0])
+            .page /
+            this.props.book.page +
+          "";
+      }
+    } else {
+      if (
+        RecordLocation.getHtmlLocation(this.props.book.key) &&
+        RecordLocation.getHtmlLocation(this.props.book.key).percentage
+      ) {
+        percentage = RecordLocation.getHtmlLocation(
+          this.props.book.key
+        ).percentage;
+      }
+    }
     const actionProps = { left: this.state.left, top: this.state.top };
     return (
       <>
         <div
           className="book-list-cover-item"
-          onMouseOver={() => {
-            this.handleConfig(true);
-          }}
-          onMouseLeave={() => {
-            this.handleConfig(false);
-            // this.props.handleActionDialog(false);
-          }}
           onContextMenu={(event) => {
             this.handleMoreAction(event);
           }}
         >
-          {!this.props.book.cover ||
-          this.props.book.cover === "noCover" ||
-          (this.props.book.format === "PDF" &&
-            StorageUtil.getReaderConfig("isPDFCover") !== "yes") ? (
-            <div
-              className="book-cover-item-cover"
-              onClick={() => {
-                this.handleJump();
-              }}
-              style={{ display: "block" }}
-            >
-              <EmptyCover
-                {...{
-                  format: this.props.book.format,
-                  title: this.props.book.name,
-                  scale: 1.15,
-                }}
-              />
+          <div className="book-cover-item-header">
+            <div className="reading-progress-icon">
+              <div style={{ position: "relative", left: "4px" }}>
+                {percentage
+                  ? Math.floor(parseFloat(percentage) * 100) === 0
+                    ? "New"
+                    : Math.floor(parseFloat(percentage) * 100) < 10
+                    ? "0" + Math.floor(parseFloat(percentage) * 100)
+                    : Math.floor(parseFloat(percentage) * 100) === 100
+                    ? "Done"
+                    : Math.floor(parseFloat(percentage) * 100)
+                  : "00"}
+                {Math.floor(parseFloat(percentage) * 100) > 0 &&
+                  Math.floor(parseFloat(percentage) * 100) < 100 && (
+                    <span className="reading-percentage-char">%</span>
+                  )}
+              </div>
             </div>
-          ) : (
-            <div
-              className="book-cover-item-cover"
-              onClick={() => {
-                this.handleJump();
+            <span
+              className="icon-more book-more-action"
+              onClick={(event) => {
+                this.handleMoreAction(event);
               }}
-            >
+            ></span>
+          </div>
+
+          <div
+            className="book-cover-item-cover"
+            onClick={() => {
+              this.handleJump();
+            }}
+            style={
+              StorageUtil.getReaderConfig("isDisableCrop") === "yes"
+                ? {
+                    height: "195px",
+                    alignItems: "flex-start",
+                    background: "rgba(255, 255,255, 0)",
+                    boxShadow: "0px 0px 5px rgba(0, 0, 0, 0)",
+                  }
+                : {
+                    height: "170px",
+                    alignItems: "center",
+                    overflow: "hidden",
+                  }
+            }
+          >
+            {!this.props.book.cover ||
+            this.props.book.cover === "noCover" ||
+            (this.props.book.format === "PDF" &&
+              StorageUtil.getReaderConfig("isDisablePDFCover") === "yes") ? (
+              <div
+                className="book-item-image"
+                style={{ width: "120px", height: "170px" }}
+              >
+                <EmptyCover
+                  {...{
+                    format: this.props.book.format,
+                    title: this.props.book.name,
+                    scale: 1.14,
+                  }}
+                />
+              </div>
+            ) : (
               <img
                 src={this.props.book.cover}
                 alt=""
                 style={
-                  this.state.direction === "horizontal"
+                  this.state.direction === "horizontal" ||
+                  StorageUtil.getReaderConfig("isDisableCrop") === "yes"
                     ? { width: "100%" }
                     : { height: "100%" }
                 }
+                className="book-item-image"
                 onLoad={(res: any) => {
                   if (
                     res.target.naturalHeight / res.target.naturalWidth >
@@ -182,8 +229,18 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
                   }
                 }}
               />
-            </div>
-          )}
+            )}
+            {this.props.isSelectBook ? (
+              <span
+                className="icon-message book-selected-icon"
+                style={
+                  this.props.isSelected
+                    ? { right: "274px", top: "30px" }
+                    : { right: "274px", top: "30px", color: "#eee" }
+                }
+              ></span>
+            ) : null}
+          </div>
 
           <p className="book-cover-item-title">{this.props.book.name}</p>
           <p className="book-cover-item-author">
@@ -202,62 +259,6 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
               <Trans>Empty</Trans>
             )}
           </div>
-          {this.props.isSelectBook ? (
-            <span
-              className="icon-message book-selected-icon"
-              style={
-                this.props.isSelected
-                  ? { right: "274px", bottom: "25px" }
-                  : { right: "274px", bottom: "25px", color: "#eee" }
-              }
-            ></span>
-          ) : null}
-          {this.state.isFavorite && !this.props.isSelectBook ? (
-            <span
-              className="icon-love book-loved-icon"
-              onClick={() => {
-                this.handleCancelLoveBook();
-              }}
-              style={{ right: "274px", bottom: "25px" }}
-            ></span>
-          ) : null}
-          {this.state.isOpenConfig && !this.props.isSelectBook ? (
-            <>
-              {this.props.book.format !== "PDF" && (
-                <div
-                  className="reading-progress-icon"
-                  style={{ right: "270px" }}
-                >
-                  <div style={{ position: "relative", left: "4px" }}>
-                    {percentage
-                      ? Math.floor(percentage * 100) < 10
-                        ? "0" + Math.floor(percentage * 100)
-                        : Math.floor(percentage * 100) === 100
-                        ? "完"
-                        : Math.floor(percentage * 100)
-                      : "00"}
-                    <span className="reading-percentage-char">%</span>
-                  </div>
-                </div>
-              )}
-              <span
-                className="icon-more book-more-action"
-                onClick={(event) => {
-                  this.handleMoreAction(event);
-                }}
-                style={{ right: "270px" }}
-              ></span>
-              {!this.state.isFavorite && (
-                <span
-                  className="icon-love book-love-icon"
-                  onClick={() => {
-                    this.handleLoveBook();
-                  }}
-                  style={{ right: "275px", bottom: "25px" }}
-                ></span>
-              )}
-            </>
-          ) : null}
         </div>
         {this.props.isOpenActionDialog &&
         this.props.book.key === this.props.currentBook.key ? (

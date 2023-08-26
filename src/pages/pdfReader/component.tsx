@@ -4,11 +4,12 @@ import { ViewerProps, ViewerState } from "./interface";
 
 import { withRouter } from "react-router-dom";
 import BookUtil from "../../utils/fileUtils/bookUtil";
-import BackToMain from "../../components/backToMain";
+import PDFWidget from "../../components/pdfWidget";
 import PopupMenu from "../../components/popups/popupMenu";
 import { Toaster } from "react-hot-toast";
 import { handleLinkJump } from "../../utils/readUtils/linkUtil";
 import { pdfMouseEvent } from "../../utils/serviceUtils/mouseEvent";
+import StorageUtil from "../../utils/serviceUtils/storageUtil";
 declare var window: any;
 class Viewer extends React.Component<ViewerProps, ViewerState> {
   constructor(props: ViewerProps) {
@@ -19,9 +20,8 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       cfiRange: null,
       contents: null,
       rect: null,
-      pageWidth: 0,
-      pageHeight: 0,
       loading: true,
+      isDisablePopup: StorageUtil.getReaderConfig("isDisablePopup") === "yes",
     };
   }
   UNSAFE_componentWillMount() {
@@ -53,7 +53,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     });
     document
       .querySelector(".ebook-viewer")
-      ?.setAttribute("style", "height:100%");
+      ?.setAttribute("style", "height:100%; overflow: hidden;");
     let pageArea = document.getElementById("page-area");
     if (!pageArea) return;
     let iframe = pageArea.getElementsByTagName("iframe")[0];
@@ -69,16 +69,25 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       });
 
       doc.document.addEventListener("mouseup", () => {
+        if (this.state.isDisablePopup) return;
         if (!doc!.getSelection() || doc!.getSelection().rangeCount === 0)
           return;
 
         var rect = doc!.getSelection()!.getRangeAt(0).getBoundingClientRect();
         this.setState({
           rect,
-          pageWidth: doc.document.body.scrollWidth,
-          pageHeight: doc.document.body.scrollHeight,
         });
         // iWin.getSelection() && showHighlight(getHightlightCoords());
+      });
+      doc.addEventListener("contextmenu", (event) => {
+        if (!this.state.isDisablePopup) return;
+        if (!doc!.getSelection() || doc!.getSelection().rangeCount === 0)
+          return;
+
+        var rect = doc!.getSelection()!.getRangeAt(0).getBoundingClientRect();
+        this.setState({
+          rect,
+        });
       });
     };
   }
@@ -95,8 +104,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
                 },
               },
               rect: this.state.rect,
-              pageWidth: this.state.pageWidth,
-              pageHeight: this.state.pageHeight,
               chapterDocIndex: 0,
               chapter: "0",
             }}
@@ -110,7 +117,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         >
           Loading
         </iframe>
-        <BackToMain /> <Toaster />
+        <PDFWidget /> <Toaster />
       </div>
     );
   }

@@ -90,7 +90,7 @@ class DeleteDialog extends React.Component<
       await this.deleteBook(keyArr[i]);
     }
 
-    if (this.props.books.length === 1) {
+    if (this.props.books.length === 0) {
       this.props.history.push("/manager/empty");
     }
     this.props.handleFetchBooks(false);

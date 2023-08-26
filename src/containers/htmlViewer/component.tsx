@@ -43,8 +43,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           .chapterDocIndex || 0
       ),
       chapter: "",
-      pageWidth: 0,
-      pageHeight: 0,
       rendition: null,
     };
     this.lock = false;
@@ -60,31 +58,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     this.props.handleRenderBookFunc(this.handleRenderBook);
 
     window.addEventListener("resize", () => {
-      if (lock) return;
-      let reader = document.querySelector("#page-area");
-      //解决文字遮挡问题
-      if (
-        reader &&
-        reader.getAttribute("style") &&
-        reader.getAttribute("style")!.indexOf("width") > -1
-      ) {
-        reader.setAttribute(
-          "style",
-          reader
-            .getAttribute("style")!
-            .substring(0, reader.getAttribute("style")!.indexOf("width"))
-        );
-        StorageUtil.getReaderConfig("readerMode") !== "scroll" &&
-          this.handlePageWidth();
-      }
-
-      this.handleRenderBook();
-
-      lock = true;
-      setTimeout(function () {
-        lock = false;
-      }, 100);
-      return false;
+      BookUtil.reloadBooks();
     });
   }
   handlePageWidth = () => {
@@ -157,10 +131,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       rendition: rendition,
     });
     this.setState({ rendition });
-    this.setState({
-      pageWidth: rendition.getPageSize().width,
-      pageHeight: rendition.getPageSize().height,
-    });
     StyleUtil.addDefaultCss();
     tsTransform();
     binicReadingProcess();
@@ -369,8 +339,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
             {...{
               rendition: this.props.htmlBook.rendition,
               rect: this.state.rect,
-              pageWidth: this.state.pageWidth,
-              pageHeight: this.state.pageHeight,
               chapterDocIndex: this.state.chapterDocIndex,
               chapter: this.state.chapter,
             }}

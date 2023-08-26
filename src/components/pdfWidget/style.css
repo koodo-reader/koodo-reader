@@ -1,0 +1,46 @@
+.back-main-container {
+  position: fixed;
+  bottom: 42px;
+  left: 0px;
+  width: 140px;
+  height: 40px;
+  border-radius: 20px;
+  background-color: rgba(75, 75, 75, 0.4);
+  z-index: 10;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  cursor: pointer;
+  padding-left: 5px;
+  padding-right: 5px;
+  transition: "transform 0.5s ease";
+}
+.back-home-home,
+.back-home-day,
+.back-home-night,
+.back-home-eye,
+.back-home-dropdown {
+  color: white;
+}
+.back-home-home:hover,
+.back-home-day:hover,
+.back-home-night:hover,
+.back-home-eye:hover,
+.back-home-dropdown:hover {
+  opacity: 0.6;
+}
+.back-home-dropdown {
+  font-size: 15px;
+  transform: rotate(-90deg);
+  position: relative;
+  left: 5px;
+}
+.back-home-eye {
+  font-size: 22px;
+}
+.back-home-day {
+  font-size: 22px;
+}
+.back-home-night {
+  font-size: 18px;
+}
