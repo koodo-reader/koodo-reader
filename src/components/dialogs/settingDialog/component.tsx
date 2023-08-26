@@ -20,6 +20,7 @@ import { themeList } from "../../../constants/themeList";
 import toast from "react-hot-toast";
 import { openExternalUrl } from "../../../utils/serviceUtils/urlUtil";
 import ManagerUtil from "../../../utils/fileUtils/managerUtil";
+declare var window: any;
 class SettingDialog extends React.Component<
   SettingInfoProps,
   SettingInfoState
