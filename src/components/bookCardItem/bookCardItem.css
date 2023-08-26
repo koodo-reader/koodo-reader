@@ -1,50 +1,40 @@
 .book-list-item {
   width: 133px;
-  height: 192px;
+  /* height: 192px; */
   float: left;
   overflow: hidden;
   position: relative;
 }
 .book-item-cover {
   width: 105px;
-  height: 137px;
+  /* height: 137px; */
   opacity: 1;
-  margin: 15px 15px 5px 15px;
+  margin: 10px 15px 5px 15px;
   cursor: pointer;
-  overflow: hidden;
+  /* overflow: hidden; */
   display: flex;
   justify-content: center;
-  align-items: center;
+
+  border-radius: 2px;
+}
+.book-item-image {
+  border-radius: 2px;
 }
 .book-item-title {
   width: 80%;
   margin-left: 10%;
-  margin-bottom: 5px;
-  height: 33px;
-  font-size: 15px;
-  line-height: 17px;
+  /* margin-bottom: 5px; */
+  height: 32px;
+  font-size: 12px;
+  line-height: 15px;
   opacity: 1;
-  text-align: center;
+  text-align: left;
   text-overflow: ellipsis;
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
   overflow: hidden;
   position: relative;
-}
-.book-item-config {
-  width: 105px;
-  height: 35px;
-  position: relative;
-  bottom: 71px;
-  left: 15px;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  font-size: 15px;
-  opacity: 1;
-  cursor: pointer;
-  animation: fade-in 0.1s ease-in 0s 1;
 }
 
 @keyframes fade-in {
@@ -58,25 +48,29 @@
   }
 }
 .book-more-action {
-  position: absolute;
-  top: 23px;
-  right: 17px;
-  font-size: 18px;
+  /* position: absolute;
+  bottom: 23px;
+  right: 17px; */
+  transform: rotate(90deg);
+  float: right;
+  font-size: 14px;
   cursor: pointer;
-  animation: slide-down-rotate 0.1s ease-in-out 0s 1;
+  margin-right: 14px;
+  margin-top: 4px;
+  opacity: 0.8;
 }
 .reading-progress-icon {
-  position: absolute;
-  top: 18px;
-  left: 17px;
-  width: 31px;
-  height: 31px;
+  /* position: absolute;
+  bottom: 18px;
+  left: 17px; */
+  /* width: 31px;
+  height: 31px; */
+  display: inline-block;
+  margin-left: 10px;
   border-radius: 50%;
-  font-size: 15px;
-  line-height: 31px;
+  font-size: 8px;
+  /* line-height: 31px; */
   cursor: pointer;
-  transform: scale(0.9);
-  animation: slide-down 0.1s ease-in-out 0s 1;
 }
 @keyframes slide-down {
   0% {
@@ -114,16 +108,15 @@
 }
 .book-love-icon {
   position: absolute;
-  bottom: 45px;
+  bottom: 25px;
   right: 20px;
   font-size: 18px;
   cursor: pointer;
   z-index: 1;
-  animation: slide-up 0.1s ease-in-out 0s 1;
 }
 .book-loved-icon {
   position: absolute;
-  bottom: 44px;
+  bottom: 23px;
   right: 19px;
   font-size: 20px;
   color: #f87356;
@@ -132,7 +125,7 @@
 }
 .book-selected-icon {
   position: absolute;
-  bottom: 44px;
+  bottom: 60px;
   right: 19px;
   font-size: 20px;
   color: #f87356;

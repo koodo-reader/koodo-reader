@@ -12,6 +12,7 @@
   opacity: 1;
   cursor: pointer;
   overflow: hidden;
+  border-radius: 1px;
 }
 
 .book-item-list-title,

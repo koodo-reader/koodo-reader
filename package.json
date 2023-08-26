@@ -143,12 +143,6 @@
         "mimeType": "application/vnd.amazon.ebook"
       },
       {
-        "ext": "djvu",
-        "icon": "assets/icons/pdf",
-        "role": "Viewer",
-        "mimeType": "image/vnd.djvu"
-      },
-      {
         "ext": "cbz",
         "icon": "assets/icons/comic",
         "role": "Viewer",

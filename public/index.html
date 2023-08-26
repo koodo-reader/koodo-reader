@@ -14,32 +14,22 @@
       itemprop="description"
       content="Koodo Reader is an open-source epub reader with backup and restore support, runs on Windows, Mac and Web"
     />
-
     <style>
       #root {
         height: 100%;
         width: 100%;
       }
     </style>
-    <script
-      type="text/javascript"
-      src="%PUBLIC_URL%/lib/kookit/kookit.min.js"
-    ></script>
-    <script>
-      var script = document.createElement("script");
-      if (document.location.href.indexOf("localhost:3000") > -1) {
-        script.src = "http://127.0.0.1:5500/dist/kookit.umd.js";
-      }
-      document.head.appendChild(script);
-    </script>
     <title>Koodo Reader</title>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
-
     <div id="root"></div>
     <canvas id="the-canvas"></canvas>
-
+    <script
+      type="text/javascript"
+      src="%PUBLIC_URL%/lib/kookit/kookit.min.js"
+    ></script>
     <script
       type="text/javascript"
       src="%PUBLIC_URL%/lib/JSZip/jszip.min.js"
@@ -127,11 +117,6 @@
     <script
       type="text/javascript"
       src="%PUBLIC_URL%/lib/Hammer/hammer.min.js"
-    ></script>
-    <script type="text/javascript" src="%PUBLIC_URL%/lib/djvu/djvu.js"></script>
-    <script
-      type="text/javascript"
-      src="%PUBLIC_URL%/lib/djvu/djvu_viewer.js"
     ></script>
     <script
       type="text/javascript"

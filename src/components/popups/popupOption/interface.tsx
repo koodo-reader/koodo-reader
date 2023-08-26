@@ -8,8 +8,6 @@ export interface PopupOptionProps {
   color: number;
   rect: DOMRect;
   cfiRange: string;
-  pageWidth: number;
-  pageHeight: number;
   chapterDocIndex: number;
   chapter: string;
   handleOpenMenu: (isOpenMenu: boolean) => void;

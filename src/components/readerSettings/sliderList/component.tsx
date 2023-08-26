@@ -3,7 +3,7 @@ import { Trans } from "react-i18next";
 import { SliderListProps, SliderListState } from "./interface";
 import "./sliderList.css";
 import StorageUtil from "../../../utils/serviceUtils/storageUtil";
-import { isElectron } from "react-device-detect";
+import BookUtil from "../../../utils/fileUtils/bookUtil";
 class SliderList extends React.Component<SliderListProps, SliderListState> {
   constructor(props: SliderListProps) {
     super(props);
@@ -26,17 +26,7 @@ class SliderList extends React.Component<SliderListProps, SliderListState> {
   }
   handleRest = async () => {
     if (this.props.mode === "scale" || this.props.mode === "margin") {
-      if (isElectron) {
-        if (StorageUtil.getReaderConfig("isOpenInMain") === "yes") {
-          window.require("electron").ipcRenderer.invoke("reload-main", "ping");
-        } else {
-          window
-            .require("electron")
-            .ipcRenderer.invoke("reload-reader", "ping");
-        }
-      } else {
-        window.location.reload();
-      }
+      BookUtil.reloadBooks();
       return;
     }
     this.props.renderBookFunc();

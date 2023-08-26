@@ -6,6 +6,7 @@ import {
   handleActionDialog,
   handleReadingBook,
   handleFetchBooks,
+  handleDetailDialog,
 } from "../../../store/actions";
 
 import { stateType } from "../../../store";
@@ -28,6 +29,7 @@ const actionCreator = {
   handleReadingBook,
   handleActionDialog,
   handleFetchBooks,
+  handleDetailDialog,
 };
 export default connect(
   mapStateToProps,

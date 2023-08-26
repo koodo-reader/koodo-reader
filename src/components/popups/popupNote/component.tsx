@@ -9,8 +9,10 @@ import NoteTag from "../../noteTag";
 import NoteModel from "../../../model/Note";
 import { Trans } from "react-i18next";
 import toast from "react-hot-toast";
-import { getHightlightCoords } from "../../../utils/fileUtils/pdfUtil";
-import { getPDFIframeDoc } from "../../../utils/serviceUtils/docUtil";
+import {
+  getHightlightCoords,
+  removePDFHighlight,
+} from "../../../utils/fileUtils/pdfUtil";
 declare var window: any;
 let classes = [
   "color-0",
@@ -33,25 +35,6 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
   }
   handleTag = (tag: string[]) => {
     this.setState({ tag });
-  };
-  removePDFHighlight = (selected: any, colorCode: string, noteKey: string) => {
-    let iWin = getPDFIframeDoc();
-    if (!iWin) return;
-    var pageIndex = selected.page;
-    if (!iWin.PDFViewerApplication.pdfViewer) return;
-    var page = iWin.PDFViewerApplication.pdfViewer.getPageView(pageIndex);
-    if (page && page.div && page.textLayer && page.textLayer.textLayerDiv) {
-      var pageElement =
-        colorCode.indexOf("color") > -1
-          ? page.textLayer.textLayerDiv
-          : page.div;
-      let noteElements = pageElement.querySelectorAll(".pdf-note");
-      noteElements.forEach((item: Element) => {
-        if (item.getAttribute("key") === noteKey) {
-          item.parentNode?.removeChild(item);
-        }
-      });
-    }
   };
   createNote() {
     let notes = (document.querySelector(".editor-box") as HTMLInputElement)
@@ -158,7 +141,7 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
           this.props.handleOpenMenu(false);
           this.props.handleMenuMode("menu");
           if (this.props.currentBook.format === "PDF") {
-            this.removePDFHighlight(
+            removePDFHighlight(
               JSON.parse(note.range),
               classes[note.color],
               note.key

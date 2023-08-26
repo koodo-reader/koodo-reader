@@ -6,7 +6,7 @@ body:
   - type: checkboxes
     id: testing1
     attributes:
-      label: I've already installed the latest developer version of Koodo Reader, this problem still exsits
+      label: I've already installed the latest developer version of Koodo Reader from Github Release, this problem still exsits
       description: https://github.com/troyeguo/koodo-reader/releases/latest
       options:
         - label: "Yes"

@@ -5,13 +5,9 @@ import PopupOption from "../popupOption";
 import PopupTrans from "../popupTrans";
 import NoteModel from "../../../model/Note";
 import { PopupMenuProps, PopupMenuStates } from "./interface";
-import StorageUtil from "../../../utils/serviceUtils/storageUtil";
-import {
-  getIframeDoc,
-  getPDFIframeDoc,
-} from "../../../utils/serviceUtils/docUtil";
-let colors = ["#fac106", "#ebe702", "#0be603", "#0493e6"];
-let lines = ["#FF0000", "#000080", "#0000FF", "#2EFF2E"];
+import { getIframeDoc } from "../../../utils/serviceUtils/docUtil";
+import { showPDFHighlight } from "../../../utils/fileUtils/pdfUtil";
+import BookUtil from "../../../utils/fileUtils/bookUtil";
 
 declare var window: any;
 
@@ -66,6 +62,8 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     if (!doc) return;
     doc.addEventListener("mousedown", this.openMenu);
     doc.addEventListener("touchend", this.openMenu);
+    window.addEventListener("resize", BookUtil.reloadBooks);
+
     if (this.props.currentBook.format === "PDF") {
       setTimeout(() => {
         this.renderHighlighters();
@@ -131,54 +129,6 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     });
   };
 
-  showPDFHighlight = (selected: any, colorCode: string, noteKey: string) => {
-    let iWin = getPDFIframeDoc();
-    if (!iWin) return;
-    var pageIndex = selected.page;
-    if (!iWin.PDFViewerApplication.pdfViewer) return;
-    var page = iWin.PDFViewerApplication.pdfViewer.getPageView(pageIndex);
-    if (page && page.div && page.textLayer && page.textLayer.textLayerDiv) {
-      var pageElement =
-        colorCode.indexOf("color") > -1
-          ? page.textLayer.textLayerDiv
-          : page.div;
-
-      var viewport = page.viewport;
-      selected.coords.forEach((rect) => {
-        var bounds = viewport.convertToViewportRectangle(rect);
-        var el = iWin.document.createElement("div");
-
-        el?.setAttribute(
-          "style",
-          "position: absolute;" +
-            (colorCode.indexOf("color") > -1
-              ? "background-color: "
-              : "border-bottom: ") +
-            (colorCode.indexOf("color") > -1
-              ? colors[colorCode.split("-")[1]]
-              : `2px solid ${lines[colorCode.split("-")[1]]}`) +
-            "; left:" +
-            Math.min(bounds[0], bounds[2]) +
-            "px; top:" +
-            Math.min(bounds[1], bounds[3]) +
-            "px;" +
-            "width:" +
-            Math.abs(bounds[0] - bounds[2]) +
-            "px; height:" +
-            Math.abs(bounds[1] - bounds[3]) +
-            "px; z-index:0;"
-        );
-        el?.setAttribute("key", noteKey);
-        el?.setAttribute("class", "pdf-note");
-        el?.addEventListener("click", (event: any) => {
-          this.handlePDFClick(event);
-        });
-
-        pageElement.appendChild(el);
-      });
-    }
-  };
-
   handleClickHighlighter = (key: string) => {
     let dialog: HTMLInputElement | null = document.querySelector(".editor-box");
     if (!dialog) return;
@@ -195,43 +145,52 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
   showMenu = () => {
     let rect = this.state.rect;
     if (!rect) return;
-    this.props.handleChangeDirection(false);
-    let page: any = { offsetLeft: 0 };
-    if (this.props.currentBook.format !== "PDF") {
-      page = document.getElementById("page-area");
-      if (!page.clientWidth) return;
-    }
-
-    let height = 200;
-    let x =
-      this.props.currentBook.format === "PDF"
-        ? rect.left
-        : StorageUtil.getReaderConfig("readerMode") === "single"
-        ? (rect.x % this.props.pageWidth) + page.offsetLeft
-        : StorageUtil.getReaderConfig("readerMode") === "scroll"
-        ? rect.left + page.offsetLeft
-        : rect.x % this.props.pageWidth;
-    let y = rect.y % this.props.pageHeight;
-    let posX = x + rect.width / 2 - 20;
-    //防止menu超出图书
-    let rightEdge =
-      this.props.menuMode === "note" || this.props.menuMode === "trans"
-        ? this.props.pageWidth - 310 + page.offsetLeft * 2
-        : this.props.pageWidth - 200 + page.offsetLeft * 2;
-    let posY: number;
-    //控制menu方向
-    if (y < height) {
-      this.props.handleChangeDirection(true);
-      posY = y + 67;
-    } else {
-      posY = y - height / 2 - 57;
-    }
-    posX = posX > rightEdge ? rightEdge : posX;
+    let { posX, posY } =
+      this.props.currentBook.format !== "PDF"
+        ? this.getHtmlPosition(rect)
+        : this.getPdfPosition(rect);
     this.props.handleOpenMenu(true);
     let popupMenu = document.querySelector(".popup-menu-container");
     popupMenu?.setAttribute("style", `left:${posX}px;top:${posY}px`);
     this.setState({ rect: null });
   };
+  getPdfPosition(rect: any) {
+    let posY = rect.bottom;
+    let posX = rect.left + rect.width / 2;
+    document
+      .querySelector(".ebook-viewer")
+      ?.setAttribute("style", "height:100%; overflow: hidden;");
+    let pageArea = document.getElementById("page-area");
+    if (!pageArea) return;
+    let iframe = pageArea.getElementsByTagName("iframe")[0];
+    if (!iframe) return;
+    let doc: any = iframe.contentWindow || iframe.contentDocument?.defaultView;
+    if (rect.bottom < doc.document.body.scrollHeight - 188) {
+      this.props.handleChangeDirection(true);
+      posY = posY + 16;
+    } else {
+      posY = posY - rect.height - 188;
+    }
+    posX = posX - 80;
+    return { posX, posY } as any;
+  }
+  getHtmlPosition(rect: any) {
+    let posY = rect.bottom - this.props.rendition.getPageSize().scrollTop;
+    let posX = rect.left + rect.width / 2;
+    if (
+      posY <
+      this.props.rendition.getPageSize().height -
+        188 +
+        this.props.rendition.getPageSize().top
+    ) {
+      this.props.handleChangeDirection(true);
+      posY = posY + 16 + this.props.rendition.getPageSize().top;
+    } else {
+      posY = posY - rect.height - 188 + this.props.rendition.getPageSize().top;
+    }
+    posX = posX - 80 + this.props.rendition.getPageSize().left;
+    return { posX, posY } as any;
+  }
   //渲染高亮
   renderHighlighters = async () => {
     let highlighters: any = this.props.notes;
@@ -273,10 +232,11 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
         if (item.bookKey === this.props.currentBook.key) {
           try {
             if (this.props.currentBook.format === "PDF") {
-              this.showPDFHighlight(
+              showPDFHighlight(
                 JSON.parse(item.range),
                 classes[item.color],
-                item.key
+                item.key,
+                this.handlePDFClick
               );
             } else {
               let temp = JSON.parse(item.range);
@@ -370,8 +330,6 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
       this.handleHighlight();
     }
     const PopupProps = {
-      pageWidth: this.props.pageWidth,
-      pageHeight: this.props.pageHeight,
       chapterDocIndex: this.props.chapterDocIndex,
       chapter: this.props.chapter,
     };

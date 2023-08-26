@@ -19,6 +19,9 @@ export function handleSearch(isSearch: boolean) {
 export function handleTipDialog(isTipDialog: boolean) {
   return { type: "HANDLE_TIP_DIALOG", payload: isTipDialog };
 }
+export function handleDetailDialog(isDetailDialog: boolean) {
+  return { type: "HANDLE_DETAIL_DIALOG", payload: isDetailDialog };
+}
 export function handleTip(tip: string) {
   return { type: "HANDLE_TIP", payload: tip };
 }

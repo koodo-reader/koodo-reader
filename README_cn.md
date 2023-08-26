@@ -33,7 +33,7 @@
 
 - 支持阅读格式：
   - EPUB (**.epub**)
-  - 扫描文档 (**.pdf**, **.djvu**)
+  - 扫描文档 (**.pdf**)
   - Kindle (**.azw3**, **.mobi**, **.azw**)
   - 纯文本 (**.txt**)
   - 漫画 (**.cbr**, **.cbz**, **.cbt**, **.cb7**)
@@ -58,7 +58,7 @@
 - 使用 Scoop 安装：
 
 ```shell
-scoop bucket add dorado https://github.com/chawyehsu/dorado
+scoop bucket add extras
 scoop install dorado/koodo-reader
 ```
 

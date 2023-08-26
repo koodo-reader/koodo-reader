@@ -1,5 +1,9 @@
+import { getPDFIframeDoc } from "../serviceUtils/docUtil";
+
 declare var window: any;
 var pdfjsLib = window["pdfjs-dist/build/pdf"];
+let colors = ["#fac106", "#ebe702", "#0be603", "#0493e6"];
+let lines = ["#FF0000", "#000080", "#0000FF", "#2EFF2E"];
 export const getHightlightCoords = () => {
   let pageArea = document.getElementById("page-area");
   if (!pageArea) return;
@@ -62,40 +66,122 @@ export const getHightlightCoords = () => {
   });
   return { page: pageIndex, coords: selected };
 };
-export const getPDFCover = (file: ArrayBuffer) => {
-  return new Promise<string>((resolve, reject) => {
+export const getPDFMetadata = (file: ArrayBuffer) => {
+  return new Promise<any>((resolve, reject) => {
     let fileSize = file.byteLength / 1024 / 1024;
     setTimeout(() => {
       resolve("");
     }, Math.ceil(fileSize / 10) * 1000);
     pdfjsLib
       .getDocument({ data: file })
-      .promise.then((pdfDoc: any) => {
-        pdfDoc.getPage(1).then((page: any) => {
-          var scale = 1.5;
-          var viewport = page.getViewport({
-            scale: scale,
+      .promise.then(async (pdfDoc: any) => {
+        pdfDoc
+          .getMetadata()
+          .then(async (metadata) => {
+            let name = metadata.info.Title;
+            let author = metadata.info.Author;
+            let publisher = metadata.info.Producer;
+            let pageCount = (await pdfDoc)._pdfInfo.numPages;
+            pdfDoc.getPage(1).then((page: any) => {
+              var scale = 1.5;
+              var viewport = page.getViewport({
+                scale: scale,
+              });
+              var canvas: any = document.getElementById("the-canvas");
+              var context = canvas.getContext("2d");
+              canvas.height =
+                viewport.height ||
+                viewport.viewBox[3]; /* viewport.height is NaN */
+              canvas.width =
+                viewport.width ||
+                viewport.viewBox[2]; /* viewport.width is also NaN */
+              var task = page.render({
+                canvasContext: context,
+                viewport: viewport,
+              });
+              task.promise.then(async () => {
+                let cover: any = canvas.toDataURL("image/jpeg");
+                resolve({ cover, author, name, publisher, pageCount });
+              });
+            });
+          })
+          .catch(function (err) {
+            console.log(err);
           });
-          var canvas: any = document.getElementById("the-canvas");
-          var context = canvas.getContext("2d");
-          canvas.height =
-            viewport.height || viewport.viewBox[3]; /* viewport.height is NaN */
-          canvas.width =
-            viewport.width ||
-            viewport.viewBox[2]; /* viewport.width is also NaN */
-          var task = page.render({
-            canvasContext: context,
-            viewport: viewport,
-          });
-          task.promise.then(async () => {
-            let cover: any = canvas.toDataURL("image/jpeg");
-
-            resolve(cover);
-          });
-        });
       })
       .catch((err: any) => {
         resolve("");
       });
   });
+};
+export const removePDFHighlight = (
+  selected: any,
+  colorCode: string,
+  noteKey: string
+) => {
+  let iWin = getPDFIframeDoc();
+  if (!iWin) return;
+  var pageIndex = selected.page;
+  if (!iWin.PDFViewerApplication.pdfViewer) return;
+  var page = iWin.PDFViewerApplication.pdfViewer.getPageView(pageIndex);
+  if (page && page.div && page.textLayer && page.textLayer.div) {
+    var pageElement =
+      colorCode.indexOf("color") > -1 ? page.textLayer.div : page.div;
+    let noteElements = pageElement.querySelectorAll(".pdf-note");
+    noteElements.forEach((item: Element) => {
+      if (item.getAttribute("key") === noteKey) {
+        item.parentNode?.removeChild(item);
+      }
+    });
+  }
+};
+export const showPDFHighlight = (
+  selected: any,
+  colorCode: string,
+  noteKey: string,
+  handlePDFClick: any
+) => {
+  let iWin = getPDFIframeDoc();
+  if (!iWin) return;
+  var pageIndex = selected.page;
+  if (!iWin.PDFViewerApplication.pdfViewer) return;
+  var page = iWin.PDFViewerApplication.pdfViewer.getPageView(pageIndex);
+  if (page && page.div && page.textLayer && page.textLayer.div) {
+    var pageElement =
+      colorCode.indexOf("color") > -1 ? page.textLayer.div : page.div;
+
+    var viewport = page.viewport;
+    selected.coords.forEach((rect) => {
+      var bounds = viewport.convertToViewportRectangle(rect);
+      var el = iWin.document.createElement("div");
+
+      el?.setAttribute(
+        "style",
+        "position: absolute;" +
+          (colorCode.indexOf("color") > -1
+            ? "background-color: "
+            : "border-bottom: ") +
+          (colorCode.indexOf("color") > -1
+            ? colors[colorCode.split("-")[1]]
+            : `2px solid ${lines[colorCode.split("-")[1]]}`) +
+          "; left:" +
+          Math.min(bounds[0], bounds[2]) +
+          "px; top:" +
+          Math.min(bounds[1], bounds[3]) +
+          "px;" +
+          "width:" +
+          Math.abs(bounds[0] - bounds[2]) +
+          "px; height:" +
+          Math.abs(bounds[1] - bounds[3]) +
+          "px; z-index:0;"
+      );
+      el?.setAttribute("key", noteKey);
+      el?.setAttribute("class", "pdf-note");
+      el?.addEventListener("click", (event: any) => {
+        handlePDFClick(event);
+      });
+
+      pageElement.appendChild(el);
+    });
+  }
 };

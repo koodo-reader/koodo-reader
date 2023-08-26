@@ -161,7 +161,12 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
                   }
                   for (let index = 0; index < selectedBooks.length; index++) {
                     const selectedBook = selectedBooks[index];
-                    toast(this.props.t("Precaching"));
+                    if (selectedBook.format === "PDF") {
+                      toast(this.props.t("Not supported yet"));
+                    } else {
+                      toast(this.props.t("Precaching"));
+                    }
+
                     let result = await BookUtil.fetchBook(
                       selectedBook.key,
                       true,

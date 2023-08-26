@@ -8,18 +8,18 @@ body,
 .book-content-name,
 .delete-tag-container,
 .setting-subtitle,
+.book-more-action,
+.reading-progress-icon,
 .book-subcontent-name {
   color: rgba(75, 75, 75, 1);
 }
-.reading-progress-icon,
 .book-love-icon,
 .book-loved-icon,
 .zoom-in-icon,
 .zoom-out-icon,
 .save-icon,
 .clockwise-icon,
-.counterclockwise-icon,
-.book-more-action {
+.counterclockwise-icon {
   text-shadow: 0px 0px 5px rgba(75, 75, 75, 0.3);
 }
 .add-dialog-shelf-list-box,
@@ -100,7 +100,6 @@ body,
   color: rgba(255, 255, 255, 1) !important;
 }
 
-.reading-progress-icon,
 .header-search-box,
 #jumpPage,
 #jumpChapter,
@@ -162,6 +161,7 @@ body,
   background: rgba(255, 255, 255, 1);
   box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.2);
 }
+.book-item-image,
 .book-item-cover,
 .book-cover,
 .book-cover-item-cover,
@@ -217,9 +217,7 @@ body,
 .exit-reading-text,
 .add-bookmark-text,
 .enter-fullscreen-text,
-.reading-progress-icon,
 .book-love-icon,
-.book-more-action,
 .image-operation,
 .popup-menu-triangle-up,
 .popup-menu-triangle-down,

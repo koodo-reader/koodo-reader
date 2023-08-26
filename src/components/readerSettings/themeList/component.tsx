@@ -8,7 +8,7 @@ import StorageUtil from "../../../utils/serviceUtils/storageUtil";
 import { Panel as ColorPickerPanel } from "rc-color-picker";
 import "rc-color-picker/assets/index.css";
 import ThemeUtil from "../../../utils/readUtils/themeUtil";
-import { isElectron } from "react-device-detect";
+import BookUtil from "../../../utils/fileUtils/bookUtil";
 
 class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
   constructor(props: ThemeListProps) {
@@ -48,15 +48,7 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
     ) {
       StorageUtil.setReaderConfig("textColor", "rgba(0,0,0,1)");
     }
-    if (isElectron) {
-      if (StorageUtil.getReaderConfig("isOpenInMain") === "yes") {
-        window.require("electron").ipcRenderer.invoke("reload-main", "ping");
-      } else {
-        window.require("electron").ipcRenderer.invoke("reload-reader", "ping");
-      }
-    } else {
-      window.location.reload();
-    }
+    BookUtil.reloadBooks();
   };
 
   handleChooseBgColor = (color) => {

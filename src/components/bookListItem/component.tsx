@@ -104,16 +104,35 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
     );
   }
   render() {
-    let percentage = RecordLocation.getHtmlLocation(this.props.book.key)
-      ? RecordLocation.getHtmlLocation(this.props.book.key).percentage
-      : 0;
-
+    let percentage = "0";
+    if (this.props.book.format === "PDF") {
+      if (
+        RecordLocation.getPDFLocation(this.props.book.md5.split("-")[0]) &&
+        RecordLocation.getPDFLocation(this.props.book.md5.split("-")[0]).page &&
+        this.props.book.page
+      ) {
+        percentage =
+          RecordLocation.getPDFLocation(this.props.book.md5.split("-")[0])
+            .page /
+            this.props.book.page +
+          "";
+      }
+    } else {
+      if (
+        RecordLocation.getHtmlLocation(this.props.book.key) &&
+        RecordLocation.getHtmlLocation(this.props.book.key).percentage
+      ) {
+        percentage = RecordLocation.getHtmlLocation(
+          this.props.book.key
+        ).percentage;
+      }
+    }
     return (
       <div className="book-list-item-container">
         {!this.props.book.cover ||
         this.props.book.cover === "noCover" ||
         (this.props.book.format === "PDF" &&
-          StorageUtil.getReaderConfig("isPDFCover") !== "yes") ? (
+          StorageUtil.getReaderConfig("isDisablePDFCover") === "yes") ? (
           <div
             className="book-item-list-cover"
             onClick={() => {
@@ -188,7 +207,19 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
           </span>
         </p>
         <p className="book-item-list-percentage">
-          {percentage ? Math.round(percentage * 100) : 0}%
+          {percentage
+            ? Math.floor(parseFloat(percentage) * 100) === 0
+              ? "New"
+              : Math.floor(parseFloat(percentage) * 100) < 10
+              ? "0" + Math.floor(parseFloat(percentage) * 100)
+              : Math.floor(parseFloat(percentage) * 100) === 100
+              ? "Done"
+              : Math.floor(parseFloat(percentage) * 100)
+            : "00"}
+          {Math.floor(parseFloat(percentage) * 100) > 0 &&
+            Math.floor(parseFloat(percentage) * 100) < 100 && (
+              <span className="reading-percentage-char">%</span>
+            )}
         </p>
         {this.props.mode === "trash" ? (
           <div className="book-item-list-config">

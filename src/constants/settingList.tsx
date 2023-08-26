@@ -96,13 +96,13 @@ export const settingList = [
   },
   {
     isElectron: false,
-    title: "Use first page as PDF cover",
-    propName: "isPDFCover",
+    title: "Don't use first page as PDF cover",
+    propName: "isDisablePDFCover",
   },
   {
     isElectron: false,
-    title: "Hide floating button in PDF reader",
-    propName: "isHideFloating",
+    title: "Don't crop book cover",
+    propName: "isDisableCrop",
   },
   {
     isElectron: true,
@@ -134,6 +134,7 @@ export const langList = [
   { label: "български", value: "bg" },
   { label: "bahasa Indonesia", value: "id" },
   { label: "հայերեն", value: "hy" },
+  { label: "བོད་སྐད།", value: "bo" },
 ];
 
 export const searchList = [

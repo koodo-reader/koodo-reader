@@ -32,7 +32,7 @@
 
 - Format support:
   - EPUB (**.epub**)
-  - Scanned document (**.pdf**, **.djvu**)
+  - Scanned document (**.pdf**)
   - DRM-free Mobipocket (**.mobi**) and Kindle (**.azw3**, **.azw**)
   - Plain text (**.txt**)
   - FictionBook (**.fb2**)
@@ -58,7 +58,7 @@
 - Install with Scoop:
 
 ```shell
-scoop bucket add dorado https://github.com/chawyehsu/dorado
+scoop bucket add extras
 scoop install dorado/koodo-reader
 ```
 

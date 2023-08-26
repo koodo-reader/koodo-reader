@@ -19,7 +19,6 @@ export interface BookCardProps extends RouteComponentProps<any> {
   handleDeleteDialog: (isShow: boolean) => void;
 }
 export interface BookCardState {
-  isOpenConfig: boolean;
   isFavorite: boolean;
   left: number;
   top: number;

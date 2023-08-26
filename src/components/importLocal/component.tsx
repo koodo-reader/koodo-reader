@@ -238,7 +238,6 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
           ".mobi",
           ".azw3",
           ".azw",
-          ".djvu",
           ".htm",
           ".html",
           ".xml",
