@@ -3,6 +3,7 @@ import NoteModel from "../../model/Note";
 import ReadingTime from "./readingTime";
 import RecordLocation from "./recordLocation";
 import RecordRecent from "./recordRecent";
+declare var window: any;
 const getBookName = (books: BookModel[]) => {
   return books.map((item) => item.name);
 };

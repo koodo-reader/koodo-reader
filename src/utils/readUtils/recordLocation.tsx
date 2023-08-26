@@ -1,3 +1,4 @@
+declare var window: any;
 class RecordLocation {
   static recordCfi(bookKey: string, cfi: string, percentage: number) {
     let json = localStorage.getItem("recordLocation");
