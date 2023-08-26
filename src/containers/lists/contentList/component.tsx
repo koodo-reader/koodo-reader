@@ -2,6 +2,7 @@ import React from "react";
 import "./contentList.css";
 import { ContentListProps, ContentListState } from "./interface";
 import StorageUtil from "../../../utils/serviceUtils/storageUtil";
+declare var window: any;
 class ContentList extends React.Component<ContentListProps, ContentListState> {
   constructor(props: ContentListProps) {
     super(props);
