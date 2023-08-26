@@ -5,8 +5,6 @@ export interface PopupNoteProps {
   notes: NoteModel[];
   color: number;
   noteKey: string;
-  pageWidth: number;
-  pageHeight: number;
   chapterDocIndex: number;
   chapter: string;
   handleNoteKey: (key: string) => void;

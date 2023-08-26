@@ -13,8 +13,6 @@ export interface PopupMenuProps {
   // cfiRange: any;
   rect: any;
   noteKey: string;
-  pageWidth: number;
-  pageHeight: number;
   chapterDocIndex: number;
   chapter: string;
   handleNoteKey: (key: string) => void;

@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import { Route, Switch, HashRouter } from "react-router-dom";
 import Manager from "../pages/manager";
 import HtmlReader from "../pages/htmlReader";
-import DjvuReader from "../pages/djvuReader";
 import PDFReader from "../pages/pdfReader";
 import _Redirect from "../pages/redirect";
 import i18n from "../i18n";
@@ -32,6 +31,9 @@ const Router = () => {
       } else if (navigator.language.startsWith("jp")) {
         i18n.changeLanguage("jp");
         StorageUtil.setReaderConfig("lang", "jp");
+      } else if (navigator.language.startsWith("bo")) {
+        i18n.changeLanguage("bo");
+        StorageUtil.setReaderConfig("lang", "bo");
       } else if (navigator.language.startsWith("hy")) {
         i18n.changeLanguage("hy");
         StorageUtil.setReaderConfig("lang", "hy");
@@ -90,7 +92,6 @@ const Router = () => {
     <HashRouter>
       <Switch>
         <Route component={Manager} path="/manager" />
-        <Route component={DjvuReader} path="/djvu" />
         <Route component={HtmlReader} path="/epub" />
         <Route component={HtmlReader} path="/mobi" />
         <Route component={HtmlReader} path="/cbr" />

@@ -9,7 +9,7 @@ const sleep = (ms: number) => {
 };
 
 let throttleTime =
-  StorageUtil.getReaderConfig("isSliding") === "yes" ? 1000 : 300;
+  StorageUtil.getReaderConfig("isSliding") === "yes" ? 1000 : 0;
 export const getSelection = () => {
   let doc = getIframeDoc();
   if (!doc) return;
@@ -188,14 +188,6 @@ export const pdfMouseEvent = () => {
   let doc: any = iframe.contentWindow || iframe.contentDocument?.defaultView;
 
   doc.document.addEventListener("keydown", (event) => {
-    if (lock) return;
-    lock = true;
-    handleShortcut(event);
-    setTimeout(() => (lock = false), throttleTime);
-  });
-};
-export const djvuMouseEvent = () => {
-  document.addEventListener("keydown", (event) => {
     if (lock) return;
     lock = true;
     handleShortcut(event);

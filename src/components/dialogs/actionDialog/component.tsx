@@ -4,16 +4,13 @@ import { Trans } from "react-i18next";
 import { ActionDialogProps, ActionDialogState } from "./interface";
 import AddTrash from "../../../utils/readUtils/addTrash";
 
-import Parser from "html-react-parser";
-import * as DOMPurify from "dompurify";
-
-import ShelfUtil from "../../../utils/readUtils/shelfUtil";
 import toast from "react-hot-toast";
 import BookUtil from "../../../utils/fileUtils/bookUtil";
 import {
   exportHighlights,
   exportNotes,
 } from "../../../utils/syncUtils/exportUtil";
+import AddFavorite from "../../../utils/readUtils/addFavorite";
 declare var window: any;
 class ActionDialog extends React.Component<
   ActionDialogProps,
@@ -23,6 +20,7 @@ class ActionDialog extends React.Component<
     super(props);
     this.state = {
       isShowExport: false,
+      isShowDetail: false,
       isExceed: false,
     };
   }
@@ -36,6 +34,11 @@ class ActionDialog extends React.Component<
     this.props.handleReadingBook(this.props.currentBook);
     this.props.handleActionDialog(false);
   };
+  handleDetailBook = () => {
+    this.props.handleDetailDialog(true);
+    this.props.handleReadingBook(this.props.currentBook);
+    this.props.handleActionDialog(false);
+  };
   handleAddShelf = () => {
     this.props.handleAddDialog(true);
     this.props.handleReadingBook(this.props.currentBook);
@@ -46,6 +49,22 @@ class ActionDialog extends React.Component<
     this.props.handleActionDialog(false);
     toast.success(this.props.t("Restore Successfully"));
     this.props.handleFetchBooks();
+  };
+  handleLoveBook = () => {
+    AddFavorite.setFavorite(this.props.currentBook.key);
+    toast.success(this.props.t("Add Successfully"));
+    this.props.handleActionDialog(false);
+  };
+  handleCancelLoveBook = () => {
+    AddFavorite.clear(this.props.currentBook.key);
+    if (
+      Object.keys(AddFavorite.getAllFavorite()).length === 0 &&
+      this.props.mode === "favorite"
+    ) {
+      this.props.history.push("/manager/empty");
+    }
+    toast.success(this.props.t("Cancel Successfully"));
+    this.props.handleActionDialog(false);
   };
   render() {
     if (this.props.mode === "trash") {
@@ -95,6 +114,31 @@ class ActionDialog extends React.Component<
             <div
               className="action-dialog-add"
               onClick={() => {
+                if (
+                  AddFavorite.getAllFavorite().indexOf(
+                    this.props.currentBook.key
+                  ) > -1
+                ) {
+                  this.handleCancelLoveBook();
+                } else {
+                  this.handleLoveBook();
+                }
+              }}
+            >
+              <span className="icon-love view-icon"></span>
+              <p className="action-name">
+                {AddFavorite.getAllFavorite().indexOf(
+                  this.props.currentBook.key
+                ) > -1 ? (
+                  <Trans>Remove from favorite</Trans>
+                ) : (
+                  <Trans>Add to favorite</Trans>
+                )}
+              </p>
+            </div>
+            <div
+              className="action-dialog-add"
+              onClick={() => {
                 this.handleAddShelf();
               }}
             >
@@ -123,6 +167,20 @@ class ActionDialog extends React.Component<
               <span className="icon-edit view-icon"></span>
               <p className="action-name">
                 <Trans>Edit</Trans>
+              </p>
+            </div>
+            <div
+              className="action-dialog-edit"
+              onClick={() => {
+                this.handleDetailBook();
+              }}
+            >
+              <span
+                className="icon-idea view-icon"
+                style={{ fontSize: "17px" }}
+              ></span>
+              <p className="action-name">
+                <Trans>Details</Trans>
               </p>
             </div>
             <div
@@ -159,83 +217,6 @@ class ActionDialog extends React.Component<
                 className="icon-dropdown icon-export-all"
                 style={{ left: "95px" }}
               ></span>
-            </div>
-
-            <div className="sort-dialog-seperator"></div>
-
-            <div className="action-dialog-book-info">
-              <div>
-                <p className="action-dialog-book-publisher">
-                  <Trans>Book Name</Trans>:
-                </p>
-                <p className="action-dialog-book-title">
-                  {this.props.currentBook.name}
-                </p>
-                <p className="action-dialog-book-publisher">
-                  <Trans>Author</Trans>:
-                </p>
-                <p className="action-dialog-book-title">
-                  <Trans>{this.props.currentBook.author}</Trans>
-                </p>
-              </div>
-              <div>
-                <p className="action-dialog-book-publisher">
-                  <Trans>Publisher</Trans>:
-                </p>
-                <p className="action-dialog-book-title">
-                  {this.props.currentBook.publisher}
-                </p>
-              </div>
-              <div>
-                <p className="action-dialog-book-publisher">
-                  <Trans>File size</Trans>:
-                </p>
-                <p className="action-dialog-book-title">
-                  {this.props.currentBook.size
-                    ? this.props.currentBook.size / 1024 / 1024 > 1
-                      ? parseFloat(
-                          this.props.currentBook.size / 1024 / 1024 + ""
-                        ).toFixed(2) + "Mb"
-                      : parseInt(this.props.currentBook.size / 1024 + "") + "Kb"
-                    : // eslint-disable-next-line
-                      "0" + "Kb"}
-                </p>
-              </div>
-              <div>
-                <p className="action-dialog-book-added">
-                  <Trans>Added at</Trans>:
-                </p>
-                <p className="action-dialog-book-title">
-                  {new Date(parseInt(this.props.currentBook.key))
-                    .toLocaleString()
-                    .replace(/:\d{1,2}$/, " ")}
-                </p>
-              </div>
-              <div>
-                <p className="action-dialog-book-publisher">
-                  <Trans>Shelf</Trans>:
-                </p>
-                <p className="action-dialog-book-title">
-                  {ShelfUtil.getBookPosition(this.props.currentBook.key).map(
-                    (item) => (
-                      <>
-                        #<Trans>{item}</Trans>&nbsp;
-                      </>
-                    )
-                  )}
-                </p>
-              </div>
-              <div>
-                <p className="action-dialog-book-desc">
-                  <Trans>Description</Trans>:
-                </p>
-                <div className="action-dialog-book-detail">
-                  {Parser(
-                    DOMPurify.sanitize(this.props.currentBook.description) ||
-                      " "
-                  )}
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -336,6 +317,10 @@ class ActionDialog extends React.Component<
           <div
             className="action-dialog-edit"
             onClick={() => {
+              if (this.props.currentBook.format === "PDF") {
+                toast(this.props.t("Not supported yet"));
+                return;
+              }
               toast(this.props.t("Precaching"));
               BookUtil.fetchBook(
                 this.props.currentBook.key,

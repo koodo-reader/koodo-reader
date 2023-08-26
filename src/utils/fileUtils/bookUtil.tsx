@@ -3,7 +3,7 @@ import { isElectron } from "react-device-detect";
 
 import BookModel from "../../model/Book";
 import toast from "react-hot-toast";
-import { getPDFCover } from "./pdfUtil";
+import { getPDFMetadata } from "./pdfUtil";
 import { copyArrayBuffer } from "../commonUtil";
 declare var window: any;
 
@@ -103,48 +103,6 @@ class BookUtil {
       }
     });
   }
-  static fetchBook1(
-    key: string,
-    isArrayBuffer: boolean = false,
-    bookPath: string = ""
-  ) {
-    if (isElectron) {
-      return new Promise<File | ArrayBuffer | boolean>((resolve, reject) => {
-        var fs = window.require("fs");
-        var path = window.require("path");
-        let _bookPath = path.join(
-          localStorage.getItem("storageLocation")
-            ? localStorage.getItem("storageLocation")
-            : window
-                .require("electron")
-                .ipcRenderer.sendSync("storage-location", "ping"),
-          `book`,
-          key
-        );
-        var data;
-        if (bookPath && fs.existsSync(bookPath)) {
-          data = fs.readFileSync(bookPath);
-        } else if (fs.existsSync(_bookPath)) {
-          data = fs.readFileSync(_bookPath);
-        } else {
-          resolve(false);
-        }
-
-        let blobTemp = new Blob([data]);
-        let fileTemp = new File([blobTemp], "data", {
-          lastModified: new Date().getTime(),
-          type: blobTemp.type,
-        });
-        if (isArrayBuffer) {
-          resolve(new Uint8Array(data).buffer);
-        } else {
-          resolve(fileTemp);
-        }
-      });
-    } else {
-      return window.localforage.getItem(key);
-    }
-  }
   static fetchBook(
     key: string,
     isArrayBuffer: boolean = false,
@@ -214,7 +172,7 @@ class BookUtil {
           book.name
         }`,
         isMergeWord:
-          book.format === "PDF" || book.format === "DJVU"
+          book.format === "PDF"
             ? "no"
             : StorageUtil.getReaderConfig("isMergeWord"),
         isFullscreen: StorageUtil.getReaderConfig("isAutoFullscreen"),
@@ -259,6 +217,17 @@ class BookUtil {
         : `${pdfLocation}?file=${book.key}`;
     } else {
       return `./lib/pdf/web/viewer.html?file=${book.key}`;
+    }
+  }
+  static reloadBooks() {
+    if (isElectron) {
+      if (StorageUtil.getReaderConfig("isOpenInMain") === "yes") {
+        window.require("electron").ipcRenderer.invoke("reload-main", "ping");
+      } else {
+        window.require("electron").ipcRenderer.invoke("reload-reader", "ping");
+      }
+    } else {
+      window.location.reload();
     }
   }
   static getRendtion = (
@@ -319,13 +288,15 @@ class BookUtil {
         author: string,
         publisher: string,
         description: string,
-        charset: string;
-      [name, author, description, publisher, charset] = [
+        charset: string,
+        page: number;
+      [name, author, description, publisher, charset, page] = [
         bookName,
         "Unknown Author",
         "",
         "",
         "",
+        0,
       ];
       let metadata: any;
       let rendition = BookUtil.getRendtion(
@@ -337,7 +308,14 @@ class BookUtil {
 
       switch (extension) {
         case "pdf":
-          cover = await getPDFCover(file_content);
+          metadata = await getPDFMetadata(copyArrayBuffer(file_content));
+          [name, author, publisher, cover, page] = [
+            metadata.name || bookName,
+            metadata.author || "Unknown Author",
+            metadata.publisher || "",
+            metadata.cover || "",
+            metadata.pageCount || 0,
+          ];
           if (cover.indexOf("image") === -1) {
             cover = "";
           }
@@ -417,6 +395,7 @@ class BookUtil {
           format,
           publisher,
           size,
+          page,
           path,
           charset
         )

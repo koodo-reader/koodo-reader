@@ -18,6 +18,5 @@ export interface ViewerState {
   contents: any;
   rect: any;
   loading: boolean;
-  pageWidth: number;
-  pageHeight: number;
+  isDisablePopup: boolean;
 }

@@ -3,8 +3,7 @@ import "./modeControl.css";
 import { ModeControlProps, ModeControlState } from "./interface";
 import StorageUtil from "../../../utils/serviceUtils/storageUtil";
 import { Trans } from "react-i18next";
-
-import { isElectron } from "react-device-detect";
+import BookUtil from "../../../utils/fileUtils/bookUtil";
 
 class ModeControl extends React.Component<ModeControlProps, ModeControlState> {
   constructor(props: ModeControlProps) {
@@ -17,15 +16,7 @@ class ModeControl extends React.Component<ModeControlProps, ModeControlState> {
   handleChangeMode = (mode: string) => {
     this.setState({ readerMode: mode });
     StorageUtil.setReaderConfig("readerMode", mode);
-    if (isElectron) {
-      if (StorageUtil.getReaderConfig("isOpenInMain") === "yes") {
-        window.require("electron").ipcRenderer.invoke("reload-main", "ping");
-      } else {
-        window.require("electron").ipcRenderer.invoke("reload-reader", "ping");
-      }
-    } else {
-      window.location.reload();
-    }
+    BookUtil.reloadBooks();
   };
   render() {
     return (
