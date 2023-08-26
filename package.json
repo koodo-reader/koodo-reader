@@ -34,14 +34,10 @@
     "request": "^2.88.2",
     "webdav": "^3.6.2",
     "webdav-fs": "^3.0.0",
-    "ws": "^8.13.0",
     "zip-a-folder": "^0.0.12"
   },
   "devDependencies": {
-    "@types/chardet": "^0.8.1",
-    "@types/express": "^4.17.15",
     "@types/i18next": "^13.0.0",
-    "@types/marked": "^2.0.2",
     "@types/md5": "^2.2.0",
     "@types/node": "^13.13.2",
     "@types/react": "17.0.2",
@@ -51,8 +47,6 @@
     "@types/react-redux": "^7.1.7",
     "@types/react-router-dom": "^5.1.6",
     "@types/spark-md5": "^3.0.2",
-    "@types/underscore": "^1.10.24",
-    "@types/ws": "^8.5.4",
     "classnames": "^2.2.6",
     "concurrently": "^5.0.1",
     "cross-env": "^6.0.3",
@@ -73,14 +67,14 @@
     "react-lottie": "^1.2.3",
     "react-redux": "^7.2.0",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "4.0.3",
+    "react-scripts": "^5.0.1",
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
     "sass-loader": "^13.3.2",
     "source-map-explorer": "^2.5.2",
     "spark-md5": "^3.0.1",
     "typescript": "3.8.3",
-    "wait-on": "^3.3.0"
+    "wait-on": "^7.0.1"
   },
   "scripts": {
     "analyze": "source-map-explorer 'build/static/js/*.js'",
@@ -89,7 +83,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "ele": "electron .",
-    "dev": "concurrently \"cross-env BROWSER=none npm start\" \"wait-on http://localhost:3000/ && nodemon --watch main.js --exec electron .\"",
+    "dev": "concurrently \"cross-env BROWSER=none npm start\" \"wait-on http://127.0.0.1:3000/ && nodemon --watch main.js --exec electron .\"",
     "release": "electron-builder",
     "prerelease": "react-scripts build"
   },
