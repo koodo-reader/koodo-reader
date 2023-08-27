@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'icomoon';
-  src:  url('fonts/icomoon.eot?o3qvp2');
-  src:  url('fonts/icomoon.eot?o3qvp2#iefix') format('embedded-opentype'),
-    url('fonts/icomoon.ttf?o3qvp2') format('truetype'),
-    url('fonts/icomoon.woff?o3qvp2') format('woff'),
-    url('fonts/icomoon.svg?o3qvp2#icomoon') format('svg');
+  src:  url('fonts/icomoon.eot?43s8j0');
+  src:  url('fonts/icomoon.eot?43s8j0#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.ttf?43s8j0') format('truetype'),
+    url('fonts/icomoon.woff?43s8j0') format('woff'),
+    url('fonts/icomoon.svg?43s8j0#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -25,6 +25,39 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-bookshelf-line:before {
+  content: "\e94b";
+}
+.icon-highlight-line:before {
+  content: "\e94c";
+}
+.icon-select:before {
+  content: "\e94d";
+}
+.icon-trash-line:before {
+  content: "\e943";
+}
+.icon-detail:before {
+  content: "\e944";
+}
+.icon-bookshelf:before {
+  content: "\e945";
+}
+.icon-edit-line:before {
+  content: "\e946";
+}
+.icon-address-book:before {
+  content: "\e947";
+}
+.icon-idea-line:before {
+  content: "\e948";
+}
+.icon-heart:before {
+  content: "\e949";
+}
+.icon-home-line:before {
+  content: "\e94a";
+}
 .icon-day:before {
   content: "\e936";
 }
