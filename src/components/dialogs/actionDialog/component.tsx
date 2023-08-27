@@ -55,6 +55,11 @@ class ActionDialog extends React.Component<
     toast.success(this.props.t("Add Successfully"));
     this.props.handleActionDialog(false);
   };
+  handleMultiSelect = () => {
+    this.props.handleSelectBook(true);
+    this.props.handleSelectedBooks([this.props.currentBook.key]);
+    this.props.handleActionDialog(false);
+  };
   handleCancelLoveBook = () => {
     AddFavorite.clear(this.props.currentBook.key);
     if (
@@ -125,14 +130,14 @@ class ActionDialog extends React.Component<
                 }
               }}
             >
-              <span className="icon-love view-icon"></span>
+              <span className="icon-heart view-icon"></span>
               <p className="action-name">
                 {AddFavorite.getAllFavorite().indexOf(
                   this.props.currentBook.key
                 ) > -1 ? (
-                  <Trans>Remove from favorite</Trans>
+                  <Trans>Remove from Favorite</Trans>
                 ) : (
-                  <Trans>Add to favorite</Trans>
+                  <Trans>Add to Favorite</Trans>
                 )}
               </p>
             </div>
@@ -142,9 +147,20 @@ class ActionDialog extends React.Component<
                 this.handleAddShelf();
               }}
             >
-              <span className="icon-shelf view-icon"></span>
+              <span className="icon-bookshelf-line view-icon"></span>
               <p className="action-name">
                 <Trans>Add to Shelf</Trans>
+              </p>
+            </div>
+            <div
+              className="action-dialog-add"
+              onClick={() => {
+                this.handleMultiSelect();
+              }}
+            >
+              <span className="icon-select view-icon"></span>
+              <p className="action-name">
+                <Trans>Multiple Select</Trans>
               </p>
             </div>
             <div
@@ -153,7 +169,7 @@ class ActionDialog extends React.Component<
                 this.handleDeleteBook();
               }}
             >
-              <span className="icon-trash view-icon"></span>
+              <span className="icon-trash-line view-icon"></span>
               <p className="action-name">
                 <Trans>Delete</Trans>
               </p>
@@ -164,7 +180,7 @@ class ActionDialog extends React.Component<
                 this.handleEditBook();
               }}
             >
-              <span className="icon-edit view-icon"></span>
+              <span className="icon-edit-line view-icon"></span>
               <p className="action-name">
                 <Trans>Edit</Trans>
               </p>
@@ -176,10 +192,10 @@ class ActionDialog extends React.Component<
               }}
             >
               <span
-                className="icon-idea view-icon"
+                className="icon-idea-line view-icon"
                 style={{ fontSize: "17px" }}
               ></span>
-              <p className="action-name">
+              <p className="action-name" style={{ marginLeft: "12px" }}>
                 <Trans>Details</Trans>
               </p>
             </div>
@@ -206,8 +222,10 @@ class ActionDialog extends React.Component<
                   className="icon-more view-icon"
                   style={{
                     display: "inline-block",
-                    marginRight: "15px",
+                    marginRight: "12px",
+                    marginLeft: "3px",
                     transform: "rotate(90deg)",
+                    fontSize: "12px",
                   }}
                 ></span>
                 <Trans>More Actions</Trans>

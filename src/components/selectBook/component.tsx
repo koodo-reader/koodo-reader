@@ -35,7 +35,7 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
           }}
           className="book-manage-title"
         >
-          <Trans>{this.props.isSelectBook ? "Cancel" : "Select"}</Trans>
+          <Trans>{this.props.isSelectBook ? "Cancel" : ""}</Trans>
         </span>
         {this.props.isSelectBook && (
           <>
