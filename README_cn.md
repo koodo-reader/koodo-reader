@@ -108,7 +108,7 @@ flatpak run io.github.troyeguo.koodo-reader
 
 ## 运行源码
 
-请确保您电脑的 node 的版本为 14.x.x，已配置好 yarn，git 的运行环境。
+请确保您电脑已配置好 yarn，git 的运行环境。
 
 1. 将项目源码下载到本地
 

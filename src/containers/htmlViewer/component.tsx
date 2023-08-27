@@ -248,7 +248,11 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       );
     });
     if (targetContent.length > 0) {
-      contentBody.scrollTo(0, targetContent[0].offsetTop);
+      contentBody.scrollTo({
+        left: 0,
+        top: targetContent[0].offsetTop,
+        behavior: "smooth",
+      });
       targetContent[0].setAttribute("style", "color:red; font-weight: bold");
     }
   };

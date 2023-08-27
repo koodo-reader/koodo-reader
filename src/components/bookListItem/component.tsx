@@ -10,7 +10,7 @@ import StorageUtil from "../../utils/serviceUtils/storageUtil";
 import AddTrash from "../../utils/readUtils/addTrash";
 import EmptyCover from "../emptyCover";
 import BookUtil from "../../utils/fileUtils/bookUtil";
-
+import ActionDialog from "../dialogs/actionDialog";
 import { isElectron } from "react-device-detect";
 import toast from "react-hot-toast";
 declare var window: any;
@@ -22,6 +22,8 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
       isFavorite:
         AddFavorite.getAllFavorite().indexOf(this.props.book.key) > -1,
       direction: "horizontal",
+      left: 0,
+      top: 0,
     };
   }
   componentDidMount() {
@@ -103,7 +105,31 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
       }
     );
   }
+  handleMoreAction = (event: any) => {
+    event.preventDefault();
+    const e = event || window.event;
+    let x = e.clientX;
+    if (x > document.body.clientWidth - 300) {
+      x = x - 180;
+    }
+    this.setState(
+      {
+        left: x,
+        top:
+          document.body.clientHeight - e.clientY > 200
+            ? e.clientY
+            : e.clientY - 200,
+      },
+      () => {
+        console.log("sagsdgsff");
+        this.props.handleActionDialog(true);
+        this.props.handleReadingBook(this.props.book);
+      }
+    );
+  };
   render() {
+    const actionProps = { left: this.state.left, top: this.state.top };
+
     let percentage = "0";
     if (this.props.book.format === "PDF") {
       if (
@@ -127,155 +153,111 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
         ).percentage;
       }
     }
+
     return (
-      <div className="book-list-item-container">
-        {!this.props.book.cover ||
-        this.props.book.cover === "noCover" ||
-        (this.props.book.format === "PDF" &&
-          StorageUtil.getReaderConfig("isDisablePDFCover") === "yes") ? (
-          <div
-            className="book-item-list-cover"
-            onClick={() => {
-              this.handleJump();
-            }}
-            style={{ display: "block" }}
-          >
-            <EmptyCover
-              {...{
-                format: this.props.book.format,
-                title: this.props.book.name,
-                scale: 0.54,
-              }}
-            />
-          </div>
-        ) : (
-          <div
-            className="book-item-list-cover"
-            onClick={() => {
-              this.handleJump();
-            }}
-          >
-            <img
-              src={this.props.book.cover}
-              alt=""
-              style={
-                this.state.direction === "horizontal"
-                  ? { width: "100%" }
-                  : { height: "100%" }
-              }
-              onLoad={(res: any) => {
-                if (
-                  res.target.naturalHeight / res.target.naturalWidth >
-                  74 / 57
-                ) {
-                  this.setState({ direction: "horizontal" });
-                } else {
-                  this.setState({ direction: "vertical" });
-                }
-              }}
-            />
-          </div>
-        )}
-        {this.props.isSelectBook ? (
-          <span
-            className="icon-message book-selected-icon"
-            style={
-              this.props.isSelected
-                ? { left: "35px", bottom: "5px" }
-                : { left: "35px", bottom: "5px", color: "#eee" }
-            }
-          ></span>
-        ) : null}
-        <p
-          className="book-item-list-title"
-          onClick={() => {
-            this.handleJump();
+      <>
+        <div
+          className="book-list-item-container"
+          onContextMenu={(event) => {
+            console.log("asdfsdfs");
+            this.handleMoreAction(event);
           }}
         >
-          <span className="book-item-list-subtitle">
-            {this.props.book.name}
-          </span>
-        </p>
-
-        <p className="book-item-list-author">
-          <span className="book-item-list-subtitle">
-            <Trans>
-              {this.props.book.author
-                ? this.props.book.author
-                : "Unknown Author"}
-            </Trans>
-          </span>
-        </p>
-        <p className="book-item-list-percentage">
-          {percentage
-            ? Math.floor(parseFloat(percentage) * 100) === 0
-              ? "New"
-              : Math.floor(parseFloat(percentage) * 100) < 10
-              ? "0" + Math.floor(parseFloat(percentage) * 100)
-              : Math.floor(parseFloat(percentage) * 100) === 100
-              ? "Done"
-              : Math.floor(parseFloat(percentage) * 100)
-            : "00"}
-          {Math.floor(parseFloat(percentage) * 100) > 0 &&
-            Math.floor(parseFloat(percentage) * 100) < 100 && (
-              <span className="reading-percentage-char">%</span>
-            )}
-        </p>
-        {this.props.mode === "trash" ? (
-          <div className="book-item-list-config">
-            <span
-              className="icon-clockwise list-icon"
+          {!this.props.book.cover ||
+          this.props.book.cover === "noCover" ||
+          (this.props.book.format === "PDF" &&
+            StorageUtil.getReaderConfig("isDisablePDFCover") === "yes") ? (
+            <div
+              className="book-item-list-cover"
               onClick={() => {
-                this.handleRestoreBook();
+                this.handleJump();
               }}
-            ></span>
-          </div>
-        ) : (
-          <div className="book-item-list-config">
-            {this.state.isFavorite ? (
-              <span
-                className="icon-love list-icon"
-                onClick={() => {
-                  this.handleCancelLoveBook();
+            >
+              <div className="book-item-image" style={{ height: "74px" }}>
+                <EmptyCover
+                  {...{
+                    format: this.props.book.format,
+                    title: this.props.book.name,
+                    scale: 0.54,
+                  }}
+                />
+              </div>
+            </div>
+          ) : (
+            <div
+              className="book-item-list-cover"
+              onClick={() => {
+                this.handleJump();
+              }}
+            >
+              <img
+                src={this.props.book.cover}
+                alt=""
+                className="book-item-image"
+                style={{ width: "100%" }}
+                onLoad={(res: any) => {
+                  if (
+                    res.target.naturalHeight / res.target.naturalWidth >
+                    74 / 57
+                  ) {
+                    this.setState({ direction: "horizontal" });
+                  } else {
+                    this.setState({ direction: "vertical" });
+                  }
                 }}
-                style={{ color: "#f87356" }}
-              ></span>
-            ) : (
-              <span
-                className="icon-love list-icon"
-                onClick={() => {
-                  this.handleLoveBook();
-                }}
-              ></span>
-            )}
-
+              />
+            </div>
+          )}
+          {this.props.isSelectBook ? (
             <span
-              className="icon-shelf list-icon"
-              onClick={() => {
-                this.handleAddShelf();
-              }}
+              className="icon-message book-selected-icon"
+              style={
+                this.props.isSelected
+                  ? { left: "35px", bottom: "5px" }
+                  : { left: "35px", bottom: "5px", color: "#eee" }
+              }
             ></span>
-            <span
-              className="icon-trash list-icon"
-              onClick={() => {
-                this.handleDeleteBook();
-              }}
-            ></span>
-            <span
-              className="icon-edit list-icon"
-              onClick={() => {
-                this.handleEditBook();
-              }}
-            ></span>
-            <span
-              className="icon-export list-icon"
-              onClick={() => {
-                this.handleExportBook();
-              }}
-            ></span>
+          ) : null}
+          <p
+            className="book-item-list-title"
+            onClick={() => {
+              this.handleJump();
+            }}
+          >
+            <div className="book-item-list-subtitle">
+              {this.props.book.name}
+            </div>
+          </p>
+          <p className="book-item-list-percentage">
+            {percentage
+              ? Math.floor(parseFloat(percentage) * 100) === 0
+                ? "New"
+                : Math.floor(parseFloat(percentage) * 100) < 10
+                ? "0" + Math.floor(parseFloat(percentage) * 100)
+                : Math.floor(parseFloat(percentage) * 100) === 100
+                ? "Done"
+                : Math.floor(parseFloat(percentage) * 100)
+              : "00"}
+            {Math.floor(parseFloat(percentage) * 100) > 0 &&
+              Math.floor(parseFloat(percentage) * 100) < 100 && <span>%</span>}
+          </p>
+          <p className="book-item-list-author">
+            <span className="book-item-list-subtitle">
+              <Trans>
+                {this.props.book.author
+                  ? this.props.book.author
+                  : "Unknown Author"}
+              </Trans>
+            </span>
+          </p>
+        </div>{" "}
+        {this.props.isOpenActionDialog &&
+        this.props.book.key === this.props.currentBook.key ? (
+          <div className="action-dialog-parent">
+            <ActionDialog {...actionProps} />
           </div>
-        )}
-      </div>
+        ) : null}
+      </>
     );
   }
 }
