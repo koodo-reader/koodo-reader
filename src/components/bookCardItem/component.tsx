@@ -137,7 +137,7 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
             style={
               StorageUtil.getReaderConfig("isDisableCrop") === "yes"
                 ? {
-                    height: "173px",
+                    height: "168px",
                     alignItems: "flex-end",
                     background: "rgba(255, 255,255, 0)",
                     boxShadow: "0px 0px 5px rgba(0, 0, 0, 0)",
