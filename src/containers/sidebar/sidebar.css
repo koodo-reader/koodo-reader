@@ -14,8 +14,22 @@
   position: relative;
   top: 85px;
   width: 210px;
-  height: 100%;
-  overflow: hidden;
+  height: calc(100% - 100px);
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+.side-menu-container-parent:hover::-webkit-scrollbar-thumb,
+.side-menu-container-parent:active::-webkit-scrollbar-thumb,
+.side-menu-container-parent:focus::-webkit-scrollbar-thumb {
+  display: block;
+  width: 1px;
+}
+.side-menu-container-parent::-webkit-scrollbar-thumb {
+  display: none;
+}
+.side-menu-container-parent::-webkit-scrollbar {
+  width: 2px;
+  height: 0.5rem;
 }
 .sidebar-list {
   margin-right: 5px;
@@ -42,8 +56,13 @@
 .side-menu-container {
   /* overflow: hidden; */
   width: 100%;
-  height: 100%;
-  overflow-y: scroll;
+  padding-right: 17px; /* Increase/decrease this value for cross-browser compatibility */
+  box-sizing: content-box;
+  position: relative;
+}
+.side-shelf-container {
+  /* overflow: hidden; */
+  width: 100%;
   padding-right: 17px; /* Increase/decrease this value for cross-browser compatibility */
   box-sizing: content-box;
   position: relative;
@@ -51,7 +70,7 @@
 
 .side-menu-icon {
   /* float: left; */
-  font-size: 17px;
+  font-size: 22px;
   margin: 9px 12px 7px 18px;
   display: flex;
   justify-content: center;
@@ -68,7 +87,7 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   margin-left: -20px;
-  margin-bottom: 10px;
+  margin-bottom: 3px;
   position: relative;
   bottom: 1px;
   overflow: hidden;
@@ -99,7 +118,27 @@
   white-space: nowrap;
   overflow-x: hidden;
 }
-
+.side-shelf-title {
+  font-size: 17px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  margin-top: 10px;
+  display: inline-block;
+}
+.side-shelf-title-container {
+  width: 70%;
+  margin-left: 10%;
+  border-bottom: 1px solid #ccc;
+}
+.side-shelf-title-icon {
+  margin-top: 13px;
+  float: right;
+  font-weight: 500;
+  font-size: 14px;
+  transform-origin: center center;
+  transition: transform 0.1s ease;
+  cursor: pointer;
+}
 .side-menu-selector-container {
   width: 100%;
   height: 39px;

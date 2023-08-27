@@ -42,6 +42,9 @@ class ShelfSelector extends React.Component<
       this.props.handleMode("shelf");
     });
   };
+  handleDeletePopup = (isOpenDelete: boolean) => {
+    this.setState({ isOpenDelete });
+  };
   renderShelfList = () => {
     let shelfList = ShelfUtil.getShelf();
     let shelfTitle = Object.keys(shelfList);
@@ -59,9 +62,7 @@ class ShelfSelector extends React.Component<
       );
     });
   };
-  handleDeletePopup = (isOpenDelete: boolean) => {
-    this.setState({ isOpenDelete });
-  };
+
   render() {
     if (isElectron) {
       //兼容之前的版本
