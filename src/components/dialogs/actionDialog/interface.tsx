@@ -11,6 +11,8 @@ export interface ActionDialogProps extends RouteComponentProps<any> {
   left: number;
   top: number;
   mode: string;
+  isSelectBook: boolean;
+
   handleFetchBooks: () => void;
   handleDeleteDialog: (isShow: boolean) => void;
   handleFetchBookmarks: () => void;
@@ -21,6 +23,8 @@ export interface ActionDialogProps extends RouteComponentProps<any> {
   handleAddDialog: (isShow: boolean) => void;
   handleActionDialog: (isShow: boolean) => void;
   handleDetailDialog: (isShow: boolean) => void;
+  handleSelectBook: (isSelectBook: boolean) => void;
+  handleSelectedBooks: (selectedBooks: string[]) => void;
 }
 export interface ActionDialogState {
   isShowExport: boolean;

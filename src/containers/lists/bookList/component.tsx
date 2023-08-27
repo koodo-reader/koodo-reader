@@ -16,7 +16,6 @@ import ViewMode from "../../../components/viewMode";
 import { backup } from "../../../utils/syncUtils/backupUtil";
 import { isElectron } from "react-device-detect";
 import SelectBook from "../../../components/selectBook";
-import ShelfSelector from "../../../components/shelfSelector";
 declare var window: any;
 class BookList extends React.Component<BookListProps, BookListState> {
   constructor(props: BookListProps) {
@@ -191,12 +190,11 @@ class BookList extends React.Component<BookListProps, BookListState> {
           }
         >
           <SelectBook />
-          <div style={this.props.isSelectBook ? { display: "none" } : {}}>
+          {/* <div style={this.props.isSelectBook ? { display: "none" } : {}}>
             <ShelfSelector />
-          </div>
+          </div> */}
           <ViewMode />
         </div>
-
         <div
           className="book-list-container-parent"
           style={

@@ -1,6 +1,6 @@
 .book-list-container-parent {
   position: absolute;
-  top: 125px;
+  top: 80px;
   left: 220px;
   width: calc(100% - 220px);
   height: calc(100% - 125px);
@@ -11,7 +11,7 @@
   align-items: center;
   justify-content: space-between;
   position: absolute;
-  top: 85px;
+  bottom: 10px;
   left: 220px;
   width: calc(100% - 220px);
 }

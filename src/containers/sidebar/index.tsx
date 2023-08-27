@@ -12,7 +12,11 @@ import { withTranslation } from "react-i18next";
 import Sidebar from "./component";
 
 const mapStateToProps = (state: stateType) => {
-  return { mode: state.sidebar.mode, isCollapsed: state.sidebar.isCollapsed };
+  return {
+    mode: state.sidebar.mode,
+    isCollapsed: state.sidebar.isCollapsed,
+    shelfIndex: state.sidebar.shelfIndex,
+  };
 };
 const actionCreator = {
   handleMode,
