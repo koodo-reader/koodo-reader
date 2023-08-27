@@ -7,6 +7,8 @@ export interface BookItemProps extends RouteComponentProps<any> {
   currentBook: BookModel;
   dragItem: string;
   mode: string;
+  isOpenActionDialog: boolean;
+
   isSelectBook: boolean;
   isSelected: boolean;
   selectedBooks: string[];
@@ -14,6 +16,8 @@ export interface BookItemProps extends RouteComponentProps<any> {
   handleEditDialog: (isShow: boolean) => void;
   handleDeleteDialog: (isShow: boolean) => void;
   handleAddDialog: (isShow: boolean) => void;
+  handleActionDialog: (isShowActionDialog: boolean) => void;
+
   t: (title: string) => string;
   handleDragItem: (key: string) => void;
   handleFetchBooks: () => void;
@@ -23,4 +27,6 @@ export interface BookItemState {
   isDeleteDialog: boolean;
   isFavorite: boolean;
   direction: string;
+  left: number;
+  top: number;
 }

@@ -111,7 +111,7 @@ flatpak run io.github.troyeguo.koodo-reader
 
 ## Desenvolver
 
-Certifique-se de ter instalado yarn e git, a versão, a versão do node deverá ser superior ou igual a 14.0.0.
+Certifique-se de ter instalado yarn e git, a versão.
 
 1. Baixe o repositório
 

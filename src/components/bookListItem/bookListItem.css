@@ -1,6 +1,4 @@
 .book-list-item-container {
-  display: flex;
-  justify-content: space-between;
   margin: 18px;
   margin-right: 25px;
   position: relative;
@@ -11,32 +9,41 @@
   height: 74px;
   opacity: 1;
   cursor: pointer;
-  overflow: hidden;
+  /* overflow: hidden; */
   border-radius: 1px;
+  float: left;
+  margin-right: 15px;
 }
 
 .book-item-list-title,
 .book-item-list-author {
   max-height: 60px;
-  width: 350px;
-  font-size: 18px;
+  font-size: 15px;
   opacity: 1;
-  text-align: center;
+  text-align: left;
   vertical-align: middle;
   cursor: pointer;
   margin: 7px 10px;
   line-height: 20px;
   word-wrap: break-word;
-  display: table;
+
   overflow: hidden;
+}
+.book-item-list-title {
+  display: inline-block;
+  width: calc(100% - 350px);
+  text-align: left;
 }
 .book-item-list-subtitle {
   display: table-cell;
   vertical-align: middle;
   height: 60px;
+  width: 100%;
 }
 .book-item-list-author {
   width: 150px;
+  float: right;
+  display: table;
 }
 .book-item-list-date,
 .book-item-list-config {
@@ -63,4 +70,5 @@
   text-align: center;
   margin: 22px 10px;
   line-height: 30px;
+  float: right;
 }
