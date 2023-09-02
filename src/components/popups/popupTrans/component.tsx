@@ -75,13 +75,13 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
                     "transService",
                     event.target.value
                   );
+                  this.setState({ transTarget: "en" }, () => {
+                    StorageUtil.setReaderConfig("transTarget", "en");
+                    this.handleTrans(
+                      this.props.originalText.replace(/(\r\n|\n|\r)/gm, "")
+                    );
+                  });
                 });
-                this.setState({ transTarget: "en" }, () => {
-                  StorageUtil.setReaderConfig("transTarget", "en");
-                });
-                this.handleTrans(
-                  this.props.originalText.replace(/(\r\n|\n|\r)/gm, "")
-                );
               }}
             >
               {["Google", "Bing"].map((item, index) => {

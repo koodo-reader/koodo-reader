@@ -50,6 +50,9 @@
   padding-left: 5px;
   transition: 0.2s;
 }
+.sidebar-shelf-icon {
+  font-size: 19px;
+}
 .sidebar-list-icon:hover {
   border-radius: 50%;
 }

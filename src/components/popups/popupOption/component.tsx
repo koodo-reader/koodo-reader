@@ -45,6 +45,18 @@ class PopupOption extends React.Component<PopupOptionProps> {
     this.props.handleMenuMode("trans");
     this.props.handleOriginalText(getSelection() || "");
   };
+  handleDict = () => {
+    if (!isElectron) {
+      toast(
+        this.props.t(
+          "Koodo Reader's web version are limited by the browser, for more powerful features, please download the desktop version."
+        )
+      );
+      return;
+    }
+    this.props.handleMenuMode("dict");
+    this.props.handleOriginalText(getSelection() || "");
+  };
   handleDigest = () => {
     let bookKey = this.props.currentBook.key;
     let cfi = "";
@@ -204,7 +216,7 @@ class PopupOption extends React.Component<PopupOptionProps> {
                         this.handleDigest();
                         break;
                       case 2:
-                        this.handleTrans();
+                        this.handleDict();
                         break;
                       case 3:
                         this.handleCopy();
@@ -213,12 +225,14 @@ class PopupOption extends React.Component<PopupOptionProps> {
                         this.handleSearchBook();
                         break;
                       case 5:
-                        this.handleSearchInternet();
+                        this.handleTrans();
                         break;
                       case 6:
+                        this.handleSearchInternet();
+                        break;
+                      case 7:
                         this.handleSpeak();
                         break;
-
                       default:
                         break;
                     }

@@ -1,59 +1,40 @@
 .book-list-item-container {
-  margin: 18px;
+  margin: 12px;
   margin-right: 25px;
   position: relative;
-  max-height: 74px;
 }
 .book-item-list-cover {
-  width: 57px;
-  height: 74px;
+  width: 43px;
+  /* height: 74px; */
   opacity: 1;
   cursor: pointer;
   /* overflow: hidden; */
   border-radius: 1px;
-  float: left;
-  margin-right: 15px;
+  display: inline-block;
+  margin-right: 12px;
 }
 
-.book-item-list-title,
-.book-item-list-author {
-  max-height: 60px;
-  font-size: 15px;
-  opacity: 1;
-  text-align: left;
-  vertical-align: middle;
-  cursor: pointer;
-  margin: 7px 10px;
-  line-height: 20px;
-  word-wrap: break-word;
-
-  overflow: hidden;
-}
 .book-item-list-title {
   display: inline-block;
-  width: calc(100% - 350px);
-  text-align: left;
-}
-.book-item-list-subtitle {
-  display: table-cell;
-  vertical-align: middle;
-  height: 60px;
-  width: 100%;
-}
-.book-item-list-author {
-  width: 150px;
-  float: right;
-  display: table;
-}
-.book-item-list-date,
-.book-item-list-config {
-  height: 25px;
-  min-width: 180px;
+  width: calc(100% - 80px);
+  position: absolute;
+  top: 0px;
+  left: 60px;
   font-size: 15px;
-  opacity: 1;
-  text-align: center;
-  margin: 22px 10px;
-  line-height: 38px;
+}
+.book-item-list-subtitle,
+.book-item-list-author,
+.book-item-list-percentage {
+  height: 22px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.book-item-list-author,
+.book-item-list-percentage {
+  opacity: 0.6;
+  font-size: 10px;
+  height: 18px;
 }
 .book-item-list-config {
   cursor: pointer;
@@ -61,14 +42,4 @@
 .list-icon {
   margin: 15px 10px;
   font-size: 20px;
-}
-.book-item-list-percentage {
-  max-width: 50px;
-  height: 30px;
-  font-size: 15px;
-  opacity: 1;
-  text-align: center;
-  margin: 22px 10px;
-  line-height: 30px;
-  float: right;
 }
