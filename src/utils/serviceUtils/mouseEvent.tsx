@@ -181,8 +181,21 @@ export const HtmlMouseEvent = (
   });
 };
 export const pdfMouseEvent = () => {
-  window.addEventListener("keydown", (event) => {
-    console.log("asfsafsd");
+  let pageArea = document.getElementById("page-area");
+  if (!pageArea) return;
+  let iframe = pageArea.getElementsByTagName("iframe")[0];
+  if (!iframe) return;
+  let doc: any = iframe.contentWindow || iframe.contentDocument?.defaultView;
+
+  doc.document.addEventListener("keydown", (event) => {
+    if (lock) return;
+    lock = true;
+    handleShortcut(event);
+    setTimeout(() => (lock = false), throttleTime);
+  });
+};
+export const djvuMouseEvent = () => {
+  document.addEventListener("keydown", (event) => {
     if (lock) return;
     lock = true;
     handleShortcut(event);

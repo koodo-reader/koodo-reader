@@ -234,6 +234,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
         accept={[
           ".epub",
           ".pdf",
+          ".djvu",
           ".txt",
           ".mobi",
           ".azw3",
