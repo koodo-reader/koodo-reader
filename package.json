@@ -18,6 +18,7 @@
     "react-error-overlay": "6.0.9"
   },
   "dependencies": {
+    "@types/ws": "^8.5.5",
     "@vitalets/google-translate-api": "^8.0.0",
     "adm-zip": "^0.5.2",
     "axios": "^0.19.2",
@@ -34,6 +35,7 @@
     "request": "^2.88.2",
     "webdav": "^3.6.2",
     "webdav-fs": "^3.0.0",
+    "ws": "^8.13.0",
     "zip-a-folder": "^0.0.12"
   },
   "devDependencies": {

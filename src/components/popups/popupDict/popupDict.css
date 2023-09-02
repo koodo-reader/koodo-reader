@@ -1,0 +1,43 @@
+.trans-container {
+  width: 264px;
+  height: 172px;
+}
+.original-text-box,
+.trans-text-box {
+  width: 230px;
+  height: 100px;
+  opacity: 1;
+  border-radius: 5px;
+  position: absolute;
+  user-select: text;
+  overflow-y: scroll;
+  padding: 5px;
+  box-sizing: border-box;
+  font-size: 15px;
+  line-height: 18px;
+}
+.trans-button-container {
+  position: absolute;
+  bottom: 8px;
+  right: 20px;
+}
+.trans-text-box {
+  left: 16px;
+  top: 16px;
+}
+.target-lang-container {
+  position: absolute;
+  width: calc(100% - 32px);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  bottom: 16px;
+  left: 16px;
+}
+.dict-url {
+  font-size: 12px;
+  cursor: pointer;
+  text-align: center;
+  width: 100%;
+  margin-top: 20px;
+}
