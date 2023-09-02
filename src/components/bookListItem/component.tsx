@@ -121,7 +121,6 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
             : e.clientY - 200,
       },
       () => {
-        console.log("sagsdgsff");
         this.props.handleActionDialog(true);
         this.props.handleReadingBook(this.props.book);
       }
@@ -159,7 +158,6 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
         <div
           className="book-list-item-container"
           onContextMenu={(event) => {
-            console.log("asdfsdfs");
             this.handleMoreAction(event);
           }}
         >
@@ -172,13 +170,14 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
               onClick={() => {
                 this.handleJump();
               }}
+              style={{ height: "65px" }}
             >
-              <div className="book-item-image" style={{ height: "74px" }}>
+              <div className="book-item-image" style={{ height: "67px" }}>
                 <EmptyCover
                   {...{
                     format: this.props.book.format,
                     title: this.props.book.name,
-                    scale: 0.54,
+                    scale: 0.43,
                   }}
                 />
               </div>
@@ -198,7 +197,7 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
                 onLoad={(res: any) => {
                   if (
                     res.target.naturalHeight / res.target.naturalWidth >
-                    74 / 57
+                    74 / 47
                   ) {
                     this.setState({ direction: "horizontal" });
                   } else {
@@ -227,28 +226,28 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
             <div className="book-item-list-subtitle">
               {this.props.book.name}
             </div>
-          </p>
-          <p className="book-item-list-percentage">
-            {percentage
-              ? Math.floor(parseFloat(percentage) * 100) === 0
-                ? "New"
-                : Math.floor(parseFloat(percentage) * 100) < 10
-                ? "0" + Math.floor(parseFloat(percentage) * 100)
-                : Math.floor(parseFloat(percentage) * 100) === 100
-                ? "Done"
-                : Math.floor(parseFloat(percentage) * 100)
-              : "00"}
-            {Math.floor(parseFloat(percentage) * 100) > 0 &&
-              Math.floor(parseFloat(percentage) * 100) < 100 && <span>%</span>}
-          </p>
-          <p className="book-item-list-author">
-            <span className="book-item-list-subtitle">
+            <div className="book-item-list-author">
               <Trans>
                 {this.props.book.author
                   ? this.props.book.author
                   : "Unknown Author"}
               </Trans>
-            </span>
+            </div>
+            <p className="book-item-list-percentage">
+              {percentage
+                ? Math.floor(parseFloat(percentage) * 100) === 0
+                  ? "New"
+                  : Math.floor(parseFloat(percentage) * 100) < 10
+                  ? "0" + Math.floor(parseFloat(percentage) * 100)
+                  : Math.floor(parseFloat(percentage) * 100) === 100
+                  ? "Done"
+                  : Math.floor(parseFloat(percentage) * 100)
+                : "00"}
+              {Math.floor(parseFloat(percentage) * 100) > 0 &&
+                Math.floor(parseFloat(percentage) * 100) < 100 && (
+                  <span>%</span>
+                )}
+            </p>
           </p>
         </div>{" "}
         {this.props.isOpenActionDialog &&

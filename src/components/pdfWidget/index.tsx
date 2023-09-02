@@ -19,7 +19,15 @@ class PDFWidget extends React.Component<PDFWidgetProps, PDFWidgetState> {
     return (
       <div
         className="back-main-container"
-        style={this.state.isHover ? {} : { width: "30px", left: "-20px" }}
+        style={
+          this.state.isHover
+            ? {}
+            : {
+                width: "30px",
+                left: "-41px",
+                animation: "shrink 0.2s forwards",
+              }
+        }
         onMouseEnter={() => {
           this.setState({ isHover: true });
         }}

@@ -24,4 +24,5 @@ export interface BookCoverState {
   left: number;
   top: number;
   direction: string;
+  desc: string;
 }

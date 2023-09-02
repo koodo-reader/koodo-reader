@@ -9,9 +9,6 @@ import { withRouter } from "react-router-dom";
 import RecordLocation from "../../utils/readUtils/recordLocation";
 import { isElectron } from "react-device-detect";
 import EmptyCover from "../emptyCover";
-import Parser from "html-react-parser";
-import * as DOMPurify from "dompurify";
-
 import { Trans } from "react-i18next";
 import BookUtil from "../../utils/fileUtils/bookUtil";
 import toast from "react-hot-toast";
@@ -26,6 +23,7 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
       left: 0,
       top: 0,
       direction: "horizontal",
+      desc: "",
     };
   }
 
@@ -136,6 +134,10 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
         ).percentage;
       }
     }
+    var htmlString = this.props.book.description;
+    var div = document.createElement("div");
+    div.innerHTML = htmlString;
+    var textContent = div.textContent || div.innerText;
     const actionProps = { left: this.state.left, top: this.state.top };
     return (
       <>
@@ -253,11 +255,9 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
           </p>
           <div className="book-cover-item-desc">
             <Trans>Description</Trans>:&nbsp;
-            {this.props.book.description ? (
-              Parser(DOMPurify.sanitize(this.props.book.description))
-            ) : (
-              <Trans>Empty</Trans>
-            )}
+            <div className="book-cover-item-desc-detail">
+              {this.props.book.description ? textContent : <Trans>Empty</Trans>}
+            </div>
           </div>
         </div>
         {this.props.isOpenActionDialog &&

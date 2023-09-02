@@ -44,7 +44,7 @@
   height: 18px;
   font-size: 13px;
   line-height: 17px;
-  opacity: 1;
+  opacity: 0.6;
   text-align: left;
   text-overflow: ellipsis;
   display: -webkit-box;
@@ -83,15 +83,22 @@
 .book-cover-item-desc {
   width: 240px;
   margin-top: 5px;
-  height: 68px;
   font-size: 13px;
   line-height: 17px;
-  opacity: 1;
+  opacity: 0.6;
   text-align: left;
   position: relative;
-  overflow-y: scroll;
   float: left;
-  overflow-x: hidden;
+  height: 52px;
+}
+.book-cover-item-desc-detail {
+  width: 100%;
+  height: 100%;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
 }
 @keyframes slide-down {
   0% {

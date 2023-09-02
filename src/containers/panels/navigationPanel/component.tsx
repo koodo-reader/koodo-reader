@@ -6,9 +6,10 @@ import { Trans } from "react-i18next";
 import { NavigationPanelProps, NavigationPanelState } from "./interface";
 import SearchBox from "../../../components/searchBox";
 import Parser from "html-react-parser";
+import * as DOMPurify from "dompurify";
 import EmptyCover from "../../../components/emptyCover";
 import StorageUtil from "../../../utils/serviceUtils/storageUtil";
-import * as DOMPurify from "dompurify";
+
 import CFI from "epub-cfi-resolver";
 
 class NavigationPanel extends React.Component<

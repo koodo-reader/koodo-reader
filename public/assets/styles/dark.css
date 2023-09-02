@@ -98,7 +98,8 @@ body,
 .translation-option:hover,
 .speaker-option:hover,
 .search-book-option:hover,
-.google-option:hover,
+.dict-option:hover,
+.browser-option:hover,
 .header-search-text:hover,
 .reader-setting-icon-container:hover,
 .setting-icon-container:hover,
@@ -114,7 +115,7 @@ body,
 .book-manage-title:hover,
 .backup-page-list-item:hover,
 .restore-file:hover,
-Z .copy-option:hover {
+.copy-option:hover {
   background-color: rgba(235, 235, 235, 0.035);
 }
 .drag-background {

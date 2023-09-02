@@ -3,6 +3,7 @@ import "./popupMenu.css";
 import PopupNote from "../popupNote";
 import PopupOption from "../popupOption";
 import PopupTrans from "../popupTrans";
+import PopupDict from "../popupDict";
 import NoteModel from "../../../model/Note";
 import { PopupMenuProps, PopupMenuStates } from "./interface";
 import { getIframeDoc } from "../../../utils/serviceUtils/docUtil";
@@ -346,6 +347,8 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
               <PopupNote {...PopupProps} />
             ) : this.props.menuMode === "trans" ? (
               <PopupTrans {...PopupProps} />
+            ) : this.props.menuMode === "dict" ? (
+              <PopupDict {...PopupProps} />
             ) : null}
             <span
               className="icon-close popup-close"
