@@ -124,9 +124,11 @@ export const removePDFHighlight = (
   var pageIndex = selected.page;
   if (!iWin.PDFViewerApplication.pdfViewer) return;
   var page = iWin.PDFViewerApplication.pdfViewer.getPageView(pageIndex);
-  if (page && page.div && page.textLayer && page.textLayer.div) {
+  if (page && page.div && page.textLayer && page.textLayer.textLayerDiv) {
     var pageElement =
-      colorCode.indexOf("color") > -1 ? page.textLayer.div : page.div;
+      colorCode.indexOf("color") > -1
+        ? page.textLayer.textLayerDiv
+        : page.textLayerDiv;
     let noteElements = pageElement.querySelectorAll(".pdf-note");
     noteElements.forEach((item: Element) => {
       if (item.getAttribute("key") === noteKey) {
@@ -146,9 +148,9 @@ export const showPDFHighlight = (
   var pageIndex = selected.page;
   if (!iWin.PDFViewerApplication.pdfViewer) return;
   var page = iWin.PDFViewerApplication.pdfViewer.getPageView(pageIndex);
-  if (page && page.div && page.textLayer && page.textLayer.div) {
+  if (page && page.div && page.textLayer && page.textLayer.textLayerDiv) {
     var pageElement =
-      colorCode.indexOf("color") > -1 ? page.textLayer.div : page.div;
+      colorCode.indexOf("color") > -1 ? page.textLayer.textLayerDiv : page.div;
 
     var viewport = page.viewport;
     selected.coords.forEach((rect) => {

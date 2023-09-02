@@ -38,6 +38,29 @@
   font-size: 12px;
   cursor: pointer;
   text-align: center;
-  width: 100%;
   margin-top: 20px;
+}
+.trans-container .r0bn4c {
+  font-weight: bold;
+}
+.trans-container .r0bn4c::before {
+  content: "[";
+  font-weight: bold;
+}
+.trans-container .r0bn4c::after {
+  content: "]";
+  font-weight: bold;
+}
+.trans-container ol {
+  counter-reset: my-counter;
+  list-style-type: none;
+}
+
+.trans-container li:before {
+  counter-increment: my-counter;
+  content: counter(my-counter) ". ";
+  font-weight: bold;
+}
+.trans-container li div {
+  display: inline;
 }
