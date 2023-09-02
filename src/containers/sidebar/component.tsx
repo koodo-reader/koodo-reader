@@ -7,6 +7,7 @@ import StorageUtil from "../../utils/serviceUtils/storageUtil";
 import { openExternalUrl } from "../../utils/serviceUtils/urlUtil";
 import ShelfUtil from "../../utils/readUtils/shelfUtil";
 import DeletePopup from "../../components/dialogs/deletePopup";
+import { Trans } from "react-i18next";
 class Sidebar extends React.Component<SidebarProps, SidebarState> {
   constructor(props: SidebarProps) {
     super(props);
@@ -190,12 +191,12 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
                 <span
                   className={
                     this.props.shelfIndex === index
-                      ? `icon-bookshelf-line  active-icon`
-                      : `icon-bookshelf-line`
+                      ? `icon-bookshelf-line  active-icon sidebar-shelf-icon`
+                      : `icon-bookshelf-line sidebar-shelf-icon`
                   }
                   style={
                     this.props.isCollapsed
-                      ? { position: "relative", marginLeft: "-9px" }
+                      ? { position: "relative", marginLeft: "-8px" }
                       : {}
                   }
                 ></span>
@@ -266,7 +267,9 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
                   : { border: "none" }
               }
             >
-              <div className="side-shelf-title">我的书架</div>
+              <div className="side-shelf-title">
+                <Trans>Shelf</Trans>
+              </div>
               <span
                 className="icon-dropdown side-shelf-title-icon"
                 onClick={() => {
