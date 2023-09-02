@@ -121,6 +121,12 @@
         "mimeType": "application/pdf"
       },
       {
+        "ext": "djvu",
+        "icon": "assets/icons/pdf",
+        "role": "Viewer",
+        "mimeType": "image/vnd.djvu"
+      },
+      {
         "ext": "mobi",
         "icon": "assets/icons/mobi",
         "role": "Viewer",

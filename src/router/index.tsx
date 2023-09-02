@@ -3,6 +3,7 @@ import { Route, Switch, HashRouter } from "react-router-dom";
 import Manager from "../pages/manager";
 import HtmlReader from "../pages/htmlReader";
 import PDFReader from "../pages/pdfReader";
+import DjvuReader from "../pages/djvuReader";
 import _Redirect from "../pages/redirect";
 import i18n from "../i18n";
 import StorageUtil from "../utils/serviceUtils/storageUtil";
@@ -111,6 +112,7 @@ const Router = () => {
         <Route component={HtmlReader} path="/mhtml" />
         <Route component={HtmlReader} path="/href" />
         <Route component={PDFReader} path="/pdf" />
+        <Route component={DjvuReader} path="/djvu" />
         <Route component={_Redirect} path="/" />
       </Switch>
     </HashRouter>
