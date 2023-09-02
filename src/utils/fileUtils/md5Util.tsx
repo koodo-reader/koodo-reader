@@ -13,7 +13,7 @@ export const fetchMD5 = (file: any) => {
           pdfjsLib
             .getDocument({ data: (ev.target as any).result })
             .promise.then((pdfDoc: any) => {
-              resolve(pdfDoc._pdfInfo.fingerprints[0] + "-" + md5);
+              resolve(pdfDoc._pdfInfo.fingerprint + "-" + md5);
             })
             .catch((err: any) => {
               resolve(md5);
