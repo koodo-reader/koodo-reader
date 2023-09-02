@@ -107,6 +107,7 @@ export const googleTransList = {
   zu: "Zulu",
 };
 export const bingTransList = {
+  "auto-dect": "Automatic",
   af: "Afrikaans",
   sq: "Albanian",
   am: "Amharic",

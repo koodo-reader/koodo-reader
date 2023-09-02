@@ -23,7 +23,7 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
     this.handleDict(originalText);
   }
   handleDict = async (text: string) => {
-    if (StorageUtil.getReaderConfig("dictService") === "Bing Dictionary") {
+    if (StorageUtil.getReaderConfig("dictService") === "必应词典") {
       const { ipcRenderer } = window.require("electron");
       const html = await ipcRenderer.invoke("get-url-content", {
         url: `https://cn.bing.com/dict/search?mkt=zh-cn&q=${encodeURIComponent(
@@ -57,40 +57,70 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
         });
       }
     } else if (
-      StorageUtil.getReaderConfig("dictService") === "Yandex.Dictionary"
+      StorageUtil.getReaderConfig("dictService") === "Google Dictionary"
     ) {
-      axios
-        .get(
-          `https://dictionary.yandex.net/api/v1/dicservice.json/lookup?key=dict.1.1.20230902T033436Z.542e2ddc8ebe9e85.61511357024c344bb8f901013526cadb1186f62e&lang=${
-            StorageUtil.getReaderConfig("dictTarget") || "en-en"
-          }&text=${text}`
-        )
-        .then((res: any) => {
-          let dictText = this.handleYandexReturn(res.data.def[0].tr)
-            .map((item) => {
-              return `<p><span style="font-weight: bold">[${item.type}]</span> ${item.definitions}</p>`;
-            })
-            .join("");
-          this.setState({
-            dictText: dictText,
-          });
-        })
-        .catch((err) => {
+      const { ipcRenderer } = window.require("electron");
+      console.log(text);
+      const html = await ipcRenderer.invoke("get-url-content", {
+        url: `https://www.google.com/search?q=define+${encodeURIComponent(
+          text
+        )}`,
+      });
+      if (html) {
+        const doc = new DOMParser().parseFromString(html, "text/html");
+        const parentElement = Array.from(doc.querySelectorAll(".kCrYT"))[1];
+        console.log(parentElement);
+        var aNodes = parentElement.querySelectorAll("a");
+        if (aNodes.length > 0) {
           this.setState({
             dictText: this.props.t("Error happens"),
           });
+          return;
+        }
+        var childElements = parentElement.querySelectorAll(".r0bn4c");
+        console.log(childElements);
+        // 遍历子元素并移除特定的子元素
+        for (var i = 0; i < childElements.length; i++) {
+          var childElement = childElements[i];
+          if (
+            childElement.textContent &&
+            (childElement.textContent?.indexOf("synonyms") > -1 ||
+              childElement.textContent?.indexOf('"') > -1)
+          ) {
+            childElement.parentNode &&
+              childElement.parentNode.removeChild(childElement);
+          }
+          if (childElement.textContent) {
+            childElement.textContent = childElement.textContent.trim();
+          }
+        }
+        console.log(parentElement);
+        this.setState({
+          dictText: parentElement.innerHTML,
         });
+      } else {
+        this.setState({
+          dictText: this.props.t("Error happens"),
+        });
+      }
     } else {
       axios
-        .get(
-          `https://api.dictionaryapi.dev/api/v2/entries/${
-            StorageUtil.getReaderConfig("dictTarget") || "en-en"
-          }/${text}`
-        )
+        .get(`https://api.dictionaryapi.dev/api/v2/entries/en/${text}`)
         .then((res: any) => {
           let dictText = res.data[0].meanings
             .map((item) => {
-              return `<p><span style="font-weight: bold">[${item.partOfSpeech}]</span> ${item.definitions[0].definition}</p>`;
+              return `<p><span style="font-weight: bold">[${
+                item.partOfSpeech
+              }]</span><div>${item.definitions
+                .map((item, index) => {
+                  console.log(item.definition);
+                  return (
+                    `<span style="font-weight: bold">${index + 1}</span>` +
+                    ". " +
+                    item.definition
+                  );
+                })
+                .join("</div><div>")}</div></p>`;
             })
             .join("");
           this.setState({
@@ -131,32 +161,36 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
                 " ",
               {
                 replace: (domNode) => {
-                  if (domNode.name === "address") {
-                    delete domNode.attribs.onclick;
-                    return (
-                      <p
-                        onClick={() => {
-                          openExternalUrl(
-                            this.state.dictService
-                              ? dictList.filter(
-                                  (item) => item.name === this.state.dictService
-                                )[0].url
-                              : dictList[0].url
-                          );
-                        }}
-                        className="dict-url"
-                      >
-                        {"Powered by " +
-                          (this.state.dictService
-                            ? this.state.dictService
-                            : "Free Dictionary API")}
-                      </p>
-                    );
+                  if (this.state.dictService === "Yandex.Dictionary") {
+                    if (domNode.name === "address") {
+                      delete domNode.attribs.onclick;
+                      return (
+                        <p
+                          onClick={() => {
+                            openExternalUrl(
+                              this.state.dictService
+                                ? dictList.filter(
+                                    (item) =>
+                                      item.name === this.state.dictService
+                                  )[0].url
+                                : dictList[0].url
+                            );
+                          }}
+                          className="dict-url"
+                        >
+                          {"Powered by " +
+                            (this.state.dictService
+                              ? this.state.dictService
+                              : "Free Dictionary API")}
+                        </p>
+                      );
+                    }
                   }
                 },
               }
             )}
           </div>
+
           <div className="target-lang-container">
             <select
               className="booklist-shelf-list"
@@ -169,17 +203,10 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
                   );
                   this.setState(
                     {
-                      dictTarget: dictList.filter(
-                        (item) => item.name === this.state.dictService
-                      )[0].list["en-en"],
+                      dictTarget: "en-en",
                     },
                     () => {
-                      StorageUtil.setReaderConfig(
-                        "dictTarget",
-                        dictList.filter(
-                          (item) => item.name === this.state.dictService
-                        )[0].list["en-en"]
-                      );
+                      StorageUtil.setReaderConfig("dictTarget", "en-en");
                       this.handleDict(
                         this.props.originalText.replace(/(\r\n|\n|\r)/gm, "")
                       );
@@ -199,53 +226,6 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
                     }
                   >
                     {item.name}
-                  </option>
-                );
-              })}
-            </select>
-            <select
-              className="booklist-shelf-list"
-              style={{ width: "100px", margin: 0 }}
-              onChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
-                let targetLang = event.target.value;
-                StorageUtil.setReaderConfig(
-                  "dictTarget",
-                  dictList.filter(
-                    (item) => item.name === this.state.dictService
-                  )[0].list[targetLang]
-                );
-                this.handleDict(
-                  this.props.originalText.replace(/(\r\n|\n|\r)/gm, "")
-                );
-              }}
-            >
-              {Object.keys(
-                this.state.dictService
-                  ? dictList.filter(
-                      (item) => item.name === this.state.dictService
-                    )[0].list
-                  : dictList[0].list
-              ).map((item, index) => {
-                return (
-                  <option
-                    value={item}
-                    key={index}
-                    className="add-dialog-shelf-list-option"
-                    selected={
-                      StorageUtil.getReaderConfig("dictTarget") === item
-                        ? true
-                        : false
-                    }
-                  >
-                    {
-                      Object.keys(
-                        this.state.dictService
-                          ? dictList.filter(
-                              (item) => item.name === this.state.dictService
-                            )[0].list
-                          : dictList[0].list
-                      )[index]
-                    }
                   </option>
                 );
               })}

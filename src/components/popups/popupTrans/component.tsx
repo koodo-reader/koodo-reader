@@ -1,7 +1,6 @@
 import React from "react";
 import "./popupTrans.css";
 import { PopupTransProps, PopupTransState } from "./interface";
-import { Trans } from "react-i18next";
 import {
   googleTransList,
   bingTransList,
@@ -14,6 +13,7 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
       translatedText: "",
       transService: StorageUtil.getReaderConfig("transService"),
       transTarget: StorageUtil.getReaderConfig("transTarget"),
+      transSource: StorageUtil.getReaderConfig("transSource"),
     };
   }
   componentDidMount() {
@@ -25,7 +25,7 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
       const { translate } = window.require("bing-translate-api");
       translate(
         text,
-        null,
+        StorageUtil.getReaderConfig("transSource") || "auto-detect",
         StorageUtil.getReaderConfig("transTarget") || "en",
         false
       )
@@ -42,6 +42,7 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
     } else {
       const translate = window.require("@vitalets/google-translate-api");
       translate(text, {
+        from: StorageUtil.getReaderConfig("transSource") || "auto",
         to: StorageUtil.getReaderConfig("transTarget") || "en",
       })
         .then((res) => {
@@ -62,25 +63,27 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
         <div className="trans-container">
           <div className="trans-text-box">{this.state.translatedText}</div>
           <div className="target-lang-container">
-            <p className="general-setting-title" style={{ display: "inline" }}>
-              <Trans>Select</Trans>
-            </p>
             <select
               className="booklist-shelf-list"
-              style={{ width: "75px", margin: 0 }}
+              style={{ width: "65px", margin: 0 }}
               onChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
-                StorageUtil.setReaderConfig("transTarget", "en");
                 this.setState({ transService: event.target.value }, () => {
                   StorageUtil.setReaderConfig(
                     "transService",
                     event.target.value
                   );
-                  this.setState({ transTarget: "en" }, () => {
-                    StorageUtil.setReaderConfig("transTarget", "en");
-                    this.handleTrans(
-                      this.props.originalText.replace(/(\r\n|\n|\r)/gm, "")
-                    );
-                  });
+                  let autoValue =
+                    event.target.value === "Google" ? "auto" : "auto-detect";
+                  this.setState(
+                    { transSource: autoValue, transTarget: "en" },
+                    () => {
+                      StorageUtil.setReaderConfig("transTarget", "en");
+                      StorageUtil.setReaderConfig("transSource", autoValue);
+                      this.handleTrans(
+                        this.props.originalText.replace(/(\r\n|\n|\r)/gm, "")
+                      );
+                    }
+                  );
                 });
               }}
             >
@@ -97,9 +100,46 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
                 );
               })}
             </select>
+
             <select
               className="booklist-shelf-list"
-              style={{ width: "75px", margin: 0 }}
+              style={{ width: "65px", margin: 0 }}
+              onChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
+                let targetLang = event.target.value;
+                StorageUtil.setReaderConfig("transSource", targetLang);
+                this.handleTrans(
+                  this.props.originalText.replace(/(\r\n|\n|\r)/gm, "")
+                );
+              }}
+            >
+              {(this.state.transService === "Google"
+                ? Object.keys(googleTransList)
+                : Object.keys(bingTransList)
+              ).map((item, index) => {
+                return (
+                  <option
+                    value={item}
+                    key={index}
+                    className="add-dialog-shelf-list-option"
+                    selected={
+                      StorageUtil.getReaderConfig("transSource") === item
+                        ? true
+                        : false
+                    }
+                  >
+                    {
+                      (this.state.transService === "Google"
+                        ? Object.values(googleTransList)
+                        : Object.values(bingTransList))[index]
+                    }
+                  </option>
+                );
+              })}
+            </select>
+            <div>{"->"}</div>
+            <select
+              className="booklist-shelf-list"
+              style={{ width: "65px", margin: 0 }}
               onChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
                 let targetLang = event.target.value;
                 StorageUtil.setReaderConfig("transTarget", targetLang);

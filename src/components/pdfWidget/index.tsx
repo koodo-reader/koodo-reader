@@ -81,7 +81,7 @@ class PDFWidget extends React.Component<PDFWidgetProps, PDFWidgetState> {
               .querySelector(".ebook-viewer")
               ?.setAttribute(
                 "style",
-                "height:100%; overflow: hidden; filter: invert(100%);"
+                "height:100%; overflow: hidden; filter: invert(100%) !important;"
               );
           }}
           style={this.state.isHover ? {} : { display: "none" }}
