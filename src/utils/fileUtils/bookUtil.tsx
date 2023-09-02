@@ -160,7 +160,9 @@ class BookUtil {
       return;
     }
     if (StorageUtil.getReaderConfig("isOpenInMain") === "yes") {
-      history.push(BookUtil.getBookUrl(book) + `?title=${book.name}`);
+      history.push(
+        BookUtil.getBookUrl(book) + `?title=${book.name}&file=${book.key}`
+      );
       return;
     }
     let ref = book.format.toLowerCase();
@@ -170,7 +172,7 @@ class BookUtil {
       ipcRenderer.invoke("open-book", {
         url: `${window.location.href.split("#")[0]}#/${ref}/${book.key}?title=${
           book.name
-        }`,
+        }&file=${book.key}`,
         isMergeWord:
           book.format === "PDF"
             ? "no"
@@ -182,7 +184,7 @@ class BookUtil {
       window.open(
         `${window.location.href.split("#")[0]}#/${ref}/${book.key}?title=${
           book.name
-        }`
+        }&file=${book.key}`
       );
     }
   }
