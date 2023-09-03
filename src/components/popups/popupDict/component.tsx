@@ -8,6 +8,8 @@ import * as DOMPurify from "dompurify";
 import axios from "axios";
 import { getBingDict } from "../../../utils/serviceUtils/bingDictUtil";
 import { openExternalUrl } from "../../../utils/serviceUtils/urlUtil";
+import RecordLocation from "../../../utils/readUtils/recordLocation";
+import DictHistory from "../../../model/DictHistory";
 declare var window: any;
 class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
   constructor(props: PopupDictProps) {
@@ -21,7 +23,18 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
   componentDidMount() {
     let originalText = this.props.originalText.replace(/(\r\n|\n|\r)/gm, "");
     this.handleDict(originalText);
+    this.handleRecordHistory(originalText);
   }
+  handleRecordHistory = async (text: string) => {
+    let bookKey = this.props.currentBook.key;
+    let bookLocation = RecordLocation.getHtmlLocation(bookKey);
+    let chapter = bookLocation.chapterTitle;
+    let word = new DictHistory(bookKey, text, chapter);
+    let dictHistoryArr =
+      (await window.localforage.getItem("dictHistory")) || [];
+    dictHistoryArr.push(word);
+    window.localforage.setItem("dictHistory", dictHistoryArr);
+  };
   handleDict = async (text: string) => {
     if (StorageUtil.getReaderConfig("dictService") === "必应词典") {
       const { ipcRenderer } = window.require("electron");
@@ -60,7 +73,6 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
       StorageUtil.getReaderConfig("dictService") === "Google Dictionary"
     ) {
       const { ipcRenderer } = window.require("electron");
-      console.log(text);
       const html = await ipcRenderer.invoke("get-url-content", {
         url: `https://www.google.com/search?q=define+${encodeURIComponent(
           text
@@ -69,7 +81,6 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
       if (html) {
         const doc = new DOMParser().parseFromString(html, "text/html");
         const parentElement = Array.from(doc.querySelectorAll(".kCrYT"))[1];
-        console.log(parentElement);
         var aNodes = parentElement.querySelectorAll("a");
         if (aNodes.length > 0) {
           this.setState({
@@ -78,7 +89,6 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
           return;
         }
         var childElements = parentElement.querySelectorAll(".r0bn4c");
-        console.log(childElements);
         // 遍历子元素并移除特定的子元素
         for (var i = 0; i < childElements.length; i++) {
           var childElement = childElements[i];
@@ -94,7 +104,6 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
             childElement.textContent = childElement.textContent.trim();
           }
         }
-        console.log(parentElement);
         this.setState({
           dictText: parentElement.innerHTML,
         });
@@ -113,7 +122,6 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
                 item.partOfSpeech
               }]</span><div>${item.definitions
                 .map((item, index) => {
-                  console.log(item.definition);
                   return (
                     `<span style="font-weight: bold">${index + 1}</span>` +
                     ". " +

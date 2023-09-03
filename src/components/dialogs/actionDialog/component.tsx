@@ -7,6 +7,7 @@ import AddTrash from "../../../utils/readUtils/addTrash";
 import toast from "react-hot-toast";
 import BookUtil from "../../../utils/fileUtils/bookUtil";
 import {
+  exportDictionaryHistory,
   exportHighlights,
   exportNotes,
 } from "../../../utils/syncUtils/exportUtil";
@@ -330,6 +331,32 @@ class ActionDialog extends React.Component<
           >
             <p className="action-name">
               <Trans>Export Highlights</Trans>
+            </p>
+          </div>
+          <div
+            className="action-dialog-edit"
+            onClick={async () => {
+              let dictHistory =
+                (await window.localforage.getItem("dictHistory")) || [];
+              if (
+                dictHistory.filter(
+                  (item) =>
+                    item.bookKey === this.props.currentBook.key &&
+                    item.notes === ""
+                ).length > 0
+              ) {
+                exportDictionaryHistory(dictHistory, [
+                  ...this.props.books,
+                  ...this.props.deletedBooks,
+                ]);
+                toast.success(this.props.t("Export Successfully"));
+              } else {
+                toast(this.props.t("Nothing to export"));
+              }
+            }}
+          >
+            <p className="action-name">
+              <Trans>Export Dictionary History</Trans>
             </p>
           </div>
           <div
