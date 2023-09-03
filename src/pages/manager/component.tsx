@@ -138,6 +138,7 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
               this.props.isShowNew ||
               this.props.isOpenDeleteDialog ||
               this.props.isOpenEditDialog ||
+              this.props.isDetailDialog ||
               this.props.isOpenAddDialog ||
               this.props.isTipDialog ||
               this.props.isShowLoading ||
@@ -159,12 +160,12 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
           </div>
         )}
         <Sidebar />
+        <Toaster />
         <Header {...{ handleDrag: this.handleDrag }} />
         {this.props.isOpenDeleteDialog && <DeleteDialog />}
         {this.props.isOpenEditDialog && <EditDialog />}
         {this.props.isOpenAddDialog && <AddDialog />}
         {this.props.isShowLoading && <LoadingDialog />}
-        <Toaster />
         {this.props.isSortDisplay && <SortDialog />}
         {this.props.isAboutOpen && <AboutDialog />}
         {this.props.isBackup && <BackupDialog />}

@@ -11,6 +11,7 @@ import {
   exportNotes,
 } from "../../utils/syncUtils/exportUtil";
 import BookUtil from "../../utils/fileUtils/bookUtil";
+declare var window: any;
 class SelectBook extends React.Component<BookListProps, BookListState> {
   constructor(props: BookListProps) {
     super(props);
@@ -141,6 +142,41 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
               }}
             >
               <Trans>Export Highlights</Trans>
+            </span>
+            <span
+              className="book-manage-title"
+              onClick={async () => {
+                let selectedBooks = this.props.books.filter(
+                  (item: BookModel) =>
+                    this.props.selectedBooks.indexOf(item.key) > -1
+                );
+                let dictHistory = await window.localforage.setItem(
+                  "dictHistory"
+                );
+                if (
+                  dictHistory.filter(
+                    (item) =>
+                      selectedBooks.filter(
+                        (subitem) => subitem.key === item.bookKey
+                      ).length > 0 && item.notes === ""
+                  ).length > 0
+                ) {
+                  exportHighlights(
+                    dictHistory.filter(
+                      (item) =>
+                        selectedBooks.filter(
+                          (subitem) => subitem.key === item.bookKey
+                        ).length > 0 && item.notes === ""
+                    ),
+                    selectedBooks
+                  );
+                  toast.success(this.props.t("Export Successfully"));
+                } else {
+                  toast(this.props.t("Nothing to export"));
+                }
+              }}
+            >
+              <Trans>Export Dictionary History</Trans>
             </span>
             <span
               className="book-manage-title"
