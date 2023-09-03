@@ -40,38 +40,3 @@
   margin-left: 15px;
   font-weight: 500;
 }
-.action-dialog-book-info {
-  margin-left: 10px;
-  overflow-y: scroll;
-  height: 185px;
-  text-align: left;
-  overflow-x: hidden;
-}
-.action-dialog-book-info:hover::-webkit-scrollbar-thumb,
-.action-dialog-book-info:active::-webkit-scrollbar-thumb,
-.action-dialog-book-info:focus::-webkit-scrollbar-thumb {
-  display: block;
-}
-.action-dialog-book-info::-webkit-scrollbar-thumb {
-  display: none;
-}
-.action-dialog-book-title {
-  font-size: 15px;
-  font-weight: 500;
-  line-height: 17px;
-  max-height: 190px;
-  margin-bottom: 10px;
-}
-.action-dialog-book-author,
-.action-dialog-book-desc,
-.action-dialog-book-publisher,
-.action-dialog-book-added {
-  font-size: 15px;
-  line-height: 18px;
-}
-.action-dialog-book-detail {
-  /* width: 80%; */
-  margin-top: 5px;
-  max-height: 50px;
-  font-size: 15px;
-}

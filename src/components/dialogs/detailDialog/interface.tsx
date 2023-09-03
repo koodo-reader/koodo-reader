@@ -4,4 +4,7 @@ export interface DetailDialogProps {
   tip: string;
   currentBook: BookModel;
 }
-export interface DetailDialogState {}
+export interface DetailDialogState {
+  backgroundColor: string;
+  textColor: string;
+}

@@ -224,15 +224,11 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
             }}
           >
             <div className="book-item-list-subtitle">
-              {this.props.book.name}
+              <div className="book-item-list-subtitle-text">
+                {this.props.book.name}
+              </div>
             </div>
-            <div className="book-item-list-author">
-              <Trans>
-                {this.props.book.author
-                  ? this.props.book.author
-                  : "Unknown Author"}
-              </Trans>
-            </div>
+
             <p className="book-item-list-percentage">
               {percentage
                 ? Math.floor(parseFloat(percentage) * 100) === 0
@@ -248,8 +244,15 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
                   <span>%</span>
                 )}
             </p>
+            <div className="book-item-list-author">
+              <Trans>
+                {this.props.book.author
+                  ? this.props.book.author
+                  : "Unknown Author"}
+              </Trans>
+            </div>
           </p>
-        </div>{" "}
+        </div>
         {this.props.isOpenActionDialog &&
         this.props.book.key === this.props.currentBook.key ? (
           <div className="action-dialog-parent">

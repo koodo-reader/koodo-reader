@@ -17,24 +17,44 @@
 .book-item-list-title {
   display: inline-block;
   width: calc(100% - 80px);
+  height: 100%;
   position: absolute;
   top: 0px;
   left: 60px;
-  font-size: 15px;
+}
+
+.book-item-list-author {
+  width: 150px;
+  float: right;
+}
+.book-item-list-percentage {
+  width: 50px;
+  float: right;
 }
 .book-item-list-subtitle,
 .book-item-list-author,
 .book-item-list-percentage {
-  height: 22px;
+  height: 100%;
   text-overflow: ellipsis;
-  white-space: nowrap;
   overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-height: 18px;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
 }
-.book-item-list-author,
-.book-item-list-percentage {
-  opacity: 0.6;
-  font-size: 10px;
-  height: 18px;
+.book-item-list-subtitle {
+  width: calc(100% - 250px);
+  float: left;
+}
+.book-item-list-subtitle-text {
+  float: left;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .book-item-list-config {
   cursor: pointer;

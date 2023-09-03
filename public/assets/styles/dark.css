@@ -148,6 +148,8 @@ body,
 .book-item-image,
 .book-item-cover,
 .book-cover,
+.detail-cover,
+.detail-cover-background-container,
 .book-cover-item-cover {
   background: rgba(235, 235, 235, 0.1);
   box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.18);
