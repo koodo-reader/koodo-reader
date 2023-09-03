@@ -44,7 +44,7 @@
   height: 18px;
   font-size: 13px;
   line-height: 17px;
-  opacity: 0.6;
+  opacity: 0.8;
   text-align: left;
   text-overflow: ellipsis;
   display: -webkit-box;
@@ -85,7 +85,7 @@
   margin-top: 5px;
   font-size: 13px;
   line-height: 17px;
-  opacity: 0.6;
+  opacity: 0.8;
   text-align: left;
   position: relative;
   float: left;

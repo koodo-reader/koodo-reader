@@ -54,6 +54,7 @@ export type stateType = {
   };
   book: {
     isOpenEditDialog: boolean;
+    isDetailDialog: boolean;
     isOpenDeleteDialog: boolean;
     isOpenAddDialog: boolean;
     isOpenActionDialog: boolean;
