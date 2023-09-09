@@ -9,8 +9,7 @@ import SortUtil from "../../../utils/readUtils/sortUtil";
 import BookModel from "../../../model/Book";
 import { Trans } from "react-i18next";
 import { BookListProps, BookListState } from "./interface";
-import Empty from "../../emptyPage";
-import { withRouter } from "react-router-dom";
+import { Redirect, withRouter } from "react-router-dom";
 import ViewMode from "../../../components/viewMode";
 
 class BookList extends React.Component<BookListProps, BookListState> {
@@ -70,20 +69,7 @@ class BookList extends React.Component<BookListProps, BookListState> {
           RecordRecent.getAllRecent()
         );
     if (books.length === 0) {
-      return (
-        <div
-          style={{
-            position: "fixed",
-            left: 0,
-            top: 0,
-            width: "100%",
-            height: "100%",
-            zIndex: -1,
-          }}
-        >
-          <Empty />
-        </div>
-      );
+      return <Redirect to="/manager/empty" />;
     }
 
     return books.map((item: BookModel, index: number) => {
@@ -117,17 +103,6 @@ class BookList extends React.Component<BookListProps, BookListState> {
   render() {
     return (
       <>
-        <ViewMode />
-        <div
-          className="booklist-delete-container"
-          onClick={() => {
-            this.props.handleDeleteDialog(true);
-          }}
-          style={this.props.isCollapsed ? { left: "calc(50% - 60px)" } : {}}
-        >
-          <Trans>Delete All Books</Trans>
-        </div>
-
         <div
           className="book-list-container-parent"
           style={
@@ -139,6 +114,26 @@ class BookList extends React.Component<BookListProps, BookListState> {
           <div className="book-list-container">
             <ul className="book-list-item-box">{this.renderBookList()}</ul>
           </div>
+        </div>
+        <div
+          className="book-list-header"
+          style={
+            this.props.isCollapsed
+              ? { width: "calc(100% - 70px)", left: "70px" }
+              : {}
+          }
+        >
+          <div></div>
+          <div
+            className="booklist-delete-container"
+            onClick={() => {
+              this.props.handleDeleteDialog(true);
+            }}
+            style={this.props.isCollapsed ? { left: "calc(50% - 60px)" } : {}}
+          >
+            <Trans>Delete All Books</Trans>
+          </div>
+          <ViewMode />
         </div>
       </>
     );

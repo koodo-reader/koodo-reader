@@ -51,6 +51,9 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
         }
       );
     }
+    if (nextProps.menuMode !== this.props.menuMode) {
+      this.showMenu(nextProps.menuMode);
+    }
   }
   handleRenderHighlight = () => {
     new Promise<void>((resolve, reject) => {
@@ -107,16 +110,28 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     });
   };
   handleNoteClick = (event: any) => {
-    let doc = getIframeDoc();
-    if (!doc) return;
+    let pageArea = document.getElementById("page-area");
+    if (!pageArea) return;
+    let iframe = pageArea.getElementsByTagName("iframe")[0];
+    if (!iframe || !iframe.contentWindow) return;
     this.props.handleMenuMode("note");
+    let note = this.props.notes.filter(
+      (item) => item.key === event.currentTarget.dataset.key
+    )[0];
+    let temp = JSON.parse(note.range);
+    temp = [temp];
+    let doc = iframe.contentDocument;
+    if (!doc) return;
+    window.rangy.getSelection(iframe).restoreCharacterRanges(doc, temp);
     let sel = doc.getSelection();
     if (!sel) return;
+
     let range = sel.getRangeAt(0);
     sel.removeAllRanges();
     sel.addRange(range);
+
     this.setState({ rect: range.getBoundingClientRect() }, () => {
-      this.showMenu();
+      this.showMenu(this.props.menuMode);
       this.handleClickHighlighter(event.currentTarget.dataset.key);
       event.stopPropagation();
     });
@@ -124,7 +139,7 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
   handlePDFClick = (event: any) => {
     this.props.handleMenuMode("note");
     this.setState({ rect: event.currentTarget.getBoundingClientRect() }, () => {
-      this.showMenu();
+      this.showMenu(this.props.menuMode);
       this.handleClickHighlighter(event.currentTarget.getAttribute("key"));
       event.stopPropagation();
     });
@@ -143,19 +158,18 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
   handleShowDelete = (deleteKey: string) => {
     this.setState({ deleteKey });
   };
-  showMenu = () => {
+  showMenu = (menuMode: string) => {
     let rect = this.state.rect;
     if (!rect) return;
     let { posX, posY } =
       this.props.currentBook.format !== "PDF"
-        ? this.getHtmlPosition(rect)
-        : this.getPdfPosition(rect);
+        ? this.getHtmlPosition(rect, menuMode)
+        : this.getPdfPosition(rect, menuMode);
     this.props.handleOpenMenu(true);
     let popupMenu = document.querySelector(".popup-menu-container");
     popupMenu?.setAttribute("style", `left:${posX}px;top:${posY}px`);
-    this.setState({ rect: null });
   };
-  getPdfPosition(rect: any) {
+  getPdfPosition(rect: any, menuMode: string) {
     let posY = rect.bottom;
     let posX = rect.left + rect.width / 2;
     document
@@ -173,9 +187,12 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
       posY = posY - rect.height - 188;
     }
     posX = posX - 80;
+    if (posX > doc.document.body.scrollWidth - 264 && menuMode !== "menu") {
+      posX = posX - (264 - 159);
+    }
     return { posX, posY } as any;
   }
-  getHtmlPosition(rect: any) {
+  getHtmlPosition(rect: any, menuMode: string) {
     let posY = rect.bottom - this.props.rendition.getPageSize().scrollTop;
     let posX = rect.left + rect.width / 2;
     if (
@@ -288,7 +305,7 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
       this.props.handleNoteKey("");
       return;
     }
-    this.showMenu();
+    this.showMenu(this.props.menuMode);
     this.props.handleMenuMode("menu");
   };
   //添加高亮
