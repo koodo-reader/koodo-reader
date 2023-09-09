@@ -24,9 +24,6 @@
   user-select: text;
 }
 .booklist-delete-container {
-  position: absolute;
-  top: 80px;
-  left: calc(50vw);
   border: 2px solid rgb(231, 69, 69);
   text-align: center;
   height: 30px;
@@ -64,6 +61,7 @@
 }
 .booklist-manage-container {
   cursor: pointer;
+  margin-bottom: 5px;
 }
 .book-manage-title {
   font-size: 15px;

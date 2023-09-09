@@ -262,6 +262,7 @@ class ActionDialog extends React.Component<
         >
           <div
             className="action-dialog-edit"
+            style={{ marginLeft: "-15px" }}
             onClick={() => {
               BookUtil.fetchBook(
                 this.props.currentBook.key,
@@ -283,6 +284,7 @@ class ActionDialog extends React.Component<
           </div>
           <div
             className="action-dialog-edit"
+            style={{ marginLeft: "-15px" }}
             onClick={() => {
               if (
                 this.props.notes.filter(
@@ -309,6 +311,7 @@ class ActionDialog extends React.Component<
           </div>
           <div
             className="action-dialog-edit"
+            style={{ marginLeft: "-15px" }}
             onClick={() => {
               if (
                 this.props.notes.filter(
@@ -335,14 +338,13 @@ class ActionDialog extends React.Component<
           </div>
           <div
             className="action-dialog-edit"
+            style={{ marginLeft: "-15px" }}
             onClick={async () => {
               let dictHistory =
-                (await window.localforage.getItem("dictHistory")) || [];
+                (await window.localforage.getItem("words")) || [];
               if (
                 dictHistory.filter(
-                  (item) =>
-                    item.bookKey === this.props.currentBook.key &&
-                    item.notes === ""
+                  (item) => item.bookKey === this.props.currentBook.key
                 ).length > 0
               ) {
                 exportDictionaryHistory(dictHistory, [
@@ -361,6 +363,7 @@ class ActionDialog extends React.Component<
           </div>
           <div
             className="action-dialog-edit"
+            style={{ marginLeft: "-15px" }}
             onClick={() => {
               if (this.props.currentBook.format === "PDF") {
                 toast(this.props.t("Not supported yet"));
@@ -397,6 +400,7 @@ class ActionDialog extends React.Component<
           </div>
           <div
             className="action-dialog-edit"
+            style={{ marginLeft: "-15px" }}
             onClick={async () => {
               await BookUtil.deleteBook("cache-" + this.props.currentBook.key);
               toast.success(this.props.t("Delete Successfully"));
