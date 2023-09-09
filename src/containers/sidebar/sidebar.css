@@ -122,7 +122,7 @@
   overflow-x: hidden;
 }
 .side-shelf-title {
-  font-size: 17px;
+  font-size: 16px;
   font-weight: 600;
   margin-bottom: 10px;
   margin-top: 10px;
@@ -134,10 +134,10 @@
   border-bottom: 1px solid #ccc;
 }
 .side-shelf-title-icon {
-  margin-top: 13px;
+  margin-top: 14px;
   float: right;
   font-weight: 500;
-  font-size: 14px;
+  font-size: 12px;
   transform-origin: center center;
   transition: transform 0.1s ease;
   cursor: pointer;

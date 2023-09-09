@@ -78,6 +78,12 @@ export const settingList = [
     propName: "isPreventAdd",
   },
   {
+    isElectron: true,
+    title: "Lemmatize words when looking up in a dictionary",
+    desc: "To reduce the different forms of a word to one single form, for example, reducing builds, building or built to build, reducing cats to cat, reducing fastest to fast",
+    propName: "isLemmatizeWord",
+  },
+  {
     isElectron: false,
     title: "Open books in the main window",
     desc: "Book won't be opened in a seperate window but directly opened in the main window",

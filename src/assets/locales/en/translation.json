@@ -104,6 +104,8 @@
   "Light Mode": "Light Mode",
   "Night Mode": "Night Mode",
   "Turn on Bionic Reading": "Turn on Bionic Reading",
+  "Lemmatize words when looking up in a dictionary": "查询单词前将词性还原",
+  "To reduce the different forms of a word to one single form, for example, reducing builds, building or built to build, reducing cats to cat, reducing fastest to fast": "To reduce the different forms of a word to one single form, for example, reducing builds, building or built to build, reducing cats to cat, reducing fastest to fast",
   "Export All Books": "Export All Books",
   "Export All Notes": "Export All Notes",
   "Export All Highlights": "Export All Highlights",

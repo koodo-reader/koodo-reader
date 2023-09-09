@@ -108,8 +108,8 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
         this.props.chapterDocIndex,
         text,
         cfi,
-        range,
         notes,
+        range,
         percentage,
         color,
         tag

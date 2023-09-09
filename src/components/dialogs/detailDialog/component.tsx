@@ -55,7 +55,6 @@ class DetailDialog extends React.Component<
             paddingTop: "20",
             paddingBottom: "20",
             height: "430px",
-            overflow: "scroll",
           }}
         >
           <div style={{ position: "relative" }}>
@@ -101,7 +100,10 @@ class DetailDialog extends React.Component<
                 </p>
               </p>
             </p>
-            <p className="detail-dialog-book-divider"></p>
+            <p
+              className="detail-dialog-book-divider"
+              style={{ backgroundColor: this.state.textColor }}
+            ></p>
             <p className="detail-dialog-book-size">
               <p className="detail-sub-title">
                 <Trans>File size</Trans>
@@ -119,7 +121,10 @@ class DetailDialog extends React.Component<
                 </p>
               </p>
             </p>
-            <p className="detail-dialog-book-divider"></p>
+            <p
+              className="detail-dialog-book-divider"
+              style={{ backgroundColor: this.state.textColor }}
+            ></p>
             <p className="detail-dialog-book-added">
               <p className="detail-sub-title">
                 <Trans>Added at</Trans>
@@ -132,7 +137,10 @@ class DetailDialog extends React.Component<
                 </p>
               </p>
             </p>
-            <p className="detail-dialog-book-divider"></p>
+            <p
+              className="detail-dialog-book-divider"
+              style={{ backgroundColor: this.state.textColor }}
+            ></p>
             <p className="detail-dialog-book-added">
               <p className="detail-sub-title">
                 <Trans>Pages</Trans>

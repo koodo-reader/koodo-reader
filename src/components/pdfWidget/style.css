@@ -5,7 +5,7 @@
   width: 140px;
   height: 40px;
   border-radius: 20px;
-  background-color: #fcfcfc;
+  background-color: #8b8b8b;
   z-index: 10;
   display: flex;
   justify-content: space-around;
@@ -40,7 +40,7 @@
 .back-home-night,
 .back-home-eye,
 .back-home-dropdown {
-  color: #8b8b8b;
+  color: #fcfcfc;
 }
 .back-home-home:hover,
 .back-home-day:hover,

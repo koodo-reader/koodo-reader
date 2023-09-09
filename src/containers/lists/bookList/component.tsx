@@ -9,8 +9,6 @@ import SortUtil from "../../../utils/readUtils/sortUtil";
 import BookModel from "../../../model/Book";
 import { BookListProps, BookListState } from "./interface";
 import StorageUtil from "../../../utils/serviceUtils/storageUtil";
-
-import Empty from "../../emptyPage";
 import { Redirect, withRouter } from "react-router-dom";
 import ViewMode from "../../../components/viewMode";
 import { backup } from "../../../utils/syncUtils/backupUtil";
@@ -109,20 +107,7 @@ class BookList extends React.Component<BookListProps, BookListState> {
           SortUtil.sortBooks(this.props.books, this.props.bookSortCode) || []
         );
     if (books.length === 0) {
-      return (
-        <div
-          style={{
-            position: "fixed",
-            left: 0,
-            top: 0,
-            width: "100%",
-            height: "100%",
-            zIndex: -1,
-          }}
-        >
-          <Empty />
-        </div>
-      );
+      return <Redirect to="/manager/empty" />;
     }
     return books.map((item: BookModel, index: number) => {
       return this.props.viewMode === "list" ? (
@@ -190,10 +175,9 @@ class BookList extends React.Component<BookListProps, BookListState> {
           }
         >
           <SelectBook />
-          {/* <div style={this.props.isSelectBook ? { display: "none" } : {}}>
-            <ShelfSelector />
-          </div> */}
-          <ViewMode />
+          <div style={this.props.isSelectBook ? { display: "none" } : {}}>
+            <ViewMode />
+          </div>
         </div>
         <div
           className="book-list-container-parent"
