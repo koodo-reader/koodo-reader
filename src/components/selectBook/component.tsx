@@ -7,6 +7,7 @@ import { withRouter } from "react-router-dom";
 import toast from "react-hot-toast";
 import {
   exportBooks,
+  exportDictionaryHistory,
   exportHighlights,
   exportNotes,
 } from "../../utils/syncUtils/exportUtil";
@@ -35,6 +36,7 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
             }
           }}
           className="book-manage-title"
+          style={{ color: "#0078d4" }}
         >
           <Trans>{this.props.isSelectBook ? "Cancel" : ""}</Trans>
         </span>
@@ -150,26 +152,16 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
                   (item: BookModel) =>
                     this.props.selectedBooks.indexOf(item.key) > -1
                 );
-                let dictHistory = await window.localforage.setItem(
-                  "dictHistory"
+                let dictHistory =
+                  (await window.localforage.getItem("words")) || [];
+                dictHistory = dictHistory.filter(
+                  (item) =>
+                    selectedBooks.filter(
+                      (subitem) => subitem.key === item.bookKey
+                    ).length > 0
                 );
-                if (
-                  dictHistory.filter(
-                    (item) =>
-                      selectedBooks.filter(
-                        (subitem) => subitem.key === item.bookKey
-                      ).length > 0 && item.notes === ""
-                  ).length > 0
-                ) {
-                  exportHighlights(
-                    dictHistory.filter(
-                      (item) =>
-                        selectedBooks.filter(
-                          (subitem) => subitem.key === item.bookKey
-                        ).length > 0 && item.notes === ""
-                    ),
-                    selectedBooks
-                  );
+                if (dictHistory.length > 0) {
+                  exportDictionaryHistory(dictHistory, selectedBooks);
                   toast.success(this.props.t("Export Successfully"));
                 } else {
                   toast(this.props.t("Nothing to export"));

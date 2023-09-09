@@ -10,6 +10,7 @@ import { getBingDict } from "../../../utils/serviceUtils/bingDictUtil";
 import { openExternalUrl } from "../../../utils/serviceUtils/urlUtil";
 import RecordLocation from "../../../utils/readUtils/recordLocation";
 import DictHistory from "../../../model/DictHistory";
+
 declare var window: any;
 class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
   constructor(props: PopupDictProps) {
@@ -21,7 +22,15 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
     };
   }
   componentDidMount() {
-    let originalText = this.props.originalText.replace(/(\r\n|\n|\r)/gm, "");
+    let originalText = this.props.originalText
+      .replace(/(\r\n|\n|\r)/gm, "")
+      .replace(/-/gm, "");
+    if (StorageUtil.getReaderConfig("isLemmatizeWord") === "yes") {
+      var lemmatize = window.require("wink-lemmatizer");
+      originalText = lemmatize.verb(originalText);
+      originalText = lemmatize.noun(originalText);
+      originalText = lemmatize.adjective(originalText);
+    }
     this.handleDict(originalText);
     this.handleRecordHistory(originalText);
   }
@@ -30,10 +39,9 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
     let bookLocation = RecordLocation.getHtmlLocation(bookKey);
     let chapter = bookLocation.chapterTitle;
     let word = new DictHistory(bookKey, text, chapter);
-    let dictHistoryArr =
-      (await window.localforage.getItem("dictHistory")) || [];
+    let dictHistoryArr = (await window.localforage.getItem("words")) || [];
     dictHistoryArr.push(word);
-    window.localforage.setItem("dictHistory", dictHistoryArr);
+    window.localforage.setItem("words", dictHistoryArr);
   };
   handleDict = async (text: string) => {
     if (StorageUtil.getReaderConfig("dictService") === "必应词典") {
@@ -94,8 +102,9 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
           var childElement = childElements[i];
           if (
             childElement.textContent &&
-            (childElement.textContent?.indexOf("synonyms") > -1 ||
-              childElement.textContent?.indexOf('"') > -1)
+            (childElement.textContent?.indexOf(":") > -1 ||
+              childElement.textContent?.indexOf('"') > -1 ||
+              childElement.textContent?.indexOf("「") > -1)
           ) {
             childElement.parentNode &&
               childElement.parentNode.removeChild(childElement);
@@ -141,23 +150,6 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
           });
         });
     }
-  };
-  handleYandexReturn = (list) => {
-    let typeList: string[] = [];
-    list.forEach((item) => {
-      if (typeList.indexOf(item.pos) === -1) {
-        typeList.push(item.pos);
-      }
-    });
-    return typeList.map((type) => {
-      return {
-        type,
-        definitions: list
-          .filter((item) => item.pos === type)
-          .map((item) => item.text)
-          .join(","),
-      };
-    });
   };
   render() {
     const renderNoteEditor = () => {

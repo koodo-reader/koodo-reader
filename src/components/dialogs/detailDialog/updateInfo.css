@@ -64,6 +64,7 @@
 .detail-dialog-book-info {
   overflow-y: scroll;
   height: 185px;
+  line-height: 1.25;
   text-align: left;
   overflow-x: hidden;
   width: 100%;
@@ -137,8 +138,7 @@
   height: 60px;
   width: 0.5px;
   margin-top: 5px;
-  background-color: #aaa;
-  opacity: 0.5;
+  opacity: 0.2;
 }
 .detail-dialog-book-detail {
   /* width: 80%; */

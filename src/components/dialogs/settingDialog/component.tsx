@@ -36,6 +36,7 @@ class SettingDialog extends React.Component<
       isAutoFullscreen:
         StorageUtil.getReaderConfig("isAutoFullscreen") === "yes",
       isPreventAdd: StorageUtil.getReaderConfig("isPreventAdd") === "yes",
+      isLemmatizeWord: StorageUtil.getReaderConfig("isLemmatizeWord") === "yes",
       isOpenBook: StorageUtil.getReaderConfig("isOpenBook") === "yes",
       isExpandContent: StorageUtil.getReaderConfig("isExpandContent") === "yes",
       isDisablePopup: StorageUtil.getReaderConfig("isDisablePopup") === "yes",

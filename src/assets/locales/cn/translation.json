@@ -91,6 +91,8 @@
   "Ascend": "升序",
   "Sort by Name": "按书名",
   "Turn on Bionic Reading": "开启仿生阅读",
+  "Lemmatize words when looking up in a dictionary": "查询单词前将词性还原",
+  "To reduce the different forms of a word to one single form, for example, reducing builds, building or built to build, reducing cats to cat, reducing fastest to fast": "将不同变形的单词还原成单词原形，例如将builds, building 和 built 还原为 build，将cats还原为cat，fastest还原成fast",
   "Export All Books": "导出所有图书",
   "Export All Dictionary History": "导出所有查词历史",
   "Export Dictionary History": "导出查词历史",

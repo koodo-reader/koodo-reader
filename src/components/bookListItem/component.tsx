@@ -71,6 +71,12 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
   handleCancelLoveBook = () => {
     AddFavorite.clear(this.props.book.key);
     this.setState({ isFavorite: false });
+    if (
+      Object.keys(AddFavorite.getAllFavorite()).length === 0 &&
+      this.props.mode === "favorite"
+    ) {
+      this.props.history.push("/manager/empty");
+    }
     toast.success(this.props.t("Cancel Successfully"));
   };
   handleRestoreBook = () => {
@@ -212,8 +218,8 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
               className="icon-message book-selected-icon"
               style={
                 this.props.isSelected
-                  ? { left: "35px", bottom: "5px" }
-                  : { left: "35px", bottom: "5px", color: "#eee" }
+                  ? { left: "20px", bottom: "5px" }
+                  : { left: "20px", bottom: "5px", color: "#eee" }
               }
             ></span>
           ) : null}
