@@ -1,9 +1,6 @@
 import React from "react";
 import "./popupMenu.css";
-import PopupNote from "../popupNote";
 import PopupOption from "../popupOption";
-import PopupTrans from "../popupTrans";
-import PopupDict from "../popupDict";
 import NoteModel from "../../../model/Note";
 import { PopupMenuProps, PopupMenuStates } from "./interface";
 import { getIframeDoc } from "../../../utils/serviceUtils/docUtil";
@@ -29,6 +26,7 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     this.state = {
       deleteKey: "",
       rect: this.props.rect,
+      isRightEdge: false,
     };
   }
 
@@ -47,11 +45,13 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
           rect: nextProps.rect,
         },
         () => {
+          console.log("open", nextProps.rect, this.props.rect);
           this.openMenu();
         }
       );
     }
     if (nextProps.menuMode !== this.props.menuMode) {
+      console.log("1sfasdfsd", nextProps.menuMode, this.props.menuMode);
       this.showMenu(nextProps.menuMode);
     }
   }
@@ -131,6 +131,7 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     sel.addRange(range);
 
     this.setState({ rect: range.getBoundingClientRect() }, () => {
+      console.log("1sfasdfsd");
       this.showMenu(this.props.menuMode);
       this.handleClickHighlighter(event.currentTarget.dataset.key);
       event.stopPropagation();
@@ -139,6 +140,7 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
   handlePDFClick = (event: any) => {
     this.props.handleMenuMode("note");
     this.setState({ rect: event.currentTarget.getBoundingClientRect() }, () => {
+      console.log("1sfasdfsd");
       this.showMenu(this.props.menuMode);
       this.handleClickHighlighter(event.currentTarget.getAttribute("key"));
       event.stopPropagation();
@@ -159,15 +161,18 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     this.setState({ deleteKey });
   };
   showMenu = (menuMode: string) => {
+    console.log(this.state.rect);
     let rect = this.state.rect;
     if (!rect) return;
-    let { posX, posY } =
-      this.props.currentBook.format !== "PDF"
-        ? this.getHtmlPosition(rect, menuMode)
-        : this.getPdfPosition(rect, menuMode);
-    this.props.handleOpenMenu(true);
-    let popupMenu = document.querySelector(".popup-menu-container");
-    popupMenu?.setAttribute("style", `left:${posX}px;top:${posY}px`);
+    this.setState({ isRightEdge: false }, () => {
+      let { posX, posY } =
+        this.props.currentBook.format !== "PDF"
+          ? this.getHtmlPosition(rect, menuMode)
+          : this.getPdfPosition(rect, menuMode);
+      this.props.handleOpenMenu(true);
+      let popupMenu = document.querySelector(".popup-menu-container");
+      popupMenu?.setAttribute("style", `left:${posX}px;top:${posY}px`);
+    });
   };
   getPdfPosition(rect: any, menuMode: string) {
     let posY = rect.bottom;
@@ -180,6 +185,7 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     let iframe = pageArea.getElementsByTagName("iframe")[0];
     if (!iframe) return;
     let doc: any = iframe.contentWindow || iframe.contentDocument?.defaultView;
+    console.log(rect.bottom, doc.document.body.scrollHeight - 188);
     if (rect.bottom < doc.document.body.scrollHeight - 188) {
       this.props.handleChangeDirection(true);
       posY = posY + 16;
@@ -187,8 +193,10 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
       posY = posY - rect.height - 188;
     }
     posX = posX - 80;
-    if (posX > doc.document.body.scrollWidth - 264 && menuMode !== "menu") {
+    console.log(posX, doc.document.body.clientWidth - 264, menuMode);
+    if (posX > doc.document.body.clientWidth - 264 && menuMode !== "menu") {
       posX = posX - (264 - 159);
+      this.setState({ isRightEdge: true });
     }
     return { posX, posY } as any;
   }
@@ -207,6 +215,20 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
       posY = posY - rect.height - 188 + this.props.rendition.getPageSize().top;
     }
     posX = posX - 80 + this.props.rendition.getPageSize().left;
+    let pageArea = document.getElementById("page-area");
+    if (!pageArea) return;
+    let iframe = pageArea.getElementsByTagName("iframe")[0];
+    if (!iframe) return;
+    let doc: any = iframe.contentDocument;
+    if (!doc) {
+      return;
+    }
+    console.log(posX, doc.body.clientWidth - 264);
+    if (posX > doc.body.clientWidth - 264 && menuMode !== "menu") {
+      posX = posX - (264 - 159);
+
+      this.setState({ isRightEdge: true });
+    }
     return { posX, posY } as any;
   }
   //渲染高亮
@@ -305,6 +327,7 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
       this.props.handleNoteKey("");
       return;
     }
+    console.log("1sfasdfsd");
     this.showMenu(this.props.menuMode);
     this.props.handleMenuMode("menu");
   };
@@ -360,12 +383,6 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
           <div className="popup-menu-box">
             {this.props.menuMode === "menu" ? (
               <PopupOption {...PopupProps} />
-            ) : this.props.menuMode === "note" ? (
-              <PopupNote {...PopupProps} />
-            ) : this.props.menuMode === "trans" ? (
-              <PopupTrans {...PopupProps} />
-            ) : this.props.menuMode === "dict" ? (
-              <PopupDict {...PopupProps} />
             ) : null}
             <span
               className="icon-close popup-close"
@@ -375,16 +392,12 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
               style={this.props.isChangeDirection ? { top: "180px" } : {}}
             ></span>
           </div>
-          {this.props.isChangeDirection ? (
-            <span
-              className="icon-popup popup-menu-triangle-up"
-              style={
-                this.props.menuMode === "highlight" ? { bottom: "110px" } : {}
-              }
-            ></span>
-          ) : (
-            <span className="icon-popup popup-menu-triangle-down"></span>
-          )}
+          {this.props.menuMode === "menu" &&
+            (this.props.isChangeDirection ? (
+              <span className="icon-popup popup-menu-triangle-up"></span>
+            ) : (
+              <span className="icon-popup popup-menu-triangle-down"></span>
+            ))}
         </div>
       </div>
     );

@@ -1,0 +1,40 @@
+.popup-menu-box {
+  opacity: 1;
+  border-radius: 19px;
+  position: relative;
+  z-index: -1;
+}
+.popup-menu-triangle-down {
+  float: left;
+  margin-left: 59px;
+  font-size: 16px;
+  text-shadow: 0px 8px 8px rgba(0, 0, 0, 0.16);
+  z-index: 0;
+}
+.popup-menu-triangle-up {
+  transform: rotate(180deg);
+  position: absolute;
+  bottom: 172px;
+  margin-left: 60px;
+  font-size: 16px;
+  text-shadow: 0px 8px 8px rgba(0, 0, 0, 0.16);
+  z-index: 0;
+}
+.delete-highlighter-container {
+  position: relative;
+}
+
+.popup-close {
+  position: absolute;
+  top: -30px;
+  right: 70px;
+  cursor: pointer;
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

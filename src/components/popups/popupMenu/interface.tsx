@@ -24,6 +24,7 @@ export interface PopupMenuProps {
 }
 export interface PopupMenuStates {
   deleteKey: string;
+  isRightEdge: boolean;
   // cfiRange: string;
   rect: DOMRect | null;
 }
