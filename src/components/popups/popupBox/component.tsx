@@ -1,15 +1,17 @@
 import React from "react";
 import "./popupMenu.css";
-import PopupOption from "../popupOption";
+import PopupNote from "../popupNote";
+import PopupTrans from "../popupTrans";
+import PopupDict from "../popupDict";
 import NoteModel from "../../../model/Note";
-import { PopupMenuProps, PopupMenuStates } from "./interface";
+import { PopupBoxProps, PopupBoxStates } from "./interface";
 import { getIframeDoc } from "../../../utils/serviceUtils/docUtil";
 import { showPDFHighlight } from "../../../utils/fileUtils/pdfUtil";
 import BookUtil from "../../../utils/fileUtils/bookUtil";
 
 declare var window: any;
 
-class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
+class PopupBox extends React.Component<PopupBoxProps, PopupBoxStates> {
   highlighter: any;
   timer!: NodeJS.Timeout;
   key: any;
@@ -17,7 +19,7 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
   showNote: boolean;
   isFirstShow: boolean;
   rect: any;
-  constructor(props: PopupMenuProps) {
+  constructor(props: PopupBoxProps) {
     super(props);
     this.showNote = false;
     this.isFirstShow = false;
@@ -38,7 +40,7 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
       }, 500);
     });
   }
-  UNSAFE_componentWillReceiveProps(nextProps: PopupMenuProps) {
+  UNSAFE_componentWillReceiveProps(nextProps: PopupBoxProps) {
     if (nextProps.rect !== this.props.rect) {
       this.setState(
         {
@@ -381,8 +383,12 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
           style={this.props.isOpenMenu ? {} : { display: "none" }}
         >
           <div className="popup-menu-box">
-            {this.props.menuMode === "menu" ? (
-              <PopupOption {...PopupProps} />
+            {this.props.menuMode === "note" ? (
+              <PopupNote {...PopupProps} />
+            ) : this.props.menuMode === "trans" ? (
+              <PopupTrans {...PopupProps} />
+            ) : this.props.menuMode === "dict" ? (
+              <PopupDict {...PopupProps} />
             ) : null}
             <span
               className="icon-close popup-close"
@@ -404,4 +410,4 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
   }
 }
 
-export default PopupMenu;
+export default PopupBox;
