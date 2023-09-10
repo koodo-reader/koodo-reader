@@ -1,7 +1,7 @@
 import BookModel from "../../../model/Book";
 import NoteModel from "../../../model/Note";
 
-export interface PopupMenuProps {
+export interface PopupBoxProps {
   currentBook: BookModel;
   isOpenMenu: boolean;
   isChangeDirection: boolean;
@@ -22,7 +22,7 @@ export interface PopupMenuProps {
   handleChangeDirection: (isChangeDirection: boolean) => void;
   handleRenderNoteFunc: (renderNoteFunc: () => void) => void;
 }
-export interface PopupMenuStates {
+export interface PopupBoxStates {
   deleteKey: string;
   isRightEdge: boolean;
   // cfiRange: string;

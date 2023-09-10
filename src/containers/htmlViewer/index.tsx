@@ -25,6 +25,7 @@ const mapStateToProps = (state: stateType) => {
     renderNoteFunc: state.book.renderNoteFunc,
     htmlBook: state.reader.htmlBook,
     books: state.manager.books,
+    menuMode: state.viewArea.menuMode,
   };
 };
 const actionCreator = {

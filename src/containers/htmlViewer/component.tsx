@@ -16,6 +16,7 @@ import { getIframeDoc } from "../../utils/serviceUtils/docUtil";
 import { tsTransform } from "../../utils/serviceUtils/langUtil";
 import CFI from "epub-cfi-resolver";
 import { binicReadingProcess } from "../../utils/serviceUtils/bionicUtil";
+import PopupBox from "../../components/popups/popupBox";
 
 declare var window: any;
 let lock = false; //prevent from clicking too fasts
@@ -338,8 +339,21 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
             .props.currentBook.key ? (
           <Background />
         ) : null}
-        {this.props.htmlBook ? (
+        {this.props.htmlBook && this.props.menuMode === "menu" ? (
           <PopupMenu
+            {...{
+              rendition: this.props.htmlBook.rendition,
+              rect: this.state.rect,
+              chapterDocIndex: this.state.chapterDocIndex,
+              chapter: this.state.chapter,
+            }}
+          />
+        ) : null}
+        {this.props.htmlBook &&
+        (this.props.menuMode === "dict" ||
+          this.props.menuMode === "trans" ||
+          this.props.menuMode === "note") ? (
+          <PopupBox
             {...{
               rendition: this.props.htmlBook.rendition,
               rect: this.state.rect,

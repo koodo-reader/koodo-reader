@@ -20,7 +20,7 @@ declare var window: any;
 
 class PopupOption extends React.Component<PopupOptionProps> {
   handleNote = () => {
-    this.props.handleChangeDirection(false);
+    // this.props.handleChangeDirection(false);
     this.props.handleMenuMode("note");
   };
   handleCopy = () => {
