@@ -122,8 +122,8 @@
   top: 65px;
 }
 .backup-page-backup {
-  width: 152px;
-  height: 152px;
+  width: 142px;
+  height: 142px;
   font-size: 18px;
   line-height: 40px;
   opacity: 1;
@@ -148,10 +148,10 @@
   line-height: 20px;
   opacity: 1;
   position: absolute;
-  bottom: 11px;
+  bottom: 8px;
   right: 27px;
   cursor: pointer;
-  padding: 10px;
+  padding: 5px;
   border-radius: 5px;
 }
 .backup-page-previous {
@@ -164,12 +164,23 @@
   cursor: pointer;
 }
 .backup-page-backup-selector {
-  width: 152px;
-  height: 152px;
+  width: 142px;
+  height: 142px;
   opacity: 1;
   animation: popup 0.1s ease-in-out 0s 1;
-  margin-left: 49px;
+  margin-left: 54px;
+  margin-top: 5px;
   border-radius: 5px;
+}
+.restore-warning {
+  font-size: 12px;
+  line-height: 1.25;
+  margin-top: 12px;
+  position: absolute;
+  bottom: 35px;
+  padding-left: 20px;
+  padding-right: 20px;
+  color: rgb(231, 69, 69);
 }
 .icon-local {
   opacity: 1;

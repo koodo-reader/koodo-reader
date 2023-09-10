@@ -178,7 +178,7 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
               }}
               style={{ height: "65px" }}
             >
-              <div className="book-item-image" style={{ height: "67px" }}>
+              <div className="book-item-image" style={{ height: "60px" }}>
                 <EmptyCover
                   {...{
                     format: this.props.book.format,
