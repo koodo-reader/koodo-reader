@@ -116,11 +116,11 @@ class SettingPanel extends React.Component<
           ) : null}
           <SliderList
             {...{
-              maxValue: 2,
-              minValue: 0.5,
+              maxValue: 1,
+              minValue: 0.3,
               mode: "brightness",
-              minLabel: "0.5",
-              maxLabel: "2",
+              minLabel: "0.3",
+              maxLabel: "1",
               step: 0.1,
               title: "Brightness",
             }}

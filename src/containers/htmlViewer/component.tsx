@@ -134,7 +134,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     StyleUtil.addDefaultCss();
     tsTransform();
     binicReadingProcess();
-    rendition.setStyle(StyleUtil.getCustomCss());
+    // rendition.setStyle(StyleUtil.getCustomCss());
     let bookLocation: {
       text: string;
       count: string;
@@ -194,7 +194,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
 
       let chapter =
         bookLocation.chapterTitle ||
-        (this.props.htmlBook
+        (this.props.htmlBook && this.props.htmlBook.flattenChapters[0]
           ? this.props.htmlBook.flattenChapters[0].label
           : "Unknown Chapter");
       let chapterDocIndex = 0;

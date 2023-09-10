@@ -36,22 +36,6 @@ class TextToSpeech extends React.Component<
       window.speechSynthesis && window.speechSynthesis.cancel();
       this.setState({ isAudioOn: false });
     }
-    let synth = window.speechSynthesis;
-    synth.getVoices();
-    if (isElectron) {
-      this.edgeVoices = await EdgeUtil.getVoiceList();
-    }
-  }
-  handleChangeAudio = () => {
-    if (this.state.isAudioOn) {
-      window.speechSynthesis.cancel();
-      EdgeUtil.pauseAudio();
-      this.setState({ isAudioOn: false });
-    } else {
-      this.handleStartSpeech();
-    }
-  };
-  handleStartSpeech = () => {
     const setSpeech = () => {
       return new Promise((resolve, reject) => {
         let synth = window.speechSynthesis;
@@ -67,12 +51,11 @@ class TextToSpeech extends React.Component<
         }, 10);
       });
     };
-
-    let s = setSpeech();
-    s.then(async (voices: any) => {
-      this.nativeVoices = voices;
+    this.nativeVoices = await setSpeech();
+    if (isElectron) {
+      this.edgeVoices = await EdgeUtil.getVoiceList();
       this.voices = [
-        ...voices,
+        ...this.nativeVoices,
         ...this.edgeVoices.map((item) => {
           return {
             name:
@@ -84,10 +67,23 @@ class TextToSpeech extends React.Component<
           };
         }),
       ];
-      this.setState({ isAudioOn: true }, () => {
-        this.handleAudio();
-        this.handleSelect();
-      });
+    } else {
+      this.voices = this.nativeVoices;
+    }
+  }
+  handleChangeAudio = () => {
+    if (this.state.isAudioOn) {
+      window.speechSynthesis.cancel();
+      EdgeUtil.pauseAudio();
+      this.setState({ isAudioOn: false });
+    } else {
+      this.handleStartSpeech();
+    }
+  };
+  handleStartSpeech = () => {
+    this.setState({ isAudioOn: true }, () => {
+      this.handleAudio();
+      this.handleSelect();
     });
   };
   handleSelect = () => {
@@ -113,33 +109,44 @@ class TextToSpeech extends React.Component<
     }
   };
   handleAudio = async () => {
+    this.nodeList = await this.handleGetText();
+    let voiceIndex = StorageUtil.getReaderConfig("voiceIndex") || 0;
+    if (voiceIndex > this.nativeVoices.length) {
+      await this.handleRead();
+    } else {
+      await this.handleSystemRead(0);
+    }
+  };
+  handleGetText = async () => {
     if (StorageUtil.getReaderConfig("isSliding") === "yes") {
       await sleep(1000);
     }
     this.nodeList = this.props.htmlBook.rendition
       .audioText()
       .filter((item: string) => item && item.trim());
-    await this.handleRead();
+    if (this.nodeList.length === 0) {
+      await this.props.htmlBook.rendition.next();
+      this.nodeList = await this.handleGetText();
+    }
+    return this.nodeList;
   };
   async handleRead() {
     let voiceIndex = StorageUtil.getReaderConfig("voiceIndex") || 0;
     let speed = StorageUtil.getReaderConfig("voiceSpeed") || 1;
-    if (voiceIndex > this.nativeVoices.length) {
-      EdgeUtil.setAudioPaths();
+
+    EdgeUtil.setAudioPaths();
+    await EdgeUtil.cacheAudio(
+      [this.nodeList[0]],
+      this.edgeVoices[voiceIndex - this.nativeVoices.length].ShortName,
+      speed * 100 - 100
+    );
+
+    setTimeout(async () => {
       await EdgeUtil.cacheAudio(
-        [this.nodeList[0]],
+        this.nodeList.slice(1),
         this.edgeVoices[voiceIndex - this.nativeVoices.length].ShortName,
         speed * 100 - 100
       );
-    }
-    setTimeout(async () => {
-      if (voiceIndex > this.nativeVoices.length) {
-        await EdgeUtil.cacheAudio(
-          this.nodeList.slice(1),
-          this.edgeVoices[voiceIndex - this.nativeVoices.length].ShortName,
-          speed * 100 - 100
-        );
-      }
     }, 1);
 
     for (let index = 0; index < this.nodeList.length; index++) {
@@ -147,10 +154,7 @@ class TextToSpeech extends React.Component<
       let style = "background: #f3a6a68c";
       this.props.htmlBook.rendition.highlightNode(currentText, style);
 
-      if (
-        index > EdgeUtil.getAudioPaths().length - 1 &&
-        voiceIndex > this.nativeVoices.length
-      ) {
+      if (index > EdgeUtil.getAudioPaths().length - 1) {
         while (true) {
           if (index < EdgeUtil.getAudioPaths().length - 1) break;
           await new Promise((resolve) => setTimeout(resolve, 500));
@@ -163,10 +167,9 @@ class TextToSpeech extends React.Component<
       );
       if (
         this.nodeList[index] ===
-          this.props.htmlBook.rendition.visibleText()[
-            this.props.htmlBook.rendition.visibleText().length - 1
-          ] &&
-        voiceIndex > this.nativeVoices.length
+        this.props.htmlBook.rendition.visibleText()[
+          this.props.htmlBook.rendition.visibleText().length - 1
+        ]
       ) {
         await this.props.htmlBook.rendition.next();
       }
@@ -175,7 +178,8 @@ class TextToSpeech extends React.Component<
       }
     }
     if (this.state.isAudioOn && this.props.isReading) {
-      await window.require("electron").ipcRenderer.invoke("clear-tts");
+      isElectron &&
+        (await window.require("electron").ipcRenderer.invoke("clear-tts"));
       let position = this.props.htmlBook.rendition.getPosition();
       RecordLocation.recordHtmlLocation(
         this.props.currentBook.key,
@@ -192,52 +196,105 @@ class TextToSpeech extends React.Component<
       await this.handleAudio();
     }
   }
+  async handleSystemRead(index) {
+    let currentText = this.nodeList[index];
+    let style = "background: #f3a6a68c";
+    this.props.htmlBook.rendition.highlightNode(currentText, style);
+
+    let res = await this.handleSystemSpeech(
+      index,
+      StorageUtil.getReaderConfig("voiceIndex") || 0,
+      StorageUtil.getReaderConfig("voiceSpeed") || 1
+    );
+
+    if (res === "start") {
+      index++;
+      if (
+        this.nodeList[index] ===
+        this.props.htmlBook.rendition.visibleText()[
+          this.props.htmlBook.rendition.visibleText().length - 1
+        ]
+      ) {
+        await this.props.htmlBook.rendition.next();
+      }
+      if (
+        this.state.isAudioOn &&
+        this.props.isReading &&
+        index === this.nodeList
+      ) {
+        let position = this.props.htmlBook.rendition.getPosition();
+        RecordLocation.recordHtmlLocation(
+          this.props.currentBook.key,
+          position.text,
+          position.chapterTitle,
+          position.chapterDocIndex,
+          position.chapterHref,
+          position.count,
+          position.percentage,
+          position.cfi,
+          position.page
+        );
+        this.nodeList = [];
+        await this.handleAudio();
+        return;
+      }
+      await this.handleSystemRead(index);
+    } else if (res === "end") {
+      return;
+    }
+  }
   handleSpeech = async (index: number, voiceIndex: number, speed: number) => {
     return new Promise<string>(async (resolve, reject) => {
-      if (voiceIndex > this.nativeVoices.length) {
-        let res = await EdgeUtil.readAloud(index);
-        if (res === "loaderror") {
-          resolve("start");
-        } else {
-          let player = EdgeUtil.getPlayer();
-          player.on("end", async () => {
-            if (!(this.state.isAudioOn && this.props.isReading)) {
-              resolve("end");
-            }
-            resolve("start");
-          });
-        }
+      let res = await EdgeUtil.readAloud(index);
+      if (res === "loaderror") {
+        resolve("start");
       } else {
-        var msg = new SpeechSynthesisUtterance();
-        msg.text = this.nodeList[index]
-          .replace(/\s\s/g, "")
-          .replace(/\r/g, "")
-          .replace(/\n/g, "")
-          .replace(/\t/g, "")
-          .replace(/\f/g, "");
-
-        msg.voice = window.speechSynthesis.getVoices()[voiceIndex];
-        msg.rate = speed;
-        window.speechSynthesis.speak(msg);
-        msg.onerror = (err) => {
-          console.log(err);
-          resolve("start");
-        };
-
-        msg.onend = async (event) => {
+        let player = EdgeUtil.getPlayer();
+        player.on("end", async () => {
           if (!(this.state.isAudioOn && this.props.isReading)) {
             resolve("end");
           }
           resolve("start");
-        };
+        });
       }
     });
   };
+  handleSystemSpeech = async (
+    index: number,
+    voiceIndex: number,
+    speed: number
+  ) => {
+    return new Promise<string>(async (resolve, reject) => {
+      var msg = new SpeechSynthesisUtterance();
+      msg.text = this.nodeList[index]
+        .replace(/\s\s/g, "")
+        .replace(/\r/g, "")
+        .replace(/\n/g, "")
+        .replace(/\t/g, "")
+        .replace(/&/g, "")
+        .replace(/\f/g, "");
 
+      msg.voice = this.nativeVoices[voiceIndex];
+      msg.rate = speed;
+      window.speechSynthesis.cancel();
+      window.speechSynthesis.speak(msg);
+      msg.onerror = (err) => {
+        console.log(err);
+        resolve("end");
+      };
+
+      msg.onend = async (event) => {
+        if (!(this.state.isAudioOn && this.props.isReading)) {
+          resolve("end");
+        }
+        resolve("start");
+      };
+    });
+  };
   render() {
     return (
       <>
-        {this.state.isSupported ? (
+        {
           <>
             <div className="single-control-switch-container">
               <span className="single-control-switch-title">
@@ -331,7 +388,7 @@ class TextToSpeech extends React.Component<
               </div>
             )}
           </>
-        ) : null}
+        }
       </>
     );
   }

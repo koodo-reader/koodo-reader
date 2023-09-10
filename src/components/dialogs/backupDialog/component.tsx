@@ -13,7 +13,8 @@ import Lottie from "react-lottie";
 import animationSuccess from "../../../assets/lotties/success.json";
 
 import toast from "react-hot-toast";
-import { isElectron } from "react-device-detect";declare var window: any;
+import { isElectron } from "react-device-detect";
+declare var window: any;
 const successOptions = {
   loop: false,
   autoplay: true,
@@ -236,6 +237,15 @@ class BackupDialog extends React.Component<
 
     return (
       <div className="backup-page-container">
+        {this.state.currentStep === 0 && this.state.isBackup === "no" && (
+          <div className="restore-warning">
+            <Trans>
+              This process is inreversible, and will completely overwrite your
+              current library, make sure you know what you're doing before
+              proceeding
+            </Trans>
+          </div>
+        )}
         {this.props.isOpenTokenDialog ? <TokenDialog {...dialogProps} /> : null}
         {this.state.currentStep === 0 ? (
           <div className="backup-page-title">
@@ -288,7 +298,7 @@ class BackupDialog extends React.Component<
               }}
             >
               <span className="icon-restore"></span>
-              <div>
+              <div style={{ lineHeight: 1.0 }}>
                 <Trans>Restore</Trans>
               </div>
             </div>

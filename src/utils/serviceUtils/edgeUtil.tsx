@@ -36,6 +36,7 @@ class EdgeUtil {
               .replace(/\r/g, "")
               .replace(/\n/g, "")
               .replace(/\t/g, "")
+              .replace(/&/g, "")
               .replace(/\f/g, ""),
             voiceName,
             speed

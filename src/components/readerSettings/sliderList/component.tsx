@@ -49,7 +49,10 @@ class SliderList extends React.Component<SliderListProps, SliderListState> {
       this.setState({ value: paraSpacing });
       StorageUtil.setReaderConfig("paraSpacing", paraSpacing);
     } else if (this.props.mode === "brightness") {
-      const brightness = event.target.value;
+      let brightness = event.target.value;
+      if (brightness < 0.3) {
+        brightness = 0.3;
+      }
       this.setState({ value: brightness });
       StorageUtil.setReaderConfig("brightness", brightness);
     } else {

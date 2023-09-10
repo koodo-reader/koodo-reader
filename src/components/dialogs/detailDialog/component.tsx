@@ -68,7 +68,7 @@ class DetailDialog extends React.Component<
               ) : (
                 <div
                   className="detail-cover"
-                  style={{ width: "130px", height: "170px" }}
+                  style={{ width: "125px", height: "170px" }}
                 >
                   <EmptyCover
                     {...{

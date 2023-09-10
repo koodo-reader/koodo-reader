@@ -2,3 +2,14 @@
   cursor: pointer;
   margin-left: 20px;
 }
+.booklist-delete-container {
+  border: 2px solid rgb(231, 69, 69);
+  text-align: center;
+  height: 30px;
+  line-height: 30px;
+  color: rgb(231, 69, 69);
+  cursor: pointer;
+  border-radius: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
