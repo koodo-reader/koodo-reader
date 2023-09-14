@@ -154,8 +154,8 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
   render() {
     const renderNoteEditor = () => {
       return (
-        <div className="trans-container">
-          <div className="trans-text-box">
+        <div className="dict-container">
+          <div className="dict-text-box">
             {Parser(
               DOMPurify.sanitize(this.state.dictText + "<address></address>") ||
                 " ",
