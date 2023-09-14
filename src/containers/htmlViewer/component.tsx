@@ -17,6 +17,8 @@ import { tsTransform } from "../../utils/serviceUtils/langUtil";
 import CFI from "epub-cfi-resolver";
 import { binicReadingProcess } from "../../utils/serviceUtils/bionicUtil";
 import PopupBox from "../../components/popups/popupBox";
+import { renderHighlighters } from "../../utils/serviceUtils/noteUtil";
+import Note from "../../model/Note";
 
 declare var window: any;
 let lock = false; //prevent from clicking too fasts
@@ -77,6 +79,30 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       );
     }
   };
+  handleHighlight = () => {
+    let highlighters: any = this.props.notes;
+    if (!highlighters) return;
+    let highlightersByChapter = highlighters.filter((item: Note) => {
+      if (this.props.currentBook.format !== "PDF") {
+        return (
+          item.chapter ===
+            this.props.rendition.getChapterDoc()[this.state.chapterDocIndex]
+              .label && item.bookKey === this.props.currentBook.key
+        );
+      } else {
+        return (
+          item.chapterIndex === this.state.chapterDocIndex &&
+          item.bookKey === this.props.currentBook.key
+        );
+      }
+    });
+    renderHighlighters(
+      highlightersByChapter,
+      this.props.currentBook.format,
+      this.handleNoteClick
+    );
+  };
+  handleNoteClick = () => {};
   handleRenderBook = async () => {
     if (lock) return;
     let { key, path, format, name } = this.props.currentBook;
@@ -89,7 +115,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     StorageUtil.getReaderConfig("readerMode") !== "scroll" &&
       this.handlePageWidth();
 
-    window.rangy.init();
+    this.handleHighlight();
     let isCacheExsit = await BookUtil.isBookExist("cache-" + key, path);
     BookUtil.fetchBook(isCacheExsit ? "cache-" + key : key, true, path).then(
       async (result: any) => {

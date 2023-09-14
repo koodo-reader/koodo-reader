@@ -1,5 +1,4 @@
-body,
-.editor-box {
+body {
   -webkit-tap-highlight-color: transparent;
   background: rgba(47, 52, 55, 1);
   color: rgba(235, 235, 235, 1);
@@ -43,8 +42,6 @@ body,
 .previous-chapter,
 .color-option,
 .line-option,
-.original-text-box,
-.trans-text-box,
 .token-dialog-link-text,
 .token-dialog-token-text,
 .nav-search-page-item {
@@ -119,7 +116,7 @@ body,
   background-color: rgba(235, 235, 235, 0.035);
 }
 .drag-background {
-  background: hsla(0, 0%, 0%, 0.5);
+  background: hsla(0, 0%, 100%, 0.2);
 }
 .action-dialog-container,
 .add-dialog-container,
@@ -133,6 +130,7 @@ body,
 .new-version,
 .sort-dialog-container,
 .popup-menu-box,
+.popup-box-container,
 .loading-page-cover,
 .loading-page-cover,
 .navigation-panel,
@@ -182,6 +180,7 @@ body,
 .token-dialog-cancel,
 .new-version,
 .popup-menu-box,
+.popup-box-container,
 .general-setting-dropdown,
 .card-list-item-card,
 .navigation-header,

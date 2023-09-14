@@ -1,9 +1,9 @@
-.trans-container {
+.dict-container {
   width: 264px;
   height: 172px;
 }
-.original-text-box,
-.trans-text-box {
+
+.dict-text-box {
   width: 230px;
   height: 100px;
   opacity: 1;
@@ -16,12 +16,12 @@
   font-size: 15px;
   line-height: 18px;
 }
-.trans-button-container {
+.dict-button-container {
   position: absolute;
   bottom: 8px;
   right: 20px;
 }
-.trans-text-box {
+.dict-text-box {
   left: 16px;
   top: 16px;
 }
@@ -40,27 +40,27 @@
   text-align: center;
   margin-top: 20px;
 }
-.trans-container .r0bn4c {
+.dict-container .r0bn4c {
   font-weight: bold;
 }
-.trans-container .r0bn4c::before {
+.dict-container .r0bn4c::before {
   content: "[";
   font-weight: bold;
 }
-.trans-container .r0bn4c::after {
+.dict-container .r0bn4c::after {
   content: "]";
   font-weight: bold;
 }
-.trans-container ol {
+.dict-container ol {
   counter-reset: my-counter;
   list-style-type: none;
 }
 
-.trans-container li:before {
+.dict-container li:before {
   counter-increment: my-counter;
   content: counter(my-counter) ". ";
   font-weight: bold;
 }
-.trans-container li div {
+.dict-container li div {
   display: inline;
 }

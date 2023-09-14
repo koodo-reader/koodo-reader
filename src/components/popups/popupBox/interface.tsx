@@ -24,7 +24,5 @@ export interface PopupBoxProps {
 }
 export interface PopupBoxStates {
   deleteKey: string;
-  isRightEdge: boolean;
-  // cfiRange: string;
   rect: DOMRect | null;
 }

@@ -174,12 +174,15 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
     const renderNoteEditor = () => {
       return (
         <div className="note-editor">
+          <div className="note-original-text">
+            如果写到情节高潮段落，在QQ上会看到她不停表演吐血、上吊和撞墙。哪怕用再长的时间，她也一定要把最完美最到位的感觉表现出来
+          </div>
           <div className="editor-box-parent">
             <textarea className="editor-box" />
           </div>
           <div
             className="note-tags"
-            style={{ position: "absolute", bottom: "0px", height: "70px" }}
+            style={{ position: "absolute", bottom: "0px", height: "40px" }}
           >
             <NoteTag
               {...{

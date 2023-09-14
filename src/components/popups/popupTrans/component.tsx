@@ -11,6 +11,7 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
     super(props);
     this.state = {
       translatedText: "",
+      originalText: "",
       transService: StorageUtil.getReaderConfig("transService"),
       transTarget: StorageUtil.getReaderConfig("transTarget"),
       transSource: StorageUtil.getReaderConfig("transSource"),
@@ -57,89 +58,52 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
         });
     }
   };
+  handleChangeService(target: string) {
+    this.setState({ transService: target }, () => {
+      StorageUtil.setReaderConfig("transService", target);
+      let autoValue = target === "Google" ? "auto" : "auto-detect";
+      this.setState({ transSource: autoValue, transTarget: "en" }, () => {
+        StorageUtil.setReaderConfig("transTarget", "en");
+        StorageUtil.setReaderConfig("transSource", autoValue);
+        this.handleTrans(this.props.originalText.replace(/(\r\n|\n|\r)/gm, ""));
+      });
+    });
+  }
   render() {
     const renderNoteEditor = () => {
       return (
         <div className="trans-container">
-          <div className="trans-text-box">{this.state.translatedText}</div>
-          <div className="target-lang-container">
-            <select
-              className="booklist-shelf-list"
-              style={{ width: "65px", margin: 0 }}
-              onChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
-                this.setState({ transService: event.target.value }, () => {
-                  StorageUtil.setReaderConfig(
-                    "transService",
-                    event.target.value
-                  );
-                  let autoValue =
-                    event.target.value === "Google" ? "auto" : "auto-detect";
-                  this.setState(
-                    { transSource: autoValue, transTarget: "en" },
-                    () => {
-                      StorageUtil.setReaderConfig("transTarget", "en");
-                      StorageUtil.setReaderConfig("transSource", autoValue);
-                      this.handleTrans(
-                        this.props.originalText.replace(/(\r\n|\n|\r)/gm, "")
-                      );
-                    }
-                  );
-                });
+          <div className="trans-lang-selector-container">
+            <div
+              className={
+                this.state.transService === "Google"
+                  ? "trans-service-selector"
+                  : "trans-service-selector-inactive"
+              }
+              onClick={() => {
+                this.handleChangeService("Google");
               }}
             >
-              {["Google", "Bing"].map((item, index) => {
-                return (
-                  <option
-                    value={item}
-                    key={index}
-                    className="add-dialog-shelf-list-option"
-                    selected={this.state.transService === item ? true : false}
-                  >
-                    {item}
-                  </option>
-                );
-              })}
-            </select>
+              <span className="icon-google"></span>
+            </div>
+            <div
+              className={
+                this.state.transService === "Bing"
+                  ? "trans-service-selector"
+                  : "trans-service-selector-inactive"
+              }
+              onClick={() => {
+                this.handleChangeService("Bing");
+              }}
+            >
+              <span className="icon-bing"></span>
+            </div>
+          </div>
 
+          <div className="original-text-box">
             <select
-              className="booklist-shelf-list"
-              style={{ width: "65px", margin: 0 }}
-              onChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
-                let targetLang = event.target.value;
-                StorageUtil.setReaderConfig("transSource", targetLang);
-                this.handleTrans(
-                  this.props.originalText.replace(/(\r\n|\n|\r)/gm, "")
-                );
-              }}
-            >
-              {(this.state.transService === "Google"
-                ? Object.keys(googleTransList)
-                : Object.keys(bingTransList)
-              ).map((item, index) => {
-                return (
-                  <option
-                    value={item}
-                    key={index}
-                    className="add-dialog-shelf-list-option"
-                    selected={
-                      StorageUtil.getReaderConfig("transSource") === item
-                        ? true
-                        : false
-                    }
-                  >
-                    {
-                      (this.state.transService === "Google"
-                        ? Object.values(googleTransList)
-                        : Object.values(bingTransList))[index]
-                    }
-                  </option>
-                );
-              })}
-            </select>
-            <div>{"->"}</div>
-            <select
-              className="booklist-shelf-list"
-              style={{ width: "65px", margin: 0 }}
+              className="trans-lang-selector"
+              style={{ maxWidth: "120px", margin: 0 }}
               onChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
                 let targetLang = event.target.value;
                 StorageUtil.setReaderConfig("transTarget", targetLang);
@@ -172,7 +136,52 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
                 );
               })}
             </select>
+            <div className="original-text">{this.state.originalText}</div>
           </div>
+          <div className="trans-text-box">
+            <select
+              className="trans-lang-selector"
+              style={{ maxWidth: "120px", margin: 0 }}
+              onChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
+                let targetLang = event.target.value;
+                StorageUtil.setReaderConfig("transSource", targetLang);
+                this.handleTrans(
+                  this.props.originalText.replace(/(\r\n|\n|\r)/gm, "")
+                );
+              }}
+            >
+              {(this.state.transService === "Google"
+                ? Object.keys(googleTransList)
+                : Object.keys(bingTransList)
+              ).map((item, index) => {
+                return (
+                  <option
+                    value={item}
+                    key={index}
+                    className="add-dialog-shelf-list-option"
+                    selected={
+                      StorageUtil.getReaderConfig("transSource") === item
+                        ? true
+                        : false
+                    }
+                  >
+                    {
+                      (this.state.transService === "Google"
+                        ? Object.values(googleTransList)
+                        : Object.values(bingTransList))[index]
+                    }
+                  </option>
+                );
+              })}
+            </select>
+            <div className="trans-text">{this.state.translatedText}</div>
+          </div>
+
+          {/* <div className="target-lang-container">
+            
+
+            <div>{"->"}</div>
+          </div> */}
         </div>
       );
     };
