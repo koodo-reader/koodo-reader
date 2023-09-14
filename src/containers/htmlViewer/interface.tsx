@@ -1,22 +1,23 @@
-import BookModel from "../../model/Book";
-import HtmlBookModel from "../../model/HtmlBook";
+import Book from "../../model/Book";
+import HtmlBook from "../../model/HtmlBook";
+import Note from "../../model/Note";
 
 export interface ViewerProps {
-  book: BookModel;
+  book: Book;
   rendition: any;
-  currentBook: BookModel;
-  books: BookModel[];
+  currentBook: Book;
+  books: Book[];
   menuMode: string;
-
+  notes: Note[];
   isReading: boolean;
-  htmlBook: HtmlBookModel;
+  htmlBook: HtmlBook;
   isShow: boolean;
   handleRenderBookFunc: (renderBookFunc: () => void) => void;
   renderNoteFunc: () => void;
   t: (title: string) => string;
   handleReadingState: (isReading: boolean) => void;
-  handleReadingBook: (book: BookModel) => void;
-  handleHtmlBook: (htmlBook: HtmlBookModel | null) => void;
+  handleReadingBook: (book: Book) => void;
+  handleHtmlBook: (htmlBook: HtmlBook | null) => void;
   handleLeaveReader: (position: string) => void;
   handleEnterReader: (position: string) => void;
   handleFetchBooks: () => void;
@@ -25,7 +26,7 @@ export interface ViewerProps {
   handleCurrentChapter: (currentChapter: string) => void;
   handleCurrentChapterIndex: (currentChapterIndex: number) => void;
   handlePercentage: (percentage: number) => void;
-  handleFetchPercentage: (book: BookModel) => void;
+  handleFetchPercentage: (book: Book) => void;
 }
 export interface ViewerState {
   key: string;

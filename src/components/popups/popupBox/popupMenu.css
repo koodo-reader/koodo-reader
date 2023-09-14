@@ -1,8 +1,14 @@
-.popup-menu-box {
+.popup-box-container {
   opacity: 1;
-  border-radius: 19px;
-  position: relative;
-  z-index: -1;
+  border-radius: 10px;
+  position: absolute;
+  bottom: 0px;
+  width: 500px;
+  height: 300px;
+  left: calc(50% - 250px);
+  z-index: 10;
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
 }
 .popup-menu-triangle-down {
   float: left;
