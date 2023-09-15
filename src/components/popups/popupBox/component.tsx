@@ -37,7 +37,7 @@ class PopupBox extends React.Component<PopupBoxProps, PopupBoxStates> {
           // style={this.props.isOpenMenu ? {} : { display: "none" }}
         >
           {this.props.menuMode === "note" ? (
-            <PopupNote {...PopupProps} />
+            <PopupDict {...PopupProps} />
           ) : this.props.menuMode === "trans" ? (
             <PopupTrans {...PopupProps} />
           ) : this.props.menuMode === "dict" ? (

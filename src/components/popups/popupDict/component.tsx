@@ -63,7 +63,7 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
           .filter((item) => item !== "result")
           .map((item) => {
             if (res[item]) {
-              return `<p><span style="font-weight: bold">[${item}]</span> ${res[item]}</p>`;
+              return `<p><span class="dict-word-type">[${item}]</span> ${res[item]}</p>`;
             } else {
               return "";
             }
@@ -123,13 +123,13 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
       }
     } else {
       axios
-        .get(`https://api.dictionaryapi.dev/api/v2/entries/en/${text}`)
+        .get(`https://api.dictionaryapi.dev/api/v2/entries/en/${"love"}`)
         .then((res: any) => {
           let dictText = res.data[0].meanings
             .map((item) => {
-              return `<p><span style="font-weight: bold">[${
+              return `<p><p class="dict-word-type">[${
                 item.partOfSpeech
-              }]</span><div>${item.definitions
+              }]</p><div>${item.definitions
                 .map((item, index) => {
                   return (
                     `<span style="font-weight: bold">${index + 1}</span>` +
@@ -155,45 +155,9 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
     const renderNoteEditor = () => {
       return (
         <div className="dict-container">
-          <div className="dict-text-box">
-            {Parser(
-              DOMPurify.sanitize(this.state.dictText + "<address></address>") ||
-                " ",
-              {
-                replace: (domNode) => {
-                  if (this.state.dictService === "Yandex.Dictionary") {
-                    if (domNode.name === "address") {
-                      delete domNode.attribs.onclick;
-                      return (
-                        <p
-                          onClick={() => {
-                            openExternalUrl(
-                              this.state.dictService
-                                ? dictList.filter(
-                                    (item) =>
-                                      item.name === this.state.dictService
-                                  )[0].url
-                                : dictList[0].url
-                            );
-                          }}
-                          className="dict-url"
-                        >
-                          {"Powered by " +
-                            (this.state.dictService
-                              ? this.state.dictService
-                              : "Free Dictionary API")}
-                        </p>
-                      );
-                    }
-                  }
-                },
-              }
-            )}
-          </div>
-
-          <div className="target-lang-container">
+          <div className="dict-service-container">
             <select
-              className="booklist-shelf-list"
+              className="dict-service-selector"
               style={{ width: "120px", margin: 0 }}
               onChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
                 this.setState({ dictService: event.target.value }, () => {
@@ -230,6 +194,47 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
                 );
               })}
             </select>
+          </div>
+          <div className="dict-word">Love</div>
+          <div className="dict-original-word">
+            <span>原型:</span>
+            <span>Love</span>
+          </div>
+
+          <div className="dict-text-box">
+            {Parser(
+              DOMPurify.sanitize(this.state.dictText + "<address></address>") ||
+                " ",
+              {
+                replace: (domNode) => {
+                  if (this.state.dictService === "Yandex.Dictionary") {
+                    if (domNode.name === "address") {
+                      delete domNode.attribs.onclick;
+                      return (
+                        <p
+                          onClick={() => {
+                            openExternalUrl(
+                              this.state.dictService
+                                ? dictList.filter(
+                                    (item) =>
+                                      item.name === this.state.dictService
+                                  )[0].url
+                                : dictList[0].url
+                            );
+                          }}
+                          className="dict-url"
+                        >
+                          {"Powered by " +
+                            (this.state.dictService
+                              ? this.state.dictService
+                              : "Free Dictionary API")}
+                        </p>
+                      );
+                    }
+                  }
+                },
+              }
+            )}
           </div>
         </div>
       );
