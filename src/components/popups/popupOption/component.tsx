@@ -216,7 +216,7 @@ class PopupOption extends React.Component<PopupOptionProps> {
                         this.handleDigest();
                         break;
                       case 2:
-                        this.handleDict();
+                        this.handleTrans();
                         break;
                       case 3:
                         this.handleCopy();
@@ -225,7 +225,7 @@ class PopupOption extends React.Component<PopupOptionProps> {
                         this.handleSearchBook();
                         break;
                       case 5:
-                        this.handleTrans();
+                        this.handleDict();
                         break;
                       case 6:
                         this.handleSearchInternet();
