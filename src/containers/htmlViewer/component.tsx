@@ -56,6 +56,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     this.props.handleFetchBooks();
   }
   componentDidMount() {
+    window.rangy.init();
     this.handleRenderBook();
 
     this.props.handleRenderBookFunc(this.handleRenderBook);
@@ -79,15 +80,15 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       );
     }
   };
-  handleHighlight = () => {
+  handleHighlight = (rendition: any) => {
     let highlighters: any = this.props.notes;
     if (!highlighters) return;
     let highlightersByChapter = highlighters.filter((item: Note) => {
       if (this.props.currentBook.format !== "PDF") {
         return (
           item.chapter ===
-            this.props.rendition.getChapterDoc()[this.state.chapterDocIndex]
-              .label && item.bookKey === this.props.currentBook.key
+            rendition.getChapterDoc()[this.state.chapterDocIndex].label &&
+          item.bookKey === this.props.currentBook.key
         );
       } else {
         return (
@@ -115,7 +116,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     StorageUtil.getReaderConfig("readerMode") !== "scroll" &&
       this.handlePageWidth();
 
-    this.handleHighlight();
     let isCacheExsit = await BookUtil.isBookExist("cache-" + key, path);
     BookUtil.fetchBook(isCacheExsit ? "cache-" + key : key, true, path).then(
       async (result: any) => {
@@ -158,6 +158,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       rendition: rendition,
     });
     this.setState({ rendition });
+    this.handleHighlight(rendition);
     StyleUtil.addDefaultCss();
     tsTransform();
     binicReadingProcess();
@@ -375,7 +376,8 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
             }}
           />
         ) : null}
-        {this.props.htmlBook &&
+        {this.props.isOpenMenu &&
+        this.props.htmlBook &&
         (this.props.menuMode === "dict" ||
           this.props.menuMode === "trans" ||
           this.props.menuMode === "note") ? (

@@ -37,7 +37,7 @@ class PopupBox extends React.Component<PopupBoxProps, PopupBoxStates> {
           // style={this.props.isOpenMenu ? {} : { display: "none" }}
         >
           {this.props.menuMode === "note" ? (
-            <PopupDict {...PopupProps} />
+            <PopupNote {...PopupProps} />
           ) : this.props.menuMode === "trans" ? (
             <PopupTrans {...PopupProps} />
           ) : this.props.menuMode === "dict" ? (
@@ -51,7 +51,12 @@ class PopupBox extends React.Component<PopupBoxProps, PopupBoxStates> {
             style={{ top: "-30px", left: "calc(50% - 10px)" }}
           ></span>
         </div>
-        <div className="drag-background" onClick={() => {}}></div>
+        <div
+          className="drag-background"
+          onClick={() => {
+            this.props.handleOpenMenu(false);
+          }}
+        ></div>
       </>
     );
   }

@@ -8,6 +8,8 @@ export interface PopupDictProps {
 }
 export interface PopupDictState {
   dictText: string;
+  word: string;
+  prototype: string;
   dictService: string;
   dictTarget: string;
 }

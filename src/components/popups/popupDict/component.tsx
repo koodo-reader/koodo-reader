@@ -10,6 +10,7 @@ import { getBingDict } from "../../../utils/serviceUtils/bingDictUtil";
 import { openExternalUrl } from "../../../utils/serviceUtils/urlUtil";
 import RecordLocation from "../../../utils/readUtils/recordLocation";
 import DictHistory from "../../../model/DictHistory";
+import { Trans } from "react-i18next";
 
 declare var window: any;
 class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
@@ -17,6 +18,8 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
     super(props);
     this.state = {
       dictText: "",
+      word: "",
+      prototype: "",
       dictService: StorageUtil.getReaderConfig("dictService"),
       dictTarget: StorageUtil.getReaderConfig("dictTarget"),
     };
@@ -25,11 +28,15 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
     let originalText = this.props.originalText
       .replace(/(\r\n|\n|\r)/gm, "")
       .replace(/-/gm, "");
+    this.setState({ word: originalText });
+    let prototype = "";
+    var lemmatize = window.require("wink-lemmatizer");
+    prototype = lemmatize.verb(originalText);
+    prototype = lemmatize.noun(prototype);
+    prototype = lemmatize.adjective(prototype);
+    this.setState({ prototype });
     if (StorageUtil.getReaderConfig("isLemmatizeWord") === "yes") {
-      var lemmatize = window.require("wink-lemmatizer");
-      originalText = lemmatize.verb(originalText);
-      originalText = lemmatize.noun(originalText);
-      originalText = lemmatize.adjective(originalText);
+      originalText = prototype;
     }
     this.handleDict(originalText);
     this.handleRecordHistory(originalText);
@@ -63,7 +70,7 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
           .filter((item) => item !== "result")
           .map((item) => {
             if (res[item]) {
-              return `<p><span class="dict-word-type">[${item}]</span> ${res[item]}</p>`;
+              return `<p><p class="dict-word-type">[${item}]</p> ${res[item]}</p>`;
             } else {
               return "";
             }
@@ -123,7 +130,7 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
       }
     } else {
       axios
-        .get(`https://api.dictionaryapi.dev/api/v2/entries/en/${"love"}`)
+        .get(`https://api.dictionaryapi.dev/api/v2/entries/en/${text}`)
         .then((res: any) => {
           let dictText = res.data[0].meanings
             .map((item) => {
@@ -158,7 +165,7 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
           <div className="dict-service-container">
             <select
               className="dict-service-selector"
-              style={{ width: "120px", margin: 0 }}
+              style={{ margin: 0 }}
               onChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
                 this.setState({ dictService: event.target.value }, () => {
                   StorageUtil.setReaderConfig(
@@ -195,10 +202,11 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
               })}
             </select>
           </div>
-          <div className="dict-word">Love</div>
+          <div className="dict-word">{this.state.word}</div>
           <div className="dict-original-word">
-            <span>原型:</span>
-            <span>Love</span>
+            <Trans>Prototype</Trans>
+            <span>:</span>
+            <span>{this.state.prototype}</span>
           </div>
 
           <div className="dict-text-box">

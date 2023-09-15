@@ -27,11 +27,30 @@ let classes = [
 class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
   constructor(props: PopupNoteProps) {
     super(props);
-    this.state = { tag: [] };
+    this.state = { tag: [], text: "" };
   }
   componentDidMount() {
     let textArea: any = document.querySelector(".editor-box");
     textArea && textArea.focus();
+
+    let pageArea = document.getElementById("page-area");
+    if (!pageArea) return;
+    let iframe = pageArea.getElementsByTagName("iframe")[0];
+    if (!iframe) return;
+    let doc = iframe.contentDocument;
+    if (!doc) {
+      return;
+    }
+    let text = doc.getSelection()?.toString();
+    if (!text) {
+      return;
+    }
+    text = text.replace(/\s\s/g, "");
+    text = text.replace(/\r/g, "");
+    text = text.replace(/\n/g, "");
+    text = text.replace(/\t/g, "");
+    text = text.replace(/\f/g, "");
+    this.setState({ text });
   }
   handleTag = (tag: string[]) => {
     this.setState({ tag });
@@ -88,15 +107,7 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
         this.props.currentBook.format === "PDF"
           ? JSON.stringify(getHightlightCoords())
           : JSON.stringify(charRange);
-      let text = doc.getSelection()?.toString();
-      if (!text) {
-        return;
-      }
-      text = text.replace(/\s\s/g, "");
-      text = text.replace(/\r/g, "");
-      text = text.replace(/\n/g, "");
-      text = text.replace(/\t/g, "");
-      text = text.replace(/\f/g, "");
+
       let percentage = 0;
 
       let color = this.props.color || 0;
@@ -106,7 +117,7 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
         bookKey,
         this.props.chapter,
         this.props.chapterDocIndex,
-        text,
+        this.state.text,
         cfi,
         notes,
         range,
@@ -174,9 +185,7 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
     const renderNoteEditor = () => {
       return (
         <div className="note-editor">
-          <div className="note-original-text">
-            如果写到情节高潮段落，在QQ上会看到她不停表演吐血、上吊和撞墙。哪怕用再长的时间，她也一定要把最完美最到位的感觉表现出来
-          </div>
+          <div className="note-original-text">{this.state.text}</div>
           <div className="editor-box-parent">
             <textarea className="editor-box" />
           </div>

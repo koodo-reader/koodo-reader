@@ -26,6 +26,7 @@ export const renderHighlighters = async (
           handleNoteClick
         );
       } else {
+        console.log(item);
         showNoteHighlight(
           JSON.parse(item.range),
           classes[item.color],
@@ -55,11 +56,13 @@ export const showNoteHighlight = (
   if (!iframe || !iframe.contentWindow) return;
   let iWin = iframe.contentWindow || iframe.contentDocument?.defaultView;
   let doc = iframe.contentDocument;
-  let temp = JSON.parse(range);
+  console.log(range);
+  let temp = range;
   temp = [temp];
   window.rangy.getSelection(iframe).restoreCharacterRanges(doc, temp);
   // 获取选中的文本范围
   var selection = window.getSelection();
+  console.log(selection);
 
   // 创建一个红色背景的span元素
   var span = document.createElement("span");
