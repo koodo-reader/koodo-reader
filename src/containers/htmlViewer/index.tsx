@@ -24,6 +24,7 @@ const mapStateToProps = (state: stateType) => {
     isReading: state.book.isReading,
     renderNoteFunc: state.book.renderNoteFunc,
     htmlBook: state.reader.htmlBook,
+    isOpenMenu: state.viewArea.isOpenMenu,
     books: state.manager.books,
     notes: state.reader.notes,
     menuMode: state.viewArea.menuMode,

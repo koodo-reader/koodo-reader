@@ -1,17 +1,14 @@
 .dict-container {
-  width: calc(100% - 30px);
+  width: calc(100% - 50px);
   height: calc(100% - 65px);
   padding: 25px;
   padding-top: 5px;
 }
 .dict-word {
   font-size: 30px;
-  /* color: #2084e8; */
   font-weight: bold;
   line-height: 30px;
   display: inline-block;
-  /* border-left: solid 4px #2084e8; */
-  /* padding-left: 5px; */
   margin-top: 20px;
   margin-left: 5px;
 }
@@ -28,6 +25,7 @@
   font-weight: bold;
   color: #2084e8;
   margin-bottom: 5px;
+  margin-top: 5px;
 }
 .dict-text-box {
   opacity: 1;
@@ -54,7 +52,7 @@
   right: 25px;
 }
 .dict-service-selector {
-  width: 120px;
+  width: 100px;
   height: 30px;
   opacity: 1;
   font-size: 15px;

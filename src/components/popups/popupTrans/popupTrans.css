@@ -1,78 +1,121 @@
 .trans-container {
-  width: calc(100% - 30px);
-  height: calc(100% - 65px);
-  padding: 15px;
-  margin-top: 40px;
+  width: calc(100% - 40px);
+  height: calc(100% - 50px);
+  padding: 20px;
+  margin-top: 50px;
+}
+.trans-box {
+  height: calc(100% - 40px);
   display: flex;
   align-items: center;
   justify-content: space-between;
+  border-radius: 7px;
 }
 .original-text,
 .trans-text {
-  margin-top: 20px;
+  overflow-y: scroll;
+  height: calc(100% - 40px);
+  margin: 5px;
+  margin-top: 35px;
 }
 .original-text-box,
 .trans-text-box {
   width: 100%;
-  height: calc(100% - 10px);
+  height: 100%;
   opacity: 1;
-  border-radius: 5px;
   user-select: text;
-  overflow-y: scroll;
+
   padding: 5px;
   box-sizing: border-box;
   font-size: 15px;
   line-height: 18px;
   /* position: relative; */
 }
+.trans-lang-selector-container {
+  width: calc(100% - 40px);
+  height: 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+  position: absolute;
+  top: 70px;
+}
+.trans-lang-box,
+.original-lang-box {
+  width: calc(50%);
+  height: 100%;
+  padding-left: 10px;
+  box-sizing: border-box;
+}
 .original-text-box {
-  border: 1px solid rgba(0, 0, 0, 0.12);
-  margin-right: 10px;
+  /* margin-right: 10px; */
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  border-right: none;
+  border-bottom-left-radius: 7px;
+  border-top-left-radius: 7px;
 }
 .trans-text-box {
-  background-color: #fff9f9;
+  background-color: #f5f5f5;
+  border-bottom-right-radius: 7px;
+  border-top-right-radius: 7px;
 }
 .trans-lang-selector,
-.trans-service-selector {
-  width: 100px;
-  height: 25px;
+.original-lang-selector {
+  width: 90px;
+  height: 30px;
   opacity: 1;
   box-sizing: border-box;
   font-size: 15px;
-  line-height: 25px;
+  line-height: 30px;
   cursor: pointer;
   border: none;
   background-color: transparent;
-  color: #f16464;
+  color: rgb(67, 67, 67);
+}
+.trans-lang-selector {
+  font-size: 15px;
+  line-height: 15px;
 }
 .trans-service-selector {
-  background-color: #f16464;
-  color: white;
-  height: 30px;
-  width: 50px;
-  border-radius: 5px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  color: #f16464;
+  background-color: rgba(241, 100, 100, 0.05);
+  height: 34px;
+  width: 80px;
   float: left;
-  margin-right: 10px;
+  border-radius: 5px;
+  /* margin-right: 10px; */
   text-align: center;
-  line-height: 30px;
+  line-height: 34px;
   cursor: pointer;
+  opacity: 1;
+}
+.trans-google-icon,
+.trans-bing-icon {
+  font-size: 13px;
+  margin: 2px;
+  margin-right: 5px;
 }
 .trans-service-selector-inactive {
-  border: 2px solid #f16464;
-  height: 30px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
   color: #f16464;
-  width: 50px;
-  border-radius: 5px;
   float: left;
-  margin-right: 10px;
+  height: 34px;
+  width: 80px;
+
+  border-radius: 5px;
+  /* margin-right: 10px; */
   text-align: center;
-  line-height: 26px;
-  box-sizing: border-box;
+  line-height: 34px;
   cursor: pointer;
 }
-.trans-lang-selector-container {
+.trans-service-selector-container {
   position: absolute;
-  top: 15px;
+  top: 20px;
+  width: 180px;
+  display: flex;
+  justify-content: space-between;
 }
 .trans-button-container {
   position: absolute;
