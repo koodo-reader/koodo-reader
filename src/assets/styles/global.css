@@ -7,3 +7,6 @@
   justify-content: center;
   align-items: center;
 }
+*:focus {
+  outline: none;
+}

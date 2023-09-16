@@ -97,13 +97,21 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         );
       }
     });
+
     renderHighlighters(
       highlightersByChapter,
       this.props.currentBook.format,
       this.handleNoteClick
     );
   };
-  handleNoteClick = () => {};
+  handleNoteClick = (event: Event) => {
+    console.log(event);
+    if (event && event.target) {
+      this.props.handleNoteKey((event.target as any).getAttribute("key"));
+      this.props.handleMenuMode("note");
+      this.props.handleOpenMenu(true);
+    }
+  };
   handleRenderBook = async () => {
     if (lock) return;
     let { key, path, format, name } = this.props.currentBook;
@@ -158,7 +166,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       rendition: rendition,
     });
     this.setState({ rendition });
-    this.handleHighlight(rendition);
+
     StyleUtil.addDefaultCss();
     tsTransform();
     binicReadingProcess();
@@ -209,7 +217,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         })
       );
     }
-
+    this.handleHighlight(rendition);
     rendition.on("rendered", () => {
       this.handleLocation();
       let bookLocation: {
@@ -366,7 +374,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
             .props.currentBook.key ? (
           <Background />
         ) : null}
-        {this.props.htmlBook && this.props.menuMode === "menu" ? (
+        {this.props.htmlBook ? (
           <PopupMenu
             {...{
               rendition: this.props.htmlBook.rendition,

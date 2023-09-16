@@ -6,6 +6,7 @@ import PopupTrans from "./component";
 const mapStateToProps = (state: stateType) => {
   return {
     originalText: state.reader.originalText,
+    noteKey: state.reader.noteKey,
   };
 };
 const actionCreator = {
