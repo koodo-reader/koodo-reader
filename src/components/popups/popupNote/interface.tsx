@@ -1,4 +1,5 @@
 import BookModel from "../../../model/Book";
+import HtmlBook from "../../../model/HtmlBook";
 import NoteModel from "../../../model/Note";
 export interface PopupNoteProps {
   currentBook: BookModel;
@@ -7,6 +8,7 @@ export interface PopupNoteProps {
   noteKey: string;
   chapterDocIndex: number;
   chapter: string;
+  htmlBook: HtmlBook;
   handleNoteKey: (key: string) => void;
   handleOpenMenu: (isOpenMenu: boolean) => void;
   handleMenuMode: (menu: string) => void;

@@ -24,7 +24,11 @@ class PopupBox extends React.Component<PopupBoxProps, PopupBoxStates> {
       rect: this.props.rect,
     };
   }
-
+  handleClose() {
+    this.props.handleOpenMenu(false);
+    this.props.handleNoteKey("");
+    this.props.handleMenuMode("");
+  }
   render() {
     const PopupProps = {
       chapterDocIndex: this.props.chapterDocIndex,
@@ -46,7 +50,7 @@ class PopupBox extends React.Component<PopupBoxProps, PopupBoxStates> {
           <span
             className="icon-close popup-close"
             onClick={() => {
-              this.props.handleOpenMenu(false);
+              this.handleClose();
             }}
             style={{ top: "-30px", left: "calc(50% - 10px)" }}
           ></span>
@@ -54,7 +58,7 @@ class PopupBox extends React.Component<PopupBoxProps, PopupBoxStates> {
         <div
           className="drag-background"
           onClick={() => {
-            this.props.handleOpenMenu(false);
+            this.handleClose();
           }}
         ></div>
       </>

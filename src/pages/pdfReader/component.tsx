@@ -10,6 +10,8 @@ import { Toaster } from "react-hot-toast";
 import { handleLinkJump } from "../../utils/readUtils/linkUtil";
 import { pdfMouseEvent } from "../../utils/serviceUtils/mouseEvent";
 import StorageUtil from "../../utils/serviceUtils/storageUtil";
+import PopupBox from "../../components/popups/popupBox";
+import { renderHighlighters } from "../../utils/serviceUtils/noteUtil";
 declare var window: any;
 class Viewer extends React.Component<ViewerProps, ViewerState> {
   constructor(props: ViewerProps) {
@@ -89,9 +91,29 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           rect,
         });
       });
+      setTimeout(() => {
+        this.handleHighlight();
+      }, 1000);
     };
   }
+  handleHighlight = () => {
+    let highlighters: any = this.props.notes;
+    if (!highlighters) return;
+    let highlightersByChapter = highlighters;
 
+    renderHighlighters(
+      highlightersByChapter,
+      this.props.currentBook.format,
+      this.handleNoteClick
+    );
+  };
+  handleNoteClick = (event: Event) => {
+    if (event && event.target) {
+      this.props.handleNoteKey((event.target as any).getAttribute("key"));
+      this.props.handleMenuMode("note");
+      this.props.handleOpenMenu(true);
+    }
+  };
   render() {
     return (
       <div className="ebook-viewer" id="page-area">
@@ -109,6 +131,23 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
             }}
           />
         )}
+        {this.props.isOpenMenu &&
+        (this.props.menuMode === "dict" ||
+          this.props.menuMode === "trans" ||
+          this.props.menuMode === "note") ? (
+          <PopupBox
+            {...{
+              rendition: {
+                on: (status: string, callback: any) => {
+                  callback();
+                },
+              },
+              rect: this.state.rect,
+              chapterDocIndex: 0,
+              chapter: "0",
+            }}
+          />
+        ) : null}
         <iframe
           src={this.state.href}
           title={this.state.title}

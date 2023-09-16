@@ -26,7 +26,7 @@
   resize: none;
   font-size: 15px;
   width: calc(100% - 20px);
-  height: 100%;
+  min-height: 120px;
   line-height: 18px;
   overflow-y: scroll;
   background-color: rgba(16, 152, 112, 0.05);
