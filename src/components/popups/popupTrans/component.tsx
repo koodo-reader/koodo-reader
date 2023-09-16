@@ -48,7 +48,6 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
         to: StorageUtil.getReaderConfig("transTarget") || "en",
       })
         .then((res) => {
-          console.log(res.text, StorageUtil.getReaderConfig("transTarget"));
           this.setState({
             translatedText: res.text,
           });

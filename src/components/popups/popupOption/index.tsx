@@ -4,7 +4,11 @@ import {
   handleMenuMode,
   handleChangeDirection,
 } from "../../../store/actions";
-import { handleFetchNotes, handleOriginalText } from "../../../store/actions";
+import {
+  handleFetchNotes,
+  handleOriginalText,
+  handleNoteKey,
+} from "../../../store/actions";
 import { stateType } from "../../../store";
 import { withTranslation } from "react-i18next";
 import PopupOption from "./component";
@@ -14,6 +18,7 @@ const mapStateToProps = (state: stateType) => {
     selection: state.viewArea.selection,
     notes: state.reader.notes,
     color: state.reader.color,
+    htmlBook: state.reader.htmlBook,
   };
 };
 const actionCreator = {
@@ -22,6 +27,7 @@ const actionCreator = {
   handleFetchNotes,
   handleOriginalText,
   handleChangeDirection,
+  handleNoteKey,
 };
 export default connect(
   mapStateToProps,
