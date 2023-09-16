@@ -13,6 +13,8 @@ import {
   getHightlightCoords,
   removePDFHighlight,
 } from "../../../utils/fileUtils/pdfUtil";
+import { getIframeDoc } from "../../../utils/serviceUtils/docUtil";
+import { renderHighlighters } from "../../../utils/serviceUtils/noteUtil";
 declare var window: any;
 let classes = [
   "color-0",
@@ -32,28 +34,65 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
   componentDidMount() {
     let textArea: any = document.querySelector(".editor-box");
     textArea && textArea.focus();
-
-    let pageArea = document.getElementById("page-area");
-    if (!pageArea) return;
-    let iframe = pageArea.getElementsByTagName("iframe")[0];
-    if (!iframe) return;
-    let doc = iframe.contentDocument;
-    if (!doc) {
-      return;
+    if (this.props.noteKey) {
+      let noteIndex = window._.findLastIndex(this.props.notes, {
+        key: this.props.noteKey,
+      });
+      console.log(this.props.noteKey, noteIndex, this.props.notes);
+      this.setState({
+        text: this.props.notes[noteIndex].text,
+      });
+      textArea.value = this.props.notes[noteIndex].notes;
+    } else {
+      let doc = getIframeDoc();
+      if (!doc) {
+        return;
+      }
+      let text = doc.getSelection()?.toString();
+      if (!text) {
+        return;
+      }
+      text = text.replace(/\s\s/g, "");
+      text = text.replace(/\r/g, "");
+      text = text.replace(/\n/g, "");
+      text = text.replace(/\t/g, "");
+      text = text.replace(/\f/g, "");
+      this.setState({ text });
     }
-    let text = doc.getSelection()?.toString();
-    if (!text) {
-      return;
-    }
-    text = text.replace(/\s\s/g, "");
-    text = text.replace(/\r/g, "");
-    text = text.replace(/\n/g, "");
-    text = text.replace(/\t/g, "");
-    text = text.replace(/\f/g, "");
-    this.setState({ text });
   }
   handleTag = (tag: string[]) => {
     this.setState({ tag });
+  };
+  handleHighlight = () => {
+    let highlighters: any = this.props.notes;
+    if (!highlighters) return;
+    let highlightersByChapter = highlighters.filter((item: Note) => {
+      if (this.props.currentBook.format !== "PDF") {
+        return (
+          item.chapter ===
+            this.props.htmlBook.rendition.getChapterDoc()[
+              this.props.chapterDocIndex
+            ].label && item.bookKey === this.props.currentBook.key
+        );
+      } else {
+        return (
+          item.chapterIndex === this.props.chapterDocIndex &&
+          item.bookKey === this.props.currentBook.key
+        );
+      }
+    });
+    renderHighlighters(
+      highlightersByChapter,
+      this.props.currentBook.format,
+      this.handleNoteClick
+    );
+  };
+  handleNoteClick = (event: Event) => {
+    if (event && event.target) {
+      this.props.handleNoteKey((event.target as any).getAttribute("key"));
+      this.props.handleMenuMode("note");
+      this.props.handleOpenMenu(true);
+    }
   };
   createNote() {
     let notes = (document.querySelector(".editor-box") as HTMLInputElement)
@@ -81,8 +120,9 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
         this.props.handleOpenMenu(false);
         toast.success(this.props.t("Add Successfully"));
         this.props.handleFetchNotes();
-        this.props.handleMenuMode("highlight");
+        this.props.handleMenuMode("");
         this.props.handleNoteKey("");
+        this.handleHighlight();
       });
     } else {
       //创建笔记
@@ -119,8 +159,8 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
         this.props.chapterDocIndex,
         this.state.text,
         cfi,
-        notes,
         range,
+        notes,
         percentage,
         color,
         tag
@@ -132,7 +172,8 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
         this.props.handleOpenMenu(false);
         toast.success(this.props.t("Add Successfully"));
         this.props.handleFetchNotes();
-        this.props.handleMenuMode("highlight");
+        this.props.handleMenuMode("");
+        this.handleHighlight();
       });
     }
   }
@@ -149,8 +190,6 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
       if (noteIndex > -1) {
         this.props.notes.splice(noteIndex, 1);
         window.localforage.setItem("notes", this.props.notes).then(() => {
-          this.props.handleOpenMenu(false);
-          this.props.handleMenuMode("menu");
           if (this.props.currentBook.format === "PDF") {
             removePDFHighlight(
               JSON.parse(note.range),
@@ -160,15 +199,18 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
           }
 
           toast.success(this.props.t("Delete Successfully"));
-          this.props.handleMenuMode("highlight");
+          this.props.handleMenuMode("");
           this.props.handleFetchNotes();
           this.props.handleNoteKey("");
+          this.handleHighlight();
+          this.props.handleOpenMenu(false);
         });
       }
     } else {
       this.props.handleOpenMenu(false);
-      this.props.handleMenuMode("menu");
+      this.props.handleMenuMode("");
       this.props.handleNoteKey("");
+      this.handleHighlight();
     }
   };
 

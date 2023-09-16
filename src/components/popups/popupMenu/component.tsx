@@ -2,6 +2,10 @@ import React from "react";
 import "./popupMenu.css";
 import PopupOption from "../popupOption";
 import { PopupMenuProps, PopupMenuStates } from "./interface";
+import {
+  getIframeDoc,
+  getPDFIframeDoc,
+} from "../../../utils/serviceUtils/docUtil";
 
 class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
   highlighter: any;
@@ -30,7 +34,6 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
           rect: nextProps.rect,
         },
         () => {
-          console.log("open", nextProps.rect, this.props.rect);
           this.openMenu();
         }
       );
@@ -41,7 +44,6 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     this.setState({ deleteKey });
   };
   showMenu = () => {
-    console.log(this.state.rect);
     let rect = this.state.rect;
     if (!rect) return;
     this.setState({ isRightEdge: false }, () => {
@@ -60,12 +62,7 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     document
       .querySelector(".ebook-viewer")
       ?.setAttribute("style", "height:100%; overflow: hidden;");
-    let pageArea = document.getElementById("page-area");
-    if (!pageArea) return;
-    let iframe = pageArea.getElementsByTagName("iframe")[0];
-    if (!iframe) return;
-    let doc: any = iframe.contentWindow || iframe.contentDocument?.defaultView;
-    console.log(rect.bottom, doc.document.body.scrollHeight - 188);
+    let doc: any = getPDFIframeDoc();
     if (rect.bottom < doc.document.body.scrollHeight - 188) {
       this.props.handleChangeDirection(true);
       posY = posY + 16;
@@ -90,31 +87,19 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
       posY = posY - rect.height - 188 + this.props.rendition.getPageSize().top;
     }
     posX = posX - 80 + this.props.rendition.getPageSize().left;
-    let pageArea = document.getElementById("page-area");
-    if (!pageArea) return;
-    let iframe = pageArea.getElementsByTagName("iframe")[0];
-    if (!iframe) return;
-    let doc: any = iframe.contentDocument;
-    if (!doc) {
-      return;
-    }
     return { posX, posY } as any;
   }
 
   //控制弹窗
   openMenu = () => {
     this.setState({ deleteKey: "" });
-    let pageArea = document.getElementById("page-area");
-    if (!pageArea) return;
-    let iframe = pageArea.getElementsByTagName("iframe")[0];
-    if (!iframe) return;
-    let doc = iframe.contentDocument;
+    let doc = getIframeDoc();
     if (!doc) return;
     let sel = doc.getSelection();
     this.props.handleChangeDirection(false);
     // 如果 popmenu正在被展示，则隐藏
     if (this.props.isOpenMenu) {
-      this.props.handleMenuMode("menu");
+      this.props.handleMenuMode("");
       this.props.handleOpenMenu(false);
       this.props.handleNoteKey("");
     }
@@ -145,13 +130,6 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
             {this.props.menuMode === "menu" ? (
               <PopupOption {...PopupProps} />
             ) : null}
-            <span
-              className="icon-close popup-close"
-              onClick={() => {
-                this.props.handleOpenMenu(false);
-              }}
-              style={this.props.isChangeDirection ? { top: "180px" } : {}}
-            ></span>
           </div>
           {this.props.menuMode === "menu" &&
             (this.props.isChangeDirection ? (

@@ -10,6 +10,12 @@
   border-bottom-left-radius: 0px;
   border-bottom-right-radius: 0px;
 }
+@media screen and (max-width: 576px) {
+  .popup-box-container {
+    width: 90%;
+    left: 5%;
+  }
+}
 .popup-menu-triangle-down {
   float: left;
   margin-left: 59px;

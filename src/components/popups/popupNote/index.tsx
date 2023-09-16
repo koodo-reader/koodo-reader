@@ -13,6 +13,7 @@ const mapStateToProps = (state: stateType) => {
     currentBook: state.book.currentBook,
     notes: state.reader.notes,
     color: state.reader.color,
+    htmlBook: state.reader.htmlBook,
     noteKey: state.reader.noteKey,
   };
 };

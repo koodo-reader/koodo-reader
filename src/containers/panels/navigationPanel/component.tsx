@@ -11,6 +11,7 @@ import EmptyCover from "../../../components/emptyCover";
 import StorageUtil from "../../../utils/serviceUtils/storageUtil";
 
 import CFI from "epub-cfi-resolver";
+import { getIframeDoc } from "../../../utils/serviceUtils/docUtil";
 
 class NavigationPanel extends React.Component<
   NavigationPanelProps,
@@ -80,11 +81,7 @@ class NavigationPanel extends React.Component<
                   bookLocation.chapterTitle
                 );
                 let cfiObj = new CFI(bookLocation.cfi);
-                let pageArea = document.getElementById("page-area");
-                if (!pageArea) return;
-                let iframe = pageArea.getElementsByTagName("iframe")[0];
-                if (!iframe) return;
-                let doc: any = iframe.contentDocument;
+                let doc: any = getIframeDoc();
                 if (!doc) {
                   return;
                 }

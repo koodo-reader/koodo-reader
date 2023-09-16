@@ -24,6 +24,9 @@ export interface ViewerProps {
   handleFetchBooks: () => void;
   handleFetchNotes: () => void;
   handleFetchBookmarks: () => void;
+  handleNoteKey: (key: string) => void;
+  handleOpenMenu: (isOpenMenu: boolean) => void;
+  handleMenuMode: (menu: string) => void;
   handleCurrentChapter: (currentChapter: string) => void;
   handleCurrentChapterIndex: (currentChapterIndex: number) => void;
   handlePercentage: (percentage: number) => void;
