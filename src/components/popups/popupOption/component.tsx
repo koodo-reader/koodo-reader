@@ -123,7 +123,6 @@ class PopupOption extends React.Component<PopupOptionProps> {
   };
   handleHighlight = () => {
     let highlighters: any = this.props.notes;
-    console.log(highlighters);
     if (!highlighters) return;
     let highlightersByChapter = highlighters.filter((item: Note) => {
       if (this.props.currentBook.format !== "PDF") {
@@ -142,7 +141,6 @@ class PopupOption extends React.Component<PopupOptionProps> {
         );
       }
     });
-    console.log(highlightersByChapter);
     renderHighlighters(
       highlightersByChapter,
       this.props.currentBook.format,
