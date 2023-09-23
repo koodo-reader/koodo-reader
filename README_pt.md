@@ -59,7 +59,7 @@
 
 ```shell
 scoop bucket add extras
-scoop install dorado/koodo-reader
+scoop install extras/koodo-reader
 ```
 
 - Instalar com o Winget:
