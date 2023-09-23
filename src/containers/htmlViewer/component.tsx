@@ -82,7 +82,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
   };
   handleHighlight = (rendition: any) => {
     let highlighters: any = this.props.notes;
-    console.log(highlighters);
     if (!highlighters) return;
     let highlightersByChapter = highlighters.filter((item: Note) => {
       if (this.props.currentBook.format !== "PDF") {
