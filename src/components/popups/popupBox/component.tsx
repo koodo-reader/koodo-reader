@@ -4,6 +4,7 @@ import PopupNote from "../popupNote";
 import PopupTrans from "../popupTrans";
 import PopupDict from "../popupDict";
 import { PopupBoxProps, PopupBoxStates } from "./interface";
+import { getIframeDoc } from "../../../utils/serviceUtils/docUtil";
 
 class PopupBox extends React.Component<PopupBoxProps, PopupBoxStates> {
   highlighter: any;
@@ -28,6 +29,9 @@ class PopupBox extends React.Component<PopupBoxProps, PopupBoxStates> {
     this.props.handleOpenMenu(false);
     this.props.handleNoteKey("");
     this.props.handleMenuMode("");
+    let doc = getIframeDoc();
+    if (!doc) return;
+    doc.getSelection()?.empty();
   }
   render() {
     const PopupProps = {

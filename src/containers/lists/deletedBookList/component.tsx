@@ -18,7 +18,7 @@ class BookList extends React.Component<BookListProps, BookListState> {
     this.state = {};
   }
   UNSAFE_componentWillMount() {
-    this.props.handleFetchBooks(true);
+    this.props.handleFetchBooks();
   }
   handleKeyFilter = (items: any[], arr: string[]) => {
     let itemArr: any[] = [];

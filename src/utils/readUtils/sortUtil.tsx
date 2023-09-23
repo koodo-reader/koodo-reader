@@ -28,7 +28,12 @@ const getBookIndex = (nameArr: string[], oldNameArr: string[]) => {
   if (indexArr.length < oldNameArr.length) {
     oldNameArr.forEach((item) => {
       if (nameArr.indexOf(item) === -1) {
-        indexArr.push(indexArr.length);
+        for (let index = 0; index < oldNameArr.length; index++) {
+          if (indexArr.indexOf(index) === -1) {
+            indexArr.push(index);
+            break;
+          }
+        }
       }
     });
   }

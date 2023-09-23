@@ -156,6 +156,7 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
                 this.props.handleMode("home");
               }
               this.setState({ index: -1 });
+              this.props.history.push("/manager/shelf");
             }}
             onMouseEnter={() => {
               this.handleShelfHover(index);
