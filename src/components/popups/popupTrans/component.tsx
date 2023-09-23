@@ -12,7 +12,7 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
     this.state = {
       translatedText: "",
       originalText: "",
-      transService: StorageUtil.getReaderConfig("transService"),
+      transService: StorageUtil.getReaderConfig("transService") || "Google",
       transTarget: StorageUtil.getReaderConfig("transTarget"),
       transSource: StorageUtil.getReaderConfig("transSource"),
     };
@@ -23,7 +23,7 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
     this.handleTrans(originalText);
   }
   handleTrans = (text: string) => {
-    if (StorageUtil.getReaderConfig("transService") === "Bing") {
+    if (this.state.transService === "Bing") {
       const { translate } = window.require("bing-translate-api");
       translate(
         text,

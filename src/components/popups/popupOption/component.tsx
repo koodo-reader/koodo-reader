@@ -148,7 +148,7 @@ class PopupOption extends React.Component<PopupOptionProps> {
   };
   handleNoteClick = (event: Event) => {
     if (event && event.target) {
-      this.props.handleNoteKey((event.target as any).getAttribute("key"));
+      this.props.handleNoteKey((event.target as any).dataset.key);
       this.props.handleMenuMode("note");
       this.props.handleOpenMenu(true);
     }

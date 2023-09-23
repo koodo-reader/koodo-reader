@@ -12,6 +12,7 @@ import { pdfMouseEvent } from "../../utils/serviceUtils/mouseEvent";
 import StorageUtil from "../../utils/serviceUtils/storageUtil";
 import PopupBox from "../../components/popups/popupBox";
 import { renderHighlighters } from "../../utils/serviceUtils/noteUtil";
+import { getPDFIframeDoc } from "../../utils/serviceUtils/docUtil";
 declare var window: any;
 class Viewer extends React.Component<ViewerProps, ViewerState> {
   constructor(props: ViewerProps) {
@@ -91,9 +92,17 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           rect,
         });
       });
+
       setTimeout(() => {
         this.handleHighlight();
-      }, 1000);
+        let iWin = getPDFIframeDoc();
+        if (!iWin) return;
+        if (!iWin.PDFViewerApplication.eventBus) return;
+        iWin.PDFViewerApplication.eventBus.on(
+          "pagechanging",
+          this.handleHighlight
+        );
+      }, 3000);
     };
   }
   handleHighlight = () => {
@@ -109,7 +118,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
   };
   handleNoteClick = (event: Event) => {
     if (event && event.target) {
-      this.props.handleNoteKey((event.target as any).getAttribute("key"));
+      this.props.handleNoteKey((event.target as any).dataset.key);
       this.props.handleMenuMode("note");
       this.props.handleOpenMenu(true);
     }

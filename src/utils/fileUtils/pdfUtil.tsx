@@ -130,8 +130,8 @@ export const removePDFHighlight = (
         ? page.textLayer.textLayerDiv
         : page.textLayerDiv;
     let noteElements = pageElement.querySelectorAll(".pdf-note");
-    noteElements.forEach((item: Element) => {
-      if (item.getAttribute("key") === noteKey) {
+    noteElements.forEach((item: any) => {
+      if (item.dataset.key === noteKey) {
         item.parentNode?.removeChild(item);
       }
     });
@@ -177,7 +177,7 @@ export const showPDFHighlight = (
           Math.abs(bounds[1] - bounds[3]) +
           "px; z-index:0;"
       );
-      el?.setAttribute("key", noteKey);
+      el?.setAttribute("data-key", noteKey);
       el?.setAttribute("class", "pdf-note");
       el?.addEventListener("click", (event: any) => {
         handlePDFClick(event);
