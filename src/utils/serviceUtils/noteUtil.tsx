@@ -17,6 +17,7 @@ export const renderHighlighters = async (
     "line-3",
   ];
   clearHighlight();
+  console.log(notes);
   for (let index = 0; index < notes.length; index++) {
     const item = notes[index];
     try {

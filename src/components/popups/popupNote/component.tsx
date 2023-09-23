@@ -68,10 +68,12 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
     let highlightersByChapter = highlighters.filter((item: Note) => {
       if (this.props.currentBook.format !== "PDF") {
         return (
-          item.chapter ===
+          (item.chapter ===
             this.props.htmlBook.rendition.getChapterDoc()[
               this.props.chapterDocIndex
-            ].label && item.bookKey === this.props.currentBook.key
+            ].label ||
+            item.chapterIndex === this.props.chapterDocIndex) &&
+          item.bookKey === this.props.currentBook.key
         );
       } else {
         return (
