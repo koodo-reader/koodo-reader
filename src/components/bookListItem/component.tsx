@@ -122,7 +122,7 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
       {
         left: x,
         top:
-          document.body.clientHeight - e.clientY > 200
+          document.body.clientHeight - e.clientY > 250
             ? e.clientY
             : e.clientY - 200,
       },
@@ -178,7 +178,7 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
               }}
               style={{ height: "65px" }}
             >
-              <div className="book-item-image" style={{ height: "60px" }}>
+              <div className="book-item-image" style={{ height: "65px" }}>
                 <EmptyCover
                   {...{
                     format: this.props.book.format,

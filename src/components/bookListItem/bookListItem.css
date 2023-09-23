@@ -20,6 +20,7 @@
   position: absolute;
   top: 0px;
   left: 60px;
+  cursor: pointer;
 }
 
 .book-item-list-author {

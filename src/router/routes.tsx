@@ -11,6 +11,7 @@ export const routes = [
   { path: "/manager/note", component: NoteList },
   { path: "/manager/digest", component: DigestList },
   { path: "/manager/home", component: BookList },
+  { path: "/manager/shelf", component: BookList },
   { path: "/manager/favorite", component: BookList },
   { path: "/manager/trash", component: DeletedBookList },
 ];

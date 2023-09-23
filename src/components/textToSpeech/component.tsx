@@ -110,7 +110,6 @@ class TextToSpeech extends React.Component<
   };
   handleAudio = async () => {
     this.nodeList = await this.handleGetText();
-    console.log(this.nodeList);
     let voiceIndex = StorageUtil.getReaderConfig("voiceIndex") || 0;
     if (voiceIndex > this.nativeVoices.length) {
       await this.handleRead();

@@ -64,9 +64,9 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
       {
         left: x,
         top:
-          document.body.clientHeight - e.clientY > 300
+          document.body.clientHeight - e.clientY > 250
             ? e.clientY
-            : e.clientY - 300,
+            : e.clientY - 200,
       },
       () => {
         this.props.handleActionDialog(true);

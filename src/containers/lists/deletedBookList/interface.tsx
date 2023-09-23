@@ -15,6 +15,6 @@ export interface BookListProps extends RouteComponentProps<any> {
   handleFetchList: () => void;
   handleMode: (mode: string) => void;
   handleDeleteDialog: (isShow: boolean) => void;
-  handleFetchBooks: (isTrash: boolean) => void;
+  handleFetchBooks: () => void;
 }
 export interface BookListState {}

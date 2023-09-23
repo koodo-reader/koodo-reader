@@ -77,7 +77,7 @@ export const showNoteHighlight = async (
   let newRange = sel.getRangeAt(0);
   var safeRanges = getSafeRanges(newRange);
   for (var i = 0; i < safeRanges.length; i++) {
-    highlightRange(safeRanges[i], colorCode, noteKey, handleNoteClick);
+    highlightRange(safeRanges[i], colorCode, noteKey, handleNoteClick, doc);
   }
   if (!iWin || !iWin.getSelection()) return;
   iWin.getSelection()?.empty(); // 清除文本选取
@@ -92,26 +92,56 @@ function clearHighlight() {
   const elements = doc.querySelectorAll(".kookit-note");
   for (let index = 0; index < elements.length; index++) {
     const element: any = elements[index];
-    const parent: any = element.parentNode;
-    const textNode = doc.createTextNode(element.textContent);
-    parent.insertBefore(textNode, element);
-    parent.removeChild(element);
+    element.classList.remove("kookit-note");
+    element.removeAttribute("data-key");
+    var classes = element.classList;
+
+    // 遍历所有class名
+    for (var i = classes.length - 1; i >= 0; i--) {
+      var className = classes[i];
+
+      // 判断class名是否以"color"开头
+      if (className.startsWith("color") || className.startsWith("line")) {
+        // 删除以"color"开头的class名
+        element.classList.remove(className);
+      }
+    }
   }
 }
 function highlightRange(
   range: Range,
   colorCode: string,
   noteKey: string,
-  handleNoteClick: any
+  handleNoteClick: any,
+  doc: any
 ) {
   var newNode = document.createElement("span");
   newNode.setAttribute("class", colorCode + " kookit-note");
-  newNode.setAttribute("key", noteKey);
+  newNode.setAttribute("data-key", noteKey);
   // newNode.setAttribute("onclick", `window.handleNoteClick()`);
   newNode.addEventListener("click", (event) => {
     handleNoteClick(event);
   });
+
   range.surroundContents(newNode);
+  var startNode = range.startContainer;
+  var endNode = range.endContainer;
+  var startOffset = range.startOffset;
+  var endOffset = range.endOffset;
+  var newRange = doc!.createRange();
+  newRange.setStart(startNode, startOffset);
+  newRange.setEnd(endNode, endOffset);
+  var commonAncestor = newRange.commonAncestorContainer;
+  var treeWalker = document.createTreeWalker(
+    commonAncestor,
+    NodeFilter.SHOW_ELEMENT
+  );
+  while (treeWalker.nextNode()) {
+    var node: any = treeWalker.currentNode;
+    if (node.nodeType === 1) {
+      node.setAttribute("data-key", noteKey);
+    }
+  }
 }
 
 function getSafeRanges(dangerous) {

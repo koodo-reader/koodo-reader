@@ -1,5 +1,5 @@
 .note-editor {
-  width: calc(100% - 45px);
+  width: calc(100% - 40px);
   height: calc(100% - 140px);
   padding: 20px;
 }
