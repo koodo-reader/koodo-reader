@@ -14,21 +14,20 @@ import ViewMode from "../../../components/viewMode";
 import { backup } from "../../../utils/syncUtils/backupUtil";
 import { isElectron } from "react-device-detect";
 import SelectBook from "../../../components/selectBook";
+import { Trans } from "react-i18next";
+import DeletePopup from "../../../components/dialogs/deletePopup";
 declare var window: any;
 class BookList extends React.Component<BookListProps, BookListState> {
   constructor(props: BookListProps) {
     super(props);
     this.state = {
+      isOpenDelete: false,
       favoriteBooks: Object.keys(AddFavorite.getAllFavorite()).length,
       isHideShelfBook: StorageUtil.getReaderConfig("isHideShelfBook") === "yes",
     };
   }
   UNSAFE_componentWillMount() {
-    if (this.props.mode === "trash") {
-      this.props.handleFetchBooks(true);
-    } else {
-      this.props.handleFetchBooks(false);
-    }
+    this.props.handleFetchBooks();
   }
   componentDidMount() {
     if (!this.props.books || !this.props.books[0]) {
@@ -80,7 +79,6 @@ class BookList extends React.Component<BookListProps, BookListState> {
   };
   renderBookList = () => {
     //根据不同的场景获取不同的图书数据
-
     let books = this.props.isSearch //搜索图书
       ? this.handleIndexFilter(this.props.books, this.props.searchResults)
       : this.props.shelfIndex > 0 //展示书架
@@ -137,7 +135,19 @@ class BookList extends React.Component<BookListProps, BookListState> {
       );
     });
   };
+  handleDeleteShelf = () => {
+    if (this.props.shelfIndex < 1) return;
+    let shelfTitles = Object.keys(ShelfUtil.getShelf());
+    //获取当前书架名
+    let currentShelfTitle = shelfTitles[this.props.shelfIndex];
+    ShelfUtil.removeShelf(currentShelfTitle);
 
+    this.props.handleShelfIndex(-1);
+    this.props.handleMode("home");
+  };
+  handleDeletePopup = (isOpenDelete: boolean) => {
+    this.setState({ isOpenDelete });
+  };
   render() {
     if (
       (this.state.favoriteBooks === 0 && this.props.mode === "favorite") ||
@@ -164,8 +174,17 @@ class BookList extends React.Component<BookListProps, BookListState> {
       "totalBooks",
       this.props.books.length.toString()
     );
+    const deletePopupProps = {
+      mode: "shelf",
+      name: Object.keys(ShelfUtil.getShelf())[this.props.shelfIndex],
+      title: "Delete this shelf",
+      description: "This action will clear and remove this shelf",
+      handleDeletePopup: this.handleDeletePopup,
+      handleDeleteOpearion: this.handleDeleteShelf,
+    };
     return (
       <>
+        {this.state.isOpenDelete && <DeletePopup {...deletePopupProps} />}
         <div
           className="book-list-header"
           style={
@@ -175,6 +194,17 @@ class BookList extends React.Component<BookListProps, BookListState> {
           }
         >
           <SelectBook />
+          {this.props.shelfIndex > -1 && (
+            <div
+              className="booklist-delete-container"
+              onClick={() => {
+                this.handleDeletePopup(true);
+              }}
+              style={this.props.isCollapsed ? { left: "calc(50% - 60px)" } : {}}
+            >
+              <Trans>Delete this shelf</Trans>
+            </div>
+          )}
           <div style={this.props.isSelectBook ? { display: "none" } : {}}>
             <ViewMode />
           </div>

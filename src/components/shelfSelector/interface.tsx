@@ -16,7 +16,7 @@ export interface ShelfSelectorProps extends RouteComponentProps<any> {
   handleMode: (mode: string) => void;
   handleShelfIndex: (index: number) => void;
   handleDeleteDialog: (isShow: boolean) => void;
-  handleFetchBooks: (isTrash: boolean) => void;
+  handleFetchBooks: () => void;
   t: (title: string) => string;
 }
 export interface ShelfSelectorState {

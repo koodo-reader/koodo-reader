@@ -36,7 +36,7 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
             }
           }}
           className="book-manage-title"
-          style={{ color: "#0078d4" }}
+          style={{ color: "rgb(231, 69, 69)" }}
         >
           <Trans>{this.props.isSelectBook ? "Cancel" : ""}</Trans>
         </span>

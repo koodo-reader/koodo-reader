@@ -105,9 +105,8 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     );
   };
   handleNoteClick = (event: Event) => {
-    console.log(event);
     if (event && event.target) {
-      this.props.handleNoteKey((event.target as any).getAttribute("key"));
+      this.props.handleNoteKey((event.target as any).dataset.key);
       this.props.handleMenuMode("note");
       this.props.handleOpenMenu(true);
     }
@@ -217,7 +216,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         })
       );
     }
-    this.handleHighlight(rendition);
+
     rendition.on("rendered", () => {
       this.handleLocation();
       let bookLocation: {
@@ -262,6 +261,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       tsTransform();
       binicReadingProcess();
       this.handleBindGesture();
+      this.handleHighlight(rendition);
       lock = true;
       setTimeout(function () {
         lock = false;

@@ -38,7 +38,6 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
       let noteIndex = window._.findLastIndex(this.props.notes, {
         key: this.props.noteKey,
       });
-      console.log(this.props.noteKey, noteIndex, this.props.notes);
       this.setState({
         text: this.props.notes[noteIndex].text,
       });
@@ -89,7 +88,7 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
   };
   handleNoteClick = (event: Event) => {
     if (event && event.target) {
-      this.props.handleNoteKey((event.target as any).getAttribute("key"));
+      this.props.handleNoteKey((event.target as any).dataset.key);
       this.props.handleMenuMode("note");
       this.props.handleOpenMenu(true);
     }

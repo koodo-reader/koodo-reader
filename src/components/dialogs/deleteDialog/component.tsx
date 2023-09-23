@@ -76,7 +76,7 @@ class DeleteDialog extends React.Component<
         ShelfUtil.clearShelf(this.props.shelfIndex, item);
       });
       this.props.handleSelectedBooks([]);
-      this.props.handleFetchBooks(false);
+      this.props.handleFetchBooks();
       this.props.handleSelectBook(!this.props.isSelectBook);
       this.props.handleDeleteDialog(false);
       toast.success(this.props.t("Delete Successfully"));
@@ -93,8 +93,8 @@ class DeleteDialog extends React.Component<
     if (this.props.books.length === 0) {
       this.props.history.push("/manager/empty");
     }
-    this.props.handleFetchBooks(false);
-    this.props.handleFetchBooks(true);
+    this.props.handleFetchBooks();
+    this.props.handleFetchBooks();
     this.props.handleFetchBookmarks();
     this.props.handleFetchNotes();
   };
@@ -112,14 +112,14 @@ class DeleteDialog extends React.Component<
       AddFavorite.clear(item);
     });
     this.props.handleSelectedBooks([]);
-    this.props.handleFetchBooks(false);
+    this.props.handleFetchBooks();
     this.props.handleSelectBook(!this.props.isSelectBook);
   };
   deleteCurrentBook = () => {
     AddTrash.setTrash(this.props.currentBook.key);
     //从喜爱的图书中删除
     AddFavorite.clear(this.props.currentBook.key);
-    this.props.handleFetchBooks(false);
+    this.props.handleFetchBooks();
   };
   deleteBook = (key: string) => {
     return new Promise<void>((resolve, reject) => {

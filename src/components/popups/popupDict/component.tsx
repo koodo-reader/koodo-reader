@@ -25,6 +25,9 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
     };
   }
   componentDidMount() {
+    this.handleLookUp();
+  }
+  handleLookUp() {
     let originalText = this.props.originalText
       .replace(/(\r\n|\n|\r)/gm, "")
       .replace(/-/gm, "");
@@ -159,7 +162,7 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
     }
   };
   render() {
-    const renderNoteEditor = () => {
+    const renderDictBox = () => {
       return (
         <div className="dict-container">
           <div className="dict-service-container">
@@ -178,9 +181,7 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
                     },
                     () => {
                       StorageUtil.setReaderConfig("dictTarget", "en-en");
-                      this.handleDict(
-                        this.props.originalText.replace(/(\r\n|\n|\r)/gm, "")
-                      );
+                      this.handleLookUp();
                     }
                   );
                 });
@@ -202,7 +203,11 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
               })}
             </select>
           </div>
-          <div className="dict-word">{this.state.word}</div>
+          <div className="dict-word">
+            {StorageUtil.getReaderConfig("isLemmatizeWord") === "yes"
+              ? this.state.prototype
+              : this.state.word}
+          </div>
           <div className="dict-original-word">
             <Trans>Prototype</Trans>
             <span>:</span>
@@ -247,7 +252,7 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
         </div>
       );
     };
-    return renderNoteEditor();
+    return renderDictBox();
   }
 }
 export default PopupDict;
