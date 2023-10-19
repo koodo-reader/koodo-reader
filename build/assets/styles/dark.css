@@ -1,0 +1,253 @@
+body {
+  -webkit-tap-highlight-color: transparent;
+  background: rgba(47, 52, 55, 1);
+  color: rgba(235, 235, 235, 1);
+}
+
+.book-content-name,
+.booklist-shelf-list,
+.lang-setting-dropdown,
+.delete-tag-container,
+.setting-subtitle,
+.book-subcontent-name {
+  color: rgba(235, 235, 235, 1);
+}
+
+.add-dialog-shelf-list-box,
+.add-dialog-shelf-list-option,
+.add-dialog-new-shelf-box,
+.add-dialog-cancel,
+.delete-dialog-cancel,
+.edit-dialog-book-name-box,
+.edit-dialog-book-author-box,
+.edit-dialog-cancel,
+.tag-list-item,
+.token-dialog-cancel,
+.lang-setting-dropdown,
+.tag-list-item-new,
+.input-value,
+.import-from-cloud,
+.booklist-shelf-list,
+.token-dialog-token-box,
+.token-dialog-url-box,
+.token-dialog-username-box,
+.token-dialog-password-box,
+.general-setting-dropdown,
+.active-color,
+.delete-dialog-uncheck-icon,
+.next-chapter,
+.progress-slide-circle,
+.setting-dialog-location-title,
+.delete-dialog-uncheck-icon,
+.previous-chapter,
+.color-option,
+.line-option,
+.token-dialog-link-text,
+.token-dialog-token-text,
+.nav-search-page-item {
+  border: 2px solid rgba(235, 235, 235, 1);
+}
+
+.header-search-box,
+.header-search-box::placeholder,
+.header-search-text {
+  color: rgba(235, 235, 235, 0.8);
+}
+.delete-digest-button,
+.add-dialog-comfirm,
+.backup-page-backup-selector,
+.delete-dialog-comfirm,
+.book-item-config,
+.book-cover-item-config,
+.download-desk-button,
+.edit-dialog-comfirm,
+.change-location-button,
+.token-dialog-comfirm,
+.new-version-open,
+.update-dialog-container-button,
+.import-from-local,
+.side-menu-selector-container,
+.previous-chapter-single-container,
+.next-chapter-single-container,
+.book-bookmark-link,
+.message-box-container,
+.only-local-icon,
+.popup-close {
+  background-color: rgba(71, 76, 80, 1);
+  color: rgba(235, 235, 235, 1);
+}
+
+.header-search-box,
+#jumpPage,
+#jumpChapter,
+#newTag {
+  background-color: rgba(235, 235, 235, 0.1);
+}
+
+.backup-page-close-icon:hover,
+.sidebar-list-icon:hover,
+.nav-close-icon:hover,
+.setting-close-container:hover,
+.side-menu-hover-container,
+.setting-dialog-location-title,
+.note-option:hover,
+.digest-option:hover,
+.translation-option:hover,
+.speaker-option:hover,
+.search-book-option:hover,
+.dict-option:hover,
+.browser-option:hover,
+.header-search-text:hover,
+.reader-setting-icon-container:hover,
+.setting-icon-container:hover,
+.animation-mask,
+.animation-mask-local,
+.sort-by-category-list:hover,
+.sort-by-order-list:hover,
+.backup-page-backup:hover,
+.action-dialog-add:hover,
+.action-dialog-delete:hover,
+.action-dialog-edit:hover,
+.backup-page-next:hover,
+.book-manage-title:hover,
+.backup-page-list-item:hover,
+.restore-file:hover,
+.copy-option:hover {
+  background-color: rgba(235, 235, 235, 0.035);
+}
+.drag-background {
+  background: hsla(0, 0%, 100%, 0.2);
+}
+.action-dialog-container,
+.add-dialog-container,
+.backup-page-container,
+.delete-dialog-container,
+.download-desk-container,
+.edit-dialog-container,
+.loading-dialog,
+.setting-dialog-container,
+.token-dialog-container,
+.new-version,
+.sort-dialog-container,
+.popup-menu-box,
+.popup-box-container,
+.loading-page-cover,
+.loading-page-cover,
+.navigation-panel,
+.book-operation-panel,
+.progress-panel,
+.input-value,
+.tag-list-item-new,
+.tag-list-item,
+.setting-panel-parent {
+  background: rgba(47, 52, 55, 1);
+  box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.2);
+}
+.book-item-image,
+.book-item-cover,
+.book-cover,
+.detail-cover,
+.detail-cover-background-container,
+.book-cover-item-cover {
+  background: rgba(235, 235, 235, 0.1);
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.18);
+}
+.backup-page-backup-selector,
+.message-box-container {
+  box-shadow: 0px 0px 12px rgba(75, 75, 75, 1);
+}
+
+.add-bookmark-button,
+.exit-reading-button,
+.add-bookmark-button,
+.enter-fullscreen-button,
+.card-list-item-card,
+.navigation-header {
+  box-shadow: 0px 0px 5px rgba(30, 30, 30, 1);
+}
+.background-color-circle,
+.background-box1,
+.background-box2,
+.background-box3 {
+  box-shadow: 0px 0px 2px rgba(235, 235, 235, 0.18);
+}
+
+.add-dialog-cancel,
+.delete-dialog-cancel,
+.edit-dialog-cancel,
+.loading-dialog,
+.lang-setting-dropdown,
+.token-dialog-cancel,
+.new-version,
+.popup-menu-box,
+.popup-box-container,
+.general-setting-dropdown,
+.card-list-item-card,
+.navigation-header,
+.import-from-cloud,
+.only-local-slider,
+.single-control-button,
+.add-dialog-shelf-list-box,
+.add-dialog-new-shelf-box,
+.edit-dialog-book-name-box,
+.edit-dialog-book-author-box,
+.booklist-shelf-list,
+.progress-slide-circle {
+  background: rgba(47, 52, 55, 1);
+}
+.single-control-switch,
+::-webkit-scrollbar-thumb,
+::-webkit-scrollbar-thumb:hover,
+.active-tag,
+.active-page,
+.sk-chase-dot:before {
+  background-color: rgba(235, 235, 235, 1) !important;
+}
+.exit-reading-text,
+.add-bookmark-text,
+.token-dialog-token-text,
+.enter-fullscreen-text,
+.image-operation,
+.add-bookmark-icon,
+.exit-reading-icon,
+.message-box-icon,
+.active-icon,
+.active-selector,
+.enter-fullscreen-icon,
+.icon-popup,
+.token-dialog-link-text,
+.token-dialog-token-text,
+.delete-dialog-uncheck-icon,
+.book-bookmark-link,
+.general-setting-dropdown,
+.trans-lang-selector,
+.original-lang-selector,
+.editor-box,
+#jumpPage,
+#jumpChapter,
+.add-dialog-shelf-list-box,
+.add-dialog-new-shelf-box,
+.edit-dialog-book-name-box,
+.edit-dialog-book-author-box,
+.card-list-item-show-more,
+.cover-banner,
+.book-more-action,
+.reading-progress-icon,
+.book-love-icon,
+input,
+.input-value {
+  color: rgba(235, 235, 235, 1);
+}
+.book-content-name,
+.book-subcontent-name,
+.book-bookmark-list,
+.nav-search-list-item,
+.sort-dialog-seperator {
+  border-bottom: 1px solid rgba(235, 235, 235, 0.5);
+}
+.popup-menu-triangle-up,
+.active-tag,
+.active-page,
+.popup-menu-triangle-down {
+  color: rgba(47, 52, 55, 1) !important;
+}
