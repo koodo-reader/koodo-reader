@@ -24,6 +24,7 @@ if (process.platform != "darwin" && process.argv.length >= 2) {
 let options = {
   width: 1050,
   height: 660,
+  backgroundColor: "#fff",
   webPreferences: {
     webSecurity: false,
     nodeIntegration: true,

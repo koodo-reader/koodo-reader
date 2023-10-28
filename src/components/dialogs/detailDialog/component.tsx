@@ -4,7 +4,6 @@ import { DetailDialogProps, DetailDialogState } from "./interface";
 import { Trans } from "react-i18next";
 import Parser from "html-react-parser";
 import * as DOMPurify from "dompurify";
-import { FastAverageColor } from "fast-average-color";
 import EmptyCover from "../../emptyCover";
 class DetailDialog extends React.Component<
   DetailDialogProps,
@@ -13,22 +12,9 @@ class DetailDialog extends React.Component<
   constructor(props: DetailDialogProps) {
     super(props);
     this.state = {
-      backgroundColor: "",
-      textColor: "",
+      backgroundColor: "#333",
+      textColor: "#333",
     };
-  }
-  componentDidMount() {
-    const fac = new FastAverageColor();
-
-    // From not loaded image (HTMLImageElement)
-    fac
-      .getColorAsync(this.props.currentBook.cover, { algorithm: "dominant" })
-      .then((color) => {
-        this.setState({ textColor: color.isDark ? "#fff" : "#333" });
-      })
-      .catch((e) => {
-        console.error(e);
-      });
   }
   handleClose = () => {
     this.props.handleDetailDialog(false);
@@ -39,16 +25,6 @@ class DetailDialog extends React.Component<
         className="download-desk-container"
         style={{ color: this.state.textColor }}
       >
-        <div className="detail-cover-background-container">
-          <div
-            className="detail-cover-background"
-            style={{
-              // background: this.state.backgroundColor,
-
-              backgroundImage: 'url("' + this.props.currentBook.cover + '")',
-            }}
-          ></div>
-        </div>
         <div
           className="detail-dialog-book-info"
           style={{

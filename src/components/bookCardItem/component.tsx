@@ -207,7 +207,7 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
                 : "00"}
               {Math.floor(parseFloat(percentage) * 100) > 0 &&
                 Math.floor(parseFloat(percentage) * 100) < 100 && (
-                  <span className="reading-percentage-char">%</span>
+                  <span>%</span>
                 )}
             </div>
           </div>

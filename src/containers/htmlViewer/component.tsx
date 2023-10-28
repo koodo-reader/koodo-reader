@@ -353,15 +353,17 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
                   }px)`,
                   paddingLeft: "20px",
                   paddingRight: "15px",
+                  left: 0,
+                  right: 0,
                 }
               : this.state.readerMode === "single"
               ? {
                   left: `calc(50vw - ${
                     270 * parseFloat(this.state.scale)
-                  }px + 15px)`,
+                  }px + 30px)`,
                   right: `calc(50vw - ${
                     270 * parseFloat(this.state.scale)
-                  }px + 15px)`,
+                  }px + 30px)`,
                 }
               : this.state.readerMode === "double"
               ? {

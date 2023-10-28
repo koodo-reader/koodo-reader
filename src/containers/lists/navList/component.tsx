@@ -28,7 +28,7 @@ class NavList extends React.Component<NavListProps, NavListState> {
         cfi: cfi,
       };
     }
-    //compatile wiht lower version(1.5.1)
+    //compatile with lower version(1.5.1)
     if (bookLocation.cfi) {
       await this.props.htmlBook.rendition.goToChapter(
         bookLocation.chapterDocIndex,
