@@ -62,7 +62,11 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     this.props.handleRenderBookFunc(this.handleRenderBook);
 
     window.addEventListener("resize", () => {
-      BookUtil.reloadBooks();
+      if (StorageUtil.getReaderConfig("isFullscreen") === "yes") {
+        this.handleRenderBook();
+      } else {
+        BookUtil.reloadBooks();
+      }
     });
   }
   handlePageWidth = () => {

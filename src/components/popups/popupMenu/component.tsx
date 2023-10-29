@@ -62,8 +62,16 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     document
       .querySelector(".ebook-viewer")
       ?.setAttribute("style", "height:100%; overflow: hidden;");
+
     let doc: any = getPDFIframeDoc();
-    if (rect.bottom < doc.document.body.scrollHeight - 188) {
+    console.log(rect, doc.document.body, doc.document.body.scrollHeight);
+    if (
+      doc.document.body.scrollHeight - rect.top - rect.height < 188 &&
+      rect.top < 188
+    ) {
+      this.props.handleChangeDirection(true);
+      posY = rect.top + 16;
+    } else if (rect.bottom < doc.document.body.scrollHeight - 188) {
       this.props.handleChangeDirection(true);
       posY = posY + 16;
     } else {
@@ -75,7 +83,10 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
   getHtmlPosition(rect: any) {
     let posY = rect.bottom - this.props.rendition.getPageSize().scrollTop;
     let posX = rect.left + rect.width / 2;
-    if (
+    if (this.props.rendition.getPageSize().height - rect.height < 188) {
+      this.props.handleChangeDirection(true);
+      posY = rect.top + 16 + this.props.rendition.getPageSize().top;
+    } else if (
       posY <
       this.props.rendition.getPageSize().height -
         188 +

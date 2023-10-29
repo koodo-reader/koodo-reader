@@ -92,7 +92,7 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
             {this.state.index === index && this.props.mode !== "shelf" ? (
               <div className="side-menu-selector-container"></div>
             ) : null}
-            {this.state.hoverIndex === index && this.props.mode !== "shelf" ? (
+            {this.state.hoverIndex === index ? (
               <div className="side-menu-hover-container"></div>
             ) : null}
             <div

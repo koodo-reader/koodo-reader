@@ -8,7 +8,6 @@
   border-radius: 5px;
   overflow: hidden;
   overflow-x: hidden;
-  padding-bottom: 5px;
 }
 
 .action-dialog-actions-container {
@@ -16,7 +15,7 @@
   text-align: center;
   line-height: 14px;
   opacity: 1;
-  margin-top: 5px;
+  padding: 5px;
   /* position: absolute;
   top: 83px;
   left: 29px; */
@@ -31,6 +30,7 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  padding-left: 10px;
 }
 
 .action-name {
