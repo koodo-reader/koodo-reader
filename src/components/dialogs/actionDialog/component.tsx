@@ -254,7 +254,7 @@ class ActionDialog extends React.Component<
             this.state.isShowExport
               ? {
                   position: "fixed",
-                  left: this.props.left + (this.state.isExceed ? -200 : 200),
+                  left: this.props.left + (this.state.isExceed ? -195 : 195),
                   top: this.props.top + 70,
                 }
               : { display: "none" }
