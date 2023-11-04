@@ -25,6 +25,7 @@
   cursor: pointer;
   padding-left: 15px;
   padding-right: 15px;
+  border-radius: 3px;
 }
 .sort-dialog-seperator {
   width: 100%;

@@ -12,6 +12,8 @@ export interface BookCoverProps extends RouteComponentProps<any> {
   isSelectBook: boolean;
   isSelected: boolean;
   selectedBooks: string[];
+  handleSelectBook: (isSelectBook: boolean) => void;
+
   handleReadingBook: (book: BookModel) => void;
   handleActionDialog: (isShowActionDialog: boolean) => void;
   t: (title: string) => string;
@@ -20,6 +22,8 @@ export interface BookCoverProps extends RouteComponentProps<any> {
   handleDeleteDialog: (isShow: boolean) => void;
 }
 export interface BookCoverState {
+  isHover: boolean;
+
   isFavorite: boolean;
   left: number;
   top: number;
