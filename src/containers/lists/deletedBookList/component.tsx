@@ -15,11 +15,54 @@ import ViewMode from "../../../components/viewMode";
 class BookList extends React.Component<BookListProps, BookListState> {
   constructor(props: BookListProps) {
     super(props);
-    this.state = {};
+    this.state = { isRefreshing: false };
+  }
+  componentDidMount() {
+    setTimeout(() => {
+      this.lazyLoad();
+      window.addEventListener("scroll", this.lazyLoad);
+      window.addEventListener("resize", this.lazyLoad);
+    }, 0);
   }
   UNSAFE_componentWillMount() {
     this.props.handleFetchBooks();
   }
+  UNSAFE_componentWillReceiveProps() {
+    this.setState({ isRefreshing: true }, () => {
+      this.setState({ isRefreshing: false });
+    });
+  }
+  lazyLoad = () => {
+    const lazyImages: any = document.querySelectorAll(".lazy-image");
+
+    lazyImages.forEach((lazyImage) => {
+      if (this.isElementInViewport(lazyImage)) {
+        lazyImage.src = lazyImage.dataset.src;
+        lazyImage.dataset.src = "";
+        lazyImage.classList.remove("lazy-image");
+      }
+    });
+    const coverImages: any = document.querySelectorAll(".book-item-cover");
+    coverImages.forEach((coverImage) => {
+      if (this.isElementInViewport(coverImage)) {
+        if (coverImage.dataset.src) {
+          coverImage.src = coverImage.dataset.src;
+          coverImage.dataset.src = "";
+        }
+      }
+    });
+  };
+  isElementInViewport = (element) => {
+    const rect = element.getBoundingClientRect();
+
+    return (
+      rect.top >= 0 &&
+      rect.left >= 0 &&
+      rect.bottom <=
+        (window.innerHeight || document.documentElement.clientHeight) &&
+      rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+    );
+  };
   handleKeyFilter = (items: any[], arr: string[]) => {
     let itemArr: any[] = [];
     arr.forEach((item) => {
@@ -71,7 +114,16 @@ class BookList extends React.Component<BookListProps, BookListState> {
     if (books.length === 0) {
       return <Redirect to="/manager/empty" />;
     }
-
+    setTimeout(() => {
+      this.lazyLoad();
+    }, 0);
+    let listElements = document.querySelector(".book-list-item-box");
+    let covers = listElements?.querySelectorAll("img");
+    covers?.forEach((cover) => {
+      if (!cover.classList.contains("lazy-image")) {
+        cover.classList.add("lazy-image");
+      }
+    });
     return books.map((item: BookModel, index: number) => {
       return this.props.viewMode === "list" ? (
         <BookListItem
@@ -112,7 +164,14 @@ class BookList extends React.Component<BookListProps, BookListState> {
           }
         >
           <div className="book-list-container">
-            <ul className="book-list-item-box">{this.renderBookList()}</ul>
+            <ul
+              className="book-list-item-box"
+              onScroll={() => {
+                this.lazyLoad();
+              }}
+            >
+              {!this.state.isRefreshing && this.renderBookList()}
+            </ul>
           </div>
         </div>
         <div
