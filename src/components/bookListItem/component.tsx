@@ -24,6 +24,7 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
       direction: "horizontal",
       left: 0,
       top: 0,
+      isHover: false,
     };
   }
   componentDidMount() {
@@ -177,6 +178,12 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
                 this.handleJump();
               }}
               style={{ height: "65px" }}
+              onMouseEnter={() => {
+                this.setState({ isHover: true });
+              }}
+              onMouseLeave={() => {
+                this.setState({ isHover: false });
+              }}
             >
               <div className="book-item-image" style={{ height: "65px" }}>
                 <EmptyCover
@@ -194,11 +201,17 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
               onClick={() => {
                 this.handleJump();
               }}
+              onMouseEnter={() => {
+                this.setState({ isHover: true });
+              }}
+              onMouseLeave={() => {
+                this.setState({ isHover: false });
+              }}
             >
               <img
-                src={this.props.book.cover}
+                data-src={this.props.book.cover}
                 alt=""
-                className="book-item-image"
+                className="lazy-image book-item-image"
                 style={{ width: "100%" }}
                 onLoad={(res: any) => {
                   if (
@@ -213,12 +226,30 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
               />
             </div>
           )}
-          {this.props.isSelectBook ? (
+          {this.props.isSelectBook || this.state.isHover ? (
             <span
               className="icon-message book-selected-icon"
+              onMouseEnter={() => {
+                this.setState({ isHover: true });
+              }}
+              onClick={() => {
+                if (this.props.isSelectBook) {
+                  this.props.handleSelectedBooks(
+                    this.props.isSelected
+                      ? this.props.selectedBooks.filter(
+                          (item) => item !== this.props.book.key
+                        )
+                      : [...this.props.selectedBooks, this.props.book.key]
+                  );
+                } else {
+                  this.props.handleSelectBook(true);
+                  this.props.handleSelectedBooks([this.props.book.key]);
+                }
+                this.setState({ isHover: false });
+              }}
               style={
                 this.props.isSelected
-                  ? { left: "20px", bottom: "5px" }
+                  ? { left: "20px", bottom: "5px", opacity: 1 }
                   : { left: "20px", bottom: "5px", color: "#eee" }
               }
             ></span>

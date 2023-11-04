@@ -14,6 +14,11 @@
   margin-top: 3px;
   font-size: 26px;
 }
+.header-archive-icon {
+  float: left;
+  margin-top: 3px;
+  font-size: 21px;
+}
 .only-local-container {
   position: absolute;
   left: 520px;
@@ -81,7 +86,7 @@
   .import-from-local {
     position: fixed !important;
     left: 15px;
-    top: calc(100vh - 170px) !important;
+    top: calc(100vh - 80px) !important;
     width: 138px;
     padding: 0px !important;
   }
@@ -112,11 +117,16 @@
   transform-origin: left;
   border-radius: 19px;
 }
-
+.setting-icon-parrent {
+  position: absolute;
+  top: 18px;
+  margin-left: 280px;
+  height: 50px;
+}
 .header-search-container {
   position: absolute;
   top: 23px;
-  left: 235px;
+  margin-left: 40px;
   width: 220px;
 }
 .setting-icon {
@@ -129,12 +139,11 @@
   height: 50px;
   font-size: 25px;
   line-height: 50px;
-  position: absolute;
-  left: 560px;
-  top: 20px;
   cursor: pointer;
   transition: 0.1s;
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-left: 25px;
+  float: left;
 }

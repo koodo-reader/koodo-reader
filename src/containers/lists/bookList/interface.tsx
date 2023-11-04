@@ -29,4 +29,5 @@ export interface BookListState {
   favoriteBooks: number;
   isHideShelfBook: boolean;
   isOpenDelete: boolean;
+  isRefreshing: boolean;
 }

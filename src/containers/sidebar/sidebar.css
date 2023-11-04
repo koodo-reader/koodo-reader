@@ -72,7 +72,7 @@
 }
 @media screen and (max-width: 950px) {
   .side-menu-container-parent {
-    height: calc(100% - 250px);
+    height: calc(100% - 155px);
   }
 }
 .side-menu-icon {
