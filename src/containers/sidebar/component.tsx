@@ -290,7 +290,7 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
               <ul className="side-shelf-container">{renderSideShelf()}</ul>
             )}
           </div>
-        </div>{" "}
+        </div>
         {this.state.isOpenDelete && <DeletePopup {...deletePopupProps} />}
       </>
     );

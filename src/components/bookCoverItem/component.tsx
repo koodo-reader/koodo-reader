@@ -24,6 +24,7 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
       top: 0,
       direction: "horizontal",
       desc: "",
+      isHover: false,
     };
   }
 
@@ -178,6 +179,12 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
             onClick={() => {
               this.handleJump();
             }}
+            onMouseEnter={() => {
+              this.setState({ isHover: true });
+            }}
+            onMouseLeave={() => {
+              this.setState({ isHover: false });
+            }}
             style={
               StorageUtil.getReaderConfig("isDisableCrop") === "yes"
                 ? {
@@ -211,7 +218,7 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
               </div>
             ) : (
               <img
-                src={this.props.book.cover}
+                data-src={this.props.book.cover}
                 alt=""
                 style={
                   this.state.direction === "horizontal" ||
@@ -219,7 +226,7 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
                     ? { width: "100%" }
                     : { height: "100%" }
                 }
-                className="book-item-image"
+                className="lazy-image book-item-image"
                 onLoad={(res: any) => {
                   if (
                     res.target.naturalHeight / res.target.naturalWidth >
@@ -232,13 +239,39 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
                 }}
               />
             )}
-            {this.props.isSelectBook ? (
+            {this.props.isSelectBook || this.state.isHover ? (
               <span
                 className="icon-message book-selected-icon"
+                onMouseEnter={() => {
+                  this.setState({ isHover: true });
+                }}
+                onClick={() => {
+                  if (this.props.isSelectBook) {
+                    this.props.handleSelectedBooks(
+                      this.props.isSelected
+                        ? this.props.selectedBooks.filter(
+                            (item) => item !== this.props.book.key
+                          )
+                        : [...this.props.selectedBooks, this.props.book.key]
+                    );
+                  } else {
+                    this.props.handleSelectBook(true);
+                    this.props.handleSelectedBooks([this.props.book.key]);
+                  }
+                  this.setState({ isHover: false });
+                }}
                 style={
                   this.props.isSelected
-                    ? { right: "274px", top: "30px" }
-                    : { right: "274px", top: "30px", color: "#eee" }
+                    ? {
+                        right: "274px",
+                        top: "30px",
+                        opacity: 1,
+                      }
+                    : {
+                        right: "274px",
+                        top: "30px",
+                        color: "#eee",
+                      }
                 }
               ></span>
             ) : null}

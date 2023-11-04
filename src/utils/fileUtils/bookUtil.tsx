@@ -248,7 +248,7 @@ class BookUtil {
     } else if (format === "EPUB") {
       rendition = new window.Kookit.EpubRender(result, readerMode);
     } else if (format === "TXT") {
-      let text = iconv.decode(Buffer.from(result), "gb2312" || "utf8");
+      let text = iconv.decode(Buffer.from(result), charset || "utf8");
       rendition = new window.Kookit.TxtRender(text, readerMode);
     } else if (format === "MD") {
       rendition = new window.Kookit.MdRender(result, readerMode);

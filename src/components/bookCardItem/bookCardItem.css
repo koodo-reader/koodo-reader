@@ -36,7 +36,9 @@
   overflow: hidden;
   position: relative;
 }
-
+.book-selected-icon {
+  opacity: 0.5;
+}
 @keyframes fade-in {
   0% {
     opacity: 0;

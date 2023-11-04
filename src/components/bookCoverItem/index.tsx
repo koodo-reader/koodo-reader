@@ -5,6 +5,7 @@ import {
   handleDragItem,
   handleDeleteDialog,
   handleSelectedBooks,
+  handleSelectBook,
 } from "../../store/actions";
 import BookCoverItem from "./component";
 import { stateType } from "../../store";
@@ -27,6 +28,7 @@ const actionCreator = {
   handleActionDialog,
   handleDragItem,
   handleDeleteDialog,
+  handleSelectBook,
   handleSelectedBooks,
 };
 export default connect(

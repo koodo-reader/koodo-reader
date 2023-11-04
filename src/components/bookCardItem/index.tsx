@@ -4,6 +4,7 @@ import {
   handleReadingBook,
   handleDragItem,
   handleDeleteDialog,
+  handleSelectBook,
   handleSelectedBooks,
 } from "../../store/actions";
 import { withTranslation } from "react-i18next";
@@ -25,6 +26,7 @@ const actionCreator = {
   handleReadingBook,
   handleActionDialog,
   handleDragItem,
+  handleSelectBook,
   handleDeleteDialog,
   handleSelectedBooks,
 };

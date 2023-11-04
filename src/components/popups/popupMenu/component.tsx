@@ -64,7 +64,6 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
       ?.setAttribute("style", "height:100%; overflow: hidden;");
 
     let doc: any = getPDFIframeDoc();
-    console.log(rect, doc.document.body, doc.document.body.scrollHeight);
     if (
       doc.document.body.scrollHeight - rect.top - rect.height < 188 &&
       rect.top < 188
