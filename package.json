@@ -109,7 +109,9 @@
       "buildResources": "assets"
     },
     "publish": {
-      "provider": "github"
+      "provider": "github",
+      "repo": "koodo-reader",
+      "owner": "koodo-reader"
     },
     "fileAssociations": [
       {
