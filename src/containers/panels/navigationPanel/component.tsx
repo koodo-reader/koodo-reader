@@ -207,10 +207,7 @@ class NavigationPanel extends React.Component<
               <span className="icon-close"></span>
             </div>
 
-            <div
-              className="header-search-container"
-              style={this.state.isSearch ? { left: 40 } : {}}
-            >
+            <div className="header-search-container">
               <div
                 className="navigation-search-title"
                 style={{ height: "20px", margin: "0px 25px 13px" }}

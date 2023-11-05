@@ -199,7 +199,7 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
               onMouseEnter={() => {
                 this.setState({ isHover: true });
               }}
-              onClick={() => {
+              onClick={(event) => {
                 if (this.props.isSelectBook) {
                   this.props.handleSelectedBooks(
                     this.props.isSelected
@@ -213,6 +213,7 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
                   this.props.handleSelectedBooks([this.props.book.key]);
                 }
                 this.setState({ isHover: false });
+                event?.stopPropagation();
               }}
               style={this.props.isSelected ? { opacity: 1 } : { color: "#eee" }}
             ></span>

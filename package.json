@@ -11,7 +11,7 @@
     "node": "18.x",
     "npm": ">=6.0.0"
   },
-  "repository": "https://github.com/troyeguo/koodo-reader",
+  "repository": "https://github.com/koodo-reader/koodo-reader",
   "private": false,
   "resolutions": {
     "//": "See https://github.com/facebook/create-react-app/issues/11773",

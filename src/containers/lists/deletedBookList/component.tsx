@@ -36,19 +36,9 @@ class BookList extends React.Component<BookListProps, BookListState> {
     const lazyImages: any = document.querySelectorAll(".lazy-image");
 
     lazyImages.forEach((lazyImage) => {
-      if (this.isElementInViewport(lazyImage)) {
+      if (this.isElementInViewport(lazyImage) && lazyImage.dataset.src) {
         lazyImage.src = lazyImage.dataset.src;
-        lazyImage.dataset.src = "";
         lazyImage.classList.remove("lazy-image");
-      }
-    });
-    const coverImages: any = document.querySelectorAll(".book-item-cover");
-    coverImages.forEach((coverImage) => {
-      if (this.isElementInViewport(coverImage)) {
-        if (coverImage.dataset.src) {
-          coverImage.src = coverImage.dataset.src;
-          coverImage.dataset.src = "";
-        }
       }
     });
   };

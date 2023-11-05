@@ -245,7 +245,7 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
                 onMouseEnter={() => {
                   this.setState({ isHover: true });
                 }}
-                onClick={() => {
+                onClick={(event) => {
                   if (this.props.isSelectBook) {
                     this.props.handleSelectedBooks(
                       this.props.isSelected
@@ -259,6 +259,7 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
                     this.props.handleSelectedBooks([this.props.book.key]);
                   }
                   this.setState({ isHover: false });
+                  event?.stopPropagation();
                 }}
                 style={
                   this.props.isSelected
