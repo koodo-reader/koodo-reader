@@ -6,7 +6,7 @@ body:
     id: testing1
     attributes:
       label: 我已经从 Github Release 安装了最新开发版的 Koodo Reader，这个问题仍然存在
-      description: https://github.com/troyeguo/koodo-reader/releases/latest
+      description: https://github.com/koodo-reader/koodo-reader/releases/latest
       options:
         - label: "Yes"
           required: true
@@ -15,7 +15,7 @@ body:
     id: testing2
     attributes:
       label: 我已经搜索了已有的 issue 列表，没有找到类似的 issue
-      description: https://github.com/troyeguo/koodo-reader/issues
+      description: https://github.com/koodo-reader/koodo-reader/issues
       options:
         - label: "Yes"
           required: true

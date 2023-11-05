@@ -7,7 +7,7 @@ body:
     id: testing1
     attributes:
       label: I've already installed the latest developer version of Koodo Reader from Github Release, this problem still exsits
-      description: https://github.com/troyeguo/koodo-reader/releases/latest
+      description: https://github.com/koodo-reader/koodo-reader/releases/latest
       options:
         - label: "Yes"
           required: true
@@ -16,7 +16,7 @@ body:
     id: testing2
     attributes:
       label: There are no similar issues on the issue list
-      description: https://github.com/troyeguo/koodo-reader/issues
+      description: https://github.com/koodo-reader/koodo-reader/issues
       options:
         - label: "Yes"
           required: true

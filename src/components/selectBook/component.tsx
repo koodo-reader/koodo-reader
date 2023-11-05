@@ -12,6 +12,7 @@ import {
   exportNotes,
 } from "../../utils/syncUtils/exportUtil";
 import BookUtil from "../../utils/fileUtils/bookUtil";
+import ShelfUtil from "../../utils/readUtils/shelfUtil";
 declare var window: any;
 class SelectBook extends React.Component<BookListProps, BookListState> {
   constructor(props: BookListProps) {
@@ -21,7 +22,11 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
       favoriteBooks: Object.keys(AddFavorite.getAllFavorite()).length,
     };
   }
-
+  handleFilterShelfBook = (items: BookModel[]) => {
+    return items.filter((item) => {
+      return ShelfUtil.getBookPosition(item.key).length === 0;
+    });
+  };
   render() {
     return (
       <div
@@ -245,17 +250,21 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
               className="book-manage-title"
               onClick={() => {
                 if (
-                  this.props.selectedBooks.length === this.props.books.length
+                  this.props.selectedBooks.length ===
+                  this.handleFilterShelfBook(this.props.books).length
                 ) {
                   this.props.handleSelectedBooks([]);
                 } else {
                   this.props.handleSelectedBooks(
-                    this.props.books.map((item) => item.key)
+                    this.handleFilterShelfBook(this.props.books).map(
+                      (item) => item.key
+                    )
                   );
                 }
               }}
             >
-              {this.props.selectedBooks.length === this.props.books.length ? (
+              {this.props.selectedBooks.length ===
+              this.handleFilterShelfBook(this.props.books).length ? (
                 <Trans>Deselect All</Trans>
               ) : (
                 <Trans>Select All</Trans>
