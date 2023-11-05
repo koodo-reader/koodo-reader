@@ -1,6 +1,6 @@
 <div align="left">
 
-[简体中文](https://github.com/troyeguo/koodo-reader/blob/master/README_cn.md) | [Português](https://github.com/troyeguo/koodo-reader/blob/master/README_pt.md) | English
+[简体中文](https://github.com/koodo-reader/koodo-reader/blob/master/README_cn.md) | [Português](https://github.com/koodo-reader/koodo-reader/blob/master/README_pt.md) | English
 
 </div>
 
@@ -53,7 +53,7 @@
 
 - Desktop Version:
   - Stable Version (Recommended): [Download](https://koodo.960960.xyz/en)
-  - Developer Version: [Download](https://github.com/troyeguo/koodo-reader/releases/latest) ( With new feature and bug fix, but may induce some unknown bugs)
+  - Developer Version: [Download](https://github.com/koodo-reader/koodo-reader/releases/latest) ( With new feature and bug fix, but may induce some unknown bugs)
 - Web Version：[Preview](https://reader.960960.xyz)
 - Install with Scoop:
 
@@ -116,7 +116,7 @@ Make sure that you have installed yarn and git
 1. Download the repo
 
    ```
-   git clone https://github.com/troyeguo/koodo-reader.git
+   git clone https://github.com/koodo-reader/koodo-reader.git
    ```
 
 2. Enter desktop mode
