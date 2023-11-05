@@ -168,7 +168,7 @@ class BookList extends React.Component<BookListProps, BookListState> {
   lazyLoad = () => {
     const lazyImages: any = document.querySelectorAll(".lazy-image");
     lazyImages.forEach((lazyImage) => {
-      if (this.isElementInViewport(lazyImage)) {
+      if (this.isElementInViewport(lazyImage) && lazyImage.dataset.src) {
         lazyImage.src = lazyImage.dataset.src;
         lazyImage.classList.remove("lazy-image");
       }

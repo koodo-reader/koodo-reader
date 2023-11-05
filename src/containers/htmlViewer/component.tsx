@@ -377,8 +377,11 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
               : {}
           }
         ></div>
-        {StorageUtil.getReaderConfig("isHideBackground") === "yes" ? null : this
-            .props.currentBook.key ? (
+        {StorageUtil.getReaderConfig("isHideBackground") === "yes" ||
+        (StorageUtil.getReaderConfig("backgroundColor") &&
+          StorageUtil.getReaderConfig("backgroundColor").startsWith(
+            "#"
+          )) ? null : this.props.currentBook.key ? (
           <Background />
         ) : null}
         {this.props.htmlBook ? (

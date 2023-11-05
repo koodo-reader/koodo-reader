@@ -1,6 +1,6 @@
 <div align="left">
 
-简体中文 | [Português](https://github.com/troyeguo/koodo-reader/blob/master/README_pt.md) | [English](https://github.com/troyeguo/koodo-reader/blob/master/README.md)
+简体中文 | [Português](https://github.com/koodo-reader/koodo-reader/blob/master/README_pt.md) | [English](https://github.com/koodo-reader/koodo-reader/blob/master/README.md)
 
 </div>
 
@@ -53,7 +53,7 @@
 
 - 桌面端：
   - 稳定版 (推荐下载)：[官网](https://koodo.960960.xyz/zh)（感谢 [@Stille](https://www.ioiox.com/donate.html) 提供下载加速服务）
-  - 开发版：[Github Release](https://github.com/troyeguo/koodo-reader/releases/latest) （包含新功能和 bug 修复，但也可能引入更多未知 bug）
+  - 开发版：[Github Release](https://github.com/koodo-reader/koodo-reader/releases/latest) （包含新功能和 bug 修复，但也可能引入更多未知 bug）
 - 网页版：[前往](https://reader.960960.xyz)
 - 使用 Scoop 安装：
 
@@ -113,7 +113,7 @@ flatpak run io.github.troyeguo.koodo-reader
 1. 将项目源码下载到本地
 
    ```
-   git clone https://github.com/troyeguo/koodo-reader.git
+   git clone https://github.com/koodo-reader/koodo-reader.git
    ```
 
 2. cd 到项目文件夹，运行以下代码进入客户端模式
