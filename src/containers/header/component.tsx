@@ -74,7 +74,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         }
       });
     }
-
     window.addEventListener("resize", () => {
       this.setState({ width: document.body.clientWidth });
     });
