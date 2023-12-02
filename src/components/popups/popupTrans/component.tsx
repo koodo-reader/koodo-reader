@@ -81,6 +81,7 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
                   ? "trans-service-selector"
                   : "trans-service-selector-inactive"
               }
+              style={{ width: "90px" }}
               onClick={() => {
                 this.handleChangeService("Google");
               }}

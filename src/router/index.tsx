@@ -11,18 +11,30 @@ import StorageUtil from "../utils/serviceUtils/storageUtil";
 const Router = () => {
   useEffect(() => {
     const lng = StorageUtil.getReaderConfig("lang");
+
     if (lng) {
-      i18n.changeLanguage(lng);
+      //Compatile with 1.6.0 and older
+      if (lng === "zh") {
+        console.log(lng);
+        i18n.changeLanguage("zhCN");
+      } else if (lng === "cht") {
+        i18n.changeLanguage("zhTW");
+      } else {
+        i18n.changeLanguage(lng);
+      }
     } else {
       if (navigator.language === "zh-CN" || navigator.language === "zh-SG") {
-        i18n.changeLanguage("zh");
-        StorageUtil.setReaderConfig("lang", "zh");
+        i18n.changeLanguage("zhCN");
+        StorageUtil.setReaderConfig("lang", "zhCN");
       } else if (
         navigator.language === "zh-TW" ||
         navigator.language === "zh-HK"
       ) {
-        i18n.changeLanguage("cht");
-        StorageUtil.setReaderConfig("lang", "cht");
+        i18n.changeLanguage("zhTW");
+        StorageUtil.setReaderConfig("lang", "zhTW");
+      } else if (navigator.language === "zh-MO") {
+        i18n.changeLanguage("zhMO");
+        StorageUtil.setReaderConfig("lang", "zhMO");
       } else if (navigator.language.startsWith("ro")) {
         i18n.changeLanguage("ro");
         StorageUtil.setReaderConfig("lang", "ro");

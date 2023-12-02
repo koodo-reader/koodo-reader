@@ -117,8 +117,9 @@ export const settingList = [
   },
 ];
 export const langList = [
-  { label: "简体中文", value: "zh" },
-  { label: "繁體中文", value: "cht" },
+  { label: "简体中文", value: "zhCN" },
+  { label: "繁體中文", value: "zhTW" },
+  { label: "繁體中文-澳門", value: "zhMO" },
   { label: "English", value: "en" },
   { label: "Pусский", value: "ru" },
   { label: "Español", value: "es" },
