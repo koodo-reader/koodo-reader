@@ -13,7 +13,6 @@ import { Trans } from "react-i18next";
 import StorageUtil from "../../utils/serviceUtils/storageUtil";
 import AddFavorite from "../../utils/readUtils/addFavorite";
 import SettingDialog from "../../components/dialogs/settingDialog";
-import { isMobile } from "react-device-detect";
 import { Route, Switch, Redirect } from "react-router-dom";
 import { routes } from "../../router/routes";
 import Arrow from "../../components/arrow";
