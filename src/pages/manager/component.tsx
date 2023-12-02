@@ -13,6 +13,7 @@ import { Trans } from "react-i18next";
 import StorageUtil from "../../utils/serviceUtils/storageUtil";
 import AddFavorite from "../../utils/readUtils/addFavorite";
 import SettingDialog from "../../components/dialogs/settingDialog";
+import { isMobile } from "react-device-detect";
 import { Route, Switch, Redirect } from "react-router-dom";
 import { routes } from "../../router/routes";
 import Arrow from "../../components/arrow";
@@ -77,6 +78,35 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
   };
   render() {
     let { books } = this.props;
+    if (isMobile && document.location.href.indexOf("192.168") === -1) {
+      return (
+        <>
+          <p className="waring-title">
+            <Trans>Warning</Trans>
+          </p>
+          <div className="mobile-warning">
+            <span>
+              <Trans>
+                For better user experince, please visit this site on a computer
+              </Trans>
+            </span>
+          </div>
+          <div>
+            <img
+              src={
+                StorageUtil.getReaderConfig("appSkin") === "night" ||
+                (StorageUtil.getReaderConfig("appSkin") === "system" &&
+                  StorageUtil.getReaderConfig("isOSNight") === "yes")
+                  ? "./assets/empty_light.svg"
+                  : "./assets/empty.svg"
+              }
+              alt=""
+              className="waring-pic"
+            />
+          </div>
+        </>
+      );
+    }
     return (
       <div
         className="manager"
