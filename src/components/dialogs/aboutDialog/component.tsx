@@ -53,8 +53,8 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
               className="sort-by-category-list"
               onClick={() => {
                 if (
-                  StorageUtil.getReaderConfig("lang") === "zh" ||
-                  StorageUtil.getReaderConfig("lang") === "cht"
+                  StorageUtil.getReaderConfig("lang") === "zhCN" ||
+                  StorageUtil.getReaderConfig("lang") === "zhTW"
                 ) {
                   this.handleJump(
                     "https://troyeguo.notion.site/Koodo-Reader-0c9c7ccdc5104a54825dfc72f1c84bea"
@@ -80,8 +80,8 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
               className="sort-by-category-list"
               onClick={() => {
                 if (
-                  StorageUtil.getReaderConfig("lang") === "zh" ||
-                  StorageUtil.getReaderConfig("lang") === "cht"
+                  StorageUtil.getReaderConfig("lang") === "zhCN" ||
+                  StorageUtil.getReaderConfig("lang") === "zhTW"
                 ) {
                   this.handleJump(
                     "https://troyeguo.notion.site/215baeda57804fd29dbb0e91d1e6a021?v=360c00183d944b598668f34c255edfd7"

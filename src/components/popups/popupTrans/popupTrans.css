@@ -96,6 +96,9 @@
   margin: 2px;
   margin-right: 5px;
 }
+.trans-bing-icon {
+  font-size: 14px;
+}
 .trans-service-selector-inactive {
   border: 1px solid rgba(0, 0, 0, 0.05);
   color: #f16464;
