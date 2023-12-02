@@ -80,28 +80,14 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
           StorageUtil.getReaderConfig("backgroundColor") ===
             "rgba(44,47,49,1)" ? (
             <div
-              className="dark-spine-shadow-left"
-              style={
-                this.state.isSingle ||
-                (StorageUtil.getReaderConfig("backgroundColor") &&
-                  StorageUtil.getReaderConfig("backgroundColor").startsWith(
-                    "#"
-                  ))
-                  ? { display: "none" }
-                  : {}
-              }
+              className="spine-shadow-left"
+              style={this.state.isSingle ? { display: "none" } : {}}
             ></div>
           ) : (
             <div
               className="spine-shadow-left"
               style={
-                this.state.isSingle ||
-                (StorageUtil.getReaderConfig("backgroundColor") &&
-                  StorageUtil.getReaderConfig("backgroundColor").startsWith(
-                    "#"
-                  ))
-                  ? { display: "none" }
-                  : {}
+                this.state.isSingle ? { display: "none" } : { opacity: "0.2" }
               }
             ></div>
           )}
@@ -116,12 +102,9 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
           StorageUtil.getReaderConfig("backgroundColor") ===
             "rgba(44,47,49,1)" ? (
             <div
-              className="dark-spine-shadow-right"
+              className="spine-shadow-right"
               style={
-                StorageUtil.getReaderConfig("backgroundColor") &&
-                StorageUtil.getReaderConfig("backgroundColor").startsWith("#")
-                  ? { display: "none" }
-                  : this.state.isSingle
+                this.state.isSingle
                   ? {
                       position: "relative",
                       right: 0,
@@ -133,15 +116,13 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
             <div
               className="spine-shadow-right"
               style={
-                StorageUtil.getReaderConfig("backgroundColor") &&
-                StorageUtil.getReaderConfig("backgroundColor").startsWith("#")
-                  ? { display: "none" }
-                  : this.state.isSingle
+                this.state.isSingle
                   ? {
                       position: "relative",
                       right: 0,
+                      opacity: 0.2,
                     }
-                  : {}
+                  : { opacity: 0.2 }
               }
             ></div>
           )}
