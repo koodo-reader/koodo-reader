@@ -48,10 +48,13 @@ class BackupDialog extends React.Component<
   handleRestoreToLocal = async (event: any) => {
     event.preventDefault();
     this.props.handleLoadingDialog(true);
-    let result = await restore(event.target.files[0]);
-    if (result) {
-      this.handleFinish();
-    }
+    //Fix animation issue
+    setTimeout(async () => {
+      let result = await restore(event.target.files[0]);
+      if (result) {
+        this.handleFinish();
+      }
+    }, 10);
   };
   showMessage = (message: string) => {
     toast(this.props.t(message));

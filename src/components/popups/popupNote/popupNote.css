@@ -15,6 +15,7 @@
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 3;
   overflow: hidden;
+  font-size: 15px;
 }
 .editor-box-parent {
   width: 100%;

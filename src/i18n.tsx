@@ -1,8 +1,9 @@
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 import translationEN from "./assets/locales/en/translation.json";
-import translationCN from "./assets/locales/cn/translation.json";
-import translationTW from "./assets/locales/tw/translation.json";
+import translationZHCN from "./assets/locales/zh-CN/translation.json";
+import translationZHTW from "./assets/locales/zh-TW/translation.json";
+import translationZHMO from "./assets/locales/zh-MO/translation.json";
 import translationAR from "./assets/locales/ar/translation.json";
 import translationTR from "./assets/locales/tr/translation.json";
 import translationRO from "./assets/locales/ro/translation.json";
@@ -29,11 +30,14 @@ const resources = {
   en: {
     translation: translationEN,
   },
-  zh: {
-    translation: translationCN,
+  zhCN: {
+    translation: translationZHCN,
   },
-  cht: {
-    translation: translationTW,
+  zhTW: {
+    translation: translationZHTW,
+  },
+  zhMO: {
+    translation: translationZHMO,
   },
   tr: {
     translation: translationTR,
