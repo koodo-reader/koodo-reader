@@ -21,7 +21,7 @@
     "@vitalets/google-translate-api": "^8.0.0",
     "adm-zip": "^0.5.2",
     "axios": "^0.19.2",
-    "bing-translate-api": "^2.7.0",
+    "bing-translate-api": "^2.10.0",
     "buffer": "^6.0.3",
     "copy-text-to-clipboard": "^2.2.0",
     "dompurify": "^3.0.1",

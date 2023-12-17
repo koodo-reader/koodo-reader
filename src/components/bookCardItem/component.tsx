@@ -215,7 +215,13 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
                 this.setState({ isHover: false });
                 event?.stopPropagation();
               }}
-              style={this.props.isSelected ? { opacity: 1 } : { color: "#eee" }}
+              style={
+                this.props.isSelected
+                  ? { opacity: 1 }
+                  : {
+                      color: "#eee",
+                    }
+              }
             ></span>
           ) : null}
 

@@ -110,11 +110,9 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     );
   };
   handleNoteClick = (event: Event) => {
-    if (event && event.target) {
-      this.props.handleNoteKey((event.target as any).dataset.key);
-      this.props.handleMenuMode("note");
-      this.props.handleOpenMenu(true);
-    }
+    this.props.handleNoteKey((event.target as any).dataset.key);
+    this.props.handleMenuMode("note");
+    this.props.handleOpenMenu(true);
   };
   handleRenderBook = async () => {
     if (lock) return;
@@ -346,7 +344,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           id="page-area"
           style={
             document.body.clientWidth < 570
-              ? { left: 0, right: 0 }
+              ? { left: 20, right: 20 }
               : this.state.readerMode === "scroll"
               ? {
                   marginLeft: `calc(50vw - ${
