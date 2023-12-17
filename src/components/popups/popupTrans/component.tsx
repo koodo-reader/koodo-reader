@@ -37,6 +37,7 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
           });
         })
         .catch((err) => {
+          console.log(err);
           this.setState({
             translatedText: this.props.t("Error happens"),
           });

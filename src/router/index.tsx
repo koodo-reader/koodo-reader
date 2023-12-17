@@ -15,7 +15,6 @@ const Router = () => {
     if (lng) {
       //Compatile with 1.6.0 and older
       if (lng === "zh") {
-        console.log(lng);
         i18n.changeLanguage("zhCN");
       } else if (lng === "cht") {
         i18n.changeLanguage("zhTW");

@@ -87,7 +87,7 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
             <div
               className="spine-shadow-left"
               style={
-                this.state.isSingle ? { display: "none" } : { opacity: "0.2" }
+                this.state.isSingle ? { display: "none" } : { opacity: "0.15" }
               }
             ></div>
           )}
@@ -120,9 +120,9 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
                   ? {
                       position: "relative",
                       right: 0,
-                      opacity: 0.2,
+                      opacity: 0.15,
                     }
-                  : { opacity: 0.2 }
+                  : { opacity: 0.15 }
               }
             ></div>
           )}
