@@ -53,3 +53,5 @@ export const classes = [
   "line-2",
   "line-3",
 ];
+export const colors = ["#fac106", "#ebe702", "#0be603", "#0493e6"];
+export const lines = ["#FF0000", "#000080", "#0000FF", "#2EFF2E"];

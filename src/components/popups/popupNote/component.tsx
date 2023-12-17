@@ -141,7 +141,11 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
         toast.success(this.props.t("Add Successfully"));
         this.props.handleFetchNotes();
         this.props.handleMenuMode("");
-        createOneNote(note, this.handleNoteClick);
+        createOneNote(
+          note,
+          this.props.currentBook.format,
+          this.handleNoteClick
+        );
       });
     }
   }
@@ -170,7 +174,7 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
           this.props.handleMenuMode("");
           this.props.handleFetchNotes();
           this.props.handleNoteKey("");
-          removeOneNote(note.key);
+          removeOneNote(note.key, this.props.currentBook.format);
           this.props.handleOpenMenu(false);
         });
       }
