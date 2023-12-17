@@ -1,4 +1,4 @@
-import { classes } from "../../constants/themeList";
+import { classes, colors, lines } from "../../constants/themeList";
 import Note from "../../model/Note";
 import { showPDFHighlight } from "../fileUtils/pdfUtil";
 declare var window: any;
@@ -44,7 +44,7 @@ export const renderHighlighters = async (
     }
   }
 };
-export const removeOneNote = (key: string) => {
+export const removeOneNote = (key: string, format: string) => {
   let pageArea = document.getElementById("page-area");
   if (!pageArea) return;
   let iframe = pageArea.getElementsByTagName("iframe")[0];
@@ -56,30 +56,37 @@ export const removeOneNote = (key: string) => {
     const element: any = elements[index];
     const dataKey = element.getAttribute("data-key");
     if (dataKey === key) {
-      element.classList.remove("kookit-note");
-      element.removeAttribute("data-key");
-      var classes = element.classList;
-
-      // 遍历所有class名
-      for (var i = classes.length - 1; i >= 0; i--) {
-        var className = classes[i];
-
-        // 判断class名是否以"color"开头
-        if (className.startsWith("color") || className.startsWith("line")) {
-          // 删除以"color"开头的class名
-          element.classList.remove(className);
-        }
-      }
+      element.parentNode.removeChild(element);
     }
   }
 };
-export const createOneNote = async (note: Note, handleNoteClick: any) => {
-  showNoteHighlight(
-    JSON.parse(note.range),
-    classes[note.color],
-    note.key,
-    handleNoteClick
-  );
+export const createOneNote = async (
+  item: Note,
+  format: string,
+  handleNoteClick: any
+) => {
+  if (format === "PDF") {
+    let pageArea = document.getElementById("page-area");
+    if (!pageArea) return;
+    let iframe = pageArea.getElementsByTagName("iframe")[0];
+    if (!iframe || !iframe.contentWindow) return;
+    let iWin: any = iframe.contentWindow || iframe.contentDocument?.defaultView;
+    showPDFHighlight(
+      JSON.parse(item.range),
+      classes[item.color],
+      item.key,
+      handleNoteClick
+    );
+    if (!iWin || !iWin.getSelection()) return;
+    iWin.getSelection()?.empty(); // 清除文本选取
+  } else {
+    showNoteHighlight(
+      JSON.parse(item.range),
+      classes[item.color],
+      item.key,
+      handleNoteClick
+    );
+  }
 };
 export const showNoteHighlight = (
   range: any,
@@ -120,21 +127,7 @@ function clearHighlight() {
   const elements = doc.querySelectorAll(".kookit-note");
   for (let index = 0; index < elements.length; index++) {
     const element: any = elements[index];
-    element.classList.remove("kookit-note");
-    element.removeAttribute("data-key");
-
-    var classes = element.classList;
-
-    // 遍历所有class名
-    for (var i = classes.length - 1; i >= 0; i--) {
-      var className = classes[i];
-
-      // 判断class名是否以"color"开头
-      if (className.startsWith("color") || className.startsWith("line")) {
-        // 删除以"color"开头的class名
-        element.classList.remove(className);
-      }
-    }
+    element.parentNode.removeChild(element);
   }
 }
 
@@ -152,7 +145,13 @@ async function highlightRange(
     newNode?.setAttribute(
       "style",
       "position: absolute;" +
-        "left:" +
+        (colorCode.indexOf("color") > -1
+          ? "background-color: "
+          : "border-bottom: ") +
+        (colorCode.indexOf("color") > -1
+          ? colors[colorCode.split("-")[1]] + ";opacity: 0.2"
+          : `2px solid ${lines[colorCode.split("-")[1]]}`) +
+        ";left:" +
         (Math.min(rect.left, rect.x) + doc.body.scrollLeft) +
         "px; top:" +
         (Math.min(rect.top, rect.y) + doc.body.scrollTop) +
@@ -161,9 +160,9 @@ async function highlightRange(
         rect.width +
         "px; height:" +
         rect.height +
-        "px; z-index:-1;"
+        "px; z-index:0;"
     );
-    newNode.setAttribute("class", colorCode + " kookit-note");
+    newNode.setAttribute("class", " kookit-note");
     newNode.setAttribute("data-key", noteKey);
     // newNode.setAttribute("onclick", `window.handleNoteClick()`);
     newNode.addEventListener("click", (event) => {
