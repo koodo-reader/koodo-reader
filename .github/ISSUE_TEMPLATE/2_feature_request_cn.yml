@@ -13,7 +13,7 @@ body:
   - type: checkboxes
     id: testing2
     attributes:
-      label: 如果您有不止一个需求，请再开一个 issue 来提交.
+      label: 如果您有不止一个需求，请在多个 issue 里分别提交.
       options:
         - label: "Yes"
           required: true
