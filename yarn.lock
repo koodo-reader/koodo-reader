@@ -4287,10 +4287,10 @@ binary-extensions@^2.0.0:
   resolved "https://registry.yarnpkg.com/binary-extensions/-/binary-extensions-2.2.0.tgz#75f502eeaf9ffde42fc98829645be4ea76bd9e2d"
   integrity sha512-jDctJ/IVQbZoJykoeHbhXpOlNBqGNcwXJKJog42E5HDPUwQTSdjCHdihjj0DlnheQ7blbT6dHOafNAiS8ooQKA==
 
-bing-translate-api@^2.7.0:
-  version "2.9.0"
-  resolved "https://registry.yarnpkg.com/bing-translate-api/-/bing-translate-api-2.9.0.tgz#79f5868b7f9b7e475380bc99d35490e5e33c0bfd"
-  integrity sha512-jvjbKi6qgaD0/Wln9/rlViuhE1DoYGuEku7fBVvNHD4yoahWb8zquxJFkwcMGo+x/RKJpTRzXX5gEI2Vm2ETBQ==
+bing-translate-api@^2.10.0:
+  version "2.10.0"
+  resolved "https://registry.yarnpkg.com/bing-translate-api/-/bing-translate-api-2.10.0.tgz#a391ce2d7e9be07abf30b98fb0a147a01ab69b3d"
+  integrity sha512-jAxLMMftjB9KizG/IqUz+pyfB6n4Q8zu7LVgbAULeHbBvOy+Enwxm+f2uNrKTeiO4tKhNqi13Kjk29DOc+q/zw==
   dependencies:
     got "^11.8.6"
 

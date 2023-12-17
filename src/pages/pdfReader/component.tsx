@@ -117,11 +117,9 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     );
   };
   handleNoteClick = (event: Event) => {
-    if (event && event.target) {
-      this.props.handleNoteKey((event.target as any).dataset.key);
-      this.props.handleMenuMode("note");
-      this.props.handleOpenMenu(true);
-    }
+    this.props.handleNoteKey((event.target as any).dataset.key);
+    this.props.handleMenuMode("note");
+    this.props.handleOpenMenu(true);
   };
   render() {
     return (

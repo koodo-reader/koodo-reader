@@ -14,18 +14,13 @@ import {
   removePDFHighlight,
 } from "../../../utils/fileUtils/pdfUtil";
 import { getIframeDoc } from "../../../utils/serviceUtils/docUtil";
-import { renderHighlighters } from "../../../utils/serviceUtils/noteUtil";
+import {
+  createOneNote,
+  removeOneNote,
+} from "../../../utils/serviceUtils/noteUtil";
+import { classes } from "../../../constants/themeList";
 declare var window: any;
-let classes = [
-  "color-0",
-  "color-1",
-  "color-2",
-  "color-3",
-  "line-0",
-  "line-1",
-  "line-2",
-  "line-3",
-];
+
 class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
   constructor(props: PopupNoteProps) {
     super(props);
@@ -62,38 +57,11 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
   handleTag = (tag: string[]) => {
     this.setState({ tag });
   };
-  handleHighlight = () => {
-    let highlighters: any = this.props.notes;
-    if (!highlighters) return;
-    let highlightersByChapter = highlighters.filter((item: Note) => {
-      if (this.props.currentBook.format !== "PDF") {
-        return (
-          (item.chapter ===
-            this.props.htmlBook.rendition.getChapterDoc()[
-              this.props.chapterDocIndex
-            ].label ||
-            item.chapterIndex === this.props.chapterDocIndex) &&
-          item.bookKey === this.props.currentBook.key
-        );
-      } else {
-        return (
-          item.chapterIndex === this.props.chapterDocIndex &&
-          item.bookKey === this.props.currentBook.key
-        );
-      }
-    });
-    renderHighlighters(
-      highlightersByChapter,
-      this.props.currentBook.format,
-      this.handleNoteClick
-    );
-  };
+
   handleNoteClick = (event: Event) => {
-    if (event && event.target) {
-      this.props.handleNoteKey((event.target as any).dataset.key);
-      this.props.handleMenuMode("note");
-      this.props.handleOpenMenu(true);
-    }
+    this.props.handleNoteKey((event.target as any).dataset.key);
+    this.props.handleMenuMode("note");
+    this.props.handleOpenMenu(true);
   };
   createNote() {
     let notes = (document.querySelector(".editor-box") as HTMLInputElement)
@@ -123,7 +91,6 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
         this.props.handleFetchNotes();
         this.props.handleMenuMode("");
         this.props.handleNoteKey("");
-        this.handleHighlight();
       });
     } else {
       //创建笔记
@@ -174,7 +141,7 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
         toast.success(this.props.t("Add Successfully"));
         this.props.handleFetchNotes();
         this.props.handleMenuMode("");
-        this.handleHighlight();
+        createOneNote(note, this.handleNoteClick);
       });
     }
   }
@@ -203,7 +170,7 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
           this.props.handleMenuMode("");
           this.props.handleFetchNotes();
           this.props.handleNoteKey("");
-          this.handleHighlight();
+          removeOneNote(note.key);
           this.props.handleOpenMenu(false);
         });
       }
@@ -211,7 +178,6 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
       this.props.handleOpenMenu(false);
       this.props.handleMenuMode("");
       this.props.handleNoteKey("");
-      this.handleHighlight();
     }
   };
 

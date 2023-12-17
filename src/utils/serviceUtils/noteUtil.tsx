@@ -1,3 +1,4 @@
+import { classes } from "../../constants/themeList";
 import Note from "../../model/Note";
 import { showPDFHighlight } from "../fileUtils/pdfUtil";
 declare var window: any;
@@ -6,16 +7,6 @@ export const renderHighlighters = async (
   format: string,
   handleNoteClick: any
 ) => {
-  let classes = [
-    "color-0",
-    "color-1",
-    "color-2",
-    "color-3",
-    "line-0",
-    "line-1",
-    "line-2",
-    "line-3",
-  ];
   clearHighlight();
   for (let index = 0; index < notes.length; index++) {
     const item = notes[index];
@@ -36,7 +27,7 @@ export const renderHighlighters = async (
         if (!iWin || !iWin.getSelection()) return;
         iWin.getSelection()?.empty(); // 清除文本选取
       } else {
-        await showNoteHighlight(
+        showNoteHighlight(
           JSON.parse(item.range),
           classes[item.color],
           item.key,
@@ -53,7 +44,44 @@ export const renderHighlighters = async (
     }
   }
 };
-export const showNoteHighlight = async (
+export const removeOneNote = (key: string) => {
+  let pageArea = document.getElementById("page-area");
+  if (!pageArea) return;
+  let iframe = pageArea.getElementsByTagName("iframe")[0];
+  if (!iframe || !iframe.contentWindow) return;
+  let doc = iframe.contentDocument;
+  if (!doc) return;
+  const elements = doc.querySelectorAll(".kookit-note");
+  for (let index = 0; index < elements.length; index++) {
+    const element: any = elements[index];
+    const dataKey = element.getAttribute("data-key");
+    if (dataKey === key) {
+      element.classList.remove("kookit-note");
+      element.removeAttribute("data-key");
+      var classes = element.classList;
+
+      // 遍历所有class名
+      for (var i = classes.length - 1; i >= 0; i--) {
+        var className = classes[i];
+
+        // 判断class名是否以"color"开头
+        if (className.startsWith("color") || className.startsWith("line")) {
+          // 删除以"color"开头的class名
+          element.classList.remove(className);
+        }
+      }
+    }
+  }
+};
+export const createOneNote = async (note: Note, handleNoteClick: any) => {
+  showNoteHighlight(
+    JSON.parse(note.range),
+    classes[note.color],
+    note.key,
+    handleNoteClick
+  );
+};
+export const showNoteHighlight = (
   range: any,
   colorCode: string,
   noteKey: string,
@@ -94,6 +122,7 @@ function clearHighlight() {
     const element: any = elements[index];
     element.classList.remove("kookit-note");
     element.removeAttribute("data-key");
+
     var classes = element.classList;
 
     // 遍历所有class名
@@ -108,39 +137,46 @@ function clearHighlight() {
     }
   }
 }
-function highlightRange(
+
+async function highlightRange(
   range: Range,
   colorCode: string,
   noteKey: string,
   handleNoteClick: any,
   doc: any
 ) {
-  var newNode = document.createElement("span");
-  newNode.setAttribute("class", colorCode + " kookit-note");
-  newNode.setAttribute("data-key", noteKey);
-  // newNode.setAttribute("onclick", `window.handleNoteClick()`);
-  newNode.addEventListener("click", (event) => {
-    handleNoteClick(event);
-  });
-
-  range.surroundContents(newNode);
-  var startNode = range.startContainer;
-  var endNode = range.endContainer;
-  var startOffset = range.startOffset;
-  var endOffset = range.endOffset;
-  var newRange = doc!.createRange();
-  newRange.setStart(startNode, startOffset);
-  newRange.setEnd(endNode, endOffset);
-  var commonAncestor = newRange.commonAncestorContainer;
-  var treeWalker = document.createTreeWalker(
-    commonAncestor,
-    NodeFilter.SHOW_ELEMENT
-  );
-  while (treeWalker.nextNode()) {
-    var node: any = treeWalker.currentNode;
-    if (node.nodeType === 1) {
-      node.setAttribute("data-key", noteKey);
-    }
+  const rects = range.getClientRects();
+  for (let index = 0; index < rects.length; index++) {
+    const rect = rects[index];
+    var newNode = document.createElement("span");
+    newNode?.setAttribute(
+      "style",
+      "position: absolute;" +
+        "left:" +
+        (Math.min(rect.left, rect.x) + doc.body.scrollLeft) +
+        "px; top:" +
+        (Math.min(rect.top, rect.y) + doc.body.scrollTop) +
+        "px;" +
+        "width:" +
+        rect.width +
+        "px; height:" +
+        rect.height +
+        "px; z-index:-1;"
+    );
+    newNode.setAttribute("class", colorCode + " kookit-note");
+    newNode.setAttribute("data-key", noteKey);
+    // newNode.setAttribute("onclick", `window.handleNoteClick()`);
+    newNode.addEventListener("click", (event) => {
+      if (event && event.target) {
+        if (
+          (event.target as any).dataset &&
+          (event.target as any).dataset.key
+        ) {
+          handleNoteClick(event);
+        }
+      }
+    });
+    doc.body.appendChild(newNode);
   }
 }
 
