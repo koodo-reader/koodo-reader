@@ -5,8 +5,7 @@ body:
   - type: checkboxes
     id: testing1
     attributes:
-      label: I've read Koodo Reader's roadmap, there is no similar feature.
-      description: https://troyeguo.notion.site/d1c19a132932465bae1d89dd963c92ea?v=ca8aa69cf25849c18c92b92ba868663b
+      label: I've searched the issue list, there is no similar features.
       options:
         - label: "Yes"
           required: true
@@ -14,7 +13,7 @@ body:
   - type: checkboxes
     id: testing2
     attributes:
-      label: This issue only requests one feature.
+      label: Please open another issue if you have multiple features to request.
       options:
         - label: "Yes"
           required: true
