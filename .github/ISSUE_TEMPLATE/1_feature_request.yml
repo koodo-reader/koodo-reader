@@ -13,7 +13,7 @@ body:
   - type: checkboxes
     id: testing2
     attributes:
-      label: Please open another issue if you have multiple features to request.
+      label: If you have more than one feature, please open multiple issues to report respectively.
       options:
         - label: "Yes"
           required: true
