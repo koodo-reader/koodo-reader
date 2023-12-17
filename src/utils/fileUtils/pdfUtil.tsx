@@ -141,7 +141,7 @@ export const showPDFHighlight = (
   selected: any,
   colorCode: string,
   noteKey: string,
-  handlePDFClick: any
+  handleNoteClick: any
 ) => {
   let iWin = getPDFIframeDoc();
   if (!iWin) return;
@@ -180,7 +180,14 @@ export const showPDFHighlight = (
       el?.setAttribute("data-key", noteKey);
       el?.setAttribute("class", "pdf-note");
       el?.addEventListener("click", (event: any) => {
-        handlePDFClick(event);
+        if (event && event.target) {
+          if (
+            (event.target as any).dataset &&
+            (event.target as any).dataset.key
+          ) {
+            handleNoteClick(event);
+          }
+        }
       });
 
       pageElement.appendChild(el);
