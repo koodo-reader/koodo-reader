@@ -118,7 +118,11 @@ class PopupOption extends React.Component<PopupOptionProps> {
       toast.success(this.props.t("Add Successfully"));
       this.props.handleFetchNotes();
       this.props.handleMenuMode("");
-      createOneNote(digest, this.handleNoteClick);
+      createOneNote(
+        digest,
+        this.props.currentBook.format,
+        this.handleNoteClick
+      );
     });
   };
 

@@ -1,9 +1,9 @@
+import { colors, lines } from "../../constants/themeList";
 import { getPDFIframeDoc } from "../serviceUtils/docUtil";
 
 declare var window: any;
 var pdfjsLib = window["pdfjs-dist/build/pdf"];
-let colors = ["#fac106", "#ebe702", "#0be603", "#0493e6"];
-let lines = ["#FF0000", "#000080", "#0000FF", "#2EFF2E"];
+
 export const getHightlightCoords = () => {
   let pageArea = document.getElementById("page-area");
   if (!pageArea) return;
@@ -126,10 +126,9 @@ export const removePDFHighlight = (
   var page = iWin.PDFViewerApplication.pdfViewer.getPageView(pageIndex);
   if (page && page.div && page.textLayer && page.textLayer.textLayerDiv) {
     var pageElement =
-      colorCode.indexOf("color") > -1
-        ? page.textLayer.textLayerDiv
-        : page.textLayerDiv;
-    let noteElements = pageElement.querySelectorAll(".pdf-note");
+      colorCode.indexOf("color") > -1 ? page.textLayer.textLayerDiv : page.div;
+
+    let noteElements = pageElement.querySelectorAll(".kookit-note");
     noteElements.forEach((item: any) => {
       if (item.dataset.key === noteKey) {
         item.parentNode?.removeChild(item);
@@ -178,7 +177,7 @@ export const showPDFHighlight = (
           "px; z-index:0;"
       );
       el?.setAttribute("data-key", noteKey);
-      el?.setAttribute("class", "pdf-note");
+      el?.setAttribute("class", "kookit-note");
       el?.addEventListener("click", (event: any) => {
         if (event && event.target) {
           if (
