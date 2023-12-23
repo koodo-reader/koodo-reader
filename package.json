@@ -103,7 +103,8 @@
       "node_modules/**/*",
       "package.json",
       "main.js",
-      "edge-tts.js"
+      "edge-tts.js",
+      "deepl-trans.js"
     ],
     "directories": {
       "buildResources": "assets"

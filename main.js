@@ -14,6 +14,7 @@ const store = new Store();
 const fs = require("fs");
 const configDir = app.getPath("userData");
 const { ra } = require("./edge-tts");
+const { deeplTranlate } = require("./deepl-trans");
 const dirPath = path.join(configDir, "uploads");
 let mainWin;
 const singleInstance = app.requestSingleInstanceLock();
@@ -133,6 +134,11 @@ const createMainWin = () => {
     }
 
     return path.join(dirPath, "tts", audioName);
+  });
+  ipcMain.handle("deepl-trans", async (event, config) => {
+    console.log(dirPath);
+    let { text, from, to } = config;
+    return deeplTranlate(text, from, to);
   });
   ipcMain.handle("clear-tts", async (event, config) => {
     if (!fs.existsSync(path.join(dirPath, "tts"))) {
