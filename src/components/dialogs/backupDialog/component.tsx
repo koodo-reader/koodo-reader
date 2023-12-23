@@ -122,11 +122,8 @@ class BackupDialog extends React.Component<
           }
 
           break;
-        case 2:
-          this.showMessage("Coming Soon");
-          break;
 
-        case 3:
+        case 2:
           if (!StorageUtil.getReaderConfig("webdav_token")) {
             this.props.handleTokenDialog(true);
             break;
@@ -184,7 +181,7 @@ class BackupDialog extends React.Component<
             className="backup-page-list-item"
             onClick={() => {
               //webdav is avavilible on desktop
-              if (index === 3 && !isElectron) {
+              if (index === 2 && !isElectron) {
                 toast(
                   this.props.t(
                     "Koodo Reader's web version are limited by the browser, for more powerful features, please download the desktop version."
@@ -194,7 +191,6 @@ class BackupDialog extends React.Component<
               }
               this.handleDrive(index);
             }}
-            style={index !== 2 ? { opacity: 1 } : {}}
           >
             <div className="backup-page-list-item-container">
               <span
