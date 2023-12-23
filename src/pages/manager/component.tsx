@@ -69,7 +69,7 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
     this.props.handleFetchNoteSortCode();
     this.props.handleFetchList();
   }
-  componentDidMount() {
+  async componentDidMount() {
     this.props.handleReadingState(false);
   }
 
