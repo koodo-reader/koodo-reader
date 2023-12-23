@@ -11,7 +11,7 @@ import { withRouter } from "react-router-dom";
 import toast from "react-hot-toast";
 import { HtmlMouseEvent } from "../../../utils/serviceUtils/mouseEvent";
 import storageUtil from "../../../utils/serviceUtils/storageUtil";
-import EdgeUtil from "../../../utils/serviceUtils/edgeUtil";
+import BingTTSUtil from "../../../utils/serviceUtils/bingTTSUtil";
 declare var document: any;
 declare var window: any;
 class OperationPanel extends React.Component<
@@ -71,7 +71,7 @@ class OperationPanel extends React.Component<
     this.props.handleReadingState(false);
     this.props.handleSearch(false);
     window.speechSynthesis.cancel();
-    EdgeUtil.pauseAudio();
+    BingTTSUtil.pauseAudio();
     ReadingTime.setTime(this.props.currentBook.key, this.props.time);
     this.handleExitFullScreen();
     if (this.props.htmlBook) {
