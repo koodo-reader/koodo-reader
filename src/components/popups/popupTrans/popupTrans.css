@@ -91,12 +91,16 @@
   opacity: 1;
 }
 .trans-google-icon,
-.trans-bing-icon {
+.trans-bing-icon,
+.trans-deepl-icon {
   font-size: 13px;
   margin: 2px;
   margin-right: 5px;
 }
 .trans-bing-icon {
+  font-size: 14px;
+}
+.trans-deepl-icon {
   font-size: 14px;
 }
 .trans-service-selector-inactive {
@@ -115,7 +119,7 @@
 .trans-service-selector-container {
   position: absolute;
   top: 20px;
-  width: 180px;
+  width: 270px;
   display: flex;
   justify-content: space-between;
 }

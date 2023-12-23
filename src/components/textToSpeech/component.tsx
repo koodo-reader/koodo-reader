@@ -4,10 +4,10 @@ import { Trans } from "react-i18next";
 import { speedList } from "../../constants/dropdownList";
 import StorageUtil from "../../utils/serviceUtils/storageUtil";
 import { sleep } from "../../utils/commonUtil";
-import EdgeUtil from "../../utils/serviceUtils/edgeUtil";
 import { isElectron } from "react-device-detect";
 import toast from "react-hot-toast";
 import RecordLocation from "../../utils/readUtils/recordLocation";
+import BingTTSUtil from "../../utils/serviceUtils/bingTTSUtil";
 
 class TextToSpeech extends React.Component<
   TextToSpeechProps,
@@ -53,7 +53,7 @@ class TextToSpeech extends React.Component<
     };
     this.nativeVoices = await setSpeech();
     if (isElectron) {
-      this.edgeVoices = await EdgeUtil.getVoiceList();
+      this.edgeVoices = await BingTTSUtil.getVoiceList();
       this.voices = [
         ...this.nativeVoices,
         ...this.edgeVoices.map((item) => {
@@ -74,7 +74,7 @@ class TextToSpeech extends React.Component<
   handleChangeAudio = () => {
     if (this.state.isAudioOn) {
       window.speechSynthesis.cancel();
-      EdgeUtil.pauseAudio();
+      BingTTSUtil.pauseAudio();
       this.setState({ isAudioOn: false });
     } else {
       this.handleStartSpeech();
@@ -134,15 +134,15 @@ class TextToSpeech extends React.Component<
     let voiceIndex = StorageUtil.getReaderConfig("voiceIndex") || 0;
     let speed = StorageUtil.getReaderConfig("voiceSpeed") || 1;
 
-    EdgeUtil.setAudioPaths();
-    await EdgeUtil.cacheAudio(
+    BingTTSUtil.setAudioPaths();
+    await BingTTSUtil.cacheAudio(
       [this.nodeList[0]],
       this.edgeVoices[voiceIndex - this.nativeVoices.length].ShortName,
       speed * 100 - 100
     );
 
     setTimeout(async () => {
-      await EdgeUtil.cacheAudio(
+      await BingTTSUtil.cacheAudio(
         this.nodeList.slice(1),
         this.edgeVoices[voiceIndex - this.nativeVoices.length].ShortName,
         speed * 100 - 100
@@ -154,9 +154,9 @@ class TextToSpeech extends React.Component<
       let style = "background: #f3a6a68c";
       this.props.htmlBook.rendition.highlightNode(currentText, style);
 
-      if (index > EdgeUtil.getAudioPaths().length - 1) {
+      if (index > BingTTSUtil.getAudioPaths().length - 1) {
         while (true) {
-          if (index < EdgeUtil.getAudioPaths().length - 1) break;
+          if (index < BingTTSUtil.getAudioPaths().length - 1) break;
           await new Promise((resolve) => setTimeout(resolve, 500));
         }
       }
@@ -245,11 +245,11 @@ class TextToSpeech extends React.Component<
   }
   handleSpeech = async (index: number, voiceIndex: number, speed: number) => {
     return new Promise<string>(async (resolve, reject) => {
-      let res = await EdgeUtil.readAloud(index);
+      let res = await BingTTSUtil.readAloud(index);
       if (res === "loaderror") {
         resolve("start");
       } else {
-        let player = EdgeUtil.getPlayer();
+        let player = BingTTSUtil.getPlayer();
         player.on("end", async () => {
           if (!(this.state.isAudioOn && this.props.isReading)) {
             resolve("end");

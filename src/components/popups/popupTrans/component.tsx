@@ -3,9 +3,11 @@ import "./popupTrans.css";
 import { PopupTransProps, PopupTransState } from "./interface";
 import {
   googleTransList,
-  bingTransList,
+  edgeTransList,
+  deeplTransList,
 } from "../../../constants/translationList";
 import StorageUtil from "../../../utils/serviceUtils/storageUtil";
+import { bingTranlate } from "../../../utils/serviceUtils/bingTransUtil";
 class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
   constructor(props: PopupTransProps) {
     super(props);
@@ -24,23 +26,34 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
   }
   handleTrans = (text: string) => {
     if (this.state.transService === "Bing") {
-      const { translate } = window.require("bing-translate-api");
-      translate(
+      bingTranlate(
         text,
-        StorageUtil.getReaderConfig("transSource") || "auto-detect",
-        StorageUtil.getReaderConfig("transTarget") || "en",
-        false
+        StorageUtil.getReaderConfig("transSource") || "",
+        StorageUtil.getReaderConfig("transTarget") || "en"
       )
         .then((res) => {
           this.setState({
-            translatedText: res.translation,
+            translatedText: res,
           });
         })
         .catch((err) => {
           console.log(err);
+        });
+    } else if (this.state.transService === "Deepl") {
+      window
+        .require("electron")
+        .ipcRenderer.invoke("deepl-trans", {
+          text: text,
+          from: StorageUtil.getReaderConfig("transSource"),
+          to: StorageUtil.getReaderConfig("transTarget"),
+        })
+        .then((res) => {
           this.setState({
-            translatedText: this.props.t("Error happens"),
+            translatedText: res,
           });
+        })
+        .catch((err) => {
+          console.log(err);
         });
     } else {
       const translate = window.require("@vitalets/google-translate-api");
@@ -63,7 +76,7 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
   handleChangeService(target: string) {
     this.setState({ transService: target }, () => {
       StorageUtil.setReaderConfig("transService", target);
-      let autoValue = target === "Google" ? "auto" : "auto-detect";
+      let autoValue = target === "Google" || target === "Deepl" ? "auto" : "";
       this.setState({ transSource: autoValue, transTarget: "en" }, () => {
         StorageUtil.setReaderConfig("transTarget", "en");
         StorageUtil.setReaderConfig("transSource", autoValue);
@@ -103,6 +116,19 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
               <span className="icon-bing trans-bing-icon"></span>
               Bing
             </div>
+            <div
+              className={
+                this.state.transService === "Deepl"
+                  ? "trans-service-selector"
+                  : "trans-service-selector-inactive"
+              }
+              onClick={() => {
+                this.handleChangeService("Deepl");
+              }}
+            >
+              <span className="icon-deepl trans-deepl-icon"></span>
+              Deepl
+            </div>
           </div>
           <div className="trans-lang-selector-container">
             <div className="original-lang-box">
@@ -119,7 +145,9 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
               >
                 {(this.state.transService === "Google"
                   ? Object.keys(googleTransList)
-                  : Object.keys(bingTransList)
+                  : this.state.transService === "Deepl"
+                  ? Object.keys(deeplTransList)
+                  : Object.keys(edgeTransList)
                 ).map((item, index) => {
                   return (
                     <option
@@ -135,7 +163,9 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
                       {
                         (this.state.transService === "Google"
                           ? Object.values(googleTransList)
-                          : Object.values(bingTransList))[index]
+                          : this.state.transService === "Deepl"
+                          ? Object.values(deeplTransList)
+                          : Object.values(edgeTransList))[index]
                       }
                     </option>
                   );
@@ -156,7 +186,9 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
               >
                 {(this.state.transService === "Google"
                   ? Object.keys(googleTransList)
-                  : Object.keys(bingTransList)
+                  : this.state.transService === "Deepl"
+                  ? Object.keys(deeplTransList)
+                  : Object.keys(edgeTransList)
                 ).map((item, index) => {
                   return (
                     <option
@@ -172,7 +204,9 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
                       {
                         (this.state.transService === "Google"
                           ? Object.values(googleTransList)
-                          : Object.values(bingTransList))[index]
+                          : this.state.transService === "Deepl"
+                          ? Object.values(deeplTransList)
+                          : Object.values(edgeTransList))[index]
                       }
                     </option>
                   );

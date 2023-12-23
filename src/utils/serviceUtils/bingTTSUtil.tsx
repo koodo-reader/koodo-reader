@@ -1,6 +1,6 @@
 import { voiceList } from "../../constants/voiceList";
 import { Howl } from "howler";
-class EdgeUtil {
+class BingTTSUtil {
   static player: any;
   static currentAudioPath: string = "";
   static audioPaths: string[] = [];
@@ -106,4 +106,4 @@ class EdgeUtil {
     });
   }
 }
-export default EdgeUtil;
+export default BingTTSUtil;
