@@ -241,7 +241,7 @@
     "Click the import button to add books": "Klik op de importknop om boeken toe te voegen",
     "Turn on night mode": "Nachtmodus inschakelen",
     "Turn on auto update": "Automatisch bijwerken inschakelen",
-    "Auto Update relys on GitHub Release for package hosting, if your internet doesn't have stable connection to GitHub, we highly recommand you to turn off this option": "Automatisch bijwerken is afhankelijk van GitHub. Als uw internetverbinding niet stabiel of snel genoeg is, schakel deze optie dan uit.",
+    "Auto Update relies on GitHub Release for package hosting, if your internet doesn't have stable connection to GitHub, we highly recommand you to turn off this option": "Automatisch bijwerken is afhankelijk van GitHub. Als uw internetverbinding niet stabiel of snel genoeg is, schakel deze optie dan uit.",
     "File size": "Bestandsgrootte",
     "Take effect at next startup": "Herstart om toe te passen",
     "View Mode": "Weergavemodus",

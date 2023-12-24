@@ -245,7 +245,7 @@
   "Click the import button to add books": "Apasați butonul de importare pentru a adăuga cărți",
   "Turn on night mode": "Activați modul de noapte",
   "Turn on auto update": "Activați actualizarea automată",
-  "Auto Update relys on GitHub Release for package hosting, if your internet doesn't have stable connection to GitHub, we highly recommand you to turn off this option": "Actualizarea automată se bazează pe lansarea GitHub pentru găzduirea pachetelor, dacă internetul dvs. nu are o conexiune stabilă la GitHub, vă recomandăm să dezactivați această opțiune",
+  "Auto Update relies on GitHub Release for package hosting, if your internet doesn't have stable connection to GitHub, we highly recommand you to turn off this option": "Actualizarea automată se bazează pe lansarea GitHub pentru găzduirea pachetelor, dacă internetul dvs. nu are o conexiune stabilă la GitHub, vă recomandăm să dezactivați această opțiune",
   "File size": "Mărimea fișierului",
   "Take effect at next startup": "Intră în vigoare la următoarea pornire",
   "View Mode": "Modul de vizualizare",
