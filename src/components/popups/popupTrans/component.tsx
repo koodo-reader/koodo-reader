@@ -8,6 +8,7 @@ import {
 } from "../../../constants/translationList";
 import StorageUtil from "../../../utils/serviceUtils/storageUtil";
 import { bingTranlate } from "../../../utils/serviceUtils/bingTransUtil";
+import { deeplTranlate } from "../../../utils/serviceUtils/deeplTransUtil";
 class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
   constructor(props: PopupTransProps) {
     super(props);
@@ -40,13 +41,11 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
           console.log(err);
         });
     } else if (this.state.transService === "Deepl") {
-      window
-        .require("electron")
-        .ipcRenderer.invoke("deepl-trans", {
-          text: text,
-          from: StorageUtil.getReaderConfig("transSource"),
-          to: StorageUtil.getReaderConfig("transTarget"),
-        })
+      deeplTranlate(
+        text,
+        StorageUtil.getReaderConfig("transSource") || "auto",
+        StorageUtil.getReaderConfig("transTarget") || "EN"
+      )
         .then((res) => {
           this.setState({
             translatedText: res,
