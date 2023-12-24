@@ -342,7 +342,7 @@
   "No popup when selecting texts": "ཡི་གེ་གདམ་སྐབས་འཆར་ངོས་གཞན་པ་མི་ཡོང་།",
   "Turn it on when you want Koodo to work with other third-party translation service, right clicking on the selected text will trigger popup again": "Koodoནས་ཕྱོགས་གསུམ་པའི་ལོ་ཙཱའི་ཞབས་ཞུ་སྤྱོད་འདོད་ན། དཔེ་ཆའི་ཁྲོད་ནས་ཡི་གེ་གང་རུང་གདམ་ནས་བྱེད་ནུས་འདིའི་ཁ་ཕྱེས་དགོས།",
   "Disable trash bin": "སྙིགས་སྣོད་མེད་པར་བཟོ།",
-  "When deleting books, they will be deleted permanetly instead of sending to trash bin": "དཔེ་ཆ་གང་རུང་གསུབ་ན། སྙིགས་སྣོད་དུ་མ་སྐྱེལ་བར་ཐད་ཀར་གསུབ་འགྲོ།",
+  "When deleting books, they will be deleted permanently instead of sending to trash bin": "དཔེ་ཆ་གང་རུང་གསུབ་ན། སྙིགས་སྣོད་དུ་མ་སྐྱེལ་བར་ཐད་ཀར་གསུབ་འགྲོ།",
   "Hide books already added to the shelf": "དཔེ་སྒྲོམ་ནང་དུ་བསྣན་ཟིན་པའི་དཔེ་ཆ་སྦས་སྐུང་།",
   "Hide books which have been added to the shelf, so they won't show up in home page": "དཔེ་སྒྲོམ་ནང་དུ་བསྣན་ཟིན་པའི་དཔེ་ཆ་སྦས་སྐུང་བྱས་ན། དཔེ་ཆ་དེ་ཉིད་གཙོ་ངོས་ནས་མི་མངོན།",
   "Delete book from shelf also deleting book itself": "དཔེ་སྒྲོམ་ནང་གི་དཔེ་ཆ་གསུབ་ན། དཔེ་ཆ་དེ་དུས་གཏན་དུ་གསུབ་འགྲོ། ",
