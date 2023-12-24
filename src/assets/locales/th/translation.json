@@ -339,7 +339,7 @@
   "No popup when selecting texts": "ไม่มีป๊อปอัพเมื่อเลือกข้อความ",
   "Turn it on when you want Koodo to work with other third-party translation service, right clicking on the selected text will trigger popup again": "เปิดใช้งานเมื่อคุณต้องการให้ Koodo ทำงานร่วมกับบริการแปลภาษาบุคคลที่สาม คลิกขวาบนข้อความที่เลือกจะเรียกใช้ป๊อปอัพอีกครั้ง",
   "Disable trash bin": "ปิดใช้งานถังขยะ",
-  "When deleting books, they will be deleted permanetly instead of sending to trash bin": "เมื่อลบหนังสือไปแล้ว มันจะถูกลบถาวรแทนที่จะส่งไปยังถังขยะ",
+  "When deleting books, they will be deleted permanently instead of sending to trash bin": "เมื่อลบหนังสือไปแล้ว มันจะถูกลบถาวรแทนที่จะส่งไปยังถังขยะ",
   "Hide books already added to the shelf": "ซ่อนหนังสือที่เพิ่มเข้าชั้นวางแล้ว",
   "Hide books which have been added to the shelf, so they won't show up in home page": "ซ่อนหนังสือที่เพิ่มเข้าชั้นวางไว้ ดังนั้นจะไม่ปรากฏในหน้าโฮมเพจ",
   "Delete book from shelf also deleting book itself": "การลบหนังสือออกจากชั้นวางเช่นเดียวกับการลบหนังสือตัวตน",

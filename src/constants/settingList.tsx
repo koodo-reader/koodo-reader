@@ -50,7 +50,7 @@ export const settingList = [
   {
     isElectron: false,
     title: "Disable trash bin",
-    desc: "When deleting books, they will be deleted permanetly instead of sending to trash bin",
+    desc: "When deleting books, they will be deleted permanently instead of sending to trash bin",
     propName: "isDisableTrashBin",
   },
   {

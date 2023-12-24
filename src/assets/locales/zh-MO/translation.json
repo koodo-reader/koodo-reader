@@ -342,7 +342,7 @@
     "No popup when selecting texts": "選擇文字時不彈出視窗",
     "Turn it on when you want Koodo to work with other third-party translation service, right clicking on the selected text will trigger popup again": "啟用這項表示您希望 Koodo 閱讀器與第三方翻譯服務配合使用，在已選取文字上點擊右鍵將再次彈出視窗",
     "Disable trash bin": "禁用垃圾桶",
-    "When deleting books, they will be deleted permanetly instead of sending to trash bin": "刪除書籍時，書籍將被永久刪除而不經垃圾桶",
+    "When deleting books, they will be deleted permanently instead of sending to trash bin": "刪除書籍時，書籍將被永久刪除而不經垃圾桶",
     "Hide books already added to the shelf": "隱藏已加入書架的書籍",
     "Hide books which have been added to the shelf, so they won't show up in home page": "隱藏已新增至書架的書籍，這些書籍將不會顯示在主頁中",
     "Delete book from shelf also deleting book itself": "從書架中移出書籍時，並刪除書籍",
