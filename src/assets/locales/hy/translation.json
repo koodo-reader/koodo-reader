@@ -342,7 +342,7 @@
     "No popup when selecting texts": "Տեքստի հատվածն ընտրելիս՝ չցուցադրել մենյուն",
     "Turn it on when you want Koodo to work with other third-party translation service, right clicking on the selected text will trigger popup again": "Միացրեք, եթե ցանկանում եք, որ տեքստն ընտրելիս ցուցադրվի որևէ այլ ծրագրի մենյու։ Koodo-ի մենյուն կցուցադրվի, երբ տեքստն ընտրելուց հետո սեղմեք մկնիկի աջ կոճակը։",
     "Disable trash bin": "Անջատել աղբարկղը",
-    "When deleting books, they will be deleted permanetly instead of sending to trash bin": "Գրքերը ջնջելիս՝ դրանք չեն տեղափոխվի աղբարկղ, այլ մեկընդմիշը կջնջվեն",
+    "When deleting books, they will be deleted permanently instead of sending to trash bin": "Գրքերը ջնջելիս՝ դրանք չեն տեղափոխվի աղբարկղ, այլ մեկընդմիշը կջնջվեն",
     "Hide books already added to the shelf": "Թաքցնել դարակների մեջ ավելացված գրքերը",
     "Hide books which have been added to the shelf, so they won't show up in home page": "Գրադարանի գլխավոր էջից թաքցնել բոլոր այն գրքերը, որոնք ավելացվել են դարակների մեջ",
     "Delete book from shelf also deleting book itself": "Դարակից հեռացնելիս՝ ջնջել գրքերը",
