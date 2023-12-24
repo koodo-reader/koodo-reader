@@ -241,7 +241,7 @@
     "Click the import button to add books": "點選導入按鈕新增書籍",
     "Turn on night mode": "啟用夜間模式",
     "Turn on auto update": "啟用自動更新",
-    "Auto Update relys on GitHub Release for package hosting, if your internet doesn't have stable connection to GitHub, we highly recommand you to turn off this option": "自動更新依賴 GitHub Release 進行套件託管，如果您的網路與 GitHub 的連線不穩定，建議您關閉此選項",
+    "Auto Update relies on GitHub Release for package hosting, if your internet doesn't have stable connection to GitHub, we highly recommand you to turn off this option": "自動更新依賴 GitHub Release 進行套件託管，如果您的網路與 GitHub 的連線不穩定，建議您關閉此選項",
     "File size": "文件大小",
     "Take effect at next startup": "下次啟動時生效",
     "View Mode": "查看模式",

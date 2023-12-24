@@ -245,7 +245,7 @@
   "Click the import button to add books": "Cliquez sur le bouton d’importation pour ajouter des livres",
   "Turn on night mode": "Turn on night mode",
   "Turn on auto update": "Activer la mise à jour automatique",
-  "Auto Update relys on GitHub Release for package hosting, if your internet doesn't have stable connection to GitHub, we highly recommand you to turn off this option": "La mise à jour repose les paquets à disposition dans GitHub. Si votre connexion internet n’est pas stable, il est recommandé de désactiver cette option.",
+  "Auto Update relies on GitHub Release for package hosting, if your internet doesn't have stable connection to GitHub, we highly recommand you to turn off this option": "La mise à jour repose les paquets à disposition dans GitHub. Si votre connexion internet n’est pas stable, il est recommandé de désactiver cette option.",
   "File size": "Taille du fichier",
   "Take effect at next startup": "Prend effet au prochain démarrage",
   "View Mode": "Mode d’affichage",
