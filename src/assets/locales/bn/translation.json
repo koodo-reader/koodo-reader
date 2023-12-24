@@ -342,7 +342,7 @@
     "No popup when selecting texts": "টেস্কট সিলেক্টের সময় পপ-আপ নেই",
     "Turn it on when you want Koodo to work with other third-party translation service, right clicking on the selected text will trigger popup again": "Koodo কে থার্ড-পার্টি ট্রন্সলেশন সার্ভিসের সাথে কাজ করাতে চাইলে চালু করুন, সিলেক্টকৃত টেস্কটে রাইট ক্লিক করলে পপ-আপ ট্রিগার হবে",
     "Disable trash bin": "ট্রাশ বিন নিষ্ক্রিয় করুন",
-    "When deleting books, they will be deleted permanetly instead of sending to trash bin": "যখন বই ডিলিট করবেন, তখন সেগুলো ট্রাশ বিনে যাওয়ার পরিবর্তে চিরকালের জন্য ডিলিট হয়ে যাবে",
+    "When deleting books, they will be deleted permanently instead of sending to trash bin": "যখন বই ডিলিট করবেন, তখন সেগুলো ট্রাশ বিনে যাওয়ার পরিবর্তে চিরকালের জন্য ডিলিট হয়ে যাবে",
     "Hide books already added to the shelf": "ইতিমধ্যেই শেলফে যোগ করা বইগুলি লুকান",
     "Hide books which have been added to the shelf, so they won't show up in home page": "ইতিমধ্যেই শেলফে যোগ করা বইগুলি লুকান, যাতে তারা হোম পেজে আর দেখা না যায়",
     "Delete book from shelf also deleting book itself": "সেলফ থেকে বই ডিলিট করলে বইগুলোও ডিলিট হয়ে যাবে",
