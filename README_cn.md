@@ -132,4 +132,4 @@ flatpak run io.github.troyeguo.koodo-reader
 
 ## 贡献翻译
 
-您可以通过 Koodo Reader 的[在线翻译工具](https://poeditor.com/join/project?hash=fk4qbQTlsk)，完善现有翻译，也可以添加新的语言。
+您可以通过提交 Pull Request 的方式完善 Koodo Reader 的翻译
