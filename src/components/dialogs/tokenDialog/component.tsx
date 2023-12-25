@@ -66,7 +66,7 @@ class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
                     : {}
                 }
               >
-                <Trans>Webdav Info</Trans>
+                <Trans>WebDAV Info</Trans>
               </div>
               <input
                 type="text"
