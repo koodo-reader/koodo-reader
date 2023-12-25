@@ -31,7 +31,7 @@ export const settingList = [
   },
   {
     isElectron: true,
-    title: "Auto open book in fullscreen",
+    title: "Auto open book infull screen",
     desc: "Reader window will be maximized to fit the screen when opening a book",
     propName: "isAutoFullscreen",
   },
@@ -50,7 +50,7 @@ export const settingList = [
   {
     isElectron: false,
     title: "Disable trash bin",
-    desc: "When deleting books, they will be deleted permanetly instead of sending to trash bin",
+    desc: "When deleting books, they will be deleted permanently instead of sending to trash bin",
     propName: "isDisableTrashBin",
   },
   {
@@ -86,7 +86,7 @@ export const settingList = [
   {
     isElectron: false,
     title: "Open books in the main window",
-    desc: "Book won't be opened in a seperate window but directly opened in the main window",
+    desc: "Book won't be opened in a separate window but directly opened in the main window",
     propName: "isOpenInMain",
   },
   {

@@ -119,7 +119,7 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
                 this.handleJump("https://github.com/koodo-reader/koodo-reader");
               }}
             >
-              <Trans>Github Repo</Trans>
+              <Trans>GitHub Repo</Trans>
             </li>
 
             {isElectron && (
