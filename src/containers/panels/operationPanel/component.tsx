@@ -225,11 +225,11 @@ class OperationPanel extends React.Component<
               <span className="icon-fullscreen enter-fullscreen-icon"></span>
               {StorageUtil.getReaderConfig("isFullscreen") !== "yes" ? (
                 <span className="enter-fullscreen-text">
-                  <Trans>Enterfull screen</Trans>
+                  <Trans>Enter full screen</Trans>
                 </span>
               ) : (
                 <span className="enter-fullscreen-text">
-                  <Trans>Exitfull screen</Trans>
+                  <Trans>Exit full screen</Trans>
                 </span>
               )}
             </div>

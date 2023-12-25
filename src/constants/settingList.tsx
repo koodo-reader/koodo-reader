@@ -31,7 +31,7 @@ export const settingList = [
   },
   {
     isElectron: true,
-    title: "Auto open book infull screen",
+    title: "Auto open book in full screen",
     desc: "Reader window will be maximized to fit the screen when opening a book",
     propName: "isAutoFullscreen",
   },
