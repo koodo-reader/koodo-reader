@@ -135,4 +135,4 @@ Certifique-se de ter instalado yarn e git, a versão.
 
 ## Traduções
 
-Koodo Reader usa o POEditor para gerenciar as localizações, Visite [aqui](https://poeditor.com/join/project?hash=fk4qbQTlsk) para editar a tradução atual ou adicionar um novo idioma
+Você pode enviar solicitações de pull para editar a tradução atual ou adicionar um novo idioma.
