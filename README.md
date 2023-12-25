@@ -135,4 +135,4 @@ Make sure that you have installed yarn and git
 
 ## Translation
 
-Koodo Reader use POEditor to manage localization, Visit [here](https://poeditor.com/join/project?hash=fk4qbQTlsk) to edit current translation or add new language
+You can submit pull requests to edit current translation or add new language
