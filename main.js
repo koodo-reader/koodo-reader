@@ -14,7 +14,6 @@ const store = new Store();
 const fs = require("fs");
 const configDir = app.getPath("userData");
 const { ra } = require("./edge-tts");
-const { deeplTranlate } = require("./deepl-trans");
 const dirPath = path.join(configDir, "uploads");
 let mainWin;
 const singleInstance = app.requestSingleInstanceLock();
@@ -121,7 +120,6 @@ const createMainWin = () => {
     event.returnValue = "success";
   });
   ipcMain.handle("edge-tts", async (event, config) => {
-    console.log(dirPath);
     let { text } = config;
     let audioName = new Date().getTime() + ".webm";
     if (!fs.existsSync(path.join(dirPath, "tts"))) {
@@ -135,10 +133,42 @@ const createMainWin = () => {
 
     return path.join(dirPath, "tts", audioName);
   });
-  ipcMain.handle("deepl-trans", async (event, config) => {
-    console.log(dirPath);
-    let { text, from, to } = config;
-    return deeplTranlate(text, from, to);
+  ipcMain.handle("onedrive-upload", async (event, config) => {
+    let { accessToken, filename } = config;
+    const { size } = fs.statSync(path.join(dirPath, filename));
+    const oneDriveAPI = require("onedrive-api");
+    let result = await oneDriveAPI.items.uploadSession({
+      accessToken: accessToken,
+      filename: filename,
+      fileSize: size,
+      parentPath: "/Apps/KoodoReader/",
+      readableStream: fs.createReadStream(path.join(dirPath, filename)),
+      conflictBehavior: "replace",
+    });
+    return true;
+  });
+  ipcMain.handle("onedrive-download", async (event, config) => {
+    let { accessToken, filename } = config;
+    const oneDriveAPI = require("onedrive-api");
+    var fileStream = await oneDriveAPI.items.download({
+      accessToken: accessToken,
+      itemPath: "/Apps/KoodoReader/" + filename,
+    });
+    const writeStream = fs.createWriteStream(path.join(dirPath, filename));
+    fileStream.pipe(writeStream);
+    async function closeWriteStream(writeStream) {
+      return new Promise((resolve) => {
+        writeStream.on("close", () => {
+          resolve(true);
+        });
+        writeStream.on("error", () => {
+          console.log("error");
+          resolve(false);
+        });
+      });
+    }
+    const result = await closeWriteStream(writeStream);
+    return result;
   });
   ipcMain.handle("clear-tts", async (event, config) => {
     if (!fs.existsSync(path.join(dirPath, "tts"))) {

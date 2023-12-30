@@ -5,6 +5,8 @@ import { TokenDialogProps, TokenDialogState } from "./interface";
 import StorageUtil from "../../../utils/serviceUtils/storageUtil";
 import toast from "react-hot-toast";
 import { openExternalUrl } from "../../../utils/serviceUtils/urlUtil";
+import axios from "axios";
+import { driveConfig } from "../../../constants/driveList";
 class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
   constructor(props: TokenDialogProps) {
     super(props);
@@ -14,11 +16,29 @@ class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
   handleCancel = () => {
     this.props.handleTokenDialog(false);
   };
-  handleTokenComfirm = () => {
+  handleDropboxComfirm = () => {
     let token: string = (
       document.querySelector(".token-dialog-token-box") as HTMLTextAreaElement
     ).value;
-    StorageUtil.setReaderConfig(`${this.props.driveName}_token`, token);
+    StorageUtil.setReaderConfig(
+      `${this.props.driveName.toLowerCase()}_token`,
+      token
+    );
+    this.props.handleTokenDialog(false);
+    toast.success(this.props.t("Add Successfully"));
+  };
+  handleOneDriveComfirm = async () => {
+    let code: string = (
+      document.querySelector(".token-dialog-token-box") as HTMLTextAreaElement
+    ).value;
+    let res = await axios.post(driveConfig.onedriveAuthUrl, {
+      code,
+      redirect_uri: driveConfig.callbackUrl,
+    });
+    StorageUtil.setReaderConfig(
+      `${this.props.driveName.toLowerCase()}_token`,
+      res.data.refresh_token
+    );
     this.props.handleTokenDialog(false);
     toast.success(this.props.t("Add Successfully"));
   };
@@ -37,7 +57,7 @@ class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
       ) as HTMLTextAreaElement
     ).value;
     StorageUtil.setReaderConfig(
-      `${this.props.driveName}_token`,
+      `${this.props.driveName.toLowerCase()}_token`,
       JSON.stringify({ url, username, password })
     );
     this.props.handleTokenDialog(false);
@@ -56,7 +76,7 @@ class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
             {this.props.driveName}&nbsp;
             <Trans>Token</Trans>
           </div>
-          {this.props.driveName === "webdav" ? (
+          {this.props.driveName === "WebDAV" ? (
             <>
               <div
                 className="token-dialog-info-text"
@@ -128,10 +148,12 @@ class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
           <div
             className="token-dialog-comfirm"
             onClick={() => {
-              if (this.props.driveName === "webdav") {
+              if (this.props.driveName === "WebDAV") {
                 this.handleDavComfirm();
+              } else if (this.props.driveName === "Dropbox") {
+                this.handleDropboxComfirm();
               } else {
-                this.handleTokenComfirm();
+                this.handleOneDriveComfirm();
               }
             }}
           >

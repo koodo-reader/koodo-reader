@@ -18,5 +18,5 @@ export interface BackupDialogProps {
 export interface BackupDialogState {
   currentStep: number | null;
   isBackup: string;
-  currentDrive: number | null;
+  currentDrive: string;
 }
