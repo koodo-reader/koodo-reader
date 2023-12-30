@@ -21,7 +21,6 @@ import LoadingDialog from "../../components/dialogs/loadingDialog";
 import TipDialog from "../../components/dialogs/TipDialog";
 import { Toaster } from "react-hot-toast";
 import DetailDialog from "../../components/dialogs/detailDialog";
-import OneDriveUtil from "../../utils/syncUtils/onedrive";
 
 class Manager extends React.Component<ManagerProps, ManagerState> {
   timer!: NodeJS.Timeout;
