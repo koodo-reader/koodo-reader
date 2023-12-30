@@ -222,7 +222,10 @@ class BackupDialog extends React.Component<
             className="backup-page-list-item"
             onClick={() => {
               //webdav is avavilible on desktop
-              if (item.name === "WebDAV" && !isElectron) {
+              if (
+                (item.name === "WebDAV" || item.name === "OneDrive") &&
+                !isElectron
+              ) {
                 toast(
                   this.props.t(
                     "Koodo Reader's web version are limited by the browser, for more powerful features, please download the desktop version."
