@@ -6,7 +6,7 @@ export const driveConfig = {
   onedriveAuthUrl: "https://koodo.960960.xyz/api/onedrive_auth",
   onedriveRefreshUrl: "https://koodo.960960.xyz/api/onedrive_refresh",
   dropboxClientId: "vnc67byrssocvy1",
-  onedriveClientId: "b3e96681-2d61-4e29-8048-2225fc34ce9b",
+  onedriveClientId: "506df58a-29ab-4020-afc5-6f423dc80f35",
 };
 export const driveList = [
   {
