@@ -5,6 +5,7 @@ import { backup } from "../../../utils/syncUtils/backupUtil";
 import { restore } from "../../../utils/syncUtils/restoreUtil";
 import { Trans } from "react-i18next";
 import DropboxUtil from "../../../utils/syncUtils/dropbox";
+import OneDriveUtil from "../../../utils/syncUtils/onedrive";
 import WebdavUtil from "../../../utils/syncUtils/webdav";
 import { BackupDialogProps, BackupDialogState } from "./interface";
 import TokenDialog from "../tokenDialog";
@@ -32,7 +33,7 @@ class BackupDialog extends React.Component<
     this.state = {
       currentStep: 0,
       isBackup: "",
-      currentDrive: 0,
+      currentDrive: "Local",
     };
   }
   handleClose = () => {
@@ -59,13 +60,13 @@ class BackupDialog extends React.Component<
   showMessage = (message: string) => {
     toast(this.props.t(message));
   };
-  handleDrive = (index: number) => {
+  handleDrive = (name: string) => {
     let year = new Date().getFullYear(),
       month = new Date().getMonth() + 1,
       day = new Date().getDate();
-    this.setState({ currentDrive: index }, async () => {
-      switch (index) {
-        case 0:
+    this.setState({ currentDrive: name }, async () => {
+      switch (name) {
+        case "Local":
           let blob: Blob | boolean = await backup(
             this.props.books,
             this.props.notes,
@@ -83,7 +84,7 @@ class BackupDialog extends React.Component<
           );
           this.handleFinish();
           break;
-        case 1:
+        case "Dropbox":
           if (!StorageUtil.getReaderConfig("dropbox_token")) {
             this.props.handleTokenDialog(true);
             break;
@@ -123,7 +124,7 @@ class BackupDialog extends React.Component<
 
           break;
 
-        case 2:
+        case "WebDAV":
           if (!StorageUtil.getReaderConfig("webdav_token")) {
             this.props.handleTokenDialog(true);
             break;
@@ -167,6 +168,46 @@ class BackupDialog extends React.Component<
             }
           }
           break;
+        case "OneDrive":
+          if (!StorageUtil.getReaderConfig("onedrive_token")) {
+            this.props.handleTokenDialog(true);
+            break;
+          }
+
+          if (this.state.isBackup === "yes") {
+            this.showMessage("Uploading, please wait");
+            this.props.handleLoadingDialog(true);
+
+            let blob: Blob | boolean = await backup(
+              this.props.books,
+              this.props.notes,
+              this.props.bookmarks,
+              false
+            );
+            if (!blob) {
+              this.showMessage("Backup Failed");
+              this.props.handleLoadingDialog(false);
+            }
+            let result = await OneDriveUtil.UploadFile(blob as Blob);
+            if (result) {
+              this.handleFinish();
+            } else {
+              this.showMessage("Upload failed, check your connection");
+            }
+          } else {
+            this.props.handleLoadingDialog(true);
+            this.showMessage("Downloading, please wait");
+            let result = await OneDriveUtil.DownloadFile();
+            if (result) {
+              this.handleFinish();
+            } else {
+              this.showMessage("Download failed,network problem or no backup");
+              this.props.handleLoadingDialog(false);
+            }
+          }
+
+          break;
+
         default:
           break;
       }
@@ -174,14 +215,14 @@ class BackupDialog extends React.Component<
   };
   render() {
     const renderDrivePage = () => {
-      return driveList.map((item, index) => {
+      return driveList.map((item) => {
         return (
           <li
             key={item.id}
             className="backup-page-list-item"
             onClick={() => {
               //webdav is avavilible on desktop
-              if (index === 2 && !isElectron) {
+              if (item.name === "WebDAV" && !isElectron) {
                 toast(
                   this.props.t(
                     "Koodo Reader's web version are limited by the browser, for more powerful features, please download the desktop version."
@@ -189,14 +230,15 @@ class BackupDialog extends React.Component<
                 );
                 return;
               }
-              this.handleDrive(index);
+              this.handleDrive(item.name);
             }}
           >
             <div className="backup-page-list-item-container">
               <span
                 className={`icon-${item.icon} backup-page-list-icon`}
               ></span>
-              {StorageUtil.getReaderConfig("dropbox_token") && index === 1 ? (
+              {StorageUtil.getReaderConfig("dropbox_token") &&
+              item.name === "Dropbox" ? (
                 <div
                   className="backup-page-list-title"
                   onClick={() => {
@@ -207,7 +249,20 @@ class BackupDialog extends React.Component<
                 >
                   <Trans>Unauthorize</Trans>
                 </div>
-              ) : StorageUtil.getReaderConfig("webdav_token") && index === 3 ? (
+              ) : StorageUtil.getReaderConfig("onedrive_token") &&
+                item.name === "OneDrive" ? (
+                <div
+                  className="backup-page-list-title"
+                  onClick={() => {
+                    StorageUtil.setReaderConfig("onedrive_token", "");
+                    this.showMessage("Unauthorize Successfully");
+                  }}
+                  style={{ color: "rgb(0, 120, 212)" }}
+                >
+                  <Trans>Unauthorize</Trans>
+                </div>
+              ) : StorageUtil.getReaderConfig("webdav_token") &&
+                item.name === "WebDAV" ? (
                 <div
                   className="backup-page-list-title"
                   onClick={() => {
@@ -230,8 +285,17 @@ class BackupDialog extends React.Component<
     };
 
     const dialogProps = {
-      driveName: driveList[this.state.currentDrive!].icon,
-      url: driveList[this.state.currentDrive!].url,
+      driveName:
+        driveList[
+          window._.findLastIndex(driveList, {
+            name: this.state.currentDrive,
+          })
+        ].name,
+      url: driveList[
+        window._.findLastIndex(driveList, {
+          name: this.state.currentDrive,
+        })
+      ].url,
     };
 
     return (
