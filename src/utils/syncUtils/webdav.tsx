@@ -2,11 +2,15 @@ import { restore } from "./restoreUtil";
 import StorageUtil from "../serviceUtils/storageUtil";
 
 class WebdavUtil {
-  static UploadFile = async (file: any) => {
+  static UploadFile = async (blob: any) => {
     return new Promise<boolean>(async (resolve, reject) => {
+      let file = new File([blob], "data.zip", {
+        lastModified: new Date().getTime(),
+        type: blob.type,
+      });
       const { createClient } = window.require("webdav");
       let { url, username, password } = JSON.parse(
-        StorageUtil.getReaderConfig("webdav_token") || ""
+        StorageUtil.getReaderConfig("webdav_token") || "{}"
       );
       const client = createClient(url, {
         username,

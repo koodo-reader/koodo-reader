@@ -33,4 +33,16 @@ export const driveList = [
     icon: "onedrive",
     url: `https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=${driveConfig.onedriveClientId}&scope=files.readwrite offline_access&response_type=code&redirect_uri=${driveConfig.callbackUrl}`,
   },
+  {
+    id: 5,
+    name: "FTP",
+    icon: "ftp",
+    url: "",
+  },
+  {
+    id: 6,
+    name: "SFTP",
+    icon: "sftp",
+    url: "",
+  },
 ];
