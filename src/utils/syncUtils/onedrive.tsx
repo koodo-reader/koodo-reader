@@ -28,12 +28,12 @@ class OneDriveUtil {
       if (!result) resolve(false);
       try {
         const fs_extra = window.require("fs-extra");
-        fs_extra.remove(path.join(dirPath, `data.zip`), (error: any) => {
+        fs_extra.remove(path.join(dirPath, filename), (error: any) => {
           if (error) resolve(false);
           resolve(true);
         });
       } catch (e) {
-        console.log("error removing ", path.join(dirPath, `data.zip`));
+        console.log("error removing ", path.join(dirPath, filename));
         resolve(false);
       }
     });
@@ -57,9 +57,9 @@ class OneDriveUtil {
         filename,
       });
       if (result) {
-        var data = fs.readFileSync(path.join(dirPath, `data.zip`));
+        var data = fs.readFileSync(path.join(dirPath, filename));
         let blobTemp: any = new Blob([data], { type: "application/zip" });
-        let fileTemp = new File([blobTemp], "data.zip", {
+        let fileTemp = new File([blobTemp], filename, {
           lastModified: new Date().getTime(),
           type: blobTemp.type,
         });
@@ -69,12 +69,12 @@ class OneDriveUtil {
       resolve(true);
       try {
         const fs_extra = window.require("fs-extra");
-        fs_extra.remove(path.join(dirPath, `data.zip`), (error: any) => {
+        fs_extra.remove(path.join(dirPath, filename), (error: any) => {
           if (error) resolve(false);
           resolve(true);
         });
       } catch (e) {
-        console.log("error removing ", path.join(dirPath, `data.zip`));
+        console.log("error removing ", path.join(dirPath, filename));
         resolve(false);
       }
     });

@@ -147,6 +147,7 @@ const createMainWin = () => {
     });
     return true;
   });
+
   ipcMain.handle("onedrive-download", async (event, config) => {
     let { accessToken, filename } = config;
     const oneDriveAPI = require("onedrive-api");
@@ -169,6 +170,147 @@ const createMainWin = () => {
     }
     const result = await closeWriteStream(writeStream);
     return result;
+  });
+  ipcMain.handle("ftp-upload", async (event, config) => {
+    let { url, username, password, filename, dir, ssl } = config;
+    const Client = require("ftp");
+    let c = new Client();
+    async function uploadFile() {
+      return new Promise((resolve, reject) => {
+        c.on("ready", function () {
+          c.put(
+            path.join(dirPath, filename),
+            dir + "/" + filename,
+            function (err) {
+              if (err) reject(err);
+              c.end();
+              resolve(true);
+            }
+          );
+        });
+        c.connect({
+          host: url,
+          user: username,
+          password: password,
+          secure: ssl === "1" ? true : false,
+        });
+      });
+    }
+
+    try {
+      await uploadFile();
+      return true;
+    } catch (err) {
+      console.error(err);
+      return false;
+    }
+  });
+  ipcMain.handle("ftp-download", async (event, config) => {
+    let { url, username, password, filename, dir, ssl } = config;
+    const Client = require("ftp");
+    let c = new Client();
+    async function downloadFile() {
+      return new Promise((resolve, reject) => {
+        c.on("ready", function () {
+          c.get(dir + "/" + filename, function (err, stream) {
+            if (err) reject(err);
+            stream.once("close", function () {
+              c.end();
+              resolve(true);
+            });
+            console.log(path.join(dirPath, filename));
+            stream.pipe(fs.createWriteStream(path.join(dirPath, filename)));
+          });
+        });
+        c.connect({
+          host: url,
+          user: username,
+          password: password,
+          secure: ssl === "1" ? true : false,
+        });
+      });
+    }
+
+    try {
+      await downloadFile();
+      return true;
+    } catch (err) {
+      console.error(err);
+      return false;
+    }
+  });
+  ipcMain.handle("sftp-upload", async (event, config) => {
+    let { url, username, password, filename, dir, port } = config;
+    let Client = require("ssh2-sftp-client");
+    let sftp = new Client();
+    async function uploadFile() {
+      return new Promise((resolve, reject) => {
+        let data = fs.createReadStream(path.join(dirPath, filename));
+        let remote = "/" + dir + "/" + filename;
+        console.log(url, username, password, filename, dir, port);
+        sftp
+          .connect({
+            host: url,
+            port: port,
+            username: username,
+            password: password,
+          })
+          .then(() => {
+            return sftp.put(data, remote);
+          })
+          .then(() => {
+            resolve(true);
+            return sftp.end();
+          })
+          .catch((err) => {
+            console.error(err.message);
+            resolve(false);
+          });
+      });
+    }
+
+    try {
+      return await uploadFile();
+    } catch (err) {
+      console.error(err);
+      return false;
+    }
+  });
+  ipcMain.handle("sftp-download", async (event, config) => {
+    let { url, username, password, filename, dir, port } = config;
+    let Client = require("ssh2-sftp-client");
+    let sftp = new Client();
+    async function downloadFile() {
+      return new Promise((resolve, reject) => {
+        let remotePath = "/" + dir + "/" + filename;
+        let dst = fs.createWriteStream(path.join(dirPath, filename));
+        sftp
+          .connect({
+            host: url,
+            port: port,
+            username: username,
+            password: password,
+          })
+          .then(() => {
+            return sftp.get(remotePath, dst);
+          })
+          .then(() => {
+            resolve(true);
+            return sftp.end();
+          })
+          .catch((err) => {
+            console.error(err.message);
+            resolve(false);
+          });
+      });
+    }
+
+    try {
+      return await downloadFile();
+    } catch (err) {
+      console.error(err);
+      return false;
+    }
   });
   ipcMain.handle("clear-tts", async (event, config) => {
     if (!fs.existsSync(path.join(dirPath, "tts"))) {

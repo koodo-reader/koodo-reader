@@ -7,6 +7,8 @@ import { Trans } from "react-i18next";
 import DropboxUtil from "../../../utils/syncUtils/dropbox";
 import OneDriveUtil from "../../../utils/syncUtils/onedrive";
 import WebdavUtil from "../../../utils/syncUtils/webdav";
+import FtpUtil from "../../../utils/syncUtils/ftp";
+import SFtpUtil from "../../../utils/syncUtils/sftp";
 import { BackupDialogProps, BackupDialogState } from "./interface";
 import TokenDialog from "../tokenDialog";
 import StorageUtil from "../../../utils/serviceUtils/storageUtil";
@@ -85,95 +87,24 @@ class BackupDialog extends React.Component<
           this.handleFinish();
           break;
         case "Dropbox":
-          if (!StorageUtil.getReaderConfig("dropbox_token")) {
-            this.props.handleTokenDialog(true);
-            break;
-          }
-
-          if (this.state.isBackup === "yes") {
-            this.showMessage("Uploading, please wait");
-            this.props.handleLoadingDialog(true);
-
-            let blob: Blob | boolean = await backup(
-              this.props.books,
-              this.props.notes,
-              this.props.bookmarks,
-              false
-            );
-            if (!blob) {
-              this.showMessage("Backup Failed");
-              this.props.handleLoadingDialog(false);
-            }
-            let result = await DropboxUtil.UploadFile(blob);
-            if (result) {
-              this.handleFinish();
-            } else {
-              this.showMessage("Upload failed, check your connection");
-            }
-          } else {
-            this.props.handleLoadingDialog(true);
-            this.showMessage("Downloading, please wait");
-            let result = await DropboxUtil.DownloadFile();
-            if (result) {
-              this.handleFinish();
-            } else {
-              this.showMessage("Download failed,network problem or no backup");
-              this.props.handleLoadingDialog(false);
-            }
-          }
-
-          break;
-
         case "WebDAV":
-          if (!StorageUtil.getReaderConfig("webdav_token")) {
-            this.props.handleTokenDialog(true);
-            break;
-          }
-          if (this.state.isBackup === "yes") {
-            this.showMessage("Uploading, please wait");
-            this.props.handleLoadingDialog(true);
-
-            let blob: any = await backup(
-              this.props.books,
-              this.props.notes,
-              this.props.bookmarks,
-              false
-            );
-            if (!blob) {
-              this.showMessage("Backup Failed");
-              this.props.handleLoadingDialog(false);
-            }
-
-            let result = await WebdavUtil.UploadFile(
-              new File([blob], "data.zip", {
-                lastModified: new Date().getTime(),
-                type: blob.type,
-              })
-            );
-            if (result) {
-              this.handleFinish();
-            } else {
-              this.showMessage("Upload failed, check your connection");
-              this.props.handleLoadingDialog(false);
-            }
-          } else {
-            this.showMessage("Downloading, please wait");
-            this.props.handleLoadingDialog(true);
-
-            let result = await WebdavUtil.DownloadFile();
-            if (!result) {
-              this.showMessage("Download failed,network problem or no backup");
-            } else {
-              this.handleFinish();
-            }
-          }
-          break;
         case "OneDrive":
-          if (!StorageUtil.getReaderConfig("onedrive_token")) {
+        case "FTP":
+        case "SFTP":
+          if (!StorageUtil.getReaderConfig(name.toLowerCase() + "_token")) {
             this.props.handleTokenDialog(true);
             break;
           }
-
+          let DriveUtil =
+            name === "Dropbox"
+              ? DropboxUtil
+              : name === "FTP"
+              ? FtpUtil
+              : name === "OneDrive"
+              ? OneDriveUtil
+              : name === "SFTP"
+              ? SFtpUtil
+              : WebdavUtil;
           if (this.state.isBackup === "yes") {
             this.showMessage("Uploading, please wait");
             this.props.handleLoadingDialog(true);
@@ -188,7 +119,8 @@ class BackupDialog extends React.Component<
               this.showMessage("Backup Failed");
               this.props.handleLoadingDialog(false);
             }
-            let result = await OneDriveUtil.UploadFile(blob as Blob);
+
+            let result = await DriveUtil.UploadFile(blob);
             if (result) {
               this.handleFinish();
             } else {
@@ -197,7 +129,7 @@ class BackupDialog extends React.Component<
           } else {
             this.props.handleLoadingDialog(true);
             this.showMessage("Downloading, please wait");
-            let result = await OneDriveUtil.DownloadFile();
+            let result = await DriveUtil.DownloadFile();
             if (result) {
               this.handleFinish();
             } else {
@@ -207,7 +139,6 @@ class BackupDialog extends React.Component<
           }
 
           break;
-
         default:
           break;
       }
@@ -223,7 +154,10 @@ class BackupDialog extends React.Component<
             onClick={() => {
               //webdav is avavilible on desktop
               if (
-                (item.name === "WebDAV" || item.name === "OneDrive") &&
+                (item.name === "WebDAV" ||
+                  item.name === "OneDrive" ||
+                  item.name === "FTP" ||
+                  item.name === "SFTP") &&
                 !isElectron
               ) {
                 toast(
@@ -240,36 +174,11 @@ class BackupDialog extends React.Component<
               <span
                 className={`icon-${item.icon} backup-page-list-icon`}
               ></span>
-              {StorageUtil.getReaderConfig("dropbox_token") &&
-              item.name === "Dropbox" ? (
+              {StorageUtil.getReaderConfig(item.icon + "_token") ? (
                 <div
                   className="backup-page-list-title"
                   onClick={() => {
-                    StorageUtil.setReaderConfig("dropbox_token", "");
-                    this.showMessage("Unauthorize Successfully");
-                  }}
-                  style={{ color: "rgb(0, 120, 212)" }}
-                >
-                  <Trans>Unauthorize</Trans>
-                </div>
-              ) : StorageUtil.getReaderConfig("onedrive_token") &&
-                item.name === "OneDrive" ? (
-                <div
-                  className="backup-page-list-title"
-                  onClick={() => {
-                    StorageUtil.setReaderConfig("onedrive_token", "");
-                    this.showMessage("Unauthorize Successfully");
-                  }}
-                  style={{ color: "rgb(0, 120, 212)" }}
-                >
-                  <Trans>Unauthorize</Trans>
-                </div>
-              ) : StorageUtil.getReaderConfig("webdav_token") &&
-                item.name === "WebDAV" ? (
-                <div
-                  className="backup-page-list-title"
-                  onClick={() => {
-                    StorageUtil.setReaderConfig("webdav_token", "");
+                    StorageUtil.setReaderConfig(item.icon + "_token", "");
                     this.showMessage("Unauthorize Successfully");
                   }}
                   style={{ color: "rgb(0, 120, 212)" }}
