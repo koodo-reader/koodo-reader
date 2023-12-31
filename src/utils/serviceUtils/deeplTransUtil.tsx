@@ -1,4 +1,4 @@
-export const deeplTranlate = async (text, from, to) => {
+export const deeplTranslate = async (text, from, to) => {
   const rand = getRandomNumber();
   const body = {
     jsonrpc: "2.0",
