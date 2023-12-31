@@ -64,15 +64,17 @@
 }
 .token-dialog-url-box,
 .token-dialog-username-box,
+.token-dialog-ssl-box,
+.token-dialog-path-box,
 .token-dialog-password-box {
   width: 322px;
-  height: 28px;
+  height: 23px;
   opacity: 1;
   font-size: 13px;
   line-height: 14px;
   opacity: 1;
   margin-left: 60px;
-  margin-top: 10px;
+  margin-top: 9px;
   padding-left: 15px;
   border-radius: 5px;
 }

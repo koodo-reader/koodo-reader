@@ -22,7 +22,6 @@ export const deeplTranslate = async (text, from, to) => {
   } else {
     body_str = body_str.replace('"method":"', '"method": "');
   }
-  console.log(body_str);
   const axios = window.require("axios");
   let data = body_str;
 

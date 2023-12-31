@@ -1,60 +1,48 @@
 import { restore } from "./restoreUtil";
 import StorageUtil from "../serviceUtils/storageUtil";
-import { driveConfig } from "../../constants/driveList";
-import axios from "axios";
 
-class OneDriveUtil {
-  static UploadFile(blob: any) {
+class SFtpUtil {
+  static UploadFile = async (blob: any) => {
     return new Promise<boolean>(async (resolve, reject) => {
-      var refresh_token = StorageUtil.getReaderConfig("onedrive_token") || "";
-      let res = await axios.post(driveConfig.onedriveRefreshUrl, {
-        refresh_token,
-        redirect_uri: driveConfig.callbackUrl,
-      });
+      let { url, username, password, port, dir } = JSON.parse(
+        StorageUtil.getReaderConfig("sftp_token") || "{}"
+      );
       const fs = window.require("fs");
       const path = window.require("path");
       const { ipcRenderer } = window.require("electron");
-
       const dirPath = ipcRenderer.sendSync("user-data", "ping");
       const arrayBuffer = await blob.arrayBuffer();
       const filename = "data.zip";
-
       fs.writeFileSync(path.join(dirPath, filename), Buffer.from(arrayBuffer));
-
-      let result = await ipcRenderer.invoke("onedrive-upload", {
-        accessToken: res.data.access_token,
-        filename,
-      });
-      if (!result) resolve(false);
-      try {
-        const fs_extra = window.require("fs-extra");
-        fs_extra.remove(path.join(dirPath, filename), (error: any) => {
-          if (error) resolve(false);
-          resolve(true);
-        });
-      } catch (e) {
-        console.log("error removing ", path.join(dirPath, filename));
-        resolve(false);
-      }
+      resolve(
+        await ipcRenderer.invoke("sftp-upload", {
+          url,
+          username,
+          password,
+          filename,
+          port,
+          dir,
+        })
+      );
     });
-  }
-  static DownloadFile() {
+  };
+  static DownloadFile = async () => {
     return new Promise<boolean>(async (resolve, reject) => {
-      var refresh_token = StorageUtil.getReaderConfig("onedrive_token") || "";
-      let res = await axios.post(driveConfig.onedriveRefreshUrl, {
-        refresh_token,
-        redirect_uri: driveConfig.callbackUrl,
-      });
       const filename = "data.zip";
       const fs = window.require("fs");
       const path = window.require("path");
       const { ipcRenderer } = window.require("electron");
-
+      let { url, username, password, port, dir } = JSON.parse(
+        StorageUtil.getReaderConfig("sftp_token") || "{}"
+      );
       const dirPath = ipcRenderer.sendSync("user-data", "ping");
-
-      let result = await ipcRenderer.invoke("onedrive-download", {
-        accessToken: res.data.access_token,
+      let result = await ipcRenderer.invoke("sftp-download", {
+        url,
+        username,
+        password,
         filename,
+        port,
+        dir,
       });
       if (result) {
         var data = fs.readFileSync(path.join(dirPath, filename));
@@ -78,7 +66,7 @@ class OneDriveUtil {
         resolve(false);
       }
     });
-  }
+  };
 }
 
-export default OneDriveUtil;
+export default SFtpUtil;
