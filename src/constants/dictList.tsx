@@ -11,8 +11,4 @@ export const dictList = [
     name: "必应词典",
     url: "https://www.bing.com/dict",
   },
-  {
-    name: "Cambridge Dict",
-    url: "https://dictionary.cambridge.org",
-  },
 ];
