@@ -118,6 +118,7 @@
       "repo": "koodo-reader",
       "owner": "koodo-reader"
     },
+    "buildDependenciesFromSource": false,
     "fileAssociations": [
       {
         "ext": "epub",
