@@ -7,7 +7,6 @@ import Parser from "html-react-parser";
 import * as DOMPurify from "dompurify";
 import axios from "axios";
 import { getBingDict } from "../../../utils/serviceUtils/bingDictUtil";
-import { openExternalUrl } from "../../../utils/serviceUtils/urlUtil";
 import RecordLocation from "../../../utils/readUtils/recordLocation";
 import DictHistory from "../../../model/DictHistory";
 import { Trans } from "react-i18next";
@@ -219,33 +218,7 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
               DOMPurify.sanitize(this.state.dictText + "<address></address>") ||
                 " ",
               {
-                replace: (domNode) => {
-                  if (this.state.dictService === "Yandex.Dictionary") {
-                    if (domNode.name === "address") {
-                      delete domNode.attribs.onclick;
-                      return (
-                        <p
-                          onClick={() => {
-                            openExternalUrl(
-                              this.state.dictService
-                                ? dictList.filter(
-                                    (item) =>
-                                      item.name === this.state.dictService
-                                  )[0].url
-                                : dictList[0].url
-                            );
-                          }}
-                          className="dict-url"
-                        >
-                          {"Powered by " +
-                            (this.state.dictService
-                              ? this.state.dictService
-                              : "Free Dictionary API")}
-                        </p>
-                      );
-                    }
-                  }
-                },
+                replace: (domNode) => {},
               }
             )}
           </div>

@@ -5,10 +5,12 @@ import {
   googleTransList,
   edgeTransList,
   deeplTransList,
+  yandexTransList,
 } from "../../../constants/translationList";
 import StorageUtil from "../../../utils/serviceUtils/storageUtil";
-import { bingTranlate } from "../../../utils/serviceUtils/bingTransUtil";
-import { deeplTranlate } from "../../../utils/serviceUtils/deeplTransUtil";
+import { bingTranslate } from "../../../utils/serviceUtils/bingTransUtil";
+import { deeplTranslate } from "../../../utils/serviceUtils/deeplTransUtil";
+import { yandexTranslate } from "../../../utils/serviceUtils/yandexTransUtil";
 class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
   constructor(props: PopupTransProps) {
     super(props);
@@ -27,7 +29,21 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
   }
   handleTrans = (text: string) => {
     if (this.state.transService === "Bing") {
-      bingTranlate(
+      bingTranslate(
+        text,
+        StorageUtil.getReaderConfig("transSource") || "",
+        StorageUtil.getReaderConfig("transTarget") || "en"
+      )
+        .then((res) => {
+          this.setState({
+            translatedText: res,
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else if (this.state.transService === "Yandex") {
+      yandexTranslate(
         text,
         StorageUtil.getReaderConfig("transSource") || "",
         StorageUtil.getReaderConfig("transTarget") || "en"
@@ -41,7 +57,7 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
           console.log(err);
         });
     } else if (this.state.transService === "Deepl") {
-      deeplTranlate(
+      deeplTranslate(
         text,
         StorageUtil.getReaderConfig("transSource") || "auto",
         StorageUtil.getReaderConfig("transTarget") || "EN"
@@ -128,6 +144,19 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
               <span className="icon-deepl trans-deepl-icon"></span>
               Deepl
             </div>
+            <div
+              className={
+                this.state.transService === "Yandex"
+                  ? "trans-service-selector"
+                  : "trans-service-selector-inactive"
+              }
+              onClick={() => {
+                this.handleChangeService("Yandex");
+              }}
+            >
+              <span className="icon-yandex trans-yandex-icon"></span>
+              Yandex
+            </div>
           </div>
           <div className="trans-lang-selector-container">
             <div className="original-lang-box">
@@ -146,6 +175,8 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
                   ? Object.keys(googleTransList)
                   : this.state.transService === "Deepl"
                   ? Object.keys(deeplTransList)
+                  : this.state.transService === "Yandex"
+                  ? Object.keys(yandexTransList)
                   : Object.keys(edgeTransList)
                 ).map((item, index) => {
                   return (
@@ -164,6 +195,8 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
                           ? Object.values(googleTransList)
                           : this.state.transService === "Deepl"
                           ? Object.values(deeplTransList)
+                          : this.state.transService === "Yandex"
+                          ? Object.values(yandexTransList)
                           : Object.values(edgeTransList))[index]
                       }
                     </option>
@@ -187,6 +220,8 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
                   ? Object.keys(googleTransList)
                   : this.state.transService === "Deepl"
                   ? Object.keys(deeplTransList)
+                  : this.state.transService === "Yandex"
+                  ? Object.keys(yandexTransList)
                   : Object.keys(edgeTransList)
                 ).map((item, index) => {
                   return (
@@ -205,6 +240,8 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
                           ? Object.values(googleTransList)
                           : this.state.transService === "Deepl"
                           ? Object.values(deeplTransList)
+                          : this.state.transService === "Yandex"
+                          ? Object.values(yandexTransList)
                           : Object.values(edgeTransList))[index]
                       }
                     </option>
