@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const bingTranlate = async (text: string, from: string, to: string) => {
+export const bingTranslate = async (text: string, from: string, to: string) => {
   let authUrl = "https://edge.microsoft.com/translate/auth";
   let transUrl =
     "https://api-edge.cognitive.microsofttranslator.com/translate?api-version=3.0&from=" +
