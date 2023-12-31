@@ -18,7 +18,7 @@ class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
   };
   handleDropboxComfirm = () => {
     let token: string = (
-      document.querySelector(".token-dialog-token-box") as HTMLTextAreaElement
+      document.querySelector("#token-dialog-token-box") as HTMLTextAreaElement
     ).value;
     StorageUtil.setReaderConfig(
       `${this.props.driveName.toLowerCase()}_token`,
@@ -29,7 +29,7 @@ class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
   };
   handleOneDriveComfirm = async () => {
     let code: string = (
-      document.querySelector(".token-dialog-token-box") as HTMLTextAreaElement
+      document.querySelector("#token-dialog-token-box") as HTMLTextAreaElement
     ).value;
     let res = await axios.post(driveConfig.onedriveAuthUrl, {
       code,
@@ -44,21 +44,75 @@ class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
   };
   handleDavComfirm = () => {
     let url: string = (
-      document.querySelector(".token-dialog-url-box") as HTMLTextAreaElement
+      document.querySelector("#token-dialog-url-box") as HTMLTextAreaElement
     ).value;
     let username: string = (
       document.querySelector(
-        ".token-dialog-username-box"
+        "#token-dialog-username-box"
       ) as HTMLTextAreaElement
     ).value;
     let password: string = (
       document.querySelector(
-        ".token-dialog-password-box"
+        "#token-dialog-password-box"
       ) as HTMLTextAreaElement
     ).value;
     StorageUtil.setReaderConfig(
       `${this.props.driveName.toLowerCase()}_token`,
       JSON.stringify({ url, username, password })
+    );
+    this.props.handleTokenDialog(false);
+    toast.success(this.props.t("Add Successfully"));
+  };
+  handleFTPComfirm = () => {
+    let url: string = (
+      document.querySelector("#token-dialog-url-box") as HTMLTextAreaElement
+    ).value;
+    let username: string = (
+      document.querySelector(
+        "#token-dialog-username-box"
+      ) as HTMLTextAreaElement
+    ).value;
+    let password: string = (
+      document.querySelector(
+        "#token-dialog-password-box"
+      ) as HTMLTextAreaElement
+    ).value;
+    let dir: string = (
+      document.querySelector("#token-dialog-path-box") as HTMLTextAreaElement
+    ).value;
+    let ssl: string = (
+      document.querySelector("#token-dialog-ssl-box") as HTMLTextAreaElement
+    ).value;
+    StorageUtil.setReaderConfig(
+      `${this.props.driveName.toLowerCase()}_token`,
+      JSON.stringify({ url, username, password, dir, ssl })
+    );
+    this.props.handleTokenDialog(false);
+    toast.success(this.props.t("Add Successfully"));
+  };
+  handleSFTPComfirm = () => {
+    let url: string = (
+      document.querySelector("#token-dialog-url-box") as HTMLTextAreaElement
+    ).value;
+    let username: string = (
+      document.querySelector(
+        "#token-dialog-username-box"
+      ) as HTMLTextAreaElement
+    ).value;
+    let password: string = (
+      document.querySelector(
+        "#token-dialog-password-box"
+      ) as HTMLTextAreaElement
+    ).value;
+    let dir: string = (
+      document.querySelector("#token-dialog-path-box") as HTMLTextAreaElement
+    ).value;
+    let port: string = (
+      document.querySelector("#token-dialog-port-box") as HTMLTextAreaElement
+    ).value;
+    StorageUtil.setReaderConfig(
+      `${this.props.driveName.toLowerCase()}_token`,
+      JSON.stringify({ url, username, password, dir, port })
     );
     this.props.handleTokenDialog(false);
     toast.success(this.props.t("Add Successfully"));
@@ -90,9 +144,78 @@ class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
               </div>
               <input
                 type="text"
-                name="username"
+                name="url"
                 placeholder={this.props.t("Server Address")}
                 id="token-dialog-url-box"
+                className="token-dialog-username-box"
+              />
+              <input
+                type="text"
+                name="username"
+                placeholder={this.props.t("Username")}
+                id="token-dialog-username-box"
+                className="token-dialog-username-box"
+              />
+              <input
+                type="text"
+                name="password"
+                placeholder={this.props.t("Password")}
+                id="token-dialog-password-box"
+                className="token-dialog-username-box"
+              />
+            </>
+          ) : this.props.driveName === "SFTP" ? (
+            <>
+              <input
+                type="text"
+                name="url"
+                placeholder={this.props.t("Server Address")}
+                id="token-dialog-url-box"
+                className="token-dialog-username-box"
+              />
+              <input
+                type="text"
+                name="port"
+                placeholder={this.props.t("Server port")}
+                id="token-dialog-port-box"
+                className="token-dialog-username-box"
+              />
+              <input
+                type="text"
+                name="path"
+                placeholder={this.props.t("Server path")}
+                id="token-dialog-path-box"
+                className="token-dialog-username-box"
+              />
+              <input
+                type="text"
+                name="username"
+                placeholder={this.props.t("Username")}
+                id="token-dialog-username-box"
+                className="token-dialog-username-box"
+              />
+              <input
+                type="text"
+                name="password"
+                placeholder={this.props.t("Password")}
+                id="token-dialog-password-box"
+                className="token-dialog-password-box"
+              />
+            </>
+          ) : this.props.driveName === "FTP" ? (
+            <>
+              <input
+                type="text"
+                name="url"
+                placeholder={this.props.t("Server Address")}
+                id="token-dialog-url-box"
+                className="token-dialog-username-box"
+              />
+              <input
+                type="text"
+                name="path"
+                placeholder={this.props.t("Server path")}
+                id="token-dialog-path-box"
                 className="token-dialog-url-box"
               />
               <input
@@ -104,9 +227,16 @@ class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
               />
               <input
                 type="text"
-                name="username"
+                name="password"
                 placeholder={this.props.t("Password")}
                 id="token-dialog-password-box"
+                className="token-dialog-password-box"
+              />
+              <input
+                type="text"
+                name="ssl"
+                placeholder={this.props.t("Use SSL, 1 for use, 0 for not use")}
+                id="token-dialog-ssl-box"
                 className="token-dialog-password-box"
               />
             </>
@@ -133,7 +263,10 @@ class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
               >
                 <Trans>Authorize</Trans>
               </div>
-              <textarea className="token-dialog-token-box" />
+              <textarea
+                className="token-dialog-token-box"
+                id="token-dialog-token-box"
+              />
             </>
           )}
 
@@ -150,6 +283,10 @@ class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
             onClick={() => {
               if (this.props.driveName === "WebDAV") {
                 this.handleDavComfirm();
+              } else if (this.props.driveName === "FTP") {
+                this.handleFTPComfirm();
+              } else if (this.props.driveName === "SFTP") {
+                this.handleSFTPComfirm();
               } else if (this.props.driveName === "Dropbox") {
                 this.handleDropboxComfirm();
               } else {

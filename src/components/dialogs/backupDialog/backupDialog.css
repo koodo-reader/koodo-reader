@@ -59,8 +59,8 @@
 }
 .backup-page-list-item {
   float: left;
-  width: 130px;
-  height: 100px;
+  width: 93px;
+  height: 93px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -94,12 +94,22 @@
 .icon-googledrive {
   font-size: 45px;
 }
-
+.icon-ftp {
+  font-size: 65px;
+  position: relative;
+  left: 43px;
+}
+.icon-sftp {
+  font-size: 65px;
+  position: relative;
+  left: 43px;
+}
 .icon-webdav {
   font-size: 35px;
   position: relative;
   left: 40px;
 }
+
 .backup-page-close-icon {
   position: absolute;
   right: 10px;

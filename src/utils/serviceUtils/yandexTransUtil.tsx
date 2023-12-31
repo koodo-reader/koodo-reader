@@ -23,7 +23,6 @@ export const yandexTranslate = async (text, from, to) => {
   };
 
   let transRes = await axios.request(config);
-  console.log(transRes);
   let result = transRes.data;
   if (result && result.text) {
     return result.text[0].trim();
