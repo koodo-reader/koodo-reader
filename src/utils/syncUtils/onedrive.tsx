@@ -11,31 +11,41 @@ class OneDriveUtil {
         refresh_token,
         redirect_uri: driveConfig.callbackUrl,
       });
-      const fs = window.require("fs");
-      const path = window.require("path");
-      const { ipcRenderer } = window.require("electron");
-
-      const dirPath = ipcRenderer.sendSync("user-data", "ping");
-      const arrayBuffer = await blob.arrayBuffer();
-      const filename = "data.zip";
-
-      fs.writeFileSync(path.join(dirPath, filename), Buffer.from(arrayBuffer));
-
-      let result = await ipcRenderer.invoke("onedrive-upload", {
-        accessToken: res.data.access_token,
-        filename,
+      let file = new File([blob], "data.zip", {
+        lastModified: new Date().getTime(),
+        type: blob.type,
       });
-      if (!result) resolve(false);
+      const accessToken = res.data.access_token; // 替换为实际的访问令牌
+      const uploadSessionUrl =
+        "https://graph.microsoft.com/v1.0/me/drive/root:/Apps/KoodoReader/" +
+        file.name +
+        ":/createUploadSession";
+
       try {
-        const fs_extra = window.require("fs-extra");
-        fs_extra.remove(path.join(dirPath, filename), (error: any) => {
-          if (error) resolve(false);
-          resolve(true);
+        // 创建上传会话
+        const sessionResponse = await axios.post(uploadSessionUrl, null, {
+          headers: {
+            Authorization: "Bearer " + accessToken,
+            "Content-Type": "application/json",
+          },
         });
-      } catch (e) {
-        console.log("error removing ", path.join(dirPath, filename));
+
+        const uploadUrl = sessionResponse.data.uploadUrl;
+
+        // 上传整个文件
+        const response = await axios.put(uploadUrl, file, {
+          headers: {
+            Authorization: "Bearer " + accessToken,
+            "Content-Type": file.type,
+          },
+        });
+
+        console.log("File uploaded successfully:", response.data);
+      } catch (error) {
+        console.error("Error occurred during file upload:", error);
         resolve(false);
       }
+      resolve(true);
     });
   }
   static DownloadFile() {
@@ -45,38 +55,29 @@ class OneDriveUtil {
         refresh_token,
         redirect_uri: driveConfig.callbackUrl,
       });
-      const filename = "data.zip";
-      const fs = window.require("fs");
-      const path = window.require("path");
-      const { ipcRenderer } = window.require("electron");
+      const accessToken = res.data.access_token; // 替换为实际的访问令牌
+      const downloadUrl = `https://graph.microsoft.com/v1.0/me/drive/root:/Apps/KoodoReader/data.zip:/content`;
 
-      const dirPath = ipcRenderer.sendSync("user-data", "ping");
+      try {
+        const response = await axios.get(downloadUrl, {
+          headers: {
+            Authorization: "Bearer " + accessToken,
+            responseType: "blob", // 设置响应类型为 Blob
+          },
+        });
 
-      let result = await ipcRenderer.invoke("onedrive-download", {
-        accessToken: res.data.access_token,
-        filename,
-      });
-      if (result) {
-        var data = fs.readFileSync(path.join(dirPath, filename));
-        let blobTemp: any = new Blob([data], { type: "application/zip" });
-        let fileTemp = new File([blobTemp], filename, {
+        // 从响应中获取文件内容
+        const fileContent = response.data;
+        let fileTemp = new File([fileContent], "data.zip", {
           lastModified: new Date().getTime(),
-          type: blobTemp.type,
+          type: fileContent.type,
         });
         let result = await restore(fileTemp);
         if (!result) resolve(false);
+      } catch (error) {
+        console.error("Error occurred during file download:", error);
       }
       resolve(true);
-      try {
-        const fs_extra = window.require("fs-extra");
-        fs_extra.remove(path.join(dirPath, filename), (error: any) => {
-          if (error) resolve(false);
-          resolve(true);
-        });
-      } catch (e) {
-        console.log("error removing ", path.join(dirPath, filename));
-        resolve(false);
-      }
     });
   }
 }

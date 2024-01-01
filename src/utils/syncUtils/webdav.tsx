@@ -26,34 +26,13 @@ class WebdavUtil {
       wfs.writeFile("/KoodoReader/data.zip", file, "binary", function (err) {
         console.log(err);
         if (err) resolve(false);
-        let year = new Date().getFullYear(),
-          month = new Date().getMonth() + 1,
-          day = new Date().getDate();
-        client
-          .copyFile(
-            "/KoodoReader/data.zip",
-            "/KoodoReader/" +
-              `${year}-${month <= 9 ? "0" + month : month}-${
-                day <= 9 ? "0" + day : day
-              }.zip`
-          )
-          .then(() => {
-            resolve(true);
-          })
-          .catch(() => {
-            resolve(false);
-          });
+        resolve(true);
       });
     });
   };
   static DownloadFile = async () => {
     return new Promise<boolean>(async (resolve, reject) => {
-      const fs = window.require("fs");
-      const path = window.require("path");
       const { createClient } = window.require("webdav");
-      const { ipcRenderer } = window.require("electron");
-      const dirPath = ipcRenderer.sendSync("user-data", "ping");
-      const request = window.require("request");
       let { url, username, password } = JSON.parse(
         StorageUtil.getReaderConfig("webdav_token") || ""
       );
@@ -64,37 +43,19 @@ class WebdavUtil {
       if ((await client.exists("/KoodoReader/data.zip")) === false) {
         resolve(false);
       }
-      const downloadLink: string = client.getFileDownloadLink(
+      const buffer: Buffer = await client.getFileContents(
         "/KoodoReader/data.zip"
       );
-      let stream = fs.createWriteStream(path.join(dirPath, `data.zip`));
-      request(downloadLink)
-        .pipe(stream)
-        .on("close", async (err) => {
-          if (err) {
-            console.log(err);
-            resolve(false);
-          } else {
-            var data = fs.readFileSync(path.join(dirPath, `data.zip`));
-            let blobTemp: any = new Blob([data], { type: "application/zip" });
-            let fileTemp = new File([blobTemp], "data.zip", {
-              lastModified: new Date().getTime(),
-              type: blobTemp.type,
-            });
-            let result = await restore(fileTemp);
-            if (!result) resolve(false);
-            try {
-              const fs_extra = window.require("fs-extra");
-              fs_extra.remove(path.join(dirPath, `data.zip`), (error: any) => {
-                if (error) resolve(false);
-                resolve(true);
-              });
-            } catch (e) {
-              console.log("error removing ", path.join(dirPath, `data.zip`));
-              resolve(false);
-            }
-          }
-        });
+      console.log(buffer);
+      let blobTemp: any = new Blob([buffer], { type: "application/zip" });
+      let fileTemp = new File([blobTemp], "data.zip", {
+        lastModified: new Date().getTime(),
+        type: blobTemp.type,
+      });
+      console.log(fileTemp);
+      let result = await restore(fileTemp);
+      if (!result) resolve(false);
+      resolve(true);
     });
   };
 }

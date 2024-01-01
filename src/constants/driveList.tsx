@@ -5,8 +5,13 @@ export const driveConfig = {
       : "http://localhost:3000",
   onedriveAuthUrl: "https://koodo.960960.xyz/api/onedrive_auth",
   onedriveRefreshUrl: "https://koodo.960960.xyz/api/onedrive_refresh",
+  googleAuthUrl: "https://koodo.960960.xyz/api/google_auth",
+  googleRefreshUrl: "https://koodo.960960.xyz/api/google_refresh",
+  googleScope: "https://www.googleapis.com/auth/drive.appdata",
   dropboxClientId: "vnc67byrssocvy1",
   onedriveClientId: "506df58a-29ab-4020-afc5-6f423dc80f35",
+  googleClientId:
+    "1051055003225-ph1f5fvh328dhv7bco5jitlnfhg6ks2t.apps.googleusercontent.com",
 };
 export const driveList = [
   {
@@ -44,5 +49,11 @@ export const driveList = [
     name: "SFTP",
     icon: "sftp",
     url: "",
+  },
+  {
+    id: 7,
+    name: "Google Drive",
+    icon: "googledrive",
+    url: `https://accounts.google.com/o/oauth2/v2/auth?redirect_uri=${driveConfig.callbackUrl}&prompt=consent&response_type=code&client_id=${driveConfig.googleClientId}&scope=${driveConfig.googleScope}&access_type=offline`,
   },
 ];
