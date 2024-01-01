@@ -133,44 +133,6 @@ const createMainWin = () => {
 
     return path.join(dirPath, "tts", audioName);
   });
-  ipcMain.handle("onedrive-upload", async (event, config) => {
-    let { accessToken, filename } = config;
-    const { size } = fs.statSync(path.join(dirPath, filename));
-    const oneDriveAPI = require("onedrive-api");
-    let result = await oneDriveAPI.items.uploadSession({
-      accessToken: accessToken,
-      filename: filename,
-      fileSize: size,
-      parentPath: "/Apps/KoodoReader/",
-      readableStream: fs.createReadStream(path.join(dirPath, filename)),
-      conflictBehavior: "replace",
-    });
-    return true;
-  });
-
-  ipcMain.handle("onedrive-download", async (event, config) => {
-    let { accessToken, filename } = config;
-    const oneDriveAPI = require("onedrive-api");
-    var fileStream = await oneDriveAPI.items.download({
-      accessToken: accessToken,
-      itemPath: "/Apps/KoodoReader/" + filename,
-    });
-    const writeStream = fs.createWriteStream(path.join(dirPath, filename));
-    fileStream.pipe(writeStream);
-    async function closeWriteStream(writeStream) {
-      return new Promise((resolve) => {
-        writeStream.on("close", () => {
-          resolve(true);
-        });
-        writeStream.on("error", () => {
-          console.log("error");
-          resolve(false);
-        });
-      });
-    }
-    const result = await closeWriteStream(writeStream);
-    return result;
-  });
   ipcMain.handle("ftp-upload", async (event, config) => {
     let { url, username, password, filename, dir, ssl } = config;
     const Client = require("ftp");

@@ -6,6 +6,7 @@ import { restore } from "../../../utils/syncUtils/restoreUtil";
 import { Trans } from "react-i18next";
 import DropboxUtil from "../../../utils/syncUtils/dropbox";
 import OneDriveUtil from "../../../utils/syncUtils/onedrive";
+import GoogleDriveUtil from "../../../utils/syncUtils/googledrive";
 import WebdavUtil from "../../../utils/syncUtils/webdav";
 import FtpUtil from "../../../utils/syncUtils/ftp";
 import SFtpUtil from "../../../utils/syncUtils/sftp";
@@ -35,7 +36,7 @@ class BackupDialog extends React.Component<
     this.state = {
       currentStep: 0,
       isBackup: "",
-      currentDrive: "Local",
+      currentDrive: "local",
     };
   }
   handleClose = () => {
@@ -68,7 +69,7 @@ class BackupDialog extends React.Component<
       day = new Date().getDate();
     this.setState({ currentDrive: name }, async () => {
       switch (name) {
-        case "Local":
+        case "local":
           let blob: Blob | boolean = await backup(
             this.props.books,
             this.props.notes,
@@ -86,23 +87,26 @@ class BackupDialog extends React.Component<
           );
           this.handleFinish();
           break;
-        case "Dropbox":
-        case "WebDAV":
-        case "OneDrive":
-        case "FTP":
-        case "SFTP":
-          if (!StorageUtil.getReaderConfig(name.toLowerCase() + "_token")) {
+        case "dropbox":
+        case "webdav":
+        case "onedrive":
+        case "googledrive":
+        case "ftp":
+        case "sftp":
+          if (!StorageUtil.getReaderConfig(name + "_token")) {
             this.props.handleTokenDialog(true);
             break;
           }
           let DriveUtil =
-            name === "Dropbox"
+            name === "dropbox"
               ? DropboxUtil
-              : name === "FTP"
+              : name === "ftp"
               ? FtpUtil
-              : name === "OneDrive"
+              : name === "onedrive"
               ? OneDriveUtil
-              : name === "SFTP"
+              : name === "googledrive"
+              ? GoogleDriveUtil
+              : name === "sftp"
               ? SFtpUtil
               : WebdavUtil;
           if (this.state.isBackup === "yes") {
@@ -154,10 +158,10 @@ class BackupDialog extends React.Component<
             onClick={() => {
               //webdav is avavilible on desktop
               if (
-                (item.name === "WebDAV" ||
-                  item.name === "OneDrive" ||
-                  item.name === "FTP" ||
-                  item.name === "SFTP") &&
+                (item.icon === "webdav" ||
+                  item.icon === "onedrive" ||
+                  item.icon === "ftp" ||
+                  item.icon === "sftp") &&
                 !isElectron
               ) {
                 toast(
@@ -167,7 +171,7 @@ class BackupDialog extends React.Component<
                 );
                 return;
               }
-              this.handleDrive(item.name);
+              this.handleDrive(item.icon);
             }}
           >
             <div className="backup-page-list-item-container">
@@ -197,17 +201,18 @@ class BackupDialog extends React.Component<
     };
 
     const dialogProps = {
-      driveName:
-        driveList[
-          window._.findLastIndex(driveList, {
-            name: this.state.currentDrive,
-          })
-        ].name,
+      driveName: this.state.currentDrive,
       url: driveList[
         window._.findLastIndex(driveList, {
-          name: this.state.currentDrive,
+          icon: this.state.currentDrive,
         })
       ].url,
+      title:
+        driveList[
+          window._.findLastIndex(driveList, {
+            icon: this.state.currentDrive,
+          })
+        ].name,
     };
 
     return (
