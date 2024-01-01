@@ -20,10 +20,7 @@ class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
     let token: string = (
       document.querySelector("#token-dialog-token-box") as HTMLTextAreaElement
     ).value;
-    StorageUtil.setReaderConfig(
-      `${this.props.driveName.toLowerCase()}_token`,
-      token
-    );
+    StorageUtil.setReaderConfig(`${this.props.driveName}_token`, token);
     this.props.handleTokenDialog(false);
     toast.success(this.props.t("Add Successfully"));
   };
@@ -36,7 +33,23 @@ class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
       redirect_uri: driveConfig.callbackUrl,
     });
     StorageUtil.setReaderConfig(
-      `${this.props.driveName.toLowerCase()}_token`,
+      `${this.props.driveName}_token`,
+      res.data.refresh_token
+    );
+    this.props.handleTokenDialog(false);
+    toast.success(this.props.t("Add Successfully"));
+  };
+  handleGoogleDriveComfirm = async () => {
+    let code: string = (
+      document.querySelector("#token-dialog-token-box") as HTMLTextAreaElement
+    ).value;
+    let res = await axios.post(driveConfig.googleAuthUrl, {
+      code,
+      redirect_uri: driveConfig.callbackUrl,
+      scope: driveConfig.googleScope,
+    });
+    StorageUtil.setReaderConfig(
+      `${this.props.driveName}_token`,
       res.data.refresh_token
     );
     this.props.handleTokenDialog(false);
@@ -57,7 +70,7 @@ class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
       ) as HTMLTextAreaElement
     ).value;
     StorageUtil.setReaderConfig(
-      `${this.props.driveName.toLowerCase()}_token`,
+      `${this.props.driveName}_token`,
       JSON.stringify({ url, username, password })
     );
     this.props.handleTokenDialog(false);
@@ -84,7 +97,7 @@ class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
       document.querySelector("#token-dialog-ssl-box") as HTMLTextAreaElement
     ).value;
     StorageUtil.setReaderConfig(
-      `${this.props.driveName.toLowerCase()}_token`,
+      `${this.props.driveName}_token`,
       JSON.stringify({ url, username, password, dir, ssl })
     );
     this.props.handleTokenDialog(false);
@@ -111,7 +124,7 @@ class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
       document.querySelector("#token-dialog-port-box") as HTMLTextAreaElement
     ).value;
     StorageUtil.setReaderConfig(
-      `${this.props.driveName.toLowerCase()}_token`,
+      `${this.props.driveName}_token`,
       JSON.stringify({ url, username, password, dir, port })
     );
     this.props.handleTokenDialog(false);
@@ -127,7 +140,7 @@ class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
           <div className="token-dialog-title">
             <Trans>Authorize</Trans>
             &nbsp;
-            {this.props.driveName}&nbsp;
+            {this.props.title}&nbsp;
             <Trans>Token</Trans>
           </div>
           {this.props.driveName === "WebDAV" ? (
@@ -281,15 +294,17 @@ class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
           <div
             className="token-dialog-comfirm"
             onClick={() => {
-              if (this.props.driveName === "WebDAV") {
+              if (this.props.driveName === "webdav") {
                 this.handleDavComfirm();
-              } else if (this.props.driveName === "FTP") {
+              } else if (this.props.driveName === "ftp") {
                 this.handleFTPComfirm();
-              } else if (this.props.driveName === "SFTP") {
+              } else if (this.props.driveName === "sftp") {
                 this.handleSFTPComfirm();
-              } else if (this.props.driveName === "Dropbox") {
+              } else if (this.props.driveName === "dropbox") {
                 this.handleDropboxComfirm();
-              } else {
+              } else if (this.props.driveName === "googledrive") {
+                this.handleGoogleDriveComfirm();
+              } else if (this.props.driveName === "onedrive") {
                 this.handleOneDriveComfirm();
               }
             }}
