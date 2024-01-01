@@ -46,13 +46,11 @@ class WebdavUtil {
       const buffer: Buffer = await client.getFileContents(
         "/KoodoReader/data.zip"
       );
-      console.log(buffer);
       let blobTemp: any = new Blob([buffer], { type: "application/zip" });
       let fileTemp = new File([blobTemp], "data.zip", {
         lastModified: new Date().getTime(),
         type: blobTemp.type,
       });
-      console.log(fileTemp);
       let result = await restore(fileTemp);
       if (!result) resolve(false);
       resolve(true);

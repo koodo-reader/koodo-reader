@@ -12,6 +12,13 @@
   margin-top: 20px;
   margin-left: 5px;
 }
+.wiki-image {
+  float: right;
+  width: 43%;
+}
+.wiki-text::first-letter {
+  font-size: 3rem;
+}
 .dict-definition {
   line-height: 30px;
 }
@@ -34,7 +41,7 @@
   height: calc(100% - 45px);
   user-select: text;
   overflow-y: scroll;
-  padding: 5px;
+  padding: 8px;
   box-sizing: border-box;
   font-size: 15px;
   line-height: 20px;
@@ -52,7 +59,7 @@
   right: 25px;
 }
 .dict-service-selector {
-  width: 100px;
+  width: 90px;
   height: 30px;
   opacity: 1;
   font-size: 15px;

@@ -23,11 +23,11 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     };
   }
   async componentDidMount() {
-    // const obj = { hello: "world" };
-    // const blob = new Blob([JSON.stringify(obj, null, 2)], {
-    //   type: "application/json",
+    // const { ipcRenderer } = window.require("electron");
+    // const html = await ipcRenderer.invoke("wiki-index", {
+    //   text: "batman",
     // });
-    // await SFtpUtil.DownloadFile();
+    // console.log(html);
     if (isElectron) {
       const fs = window.require("fs");
       const path = window.require("path");

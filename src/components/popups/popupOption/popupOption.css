@@ -13,6 +13,7 @@
 .search-book-option,
 .browser-option,
 .dict-option,
+.wikipedia-option,
 .copy-option {
   height: 42px;
   width: 42px;
@@ -38,6 +39,7 @@
 .search-book-option:hover,
 .browser-option:hover,
 .dict-option:hover,
+.wikipedia-option:hover,
 .copy-option:hover {
   border-radius: 5px;
 }
@@ -51,6 +53,7 @@
 .baidu-icon,
 .bing-icon,
 .copy-icon,
+.wikipedia-icon,
 .digest-icon {
   line-height: 45px !important;
   font-size: 27px;
@@ -79,7 +82,10 @@
 .dict-icon {
   color: #2084e8;
   font-size: 25px;
-  margin-left: -4px;
+}
+.wikipedia-icon {
+  font-size: 22px;
+  opacity: 0.83;
 }
 .baidu-icon {
   color: rgb(252, 204, 136);
