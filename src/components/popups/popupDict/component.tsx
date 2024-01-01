@@ -17,7 +17,7 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
   constructor(props: PopupDictProps) {
     super(props);
     this.state = {
-      dictText: "",
+      dictText: "Please Wait a moment",
       word: "",
       prototype: "",
       dictService: StorageUtil.getReaderConfig("dictService"),
