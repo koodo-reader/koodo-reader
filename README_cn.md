@@ -41,7 +41,7 @@
   - FB2 (**.fb2**)
   - 超文本 (**.html**, **.xml**, **.xhtml**, **.mhtml**, **.htm**, **.htm**)
 - 支持 **Windows**，**macOS**，**Linux** 和 **网页版**
-- 备份数据到 **Dropbox** 和 **WebDAV**
+- 备份数据到 **OneDrive**, **Google Drive**, **Dropbox**, **FTP**, **SFTP**, **WebDAV**
 - 自定义源文件夹，利用 OneDrive、百度网盘、iCloud、Dropbox 等进行多设备同步
 - 双页模式，单页模式，滚动模式
 - 听书功能，翻译功能，触控屏支持，批量导入图书
