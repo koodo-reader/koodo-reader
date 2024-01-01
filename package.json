@@ -38,6 +38,7 @@
     "uuid": "^9.0.1",
     "webdav": "^3.6.2",
     "webdav-fs": "3.0.0",
+    "wikijs": "^6.4.1",
     "wink-lemmatizer": "^3.0.4",
     "ws": "^8.13.0",
     "zip-a-folder": "^0.0.12"

@@ -10,6 +10,7 @@ import { getBingDict } from "../../../utils/serviceUtils/bingDictUtil";
 import RecordLocation from "../../../utils/readUtils/recordLocation";
 import DictHistory from "../../../model/DictHistory";
 import { Trans } from "react-i18next";
+import { wikiList } from "../../../constants/wikiList";
 
 declare var window: any;
 class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
@@ -21,6 +22,7 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
       prototype: "",
       dictService: StorageUtil.getReaderConfig("dictService"),
       dictTarget: StorageUtil.getReaderConfig("dictTarget"),
+      wikiCode: StorageUtil.getReaderConfig("wikiCode") || "en",
     };
   }
   componentDidMount() {
@@ -53,7 +55,7 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
     window.localforage.setItem("words", dictHistoryArr);
   };
   handleDict = async (text: string) => {
-    if (StorageUtil.getReaderConfig("dictService") === "必应词典") {
+    if (StorageUtil.getReaderConfig("dictService") === "bing_cn_dict") {
       const { ipcRenderer } = window.require("electron");
       const html = await ipcRenderer.invoke("get-url-content", {
         url: `https://cn.bing.com/dict/search?mkt=zh-cn&q=${encodeURIComponent(
@@ -86,9 +88,7 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
           dictText: this.props.t("Error happens"),
         });
       }
-    } else if (
-      StorageUtil.getReaderConfig("dictService") === "Google Dictionary"
-    ) {
+    } else if (StorageUtil.getReaderConfig("dictService") === "google_dict") {
       const { ipcRenderer } = window.require("electron");
       const html = await ipcRenderer.invoke("get-url-content", {
         url: `https://www.google.com/search?q=define+${encodeURIComponent(
@@ -124,6 +124,74 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
         }
         this.setState({
           dictText: parentElement.innerHTML,
+        });
+      } else {
+        this.setState({
+          dictText: this.props.t("Error happens"),
+        });
+      }
+    } else if (StorageUtil.getReaderConfig("dictService") === "google_dict") {
+      const { ipcRenderer } = window.require("electron");
+      const html = await ipcRenderer.invoke("get-url-content", {
+        url: `https://www.google.com/search?q=define+${encodeURIComponent(
+          text
+        )}`,
+      });
+      if (html) {
+        const doc = new DOMParser().parseFromString(html, "text/html");
+        const parentElement = Array.from(doc.querySelectorAll(".kCrYT"))[1];
+        var aNodes = parentElement.querySelectorAll("a");
+        if (aNodes.length > 0) {
+          this.setState({
+            dictText: this.props.t("Error happens"),
+          });
+          return;
+        }
+        var childElements = parentElement.querySelectorAll(".r0bn4c");
+        // 遍历子元素并移除特定的子元素
+        for (var i = 0; i < childElements.length; i++) {
+          var childElement = childElements[i];
+          if (
+            childElement.textContent &&
+            (childElement.textContent?.indexOf(":") > -1 ||
+              childElement.textContent?.indexOf('"') > -1 ||
+              childElement.textContent?.indexOf("「") > -1)
+          ) {
+            childElement.parentNode &&
+              childElement.parentNode.removeChild(childElement);
+          }
+          if (childElement.textContent) {
+            childElement.textContent = childElement.textContent.trim();
+          }
+        }
+        this.setState({
+          dictText: parentElement.innerHTML,
+        });
+      } else {
+        this.setState({
+          dictText: this.props.t("Error happens"),
+        });
+      }
+    } else if (StorageUtil.getReaderConfig("dictService") === "wikipedia") {
+      const { ipcRenderer } = window.require("electron");
+
+      const res = await ipcRenderer.invoke("wiki-index", {
+        text,
+        code: this.state.wikiCode,
+      });
+      if (res) {
+        let html = `<img class="wiki-image" style="shape-outside: url('${
+          res.image
+        }')" src="${res.image}"></img><p class="wiki-text">${
+          this.state.wikiCode === "zh"
+            ? StorageUtil.getReaderConfig("lang") === "zhMO" ||
+              StorageUtil.getReaderConfig("lang") === "zhTW"
+              ? window.ChineseS2T.s2t(res.summary)
+              : window.ChineseS2T.t2s(res.summary)
+            : res.summary
+        }</p>`;
+        this.setState({
+          dictText: html,
         });
       } else {
         this.setState({
@@ -169,39 +237,82 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
               className="dict-service-selector"
               style={{ margin: 0 }}
               onChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
-                this.setState({ dictService: event.target.value }, () => {
-                  StorageUtil.setReaderConfig(
-                    "dictService",
-                    event.target.value
-                  );
-                  this.setState(
-                    {
-                      dictTarget: "en-en",
-                    },
-                    () => {
-                      StorageUtil.setReaderConfig("dictTarget", "en-en");
-                      this.handleLookUp();
-                    }
-                  );
-                });
+                this.setState(
+                  {
+                    dictService: event.target.value,
+                  },
+                  () => {
+                    StorageUtil.setReaderConfig(
+                      "dictService",
+                      event.target.value
+                    );
+                    this.setState(
+                      {
+                        dictTarget: "en-en",
+                      },
+                      () => {
+                        StorageUtil.setReaderConfig("dictTarget", "en-en");
+                        this.handleLookUp();
+                      }
+                    );
+                  }
+                );
               }}
             >
               {dictList.map((item, index) => {
                 return (
                   <option
                     value={item.name}
-                    key={index}
+                    key={item.name}
                     className="add-dialog-shelf-list-option"
                     selected={
                       this.state.dictService === item.name ? true : false
                     }
                   >
-                    {item.name}
+                    {item.title}
                   </option>
                 );
               })}
             </select>
           </div>
+          {this.state.dictService === "wikipedia" ? (
+            <div className="dict-service-container" style={{ right: 150 }}>
+              <select
+                className="dict-service-selector"
+                style={{ margin: 0 }}
+                onChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
+                  this.setState(
+                    {
+                      wikiCode: event.target.value,
+                    },
+                    () => {
+                      StorageUtil.setReaderConfig(
+                        "wikiCode",
+                        event.target.value
+                      );
+                      this.handleLookUp();
+                    }
+                  );
+                }}
+              >
+                {wikiList.map((item, index) => {
+                  return (
+                    <option
+                      value={item.code}
+                      key={item.code}
+                      className="add-dialog-shelf-list-option"
+                      selected={
+                        this.state.wikiCode === item.code ? true : false
+                      }
+                    >
+                      {item.nativeLang}
+                    </option>
+                  );
+                })}
+              </select>
+            </div>
+          ) : null}
+
           <div className="dict-word">
             {StorageUtil.getReaderConfig("isLemmatizeWord") === "yes"
               ? this.state.prototype
