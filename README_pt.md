@@ -40,7 +40,7 @@
   - Texto rico (**.md**, **.docx**)
   - Hiper texto (**.html**, **.xml**, **.xhtml**, **.mhtml**, **.htm**, **.htm**)
 - Plataformas suportadas : **Windows**, **macOS**, **Linux** e **Web**
-- Guarde seus dados no **Dropbox** ou **WebDAV**
+- Guarde seus dados no **OneDrive**, **Google Drive**, **Dropbox**, **FTP**, **SFTP**, **WebDAV**
 - Personalize a pasta de origem e sincronize entre varios dispositivos usando OneDrive, iCloud, Dropbox, etc..
 - Layouts de uma coluna, duas colunas ou de rolagem continua
 - Text para fala, tradução, controles deslizante de progresso, suporte a tela sensível ao toque, importação em lote
