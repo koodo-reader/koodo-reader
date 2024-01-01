@@ -1,14 +1,29 @@
 export const dictList = [
   {
-    name: "Free Dictionary API",
+    title: "Free Dictionary API",
+    name: "free_dictionary_api",
     url: "https://dictionaryapi.dev/",
   },
   {
-    name: "Google Dict",
+    title: "Google Dict",
+    name: "google_dict",
     url: "https://www.google.com",
   },
   {
-    name: "必应词典",
+    title: "必应词典",
+    name: "bing_cn_dict",
     url: "https://www.bing.com/dict",
+  },
+  {
+    title: "Wikipedia",
+    name: "wikipedia",
+    url: "https://www.wikipedia.org",
+  },
+];
+export const wikiLangList = [
+  {
+    title: "Wikipedia",
+    name: "es",
+    url: "https://es.wikipedia.org/w/api.php",
   },
 ];

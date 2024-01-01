@@ -311,6 +311,32 @@ const createMainWin = () => {
       return null;
     }
   });
+  ipcMain.handle("wiki-index", async (event, config) => {
+    const wiki = require("wikijs").default;
+    console.log(config);
+    try {
+      let page = await wiki({
+        apiUrl: "https://" + config.code + ".wikipedia.org/w/api.php",
+      }).page(config.text);
+      let summary = await page.summary();
+      let image = await page.mainImage();
+      return { summary, image };
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  });
+  ipcMain.handle("wiki-images", async (event, config) => {
+    const wiki = require("wikijs").default;
+    try {
+      return await wiki()
+        .page("bat")
+        .then((page) => page.mainImage());
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  });
   ipcMain.on("storage-location", (event, arg) => {
     event.returnValue = path.join(dirPath, "data");
   });
