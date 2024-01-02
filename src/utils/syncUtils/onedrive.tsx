@@ -2,7 +2,6 @@ import { restore } from "./restoreUtil";
 import StorageUtil from "../serviceUtils/storageUtil";
 import { driveConfig } from "../../constants/driveList";
 import axios from "axios";
-
 class OneDriveUtil {
   static UploadFile(blob: any) {
     return new Promise<boolean>(async (resolve, reject) => {
@@ -17,7 +16,7 @@ class OneDriveUtil {
       });
       const accessToken = res.data.access_token; // 替换为实际的访问令牌
       const uploadSessionUrl =
-        "https://graph.microsoft.com/v1.0/me/drive/root:/Apps/KoodoReader/" +
+        "https://graph.microsoft.com/v1.0/me/drive/special/approot:/" +
         file.name +
         ":/createUploadSession";
 
@@ -40,7 +39,7 @@ class OneDriveUtil {
           },
         });
 
-        console.log("File uploaded successfully:", response.data);
+        console.log("File uploaded successfully:", response);
       } catch (error) {
         console.error("Error occurred during file upload:", error);
         resolve(false);
@@ -50,27 +49,28 @@ class OneDriveUtil {
   }
   static DownloadFile() {
     return new Promise<boolean>(async (resolve, reject) => {
+      const filename = "data.zip";
       var refresh_token = StorageUtil.getReaderConfig("onedrive_token") || "";
       let res = await axios.post(driveConfig.onedriveRefreshUrl, {
         refresh_token,
         redirect_uri: driveConfig.callbackUrl,
       });
       const accessToken = res.data.access_token; // 替换为实际的访问令牌
-      const downloadUrl = `https://graph.microsoft.com/v1.0/me/drive/root:/Apps/KoodoReader/data.zip:/content`;
-
+      const downloadUrl = `https://graph.microsoft.com/v1.0/me/drive/special/approot:/${filename}:/content`;
+      console.log(accessToken);
       try {
         const response = await axios.get(downloadUrl, {
+          responseType: "blob",
           headers: {
             Authorization: "Bearer " + accessToken,
-            responseType: "blob", // 设置响应类型为 Blob
           },
         });
-
-        // 从响应中获取文件内容
-        const fileContent = response.data;
-        let fileTemp = new File([fileContent], "data.zip", {
+        let blobTemp: any = new Blob([response.data], {
+          type: "application/zip",
+        });
+        let fileTemp = new File([blobTemp], filename, {
           lastModified: new Date().getTime(),
-          type: fileContent.type,
+          type: blobTemp.type,
         });
         let result = await restore(fileTemp);
         if (!result) resolve(false);

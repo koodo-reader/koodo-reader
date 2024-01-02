@@ -36,7 +36,7 @@ export const driveList = [
     id: 4,
     name: "OneDrive",
     icon: "onedrive",
-    url: `https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=${driveConfig.onedriveClientId}&scope=files.readwrite offline_access&response_type=code&redirect_uri=${driveConfig.callbackUrl}`,
+    url: `https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=${driveConfig.onedriveClientId}&scope=files.readwrite.appfolder offline_access&response_type=code&redirect_uri=${driveConfig.callbackUrl}`,
   },
   {
     id: 5,
