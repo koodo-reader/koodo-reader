@@ -43,7 +43,7 @@
 - Save your data to **OneDrive**, **Google Drive**, **Dropbox**, **FTP**, **SFTP**, **WebDAV**
 - Customize the source folder and synchronize among multiple devices using OneDrive, iCloud, Dropbox, etc.
 - Single-column, two-column, or continuous scrolling layouts
-- Text-to-speech, translation, progress slider, touch screen support, batch import
+- Text-to-speech, translation, dictionary, touch screen support, batch import
 - Add bookmarks, notes, highlights to your books
 - Adjust font size, font family, line-spacing, paragraph spacing, background color, text color, margins, and brightness
 - Night mode and theme color
