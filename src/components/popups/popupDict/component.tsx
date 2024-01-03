@@ -130,48 +130,6 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
           dictText: this.props.t("Error happens"),
         });
       }
-    } else if (StorageUtil.getReaderConfig("dictService") === "google_dict") {
-      const { ipcRenderer } = window.require("electron");
-      const html = await ipcRenderer.invoke("get-url-content", {
-        url: `https://www.google.com/search?q=define+${encodeURIComponent(
-          text
-        )}`,
-      });
-      if (html) {
-        const doc = new DOMParser().parseFromString(html, "text/html");
-        const parentElement = Array.from(doc.querySelectorAll(".kCrYT"))[1];
-        var aNodes = parentElement.querySelectorAll("a");
-        if (aNodes.length > 0) {
-          this.setState({
-            dictText: this.props.t("Error happens"),
-          });
-          return;
-        }
-        var childElements = parentElement.querySelectorAll(".r0bn4c");
-        // 遍历子元素并移除特定的子元素
-        for (var i = 0; i < childElements.length; i++) {
-          var childElement = childElements[i];
-          if (
-            childElement.textContent &&
-            (childElement.textContent?.indexOf(":") > -1 ||
-              childElement.textContent?.indexOf('"') > -1 ||
-              childElement.textContent?.indexOf("「") > -1)
-          ) {
-            childElement.parentNode &&
-              childElement.parentNode.removeChild(childElement);
-          }
-          if (childElement.textContent) {
-            childElement.textContent = childElement.textContent.trim();
-          }
-        }
-        this.setState({
-          dictText: parentElement.innerHTML,
-        });
-      } else {
-        this.setState({
-          dictText: this.props.t("Error happens"),
-        });
-      }
     } else if (StorageUtil.getReaderConfig("dictService") === "wikipedia") {
       const { ipcRenderer } = window.require("electron");
 
