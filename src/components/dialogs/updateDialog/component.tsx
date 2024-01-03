@@ -9,6 +9,7 @@ import animationNew from "../../../assets/lotties/new.json";
 import animationSuccess from "../../../assets/lotties/success.json";
 import StorageUtil from "../../../utils/serviceUtils/storageUtil";
 import { openExternalUrl } from "../../../utils/serviceUtils/urlUtil";
+import { isElectron } from "react-device-detect";
 const newOptions = {
   loop: false,
   autoplay: true,
@@ -40,13 +41,9 @@ class UpdateInfo extends React.Component<UpdateInfoProps, UpdateInfoState> {
         .get(`https://koodo.960960.xyz/api/update?name=${navigator.language}`)
         .then((res) => {
           const newVersion = res.data.log.version;
-          console.log(
-            res,
-            packageInfo.version,
-            newVersion,
-            packageInfo.version.localeCompare(newVersion)
-          );
-
+          if (!isElectron) {
+            return;
+          }
           setTimeout(() => {
             if (packageInfo.version.localeCompare(newVersion) < 0) {
               if (StorageUtil.getReaderConfig("isDisableUpdate") !== "yes") {
