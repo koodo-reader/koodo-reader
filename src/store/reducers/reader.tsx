@@ -34,6 +34,7 @@ export function reader(
         ...state,
         notes: action.payload,
       };
+
     case "HANDLE_CURRENT_CHAPTER":
       return {
         ...state,

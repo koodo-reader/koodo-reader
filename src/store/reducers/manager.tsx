@@ -3,6 +3,7 @@ const initState = {
   deletedBooks: [],
   searchResults: [],
   isSearch: false,
+  isOpenFeedbackDialog: false,
   isAboutOpen: false,
   isBookSort: localStorage.getItem("bookSortCode") ? true : false,
   isNoteSort: false,
@@ -36,6 +37,12 @@ export function manager(
         ...state,
         deletedBooks: action.payload,
       };
+    case "HANDLE_FEEDBACK_DIALOG":
+      return {
+        ...state,
+        isOpenFeedbackDialog: action.payload,
+      };
+
     case "HANDLE_SEARCH_BOOKS":
       return {
         ...state,

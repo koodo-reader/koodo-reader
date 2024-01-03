@@ -59,6 +59,9 @@ export function handleBookSort(isBookSort: boolean) {
 export function handleNoteSort(isNoteSort: boolean) {
   return { type: "HANDLE_NOTE_SORT", payload: isNoteSort };
 }
+export function handleFeedbackDialog(mode: boolean) {
+  return { type: "HANDLE_FEEDBACK_DIALOG", payload: mode };
+}
 export function handleBookSortCode(bookSortCode: {
   sort: number;
   order: number;

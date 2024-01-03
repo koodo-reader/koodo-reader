@@ -19,6 +19,10 @@
   margin-top: 3px;
   font-size: 21px;
 }
+.header-feedback {
+  font-size: 15px;
+  color: rgb(35, 170, 242);
+}
 .only-local-container {
   position: absolute;
   left: 520px;

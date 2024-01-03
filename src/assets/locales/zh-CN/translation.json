@@ -227,7 +227,7 @@
   "Collapse sidebar": "收起侧边栏",
   "Show sidebar": "打开侧边栏",
   "Sync": "同步",
-  "Help": "帮助文档",
+  "Document": "帮助文档",
   "Feedback": "反馈建议",
   "GitHub Repo": "GitHub 仓库",
   "Speak the text": "朗读文字",
@@ -384,5 +384,12 @@
   "This action will permanently delete the selected books, together with their notes, bookmarks and digests": "此操作会彻底删除所有选中的图书，以及它们的书签，笔记和高亮",
   "Server path": "服务器路径",
   "Use SSL, 1 for use, 0 for not use": "是否使用 SSL, 1 表示使用, 0 表示不使用",
-  "Server port": "服务器端口"
+  "Server port": "服务器端口",
+  "Send successfully": "发送成功",
+  "Sending": "发送中",
+  "Thanks for using the developer version of Koodo Reader, leave a comment if you encounter any problems. Noted that we can't reply to you from here. For faster and better support, please visit": "感谢使用 Koodo Reader 开发版，如果您在使用过程中遇到任何问题，欢迎给我们留言。请注意我们无法在此回复您，为了更好的支持，请访问",
+  "You're not using the latest version of Koodo Reader. Please update to the latest version to see if the problem still exsits": "您使用的不是最新开发版 Koodo Reader，请升级至最新版之后，再确认您的问题是否还存在",
+  "Brief description of the problem": "问题的简单描述",
+  "Detailed description of the problem": "问题的详细介绍",
+  "Your email(optional), We may contact you for further investigation": "您的邮箱（可选的），我们可能会进一步联系您"
 }
