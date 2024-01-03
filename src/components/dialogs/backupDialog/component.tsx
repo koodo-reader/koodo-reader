@@ -226,6 +226,7 @@ class BackupDialog extends React.Component<
           </div>
         )}
         {this.props.isOpenTokenDialog ? <TokenDialog {...dialogProps} /> : null}
+
         {this.state.currentStep === 0 ? (
           <div className="backup-page-title">
             <Trans>Choose your operation</Trans>

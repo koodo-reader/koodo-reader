@@ -12,6 +12,9 @@ import {
 } from "../../../utils/syncUtils/exportUtil";
 import "./aboutDialog.css";
 import StorageUtil from "../../../utils/serviceUtils/storageUtil";
+import { checkStableUpdate } from "../../../utils/commonUtil";
+import packageInfo from "../../../../package.json";
+
 declare var window: any;
 class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
   constructor(props: AboutDialogProps) {
@@ -67,12 +70,20 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
                 }
               }}
             >
-              <Trans>Help</Trans>
+              <Trans>Document</Trans>
             </li>
             <li
               className="sort-by-category-list"
-              onClick={() => {
-                this.handleJump(`https://koodo.960960.xyz/en/support`);
+              onClick={async () => {
+                let stableLog = await checkStableUpdate();
+                if (
+                  packageInfo.version.localeCompare(stableLog.version) > 0 &&
+                  isElectron
+                ) {
+                  this.props.handleFeedbackDialog(true);
+                } else {
+                  this.handleJump(`https://koodo.960960.xyz/en/support`);
+                }
               }}
             >
               <Trans>Feedback</Trans>
