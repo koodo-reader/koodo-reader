@@ -75,15 +75,19 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
             <li
               className="sort-by-category-list"
               onClick={async () => {
-                let stableLog = await checkStableUpdate();
-                if (
-                  packageInfo.version.localeCompare(stableLog.version) > 0 &&
-                  isElectron
-                ) {
-                  this.props.handleFeedbackDialog(true);
-                } else {
-                  this.handleJump(`https://koodo.960960.xyz/en/support`);
+                try {
+                  let stableLog = await checkStableUpdate();
+                  if (
+                    packageInfo.version.localeCompare(stableLog.version) > 0 &&
+                    isElectron
+                  ) {
+                    this.props.handleFeedbackDialog(true);
+                    return;
+                  }
+                } catch (error) {
+                  console.log(error);
                 }
+                this.handleJump(`https://koodo.960960.xyz/en/support`);
               }}
             >
               <Trans>Feedback</Trans>
