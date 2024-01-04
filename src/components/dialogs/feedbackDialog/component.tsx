@@ -24,6 +24,7 @@ class FeedbackDialog extends Component<
 
   handleComfirm = async () => {
     this.setState({ isSending: true });
+    toast(this.props.t("Sending"));
     let content: string = (
       document.querySelector(
         "#feedback-dialog-content-box"
@@ -84,8 +85,8 @@ class FeedbackDialog extends Component<
           <div className="feedback-dialog-info-text">
             <Trans>
               Thanks for using the developer version of Koodo Reader, leave a
-              comment if you encounter any problems. Noted that we can't reply
-              to you from here. For faster and better support, please visit
+              comment if you encounter any problems. Note that we can't reply to
+              you from here. For faster and better support, please visit
             </Trans>
             &nbsp;
             <span
@@ -108,6 +109,17 @@ class FeedbackDialog extends Component<
                 You're not using the latest version of Koodo Reader. Please
                 update to the latest version to see if the problem still exsits
               </Trans>
+              &nbsp;
+              <span
+                onClick={() => {
+                  this.handleJump(
+                    `https://github.com/koodo-reader/koodo-reader/releases/latest`
+                  );
+                }}
+                style={{ color: "rgb(35, 170, 242)", cursor: "pointer" }}
+              >
+                <Trans>Download</Trans>
+              </span>
             </div>
           )}
 
@@ -117,6 +129,12 @@ class FeedbackDialog extends Component<
               placeholder={this.props.t("Brief description of the problem")}
               id="feedback-dialog-subject-box"
               className="feedback-dialog-content-box"
+              style={
+                packageInfo.version.localeCompare(this.state.developerVersion) <
+                0
+                  ? {}
+                  : { marginTop: "30px" }
+              }
             />
             <textarea
               name="content"
@@ -139,14 +157,14 @@ class FeedbackDialog extends Component<
             onClick={() => {
               this.handleCancel();
             }}
-            style={{ left: "100px", top: "430px" }}
+            style={{ left: "100px", top: "440px" }}
           >
             <Trans>Cancel</Trans>
           </div>
           {this.state.isSending ? (
             <div
               className="token-dialog-comfirm"
-              style={{ left: "180px", top: "430px" }}
+              style={{ left: "180px", top: "440px" }}
             >
               <Trans>Sending</Trans>
             </div>
@@ -156,7 +174,7 @@ class FeedbackDialog extends Component<
               onClick={() => {
                 this.handleComfirm();
               }}
-              style={{ left: "180px", top: "430px" }}
+              style={{ left: "180px", top: "440px" }}
             >
               <Trans>Confirm</Trans>
             </div>
