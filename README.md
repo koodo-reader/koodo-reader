@@ -135,4 +135,58 @@ Make sure that you have installed yarn and git
 
 ## Translation
 
-You can submit pull requests to edit current translation or add new language
+### Edit current language
+
+1. Select the your target language from the following list.
+
+2. Click the view button to examine the source file. The untranslated terms are listed at the bottom of each file.
+
+3. Translate the terms to your target language based on the given English reference
+
+4. Sumbit the translation file or just translation snippets based on the amount of your translation to [this link](https://github.com/koodo-reader/koodo-reader/issues/new?assignees=&labels=submit+translation&projects=&template=3_submit_translation.yml). Pull request is also welcomed.
+
+| Language        | Code  | View                                                |
+| --------------- | ----- | --------------------------------------------------- |
+| Arabic          | ar    | [View](./src/assets/locales/ar/translation.json)    |
+| Bengali         | bn    | [View](./src/assets/locales/bn/translation.json)    |
+| Tibetan         | bo    | [View](./src/assets/locales/bo/translation.json)    |
+| Bulgarian       | bg    | [View](./src/assets/locales/bg/translation.json)    |
+| Czech           | cs    | [View](./src/assets/locales/cs/translation.json)    |
+| Danish          | da    | [View](./src/assets/locales/da/translation.json)    |
+| German          | de    | [View](./src/assets/locales/de/translation.json)    |
+| Greek           | el    | [View](./src/assets/locales/el/translation.json)    |
+| English         | en    | [View](./src/assets/locales/en/translation.json)    |
+| Esperanto       | eo    | [View](./src/assets/locales/eo/translation.json)    |
+| Spanish         | es    | [View](./src/assets/locales/es/translation.json)    |
+| Persian         | fa    | [View](./src/assets/locales/fa/translation.json)    |
+| Finnish         | fi    | [View](./src/assets/locales/fi/translation.json)    |
+| French          | fr    | [View](./src/assets/locales/fr/translation.json)    |
+| Armenian        | hy    | [View](./src/assets/locales/hy/translation.json)    |
+| Indonesian      | id    | [View](./src/assets/locales/id/translation.json)    |
+| Interlingue     | ie    | [View](./src/assets/locales/ie/translation.json)    |
+| Italian         | it    | [View](./src/assets/locales/it/translation.json)    |
+| Japanese        | ja    | [View](./src/assets/locales/ja/translation.json)    |
+| Japanese (JP)   | ja    | [View](./src/assets/locales/ja-JP/translation.json) |
+| Korean          | ko    | [View](./src/assets/locales/ko/translation.json)    |
+| Dutch           | nl    | [View](./src/assets/locales/nl/translation.json)    |
+| Polish          | pl    | [View](./src/assets/locales/pl/translation.json)    |
+| Portuguese      | pt    | [View](./src/assets/locales/pt/translation.json)    |
+| Portuguese (BR) | pt-BR | [View](./src/assets/locales/pt-BR/translation.json) |
+| Romanian        | ro    | [View](./src/assets/locales/ro/translation.json)    |
+| Russian         | ru    | [View](./src/assets/locales/ru/translation.json)    |
+| Slovenian       | sl    | [View](./src/assets/locales/sl/translation.json)    |
+| Swedish         | sv    | [View](./src/assets/locales/sv/translation.json)    |
+| Tamil           | ta    | [View](./src/assets/locales/ta/translation.json)    |
+| Thai            | th    | [View](./src/assets/locales/th/translation.json)    |
+| Turkish         | tr    | [View](./src/assets/locales/tr/translation.json)    |
+| Ukrainian       | uk    | [View](./src/assets/locales/uk/translation.json)    |
+| Vietnamese      | vi    | [View](./src/assets/locales/vi/translation.json)    |
+| Chinese (CN)    | zh-CN | [View](./src/assets/locales/zh-CN/translation.json) |
+| Chinese (TW)    | zh-TW | [View](./src/assets/locales/zh-TW/translation.json) |
+| Chinese (MO)    | zh-MO | [View](./src/assets/locales/zh-MO/translation.json) |
+
+### Add new language
+
+1. If you can't find your target language from the above list, Download the Engish source file from [this link](./src/assets/locales/en/translation.json)
+
+2. When you finish translation submit the source file to [this link](https://github.com/koodo-reader/koodo-reader/issues/new?assignees=&labels=submit+translation&projects=&template=3_submit_translation.yml). Pull request is also welcomed.

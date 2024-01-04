@@ -391,5 +391,8 @@
   "You're not using the latest version of Koodo Reader. Please update to the latest version to see if the problem still exsits": "您使用的不是最新开发版 Koodo Reader，请升级至最新版之后，再确认您的问题是否还存在",
   "Brief description of the problem": "问题的简单描述",
   "Detailed description of the problem": "问题的详细介绍",
-  "Your email(optional), We may contact you for further investigation": "您的邮箱（可选的），我们可能会进一步联系您"
+  "Your email(optional), We may contact you for further investigation": "您的邮箱（可选的），我们可能会进一步联系您",
+  "Don't Use first page as PDF cover": "Don't use first page as PDF cover",
+  "Add to favorite": "Add to favorite",
+  "Remove from favorite": "Remove from favorite"
 }
