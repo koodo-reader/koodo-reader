@@ -9,21 +9,28 @@ body:
       description: https://github.com/koodo-reader/koodo-reader#translation
       options:
         - label: "Yes"
+          required: true
 
   - type: input
     id: code
     attributes:
       label: Language code (Check out this website for more info http://www.lingoes.net/en/translator/langcode.htm)
       placeholder: Language code for the translation
+    validations:
+      required: true
 
   - type: textarea
     id: native
     attributes:
       label: The name of this language in your native language
       placeholder: How to say this language in your native language, for example français is the native name of French in French
+    validations:
+      required: true
 
   - type: textarea
     id: translation
     attributes:
       label: Translation snippet or file
       placeholder: You can paste the translation snippet or upload the translation json file here
+    validations:
+      required: true
