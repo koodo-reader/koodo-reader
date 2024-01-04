@@ -12,7 +12,7 @@ const runScript = async () => {
       const axios = require("axios");
       const qs = require("qs");
       let data = qs.stringify({
-        api_token: "9bcf7134cfc132bbb117d4884d4018e0",
+        api_token: "",
         id: "504405",
         language: code,
         type: "json",
