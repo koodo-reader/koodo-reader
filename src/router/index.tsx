@@ -40,9 +40,9 @@ const Router = () => {
       } else if (navigator.language.startsWith("ru")) {
         i18n.changeLanguage("ru");
         StorageUtil.setReaderConfig("lang", "ru");
-      } else if (navigator.language.startsWith("jp")) {
-        i18n.changeLanguage("jp");
-        StorageUtil.setReaderConfig("lang", "jp");
+      } else if (navigator.language.startsWith("ja")) {
+        i18n.changeLanguage("ja");
+        StorageUtil.setReaderConfig("lang", "ja");
       } else if (navigator.language.startsWith("bo")) {
         i18n.changeLanguage("bo");
         StorageUtil.setReaderConfig("lang", "bo");

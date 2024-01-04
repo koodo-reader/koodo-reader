@@ -9,7 +9,7 @@ import translationTR from "./assets/locales/tr/translation.json";
 import translationRO from "./assets/locales/ro/translation.json";
 import translationPL from "./assets/locales/pl/translation.json";
 import translationCS from "./assets/locales/cs/translation.json";
-import translationJP from "./assets/locales/jp/translation.json";
+import translationJA from "./assets/locales/ja/translation.json";
 import translationBO from "./assets/locales/bo/translation.json";
 import translationID from "./assets/locales/id/translation.json";
 import translationHY from "./assets/locales/hy/translation.json";
@@ -54,8 +54,8 @@ const resources = {
   cs: {
     translation: translationCS,
   },
-  jp: {
-    translation: translationJP,
+  ja: {
+    translation: translationJA,
   },
   bo: {
     translation: translationBO,
