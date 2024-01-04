@@ -14,16 +14,17 @@ body:
   - type: input
     id: code
     attributes:
-      label: Language code (Check out this website for more info http://www.lingoes.net/en/translator/langcode.htm)
+      label: Language code (Check out this website for more info)
+      description: http://www.lingoes.net/en/translator/langcode.htm
       placeholder: Language code for the translation
     validations:
       required: true
 
-  - type: textarea
+  - type: input
     id: native
     attributes:
       label: The name of this language in your native language
-      placeholder: How to say this language in your native language, for example français is the native name of French in French
+      placeholder: How to say this language in your native language
     validations:
       required: true
 
