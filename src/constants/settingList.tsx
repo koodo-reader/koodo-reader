@@ -126,7 +126,7 @@ export const langList = [
   { label: "Français", value: "fr" },
   { label: "Português", value: "ptBR" },
   { label: "فارسی", value: "fa" },
-  { label: "日本語", value: "jp" },
+  { label: "日本語", value: "ja" },
   { label: "Türkçe", value: "tr" },
   { label: "عربي", value: "ar" },
   { label: "čeština", value: "cs" },
