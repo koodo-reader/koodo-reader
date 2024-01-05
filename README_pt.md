@@ -132,7 +132,3 @@ Certifique-se de ter instalado yarn e git, a versão.
    yarn
    yarn start
    ```
-
-## Traduções
-
-Você pode enviar solicitações de pull para editar a tradução atual ou adicionar um novo idioma.
