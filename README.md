@@ -40,7 +40,7 @@
   - Rich text (**.md**, **.docx**)
   - Hyper Text (**.html**, **.xml**, **.xhtml**, **.mhtml**, **.htm**, **.htm**)
 - Platform support: **Windows**, **macOS**, **Linux** and **Web**
-- Save your data to **OneDrive**, **Google Drive**, **Dropbox**, **FTP**, **SFTP**, **WebDAV**
+- Save your data to **OneDrive**, **Google Drive**, **Dropbox**, **FTP**, **SFTP**, **WebDAV**, **S3**, **S3 compatible**
 - Customize the source folder and synchronize among multiple devices using OneDrive, iCloud, Dropbox, etc.
 - Single-column, two-column, or continuous scrolling layouts
 - Text-to-speech, translation, dictionary, touch screen support, batch import
