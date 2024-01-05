@@ -79,7 +79,7 @@
 }
 .backup-page-list-title {
   width: 150px !important;
-  font-size: 15px;
+  font-size: 14px;
   line-height: 30px;
   opacity: 1;
   width: 100%;
@@ -93,6 +93,9 @@
 }
 .icon-googledrive {
   font-size: 45px;
+}
+.icon-s3compatible {
+  font-size: 60px;
 }
 .icon-ftp {
   font-size: 65px;
