@@ -103,6 +103,37 @@ class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
     this.props.handleTokenDialog(false);
     toast.success(this.props.t("Add Successfully"));
   };
+  handleS3Comfirm = () => {
+    let endpoint: string = (
+      document.querySelector(
+        "#token-dialog-endpoint-box"
+      ) as HTMLTextAreaElement
+    ).value;
+    let region: string = (
+      document.querySelector("#token-dialog-region-box") as HTMLTextAreaElement
+    ).value;
+    let bucketName: string = (
+      document.querySelector("#token-dialog-bucket-box") as HTMLTextAreaElement
+    ).value;
+    let accessKeyId: string = (
+      document.querySelector("#token-dialog-id-box") as HTMLTextAreaElement
+    ).value;
+    let secretAccessKey: string = (
+      document.querySelector("#token-dialog-key-box") as HTMLTextAreaElement
+    ).value;
+    StorageUtil.setReaderConfig(
+      `${this.props.driveName}_token`,
+      JSON.stringify({
+        endpoint,
+        region,
+        bucketName,
+        accessKeyId,
+        secretAccessKey,
+      })
+    );
+    this.props.handleTokenDialog(false);
+    toast.success(this.props.t("Add Successfully"));
+  };
   handleSFTPComfirm = () => {
     let url: string = (
       document.querySelector("#token-dialog-url-box") as HTMLTextAreaElement
@@ -143,7 +174,7 @@ class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
             {this.props.title}&nbsp;
             <Trans>Token</Trans>
           </div>
-          {this.props.driveName === "WebDAV" ? (
+          {this.props.driveName === "webdav" ? (
             <>
               <div
                 className="token-dialog-info-text"
@@ -177,7 +208,7 @@ class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
                 className="token-dialog-username-box"
               />
             </>
-          ) : this.props.driveName === "SFTP" ? (
+          ) : this.props.driveName === "sftp" ? (
             <>
               <input
                 type="text"
@@ -215,7 +246,7 @@ class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
                 className="token-dialog-password-box"
               />
             </>
-          ) : this.props.driveName === "FTP" ? (
+          ) : this.props.driveName === "ftp" ? (
             <>
               <input
                 type="text"
@@ -250,6 +281,44 @@ class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
                 name="ssl"
                 placeholder={this.props.t("Use SSL, 1 for use, 0 for not use")}
                 id="token-dialog-ssl-box"
+                className="token-dialog-password-box"
+              />
+            </>
+          ) : this.props.driveName === "s3compatible" ? (
+            <>
+              <input
+                type="text"
+                name="url"
+                placeholder={this.props.t("Endpoint")}
+                id="token-dialog-endpoint-box"
+                className="token-dialog-username-box"
+              />
+              <input
+                type="text"
+                name="path"
+                placeholder={this.props.t("Region")}
+                id="token-dialog-region-box"
+                className="token-dialog-url-box"
+              />
+              <input
+                type="text"
+                name="username"
+                placeholder={this.props.t("BucketName")}
+                id="token-dialog-bucket-box"
+                className="token-dialog-username-box"
+              />
+              <input
+                type="text"
+                name="password"
+                placeholder={this.props.t("AccessKeyId")}
+                id="token-dialog-id-box"
+                className="token-dialog-password-box"
+              />
+              <input
+                type="text"
+                name="ssl"
+                placeholder={this.props.t("SecretAccessKey")}
+                id="token-dialog-key-box"
                 className="token-dialog-password-box"
               />
             </>
@@ -300,6 +369,8 @@ class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
                 this.handleFTPComfirm();
               } else if (this.props.driveName === "sftp") {
                 this.handleSFTPComfirm();
+              } else if (this.props.driveName === "s3compatible") {
+                this.handleS3Comfirm();
               } else if (this.props.driveName === "dropbox") {
                 this.handleDropboxComfirm();
               } else if (this.props.driveName === "googledrive") {

@@ -57,7 +57,6 @@ class OneDriveUtil {
       });
       const accessToken = res.data.access_token; // 替换为实际的访问令牌
       const downloadUrl = `https://graph.microsoft.com/v1.0/me/drive/special/approot:/${filename}:/content`;
-      console.log(accessToken);
       try {
         const response = await axios.get(downloadUrl, {
           responseType: "blob",
