@@ -24,11 +24,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     };
   }
   async componentDidMount() {
-    // const { ipcRenderer } = window.require("electron");
-    // const html = await ipcRenderer.invoke("wiki-index", {
-    //   text: "batman",
-    // });
-    // console.log(html);
     if (isElectron) {
       const fs = window.require("fs");
       const path = window.require("path");

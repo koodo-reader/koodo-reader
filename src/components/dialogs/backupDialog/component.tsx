@@ -10,6 +10,7 @@ import GoogleDriveUtil from "../../../utils/syncUtils/googledrive";
 import WebdavUtil from "../../../utils/syncUtils/webdav";
 import FtpUtil from "../../../utils/syncUtils/ftp";
 import SFtpUtil from "../../../utils/syncUtils/sftp";
+import S3Util from "../../../utils/syncUtils/s3compatible";
 import { BackupDialogProps, BackupDialogState } from "./interface";
 import TokenDialog from "../tokenDialog";
 import StorageUtil from "../../../utils/serviceUtils/storageUtil";
@@ -93,6 +94,7 @@ class BackupDialog extends React.Component<
         case "googledrive":
         case "ftp":
         case "sftp":
+        case "s3compatible":
           if (!StorageUtil.getReaderConfig(name + "_token")) {
             this.props.handleTokenDialog(true);
             break;
@@ -108,6 +110,8 @@ class BackupDialog extends React.Component<
               ? GoogleDriveUtil
               : name === "sftp"
               ? SFtpUtil
+              : name === "s3compatible"
+              ? S3Util
               : WebdavUtil;
           if (this.state.isBackup === "yes") {
             this.showMessage("Uploading, please wait");
@@ -160,6 +164,7 @@ class BackupDialog extends React.Component<
               if (
                 (item.icon === "webdav" ||
                   item.icon === "ftp" ||
+                  item.icon === "s3compatible" ||
                   item.icon === "sftp") &&
                 !isElectron
               ) {
