@@ -129,7 +129,3 @@ flatpak run io.github.troyeguo.koodo-reader
    yarn
    yarn start
    ```
-
-## 贡献翻译
-
-您可以通过提交 Pull Request 的方式完善 Koodo Reader 的翻译
