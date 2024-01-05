@@ -69,8 +69,6 @@ class GoogleDriveUtil {
           },
           timeout: 60000,
         });
-        console.log(res, "res");
-        console.log("File uploaded successfully.");
         StorageUtil.setReaderConfig("googleFileId", res.data.id);
       } catch (error) {
         console.error("Error occurred during upload:", error);

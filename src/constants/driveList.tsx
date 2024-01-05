@@ -56,4 +56,10 @@ export const driveList = [
     icon: "googledrive",
     url: `https://accounts.google.com/o/oauth2/v2/auth?redirect_uri=${driveConfig.callbackUrl}&prompt=consent&response_type=code&client_id=${driveConfig.googleClientId}&scope=${driveConfig.googleScope}&access_type=offline`,
   },
+  {
+    id: 8,
+    name: "S3 Compatible",
+    icon: "s3compatible",
+    url: "",
+  },
 ];
