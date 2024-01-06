@@ -137,7 +137,7 @@ Make sure that you have installed yarn and git
 
 ### Edit current language
 
-1. Select the your target language from the following list.
+1. Select your target language from the following list.
 
 2. Click the view button to examine the source file. The untranslated terms are listed at the bottom of each file.
 
