@@ -233,8 +233,8 @@
   "Move your mouse on the top of any book, click the heart icon to add it to your favorite books": "Mova seu cursos para o topo de qualquer livro, clique no ícone de coração e adicione ele em seus livros favoritos",
   "Empty Bookmark": "Marcador vazio",
   "Empty Note": "Nota vazia",
-  "Select any text and click the Note button on the popup menu": "Selecione qualquer texto e clique no botão Notas no menu de popup",
-  "Select any text and click the Highlight button on the popup menu": "Selecione qualquer texto e clique no botão Realçar no menu de popup",
+  "Select any text and click the note button on the popup menu": "Selecione qualquer texto e clique no botão Notas no menu de popup",
+  "Select any text and click the highlight button on the popup menu": "Selecione qualquer texto e clique no botão Realçar no menu de popup",
   "Invert color": "Inverter cor",
   "Empty Shelf": "Estante vazia",
   "Edit": "Editar",
@@ -282,7 +282,7 @@
   "Precache books after import to increase opening speed, Koodo will generate a precache version of the original book and save it into your library": "Pre-cache books after import to increase opening speed, Koodo will generate a pre-cache version of the original book and save it into your library",
   "Take effect in a while": "Take effect in a while",
   "Follow OS": "Follow OS",
-  "Don't Use first page as PDF cover": "Don't use first page as PDF cover",
+  "Don't use first page as PDF cover": "Don't use first page as PDF cover",
   "Don't crop book cover": "Don't crop book cover",
   "Add to favorite": "Add to favorite",
   "Remove from favorite": "Remove from favorite",
@@ -312,7 +312,7 @@
   "Backup your data with WebDAV": "Backup your data with WebDAV",
   "Auto Update relies on GitHub Release for package hosting, if your internet doesn't have stable connection to GitHub, we highly recommand you to turn off this option": "Auto Update relies on GitHub Release for package hosting, if your internet doesn't have stable connection to GitHub, we highly recommand you to turn off this option",
   "Prototype": "Prototype",
-  "Right click on any book and Click Add to Favorite to add it to your favorite books": "Right click on any book and click Add to Favorite to add it to your favorite books",
+  "Right click on any book and click add to favorite to add it to your favorite books": "Right click on any book and click Add to Favorite to add it to your favorite books",
   "Empty Reading Records": "Empty reading records",
   "Empty Highlight": "Empty Highlight",
   "Move your mouse on top of any book, then click the more icon to add the book to the shelf": "Move your mouse on top of any book, then click the more icon to add the book to the shelf",
@@ -396,5 +396,6 @@
   "You're not using the latest version of Koodo Reader. Please update to the latest version to see if the problem still exsits": "You're not using the latest version of Koodo Reader. Please update to the latest version to see if the problem still exsits",
   "Brief description of the problem": "Brief description of the problem",
   "Detailed description of the problem": "Detailed description of the problem",
-  "Your email(optional), We may contact you for further investigation": "Your email(optional), We may contact you for further investigation"
+  "Your email(optional), We may contact you for further investigation": "Your email(optional), We may contact you for further investigation",
+  "Report": "Report"
 }

@@ -136,9 +136,9 @@ class ActionDialog extends React.Component<
                 {AddFavorite.getAllFavorite().indexOf(
                   this.props.currentBook.key
                 ) > -1 ? (
-                  <Trans>Remove from Favorite</Trans>
+                  <Trans>Remove from favorite</Trans>
                 ) : (
-                  <Trans>Add to Favorite</Trans>
+                  <Trans>Add to favorite</Trans>
                 )}
               </p>
             </div>

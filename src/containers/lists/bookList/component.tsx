@@ -16,6 +16,7 @@ import { isElectron } from "react-device-detect";
 import SelectBook from "../../../components/selectBook";
 import { Trans } from "react-i18next";
 import DeletePopup from "../../../components/dialogs/deletePopup";
+
 declare var window: any;
 class BookList extends React.Component<BookListProps, BookListState> {
   constructor(props: BookListProps) {
@@ -31,7 +32,7 @@ class BookList extends React.Component<BookListProps, BookListState> {
     this.props.handleFetchBooks();
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     if (!this.props.books || !this.props.books[0]) {
       return <Redirect to="manager/empty" />;
     }
@@ -237,7 +238,6 @@ class BookList extends React.Component<BookListProps, BookListState> {
               onClick={() => {
                 this.handleDeletePopup(true);
               }}
-              style={this.props.isCollapsed ? { left: "calc(50% - 60px)" } : {}}
             >
               <Trans>Delete this shelf</Trans>
             </div>
