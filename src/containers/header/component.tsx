@@ -24,6 +24,8 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     };
   }
   async componentDidMount() {
+    // isElectron &&
+    //   (await window.require("electron").ipcRenderer.invoke("s3-download"));
     if (isElectron) {
       const fs = window.require("fs");
       const path = window.require("path");
