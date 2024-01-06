@@ -152,7 +152,8 @@
   position: absolute;
   top: 30px;
   right: 180px;
-  font-weight: bold;
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 .setting-icon-container {
   width: 50px;
