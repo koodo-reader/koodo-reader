@@ -33,20 +33,20 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
         className="booklist-manage-container"
         style={this.props.isCollapsed ? { left: "75px" } : {}}
       >
-        <span
-          onClick={() => {
-            this.props.handleSelectBook(!this.props.isSelectBook);
-            if (this.props.isSelectBook) {
-              this.props.handleSelectedBooks([]);
-            }
-          }}
-          className="book-manage-title"
-          style={{ color: "rgb(231, 69, 69)" }}
-        >
-          <Trans>{this.props.isSelectBook ? "Cancel" : ""}</Trans>
-        </span>
         {this.props.isSelectBook && (
           <>
+            <span
+              onClick={() => {
+                this.props.handleSelectBook(!this.props.isSelectBook);
+                if (this.props.isSelectBook) {
+                  this.props.handleSelectedBooks([]);
+                }
+              }}
+              className="book-manage-title"
+              style={{ color: "rgb(231, 69, 69)" }}
+            >
+              <Trans>Cancel</Trans>
+            </span>
             <span
               className="book-manage-title"
               onClick={() => {
@@ -269,7 +269,7 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
               ) : (
                 <Trans>Select All</Trans>
               )}
-            </span>{" "}
+            </span>
           </>
         )}
       </div>

@@ -7,7 +7,7 @@ export const emptyList = [
   {
     mode: "favorite",
     main: "No Favorite Books",
-    sub: "Right click on any book and Click Add to Favorite to add it to your favorite books",
+    sub: "Right click on any book and click add to favorite to add it to your favorite books",
   },
   {
     mode: "bookmark",
@@ -17,12 +17,12 @@ export const emptyList = [
   {
     mode: "note",
     main: "Empty Note",
-    sub: "Select any text and click the Note button on the popup menu",
+    sub: "Select any text and click the note button on the popup menu",
   },
   {
     mode: "digest",
     main: "Empty Highlight",
-    sub: "Select any text and click the Highlight button on the popup menu",
+    sub: "Select any text and click the highlight button on the popup menu",
   },
   {
     mode: "shelf",
