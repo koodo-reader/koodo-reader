@@ -12,14 +12,14 @@ class SFtpUtil {
       const { ipcRenderer } = window.require("electron");
       const dirPath = ipcRenderer.sendSync("user-data", "ping");
       const arrayBuffer = await blob.arrayBuffer();
-      const filename = "data.zip";
-      fs.writeFileSync(path.join(dirPath, filename), Buffer.from(arrayBuffer));
+      const fileName = "data.zip";
+      fs.writeFileSync(path.join(dirPath, fileName), Buffer.from(arrayBuffer));
       resolve(
         await ipcRenderer.invoke("sftp-upload", {
           url,
           username,
           password,
-          filename,
+          fileName,
           port,
           dir,
         })
@@ -28,7 +28,7 @@ class SFtpUtil {
   };
   static DownloadFile = async () => {
     return new Promise<boolean>(async (resolve, reject) => {
-      const filename = "data.zip";
+      const fileName = "data.zip";
       const fs = window.require("fs");
       const path = window.require("path");
       const { ipcRenderer } = window.require("electron");
@@ -40,14 +40,14 @@ class SFtpUtil {
         url,
         username,
         password,
-        filename,
+        fileName,
         port,
         dir,
       });
       if (result) {
-        var data = fs.readFileSync(path.join(dirPath, filename));
+        var data = fs.readFileSync(path.join(dirPath, fileName));
         let blobTemp: any = new Blob([data], { type: "application/zip" });
-        let fileTemp = new File([blobTemp], filename, {
+        let fileTemp = new File([blobTemp], fileName, {
           lastModified: new Date().getTime(),
           type: blobTemp.type,
         });
@@ -57,12 +57,12 @@ class SFtpUtil {
       resolve(true);
       try {
         const fs_extra = window.require("fs-extra");
-        fs_extra.remove(path.join(dirPath, filename), (error: any) => {
+        fs_extra.remove(path.join(dirPath, fileName), (error: any) => {
           if (error) resolve(false);
           resolve(true);
         });
       } catch (e) {
-        console.log("error removing ", path.join(dirPath, filename));
+        console.log("error removing ", path.join(dirPath, fileName));
         resolve(false);
       }
     });
