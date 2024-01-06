@@ -1,92 +1,70 @@
 import { restore } from "./restoreUtil";
 import StorageUtil from "../serviceUtils/storageUtil";
-import {
-  S3Client,
-  GetObjectCommand,
-  PutObjectCommand,
-} from "@aws-sdk/client-s3";
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { v4 as uuid } from "uuid";
-import axios from "axios";
 
 class S3Util {
   static UploadFile = async (blob: any) => {
     return new Promise<boolean>(async (resolve, reject) => {
       let { endpoint, region, bucketName, accessKeyId, secretAccessKey } =
         JSON.parse(StorageUtil.getReaderConfig("s3compatible_token") || "{}");
-
+      const fs = window.require("fs");
+      const path = window.require("path");
+      const { ipcRenderer } = window.require("electron");
+      const dirPath = ipcRenderer.sendSync("user-data", "ping");
       const arrayBuffer = await blob.arrayBuffer();
-      const filename = uuid() + ".zip";
-      // Create an S3 client
-      //
-      // You must copy the endpoint from your B2 bucket details
-      // and set the region to match.
-      const s3 = new S3Client({
-        endpoint,
-        region,
-        credentials: {
+      const fileName = uuid() + ".zip";
+      fs.writeFileSync(path.join(dirPath, fileName), Buffer.from(arrayBuffer));
+      StorageUtil.setReaderConfig("s3FileName", fileName);
+      resolve(
+        await ipcRenderer.invoke("s3-upload", {
+          endpoint,
+          region,
+          bucketName,
           accessKeyId,
           secretAccessKey,
-        },
-      });
-      try {
-        await s3.send(
-          new PutObjectCommand({
-            Bucket: bucketName,
-            Key: filename,
-            Body: Buffer.from(arrayBuffer),
-          })
-        );
-        StorageUtil.setReaderConfig("s3FileName", filename);
-        resolve(true);
-      } catch (err) {
-        console.log("Error: ", err);
-        resolve(false);
-      }
+          fileName,
+        })
+      );
     });
   };
   static DownloadFile = async () => {
     return new Promise<boolean>(async (resolve, reject) => {
-      const filename = "data.zip";
+      const fileName = StorageUtil.getReaderConfig("s3FileName") || "data.zip";
+      const fs = window.require("fs");
+      const path = window.require("path");
+      const { ipcRenderer } = window.require("electron");
       let { endpoint, region, bucketName, accessKeyId, secretAccessKey } =
         JSON.parse(StorageUtil.getReaderConfig("s3compatible_token") || "{}");
-      const s3 = new S3Client({
+      const dirPath = ipcRenderer.sendSync("user-data", "ping");
+      let result = await ipcRenderer.invoke("s3-download", {
         endpoint,
         region,
-        credentials: {
-          accessKeyId,
-          secretAccessKey,
-        },
+        bucketName,
+        accessKeyId,
+        secretAccessKey,
+        fileName,
       });
-      let url = await getSignedUrl(
-        s3,
-        new GetObjectCommand({
-          Bucket: bucketName,
-          Key: StorageUtil.getReaderConfig("s3FileName"),
-        })
-      );
-
-      try {
-        const response = await axios.get(url, {
-          headers: {},
-          responseType: "blob", // 指定响应类型为 Blob，以便处理文件
-        });
-
-        // 从响应中获取文件数据
-        const blob = new Blob([response.data], {
-          type: response.headers["content-type"],
-        });
-
-        let fileTemp = new File([blob], filename, {
+      if (result) {
+        var data = fs.readFileSync(path.join(dirPath, fileName));
+        let blobTemp: any = new Blob([data], { type: "application/zip" });
+        let fileTemp = new File([blobTemp], fileName, {
           lastModified: new Date().getTime(),
-          type: blob.type,
+          type: blobTemp.type,
         });
         let result = await restore(fileTemp);
         if (!result) resolve(false);
-      } catch (error) {
-        console.error("Error occurred during file download:", error);
       }
       resolve(true);
+      try {
+        const fs_extra = window.require("fs-extra");
+        fs_extra.remove(path.join(dirPath, fileName), (error: any) => {
+          if (error) resolve(false);
+          resolve(true);
+        });
+      } catch (e) {
+        console.log("error removing ", path.join(dirPath, fileName));
+        resolve(false);
+      }
     });
   };
 }
