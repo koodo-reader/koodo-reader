@@ -94,6 +94,9 @@
     width: 138px;
     padding: 0px !important;
   }
+  .header-report-container {
+    right: 15px !important;
+  }
 }
 .download-demo-book {
   text-decoration: underline;
@@ -126,6 +129,7 @@
   top: 18px;
   margin-left: 280px;
   height: 50px;
+  z-index: 1;
 }
 .header-search-container {
   position: absolute;
@@ -137,7 +141,19 @@
   font-size: 25px;
   line-height: 50px;
 }
-
+.header-report-container {
+  text-align: right;
+  height: 30px;
+  line-height: 30px;
+  cursor: pointer;
+  border-radius: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
+  position: absolute;
+  top: 30px;
+  right: 180px;
+  font-weight: bold;
+}
 .setting-icon-container {
   width: 50px;
   height: 50px;
