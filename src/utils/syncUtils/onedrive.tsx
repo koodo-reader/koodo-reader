@@ -49,14 +49,14 @@ class OneDriveUtil {
   }
   static DownloadFile() {
     return new Promise<boolean>(async (resolve, reject) => {
-      const filename = "data.zip";
+      const fileName = "data.zip";
       var refresh_token = StorageUtil.getReaderConfig("onedrive_token") || "";
       let res = await axios.post(driveConfig.onedriveRefreshUrl, {
         refresh_token,
         redirect_uri: driveConfig.callbackUrl,
       });
       const accessToken = res.data.access_token; // 替换为实际的访问令牌
-      const downloadUrl = `https://graph.microsoft.com/v1.0/me/drive/special/approot:/${filename}:/content`;
+      const downloadUrl = `https://graph.microsoft.com/v1.0/me/drive/special/approot:/${fileName}:/content`;
       try {
         const response = await axios.get(downloadUrl, {
           responseType: "blob",
@@ -67,7 +67,7 @@ class OneDriveUtil {
         let blobTemp: any = new Blob([response.data], {
           type: "application/zip",
         });
-        let fileTemp = new File([blobTemp], filename, {
+        let fileTemp = new File([blobTemp], fileName, {
           lastModified: new Date().getTime(),
           type: blobTemp.type,
         });

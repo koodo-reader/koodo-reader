@@ -8,7 +8,7 @@ const getData = (file) =>
       const fr = new FileReader();
       fr.onload = (f: any) =>
         resolve({
-          filename: file.name,
+          fileName: file.name,
           mimeType: file.type,
           fileSize: file.size,
           data: f.target.result,
@@ -42,7 +42,7 @@ class GoogleDriveUtil {
       // 1. Create the session for the resumable upload.
       const metadata = {
         mimeType: fileObj.mimeType,
-        name: fileObj.filename,
+        name: fileObj.fileName,
         parents: ["appDataFolder"],
       };
       try {
@@ -87,7 +87,7 @@ class GoogleDriveUtil {
       });
       const accessToken = res.data.access_token;
       let fileId = StorageUtil.getReaderConfig("googleFileId");
-      const filename = "data.zip";
+      const fileName = "data.zip";
       const url = `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`;
 
       try {
@@ -103,7 +103,7 @@ class GoogleDriveUtil {
           type: response.headers["content-type"],
         });
 
-        let fileTemp = new File([blob], filename, {
+        let fileTemp = new File([blob], fileName, {
           lastModified: new Date().getTime(),
           type: blob.type,
         });
