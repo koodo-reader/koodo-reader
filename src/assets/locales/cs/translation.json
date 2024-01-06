@@ -255,9 +255,9 @@
   "Empty Reading Records": "Prázdné záznamy o čtení",
   "Empty Bookmark": "Žádné záložky",
   "Empty Note": "Žádné poznámky",
-  "Select any text and click the Note button on the popup menu": "Vyberte libovolný text a v rozbalovací nabídce klikněte na tlačítko Poznámka",
+  "Select any text and click the note button on the popup menu": "Vyberte libovolný text a v rozbalovací nabídce klikněte na tlačítko Poznámka",
   "Empty Highlight": "Žádné zvýraznění",
-  "Select any text and click the Highlight button on the popup menu": "Vyberte libovolný text a v rozbalovací nabídce klikněte na tlačítko Zvýraznit",
+  "Select any text and click the highlight button on the popup menu": "Vyberte libovolný text a v rozbalovací nabídce klikněte na tlačítko Zvýraznit",
   "Invert color": "Invertovat barvy",
   "Empty Shelf": "Prázdná polička",
   "Move your mouse on top of any book, then click the more icon to add the book to the shelf": "Najeďte myší na libovolnou knihu, a poté kliknutím na ikonu Více přidejte knihu na poličku",
@@ -362,7 +362,7 @@
   "Auto precache books after import": "Auto pre-cache books after import",
   "Precache books after import to increase opening speed, Koodo will generate a precache version of the original book and save it into your library": "Pre-cache books after import to increase opening speed, Koodo will generate a pre-cache version of the original book and save it into your library",
   "Take effect in a while": "Take effect in a while",
-  "Don't Use first page as PDF cover": "Don't use first page as PDF cover",
+  "Don't use first page as PDF cover": "Don't use first page as PDF cover",
   "Don't crop book cover": "Don't crop book cover",
   "Add to favorite": "Add to favorite",
   "Remove from favorite": "Remove from favorite",
@@ -372,7 +372,7 @@
   "Latest Stable Version": "Latest stable version",
   "Developer Version": "Developer version",
   "Prototype": "Prototype",
-  "Right click on any book and Click Add to Favorite to add it to your favorite books": "Right click on any book and click Add to Favorite to add it to your favorite books",
+  "Right click on any book and click add to favorite to add it to your favorite books": "Right click on any book and click Add to Favorite to add it to your favorite books",
   "No popup when selecting texts": "No popup when selecting texts",
   "Turn it on when you want Koodo to work with other third-party translation service, right clicking on the selected text will trigger popup again": "Turn it on when you want Koodo to work with other third-party translation service, right clicking on the selected text will trigger popup again",
   "Disable trash bin": "Disable trash bin",
@@ -391,5 +391,6 @@
   "You're not using the latest version of Koodo Reader. Please update to the latest version to see if the problem still exsits": "You're not using the latest version of Koodo Reader. Please update to the latest version to see if the problem still exsits",
   "Brief description of the problem": "Brief description of the problem",
   "Detailed description of the problem": "Detailed description of the problem",
-  "Your email(optional), We may contact you for further investigation": "Your email(optional), We may contact you for further investigation"
+  "Your email(optional), We may contact you for further investigation": "Your email(optional), We may contact you for further investigation",
+  "Report": "Report"
 }

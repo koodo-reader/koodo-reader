@@ -80,7 +80,7 @@ class FeedbackDialog extends Component<
       <div className="feedback-dialog-container">
         <div className="feedback-dialog-box">
           <div className="feedback-dialog-title">
-            <Trans>Feedback</Trans>
+            <Trans>Report</Trans>
           </div>
           <div className="feedback-dialog-info-text">
             <Trans>

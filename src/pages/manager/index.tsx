@@ -60,6 +60,7 @@ const actionCreator = {
   handleEditDialog,
   handleDeleteDialog,
   handleAddDialog,
+
   handleTipDialog,
   handleDetailDialog,
   handleLoadingDialog,
