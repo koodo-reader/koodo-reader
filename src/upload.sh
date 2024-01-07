@@ -3,7 +3,7 @@
 # GitHub repo details
 USER="koodo-reader"
 REPO="koodo-reader"
-TAG="v1.5.8"
+TAG="v1.5.7"
 
 # Backblaze details
 BUCKET="koodo-reader"
