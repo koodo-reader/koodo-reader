@@ -66,7 +66,8 @@ done
 echo "</table></body></html>" >> $html_file
 
 ./b2 upload-file $BUCKET file_list.html index.html
-./rclone copy file_list.html r2:$BUCKET/index.html
+mv file_list.html index.html
+./rclone copy index.html r2:$BUCKET
 
 # 获取文件列表
 file_list=$(./b2 ls --long "$BUCKET" "$TAG")
@@ -93,5 +94,6 @@ done
 echo "</table></body></html>" >> $html_file
 
 ./b2 upload-file $BUCKET file_list.html $TAG.html
-./rclone copy file_list.html r2:$BUCKET/$TAG.html
+mv file_list.html $TAG.html
+./rclone copy $TAG.html r2:$BUCKET
 
