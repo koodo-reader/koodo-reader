@@ -2,12 +2,8 @@ name: Download and Upload Release Files
 
 on:
   push:
-    branches: [master]
-    tags:
-      # Build on every tag in the form v1.2.3-something.4
-      - "v*"
-  pull_request:
-    branches: [master]
+    paths:
+      - "src/upload.sh" # 指定要监视的文件路径
 
 jobs:
   build:
@@ -19,7 +15,7 @@ jobs:
 
       - name: Run custom script
         run: |
-          curl -O https://download.960960.xyz/file/koodo-reader/upload.sh
+          curl -O https://raw.githubusercontent.com/koodo-reader/koodo-reader/master/src/upload.sh
           chmod +x ./upload.sh
           ./upload.sh ${{ secrets.B2_ACCOUNT_ID }} ${{ secrets.B2_APPLICATION_KEY }}
         shell: bash
