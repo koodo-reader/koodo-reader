@@ -17,7 +17,7 @@
 </h3>
 <div align="center">
 
-[Download](https://koodo.960960.xyz/en) | [Preview](https://reader.960960.xyz) | [Roadmap](https://troyeguo.notion.site/d1c19a132932465bae1d89dd963c92ea?v=ca8aa69cf25849c18c92b92ba868663b) | [Document](https://troyeguo.notion.site/Koodo-Reader-Document-9c767af3d66c459db996bdd08a34c34b)
+[Download](https://koodo.960960.xyz/en) | [Preview](https://reader.960960.xyz) | [Roadmap](https://koodo.960960.xyz/en/roadmap) | [Document](https://koodo.960960.xyz/en/document)
 
 </div>
 
