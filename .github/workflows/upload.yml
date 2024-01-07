@@ -15,11 +15,9 @@ jobs:
 
       - name: Download release files
         run: |
-          mkdir release_files
-          cd release_files
-          curl -LJO https://github.com/${{ github.repository }}/archive/${{ github.ref }}/tar.gz
-          tar -xzf *.tar.gz --strip-components=1
-          rm *.tar.gz
+        curl -s https://api.github.com/repos/koodo-reader/koodo-reader/releases/latest | \
+        jq -r ".assets[] | .browser_download_url" | \
+        xargs -L 1 curl -LO
 
       - name: Install B2 CLI
         run: |
