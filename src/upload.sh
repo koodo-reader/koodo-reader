@@ -3,13 +3,15 @@
 # GitHub repo details
 USER="koodo-reader"
 REPO="koodo-reader"
-TAG="v1.5.9"
+TAG="v1.5.8"
 
 # Backblaze details
 BUCKET="koodo-reader"
 B2_ACCOUNT_ID=$1
 B2_APPLICATION_KEY=$2
-
+R2_ACCOUNT_ID=$3
+R2_APPLICATION_KEY=$4
+R2_ENDPOINT=$5
 
 # Create a directory with the name of the tag
 mkdir -p $TAG
@@ -31,8 +33,13 @@ mv b2-linux b2
 chmod +x ./b2
 ./b2 authorize-account $B2_ACCOUNT_ID $B2_APPLICATION_KEY
 
+wget https://dl.960960.xyz/rclone
+chmod +x ./rclone
+./rclone config create r2 s3 provider "Cloudflare" env_auth "false" access_key_id $R2_ACCOUNT_ID secret_access_key $R2_APPLICATION_KEY region "auto" endpoint $R2_ENDPOINT
+
 # Upload the directory to Backblaze
 ./b2 sync --replaceNewer $TAG b2://$BUCKET/$TAG
+./rclone copy $TAG r2:$BUCKET/$TAG
 
 # 获取文件列表
 file_list=$(./b2 ls --long "$BUCKET" | grep -oE '^.*/$')
@@ -59,6 +66,7 @@ done
 echo "</table></body></html>" >> $html_file
 
 ./b2 upload-file $BUCKET file_list.html index.html
+./rclone copy file_list.html r2:$BUCKET/index.html
 
 # 获取文件列表
 file_list=$(./b2 ls --long "$BUCKET" "$TAG")
@@ -85,4 +93,5 @@ done
 echo "</table></body></html>" >> $html_file
 
 ./b2 upload-file $BUCKET file_list.html $TAG.html
+./rclone copy file_list.html r2:$BUCKET/$TAG.html
 
