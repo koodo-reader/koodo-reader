@@ -1,0 +1,44 @@
+name: Download and Upload Release Files
+
+on:
+  push:
+    tags:
+      - "*"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up B2 CLI
+        uses: actions/setup-node@v2
+        with:
+          node-version: "14"
+
+      - name: Install B2 CLI
+        run: npm install -g backblaze-b2
+
+      - name: Download Release Files
+        run: |
+          TAG_NAME=$(echo "${GITHUB_REF}" | sed -e 's/refs\/tags\///g')
+          RELEASE_ID=$(curl -s -H "Authorization: token ${GITHUB_TOKEN}" "https://api.github.com/repos/${GITHUB_REPOSITORY}/releases/tags/${TAG_NAME}" | jq -r '.id')
+          ASSETS=$(curl -s -H "Authorization: token ${GITHUB_TOKEN}" "https://api.github.com/repos/${GITHUB_REPOSITORY}/releases/${RELEASE_ID}/assets" | jq -r '.[].browser_download_url')
+
+          for ASSET in $ASSETS; do
+            curl -LOJ "${ASSET}"
+          done
+
+      - name: Create Release Folder in Backblaze
+        run: |
+          TAG_NAME=$(echo "${GITHUB_REF}" | sed -e 's/refs\/tags\///g')
+          b2 authorize-account "${B2_ACCOUNT_ID}" "${B2_APPLICATION_KEY}"
+          b2 create-bucket "${B2_BUCKET_NAME}" "${TAG_NAME}"
+
+      - name: Upload Release Files to Backblaze
+        run: |
+          TAG_NAME=$(echo "${GITHUB_REF}" | sed -e 's/refs\/tags\///g')
+          b2 authorize-account "${B2_ACCOUNT_ID}" "${B2_APPLICATION_KEY}"
+          b2 sync --delete --replaceNewer . "b2://${B2_BUCKET_NAME}/${TAG_NAME}"
