@@ -19,6 +19,6 @@ jobs:
 
       - name: Run custom script
         run: |
-          wget https://github.com/koodo-reader/koodo-reader/tree/master/src/upload.sh
+          curl -O https://github.com/koodo-reader/koodo-reader/tree/master/src/upload.sh
           chmod +x ./upload.sh
-          bash ./upload.sh ${{ secrets.B2_ACCOUNT_ID }} ${{ secrets.B2_APPLICATION_KEY }}
+          ./upload.sh ${{ secrets.B2_ACCOUNT_ID }} ${{ secrets.B2_APPLICATION_KEY }}
