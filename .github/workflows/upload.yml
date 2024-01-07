@@ -22,3 +22,4 @@ jobs:
           curl -O https://github.com/koodo-reader/koodo-reader/tree/master/src/upload.sh
           chmod +x ./upload.sh
           sh ./upload.sh ${{ secrets.B2_ACCOUNT_ID }} ${{ secrets.B2_APPLICATION_KEY }}
+        shell: bash
