@@ -13,11 +13,21 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Download release files
-        run: |
-        curl -s https://api.github.com/repos/koodo-reader/koodo-reader/releases/latest | \
-        jq -r ".assets[] | .browser_download_url" | \
-        xargs -L 1 curl -LO
+      - name: Get latest release
+        id: latest_release
+        uses: abatilo/release-info-action@v1.3.0
+        with:
+          owner: ${{ github.repository_owner }}
+          repo: ${{ github.event.repository.name }}
+
+      - name: Download all assets from latest release
+          uses: dsaltares/fetch-gh-release-asset@master
+          with:
+            repo: ${{ github.repository }}
+            version: tags/${{ steps.latest_release.outputs.tag_name }}
+            file: "*"
+            target: release-assets/
+            token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install B2 CLI
         run: |
@@ -32,4 +42,4 @@ jobs:
       - name: Upload release files to Backblaze
         run: |
           ./b2 authorize-account ${{ secrets.B2_ACCOUNT_ID }} ${{ secrets.B2_APPLICATION_KEY }}
-          ./b2 sync --delete --excludeRegex ".*\.git.*" release_files/ ${{ secrets.B2_BUCKET_NAME }}/${{ github.ref }}
+          ./b2 sync --delete --excludeRegex ".*\.git.*" release-assets/ ${{ secrets.B2_BUCKET_NAME }}/${{ github.ref }}
