@@ -3,43 +3,18 @@ name: Download and Upload Release Files
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Get latest release
-        id: latest_release
-        uses: abatilo/release-info-action@v1.3.0
-        with:
-          owner: ${{ github.repository_owner }}
-          repo: ${{ github.event.repository.name }}
-
-      - name: Download all assets from latest release
-          uses: dsaltares/fetch-gh-release-asset@master
-          with:
-            repo: ${{ github.repository }}
-            version: tags/${{ steps.latest_release.outputs.tag_name }}
-            file: "*"
-            target: release-assets/
-            token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Install B2 CLI
+      - name: Run custom script
         run: |
-          curl https://f000.backblazeb2.com/file/backblazeb2-public/b2-linux-x86_64 -o b2
-          chmod +x b2
-
-      - name: Create or update folder in Backblaze
-        run: |
-          ./b2 authorize-account ${{ secrets.B2_ACCOUNT_ID }} ${{ secrets.B2_APPLICATION_KEY }}
-          ./b2 create-bucket ${{ secrets.B2_BUCKET_NAME }} ${{ github.ref }} allPublic
-
-      - name: Upload release files to Backblaze
-        run: |
-          ./b2 authorize-account ${{ secrets.B2_ACCOUNT_ID }} ${{ secrets.B2_APPLICATION_KEY }}
-          ./b2 sync --delete --excludeRegex ".*\.git.*" release-assets/ ${{ secrets.B2_BUCKET_NAME }}/${{ github.ref }}
+          wget https://github.com/koodo-reader/koodo-reader/tree/master/src/upload.sh
+          chmod +x ./upload.sh
+          ./upload.sh ${{ secrets.B2_ACCOUNT_ID }} ${{ secrets.B2_APPLICATION_KEY }}
