@@ -3,7 +3,7 @@
 # GitHub repo details
 USER="koodo-reader"
 REPO="koodo-reader"
-TAG="v1.6.1"
+TAG="v1.5.9"
 
 # Backblaze details
 BUCKET="koodo-reader"
@@ -68,7 +68,7 @@ html_file="file_list.html"
 echo "<html><body><table>" > $html_file
 
 # 添加表头
-echo "<tr><th>File Name</th><th style='width:100px;text-align:left'>File Size</th><th style='width:100px;text-align:left'>Last Modified</th></tr>" >> $html_file
+echo "<tr><th style='width:100px;text-align:left'>File Name</th><th style='width:100px;text-align:left'>File Size</th><th style='width:100px;text-align:left'>Last Modified</th></tr>" >> $html_file
 
 # 遍历文件列表
 echo "$file_list" | while read line; do
