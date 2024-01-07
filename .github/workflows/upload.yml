@@ -17,8 +17,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Run custom script
-        run: |
-          wget https://github.com/koodo-reader/koodo-reader/tree/master/src/upload.sh
-          chmod +x ./upload.sh
-          sh ./upload.sh ${{ secrets.B2_ACCOUNT_ID }} ${{ secrets.B2_APPLICATION_KEY }}
+      - name: Run script file
+          run: |
+            wget https://github.com/koodo-reader/koodo-reader/tree/master/src/upload.sh
+            chmod +x ./upload.sh
+            ./upload.sh ${{ secrets.B2_ACCOUNT_ID }} ${{ secrets.B2_APPLICATION_KEY }}
+          shell: bash
