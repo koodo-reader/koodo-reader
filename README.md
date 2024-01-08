@@ -25,10 +25,10 @@
 
 <div align="center">
   <br/>
-  <img src="https://dl.960960.xyz/screenshots/1.png" width="800px">
+  <img src="https://dl.960960.xyz/screenshots/1.png" width="800px" style="box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.18);">
   <br/>
   <br/>
-  <img src="https://dl.960960.xyz/screenshots/5.png" width="800px">
+  <img src="https://dl.960960.xyz/screenshots/5.png" width="800px" style="box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.18);">
   <br/>
 </div>
 
@@ -100,25 +100,25 @@ flatpak run io.github.troyeguo.koodo-reader
   <b>List mode</b>
   <br/>
   <br/>
-  <img src="https://dl.960960.xyz/screenshots/2.png" width="800px">
+  <img src="https://dl.960960.xyz/screenshots/2.png" width="800px" style="box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.18);">
   <br/>
   <br/>
   <b>Cover mode</b>
   <br/>
   <br/>
-  <img src="https://dl.960960.xyz/screenshots/3.png" width="800px">
+  <img src="https://dl.960960.xyz/screenshots/3.png" width="800px" style="box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.18);">
   <br/>
   <br/>
   <b>Reader menu</b>
   <br/>
   <br/>
-  <img src="https://dl.960960.xyz/screenshots/6.png" width="800px">
+  <img src="https://dl.960960.xyz/screenshots/6.png" width="800px" style="box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.18);">
   <br/>
   <br/>
   <b>Dark mode</b>
   <br/>
   <br/>
-  <img src="https://dl.960960.xyz/screenshots/4.png" width="800px">
+  <img src="https://dl.960960.xyz/screenshots/4.png" width="800px" style="box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.18);">
   <br/>
 </div>
 
