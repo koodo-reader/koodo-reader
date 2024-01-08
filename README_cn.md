@@ -5,7 +5,7 @@
 </div>
 
 <div align="center">
-  <img src="https://dl.960960.xyz/screenshots/logo.png" width="96px" height="96px"/>
+  <kbd><img src="https://dl.960960.xyz/screenshots/logo.png" width="96px" height="96px"/>
 </div>
 
 <h1 align="center">
@@ -27,10 +27,10 @@
 <div align="center">
   <br/>
   <br/>
-  <img src="https://dl.960960.xyz/screenshots/1.png" width="800px">
+  <kbd><img src="https://dl.960960.xyz/screenshots/1.png" width="800px"></kbd>
   <br/>
   <br/>
-  <img src="https://dl.960960.xyz/screenshots/5.png" width="800px">
+  <kbd><img src="https://dl.960960.xyz/screenshots/5.png" width="800px"></kbd>
   <br/>
   <br/>
 </div>
@@ -101,25 +101,25 @@ flatpak run io.github.troyeguo.koodo-reader
   <b>列表模式</b>
   <br/>
   <br/>
-  <img src="https://dl.960960.xyz/screenshots/2.png" width="800px">
+  <kbd><img src="https://dl.960960.xyz/screenshots/2.png" width="800px"></kbd>
   <br/>
   <br/>
   <b>封面模式</b>
   <br/>
   <br/>
-  <img src="https://dl.960960.xyz/screenshots/3.png" width="800px">
+  <kbd><img src="https://dl.960960.xyz/screenshots/3.png" width="800px"></kbd>
   <br/>
   <br/>
   <b>阅读菜单</b>
   <br/>
   <br/>
-  <img src="https://dl.960960.xyz/screenshots/6.png" width="800px">
+  <kbd><img src="https://dl.960960.xyz/screenshots/6.png" width="800px"></kbd>
   <br/>
   <br/>
   <b>黑夜模式</b>
   <br/>
   <br/>
-  <img src="https://dl.960960.xyz/screenshots/4.png" width="800px">
+  <kbd><img src="https://dl.960960.xyz/screenshots/4.png" width="800px"></kbd>
   <br/>
   <br/>
 </div>
