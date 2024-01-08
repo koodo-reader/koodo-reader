@@ -160,44 +160,44 @@ Make sure that you have installed yarn and git
 
 4. Sumbit the translation file or just translation snippets based on the amount of your translation to [this link](https://github.com/koodo-reader/koodo-reader/issues/new?assignees=&labels=submit+translation&projects=&template=3_submit_translation.yml). Pull request is also welcomed.
 
-| Language        | Code  | View                                                |
+| Language(A-Z)   | Code  | View                                                |
 | --------------- | ----- | --------------------------------------------------- |
 | Arabic          | ar    | [View](./src/assets/locales/ar/translation.json)    |
+| Armenian        | hy    | [View](./src/assets/locales/hy/translation.json)    |
 | Bengali         | bn    | [View](./src/assets/locales/bn/translation.json)    |
-| Tibetan         | bo    | [View](./src/assets/locales/bo/translation.json)    |
 | Bulgarian       | bg    | [View](./src/assets/locales/bg/translation.json)    |
+| Chinese (CN)    | zh-CN | [View](./src/assets/locales/zh-CN/translation.json) |
+| Chinese (MO)    | zh-MO | [View](./src/assets/locales/zh-MO/translation.json) |
+| Chinese (TW)    | zh-TW | [View](./src/assets/locales/zh-TW/translation.json) |
 | Czech           | cs    | [View](./src/assets/locales/cs/translation.json)    |
 | Danish          | da    | [View](./src/assets/locales/da/translation.json)    |
-| German          | de    | [View](./src/assets/locales/de/translation.json)    |
-| Greek           | el    | [View](./src/assets/locales/el/translation.json)    |
+| Dutch           | nl    | [View](./src/assets/locales/nl/translation.json)    |
 | English         | en    | [View](./src/assets/locales/en/translation.json)    |
 | Esperanto       | eo    | [View](./src/assets/locales/eo/translation.json)    |
-| Spanish         | es    | [View](./src/assets/locales/es/translation.json)    |
-| Persian         | fa    | [View](./src/assets/locales/fa/translation.json)    |
 | Finnish         | fi    | [View](./src/assets/locales/fi/translation.json)    |
 | French          | fr    | [View](./src/assets/locales/fr/translation.json)    |
-| Armenian        | hy    | [View](./src/assets/locales/hy/translation.json)    |
+| German          | de    | [View](./src/assets/locales/de/translation.json)    |
+| Greek           | el    | [View](./src/assets/locales/el/translation.json)    |
 | Indonesian      | id    | [View](./src/assets/locales/id/translation.json)    |
 | Interlingue     | ie    | [View](./src/assets/locales/ie/translation.json)    |
 | Italian         | it    | [View](./src/assets/locales/it/translation.json)    |
 | Japanese        | ja    | [View](./src/assets/locales/ja/translation.json)    |
 | Korean          | ko    | [View](./src/assets/locales/ko/translation.json)    |
-| Dutch           | nl    | [View](./src/assets/locales/nl/translation.json)    |
+| Persian         | fa    | [View](./src/assets/locales/fa/translation.json)    |
 | Polish          | pl    | [View](./src/assets/locales/pl/translation.json)    |
 | Portuguese      | pt    | [View](./src/assets/locales/pt/translation.json)    |
 | Portuguese (BR) | pt-BR | [View](./src/assets/locales/pt-BR/translation.json) |
 | Romanian        | ro    | [View](./src/assets/locales/ro/translation.json)    |
 | Russian         | ru    | [View](./src/assets/locales/ru/translation.json)    |
 | Slovenian       | sl    | [View](./src/assets/locales/sl/translation.json)    |
+| Spanish         | es    | [View](./src/assets/locales/es/translation.json)    |
 | Swedish         | sv    | [View](./src/assets/locales/sv/translation.json)    |
 | Tamil           | ta    | [View](./src/assets/locales/ta/translation.json)    |
 | Thai            | th    | [View](./src/assets/locales/th/translation.json)    |
+| Tibetan         | bo    | [View](./src/assets/locales/bo/translation.json)    |
 | Turkish         | tr    | [View](./src/assets/locales/tr/translation.json)    |
 | Ukrainian       | uk    | [View](./src/assets/locales/uk/translation.json)    |
 | Vietnamese      | vi    | [View](./src/assets/locales/vi/translation.json)    |
-| Chinese (CN)    | zh-CN | [View](./src/assets/locales/zh-CN/translation.json) |
-| Chinese (TW)    | zh-TW | [View](./src/assets/locales/zh-TW/translation.json) |
-| Chinese (MO)    | zh-MO | [View](./src/assets/locales/zh-MO/translation.json) |
 
 ### Add new language
 
