@@ -5,7 +5,7 @@
 </div>
 
 <div align="center" >
-  <kbd><img src="https://dl.960960.xyz/screenshots/logo.png" width="96px" height="96px"/>
+  <img src="https://dl.960960.xyz/screenshots/logo.png" width="96px" height="96px"/>
 </div>
 
 <h1 align="center">
