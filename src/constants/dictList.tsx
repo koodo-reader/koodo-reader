@@ -20,10 +20,3 @@ export const dictList = [
     url: "https://www.wikipedia.org",
   },
 ];
-export const wikiLangList = [
-  {
-    title: "Wikipedia",
-    name: "es",
-    url: "https://es.wikipedia.org/w/api.php",
-  },
-];

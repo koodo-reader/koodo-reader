@@ -5,7 +5,7 @@
 </div>
 
 <div align="center" >
-  <img src="https://i.loli.net/2021/07/30/ZKNMmz54Q3uqlrW.png" width="96px" height="96px"/>
+  <img src="https://dl.960960.xyz/screenshots/logo.png" width="96px" height="96px"/>
 </div>
 
 <h1 align="center">
@@ -24,8 +24,12 @@
 ## Preview
 
 <div align="center">
-  <img src="https://i.loli.net/2021/08/08/I37WPYFJcC1jltn.png" >
-  <img src="https://i.loli.net/2021/08/08/G7WvUQFTrEpSCKg.png" >
+  <br/>
+  <img src="https://dl.960960.xyz/screenshots/1.png" width="800px">
+  <br/>
+  <br/>
+  <img src="https://dl.960960.xyz/screenshots/5.png" width="800px">
+  <br/>
 </div>
 
 ## Feature
@@ -92,19 +96,30 @@ flatpak run io.github.troyeguo.koodo-reader
 ## Screenshot
 
 <div align="center">
+  <br/>
   <b>List mode</b>
-  <img src="https://i.loli.net/2021/08/08/JyNHfThMs184Um2.png" >
+  <br/>
+  <br/>
+  <img src="https://dl.960960.xyz/screenshots/2.png" width="800px">
+  <br/>
+  <br/>
   <b>Cover mode</b>
-  <img src="https://i.loli.net/2021/08/08/76zkDEAobd4qsmR.png" >
+  <br/>
+  <br/>
+  <img src="https://dl.960960.xyz/screenshots/3.png" width="800px">
+  <br/>
+  <br/>
   <b>Reader menu</b>
-  <img src="https://i.loli.net/2021/08/08/LeEN9gnOvFmfVWA.png" >
-  <b>Backup and restore</b>
-  <img src="https://i.loli.net/2021/08/08/aRIAiYT2dGJQhC1.png" >
-  <b>Dark mode and theme color</b>
-  <img src="https://i.loli.net/2021/08/08/ynqUNpX93xZefdw.png" >
-  <b>Note management</b>
-  <img src="https://i.loli.net/2021/08/09/sARQBoefvGklHwC.png" >
-
+  <br/>
+  <br/>
+  <img src="https://dl.960960.xyz/screenshots/6.png" width="800px">
+  <br/>
+  <br/>
+  <b>Dark mode</b>
+  <br/>
+  <br/>
+  <img src="https://dl.960960.xyz/screenshots/4.png" width="800px">
+  <br/>
 </div>
 
 </div>
