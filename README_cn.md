@@ -5,7 +5,7 @@
 </div>
 
 <div align="center">
-  <img src="https://i.loli.net/2021/07/30/ZKNMmz54Q3uqlrW.png" width="96px" height="96px"/>
+  <img src="https://dl.960960.xyz/screenshots/logo.png" width="96px" height="96px"/>
 </div>
 
 <h1 align="center">
@@ -25,8 +25,14 @@
 ## 预览
 
 <div align="center">
-  <img src="https://i.loli.net/2021/08/08/I37WPYFJcC1jltn.png" >
-  <img src="https://i.loli.net/2021/08/08/G7WvUQFTrEpSCKg.png" >
+  <br/>
+  <br/>
+  <img src="https://dl.960960.xyz/screenshots/1.png" width="800px">
+  <br/>
+  <br/>
+  <img src="https://dl.960960.xyz/screenshots/5.png" width="800px">
+  <br/>
+  <br/>
 </div>
 
 ## 特色
@@ -93,17 +99,29 @@ flatpak run io.github.troyeguo.koodo-reader
 
 <div align="center">
   <b>列表模式</b>
-  <img src="https://i.loli.net/2021/08/08/JyNHfThMs184Um2.png" >
+  <br/>
+  <br/>
+  <img src="https://dl.960960.xyz/screenshots/2.png" width="800px">
+  <br/>
+  <br/>
   <b>封面模式</b>
-  <img src="https://i.loli.net/2021/08/08/76zkDEAobd4qsmR.png" >
+  <br/>
+  <br/>
+  <img src="https://dl.960960.xyz/screenshots/3.png" width="800px">
+  <br/>
+  <br/>
   <b>阅读菜单</b>
-  <img src="https://i.loli.net/2021/08/08/LeEN9gnOvFmfVWA.png" >
-  <b>备份和恢复</b>
-  <img src="https://i.loli.net/2021/08/08/aRIAiYT2dGJQhC1.png" >
-  <b>黑夜模式和主题色</b>
-  <img src="https://i.loli.net/2021/08/08/ynqUNpX93xZefdw.png" >
-  <b>笔记管理</b>
-  <img src="https://i.loli.net/2021/08/09/sARQBoefvGklHwC.png" >
+  <br/>
+  <br/>
+  <img src="https://dl.960960.xyz/screenshots/6.png" width="800px">
+  <br/>
+  <br/>
+  <b>黑夜模式</b>
+  <br/>
+  <br/>
+  <img src="https://dl.960960.xyz/screenshots/4.png" width="800px">
+  <br/>
+  <br/>
 </div>
 
 ## 运行源码

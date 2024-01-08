@@ -1,6 +1,5 @@
 import { restore } from "./restoreUtil";
 import StorageUtil from "../serviceUtils/storageUtil";
-import { v4 as uuid } from "uuid";
 
 class S3Util {
   static UploadFile = async (blob: any) => {
@@ -12,9 +11,8 @@ class S3Util {
       const { ipcRenderer } = window.require("electron");
       const dirPath = ipcRenderer.sendSync("user-data", "ping");
       const arrayBuffer = await blob.arrayBuffer();
-      const fileName = uuid() + ".zip";
+      const fileName = "data.zip";
       fs.writeFileSync(path.join(dirPath, fileName), Buffer.from(arrayBuffer));
-      StorageUtil.setReaderConfig("s3FileName", fileName);
       resolve(
         await ipcRenderer.invoke("s3-upload", {
           endpoint,
@@ -29,7 +27,7 @@ class S3Util {
   };
   static DownloadFile = async () => {
     return new Promise<boolean>(async (resolve, reject) => {
-      const fileName = StorageUtil.getReaderConfig("s3FileName") || "data.zip";
+      const fileName = "data.zip";
       const fs = window.require("fs");
       const path = window.require("path");
       const { ipcRenderer } = window.require("electron");
