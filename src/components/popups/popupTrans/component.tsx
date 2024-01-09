@@ -6,11 +6,12 @@ import {
   edgeTransList,
   deeplTransList,
   yandexTransList,
-} from "../../../constants/translationList";
+} from "../../../constants/transList";
 import StorageUtil from "../../../utils/serviceUtils/storageUtil";
 import { bingTranslate } from "../../../utils/serviceUtils/bingTransUtil";
 import { deeplTranslate } from "../../../utils/serviceUtils/deeplTransUtil";
 import { yandexTranslate } from "../../../utils/serviceUtils/yandexTransUtil";
+import { googleTranslate } from "../../../utils/serviceUtils/googleTransUtil";
 class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
   constructor(props: PopupTransProps) {
     super(props);
@@ -71,20 +72,24 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
           console.log(err);
         });
     } else {
-      const translate = window.require("@vitalets/google-translate-api");
-      translate(text, {
-        from: StorageUtil.getReaderConfig("transSource") || "auto",
-        to: StorageUtil.getReaderConfig("transTarget") || "en",
-      })
+      googleTranslate(
+        text,
+        StorageUtil.getReaderConfig("transSource") || "",
+        StorageUtil.getReaderConfig("transTarget") || "en"
+      )
         .then((res) => {
-          this.setState({
-            translatedText: res.text,
-          });
+          if (res.explanations) {
+            this.setState({
+              translatedText: res.explanations[0].explains[0],
+            });
+          } else {
+            this.setState({
+              translatedText: res,
+            });
+          }
         })
         .catch((err) => {
-          this.setState({
-            translatedText: this.props.t("Error happens"),
-          });
+          console.log(err);
         });
     }
   };
