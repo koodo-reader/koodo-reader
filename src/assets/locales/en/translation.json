@@ -388,5 +388,9 @@
   "Brief description of the problem": "Brief description of the problem",
   "Detailed description of the problem": "Detailed description of the problem",
   "Your email(optional), We may contact you for further investigation": "Your email(optional), We may contact you for further investigation",
-  "Report": "Report"
+  "Report": "Report",
+  "Sentence": "Sentence",
+  "Associations": "Associations",
+  "Explanations": "Sentence",
+  "Pronunciations": "Pronunciations"
 }

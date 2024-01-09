@@ -59,7 +59,7 @@
   right: 25px;
 }
 .dict-service-selector {
-  width: 90px;
+  width: 120px;
   height: 30px;
   opacity: 1;
   font-size: 15px;
@@ -78,7 +78,7 @@
   text-align: center;
   margin-top: 20px;
 }
-.dict-container .r0bn4c {
+/* .dict-container .r0bn4c {
   font-weight: bold;
   color: #2084e8;
 }
@@ -89,17 +89,29 @@
 .dict-container .r0bn4c::after {
   content: "]";
   font-weight: bold;
-}
-.dict-container ol {
+} */
+/* .dict-container ol {
   counter-reset: my-counter;
   list-style-type: none;
-}
+} */
 
-.dict-container li:before {
+/* .dict-container li:before {
   counter-increment: my-counter;
   content: counter(my-counter) ". ";
   font-weight: bold;
-}
-.dict-container li div {
+} */
+/* .dict-container li div {
   display: inline;
+} */
+.dict-container ul {
+  counter-reset: my-counter;
+}
+
+.dict-container li {
+  counter-increment: my-counter;
+}
+
+.dict-container li::before {
+  content: counter(my-counter) ". ";
+  font-weight: bold;
 }

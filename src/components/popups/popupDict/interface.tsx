@@ -10,7 +10,6 @@ export interface PopupDictState {
   dictText: string;
   word: string;
   prototype: string;
-  wikiCode: string;
   dictService: string;
   dictTarget: string;
 }

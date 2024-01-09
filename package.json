@@ -19,8 +19,6 @@
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.485.0",
-    "@aws-sdk/s3-request-presigner": "^3.485.0",
-    "@vitalets/google-translate-api": "^8.0.0",
     "adm-zip": "^0.5.2",
     "axios": "^0.19.2",
     "buffer": "^6.0.3",
@@ -39,8 +37,6 @@
     "ssh2-sftp-client": "^9.1.0",
     "uuid": "^9.0.1",
     "webdav": "^3.6.2",
-    "webdav-fs": "3.0.0",
-    "wikijs": "^6.4.1",
     "wink-lemmatizer": "^3.0.4",
     "ws": "^8.13.0",
     "zip-a-folder": "^0.0.12"
@@ -48,7 +44,6 @@
   "devDependencies": {
     "@types/i18next": "^13.0.0",
     "@types/iconv-lite": "^0.0.1",
-    "@types/md5": "^2.2.0",
     "@types/node": "^13.13.2",
     "@types/react": "17.0.2",
     "@types/react-dom": "17.0.2",
@@ -66,7 +61,6 @@
     "hard-source-webpack-plugin": "^0.13.1",
     "html-react-parser": "^0.13.0",
     "i18next": "^20.2.4",
-    "md5": "^2.3.0",
     "node-sass": "^9.0.0",
     "nodemon": "^2.0.6",
     "rc-color-picker": "^1.2.6",
