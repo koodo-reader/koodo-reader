@@ -439,47 +439,6 @@ const createMainWin = () => {
     });
     return path;
   });
-
-  ipcMain.handle("get-url-content", async (event, config) => {
-    const axios = require("axios");
-    try {
-      const response = await axios.get(config.url, {
-        headers: {
-          "User-Agent":
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36",
-        },
-      });
-      return response.data;
-    } catch (error) {
-      console.error(error);
-      return null;
-    }
-  });
-  ipcMain.handle("wiki-index", async (event, config) => {
-    const wiki = require("wikijs").default;
-    try {
-      let page = await wiki({
-        apiUrl: "https://" + config.code + ".wikipedia.org/w/api.php",
-      }).page(config.text);
-      let summary = await page.summary();
-      let image = await page.mainImage();
-      return { summary, image };
-    } catch (error) {
-      console.error(error);
-      return null;
-    }
-  });
-  ipcMain.handle("wiki-images", async (event, config) => {
-    const wiki = require("wikijs").default;
-    try {
-      return await wiki()
-        .page("bat")
-        .then((page) => page.mainImage());
-    } catch (error) {
-      console.error(error);
-      return null;
-    }
-  });
   ipcMain.on("storage-location", (event, arg) => {
     event.returnValue = path.join(dirPath, "data");
   });

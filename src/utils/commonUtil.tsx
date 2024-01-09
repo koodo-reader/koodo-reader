@@ -46,12 +46,10 @@ export const base64ArrayBuffer = (arrayBuffer: ArrayBuffer) => {
 export const checkDeveloperUpdate = async () => {
   const axios = window.require("axios");
   let res = await axios.get("https://koodo.960960.xyz/api/update_dev");
-  console.log(res);
   return res.data;
 };
 export const checkStableUpdate = async () => {
   const axios = window.require("axios");
   let res = await axios.get("https://koodo.960960.xyz/api/update");
-  console.log(res);
   return res.data.log;
 };
