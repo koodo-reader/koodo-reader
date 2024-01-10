@@ -1,7 +1,12 @@
 import React from "react";
 import "./popupDict.css";
 import { PopupDictProps, PopupDictState } from "./interface";
-import { dictList, googleLangList } from "../../../constants/dictList";
+import {
+  bingLangList,
+  dictList,
+  freeLangList,
+  googleLangList,
+} from "../../../constants/dictList";
 import StorageUtil from "../../../utils/serviceUtils/storageUtil";
 import Parser from "html-react-parser";
 import * as DOMPurify from "dompurify";
@@ -67,9 +72,9 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
       `<p class="dict-word-type">[${this.props.t("Explanations")}]</p>` +
       res.explanations
         .map((item) => {
-          return `<p><li class="dict-word-type">${
+          return `<p><span style="font-weight: bold">${
             item.trait
-          }</li> ${item.explains.join(", ")}</p>`;
+          }</span> ${item.explains.join(", ")}</p>`;
         })
         .join("") +
       `<p class="dict-word-type">[${this.props.t("Associations")}]</p></p>` +
@@ -87,6 +92,7 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
     if (StorageUtil.getReaderConfig("dictService") === "bing_dict") {
       try {
         let target = await getBingDict(text);
+
         if (!target.explanations) {
           this.setState({
             dictText: this.props.t("Error happens"),
@@ -156,12 +162,21 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
             `<p class="dict-word-type">[${this.props.t(
               "Pronunciations"
             )}]</p></p>` +
+            (res.data[0].phonetic ? res.data[0].phonetic : "") +
+            `<br/>` +
             res.data[0].phonetics
-              .filter((item) => item.text)
+              .filter((item) => item.audio)
               .map((item) => {
-                return `[${item.text}]`;
-              })
-              .join(", ") +
+                return (
+                  `<span class='audio-label'>${
+                    item.audio.includes("uk") ? "UK" : "US"
+                  } </span>` +
+                  `<span class='audio-label'>${
+                    item.text ? item.text : ""
+                  } </span>` +
+                  `<audio controls class="audio-player"><source src="${item.audio}" type="audio/mpeg"></audio>`
+                );
+              }) +
             res.data[0].meanings
               .map((item) => {
                 return `<p><p class="dict-word-type">[${
@@ -236,80 +251,55 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
               })}
             </select>
           </div>
-          {this.state.dictService === "wikipedia" ? (
-            <div className="dict-service-container" style={{ right: 150 }}>
-              <select
-                className="dict-service-selector"
-                style={{ margin: 0 }}
-                onChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
-                  this.setState(
-                    {
-                      dictTarget: event.target.value || "en",
-                    },
-                    () => {
-                      StorageUtil.setReaderConfig(
-                        "dictTarget",
-                        event.target.value
-                      );
-                      this.handleLookUp();
+
+          <div className="dict-service-container" style={{ right: 150 }}>
+            <select
+              className="dict-service-selector"
+              style={{ margin: 0 }}
+              onChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
+                this.setState(
+                  {
+                    dictTarget: event.target.value || "en",
+                  },
+                  () => {
+                    StorageUtil.setReaderConfig(
+                      "dictTarget",
+                      event.target.value
+                    );
+                    this.handleLookUp();
+                  }
+                );
+              }}
+            >
+              {(this.state.dictService === "wikipedia"
+                ? wikiList
+                : this.state.dictService === "bing_dict"
+                ? bingLangList
+                : this.state.dictService === "google_dict"
+                ? googleLangList
+                : freeLangList
+              ).map((item, index) => {
+                return (
+                  <option
+                    value={item.code}
+                    key={item.code}
+                    className="add-dialog-shelf-list-option"
+                    selected={
+                      this.state.dictTarget === item.code ? true : false
                     }
-                  );
-                }}
-              >
-                {wikiList.map((item, index) => {
-                  return (
-                    <option
-                      value={item.code}
-                      key={item.code}
-                      className="add-dialog-shelf-list-option"
-                      selected={
-                        this.state.dictTarget === item.code ? true : false
-                      }
-                    >
-                      {item.nativeLang}
-                    </option>
-                  );
-                })}
-              </select>
-            </div>
-          ) : null}
-          {this.state.dictService === "google_dict" ? (
-            <div className="dict-service-container" style={{ right: 150 }}>
-              <select
-                className="dict-service-selector"
-                style={{ margin: 0 }}
-                onChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
-                  this.setState(
+                  >
                     {
-                      dictTarget: event.target.value || "en",
-                    },
-                    () => {
-                      StorageUtil.setReaderConfig(
-                        "dictTarget",
-                        event.target.value
-                      );
-                      this.handleLookUp();
+                      item[
+                        this.state.dictService !== "google_dict"
+                          ? "nativeLang"
+                          : "lang"
+                      ]
                     }
-                  );
-                }}
-              >
-                {googleLangList.map((item, index) => {
-                  return (
-                    <option
-                      value={item.code}
-                      key={item.code}
-                      className="add-dialog-shelf-list-option"
-                      selected={
-                        this.state.dictTarget === item.code ? true : false
-                      }
-                    >
-                      {item.lang}
-                    </option>
-                  );
-                })}
-              </select>
-            </div>
-          ) : null}
+                  </option>
+                );
+              })}
+            </select>
+          </div>
           <div className="dict-word">
             {StorageUtil.getReaderConfig("isLemmatizeWord") === "yes"
               ? this.state.prototype

@@ -5,12 +5,12 @@ export const dictList = [
     url: "https://dictionaryapi.dev/",
   },
   {
-    title: "Google Dict",
+    title: "Google Dictionary",
     name: "google_dict",
     url: "https://www.google.com",
   },
   {
-    title: "Bing Dict",
+    title: "Bing Dictionary",
     name: "bing_dict",
     url: "https://www.bing.com/dict",
   },
@@ -1759,4 +1759,10 @@ export const wikiList = [
     nativeLang: "Nēhiyawēwin / ᓀᐦᐃᔭᐍᐏᐣ",
     code: "cr",
   },
+];
+export const bingLangList = [
+  { lang: "Chinese", code: "zh-CN", nativeLang: "简体中文" },
+];
+export const freeLangList = [
+  { lang: "English", code: "en", nativeLang: "English" },
 ];
