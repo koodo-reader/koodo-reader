@@ -115,3 +115,38 @@
   content: counter(my-counter) ". ";
   font-weight: bold;
 }
+.audio-player {
+  width: 90px;
+  height: 30px;
+  margin-right: 10px;
+}
+.audio-label {
+  display: inline-block;
+  font-weight: bold;
+  position: relative;
+  bottom: 9px;
+  margin-right: 5px;
+}
+.audio-player::-webkit-media-controls-timeline {
+  display: none !important;
+}
+
+.audio-player::-webkit-media-controls-current-time-display {
+  display: none !important;
+}
+
+.audio-player::-webkit-media-controls-time-remaining-display {
+  display: none !important;
+}
+
+.audio-player::-webkit-media-controls-mute-button {
+  display: none !important;
+}
+
+.audio-player::-webkit-media-controls-volume-slider {
+  display: none !important;
+}
+
+.audio-player::-webkit-media-controls-volume-slider-container {
+  display: none !important;
+}
