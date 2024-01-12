@@ -385,8 +385,8 @@
   "Server port": "服务器端口",
   "Send successfully": "发送成功",
   "Sending": "发送中",
-  "Thanks for using the developer version of Koodo Reader, leave a comment if you encounter any problems. Note that we can't reply to you from here. For faster and better support, please visit": "感谢使用 Koodo Reader 开发版，如果您在使用过程中遇到任何问题，欢迎给我们留言。请注意我们无法在此回复您，为了更好的支持，请访问",
-  "You're not using the latest version of Koodo Reader. Please update to the latest version to see if the problem still exsits": "您使用的不是最新开发版 Koodo Reader，请升级至最新版之后，再确认您的问题是否还存在",
+  "Thanks for using the developer version, leave a comment if you encounter any problems. Note that we can't reply to you from here. For faster and better support, please visit": "感谢使用 Koodo Reader 开发版，如果您在使用过程中遇到任何问题，欢迎给我们留言。请注意我们无法在此回复您，为了更好的支持，请访问",
+  "You're not using the latest version of Koodo Reader. Please update first": "您使用的不是最新开发版 Koodo Reader，请升级至最新版之后，再确认您的问题是否还存在",
   "Brief description of the problem": "问题的简单描述",
   "Detailed description of the problem": "问题的详细介绍",
   "Your email(optional), We may contact you for further investigation": "您的邮箱（可选的），我们可能会进一步联系您",
@@ -396,5 +396,7 @@
   "Sentence": "例句",
   "Associations": "关联",
   "Explanations": "解释",
-  "Pronunciations": "发音"
+  "Pronunciations": "发音",
+  "Upload attachments": "上传附件",
+  "File size is larger than 20MB": "文件不能大于 20MB"
 }

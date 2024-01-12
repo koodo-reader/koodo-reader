@@ -1,3 +1,5 @@
+import axios from "axios";
+
 export const sleep = (time: number) => {
   return new Promise((resolve) => setTimeout(resolve, time));
 };
@@ -44,12 +46,31 @@ export const base64ArrayBuffer = (arrayBuffer: ArrayBuffer) => {
 };
 
 export const checkDeveloperUpdate = async () => {
-  const axios = window.require("axios");
   let res = await axios.get("https://koodo.960960.xyz/api/update_dev");
   return res.data;
 };
-export const checkStableUpdate = async () => {
+export const getUploadUrl = async () => {
   const axios = window.require("axios");
+  let res = await axios.get("https://koodo.960960.xyz/api/get_temp_upload_url");
+  return res.data;
+};
+export const uploadFile = async (url: string, file: any) => {
+  return new Promise<boolean>((resolve, reject) => {
+    axios
+      .put(url, file, {
+        timeout: 60000,
+      })
+      .then((res) => {
+        console.log(res);
+        resolve(true);
+      })
+      .catch((err) => {
+        console.log(err);
+        resolve(false);
+      });
+  });
+};
+export const checkStableUpdate = async () => {
   let res = await axios.get("https://koodo.960960.xyz/api/update");
   return res.data.log;
 };
