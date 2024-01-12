@@ -11,4 +11,6 @@ export interface FeedbackDialogState {
   isNew: boolean;
   isSending: boolean;
   developerVersion: string;
+  uploadUrl: string;
+  fileContent: any;
 }
