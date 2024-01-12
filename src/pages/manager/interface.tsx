@@ -35,6 +35,7 @@ export interface ManagerProps extends RouteComponentProps<any> {
   handleAddDialog: (isOpenAddDialog: boolean) => void;
   handleTipDialog: (isTipDialog: boolean) => void;
   handleDetailDialog: (isDetailDialog: boolean) => void;
+  handleFeedbackDialog: (isShow: boolean) => void;
   handleLoadingDialog: (isShowLoading: boolean) => void;
   handleNewDialog: (isShowNew: boolean) => void;
   handleBackupDialog: (isBackup: boolean) => void;
