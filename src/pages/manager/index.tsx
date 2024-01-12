@@ -8,6 +8,7 @@ import {
   handleDetailDialog,
   handleLoadingDialog,
   handleNewDialog,
+  handleFeedbackDialog,
   handleSetting,
   handleBackupDialog,
   handleFetchNotes,
@@ -60,7 +61,7 @@ const actionCreator = {
   handleEditDialog,
   handleDeleteDialog,
   handleAddDialog,
-
+  handleFeedbackDialog,
   handleTipDialog,
   handleDetailDialog,
   handleLoadingDialog,
