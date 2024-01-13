@@ -12,10 +12,11 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-
+      - name: Checkout code
+        uses: actions/checkout@v2
       - name: Run custom script
         run: |
-          curl -O src/upload.sh
+          cp src/upload.sh upload.sh
           chmod +x ./upload.sh
           ./upload.sh ${{ secrets.B2_ACCOUNT_ID }} ${{ secrets.B2_APPLICATION_KEY }} ${{ secrets.R2_ACCOUNT_ID }} ${{ secrets.R2_APPLICATION_KEY }} ${{ secrets.R2_ENDPOINT }} v1.6.2
         shell: bash
