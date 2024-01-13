@@ -187,7 +187,7 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
                 ]);
                 toast.success(this.props.t("Export Successfully"));
               } else {
-                toast(this.props.t("Nothing to export"));
+                toast(this.props.t("Nothing to Export"));
               }
             }}
           >
@@ -205,7 +205,7 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
                 );
                 toast.success(this.props.t("Export Successfully"));
               } else {
-                toast(this.props.t("Nothing to export"));
+                toast(this.props.t("Nothing to Export"));
               }
             }}
           >
@@ -223,7 +223,7 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
                 );
                 toast.success(this.props.t("Export Successfully"));
               } else {
-                toast(this.props.t("Nothing to export"));
+                toast(this.props.t("Nothing to Export"));
               }
             }}
           >
@@ -241,7 +241,7 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
                 ]);
                 toast.success(this.props.t("Export Successfully"));
               } else {
-                toast(this.props.t("Nothing to export"));
+                toast(this.props.t("Nothing to Export"));
               }
             }}
           >

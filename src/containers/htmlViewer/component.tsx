@@ -14,7 +14,6 @@ import { HtmlMouseEvent } from "../../utils/serviceUtils/mouseEvent";
 import ImageViewer from "../../components/imageViewer";
 import { getIframeDoc } from "../../utils/serviceUtils/docUtil";
 import { tsTransform } from "../../utils/serviceUtils/langUtil";
-import CFI from "epub-cfi-resolver";
 import { binicReadingProcess } from "../../utils/serviceUtils/bionicUtil";
 import PopupBox from "../../components/popups/popupBox";
 import { renderHighlighters } from "../../utils/serviceUtils/noteUtil";
@@ -190,7 +189,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         bookLocation.chapterHref,
         bookLocation.chapterTitle
       );
-      let cfiObj = new CFI(bookLocation.cfi);
       let pageArea = document.getElementById("page-area");
       if (!pageArea) return;
       let iframe = pageArea.getElementsByTagName("iframe")[0];
@@ -199,11 +197,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       if (!doc) {
         return;
       }
-      var bookmark = cfiObj.resolveLast(doc, {
-        ignoreIDs: true,
-      });
-
-      await rendition.goToNode(bookmark.node.parentElement);
     } else if (chapterDocs.length > 0) {
       await rendition.goToPosition(
         JSON.stringify({

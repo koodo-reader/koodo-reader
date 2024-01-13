@@ -19,8 +19,6 @@ const emptyCover = (props) => (
             ? " #ff9900"
             : props.format === "MD"
             ? "#5e7fff"
-            : props.format === "DJVU"
-            ? "#109870"
             : props.format === "FB2"
             ? "#0063b1"
             : props.format === "DOCX"

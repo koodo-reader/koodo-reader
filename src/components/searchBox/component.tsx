@@ -93,7 +93,7 @@ class SearchBox extends React.Component<SearchBoxProps> {
           }}
           placeholder={
             this.props.isNavSearch || this.props.mode === "nav"
-              ? this.props.t("Search in the book")
+              ? this.props.t("Search in the Book")
               : this.props.tabMode === "note"
               ? this.props.t("Search my notes")
               : this.props.tabMode === "digest"

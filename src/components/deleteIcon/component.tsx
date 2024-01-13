@@ -77,7 +77,7 @@ class DeleteIcon extends React.Component<DeleteIconProps, DeleteIconStates> {
   render() {
     const deletePopupProps = {
       name: this.props.tagName,
-      title: "Delete this tag",
+      title: "Delete This Tag",
       description: "This action will clear and remove this tag",
       handleDeletePopup: this.handleDeletePopup,
       handleDeleteOpearion: this.handleDelete,

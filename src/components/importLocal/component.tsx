@@ -170,18 +170,23 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
     return new Promise<void>((resolve, reject) => {
       //md5重复不导入
       let isRepeat = false;
-      if (
-        [...(this.props.books || []), ...this.props.deletedBooks].length > 0
-      ) {
-        [...(this.props.books || []), ...this.props.deletedBooks].forEach(
-          (item) => {
-            if (item.md5 === md5 && item.size === file.size) {
-              isRepeat = true;
-              toast.error(this.props.t("Duplicate Book"));
-              return resolve();
-            }
+      if (this.props.books.length > 0) {
+        this.props.books.forEach((item) => {
+          if (item.md5 === md5 && item.size === file.size) {
+            isRepeat = true;
+            toast.error(this.props.t("Duplicate Book"));
+            return resolve();
           }
-        );
+        });
+      }
+      if (this.props.deletedBooks.length > 0) {
+        this.props.deletedBooks.forEach((item) => {
+          if (item.md5 === md5 && item.size === file.size) {
+            isRepeat = true;
+            toast.error(this.props.t("Duplicate Book in Trash Bin"));
+            return resolve();
+          }
+        });
       }
       //解析图书，获取图书数据
       if (!isRepeat) {
@@ -234,7 +239,6 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
         accept={[
           ".epub",
           ".pdf",
-          ".djvu",
           ".txt",
           ".mobi",
           ".azw3",

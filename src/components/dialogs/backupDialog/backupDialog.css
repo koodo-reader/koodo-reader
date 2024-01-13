@@ -200,9 +200,9 @@
 .restore-file {
   position: absolute;
   left: 0px;
-  bottom: 100px;
-  width: 130px;
-  height: 100px;
+  bottom: 105px;
+  width: 93px;
+  height: 93px;
   z-index: 10;
   opacity: 0.5;
   cursor: pointer;

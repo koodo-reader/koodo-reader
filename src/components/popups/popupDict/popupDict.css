@@ -28,11 +28,15 @@
   margin-top: 10px;
   margin-left: 5px;
 }
-.dict-word-type {
+.dict-word-type,
+.wiki-learn-more {
   font-weight: bold;
   color: #2084e8;
   margin-bottom: 5px;
   margin-top: 5px;
+}
+.wiki-learn-more {
+  cursor: pointer;
 }
 .dict-text-box {
   opacity: 1;

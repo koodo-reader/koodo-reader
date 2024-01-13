@@ -220,7 +220,7 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
     const deletePopupProps = {
       mode: "shelf",
       name: Object.keys(ShelfUtil.getShelf())[this.state.shelfIndex],
-      title: "Delete this shelf",
+      title: "Delete This Shelf",
       description: "This action will clear and remove this shelf",
       handleDeletePopup: this.handleDeletePopup,
       handleDeleteOpearion: this.handleDeleteShelf,

@@ -99,12 +99,15 @@ class SliderList extends React.Component<SliderListProps, SliderListState> {
             }
             onChange={(event) => {
               let fieldVal = event.target.value;
+              if (!fieldVal) return;
               this.setState({ inputValue: fieldVal });
             }}
             onFocus={() => {
               this.setState({ isTyping: true });
             }}
             onBlur={(event) => {
+              let fieldVal = event.target.value;
+              if (!fieldVal) return;
               this.onValueChange(event);
               this.setState({ isTyping: false });
               this.handleRest();

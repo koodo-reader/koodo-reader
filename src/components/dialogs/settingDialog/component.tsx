@@ -308,7 +308,7 @@ class SettingDialog extends React.Component<
             );
           })}
           <div className="setting-dialog-new-title">
-            <Trans>Theme Color</Trans>
+            <Trans>Theme color</Trans>
             <ul className="theme-setting-container">
               {themeList.map((item, index) => (
                 <li
@@ -347,7 +347,7 @@ class SettingDialog extends React.Component<
           )}
 
           <div className="setting-dialog-new-title">
-            <Trans>System Font</Trans>
+            <Trans>System font</Trans>
             <select
               name=""
               className="lang-setting-dropdown"
