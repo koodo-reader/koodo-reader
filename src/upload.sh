@@ -37,6 +37,7 @@ wget https://dl.960960.xyz/rclone
 chmod +x ./rclone
 ./rclone config create r2 s3 provider "Cloudflare" env_auth "false" access_key_id $R2_ACCOUNT_ID secret_access_key $R2_APPLICATION_KEY region "auto" endpoint $R2_ENDPOINT
 
+
 # Upload the directory to Backblaze
 ./b2 sync --replaceNewer $TAG b2://$BUCKET/$TAG
 ./rclone copy $TAG r2:$BUCKET/$TAG
