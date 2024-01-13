@@ -9,7 +9,6 @@ import Parser from "html-react-parser";
 import * as DOMPurify from "dompurify";
 import EmptyCover from "../../../components/emptyCover";
 import StorageUtil from "../../../utils/serviceUtils/storageUtil";
-import { getIframeDoc } from "../../../utils/serviceUtils/docUtil";
 
 class NavigationPanel extends React.Component<
   NavigationPanelProps,
