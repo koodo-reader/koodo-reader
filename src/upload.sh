@@ -3,7 +3,7 @@
 # GitHub repo details
 USER="koodo-reader"
 REPO="koodo-reader"
-
+TAG="v1.6.2"
 
 # Backblaze details
 BUCKET="koodo-reader"
@@ -12,7 +12,6 @@ B2_APPLICATION_KEY=$2
 R2_ACCOUNT_ID=$3
 R2_APPLICATION_KEY=$4
 R2_ENDPOINT=$5
-TAG=$6
 
 # Create a directory with the name of the tag
 mkdir -p $TAG
@@ -37,7 +36,6 @@ chmod +x ./b2
 wget https://dl.960960.xyz/rclone
 chmod +x ./rclone
 ./rclone config create r2 s3 provider "Cloudflare" env_auth "false" access_key_id $R2_ACCOUNT_ID secret_access_key $R2_APPLICATION_KEY region "auto" endpoint $R2_ENDPOINT
-
 
 # Upload the directory to Backblaze
 ./b2 sync --replaceNewer $TAG b2://$BUCKET/$TAG
