@@ -176,7 +176,7 @@ class BookUtil {
           book.name
         }&file=${book.key}`,
         isMergeWord:
-          book.format === "PDF" || book.format === "DJVU"
+          book.format === "PDF"
             ? "no"
             : StorageUtil.getReaderConfig("isMergeWord"),
         isFullscreen: StorageUtil.getReaderConfig("isAutoFullscreen"),

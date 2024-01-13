@@ -37,7 +37,7 @@
 
 - Formatos suportados:
   - EPUB (**.epub**)
-  - Documento scaneados (**.pdf**, **.djvu**)
+  - PDF (**.pdf\***)
   - Formato sem DRM (**.mobi**) e Kindle (**.azw3**, **.azw**)
   - Texto puro (**.txt**)
   - FictionBook (**.fb2**)

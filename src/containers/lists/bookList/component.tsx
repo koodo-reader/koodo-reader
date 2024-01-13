@@ -215,7 +215,7 @@ class BookList extends React.Component<BookListProps, BookListState> {
     const deletePopupProps = {
       mode: "shelf",
       name: Object.keys(ShelfUtil.getShelf())[this.props.shelfIndex],
-      title: "Delete this shelf",
+      title: "Delete This Shelf",
       description: "This action will clear and remove this shelf",
       handleDeletePopup: this.handleDeletePopup,
       handleDeleteOpearion: this.handleDeleteShelf,
@@ -239,7 +239,7 @@ class BookList extends React.Component<BookListProps, BookListState> {
                 this.handleDeletePopup(true);
               }}
             >
-              <Trans>Delete this shelf</Trans>
+              <Trans>Delete This Shelf</Trans>
             </div>
           )}
           <div style={this.props.isSelectBook ? { display: "none" } : {}}>

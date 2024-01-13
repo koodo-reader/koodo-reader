@@ -220,14 +220,14 @@ class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
               <input
                 type="text"
                 name="port"
-                placeholder={this.props.t("Server port")}
+                placeholder={this.props.t("Server Port")}
                 id="token-dialog-port-box"
                 className="token-dialog-username-box"
               />
               <input
                 type="text"
                 name="path"
-                placeholder={this.props.t("Server path")}
+                placeholder={this.props.t("Server Path")}
                 id="token-dialog-path-box"
                 className="token-dialog-username-box"
               />
@@ -258,7 +258,7 @@ class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
               <input
                 type="text"
                 name="path"
-                placeholder={this.props.t("Server path")}
+                placeholder={this.props.t("Server Path")}
                 id="token-dialog-path-box"
                 className="token-dialog-url-box"
               />

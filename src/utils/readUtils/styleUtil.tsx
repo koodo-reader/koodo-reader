@@ -78,7 +78,7 @@ class styleUtil {
         : ""
     };margin-bottom: ${
       StorageUtil.getReaderConfig("paraSpacing") || 0
-    }px !important;padding:0px !important;word-wrap: break-word;`;
+    }px !important;padding:0px !important;word-wrap: break-word;white-space: pre-wrap;`;
   }
   static addStyle = (url: string) => {
     const style = document.createElement("link");
