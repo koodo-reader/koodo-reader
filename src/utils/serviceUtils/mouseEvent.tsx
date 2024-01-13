@@ -194,11 +194,3 @@ export const pdfMouseEvent = () => {
     setTimeout(() => (lock = false), throttleTime);
   });
 };
-export const djvuMouseEvent = () => {
-  document.addEventListener("keydown", (event) => {
-    if (lock) return;
-    lock = true;
-    handleShortcut(event);
-    setTimeout(() => (lock = false), throttleTime);
-  });
-};

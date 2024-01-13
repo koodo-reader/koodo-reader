@@ -5,7 +5,7 @@ const LoadingDialog = (props) => {
   return (
     <div className="loading-dialog">
       <div className="loading-dialog-title">
-        <Trans>Please Wait a moment</Trans>
+        <Trans>Please Wait</Trans>
       </div>
       <div className="loading-animation">
         <div className="loader"></div>

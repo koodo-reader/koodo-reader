@@ -4,7 +4,6 @@ import { Trans } from "react-i18next";
 import { NavListProps, NavListState } from "./interface";
 import DeleteIcon from "../../../components/deleteIcon";
 import toast from "react-hot-toast";
-import CFI from "epub-cfi-resolver";
 import RecordLocation from "../../../utils/readUtils/recordLocation";
 class NavList extends React.Component<NavListProps, NavListState> {
   constructor(props: NavListProps) {
@@ -17,7 +16,7 @@ class NavList extends React.Component<NavListProps, NavListState> {
   async handleJump(cfi: string) {
     //书签跳转
     if (!cfi) {
-      toast(this.props.t("Wrong bookmark"));
+      toast(this.props.t("Wrong Bookmark"));
       return;
     }
     let bookLocation;
@@ -35,19 +34,6 @@ class NavList extends React.Component<NavListProps, NavListState> {
         bookLocation.chapterHref,
         bookLocation.chapterTitle
       );
-      let cfiObj = new CFI(bookLocation.cfi);
-      let pageArea = document.getElementById("page-area");
-      if (!pageArea) return;
-      let iframe = pageArea.getElementsByTagName("iframe")[0];
-      if (!iframe) return;
-      let doc: any = iframe.contentDocument;
-      if (!doc) {
-        return;
-      }
-      var bookmark = cfiObj.resolveLast(doc, {
-        ignoreIDs: true,
-      });
-      await this.props.htmlBook.rendition.goToNode(bookmark.node.parentElement);
     } else {
       await this.props.htmlBook.rendition.goToPosition(
         JSON.stringify({
