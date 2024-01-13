@@ -3,7 +3,7 @@
 # GitHub repo details
 USER="koodo-reader"
 REPO="koodo-reader"
-TAG="v1.6.2"
+
 
 # Backblaze details
 BUCKET="koodo-reader"
@@ -12,6 +12,7 @@ B2_APPLICATION_KEY=$2
 R2_ACCOUNT_ID=$3
 R2_APPLICATION_KEY=$4
 R2_ENDPOINT=$5
+TAG=$6
 
 # Create a directory with the name of the tag
 mkdir -p $TAG
