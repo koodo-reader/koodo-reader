@@ -3,7 +3,7 @@ name: Download and Upload Release Files
 on:
   push:
     paths:
-      - "src/upload.sh" # 指定要监视的文件路径
+      - ".github/workflows/upload.yml" # 指定要监视的文件路径
 
 jobs:
   build:
@@ -17,5 +17,5 @@ jobs:
         run: |
           curl -O https://raw.githubusercontent.com/koodo-reader/koodo-reader/master/src/upload.sh
           chmod +x ./upload.sh
-          ./upload.sh ${{ secrets.B2_ACCOUNT_ID }} ${{ secrets.B2_APPLICATION_KEY }} ${{ secrets.R2_ACCOUNT_ID }} ${{ secrets.R2_APPLICATION_KEY }} ${{ secrets.R2_ENDPOINT }}
+          ./upload.sh ${{ secrets.B2_ACCOUNT_ID }} ${{ secrets.B2_APPLICATION_KEY }} ${{ secrets.R2_ACCOUNT_ID }} ${{ secrets.R2_APPLICATION_KEY }} ${{ secrets.R2_ENDPOINT }} v1.6.2
         shell: bash
