@@ -191,7 +191,7 @@ export const readerSettingList = [
     propName: "isInvert",
   },
   {
-    title: "Turn on Bionic Reading",
+    title: "Turn On Bionic Reading",
     propName: "isBionic",
   },
   {
@@ -203,15 +203,15 @@ export const readerSettingList = [
     propName: "isHideHeader",
   },
   {
-    title: "Hide mimical background",
+    title: "Hide Mimical Background",
     propName: "isHideBackground",
   },
   {
-    title: "Hide navigation button",
+    title: "Hide Navigation Button",
     propName: "isHidePageButton",
   },
   {
-    title: "Hide menu button",
+    title: "Hide Menu Button",
     propName: "isHideMenuButton",
   },
 ];

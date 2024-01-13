@@ -7,7 +7,7 @@ export const emptyList = [
   {
     mode: "favorite",
     main: "No Favorite Books",
-    sub: "Right click on any book and click add to favorite to add it to your favorite books",
+    sub: "Right click on any book and click Add to Favorite to add it to your favorite books",
   },
   {
     mode: "bookmark",

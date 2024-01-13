@@ -15,4 +15,8 @@ export interface BookListProps extends RouteComponentProps<any> {
   handleSelectBook: (isSelectBook: boolean) => void;
   handleSelectedBooks: (selectedBooks: string[]) => void;
 }
-export interface BookListState {}
+export interface BookListState {
+  isShowExport: boolean;
+  isOpenDelete: boolean;
+  favoriteBooks: number;
+}

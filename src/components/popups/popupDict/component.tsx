@@ -17,13 +17,14 @@ import { Trans } from "react-i18next";
 import { wikiList } from "../../../constants/dictList";
 import { googleTranslate } from "../../../utils/serviceUtils/googleTransUtil";
 import { getBingDict } from "../../../utils/serviceUtils/bingDictUtil";
+import { openExternalUrl } from "../../../utils/serviceUtils/urlUtil";
 
 declare var window: any;
 class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
   constructor(props: PopupDictProps) {
     super(props);
     this.state = {
-      dictText: this.props.t("Please Wait a moment"),
+      dictText: this.props.t("Please Wait"),
       word: "",
       prototype: "",
       dictService: StorageUtil.getReaderConfig("dictService"),
@@ -144,10 +145,25 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
               ? window.ChineseS2T.s2t(res.data.extract)
               : window.ChineseS2T.t2s(res.data.extract)
             : res.data.extract
-        }</p>`;
-        this.setState({
-          dictText: html,
-        });
+        }</p><p class="wiki-learn-more">${this.props.t("Learn More")}</p>`;
+        this.setState(
+          {
+            dictText: html,
+          },
+          () => {
+            let moreElement = document.querySelector(".wiki-learn-more");
+            if (moreElement) {
+              moreElement.addEventListener("click", () => {
+                openExternalUrl(
+                  "https://" +
+                    this.state.dictTarget +
+                    ".wikipedia.org/w/index.php?search=" +
+                    text
+                );
+              });
+            }
+          }
+        );
       } catch (error) {
         console.log(error);
         this.setState({

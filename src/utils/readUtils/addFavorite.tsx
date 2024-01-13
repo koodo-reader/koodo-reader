@@ -16,6 +16,16 @@ class AddFavorite {
 
     localStorage.setItem("favoriteBooks", JSON.stringify(bookArr));
   }
+  static setFavorites(books: BookModel[]) {
+    let bookArr =
+      localStorage.getItem("favoriteBooks") !== "{}" &&
+      localStorage.getItem("favoriteBooks")
+        ? JSON.parse(localStorage.getItem("favoriteBooks") || "")
+        : [];
+    let bookKeys = books.map((item) => item.key);
+    bookArr = [...new Set([...bookArr, ...bookKeys])];
+    localStorage.setItem("favoriteBooks", JSON.stringify(bookArr));
+  }
   static setAllFavorite(books: BookModel[]) {
     let bookArr: string[] = [];
     books.forEach((item) => {

@@ -1,7 +1,7 @@
 {
   "name": "koodo-reader",
   "main": "main.js",
-  "version": "1.6.1",
+  "version": "1.6.2",
   "description": "A cross-platform ebook reader",
   "author": {
     "name": "App by Troye",
@@ -26,7 +26,6 @@
     "dompurify": "^3.0.1",
     "electron-is-dev": "^1.1.0",
     "electron-store": "^8.0.1",
-    "epub-cfi-resolver": "^1.0.2",
     "font-list": "^1.4.5",
     "fs-extra": "^9.1.0",
     "ftp": "^0.3.10",
@@ -126,12 +125,6 @@
         "icon": "assets/icons/pdf",
         "role": "Viewer",
         "mimeType": "application/pdf"
-      },
-      {
-        "ext": "djvu",
-        "icon": "assets/icons/pdf",
-        "role": "Viewer",
-        "mimeType": "image/vnd.djvu"
       },
       {
         "ext": "mobi",

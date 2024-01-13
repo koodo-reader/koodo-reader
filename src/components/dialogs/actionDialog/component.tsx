@@ -136,9 +136,9 @@ class ActionDialog extends React.Component<
                 {AddFavorite.getAllFavorite().indexOf(
                   this.props.currentBook.key
                 ) > -1 ? (
-                  <Trans>Remove from favorite</Trans>
+                  <Trans>Remove from Favorite</Trans>
                 ) : (
-                  <Trans>Add to favorite</Trans>
+                  <Trans>Add to Favorite</Trans>
                 )}
               </p>
             </div>
@@ -302,7 +302,7 @@ class ActionDialog extends React.Component<
                   );
                   toast.success(this.props.t("Export Successfully"));
                 } else {
-                  toast(this.props.t("Nothing to export"));
+                  toast(this.props.t("Nothing to Export"));
                 }
               }}
             >
@@ -329,7 +329,7 @@ class ActionDialog extends React.Component<
                   );
                   toast.success(this.props.t("Export Successfully"));
                 } else {
-                  toast(this.props.t("Nothing to export"));
+                  toast(this.props.t("Nothing to Export"));
                 }
               }}
             >
@@ -354,7 +354,7 @@ class ActionDialog extends React.Component<
                   ]);
                   toast.success(this.props.t("Export Successfully"));
                 } else {
-                  toast(this.props.t("Nothing to export"));
+                  toast(this.props.t("Nothing to Export"));
                 }
               }}
             >
