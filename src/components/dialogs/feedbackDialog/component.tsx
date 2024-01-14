@@ -71,7 +71,7 @@ class FeedbackDialog extends Component<
     const system = os.platform() + " " + os.version();
     const axios = window.require("axios");
     let fileName = "";
-    if (this.state.uploadUrl) {
+    if (this.state.fileContent && this.state.uploadUrl) {
       var segments = this.state.uploadUrl.split("/").reverse()[0];
       fileName = segments.split("?")[0];
     }
