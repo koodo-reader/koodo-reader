@@ -157,7 +157,7 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
     return (
       <div className="background-color-setting">
         <div className="background-color-text">
-          <Trans>Background Color</Trans>
+          <Trans>Background color</Trans>
         </div>
         <ul className="background-color-list">
           <li
@@ -186,7 +186,7 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
           />
         )}
         <div className="background-color-text">
-          <Trans>Text Color</Trans>
+          <Trans>Text color</Trans>
         </div>
         <ul className="background-color-list">
           <li

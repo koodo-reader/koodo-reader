@@ -45,7 +45,7 @@ class EditDialog extends React.Component<EditDialogProps, EditDialogState> {
       this.props.handleEditDialog(false);
       this.props.handleFetchBooks();
     });
-    toast.success(this.props.t("Edit Successfully"));
+    toast.success(this.props.t("Edition successful"));
     this.props.handleActionDialog(false);
   };
   render() {
@@ -56,7 +56,7 @@ class EditDialog extends React.Component<EditDialogProps, EditDialogState> {
         </div>
         <div className="edit-dialog-book-name-container">
           <div className="edit-dialog-book-name-text">
-            <Trans>Book Name</Trans>
+            <Trans>Book name</Trans>
           </div>
           <input className="edit-dialog-book-name-box" />
         </div>

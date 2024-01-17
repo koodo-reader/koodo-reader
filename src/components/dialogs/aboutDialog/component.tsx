@@ -96,7 +96,7 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
                 this.handleJump("https://koodo.960960.xyz");
               }}
             >
-              <Trans>Our Website</Trans>
+              <Trans>Our website</Trans>
             </li>
             <li
               className="sort-by-category-list"
@@ -114,7 +114,7 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
                 this.handleJump("https://github.com/koodo-reader/koodo-reader");
               }}
             >
-              <Trans>GitHub Repo</Trans>
+              <Trans>GitHub repository</Trans>
             </li>
 
             {isElectron && (
@@ -126,7 +126,7 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
                     .ipcRenderer.invoke("open-console", "ping");
                 }}
               >
-                <Trans>Open Console</Trans>
+                <Trans>Open console</Trans>
               </li>
             )}
             {this.props.isNewWarning && (
@@ -137,7 +137,7 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
                 }}
                 style={{ color: "rgb(35, 170, 242)" }}
               >
-                <Trans>New Version</Trans>
+                <Trans>New version</Trans>
               </li>
             )}
             <li
@@ -150,7 +150,7 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
                 event.stopPropagation();
               }}
             >
-              <Trans>Export All</Trans>
+              <Trans>Export all</Trans>
               <span className="icon-dropdown icon-export-all"></span>
             </li>
           </ul>
@@ -185,13 +185,13 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
                   ...this.props.books,
                   ...this.props.deletedBooks,
                 ]);
-                toast.success(this.props.t("Export Successfully"));
+                toast.success(this.props.t("Export successful"));
               } else {
-                toast(this.props.t("Nothing to Export"));
+                toast(this.props.t("Nothing to export"));
               }
             }}
           >
-            <Trans>Export All Books</Trans>
+            <Trans>Export all books</Trans>
           </li>
           <li
             className="sort-by-category-list"
@@ -203,13 +203,13 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
                   this.props.notes.filter((item) => item.notes !== ""),
                   [...this.props.books, ...this.props.deletedBooks]
                 );
-                toast.success(this.props.t("Export Successfully"));
+                toast.success(this.props.t("Export successful"));
               } else {
-                toast(this.props.t("Nothing to Export"));
+                toast(this.props.t("Nothing to export"));
               }
             }}
           >
-            <Trans>Export All Notes</Trans>
+            <Trans>Export all notes</Trans>
           </li>
           <li
             className="sort-by-category-list"
@@ -221,13 +221,13 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
                   this.props.notes.filter((item) => item.notes === ""),
                   [...this.props.books, ...this.props.deletedBooks]
                 );
-                toast.success(this.props.t("Export Successfully"));
+                toast.success(this.props.t("Export successful"));
               } else {
-                toast(this.props.t("Nothing to Export"));
+                toast(this.props.t("Nothing to export"));
               }
             }}
           >
-            <Trans>Export All Highlights</Trans>
+            <Trans>Export all highlights</Trans>
           </li>
           <li
             className="sort-by-category-list"
@@ -239,13 +239,13 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
                   ...this.props.books,
                   ...this.props.deletedBooks,
                 ]);
-                toast.success(this.props.t("Export Successfully"));
+                toast.success(this.props.t("Export successful"));
               } else {
-                toast(this.props.t("Nothing to Export"));
+                toast(this.props.t("Nothing to export"));
               }
             }}
           >
-            <Trans>Export All Dictionary History</Trans>
+            <Trans>Export all dictionary history</Trans>
           </li>
         </div>
       </>

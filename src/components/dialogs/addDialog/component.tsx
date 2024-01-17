@@ -31,7 +31,7 @@ class AddDialog extends Component<AddDialogProps, AddDialogState> {
     if (this.state.isNew) {
       shelfTitle = inputElement.value;
       if (shelfList.hasOwnProperty(shelfTitle)) {
-        toast(this.props.t("Duplicate Shelf"));
+        toast(this.props.t("Duplicate shelf"));
         return;
       }
     }
@@ -46,7 +46,7 @@ class AddDialog extends Component<AddDialogProps, AddDialogState> {
       shelfList[`${shelfTitle}`] &&
       shelfList[`${shelfTitle}`].indexOf(this.props.currentBook.key) > -1
     ) {
-      toast(this.props.t("Duplicate Book"));
+      toast(this.props.t("Duplicate book"));
       return;
     }
     if (this.props.isSelectBook) {
@@ -62,7 +62,7 @@ class AddDialog extends Component<AddDialogProps, AddDialogState> {
     }
 
     this.props.handleAddDialog(false);
-    toast.success(this.props.t("Add Successfully"));
+    toast.success(this.props.t("Addition successful"));
     this.props.handleActionDialog(false);
     this.props.handleMode("shelf");
     this.props.handleShelfIndex(shelfIndex);
@@ -95,7 +95,7 @@ class AddDialog extends Component<AddDialogProps, AddDialogState> {
     return (
       <div className="add-dialog-container">
         <div className="add-dialog-title">
-          <Trans>Add to Shelf</Trans>
+          <Trans>Add to shelf</Trans>
         </div>
         <div className="add-dialog-shelf-list-container">
           <div className="add-dialog-shelf-list-text">
@@ -112,7 +112,7 @@ class AddDialog extends Component<AddDialogProps, AddDialogState> {
         </div>
         <div className="add-dialog-new-shelf-container">
           <div className="add-dialog-new-shelf-text">
-            <Trans>New Shelf</Trans>
+            <Trans>New shelf</Trans>
           </div>
           <input
             className="add-dialog-new-shelf-box"

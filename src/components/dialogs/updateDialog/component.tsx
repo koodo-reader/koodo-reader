@@ -105,7 +105,7 @@ class UpdateInfo extends React.Component<UpdateInfoProps, UpdateInfoState> {
             >
               <div className="new-version-title">
                 {this.state.isUpdated ? (
-                  <Trans>Update Complete</Trans>
+                  <Trans>Update complete</Trans>
                 ) : (
                   <>
                     <Trans>Update to</Trans>
@@ -153,7 +153,7 @@ class UpdateInfo extends React.Component<UpdateInfoProps, UpdateInfoState> {
                 >
                   {this.state.isUpdated ? (
                     <>
-                      <Trans>Changelog</Trans>
+                      <Trans>Change log</Trans>
                     </>
                   ) : (
                     <Trans>Download</Trans>
@@ -162,7 +162,7 @@ class UpdateInfo extends React.Component<UpdateInfoProps, UpdateInfoState> {
                 {this.state.updateLog && (
                   <>
                     <p className="update-dialog-new-title">
-                      <Trans>What's New</Trans>
+                      <Trans>What's new</Trans>
                     </p>
                     <ul className="update-dialog-new-container">
                       {this.renderList(this.state.updateLog.new)}
