@@ -16,4 +16,3 @@
 - [ ] Have you checked to ensure there aren't other open [Pull Requests](../../../pulls) for the same update/change?
 - [ ] Have you linted your code locally prior to submission?
 - [ ] Have you successfully ran app with your changes locally?
-- [ ] Do you agree to our Contributor License Agreement?
