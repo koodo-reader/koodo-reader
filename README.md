@@ -57,7 +57,7 @@
 
 - Desktop Version:
   - Stable Version (Recommended): [Download](https://koodo.960960.xyz/en)
-  - Developer Version: [Download](https://github.com/koodo-reader/koodo-reader/releases/latest) ( With new feature and bug fix, but may induce some unknown bugs)
+  - Developer version: [Download](https://github.com/koodo-reader/koodo-reader/releases/latest) ( With new feature and bug fix, but may induce some unknown bugs)
 - Web Version：[Preview](https://reader.960960.xyz)
 - Install with Scoop:
 

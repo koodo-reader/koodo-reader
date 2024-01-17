@@ -48,12 +48,12 @@ class ActionDialog extends React.Component<
   handleRestoreBook = () => {
     AddTrash.clear(this.props.currentBook.key);
     this.props.handleActionDialog(false);
-    toast.success(this.props.t("Restore Successfully"));
+    toast.success(this.props.t("Restore successful"));
     this.props.handleFetchBooks();
   };
   handleLoveBook = () => {
     AddFavorite.setFavorite(this.props.currentBook.key);
-    toast.success(this.props.t("Add Successfully"));
+    toast.success(this.props.t("Addition successful"));
     this.props.handleActionDialog(false);
   };
   handleMultiSelect = () => {
@@ -69,7 +69,7 @@ class ActionDialog extends React.Component<
     ) {
       this.props.history.push("/manager/empty");
     }
-    toast.success(this.props.t("Cancel Successfully"));
+    toast.success(this.props.t("Cancellation successful"));
     this.props.handleActionDialog(false);
   };
   render() {
@@ -136,9 +136,9 @@ class ActionDialog extends React.Component<
                 {AddFavorite.getAllFavorite().indexOf(
                   this.props.currentBook.key
                 ) > -1 ? (
-                  <Trans>Remove from Favorite</Trans>
+                  <Trans>Remove from favorite</Trans>
                 ) : (
-                  <Trans>Add to Favorite</Trans>
+                  <Trans>Add to favorite</Trans>
                 )}
               </p>
             </div>
@@ -150,7 +150,7 @@ class ActionDialog extends React.Component<
             >
               <span className="icon-bookshelf-line view-icon"></span>
               <p className="action-name">
-                <Trans>Add to Shelf</Trans>
+                <Trans>Add to shelf</Trans>
               </p>
             </div>
             <div
@@ -161,7 +161,7 @@ class ActionDialog extends React.Component<
             >
               <span className="icon-select view-icon"></span>
               <p className="action-name">
-                <Trans>Multiple Select</Trans>
+                <Trans>Multiple selection</Trans>
               </p>
             </div>
             <div
@@ -229,7 +229,7 @@ class ActionDialog extends React.Component<
                     fontSize: "12px",
                   }}
                 ></span>
-                <Trans>More Actions</Trans>
+                <Trans>More actions</Trans>
               </p>
 
               <span
@@ -270,7 +270,7 @@ class ActionDialog extends React.Component<
                   true,
                   this.props.currentBook.path
                 ).then((result: any) => {
-                  toast.success(this.props.t("Export Successfully"));
+                  toast.success(this.props.t("Export successful"));
                   window.saveAs(
                     new Blob([result]),
                     this.props.currentBook.name +
@@ -280,7 +280,7 @@ class ActionDialog extends React.Component<
               }}
             >
               <p className="action-name">
-                <Trans>Export Books</Trans>
+                <Trans>Export books</Trans>
               </p>
             </div>
             <div
@@ -300,14 +300,14 @@ class ActionDialog extends React.Component<
                     ),
                     [...this.props.books, ...this.props.deletedBooks]
                   );
-                  toast.success(this.props.t("Export Successfully"));
+                  toast.success(this.props.t("Export successful"));
                 } else {
-                  toast(this.props.t("Nothing to Export"));
+                  toast(this.props.t("Nothing to export"));
                 }
               }}
             >
               <p className="action-name">
-                <Trans>Export Notes</Trans>
+                <Trans>Export notes</Trans>
               </p>
             </div>
             <div
@@ -327,14 +327,14 @@ class ActionDialog extends React.Component<
                     ),
                     [...this.props.books, ...this.props.deletedBooks]
                   );
-                  toast.success(this.props.t("Export Successfully"));
+                  toast.success(this.props.t("Export successful"));
                 } else {
-                  toast(this.props.t("Nothing to Export"));
+                  toast(this.props.t("Nothing to export"));
                 }
               }}
             >
               <p className="action-name">
-                <Trans>Export Highlights</Trans>
+                <Trans>Export highlights</Trans>
               </p>
             </div>
             <div
@@ -352,14 +352,14 @@ class ActionDialog extends React.Component<
                     ...this.props.books,
                     ...this.props.deletedBooks,
                   ]);
-                  toast.success(this.props.t("Export Successfully"));
+                  toast.success(this.props.t("Export successful"));
                 } else {
-                  toast(this.props.t("Nothing to Export"));
+                  toast(this.props.t("Nothing to export"));
                 }
               }}
             >
               <p className="action-name">
-                <Trans>Export Dictionary History</Trans>
+                <Trans>Export dictionary history</Trans>
               </p>
             </div>
             <div
@@ -370,7 +370,7 @@ class ActionDialog extends React.Component<
                   toast(this.props.t("Not supported yet"));
                   return;
                 }
-                toast(this.props.t("Precaching"));
+                toast(this.props.t("Pre-caching"));
                 BookUtil.fetchBook(
                   this.props.currentBook.key,
                   true,
@@ -388,15 +388,15 @@ class ActionDialog extends React.Component<
                       "cache-" + this.props.currentBook.key,
                       cache
                     );
-                    toast.success(this.props.t("Precaching Successfully"));
+                    toast.success(this.props.t("Pre-caching successful"));
                   } else {
-                    toast.error(this.props.t("Precaching failed"));
+                    toast.error(this.props.t("Pre-caching failed"));
                   }
                 });
               }}
             >
               <p className="action-name">
-                <Trans>Precache</Trans>
+                <Trans>Pre-cache</Trans>
               </p>
             </div>
             <div
@@ -406,11 +406,11 @@ class ActionDialog extends React.Component<
                 await BookUtil.deleteBook(
                   "cache-" + this.props.currentBook.key
                 );
-                toast.success(this.props.t("Delete Successfully"));
+                toast.success(this.props.t("Deletion successful"));
               }}
             >
               <p className="action-name">
-                <Trans>Delete Precache</Trans>
+                <Trans>Delete pre-cache</Trans>
               </p>
             </div>
           </div>

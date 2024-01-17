@@ -22,7 +22,7 @@ class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
     ).value;
     StorageUtil.setReaderConfig(`${this.props.driveName}_token`, token);
     this.props.handleTokenDialog(false);
-    toast.success(this.props.t("Add Successfully"));
+    toast.success(this.props.t("Addition successful"));
   };
   handleOneDriveComfirm = async () => {
     let code: string = (
@@ -37,7 +37,7 @@ class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
       res.data.refresh_token
     );
     this.props.handleTokenDialog(false);
-    toast.success(this.props.t("Add Successfully"));
+    toast.success(this.props.t("Addition successful"));
   };
   handleGoogleDriveComfirm = async () => {
     let code: string = (
@@ -53,7 +53,7 @@ class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
       res.data.refresh_token
     );
     this.props.handleTokenDialog(false);
-    toast.success(this.props.t("Add Successfully"));
+    toast.success(this.props.t("Addition successful"));
   };
   handleDavComfirm = () => {
     let url: string = (
@@ -74,7 +74,7 @@ class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
       JSON.stringify({ url, username, password })
     );
     this.props.handleTokenDialog(false);
-    toast.success(this.props.t("Add Successfully"));
+    toast.success(this.props.t("Addition successful"));
   };
   handleFTPComfirm = () => {
     let url: string = (
@@ -101,7 +101,7 @@ class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
       JSON.stringify({ url, username, password, dir, ssl })
     );
     this.props.handleTokenDialog(false);
-    toast.success(this.props.t("Add Successfully"));
+    toast.success(this.props.t("Addition successful"));
   };
   handleS3Comfirm = () => {
     let endpoint: string = (
@@ -132,7 +132,7 @@ class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
       })
     );
     this.props.handleTokenDialog(false);
-    toast.success(this.props.t("Add Successfully"));
+    toast.success(this.props.t("Addition successful"));
   };
   handleSFTPComfirm = () => {
     let url: string = (
@@ -159,7 +159,7 @@ class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
       JSON.stringify({ url, username, password, dir, port })
     );
     this.props.handleTokenDialog(false);
-    toast.success(this.props.t("Add Successfully"));
+    toast.success(this.props.t("Addition successful"));
   };
   handleJump = (url: string) => {
     openExternalUrl(url);
@@ -189,7 +189,7 @@ class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
               <input
                 type="text"
                 name="url"
-                placeholder={this.props.t("Server Address")}
+                placeholder={this.props.t("Server address")}
                 id="token-dialog-url-box"
                 className="token-dialog-username-box"
               />
@@ -213,14 +213,14 @@ class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
               <input
                 type="text"
                 name="url"
-                placeholder={this.props.t("Server Address")}
+                placeholder={this.props.t("Server address")}
                 id="token-dialog-url-box"
                 className="token-dialog-username-box"
               />
               <input
                 type="text"
                 name="port"
-                placeholder={this.props.t("Server Port")}
+                placeholder={this.props.t("Server port")}
                 id="token-dialog-port-box"
                 className="token-dialog-username-box"
               />
@@ -251,7 +251,7 @@ class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
               <input
                 type="text"
                 name="url"
-                placeholder={this.props.t("Server Address")}
+                placeholder={this.props.t("Server address")}
                 id="token-dialog-url-box"
                 className="token-dialog-username-box"
               />

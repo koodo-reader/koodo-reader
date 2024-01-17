@@ -68,13 +68,13 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
                   if (this.props.isSelectBook) {
                     this.props.handleSelectedBooks([]);
                   }
-                  toast.success(this.props.t("Export Successfully"));
+                  toast.success(this.props.t("Export successful"));
                 } else {
-                  toast(this.props.t("Nothing to Export"));
+                  toast(this.props.t("Nothing to export"));
                 }
               }}
             >
-              <Trans>Add to Favorite</Trans>
+              <Trans>Add to favorite</Trans>
             </span>
             <span
               className="book-manage-title"
@@ -82,7 +82,7 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
                 this.props.handleAddDialog(true);
               }}
             >
-              <Trans>Add to Shelf</Trans>
+              <Trans>Add to shelf</Trans>
             </span>
             <span
               className="book-manage-title"
@@ -103,7 +103,7 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
                   event.stopPropagation();
                 }}
               >
-                <Trans>More Actions</Trans>
+                <Trans>More actions</Trans>
               </span>
 
               <div
@@ -132,13 +132,13 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
                             this.props.selectedBooks.indexOf(item.key) > -1
                         )
                       );
-                      toast.success(this.props.t("Export Successfully"));
+                      toast.success(this.props.t("Export successful"));
                     } else {
-                      toast(this.props.t("Nothing to Export"));
+                      toast(this.props.t("Nothing to export"));
                     }
                   }}
                 >
-                  <Trans>Export Books</Trans>
+                  <Trans>Export books</Trans>
                 </span>
                 <span
                   className="book-manage-title select-book-action"
@@ -164,13 +164,13 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
                         ),
                         selectedBooks
                       );
-                      toast.success(this.props.t("Export Successfully"));
+                      toast.success(this.props.t("Export successful"));
                     } else {
-                      toast(this.props.t("Nothing to Export"));
+                      toast(this.props.t("Nothing to export"));
                     }
                   }}
                 >
-                  <Trans>Export Notes</Trans>
+                  <Trans>Export notes</Trans>
                 </span>
                 <span
                   className="book-manage-title select-book-action"
@@ -196,13 +196,13 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
                         ),
                         selectedBooks
                       );
-                      toast.success(this.props.t("Export Successfully"));
+                      toast.success(this.props.t("Export successful"));
                     } else {
-                      toast(this.props.t("Nothing to Export"));
+                      toast(this.props.t("Nothing to export"));
                     }
                   }}
                 >
-                  <Trans>Export Highlights</Trans>
+                  <Trans>Export highlights</Trans>
                 </span>
                 <span
                   className="book-manage-title select-book-action"
@@ -221,13 +221,13 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
                     );
                     if (dictHistory.length > 0) {
                       exportDictionaryHistory(dictHistory, selectedBooks);
-                      toast.success(this.props.t("Export Successfully"));
+                      toast.success(this.props.t("Export successful"));
                     } else {
-                      toast(this.props.t("Nothing to Export"));
+                      toast(this.props.t("Nothing to export"));
                     }
                   }}
                 >
-                  <Trans>Export Dictionary History</Trans>
+                  <Trans>Export dictionary history</Trans>
                 </span>
                 <span
                   className="book-manage-title select-book-action"
@@ -255,7 +255,7 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
                         if (selectedBook.format === "PDF") {
                           toast(this.props.t("Not supported yet"));
                         } else {
-                          toast(this.props.t("Precaching"));
+                          toast(this.props.t("Pre-caching"));
                         }
 
                         let result = await BookUtil.fetchBook(
@@ -272,11 +272,9 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
                         let cache = await rendition.preCache(result);
                         if (cache !== "err") {
                           BookUtil.addBook("cache-" + selectedBook.key, cache);
-                          toast.success(
-                            this.props.t("Precaching Successfully")
-                          );
+                          toast.success(this.props.t("Pre-caching successful"));
                         } else {
-                          toast.error(this.props.t("Precaching failed"));
+                          toast.error(this.props.t("Pre-caching failed"));
                         }
                       }
                     } else {
@@ -284,7 +282,7 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
                     }
                   }}
                 >
-                  <Trans>Precache</Trans>
+                  <Trans>Pre-cache</Trans>
                 </span>
                 <span
                   className="book-manage-title select-book-action"
@@ -300,11 +298,11 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
                     for (let index = 0; index < selectedBooks.length; index++) {
                       const selectedBook = selectedBooks[index];
                       await BookUtil.deleteBook("cache-" + selectedBook.key);
-                      toast.success(this.props.t("Delete Successfully"));
+                      toast.success(this.props.t("Deletion successful"));
                     }
                   }}
                 >
-                  <Trans>Delete Precache</Trans>
+                  <Trans>Delete pre-cache</Trans>
                 </span>
               </div>
             </div>
@@ -328,9 +326,9 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
             >
               {this.props.selectedBooks.length ===
               this.handleFilterShelfBook(this.props.books).length ? (
-                <Trans>Deselect All</Trans>
+                <Trans>Deselect all</Trans>
               ) : (
-                <Trans>Select All</Trans>
+                <Trans>Select all</Trans>
               )}
             </span>
           </>

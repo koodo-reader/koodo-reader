@@ -82,7 +82,7 @@ class DetailDialog extends React.Component<
             ></p>
             <p className="detail-dialog-book-size">
               <p className="detail-sub-title">
-                <Trans>File Size</Trans>
+                <Trans>File size</Trans>
               </p>
               <p className="detail-sub-content-container">
                 <p className="detail-sub-content">
@@ -103,7 +103,7 @@ class DetailDialog extends React.Component<
             ></p>
             <p className="detail-dialog-book-added">
               <p className="detail-sub-title">
-                <Trans>Added at</Trans>
+                <Trans>Added on</Trans>
               </p>
               <p className="detail-sub-content-container">
                 <p className="detail-sub-content">

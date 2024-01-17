@@ -166,7 +166,7 @@ class CardList extends React.Component<CardListProps, CardListStates> {
                   style={{ bottom: "10px" }}
                 >
                   {this.props.mode === "note" ? (
-                    <Trans>{"More Notes"}</Trans>
+                    <Trans>{"More notes"}</Trans>
                   ) : (
                     <Trans>{"Show in the book"}</Trans>
                   )}

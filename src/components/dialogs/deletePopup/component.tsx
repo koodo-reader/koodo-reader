@@ -10,7 +10,7 @@ class DeletePopup extends React.Component<DeletePopupProps> {
     //从列表删除和从图书库删除判断
     this.props.handleDeletePopup(false);
     this.props.handleDeleteOpearion();
-    toast.success(this.props.t("Delete Successfully"));
+    toast.success(this.props.t("Deletion successful"));
   };
   render() {
     return (

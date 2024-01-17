@@ -134,7 +134,7 @@ class NoteTag extends React.Component<NoteTagProps, NoteTagState> {
       >
         {this.props.isReading || this.props.isCard ? null : (
           <div className="tag-title">
-            <Trans>All Tags</Trans>
+            <Trans>All tags</Trans>
             <div
               className="note-tag-show-icon"
               style={
