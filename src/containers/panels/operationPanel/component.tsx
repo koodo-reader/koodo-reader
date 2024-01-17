@@ -134,7 +134,7 @@ class OperationPanel extends React.Component<
     this.props.handleBookmarks(bookmarkArr);
     window.localforage.setItem("bookmarks", bookmarkArr);
     this.setState({ isBookmark: true });
-    toast.success(this.props.t("Add Successfully"));
+    toast.success(this.props.t("Addition successful"));
     this.props.handleShowBookmark(true);
   };
   handleDisplayBookmark() {
@@ -160,10 +160,10 @@ class OperationPanel extends React.Component<
         <div className="book-opeartion-info">
           <span>
             <Trans
-              i18nKey="Current Reading Time"
+              i18nKey="Current reading time"
               count={Math.floor(Math.abs(Math.floor(this.props.time / 60)))}
             >
-              Current Reading Time:
+              Current reading time:
               {{
                 count: Math.abs(Math.floor(this.props.time / 60)),
               }}
@@ -173,10 +173,10 @@ class OperationPanel extends React.Component<
           &nbsp;&nbsp;&nbsp;
           <span>
             <Trans
-              i18nKey="Finish Reading Time"
+              i18nKey="Remaining reading time"
               count={Math.ceil(this.state.timeLeft / 60)}
             >
-              Finish Reading Time:
+              Remaining reading time:
               {{
                 count: `${Math.ceil(this.state.timeLeft / 60)}`,
               }}
@@ -209,7 +209,7 @@ class OperationPanel extends React.Component<
             <div style={{ display: "flex", alignItems: "center" }}>
               <span className="icon-add add-bookmark-icon"></span>
               <span className="add-bookmark-text">
-                <Trans>Add Bookmark</Trans>
+                <Trans>Bookmark</Trans>
               </span>
             </div>
           </div>
@@ -223,15 +223,9 @@ class OperationPanel extends React.Component<
           <div className="operation-button-container">
             <div style={{ display: "flex", alignItems: "center" }}>
               <span className="icon-fullscreen enter-fullscreen-icon"></span>
-              {StorageUtil.getReaderConfig("isFullscreen") !== "yes" ? (
-                <span className="enter-fullscreen-text">
-                  <Trans>Full Screen</Trans>
-                </span>
-              ) : (
-                <span className="enter-fullscreen-text">
-                  <Trans>Full Screen</Trans>
-                </span>
-              )}
+              <span className="enter-fullscreen-text">
+                <Trans>Full screen</Trans>
+              </span>
             </div>
           </div>
         </div>

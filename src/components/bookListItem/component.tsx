@@ -67,7 +67,7 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
   handleLoveBook = () => {
     AddFavorite.setFavorite(this.props.book.key);
     this.setState({ isFavorite: true });
-    toast.success(this.props.t("Add Successfully"));
+    toast.success(this.props.t("Addition successful"));
   };
   handleCancelLoveBook = () => {
     AddFavorite.clear(this.props.book.key);
@@ -78,11 +78,11 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
     ) {
       this.props.history.push("/manager/empty");
     }
-    toast.success(this.props.t("Cancel Successfully"));
+    toast.success(this.props.t("Cancellation successful"));
   };
   handleRestoreBook = () => {
     AddTrash.clear(this.props.book.key);
-    toast.success(this.props.t("Restore Successfully"));
+    toast.success(this.props.t("Restore successful"));
     this.props.handleFetchBooks();
   };
   handleJump = () => {
@@ -103,7 +103,7 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
   handleExportBook() {
     BookUtil.fetchBook(this.props.book.key, true, this.props.book.path).then(
       (result: any) => {
-        toast.success(this.props.t("Export Successfully"));
+        toast.success(this.props.t("Export successful"));
         window.saveAs(
           new Blob([result]),
           this.props.book.name +
@@ -286,7 +286,7 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
               <Trans>
                 {this.props.book.author
                   ? this.props.book.author
-                  : "Unknown Author"}
+                  : "Unknown author"}
               </Trans>
             </div>
           </p>

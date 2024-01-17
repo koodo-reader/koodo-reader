@@ -248,11 +248,11 @@ class NavigationPanel extends React.Component<
                 <Trans>
                   {this.props.currentBook.author
                     ? this.props.currentBook.author
-                    : "Unknown Author"}
+                    : "Unknown author"}
                 </Trans>
               </p>
               <span className="reading-duration">
-                <Trans>Reading Time</Trans>: {Math.floor(this.props.time / 60)}
+                <Trans>Reading time</Trans>: {Math.floor(this.props.time / 60)}
                 &nbsp; min
               </span>
               <div className="navigation-search-box">

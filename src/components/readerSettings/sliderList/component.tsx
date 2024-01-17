@@ -92,7 +92,7 @@ class SliderList extends React.Component<SliderListProps, SliderListState> {
             }
             type="number"
             step={
-              this.props.title === "Page Width" ||
+              this.props.title === "Page width" ||
               this.props.title === "Brightness"
                 ? "0.1"
                 : "1"

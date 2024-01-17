@@ -46,7 +46,7 @@ class FeedbackDialog extends Component<
       );
     }
     if (!uploadResult) {
-      toast.error(this.props.t("Error happens"));
+      toast.error(this.props.t("Error happened"));
       this.setState({ isSending: false });
       return;
     }
@@ -67,6 +67,7 @@ class FeedbackDialog extends Component<
     ).value;
     if (subject === "") {
       toast(this.props.t("Subject can't be empty"));
+      this.setState({ isSending: false });
       return;
     }
     toast(this.props.t("Sending"));
@@ -100,7 +101,7 @@ class FeedbackDialog extends Component<
 
     let res = await axios.request(config);
     if (res.data.result !== "ok") {
-      toast.error(this.props.t("Error happens"));
+      toast.error(this.props.t("Error happened"));
       this.setState({ isSending: false });
       return;
     }
@@ -143,7 +144,7 @@ class FeedbackDialog extends Component<
               }}
               style={{ color: "rgb(35, 170, 242)", cursor: "pointer" }}
             >
-              <Trans>Our Website</Trans>
+              <Trans>Our website</Trans>
             </span>
           </div>
 

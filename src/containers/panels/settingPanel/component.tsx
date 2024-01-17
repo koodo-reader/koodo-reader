@@ -46,7 +46,7 @@ class SettingPanel extends React.Component<
         ></span>
 
         <div className="setting-panel-title">
-          <Trans>Reading Option</Trans>
+          <Trans>Reading option</Trans>
         </div>
         <div className="setting-panel">
           <ModeControl />
@@ -59,7 +59,7 @@ class SettingPanel extends React.Component<
               minLabel: "13",
               maxLabel: "40",
               step: 1,
-              title: "Font Size",
+              title: "Font size",
             }}
           />
 
@@ -85,7 +85,7 @@ class SettingPanel extends React.Component<
               minLabel: "0",
               maxLabel: "20",
               step: 1,
-              title: "Letter Spacing",
+              title: "Letter spacing",
             }}
           />
 
@@ -97,7 +97,7 @@ class SettingPanel extends React.Component<
               minLabel: "0",
               maxLabel: "60",
               step: 1,
-              title: "Paragraph Spacing",
+              title: "Paragraph spacing",
             }}
           />
 
@@ -110,7 +110,7 @@ class SettingPanel extends React.Component<
                 minLabel: "0.5",
                 maxLabel: "3",
                 step: 0.1,
-                title: "Page Width",
+                title: "Page width",
               }}
             />
           ) : null}

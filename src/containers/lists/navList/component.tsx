@@ -16,7 +16,7 @@ class NavList extends React.Component<NavListProps, NavListState> {
   async handleJump(cfi: string) {
     //书签跳转
     if (!cfi) {
-      toast(this.props.t("Wrong Bookmark"));
+      toast(this.props.t("Wrong bookmark"));
       return;
     }
     let bookLocation;
@@ -120,7 +120,7 @@ class NavList extends React.Component<NavListProps, NavListState> {
               }}
               style={{ cursor: "pointer" }}
             >
-              <Trans>Go To</Trans>
+              <Trans>Go to</Trans>
             </div>
           </li>
         );

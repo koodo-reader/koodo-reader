@@ -24,7 +24,7 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
   constructor(props: PopupDictProps) {
     super(props);
     this.state = {
-      dictText: this.props.t("Please Wait"),
+      dictText: this.props.t("Please wait"),
       word: "",
       prototype: "",
       dictService: StorageUtil.getReaderConfig("dictService"),
@@ -96,7 +96,7 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
 
         if (!target.explanations) {
           this.setState({
-            dictText: this.props.t("Error happens"),
+            dictText: this.props.t("Error happened"),
           });
           return;
         }
@@ -107,7 +107,7 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
       } catch (error) {
         console.log(error);
         this.setState({
-          dictText: this.props.t("Error happens"),
+          dictText: this.props.t("Error happened"),
         });
       }
     } else if (StorageUtil.getReaderConfig("dictService") === "google_dict") {
@@ -145,7 +145,7 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
               ? window.ChineseS2T.s2t(res.data.extract)
               : window.ChineseS2T.t2s(res.data.extract)
             : res.data.extract
-        }</p><p class="wiki-learn-more">${this.props.t("Learn More")}</p>`;
+        }</p><p class="wiki-learn-more">${this.props.t("Learn more")}</p>`;
         this.setState(
           {
             dictText: html,
@@ -167,7 +167,7 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
       } catch (error) {
         console.log(error);
         this.setState({
-          dictText: this.props.t("Error happens"),
+          dictText: this.props.t("Error happened"),
         });
       }
     } else {
@@ -215,7 +215,7 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
         .catch((err) => {
           console.log(err);
           this.setState({
-            dictText: this.props.t("Error happens"),
+            dictText: this.props.t("Error happened"),
           });
         });
     }
