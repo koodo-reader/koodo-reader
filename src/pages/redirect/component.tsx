@@ -74,8 +74,8 @@ class Redirect extends React.Component<RedirectProps, RedirectState> {
             <div className="backup-page-finish-text">
               <Trans>
                 {this.state.isAuthed
-                  ? "Authorize Successfully"
-                  : "Authorize Failed"}
+                  ? "Authorisation successful"
+                  : "Authorisation failed"}
               </Trans>
             </div>
             {this.state.isAuthed ? (
@@ -89,7 +89,7 @@ class Redirect extends React.Component<RedirectProps, RedirectState> {
                 {this.state.isCopied ? (
                   <Trans>Copied</Trans>
                 ) : (
-                  <Trans>Copy Token</Trans>
+                  <Trans>Copy token</Trans>
                 )}
               </div>
             ) : null}

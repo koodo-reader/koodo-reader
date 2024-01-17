@@ -87,7 +87,7 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
       });
       window.localforage.setItem("notes", this.props.notes).then(() => {
         this.props.handleOpenMenu(false);
-        toast.success(this.props.t("Add Successfully"));
+        toast.success(this.props.t("Addition successful"));
         this.props.handleFetchNotes();
         this.props.handleMenuMode("");
         this.props.handleNoteKey("");
@@ -138,7 +138,7 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
       noteArr.push(note);
       window.localforage.setItem("notes", noteArr).then(() => {
         this.props.handleOpenMenu(false);
-        toast.success(this.props.t("Add Successfully"));
+        toast.success(this.props.t("Addition successful"));
         this.props.handleFetchNotes();
         this.props.handleMenuMode("");
         createOneNote(
@@ -170,7 +170,7 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
             );
           }
 
-          toast.success(this.props.t("Delete Successfully"));
+          toast.success(this.props.t("Deletion successful"));
           this.props.handleMenuMode("");
           this.props.handleFetchNotes();
           this.props.handleNoteKey("");

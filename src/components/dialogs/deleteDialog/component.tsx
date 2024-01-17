@@ -68,7 +68,7 @@ class DeleteDialog extends React.Component<
     }
 
     this.props.handleDeleteDialog(false);
-    toast.success(this.props.t("Delete Successfully"));
+    toast.success(this.props.t("Deletion successful"));
   };
   deleteBookFromShelf = () => {
     if (this.props.isSelectBook) {
@@ -79,7 +79,7 @@ class DeleteDialog extends React.Component<
       this.props.handleFetchBooks();
       this.props.handleSelectBook(!this.props.isSelectBook);
       this.props.handleDeleteDialog(false);
-      toast.success(this.props.t("Delete Successfully"));
+      toast.success(this.props.t("Deletion successful"));
       return;
     }
     ShelfUtil.clearShelf(this.props.shelfIndex, this.props.currentBook.key);
@@ -153,15 +153,15 @@ class DeleteDialog extends React.Component<
       <div className="delete-dialog-container">
         {this.props.mode === "shelf" && !this.state.isDeleteShelfBook ? (
           <div className="delete-dialog-title">
-            <Trans>Delete from Shelf</Trans>
+            <Trans>Delete from shelf</Trans>
           </div>
         ) : this.props.mode === "trash" ? (
           <div className="delete-dialog-title">
-            <Trans>Delete All Books</Trans>
+            <Trans>Delete all books</Trans>
           </div>
         ) : (
           <div className="delete-dialog-title">
-            <Trans>Delete This Book</Trans>
+            <Trans>Delete this book</Trans>
           </div>
         )}
         {this.props.mode === "trash" ? null : (

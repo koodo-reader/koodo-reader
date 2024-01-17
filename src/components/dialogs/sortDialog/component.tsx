@@ -61,7 +61,7 @@ class SortDialog extends React.Component<SortDialogProps, SortDialogState> {
       >
         {this.state.isNote ? (
           <ul className="sort-by-category">
-            {["Sort by Name", "Sort by Date"].map((item, index) => {
+            {["Book name", "Sort by Date"].map((item, index) => {
               return (
                 <li
                   className="sort-by-category-list"
@@ -84,12 +84,12 @@ class SortDialog extends React.Component<SortDialogProps, SortDialogState> {
         ) : (
           <ul className="sort-by-category">
             {[
-              "Sort by Recent",
-              "Sort by Name",
+              "Recently read",
+              "Book name",
               "Sort by Date",
-              "Sort by Duration",
-              "Sort by Author",
-              "Sort by Percentage",
+              "Reading duration",
+              "Author name",
+              "Reading progress",
             ].map((item, index) => {
               return (
                 <li

@@ -83,7 +83,7 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
   handleLoveBook = () => {
     AddFavorite.setFavorite(this.props.book.key);
     this.setState({ isFavorite: true });
-    toast.success(this.props.t("Add Successfully"));
+    toast.success(this.props.t("Addition successful"));
   };
   handleCancelLoveBook = () => {
     AddFavorite.clear(this.props.book.key);
@@ -94,7 +94,7 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
     ) {
       this.props.history.push("/manager/empty");
     }
-    toast.success(this.props.t("Cancel Successfully"));
+    toast.success(this.props.t("Cancellation successful"));
   };
   handleJump = () => {
     if (this.props.isSelectBook) {

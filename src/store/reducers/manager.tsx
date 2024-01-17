@@ -18,7 +18,7 @@ const initState = {
   bookSortCode: { sort: 1, order: 2 },
   noteSortCode: { sort: 2, order: 2 },
   isSelectBook: false,
-  message: "Add Successfully",
+  message: "Addition successful",
   tip: "",
   selectedBooks: [],
 };

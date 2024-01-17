@@ -25,7 +25,7 @@ class ModeControl extends React.Component<ModeControlProps, ModeControlState> {
           className="background-color-text"
           style={{ position: "relative", bottom: "15px" }}
         >
-          <Trans>View Mode</Trans>
+          <Trans>View mode</Trans>
         </div>
         <div className="single-control-container">
           <div

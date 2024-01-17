@@ -180,7 +180,7 @@ class BookList extends React.Component<BookListProps, BookListState> {
             }}
             style={this.props.isCollapsed ? { left: "calc(50% - 60px)" } : {}}
           >
-            <Trans>Delete All Books</Trans>
+            <Trans>Delete all books</Trans>
           </div>
           <ViewMode />
         </div>

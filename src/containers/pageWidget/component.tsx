@@ -113,7 +113,7 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
                   : {}
               }
             >
-              <Trans i18nKey="Book Page" count={this.state.prevPage}>
+              <Trans i18nKey="Book page" count={this.state.prevPage}>
                 Page
                 {{
                   count: this.state.prevPage,
@@ -125,7 +125,7 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
             this.state.nextPage > 0 &&
             !this.state.isSingle && (
               <p className="background-page-right">
-                <Trans i18nKey="Book Page" count={this.state.nextPage}>
+                <Trans i18nKey="Book page" count={this.state.nextPage}>
                   Page
                   {{
                     count: this.state.nextPage,

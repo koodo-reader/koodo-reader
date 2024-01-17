@@ -1,7 +1,7 @@
 export const dropdownList = [
   {
     id: 1,
-    title: "Font Family",
+    title: "Font family",
     value: "fontFamily",
     option: [
       "Built-in font",
@@ -15,19 +15,19 @@ export const dropdownList = [
   },
   {
     id: 2,
-    title: "Line Height",
+    title: "Line height",
     value: "lineHeight",
     option: ["Default", "1", "1.25", "1.5", "1.75", "2"],
   },
   {
     id: 3,
-    title: "Text Align",
+    title: "Text alignment",
     value: "textAlign",
     option: ["Default", "Left", "Justify", "Right"],
   },
   {
     id: 4,
-    title: "Chinese Conversion",
+    title: "Conversoin of Chinese",
     value: "convertChinese",
     option: [
       "Default",

@@ -149,7 +149,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     if (!result) {
       toast.error(this.props.t("Sync Failed"));
     } else {
-      toast.success(this.props.t("Sync Successfully"));
+      toast.success(this.props.t("Synchronisation successful"));
     }
   };
   handleSync = () => {
@@ -203,7 +203,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       toast.error(this.props.t("Sync Failed"));
     } else {
       syncData(result as Blob, this.props.books, true);
-      toast.success(this.props.t("Sync Successfully"));
+      toast.success(this.props.t("Synchronisation successful"));
     }
   };
 

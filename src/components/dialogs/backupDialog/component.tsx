@@ -47,7 +47,7 @@ class BackupDialog extends React.Component<
   handleFinish = () => {
     this.setState({ currentStep: 2 });
     this.props.handleLoadingDialog(false);
-    this.showMessage("Excute Successfully");
+    this.showMessage("Execute successful");
     this.props.handleFetchBooks();
   };
   handleRestoreToLocal = async (event: any) => {
@@ -187,7 +187,7 @@ class BackupDialog extends React.Component<
                   className="backup-page-list-title"
                   onClick={() => {
                     StorageUtil.setReaderConfig(item.icon + "_token", "");
-                    this.showMessage("Unauthorize Successfully");
+                    this.showMessage("Unauthorize successful");
                   }}
                   style={{ color: "rgb(0, 120, 212)" }}
                 >
@@ -312,8 +312,8 @@ class BackupDialog extends React.Component<
               <div className="backup-page-finish-text">
                 <Trans>
                   {this.state.isBackup === "yes"
-                    ? "Backup Successfully"
-                    : "Restore Successfully"}
+                    ? "Backup successful"
+                    : "Restore successful"}
                 </Trans>
               </div>
               {this.state.isBackup ? null : (
@@ -349,7 +349,7 @@ class BackupDialog extends React.Component<
               this.setState({ currentStep: 0 });
             }}
           >
-            <Trans>Last Step</Trans>
+            <Trans>Last step</Trans>
           </div>
         ) : this.state.currentStep === 0 ? (
           <div
@@ -359,7 +359,7 @@ class BackupDialog extends React.Component<
             }}
             style={this.state.isBackup ? {} : { display: "none" }}
           >
-            <Trans>Next Step</Trans>
+            <Trans>Next step</Trans>
           </div>
         ) : null}
       </div>

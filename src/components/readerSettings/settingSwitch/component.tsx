@@ -42,7 +42,7 @@ class SettingSwitch extends React.Component<
         stateName,
         this.state[stateName] ? "yes" : "no"
       );
-      toast(this.props.t("Change Successfully"));
+      toast(this.props.t("Change successful"));
       setTimeout(async () => {
         await this.props.renderBookFunc();
       }, 500);
@@ -56,7 +56,7 @@ class SettingSwitch extends React.Component<
       this.state[stateName] ? "no" : "yes"
     );
 
-    toast(this.props.t("Change Successfully"));
+    toast(this.props.t("Change successful"));
     setTimeout(() => {
       this._handleRest();
     }, 500);

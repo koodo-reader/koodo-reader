@@ -227,7 +227,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         bookLocation.chapterTitle ||
         (this.props.htmlBook && this.props.htmlBook.flattenChapters[0]
           ? this.props.htmlBook.flattenChapters[0].label
-          : "Unknown Chapter");
+          : "Unknown chapter");
       let chapterDocIndex = 0;
       if (bookLocation.chapterDocIndex) {
         chapterDocIndex = parseInt(bookLocation.chapterDocIndex);

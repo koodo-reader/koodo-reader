@@ -36,9 +36,9 @@ export const bingTranslate = async (text: string, from: string, to: string) => {
     if (transRes.status === 200) {
       return transRes.data[0].translations[0].text;
     } else {
-      return "Error happens";
+      return "Error happened";
     }
   } else {
-    return "Error happens";
+    return "Error happened";
   }
 };

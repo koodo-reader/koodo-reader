@@ -92,7 +92,7 @@ export const settingList = [
   {
     isElectron: false,
     title: "Auto precache books after import",
-    desc: "Precache books after import to increase opening speed, Koodo will generate a precache version of the original book and save it into your library",
+    desc: "Pre-cache books after import to increase opening speed, Koodo will generate a precache version of the original book and save it into your library",
     propName: "isPrecacheBook",
   },
   {
@@ -157,17 +157,17 @@ export const searchList = [
 ];
 export const skinList = [
   { label: "Follow OS", value: "system" },
-  { label: "Light Mode", value: "light" },
-  { label: "Night Mode", value: "night" },
+  { label: "Light mode", value: "light" },
+  { label: "Night mode", value: "night" },
 ];
 
 export const readerSettingList = [
   {
-    title: "Sliding Animation",
+    title: "Sliding animation",
     propName: "isSliding",
   },
   {
-    title: "Text Indent",
+    title: "Text indentation",
     propName: "isIndent",
   },
   {
@@ -179,11 +179,11 @@ export const readerSettingList = [
     propName: "isItalic",
   },
   {
-    title: "Text underline",
+    title: "Underline",
     propName: "isUnderline",
   },
   {
-    title: "Text shadow",
+    title: "Shadow",
     propName: "isShadow",
   },
   {
@@ -191,7 +191,7 @@ export const readerSettingList = [
     propName: "isInvert",
   },
   {
-    title: "Turn On Bionic Reading",
+    title: "Turn on bionic reading",
     propName: "isBionic",
   },
   {
@@ -203,15 +203,15 @@ export const readerSettingList = [
     propName: "isHideHeader",
   },
   {
-    title: "Hide Mimical Background",
+    title: "Hide mimical background",
     propName: "isHideBackground",
   },
   {
-    title: "Hide Navigation Button",
+    title: "Hide navigation button",
     propName: "isHidePageButton",
   },
   {
-    title: "Hide Menu Button",
+    title: "Hide menu button",
     propName: "isHideMenuButton",
   },
 ];

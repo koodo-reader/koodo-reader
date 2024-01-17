@@ -50,7 +50,7 @@ html_file="file_list.html"
 echo "<html><body><table>" > $html_file
 
 # 添加表头
-echo "<tr><th>File Name</th><th>File Size</th><th>Last Modified</th></tr>" >> $html_file
+echo "<tr><th>File Name</th><th>File size</th><th>Last Modified</th></tr>" >> $html_file
 
 # 遍历文件列表
 echo "$file_list" | while read line; do
@@ -78,7 +78,7 @@ html_file="file_list.html"
 echo "<html><body><table>" > $html_file
 
 # 添加表头
-echo "<tr><th style='text-align:left'>File Name</th><th style='width:100px;text-align:left'>File Size</th><th style='width:100px;text-align:left'>Last Modified</th></tr>" >> $html_file
+echo "<tr><th style='text-align:left'>File Name</th><th style='width:100px;text-align:left'>File size</th><th style='width:100px;text-align:left'>Last Modified</th></tr>" >> $html_file
 
 # 遍历文件列表
 echo "$file_list" | while read line; do
