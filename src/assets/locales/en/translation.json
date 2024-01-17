@@ -397,5 +397,6 @@
   "File size is larger than 20MB": "File size is larger than 20MB",
   "Learn More": "Learn More",
   "Format": "Format",
-  "Duplicate Book in Trash Bin": "Duplicate Book in Trash Bin"
+  "Duplicate Book in Trash Bin": "Duplicate Book in Trash Bin",
+  "Subject can't be empty": "Subject can't be empty"
 }

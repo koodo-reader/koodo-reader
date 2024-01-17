@@ -37,7 +37,7 @@ class FeedbackDialog extends Component<
 
   handleComfirm = async () => {
     this.setState({ isSending: true });
-    toast(this.props.t("Sending"));
+
     let uploadResult = true;
     if (this.state.fileContent && this.state.uploadUrl) {
       uploadResult = await uploadFile(
@@ -65,7 +65,11 @@ class FeedbackDialog extends Component<
         "#feedback-dialog-email-box"
       ) as HTMLTextAreaElement
     ).value;
-
+    if (subject === "") {
+      toast(this.props.t("Subject can't be empty"));
+      return;
+    }
+    toast(this.props.t("Sending"));
     let version = packageInfo.version;
     const os = window.require("os");
     const system = os.platform() + " " + os.version();
