@@ -34,7 +34,6 @@
     "qs": "^6.11.2",
     "react-hot-toast": "^2.1.1",
     "ssh2-sftp-client": "^9.1.0",
-    "uuid": "^9.0.1",
     "webdav": "^3.6.2",
     "wink-lemmatizer": "^3.0.4",
     "ws": "^8.13.0",
