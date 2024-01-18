@@ -36,7 +36,7 @@
 
 - Format support:
   - EPUB (**.epub**)
-  - PDF (**.pdf\***)
+  - PDF (**.pdf**)
   - DRM-free Mobipocket (**.mobi**) and Kindle (**.azw3**, **.azw**)
   - Plain text (**.txt**)
   - FictionBook (**.fb2**)
