@@ -29,13 +29,13 @@
   margin-left: 5px;
 }
 .dict-word-type,
-.wiki-learn-more {
+.dict-learn-more {
   font-weight: bold;
   color: #2084e8;
   margin-bottom: 5px;
   margin-top: 5px;
 }
-.wiki-learn-more {
+.dict-learn-more {
   cursor: pointer;
 }
 .dict-text-box {
@@ -120,13 +120,19 @@
   font-weight: bold;
 }
 .audio-player {
-  width: 90px;
+  width: 100px;
   height: 30px;
   margin-right: 10px;
 }
 .audio-label {
   display: inline-block;
   font-weight: bold;
+  position: relative;
+  bottom: 9px;
+  margin-right: 5px;
+}
+.audio-note {
+  display: inline-block;
   position: relative;
   bottom: 9px;
   margin-right: 5px;
@@ -153,4 +159,13 @@
 
 .audio-player::-webkit-media-controls-volume-slider-container {
   display: none !important;
+}
+.audio-container {
+  display: inline-block;
+  width: 50px;
+  height: 30px;
+  overflow: hidden;
+  border-radius: 15px;
+  margin-right: 10px;
+  margin-top: 5px;
 }

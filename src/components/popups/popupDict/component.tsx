@@ -18,7 +18,7 @@ import { wikiList } from "../../../constants/dictList";
 import { googleTranslate } from "../../../utils/serviceUtils/googleTransUtil";
 import { getBingDict } from "../../../utils/serviceUtils/bingDictUtil";
 import { openExternalUrl } from "../../../utils/serviceUtils/urlUtil";
-
+import lemmatize from "wink-lemmatizer";
 declare var window: any;
 class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
   constructor(props: PopupDictProps) {
@@ -40,7 +40,6 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
       .replace(/-/gm, "");
     this.setState({ word: originalText });
     let prototype = "";
-    var lemmatize = window.require("wink-lemmatizer");
     prototype = lemmatize.verb(originalText);
     prototype = lemmatize.noun(prototype);
     prototype = lemmatize.adjective(prototype);
@@ -69,7 +68,10 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
             item.region ? item.region : ""
           }</span> [${item.symbol}]`;
         })
-        .join(", ") +
+        .join(" ") +
+      res.audios.map((item) => {
+        return `<br/><div class="audio-container"><audio controls class="audio-player" controlsList="nodownload noplaybackrate"><source src="${item.url}" type="audio/mpeg"></audio></div></p>`;
+      }) +
       `<p class="dict-word-type">[${this.props.t("Explanations")}]</p>` +
       res.explanations
         .map((item) => {
@@ -85,8 +87,16 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
         })
         .join(", ") +
       `<p class="dict-word-type">[${this.props.t("Sentence")}]</p><ul>` +
-      res.sentence.map((item) => `<li>${item.source}</li>`).join("") +
-      "</ul>"
+      res.sentence
+        .map(
+          (item) =>
+            `<li>${item.source}${
+              item.translation ? " " + item.translation : ""
+            }</li>`
+        )
+        .join("") +
+      "</ul>" +
+      `<p class="dict-learn-more">${this.props.t("Learn more")}</p>`
     );
   };
   handleDict = async (text: string) => {
@@ -101,9 +111,19 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
           return;
         }
         let dictText = this.handleDictText(target);
-        this.setState({
-          dictText: dictText,
-        });
+        this.setState(
+          {
+            dictText: dictText,
+          },
+          () => {
+            let moreElement = document.querySelector(".dict-learn-more");
+            if (moreElement) {
+              moreElement.addEventListener("click", () => {
+                openExternalUrl("https://www.bing.com/dict/search?q=" + text);
+              });
+            }
+          }
+        );
       } catch (error) {
         console.log(error);
         this.setState({
@@ -115,9 +135,21 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
         .then((res) => {
           if (res.explanations) {
             let dictText = this.handleDictText(res);
-            this.setState({
-              dictText: dictText,
-            });
+            this.setState(
+              {
+                dictText: dictText,
+              },
+              () => {
+                let moreElement = document.querySelector(".dict-learn-more");
+                if (moreElement) {
+                  moreElement.addEventListener("click", () => {
+                    openExternalUrl(
+                      "https://www.google.com/search?q=define+" + text
+                    );
+                  });
+                }
+              }
+            );
           } else {
             this.setState({
               dictText: `<p>${res}</p>`,
@@ -145,13 +177,13 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
               ? window.ChineseS2T.s2t(res.data.extract)
               : window.ChineseS2T.t2s(res.data.extract)
             : res.data.extract
-        }</p><p class="wiki-learn-more">${this.props.t("Learn more")}</p>`;
+        }</p><p class="dict-learn-more">${this.props.t("Learn more")}</p>`;
         this.setState(
           {
             dictText: html,
           },
           () => {
-            let moreElement = document.querySelector(".wiki-learn-more");
+            let moreElement = document.querySelector(".dict-learn-more");
             if (moreElement) {
               moreElement.addEventListener("click", () => {
                 openExternalUrl(
@@ -187,12 +219,13 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
                   `<span class='audio-label'>${
                     item.audio.includes("uk") ? "UK" : "US"
                   } </span>` +
-                  `<span class='audio-label'>${
+                  `<span class='audio-note'>${
                     item.text ? item.text : ""
                   } </span>` +
-                  `<audio controls class="audio-player"><source src="${item.audio}" type="audio/mpeg"></audio>`
+                  `<div class="audio-container"><audio controls class="audio-player" controlsList="nodownload noplaybackrate"><source src="${item.audio}" type="audio/mpeg"></audio></div>`
                 );
-              }) +
+              })
+              .join("") +
             res.data[0].meanings
               .map((item) => {
                 return `<p><p class="dict-word-type">[${
@@ -207,10 +240,21 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
                   })
                   .join("</div><div>")}</div></p>`;
               })
-              .join("");
-          this.setState({
-            dictText: dictText,
-          });
+              .join("") +
+            `<p class="dict-learn-more">${this.props.t("Learn more")}</p>`;
+          this.setState(
+            {
+              dictText: dictText,
+            },
+            () => {
+              let moreElement = document.querySelector(".dict-learn-more");
+              if (moreElement) {
+                moreElement.addEventListener("click", () => {
+                  openExternalUrl(res.data[0].sourceUrls[0]);
+                });
+              }
+            }
+          );
         })
         .catch((err) => {
           console.log(err);

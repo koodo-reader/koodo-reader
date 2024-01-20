@@ -21,19 +21,17 @@ export async function googleTranslate(text: string, from: string, to: string) {
   );
 
   let result = res.data;
-  // 词典模式
   if (result[1]) {
     let target: any = {
       pronunciations: [],
       explanations: [],
       associations: [],
       sentence: [],
+      audios: [],
     };
-    // 发音
     if (result[0][1][3]) {
       target.pronunciations.push({ symbol: result[0][1][3], voice: "" });
     }
-    // 释义
     for (let i of result[1]) {
       target.explanations.push({
         trait: i[0],
@@ -42,7 +40,6 @@ export async function googleTranslate(text: string, from: string, to: string) {
         }),
       });
     }
-    // 例句
     if (result[13]) {
       for (let i of result[13][0]) {
         target.sentence.push({ source: i[0] });
@@ -50,7 +47,6 @@ export async function googleTranslate(text: string, from: string, to: string) {
     }
     return target;
   } else {
-    // 翻译模式
     let target = "";
     for (let r of result[0]) {
       if (r[0]) {
