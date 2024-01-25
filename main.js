@@ -253,7 +253,6 @@ const createMainWin = () => {
         resolve(true);
       });
     }
-
     try {
       return await downloadFile();
     } catch (err) {
