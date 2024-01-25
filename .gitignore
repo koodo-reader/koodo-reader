@@ -29,3 +29,4 @@ yarn-debug.log*
 yarn-error.log*
 config.js*
 rewrite.sh
+bfg.jar
