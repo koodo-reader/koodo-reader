@@ -248,7 +248,7 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
             }
             alt=""
             onClick={() => {
-              this.handleJump("https://koodo.960960.xyz");
+              this.handleJump("https://koodoreader.com");
             }}
             style={this.state.isCollapsed ? { display: "none" } : {}}
             className="logo"

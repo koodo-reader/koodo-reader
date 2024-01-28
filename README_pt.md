@@ -17,7 +17,7 @@
 </h3>
 <div align="center">
 
-[Baixar](https://koodo.960960.xyz/en) | [Pré-visualizar](https://reader.960960.xyz) | [Roadmap](https://koodo.960960.xyz/en/roadmap) | [Documento](https://koodo.960960.xyz/en/document)
+[Baixar](https://koodoreader.com/en) | [Pré-visualizar](https://web.koodoreader.com) | [Roadmap](https://koodoreader.com/en/roadmap) | [Documento](https://koodoreader.com/en/document)
 
 </div>
 
@@ -57,9 +57,9 @@
 ## Instalação
 
 - Versão para computador:
-  - Versão estável (Recomendada): [Baixar](https://koodo.960960.xyz/en)
+  - Versão estável (Recomendada): [Baixar](https://koodoreader.com/en)
   - Versão do desenvolvedor: [Baixar](https://github.com/koodo-reader/koodo-reader/releases/latest) ( Com novos recursos e correção de bugs, mas podendo ainda conter alguns problemas desconhecidos)
-- Versão para Web：[Pré-visualizar](https://reader.960960.xyz)
+- Versão para Web：[Pré-visualizar](https://web.koodoreader.com)
 - Instalar com o Scoop:
 
 ```shell

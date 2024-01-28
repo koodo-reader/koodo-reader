@@ -1,8 +1,8 @@
 blank_issues_enabled: false
 contact_links:
   - name: Bug Report
-    url: https://koodo.960960.xyz/en/support
+    url: https://koodoreader.com/en/support
     about: Things don't work as intended
   - name: 提交 Bug
-    url: https://koodo.960960.xyz/zh/support
+    url: https://koodoreader.com/zh/support
     about: 我在使用 Koodo Reader 时遇到了Bug

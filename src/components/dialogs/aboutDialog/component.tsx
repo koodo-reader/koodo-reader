@@ -58,9 +58,9 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
                   StorageUtil.getReaderConfig("lang") === "zhTW" ||
                   StorageUtil.getReaderConfig("lang") === "zhMO"
                 ) {
-                  this.handleJump("https://koodo.960960.xyz/zh/document");
+                  this.handleJump("https://koodoreader.com/zh/document");
                 } else {
-                  this.handleJump("https://koodo.960960.xyz/en/document");
+                  this.handleJump("https://koodoreader.com/en/document");
                 }
               }}
             >
@@ -69,7 +69,7 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
             <li
               className="sort-by-category-list"
               onClick={async () => {
-                this.handleJump(`https://koodo.960960.xyz/en/support`);
+                this.handleJump(`https://koodoreader.com/en/support`);
               }}
             >
               <Trans>Feedback</Trans>
@@ -82,9 +82,9 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
                   StorageUtil.getReaderConfig("lang") === "zhTW" ||
                   StorageUtil.getReaderConfig("lang") === "zhMO"
                 ) {
-                  this.handleJump("https://koodo.960960.xyz/zh/roadmap");
+                  this.handleJump("https://koodoreader.com/zh/roadmap");
                 } else {
-                  this.handleJump("https://koodo.960960.xyz/en/roadmap");
+                  this.handleJump("https://koodoreader.com/en/roadmap");
                 }
               }}
             >
@@ -93,7 +93,7 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
             <li
               className="sort-by-category-list"
               onClick={() => {
-                this.handleJump("https://koodo.960960.xyz");
+                this.handleJump("https://koodoreader.com");
               }}
             >
               <Trans>Our website</Trans>
@@ -133,7 +133,7 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
               <li
                 className="sort-by-category-list"
                 onClick={() => {
-                  this.handleJump("https://koodo.960960.xyz/en");
+                  this.handleJump("https://koodoreader.com/en");
                 }}
                 style={{ color: "rgb(35, 170, 242)" }}
               >

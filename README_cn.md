@@ -18,7 +18,7 @@
 
 <div align="center">
 
-[下载客户端](https://koodo.960960.xyz/zh) | [在线预览](https://reader.960960.xyz) | [开发计划](https://koodo.960960.xyz/zh/roadmap) | [帮助文档](https://koodo.960960.xyz/zh/document)
+[下载客户端](https://koodoreader.com/zh) | [在线预览](https://web.koodoreader.com) | [开发计划](https://koodoreader.com/zh/roadmap) | [帮助文档](https://koodoreader.com/zh/document)
 
 </div>
 
@@ -58,9 +58,9 @@
 ## 使用方法
 
 - 桌面端：
-  - 稳定版 (推荐下载)：[官网](https://koodo.960960.xyz/zh)（感谢 [@Stille](https://www.ioiox.com/donate.html) 提供下载加速服务）
+  - 稳定版 (推荐下载)：[官网](https://koodoreader.com/zh)（感谢 [@Stille](https://www.ioiox.com/donate.html) 提供下载加速服务）
   - 开发版：[GitHub Release](https://github.com/koodo-reader/koodo-reader/releases/latest) （包含新功能和 bug 修复，但也可能引入更多未知 bug）
-- 网页版：[前往](https://reader.960960.xyz)
+- 网页版：[前往](https://web.koodoreader.com)
 - 使用 Scoop 安装：
 
 ```shell
