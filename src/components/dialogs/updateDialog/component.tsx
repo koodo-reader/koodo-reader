@@ -145,8 +145,8 @@ class UpdateInfo extends React.Component<UpdateInfoProps, UpdateInfoState> {
                   onClick={() => {
                     openExternalUrl(
                       this.state.isUpdated
-                        ? "https://koodo.960960.xyz/en/log"
-                        : "https://koodo.960960.xyz/en"
+                        ? "https://koodoreader.com/en/log"
+                        : "https://koodoreader.com/en"
                     );
                   }}
                   style={this.state.isUpdated ? { marginTop: "10px" } : {}}

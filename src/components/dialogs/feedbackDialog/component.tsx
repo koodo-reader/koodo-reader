@@ -140,7 +140,7 @@ class FeedbackDialog extends Component<
             &nbsp;
             <span
               onClick={() => {
-                this.handleJump(`https://koodo.960960.xyz/en/support`);
+                this.handleJump(`https://koodoreader.com/en/support`);
               }}
               style={{ color: "rgb(35, 170, 242)", cursor: "pointer" }}
             >
