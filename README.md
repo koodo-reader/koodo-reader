@@ -17,7 +17,7 @@
 </h3>
 <div align="center">
 
-[Download](https://koodo.960960.xyz/en) | [Preview](https://reader.960960.xyz) | [Roadmap](https://koodo.960960.xyz/en/roadmap) | [Document](https://koodo.960960.xyz/en/document)
+[Download](https://koodoreader.com/en) | [Preview](https://web.koodoreader.com) | [Roadmap](https://koodoreader.com/en/roadmap) | [Document](https://koodoreader.com/en/document)
 
 </div>
 
@@ -56,9 +56,9 @@
 ## Installation
 
 - Desktop Version:
-  - Stable Version (Recommended): [Download](https://koodo.960960.xyz/en)
+  - Stable Version (Recommended): [Download](https://koodoreader.com/en)
   - Developer version: [Download](https://github.com/koodo-reader/koodo-reader/releases/latest) ( With new feature and bug fix, but may induce some unknown bugs)
-- Web Version：[Preview](https://reader.960960.xyz)
+- Web Version：[Preview](https://web.koodoreader.com)
 - Install with Scoop:
 
 ```shell
