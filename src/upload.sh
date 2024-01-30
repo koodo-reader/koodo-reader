@@ -34,7 +34,7 @@ mv b2-linux b2
 chmod +x ./b2
 ./b2 authorize-account $B2_ACCOUNT_ID $B2_APPLICATION_KEY
 
-wget https://dl.960960.xyz/rclone
+wget https://dl.koodoreader.com/rclone
 chmod +x ./rclone
 ./rclone config create r2 s3 provider "Cloudflare" env_auth "false" access_key_id $R2_ACCOUNT_ID secret_access_key $R2_APPLICATION_KEY region "auto" endpoint $R2_ENDPOINT
 
