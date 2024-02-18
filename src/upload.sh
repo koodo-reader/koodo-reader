@@ -97,4 +97,5 @@ echo "</table></body></html>" >> $html_file
 ./b2 upload-file $BUCKET file_list.html $TAG.html
 mv file_list.html $TAG.html
 ./rclone copy $TAG.html r2:$BUCKET
+./rclone copy $TAG.html r2:$BUCKET/latest.html
 

@@ -3,9 +3,17 @@ description: 我希望 Koodo Reader 增加这个功能
 labels: "feature request"
 body:
   - type: checkboxes
-    id: testing1
+    id: testing0
     attributes:
       label: 我已经搜索了 Issue 列表，没有找到类似的需求
+      options:
+        - label: "Yes"
+          required: true
+
+  - type: checkboxes
+    id: testing1
+    attributes:
+      label: 我已经试用最新开发版，同样没找到这个功能
       options:
         - label: "Yes"
           required: true
