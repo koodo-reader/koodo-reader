@@ -32,6 +32,6 @@ body:
     id: translation
     attributes:
       label: Translation snippets or file
-      placeholder: You can paste the translation snippets or upload the translation json file here
+      placeholder: You can paste the translation snippets or drag and drop the translation json file here
     validations:
       required: true

@@ -47,7 +47,7 @@
   - FB2 (**.fb2**)
   - 超文本 (**.html**, **.xml**, **.xhtml**, **.mhtml**, **.htm**, **.htm**)
 - 支持 **Windows**，**macOS**，**Linux** 和 **网页版**
-- 备份数据到 **OneDrive**, **Google Drive**, **Dropbox**, **FTP**, **SFTP**, **WebDAV**, **S3**, **S3 compatible**
+- 备份数据到 **OneDrive**, **Google Drive**, **Dropbox**, **FTP**, **SFTP**, **WebDAV**, **S3**, **S3 Compatible**
 - 自定义源文件夹，利用 OneDrive、百度网盘、iCloud、Dropbox 等进行多设备同步
 - 双页模式，单页模式，滚动模式
 - 听书功能，翻译功能，词典功能，触控屏支持，批量导入图书
@@ -58,7 +58,7 @@
 ## 使用方法
 
 - 桌面端：
-  - 稳定版 (推荐下载)：[官网](https://koodoreader.com/zh)（感谢 [@Stille](https://www.ioiox.com/donate.html) 提供下载加速服务）
+  - 稳定版 (推荐下载)：[官网](https://koodoreader.com/zh)
   - 开发版：[GitHub Release](https://github.com/koodo-reader/koodo-reader/releases/latest) （包含新功能和 bug 修复，但也可能引入更多未知 bug）
 - 网页版：[前往](https://web.koodoreader.com)
 - 使用 Scoop 安装：

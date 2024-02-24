@@ -32,7 +32,7 @@ class styleUtil {
   }
   // 获取为文档默认应用的css样式
   static getDefaultCss() {
-    return `::selection{background:#f3a6a68c}::-moz-selection{background:#f3a6a68c}.kookit-note:hover{cursor:pointer;}img{max-width:100% !important}.kookit-text{${this.getCustomCss()}}`;
+    return `::selection{background:#f3a6a68c}::-moz-selection{background:#f3a6a68c}.kookit-note:hover{cursor:pointer;}img{max-width:100% !important}.kookit-text{${this.getCustomCss()}}code,pre{white-space: pre-wrap;}`;
   }
   static getCustomCss() {
     return `font-size: ${
@@ -78,7 +78,7 @@ class styleUtil {
         : ""
     };margin-bottom: ${
       StorageUtil.getReaderConfig("paraSpacing") || 0
-    }px !important;padding:0px !important;word-wrap: break-word;white-space: pre-wrap;`;
+    }px !important;padding:0px !important;word-wrap: break-word;`;
   }
   static addStyle = (url: string) => {
     const style = document.createElement("link");
