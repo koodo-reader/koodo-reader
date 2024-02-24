@@ -1,6 +1,7 @@
 import { openExternalUrl } from "../serviceUtils/urlUtil";
 
 export const handleLinkJump = async (event: any, rendition: any = {}) => {
+  console.log("gdfdgfdg");
   let href;
   if (event.target) {
     href =
@@ -9,8 +10,14 @@ export const handleLinkJump = async (event: any, rendition: any = {}) => {
         event.target.innerText) ||
       event.target.getAttribute("href") ||
       event.target.getAttribute("src") ||
+      (event.target.parentNode &&
+        ((event.target.parentNode.getAttribute &&
+          event.target.parentNode.getAttribute("href")) ||
+          (event.target.parentNode.getAttribute &&
+            event.target.parentNode.getAttribute("src")))) ||
       "";
   }
+  console.log(href, "sfsdf");
   if (href && href.indexOf("#") > -1) {
     let pageArea = document.getElementById("page-area");
     if (!pageArea) return;
@@ -20,6 +27,7 @@ export const handleLinkJump = async (event: any, rendition: any = {}) => {
     if (!doc) {
       return;
     }
+    console.log(href, "href");
     if (href.indexOf("#") !== 0) {
       let chapterInfo = rendition.resolveChapter(href.split("#")[0]);
       await rendition.goToChapter(

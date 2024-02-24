@@ -13,6 +13,10 @@ import Viewer from "../../containers/htmlViewer";
 import RecordLocation from "../../utils/readUtils/recordLocation";
 import "./index.css";
 declare var window: any;
+
+let lock = false; //prevent from clicking too fasts
+let throttleTime =
+  StorageUtil.getReaderConfig("isSliding") === "yes" ? 1000 : 200;
 class Reader extends React.Component<ReaderProps, ReaderState> {
   messageTimer!: NodeJS.Timeout;
   tickTimer!: NodeJS.Timeout;
@@ -156,8 +160,11 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
             <div
               className="previous-chapter-single-container"
               onClick={async () => {
+                if (lock) return;
+                lock = true;
                 await this.props.htmlBook.rendition.prev();
                 this.handleLocation();
+                setTimeout(() => (lock = false), throttleTime);
               }}
             >
               <span className="icon-dropdown previous-chapter-single"></span>
@@ -165,8 +172,11 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
             <div
               className="next-chapter-single-container"
               onClick={async () => {
+                if (lock) return;
+                lock = true;
                 await this.props.htmlBook.rendition.next();
                 this.handleLocation();
+                setTimeout(() => (lock = false), throttleTime);
               }}
             >
               <span className="icon-dropdown next-chapter-single"></span>

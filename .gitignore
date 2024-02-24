@@ -30,3 +30,4 @@ yarn-error.log*
 config.js*
 rewrite.sh
 bfg.jar
+kookit.js

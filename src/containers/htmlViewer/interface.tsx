@@ -36,6 +36,7 @@ export interface ViewerState {
   key: string;
   scale: string;
   isFirst: boolean;
+  isTouch: boolean;
   chapterTitle: string;
   isDisablePopup: boolean;
   margin: number;
