@@ -161,27 +161,29 @@ class BookUtil {
       toast.error(t("Book not exist"));
       return;
     }
-    if (StorageUtil.getReaderConfig("isOpenInMain") === "yes") {
-      history.push(
-        BookUtil.getBookUrl(book) + `?title=${book.name}&file=${book.key}`
-      );
-      return;
-    }
     let ref = book.format.toLowerCase();
 
     if (isElectron) {
-      const { ipcRenderer } = window.require("electron");
-      ipcRenderer.invoke("open-book", {
-        url: `${window.location.href.split("#")[0]}#/${ref}/${book.key}?title=${
-          book.name
-        }&file=${book.key}`,
-        isMergeWord:
-          book.format === "PDF"
-            ? "no"
-            : StorageUtil.getReaderConfig("isMergeWord"),
-        isFullscreen: StorageUtil.getReaderConfig("isAutoFullscreen"),
-        isPreventSleep: StorageUtil.getReaderConfig("isPreventSleep"),
-      });
+      if (StorageUtil.getReaderConfig("isOpenInMain") === "yes") {
+        window.require("electron").ipcRenderer.invoke("new-tab", {
+          url: `${window.location.href.split("#")[0]}#/${ref}/${
+            book.key
+          }?title=${book.name}&file=${book.key}`,
+        });
+      } else {
+        const { ipcRenderer } = window.require("electron");
+        ipcRenderer.invoke("open-book", {
+          url: `${window.location.href.split("#")[0]}#/${ref}/${
+            book.key
+          }?title=${book.name}&file=${book.key}`,
+          isMergeWord:
+            book.format === "PDF"
+              ? "no"
+              : StorageUtil.getReaderConfig("isMergeWord"),
+          isAutoFullscreen: StorageUtil.getReaderConfig("isAutoFullscreen"),
+          isPreventSleep: StorageUtil.getReaderConfig("isPreventSleep"),
+        });
+      }
     } else {
       window.open(
         `${window.location.href.split("#")[0]}#/${ref}/${book.key}?title=${
@@ -226,12 +228,15 @@ class BookUtil {
   static reloadBooks() {
     if (isElectron) {
       if (StorageUtil.getReaderConfig("isOpenInMain") === "yes") {
-        window.require("electron").ipcRenderer.invoke("reload-main", "ping");
+        window.require("electron").ipcRenderer.invoke("reload-tab", "ping");
       } else {
         window.require("electron").ipcRenderer.invoke("reload-reader", "ping");
       }
     } else {
-      window.location.reload();
+      if (StorageUtil.getReaderConfig("isFullscreen") === "yes") {
+      } else {
+        window.location.reload();
+      }
     }
   }
   static getRendtion = (

@@ -1,7 +1,6 @@
 import { openExternalUrl } from "../serviceUtils/urlUtil";
 
 export const handleLinkJump = async (event: any, rendition: any = {}) => {
-  console.log("gdfdgfdg");
   let href;
   if (event.target) {
     href =
@@ -17,7 +16,6 @@ export const handleLinkJump = async (event: any, rendition: any = {}) => {
             event.target.parentNode.getAttribute("src")))) ||
       "";
   }
-  console.log(href, "sfsdf");
   if (href && href.indexOf("#") > -1) {
     let pageArea = document.getElementById("page-area");
     if (!pageArea) return;
@@ -27,7 +25,6 @@ export const handleLinkJump = async (event: any, rendition: any = {}) => {
     if (!doc) {
       return;
     }
-    console.log(href, "href");
     if (href.indexOf("#") !== 0) {
       let chapterInfo = rendition.resolveChapter(href.split("#")[0]);
       await rendition.goToChapter(
@@ -37,7 +34,6 @@ export const handleLinkJump = async (event: any, rendition: any = {}) => {
       );
     }
     let id = href.split("#").reverse()[0];
-    console.log(doc.body.querySelector("#" + id));
     await rendition.goToNode(doc.body.querySelector("#" + id) || doc.body);
   } else if (href && rendition.resolveChapter(href)) {
     let chapterInfo = rendition.resolveChapter(href);

@@ -81,9 +81,9 @@ class ImageViewer extends React.Component<ImageViewerProps, ImageViewerStates> {
     this.setState({ zoomIndex: this.state.zoomIndex + 1 }, () => {
       if (this.state.imageRatio === "horizontal") {
         image.style.width = `${60 + this.state.zoomIndex * 10}vw`;
+        image.style.marginTop = `${10 * this.state.zoomIndex}vh`;
       } else {
         image.style.height = `${100 + 10 * this.state.zoomIndex}vh`;
-        image.style.marginTop = `${10 * this.state.zoomIndex}vh`;
       }
     });
   };

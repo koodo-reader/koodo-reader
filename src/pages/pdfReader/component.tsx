@@ -25,6 +25,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       rect: null,
       loading: true,
       isDisablePopup: StorageUtil.getReaderConfig("isDisablePopup") === "yes",
+      isTouch: StorageUtil.getReaderConfig("isTouch") === "yes",
     };
   }
   UNSAFE_componentWillMount() {
@@ -83,10 +84,14 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         // iWin.getSelection() && showHighlight(getHightlightCoords());
       });
       doc.addEventListener("contextmenu", (event) => {
-        if (!this.state.isDisablePopup) return;
+        if (document.location.href.indexOf("localhost") === -1) {
+          event.preventDefault();
+        }
+
+        if (!this.state.isDisablePopup && !this.state.isTouch) return;
         if (!doc!.getSelection() || doc!.getSelection().rangeCount === 0)
           return;
-        event.preventDefault();
+
         var rect = doc!.getSelection()!.getRangeAt(0).getBoundingClientRect();
         this.setState({
           rect,

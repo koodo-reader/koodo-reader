@@ -12,6 +12,7 @@ import toast from "react-hot-toast";
 import { HtmlMouseEvent } from "../../../utils/serviceUtils/mouseEvent";
 import storageUtil from "../../../utils/serviceUtils/storageUtil";
 import BingTTSUtil from "../../../utils/serviceUtils/bingTTSUtil";
+import { isElectron } from "react-device-detect";
 declare var document: any;
 declare var window: any;
 class OperationPanel extends React.Component<
@@ -78,9 +79,12 @@ class OperationPanel extends React.Component<
       this.props.handleHtmlBook(null);
     }
     setTimeout(() => {
-      if (StorageUtil.getReaderConfig("isOpenInMain") === "yes") {
-        this.props.history.push("/manager/home");
-        document.title = "Koodo Reader";
+      if (isElectron) {
+        if (StorageUtil.getReaderConfig("isOpenInMain") === "yes") {
+          window.require("electron").ipcRenderer.invoke("exit-tab", "ping");
+        } else {
+          window.close();
+        }
       } else {
         window.close();
       }
@@ -88,21 +92,53 @@ class OperationPanel extends React.Component<
   }
   //控制进入全屏
   handleFullScreen() {
-    let de: any = document.documentElement;
-    if (de.requestFullscreen) {
-      de.requestFullscreen();
+    if (isElectron) {
+      if (StorageUtil.getReaderConfig("isOpenInMain") === "yes") {
+        window
+          .require("electron")
+          .ipcRenderer.invoke("enter-tab-fullscreen", "ping");
+      } else {
+        window
+          .require("electron")
+          .ipcRenderer.invoke("enter-fullscreen", "ping");
+      }
+    } else {
+      let de: any = document.documentElement;
+      if (de.requestFullscreen) {
+        de.requestFullscreen();
+      }
     }
+
     StorageUtil.setReaderConfig("isFullscreen", "yes");
+    if (StorageUtil.getReaderConfig("isOpenInMain") === "yes" && isElectron) {
+      window.require("electron").ipcRenderer.invoke("adjust-tab-size", "ping");
+    }
   }
   // 退出全屏模式
   handleExitFullScreen() {
-    //解决使用esc退出全屏，再退出阅读时发生的bug
-    if (!document.fullscreenElement) return;
+    if (isElectron) {
+      if (StorageUtil.getReaderConfig("isOpenInMain") === "yes") {
+        window
+          .require("electron")
+          .ipcRenderer.invoke("exit-tab-fullscreen", "ping");
+      } else {
+        window
+          .require("electron")
+          .ipcRenderer.invoke("exit-fullscreen", "ping");
+      }
+    } else {
+      //解决使用esc退出全屏，再退出阅读时发生的bug
+      if (!document.fullscreenElement) return;
 
-    if (document.exitFullscreen) {
-      document.exitFullscreen();
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      }
     }
+
     StorageUtil.setReaderConfig("isFullscreen", "no");
+    if (StorageUtil.getReaderConfig("isOpenInMain") === "yes" && isElectron) {
+      window.require("electron").ipcRenderer.invoke("adjust-tab-size", "ping");
+    }
   }
   handleAddBookmark = () => {
     let bookKey = this.props.currentBook.key;
