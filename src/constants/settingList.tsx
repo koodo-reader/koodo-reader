@@ -84,7 +84,7 @@ export const settingList = [
     propName: "isLemmatizeWord",
   },
   {
-    isElectron: false,
+    isElectron: true,
     title: "Open books in the main window",
     desc: "Book won't be opened in a separate window but directly opened in the main window",
     propName: "isOpenInMain",

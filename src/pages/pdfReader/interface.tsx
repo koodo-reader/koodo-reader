@@ -23,6 +23,7 @@ export interface ViewerState {
   title: string;
   cfiRange: any;
   contents: any;
+  isTouch: boolean;
   rect: any;
   loading: boolean;
   isDisablePopup: boolean;

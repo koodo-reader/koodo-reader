@@ -61,11 +61,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     this.props.handleRenderBookFunc(this.handleRenderBook);
 
     window.addEventListener("resize", () => {
-      if (StorageUtil.getReaderConfig("isFullscreen") === "yes") {
-        this.handleRenderBook();
-      } else {
-        BookUtil.reloadBooks();
-      }
+      BookUtil.reloadBooks();
     });
   }
   handlePageWidth = () => {
@@ -318,7 +314,10 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       this.setState({ rect });
     });
     doc.addEventListener("contextmenu", (event) => {
-      event.preventDefault();
+      if (document.location.href.indexOf("localhost") === -1) {
+        event.preventDefault();
+      }
+
       if (!this.state.isDisablePopup && !this.state.isTouch) return;
 
       if (!doc!.getSelection() || doc!.getSelection()!.rangeCount === 0) return;

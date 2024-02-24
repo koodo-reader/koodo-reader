@@ -1,6 +1,7 @@
 const {
   app,
   BrowserWindow,
+  BrowserView,
   Menu,
   ipcMain,
   dialog,
@@ -16,6 +17,7 @@ const configDir = app.getPath("userData");
 const { ra } = require("./edge-tts");
 const dirPath = path.join(configDir, "uploads");
 let mainWin;
+let mainView
 const singleInstance = app.requestSingleInstanceLock();
 var filePath = null;
 if (process.platform != "darwin" && process.argv.length >= 2) {
@@ -69,12 +71,12 @@ const createMainWin = () => {
     mainWin = null;
   });
   ipcMain.handle("open-book", (event, config) => {
-    let { url, isMergeWord, isFullscreen, isPreventSleep } = config;
+    let { url, isMergeWord, isAutoFullscreen, isPreventSleep } = config;
     options.webPreferences.nodeIntegrationInSubFrames = true;
     store.set({
       url,
       isMergeWord: isMergeWord ? isMergeWord : "no",
-      isFullscreen: isFullscreen ? isFullscreen : "no",
+      isAutoFullscreen: isAutoFullscreen ? isAutoFullscreen : "no",
       isPreventSleep: isPreventSleep ? isPreventSleep : "no",
     });
     let id;
@@ -83,7 +85,7 @@ const createMainWin = () => {
       console.log(powerSaveBlocker.isStarted(id));
     }
 
-    if (isFullscreen === "yes") {
+    if (isAutoFullscreen === "yes") {
       readerWindow = new BrowserWindow(options);
       readerWindow.loadURL(url);
       readerWindow.maximize();
@@ -478,6 +480,44 @@ const createMainWin = () => {
   ipcMain.handle("create-new-main", (event, arg) => {
     if (!mainWin) {
       createMainWin();
+    }
+  });
+  ipcMain.handle("new-tab", (event, config) => {
+    if (mainWin) {
+      mainView = new BrowserView(options)
+      mainWin.setBrowserView(mainView)
+      let [width, height] = mainWin.getSize()
+      mainView.setBounds({ x: 0, y: 0, width: width, height: height })
+      console.log(config.url);
+      mainView.webContents.loadURL(config.url)
+    }
+  });
+  ipcMain.handle("reload-tab", (event, config) => {
+    if (mainWin && mainView) {
+      mainView.webContents.reload()
+    }
+  });
+  ipcMain.handle("adjust-tab-size", (event, config) => {
+    if (mainWin && mainView) {
+      let [width, height] = mainWin.getSize()
+      mainView.setBounds({ x: 0, y: 0, width: width, height: height })
+    }
+  });
+  ipcMain.handle("exit-tab", (event, message) => {
+    if (mainWin && mainView) {
+      mainWin.setBrowserView(null)
+    }
+  });
+  ipcMain.handle("enter-tab-fullscreen", () => {
+    if (mainWin && mainView) {
+      mainWin.setFullScreen(true);
+      console.log("enter full");
+    }
+  });
+  ipcMain.handle("exit-tab-fullscreen", () => {
+    if (mainWin && mainView) {
+      mainWin.setFullScreen(false);
+      console.log("exit full");
     }
   });
   ipcMain.handle("enter-fullscreen", () => {
