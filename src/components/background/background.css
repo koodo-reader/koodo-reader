@@ -53,6 +53,7 @@
   z-index: 10;
   position: absolute;
   left: calc(50% - 68px);
+  opacity: 0.125;
 }
 
 .spine-shadow-right {
@@ -64,6 +65,7 @@
   box-sizing: border-box;
   position: absolute;
   right: calc(50% - 68px);
+  opacity: 0.125;
 }
 .single-background {
   width: 60vw;

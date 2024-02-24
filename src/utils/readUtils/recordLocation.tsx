@@ -62,7 +62,12 @@ class RecordLocation {
   static getPDFLocation(fingerprint: string) {
     let json = localStorage.getItem("pdfjs.history");
     let arr = JSON.parse(json || "{}").files || [];
-    return arr[window._.findLastIndex(arr, { fingerprint })] || {};
+    let index = window._.findLastIndex(arr, { fingerprint });
+    if (index > -1) {
+      return arr[index] || {};
+    } else {
+      return {};
+    }
   }
   static recordPDFLocation(fingerprint: string, obj: object) {
     let json = localStorage.getItem("pdfjs.history");

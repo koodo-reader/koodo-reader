@@ -20,6 +20,10 @@
   bottom: 30px;
   font-size: 25px;
   z-index: 6;
+  background-color: black;
+  opacity: 0.3;
+  padding: 10px;
+  border-radius: 20px;
 }
 .zoom-in-icon,
 .zoom-out-icon,

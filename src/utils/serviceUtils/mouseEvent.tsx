@@ -26,14 +26,17 @@ const arrowKeys = async (
   event: any,
   readerMode: string
 ) => {
-  if (document.querySelector(".editor-box")) {
+  if (
+    event.target.tagName.toLowerCase() === "textarea" ||
+    event.target.tagName.toLowerCase() === "input"
+  ) {
     return;
   }
   if (readerMode === "scroll" && (keyCode === 38 || keyCode === 40)) {
   } else if (keyCode === 37 || keyCode === 38) {
     event.preventDefault();
     await rendition.prev();
-  } else if (keyCode === 39 || keyCode === 40) {
+  } else if (keyCode === 32 || keyCode === 39 || keyCode === 40) {
     event.preventDefault();
     await rendition.next();
   }

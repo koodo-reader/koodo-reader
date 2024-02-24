@@ -38,7 +38,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           .chapterTitle || "",
       readerMode: StorageUtil.getReaderConfig("readerMode") || "double",
       isDisablePopup: StorageUtil.getReaderConfig("isDisablePopup") === "yes",
-
+      isTouch: StorageUtil.getReaderConfig("isTouch") === "yes",
       margin: parseInt(StorageUtil.getReaderConfig("margin")) || 0,
       chapterDocIndex: parseInt(
         RecordLocation.getHtmlLocation(this.props.currentBook.key)
@@ -318,8 +318,9 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       this.setState({ rect });
     });
     doc.addEventListener("contextmenu", (event) => {
-      if (!this.state.isDisablePopup) return;
       event.preventDefault();
+      if (!this.state.isDisablePopup && !this.state.isTouch) return;
+
       if (!doc!.getSelection() || doc!.getSelection()!.rangeCount === 0) return;
       var rect = doc!.getSelection()!.getRangeAt(0).getBoundingClientRect();
       this.setState({ rect });

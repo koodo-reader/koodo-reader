@@ -173,14 +173,16 @@ class SortUtil {
       //使书摘从晚到早排序
       let noteArr = window._.clone(notes).reverse();
       let nameArr = window._.uniq(
-        notes.map(
-          (item) =>
-            books[
-              window._.findLastIndex(books, {
-                key: item.bookKey,
-              })
-            ].name
-        )
+        notes.map((item) => {
+          let bookIndex = window._.findLastIndex(books, {
+            key: item.bookKey,
+          });
+          if (bookIndex > -1) {
+            return books[bookIndex].name;
+          } else {
+            return "";
+          }
+        })
       );
       if (noteSortCode.order === 1) {
         nameArr.sort();
@@ -194,14 +196,10 @@ class SortUtil {
       });
       noteArr.forEach((note) => {
         nameArr.forEach((name) => {
-          if (
-            name ===
-            books[
-              window._.findLastIndex(books, {
-                key: note.bookKey,
-              })
-            ].name
-          ) {
+          let bookIndex = window._.findLastIndex(books, {
+            key: note.bookKey,
+          });
+          if (bookIndex > -1 && name === books[bookIndex].name) {
             noteObj[name].push(note);
           }
         });
