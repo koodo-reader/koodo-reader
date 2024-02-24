@@ -105,7 +105,7 @@ class FeedbackDialog extends Component<
       this.setState({ isSending: false });
       return;
     }
-    toast.success(this.props.t("Send successfully"));
+    toast.success(this.props.t("Sending successful"));
     this.props.handleFeedbackDialog(false);
   };
   handleJump = (url: string) => {
@@ -161,9 +161,7 @@ class FeedbackDialog extends Component<
               &nbsp;
               <span
                 onClick={() => {
-                  this.handleJump(
-                    `https://github.com/koodo-reader/koodo-reader/releases/latest`
-                  );
+                  this.handleJump(`https://dl.koodoreader.com/latest.html`);
                 }}
                 style={{ color: "rgb(35, 170, 242)", cursor: "pointer" }}
               >

@@ -28,8 +28,8 @@ export const handleLinkJump = async (event: any, rendition: any = {}) => {
         chapterInfo.label
       );
     }
-
     let id = href.split("#").reverse()[0];
+    console.log(doc.body.querySelector("#" + id));
     await rendition.goToNode(doc.body.querySelector("#" + id) || doc.body);
   } else if (href && rendition.resolveChapter(href)) {
     let chapterInfo = rendition.resolveChapter(href);
