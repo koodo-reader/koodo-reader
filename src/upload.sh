@@ -52,7 +52,7 @@ echo "$file_list" | while read line; do
     last_modified=$(echo $line | awk '{print $2}')
 
     # 添加到HTML文件
-    echo "<tr><td><a href="./$file_name">$(echo "$file_name" | sed 's/.*\///')</a></td><td style='width:100px'>$(($((file_size)) / 1024 / 1024)) MB</td><td style='width:100px'>$last_modified</td></tr>" >> $html_file
+    echo "<tr><td><a href="./$TAG/$file_name">$(echo "$file_name" | sed 's/.*\///')</a></td><td style='width:100px'>$(($((file_size)) / 1024 / 1024)) MB</td><td style='width:100px'>$last_modified</td></tr>" >> $html_file
 done
 
 # 结束HTML文件
