@@ -71,7 +71,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         event.preventDefault();
         await handleLinkJump(event);
       });
-
       doc.document.addEventListener("mouseup", (event) => {
         if (this.state.isDisablePopup) return;
         if (!doc!.getSelection() || doc!.getSelection().rangeCount === 0)

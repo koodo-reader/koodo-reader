@@ -27,27 +27,22 @@ class NavList extends React.Component<NavListProps, NavListState> {
         cfi: cfi,
       };
     }
-    //compatile with lower version(1.5.1)
-    if (bookLocation.cfi) {
-      await this.props.htmlBook.rendition.goToChapter(
-        bookLocation.chapterDocIndex,
-        bookLocation.chapterHref,
-        bookLocation.chapterTitle
-      );
-    } else {
-      await this.props.htmlBook.rendition.goToPosition(
-        JSON.stringify({
-          text: bookLocation.text,
-          chapterTitle: bookLocation.chapterTitle,
-          chapterDocIndex: bookLocation.chapterDocIndex,
-          chapterHref: bookLocation.chapterHref,
-          count: bookLocation.count,
-          percentage: bookLocation.percentage,
-          cfi: bookLocation.cfi,
-          page: bookLocation.page,
-        })
-      );
-    }
+
+    await this.props.htmlBook.rendition.goToPosition(
+      JSON.stringify({
+        text: bookLocation.text,
+        chapterTitle: bookLocation.chapterTitle,
+        chapterDocIndex: bookLocation.chapterDocIndex,
+        chapterHref: bookLocation.chapterHref,
+        count: bookLocation.hasOwnProperty("cfi")
+          ? "ignore"
+          : bookLocation.count,
+        percentage: bookLocation.percentage,
+        cfi: bookLocation.cfi,
+        page: bookLocation.page,
+      })
+    );
+
     this.handleDisplayBookmark();
   }
   handleDisplayBookmark() {

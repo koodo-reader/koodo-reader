@@ -63,19 +63,17 @@ class SettingPanel extends React.Component<
             }}
           />
 
-          {this.state.readerMode && this.state.readerMode === "double" && (
-            <SliderList
-              {...{
-                maxValue: 80,
-                minValue: 0,
-                mode: "margin",
-                minLabel: "0",
-                maxLabel: "80",
-                step: 5,
-                title: "Margin",
-              }}
-            />
-          )}
+          <SliderList
+            {...{
+              maxValue: 80,
+              minValue: 0,
+              mode: "margin",
+              minLabel: "0",
+              maxLabel: "80",
+              step: 5,
+              title: "Margin",
+            }}
+          />
 
           <SliderList
             {...{
