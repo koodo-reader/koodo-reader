@@ -317,6 +317,7 @@ class SettingDialog extends React.Component<
                       ? "active-color theme-setting-item"
                       : "theme-setting-item"
                   }
+                  key={item.name}
                   onClick={() => {
                     this.handleTheme(item.name, index);
                   }}

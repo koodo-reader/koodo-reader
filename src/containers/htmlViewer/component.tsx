@@ -178,22 +178,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       cfi: string;
       page: string;
     } = RecordLocation.getHtmlLocation(this.props.currentBook.key);
-    //compatile wiht lower version(1.5.1)
-    if (bookLocation.cfi) {
-      await rendition.goToChapter(
-        bookLocation.chapterDocIndex,
-        bookLocation.chapterHref,
-        bookLocation.chapterTitle
-      );
-      let pageArea = document.getElementById("page-area");
-      if (!pageArea) return;
-      let iframe = pageArea.getElementsByTagName("iframe")[0];
-      if (!iframe) return;
-      let doc: any = iframe.contentDocument;
-      if (!doc) {
-        return;
-      }
-    } else if (chapterDocs.length > 0) {
+    if (chapterDocs.length > 0) {
       await rendition.goToPosition(
         JSON.stringify({
           text: bookLocation.text || "",
@@ -201,7 +186,9 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           page: bookLocation.page || "",
           chapterDocIndex: bookLocation.chapterDocIndex || 0,
           chapterHref: bookLocation.chapterHref || chapterDocs[0].href,
-          count: bookLocation.count || 0,
+          count: bookLocation.hasOwnProperty("cfi")
+            ? "ignore"
+            : bookLocation.count || 0,
           percentage: bookLocation.percentage,
           cfi: bookLocation.cfi,
           isFirst: true,

@@ -70,6 +70,12 @@ const createMainWin = () => {
   mainWin.on("close", () => {
     mainWin = null;
   });
+  mainWin.on("resize", () => {
+    if (mainView) {
+      let [width, height] = mainWin.getSize()
+      mainView.setBounds({ x: 0, y: 0, width: width, height: height })
+    }
+  });
   ipcMain.handle("open-book", (event, config) => {
     let { url, isMergeWord, isAutoFullscreen, isPreventSleep } = config;
     options.webPreferences.nodeIntegrationInSubFrames = true;

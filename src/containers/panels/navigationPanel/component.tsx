@@ -70,32 +70,25 @@ class NavigationPanel extends React.Component<
             key={index}
             onClick={async () => {
               let bookLocation = JSON.parse(item.cfi) || {};
-              //compatile with lower version(1.5.1)
-              if (bookLocation.cfi) {
-                await this.props.htmlBook.rendition.goToChapter(
-                  bookLocation.chapterDocIndex,
-                  bookLocation.chapterHref,
-                  bookLocation.chapterTitle
-                );
-              } else {
-                await this.props.htmlBook.rendition.goToPosition(
-                  JSON.stringify({
-                    text: bookLocation.text,
-                    chapterTitle: bookLocation.chapterTitle,
-                    chapterDocIndex: bookLocation.chapterDocIndex,
-                    chapterHref: bookLocation.chapterHref,
-                    count: bookLocation.count,
-                    percentage: bookLocation.percentage,
-                    cfi: bookLocation.cfi,
-                    page: bookLocation.page,
-                  })
-                );
-                let style = "background: #f3a6a68c";
-                this.props.htmlBook.rendition.highlightNode(
-                  bookLocation.text,
-                  style
-                );
-              }
+              await this.props.htmlBook.rendition.goToPosition(
+                JSON.stringify({
+                  text: bookLocation.text,
+                  chapterTitle: bookLocation.chapterTitle,
+                  chapterDocIndex: bookLocation.chapterDocIndex,
+                  chapterHref: bookLocation.chapterHref,
+                  count: bookLocation.hasOwnProperty("cfi")
+                    ? "ignore"
+                    : bookLocation.count,
+                  percentage: bookLocation.percentage,
+                  cfi: bookLocation.cfi,
+                  page: bookLocation.page,
+                })
+              );
+              let style = "background: #f3a6a68c";
+              this.props.htmlBook.rendition.highlightNode(
+                bookLocation.text,
+                style
+              );
             }}
           >
             {Parser(DOMPurify.sanitize(item.excerpt))}

@@ -110,9 +110,6 @@ class OperationPanel extends React.Component<
     }
 
     StorageUtil.setReaderConfig("isFullscreen", "yes");
-    if (StorageUtil.getReaderConfig("isOpenInMain") === "yes" && isElectron) {
-      window.require("electron").ipcRenderer.invoke("adjust-tab-size", "ping");
-    }
   }
   // 退出全屏模式
   handleExitFullScreen() {
@@ -136,9 +133,6 @@ class OperationPanel extends React.Component<
     }
 
     StorageUtil.setReaderConfig("isFullscreen", "no");
-    if (StorageUtil.getReaderConfig("isOpenInMain") === "yes" && isElectron) {
-      window.require("electron").ipcRenderer.invoke("adjust-tab-size", "ping");
-    }
   }
   handleAddBookmark = () => {
     let bookKey = this.props.currentBook.key;

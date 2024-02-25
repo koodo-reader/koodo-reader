@@ -60,5 +60,5 @@ echo "</table></body></html>" >> $html_file
 
 mv file_list.html $TAG.html
 ./rclone copy $TAG.html r2:$BUCKET
-./rclone copy $TAG.html r2:$BUCKET/latest.html
+./rclone copyto $TAG.html r2:$BUCKET/latest.html
 

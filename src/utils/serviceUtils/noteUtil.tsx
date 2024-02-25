@@ -110,7 +110,7 @@ export const showNoteHighlight = (
   let sel = doc!.getSelection();
   if (!sel) return;
   let newRange = sel.getRangeAt(0);
-  var safeRanges = getSafeRanges(newRange);
+  var safeRanges: Range[] = getSafeRanges(newRange);
   for (var i = 0; i < safeRanges.length; i++) {
     highlightRange(safeRanges[i], colorCode, noteKey, handleNoteClick, doc);
   }
@@ -140,6 +140,14 @@ async function highlightRange(
 ) {
   const rects = range.getClientRects();
   for (let index = 0; index < rects.length; index++) {
+    // fix repeated highlight
+    if (
+      range.startContainer.nodeType === 1 &&
+      range.endContainer.nodeType === 1 &&
+      index === 0
+    ) {
+      continue;
+    }
     const rect = rects[index];
     var newNode = document.createElement("span");
     newNode?.setAttribute(
