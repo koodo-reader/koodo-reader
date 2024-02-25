@@ -291,7 +291,6 @@ const createMainWin = () => {
         });
       });
     }
-
     try {
       return await uploadFile();
     } catch (err) {
