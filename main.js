@@ -37,7 +37,6 @@ let options = {
     enableRemoteModule: true,
   },
 };
-
 // Single Instance Lock
 if (!singleInstance) {
   app.quit();
