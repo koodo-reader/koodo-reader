@@ -3,9 +3,17 @@ description: What feature do you think is missing in Koodo Reader
 labels: "feature request"
 body:
   - type: checkboxes
-    id: testing1
+    id: testing0
     attributes:
       label: I've searched the issue list, there is no similar features.
+      options:
+        - label: "Yes"
+          required: true
+
+  - type: checkboxes
+    id: testing1
+    attributes:
+      label: I've installed the latest developer version, still can't find this feature.
       options:
         - label: "Yes"
           required: true
