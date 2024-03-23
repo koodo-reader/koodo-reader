@@ -1,10 +1,6 @@
 name: Build/release
 
-on:
-  push:
-    branches: [master]
-    tags:
-      - "v*"
+on: workflow_dispatch
 
 jobs:
   release:
