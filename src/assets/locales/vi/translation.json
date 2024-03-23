@@ -372,7 +372,7 @@
   "This action will delete all the notes, bookmarks and digests of this book": "Hành động này sẽ xóa tất cả ghi chú, dấu trang và thông báo tóm tắt của sách này",
   "More formats supported": "Hỗ trợ nhiều định dạng hơn",
   "Koodo Reader's web version are limited by the browser, for more powerful features, please download the desktop version.": "Phiên bản web của Koodo Reader bị giới hạn bởi trình duyệt, để có thêm các tính năng mạnh mẽ hơn, vui lòng tải xuống phiên bản dành cho máy tính để bàn.",
-  "No popup when selecting texts": "No popup when selecting texts",
+  "No popup when selecting texts": "Không hiển thị cửa sổ bật lên sau khi chọn văn bản",
   "Turn it on when you want Koodo to work with other third-party translation service, right clicking on the selected text will trigger popup again": "Bật nó lên khi bạn muốn Koodo làm việc với dịch vụ dịch thuật của bên thứ ba, nhấp chuột phải vào văn bản đã chọn sẽ kích hoạt lại cửa sổ bật lên",
   "Disable trash bin": "Vô hiệu hóa thùng rác",
   "When deleting books, they will be deleted permanently instead of sending to trash bin": "Khi xóa, sách sẽ bị xóa vĩnh viễn thay vì bị đưa vào thùng rác",
