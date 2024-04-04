@@ -21,7 +21,7 @@ body:
   - type: checkboxes
     id: testing2
     attributes:
-      label: If you have more than one feature, please open multiple issues to report respectively.
+      label: If you have more than one feature, please open multiple issues.
       options:
         - label: "Yes"
           required: true

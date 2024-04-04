@@ -10,6 +10,7 @@ class SliderList extends React.Component<SliderListProps, SliderListState> {
     this.state = {
       isTyping: false,
       inputValue: "",
+      isEntered: false,
       value:
         this.props.mode === "fontSize"
           ? StorageUtil.getReaderConfig("fontSize") || "17"
@@ -97,20 +98,37 @@ class SliderList extends React.Component<SliderListProps, SliderListState> {
                 ? "0.1"
                 : "1"
             }
+            onInput={(event: any) => {
+              let fieldVal = event.target.value;
+              this.setState({ inputValue: fieldVal });
+            }}
             onChange={(event) => {
               let fieldVal = event.target.value;
-              if (!fieldVal) return;
               this.setState({ inputValue: fieldVal });
             }}
             onFocus={() => {
               this.setState({ isTyping: true });
             }}
             onBlur={(event) => {
-              let fieldVal = event.target.value;
-              if (!fieldVal) return;
-              this.onValueChange(event);
-              this.setState({ isTyping: false });
-              this.handleRest();
+              if (!this.state.isEntered) {
+                let fieldVal = event.target.value;
+                if (!fieldVal) return;
+                this.onValueChange(event);
+                this.setState({ isTyping: false });
+                this.handleRest();
+              } else {
+                this.setState({ isEntered: false });
+              }
+            }}
+            onKeyDown={(event: any) => {
+              if (event.key === "Enter") {
+                this.setState({ isEntered: true });
+                let fieldVal = event.target.value;
+                if (!fieldVal) return;
+                this.onValueChange(event);
+                this.setState({ isTyping: false });
+                this.handleRest();
+              }
             }}
           />
           <span style={{ marginLeft: "10px" }}>{this.state.value}</span>

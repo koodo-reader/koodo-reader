@@ -22,7 +22,7 @@ import TipDialog from "../../components/dialogs/TipDialog";
 import { Toaster } from "react-hot-toast";
 import DetailDialog from "../../components/dialogs/detailDialog";
 import FeedbackDialog from "../../components/dialogs/feedbackDialog";
-
+import { Tooltip } from "react-tooltip";
 class Manager extends React.Component<ManagerProps, ManagerState> {
   timer!: NodeJS.Timeout;
   constructor(props: ManagerProps) {
@@ -118,6 +118,7 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
           ).style.zIndex = "50";
         }}
       >
+        <Tooltip id="my-tooltip" style={{ zIndex: 25 }} />
         {!this.props.dragItem && (
           <div
             className="drag-background"

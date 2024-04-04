@@ -1,5 +1,4 @@
 import React from "react";
-import PageWidget from "../../containers/pageWidget";
 import SettingPanel from "../../containers/panels/settingPanel";
 import NavigationPanel from "../../containers/panels/navigationPanel";
 import OperationPanel from "../../containers/panels/operationPanel";
@@ -9,7 +8,7 @@ import { ReaderProps, ReaderState } from "./interface";
 import StorageUtil from "../../utils/serviceUtils/storageUtil";
 import ReadingTime from "../../utils/readUtils/readingTime";
 import Viewer from "../../containers/htmlViewer";
-
+import { Tooltip } from "react-tooltip";
 import RecordLocation from "../../utils/readUtils/recordLocation";
 import "./index.css";
 declare var window: any;
@@ -155,6 +154,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
     };
     return (
       <div className="viewer">
+        <Tooltip id="my-tooltip" style={{ zIndex: 25 }} />
         {StorageUtil.getReaderConfig("isHidePageButton") !== "yes" && (
           <>
             <div
@@ -290,7 +290,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         >
           <span className="icon-grid panel-icon"></span>
         </div>
-        {this.props.currentBook.key && <Viewer {...renditionProps} />}
+
         <div
           className="setting-panel-container"
           onMouseLeave={(event) => {
@@ -353,7 +353,8 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
             <OperationPanel {...{ time: this.state.time }} />
           )}
         </div>
-        <PageWidget />
+
+        {this.props.currentBook.key && <Viewer {...renditionProps} />}
       </div>
     );
   }

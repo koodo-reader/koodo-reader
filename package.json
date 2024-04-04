@@ -33,6 +33,7 @@
     "iconv-lite": "^0.6.3",
     "qs": "^6.11.2",
     "react-hot-toast": "^2.1.1",
+    "react-tooltip": "^5.26.3",
     "ssh2-sftp-client": "^9.1.0",
     "webdav": "^3.6.2",
     "wink-lemmatizer": "^3.0.4",

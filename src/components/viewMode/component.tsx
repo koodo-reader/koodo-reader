@@ -2,7 +2,6 @@ import React from "react";
 import "./viewMode.css";
 import { ViewModeProps, ViewModeState } from "./interface";
 import StorageUtil from "../../utils/serviceUtils/storageUtil";
-
 import { viewMode } from "../../constants/viewMode";
 
 class ViewMode extends React.Component<ViewModeProps, ViewModeState> {
@@ -50,7 +49,12 @@ class ViewMode extends React.Component<ViewModeProps, ViewModeState> {
             style={this.props.viewMode !== item.mode ? { opacity: 0.5 } : {}}
             key={item.mode}
           >
-            <span className={`icon-${item.icon}`}></span>
+            <span
+              data-tooltip-id="my-tooltip"
+              data-tooltip-content={this.props.t(item.name)}
+            >
+              <span className={`icon-${item.icon}`}></span>
+            </span>
           </div>
         ))}
       </div>

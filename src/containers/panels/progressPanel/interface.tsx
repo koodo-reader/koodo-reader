@@ -17,4 +17,5 @@ export interface ProgressPanelState {
   targetChapterIndex: number | string;
   targetPage: number | string;
   isSingle: boolean;
+  isEntered: boolean;
 }

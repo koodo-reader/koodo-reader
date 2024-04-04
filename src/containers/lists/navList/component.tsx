@@ -12,6 +12,11 @@ class NavList extends React.Component<NavListProps, NavListState> {
       deleteIndex: -1,
     };
   }
+  componentDidMount(): void {
+    this.props.htmlBook.rendition.on("rendered", () => {
+      this.handleDisplayBookmark();
+    });
+  }
   //跳转到图书的指定位置
   async handleJump(cfi: string) {
     //书签跳转
@@ -42,8 +47,6 @@ class NavList extends React.Component<NavListProps, NavListState> {
         page: bookLocation.page,
       })
     );
-
-    this.handleDisplayBookmark();
   }
   handleDisplayBookmark() {
     this.props.handleShowBookmark(false);

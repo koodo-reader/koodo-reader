@@ -2,6 +2,9 @@ import React from "react";
 import "./contentList.css";
 import { ContentListProps, ContentListState } from "./interface";
 import StorageUtil from "../../../utils/serviceUtils/storageUtil";
+import RecordLocation from "../../../utils/readUtils/recordLocation";
+import { scrollContents } from "../../../utils/commonUtil";
+
 declare var window: any;
 class ContentList extends React.Component<ContentListProps, ContentListState> {
   constructor(props: ContentListProps) {
@@ -15,10 +18,33 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
     this.handleJump = this.handleJump.bind(this);
   }
   componentDidMount() {
-    this.props.htmlBook &&
-      this.setState({
-        chapters: this.props.htmlBook.chapters,
-      });
+    if (this.props.htmlBook) {
+      this.setState(
+        {
+          chapters: this.props.htmlBook.chapters,
+        },
+        () => {
+          let bookLocation: {
+            text: string;
+            count: string;
+            chapterTitle: string;
+            chapterDocIndex: string;
+            chapterHref: string;
+          } = RecordLocation.getHtmlLocation(this.props.currentBook.key);
+
+          let chapter =
+            bookLocation.chapterTitle ||
+            (this.props.htmlBook && this.props.htmlBook.flattenChapters[0]
+              ? this.props.htmlBook.flattenChapters[0].label
+              : "Unknown chapter");
+          scrollContents(
+            chapter,
+            bookLocation.chapterHref,
+            this.props.htmlBook.flattenChapters
+          );
+        }
+      );
+    }
   }
   async handleJump(event: any) {
     event.preventDefault();

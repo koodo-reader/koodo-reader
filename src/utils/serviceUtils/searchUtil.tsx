@@ -1,7 +1,7 @@
 import BookModel from "../../model/Book";
 import NoteModel from "../../model/Note";
 class SearchUtil {
-  static MergeArray(arr1: number[], arr2: number[]) {
+  static mergeArray(arr1: number[], arr2: number[]) {
     var _arr: number[] = [];
     for (let item of arr1) {
       _arr.push(item);
@@ -23,13 +23,13 @@ class SearchUtil {
   static fuzzyQuery(list: string[], keyWord: string) {
     var arr: number[] = [];
     for (var i = 0; i < list.length; i++) {
-      if (list[i].indexOf(keyWord) > -1) {
+      if (list[i].indexOf(keyWord.trim()) > -1) {
         arr.push(i);
       }
     }
     return arr;
   }
-  static MouseSearch(books: BookModel[]) {
+  static mouseSearch(books: BookModel[]) {
     let keyword = (
       document.querySelector(".header-search-box") as HTMLInputElement
     ).value.toLowerCase();
@@ -43,9 +43,9 @@ class SearchUtil {
     let bookResults = this.fuzzyQuery(bookNameArr, keyword);
     let authorResults = this.fuzzyQuery(AuthorNameArr, keyword);
 
-    return this.MergeArray(bookResults, authorResults);
+    return this.mergeArray(bookResults, authorResults);
   }
-  static KeySearch(event: any, books: BookModel[]) {
+  static keySearch(event: any, books: BookModel[]) {
     if (event && event.keyCode === 13) {
       let bookNameArr: string[] = [];
       let AuthorNameArr: string[] = [];
@@ -64,10 +64,10 @@ class SearchUtil {
         event.target.value.toLowerCase()
       );
 
-      return this.MergeArray(bookResults, authorResults);
+      return this.mergeArray(bookResults, authorResults);
     }
   }
-  static MouseNoteSearch(notes: NoteModel[]) {
+  static mouseNoteSearch(notes: NoteModel[]) {
     let keyword = (
       document.querySelector(".header-search-box") as HTMLInputElement
     ).value.toLowerCase();
@@ -79,9 +79,9 @@ class SearchUtil {
     });
     let noteResults = this.fuzzyQuery(noteArr, keyword);
     let textResults = this.fuzzyQuery(textArr, keyword);
-    return this.MergeArray(noteResults, textResults);
+    return this.mergeArray(noteResults, textResults);
   }
-  static KeyNoteSearch(event: any, notes: NoteModel[]) {
+  static keyNoteSearch(event: any, notes: NoteModel[]) {
     if (event && event.keyCode === 13) {
       let noteArr: string[] = [];
       let textArr: string[] = [];
@@ -97,7 +97,7 @@ class SearchUtil {
         textArr,
         event.target.value.toLowerCase()
       );
-      return this.MergeArray(noteResults, textResults);
+      return this.mergeArray(noteResults, textResults);
     }
   }
 }

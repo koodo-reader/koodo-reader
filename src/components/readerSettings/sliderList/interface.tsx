@@ -13,4 +13,5 @@ export interface SliderListState {
   value: string;
   inputValue: string;
   isTyping: boolean;
+  isEntered: boolean;
 }

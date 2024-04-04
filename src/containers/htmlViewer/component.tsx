@@ -18,6 +18,8 @@ import { binicReadingProcess } from "../../utils/serviceUtils/bionicUtil";
 import PopupBox from "../../components/popups/popupBox";
 import { renderHighlighters } from "../../utils/serviceUtils/noteUtil";
 import Note from "../../model/Note";
+import PageWidget from "../../containers/pageWidget";
+import { scrollContents } from "../../utils/commonUtil";
 
 declare var window: any;
 let lock = false; //prevent from clicking too fasts
@@ -83,19 +85,12 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     let highlighters: any = this.props.notes;
     if (!highlighters) return;
     let highlightersByChapter = highlighters.filter((item: Note) => {
-      if (this.props.currentBook.format !== "PDF") {
-        return (
-          (item.chapter ===
-            rendition.getChapterDoc()[this.state.chapterDocIndex].label ||
-            item.chapterIndex === this.state.chapterDocIndex) &&
-          item.bookKey === this.props.currentBook.key
-        );
-      } else {
-        return (
-          item.chapterIndex === this.state.chapterDocIndex &&
-          item.bookKey === this.props.currentBook.key
-        );
-      }
+      return (
+        (item.chapter ===
+          rendition.getChapterDoc()[this.state.chapterDocIndex].label ||
+          item.chapterIndex === this.state.chapterDocIndex) &&
+        item.bookKey === this.props.currentBook.key
+      );
     });
 
     renderHighlighters(
@@ -235,7 +230,11 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         chapter,
         chapterDocIndex,
       });
-      this.handleContentScroll(chapter, bookLocation.chapterHref);
+      scrollContents(
+        chapter,
+        bookLocation.chapterHref,
+        this.props.htmlBook.flattenChapters
+      );
       StyleUtil.addDefaultCss();
       tsTransform();
       binicReadingProcess();
@@ -248,30 +247,11 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       return false;
     });
   };
-  handleContentScroll = (chapter: string, chapterHref: string) => {
-    if (!chapterHref) return;
-    let chapterIndex = window._.findIndex(this.props.htmlBook.flattenChapters, {
-      href: chapterHref,
-    });
-    let contentBody = document.getElementsByClassName("navigation-body")[0];
-    if (!contentBody) return;
-    let contentList = contentBody.getElementsByTagName("a");
-    let targetContent = Array.from(contentList).filter((item, index) => {
-      item.setAttribute("style", "");
-      return (
-        item.textContent === chapter && Math.abs(index - chapterIndex) <= 1
-      );
-    });
-    if (targetContent.length > 0) {
-      contentBody.scrollTo({
-        left: 0,
-        top: targetContent[0].offsetTop,
-        behavior: "smooth",
-      });
-      targetContent[0].setAttribute("style", "color:red; font-weight: bold");
-    }
-  };
+
   handleLocation = () => {
+    if (!this.props.htmlBook) {
+      return;
+    }
     let position = this.props.htmlBook.rendition.getPosition();
     RecordLocation.recordHtmlLocation(
       this.props.currentBook.key,
@@ -315,6 +295,40 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
   render() {
     return (
       <>
+        {this.props.htmlBook ? (
+          <PopupMenu
+            {...{
+              rendition: this.props.htmlBook.rendition,
+              rect: this.state.rect,
+              chapterDocIndex: this.state.chapterDocIndex,
+              chapter: this.state.chapter,
+            }}
+          />
+        ) : null}
+        {this.props.isOpenMenu &&
+        this.props.htmlBook &&
+        (this.props.menuMode === "dict" ||
+          this.props.menuMode === "trans" ||
+          this.props.menuMode === "note") ? (
+          <PopupBox
+            {...{
+              rendition: this.props.htmlBook.rendition,
+              rect: this.state.rect,
+              chapterDocIndex: this.state.chapterDocIndex,
+              chapter: this.state.chapter,
+            }}
+          />
+        ) : null}
+        {this.props.htmlBook && (
+          <ImageViewer
+            {...{
+              isShow: this.props.isShow,
+              rendition: this.props.htmlBook.rendition,
+              handleEnterReader: this.props.handleEnterReader,
+              handleLeaveReader: this.props.handleLeaveReader,
+            }}
+          />
+        )}
         <div
           className={
             this.state.readerMode === "scroll"
@@ -355,44 +369,11 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
               : {}
           }
         ></div>
+        <PageWidget />
         {StorageUtil.getReaderConfig("isHideBackground") === "yes" ? null : this
             .props.currentBook.key ? (
           <Background />
         ) : null}
-        {this.props.htmlBook ? (
-          <PopupMenu
-            {...{
-              rendition: this.props.htmlBook.rendition,
-              rect: this.state.rect,
-              chapterDocIndex: this.state.chapterDocIndex,
-              chapter: this.state.chapter,
-            }}
-          />
-        ) : null}
-        {this.props.isOpenMenu &&
-        this.props.htmlBook &&
-        (this.props.menuMode === "dict" ||
-          this.props.menuMode === "trans" ||
-          this.props.menuMode === "note") ? (
-          <PopupBox
-            {...{
-              rendition: this.props.htmlBook.rendition,
-              rect: this.state.rect,
-              chapterDocIndex: this.state.chapterDocIndex,
-              chapter: this.state.chapter,
-            }}
-          />
-        ) : null}
-        {this.props.htmlBook && (
-          <ImageViewer
-            {...{
-              isShow: this.props.isShow,
-              rendition: this.props.htmlBook.rendition,
-              handleEnterReader: this.props.handleEnterReader,
-              handleLeaveReader: this.props.handleLeaveReader,
-            }}
-          />
-        )}
       </>
     );
   }

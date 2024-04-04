@@ -16,6 +16,7 @@ class ProgressPanel extends React.Component<
       totalPage: 0,
       targetChapterIndex: 0,
       targetPage: 0,
+      isEntered: false,
       isSingle:
         StorageUtil.getReaderConfig("readerMode") &&
         StorageUtil.getReaderConfig("readerMode") !== "double",
@@ -126,6 +127,7 @@ class ProgressPanel extends React.Component<
               let fieldVal = event.target.value;
               this.setState({ targetPage: fieldVal });
             }}
+            //TODO
             onBlur={(event) => {
               if (event.target.value.trim()) {
                 // this.handleJumpChapter(event);
@@ -151,11 +153,26 @@ class ProgressPanel extends React.Component<
               this.setState({ targetChapterIndex: fieldVal });
             }}
             onBlur={(event) => {
-              if (event.target.value.trim()) {
-                this.handleJumpChapter(event);
-                this.setState({ targetChapterIndex: "" });
+              if (!this.state.isEntered) {
+                if (event.target.value.trim()) {
+                  this.handleJumpChapter(event);
+                  this.setState({ targetChapterIndex: "" });
+                } else {
+                  this.setState({ targetChapterIndex: "" });
+                }
               } else {
-                this.setState({ targetChapterIndex: "" });
+                this.setState({ isEntered: false });
+              }
+            }}
+            onKeyDown={(event: any) => {
+              if (event.key === "Enter") {
+                this.setState({ isEntered: true });
+                if (event.target.value.trim()) {
+                  this.handleJumpChapter(event);
+                  this.setState({ targetChapterIndex: "" });
+                } else {
+                  this.setState({ targetChapterIndex: "" });
+                }
               }
             }}
           />

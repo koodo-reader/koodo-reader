@@ -251,8 +251,13 @@ class PopupOption extends React.Component<PopupOptionProps> {
                   }}
                 >
                   <span
-                    className={`icon-${item.icon} ${item.name}-icon`}
-                  ></span>
+                    data-tooltip-id="my-tooltip"
+                    data-tooltip-content={this.props.t(item.title)}
+                  >
+                    <span
+                      className={`icon-${item.icon} ${item.name}-icon`}
+                    ></span>
+                  </span>
                 </div>
               );
             })}

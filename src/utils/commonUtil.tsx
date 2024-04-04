@@ -1,5 +1,5 @@
 import axios from "axios";
-
+declare var window: any;
 export const sleep = (time: number) => {
   return new Promise((resolve) => setTimeout(resolve, time));
 };
@@ -73,4 +73,29 @@ export const uploadFile = async (url: string, file: any) => {
 export const checkStableUpdate = async () => {
   let res = await axios.get("https://koodo.960960.xyz/api/update");
   return res.data.log;
+};
+export const scrollContents = (
+  chapter: string,
+  chapterHref: string,
+  flattenChapters: any
+) => {
+  if (!chapterHref) return;
+  let chapterIndex = window._.findIndex(flattenChapters, {
+    href: chapterHref,
+  });
+  let contentBody = document.getElementsByClassName("navigation-body")[0];
+  if (!contentBody) return;
+  let contentList = contentBody.getElementsByTagName("a");
+  let targetContent = Array.from(contentList).filter((item, index) => {
+    item.setAttribute("style", "");
+    return item.textContent === chapter && Math.abs(index - chapterIndex) <= 1;
+  });
+  if (targetContent.length > 0) {
+    contentBody.scrollTo({
+      left: 0,
+      top: targetContent[0].offsetTop,
+      behavior: "smooth",
+    });
+    targetContent[0].setAttribute("style", "color:red; font-weight: bold");
+  }
 };

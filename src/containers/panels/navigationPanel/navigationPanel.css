@@ -90,11 +90,23 @@
 
   overflow-y: scroll;
   z-index: 0;
-  overflow-x: hidden;
+  overflow-x: visible;
 }
-/* .navigation-body::-webkit-scrollbar {
+.navigation-body:hover::-webkit-scrollbar-thumb,
+.navigation-body:active::-webkit-scrollbar-thumb,
+.navigation-body:focus::-webkit-scrollbar-thumb {
+  display: block;
+  width: 15px;
+  border-radius: 0;
+  opacity: 0.1;
+  background-color: rgba(75, 75, 75, 0.2);
+}
+.navigation-body::-webkit-scrollbar-thumb {
   display: none;
-} */
+}
+.navigation-body::-webkit-scrollbar {
+  width: 15px;
+}
 .navigation-panel-empty-bookmark {
   display: flex;
   justify-content: center;
