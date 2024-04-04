@@ -1,7 +1,7 @@
 import React from "react";
 import RecentBooks from "../../utils/readUtils/recordRecent";
 import { ViewerProps, ViewerState } from "./interface";
-
+import { Tooltip } from "react-tooltip";
 import { withRouter } from "react-router-dom";
 import BookUtil from "../../utils/fileUtils/bookUtil";
 import PDFWidget from "../../components/pdfWidget";
@@ -13,6 +13,8 @@ import StorageUtil from "../../utils/serviceUtils/storageUtil";
 import PopupBox from "../../components/popups/popupBox";
 import { renderHighlighters } from "../../utils/serviceUtils/noteUtil";
 import { getPDFIframeDoc } from "../../utils/serviceUtils/docUtil";
+import Note from "../../model/Note";
+import RecordLocation from "../../utils/readUtils/recordLocation";
 declare var window: any;
 class Viewer extends React.Component<ViewerProps, ViewerState> {
   constructor(props: ViewerProps) {
@@ -24,6 +26,10 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       contents: null,
       rect: null,
       loading: true,
+      chapterDocIndex: parseInt(
+        RecordLocation.getHtmlLocation(this.props.currentBook.key)
+          .chapterDocIndex || 0
+      ),
       isDisablePopup: StorageUtil.getReaderConfig("isDisablePopup") === "yes",
       isTouch: StorageUtil.getReaderConfig("isTouch") === "yes",
     };
@@ -112,8 +118,12 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
   handleHighlight = () => {
     let highlighters: any = this.props.notes;
     if (!highlighters) return;
-    let highlightersByChapter = highlighters;
-
+    let highlightersByChapter = highlighters.filter((item: Note) => {
+      return (
+        item.chapterIndex === this.state.chapterDocIndex &&
+        item.bookKey === this.props.currentBook.key
+      );
+    });
     renderHighlighters(
       highlightersByChapter,
       this.props.currentBook.format,
@@ -128,6 +138,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
   render() {
     return (
       <div className="ebook-viewer" id="page-area">
+        <Tooltip id="my-tooltip" />
         {!this.state.loading && (
           <PopupMenu
             {...{

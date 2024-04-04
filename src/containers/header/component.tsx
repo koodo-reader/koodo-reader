@@ -219,7 +219,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         >
           <SearchBox />
         </div>
-
         <div
           className="setting-icon-parrent"
           style={this.props.isCollapsed ? { marginLeft: "430px" } : {}}
@@ -234,7 +233,12 @@ class Header extends React.Component<HeaderProps, HeaderState> {
             }}
             style={{ top: "18px" }}
           >
-            <span className="icon-sort-desc header-sort-icon"></span>
+            <span
+              data-tooltip-id="my-tooltip"
+              data-tooltip-content={this.props.t("Sort by")}
+            >
+              <span className="icon-sort-desc header-sort-icon"></span>
+            </span>
           </div>
           <div
             className="setting-icon-container"
@@ -247,11 +251,16 @@ class Header extends React.Component<HeaderProps, HeaderState> {
             style={{ marginTop: "2px" }}
           >
             <span
-              className="icon-setting setting-icon"
-              style={
-                this.props.isNewWarning ? { color: "rgb(35, 170, 242)" } : {}
-              }
-            ></span>
+              data-tooltip-id="my-tooltip"
+              data-tooltip-content={this.props.t("Setting")}
+            >
+              <span
+                className="icon-setting setting-icon"
+                style={
+                  this.props.isNewWarning ? { color: "rgb(35, 170, 242)" } : {}
+                }
+              ></span>
+            </span>
           </div>
           <div
             className="setting-icon-container"
@@ -263,7 +272,12 @@ class Header extends React.Component<HeaderProps, HeaderState> {
             }}
             style={{ marginTop: "1px" }}
           >
-            <span className="icon-archive header-archive-icon"></span>
+            <span
+              data-tooltip-id="my-tooltip"
+              data-tooltip-content={this.props.t("Backup")}
+            >
+              <span className="icon-archive header-archive-icon"></span>
+            </span>
           </div>
           {isElectron && (
             <div
@@ -275,11 +289,18 @@ class Header extends React.Component<HeaderProps, HeaderState> {
               style={{ marginTop: "2px" }}
             >
               <span
-                className="icon-sync setting-icon"
-                style={
-                  this.state.isdataChange ? { color: "rgb(35, 170, 242)" } : {}
-                }
-              ></span>
+                data-tooltip-id="my-tooltip"
+                data-tooltip-content={this.props.t("Sync")}
+              >
+                <span
+                  className="icon-sync setting-icon"
+                  style={
+                    this.state.isdataChange
+                      ? { color: "rgb(35, 170, 242)" }
+                      : {}
+                  }
+                ></span>
+              </span>
             </div>
           )}
         </div>

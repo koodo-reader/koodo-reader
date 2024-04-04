@@ -1,14 +1,14 @@
 .book-bookmark-list {
   /* max-height: 200px; */
-  width: 280px;
-  margin-left: 18px;
+  width: 270px;
+  margin-left: 13px;
   box-sizing: border-box;
   overflow: hidden;
   position: relative;
 }
 .book-bookmark-digest {
   margin: 15px 5px 10px;
-  width: 255px;
+  width: 240px;
   max-height: 198px;
   font-size: 13px;
   line-height: 15px;
@@ -72,4 +72,5 @@
   margin-top: -3px;
   text-overflow: ellipsis;
   float: left;
+  margin-left: 5px;
 }

@@ -12,6 +12,7 @@ class NoteTag extends React.Component<NoteTagProps, NoteTagState> {
     this.state = {
       tagIndex: [],
       isInput: false,
+      isEntered: false,
       deleteIndex: -1,
       isShowTags: false,
     };
@@ -171,7 +172,17 @@ class NoteTag extends React.Component<NoteTagProps, NoteTagState> {
                       name="newTag"
                       id="newTag"
                       onBlur={(event) => {
-                        this.handleAddTag(event);
+                        if (!this.state.isEntered) {
+                          this.handleAddTag(event);
+                        } else {
+                          this.setState({ isEntered: false });
+                        }
+                      }}
+                      onKeyDown={(event: any) => {
+                        if (event.key === "Enter") {
+                          this.setState({ isEntered: true });
+                          this.handleAddTag(event);
+                        }
                       }}
                     />
                   ) : (

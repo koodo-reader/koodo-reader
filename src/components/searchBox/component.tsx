@@ -22,12 +22,12 @@ class SearchBox extends React.Component<SearchBoxProps> {
     }
     let results =
       this.props.tabMode === "note"
-        ? SearchUtil.MouseNoteSearch(
+        ? SearchUtil.mouseNoteSearch(
             this.props.notes.filter((item) => item.notes !== "")
           )
         : this.props.tabMode === "digest"
-        ? SearchUtil.MouseNoteSearch(this.props.digests)
-        : SearchUtil.MouseSearch(this.props.books);
+        ? SearchUtil.mouseNoteSearch(this.props.digests)
+        : SearchUtil.mouseSearch(this.props.books);
     if (results) {
       this.props.handleSearchResults(results);
       this.props.handleSearch(true);
@@ -43,13 +43,13 @@ class SearchBox extends React.Component<SearchBoxProps> {
     }
     let results =
       this.props.tabMode === "note"
-        ? SearchUtil.KeyNoteSearch(
+        ? SearchUtil.keyNoteSearch(
             event,
             this.props.notes.filter((item) => item.notes !== "")
           )
         : this.props.tabMode === "digest"
-        ? SearchUtil.KeyNoteSearch(event, this.props.digests)
-        : SearchUtil.KeySearch(event, this.props.books);
+        ? SearchUtil.keyNoteSearch(event, this.props.digests)
+        : SearchUtil.keySearch(event, this.props.books);
     if (results) {
       this.props.handleSearchResults(results);
       this.props.handleSearch(true);

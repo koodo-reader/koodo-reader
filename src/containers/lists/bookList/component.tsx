@@ -112,7 +112,7 @@ class BookList extends React.Component<BookListProps, BookListState> {
           //返回排序后的图书index
           SortUtil.sortBooks(this.props.books, this.props.bookSortCode) || []
         );
-    if (books.length === 0) {
+    if (books.length === 0 && !this.props.isSearch) {
       return <Redirect to="/manager/empty" />;
     }
     setTimeout(() => {

@@ -220,7 +220,7 @@ class TextToSpeech extends React.Component<
       if (
         this.state.isAudioOn &&
         this.props.isReading &&
-        index === this.nodeList
+        index === this.nodeList.length
       ) {
         let position = this.props.htmlBook.rendition.getPosition();
         RecordLocation.recordHtmlLocation(

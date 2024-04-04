@@ -6,7 +6,7 @@
   width: 500px;
   height: 300px;
   left: calc(50% - 250px);
-  z-index: 10;
+  /* z-index: 10; */
   border-bottom-left-radius: 0px;
   border-bottom-right-radius: 0px;
 }

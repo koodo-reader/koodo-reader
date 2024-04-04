@@ -16,6 +16,7 @@
   position: absolute;
   left: 25px;
   bottom: -20px;
+  z-index: -1;
 }
 .download-desk-title {
   font-size: 18px;

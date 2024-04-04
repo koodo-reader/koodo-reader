@@ -272,11 +272,11 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
                 ? Math.floor(parseFloat(percentage) * 100) === 0
                   ? "New"
                   : Math.floor(parseFloat(percentage) * 100) < 10
-                  ? "0" + Math.floor(parseFloat(percentage) * 100)
+                  ? Math.floor(parseFloat(percentage) * 100)
                   : Math.floor(parseFloat(percentage) * 100) === 100
                   ? "Done"
                   : Math.floor(parseFloat(percentage) * 100)
-                : "00"}
+                : "0"}
               {Math.floor(parseFloat(percentage) * 100) > 0 &&
                 Math.floor(parseFloat(percentage) * 100) < 100 && (
                   <span>%</span>

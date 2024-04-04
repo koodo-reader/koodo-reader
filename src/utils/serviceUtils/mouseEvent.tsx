@@ -9,7 +9,7 @@ const sleep = (ms: number) => {
 };
 
 let throttleTime =
-  StorageUtil.getReaderConfig("isSliding") === "yes" ? 1000 : 200;
+  StorageUtil.getReaderConfig("isSliding") === "yes" ? 1000 : 400;
 export const getSelection = () => {
   let doc = getIframeDoc();
   if (!doc) return;

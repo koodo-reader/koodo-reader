@@ -21,6 +21,7 @@ export interface ViewerProps {
 export interface ViewerState {
   href: string;
   title: string;
+  chapterDocIndex: number;
   cfiRange: any;
   contents: any;
   isTouch: boolean;
