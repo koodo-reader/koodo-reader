@@ -292,127 +292,132 @@ class BookUtil {
     file_content: ArrayBuffer
   ) {
     return new Promise<BookModel | string>(async (resolve, reject) => {
-      let cover: any = "";
-      let key: string,
-        name: string,
-        author: string,
-        publisher: string,
-        description: string,
-        charset: string,
-        page: number;
-      [name, author, description, publisher, charset, page] = [
-        bookName,
-        "Unknown author",
-        "",
-        "",
-        "",
-        0,
-      ];
-      let metadata: any;
-      let rendition = BookUtil.getRendtion(
-        file_content,
-        extension.toUpperCase(),
-        "",
-        ""
-      );
+      try {
+        let cover: any = "";
+        let key: string,
+          name: string,
+          author: string,
+          publisher: string,
+          description: string,
+          charset: string,
+          page: number;
+        [name, author, description, publisher, charset, page] = [
+          bookName,
+          "Unknown author",
+          "",
+          "",
+          "",
+          0,
+        ];
+        let metadata: any;
+        let rendition = BookUtil.getRendtion(
+          file_content,
+          extension.toUpperCase(),
+          "",
+          ""
+        );
 
-      switch (extension) {
-        case "pdf":
-          metadata = await getPDFMetadata(copyArrayBuffer(file_content));
-          [name, author, publisher, cover, page] = [
-            metadata.name || bookName,
-            metadata.author || "Unknown author",
-            metadata.publisher || "",
-            metadata.cover || "",
-            metadata.pageCount || 0,
-          ];
-          if (cover.indexOf("image") === -1) {
-            cover = "";
-          }
-          break;
-        case "epub":
-          metadata = await rendition.getMetadata();
-          if (metadata === "timeout_error") {
-            resolve("get_metadata_error");
+        switch (extension) {
+          case "pdf":
+            metadata = await getPDFMetadata(copyArrayBuffer(file_content));
+            [name, author, publisher, cover, page] = [
+              metadata.name || bookName,
+              metadata.author || "Unknown author",
+              metadata.publisher || "",
+              metadata.cover || "",
+              metadata.pageCount || 0,
+            ];
+            if (cover.indexOf("image") === -1) {
+              cover = "";
+            }
             break;
-          } else if (!metadata.name) {
-            break;
-          }
+          case "epub":
+            metadata = await rendition.getMetadata();
+            if (metadata === "timeout_error") {
+              resolve("get_metadata_error");
+              break;
+            } else if (!metadata.name) {
+              break;
+            }
 
-          [name, author, description, publisher, cover] = [
-            metadata.name || bookName,
-            metadata.author || "Unknown author",
-            metadata.description || "",
-            metadata.publisher || "",
-            metadata.cover || "",
-          ];
-          if (cover.indexOf("image") === -1) {
-            cover = "";
-          }
-          break;
-        case "mobi":
-        case "azw":
-        case "azw3":
-          metadata = await rendition.getMetadata();
-          [name, author, description, publisher, cover] = [
-            metadata.name || bookName,
-            metadata.author || "Unknown author",
-            metadata.description || "",
-            metadata.publisher || "",
-            metadata.cover || "",
-          ];
-          break;
-        case "fb2":
-          metadata = await rendition.getMetadata();
-          [name, author, description, publisher, cover] = [
-            metadata.name || bookName,
-            metadata.author || "Unknown author",
-            metadata.description || "",
-            metadata.publisher || "",
-            metadata.cover || "",
-          ];
-          break;
-        case "cbr":
-        case "cbt":
-        case "cbz":
-        case "cb7":
-          metadata = await rendition.getMetadata();
-          cover = metadata.cover;
-          break;
-        case "txt":
-          metadata = await rendition.getMetadata(file_content);
-          charset = metadata.charset;
-          break;
-        default:
-          break;
-      }
-      let format = extension.toUpperCase();
-      key = new Date().getTime() + "";
-      if (
-        StorageUtil.getReaderConfig("isPrecacheBook") === "yes" &&
-        extension !== "pdf"
-      ) {
-        let cache = await rendition.preCache(file_content);
-        if (cache !== "err") {
-          BookUtil.addBook("cache-" + key, cache);
+            [name, author, description, publisher, cover] = [
+              metadata.name || bookName,
+              metadata.author || "Unknown author",
+              metadata.description || "",
+              metadata.publisher || "",
+              metadata.cover || "",
+            ];
+            if (cover.indexOf("image") === -1) {
+              cover = "";
+            }
+            break;
+          case "mobi":
+          case "azw":
+          case "azw3":
+            metadata = await rendition.getMetadata();
+            [name, author, description, publisher, cover] = [
+              metadata.name || bookName,
+              metadata.author || "Unknown author",
+              metadata.description || "",
+              metadata.publisher || "",
+              metadata.cover || "",
+            ];
+            break;
+          case "fb2":
+            metadata = await rendition.getMetadata();
+            [name, author, description, publisher, cover] = [
+              metadata.name || bookName,
+              metadata.author || "Unknown author",
+              metadata.description || "",
+              metadata.publisher || "",
+              metadata.cover || "",
+            ];
+            break;
+          case "cbr":
+          case "cbt":
+          case "cbz":
+          case "cb7":
+            metadata = await rendition.getMetadata();
+            cover = metadata.cover;
+            break;
+          case "txt":
+            metadata = await rendition.getMetadata(file_content);
+            charset = metadata.charset;
+            break;
+          default:
+            break;
         }
+        let format = extension.toUpperCase();
+        key = new Date().getTime() + "";
+        if (
+          StorageUtil.getReaderConfig("isPrecacheBook") === "yes" &&
+          extension !== "pdf"
+        ) {
+          let cache = await rendition.preCache(file_content);
+          if (cache !== "err") {
+            BookUtil.addBook("cache-" + key, cache);
+          }
+        }
+        resolve(
+          new BookModel(
+            key,
+            name,
+            author,
+            description,
+            md5,
+            cover,
+            format,
+            publisher,
+            size,
+            page,
+            path,
+            charset
+          )
+        );
+      } catch (error) {
+        console.log(error);
+        resolve("get_metadata_error");
       }
-      resolve(
-        new BookModel(
-          key,
-          name,
-          author,
-          description,
-          md5,
-          cover,
-          format,
-          publisher,
-          size,
-          page,
-          path,
-          charset
-        )
-      );
     });
   }
 }

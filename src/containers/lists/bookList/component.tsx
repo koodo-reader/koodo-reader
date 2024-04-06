@@ -232,7 +232,7 @@ class BookList extends React.Component<BookListProps, BookListState> {
           }
         >
           <SelectBook />
-          {this.props.shelfIndex > -1 && (
+          {this.props.shelfIndex > -1 && !this.props.isSelectBook && (
             <div
               className="booklist-delete-container"
               onClick={() => {

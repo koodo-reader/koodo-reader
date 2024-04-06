@@ -73,13 +73,13 @@
 }
 .left-panel {
   width: 50px;
-  height: 250px;
+  height: 100px;
   position: absolute;
   left: 0px;
-  top: calc(50vh - 125px);
+  top: calc(50vh - 50px);
   background-color: rgba(75, 75, 75, 0.3);
-  border-bottom-right-radius: 50px;
-  border-top-right-radius: 50px;
+  border-bottom-right-radius: 20px;
+  border-top-right-radius: 20px;
   z-index: 10;
   opacity: 0;
   display: flex;
@@ -89,13 +89,13 @@
 }
 .right-panel {
   width: 50px;
-  height: 250px;
+  height: 100px;
   position: absolute;
   right: 0px;
-  top: calc(50vh - 125px);
+  top: calc(50vh - 50px);
   background-color: rgba(75, 75, 75, 0.3);
-  border-bottom-left-radius: 50px;
-  border-top-left-radius: 50px;
+  border-bottom-left-radius: 20px;
+  border-top-left-radius: 20px;
   z-index: 10;
   opacity: 0;
   display: flex;
@@ -104,14 +104,14 @@
   cursor: pointer;
 }
 .top-panel {
-  width: 250px;
+  width: 100px;
   height: 50px;
   position: absolute;
-  right: calc(50vw - 125px);
+  right: calc(50vw - 50px);
   top: 0px;
   background-color: rgba(75, 75, 75, 0.3);
-  border-bottom-left-radius: 50px;
-  border-bottom-right-radius: 50px;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
   z-index: 10;
   opacity: 0;
   display: flex;
@@ -120,14 +120,14 @@
   cursor: pointer;
 }
 .bottom-panel {
-  width: 250px;
+  width: 100px;
   height: 50px;
   position: absolute;
-  right: calc(50vw - 125px);
+  right: calc(50vw - 50px);
   top: calc(100vh - 50px);
   background-color: rgba(75, 75, 75, 0.3);
-  border-top-left-radius: 50px;
-  border-top-right-radius: 50px;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
   z-index: 10;
   opacity: 0;
   display: flex;

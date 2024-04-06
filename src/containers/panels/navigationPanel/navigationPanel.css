@@ -90,7 +90,7 @@
 
   overflow-y: scroll;
   z-index: 0;
-  overflow-x: visible;
+  overflow-x: hidden;
 }
 .navigation-body:hover::-webkit-scrollbar-thumb,
 .navigation-body:active::-webkit-scrollbar-thumb,

@@ -138,16 +138,9 @@ async function highlightRange(
   handleNoteClick: any,
   doc: any
 ) {
-  const rects = range.getClientRects();
+  console.log(range);
+  const rects = filterRects(range.getClientRects());
   for (let index = 0; index < rects.length; index++) {
-    // fix repeated highlight
-    if (
-      range.startContainer.nodeType === 1 &&
-      range.endContainer.nodeType === 1 &&
-      index === 0
-    ) {
-      continue;
-    }
     const rect = rects[index];
     var newNode = document.createElement("span");
     newNode?.setAttribute(
@@ -186,7 +179,35 @@ async function highlightRange(
     doc.body.appendChild(newNode);
   }
 }
+function filterRects(rects: any) {
+  console.log(rects, "rects");
+  let result: any = [];
+  let lastRect: any = null;
+  for (let index = 0; index < rects.length; index++) {
+    const rect = rects[index];
+    if (lastRect) {
+      // let duplicates = result.filter(
+      //   (r: any) =>
+      //     Math.abs(r.top - rect.top) < 1 && Math.abs(r.left - rect.left) < 1
+      // );
+      // if (duplicates.length > 0) {
+      //   continue;
+      // }
+      console.log(rect.y, lastRect.y, lastRect);
+      if (
+        (rect.top === lastRect.top && rect.left === lastRect.left) ||
+        rect.top === 0
+      ) {
+        continue;
+      }
+    }
+    result.push(rect);
+    lastRect = rect;
+  }
+  console.log(result);
 
+  return result;
+}
 function getSafeRanges(dangerous) {
   var a = dangerous.commonAncestorContainer;
   // Starts -- Work inward from the start, selecting the largest safe range

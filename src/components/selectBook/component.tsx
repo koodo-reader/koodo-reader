@@ -25,10 +25,39 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
     };
   }
   handleFilterShelfBook = (items: BookModel[]) => {
-    return items.filter((item) => {
-      return ShelfUtil.getBookPosition(item.key).length === 0;
-    });
+    if (this.props.shelfIndex > 0) {
+      //获取书架名
+      if (this.props.shelfIndex < 1) return items;
+      let shelfTitle = Object.keys(ShelfUtil.getShelf());
+      //获取当前书架名
+      let currentShelfTitle = shelfTitle[this.props.shelfIndex];
+      if (!currentShelfTitle) return items;
+      //获取当前书架的图书列表
+      let currentShelfList = ShelfUtil.getShelf()[currentShelfTitle];
+      //根据图书列表获取到图书数据
+      let shelfItems = items.filter((item: BookModel) => {
+        return currentShelfList.indexOf(item.key) > -1;
+      });
+      return shelfItems;
+    } else {
+      return items;
+    }
   };
+  handleShelf(items: any, index: number) {
+    //获取书架名
+    if (index < 1) return items;
+    let shelfTitle = Object.keys(ShelfUtil.getShelf());
+    //获取当前书架名
+    let currentShelfTitle = shelfTitle[index];
+    if (!currentShelfTitle) return items;
+    //获取当前书架的图书列表
+    let currentShelfList = ShelfUtil.getShelf()[currentShelfTitle];
+    //根据图书列表获取到图书数据
+    let shelfItems = items.filter((item: { key: number }) => {
+      return currentShelfList.indexOf(item.key) > -1;
+    });
+    return shelfItems;
+  }
   render() {
     return (
       <div
@@ -310,6 +339,11 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
             <span
               className="book-manage-title select-book-action"
               onClick={() => {
+                console.log(
+                  this.props.selectedBooks,
+                  this.props.books,
+                  this.handleFilterShelfBook(this.props.books)
+                );
                 if (
                   this.props.selectedBooks.length ===
                   this.handleFilterShelfBook(this.props.books).length
