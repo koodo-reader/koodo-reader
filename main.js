@@ -26,7 +26,6 @@ if (process.platform != "darwin" && process.argv.length >= 2) {
 let options = {
   width: 1050,
   height: 660,
-  backgroundColor: "#fff",
   webPreferences: {
     webSecurity: false,
     nodeIntegration: true,
@@ -37,6 +36,13 @@ let options = {
     enableRemoteModule: true,
   },
 };
+const os = require('os');
+
+if (os.platform() === 'linux') {
+  options = Object.assign({}, options, {
+    icon: path.join(__dirname, "./build/assets/icon.png"),
+  });
+}
 // Single Instance Lock
 if (!singleInstance) {
   app.quit();
