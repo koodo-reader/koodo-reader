@@ -89,7 +89,7 @@ class ProgressPanel extends React.Component<
       await this.props.htmlBook.rendition.goToChapter(
         this.props.htmlBook.flattenChapters[targetChapterIndex].index,
         this.props.htmlBook.flattenChapters[targetChapterIndex].href,
-        ""
+        this.props.htmlBook.flattenChapters[targetChapterIndex].label
       );
     }
   };

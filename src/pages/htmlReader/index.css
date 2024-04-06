@@ -68,11 +68,11 @@
 }
 .panel-icon {
   color: white;
-  font-size: 20px;
+  font-size: 18px;
   opacity: 0.9;
 }
 .left-panel {
-  width: 50px;
+  width: 30px;
   height: 100px;
   position: absolute;
   left: 0px;
@@ -88,7 +88,7 @@
   cursor: pointer;
 }
 .right-panel {
-  width: 50px;
+  width: 30px;
   height: 100px;
   position: absolute;
   right: 0px;
@@ -105,7 +105,7 @@
 }
 .top-panel {
   width: 100px;
-  height: 50px;
+  height: 30px;
   position: absolute;
   right: calc(50vw - 50px);
   top: 0px;
@@ -121,10 +121,10 @@
 }
 .bottom-panel {
   width: 100px;
-  height: 50px;
+  height: 30px;
   position: absolute;
   right: calc(50vw - 50px);
-  top: calc(100vh - 50px);
+  bottom: 0px;
   background-color: rgba(75, 75, 75, 0.3);
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
