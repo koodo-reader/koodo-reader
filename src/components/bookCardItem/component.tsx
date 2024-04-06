@@ -59,15 +59,17 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
     const e = event || window.event;
     let x = e.clientX;
     if (x > document.body.clientWidth - 300) {
-      x = x - 180;
+      x = x - 190;
+    } else {
+      x = x - 10;
     }
     this.setState(
       {
         left: x,
         top:
           document.body.clientHeight - e.clientY > 250
-            ? e.clientY
-            : e.clientY - 200,
+            ? e.clientY - 10
+            : e.clientY - 220,
       },
       () => {
         this.props.handleActionDialog(true);

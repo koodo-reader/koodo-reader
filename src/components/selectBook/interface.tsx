@@ -5,6 +5,7 @@ import { RouteComponentProps } from "react-router";
 export interface BookListProps extends RouteComponentProps<any> {
   books: BookModel[];
   notes: NoteModel[];
+  shelfIndex: number;
   deletedBooks: BookModel[];
   isSelectBook: boolean;
   isCollapsed: boolean;

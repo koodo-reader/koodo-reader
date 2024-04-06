@@ -160,7 +160,7 @@ export const bindHtmlEvent = (
   if (StorageUtil.getReaderConfig("isTouch") === "yes") {
     const mc = new window.Hammer(doc);
     mc.on("panleft panright panup pandown", async (event: any) => {
-      if (lock) return;
+      if (lock || event.pointerType === "mouse") return;
       lock = true;
       await gesture(rendition, event.type);
       handleLocation(key, rendition);

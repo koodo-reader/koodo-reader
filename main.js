@@ -106,6 +106,7 @@ const createMainWin = () => {
         transparent: isMergeWord === "yes" ? true : false,
       });
       readerWindow.loadURL(url);
+      // readerWindow.webContents.openDevTools();
     }
     readerWindow.on("close", (event) => {
       if (!readerWindow.isDestroyed()) {

@@ -82,14 +82,9 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
     });
   };
   handleJump = (book: BookModel) => {
-    if (StorageUtil.getReaderConfig("isOpenInMain") === "yes") {
-      BookUtil.RedirectBook(book, this.props.t, this.props.history);
-      this.props.handleReadingBook(book);
-    } else {
-      localStorage.setItem("tempBook", JSON.stringify(book));
-      BookUtil.RedirectBook(book, this.props.t, this.props.history);
-      this.props.history.push("/manager/home");
-    }
+    localStorage.setItem("tempBook", JSON.stringify(book));
+    BookUtil.RedirectBook(book, this.props.t, this.props.history);
+    this.props.history.push("/manager/home");
   };
   handleAddBook = (book: BookModel, buffer: ArrayBuffer) => {
     return new Promise<void>((resolve, reject) => {
@@ -154,7 +149,12 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
         toast.error(this.props.t("Import failed"));
         return resolve();
       } else {
-        await this.handleBook(file, md5);
+        try {
+          await this.handleBook(file, md5);
+        } catch (error) {
+          console.log(error);
+        }
+
         return resolve();
       }
     });
@@ -201,14 +201,20 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
           let reader = new FileReader();
           reader.onload = async (event) => {
             const file_content = (event.target as any).result;
-            result = await BookUtil.generateBook(
-              bookName,
-              extension,
-              md5,
-              file.size,
-              file.path || clickFilePath,
-              file_content
-            );
+            try {
+              result = await BookUtil.generateBook(
+                bookName,
+                extension,
+                md5,
+                file.size,
+                file.path || clickFilePath,
+                file_content
+              );
+            } catch (error) {
+              console.log(error);
+              throw error;
+            }
+
             clickFilePath = "";
             if (result === "get_metadata_error") {
               toast.error(this.props.t("Import failed"));
