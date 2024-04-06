@@ -181,20 +181,15 @@ async function highlightRange(
 function filterRects(rects: any) {
   let result: any = [];
   let lastRect: any = null;
+  let lineHeight = getLineHeight(rects);
+  let lineWidth = getLineWidth(rects);
   for (let index = 0; index < rects.length; index++) {
     const rect = rects[index];
+    if (Math.abs(rect.height - lineHeight) > 1 && rect.width === lineWidth) {
+      continue;
+    }
     if (lastRect) {
-      // let duplicates = result.filter(
-      //   (r: any) =>
-      //     Math.abs(r.top - rect.top) < 1 && Math.abs(r.left - rect.left) < 1
-      // );
-      // if (duplicates.length > 0) {
-      //   continue;
-      // }
-      if (
-        (rect.top === lastRect.top && rect.left === lastRect.left) ||
-        rect.top === 0
-      ) {
+      if (rect.top === lastRect.top && rect.left === lastRect.left) {
         continue;
       }
     }
@@ -203,6 +198,32 @@ function filterRects(rects: any) {
   }
 
   return result;
+}
+function getLineHeight(rects: any[]) {
+  let arr = Array.from(rects)
+    .filter((item) => item.height > 0)
+    .map((item) => item.height);
+  let frequency = {};
+  let maxCount = 0;
+  let result;
+
+  for (let num of arr) {
+    frequency[num] = (frequency[num] || 0) + 1;
+    if (frequency[num] > maxCount) {
+      maxCount = frequency[num];
+      result = num;
+    } else if (frequency[num] === maxCount) {
+      result = Math.min(result, num);
+    }
+  }
+
+  return result;
+}
+function getLineWidth(rects: any[]) {
+  let arr = Array.from(rects)
+    .filter((item) => item.width > 0)
+    .map((item) => item.width);
+  return Math.max(...arr);
 }
 function getSafeRanges(dangerous) {
   var a = dangerous.commonAncestorContainer;
