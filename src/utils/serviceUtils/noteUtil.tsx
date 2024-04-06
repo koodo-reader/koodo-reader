@@ -138,7 +138,6 @@ async function highlightRange(
   handleNoteClick: any,
   doc: any
 ) {
-  console.log(range);
   const rects = filterRects(range.getClientRects());
   for (let index = 0; index < rects.length; index++) {
     const rect = rects[index];
@@ -180,7 +179,6 @@ async function highlightRange(
   }
 }
 function filterRects(rects: any) {
-  console.log(rects, "rects");
   let result: any = [];
   let lastRect: any = null;
   for (let index = 0; index < rects.length; index++) {
@@ -193,7 +191,6 @@ function filterRects(rects: any) {
       // if (duplicates.length > 0) {
       //   continue;
       // }
-      console.log(rect.y, lastRect.y, lastRect);
       if (
         (rect.top === lastRect.top && rect.left === lastRect.left) ||
         rect.top === 0
@@ -204,7 +201,6 @@ function filterRects(rects: any) {
     result.push(rect);
     lastRect = rect;
   }
-  console.log(result);
 
   return result;
 }
