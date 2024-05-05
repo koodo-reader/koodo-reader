@@ -1,4 +1,4 @@
-name: Download and Upload Release Files
+name: Download/upload
 
 on: workflow_dispatch
 
