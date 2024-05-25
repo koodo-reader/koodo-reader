@@ -12,6 +12,7 @@ import { isElectron } from "react-device-detect";
 import { dropdownList } from "./constants/dropdownList";
 // import StorageUtil from "./utils/serviceUtils/storageUtil";
 import { initSystemFont, initTheme } from "./utils/serviceUtils/launchUtil";
+declare var window: any;
 initTheme();
 initSystemFont();
 ReactDOM.render(
@@ -20,7 +21,6 @@ ReactDOM.render(
   </Provider>,
   document.getElementById("root")
 );
-
 if (isElectron) {
   const fontList = window.require("font-list");
   fontList.getFonts({ disableQuoting: true }).then((result) => {

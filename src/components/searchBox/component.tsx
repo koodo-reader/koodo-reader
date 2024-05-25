@@ -18,7 +18,7 @@ class SearchBox extends React.Component<SearchBoxProps> {
       value && this.search(value);
     }
     if (this.props.mode === "nav") {
-      this.props.handleSearchState(true);
+      this.props.handleNavSearchState("searching");
     }
     let results =
       this.props.tabMode === "note"
@@ -37,7 +37,7 @@ class SearchBox extends React.Component<SearchBoxProps> {
     if (event.keyCode !== 13) {
       return;
     }
-    let value = (this.refs.searchBox as any).value.toLowerCase();
+    let value = (this.refs.searchBox as any).value;
     if (this.props.isNavSearch || this.props.isReading) {
       value && this.search(value);
     }
@@ -56,8 +56,9 @@ class SearchBox extends React.Component<SearchBoxProps> {
     }
   };
   search = async (q: string) => {
+    this.props.handleNavSearchState("searching");
     let searchList = await this.props.htmlBook.rendition.doSearch(q);
-
+    this.props.handleNavSearchState("pending");
     this.props.handleSearchList(
       searchList.map((item: any) => {
         item.excerpt = item.excerpt.replace(
@@ -89,7 +90,8 @@ class SearchBox extends React.Component<SearchBoxProps> {
             this.handleKey(event);
           }}
           onFocus={() => {
-            this.props.mode === "nav" && this.props.handleSearchState(true);
+            this.props.mode === "nav" &&
+              this.props.handleNavSearchState("focused");
           }}
           placeholder={
             this.props.isNavSearch || this.props.mode === "nav"

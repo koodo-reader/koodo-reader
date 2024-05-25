@@ -3,13 +3,13 @@ import "./updateInfo.css";
 import { UpdateInfoProps, UpdateInfoState } from "./interface";
 import packageInfo from "../../../../package.json";
 import { Trans } from "react-i18next";
-import axios from "axios";
 import Lottie from "react-lottie";
 import animationNew from "../../../assets/lotties/new.json";
 import animationSuccess from "../../../assets/lotties/success.json";
 import StorageUtil from "../../../utils/serviceUtils/storageUtil";
 import { openExternalUrl } from "../../../utils/serviceUtils/urlUtil";
 import { isElectron } from "react-device-detect";
+import { checkStableUpdate, sleep } from "../../../utils/commonUtil";
 const newOptions = {
   loop: false,
   autoplay: true,
@@ -36,43 +36,86 @@ class UpdateInfo extends React.Component<UpdateInfoProps, UpdateInfoState> {
     };
   }
   componentDidMount() {
-    !this.props.currentBook.key &&
-      axios
-        .get(`https://koodo.960960.xyz/api/update?name=${navigator.language}`)
-        .then((res) => {
-          const newVersion = res.data.log.version;
-          if (!isElectron) {
-            return;
+    if (!this.props.currentBook.key) {
+      let lastTimeCheck: string = StorageUtil.getReaderConfig("lastTimeCheck");
+
+      if (
+        lastTimeCheck &&
+        new Date().getTime() - parseInt(lastTimeCheck) < 7 * 24 * 60 * 60 * 1000
+      ) {
+        return;
+      }
+
+      checkStableUpdate().then(async (res) => {
+        StorageUtil.setReaderConfig("lastTimeCheck", new Date().getTime() + "");
+        const newVersion = res.version;
+        if (!isElectron) {
+          return;
+        }
+        await sleep(500);
+
+        if (packageInfo.version.localeCompare(newVersion) < 0) {
+          if (StorageUtil.getReaderConfig("isDisableUpdate") !== "yes") {
+            this.setState({ updateLog: res });
+            this.props.handleNewDialog(true);
+          } else {
+            this.props.handleNewWarning(true);
           }
-          setTimeout(() => {
-            if (packageInfo.version.localeCompare(newVersion) < 0) {
-              if (StorageUtil.getReaderConfig("isDisableUpdate") !== "yes") {
-                this.setState({ updateLog: res.data.log });
-                this.props.handleNewDialog(true);
-              } else {
-                this.props.handleNewWarning(true);
-              }
-            } else if (
-              StorageUtil.getReaderConfig("version") !== newVersion &&
-              StorageUtil.getReaderConfig("isFirst")
-            ) {
-              this.setState({ isUpdated: true });
-              this.props.handleNewDialog(true);
-              StorageUtil.setReaderConfig("version", newVersion);
-            }
-            StorageUtil.setReaderConfig(
-              "appInfo",
-              packageInfo.version.localeCompare(newVersion) < 0
-                ? "new"
-                : packageInfo.version.localeCompare(newVersion) === 0
-                ? "stable"
-                : "dev"
-            );
-          }, 500);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+        } else if (
+          StorageUtil.getReaderConfig("version") !== newVersion &&
+          StorageUtil.getReaderConfig("isFirst")
+        ) {
+          this.setState({ isUpdated: true });
+          this.props.handleNewDialog(true);
+          StorageUtil.setReaderConfig("version", newVersion);
+        }
+        StorageUtil.setReaderConfig(
+          "appInfo",
+          packageInfo.version.localeCompare(newVersion) < 0
+            ? "new"
+            : packageInfo.version.localeCompare(newVersion) === 0
+            ? "stable"
+            : "dev"
+        );
+      });
+    }
+    // !this.props.currentBook.key &&
+    //   axios
+    //     .get(`https://koodo.960960.xyz/api/update?name=${navigator.language}`)
+    //     .then((res) => {
+    //       const newVersion = res.data.log.version;
+    //       if (!isElectron) {
+    //         return;
+    //       }
+    //       setTimeout(() => {
+    //         if (packageInfo.version.localeCompare(newVersion) < 0) {
+    //           if (StorageUtil.getReaderConfig("isDisableUpdate") !== "yes") {
+    //             this.setState({ updateLog: res.data.log });
+    //             this.props.handleNewDialog(true);
+    //           } else {
+    //             this.props.handleNewWarning(true);
+    //           }
+    //         } else if (
+    //           StorageUtil.getReaderConfig("version") !== newVersion &&
+    //           StorageUtil.getReaderConfig("isFirst")
+    //         ) {
+    //           this.setState({ isUpdated: true });
+    //           this.props.handleNewDialog(true);
+    //           StorageUtil.setReaderConfig("version", newVersion);
+    //         }
+    //         StorageUtil.setReaderConfig(
+    //           "appInfo",
+    //           packageInfo.version.localeCompare(newVersion) < 0
+    //             ? "new"
+    //             : packageInfo.version.localeCompare(newVersion) === 0
+    //             ? "stable"
+    //             : "dev"
+    //         );
+    //       }, 500);
+    //     })
+    //     .catch((err) => {
+    //       console.log(err);
+    //     });
   }
   renderList = (arr: any[]) => {
     return arr.map((item, index) => {

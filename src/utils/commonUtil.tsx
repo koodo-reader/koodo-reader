@@ -57,9 +57,7 @@ export const getUploadUrl = async () => {
 export const uploadFile = async (url: string, file: any) => {
   return new Promise<boolean>((resolve, reject) => {
     axios
-      .put(url, file, {
-        timeout: 60000,
-      })
+      .put(url, file, {})
       .then((res) => {
         console.log(res);
         resolve(true);
@@ -71,7 +69,9 @@ export const uploadFile = async (url: string, file: any) => {
   });
 };
 export const checkStableUpdate = async () => {
-  let res = await axios.get("https://koodo.960960.xyz/api/update");
+  let res = await axios.get(
+    `https://koodo.960960.xyz/api/update?name=${navigator.language}`
+  );
   return res.data.log;
 };
 export const scrollContents = (

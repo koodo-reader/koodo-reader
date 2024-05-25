@@ -19,7 +19,7 @@ class NavigationPanel extends React.Component<
     this.state = {
       currentTab: "contents",
       chapters: [],
-      isSearch: false,
+      searchState: "",
       searchList: null,
       startIndex: 0,
       currentIndex: 0,
@@ -27,8 +27,8 @@ class NavigationPanel extends React.Component<
         StorageUtil.getReaderConfig("isNavLocked") === "yes" ? true : false,
     };
   }
-  handleSearchState = (isSearch: boolean) => {
-    this.setState({ isSearch });
+  handleNavSearchState = (state: string) => {
+    this.setState({ searchState: state });
   };
   handleSearchList = (searchList: any) => {
     this.setState({ searchList });
@@ -47,6 +47,17 @@ class NavigationPanel extends React.Component<
         this.state.isNavLocked ? "yes" : "no"
       );
     });
+  };
+  renderBeforeSearch = () => {
+    if (this.state.searchState === "searching") {
+      return (
+        <div className="loading-animation search-animation">
+          <div className="loader"></div>
+        </div>
+      );
+    } else {
+      return null;
+    }
   };
   renderSearchList = () => {
     if (!this.state.searchList[0]) {
@@ -161,11 +172,11 @@ class NavigationPanel extends React.Component<
   };
   render() {
     const searchProps = {
-      mode: this.state.isSearch ? "" : "nav",
+      mode: this.state.searchState ? "" : "nav",
       width: "100px",
       height: "35px",
-      isNavSearch: this.state.isSearch,
-      handleSearchState: this.handleSearchState,
+      isNavSearch: this.state.searchState,
+      handleNavSearchState: this.handleNavSearchState,
       handleSearchList: this.handleSearchList,
     };
     const bookmarkProps = {
@@ -173,12 +184,12 @@ class NavigationPanel extends React.Component<
     };
     return (
       <div className="navigation-panel">
-        {this.state.isSearch ? (
+        {this.state.searchState ? (
           <>
             <div
               className="nav-close-icon"
               onClick={() => {
-                this.handleSearchState(false);
+                this.handleNavSearchState("");
                 this.props.handleSearch(false);
                 this.setState({ searchList: null });
               }}
@@ -196,7 +207,13 @@ class NavigationPanel extends React.Component<
               <SearchBox {...searchProps} />
             </div>
             <ul className="nav-search-list">
-              {this.state.searchList ? this.renderSearchList() : null}
+              {this.state.searchState === "searching" ? (
+                <div className="loading-animation search-animation">
+                  <div className="loader"></div>
+                </div>
+              ) : this.state.searchList ? (
+                this.renderSearchList()
+              ) : null}
             </ul>
             <ul className="nav-search-page">
               {this.state.searchList ? this.renderSearchPage() : null}

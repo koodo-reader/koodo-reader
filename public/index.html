@@ -32,10 +32,6 @@
     ></script>
     <script
       type="text/javascript"
-      src="%PUBLIC_URL%/lib/kookit/kookit.js"
-    ></script>
-    <script
-      type="text/javascript"
       src="%PUBLIC_URL%/lib/JSZip/jszip.min.js"
     ></script>
     <script
@@ -122,5 +118,13 @@
       type="text/javascript"
       src="%PUBLIC_URL%/lib/mammoth/mammoth.browser.min.js"
     ></script>
+    <script>
+      if (window.location.href.indexOf("localhost") > -1) {
+        //load js from %PUBLIC_URL%/lib/kookit/kookit.js
+        var script = document.createElement("script");
+        script.src = "%PUBLIC_URL%/lib/kookit/kookit.js";
+        document.head.appendChild(script);
+      }
+    </script>
   </body>
 </html>

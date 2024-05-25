@@ -29,6 +29,9 @@ class ColorOption extends React.Component<ColorProps, ColorStates> {
                 "highlightIndex",
                 (index + 4).toString()
               );
+              setTimeout(() => {
+                this.props.handleDigest();
+              }, 100);
             }}
           >
             <div
@@ -52,6 +55,9 @@ class ColorOption extends React.Component<ColorProps, ColorStates> {
             onClick={() => {
               this.props.handleColor(index);
               StorageUtil.setReaderConfig("highlightIndex", index.toString());
+              setTimeout(() => {
+                this.props.handleDigest();
+              }, 100);
             }}
           ></div>
         );

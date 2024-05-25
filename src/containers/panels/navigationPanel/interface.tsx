@@ -17,7 +17,7 @@ export interface NavigationPanelState {
   chapters: any;
   startIndex: number;
   currentIndex: number;
-  isSearch: boolean;
+  searchState: string;
   searchList: any;
   isNavLocked: boolean;
 }

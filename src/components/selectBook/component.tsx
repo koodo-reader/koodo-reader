@@ -97,9 +97,9 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
                   if (this.props.isSelectBook) {
                     this.props.handleSelectedBooks([]);
                   }
-                  toast.success(this.props.t("Export successful"));
+                  toast.success(this.props.t("Add successful"));
                 } else {
-                  toast(this.props.t("Nothing to export"));
+                  toast(this.props.t("Nothing to add"));
                 }
               }}
             >
@@ -339,11 +339,6 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
             <span
               className="book-manage-title select-book-action"
               onClick={() => {
-                console.log(
-                  this.props.selectedBooks,
-                  this.props.books,
-                  this.handleFilterShelfBook(this.props.books)
-                );
                 if (
                   this.props.selectedBooks.length ===
                   this.handleFilterShelfBook(this.props.books).length
