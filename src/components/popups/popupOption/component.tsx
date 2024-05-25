@@ -209,7 +209,11 @@ class PopupOption extends React.Component<PopupOptionProps> {
     msg.voice = window.speechSynthesis.getVoices()[0];
     window.speechSynthesis.speak(msg);
   };
+
   render() {
+    const PopupProps = {
+      handleDigest: this.handleDigest,
+    };
     const renderMenuList = () => {
       return (
         <>
@@ -262,7 +266,7 @@ class PopupOption extends React.Component<PopupOptionProps> {
               );
             })}
           </div>
-          <ColorOption />
+          <ColorOption {...PopupProps} />
         </>
       );
     };

@@ -138,7 +138,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
   render() {
     return (
       <div className="ebook-viewer" id="page-area">
-        <Tooltip id="my-tooltip" />
+        <Tooltip id="my-tooltip" style={{ zIndex: 25 }} />
         {!this.state.loading && (
           <PopupMenu
             {...{

@@ -142,6 +142,7 @@ export const langList = [
   { label: "bahasa Indonesia", value: "id" },
   { label: "հայերեն", value: "hy" },
   { label: "བོད་སྐད།", value: "bo" },
+  { label: "हिंदी", value: "hi" },
 ];
 
 export const searchList = [

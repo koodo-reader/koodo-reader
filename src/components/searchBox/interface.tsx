@@ -17,7 +17,7 @@ export interface SearchBoxProps {
   shelfIndex: number;
   handleSearchResults: (results: number[]) => void;
   handleSearch: (isSearch: boolean) => void;
-  handleSearchState: (isSearch: boolean) => void;
+  handleNavSearchState: (state: string) => void;
   handleSearchList: (searchList: any) => void;
   t: any;
 }

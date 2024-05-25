@@ -250,8 +250,8 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
               }}
               style={
                 this.props.isSelected
-                  ? { left: "20px", bottom: "5px", opacity: 1 }
-                  : { left: "20px", bottom: "5px", color: "#eee" }
+                  ? { left: "18px", bottom: "5px", opacity: 1 }
+                  : { left: "18px", bottom: "5px", color: "#eee" }
               }
             ></span>
           ) : null}

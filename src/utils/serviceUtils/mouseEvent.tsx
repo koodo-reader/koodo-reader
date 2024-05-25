@@ -33,10 +33,15 @@ const arrowKeys = async (
     return;
   }
   if (readerMode === "scroll" && (keyCode === 38 || keyCode === 40)) {
-  } else if (keyCode === 37 || keyCode === 38) {
+  } else if (keyCode === 33 || keyCode === 37 || keyCode === 38) {
     event.preventDefault();
     await rendition.prev();
-  } else if (keyCode === 32 || keyCode === 39 || keyCode === 40) {
+  } else if (
+    keyCode === 32 ||
+    keyCode === 34 ||
+    keyCode === 39 ||
+    keyCode === 40
+  ) {
     event.preventDefault();
     await rendition.next();
   }

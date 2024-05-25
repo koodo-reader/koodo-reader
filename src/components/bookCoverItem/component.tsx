@@ -264,12 +264,12 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
                 style={
                   this.props.isSelected
                     ? {
-                        right: "274px",
+                        right: "272px",
                         top: "30px",
                         opacity: 1,
                       }
                     : {
-                        right: "274px",
+                        right: "272px",
                         top: "30px",
                         color: "#eee",
                       }

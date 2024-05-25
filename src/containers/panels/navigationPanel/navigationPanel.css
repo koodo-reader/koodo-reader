@@ -169,6 +169,7 @@
   font-size: 15px;
   height: calc(100vh - 170px);
   overflow-y: scroll;
+  width: calc(100% - 20px);
 }
 .nav-search-list-item {
   padding: 8px;
@@ -199,7 +200,6 @@
   cursor: pointer;
   transition: all 0.3s ease;
 }
-
 .nav-lock-icon {
   position: absolute;
   top: 0px;

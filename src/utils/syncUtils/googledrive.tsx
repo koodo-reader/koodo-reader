@@ -19,6 +19,25 @@ const getData = (file) =>
       resolve({});
     }
   });
+// get file list from google drive and return the file id of the file with the file name of "data.zip"
+// if the file does not exist, return an empty string
+const getFileId = async (accessToken: string) => {
+  const url = `https://www.googleapis.com/drive/v3/files?q=name='data.zip'&spaces=appDataFolder&fields=files(id,name)`;
+  try {
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: "Bearer " + accessToken,
+      },
+    });
+    if (response.data.files.length === 0) {
+      return "";
+    }
+    return response.data.files[0].id;
+  } catch (error) {
+    console.error("Error occurred during file list retrieval:", error);
+    return "";
+  }
+};
 class GoogleDriveUtil {
   static UploadFile(blob: any) {
     return new Promise<boolean>(async (resolve, reject) => {
@@ -59,7 +78,7 @@ class GoogleDriveUtil {
         const location = response.headers.location;
 
         // 2. Upload the data using the retrieved endpoint.
-        let res = await axios.put(location, fileObj.data, {
+        await axios.put(location, fileObj.data, {
           headers: {
             Authorization: "Bearer " + accessToken,
             "Content-Type": "application/zip",
@@ -67,9 +86,7 @@ class GoogleDriveUtil {
               fileObj.fileSize
             }`,
           },
-          timeout: 60000,
         });
-        StorageUtil.setReaderConfig("googleFileId", res.data.id);
       } catch (error) {
         console.error("Error occurred during upload:", error);
         resolve(false);
@@ -86,7 +103,10 @@ class GoogleDriveUtil {
         redirect_uri: driveConfig.callbackUrl,
       });
       const accessToken = res.data.access_token;
-      let fileId = StorageUtil.getReaderConfig("googleFileId");
+      let fileId = await getFileId(accessToken);
+      if (!fileId) {
+        resolve(false);
+      }
       const fileName = "data.zip";
       const url = `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`;
 

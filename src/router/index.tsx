@@ -48,6 +48,9 @@ const Router = () => {
       } else if (navigator.language.startsWith("hy")) {
         i18n.changeLanguage("hy");
         StorageUtil.setReaderConfig("lang", "hy");
+      } else if (navigator.language.startsWith("hi")) {
+        i18n.changeLanguage("hi");
+        StorageUtil.setReaderConfig("lang", "hi");
       } else if (navigator.language.startsWith("id")) {
         i18n.changeLanguage("id");
         StorageUtil.setReaderConfig("lang", "id");
