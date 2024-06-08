@@ -26,6 +26,7 @@ class ImageViewer extends React.Component<ImageViewerProps, ImageViewerStates> {
   }
 
   showImage = async (event: any) => {
+    console.log("sadagsd");
     event.preventDefault();
     if (this.props.isShow) {
       this.props.handleLeaveReader("left");
