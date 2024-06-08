@@ -78,17 +78,16 @@ class OperationPanel extends React.Component<
     if (this.props.htmlBook) {
       this.props.handleHtmlBook(null);
     }
-    setTimeout(() => {
-      if (isElectron) {
-        if (StorageUtil.getReaderConfig("isOpenInMain") === "yes") {
-          window.require("electron").ipcRenderer.invoke("exit-tab", "ping");
-        } else {
-          window.close();
-        }
+
+    if (isElectron) {
+      if (StorageUtil.getReaderConfig("isOpenInMain") === "yes") {
+        window.require("electron").ipcRenderer.invoke("exit-tab", "ping");
       } else {
         window.close();
       }
-    }, 50);
+    } else {
+      window.close();
+    }
   }
   //控制进入全屏
   handleFullScreen() {

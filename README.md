@@ -179,6 +179,7 @@ Make sure that you have installed yarn and git
 | French          | fr    | [View](./src/assets/locales/fr/translation.json)    |
 | German          | de    | [View](./src/assets/locales/de/translation.json)    |
 | Greek           | el    | [View](./src/assets/locales/el/translation.json)    |
+| Hindi           | hi    | [View](./src/assets/locales/hi/translation.json)    |
 | Indonesian      | id    | [View](./src/assets/locales/id/translation.json)    |
 | Interlingue     | ie    | [View](./src/assets/locales/ie/translation.json)    |
 | Italian         | it    | [View](./src/assets/locales/it/translation.json)    |

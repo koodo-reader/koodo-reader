@@ -380,7 +380,11 @@ class TextToSpeech extends React.Component<
                   }}
                 >
                   {speedList.option.map((item) => (
-                    <option value={item} className="lang-setting-option">
+                    <option
+                      value={item}
+                      className="lang-setting-option"
+                      key={item}
+                    >
                       {item}
                     </option>
                   ))}

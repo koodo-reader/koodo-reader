@@ -230,7 +230,7 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
           <p className="book-item-title">{this.props.book.name}</p>
           <div className="reading-progress-icon">
             <div style={{ position: "relative", left: "4px" }}>
-              {percentage
+              {percentage && !isNaN(parseFloat(percentage))
                 ? Math.floor(parseFloat(percentage) * 100) === 0
                   ? "New"
                   : Math.floor(parseFloat(percentage) * 100) < 10

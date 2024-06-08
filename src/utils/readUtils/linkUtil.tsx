@@ -4,9 +4,7 @@ export const handleLinkJump = async (event: any, rendition: any = {}) => {
   let href;
   if (event.target) {
     href =
-      (event.target.innerText &&
-        event.target.innerText.indexOf("http") > -1 &&
-        event.target.innerText) ||
+      (event.target.innerText.startsWith("http") && event.target.innerText) ||
       event.target.getAttribute("href") ||
       event.target.getAttribute("src") ||
       (event.target.parentNode &&
@@ -14,6 +12,11 @@ export const handleLinkJump = async (event: any, rendition: any = {}) => {
           event.target.parentNode.getAttribute("href")) ||
           (event.target.parentNode.getAttribute &&
             event.target.parentNode.getAttribute("src")))) ||
+      (event.target.parentNode.parentNode &&
+        ((event.target.parentNode.parentNode.getAttribute &&
+          event.target.parentNode.parentNode.getAttribute("href")) ||
+          (event.target.parentNode.parentNode.getAttribute &&
+            event.target.parentNode.parentNode.getAttribute("src")))) ||
       "";
   }
   if (href && href.indexOf("#") > -1) {
