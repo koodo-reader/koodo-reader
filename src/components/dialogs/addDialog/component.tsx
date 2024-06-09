@@ -27,7 +27,7 @@ class AddDialog extends Component<AddDialogProps, AddDialogState> {
     let shelfTitles = Object.keys(ShelfUtil.getShelf());
     let shelfIndex = this.state.isNew
       ? shelfTitles.length
-      : shelfTitles.indexOf(inputElement.value);
+      : shelfTitles.indexOf(shelfTitle);
     if (this.state.isNew) {
       shelfTitle = inputElement.value;
       if (shelfList.hasOwnProperty(shelfTitle)) {

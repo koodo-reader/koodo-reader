@@ -12,6 +12,7 @@
   opacity: 1;
   float: left;
   transition: none;
+  cursor: pointer;
   /* text-overflow: ellipsis;
   display: -webkit-box;
   -webkit-box-orient: vertical;

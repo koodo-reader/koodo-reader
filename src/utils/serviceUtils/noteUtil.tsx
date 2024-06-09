@@ -185,9 +185,11 @@ function filterRects(rects: any) {
   let lineWidth = getLineWidth(rects);
   for (let index = 0; index < rects.length; index++) {
     const rect = rects[index];
+
     if (Math.abs(rect.height - lineHeight) > 1 && rect.width === lineWidth) {
       continue;
     }
+
     if (lastRect) {
       if (rect.top === lastRect.top && rect.left === lastRect.left) {
         continue;
@@ -206,7 +208,7 @@ function getLineHeight(rects: any[]) {
   let frequency = {};
   let maxCount = 0;
   let result;
-
+  console.log(arr);
   for (let num of arr) {
     frequency[num] = (frequency[num] || 0) + 1;
     if (frequency[num] > maxCount) {
@@ -216,7 +218,7 @@ function getLineHeight(rects: any[]) {
       result = Math.min(result, num);
     }
   }
-
+  console.log(result, "result");
   return result;
 }
 function getLineWidth(rects: any[]) {

@@ -34,6 +34,7 @@ class styleUtil {
   static getDefaultCss() {
     return `::selection{background:#f3a6a68c}::-moz-selection{background:#f3a6a68c}.kookit-note:hover{cursor:pointer;}img{max-width:100% !important}.kookit-text{${this.getCustomCss()}}code,pre{white-space: pre-wrap;}`;
   }
+  //force horionztal writing mode
   static getCustomCss() {
     return `font-size: ${
       StorageUtil.getReaderConfig("fontSize") || 17
@@ -78,7 +79,7 @@ class styleUtil {
         : ""
     };margin-bottom: ${
       StorageUtil.getReaderConfig("paraSpacing") || 0
-    }px !important;padding:0px !important;word-wrap: break-word;`;
+    }px !important;padding:0px !important;word-wrap: break-word !important; writing-mode: horizontal-tb !important;`;
   }
   static addStyle = (url: string) => {
     const style = document.createElement("link");

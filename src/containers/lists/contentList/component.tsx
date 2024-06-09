@@ -5,7 +5,6 @@ import StorageUtil from "../../../utils/serviceUtils/storageUtil";
 import RecordLocation from "../../../utils/readUtils/recordLocation";
 import { scrollContents } from "../../../utils/commonUtil";
 
-declare var window: any;
 class ContentList extends React.Component<ContentListProps, ContentListState> {
   constructor(props: ContentListProps) {
     super(props);
@@ -40,27 +39,19 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
           scrollContents(
             chapter,
             bookLocation.chapterHref,
-            this.props.htmlBook.flattenChapters
           );
         }
       );
     }
   }
-  async handleJump(event: any) {
-    event.preventDefault();
-    let href = event.target.getAttribute("href");
-    let chapterIndex = window._.findIndex(this.props.htmlBook.flattenChapters, {
-      href,
-    });
-    let title = this.props.htmlBook.flattenChapters[chapterIndex].label;
-    let index = this.props.htmlBook.flattenChapters[chapterIndex].index;
+  async handleJump(item: any) {
     await this.props.htmlBook.rendition.goToChapter(
-      index.toString(),
-      href,
-      title
+      item.index,
+      item.href,
+      item.label
     );
-    this.props.handleCurrentChapter(title);
-    this.props.handleCurrentChapterIndex(index);
+    this.props.handleCurrentChapter(item.label);
+    this.props.handleCurrentChapterIndex(item.index);
   }
   UNSAFE_componentWillReceiveProps(nextProps: ContentListProps) {
     if (nextProps.htmlBook && nextProps.htmlBook !== this.props.htmlBook) {
@@ -68,6 +59,16 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
     }
   }
   render() {
+    let bookLocation: {
+      text: string;
+      count: string;
+      chapterTitle: string;
+      chapterDocIndex: string;
+      chapterHref: string;
+      percentage: string;
+      cfi: string;
+      page: string;
+    } = RecordLocation.getHtmlLocation(this.props.currentBook.key);
     const renderContentList = (items: any, level: number) => {
       level++;
       return items.map((item: any, index: number) => {
@@ -86,25 +87,32 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
                     });
                   }}
                   style={
-                    this.state.currentIndex === index
+                    this.state.currentIndex === index ||
+                    item.subitems.filter(
+                      (item) => item.href === bookLocation.chapterHref
+                    ).length > 0
                       ? {}
                       : { transform: "rotate(-90deg)" }
                   }
                 ></span>
               )}
 
-            <a
-              href={item.href}
-              onClick={this.handleJump}
+            <span
+              onClick={() => {
+                this.handleJump(item);
+              }}
               className="book-content-name"
             >
               {item.label}
-            </a>
+            </span>
             {item.subitems &&
             item.subitems.length > 0 &&
             (this.state.currentIndex === index ||
               level > 2 ||
-              this.state.isExpandContent) ? (
+              this.state.isExpandContent ||
+              item.subitems.filter(
+                (item) => item.href === bookLocation.chapterHref
+              ).length > 0) ? (
               <ul>{renderContentList(item.subitems, level)}</ul>
             ) : null}
           </li>

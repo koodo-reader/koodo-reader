@@ -2,6 +2,7 @@ import StorageUtil from "./storageUtil";
 import RecordLocation from "../readUtils/recordLocation";
 import { isElectron } from "react-device-detect";
 import { getIframeDoc, getIframeWin } from "./docUtil";
+import { handleExitFullScreen, handleFullScreen } from "../commonUtil";
 declare var window: any;
 declare var document: any;
 const sleep = (ms: number) => {
@@ -69,22 +70,18 @@ const handleShortcut = (event: any) => {
     }
   }
   if (event.keyCode === 27) {
-    if (isElectron) {
-      StorageUtil.setReaderConfig("isFullscreen", "no");
-    }
+    StorageUtil.setReaderConfig("isFullscreen", "no");
   }
   if (event.keyCode === 122) {
     if (isElectron) {
       event.preventDefault();
+      StorageUtil.getReaderConfig("isFullscreen") !== "yes"
+        ? handleFullScreen()
+        : handleExitFullScreen();
+
       if (StorageUtil.getReaderConfig("isFullscreen") === "yes") {
-        window
-          .require("electron")
-          .ipcRenderer.invoke("exit-fullscreen", "ping");
         StorageUtil.setReaderConfig("isFullscreen", "no");
       } else {
-        window
-          .require("electron")
-          .ipcRenderer.invoke("enter-fullscreen", "ping");
         StorageUtil.setReaderConfig("isFullscreen", "yes");
       }
     }
