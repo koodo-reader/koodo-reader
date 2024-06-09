@@ -57,15 +57,10 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
     let key = url.substring(lastIndexOfSlash + 1, firstIndexOfQuestion);
     this.props.handleFetchBooks();
     window.localforage.getItem("books").then((result: any) => {
-      let book;
-      //兼容在主窗口打开
-      if (this.props.currentBook.key) {
-        book = this.props.currentBook;
-      } else {
-        book =
-          result[window._.findIndex(result, { key })] ||
-          JSON.parse(localStorage.getItem("tempBook") || "{}");
-      }
+      let book =
+        result[window._.findIndex(result, { key })] ||
+        JSON.parse(localStorage.getItem("tempBook") || "{}");
+
       this.props.handleReadingBook(book);
       this.props.handleFetchPercentage(book);
     });

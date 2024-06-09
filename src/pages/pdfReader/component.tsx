@@ -45,14 +45,9 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     let lastIndexOfSlash = url.lastIndexOf("/", firstIndexOfQuestion);
     let key = url.substring(lastIndexOfSlash + 1, firstIndexOfQuestion);
     window.localforage.getItem("books").then((result: any) => {
-      let book;
-      if (this.props.currentBook.key) {
-        book = this.props.currentBook;
-      } else {
-        book =
-          result[window._.findIndex(result, { key })] ||
-          JSON.parse(localStorage.getItem("tempBook") || "{}");
-      }
+      let book =
+        result[window._.findIndex(result, { key })] ||
+        JSON.parse(localStorage.getItem("tempBook") || "{}");
 
       document.title = book.name + " - Koodo Reader";
       this.props.handleReadingState(true);

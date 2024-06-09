@@ -66,21 +66,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       BookUtil.reloadBooks();
     });
   }
-  handlePageWidth = () => {
-    let reader = document.querySelector("#page-area");
-    //解决文字遮挡问题
-    if (reader) {
-      reader.setAttribute(
-        "style",
-        reader.getAttribute("style") +
-          "width:" +
-          (parseInt(reader.clientWidth + "") % 2
-            ? parseInt(reader.clientWidth + "") - 1
-            : parseInt(reader.clientWidth + "")) +
-          "px; "
-      );
-    }
-  };
+
   handleHighlight = (rendition: any) => {
     let highlighters: any = this.props.notes;
     if (!highlighters) return;
@@ -112,9 +98,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     if (doc && this.state.rendition) {
       this.state.rendition.removeContent();
     }
-
-    StorageUtil.getReaderConfig("readerMode") !== "scroll" &&
-      this.handlePageWidth();
 
     let isCacheExsit = await BookUtil.isBookExist("cache-" + key, path);
     BookUtil.fetchBook(isCacheExsit ? "cache-" + key : key, true, path).then(
@@ -230,11 +213,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         chapter,
         chapterDocIndex,
       });
-      scrollContents(
-        chapter,
-        bookLocation.chapterHref,
-        this.props.htmlBook.flattenChapters
-      );
+      scrollContents(chapter, bookLocation.chapterHref);
       StyleUtil.addDefaultCss();
       tsTransform();
       binicReadingProcess();

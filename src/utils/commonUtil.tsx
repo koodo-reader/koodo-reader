@@ -1,4 +1,6 @@
 import axios from "axios";
+import StorageUtil from "./serviceUtils/storageUtil";
+import { isElectron } from "react-device-detect";
 declare var window: any;
 export const sleep = (time: number) => {
   return new Promise((resolve) => setTimeout(resolve, time));
@@ -74,28 +76,46 @@ export const checkStableUpdate = async () => {
   );
   return res.data.log;
 };
-export const scrollContents = (
-  chapter: string,
-  chapterHref: string,
-  flattenChapters: any
-) => {
+export const scrollContents = (chapterTitle: string, chapterHref: string) => {
   if (!chapterHref) return;
-  let chapterIndex = window._.findIndex(flattenChapters, {
-    href: chapterHref,
-  });
+
   let contentBody = document.getElementsByClassName("navigation-body")[0];
   if (!contentBody) return;
-  let contentList = contentBody.getElementsByTagName("a");
+  let contentList = contentBody.getElementsByClassName("book-content-name");
   let targetContent = Array.from(contentList).filter((item, index) => {
     item.setAttribute("style", "");
-    return item.textContent === chapter && Math.abs(index - chapterIndex) <= 1;
+    return item.textContent === chapterTitle;
   });
   if (targetContent.length > 0) {
     contentBody.scrollTo({
       left: 0,
-      top: targetContent[0].offsetTop,
+      top: (targetContent[0] as any).offsetTop,
       behavior: "smooth",
     });
     targetContent[0].setAttribute("style", "color:red; font-weight: bold");
+  }
+};
+//控制进入全屏
+export const handleFullScreen = () => {
+  if (isElectron) {
+    if (StorageUtil.getReaderConfig("isOpenInMain") === "yes") {
+      window
+        .require("electron")
+        .ipcRenderer.invoke("enter-tab-fullscreen", "ping");
+    } else {
+      window.require("electron").ipcRenderer.invoke("enter-fullscreen", "ping");
+    }
+  }
+};
+// 退出全屏模式
+export const handleExitFullScreen = () => {
+  if (isElectron) {
+    if (StorageUtil.getReaderConfig("isOpenInMain") === "yes") {
+      window
+        .require("electron")
+        .ipcRenderer.invoke("exit-tab-fullscreen", "ping");
+    } else {
+      window.require("electron").ipcRenderer.invoke("exit-fullscreen", "ping");
+    }
   }
 };

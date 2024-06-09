@@ -13,7 +13,10 @@ import { HtmlMouseEvent } from "../../../utils/serviceUtils/mouseEvent";
 import storageUtil from "../../../utils/serviceUtils/storageUtil";
 import BingTTSUtil from "../../../utils/serviceUtils/bingTTSUtil";
 import { isElectron } from "react-device-detect";
-declare var document: any;
+import {
+  handleExitFullScreen,
+  handleFullScreen,
+} from "../../../utils/commonUtil";
 declare var window: any;
 class OperationPanel extends React.Component<
   OperationPanelProps,
@@ -63,8 +66,13 @@ class OperationPanel extends React.Component<
   // 点击切换全屏按钮触发
   handleScreen() {
     StorageUtil.getReaderConfig("isFullscreen") !== "yes"
-      ? this.handleFullScreen()
-      : this.handleExitFullScreen();
+      ? handleFullScreen()
+      : handleExitFullScreen();
+    if (StorageUtil.getReaderConfig("isFullscreen") === "yes") {
+      StorageUtil.setReaderConfig("isFullscreen", "no");
+    } else {
+      StorageUtil.setReaderConfig("isFullscreen", "yes");
+    }
   }
   // 点击退出按钮的处理程序
   handleExit() {
@@ -74,7 +82,7 @@ class OperationPanel extends React.Component<
     window.speechSynthesis.cancel();
     BingTTSUtil.pauseAudio();
     ReadingTime.setTime(this.props.currentBook.key, this.props.time);
-    this.handleExitFullScreen();
+    handleExitFullScreen();
     if (this.props.htmlBook) {
       this.props.handleHtmlBook(null);
     }
@@ -88,50 +96,6 @@ class OperationPanel extends React.Component<
     } else {
       window.close();
     }
-  }
-  //控制进入全屏
-  handleFullScreen() {
-    if (isElectron) {
-      if (StorageUtil.getReaderConfig("isOpenInMain") === "yes") {
-        window
-          .require("electron")
-          .ipcRenderer.invoke("enter-tab-fullscreen", "ping");
-      } else {
-        window
-          .require("electron")
-          .ipcRenderer.invoke("enter-fullscreen", "ping");
-      }
-    } else {
-      let de: any = document.documentElement;
-      if (de.requestFullscreen) {
-        de.requestFullscreen();
-      }
-    }
-
-    StorageUtil.setReaderConfig("isFullscreen", "yes");
-  }
-  // 退出全屏模式
-  handleExitFullScreen() {
-    if (isElectron) {
-      if (StorageUtil.getReaderConfig("isOpenInMain") === "yes") {
-        window
-          .require("electron")
-          .ipcRenderer.invoke("exit-tab-fullscreen", "ping");
-      } else {
-        window
-          .require("electron")
-          .ipcRenderer.invoke("exit-fullscreen", "ping");
-      }
-    } else {
-      //解决使用esc退出全屏，再退出阅读时发生的bug
-      if (!document.fullscreenElement) return;
-
-      if (document.exitFullscreen) {
-        document.exitFullscreen();
-      }
-    }
-
-    StorageUtil.setReaderConfig("isFullscreen", "no");
   }
   handleAddBookmark = () => {
     let bookKey = this.props.currentBook.key;
@@ -246,7 +210,15 @@ class OperationPanel extends React.Component<
         <div
           className="enter-fullscreen-button"
           onClick={() => {
-            this.handleScreen();
+            if (isElectron) {
+              this.handleScreen();
+            } else {
+              toast(
+                this.props.t(
+                  "Koodo Reader's web version are limited by the browser, for more powerful features, please download the desktop version."
+                )
+              );
+            }
           }}
         >
           <div className="operation-button-container">

@@ -233,10 +233,7 @@ class BookUtil {
         window.require("electron").ipcRenderer.invoke("reload-reader", "ping");
       }
     } else {
-      if (StorageUtil.getReaderConfig("isFullscreen") === "yes") {
-      } else {
-        window.location.reload();
-      }
+      window.location.reload();
     }
   }
   static getRendtion = (

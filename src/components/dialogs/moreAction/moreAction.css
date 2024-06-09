@@ -1,0 +1,43 @@
+.action-dialog-container {
+  width: 200px;
+  /* height: 340px; */
+  opacity: 1;
+  position: fixed;
+  z-index: 9;
+  animation: popup 0.1s ease-in-out 0s 1;
+  border-radius: 5px;
+  overflow: hidden;
+  overflow-x: hidden;
+}
+
+.action-dialog-actions-container {
+  font-size: 15px;
+  text-align: center;
+  line-height: 14px;
+  opacity: 1;
+  padding: 5px;
+  /* position: absolute;
+  top: 83px;
+  left: 29px; */
+}
+.action-dialog-add,
+.action-dialog-delete,
+.action-dialog-edit {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 4px 15px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-left: 10px;
+  border-radius: 3px;
+}
+
+.action-name {
+  font-size: 15px;
+  text-align: center;
+  line-height: 25px;
+  margin-left: 15px;
+  font-weight: 500;
+}

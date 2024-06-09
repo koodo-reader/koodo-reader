@@ -79,43 +79,6 @@ class UpdateInfo extends React.Component<UpdateInfoProps, UpdateInfoState> {
         );
       });
     }
-    // !this.props.currentBook.key &&
-    //   axios
-    //     .get(`https://koodo.960960.xyz/api/update?name=${navigator.language}`)
-    //     .then((res) => {
-    //       const newVersion = res.data.log.version;
-    //       if (!isElectron) {
-    //         return;
-    //       }
-    //       setTimeout(() => {
-    //         if (packageInfo.version.localeCompare(newVersion) < 0) {
-    //           if (StorageUtil.getReaderConfig("isDisableUpdate") !== "yes") {
-    //             this.setState({ updateLog: res.data.log });
-    //             this.props.handleNewDialog(true);
-    //           } else {
-    //             this.props.handleNewWarning(true);
-    //           }
-    //         } else if (
-    //           StorageUtil.getReaderConfig("version") !== newVersion &&
-    //           StorageUtil.getReaderConfig("isFirst")
-    //         ) {
-    //           this.setState({ isUpdated: true });
-    //           this.props.handleNewDialog(true);
-    //           StorageUtil.setReaderConfig("version", newVersion);
-    //         }
-    //         StorageUtil.setReaderConfig(
-    //           "appInfo",
-    //           packageInfo.version.localeCompare(newVersion) < 0
-    //             ? "new"
-    //             : packageInfo.version.localeCompare(newVersion) === 0
-    //             ? "stable"
-    //             : "dev"
-    //         );
-    //       }, 500);
-    //     })
-    //     .catch((err) => {
-    //       console.log(err);
-    //     });
   }
   renderList = (arr: any[]) => {
     return arr.map((item, index) => {

@@ -61,17 +61,7 @@ class ProgressPanel extends React.Component<
   }
   onProgressChange = async (event: any) => {
     const percentage = event.target.value / 100;
-    if (this.props.htmlBook.flattenChapters.length > 0) {
-      let chapterIndex =
-        percentage === 1
-          ? this.props.htmlBook.flattenChapters.length - 1
-          : Math.floor(this.props.htmlBook.flattenChapters.length * percentage);
-      await this.props.htmlBook.rendition.goToChapter(
-        this.props.htmlBook.flattenChapters[chapterIndex].index.toString(),
-        this.props.htmlBook.flattenChapters[chapterIndex].href,
-        this.props.htmlBook.flattenChapters[chapterIndex].label
-      );
-    }
+    await this.props.htmlBook.rendition.goToPercentage(percentage);
   };
   nextChapter = async () => {
     if (this.props.htmlBook.flattenChapters.length > 0) {
@@ -85,13 +75,7 @@ class ProgressPanel extends React.Component<
   };
   handleJumpChapter = async (event: any) => {
     let targetChapterIndex = parseInt(event.target.value.trim()) - 1;
-    if (this.props.htmlBook.flattenChapters.length > 0) {
-      await this.props.htmlBook.rendition.goToChapter(
-        this.props.htmlBook.flattenChapters[targetChapterIndex].index,
-        this.props.htmlBook.flattenChapters[targetChapterIndex].href,
-        this.props.htmlBook.flattenChapters[targetChapterIndex].label
-      );
-    }
+    await this.props.htmlBook.rendition.goToChapterIndex(targetChapterIndex);
   };
   render() {
     if (!this.props.htmlBook) {
