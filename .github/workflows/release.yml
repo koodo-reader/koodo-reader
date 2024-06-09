@@ -19,15 +19,7 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 18
-      - uses: actions/setup-python@v5
-        if: startsWith(matrix.os, 'macos')
-        with:
-          python-version: "3.10"
-          cache: "pip"
-      - name: Install Python setup tools
-        if: startsWith(matrix.os, 'macos')
-        run: |
-          pip install setuptools
+
       - name: Install Snapcraft
         uses: samuelmeuli/action-snapcraft@v1.2.0
         # Only install Snapcraft on Ubuntu
