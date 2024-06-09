@@ -13,5 +13,5 @@ jobs:
         run: |
           curl -O https://raw.githubusercontent.com/koodo-reader/koodo-reader/master/src/upload.sh
           chmod +x ./upload.sh
-          ./upload.sh ${{ secrets.R2_ACCOUNT_ID }} ${{ secrets.R2_APPLICATION_KEY }} ${{ secrets.R2_ENDPOINT }} v1.6.6
+          ./upload.sh ${{ secrets.R2_ACCOUNT_ID }} ${{ secrets.R2_APPLICATION_KEY }} ${{ secrets.R2_ENDPOINT }} v1.6.7
         shell: bash
