@@ -208,7 +208,6 @@ function getLineHeight(rects: any[]) {
   let frequency = {};
   let maxCount = 0;
   let result;
-  console.log(arr);
   for (let num of arr) {
     frequency[num] = (frequency[num] || 0) + 1;
     if (frequency[num] > maxCount) {
@@ -218,7 +217,6 @@ function getLineHeight(rects: any[]) {
       result = Math.min(result, num);
     }
   }
-  console.log(result, "result");
   return result;
 }
 function getLineWidth(rects: any[]) {
