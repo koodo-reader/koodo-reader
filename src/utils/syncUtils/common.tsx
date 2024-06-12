@@ -184,6 +184,42 @@ export const zipBook = (zip: any, books: BookModel[]) => {
   });
 };
 
+export const unzipConfigWeb = (zipEntries: any) => {
+  return new Promise<boolean>(async (resolve, reject) => {
+    if(!zipEntries.files || !Object.keys(zipEntries.files).length) resolve(false)
+    let filesLength = Object.keys(zipEntries.files).length
+    let count = 0
+    await zipEntries.forEach(async function (_relativePath, zipEntry) {
+      let entry = zipEntries.file(zipEntry.name)
+      if (!entry) {
+        filesLength--
+        return
+      }
+      let text = await zipEntries.file(zipEntry.name).async("string")
+      let entryName = zipEntry.name.replaceAll('config/', '').replaceAll('book/', '')
+      if (configArr.indexOf(entryName) > -1 && text) {
+        if (
+          entryName === "notes.json" ||
+          entryName === "books.json" ||
+          entryName === "bookmarks.json"
+        ) {
+          window.localforage.setItem(
+            entryName.split(".")[0],
+            JSON.parse(text)
+          );
+        } else if (entryName === "pdfjs.history.json") {
+          localStorage.setItem("pdfjs.history", text);
+        } else {
+          localStorage.setItem(entryName.split(".")[0], text);
+        }
+      }
+      count++
+      if(filesLength === count) 
+        resolve(true);
+    });
+  });
+};
+
 export const unzipConfig = (zipEntries: any) => {
   return new Promise<boolean>((resolve, reject) => {
     zipEntries.forEach(function (zipEntry) {
@@ -217,6 +253,32 @@ const toArrayBuffer = (buf) => {
   }
   return ab;
 };
+
+export const unzipBookWeb = (zipEntries: any) => {
+  return new Promise<boolean>((resolve) => {
+    window.localforage.getItem("books").then((value: any) => {
+      let count = 0;
+      value &&
+        value.length > 0 &&
+        value.forEach((item: any) => {
+          zipEntries.forEach(async (_relativePath,zipEntry) => {
+            let entryName = zipEntry.name.replaceAll('config/', '').replaceAll('book/', '')
+            if (entryName === item.key) {
+              await BookUtil.addBook(
+                item.key,
+                await zipEntries.file(zipEntry.name).async("arraybuffer")
+              );
+              count++;
+              if (count === value.length) {
+                resolve(true);
+              }
+            }
+          });
+        });
+    });
+  });
+};
+
 export const unzipBook = (zipEntries: any) => {
   return new Promise<boolean>((resolve, reject) => {
     window.localforage.getItem("books").then((value: any) => {
