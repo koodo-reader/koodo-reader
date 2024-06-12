@@ -2,7 +2,7 @@ import React from "react";
 import "./backupDialog.css";
 import { driveList } from "../../../constants/driveList";
 import { backup } from "../../../utils/syncUtils/backupUtil";
-import { restore } from "../../../utils/syncUtils/restoreUtil";
+import { restore, restoreWwb } from "../../../utils/syncUtils/restoreUtil";
 import { Trans } from "react-i18next";
 import DropboxUtil from "../../../utils/syncUtils/dropbox";
 import OneDriveUtil from "../../../utils/syncUtils/onedrive";
@@ -18,7 +18,7 @@ import Lottie from "react-lottie";
 import animationSuccess from "../../../assets/lotties/success.json";
 
 import toast from "react-hot-toast";
-import { isElectron } from "react-device-detect";
+import { isElectron, isBrowser } from "react-device-detect";
 declare var window: any;
 const successOptions = {
   loop: false,
@@ -55,7 +55,7 @@ class BackupDialog extends React.Component<
     this.props.handleLoadingDialog(true);
     //Fix animation issue
     setTimeout(async () => {
-      let result = await restore(event.target.files[0]);
+      let result = await (isBrowser ? restoreWwb(event.target.files[0]) : restore(event.target.files[0]));
       if (result) {
         this.handleFinish();
       }
@@ -269,16 +269,7 @@ class BackupDialog extends React.Component<
                   ? "backup-page-backup active"
                   : "backup-page-backup"
               }
-              onClick={(event) => {
-                if (!isElectron) {
-                  event.preventDefault();
-                  toast(
-                    this.props.t(
-                      "Koodo Reader's web version are limited by the browser, for more powerful features, please download the desktop version."
-                    )
-                  );
-                  return;
-                }
+              onClick={() => {
                 this.setState({ isBackup: "no" });
               }}
             >
