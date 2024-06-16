@@ -144,6 +144,7 @@ const createMainWin = () => {
       // readerWindow = null;
     });
 
+
     event.returnValue = "success";
   });
   ipcMain.handle("edge-tts", async (event, config) => {
