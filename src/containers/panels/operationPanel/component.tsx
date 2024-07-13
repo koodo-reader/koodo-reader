@@ -11,7 +11,7 @@ import { withRouter } from "react-router-dom";
 import toast from "react-hot-toast";
 import { HtmlMouseEvent } from "../../../utils/serviceUtils/mouseEvent";
 import storageUtil from "../../../utils/serviceUtils/storageUtil";
-import BingTTSUtil from "../../../utils/serviceUtils/bingTTSUtil";
+import TTSUtil from "../../../utils/serviceUtils/ttsUtil";
 import { isElectron } from "react-device-detect";
 import {
   handleExitFullScreen,
@@ -80,7 +80,7 @@ class OperationPanel extends React.Component<
     this.props.handleReadingState(false);
     this.props.handleSearch(false);
     window.speechSynthesis.cancel();
-    BingTTSUtil.pauseAudio();
+    TTSUtil.pauseAudio();
     ReadingTime.setTime(this.props.currentBook.key, this.props.time);
     handleExitFullScreen();
     if (this.props.htmlBook) {

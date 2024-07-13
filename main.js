@@ -14,8 +14,9 @@ const Store = require("electron-store");
 const store = new Store();
 const fs = require("fs");
 const configDir = app.getPath("userData");
-const { ra } = require("./edge-tts");
 const dirPath = path.join(configDir, "uploads");
+
+const { getEdgeAudioPath } = require("./util");
 let mainWin;
 let mainView
 const singleInstance = app.requestSingleInstanceLock();
@@ -147,19 +148,13 @@ const createMainWin = () => {
 
     event.returnValue = "success";
   });
-  ipcMain.handle("edge-tts", async (event, config) => {
-    let { text } = config;
-    let audioName = new Date().getTime() + ".webm";
-    if (!fs.existsSync(path.join(dirPath, "tts"))) {
-      fs.mkdirSync(path.join(dirPath, "tts"));
-      fs.writeFileSync(path.join(dirPath, "tts", audioName), await ra(text));
-      console.log("文件夹创建成功");
+  ipcMain.handle("generate-tts", async (event, config) => {
+    let { text, url, type, speed } = config;
+    if (type === "edge") {
+      return getEdgeAudioPath(text, url, speed, dirPath);
     } else {
-      fs.writeFileSync(path.join(dirPath, "tts", audioName), await ra(text));
-      console.log("文件夹已存在");
+      return getEdgeAudioPath(text, url, speed);
     }
-
-    return path.join(dirPath, "tts", audioName);
   });
   ipcMain.handle("ftp-upload", async (event, config) => {
     let { url, username, password, fileName, dir, ssl } = config;

@@ -1,0 +1,38 @@
+.voice-add-content-box {
+  width: 100%;
+  height: 100px;
+  opacity: 1;
+  font-size: 13px;
+  line-height: 14px;
+  padding: 5px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+  opacity: 1;
+  border-radius: 5px;
+}
+.voice-add-cancel {
+  width: 60px;
+  height: 26px;
+  opacity: 1;
+
+  font-size: 13px;
+  line-height: 26px;
+  opacity: 1;
+  text-align: center;
+  cursor: pointer;
+  border-radius: 5px;
+}
+.voice-add-comfirm {
+  width: 64px;
+  height: 30px;
+  opacity: 1;
+
+  font-size: 13px;
+  line-height: 30px;
+  opacity: 1;
+  text-align: center;
+  cursor: pointer;
+  border-radius: 5px;
+  float: right;
+}
