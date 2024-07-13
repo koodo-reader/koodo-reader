@@ -3,29 +3,31 @@ import { TextToSpeechProps, TextToSpeechState } from "./interface";
 import { Trans } from "react-i18next";
 import { speedList } from "../../constants/dropdownList";
 import StorageUtil from "../../utils/serviceUtils/storageUtil";
-import { sleep } from "../../utils/commonUtil";
+import { getQueryParams, sleep } from "../../utils/commonUtil";
 import { isElectron } from "react-device-detect";
 import toast from "react-hot-toast";
 import RecordLocation from "../../utils/readUtils/recordLocation";
-import BingTTSUtil from "../../utils/serviceUtils/bingTTSUtil";
-
+import TTSUtil from "../../utils/serviceUtils/ttsUtil";
+import VoiceList from "../../utils/readUtils/voiceList";
+import "./textToSpeech.css";
 class TextToSpeech extends React.Component<
   TextToSpeechProps,
   TextToSpeechState
 > {
   nodeList: string[];
   voices: any;
-  edgeVoices: any;
+  customVoices: any;
   nativeVoices: any;
   constructor(props: TextToSpeechProps) {
     super(props);
     this.state = {
       isSupported: false,
       isAudioOn: false,
+      isAddNew: false,
     };
     this.nodeList = [];
     this.voices = [];
-    this.edgeVoices = [];
+    this.customVoices = [];
     this.nativeVoices = [];
   }
   async componentDidMount() {
@@ -53,17 +55,12 @@ class TextToSpeech extends React.Component<
     };
     this.nativeVoices = await setSpeech();
     if (isElectron) {
-      this.edgeVoices = await BingTTSUtil.getVoiceList();
+      this.customVoices = await TTSUtil.getVoiceList();
       this.voices = [
         ...this.nativeVoices,
-        ...this.edgeVoices.map((item) => {
+        ...this.customVoices.map((item) => {
           return {
-            name:
-              item.FriendlyName.split("-")[1].trim() +
-              " " +
-              item.Gender +
-              " " +
-              item.FriendlyName.split(" ")[1],
+            name: item.name,
           };
         }),
       ];
@@ -74,7 +71,7 @@ class TextToSpeech extends React.Component<
   handleChangeAudio = () => {
     if (this.state.isAudioOn) {
       window.speechSynthesis.cancel();
-      BingTTSUtil.pauseAudio();
+      TTSUtil.pauseAudio();
       this.setState({ isAudioOn: false });
     } else {
       this.handleStartSpeech();
@@ -110,8 +107,9 @@ class TextToSpeech extends React.Component<
   };
   handleAudio = async () => {
     this.nodeList = await this.handleGetText();
-    let voiceIndex = StorageUtil.getReaderConfig("voiceIndex") || 0;
-    if (voiceIndex > this.nativeVoices.length) {
+    let voiceIndex = parseInt(StorageUtil.getReaderConfig("voiceIndex")) || 0;
+    console.log(voiceIndex, this.nativeVoices.length);
+    if (voiceIndex > this.nativeVoices.length - 1) {
       await this.handleRead();
     } else {
       await this.handleSystemRead(0);
@@ -131,20 +129,20 @@ class TextToSpeech extends React.Component<
     return this.nodeList;
   };
   async handleRead() {
-    let voiceIndex = StorageUtil.getReaderConfig("voiceIndex") || 0;
-    let speed = StorageUtil.getReaderConfig("voiceSpeed") || 1;
+    let voiceIndex = parseInt(StorageUtil.getReaderConfig("voiceIndex")) || 0;
+    let speed = parseFloat(StorageUtil.getReaderConfig("voiceSpeed")) || 1;
 
-    BingTTSUtil.setAudioPaths();
-    await BingTTSUtil.cacheAudio(
+    TTSUtil.setAudioPaths();
+    await TTSUtil.cacheAudio(
       [this.nodeList[0]],
-      this.edgeVoices[voiceIndex - this.nativeVoices.length].ShortName,
+      voiceIndex - this.nativeVoices.length,
       speed * 100 - 100
     );
 
     setTimeout(async () => {
-      await BingTTSUtil.cacheAudio(
+      await TTSUtil.cacheAudio(
         this.nodeList.slice(1),
-        this.edgeVoices[voiceIndex - this.nativeVoices.length].ShortName,
+        voiceIndex - this.nativeVoices.length,
         speed * 100 - 100
       );
     }, 1);
@@ -154,16 +152,16 @@ class TextToSpeech extends React.Component<
       let style = "background: #f3a6a68c";
       this.props.htmlBook.rendition.highlightNode(currentText, style);
 
-      if (index > BingTTSUtil.getAudioPaths().length - 1) {
+      if (index > TTSUtil.getAudioPaths().length - 1) {
         while (true) {
-          if (index < BingTTSUtil.getAudioPaths().length - 1) break;
+          if (index < TTSUtil.getAudioPaths().length - 1) break;
           await new Promise((resolve) => setTimeout(resolve, 500));
         }
       }
       let res = await this.handleSpeech(
         index,
-        StorageUtil.getReaderConfig("voiceIndex") || 0,
-        StorageUtil.getReaderConfig("voiceSpeed") || 1
+        parseInt(StorageUtil.getReaderConfig("voiceIndex")) || 0,
+        parseFloat(StorageUtil.getReaderConfig("voiceSpeed")) || 1
       );
       if (
         this.nodeList[index] ===
@@ -203,8 +201,8 @@ class TextToSpeech extends React.Component<
 
     let res = await this.handleSystemSpeech(
       index,
-      StorageUtil.getReaderConfig("voiceIndex") || 0,
-      StorageUtil.getReaderConfig("voiceSpeed") || 1
+      parseInt(StorageUtil.getReaderConfig("voiceIndex")) || 0,
+      parseFloat(StorageUtil.getReaderConfig("voiceSpeed")) || 1
     );
 
     if (res === "start") {
@@ -245,11 +243,11 @@ class TextToSpeech extends React.Component<
   }
   handleSpeech = async (index: number, voiceIndex: number, speed: number) => {
     return new Promise<string>(async (resolve, reject) => {
-      let res = await BingTTSUtil.readAloud(index);
+      let res = await TTSUtil.readAloud(index);
       if (res === "loaderror") {
         resolve("start");
       } else {
-        let player = BingTTSUtil.getPlayer();
+        let player = TTSUtil.getPlayer();
         player.on("end", async () => {
           if (!(this.state.isAudioOn && this.props.isReading)) {
             resolve("end");
@@ -340,11 +338,17 @@ class TextToSpeech extends React.Component<
                   className="lang-setting-dropdown"
                   id="text-speech-voice"
                   onChange={(event) => {
-                    StorageUtil.setReaderConfig(
-                      "voiceIndex",
-                      event.target.value
-                    );
-                    toast(this.props.t("Take effect in a while"));
+                    if (event.target.value === this.voices.length - 1 + "") {
+                      window.speechSynthesis.cancel();
+                      TTSUtil.pauseAudio();
+                      this.setState({ isAddNew: true, isAudioOn: false });
+                    } else {
+                      StorageUtil.setReaderConfig(
+                        "voiceIndex",
+                        event.target.value
+                      );
+                      toast(this.props.t("Take effect at next startup"));
+                    }
                   }}
                 >
                   {this.voices.map((item, index) => {
@@ -354,14 +358,14 @@ class TextToSpeech extends React.Component<
                         key={item.name}
                         className="lang-setting-option"
                       >
-                        {item.name}
+                        {this.props.t(item.name)}
                       </option>
                     );
                   })}
                 </select>
               </div>
             )}
-            {this.state.isAudioOn && (
+            {this.state.isAudioOn && !this.state.isAddNew && (
               <div
                 className="setting-dialog-new-title"
                 style={{ marginLeft: "20px", width: "88%", fontWeight: 500 }}
@@ -376,7 +380,7 @@ class TextToSpeech extends React.Component<
                       "voiceSpeed",
                       event.target.value
                     );
-                    toast(this.props.t("Take effect in a while"));
+                    toast(this.props.t("Take effect at next startup"));
                   }}
                 >
                   {speedList.option.map((item) => (
@@ -389,6 +393,49 @@ class TextToSpeech extends React.Component<
                     </option>
                   ))}
                 </select>
+              </div>
+            )}
+            {this.state.isAddNew && (
+              <div
+                className="voice-add-new-container"
+                style={{ marginLeft: "20px", width: "88%", fontWeight: 500 }}
+              >
+                <textarea
+                  name="url"
+                  placeholder={this.props.t(
+                    "The URL of the voice you want to add, check out document for instructions"
+                  )}
+                  id="voice-add-content-box"
+                  className="voice-add-content-box"
+                />
+
+                <div
+                  className="voice-add-comfirm"
+                  onClick={() => {
+                    let url: string = (
+                      document.querySelector(
+                        "#voice-add-content-box"
+                      ) as HTMLTextAreaElement
+                    ).value;
+                    if (url) {
+                      let config: any = getQueryParams(url);
+                      VoiceList.addVoice(config.name, url, "edge");
+                      toast.success(this.props.t("Addition successful"));
+                      toast(this.props.t("Take effect at next startup"));
+                    }
+                    this.setState({ isAddNew: false });
+                  }}
+                >
+                  <Trans>Confirm</Trans>
+                </div>
+                <div
+                  className="voice-add-cancel"
+                  onClick={() => {
+                    this.setState({ isAddNew: false });
+                  }}
+                >
+                  <Trans>Cancel</Trans>
+                </div>
               </div>
             )}
           </>

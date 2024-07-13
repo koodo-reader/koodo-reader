@@ -119,3 +119,12 @@ export const handleExitFullScreen = () => {
     }
   }
 };
+export const getQueryParams = (url: string) => {
+  const urlObj = new URL(url);
+  const params = new URLSearchParams(urlObj.search);
+  const queryParams = {};
+  for (let pair of params.entries()) {
+    queryParams[pair[0]] = pair[1];
+  }
+  return queryParams;
+};

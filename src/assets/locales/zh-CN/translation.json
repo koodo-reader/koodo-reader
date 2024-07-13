@@ -400,5 +400,7 @@
   "Format": "格式",
   "Duplicate book in trash bin": "回收站中存在重复图书",
   "Subject can't be empty": "主题不能为空",
+  "The URL of the voice you want to add, check out document for instructions": "您想添加的音色的URL，查看帮助文档了解如何获取更多音色",
+  "Add new voice": "添加新音色",
   "Full screen": "全屏模式"
 }

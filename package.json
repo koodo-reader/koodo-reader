@@ -99,7 +99,7 @@
       "node_modules/**/*",
       "package.json",
       "main.js",
-      "edge-tts.js"
+      "util.js"
     ],
     "directories": {
       "buildResources": "assets"
