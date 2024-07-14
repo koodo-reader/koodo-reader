@@ -1,5 +1,5 @@
-import HtmlBookModel from "../../../model/HtmlBook";
-import BookModel from "../../../model/Book";
+import HtmlBookModel from "../../../models/HtmlBook";
+import BookModel from "../../../models/Book";
 export interface ContentListProps {
   currentBook: BookModel;
   chapters: any;

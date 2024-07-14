@@ -1,12 +1,12 @@
 //添加笔记的弹窗
 import React from "react";
 import "./popupNote.css";
-import Note from "../../../model/Note";
+import Note from "../../../models/Note";
 
 import { PopupNoteProps, PopupNoteState } from "./interface";
 import RecordLocation from "../../../utils/readUtils/recordLocation";
 import NoteTag from "../../noteTag";
-import NoteModel from "../../../model/Note";
+import NoteModel from "../../../models/Note";
 import { Trans } from "react-i18next";
 import toast from "react-hot-toast";
 import {

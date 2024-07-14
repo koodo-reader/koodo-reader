@@ -1,6 +1,6 @@
-import NoteModel from "../../model/Note";
-import BookmarkModel from "../../model/Bookmark";
-import HtmlBookModel from "../../model/HtmlBook";
+import NoteModel from "../../models/Note";
+import BookmarkModel from "../../models/Bookmark";
+import HtmlBookModel from "../../models/HtmlBook";
 import AddTrash from "../../utils/readUtils/addTrash";
 declare var window: any;
 export function handleNotes(notes: NoteModel[]) {

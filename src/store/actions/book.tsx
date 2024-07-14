@@ -1,4 +1,4 @@
-import BookModel from "../../model/Book";
+import BookModel from "../../models/Book";
 export function handleEditDialog(mode: boolean) {
   return { type: "HANDLE_EDIT_DIALOG", payload: mode };
 }

@@ -1,4 +1,4 @@
-import BookModel from "../../model/Book";
+import BookModel from "../../models/Book";
 class RecordRecent {
   static setRecent(bookKey: string) {
     let bookArr =

@@ -1,7 +1,7 @@
 import StorageUtil from "../serviceUtils/storageUtil";
 import { isElectron } from "react-device-detect";
 
-import BookModel from "../../model/Book";
+import BookModel from "../../models/Book";
 import toast from "react-hot-toast";
 import { getPDFMetadata } from "./pdfUtil";
 import { copyArrayBuffer } from "../commonUtil";

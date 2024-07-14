@@ -1,4 +1,4 @@
-import BookModel from "../../../model/Book";
+import BookModel from "../../../models/Book";
 export interface FeedbackDialogProps {
   handleFeedbackDialog: (isShow: boolean) => void;
   currentBook: BookModel;

@@ -1,6 +1,6 @@
 import React from "react";
 import AddFavorite from "../../utils/readUtils/addFavorite";
-import BookModel from "../../model/Book";
+import BookModel from "../../models/Book";
 import "./selectBook.css";
 import { Trans } from "react-i18next";
 import { BookListProps, BookListState } from "./interface";

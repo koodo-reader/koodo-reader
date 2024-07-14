@@ -1,6 +1,6 @@
-import BookModel from "../../../model/Book";
-import BookmarkModel from "../../../model/Bookmark";
-import NoteModel from "../../../model/Note";
+import BookModel from "../../../models/Book";
+import BookmarkModel from "../../../models/Bookmark";
+import NoteModel from "../../../models/Note";
 import { RouteComponentProps } from "react-router";
 
 export interface CardListProps extends RouteComponentProps<any> {

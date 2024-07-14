@@ -3,7 +3,7 @@ import "./digestList.css";
 import { DigestListProps, DigestListStates } from "./interface";
 import CardList from "../cardList";
 import NoteTag from "../../../components/noteTag";
-import NoteModel from "../../../model/Note";
+import NoteModel from "../../../models/Note";
 import Empty from "../../emptyPage";
 
 class DigestList extends React.Component<DigestListProps, DigestListStates> {

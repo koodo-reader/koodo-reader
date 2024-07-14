@@ -1,6 +1,6 @@
 import React from "react";
 import "./cardList.css";
-import NoteModel from "../../../model/Note";
+import NoteModel from "../../../models/Note";
 import { Trans } from "react-i18next";
 import { CardListProps, CardListStates } from "./interface";
 import DeleteIcon from "../../../components/deleteIcon";
@@ -11,7 +11,7 @@ import { Redirect } from "react-router-dom";
 import NoteTag from "../../../components/noteTag";
 import BookUtil from "../../../utils/fileUtils/bookUtil";
 import toast from "react-hot-toast";
-import BookModel from "../../../model/Book";
+import BookModel from "../../../models/Book";
 class CardList extends React.Component<CardListProps, CardListStates> {
   constructor(props: CardListProps) {
     super(props);

@@ -1,6 +1,6 @@
 import React from "react";
 import "./importLocal.css";
-import BookModel from "../../model/Book";
+import BookModel from "../../models/Book";
 
 import { fetchMD5 } from "../../utils/fileUtils/md5Util";
 import { Trans } from "react-i18next";

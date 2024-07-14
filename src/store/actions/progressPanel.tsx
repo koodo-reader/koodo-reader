@@ -1,5 +1,5 @@
 import RecordLocation from "../../utils/readUtils/recordLocation";
-import BookModel from "../../model/Book";
+import BookModel from "../../models/Book";
 export function handleLocations(locations: any) {
   return { type: "HANDLE_LOCATIONS", payload: locations };
 }

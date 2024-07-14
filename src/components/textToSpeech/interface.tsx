@@ -1,5 +1,5 @@
-import BookModel from "../../model/Book";
-import HtmlBook from "../../model/HtmlBook";
+import BookModel from "../../models/Book";
+import HtmlBook from "../../models/HtmlBook";
 
 export interface TextToSpeechProps {
   locations: any;

@@ -1,7 +1,7 @@
-import BookmarkModel from "../../../model/Bookmark";
-import BookModel from "../../../model/Book";
-import HtmlBookModel from "../../../model/HtmlBook";
-import NoteModel from "../../../model/Note";
+import BookmarkModel from "../../../models/Bookmark";
+import BookModel from "../../../models/Book";
+import HtmlBookModel from "../../../models/HtmlBook";
+import NoteModel from "../../../models/Note";
 export interface NavListProps {
   currentBook: BookModel;
   bookmarks: BookmarkModel[];

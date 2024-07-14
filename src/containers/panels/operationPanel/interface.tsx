@@ -1,7 +1,7 @@
-import BookModel from "../../../model/Book";
-import NoteModel from "../../../model/Note";
-import HtmlBookModel from "../../../model/HtmlBook";
-import BookmarkModel from "../../../model/Bookmark";
+import BookModel from "../../../models/Book";
+import NoteModel from "../../../models/Note";
+import HtmlBookModel from "../../../models/HtmlBook";
+import BookmarkModel from "../../../models/Bookmark";
 import { RouteComponentProps } from "react-router";
 
 export interface OperationPanelProps extends RouteComponentProps<any> {
