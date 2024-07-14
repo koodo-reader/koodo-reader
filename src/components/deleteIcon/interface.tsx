@@ -1,5 +1,5 @@
-import BookmarkModel from "../../model/Bookmark";
-import NoteModel from "../../model/Note";
+import BookmarkModel from "../../models/Bookmark";
+import NoteModel from "../../models/Note";
 export interface DeleteIconProps {
   bookmarks: BookmarkModel[];
   notes: NoteModel[];

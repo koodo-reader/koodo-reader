@@ -1,6 +1,6 @@
-import BookModel from "../../../model/Book";
-import HtmlBook from "../../../model/HtmlBook";
-import NoteModel from "../../../model/Note";
+import BookModel from "../../../models/Book";
+import HtmlBook from "../../../models/HtmlBook";
+import NoteModel from "../../../models/Note";
 export interface PopupNoteProps {
   currentBook: BookModel;
   notes: NoteModel[];

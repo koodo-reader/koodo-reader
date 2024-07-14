@@ -1,6 +1,6 @@
-import BookModel from "../../model/Book";
-import NoteModel from "../../model/Note";
-import htmlBookModel from "../../model/HtmlBook";
+import BookModel from "../../models/Book";
+import NoteModel from "../../models/Note";
+import htmlBookModel from "../../models/HtmlBook";
 export interface SearchBoxProps {
   books: BookModel[];
   isSearch: boolean;

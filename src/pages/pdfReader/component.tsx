@@ -13,7 +13,7 @@ import StorageUtil from "../../utils/serviceUtils/storageUtil";
 import PopupBox from "../../components/popups/popupBox";
 import { renderHighlighters } from "../../utils/serviceUtils/noteUtil";
 import { getPDFIframeDoc } from "../../utils/serviceUtils/docUtil";
-import Note from "../../model/Note";
+import Note from "../../models/Note";
 import RecordLocation from "../../utils/readUtils/recordLocation";
 declare var window: any;
 class Viewer extends React.Component<ViewerProps, ViewerState> {

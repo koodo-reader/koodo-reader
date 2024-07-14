@@ -108,7 +108,6 @@ class TextToSpeech extends React.Component<
   handleAudio = async () => {
     this.nodeList = await this.handleGetText();
     let voiceIndex = parseInt(StorageUtil.getReaderConfig("voiceIndex")) || 0;
-    console.log(voiceIndex, this.nativeVoices.length);
     if (voiceIndex > this.nativeVoices.length - 1) {
       await this.handleRead();
     } else {
@@ -403,7 +402,7 @@ class TextToSpeech extends React.Component<
                 <textarea
                   name="url"
                   placeholder={this.props.t(
-                    "The URL of the voice you want to add, check out document for instructions"
+                    "The URL of the voice you want to add, check out document to learn how to get more voices"
                   )}
                   id="voice-add-content-box"
                   className="voice-add-content-box"

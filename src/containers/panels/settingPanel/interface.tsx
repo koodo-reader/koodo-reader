@@ -1,4 +1,4 @@
-import BookModel from "../../../model/Book";
+import BookModel from "../../../models/Book";
 export interface SettingPanelProps {
   currentBook: BookModel;
   locations: any;

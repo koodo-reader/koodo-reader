@@ -1,6 +1,6 @@
-import BookModel from "../../model/Book";
-import NoteModel from "../../model/Note";
-import BookmarkModel from "../../model/Bookmark";
+import BookModel from "../../models/Book";
+import NoteModel from "../../models/Note";
+import BookmarkModel from "../../models/Bookmark";
 import { zipBook, zipConfig } from "./common";
 declare var window: any;
 

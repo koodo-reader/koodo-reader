@@ -1,6 +1,6 @@
 import StorageUtil from "../../utils/serviceUtils/storageUtil";
 import SortUtil from "../../utils/readUtils/sortUtil";
-import BookModel from "../../model/Book";
+import BookModel from "../../models/Book";
 import { Dispatch } from "redux";
 import AddTrash from "../../utils/readUtils/addTrash";
 declare var window: any;

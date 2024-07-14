@@ -17,7 +17,7 @@ import { tsTransform } from "../../utils/serviceUtils/langUtil";
 import { binicReadingProcess } from "../../utils/serviceUtils/bionicUtil";
 import PopupBox from "../../components/popups/popupBox";
 import { renderHighlighters } from "../../utils/serviceUtils/noteUtil";
-import Note from "../../model/Note";
+import Note from "../../models/Note";
 import PageWidget from "../../containers/pageWidget";
 import { scrollContents } from "../../utils/commonUtil";
 

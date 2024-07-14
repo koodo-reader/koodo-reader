@@ -1,5 +1,5 @@
-import BookModel from "../../model/Book";
-import NoteModel from "../../model/Note";
+import BookModel from "../../models/Book";
+import NoteModel from "../../models/Note";
 class SearchUtil {
   static mergeArray(arr1: number[], arr2: number[]) {
     var _arr: number[] = [];

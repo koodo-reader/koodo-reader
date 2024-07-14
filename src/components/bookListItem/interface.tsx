@@ -1,4 +1,4 @@
-import BookModel from "../../model/Book";
+import BookModel from "../../models/Book";
 import { RouteComponentProps } from "react-router";
 
 export interface BookItemProps extends RouteComponentProps<any> {

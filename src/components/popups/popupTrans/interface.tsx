@@ -10,4 +10,5 @@ export interface PopupTransState {
   transService: string;
   transTarget: string;
   transSource: string;
+  isAddNew: boolean;
 }

@@ -1,6 +1,6 @@
 import React from "react";
 import "./operationPanel.css";
-import Bookmark from "../../../model/Bookmark";
+import Bookmark from "../../../models/Bookmark";
 import { Trans } from "react-i18next";
 
 import RecordLocation from "../../../utils/readUtils/recordLocation";

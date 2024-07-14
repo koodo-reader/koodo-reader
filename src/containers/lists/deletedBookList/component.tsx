@@ -6,7 +6,7 @@ import BookListItem from "../../../components/bookListItem";
 import AddTrash from "../../../utils/readUtils/addTrash";
 import RecordRecent from "../../../utils/readUtils/recordRecent";
 import SortUtil from "../../../utils/readUtils/sortUtil";
-import BookModel from "../../../model/Book";
+import BookModel from "../../../models/Book";
 import { Trans } from "react-i18next";
 import { BookListProps, BookListState } from "./interface";
 import { Redirect, withRouter } from "react-router-dom";

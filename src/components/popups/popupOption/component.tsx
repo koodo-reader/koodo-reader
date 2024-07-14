@@ -1,7 +1,7 @@
 import React from "react";
 import "./popupOption.css";
 
-import Note from "../../../model/Note";
+import Note from "../../../models/Note";
 import { PopupOptionProps } from "./interface";
 import ColorOption from "../../colorOption";
 import RecordLocation from "../../../utils/readUtils/recordLocation";

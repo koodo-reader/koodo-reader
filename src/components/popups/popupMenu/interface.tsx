@@ -1,5 +1,5 @@
-import BookModel from "../../../model/Book";
-import NoteModel from "../../../model/Note";
+import BookModel from "../../../models/Book";
+import NoteModel from "../../../models/Note";
 
 export interface PopupMenuProps {
   currentBook: BookModel;

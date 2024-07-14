@@ -3,7 +3,7 @@ import "./noteList.css";
 import { NoteListProps, NoteListState } from "./interface";
 import CardList from "../cardList";
 import NoteTag from "../../../components/noteTag";
-import NoteModel from "../../../model/Note";
+import NoteModel from "../../../models/Note";
 import Empty from "../../emptyPage";
 
 class NoteList extends React.Component<NoteListProps, NoteListState> {

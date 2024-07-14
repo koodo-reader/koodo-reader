@@ -7,10 +7,10 @@ import { reader } from "./reducers/reader";
 import { viewArea } from "./reducers/viewArea";
 import { sidebar } from "./reducers/sidebar";
 import { backupPage } from "./reducers/backupPage";
-import BookModel from "../model/Book";
-import NoteModel from "../model/Note";
-import BookmarkModel from "../model/Bookmark";
-import HtmlBookModel from "../model/HtmlBook";
+import BookModel from "../models/Book";
+import NoteModel from "../models/Note";
+import BookmarkModel from "../models/Bookmark";
+import HtmlBookModel from "../models/HtmlBook";
 const rootReducer = combineReducers({
   book,
   manager,

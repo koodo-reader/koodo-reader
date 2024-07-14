@@ -1,4 +1,4 @@
-import BookModel from "../../model/Book";
+import BookModel from "../../models/Book";
 class AddFavorite {
   static setFavorite(bookKey: string) {
     let bookArr =

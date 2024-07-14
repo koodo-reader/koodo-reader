@@ -1,4 +1,4 @@
-import BookModel from "../../../model/Book";
+import BookModel from "../../../models/Book";
 export interface TokenDialogProps {
   handleTokenDialog: (isShow: boolean) => void;
   currentBook: BookModel;

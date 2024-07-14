@@ -1,4 +1,4 @@
-import BookModel from "../../../model/Book";
+import BookModel from "../../../models/Book";
 export interface PopupDictProps {
   originalText: string;
   currentBook: BookModel;
@@ -12,4 +12,5 @@ export interface PopupDictState {
   prototype: string;
   dictService: string;
   dictTarget: string;
+  isAddNew: boolean;
 }

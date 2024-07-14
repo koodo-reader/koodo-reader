@@ -1,5 +1,5 @@
-import BookModel from "../../model/Book";
-import Note from "../../model/Note";
+import BookModel from "../../models/Book";
+import Note from "../../models/Note";
 
 export interface ViewerProps {
   book: BookModel;

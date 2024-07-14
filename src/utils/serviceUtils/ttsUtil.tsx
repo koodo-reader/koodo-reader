@@ -29,7 +29,6 @@ class TTSUtil {
     voiceIndex: number,
     speed: number = 0
   ) {
-    console.log("cacheAudio", nodeList, voiceIndex, speed);
     let voiceList = VoiceList.getAllVoices();
     if (voiceIndex >= voiceList.length) {
       voiceIndex = 0;

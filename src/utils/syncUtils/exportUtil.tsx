@@ -1,6 +1,6 @@
-import Book from "../../model/Book";
-import DictHistory from "../../model/DictHistory";
-import Note from "../../model/Note";
+import Book from "../../models/Book";
+import DictHistory from "../../models/DictHistory";
+import Note from "../../models/Note";
 import BookUtil from "../fileUtils/bookUtil";
 import { zipFilesToBlob } from "./common";
 

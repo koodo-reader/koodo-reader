@@ -1,6 +1,6 @@
-import Book from "../../model/Book";
-import HtmlBook from "../../model/HtmlBook";
-import Note from "../../model/Note";
+import Book from "../../models/Book";
+import HtmlBook from "../../models/HtmlBook";
+import Note from "../../models/Note";
 
 export interface ViewerProps {
   book: Book;

@@ -1,8 +1,8 @@
-import BookModel from "../../model/Book";
+import BookModel from "../../models/Book";
 
 import BookUtil from "../fileUtils/bookUtil";
-import NoteModel from "../../model/Note";
-import BookmarkModel from "../../model/Bookmark";
+import NoteModel from "../../models/Note";
+import BookmarkModel from "../../models/Bookmark";
 import { isElectron } from "react-device-detect";
 declare var window: any;
 

@@ -1,5 +1,5 @@
 import { classes, colors, lines } from "../../constants/themeList";
-import Note from "../../model/Note";
+import Note from "../../models/Note";
 import { showPDFHighlight } from "../fileUtils/pdfUtil";
 declare var window: any;
 export const renderHighlighters = async (
