@@ -54,19 +54,6 @@ class TextToSpeech extends React.Component<
       });
     };
     this.nativeVoices = await setSpeech();
-    if (isElectron) {
-      this.customVoices = await TTSUtil.getVoiceList();
-      this.voices = [
-        ...this.nativeVoices,
-        ...this.customVoices.map((item) => {
-          return {
-            name: item.name,
-          };
-        }),
-      ];
-    } else {
-      this.voices = this.nativeVoices;
-    }
   }
   handleChangeAudio = () => {
     if (this.state.isAudioOn) {
@@ -74,6 +61,19 @@ class TextToSpeech extends React.Component<
       TTSUtil.pauseAudio();
       this.setState({ isAudioOn: false });
     } else {
+      if (isElectron) {
+        this.customVoices = TTSUtil.getVoiceList();
+        this.voices = [
+          ...this.nativeVoices,
+          ...this.customVoices.map((item) => {
+            return {
+              name: item.name,
+            };
+          }),
+        ];
+      } else {
+        this.voices = this.nativeVoices;
+      }
       this.handleStartSpeech();
     }
   };
@@ -421,7 +421,6 @@ class TextToSpeech extends React.Component<
                       let config: any = getQueryParams(url);
                       VoiceList.addVoice(config.name, url, "edge");
                       toast.success(this.props.t("Addition successful"));
-                      toast(this.props.t("Take effect at next startup"));
                     }
                     this.setState({ isAddNew: false });
                   }}
