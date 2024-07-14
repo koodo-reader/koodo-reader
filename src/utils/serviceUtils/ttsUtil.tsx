@@ -72,11 +72,9 @@ class TTSUtil {
   static getPlayer() {
     return this.player;
   }
-  static async getVoiceList() {
-    return new Promise<any[]>((resolve, reject) => {
-      let voices = VoiceList.getAllVoices();
-      resolve([...voices, { name: "Add new voice", url: "", type: "" }]);
-    });
+  static getVoiceList() {
+    let voices = VoiceList.getAllVoices();
+    return [...voices, { name: "Add new voice", url: "", type: "" }];
   }
 }
 export default TTSUtil;
