@@ -10,6 +10,7 @@ import RecordLocation from "../../utils/readUtils/recordLocation";
 import TTSUtil from "../../utils/serviceUtils/ttsUtil";
 import "./textToSpeech.css";
 import PluginList from "../../utils/readUtils/pluginList";
+import { openExternalUrl } from "../../utils/serviceUtils/urlUtil";
 
 class TextToSpeech extends React.Component<
   TextToSpeechProps,
@@ -428,13 +429,36 @@ class TextToSpeech extends React.Component<
                 >
                   <Trans>Confirm</Trans>
                 </div>
-                <div
-                  className="voice-add-cancel"
-                  onClick={() => {
-                    this.setState({ isAddNew: false });
-                  }}
-                >
-                  <Trans>Cancel</Trans>
+                <div className="voice-add-button-container">
+                  <div
+                    className="voice-add-cancel"
+                    onClick={() => {
+                      this.setState({ isAddNew: false });
+                    }}
+                  >
+                    <Trans>Cancel</Trans>
+                  </div>
+                  <div
+                    className="voice-add-cancel"
+                    style={{ marginRight: "10px" }}
+                    onClick={() => {
+                      if (
+                        StorageUtil.getReaderConfig("lang") === "zhCN" ||
+                        StorageUtil.getReaderConfig("lang") === "zhTW" ||
+                        StorageUtil.getReaderConfig("lang") === "zhMO"
+                      ) {
+                        openExternalUrl(
+                          "https://www.koodoreader.com/zh/document"
+                        );
+                      } else {
+                        openExternalUrl(
+                          "https://www.koodoreader.com/en/document"
+                        );
+                      }
+                    }}
+                  >
+                    <Trans>Document</Trans>
+                  </div>
                 </div>
               </div>
             )}

@@ -36,3 +36,7 @@
   border-radius: 5px;
   float: right;
 }
+.voice-add-button-container {
+  display: flex;
+  justify-content: space-between;
+}
