@@ -3,13 +3,14 @@ import { TextToSpeechProps, TextToSpeechState } from "./interface";
 import { Trans } from "react-i18next";
 import { speedList } from "../../constants/dropdownList";
 import StorageUtil from "../../utils/serviceUtils/storageUtil";
-import { getQueryParams, sleep } from "../../utils/commonUtil";
+import { sleep } from "../../utils/commonUtil";
 import { isElectron } from "react-device-detect";
 import toast from "react-hot-toast";
 import RecordLocation from "../../utils/readUtils/recordLocation";
 import TTSUtil from "../../utils/serviceUtils/ttsUtil";
-import VoiceList from "../../utils/readUtils/voiceList";
 import "./textToSpeech.css";
+import PluginList from "../../utils/readUtils/pluginList";
+
 class TextToSpeech extends React.Component<
   TextToSpeechProps,
   TextToSpeechState
@@ -56,6 +57,7 @@ class TextToSpeech extends React.Component<
     this.nativeVoices = await setSpeech();
   }
   handleChangeAudio = () => {
+    this.setState({ isAddNew: false });
     if (this.state.isAudioOn) {
       window.speechSynthesis.cancel();
       TTSUtil.pauseAudio();
@@ -63,14 +65,7 @@ class TextToSpeech extends React.Component<
     } else {
       if (isElectron) {
         this.customVoices = TTSUtil.getVoiceList();
-        this.voices = [
-          ...this.nativeVoices,
-          ...this.customVoices.map((item) => {
-            return {
-              name: item.name,
-            };
-          }),
-        ];
+        this.voices = [...this.nativeVoices, ...this.customVoices];
       } else {
         this.voices = this.nativeVoices;
       }
@@ -108,7 +103,10 @@ class TextToSpeech extends React.Component<
   handleAudio = async () => {
     this.nodeList = await this.handleGetText();
     let voiceIndex = parseInt(StorageUtil.getReaderConfig("voiceIndex")) || 0;
-    if (voiceIndex > this.nativeVoices.length - 1) {
+    if (
+      voiceIndex > this.nativeVoices.length - 1 &&
+      PluginList.getAllVoices().length > 0
+    ) {
       await this.handleRead();
     } else {
       await this.handleSystemRead(0);
@@ -357,7 +355,7 @@ class TextToSpeech extends React.Component<
                         key={item.name}
                         className="lang-setting-option"
                       >
-                        {this.props.t(item.name)}
+                        {this.props.t(item.displayName || item.name)}
                       </option>
                     );
                   })}
@@ -402,7 +400,7 @@ class TextToSpeech extends React.Component<
                 <textarea
                   name="url"
                   placeholder={this.props.t(
-                    "The URL of the voice you want to add, check out document to learn how to get more voices"
+                    "Paste the code of the plugin here, check out document to learn how to get more plugin"
                   )}
                   id="voice-add-content-box"
                   className="voice-add-content-box"
@@ -411,14 +409,14 @@ class TextToSpeech extends React.Component<
                 <div
                   className="voice-add-comfirm"
                   onClick={() => {
-                    let url: string = (
+                    let value: string = (
                       document.querySelector(
                         "#voice-add-content-box"
                       ) as HTMLTextAreaElement
                     ).value;
-                    if (url) {
-                      let config: any = getQueryParams(url);
-                      VoiceList.addVoice(config.name, url, "edge");
+                    if (value) {
+                      let plugin = JSON.parse(value);
+                      PluginList.addPlugin(plugin);
                       toast.success(this.props.t("Addition successful"));
                     }
                     this.setState({ isAddNew: false });

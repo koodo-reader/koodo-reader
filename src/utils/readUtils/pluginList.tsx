@@ -31,6 +31,23 @@ class PluginList {
         : [];
     return pluginList || [];
   }
+  static getAllVoices() {
+    let pluginList =
+      localStorage.getItem("pluginList") !== "{}" &&
+      localStorage.getItem("pluginList")
+        ? (JSON.parse(localStorage.getItem("pluginList") || "") as Plugin[])
+        : [];
+    let voiceList: any[] = [];
+    for (
+      let index = 0;
+      index < pluginList.filter((item) => item.type === "voice").length;
+      index++
+    ) {
+      const plugin = pluginList.filter((item) => item.type === "voice")[index];
+      voiceList.push(...(plugin.voiceList as any[]));
+    }
+    return voiceList;
+  }
 }
 
 export default PluginList;

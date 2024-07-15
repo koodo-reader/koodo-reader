@@ -1,5 +1,6 @@
 import { Howl } from "howler";
-import VoiceList from "../readUtils/voiceList";
+import PluginList from "../readUtils/pluginList";
+import Plugin from "../../models/Plugin";
 
 class TTSUtil {
   static player: any;
@@ -29,14 +30,15 @@ class TTSUtil {
     voiceIndex: number,
     speed: number = 0
   ) {
-    let voiceList = VoiceList.getAllVoices();
+    let voiceList = PluginList.getAllVoices();
     if (voiceIndex >= voiceList.length) {
       voiceIndex = 0;
     }
     let voice = voiceList[voiceIndex];
-    if (!voice) {
+    if (!voice || !voice.plugin) {
       return;
     }
+    let plugin: Plugin = PluginList.getPluginById(voice.plugin);
     for (let index = 0; index < nodeList.length; index++) {
       const nodeText = nodeList[index];
       let audioPath = await window
@@ -50,8 +52,8 @@ class TTSUtil {
             .replace(/&/g, "")
             .replace(/\f/g, ""),
           speed,
-          url: voice.url,
-          type: voice.type,
+          plugin: plugin,
+          voiceName: voice.name,
         });
       this.audioPaths.push(audioPath);
     }
@@ -72,7 +74,7 @@ class TTSUtil {
     return this.player;
   }
   static getVoiceList() {
-    let voices = VoiceList.getAllVoices();
+    let voices = PluginList.getAllVoices();
     return [...voices, { name: "Add new voice", url: "", type: "" }];
   }
 }

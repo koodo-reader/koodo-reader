@@ -98,8 +98,7 @@
       "build/**/*",
       "node_modules/**/*",
       "package.json",
-      "main.js",
-      "util.js"
+      "main.js"
     ],
     "directories": {
       "buildResources": "assets"
