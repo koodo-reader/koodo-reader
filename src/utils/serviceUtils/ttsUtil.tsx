@@ -53,7 +53,7 @@ class TTSUtil {
             .replace(/\f/g, ""),
           speed,
           plugin: plugin,
-          voiceName: voice.name,
+          config: voice.config,
         });
       this.audioPaths.push(audioPath);
     }

@@ -7,6 +7,7 @@ class Plugin {
   config: object;
   langList: object | any[];
   voiceList: object | any[];
+  scriptSHA256: string;
   script: string;
   constructor(
     identifier: string,
@@ -17,6 +18,7 @@ class Plugin {
     config: object,
     langList: any,
     voiceList: any,
+    scriptSHA256: string,
     script: string
   ) {
     this.identifier = identifier;
@@ -28,6 +30,7 @@ class Plugin {
     this.langList = langList;
     this.voiceList = voiceList;
     this.script = script;
+    this.scriptSHA256 = scriptSHA256;
   }
 }
 

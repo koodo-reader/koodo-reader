@@ -128,3 +128,9 @@ export const getQueryParams = (url: string) => {
   }
   return queryParams;
 };
+export const getStrSHA256 = (str: string) => {
+  const crypto = window.require("crypto");
+  const hash = crypto.createHash("sha256");
+  hash.update(str);
+  return hash.digest("hex");
+};

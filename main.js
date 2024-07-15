@@ -146,17 +146,12 @@ const createMainWin = () => {
 
     event.returnValue = "success";
   });
-  ipcMain.handle("generate-tts", async (event, config) => {
-    let { text, speed, voiceName, plugin } = config;
-    const sparkMd5 = require('spark-md5');
-    const hash = sparkMd5.hash(plugin.script);;
-    if (hash !== "fd4638b1c069404933607227a60aed62") {
-      return ""
-    }
+  ipcMain.handle("generate-tts", async (event, voiceConfig) => {
+    let { text, speed, plugin, config } = voiceConfig;
     let voiceFunc = plugin.script
     // eslint-disable-next-line no-eval
     eval(voiceFunc);
-    return global.getAudioPath(text, speed, dirPath, { voiceName: voiceName, voiceFormat: "webm-24khz-16bit-mono-opus" });
+    return global.getAudioPath(text, speed, dirPath, config);
 
   });
   ipcMain.handle("ftp-upload", async (event, config) => {

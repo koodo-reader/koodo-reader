@@ -27,17 +27,6 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
     };
   }
   componentDidMount() {
-    if (!this.state.dictService) {
-      this.setState({ isAddNew: true });
-    }
-    if (
-      PluginList.getAllPlugins().findIndex(
-        (item) => item.identifier === this.state.dictService
-      ) === -1
-    ) {
-      this.setState({ isAddNew: true });
-      return;
-    }
     this.handleLookUp();
   }
   handleLookUp() {
@@ -53,6 +42,14 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
     if (StorageUtil.getReaderConfig("isLemmatizeWord") === "yes") {
       originalText = prototype;
     }
+    if (
+      !this.state.dictService ||
+      PluginList.getAllPlugins().findIndex(
+        (item) => item.identifier === this.state.dictService
+      ) === -1
+    ) {
+      this.setState({ isAddNew: true });
+    }
     this.handleDict(originalText);
     this.handleRecordHistory(originalText);
   }
@@ -67,7 +64,8 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
   };
   handleDict = async (text: string) => {
     try {
-      let dictFunc = PluginList.getPluginById(this.state.dictService).script;
+      let plugin = PluginList.getPluginById(this.state.dictService);
+      let dictFunc = plugin.script;
       // eslint-disable-next-line no-eval
       eval(dictFunc);
       let dictText = await window.getDictText(
@@ -76,7 +74,7 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
         this.state.dictTarget,
         axios,
         this.props.t,
-        {}
+        plugin.config
       );
       this.setState(
         {
@@ -265,7 +263,12 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
                     ).value;
                     if (value) {
                       let plugin: Plugin = JSON.parse(value);
-                      PluginList.addPlugin(plugin);
+
+                      let isSuccess = PluginList.addPlugin(plugin);
+                      if (!isSuccess) {
+                        toast.error(this.props.t("Plugin verification failed"));
+                        return;
+                      }
                       this.setState({ dictService: plugin.identifier });
                       toast.success(this.props.t("Addition successful"));
                       this.handleChangeDictService(plugin.identifier);
