@@ -15,8 +15,6 @@ const store = new Store();
 const fs = require("fs");
 const configDir = app.getPath("userData");
 const dirPath = path.join(configDir, "uploads");
-
-const { getEdgeAudioPath } = require("./util");
 let mainWin;
 let mainView
 const singleInstance = app.requestSingleInstanceLock();
@@ -149,12 +147,17 @@ const createMainWin = () => {
     event.returnValue = "success";
   });
   ipcMain.handle("generate-tts", async (event, config) => {
-    let { text, url, type, speed } = config;
-    if (type === "edge") {
-      return getEdgeAudioPath(text, url, speed, dirPath);
-    } else {
-      return getEdgeAudioPath(text, url, speed);
+    let { text, speed, voiceName, plugin } = config;
+    const sparkMd5 = require('spark-md5');
+    const hash = sparkMd5.hash(plugin.script);;
+    if (hash !== "fd4638b1c069404933607227a60aed62") {
+      return ""
     }
+    let voiceFunc = plugin.script
+    // eslint-disable-next-line no-eval
+    eval(voiceFunc);
+    return global.getAudioPath(text, speed, dirPath, { voiceName: voiceName, voiceFormat: "webm-24khz-16bit-mono-opus" });
+
   });
   ipcMain.handle("ftp-upload", async (event, config) => {
     let { url, username, password, fileName, dir, ssl } = config;
