@@ -39,9 +39,8 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
     this.handleTrans(originalText);
   }
   handleTrans = (text: string) => {
-    let translateFunc = PluginList.getPluginById(
-      this.state.transService
-    ).script;
+    let plutin = PluginList.getPluginById(this.state.transService);
+    let translateFunc = plutin.script;
     // eslint-disable-next-line no-eval
     eval(translateFunc);
     window
@@ -50,7 +49,7 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
         StorageUtil.getReaderConfig("transSource") || "",
         StorageUtil.getReaderConfig("transTarget") || "en",
         axios,
-        {}
+        plutin.config
       )
       .then((res: any) => {
         if (res.explanations) {
@@ -166,7 +165,11 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
                     ).value;
                     if (value) {
                       let plugin: Plugin = JSON.parse(value);
-                      PluginList.addPlugin(plugin);
+                      let isSuccess = PluginList.addPlugin(plugin);
+                      if (!isSuccess) {
+                        toast.error(this.props.t("Plugin verification failed"));
+                        return;
+                      }
                       this.setState({ transService: plugin.identifier });
                       toast.success(this.props.t("Addition successful"));
                       this.handleChangeService(plugin.identifier);

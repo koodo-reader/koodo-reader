@@ -1,7 +1,15 @@
+import { pluginHashList } from "../../constants/pluginList";
 import Plugin from "../../models/Plugin";
+import { getStrSHA256 } from "../commonUtil";
 
 class PluginList {
   static addPlugin(plugin: Plugin) {
+    if (
+      pluginHashList.indexOf(plugin.scriptSHA256) === -1 ||
+      getStrSHA256(plugin.script) !== plugin.scriptSHA256
+    ) {
+      return false;
+    }
     let pluginList =
       localStorage.getItem("pluginList") !== "{}" &&
       localStorage.getItem("pluginList")
@@ -11,6 +19,7 @@ class PluginList {
     pluginList.push(plugin);
 
     localStorage.setItem("pluginList", JSON.stringify(pluginList));
+    return true;
   }
   static getPluginById(identifier: string) {
     let pluginList =

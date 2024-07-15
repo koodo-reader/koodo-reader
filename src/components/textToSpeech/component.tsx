@@ -416,7 +416,11 @@ class TextToSpeech extends React.Component<
                     ).value;
                     if (value) {
                       let plugin = JSON.parse(value);
-                      PluginList.addPlugin(plugin);
+                      let isSuccess = PluginList.addPlugin(plugin);
+                      if (!isSuccess) {
+                        toast.error(this.props.t("Plugin verification failed"));
+                        return;
+                      }
                       toast.success(this.props.t("Addition successful"));
                     }
                     this.setState({ isAddNew: false });
