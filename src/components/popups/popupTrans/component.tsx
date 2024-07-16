@@ -69,7 +69,7 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
   handleChangeService(target: string) {
     this.setState({ transService: target }, () => {
       StorageUtil.setReaderConfig("transService", target);
-      let autoValue = PluginList.getPluginById(target).config["autoValue"];
+      let autoValue = PluginList.getPluginById(target).autoValue;
       this.setState({ transSource: autoValue, transTarget: "en" }, () => {
         StorageUtil.setReaderConfig("transTarget", "en");
         StorageUtil.setReaderConfig("transSource", autoValue);

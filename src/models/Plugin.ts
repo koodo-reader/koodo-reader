@@ -4,6 +4,7 @@ class Plugin {
   displayName: string;
   icon: string;
   version: string;
+  autoValue: string;
   config: object;
   langList: object | any[];
   voiceList: object | any[];
@@ -15,6 +16,7 @@ class Plugin {
     displayName: string,
     icon: string,
     version: string,
+    autoValue: string,
     config: object,
     langList: any,
     voiceList: any,
@@ -26,6 +28,7 @@ class Plugin {
     this.displayName = displayName;
     this.icon = icon;
     this.version = version;
+    this.autoValue = autoValue;
     this.config = config;
     this.langList = langList;
     this.voiceList = voiceList;
