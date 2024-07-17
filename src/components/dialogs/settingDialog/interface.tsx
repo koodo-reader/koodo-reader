@@ -1,6 +1,7 @@
 import BookModel from "../../../models/Book";
 import NoteModel from "../../../models/Note";
 import BookmarkModel from "../../../models/Bookmark";
+import Plugin from "../../../models/Plugin";
 export interface SettingInfoProps {
   handleSetting: (isSettingOpen: boolean) => void;
   handleTipDialog: (isTipDialog: boolean) => void;
@@ -35,4 +36,6 @@ export interface SettingInfoState {
   isPreventAdd: boolean;
   isLemmatizeWord: boolean;
   currentThemeIndex: number;
+  currentTab: string;
+  pluginList: Plugin[];
 }

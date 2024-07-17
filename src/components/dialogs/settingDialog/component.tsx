@@ -11,7 +11,9 @@ import { dropdownList } from "../../../constants/dropdownList";
 
 import { restore } from "../../../utils/syncUtils/restoreUtil";
 import {
-  settingList,
+  generalSettingList,
+  appearanceSettingList,
+  readingSettingList,
   langList,
   searchList,
   skinList,
@@ -20,6 +22,7 @@ import { themeList } from "../../../constants/themeList";
 import toast from "react-hot-toast";
 import { openExternalUrl } from "../../../utils/serviceUtils/urlUtil";
 import ManagerUtil from "../../../utils/fileUtils/managerUtil";
+import PluginList from "../../../utils/readUtils/pluginList";
 declare var window: any;
 class SettingDialog extends React.Component<
   SettingInfoProps,
@@ -28,6 +31,8 @@ class SettingDialog extends React.Component<
   constructor(props: SettingInfoProps) {
     super(props);
     this.state = {
+      currentTab: "general",
+      pluginList: PluginList.getAllPlugins(),
       isTouch: StorageUtil.getReaderConfig("isTouch") === "yes",
       isImportPath: StorageUtil.getReaderConfig("isImportPath") === "yes",
       isMergeWord: StorageUtil.getReaderConfig("isMergeWord") === "yes",
@@ -199,7 +204,9 @@ class SettingDialog extends React.Component<
       localStorage.getItem("storageLocation") ||
       ipcRenderer.sendSync("storage-location", "ping");
   };
-
+  handleChangeTab = (currentTab: string) => {
+    this.setState({ currentTab });
+  };
   handleTheme = (name: string, index: number) => {
     this.setState({ currentThemeIndex: index });
     StorageUtil.setReaderConfig("themeColor", name);
@@ -244,6 +251,63 @@ class SettingDialog extends React.Component<
               ? "Developer version"
               : ""}
           </Trans>
+          <div
+            className="navigation-navigation"
+            style={{ position: "unset", marginTop: "5px" }}
+          >
+            <span
+              className="book-bookmark-title"
+              onClick={() => {
+                this.handleChangeTab("general");
+              }}
+              style={
+                this.state.currentTab === "general"
+                  ? { fontWeight: "bold", borderBottom: "2px solid" }
+                  : { opacity: 0.5 }
+              }
+            >
+              <Trans>General</Trans>
+            </span>
+            <span
+              className="book-bookmark-title"
+              style={
+                this.state.currentTab === "reading"
+                  ? { fontWeight: "bold", borderBottom: "2px solid" }
+                  : { opacity: 0.5 }
+              }
+              onClick={() => {
+                this.handleChangeTab("reading");
+              }}
+            >
+              <Trans>Reading</Trans>
+            </span>
+            <span
+              className="book-bookmark-title"
+              style={
+                this.state.currentTab === "appearance"
+                  ? { fontWeight: "bold", borderBottom: "2px solid" }
+                  : { opacity: 0.5 }
+              }
+              onClick={() => {
+                this.handleChangeTab("appearance");
+              }}
+            >
+              <Trans>Appearance</Trans>
+            </span>
+            <span
+              className="book-bookmark-title"
+              style={
+                this.state.currentTab === "plugins"
+                  ? { fontWeight: "bold", borderBottom: "2px solid" }
+                  : { opacity: 0.5 }
+              }
+              onClick={() => {
+                this.handleChangeTab("plugins");
+              }}
+            >
+              <Trans>Plugins</Trans>
+            </span>
+          </div>
         </p>
         <div
           className="setting-close-container"
@@ -255,175 +319,346 @@ class SettingDialog extends React.Component<
         </div>
 
         <div className="setting-dialog-info">
-          {settingList.map((item, index) => {
-            return (
-              <div
-                style={
-                  item.isElectron ? (isElectron ? {} : { display: "none" }) : {}
-                }
-                key={item.propName}
-              >
-                <div className="setting-dialog-new-title" key={item.title}>
-                  <span style={{ width: "250px" }}>
-                    <Trans>{item.title}</Trans>
-                  </span>
-
-                  <span
-                    className="single-control-switch"
-                    onClick={() => {
-                      switch (item.propName) {
-                        case "isMergeWord":
-                          this.handleMergeWord();
-                          break;
-                        case "isOpenInMain":
-                          this.handleOpenInMain();
-                          break;
-                        default:
-                          this.handleSetting(item.propName);
-                          break;
-                      }
-                    }}
-                    style={this.state[item.propName] ? {} : { opacity: 0.6 }}
-                  >
-                    <span
-                      className="single-control-button"
-                      style={
-                        this.state[item.propName]
-                          ? {
-                              transform: "translateX(20px)",
-                              transition: "transform 0.5s ease",
-                            }
-                          : {
-                              transform: "translateX(0px)",
-                              transition: "transform 0.5s ease",
-                            }
-                      }
-                    ></span>
-                  </span>
-                </div>
-                <p className="setting-option-subtitle">
-                  <Trans>{item.desc}</Trans>
-                </p>
-              </div>
-            );
-          })}
-          <div className="setting-dialog-new-title">
-            <Trans>Theme color</Trans>
-            <ul className="theme-setting-container">
-              {themeList.map((item, index) => (
-                <li
-                  className={
-                    index === this.state.currentThemeIndex
-                      ? "active-color theme-setting-item"
-                      : "theme-setting-item"
-                  }
-                  key={item.name}
-                  onClick={() => {
-                    this.handleTheme(item.name, index);
-                  }}
-                  style={{ backgroundColor: item.color }}
-                ></li>
-              ))}
-            </ul>
-          </div>
-
-          {isElectron && (
+          {this.state.currentTab === "general" ? (
             <>
-              <div className="setting-dialog-new-title">
-                <Trans>Change storage location</Trans>
+              {generalSettingList.map((item, index) => {
+                return (
+                  <div
+                    style={
+                      item.isElectron
+                        ? isElectron
+                          ? {}
+                          : { display: "none" }
+                        : {}
+                    }
+                    key={item.propName}
+                  >
+                    <div className="setting-dialog-new-title" key={item.title}>
+                      <span style={{ width: "250px" }}>
+                        <Trans>{item.title}</Trans>
+                      </span>
 
-                <span
-                  className="change-location-button"
-                  onClick={() => {
-                    this.handleChangeLocation();
+                      <span
+                        className="single-control-switch"
+                        onClick={() => {
+                          switch (item.propName) {
+                            case "isMergeWord":
+                              this.handleMergeWord();
+                              break;
+                            case "isOpenInMain":
+                              this.handleOpenInMain();
+                              break;
+                            default:
+                              this.handleSetting(item.propName);
+                              break;
+                          }
+                        }}
+                        style={
+                          this.state[item.propName] ? {} : { opacity: 0.6 }
+                        }
+                      >
+                        <span
+                          className="single-control-button"
+                          style={
+                            this.state[item.propName]
+                              ? {
+                                  transform: "translateX(20px)",
+                                  transition: "transform 0.5s ease",
+                                }
+                              : {
+                                  transform: "translateX(0px)",
+                                  transition: "transform 0.5s ease",
+                                }
+                          }
+                        ></span>
+                      </span>
+                    </div>
+                    <p className="setting-option-subtitle">
+                      <Trans>{item.desc}</Trans>
+                    </p>
+                  </div>
+                );
+              })}
+
+              {isElectron && (
+                <>
+                  <div className="setting-dialog-new-title">
+                    <Trans>Change storage location</Trans>
+
+                    <span
+                      className="change-location-button"
+                      onClick={() => {
+                        this.handleChangeLocation();
+                      }}
+                    >
+                      <Trans>Select</Trans>
+                    </span>
+                  </div>
+                  <div className="setting-dialog-location-title">
+                    {this.state.storageLocation}
+                  </div>
+                </>
+              )}
+
+              <div className="setting-dialog-new-title">
+                <Trans>Language</Trans>
+                <select
+                  name=""
+                  className="lang-setting-dropdown"
+                  onChange={(event) => {
+                    this.changeLanguage(event.target.value);
                   }}
                 >
-                  <Trans>Select</Trans>
-                </span>
+                  {langList.map((item) => (
+                    <option
+                      value={item.value}
+                      key={item.value}
+                      className="lang-setting-option"
+                    >
+                      {item.label}
+                    </option>
+                  ))}
+                </select>
               </div>
-              <div className="setting-dialog-location-title">
-                {this.state.storageLocation}
+              <div className="setting-dialog-new-title">
+                <Trans>Default search engine</Trans>
+                <select
+                  name=""
+                  className="lang-setting-dropdown"
+                  onChange={(event) => {
+                    this.changeSearch(event.target.value);
+                  }}
+                >
+                  {searchList.map((item) => (
+                    <option
+                      value={item.value}
+                      key={item.value}
+                      className="lang-setting-option"
+                    >
+                      {this.props.t(item.label)}
+                    </option>
+                  ))}
+                </select>
               </div>
             </>
+          ) : this.state.currentTab === "reading" ? (
+            <>
+              {readingSettingList.map((item, index) => {
+                return (
+                  <div
+                    style={
+                      item.isElectron
+                        ? isElectron
+                          ? {}
+                          : { display: "none" }
+                        : {}
+                    }
+                    key={item.propName}
+                  >
+                    <div className="setting-dialog-new-title" key={item.title}>
+                      <span style={{ width: "250px" }}>
+                        <Trans>{item.title}</Trans>
+                      </span>
+
+                      <span
+                        className="single-control-switch"
+                        onClick={() => {
+                          switch (item.propName) {
+                            case "isMergeWord":
+                              this.handleMergeWord();
+                              break;
+                            case "isOpenInMain":
+                              this.handleOpenInMain();
+                              break;
+                            default:
+                              this.handleSetting(item.propName);
+                              break;
+                          }
+                        }}
+                        style={
+                          this.state[item.propName] ? {} : { opacity: 0.6 }
+                        }
+                      >
+                        <span
+                          className="single-control-button"
+                          style={
+                            this.state[item.propName]
+                              ? {
+                                  transform: "translateX(20px)",
+                                  transition: "transform 0.5s ease",
+                                }
+                              : {
+                                  transform: "translateX(0px)",
+                                  transition: "transform 0.5s ease",
+                                }
+                          }
+                        ></span>
+                      </span>
+                    </div>
+                    <p className="setting-option-subtitle">
+                      <Trans>{item.desc}</Trans>
+                    </p>
+                  </div>
+                );
+              })}
+            </>
+          ) : this.state.currentTab === "appearance" ? (
+            <>
+              {appearanceSettingList.map((item, index) => {
+                return (
+                  <div
+                    style={
+                      item.isElectron
+                        ? isElectron
+                          ? {}
+                          : { display: "none" }
+                        : {}
+                    }
+                    key={item.propName}
+                  >
+                    <div className="setting-dialog-new-title" key={item.title}>
+                      <span style={{ width: "250px" }}>
+                        <Trans>{item.title}</Trans>
+                      </span>
+
+                      <span
+                        className="single-control-switch"
+                        onClick={() => {
+                          switch (item.propName) {
+                            case "isMergeWord":
+                              this.handleMergeWord();
+                              break;
+                            case "isOpenInMain":
+                              this.handleOpenInMain();
+                              break;
+                            default:
+                              this.handleSetting(item.propName);
+                              break;
+                          }
+                        }}
+                        style={
+                          this.state[item.propName] ? {} : { opacity: 0.6 }
+                        }
+                      >
+                        <span
+                          className="single-control-button"
+                          style={
+                            this.state[item.propName]
+                              ? {
+                                  transform: "translateX(20px)",
+                                  transition: "transform 0.5s ease",
+                                }
+                              : {
+                                  transform: "translateX(0px)",
+                                  transition: "transform 0.5s ease",
+                                }
+                          }
+                        ></span>
+                      </span>
+                    </div>
+                    <p className="setting-option-subtitle">
+                      <Trans>{item.desc}</Trans>
+                    </p>
+                  </div>
+                );
+              })}
+              <div className="setting-dialog-new-title">
+                <Trans>Theme color</Trans>
+                <ul className="theme-setting-container">
+                  {themeList.map((item, index) => (
+                    <li
+                      className={
+                        index === this.state.currentThemeIndex
+                          ? "active-color theme-setting-item"
+                          : "theme-setting-item"
+                      }
+                      key={item.name}
+                      onClick={() => {
+                        this.handleTheme(item.name, index);
+                      }}
+                      style={{ backgroundColor: item.color }}
+                    ></li>
+                  ))}
+                </ul>
+              </div>
+              <div className="setting-dialog-new-title">
+                <Trans>Appearance</Trans>
+                <select
+                  name=""
+                  className="lang-setting-dropdown"
+                  onChange={(event) => {
+                    this.changeSkin(event.target.value);
+                  }}
+                >
+                  {skinList.map((item) => (
+                    <option
+                      value={item.value}
+                      key={item.value}
+                      className="lang-setting-option"
+                    >
+                      {this.props.t(item.label)}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="setting-dialog-new-title">
+                <Trans>System font</Trans>
+                <select
+                  name=""
+                  className="lang-setting-dropdown"
+                  onChange={(event) => {
+                    this.changeFont(event.target.value);
+                  }}
+                >
+                  {dropdownList[0].option.map((item) => (
+                    <option
+                      value={item}
+                      key={item}
+                      className="lang-setting-option"
+                    >
+                      {this.props.t(item)}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </>
+          ) : (
+            <>
+              {this.state.pluginList.length > 0 ? (
+                this.state.pluginList.map((item, index) => {
+                  return (
+                    <div className="setting-dialog-new-title">
+                      <span>
+                        <span
+                          className={`icon-${item.icon} setting-plugin-icon`}
+                        ></span>
+                        <span className="setting-plugin-name">
+                          {item.displayName}
+                        </span>
+                      </span>
+
+                      <span
+                        className="change-location-button"
+                        onClick={() => {
+                          PluginList.deletePluginById(item.identifier);
+                          this.setState({
+                            pluginList: PluginList.getAllPlugins(),
+                          });
+                          toast.success(this.props.t("Deletion successful"));
+                        }}
+                      >
+                        <Trans>Delete</Trans>
+                      </span>
+                    </div>
+                  );
+                })
+              ) : (
+                <div className="navigation-panel-empty-bookmark">
+                  <Trans>Empty</Trans>
+                </div>
+              )}
+            </>
           )}
-
-          <div className="setting-dialog-new-title">
-            <Trans>System font</Trans>
-            <select
-              name=""
-              className="lang-setting-dropdown"
-              onChange={(event) => {
-                this.changeFont(event.target.value);
-              }}
-            >
-              {dropdownList[0].option.map((item) => (
-                <option value={item} key={item} className="lang-setting-option">
-                  {this.props.t(item)}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="setting-dialog-new-title">
-            <Trans>Language</Trans>
-            <select
-              name=""
-              className="lang-setting-dropdown"
-              onChange={(event) => {
-                this.changeLanguage(event.target.value);
-              }}
-            >
-              {langList.map((item) => (
-                <option
-                  value={item.value}
-                  key={item.value}
-                  className="lang-setting-option"
-                >
-                  {item.label}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className="setting-dialog-new-title">
-            <Trans>Default search engine</Trans>
-            <select
-              name=""
-              className="lang-setting-dropdown"
-              onChange={(event) => {
-                this.changeSearch(event.target.value);
-              }}
-            >
-              {searchList.map((item) => (
-                <option
-                  value={item.value}
-                  key={item.value}
-                  className="lang-setting-option"
-                >
-                  {this.props.t(item.label)}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className="setting-dialog-new-title">
-            <Trans>Appearance</Trans>
-            <select
-              name=""
-              className="lang-setting-dropdown"
-              onChange={(event) => {
-                this.changeSkin(event.target.value);
-              }}
-            >
-              {skinList.map((item) => (
-                <option
-                  value={item.value}
-                  key={item.value}
-                  className="lang-setting-option"
-                >
-                  {this.props.t(item.label)}
-                </option>
-              ))}
-            </select>
-          </div>
         </div>
       </div>
     );
