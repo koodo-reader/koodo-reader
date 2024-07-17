@@ -41,7 +41,7 @@
   margin: 20px 30px;
 }
 .setting-dialog-info {
-  height: 400px;
+  height: 370px;
   overflow-y: scroll;
   width: 346px;
 }
@@ -98,7 +98,16 @@
 .setting-subtitle {
   font-size: 15px;
   margin: 5px;
+  margin-bottom: 0px;
   text-align: center;
+}
+.setting-plugin-icon {
+  margin: 5px;
+  font-size: 20px;
+}
+.setting-plugin-name {
+  position: relative;
+  bottom: 5px;
 }
 .lang-setting-dropdown {
   width: 100px;

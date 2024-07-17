@@ -1,16 +1,4 @@
-export const settingList = [
-  {
-    isElectron: false,
-    title: "Turn on touch screen mode",
-    desc: "Gesture and UI optimization for touch screen",
-    propName: "isTouch",
-  },
-  {
-    isElectron: false,
-    title: "Prevent accidental trigger",
-    desc: "Reader menu will not be triggered by hovering but clicking on the area",
-    propName: "isPreventTrigger",
-  },
+export const generalSettingList = [
   {
     isElectron: true,
     title: "Import books as link",
@@ -18,34 +6,10 @@ export const settingList = [
     propName: "isImportPath",
   },
   {
-    isElectron: true,
-    title: "Merge reader into Word",
-    desc: "Get rid of window frame, make reader hide into Word or any text editor, and can't be detected. You need to set up the reader's position, size and style first.",
-    propName: "isMergeWord",
-  },
-  {
     isElectron: false,
     title: "Auto open last-read book",
     desc: "The book that you read from last time will be open automatically when launching",
     propName: "isOpenBook",
-  },
-  {
-    isElectron: true,
-    title: "Auto open book in full screen",
-    desc: "Reader window will be maximized to fit the screen when opening a book",
-    propName: "isAutoFullscreen",
-  },
-  {
-    isElectron: false,
-    title: "Auto expand content",
-    desc: "All the folded content will be expanded in the navigation panel",
-    propName: "isExpandContent",
-  },
-  {
-    isElectron: false,
-    title: "No popup when selecting texts",
-    desc: "Turn it on when you want Koodo to work with other third-party translation service, right clicking on the selected text will trigger popup again",
-    propName: "isDisablePopup",
   },
   {
     isElectron: false,
@@ -79,12 +43,6 @@ export const settingList = [
   },
   {
     isElectron: true,
-    title: "Lemmatize words when looking up in a dictionary",
-    desc: "To reduce the different forms of a word to one single form, for example, reducing builds, building or built to build, reducing cats to cat, reducing fastest to fast",
-    propName: "isLemmatizeWord",
-  },
-  {
-    isElectron: true,
     title: "Open books in the main window",
     desc: "Book won't be opened in a separate window but directly opened in the main window",
     propName: "isOpenInMain",
@@ -101,8 +59,16 @@ export const settingList = [
     propName: "isDisableUpdate",
   },
   {
+    isElectron: true,
+    title: "Open url with built-in browser",
+    propName: "isUseBuiltIn",
+  },
+];
+export const appearanceSettingList = [
+  {
     isElectron: false,
     title: "Don't use first page as PDF cover",
+    desc: "",
     propName: "isDisablePDFCover",
   },
   {
@@ -110,10 +76,49 @@ export const settingList = [
     title: "Don't crop book cover",
     propName: "isDisableCrop",
   },
+];
+export const readingSettingList = [
+  {
+    isElectron: false,
+    title: "Turn on touch screen mode",
+    desc: "Gesture and UI optimization for touch screen",
+    propName: "isTouch",
+  },
+  {
+    isElectron: false,
+    title: "Prevent accidental trigger",
+    desc: "Reader menu will not be triggered by hovering but clicking on the area",
+    propName: "isPreventTrigger",
+  },
   {
     isElectron: true,
-    title: "Open url with built-in browser",
-    propName: "isUseBuiltIn",
+    title: "Merge reader into Word",
+    desc: "Get rid of window frame, make reader hide into Word or any text editor, and can't be detected. You need to set up the reader's position, size and style first.",
+    propName: "isMergeWord",
+  },
+  {
+    isElectron: true,
+    title: "Auto open book in full screen",
+    desc: "Reader window will be maximized to fit the screen when opening a book",
+    propName: "isAutoFullscreen",
+  },
+  {
+    isElectron: false,
+    title: "Auto expand content",
+    desc: "All the folded content will be expanded in the navigation panel",
+    propName: "isExpandContent",
+  },
+  {
+    isElectron: false,
+    title: "No popup when selecting texts",
+    desc: "Turn it on when you want Koodo to work with other third-party translation service, right clicking on the selected text will trigger popup again",
+    propName: "isDisablePopup",
+  },
+  {
+    isElectron: true,
+    title: "Lemmatize words when looking up in a dictionary",
+    desc: "To reduce the different forms of a word to one single form, for example, reducing builds, building or built to build, reducing cats to cat, reducing fastest to fast",
+    propName: "isLemmatizeWord",
   },
 ];
 export const langList = [

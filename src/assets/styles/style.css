@@ -193,7 +193,6 @@
 }
 .icon-translation:before {
   content: "\e900";
-  color: #f16464;
 }
 .icon-english:before {
   content: "\e92d";

@@ -58,6 +58,9 @@
   line-height: 45px !important;
   font-size: 27px;
 }
+.translation-icon {
+  color: #f16464;
+}
 .copy-icon {
   color: #ff9900;
 }

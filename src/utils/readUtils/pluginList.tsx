@@ -39,6 +39,17 @@ class PluginList {
         : [];
     return pluginList || [];
   }
+  static deletePluginById(identifier: string) {
+    let pluginList =
+      localStorage.getItem("pluginList") !== "{}" &&
+      localStorage.getItem("pluginList")
+        ? (JSON.parse(localStorage.getItem("pluginList") || "") as Plugin[])
+        : [];
+    let newPluginList = pluginList.filter(
+      (item: Plugin) => item.identifier !== identifier
+    );
+    localStorage.setItem("pluginList", JSON.stringify(newPluginList));
+  }
   static getAllVoices() {
     let pluginList =
       localStorage.getItem("pluginList") !== "{}" &&
