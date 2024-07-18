@@ -76,19 +76,23 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
         this.props.t,
         plugin.config
       );
-      this.setState(
-        {
-          dictText: dictText,
-        },
-        () => {
-          let moreElement = document.querySelector(".dict-learn-more");
-          if (moreElement) {
-            moreElement.addEventListener("click", () => {
-              openExternalUrl(window.learnMoreUrl);
-            });
+      if (dictText.startsWith("https://")) {
+        window.open(dictText);
+      } else {
+        this.setState(
+          {
+            dictText: dictText,
+          },
+          () => {
+            let moreElement = document.querySelector(".dict-learn-more");
+            if (moreElement) {
+              moreElement.addEventListener("click", () => {
+                openExternalUrl(window.learnMoreUrl);
+              });
+            }
           }
-        }
-      );
+        );
+      }
     } catch (error) {
       console.log(error);
       this.setState({
