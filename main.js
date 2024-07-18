@@ -16,6 +16,7 @@ const fs = require("fs");
 const configDir = app.getPath("userData");
 const dirPath = path.join(configDir, "uploads");
 let mainWin;
+let readerWindow;
 let mainView
 const singleInstance = app.requestSingleInstanceLock();
 var filePath = null;

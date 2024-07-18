@@ -51,11 +51,9 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
         axios,
         plutin.config
       )
-      .then((res: any) => {
-        if (res.explanations) {
-          this.setState({
-            translatedText: res.explanations[0].explains[0],
-          });
+      .then((res: string) => {
+        if (res.startsWith("https://")) {
+          window.open(res);
         } else {
           this.setState({
             translatedText: res,
