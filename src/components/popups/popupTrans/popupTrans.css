@@ -165,10 +165,11 @@
   font-weight: bold;
 }
 .trans-add-cancel {
-  width: 60px;
+  /* width: 60px; */
   height: 30px;
   opacity: 1;
-
+  padding-left: 5px;
+  padding-right: 5px;
   font-size: 13px;
   line-height: 30px;
   opacity: 1;
@@ -177,10 +178,11 @@
   border-radius: 5px;
 }
 .trans-add-comfirm {
-  width: 64px;
+  /* width: 64px; */
   height: 30px;
   opacity: 1;
-
+  padding-left: 5px;
+  padding-right: 5px;
   font-size: 13px;
   line-height: 30px;
   opacity: 1;
@@ -190,6 +192,7 @@
   float: right;
   background-color: #f16464;
   color: white;
+  margin-left: 5px;
 }
 .trans-add-button-container {
   display: flex;

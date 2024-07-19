@@ -229,34 +229,35 @@ class FeedbackDialog extends Component<
               className="feedback-dialog-content-box"
             />
           </>
-
-          <div
-            className="token-dialog-cancel"
-            onClick={() => {
-              this.handleCancel();
-            }}
-            style={{ left: "100px", top: "440px" }}
-          >
-            <Trans>Cancel</Trans>
-          </div>
-          {this.state.isSending ? (
+          <div className="add-dialog-button-container">
             <div
-              className="token-dialog-comfirm"
-              style={{ left: "180px", top: "440px" }}
-            >
-              <Trans>Sending</Trans>
-            </div>
-          ) : (
-            <div
-              className="token-dialog-comfirm"
+              className="add-dialog-cancel"
               onClick={() => {
-                this.handleComfirm();
+                this.handleCancel();
               }}
-              style={{ left: "180px", top: "440px" }}
+              style={{ left: "100px", top: "440px" }}
             >
-              <Trans>Confirm</Trans>
+              <Trans>Cancel</Trans>
             </div>
-          )}
+            {this.state.isSending ? (
+              <div
+                className="add-dialog-comfirm"
+                style={{ left: "180px", top: "440px" }}
+              >
+                <Trans>Sending</Trans>
+              </div>
+            ) : (
+              <div
+                className="add-dialog-comfirm"
+                onClick={() => {
+                  this.handleComfirm();
+                }}
+                style={{ left: "180px", top: "440px" }}
+              >
+                <Trans>Confirm</Trans>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     );

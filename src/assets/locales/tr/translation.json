@@ -402,5 +402,14 @@
   "Format": "Biçim",
   "Duplicate book in trash bin": "Çöp kovasında kopya kitap",
   "Subject can't be empty": "Konu boş olamaz",
-  "Full screen": "Tam ekran"
+  "Full screen": "Tam ekran",
+  "Dictionary": "Dictionary",
+  "General": "General",
+  "Reading": "Reading",
+  "Plugins": "Plugins",
+  "Paste the code of the plugin here, check out document to learn how to get more plugin": "Paste the code of the plugin here, check out document to learn how to get more plugin",
+  "Add new voice": "Add new voice",
+  "Plugin verification failed": "Plugin verification failed",
+  "Add new plugin": "Add new plugin",
+  "Pot is running": "Pot is running"
 }

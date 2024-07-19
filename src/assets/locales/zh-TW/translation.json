@@ -397,5 +397,14 @@
   "Format": "格式",
   "Duplicate book in trash bin": "回收站有重複書籍",
   "Subject can't be empty": "標題不能是空的",
-  "Full screen": "全螢幕"
+  "Full screen": "全螢幕",
+  "Dictionary": "Dictionary",
+  "General": "General",
+  "Reading": "Reading",
+  "Plugins": "Plugins",
+  "Paste the code of the plugin here, check out document to learn how to get more plugin": "Paste the code of the plugin here, check out document to learn how to get more plugin",
+  "Add new voice": "Add new voice",
+  "Plugin verification failed": "Plugin verification failed",
+  "Add new plugin": "Add new plugin",
+  "Pot is running": "Pot is running"
 }

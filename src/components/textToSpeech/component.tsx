@@ -448,11 +448,11 @@ class TextToSpeech extends React.Component<
                         StorageUtil.getReaderConfig("lang") === "zhMO"
                       ) {
                         openExternalUrl(
-                          "https://www.koodoreader.com/zh/document"
+                          "https://www.koodoreader.com/zh/plugin"
                         );
                       } else {
                         openExternalUrl(
-                          "https://www.koodoreader.com/en/document"
+                          "https://www.koodoreader.com/en/plugin"
                         );
                       }
                     }}

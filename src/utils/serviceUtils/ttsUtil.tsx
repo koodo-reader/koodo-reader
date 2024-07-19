@@ -55,7 +55,9 @@ class TTSUtil {
           plugin: plugin,
           config: voice.config,
         });
-      this.audioPaths.push(audioPath);
+      if (audioPath) {
+        this.audioPaths.push(audioPath);
+      }
     }
   }
   static async pauseAudio() {

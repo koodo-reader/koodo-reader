@@ -53,36 +53,6 @@
   /* margin-left: 25px; */
 }
 
-.delete-dialog-cancel {
-  width: 60px;
-  height: 26px;
-  opacity: 1;
-  position: absolute;
-  left: 147px;
-  top: 154px;
-  border-radius: 5px;
-
-  font-size: 13px;
-
-  line-height: 26px;
-  opacity: 1;
-  text-align: center;
-  cursor: pointer;
-}
-.delete-dialog-comfirm {
-  width: 64px;
-  height: 30px;
-  opacity: 1;
-  position: absolute;
-  left: 220px;
-  top: 154px;
-  font-size: 13px;
-  line-height: 30px;
-  opacity: 1;
-  text-align: center;
-  cursor: pointer;
-  border-radius: 5px;
-}
 .delete-dialog-uncheck-icon {
   width: 12px;
   height: 12px;

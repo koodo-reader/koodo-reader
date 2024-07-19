@@ -401,5 +401,14 @@
   "Format": "Formato",
   "Duplicate book in trash bin": "Libro duplicato nel cestino",
   "Subject can't be empty": "L'argomento non può essere vuoto",
-  "Full screen": "Schermo intero"
+  "Full screen": "Schermo intero",
+  "Dictionary": "Dictionary",
+  "General": "General",
+  "Reading": "Reading",
+  "Plugins": "Plugins",
+  "Paste the code of the plugin here, check out document to learn how to get more plugin": "Paste the code of the plugin here, check out document to learn how to get more plugin",
+  "Add new voice": "Add new voice",
+  "Plugin verification failed": "Plugin verification failed",
+  "Add new plugin": "Add new plugin",
+  "Pot is running": "Pot is running"
 }

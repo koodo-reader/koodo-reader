@@ -351,36 +351,37 @@ class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
               />
             </>
           )}
-
-          <div
-            className="token-dialog-cancel"
-            onClick={() => {
-              this.handleCancel();
-            }}
-          >
-            <Trans>Cancel</Trans>
-          </div>
-          <div
-            className="token-dialog-comfirm"
-            onClick={() => {
-              if (this.props.driveName === "webdav") {
-                this.handleDavComfirm();
-              } else if (this.props.driveName === "ftp") {
-                this.handleFTPComfirm();
-              } else if (this.props.driveName === "sftp") {
-                this.handleSFTPComfirm();
-              } else if (this.props.driveName === "s3compatible") {
-                this.handleS3Comfirm();
-              } else if (this.props.driveName === "dropbox") {
-                this.handleDropboxComfirm();
-              } else if (this.props.driveName === "googledrive") {
-                this.handleGoogleDriveComfirm();
-              } else if (this.props.driveName === "onedrive") {
-                this.handleOneDriveComfirm();
-              }
-            }}
-          >
-            <Trans>Confirm</Trans>
+          <div className="add-dialog-button-container">
+            <div
+              className="add-dialog-cancel"
+              onClick={() => {
+                this.handleCancel();
+              }}
+            >
+              <Trans>Cancel</Trans>
+            </div>
+            <div
+              className="add-dialog-comfirm"
+              onClick={() => {
+                if (this.props.driveName === "webdav") {
+                  this.handleDavComfirm();
+                } else if (this.props.driveName === "ftp") {
+                  this.handleFTPComfirm();
+                } else if (this.props.driveName === "sftp") {
+                  this.handleSFTPComfirm();
+                } else if (this.props.driveName === "s3compatible") {
+                  this.handleS3Comfirm();
+                } else if (this.props.driveName === "dropbox") {
+                  this.handleDropboxComfirm();
+                } else if (this.props.driveName === "googledrive") {
+                  this.handleGoogleDriveComfirm();
+                } else if (this.props.driveName === "onedrive") {
+                  this.handleOneDriveComfirm();
+                }
+              }}
+            >
+              <Trans>Confirm</Trans>
+            </div>
           </div>
         </div>
       </div>
