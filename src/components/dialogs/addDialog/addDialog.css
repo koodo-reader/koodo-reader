@@ -80,32 +80,40 @@
   line-height: 31px;
   border-radius: 5px;
 }
+.add-dialog-button-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 10px;
+  position: absolute;
+  right: 25px;
+  bottom: 15px;
+}
 .add-dialog-cancel {
-  width: 60px;
+  /* width: 60px; */
   height: 26px;
   opacity: 1;
-  position: absolute;
+  /* position: absolute;
   left: 147px;
-  top: 144px;
+  top: 144px; */
   border-radius: 5px;
-
+  padding-left: 5px;
+  padding-right: 5px;
   font-size: 13px;
-
+  margin-right: 10px;
   line-height: 26px;
   opacity: 1;
   text-align: center;
   cursor: pointer;
 }
 .add-dialog-comfirm {
-  width: 64px;
+  /* width: 64px; */
   height: 30px;
   opacity: 1;
-  position: absolute;
-  left: 220px;
-  top: 144px;
+
   font-size: 13px;
   border-radius: 5px;
-
+  padding-left: 5px;
+  padding-right: 5px;
   line-height: 30px;
   opacity: 1;
   text-align: center;

@@ -62,44 +62,16 @@
 }
 
 .feedback-dialog-content-box {
-  width: 80%;
+  width: calc(100% - 50px);
+  margin-left: 25px;
   height: 50px;
   opacity: 1;
   font-size: 13px;
   line-height: 14px;
-  margin-left: 10%;
+
   padding: 5px;
   margin-bottom: 10px;
   box-sizing: border-box;
   opacity: 1;
-  border-radius: 5px;
-}
-
-.feedback-dialog-cancel {
-  width: 60px;
-  height: 26px;
-  opacity: 1;
-  position: absolute;
-  left: 157px;
-  bottom: 10px;
-  font-size: 13px;
-  line-height: 26px;
-  opacity: 1;
-  text-align: center;
-  cursor: pointer;
-  border-radius: 5px;
-}
-.feedback-dialog-comfirm {
-  width: 60px;
-  height: 26px;
-  opacity: 1;
-  position: absolute;
-  left: 117px;
-  bottom: 10px;
-  font-size: 13px;
-  line-height: 26px;
-  opacity: 1;
-  text-align: center;
-  cursor: pointer;
   border-radius: 5px;
 }

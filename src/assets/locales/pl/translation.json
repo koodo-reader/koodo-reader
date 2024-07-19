@@ -400,5 +400,14 @@
   "Format": "Format",
   "Duplicate book in trash bin": "Duplikat książki w koszu na śmieci",
   "Subject can't be empty": "Temat nie może być pusty",
-  "Full screen": "Pełny ekran"
+  "Full screen": "Pełny ekran",
+  "Dictionary": "Dictionary",
+  "General": "General",
+  "Reading": "Reading",
+  "Plugins": "Plugins",
+  "Paste the code of the plugin here, check out document to learn how to get more plugin": "Paste the code of the plugin here, check out document to learn how to get more plugin",
+  "Add new voice": "Add new voice",
+  "Plugin verification failed": "Plugin verification failed",
+  "Add new plugin": "Add new plugin",
+  "Pot is running": "Pot is running"
 }

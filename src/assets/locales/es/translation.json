@@ -397,5 +397,16 @@
   "Format": "Formato",
   "Duplicate book in trash bin": "Libro duplicado en la papelera",
   "Subject can't be empty": "El asunto no puede estar vacío",
-  "Full screen": "Pantalla completa"
+  "Full screen": "Pantalla completa",
+  "Dictionary": "Dictionary",
+  "This process is inreversible, and will completely overwrite your current library, make sure you know what you're doing before proceeding": "This process is irreversible, and will completely overwrite your current library, make sure you know what you're doing before proceeding",
+  "Pre-cache books after import to increase opening speed, Koodo will generate a precache version of the original book and save it into your library": "Pre-cache books after import to increase opening speed, Koodo will generate a pre-cache version of the original book and save it into your library",
+  "General": "General",
+  "Reading": "Reading",
+  "Plugins": "Plugins",
+  "Paste the code of the plugin here, check out document to learn how to get more plugin": "Paste the code of the plugin here, check out document to learn how to get more plugin",
+  "Add new voice": "Add new voice",
+  "Plugin verification failed": "Plugin verification failed",
+  "Add new plugin": "Add new plugin",
+  "Pot is running": "Pot is running"
 }

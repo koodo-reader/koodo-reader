@@ -66,21 +66,23 @@ class EditDialog extends React.Component<EditDialogProps, EditDialogState> {
           </div>
           <input className="edit-dialog-book-author-box" />
         </div>
-        <div
-          className="edit-dialog-cancel"
-          onClick={() => {
-            this.handleCancel();
-          }}
-        >
-          <Trans>Cancel</Trans>
-        </div>
-        <div
-          className="edit-dialog-comfirm"
-          onClick={() => {
-            this.handleComfirm();
-          }}
-        >
-          <Trans>Confirm</Trans>
+        <div className="add-dialog-button-container">
+          <div
+            className="add-dialog-cancel"
+            onClick={() => {
+              this.handleCancel();
+            }}
+          >
+            <Trans>Cancel</Trans>
+          </div>
+          <div
+            className="add-dialog-comfirm"
+            onClick={() => {
+              this.handleComfirm();
+            }}
+          >
+            <Trans>Confirm</Trans>
+          </div>
         </div>
       </div>
     );

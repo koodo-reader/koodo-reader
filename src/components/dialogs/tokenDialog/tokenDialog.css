@@ -51,7 +51,8 @@
 }
 
 .token-dialog-token-box {
-  width: 382px;
+  width: calc(100% - 50px);
+  margin-left: 25px;
   height: 70px;
   opacity: 1;
   font-size: 13px;
@@ -59,7 +60,8 @@
   opacity: 1;
   position: absolute;
   top: 144px;
-  left: 30px;
+  box-sizing: border-box;
+  /* left: 30px; */
   border-radius: 5px;
 }
 .token-dialog-url-box,

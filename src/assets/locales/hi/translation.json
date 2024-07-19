@@ -396,5 +396,13 @@
   "Learn more": "और जाने",
   "Format": "फॉर्मेट्",
   "Duplicate book in trash bin": "Trash bin में किताब डुप्लीकेट करें",
-  "Subject can't be empty": "विषय खाली नही रह सकता"
+  "Subject can't be empty": "विषय खाली नही रह सकता",
+  "General": "General",
+  "Reading": "Reading",
+  "Plugins": "Plugins",
+  "Paste the code of the plugin here, check out document to learn how to get more plugin": "Paste the code of the plugin here, check out document to learn how to get more plugin",
+  "Add new voice": "Add new voice",
+  "Plugin verification failed": "Plugin verification failed",
+  "Add new plugin": "Add new plugin",
+  "Pot is running": "Pot is running"
 }

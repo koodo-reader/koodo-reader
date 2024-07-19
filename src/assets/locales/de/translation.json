@@ -399,5 +399,16 @@
   "Format": "Formatierung",
   "Duplicate book in trash bin": "Buch im Mülleimer duplizieren",
   "Subject can't be empty": "Betreff kann nicht leer sein",
-  "Full screen": "Vollbild"
+  "Full screen": "Vollbild",
+  "Dictionary": "Dictionary",
+  "Conversoin of Chinese": "Conversoin of Chinese",
+  "This process is inreversible, and will completely overwrite your current library, make sure you know what you're doing before proceeding": "This process is irreversible, and will completely overwrite your current library, make sure you know what you're doing before proceeding",
+  "General": "General",
+  "Reading": "Reading",
+  "Plugins": "Plugins",
+  "Paste the code of the plugin here, check out document to learn how to get more plugin": "Paste the code of the plugin here, check out document to learn how to get more plugin",
+  "Add new voice": "Add new voice",
+  "Plugin verification failed": "Plugin verification failed",
+  "Add new plugin": "Add new plugin",
+  "Pot is running": "Pot is running"
 }

@@ -133,13 +133,9 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
                       StorageUtil.getReaderConfig("lang") === "zhTW" ||
                       StorageUtil.getReaderConfig("lang") === "zhMO"
                     ) {
-                      openExternalUrl(
-                        "https://www.koodoreader.com/zh/document"
-                      );
+                      openExternalUrl("https://www.koodoreader.com/zh/plugin");
                     } else {
-                      openExternalUrl(
-                        "https://www.koodoreader.com/en/document"
-                      );
+                      openExternalUrl("https://www.koodoreader.com/en/plugin");
                     }
                   }}
                 >
@@ -152,7 +148,7 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
                   }}
                 >
                   <Trans>Cancel</Trans>
-                </div>{" "}
+                </div>
                 <div
                   className="trans-add-comfirm"
                   onClick={() => {

@@ -1,9 +1,9 @@
 // the translations
 const resources = [
   "./assets/locales/ar/translation.json",
+  "./assets/locales/bg/translation.json",
   "./assets/locales/bn/translation.json",
   "./assets/locales/bo/translation.json",
-  "./assets/locales/bg/translation.json",
   "./assets/locales/cs/translation.json",
   "./assets/locales/da/translation.json",
   "./assets/locales/de/translation.json",
@@ -14,6 +14,8 @@ const resources = [
   "./assets/locales/fa/translation.json",
   "./assets/locales/fi/translation.json",
   "./assets/locales/fr/translation.json",
+  "./assets/locales/hi/translation.json",
+  "./assets/locales/hu/translation.json",
   "./assets/locales/hy/translation.json",
   "./assets/locales/id/translation.json",
   "./assets/locales/ie/translation.json",
