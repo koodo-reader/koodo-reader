@@ -89,7 +89,7 @@
   bottom: 15px;
 }
 .add-dialog-cancel {
-  /* width: 60px; */
+  min-width: 60px;
   height: 26px;
   opacity: 1;
   /* position: absolute;
@@ -106,7 +106,7 @@
   cursor: pointer;
 }
 .add-dialog-comfirm {
-  /* width: 64px; */
+  min-width: 64px;
   height: 30px;
   opacity: 1;
 
