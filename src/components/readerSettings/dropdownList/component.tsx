@@ -1,4 +1,3 @@
-//图书样式设置的下拉菜单页面
 import React from "react";
 import { dropdownList } from "../../../constants/dropdownList";
 import "./dropdownList.css";
@@ -35,7 +34,6 @@ class DropdownList extends React.Component<
     };
   }
   componentDidMount() {
-    //使下拉菜单选中预设的值
     if (isElectron) {
       const fontList = window.require("font-list");
       fontList.getFonts({ disableQuoting: true }).then((result) => {
@@ -91,7 +89,6 @@ class DropdownList extends React.Component<
       ]?.setAttribute("selected", "selected");
   }
 
-  //切换不同的样式
   handleView(event: any, option: string) {
     let arr = event.target.value.split(",");
     StorageUtil.setReaderConfig(option, arr[0]);

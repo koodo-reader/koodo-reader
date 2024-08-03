@@ -55,24 +55,19 @@ class BookList extends React.Component<BookListProps, BookListState> {
     return itemArr;
   };
 
-  //获取书架数据
   handleShelf(items: any, index: number) {
-    //获取书架名
     if (index < 1) return items;
     let shelfTitle = Object.keys(ShelfUtil.getShelf());
-    //获取当前书架名
     let currentShelfTitle = shelfTitle[index];
     if (!currentShelfTitle) return items;
-    //获取当前书架的图书列表
     let currentShelfList = ShelfUtil.getShelf()[currentShelfTitle];
-    //根据图书列表获取到图书数据
     let shelfItems = items.filter((item: { key: number }) => {
       return currentShelfList.indexOf(item.key) > -1;
     });
     return shelfItems;
   }
 
-  //根据搜索图书index获取到搜索出的图书
+  //get the searched books according to the index
   handleIndexFilter = (items: any, arr: number[]) => {
     let itemArr: any[] = [];
     arr.forEach((item) => {
@@ -86,30 +81,26 @@ class BookList extends React.Component<BookListProps, BookListState> {
     });
   };
   renderBookList = () => {
-    //根据不同的场景获取不同的图书数据
-    let books = this.props.isSearch //搜索图书
+    //get different book data according to different scenes
+    let books = this.props.isSearch
       ? this.handleIndexFilter(this.props.books, this.props.searchResults)
-      : this.props.shelfIndex > 0 //展示书架
+      : this.props.shelfIndex > 0
       ? this.handleIndexFilter(
           this.handleShelf(this.props.books, this.props.shelfIndex),
-          //返回排序后的图书index
           SortUtil.sortBooks(this.props.books, this.props.bookSortCode) || []
         )
-      : this.props.mode === "favorite" //我的喜爱
+      : this.props.mode === "favorite"
       ? this.handleIndexFilter(
           this.handleKeyFilter(this.props.books, AddFavorite.getAllFavorite()),
-          //返回排序后的图书index
           SortUtil.sortBooks(this.props.books, this.props.bookSortCode) || []
         )
-      : this.state.isHideShelfBook //我的喜爱
+      : this.state.isHideShelfBook
       ? this.handleIndexFilter(
           this.handleFilterShelfBook(this.props.books),
-          //返回排序后的图书index
           SortUtil.sortBooks(this.props.books, this.props.bookSortCode) || []
         )
       : this.handleIndexFilter(
           this.props.books,
-          //返回排序后的图书index
           SortUtil.sortBooks(this.props.books, this.props.bookSortCode) || []
         );
     if (books.length === 0 && !this.props.isSearch) {
@@ -156,7 +147,6 @@ class BookList extends React.Component<BookListProps, BookListState> {
   handleDeleteShelf = () => {
     if (this.props.shelfIndex < 1) return;
     let shelfTitles = Object.keys(ShelfUtil.getShelf());
-    //获取当前书架名
     let currentShelfTitle = shelfTitles[this.props.shelfIndex];
     ShelfUtil.removeShelf(currentShelfTitle);
 
@@ -195,7 +185,7 @@ class BookList extends React.Component<BookListProps, BookListState> {
       return <Redirect to="/manager/empty" />;
     }
     if (isElectron) {
-      //兼容之前的版本
+      //accommodate the previous version
       window.localforage.getItem(this.props.books[0].key).then((result) => {
         if (result) {
           backup(

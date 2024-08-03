@@ -119,7 +119,6 @@ export const convertArrayToCSV = (array) => {
             typeof cell === "string" &&
             (cell.includes(",") || cell.includes("\n") || cell.includes("s"))
           ) {
-            // 如果单元格内容包含逗号或换行符，则将其用双引号括起来，并将内部的双引号替换为两个双引号
             return '"' + cell.replace(/"/g, '""') + '"';
           } else {
             return cell;

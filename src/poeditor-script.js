@@ -50,9 +50,9 @@ const runScript = async () => {
       }
       // console.log(translation);
       if (fs.existsSync(path.join(__dirname, "./assets/locales/" + code))) {
-        console.log("文件夹存在");
+        console.log("folder exist");
       } else {
-        console.log("文件夹不存在");
+        console.log("folder not exist");
         fs.mkdirSync(path.join(__dirname, "./poeditor/" + code));
         fs.writeFileSync(
           path.join(__dirname, "./poeditor/" + code + "/translation.json"),

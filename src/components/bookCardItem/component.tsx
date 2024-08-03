@@ -28,7 +28,7 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
 
   componentDidMount() {
     let filePath = "";
-    //控制是否自动打开本书
+    //open book when app start
     if (isElectron) {
       const { ipcRenderer } = window.require("electron");
       filePath = ipcRenderer.sendSync("get-file-data");

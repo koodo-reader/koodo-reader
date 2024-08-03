@@ -66,7 +66,7 @@ class BookList extends React.Component<BookListProps, BookListState> {
     return itemArr;
   };
 
-  //根据搜索图书index获取到搜索出的图书
+  //get the searched book according to the index
   handleIndexFilter = (items: any, arr: number[]) => {
     let itemArr: any[] = [];
     arr.forEach((item) => {
@@ -76,13 +76,13 @@ class BookList extends React.Component<BookListProps, BookListState> {
     return itemArr;
   };
   renderBookList = () => {
-    //根据不同的场景获取不同的图书数据
+    //get the book data according to different scenarios
     let books = !this.props.isBookSort
       ? this.handleKeyFilter(this.props.deletedBooks, AddTrash.getAllTrash())
       : this.props.isBookSort
       ? this.handleIndexFilter(
           this.handleKeyFilter(this.props.deletedBooks, AddTrash.getAllTrash()),
-          //返回排序后的图书index
+          //return the sorted book index
           SortUtil.sortBooks(
             this.props.deletedBooks,
             this.props.bookSortCode
@@ -91,7 +91,7 @@ class BookList extends React.Component<BookListProps, BookListState> {
       : this.props.isBookSort
       ? this.handleIndexFilter(
           this.props.deletedBooks,
-          //返回排序后的图书index
+          //return the sorted book index
           SortUtil.sortBooks(
             this.props.deletedBooks,
             this.props.bookSortCode

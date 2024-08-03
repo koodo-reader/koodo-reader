@@ -35,12 +35,10 @@ class AddDialog extends Component<AddDialogProps, AddDialogState> {
         return;
       }
     }
-    //未填书架名提醒
     if (!shelfTitle) {
       toast(this.props.t("Shelf Title is Empty"));
       return;
     }
-    //判断书架中是否已有该图书
     if (
       !this.props.isSelectBook &&
       shelfList[`${shelfTitle}`] &&
@@ -67,7 +65,6 @@ class AddDialog extends Component<AddDialogProps, AddDialogState> {
     this.props.handleMode("shelf");
     this.props.handleShelfIndex(shelfIndex);
   };
-  //如果是添加到已存在的书架就diable新建图书的input框
   handleChange = (shelfTitle: string) => {
     if (shelfTitle === "New") {
       this.setState({ isNew: true });

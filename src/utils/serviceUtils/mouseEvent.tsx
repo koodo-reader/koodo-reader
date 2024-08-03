@@ -134,7 +134,6 @@ export const bindHtmlEvent = (
     handleLocation(key, rendition);
     setTimeout(() => (lock = false), throttleTime);
   });
-  //判断是否正在使用笔记本电脑的的触控板
   doc.addEventListener(
     "wheel",
     async (event) => {
@@ -158,7 +157,6 @@ export const bindHtmlEvent = (
     if (lock) return;
     lock = true;
     await arrowKeys(rendition, event.keyCode, event, readerMode);
-    //使用Key判断是否是htmlBook
     handleLocation(key, rendition);
     setTimeout(() => (lock = false), throttleTime);
   });

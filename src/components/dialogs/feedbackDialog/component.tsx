@@ -112,15 +112,12 @@ class FeedbackDialog extends Component<
     openExternalUrl(url);
   };
   getFileName(url: string) {
-    // 匹配最后一个斜杠后面和问号前面的内容
     var regex = /([^?]+)(?=\?|$)/;
     var match = url.match(regex);
 
     if (match) {
-      // 返回匹配到的内容
       return match[1];
     } else {
-      // 如果没有匹配到，则返回空字符串
       return "";
     }
   }
@@ -197,8 +194,7 @@ class FeedbackDialog extends Component<
                 let zip = new window.JSZip();
                 for (let index = 0; index < files.length; index++) {
                   const file = files[index];
-                  var fileSize = file.size; // 文件大小，单位为字节
-                  // 将文件大小转换为MB
+                  var fileSize = file.size;
                   var fileSizeMB = fileSize / (1024 * 1024);
                   if (fileSizeMB > 20) {
                     toast.error(this.props.t("File size is larger than 20MB"));

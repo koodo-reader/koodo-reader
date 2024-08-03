@@ -21,7 +21,7 @@ const getBookKey = (books: BookModel[]) => {
 const getBookIndex = (nameArr: string[], oldNameArr: string[]) => {
   let indexArr: number[] = [];
   for (let i = 0; i < nameArr.length; i++) {
-    //如果索引数组已经包含该索引，就把它放在随后一位，取数组长度为索引
+    //if the index array already contains the index, put it in the next position, and take the array length as the index
     oldNameArr.indexOf(nameArr[i]) > -1 &&
       indexArr.push(oldNameArr.indexOf(nameArr[i]));
   }
@@ -139,7 +139,6 @@ class SortUtil {
     books: BookModel[] = []
   ) {
     if (noteSortCode.sort === 2) {
-      //使书摘从晚到早排序
       let noteArr = window._.clone(notes).reverse();
       let dateArr = window._.uniq(
         notes.map(
@@ -152,7 +151,6 @@ class SortUtil {
       } else {
         dateArr.sort().reverse();
       }
-      //得到以日期为键，书摘为值的对象
       let noteObj: { [key: string]: any } = {};
       dateArr.forEach((date) => {
         noteObj[date] = [];
@@ -170,7 +168,6 @@ class SortUtil {
       return noteObj || {};
     }
     if (noteSortCode.sort === 1) {
-      //使书摘从晚到早排序
       let noteArr = window._.clone(notes).reverse();
       let nameArr = window._.uniq(
         notes.map((item) => {
@@ -189,7 +186,6 @@ class SortUtil {
       } else {
         nameArr.sort().reverse();
       }
-      //得到以日期为键，书摘为值的对象
       let noteObj: { [key: string]: any } = {};
       nameArr.forEach((name) => {
         noteObj[name] = [];

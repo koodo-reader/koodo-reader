@@ -34,10 +34,10 @@ export const getFileMD5 = (file: any) => {
           (File as any).prototype.slice ||
           (File as any).prototype.mozSlice ||
           (File as any).prototype.webkitSlice,
-        chunkSize = 2097152, // 以每片2MB大小来逐次读取
+        chunkSize = 2097152,
         chunks = Math.ceil(file.size / chunkSize),
         currentChunk = 0,
-        spark = new SparkMD5(), //创建SparkMD5的实例
+        spark = new SparkMD5(),
         fileReader = new FileReader();
       fileReader.onload = async (e) => {
         if (!e.target) {

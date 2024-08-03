@@ -1,4 +1,3 @@
-//排序弹窗
 import React from "react";
 import "./sortDialog.css";
 import SortUtil from "../../../utils/readUtils/sortUtil";

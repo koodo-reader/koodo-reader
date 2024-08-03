@@ -62,7 +62,6 @@ class SliderList extends React.Component<SliderListProps, SliderListState> {
       StorageUtil.setReaderConfig("margin", margin);
     }
   };
-  //使进度百分比随拖动实时变化
   onValueInput = (event: any) => {
     this.setState({ value: event.target.value });
   };

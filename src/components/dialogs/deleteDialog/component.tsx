@@ -55,7 +55,6 @@ class DeleteDialog extends React.Component<
     });
   };
   handleComfirm = async () => {
-    //从列表删除和从图书库删除判断
     if (this.props.mode === "shelf" && !this.state.isDeleteShelfBook) {
       this.deleteBookFromShelf();
     } else if (this.props.mode === "trash") {
@@ -108,7 +107,6 @@ class DeleteDialog extends React.Component<
   deleteSelectedBook = () => {
     this.props.selectedBooks.forEach((item) => {
       AddTrash.setTrash(item);
-      //从喜爱的图书中删除
       AddFavorite.clear(item);
     });
     this.props.handleSelectedBooks([]);
@@ -117,7 +115,6 @@ class DeleteDialog extends React.Component<
   };
   deleteCurrentBook = () => {
     AddTrash.setTrash(this.props.currentBook.key);
-    //从喜爱的图书中删除
     AddFavorite.clear(this.props.currentBook.key);
     this.props.handleFetchBooks();
   };
@@ -129,17 +126,11 @@ class DeleteDialog extends React.Component<
           .then(async () => {
             await BookUtil.deleteBook(key);
             await BookUtil.deleteBook("cache-" + key);
-            //从喜爱的图书中删除
             AddFavorite.clear(key);
-            //从回收的图书中删除
             AddTrash.clear(key);
-            //从书架删除
             ShelfUtil.deletefromAllShelf(key);
-            //从阅读记录删除
             RecordRecent.clear(key);
-            //删除阅读历史
             RecordLocation.clear(key);
-            //删除书签，笔记，书摘，高亮
             await this.handleDeleteOther(key);
             resolve();
           })

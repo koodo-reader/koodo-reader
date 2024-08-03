@@ -30,7 +30,7 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
 
   componentDidMount() {
     let filePath = "";
-    //控制是否自动打开本书
+    // Get file path from electron
     if (isElectron) {
       const { ipcRenderer } = window.require("electron");
       filePath = ipcRenderer.sendSync("get-file-data");

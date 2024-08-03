@@ -17,9 +17,8 @@ class NavList extends React.Component<NavListProps, NavListState> {
       this.handleDisplayBookmark();
     });
   }
-  //跳转到图书的指定位置
   async handleJump(cfi: string) {
-    //书签跳转
+    //bookmark redirect
     if (!cfi) {
       toast(this.props.t("Wrong bookmark"));
       return;

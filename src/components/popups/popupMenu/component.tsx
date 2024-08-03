@@ -100,21 +100,18 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     return { posX, posY } as any;
   }
 
-  //控制弹窗
   openMenu = () => {
     this.setState({ deleteKey: "" });
     let doc = getIframeDoc();
     if (!doc) return;
     let sel = doc.getSelection();
     this.props.handleChangeDirection(false);
-    // 如果 popmenu正在被展示，则隐藏
     if (this.props.isOpenMenu) {
       this.props.handleMenuMode("");
       this.props.handleOpenMenu(false);
       this.props.handleNoteKey("");
     }
     if (!sel) return;
-    // 使弹出菜单更加灵活可控;
     if (sel.isCollapsed) {
       this.props.isOpenMenu && this.props.handleOpenMenu(false);
       this.props.handleMenuMode("menu");

@@ -14,14 +14,13 @@ class OneDriveUtil {
         lastModified: new Date().getTime(),
         type: blob.type,
       });
-      const accessToken = res.data.access_token; // 替换为实际的访问令牌
+      const accessToken = res.data.access_token;
       const uploadSessionUrl =
         "https://graph.microsoft.com/v1.0/me/drive/special/approot:/" +
         file.name +
         ":/createUploadSession";
 
       try {
-        // 创建上传会话
         const sessionResponse = await axios.post(uploadSessionUrl, null, {
           headers: {
             Authorization: "Bearer " + accessToken,
@@ -31,7 +30,6 @@ class OneDriveUtil {
 
         const uploadUrl = sessionResponse.data.uploadUrl;
 
-        // 上传整个文件
         const response = await axios.put(uploadUrl, file, {
           headers: {
             Authorization: "Bearer " + accessToken,
@@ -55,7 +53,7 @@ class OneDriveUtil {
         refresh_token,
         redirect_uri: driveConfig.callbackUrl,
       });
-      const accessToken = res.data.access_token; // 替换为实际的访问令牌
+      const accessToken = res.data.access_token;
       const downloadUrl = `https://graph.microsoft.com/v1.0/me/drive/special/approot:/${fileName}:/content`;
       try {
         const response = await axios.get(downloadUrl, {

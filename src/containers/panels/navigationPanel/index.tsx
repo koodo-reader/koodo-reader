@@ -1,4 +1,3 @@
-//图书导航栏
 import { connect } from "react-redux";
 import { handleFetchBookmarks, handleSearch } from "../../../store/actions";
 import { stateType } from "../../../store";

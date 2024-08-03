@@ -17,7 +17,6 @@ class CardList extends React.Component<CardListProps, CardListStates> {
     super(props);
     this.state = { deleteKey: "" };
   }
-  //根据bookkey获取
   handleBookName = (bookKey: string) => {
     let { books } = this.props;
     let bookName = "";
@@ -35,7 +34,6 @@ class CardList extends React.Component<CardListProps, CardListStates> {
   handleJump = (note: NoteModel) => {
     let { books } = this.props;
     let book: BookModel | null = null;
-    //根据bookKey获取指定的book和epub
     for (let i = 0; i < books.length; i++) {
       if (books[i].key === note.bookKey) {
         book = books[i];

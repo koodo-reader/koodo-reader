@@ -141,7 +141,6 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
     });
   };
 
-  //获取书籍md5
   getMd5WithBrowser = async (file: any) => {
     return new Promise<void>(async (resolve, reject) => {
       const md5 = await fetchMD5(file);
@@ -168,7 +167,6 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
     let bookName = file.name.substr(0, file.name.length - extension.length - 1);
     let result: BookModel | string;
     return new Promise<void>((resolve, reject) => {
-      //md5重复不导入
       let isRepeat = false;
       if (this.props.books.length > 0) {
         this.props.books.forEach((item) => {
@@ -188,7 +186,6 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
           }
         });
       }
-      //解析图书，获取图书数据
       if (!isRepeat) {
         let reader = new FileReader();
         reader.readAsArrayBuffer(file);
