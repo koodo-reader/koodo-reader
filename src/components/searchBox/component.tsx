@@ -1,4 +1,3 @@
-//搜索框
 import React from "react";
 import "./searchBox.css";
 import SearchUtil from "../../utils/serviceUtils/searchUtil";

@@ -25,7 +25,7 @@ export const renderHighlighters = async (
           handleNoteClick
         );
         if (!iWin || !iWin.getSelection()) return;
-        iWin.getSelection()?.empty(); // 清除文本选取
+        iWin.getSelection()?.empty();
       } else {
         showNoteHighlight(
           JSON.parse(item.range),
@@ -78,7 +78,7 @@ export const createOneNote = async (
       handleNoteClick
     );
     if (!iWin || !iWin.getSelection()) return;
-    iWin.getSelection()?.empty(); // 清除文本选取
+    iWin.getSelection()?.empty();
   } else {
     showNoteHighlight(
       JSON.parse(item.range),
@@ -115,7 +115,7 @@ export const showNoteHighlight = (
     highlightRange(safeRanges[i], colorCode, noteKey, handleNoteClick, doc);
   }
   if (!iWin || !iWin.getSelection()) return;
-  iWin.getSelection()?.empty(); // 清除文本选取
+  iWin.getSelection()?.empty();
 };
 function clearHighlight() {
   let pageArea = document.getElementById("page-area");

@@ -20,7 +20,6 @@ class ShelfSelector extends React.Component<
     };
   }
 
-  //切换书架
   handleShelfItem = (event: any) => {
     let index = event.target.value.split(",")[1];
     this.setState({ shelfIndex: index });
@@ -34,7 +33,6 @@ class ShelfSelector extends React.Component<
   handleDeleteShelf = () => {
     if (this.state.shelfIndex < 1) return;
     let shelfTitles = Object.keys(ShelfUtil.getShelf());
-    //获取当前书架名
     let currentShelfTitle = shelfTitles[this.state.shelfIndex];
     ShelfUtil.removeShelf(currentShelfTitle);
     this.setState({ shelfIndex: 0 }, () => {
@@ -65,7 +63,6 @@ class ShelfSelector extends React.Component<
 
   render() {
     if (isElectron) {
-      //兼容之前的版本
       window.localforage.getItem(this.props.books[0].key).then((result) => {
         if (result) {
           backup(

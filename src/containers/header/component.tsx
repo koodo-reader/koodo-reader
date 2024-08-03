@@ -39,9 +39,9 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         fs.mkdirSync(dirPath);
         fs.mkdirSync(path.join(dirPath, "data"));
         fs.mkdirSync(path.join(dirPath, "data", "book"));
-        console.log("文件夹创建成功");
+        console.log("folder created");
       } else {
-        console.log("文件夹已存在");
+        console.log("folder exist");
       }
 
       if (
@@ -184,7 +184,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       ) {
         this.syncFromLocation();
       } else {
-        //否则就把Koodo中数据同步到同步文件夹
         this.syncToLocation();
       }
     });

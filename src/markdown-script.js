@@ -12,7 +12,7 @@ const runScript = async () => {
     try {
       const code = Object.keys(langList)[index];
       if (fs.existsSync(path.join(__dirname, "./assets/locales/" + code))) {
-        console.log("文件夹存在");
+        console.log("folder exist");
         newLangList.push({
           Language: langList[code],
           Code: code,
@@ -20,7 +20,7 @@ const runScript = async () => {
         });
         resList.push("./assets/locales/" + code + "/translation.json");
       } else {
-        console.log("文件夹不存在");
+        console.log("folder not exist");
       }
     } catch (error) {
       console.error("Error reading JSON file:", error);

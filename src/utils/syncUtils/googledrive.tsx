@@ -115,10 +115,9 @@ class GoogleDriveUtil {
           headers: {
             Authorization: "Bearer " + accessToken,
           },
-          responseType: "blob", // 指定响应类型为 Blob，以便处理文件
+          responseType: "blob",
         });
 
-        // 从响应中获取文件数据
         const blob = new Blob([response.data], {
           type: response.headers["content-type"],
         });

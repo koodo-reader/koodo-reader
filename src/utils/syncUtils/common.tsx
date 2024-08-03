@@ -37,7 +37,7 @@ export function getParamsFromUrl() {
   }
   return hashParams;
 }
-//移动文件到指定路径
+
 export const moveData = (
   blob,
   driveIndex,
@@ -91,7 +91,7 @@ export const moveData = (
     }
   };
 };
-//改变数据存储路径
+
 export const changePath = (oldPath: string, newPath: string) => {
   return new Promise<number>((resolve, reject) => {
     const fs = window.require("fs-extra");

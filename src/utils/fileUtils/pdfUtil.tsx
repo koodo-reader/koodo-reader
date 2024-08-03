@@ -16,7 +16,7 @@ export const getHightlightCoords = () => {
   var page = iWin!.PDFViewerApplication.pdfViewer.getPageView(pageIndex);
   var viewport = page.viewport;
   var pageRect = page.canvas.getClientRects()[0];
-  //处理双页模式的情况
+  //handle double page mode
   if (iWin!.PDFViewerApplication.pdfViewer.spreadMode === 1) {
     if (selectionRects.length > 0) {
       if (selectionRects[0].left > pageRect.right) {

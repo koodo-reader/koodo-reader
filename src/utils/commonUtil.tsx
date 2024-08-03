@@ -95,7 +95,6 @@ export const scrollContents = (chapterTitle: string, chapterHref: string) => {
     targetContent[0].setAttribute("style", "color:red; font-weight: bold");
   }
 };
-//控制进入全屏
 export const handleFullScreen = () => {
   if (isElectron) {
     if (StorageUtil.getReaderConfig("isOpenInMain") === "yes") {
@@ -107,7 +106,6 @@ export const handleFullScreen = () => {
     }
   }
 };
-// 退出全屏模式
 export const handleExitFullScreen = () => {
   if (isElectron) {
     if (StorageUtil.getReaderConfig("isOpenInMain") === "yes") {

@@ -41,7 +41,7 @@ class DeleteIcon extends React.Component<DeleteIconProps, DeleteIconStates> {
               toast.success(this.props.t("Deletion successful"));
             })
             .catch(() => {
-              console.log("删除失败");
+              console.log("delete failed");
             });
         } else {
           window.localforage
@@ -51,7 +51,7 @@ class DeleteIcon extends React.Component<DeleteIconProps, DeleteIconStates> {
               toast.success(this.props.t("Deletion successful"));
             })
             .catch(() => {
-              console.log("修改失败");
+              console.log("modify failed");
             });
         }
       }

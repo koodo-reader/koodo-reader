@@ -2,7 +2,7 @@ import { getIframeDoc } from "../serviceUtils/docUtil";
 import StorageUtil from "../serviceUtils/storageUtil";
 
 class styleUtil {
-  // 为 iframe 添加默认的样式
+  // add default css for iframe
   static addDefaultCss() {
     let doc = getIframeDoc();
     if (!doc) return;
@@ -30,7 +30,7 @@ class styleUtil {
     style.textContent = css;
     doc.head.appendChild(style);
   }
-  // 获取为文档默认应用的css样式
+  // get default css for iframe
   static getDefaultCss() {
     return `::selection{background:#f3a6a68c}::-moz-selection{background:#f3a6a68c}.kookit-note:hover{cursor:pointer;}img{max-width:100% !important}.kookit-text{${this.getCustomCss()}}code,pre{white-space: pre-wrap;}`;
   }

@@ -1,4 +1,3 @@
-//笔记书摘的标签
 import React from "react";
 import "./noteTag.css";
 import { NoteTagProps, NoteTagState } from "./interface";

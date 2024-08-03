@@ -1,4 +1,3 @@
-//添加笔记的弹窗
 import React from "react";
 import "./popupNote.css";
 import Note from "../../../models/Note";
@@ -77,7 +76,6 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
       );
     }
     if (this.props.noteKey) {
-      //编辑笔记
       this.props.notes.forEach((item) => {
         if (item.key === this.props.noteKey) {
           item.notes = notes;
@@ -93,7 +91,6 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
         this.props.handleNoteKey("");
       });
     } else {
-      //创建笔记
       let bookKey = this.props.currentBook.key;
 
       let pageArea = document.getElementById("page-area");

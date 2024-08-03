@@ -55,7 +55,6 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
   handleDeleteShelf = () => {
     if (this.state.shelfIndex < 1) return;
     let shelfTitles = Object.keys(ShelfUtil.getShelf());
-    //获取当前书架名
     let currentShelfTitle = shelfTitles[this.state.shelfIndex];
     ShelfUtil.removeShelf(currentShelfTitle);
     this.setState({ shelfIndex: 0 }, () => {

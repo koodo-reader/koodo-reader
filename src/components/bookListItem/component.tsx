@@ -29,7 +29,7 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
   }
   componentDidMount() {
     let filePath = "";
-    //控制是否自动打开本书
+    //open book when app start
     if (isElectron) {
       const { ipcRenderer } = window.require("electron");
       filePath = ipcRenderer.sendSync("get-file-data");

@@ -65,9 +65,8 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
       this.props.handleFetchPercentage(book);
     });
   }
-  //进入阅读器
+
   handleEnterReader = (position: string) => {
-    //控制上下左右的菜单的显示
     switch (position) {
       case "right":
         this.setState({
@@ -93,9 +92,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         break;
     }
   };
-  //退出阅读器
   handleLeaveReader = (position: string) => {
-    //控制上下左右的菜单的显示
     switch (position) {
       case "right":
         if (StorageUtil.getReaderConfig("isSettingLocked") === "yes") {

@@ -29,7 +29,7 @@ class OperationPanel extends React.Component<
   constructor(props: OperationPanelProps) {
     super(props);
     this.state = {
-      isBookmark: false, // 是否添加书签
+      isBookmark: false,
       time: 0,
       currentPercentage: RecordLocation.getHtmlLocation(
         this.props.currentBook.key
@@ -63,7 +63,6 @@ class OperationPanel extends React.Component<
   }
 
   handleShortcut() {}
-  // 点击切换全屏按钮触发
   handleScreen() {
     StorageUtil.getReaderConfig("isFullscreen") !== "yes"
       ? handleFullScreen()
@@ -74,7 +73,6 @@ class OperationPanel extends React.Component<
       StorageUtil.setReaderConfig("isFullscreen", "yes");
     }
   }
-  // 点击退出按钮的处理程序
   handleExit() {
     StorageUtil.setReaderConfig("isFullscreen", "no");
     this.props.handleReadingState(false);

@@ -18,10 +18,6 @@ export const tsTransform = () => {
           .split("")
           .map((item) => window.ChineseS2T.s2t(item))
           .join("");
-        // item.innerHTML = item.innerHTML.replace(
-        //   item.innerText,
-        //   Chinese.s2t(item.innerText)
-        // );
       });
     } else {
       doc.querySelectorAll("p").forEach((item) => {
