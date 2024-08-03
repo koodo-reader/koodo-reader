@@ -17,6 +17,7 @@ let configArr = [
   "noteSortCode.json",
   "readingTime.json",
   "recentBooks.json",
+  "pluginList.json",
   "favoriteBooks.json",
   "favoriteBooks.json",
   "shelfList.json",
@@ -267,6 +268,7 @@ export const zipConfig = (
         )
         .file("readingTime.json", localStorage.getItem("readingTime") || "")
         .file("recentBooks.json", localStorage.getItem("recentBooks") || [])
+        .file("pluginList.json", localStorage.getItem("pluginList") || [])
         .file("deletedBooks.json", localStorage.getItem("deletedBooks") || [])
         .file("favoriteBooks.json", localStorage.getItem("favoriteBooks") || [])
         .file("shelfList.json", localStorage.getItem("shelfList") || [])

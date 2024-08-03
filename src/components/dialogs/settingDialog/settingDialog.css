@@ -103,7 +103,9 @@
 }
 .setting-plugin-icon {
   margin: 5px;
-  font-size: 20px;
+  font-size: 18px;
+  display: inline-block;
+  width: 20px;
 }
 .setting-plugin-name {
   position: relative;

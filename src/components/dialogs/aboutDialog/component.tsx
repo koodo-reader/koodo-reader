@@ -37,7 +37,7 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
           onMouseEnter={() => {
             this.props.handleAbout(true);
           }}
-          style={{ left: "495px" }}
+          style={{ left: "480px" }}
         >
           <ul className="sort-by-category">
             <li
