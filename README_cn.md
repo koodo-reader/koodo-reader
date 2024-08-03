@@ -18,7 +18,7 @@
 
 <div align="center">
 
-[下载客户端](https://koodoreader.com/zh) | [在线预览](https://web.koodoreader.com) | [开发计划](https://koodoreader.com/zh/roadmap) | [帮助文档](https://koodoreader.com/zh/document) | [插件市场](https://koodoreader.com/zh/plugin)
+[下载客户端](https://koodoreader.com/zh) | [在线预览](https://web.koodoreader.com) | [开发计划](https://koodoreader.com/zh/roadmap) | [帮助文档](https://koodoreader.com/zh/document)
 
 </div>
 
