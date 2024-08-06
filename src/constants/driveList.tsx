@@ -1,12 +1,13 @@
 export const driveConfig = {
   callbackUrl:
     process.env.NODE_ENV === "production"
-      ? "https://reader.960960.xyz"
+      ? "https://web.koodoreader.com"
       : "http://localhost:3000",
-  onedriveAuthUrl: "https://koodo.960960.xyz/api/onedrive_auth",
-  onedriveRefreshUrl: "https://koodo.960960.xyz/api/onedrive_refresh",
-  googleAuthUrl: "https://koodo.960960.xyz/api/google_auth",
-  googleRefreshUrl: "https://koodo.960960.xyz/api/google_refresh",
+  onedriveAuthUrl: "https://cloud.960960.xyz/api/v1/third_auth/onedrive_auth",
+  onedriveRefreshUrl:
+    "https://cloud.960960.xyz/api/v1/third_auth/onedrive_refresh",
+  googleAuthUrl: "https://cloud.960960.xyz/api/v1/third_auth/google_auth",
+  googleRefreshUrl: "https://cloud.960960.xyz/api/v1/third_auth/google_refresh",
   googleScope: "https://www.googleapis.com/auth/drive.appdata",
   dropboxClientId: "vnc67byrssocvy1",
   onedriveClientId: "506df58a-29ab-4020-afc5-6f423dc80f35",

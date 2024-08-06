@@ -5,7 +5,7 @@
   "description": "A cross-platform ebook reader",
   "author": {
     "name": "App by Troye",
-    "email": "support@960960.xyz"
+    "email": "feedback@koodoreader.com"
   },
   "engines": {
     "node": ">=18.0.0",
