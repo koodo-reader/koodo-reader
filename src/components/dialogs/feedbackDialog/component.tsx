@@ -92,7 +92,7 @@ class FeedbackDialog extends Component<
     let config = {
       method: "post",
       maxBodyLength: Infinity,
-      url: "https://worker.960960.xyz/api/feedback",
+      url: "https://api.960960.xyz/api/feedback",
       headers: {
         "Content-Type": "application/json",
       },
