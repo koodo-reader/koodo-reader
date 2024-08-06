@@ -48,12 +48,14 @@ export const base64ArrayBuffer = (arrayBuffer: ArrayBuffer) => {
 };
 
 export const checkDeveloperUpdate = async () => {
-  let res = await axios.get("https://koodo.960960.xyz/api/update_dev");
+  let res = await axios.get("https://worker.960960.xyz/api/update_dev");
   return res.data;
 };
 export const getUploadUrl = async () => {
   const axios = window.require("axios");
-  let res = await axios.get("https://koodo.960960.xyz/api/get_temp_upload_url");
+  let res = await axios.get(
+    "https://worker.960960.xyz/api/get_temp_upload_url"
+  );
   return res.data;
 };
 export const uploadFile = async (url: string, file: any) => {
@@ -72,7 +74,7 @@ export const uploadFile = async (url: string, file: any) => {
 };
 export const checkStableUpdate = async () => {
   let res = await axios.get(
-    `https://koodo.960960.xyz/api/update?name=${navigator.language}`
+    `https://worker.960960.xyz/api/update?name=${navigator.language}`
   );
   return res.data.log;
 };
