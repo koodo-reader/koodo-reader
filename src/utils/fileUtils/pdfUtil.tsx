@@ -1,4 +1,4 @@
-import { colors, lines } from "../../constants/themeList";
+import { lines, pdfColors } from "../../constants/themeList";
 import { getPDFIframeDoc } from "../serviceUtils/docUtil";
 
 declare var window: any;
@@ -163,7 +163,7 @@ export const showPDFHighlight = (
             ? "background-color: "
             : "border-bottom: ") +
           (colorCode.indexOf("color") > -1
-            ? colors[colorCode.split("-")[1]]
+            ? pdfColors[colorCode.split("-")[1]]
             : `2px solid ${lines[colorCode.split("-")[1]]}`) +
           "; left:" +
           Math.min(bounds[0], bounds[2]) +
@@ -174,7 +174,7 @@ export const showPDFHighlight = (
           Math.abs(bounds[0] - bounds[2]) +
           "px; height:" +
           Math.abs(bounds[1] - bounds[3]) +
-          "px; z-index:0;"
+          "px; z-index:-1;"
       );
       el?.setAttribute("data-key", noteKey);
       el?.setAttribute("class", "kookit-note");

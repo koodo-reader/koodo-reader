@@ -149,7 +149,7 @@ async function highlightRange(
           ? "background-color: "
           : "border-bottom: ") +
         (colorCode.indexOf("color") > -1
-          ? colors[colorCode.split("-")[1]] + ";opacity: 0.2"
+          ? colors[colorCode.split("-")[1]] + ";opacity: 1"
           : `2px solid ${lines[colorCode.split("-")[1]]}`) +
         ";left:" +
         (Math.min(rect.left, rect.x) + doc.body.scrollLeft) +
@@ -160,7 +160,7 @@ async function highlightRange(
         rect.width +
         "px; height:" +
         rect.height +
-        "px; z-index:0;"
+        "px; z-index:-1;"
     );
     newNode.setAttribute("class", " kookit-note");
     newNode.setAttribute("data-key", noteKey);
@@ -180,50 +180,12 @@ async function highlightRange(
 }
 function filterRects(rects: any) {
   let result: any = [];
-  let lastRect: any = null;
-  let lineHeight = getLineHeight(rects);
-  let lineWidth = getLineWidth(rects);
   for (let index = 0; index < rects.length; index++) {
     const rect = rects[index];
-
-    if (Math.abs(rect.height - lineHeight) > 1 && rect.width === lineWidth) {
-      continue;
-    }
-
-    if (lastRect) {
-      if (rect.top === lastRect.top && rect.left === lastRect.left) {
-        continue;
-      }
-    }
     result.push(rect);
-    lastRect = rect;
   }
 
   return result;
-}
-function getLineHeight(rects: any[]) {
-  let arr = Array.from(rects)
-    .filter((item) => item.height > 0)
-    .map((item) => item.height);
-  let frequency = {};
-  let maxCount = 0;
-  let result;
-  for (let num of arr) {
-    frequency[num] = (frequency[num] || 0) + 1;
-    if (frequency[num] > maxCount) {
-      maxCount = frequency[num];
-      result = num;
-    } else if (frequency[num] === maxCount) {
-      result = Math.min(result, num);
-    }
-  }
-  return result;
-}
-function getLineWidth(rects: any[]) {
-  let arr = Array.from(rects)
-    .filter((item) => item.width > 0)
-    .map((item) => item.width);
-  return Math.max(...arr);
 }
 function getSafeRanges(dangerous) {
   var a = dangerous.commonAncestorContainer;

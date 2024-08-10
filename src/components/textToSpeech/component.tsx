@@ -44,15 +44,16 @@ class TextToSpeech extends React.Component<
       return new Promise((resolve, reject) => {
         let synth = window.speechSynthesis;
         let id;
-
-        id = setInterval(() => {
-          if (synth.getVoices().length !== 0) {
-            resolve(synth.getVoices());
-            clearInterval(id);
-          } else {
-            this.setState({ isSupported: false });
-          }
-        }, 10);
+        if (synth) {
+          id = setInterval(() => {
+            if (synth.getVoices().length !== 0) {
+              resolve(synth.getVoices());
+              clearInterval(id);
+            } else {
+              this.setState({ isSupported: false });
+            }
+          }, 10);
+        }
       });
     };
     this.nativeVoices = await setSpeech();
@@ -320,7 +321,7 @@ class TextToSpeech extends React.Component<
                 ></span>
               </span>
             </div>
-            {this.state.isAudioOn && this.voices.length > 0 && (
+            {this.state.isAudioOn && (
               <div
                 className="setting-dialog-new-title"
                 style={{

@@ -82,7 +82,7 @@
   margin-right: 20px;
 }
 .note-tags {
-  width: 100%;
+  width: 320px;
   overflow-x: scroll;
   overflow-y: hidden;
 }

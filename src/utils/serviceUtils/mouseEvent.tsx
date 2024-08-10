@@ -27,10 +27,6 @@ const arrowKeys = async (
   event: any,
   readerMode: string
 ) => {
-  if (keyCode === 9) {
-    event.preventDefault();
-    return;
-  }
   if (
     event.target.tagName.toLowerCase() === "textarea" ||
     event.target.tagName.toLowerCase() === "input"
