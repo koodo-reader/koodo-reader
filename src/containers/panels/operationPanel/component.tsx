@@ -77,7 +77,7 @@ class OperationPanel extends React.Component<
     StorageUtil.setReaderConfig("isFullscreen", "no");
     this.props.handleReadingState(false);
     this.props.handleSearch(false);
-    window.speechSynthesis.cancel();
+    window.speechSynthesis && window.speechSynthesis.cancel();
     TTSUtil.pauseAudio();
     ReadingTime.setTime(this.props.currentBook.key, this.props.time);
     handleExitFullScreen();
