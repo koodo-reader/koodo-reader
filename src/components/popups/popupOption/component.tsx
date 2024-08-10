@@ -206,8 +206,10 @@ class PopupOption extends React.Component<PopupOptionProps> {
   handleSpeak = () => {
     var msg = new SpeechSynthesisUtterance();
     msg.text = getSelection() || "";
-    msg.voice = window.speechSynthesis.getVoices()[0];
-    window.speechSynthesis.speak(msg);
+    if (window.speechSynthesis && window.speechSynthesis.getVoices) {
+      msg.voice = window.speechSynthesis.getVoices()[0];
+      window.speechSynthesis.speak(msg);
+    }
   };
 
   render() {

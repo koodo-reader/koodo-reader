@@ -46,6 +46,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         RecordLocation.getHtmlLocation(this.props.currentBook.key)
           .chapterDocIndex || 0
       ),
+      pageOffset: "",
       chapter: "",
       rendition: null,
     };
@@ -59,14 +60,46 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
   componentDidMount() {
     window.rangy.init();
     this.handleRenderBook();
-
+    //make sure page width is always 12 times, section = Math.floor(element.clientWidth / 12), or text will be blocked
+    this.handlePageWidth();
     this.props.handleRenderBookFunc(this.handleRenderBook);
 
     window.addEventListener("resize", () => {
       BookUtil.reloadBooks();
     });
   }
-
+  handlePageWidth = () => {
+    if (document.body.clientWidth < 570) {
+      let width =
+        document.body.clientWidth -
+        72 -
+        ((document.body.clientWidth - 72) % 12);
+      this.setState({ pageOffset: `calc(50vw - ${width / 2}px)` });
+    } else if (this.state.readerMode === "scroll") {
+      this.setState({
+        pageOffset: `calc(50vw - ${
+          276 * parseFloat(this.state.scale) -
+          ((276 * parseFloat(this.state.scale)) % 12)
+        }px)`,
+      });
+    } else if (this.state.readerMode === "single") {
+      this.setState({
+        pageOffset: `calc(50vw - ${
+          276 * parseFloat(this.state.scale) -
+          ((276 * parseFloat(this.state.scale)) % 12)
+        }px + 36px)`,
+      });
+    } else if (this.state.readerMode === "double") {
+      let width =
+        document.body.clientWidth -
+        2 * this.state.margin -
+        80 -
+        ((document.body.clientWidth - 2 * this.state.margin - 80) % 12);
+      this.setState({
+        pageOffset: `calc(50vw - ${width / 2}px)`,
+      });
+    }
+  };
   handleHighlight = (rendition: any) => {
     let highlighters: any = this.props.notes;
     if (!highlighters) return;
@@ -316,36 +349,20 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           }
           id="page-area"
           style={
-            document.body.clientWidth < 570
-              ? { left: 20, right: 20 }
-              : this.state.readerMode === "scroll"
+            this.state.readerMode === "scroll" &&
+            document.body.clientWidth >= 570
               ? {
-                  marginLeft: `calc(50vw - ${
-                    270 * parseFloat(this.state.scale)
-                  }px)`,
-                  marginRight: `calc(50vw - ${
-                    270 * parseFloat(this.state.scale)
-                  }px)`,
+                  marginLeft: this.state.pageOffset,
+                  marginRight: this.state.pageOffset,
                   paddingLeft: "20px",
                   paddingRight: "15px",
                   left: 0,
                   right: 0,
                 }
-              : this.state.readerMode === "single"
-              ? {
-                  left: `calc(50vw - ${
-                    270 * parseFloat(this.state.scale)
-                  }px + 30px)`,
-                  right: `calc(50vw - ${
-                    270 * parseFloat(this.state.scale)
-                  }px + 30px)`,
+              : {
+                  left: this.state.pageOffset,
+                  right: this.state.pageOffset,
                 }
-              : this.state.readerMode === "double"
-              ? {
-                  left: 40 + this.state.margin + "px",
-                  right: 40 + this.state.margin + "px",
-                }
-              : {}
           }
         ></div>
         <PageWidget />

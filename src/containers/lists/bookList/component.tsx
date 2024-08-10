@@ -87,17 +87,29 @@ class BookList extends React.Component<BookListProps, BookListState> {
       : this.props.shelfIndex > 0
       ? this.handleIndexFilter(
           this.handleShelf(this.props.books, this.props.shelfIndex),
-          SortUtil.sortBooks(this.props.books, this.props.bookSortCode) || []
+          SortUtil.sortBooks(
+            this.handleShelf(this.props.books, this.props.shelfIndex),
+            this.props.bookSortCode
+          ) || []
         )
       : this.props.mode === "favorite"
       ? this.handleIndexFilter(
           this.handleKeyFilter(this.props.books, AddFavorite.getAllFavorite()),
-          SortUtil.sortBooks(this.props.books, this.props.bookSortCode) || []
+          SortUtil.sortBooks(
+            this.handleKeyFilter(
+              this.props.books,
+              AddFavorite.getAllFavorite()
+            ),
+            this.props.bookSortCode
+          ) || []
         )
       : this.state.isHideShelfBook
       ? this.handleIndexFilter(
           this.handleFilterShelfBook(this.props.books),
-          SortUtil.sortBooks(this.props.books, this.props.bookSortCode) || []
+          SortUtil.sortBooks(
+            this.handleFilterShelfBook(this.props.books),
+            this.props.bookSortCode
+          ) || []
         )
       : this.handleIndexFilter(
           this.props.books,

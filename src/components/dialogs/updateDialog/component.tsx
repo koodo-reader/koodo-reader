@@ -42,7 +42,7 @@ class UpdateInfo extends React.Component<UpdateInfoProps, UpdateInfoState> {
       if (
         lastTimeCheck &&
         new Date().getTime() - parseInt(lastTimeCheck) <
-          30 * 24 * 60 * 60 * 1000
+          28 * 24 * 60 * 60 * 1000
       ) {
         return;
       }
