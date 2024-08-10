@@ -1,7 +1,7 @@
 {
   "name": "koodo-reader",
   "main": "main.js",
-  "version": "1.6.7",
+  "version": "1.6.8",
   "description": "A cross-platform ebook reader",
   "author": {
     "name": "App by Troye",
