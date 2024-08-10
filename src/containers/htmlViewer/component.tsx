@@ -47,6 +47,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           .chapterDocIndex || 0
       ),
       pageOffset: "",
+      pageWidth: "",
       chapter: "",
       rendition: null,
     };
@@ -69,34 +70,48 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     });
   }
   handlePageWidth = () => {
+    const findValidMultiple = (limit: number) => {
+      let multiple = limit - (limit % 12);
+
+      while (multiple >= 0) {
+        if (((multiple - multiple / 12) / 2) % 2 === 0) {
+          return multiple;
+        }
+        multiple -= 12;
+      }
+
+      return limit;
+    };
+
     if (document.body.clientWidth < 570) {
-      let width =
-        document.body.clientWidth -
-        72 -
-        ((document.body.clientWidth - 72) % 12);
-      this.setState({ pageOffset: `calc(50vw - ${width / 2}px)` });
-    } else if (this.state.readerMode === "scroll") {
-      this.setState({
-        pageOffset: `calc(50vw - ${
-          276 * parseFloat(this.state.scale) -
-          ((276 * parseFloat(this.state.scale)) % 12)
-        }px)`,
-      });
-    } else if (this.state.readerMode === "single") {
-      this.setState({
-        pageOffset: `calc(50vw - ${
-          276 * parseFloat(this.state.scale) -
-          ((276 * parseFloat(this.state.scale)) % 12)
-        }px + 36px)`,
-      });
-    } else if (this.state.readerMode === "double") {
-      let width =
-        document.body.clientWidth -
-        2 * this.state.margin -
-        80 -
-        ((document.body.clientWidth - 2 * this.state.margin - 80) % 12);
+      let width = findValidMultiple(document.body.clientWidth - 72);
+
       this.setState({
         pageOffset: `calc(50vw - ${width / 2}px)`,
+        pageWidth: `${width}px`,
+      });
+    } else if (this.state.readerMode === "scroll") {
+      let width = findValidMultiple(276 * parseFloat(this.state.scale) * 2);
+      this.setState({
+        pageOffset: `calc(50vw - ${width / 2}px)`,
+        pageWidth: `${width}px`,
+      });
+    } else if (this.state.readerMode === "single") {
+      let width = findValidMultiple(
+        276 * parseFloat(this.state.scale) * 2 - 36
+      );
+      this.setState({
+        pageOffset: `calc(50vw - ${width / 2}px)`,
+        pageWidth: `${width}px`,
+      });
+    } else if (this.state.readerMode === "double") {
+      let width = findValidMultiple(
+        document.body.clientWidth - 2 * this.state.margin - 80
+      );
+      console.log(width, "width");
+      this.setState({
+        pageOffset: `calc(50vw - ${width / 2}px)`,
+        pageWidth: `${width}px`,
       });
     }
   };
@@ -361,7 +376,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
                 }
               : {
                   left: this.state.pageOffset,
-                  right: this.state.pageOffset,
+                  width: this.state.pageWidth,
                 }
           }
         ></div>

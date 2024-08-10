@@ -43,6 +43,7 @@ export interface ViewerState {
   readerMode: string;
   chapter: string;
   pageOffset: string;
+  pageWidth: string;
   chapterDocIndex: number;
   cfiRange: any;
   contents: any;

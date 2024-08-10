@@ -61,7 +61,7 @@ class TextToSpeech extends React.Component<
   handleChangeAudio = () => {
     this.setState({ isAddNew: false });
     if (this.state.isAudioOn) {
-      window.speechSynthesis.cancel();
+      window.speechSynthesis && window.speechSynthesis.cancel();
       TTSUtil.pauseAudio();
       this.setState({ isAudioOn: false });
     } else {
@@ -71,7 +71,7 @@ class TextToSpeech extends React.Component<
       } else {
         this.voices = this.nativeVoices;
       }
-      if (PluginList.getAllVoices().length === 0) {
+      if (this.voices.length === 0 && PluginList.getAllVoices().length === 0) {
         this.setState({ isAddNew: true });
         return;
       }
@@ -277,7 +277,7 @@ class TextToSpeech extends React.Component<
 
       msg.voice = this.nativeVoices[voiceIndex];
       msg.rate = speed;
-      window.speechSynthesis.cancel();
+      window.speechSynthesis && window.speechSynthesis.cancel();
       window.speechSynthesis.speak(msg);
       msg.onerror = (err) => {
         console.log(err);
@@ -342,7 +342,7 @@ class TextToSpeech extends React.Component<
                   id="text-speech-voice"
                   onChange={(event) => {
                     if (event.target.value === this.voices.length - 1 + "") {
-                      window.speechSynthesis.cancel();
+                      window.speechSynthesis && window.speechSynthesis.cancel();
                       TTSUtil.pauseAudio();
                       this.setState({ isAddNew: true, isAudioOn: false });
                     } else {
