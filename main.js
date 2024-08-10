@@ -81,7 +81,7 @@ const createMainWin = () => {
       mainView.setBounds({ x: 0, y: 0, width: width, height: height })
     }
   });
-  mainWin.on("resize", () => {
+  mainWin.on("maximize", () => {
     if (mainView) {
       let [width, height] = mainWin.getSize()
       mainView.setBounds({ x: 0, y: 0, width: width, height: height })

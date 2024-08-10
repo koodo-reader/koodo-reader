@@ -71,6 +71,10 @@ class TextToSpeech extends React.Component<
       } else {
         this.voices = this.nativeVoices;
       }
+      if (PluginList.getAllVoices().length === 0) {
+        this.setState({ isAddNew: true });
+        return;
+      }
       this.handleStartSpeech();
     }
   };
