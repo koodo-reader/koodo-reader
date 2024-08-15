@@ -45,7 +45,7 @@
   - 漫画 (**.cbr**, **.cbz**, **.cbt**, **.cb7**)
   - 富文本 (**.md**, **.docx**)
   - FB2 (**.fb2**)
-  - 超文本 (**.html**, **.xml**, **.xhtml**, **.mhtml**, **.htm**, **.htm**)
+  - 超文本 (**.html**, **.xml**, **.xhtml**, **.mhtml**, **.htm**)
 - 支持 **Windows**，**macOS**，**Linux** 和 **网页版**
 - 备份数据到 **OneDrive**, **Google Drive**, **Dropbox**, **FTP**, **SFTP**, **WebDAV**, **S3**, **S3 Compatible**
 - 自定义源文件夹，利用 OneDrive、百度网盘、iCloud、Dropbox 等进行多设备同步
