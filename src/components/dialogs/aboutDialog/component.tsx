@@ -58,9 +58,9 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
                   StorageUtil.getReaderConfig("lang") === "zhTW" ||
                   StorageUtil.getReaderConfig("lang") === "zhMO"
                 ) {
-                  this.handleJump("https://koodoreader.com/zh/document");
+                  this.handleJump("https://ielts-stud.ai/zh/document");
                 } else {
-                  this.handleJump("https://koodoreader.com/en/document");
+                  this.handleJump("https://ielts-stud.ai/en/document");
                 }
               }}
             >
@@ -69,7 +69,7 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
             <li
               className="sort-by-category-list"
               onClick={async () => {
-                this.handleJump(`https://koodoreader.com/en/support`);
+                this.handleJump(`https://ielts-stud.ai/en/support`);
               }}
             >
               <Trans>Feedback</Trans>
@@ -82,9 +82,9 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
                   StorageUtil.getReaderConfig("lang") === "zhTW" ||
                   StorageUtil.getReaderConfig("lang") === "zhMO"
                 ) {
-                  this.handleJump("https://koodoreader.com/zh/roadmap");
+                  this.handleJump("https://ielts-stud.ai/zh/roadmap");
                 } else {
-                  this.handleJump("https://koodoreader.com/en/roadmap");
+                  this.handleJump("https://ielts-stud.ai/en/roadmap");
                 }
               }}
             >
@@ -93,7 +93,7 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
             <li
               className="sort-by-category-list"
               onClick={() => {
-                this.handleJump("https://koodoreader.com");
+                this.handleJump("https://ielts-stud.ai");
               }}
             >
               <Trans>Our website</Trans>
@@ -133,7 +133,7 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
               <li
                 className="sort-by-category-list"
                 onClick={() => {
-                  this.handleJump("https://koodoreader.com/en");
+                  this.handleJump("https://ielts-stud.ai/en");
                 }}
                 style={{ color: "rgb(35, 170, 242)" }}
               >

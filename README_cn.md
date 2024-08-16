@@ -5,11 +5,11 @@
 </div>
 
 <div align="center">
-  <img src="https://dl.koodoreader.com/screenshots/logo.png" width="96px" height="96px"/>
+  <img src="https://dl.ielts-stud.ai/screenshots/logo.png" width="96px" height="96px"/>
 </div>
 
 <h1 align="center">
-  Koodo Reader
+  IELTS STUDY AI
 </h1>
 
 <h3 align="center">
@@ -18,7 +18,7 @@
 
 <div align="center">
 
-[下载客户端](https://koodoreader.com/zh) | [在线预览](https://web.koodoreader.com) | [开发计划](https://koodoreader.com/zh/roadmap) | [帮助文档](https://koodoreader.com/zh/document) | [插件列表](https://koodoreader.com/zh/plugin)
+[下载客户端](https://ielts-stud.ai/zh) | [在线预览](https://web.ielts-stud.ai) | [开发计划](https://ielts-stud.ai/zh/roadmap) | [帮助文档](https://ielts-stud.ai/zh/document) | [插件列表](https://ielts-stud.ai/zh/plugin)
 
 </div>
 
@@ -27,10 +27,10 @@
 <div align="center">
   <br/>
   <br/>
-  <kbd><img src="https://dl.koodoreader.com/screenshots/1.png" width="800px"></kbd>
+  <kbd><img src="https://dl.ielts-stud.ai/screenshots/1.png" width="800px"></kbd>
   <br/>
   <br/>
-  <kbd><img src="https://dl.koodoreader.com/screenshots/5.png" width="800px"></kbd>
+  <kbd><img src="https://dl.ielts-stud.ai/screenshots/5.png" width="800px"></kbd>
   <br/>
   <br/>
 </div>
@@ -58,9 +58,9 @@
 ## 使用方法
 
 - 桌面端：
-  - 稳定版 (推荐下载)：[官网](https://koodoreader.com/zh)
+  - 稳定版 (推荐下载)：[官网](https://ielts-stud.ai/zh)
   - 开发版：[GitHub Release](https://github.com/koodo-reader/koodo-reader/releases/latest) （包含新功能和 bug 修复，但也可能引入更多未知 bug）
-- 网页版：[前往](https://web.koodoreader.com)
+- 网页版：[前往](https://web.ielts-stud.ai)
 - 使用 Scoop 安装：
 
 ```shell
@@ -101,25 +101,25 @@ flatpak run io.github.troyeguo.koodo-reader
   <b>列表模式</b>
   <br/>
   <br/>
-  <kbd><img src="https://dl.koodoreader.com/screenshots/2.png" width="800px"></kbd>
+  <kbd><img src="https://dl.ielts-stud.ai/screenshots/2.png" width="800px"></kbd>
   <br/>
   <br/>
   <b>封面模式</b>
   <br/>
   <br/>
-  <kbd><img src="https://dl.koodoreader.com/screenshots/3.png" width="800px"></kbd>
+  <kbd><img src="https://dl.ielts-stud.ai/screenshots/3.png" width="800px"></kbd>
   <br/>
   <br/>
   <b>阅读菜单</b>
   <br/>
   <br/>
-  <kbd><img src="https://dl.koodoreader.com/screenshots/6.png" width="800px"></kbd>
+  <kbd><img src="https://dl.ielts-stud.ai/screenshots/6.png" width="800px"></kbd>
   <br/>
   <br/>
   <b>黑夜模式</b>
   <br/>
   <br/>
-  <kbd><img src="https://dl.koodoreader.com/screenshots/4.png" width="800px"></kbd>
+  <kbd><img src="https://dl.ielts-stud.ai/screenshots/4.png" width="800px"></kbd>
   <br/>
   <br/>
 </div>

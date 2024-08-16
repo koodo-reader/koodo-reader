@@ -1,7 +1,7 @@
 export const driveConfig = {
   callbackUrl:
     process.env.NODE_ENV === "production"
-      ? "https://web.koodoreader.com"
+      ? "https://web.ielts-stud.ai"
       : "http://localhost:3000",
   onedriveAuthUrl: "https://cloud.960960.xyz/api/v1/third_auth/onedrive_auth",
   onedriveRefreshUrl:

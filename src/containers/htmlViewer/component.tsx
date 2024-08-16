@@ -168,7 +168,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         this.props.handleReadingState(true);
 
         RecentBooks.setRecent(this.props.currentBook.key);
-        document.title = name + " - Koodo Reader";
+        document.title = name + " - IELTS STUDY AI";
       }
     );
   };

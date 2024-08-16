@@ -137,7 +137,7 @@ class FeedbackDialog extends Component<
             &nbsp;
             <span
               onClick={() => {
-                this.handleJump(`https://koodoreader.com/en/support`);
+                this.handleJump(`https://ielts-stud.ai/en/support`);
               }}
               style={{ color: "rgb(35, 170, 242)", cursor: "pointer" }}
             >
@@ -152,13 +152,13 @@ class FeedbackDialog extends Component<
               style={{ color: "rgb(231, 69, 69)" }}
             >
               <Trans>
-                You're not using the latest version of Koodo Reader. Please
+                You're not using the latest version of IELTS STUDY AI. Please
                 update first
               </Trans>
               &nbsp;
               <span
                 onClick={() => {
-                  this.handleJump(`https://dl.koodoreader.com/latest.html`);
+                  this.handleJump(`https://dl.ielts-stud.ai/latest.html`);
                 }}
                 style={{ color: "rgb(35, 170, 242)", cursor: "pointer" }}
               >

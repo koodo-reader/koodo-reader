@@ -1,8 +1,8 @@
 blank_issues_enabled: false
 contact_links:
   - name: Bug Report
-    url: https://koodoreader.com/en/support
+    url: https://ielts-stud.ai/en/support
     about: Things don't work as intended
   - name: 提交 Bug
-    url: https://koodoreader.com/zh/support
-    about: 我在使用 Koodo Reader 时遇到了Bug
+    url: https://ielts-stud.ai/zh/support
+    about: 我在使用 IELTS STUDY AI 时遇到了Bug

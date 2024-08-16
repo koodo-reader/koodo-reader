@@ -170,7 +170,7 @@ class BackupDialog extends React.Component<
               ) {
                 toast(
                   this.props.t(
-                    "Koodo Reader's web version are limited by the browser, for more powerful features, please download the desktop version."
+                    "IELTS STUDY AI's web version are limited by the browser, for more powerful features, please download the desktop version."
                   )
                 );
                 return;
@@ -274,7 +274,7 @@ class BackupDialog extends React.Component<
                   event.preventDefault();
                   toast(
                     this.props.t(
-                      "Koodo Reader's web version are limited by the browser, for more powerful features, please download the desktop version."
+                      "IELTS STUDY AI's web version are limited by the browser, for more powerful features, please download the desktop version."
                     )
                   );
                   return;

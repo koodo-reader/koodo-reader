@@ -5,7 +5,7 @@
 </div>
 
 <div align="center" >
-  <img src="https://dl.koodoreader.com/screenshots/logo.png" width="96px" height="96px"/>
+  <img src="https://dl.ielts-stud.ai/screenshots/logo.png" width="96px" height="96px"/>
 </div>
 
 <h1 align="center">
@@ -17,7 +17,7 @@
 </h3>
 <div align="center">
 
-[डाउनलोड](https://koodoreader.com/en) | [समीक्षा](https://web.koodoreader.com) | [रोडमैप](https://koodoreader.com/en/roadmap) | [आलेख](https://koodoreader.com/en/document)
+[डाउनलोड](https://ielts-stud.ai/en) | [समीक्षा](https://web.ielts-stud.ai) | [रोडमैप](https://ielts-stud.ai/en/roadmap) | [आलेख](https://ielts-stud.ai/en/document)
 
 </div>
 
@@ -25,10 +25,10 @@
 
 <div align="center">
   <br/>
-  <kbd><img src="https://dl.koodoreader.com/screenshots/1.png" width="800px"></kbd>
+  <kbd><img src="https://dl.ielts-stud.ai/screenshots/1.png" width="800px"></kbd>
   <br/>
   <br/>
-  <kbd><img src="https://dl.koodoreader.com/screenshots/5.png" width="800px"></kbd>
+  <kbd><img src="https://dl.ielts-stud.ai/screenshots/5.png" width="800px"></kbd>
   <br/>
 </div>
 
@@ -56,9 +56,9 @@
 ## इंस्टालेशन
 
 - डेस्कटॉप संस्करण:
-  - स्थिर संस्करण (अनुशंसित): [डाउनलोड](https://koodoreader.com/en)
+  - स्थिर संस्करण (अनुशंसित): [डाउनलोड](https://ielts-stud.ai/en)
   - डेवलपर संस्करण: [डाउनलोड](https://github.com/koodo-reader/koodo-reader/releases/latest) ( नई सुविधा और बग फिक्स के साथ, लेकिन कुछ अज्ञात बग उत्पन्न हो सकते हैं)
-- वेब संस्करण：[समीक्षा](https://web.koodoreader.com)
+- वेब संस्करण：[समीक्षा](https://web.ielts-stud.ai)
 - स्कूप के साथ इंस्टाल करें:
 
 ```shell
@@ -100,25 +100,25 @@ flatpak run io.github.troyeguo.koodo-reader
   <b>सूची मोड</b>
   <br/>
   <br/>
-  <kbd><img src="https://dl.koodoreader.com/screenshots/2.png" width="800px"></kbd>
+  <kbd><img src="https://dl.ielts-stud.ai/screenshots/2.png" width="800px"></kbd>
   <br/>
   <br/>
   <b>कवर मोड</b>
   <br/>
   <br/>
-  <kbd><img src="https://dl.koodoreader.com/screenshots/3.png" width="800px"></kbd>
+  <kbd><img src="https://dl.ielts-stud.ai/screenshots/3.png" width="800px"></kbd>
   <br/>
   <br/>
   <b>पाठक मेनू</b>
   <br/>
   <br/>
-  <kbd><img src="https://dl.koodoreader.com/screenshots/6.png" width="800px"></kbd>
+  <kbd><img src="https://dl.ielts-stud.ai/screenshots/6.png" width="800px"></kbd>
   <br/>
   <br/>
   <b>डार्क मोड</b>
   <br/>
   <br/>
-  <kbd><img src="https://dl.koodoreader.com/screenshots/4.png" width="800px"></kbd>
+  <kbd><img src="https://dl.ielts-stud.ai/screenshots/4.png" width="800px"></kbd>
   <br/>
 </div>
 
