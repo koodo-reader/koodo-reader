@@ -3,6 +3,7 @@ import "./emptyPage.css";
 import { emptyList } from "../../constants/emptyList";
 import { Trans } from "react-i18next";
 import { EmptyPageProps, EmptyPageState } from "./interface";
+import StorageUtil from "../../utils/serviceUtils/storageUtil";
 
 class EmptyPage extends React.Component<EmptyPageProps, EmptyPageState> {
   render() {
@@ -40,7 +41,13 @@ class EmptyPage extends React.Component<EmptyPageProps, EmptyPageState> {
           style={{ width: "calc(100% - 50px)" }}
         >
           <img
-            src="./assets/empty.svg"
+            src={
+              StorageUtil.getReaderConfig("appSkin") === "night" ||
+              (StorageUtil.getReaderConfig("appSkin") === "system" &&
+                StorageUtil.getReaderConfig("isOSNight") === "yes")
+                ? "./assets/empty_light.svg"
+                : "./assets/empty.svg"
+            }
             alt=""
             className="empty-page-illustration"
           />
