@@ -108,7 +108,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       let width = findValidMultiple(
         document.body.clientWidth - 2 * this.state.margin - 80
       );
-      console.log(width, "width");
       this.setState({
         pageOffset: `calc(50vw - ${width / 2}px)`,
         pageWidth: `${width}px`,

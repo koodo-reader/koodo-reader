@@ -71,35 +71,6 @@ class SettingDialog extends React.Component<
         : "",
     };
   }
-  componentDidMount() {
-    StorageUtil.getReaderConfig("systemFont") &&
-      document
-        .getElementsByClassName("lang-setting-dropdown")[0]
-        ?.children[
-          dropdownList[0].option.indexOf(
-            StorageUtil.getReaderConfig("systemFont")
-          )
-        ]?.setAttribute("selected", "selected");
-    document
-      .getElementsByClassName("lang-setting-dropdown")[1]
-      ?.children[
-        langList
-          .map((item) => item.value)
-          .indexOf(StorageUtil.getReaderConfig("lang") || "en")
-      ]?.setAttribute("selected", "selected");
-    document.getElementsByClassName("lang-setting-dropdown")[2]?.children[
-      window._.findLastIndex(searchList, {
-        value:
-          StorageUtil.getReaderConfig("searchEngine") ||
-          (navigator.language === "zh-CN" ? "baidu" : "google"),
-      })
-    ]?.setAttribute("selected", "selected");
-    document.getElementsByClassName("lang-setting-dropdown")[3]?.children[
-      window._.findLastIndex(skinList, {
-        value: StorageUtil.getReaderConfig("appSkin") || "system",
-      })
-    ]?.setAttribute("selected", "selected");
-  }
   handleRest = (bool: boolean) => {
     toast.success(this.props.t("Change successful"));
   };
@@ -414,6 +385,12 @@ class SettingDialog extends React.Component<
                       value={item.value}
                       key={item.value}
                       className="lang-setting-option"
+                      selected={
+                        item.value ===
+                        (StorageUtil.getReaderConfig("lang") || "en")
+                          ? true
+                          : false
+                      }
                     >
                       {item.label}
                     </option>
@@ -434,6 +411,13 @@ class SettingDialog extends React.Component<
                       value={item.value}
                       key={item.value}
                       className="lang-setting-option"
+                      selected={
+                        item.value ===
+                        (StorageUtil.getReaderConfig("searchEngine") ||
+                          (navigator.language === "zh-CN" ? "baidu" : "google"))
+                          ? true
+                          : false
+                      }
                     >
                       {this.props.t(item.label)}
                     </option>
@@ -595,6 +579,12 @@ class SettingDialog extends React.Component<
                       value={item.value}
                       key={item.value}
                       className="lang-setting-option"
+                      selected={
+                        item.value ===
+                        (StorageUtil.getReaderConfig("appSkin") || "system")
+                          ? true
+                          : false
+                      }
                     >
                       {this.props.t(item.label)}
                     </option>
@@ -615,6 +605,11 @@ class SettingDialog extends React.Component<
                       value={item}
                       key={item}
                       className="lang-setting-option"
+                      selected={
+                        item === StorageUtil.getReaderConfig("systemFont")
+                          ? true
+                          : false
+                      }
                     >
                       {this.props.t(item)}
                     </option>

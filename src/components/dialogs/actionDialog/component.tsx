@@ -66,6 +66,7 @@ class ActionDialog extends React.Component<
     }
     toast.success(this.props.t("Cancellation successful"));
     this.props.handleActionDialog(false);
+    this.props.handleFetchBooks();
   };
   handleMoreAction = (isShow: boolean) => {
     this.setState({ isShowExport: isShow });

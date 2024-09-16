@@ -361,7 +361,7 @@ class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
               <Trans>Cancel</Trans>
             </div>
             <div
-              className="add-dialog-comfirm"
+              className="add-dialog-confirm"
               onClick={() => {
                 if (this.props.driveName === "webdav") {
                   this.handleDavComfirm();

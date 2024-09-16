@@ -14,6 +14,7 @@ import {
 } from "../../utils/syncUtils/exportUtil";
 import BookUtil from "../../utils/fileUtils/bookUtil";
 import ShelfUtil from "../../utils/readUtils/shelfUtil";
+import StorageUtil from "../../utils/serviceUtils/storageUtil";
 declare var window: any;
 class SelectBook extends React.Component<BookListProps, BookListState> {
   constructor(props: BookListProps) {
@@ -36,6 +37,11 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
       });
       return shelfItems;
     } else {
+      if (StorageUtil.getReaderConfig("isHideShelfBook") === "yes") {
+        return items.filter((item) => {
+          return ShelfUtil.getBookPosition(item.key).length === 0;
+        });
+      }
       return items;
     }
   };

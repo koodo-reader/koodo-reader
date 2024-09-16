@@ -161,7 +161,7 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
             this.state.isShowExportAll
               ? {
                   position: "absolute",
-                  left: "680px",
+                  left: "665px",
                   top: "250px",
                 }
               : { display: "none" }

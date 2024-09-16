@@ -118,7 +118,7 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
               <textarea
                 name="url"
                 placeholder={this.props.t(
-                  "Paste the code of the plugin here, check out document to learn how to get more plugin"
+                  "Paste the code of the plugin here, check out document to learn how to get more plugins"
                 )}
                 id="trans-add-content-box"
                 className="trans-add-content-box"
@@ -150,7 +150,7 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
                   <Trans>Cancel</Trans>
                 </div>
                 <div
-                  className="trans-add-comfirm"
+                  className="trans-add-confirm"
                   onClick={() => {
                     let value: string = (
                       document.querySelector(

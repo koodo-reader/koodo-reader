@@ -25,9 +25,9 @@ class DeletePopup extends React.Component<DeletePopupProps> {
         <div className="delete-dialog-other-option">
           <Trans>{this.props.description}</Trans>
         </div>
-        <div className="delete-dialog-button-container">
+        <div className="add-dialog-button-container">
           <div
-            className="delete-dialog-cancel"
+            className="add-dialog-cancel"
             onClick={() => {
               this.handleCancel();
             }}
@@ -35,7 +35,7 @@ class DeletePopup extends React.Component<DeletePopupProps> {
             <Trans>Cancel</Trans>
           </div>
           <div
-            className="delete-dialog-comfirm"
+            className="add-dialog-confirm"
             onClick={() => {
               this.handleComfirm();
             }}

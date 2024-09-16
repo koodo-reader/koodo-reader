@@ -141,14 +141,16 @@ class DetailDialog extends React.Component<
             </div>
           </div>
         </div>
-        <div
-          className="new-version-open"
-          onClick={() => {
-            this.handleClose();
-          }}
-          style={{ marginTop: "10px", position: "absolute", bottom: "10px" }}
-        >
-          <Trans>Close</Trans>
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          <div
+            className="new-version-open"
+            onClick={() => {
+              this.handleClose();
+            }}
+            style={{ marginTop: "10px", position: "absolute", bottom: "10px" }}
+          >
+            <Trans>Close</Trans>
+          </div>
         </div>
       </div>
     );

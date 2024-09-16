@@ -126,7 +126,7 @@ class AddDialog extends Component<AddDialogProps, AddDialogState> {
             <Trans>Cancel</Trans>
           </div>
           <div
-            className="add-dialog-comfirm"
+            className="add-dialog-confirm"
             onClick={() => {
               this.handleComfirm();
             }}

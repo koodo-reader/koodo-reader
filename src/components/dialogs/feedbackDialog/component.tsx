@@ -237,14 +237,14 @@ class FeedbackDialog extends Component<
             </div>
             {this.state.isSending ? (
               <div
-                className="add-dialog-comfirm"
+                className="add-dialog-confirm"
                 style={{ left: "180px", top: "440px" }}
               >
                 <Trans>Sending</Trans>
               </div>
             ) : (
               <div
-                className="add-dialog-comfirm"
+                className="add-dialog-confirm"
                 onClick={() => {
                   this.handleComfirm();
                 }}

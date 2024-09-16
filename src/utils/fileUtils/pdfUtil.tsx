@@ -154,9 +154,9 @@ export const showPDFHighlight = (
     var viewport = page.viewport;
     selected.coords.forEach((rect) => {
       var bounds = viewport.convertToViewportRectangle(rect);
-      var el = iWin.document.createElement("div");
+      var newNode = iWin.document.createElement("div");
 
-      el?.setAttribute(
+      newNode?.setAttribute(
         "style",
         "position: absolute;" +
           (colorCode.indexOf("color") > -1
@@ -176,9 +176,28 @@ export const showPDFHighlight = (
           Math.abs(bounds[1] - bounds[3]) +
           "px; z-index:-1;"
       );
-      el?.setAttribute("data-key", noteKey);
-      el?.setAttribute("class", "kookit-note");
-      el?.addEventListener("click", (event: any) => {
+      newNode?.setAttribute("data-key", noteKey);
+      newNode?.setAttribute("class", "kookit-note");
+
+      pageElement.appendChild(newNode);
+      var clickNode = iWin.document.createElement("div");
+      clickNode?.setAttribute(
+        "style",
+        "position: absolute;" +
+          "left:" +
+          Math.min(bounds[0], bounds[2]) +
+          "px; top:" +
+          Math.min(bounds[1], bounds[3]) +
+          "px;" +
+          "width:" +
+          Math.abs(bounds[0] - bounds[2]) +
+          "px; height:" +
+          Math.abs(bounds[1] - bounds[3]) +
+          "px; z-index:1;"
+      );
+      clickNode.setAttribute("class", " kookit-note");
+      clickNode.setAttribute("data-key", noteKey);
+      clickNode?.addEventListener("click", (event: any) => {
         if (event && event.target) {
           if (
             (event.target as any).dataset &&
@@ -188,8 +207,7 @@ export const showPDFHighlight = (
           }
         }
       });
-
-      pageElement.appendChild(el);
+      pageElement.appendChild(clickNode);
     });
   }
 };

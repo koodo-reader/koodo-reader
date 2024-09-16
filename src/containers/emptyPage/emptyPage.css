@@ -8,9 +8,12 @@
 }
 .empty-page-illustration {
   height: 100%;
+  position: absolute;
+  bottom: 0px;
+  right: 0px;
 }
 .empty-illustration-container {
-  height: 450px;
+  height: 350px;
   position: absolute;
   right: 0;
   bottom: 0;

@@ -141,7 +141,9 @@
 }
 .change-location-button {
   display: inline-block;
-  width: 60px;
+  min-width: 60px;
+  padding-left: 10px;
+  padding-right: 10px;
   height: 22px;
   opacity: 1;
   border-radius: 11px;
