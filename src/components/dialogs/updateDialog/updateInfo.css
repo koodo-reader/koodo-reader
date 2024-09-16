@@ -20,9 +20,8 @@
   width: 346px;
 }
 .new-version-open {
-  margin-left: 115px;
   margin-top: -5px;
-  width: 98px;
+  min-width: 80px;
   padding: 0px 10px;
   height: 32px;
   opacity: 1;

@@ -81,30 +81,7 @@ class TextToSpeech extends React.Component<
   handleStartSpeech = () => {
     this.setState({ isAudioOn: true }, () => {
       this.handleAudio();
-      this.handleSelect();
     });
-  };
-  handleSelect = () => {
-    if (
-      document.querySelector("#text-speech-speed") &&
-      document.querySelector("#text-speech-voice") &&
-      document.querySelector("#text-speech-speed")!.children[0] &&
-      document.querySelector("#text-speech-voice")!.children[0]
-    ) {
-      document
-        .querySelector("#text-speech-speed")!
-        .children[
-          speedList.option.indexOf(
-            StorageUtil.getReaderConfig("voiceSpeed") || "1"
-          )
-        ]?.setAttribute("selected", "selected");
-      document
-        .querySelector("#text-speech-voice")!
-        .children[StorageUtil.getReaderConfig("voiceIndex") || 0]?.setAttribute(
-          "selected",
-          "selected"
-        );
-    }
   };
   handleAudio = async () => {
     this.nodeList = await this.handleGetText();
@@ -354,12 +331,18 @@ class TextToSpeech extends React.Component<
                     }
                   }}
                 >
-                  {this.voices.map((item, index) => {
+                  {this.voices.map((item, index: number) => {
                     return (
                       <option
                         value={index}
                         key={item.name}
                         className="lang-setting-option"
+                        selected={
+                          index ===
+                          parseInt(
+                            StorageUtil.getReaderConfig("voiceIndex") || "0"
+                          )
+                        }
                       >
                         {this.props.t(item.displayName || item.name)}
                       </option>
@@ -391,6 +374,10 @@ class TextToSpeech extends React.Component<
                       value={item}
                       className="lang-setting-option"
                       key={item}
+                      selected={
+                        item ===
+                        (StorageUtil.getReaderConfig("voiceSpeed") || "1")
+                      }
                     >
                       {item}
                     </option>
@@ -406,14 +393,14 @@ class TextToSpeech extends React.Component<
                 <textarea
                   name="url"
                   placeholder={this.props.t(
-                    "Paste the code of the plugin here, check out document to learn how to get more plugin"
+                    "Paste the code of the plugin here, check out document to learn how to get more plugins"
                   )}
                   id="voice-add-content-box"
                   className="voice-add-content-box"
                 />
 
                 <div
-                  className="voice-add-comfirm"
+                  className="voice-add-confirm"
                   onClick={() => {
                     let value: string = (
                       document.querySelector(

@@ -120,6 +120,7 @@ class ProgressPanel extends React.Component<
                 this.setState({ targetPage: "" });
               }
             }}
+            disabled
           />
           <span>/ {this.state.totalPage}</span>
           &nbsp;&nbsp;&nbsp;

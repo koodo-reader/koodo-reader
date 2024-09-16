@@ -61,34 +61,46 @@ class ImageViewer extends React.Component<ImageViewerProps, ImageViewerStates> {
       );
     });
     img.src = event.target.src;
-    let image: HTMLImageElement | null = document.querySelector(".image");
+    let image: HTMLImageElement | null =
+      document.querySelector("#selectedImage");
     if (image) {
       image!.src = event.target.src;
       this.setState({ isShowImage: true });
+      if (this.state.imageRatio === "horizontal") {
+        image.style.width = "60vw";
+      } else {
+        image.style.height = "100vh";
+      }
     }
   };
   hideImage = (event: any) => {
     event.preventDefault();
-    if (event.target.src) {
-      let image: HTMLImageElement | null = document.querySelector(".image");
-      if (image) image.src = "";
+    let image: HTMLImageElement | null =
+      document.querySelector("#selectedImage");
+    if (image) {
+      image.src = "";
+      image.style.removeProperty("margin-top");
+      image.style.removeProperty("transform");
+      image.style.removeProperty("width");
+      image.style.removeProperty("height");
     }
+
     this.setState({ isShowImage: false });
   };
   handleZoomIn = () => {
-    let image: any = document.querySelector(".image");
+    let image: any = document.querySelector("#selectedImage");
     if (image.style.width === "200vw" || image.style.height === "200vh") return;
     this.setState({ zoomIndex: this.state.zoomIndex + 1 }, () => {
       if (this.state.imageRatio === "horizontal") {
         image.style.width = `${60 + this.state.zoomIndex * 10}vw`;
-        image.style.marginTop = `${10 * this.state.zoomIndex}vh`;
+        // image.style.marginTop = `${10 * this.state.zoomIndex}vh`;
       } else {
         image.style.height = `${100 + 10 * this.state.zoomIndex}vh`;
       }
     });
   };
   handleZoomOut = () => {
-    let image: any = document.querySelector(".image");
+    let image: any = document.querySelector("#selectedImage");
     if (image.style.width === "10vw" || image.style.height === "10vh") return;
     this.setState({ zoomIndex: this.state.zoomIndex - 1 }, () => {
       if (this.state.imageRatio === "horizontal") {
@@ -99,18 +111,18 @@ class ImageViewer extends React.Component<ImageViewerProps, ImageViewerStates> {
     });
   };
   handleSave = async () => {
-    let image: any = document.querySelector(".image");
+    let image: any = document.querySelector("#selectedImage");
     let blob = await fetch(image.src).then((r) => r.blob());
     window.saveAs(blob, `${new Date().toLocaleDateString()}`);
   };
   handleClock = () => {
-    let image: any = document.querySelector(".image");
+    let image: any = document.querySelector("#selectedImage");
     this.setState({ rotateIndex: this.state.rotateIndex + 1 }, () => {
       image.style.transform = `rotate(${this.state.rotateIndex * 90}deg)`;
     });
   };
   handleCounterClock = () => {
-    let image: any = document.querySelector(".image");
+    let image: any = document.querySelector("#selectedImage");
     this.setState({ rotateIndex: this.state.rotateIndex - 1 }, () => {
       image.style.transform = `rotate(${this.state.rotateIndex * 90}deg)`;
     });
@@ -136,6 +148,7 @@ class ImageViewer extends React.Component<ImageViewerProps, ImageViewerStates> {
           src=""
           alt=""
           className="image"
+          id="selectedImage"
           style={
             this.state.imageRatio === "horizontal"
               ? { width: "60vw" }

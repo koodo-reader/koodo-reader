@@ -93,17 +93,7 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
             </span>
           </div>
           <div>
-            <img
-              src={
-                StorageUtil.getReaderConfig("appSkin") === "night" ||
-                (StorageUtil.getReaderConfig("appSkin") === "system" &&
-                  StorageUtil.getReaderConfig("isOSNight") === "yes")
-                  ? "./assets/empty_light.svg"
-                  : "./assets/empty.svg"
-              }
-              alt=""
-              className="waring-pic"
-            />
+            <img src="./assets/empty.svg" alt="" className="waring-pic" />
           </div>
         </>
       );

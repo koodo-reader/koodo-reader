@@ -208,7 +208,7 @@ class DeleteDialog extends React.Component<
             <Trans>Cancel</Trans>
           </div>
           <div
-            className="add-dialog-comfirm"
+            className="add-dialog-confirm"
             onClick={() => {
               this.handleComfirm();
             }}

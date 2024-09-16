@@ -44,15 +44,18 @@ class TipDialog extends React.Component<TipDialogProps, TipDialogState> {
             <Trans>{this.props.tip}</Trans>
           </div>
         </div>
-        <div
-          className="new-version-open"
-          onClick={() => {
-            this.handleClose();
-          }}
-          style={{ marginTop: "-10px" }}
-        >
-          <Trans>Understand</Trans>
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          <div
+            className="new-version-open"
+            onClick={() => {
+              this.handleClose();
+            }}
+            style={{ marginTop: "-10px" }}
+          >
+            <Trans>Understand</Trans>
+          </div>
         </div>
+
         <div className="download-desk-animation">
           <Lottie options={downloadOptions} height={200} width={300} />
         </div>

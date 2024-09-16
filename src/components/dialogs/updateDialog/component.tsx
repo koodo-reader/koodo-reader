@@ -147,25 +147,28 @@ class UpdateInfo extends React.Component<UpdateInfoProps, UpdateInfoState> {
                     <Lottie options={newOptions} height={220} width={220} />
                   )}
                 </div>
-                <div
-                  className="new-version-open"
-                  onClick={() => {
-                    openExternalUrl(
-                      this.state.isUpdated
-                        ? "https://koodoreader.com/en/log"
-                        : "https://koodoreader.com/en"
-                    );
-                  }}
-                  style={this.state.isUpdated ? { marginTop: "10px" } : {}}
-                >
-                  {this.state.isUpdated ? (
-                    <>
-                      <Trans>Change log</Trans>
-                    </>
-                  ) : (
-                    <Trans>Download</Trans>
-                  )}
+                <div style={{ display: "flex", justifyContent: "center" }}>
+                  <div
+                    className="new-version-open"
+                    onClick={() => {
+                      openExternalUrl(
+                        this.state.isUpdated
+                          ? "https://koodoreader.com/en/log"
+                          : "https://koodoreader.com/en"
+                      );
+                    }}
+                    style={this.state.isUpdated ? { marginTop: "10px" } : {}}
+                  >
+                    {this.state.isUpdated ? (
+                      <>
+                        <Trans>Change log</Trans>
+                      </>
+                    ) : (
+                      <Trans>Download</Trans>
+                    )}
+                  </div>
                 </div>
+
                 {this.state.updateLog && (
                   <>
                     <p className="update-dialog-new-title">

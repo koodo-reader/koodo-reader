@@ -40,53 +40,18 @@ class DropdownList extends React.Component<
         if (!result || result.length === 0) return;
         dropdownList[0].option = result;
         dropdownList[0].option.push("Built-in font");
-        this.setState(
-          {
-            currentFontFamilyIndex: dropdownList[0].option.findIndex(
-              (item: any) => {
-                return (
-                  item ===
-                  (StorageUtil.getReaderConfig("fontFamily") || "Built-in font")
-                );
-              }
-            ),
-          },
-          () => {
-            document
-              .querySelector(".paragraph-character-setting")!
-              .children[0].children[1].children[
-                this.state.currentFontFamilyIndex === -1
-                  ? 0
-                  : this.state.currentFontFamilyIndex
-              ]?.setAttribute("selected", "selected");
-          }
-        );
+        this.setState({
+          currentFontFamilyIndex: dropdownList[0].option.findIndex(
+            (item: any) => {
+              return (
+                item ===
+                (StorageUtil.getReaderConfig("fontFamily") || "Built-in font")
+              );
+            }
+          ),
+        });
       });
-    } else {
-      document
-        .querySelector(".paragraph-character-setting")!
-        .children[0].children[1].children[
-          this.state.currentFontFamilyIndex === -1
-            ? 0
-            : this.state.currentFontFamilyIndex
-        ]?.setAttribute("selected", "selected");
     }
-
-    document
-      .querySelector(".paragraph-character-setting")!
-      .children[1].children[1].children[
-        this.state.currentLineHeightIndex
-      ]?.setAttribute("selected", "selected");
-    document
-      .querySelector(".paragraph-character-setting")!
-      .children[2].children[1].children[
-        this.state.currentTextAlignIndex
-      ]?.setAttribute("selected", "selected");
-    document
-      .querySelector(".paragraph-character-setting")!
-      .children[3].children[1].children[
-        this.state.chineseConversionIndex
-      ]?.setAttribute("selected", "selected");
   }
 
   handleView(event: any, option: string) {
@@ -142,6 +107,16 @@ class DropdownList extends React.Component<
                 value={[subItem, index.toString()]}
                 key={index}
                 className="general-setting-option"
+                selected={
+                  index ===
+                  (item.value === "lineHeight"
+                    ? this.state.currentLineHeightIndex
+                    : item.value === "textAlign"
+                    ? this.state.currentTextAlignIndex
+                    : item.value === "convertChinese"
+                    ? this.state.chineseConversionIndex
+                    : this.state.currentFontFamilyIndex)
+                }
               >
                 {this.props.t(subItem)}
               </option>

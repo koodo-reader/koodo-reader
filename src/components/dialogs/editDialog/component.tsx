@@ -76,7 +76,7 @@ class EditDialog extends React.Component<EditDialogProps, EditDialogState> {
             <Trans>Cancel</Trans>
           </div>
           <div
-            className="add-dialog-comfirm"
+            className="add-dialog-confirm"
             onClick={() => {
               this.handleComfirm();
             }}

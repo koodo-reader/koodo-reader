@@ -131,7 +131,7 @@ function clearHighlight() {
   }
 }
 
-async function highlightRange(
+function highlightRange(
   range: Range,
   colorCode: string,
   noteKey: string,
@@ -165,7 +165,26 @@ async function highlightRange(
     newNode.setAttribute("class", " kookit-note");
     newNode.setAttribute("data-key", noteKey);
     // newNode.setAttribute("onclick", `window.handleNoteClick()`);
-    newNode.addEventListener("click", (event) => {
+
+    doc.body.appendChild(newNode);
+    var clickNode = document.createElement("span");
+    clickNode?.setAttribute(
+      "style",
+      "position: absolute;" +
+        "left:" +
+        (Math.min(rect.left, rect.x) + doc.body.scrollLeft) +
+        "px; top:" +
+        (Math.min(rect.top, rect.y) + doc.body.scrollTop) +
+        "px;" +
+        "width:" +
+        rect.width +
+        "px; height:" +
+        rect.height +
+        "px; z-index:1;"
+    );
+    clickNode.setAttribute("class", " kookit-note");
+    clickNode.setAttribute("data-key", noteKey);
+    clickNode.addEventListener("click", (event) => {
       if (event && event.target) {
         if (
           (event.target as any).dataset &&
@@ -175,9 +194,10 @@ async function highlightRange(
         }
       }
     });
-    doc.body.appendChild(newNode);
+    doc.body.appendChild(clickNode);
   }
 }
+
 function filterRects(rects: any) {
   let result: any = [];
   for (let index = 0; index < rects.length; index++) {
