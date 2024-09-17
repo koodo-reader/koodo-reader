@@ -10,6 +10,7 @@ import {
   exportHighlights,
   exportNotes,
 } from "../../../utils/syncUtils/exportUtil";
+import StorageUtil from "../../../utils/serviceUtils/storageUtil";
 declare var window: any;
 class ActionDialog extends React.Component<MoreActionProps, MoreActionState> {
   constructor(props: MoreActionProps) {
@@ -159,7 +160,10 @@ class ActionDialog extends React.Component<MoreActionProps, MoreActionState> {
                   result,
                   this.props.currentBook.format,
                   "",
-                  this.props.currentBook.charset
+                  this.props.currentBook.charset,
+                  StorageUtil.getReaderConfig("isSliding") === "yes"
+                    ? "sliding"
+                    : ""
                 );
                 let cache = await rendition.preCache(result);
                 if (cache !== "err") {

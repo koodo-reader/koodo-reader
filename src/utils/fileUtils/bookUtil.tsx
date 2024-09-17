@@ -240,24 +240,25 @@ class BookUtil {
     result: ArrayBuffer,
     format: string,
     readerMode: string,
-    charset: string
+    charset: string,
+    animation: string
   ) => {
     let rendition;
     if (format === "CACHE") {
-      rendition = new window.Kookit.CacheRender(result, readerMode);
+      rendition = new window.Kookit.CacheRender(result, readerMode, animation);
     } else if (format === "MOBI" || format === "AZW3" || format === "AZW") {
-      rendition = new window.Kookit.MobiRender(result, readerMode);
+      rendition = new window.Kookit.MobiRender(result, readerMode, animation);
     } else if (format === "EPUB") {
-      rendition = new window.Kookit.EpubRender(result, readerMode);
+      rendition = new window.Kookit.EpubRender(result, readerMode, animation);
     } else if (format === "TXT") {
       let text = iconv.decode(Buffer.from(result), charset || "utf8");
-      rendition = new window.Kookit.TxtRender(text, readerMode);
+      rendition = new window.Kookit.TxtRender(text, readerMode, animation);
     } else if (format === "MD") {
-      rendition = new window.Kookit.MdRender(result, readerMode);
+      rendition = new window.Kookit.MdRender(result, readerMode, animation);
     } else if (format === "FB2") {
-      rendition = new window.Kookit.Fb2Render(result, readerMode);
+      rendition = new window.Kookit.Fb2Render(result, readerMode, animation);
     } else if (format === "DOCX") {
-      rendition = new window.Kookit.DocxRender(result, readerMode);
+      rendition = new window.Kookit.DocxRender(result, readerMode, animation);
     } else if (
       format === "HTML" ||
       format === "XHTML" ||
@@ -265,7 +266,12 @@ class BookUtil {
       format === "HTM" ||
       format === "XML"
     ) {
-      rendition = new window.Kookit.HtmlRender(result, readerMode, format);
+      rendition = new window.Kookit.HtmlRender(
+        result,
+        readerMode,
+        format,
+        animation
+      );
     } else if (
       format === "CBR" ||
       format === "CBT" ||
@@ -275,7 +281,8 @@ class BookUtil {
       rendition = new window.Kookit.ComicRender(
         copyArrayBuffer(result),
         readerMode,
-        format
+        format,
+        animation
       );
     }
     return rendition;
@@ -311,7 +318,8 @@ class BookUtil {
           file_content,
           extension.toUpperCase(),
           "",
-          ""
+          "",
+          StorageUtil.getReaderConfig("isSliding") === "yes" ? "sliding" : ""
         );
 
         switch (extension) {

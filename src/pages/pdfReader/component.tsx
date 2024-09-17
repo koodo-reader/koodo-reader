@@ -73,9 +73,16 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         await handleLinkJump(event);
       });
       doc.document.addEventListener("mouseup", (event) => {
+        if (this.state.isDisablePopup) {
+          if (doc!.getSelection()!.toString().trim().length === 0) {
+            let rect = doc!
+              .getSelection()!
+              .getRangeAt(0)
+              .getBoundingClientRect();
+            this.setState({ rect });
+          }
+        }
         if (this.state.isDisablePopup) return;
-        if (!doc!.getSelection() || doc!.getSelection().rangeCount === 0)
-          return;
         event.preventDefault();
         var rect = doc!.getSelection()!.getRangeAt(0).getBoundingClientRect();
         this.setState({
@@ -89,7 +96,10 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         }
 
         if (!this.state.isDisablePopup && !this.state.isTouch) return;
-        if (!doc!.getSelection() || doc!.getSelection().rangeCount === 0)
+        if (
+          !doc!.getSelection() ||
+          doc!.getSelection().toString().trim().length === 0
+        )
           return;
 
         var rect = doc!.getSelection()!.getRangeAt(0).getBoundingClientRect();
