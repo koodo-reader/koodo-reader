@@ -160,6 +160,9 @@ export const bindHtmlEvent = (
   if (StorageUtil.getReaderConfig("isTouch") === "yes") {
     const mc = new window.Hammer(doc);
     mc.on("panleft panright panup pandown", async (event: any) => {
+      if (readerMode === "scroll") {
+        return;
+      }
       if (lock || event.pointerType === "mouse") return;
       lock = true;
       await gesture(rendition, event.type);
@@ -167,6 +170,17 @@ export const bindHtmlEvent = (
       setTimeout(() => (lock = false), throttleTime);
     });
   }
+
+  doc.addEventListener("touchend", async (event) => {
+    if (lock) return;
+    lock = true;
+    if (readerMode === "scroll") {
+      await sleep(200);
+      await rendition.record();
+    }
+    handleLocation(key, rendition);
+    setTimeout(() => (lock = false), throttleTime);
+  });
 };
 export const HtmlMouseEvent = (
   rendition: any,

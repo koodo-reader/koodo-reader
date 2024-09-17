@@ -82,6 +82,13 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
   getHtmlPosition(rect: any) {
     let posY = rect.bottom - this.props.rendition.getPageSize().scrollTop;
     let posX = rect.left + rect.width / 2;
+    if (rect.width > this.props.rendition.getPageSize().sectionWidth) {
+      posX =
+        rect.left +
+        rect.width -
+        this.props.rendition.getPageSize().sectionWidth / 2;
+    }
+    console.log(posX, "posX");
     if (this.props.rendition.getPageSize().height - rect.height < 188) {
       this.props.handleChangeDirection(true);
       posY = rect.top + 16 + this.props.rendition.getPageSize().top;

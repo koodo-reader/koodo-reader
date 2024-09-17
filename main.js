@@ -26,6 +26,7 @@ if (process.platform != "darwin" && process.argv.length >= 2) {
 let options = {
   width: 1050,
   height: 660,
+  backgroundColor: '#fff',
   webPreferences: {
     webSecurity: false,
     nodeIntegration: true,
@@ -97,6 +98,9 @@ const createMainWin = () => {
   ipcMain.handle("open-book", (event, config) => {
     let { url, isMergeWord, isAutoFullscreen, isPreventSleep } = config;
     options.webPreferences.nodeIntegrationInSubFrames = true;
+    if (isMergeWord) {
+      delete options.backgroundColor
+    }
     store.set({
       url,
       isMergeWord: isMergeWord ? isMergeWord : "no",
@@ -559,6 +563,9 @@ const createMainWin = () => {
     }
     if (readerWindow) {
       readerWindow.close();
+      if (store.get("isMergeWord") === "yes") {
+        delete options.backgroundColor
+      }
       Object.assign(options, {
         width: parseInt(store.get("windowWidth") || 1050),
         height: parseInt(store.get("windowHeight") || 660),

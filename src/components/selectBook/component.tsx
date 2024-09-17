@@ -294,7 +294,10 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
                           result,
                           selectedBook.format,
                           "",
-                          selectedBook.charset
+                          selectedBook.charset,
+                          StorageUtil.getReaderConfig("isSliding") === "yes"
+                            ? "sliding"
+                            : ""
                         );
                         let cache = await rendition.preCache(result);
                         if (cache !== "err") {

@@ -145,7 +145,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     if (doc && this.state.rendition) {
       this.state.rendition.removeContent();
     }
-
     let isCacheExsit = await BookUtil.isBookExist("cache-" + key, path);
     BookUtil.fetchBook(isCacheExsit ? "cache-" + key : key, true, path).then(
       async (result: any) => {
@@ -157,7 +156,8 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           result,
           isCacheExsit ? "CACHE" : format,
           this.state.readerMode,
-          this.props.currentBook.charset
+          this.props.currentBook.charset,
+          StorageUtil.getReaderConfig("isSliding") === "yes" ? "sliding" : ""
         );
 
         await rendition.renderTo(
@@ -301,8 +301,14 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       this.props.handleLeaveReader("bottom");
     });
     doc.addEventListener("mouseup", () => {
+      if (this.state.isDisablePopup) {
+        if (doc!.getSelection()!.toString().trim().length === 0) {
+          let rect = doc!.getSelection()!.getRangeAt(0).getBoundingClientRect();
+          this.setState({ rect });
+        }
+      }
       if (this.state.isDisablePopup) return;
-      if (!doc!.getSelection() || doc!.getSelection()!.rangeCount === 0) return;
+
       var rect = doc!.getSelection()!.getRangeAt(0).getBoundingClientRect();
       this.setState({ rect });
     });
@@ -313,8 +319,13 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
 
       if (!this.state.isDisablePopup && !this.state.isTouch) return;
 
-      if (!doc!.getSelection() || doc!.getSelection()!.rangeCount === 0) return;
+      if (
+        !doc!.getSelection() ||
+        doc!.getSelection()!.toString().trim().length === 0
+      )
+        return;
       var rect = doc!.getSelection()!.getRangeAt(0).getBoundingClientRect();
+      console.log(rect);
       this.setState({ rect });
     });
   };
