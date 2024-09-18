@@ -67,32 +67,11 @@ scoop bucket add extras
 scoop install extras/koodo-reader
 ```
 
-- Instalar com o Winget:
-
-```shell
-winget install -e AppbyTroye.KoodoReader
-```
-
-- Instalar com o Homebrew:
-
-```shell
-brew install --cask koodo-reader
-```
-
 - Instalar com o Docker:
 
 ```bash
 docker-compose up -d
 ```
-
-- Instalar Flathub:
-
-```shell
-flatpak install flathub io.github.troyeguo.koodo-reader
-flatpak run io.github.troyeguo.koodo-reader
-```
-
-<a href="https://flathub.org/apps/details/io.github.troyeguo.koodo-reader"><img height="50" alt="Download on Flathub" src="https://flathub.org/assets/badges/flathub-badge-en.png"/></a>
 
 ## Capturas de tela
 

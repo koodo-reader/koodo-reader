@@ -41,8 +41,8 @@
   - प्लेन टेक्स्ट (**.txt**)
   - उपन्यास पुस्तक (**.fb2**)
   - हास्य पुस्तक पुरालेख (**.cbr**, **.cbz**, **.cbt**, **.cb7**)
-  - रिच टेक्स्ट  (**.md**, **.docx**)
-  - हाइपरटेक्सट  (**.html**, **.xml**, **.xhtml**, **.mhtml**, **.htm**)
+  - रिच टेक्स्ट (**.md**, **.docx**)
+  - हाइपरटेक्सट (**.html**, **.xml**, **.xhtml**, **.mhtml**, **.htm**)
 - प्लेटफार्म: **Windows**, **macOS**, **Linux** and **Web**
 - अपना डेटा यहां सहेजें **OneDrive**, **Google Drive**, **Dropbox**, **FTP**, **SFTP**, **WebDAV**, **S3**, **S3 Compatible**
 - स्रोत फ़ोल्डर को कस्टमाइज़ करें और वनड्राइव, आईक्लाउड, ड्रॉपबॉक्स आदि का उपयोग करके कई डिवाइसों के बीच सिंक्रनाइज़ करें।
@@ -66,32 +66,11 @@ scoop bucket add extras
 scoop install extras/koodo-reader
 ```
 
-- विंगेट के साथ इंस्टॉल करें:
-
-```shell
-winget install -e AppbyTroye.KoodoReader
-```
-
-- होमब्रू के साथ इंस्टॉल करें:
-
-```shell
-brew install --cask koodo-reader
-```
-
 - डॉकर के साथ इंस्टॉल करें:
 
 ```bash
 docker-compose up -d
 ```
-
-- फ़्लैथब के साथ इंस्टॉल करें:
-
-```shell
-flatpak install flathub io.github.troyeguo.koodo-reader
-flatpak run io.github.troyeguo.koodo-reader
-```
-
-<a href="https://flathub.org/apps/details/io.github.troyeguo.koodo-reader"><img height="50" alt="Download on Flathub" src="https://flathub.org/assets/badges/flathub-badge-en.png"/></a>
 
 ## स्क्रीनशॉट
 
