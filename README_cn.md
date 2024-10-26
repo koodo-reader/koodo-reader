@@ -71,7 +71,7 @@ scoop install extras/koodo-reader
 - 使用 Docker 安装：
 
 ```bash
-docker-compose up -d
+docker run -d -p 80:80 --name koodo-reader ghcr.io/koodo-reader/koodo-reader:master
 ```
 
 ## 截图

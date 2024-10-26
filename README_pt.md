@@ -70,7 +70,7 @@ scoop install extras/koodo-reader
 - Instalar com o Docker:
 
 ```bash
-docker-compose up -d
+docker run -d -p 80:80 --name koodo-reader ghcr.io/koodo-reader/koodo-reader:master
 ```
 
 ## Capturas de tela
