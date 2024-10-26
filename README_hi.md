@@ -69,7 +69,7 @@ scoop install extras/koodo-reader
 - डॉकर के साथ इंस्टॉल करें:
 
 ```bash
-docker-compose up -d
+docker run -d -p 80:80 --name koodo-reader ghcr.io/koodo-reader/koodo-reader:master
 ```
 
 ## स्क्रीनशॉट
