@@ -98,7 +98,7 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
                 StorageUtil.getReaderConfig("appSkin") === "night" ||
                 (StorageUtil.getReaderConfig("appSkin") === "system" &&
                   StorageUtil.getReaderConfig("isOSNight") === "yes")
-                  ? "./assets/empty_light.svg"
+                  ? "./assets/empty_dark.svg"
                   : "./assets/empty.svg"
               }
               alt=""

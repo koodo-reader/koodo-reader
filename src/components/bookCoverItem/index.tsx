@@ -10,6 +10,7 @@ import {
 import BookCoverItem from "./component";
 import { stateType } from "../../store";
 import { withTranslation } from "react-i18next";
+import { withRouter } from "react-router-dom";
 
 const mapStateToProps = (state: stateType) => {
   return {
@@ -34,4 +35,4 @@ const actionCreator = {
 export default connect(
   mapStateToProps,
   actionCreator
-)(withTranslation()(BookCoverItem as any) as any);
+)(withTranslation()(withRouter(BookCoverItem as any) as any) as any);

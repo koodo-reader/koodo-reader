@@ -61,6 +61,19 @@
   margin-top: 4px;
   opacity: 0.8;
 }
+.book-heart-action {
+  /* position: absolute;
+  bottom: 23px;
+  right: 17px; */
+  float: right;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-right: 6px;
+  margin-top: 4px;
+  opacity: 0.8;
+  color: rgb(231, 69, 69);
+}
 .reading-progress-icon {
   /* position: absolute;
   bottom: 18px;

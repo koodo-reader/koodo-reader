@@ -11,6 +11,7 @@ import {
 import { stateType } from "../../../store";
 import DeleteDialog from "./component";
 import { withTranslation } from "react-i18next";
+import { withRouter } from "react-router-dom";
 
 const mapStateToProps = (state: stateType) => {
   return {
@@ -38,4 +39,4 @@ const actionCreator = {
 export default connect(
   mapStateToProps,
   actionCreator
-)(withTranslation()(DeleteDialog as any) as any);
+)(withTranslation()(withRouter(DeleteDialog as any) as any) as any);

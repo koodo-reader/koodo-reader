@@ -245,12 +245,16 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
                 )}
             </div>
           </div>
+
           <span
             className="icon-more book-more-action"
             onClick={(event) => {
               this.handleMoreAction(event);
             }}
           ></span>
+          {AddFavorite.getAllFavorite().indexOf(this.props.book.key) > -1 && (
+            <span className="icon-heart book-heart-action"></span>
+          )}
         </div>
 
         {this.props.isOpenActionDialog &&

@@ -226,7 +226,6 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
     };
     return (
       <>
-        {" "}
         <div className="sidebar">
           <div
             className="sidebar-list-icon"

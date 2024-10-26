@@ -405,5 +405,6 @@
   "Plugin verification failed": "Plugin verification failed",
   "Add new plugin": "Add new plugin",
   "Pot is running": "Pot is running",
+  "This feature is only available in the developer version": "This feature is only available in the developer version",
   "Subject can't be empty": "Subject can't be empty"
 }

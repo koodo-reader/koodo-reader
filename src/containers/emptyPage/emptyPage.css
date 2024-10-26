@@ -7,10 +7,10 @@
   overflow: hidden;
 }
 .empty-page-illustration {
-  height: 100%;
+  height: 80%;
   position: absolute;
-  bottom: 0px;
-  right: 0px;
+  bottom: 30px;
+  right: 40px;
 }
 .empty-illustration-container {
   height: 350px;

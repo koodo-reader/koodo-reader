@@ -24,6 +24,7 @@
 
 .header-search-box,
 .header-search-box::placeholder,
+.feedback-dialog-content-box::placeholder,
 .header-search-text,
 .card-list-item-show-more {
   color: rgba(241, 100, 100, 0.8) !important;

@@ -16,9 +16,11 @@ import TokenDialog from "../tokenDialog";
 import StorageUtil from "../../../utils/serviceUtils/storageUtil";
 import Lottie from "react-lottie";
 import animationSuccess from "../../../assets/lotties/success.json";
+import packageInfo from "../../../../package.json";
 
 import toast from "react-hot-toast";
 import { isElectron } from "react-device-detect";
+import { checkStableUpdate } from "../../../utils/commonUtil";
 declare var window: any;
 const successOptions = {
   loop: false,
@@ -38,7 +40,14 @@ class BackupDialog extends React.Component<
       currentStep: 0,
       isBackup: "",
       currentDrive: "local",
+      isDeveloperVer: false,
     };
+  }
+  async componentDidMount() {
+    let stableLog = await checkStableUpdate();
+    if (packageInfo.version.localeCompare(stableLog.version) > 0) {
+      this.setState({ isDeveloperVer: true });
+    }
   }
   handleClose = () => {
     this.props.handleBackupDialog(false);
@@ -95,6 +104,14 @@ class BackupDialog extends React.Component<
         case "ftp":
         case "sftp":
         case "s3compatible":
+          if (name === "onedrive" || name === "googledrive") {
+            if (!this.state.isDeveloperVer) {
+              this.showMessage(
+                "This feature is only available in the developer version"
+              );
+              return;
+            }
+          }
           if (!StorageUtil.getReaderConfig(name + "_token")) {
             this.props.handleTokenDialog(true);
             break;

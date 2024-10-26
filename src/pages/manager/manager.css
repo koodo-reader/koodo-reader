@@ -47,7 +47,8 @@
   font-weight: 600;
 }
 .waring-pic {
-  width: 100vw;
+  width: 80vw;
   position: absolute;
-  bottom: 0px;
+  left: 10vw;
+  bottom: 20px;
 }

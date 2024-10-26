@@ -12,11 +12,26 @@ class PluginList {
         ? JSON.parse(localStorage.getItem("pluginList") || "")
         : [];
     if (
-      pluginList.find((item: Plugin) => item.identifier === plugin.identifier)
+      pluginList.find(
+        (item: Plugin) =>
+          item.identifier === plugin.identifier &&
+          item.version === plugin.version
+      )
     ) {
       return false;
     }
-
+    if (
+      pluginList.find((item: Plugin) => item.identifier === plugin.identifier)
+    ) {
+      let oldPlugin = pluginList.find(
+        (item: Plugin) => item.identifier === plugin.identifier
+      );
+      if (oldPlugin) {
+        pluginList = pluginList.filter(
+          (item: Plugin) => item.identifier !== plugin.identifier
+        );
+      }
+    }
     pluginList.push(plugin);
 
     localStorage.setItem("pluginList", JSON.stringify(pluginList));
