@@ -10,6 +10,7 @@ import { connect } from "react-redux";
 import { stateType } from "../../store";
 import { withTranslation } from "react-i18next";
 import Sidebar from "./component";
+import { withRouter } from "react-router-dom";
 
 const mapStateToProps = (state: stateType) => {
   return {
@@ -30,4 +31,4 @@ const actionCreator = {
 export default connect(
   mapStateToProps,
   actionCreator
-)(withTranslation()(Sidebar as any) as any);
+)(withTranslation()(withRouter(Sidebar as any) as any) as any);

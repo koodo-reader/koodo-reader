@@ -69,17 +69,6 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
     this.setState({ isFavorite: true });
     toast.success(this.props.t("Addition successful"));
   };
-  handleCancelLoveBook = () => {
-    AddFavorite.clear(this.props.book.key);
-    this.setState({ isFavorite: false });
-    if (
-      Object.keys(AddFavorite.getAllFavorite()).length === 0 &&
-      this.props.mode === "favorite"
-    ) {
-      this.props.history.push("/manager/empty");
-    }
-    toast.success(this.props.t("Cancellation successful"));
-  };
   handleRestoreBook = () => {
     AddTrash.clear(this.props.book.key);
     toast.success(this.props.t("Restore successful"));

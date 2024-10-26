@@ -68,7 +68,7 @@
   opacity: 1;
   font-size: 13px;
   line-height: 14px;
-
+  background-color: rgba(75, 75, 75, 0);
   padding: 5px;
   margin-bottom: 10px;
   box-sizing: border-box;

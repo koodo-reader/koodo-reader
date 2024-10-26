@@ -19,4 +19,5 @@ export interface BackupDialogState {
   currentStep: number | null;
   isBackup: string;
   currentDrive: string;
+  isDeveloperVer: boolean;
 }

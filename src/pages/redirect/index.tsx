@@ -4,6 +4,7 @@ import { stateType } from "../../store";
 import { handleLoadingDialog } from "../../store/actions";
 import Redirect from "./component";
 import { withTranslation } from "react-i18next";
+import { withRouter } from "react-router-dom";
 const mapStateToProps = (state: stateType) => {
   return {};
 };
@@ -11,4 +12,4 @@ const actionCreator = { handleLoadingDialog };
 export default connect(
   mapStateToProps,
   actionCreator
-)(withTranslation()(Redirect as any) as any);
+)(withTranslation()(withRouter(Redirect as any) as any) as any);

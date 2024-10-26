@@ -14,6 +14,7 @@ import {
 import { stateType } from "../../../store";
 import { withTranslation } from "react-i18next";
 import ActionDialog from "./component";
+import { withRouter } from "react-router-dom";
 
 const mapStateToProps = (state: stateType) => {
   return {
@@ -40,4 +41,4 @@ const actionCreator = {
 export default connect(
   mapStateToProps,
   actionCreator
-)(withTranslation()(ActionDialog as any) as any);
+)(withTranslation()(withRouter(ActionDialog as any) as any) as any);

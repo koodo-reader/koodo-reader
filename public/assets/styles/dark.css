@@ -53,6 +53,7 @@ body {
 
 .header-search-box,
 .header-search-box::placeholder,
+.feedback-dialog-content-box::placeholder,
 .header-search-text {
   color: rgba(235, 235, 235, 0.8);
 }

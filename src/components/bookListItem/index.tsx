@@ -14,6 +14,7 @@ import { withTranslation } from "react-i18next";
 
 import { stateType } from "../../store";
 import BookListItem from "./component";
+import { withRouter } from "react-router-dom";
 const mapStateToProps = (state: stateType) => {
   return {
     isReading: state.book.isReading,
@@ -40,4 +41,4 @@ const actionCreator = {
 export default connect(
   mapStateToProps,
   actionCreator
-)(withTranslation()(BookListItem as any) as any);
+)(withTranslation()(withRouter(BookListItem as any) as any) as any);

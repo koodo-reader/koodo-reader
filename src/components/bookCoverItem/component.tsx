@@ -85,17 +85,6 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
     this.setState({ isFavorite: true });
     toast.success(this.props.t("Addition successful"));
   };
-  handleCancelLoveBook = () => {
-    AddFavorite.clear(this.props.book.key);
-    this.setState({ isFavorite: false });
-    if (
-      Object.keys(AddFavorite.getAllFavorite()).length === 0 &&
-      this.props.mode === "favorite"
-    ) {
-      this.props.history.push("/manager/empty");
-    }
-    toast.success(this.props.t("Cancellation successful"));
-  };
   handleJump = () => {
     if (this.props.isSelectBook) {
       this.props.handleSelectedBooks(
@@ -172,6 +161,9 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
                 this.handleMoreAction(event);
               }}
             ></span>
+            {AddFavorite.getAllFavorite().indexOf(this.props.book.key) > -1 && (
+              <span className="icon-heart book-heart-action"></span>
+            )}
           </div>
 
           <div

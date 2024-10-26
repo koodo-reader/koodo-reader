@@ -62,6 +62,9 @@ class DropdownList extends React.Component<
         this.setState({
           currentFontFamilyIndex: arr[1],
         });
+        if (arr[0] === "Built-in font") {
+          StorageUtil.setReaderConfig(option, "");
+        }
 
         break;
 
