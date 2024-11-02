@@ -127,7 +127,7 @@ const Router = () => {
         <Route component={HtmlReader} path="/xhtml" />
         <Route component={HtmlReader} path="/mhtml" />
         <Route component={HtmlReader} path="/href" />
-        <Route component={PDFReader} path="/pdf" />
+        <Route component={HtmlReader} path="/pdf" />
         <Route component={_Redirect} path="/" />
       </Switch>
     </HashRouter>

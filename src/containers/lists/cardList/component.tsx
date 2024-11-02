@@ -45,30 +45,25 @@ class CardList extends React.Component<CardListProps, CardListStates> {
       return;
     }
 
-    if (book.format === "PDF") {
-      let bookLocation = JSON.parse(note.cfi) || {};
-      RecordLocation.recordPDFLocation(book.md5.split("-")[0], bookLocation);
-    } else {
-      let bookLocation: any = {};
-      //compatile wiht lower version(1.4.2)
-      try {
-        bookLocation = JSON.parse(note.cfi) || {};
-      } catch (error) {
-        bookLocation.cfi = note.cfi;
-        bookLocation.chapterTitle = note.chapter;
-      }
-      RecordLocation.recordHtmlLocation(
-        note.bookKey,
-        bookLocation.text,
-        bookLocation.chapterTitle,
-        bookLocation.chapterDocIndex,
-        bookLocation.chapterHref,
-        bookLocation.count,
-        bookLocation.percentage,
-        bookLocation.cfi,
-        bookLocation.page
-      );
+    let bookLocation: any = {};
+    //compatile wiht lower version(1.4.2)
+    try {
+      bookLocation = JSON.parse(note.cfi) || {};
+    } catch (error) {
+      bookLocation.cfi = note.cfi;
+      bookLocation.chapterTitle = note.chapter;
     }
+    RecordLocation.recordHtmlLocation(
+      note.bookKey,
+      bookLocation.text,
+      bookLocation.chapterTitle,
+      bookLocation.chapterDocIndex,
+      bookLocation.chapterHref,
+      bookLocation.count,
+      bookLocation.percentage,
+      bookLocation.cfi,
+      bookLocation.page
+    );
 
     BookUtil.RedirectBook(book, this.props.t, this.props.history);
   };

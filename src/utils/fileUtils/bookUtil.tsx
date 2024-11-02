@@ -176,10 +176,7 @@ class BookUtil {
           url: `${window.location.href.split("#")[0]}#/${ref}/${
             book.key
           }?title=${book.name}&file=${book.key}`,
-          isMergeWord:
-            book.format === "PDF"
-              ? "no"
-              : StorageUtil.getReaderConfig("isMergeWord"),
+          isMergeWord: StorageUtil.getReaderConfig("isMergeWord"),
           isAutoFullscreen: StorageUtil.getReaderConfig("isAutoFullscreen"),
           isPreventSleep: StorageUtil.getReaderConfig("isPreventSleep"),
         });
@@ -255,6 +252,8 @@ class BookUtil {
       rendition = new window.Kookit.TxtRender(text, readerMode, animation);
     } else if (format === "MD") {
       rendition = new window.Kookit.MdRender(result, readerMode, animation);
+    } else if (format === "PDF") {
+      rendition = new window.Kookit.PdfRender(result, readerMode, animation);
     } else if (format === "FB2") {
       rendition = new window.Kookit.Fb2Render(result, readerMode, animation);
     } else if (format === "DOCX") {
@@ -324,50 +323,10 @@ class BookUtil {
 
         switch (extension) {
           case "pdf":
-            metadata = await getPDFMetadata(copyArrayBuffer(file_content));
-            [name, author, publisher, cover, page] = [
-              metadata.name || bookName,
-              metadata.author || "Unknown author",
-              metadata.publisher || "",
-              metadata.cover || "",
-              metadata.pageCount || 0,
-            ];
-            if (cover.indexOf("image") === -1) {
-              cover = "";
-            }
-            break;
           case "epub":
-            metadata = await rendition.getMetadata();
-            if (metadata === "timeout_error") {
-              resolve("get_metadata_error");
-              break;
-            } else if (!metadata.name) {
-              break;
-            }
-
-            [name, author, description, publisher, cover] = [
-              metadata.name || bookName,
-              metadata.author || "Unknown author",
-              metadata.description || "",
-              metadata.publisher || "",
-              metadata.cover || "",
-            ];
-            if (cover.indexOf("image") === -1) {
-              cover = "";
-            }
-            break;
           case "mobi":
           case "azw":
           case "azw3":
-            metadata = await rendition.getMetadata();
-            [name, author, description, publisher, cover] = [
-              metadata.name || bookName,
-              metadata.author || "Unknown author",
-              metadata.description || "",
-              metadata.publisher || "",
-              metadata.cover || "",
-            ];
-            break;
           case "fb2":
             metadata = await rendition.getMetadata();
             [name, author, description, publisher, cover] = [

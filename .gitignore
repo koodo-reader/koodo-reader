@@ -31,3 +31,4 @@ config.js*
 rewrite.sh
 bfg.jar
 kookit.js
+kookit.mjs

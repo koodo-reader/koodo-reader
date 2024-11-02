@@ -47,10 +47,7 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     let rect = this.state.rect;
     if (!rect) return;
     this.setState({ isRightEdge: false }, () => {
-      let { posX, posY } =
-        this.props.currentBook.format !== "PDF"
-          ? this.getHtmlPosition(rect)
-          : this.getPdfPosition(rect);
+      let { posX, posY } = this.getHtmlPosition(rect);
       this.props.handleOpenMenu(true);
       let popupMenu = document.querySelector(".popup-menu-container");
       popupMenu?.setAttribute("style", `left:${posX}px;top:${posY}px`);
