@@ -100,28 +100,15 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
   };
   render() {
     let percentage = "0";
-    if (this.props.book.format === "PDF") {
-      if (
-        RecordLocation.getPDFLocation(this.props.book.md5.split("-")[0]) &&
-        RecordLocation.getPDFLocation(this.props.book.md5.split("-")[0]).page &&
-        this.props.book.page
-      ) {
-        percentage =
-          RecordLocation.getPDFLocation(this.props.book.md5.split("-")[0])
-            .page /
-            this.props.book.page +
-          "";
-      }
-    } else {
-      if (
-        RecordLocation.getHtmlLocation(this.props.book.key) &&
-        RecordLocation.getHtmlLocation(this.props.book.key).percentage
-      ) {
-        percentage = RecordLocation.getHtmlLocation(
-          this.props.book.key
-        ).percentage;
-      }
+    if (
+      RecordLocation.getHtmlLocation(this.props.book.key) &&
+      RecordLocation.getHtmlLocation(this.props.book.key).percentage
+    ) {
+      percentage = RecordLocation.getHtmlLocation(
+        this.props.book.key
+      ).percentage;
     }
+
     // let percentage = 0;
     const actionProps = { left: this.state.left, top: this.state.top };
     return (

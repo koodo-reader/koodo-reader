@@ -1,27 +1,9 @@
 import SparkMD5 from "spark-md5";
-
-declare var window: any;
-var pdfjsLib = window["pdfjs-dist/build/pdf"];
 export const fetchMD5 = (file: any) => {
   return new Promise<string>(async (resolve, reject) => {
     try {
       let md5 = await getFileMD5(file);
-      if (file.name.indexOf(".pdf") > -1) {
-        let fileReader = new FileReader();
-        fileReader.readAsArrayBuffer(file);
-        fileReader.onload = (ev) => {
-          pdfjsLib
-            .getDocument({ data: (ev.target as any).result })
-            .promise.then((pdfDoc: any) => {
-              resolve(pdfDoc._pdfInfo.fingerprint + "-" + md5);
-            })
-            .catch((err: any) => {
-              resolve(md5);
-            });
-        };
-      } else {
-        resolve(md5);
-      }
+      resolve(md5);
     } catch (error) {
       reject("");
     }

@@ -102,28 +102,16 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
   };
   render() {
     let percentage = "0";
-    if (this.props.book.format === "PDF") {
-      if (
-        RecordLocation.getPDFLocation(this.props.book.md5.split("-")[0]) &&
-        RecordLocation.getPDFLocation(this.props.book.md5.split("-")[0]).page &&
-        this.props.book.page
-      ) {
-        percentage =
-          RecordLocation.getPDFLocation(this.props.book.md5.split("-")[0])
-            .page /
-            this.props.book.page +
-          "";
-      }
-    } else {
-      if (
-        RecordLocation.getHtmlLocation(this.props.book.key) &&
-        RecordLocation.getHtmlLocation(this.props.book.key).percentage
-      ) {
-        percentage = RecordLocation.getHtmlLocation(
-          this.props.book.key
-        ).percentage;
-      }
+
+    if (
+      RecordLocation.getHtmlLocation(this.props.book.key) &&
+      RecordLocation.getHtmlLocation(this.props.book.key).percentage
+    ) {
+      percentage = RecordLocation.getHtmlLocation(
+        this.props.book.key
+      ).percentage;
     }
+
     var htmlString = this.props.book.description;
     var div = document.createElement("div");
     div.innerHTML = htmlString;

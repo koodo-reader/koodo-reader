@@ -60,16 +60,10 @@ class PopupOption extends React.Component<PopupOptionProps> {
   };
   handleDigest = () => {
     let bookKey = this.props.currentBook.key;
-    let cfi = "";
-    if (this.props.currentBook.format === "PDF") {
-      cfi = JSON.stringify(
-        RecordLocation.getPDFLocation(this.props.currentBook.md5.split("-")[0])
-      );
-    } else {
-      cfi = JSON.stringify(
-        RecordLocation.getHtmlLocation(this.props.currentBook.key)
-      );
-    }
+    let cfi = JSON.stringify(
+      RecordLocation.getHtmlLocation(this.props.currentBook.key)
+    );
+
     let percentage = RecordLocation.getHtmlLocation(this.props.currentBook.key)
       .percentage
       ? RecordLocation.getHtmlLocation(this.props.currentBook.key).percentage

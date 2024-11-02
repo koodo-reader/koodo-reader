@@ -28,10 +28,6 @@
     <canvas id="the-canvas"></canvas>
     <script
       type="text/javascript"
-      src="%PUBLIC_URL%/lib/kookit/kookit.min.js"
-    ></script>
-    <script
-      type="text/javascript"
       src="%PUBLIC_URL%/lib/JSZip/jszip.min.js"
     ></script>
     <script
@@ -78,10 +74,19 @@
       type="text/javascript"
       src="%PUBLIC_URL%/lib/libunrar/rpc.js"
     ></script>
-    <script
-      type="text/javascript"
-      src="%PUBLIC_URL%/lib/pdf/build/pdf.js"
-    ></script>
+    <script type="module">
+      import "%PUBLIC_URL%/lib/pdfjs/pdf.min.mjs";
+      // import * as pdfjsWorker from "./pdfjs/pdf.worker.mjs";
+      console.log(window);
+      pdfjsLib.GlobalWorkerOptions.workerSrc =
+        "%PUBLIC_URL%/lib/pdfjs/pdf.worker.min.mjs";
+      import * as Kookit from "%PUBLIC_URL%/lib/kookit/kookit.mjs";
+      import * as KookitCompressed from "%PUBLIC_URL%/lib/kookit/kookit.min.mjs";
+      window.Kookit = KookitCompressed;
+      if (window.location.href.indexOf("localhost") > -1) {
+        window.Kookit = Kookit;
+      }
+    </script>
     <script
       type="text/javascript"
       src="%PUBLIC_URL%/lib/Dropbox/Dropbox-sdk.min.js"
@@ -114,13 +119,5 @@
       type="text/javascript"
       src="%PUBLIC_URL%/lib/mammoth/mammoth.browser.min.js"
     ></script>
-    <script>
-      if (window.location.href.indexOf("localhost") > -1) {
-        //load js from %PUBLIC_URL%/lib/kookit/kookit.js
-        var script = document.createElement("script");
-        script.src = "%PUBLIC_URL%/lib/kookit/kookit.js";
-        document.head.appendChild(script);
-      }
-    </script>
   </body>
 </html>
