@@ -1,8 +1,7 @@
 import React, { useEffect } from "react";
 import { Route, Switch, HashRouter } from "react-router-dom";
 import Manager from "../pages/manager";
-import HtmlReader from "../pages/htmlReader";
-import PDFReader from "../pages/pdfReader";
+import HtmlReader from "../pages/reader";
 import _Redirect from "../pages/redirect";
 import i18n from "../i18n";
 import StorageUtil from "../utils/serviceUtils/storageUtil";

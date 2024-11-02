@@ -88,7 +88,7 @@ export const createOneNote = async (
     );
   }
 };
-export const showNoteHighlight = (
+const showNoteHighlight = (
   range: any,
   colorCode: string,
   noteKey: string,

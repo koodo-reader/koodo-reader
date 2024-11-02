@@ -7,7 +7,7 @@ import ProgressPanel from "../../containers/panels/progressPanel";
 import { ReaderProps, ReaderState } from "./interface";
 import StorageUtil from "../../utils/serviceUtils/storageUtil";
 import ReadingTime from "../../utils/readUtils/readingTime";
-import Viewer from "../../containers/htmlViewer";
+import Viewer from "../../containers/viewer";
 import { Tooltip } from "react-tooltip";
 import RecordLocation from "../../utils/readUtils/recordLocation";
 import "./index.css";
