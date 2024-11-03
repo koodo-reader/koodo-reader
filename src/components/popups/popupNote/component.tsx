@@ -56,16 +56,10 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
   async createNote() {
     let notes = (document.querySelector(".editor-box") as HTMLInputElement)
       .value;
-    let cfi = "";
-    if (this.props.currentBook.format === "PDF") {
-      cfi = JSON.stringify(
-        RecordLocation.getPDFLocation(this.props.currentBook.md5.split("-")[0])
-      );
-    } else {
-      cfi = JSON.stringify(
-        RecordLocation.getHtmlLocation(this.props.currentBook.key)
-      );
-    }
+    let cfi = JSON.stringify(
+      RecordLocation.getHtmlLocation(this.props.currentBook.key)
+    );
+
     if (this.props.noteKey) {
       this.props.notes.forEach((item) => {
         if (item.key === this.props.noteKey) {
@@ -84,29 +78,11 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
     } else {
       let bookKey = this.props.currentBook.key;
 
-      let pageArea = document.getElementById("page-area");
-      if (!pageArea) return;
-      let iframe = pageArea.getElementsByTagName("iframe")[0];
-      if (!iframe) return;
-      let doc = iframe.contentDocument;
-      if (!doc) {
-        return;
-      }
-      let charRange;
-      if (this.props.currentBook.format !== "PDF") {
-        charRange = window.rangy
-          .getSelection(iframe)
-          .saveCharacterRanges(doc.body)[0];
-      }
-
-      let range =
-        this.props.currentBook.format === "PDF"
-          ? JSON.stringify(
-              await this.props.htmlBook.rendition.getHightlightCoords(
-                this.props.chapterDocIndex
-              )
-            )
-          : JSON.stringify(charRange);
+      let range = JSON.stringify(
+        await this.props.htmlBook.rendition.getHightlightCoords(
+          this.props.chapterDocIndex
+        )
+      );
 
       let percentage = 0;
 
@@ -153,14 +129,6 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
       if (noteIndex > -1) {
         this.props.notes.splice(noteIndex, 1);
         window.localforage.setItem("notes", this.props.notes).then(() => {
-          // if (this.props.currentBook.format === "PDF") {
-          //   removePDFHighlight(
-          //     JSON.parse(note.range),
-          //     classes[note.color],
-          //     note.key
-          //   );
-          // }
-
           toast.success(this.props.t("Deletion successful"));
           this.props.handleMenuMode("");
           this.props.handleFetchNotes();

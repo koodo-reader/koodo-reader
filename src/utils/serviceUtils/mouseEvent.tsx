@@ -4,7 +4,6 @@ import { isElectron } from "react-device-detect";
 import { getIframeDoc, getIframeWin } from "./docUtil";
 import { handleExitFullScreen, handleFullScreen } from "../commonUtil";
 declare var window: any;
-declare var document: any;
 const sleep = (ms: number) => {
   return new Promise((resolve) => setTimeout(resolve, ms));
 };
@@ -195,19 +194,5 @@ export const HtmlMouseEvent = (
     if (!doc) return;
     lock = false;
     bindHtmlEvent(rendition, doc, key, readerMode);
-  });
-};
-export const pdfMouseEvent = () => {
-  let pageArea = document.getElementById("page-area");
-  if (!pageArea) return;
-  let iframe = pageArea.getElementsByTagName("iframe")[0];
-  if (!iframe) return;
-  let doc: any = iframe.contentWindow || iframe.contentDocument?.defaultView;
-
-  doc.document.addEventListener("keydown", (event) => {
-    if (lock) return;
-    lock = true;
-    handleShortcut(event);
-    setTimeout(() => (lock = false), throttleTime);
   });
 };

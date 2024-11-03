@@ -21,7 +21,6 @@ let configArr = [
   "favoriteBooks.json",
   "favoriteBooks.json",
   "shelfList.json",
-  "pdfjs.history.json",
   "recordLocation.json",
 ];
 export function getParamsFromUrl() {
@@ -199,8 +198,6 @@ export const unzipConfig = (zipEntries: any) => {
             zipEntry.name.split(".")[0],
             JSON.parse(text)
           );
-        } else if (zipEntry.name === "pdfjs.history.json") {
-          localStorage.setItem("pdfjs.history", text);
         } else {
           localStorage.setItem(zipEntry.name.split(".")[0], text);
         }
@@ -273,7 +270,6 @@ export const zipConfig = (
         .file("favoriteBooks.json", localStorage.getItem("favoriteBooks") || [])
         .file("shelfList.json", localStorage.getItem("shelfList") || [])
         .file("noteTags.json", localStorage.getItem("noteTags") || [])
-        .file("pdfjs.history.json", localStorage.getItem("pdfjs.history") || [])
         .file(
           "recordLocation.json",
           localStorage.getItem("recordLocation") || ""
