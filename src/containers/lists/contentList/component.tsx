@@ -36,15 +36,13 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
             (this.props.htmlBook && this.props.htmlBook.flattenChapters[0]
               ? this.props.htmlBook.flattenChapters[0].label
               : "Unknown chapter");
-          scrollContents(
-            chapter,
-            bookLocation.chapterHref,
-          );
+          scrollContents(chapter, bookLocation.chapterHref);
         }
       );
     }
   }
   async handleJump(item: any) {
+    console.log(item);
     await this.props.htmlBook.rendition.goToChapter(
       item.index,
       item.href,

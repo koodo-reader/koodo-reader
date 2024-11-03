@@ -57,7 +57,6 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
   }
 
   render() {
-    console.log(this.props.currentBook, "this.props.currentBook");
     return (
       <div
         className="background"

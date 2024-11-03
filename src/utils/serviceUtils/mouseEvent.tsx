@@ -10,6 +10,7 @@ const sleep = (ms: number) => {
 
 let throttleTime =
   StorageUtil.getReaderConfig("isSliding") === "yes" ? 1000 : 400;
+
 export const getSelection = () => {
   let doc = getIframeDoc();
   if (!doc) return;
@@ -116,6 +117,28 @@ const handleLocation = (key: string, rendition: any) => {
     position.page
   );
 };
+export const scrollChapter = async (
+  element: any,
+  rendition: any,
+  deltaY: number
+) => {
+  if (deltaY < 0) {
+    if (element.scrollTop === 0) {
+      await rendition.prev();
+    }
+  }
+  if (deltaY > 0) {
+    var scrollHeight = element.scrollHeight;
+    var scrollTop = element.scrollTop;
+    var clientHeight = element.clientHeight;
+    console.log(scrollTop + clientHeight, scrollHeight);
+
+    if (Math.abs(scrollTop + clientHeight - scrollHeight) < 10) {
+      await rendition.next();
+    }
+  }
+};
+
 export const bindHtmlEvent = (
   rendition: any,
   doc: any,
@@ -137,6 +160,11 @@ export const bindHtmlEvent = (
       if (readerMode === "scroll") {
         await sleep(200);
         await rendition.record();
+        if (Math.abs(event.deltaX) === 0) {
+          let srollElement =
+            document.getElementsByClassName("html-viewer-page")[0];
+          await scrollChapter(srollElement, rendition, event.deltaY);
+        }
       } else {
         if (Math.abs(event.deltaX) === 0) {
           await mouseChrome(rendition, event.deltaY);
