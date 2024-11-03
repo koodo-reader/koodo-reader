@@ -192,35 +192,6 @@ class BookUtil {
     let ref = book.format.toLowerCase();
     return `/${ref}/${book.key}`;
   }
-  static getPDFUrl(book: BookModel) {
-    if (isElectron) {
-      const path = window.require("path");
-      const { ipcRenderer } = window.require("electron");
-      localStorage.setItem("pdfPath", book.path);
-      const __dirname = ipcRenderer.sendSync("get-dirname", "ping");
-      let pdfLocation =
-        document.URL.indexOf("localhost") > -1
-          ? "http://localhost:3000/"
-          : `file://${path.join(
-              __dirname,
-              "./build",
-              "lib",
-              "pdf",
-              "web",
-              "viewer.html"
-            )}`;
-      let url = `${
-        window.navigator.platform.indexOf("Win") > -1
-          ? "lib/pdf/web/"
-          : "lib\\pdf\\web\\"
-      }viewer.html?file=${book.key}`;
-      return document.URL.indexOf("localhost") > -1
-        ? pdfLocation + url
-        : `${pdfLocation}?file=${book.key}`;
-    } else {
-      return `./lib/pdf/web/viewer.html?file=${book.key}`;
-    }
-  }
   static reloadBooks() {
     if (isElectron) {
       if (StorageUtil.getReaderConfig("isOpenInMain") === "yes") {

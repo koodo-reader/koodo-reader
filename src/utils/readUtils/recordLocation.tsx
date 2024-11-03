@@ -1,4 +1,3 @@
-declare var window: any;
 class RecordLocation {
   static recordCfi(bookKey: string, cfi: string, percentage: number) {
     let json = localStorage.getItem("recordLocation");
@@ -59,22 +58,7 @@ class RecordLocation {
     let obj = JSON.parse(json || "{}");
     return obj[bookKey] || {};
   }
-  static getPDFLocation(fingerprint: string) {
-    let json = localStorage.getItem("pdfjs.history");
-    let arr = JSON.parse(json || "{}").files || [];
-    let index = window._.findLastIndex(arr, { fingerprint });
-    if (index > -1) {
-      return arr[index] || {};
-    } else {
-      return {};
-    }
-  }
-  static recordPDFLocation(fingerprint: string, obj: object) {
-    let json = localStorage.getItem("pdfjs.history");
-    let _obj = JSON.parse(json || "{}");
-    _obj.files[window._.findLastIndex(_obj.files, { fingerprint })] = obj;
-    localStorage.setItem("pdfjs.history", JSON.stringify(_obj));
-  }
+
   static getAllCfi() {
     let json = localStorage.getItem("recordLocation");
     let obj = JSON.parse(json || "{}");

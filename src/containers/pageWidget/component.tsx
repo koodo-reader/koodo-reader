@@ -57,6 +57,7 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
   }
 
   render() {
+    console.log(this.props.currentBook, "this.props.currentBook");
     return (
       <div
         className="background"
@@ -67,7 +68,7 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
         }}
       >
         <div className="header-container">
-          {!this.state.isHideHeader && this.props.currentChapter && (
+          {!this.state.isHideHeader && this.props.currentChapter + "" && (
             <p
               className="header-chapter-name"
               style={
@@ -83,7 +84,7 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
             </p>
           )}
           {!this.state.isHideHeader &&
-            this.props.currentChapter &&
+            this.props.currentChapter + "" &&
             !this.state.isSingle && (
               <p
                 className="header-book-name"

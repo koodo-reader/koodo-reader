@@ -32,8 +32,8 @@ let options = {
     nodeIntegration: true,
     contextIsolation: false,
     nativeWindowOpen: true,
-    nodeIntegrationInSubFrames: true,
-    allowRunningInsecureContent: true,
+    nodeIntegrationInSubFrames: false,
+    allowRunningInsecureContent: false,
     enableRemoteModule: true,
   },
 };
