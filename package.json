@@ -8,7 +8,7 @@
     "email": "feedback@koodoreader.com"
   },
   "engines": {
-    "node": ">=18.0.0",
+    "node": ">=22.0.0",
     "npm": ">=6.0.0"
   },
   "repository": "https://github.com/koodo-reader/koodo-reader",
@@ -55,7 +55,7 @@
     "classnames": "^2.2.6",
     "concurrently": "^5.0.1",
     "cross-env": "^6.0.3",
-    "electron": "14.1.1",
+    "electron": "20.3.12",
     "electron-builder": "^23.6.0",
     "hard-source-webpack-plugin": "^0.13.1",
     "html-react-parser": "^5.1.10",
