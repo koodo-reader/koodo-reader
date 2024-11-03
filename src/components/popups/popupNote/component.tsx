@@ -8,16 +8,7 @@ import NoteTag from "../../noteTag";
 import NoteModel from "../../../models/Note";
 import { Trans } from "react-i18next";
 import toast from "react-hot-toast";
-import {
-  getHightlightCoords,
-  removePDFHighlight,
-} from "../../../utils/fileUtils/pdfUtil";
 import { getIframeDoc } from "../../../utils/serviceUtils/docUtil";
-import {
-  createOneNote,
-  removeOneNote,
-} from "../../../utils/serviceUtils/noteUtil";
-import { classes } from "../../../constants/themeList";
 declare var window: any;
 
 class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
@@ -62,7 +53,7 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
     this.props.handleMenuMode("note");
     this.props.handleOpenMenu(true);
   };
-  createNote() {
+  async createNote() {
     let notes = (document.querySelector(".editor-box") as HTMLInputElement)
       .value;
     let cfi = "";
@@ -110,7 +101,11 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
 
       let range =
         this.props.currentBook.format === "PDF"
-          ? JSON.stringify(getHightlightCoords())
+          ? JSON.stringify(
+              await this.props.htmlBook.rendition.getHightlightCoords(
+                this.props.chapterDocIndex
+              )
+            )
           : JSON.stringify(charRange);
 
       let percentage = 0;
@@ -133,14 +128,13 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
 
       let noteArr = this.props.notes;
       noteArr.push(note);
-      window.localforage.setItem("notes", noteArr).then(() => {
+      window.localforage.setItem("notes", noteArr).then(async () => {
         this.props.handleOpenMenu(false);
         toast.success(this.props.t("Addition successful"));
         this.props.handleFetchNotes();
         this.props.handleMenuMode("");
-        createOneNote(
+        await this.props.htmlBook.rendition.createOneNote(
           note,
-          this.props.currentBook.format,
           this.handleNoteClick
         );
       });
@@ -159,19 +153,22 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
       if (noteIndex > -1) {
         this.props.notes.splice(noteIndex, 1);
         window.localforage.setItem("notes", this.props.notes).then(() => {
-          if (this.props.currentBook.format === "PDF") {
-            removePDFHighlight(
-              JSON.parse(note.range),
-              classes[note.color],
-              note.key
-            );
-          }
+          // if (this.props.currentBook.format === "PDF") {
+          //   removePDFHighlight(
+          //     JSON.parse(note.range),
+          //     classes[note.color],
+          //     note.key
+          //   );
+          // }
 
           toast.success(this.props.t("Deletion successful"));
           this.props.handleMenuMode("");
           this.props.handleFetchNotes();
           this.props.handleNoteKey("");
-          removeOneNote(note.key, this.props.currentBook.format);
+          this.props.htmlBook.rendition.removeOneNote(
+            note.key,
+            this.props.currentBook.format
+          );
           this.props.handleOpenMenu(false);
         });
       }

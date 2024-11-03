@@ -16,7 +16,6 @@ import { getIframeDoc } from "../../utils/serviceUtils/docUtil";
 import { tsTransform } from "../../utils/serviceUtils/langUtil";
 import { binicReadingProcess } from "../../utils/serviceUtils/bionicUtil";
 import PopupBox from "../../components/popups/popupBox";
-import { renderHighlighters } from "../../utils/serviceUtils/noteUtil";
 import Note from "../../models/Note";
 import PageWidget from "../pageWidget";
 import { scrollContents } from "../../utils/commonUtil";
@@ -114,7 +113,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       });
     }
   };
-  handleHighlight = (rendition: any) => {
+  handleHighlight = async (rendition: any) => {
     let highlighters: any = this.props.notes;
     if (!highlighters) return;
     let highlightersByChapter = highlighters.filter((item: Note) => {
@@ -126,9 +125,8 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       );
     });
 
-    renderHighlighters(
+    await this.props.htmlBook.rendition.renderHighlighters(
       highlightersByChapter,
-      this.props.currentBook.format,
       this.handleNoteClick
     );
   };
@@ -221,7 +219,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       );
     }
 
-    rendition.on("rendered", () => {
+    rendition.on("rendered", async () => {
       this.handleLocation();
       let bookLocation: {
         text: string;
@@ -265,7 +263,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       tsTransform();
       binicReadingProcess();
       this.handleBindGesture();
-      this.handleHighlight(rendition);
+      await this.handleHighlight(rendition);
       lock = true;
       setTimeout(function () {
         lock = false;

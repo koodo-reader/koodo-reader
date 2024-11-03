@@ -11,11 +11,9 @@ import StorageUtil from "../../../utils/serviceUtils/storageUtil";
 import toast from "react-hot-toast";
 import { getSelection } from "../../../utils/serviceUtils/mouseEvent";
 import copy from "copy-text-to-clipboard";
-import { getHightlightCoords } from "../../../utils/fileUtils/pdfUtil";
 import { getIframeDoc } from "../../../utils/serviceUtils/docUtil";
 import { openExternalUrl } from "../../../utils/serviceUtils/urlUtil";
 import { isElectron } from "react-device-detect";
-import { createOneNote } from "../../../utils/serviceUtils/noteUtil";
 
 declare var window: any;
 
@@ -58,7 +56,7 @@ class PopupOption extends React.Component<PopupOptionProps> {
     this.props.handleMenuMode("dict");
     this.props.handleOriginalText(getSelection() || "");
   };
-  handleDigest = () => {
+  handleDigest = async () => {
     let bookKey = this.props.currentBook.key;
     let cfi = JSON.stringify(
       RecordLocation.getHtmlLocation(this.props.currentBook.key)
@@ -84,7 +82,11 @@ class PopupOption extends React.Component<PopupOptionProps> {
     }
     let range =
       this.props.currentBook.format === "PDF"
-        ? JSON.stringify(getHightlightCoords())
+        ? JSON.stringify(
+            await this.props.htmlBook.rendition.getHightlightCoords(
+              this.props.chapterDocIndex
+            )
+          )
         : JSON.stringify(charRange);
     let text = doc.getSelection()?.toString();
     if (!text) return;
@@ -107,14 +109,13 @@ class PopupOption extends React.Component<PopupOptionProps> {
     );
     let noteArr = this.props.notes;
     noteArr.push(digest);
-    window.localforage.setItem("notes", noteArr).then(() => {
+    window.localforage.setItem("notes", noteArr).then(async () => {
       this.props.handleOpenMenu(false);
       toast.success(this.props.t("Addition successful"));
       this.props.handleFetchNotes();
       this.props.handleMenuMode("");
-      createOneNote(
+      await this.props.htmlBook.rendition.createOneNote(
         digest,
-        this.props.currentBook.format,
         this.handleNoteClick
       );
     });

@@ -3,7 +3,6 @@ import { isElectron } from "react-device-detect";
 
 import BookModel from "../../models/Book";
 import toast from "react-hot-toast";
-import { getPDFMetadata } from "./pdfUtil";
 import { copyArrayBuffer } from "../commonUtil";
 import iconv from "iconv-lite";
 import { Buffer } from "buffer";
