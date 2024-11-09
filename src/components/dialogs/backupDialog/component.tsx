@@ -67,6 +67,11 @@ class BackupDialog extends React.Component<
       let result = await restore(event.target.files[0]);
       if (result) {
         this.handleFinish();
+      } else {
+        this.showMessage(
+          "Restore failed, backup from an older version is no longer supported"
+        );
+        this.props.handleLoadingDialog(false);
       }
     }, 10);
   };
@@ -80,12 +85,7 @@ class BackupDialog extends React.Component<
     this.setState({ currentDrive: name }, async () => {
       switch (name) {
         case "local":
-          let blob: Blob | boolean = await backup(
-            this.props.books,
-            this.props.notes,
-            this.props.bookmarks,
-            false
-          );
+          let blob: Blob | boolean = await backup(false);
           if (!blob) {
             this.showMessage("Backup Failed");
           }
@@ -134,12 +134,7 @@ class BackupDialog extends React.Component<
             this.showMessage("Uploading, please wait");
             this.props.handleLoadingDialog(true);
 
-            let blob: Blob | boolean = await backup(
-              this.props.books,
-              this.props.notes,
-              this.props.bookmarks,
-              false
-            );
+            let blob: Blob | boolean = await backup(false);
             if (!blob) {
               this.showMessage("Backup Failed");
               this.props.handleLoadingDialog(false);

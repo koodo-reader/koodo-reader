@@ -8,7 +8,7 @@ import UpdateInfo from "../../components/dialogs/updateDialog";
 import { restore } from "../../utils/syncUtils/restoreUtil";
 import { backup } from "../../utils/syncUtils/backupUtil";
 import { isElectron } from "react-device-detect";
-import { syncData } from "../../utils/syncUtils/common";
+import { syncData, upgradeStorage } from "../../utils/syncUtils/common";
 import toast from "react-hot-toast";
 import { Trans } from "react-i18next";
 import { checkStableUpdate } from "../../utils/commonUtil";
@@ -53,6 +53,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
           StorageUtil.getReaderConfig("storageLocation")
         );
       }
+      //Check for update
       try {
         let stableLog = await checkStableUpdate();
         if (packageInfo.version.localeCompare(stableLog.version) > 0) {
@@ -69,18 +70,16 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         : window
             .require("electron")
             .ipcRenderer.sendSync("storage-location", "ping");
-      let sourcePath = path.join(
-        storageLocation,
-        "config",
-        "readerConfig.json"
-      );
+      //upgrade data from old version
+      await upgradeStorage(storageLocation, this.props.books, toast);
+      let sourcePath = path.join(storageLocation, "config", "config.json");
       //Detect data modification
       fs.readFile(sourcePath, "utf8", (err, data) => {
         if (err) {
           console.log(err);
           return;
         }
-        const readerConfig = JSON.parse(data);
+        const readerConfig = JSON.parse(JSON.parse(data).readerConfig);
         if (
           localStorage.getItem("lastSyncTime") &&
           parseInt(readerConfig.lastSyncTime) >
@@ -129,18 +128,14 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         : window
             .require("electron")
             .ipcRenderer.sendSync("storage-location", "ping");
-      let sourcePath = path.join(
-        storageLocation,
-        "config",
-        "readerConfig.json"
-      );
+      let sourcePath = path.join(storageLocation, "config", "config.json");
 
       fs.readFile(sourcePath, "utf8", (err, data) => {
         if (err) {
           console.log(err);
           return;
         }
-        const readerConfig = JSON.parse(data);
+        const readerConfig = JSON.parse(JSON.parse(data).readerConfig);
         if (localStorage.getItem("lastSyncTime") && readerConfig.lastSyncTime) {
           localStorage.setItem("lastSyncTime", readerConfig.lastSyncTime);
         }
@@ -168,14 +163,13 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       : window
           .require("electron")
           .ipcRenderer.sendSync("storage-location", "ping");
-    let sourcePath = path.join(storageLocation, "config", "readerConfig.json");
+    let sourcePath = path.join(storageLocation, "config", "config.json");
     fs.readFile(sourcePath, "utf8", async (err, data) => {
       if (err || !data) {
         this.syncToLocation();
         return;
       }
-      const readerConfig = JSON.parse(data);
-
+      const readerConfig = JSON.parse(JSON.parse(data).readerConfig);
       if (
         readerConfig &&
         localStorage.getItem("lastSyncTime") &&
@@ -192,12 +186,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     let timestamp = new Date().getTime().toString();
     StorageUtil.setReaderConfig("lastSyncTime", timestamp);
     localStorage.setItem("lastSyncTime", timestamp);
-    let result = await backup(
-      this.props.books,
-      this.props.notes,
-      this.props.bookmarks,
-      true
-    );
+    let result = await backup(true);
     if (!result) {
       toast.error(this.props.t("Sync Failed"));
     } else {
@@ -282,7 +271,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
             <div
               className="setting-icon-container"
               onClick={() => {
-                // this.syncFromLocation();
                 this.handleSync();
               }}
               style={{ marginTop: "2px" }}

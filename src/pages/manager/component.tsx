@@ -64,6 +64,7 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
   }
   UNSAFE_componentWillMount() {
     this.props.handleFetchBooks();
+    this.props.handleFetchPlugins();
     this.props.handleFetchNotes();
     this.props.handleFetchBookmarks();
     this.props.handleFetchBookSortCode();

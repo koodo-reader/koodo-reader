@@ -23,6 +23,7 @@ export interface ViewerProps {
   handleEnterReader: (position: string) => void;
   handleFetchBooks: () => void;
   handleFetchNotes: () => void;
+  handleFetchPlugins: () => void;
   handleFetchBookmarks: () => void;
   handleNoteKey: (key: string) => void;
   handleOpenMenu: (isOpenMenu: boolean) => void;

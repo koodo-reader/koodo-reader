@@ -131,8 +131,6 @@ export const scrollChapter = async (
     var scrollHeight = element.scrollHeight;
     var scrollTop = element.scrollTop;
     var clientHeight = element.clientHeight;
-    console.log(scrollTop + clientHeight, scrollHeight);
-
     if (Math.abs(scrollTop + clientHeight - scrollHeight) < 10) {
       await rendition.next();
     }

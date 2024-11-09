@@ -66,12 +66,15 @@ class TextToSpeech extends React.Component<
       this.setState({ isAudioOn: false });
     } else {
       if (isElectron) {
-        this.customVoices = TTSUtil.getVoiceList();
+        this.customVoices = TTSUtil.getVoiceList(this.props.plugins);
         this.voices = [...this.nativeVoices, ...this.customVoices];
       } else {
         this.voices = this.nativeVoices;
       }
-      if (this.voices.length === 0 && PluginList.getAllVoices().length === 0) {
+      if (
+        this.voices.length === 0 &&
+        PluginList.getAllVoices(this.props.plugins).length === 0
+      ) {
         this.setState({ isAddNew: true });
         return;
       }
@@ -88,7 +91,7 @@ class TextToSpeech extends React.Component<
     let voiceIndex = parseInt(StorageUtil.getReaderConfig("voiceIndex")) || 0;
     if (
       voiceIndex > this.nativeVoices.length - 1 &&
-      PluginList.getAllVoices().length > 0
+      PluginList.getAllVoices(this.props.plugins).length > 0
     ) {
       await this.handleRead();
     } else {
@@ -116,14 +119,16 @@ class TextToSpeech extends React.Component<
     await TTSUtil.cacheAudio(
       [this.nodeList[0]],
       voiceIndex - this.nativeVoices.length,
-      speed * 100 - 100
+      speed * 100 - 100,
+      this.props.plugins
     );
 
     setTimeout(async () => {
       await TTSUtil.cacheAudio(
         this.nodeList.slice(1),
         voiceIndex - this.nativeVoices.length,
-        speed * 100 - 100
+        speed * 100 - 100,
+        this.props.plugins
       );
     }, 1);
 
@@ -401,7 +406,7 @@ class TextToSpeech extends React.Component<
 
                 <div
                   className="voice-add-confirm"
-                  onClick={() => {
+                  onClick={async () => {
                     let value: string = (
                       document.querySelector(
                         "#voice-add-content-box"
@@ -409,11 +414,12 @@ class TextToSpeech extends React.Component<
                     ).value;
                     if (value) {
                       let plugin = JSON.parse(value);
-                      let isSuccess = PluginList.addPlugin(plugin);
+                      let isSuccess = await PluginList.addPlugin(plugin);
                       if (!isSuccess) {
                         toast.error(this.props.t("Plugin verification failed"));
                         return;
                       }
+                      this.props.handleFetchPlugins();
                       toast.success(this.props.t("Addition successful"));
                     }
                     this.setState({ isAddNew: false });

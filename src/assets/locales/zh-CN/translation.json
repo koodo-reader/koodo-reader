@@ -408,6 +408,10 @@
   "Add new plugin": "添加新插件",
   "Pot is running": "Pot 正在运行中",
   "Plugin verification failed": "插件校验失败",
+  "Please select the service": "请选择服务",
+  "Upgrading data": "数据升级中",
+  "Upgrade successful": "升级成功",
+  "Restore failed, backup from an older version is no longer supported": "恢复失败，不再支持旧版本的备份",
   "This feature is only available in the developer version": "本功能仅支持开发版",
   "Paste the code of the plugin here, check out document to learn how to get more plugins": "将插件的代码粘贴在这里，查看帮助文档了解如何获取更多插件",
   "Full screen": "全屏模式"

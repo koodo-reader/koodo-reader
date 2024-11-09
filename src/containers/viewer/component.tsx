@@ -56,6 +56,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     this.props.handleFetchBookmarks();
     this.props.handleFetchNotes();
     this.props.handleFetchBooks();
+    this.props.handleFetchPlugins();
   }
   componentDidMount() {
     window.rangy.init();
@@ -143,31 +144,34 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     if (doc && this.state.rendition) {
       this.state.rendition.removeContent();
     }
-    let isCacheExsit = await BookUtil.isBookExist("cache-" + key, path);
-    BookUtil.fetchBook(isCacheExsit ? "cache-" + key : key, true, path).then(
-      async (result: any) => {
-        if (!result) {
-          toast.error(this.props.t("Book not exsit"));
-          return;
-        }
-        let rendition = BookUtil.getRendtion(
-          result,
-          isCacheExsit ? "CACHE" : format,
-          this.state.readerMode,
-          this.props.currentBook.charset,
-          StorageUtil.getReaderConfig("isSliding") === "yes" ? "sliding" : ""
-        );
-
-        await rendition.renderTo(
-          document.getElementsByClassName("html-viewer-page")[0]
-        );
-        await this.handleRest(rendition);
-        this.props.handleReadingState(true);
-
-        RecentBooks.setRecent(this.props.currentBook.key);
-        document.title = name + " - Koodo Reader";
+    let isCacheExsit = await BookUtil.isBookExist("cache-" + key, "zip", path);
+    BookUtil.fetchBook(
+      isCacheExsit ? "cache-" + key : key,
+      isCacheExsit ? "zip" : format.toLowerCase(),
+      true,
+      path
+    ).then(async (result: any) => {
+      if (!result) {
+        toast.error(this.props.t("Book not exsit"));
+        return;
       }
-    );
+      let rendition = BookUtil.getRendtion(
+        result,
+        isCacheExsit ? "CACHE" : format,
+        this.state.readerMode,
+        this.props.currentBook.charset,
+        StorageUtil.getReaderConfig("isSliding") === "yes" ? "sliding" : ""
+      );
+
+      await rendition.renderTo(
+        document.getElementsByClassName("html-viewer-page")[0]
+      );
+      await this.handleRest(rendition);
+      this.props.handleReadingState(true);
+
+      RecentBooks.setRecent(this.props.currentBook.key);
+      document.title = name + " - Koodo Reader";
+    });
   };
 
   handleRest = async (rendition: any) => {
@@ -323,7 +327,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       )
         return;
       var rect = doc!.getSelection()!.getRangeAt(0).getBoundingClientRect();
-      console.log(rect);
       this.setState({ rect });
     });
   };

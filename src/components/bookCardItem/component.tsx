@@ -145,8 +145,7 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
                   }
             }
           >
-            {!this.props.book.cover ||
-            this.props.book.cover === "noCover" ||
+            {!BookUtil.isCoverExist(this.props.book) ||
             (this.props.book.format === "PDF" &&
               StorageUtil.getReaderConfig("isDisablePDFCover") === "yes") ? (
               <div className="book-item-image">
@@ -160,7 +159,7 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
               </div>
             ) : (
               <img
-                data-src={this.props.book.cover}
+                data-src={BookUtil.getCover(this.props.book)}
                 alt=""
                 className="lazy-image book-item-image"
                 style={

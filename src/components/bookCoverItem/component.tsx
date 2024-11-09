@@ -180,8 +180,7 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
                   }
             }
           >
-            {!this.props.book.cover ||
-            this.props.book.cover === "noCover" ||
+            {!BookUtil.isCoverExist(this.props.book) ||
             (this.props.book.format === "PDF" &&
               StorageUtil.getReaderConfig("isDisablePDFCover") === "yes") ? (
               <div
@@ -198,7 +197,7 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
               </div>
             ) : (
               <img
-                data-src={this.props.book.cover}
+                data-src={BookUtil.getCover(this.props.book)}
                 alt=""
                 style={
                   this.state.direction === "horizontal" ||

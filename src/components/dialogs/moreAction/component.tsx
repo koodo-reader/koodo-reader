@@ -47,6 +47,7 @@ class ActionDialog extends React.Component<MoreActionProps, MoreActionState> {
             onClick={() => {
               BookUtil.fetchBook(
                 this.props.currentBook.key,
+                this.props.currentBook.format.toLowerCase(),
                 true,
                 this.props.currentBook.path
               ).then((result: any) => {
@@ -153,6 +154,7 @@ class ActionDialog extends React.Component<MoreActionProps, MoreActionState> {
               toast(this.props.t("Pre-caching"));
               BookUtil.fetchBook(
                 this.props.currentBook.key,
+                this.props.currentBook.format.toLowerCase(),
                 true,
                 this.props.currentBook.path
               ).then(async (result: any) => {
@@ -169,6 +171,7 @@ class ActionDialog extends React.Component<MoreActionProps, MoreActionState> {
                 if (cache !== "err") {
                   BookUtil.addBook(
                     "cache-" + this.props.currentBook.key,
+                    "zip",
                     cache
                   );
                   toast.success(this.props.t("Pre-caching successful"));
@@ -186,7 +189,10 @@ class ActionDialog extends React.Component<MoreActionProps, MoreActionState> {
             className="action-dialog-edit"
             style={{ paddingLeft: "0px" }}
             onClick={async () => {
-              await BookUtil.deleteBook("cache-" + this.props.currentBook.key);
+              await BookUtil.deleteBook(
+                "cache-" + this.props.currentBook.key,
+                "zip"
+              );
               toast.success(this.props.t("Deletion successful"));
             }}
           >

@@ -13,7 +13,6 @@ import { getSelection } from "../../../utils/serviceUtils/mouseEvent";
 import copy from "copy-text-to-clipboard";
 import { getIframeDoc } from "../../../utils/serviceUtils/docUtil";
 import { openExternalUrl } from "../../../utils/serviceUtils/urlUtil";
-import { isElectron } from "react-device-detect";
 
 declare var window: any;
 
@@ -33,26 +32,10 @@ class PopupOption extends React.Component<PopupOptionProps> {
     toast.success(this.props.t("Copying successful"));
   };
   handleTrans = () => {
-    if (!isElectron) {
-      toast(
-        this.props.t(
-          "Koodo Reader's web version are limited by the browser, for more powerful features, please download the desktop version."
-        )
-      );
-      return;
-    }
     this.props.handleMenuMode("trans");
     this.props.handleOriginalText(getSelection() || "");
   };
   handleDict = () => {
-    if (!isElectron) {
-      toast(
-        this.props.t(
-          "Koodo Reader's web version are limited by the browser, for more powerful features, please download the desktop version."
-        )
-      );
-      return;
-    }
     this.props.handleMenuMode("dict");
     this.props.handleOriginalText(getSelection() || "");
   };

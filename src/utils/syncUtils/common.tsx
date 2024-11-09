@@ -1,96 +1,5 @@
 import BookModel from "../../models/Book";
-
-import BookUtil from "../fileUtils/bookUtil";
-import NoteModel from "../../models/Note";
-import BookmarkModel from "../../models/Bookmark";
-import { isElectron } from "react-device-detect";
 declare var window: any;
-
-let configArr = [
-  "notes.json",
-  "books.json",
-  "bookmarks.json",
-  "readerConfig.json",
-  "noteTags.json",
-  "themeColors.json",
-  "bookSortCode.json",
-  "noteSortCode.json",
-  "readingTime.json",
-  "recentBooks.json",
-  "pluginList.json",
-  "favoriteBooks.json",
-  "favoriteBooks.json",
-  "shelfList.json",
-  "recordLocation.json",
-];
-export function getParamsFromUrl() {
-  var hashParams: any = {};
-  var e,
-    r = /([^&;=]+)=?([^&;]*)/g,
-    q =
-      window.location.hash.substring(2) ||
-      window.location.search.substring(1).split("#")[0];
-
-  while ((e = r.exec(q))) {
-    hashParams[e[1]] = decodeURIComponent(e[2]);
-  }
-  return hashParams;
-}
-
-export const moveData = (
-  blob,
-  driveIndex,
-  books: BookModel[] = [],
-  handleFinish: () => void = () => {}
-) => {
-  let file = new File([blob], "config.zip", {
-    lastModified: new Date().getTime(),
-    type: blob.type,
-  });
-  const fs = window.require("fs");
-  const path = window.require("path");
-  const AdmZip = window.require("adm-zip");
-
-  const { ipcRenderer } = window.require("electron");
-  const dirPath = ipcRenderer.sendSync("user-data", "ping");
-  const dataPath = localStorage.getItem("storageLocation")
-    ? localStorage.getItem("storageLocation")
-    : window
-        .require("electron")
-        .ipcRenderer.sendSync("storage-location", "ping");
-  var reader = new FileReader();
-  reader.readAsArrayBuffer(file);
-  reader.onload = async (event) => {
-    if (!event.target) return;
-    if (!fs.existsSync(path.join(dirPath))) {
-      fs.mkdirSync(path.join(dirPath));
-    }
-    fs.writeFileSync(
-      path.join(dirPath, file.name),
-      Buffer.from(event.target.result as any)
-    );
-    var zip = new AdmZip(path.join(dirPath, file.name));
-    zip.extractAllTo(/*target path*/ dataPath, /*overwrite*/ true);
-    const fs_extra = window.require("fs-extra");
-    fs_extra.copy(
-      path.join(dirPath, file.name),
-      path.join(dataPath, file.name),
-      function (err) {
-        if (err) return;
-      }
-    );
-    if (driveIndex === 4) {
-      let deleteBooks = books.map((item) => {
-        return window.localforage.removeItem(item.key);
-      });
-      await Promise.all(deleteBooks);
-    }
-    if (driveIndex === 5) {
-      handleFinish();
-    }
-  };
-};
-
 export const changePath = (oldPath: string, newPath: string) => {
   return new Promise<number>((resolve, reject) => {
     const fs = window.require("fs-extra");
@@ -160,54 +69,97 @@ export const syncData = (blob: Blob, books: BookModel[] = [], isSync: true) => {
   });
 };
 
-export const zipBook = (zip: any, books: BookModel[]) => {
-  return new Promise<boolean>(async (resolve, reject) => {
-    let bookZip = zip.folder("book");
-    let data: any = [];
-    books &&
-      books.forEach((item) => {
-        data.push(
-          !isElectron
-            ? window.localforage.getItem(item.key)
-            : BookUtil.fetchBook(item.key, false, item.path)
-        );
-      });
-    try {
-      let results = await Promise.all(data);
-      for (let i = 0; i < books.length; i++) {
-        results[i] && bookZip.file(`${books[i].key}`, results[i]);
-      }
-      resolve(true);
-    } catch (error) {
-      resolve(false);
+export const zipFilesToBlob = (buffers: ArrayBuffer[], names: string[]) => {
+  var zip = new window.JSZip();
+  for (let index = 0; index < buffers.length; index++) {
+    zip.file(names[index], buffers[index]);
+  }
+  return zip.generateAsync({ type: "blob" });
+};
+
+export const base64ToArrayBufferAndExtension = (base64: string) => {
+  let mimeMatch = base64.match(/^data:(image\/\w+);base64,/);
+  if (!mimeMatch) {
+    let fileType = base64ToFileType(base64);
+    if (!fileType) {
+      throw new Error("Invalid base64 string");
     }
-  });
-};
+    mimeMatch = ["", `image/${fileType}`];
+  }
+  const mime = mimeMatch[1];
 
-export const unzipConfig = (zipEntries: any) => {
-  return new Promise<boolean>((resolve, reject) => {
-    zipEntries.forEach(function (zipEntry) {
-      let text = zipEntry.getData().toString("utf8");
-      if (configArr.indexOf(zipEntry.name) > -1 && text) {
-        if (
-          zipEntry.name === "notes.json" ||
-          zipEntry.name === "books.json" ||
-          zipEntry.name === "bookmarks.json"
-        ) {
-          window.localforage.setItem(
-            zipEntry.name.split(".")[0],
-            JSON.parse(text)
-          );
-        } else {
-          localStorage.setItem(zipEntry.name.split(".")[0], text);
-        }
-      }
-    });
-    resolve(true);
-  });
-};
+  const extension = mime.split("/")[1];
 
-const toArrayBuffer = (buf) => {
+  const base64Data = base64.replace(/^data:.*;base64,/, "");
+
+  const binaryString = atob(base64Data);
+  const len = binaryString.length;
+  const bytes = new Uint8Array(len);
+  for (let i = 0; i < len; i++) {
+    bytes[i] = binaryString.charCodeAt(i);
+  }
+
+  const arrayBuffer = bytes.buffer;
+
+  return {
+    arrayBuffer,
+    extension,
+  };
+};
+function base64ToFileType(base64: string) {
+  // Decode base64 string to binary string
+  base64 = base64.replace(/^data:.*;base64,/, "");
+  const binaryString = window.atob(base64);
+  const len = binaryString.length;
+  const bytes = new Uint8Array(len);
+
+  for (let i = 0; i < len; i++) {
+    bytes[i] = binaryString.charCodeAt(i);
+  }
+
+  // Determine file type based on magic numbers
+  const header = bytes.subarray(0, 4);
+  let fileType = "unknown";
+  const signatures: { [key: string]: string } = {
+    "89504e47": "png",
+    ffd8ffe0: "jpg",
+    ffd8ffe1: "jpg",
+    ffd8ffdb: "jpg",
+    ffd8ffe2: "jpg",
+    "47494638": "gif",
+    "424d": "bmp",
+    "49492a00": "tiff",
+    "4d4d002a": "tiff",
+    "52494646": "webp", // 'RIFF' followed by 'WEBP'
+    "377abcaf271c": "webp", // WebP extended signature
+    "3c3f786d6c": "svg",
+    "00000100": "ico",
+  };
+
+  const headerHex = Array.from(header)
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
+
+  if (signatures[headerHex]) {
+    fileType = signatures[headerHex];
+  }
+
+  return fileType;
+}
+export function getParamsFromUrl() {
+  var hashParams: any = {};
+  var e,
+    r = /([^&;=]+)=?([^&;]*)/g,
+    q =
+      window.location.hash.substring(2) ||
+      window.location.search.substring(1).split("#")[0];
+
+  while ((e = r.exec(q))) {
+    hashParams[e[1]] = decodeURIComponent(e[2]);
+  }
+  return hashParams;
+}
+export const toArrayBuffer = (buf) => {
   const ab = new ArrayBuffer(buf.length);
   const view = new Uint8Array(ab);
   for (let i = 0; i < buf.length; ++i) {
@@ -215,75 +167,58 @@ const toArrayBuffer = (buf) => {
   }
   return ab;
 };
-export const unzipBook = (zipEntries: any) => {
-  return new Promise<boolean>((resolve, reject) => {
-    window.localforage.getItem("books").then((value: any) => {
-      let count = 0;
-      value &&
-        value.length > 0 &&
-        value.forEach((item: any) => {
-          zipEntries.forEach(async (zipEntry) => {
-            if (zipEntry.name === item.key) {
-              await BookUtil.addBook(
-                item.key,
-                toArrayBuffer(zipEntry.getData())
-              );
-              count++;
-              if (count === value.length) {
-                resolve(true);
-              }
-            }
-          });
-        });
-    });
-  });
-};
-export const zipConfig = (
-  zip: any,
+export const upgradeStorage = async (
+  dataPath: string,
   books: BookModel[],
-  notes: NoteModel[],
-  bookmarks: BookmarkModel[]
+  toast: any
 ) => {
-  return new Promise<boolean>((resolve, reject) => {
-    try {
-      let configZip = zip.folder("config");
-      configZip
-        .file("notes.json", JSON.stringify(notes))
-        .file("books.json", JSON.stringify(books))
-        .file("bookmarks.json", JSON.stringify(bookmarks))
-        .file("readerConfig.json", localStorage.getItem("readerConfig") || "")
-        .file("themeColors.json", localStorage.getItem("themeColors") || "")
-        .file(
-          "bookSortCode.json",
-          localStorage.getItem("bookSortCode") ||
-            JSON.stringify({ sort: 1, order: 2 })
-        )
-        .file(
-          "noteSortCode.json",
-          localStorage.getItem("noteSortCode") ||
-            JSON.stringify({ sort: 2, order: 2 })
-        )
-        .file("readingTime.json", localStorage.getItem("readingTime") || "")
-        .file("recentBooks.json", localStorage.getItem("recentBooks") || [])
-        .file("pluginList.json", localStorage.getItem("pluginList") || [])
-        .file("deletedBooks.json", localStorage.getItem("deletedBooks") || [])
-        .file("favoriteBooks.json", localStorage.getItem("favoriteBooks") || [])
-        .file("shelfList.json", localStorage.getItem("shelfList") || [])
-        .file("noteTags.json", localStorage.getItem("noteTags") || [])
-        .file(
-          "recordLocation.json",
-          localStorage.getItem("recordLocation") || ""
-        );
-      resolve(true);
-    } catch (error) {
-      resolve(false);
+  //check if folder named cover exsits
+  const fs = window.require("fs");
+  const path = window.require("path");
+  if (fs.existsSync(path.join(dataPath, "cover"))) {
+    console.log("upgraded");
+    return;
+  }
+  toast("Upgrading data");
+
+  fs.mkdirSync(path.join(dataPath, "cover"));
+  books.forEach((item) => {
+    let cover = item.cover;
+    if (cover) {
+      let result = base64ToArrayBufferAndExtension(cover);
+      fs.writeFileSync(
+        path.join(dataPath, "cover", `${item.key}.${result.extension}`),
+        Buffer.from(result.arrayBuffer)
+      );
+      item.cover = "";
     }
   });
-};
-export const zipFilesToBlob = (buffers: ArrayBuffer[], names: string[]) => {
-  var zip = new window.JSZip();
-  for (let index = 0; index < buffers.length; index++) {
-    zip.file(names[index], buffers[index]);
+  await window.localforage.setItem("books", books);
+  //check if folder named book exsits, and loop each file and change file extension
+  if (!fs.existsSync(path.join(dataPath, "book"))) {
+    return;
   }
-  return zip.generateAsync({ type: "blob" });
+  const files = fs.readdirSync(path.join(dataPath, "book"));
+  console.log(files);
+  for (let i = 0; i < files.length; i++) {
+    let fileName = files[i];
+    let book = books.find((item) => item.key === fileName);
+    if (book) {
+      let newFileName = `${book.key}.${book.format.toLowerCase()}`;
+      fs.renameSync(
+        path.join(dataPath, "book", fileName),
+        path.join(dataPath, "book", newFileName)
+      );
+    }
+  }
+
+  let plugins =
+    localStorage.getItem("pluginList") !== "{}" &&
+    localStorage.getItem("pluginList")
+      ? JSON.parse(localStorage.getItem("pluginList") || "")
+      : [];
+  plugins.length > 0 && (await window.localforage.setItem("plugins", plugins));
+  localStorage.deleteItem("pluginList");
+
+  toast.success("Upgrade successful");
 };

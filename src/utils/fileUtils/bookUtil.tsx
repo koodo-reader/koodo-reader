@@ -6,10 +6,11 @@ import toast from "react-hot-toast";
 import { copyArrayBuffer } from "../commonUtil";
 import iconv from "iconv-lite";
 import { Buffer } from "buffer";
+import { base64ToArrayBufferAndExtension } from "../syncUtils/common";
 declare var window: any;
 
 class BookUtil {
-  static addBook(key: string, buffer: ArrayBuffer) {
+  static addBook(key: string, foramt: string, buffer: ArrayBuffer) {
     if (isElectron) {
       const fs = window.require("fs");
       const path = window.require("path");
@@ -18,34 +19,22 @@ class BookUtil {
         : window
             .require("electron")
             .ipcRenderer.sendSync("storage-location", "ping");
-      return new Promise<void>((resolve, reject) => {
-        var reader = new FileReader();
-        reader.readAsArrayBuffer(new Blob([buffer]));
-        reader.onload = async (event) => {
-          if (!event.target) return;
-          try {
-            if (!fs.existsSync(path.join(dataPath, "book"))) {
-              fs.mkdirSync(path.join(dataPath, "book"));
-            }
-            fs.writeFileSync(
-              path.join(dataPath, "book", key),
-              Buffer.from(event.target.result as any)
-            );
-            resolve();
-          } catch (error) {
-            reject();
-            throw error;
-          }
-        };
-        reader.onerror = () => {
-          reject();
-        };
-      });
+      try {
+        if (!fs.existsSync(path.join(dataPath, "book"))) {
+          fs.mkdirSync(path.join(dataPath, "book"));
+        }
+        fs.writeFileSync(
+          path.join(dataPath, "book", key + "." + foramt),
+          Buffer.from(buffer)
+        );
+      } catch (error) {
+        throw error;
+      }
     } else {
       return window.localforage.setItem(key, buffer);
     }
   }
-  static deleteBook(key: string) {
+  static deleteBook(key: string, format: string) {
     if (isElectron) {
       const fs_extra = window.require("fs-extra");
       const path = window.require("path");
@@ -56,10 +45,13 @@ class BookUtil {
             .ipcRenderer.sendSync("storage-location", "ping");
       return new Promise<void>((resolve, reject) => {
         try {
-          fs_extra.remove(path.join(dataPath, `book`, key), (err) => {
-            if (err) throw err;
-            resolve();
-          });
+          fs_extra.remove(
+            path.join(dataPath, `book`, key + "." + format),
+            (err) => {
+              if (err) throw err;
+              resolve();
+            }
+          );
         } catch (e) {
           reject();
         }
@@ -68,7 +60,7 @@ class BookUtil {
       return window.localforage.removeItem(key);
     }
   }
-  static isBookExist(key: string, bookPath: string = "") {
+  static isBookExist(key: string, format: string, bookPath: string) {
     return new Promise<boolean>((resolve, reject) => {
       if (isElectron) {
         var fs = window.require("fs");
@@ -80,7 +72,7 @@ class BookUtil {
                 .require("electron")
                 .ipcRenderer.sendSync("storage-location", "ping"),
           `book`,
-          key
+          key + "." + format
         );
 
         if (key.startsWith("cache")) {
@@ -104,10 +96,58 @@ class BookUtil {
       }
     });
   }
+  static getCover(book: BookModel) {
+    if (isElectron) {
+      var fs = window.require("fs");
+      var path = window.require("path");
+      let directoryPath = path.join(
+        localStorage.getItem("storageLocation")
+          ? localStorage.getItem("storageLocation")
+          : window
+              .require("electron")
+              .ipcRenderer.sendSync("storage-location", "ping"),
+        "cover"
+      );
+      const files = fs.readdirSync(directoryPath);
+      const imageFiles = files.filter((file) => file.startsWith(book.key));
+      if (imageFiles.length === 0) {
+        return book.cover;
+      }
+      let format = imageFiles[0].split(".")[1];
+      const imageFilePath = path.join(directoryPath, imageFiles[0]);
+      let buffer = fs.readFileSync(imageFilePath);
+      return `data:image/${format};base64,${buffer.toString("base64")}`;
+    } else {
+      return book.cover;
+    }
+  }
+  static isCoverExist(book: BookModel) {
+    if (isElectron) {
+      var fs = window.require("fs");
+      var path = window.require("path");
+      let directoryPath = path.join(
+        localStorage.getItem("storageLocation")
+          ? localStorage.getItem("storageLocation")
+          : window
+              .require("electron")
+              .ipcRenderer.sendSync("storage-location", "ping"),
+        "cover"
+      );
+      if (!fs.existsSync(directoryPath)) {
+        return false;
+      }
+      const files = fs.readdirSync(directoryPath);
+      const imageFiles = files.filter((file) => file.startsWith(book.key));
+      return imageFiles.length > 0;
+    } else {
+      return book.cover !== "";
+    }
+  }
   static fetchBook(
     key: string,
+    format: string,
     isArrayBuffer: boolean = false,
-    bookPath: string = ""
+    bookPath: string
   ) {
     if (isElectron) {
       return new Promise<File | ArrayBuffer | boolean>((resolve, reject) => {
@@ -120,7 +160,7 @@ class BookUtil {
                 .require("electron")
                 .ipcRenderer.sendSync("storage-location", "ping"),
           `book`,
-          key
+          key + "." + format
         );
         var data;
         if (fs.existsSync(_bookPath)) {
@@ -148,7 +188,12 @@ class BookUtil {
   }
   static FetchAllBooks(Books: BookModel[]) {
     return Books.map((item) => {
-      return this.fetchBook(item.key, true, item.path);
+      return this.fetchBook(
+        item.key,
+        item.format.toLowerCase(),
+        true,
+        item.path
+      );
     });
   }
   static async RedirectBook(
@@ -156,7 +201,9 @@ class BookUtil {
     t: (string) => string,
     history: any
   ) {
-    if (!(await this.isBookExist(book.key, book.path))) {
+    if (
+      !(await this.isBookExist(book.key, book.format.toLowerCase(), book.path))
+    ) {
       toast.error(t("Book not exist"));
       return;
     }
@@ -256,6 +303,29 @@ class BookUtil {
     }
     return rendition;
   };
+  static addCover(book: BookModel) {
+    if (isElectron) {
+      var fs = window.require("fs");
+      var path = window.require("path");
+      let directoryPath = path.join(
+        localStorage.getItem("storageLocation")
+          ? localStorage.getItem("storageLocation")
+          : window
+              .require("electron")
+              .ipcRenderer.sendSync("storage-location", "ping"),
+        "cover"
+      );
+      if (!fs.existsSync(directoryPath)) {
+        fs.mkdirSync(directoryPath);
+      }
+      const result = base64ToArrayBufferAndExtension(book.cover);
+      fs.writeFileSync(
+        path.join(directoryPath, `${book.key}.${result.extension}`),
+        Buffer.from(result.arrayBuffer)
+      );
+      book.cover = "";
+    }
+  }
   static generateBook(
     bookName: string,
     extension: string,
@@ -329,7 +399,7 @@ class BookUtil {
         ) {
           let cache = await rendition.preCache(file_content);
           if (cache !== "err") {
-            BookUtil.addBook("cache-" + key, cache);
+            BookUtil.addBook("cache-" + key, "zip", cache);
           }
         }
         resolve(

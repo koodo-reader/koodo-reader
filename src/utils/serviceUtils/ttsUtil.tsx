@@ -1,6 +1,6 @@
 import { Howl } from "howler";
 import PluginList from "../readUtils/pluginList";
-import Plugin from "../../models/Plugin";
+import PluginModel from "../../models/Plugin";
 
 class TTSUtil {
   static player: any;
@@ -28,9 +28,10 @@ class TTSUtil {
   static async cacheAudio(
     nodeList: string[],
     voiceIndex: number,
-    speed: number = 0
+    speed: number,
+    plugins: PluginModel[]
   ) {
-    let voiceList = PluginList.getAllVoices();
+    let voiceList = PluginList.getAllVoices(plugins);
     if (voiceIndex >= voiceList.length) {
       voiceIndex = 0;
     }
@@ -38,7 +39,10 @@ class TTSUtil {
     if (!voice || !voice.plugin) {
       return;
     }
-    let plugin: Plugin = PluginList.getPluginById(voice.plugin);
+    let plugin = plugins.find((item) => item.identifier === voice.plugin);
+    if (!plugin) {
+      return;
+    }
     for (let index = 0; index < nodeList.length; index++) {
       const nodeText = nodeList[index];
       let audioPath = await window
@@ -75,8 +79,8 @@ class TTSUtil {
   static getPlayer() {
     return this.player;
   }
-  static getVoiceList() {
-    let voices = PluginList.getAllVoices();
+  static getVoiceList(plugins: PluginModel[]) {
+    let voices = PluginList.getAllVoices(plugins);
     return [...voices, { name: "Add new voice", url: "", type: "" }];
   }
 }
