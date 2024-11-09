@@ -287,6 +287,7 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
 
                         let result = await BookUtil.fetchBook(
                           selectedBook.key,
+                          selectedBook.format.toLowerCase(),
                           true,
                           selectedBook.path
                         );
@@ -301,7 +302,11 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
                         );
                         let cache = await rendition.preCache(result);
                         if (cache !== "err") {
-                          BookUtil.addBook("cache-" + selectedBook.key, cache);
+                          BookUtil.addBook(
+                            "cache-" + selectedBook.key,
+                            "zip",
+                            cache
+                          );
                           toast.success(this.props.t("Pre-caching successful"));
                         } else {
                           toast.error(this.props.t("Pre-caching failed"));
@@ -327,7 +332,10 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
                     }
                     for (let index = 0; index < selectedBooks.length; index++) {
                       const selectedBook = selectedBooks[index];
-                      await BookUtil.deleteBook("cache-" + selectedBook.key);
+                      await BookUtil.deleteBook(
+                        "cache-" + selectedBook.key,
+                        "zip"
+                      );
                       toast.success(this.props.t("Deletion successful"));
                     }
                   }}

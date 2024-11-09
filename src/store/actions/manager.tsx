@@ -1,11 +1,15 @@
 import StorageUtil from "../../utils/serviceUtils/storageUtil";
 import SortUtil from "../../utils/readUtils/sortUtil";
 import BookModel from "../../models/Book";
+import PluginModel from "../../models/Plugin";
 import { Dispatch } from "redux";
 import AddTrash from "../../utils/readUtils/addTrash";
 declare var window: any;
 export function handleBooks(books: BookModel[]) {
   return { type: "HANDLE_BOOKS", payload: books };
+}
+export function handlePlugins(plugins: PluginModel[]) {
+  return { type: "HANDLE_PLUGINS", payload: plugins };
 }
 export function handleDeletedBooks(deletedBooks: BookModel[]) {
   return { type: "HANDLE_DELETED_BOOKS", payload: deletedBooks };
@@ -83,6 +87,21 @@ export function handleFetchBooks() {
       let keyArr = AddTrash.getAllTrash();
       dispatch(handleDeletedBooks(handleKeyFilter(bookArr, keyArr)));
       dispatch(handleBooks(handleKeyRemove(bookArr, keyArr)));
+    });
+  };
+}
+
+export function handleFetchPlugins() {
+  return (dispatch: Dispatch) => {
+    window.localforage.getItem("plugins", (err, value) => {
+      if (!value) {
+        value =
+          localStorage.getItem("pluginList") !== "{}" &&
+          localStorage.getItem("pluginList")
+            ? JSON.parse(localStorage.getItem("pluginList") || "")
+            : [];
+      }
+      dispatch(handlePlugins(value));
     });
   };
 }

@@ -89,19 +89,22 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
   handleAddBook = (book: BookModel, buffer: ArrayBuffer) => {
     return new Promise<void>((resolve, reject) => {
       if (this.state.isOpenFile) {
-        StorageUtil.getReaderConfig("isImportPath") !== "yes" &&
-          StorageUtil.getReaderConfig("isPreventAdd") !== "yes" &&
-          BookUtil.addBook(book.key, buffer);
+        if (
+          StorageUtil.getReaderConfig("isImportPath") !== "yes" &&
+          StorageUtil.getReaderConfig("isPreventAdd") !== "yes"
+        ) {
+          BookUtil.addBook(book.key, book.format.toLowerCase(), buffer);
+        }
         if (StorageUtil.getReaderConfig("isPreventAdd") === "yes") {
           this.handleJump(book);
-
           this.setState({ isOpenFile: false });
-
           return resolve();
         }
       } else {
         StorageUtil.getReaderConfig("isImportPath") !== "yes" &&
-          BookUtil.addBook(book.key, buffer);
+          BookUtil.addBook(book.key, book.format.toLowerCase(), buffer);
+
+        BookUtil.addCover(book);
       }
 
       let bookArr = [...(this.props.books || []), ...this.props.deletedBooks];

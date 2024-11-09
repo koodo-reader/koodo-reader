@@ -2,7 +2,7 @@ import React from "react";
 import "./popupDict.css";
 import { PopupDictProps, PopupDictState } from "./interface";
 import PluginList from "../../../utils/readUtils/pluginList";
-import Plugin from "../../../models/Plugin";
+import PluginModel from "../../../models/Plugin";
 import StorageUtil from "../../../utils/serviceUtils/storageUtil";
 import Parser from "html-react-parser";
 import * as DOMPurify from "dompurify";
@@ -29,7 +29,7 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
   componentDidMount() {
     this.handleLookUp();
   }
-  handleLookUp() {
+  async handleLookUp() {
     let originalText = this.props.originalText
       .replace(/(\r\n|\n|\r)/gm, "")
       .replace(/-/gm, "");
@@ -44,7 +44,7 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
     }
     if (
       !this.state.dictService ||
-      PluginList.getAllPlugins().findIndex(
+      this.props.plugins.findIndex(
         (item) => item.identifier === this.state.dictService
       ) === -1
     ) {
@@ -64,7 +64,10 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
   };
   handleDict = async (text: string) => {
     try {
-      let plugin = PluginList.getPluginById(this.state.dictService);
+      let plugin = this.props.plugins.find(
+        (item) => item.identifier === this.state.dictService
+      );
+      if (!plugin) return;
       let dictFunc = plugin.script;
       // eslint-disable-next-line no-eval
       eval(dictFunc);
@@ -136,7 +139,7 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
                 this.handleChangeDictService(event.target.value);
               }}
             >
-              {PluginList.getAllPlugins()
+              {this.props.plugins
                 .filter((item) => item.type === "dictionary")
                 .map((item, index) => {
                   return (
@@ -183,10 +186,13 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
                 );
               }}
             >
-              {PluginList.getPluginById(this.state.dictService).langList &&
+              {this.props.plugins.find(
+                (item) => item.identifier === this.state.dictService
+              )?.langList &&
                 (
-                  PluginList.getPluginById(this.state.dictService)
-                    .langList as any[]
+                  this.props.plugins.find(
+                    (item) => item.identifier === this.state.dictService
+                  )?.langList as any[]
                 ).map((item, index) => {
                   return (
                     <option
@@ -255,25 +261,27 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
                 <div
                   className="trans-add-confirm"
                   style={{ backgroundColor: "#2084e8" }}
-                  onClick={() => {
+                  onClick={async () => {
                     let value: string = (
                       document.querySelector(
                         "#trans-add-content-box"
                       ) as HTMLTextAreaElement
                     ).value;
                     if (value) {
-                      let plugin: Plugin = JSON.parse(value);
+                      let plugin: PluginModel = JSON.parse(value);
 
-                      let isSuccess = PluginList.addPlugin(plugin);
+                      let isSuccess = await PluginList.addPlugin(plugin);
                       if (!isSuccess) {
                         toast.error(this.props.t("Plugin verification failed"));
                         return;
                       }
-                      this.setState({ dictService: plugin.identifier });
+                      this.props.handleFetchPlugins();
                       toast.success(this.props.t("Addition successful"));
-                      this.handleChangeDictService(plugin.identifier);
                     }
-                    this.setState({ isAddNew: false });
+                    this.setState({
+                      isAddNew: false,
+                      dictText: this.props.t("Please select the service"),
+                    });
                   }}
                 >
                   <Trans>Confirm</Trans>

@@ -126,9 +126,20 @@ export const getQueryParams = (url: string) => {
   }
   return queryParams;
 };
-export const getStrSHA256 = (str: string) => {
-  const crypto = window.require("crypto");
-  const hash = crypto.createHash("sha256");
-  hash.update(str);
-  return hash.digest("hex");
-};
+export async function generateSHA256Hash(message) {
+  // Encode the message as a Uint8Array
+  const msgBuffer = new TextEncoder().encode(message);
+
+  // Hash the message
+  const hashBuffer = await crypto.subtle.digest("SHA-256", msgBuffer);
+
+  // Convert the hash to a byte array
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+
+  // Convert the byte array to a hex string
+  const hashHex = hashArray
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
+
+  return hashHex;
+}

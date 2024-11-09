@@ -25,6 +25,7 @@ export interface ManagerProps extends RouteComponentProps<any> {
   isOpenFeedbackDialog: boolean;
   dragItem: string;
   handleFetchBooks: () => void;
+  handleFetchPlugins: () => void;
   handleFetchNotes: () => void;
   handleFetchBookmarks: () => void;
   handleFetchBookSortCode: () => void;

@@ -90,16 +90,18 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
     BookUtil.RedirectBook(this.props.book, this.props.t, this.props.history);
   };
   handleExportBook() {
-    BookUtil.fetchBook(this.props.book.key, true, this.props.book.path).then(
-      (result: any) => {
-        toast.success(this.props.t("Export successful"));
-        window.saveAs(
-          new Blob([result]),
-          this.props.book.name +
-            `.${this.props.book.format.toLocaleLowerCase()}`
-        );
-      }
-    );
+    BookUtil.fetchBook(
+      this.props.book.key,
+      this.props.book.format.toLowerCase(),
+      true,
+      this.props.book.path
+    ).then((result: any) => {
+      toast.success(this.props.t("Export successful"));
+      window.saveAs(
+        new Blob([result]),
+        this.props.book.name + `.${this.props.book.format.toLocaleLowerCase()}`
+      );
+    });
   }
   handleMoreAction = (event: any) => {
     event.preventDefault();
@@ -144,8 +146,7 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
             this.handleMoreAction(event);
           }}
         >
-          {!this.props.book.cover ||
-          this.props.book.cover === "noCover" ||
+          {!BookUtil.isCoverExist(this.props.book) ||
           (this.props.book.format === "PDF" &&
             StorageUtil.getReaderConfig("isDisablePDFCover") === "yes") ? (
             <div
@@ -185,7 +186,7 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
               }}
             >
               <img
-                data-src={this.props.book.cover}
+                data-src={BookUtil.getCover(this.props.book)}
                 alt=""
                 className="lazy-image book-item-image"
                 style={{ width: "100%" }}

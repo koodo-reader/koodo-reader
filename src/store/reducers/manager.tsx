@@ -1,5 +1,6 @@
 const initState = {
   books: null,
+  plugins: null,
   deletedBooks: [],
   searchResults: [],
   isSearch: false,
@@ -31,6 +32,11 @@ export function manager(
       return {
         ...state,
         books: action.payload,
+      };
+    case "HANDLE_PLUGINS":
+      return {
+        ...state,
+        plugins: action.payload,
       };
     case "HANDLE_DELETED_BOOKS":
       return {

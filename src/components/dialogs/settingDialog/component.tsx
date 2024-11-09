@@ -32,7 +32,7 @@ class SettingDialog extends React.Component<
     super(props);
     this.state = {
       currentTab: "general",
-      pluginList: PluginList.getAllPlugins(),
+      pluginList: this.props.plugins,
       isTouch: StorageUtil.getReaderConfig("isTouch") === "yes",
       isImportPath: StorageUtil.getReaderConfig("isImportPath") === "yes",
       isMergeWord: StorageUtil.getReaderConfig("isMergeWord") === "yes",
@@ -133,7 +133,7 @@ class SettingDialog extends React.Component<
 
     var data = fs.readFileSync(outPath);
 
-    let blobTemp = new Blob([data], { type: "application/epub+zip" });
+    let blobTemp = new Blob([data], { type: "application/zip" });
     let fileTemp = new File([blobTemp], "config.zip", {
       lastModified: new Date().getTime(),
       type: blobTemp.type,
@@ -634,11 +634,12 @@ class SettingDialog extends React.Component<
 
                       <span
                         className="change-location-button"
-                        onClick={() => {
-                          PluginList.deletePluginById(item.identifier);
+                        onClick={async () => {
+                          await PluginList.deletePluginById(item.identifier);
                           this.setState({
-                            pluginList: PluginList.getAllPlugins(),
+                            pluginList: await PluginList.getAllPlugins(),
                           });
+                          this.props.handleFetchPlugins();
                           toast.success(this.props.t("Deletion successful"));
                         }}
                       >

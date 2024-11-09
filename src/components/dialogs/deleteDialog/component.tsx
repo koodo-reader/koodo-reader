@@ -1,7 +1,5 @@
 import React from "react";
 import "./deleteDialog.css";
-import DeleteUtil from "../../../utils/readUtils/deleteUtil";
-
 import ShelfUtil from "../../../utils/readUtils/shelfUtil";
 import RecordRecent from "../../../utils/readUtils/recordRecent";
 import RecordLocation from "../../../utils/readUtils/recordLocation";
@@ -33,7 +31,9 @@ class DeleteDialog extends React.Component<
   handleDeleteOther = (key: string) => {
     return new Promise<void>(async (resolve, reject) => {
       if (this.props.bookmarks) {
-        let bookmarkArr = DeleteUtil.deleteBookmarks(this.props.bookmarks, key);
+        let bookmarkArr = this.props.bookmarks.filter(
+          (item) => item.bookKey !== key
+        );
         if (bookmarkArr.length === 0) {
           await window.localforage.removeItem("bookmarks");
         } else {
@@ -42,7 +42,7 @@ class DeleteDialog extends React.Component<
         this.props.handleFetchBookmarks();
       }
       if (this.props.notes) {
-        let noteArr = DeleteUtil.deleteNotes(this.props.notes, key);
+        let noteArr = this.props.notes.filter((item) => item.bookKey !== key);
         if (noteArr.length === 0) {
           await window.localforage.removeItem("notes");
           resolve();
@@ -86,7 +86,12 @@ class DeleteDialog extends React.Component<
   deleteAllBookInTrash = async () => {
     let keyArr = AddTrash.getAllTrash();
     for (let i = 0; i < keyArr.length; i++) {
-      await this.deleteBook(keyArr[i]);
+      await this.deleteBook(
+        keyArr[i],
+        this.props.books
+          .find((item) => item.key === keyArr[i])
+          ?.format.toLowerCase() || "epub"
+      );
     }
 
     if (this.props.books.length === 0) {
@@ -118,14 +123,17 @@ class DeleteDialog extends React.Component<
     AddFavorite.clear(this.props.currentBook.key);
     this.props.handleFetchBooks();
   };
-  deleteBook = (key: string) => {
+  deleteBook = (key: string, format: string) => {
     return new Promise<void>((resolve, reject) => {
       this.props.books &&
         window.localforage
-          .setItem("books", DeleteUtil.deleteBook(this.props.books, key))
+          .setItem(
+            "books",
+            this.props.books.filter((item) => item.key !== key)
+          )
           .then(async () => {
-            await BookUtil.deleteBook(key);
-            await BookUtil.deleteBook("cache-" + key);
+            await BookUtil.deleteBook(key, format);
+            await BookUtil.deleteBook("cache-" + key, "zip");
             AddFavorite.clear(key);
             AddTrash.clear(key);
             ShelfUtil.deletefromAllShelf(key);
@@ -134,8 +142,9 @@ class DeleteDialog extends React.Component<
             await this.handleDeleteOther(key);
             resolve();
           })
-          .catch(() => {
-            reject();
+          .catch((err) => {
+            console.log(err);
+            reject(err);
           });
     });
   };

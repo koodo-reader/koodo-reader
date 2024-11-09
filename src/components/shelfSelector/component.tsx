@@ -65,12 +65,7 @@ class ShelfSelector extends React.Component<
     if (isElectron) {
       window.localforage.getItem(this.props.books[0].key).then((result) => {
         if (result) {
-          backup(
-            this.props.books,
-            this.props.notes,
-            this.props.bookmarks,
-            false
-          );
+          backup(false);
         }
       });
     }
