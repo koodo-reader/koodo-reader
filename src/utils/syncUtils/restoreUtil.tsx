@@ -123,7 +123,6 @@ export const unzipCover = async (zipEntries: any) => {
     fs.mkdirSync(path.join(dataPath, "cover"));
   }
   let flag = true;
-  console.log(1);
   for (let i = 0; i < zipEntries.length; i++) {
     if (
       zipEntries[i].entryName.startsWith("cover/") &&
@@ -134,7 +133,6 @@ export const unzipCover = async (zipEntries: any) => {
         flag = false;
         break;
       }
-      console.log(zipEntries[i], buffer);
       fs.writeFileSync(
         path.join(dataPath, "cover", zipEntries[i].name),
         buffer

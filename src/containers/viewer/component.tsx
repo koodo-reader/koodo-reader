@@ -209,10 +209,10 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       await rendition.goToPosition(
         JSON.stringify({
           text: bookLocation.text || "",
-          chapterTitle: bookLocation.chapterTitle || chapterDocs[0].label,
+          chapterTitle: bookLocation.chapterTitle || "",
           page: bookLocation.page || "",
           chapterDocIndex: bookLocation.chapterDocIndex || 0,
-          chapterHref: bookLocation.chapterHref || chapterDocs[0].href,
+          chapterHref: bookLocation.chapterHref || "",
           count: bookLocation.hasOwnProperty("cfi")
             ? "ignore"
             : bookLocation.count || 0,
