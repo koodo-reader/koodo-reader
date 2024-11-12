@@ -282,7 +282,6 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         >
           <span className="icon-grid panel-icon"></span>
         </div>
-
         <div
           className="setting-panel-container"
           onMouseLeave={(event) => {

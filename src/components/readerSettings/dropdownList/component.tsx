@@ -101,6 +101,15 @@ class DropdownList extends React.Component<
           <select
             name=""
             className="general-setting-dropdown"
+            value={
+              item.value === "lineHeight"
+                ? this.state.currentLineHeightIndex
+                : item.value === "textAlign"
+                ? this.state.currentTextAlignIndex
+                : item.value === "convertChinese"
+                ? this.state.chineseConversionIndex
+                : this.state.currentFontFamilyIndex
+            }
             onChange={(event) => {
               this.handleView(event, item.value);
             }}
@@ -110,16 +119,6 @@ class DropdownList extends React.Component<
                 value={[subItem, index.toString()]}
                 key={index}
                 className="general-setting-option"
-                selected={
-                  index ===
-                  (item.value === "lineHeight"
-                    ? this.state.currentLineHeightIndex
-                    : item.value === "textAlign"
-                    ? this.state.currentTextAlignIndex
-                    : item.value === "convertChinese"
-                    ? this.state.chineseConversionIndex
-                    : this.state.currentFontFamilyIndex)
-                }
               >
                 {this.props.t(subItem)}
               </option>
@@ -128,13 +127,13 @@ class DropdownList extends React.Component<
         </li>
       ));
     };
-
+  
     return (
       <ul className="paragraph-character-setting">
         {renderParagraphCharacter()}
       </ul>
     );
-  }
+  }  
 }
 
 export default DropdownList;

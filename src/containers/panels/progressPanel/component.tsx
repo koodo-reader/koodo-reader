@@ -22,9 +22,9 @@ class ProgressPanel extends React.Component<
         StorageUtil.getReaderConfig("readerMode") !== "double",
     };
   }
+
   async UNSAFE_componentWillReceiveProps(nextProps: ProgressPanelProps) {
     if (nextProps.htmlBook !== this.props.htmlBook && nextProps.htmlBook) {
-      await this.handlePageNum(nextProps.htmlBook.rendition);
       nextProps.htmlBook.rendition.on("page-changed", async () => {
         await this.handlePageNum(nextProps.htmlBook.rendition);
         this.handleCurrentChapterIndex(nextProps.htmlBook.rendition);
@@ -36,6 +36,7 @@ class ProgressPanel extends React.Component<
       this.handleCurrentChapterIndex(nextProps.htmlBook.rendition);
     }
   }
+
   handleCurrentChapterIndex = (rendition) => {
     let position = rendition.getPosition();
 
@@ -43,13 +44,16 @@ class ProgressPanel extends React.Component<
     if (!href) {
       return;
     }
+
     let chapterIndex = window._.findIndex(this.props.htmlBook.flattenChapters, {
       href,
     });
     this.setState({ targetChapterIndex: chapterIndex + 1 });
   };
+
   async handlePageNum(rendition) {
     let pageInfo = await rendition.getProgress();
+
     this.setState({
       currentPage: this.state.isSingle
         ? pageInfo.currentPage
@@ -59,24 +63,29 @@ class ProgressPanel extends React.Component<
         : (pageInfo.totalPage - 1) * 2,
     });
   }
+
   onProgressChange = async (event: any) => {
     const percentage = event.target.value / 100;
     await this.props.htmlBook.rendition.goToPercentage(percentage);
   };
+
   nextChapter = async () => {
     if (this.props.htmlBook.flattenChapters.length > 0) {
       await this.props.htmlBook.rendition.nextChapter();
     }
   };
+
   prevChapter = async () => {
     if (this.props.htmlBook.flattenChapters.length > 0) {
       await this.props.htmlBook.rendition.prevChapter();
     }
   };
+
   handleJumpChapter = async (event: any) => {
     let targetChapterIndex = parseInt(event.target.value.trim()) - 1;
     await this.props.htmlBook.rendition.goToChapterIndex(targetChapterIndex);
   };
+
   render() {
     if (!this.props.htmlBook) {
       return <div className="progress-panel">Loading</div>;
@@ -109,12 +118,11 @@ class ProgressPanel extends React.Component<
             }}
             onChange={(event) => {
               let fieldVal = event.target.value;
+
               this.setState({ targetPage: fieldVal });
             }}
-            //TODO
             onBlur={(event) => {
               if (event.target.value.trim()) {
-                // this.handleJumpChapter(event);
                 this.setState({ targetPage: "" });
               } else {
                 this.setState({ targetPage: "" });
@@ -191,6 +199,7 @@ class ProgressPanel extends React.Component<
               this.onProgressChange(event);
             }}
             onTouchEnd={(event) => {
+  
               this.onProgressChange(event);
             }}
             style={{ width: "80%" }}
