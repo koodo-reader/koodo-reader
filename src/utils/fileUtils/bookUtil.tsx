@@ -143,6 +143,27 @@ class BookUtil {
       return book.cover !== "";
     }
   }
+  static deleteCover(key: string) {
+    if (isElectron) {
+      var fs = window.require("fs");
+      var path = window.require("path");
+      let directoryPath = path.join(
+        localStorage.getItem("storageLocation")
+          ? localStorage.getItem("storageLocation")
+          : window
+              .require("electron")
+              .ipcRenderer.sendSync("storage-location", "ping"),
+        "cover"
+      );
+      const files = fs.readdirSync(directoryPath);
+      const imageFiles = files.filter((file) => file.startsWith(key));
+      if (imageFiles.length === 0) {
+        return;
+      }
+      const imageFilePath = path.join(directoryPath, imageFiles[0]);
+      fs.unlinkSync(imageFilePath);
+    }
+  }
   static fetchBook(
     key: string,
     format: string,

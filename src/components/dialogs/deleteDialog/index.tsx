@@ -23,6 +23,7 @@ const mapStateToProps = (state: stateType) => {
     bookmarks: state.reader.bookmarks,
     notes: state.reader.notes,
     digests: state.reader.digests,
+    deletedBooks: state.manager.deletedBooks,
     mode: state.sidebar.mode,
     shelfIndex: state.sidebar.shelfIndex,
   };

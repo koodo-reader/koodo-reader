@@ -1,64 +1,81 @@
 import { restore } from "./restoreUtil";
 import StorageUtil from "../serviceUtils/storageUtil";
-declare var window: any;
+import { driveConfig } from "../../constants/driveList";
+import axios from "axios";
 
 class DropboxUtil {
   static UploadFile(blob: any) {
-    return new Promise<boolean>((resolve, reject) => {
-      var ACCESS_TOKEN = StorageUtil.getReaderConfig("dropbox_token") || "";
-      var dbx = new window.Dropbox.Dropbox({ accessToken: ACCESS_TOKEN });
-      const file = new File([blob], "data.zip");
-      let date = new Date().getTime();
-      dbx
-        .filesUpload({
-          path: `/${date}/data.zip`,
-          contents: file,
-        })
-        .then(function (response: any) {
-          console.log(response, "上传成功");
-          resolve(true);
-        })
-        .catch(function (error: any) {
-          console.log(error, "上传失败");
-          resolve(false);
+    return new Promise<boolean>(async (resolve, reject) => {
+      try {
+        const fileName = "data.zip";
+        var refresh_token = StorageUtil.getReaderConfig("dropbox_token") || "";
+        let res = await axios.post(driveConfig.dropboxRefreshUrl, {
+          refresh_token,
         });
+        let file = new File([blob], fileName, {
+          lastModified: new Date().getTime(),
+          type: blob.type,
+        });
+        const accessToken = res.data.access_token;
+        const response = await axios.post(
+          "https://content.dropboxapi.com/2/files/upload",
+          file,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+              "Content-Type": "application/octet-stream",
+              "Dropbox-API-Arg": JSON.stringify({
+                path: "/" + fileName,
+                mode: "overwrite",
+                autorename: true,
+                mute: false,
+              }),
+            },
+          }
+        );
+
+        if (response.status === 200) {
+          resolve(true);
+        } else {
+          reject(new Error("File upload failed"));
+        }
+      } catch (error) {
+        reject(error);
+      }
     });
   }
   static DownloadFile() {
-    return new Promise<boolean>((resolve, reject) => {
-      var ACCESS_TOKEN = StorageUtil.getReaderConfig("dropbox_token") || "";
-      var dbx = new window.Dropbox.Dropbox({ accessToken: ACCESS_TOKEN });
-      dbx
-        .filesListFolder({ path: "" })
-        .then(function (response) {
-          let folderArr: string[] = [];
-          response.result.entries.forEach((item) => {
-            if (!isNaN(parseInt(item.name))) folderArr.push(item.name);
-          });
-          let folder = folderArr.sort().reverse()[0];
-          dbx
-            .filesDownload({
-              path: `/${folder}/data.zip`,
-            })
-            .then(async (data: any) => {
-              let file = data.result.fileBlob;
-              file.lastModifiedDate = new Date();
-              file.name = "data.zip";
-              let result = await restore(file);
-              if (result) {
-                resolve(true);
-              } else {
-                resolve(false);
-              }
-            })
-            .catch(function (error: any) {
-              console.log(error);
-              resolve(false);
-            });
-        })
-        .catch(function (error) {
-          console.log(error);
+    return new Promise<boolean>(async (resolve, reject) => {
+      try {
+        const fileName = "data.zip";
+        var refresh_token = StorageUtil.getReaderConfig("dropbox_token") || "";
+        let res = await axios.post(driveConfig.dropboxRefreshUrl, {
+          refresh_token,
         });
+        const accessToken = res.data.access_token;
+        const response = await axios({
+          url: "https://content.dropboxapi.com/2/files/download",
+          method: "post",
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Dropbox-API-Arg": JSON.stringify({
+              path: "/" + fileName,
+            }),
+          },
+          responseType: "blob", // This is important for downloading files
+        });
+        let file = response.data;
+        file.lastModifiedDate = new Date();
+        file.name = fileName;
+        let result = await restore(file);
+        if (result) {
+          resolve(true);
+        } else {
+          resolve(false);
+        }
+      } catch (error) {
+        console.error("Error downloading file from Dropbox:", error);
+      }
     });
   }
 }

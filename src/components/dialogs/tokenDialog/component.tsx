@@ -16,11 +16,19 @@ class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
   handleCancel = () => {
     this.props.handleTokenDialog(false);
   };
-  handleDropboxComfirm = () => {
-    let token: string = (
+  handleDropboxComfirm = async () => {
+    let code: string = (
       document.querySelector("#token-dialog-token-box") as HTMLTextAreaElement
     ).value;
-    StorageUtil.setReaderConfig(`${this.props.driveName}_token`, token);
+    let res = await axios.post(driveConfig.dropboxAuthUrl, {
+      code,
+      redirect_uri: driveConfig.callbackUrl,
+    });
+    console.log(res);
+    StorageUtil.setReaderConfig(
+      `${this.props.driveName}_token`,
+      res.data.refresh_token
+    );
     this.props.handleTokenDialog(false);
     toast.success(this.props.t("Addition successful"));
   };

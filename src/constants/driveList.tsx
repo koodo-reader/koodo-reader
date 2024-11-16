@@ -3,6 +3,9 @@ export const driveConfig = {
     process.env.NODE_ENV === "production"
       ? "https://web.koodoreader.com"
       : "http://localhost:3000",
+  dropboxAuthUrl: "https://cloud.960960.xyz/api/v1/third_auth/dropbox_auth",
+  dropboxRefreshUrl:
+    "https://cloud.960960.xyz/api/v1/third_auth/dropbox_refresh",
   onedriveAuthUrl: "https://cloud.960960.xyz/api/v1/third_auth/onedrive_auth",
   onedriveRefreshUrl:
     "https://cloud.960960.xyz/api/v1/third_auth/onedrive_refresh",
@@ -25,7 +28,7 @@ export const driveList = [
     id: 2,
     name: "Dropbox",
     icon: "dropbox",
-    url: `https://www.dropbox.com/oauth2/authorize?response_type=token&client_id=${driveConfig.dropboxClientId}&redirect_uri=${driveConfig.callbackUrl}`,
+    url: `https://www.dropbox.com/oauth2/authorize?response_type=code&token_access_type=offline&client_id=${driveConfig.dropboxClientId}&redirect_uri=${driveConfig.callbackUrl}`,
   },
   {
     id: 3,
