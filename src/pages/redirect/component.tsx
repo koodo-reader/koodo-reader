@@ -48,7 +48,7 @@ class Redirect extends React.Component<RedirectProps, RedirectState> {
       let params: any = getParamsFromUrl();
       let state = params.state;
       if (state) {
-        const [uuid, encodedState] = state.split("|");
+        const encodedState = state.split("|")[1];
         const customParams = JSON.parse(decodeURIComponent(encodedState));
         if (customParams && customParams.deeplink) {
           window.location.replace(
