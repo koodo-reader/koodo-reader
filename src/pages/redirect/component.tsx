@@ -52,7 +52,7 @@ class Redirect extends React.Component<RedirectProps, RedirectState> {
         const customParams = JSON.parse(decodeURIComponent(encodedState));
         if (customParams && customParams.deeplink) {
           window.location.replace(
-            customParams.deeplink + "?code=" + params.code
+            customParams.deeplink + "?code=" + params.code + "&state=" + state
           );
         }
       }
