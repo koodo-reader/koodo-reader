@@ -43,19 +43,22 @@ class Redirect extends React.Component<RedirectProps, RedirectState> {
     }
     if (url.indexOf("error") > -1) {
       this.setState({ isError: true });
-      return false;
     }
     if (url.indexOf("code") > -1) {
       let params: any = getParamsFromUrl();
+      let state = params.state;
+      if (state) {
+        const [uuid, encodedState] = state.split("|");
+        const customParams = JSON.parse(decodeURIComponent(encodedState));
+        if (customParams && customParams.deeplink) {
+          window.location.replace(
+            customParams.deeplink + "?code=" + params.code
+          );
+        }
+      }
+
       this.setState({ token: params.code });
       this.setState({ isAuthed: true });
-      return false;
-    }
-    if (url.indexOf("access_token") > -1) {
-      let params: any = getParamsFromUrl();
-      this.setState({ token: params.access_token });
-      this.setState({ isAuthed: true });
-      return false;
     }
   }
 

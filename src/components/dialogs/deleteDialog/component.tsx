@@ -86,12 +86,10 @@ class DeleteDialog extends React.Component<
   deleteAllBookInTrash = async () => {
     let keyArr = AddTrash.getAllTrash();
     for (let i = 0; i < keyArr.length; i++) {
-      await this.deleteBook(
-        keyArr[i],
-        this.props.books
-          .find((item) => item.key === keyArr[i])
-          ?.format.toLowerCase() || "epub"
-      );
+      let format = this.props.deletedBooks
+        .find((item) => item.key === keyArr[i])
+        ?.format.toLowerCase();
+      await this.deleteBook(keyArr[i], format || "epub");
     }
 
     if (this.props.books.length === 0) {
@@ -133,6 +131,7 @@ class DeleteDialog extends React.Component<
           )
           .then(async () => {
             await BookUtil.deleteBook(key, format);
+            BookUtil.deleteCover(key);
             await BookUtil.deleteBook("cache-" + key, "zip");
             AddFavorite.clear(key);
             AddTrash.clear(key);
