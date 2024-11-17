@@ -6,6 +6,7 @@ import { getParamsFromUrl } from "../../utils/syncUtils/common";
 import copy from "copy-text-to-clipboard";
 import { withRouter } from "react-router-dom";
 import Lottie from "react-lottie";
+
 import animationSuccess from "../../assets/lotties/success.json";
 import toast, { Toaster } from "react-hot-toast";
 import StorageUtil from "../../utils/serviceUtils/storageUtil";
@@ -46,6 +47,8 @@ class Redirect extends React.Component<RedirectProps, RedirectState> {
     }
     if (url.indexOf("code") > -1) {
       let params: any = getParamsFromUrl();
+      this.setState({ token: params.code });
+      this.setState({ isAuthed: true });
       let state = params.state;
       if (state) {
         const encodedState = state.split("|")[1];
@@ -56,9 +59,6 @@ class Redirect extends React.Component<RedirectProps, RedirectState> {
           );
         }
       }
-
-      this.setState({ token: params.code });
-      this.setState({ isAuthed: true });
     }
   }
 
