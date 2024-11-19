@@ -1,7 +1,7 @@
 @font-face {
   font-family: 'icomoon';
-  src:  url('fonts/icomoon.eot?5we8z8');
-  src:  url('fonts/icomoon.eot?5we8z8#iefix') format('embedded-opentype'),
+  src: url('fonts/icomoon.eot?5we8z8');
+  src: url('fonts/icomoon.eot?5we8z8#iefix') format('embedded-opentype'),
     url('fonts/icomoon.ttf?5we8z8') format('truetype'),
     url('fonts/icomoon.woff?5we8z8') format('woff'),
     url('fonts/icomoon.svg?5we8z8#icomoon') format('svg');
@@ -10,7 +10,8 @@
   font-display: block;
 }
 
-[class^="icon-"], [class*=" icon-"] {
+[class^="icon-"],
+[class*=" icon-"] {
   /* use !important to prevent issues with browser extensions that change fonts */
   font-family: 'icomoon' !important;
   speak: never;
@@ -28,273 +29,361 @@
 .icon-s3compatible:before {
   content: "\e958";
 }
+
 .icon-feedback:before {
   content: "\e957";
 }
+
 .icon-sftp:before {
   content: "\e956";
 }
+
 .icon-ftp:before {
   content: "\e954";
 }
+
 .icon-smb:before {
   content: "\e955";
 }
+
 .icon-yandex:before {
   content: "\e953";
 }
+
 .icon-deepl:before {
   content: "\e952";
 }
+
 .icon-archive:before {
   content: "\e951";
 }
+
 .icon-browser:before {
   content: "\e950";
 }
+
 .icon-internet:before {
   content: "\e94f";
 }
+
 .icon-dict:before {
   content: "\e94e";
 }
+
 .icon-bookshelf-line:before {
   content: "\e94b";
 }
+
 .icon-highlight-line:before {
   content: "\e94c";
 }
+
 .icon-select:before {
   content: "\e94d";
 }
+
 .icon-trash-line:before {
   content: "\e943";
 }
+
 .icon-detail:before {
   content: "\e944";
 }
+
 .icon-bookshelf:before {
   content: "\e945";
 }
+
 .icon-edit-line:before {
   content: "\e946";
 }
+
 .icon-address-book:before {
   content: "\e947";
 }
+
 .icon-idea-line:before {
   content: "\e948";
 }
+
 .icon-heart:before {
   content: "\e949";
 }
+
 .icon-home-line:before {
   content: "\e94a";
 }
+
 .icon-day:before {
   content: "\e936";
 }
+
 .icon-eye:before {
   content: "\e941";
 }
+
 .icon-night:before {
   content: "\e942";
 }
+
 .icon-highlight:before {
   content: "\e935";
 }
+
 .icon-check:before {
   content: "\e922";
 }
+
 .icon-share:before {
   content: "\e91c";
 }
+
 .icon-google:before {
   content: "\e928";
 }
+
 .icon-speaker:before {
   content: "\e929";
 }
+
 .icon-search-book:before {
   content: "\e92f";
 }
+
 .icon-bing:before {
   content: "\e930";
 }
+
 .icon-baidu:before {
   content: "\e931";
 }
+
 .icon-digest:before {
   content: "\e927";
 }
+
 .icon-sort-desc:before {
   content: "\e917";
 }
+
 .icon-sync:before {
   content: "\e918";
 }
+
 .icon-folder:before {
   content: "\e920";
 }
+
 .icon-menu:before {
   content: "\e924";
 }
+
 .icon-minus:before {
   content: "\e915";
 }
+
 .icon-cover:before {
   content: "\e914";
 }
+
 .icon-lock:before {
   content: "\e912";
 }
+
 .icon-unlock:before {
   content: "\e913";
 }
+
 .icon-export:before {
   content: "\e911";
 }
+
 .icon-zoom-in:before {
   content: "\e908";
 }
+
 .icon-save:before {
   content: "\e909";
 }
+
 .icon-zoom-out:before {
   content: "\e90a";
 }
+
 .icon-clockwise:before {
   content: "\e90c";
 }
+
 .icon-counterclockwise:before {
   content: "\e90e";
 }
+
 .icon-scroll1:before {
   content: "\e905";
 }
+
 .icon-setting:before {
   content: "\e904";
 }
+
 .icon-audio:before {
   content: "\e903";
 }
+
 .icon-scroll:before {
   content: "\e902";
 }
+
 .icon-love:before {
   content: "\e901";
 }
+
 .icon-trash:before {
   content: "\e906";
 }
+
 .icon-edit:before {
   content: "\e907";
 }
+
 .icon-translation:before {
   content: "\e900";
 }
+
 .icon-english:before {
   content: "\e92d";
 }
+
 .icon-simplified:before {
   content: "\e92e";
   color: #565656;
 }
+
 .icon-traditional:before {
   content: "\e932";
   color: #565656;
 }
+
 .icon-local:before {
   content: "\e92a";
 }
+
 .icon-backup:before {
   content: "\e92b";
 }
+
 .icon-restore:before {
   content: "\e92c";
 }
+
 .icon-two-page:before {
   content: "\e925";
 }
+
 .icon-single-page:before {
   content: "\e926";
 }
+
 .icon-message:before {
   content: "\e923";
 }
+
 .icon-close:before {
   content: "\e921";
 }
+
 .icon-home:before {
   content: "\e90b";
 }
+
 .icon-popup:before {
   content: "\e91f";
 }
+
 .icon-note:before {
   content: "\e91a";
 }
+
 .icon-collect:before {
   content: "\e91b";
 }
+
 .icon-copy:before {
   content: "\e91d";
 }
+
 .icon-success:before {
   content: "\e91e";
 }
+
 .icon-add:before {
   content: "\e90d";
 }
+
 .icon-onedrive:before {
   content: "\e90f";
   color: #4b4b4b;
 }
+
 .icon-dropbox:before {
   content: "\e910";
   color: #4b4b4b;
 }
+
 .icon-webdav:before {
   content: "\e916";
   color: #4b4b4b;
 }
+
 .icon-exit:before {
   content: "\e919";
 }
+
 .icon-fullscreen:before {
   content: "\e933";
 }
+
 .icon-googledrive:before {
   content: "\e934";
   color: #4b4b4b;
 }
+
 .icon-list:before {
   content: "\e937";
 }
+
 .icon-more:before {
   content: "\e938";
 }
+
 .icon-bookmark:before {
   content: "\e939";
 }
+
 .icon-shelf:before {
   content: "\e93a";
 }
+
 .icon-idea:before {
   content: "\e93b";
 }
+
 .icon-recent:before {
   content: "\e93c";
 }
+
 .icon-sort:before {
   content: "\e93d";
 }
+
 .icon-search:before {
   content: "\e93e";
 }
+
 .icon-grid:before {
   content: "\e93f";
 }
+
 .icon-dropdown:before {
   content: "\e940";
 }

@@ -11,6 +11,7 @@ import TTSUtil from "../../utils/serviceUtils/ttsUtil";
 import "./textToSpeech.css";
 import PluginList from "../../utils/readUtils/pluginList";
 import { openExternalUrl } from "../../utils/serviceUtils/urlUtil";
+import { highlightWordsDirectly } from "../../utils/readUtils/handleSpeak";
 
 class TextToSpeech extends React.Component<
   TextToSpeechProps,
@@ -58,6 +59,8 @@ class TextToSpeech extends React.Component<
     };
     this.nativeVoices = await setSpeech();
   }
+
+
   handleChangeAudio = () => {
     this.setState({ isAddNew: false });
     if (this.state.isAudioOn) {
@@ -146,7 +149,7 @@ class TextToSpeech extends React.Component<
       if (
         this.nodeList[index] ===
         this.props.htmlBook.rendition.visibleText()[
-          this.props.htmlBook.rendition.visibleText().length - 1
+        this.props.htmlBook.rendition.visibleText().length - 1
         ]
       ) {
         await this.props.htmlBook.rendition.next();
@@ -174,10 +177,87 @@ class TextToSpeech extends React.Component<
       await this.handleAudio();
     }
   }
+
+  // async handleSystemRead(index) {
+  //   let currentText = this.nodeList[index];
+  //   let style = "background: #f3a6a68c";
+  //   this.props.htmlBook.rendition.highlightNode(currentText, style);
+
+  //   let res = await this.handleSystemSpeech(
+  //     index,
+  //     parseInt(StorageUtil.getReaderConfig("voiceIndex")) || 0,
+  //     parseFloat(StorageUtil.getReaderConfig("voiceSpeed")) || 1
+  //   );
+
+  //   if (res === "start") {
+  //     index++;
+  //     if (
+  //       this.nodeList[index] ===
+  //       this.props.htmlBook.rendition.visibleText()[
+  //         this.props.htmlBook.rendition.visibleText().length - 1
+  //       ]
+  //     ) {
+  //       await this.props.htmlBook.rendition.next();
+  //     }
+  //     if (
+  //       this.state.isAudioOn &&
+  //       this.props.isReading &&
+  //       index === this.nodeList.length
+  //     ) {
+  //       let position = this.props.htmlBook.rendition.getPosition();
+  //       RecordLocation.recordHtmlLocation(
+  //         this.props.currentBook.key,
+  //         position.text,
+  //         position.chapterTitle,
+  //         position.chapterDocIndex,
+  //         position.chapterHref,
+  //         position.count,
+  //         position.percentage,
+  //         position.cfi,
+  //         position.page
+  //       );
+  //       this.nodeList = [];
+  //       await this.handleAudio();
+  //       return;
+  //     }
+  //     await this.handleSystemRead(index);
+  //   } else if (res === "end") {
+  //     return;
+  //   }
+  // }
+
   async handleSystemRead(index) {
-    let currentText = this.nodeList[index];
-    let style = "background: #f3a6a68c";
-    this.props.htmlBook.rendition.highlightNode(currentText, style);
+    let currentText = this.nodeList[index]; // Texte actuel
+    //let style = "background: #f3a6a68c";
+    //this.props.htmlBook.rendition.highlightNode(currentText, style);
+
+    let e = document.getElementById("page-area");
+    if (e) {
+      let iframe = e.getElementsByTagName("iframe")[0];
+      let iframeDocument = iframe.contentDocument;
+
+      if (iframeDocument) {
+        // 1. Rechercher l'élément HTML contenant `currentText`
+        let elements = iframeDocument.body.querySelectorAll("*"); // Parcourir tous les éléments
+        let matchingElement: HTMLElement | null = null;
+
+        elements.forEach((element) => {
+          if (element.textContent?.includes(currentText)) {
+            matchingElement = element as HTMLElement;
+          }
+        });
+
+        // 2. Si un élément correspondant est trouvé, appeler underlinesWords
+        if (matchingElement) {
+          console.log("Element trouvé :", matchingElement);
+
+          // Appeler la méthode underlinesWords
+          highlightWordsDirectly(currentText, matchingElement, "#FFD700"); // Couleur dorée pour le surlignage
+        } else {
+          console.warn("Aucun élément correspondant trouvé pour le texte :", currentText);
+        }
+      }
+    }
 
     let res = await this.handleSystemSpeech(
       index,
@@ -185,12 +265,13 @@ class TextToSpeech extends React.Component<
       parseFloat(StorageUtil.getReaderConfig("voiceSpeed")) || 1
     );
 
+    // Logique de lecture suivante
     if (res === "start") {
       index++;
       if (
         this.nodeList[index] ===
         this.props.htmlBook.rendition.visibleText()[
-          this.props.htmlBook.rendition.visibleText().length - 1
+        this.props.htmlBook.rendition.visibleText().length - 1
         ]
       ) {
         await this.props.htmlBook.rendition.next();
@@ -244,6 +325,7 @@ class TextToSpeech extends React.Component<
   ) => {
     return new Promise<string>(async (resolve, reject) => {
       var msg = new SpeechSynthesisUtterance();
+      msg.lang = "fr-FR";
       msg.text = this.nodeList[index]
         .replace(/\s\s/g, "")
         .replace(/\r/g, "")
@@ -291,13 +373,13 @@ class TextToSpeech extends React.Component<
                   style={
                     this.state.isAudioOn
                       ? {
-                          transform: "translateX(20px)",
-                          transition: "transform 0.5s ease",
-                        }
+                        transform: "translateX(20px)",
+                        transition: "transform 0.5s ease",
+                      }
                       : {
-                          transform: "translateX(0px)",
-                          transition: "transform 0.5s ease",
-                        }
+                        transform: "translateX(0px)",
+                        transition: "transform 0.5s ease",
+                      }
                   }
                 ></span>
               </span>
@@ -312,79 +394,43 @@ class TextToSpeech extends React.Component<
                   fontWeight: 500,
                 }}
               >
-                <Trans>Voice</Trans>
-                <select
-                  name=""
-                  className="lang-setting-dropdown"
-                  id="text-speech-voice"
-                  onChange={(event) => {
-                    if (event.target.value === this.voices.length - 1 + "") {
-                      window.speechSynthesis && window.speechSynthesis.cancel();
-                      TTSUtil.pauseAudio();
-                      this.setState({ isAddNew: true, isAudioOn: false });
-                    } else {
-                      StorageUtil.setReaderConfig(
-                        "voiceIndex",
-                        event.target.value
-                      );
-                      toast(this.props.t("Take effect at next startup"));
-                    }
-                  }}
-                >
-                  {this.voices.map((item, index: number) => {
-                    return (
-                      <option
-                        value={index}
-                        key={item.name}
-                        className="lang-setting-option"
-                        selected={
-                          index ===
-                          parseInt(
-                            StorageUtil.getReaderConfig("voiceIndex") || "0"
-                          )
-                        }
-                      >
-                        {this.props.t(item.displayName || item.name)}
-                      </option>
-                    );
-                  })}
-                </select>
+
               </div>
             )}
-            {this.state.isAudioOn && !this.state.isAddNew && (
-              <div
-                className="setting-dialog-new-title"
-                style={{ marginLeft: "20px", width: "88%", fontWeight: 500 }}
+
+            <div
+              className="setting-dialog-new-title"
+              style={{ marginLeft: "20px", width: "88%", fontWeight: 500 }}
+            >
+              <Trans>Speed</Trans>
+              <select
+                name=""
+                id="text-speech-speed"
+                className="lang-setting-dropdown"
+                onChange={(event) => {
+                  StorageUtil.setReaderConfig(
+                    "voiceSpeed",
+                    event.target.value
+                  );
+                  toast(this.props.t("Take effect at next startup"));
+                }}
               >
-                <Trans>Speed</Trans>
-                <select
-                  name=""
-                  id="text-speech-speed"
-                  className="lang-setting-dropdown"
-                  onChange={(event) => {
-                    StorageUtil.setReaderConfig(
-                      "voiceSpeed",
-                      event.target.value
-                    );
-                    toast(this.props.t("Take effect at next startup"));
-                  }}
-                >
-                  {speedList.option.map((item) => (
-                    <option
-                      value={item}
-                      className="lang-setting-option"
-                      key={item}
-                      selected={
-                        item ===
-                        (StorageUtil.getReaderConfig("voiceSpeed") || "1")
-                      }
-                    >
-                      {item}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            )}
+                {speedList.option.map((item) => (
+                  <option
+                    value={item}
+                    className="lang-setting-option"
+                    key={item}
+                    selected={
+                      item ===
+                      (StorageUtil.getReaderConfig("voiceSpeed") || "1")
+                    }
+                  >
+                    {item}
+                  </option>
+                ))}
+              </select>
+            </div>
+
             {this.state.isAddNew && (
               <div
                 className="voice-add-new-container"
