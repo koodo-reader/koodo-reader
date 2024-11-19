@@ -89,6 +89,18 @@ class SettingPanel extends React.Component<
 
           <SliderList
             {...{
+              maxValue: 20,
+              minValue: 0,
+              mode: "wordSpacing",
+              minLabel: "0",
+              maxLabel: "20",
+              step: 1,
+              title: "Word spacing",
+            }}
+          />
+
+          <SliderList
+            {...{
               maxValue: 60,
               minValue: 0,
               mode: "paraSpacing",

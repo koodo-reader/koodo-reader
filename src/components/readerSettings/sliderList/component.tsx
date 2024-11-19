@@ -15,14 +15,16 @@ class SliderList extends React.Component<SliderListProps, SliderListState> {
         this.props.mode === "fontSize"
           ? StorageUtil.getReaderConfig("fontSize") || "17"
           : this.props.mode === "scale"
-          ? StorageUtil.getReaderConfig("scale") || "1"
-          : this.props.mode === "letterSpacing"
-          ? StorageUtil.getReaderConfig("letterSpacing") || "0"
-          : this.props.mode === "paraSpacing"
-          ? StorageUtil.getReaderConfig("paraSpacing") || "0"
-          : this.props.mode === "brightness"
-          ? StorageUtil.getReaderConfig("brightness") || "1"
-          : StorageUtil.getReaderConfig("margin") || "0",
+            ? StorageUtil.getReaderConfig("scale") || "1"
+            : this.props.mode === "letterSpacing"
+              ? StorageUtil.getReaderConfig("letterSpacing") || "0"
+              : this.props.mode === "wordSpacing"
+                ? StorageUtil.getReaderConfig("wordSpacing") || "0"
+                : this.props.mode === "paraSpacing"
+                  ? StorageUtil.getReaderConfig("paraSpacing") || "0"
+                  : this.props.mode === "brightness"
+                    ? StorageUtil.getReaderConfig("brightness") || "1"
+                    : StorageUtil.getReaderConfig("margin") || "0",
     };
   }
   handleRest = async () => {
@@ -45,7 +47,13 @@ class SliderList extends React.Component<SliderListProps, SliderListState> {
       const letterSpacing = event.target.value;
       this.setState({ value: letterSpacing });
       StorageUtil.setReaderConfig("letterSpacing", letterSpacing);
-    } else if (this.props.mode === "paraSpacing") {
+    }
+    else if (this.props.mode === "wordSpacing") {
+      const wordSpacing = event.target.value;
+      this.setState({ value: wordSpacing });
+      StorageUtil.setReaderConfig("wordSpacing", wordSpacing);
+    }
+    else if (this.props.mode === "paraSpacing") {
       const paraSpacing = event.target.value;
       this.setState({ value: paraSpacing });
       StorageUtil.setReaderConfig("paraSpacing", paraSpacing);
@@ -93,7 +101,7 @@ class SliderList extends React.Component<SliderListProps, SliderListState> {
             type="number"
             step={
               this.props.title === "Page width" ||
-              this.props.title === "Brightness"
+                this.props.title === "Brightness"
                 ? "0.1"
                 : "1"
             }
