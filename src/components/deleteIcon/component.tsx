@@ -4,7 +4,9 @@ import { DeleteIconProps, DeleteIconStates } from "./interface";
 import TagUtil from "../../utils/readUtils/tagUtil";
 import DeletePopup from "../dialogs/deletePopup";
 import toast from "react-hot-toast";
-declare var window: any;
+import NoteService from "../../utils/serviceUtils/noteService";
+import BookmarkService from "../../utils/serviceUtils/bookmarkService";
+
 class DeleteIcon extends React.Component<DeleteIconProps, DeleteIconStates> {
   constructor(props: DeleteIconProps) {
     super(props);
@@ -34,25 +36,39 @@ class DeleteIcon extends React.Component<DeleteIconProps, DeleteIconStates> {
       if (item.key === this.props.itemKey) {
         deleteItems.splice(index, 1);
         if (deleteItems.length === 0) {
-          window.localforage
-            .removeItem(this.props.mode)
-            .then(() => {
-              deleteFunc();
-              toast.success(this.props.t("Deletion successful"));
-            })
-            .catch(() => {
-              console.log("delete failed");
-            });
+          switch (this.props.mode) {
+            case "notes":
+              NoteService.deleteAllNotes().then(() => {
+                deleteFunc();
+                toast.success(this.props.t("Deletion successful"));
+              });
+              break;
+            case "bookmarks":
+              BookmarkService.deleteAllBookmarks().then(() => {
+                deleteFunc();
+                toast.success(this.props.t("Deletion successful"));
+              });
+              break;
+            default:
+              break;
+          }
         } else {
-          window.localforage
-            .setItem(this.props.mode, deleteItems)
-            .then(() => {
-              deleteFunc();
-              toast.success(this.props.t("Deletion successful"));
-            })
-            .catch(() => {
-              console.log("modify failed");
-            });
+          switch (this.props.mode) {
+            case "notes":
+              NoteService.saveAllNotes(deleteItems).then(() => {
+                deleteFunc();
+                toast.success(this.props.t("Deletion successful"));
+              });
+              break;
+            case "bookmarks":
+              BookmarkService.saveAllBookmarks(deleteItems).then(() => {
+                deleteFunc();
+                toast.success(this.props.t("Deletion successful"));
+              });
+              break;
+            default:
+              break;
+          }
         }
       }
     });
@@ -64,7 +80,7 @@ class DeleteIcon extends React.Component<DeleteIconProps, DeleteIconStates> {
         tag: item.tag.filter((subitem) => subitem !== tagName),
       };
     });
-    window.localforage.setItem("notes", noteList).then(() => {
+    NoteService.saveAllNotes(noteList).then(() => {
       this.props.handleFetchNotes();
     });
   };

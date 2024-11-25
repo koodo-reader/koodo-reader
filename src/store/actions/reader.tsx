@@ -2,7 +2,9 @@ import NoteModel from "../../models/Note";
 import BookmarkModel from "../../models/Bookmark";
 import HtmlBookModel from "../../models/HtmlBook";
 import AddTrash from "../../utils/readUtils/addTrash";
-declare var window: any;
+import NoteService from "../../utils/serviceUtils/noteService";
+import BookmarkService from "../../utils/serviceUtils/bookmarkService";
+
 export function handleNotes(notes: NoteModel[]) {
   return { type: "HANDLE_NOTES", payload: notes };
 }
@@ -35,7 +37,7 @@ export function handleNoteKey(key: string) {
 }
 export function handleFetchNotes() {
   return (dispatch: (arg0: { type: string; payload: NoteModel[] }) => void) => {
-    window.localforage.getItem("notes", (err, value) => {
+    NoteService.getAllNotes().then((value) => {
       let noteArr: any;
       if (value === null) {
         noteArr = [];
@@ -62,7 +64,7 @@ export function handleFetchBookmarks() {
   return (
     dispatch: (arg0: { type: string; payload: BookmarkModel[] }) => void
   ) => {
-    window.localforage.getItem("bookmarks", (err, value) => {
+    BookmarkService.getAllBookmarks().then((value) => {
       let bookmarkArr: any;
       if (value === null) {
         bookmarkArr = [];

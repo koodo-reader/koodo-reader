@@ -11,7 +11,10 @@ import AddTrash from "../../../utils/readUtils/addTrash";
 import BookUtil from "../../../utils/fileUtils/bookUtil";
 import toast from "react-hot-toast";
 import StorageUtil from "../../../utils/serviceUtils/storageUtil";
-declare var window: any;
+import NoteService from "../../../utils/serviceUtils/noteService";
+import BookmarkService from "../../../utils/serviceUtils/bookmarkService";
+import BookService from "../../../utils/serviceUtils/bookService";
+
 class DeleteDialog extends React.Component<
   DeleteDialogProps,
   DeleteDialogState
@@ -31,25 +34,11 @@ class DeleteDialog extends React.Component<
   handleDeleteOther = (key: string) => {
     return new Promise<void>(async (resolve, reject) => {
       if (this.props.bookmarks) {
-        let bookmarkArr = this.props.bookmarks.filter(
-          (item) => item.bookKey !== key
-        );
-        if (bookmarkArr.length === 0) {
-          await window.localforage.removeItem("bookmarks");
-        } else {
-          await window.localforage.setItem("bookmarks", bookmarkArr);
-        }
+        await BookmarkService.deleteBookmark(key);
         this.props.handleFetchBookmarks();
       }
       if (this.props.notes) {
-        let noteArr = this.props.notes.filter((item) => item.bookKey !== key);
-        if (noteArr.length === 0) {
-          await window.localforage.removeItem("notes");
-          resolve();
-        } else {
-          await window.localforage.setItem("notes", noteArr);
-          resolve();
-        }
+        NoteService.deleteNote(key);
         this.props.handleFetchNotes();
       }
     });
@@ -123,28 +112,24 @@ class DeleteDialog extends React.Component<
   };
   deleteBook = (key: string, format: string) => {
     return new Promise<void>((resolve, reject) => {
-      this.props.books &&
-        window.localforage
-          .setItem(
-            "books",
-            this.props.books.filter((item) => item.key !== key)
-          )
-          .then(async () => {
-            await BookUtil.deleteBook(key, format);
-            BookUtil.deleteCover(key);
-            await BookUtil.deleteBook("cache-" + key, "zip");
-            AddFavorite.clear(key);
-            AddTrash.clear(key);
-            ShelfUtil.deletefromAllShelf(key);
-            RecordRecent.clear(key);
-            RecordLocation.clear(key);
-            await this.handleDeleteOther(key);
-            resolve();
-          })
-          .catch((err) => {
-            console.log(err);
-            reject(err);
-          });
+      if (!this.props.books) return;
+      BookService.deleteBook(key)
+        .then(async () => {
+          await BookUtil.deleteBook(key, format);
+          BookUtil.deleteCover(key);
+          await BookUtil.deleteBook("cache-" + key, "zip");
+          AddFavorite.clear(key);
+          AddTrash.clear(key);
+          ShelfUtil.deletefromAllShelf(key);
+          RecordRecent.clear(key);
+          RecordLocation.clear(key);
+          await this.handleDeleteOther(key);
+          resolve();
+        })
+        .catch((err) => {
+          console.log(err);
+          reject(err);
+        });
     });
   };
   render() {

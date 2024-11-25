@@ -5,7 +5,7 @@ import StorageUtil from "../../../utils/serviceUtils/storageUtil";
 import axios from "axios";
 import { Trans } from "react-i18next";
 import toast from "react-hot-toast";
-import PluginList from "../../../utils/readUtils/pluginList";
+import PluginService from "../../../utils/serviceUtils/pluginService";
 import Plugin from "../../../models/Plugin";
 import { openExternalUrl } from "../../../utils/serviceUtils/urlUtil";
 declare var window: any;
@@ -170,7 +170,7 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
                     ).value;
                     if (value) {
                       let plugin: Plugin = JSON.parse(value);
-                      let isSuccess = await PluginList.addPlugin(plugin);
+                      let isSuccess = await PluginService.savePlugin(plugin);
                       if (!isSuccess) {
                         toast.error(this.props.t("Plugin verification failed"));
                         return;

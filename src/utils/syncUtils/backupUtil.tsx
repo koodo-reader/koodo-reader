@@ -6,6 +6,11 @@ import BookmarkModel from "../../models/Bookmark";
 import { isElectron } from "react-device-detect";
 import DictHistory from "../../models/DictHistory";
 import { base64ToArrayBufferAndExtension } from "./common";
+import PluginService from "../serviceUtils/pluginService";
+import BookService from "../serviceUtils/bookService";
+import NoteService from "../serviceUtils/noteService";
+import BookmarkService from "../serviceUtils/bookmarkService";
+import WordService from "../serviceUtils/wordService";
 declare var window: any;
 
 const configList = [
@@ -25,16 +30,11 @@ const configList = [
 export const backup = (isSync: boolean) => {
   return new Promise<Blob | boolean>(async (resolve, reject) => {
     let zip = new window.JSZip();
-    let books = (await window.localforage.getItem("books")) || [];
-    let notes = (await window.localforage.getItem("notes")) || [];
-    let bookmarks = (await window.localforage.getItem("bookmarks")) || [];
-    let words = (await window.localforage.getItem("words")) || [];
-    let plugins = (await window.localforage.getItem("plugins"))
-      ? await window.localforage.getItem("plugins")
-      : localStorage.getItem("pluginList") !== "{}" &&
-        localStorage.getItem("pluginList")
-      ? JSON.parse(localStorage.getItem("pluginList") || "")
-      : [];
+    let books = await BookService.getAllBooks();
+    let notes = await NoteService.getAllNotes();
+    let bookmarks = await BookmarkService.getAllBookmarks();
+    let words = await WordService.getAllWords();
+    let plugins = await PluginService.getAllPlugins();
     if (!isSync) {
       zipCover(zip, books);
       await zipBook(zip, books);
@@ -60,14 +60,12 @@ export const zipBook = (zip: any, books: BookModel[]) => {
     books &&
       books.forEach((item) => {
         data.push(
-          !isElectron
-            ? window.localforage.getItem(item.key)
-            : BookUtil.fetchBook(
-                item.key,
-                item.format.toLowerCase(),
-                false,
-                item.path
-              )
+          BookUtil.fetchBook(
+            item.key,
+            item.format.toLowerCase(),
+            false,
+            item.path
+          )
         );
       });
     try {

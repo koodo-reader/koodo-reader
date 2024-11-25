@@ -17,6 +17,7 @@ import {
   handleExitFullScreen,
   handleFullScreen,
 } from "../../../utils/commonUtil";
+import BookmarkService from "../../../utils/serviceUtils/bookmarkService";
 declare var window: any;
 class OperationPanel extends React.Component<
   OperationPanelProps,
@@ -95,7 +96,7 @@ class OperationPanel extends React.Component<
       window.close();
     }
   }
-  handleAddBookmark = () => {
+  handleAddBookmark = async () => {
     let bookKey = this.props.currentBook.key;
     let bookLocation = RecordLocation.getHtmlLocation(bookKey);
     let text = bookLocation.text;
@@ -120,10 +121,8 @@ class OperationPanel extends React.Component<
       percentage,
       chapter
     );
-    let bookmarkArr = this.props.bookmarks;
-    bookmarkArr.push(bookmark);
-    this.props.handleBookmarks(bookmarkArr);
-    window.localforage.setItem("bookmarks", bookmarkArr);
+    await BookmarkService.saveBookmark(bookmark);
+    this.props.handleFetchBookmarks();
     this.setState({ isBookmark: true });
     toast.success(this.props.t("Addition successful"));
     this.props.handleShowBookmark(true);

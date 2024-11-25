@@ -11,7 +11,8 @@ import Viewer from "../../containers/viewer";
 import { Tooltip } from "react-tooltip";
 import RecordLocation from "../../utils/readUtils/recordLocation";
 import "./index.css";
-declare var window: any;
+import Book from "../../models/Book";
+import BookService from "../../utils/serviceUtils/bookService";
 
 let lock = false; //prevent from clicking too fasts
 let throttleTime =
@@ -56,11 +57,11 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
     let lastIndexOfSlash = url.lastIndexOf("/", firstIndexOfQuestion);
     let key = url.substring(lastIndexOfSlash + 1, firstIndexOfQuestion);
     this.props.handleFetchBooks();
-    window.localforage.getItem("books").then((result: any) => {
-      let book =
-        result[window._.findIndex(result, { key })] ||
-        JSON.parse(localStorage.getItem("tempBook") || "{}");
-
+    BookService.getBook(key).then((book: Book | null) => {
+      if (!book) {
+        return;
+      }
+      book = book || JSON.parse(localStorage.getItem("tempBook") || "{}");
       this.props.handleReadingBook(book);
       this.props.handleFetchPercentage(book);
     });

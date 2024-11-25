@@ -9,7 +9,7 @@ import toast from "react-hot-toast";
 import RecordLocation from "../../utils/readUtils/recordLocation";
 import TTSUtil from "../../utils/serviceUtils/ttsUtil";
 import "./textToSpeech.css";
-import PluginList from "../../utils/readUtils/pluginList";
+import PluginService from "../../utils/serviceUtils/pluginService";
 import { openExternalUrl } from "../../utils/serviceUtils/urlUtil";
 
 class TextToSpeech extends React.Component<
@@ -73,7 +73,7 @@ class TextToSpeech extends React.Component<
       }
       if (
         this.voices.length === 0 &&
-        PluginList.getAllVoices(this.props.plugins).length === 0
+        PluginService.getAllVoices(this.props.plugins).length === 0
       ) {
         this.setState({ isAddNew: true });
         return;
@@ -91,7 +91,7 @@ class TextToSpeech extends React.Component<
     let voiceIndex = parseInt(StorageUtil.getReaderConfig("voiceIndex")) || 0;
     if (
       voiceIndex > this.nativeVoices.length - 1 &&
-      PluginList.getAllVoices(this.props.plugins).length > 0
+      PluginService.getAllVoices(this.props.plugins).length > 0
     ) {
       await this.handleRead();
     } else {
@@ -414,7 +414,7 @@ class TextToSpeech extends React.Component<
                     ).value;
                     if (value) {
                       let plugin = JSON.parse(value);
-                      let isSuccess = await PluginList.addPlugin(plugin);
+                      let isSuccess = await PluginService.savePlugin(plugin);
                       if (!isSuccess) {
                         toast.error(this.props.t("Plugin verification failed"));
                         return;

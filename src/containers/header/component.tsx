@@ -11,7 +11,7 @@ import { isElectron } from "react-device-detect";
 import { syncData, upgradeStorage } from "../../utils/syncUtils/common";
 import toast from "react-hot-toast";
 import { Trans } from "react-i18next";
-import { checkStableUpdate } from "../../utils/commonUtil";
+import { checkStableUpdate, getStorageLocation } from "../../utils/commonUtil";
 import packageInfo from "../../../package.json";
 
 class Header extends React.Component<HeaderProps, HeaderState> {
@@ -65,11 +65,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         console.log(error);
       }
       //Check for data update
-      let storageLocation = localStorage.getItem("storageLocation")
-        ? localStorage.getItem("storageLocation")
-        : window
-            .require("electron")
-            .ipcRenderer.sendSync("storage-location", "ping");
+      let storageLocation = getStorageLocation() || "";
       //upgrade data from old version
       await upgradeStorage(storageLocation, this.props.books, toast);
       let sourcePath = path.join(storageLocation, "config", "config.json");
@@ -103,11 +99,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     const fs = window.require("fs");
     const path = window.require("path");
     const { zip } = window.require("zip-a-folder");
-    let storageLocation = localStorage.getItem("storageLocation")
-      ? localStorage.getItem("storageLocation")
-      : window
-          .require("electron")
-          .ipcRenderer.sendSync("storage-location", "ping");
+    let storageLocation = getStorageLocation() || "";
     let sourcePath = path.join(storageLocation, "config");
     let outPath = path.join(storageLocation, "config.zip");
     await zip(sourcePath, outPath);
@@ -123,11 +115,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     if (result) {
       this.setState({ isdataChange: false });
       //Check for data update
-      let storageLocation = localStorage.getItem("storageLocation")
-        ? localStorage.getItem("storageLocation")
-        : window
-            .require("electron")
-            .ipcRenderer.sendSync("storage-location", "ping");
+      let storageLocation = getStorageLocation() || "";
       let sourcePath = path.join(storageLocation, "config", "config.json");
 
       fs.readFile(sourcePath, "utf8", (err, data) => {
@@ -158,11 +146,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     }
     const fs = window.require("fs");
     const path = window.require("path");
-    let storageLocation = localStorage.getItem("storageLocation")
-      ? localStorage.getItem("storageLocation")
-      : window
-          .require("electron")
-          .ipcRenderer.sendSync("storage-location", "ping");
+    let storageLocation = getStorageLocation() || "";
     let sourcePath = path.join(storageLocation, "config", "config.json");
     fs.readFile(sourcePath, "utf8", async (err, data) => {
       if (err || !data) {

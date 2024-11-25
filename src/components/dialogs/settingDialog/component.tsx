@@ -22,7 +22,8 @@ import { themeList } from "../../../constants/themeList";
 import toast from "react-hot-toast";
 import { openExternalUrl } from "../../../utils/serviceUtils/urlUtil";
 import ManagerUtil from "../../../utils/fileUtils/managerUtil";
-import PluginList from "../../../utils/readUtils/pluginList";
+import PluginService from "../../../utils/serviceUtils/pluginService";
+import { getStorageLocation } from "../../../utils/commonUtil";
 declare var window: any;
 class SettingDialog extends React.Component<
   SettingInfoProps,
@@ -62,13 +63,7 @@ class SettingDialog extends React.Component<
       currentThemeIndex: window._.findLastIndex(themeList, {
         name: StorageUtil.getReaderConfig("themeColor"),
       }),
-      storageLocation: isElectron
-        ? localStorage.getItem("storageLocation")
-          ? localStorage.getItem("storageLocation")
-          : window
-              .require("electron")
-              .ipcRenderer.sendSync("storage-location", "ping")
-        : "",
+      storageLocation: getStorageLocation() || "",
     };
   }
   handleRest = (bool: boolean) => {
@@ -122,11 +117,7 @@ class SettingDialog extends React.Component<
     const fs = window.require("fs");
     const path = window.require("path");
     const { zip } = window.require("zip-a-folder");
-    let storageLocation = localStorage.getItem("storageLocation")
-      ? localStorage.getItem("storageLocation")
-      : window
-          .require("electron")
-          .ipcRenderer.sendSync("storage-location", "ping");
+    let storageLocation = getStorageLocation() || "";
     let sourcePath = path.join(storageLocation, "config");
     let outPath = path.join(storageLocation, "config.zip");
     await zip(sourcePath, outPath);
@@ -153,9 +144,7 @@ class SettingDialog extends React.Component<
       return;
     }
     let result = await changePath(
-      localStorage.getItem("storageLocation")
-        ? localStorage.getItem("storageLocation")
-        : ipcRenderer.sendSync("storage-location", "ping"),
+      getStorageLocation() || "",
       path.filePaths[0]
     );
     if (result === 1) {
@@ -635,9 +624,9 @@ class SettingDialog extends React.Component<
                       <span
                         className="change-location-button"
                         onClick={async () => {
-                          await PluginList.deletePluginById(item.identifier);
+                          await PluginService.deletePluginById(item.identifier);
                           this.setState({
-                            pluginList: await PluginList.getAllPlugins(),
+                            pluginList: await PluginService.getAllPlugins(),
                           });
                           this.props.handleFetchPlugins();
                           toast.success(this.props.t("Deletion successful"));

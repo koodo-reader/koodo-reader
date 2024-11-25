@@ -4,7 +4,9 @@ import BookModel from "../../models/Book";
 import PluginModel from "../../models/Plugin";
 import { Dispatch } from "redux";
 import AddTrash from "../../utils/readUtils/addTrash";
-declare var window: any;
+import PluginService from "../../utils/serviceUtils/pluginService";
+import BookService from "../../utils/serviceUtils/bookService";
+
 export function handleBooks(books: BookModel[]) {
   return { type: "HANDLE_BOOKS", payload: books };
 }
@@ -82,7 +84,7 @@ export function handleNoteSortCode(noteSortCode: {
 
 export function handleFetchBooks() {
   return (dispatch: Dispatch) => {
-    window.localforage.getItem("books", (err, value) => {
+    BookService.getAllBooks().then((value) => {
       let bookArr: any = value;
       let keyArr = AddTrash.getAllTrash();
       dispatch(handleDeletedBooks(handleKeyFilter(bookArr, keyArr)));
@@ -92,8 +94,8 @@ export function handleFetchBooks() {
 }
 
 export function handleFetchPlugins() {
-  return (dispatch: Dispatch) => {
-    window.localforage.getItem("plugins", (err, value) => {
+  return async (dispatch: Dispatch) => {
+    PluginService.getAllPlugins().then((value) => {
       if (!value) {
         value =
           localStorage.getItem("pluginList") !== "{}" &&

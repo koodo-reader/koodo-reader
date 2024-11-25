@@ -143,3 +143,14 @@ export async function generateSHA256Hash(message) {
 
   return hashHex;
 }
+export const getStorageLocation = () => {
+  if (isElectron) {
+    return localStorage.getItem("storageLocation")
+      ? localStorage.getItem("storageLocation")
+      : window
+          .require("electron")
+          .ipcRenderer.sendSync("storage-location", "ping");
+  } else {
+    return localStorage.getItem("storageLocation");
+  }
+};
