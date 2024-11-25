@@ -1,9 +1,9 @@
-import { getStorageLocation } from "../commonUtil";
-import BookmarkService from "../serviceUtils/bookmarkService";
-import BookService from "../serviceUtils/bookService";
-import NoteService from "../serviceUtils/noteService";
-import PluginService from "../serviceUtils/pluginService";
-import WordService from "../serviceUtils/wordService";
+import { getStorageLocation } from "../common";
+import BookmarkService from "../service/bookmarkService";
+import BookService from "../service/bookService";
+import NoteService from "../service/noteService";
+import PluginService from "../service/pluginService";
+import WordService from "../service/wordService";
 
 declare var window: any;
 

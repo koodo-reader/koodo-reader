@@ -3,15 +3,15 @@ import "./header.css";
 import SearchBox from "../../components/searchBox";
 import ImportLocal from "../../components/importLocal";
 import { HeaderProps, HeaderState } from "./interface";
-import StorageUtil from "../../utils/serviceUtils/storageUtil";
+import StorageUtil from "../../utils/service/configService";
 import UpdateInfo from "../../components/dialogs/updateDialog";
-import { restore } from "../../utils/syncUtils/restoreUtil";
-import { backup } from "../../utils/syncUtils/backupUtil";
+import { restore } from "../../utils/sync/restore";
+import { backup } from "../../utils/sync/backup";
 import { isElectron } from "react-device-detect";
-import { syncData, upgradeStorage } from "../../utils/syncUtils/common";
+import { syncData, upgradeStorage } from "../../utils/sync/common";
 import toast from "react-hot-toast";
 import { Trans } from "react-i18next";
-import { checkStableUpdate, getStorageLocation } from "../../utils/commonUtil";
+import { checkStableUpdate, getStorageLocation } from "../../utils/common";
 import packageInfo from "../../../package.json";
 
 class Header extends React.Component<HeaderProps, HeaderState> {

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import ShelfUtil from "../../../utils/readUtils/shelfUtil";
+import ShelfUtil from "../../../utils/reader/shelfUtil";
 import { Trans } from "react-i18next";
 import { AddDialogProps, AddDialogState } from "./interface";
 import "./addDialog.css";

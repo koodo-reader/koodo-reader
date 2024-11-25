@@ -2,8 +2,8 @@ import React from "react";
 import "./imageViewer.css";
 import { ImageViewerProps, ImageViewerStates } from "./interface";
 
-import { handleLinkJump } from "../../utils/readUtils/linkUtil";
-import { getIframeDoc } from "../../utils/serviceUtils/docUtil";
+import { handleLinkJump } from "../../utils/reader/linkUtil";
+import { getIframeDoc } from "../../utils/reader/docUtil";
 declare var window: any;
 class ImageViewer extends React.Component<ImageViewerProps, ImageViewerStates> {
   constructor(props: ImageViewerProps) {

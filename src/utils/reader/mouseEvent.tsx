@@ -1,8 +1,8 @@
-import StorageUtil from "./storageUtil";
-import RecordLocation from "../readUtils/recordLocation";
+import StorageUtil from "../service/configService";
+import RecordLocation from "./recordLocation";
 import { isElectron } from "react-device-detect";
 import { getIframeDoc, getIframeWin } from "./docUtil";
-import { handleExitFullScreen, handleFullScreen } from "../commonUtil";
+import { handleExitFullScreen, handleFullScreen } from "../common";
 declare var window: any;
 const sleep = (ms: number) => {
   return new Promise((resolve) => setTimeout(resolve, ms));

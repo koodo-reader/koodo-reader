@@ -4,7 +4,7 @@ import Manager from "../pages/manager";
 import HtmlReader from "../pages/reader";
 import _Redirect from "../pages/redirect";
 import i18n from "../i18n";
-import StorageUtil from "../utils/serviceUtils/storageUtil";
+import StorageUtil from "../utils/service/configService";
 
 const Router = () => {
   useEffect(() => {

@@ -1,7 +1,7 @@
 import BookModel from "../../models/Book";
-import { getStorageLocation } from "../commonUtil";
-import BookService from "../serviceUtils/bookService";
-import PluginService from "../serviceUtils/pluginService";
+import { getStorageLocation } from "../common";
+import BookService from "../service/bookService";
+import PluginService from "../service/pluginService";
 declare var window: any;
 export const changePath = (oldPath: string, newPath: string) => {
   return new Promise<number>((resolve, reject) => {

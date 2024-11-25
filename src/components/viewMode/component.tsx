@@ -1,7 +1,7 @@
 import React from "react";
 import "./viewMode.css";
 import { ViewModeProps, ViewModeState } from "./interface";
-import StorageUtil from "../../utils/serviceUtils/storageUtil";
+import StorageUtil from "../../utils/service/configService";
 import { viewMode } from "../../constants/viewMode";
 
 class ViewMode extends React.Component<ViewModeProps, ViewModeState> {

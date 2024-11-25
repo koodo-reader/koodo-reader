@@ -1,19 +1,19 @@
 import React from "react";
 import "./popupDict.css";
 import { PopupDictProps, PopupDictState } from "./interface";
-import PluginService from "../../../utils/serviceUtils/pluginService";
+import PluginService from "../../../utils/service/pluginService";
 import PluginModel from "../../../models/Plugin";
-import StorageUtil from "../../../utils/serviceUtils/storageUtil";
+import StorageUtil from "../../../utils/service/configService";
 import Parser from "html-react-parser";
 import * as DOMPurify from "dompurify";
 import axios from "axios";
-import RecordLocation from "../../../utils/readUtils/recordLocation";
+import RecordLocation from "../../../utils/reader/recordLocation";
 import DictHistory from "../../../models/DictHistory";
 import { Trans } from "react-i18next";
-import { openExternalUrl } from "../../../utils/serviceUtils/urlUtil";
+import { openExternalUrl } from "../../../utils/reader/urlUtil";
 import lemmatize from "wink-lemmatizer";
 import toast from "react-hot-toast";
-import WordService from "../../../utils/serviceUtils/wordService";
+import WordService from "../../../utils/service/wordService";
 declare var window: any;
 class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
   constructor(props: PopupDictProps) {

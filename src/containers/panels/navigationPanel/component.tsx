@@ -8,8 +8,8 @@ import SearchBox from "../../../components/searchBox";
 import Parser from "html-react-parser";
 import * as DOMPurify from "dompurify";
 import EmptyCover from "../../../components/emptyCover";
-import StorageUtil from "../../../utils/serviceUtils/storageUtil";
-import BookUtil from "../../../utils/fileUtils/bookUtil";
+import StorageUtil from "../../../utils/service/configService";
+import BookUtil from "../../../utils/file/bookUtil";
 
 class NavigationPanel extends React.Component<
   NavigationPanelProps,

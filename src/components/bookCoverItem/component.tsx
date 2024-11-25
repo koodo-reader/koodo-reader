@@ -1,16 +1,16 @@
 import React from "react";
-import RecentBooks from "../../utils/readUtils/recordRecent";
+import RecentBooks from "../../utils/reader/recordRecent";
 import "./bookCoverItem.css";
 import { BookCoverProps, BookCoverState } from "./interface";
-import AddFavorite from "../../utils/readUtils/addFavorite";
+import AddFavorite from "../../utils/reader/addFavorite";
 import ActionDialog from "../dialogs/actionDialog";
-import StorageUtil from "../../utils/serviceUtils/storageUtil";
+import StorageUtil from "../../utils/service/configService";
 import { withRouter } from "react-router-dom";
-import RecordLocation from "../../utils/readUtils/recordLocation";
+import RecordLocation from "../../utils/reader/recordLocation";
 import { isElectron } from "react-device-detect";
 import EmptyCover from "../emptyCover";
 import { Trans } from "react-i18next";
-import BookUtil from "../../utils/fileUtils/bookUtil";
+import BookUtil from "../../utils/file/bookUtil";
 import toast from "react-hot-toast";
 declare var window: any;
 

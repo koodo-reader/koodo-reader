@@ -1,5 +1,5 @@
-import { getIframeDoc } from "../serviceUtils/docUtil";
-import StorageUtil from "../serviceUtils/storageUtil";
+import { getIframeDoc } from "./docUtil";
+import StorageUtil from "../service/configService";
 
 class styleUtil {
   // add default css for iframe

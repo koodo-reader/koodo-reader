@@ -1,11 +1,11 @@
 import React from "react";
 import "./deleteIcon.css";
 import { DeleteIconProps, DeleteIconStates } from "./interface";
-import TagUtil from "../../utils/readUtils/tagUtil";
+import TagUtil from "../../utils/reader/tagUtil";
 import DeletePopup from "../dialogs/deletePopup";
 import toast from "react-hot-toast";
-import NoteService from "../../utils/serviceUtils/noteService";
-import BookmarkService from "../../utils/serviceUtils/bookmarkService";
+import NoteService from "../../utils/service/noteService";
+import BookmarkService from "../../utils/service/bookmarkService";
 
 class DeleteIcon extends React.Component<DeleteIconProps, DeleteIconStates> {
   constructor(props: DeleteIconProps) {

@@ -1,11 +1,11 @@
-import StorageUtil from "../../utils/serviceUtils/storageUtil";
-import SortUtil from "../../utils/readUtils/sortUtil";
+import StorageUtil from "../../utils/service/configService";
+import SortUtil from "../../utils/reader/sortUtil";
 import BookModel from "../../models/Book";
 import PluginModel from "../../models/Plugin";
 import { Dispatch } from "redux";
-import AddTrash from "../../utils/readUtils/addTrash";
-import PluginService from "../../utils/serviceUtils/pluginService";
-import BookService from "../../utils/serviceUtils/bookService";
+import AddTrash from "../../utils/reader/addTrash";
+import PluginService from "../../utils/service/pluginService";
+import BookService from "../../utils/service/bookService";
 
 export function handleBooks(books: BookModel[]) {
   return { type: "HANDLE_BOOKS", payload: books };

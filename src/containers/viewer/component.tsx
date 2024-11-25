@@ -1,24 +1,24 @@
 import React from "react";
-import RecentBooks from "../../utils/readUtils/recordRecent";
+import RecentBooks from "../../utils/reader/recordRecent";
 import { ViewerProps, ViewerState } from "./interface";
 import { withRouter } from "react-router-dom";
-import BookUtil from "../../utils/fileUtils/bookUtil";
+import BookUtil from "../../utils/file/bookUtil";
 import PopupMenu from "../../components/popups/popupMenu";
-import StorageUtil from "../../utils/serviceUtils/storageUtil";
-import RecordLocation from "../../utils/readUtils/recordLocation";
+import StorageUtil from "../../utils/service/configService";
+import RecordLocation from "../../utils/reader/recordLocation";
 import Background from "../../components/background";
 import toast from "react-hot-toast";
-import StyleUtil from "../../utils/readUtils/styleUtil";
+import StyleUtil from "../../utils/reader/styleUtil";
 import "./index.css";
-import { HtmlMouseEvent } from "../../utils/serviceUtils/mouseEvent";
+import { HtmlMouseEvent } from "../../utils/reader/mouseEvent";
 import ImageViewer from "../../components/imageViewer";
-import { getIframeDoc } from "../../utils/serviceUtils/docUtil";
-import { tsTransform } from "../../utils/serviceUtils/langUtil";
-import { binicReadingProcess } from "../../utils/serviceUtils/bionicUtil";
+import { getIframeDoc } from "../../utils/reader/docUtil";
+import { tsTransform } from "../../utils/reader/langUtil";
+import { binicReadingProcess } from "../../utils/reader/bionicUtil";
 import PopupBox from "../../components/popups/popupBox";
 import Note from "../../models/Note";
 import PageWidget from "../pageWidget";
-import { scrollContents } from "../../utils/commonUtil";
+import { scrollContents } from "../../utils/common";
 
 declare var window: any;
 let lock = false; //prevent from clicking too fasts

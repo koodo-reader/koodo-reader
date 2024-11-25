@@ -1,5 +1,5 @@
 import { isElectron } from "react-device-detect";
-import StorageUtil from "./storageUtil";
+import StorageUtil from "../service/configService";
 
 export const initTheme = () => {
   const style = document.createElement("link");

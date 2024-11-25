@@ -1,14 +1,14 @@
 import React from "react";
 import { backgroundList, textList } from "../../../constants/themeList";
-import StyleUtil from "../../../utils/readUtils/styleUtil";
+import StyleUtil from "../../../utils/reader/styleUtil";
 import "./themeList.css";
 import { Trans } from "react-i18next";
 import { ThemeListProps, ThemeListState } from "./interface";
-import StorageUtil from "../../../utils/serviceUtils/storageUtil";
+import StorageUtil from "../../../utils/service/configService";
 import { Panel as ColorPickerPanel } from "rc-color-picker";
 import "rc-color-picker/assets/index.css";
-import ThemeUtil from "../../../utils/readUtils/themeUtil";
-import BookUtil from "../../../utils/fileUtils/bookUtil";
+import ThemeUtil from "../../../utils/reader/themeUtil";
+import BookUtil from "../../../utils/file/bookUtil";
 
 class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
   constructor(props: ThemeListProps) {

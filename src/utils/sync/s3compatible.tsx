@@ -1,12 +1,11 @@
-import { restore } from "./restoreUtil";
-import StorageUtil from "../serviceUtils/storageUtil";
+import { restore } from "./restore";
+import StorageUtil from "../service/configService";
 
-class WebdavUtil {
+class S3Util {
   static UploadFile = async (blob: any) => {
     return new Promise<boolean>(async (resolve, reject) => {
-      let { url, username, password } = JSON.parse(
-        StorageUtil.getReaderConfig("webdav_token") || "{}"
-      );
+      let { endpoint, region, bucketName, accessKeyId, secretAccessKey } =
+        JSON.parse(StorageUtil.getReaderConfig("s3compatible_token") || "{}");
       const fs = window.require("fs");
       const path = window.require("path");
       const { ipcRenderer } = window.require("electron");
@@ -15,10 +14,12 @@ class WebdavUtil {
       const fileName = "data.zip";
       fs.writeFileSync(path.join(dirPath, fileName), Buffer.from(arrayBuffer));
       resolve(
-        await ipcRenderer.invoke("webdav-upload", {
-          url,
-          username,
-          password,
+        await ipcRenderer.invoke("s3-upload", {
+          endpoint,
+          region,
+          bucketName,
+          accessKeyId,
+          secretAccessKey,
           fileName,
         })
       );
@@ -26,18 +27,19 @@ class WebdavUtil {
   };
   static DownloadFile = async () => {
     return new Promise<boolean>(async (resolve, reject) => {
-      let { url, username, password } = JSON.parse(
-        StorageUtil.getReaderConfig("webdav_token") || ""
-      );
       const fileName = "data.zip";
       const fs = window.require("fs");
       const path = window.require("path");
       const { ipcRenderer } = window.require("electron");
+      let { endpoint, region, bucketName, accessKeyId, secretAccessKey } =
+        JSON.parse(StorageUtil.getReaderConfig("s3compatible_token") || "{}");
       const dirPath = ipcRenderer.sendSync("user-data", "ping");
-      let result = await ipcRenderer.invoke("webdav-download", {
-        url,
-        username,
-        password,
+      let result = await ipcRenderer.invoke("s3-download", {
+        endpoint,
+        region,
+        bucketName,
+        accessKeyId,
+        secretAccessKey,
         fileName,
       });
       if (result) {
@@ -65,4 +67,4 @@ class WebdavUtil {
   };
 }
 
-export default WebdavUtil;
+export default S3Util;

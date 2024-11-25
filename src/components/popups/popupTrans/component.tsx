@@ -1,13 +1,13 @@
 import React from "react";
 import "./popupTrans.css";
 import { PopupTransProps, PopupTransState } from "./interface";
-import StorageUtil from "../../../utils/serviceUtils/storageUtil";
+import StorageUtil from "../../../utils/service/configService";
 import axios from "axios";
 import { Trans } from "react-i18next";
 import toast from "react-hot-toast";
-import PluginService from "../../../utils/serviceUtils/pluginService";
+import PluginService from "../../../utils/service/pluginService";
 import Plugin from "../../../models/Plugin";
-import { openExternalUrl } from "../../../utils/serviceUtils/urlUtil";
+import { openExternalUrl } from "../../../utils/reader/urlUtil";
 declare var window: any;
 class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
   constructor(props: PopupTransProps) {

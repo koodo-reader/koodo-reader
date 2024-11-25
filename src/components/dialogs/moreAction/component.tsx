@@ -4,15 +4,15 @@ import { Trans } from "react-i18next";
 import { MoreActionProps, MoreActionState } from "./interface";
 
 import toast from "react-hot-toast";
-import BookUtil from "../../../utils/fileUtils/bookUtil";
+import BookUtil from "../../../utils/file/bookUtil";
 import {
   exportDictionaryHistory,
   exportHighlights,
   exportNotes,
-} from "../../../utils/syncUtils/exportUtil";
-import StorageUtil from "../../../utils/serviceUtils/storageUtil";
-import NoteService from "../../../utils/serviceUtils/noteService";
-import WordService from "../../../utils/serviceUtils/wordService";
+} from "../../../utils/sync/export";
+import StorageUtil from "../../../utils/service/configService";
+import NoteService from "../../../utils/service/noteService";
+import WordService from "../../../utils/service/wordService";
 declare var window: any;
 class ActionDialog extends React.Component<MoreActionProps, MoreActionState> {
   constructor(props: MoreActionProps) {

@@ -5,7 +5,7 @@ import { Trans } from "react-i18next";
 import Parser from "html-react-parser";
 import * as DOMPurify from "dompurify";
 import EmptyCover from "../../emptyCover";
-import BookUtil from "../../../utils/fileUtils/bookUtil";
+import BookUtil from "../../../utils/file/bookUtil";
 class DetailDialog extends React.Component<
   DetailDialogProps,
   DetailDialogState

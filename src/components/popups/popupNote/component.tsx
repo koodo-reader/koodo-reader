@@ -3,13 +3,13 @@ import "./popupNote.css";
 import Note from "../../../models/Note";
 
 import { PopupNoteProps, PopupNoteState } from "./interface";
-import RecordLocation from "../../../utils/readUtils/recordLocation";
+import RecordLocation from "../../../utils/reader/recordLocation";
 import NoteTag from "../../noteTag";
 import NoteModel from "../../../models/Note";
 import { Trans } from "react-i18next";
 import toast from "react-hot-toast";
-import { getIframeDoc } from "../../../utils/serviceUtils/docUtil";
-import NoteService from "../../../utils/serviceUtils/noteService";
+import { getIframeDoc } from "../../../utils/reader/docUtil";
+import NoteService from "../../../utils/service/noteService";
 declare var window: any;
 
 class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {

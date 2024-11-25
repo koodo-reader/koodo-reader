@@ -1,12 +1,12 @@
-import StorageUtil from "../serviceUtils/storageUtil";
+import StorageUtil from "../service/configService";
 import { isElectron } from "react-device-detect";
 
 import BookModel from "../../models/Book";
 import toast from "react-hot-toast";
-import { copyArrayBuffer, getStorageLocation } from "../commonUtil";
+import { copyArrayBuffer, getStorageLocation } from "../common";
 import iconv from "iconv-lite";
 import { Buffer } from "buffer";
-import { base64ToArrayBufferAndExtension } from "../syncUtils/common";
+import { base64ToArrayBufferAndExtension } from "../sync/common";
 declare var window: any;
 
 class BookUtil {

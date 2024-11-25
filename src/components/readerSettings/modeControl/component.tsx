@@ -1,9 +1,9 @@
 import React from "react";
 import "./modeControl.css";
 import { ModeControlProps, ModeControlState } from "./interface";
-import StorageUtil from "../../../utils/serviceUtils/storageUtil";
+import StorageUtil from "../../../utils/service/configService";
 import { Trans } from "react-i18next";
-import BookUtil from "../../../utils/fileUtils/bookUtil";
+import BookUtil from "../../../utils/file/bookUtil";
 
 class ModeControl extends React.Component<ModeControlProps, ModeControlState> {
   constructor(props: ModeControlProps) {

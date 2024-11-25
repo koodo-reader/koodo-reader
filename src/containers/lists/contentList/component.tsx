@@ -1,9 +1,9 @@
 import React from "react";
 import "./contentList.css";
 import { ContentListProps, ContentListState } from "./interface";
-import StorageUtil from "../../../utils/serviceUtils/storageUtil";
-import RecordLocation from "../../../utils/readUtils/recordLocation";
-import { scrollContents } from "../../../utils/commonUtil";
+import StorageUtil from "../../../utils/service/configService";
+import RecordLocation from "../../../utils/reader/recordLocation";
+import { scrollContents } from "../../../utils/common";
 
 class ContentList extends React.Component<ContentListProps, ContentListState> {
   constructor(props: ContentListProps) {

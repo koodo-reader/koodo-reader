@@ -1,5 +1,5 @@
 import { Howl } from "howler";
-import PluginService from "./pluginService";
+import PluginService from "../service/pluginService";
 import PluginModel from "../../models/Plugin";
 
 class TTSUtil {

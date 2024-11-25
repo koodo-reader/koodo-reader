@@ -6,10 +6,10 @@ import { Trans } from "react-i18next";
 import Lottie from "react-lottie";
 import animationNew from "../../../assets/lotties/new.json";
 import animationSuccess from "../../../assets/lotties/success.json";
-import StorageUtil from "../../../utils/serviceUtils/storageUtil";
-import { openExternalUrl } from "../../../utils/serviceUtils/urlUtil";
+import StorageUtil from "../../../utils/service/configService";
+import { openExternalUrl } from "../../../utils/reader/urlUtil";
 import { isElectron } from "react-device-detect";
-import { checkStableUpdate, sleep } from "../../../utils/commonUtil";
+import { checkStableUpdate, sleep } from "../../../utils/common";
 const newOptions = {
   loop: false,
   autoplay: true,

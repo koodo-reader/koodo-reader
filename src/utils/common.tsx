@@ -1,5 +1,5 @@
 import axios from "axios";
-import StorageUtil from "./serviceUtils/storageUtil";
+import StorageUtil from "./service/configService";
 import { isElectron } from "react-device-detect";
 declare var window: any;
 export const sleep = (time: number) => {
