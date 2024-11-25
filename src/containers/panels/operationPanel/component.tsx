@@ -3,21 +3,18 @@ import "./operationPanel.css";
 import Bookmark from "../../../models/Bookmark";
 import { Trans } from "react-i18next";
 
-import RecordLocation from "../../../utils/readUtils/recordLocation";
+import RecordLocation from "../../../utils/reader/recordLocation";
 import { OperationPanelProps, OperationPanelState } from "./interface";
-import StorageUtil from "../../../utils/serviceUtils/storageUtil";
-import ReadingTime from "../../../utils/readUtils/readingTime";
+import StorageUtil from "../../../utils/service/configService";
+import ReadingTime from "../../../utils/reader/readingTime";
 import { withRouter } from "react-router-dom";
 import toast from "react-hot-toast";
-import { HtmlMouseEvent } from "../../../utils/serviceUtils/mouseEvent";
-import storageUtil from "../../../utils/serviceUtils/storageUtil";
-import TTSUtil from "../../../utils/serviceUtils/ttsUtil";
+import { HtmlMouseEvent } from "../../../utils/reader/mouseEvent";
+import storageUtil from "../../../utils/service/configService";
+import TTSUtil from "../../../utils/reader/ttsUtil";
 import { isElectron } from "react-device-detect";
-import {
-  handleExitFullScreen,
-  handleFullScreen,
-} from "../../../utils/commonUtil";
-import BookmarkService from "../../../utils/serviceUtils/bookmarkService";
+import { handleExitFullScreen, handleFullScreen } from "../../../utils/common";
+import BookmarkService from "../../../utils/service/bookmarkService";
 declare var window: any;
 class OperationPanel extends React.Component<
   OperationPanelProps,

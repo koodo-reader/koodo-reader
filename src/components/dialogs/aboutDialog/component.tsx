@@ -2,17 +2,17 @@ import React from "react";
 import { Trans } from "react-i18next";
 import { AboutDialogProps, AboutDialogState } from "./interface";
 import { isElectron } from "react-device-detect";
-import { openExternalUrl } from "../../../utils/serviceUtils/urlUtil";
+import { openExternalUrl } from "../../../utils/reader/urlUtil";
 import toast from "react-hot-toast";
 import {
   exportBooks,
   exportDictionaryHistory,
   exportHighlights,
   exportNotes,
-} from "../../../utils/syncUtils/exportUtil";
+} from "../../../utils/sync/export";
 import "./aboutDialog.css";
-import StorageUtil from "../../../utils/serviceUtils/storageUtil";
-import WordService from "../../../utils/serviceUtils/wordService";
+import StorageUtil from "../../../utils/service/configService";
+import WordService from "../../../utils/service/wordService";
 
 declare var window: any;
 class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {

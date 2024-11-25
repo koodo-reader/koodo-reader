@@ -2,10 +2,10 @@ import React from "react";
 import { SettingSwitchProps, SettingSwitchState } from "./interface";
 import { Trans } from "react-i18next";
 import TextToSpeech from "../../textToSpeech";
-import StorageUtil from "../../../utils/serviceUtils/storageUtil";
+import StorageUtil from "../../../utils/service/configService";
 import { readerSettingList } from "../../../constants/settingList";
 import toast from "react-hot-toast";
-import BookUtil from "../../../utils/fileUtils/bookUtil";
+import BookUtil from "../../../utils/file/bookUtil";
 class SettingSwitch extends React.Component<
   SettingSwitchProps,
   SettingSwitchState

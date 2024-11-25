@@ -1,7 +1,7 @@
 import React from "react";
 import "./loadingPage.css";
 import { LoadingPageProps } from "./interface";
-import StorageUtil from "../../utils/serviceUtils/storageUtil";
+import StorageUtil from "../../utils/service/configService";
 import { Redirect } from "react-router-dom";
 
 class LoadingPage extends React.Component<LoadingPageProps> {

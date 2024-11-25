@@ -1,5 +1,5 @@
 import { getIframeDoc } from "./docUtil";
-import StorageUtil from "./storageUtil";
+import StorageUtil from "../service/configService";
 
 /* Insert one Node after another Node */
 const insertAfter = (newNode, existingNode) => {

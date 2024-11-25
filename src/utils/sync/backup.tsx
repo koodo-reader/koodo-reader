@@ -1,16 +1,16 @@
 import BookModel from "../../models/Book";
 import PluginModel from "../../models/Plugin";
-import BookUtil from "../fileUtils/bookUtil";
+import BookUtil from "../file/bookUtil";
 import NoteModel from "../../models/Note";
 import BookmarkModel from "../../models/Bookmark";
 import { isElectron } from "react-device-detect";
 import DictHistory from "../../models/DictHistory";
 import { base64ToArrayBufferAndExtension } from "./common";
-import PluginService from "../serviceUtils/pluginService";
-import BookService from "../serviceUtils/bookService";
-import NoteService from "../serviceUtils/noteService";
-import BookmarkService from "../serviceUtils/bookmarkService";
-import WordService from "../serviceUtils/wordService";
+import PluginService from "../service/pluginService";
+import BookService from "../service/bookService";
+import NoteService from "../service/noteService";
+import BookmarkService from "../service/bookmarkService";
+import WordService from "../service/wordService";
 declare var window: any;
 
 const configList = [

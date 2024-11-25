@@ -3,9 +3,9 @@ import "./sidebar.css";
 import { sideMenu } from "../../constants/sideMenu";
 import { SidebarProps, SidebarState } from "./interface";
 import { withRouter } from "react-router-dom";
-import StorageUtil from "../../utils/serviceUtils/storageUtil";
-import { openExternalUrl } from "../../utils/serviceUtils/urlUtil";
-import ShelfUtil from "../../utils/readUtils/shelfUtil";
+import StorageUtil from "../../utils/service/configService";
+import { openExternalUrl } from "../../utils/reader/urlUtil";
+import ShelfUtil from "../../utils/reader/shelfUtil";
 import DeletePopup from "../../components/dialogs/deletePopup";
 import { Trans } from "react-i18next";
 class Sidebar extends React.Component<SidebarProps, SidebarState> {

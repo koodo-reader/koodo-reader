@@ -1,11 +1,12 @@
-import { restore } from "./restoreUtil";
-import StorageUtil from "../serviceUtils/storageUtil";
+import { restore } from "./restore";
+import StorageUtil from "../service/configService";
 
-class S3Util {
+class FtpUtil {
   static UploadFile = async (blob: any) => {
     return new Promise<boolean>(async (resolve, reject) => {
-      let { endpoint, region, bucketName, accessKeyId, secretAccessKey } =
-        JSON.parse(StorageUtil.getReaderConfig("s3compatible_token") || "{}");
+      let { url, username, password, ssl, dir } = JSON.parse(
+        StorageUtil.getReaderConfig("ftp_token") || "{}"
+      );
       const fs = window.require("fs");
       const path = window.require("path");
       const { ipcRenderer } = window.require("electron");
@@ -14,13 +15,13 @@ class S3Util {
       const fileName = "data.zip";
       fs.writeFileSync(path.join(dirPath, fileName), Buffer.from(arrayBuffer));
       resolve(
-        await ipcRenderer.invoke("s3-upload", {
-          endpoint,
-          region,
-          bucketName,
-          accessKeyId,
-          secretAccessKey,
+        await ipcRenderer.invoke("ftp-upload", {
+          url,
+          username,
+          password,
           fileName,
+          ssl,
+          dir,
         })
       );
     });
@@ -31,16 +32,17 @@ class S3Util {
       const fs = window.require("fs");
       const path = window.require("path");
       const { ipcRenderer } = window.require("electron");
-      let { endpoint, region, bucketName, accessKeyId, secretAccessKey } =
-        JSON.parse(StorageUtil.getReaderConfig("s3compatible_token") || "{}");
+      let { url, username, password, ssl, dir } = JSON.parse(
+        StorageUtil.getReaderConfig("ftp_token") || "{}"
+      );
       const dirPath = ipcRenderer.sendSync("user-data", "ping");
-      let result = await ipcRenderer.invoke("s3-download", {
-        endpoint,
-        region,
-        bucketName,
-        accessKeyId,
-        secretAccessKey,
+      let result = await ipcRenderer.invoke("ftp-download", {
+        url,
+        username,
+        password,
         fileName,
+        ssl,
+        dir,
       });
       if (result) {
         var data = fs.readFileSync(path.join(dirPath, fileName));
@@ -67,4 +69,4 @@ class S3Util {
   };
 }
 
-export default S3Util;
+export default FtpUtil;

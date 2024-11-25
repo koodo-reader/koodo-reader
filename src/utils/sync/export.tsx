@@ -1,7 +1,7 @@
 import Book from "../../models/Book";
 import DictHistory from "../../models/DictHistory";
 import Note from "../../models/Note";
-import BookUtil from "../fileUtils/bookUtil";
+import BookUtil from "../file/bookUtil";
 import { zipFilesToBlob } from "./common";
 
 declare var window: any;

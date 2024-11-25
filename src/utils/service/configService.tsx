@@ -1,4 +1,4 @@
-class StorageUtil {
+class ConfigService {
   static getReaderConfig(key: string) {
     let readerConfig = JSON.parse(localStorage.getItem("readerConfig")!) || {};
     return readerConfig[key];
@@ -11,4 +11,4 @@ class StorageUtil {
   }
 }
 
-export default StorageUtil;
+export default ConfigService;

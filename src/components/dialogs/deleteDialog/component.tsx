@@ -1,19 +1,19 @@
 import React from "react";
 import "./deleteDialog.css";
-import ShelfUtil from "../../../utils/readUtils/shelfUtil";
-import RecordRecent from "../../../utils/readUtils/recordRecent";
-import RecordLocation from "../../../utils/readUtils/recordLocation";
-import AddFavorite from "../../../utils/readUtils/addFavorite";
+import ShelfUtil from "../../../utils/reader/shelfUtil";
+import RecordRecent from "../../../utils/reader/recordRecent";
+import RecordLocation from "../../../utils/reader/recordLocation";
+import AddFavorite from "../../../utils/reader/addFavorite";
 import { Trans } from "react-i18next";
 import { DeleteDialogProps, DeleteDialogState } from "./interface";
 import { withRouter } from "react-router-dom";
-import AddTrash from "../../../utils/readUtils/addTrash";
-import BookUtil from "../../../utils/fileUtils/bookUtil";
+import AddTrash from "../../../utils/reader/addTrash";
+import BookUtil from "../../../utils/file/bookUtil";
 import toast from "react-hot-toast";
-import StorageUtil from "../../../utils/serviceUtils/storageUtil";
-import NoteService from "../../../utils/serviceUtils/noteService";
-import BookmarkService from "../../../utils/serviceUtils/bookmarkService";
-import BookService from "../../../utils/serviceUtils/bookService";
+import StorageUtil from "../../../utils/service/configService";
+import NoteService from "../../../utils/service/noteService";
+import BookmarkService from "../../../utils/service/bookmarkService";
+import BookService from "../../../utils/service/bookService";
 
 class DeleteDialog extends React.Component<
   DeleteDialogProps,

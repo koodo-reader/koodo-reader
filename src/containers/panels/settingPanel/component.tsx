@@ -7,7 +7,7 @@ import ModeControl from "../../../components/readerSettings/modeControl";
 import SettingSwitch from "../../../components/readerSettings/settingSwitch";
 import { SettingPanelProps, SettingPanelState } from "./interface";
 import { Trans } from "react-i18next";
-import StorageUtil from "../../../utils/serviceUtils/storageUtil";
+import StorageUtil from "../../../utils/service/configService";
 
 class SettingPanel extends React.Component<
   SettingPanelProps,

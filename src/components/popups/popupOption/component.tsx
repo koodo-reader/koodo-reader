@@ -4,16 +4,16 @@ import "./popupOption.css";
 import Note from "../../../models/Note";
 import { PopupOptionProps } from "./interface";
 import ColorOption from "../../colorOption";
-import RecordLocation from "../../../utils/readUtils/recordLocation";
+import RecordLocation from "../../../utils/reader/recordLocation";
 
 import { popupList } from "../../../constants/popupList";
-import StorageUtil from "../../../utils/serviceUtils/storageUtil";
+import StorageUtil from "../../../utils/service/configService";
 import toast from "react-hot-toast";
-import { getSelection } from "../../../utils/serviceUtils/mouseEvent";
+import { getSelection } from "../../../utils/reader/mouseEvent";
 import copy from "copy-text-to-clipboard";
-import { getIframeDoc } from "../../../utils/serviceUtils/docUtil";
-import { openExternalUrl } from "../../../utils/serviceUtils/urlUtil";
-import NoteService from "../../../utils/serviceUtils/noteService";
+import { getIframeDoc } from "../../../utils/reader/docUtil";
+import { openExternalUrl } from "../../../utils/reader/urlUtil";
+import NoteService from "../../../utils/service/noteService";
 
 declare var window: any;
 

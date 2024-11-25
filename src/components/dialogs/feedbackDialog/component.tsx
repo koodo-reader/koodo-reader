@@ -4,12 +4,12 @@ import { FeedbackDialogProps, FeedbackDialogState } from "./interface";
 import toast from "react-hot-toast";
 import "./feedbackDialog.css";
 import packageInfo from "../../../../package.json";
-import { openExternalUrl } from "../../../utils/serviceUtils/urlUtil";
+import { openExternalUrl } from "../../../utils/reader/urlUtil";
 import {
   checkDeveloperUpdate,
   getUploadUrl,
   uploadFile,
-} from "../../../utils/commonUtil";
+} from "../../../utils/common";
 declare var window: any;
 class FeedbackDialog extends Component<
   FeedbackDialogProps,

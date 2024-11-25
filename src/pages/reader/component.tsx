@@ -5,14 +5,14 @@ import OperationPanel from "../../containers/panels/operationPanel";
 import { Toaster } from "react-hot-toast";
 import ProgressPanel from "../../containers/panels/progressPanel";
 import { ReaderProps, ReaderState } from "./interface";
-import StorageUtil from "../../utils/serviceUtils/storageUtil";
-import ReadingTime from "../../utils/readUtils/readingTime";
+import StorageUtil from "../../utils/service/configService";
+import ReadingTime from "../../utils/reader/readingTime";
 import Viewer from "../../containers/viewer";
 import { Tooltip } from "react-tooltip";
-import RecordLocation from "../../utils/readUtils/recordLocation";
+import RecordLocation from "../../utils/reader/recordLocation";
 import "./index.css";
 import Book from "../../models/Book";
-import BookService from "../../utils/serviceUtils/bookService";
+import BookService from "../../utils/service/bookService";
 
 let lock = false; //prevent from clicking too fasts
 let throttleTime =

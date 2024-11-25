@@ -1,11 +1,11 @@
-import { restore } from "./restoreUtil";
-import StorageUtil from "../serviceUtils/storageUtil";
+import { restore } from "./restore";
+import StorageUtil from "../service/configService";
 
-class FtpUtil {
+class SFtpUtil {
   static UploadFile = async (blob: any) => {
     return new Promise<boolean>(async (resolve, reject) => {
-      let { url, username, password, ssl, dir } = JSON.parse(
-        StorageUtil.getReaderConfig("ftp_token") || "{}"
+      let { url, username, password, port, dir } = JSON.parse(
+        StorageUtil.getReaderConfig("sftp_token") || "{}"
       );
       const fs = window.require("fs");
       const path = window.require("path");
@@ -15,12 +15,12 @@ class FtpUtil {
       const fileName = "data.zip";
       fs.writeFileSync(path.join(dirPath, fileName), Buffer.from(arrayBuffer));
       resolve(
-        await ipcRenderer.invoke("ftp-upload", {
+        await ipcRenderer.invoke("sftp-upload", {
           url,
           username,
           password,
           fileName,
-          ssl,
+          port,
           dir,
         })
       );
@@ -32,16 +32,16 @@ class FtpUtil {
       const fs = window.require("fs");
       const path = window.require("path");
       const { ipcRenderer } = window.require("electron");
-      let { url, username, password, ssl, dir } = JSON.parse(
-        StorageUtil.getReaderConfig("ftp_token") || "{}"
+      let { url, username, password, port, dir } = JSON.parse(
+        StorageUtil.getReaderConfig("sftp_token") || "{}"
       );
       const dirPath = ipcRenderer.sendSync("user-data", "ping");
-      let result = await ipcRenderer.invoke("ftp-download", {
+      let result = await ipcRenderer.invoke("sftp-download", {
         url,
         username,
         password,
         fileName,
-        ssl,
+        port,
         dir,
       });
       if (result) {
@@ -69,4 +69,4 @@ class FtpUtil {
   };
 }
 
-export default FtpUtil;
+export default SFtpUtil;

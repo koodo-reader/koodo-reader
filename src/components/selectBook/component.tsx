@@ -1,5 +1,5 @@
 import React from "react";
-import AddFavorite from "../../utils/readUtils/addFavorite";
+import AddFavorite from "../../utils/reader/addFavorite";
 import BookModel from "../../models/Book";
 import "./selectBook.css";
 import { Trans } from "react-i18next";
@@ -11,13 +11,13 @@ import {
   exportDictionaryHistory,
   exportHighlights,
   exportNotes,
-} from "../../utils/syncUtils/exportUtil";
-import BookUtil from "../../utils/fileUtils/bookUtil";
-import ShelfUtil from "../../utils/readUtils/shelfUtil";
-import StorageUtil from "../../utils/serviceUtils/storageUtil";
-import BookService from "../../utils/serviceUtils/bookService";
-import NoteService from "../../utils/serviceUtils/noteService";
-import WordService from "../../utils/serviceUtils/wordService";
+} from "../../utils/sync/export";
+import BookUtil from "../../utils/file/bookUtil";
+import ShelfUtil from "../../utils/reader/shelfUtil";
+import StorageUtil from "../../utils/service/configService";
+import BookService from "../../utils/service/bookService";
+import NoteService from "../../utils/service/noteService";
+import WordService from "../../utils/service/wordService";
 
 class SelectBook extends React.Component<BookListProps, BookListState> {
   constructor(props: BookListProps) {

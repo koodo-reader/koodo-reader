@@ -4,7 +4,7 @@ import "./editDialog.css";
 import { Trans } from "react-i18next";
 import { EditDialogProps, EditDialogState } from "./interface";
 import toast from "react-hot-toast";
-import BookService from "../../../utils/serviceUtils/bookService";
+import BookService from "../../../utils/service/bookService";
 
 class EditDialog extends React.Component<EditDialogProps, EditDialogState> {
   constructor(props: EditDialogProps) {

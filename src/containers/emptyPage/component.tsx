@@ -3,7 +3,7 @@ import "./emptyPage.css";
 import { emptyList } from "../../constants/emptyList";
 import { Trans } from "react-i18next";
 import { EmptyPageProps, EmptyPageState } from "./interface";
-import StorageUtil from "../../utils/serviceUtils/storageUtil";
+import StorageUtil from "../../utils/service/configService";
 
 class EmptyPage extends React.Component<EmptyPageProps, EmptyPageState> {
   render() {

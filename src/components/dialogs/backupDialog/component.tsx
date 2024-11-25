@@ -1,26 +1,26 @@
 import React from "react";
 import "./backupDialog.css";
 import { driveList } from "../../../constants/driveList";
-import { backup } from "../../../utils/syncUtils/backupUtil";
-import { restore } from "../../../utils/syncUtils/restoreUtil";
+import { backup } from "../../../utils/sync/backup";
+import { restore } from "../../../utils/sync/restore";
 import { Trans } from "react-i18next";
-import DropboxUtil from "../../../utils/syncUtils/dropbox";
-import OneDriveUtil from "../../../utils/syncUtils/onedrive";
-import GoogleDriveUtil from "../../../utils/syncUtils/googledrive";
-import WebdavUtil from "../../../utils/syncUtils/webdav";
-import FtpUtil from "../../../utils/syncUtils/ftp";
-import SFtpUtil from "../../../utils/syncUtils/sftp";
-import S3Util from "../../../utils/syncUtils/s3compatible";
+import DropboxUtil from "../../../utils/sync/dropbox";
+import OneDriveUtil from "../../../utils/sync/onedrive";
+import GoogleDriveUtil from "../../../utils/sync/googledrive";
+import WebdavUtil from "../../../utils/sync/webdav";
+import FtpUtil from "../../../utils/sync/ftp";
+import SFtpUtil from "../../../utils/sync/sftp";
+import S3Util from "../../../utils/sync/s3compatible";
 import { BackupDialogProps, BackupDialogState } from "./interface";
 import TokenDialog from "../tokenDialog";
-import StorageUtil from "../../../utils/serviceUtils/storageUtil";
+import StorageUtil from "../../../utils/service/configService";
 import Lottie from "react-lottie";
 import animationSuccess from "../../../assets/lotties/success.json";
 import packageInfo from "../../../../package.json";
 
 import toast from "react-hot-toast";
 import { isElectron } from "react-device-detect";
-import { checkStableUpdate } from "../../../utils/commonUtil";
+import { checkStableUpdate } from "../../../utils/common";
 declare var window: any;
 const successOptions = {
   loop: false,

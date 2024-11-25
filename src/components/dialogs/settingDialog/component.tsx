@@ -4,12 +4,12 @@ import { SettingInfoProps, SettingInfoState } from "./interface";
 import { Trans } from "react-i18next";
 import i18n from "../../../i18n";
 import packageInfo from "../../../../package.json";
-import StorageUtil from "../../../utils/serviceUtils/storageUtil";
-import { changePath } from "../../../utils/syncUtils/common";
+import StorageUtil from "../../../utils/service/configService";
+import { changePath } from "../../../utils/sync/common";
 import { isElectron } from "react-device-detect";
 import { dropdownList } from "../../../constants/dropdownList";
 
-import { restore } from "../../../utils/syncUtils/restoreUtil";
+import { restore } from "../../../utils/sync/restore";
 import {
   generalSettingList,
   appearanceSettingList,
@@ -20,10 +20,10 @@ import {
 } from "../../../constants/settingList";
 import { themeList } from "../../../constants/themeList";
 import toast from "react-hot-toast";
-import { openExternalUrl } from "../../../utils/serviceUtils/urlUtil";
-import ManagerUtil from "../../../utils/fileUtils/managerUtil";
-import PluginService from "../../../utils/serviceUtils/pluginService";
-import { getStorageLocation } from "../../../utils/commonUtil";
+import { openExternalUrl } from "../../../utils/reader/urlUtil";
+import ManagerUtil from "../../../utils/reader/managerUtil";
+import PluginService from "../../../utils/service/pluginService";
+import { getStorageLocation } from "../../../utils/common";
 declare var window: any;
 class SettingDialog extends React.Component<
   SettingInfoProps,

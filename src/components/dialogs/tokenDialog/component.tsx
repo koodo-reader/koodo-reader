@@ -2,9 +2,9 @@ import React, { Component } from "react";
 import "./tokenDialog.css";
 import { Trans } from "react-i18next";
 import { TokenDialogProps, TokenDialogState } from "./interface";
-import StorageUtil from "../../../utils/serviceUtils/storageUtil";
+import StorageUtil from "../../../utils/service/configService";
 import toast from "react-hot-toast";
-import { openExternalUrl } from "../../../utils/serviceUtils/urlUtil";
+import { openExternalUrl } from "../../../utils/reader/urlUtil";
 import axios from "axios";
 import { driveConfig } from "../../../constants/driveList";
 class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {

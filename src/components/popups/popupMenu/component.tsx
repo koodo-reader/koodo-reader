@@ -2,7 +2,7 @@ import React from "react";
 import "./popupMenu.css";
 import PopupOption from "../popupOption";
 import { PopupMenuProps, PopupMenuStates } from "./interface";
-import { getIframeDoc } from "../../../utils/serviceUtils/docUtil";
+import { getIframeDoc } from "../../../utils/reader/docUtil";
 
 class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
   highlighter: any;

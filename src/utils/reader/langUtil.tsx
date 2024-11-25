@@ -1,4 +1,4 @@
-import StorageUtil from "./storageUtil";
+import StorageUtil from "../service/configService";
 import { getIframeDoc } from "./docUtil";
 declare var window: any;
 

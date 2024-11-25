@@ -1,5 +1,5 @@
-import { restore } from "./restoreUtil";
-import StorageUtil from "../serviceUtils/storageUtil";
+import { restore } from "./restore";
+import StorageUtil from "../service/configService";
 import { driveConfig } from "../../constants/driveList";
 import axios from "axios";
 const getData = (file) =>

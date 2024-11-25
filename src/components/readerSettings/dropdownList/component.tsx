@@ -3,7 +3,7 @@ import { dropdownList } from "../../../constants/dropdownList";
 import "./dropdownList.css";
 import { Trans } from "react-i18next";
 import { DropdownListProps, DropdownListState } from "./interface";
-import StorageUtil from "../../../utils/serviceUtils/storageUtil";
+import StorageUtil from "../../../utils/service/configService";
 import { isElectron } from "react-device-detect";
 class DropdownList extends React.Component<
   DropdownListProps,

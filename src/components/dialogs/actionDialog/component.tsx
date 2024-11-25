@@ -2,10 +2,10 @@ import React from "react";
 import "./actionDialog.css";
 import { Trans } from "react-i18next";
 import { ActionDialogProps, ActionDialogState } from "./interface";
-import AddTrash from "../../../utils/readUtils/addTrash";
+import AddTrash from "../../../utils/reader/addTrash";
 
 import toast from "react-hot-toast";
-import AddFavorite from "../../../utils/readUtils/addFavorite";
+import AddFavorite from "../../../utils/reader/addFavorite";
 import MoreAction from "../moreAction";
 declare var window: any;
 class ActionDialog extends React.Component<

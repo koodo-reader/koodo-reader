@@ -1,5 +1,5 @@
 import Plugin from "../../models/Plugin";
-import { generateSHA256Hash } from "../commonUtil";
+import { generateSHA256Hash } from "../common";
 declare var window: any;
 
 class PluginService {

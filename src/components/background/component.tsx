@@ -1,7 +1,7 @@
 import React from "react";
 import "./background.css";
 import { BackgroundProps, BackgroundState } from "./interface";
-import StorageUtil from "../../utils/serviceUtils/storageUtil";
+import StorageUtil from "../../utils/service/configService";
 
 class Background extends React.Component<BackgroundProps, BackgroundState> {
   isFirst: Boolean;

@@ -2,21 +2,21 @@ import React from "react";
 import "./importLocal.css";
 import BookModel from "../../models/Book";
 
-import { fetchMD5 } from "../../utils/fileUtils/md5Util";
+import { fetchMD5 } from "../../utils/file/md5Util";
 import { Trans } from "react-i18next";
 import Dropzone from "react-dropzone";
 
 import { ImportLocalProps, ImportLocalState } from "./interface";
-import RecordRecent from "../../utils/readUtils/recordRecent";
+import RecordRecent from "../../utils/reader/recordRecent";
 import { isElectron } from "react-device-detect";
 import { withRouter } from "react-router-dom";
-import BookUtil from "../../utils/fileUtils/bookUtil";
-import { fetchFileFromPath } from "../../utils/fileUtils/fileUtil";
+import BookUtil from "../../utils/file/bookUtil";
+import { fetchFileFromPath } from "../../utils/file/fileUtil";
 import toast from "react-hot-toast";
-import StorageUtil from "../../utils/serviceUtils/storageUtil";
+import StorageUtil from "../../utils/service/configService";
 
-import ShelfUtil from "../../utils/readUtils/shelfUtil";
-import BookService from "../../utils/serviceUtils/bookService";
+import ShelfUtil from "../../utils/reader/shelfUtil";
+import BookService from "../../utils/service/bookService";
 declare var window: any;
 let clickFilePath = "";
 
