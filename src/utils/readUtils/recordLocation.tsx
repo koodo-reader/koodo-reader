@@ -1,16 +1,4 @@
 class RecordLocation {
-  static recordCfi(bookKey: string, cfi: string, percentage: number) {
-    let json = localStorage.getItem("recordLocation");
-    let obj = JSON.parse(json || "{}");
-    obj[bookKey] = { cfi: cfi, percentage: percentage };
-    localStorage.setItem("recordLocation", JSON.stringify(obj));
-  }
-
-  static getCfi(bookKey: string) {
-    let json = localStorage.getItem("recordLocation");
-    let obj = JSON.parse(json || "{}");
-    return obj[bookKey] || {};
-  }
   static recordHtmlLocation(
     bookKey: string,
     text: string,
@@ -22,35 +10,19 @@ class RecordLocation {
     cfi: string,
     page: string
   ) {
-    if (cfi) {
-      let json = localStorage.getItem("recordLocation");
-      let obj = JSON.parse(json || "{}");
-      obj[bookKey] = {
-        text,
-        chapterTitle,
-        chapterDocIndex,
-        chapterHref,
-        count,
-        percentage,
-        cfi,
-        page,
-      };
-      localStorage.setItem("recordLocation", JSON.stringify(obj));
-    } else {
-      let json = localStorage.getItem("recordLocation");
-      let obj = JSON.parse(json || "{}");
-      obj[bookKey] = {
-        text,
-        chapterTitle,
-        chapterDocIndex,
-        chapterHref,
-        count,
-        percentage,
-        cfi,
-        page,
-      };
-      localStorage.setItem("recordLocation", JSON.stringify(obj));
-    }
+    let json = localStorage.getItem("recordLocation");
+    let obj = JSON.parse(json || "{}");
+    obj[bookKey] = {
+      text,
+      chapterTitle,
+      chapterDocIndex,
+      chapterHref,
+      count,
+      percentage,
+      cfi,
+      page,
+    };
+    localStorage.setItem("recordLocation", JSON.stringify(obj));
   }
 
   static getHtmlLocation(bookKey: string) {
@@ -59,7 +31,7 @@ class RecordLocation {
     return obj[bookKey] || {};
   }
 
-  static getAllCfi() {
+  static getAllHtmlLocation() {
     let json = localStorage.getItem("recordLocation");
     let obj = JSON.parse(json || "{}");
     return obj;

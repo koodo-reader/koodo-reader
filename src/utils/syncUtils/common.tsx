@@ -218,7 +218,7 @@ export const upgradeStorage = async (
       ? JSON.parse(localStorage.getItem("pluginList") || "")
       : [];
   plugins.length > 0 && (await window.localforage.setItem("plugins", plugins));
-  localStorage.deleteItem("pluginList");
+  localStorage.removeItem("pluginList");
 
   toast.success("Upgrade successful");
 };
