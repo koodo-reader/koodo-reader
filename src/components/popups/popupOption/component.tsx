@@ -13,6 +13,7 @@ import { getSelection } from "../../../utils/serviceUtils/mouseEvent";
 import copy from "copy-text-to-clipboard";
 import { getIframeDoc } from "../../../utils/serviceUtils/docUtil";
 import { openExternalUrl } from "../../../utils/serviceUtils/urlUtil";
+import NoteService from "../../../utils/serviceUtils/noteService";
 
 declare var window: any;
 
@@ -92,7 +93,7 @@ class PopupOption extends React.Component<PopupOptionProps> {
     );
     let noteArr = this.props.notes;
     noteArr.push(digest);
-    window.localforage.setItem("notes", noteArr).then(async () => {
+    NoteService.saveAllNotes(noteArr).then(async () => {
       this.props.handleOpenMenu(false);
       toast.success(this.props.t("Addition successful"));
       this.props.handleFetchNotes();

@@ -1,7 +1,7 @@
 import React from "react";
 import "./popupDict.css";
 import { PopupDictProps, PopupDictState } from "./interface";
-import PluginList from "../../../utils/readUtils/pluginList";
+import PluginService from "../../../utils/serviceUtils/pluginService";
 import PluginModel from "../../../models/Plugin";
 import StorageUtil from "../../../utils/serviceUtils/storageUtil";
 import Parser from "html-react-parser";
@@ -13,6 +13,7 @@ import { Trans } from "react-i18next";
 import { openExternalUrl } from "../../../utils/serviceUtils/urlUtil";
 import lemmatize from "wink-lemmatizer";
 import toast from "react-hot-toast";
+import WordService from "../../../utils/serviceUtils/wordService";
 declare var window: any;
 class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
   constructor(props: PopupDictProps) {
@@ -58,9 +59,7 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
     let bookLocation = RecordLocation.getHtmlLocation(bookKey);
     let chapter = bookLocation.chapterTitle;
     let word = new DictHistory(bookKey, text, chapter);
-    let dictHistoryArr = (await window.localforage.getItem("words")) || [];
-    dictHistoryArr.push(word);
-    window.localforage.setItem("words", dictHistoryArr);
+    await WordService.saveWord(word);
   };
   handleDict = async (text: string) => {
     try {
@@ -270,7 +269,7 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
                     if (value) {
                       let plugin: PluginModel = JSON.parse(value);
 
-                      let isSuccess = await PluginList.addPlugin(plugin);
+                      let isSuccess = await PluginService.savePlugin(plugin);
                       if (!isSuccess) {
                         toast.error(this.props.t("Plugin verification failed"));
                         return;

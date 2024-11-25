@@ -1,3 +1,10 @@
+import { getStorageLocation } from "../commonUtil";
+import BookmarkService from "../serviceUtils/bookmarkService";
+import BookService from "../serviceUtils/bookService";
+import NoteService from "../serviceUtils/noteService";
+import PluginService from "../serviceUtils/pluginService";
+import WordService from "../serviceUtils/wordService";
+
 declare var window: any;
 
 export const restore = (file: File, isSync = false) => {
@@ -5,11 +12,7 @@ export const restore = (file: File, isSync = false) => {
     const fs = window.require("fs");
     const path = window.require("path");
     const AdmZip = window.require("adm-zip");
-    const dataPath = localStorage.getItem("storageLocation")
-      ? localStorage.getItem("storageLocation")
-      : window
-          .require("electron")
-          .ipcRenderer.sendSync("storage-location", "ping");
+    const dataPath = getStorageLocation() || "";
     var reader = new FileReader();
     reader.readAsArrayBuffer(file);
     reader.onload = async (event) => {
@@ -72,10 +75,25 @@ export const unzipConfig = async (zipEntries: any) => {
           localStorage.setItem(key, config[key]);
         }
       } else {
-        await window.localforage.setItem(
-          zipEntries[i].name.split(".")[0],
-          JSON.parse(text)
-        );
+        switch (zipEntries[i].name.split(".")[0]) {
+          case "books":
+            await BookService.saveAllBooks(JSON.parse(text));
+            break;
+          case "notes":
+            await NoteService.saveAllNotes(JSON.parse(text));
+            break;
+          case "bookmarks":
+            await BookmarkService.saveAllBookmarks(JSON.parse(text));
+            break;
+          case "words":
+            await WordService.saveAllWords(JSON.parse(text));
+            break;
+          case "plugins":
+            await PluginService.saveAllPlugins(JSON.parse(text));
+            break;
+          default:
+            break;
+        }
       }
     }
   }
@@ -85,11 +103,7 @@ export const unzipConfig = async (zipEntries: any) => {
 export const unzipBook = async (zipEntries: any) => {
   const fs = window.require("fs");
   const path = window.require("path");
-  const dataPath = localStorage.getItem("storageLocation")
-    ? localStorage.getItem("storageLocation")
-    : window
-        .require("electron")
-        .ipcRenderer.sendSync("storage-location", "ping");
+  const dataPath = getStorageLocation() || "";
 
   if (!fs.existsSync(path.join(dataPath, "book"))) {
     fs.mkdirSync(path.join(dataPath, "book"));
@@ -113,11 +127,7 @@ export const unzipBook = async (zipEntries: any) => {
 export const unzipCover = async (zipEntries: any) => {
   const fs = window.require("fs");
   const path = window.require("path");
-  const dataPath = localStorage.getItem("storageLocation")
-    ? localStorage.getItem("storageLocation")
-    : window
-        .require("electron")
-        .ipcRenderer.sendSync("storage-location", "ping");
+  const dataPath = getStorageLocation() || "";
 
   if (!fs.existsSync(path.join(dataPath, "cover"))) {
     fs.mkdirSync(path.join(dataPath, "cover"));

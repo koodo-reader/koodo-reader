@@ -2,8 +2,8 @@ import Plugin from "../../models/Plugin";
 import { generateSHA256Hash } from "../commonUtil";
 declare var window: any;
 
-class PluginList {
-  static async addPlugin(plugin: Plugin) {
+class PluginService {
+  static async savePlugin(plugin: Plugin) {
     if ((await generateSHA256Hash(plugin.script)) !== plugin.scriptSHA256) {
       return false;
     }
@@ -44,10 +44,18 @@ class PluginList {
       {}) as Plugin;
   }
   static async getAllPlugins() {
-    let pluginList = (await window.localforage.getItem("plugins"))
-      ? await window.localforage.getItem("plugins")
-      : [];
+    let pluginList = await window.localforage.getItem("plugins");
+    if (!pluginList) {
+      pluginList =
+        localStorage.getItem("pluginList") !== "{}" &&
+        localStorage.getItem("pluginList")
+          ? JSON.parse(localStorage.getItem("pluginList") || "")
+          : [];
+    }
     return pluginList || [];
+  }
+  static async saveAllPlugins(plugins: Plugin[]) {
+    await window.localforage.setItem("plugins", plugins);
   }
   static async deletePluginById(identifier: string) {
     let pluginList = (await window.localforage.getItem("plugins"))
@@ -72,4 +80,4 @@ class PluginList {
   }
 }
 
-export default PluginList;
+export default PluginService;

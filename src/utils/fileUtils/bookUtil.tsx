@@ -3,7 +3,7 @@ import { isElectron } from "react-device-detect";
 
 import BookModel from "../../models/Book";
 import toast from "react-hot-toast";
-import { copyArrayBuffer } from "../commonUtil";
+import { copyArrayBuffer, getStorageLocation } from "../commonUtil";
 import iconv from "iconv-lite";
 import { Buffer } from "buffer";
 import { base64ToArrayBufferAndExtension } from "../syncUtils/common";
@@ -14,11 +14,7 @@ class BookUtil {
     if (isElectron) {
       const fs = window.require("fs");
       const path = window.require("path");
-      const dataPath = localStorage.getItem("storageLocation")
-        ? localStorage.getItem("storageLocation")
-        : window
-            .require("electron")
-            .ipcRenderer.sendSync("storage-location", "ping");
+      const dataPath = getStorageLocation() || "";
       try {
         if (!fs.existsSync(path.join(dataPath, "book"))) {
           fs.mkdirSync(path.join(dataPath, "book"));
@@ -38,11 +34,7 @@ class BookUtil {
     if (isElectron) {
       const fs_extra = window.require("fs-extra");
       const path = window.require("path");
-      const dataPath = localStorage.getItem("storageLocation")
-        ? localStorage.getItem("storageLocation")
-        : window
-            .require("electron")
-            .ipcRenderer.sendSync("storage-location", "ping");
+      const dataPath = getStorageLocation() || "";
       return new Promise<void>((resolve, reject) => {
         try {
           fs_extra.remove(
@@ -66,11 +58,7 @@ class BookUtil {
         var fs = window.require("fs");
         var path = window.require("path");
         let _bookPath = path.join(
-          localStorage.getItem("storageLocation")
-            ? localStorage.getItem("storageLocation")
-            : window
-                .require("electron")
-                .ipcRenderer.sendSync("storage-location", "ping"),
+          getStorageLocation() || "",
           `book`,
           key + "." + format
         );
@@ -100,14 +88,7 @@ class BookUtil {
     if (isElectron) {
       var fs = window.require("fs");
       var path = window.require("path");
-      let directoryPath = path.join(
-        localStorage.getItem("storageLocation")
-          ? localStorage.getItem("storageLocation")
-          : window
-              .require("electron")
-              .ipcRenderer.sendSync("storage-location", "ping"),
-        "cover"
-      );
+      let directoryPath = path.join(getStorageLocation() || "", "cover");
       const files = fs.readdirSync(directoryPath);
       const imageFiles = files.filter((file) => file.startsWith(book.key));
       if (imageFiles.length === 0) {
@@ -125,14 +106,7 @@ class BookUtil {
     if (isElectron) {
       var fs = window.require("fs");
       var path = window.require("path");
-      let directoryPath = path.join(
-        localStorage.getItem("storageLocation")
-          ? localStorage.getItem("storageLocation")
-          : window
-              .require("electron")
-              .ipcRenderer.sendSync("storage-location", "ping"),
-        "cover"
-      );
+      let directoryPath = path.join(getStorageLocation() || "", "cover");
       if (!fs.existsSync(directoryPath)) {
         return false;
       }
@@ -147,14 +121,7 @@ class BookUtil {
     if (isElectron) {
       var fs = window.require("fs");
       var path = window.require("path");
-      let directoryPath = path.join(
-        localStorage.getItem("storageLocation")
-          ? localStorage.getItem("storageLocation")
-          : window
-              .require("electron")
-              .ipcRenderer.sendSync("storage-location", "ping"),
-        "cover"
-      );
+      let directoryPath = path.join(getStorageLocation() || "", "cover");
       const files = fs.readdirSync(directoryPath);
       const imageFiles = files.filter((file) => file.startsWith(key));
       if (imageFiles.length === 0) {
@@ -175,11 +142,7 @@ class BookUtil {
         var fs = window.require("fs");
         var path = window.require("path");
         let _bookPath = path.join(
-          localStorage.getItem("storageLocation")
-            ? localStorage.getItem("storageLocation")
-            : window
-                .require("electron")
-                .ipcRenderer.sendSync("storage-location", "ping"),
+          getStorageLocation() || "",
           `book`,
           key + "." + format
         );
@@ -328,14 +291,7 @@ class BookUtil {
     if (isElectron) {
       var fs = window.require("fs");
       var path = window.require("path");
-      let directoryPath = path.join(
-        localStorage.getItem("storageLocation")
-          ? localStorage.getItem("storageLocation")
-          : window
-              .require("electron")
-              .ipcRenderer.sendSync("storage-location", "ping"),
-        "cover"
-      );
+      let directoryPath = path.join(getStorageLocation() || "", "cover");
       if (!fs.existsSync(directoryPath)) {
         fs.mkdirSync(directoryPath);
       }

@@ -1,4 +1,7 @@
 import BookModel from "../../models/Book";
+import { getStorageLocation } from "../commonUtil";
+import BookService from "../serviceUtils/bookService";
+import PluginService from "../serviceUtils/pluginService";
 declare var window: any;
 export const changePath = (oldPath: string, newPath: string) => {
   return new Promise<number>((resolve, reject) => {
@@ -37,11 +40,7 @@ export const syncData = (blob: Blob, books: BookModel[] = [], isSync: true) => {
     const fs = window.require("fs");
     const path = window.require("path");
     const AdmZip = window.require("adm-zip");
-    const dataPath = localStorage.getItem("storageLocation")
-      ? localStorage.getItem("storageLocation")
-      : window
-          .require("electron")
-          .ipcRenderer.sendSync("storage-location", "ping");
+    const dataPath = getStorageLocation() || "";
     var reader = new FileReader();
     reader.readAsArrayBuffer(file);
     reader.onload = async (event) => {
@@ -58,7 +57,7 @@ export const syncData = (blob: Blob, books: BookModel[] = [], isSync: true) => {
 
       if (!isSync) {
         let deleteBooks = books.map((item) => {
-          return window.localforage.removeItem(item.key);
+          return BookService.deleteBook(item.key);
         });
         await Promise.all(deleteBooks);
         resolve(true);
@@ -193,7 +192,7 @@ export const upgradeStorage = async (
       item.cover = "";
     }
   });
-  await window.localforage.setItem("books", books);
+  await BookService.saveAllBooks(books);
   //check if folder named book exsits, and loop each file and change file extension
   if (!fs.existsSync(path.join(dataPath, "book"))) {
     return;
@@ -217,7 +216,7 @@ export const upgradeStorage = async (
     localStorage.getItem("pluginList")
       ? JSON.parse(localStorage.getItem("pluginList") || "")
       : [];
-  plugins.length > 0 && (await window.localforage.setItem("plugins", plugins));
+  plugins.length > 0 && (await PluginService.saveAllPlugins(plugins));
   localStorage.removeItem("pluginList");
 
   toast.success("Upgrade successful");

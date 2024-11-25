@@ -15,7 +15,10 @@ import {
 import BookUtil from "../../utils/fileUtils/bookUtil";
 import ShelfUtil from "../../utils/readUtils/shelfUtil";
 import StorageUtil from "../../utils/serviceUtils/storageUtil";
-declare var window: any;
+import BookService from "../../utils/serviceUtils/bookService";
+import NoteService from "../../utils/serviceUtils/noteService";
+import WordService from "../../utils/serviceUtils/wordService";
+
 class SelectBook extends React.Component<BookListProps, BookListState> {
   constructor(props: BookListProps) {
     super(props);
@@ -147,18 +150,11 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
                 <span
                   className="book-manage-title select-book-action"
                   onClick={async () => {
-                    if (
-                      this.props.books.filter(
-                        (item: BookModel) =>
-                          this.props.selectedBooks.indexOf(item.key) > -1
-                      ).length > 0
-                    ) {
-                      await exportBooks(
-                        this.props.books.filter(
-                          (item: BookModel) =>
-                            this.props.selectedBooks.indexOf(item.key) > -1
-                        )
-                      );
+                    let books = await BookService.getBooksByKeys(
+                      this.props.selectedBooks
+                    );
+                    if (books.length > 0) {
+                      await exportBooks(books);
                       toast.success(this.props.t("Export successful"));
                     } else {
                       toast(this.props.t("Nothing to export"));
@@ -170,27 +166,14 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
                 <span
                   className="book-manage-title select-book-action"
                   onClick={async () => {
-                    let selectedBooks = this.props.books.filter(
-                      (item: BookModel) =>
-                        this.props.selectedBooks.indexOf(item.key) > -1
+                    let selectedBooks = await BookService.getBooksByKeys(
+                      this.props.selectedBooks
                     );
-                    if (
-                      this.props.notes.filter(
-                        (item) =>
-                          selectedBooks.filter(
-                            (subitem) => subitem.key === item.bookKey
-                          ).length > 0 && item.notes !== ""
-                      ).length > 0
-                    ) {
-                      exportNotes(
-                        this.props.notes.filter(
-                          (item) =>
-                            selectedBooks.filter(
-                              (subitem) => subitem.key === item.bookKey
-                            ).length > 0 && item.notes !== ""
-                        ),
-                        selectedBooks
-                      );
+                    let notes = await NoteService.getNotesByBookKeys(
+                      this.props.selectedBooks
+                    );
+                    if (notes.length > 0) {
+                      exportNotes(notes, selectedBooks);
                       toast.success(this.props.t("Export successful"));
                     } else {
                       toast(this.props.t("Nothing to export"));
@@ -202,27 +185,14 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
                 <span
                   className="book-manage-title select-book-action"
                   onClick={async () => {
-                    let selectedBooks = this.props.books.filter(
-                      (item: BookModel) =>
-                        this.props.selectedBooks.indexOf(item.key) > -1
+                    let selectedBooks = await BookService.getBooksByKeys(
+                      this.props.selectedBooks
                     );
-                    if (
-                      this.props.notes.filter(
-                        (item) =>
-                          selectedBooks.filter(
-                            (subitem) => subitem.key === item.bookKey
-                          ).length > 0 && item.notes === ""
-                      ).length > 0
-                    ) {
-                      exportHighlights(
-                        this.props.notes.filter(
-                          (item) =>
-                            selectedBooks.filter(
-                              (subitem) => subitem.key === item.bookKey
-                            ).length > 0 && item.notes === ""
-                        ),
-                        selectedBooks
-                      );
+                    let highlights = await NoteService.getHighlightsByBookKeys(
+                      this.props.selectedBooks
+                    );
+                    if (highlights.length > 0) {
+                      exportHighlights(highlights, selectedBooks);
                       toast.success(this.props.t("Export successful"));
                     } else {
                       toast(this.props.t("Nothing to export"));
@@ -234,17 +204,11 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
                 <span
                   className="book-manage-title select-book-action"
                   onClick={async () => {
-                    let selectedBooks = this.props.books.filter(
-                      (item: BookModel) =>
-                        this.props.selectedBooks.indexOf(item.key) > -1
+                    let selectedBooks = await BookService.getBooksByKeys(
+                      this.props.selectedBooks
                     );
-                    let dictHistory =
-                      (await window.localforage.getItem("words")) || [];
-                    dictHistory = dictHistory.filter(
-                      (item) =>
-                        selectedBooks.filter(
-                          (subitem) => subitem.key === item.bookKey
-                        ).length > 0
+                    let dictHistory = await WordService.getWordsByBookKeys(
+                      this.props.selectedBooks
                     );
                     if (dictHistory.length > 0) {
                       exportDictionaryHistory(dictHistory, selectedBooks);
@@ -259,20 +223,10 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
                 <span
                   className="book-manage-title select-book-action"
                   onClick={async () => {
-                    if (
-                      this.props.books.filter(
-                        (item: BookModel) =>
-                          this.props.selectedBooks.indexOf(item.key) > -1
-                      ).length > 0
-                    ) {
-                      let selectedBooks = this.props.books.filter(
-                        (item: BookModel) =>
-                          this.props.selectedBooks.indexOf(item.key) > -1
-                      );
-                      if (selectedBooks.length === 0) {
-                        toast(this.props.t("Nothing to precache"));
-                        return;
-                      }
+                    let selectedBooks = await BookService.getBooksByKeys(
+                      this.props.selectedBooks
+                    );
+                    if (selectedBooks.length > 0) {
                       for (
                         let index = 0;
                         index < selectedBooks.length;
@@ -322,9 +276,8 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
                 <span
                   className="book-manage-title select-book-action"
                   onClick={async () => {
-                    let selectedBooks = this.props.books.filter(
-                      (item: BookModel) =>
-                        this.props.selectedBooks.indexOf(item.key) > -1
+                    let selectedBooks = await BookService.getBooksByKeys(
+                      this.props.selectedBooks
                     );
                     if (selectedBooks.length === 0) {
                       toast(this.props.t("Nothing to delete"));

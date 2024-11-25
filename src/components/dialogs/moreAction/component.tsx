@@ -11,6 +11,8 @@ import {
   exportNotes,
 } from "../../../utils/syncUtils/exportUtil";
 import StorageUtil from "../../../utils/serviceUtils/storageUtil";
+import NoteService from "../../../utils/serviceUtils/noteService";
+import WordService from "../../../utils/serviceUtils/wordService";
 declare var window: any;
 class ActionDialog extends React.Component<MoreActionProps, MoreActionState> {
   constructor(props: MoreActionProps) {
@@ -67,20 +69,15 @@ class ActionDialog extends React.Component<MoreActionProps, MoreActionState> {
           <div
             className="action-dialog-edit"
             style={{ paddingLeft: "0px" }}
-            onClick={() => {
-              if (
-                this.props.notes.filter(
-                  (item) =>
-                    item.bookKey === this.props.currentBook.key &&
-                    item.notes !== ""
-                ).length > 0
-              ) {
-                exportNotes(
-                  this.props.notes.filter(
-                    (item) => item.bookKey === this.props.currentBook.key
-                  ),
-                  [...this.props.books, ...this.props.deletedBooks]
-                );
+            onClick={async () => {
+              let notes = await NoteService.getNotesByBookKey(
+                this.props.currentBook.key
+              );
+              if (notes.length > 0) {
+                exportNotes(notes, [
+                  ...this.props.books,
+                  ...this.props.deletedBooks,
+                ]);
                 toast.success(this.props.t("Export successful"));
               } else {
                 toast(this.props.t("Nothing to export"));
@@ -94,20 +91,15 @@ class ActionDialog extends React.Component<MoreActionProps, MoreActionState> {
           <div
             className="action-dialog-edit"
             style={{ paddingLeft: "0px" }}
-            onClick={() => {
-              if (
-                this.props.notes.filter(
-                  (item) =>
-                    item.bookKey === this.props.currentBook.key &&
-                    item.notes === ""
-                ).length > 0
-              ) {
-                exportHighlights(
-                  this.props.notes.filter(
-                    (item) => item.bookKey === this.props.currentBook.key
-                  ),
-                  [...this.props.books, ...this.props.deletedBooks]
-                );
+            onClick={async () => {
+              let highlights = await NoteService.getHighlightsByBookKey(
+                this.props.currentBook.key
+              );
+              if (highlights.length > 0) {
+                exportHighlights(highlights, [
+                  ...this.props.books,
+                  ...this.props.deletedBooks,
+                ]);
                 toast.success(this.props.t("Export successful"));
               } else {
                 toast(this.props.t("Nothing to export"));
@@ -122,13 +114,10 @@ class ActionDialog extends React.Component<MoreActionProps, MoreActionState> {
             className="action-dialog-edit"
             style={{ paddingLeft: "0px" }}
             onClick={async () => {
-              let dictHistory =
-                (await window.localforage.getItem("words")) || [];
-              if (
-                dictHistory.filter(
-                  (item) => item.bookKey === this.props.currentBook.key
-                ).length > 0
-              ) {
+              let dictHistory = await WordService.getWordsByBookKey(
+                this.props.currentBook.key
+              );
+              if (dictHistory.length > 0) {
                 exportDictionaryHistory(dictHistory, [
                   ...this.props.books,
                   ...this.props.deletedBooks,

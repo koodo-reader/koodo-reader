@@ -9,6 +9,7 @@ import NoteModel from "../../../models/Note";
 import { Trans } from "react-i18next";
 import toast from "react-hot-toast";
 import { getIframeDoc } from "../../../utils/serviceUtils/docUtil";
+import NoteService from "../../../utils/serviceUtils/noteService";
 declare var window: any;
 
 class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
@@ -68,7 +69,7 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
           item.cfi = cfi;
         }
       });
-      window.localforage.setItem("notes", this.props.notes).then(() => {
+      NoteService.saveAllNotes(this.props.notes).then(() => {
         this.props.handleOpenMenu(false);
         toast.success(this.props.t("Addition successful"));
         this.props.handleFetchNotes();
@@ -104,7 +105,7 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
 
       let noteArr = this.props.notes;
       noteArr.push(note);
-      window.localforage.setItem("notes", noteArr).then(async () => {
+      NoteService.saveAllNotes(noteArr).then(async () => {
         this.props.handleOpenMenu(false);
         toast.success(this.props.t("Addition successful"));
         this.props.handleFetchNotes();
@@ -128,7 +129,7 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
       });
       if (noteIndex > -1) {
         this.props.notes.splice(noteIndex, 1);
-        window.localforage.setItem("notes", this.props.notes).then(() => {
+        NoteService.saveAllNotes(this.props.notes).then(() => {
           toast.success(this.props.t("Deletion successful"));
           this.props.handleMenuMode("");
           this.props.handleFetchNotes();

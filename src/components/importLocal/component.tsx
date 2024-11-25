@@ -16,6 +16,7 @@ import toast from "react-hot-toast";
 import StorageUtil from "../../utils/serviceUtils/storageUtil";
 
 import ShelfUtil from "../../utils/readUtils/shelfUtil";
+import BookService from "../../utils/serviceUtils/bookService";
 declare var window: any;
 let clickFilePath = "";
 
@@ -107,15 +108,9 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
         BookUtil.addCover(book);
       }
 
-      let bookArr = [...(this.props.books || []), ...this.props.deletedBooks];
-      if (bookArr == null) {
-        bookArr = [];
-      }
-      bookArr.push(book);
       this.props.handleReadingBook(book);
       RecordRecent.setRecent(book.key);
-      window.localforage
-        .setItem("books", bookArr)
+      BookService.saveBook(book)
         .then(() => {
           this.props.handleFetchBooks();
           if (this.props.mode === "shelf") {
