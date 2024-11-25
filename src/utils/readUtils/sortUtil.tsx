@@ -57,7 +57,7 @@ const getDurationArr = () => {
   return Object.keys(durationObj);
 };
 const getPercentageArr = () => {
-  let locationObj = RecordLocation.getAllCfi();
+  let locationObj = RecordLocation.getAllHtmlLocation();
   var sortable: any = [];
   for (let obj in locationObj) {
     sortable.push([obj, locationObj[obj].percentage || 0]);
