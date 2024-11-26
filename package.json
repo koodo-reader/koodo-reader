@@ -248,7 +248,6 @@
           "target": "deb",
           "arch": [
             "arm64",
-            "ia32",
             "x64"
           ]
         },
@@ -262,7 +261,6 @@
           "target": "AppImage",
           "arch": [
             "arm64",
-            "ia32",
             "x64"
           ]
         }
