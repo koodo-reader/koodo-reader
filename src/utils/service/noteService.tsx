@@ -37,9 +37,19 @@ class NoteService {
     await window.localforage.removeItem("notes");
   }
   static async saveNote(note: Note) {
-    let notes = await this.getAllNotes();
-    notes.push(note);
-    await this.saveAllNotes(notes);
+    if (isElectron) {
+      let noteRaw = await this.jsonToSqlite(note);
+      window.require("electron").ipcRenderer.sendSync("database-command", {
+        command: "insert",
+        table: "notes",
+        data: noteRaw,
+        sql: `INSERT INTO notes (key, bookKey, chapter, chapterDocIndex, text, cfi, range, notes, date, percentage, color, tag) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)`,
+      });
+    } else {
+      let notes = await this.getAllNotes();
+      notes.push(note);
+      await this.saveAllNotes(notes);
+    }
   }
   static async deleteNote(key: string) {
     let notes = await this.getAllNotes();
