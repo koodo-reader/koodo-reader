@@ -21,6 +21,7 @@
     "@aws-sdk/client-s3": "^3.485.0",
     "adm-zip": "^0.5.2",
     "axios": "^0.19.2",
+    "better-sqlite3": "^11.5.0",
     "buffer": "^6.0.3",
     "copy-text-to-clipboard": "^2.2.0",
     "dompurify": "^3.0.1",
@@ -56,6 +57,7 @@
     "cross-env": "^6.0.3",
     "electron": "20.3.12",
     "electron-builder": "^23.6.0",
+    "electron-rebuild": "^3.2.9",
     "hard-source-webpack-plugin": "^0.13.1",
     "html-react-parser": "^5.1.10",
     "i18next": "^20.2.4",
@@ -86,7 +88,9 @@
     "ele": "electron .",
     "dev": "concurrently \"cross-env BROWSER=none npm start\" \"wait-on http://127.0.0.1:3000/ && nodemon --watch main.js --exec electron .\"",
     "release": "electron-builder",
-    "prerelease": "react-scripts build"
+    "prerelease": "react-scripts build",
+    "postinstall": "electron-builder install-app-deps",
+    "rebuild": "electron-rebuild -f -w better-sqlite3"
   },
   "homepage": "./",
   "build": {

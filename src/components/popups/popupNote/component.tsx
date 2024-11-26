@@ -85,7 +85,11 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
         )
       );
 
-      let percentage = 0;
+      let percentage = RecordLocation.getHtmlLocation(
+        this.props.currentBook.key
+      ).percentage
+        ? RecordLocation.getHtmlLocation(this.props.currentBook.key).percentage
+        : "0";
 
       let color = this.props.color || 0;
       let tag = this.state.tag;
