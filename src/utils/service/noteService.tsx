@@ -3,6 +3,18 @@ import Note from "../../models/Note";
 declare var window: any;
 
 class NoteService {
+  static async jsonToSqlite(note: Note) {
+    let noteRaw: any = { ...note };
+    noteRaw.date = JSON.stringify(note.date);
+    noteRaw.tag = JSON.stringify(note.tag);
+    return noteRaw;
+  }
+  static async sqliteToJson(noteRaw: any) {
+    let note: Note = { ...noteRaw };
+    note.date = JSON.parse(noteRaw.date);
+    note.tag = JSON.parse(noteRaw.tag);
+    return note;
+  }
   static async getAllNotes(): Promise<Note[]> {
     if (isElectron) {
       let noteRaw = window
