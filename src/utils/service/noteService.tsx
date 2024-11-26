@@ -1,10 +1,22 @@
+import { isElectron } from "react-device-detect";
 import Note from "../../models/Note";
 declare var window: any;
 
 class NoteService {
   static async getAllNotes(): Promise<Note[]> {
-    const notes = (await window.localforage.getItem("notes")) || [];
-    return notes;
+    if (isElectron) {
+      let noteRaw = window
+        .require("electron")
+        .ipcRenderer.sendSync("database-command", "ping");
+      return noteRaw.map((note: any) => {
+        note.date = JSON.parse(note.date);
+        note.tag = JSON.parse(note.tag);
+        return note;
+      });
+    } else {
+      const notes = (await window.localforage.getItem("notes")) || [];
+      return notes;
+    }
   }
   static async saveAllNotes(notes: Note[]) {
     await window.localforage.setItem("notes", notes);

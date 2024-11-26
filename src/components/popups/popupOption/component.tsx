@@ -49,7 +49,7 @@ class PopupOption extends React.Component<PopupOptionProps> {
     let percentage = RecordLocation.getHtmlLocation(this.props.currentBook.key)
       .percentage
       ? RecordLocation.getHtmlLocation(this.props.currentBook.key).percentage
-      : 0;
+      : "0";
     let color = this.props.color;
     let notes = "";
     let pageArea = document.getElementById("page-area");

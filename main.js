@@ -17,7 +17,12 @@ const configDir = app.getPath("userData");
 const dirPath = path.join(configDir, "uploads");
 let mainWin;
 let readerWindow;
-let mainView
+let mainView;
+let notesDB;
+let booksDB;
+let bookmarksDB;
+let wordsDB;
+let pluginsDB;
 const singleInstance = app.requestSingleInstanceLock();
 var filePath = null;
 if (process.platform != "darwin" && process.argv.length >= 2) {
@@ -38,7 +43,7 @@ let options = {
   },
 };
 const os = require('os');
-
+const Database = require("better-sqlite3");
 if (os.platform() === 'linux') {
   options = Object.assign({}, options, {
     icon: path.join(__dirname, "./build/assets/icon.png"),
@@ -61,6 +66,39 @@ if (!singleInstance) {
       mainWin.focus();
     }
   });
+}
+const getDBConnection = (dbName) => {
+  if (dbName === "notes") {
+    if (!notesDB) {
+      notesDB = new Database("./notes.db", { verbose: console.log });
+      notesDB.pragma('journal_mode = WAL');
+    }
+    return notesDB;
+  } else if (dbName === "books") {
+    if (!booksDB) {
+      booksDB = new Database("./books.db", { verbose: console.log });
+      booksDB.pragma('journal_mode = WAL');
+    }
+    return booksDB;
+  } else if (dbName === "bookmarks") {
+    if (!bookmarksDB) {
+      bookmarksDB = new Database("./bookmarks.db", { verbose: console.log });
+      bookmarksDB.pragma('journal_mode = WAL');
+    }
+    return bookmarksDB;
+  } else if (dbName === "words") {
+    if (!wordsDB) {
+      wordsDB = new Database("./words.db", { verbose: console.log });
+      wordsDB.pragma('journal_mode = WAL');
+    }
+    return wordsDB;
+  } else if (dbName === "plugins") {
+    if (!pluginsDB) {
+      pluginsDB = new Database("./plugins.db", { verbose: console.log });
+      pluginsDB.pragma('journal_mode = WAL');
+    }
+    return pluginsDB;
+  }
 }
 const createMainWin = () => {
   mainWin = new BrowserWindow(options);
@@ -463,8 +501,15 @@ const createMainWin = () => {
     });
     return path;
   });
-  ipcMain.on("storage-location", (event, arg) => {
+  ipcMain.on("storage-location", (event, config) => {
     event.returnValue = path.join(dirPath, "data");
+  });
+  ipcMain.on("database-command", (event, arg) => {
+    let db = getDBConnection("notes");
+    const row = db.prepare('SELECT * FROM notes');
+    const notes = row.all();
+    console.log(notes);
+    event.returnValue = notes;
   });
   ipcMain.on("user-data", (event, arg) => {
     event.returnValue = dirPath;

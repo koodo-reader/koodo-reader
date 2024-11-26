@@ -3,13 +3,13 @@ class Bookmark {
   bookKey: string;
   cfi: string;
   label: string;
-  percentage: number;
+  percentage: string;
   chapter: string;
   constructor(
     bookKey: string,
     cfi: string,
     label: string,
-    percentage: number,
+    percentage: string,
     chapter: string
   ) {
     this.key = new Date().getTime() + "";
