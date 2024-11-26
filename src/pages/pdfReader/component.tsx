@@ -68,6 +68,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         iframe.contentWindow || iframe.contentDocument?.defaultView;
       this.setState({ loading: false });
       pdfMouseEvent();
+   
       doc.document.addEventListener("click", async (event: any) => {
         event.preventDefault();
         await handleLinkJump(event);
@@ -180,6 +181,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           title={this.state.title}
           width="100%"
           height="100%"
+       
         >
           Loading
         </iframe>

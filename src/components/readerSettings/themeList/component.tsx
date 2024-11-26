@@ -1,14 +1,16 @@
 import React from "react";
-import { backgroundList, textList } from "../../../constants/themeList";
+import {backgroundList, textList, lines} from "../../../constants/themeList";
 import StyleUtil from "../../../utils/readUtils/styleUtil";
 import "./themeList.css";
-import { Trans } from "react-i18next";
-import { ThemeListProps, ThemeListState } from "./interface";
+import {Trans} from "react-i18next";
+import {ThemeListProps, ThemeListState} from "./interface";
 import StorageUtil from "../../../utils/serviceUtils/storageUtil";
-import { Panel as ColorPickerPanel } from "rc-color-picker";
+import {Panel as ColorPickerPanel} from "rc-color-picker";
 import "rc-color-picker/assets/index.css";
 import ThemeUtil from "../../../utils/readUtils/themeUtil";
 import BookUtil from "../../../utils/fileUtils/bookUtil";
+
+
 
 class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
   constructor(props: ThemeListProps) {
@@ -31,8 +33,18 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
             (StorageUtil.getReaderConfig("textColor") || "rgba(0,0,0,1)")
           );
         }),
+      // currentLineIndex: lines
+      //   .concat(ThemeUtil.getAllThemes())
+      //   .findIndex((item) => {
+      //     return (
+      //       item ===
+      //       (StorageUtil.getReaderConfig("lineColors") || "rgba(0,0,0,1)")
+      //     );
+      //   }),
       isShowTextPicker: false,
       isShowBgPicker: false,
+      isButtonClicked:false,
+     
     };
   }
   handleChangeBgColor = (color: string, index: number = -1) => {
@@ -66,8 +78,11 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
     ) {
       ThemeUtil.setThemes(StorageUtil.getReaderConfig("textColor"));
     }
-    this.setState({ isShowTextPicker });
+    this.setState({isShowTextPicker});
   };
+
+
+
   handleColorBgPicker = (isShowBgPicker: boolean) => {
     if (
       !isShowBgPicker &&
@@ -81,7 +96,7 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
     ) {
       ThemeUtil.setThemes(StorageUtil.getReaderConfig("backgroundColor"));
     }
-    this.setState({ isShowBgPicker });
+    this.setState({isShowBgPicker});
   };
   handleChooseTextColor = (color) => {
     if (typeof color !== "object") {
@@ -97,6 +112,22 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
     );
     this.props.renderBookFunc();
   };
+
+  handleChooseLineColor = (isButtonClicked,colors:string[]) => {
+   
+    const colorsJSON = JSON.stringify(colors);
+     StorageUtil.setReaderConfig("lineColors",colorsJSON);
+
+    if (isButtonClicked) {
+       this.props.renderBookWithLineColors();
+     }
+    
+
+   this.setState({ isButtonClicked:false});
+  }
+  
+    
+
   render() {
     const renderBackgroundColorList = () => {
       return backgroundList
@@ -113,15 +144,13 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
               onClick={() => {
                 this.handleChangeBgColor(item, index);
               }}
-              style={{ backgroundColor: item }}
-            >
+              style={{backgroundColor: item}}>
               {index > 3 && index === this.state.currentBackgroundIndex && (
                 <span
                   className="icon-close"
                   onClick={() => {
                     ThemeUtil.clear(item);
-                  }}
-                ></span>
+                  }}></span>
               )}
             </li>
           );
@@ -140,20 +169,19 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
             onClick={() => {
               this.handleChooseTextColor(item);
             }}
-            style={{ backgroundColor: item }}
-          >
+            style={{backgroundColor: item}}>
             {index > 3 && index === this.state.currentTextIndex && (
               <span
                 className="icon-close"
                 onClick={() => {
                   ThemeUtil.clear(item);
-                }}
-              ></span>
+                }}></span>
             )}
           </li>
         );
       });
     };
+
     return (
       <div className="background-color-setting">
         <div className="background-color-text">
@@ -164,11 +192,11 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
             className="background-color-circle"
             onClick={() => {
               this.handleColorBgPicker(!this.state.isShowBgPicker);
-            }}
-          >
+            }}>
             <span
-              className={this.state.isShowBgPicker ? "icon-check" : "icon-more"}
-            ></span>
+              className={
+                this.state.isShowBgPicker ? "icon-check" : "icon-more"
+              }></span>
           </li>
 
           {renderBackgroundColorList()}
@@ -193,13 +221,11 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
             className="background-color-circle"
             onClick={() => {
               this.handleColorTextPicker(!this.state.isShowTextPicker);
-            }}
-          >
+            }}>
             <span
               className={
                 this.state.isShowTextPicker ? "icon-check" : "icon-more"
-              }
-            ></span>
+              }></span>
           </li>
 
           {renderTextColorList()}
@@ -216,6 +242,27 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
             }}
           />
         )}
+        
+         <div className="background-color-line">
+          <Trans>Line color</Trans>
+        </div>
+        <div className="grp-btn-change-color-line">
+        <button 
+             onClick={()=>this.handleChooseLineColor(!this.state.isButtonClicked ,lines)}
+              className="btn-style"
+              >    
+              A+  
+            </button>
+
+            <button 
+             onClick={()=>this.handleChooseLineColor(!this.state.isButtonClicked ,["#000000"])}
+              className="btn--reset-style"
+              >  
+              A-    
+            </button>
+
+        </div>
+     
       </div>
     );
   }

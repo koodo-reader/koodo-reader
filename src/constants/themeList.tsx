@@ -55,4 +55,4 @@ export const classes = [
 ];
 export const colors = ["#FEF3CD", "#FBFACC", "#CEFACD", "#CDE9FA"];
 export const pdfColors = ["#fac106", "#ebe702", "#0be603", "#0493e6"];
-export const lines = ["#FF0000", "#000080", "#0000FF", "#2EFF2E"];
+export const lines = ["#FF0000", "#000080", "#0000FF"];

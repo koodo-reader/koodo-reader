@@ -21,6 +21,8 @@ import Note from "../../models/Note";
 import PageWidget from "../../containers/pageWidget";
 import { scrollContents } from "../../utils/commonUtil";
 
+
+
 declare var window: any;
 let lock = false; //prevent from clicking too fasts
 
@@ -61,14 +63,18 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
   componentDidMount() {
     window.rangy.init();
     this.handleRenderBook();
+    this.handleRenderBookLinesColor();
     //make sure page width is always 12 times, section = Math.floor(element.clientWidth / 12), or text will be blocked
     this.handlePageWidth();
     this.props.handleRenderBookFunc(this.handleRenderBook);
+    this.props.handleRenderBookWithLinesColors(this.handleRenderBookLinesColor)
 
     window.addEventListener("resize", () => {
       BookUtil.reloadBooks();
     });
+  
   }
+
   handlePageWidth = () => {
     const findValidMultiple = (limit: number) => {
       let multiple = limit - (limit % 12);
@@ -137,6 +143,51 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     this.props.handleMenuMode("note");
     this.props.handleOpenMenu(true);
   };
+
+
+
+
+  handleRenderBookLinesColor =  () => {
+    // setTimeout(()=>{
+    let doc = getIframeDoc();
+    if (!doc) {
+      console.error("document introuvable");
+      return;
+
+    }
+    const savedColors = StorageUtil.getReaderConfig("lineColors");
+
+    if (savedColors) {
+      const lineColors = JSON.parse(savedColors);
+    
+      const kookitTextLines = doc.querySelectorAll<HTMLElement>(".kookit-text");
+
+      if (!kookitTextLines.length) {
+        console.error("Aucune ligne trouvée avec le sélecteur '.kookit-text'");
+        return;
+      }
+      
+      // Injecter les styles globaux dynamiquement
+      const styleElement = doc.querySelector("#dynamic-line-colors") || doc.createElement("style");
+      styleElement.id = "dynamic-line-colors";
+
+      let styles = "";
+
+      kookitTextLines.forEach((lines, index) => {
+        const color = lineColors[index % lineColors.length];
+        //création d' un sélecteur CSS pour cibler le n-ième enfant
+      
+        styles += `.kookit-text:nth-child(${index + 1}) { color: ${color} !important; }`;
+     
+      });
+  
+      styleElement.textContent = styles;
+      doc.head.appendChild(styleElement);
+    }
+    // },1000)
+    
+  }
+
   handleRenderBook = async () => {
     if (lock) return;
     let { key, path, format, name } = this.props.currentBook;
@@ -171,6 +222,8 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       }
     );
   };
+
+
 
   handleRest = async (rendition: any) => {
     HtmlMouseEvent(
@@ -243,14 +296,14 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         chapterDocIndex =
           bookLocation.chapterTitle && this.props.htmlBook
             ? window._.findLastIndex(
-                this.props.htmlBook.flattenChapters.map((item) => {
-                  item.label = item.label.trim();
-                  return item;
-                }),
-                {
-                  title: bookLocation.chapterTitle.trim(),
-                }
-              )
+              this.props.htmlBook.flattenChapters.map((item) => {
+                item.label = item.label.trim();
+                return item;
+              }),
+              {
+                title: bookLocation.chapterTitle.trim(),
+              }
+            )
             : 0;
       }
       this.props.handleCurrentChapter(chapter);
@@ -325,7 +378,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       )
         return;
       var rect = doc!.getSelection()!.getRangeAt(0).getBoundingClientRect();
-      console.log(rect);
+
       this.setState({ rect });
     });
   };
@@ -343,10 +396,10 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           />
         ) : null}
         {this.props.isOpenMenu &&
-        this.props.htmlBook &&
-        (this.props.menuMode === "dict" ||
-          this.props.menuMode === "trans" ||
-          this.props.menuMode === "note") ? (
+          this.props.htmlBook &&
+          (this.props.menuMode === "dict" ||
+            this.props.menuMode === "trans" ||
+            this.props.menuMode === "note") ? (
           <PopupBox
             {...{
               rendition: this.props.htmlBook.rendition,
@@ -375,24 +428,25 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           id="page-area"
           style={
             this.state.readerMode === "scroll" &&
-            document.body.clientWidth >= 570
+              document.body.clientWidth >= 570
               ? {
-                  marginLeft: this.state.pageOffset,
-                  marginRight: this.state.pageOffset,
-                  paddingLeft: "20px",
-                  paddingRight: "15px",
-                  left: 0,
-                  right: 0,
-                }
+                marginLeft: this.state.pageOffset,
+                marginRight: this.state.pageOffset,
+                paddingLeft: "20px",
+                paddingRight: "15px",
+                left: 0,
+                right: 0,
+                
+              }
               : {
-                  left: this.state.pageOffset,
-                  width: this.state.pageWidth,
-                }
+                left: this.state.pageOffset,
+                width: this.state.pageWidth,
+              }
           }
         ></div>
         <PageWidget />
         {StorageUtil.getReaderConfig("isHideBackground") === "yes" ? null : this
-            .props.currentBook.key ? (
+          .props.currentBook.key ? (
           <Background />
         ) : null}
       </>
@@ -400,3 +454,5 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
   }
 }
 export default withRouter(Viewer as any);
+
+

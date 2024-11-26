@@ -15,6 +15,7 @@ import {
   handleFetchBookmarks,
   handlePercentage,
   handleFetchPercentage,
+  handleRenderBookWithLinesColors
 } from "../../store/actions";
 import Viewer from "./component";
 import { stateType } from "../../store";
@@ -39,6 +40,7 @@ const actionCreator = {
   handleActionDialog,
   handleHtmlBook,
   handleRenderBookFunc,
+  handleRenderBookWithLinesColors,
   handleFetchBooks,
   handleOpenMenu,
   handleCurrentChapter,

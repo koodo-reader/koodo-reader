@@ -8,6 +8,9 @@ const initState = {
   currentBook: {},
   renderBookFunc: () => {},
   renderNoteFunc: () => {},
+  renderBookWithLineColors:()=>{}
+  // document: null,
+
 };
 export function book(
   state = initState,
@@ -29,6 +32,14 @@ export function book(
         ...state,
         renderBookFunc: action.payload,
       };
+
+      case "HANDLE_RENDER_BOOK_WITH_LINES_COLORS":
+        return {
+          ...state,
+          renderBookWithLineColors: action.payload,
+        };
+        
+      
     case "HANDLE_RENDER_NOTE_FUNC":
       return {
         ...state,
