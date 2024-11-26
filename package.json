@@ -90,6 +90,7 @@
     "release": "electron-builder",
     "prerelease": "react-scripts build",
     "postinstall": "electron-builder install-app-deps",
+    "localrelease": "electron-builder --win --x64 --config.nsis.oneClick=false --config.nsis.perMachine=true --config.nsis.allowToChangeInstallationDirectory=true",
     "rebuild": "electron-rebuild -f -w better-sqlite3"
   },
   "homepage": "./",
@@ -101,6 +102,7 @@
       "build/**/*",
       "node_modules/**/*",
       "package.json",
+      "notes.db",
       "main.js"
     ],
     "directories": {
