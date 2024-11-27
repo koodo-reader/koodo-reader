@@ -13,16 +13,13 @@ const isDev = require("electron-is-dev");
 const Store = require("electron-store");
 const store = new Store();
 const fs = require("fs");
+const { sqlStatement, jsonToSqlite, sqliteToJson } = require('./sql.js');
 const configDir = app.getPath("userData");
 const dirPath = path.join(configDir, "uploads");
 let mainWin;
 let readerWindow;
 let mainView;
-let notesDB;
-let booksDB;
-let bookmarksDB;
-let wordsDB;
-let pluginsDB;
+let dbConnection = {};
 const singleInstance = app.requestSingleInstanceLock();
 var filePath = null;
 if (process.platform != "darwin" && process.argv.length >= 2) {
@@ -67,38 +64,17 @@ if (!singleInstance) {
     }
   });
 }
-const getDBConnection = (dbName) => {
-  if (dbName === "notes") {
-    if (!notesDB) {
-      notesDB = new Database("./notes.db", { verbose: console.log });
-      notesDB.pragma('journal_mode = WAL');
+const getDBConnection = (dbName, storagePath) => {
+  console.log(dbName, 'dbName');
+  if (!dbConnection[dbName]) {
+    if (!fs.existsSync(path.join(storagePath, "config"))) {
+      fs.mkdirSync(path.join(storagePath, "config"));
     }
-    return notesDB;
-  } else if (dbName === "books") {
-    if (!booksDB) {
-      booksDB = new Database("./books.db", { verbose: console.log });
-      booksDB.pragma('journal_mode = WAL');
-    }
-    return booksDB;
-  } else if (dbName === "bookmarks") {
-    if (!bookmarksDB) {
-      bookmarksDB = new Database("./bookmarks.db", { verbose: console.log });
-      bookmarksDB.pragma('journal_mode = WAL');
-    }
-    return bookmarksDB;
-  } else if (dbName === "words") {
-    if (!wordsDB) {
-      wordsDB = new Database("./words.db", { verbose: console.log });
-      wordsDB.pragma('journal_mode = WAL');
-    }
-    return wordsDB;
-  } else if (dbName === "plugins") {
-    if (!pluginsDB) {
-      pluginsDB = new Database("./plugins.db", { verbose: console.log });
-      pluginsDB.pragma('journal_mode = WAL');
-    }
-    return pluginsDB;
+    dbConnection[dbName] = new Database(path.join(storagePath, "config", `${dbName}.db`), { verbose: console.log });
+    dbConnection[dbName].pragma('journal_mode = WAL');
+    dbConnection[dbName].exec(sqlStatement["createTableStatement"][dbName]);
   }
+  return dbConnection[dbName];
 }
 const createMainWin = () => {
   mainWin = new BrowserWindow(options);
@@ -504,12 +480,36 @@ const createMainWin = () => {
   ipcMain.on("storage-location", (event, config) => {
     event.returnValue = path.join(dirPath, "data");
   });
-  ipcMain.on("database-command", (event, arg) => {
-    let db = getDBConnection("notes");
-    const row = db.prepare('SELECT * FROM notes');
-    const notes = row.all();
-    console.log(notes);
-    event.returnValue = notes;
+  ipcMain.handle("database-command", (event, config) => {
+    let { statement, statementType, executeType, dbName, data, storagePath } = config;
+    console.log(config);
+    let db = getDBConnection(dbName, storagePath);
+    let sql = ""
+    if (statementType === "string") {
+      sql = sqlStatement[statement][dbName];
+    } else if (statementType === "function") {
+      sql = sqlStatement[statement][dbName](data);
+    }
+    const row = db.prepare(sql);
+    let result;
+    if (data) {
+      if (statement.startsWith("save") || statement.startsWith("update")) {
+        data = jsonToSqlite[dbName](data)
+      }
+      result = row[executeType](data);
+    } else {
+      result = row[executeType]();
+    }
+    console.log(result, 'result')
+    if (executeType === 'all') {
+
+      return result.map(item => sqliteToJson[dbName](item));
+    } else if (executeType === 'get') {
+      return sqliteToJson[dbName](result);
+    } else {
+      return result;
+    }
+
   });
   ipcMain.on("user-data", (event, arg) => {
     event.returnValue = dirPath;

@@ -69,7 +69,10 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
           item.cfi = cfi;
         }
       });
-      NoteService.saveAllNotes(this.props.notes).then(() => {
+      let newNote = this.props.notes.filter(
+        (item) => item.key === this.props.noteKey
+      )[0];
+      NoteService.updateNote(newNote).then(() => {
         this.props.handleOpenMenu(false);
         toast.success(this.props.t("Addition successful"));
         this.props.handleFetchNotes();
@@ -106,10 +109,7 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
         color,
         tag
       );
-
-      let noteArr = this.props.notes;
-      noteArr.push(note);
-      NoteService.saveAllNotes(noteArr).then(async () => {
+      NoteService.saveNote(note).then(async () => {
         this.props.handleOpenMenu(false);
         toast.success(this.props.t("Addition successful"));
         this.props.handleFetchNotes();
@@ -122,29 +122,18 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
     }
   }
   handleClose = () => {
-    let noteIndex = -1;
-    let note: NoteModel;
     if (this.props.noteKey) {
-      this.props.notes.forEach((item, index) => {
-        if (item.key === this.props.noteKey) {
-          noteIndex = index;
-          note = item;
-        }
+      NoteService.deleteNote(this.props.noteKey).then(() => {
+        toast.success(this.props.t("Deletion successful"));
+        this.props.handleMenuMode("");
+        this.props.handleFetchNotes();
+        this.props.handleNoteKey("");
+        this.props.htmlBook.rendition.removeOneNote(
+          this.props.noteKey,
+          this.props.currentBook.format
+        );
+        this.props.handleOpenMenu(false);
       });
-      if (noteIndex > -1) {
-        this.props.notes.splice(noteIndex, 1);
-        NoteService.saveAllNotes(this.props.notes).then(() => {
-          toast.success(this.props.t("Deletion successful"));
-          this.props.handleMenuMode("");
-          this.props.handleFetchNotes();
-          this.props.handleNoteKey("");
-          this.props.htmlBook.rendition.removeOneNote(
-            note.key,
-            this.props.currentBook.format
-          );
-          this.props.handleOpenMenu(false);
-        });
-      }
     } else {
       this.props.handleOpenMenu(false);
       this.props.handleMenuMode("");
