@@ -17,61 +17,29 @@ class DeleteIcon extends React.Component<DeleteIconProps, DeleteIconStates> {
   }
 
   handleDelete = () => {
-    let deleteItems =
-      this.props.mode === "notes"
-        ? this.props.notes
-        : this.props.mode === "tags"
-        ? TagUtil.getAllTags()
-        : this.props.bookmarks;
     let deleteFunc =
       this.props.mode === "notes"
         ? this.props.handleFetchNotes
         : this.props.handleFetchBookmarks;
-    deleteItems.forEach((item: any, index: number) => {
-      if (this.props.mode === "tags") {
-        item === this.props.tagName && TagUtil.clear(item);
-        this.handleDeleteTagFromNote(item);
-        return;
-      }
-      if (item.key === this.props.itemKey) {
-        deleteItems.splice(index, 1);
-        if (deleteItems.length === 0) {
-          switch (this.props.mode) {
-            case "notes":
-              NoteService.deleteAllNotes().then(() => {
-                deleteFunc();
-                toast.success(this.props.t("Deletion successful"));
-              });
-              break;
-            case "bookmarks":
-              BookmarkService.deleteAllBookmarks().then(() => {
-                deleteFunc();
-                toast.success(this.props.t("Deletion successful"));
-              });
-              break;
-            default:
-              break;
-          }
-        } else {
-          switch (this.props.mode) {
-            case "notes":
-              NoteService.saveAllNotes(deleteItems).then(() => {
-                deleteFunc();
-                toast.success(this.props.t("Deletion successful"));
-              });
-              break;
-            case "bookmarks":
-              BookmarkService.saveAllBookmarks(deleteItems).then(() => {
-                deleteFunc();
-                toast.success(this.props.t("Deletion successful"));
-              });
-              break;
-            default:
-              break;
-          }
-        }
-      }
-    });
+    if (this.props.mode === "tags") {
+      TagUtil.clear(this.props.tagName);
+      this.handleDeleteTagFromNote(this.props.tagName);
+      return;
+    }
+    if (this.props.mode === "bookmarks") {
+      BookmarkService.deleteBookmark(this.props.itemKey).then(() => {
+        deleteFunc();
+        toast.success(this.props.t("Deletion successful"));
+      });
+      return;
+    }
+    if (this.props.mode === "notes") {
+      NoteService.deleteNote(this.props.itemKey).then(() => {
+        deleteFunc();
+        toast.success(this.props.t("Deletion successful"));
+      });
+      return;
+    }
   };
   handleDeleteTagFromNote = (tagName: string) => {
     let noteList = this.props.notes.map((item) => {
@@ -80,7 +48,7 @@ class DeleteIcon extends React.Component<DeleteIconProps, DeleteIconStates> {
         tag: item.tag.filter((subitem) => subitem !== tagName),
       };
     });
-    NoteService.saveAllNotes(noteList).then(() => {
+    NoteService.updateAllNotes(noteList).then(() => {
       this.props.handleFetchNotes();
     });
   };

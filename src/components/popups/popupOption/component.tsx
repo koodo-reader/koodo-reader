@@ -91,9 +91,7 @@ class PopupOption extends React.Component<PopupOptionProps> {
       color,
       []
     );
-    let noteArr = this.props.notes;
-    noteArr.push(digest);
-    NoteService.saveAllNotes(noteArr).then(async () => {
+    NoteService.saveNote(digest).then(async () => {
       this.props.handleOpenMenu(false);
       toast.success(this.props.t("Addition successful"));
       this.props.handleFetchNotes();

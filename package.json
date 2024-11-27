@@ -21,7 +21,7 @@
     "@aws-sdk/client-s3": "^3.485.0",
     "adm-zip": "^0.5.2",
     "axios": "^0.19.2",
-    "better-sqlite3": "^11.5.0",
+    "better-sqlite3": "^11.6.0",
     "buffer": "^6.0.3",
     "copy-text-to-clipboard": "^2.2.0",
     "dompurify": "^3.0.1",
@@ -90,20 +90,19 @@
     "release": "electron-builder",
     "prerelease": "react-scripts build",
     "postinstall": "electron-builder install-app-deps",
-    "localrelease": "electron-builder --win --x64 --config.nsis.oneClick=false --config.nsis.perMachine=true --config.nsis.allowToChangeInstallationDirectory=true",
     "rebuild": "electron-rebuild -f -w better-sqlite3"
   },
   "homepage": "./",
   "build": {
     "appId": "xyz.960960.koodo",
     "productName": "Koodo Reader",
-    "copyright": "Copyright (c) 2021-2022 ${author}",
+    "copyright": "Copyright (c) 2020-2024 ${author}",
     "files": [
       "build/**/*",
       "node_modules/**/*",
       "package.json",
-      "notes.db",
-      "main.js"
+      "main.js",
+      "sql.js"
     ],
     "directories": {
       "buildResources": "assets"
