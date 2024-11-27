@@ -1,14 +1,16 @@
 import React from "react";
-import {backgroundList, textList, lines} from "../../../constants/themeList";
+import { backgroundList, textList, lines } from "../../../constants/themeList";
 import StyleUtil from "../../../utils/readUtils/styleUtil";
 import "./themeList.css";
-import {Trans} from "react-i18next";
-import {ThemeListProps, ThemeListState} from "./interface";
+import { Trans } from "react-i18next";
+import { ThemeListProps, ThemeListState } from "./interface";
 import StorageUtil from "../../../utils/serviceUtils/storageUtil";
-import {Panel as ColorPickerPanel} from "rc-color-picker";
+import { Panel as ColorPickerPanel } from "rc-color-picker";
 import "rc-color-picker/assets/index.css";
 import ThemeUtil from "../../../utils/readUtils/themeUtil";
 import BookUtil from "../../../utils/fileUtils/bookUtil";
+import { getIframeDoc } from "../../../utils/serviceUtils/docUtil";
+import styleUtil from "../../../utils/readUtils/styleUtil";
 
 
 
@@ -33,18 +35,11 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
             (StorageUtil.getReaderConfig("textColor") || "rgba(0,0,0,1)")
           );
         }),
-      // currentLineIndex: lines
-      //   .concat(ThemeUtil.getAllThemes())
-      //   .findIndex((item) => {
-      //     return (
-      //       item ===
-      //       (StorageUtil.getReaderConfig("lineColors") || "rgba(0,0,0,1)")
-      //     );
-      //   }),
+
       isShowTextPicker: false,
       isShowBgPicker: false,
-      isButtonClicked:false,
-     
+      isButtonClicked: false,
+
     };
   }
   handleChangeBgColor = (color: string, index: number = -1) => {
@@ -78,7 +73,7 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
     ) {
       ThemeUtil.setThemes(StorageUtil.getReaderConfig("textColor"));
     }
-    this.setState({isShowTextPicker});
+    this.setState({ isShowTextPicker });
   };
 
 
@@ -96,9 +91,10 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
     ) {
       ThemeUtil.setThemes(StorageUtil.getReaderConfig("backgroundColor"));
     }
-    this.setState({isShowBgPicker});
+    this.setState({ isShowBgPicker });
   };
-  handleChooseTextColor = (color) => {
+  handleChooseTextColor = (color, useAltCss: boolean) => {
+    StorageUtil.setReaderConfig("useAltCss", useAltCss.toString());
     if (typeof color !== "object") {
       this.setState({
         currentTextIndex: textList
@@ -113,20 +109,43 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
     this.props.renderBookFunc();
   };
 
-  handleChooseLineColor = (isButtonClicked,colors:string[]) => {
-   
-    const colorsJSON = JSON.stringify(colors);
-     StorageUtil.setReaderConfig("lineColors",colorsJSON);
+  applyDynamicStyles = () => {
+    let doc = getIframeDoc();
 
-    if (isButtonClicked) {
-       this.props.renderBookWithLineColors();
-     }
-    
+    if (!doc) {
+      console.error("document introuvable");
+      return;
+    }
 
-   this.setState({ isButtonClicked:false});
+    // Injecter les styles globaux dynamiquement
+    const styleElement = doc.querySelector("#dynamic-line-colors") || doc.createElement("style");
+    styleElement.id = "dynamic-line-colors";
+
+    // Récupérer les styles de getCustomAltCss
+    const styles = styleUtil.getCustomAltCss();
+    styleElement.textContent = styles;
+    doc.head.appendChild(styleElement);
+
   }
-  
-    
+  handleChooseLineColor = (isButtonClicked, colors: string[], useAltCss: boolean) => {
+
+    const colorsJSON = JSON.stringify(colors);
+
+    if (colors.length) {
+      StorageUtil.setReaderConfig("lineColors", colorsJSON);
+    } else {
+      StorageUtil.setReaderConfig("lineColors", '');
+    }
+    StorageUtil.setReaderConfig("useAltCss", useAltCss.toString());
+    if (isButtonClicked) {
+
+      this.applyDynamicStyles();
+      this.props.renderBookFunc();
+    }
+    this.setState({ isButtonClicked: false });
+  }
+
+
 
   render() {
     const renderBackgroundColorList = () => {
@@ -144,7 +163,7 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
               onClick={() => {
                 this.handleChangeBgColor(item, index);
               }}
-              style={{backgroundColor: item}}>
+              style={{ backgroundColor: item }}>
               {index > 3 && index === this.state.currentBackgroundIndex && (
                 <span
                   className="icon-close"
@@ -167,9 +186,9 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
                 : "background-color-circle"
             }
             onClick={() => {
-              this.handleChooseTextColor(item);
+              this.handleChooseTextColor(item, false);
             }}
-            style={{backgroundColor: item}}>
+            style={{ backgroundColor: item }}>
             {index > 3 && index === this.state.currentTextIndex && (
               <span
                 className="icon-close"
@@ -242,27 +261,28 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
             }}
           />
         )}
-        
-         <div className="background-color-line">
-          <Trans>Line color</Trans>
+
+        <div className="background-color-line">
+          <Trans>Colorier les lignes</Trans>
         </div>
         <div className="grp-btn-change-color-line">
-        <button 
-             onClick={()=>this.handleChooseLineColor(!this.state.isButtonClicked ,lines)}
-              className="btn-style"
-              >    
-              A+  
-            </button>
+          <button
+            id="<btn-change-color>"
+            onClick={() => this.handleChooseLineColor(!this.state.isButtonClicked, lines, true)}
+            className="btn-style"
+          >
+            A+
+          </button>
 
-            <button 
-             onClick={()=>this.handleChooseLineColor(!this.state.isButtonClicked ,["#000000"])}
-              className="btn--reset-style"
-              >  
-              A-    
-            </button>
+          <button
+            onClick={() => this.handleChooseLineColor(!this.state.isButtonClicked, [""], true)}
+            className="btn--reset-style"
+          >
+            A-
+          </button>
 
         </div>
-     
+
       </div>
     );
   }

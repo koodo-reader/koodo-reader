@@ -28,6 +28,7 @@ let lock = false; //prevent from clicking too fasts
 
 class Viewer extends React.Component<ViewerProps, ViewerState> {
   lock: boolean;
+  observer: MutationObserver | null = null;
   constructor(props: ViewerProps) {
     super(props);
     this.state = {
@@ -63,17 +64,26 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
   componentDidMount() {
     window.rangy.init();
     this.handleRenderBook();
-    this.handleRenderBookLinesColor();
+
     //make sure page width is always 12 times, section = Math.floor(element.clientWidth / 12), or text will be blocked
     this.handlePageWidth();
     this.props.handleRenderBookFunc(this.handleRenderBook);
-    this.props.handleRenderBookWithLinesColors(this.handleRenderBookLinesColor)
+
 
     window.addEventListener("resize", () => {
       BookUtil.reloadBooks();
     });
-  
+
+
   }
+  componentWillUnmount() {
+    if (this.observer) {
+      this.observer.disconnect();
+      this.observer = null;
+    }
+  }
+
+
 
   handlePageWidth = () => {
     const findValidMultiple = (limit: number) => {
@@ -146,47 +156,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
 
 
 
-
-  handleRenderBookLinesColor =  () => {
-    // setTimeout(()=>{
-    let doc = getIframeDoc();
-    if (!doc) {
-      console.error("document introuvable");
-      return;
-
-    }
-    const savedColors = StorageUtil.getReaderConfig("lineColors");
-
-    if (savedColors) {
-      const lineColors = JSON.parse(savedColors);
-    
-      const kookitTextLines = doc.querySelectorAll<HTMLElement>(".kookit-text");
-
-      if (!kookitTextLines.length) {
-        console.error("Aucune ligne trouvée avec le sélecteur '.kookit-text'");
-        return;
-      }
-      
-      // Injecter les styles globaux dynamiquement
-      const styleElement = doc.querySelector("#dynamic-line-colors") || doc.createElement("style");
-      styleElement.id = "dynamic-line-colors";
-
-      let styles = "";
-
-      kookitTextLines.forEach((lines, index) => {
-        const color = lineColors[index % lineColors.length];
-        //création d' un sélecteur CSS pour cibler le n-ième enfant
-      
-        styles += `.kookit-text:nth-child(${index + 1}) { color: ${color} !important; }`;
-     
-      });
-  
-      styleElement.textContent = styles;
-      doc.head.appendChild(styleElement);
-    }
-    // },1000)
-    
-  }
 
   handleRenderBook = async () => {
     if (lock) return;
@@ -436,7 +405,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
                 paddingRight: "15px",
                 left: 0,
                 right: 0,
-                
+
               }
               : {
                 left: this.state.pageOffset,

@@ -14,7 +14,6 @@ export interface ViewerProps {
   isShow: boolean;
   isOpenMenu: boolean;
   handleRenderBookFunc: (renderBookFunc: () => void) => void;
-  handleRenderBookWithLinesColors:(renderBookWithLineColors:()=>void) => void;
   renderNoteFunc: () => void;
   t: (title: string) => string;
   handleReadingState: (isReading: boolean) => void;
