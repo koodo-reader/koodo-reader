@@ -112,6 +112,7 @@ class BookUtil {
       }
       const files = fs.readdirSync(directoryPath);
       const imageFiles = files.filter((file) => file.startsWith(book.key));
+      console.log(imageFiles);
       return imageFiles.length > 0;
     } else {
       return book.cover !== "";
@@ -288,6 +289,8 @@ class BookUtil {
     return rendition;
   };
   static addCover(book: BookModel) {
+    console.log(book);
+    if (!book.cover) return;
     if (isElectron) {
       var fs = window.require("fs");
       var path = window.require("path");

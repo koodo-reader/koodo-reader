@@ -1,7 +1,10 @@
 import BookModel from "../../models/Book";
 import { getStorageLocation } from "../common";
+import BookmarkService from "../service/bookmarkService";
 import BookService from "../service/bookService";
+import NoteService from "../service/noteService";
 import PluginService from "../service/pluginService";
+import WordService from "../service/wordService";
 declare var window: any;
 export const changePath = (oldPath: string, newPath: string) => {
   return new Promise<number>((resolve, reject) => {
@@ -166,21 +169,23 @@ export const toArrayBuffer = (buf) => {
   }
   return ab;
 };
-export const upgradeStorage = async (
-  dataPath: string,
-  books: BookModel[],
-  toast: any
-) => {
+export const upgradeStorage = async (dataPath: string, toast: any) => {
+  // localStorage.setItem("isUpgraded", "yes");
   //check if folder named cover exsits
   const fs = window.require("fs");
   const path = window.require("path");
-  if (fs.existsSync(path.join(dataPath, "cover"))) {
+  // upgrage cover and book
+  if (
+    localStorage.getItem("isUpgraded") === "yes" ||
+    fs.existsSync(path.join(dataPath, "cover"))
+  ) {
     console.log("upgraded");
     return;
   }
   toast("Upgrading data");
 
   fs.mkdirSync(path.join(dataPath, "cover"));
+  let books = await window.localforage.getItem("books");
   books.forEach((item) => {
     let cover = item.cover;
     if (cover) {
@@ -193,7 +198,8 @@ export const upgradeStorage = async (
     }
   });
   await BookService.saveAllBooks(books);
-  //check if folder named book exsits, and loop each file and change file extension
+
+  //uprade book files
   if (!fs.existsSync(path.join(dataPath, "book"))) {
     return;
   }
@@ -209,15 +215,39 @@ export const upgradeStorage = async (
         path.join(dataPath, "book", newFileName)
       );
     }
+    if (fileName.startsWith("cache")) {
+      let newFileName = `${fileName}.zip`;
+      fs.renameSync(
+        path.join(dataPath, "book", fileName),
+        path.join(dataPath, "book", newFileName)
+      );
+    }
   }
-
+  //upgrade plugin
   let plugins =
     localStorage.getItem("pluginList") !== "{}" &&
     localStorage.getItem("pluginList")
       ? JSON.parse(localStorage.getItem("pluginList") || "")
       : [];
   plugins.length > 0 && (await PluginService.saveAllPlugins(plugins));
-  localStorage.removeItem("pluginList");
+
+  //upgrade notes
+  let notes = await window.localforage.getItem("notes");
+  if (notes && notes.length > 0) {
+    await NoteService.saveAllNotes(notes);
+  }
+
+  //upgrade bookmarks
+  let bookmarks = await window.localforage.getItem("bookmarks");
+  if (bookmarks && bookmarks.length > 0) {
+    await BookmarkService.saveAllBookmarks(bookmarks);
+  }
+  //upgrade words
+  let words = await window.localforage.getItem("words");
+  if (words && words.length > 0) {
+    await WordService.saveAllWords(words);
+  }
 
   toast.success("Upgrade successful");
+  localStorage.setItem("isUpgraded", "yes");
 };

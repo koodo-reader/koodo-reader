@@ -113,11 +113,13 @@ const getByBookKeyStatement = {
   notes: `SELECT * FROM notes WHERE bookKey = ?`,
   bookmarks: 'SELECT * FROM bookmarks WHERE bookKey = ?',
   words: 'SELECT * FROM words WHERE bookKey = ?',
+  books: 'SELECT * FROM books WHERE key = ?',
 }
 const getByBookKeysStatement = {
   notes: (bookKeys) => `SELECT * FROM notes WHERE bookKey IN (${bookKeys.map(() => '?').join(',')})`,
   bookmarks: (bookKeys) => `SELECT * FROM bookmarks WHERE bookKey IN (${bookKeys.map(() => '?').join(',')})`,
   words: (bookKeys) => `SELECT * FROM words WHERE bookKey IN (${bookKeys.map(() => '?').join(',')})`,
+  books: (bookKeys) => `SELECT * FROM books WHERE key IN (${bookKeys.map(() => '?').join(',')})`,
 }
 const sqlStatement = {
   createTableStatement,
@@ -145,10 +147,15 @@ const jsonToSqlite = {
   },
   plugins: (plugin) => {
     let pluginRaw = { ...plugin };
+    if (!plugin.autoValue) { pluginRaw.autoValue = null }
+    if (!plugin.langList) { pluginRaw.langList = null } else {
+      pluginRaw.langList = JSON.stringify(plugin.langList);
+    }
+    if (!plugin.voiceList) { pluginRaw.voiceList = null } else {
+      pluginRaw.voiceList = JSON.stringify(plugin.voiceList);
+    }
     pluginRaw.config = JSON.stringify(plugin.config);
-    pluginRaw.langList = JSON.stringify(plugin.langList);
-    pluginRaw.voiceList = JSON.stringify(plugin.voiceList);
-    return plugin;
+    return pluginRaw;
   },
   words: (word) => {
     let wordRaw = { ...word };
@@ -171,10 +178,15 @@ const sqliteToJson = {
   },
   plugins: (plugin) => {
     let pluginRaw = { ...plugin };
+    if (!plugin.autoValue) { delete pluginRaw.autoValue }
+    if (!plugin.langList) { delete pluginRaw.langList } else {
+      pluginRaw.langList = JSON.parse(plugin.langList);
+    }
+    if (!plugin.voiceList) { delete pluginRaw.voiceList } else {
+      pluginRaw.voiceList = JSON.parse(plugin.voiceList);
+    }
     pluginRaw.config = JSON.parse(plugin.config);
-    pluginRaw.langList = JSON.parse(plugin.langList);
-    pluginRaw.voiceList = JSON.parse(plugin.voiceList);
-    return plugin;
+    return pluginRaw;
   },
   words: (word) => {
     let wordRaw = { ...word };

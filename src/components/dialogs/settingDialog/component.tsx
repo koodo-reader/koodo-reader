@@ -33,7 +33,6 @@ class SettingDialog extends React.Component<
     super(props);
     this.state = {
       currentTab: "general",
-      pluginList: this.props.plugins,
       isTouch: StorageUtil.getReaderConfig("isTouch") === "yes",
       isImportPath: StorageUtil.getReaderConfig("isImportPath") === "yes",
       isMergeWord: StorageUtil.getReaderConfig("isMergeWord") === "yes",
@@ -65,6 +64,9 @@ class SettingDialog extends React.Component<
       }),
       storageLocation: getStorageLocation() || "",
     };
+  }
+  componentDidMount(): void {
+    this.props.handleFetchPlugins();
   }
   handleRest = (bool: boolean) => {
     toast.success(this.props.t("Change successful"));
@@ -608,8 +610,8 @@ class SettingDialog extends React.Component<
             </>
           ) : (
             <>
-              {this.state.pluginList.length > 0 ? (
-                this.state.pluginList.map((item, index) => {
+              {this.props.plugins.length > 0 ? (
+                this.props.plugins.map((item, index) => {
                   return (
                     <div className="setting-dialog-new-title">
                       <span>
@@ -624,10 +626,7 @@ class SettingDialog extends React.Component<
                       <span
                         className="change-location-button"
                         onClick={async () => {
-                          await PluginService.deletePluginById(item.identifier);
-                          this.setState({
-                            pluginList: await PluginService.getAllPlugins(),
-                          });
+                          await PluginService.deletePlugin(item.identifier);
                           this.props.handleFetchPlugins();
                           toast.success(this.props.t("Deletion successful"));
                         }}

@@ -39,5 +39,4 @@ export interface SettingInfoState {
   isLemmatizeWord: boolean;
   currentThemeIndex: number;
   currentTab: string;
-  pluginList: PluginModel[];
 }

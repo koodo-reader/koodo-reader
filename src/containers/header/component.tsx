@@ -67,7 +67,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       //Check for data update
       let storageLocation = getStorageLocation() || "";
       //upgrade data from old version
-      await upgradeStorage(storageLocation, this.props.books, toast);
+      await upgradeStorage(storageLocation, toast);
       let sourcePath = path.join(storageLocation, "config", "config.json");
       //Detect data modification
       fs.readFile(sourcePath, "utf8", (err, data) => {
