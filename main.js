@@ -496,13 +496,13 @@ const createMainWin = () => {
       if (statement.startsWith("save") || statement.startsWith("update")) {
         data = jsonToSqlite[dbName](data)
       }
+      console.log(data, 'data');
       result = row[executeType](data);
     } else {
       result = row[executeType]();
     }
     console.log(result, 'result')
     if (executeType === 'all') {
-
       return result.map(item => sqliteToJson[dbName](item));
     } else if (executeType === 'get') {
       return sqliteToJson[dbName](result);

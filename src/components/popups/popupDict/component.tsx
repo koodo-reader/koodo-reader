@@ -268,11 +268,18 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
                     ).value;
                     if (value) {
                       let plugin: PluginModel = JSON.parse(value);
-
-                      let isSuccess = await PluginService.savePlugin(plugin);
-                      if (!isSuccess) {
+                      if (!(await PluginService.checkPlugin(plugin))) {
                         toast.error(this.props.t("Plugin verification failed"));
                         return;
+                      }
+                      if (
+                        this.props.plugins.find(
+                          (item) => item.identifier === plugin.identifier
+                        )
+                      ) {
+                        await PluginService.updatePlugin(plugin);
+                      } else {
+                        await PluginService.savePlugin(plugin);
                       }
                       this.props.handleFetchPlugins();
                       toast.success(this.props.t("Addition successful"));
