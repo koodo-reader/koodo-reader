@@ -2,7 +2,7 @@ import React from "react";
 import "./manager.css";
 import { RedirectProps, RedirectState } from "./interface";
 import { Trans } from "react-i18next";
-import { getParamsFromUrl } from "../../utils/sync/common";
+import { getParamsFromUrl } from "../../utils/file/common";
 import copy from "copy-text-to-clipboard";
 import { withRouter } from "react-router-dom";
 import Lottie from "react-lottie";

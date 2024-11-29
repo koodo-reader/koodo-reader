@@ -1,15 +1,23 @@
 import Book from "../../models/Book";
 import DictHistory from "../../models/DictHistory";
 import Note from "../../models/Note";
-import BookUtil from "../file/bookUtil";
-import { zipFilesToBlob } from "./common";
+import BookUtil from "./bookUtil";
+
+export const zipFilesToBlob = (buffers: ArrayBuffer[], names: string[]) => {
+  var zip = new window.JSZip();
+  for (let index = 0; index < buffers.length; index++) {
+    zip.file(names[index], buffers[index]);
+  }
+  return zip.generateAsync({ type: "blob" });
+};
 
 declare var window: any;
 let year = new Date().getFullYear(),
   month = new Date().getMonth() + 1,
   day = new Date().getDate();
+
 export const exportBooks = async (books: Book[]) => {
-  let fetchPromises = BookUtil.FetchAllBooks(books);
+  let fetchPromises = BookUtil.fetchAllBooks(books);
   let booksBuffers: any[] = [];
 
   for (let index = 0; index < fetchPromises.length; index++) {

@@ -5,10 +5,10 @@ import ImportLocal from "../../components/importLocal";
 import { HeaderProps, HeaderState } from "./interface";
 import StorageUtil from "../../utils/service/configService";
 import UpdateInfo from "../../components/dialogs/updateDialog";
-import { restore } from "../../utils/sync/restore";
-import { backup } from "../../utils/sync/backup";
+import { restore } from "../../utils/file/restore";
+import { backupToConfigJson } from "../../utils/file/backup";
 import { isElectron } from "react-device-detect";
-import { syncData, upgradeStorage } from "../../utils/sync/common";
+import { syncData, upgradeStorage } from "../../utils/file/common";
 import toast from "react-hot-toast";
 import { Trans } from "react-i18next";
 import { checkStableUpdate, getStorageLocation } from "../../utils/common";
@@ -30,6 +30,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
   async componentDidMount() {
     // isElectron &&
     //   (await window.require("electron").ipcRenderer.invoke("s3-download"));
+
     if (isElectron) {
       const fs = window.require("fs");
       const path = window.require("path");
@@ -170,13 +171,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     let timestamp = new Date().getTime().toString();
     StorageUtil.setReaderConfig("lastSyncTime", timestamp);
     localStorage.setItem("lastSyncTime", timestamp);
-    let result = await backup(true);
-    if (!result) {
-      toast.error(this.props.t("Sync Failed"));
-    } else {
-      syncData(result as Blob, this.props.books, true);
-      toast.success(this.props.t("Synchronisation successful"));
-    }
+    backupToConfigJson();
   };
 
   render() {

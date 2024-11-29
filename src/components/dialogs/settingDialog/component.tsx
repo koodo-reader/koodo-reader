@@ -5,11 +5,11 @@ import { Trans } from "react-i18next";
 import i18n from "../../../i18n";
 import packageInfo from "../../../../package.json";
 import StorageUtil from "../../../utils/service/configService";
-import { changePath } from "../../../utils/sync/common";
+import { changePath } from "../../../utils/file/common";
 import { isElectron } from "react-device-detect";
 import { dropdownList } from "../../../constants/dropdownList";
 
-import { restore } from "../../../utils/sync/restore";
+import { restore } from "../../../utils/file/restore";
 import {
   generalSettingList,
   appearanceSettingList,

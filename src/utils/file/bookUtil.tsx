@@ -6,7 +6,6 @@ import toast from "react-hot-toast";
 import { copyArrayBuffer, getStorageLocation } from "../common";
 import iconv from "iconv-lite";
 import { Buffer } from "buffer";
-import { base64ToArrayBufferAndExtension } from "../sync/common";
 declare var window: any;
 
 class BookUtil {
@@ -84,54 +83,6 @@ class BookUtil {
       }
     });
   }
-  static getCover(book: BookModel) {
-    if (isElectron) {
-      var fs = window.require("fs");
-      var path = window.require("path");
-      let directoryPath = path.join(getStorageLocation() || "", "cover");
-      const files = fs.readdirSync(directoryPath);
-      const imageFiles = files.filter((file) => file.startsWith(book.key));
-      if (imageFiles.length === 0) {
-        return book.cover;
-      }
-      let format = imageFiles[0].split(".")[1];
-      const imageFilePath = path.join(directoryPath, imageFiles[0]);
-      let buffer = fs.readFileSync(imageFilePath);
-      return `data:image/${format};base64,${buffer.toString("base64")}`;
-    } else {
-      return book.cover;
-    }
-  }
-  static isCoverExist(book: BookModel) {
-    if (isElectron) {
-      var fs = window.require("fs");
-      var path = window.require("path");
-      let directoryPath = path.join(getStorageLocation() || "", "cover");
-      if (!fs.existsSync(directoryPath)) {
-        return false;
-      }
-      const files = fs.readdirSync(directoryPath);
-      const imageFiles = files.filter((file) => file.startsWith(book.key));
-      console.log(imageFiles);
-      return imageFiles.length > 0;
-    } else {
-      return book.cover !== "";
-    }
-  }
-  static deleteCover(key: string) {
-    if (isElectron) {
-      var fs = window.require("fs");
-      var path = window.require("path");
-      let directoryPath = path.join(getStorageLocation() || "", "cover");
-      const files = fs.readdirSync(directoryPath);
-      const imageFiles = files.filter((file) => file.startsWith(key));
-      if (imageFiles.length === 0) {
-        return;
-      }
-      const imageFilePath = path.join(directoryPath, imageFiles[0]);
-      fs.unlinkSync(imageFilePath);
-    }
-  }
   static fetchBook(
     key: string,
     format: string,
@@ -171,7 +122,7 @@ class BookUtil {
       return window.localforage.getItem(key);
     }
   }
-  static FetchAllBooks(Books: BookModel[]) {
+  static fetchAllBooks(Books: BookModel[]) {
     return Books.map((item) => {
       return this.fetchBook(
         item.key,
@@ -181,11 +132,7 @@ class BookUtil {
       );
     });
   }
-  static async RedirectBook(
-    book: BookModel,
-    t: (string) => string,
-    history: any
-  ) {
+  static async redirectBook(book: BookModel, t: (string) => string) {
     if (
       !(await this.isBookExist(book.key, book.format.toLowerCase(), book.path))
     ) {
@@ -288,24 +235,6 @@ class BookUtil {
     }
     return rendition;
   };
-  static addCover(book: BookModel) {
-    console.log(book);
-    if (!book.cover) return;
-    if (isElectron) {
-      var fs = window.require("fs");
-      var path = window.require("path");
-      let directoryPath = path.join(getStorageLocation() || "", "cover");
-      if (!fs.existsSync(directoryPath)) {
-        fs.mkdirSync(directoryPath);
-      }
-      const result = base64ToArrayBufferAndExtension(book.cover);
-      fs.writeFileSync(
-        path.join(directoryPath, `${book.key}.${result.extension}`),
-        Buffer.from(result.arrayBuffer)
-      );
-      book.cover = "";
-    }
-  }
   static generateBook(
     bookName: string,
     extension: string,

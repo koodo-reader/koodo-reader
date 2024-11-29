@@ -65,7 +65,7 @@ class CardList extends React.Component<CardListProps, CardListStates> {
       bookLocation.page
     );
 
-    BookUtil.RedirectBook(book, this.props.t, this.props.history);
+    BookUtil.redirectBook(book, this.props.t);
   };
   render() {
     let { cards } = this.props;

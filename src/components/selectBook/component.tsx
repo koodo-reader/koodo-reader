@@ -11,7 +11,7 @@ import {
   exportDictionaryHistory,
   exportHighlights,
   exportNotes,
-} from "../../utils/sync/export";
+} from "../../utils/file/export";
 import BookUtil from "../../utils/file/bookUtil";
 import ShelfUtil from "../../utils/reader/shelfUtil";
 import StorageUtil from "../../utils/service/configService";

@@ -14,6 +14,7 @@ import StorageUtil from "../../../utils/service/configService";
 import NoteService from "../../../utils/service/noteService";
 import BookmarkService from "../../../utils/service/bookmarkService";
 import BookService from "../../../utils/service/bookService";
+import CoverUtil from "../../../utils/file/coverUtil";
 
 class DeleteDialog extends React.Component<
   DeleteDialogProps,
@@ -116,7 +117,7 @@ class DeleteDialog extends React.Component<
       BookService.deleteBook(key)
         .then(async () => {
           await BookUtil.deleteBook(key, format);
-          BookUtil.deleteCover(key);
+          CoverUtil.deleteCover(key);
           await BookUtil.deleteBook("cache-" + key, "zip");
           AddFavorite.clear(key);
           AddTrash.clear(key);

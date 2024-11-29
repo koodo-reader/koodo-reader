@@ -12,6 +12,7 @@ import EmptyCover from "../emptyCover";
 import { Trans } from "react-i18next";
 import BookUtil from "../../utils/file/bookUtil";
 import toast from "react-hot-toast";
+import CoverUtil from "../../utils/file/coverUtil";
 declare var window: any;
 
 class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
@@ -43,7 +44,7 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
       !filePath
     ) {
       this.props.handleReadingBook(this.props.book);
-      BookUtil.RedirectBook(this.props.book, this.props.t, this.props.history);
+      BookUtil.redirectBook(this.props.book, this.props.t);
     }
   }
   UNSAFE_componentWillReceiveProps(nextProps: BookCoverProps) {
@@ -98,7 +99,7 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
     }
     RecentBooks.setRecent(this.props.book.key);
     this.props.handleReadingBook(this.props.book);
-    BookUtil.RedirectBook(this.props.book, this.props.t, this.props.history);
+    BookUtil.redirectBook(this.props.book, this.props.t);
   };
   render() {
     let percentage = "0";
@@ -180,7 +181,7 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
                   }
             }
           >
-            {!BookUtil.isCoverExist(this.props.book) ||
+            {!CoverUtil.isCoverExist(this.props.book) ||
             (this.props.book.format === "PDF" &&
               StorageUtil.getReaderConfig("isDisablePDFCover") === "yes") ? (
               <div
@@ -197,7 +198,7 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
               </div>
             ) : (
               <img
-                data-src={BookUtil.getCover(this.props.book)}
+                data-src={CoverUtil.getCover(this.props.book)}
                 alt=""
                 style={
                   this.state.direction === "horizontal" ||

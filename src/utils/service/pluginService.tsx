@@ -1,9 +1,16 @@
 import { isElectron } from "react-device-detect";
 import Plugin from "../../models/Plugin";
 import { generateSHA256Hash, getStorageLocation } from "../common";
+import SqlUtil from "../file/sqlUtil";
 declare var window: any;
 
 class PluginService {
+  static async getDbBuffer() {
+    let sqlUtil = new SqlUtil();
+    let plugins = await this.getAllPlugins();
+    return sqlUtil.JsonToDbBuffer(plugins, "plugins");
+  }
+
   static async getAllPlugins() {
     if (isElectron) {
       let plugins = await window

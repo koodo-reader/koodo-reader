@@ -9,7 +9,7 @@ import {
   exportDictionaryHistory,
   exportHighlights,
   exportNotes,
-} from "../../../utils/sync/export";
+} from "../../../utils/file/export";
 import "./aboutDialog.css";
 import StorageUtil from "../../../utils/service/configService";
 import WordService from "../../../utils/service/wordService";

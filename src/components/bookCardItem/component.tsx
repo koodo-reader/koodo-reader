@@ -10,6 +10,7 @@ import RecordLocation from "../../utils/reader/recordLocation";
 import { isElectron } from "react-device-detect";
 import EmptyCover from "../emptyCover";
 import BookUtil from "../../utils/file/bookUtil";
+import CoverUtil from "../../utils/file/coverUtil";
 
 declare var window: any;
 
@@ -42,7 +43,7 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
     ) {
       this.props.handleReadingBook(this.props.book);
 
-      BookUtil.RedirectBook(this.props.book, this.props.t, this.props.history);
+      BookUtil.redirectBook(this.props.book, this.props.t);
     }
   }
   UNSAFE_componentWillReceiveProps(nextProps: BookCardProps) {
@@ -96,7 +97,7 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
     }
     RecentBooks.setRecent(this.props.book.key);
     this.props.handleReadingBook(this.props.book);
-    BookUtil.RedirectBook(this.props.book, this.props.t, this.props.history);
+    BookUtil.redirectBook(this.props.book, this.props.t);
   };
   render() {
     let percentage = "0";
@@ -145,7 +146,7 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
                   }
             }
           >
-            {!BookUtil.isCoverExist(this.props.book) ||
+            {!CoverUtil.isCoverExist(this.props.book) ||
             (this.props.book.format === "PDF" &&
               StorageUtil.getReaderConfig("isDisablePDFCover") === "yes") ? (
               <div className="book-item-image">
@@ -159,7 +160,7 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
               </div>
             ) : (
               <img
-                data-src={BookUtil.getCover(this.props.book)}
+                data-src={CoverUtil.getCover(this.props.book)}
                 alt=""
                 className="lazy-image book-item-image"
                 style={

@@ -9,7 +9,7 @@ import {
   exportDictionaryHistory,
   exportHighlights,
   exportNotes,
-} from "../../../utils/sync/export";
+} from "../../../utils/file/export";
 import StorageUtil from "../../../utils/service/configService";
 import NoteService from "../../../utils/service/noteService";
 import WordService from "../../../utils/service/wordService";

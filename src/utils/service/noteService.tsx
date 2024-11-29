@@ -1,9 +1,15 @@
 import { isElectron } from "react-device-detect";
 import Note from "../../models/Note";
 import { getStorageLocation } from "../common";
+import SqlUtil from "../file/sqlUtil";
 declare var window: any;
 
 class NoteService {
+  static async getDbBuffer() {
+    let sqlUtil = new SqlUtil();
+    let notes = await this.getAllNotes();
+    return sqlUtil.JsonToDbBuffer(notes, "notes");
+  }
   static async getAllNotes(): Promise<Note[]> {
     if (isElectron) {
       let notes = await window
