@@ -2,7 +2,6 @@ import React from "react";
 import "./importLocal.css";
 import BookModel from "../../models/Book";
 
-import { fetchMD5 } from "../../utils/file/md5Util";
 import { Trans } from "react-i18next";
 import Dropzone from "react-dropzone";
 
@@ -11,12 +10,13 @@ import RecordRecent from "../../utils/reader/recordRecent";
 import { isElectron } from "react-device-detect";
 import { withRouter } from "react-router-dom";
 import BookUtil from "../../utils/file/bookUtil";
-import { fetchFileFromPath } from "../../utils/file/fileUtil";
 import toast from "react-hot-toast";
 import StorageUtil from "../../utils/service/configService";
 
 import ShelfUtil from "../../utils/reader/shelfUtil";
 import BookService from "../../utils/service/bookService";
+import CoverUtil from "../../utils/file/coverUtil";
+import { calculateFileMD5, fetchFileFromPath } from "../../utils/common";
 declare var window: any;
 let clickFilePath = "";
 
@@ -59,7 +59,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
   }
   handleFilePath = async (filePath: string) => {
     clickFilePath = filePath;
-    let md5 = await fetchMD5(await fetchFileFromPath(filePath));
+    let md5 = await calculateFileMD5(await fetchFileFromPath(filePath));
     if ([...(this.props.books || []), ...this.props.deletedBooks].length > 0) {
       let isRepeat = false;
       let repeatBook: BookModel | null = null;
@@ -84,7 +84,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
   };
   handleJump = (book: BookModel) => {
     localStorage.setItem("tempBook", JSON.stringify(book));
-    BookUtil.RedirectBook(book, this.props.t, this.props.history);
+    BookUtil.redirectBook(book, this.props.t);
     this.props.history.push("/manager/home");
   };
   handleAddBook = (book: BookModel, buffer: ArrayBuffer) => {
@@ -105,7 +105,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
         StorageUtil.getReaderConfig("isImportPath") !== "yes" &&
           BookUtil.addBook(book.key, book.format.toLowerCase(), buffer);
 
-        BookUtil.addCover(book);
+        CoverUtil.addCover(book);
       }
 
       this.props.handleReadingBook(book);
@@ -141,7 +141,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
 
   getMd5WithBrowser = async (file: any) => {
     return new Promise<void>(async (resolve, reject) => {
-      const md5 = await fetchMD5(file);
+      const md5 = await calculateFileMD5(file);
       if (!md5) {
         toast.error(this.props.t("Import failed"));
         return resolve();

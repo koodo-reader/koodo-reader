@@ -1,9 +1,15 @@
 import { isElectron } from "react-device-detect";
 import Book from "../../models/Book";
 import { getStorageLocation } from "../common";
+import SqlUtil from "../file/sqlUtil";
 declare var window: any;
 
 class BookService {
+  static async getDbBuffer() {
+    let sqlUtil = new SqlUtil();
+    let books = await this.getAllBooks();
+    return sqlUtil.JsonToDbBuffer(books, "books");
+  }
   static async getAllBooks(): Promise<Book[]> {
     if (isElectron) {
       let books = await window

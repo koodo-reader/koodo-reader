@@ -1,9 +1,15 @@
 import { isElectron } from "react-device-detect";
 import Bookmark from "../../models/Bookmark";
 import { getStorageLocation } from "../common";
+import SqlUtil from "../file/sqlUtil";
 declare var window: any;
 
 class BookmarkService {
+  static async getDbBuffer() {
+    let sqlUtil = new SqlUtil();
+    let bookmarks = await this.getAllBookmarks();
+    return sqlUtil.JsonToDbBuffer(bookmarks, "bookmarks");
+  }
   static async getAllBookmarks(): Promise<Bookmark[]> {
     if (isElectron) {
       let bookmarks = await window

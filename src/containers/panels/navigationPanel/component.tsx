@@ -9,7 +9,7 @@ import Parser from "html-react-parser";
 import * as DOMPurify from "dompurify";
 import EmptyCover from "../../../components/emptyCover";
 import StorageUtil from "../../../utils/service/configService";
-import BookUtil from "../../../utils/file/bookUtil";
+import CoverUtil from "../../../utils/file/coverUtil";
 
 class NavigationPanel extends React.Component<
   NavigationPanelProps,
@@ -234,10 +234,10 @@ class NavigationPanel extends React.Component<
                 }}
               ></span>
 
-              {BookUtil.isCoverExist(this.props.currentBook) ? (
+              {CoverUtil.isCoverExist(this.props.currentBook) ? (
                 <img
                   className="book-cover"
-                  src={BookUtil.getCover(this.props.currentBook)}
+                  src={CoverUtil.getCover(this.props.currentBook)}
                   alt=""
                 />
               ) : (

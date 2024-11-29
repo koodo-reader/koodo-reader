@@ -1,7 +1,48 @@
 import axios from "axios";
 import StorageUtil from "./service/configService";
 import { isElectron } from "react-device-detect";
+import SparkMD5 from "spark-md5";
 declare var window: any;
+export const calculateFileMD5 = (file: File): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+
+    reader.onload = (event) => {
+      const arrayBuffer = event.target?.result as ArrayBuffer;
+      const md5Hash = SparkMD5.ArrayBuffer.hash(arrayBuffer);
+      resolve(md5Hash);
+    };
+
+    reader.onerror = (error) => {
+      reject(error);
+    };
+
+    reader.readAsArrayBuffer(file);
+  });
+};
+export const fetchFileFromPath = (filePath: string) => {
+  return new Promise<File>((resolve, reject) => {
+    const fs = window.require("fs");
+
+    fs.readFile(filePath, (err, data) => {
+      if (err) {
+        console.log(err);
+        return;
+      }
+      const file = new File(
+        [data],
+        window.navigator.platform.indexOf("Win") > -1
+          ? filePath.split("\\").reverse()[0]
+          : filePath.split("/").reverse()[0],
+        {
+          lastModified: new Date().getTime(),
+        }
+      );
+      resolve(file);
+    });
+  });
+};
+
 export const sleep = (time: number) => {
   return new Promise((resolve) => setTimeout(resolve, time));
 };

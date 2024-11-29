@@ -1,9 +1,16 @@
 import { isElectron } from "react-device-detect";
 import Word from "../../models/DictHistory";
 import { getStorageLocation } from "../common";
+import SqlUtil from "../file/sqlUtil";
 declare var window: any;
 
 class WordService {
+  static async getDbBuffer() {
+    let sqlUtil = new SqlUtil();
+    let words = await this.getAllWords();
+    return sqlUtil.JsonToDbBuffer(words, "words");
+  }
+
   static async getAllWords(): Promise<Word[]> {
     if (isElectron) {
       let words = await window

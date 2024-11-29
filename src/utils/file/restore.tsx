@@ -1,10 +1,4 @@
 import { getStorageLocation } from "../common";
-import BookmarkService from "../service/bookmarkService";
-import BookService from "../service/bookService";
-import NoteService from "../service/noteService";
-import PluginService from "../service/pluginService";
-import WordService from "../service/wordService";
-
 declare var window: any;
 
 export const restore = (file: File, isSync = false) => {
@@ -49,7 +43,47 @@ export const restore = (file: File, isSync = false) => {
     };
   });
 };
+export const restoreFromConfigJson = () => {
+  const fs = window.require("fs");
+  const path = window.require("path");
+  const dataPath = getStorageLocation() || "";
+  if (!fs.existsSync(path.join(dataPath, "config.json"))) {
+    return false;
+  }
+  let configStr = fs.readFileSync(path.join(dataPath, "config.json"), "utf-8");
+  let config = JSON.parse(configStr);
+  for (let key in config) {
+    localStorage.setItem(key, config[key]);
+  }
+};
+export const restoreFromfilePath = async (filePath: string) => {
+  const fs = window.require("fs");
+  const AdmZip = window.require("adm-zip");
+  if (!fs.existsSync(filePath)) {
+    return false;
+  }
+  var zip = new AdmZip(filePath);
+  var zipEntries = zip.getEntries(); // an array of ZipEntry records
+  let result = await unzipConfig(zipEntries);
+  if (result) {
+    let res1 = await unzipBook(zipEntries);
+    let res2 = await unzipCover(zipEntries);
+    if (res1 || res2) {
+      return true;
+    } else {
+      return false;
+    }
+  } else {
+    return false;
+  }
+};
 export const unzipConfig = async (zipEntries: any) => {
+  const fs = window.require("fs");
+  const path = window.require("path");
+  const dataPath = getStorageLocation() || "";
+  if (!fs.existsSync(path.join(dataPath, "config"))) {
+    fs.mkdirSync(path.join(dataPath, "config"));
+  }
   // no longer support backup from older version
   if (
     zipEntries
@@ -64,36 +98,27 @@ export const unzipConfig = async (zipEntries: any) => {
       zipEntries[i].entryName.startsWith("config/") &&
       !zipEntries[i].isDirectory
     ) {
-      let text = zipEntries[i].getData().toString("utf8");
-      if (!text) {
-        flag = false;
-        break;
-      }
       if (zipEntries[i].name === "config.json") {
+        let text = zipEntries[i].getData().toString("utf8");
+        if (!text) {
+          flag = false;
+          break;
+        }
         let config = JSON.parse(text);
         for (let key in config) {
           localStorage.setItem(key, config[key]);
         }
       } else {
-        switch (zipEntries[i].name.split(".")[0]) {
-          case "books":
-            await BookService.saveAllBooks(JSON.parse(text));
-            break;
-          case "notes":
-            await NoteService.saveAllNotes(JSON.parse(text));
-            break;
-          case "bookmarks":
-            await BookmarkService.saveAllBookmarks(JSON.parse(text));
-            break;
-          case "words":
-            await WordService.saveAllWords(JSON.parse(text));
-            break;
-          case "plugins":
-            await PluginService.saveAllPlugins(JSON.parse(text));
-            break;
-          default:
-            break;
+        let buffer = zipEntries[i].getData();
+        if (!buffer) {
+          flag = false;
+          break;
         }
+
+        fs.writeFileSync(
+          path.join(dataPath, "config", zipEntries[i].name),
+          buffer
+        );
       }
     }
   }

@@ -1,8 +1,8 @@
 import React from "react";
 import "./backupDialog.css";
 import { driveList } from "../../../constants/driveList";
-import { backup } from "../../../utils/sync/backup";
-import { restore } from "../../../utils/sync/restore";
+import { backupFromStorage } from "../../../utils/file/backup";
+import { restore } from "../../../utils/file/restore";
 import { Trans } from "react-i18next";
 import DropboxUtil from "../../../utils/sync/dropbox";
 import OneDriveUtil from "../../../utils/sync/onedrive";
@@ -85,7 +85,7 @@ class BackupDialog extends React.Component<
     this.setState({ currentDrive: name }, async () => {
       switch (name) {
         case "local":
-          let blob: Blob | boolean = await backup(false);
+          let blob: Blob | boolean = await backupFromStorage();
           if (!blob) {
             this.showMessage("Backup Failed");
           }
@@ -134,7 +134,7 @@ class BackupDialog extends React.Component<
             this.showMessage("Uploading, please wait");
             this.props.handleLoadingDialog(true);
 
-            let blob: Blob | boolean = await backup(false);
+            let blob: Blob | boolean = await backupFromStorage();
             if (!blob) {
               this.showMessage("Backup Failed");
               this.props.handleLoadingDialog(false);

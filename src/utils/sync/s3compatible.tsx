@@ -1,4 +1,4 @@
-import { restore } from "./restore";
+import { restore } from "../file/restore";
 import StorageUtil from "../service/configService";
 
 class S3Util {

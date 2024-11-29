@@ -13,6 +13,7 @@ import BookUtil from "../../utils/file/bookUtil";
 import ActionDialog from "../dialogs/actionDialog";
 import { isElectron } from "react-device-detect";
 import toast from "react-hot-toast";
+import CoverUtil from "../../utils/file/coverUtil";
 declare var window: any;
 class BookListItem extends React.Component<BookItemProps, BookItemState> {
   constructor(props: BookItemProps) {
@@ -41,7 +42,7 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
       !filePath
     ) {
       this.props.handleReadingBook(this.props.book);
-      BookUtil.RedirectBook(this.props.book, this.props.t, this.props.history);
+      BookUtil.redirectBook(this.props.book, this.props.t);
     }
   }
   UNSAFE_componentWillReceiveProps(nextProps: BookItemProps) {
@@ -87,7 +88,7 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
     }
     RecentBooks.setRecent(this.props.book.key);
     this.props.handleReadingBook(this.props.book);
-    BookUtil.RedirectBook(this.props.book, this.props.t, this.props.history);
+    BookUtil.redirectBook(this.props.book, this.props.t);
   };
   handleExportBook() {
     BookUtil.fetchBook(
@@ -146,7 +147,7 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
             this.handleMoreAction(event);
           }}
         >
-          {!BookUtil.isCoverExist(this.props.book) ||
+          {!CoverUtil.isCoverExist(this.props.book) ||
           (this.props.book.format === "PDF" &&
             StorageUtil.getReaderConfig("isDisablePDFCover") === "yes") ? (
             <div
@@ -186,7 +187,7 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
               }}
             >
               <img
-                data-src={BookUtil.getCover(this.props.book)}
+                data-src={CoverUtil.getCover(this.props.book)}
                 alt=""
                 className="lazy-image book-item-image"
                 style={{ width: "100%" }}

@@ -11,8 +11,6 @@ import { BookListProps, BookListState } from "./interface";
 import StorageUtil from "../../../utils/service/configService";
 import { Redirect, withRouter } from "react-router-dom";
 import ViewMode from "../../../components/viewMode";
-import { backup } from "../../../utils/sync/backup";
-import { isElectron } from "react-device-detect";
 import SelectBook from "../../../components/selectBook";
 import { Trans } from "react-i18next";
 import DeletePopup from "../../../components/dialogs/deletePopup";
@@ -195,14 +193,6 @@ class BookList extends React.Component<BookListProps, BookListState> {
       !this.props.books[0]
     ) {
       return <Redirect to="/manager/empty" />;
-    }
-    if (isElectron) {
-      //accommodate the previous version
-      window.localforage.getItem(this.props.books[0].key).then((result) => {
-        if (result) {
-          backup(false);
-        }
-      });
     }
 
     StorageUtil.setReaderConfig(
