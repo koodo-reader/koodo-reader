@@ -8,6 +8,10 @@ class BookService {
   static async getDbBuffer() {
     let sqlUtil = new SqlUtil();
     let books = await this.getAllBooks();
+    books = books.map((b) => {
+      b.cover = "";
+      return b;
+    });
     return sqlUtil.JsonToDbBuffer(books, "books");
   }
   static async getAllBooks(): Promise<Book[]> {

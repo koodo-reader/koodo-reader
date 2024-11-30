@@ -7,7 +7,8 @@ import NoteService from "../service/noteService";
 import PluginService from "../service/pluginService";
 import WordService from "../service/wordService";
 declare var window: any;
-export const changePath = (oldPath: string, newPath: string) => {
+export const changePath = (newPath: string) => {
+  let oldPath = getStorageLocation() || "";
   return new Promise<number>((resolve, reject) => {
     const fs = window.require("fs-extra");
     try {
@@ -71,7 +72,20 @@ export const syncData = (blob: Blob, books: BookModel[] = [], isSync: true) => {
     };
   });
 };
-
+export const getLastSyncTimeFromConfigJson = () => {
+  const fs = window.require("fs");
+  const path = window.require("path");
+  const dataPath = getStorageLocation() || "";
+  if (!fs.existsSync(path.join(dataPath, "config", "config.json"))) {
+    return 0;
+  }
+  let data = fs.readFileSync(
+    path.join(dataPath, "config", "config.json"),
+    "utf-8"
+  );
+  const readerConfig = JSON.parse(JSON.parse(data).readerConfig);
+  return parseInt(readerConfig.lastSyncTime);
+};
 export function getParamsFromUrl() {
   var hashParams: any = {};
   var e,
@@ -86,7 +100,8 @@ export function getParamsFromUrl() {
   return hashParams;
 }
 
-export const upgradeStorage = async (dataPath: string, toast: any) => {
+export const upgradeStorage = async (toast: any) => {
+  let dataPath = getStorageLocation() || "";
   // localStorage.setItem("isUpgraded", "yes");
   //check if folder named cover exsits
   const fs = window.require("fs");
@@ -121,7 +136,6 @@ export const upgradeStorage = async (dataPath: string, toast: any) => {
     return;
   }
   const files = fs.readdirSync(path.join(dataPath, "book"));
-  console.log(files);
   for (let i = 0; i < files.length; i++) {
     let fileName = files[i];
     let book = books.find((item) => item.key === fileName);

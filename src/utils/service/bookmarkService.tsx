@@ -138,6 +138,62 @@ class BookmarkService {
       return null;
     }
   }
+  static async getBookmarksByBookKey(bookKey: string): Promise<Bookmark[]> {
+    if (isElectron) {
+      let bookmarks = await window
+        .require("electron")
+        .ipcRenderer.invoke("database-command", {
+          statement: "getByBookKeysStatement",
+          statementType: "string",
+          executeType: "all",
+          dbName: "bookmarks",
+          data: bookKey,
+          storagePath: getStorageLocation(),
+        });
+      return bookmarks;
+    } else {
+      let bookmarks = await this.getAllBookmarks();
+      return bookmarks.filter((b) => b.bookKey === bookKey);
+    }
+  }
+  static async getBookmarksByBookKeys(keys: string[]): Promise<Bookmark[]> {
+    if (isElectron) {
+      let bookmarks = await window
+        .require("electron")
+        .ipcRenderer.invoke("database-command", {
+          statement: "getByBookKeysStatement",
+          statementType: "string",
+          executeType: "all",
+          dbName: "bookmarks",
+          data: keys,
+          storagePath: getStorageLocation(),
+        });
+      return bookmarks;
+    } else {
+      let bookmarks = await this.getAllBookmarks();
+      return bookmarks.filter((b) => keys.includes(b.bookKey));
+    }
+  }
+  static async deleteBookmarksByBookKey(bookKey: string) {
+    if (isElectron) {
+      await window.require("electron").ipcRenderer.invoke("database-command", {
+        statement: "deleteByBookKeyStatement",
+        statementType: "string",
+        executeType: "run",
+        dbName: "bookmarks",
+        data: bookKey,
+        storagePath: getStorageLocation(),
+      });
+    } else {
+      let bookmarks = await this.getAllBookmarks();
+      bookmarks = bookmarks.filter((b) => b.bookKey !== bookKey);
+      if (bookmarks.length === 0) {
+        await this.deleteAllBookmarks();
+      } else {
+        await this.saveAllBookmarks(bookmarks);
+      }
+    }
+  }
 }
 
 export default BookmarkService;

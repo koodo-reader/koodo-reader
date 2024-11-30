@@ -14,6 +14,13 @@ import { getStorageLocation } from "../common";
 import CoverUtil from "./coverUtil";
 import ConfigService from "../service/configService";
 declare var window: any;
+export const backup = async () => {
+  if (isElectron) {
+    return backupFromPath();
+  } else {
+    return await backupFromStorage();
+  }
+};
 
 export const backupFromPath = () => {
   const path = window.require("path");
@@ -23,8 +30,14 @@ export const backupFromPath = () => {
   backupToConfigJson();
   zip.addLocalFolder(path.join(dataPath, "book"), "book");
   zip.addLocalFolder(path.join(dataPath, "cover"), "cover");
-  zip.addLocalFolder(path.join(dataPath, "config"), "config");
-  return zip.toBuffer();
+  zip.addLocalFile(path.join(dataPath, "config", "config.json"), "config");
+  zip.addLocalFile(path.join(dataPath, "config", "notes.db"), "config");
+  zip.addLocalFile(path.join(dataPath, "config", "books.db"), "config");
+  zip.addLocalFile(path.join(dataPath, "config", "bookmarks.db"), "config");
+  zip.addLocalFile(path.join(dataPath, "config", "words.db"), "config");
+  zip.addLocalFile(path.join(dataPath, "config", "plugins.db"), "config");
+
+  return new Blob([zip.toBuffer()], { type: "application/zip" });
 };
 export const backupFromStorage = async () => {
   let zip = new window.JSZip();
@@ -34,8 +47,9 @@ export const backupFromStorage = async () => {
   let words = await WordService.getDbBuffer();
   let plugins = await PluginService.getDbBuffer();
   let config = JSON.stringify(ConfigService.getConfigJson());
-  zipCover(zip, books);
-  await zipBook(zip, books);
+  console.log(books, notes, bookmarks, words, plugins, config);
+  await zipCover(zip);
+  await zipBook(zip);
   let result = await zipConfig(
     zip,
     books,
@@ -46,22 +60,26 @@ export const backupFromStorage = async () => {
     config
   );
   if (!result) return false;
-  return zip.generateAsync({ type: "blob" });
+  return await zip.generateAsync({ type: "blob" });
 };
 
 export const backupToConfigJson = () => {
   let configStr = JSON.stringify(ConfigService.getConfigJson());
-  let blob = new Blob([configStr], { type: "application/json" });
   const fs = window.require("fs");
   const path = window.require("path");
   const dataPath = getStorageLocation() || "";
   if (!fs.existsSync(path.join(dataPath))) {
     fs.mkdirSync(path.join(dataPath));
   }
-  fs.writeFileSync(path.join(dataPath, "config.json"), blob);
+  fs.writeFileSync(
+    path.join(dataPath, "config", "config.json"),
+    configStr,
+    "utf-8"
+  );
 };
-export const zipBook = (zip: any, books: BookModel[]) => {
+export const zipBook = (zip: any) => {
   return new Promise<boolean>(async (resolve, reject) => {
+    let books = await BookService.getAllBooks();
     let bookZip = zip.folder("book");
     let data: any = [];
     books &&
@@ -90,7 +108,8 @@ export const zipBook = (zip: any, books: BookModel[]) => {
     }
   });
 };
-export const zipCover = (zip: any, books: BookModel[]) => {
+export const zipCover = async (zip: any) => {
+  let books = await BookService.getAllBooks();
   let coverZip = zip.folder("cover");
   if (isElectron) {
   } else {

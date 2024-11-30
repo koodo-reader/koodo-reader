@@ -9,7 +9,7 @@ import { changePath } from "../../../utils/file/common";
 import { isElectron } from "react-device-detect";
 import { dropdownList } from "../../../constants/dropdownList";
 
-import { restore } from "../../../utils/file/restore";
+import { restoreFromConfigJson } from "../../../utils/file/restore";
 import {
   generalSettingList,
   appearanceSettingList,
@@ -116,23 +116,7 @@ class SettingDialog extends React.Component<
     this.handleRest(this.state[stateName]);
   };
   syncFromLocation = async () => {
-    const fs = window.require("fs");
-    const path = window.require("path");
-    const { zip } = window.require("zip-a-folder");
-    let storageLocation = getStorageLocation() || "";
-    let sourcePath = path.join(storageLocation, "config");
-    let outPath = path.join(storageLocation, "config.zip");
-    await zip(sourcePath, outPath);
-
-    var data = fs.readFileSync(outPath);
-
-    let blobTemp = new Blob([data], { type: "application/zip" });
-    let fileTemp = new File([blobTemp], "config.zip", {
-      lastModified: new Date().getTime(),
-      type: blobTemp.type,
-    });
-
-    let result = await restore(fileTemp, true);
+    let result = await restoreFromConfigJson();
     if (result) {
       toast.success(this.props.t("Change successful"));
     } else {
@@ -145,10 +129,7 @@ class SettingDialog extends React.Component<
     if (!path.filePaths[0]) {
       return;
     }
-    let result = await changePath(
-      getStorageLocation() || "",
-      path.filePaths[0]
-    );
+    let result = await changePath(path.filePaths[0]);
     if (result === 1) {
       this.syncFromLocation();
     } else if (result === 2) {

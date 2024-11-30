@@ -32,17 +32,11 @@ class DeleteDialog extends React.Component<
   handleCancel = () => {
     this.props.handleDeleteDialog(false);
   };
-  handleDeleteOther = (key: string) => {
-    return new Promise<void>(async (resolve, reject) => {
-      if (this.props.bookmarks) {
-        await BookmarkService.deleteBookmark(key);
-        this.props.handleFetchBookmarks();
-      }
-      if (this.props.notes) {
-        NoteService.deleteNote(key);
-        this.props.handleFetchNotes();
-      }
-    });
+  handleDeleteOther = async (key: string) => {
+    await BookmarkService.deleteBookmarksByBookKey(key);
+    this.props.handleFetchBookmarks();
+    await NoteService.deleteNotesByBookKey(key);
+    this.props.handleFetchNotes();
   };
   handleComfirm = async () => {
     if (this.props.mode === "shelf" && !this.state.isDeleteShelfBook) {
@@ -55,7 +49,6 @@ class DeleteDialog extends React.Component<
     } else {
       this.deleteBooks();
     }
-
     this.props.handleDeleteDialog(false);
     toast.success(this.props.t("Deletion successful"));
   };
@@ -113,7 +106,6 @@ class DeleteDialog extends React.Component<
   };
   deleteBook = (key: string, format: string) => {
     return new Promise<void>((resolve, reject) => {
-      if (!this.props.books) return;
       BookService.deleteBook(key)
         .then(async () => {
           await BookUtil.deleteBook(key, format);

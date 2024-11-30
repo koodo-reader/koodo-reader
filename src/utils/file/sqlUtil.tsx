@@ -21,7 +21,6 @@ class SqlUtil {
     }
   }
   async dbBufferToJson(buffer: ArrayBuffer, type: string) {
-    console.log(buffer);
     let SQL = await this.getConnection();
     let db = new SQL.Database(new Uint8Array(buffer));
     let statement = db.prepare(sqlStatement["getAllStatement"][type]);
@@ -31,7 +30,6 @@ class SqlUtil {
     }
     statement.free();
     db.close();
-    console.log(json);
     return json;
   }
   async JsonToDbBuffer(json: any[], type: string) {

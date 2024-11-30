@@ -1,8 +1,8 @@
 import React from "react";
 import "./backupDialog.css";
 import { driveList } from "../../../constants/driveList";
-import { backupFromStorage } from "../../../utils/file/backup";
-import { restore } from "../../../utils/file/restore";
+import { backup, backupFromStorage } from "../../../utils/file/backup";
+import { restoreFromfilePath } from "../../../utils/file/restore";
 import { Trans } from "react-i18next";
 import DropboxUtil from "../../../utils/sync/dropbox";
 import OneDriveUtil from "../../../utils/sync/onedrive";
@@ -59,13 +59,16 @@ class BackupDialog extends React.Component<
     this.showMessage("Execute successful");
     this.props.handleFetchBooks();
   };
-  handleRestoreToLocal = async (event: any) => {
-    event.preventDefault();
-    this.props.handleLoadingDialog(true);
-    //Fix animation issue
-    setTimeout(async () => {
-      let result = await restore(event.target.files[0]);
-      if (result) {
+  handleRestoreToLocal = async () => {
+    let filePath = await window
+      .require("electron")
+      .ipcRenderer.invoke("select-file", "ping");
+
+    if (filePath) {
+      console.log("Selected file path:", filePath);
+      this.props.handleLoadingDialog(true);
+      let isSuccess = await restoreFromfilePath(filePath);
+      if (isSuccess) {
         this.handleFinish();
       } else {
         this.showMessage(
@@ -73,7 +76,7 @@ class BackupDialog extends React.Component<
         );
         this.props.handleLoadingDialog(false);
       }
-    }, 10);
+    }
   };
   showMessage = (message: string) => {
     toast(this.props.t(message));
@@ -85,7 +88,7 @@ class BackupDialog extends React.Component<
     this.setState({ currentDrive: name }, async () => {
       switch (name) {
         case "local":
-          let blob: Blob | boolean = await backupFromStorage();
+          let blob: Blob | boolean = await backup();
           if (!blob) {
             this.showMessage("Backup Failed");
           }
@@ -134,7 +137,7 @@ class BackupDialog extends React.Component<
             this.showMessage("Uploading, please wait");
             this.props.handleLoadingDialog(true);
 
-            let blob: Blob | boolean = await backupFromStorage();
+            let blob: Blob | boolean = await backup();
             if (!blob) {
               this.showMessage("Backup Failed");
               this.props.handleLoadingDialog(false);
@@ -304,15 +307,10 @@ class BackupDialog extends React.Component<
           <div className="backup-page-drive-container">
             <div>{renderDrivePage()}</div>
             {this.state.isBackup === "no" ? (
-              <input
-                type="file"
-                id="restore-file"
-                accept="application/zip"
+              <div
                 className="restore-file"
-                name="file"
-                multiple={false}
-                onChange={(event) => {
-                  this.handleRestoreToLocal(event);
+                onClick={() => {
+                  this.handleRestoreToLocal();
                 }}
               />
             ) : null}
