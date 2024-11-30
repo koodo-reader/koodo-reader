@@ -125,27 +125,24 @@ class SettingDialog extends React.Component<
   };
   handleChangeLocation = async () => {
     const { ipcRenderer } = window.require("electron");
-    const path = await ipcRenderer.invoke("change-path");
-    if (!path.filePaths[0]) {
+    const newPath = await ipcRenderer.invoke("select-path");
+    if (!newPath) {
       return;
     }
-    let result = await changePath(path.filePaths[0]);
-    if (result === 1) {
-      this.syncFromLocation();
-    } else if (result === 2) {
-      this.props.handleFetchBooks();
-      toast.success(this.props.t("Change successful"));
-    } else {
+    let isSuccess = await changePath(newPath);
+    if (!isSuccess) {
       toast.error(this.props.t("Change failed"));
+      return;
     }
-    localStorage.setItem("storageLocation", path.filePaths[0]);
-    this.setState({ storageLocation: path.filePaths[0] });
+    localStorage.setItem("storageLocation", newPath);
+    this.setState({ storageLocation: newPath });
     document.getElementsByClassName(
       "setting-dialog-location-title"
     )[0].innerHTML =
-      path.filePaths[0] ||
+      newPath ||
       localStorage.getItem("storageLocation") ||
       ipcRenderer.sendSync("storage-location", "ping");
+    toast.success(this.props.t("Change successful"));
   };
   handleChangeTab = (currentTab: string) => {
     this.setState({ currentTab });

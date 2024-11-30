@@ -1,4 +1,3 @@
-import BookModel from "../../models/Book";
 import { getStorageLocation } from "../common";
 import CoverUtil from "./coverUtil";
 import BookmarkService from "../service/bookmarkService";
@@ -7,70 +6,45 @@ import NoteService from "../service/noteService";
 import PluginService from "../service/pluginService";
 import WordService from "../service/wordService";
 declare var window: any;
-export const changePath = (newPath: string) => {
+export const changePath = async (newPath: string) => {
+  if (isFolderContainsFile(newPath)) {
+    return false;
+  }
   let oldPath = getStorageLocation() || "";
-  return new Promise<number>((resolve, reject) => {
-    const fs = window.require("fs-extra");
-    try {
-      fs.readdir(newPath, (err, files: string[]) => {
-        let isConfiged: boolean = false;
-        files.forEach((file: string) => {
-          if (file === "config.zip") {
-            isConfiged = true;
-          }
-        });
-        if (isConfiged) {
-          localStorage.setItem("storageLocation", newPath);
-          resolve(1);
-        } else {
-          fs.copy(oldPath, newPath, function (err) {
-            if (err) return;
-            fs.emptyDirSync(oldPath);
-            resolve(2);
-          });
-        }
-      });
-    } catch (error) {
-      console.log(error);
-      resolve(0);
-    }
+  const fs = window.require("fs-extra");
+  await window.require("electron").ipcRenderer.invoke("close-database", {
+    dbName: "books",
+    storagePath: getStorageLocation(),
   });
+  await window.require("electron").ipcRenderer.invoke("close-database", {
+    dbName: "notes",
+    storagePath: getStorageLocation(),
+  });
+  await window.require("electron").ipcRenderer.invoke("close-database", {
+    dbName: "bookmarks",
+    storagePath: getStorageLocation(),
+  });
+  await window.require("electron").ipcRenderer.invoke("close-database", {
+    dbName: "words",
+    storagePath: getStorageLocation(),
+  });
+  await window.require("electron").ipcRenderer.invoke("close-database", {
+    dbName: "plugins",
+    storagePath: getStorageLocation(),
+  });
+  try {
+    await fs.copy(oldPath, newPath);
+    fs.emptyDirSync(oldPath);
+    return true;
+  } catch (err) {
+    console.error(`Error copying folder: ${err}`);
+    return false;
+  }
 };
-export const syncData = (blob: Blob, books: BookModel[] = [], isSync: true) => {
-  return new Promise<boolean>((resolve, reject) => {
-    let file = new File([blob], "config.zip", {
-      lastModified: new Date().getTime(),
-      type: blob.type,
-    });
-    const fs = window.require("fs");
-    const path = window.require("path");
-    const AdmZip = window.require("adm-zip");
-    const dataPath = getStorageLocation() || "";
-    var reader = new FileReader();
-    reader.readAsArrayBuffer(file);
-    reader.onload = async (event) => {
-      if (!event.target) return;
-      if (!fs.existsSync(path.join(dataPath))) {
-        fs.mkdirSync(path.join(dataPath));
-      }
-      fs.writeFileSync(
-        path.join(dataPath, file.name),
-        Buffer.from(event.target.result as any)
-      );
-      var zip = new AdmZip(path.join(dataPath, file.name));
-      zip.extractAllTo(/*target path*/ dataPath, /*overwrite*/ true);
-
-      if (!isSync) {
-        let deleteBooks = books.map((item) => {
-          return BookService.deleteBook(item.key);
-        });
-        await Promise.all(deleteBooks);
-        resolve(true);
-      } else {
-        resolve(true);
-      }
-    };
-  });
+const isFolderContainsFile = (folderPath: string) => {
+  const fs = window.require("fs");
+  const files = fs.readdirSync(folderPath);
+  return files.length > 0;
 };
 export const getLastSyncTimeFromConfigJson = () => {
   const fs = window.require("fs");

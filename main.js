@@ -470,17 +470,14 @@ const createMainWin = () => {
       }
     }
   });
-  ipcMain.handle("change-path", async (event) => {
+  ipcMain.handle("select-path", async (event) => {
     var path = await dialog.showOpenDialog({
       properties: ["openDirectory"],
     });
-    return path;
+    return path.filePaths[0];
   });
-  ipcMain.on("storage-location", (event, config) => {
-    event.returnValue = path.join(dirPath, "data");
-  });
+
   ipcMain.handle("select-file", async (event, config) => {
-    const { dialog } = require('electron')
     const result = await dialog.showOpenDialog({
       properties: ['openFile'],
       filters: [{ name: 'Zip Files', extensions: ['zip'] }]
@@ -663,6 +660,9 @@ const createMainWin = () => {
       });
     }
     event.returnvalue = false;
+  });
+  ipcMain.on("storage-location", (event, config) => {
+    event.returnValue = path.join(dirPath, "data");
   });
   ipcMain.on("get-dirname", (event, arg) => {
     event.returnValue = __dirname;
