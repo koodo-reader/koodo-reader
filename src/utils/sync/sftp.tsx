@@ -1,4 +1,4 @@
-import { restore } from "../file/restore";
+import { restoreFromfilePath } from "../file/restore";
 import StorageUtil from "../service/configService";
 
 class SFtpUtil {
@@ -29,7 +29,6 @@ class SFtpUtil {
   static DownloadFile = async () => {
     return new Promise<boolean>(async (resolve, reject) => {
       const fileName = "data.zip";
-      const fs = window.require("fs");
       const path = window.require("path");
       const { ipcRenderer } = window.require("electron");
       let { url, username, password, port, dir } = JSON.parse(
@@ -45,13 +44,7 @@ class SFtpUtil {
         dir,
       });
       if (result) {
-        var data = fs.readFileSync(path.join(dirPath, fileName));
-        let blobTemp: any = new Blob([data], { type: "application/zip" });
-        let fileTemp = new File([blobTemp], fileName, {
-          lastModified: new Date().getTime(),
-          type: blobTemp.type,
-        });
-        let result = await restore(fileTemp);
+        let result = await restoreFromfilePath(path.join(dirPath, fileName));
         if (!result) resolve(false);
       }
       resolve(true);

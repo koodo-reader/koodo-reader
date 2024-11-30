@@ -235,6 +235,26 @@ class NoteService {
       );
     }
   }
+  static async deleteNotesByBookKey(bookKey: string) {
+    if (isElectron) {
+      await window.require("electron").ipcRenderer.invoke("database-command", {
+        statement: "deleteByBookKeyStatement",
+        statementType: "string",
+        executeType: "run",
+        dbName: "notes",
+        data: bookKey,
+        storagePath: getStorageLocation(),
+      });
+    } else {
+      let notes = await this.getAllNotes();
+      notes = notes.filter((note) => note.bookKey !== bookKey);
+      if (notes.length === 0) {
+        await this.deleteAllNotes();
+      } else {
+        await this.saveAllNotes(notes);
+      }
+    }
+  }
 }
 
 export default NoteService;

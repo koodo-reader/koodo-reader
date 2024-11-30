@@ -5,13 +5,16 @@ import ImportLocal from "../../components/importLocal";
 import { HeaderProps, HeaderState } from "./interface";
 import StorageUtil from "../../utils/service/configService";
 import UpdateInfo from "../../components/dialogs/updateDialog";
-import { restore } from "../../utils/file/restore";
+import { restoreFromConfigJson } from "../../utils/file/restore";
 import { backupToConfigJson } from "../../utils/file/backup";
 import { isElectron } from "react-device-detect";
-import { syncData, upgradeStorage } from "../../utils/file/common";
+import {
+  getLastSyncTimeFromConfigJson,
+  upgradeStorage,
+} from "../../utils/file/common";
 import toast from "react-hot-toast";
 import { Trans } from "react-i18next";
-import { checkStableUpdate, getStorageLocation } from "../../utils/common";
+import { checkStableUpdate } from "../../utils/common";
 import packageInfo from "../../../package.json";
 
 class Header extends React.Component<HeaderProps, HeaderState> {
@@ -66,25 +69,16 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         console.log(error);
       }
       //Check for data update
-      let storageLocation = getStorageLocation() || "";
       //upgrade data from old version
-      await upgradeStorage(storageLocation, toast);
-      let sourcePath = path.join(storageLocation, "config", "config.json");
+      await upgradeStorage(toast);
       //Detect data modification
-      fs.readFile(sourcePath, "utf8", (err, data) => {
-        if (err) {
-          console.log(err);
-          return;
-        }
-        const readerConfig = JSON.parse(JSON.parse(data).readerConfig);
-        if (
-          localStorage.getItem("lastSyncTime") &&
-          parseInt(readerConfig.lastSyncTime) >
-            parseInt(localStorage.getItem("lastSyncTime")!)
-        ) {
-          this.setState({ isdataChange: true });
-        }
-      });
+      let lastSyncTime = getLastSyncTimeFromConfigJson();
+      if (
+        localStorage.getItem("lastSyncTime") &&
+        lastSyncTime > parseInt(localStorage.getItem("lastSyncTime") || "0")
+      ) {
+        this.setState({ isdataChange: true });
+      }
     }
     window.addEventListener("resize", () => {
       this.setState({ width: document.body.clientWidth });
@@ -97,38 +91,14 @@ class Header extends React.Component<HeaderProps, HeaderState> {
   }
 
   syncFromLocation = async () => {
-    const fs = window.require("fs");
-    const path = window.require("path");
-    const { zip } = window.require("zip-a-folder");
-    let storageLocation = getStorageLocation() || "";
-    let sourcePath = path.join(storageLocation, "config");
-    let outPath = path.join(storageLocation, "config.zip");
-    await zip(sourcePath, outPath);
-
-    var data = fs.readFileSync(outPath);
-
-    let blobTemp = new Blob([data], { type: "application/epub+zip" });
-    let fileTemp = new File([blobTemp], "config.zip", {
-      lastModified: new Date().getTime(),
-      type: blobTemp.type,
-    });
-    let result = await restore(fileTemp, true);
+    let result = await restoreFromConfigJson();
     if (result) {
       this.setState({ isdataChange: false });
       //Check for data update
-      let storageLocation = getStorageLocation() || "";
-      let sourcePath = path.join(storageLocation, "config", "config.json");
-
-      fs.readFile(sourcePath, "utf8", (err, data) => {
-        if (err) {
-          console.log(err);
-          return;
-        }
-        const readerConfig = JSON.parse(JSON.parse(data).readerConfig);
-        if (localStorage.getItem("lastSyncTime") && readerConfig.lastSyncTime) {
-          localStorage.setItem("lastSyncTime", readerConfig.lastSyncTime);
-        }
-      });
+      let lastSyncTime = getLastSyncTimeFromConfigJson();
+      if (localStorage.getItem("lastSyncTime") && lastSyncTime) {
+        localStorage.setItem("lastSyncTime", lastSyncTime + "");
+      }
     }
     if (!result) {
       toast.error(this.props.t("Sync Failed"));
@@ -145,27 +115,15 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       StorageUtil.setReaderConfig("isFirst", "no");
       return;
     }
-    const fs = window.require("fs");
-    const path = window.require("path");
-    let storageLocation = getStorageLocation() || "";
-    let sourcePath = path.join(storageLocation, "config", "config.json");
-    fs.readFile(sourcePath, "utf8", async (err, data) => {
-      if (err || !data) {
-        this.syncToLocation();
-        return;
-      }
-      const readerConfig = JSON.parse(JSON.parse(data).readerConfig);
-      if (
-        readerConfig &&
-        localStorage.getItem("lastSyncTime") &&
-        parseInt(readerConfig.lastSyncTime) >
-          parseInt(localStorage.getItem("lastSyncTime")!)
-      ) {
-        this.syncFromLocation();
-      } else {
-        this.syncToLocation();
-      }
-    });
+    let lastSyncTime = getLastSyncTimeFromConfigJson();
+    if (
+      localStorage.getItem("lastSyncTime") &&
+      lastSyncTime > parseInt(localStorage.getItem("lastSyncTime")!)
+    ) {
+      this.syncFromLocation();
+    } else {
+      this.syncToLocation();
+    }
   };
   syncToLocation = async () => {
     let timestamp = new Date().getTime().toString();

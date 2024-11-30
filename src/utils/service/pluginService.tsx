@@ -123,7 +123,6 @@ class PluginService {
     return voiceList;
   }
   static async checkPlugin(plugin: Plugin) {
-    console.log(plugin, await generateSHA256Hash(plugin.script));
     if ((await generateSHA256Hash(plugin.script)) !== plugin.scriptSHA256) {
       return false;
     } else {

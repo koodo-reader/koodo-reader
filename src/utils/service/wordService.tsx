@@ -175,6 +175,26 @@ class WordService {
       return words.filter((word) => bookKeys.includes(word.bookKey));
     }
   }
+  static async deleteWordsByBookKey(bookKey: string) {
+    if (isElectron) {
+      await window.require("electron").ipcRenderer.invoke("database-command", {
+        statement: "deleteByBookKeyStatement",
+        statementType: "string",
+        executeType: "run",
+        dbName: "words",
+        data: bookKey,
+        storagePath: getStorageLocation(),
+      });
+    } else {
+      let words = await this.getAllWords();
+      words = words.filter((b) => b.bookKey !== bookKey);
+      if (words.length === 0) {
+        await this.deleteAllWords();
+      } else {
+        await this.saveAllWords(words);
+      }
+    }
+  }
 }
 
 export default WordService;

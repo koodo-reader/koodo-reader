@@ -65,7 +65,6 @@ if (!singleInstance) {
   });
 }
 const getDBConnection = (dbName, storagePath) => {
-  console.log(dbName, 'dbName');
   if (!dbConnection[dbName]) {
     if (!fs.existsSync(path.join(storagePath, "config"))) {
       fs.mkdirSync(path.join(storagePath, "config"));
@@ -480,9 +479,24 @@ const createMainWin = () => {
   ipcMain.on("storage-location", (event, config) => {
     event.returnValue = path.join(dirPath, "data");
   });
+  ipcMain.handle("select-file", async (event, config) => {
+    const { dialog } = require('electron')
+    const result = await dialog.showOpenDialog({
+      properties: ['openFile'],
+      filters: [{ name: 'Zip Files', extensions: ['zip'] }]
+    });
+
+    if (result.canceled) {
+      console.log('User canceled the file selection');
+      return "";
+    } else {
+      const filePath = result.filePaths[0];
+      console.log('Selected file path:', filePath);
+      return filePath;
+    }
+  });
   ipcMain.handle("database-command", (event, config) => {
     let { statement, statementType, executeType, dbName, data, storagePath } = config;
-    console.log(config);
     let db = getDBConnection(dbName, storagePath);
     let sql = ""
     if (statementType === "string") {
@@ -496,12 +510,10 @@ const createMainWin = () => {
       if (statement.startsWith("save") || statement.startsWith("update")) {
         data = jsonToSqlite[dbName](data)
       }
-      console.log(data, 'data');
       result = row[executeType](data);
     } else {
       result = row[executeType]();
     }
-    console.log(result, 'result')
     if (executeType === 'all') {
       return result.map(item => sqliteToJson[dbName](item));
     } else if (executeType === 'get') {
@@ -510,6 +522,12 @@ const createMainWin = () => {
       return result;
     }
 
+  });
+  ipcMain.handle("close-database", (event, config) => {
+    let { dbName, storagePath } = config;
+    let db = getDBConnection(dbName, storagePath);
+    delete dbConnection[dbName];
+    db.close();
   });
   ipcMain.on("user-data", (event, arg) => {
     event.returnValue = dirPath;
@@ -556,7 +574,6 @@ const createMainWin = () => {
       mainWin.setBrowserView(mainView)
       let [width, height] = mainWin.getSize()
       mainView.setBounds({ x: 0, y: 0, width: width, height: height })
-      console.log(config.url);
       mainView.webContents.loadURL(config.url)
     }
   });

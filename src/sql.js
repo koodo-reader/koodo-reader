@@ -115,6 +115,11 @@ const getByBookKeyStatement = {
   words: 'SELECT * FROM words WHERE bookKey = ?',
   books: 'SELECT * FROM books WHERE key = ?',
 }
+const deleteByBookKeyStatement = {
+  notes: `DELETE FROM notes WHERE bookKey = ?`,
+  bookmarks: 'DELETE FROM bookmarks WHERE bookKey = ?',
+  words: 'DELETE FROM words WHERE bookKey = ?',
+}
 const getByBookKeysStatement = {
   notes: (bookKeys) => `SELECT * FROM notes WHERE bookKey IN (${bookKeys.map(() => '?').join(',')})`,
   bookmarks: (bookKeys) => `SELECT * FROM bookmarks WHERE bookKey IN (${bookKeys.map(() => '?').join(',')})`,
@@ -130,7 +135,8 @@ const sqlStatement = {
   deleteStatement,
   getStatement,
   getByBookKeyStatement,
-  getByBookKeysStatement
+  getByBookKeysStatement,
+  deleteByBookKeyStatement
 }
 const jsonToSqlite = {
   notes: (note) => {

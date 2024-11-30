@@ -114,6 +114,10 @@ export const unzipConfig = async (zipEntries: any) => {
           flag = false;
           break;
         }
+        await window.require("electron").ipcRenderer.invoke("close-database", {
+          dbName: zipEntries[i].name.split(".")[0],
+          storagePath: getStorageLocation(),
+        });
 
         fs.writeFileSync(
           path.join(dataPath, "config", zipEntries[i].name),

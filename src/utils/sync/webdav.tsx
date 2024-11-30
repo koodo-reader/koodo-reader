@@ -1,4 +1,4 @@
-import { restore } from "../file/restore";
+import { restoreFromfilePath } from "../file/restore";
 import StorageUtil from "../service/configService";
 
 class WebdavUtil {
@@ -30,7 +30,6 @@ class WebdavUtil {
         StorageUtil.getReaderConfig("webdav_token") || ""
       );
       const fileName = "data.zip";
-      const fs = window.require("fs");
       const path = window.require("path");
       const { ipcRenderer } = window.require("electron");
       const dirPath = ipcRenderer.sendSync("user-data", "ping");
@@ -41,13 +40,7 @@ class WebdavUtil {
         fileName,
       });
       if (result) {
-        var data = fs.readFileSync(path.join(dirPath, fileName));
-        let blobTemp: any = new Blob([data], { type: "application/zip" });
-        let fileTemp = new File([blobTemp], fileName, {
-          lastModified: new Date().getTime(),
-          type: blobTemp.type,
-        });
-        let result = await restore(fileTemp);
+        let result = await restoreFromfilePath(path.join(dirPath, fileName));
         if (!result) resolve(false);
       }
       resolve(true);
