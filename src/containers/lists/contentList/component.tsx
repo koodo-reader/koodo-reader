@@ -1,7 +1,7 @@
 import React from "react";
 import "./contentList.css";
 import { ContentListProps, ContentListState } from "./interface";
-import StorageUtil from "../../../utils/service/configService";
+import ConfigService from "../../../utils/service/configService";
 import RecordLocation from "../../../utils/reader/recordLocation";
 import { scrollContents } from "../../../utils/common";
 
@@ -12,7 +12,8 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
       chapters: [],
       isCollapsed: true,
       currentIndex: -1,
-      isExpandContent: StorageUtil.getReaderConfig("isExpandContent") === "yes",
+      isExpandContent:
+        ConfigService.getReaderConfig("isExpandContent") === "yes",
     };
     this.handleJump = this.handleJump.bind(this);
   }

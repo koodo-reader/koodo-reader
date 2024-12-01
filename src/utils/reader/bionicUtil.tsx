@@ -1,5 +1,5 @@
 import { getIframeDoc } from "./docUtil";
-import StorageUtil from "../service/configService";
+import ConfigService from "../service/configService";
 
 /* Insert one Node after another Node */
 const insertAfter = (newNode, existingNode) => {
@@ -84,7 +84,7 @@ export const processDocumentBody = (element) => {
 export const binicReadingProcess = () => {
   let doc = getIframeDoc();
   if (!doc) return;
-  if (StorageUtil.getReaderConfig("isBionic") === "yes") {
+  if (ConfigService.getReaderConfig("isBionic") === "yes") {
     processDocumentBody(doc);
   }
 };

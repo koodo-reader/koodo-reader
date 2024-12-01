@@ -6,7 +6,7 @@ import { Trans } from "react-i18next";
 import AddFavorite from "../../utils/reader/addFavorite";
 import { withRouter } from "react-router-dom";
 import RecentBooks from "../../utils/reader/recordRecent";
-import StorageUtil from "../../utils/service/configService";
+import ConfigService from "../../utils/service/configService";
 import AddTrash from "../../utils/reader/addTrash";
 import EmptyCover from "../emptyCover";
 import BookUtil from "../../utils/file/bookUtil";
@@ -36,7 +36,7 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
       filePath = ipcRenderer.sendSync("get-file-data");
     }
     if (
-      StorageUtil.getReaderConfig("isOpenBook") === "yes" &&
+      ConfigService.getReaderConfig("isOpenBook") === "yes" &&
       RecentBooks.getAllRecent()[0] === this.props.book.key &&
       !this.props.currentBook.key &&
       !filePath
@@ -149,7 +149,7 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
         >
           {!CoverUtil.isCoverExist(this.props.book) ||
           (this.props.book.format === "PDF" &&
-            StorageUtil.getReaderConfig("isDisablePDFCover") === "yes") ? (
+            ConfigService.getReaderConfig("isDisablePDFCover") === "yes") ? (
             <div
               className="book-item-list-cover"
               onClick={() => {

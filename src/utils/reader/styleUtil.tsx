@@ -1,5 +1,5 @@
 import { getIframeDoc } from "./docUtil";
-import StorageUtil from "../service/configService";
+import ConfigService from "../service/configService";
 
 class styleUtil {
   // add default css for iframe
@@ -13,13 +13,13 @@ class styleUtil {
     background.setAttribute(
       "style",
       `background-color:${
-        StorageUtil.getReaderConfig("isMergeWord") === "yes"
+        ConfigService.getReaderConfig("isMergeWord") === "yes"
           ? "rgba(0,0,0,0)"
-          : StorageUtil.getReaderConfig("backgroundColor") ||
+          : ConfigService.getReaderConfig("backgroundColor") ||
             "rgba(255,255,255,1)"
       };filter: brightness(${
-        StorageUtil.getReaderConfig("brightness") || 1
-      }) invert(${StorageUtil.getReaderConfig("isInvert") === "yes" ? 1 : 0})`
+        ConfigService.getReaderConfig("brightness") || 1
+      }) invert(${ConfigService.getReaderConfig("isInvert") === "yes" ? 1 : 0})`
     );
     if (!doc.head) {
       return;
@@ -37,48 +37,50 @@ class styleUtil {
   //force horionztal writing mode
   static getCustomCss() {
     return `font-size: ${
-      StorageUtil.getReaderConfig("fontSize") || 17
+      ConfigService.getReaderConfig("fontSize") || 17
     }px !important;line-height: ${
-      StorageUtil.getReaderConfig("lineHeight") || "1.25"
+      ConfigService.getReaderConfig("lineHeight") || "1.25"
     } !important;font-family: ${
-      StorageUtil.getReaderConfig("fontFamily") || ""
+      ConfigService.getReaderConfig("fontFamily") || ""
     } !important;background-color: transparent;color: ${
-      StorageUtil.getReaderConfig("textColor")
-        ? StorageUtil.getReaderConfig("textColor")
-        : StorageUtil.getReaderConfig("backgroundColor") ===
+      ConfigService.getReaderConfig("textColor")
+        ? ConfigService.getReaderConfig("textColor")
+        : ConfigService.getReaderConfig("backgroundColor") ===
             "rgba(44,47,49,1)" ||
-          StorageUtil.getReaderConfig("appSkin") === "night" ||
-          (StorageUtil.getReaderConfig("appSkin") === "system" &&
-            StorageUtil.getReaderConfig("isOSNight") === "yes")
+          ConfigService.getReaderConfig("appSkin") === "night" ||
+          (ConfigService.getReaderConfig("appSkin") === "system" &&
+            ConfigService.getReaderConfig("isOSNight") === "yes")
         ? "white"
         : ""
     } !important;letter-spacing: ${
-      StorageUtil.getReaderConfig("letterSpacing")
-        ? StorageUtil.getReaderConfig("letterSpacing")
+      ConfigService.getReaderConfig("letterSpacing")
+        ? ConfigService.getReaderConfig("letterSpacing")
         : ""
     }px !important;text-align: ${
-      StorageUtil.getReaderConfig("textAlign")
-        ? StorageUtil.getReaderConfig("textAlign")
+      ConfigService.getReaderConfig("textAlign")
+        ? ConfigService.getReaderConfig("textAlign")
         : ""
     } !important;
       font-weight: ${
-        StorageUtil.getReaderConfig("isBold") === "yes" ? "bold !important" : ""
+        ConfigService.getReaderConfig("isBold") === "yes"
+          ? "bold !important"
+          : ""
       };font-style: ${
-      StorageUtil.getReaderConfig("isItalic") === "yes"
+      ConfigService.getReaderConfig("isItalic") === "yes"
         ? "italic !important"
         : ""
     };text-shadow: ${
-      StorageUtil.getReaderConfig("isShadow") === "yes"
+      ConfigService.getReaderConfig("isShadow") === "yes"
         ? "2px 2px 2px #cccccc !important"
         : ""
     };text-indent: ${
-      StorageUtil.getReaderConfig("isIndent") === "yes" ? "2rem" : ""
+      ConfigService.getReaderConfig("isIndent") === "yes" ? "2rem" : ""
     };text-decoration: ${
-      StorageUtil.getReaderConfig("isUnderline") === "yes"
+      ConfigService.getReaderConfig("isUnderline") === "yes"
         ? "underline !important"
         : ""
     };margin-bottom: ${
-      StorageUtil.getReaderConfig("paraSpacing") || 0
+      ConfigService.getReaderConfig("paraSpacing") || 0
     }px !important;padding:0px !important;word-wrap: break-word !important; writing-mode: horizontal-tb !important;`;
   }
   static addStyle = (url: string) => {
@@ -89,10 +91,12 @@ class styleUtil {
   };
 
   static applyTheme() {
-    StorageUtil.getReaderConfig("themeColor") &&
-      StorageUtil.getReaderConfig("themeColor") !== "default" &&
+    ConfigService.getReaderConfig("themeColor") &&
+      ConfigService.getReaderConfig("themeColor") !== "default" &&
       this.addStyle(
-        "./assets/styles/" + StorageUtil.getReaderConfig("themeColor") + ".css"
+        "./assets/styles/" +
+          ConfigService.getReaderConfig("themeColor") +
+          ".css"
       );
   }
 }

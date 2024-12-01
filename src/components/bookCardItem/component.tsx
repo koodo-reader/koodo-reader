@@ -4,7 +4,7 @@ import "./bookCardItem.css";
 import { BookCardProps, BookCardState } from "./interface";
 import AddFavorite from "../../utils/reader/addFavorite";
 import ActionDialog from "../dialogs/actionDialog";
-import StorageUtil from "../../utils/service/configService";
+import ConfigService from "../../utils/service/configService";
 import { withRouter } from "react-router-dom";
 import RecordLocation from "../../utils/reader/recordLocation";
 import { isElectron } from "react-device-detect";
@@ -36,7 +36,7 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
     }
 
     if (
-      StorageUtil.getReaderConfig("isOpenBook") === "yes" &&
+      ConfigService.getReaderConfig("isOpenBook") === "yes" &&
       RecentBooks.getAllRecent()[0] === this.props.book.key &&
       !this.props.currentBook.key &&
       !filePath
@@ -132,7 +132,7 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
               this.setState({ isHover: false });
             }}
             style={
-              StorageUtil.getReaderConfig("isDisableCrop") === "yes"
+              ConfigService.getReaderConfig("isDisableCrop") === "yes"
                 ? {
                     height: "168px",
                     alignItems: "flex-end",
@@ -148,7 +148,7 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
           >
             {!CoverUtil.isCoverExist(this.props.book) ||
             (this.props.book.format === "PDF" &&
-              StorageUtil.getReaderConfig("isDisablePDFCover") === "yes") ? (
+              ConfigService.getReaderConfig("isDisablePDFCover") === "yes") ? (
               <div className="book-item-image">
                 <EmptyCover
                   {...{
@@ -165,7 +165,7 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
                 className="lazy-image book-item-image"
                 style={
                   this.state.direction === "horizontal" ||
-                  StorageUtil.getReaderConfig("isDisableCrop") === "yes"
+                  ConfigService.getReaderConfig("isDisableCrop") === "yes"
                     ? { width: "100%" }
                     : { height: "100%" }
                 }

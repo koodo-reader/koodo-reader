@@ -14,7 +14,7 @@ import {
 } from "../../utils/file/export";
 import BookUtil from "../../utils/file/bookUtil";
 import ShelfUtil from "../../utils/reader/shelfUtil";
-import StorageUtil from "../../utils/service/configService";
+import ConfigService from "../../utils/service/configService";
 import BookService from "../../utils/service/bookService";
 import NoteService from "../../utils/service/noteService";
 import WordService from "../../utils/service/wordService";
@@ -40,7 +40,7 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
       });
       return shelfItems;
     } else {
-      if (StorageUtil.getReaderConfig("isHideShelfBook") === "yes") {
+      if (ConfigService.getReaderConfig("isHideShelfBook") === "yes") {
         return items.filter((item) => {
           return ShelfUtil.getBookPosition(item.key).length === 0;
         });
@@ -250,7 +250,7 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
                           selectedBook.format,
                           "",
                           selectedBook.charset,
-                          StorageUtil.getReaderConfig("isSliding") === "yes"
+                          ConfigService.getReaderConfig("isSliding") === "yes"
                             ? "sliding"
                             : ""
                         );

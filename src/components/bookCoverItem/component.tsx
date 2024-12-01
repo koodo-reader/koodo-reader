@@ -4,7 +4,7 @@ import "./bookCoverItem.css";
 import { BookCoverProps, BookCoverState } from "./interface";
 import AddFavorite from "../../utils/reader/addFavorite";
 import ActionDialog from "../dialogs/actionDialog";
-import StorageUtil from "../../utils/service/configService";
+import ConfigService from "../../utils/service/configService";
 import { withRouter } from "react-router-dom";
 import RecordLocation from "../../utils/reader/recordLocation";
 import { isElectron } from "react-device-detect";
@@ -38,7 +38,7 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
     }
 
     if (
-      StorageUtil.getReaderConfig("isOpenBook") === "yes" &&
+      ConfigService.getReaderConfig("isOpenBook") === "yes" &&
       RecentBooks.getAllRecent()[0] === this.props.book.key &&
       !this.props.currentBook.key &&
       !filePath
@@ -167,7 +167,7 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
               this.setState({ isHover: false });
             }}
             style={
-              StorageUtil.getReaderConfig("isDisableCrop") === "yes"
+              ConfigService.getReaderConfig("isDisableCrop") === "yes"
                 ? {
                     height: "195px",
                     alignItems: "flex-start",
@@ -183,7 +183,7 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
           >
             {!CoverUtil.isCoverExist(this.props.book) ||
             (this.props.book.format === "PDF" &&
-              StorageUtil.getReaderConfig("isDisablePDFCover") === "yes") ? (
+              ConfigService.getReaderConfig("isDisablePDFCover") === "yes") ? (
               <div
                 className="book-item-image"
                 style={{ width: "120px", height: "170px" }}
@@ -202,7 +202,7 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
                 alt=""
                 style={
                   this.state.direction === "horizontal" ||
-                  StorageUtil.getReaderConfig("isDisableCrop") === "yes"
+                  ConfigService.getReaderConfig("isDisableCrop") === "yes"
                     ? { width: "100%" }
                     : { height: "100%" }
                 }

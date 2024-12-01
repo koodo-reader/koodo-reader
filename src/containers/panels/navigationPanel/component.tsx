@@ -8,7 +8,7 @@ import SearchBox from "../../../components/searchBox";
 import Parser from "html-react-parser";
 import * as DOMPurify from "dompurify";
 import EmptyCover from "../../../components/emptyCover";
-import StorageUtil from "../../../utils/service/configService";
+import ConfigService from "../../../utils/service/configService";
 import CoverUtil from "../../../utils/file/coverUtil";
 
 class NavigationPanel extends React.Component<
@@ -25,7 +25,7 @@ class NavigationPanel extends React.Component<
       startIndex: 0,
       currentIndex: 0,
       isNavLocked:
-        StorageUtil.getReaderConfig("isNavLocked") === "yes" ? true : false,
+        ConfigService.getReaderConfig("isNavLocked") === "yes" ? true : false,
     };
   }
   handleNavSearchState = (state: string) => {
@@ -43,7 +43,7 @@ class NavigationPanel extends React.Component<
   };
   handleLock = () => {
     this.setState({ isNavLocked: !this.state.isNavLocked }, () => {
-      StorageUtil.setReaderConfig(
+      ConfigService.setReaderConfig(
         "isNavLocked",
         this.state.isNavLocked ? "yes" : "no"
       );

@@ -1,4 +1,4 @@
-import StorageUtil from "../../utils/service/configService";
+import ConfigService from "../../utils/service/configService";
 import SortUtil from "../../utils/reader/sortUtil";
 import BookModel from "../../models/Book";
 import PluginModel from "../../models/Plugin";
@@ -121,7 +121,7 @@ export function handleFetchNoteSortCode() {
 }
 export function handleFetchList() {
   return (dispatch: Dispatch) => {
-    let viewMode = StorageUtil.getReaderConfig("viewMode") || "card";
+    let viewMode = ConfigService.getReaderConfig("viewMode") || "card";
     dispatch(handleViewMode(viewMode));
   };
 }

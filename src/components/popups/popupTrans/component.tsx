@@ -1,7 +1,7 @@
 import React from "react";
 import "./popupTrans.css";
 import { PopupTransProps, PopupTransState } from "./interface";
-import StorageUtil from "../../../utils/service/configService";
+import ConfigService from "../../../utils/service/configService";
 import axios from "axios";
 import { Trans } from "react-i18next";
 import toast from "react-hot-toast";
@@ -15,9 +15,9 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
     this.state = {
       translatedText: "",
       originalText: "",
-      transService: StorageUtil.getReaderConfig("transService") || "",
-      transTarget: StorageUtil.getReaderConfig("transTarget"),
-      transSource: StorageUtil.getReaderConfig("transSource"),
+      transService: ConfigService.getReaderConfig("transService") || "",
+      transTarget: ConfigService.getReaderConfig("transTarget"),
+      transSource: ConfigService.getReaderConfig("transSource"),
       isAddNew: false,
     };
   }
@@ -51,8 +51,8 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
     window
       .translate(
         text,
-        StorageUtil.getReaderConfig("transSource") || "",
-        StorageUtil.getReaderConfig("transTarget") || "en",
+        ConfigService.getReaderConfig("transSource") || "",
+        ConfigService.getReaderConfig("transTarget") || "en",
         axios,
         plutin.config
       )
@@ -71,7 +71,7 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
   };
   handleChangeService(target: string) {
     this.setState({ transService: target }, () => {
-      StorageUtil.setReaderConfig("transService", target);
+      ConfigService.setReaderConfig("transService", target);
       let plugin = this.props.plugins.find(
         (item) => item.identifier === this.state.transService
       );
@@ -80,8 +80,8 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
       }
       let autoValue = plugin.autoValue;
       this.setState({ transSource: autoValue, transTarget: "en" }, () => {
-        StorageUtil.setReaderConfig("transTarget", "en");
-        StorageUtil.setReaderConfig("transSource", autoValue);
+        ConfigService.setReaderConfig("transTarget", "en");
+        ConfigService.setReaderConfig("transSource", autoValue);
         this.handleTrans(this.props.originalText.replace(/(\r\n|\n|\r)/gm, ""));
       });
     });
@@ -140,9 +140,9 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
                   style={{ color: "#f16464" }}
                   onClick={() => {
                     if (
-                      StorageUtil.getReaderConfig("lang") === "zhCN" ||
-                      StorageUtil.getReaderConfig("lang") === "zhTW" ||
-                      StorageUtil.getReaderConfig("lang") === "zhMO"
+                      ConfigService.getReaderConfig("lang") === "zhCN" ||
+                      ConfigService.getReaderConfig("lang") === "zhTW" ||
+                      ConfigService.getReaderConfig("lang") === "zhMO"
                     ) {
                       openExternalUrl("https://www.koodoreader.com/zh/plugin");
                     } else {
@@ -206,7 +206,7 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
                     style={{ maxWidth: "120px", margin: 0 }}
                     onChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
                       let targetLang = event.target.value;
-                      StorageUtil.setReaderConfig("transSource", targetLang);
+                      ConfigService.setReaderConfig("transSource", targetLang);
                       this.handleTrans(
                         this.props.originalText.replace(/(\r\n|\n|\r)/gm, "")
                       );
@@ -226,7 +226,7 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
                             key={index}
                             className="add-dialog-shelf-list-option"
                             selected={
-                              StorageUtil.getReaderConfig("transSource") ===
+                              ConfigService.getReaderConfig("transSource") ===
                               item
                                 ? true
                                 : false
@@ -251,7 +251,7 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
                     style={{ maxWidth: "120px", margin: 0 }}
                     onChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
                       let targetLang = event.target.value;
-                      StorageUtil.setReaderConfig("transTarget", targetLang);
+                      ConfigService.setReaderConfig("transTarget", targetLang);
                       this.handleTrans(
                         this.props.originalText.replace(/(\r\n|\n|\r)/gm, "")
                       );
@@ -271,7 +271,7 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
                             key={index}
                             className="add-dialog-shelf-list-option"
                             selected={
-                              StorageUtil.getReaderConfig("transTarget") ===
+                              ConfigService.getReaderConfig("transTarget") ===
                               item
                                 ? true
                                 : false

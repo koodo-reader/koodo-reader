@@ -4,7 +4,7 @@ import { ViewerProps, ViewerState } from "./interface";
 import { withRouter } from "react-router-dom";
 import BookUtil from "../../utils/file/bookUtil";
 import PopupMenu from "../../components/popups/popupMenu";
-import StorageUtil from "../../utils/service/configService";
+import ConfigService from "../../utils/service/configService";
 import RecordLocation from "../../utils/reader/recordLocation";
 import Background from "../../components/background";
 import toast from "react-hot-toast";
@@ -33,14 +33,14 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       rect: null,
       key: "",
       isFirst: true,
-      scale: StorageUtil.getReaderConfig("scale") || 1,
+      scale: ConfigService.getReaderConfig("scale") || 1,
       chapterTitle:
         RecordLocation.getHtmlLocation(this.props.currentBook.key)
           .chapterTitle || "",
-      readerMode: StorageUtil.getReaderConfig("readerMode") || "double",
-      isDisablePopup: StorageUtil.getReaderConfig("isDisablePopup") === "yes",
-      isTouch: StorageUtil.getReaderConfig("isTouch") === "yes",
-      margin: parseInt(StorageUtil.getReaderConfig("margin")) || 0,
+      readerMode: ConfigService.getReaderConfig("readerMode") || "double",
+      isDisablePopup: ConfigService.getReaderConfig("isDisablePopup") === "yes",
+      isTouch: ConfigService.getReaderConfig("isTouch") === "yes",
+      margin: parseInt(ConfigService.getReaderConfig("margin")) || 0,
       chapterDocIndex: parseInt(
         RecordLocation.getHtmlLocation(this.props.currentBook.key)
           .chapterDocIndex || 0
@@ -160,7 +160,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         isCacheExsit ? "CACHE" : format,
         this.state.readerMode,
         this.props.currentBook.charset,
-        StorageUtil.getReaderConfig("isSliding") === "yes" ? "sliding" : ""
+        ConfigService.getReaderConfig("isSliding") === "yes" ? "sliding" : ""
       );
 
       await rendition.renderTo(
@@ -392,8 +392,8 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           }
         ></div>
         <PageWidget />
-        {StorageUtil.getReaderConfig("isHideBackground") === "yes" ? null : this
-            .props.currentBook.key ? (
+        {ConfigService.getReaderConfig("isHideBackground") ===
+        "yes" ? null : this.props.currentBook.key ? (
           <Background />
         ) : null}
       </>

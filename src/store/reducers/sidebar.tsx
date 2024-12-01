@@ -1,8 +1,8 @@
-import StorageUtil from "../../utils/service/configService";
+import ConfigService from "../../utils/service/configService";
 const initState = {
   mode: "home",
   shelfIndex: -1,
-  isCollapsed: StorageUtil.getReaderConfig("isCollapsed") === "yes",
+  isCollapsed: ConfigService.getReaderConfig("isCollapsed") === "yes",
 };
 export function sidebar(
   state = initState,

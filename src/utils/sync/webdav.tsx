@@ -1,11 +1,11 @@
 import { restoreFromfilePath } from "../file/restore";
-import StorageUtil from "../service/configService";
+import ConfigService from "../service/configService";
 
 class WebdavUtil {
   static UploadFile = async (blob: any) => {
     return new Promise<boolean>(async (resolve, reject) => {
       let { url, username, password } = JSON.parse(
-        StorageUtil.getReaderConfig("webdav_token") || "{}"
+        ConfigService.getReaderConfig("webdav_token") || "{}"
       );
       const fs = window.require("fs");
       const path = window.require("path");
@@ -27,7 +27,7 @@ class WebdavUtil {
   static DownloadFile = async () => {
     return new Promise<boolean>(async (resolve, reject) => {
       let { url, username, password } = JSON.parse(
-        StorageUtil.getReaderConfig("webdav_token") || ""
+        ConfigService.getReaderConfig("webdav_token") || ""
       );
       const fileName = "data.zip";
       const path = window.require("path");

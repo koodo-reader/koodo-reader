@@ -11,7 +11,7 @@ import { isElectron } from "react-device-detect";
 import { withRouter } from "react-router-dom";
 import BookUtil from "../../utils/file/bookUtil";
 import toast from "react-hot-toast";
-import StorageUtil from "../../utils/service/configService";
+import ConfigService from "../../utils/service/configService";
 
 import ShelfUtil from "../../utils/reader/shelfUtil";
 import BookService from "../../utils/service/bookService";
@@ -91,18 +91,18 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
     return new Promise<void>((resolve, reject) => {
       if (this.state.isOpenFile) {
         if (
-          StorageUtil.getReaderConfig("isImportPath") !== "yes" &&
-          StorageUtil.getReaderConfig("isPreventAdd") !== "yes"
+          ConfigService.getReaderConfig("isImportPath") !== "yes" &&
+          ConfigService.getReaderConfig("isPreventAdd") !== "yes"
         ) {
           BookUtil.addBook(book.key, book.format.toLowerCase(), buffer);
         }
-        if (StorageUtil.getReaderConfig("isPreventAdd") === "yes") {
+        if (ConfigService.getReaderConfig("isPreventAdd") === "yes") {
           this.handleJump(book);
           this.setState({ isOpenFile: false });
           return resolve();
         }
       } else {
-        StorageUtil.getReaderConfig("isImportPath") !== "yes" &&
+        ConfigService.getReaderConfig("isImportPath") !== "yes" &&
           BookUtil.addBook(book.key, book.format.toLowerCase(), buffer);
 
         CoverUtil.addCover(book);
@@ -121,7 +121,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
           setTimeout(() => {
             this.state.isOpenFile && this.handleJump(book);
             if (
-              StorageUtil.getReaderConfig("isOpenInMain") === "yes" &&
+              ConfigService.getReaderConfig("isOpenInMain") === "yes" &&
               this.state.isOpenFile
             ) {
               this.setState({ isOpenFile: false });

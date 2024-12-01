@@ -10,7 +10,7 @@ import BackupDialog from "../../components/dialogs/backupDialog";
 import "./manager.css";
 import { ManagerProps, ManagerState } from "./interface";
 import { Trans } from "react-i18next";
-import StorageUtil from "../../utils/service/configService";
+import ConfigService from "../../utils/service/configService";
 import AddFavorite from "../../utils/reader/addFavorite";
 import SettingDialog from "../../components/dialogs/settingDialog";
 import { isMobile } from "react-device-detect";
@@ -28,7 +28,7 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
   constructor(props: ManagerProps) {
     super(props);
     this.state = {
-      totalBooks: parseInt(StorageUtil.getReaderConfig("totalBooks")) || 0,
+      totalBooks: parseInt(ConfigService.getReaderConfig("totalBooks")) || 0,
       favoriteBooks: Object.keys(AddFavorite.getAllFavorite()).length,
       isAuthed: false,
       isError: false,
@@ -46,7 +46,7 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
           totalBooks: nextProps.books.length,
         },
         () => {
-          StorageUtil.setReaderConfig(
+          ConfigService.setReaderConfig(
             "totalBooks",
             this.state.totalBooks.toString()
           );
@@ -96,9 +96,9 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
           <div>
             <img
               src={
-                StorageUtil.getReaderConfig("appSkin") === "night" ||
-                (StorageUtil.getReaderConfig("appSkin") === "system" &&
-                  StorageUtil.getReaderConfig("isOSNight") === "yes")
+                ConfigService.getReaderConfig("appSkin") === "night" ||
+                (ConfigService.getReaderConfig("appSkin") === "system" &&
+                  ConfigService.getReaderConfig("isOSNight") === "yes")
                   ? "./assets/empty_dark.svg"
                   : "./assets/empty.svg"
               }

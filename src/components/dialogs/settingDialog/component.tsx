@@ -4,7 +4,7 @@ import { SettingInfoProps, SettingInfoState } from "./interface";
 import { Trans } from "react-i18next";
 import i18n from "../../../i18n";
 import packageInfo from "../../../../package.json";
-import StorageUtil from "../../../utils/service/configService";
+import ConfigService from "../../../utils/service/configService";
 import { changePath } from "../../../utils/file/common";
 import { isElectron } from "react-device-detect";
 import { dropdownList } from "../../../constants/dropdownList";
@@ -33,34 +33,38 @@ class SettingDialog extends React.Component<
     super(props);
     this.state = {
       currentTab: "general",
-      isTouch: StorageUtil.getReaderConfig("isTouch") === "yes",
-      isImportPath: StorageUtil.getReaderConfig("isImportPath") === "yes",
-      isMergeWord: StorageUtil.getReaderConfig("isMergeWord") === "yes",
+      isTouch: ConfigService.getReaderConfig("isTouch") === "yes",
+      isImportPath: ConfigService.getReaderConfig("isImportPath") === "yes",
+      isMergeWord: ConfigService.getReaderConfig("isMergeWord") === "yes",
       isPreventTrigger:
-        StorageUtil.getReaderConfig("isPreventTrigger") === "yes",
+        ConfigService.getReaderConfig("isPreventTrigger") === "yes",
       isAutoFullscreen:
-        StorageUtil.getReaderConfig("isAutoFullscreen") === "yes",
-      isPreventAdd: StorageUtil.getReaderConfig("isPreventAdd") === "yes",
-      isLemmatizeWord: StorageUtil.getReaderConfig("isLemmatizeWord") === "yes",
-      isOpenBook: StorageUtil.getReaderConfig("isOpenBook") === "yes",
-      isExpandContent: StorageUtil.getReaderConfig("isExpandContent") === "yes",
-      isDisablePopup: StorageUtil.getReaderConfig("isDisablePopup") === "yes",
+        ConfigService.getReaderConfig("isAutoFullscreen") === "yes",
+      isPreventAdd: ConfigService.getReaderConfig("isPreventAdd") === "yes",
+      isLemmatizeWord:
+        ConfigService.getReaderConfig("isLemmatizeWord") === "yes",
+      isOpenBook: ConfigService.getReaderConfig("isOpenBook") === "yes",
+      isExpandContent:
+        ConfigService.getReaderConfig("isExpandContent") === "yes",
+      isDisablePopup: ConfigService.getReaderConfig("isDisablePopup") === "yes",
       isDisableTrashBin:
-        StorageUtil.getReaderConfig("isDisableTrashBin") === "yes",
+        ConfigService.getReaderConfig("isDisableTrashBin") === "yes",
       isDeleteShelfBook:
-        StorageUtil.getReaderConfig("isDeleteShelfBook") === "yes",
-      isHideShelfBook: StorageUtil.getReaderConfig("isHideShelfBook") === "yes",
-      isPreventSleep: StorageUtil.getReaderConfig("isPreventSleep") === "yes",
-      isOpenInMain: StorageUtil.getReaderConfig("isOpenInMain") === "yes",
-      isDisableUpdate: StorageUtil.getReaderConfig("isDisableUpdate") === "yes",
-      isPrecacheBook: StorageUtil.getReaderConfig("isPrecacheBook") === "yes",
-      appSkin: StorageUtil.getReaderConfig("appSkin"),
-      isUseBuiltIn: StorageUtil.getReaderConfig("isUseBuiltIn") === "yes",
-      isDisableCrop: StorageUtil.getReaderConfig("isDisableCrop") === "yes",
+        ConfigService.getReaderConfig("isDeleteShelfBook") === "yes",
+      isHideShelfBook:
+        ConfigService.getReaderConfig("isHideShelfBook") === "yes",
+      isPreventSleep: ConfigService.getReaderConfig("isPreventSleep") === "yes",
+      isOpenInMain: ConfigService.getReaderConfig("isOpenInMain") === "yes",
+      isDisableUpdate:
+        ConfigService.getReaderConfig("isDisableUpdate") === "yes",
+      isPrecacheBook: ConfigService.getReaderConfig("isPrecacheBook") === "yes",
+      appSkin: ConfigService.getReaderConfig("appSkin"),
+      isUseBuiltIn: ConfigService.getReaderConfig("isUseBuiltIn") === "yes",
+      isDisableCrop: ConfigService.getReaderConfig("isDisableCrop") === "yes",
       isDisablePDFCover:
-        StorageUtil.getReaderConfig("isDisablePDFCover") === "yes",
+        ConfigService.getReaderConfig("isDisablePDFCover") === "yes",
       currentThemeIndex: window._.findLastIndex(themeList, {
-        name: StorageUtil.getReaderConfig("themeColor"),
+        name: ConfigService.getReaderConfig("themeColor"),
       }),
       storageLocation: getStorageLocation() || "",
     };
@@ -73,28 +77,28 @@ class SettingDialog extends React.Component<
   };
   changeLanguage = (lng: string) => {
     i18n.changeLanguage(lng);
-    StorageUtil.setReaderConfig("lang", lng);
+    ConfigService.setReaderConfig("lang", lng);
   };
   changeSearch = (searchEngine: string) => {
-    StorageUtil.setReaderConfig("searchEngine", searchEngine);
+    ConfigService.setReaderConfig("searchEngine", searchEngine);
   };
   changeSkin = (skin: string) => {
-    StorageUtil.setReaderConfig("appSkin", skin);
+    ConfigService.setReaderConfig("appSkin", skin);
 
     if (
       skin === "night" ||
-      (StorageUtil.getReaderConfig("appSkin") === "system" &&
-        StorageUtil.getReaderConfig("isOSNight") === "yes")
+      (ConfigService.getReaderConfig("appSkin") === "system" &&
+        ConfigService.getReaderConfig("isOSNight") === "yes")
     ) {
-      StorageUtil.setReaderConfig("backgroundColor", "rgba(44,47,49,1)");
-      StorageUtil.setReaderConfig("textColor", "rgba(255,255,255,1)");
+      ConfigService.setReaderConfig("backgroundColor", "rgba(44,47,49,1)");
+      ConfigService.setReaderConfig("textColor", "rgba(255,255,255,1)");
     } else if (
       skin === "light" ||
-      (StorageUtil.getReaderConfig("appSkin") === "system" &&
-        StorageUtil.getReaderConfig("isOSNight") !== "yes")
+      (ConfigService.getReaderConfig("appSkin") === "system" &&
+        ConfigService.getReaderConfig("isOSNight") !== "yes")
     ) {
-      StorageUtil.setReaderConfig("backgroundColor", "rgba(255,255,255,1)");
-      StorageUtil.setReaderConfig("textColor", "rgba(0,0,0,1)");
+      ConfigService.setReaderConfig("backgroundColor", "rgba(255,255,255,1)");
+      ConfigService.setReaderConfig("textColor", "rgba(0,0,0,1)");
     }
 
     ManagerUtil.reloadManager();
@@ -102,14 +106,14 @@ class SettingDialog extends React.Component<
   changeFont = (font: string) => {
     let body = document.getElementsByTagName("body")[0];
     body?.setAttribute("style", "font-family:" + font + "!important");
-    StorageUtil.setReaderConfig("systemFont", font);
+    ConfigService.setReaderConfig("systemFont", font);
   };
   handleJump = (url: string) => {
     openExternalUrl(url);
   };
   handleSetting = (stateName: string) => {
     this.setState({ [stateName]: !this.state[stateName] } as any);
-    StorageUtil.setReaderConfig(
+    ConfigService.setReaderConfig(
       stateName,
       this.state[stateName] ? "no" : "yes"
     );
@@ -149,7 +153,7 @@ class SettingDialog extends React.Component<
   };
   handleTheme = (name: string, index: number) => {
     this.setState({ currentThemeIndex: index });
-    StorageUtil.setReaderConfig("themeColor", name);
+    ConfigService.setReaderConfig("themeColor", name);
     ManagerUtil.reloadManager();
   };
   handleMergeWord = () => {
@@ -161,8 +165,8 @@ class SettingDialog extends React.Component<
     this.handleMoyu();
   };
   handleMoyu = () => {
-    if (StorageUtil.getReaderConfig("isMergeWord") === "yes") {
-      StorageUtil.setReaderConfig("isHideBackground", "yes");
+    if (ConfigService.getReaderConfig("isMergeWord") === "yes") {
+      ConfigService.setReaderConfig("isHideBackground", "yes");
     }
   };
   handleOpenInMain = () => {
@@ -183,11 +187,11 @@ class SettingDialog extends React.Component<
           {packageInfo.version}
           &nbsp;&nbsp;
           <Trans>
-            {StorageUtil.getReaderConfig("appInfo") === "new"
+            {ConfigService.getReaderConfig("appInfo") === "new"
               ? "New version available"
-              : StorageUtil.getReaderConfig("appInfo") === "stable"
+              : ConfigService.getReaderConfig("appInfo") === "stable"
               ? "Latest stable version"
-              : StorageUtil.getReaderConfig("appInfo") === "dev"
+              : ConfigService.getReaderConfig("appInfo") === "dev"
               ? "Developer version"
               : ""}
           </Trans>
@@ -356,7 +360,7 @@ class SettingDialog extends React.Component<
                       className="lang-setting-option"
                       selected={
                         item.value ===
-                        (StorageUtil.getReaderConfig("lang") || "en")
+                        (ConfigService.getReaderConfig("lang") || "en")
                           ? true
                           : false
                       }
@@ -382,7 +386,7 @@ class SettingDialog extends React.Component<
                       className="lang-setting-option"
                       selected={
                         item.value ===
-                        (StorageUtil.getReaderConfig("searchEngine") ||
+                        (ConfigService.getReaderConfig("searchEngine") ||
                           (navigator.language === "zh-CN" ? "baidu" : "google"))
                           ? true
                           : false
@@ -550,7 +554,7 @@ class SettingDialog extends React.Component<
                       className="lang-setting-option"
                       selected={
                         item.value ===
-                        (StorageUtil.getReaderConfig("appSkin") || "system")
+                        (ConfigService.getReaderConfig("appSkin") || "system")
                           ? true
                           : false
                       }
@@ -575,7 +579,7 @@ class SettingDialog extends React.Component<
                       key={item}
                       className="lang-setting-option"
                       selected={
-                        item === StorageUtil.getReaderConfig("systemFont")
+                        item === ConfigService.getReaderConfig("systemFont")
                           ? true
                           : false
                       }

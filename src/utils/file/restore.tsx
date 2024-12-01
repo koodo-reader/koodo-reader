@@ -1,4 +1,5 @@
 import { getStorageLocation } from "../common";
+import ConfigService from "../service/configService";
 declare var window: any;
 
 export const restore = (file: File, isSync = false) => {
@@ -42,6 +43,25 @@ export const restore = (file: File, isSync = false) => {
       });
     };
   });
+};
+export const restoreNew = async (service: string) => {
+  const { ipcRenderer } = window.require("electron");
+  if (service === "local") {
+    let filePath = ipcRenderer.invoke("select-file", "ping");
+    if (!filePath) return;
+
+    return await restoreFromfilePath(filePath);
+  } else {
+    await ipcRenderer.invoke("cloud-downlaod", {
+      refresh_token: ConfigService.getReaderConfig(service + "_token"),
+      fileName: "data.zip",
+      service: service,
+    });
+    const path = window.require("path");
+    let dataPath = await ipcRenderer.invoke("user-data", "ping");
+    let filePath = path.join(dataPath, "backup", "data.zip");
+    return await restoreFromfilePath(filePath);
+  }
 };
 export const restoreFromConfigJson = () => {
   const fs = window.require("fs");

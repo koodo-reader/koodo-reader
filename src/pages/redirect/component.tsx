@@ -9,7 +9,7 @@ import Lottie from "react-lottie";
 
 import animationSuccess from "../../assets/lotties/success.json";
 import toast, { Toaster } from "react-hot-toast";
-import StorageUtil from "../../utils/service/configService";
+import ConfigService from "../../utils/service/configService";
 const successOptions = {
   loop: false,
   autoplay: true,
@@ -118,9 +118,9 @@ class Redirect extends React.Component<RedirectProps, RedirectState> {
         </div>
         <img
           src={
-            StorageUtil.getReaderConfig("appSkin") === "night" ||
-            (StorageUtil.getReaderConfig("appSkin") === "system" &&
-              StorageUtil.getReaderConfig("isOSNight") === "yes")
+            ConfigService.getReaderConfig("appSkin") === "night" ||
+            (ConfigService.getReaderConfig("appSkin") === "system" &&
+              ConfigService.getReaderConfig("isOSNight") === "yes")
               ? "./assets/empty_dark.svg"
               : "./assets/empty.svg"
           }

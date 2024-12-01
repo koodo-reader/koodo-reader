@@ -5,7 +5,7 @@ import OperationPanel from "../../containers/panels/operationPanel";
 import { Toaster } from "react-hot-toast";
 import ProgressPanel from "../../containers/panels/progressPanel";
 import { ReaderProps, ReaderState } from "./interface";
-import StorageUtil from "../../utils/service/configService";
+import ConfigService from "../../utils/service/configService";
 import ReadingTime from "../../utils/reader/readingTime";
 import Viewer from "../../containers/viewer";
 import { Tooltip } from "react-tooltip";
@@ -16,7 +16,7 @@ import BookService from "../../utils/service/bookService";
 
 let lock = false; //prevent from clicking too fasts
 let throttleTime =
-  StorageUtil.getReaderConfig("isSliding") === "yes" ? 1000 : 200;
+  ConfigService.getReaderConfig("isSliding") === "yes" ? 1000 : 200;
 class Reader extends React.Component<ReaderProps, ReaderState> {
   messageTimer!: NodeJS.Timeout;
   tickTimer!: NodeJS.Timeout;
@@ -24,20 +24,22 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
     super(props);
     this.state = {
       isOpenRightPanel:
-        StorageUtil.getReaderConfig("isSettingLocked") === "yes" ? true : false,
+        ConfigService.getReaderConfig("isSettingLocked") === "yes"
+          ? true
+          : false,
       isOpenTopPanel: false,
       isOpenBottomPanel: false,
       hoverPanel: "",
       isOpenLeftPanel:
-        StorageUtil.getReaderConfig("isNavLocked") === "yes" ? true : false,
+        ConfigService.getReaderConfig("isNavLocked") === "yes" ? true : false,
       time: 0,
-      isTouch: StorageUtil.getReaderConfig("isTouch") === "yes",
+      isTouch: ConfigService.getReaderConfig("isTouch") === "yes",
       isPreventTrigger:
-        StorageUtil.getReaderConfig("isPreventTrigger") === "yes",
+        ConfigService.getReaderConfig("isPreventTrigger") === "yes",
     };
   }
   componentDidMount() {
-    if (StorageUtil.getReaderConfig("isMergeWord") === "yes") {
+    if (ConfigService.getReaderConfig("isMergeWord") === "yes") {
       document
         .querySelector("body")
         ?.setAttribute("style", "background-color: rgba(0,0,0,0)");
@@ -96,7 +98,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
   handleLeaveReader = (position: string) => {
     switch (position) {
       case "right":
-        if (StorageUtil.getReaderConfig("isSettingLocked") === "yes") {
+        if (ConfigService.getReaderConfig("isSettingLocked") === "yes") {
           break;
         } else {
           this.setState({ isOpenRightPanel: false });
@@ -104,7 +106,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         }
 
       case "left":
-        if (StorageUtil.getReaderConfig("isNavLocked") === "yes") {
+        if (ConfigService.getReaderConfig("isNavLocked") === "yes") {
           break;
         } else {
           this.setState({ isOpenLeftPanel: false });
@@ -148,7 +150,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
     return (
       <div className="viewer">
         <Tooltip id="my-tooltip" style={{ zIndex: 25 }} />
-        {StorageUtil.getReaderConfig("isHidePageButton") !== "yes" && (
+        {ConfigService.getReaderConfig("isHidePageButton") !== "yes" && (
           <>
             <div
               className="previous-chapter-single-container"
@@ -176,7 +178,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
             </div>
           </>
         )}
-        {StorageUtil.getReaderConfig("isHideMenuButton") !== "yes" && (
+        {ConfigService.getReaderConfig("isHideMenuButton") !== "yes" && (
           <div
             className="reader-setting-icon-container"
             onClick={() => {

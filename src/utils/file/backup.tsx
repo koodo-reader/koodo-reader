@@ -9,20 +9,73 @@ import { getStorageLocation } from "../common";
 import CoverUtil from "./coverUtil";
 import ConfigService from "../service/configService";
 declare var window: any;
-export const backup = async () => {
+export const backup = async (service: string) => {
+  let fileName = "data.zip";
+  if (service === "local") {
+    let year = new Date().getFullYear(),
+      month = new Date().getMonth() + 1,
+      day = new Date().getDate();
+    fileName = `${year}-${month <= 9 ? "0" + month : month}-${
+      day <= 9 ? "0" + day : day
+    }.zip`;
+  }
   if (isElectron) {
-    return backupFromPath();
+    const { ipcRenderer } = window.require("electron");
+    let targetPath = "";
+    if (service === "local") {
+      const backupPath = await ipcRenderer.invoke("select-path");
+      if (!backupPath) {
+        return;
+      }
+      targetPath = backupPath;
+    } else {
+      const path = window.require("path");
+      let dataPath = await ipcRenderer.invoke("user-data", "ping");
+      targetPath = path.join(dataPath, "backup");
+    }
+    await backupFromPath(targetPath, fileName);
+    if (service === "local") {
+      return true;
+    } else {
+      return await ipcRenderer.invoke("cloud-upload", {
+        refresh_token: ConfigService.getReaderConfig(service + "_token"),
+        fileName: "data.zip",
+        service: service,
+      });
+    }
   } else {
-    return await backupFromStorage();
+    let blob: Blob | boolean = await backupFromStorage();
+    if (!blob) {
+      return false;
+    }
+    if (service === "local") {
+      window.saveAs(blob as Blob, fileName);
+    } else {
+      const { SyncUtil } = await import(
+        "../../assets/lib/kookit-sync-browser.min.js"
+      );
+      let syncUtil = new SyncUtil(service, {
+        refresh_token: ConfigService.getReaderConfig(service + "_token"),
+      });
+      let result = await syncUtil.uploadFile(fileName, "backup", blob as Blob);
+      if (result) {
+        return true;
+      } else {
+        return false;
+      }
+    }
   }
 };
 
-export const backupFromPath = () => {
+export const backupFromPath = async (targetPath: string, fileName: string) => {
   const path = window.require("path");
   const AdmZip = window.require("adm-zip");
   const dataPath = getStorageLocation() || "";
   let zip = new AdmZip();
   const fs = window.require("fs");
+  if (!fs.existsSync(path.join(targetPath))) {
+    fs.mkdirSync(path.join(targetPath));
+  }
   backupToConfigJson();
   if (fs.existsSync(path.join(dataPath, "book"))) {
     zip.addLocalFolder(path.join(dataPath, "book"), "book");
@@ -48,8 +101,9 @@ export const backupFromPath = () => {
   if (fs.existsSync(path.join(dataPath, "config", "plugins.db"))) {
     zip.addLocalFile(path.join(dataPath, "config", "plugins.db"), "config");
   }
+  await zip.writeZip(path.join(targetPath, fileName));
 
-  return new Blob([zip.toBuffer()], { type: "application/zip" });
+  // return new Blob([zip.toBuffer()], { type: "application/zip" });
 };
 export const backupFromStorage = async () => {
   let zip = new window.JSZip();

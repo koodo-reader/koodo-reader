@@ -1,11 +1,11 @@
 import { restoreFromfilePath } from "../file/restore";
-import StorageUtil from "../service/configService";
+import ConfigService from "../service/configService";
 
 class SFtpUtil {
   static UploadFile = async (blob: any) => {
     return new Promise<boolean>(async (resolve, reject) => {
       let { url, username, password, port, dir } = JSON.parse(
-        StorageUtil.getReaderConfig("sftp_token") || "{}"
+        ConfigService.getReaderConfig("sftp_token") || "{}"
       );
       const fs = window.require("fs");
       const path = window.require("path");
@@ -32,7 +32,7 @@ class SFtpUtil {
       const path = window.require("path");
       const { ipcRenderer } = window.require("electron");
       let { url, username, password, port, dir } = JSON.parse(
-        StorageUtil.getReaderConfig("sftp_token") || "{}"
+        ConfigService.getReaderConfig("sftp_token") || "{}"
       );
       const dirPath = ipcRenderer.sendSync("user-data", "ping");
       let result = await ipcRenderer.invoke("sftp-download", {
