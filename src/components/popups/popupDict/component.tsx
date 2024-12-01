@@ -3,7 +3,7 @@ import "./popupDict.css";
 import { PopupDictProps, PopupDictState } from "./interface";
 import PluginService from "../../../utils/service/pluginService";
 import PluginModel from "../../../models/Plugin";
-import StorageUtil from "../../../utils/service/configService";
+import ConfigService from "../../../utils/service/configService";
 import Parser from "html-react-parser";
 import * as DOMPurify from "dompurify";
 import axios from "axios";
@@ -22,8 +22,8 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
       dictText: this.props.t("Please wait"),
       word: "",
       prototype: "",
-      dictService: StorageUtil.getReaderConfig("dictService"),
-      dictTarget: StorageUtil.getReaderConfig("dictTarget") || "en",
+      dictService: ConfigService.getReaderConfig("dictService"),
+      dictTarget: ConfigService.getReaderConfig("dictTarget") || "en",
       isAddNew: false,
     };
   }
@@ -40,7 +40,7 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
     prototype = lemmatize.noun(prototype);
     prototype = lemmatize.adjective(prototype);
     this.setState({ prototype });
-    if (StorageUtil.getReaderConfig("isLemmatizeWord") === "yes") {
+    if (ConfigService.getReaderConfig("isLemmatizeWord") === "yes") {
       originalText = prototype;
     }
     if (
@@ -109,13 +109,13 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
         isAddNew: false,
       },
       () => {
-        StorageUtil.setReaderConfig("dictService", dictService);
+        ConfigService.setReaderConfig("dictService", dictService);
         this.setState(
           {
             dictTarget: "en",
           },
           () => {
-            StorageUtil.setReaderConfig("dictTarget", "en");
+            ConfigService.setReaderConfig("dictTarget", "en");
             this.handleLookUp();
           }
         );
@@ -176,7 +176,7 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
                     dictTarget: event.target.value || "en",
                   },
                   () => {
-                    StorageUtil.setReaderConfig(
+                    ConfigService.setReaderConfig(
                       "dictTarget",
                       event.target.value
                     );
@@ -209,7 +209,7 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
             </select>
           </div>
           <div className="dict-word">
-            {StorageUtil.getReaderConfig("isLemmatizeWord") === "yes"
+            {ConfigService.getReaderConfig("isLemmatizeWord") === "yes"
               ? this.state.prototype
               : this.state.word}
           </div>
@@ -237,9 +237,9 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
                   style={{ color: "#2084e8" }}
                   onClick={() => {
                     if (
-                      StorageUtil.getReaderConfig("lang") === "zhCN" ||
-                      StorageUtil.getReaderConfig("lang") === "zhTW" ||
-                      StorageUtil.getReaderConfig("lang") === "zhMO"
+                      ConfigService.getReaderConfig("lang") === "zhCN" ||
+                      ConfigService.getReaderConfig("lang") === "zhTW" ||
+                      ConfigService.getReaderConfig("lang") === "zhMO"
                     ) {
                       openExternalUrl("https://www.koodoreader.com/zh/plugin");
                     } else {

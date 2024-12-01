@@ -8,7 +8,7 @@ import ShelfUtil from "../../../utils/reader/shelfUtil";
 import SortUtil from "../../../utils/reader/sortUtil";
 import BookModel from "../../../models/Book";
 import { BookListProps, BookListState } from "./interface";
-import StorageUtil from "../../../utils/service/configService";
+import ConfigService from "../../../utils/service/configService";
 import { Redirect, withRouter } from "react-router-dom";
 import ViewMode from "../../../components/viewMode";
 import SelectBook from "../../../components/selectBook";
@@ -22,7 +22,8 @@ class BookList extends React.Component<BookListProps, BookListState> {
     this.state = {
       isOpenDelete: false,
       favoriteBooks: Object.keys(AddFavorite.getAllFavorite()).length,
-      isHideShelfBook: StorageUtil.getReaderConfig("isHideShelfBook") === "yes",
+      isHideShelfBook:
+        ConfigService.getReaderConfig("isHideShelfBook") === "yes",
       isRefreshing: false,
     };
   }
@@ -195,7 +196,7 @@ class BookList extends React.Component<BookListProps, BookListState> {
       return <Redirect to="/manager/empty" />;
     }
 
-    StorageUtil.setReaderConfig(
+    ConfigService.setReaderConfig(
       "totalBooks",
       this.props.books.length.toString()
     );

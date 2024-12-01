@@ -10,7 +10,7 @@ import {
   exportHighlights,
   exportNotes,
 } from "../../../utils/file/export";
-import StorageUtil from "../../../utils/service/configService";
+import ConfigService from "../../../utils/service/configService";
 import NoteService from "../../../utils/service/noteService";
 import WordService from "../../../utils/service/wordService";
 declare var window: any;
@@ -152,7 +152,7 @@ class ActionDialog extends React.Component<MoreActionProps, MoreActionState> {
                   this.props.currentBook.format,
                   "",
                   this.props.currentBook.charset,
-                  StorageUtil.getReaderConfig("isSliding") === "yes"
+                  ConfigService.getReaderConfig("isSliding") === "yes"
                     ? "sliding"
                     : ""
                 );

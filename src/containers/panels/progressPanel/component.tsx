@@ -3,7 +3,7 @@ import "./progressPanel.css";
 import { Trans } from "react-i18next";
 import { ProgressPanelProps, ProgressPanelState } from "./interface";
 
-import StorageUtil from "../../../utils/service/configService";
+import ConfigService from "../../../utils/service/configService";
 declare var window: any;
 class ProgressPanel extends React.Component<
   ProgressPanelProps,
@@ -18,8 +18,8 @@ class ProgressPanel extends React.Component<
       targetPage: 0,
       isEntered: false,
       isSingle:
-        StorageUtil.getReaderConfig("readerMode") &&
-        StorageUtil.getReaderConfig("readerMode") !== "double",
+        ConfigService.getReaderConfig("readerMode") &&
+        ConfigService.getReaderConfig("readerMode") !== "double",
     };
   }
   async UNSAFE_componentWillReceiveProps(nextProps: ProgressPanelProps) {

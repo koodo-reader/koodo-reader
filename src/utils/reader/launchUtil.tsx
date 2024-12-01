@@ -1,5 +1,5 @@
 import { isElectron } from "react-device-detect";
-import StorageUtil from "../service/configService";
+import ConfigService from "../service/configService";
 
 export const initTheme = () => {
   const style = document.createElement("link");
@@ -13,16 +13,16 @@ export const initTheme = () => {
       window.matchMedia &&
       window.matchMedia("(prefers-color-scheme: dark)").matches;
   }
-  StorageUtil.setReaderConfig("isOSNight", isNight ? "yes" : "no");
-  if (!StorageUtil.getReaderConfig("appSkin")) {
-    StorageUtil.setReaderConfig("appSkin", "system");
+  ConfigService.setReaderConfig("isOSNight", isNight ? "yes" : "no");
+  if (!ConfigService.getReaderConfig("appSkin")) {
+    ConfigService.setReaderConfig("appSkin", "system");
     if (isNight) {
     }
   }
   if (
-    StorageUtil.getReaderConfig("appSkin") === "night" ||
-    (StorageUtil.getReaderConfig("appSkin") === "system" &&
-      StorageUtil.getReaderConfig("isOSNight") === "yes")
+    ConfigService.getReaderConfig("appSkin") === "night" ||
+    (ConfigService.getReaderConfig("appSkin") === "system" &&
+      ConfigService.getReaderConfig("isOSNight") === "yes")
   ) {
     style.href = "./assets/styles/dark.css";
   } else {
@@ -31,11 +31,13 @@ export const initTheme = () => {
   document.head.appendChild(style);
 };
 export const initSystemFont = () => {
-  if (StorageUtil.getReaderConfig("systemFont")) {
+  if (ConfigService.getReaderConfig("systemFont")) {
     let body = document.getElementsByTagName("body")[0];
     body.setAttribute(
       "style",
-      "font-family:" + StorageUtil.getReaderConfig("systemFont") + "!important"
+      "font-family:" +
+        ConfigService.getReaderConfig("systemFont") +
+        "!important"
     );
   }
 };

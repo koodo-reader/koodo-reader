@@ -5,7 +5,7 @@ import { Trans } from "react-i18next";
 
 import RecordLocation from "../../../utils/reader/recordLocation";
 import { OperationPanelProps, OperationPanelState } from "./interface";
-import StorageUtil from "../../../utils/service/configService";
+import ConfigService from "../../../utils/service/configService";
 import ReadingTime from "../../../utils/reader/readingTime";
 import { withRouter } from "react-router-dom";
 import toast from "react-hot-toast";
@@ -62,17 +62,17 @@ class OperationPanel extends React.Component<
 
   handleShortcut() {}
   handleScreen() {
-    StorageUtil.getReaderConfig("isFullscreen") !== "yes"
+    ConfigService.getReaderConfig("isFullscreen") !== "yes"
       ? handleFullScreen()
       : handleExitFullScreen();
-    if (StorageUtil.getReaderConfig("isFullscreen") === "yes") {
-      StorageUtil.setReaderConfig("isFullscreen", "no");
+    if (ConfigService.getReaderConfig("isFullscreen") === "yes") {
+      ConfigService.setReaderConfig("isFullscreen", "no");
     } else {
-      StorageUtil.setReaderConfig("isFullscreen", "yes");
+      ConfigService.setReaderConfig("isFullscreen", "yes");
     }
   }
   handleExit() {
-    StorageUtil.setReaderConfig("isFullscreen", "no");
+    ConfigService.setReaderConfig("isFullscreen", "no");
     this.props.handleReadingState(false);
     this.props.handleSearch(false);
     window.speechSynthesis && window.speechSynthesis.cancel();
@@ -84,7 +84,7 @@ class OperationPanel extends React.Component<
     }
 
     if (isElectron) {
-      if (StorageUtil.getReaderConfig("isOpenInMain") === "yes") {
+      if (ConfigService.getReaderConfig("isOpenInMain") === "yes") {
         window.require("electron").ipcRenderer.invoke("exit-tab", "ping");
       } else {
         window.close();

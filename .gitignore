@@ -34,3 +34,5 @@ kookit.js
 kookit.mjs
 kookit-sync.js
 kookit-sync.mjs
+kookit-sync-browser.js
+kookit-sync-browser.mjs

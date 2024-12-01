@@ -1,5 +1,5 @@
 import axios from "axios";
-import StorageUtil from "./service/configService";
+import ConfigService from "./service/configService";
 import { isElectron } from "react-device-detect";
 import SparkMD5 from "spark-md5";
 declare var window: any;
@@ -138,7 +138,7 @@ export const scrollContents = (chapterTitle: string, chapterHref: string) => {
 };
 export const handleFullScreen = () => {
   if (isElectron) {
-    if (StorageUtil.getReaderConfig("isOpenInMain") === "yes") {
+    if (ConfigService.getReaderConfig("isOpenInMain") === "yes") {
       window
         .require("electron")
         .ipcRenderer.invoke("enter-tab-fullscreen", "ping");
@@ -149,7 +149,7 @@ export const handleFullScreen = () => {
 };
 export const handleExitFullScreen = () => {
   if (isElectron) {
-    if (StorageUtil.getReaderConfig("isOpenInMain") === "yes") {
+    if (ConfigService.getReaderConfig("isOpenInMain") === "yes") {
       window
         .require("electron")
         .ipcRenderer.invoke("exit-tab-fullscreen", "ping");

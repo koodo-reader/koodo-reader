@@ -1,4 +1,4 @@
-import StorageUtil from "../service/configService";
+import ConfigService from "../service/configService";
 import { getIframeDoc } from "./docUtil";
 declare var window: any;
 
@@ -6,11 +6,11 @@ export const tsTransform = () => {
   let doc = getIframeDoc();
   if (!doc) return;
   if (
-    StorageUtil.getReaderConfig("convertChinese") &&
-    StorageUtil.getReaderConfig("convertChinese") !== "Default"
+    ConfigService.getReaderConfig("convertChinese") &&
+    ConfigService.getReaderConfig("convertChinese") !== "Default"
   ) {
     if (
-      StorageUtil.getReaderConfig("convertChinese") ===
+      ConfigService.getReaderConfig("convertChinese") ===
       "Simplified To Traditional"
     ) {
       doc.querySelectorAll("p").forEach((item) => {

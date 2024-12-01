@@ -1,7 +1,7 @@
 import React from "react";
 import "./modeControl.css";
 import { ModeControlProps, ModeControlState } from "./interface";
-import StorageUtil from "../../../utils/service/configService";
+import ConfigService from "../../../utils/service/configService";
 import { Trans } from "react-i18next";
 import BookUtil from "../../../utils/file/bookUtil";
 
@@ -9,13 +9,13 @@ class ModeControl extends React.Component<ModeControlProps, ModeControlState> {
   constructor(props: ModeControlProps) {
     super(props);
     this.state = {
-      readerMode: StorageUtil.getReaderConfig("readerMode") || "double",
+      readerMode: ConfigService.getReaderConfig("readerMode") || "double",
     };
   }
 
   handleChangeMode = (mode: string) => {
     this.setState({ readerMode: mode });
-    StorageUtil.setReaderConfig("readerMode", mode);
+    ConfigService.setReaderConfig("readerMode", mode);
     BookUtil.reloadBooks();
   };
   render() {

@@ -3,7 +3,7 @@ import "./sidebar.css";
 import { sideMenu } from "../../constants/sideMenu";
 import { SidebarProps, SidebarState } from "./interface";
 import { withRouter } from "react-router-dom";
-import StorageUtil from "../../utils/service/configService";
+import ConfigService from "../../utils/service/configService";
 import { openExternalUrl } from "../../utils/reader/urlUtil";
 import ShelfUtil from "../../utils/reader/shelfUtil";
 import DeletePopup from "../../components/dialogs/deletePopup";
@@ -19,7 +19,7 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
       isOpenDelete: false,
       shelfIndex: 0,
       isCollapsed:
-        StorageUtil.getReaderConfig("isCollapsed") === "yes" || false,
+        ConfigService.getReaderConfig("isCollapsed") === "yes" || false,
     };
   }
   componentDidMount() {
@@ -47,7 +47,7 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
   handleCollapse = (isCollapsed: boolean) => {
     this.setState({ isCollapsed });
     this.props.handleCollapse(isCollapsed);
-    StorageUtil.setReaderConfig("isCollapsed", isCollapsed ? "yes" : "no");
+    ConfigService.setReaderConfig("isCollapsed", isCollapsed ? "yes" : "no");
   };
   handleJump = (url: string) => {
     openExternalUrl(url);
@@ -238,9 +238,9 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
 
           <img
             src={
-              StorageUtil.getReaderConfig("appSkin") === "night" ||
-              (StorageUtil.getReaderConfig("appSkin") === "system" &&
-                StorageUtil.getReaderConfig("isOSNight") === "yes")
+              ConfigService.getReaderConfig("appSkin") === "night" ||
+              (ConfigService.getReaderConfig("appSkin") === "system" &&
+                ConfigService.getReaderConfig("isOSNight") === "yes")
                 ? "./assets/label_light.png"
                 : "./assets/label.png"
             }

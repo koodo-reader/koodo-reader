@@ -7,7 +7,7 @@ import ColorOption from "../../colorOption";
 import RecordLocation from "../../../utils/reader/recordLocation";
 
 import { popupList } from "../../../constants/popupList";
-import StorageUtil from "../../../utils/service/configService";
+import ConfigService from "../../../utils/service/configService";
 import toast from "react-hot-toast";
 import { getSelection } from "../../../utils/reader/mouseEvent";
 import copy from "copy-text-to-clipboard";
@@ -112,7 +112,7 @@ class PopupOption extends React.Component<PopupOptionProps> {
     openExternalUrl(url);
   };
   handleSearchInternet = () => {
-    switch (StorageUtil.getReaderConfig("searchEngine")) {
+    switch (ConfigService.getReaderConfig("searchEngine")) {
       case "google":
         this.handleJump("https://www.google.com/search?q=" + getSelection());
         break;

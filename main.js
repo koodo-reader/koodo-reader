@@ -175,8 +175,9 @@ const createMainWin = () => {
   });
   ipcMain.handle("cloud-upload", async (event, config) => {
     let { service } = config;
-    const { SyncUtil } = await import('./public/lib/kookit/kookit-sync.min.mjs');
+    const { SyncUtil } = await import('./src/assets/lib/kookit-sync.mjs');
     let syncUtil = new SyncUtil(service, config, dirPath);
+    console.log(SyncUtil, syncUtil);
     let result = await syncUtil.uploadFile(config.fileName, "backup");
     return result;
   });

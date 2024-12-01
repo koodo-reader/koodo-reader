@@ -1,5 +1,5 @@
 import { restore } from "../file/restore";
-import StorageUtil from "../service/configService";
+import ConfigService from "../service/configService";
 import { driveConfig } from "../../constants/driveList";
 import axios from "axios";
 
@@ -8,7 +8,8 @@ class DropboxUtil {
     return new Promise<boolean>(async (resolve, reject) => {
       try {
         const fileName = "data.zip";
-        var refresh_token = StorageUtil.getReaderConfig("dropbox_token") || "";
+        var refresh_token =
+          ConfigService.getReaderConfig("dropbox_token") || "";
         let res = await axios.post(driveConfig.dropboxRefreshUrl, {
           refresh_token,
         });
@@ -49,7 +50,8 @@ class DropboxUtil {
     return new Promise<boolean>(async (resolve, reject) => {
       try {
         const fileName = "data.zip";
-        var refresh_token = StorageUtil.getReaderConfig("dropbox_token") || "";
+        var refresh_token =
+          ConfigService.getReaderConfig("dropbox_token") || "";
         let res = await axios.post(driveConfig.dropboxRefreshUrl, {
           refresh_token,
         });

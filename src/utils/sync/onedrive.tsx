@@ -1,12 +1,13 @@
 import { restore } from "../file/restore";
-import StorageUtil from "../service/configService";
+import ConfigService from "../service/configService";
 import { driveConfig } from "../../constants/driveList";
 import axios from "axios";
 class OneDriveUtil {
   static UploadFile(blob: any) {
     return new Promise<boolean>(async (resolve, reject) => {
       try {
-        var refresh_token = StorageUtil.getReaderConfig("onedrive_token") || "";
+        var refresh_token =
+          ConfigService.getReaderConfig("onedrive_token") || "";
         let res = await axios.post(driveConfig.onedriveRefreshUrl, {
           refresh_token,
           redirect_uri: driveConfig.callbackUrl,
@@ -49,7 +50,8 @@ class OneDriveUtil {
     return new Promise<boolean>(async (resolve, reject) => {
       try {
         const fileName = "data.zip";
-        var refresh_token = StorageUtil.getReaderConfig("onedrive_token") || "";
+        var refresh_token =
+          ConfigService.getReaderConfig("onedrive_token") || "";
         let res = await axios.post(driveConfig.onedriveRefreshUrl, {
           refresh_token,
           redirect_uri: driveConfig.callbackUrl,

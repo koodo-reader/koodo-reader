@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import "./tokenDialog.css";
 import { Trans } from "react-i18next";
 import { TokenDialogProps, TokenDialogState } from "./interface";
-import StorageUtil from "../../../utils/service/configService";
+import ConfigService from "../../../utils/service/configService";
 import toast from "react-hot-toast";
 import { openExternalUrl } from "../../../utils/reader/urlUtil";
 import axios from "axios";
@@ -25,7 +25,7 @@ class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
       redirect_uri: driveConfig.callbackUrl,
     });
     console.log(res);
-    StorageUtil.setReaderConfig(
+    ConfigService.setReaderConfig(
       `${this.props.driveName}_token`,
       res.data.refresh_token
     );
@@ -40,7 +40,7 @@ class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
       code,
       redirect_uri: driveConfig.callbackUrl,
     });
-    StorageUtil.setReaderConfig(
+    ConfigService.setReaderConfig(
       `${this.props.driveName}_token`,
       res.data.refresh_token
     );
@@ -56,7 +56,7 @@ class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
       redirect_uri: driveConfig.callbackUrl,
       scope: driveConfig.googleScope,
     });
-    StorageUtil.setReaderConfig(
+    ConfigService.setReaderConfig(
       `${this.props.driveName}_token`,
       res.data.refresh_token
     );
@@ -77,7 +77,7 @@ class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
         "#token-dialog-password-box"
       ) as HTMLTextAreaElement
     ).value;
-    StorageUtil.setReaderConfig(
+    ConfigService.setReaderConfig(
       `${this.props.driveName}_token`,
       JSON.stringify({ url, username, password })
     );
@@ -104,7 +104,7 @@ class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
     let ssl: string = (
       document.querySelector("#token-dialog-ssl-box") as HTMLTextAreaElement
     ).value;
-    StorageUtil.setReaderConfig(
+    ConfigService.setReaderConfig(
       `${this.props.driveName}_token`,
       JSON.stringify({ url, username, password, dir, ssl })
     );
@@ -129,7 +129,7 @@ class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
     let secretAccessKey: string = (
       document.querySelector("#token-dialog-key-box") as HTMLTextAreaElement
     ).value;
-    StorageUtil.setReaderConfig(
+    ConfigService.setReaderConfig(
       `${this.props.driveName}_token`,
       JSON.stringify({
         endpoint,
@@ -162,7 +162,7 @@ class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
     let port: string = (
       document.querySelector("#token-dialog-port-box") as HTMLTextAreaElement
     ).value;
-    StorageUtil.setReaderConfig(
+    ConfigService.setReaderConfig(
       `${this.props.driveName}_token`,
       JSON.stringify({ url, username, password, dir, port })
     );
@@ -187,7 +187,7 @@ class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
               <div
                 className="token-dialog-info-text"
                 style={
-                  StorageUtil.getReaderConfig("lang") === "en"
+                  ConfigService.getReaderConfig("lang") === "en"
                     ? { fontSize: "14px" }
                     : {}
                 }
@@ -335,7 +335,7 @@ class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
               <div
                 className="token-dialog-info-text"
                 style={
-                  StorageUtil.getReaderConfig("lang") === "en"
+                  ConfigService.getReaderConfig("lang") === "en"
                     ? { fontSize: "14px" }
                     : {}
                 }

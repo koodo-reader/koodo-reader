@@ -4,7 +4,7 @@ import StyleUtil from "../../../utils/reader/styleUtil";
 import "./themeList.css";
 import { Trans } from "react-i18next";
 import { ThemeListProps, ThemeListState } from "./interface";
-import StorageUtil from "../../../utils/service/configService";
+import ConfigService from "../../../utils/service/configService";
 import { Panel as ColorPickerPanel } from "rc-color-picker";
 import "rc-color-picker/assets/index.css";
 import ThemeUtil from "../../../utils/reader/themeUtil";
@@ -19,7 +19,7 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
         .findIndex((item) => {
           return (
             item ===
-            (StorageUtil.getReaderConfig("backgroundColor") ||
+            (ConfigService.getReaderConfig("backgroundColor") ||
               "rgba(255,255,255,1)")
           );
         }),
@@ -28,7 +28,7 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
         .findIndex((item) => {
           return (
             item ===
-            (StorageUtil.getReaderConfig("textColor") || "rgba(0,0,0,1)")
+            (ConfigService.getReaderConfig("textColor") || "rgba(0,0,0,1)")
           );
         }),
       isShowTextPicker: false,
@@ -36,23 +36,23 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
     };
   }
   handleChangeBgColor = (color: string, index: number = -1) => {
-    StorageUtil.setReaderConfig("backgroundColor", color);
+    ConfigService.setReaderConfig("backgroundColor", color);
     this.setState({
       currentBackgroundIndex: index,
     });
     if (index === 1) {
-      StorageUtil.setReaderConfig("textColor", "rgba(255,255,255,1)");
+      ConfigService.setReaderConfig("textColor", "rgba(255,255,255,1)");
     } else if (
       index === 0 &&
-      StorageUtil.getReaderConfig("backgroundColor") === "rgba(255,255,255,1)"
+      ConfigService.getReaderConfig("backgroundColor") === "rgba(255,255,255,1)"
     ) {
-      StorageUtil.setReaderConfig("textColor", "rgba(0,0,0,1)");
+      ConfigService.setReaderConfig("textColor", "rgba(0,0,0,1)");
     }
     BookUtil.reloadBooks();
   };
 
   handleChooseBgColor = (color) => {
-    StorageUtil.setReaderConfig("backgroundColor", color.color);
+    ConfigService.setReaderConfig("backgroundColor", color.color);
     StyleUtil.addDefaultCss();
   };
   handleColorTextPicker = (isShowTextPicker: boolean) => {
@@ -60,11 +60,12 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
       !isShowTextPicker &&
       textList.concat(ThemeUtil.getAllThemes()).findIndex((item) => {
         return (
-          item === (StorageUtil.getReaderConfig("textColor") || "rgba(0,0,0,1)")
+          item ===
+          (ConfigService.getReaderConfig("textColor") || "rgba(0,0,0,1)")
         );
       }) === -1
     ) {
-      ThemeUtil.setThemes(StorageUtil.getReaderConfig("textColor"));
+      ThemeUtil.setThemes(ConfigService.getReaderConfig("textColor"));
     }
     this.setState({ isShowTextPicker });
   };
@@ -74,12 +75,12 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
       backgroundList.concat(ThemeUtil.getAllThemes()).findIndex((item) => {
         return (
           item ===
-          (StorageUtil.getReaderConfig("backgroundColor") ||
+          (ConfigService.getReaderConfig("backgroundColor") ||
             "rgba(255,255,255,1)")
         );
       }) === -1
     ) {
-      ThemeUtil.setThemes(StorageUtil.getReaderConfig("backgroundColor"));
+      ThemeUtil.setThemes(ConfigService.getReaderConfig("backgroundColor"));
     }
     this.setState({ isShowBgPicker });
   };
@@ -91,7 +92,7 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
           .indexOf(color),
       });
     }
-    StorageUtil.setReaderConfig(
+    ConfigService.setReaderConfig(
       "textColor",
       typeof color === "object" ? color.color : color
     );
@@ -176,7 +177,7 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
         {this.state.isShowBgPicker && (
           <ColorPickerPanel
             enableAlpha={false}
-            color={StorageUtil.getReaderConfig("backgroundColor")}
+            color={ConfigService.getReaderConfig("backgroundColor")}
             onChange={this.handleChooseBgColor}
             mode="RGB"
             style={{
@@ -207,7 +208,7 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
         {this.state.isShowTextPicker && (
           <ColorPickerPanel
             enableAlpha={false}
-            color={StorageUtil.getReaderConfig("textColor")}
+            color={ConfigService.getReaderConfig("textColor")}
             onChange={this.handleChooseTextColor}
             mode="RGB"
             style={{

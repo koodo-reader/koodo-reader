@@ -1,5 +1,5 @@
 import { restore } from "../file/restore";
-import StorageUtil from "../service/configService";
+import ConfigService from "../service/configService";
 import { driveConfig } from "../../constants/driveList";
 import axios from "axios";
 const getData = (file) =>
@@ -42,7 +42,7 @@ class GoogleDriveUtil {
   static UploadFile(blob: any) {
     return new Promise<boolean>(async (resolve, reject) => {
       var refresh_token =
-        StorageUtil.getReaderConfig("googledrive_token") || "";
+        ConfigService.getReaderConfig("googledrive_token") || "";
       let res = await axios.post(driveConfig.googleRefreshUrl, {
         refresh_token,
         redirect_uri: driveConfig.callbackUrl,
@@ -97,7 +97,7 @@ class GoogleDriveUtil {
   static DownloadFile() {
     return new Promise<boolean>(async (resolve, reject) => {
       var refresh_token =
-        StorageUtil.getReaderConfig("googledrive_token") || "";
+        ConfigService.getReaderConfig("googledrive_token") || "";
       let res = await axios.post(driveConfig.googleRefreshUrl, {
         refresh_token,
         redirect_uri: driveConfig.callbackUrl,

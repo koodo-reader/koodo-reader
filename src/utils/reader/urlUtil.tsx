@@ -1,9 +1,9 @@
 import { isElectron } from "react-device-detect";
-import StorageUtil from "../service/configService";
+import ConfigService from "../service/configService";
 
 export const openExternalUrl = (url: string) => {
   isElectron
-    ? StorageUtil.getReaderConfig("isUseBuiltIn") === "yes"
+    ? ConfigService.getReaderConfig("isUseBuiltIn") === "yes"
       ? window.open(url)
       : window.require("electron").shell.openExternal(url)
     : window.open(url);

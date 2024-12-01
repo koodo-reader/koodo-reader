@@ -11,7 +11,7 @@ import {
   exportNotes,
 } from "../../../utils/file/export";
 import "./aboutDialog.css";
-import StorageUtil from "../../../utils/service/configService";
+import ConfigService from "../../../utils/service/configService";
 import WordService from "../../../utils/service/wordService";
 
 declare var window: any;
@@ -55,9 +55,9 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
               className="sort-by-category-list"
               onClick={() => {
                 if (
-                  StorageUtil.getReaderConfig("lang") === "zhCN" ||
-                  StorageUtil.getReaderConfig("lang") === "zhTW" ||
-                  StorageUtil.getReaderConfig("lang") === "zhMO"
+                  ConfigService.getReaderConfig("lang") === "zhCN" ||
+                  ConfigService.getReaderConfig("lang") === "zhTW" ||
+                  ConfigService.getReaderConfig("lang") === "zhMO"
                 ) {
                   this.handleJump("https://koodoreader.com/zh/document");
                 } else {
@@ -79,9 +79,9 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
               className="sort-by-category-list"
               onClick={() => {
                 if (
-                  StorageUtil.getReaderConfig("lang") === "zhCN" ||
-                  StorageUtil.getReaderConfig("lang") === "zhTW" ||
-                  StorageUtil.getReaderConfig("lang") === "zhMO"
+                  ConfigService.getReaderConfig("lang") === "zhCN" ||
+                  ConfigService.getReaderConfig("lang") === "zhTW" ||
+                  ConfigService.getReaderConfig("lang") === "zhMO"
                 ) {
                   this.handleJump("https://koodoreader.com/zh/roadmap");
                 } else {

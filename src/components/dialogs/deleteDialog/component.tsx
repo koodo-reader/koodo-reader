@@ -10,7 +10,7 @@ import { withRouter } from "react-router-dom";
 import AddTrash from "../../../utils/reader/addTrash";
 import BookUtil from "../../../utils/file/bookUtil";
 import toast from "react-hot-toast";
-import StorageUtil from "../../../utils/service/configService";
+import ConfigService from "../../../utils/service/configService";
 import NoteService from "../../../utils/service/noteService";
 import BookmarkService from "../../../utils/service/bookmarkService";
 import BookService from "../../../utils/service/bookService";
@@ -24,9 +24,9 @@ class DeleteDialog extends React.Component<
     super(props);
     this.state = {
       isDeleteShelfBook:
-        StorageUtil.getReaderConfig("isDeleteShelfBook") === "yes",
+        ConfigService.getReaderConfig("isDeleteShelfBook") === "yes",
       isDisableTrashBin:
-        StorageUtil.getReaderConfig("isDisableTrashBin") === "yes",
+        ConfigService.getReaderConfig("isDisableTrashBin") === "yes",
     };
   }
   handleCancel = () => {

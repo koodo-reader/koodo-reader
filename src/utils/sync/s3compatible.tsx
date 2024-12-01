@@ -1,11 +1,11 @@
 import { restoreFromfilePath } from "../file/restore";
-import StorageUtil from "../service/configService";
+import ConfigService from "../service/configService";
 
 class S3Util {
   static UploadFile = async (blob: any) => {
     return new Promise<boolean>(async (resolve, reject) => {
       let { endpoint, region, bucketName, accessKeyId, secretAccessKey } =
-        JSON.parse(StorageUtil.getReaderConfig("s3compatible_token") || "{}");
+        JSON.parse(ConfigService.getReaderConfig("s3compatible_token") || "{}");
       const fs = window.require("fs");
       const path = window.require("path");
       const { ipcRenderer } = window.require("electron");
@@ -31,7 +31,7 @@ class S3Util {
       const path = window.require("path");
       const { ipcRenderer } = window.require("electron");
       let { endpoint, region, bucketName, accessKeyId, secretAccessKey } =
-        JSON.parse(StorageUtil.getReaderConfig("s3compatible_token") || "{}");
+        JSON.parse(ConfigService.getReaderConfig("s3compatible_token") || "{}");
       const dirPath = ipcRenderer.sendSync("user-data", "ping");
       let result = await ipcRenderer.invoke("s3-download", {
         endpoint,

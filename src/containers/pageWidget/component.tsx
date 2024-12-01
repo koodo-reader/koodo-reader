@@ -1,7 +1,7 @@
 import React from "react";
 import "./background.css";
 import { BackgroundProps, BackgroundState } from "./interface";
-import StorageUtil from "../../utils/service/configService";
+import ConfigService from "../../utils/service/configService";
 import { Trans } from "react-i18next";
 import RecordLocation from "../../utils/reader/recordLocation";
 class Background extends React.Component<BackgroundProps, BackgroundState> {
@@ -10,13 +10,13 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
     super(props);
     this.state = {
       isSingle:
-        StorageUtil.getReaderConfig("readerMode") &&
-        StorageUtil.getReaderConfig("readerMode") !== "double",
+        ConfigService.getReaderConfig("readerMode") &&
+        ConfigService.getReaderConfig("readerMode") !== "double",
       prevPage: 0,
       nextPage: 0,
-      scale: StorageUtil.getReaderConfig("scale") || 1,
-      isHideFooter: StorageUtil.getReaderConfig("isHideFooter") === "yes",
-      isHideHeader: StorageUtil.getReaderConfig("isHideHeader") === "yes",
+      scale: ConfigService.getReaderConfig("scale") || 1,
+      isHideFooter: ConfigService.getReaderConfig("isHideFooter") === "yes",
+      isHideHeader: ConfigService.getReaderConfig("isHideHeader") === "yes",
     };
     this.isFirst = true;
   }
@@ -61,8 +61,8 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
       <div
         className="background"
         style={{
-          color: StorageUtil.getReaderConfig("textColor")
-            ? StorageUtil.getReaderConfig("textColor")
+          color: ConfigService.getReaderConfig("textColor")
+            ? ConfigService.getReaderConfig("textColor")
             : "",
         }}
       >

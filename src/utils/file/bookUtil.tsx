@@ -1,4 +1,4 @@
-import StorageUtil from "../service/configService";
+import ConfigService from "../service/configService";
 import { isElectron } from "react-device-detect";
 
 import BookModel from "../../models/Book";
@@ -154,7 +154,7 @@ class BookUtil {
     let ref = book.format.toLowerCase();
 
     if (isElectron) {
-      if (StorageUtil.getReaderConfig("isOpenInMain") === "yes") {
+      if (ConfigService.getReaderConfig("isOpenInMain") === "yes") {
         window.require("electron").ipcRenderer.invoke("new-tab", {
           url: `${window.location.href.split("#")[0]}#/${ref}/${
             book.key
@@ -166,9 +166,9 @@ class BookUtil {
           url: `${window.location.href.split("#")[0]}#/${ref}/${
             book.key
           }?title=${book.name}&file=${book.key}`,
-          isMergeWord: StorageUtil.getReaderConfig("isMergeWord"),
-          isAutoFullscreen: StorageUtil.getReaderConfig("isAutoFullscreen"),
-          isPreventSleep: StorageUtil.getReaderConfig("isPreventSleep"),
+          isMergeWord: ConfigService.getReaderConfig("isMergeWord"),
+          isAutoFullscreen: ConfigService.getReaderConfig("isAutoFullscreen"),
+          isPreventSleep: ConfigService.getReaderConfig("isPreventSleep"),
         });
       }
     } else {
@@ -185,7 +185,7 @@ class BookUtil {
   }
   static reloadBooks() {
     if (isElectron) {
-      if (StorageUtil.getReaderConfig("isOpenInMain") === "yes") {
+      if (ConfigService.getReaderConfig("isOpenInMain") === "yes") {
         window.require("electron").ipcRenderer.invoke("reload-tab", "ping");
       } else {
         window.require("electron").ipcRenderer.invoke("reload-reader", "ping");
@@ -274,7 +274,7 @@ class BookUtil {
           extension.toUpperCase(),
           "",
           "",
-          StorageUtil.getReaderConfig("isSliding") === "yes" ? "sliding" : ""
+          ConfigService.getReaderConfig("isSliding") === "yes" ? "sliding" : ""
         );
 
         switch (extension) {
@@ -310,7 +310,7 @@ class BookUtil {
         let format = extension.toUpperCase();
         key = new Date().getTime() + "";
         if (
-          StorageUtil.getReaderConfig("isPrecacheBook") === "yes" &&
+          ConfigService.getReaderConfig("isPrecacheBook") === "yes" &&
           extension !== "pdf"
         ) {
           let cache = await rendition.preCache(file_content);

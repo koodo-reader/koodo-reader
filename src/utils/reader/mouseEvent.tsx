@@ -1,4 +1,4 @@
-import StorageUtil from "../service/configService";
+import ConfigService from "../service/configService";
 import RecordLocation from "./recordLocation";
 import { isElectron } from "react-device-detect";
 import { getIframeDoc, getIframeWin } from "./docUtil";
@@ -9,7 +9,7 @@ const sleep = (ms: number) => {
 };
 
 let throttleTime =
-  StorageUtil.getReaderConfig("isSliding") === "yes" ? 1000 : 400;
+  ConfigService.getReaderConfig("isSliding") === "yes" ? 1000 : 400;
 
 export const getSelection = () => {
   let doc = getIframeDoc();
@@ -66,28 +66,28 @@ const handleShortcut = (event: any) => {
     }
   }
   if (event.keyCode === 27) {
-    StorageUtil.setReaderConfig("isFullscreen", "no");
+    ConfigService.setReaderConfig("isFullscreen", "no");
   }
   if (event.keyCode === 122) {
     if (isElectron) {
       event.preventDefault();
-      StorageUtil.getReaderConfig("isFullscreen") !== "yes"
+      ConfigService.getReaderConfig("isFullscreen") !== "yes"
         ? handleFullScreen()
         : handleExitFullScreen();
 
-      if (StorageUtil.getReaderConfig("isFullscreen") === "yes") {
-        StorageUtil.setReaderConfig("isFullscreen", "no");
+      if (ConfigService.getReaderConfig("isFullscreen") === "yes") {
+        ConfigService.setReaderConfig("isFullscreen", "no");
       } else {
-        StorageUtil.setReaderConfig("isFullscreen", "yes");
+        ConfigService.setReaderConfig("isFullscreen", "yes");
       }
     }
   }
   if (event.keyCode === 123) {
     if (isElectron) {
       event.preventDefault();
-      StorageUtil.setReaderConfig(
+      ConfigService.setReaderConfig(
         "isMergeWord",
-        StorageUtil.getReaderConfig("isMergeWord") === "yes" ? "no" : "yes"
+        ConfigService.getReaderConfig("isMergeWord") === "yes" ? "no" : "yes"
       );
       window.require("electron").ipcRenderer.invoke("switch-moyu", "ping");
     }
@@ -182,7 +182,7 @@ export const bindHtmlEvent = (
     setTimeout(() => (lock = false), throttleTime);
   });
 
-  if (StorageUtil.getReaderConfig("isTouch") === "yes") {
+  if (ConfigService.getReaderConfig("isTouch") === "yes") {
     const mc = new window.Hammer(doc);
     mc.on("panleft panright panup pandown", async (event: any) => {
       if (readerMode === "scroll") {
