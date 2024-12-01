@@ -77,7 +77,9 @@
         "%PUBLIC_URL%/lib/pdfjs/pdf.worker.mjs";
       import * as Kookit from "%PUBLIC_URL%/lib/kookit/kookit.mjs";
       import * as KookitCompressed from "%PUBLIC_URL%/lib/kookit/kookit.min.mjs";
+      import * as KookitSync from "%PUBLIC_URL%/lib/kookit/kookit-sync-browser.min.mjs";
       window.Kookit = KookitCompressed;
+      window.KookitSync = KookitSync;
       if (window.location.href.indexOf("localhost") > -1) {
         window.Kookit = Kookit;
       }

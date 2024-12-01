@@ -16,7 +16,7 @@ import toast from "react-hot-toast";
 import { Trans } from "react-i18next";
 import { checkStableUpdate } from "../../utils/common";
 import packageInfo from "../../../package.json";
-
+declare var window: any;
 class Header extends React.Component<HeaderProps, HeaderState> {
   constructor(props: HeaderProps) {
     super(props);
@@ -33,16 +33,16 @@ class Header extends React.Component<HeaderProps, HeaderState> {
   async componentDidMount() {
     // isElectron &&
     //   (await window.require("electron").ipcRenderer.invoke("s3-download"));
-
+    // let syncUtil = new window.KookitSync.SyncUtil("dropbox", {});
+    // console.log(syncUtil, window.KookitSync.SyncUtil);
+    // console.log(await syncUtil.listFiles("book"));
     if (isElectron) {
       const fs = window.require("fs");
       const path = window.require("path");
       const { ipcRenderer } = window.require("electron");
       const dirPath = ipcRenderer.sendSync("user-data", "ping");
       if (!fs.existsSync(dirPath)) {
-        fs.mkdirSync(dirPath);
-        fs.mkdirSync(path.join(dirPath, "data"));
-        fs.mkdirSync(path.join(dirPath, "data", "book"));
+        fs.mkdirSync(path.join(dirPath, "data", "book"), { recursive: true });
         console.log("folder created");
       } else {
         console.log("folder exist");

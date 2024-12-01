@@ -59,7 +59,7 @@ class CoverUtil {
       var path = window.require("path");
       let directoryPath = path.join(getStorageLocation() || "", "cover");
       if (!fs.existsSync(directoryPath)) {
-        fs.mkdirSync(directoryPath);
+        fs.mkdirSync(directoryPath, { recursive: true });
       }
       const result = this.convertCoverBase64(book.cover);
       fs.writeFileSync(

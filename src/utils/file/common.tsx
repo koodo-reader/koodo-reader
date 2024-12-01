@@ -90,7 +90,7 @@ export const upgradeStorage = async (toast: any) => {
   }
   toast("Upgrading data");
 
-  fs.mkdirSync(path.join(dataPath, "cover"));
+  fs.mkdirSync(path.join(dataPath, "cover"), { recursive: true });
   let books = await window.localforage.getItem("books");
   books.forEach((item) => {
     let cover = item.cover;

@@ -13,6 +13,7 @@ const isDev = require("electron-is-dev");
 const Store = require("electron-store");
 const store = new Store();
 const fs = require("fs");
+// const { SyncUtil } = import('./public/lib/kookit/kookit-sync.min.mjs');
 const { sqlStatement, jsonToSqlite, sqliteToJson } = require('./src/sql.js');
 const configDir = app.getPath("userData");
 const dirPath = path.join(configDir, "uploads");
@@ -67,7 +68,7 @@ if (!singleInstance) {
 const getDBConnection = (dbName, storagePath) => {
   if (!dbConnection[dbName]) {
     if (!fs.existsSync(path.join(storagePath, "config"))) {
-      fs.mkdirSync(path.join(storagePath, "config"));
+      fs.mkdirSync(path.join(storagePath, "config"), { recursive: true });
     }
     dbConnection[dbName] = new Database(path.join(storagePath, "config", `${dbName}.db`), { verbose: console.log });
     dbConnection[dbName].pragma('journal_mode = WAL');
@@ -173,71 +174,16 @@ const createMainWin = () => {
 
   });
   ipcMain.handle("ftp-upload", async (event, config) => {
-    let { url, username, password, fileName, dir, ssl } = config;
-    const Client = require("ftp");
-    let c = new Client();
-    async function uploadFile() {
-      return new Promise((resolve, reject) => {
-        c.on("ready", function () {
-          c.put(
-            path.join(dirPath, fileName),
-            dir + "/" + fileName,
-            function (err) {
-              if (err) reject(err);
-              c.end();
-              resolve(true);
-            }
-          );
-        });
-        c.connect({
-          host: url,
-          user: username,
-          password: password,
-          secure: ssl === "1" ? true : false,
-        });
-      });
-    }
-
-    try {
-      await uploadFile();
-      return true;
-    } catch (err) {
-      console.error(err);
-      return false;
-    }
+    const { SyncUtil } = await import('./public/lib/kookit/kookit-sync.min.mjs');
+    let syncUtil = new SyncUtil("ftp", config, dirPath);
+    let result = await syncUtil.uploadFile(config.fileName, "assets");
+    return result;
   });
   ipcMain.handle("ftp-download", async (event, config) => {
-    let { url, username, password, fileName, dir, ssl } = config;
-    const Client = require("ftp");
-    let c = new Client();
-    async function downloadFile() {
-      return new Promise((resolve, reject) => {
-        c.on("ready", function () {
-          c.get(dir + "/" + fileName, function (err, stream) {
-            if (err) reject(err);
-            stream.once("close", function () {
-              c.end();
-              resolve(true);
-            });
-            stream.pipe(fs.createWriteStream(path.join(dirPath, fileName)));
-          });
-        });
-        c.connect({
-          host: url,
-          user: username,
-          password: password,
-          secure: ssl === "1" ? true : false,
-        });
-      });
-    }
-
-    try {
-      await downloadFile();
-      return true;
-    } catch (err) {
-      console.error(err);
-      return false;
-    }
+    const { SyncUtil } = await import('./public/lib/kookit/kookit-sync.min.mjs');
+    let syncUtil = new SyncUtil("ftp", config, dirPath);
+    let result = await syncUtil.downloadFile(config.fileName, "assets");
+    return result;
   });
   ipcMain.handle("sftp-upload", async (event, config) => {
     let { url, username, password, fileName, dir, port } = config;

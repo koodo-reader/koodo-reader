@@ -37,8 +37,7 @@
     "react-tooltip": "^5.26.3",
     "ssh2-sftp-client": "^9.1.0",
     "webdav": "^3.6.2",
-    "wink-lemmatizer": "^3.0.4",
-    "zip-a-folder": "^0.0.12"
+    "wink-lemmatizer": "^3.0.4"
   },
   "devDependencies": {
     "@types/i18next": "^13.0.0",

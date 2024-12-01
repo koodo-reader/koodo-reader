@@ -32,3 +32,5 @@ rewrite.sh
 bfg.jar
 kookit.js
 kookit.mjs
+kookit-sync.js
+kookit-sync.mjs
