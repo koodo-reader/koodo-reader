@@ -16,7 +16,7 @@ class BookUtil {
       const dataPath = getStorageLocation() || "";
       try {
         if (!fs.existsSync(path.join(dataPath, "book"))) {
-          fs.mkdirSync(path.join(dataPath, "book"));
+          fs.mkdirSync(path.join(dataPath, "book"), { recursive: true });
         }
         fs.writeFileSync(
           path.join(dataPath, "book", key + "." + foramt),

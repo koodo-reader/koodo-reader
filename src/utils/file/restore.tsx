@@ -12,7 +12,7 @@ export const restore = (file: File, isSync = false) => {
     reader.onload = async (event) => {
       if (!event.target) return;
       if (!fs.existsSync(path.join(dataPath))) {
-        fs.mkdirSync(path.join(dataPath));
+        fs.mkdirSync(path.join(dataPath), { recursive: true });
       }
       fs.writeFileSync(
         path.join(dataPath, file.name),
@@ -82,7 +82,7 @@ export const unzipConfig = async (zipEntries: any) => {
   const path = window.require("path");
   const dataPath = getStorageLocation() || "";
   if (!fs.existsSync(path.join(dataPath, "config"))) {
-    fs.mkdirSync(path.join(dataPath, "config"));
+    fs.mkdirSync(path.join(dataPath, "config"), { recursive: true });
   }
   // no longer support backup from older version
   if (
@@ -135,7 +135,7 @@ export const unzipBook = async (zipEntries: any) => {
   const dataPath = getStorageLocation() || "";
 
   if (!fs.existsSync(path.join(dataPath, "book"))) {
-    fs.mkdirSync(path.join(dataPath, "book"));
+    fs.mkdirSync(path.join(dataPath, "book"), { recursive: true });
   }
   let flag = true;
   for (let i = 0; i < zipEntries.length; i++) {
@@ -159,7 +159,7 @@ export const unzipCover = async (zipEntries: any) => {
   const dataPath = getStorageLocation() || "";
 
   if (!fs.existsSync(path.join(dataPath, "cover"))) {
-    fs.mkdirSync(path.join(dataPath, "cover"));
+    fs.mkdirSync(path.join(dataPath, "cover"), { recursive: true });
   }
   let flag = true;
   for (let i = 0; i < zipEntries.length; i++) {

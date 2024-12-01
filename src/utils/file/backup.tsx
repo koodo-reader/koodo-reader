@@ -22,15 +22,32 @@ export const backupFromPath = () => {
   const AdmZip = window.require("adm-zip");
   const dataPath = getStorageLocation() || "";
   let zip = new AdmZip();
+  const fs = window.require("fs");
   backupToConfigJson();
-  zip.addLocalFolder(path.join(dataPath, "book"), "book");
-  zip.addLocalFolder(path.join(dataPath, "cover"), "cover");
-  zip.addLocalFile(path.join(dataPath, "config", "config.json"), "config");
-  zip.addLocalFile(path.join(dataPath, "config", "notes.db"), "config");
-  zip.addLocalFile(path.join(dataPath, "config", "books.db"), "config");
-  zip.addLocalFile(path.join(dataPath, "config", "bookmarks.db"), "config");
-  zip.addLocalFile(path.join(dataPath, "config", "words.db"), "config");
-  zip.addLocalFile(path.join(dataPath, "config", "plugins.db"), "config");
+  if (fs.existsSync(path.join(dataPath, "book"))) {
+    zip.addLocalFolder(path.join(dataPath, "book"), "book");
+  }
+  if (fs.existsSync(path.join(dataPath, "cover"))) {
+    zip.addLocalFolder(path.join(dataPath, "cover"), "cover");
+  }
+  if (fs.existsSync(path.join(dataPath, "config", "config.json"))) {
+    zip.addLocalFile(path.join(dataPath, "config", "config.json"), "config");
+  }
+  if (fs.existsSync(path.join(dataPath, "config", "notes.db"))) {
+    zip.addLocalFile(path.join(dataPath, "config", "notes.db"), "config");
+  }
+  if (fs.existsSync(path.join(dataPath, "config", "books.db"))) {
+    zip.addLocalFile(path.join(dataPath, "config", "books.db"), "config");
+  }
+  if (fs.existsSync(path.join(dataPath, "config", "bookmarks.db"))) {
+    zip.addLocalFile(path.join(dataPath, "config", "bookmarks.db"), "config");
+  }
+  if (fs.existsSync(path.join(dataPath, "config", "words.db"))) {
+    zip.addLocalFile(path.join(dataPath, "config", "words.db"), "config");
+  }
+  if (fs.existsSync(path.join(dataPath, "config", "plugins.db"))) {
+    zip.addLocalFile(path.join(dataPath, "config", "plugins.db"), "config");
+  }
 
   return new Blob([zip.toBuffer()], { type: "application/zip" });
 };
@@ -64,7 +81,7 @@ export const backupToConfigJson = () => {
   const path = window.require("path");
   const dataPath = getStorageLocation() || "";
   if (!fs.existsSync(path.join(dataPath))) {
-    fs.mkdirSync(path.join(dataPath));
+    fs.mkdirSync(path.join(dataPath), { recursive: true });
   }
   fs.writeFileSync(
     path.join(dataPath, "config", "config.json"),

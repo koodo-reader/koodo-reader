@@ -12,11 +12,12 @@ class DropboxUtil {
         let res = await axios.post(driveConfig.dropboxRefreshUrl, {
           refresh_token,
         });
+
+        const accessToken = res.data.access_token;
         let file = new File([blob], fileName, {
           lastModified: new Date().getTime(),
           type: blob.type,
         });
-        const accessToken = res.data.access_token;
         const response = await axios.post(
           "https://content.dropboxapi.com/2/files/upload",
           file,
@@ -37,7 +38,7 @@ class DropboxUtil {
         if (response.status === 200) {
           resolve(true);
         } else {
-          reject(new Error("File upload failed"));
+          reject(false);
         }
       } catch (error) {
         reject(error);
