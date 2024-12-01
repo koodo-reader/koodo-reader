@@ -174,13 +174,13 @@ const createMainWin = () => {
 
   });
   ipcMain.handle("ftp-upload", async (event, config) => {
-    const { SyncUtil } = await import('./public/lib/kookit/kookit-sync.min.mjs');
+    const { SyncUtil } = await import('./src/assets/lib/kookit-sync.min.mjs');
     let syncUtil = new SyncUtil("ftp", config, dirPath);
     let result = await syncUtil.uploadFile(config.fileName, "assets");
     return result;
   });
   ipcMain.handle("ftp-download", async (event, config) => {
-    const { SyncUtil } = await import('./public/lib/kookit/kookit-sync.min.mjs');
+    const { SyncUtil } = await import('./src/assets/lib/kookit-sync.min.mjs');
     let syncUtil = new SyncUtil("ftp", config, dirPath);
     let result = await syncUtil.downloadFile(config.fileName, "assets");
     return result;
@@ -263,7 +263,7 @@ const createMainWin = () => {
           resolve(true);
         });
         writeStream.on("error", (err) => {
-          console.log(error);
+          console.log(err);
           resolve(false);
         });
       });

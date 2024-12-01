@@ -10,7 +10,6 @@ import Router from "./router/index";
 import StyleUtil from "./utils/reader/styleUtil";
 import { isElectron } from "react-device-detect";
 import { dropdownList } from "./constants/dropdownList";
-// import StorageUtil from "./utils/serviceUtils/storageUtil";
 import { initSystemFont, initTheme } from "./utils/reader/launchUtil";
 declare var window: any;
 initTheme();
