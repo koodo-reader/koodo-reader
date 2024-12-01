@@ -71,18 +71,9 @@
     ></script>
     <script type="module">
       import "%PUBLIC_URL%/lib/pdfjs/pdf.mjs";
-      // import * as pdfjsWorker from "./pdfjs/pdf.worker.mjs";
       console.log(window);
       pdfjsLib.GlobalWorkerOptions.workerSrc =
         "%PUBLIC_URL%/lib/pdfjs/pdf.worker.mjs";
-      import * as Kookit from "%PUBLIC_URL%/lib/kookit/kookit.mjs";
-      import * as KookitCompressed from "%PUBLIC_URL%/lib/kookit/kookit.min.mjs";
-      import * as KookitSync from "%PUBLIC_URL%/lib/kookit/kookit-sync-browser.min.mjs";
-      window.Kookit = KookitCompressed;
-      window.KookitSync = KookitSync;
-      if (window.location.href.indexOf("localhost") > -1) {
-        window.Kookit = Kookit;
-      }
     </script>
     <script
       type="text/javascript"

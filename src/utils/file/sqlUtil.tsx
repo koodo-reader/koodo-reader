@@ -2,7 +2,7 @@ import {
   sqlStatement,
   sqliteToJson,
   jsonToSqlite,
-} from "../../sqlStatement.js";
+} from "../../sql-statement.js";
 declare var window: any;
 function addColonToKeys(obj: any): any {
   const newObj: any = {};
