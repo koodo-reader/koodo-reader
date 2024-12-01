@@ -4,6 +4,7 @@ import { driveList } from "../../../constants/driveList";
 import { backup, backupFromStorage } from "../../../utils/file/backup";
 import { restoreFromfilePath } from "../../../utils/file/restore";
 import { Trans } from "react-i18next";
+import { SyncUtil } from "../../../assets/lib/kookit-sync-browser.min.js";
 import DropboxUtil from "../../../utils/sync/dropbox";
 import OneDriveUtil from "../../../utils/sync/onedrive";
 import GoogleDriveUtil from "../../../utils/sync/googledrive";
@@ -119,20 +120,9 @@ class BackupDialog extends React.Component<
             this.props.handleTokenDialog(true);
             break;
           }
-          let DriveUtil =
-            name === "dropbox"
-              ? DropboxUtil
-              : name === "ftp"
-              ? FtpUtil
-              : name === "onedrive"
-              ? OneDriveUtil
-              : name === "googledrive"
-              ? GoogleDriveUtil
-              : name === "sftp"
-              ? SFtpUtil
-              : name === "s3compatible"
-              ? S3Util
-              : WebdavUtil;
+          let syncUtil = new SyncUtil(name, {
+            refresh_token: StorageUtil.getReaderConfig(name + "_token"),
+          });
           if (this.state.isBackup === "yes") {
             this.showMessage("Uploading, please wait");
             this.props.handleLoadingDialog(true);
@@ -143,7 +133,11 @@ class BackupDialog extends React.Component<
               this.props.handleLoadingDialog(false);
             }
 
-            let result = await DriveUtil.UploadFile(blob);
+            let result = await syncUtil.uploadFile(
+              "data.zip",
+              "backup",
+              blob as Blob
+            );
             if (result) {
               this.handleFinish();
             } else {
@@ -152,7 +146,7 @@ class BackupDialog extends React.Component<
           } else {
             this.props.handleLoadingDialog(true);
             this.showMessage("Downloading, please wait");
-            let result = await DriveUtil.DownloadFile();
+            let result = await syncUtil.downloadFile("data.zip", "backup");
             if (result) {
               this.handleFinish();
             } else {

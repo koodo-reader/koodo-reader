@@ -14,7 +14,7 @@ const Store = require("electron-store");
 const store = new Store();
 const fs = require("fs");
 // const { SyncUtil } = import('./public/lib/kookit/kookit-sync.min.mjs');
-const { sqlStatement, jsonToSqlite, sqliteToJson } = require('./src/sql.js');
+const { sqlStatement, jsonToSqlite, sqliteToJson } = require('./src/sql-statement.js');
 const configDir = app.getPath("userData");
 const dirPath = path.join(configDir, "uploads");
 let mainWin;
@@ -173,232 +173,19 @@ const createMainWin = () => {
     return global.getAudioPath(text, speed, dirPath, config);
 
   });
-  ipcMain.handle("ftp-upload", async (event, config) => {
-    const { SyncUtil } = await import('./src/assets/lib/kookit-sync.min.mjs');
-    let syncUtil = new SyncUtil("ftp", config, dirPath);
-    let result = await syncUtil.uploadFile(config.fileName, "assets");
+  ipcMain.handle("cloud-upload", async (event, config) => {
+    let { service } = config;
+    const { SyncUtil } = await import('./public/lib/kookit/kookit-sync.min.mjs');
+    let syncUtil = new SyncUtil(service, config, dirPath);
+    let result = await syncUtil.uploadFile(config.fileName, "backup");
     return result;
   });
-  ipcMain.handle("ftp-download", async (event, config) => {
+  ipcMain.handle("cloud-download", async (event, config) => {
+    let { service } = config;
     const { SyncUtil } = await import('./src/assets/lib/kookit-sync.min.mjs');
-    let syncUtil = new SyncUtil("ftp", config, dirPath);
-    let result = await syncUtil.downloadFile(config.fileName, "assets");
+    let syncUtil = new SyncUtil(service, config, dirPath);
+    let result = await syncUtil.downloadFile(config.fileName, "backup");
     return result;
-  });
-  ipcMain.handle("sftp-upload", async (event, config) => {
-    let { url, username, password, fileName, dir, port } = config;
-    let Client = require("ssh2-sftp-client");
-    let sftp = new Client();
-    async function uploadFile() {
-      return new Promise((resolve, reject) => {
-        let data = fs.createReadStream(path.join(dirPath, fileName));
-        let remote = "/" + dir + "/" + fileName;
-        sftp
-          .connect({
-            host: url,
-            port: port,
-            username: username,
-            password: password,
-          })
-          .then(() => {
-            return sftp.put(data, remote);
-          })
-          .then(() => {
-            resolve(true);
-            return sftp.end();
-          })
-          .catch((err) => {
-            console.error(err.message);
-            resolve(false);
-          });
-      });
-    }
-
-    try {
-      return await uploadFile();
-    } catch (err) {
-      console.error(err);
-      return false;
-    }
-  });
-  ipcMain.handle("webdav-download", async (event, config) => {
-    let { url, username, password, fileName } = config;
-    const { createClient } = require("webdav");
-    async function downloadFile() {
-      return new Promise(async (resolve, reject) => {
-        const client = createClient(url, {
-          username,
-          password,
-        });
-        if ((await client.exists("/KoodoReader/data.zip")) === false) {
-          resolve(false);
-        }
-        const buffer = await client.getFileContents("/KoodoReader/data.zip");
-        fs.writeFileSync(path.join(dirPath, fileName), buffer);
-        resolve(true);
-      });
-    }
-    try {
-      return await downloadFile();
-    } catch (err) {
-      console.error(err);
-      return false;
-    }
-  });
-  ipcMain.handle("webdav-upload", async (event, config) => {
-    let { url, username, password, fileName } = config;
-    const { createClient } = require("webdav");
-    async function uploadFile() {
-      return new Promise(async (resolve, reject) => {
-        const client = createClient(url, {
-          username,
-          password,
-        });
-        if ((await client.exists("/KoodoReader")) === false) {
-          await client.createDirectory("/KoodoReader");
-        }
-        let writeStream = client.createWriteStream("/KoodoReader/data.zip");
-        fs.createReadStream(path.join(dirPath, fileName)).pipe(writeStream);
-        writeStream.on("finish", () => {
-          resolve(true);
-        });
-        writeStream.on("error", (err) => {
-          console.log(err);
-          resolve(false);
-        });
-      });
-    }
-    try {
-      return await uploadFile();
-    } catch (err) {
-      console.error(err);
-      return false;
-    }
-  });
-  ipcMain.handle("sftp-download", async (event, config) => {
-    let { url, username, password, fileName, dir, port } = config;
-    let Client = require("ssh2-sftp-client");
-    let sftp = new Client();
-    async function downloadFile() {
-      return new Promise((resolve, reject) => {
-        let remotePath = "/" + dir + "/" + fileName;
-        let dst = fs.createWriteStream(path.join(dirPath, fileName));
-        sftp
-          .connect({
-            host: url,
-            port: port,
-            username: username,
-            password: password,
-          })
-          .then(() => {
-            return sftp.get(remotePath, dst);
-          })
-          .then(() => {
-            resolve(true);
-            return sftp.end();
-          })
-          .catch((err) => {
-            console.error(err.message);
-            resolve(false);
-          });
-      });
-    }
-
-    try {
-      return await downloadFile();
-    } catch (err) {
-      console.error(err);
-      return false;
-    }
-  });
-  ipcMain.handle("s3-upload", async (event, config) => {
-    const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
-    let {
-      endpoint,
-      region,
-      bucketName,
-      accessKeyId,
-      secretAccessKey,
-      fileName,
-    } = config;
-    const s3 = new S3Client({
-      endpoint,
-      region,
-      credentials: {
-        accessKeyId,
-        secretAccessKey,
-      },
-    });
-    try {
-      await s3.send(
-        new PutObjectCommand({
-          Bucket: bucketName,
-          Key: fileName,
-          Body: fs.createReadStream(path.join(dirPath, fileName)),
-        })
-      );
-      return true;
-    } catch (err) {
-      console.log("Error: ", err);
-      return false;
-    }
-  });
-  ipcMain.handle("s3-download", async (event, config) => {
-    let {
-      endpoint,
-      region,
-      bucketName,
-      accessKeyId,
-      secretAccessKey,
-      fileName,
-    } = config;
-    const { S3Client, GetObjectCommand } = require("@aws-sdk/client-s3");
-    function getObject(s3, bucket, key, writable) {
-      return new Promise(async (resolve, reject) => {
-        const getObjectCommandOutput = await s3.send(
-          new GetObjectCommand({
-            Bucket: bucket,
-            Key: key,
-          })
-        );
-        if (getObjectCommandOutput.Body) {
-          getObjectCommandOutput.Body.pipe(writable);
-          writable.on("finish", (err) => {
-            if (err) reject(false);
-            resolve(true);
-          });
-        } else {
-          reject(false);
-        }
-      });
-    }
-    async function downloadFile() {
-      return new Promise((resolve, reject) => {
-        const s3 = new S3Client({
-          region,
-          endpoint,
-          credentials: {
-            accessKeyId,
-            secretAccessKey,
-          },
-        });
-        let writeStream = fs.createWriteStream(path.join(dirPath, fileName));
-        getObject(s3, bucketName, fileName, writeStream)
-          .then((data) => {
-            resolve(true);
-          })
-          .catch((err) => {
-            console.error(err);
-            resolve(false);
-          });
-      });
-    }
-    try {
-      return await downloadFile();
-    } catch (err) {
-      console.error(err);
-      return false;
-    }
   });
   ipcMain.handle("clear-tts", async (event, config) => {
     if (!fs.existsSync(path.join(dirPath, "tts"))) {

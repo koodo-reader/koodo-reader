@@ -6,6 +6,18 @@ import toast from "react-hot-toast";
 import { copyArrayBuffer, getStorageLocation } from "../common";
 import iconv from "iconv-lite";
 import { Buffer } from "buffer";
+import {
+  EpubRender,
+  MobiRender,
+  TxtRender,
+  MdRender,
+  PdfRender,
+  Fb2Render,
+  DocxRender,
+  HtmlRender,
+  ComicRender,
+  CacheRender,
+} from "../../assets/lib/kookit.min.js";
 declare var window: any;
 
 class BookUtil {
@@ -191,22 +203,22 @@ class BookUtil {
   ) => {
     let rendition;
     if (format === "CACHE") {
-      rendition = new window.Kookit.CacheRender(result, readerMode, animation);
+      rendition = new CacheRender(result, readerMode, animation);
     } else if (format === "MOBI" || format === "AZW3" || format === "AZW") {
-      rendition = new window.Kookit.MobiRender(result, readerMode, animation);
+      rendition = new MobiRender(result, readerMode, animation);
     } else if (format === "EPUB") {
-      rendition = new window.Kookit.EpubRender(result, readerMode, animation);
+      rendition = new EpubRender(result, readerMode, animation);
     } else if (format === "TXT") {
       let text = iconv.decode(Buffer.from(result), charset || "utf8");
-      rendition = new window.Kookit.TxtRender(text, readerMode, animation);
+      rendition = new TxtRender(text, readerMode, animation);
     } else if (format === "MD") {
-      rendition = new window.Kookit.MdRender(result, readerMode, animation);
+      rendition = new MdRender(result, readerMode, animation);
     } else if (format === "PDF") {
-      rendition = new window.Kookit.PdfRender(result, readerMode, animation);
+      rendition = new PdfRender(result, readerMode, animation);
     } else if (format === "FB2") {
-      rendition = new window.Kookit.Fb2Render(result, readerMode, animation);
+      rendition = new Fb2Render(result, readerMode, animation);
     } else if (format === "DOCX") {
-      rendition = new window.Kookit.DocxRender(result, readerMode, animation);
+      rendition = new DocxRender(result, readerMode, animation);
     } else if (
       format === "HTML" ||
       format === "XHTML" ||
@@ -214,19 +226,14 @@ class BookUtil {
       format === "HTM" ||
       format === "XML"
     ) {
-      rendition = new window.Kookit.HtmlRender(
-        result,
-        readerMode,
-        format,
-        animation
-      );
+      rendition = new HtmlRender(result, readerMode, format, animation);
     } else if (
       format === "CBR" ||
       format === "CBT" ||
       format === "CBZ" ||
       format === "CB7"
     ) {
-      rendition = new window.Kookit.ComicRender(
+      rendition = new ComicRender(
         copyArrayBuffer(result),
         readerMode,
         format,
