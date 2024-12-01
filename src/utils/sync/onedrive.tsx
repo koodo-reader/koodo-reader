@@ -5,22 +5,22 @@ import axios from "axios";
 class OneDriveUtil {
   static UploadFile(blob: any) {
     return new Promise<boolean>(async (resolve, reject) => {
-      var refresh_token = StorageUtil.getReaderConfig("onedrive_token") || "";
-      let res = await axios.post(driveConfig.onedriveRefreshUrl, {
-        refresh_token,
-        redirect_uri: driveConfig.callbackUrl,
-      });
-      let file = new File([blob], "data.zip", {
-        lastModified: new Date().getTime(),
-        type: blob.type,
-      });
-      const accessToken = res.data.access_token;
-      const uploadSessionUrl =
-        "https://graph.microsoft.com/v1.0/me/drive/special/approot:/" +
-        file.name +
-        ":/createUploadSession";
-
       try {
+        var refresh_token = StorageUtil.getReaderConfig("onedrive_token") || "";
+        let res = await axios.post(driveConfig.onedriveRefreshUrl, {
+          refresh_token,
+          redirect_uri: driveConfig.callbackUrl,
+        });
+        let file = new File([blob], "data.zip", {
+          lastModified: new Date().getTime(),
+          type: blob.type,
+        });
+        const accessToken = res.data.access_token;
+        const uploadSessionUrl =
+          "https://graph.microsoft.com/v1.0/me/drive/special/approot:/" +
+          file.name +
+          ":/createUploadSession";
+
         const sessionResponse = await axios.post(uploadSessionUrl, null, {
           headers: {
             Authorization: "Bearer " + accessToken,
@@ -47,15 +47,16 @@ class OneDriveUtil {
   }
   static DownloadFile() {
     return new Promise<boolean>(async (resolve, reject) => {
-      const fileName = "data.zip";
-      var refresh_token = StorageUtil.getReaderConfig("onedrive_token") || "";
-      let res = await axios.post(driveConfig.onedriveRefreshUrl, {
-        refresh_token,
-        redirect_uri: driveConfig.callbackUrl,
-      });
-      const accessToken = res.data.access_token;
-      const downloadUrl = `https://graph.microsoft.com/v1.0/me/drive/special/approot:/${fileName}:/content`;
       try {
+        const fileName = "data.zip";
+        var refresh_token = StorageUtil.getReaderConfig("onedrive_token") || "";
+        let res = await axios.post(driveConfig.onedriveRefreshUrl, {
+          refresh_token,
+          redirect_uri: driveConfig.callbackUrl,
+        });
+        const accessToken = res.data.access_token;
+        const downloadUrl = `https://graph.microsoft.com/v1.0/me/drive/special/approot:/${fileName}:/content`;
+
         const response = await axios.get(downloadUrl, {
           responseType: "blob",
           headers: {
