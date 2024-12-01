@@ -13,7 +13,6 @@ const isDev = require("electron-is-dev");
 const Store = require("electron-store");
 const store = new Store();
 const fs = require("fs");
-// const { SyncUtil } = import('./public/lib/kookit/kookit-sync.min.mjs');
 const { sqlStatement, jsonToSqlite, sqliteToJson } = require('./src/sql-statement.js');
 const configDir = app.getPath("userData");
 const dirPath = path.join(configDir, "uploads");
