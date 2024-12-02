@@ -12,13 +12,11 @@ class styleUtil {
     if (!background) return;
     background.setAttribute(
       "style",
-      `background-color:${
-        StorageUtil.getReaderConfig("isMergeWord") === "yes"
-          ? "rgba(0,0,0,0)"
-          : StorageUtil.getReaderConfig("backgroundColor") ||
-            "rgba(255,255,255,1)"
-      };filter: brightness(${
-        StorageUtil.getReaderConfig("brightness") || 1
+      `background-color:${StorageUtil.getReaderConfig("isMergeWord") === "yes"
+        ? "rgba(0,0,0,0)"
+        : StorageUtil.getReaderConfig("backgroundColor") ||
+        "rgba(255,255,255,1)"
+      };filter: brightness(${StorageUtil.getReaderConfig("brightness") || 1
       }) invert(${StorageUtil.getReaderConfig("isInvert") === "yes" ? 1 : 0})`
     );
     if (!doc.head) {
@@ -36,50 +34,41 @@ class styleUtil {
   }
   //force horionztal writing mode
   static getCustomCss() {
-    return `font-size: ${
-      StorageUtil.getReaderConfig("fontSize") || 17
-    }px !important;line-height: ${
-      StorageUtil.getReaderConfig("lineHeight") || "1.25"
-    } !important;font-family: ${
-      StorageUtil.getReaderConfig("fontFamily") || ""
-    } !important;background-color: transparent;color: ${
-      StorageUtil.getReaderConfig("textColor")
+    return `font-size: ${StorageUtil.getReaderConfig("fontSize") || 17
+      }px !important;line-height: ${StorageUtil.getReaderConfig("lineHeight") || "1.25"
+      } !important;font-family: ${StorageUtil.getReaderConfig("fontFamily") || ""
+      } !important;background-color: transparent;color: ${StorageUtil.getReaderConfig("textColor")
         ? StorageUtil.getReaderConfig("textColor")
         : StorageUtil.getReaderConfig("backgroundColor") ===
-            "rgba(44,47,49,1)" ||
+          "rgba(44,47,49,1)" ||
           StorageUtil.getReaderConfig("appSkin") === "night" ||
           (StorageUtil.getReaderConfig("appSkin") === "system" &&
             StorageUtil.getReaderConfig("isOSNight") === "yes")
-        ? "white"
-        : ""
-    } !important;letter-spacing: ${
-      StorageUtil.getReaderConfig("letterSpacing")
+          ? "white"
+          : ""
+      } !important;letter-spacing: ${StorageUtil.getReaderConfig("letterSpacing")
         ? StorageUtil.getReaderConfig("letterSpacing")
         : ""
-    }px !important;text-align: ${
-      StorageUtil.getReaderConfig("textAlign")
+      }!important;word-spacing: ${StorageUtil.getReaderConfig("wordSpacing")
+        ? StorageUtil.getReaderConfig("wordSpacing")
+        : ""
+      }px !important;text-align: ${StorageUtil.getReaderConfig("textAlign")
         ? StorageUtil.getReaderConfig("textAlign")
         : ""
-    } !important;
-      font-weight: ${
-        StorageUtil.getReaderConfig("isBold") === "yes" ? "bold !important" : ""
-      };font-style: ${
-      StorageUtil.getReaderConfig("isItalic") === "yes"
+      } !important;
+      font-weight: ${StorageUtil.getReaderConfig("isBold") === "yes" ? "bold !important" : ""
+      };font-style: ${StorageUtil.getReaderConfig("isItalic") === "yes"
         ? "italic !important"
         : ""
-    };text-shadow: ${
-      StorageUtil.getReaderConfig("isShadow") === "yes"
+      };text-shadow: ${StorageUtil.getReaderConfig("isShadow") === "yes"
         ? "2px 2px 2px #cccccc !important"
         : ""
-    };text-indent: ${
-      StorageUtil.getReaderConfig("isIndent") === "yes" ? "2rem" : ""
-    };text-decoration: ${
-      StorageUtil.getReaderConfig("isUnderline") === "yes"
+      };text-indent: ${StorageUtil.getReaderConfig("isIndent") === "yes" ? "2rem" : ""
+      };text-decoration: ${StorageUtil.getReaderConfig("isUnderline") === "yes"
         ? "underline !important"
         : ""
-    };margin-bottom: ${
-      StorageUtil.getReaderConfig("paraSpacing") || 0
-    }px !important;padding:0px !important;word-wrap: break-word !important; writing-mode: horizontal-tb !important;`;
+      };margin-bottom: ${StorageUtil.getReaderConfig("paraSpacing") || 0
+      }px !important;padding:0px !important;word-wrap: break-word !important; writing-mode: horizontal-tb !important;`;
   }
   static addStyle = (url: string) => {
     const style = document.createElement("link");

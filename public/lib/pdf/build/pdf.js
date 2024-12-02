@@ -10202,6 +10202,7 @@ class TextWidgetAnnotationElement extends WidgetAnnotationElement {
         const combWidth = fieldWidth / this.data.maxLen;
         element.classList.add("comb");
         element.style.letterSpacing = `calc(${combWidth}px - 1ch)`;
+        element.style.wordSpacing = `calc(${combWidth}px - 1ch)`;
       }
     } else {
       element = document.createElement("div");
