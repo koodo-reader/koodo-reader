@@ -61,6 +61,15 @@ class BackupDialog extends React.Component<
   };
   handleBackup = (name: string) => {
     this.setState({ currentDrive: name }, async () => {
+      if (name === "local") {
+        let result = await backup(name);
+        if (result) {
+          this.handleFinish();
+        } else {
+          this.showMessage("Upload failed, check your connection");
+        }
+        return;
+      }
       if (name === "onedrive" || name === "googledrive" || name === "dropbox") {
         if (!this.state.isDeveloperVer) {
           this.showMessage(

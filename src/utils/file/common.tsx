@@ -5,6 +5,7 @@ import BookService from "../service/bookService";
 import NoteService from "../service/noteService";
 import PluginService from "../service/pluginService";
 import WordService from "../service/wordService";
+import ConfigService from "../service/configService";
 declare var window: any;
 export const changePath = async (newPath: string) => {
   if (isFolderContainsFile(newPath)) {
@@ -155,4 +156,15 @@ export const upgradeStorage = async (toast: any) => {
 
   toast.success("Upgrade successful");
   localStorage.setItem("isUpgraded", "yes");
+};
+export const getCloudConfig = (service: string) => {
+  let tokenConfig = {};
+  try {
+    tokenConfig = JSON.parse(ConfigService.getReaderConfig(service + "_token"));
+  } catch (e) {
+    tokenConfig = {
+      refresh_token: ConfigService.getReaderConfig(service + "_token"),
+    };
+  }
+  return tokenConfig;
 };
