@@ -79,7 +79,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     const changeColorsTriggered = StorageUtil.getReaderConfig("changeColorsTriggered") === "true";
 
     this.handleChangeStyle(changeColorsTriggered)
-    console.log("is colored ", this.state.isColorChanged)
 
   }
 
@@ -203,7 +202,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           await this.handleRest(rendition);
 
           rendition.on("rendered", () => {
-            console.log("render new content ")
+
             this.changeSentenceColors(rendition);
           })
 
@@ -278,7 +277,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       console.error("Impossible d'accéder au contenu de l'iframe");
       return;
     }
-    console.log("doc", doc)
 
     const randomColors = StorageUtil.getReaderConfig("readerColors") || "[]";
     const colors = JSON.parse(randomColors);
