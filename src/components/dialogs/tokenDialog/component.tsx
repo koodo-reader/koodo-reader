@@ -27,7 +27,7 @@ class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
     console.log(res);
     ConfigService.setReaderConfig(
       `${this.props.driveName}_token`,
-      res.data.refresh_token
+      JSON.stringify({ refresh_token: res.data.refresh_token })
     );
     this.props.handleTokenDialog(false);
     toast.success(this.props.t("Addition successful"));
@@ -42,7 +42,7 @@ class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
     });
     ConfigService.setReaderConfig(
       `${this.props.driveName}_token`,
-      res.data.refresh_token
+      JSON.stringify({ refresh_token: res.data.refresh_token })
     );
     this.props.handleTokenDialog(false);
     toast.success(this.props.t("Addition successful"));
@@ -58,7 +58,7 @@ class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
     });
     ConfigService.setReaderConfig(
       `${this.props.driveName}_token`,
-      res.data.refresh_token
+      JSON.stringify({ refresh_token: res.data.refresh_token })
     );
     this.props.handleTokenDialog(false);
     toast.success(this.props.t("Addition successful"));

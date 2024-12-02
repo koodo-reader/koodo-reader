@@ -1,5 +1,6 @@
-import { getStorageLocation } from "../common";
+import { getStorageLocation, sleep } from "../common";
 import ConfigService from "../service/configService";
+import { getCloudConfig } from "./common";
 declare var window: any;
 
 export const restore = (file: File, isSync = false) => {
@@ -52,13 +53,15 @@ export const restoreNew = async (service: string) => {
 
     return await restoreFromfilePath(filePath);
   } else {
-    await ipcRenderer.invoke("cloud-downlaod", {
-      refresh_token: ConfigService.getReaderConfig(service + "_token"),
+    let tokenConfig = getCloudConfig(service);
+    console.log("tokenConfig", tokenConfig);
+    await ipcRenderer.invoke("cloud-download", {
+      ...tokenConfig,
       fileName: "data.zip",
       service: service,
     });
     const path = window.require("path");
-    let dataPath = await ipcRenderer.invoke("user-data", "ping");
+    let dataPath = await ipcRenderer.sendSync("user-data", "ping");
     let filePath = path.join(dataPath, "backup", "data.zip");
     return await restoreFromfilePath(filePath);
   }
@@ -82,6 +85,7 @@ export const restoreFromfilePath = async (filePath: string) => {
   if (!fs.existsSync(filePath)) {
     return false;
   }
+  console.log("filePath", filePath);
   var zip = new AdmZip(filePath);
   var zipEntries = zip.getEntries(); // an array of ZipEntry records
   let result = await unzipConfig(zipEntries);

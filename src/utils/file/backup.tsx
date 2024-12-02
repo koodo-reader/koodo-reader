@@ -8,6 +8,7 @@ import WordService from "../service/wordService";
 import { getStorageLocation } from "../common";
 import CoverUtil from "./coverUtil";
 import ConfigService from "../service/configService";
+import { getCloudConfig } from "./common";
 declare var window: any;
 export const backup = async (service: string) => {
   let fileName = "data.zip";
@@ -30,15 +31,17 @@ export const backup = async (service: string) => {
       targetPath = backupPath;
     } else {
       const path = window.require("path");
-      let dataPath = await ipcRenderer.invoke("user-data", "ping");
+      let dataPath = await ipcRenderer.sendSync("user-data", "ping");
       targetPath = path.join(dataPath, "backup");
     }
     await backupFromPath(targetPath, fileName);
     if (service === "local") {
       return true;
     } else {
+      let tokenConfig = getCloudConfig(service);
+
       return await ipcRenderer.invoke("cloud-upload", {
-        refresh_token: ConfigService.getReaderConfig(service + "_token"),
+        ...tokenConfig,
         fileName: "data.zip",
         service: service,
       });
@@ -50,13 +53,14 @@ export const backup = async (service: string) => {
     }
     if (service === "local") {
       window.saveAs(blob as Blob, fileName);
+      return true;
     } else {
       const { SyncUtil } = await import(
-        "../../assets/lib/kookit-sync-browser.min.js"
+        "../../assets/lib/kookit-sync-browser.js"
       );
-      let syncUtil = new SyncUtil(service, {
-        refresh_token: ConfigService.getReaderConfig(service + "_token"),
-      });
+      let tokenConfig = getCloudConfig(service);
+
+      let syncUtil = new SyncUtil(service, tokenConfig);
       let result = await syncUtil.uploadFile(fileName, "backup", blob as Blob);
       if (result) {
         return true;

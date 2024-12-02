@@ -181,6 +181,7 @@ const createMainWin = () => {
     return result;
   });
   ipcMain.handle("cloud-download", async (event, config) => {
+    console.log(config);
     let { service } = config;
     const { SyncUtil } = await import('./src/assets/lib/kookit-sync.min.mjs');
     let syncUtil = new SyncUtil(service, config, dirPath);
