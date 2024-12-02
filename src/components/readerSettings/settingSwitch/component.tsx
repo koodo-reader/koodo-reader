@@ -65,7 +65,7 @@ class SettingSwitch extends React.Component<
     return (
       <>
         <TextToSpeech />
-        {readerSettingList.map((item) => (
+        {/* {readerSettingList.map((item) => (
           <div className="single-control-switch-container" key={item.title}>
             <span className="single-control-switch-title">
               <Trans>{item.title}</Trans>
@@ -136,7 +136,7 @@ class SettingSwitch extends React.Component<
               ></span>
             </span>
           </div>
-        ))}
+        ))} */}
       </>
     );
   }

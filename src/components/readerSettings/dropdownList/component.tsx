@@ -4,11 +4,8 @@ import "./dropdownList.css";
 import { Trans } from "react-i18next";
 import { DropdownListProps, DropdownListState } from "./interface";
 import StorageUtil from "../../../utils/serviceUtils/storageUtil";
-import { isElectron } from "react-device-detect";
-class DropdownList extends React.Component<
-  DropdownListProps,
-  DropdownListState
-> {
+
+class DropdownList extends React.Component<DropdownListProps, DropdownListState> {
   constructor(props: DropdownListProps) {
     super(props);
     this.state = {
@@ -18,40 +15,32 @@ class DropdownList extends React.Component<
           (StorageUtil.getReaderConfig("fontFamily") || "Built-in font")
         );
       }),
-      currentLineHeightIndex: dropdownList[1].option.findIndex((item: any) => {
-        return (
-          item === (StorageUtil.getReaderConfig("lineHeight") || "Default")
-        );
-      }),
-      currentTextAlignIndex: dropdownList[2].option.findIndex((item: any) => {
+      currentTextAlignIndex: dropdownList[1].option.findIndex((item: any) => {
         return item === (StorageUtil.getReaderConfig("textAlign") || "Default");
-      }),
-      chineseConversionIndex: dropdownList[3].option.findIndex((item: any) => {
-        return (
-          item === (StorageUtil.getReaderConfig("convertChinese") || "Default")
-        );
       }),
     };
   }
+
   componentDidMount() {
-    if (isElectron) {
-      const fontList = window.require("font-list");
-      fontList.getFonts({ disableQuoting: true }).then((result) => {
-        if (!result || result.length === 0) return;
-        dropdownList[0].option = result;
-        dropdownList[0].option.push("Built-in font");
-        this.setState({
-          currentFontFamilyIndex: dropdownList[0].option.findIndex(
-            (item: any) => {
-              return (
-                item ===
-                (StorageUtil.getReaderConfig("fontFamily") || "Built-in font")
-              );
-            }
-          ),
-        });
-      });
-    }
+    this.loadGoogleFonts(["Arial", "Verdana"]);
+  }
+
+  loadGoogleFonts(fonts: string[]) {
+    const googleFontLink = document.createElement("link");
+    googleFontLink.rel = "stylesheet";
+    googleFontLink.href = `https://fonts.googleapis.com/css2?family=${fonts
+      .map((font) => font.replace(" ", "+"))
+      .join("&family=")}&display=swap`;
+    document.head.appendChild(googleFontLink);
+
+    // Ajouter les polices à la liste des options
+    dropdownList[0].option = ["Built-in font", ...fonts];
+    this.setState({
+      currentFontFamilyIndex: dropdownList[0].option.findIndex(
+        (item: any) =>
+          item === (StorageUtil.getReaderConfig("fontFamily") || "Built-in font")
+      ),
+    });
   }
 
   handleView(event: any, option: string) {
@@ -60,37 +49,22 @@ class DropdownList extends React.Component<
     switch (option) {
       case "fontFamily":
         this.setState({
-          currentFontFamilyIndex: arr[1],
+          currentFontFamilyIndex: parseInt(arr[1]),
         });
-        if (arr[0] === "Built-in font") {
-          StorageUtil.setReaderConfig(option, "");
-        }
-
-        break;
-
-      case "lineHeight":
-        this.setState({
-          currentLineHeightIndex: arr[1],
-        });
-
+        document.body.style.fontFamily =
+          arr[0] === "Built-in font" ? "" : arr[0];
         break;
       case "textAlign":
         this.setState({
-          currentTextAlignIndex: arr[1],
+          currentTextAlignIndex: parseInt(arr[1]),
         });
-
-        break;
-      case "convertChinese":
-        this.setState({
-          chineseConversionIndex: arr[1],
-        });
-
         break;
       default:
         break;
     }
     this.props.renderBookFunc();
   }
+
   render() {
     const renderParagraphCharacter = () => {
       return dropdownList.map((item) => (
@@ -102,12 +76,8 @@ class DropdownList extends React.Component<
             name=""
             className="general-setting-dropdown"
             value={
-              item.value === "lineHeight"
-                ? this.state.currentLineHeightIndex
-                : item.value === "textAlign"
+              item.value === "textAlign"
                 ? this.state.currentTextAlignIndex
-                : item.value === "convertChinese"
-                ? this.state.chineseConversionIndex
                 : this.state.currentFontFamilyIndex
             }
             onChange={(event) => {
@@ -127,13 +97,13 @@ class DropdownList extends React.Component<
         </li>
       ));
     };
-  
+
     return (
       <ul className="paragraph-character-setting">
         {renderParagraphCharacter()}
       </ul>
     );
-  }  
+  }
 }
 
 export default DropdownList;

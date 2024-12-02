@@ -5,36 +5,32 @@ export const dropdownList = [
     value: "fontFamily",
     option: [
       "Built-in font",
-      "Helvetica",
-      "Times New Roman",
-      "Microsoft YaHei",
-      "SimSun",
-      "SimHei",
+      "verdana",
       "Arial",
     ],
   },
+  // {
+  //   id: 2,
+  //   title: "Line height",
+  //   value: "lineHeight",
+  //   option: ["Default", "1", "1.25", "1.5", "1.75", "2"],
+  // },
   {
     id: 2,
-    title: "Line height",
-    value: "lineHeight",
-    option: ["Default", "1", "1.25", "1.5", "1.75", "2"],
-  },
-  {
-    id: 3,
     title: "Text alignment",
     value: "textAlign",
-    option: ["Default", "Left", "Justify", "Right"],
+    option: ["Default", "Left", "Right"],
   },
-  {
-    id: 4,
-    title: "Conversoin of Chinese",
-    value: "convertChinese",
-    option: [
-      "Default",
-      "Simplified To Traditional",
-      "Traditional To Simplified",
-    ],
-  },
+  // {
+  //   id: 3,
+  //   title: "Conversoin of Chinese",
+  //   value: "convertChinese",
+  //   option: [
+  //     "Default",
+  //     "Simplified To Traditional",
+  //     "Traditional To Simplified",
+  //   ],
+  // },
 ];
 export const speedList = {
   id: 3,
