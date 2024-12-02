@@ -30,14 +30,11 @@ class styleUtil {
   }
   // get default css for iframe
   static getDefaultCss() {
-    const useAltCss = StorageUtil.getReaderConfig("useAltCss") === "true";
-
-    return `::selection{background:#f3a6a68c}::-moz-selection{background:#f3a6a68c}.kookit-note:hover{cursor:pointer;}img{max-width:100% !important}.kookit-text{${useAltCss ? this.getCustomAltCss() : this.getCustomCss()}}code,pre{white-space: pre-wrap;}`;
+    // const useAltCss = StorageUtil.getReaderConfig("useAltCss") === "true";
+    // useAltCss ? this.getCustomAltCss() :
+    return `::selection{background:#f3a6a68c}::-moz-selection{background:#f3a6a68c}.kookit-note:hover{cursor:pointer;}img{max-width:100% !important}.kookit-text{${this.getCustomCss()}}code,pre{white-space: pre-wrap;}`;
   }
 
-  commonCustomCss() {
-    return
-  }
 
   //force horionztal writing mode
   static getCustomCss() {

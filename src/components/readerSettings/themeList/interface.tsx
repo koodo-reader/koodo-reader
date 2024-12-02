@@ -1,7 +1,7 @@
 export interface ThemeListProps {
   t: (title: string) => string;
   renderBookFunc: () => void;
-
+  renderBookWithLineColors: () => void
 }
 
 export interface ThemeListState {

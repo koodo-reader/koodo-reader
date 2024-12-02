@@ -1,5 +1,5 @@
 import React from "react";
-import { backgroundList, textList, lines } from "../../../constants/themeList";
+import { backgroundList, textList } from "../../../constants/themeList";
 import StyleUtil from "../../../utils/readUtils/styleUtil";
 import "./themeList.css";
 import { Trans } from "react-i18next";
@@ -9,8 +9,8 @@ import { Panel as ColorPickerPanel } from "rc-color-picker";
 import "rc-color-picker/assets/index.css";
 import ThemeUtil from "../../../utils/readUtils/themeUtil";
 import BookUtil from "../../../utils/fileUtils/bookUtil";
-import { getIframeDoc } from "../../../utils/serviceUtils/docUtil";
-import styleUtil from "../../../utils/readUtils/styleUtil";
+
+
 
 
 
@@ -93,8 +93,10 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
     }
     this.setState({ isShowBgPicker });
   };
-  handleChooseTextColor = (color, useAltCss: boolean) => {
-    StorageUtil.setReaderConfig("useAltCss", useAltCss.toString());
+  handleChooseTextColor = (color, changeColorsTriggered: boolean) => {
+    StorageUtil.setReaderConfig("changeColorsTriggered", changeColorsTriggered.toString());
+    const event = new Event('localStorageChange');
+    window.dispatchEvent(event);
     if (typeof color !== "object") {
       this.setState({
         currentTextIndex: textList
@@ -107,27 +109,11 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
       typeof color === "object" ? color.color : color
     );
     this.props.renderBookFunc();
+
   };
 
-  applyDynamicStyles = () => {
-    let doc = getIframeDoc();
 
-    if (!doc) {
-      console.error("document introuvable");
-      return;
-    }
-
-    // Injecter les styles globaux dynamiquement
-    const styleElement = doc.querySelector("#dynamic-line-colors") || doc.createElement("style");
-    styleElement.id = "dynamic-line-colors";
-
-    // Récupérer les styles de getCustomAltCss
-    const styles = styleUtil.getCustomAltCss();
-    styleElement.textContent = styles;
-    doc.head.appendChild(styleElement);
-
-  }
-  handleChooseLineColor = (isButtonClicked, colors: string[], useAltCss: boolean) => {
+  handleChooseLineColor = (isButtonClicked, colors: string[]) => {
 
     const colorsJSON = JSON.stringify(colors);
 
@@ -136,16 +122,20 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
     } else {
       StorageUtil.setReaderConfig("lineColors", '');
     }
-    StorageUtil.setReaderConfig("useAltCss", useAltCss.toString());
-    if (isButtonClicked) {
 
-      this.applyDynamicStyles();
-      this.props.renderBookFunc();
+    if (isButtonClicked) {
+      //this.props.renderBookFunc();
     }
     this.setState({ isButtonClicked: false });
   }
 
 
+  handleClick = (changeColorsTriggered: boolean) => {
+    StorageUtil.setReaderConfig("changeColorsTriggered", changeColorsTriggered.toString());
+    const event = new Event('localStorageChange');
+    window.dispatchEvent(event);
+    this.props.renderBookWithLineColors();
+  };
 
   render() {
     const renderBackgroundColorList = () => {
@@ -267,15 +257,15 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
         </div>
         <div className="grp-btn-change-color-line">
           <button
-            id="<btn-change-color>"
-            onClick={() => this.handleChooseLineColor(!this.state.isButtonClicked, lines, true)}
+            id="btn-change-color"
+            onClick={() => this.handleClick(true)}
             className="btn-style"
           >
             A+
           </button>
 
           <button
-            onClick={() => this.handleChooseLineColor(!this.state.isButtonClicked, [""], true)}
+            onClick={() => this.handleChooseLineColor(!this.state.isButtonClicked, [""])}
             className="btn--reset-style"
           >
             A-

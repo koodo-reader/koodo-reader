@@ -53,8 +53,10 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       pageWidth: "",
       chapter: "",
       rendition: null,
+      isColorChanged: StorageUtil.getReaderConfig("changeColorsTriggered") === "true"
     };
     this.lock = false;
+
   }
   UNSAFE_componentWillMount() {
     this.props.handleFetchBookmarks();
@@ -63,27 +65,45 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
   }
   componentDidMount() {
     window.rangy.init();
-    this.handleRenderBook();
-
+    // this.handleRenderBook();
+    // this.handleRenderBookWithLinesColor();
     //make sure page width is always 12 times, section = Math.floor(element.clientWidth / 12), or text will be blocked
     this.handlePageWidth();
-    this.props.handleRenderBookFunc(this.handleRenderBook);
-
-
+    // this.props.handleRenderBookFunc(this.handleRenderBook);
     window.addEventListener("resize", () => {
       BookUtil.reloadBooks();
     });
 
+    window.addEventListener("localStorageChange", this.handleLocalStorageChange);
+
+    const changeColorsTriggered = StorageUtil.getReaderConfig("changeColorsTriggered") === "true";
+
+    this.handleChangeStyle(changeColorsTriggered)
+    console.log("is colored ", this.state.isColorChanged)
 
   }
+
   componentWillUnmount() {
-    if (this.observer) {
-      this.observer.disconnect();
-      this.observer = null;
-    }
+
+    window.removeEventListener("localStorageChange", this.handleLocalStorageChange);
   }
+  handleChangeStyle = (changeColorsTriggered: boolean) => {
+    if (changeColorsTriggered) {
+      this.handleRenderBookWithLinesColor();
+      this.props.handleRenderBookWithLinesColoredFunc(this.handleRenderBookWithLinesColor);
+    } else {
+      this.handleRenderBook();
+      this.props.handleRenderBookFunc(this.handleRenderBook);
+    }
 
+  };
 
+  handleLocalStorageChange = () => {
+    const changeColorsTriggered = StorageUtil.getReaderConfig("changeColorsTriggered") === "true";
+    this.setState({ isColorChanged: changeColorsTriggered }, () => {
+      this.handleChangeStyle(this.state.isColorChanged);
+    });
+  };
 
   handlePageWidth = () => {
     const findValidMultiple = (limit: number) => {
@@ -154,6 +174,49 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     this.props.handleOpenMenu(true);
   };
 
+  handleRenderBookWithLinesColor = async () => {
+    if (lock) return;
+    const { key, path, format, name } = this.props.currentBook;
+
+    try {
+      let isCacheExsit = await BookUtil.isBookExist("cache-" + key, path);
+      BookUtil.fetchBook(isCacheExsit ? "cache-" + key : key, true, path).then(
+        async (result: any) => {
+          if (!result) {
+            toast.error(this.props.t("Book not exsit"));
+            return;
+          }
+
+          let rendition = BookUtil.getRendtion(
+            result,
+            isCacheExsit ? "CACHE" : format,
+            this.state.readerMode,
+            this.props.currentBook.charset,
+            StorageUtil.getReaderConfig("isSliding") === "yes" ? "sliding" : ""
+          );
+          await rendition.renderTo(
+            document.getElementsByClassName("html-viewer-page")[0]
+
+          );
+
+          this.changeSentenceColors(rendition);
+          await this.handleRest(rendition);
+
+          rendition.on("rendered", () => {
+            console.log("render new content ")
+            this.changeSentenceColors(rendition);
+          })
+
+          this.props.handleReadingState(true);
+
+          RecentBooks.setRecent(this.props.currentBook.key);
+          document.title = name + " - Koodo Reader";
+        }
+      );
+    } catch (error) {
+      console.error("Erreur lors du traitement du livre :", error);
+    }
+  };
 
 
 
@@ -172,6 +235,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           toast.error(this.props.t("Book not exsit"));
           return;
         }
+
         let rendition = BookUtil.getRendtion(
           result,
           isCacheExsit ? "CACHE" : format,
@@ -179,17 +243,84 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           this.props.currentBook.charset,
           StorageUtil.getReaderConfig("isSliding") === "yes" ? "sliding" : ""
         );
-
         await rendition.renderTo(
           document.getElementsByClassName("html-viewer-page")[0]
+
         );
+
+        this.setState({
+          isColorChanged: false
+        });
         await this.handleRest(rendition);
+
         this.props.handleReadingState(true);
 
         RecentBooks.setRecent(this.props.currentBook.key);
         document.title = name + " - Cartable Fantastique Reader";
       }
     );
+  };
+
+
+
+
+  changeSentenceColors = (rendition) => {
+    if (!rendition) return;
+    const iframe = rendition.element?.querySelector("iframe");
+    if (!iframe) {
+      console.error("Impossible de trouver l'iframe dans rendition.element");
+      return;
+    }
+
+    // Accédez au contenu du document de l'iframe
+    const doc = iframe.contentDocument || iframe.contentWindow?.document;
+    if (!doc) {
+      console.error("Impossible d'accéder au contenu de l'iframe");
+      return;
+    }
+    console.log("doc", doc)
+
+    const randomColors = StorageUtil.getReaderConfig("readerColors") || "[]";
+    const colors = JSON.parse(randomColors);
+
+    // Parcourir tous les paragraphes et changer les couleurs des phrases
+
+    const paragraphs = doc.querySelectorAll("p.kookit-text");
+    paragraphs.forEach((p) => {
+      let colorIndex = 0;
+      // Découper le texte en phrases
+      const sentences = p.textContent?.split(/(?<=\.)/g) || []; // Divise le texte par les points
+      // Remplacer le contenu HTML des paragraphes par des phrases colorées
+      p.innerHTML = sentences
+        .map(
+          (sentence) => {
+            const color = colors[colorIndex % colors.length];
+            colorIndex++;
+
+            return `<span style="color: #${color}">${sentence}</span>`;
+          }
+        )
+        .join("");
+    });
+    ;
+
+  }
+
+  // Générer une couleur aléatoire
+  getRandomColor = () => {
+    const letters = "0123456789ABCDEF";
+    let color = "";
+    for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+
+    let colors = JSON.parse(StorageUtil.getReaderConfig("readerColors") || "[]");
+
+    if (!colors.includes(color)) {
+      colors.push(color);
+      StorageUtil.setReaderConfig("readerColors", JSON.stringify(colors));
+    }
+
   };
 
 
@@ -203,14 +334,15 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     let chapters = rendition.getChapter();
     let chapterDocs = rendition.getChapterDoc();
     let flattenChapters = rendition.flatChapter(chapters);
+
     this.props.handleHtmlBook({
       key: this.props.currentBook.key,
       chapters,
       flattenChapters,
       rendition: rendition,
     });
-    this.setState({ rendition });
 
+    this.setState({ rendition });
     StyleUtil.addDefaultCss();
     tsTransform();
     binicReadingProcess();
@@ -225,6 +357,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       cfi: string;
       page: string;
     } = RecordLocation.getHtmlLocation(this.props.currentBook.key);
+
     if (chapterDocs.length > 0) {
       await rendition.goToPosition(
         JSON.stringify({
@@ -241,7 +374,9 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           isFirst: true,
         })
       );
+
     }
+
 
     rendition.on("rendered", () => {
       this.handleLocation();
@@ -264,6 +399,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       } else {
         chapterDocIndex =
           bookLocation.chapterTitle && this.props.htmlBook
+
             ? window._.findLastIndex(
               this.props.htmlBook.flattenChapters.map((item) => {
                 item.label = item.label.trim();

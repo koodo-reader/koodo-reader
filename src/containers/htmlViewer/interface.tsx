@@ -14,6 +14,7 @@ export interface ViewerProps {
   isShow: boolean;
   isOpenMenu: boolean;
   handleRenderBookFunc: (renderBookFunc: () => void) => void;
+  handleRenderBookWithLinesColoredFunc: (renderBookWithLineColorsFunc: () => void) => void;
   renderNoteFunc: () => void;
   t: (title: string) => string;
   handleReadingState: (isReading: boolean) => void;
@@ -49,5 +50,6 @@ export interface ViewerState {
   contents: any;
   rect: any;
   rendition: any;
+  isColorChanged: boolean;
 
 }
