@@ -1,5 +1,4 @@
 import ConfigService from "../service/configService";
-import RecordLocation from "./recordLocation";
 import { isElectron } from "react-device-detect";
 import { getIframeDoc, getIframeWin } from "./docUtil";
 import { handleExitFullScreen, handleFullScreen } from "../common";
@@ -105,17 +104,7 @@ const gesture = async (rendition: any, type: string) => {
 
 const handleLocation = (key: string, rendition: any) => {
   let position = rendition.getPosition();
-  RecordLocation.recordHtmlLocation(
-    key,
-    position.text,
-    position.chapterTitle,
-    position.chapterDocIndex,
-    position.chapterHref,
-    position.count,
-    position.percentage,
-    position.cfi,
-    position.page
-  );
+  ConfigService.setObjectConfig(key, position, "recordLocation");
 };
 export const scrollChapter = async (
   element: any,

@@ -3,13 +3,13 @@ import "./popupNote.css";
 import Note from "../../../models/Note";
 
 import { PopupNoteProps, PopupNoteState } from "./interface";
-import RecordLocation from "../../../utils/reader/recordLocation";
 import NoteTag from "../../noteTag";
 import NoteModel from "../../../models/Note";
 import { Trans } from "react-i18next";
 import toast from "react-hot-toast";
 import { getIframeDoc } from "../../../utils/reader/docUtil";
 import NoteService from "../../../utils/service/noteService";
+import ConfigService from "../../../utils/service/configService";
 declare var window: any;
 
 class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
@@ -58,7 +58,11 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
     let notes = (document.querySelector(".editor-box") as HTMLInputElement)
       .value;
     let cfi = JSON.stringify(
-      RecordLocation.getHtmlLocation(this.props.currentBook.key)
+      ConfigService.getObjectConfig(
+        this.props.currentBook.key,
+        "recordLocation",
+        {}
+      )
     );
 
     if (this.props.noteKey) {
@@ -88,10 +92,16 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
         )
       );
 
-      let percentage = RecordLocation.getHtmlLocation(
-        this.props.currentBook.key
+      let percentage = ConfigService.getObjectConfig(
+        this.props.currentBook.key,
+        "recordLocation",
+        {}
       ).percentage
-        ? RecordLocation.getHtmlLocation(this.props.currentBook.key).percentage
+        ? ConfigService.getObjectConfig(
+            this.props.currentBook.key,
+            "recordLocation",
+            {}
+          ).percentage
         : "0";
 
       let color = this.props.color || 0;

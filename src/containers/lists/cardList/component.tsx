@@ -4,7 +4,6 @@ import NoteModel from "../../../models/Note";
 import { Trans } from "react-i18next";
 import { CardListProps, CardListStates } from "./interface";
 import DeleteIcon from "../../../components/deleteIcon";
-import RecordLocation from "../../../utils/reader/recordLocation";
 import { withRouter } from "react-router-dom";
 import SortUtil from "../../../utils/reader/sortUtil";
 import { Redirect } from "react-router-dom";
@@ -12,6 +11,7 @@ import NoteTag from "../../../components/noteTag";
 import BookUtil from "../../../utils/file/bookUtil";
 import toast from "react-hot-toast";
 import BookModel from "../../../models/Book";
+import ConfigService from "../../../utils/service/configService";
 class CardList extends React.Component<CardListProps, CardListStates> {
   constructor(props: CardListProps) {
     super(props);
@@ -53,17 +53,7 @@ class CardList extends React.Component<CardListProps, CardListStates> {
       bookLocation.cfi = note.cfi;
       bookLocation.chapterTitle = note.chapter;
     }
-    RecordLocation.recordHtmlLocation(
-      note.bookKey,
-      bookLocation.text,
-      bookLocation.chapterTitle,
-      bookLocation.chapterDocIndex,
-      bookLocation.chapterHref,
-      bookLocation.count,
-      bookLocation.percentage,
-      bookLocation.cfi,
-      bookLocation.page
-    );
+    ConfigService.setObjectConfig(note.bookKey, bookLocation, "recordLocation");
 
     BookUtil.redirectBook(book, this.props.t);
   };

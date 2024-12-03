@@ -1,8 +1,6 @@
 import BookModel from "../../models/Book";
 import NoteModel from "../../models/Note";
-import ReadingTime from "./readingTime";
-import RecordLocation from "./recordLocation";
-import RecordRecent from "./recordRecent";
+import ConfigService from "../service/configService";
 declare var window: any;
 const getBookName = (books: BookModel[]) => {
   return books.map((item) => item.name);
@@ -46,7 +44,7 @@ const getBookIndex = (nameArr: string[], oldNameArr: string[]) => {
   ];
 };
 const getDurationArr = () => {
-  let durationObj = ReadingTime.getAllTime();
+  let durationObj = ConfigService.getAllObjectConfig("readingTime");
   var sortable: any[] = [];
   for (let obj in durationObj) {
     sortable.push([obj, durationObj[obj]]);
@@ -57,7 +55,7 @@ const getDurationArr = () => {
   return Object.keys(durationObj);
 };
 const getPercentageArr = () => {
-  let locationObj = RecordLocation.getAllHtmlLocation();
+  let locationObj = ConfigService.getAllObjectConfig("recordLocation");
   var sortable: any = [];
   for (let obj in locationObj) {
     sortable.push([obj, locationObj[obj].percentage || 0]);
@@ -73,7 +71,7 @@ class SortUtil {
     bookSortCode: { sort: number; order: number }
   ) {
     let oldRecentArr = books.map((item) => item.key);
-    let recentArr = RecordRecent.getAllRecent();
+    let recentArr = ConfigService.getAllListConfig("recentBooks");
     if (bookSortCode.sort === 1 || bookSortCode.sort === 0) {
       if (bookSortCode.order === 1) {
         return getBookIndex(recentArr, oldRecentArr).reverse();

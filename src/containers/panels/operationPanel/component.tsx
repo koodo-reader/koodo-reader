@@ -3,10 +3,8 @@ import "./operationPanel.css";
 import Bookmark from "../../../models/Bookmark";
 import { Trans } from "react-i18next";
 
-import RecordLocation from "../../../utils/reader/recordLocation";
 import { OperationPanelProps, OperationPanelState } from "./interface";
 import ConfigService from "../../../utils/service/configService";
-import ReadingTime from "../../../utils/reader/readingTime";
 import { withRouter } from "react-router-dom";
 import toast from "react-hot-toast";
 import { HtmlMouseEvent } from "../../../utils/reader/mouseEvent";
@@ -29,10 +27,16 @@ class OperationPanel extends React.Component<
     this.state = {
       isBookmark: false,
       time: 0,
-      currentPercentage: RecordLocation.getHtmlLocation(
-        this.props.currentBook.key
+      currentPercentage: ConfigService.getObjectConfig(
+        this.props.currentBook.key,
+        "recordLocation",
+        {}
       )
-        ? RecordLocation.getHtmlLocation(this.props.currentBook.key).percentage
+        ? ConfigService.getObjectConfig(
+            this.props.currentBook.key,
+            "recordLocation",
+            {}
+          ).percentage
         : 0,
       timeLeft: 0,
     };
@@ -77,7 +81,11 @@ class OperationPanel extends React.Component<
     this.props.handleSearch(false);
     window.speechSynthesis && window.speechSynthesis.cancel();
     TTSUtil.pauseAudio();
-    ReadingTime.setTime(this.props.currentBook.key, this.props.time);
+    ConfigService.setObjectConfig(
+      this.props.currentBook.key,
+      this.props.time,
+      "readingTime"
+    );
     handleExitFullScreen();
     if (this.props.htmlBook) {
       this.props.handleHtmlBook(null);
@@ -95,7 +103,11 @@ class OperationPanel extends React.Component<
   }
   handleAddBookmark = async () => {
     let bookKey = this.props.currentBook.key;
-    let bookLocation = RecordLocation.getHtmlLocation(bookKey);
+    let bookLocation = ConfigService.getObjectConfig(
+      bookKey,
+      "recordLocation",
+      {}
+    );
     let text = bookLocation.text;
     let chapter = bookLocation.chapterTitle;
     let percentage = bookLocation.percentage;
@@ -134,7 +146,11 @@ class OperationPanel extends React.Component<
       chapterHref: string;
       percentage: string;
       cfi: string;
-    } = RecordLocation.getHtmlLocation(this.props.currentBook.key);
+    } = ConfigService.getObjectConfig(
+      this.props.currentBook.key,
+      "recordLocation",
+      {}
+    );
     this.props.bookmarks.forEach((item) => {
       if (item.cfi === JSON.stringify(bookLocation)) {
         this.props.handleShowBookmark(true);

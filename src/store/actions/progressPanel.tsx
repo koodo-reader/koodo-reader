@@ -1,5 +1,5 @@
-import RecordLocation from "../../utils/reader/recordLocation";
 import BookModel from "../../models/Book";
+import ConfigService from "../../utils/service/configService";
 export function handleLocations(locations: any) {
   return { type: "HANDLE_LOCATIONS", payload: locations };
 }
@@ -8,7 +8,9 @@ export function handlePercentage(percentage: number) {
 }
 export function handleFetchPercentage(book: BookModel) {
   return (dispatch: (arg0: { type: string; payload: any }) => void) => {
-    let percentage = RecordLocation.getHtmlLocation(book.key).percentage || 0;
+    let percentage =
+      ConfigService.getObjectConfig(book.key, "recordLocation", {})
+        .percentage || 0;
 
     dispatch(handlePercentage(percentage));
   };

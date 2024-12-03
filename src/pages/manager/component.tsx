@@ -11,7 +11,6 @@ import "./manager.css";
 import { ManagerProps, ManagerState } from "./interface";
 import { Trans } from "react-i18next";
 import ConfigService from "../../utils/service/configService";
-import AddFavorite from "../../utils/reader/addFavorite";
 import SettingDialog from "../../components/dialogs/settingDialog";
 import { isMobile } from "react-device-detect";
 import { Route, Switch, Redirect } from "react-router-dom";
@@ -29,7 +28,9 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
     super(props);
     this.state = {
       totalBooks: parseInt(ConfigService.getReaderConfig("totalBooks")) || 0,
-      favoriteBooks: Object.keys(AddFavorite.getAllFavorite()).length,
+      favoriteBooks: Object.keys(
+        ConfigService.getAllListConfig("favoriteBooks")
+      ).length,
       isAuthed: false,
       isError: false,
       isCopied: false,
@@ -58,7 +59,9 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
     }
     if (this.props.mode !== nextProps.mode) {
       this.setState({
-        favoriteBooks: Object.keys(AddFavorite.getAllFavorite()).length,
+        favoriteBooks: Object.keys(
+          ConfigService.getAllListConfig("favoriteBooks")
+        ).length,
       });
     }
   }

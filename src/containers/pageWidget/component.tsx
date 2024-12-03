@@ -3,7 +3,6 @@ import "./background.css";
 import { BackgroundProps, BackgroundState } from "./interface";
 import ConfigService from "../../utils/service/configService";
 import { Trans } from "react-i18next";
-import RecordLocation from "../../utils/reader/recordLocation";
 class Background extends React.Component<BackgroundProps, BackgroundState> {
   isFirst: Boolean;
   constructor(props: any) {
@@ -32,16 +31,10 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
   }
   handleLocation = () => {
     let position = this.props.htmlBook.rendition.getPosition();
-    RecordLocation.recordHtmlLocation(
+    ConfigService.setObjectConfig(
       this.props.currentBook.key,
-      position.text,
-      position.chapterTitle,
-      position.chapterDocIndex,
-      position.chapterHref,
-      position.count,
-      position.percentage,
-      position.cfi,
-      position.page
+      position,
+      "recordLocation"
     );
   };
   async handlePageNum(rendition) {

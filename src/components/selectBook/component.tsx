@@ -1,5 +1,4 @@
 import React from "react";
-import AddFavorite from "../../utils/reader/addFavorite";
 import BookModel from "../../models/Book";
 import "./selectBook.css";
 import { Trans } from "react-i18next";
@@ -25,7 +24,9 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
     this.state = {
       isOpenDelete: false,
       isShowExport: false,
-      favoriteBooks: Object.keys(AddFavorite.getAllFavorite()).length,
+      favoriteBooks: Object.keys(
+        ConfigService.getAllListConfig("favoriteBooks")
+      ).length,
     };
   }
   handleFilterShelfBook = (items: BookModel[]) => {
@@ -88,11 +89,14 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
                       this.props.selectedBooks.indexOf(item.key) > -1
                   ).length > 0
                 ) {
-                  AddFavorite.setFavorites(
-                    this.props.books.filter(
-                      (item: BookModel) =>
-                        this.props.selectedBooks.indexOf(item.key) > -1
-                    )
+                  ConfigService.setAllListConfig(
+                    this.props.books
+                      .filter(
+                        (item: BookModel) =>
+                          this.props.selectedBooks.indexOf(item.key) > -1
+                      )
+                      .map((item: BookModel) => item.key),
+                    "favoriteBooks"
                   );
                   this.props.handleSelectBook(!this.props.isSelectBook);
                   if (this.props.isSelectBook) {

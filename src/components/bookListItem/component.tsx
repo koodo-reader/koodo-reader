@@ -1,13 +1,9 @@
 import React from "react";
 import "./bookListItem.css";
-import RecordLocation from "../../utils/reader/recordLocation";
 import { BookItemProps, BookItemState } from "./interface";
 import { Trans } from "react-i18next";
-import AddFavorite from "../../utils/reader/addFavorite";
 import { withRouter } from "react-router-dom";
-import RecentBooks from "../../utils/reader/recordRecent";
 import ConfigService from "../../utils/service/configService";
-import AddTrash from "../../utils/reader/addTrash";
 import EmptyCover from "../emptyCover";
 import BookUtil from "../../utils/file/bookUtil";
 import ActionDialog from "../dialogs/actionDialog";
@@ -21,7 +17,9 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
     this.state = {
       isDeleteDialog: false,
       isFavorite:
-        AddFavorite.getAllFavorite().indexOf(this.props.book.key) > -1,
+        ConfigService.getAllListConfig("favoriteBooks").indexOf(
+          this.props.book.key
+        ) > -1,
       direction: "horizontal",
       left: 0,
       top: 0,
@@ -37,7 +35,8 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
     }
     if (
       ConfigService.getReaderConfig("isOpenBook") === "yes" &&
-      RecentBooks.getAllRecent()[0] === this.props.book.key &&
+      ConfigService.getAllListConfig("recentBooks")[0] ===
+        this.props.book.key &&
       !this.props.currentBook.key &&
       !filePath
     ) {
@@ -49,7 +48,9 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
     if (nextProps.book.key !== this.props.book.key) {
       this.setState({
         isFavorite:
-          AddFavorite.getAllFavorite().indexOf(nextProps.book.key) > -1,
+          ConfigService.getAllListConfig("favoriteBooks").indexOf(
+            nextProps.book.key
+          ) > -1,
       });
     }
   }
@@ -66,12 +67,12 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
     this.props.handleReadingBook(this.props.book);
   };
   handleLoveBook = () => {
-    AddFavorite.setFavorite(this.props.book.key);
+    ConfigService.setListConfig(this.props.book.key, "favoriteBooks");
     this.setState({ isFavorite: true });
     toast.success(this.props.t("Addition successful"));
   };
   handleRestoreBook = () => {
-    AddTrash.clear(this.props.book.key);
+    ConfigService.deleteListConfig(this.props.book.key, "deletedBooks");
     toast.success(this.props.t("Restore successful"));
     this.props.handleFetchBooks();
   };
@@ -86,7 +87,7 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
       );
       return;
     }
-    RecentBooks.setRecent(this.props.book.key);
+    ConfigService.setListConfig(this.props.book.key, "recentBooks");
     this.props.handleReadingBook(this.props.book);
     BookUtil.redirectBook(this.props.book, this.props.t);
   };
@@ -131,11 +132,18 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
     let percentage = "0";
 
     if (
-      RecordLocation.getHtmlLocation(this.props.book.key) &&
-      RecordLocation.getHtmlLocation(this.props.book.key).percentage
+      ConfigService.getObjectConfig(
+        this.props.book.key,
+        "recordLocation",
+        {}
+      ) &&
+      ConfigService.getObjectConfig(this.props.book.key, "recordLocation", {})
+        .percentage
     ) {
-      percentage = RecordLocation.getHtmlLocation(
-        this.props.book.key
+      percentage = ConfigService.getObjectConfig(
+        this.props.book.key,
+        "recordLocation",
+        {}
       ).percentage;
     }
 

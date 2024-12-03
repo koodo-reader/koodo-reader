@@ -2,7 +2,6 @@ import React from "react";
 import "./contentList.css";
 import { ContentListProps, ContentListState } from "./interface";
 import ConfigService from "../../../utils/service/configService";
-import RecordLocation from "../../../utils/reader/recordLocation";
 import { scrollContents } from "../../../utils/common";
 
 class ContentList extends React.Component<ContentListProps, ContentListState> {
@@ -30,7 +29,11 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
             chapterTitle: string;
             chapterDocIndex: string;
             chapterHref: string;
-          } = RecordLocation.getHtmlLocation(this.props.currentBook.key);
+          } = ConfigService.getObjectConfig(
+            this.props.currentBook.key,
+            "recordLocation",
+            {}
+          );
 
           let chapter =
             bookLocation.chapterTitle ||
@@ -66,7 +69,11 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
       percentage: string;
       cfi: string;
       page: string;
-    } = RecordLocation.getHtmlLocation(this.props.currentBook.key);
+    } = ConfigService.getObjectConfig(
+      this.props.currentBook.key,
+      "recordLocation",
+      {}
+    );
     const renderContentList = (items: any, level: number) => {
       level++;
       return items.map((item: any, index: number) => {

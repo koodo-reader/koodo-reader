@@ -4,8 +4,6 @@ import "./popupOption.css";
 import Note from "../../../models/Note";
 import { PopupOptionProps } from "./interface";
 import ColorOption from "../../colorOption";
-import RecordLocation from "../../../utils/reader/recordLocation";
-
 import { popupList } from "../../../constants/popupList";
 import ConfigService from "../../../utils/service/configService";
 import toast from "react-hot-toast";
@@ -43,12 +41,23 @@ class PopupOption extends React.Component<PopupOptionProps> {
   handleDigest = async () => {
     let bookKey = this.props.currentBook.key;
     let cfi = JSON.stringify(
-      RecordLocation.getHtmlLocation(this.props.currentBook.key)
+      ConfigService.getObjectConfig(
+        this.props.currentBook.key,
+        "recordLocation",
+        {}
+      )
     );
 
-    let percentage = RecordLocation.getHtmlLocation(this.props.currentBook.key)
-      .percentage
-      ? RecordLocation.getHtmlLocation(this.props.currentBook.key).percentage
+    let percentage = ConfigService.getObjectConfig(
+      this.props.currentBook.key,
+      "recordLocation",
+      {}
+    ).percentage
+      ? ConfigService.getObjectConfig(
+          this.props.currentBook.key,
+          "recordLocation",
+          {}
+        ).percentage
       : "0";
     let color = this.props.color;
     let notes = "";

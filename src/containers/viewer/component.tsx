@@ -1,11 +1,9 @@
 import React from "react";
-import RecentBooks from "../../utils/reader/recordRecent";
 import { ViewerProps, ViewerState } from "./interface";
 import { withRouter } from "react-router-dom";
 import BookUtil from "../../utils/file/bookUtil";
 import PopupMenu from "../../components/popups/popupMenu";
 import ConfigService from "../../utils/service/configService";
-import RecordLocation from "../../utils/reader/recordLocation";
 import Background from "../../components/background";
 import toast from "react-hot-toast";
 import StyleUtil from "../../utils/reader/styleUtil";
@@ -35,15 +33,21 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       isFirst: true,
       scale: ConfigService.getReaderConfig("scale") || 1,
       chapterTitle:
-        RecordLocation.getHtmlLocation(this.props.currentBook.key)
-          .chapterTitle || "",
+        ConfigService.getObjectConfig(
+          this.props.currentBook.key,
+          "recordLocation",
+          {}
+        ).chapterTitle || "",
       readerMode: ConfigService.getReaderConfig("readerMode") || "double",
       isDisablePopup: ConfigService.getReaderConfig("isDisablePopup") === "yes",
       isTouch: ConfigService.getReaderConfig("isTouch") === "yes",
       margin: parseInt(ConfigService.getReaderConfig("margin")) || 0,
       chapterDocIndex: parseInt(
-        RecordLocation.getHtmlLocation(this.props.currentBook.key)
-          .chapterDocIndex || 0
+        ConfigService.getObjectConfig(
+          this.props.currentBook.key,
+          "recordLocation",
+          {}
+        ).chapterDocIndex || 0
       ),
       pageOffset: "",
       pageWidth: "",
@@ -169,7 +173,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       await this.handleRest(rendition);
       this.props.handleReadingState(true);
 
-      RecentBooks.setRecent(this.props.currentBook.key);
+      ConfigService.setListConfig(this.props.currentBook.key, "recentBooks");
       document.title = name + " - Koodo Reader";
     });
   };
@@ -204,7 +208,11 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       percentage: string;
       cfi: string;
       page: string;
-    } = RecordLocation.getHtmlLocation(this.props.currentBook.key);
+    } = ConfigService.getObjectConfig(
+      this.props.currentBook.key,
+      "recordLocation",
+      {}
+    );
     if (chapterDocs.length > 0) {
       await rendition.goToPosition(
         JSON.stringify({
@@ -231,7 +239,11 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         chapterTitle: string;
         chapterDocIndex: string;
         chapterHref: string;
-      } = RecordLocation.getHtmlLocation(this.props.currentBook.key);
+      } = ConfigService.getObjectConfig(
+        this.props.currentBook.key,
+        "recordLocation",
+        {}
+      );
 
       let chapter =
         bookLocation.chapterTitle ||
@@ -281,16 +293,10 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       return;
     }
     let position = this.props.htmlBook.rendition.getPosition();
-    RecordLocation.recordHtmlLocation(
+    ConfigService.setObjectConfig(
       this.props.currentBook.key,
-      position.text,
-      position.chapterTitle,
-      position.chapterDocIndex,
-      position.chapterHref,
-      position.count,
-      position.percentage,
-      position.cfi,
-      position.page
+      position,
+      "recordLocation"
     );
   };
   handleBindGesture = () => {

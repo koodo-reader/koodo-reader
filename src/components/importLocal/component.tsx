@@ -6,7 +6,6 @@ import { Trans } from "react-i18next";
 import Dropzone from "react-dropzone";
 
 import { ImportLocalProps, ImportLocalState } from "./interface";
-import RecordRecent from "../../utils/reader/recordRecent";
 import { isElectron } from "react-device-detect";
 import { withRouter } from "react-router-dom";
 import BookUtil from "../../utils/file/bookUtil";
@@ -109,7 +108,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
       }
 
       this.props.handleReadingBook(book);
-      RecordRecent.setRecent(book.key);
+      ConfigService.setListConfig(book.key, "recentBooks");
       BookService.saveBook(book)
         .then(() => {
           this.props.handleFetchBooks();

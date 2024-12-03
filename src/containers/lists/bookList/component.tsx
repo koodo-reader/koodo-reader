@@ -3,7 +3,6 @@ import "./booklist.css";
 import BookCardItem from "../../../components/bookCardItem";
 import BookListItem from "../../../components/bookListItem";
 import BookCoverItem from "../../../components/bookCoverItem";
-import AddFavorite from "../../../utils/reader/addFavorite";
 import ShelfUtil from "../../../utils/reader/shelfUtil";
 import SortUtil from "../../../utils/reader/sortUtil";
 import BookModel from "../../../models/Book";
@@ -21,7 +20,9 @@ class BookList extends React.Component<BookListProps, BookListState> {
     super(props);
     this.state = {
       isOpenDelete: false,
-      favoriteBooks: Object.keys(AddFavorite.getAllFavorite()).length,
+      favoriteBooks: Object.keys(
+        ConfigService.getAllListConfig("favoriteBooks")
+      ).length,
       isHideShelfBook:
         ConfigService.getReaderConfig("isHideShelfBook") === "yes",
       isRefreshing: false,
@@ -93,11 +94,14 @@ class BookList extends React.Component<BookListProps, BookListState> {
         )
       : this.props.mode === "favorite"
       ? this.handleIndexFilter(
-          this.handleKeyFilter(this.props.books, AddFavorite.getAllFavorite()),
+          this.handleKeyFilter(
+            this.props.books,
+            ConfigService.getAllListConfig("favoriteBooks")
+          ),
           SortUtil.sortBooks(
             this.handleKeyFilter(
               this.props.books,
-              AddFavorite.getAllFavorite()
+              ConfigService.getAllListConfig("favoriteBooks")
             ),
             this.props.bookSortCode
           ) || []
