@@ -6,10 +6,8 @@ import { Toaster } from "react-hot-toast";
 import ProgressPanel from "../../containers/panels/progressPanel";
 import { ReaderProps, ReaderState } from "./interface";
 import ConfigService from "../../utils/service/configService";
-import ReadingTime from "../../utils/reader/readingTime";
 import Viewer from "../../containers/viewer";
 import { Tooltip } from "react-tooltip";
-import RecordLocation from "../../utils/reader/recordLocation";
 import "./index.css";
 import Book from "../../models/Book";
 import BookService from "../../utils/service/bookService";
@@ -44,12 +42,20 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         .querySelector("body")
         ?.setAttribute("style", "background-color: rgba(0,0,0,0)");
     }
-    let time = ReadingTime.getTime(this.props.currentBook.key) || 0;
+    let time = ConfigService.getObjectConfig(
+      this.props.currentBook.key,
+      "readingTime",
+      0
+    );
     this.tickTimer = setInterval(() => {
       if (this.props.currentBook.key) {
         time += 1;
         this.setState({ time });
-        ReadingTime.setTime(this.props.currentBook.key, time);
+        ConfigService.setObjectConfig(
+          this.props.currentBook.key,
+          time,
+          "readingTime"
+        );
       }
     }, 1000);
   }
@@ -125,16 +131,10 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
   handleLocation = () => {
     let position = this.props.htmlBook.rendition.getPosition();
 
-    RecordLocation.recordHtmlLocation(
+    ConfigService.setObjectConfig(
       this.props.currentBook.key,
-      position.text,
-      position.chapterTitle,
-      position.chapterDocIndex,
-      position.chapterHref,
-      position.count,
-      position.percentage,
-      position.cfi,
-      position.page
+      position,
+      "recordLocation"
     );
   };
   render() {

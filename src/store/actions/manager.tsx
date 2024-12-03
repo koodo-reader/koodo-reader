@@ -3,7 +3,6 @@ import SortUtil from "../../utils/reader/sortUtil";
 import BookModel from "../../models/Book";
 import PluginModel from "../../models/Plugin";
 import { Dispatch } from "redux";
-import AddTrash from "../../utils/reader/addTrash";
 import PluginService from "../../utils/service/pluginService";
 import BookService from "../../utils/service/bookService";
 
@@ -86,7 +85,7 @@ export function handleFetchBooks() {
   return (dispatch: Dispatch) => {
     BookService.getAllBooks().then((value) => {
       let bookArr: any = value;
-      let keyArr = AddTrash.getAllTrash();
+      let keyArr = ConfigService.getAllListConfig("deletedBooks");
       dispatch(handleDeletedBooks(handleKeyFilter(bookArr, keyArr)));
       dispatch(handleBooks(handleKeyRemove(bookArr, keyArr)));
     });
@@ -96,13 +95,6 @@ export function handleFetchBooks() {
 export function handleFetchPlugins() {
   return async (dispatch: Dispatch) => {
     PluginService.getAllPlugins().then((value) => {
-      if (!value) {
-        value =
-          localStorage.getItem("pluginList") !== "{}" &&
-          localStorage.getItem("pluginList")
-            ? JSON.parse(localStorage.getItem("pluginList") || "")
-            : [];
-      }
       dispatch(handlePlugins(value));
     });
   };

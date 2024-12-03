@@ -127,10 +127,7 @@ class BackupDialog extends React.Component<
             onClick={() => {
               //webdav is avavilible on desktop
               if (
-                (item.icon === "webdav" ||
-                  item.icon === "ftp" ||
-                  item.icon === "s3compatible" ||
-                  item.icon === "sftp") &&
+                (item.icon === "ftp" || item.icon === "sftp") &&
                 !isElectron
               ) {
                 toast(

@@ -1,13 +1,9 @@
 import React from "react";
 import "./deleteDialog.css";
 import ShelfUtil from "../../../utils/reader/shelfUtil";
-import RecordRecent from "../../../utils/reader/recordRecent";
-import RecordLocation from "../../../utils/reader/recordLocation";
-import AddFavorite from "../../../utils/reader/addFavorite";
 import { Trans } from "react-i18next";
 import { DeleteDialogProps, DeleteDialogState } from "./interface";
 import { withRouter } from "react-router-dom";
-import AddTrash from "../../../utils/reader/addTrash";
 import BookUtil from "../../../utils/file/bookUtil";
 import toast from "react-hot-toast";
 import ConfigService from "../../../utils/service/configService";
@@ -67,7 +63,7 @@ class DeleteDialog extends React.Component<
     ShelfUtil.clearShelf(this.props.shelfIndex, this.props.currentBook.key);
   };
   deleteAllBookInTrash = async () => {
-    let keyArr = AddTrash.getAllTrash();
+    let keyArr = ConfigService.getAllListConfig("deletedBooks");
     for (let i = 0; i < keyArr.length; i++) {
       let format = this.props.deletedBooks
         .find((item) => item.key === keyArr[i])
@@ -92,16 +88,16 @@ class DeleteDialog extends React.Component<
   };
   deleteSelectedBook = () => {
     this.props.selectedBooks.forEach((item) => {
-      AddTrash.setTrash(item);
-      AddFavorite.clear(item);
+      ConfigService.setListConfig(item, "deletedBooks");
+      ConfigService.deleteListConfig(item, "favoriteBooks");
     });
     this.props.handleSelectedBooks([]);
     this.props.handleFetchBooks();
     this.props.handleSelectBook(!this.props.isSelectBook);
   };
   deleteCurrentBook = () => {
-    AddTrash.setTrash(this.props.currentBook.key);
-    AddFavorite.clear(this.props.currentBook.key);
+    ConfigService.setListConfig(this.props.currentBook.key, "deletedBooks");
+    ConfigService.deleteListConfig(this.props.currentBook.key, "favoriteBooks");
     this.props.handleFetchBooks();
   };
   deleteBook = (key: string, format: string) => {
@@ -111,11 +107,11 @@ class DeleteDialog extends React.Component<
           await BookUtil.deleteBook(key, format);
           CoverUtil.deleteCover(key);
           await BookUtil.deleteBook("cache-" + key, "zip");
-          AddFavorite.clear(key);
-          AddTrash.clear(key);
+          ConfigService.deleteListConfig(key, "favoriteBooks");
+          ConfigService.deleteListConfig(key, "deletedBooks");
           ShelfUtil.deletefromAllShelf(key);
-          RecordRecent.clear(key);
-          RecordLocation.clear(key);
+          ConfigService.deleteListConfig(key, "recentBooks");
+          ConfigService.deleteObjectConfig(key, "recordLocation");
           await this.handleDeleteOther(key);
           resolve();
         })

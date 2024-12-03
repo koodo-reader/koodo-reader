@@ -1,12 +1,9 @@
 import React from "react";
-import RecentBooks from "../../utils/reader/recordRecent";
 import "./bookCoverItem.css";
 import { BookCoverProps, BookCoverState } from "./interface";
-import AddFavorite from "../../utils/reader/addFavorite";
 import ActionDialog from "../dialogs/actionDialog";
 import ConfigService from "../../utils/service/configService";
 import { withRouter } from "react-router-dom";
-import RecordLocation from "../../utils/reader/recordLocation";
 import { isElectron } from "react-device-detect";
 import EmptyCover from "../emptyCover";
 import { Trans } from "react-i18next";
@@ -20,7 +17,9 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
     super(props);
     this.state = {
       isFavorite:
-        AddFavorite.getAllFavorite().indexOf(this.props.book.key) > -1,
+        ConfigService.getAllListConfig("favoriteBooks").indexOf(
+          this.props.book.key
+        ) > -1,
       left: 0,
       top: 0,
       direction: "horizontal",
@@ -39,7 +38,8 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
 
     if (
       ConfigService.getReaderConfig("isOpenBook") === "yes" &&
-      RecentBooks.getAllRecent()[0] === this.props.book.key &&
+      ConfigService.getAllListConfig("recentBooks")[0] ===
+        this.props.book.key &&
       !this.props.currentBook.key &&
       !filePath
     ) {
@@ -51,7 +51,9 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
     if (nextProps.book.key !== this.props.book.key) {
       this.setState({
         isFavorite:
-          AddFavorite.getAllFavorite().indexOf(nextProps.book.key) > -1,
+          ConfigService.getAllListConfig("favoriteBooks").indexOf(
+            nextProps.book.key
+          ) > -1,
       });
     }
   }
@@ -82,7 +84,7 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
     this.props.handleActionDialog(false);
   };
   handleLoveBook = () => {
-    AddFavorite.setFavorite(this.props.book.key);
+    ConfigService.setListConfig(this.props.book.key, "favoriteBooks");
     this.setState({ isFavorite: true });
     toast.success(this.props.t("Addition successful"));
   };
@@ -97,7 +99,7 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
       );
       return;
     }
-    RecentBooks.setRecent(this.props.book.key);
+    ConfigService.setListConfig(this.props.book.key, "recentBooks");
     this.props.handleReadingBook(this.props.book);
     BookUtil.redirectBook(this.props.book, this.props.t);
   };
@@ -105,11 +107,18 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
     let percentage = "0";
 
     if (
-      RecordLocation.getHtmlLocation(this.props.book.key) &&
-      RecordLocation.getHtmlLocation(this.props.book.key).percentage
+      ConfigService.getObjectConfig(
+        this.props.book.key,
+        "recordLocation",
+        {}
+      ) &&
+      ConfigService.getObjectConfig(this.props.book.key, "recordLocation", {})
+        .percentage
     ) {
-      percentage = RecordLocation.getHtmlLocation(
-        this.props.book.key
+      percentage = ConfigService.getObjectConfig(
+        this.props.book.key,
+        "recordLocation",
+        {}
       ).percentage;
     }
 
@@ -150,9 +159,9 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
                 this.handleMoreAction(event);
               }}
             ></span>
-            {AddFavorite.getAllFavorite().indexOf(this.props.book.key) > -1 && (
-              <span className="icon-heart book-heart-action"></span>
-            )}
+            {ConfigService.getAllListConfig("favoriteBooks").indexOf(
+              this.props.book.key
+            ) > -1 && <span className="icon-heart book-heart-action"></span>}
           </div>
 
           <div

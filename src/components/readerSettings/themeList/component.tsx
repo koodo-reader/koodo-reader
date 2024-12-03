@@ -7,7 +7,6 @@ import { ThemeListProps, ThemeListState } from "./interface";
 import ConfigService from "../../../utils/service/configService";
 import { Panel as ColorPickerPanel } from "rc-color-picker";
 import "rc-color-picker/assets/index.css";
-import ThemeUtil from "../../../utils/reader/themeUtil";
 import BookUtil from "../../../utils/file/bookUtil";
 
 class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
@@ -15,7 +14,7 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
     super(props);
     this.state = {
       currentBackgroundIndex: backgroundList
-        .concat(ThemeUtil.getAllThemes())
+        .concat(ConfigService.getAllListConfig("themeColors"))
         .findIndex((item) => {
           return (
             item ===
@@ -24,7 +23,7 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
           );
         }),
       currentTextIndex: textList
-        .concat(ThemeUtil.getAllThemes())
+        .concat(ConfigService.getAllListConfig("themeColors"))
         .findIndex((item) => {
           return (
             item ===
@@ -58,29 +57,39 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
   handleColorTextPicker = (isShowTextPicker: boolean) => {
     if (
       !isShowTextPicker &&
-      textList.concat(ThemeUtil.getAllThemes()).findIndex((item) => {
-        return (
-          item ===
-          (ConfigService.getReaderConfig("textColor") || "rgba(0,0,0,1)")
-        );
-      }) === -1
+      textList
+        .concat(ConfigService.getAllListConfig("themeColors"))
+        .findIndex((item) => {
+          return (
+            item ===
+            (ConfigService.getReaderConfig("textColor") || "rgba(0,0,0,1)")
+          );
+        }) === -1
     ) {
-      ThemeUtil.setThemes(ConfigService.getReaderConfig("textColor"));
+      ConfigService.setListConfig(
+        ConfigService.getReaderConfig("textColor"),
+        "themeColors"
+      );
     }
     this.setState({ isShowTextPicker });
   };
   handleColorBgPicker = (isShowBgPicker: boolean) => {
     if (
       !isShowBgPicker &&
-      backgroundList.concat(ThemeUtil.getAllThemes()).findIndex((item) => {
-        return (
-          item ===
-          (ConfigService.getReaderConfig("backgroundColor") ||
-            "rgba(255,255,255,1)")
-        );
-      }) === -1
+      backgroundList
+        .concat(ConfigService.getAllListConfig("themeColors"))
+        .findIndex((item) => {
+          return (
+            item ===
+            (ConfigService.getReaderConfig("backgroundColor") ||
+              "rgba(255,255,255,1)")
+          );
+        }) === -1
     ) {
-      ThemeUtil.setThemes(ConfigService.getReaderConfig("backgroundColor"));
+      ConfigService.setListConfig(
+        ConfigService.getReaderConfig("backgroundColor"),
+        "themeColors"
+      );
     }
     this.setState({ isShowBgPicker });
   };
@@ -88,7 +97,7 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
     if (typeof color !== "object") {
       this.setState({
         currentTextIndex: textList
-          .concat(ThemeUtil.getAllThemes())
+          .concat(ConfigService.getAllListConfig("themeColors"))
           .indexOf(color),
       });
     }
@@ -101,7 +110,7 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
   render() {
     const renderBackgroundColorList = () => {
       return backgroundList
-        .concat(ThemeUtil.getAllThemes())
+        .concat(ConfigService.getAllListConfig("themeColors"))
         .map((item, index) => {
           return (
             <li
@@ -120,7 +129,7 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
                 <span
                   className="icon-close"
                   onClick={() => {
-                    ThemeUtil.clear(item);
+                    ConfigService.deleteListConfig(item, "themeColors");
                   }}
                 ></span>
               )}
@@ -129,31 +138,33 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
         });
     };
     const renderTextColorList = () => {
-      return textList.concat(ThemeUtil.getAllThemes()).map((item, index) => {
-        return (
-          <li
-            key={item + index}
-            className={
-              index === this.state.currentTextIndex
-                ? "active-color background-color-circle"
-                : "background-color-circle"
-            }
-            onClick={() => {
-              this.handleChooseTextColor(item);
-            }}
-            style={{ backgroundColor: item }}
-          >
-            {index > 3 && index === this.state.currentTextIndex && (
-              <span
-                className="icon-close"
-                onClick={() => {
-                  ThemeUtil.clear(item);
-                }}
-              ></span>
-            )}
-          </li>
-        );
-      });
+      return textList
+        .concat(ConfigService.getAllListConfig("themeColors"))
+        .map((item, index) => {
+          return (
+            <li
+              key={item + index}
+              className={
+                index === this.state.currentTextIndex
+                  ? "active-color background-color-circle"
+                  : "background-color-circle"
+              }
+              onClick={() => {
+                this.handleChooseTextColor(item);
+              }}
+              style={{ backgroundColor: item }}
+            >
+              {index > 3 && index === this.state.currentTextIndex && (
+                <span
+                  className="icon-close"
+                  onClick={() => {
+                    ConfigService.deleteListConfig(item, "themeColors");
+                  }}
+                ></span>
+              )}
+            </li>
+          );
+        });
     };
     return (
       <div className="background-color-setting">

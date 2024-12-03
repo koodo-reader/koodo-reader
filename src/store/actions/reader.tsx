@@ -1,9 +1,9 @@
 import NoteModel from "../../models/Note";
 import BookmarkModel from "../../models/Bookmark";
 import HtmlBookModel from "../../models/HtmlBook";
-import AddTrash from "../../utils/reader/addTrash";
 import NoteService from "../../utils/service/noteService";
 import BookmarkService from "../../utils/service/bookmarkService";
+import ConfigService from "../../utils/service/configService";
 
 export function handleNotes(notes: NoteModel[]) {
   return { type: "HANDLE_NOTES", payload: notes };
@@ -44,7 +44,7 @@ export function handleFetchNotes() {
       } else {
         noteArr = value;
       }
-      let keyArr = AddTrash.getAllTrash();
+      let keyArr = ConfigService.getAllListConfig("deletedBooks");
       dispatch(handleNotes(handleKeyRemove(noteArr, keyArr)));
       dispatch(
         handleDigests(
@@ -71,7 +71,7 @@ export function handleFetchBookmarks() {
       } else {
         bookmarkArr = value;
       }
-      let keyArr = AddTrash.getAllTrash();
+      let keyArr = ConfigService.getAllListConfig("deletedBooks");
       dispatch(handleBookmarks(handleKeyRemove(bookmarkArr, keyArr)));
     });
   };

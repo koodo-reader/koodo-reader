@@ -6,7 +6,6 @@ import ConfigService from "../../utils/service/configService";
 import { sleep } from "../../utils/common";
 import { isElectron } from "react-device-detect";
 import toast from "react-hot-toast";
-import RecordLocation from "../../utils/reader/recordLocation";
 import TTSUtil from "../../utils/reader/ttsUtil";
 import "./textToSpeech.css";
 import PluginService from "../../utils/service/pluginService";
@@ -164,16 +163,10 @@ class TextToSpeech extends React.Component<
       isElectron &&
         (await window.require("electron").ipcRenderer.invoke("clear-tts"));
       let position = this.props.htmlBook.rendition.getPosition();
-      RecordLocation.recordHtmlLocation(
+      ConfigService.setObjectConfig(
         this.props.currentBook.key,
-        position.text,
-        position.chapterTitle,
-        position.chapterDocIndex,
-        position.chapterHref,
-        position.count,
-        position.percentage,
-        position.cfi,
-        position.page
+        position,
+        "recordLocation"
       );
       this.nodeList = [];
       await this.handleAudio();
@@ -206,16 +199,10 @@ class TextToSpeech extends React.Component<
         index === this.nodeList.length
       ) {
         let position = this.props.htmlBook.rendition.getPosition();
-        RecordLocation.recordHtmlLocation(
+        ConfigService.setObjectConfig(
           this.props.currentBook.key,
-          position.text,
-          position.chapterTitle,
-          position.chapterDocIndex,
-          position.chapterHref,
-          position.count,
-          position.percentage,
-          position.cfi,
-          position.page
+          position,
+          "recordLocation"
         );
         this.nodeList = [];
         await this.handleAudio();

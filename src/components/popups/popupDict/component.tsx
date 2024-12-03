@@ -7,7 +7,6 @@ import ConfigService from "../../../utils/service/configService";
 import Parser from "html-react-parser";
 import * as DOMPurify from "dompurify";
 import axios from "axios";
-import RecordLocation from "../../../utils/reader/recordLocation";
 import DictHistory from "../../../models/DictHistory";
 import { Trans } from "react-i18next";
 import { openExternalUrl } from "../../../utils/reader/urlUtil";
@@ -56,7 +55,11 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
   }
   handleRecordHistory = async (text: string) => {
     let bookKey = this.props.currentBook.key;
-    let bookLocation = RecordLocation.getHtmlLocation(bookKey);
+    let bookLocation = ConfigService.getObjectConfig(
+      bookKey,
+      "recordLocation",
+      {}
+    );
     let chapter = bookLocation.chapterTitle;
     let word = new DictHistory(bookKey, text, chapter);
     await WordService.saveWord(word);

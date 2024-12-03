@@ -1,11 +1,11 @@
 import React from "react";
 import "./deleteIcon.css";
 import { DeleteIconProps, DeleteIconStates } from "./interface";
-import TagUtil from "../../utils/reader/tagUtil";
 import DeletePopup from "../dialogs/deletePopup";
 import toast from "react-hot-toast";
 import NoteService from "../../utils/service/noteService";
 import BookmarkService from "../../utils/service/bookmarkService";
+import ConfigService from "../../utils/service/configService";
 
 class DeleteIcon extends React.Component<DeleteIconProps, DeleteIconStates> {
   constructor(props: DeleteIconProps) {
@@ -22,7 +22,7 @@ class DeleteIcon extends React.Component<DeleteIconProps, DeleteIconStates> {
         ? this.props.handleFetchNotes
         : this.props.handleFetchBookmarks;
     if (this.props.mode === "tags") {
-      TagUtil.clear(this.props.tagName);
+      ConfigService.deleteListConfig(this.props.tagName, "noteTags");
       this.handleDeleteTagFromNote(this.props.tagName);
       return;
     }
