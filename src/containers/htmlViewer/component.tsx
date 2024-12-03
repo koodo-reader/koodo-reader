@@ -260,9 +260,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     );
   };
 
-
-
-
   changeSentenceColors = (rendition) => {
     if (!rendition) return;
     const iframe = rendition.element?.querySelector("iframe");

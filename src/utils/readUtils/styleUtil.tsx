@@ -30,8 +30,7 @@ class styleUtil {
   }
   // get default css for iframe
   static getDefaultCss() {
-    // const useAltCss = StorageUtil.getReaderConfig("useAltCss") === "true";
-    // useAltCss ? this.getCustomAltCss() :
+
     return `::selection{background:#f3a6a68c}::-moz-selection{background:#f3a6a68c}.kookit-note:hover{cursor:pointer;}img{max-width:100% !important}.kookit-text{${this.getCustomCss()}}code,pre{white-space: pre-wrap;}`;
   }
 
@@ -75,62 +74,6 @@ class styleUtil {
       }px !important;padding:0px !important;word-wrap: break-word !important; writing-mode: horizontal-tb !important;`;
   }
 
-  static getCustomAltCss() {
-    const colorsJSON = StorageUtil.getReaderConfig("lineColors");
-
-    if (!colorsJSON) {
-      console.warn("Aucune couleur définie dans StorageUtil.");
-      return ``; // Pas de styles si aucune couleur n'est définie
-    }
-
-    const colors = JSON.parse(colorsJSON);
-
-    if (colors.length < 3) {
-      console.error("Il faut au moins 3 couleurs pour appliquer les styles dynamiques.");
-      return ``;
-    }
-
-    const evenColor = colors[0];
-    const oddColor = colors[1];
-    const thirdColor = colors[2];
-
-    // Générer les styles dynamiques
-    return `
-      p.kookit-text:nth-child(even) {
-        color: ${evenColor} !important;
-      }
-      p.kookit-text:nth-child(odd) {
-        color: ${oddColor} !important;
-      }
-      p.kookit-text:nth-child(3n) {
-        color: ${thirdColor} !important;
-      }
-
-      font-size: ${StorageUtil.getReaderConfig("fontSize") || 17
-      }px !important;line-height: ${StorageUtil.getReaderConfig("lineHeight") || "1.25"
-      } !important;font-family: ${StorageUtil.getReaderConfig("fontFamily") || ""
-      }  !important;letter-spacing: ${StorageUtil.getReaderConfig("letterSpacing")
-        ? StorageUtil.getReaderConfig("letterSpacing")
-        : ""
-      }px !important;text-align: ${StorageUtil.getReaderConfig("textAlign")
-        ? StorageUtil.getReaderConfig("textAlign")
-        : ""
-      } !important;
-      font-weight: ${StorageUtil.getReaderConfig("isBold") === "yes" ? "bold !important" : ""
-      };font-style: ${StorageUtil.getReaderConfig("isItalic") === "yes"
-        ? "italic !important"
-        : ""
-      };text-shadow: ${StorageUtil.getReaderConfig("isShadow") === "yes"
-        ? "2px 2px 2px #cccccc !important"
-        : ""
-      };text-indent: ${StorageUtil.getReaderConfig("isIndent") === "yes" ? "2rem" : ""
-      };text-decoration: ${StorageUtil.getReaderConfig("isUnderline") === "yes"
-        ? "underline !important"
-        : ""
-      };margin-bottom: ${StorageUtil.getReaderConfig("paraSpacing") || 0
-      }px !important;padding:0px !important;word-wrap: break-word !important; writing-mode: horizontal-tb !important
-    `;
-  }
 
   static addStyle = (url: string) => {
     const style = document.createElement("link");

@@ -113,18 +113,10 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
   };
 
 
-  handleChooseLineColor = (isButtonClicked, colors: string[]) => {
-
-    const colorsJSON = JSON.stringify(colors);
-
-    if (colors.length) {
-      StorageUtil.setReaderConfig("lineColors", colorsJSON);
-    } else {
-      StorageUtil.setReaderConfig("lineColors", '');
-    }
+  handleChooseLineColor = (isButtonClicked) => {
 
     if (isButtonClicked) {
-      //this.props.renderBookFunc();
+      this.props.renderBookFunc();
     }
     this.setState({ isButtonClicked: false });
   }
@@ -265,7 +257,7 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
           </button>
 
           <button
-            onClick={() => this.handleChooseLineColor(!this.state.isButtonClicked, [""])}
+            onClick={() => this.handleChooseLineColor(!this.state.isButtonClicked)}
             className="btn--reset-style"
           >
             A-
