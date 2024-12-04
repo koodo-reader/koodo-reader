@@ -1,7 +1,7 @@
 import ConfigService from "../../utils/service/configService";
 const initState = {
   mode: "home",
-  shelfIndex: -1,
+  shelfTitle: "",
   isCollapsed: ConfigService.getReaderConfig("isCollapsed") === "yes",
 };
 export function sidebar(
@@ -14,10 +14,10 @@ export function sidebar(
         ...state,
         mode: action.payload,
       };
-    case "HANDLE_SHELF_INDEX":
+    case "HANDLE_SHELF":
       return {
         ...state,
-        shelfIndex: action.payload,
+        shelfTitle: action.payload,
       };
     case "HANDLE_COLLAPSE":
       return {

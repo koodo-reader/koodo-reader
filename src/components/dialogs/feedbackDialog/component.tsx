@@ -10,6 +10,7 @@ import {
   getUploadUrl,
   uploadFile,
 } from "../../../utils/common";
+import axios from "axios";
 declare var window: any;
 class FeedbackDialog extends Component<
   FeedbackDialogProps,
@@ -74,7 +75,6 @@ class FeedbackDialog extends Component<
     let version = packageInfo.version;
     const os = window.require("os");
     const system = os.platform() + " " + os.version();
-    const axios = window.require("axios");
     let fileName = "";
     if (this.state.fileContent && this.state.uploadUrl) {
       var segments = this.state.uploadUrl.split("/").reverse()[0];
@@ -89,7 +89,7 @@ class FeedbackDialog extends Component<
       assets: fileName,
     });
 
-    let config = {
+    let config: any = {
       method: "post",
       maxBodyLength: Infinity,
       url: "https://api.960960.xyz/api/feedback",

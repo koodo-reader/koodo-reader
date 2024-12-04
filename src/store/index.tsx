@@ -89,7 +89,7 @@ export type stateType = {
   };
   sidebar: {
     mode: string;
-    shelfIndex: number;
+    shelfTitle: string;
     isCollapsed: boolean;
   };
   viewArea: {

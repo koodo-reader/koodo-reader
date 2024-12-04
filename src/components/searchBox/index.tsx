@@ -13,7 +13,7 @@ const mapStateToProps = (state: stateType) => {
     isReading: state.book.isReading,
     currentBook: state.book.currentBook,
     tabMode: state.sidebar.mode,
-    shelfIndex: state.sidebar.shelfIndex,
+    shelfTitle: state.sidebar.shelfTitle,
   };
 };
 const actionCreator = {

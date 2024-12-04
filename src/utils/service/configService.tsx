@@ -87,6 +87,64 @@ class ConfigService {
     delete obj[itemName];
     this.setAllObjectConfig(obj, key);
   }
+  static getAllMapConfig(key: string) {
+    let json = localStorage.getItem(key);
+    let obj = JSON.parse(json!) || {};
+    return obj;
+  }
+  static getMapConfig(objectName: string, key: string) {
+    let obj = this.getAllMapConfig(key);
+    return obj[objectName] || [];
+  }
+  static setAllMapConfig(obj: any, key: string) {
+    localStorage.setItem(key, JSON.stringify(obj));
+  }
+  static setMapConfig(objectName: string, itemName: string, key: string) {
+    let obj = this.getAllMapConfig(key);
+    if (obj[objectName] === undefined) {
+      obj[objectName] = [];
+    }
+    if (obj[objectName].indexOf(itemName) === -1) {
+      obj[objectName].unshift(itemName);
+    }
+    this.setAllMapConfig(obj, key);
+  }
+  static deleteFromMapConfig(
+    objectName: string,
+    itemName: string,
+    key: string
+  ) {
+    let obj = this.getAllMapConfig(key);
+    let index = obj[objectName].indexOf(itemName);
+    obj[objectName].splice(index, 1);
+    this.setAllMapConfig(obj, key);
+  }
+  static deleteFromAllMapConfig(itemName: string, key: string) {
+    let obj = this.getAllMapConfig(key);
+    let objectNameList = Object.keys(obj);
+    objectNameList.forEach((item) => {
+      let index = obj[item].indexOf(itemName);
+      if (index > -1) {
+        obj[item].splice(index, 1);
+      }
+    });
+    this.setAllMapConfig(obj, key);
+  }
+  static deleteMapConfig(objectName: string, key: string) {
+    let obj = this.getAllMapConfig(key);
+    delete obj[objectName];
+    this.setAllMapConfig(obj, key);
+  }
+  static getFromAllMapConfig(itemName: string, key: string) {
+    let obj = this.getAllMapConfig(key);
+    let objectNameList: string[] = [];
+    for (let item in obj) {
+      if (obj[item] && obj[item].indexOf(itemName) > -1) {
+        objectNameList.push(item);
+      }
+    }
+    return objectNameList;
+  }
 }
 
 export default ConfigService;

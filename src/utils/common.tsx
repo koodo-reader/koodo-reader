@@ -93,7 +93,6 @@ export const checkDeveloperUpdate = async () => {
   return res.data;
 };
 export const getUploadUrl = async () => {
-  const axios = window.require("axios");
   let res = await axios.get("https://api.960960.xyz/api/get_temp_upload_url");
   return res.data;
 };

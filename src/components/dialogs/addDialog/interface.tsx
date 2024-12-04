@@ -9,7 +9,7 @@ export interface AddDialogProps {
   isSelectBook: boolean;
   t: (title: string) => string;
   handleMode: (mode: string) => void;
-  handleShelfIndex: (shelfIndex: number) => void;
+  handleShelf: (shelfTitle: string) => void;
   handleSelectedBooks: (selectedBooks: string[]) => void;
 }
 export interface AddDialogState {

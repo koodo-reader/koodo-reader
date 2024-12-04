@@ -12,7 +12,6 @@ import {
   exportNotes,
 } from "../../utils/file/export";
 import BookUtil from "../../utils/file/bookUtil";
-import ShelfUtil from "../../utils/reader/shelfUtil";
 import ConfigService from "../../utils/service/configService";
 import BookService from "../../utils/service/bookService";
 import NoteService from "../../utils/service/noteService";
@@ -30,12 +29,13 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
     };
   }
   handleFilterShelfBook = (items: BookModel[]) => {
-    if (this.props.shelfIndex > 0) {
-      if (this.props.shelfIndex < 1) return items;
-      let shelfTitle = Object.keys(ShelfUtil.getShelf());
-      let currentShelfTitle = shelfTitle[this.props.shelfIndex];
+    if (this.props.shelfTitle) {
+      let currentShelfTitle = this.props.shelfTitle;
       if (!currentShelfTitle) return items;
-      let currentShelfList = ShelfUtil.getShelf()[currentShelfTitle];
+      let currentShelfList = ConfigService.getMapConfig(
+        currentShelfTitle,
+        "shelfList"
+      );
       let shelfItems = items.filter((item: BookModel) => {
         return currentShelfList.indexOf(item.key) > -1;
       });
@@ -43,7 +43,10 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
     } else {
       if (ConfigService.getReaderConfig("isHideShelfBook") === "yes") {
         return items.filter((item) => {
-          return ShelfUtil.getBookPosition(item.key).length === 0;
+          return (
+            ConfigService.getFromAllMapConfig(item.key, "shelfList").length ===
+            0
+          );
         });
       }
       return items;
@@ -51,10 +54,13 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
   };
   handleShelf(items: any, index: number) {
     if (index < 1) return items;
-    let shelfTitle = Object.keys(ShelfUtil.getShelf());
+    let shelfTitle = Object.keys(ConfigService.getAllMapConfig("shelfList"));
     let currentShelfTitle = shelfTitle[index];
     if (!currentShelfTitle) return items;
-    let currentShelfList = ShelfUtil.getShelf()[currentShelfTitle];
+    let currentShelfList = ConfigService.getMapConfig(
+      currentShelfTitle,
+      "shelfList"
+    );
     let shelfItems = items.filter((item: { key: number }) => {
       return currentShelfList.indexOf(item.key) > -1;
     });

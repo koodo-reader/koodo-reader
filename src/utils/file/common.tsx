@@ -83,7 +83,7 @@ export const upgradeStorage = async (toast: any) => {
   const path = window.require("path");
   // upgrage cover and book
   if (
-    localStorage.getItem("isUpgraded") === "yes" ||
+    localStorage.getItem("isUpgradedStorage") === "yes" ||
     fs.existsSync(path.join(dataPath, "cover"))
   ) {
     console.log("upgraded");
@@ -155,7 +155,27 @@ export const upgradeStorage = async (toast: any) => {
   }
 
   toast.success("Upgrade successful");
-  localStorage.setItem("isUpgraded", "yes");
+  localStorage.setItem("isUpgradedStorage", "yes");
+};
+export const upgradeConfig = () => {
+  if (localStorage.getItem("isUpgradedConfig") === "yes") {
+    console.log("upgraded");
+    return;
+  }
+  //upgrade shelf
+  ConfigService.deleteMapConfig("New", "shelfList");
+  //upgrade noteSortCode
+  let json =
+    localStorage.getItem("noteSortCode") ||
+    JSON.stringify({ sort: 2, order: 2 });
+  ConfigService.setReaderConfig("noteSortCode", json);
+  //upgrade bookSortCode
+  json =
+    localStorage.getItem("bookSortCode") ||
+    JSON.stringify({ sort: 1, order: 2 });
+  ConfigService.setReaderConfig("bookSortCode", json);
+
+  localStorage.setItem("isUpgradedConfig", "yes");
 };
 export const getCloudConfig = (service: string) => {
   let tokenConfig = {};
