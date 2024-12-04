@@ -9,7 +9,7 @@ export interface ManagerProps extends RouteComponentProps<any> {
   bookmarks: BookmarkModel[];
   isReading: boolean;
   mode: string;
-  shelfIndex: number;
+  shelfTitle: string;
   isOpenEditDialog: boolean;
   isOpenDeleteDialog: boolean;
   isTipDialog: boolean;

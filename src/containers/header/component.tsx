@@ -10,6 +10,7 @@ import { backupToConfigJson } from "../../utils/file/backup";
 import { isElectron } from "react-device-detect";
 import {
   getLastSyncTimeFromConfigJson,
+  upgradeConfig,
   upgradeStorage,
 } from "../../utils/file/common";
 import toast from "react-hot-toast";
@@ -71,6 +72,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       //Check for data update
       //upgrade data from old version
       await upgradeStorage(toast);
+      upgradeConfig();
       //Detect data modification
       let lastSyncTime = getLastSyncTimeFromConfigJson();
       if (
@@ -79,6 +81,8 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       ) {
         this.setState({ isdataChange: true });
       }
+    } else {
+      upgradeConfig();
     }
     window.addEventListener("resize", () => {
       this.setState({ width: document.body.clientWidth });

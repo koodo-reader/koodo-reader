@@ -16,7 +16,7 @@ const mappropsToProps = (state: stateType) => {
     deletedBooks: state.manager.deletedBooks,
     selectedBooks: state.manager.selectedBooks,
     isCollapsed: state.sidebar.isCollapsed,
-    shelfIndex: state.sidebar.shelfIndex,
+    shelfTitle: state.sidebar.shelfTitle,
     isSelectBook: state.manager.isSelectBook,
   };
 };

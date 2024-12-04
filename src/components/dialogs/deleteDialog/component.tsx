@@ -1,6 +1,5 @@
 import React from "react";
 import "./deleteDialog.css";
-import ShelfUtil from "../../../utils/reader/shelfUtil";
 import { Trans } from "react-i18next";
 import { DeleteDialogProps, DeleteDialogState } from "./interface";
 import { withRouter } from "react-router-dom";
@@ -51,7 +50,11 @@ class DeleteDialog extends React.Component<
   deleteBookFromShelf = () => {
     if (this.props.isSelectBook) {
       this.props.selectedBooks.forEach((item) => {
-        ShelfUtil.clearShelf(this.props.shelfIndex, item);
+        ConfigService.deleteFromMapConfig(
+          this.props.shelfTitle,
+          item,
+          "shelfList"
+        );
       });
       this.props.handleSelectedBooks([]);
       this.props.handleFetchBooks();
@@ -60,7 +63,11 @@ class DeleteDialog extends React.Component<
       toast.success(this.props.t("Deletion successful"));
       return;
     }
-    ShelfUtil.clearShelf(this.props.shelfIndex, this.props.currentBook.key);
+    ConfigService.deleteFromMapConfig(
+      this.props.shelfTitle,
+      this.props.currentBook.key,
+      "shelfList"
+    );
   };
   deleteAllBookInTrash = async () => {
     let keyArr = ConfigService.getAllListConfig("deletedBooks");
@@ -109,7 +116,7 @@ class DeleteDialog extends React.Component<
           await BookUtil.deleteBook("cache-" + key, "zip");
           ConfigService.deleteListConfig(key, "favoriteBooks");
           ConfigService.deleteListConfig(key, "deletedBooks");
-          ShelfUtil.deletefromAllShelf(key);
+          ConfigService.deleteFromAllMapConfig(key, "shelfList");
           ConfigService.deleteListConfig(key, "recentBooks");
           ConfigService.deleteObjectConfig(key, "recordLocation");
           await this.handleDeleteOther(key);

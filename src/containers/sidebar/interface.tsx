@@ -3,23 +3,23 @@ import { RouteComponentProps } from "react-router";
 export interface SidebarProps extends RouteComponentProps<any> {
   mode: string;
   isCollapsed: boolean;
-  shelfIndex: number;
+  shelfTitle: string;
 
   handleMode: (mode: string) => void;
   handleSearch: (isSearch: boolean) => void;
   handleCollapse: (isCollapsed: boolean) => void;
   handleSortDisplay: (isSortDisplay: boolean) => void;
   handleSelectBook: (isSelectBook: boolean) => void;
-  handleShelfIndex: (shelfIndex: number) => void;
+  handleShelf: (shelfTitle: string) => void;
   t: (title: string) => string;
 }
 
 export interface SidebarState {
-  index: number;
-  hoverIndex: number;
-  hoverShelfIndex: number;
+  mode: string;
+  hoverMode: string;
+  hoverShelfTitle: string;
   isCollapsed: boolean;
   isCollpaseShelf: boolean;
-  shelfIndex: number;
+  shelfTitle: string;
   isOpenDelete: boolean;
 }

@@ -101,13 +101,17 @@ export function handleFetchPlugins() {
 }
 export function handleFetchBookSortCode() {
   return (dispatch: Dispatch) => {
-    let bookSortCode = SortUtil.getBookSortCode();
+    let bookSortCode = JSON.parse(
+      ConfigService.getReaderConfig("bookSortCode") || '{"sort": 1, "order": 2}'
+    );
     dispatch(handleBookSortCode(bookSortCode));
   };
 }
 export function handleFetchNoteSortCode() {
   return (dispatch: Dispatch) => {
-    let noteSortCode = SortUtil.getNoteSortCode();
+    let noteSortCode = JSON.parse(
+      ConfigService.getReaderConfig("noteSortCode") || '{"sort": 2, "order": 2}'
+    );
     dispatch(handleNoteSortCode(noteSortCode));
   };
 }

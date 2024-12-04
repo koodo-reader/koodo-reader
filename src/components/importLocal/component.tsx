@@ -11,8 +11,6 @@ import { withRouter } from "react-router-dom";
 import BookUtil from "../../utils/file/bookUtil";
 import toast from "react-hot-toast";
 import ConfigService from "../../utils/service/configService";
-
-import ShelfUtil from "../../utils/reader/shelfUtil";
 import BookService from "../../utils/service/bookService";
 import CoverUtil from "../../utils/file/coverUtil";
 import { calculateFileMD5, fetchFileFromPath } from "../../utils/common";
@@ -113,8 +111,11 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
         .then(() => {
           this.props.handleFetchBooks();
           if (this.props.mode === "shelf") {
-            let shelfTitles = Object.keys(ShelfUtil.getShelf());
-            ShelfUtil.setShelf(shelfTitles[this.props.shelfIndex], book.key);
+            ConfigService.setMapConfig(
+              this.props.shelfTitle,
+              book.key,
+              "shelfList"
+            );
           }
           toast.success(this.props.t("Addition successful"));
           setTimeout(() => {

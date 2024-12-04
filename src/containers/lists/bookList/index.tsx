@@ -3,7 +3,7 @@ import {
   handleFetchList,
   handleFetchBooks,
   handleMode,
-  handleShelfIndex,
+  handleShelf,
   handleDeleteDialog,
 } from "../../../store/actions";
 import { stateType } from "../../../store";
@@ -17,7 +17,7 @@ const mappropsToProps = (state: stateType) => {
     bookmarks: state.reader.bookmarks,
     notes: state.reader.notes,
     selectedBooks: state.manager.selectedBooks,
-    shelfIndex: state.sidebar.shelfIndex,
+    shelfTitle: state.sidebar.shelfTitle,
     isCollapsed: state.sidebar.isCollapsed,
     searchResults: state.manager.searchResults,
     isSearch: state.manager.isSearch,
@@ -31,7 +31,7 @@ const mappropsToProps = (state: stateType) => {
 const actionCreator = {
   handleFetchList,
   handleMode,
-  handleShelfIndex,
+  handleShelf,
   handleFetchBooks,
   handleDeleteDialog,
 };

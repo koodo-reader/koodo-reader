@@ -34,7 +34,7 @@ const mapStateToProps = (state: stateType) => {
     isReading: state.book.isReading,
     mode: state.sidebar.mode,
     dragItem: state.book.dragItem,
-    shelfIndex: state.sidebar.shelfIndex,
+    shelfTitle: state.sidebar.shelfTitle,
     isOpenEditDialog: state.book.isOpenEditDialog,
     isDetailDialog: state.manager.isDetailDialog,
     isOpenDeleteDialog: state.book.isOpenDeleteDialog,
