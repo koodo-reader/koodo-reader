@@ -22,7 +22,6 @@ import PageWidget from "../../containers/pageWidget";
 import { scrollContents } from "../../utils/commonUtil";
 
 
-
 declare var window: any;
 let lock = false; //prevent from clicking too fasts
 
@@ -74,7 +73,11 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       BookUtil.reloadBooks();
     });
 
-    window.addEventListener("localStorageChange", this.handleLocalStorageChange);
+    window.addEventListener("localStorageChange", () => {
+
+      this.handleLocalStorageChange();
+    })
+
 
     const changeColorsTriggered = StorageUtil.getReaderConfig("changeColorsTriggered") === "true";
 
@@ -86,6 +89,8 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
 
     window.removeEventListener("localStorageChange", this.handleLocalStorageChange);
   }
+
+
   handleChangeStyle = (changeColorsTriggered: boolean) => {
     if (changeColorsTriggered) {
       this.handleRenderBookWithLinesColor();
@@ -198,14 +203,11 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
 
           );
 
-          this.changeSentenceColors(rendition);
           await this.handleRest(rendition);
-
           rendition.on("rendered", () => {
 
             this.changeSentenceColors(rendition);
           })
-
           this.props.handleReadingState(true);
 
           RecentBooks.setRecent(this.props.currentBook.key);
@@ -245,11 +247,8 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         await rendition.renderTo(
           document.getElementsByClassName("html-viewer-page")[0]
 
-        );
+        )
 
-        this.setState({
-          isColorChanged: false
-        });
         await this.handleRest(rendition);
 
         this.props.handleReadingState(true);

@@ -292,8 +292,8 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
             this.state.isOpenRightPanel
               ? {}
               : {
-                  transform: "translateX(309px)",
-                }
+                transform: "translateX(309px)",
+              }
           }
         >
           <SettingPanel />
@@ -307,8 +307,8 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
             this.state.isOpenLeftPanel
               ? {}
               : {
-                  transform: "translateX(-309px)",
-                }
+                transform: "translateX(-309px)",
+              }
           }
         >
           <NavigationPanel {...{ time: this.state.time }} />
@@ -322,8 +322,8 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
             this.state.isOpenBottomPanel
               ? {}
               : {
-                  transform: "translateY(110px)",
-                }
+                transform: "translateY(110px)",
+              }
           }
         >
           <ProgressPanel {...{ time: this.state.time }} />
@@ -337,8 +337,8 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
             this.state.isOpenTopPanel
               ? {}
               : {
-                  transform: "translateY(-110px)",
-                }
+                transform: "translateY(-110px)",
+              }
           }
         >
           {this.props.htmlBook && (

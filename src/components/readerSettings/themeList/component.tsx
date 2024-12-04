@@ -9,8 +9,8 @@ import { Panel as ColorPickerPanel } from "rc-color-picker";
 import "rc-color-picker/assets/index.css";
 import ThemeUtil from "../../../utils/readUtils/themeUtil";
 import BookUtil from "../../../utils/fileUtils/bookUtil";
-
-
+import Lignescouleurs1 from "../../../assets/Lignescouleurs1.png"
+import Lignescouleurs2 from "../../../assets/Lignescouleurs2.png"
 
 
 
@@ -253,14 +253,15 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
             onClick={() => this.handleClick(true)}
             className="btn-style"
           >
-            A+
+
+            <img src={Lignescouleurs1} alt="ligneCouleur" />
           </button>
 
           <button
             onClick={() => this.handleChooseLineColor(!this.state.isButtonClicked)}
             className="btn--reset-style"
           >
-            A-
+            <img src={Lignescouleurs2} alt="ligneCouleur" />
           </button>
 
         </div>
