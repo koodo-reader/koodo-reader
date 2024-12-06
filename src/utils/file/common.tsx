@@ -75,119 +75,126 @@ export function getParamsFromUrl() {
   return hashParams;
 }
 
-export const upgradeStorage = async (toast: any) => {
-  let dataPath = getStorageLocation() || "";
-  // localStorage.setItem("isUpgraded", "yes");
-  //check if folder named cover exsits
-  const fs = window.require("fs");
-  const path = window.require("path");
-  // upgrage cover and book
-  if (
-    localStorage.getItem("isUpgradedStorage") === "yes" ||
-    fs.existsSync(path.join(dataPath, "cover"))
-  ) {
-    console.log("upgraded");
-    return;
-  }
-  toast("Upgrading data");
+export const upgradeStorage = async (): Promise<Boolean> => {
+  try {
+    let dataPath = getStorageLocation() || "";
+    // localStorage.setItem("isUpgraded", "yes");
+    //check if folder named cover exsits
+    const fs = window.require("fs");
+    const path = window.require("path");
+    // upgrage cover and book
+    if (localStorage.getItem("isUpgradedStorage") === "yes") {
+      console.log("upgraded");
+      return true;
+    }
 
-  fs.mkdirSync(path.join(dataPath, "cover"), { recursive: true });
-  let books = await window.localforage.getItem("books");
-  if (books && books.length > 0) {
-    books.forEach((item) => {
-      let cover = item.cover;
-      if (cover) {
-        let result = CoverUtil.convertCoverBase64(cover);
-        fs.writeFileSync(
-          path.join(dataPath, "cover", `${item.key}.${result.extension}`),
-          Buffer.from(result.arrayBuffer)
-        );
-        item.cover = "";
-      }
-    });
-    await BookService.saveAllBooks(books);
-  }
-
-  //uprade book files
-  if (fs.existsSync(path.join(dataPath, "book"))) {
-    const files = fs.readdirSync(path.join(dataPath, "book"));
-    if (files.length > 0) {
-      for (let i = 0; i < files.length; i++) {
-        let fileName = files[i];
-        let book = books.find((item) => item.key === fileName);
-        if (book) {
-          let newFileName = `${book.key}.${book.format.toLowerCase()}`;
-          fs.renameSync(
-            path.join(dataPath, "book", fileName),
-            path.join(dataPath, "book", newFileName)
+    fs.mkdirSync(path.join(dataPath, "cover"), { recursive: true });
+    let books = await window.localforage.getItem("books");
+    if (books && books.length > 0) {
+      books.forEach((item) => {
+        let cover = item.cover;
+        if (cover) {
+          let result = CoverUtil.convertCoverBase64(cover);
+          fs.writeFileSync(
+            path.join(dataPath, "cover", `${item.key}.${result.extension}`),
+            Buffer.from(result.arrayBuffer)
           );
+          item.cover = "";
         }
-        if (fileName.startsWith("cache")) {
-          let newFileName = `${fileName}.zip`;
-          fs.renameSync(
-            path.join(dataPath, "book", fileName),
-            path.join(dataPath, "book", newFileName)
-          );
+      });
+      await BookService.saveAllBooks(books);
+    }
+
+    //uprade book files
+    if (fs.existsSync(path.join(dataPath, "book"))) {
+      const files = fs.readdirSync(path.join(dataPath, "book"));
+      if (files.length > 0) {
+        for (let i = 0; i < files.length; i++) {
+          let fileName = files[i];
+          let book = books.find((item) => item.key === fileName);
+          if (book) {
+            let newFileName = `${book.key}.${book.format.toLowerCase()}`;
+            fs.renameSync(
+              path.join(dataPath, "book", fileName),
+              path.join(dataPath, "book", newFileName)
+            );
+          }
+          if (fileName.startsWith("cache")) {
+            let newFileName = `${fileName}.zip`;
+            fs.renameSync(
+              path.join(dataPath, "book", fileName),
+              path.join(dataPath, "book", newFileName)
+            );
+          }
         }
       }
     }
-  }
 
-  //upgrade plugin
-  let plugins =
-    localStorage.getItem("pluginList") !== "{}" &&
-    localStorage.getItem("pluginList")
-      ? JSON.parse(localStorage.getItem("pluginList") || "")
-      : [];
-  if (plugins.length > 0) {
-    plugins.length > 0 && (await PluginService.saveAllPlugins(plugins));
-  }
+    //upgrade plugin
+    let plugins =
+      localStorage.getItem("pluginList") !== "{}" &&
+      localStorage.getItem("pluginList")
+        ? JSON.parse(localStorage.getItem("pluginList") || "")
+        : [];
+    if (plugins.length > 0) {
+      plugins.length > 0 && (await PluginService.saveAllPlugins(plugins));
+    }
 
-  //upgrade notes
-  let notes = await window.localforage.getItem("notes");
-  if (notes && notes.length > 0) {
-    await NoteService.saveAllNotes(notes);
-  }
+    //upgrade notes
+    let notes = await window.localforage.getItem("notes");
+    if (notes && notes.length > 0) {
+      await NoteService.saveAllNotes(notes);
+    }
 
-  //upgrade bookmarks
-  let bookmarks = await window.localforage.getItem("bookmarks");
-  if (bookmarks && bookmarks.length > 0) {
-    await BookmarkService.saveAllBookmarks(bookmarks);
-  }
-  //upgrade words
-  let words = await window.localforage.getItem("words");
-  if (words && words.length > 0) {
-    await WordService.saveAllWords(words);
-  }
+    //upgrade bookmarks
+    let bookmarks = await window.localforage.getItem("bookmarks");
+    if (bookmarks && bookmarks.length > 0) {
+      await BookmarkService.saveAllBookmarks(bookmarks);
+    }
+    //upgrade words
+    let words = await window.localforage.getItem("words");
+    if (words && words.length > 0) {
+      await WordService.saveAllWords(words);
+    }
 
-  toast.success("Upgrade successful");
-  localStorage.setItem("isUpgradedStorage", "yes");
+    localStorage.setItem("isUpgradedStorage", "yes");
+    return true;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
 };
-export const upgradeConfig = () => {
-  if (localStorage.getItem("isUpgradedConfig") === "yes") {
-    console.log("upgraded");
-    return;
-  }
-  //upgrade shelf
+export const upgradeConfig = (): Boolean => {
+  try {
+    if (localStorage.getItem("isUpgradedConfig") === "yes") {
+      console.log("upgraded");
+      return true;
+    }
+    //upgrade shelf
 
-  let shelfList = ConfigService.getAllMapConfig("shelfList");
-  if ("New" in shelfList) {
-    ConfigService.deleteMapConfig("New", "shelfList");
-  }
+    let shelfList = ConfigService.getAllMapConfig("shelfList");
+    if ("New" in shelfList) {
+      ConfigService.deleteMapConfig("New", "shelfList");
+    }
 
-  //upgrade noteSortCode
-  let json = localStorage.getItem("noteSortCode");
-  if (json) {
-    ConfigService.setReaderConfig("noteSortCode", json);
-  }
+    //upgrade noteSortCode
+    let json = localStorage.getItem("noteSortCode");
+    if (json) {
+      ConfigService.setReaderConfig("noteSortCode", json);
+    }
 
-  //upgrade bookSortCode
-  json = localStorage.getItem("bookSortCode");
-  if (json) {
-    ConfigService.setReaderConfig("bookSortCode", json);
-  }
+    //upgrade bookSortCode
+    json = localStorage.getItem("bookSortCode");
+    if (json) {
+      ConfigService.setReaderConfig("bookSortCode", json);
+    }
 
-  localStorage.setItem("isUpgradedConfig", "yes");
+    localStorage.setItem("isUpgradedConfig", "yes");
+    return true;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
 };
 export const getCloudConfig = (service: string) => {
   let tokenConfig = {};
