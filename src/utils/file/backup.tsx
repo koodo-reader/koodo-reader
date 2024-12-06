@@ -10,7 +10,7 @@ import CoverUtil from "./coverUtil";
 import ConfigService from "../service/configService";
 import { getCloudConfig } from "./common";
 declare var window: any;
-export const backup = async (service: string) => {
+export const backup = async (service: string): Promise<Boolean> => {
   let fileName = "data.zip";
   if (service === "local") {
     let year = new Date().getFullYear(),
@@ -26,7 +26,7 @@ export const backup = async (service: string) => {
     if (service === "local") {
       const backupPath = await ipcRenderer.invoke("select-path");
       if (!backupPath) {
-        return;
+        return false;
       }
       targetPath = backupPath;
     } else {

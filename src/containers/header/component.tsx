@@ -71,8 +71,11 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       }
       //Check for data update
       //upgrade data from old version
-      await upgradeStorage(toast);
-      upgradeConfig();
+      let res1 = await upgradeStorage();
+      let res2 = upgradeConfig();
+      if (!res1 || !res2) {
+        toast.success("Upgrade failed");
+      }
       //Detect data modification
       let lastSyncTime = getLastSyncTimeFromConfigJson();
       if (

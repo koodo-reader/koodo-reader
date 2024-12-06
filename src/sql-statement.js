@@ -75,11 +75,11 @@ const getAllStatement = {
   words: 'SELECT * FROM words',
 }
 const saveStatement = {
-  notes: 'INSERT INTO notes (key, bookKey, chapter, chapterIndex, text, cfi, range, notes, date, percentage, color, tag) VALUES (@key, @bookKey, @chapter, @chapterIndex, @text, @cfi, @range, @notes, @date, @percentage, @color, @tag)',
-  bookmarks: 'INSERT INTO bookmarks (key, bookKey, cfi, label, percentage, chapter) VALUES (@key, @bookKey, @cfi, @label, @percentage, @chapter)',
-  books: 'INSERT INTO books (key, name, author, description, md5, cover, format, publisher, size, page, path, charset) VALUES (@key, @name, @author, @description, @md5, @cover, @format, @publisher, @size, @page, @path, @charset)',
-  plugins: 'INSERT INTO plugins (identifier, type, displayName, icon, version, config, autoValue, langList, voiceList, scriptSHA256, script) VALUES (@identifier, @type, @displayName, @icon, @version, @config, @autoValue, @langList, @voiceList, @scriptSHA256, @script)',
-  words: 'INSERT INTO words (key, bookKey, date, word, chapter) VALUES (@key, @bookKey, @date, @word, @chapter)',
+  notes: 'INSERT OR REPLACE INTO notes (key, bookKey, chapter, chapterIndex, text, cfi, range, notes, date, percentage, color, tag) VALUES (@key, @bookKey, @chapter, @chapterIndex, @text, @cfi, @range, @notes, @date, @percentage, @color, @tag)',
+  bookmarks: 'INSERT OR REPLACE INTO bookmarks (key, bookKey, cfi, label, percentage, chapter) VALUES (@key, @bookKey, @cfi, @label, @percentage, @chapter)',
+  books: 'INSERT OR REPLACE INTO books (key, name, author, description, md5, cover, format, publisher, size, page, path, charset) VALUES (@key, @name, @author, @description, @md5, @cover, @format, @publisher, @size, @page, @path, @charset)',
+  plugins: 'INSERT OR REPLACE INTO plugins (identifier, type, displayName, icon, version, config, autoValue, langList, voiceList, scriptSHA256, script) VALUES (@identifier, @type, @displayName, @icon, @version, @config, @autoValue, @langList, @voiceList, @scriptSHA256, @script)',
+  words: 'INSERT OR REPLACE INTO words (key, bookKey, date, word, chapter) VALUES (@key, @bookKey, @date, @word, @chapter)',
 }
 const deleteAllStatement = {
   notes: 'DELETE FROM notes',

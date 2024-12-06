@@ -1,12 +1,8 @@
 import React from "react";
 import "./backupDialog.css";
 import { driveList } from "../../../constants/driveList";
-import {
-  backup,
-  backupFromPath,
-  backupFromStorage,
-} from "../../../utils/file/backup";
-import { restoreFromfilePath, restoreNew } from "../../../utils/file/restore";
+import { backup } from "../../../utils/file/backup";
+import { restore } from "../../../utils/file/restore";
 import { Trans } from "react-i18next";
 import { BackupDialogProps, BackupDialogState } from "./interface";
 import TokenDialog from "../tokenDialog";
@@ -78,7 +74,7 @@ class BackupDialog extends React.Component<
           return;
         }
       }
-      if (!ConfigService.getReaderConfig(name + "_token")) {
+      if (!ConfigService.getReaderConfig(name + "_token") && name !== "local") {
         this.props.handleTokenDialog(true);
         return;
       }
@@ -94,6 +90,16 @@ class BackupDialog extends React.Component<
   };
   handleRestore = (name: string) => {
     this.setState({ currentDrive: name }, async () => {
+      if (name === "local") {
+        let result = await restore(name);
+        if (result) {
+          this.handleFinish();
+        } else {
+          this.showMessage("Download failed,network problem or no backup");
+          this.props.handleLoadingDialog(false);
+        }
+        return;
+      }
       if (name === "onedrive" || name === "googledrive" || name === "dropbox") {
         if (!this.state.isDeveloperVer) {
           this.showMessage(
@@ -102,13 +108,15 @@ class BackupDialog extends React.Component<
           return;
         }
       }
+
       if (!ConfigService.getReaderConfig(name + "_token")) {
         this.props.handleTokenDialog(true);
         return;
       }
       this.props.handleLoadingDialog(true);
       this.showMessage("Downloading, please wait");
-      let result = await restoreNew(name);
+
+      let result = await restore(name);
       if (result) {
         this.handleFinish();
       } else {
