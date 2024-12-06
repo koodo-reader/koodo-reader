@@ -16,6 +16,9 @@ export const initTheme = () => {
   ConfigService.setReaderConfig("isOSNight", isNight ? "yes" : "no");
   if (!ConfigService.getReaderConfig("appSkin")) {
     ConfigService.setReaderConfig("appSkin", "system");
+    //new user don't need to upgrade
+    localStorage.setItem("isUpgradedConfig", "yes");
+    localStorage.setItem("isUpgradedStorage", "yes");
     if (isNight) {
     }
   }

@@ -143,22 +143,6 @@ class BookService {
       return books.filter((b) => keys.includes(b.key));
     }
   }
-  static async getBooksArrayBuffer() {
-    if (isElectron) {
-      let books = await window
-        .require("electron")
-        .ipcRenderer.invoke("database-command", {
-          statement: "getAllStatement",
-          statementType: "string",
-          executeType: "all",
-          dbName: "books",
-          storagePath: getStorageLocation(),
-        });
-      return books;
-    } else {
-      return await window.localforage.getItem("books");
-    }
-  }
 }
 
 export default BookService;

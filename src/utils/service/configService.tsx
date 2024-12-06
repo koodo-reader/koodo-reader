@@ -1,8 +1,6 @@
 const configList = [
   "readerConfig",
   "themeColors",
-  "bookSortCode",
-  "noteSortCode",
   "readingTime",
   "recentBooks",
   "deletedBooks",
