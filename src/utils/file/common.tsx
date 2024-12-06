@@ -93,49 +93,55 @@ export const upgradeStorage = async (toast: any) => {
 
   fs.mkdirSync(path.join(dataPath, "cover"), { recursive: true });
   let books = await window.localforage.getItem("books");
-  books.forEach((item) => {
-    let cover = item.cover;
-    if (cover) {
-      let result = CoverUtil.convertCoverBase64(cover);
-      fs.writeFileSync(
-        path.join(dataPath, "cover", `${item.key}.${result.extension}`),
-        Buffer.from(result.arrayBuffer)
-      );
-      item.cover = "";
-    }
-  });
-  await BookService.saveAllBooks(books);
+  if (books && books.length > 0) {
+    books.forEach((item) => {
+      let cover = item.cover;
+      if (cover) {
+        let result = CoverUtil.convertCoverBase64(cover);
+        fs.writeFileSync(
+          path.join(dataPath, "cover", `${item.key}.${result.extension}`),
+          Buffer.from(result.arrayBuffer)
+        );
+        item.cover = "";
+      }
+    });
+    await BookService.saveAllBooks(books);
+  }
 
   //uprade book files
-  if (!fs.existsSync(path.join(dataPath, "book"))) {
-    return;
-  }
-  const files = fs.readdirSync(path.join(dataPath, "book"));
-  for (let i = 0; i < files.length; i++) {
-    let fileName = files[i];
-    let book = books.find((item) => item.key === fileName);
-    if (book) {
-      let newFileName = `${book.key}.${book.format.toLowerCase()}`;
-      fs.renameSync(
-        path.join(dataPath, "book", fileName),
-        path.join(dataPath, "book", newFileName)
-      );
+  if (fs.existsSync(path.join(dataPath, "book"))) {
+    const files = fs.readdirSync(path.join(dataPath, "book"));
+    if (files.length > 0) {
+      for (let i = 0; i < files.length; i++) {
+        let fileName = files[i];
+        let book = books.find((item) => item.key === fileName);
+        if (book) {
+          let newFileName = `${book.key}.${book.format.toLowerCase()}`;
+          fs.renameSync(
+            path.join(dataPath, "book", fileName),
+            path.join(dataPath, "book", newFileName)
+          );
+        }
+        if (fileName.startsWith("cache")) {
+          let newFileName = `${fileName}.zip`;
+          fs.renameSync(
+            path.join(dataPath, "book", fileName),
+            path.join(dataPath, "book", newFileName)
+          );
+        }
+      }
     }
-    if (fileName.startsWith("cache")) {
-      let newFileName = `${fileName}.zip`;
-      fs.renameSync(
-        path.join(dataPath, "book", fileName),
-        path.join(dataPath, "book", newFileName)
-      );
-    }
   }
+
   //upgrade plugin
   let plugins =
     localStorage.getItem("pluginList") !== "{}" &&
     localStorage.getItem("pluginList")
       ? JSON.parse(localStorage.getItem("pluginList") || "")
       : [];
-  plugins.length > 0 && (await PluginService.saveAllPlugins(plugins));
+  if (plugins.length > 0) {
+    plugins.length > 0 && (await PluginService.saveAllPlugins(plugins));
+  }
 
   //upgrade notes
   let notes = await window.localforage.getItem("notes");
@@ -163,17 +169,23 @@ export const upgradeConfig = () => {
     return;
   }
   //upgrade shelf
-  ConfigService.deleteMapConfig("New", "shelfList");
+
+  let shelfList = ConfigService.getAllMapConfig("shelfList");
+  if ("New" in shelfList) {
+    ConfigService.deleteMapConfig("New", "shelfList");
+  }
+
   //upgrade noteSortCode
-  let json =
-    localStorage.getItem("noteSortCode") ||
-    JSON.stringify({ sort: 2, order: 2 });
-  ConfigService.setReaderConfig("noteSortCode", json);
+  let json = localStorage.getItem("noteSortCode");
+  if (json) {
+    ConfigService.setReaderConfig("noteSortCode", json);
+  }
+
   //upgrade bookSortCode
-  json =
-    localStorage.getItem("bookSortCode") ||
-    JSON.stringify({ sort: 1, order: 2 });
-  ConfigService.setReaderConfig("bookSortCode", json);
+  json = localStorage.getItem("bookSortCode");
+  if (json) {
+    ConfigService.setReaderConfig("bookSortCode", json);
+  }
 
   localStorage.setItem("isUpgradedConfig", "yes");
 };
