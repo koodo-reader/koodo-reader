@@ -5,13 +5,13 @@ import Note from "../../../models/Note";
 import { PopupOptionProps } from "./interface";
 import ColorOption from "../../colorOption";
 import { popupList } from "../../../constants/popupList";
-import ConfigService from "../../../utils/service/configService";
+import ConfigService from "../../../utils/storage/configService";
 import toast from "react-hot-toast";
 import { getSelection } from "../../../utils/reader/mouseEvent";
 import copy from "copy-text-to-clipboard";
 import { getIframeDoc } from "../../../utils/reader/docUtil";
 import { openExternalUrl } from "../../../utils/common";
-import DatabaseService from "../../../utils/service/databaseService";
+import DatabaseService from "../../../utils/storage/databaseService";
 
 declare var window: any;
 

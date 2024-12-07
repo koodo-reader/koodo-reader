@@ -12,8 +12,8 @@ import {
   exportNotes,
 } from "../../utils/file/export";
 import BookUtil from "../../utils/file/bookUtil";
-import ConfigService from "../../utils/service/configService";
-import DatabaseService from "../../utils/service/databaseService";
+import ConfigService from "../../utils/storage/configService";
+import DatabaseService from "../../utils/storage/databaseService";
 
 class SelectBook extends React.Component<BookListProps, BookListState> {
   constructor(props: BookListProps) {

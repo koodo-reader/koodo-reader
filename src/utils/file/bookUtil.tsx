@@ -1,4 +1,4 @@
-import ConfigService from "../service/configService";
+import ConfigService from "../storage/configService";
 import { isElectron } from "react-device-detect";
 
 import BookModel from "../../models/Book";

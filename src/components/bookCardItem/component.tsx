@@ -2,7 +2,7 @@ import React from "react";
 import "./bookCardItem.css";
 import { BookCardProps, BookCardState } from "./interface";
 import ActionDialog from "../dialogs/actionDialog";
-import ConfigService from "../../utils/service/configService";
+import ConfigService from "../../utils/storage/configService";
 import { withRouter } from "react-router-dom";
 import { isElectron } from "react-device-detect";
 import EmptyCover from "../emptyCover";

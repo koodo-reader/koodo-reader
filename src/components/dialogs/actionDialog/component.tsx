@@ -4,7 +4,7 @@ import { Trans } from "react-i18next";
 import { ActionDialogProps, ActionDialogState } from "./interface";
 import toast from "react-hot-toast";
 import MoreAction from "../moreAction";
-import ConfigService from "../../../utils/service/configService";
+import ConfigService from "../../../utils/storage/configService";
 declare var window: any;
 class ActionDialog extends React.Component<
   ActionDialogProps,

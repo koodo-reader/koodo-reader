@@ -1,5 +1,5 @@
 import { isElectron } from "react-device-detect";
-import ConfigService from "../service/configService";
+import ConfigService from "../storage/configService";
 
 export const initTheme = () => {
   const style = document.createElement("link");

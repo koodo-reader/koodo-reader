@@ -1,7 +1,7 @@
 import React from "react";
 import "./popupDict.css";
 import { PopupDictProps, PopupDictState } from "./interface";
-import ConfigService from "../../../utils/service/configService";
+import ConfigService from "../../../utils/storage/configService";
 import Parser from "html-react-parser";
 import * as DOMPurify from "dompurify";
 import axios from "axios";
@@ -10,7 +10,7 @@ import { Trans } from "react-i18next";
 import { openExternalUrl } from "../../../utils/common";
 import lemmatize from "wink-lemmatizer";
 import toast from "react-hot-toast";
-import DatabaseService from "../../../utils/service/databaseService";
+import DatabaseService from "../../../utils/storage/databaseService";
 import { checkPlugin } from "../../../utils/common";
 declare var window: any;
 class PopupDict extends React.Component<PopupDictProps, PopupDictState> {

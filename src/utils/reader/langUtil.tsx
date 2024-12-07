@@ -1,4 +1,4 @@
-import ConfigService from "../service/configService";
+import ConfigService from "../storage/configService";
 import { getIframeDoc } from "./docUtil";
 declare var window: any;
 

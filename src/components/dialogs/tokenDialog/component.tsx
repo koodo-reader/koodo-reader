@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import "./tokenDialog.css";
 import { Trans } from "react-i18next";
 import { TokenDialogProps, TokenDialogState } from "./interface";
-import ConfigService from "../../../utils/service/configService";
+import ConfigService from "../../../utils/storage/configService";
 import toast from "react-hot-toast";
 import { openExternalUrl } from "../../../utils/common";
 import axios from "axios";

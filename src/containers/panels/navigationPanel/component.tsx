@@ -8,7 +8,7 @@ import SearchBox from "../../../components/searchBox";
 import Parser from "html-react-parser";
 import * as DOMPurify from "dompurify";
 import EmptyCover from "../../../components/emptyCover";
-import ConfigService from "../../../utils/service/configService";
+import ConfigService from "../../../utils/storage/configService";
 import CoverUtil from "../../../utils/file/coverUtil";
 
 class NavigationPanel extends React.Component<

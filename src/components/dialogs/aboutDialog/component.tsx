@@ -11,8 +11,8 @@ import {
   exportNotes,
 } from "../../../utils/file/export";
 import "./aboutDialog.css";
-import ConfigService from "../../../utils/service/configService";
-import DatabaseService from "../../../utils/service/databaseService";
+import ConfigService from "../../../utils/storage/configService";
+import DatabaseService from "../../../utils/storage/databaseService";
 
 declare var window: any;
 class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {

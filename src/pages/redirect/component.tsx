@@ -9,7 +9,7 @@ import Lottie from "react-lottie";
 
 import animationSuccess from "../../assets/lotties/success.json";
 import toast, { Toaster } from "react-hot-toast";
-import ConfigService from "../../utils/service/configService";
+import ConfigService from "../../utils/storage/configService";
 const successOptions = {
   loop: false,
   autoplay: true,

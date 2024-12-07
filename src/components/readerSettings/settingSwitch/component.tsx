@@ -2,7 +2,7 @@ import React from "react";
 import { SettingSwitchProps, SettingSwitchState } from "./interface";
 import { Trans } from "react-i18next";
 import TextToSpeech from "../../textToSpeech";
-import ConfigService from "../../../utils/service/configService";
+import ConfigService from "../../../utils/storage/configService";
 import { readerSettingList } from "../../../constants/settingList";
 import toast from "react-hot-toast";
 import BookUtil from "../../../utils/file/bookUtil";

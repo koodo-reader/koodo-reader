@@ -1,5 +1,5 @@
 import React from "react";
-import ConfigService from "../../utils/service/configService";
+import ConfigService from "../../utils/storage/configService";
 import "./colorOption.css";
 import { ColorProps, ColorStates } from "./interface";
 

@@ -1,5 +1,5 @@
 import { getIframeDoc } from "./docUtil";
-import ConfigService from "../service/configService";
+import ConfigService from "../storage/configService";
 
 /* Insert one Node after another Node */
 const insertAfter = (newNode, existingNode) => {
