@@ -12,7 +12,7 @@ import storageUtil from "../../../utils/service/configService";
 import TTSUtil from "../../../utils/reader/ttsUtil";
 import { isElectron } from "react-device-detect";
 import { handleExitFullScreen, handleFullScreen } from "../../../utils/common";
-import BookmarkService from "../../../utils/service/bookmarkService";
+import DatabaseService from "../../../utils/service/databaseService";
 declare var window: any;
 class OperationPanel extends React.Component<
   OperationPanelProps,
@@ -130,7 +130,7 @@ class OperationPanel extends React.Component<
       percentage,
       chapter
     );
-    await BookmarkService.saveBookmark(bookmark);
+    await DatabaseService.saveRecord(bookmark, "bookmarks");
     this.props.handleFetchBookmarks();
     this.setState({ isBookmark: true });
     toast.success(this.props.t("Addition successful"));

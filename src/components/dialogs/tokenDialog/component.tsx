@@ -4,7 +4,7 @@ import { Trans } from "react-i18next";
 import { TokenDialogProps, TokenDialogState } from "./interface";
 import ConfigService from "../../../utils/service/configService";
 import toast from "react-hot-toast";
-import { openExternalUrl } from "../../../utils/reader/urlUtil";
+import { openExternalUrl } from "../../../utils/common";
 import axios from "axios";
 import { driveConfig } from "../../../constants/driveList";
 class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {

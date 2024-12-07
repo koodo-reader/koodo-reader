@@ -1,5 +1,6 @@
 import axios from "axios";
 import ConfigService from "./service/configService";
+import Plugin from "../models/Plugin";
 import { isElectron } from "react-device-detect";
 import SparkMD5 from "spark-md5";
 declare var window: any;
@@ -193,4 +194,37 @@ export const getStorageLocation = () => {
   } else {
     return localStorage.getItem("storageLocation");
   }
+};
+export const getAllVoices = (pluginList: Plugin[]) => {
+  let voiceList: any[] = [];
+  for (
+    let index = 0;
+    index < pluginList.filter((item) => item.type === "voice").length;
+    index++
+  ) {
+    const plugin = pluginList.filter((item) => item.type === "voice")[index];
+    voiceList.push(...(plugin.voiceList as any[]));
+  }
+  return voiceList;
+};
+export const checkPlugin = async (plugin: Plugin) => {
+  if ((await generateSHA256Hash(plugin.script)) !== plugin.scriptSHA256) {
+    return false;
+  } else {
+    return true;
+  }
+};
+export const reloadManager = () => {
+  if (isElectron) {
+    window.require("electron").ipcRenderer.invoke("reload-main", "ping");
+  } else {
+    window.location.reload();
+  }
+};
+export const openExternalUrl = (url: string) => {
+  isElectron
+    ? ConfigService.getReaderConfig("isUseBuiltIn") === "yes"
+      ? window.open(url)
+      : window.require("electron").shell.openExternal(url)
+    : window.open(url);
 };

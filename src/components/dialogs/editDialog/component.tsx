@@ -4,7 +4,7 @@ import "./editDialog.css";
 import { Trans } from "react-i18next";
 import { EditDialogProps, EditDialogState } from "./interface";
 import toast from "react-hot-toast";
-import BookService from "../../../utils/service/bookService";
+import DatabaseService from "../../../utils/service/databaseService";
 
 class EditDialog extends React.Component<EditDialogProps, EditDialogState> {
   constructor(props: EditDialogProps) {
@@ -36,7 +36,7 @@ class EditDialog extends React.Component<EditDialogProps, EditDialogState> {
     let author = authorBox.value;
     this.props.currentBook.name = name;
     this.props.currentBook.author = author;
-    BookService.updateBook(this.props.currentBook).then(() => {
+    DatabaseService.updateRecord(this.props.currentBook, "books").then(() => {
       this.props.handleEditDialog(false);
       this.props.handleFetchBooks();
     });

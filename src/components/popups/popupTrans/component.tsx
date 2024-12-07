@@ -5,9 +5,9 @@ import ConfigService from "../../../utils/service/configService";
 import axios from "axios";
 import { Trans } from "react-i18next";
 import toast from "react-hot-toast";
-import PluginService from "../../../utils/service/pluginService";
-import Plugin from "../../../models/Plugin";
-import { openExternalUrl } from "../../../utils/reader/urlUtil";
+import { openExternalUrl } from "../../../utils/common";
+import DatabaseService from "../../../utils/service/databaseService";
+import { checkPlugin } from "../../../utils/common";
 declare var window: any;
 class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
   constructor(props: PopupTransProps) {
@@ -29,7 +29,7 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
     }
     if (
       this.props.plugins.findIndex(
-        (item) => item.identifier === this.state.transService
+        (item) => item.key === this.state.transService
       ) === -1
     ) {
       this.setState({ isAddNew: true });
@@ -40,7 +40,7 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
   }
   handleTrans = (text: string) => {
     let plutin = this.props.plugins.find(
-      (item) => item.identifier === this.state.transService
+      (item) => item.key === this.state.transService
     );
     if (!plutin) {
       return;
@@ -73,7 +73,7 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
     this.setState({ transService: target }, () => {
       ConfigService.setReaderConfig("transService", target);
       let plugin = this.props.plugins.find(
-        (item) => item.identifier === this.state.transService
+        (item) => item.key === this.state.transService
       );
       if (!plugin) {
         return;
@@ -97,13 +97,13 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
                 return (
                   <div
                     className={
-                      this.state.transService === item.identifier
+                      this.state.transService === item.key
                         ? "trans-service-selector"
                         : "trans-service-selector-inactive"
                     }
                     onClick={() => {
                       this.setState({ isAddNew: false });
-                      this.handleChangeService(item.identifier);
+                      this.handleChangeService(item.key);
                     }}
                   >
                     <span className={`icon-${item.icon} trans-icon`}></span>
@@ -169,19 +169,20 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
                       ) as HTMLTextAreaElement
                     ).value;
                     if (value) {
-                      let plugin: Plugin = JSON.parse(value);
-                      if (!(await PluginService.checkPlugin(plugin))) {
+                      let plugin: any = JSON.parse(value);
+                      plugin.key = plugin.identifier;
+                      if (!(await checkPlugin(plugin))) {
                         toast.error(this.props.t("Plugin verification failed"));
                         return;
                       }
                       if (
                         this.props.plugins.find(
-                          (item) => item.identifier === plugin.identifier
+                          (item) => item.key === plugin.key
                         )
                       ) {
-                        await PluginService.updatePlugin(plugin);
+                        await DatabaseService.updateRecord(plugin, "plugins");
                       } else {
-                        await PluginService.savePlugin(plugin);
+                        await DatabaseService.saveRecord(plugin, "plugins");
                       }
                       this.props.handleFetchPlugins();
                       toast.success(this.props.t("Addition successful"));
@@ -213,11 +214,11 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
                     }}
                   >
                     {this.props.plugins.find(
-                      (item) => item.identifier === this.state.transService
+                      (item) => item.key === this.state.transService
                     )?.langList &&
                       Object.keys(
                         this.props.plugins.find(
-                          (item) => item.identifier === this.state.transService
+                          (item) => item.key === this.state.transService
                         )?.langList as any
                       ).map((item, index) => {
                         return (
@@ -235,8 +236,7 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
                             {
                               Object.values(
                                 this.props.plugins.find(
-                                  (item) =>
-                                    item.identifier === this.state.transService
+                                  (item) => item.key === this.state.transService
                                 )?.langList as any[]
                               )[index]
                             }
@@ -258,11 +258,11 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
                     }}
                   >
                     {this.props.plugins.find(
-                      (item) => item.identifier === this.state.transService
+                      (item) => item.key === this.state.transService
                     )?.langList &&
                       Object.keys(
                         this.props.plugins.find(
-                          (item) => item.identifier === this.state.transService
+                          (item) => item.key === this.state.transService
                         )?.langList as any
                       ).map((item, index) => {
                         return (
@@ -280,8 +280,7 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
                             {
                               Object.values(
                                 this.props.plugins.find(
-                                  (item) =>
-                                    item.identifier === this.state.transService
+                                  (item) => item.key === this.state.transService
                                 )?.langList as any[]
                               )[index]
                             }

@@ -11,8 +11,7 @@ import {
   exportNotes,
 } from "../../../utils/file/export";
 import ConfigService from "../../../utils/service/configService";
-import NoteService from "../../../utils/service/noteService";
-import WordService from "../../../utils/service/wordService";
+import DatabaseService from "../../../utils/service/databaseService";
 declare var window: any;
 class ActionDialog extends React.Component<MoreActionProps, MoreActionState> {
   constructor(props: MoreActionProps) {
@@ -70,9 +69,12 @@ class ActionDialog extends React.Component<MoreActionProps, MoreActionState> {
             className="action-dialog-edit"
             style={{ paddingLeft: "0px" }}
             onClick={async () => {
-              let notes = await NoteService.getNotesByBookKey(
-                this.props.currentBook.key
-              );
+              let notes = (
+                await DatabaseService.getRecordsByBookKey(
+                  this.props.currentBook.key,
+                  "notes"
+                )
+              ).filter((note) => note.notes !== "");
               if (notes.length > 0) {
                 exportNotes(notes, [
                   ...this.props.books,
@@ -92,9 +94,12 @@ class ActionDialog extends React.Component<MoreActionProps, MoreActionState> {
             className="action-dialog-edit"
             style={{ paddingLeft: "0px" }}
             onClick={async () => {
-              let highlights = await NoteService.getHighlightsByBookKey(
-                this.props.currentBook.key
-              );
+              let highlights = (
+                await DatabaseService.getRecordsByBookKey(
+                  this.props.currentBook.key,
+                  "notes"
+                )
+              ).filter((note) => note.notes === "");
               if (highlights.length > 0) {
                 exportHighlights(highlights, [
                   ...this.props.books,
@@ -114,8 +119,9 @@ class ActionDialog extends React.Component<MoreActionProps, MoreActionState> {
             className="action-dialog-edit"
             style={{ paddingLeft: "0px" }}
             onClick={async () => {
-              let dictHistory = await WordService.getWordsByBookKey(
-                this.props.currentBook.key
+              let dictHistory = await DatabaseService.getRecordsByBookKey(
+                this.props.currentBook.key,
+                "words"
               );
               if (dictHistory.length > 0) {
                 exportDictionaryHistory(dictHistory, [

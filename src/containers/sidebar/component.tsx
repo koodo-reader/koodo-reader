@@ -4,7 +4,7 @@ import { sideMenu } from "../../constants/sideMenu";
 import { SidebarProps, SidebarState } from "./interface";
 import { withRouter } from "react-router-dom";
 import ConfigService from "../../utils/service/configService";
-import { openExternalUrl } from "../../utils/reader/urlUtil";
+import { openExternalUrl } from "../../utils/common";
 import DeletePopup from "../../components/dialogs/deletePopup";
 import { Trans } from "react-i18next";
 class Sidebar extends React.Component<SidebarProps, SidebarState> {

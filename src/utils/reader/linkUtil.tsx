@@ -1,4 +1,4 @@
-import { openExternalUrl } from "./urlUtil";
+import { openExternalUrl } from "../common";
 
 export const handleLinkJump = async (event: any, rendition: any = {}) => {
   let href;

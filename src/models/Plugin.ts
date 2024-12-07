@@ -1,5 +1,5 @@
 class Plugin {
-  identifier: string;
+  key: string;
   type: string;
   displayName: string;
   icon: string;
@@ -11,7 +11,7 @@ class Plugin {
   scriptSHA256: string;
   script: string;
   constructor(
-    identifier: string,
+    key: string,
     type: string,
     displayName: string,
     icon: string,
@@ -23,7 +23,7 @@ class Plugin {
     scriptSHA256: string,
     script: string
   ) {
-    this.identifier = identifier;
+    this.key = key;
     this.type = type;
     this.displayName = displayName;
     this.icon = icon;

@@ -44,7 +44,7 @@ const createTableStatement = {
     `,
   plugins: `
       CREATE TABLE IF NOT EXISTS "plugins" (
-        "identifier" text PRIMARY KEY,
+        "key" text PRIMARY KEY,
         "type" text,
         "displayName" text,
         "icon" text,
@@ -78,7 +78,7 @@ const saveStatement = {
   notes: 'INSERT OR REPLACE INTO notes (key, bookKey, chapter, chapterIndex, text, cfi, range, notes, date, percentage, color, tag) VALUES (@key, @bookKey, @chapter, @chapterIndex, @text, @cfi, @range, @notes, @date, @percentage, @color, @tag)',
   bookmarks: 'INSERT OR REPLACE INTO bookmarks (key, bookKey, cfi, label, percentage, chapter) VALUES (@key, @bookKey, @cfi, @label, @percentage, @chapter)',
   books: 'INSERT OR REPLACE INTO books (key, name, author, description, md5, cover, format, publisher, size, page, path, charset) VALUES (@key, @name, @author, @description, @md5, @cover, @format, @publisher, @size, @page, @path, @charset)',
-  plugins: 'INSERT OR REPLACE INTO plugins (identifier, type, displayName, icon, version, config, autoValue, langList, voiceList, scriptSHA256, script) VALUES (@identifier, @type, @displayName, @icon, @version, @config, @autoValue, @langList, @voiceList, @scriptSHA256, @script)',
+  plugins: 'INSERT OR REPLACE INTO plugins (key, type, displayName, icon, version, config, autoValue, langList, voiceList, scriptSHA256, script) VALUES (@key, @type, @displayName, @icon, @version, @config, @autoValue, @langList, @voiceList, @scriptSHA256, @script)',
   words: 'INSERT OR REPLACE INTO words (key, bookKey, date, word, chapter) VALUES (@key, @bookKey, @date, @word, @chapter)',
 }
 const deleteAllStatement = {
@@ -92,21 +92,21 @@ const updateStatement = {
   notes: 'UPDATE notes SET bookKey = @bookKey, chapter = @chapter, chapterIndex = @chapterIndex, text = @text, cfi = @cfi, range = @range, notes = @notes, date = @date, percentage = @percentage, color = @color, tag = @tag WHERE key = @key',
   bookmarks: 'UPDATE bookmarks SET bookKey = @bookKey, cfi = @cfi, label = @label, percentage = @percentage, chapter = @chapter WHERE key = @key',
   books: 'UPDATE books SET name = @name, author = @author, description = @description, md5 = @md5, cover = @cover, format = @format, publisher = @publisher, size = @size, page = @page, path = @path, charset = @charset WHERE key = @key',
-  plugins: 'UPDATE plugins SET type = @type, displayName = @displayName, icon = @icon, version = @version, config = @config, autoValue = @autoValue, langList = @langList, voiceList = @voiceList, scriptSHA256 = @scriptSHA256, script = @script WHERE identifier = @identifier',
+  plugins: 'UPDATE plugins SET type = @type, displayName = @displayName, icon = @icon, version = @version, config = @config, autoValue = @autoValue, langList = @langList, voiceList = @voiceList, scriptSHA256 = @scriptSHA256, script = @script WHERE key = @key',
   words: 'UPDATE words SET bookKey = @bookKey, date = @date, word = @word, chapter = @chapter WHERE key = @key',
 }
 const deleteStatement = {
   notes: 'DELETE FROM notes WHERE key = ?',
   bookmarks: 'DELETE FROM bookmarks WHERE key = ?',
   books: 'DELETE FROM books WHERE key = ?',
-  plugins: 'DELETE FROM plugins WHERE identifier = ?',
+  plugins: 'DELETE FROM plugins WHERE key = ?',
   words: 'DELETE FROM words WHERE key = ?',
 }
 const getStatement = {
   notes: `SELECT * FROM notes WHERE key = ?`,
   bookmarks: 'SELECT * FROM bookmarks WHERE key = ?',
   books: 'SELECT * FROM books WHERE key = ?',
-  plugins: 'SELECT * FROM plugins WHERE identifier = ?',
+  plugins: 'SELECT * FROM plugins WHERE key = ?',
   words: 'SELECT * FROM words WHERE key = ?',
 }
 const getByBookKeyStatement = {

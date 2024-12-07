@@ -1,10 +1,8 @@
 import ConfigService from "../../utils/service/configService";
-import SortUtil from "../../utils/reader/sortUtil";
 import BookModel from "../../models/Book";
 import PluginModel from "../../models/Plugin";
 import { Dispatch } from "redux";
-import PluginService from "../../utils/service/pluginService";
-import BookService from "../../utils/service/bookService";
+import DatabaseService from "../../utils/service/databaseService";
 
 export function handleBooks(books: BookModel[]) {
   return { type: "HANDLE_BOOKS", payload: books };
@@ -83,7 +81,7 @@ export function handleNoteSortCode(noteSortCode: {
 
 export function handleFetchBooks() {
   return (dispatch: Dispatch) => {
-    BookService.getAllBooks().then((value) => {
+    DatabaseService.getAllRecords("books").then((value) => {
       let bookArr: any = value;
       let keyArr = ConfigService.getAllListConfig("deletedBooks");
       dispatch(handleDeletedBooks(handleKeyFilter(bookArr, keyArr)));
@@ -94,7 +92,7 @@ export function handleFetchBooks() {
 
 export function handleFetchPlugins() {
   return async (dispatch: Dispatch) => {
-    PluginService.getAllPlugins().then((value) => {
+    DatabaseService.getAllRecords("plugins").then((value) => {
       dispatch(handlePlugins(value));
     });
   };

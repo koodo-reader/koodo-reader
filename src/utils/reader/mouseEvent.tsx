@@ -1,11 +1,8 @@
 import ConfigService from "../service/configService";
 import { isElectron } from "react-device-detect";
 import { getIframeDoc, getIframeWin } from "./docUtil";
-import { handleExitFullScreen, handleFullScreen } from "../common";
+import { handleExitFullScreen, handleFullScreen, sleep } from "../common";
 declare var window: any;
-const sleep = (ms: number) => {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-};
 
 let throttleTime =
   ConfigService.getReaderConfig("isSliding") === "yes" ? 1000 : 400;

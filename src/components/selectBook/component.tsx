@@ -13,9 +13,7 @@ import {
 } from "../../utils/file/export";
 import BookUtil from "../../utils/file/bookUtil";
 import ConfigService from "../../utils/service/configService";
-import BookService from "../../utils/service/bookService";
-import NoteService from "../../utils/service/noteService";
-import WordService from "../../utils/service/wordService";
+import DatabaseService from "../../utils/service/databaseService";
 
 class SelectBook extends React.Component<BookListProps, BookListState> {
   constructor(props: BookListProps) {
@@ -160,8 +158,9 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
                 <span
                   className="book-manage-title select-book-action"
                   onClick={async () => {
-                    let books = await BookService.getBooksByKeys(
-                      this.props.selectedBooks
+                    let books = await DatabaseService.getRecordsByBookKeys(
+                      this.props.selectedBooks,
+                      "books"
                     );
                     if (books.length > 0) {
                       await exportBooks(books);
@@ -176,12 +175,17 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
                 <span
                   className="book-manage-title select-book-action"
                   onClick={async () => {
-                    let selectedBooks = await BookService.getBooksByKeys(
-                      this.props.selectedBooks
-                    );
-                    let notes = await NoteService.getNotesByBookKeys(
-                      this.props.selectedBooks
-                    );
+                    let selectedBooks =
+                      await DatabaseService.getRecordsByBookKeys(
+                        this.props.selectedBooks,
+                        "books"
+                      );
+                    let notes = (
+                      await DatabaseService.getRecordsByBookKeys(
+                        this.props.selectedBooks,
+                        "notes"
+                      )
+                    ).filter((note) => note.notes !== "");
                     if (notes.length > 0) {
                       exportNotes(notes, selectedBooks);
                       toast.success(this.props.t("Export successful"));
@@ -195,12 +199,17 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
                 <span
                   className="book-manage-title select-book-action"
                   onClick={async () => {
-                    let selectedBooks = await BookService.getBooksByKeys(
-                      this.props.selectedBooks
-                    );
-                    let highlights = await NoteService.getHighlightsByBookKeys(
-                      this.props.selectedBooks
-                    );
+                    let selectedBooks =
+                      await DatabaseService.getRecordsByBookKeys(
+                        this.props.selectedBooks,
+                        "books"
+                      );
+                    let highlights = (
+                      await DatabaseService.getRecordsByBookKeys(
+                        this.props.selectedBooks,
+                        "notes"
+                      )
+                    ).filter((note) => note.notes === "");
                     if (highlights.length > 0) {
                       exportHighlights(highlights, selectedBooks);
                       toast.success(this.props.t("Export successful"));
@@ -214,12 +223,16 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
                 <span
                   className="book-manage-title select-book-action"
                   onClick={async () => {
-                    let selectedBooks = await BookService.getBooksByKeys(
-                      this.props.selectedBooks
-                    );
-                    let dictHistory = await WordService.getWordsByBookKeys(
-                      this.props.selectedBooks
-                    );
+                    let selectedBooks =
+                      await DatabaseService.getRecordsByBookKeys(
+                        this.props.selectedBooks,
+                        "books"
+                      );
+                    let dictHistory =
+                      await DatabaseService.getRecordsByBookKeys(
+                        this.props.selectedBooks,
+                        "words"
+                      );
                     if (dictHistory.length > 0) {
                       exportDictionaryHistory(dictHistory, selectedBooks);
                       toast.success(this.props.t("Export successful"));
@@ -233,9 +246,11 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
                 <span
                   className="book-manage-title select-book-action"
                   onClick={async () => {
-                    let selectedBooks = await BookService.getBooksByKeys(
-                      this.props.selectedBooks
-                    );
+                    let selectedBooks =
+                      await DatabaseService.getRecordsByBookKeys(
+                        this.props.selectedBooks,
+                        "books"
+                      );
                     if (selectedBooks.length > 0) {
                       for (
                         let index = 0;
@@ -286,9 +301,11 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
                 <span
                   className="book-manage-title select-book-action"
                   onClick={async () => {
-                    let selectedBooks = await BookService.getBooksByKeys(
-                      this.props.selectedBooks
-                    );
+                    let selectedBooks =
+                      await DatabaseService.getRecordsByBookKeys(
+                        this.props.selectedBooks,
+                        "books"
+                      );
                     if (selectedBooks.length === 0) {
                       toast(this.props.t("Nothing to delete"));
                       return;

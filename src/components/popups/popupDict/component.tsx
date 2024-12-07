@@ -1,18 +1,17 @@
 import React from "react";
 import "./popupDict.css";
 import { PopupDictProps, PopupDictState } from "./interface";
-import PluginService from "../../../utils/service/pluginService";
-import PluginModel from "../../../models/Plugin";
 import ConfigService from "../../../utils/service/configService";
 import Parser from "html-react-parser";
 import * as DOMPurify from "dompurify";
 import axios from "axios";
 import DictHistory from "../../../models/DictHistory";
 import { Trans } from "react-i18next";
-import { openExternalUrl } from "../../../utils/reader/urlUtil";
+import { openExternalUrl } from "../../../utils/common";
 import lemmatize from "wink-lemmatizer";
 import toast from "react-hot-toast";
-import WordService from "../../../utils/service/wordService";
+import DatabaseService from "../../../utils/service/databaseService";
+import { checkPlugin } from "../../../utils/common";
 declare var window: any;
 class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
   constructor(props: PopupDictProps) {
@@ -45,7 +44,7 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
     if (
       !this.state.dictService ||
       this.props.plugins.findIndex(
-        (item) => item.identifier === this.state.dictService
+        (item) => item.key === this.state.dictService
       ) === -1
     ) {
       this.setState({ isAddNew: true });
@@ -62,12 +61,12 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
     );
     let chapter = bookLocation.chapterTitle;
     let word = new DictHistory(bookKey, text, chapter);
-    await WordService.saveWord(word);
+    await DatabaseService.saveRecord(word, "words");
   };
   handleDict = async (text: string) => {
     try {
       let plugin = this.props.plugins.find(
-        (item) => item.identifier === this.state.dictService
+        (item) => item.key === this.state.dictService
       );
       if (!plugin) return;
       let dictFunc = plugin.script;
@@ -146,13 +145,11 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
                 .map((item, index) => {
                   return (
                     <option
-                      value={item.identifier}
-                      key={item.identifier}
+                      value={item.key}
+                      key={item.key}
                       className="add-dialog-shelf-list-option"
                       selected={
-                        this.state.dictService === item.identifier
-                          ? true
-                          : false
+                        this.state.dictService === item.key ? true : false
                       }
                     >
                       {item.displayName}
@@ -189,11 +186,11 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
               }}
             >
               {this.props.plugins.find(
-                (item) => item.identifier === this.state.dictService
+                (item) => item.key === this.state.dictService
               )?.langList &&
                 (
                   this.props.plugins.find(
-                    (item) => item.identifier === this.state.dictService
+                    (item) => item.key === this.state.dictService
                   )?.langList as any[]
                 ).map((item, index) => {
                   return (
@@ -270,19 +267,20 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
                       ) as HTMLTextAreaElement
                     ).value;
                     if (value) {
-                      let plugin: PluginModel = JSON.parse(value);
-                      if (!(await PluginService.checkPlugin(plugin))) {
+                      let plugin: any = JSON.parse(value);
+                      plugin.key = plugin.identifier;
+                      if (!(await checkPlugin(plugin))) {
                         toast.error(this.props.t("Plugin verification failed"));
                         return;
                       }
                       if (
                         this.props.plugins.find(
-                          (item) => item.identifier === plugin.identifier
+                          (item) => item.key === plugin.key
                         )
                       ) {
-                        await PluginService.updatePlugin(plugin);
+                        await DatabaseService.updateRecord(plugin, "plugins");
                       } else {
-                        await PluginService.savePlugin(plugin);
+                        await DatabaseService.saveRecord(plugin, "plugins");
                       }
                       this.props.handleFetchPlugins();
                       toast.success(this.props.t("Addition successful"));

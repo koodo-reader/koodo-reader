@@ -4,7 +4,7 @@ import { FeedbackDialogProps, FeedbackDialogState } from "./interface";
 import toast from "react-hot-toast";
 import "./feedbackDialog.css";
 import packageInfo from "../../../../package.json";
-import { openExternalUrl } from "../../../utils/reader/urlUtil";
+import { openExternalUrl } from "../../../utils/common";
 import {
   checkDeveloperUpdate,
   getUploadUrl,

@@ -1,6 +1,6 @@
 import { Howl } from "howler";
-import PluginService from "../service/pluginService";
 import PluginModel from "../../models/Plugin";
+import { getAllVoices } from "../common";
 
 class TTSUtil {
   static player: any;
@@ -31,7 +31,7 @@ class TTSUtil {
     speed: number,
     plugins: PluginModel[]
   ) {
-    let voiceList = PluginService.getAllVoices(plugins);
+    let voiceList = getAllVoices(plugins);
     if (voiceIndex >= voiceList.length) {
       voiceIndex = 0;
     }
@@ -39,7 +39,7 @@ class TTSUtil {
     if (!voice || !voice.plugin) {
       return;
     }
-    let plugin = plugins.find((item) => item.identifier === voice.plugin);
+    let plugin = plugins.find((item) => item.key === voice.plugin);
     if (!plugin) {
       return;
     }
@@ -80,7 +80,7 @@ class TTSUtil {
     return this.player;
   }
   static getVoiceList(plugins: PluginModel[]) {
-    let voices = PluginService.getAllVoices(plugins);
+    let voices = getAllVoices(plugins);
     return [...voices, { name: "Add new voice", url: "", type: "" }];
   }
 }
