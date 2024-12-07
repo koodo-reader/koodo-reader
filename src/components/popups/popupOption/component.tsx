@@ -10,8 +10,8 @@ import toast from "react-hot-toast";
 import { getSelection } from "../../../utils/reader/mouseEvent";
 import copy from "copy-text-to-clipboard";
 import { getIframeDoc } from "../../../utils/reader/docUtil";
-import { openExternalUrl } from "../../../utils/reader/urlUtil";
-import NoteService from "../../../utils/service/noteService";
+import { openExternalUrl } from "../../../utils/common";
+import DatabaseService from "../../../utils/service/databaseService";
 
 declare var window: any;
 
@@ -100,7 +100,7 @@ class PopupOption extends React.Component<PopupOptionProps> {
       color,
       []
     );
-    NoteService.saveNote(digest).then(async () => {
+    DatabaseService.saveRecord(digest, "notes").then(async () => {
       this.props.handleOpenMenu(false);
       toast.success(this.props.t("Addition successful"));
       this.props.handleFetchNotes();

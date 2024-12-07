@@ -10,7 +10,7 @@ import Viewer from "../../containers/viewer";
 import { Tooltip } from "react-tooltip";
 import "./index.css";
 import Book from "../../models/Book";
-import BookService from "../../utils/service/bookService";
+import DatabaseService from "../../utils/service/databaseService";
 
 let lock = false; //prevent from clicking too fasts
 let throttleTime =
@@ -65,7 +65,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
     let lastIndexOfSlash = url.lastIndexOf("/", firstIndexOfQuestion);
     let key = url.substring(lastIndexOfSlash + 1, firstIndexOfQuestion);
     this.props.handleFetchBooks();
-    BookService.getBook(key).then((book: Book | null) => {
+    DatabaseService.getRecord(key, "books").then((book: Book | null) => {
       if (!book) {
         return;
       }

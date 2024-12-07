@@ -2,7 +2,7 @@ import React from "react";
 import { Trans } from "react-i18next";
 import { AboutDialogProps, AboutDialogState } from "./interface";
 import { isElectron } from "react-device-detect";
-import { openExternalUrl } from "../../../utils/reader/urlUtil";
+import { openExternalUrl } from "../../../utils/common";
 import toast from "react-hot-toast";
 import {
   exportBooks,
@@ -12,7 +12,7 @@ import {
 } from "../../../utils/file/export";
 import "./aboutDialog.css";
 import ConfigService from "../../../utils/service/configService";
-import WordService from "../../../utils/service/wordService";
+import DatabaseService from "../../../utils/service/databaseService";
 
 declare var window: any;
 class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
@@ -233,7 +233,7 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
           <li
             className="sort-by-category-list"
             onClick={async () => {
-              let dictHistory = await WordService.getAllWords();
+              let dictHistory = await DatabaseService.getAllRecords("words");
               if (dictHistory.length > 0) {
                 exportDictionaryHistory(dictHistory, [
                   ...this.props.books,

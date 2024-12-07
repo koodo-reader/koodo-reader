@@ -20,10 +20,9 @@ import {
 } from "../../../constants/settingList";
 import { themeList } from "../../../constants/themeList";
 import toast from "react-hot-toast";
-import { openExternalUrl } from "../../../utils/reader/urlUtil";
-import ManagerUtil from "../../../utils/reader/managerUtil";
-import PluginService from "../../../utils/service/pluginService";
-import { getStorageLocation } from "../../../utils/common";
+import { openExternalUrl } from "../../../utils/common";
+import { getStorageLocation, reloadManager } from "../../../utils/common";
+import DatabaseService from "../../../utils/service/databaseService";
 declare var window: any;
 class SettingDialog extends React.Component<
   SettingInfoProps,
@@ -101,7 +100,7 @@ class SettingDialog extends React.Component<
       ConfigService.setReaderConfig("textColor", "rgba(0,0,0,1)");
     }
 
-    ManagerUtil.reloadManager();
+    reloadManager();
   };
   changeFont = (font: string) => {
     let body = document.getElementsByTagName("body")[0];
@@ -154,7 +153,7 @@ class SettingDialog extends React.Component<
   handleTheme = (name: string, index: number) => {
     this.setState({ currentThemeIndex: index });
     ConfigService.setReaderConfig("themeColor", name);
-    ManagerUtil.reloadManager();
+    reloadManager();
   };
   handleMergeWord = () => {
     if (this.state.isOpenInMain && !this.state.isMergeWord) {
@@ -608,7 +607,10 @@ class SettingDialog extends React.Component<
                       <span
                         className="change-location-button"
                         onClick={async () => {
-                          await PluginService.deletePlugin(item.identifier);
+                          await DatabaseService.deleteRecord(
+                            item.key,
+                            "plugins"
+                          );
                           this.props.handleFetchPlugins();
                           toast.success(this.props.t("Deletion successful"));
                         }}

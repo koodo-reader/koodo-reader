@@ -6,10 +6,8 @@ import { withRouter } from "react-router-dom";
 import BookUtil from "../../../utils/file/bookUtil";
 import toast from "react-hot-toast";
 import ConfigService from "../../../utils/service/configService";
-import NoteService from "../../../utils/service/noteService";
-import BookmarkService from "../../../utils/service/bookmarkService";
-import BookService from "../../../utils/service/bookService";
 import CoverUtil from "../../../utils/file/coverUtil";
+import DatabaseService from "../../../utils/service/databaseService";
 
 class DeleteDialog extends React.Component<
   DeleteDialogProps,
@@ -28,9 +26,9 @@ class DeleteDialog extends React.Component<
     this.props.handleDeleteDialog(false);
   };
   handleDeleteOther = async (key: string) => {
-    await BookmarkService.deleteBookmarksByBookKey(key);
+    await DatabaseService.deleteRecordsByBookKey(key, "bookmarks");
     this.props.handleFetchBookmarks();
-    await NoteService.deleteNotesByBookKey(key);
+    await DatabaseService.deleteRecordsByBookKey(key, "notes");
     this.props.handleFetchNotes();
   };
   handleComfirm = async () => {
@@ -109,7 +107,7 @@ class DeleteDialog extends React.Component<
   };
   deleteBook = (key: string, format: string) => {
     return new Promise<void>((resolve, reject) => {
-      BookService.deleteBook(key)
+      DatabaseService.deleteRecord(key, "books")
         .then(async () => {
           await BookUtil.deleteBook(key, format);
           CoverUtil.deleteCover(key);

@@ -1,11 +1,7 @@
 import { getStorageLocation } from "../common";
 import CoverUtil from "./coverUtil";
-import BookmarkService from "../service/bookmarkService";
-import BookService from "../service/bookService";
-import NoteService from "../service/noteService";
-import PluginService from "../service/pluginService";
-import WordService from "../service/wordService";
 import ConfigService from "../service/configService";
+import DatabaseService from "../service/databaseService";
 declare var window: any;
 export const changePath = async (newPath: string) => {
   if (isFolderContainsFile(newPath)) {
@@ -102,7 +98,7 @@ export const upgradeStorage = async (): Promise<Boolean> => {
           item.cover = "";
         }
       });
-      await BookService.saveAllBooks(books);
+      await DatabaseService.saveAllRecords(books, "books");
     }
 
     //uprade book files
@@ -137,24 +133,30 @@ export const upgradeStorage = async (): Promise<Boolean> => {
         ? JSON.parse(localStorage.getItem("pluginList") || "")
         : [];
     if (plugins.length > 0) {
-      plugins.length > 0 && (await PluginService.saveAllPlugins(plugins));
+      plugins = plugins.map((item: any) => {
+        if (!item.key) {
+          item.key = item.identifier;
+        }
+        return item;
+      });
+      await DatabaseService.saveAllRecords(plugins, "plugins");
     }
 
     //upgrade notes
     let notes = await window.localforage.getItem("notes");
     if (notes && notes.length > 0) {
-      await NoteService.saveAllNotes(notes);
+      await DatabaseService.saveAllRecords(notes, "notes");
     }
 
     //upgrade bookmarks
     let bookmarks = await window.localforage.getItem("bookmarks");
     if (bookmarks && bookmarks.length > 0) {
-      await BookmarkService.saveAllBookmarks(bookmarks);
+      await DatabaseService.saveAllRecords(bookmarks, "bookmarks");
     }
     //upgrade words
     let words = await window.localforage.getItem("words");
     if (words && words.length > 0) {
-      await WordService.saveAllWords(words);
+      await DatabaseService.saveAllRecords(words, "words");
     }
 
     localStorage.setItem("isUpgradedStorage", "yes");

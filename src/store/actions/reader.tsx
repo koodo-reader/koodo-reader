@@ -1,9 +1,8 @@
 import NoteModel from "../../models/Note";
 import BookmarkModel from "../../models/Bookmark";
 import HtmlBookModel from "../../models/HtmlBook";
-import NoteService from "../../utils/service/noteService";
-import BookmarkService from "../../utils/service/bookmarkService";
 import ConfigService from "../../utils/service/configService";
+import DatabaseService from "../../utils/service/databaseService";
 
 export function handleNotes(notes: NoteModel[]) {
   return { type: "HANDLE_NOTES", payload: notes };
@@ -37,7 +36,7 @@ export function handleNoteKey(key: string) {
 }
 export function handleFetchNotes() {
   return (dispatch: (arg0: { type: string; payload: NoteModel[] }) => void) => {
-    NoteService.getAllNotes().then((value) => {
+    DatabaseService.getAllRecords("notes").then((value) => {
       let noteArr: any;
       if (value === null) {
         noteArr = [];
@@ -64,7 +63,7 @@ export function handleFetchBookmarks() {
   return (
     dispatch: (arg0: { type: string; payload: BookmarkModel[] }) => void
   ) => {
-    BookmarkService.getAllBookmarks().then((value) => {
+    DatabaseService.getAllRecords("bookmarks").then((value) => {
       let bookmarkArr: any;
       if (value === null) {
         bookmarkArr = [];

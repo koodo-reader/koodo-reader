@@ -3,9 +3,8 @@ import "./deleteIcon.css";
 import { DeleteIconProps, DeleteIconStates } from "./interface";
 import DeletePopup from "../dialogs/deletePopup";
 import toast from "react-hot-toast";
-import NoteService from "../../utils/service/noteService";
-import BookmarkService from "../../utils/service/bookmarkService";
 import ConfigService from "../../utils/service/configService";
+import DatabaseService from "../../utils/service/databaseService";
 
 class DeleteIcon extends React.Component<DeleteIconProps, DeleteIconStates> {
   constructor(props: DeleteIconProps) {
@@ -27,14 +26,14 @@ class DeleteIcon extends React.Component<DeleteIconProps, DeleteIconStates> {
       return;
     }
     if (this.props.mode === "bookmarks") {
-      BookmarkService.deleteBookmark(this.props.itemKey).then(() => {
+      DatabaseService.deleteRecord(this.props.itemKey, "bookmarks").then(() => {
         deleteFunc();
         toast.success(this.props.t("Deletion successful"));
       });
       return;
     }
     if (this.props.mode === "notes") {
-      NoteService.deleteNote(this.props.itemKey).then(() => {
+      DatabaseService.deleteRecord(this.props.itemKey, "notes").then(() => {
         deleteFunc();
         toast.success(this.props.t("Deletion successful"));
       });
@@ -48,7 +47,7 @@ class DeleteIcon extends React.Component<DeleteIconProps, DeleteIconStates> {
         tag: item.tag.filter((subitem) => subitem !== tagName),
       };
     });
-    NoteService.updateAllNotes(noteList).then(() => {
+    DatabaseService.updateAllRecords(noteList, "notes").then(() => {
       this.props.handleFetchNotes();
     });
   };

@@ -3,13 +3,13 @@ import { TextToSpeechProps, TextToSpeechState } from "./interface";
 import { Trans } from "react-i18next";
 import { speedList } from "../../constants/dropdownList";
 import ConfigService from "../../utils/service/configService";
-import { sleep } from "../../utils/common";
+import { checkPlugin, getAllVoices, sleep } from "../../utils/common";
 import { isElectron } from "react-device-detect";
 import toast from "react-hot-toast";
 import TTSUtil from "../../utils/reader/ttsUtil";
 import "./textToSpeech.css";
-import PluginService from "../../utils/service/pluginService";
-import { openExternalUrl } from "../../utils/reader/urlUtil";
+import { openExternalUrl } from "../../utils/common";
+import DatabaseService from "../../utils/service/databaseService";
 
 class TextToSpeech extends React.Component<
   TextToSpeechProps,
@@ -72,7 +72,7 @@ class TextToSpeech extends React.Component<
       }
       if (
         this.voices.length === 0 &&
-        PluginService.getAllVoices(this.props.plugins).length === 0
+        getAllVoices(this.props.plugins).length === 0
       ) {
         this.setState({ isAddNew: true });
         return;
@@ -90,7 +90,7 @@ class TextToSpeech extends React.Component<
     let voiceIndex = parseInt(ConfigService.getReaderConfig("voiceIndex")) || 0;
     if (
       voiceIndex > this.nativeVoices.length - 1 &&
-      PluginService.getAllVoices(this.props.plugins).length > 0
+      getAllVoices(this.props.plugins).length > 0
     ) {
       await this.handleRead();
     } else {
@@ -401,18 +401,19 @@ class TextToSpeech extends React.Component<
                     ).value;
                     if (value) {
                       let plugin = JSON.parse(value);
-                      if (!(await PluginService.checkPlugin(plugin))) {
+                      plugin.key = plugin.identifier;
+                      if (!(await checkPlugin(plugin))) {
                         toast.error(this.props.t("Plugin verification failed"));
                         return;
                       }
                       if (
                         this.props.plugins.find(
-                          (item) => item.identifier === plugin.identifier
+                          (item) => item.key === plugin.key
                         )
                       ) {
-                        await PluginService.updatePlugin(plugin);
+                        await DatabaseService.updateRecord(plugin, "plugins");
                       } else {
-                        await PluginService.savePlugin(plugin);
+                        await DatabaseService.saveRecord(plugin, "plugins");
                       }
                       this.props.handleFetchPlugins();
                       toast.success(this.props.t("Addition successful"));

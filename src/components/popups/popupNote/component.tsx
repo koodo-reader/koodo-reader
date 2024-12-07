@@ -8,8 +8,8 @@ import NoteModel from "../../../models/Note";
 import { Trans } from "react-i18next";
 import toast from "react-hot-toast";
 import { getIframeDoc } from "../../../utils/reader/docUtil";
-import NoteService from "../../../utils/service/noteService";
 import ConfigService from "../../../utils/service/configService";
+import DatabaseService from "../../../utils/service/databaseService";
 declare var window: any;
 
 class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
@@ -76,7 +76,7 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
       let newNote = this.props.notes.filter(
         (item) => item.key === this.props.noteKey
       )[0];
-      NoteService.updateNote(newNote).then(() => {
+      DatabaseService.updateRecord(newNote, "notes").then(() => {
         this.props.handleOpenMenu(false);
         toast.success(this.props.t("Addition successful"));
         this.props.handleFetchNotes();
@@ -119,7 +119,7 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
         color,
         tag
       );
-      NoteService.saveNote(note).then(async () => {
+      DatabaseService.saveRecord(note, "notes").then(async () => {
         this.props.handleOpenMenu(false);
         toast.success(this.props.t("Addition successful"));
         this.props.handleFetchNotes();
@@ -133,7 +133,7 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
   }
   handleClose = () => {
     if (this.props.noteKey) {
-      NoteService.deleteNote(this.props.noteKey).then(() => {
+      DatabaseService.deleteRecord(this.props.noteKey, "notes").then(() => {
         toast.success(this.props.t("Deletion successful"));
         this.props.handleMenuMode("");
         this.props.handleFetchNotes();

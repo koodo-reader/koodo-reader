@@ -1,14 +1,10 @@
 import BookUtil from "./bookUtil";
 import { isElectron } from "react-device-detect";
-import PluginService from "../service/pluginService";
-import BookService from "../service/bookService";
-import NoteService from "../service/noteService";
-import BookmarkService from "../service/bookmarkService";
-import WordService from "../service/wordService";
 import { getStorageLocation } from "../common";
 import CoverUtil from "./coverUtil";
 import ConfigService from "../service/configService";
 import { getCloudConfig } from "./common";
+import DatabaseService from "../service/databaseService";
 declare var window: any;
 export const backup = async (service: string): Promise<Boolean> => {
   let fileName = "data.zip";
@@ -111,11 +107,11 @@ export const backupFromPath = async (targetPath: string, fileName: string) => {
 };
 export const backupFromStorage = async () => {
   let zip = new window.JSZip();
-  let books = await BookService.getDbBuffer();
-  let notes = await NoteService.getDbBuffer();
-  let bookmarks = await BookmarkService.getDbBuffer();
-  let words = await WordService.getDbBuffer();
-  let plugins = await PluginService.getDbBuffer();
+  let books = await DatabaseService.getDbBuffer("books");
+  let notes = await DatabaseService.getDbBuffer("notes");
+  let bookmarks = await DatabaseService.getDbBuffer("bookmarks");
+  let words = await DatabaseService.getDbBuffer("words");
+  let plugins = await DatabaseService.getDbBuffer("plugins");
   let config = JSON.stringify(ConfigService.getConfigJson());
   console.log(books, notes, bookmarks, words, plugins, config);
   await zipCover(zip);
@@ -149,7 +145,7 @@ export const backupToConfigJson = () => {
 };
 export const zipBook = (zip: any) => {
   return new Promise<boolean>(async (resolve, reject) => {
-    let books = await BookService.getAllBooks();
+    let books = await DatabaseService.getAllRecords("books");
     let bookZip = zip.folder("book");
     let data: any = [];
     books &&
@@ -179,7 +175,7 @@ export const zipBook = (zip: any) => {
   });
 };
 export const zipCover = async (zip: any) => {
-  let books = await BookService.getAllBooks();
+  let books = await DatabaseService.getAllRecords("books");
   let coverZip = zip.folder("cover");
   if (isElectron) {
   } else {
