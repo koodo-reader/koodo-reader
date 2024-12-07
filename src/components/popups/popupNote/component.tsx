@@ -8,8 +8,8 @@ import NoteModel from "../../../models/Note";
 import { Trans } from "react-i18next";
 import toast from "react-hot-toast";
 import { getIframeDoc } from "../../../utils/reader/docUtil";
-import ConfigService from "../../../utils/service/configService";
-import DatabaseService from "../../../utils/service/databaseService";
+import ConfigService from "../../../utils/storage/configService";
+import DatabaseService from "../../../utils/storage/databaseService";
 declare var window: any;
 
 class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {

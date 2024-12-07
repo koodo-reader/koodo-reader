@@ -1,5 +1,5 @@
 import axios from "axios";
-import ConfigService from "./service/configService";
+import ConfigService from "./storage/configService";
 import Plugin from "../models/Plugin";
 import { isElectron } from "react-device-detect";
 import SparkMD5 from "spark-md5";

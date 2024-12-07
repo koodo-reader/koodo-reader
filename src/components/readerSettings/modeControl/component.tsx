@@ -1,7 +1,7 @@
 import React from "react";
 import "./modeControl.css";
 import { ModeControlProps, ModeControlState } from "./interface";
-import ConfigService from "../../../utils/service/configService";
+import ConfigService from "../../../utils/storage/configService";
 import { Trans } from "react-i18next";
 import BookUtil from "../../../utils/file/bookUtil";
 

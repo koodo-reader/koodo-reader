@@ -4,7 +4,7 @@ import StyleUtil from "../../../utils/reader/styleUtil";
 import "./themeList.css";
 import { Trans } from "react-i18next";
 import { ThemeListProps, ThemeListState } from "./interface";
-import ConfigService from "../../../utils/service/configService";
+import ConfigService from "../../../utils/storage/configService";
 import { Panel as ColorPickerPanel } from "rc-color-picker";
 import "rc-color-picker/assets/index.css";
 import BookUtil from "../../../utils/file/bookUtil";

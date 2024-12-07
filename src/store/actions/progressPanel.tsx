@@ -1,5 +1,5 @@
 import BookModel from "../../models/Book";
-import ConfigService from "../../utils/service/configService";
+import ConfigService from "../../utils/storage/configService";
 export function handleLocations(locations: any) {
   return { type: "HANDLE_LOCATIONS", payload: locations };
 }

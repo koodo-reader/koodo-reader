@@ -10,7 +10,7 @@ import BackupDialog from "../../components/dialogs/backupDialog";
 import "./manager.css";
 import { ManagerProps, ManagerState } from "./interface";
 import { Trans } from "react-i18next";
-import ConfigService from "../../utils/service/configService";
+import ConfigService from "../../utils/storage/configService";
 import SettingDialog from "../../components/dialogs/settingDialog";
 import { isMobile } from "react-device-detect";
 import { Route, Switch, Redirect } from "react-router-dom";

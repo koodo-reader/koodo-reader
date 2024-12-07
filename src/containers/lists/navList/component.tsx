@@ -4,7 +4,7 @@ import { Trans } from "react-i18next";
 import { NavListProps, NavListState } from "./interface";
 import DeleteIcon from "../../../components/deleteIcon";
 import toast from "react-hot-toast";
-import ConfigService from "../../../utils/service/configService";
+import ConfigService from "../../../utils/storage/configService";
 class NavList extends React.Component<NavListProps, NavListState> {
   constructor(props: NavListProps) {
     super(props);

@@ -1,8 +1,8 @@
 import NoteModel from "../../models/Note";
 import BookmarkModel from "../../models/Bookmark";
 import HtmlBookModel from "../../models/HtmlBook";
-import ConfigService from "../../utils/service/configService";
-import DatabaseService from "../../utils/service/databaseService";
+import ConfigService from "../../utils/storage/configService";
+import DatabaseService from "../../utils/storage/databaseService";
 
 export function handleNotes(notes: NoteModel[]) {
   return { type: "HANDLE_NOTES", payload: notes };

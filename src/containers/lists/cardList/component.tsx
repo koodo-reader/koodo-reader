@@ -11,7 +11,7 @@ import NoteTag from "../../../components/noteTag";
 import BookUtil from "../../../utils/file/bookUtil";
 import toast from "react-hot-toast";
 import BookModel from "../../../models/Book";
-import ConfigService from "../../../utils/service/configService";
+import ConfigService from "../../../utils/storage/configService";
 class CardList extends React.Component<CardListProps, CardListStates> {
   constructor(props: CardListProps) {
     super(props);

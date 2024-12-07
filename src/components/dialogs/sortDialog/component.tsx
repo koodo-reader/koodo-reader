@@ -3,7 +3,7 @@ import "./sortDialog.css";
 import SortUtil from "../../../utils/reader/sortUtil";
 import { Trans } from "react-i18next";
 import { SortDialogProps, SortDialogState } from "./interface";
-import ConfigService from "../../../utils/service/configService";
+import ConfigService from "../../../utils/storage/configService";
 
 class SortDialog extends React.Component<SortDialogProps, SortDialogState> {
   constructor(props: SortDialogProps) {

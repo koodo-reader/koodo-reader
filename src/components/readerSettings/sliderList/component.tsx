@@ -2,7 +2,7 @@ import React from "react";
 import { Trans } from "react-i18next";
 import { SliderListProps, SliderListState } from "./interface";
 import "./sliderList.css";
-import ConfigService from "../../../utils/service/configService";
+import ConfigService from "../../../utils/storage/configService";
 import BookUtil from "../../../utils/file/bookUtil";
 class SliderList extends React.Component<SliderListProps, SliderListState> {
   constructor(props: SliderListProps) {

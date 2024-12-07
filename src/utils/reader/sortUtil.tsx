@@ -1,6 +1,6 @@
 import BookModel from "../../models/Book";
 import NoteModel from "../../models/Note";
-import ConfigService from "../service/configService";
+import ConfigService from "../storage/configService";
 declare var window: any;
 const getBookName = (books: BookModel[]) => {
   return books.map((item) => item.name);

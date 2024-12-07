@@ -6,7 +6,7 @@ import { Trans } from "react-i18next";
 import Lottie from "react-lottie";
 import animationNew from "../../../assets/lotties/new.json";
 import animationSuccess from "../../../assets/lotties/success.json";
-import ConfigService from "../../../utils/service/configService";
+import ConfigService from "../../../utils/storage/configService";
 import { openExternalUrl } from "../../../utils/common";
 import { isElectron } from "react-device-detect";
 import { checkStableUpdate, sleep } from "../../../utils/common";

@@ -6,7 +6,7 @@ import { restore } from "../../../utils/file/restore";
 import { Trans } from "react-i18next";
 import { BackupDialogProps, BackupDialogState } from "./interface";
 import TokenDialog from "../tokenDialog";
-import ConfigService from "../../../utils/service/configService";
+import ConfigService from "../../../utils/storage/configService";
 import Lottie from "react-lottie";
 import animationSuccess from "../../../assets/lotties/success.json";
 import packageInfo from "../../../../package.json";

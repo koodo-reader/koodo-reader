@@ -3,7 +3,7 @@ import "./progressPanel.css";
 import { Trans } from "react-i18next";
 import { ProgressPanelProps, ProgressPanelState } from "./interface";
 
-import ConfigService from "../../../utils/service/configService";
+import ConfigService from "../../../utils/storage/configService";
 declare var window: any;
 class ProgressPanel extends React.Component<
   ProgressPanelProps,

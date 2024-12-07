@@ -1,4 +1,4 @@
-import ConfigService from "../service/configService";
+import ConfigService from "../storage/configService";
 import { isElectron } from "react-device-detect";
 import { getIframeDoc, getIframeWin } from "./docUtil";
 import { handleExitFullScreen, handleFullScreen, sleep } from "../common";

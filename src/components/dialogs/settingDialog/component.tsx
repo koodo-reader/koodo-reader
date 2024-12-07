@@ -4,7 +4,7 @@ import { SettingInfoProps, SettingInfoState } from "./interface";
 import { Trans } from "react-i18next";
 import i18n from "../../../i18n";
 import packageInfo from "../../../../package.json";
-import ConfigService from "../../../utils/service/configService";
+import ConfigService from "../../../utils/storage/configService";
 import { changePath } from "../../../utils/file/common";
 import { isElectron } from "react-device-detect";
 import { dropdownList } from "../../../constants/dropdownList";
@@ -22,7 +22,7 @@ import { themeList } from "../../../constants/themeList";
 import toast from "react-hot-toast";
 import { openExternalUrl } from "../../../utils/common";
 import { getStorageLocation, reloadManager } from "../../../utils/common";
-import DatabaseService from "../../../utils/service/databaseService";
+import DatabaseService from "../../../utils/storage/databaseService";
 declare var window: any;
 class SettingDialog extends React.Component<
   SettingInfoProps,

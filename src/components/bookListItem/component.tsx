@@ -3,7 +3,7 @@ import "./bookListItem.css";
 import { BookItemProps, BookItemState } from "./interface";
 import { Trans } from "react-i18next";
 import { withRouter } from "react-router-dom";
-import ConfigService from "../../utils/service/configService";
+import ConfigService from "../../utils/storage/configService";
 import EmptyCover from "../emptyCover";
 import BookUtil from "../../utils/file/bookUtil";
 import ActionDialog from "../dialogs/actionDialog";

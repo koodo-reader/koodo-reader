@@ -9,7 +9,7 @@ import { Trans } from "react-i18next";
 import { BookListProps, BookListState } from "./interface";
 import { Redirect, withRouter } from "react-router-dom";
 import ViewMode from "../../../components/viewMode";
-import ConfigService from "../../../utils/service/configService";
+import ConfigService from "../../../utils/storage/configService";
 
 class BookList extends React.Component<BookListProps, BookListState> {
   constructor(props: BookListProps) {

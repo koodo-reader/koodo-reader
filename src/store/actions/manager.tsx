@@ -1,8 +1,8 @@
-import ConfigService from "../../utils/service/configService";
+import ConfigService from "../../utils/storage/configService";
 import BookModel from "../../models/Book";
 import PluginModel from "../../models/Plugin";
 import { Dispatch } from "redux";
-import DatabaseService from "../../utils/service/databaseService";
+import DatabaseService from "../../utils/storage/databaseService";
 
 export function handleBooks(books: BookModel[]) {
   return { type: "HANDLE_BOOKS", payload: books };

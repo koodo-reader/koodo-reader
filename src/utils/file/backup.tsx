@@ -2,9 +2,9 @@ import BookUtil from "./bookUtil";
 import { isElectron } from "react-device-detect";
 import { getStorageLocation } from "../common";
 import CoverUtil from "./coverUtil";
-import ConfigService from "../service/configService";
+import ConfigService from "../storage/configService";
 import { getCloudConfig } from "./common";
-import DatabaseService from "../service/databaseService";
+import DatabaseService from "../storage/databaseService";
 declare var window: any;
 export const backup = async (service: string): Promise<Boolean> => {
   let fileName = "data.zip";

@@ -2,7 +2,7 @@ import React from "react";
 import "./bookCoverItem.css";
 import { BookCoverProps, BookCoverState } from "./interface";
 import ActionDialog from "../dialogs/actionDialog";
-import ConfigService from "../../utils/service/configService";
+import ConfigService from "../../utils/storage/configService";
 import { withRouter } from "react-router-dom";
 import { isElectron } from "react-device-detect";
 import EmptyCover from "../emptyCover";

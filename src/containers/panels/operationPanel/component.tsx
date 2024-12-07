@@ -4,15 +4,15 @@ import Bookmark from "../../../models/Bookmark";
 import { Trans } from "react-i18next";
 
 import { OperationPanelProps, OperationPanelState } from "./interface";
-import ConfigService from "../../../utils/service/configService";
+import ConfigService from "../../../utils/storage/configService";
 import { withRouter } from "react-router-dom";
 import toast from "react-hot-toast";
 import { HtmlMouseEvent } from "../../../utils/reader/mouseEvent";
-import storageUtil from "../../../utils/service/configService";
+import storageUtil from "../../../utils/storage/configService";
 import TTSUtil from "../../../utils/reader/ttsUtil";
 import { isElectron } from "react-device-detect";
 import { handleExitFullScreen, handleFullScreen } from "../../../utils/common";
-import DatabaseService from "../../../utils/service/databaseService";
+import DatabaseService from "../../../utils/storage/databaseService";
 declare var window: any;
 class OperationPanel extends React.Component<
   OperationPanelProps,

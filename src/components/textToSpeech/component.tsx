@@ -2,14 +2,14 @@ import React from "react";
 import { TextToSpeechProps, TextToSpeechState } from "./interface";
 import { Trans } from "react-i18next";
 import { speedList } from "../../constants/dropdownList";
-import ConfigService from "../../utils/service/configService";
+import ConfigService from "../../utils/storage/configService";
 import { checkPlugin, getAllVoices, sleep } from "../../utils/common";
 import { isElectron } from "react-device-detect";
 import toast from "react-hot-toast";
 import TTSUtil from "../../utils/reader/ttsUtil";
 import "./textToSpeech.css";
 import { openExternalUrl } from "../../utils/common";
-import DatabaseService from "../../utils/service/databaseService";
+import DatabaseService from "../../utils/storage/databaseService";
 
 class TextToSpeech extends React.Component<
   TextToSpeechProps,

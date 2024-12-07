@@ -1,7 +1,7 @@
 import { getStorageLocation } from "../common";
 import CoverUtil from "./coverUtil";
-import ConfigService from "../service/configService";
-import DatabaseService from "../service/databaseService";
+import ConfigService from "../storage/configService";
+import DatabaseService from "../storage/databaseService";
 declare var window: any;
 export const changePath = async (newPath: string) => {
   if (isFolderContainsFile(newPath)) {

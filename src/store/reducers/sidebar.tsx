@@ -1,4 +1,4 @@
-import ConfigService from "../../utils/service/configService";
+import ConfigService from "../../utils/storage/configService";
 const initState = {
   mode: "home",
   shelfTitle: "",
