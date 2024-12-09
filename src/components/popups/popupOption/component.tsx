@@ -67,20 +67,12 @@ class PopupOption extends React.Component<PopupOptionProps> {
     if (!iframe) return;
     let doc = getIframeDoc();
     if (!doc) return;
-    let charRange;
-    if (this.props.currentBook.format !== "PDF") {
-      charRange = window.rangy
-        .getSelection(iframe)
-        .saveCharacterRanges(doc.body)[0];
-    }
-    let range =
-      this.props.currentBook.format === "PDF"
-        ? JSON.stringify(
-            await this.props.htmlBook.rendition.getHightlightCoords(
-              this.props.chapterDocIndex
-            )
-          )
-        : JSON.stringify(charRange);
+    let range = JSON.stringify(
+      await this.props.htmlBook.rendition.getHightlightCoords(
+        this.props.chapterDocIndex
+      )
+    );
+
     let text = doc.getSelection()?.toString();
     if (!text) return;
     text = text.replace(/\s\s/g, "");

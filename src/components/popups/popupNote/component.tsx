@@ -1,7 +1,7 @@
 import React from "react";
 import "./popupNote.css";
 import Note from "../../../models/Note";
-
+import _ from "underscore";
 import { PopupNoteProps, PopupNoteState } from "./interface";
 import NoteTag from "../../noteTag";
 import NoteModel from "../../../models/Note";
@@ -21,7 +21,7 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
     let textArea: any = document.querySelector(".editor-box");
     textArea && textArea.focus();
     if (this.props.noteKey) {
-      let noteIndex = window._.findLastIndex(this.props.notes, {
+      let noteIndex = _.findLastIndex(this.props.notes, {
         key: this.props.noteKey,
       });
       this.setState({

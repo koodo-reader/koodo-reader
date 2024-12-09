@@ -1,12 +1,13 @@
 import BookModel from "../../models/Book";
 import NoteModel from "../../models/Note";
 import ConfigService from "../storage/configService";
-declare var window: any;
+import _ from "underscore";
+
 const getBookName = (books: BookModel[]) => {
   return books.map((item) => item.name);
 };
 const getAuthorName = (books: BookModel[]) => {
-  return window._.sortBy(
+  return _.sortBy(
     books.map((item) => {
       return { key: item.key, author: item.author };
     }),
@@ -105,11 +106,11 @@ class SortUtil {
       let bookKeys = getBookKey(books);
       if (bookSortCode.order === 1) {
         return getBookIndex(
-          window._.union(durationKeys, bookKeys),
+          _.union(durationKeys, bookKeys),
           bookKeys
         ).reverse();
       } else {
-        return getBookIndex(window._.union(durationKeys, bookKeys), bookKeys);
+        return getBookIndex(_.union(durationKeys, bookKeys), bookKeys);
       }
     }
     if (bookSortCode.sort === 5) {
@@ -137,8 +138,8 @@ class SortUtil {
     books: BookModel[] = []
   ) {
     if (noteSortCode.sort === 2) {
-      let noteArr = window._.clone(notes).reverse();
-      let dateArr = window._.uniq(
+      let noteArr = _.clone(notes).reverse();
+      let dateArr = _.uniq(
         notes.map(
           (item) =>
             "" + item.date.year + "-" + item.date.month + "-" + item.date.day
@@ -166,10 +167,10 @@ class SortUtil {
       return noteObj || {};
     }
     if (noteSortCode.sort === 1) {
-      let noteArr = window._.clone(notes).reverse();
-      let nameArr = window._.uniq(
+      let noteArr = _.clone(notes).reverse();
+      let nameArr = _.uniq(
         notes.map((item) => {
-          let bookIndex = window._.findLastIndex(books, {
+          let bookIndex = _.findLastIndex(books, {
             key: item.bookKey,
           });
           if (bookIndex > -1) {
@@ -190,7 +191,7 @@ class SortUtil {
       });
       noteArr.forEach((note) => {
         nameArr.forEach((name) => {
-          let bookIndex = window._.findLastIndex(books, {
+          let bookIndex = _.findLastIndex(books, {
             key: note.bookKey,
           });
           if (bookIndex > -1 && name === books[bookIndex].name) {

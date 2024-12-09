@@ -126,7 +126,7 @@ const getByBookKeysStatement = {
   words: (bookKeys) => `SELECT * FROM words WHERE bookKey IN (${bookKeys.map(() => '?').join(',')})`,
   books: (bookKeys) => `SELECT * FROM books WHERE key IN (${bookKeys.map(() => '?').join(',')})`,
 }
-const sqlStatement = {
+export const sqlStatement = {
   createTableStatement,
   getAllStatement,
   saveStatement,
@@ -138,7 +138,7 @@ const sqlStatement = {
   getByBookKeysStatement,
   deleteByBookKeyStatement
 }
-const jsonToSqlite = {
+export const jsonToSqlite = {
   notes: (note) => {
     let noteRaw = { ...note };
     noteRaw.date = JSON.stringify(note.date);
@@ -169,7 +169,7 @@ const jsonToSqlite = {
     return wordRaw;
   },
 }
-const sqliteToJson = {
+export const sqliteToJson = {
   notes: (note) => {
     let noteRaw = { ...note };
     noteRaw.date = JSON.parse(note.date);
@@ -202,4 +202,4 @@ const sqliteToJson = {
 }
 
 
-module.exports = { sqlStatement, jsonToSqlite, sqliteToJson };
+// module.exports = { sqlStatement, jsonToSqlite, sqliteToJson };

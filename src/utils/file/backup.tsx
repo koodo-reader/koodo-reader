@@ -5,6 +5,7 @@ import CoverUtil from "./coverUtil";
 import ConfigService from "../storage/configService";
 import { getCloudConfig } from "./common";
 import DatabaseService from "../storage/databaseService";
+import JSZip from "jszip";
 declare var window: any;
 export const backup = async (service: string): Promise<Boolean> => {
   let fileName = "data.zip";
@@ -106,7 +107,7 @@ export const backupFromPath = async (targetPath: string, fileName: string) => {
   // return new Blob([zip.toBuffer()], { type: "application/zip" });
 };
 export const backupFromStorage = async () => {
-  let zip = new window.JSZip();
+  let zip = new JSZip();
   let books = await DatabaseService.getDbBuffer("books");
   let notes = await DatabaseService.getDbBuffer("notes");
   let bookmarks = await DatabaseService.getDbBuffer("bookmarks");

@@ -137,6 +137,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     ConfigService.setReaderConfig("lastSyncTime", timestamp);
     localStorage.setItem("lastSyncTime", timestamp);
     backupToConfigJson();
+    toast.success(this.props.t("Synchronisation successful"));
   };
 
   render() {

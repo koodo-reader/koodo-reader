@@ -17,7 +17,7 @@ import PopupBox from "../../components/popups/popupBox";
 import Note from "../../models/Note";
 import PageWidget from "../pageWidget";
 import { scrollContents } from "../../utils/common";
-
+import _ from "underscore";
 declare var window: any;
 let lock = false; //prevent from clicking too fasts
 
@@ -256,7 +256,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       } else {
         chapterDocIndex =
           bookLocation.chapterTitle && this.props.htmlBook
-            ? window._.findLastIndex(
+            ? _.findLastIndex(
                 this.props.htmlBook.flattenChapters.map((item) => {
                   item.label = item.label.trim();
                   return item;

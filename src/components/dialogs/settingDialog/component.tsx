@@ -8,7 +8,7 @@ import ConfigService from "../../../utils/storage/configService";
 import { changePath } from "../../../utils/file/common";
 import { isElectron } from "react-device-detect";
 import { dropdownList } from "../../../constants/dropdownList";
-
+import _ from "underscore";
 import { restoreFromConfigJson } from "../../../utils/file/restore";
 import {
   generalSettingList,
@@ -62,7 +62,7 @@ class SettingDialog extends React.Component<
       isDisableCrop: ConfigService.getReaderConfig("isDisableCrop") === "yes",
       isDisablePDFCover:
         ConfigService.getReaderConfig("isDisablePDFCover") === "yes",
-      currentThemeIndex: window._.findLastIndex(themeList, {
+      currentThemeIndex: _.findLastIndex(themeList, {
         name: ConfigService.getReaderConfig("themeColor"),
       }),
       storageLocation: getStorageLocation() || "",

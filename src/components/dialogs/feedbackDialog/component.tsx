@@ -11,6 +11,7 @@ import {
   uploadFile,
 } from "../../../utils/common";
 import axios from "axios";
+import JSZip from "jszip";
 declare var window: any;
 class FeedbackDialog extends Component<
   FeedbackDialogProps,
@@ -191,7 +192,7 @@ class FeedbackDialog extends Component<
                   toast.error("Empty files");
                 }
                 let files: any = event.target.files;
-                let zip = new window.JSZip();
+                let zip = new JSZip();
                 for (let index = 0; index < files.length; index++) {
                   const file = files[index];
                   var fileSize = file.size;
