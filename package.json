@@ -19,25 +19,33 @@
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.485.0",
+    "@zip.js/zip.js": "^2.7.54",
     "adm-zip": "^0.5.2",
     "axios": "^0.19.2",
     "basic-ftp": "^5.0.5",
     "better-sqlite3": "^11.6.0",
     "buffer": "^6.0.3",
+    "chinese-s2t": "^1.0.0",
     "copy-text-to-clipboard": "^2.2.0",
     "dompurify": "^3.0.1",
     "electron-is-dev": "^1.1.0",
     "electron-store": "^8.0.1",
+    "fflate": "^0.8.2",
     "font-list": "^1.4.5",
     "fs-extra": "^9.1.0",
     "howler": "^2.2.3",
     "iconv-lite": "^0.6.3",
+    "js-untar": "^2.0.0",
+    "jszip": "^3.10.1",
+    "mammoth": "^1.8.0",
+    "marked": "^15.0.3",
+    "mhtml2html": "^3.0.0",
     "qs": "^6.11.2",
     "react-hot-toast": "^2.1.1",
     "react-tooltip": "^5.26.3",
     "ssh2-sftp-client": "^9.1.0",
-    "webdav": "^5.7.1",
-    "wink-lemmatizer": "^3.0.4"
+    "underscore": "^1.13.7",
+    "webdav": "^5.7.1"
   },
   "devDependencies": {
     "@types/i18next": "^13.0.0",
@@ -284,7 +292,10 @@
     }
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": "react-app",
+    "rules": {
+      "no-unused-vars": 2
+    }
   },
   "browserslist": {
     "production": [

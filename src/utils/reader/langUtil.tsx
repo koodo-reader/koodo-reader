@@ -1,6 +1,6 @@
 import ConfigService from "../storage/configService";
 import { getIframeDoc } from "./docUtil";
-declare var window: any;
+import Chinese from "chinese-s2t";
 
 export const tsTransform = () => {
   let doc = getIframeDoc();
@@ -16,14 +16,14 @@ export const tsTransform = () => {
       doc.querySelectorAll("p").forEach((item) => {
         item.innerHTML = item.innerHTML
           .split("")
-          .map((item) => window.ChineseS2T.s2t(item))
+          .map((item) => Chinese.s2t(item))
           .join("");
       });
     } else {
       doc.querySelectorAll("p").forEach((item) => {
         item.innerHTML = item.innerHTML
           .split("")
-          .map((item) => window.ChineseS2T.t2s(item))
+          .map((item) => Chinese.t2s(item))
           .join("");
       });
     }

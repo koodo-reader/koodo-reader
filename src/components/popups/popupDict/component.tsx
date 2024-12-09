@@ -8,7 +8,6 @@ import axios from "axios";
 import DictHistory from "../../../models/DictHistory";
 import { Trans } from "react-i18next";
 import { openExternalUrl } from "../../../utils/common";
-import lemmatize from "wink-lemmatizer";
 import toast from "react-hot-toast";
 import DatabaseService from "../../../utils/storage/databaseService";
 import { checkPlugin } from "../../../utils/common";
@@ -33,13 +32,10 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
       .replace(/(\r\n|\n|\r)/gm, "")
       .replace(/-/gm, "");
     this.setState({ word: originalText });
-    let prototype = "";
-    prototype = lemmatize.verb(originalText);
-    prototype = lemmatize.noun(prototype);
-    prototype = lemmatize.adjective(prototype);
-    this.setState({ prototype });
+    // let prototype = "";
+    this.setState({ prototype: originalText });
     if (ConfigService.getReaderConfig("isLemmatizeWord") === "yes") {
-      originalText = prototype;
+      originalText = originalText;
     }
     if (
       !this.state.dictService ||

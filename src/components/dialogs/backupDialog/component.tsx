@@ -10,7 +10,7 @@ import ConfigService from "../../../utils/storage/configService";
 import Lottie from "react-lottie";
 import animationSuccess from "../../../assets/lotties/success.json";
 import packageInfo from "../../../../package.json";
-
+import _ from "underscore";
 import toast from "react-hot-toast";
 import { isElectron } from "react-device-detect";
 import { checkStableUpdate } from "../../../utils/common";
@@ -181,13 +181,13 @@ class BackupDialog extends React.Component<
     const dialogProps = {
       driveName: this.state.currentDrive,
       url: driveList[
-        window._.findLastIndex(driveList, {
+        _.findLastIndex(driveList, {
           icon: this.state.currentDrive,
         })
       ].url,
       title:
         driveList[
-          window._.findLastIndex(driveList, {
+          _.findLastIndex(driveList, {
             icon: this.state.currentDrive,
           })
         ].name,

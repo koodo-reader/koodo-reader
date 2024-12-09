@@ -2,9 +2,10 @@ import Book from "../../models/Book";
 import DictHistory from "../../models/DictHistory";
 import Note from "../../models/Note";
 import BookUtil from "./bookUtil";
+import JSZip from "jszip";
 
 export const zipFilesToBlob = (buffers: ArrayBuffer[], names: string[]) => {
-  var zip = new window.JSZip();
+  var zip = new JSZip();
   for (let index = 0; index < buffers.length; index++) {
     zip.file(names[index], buffers[index]);
   }
