@@ -20,7 +20,7 @@ let readerWindow;
 let mainView
 const singleInstance = app.requestSingleInstanceLock();
 var filePath = null;
-if (process.platform != "darwin" && process.argv.length >= 2) {
+if (process.platform !== "darwin" && process.argv.length >= 2) {
   filePath = process.argv[1];
 }
 let options = {
@@ -124,9 +124,9 @@ const createMainWin = () => {
         height: parseInt(store.get("windowHeight") || 660),
         x: parseInt(store.get("windowX")),
         y: parseInt(store.get("windowY")),
-        frame: isMergeWord === "yes" ? false : true,
-        hasShadow: isMergeWord === "yes" ? false : true,
-        transparent: isMergeWord === "yes" ? true : false,
+        frame: isMergeWord !== "yes",
+        hasShadow: isMergeWord !== "yes",
+        transparent: isMergeWord === "yes",
       });
       readerWindow.loadURL(url);
       // readerWindow.webContents.openDevTools();
@@ -180,7 +180,7 @@ const createMainWin = () => {
           host: url,
           user: username,
           password: password,
-          secure: ssl === "1" ? true : false,
+          secure: ssl === "1",
         });
       });
     }
@@ -213,7 +213,7 @@ const createMainWin = () => {
           host: url,
           user: username,
           password: password,
-          secure: ssl === "1" ? true : false,
+          secure: ssl === "1",
         });
       });
     }
@@ -571,9 +571,9 @@ const createMainWin = () => {
         height: parseInt(store.get("windowHeight") || 660),
         x: parseInt(store.get("windowX")),
         y: parseInt(store.get("windowY")),
-        frame: store.get("isMergeWord") !== "yes" ? false : true,
-        hasShadow: store.get("isMergeWord") !== "yes" ? false : true,
-        transparent: store.get("isMergeWord") !== "yes" ? true : false,
+        frame: store.get("isMergeWord") === "yes",
+        hasShadow: store.get("isMergeWord") === "yes",
+        transparent: store.get("isMergeWord") !== "yes",
       });
       options.webPreferences.nodeIntegrationInSubFrames = true;
 
@@ -605,11 +605,11 @@ const createMainWin = () => {
   ipcMain.on("get-dirname", (event, arg) => {
     event.returnValue = __dirname;
   });
-  ipcMain.on("system-color", (event, arg) => {
+  ipcMain.on("system-color", (event) => {
     event.returnValue = nativeTheme.shouldUseDarkColors || false;
   });
   ipcMain.on("check-main-open", (event, arg) => {
-    event.returnValue = mainWin ? true : false;
+    event.returnValue = !!mainWin;
   });
   ipcMain.on("get-file-data", function (event) {
     if (fs.existsSync(path.join(dirPath, "log.json"))) {
