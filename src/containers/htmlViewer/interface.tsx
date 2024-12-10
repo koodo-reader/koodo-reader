@@ -53,3 +53,9 @@ export interface ViewerState {
   isColorChanged: boolean;
 
 }
+
+export interface LineEnding {
+  start: number;
+  end: number;
+  text: string;
+}

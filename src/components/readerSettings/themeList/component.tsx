@@ -1,5 +1,5 @@
 import React from "react";
-import { backgroundList, textList } from "../../../constants/themeList";
+import { backgroundList, lines, textList } from "../../../constants/themeList";
 import StyleUtil from "../../../utils/readUtils/styleUtil";
 import "./themeList.css";
 import { Trans } from "react-i18next";
@@ -124,6 +124,7 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
 
   handleClick = (changeColorsTriggered: boolean) => {
     StorageUtil.setReaderConfig("changeColorsTriggered", changeColorsTriggered.toString());
+    StorageUtil.setReaderConfig("baseColors", JSON.stringify(lines));
     const event = new Event('localStorageChange');
     window.dispatchEvent(event);
     this.props.renderBookWithLineColors();

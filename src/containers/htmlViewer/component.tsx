@@ -1,6 +1,6 @@
 import React from "react";
 import RecentBooks from "../../utils/readUtils/recordRecent";
-import { ViewerProps, ViewerState } from "./interface";
+import { LineEnding, ViewerProps, ViewerState } from "./interface";
 import { withRouter } from "react-router-dom";
 import BookUtil from "../../utils/fileUtils/bookUtil";
 import PopupMenu from "../../components/popups/popupMenu";
@@ -64,12 +64,11 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
   }
   componentDidMount() {
     window.rangy.init();
-    // this.handleRenderBook();
-    // this.handleRenderBookWithLinesColor();
+
     //make sure page width is always 12 times, section = Math.floor(element.clientWidth / 12), or text will be blocked
     this.handlePageWidth();
-    // this.props.handleRenderBookFunc(this.handleRenderBook);
     window.addEventListener("resize", () => {
+
       BookUtil.reloadBooks();
     });
 
@@ -81,7 +80,8 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
 
     const changeColorsTriggered = StorageUtil.getReaderConfig("changeColorsTriggered") === "true";
 
-    this.handleChangeStyle(changeColorsTriggered)
+    this.handleChangeStyle(changeColorsTriggered);
+
 
   }
 
@@ -95,6 +95,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     if (changeColorsTriggered) {
       this.handleRenderBookWithLinesColor();
       this.props.handleRenderBookWithLinesColoredFunc(this.handleRenderBookWithLinesColor);
+
     } else {
       this.handleRenderBook();
       this.props.handleRenderBookFunc(this.handleRenderBook);
@@ -144,6 +145,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         pageOffset: `calc(50vw - ${width / 2}px)`,
         pageWidth: `${width}px`,
       });
+
     } else if (this.state.readerMode === "double") {
       let width = findValidMultiple(
         document.body.clientWidth - 2 * this.state.margin - 80
@@ -152,6 +154,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         pageOffset: `calc(50vw - ${width / 2}px)`,
         pageWidth: `${width}px`,
       });
+
     }
   };
   handleHighlight = (rendition: any) => {
@@ -200,13 +203,13 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           );
           await rendition.renderTo(
             document.getElementsByClassName("html-viewer-page")[0]
-
           );
+
 
           await this.handleRest(rendition);
           rendition.on("rendered", () => {
-
             this.changeSentenceColors(rendition);
+
           })
           this.props.handleReadingState(true);
 
@@ -259,6 +262,90 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     );
   };
 
+  removeTagsFromParagraph(paragraph) {
+    // Remplace le contenu HTML du paragraphe par son équivalent texte brut
+    paragraph.innerHTML = paragraph.innerText || paragraph.textContent || "";
+  }
+
+  getLineEndings(container) {
+    const paragraphs = container.querySelectorAll("p.kookit-text");
+
+    const lineEndings: LineEnding[] = [];
+
+    paragraphs.forEach((paragraph) => {
+
+      this.removeTagsFromParagraph(paragraph);
+
+      const range = container.createRange();
+
+      function extractTextFromNode(node) {
+        let text = '';
+        if (node.nodeType === Node.TEXT_NODE) {
+          text += node.textContent || '';
+        } else if (node.nodeType === Node.ELEMENT_NODE) {
+          // Parcourir les enfants du nœud et accumuler le texte
+          node.childNodes.forEach(child => {
+            text += extractTextFromNode(child);
+          });
+        }
+        return text;
+      }
+
+
+      function processNode(node) {
+        if (node.nodeType === Node.TEXT_NODE) {
+          let text = extractTextFromNode(node);
+          console.log("Texte extrait:", text);
+          let startOffset = 0;
+          let localOffset = 0;
+
+          // Réinitialisation pour chaque nœud de texte
+          for (let i = 0; i < text.length; i++) {
+            try {
+              range.setStart(node, localOffset);
+              range.setEnd(node, i + 1);
+            } catch (e) {
+              console.warn("Invalid offset:", e);
+              break;
+            }
+
+            const rects = range.getClientRects();
+            if (rects.length > 1) {
+              // Nouvelle ligne détectée, mise à jour de l'offset global
+              lineEndings.push({
+                start: startOffset,
+                end: startOffset + (i - localOffset),
+                text: text.slice(localOffset, i),
+              });
+              startOffset += i;
+              localOffset = i;
+            }
+          }
+
+          // Ajouter le texte restant à la fin
+          if (localOffset < text.length) {
+            lineEndings.push({
+              start: startOffset,
+              end: startOffset + (text.length - localOffset),
+              text: text.slice(localOffset),
+            });
+          }
+          startOffset += text.length;
+        } else if (node.nodeType === Node.ELEMENT_NODE) {
+          node.childNodes.forEach(child => {
+            // Continuer le traitement des nœuds enfants
+            processNode(child);
+
+          })
+        }
+      }
+
+      processNode(paragraph);
+    });
+
+    return lineEndings;
+  }
+
   changeSentenceColors = (rendition) => {
     if (!rendition) return;
     const iframe = rendition.element?.querySelector("iframe");
@@ -267,55 +354,43 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       return;
     }
 
-    // Accédez au contenu du document de l'iframe
     const doc = iframe.contentDocument || iframe.contentWindow?.document;
     if (!doc) {
       console.error("Impossible d'accéder au contenu de l'iframe");
       return;
     }
 
-    const randomColors = StorageUtil.getReaderConfig("readerColors") || "[]";
+    // Récupérer les index de début et de fin des lignes
+    const lineEndings = this.getLineEndings(doc);
+
+    const randomColors = StorageUtil.getReaderConfig("baseColors") || "[]";
     const colors = JSON.parse(randomColors);
 
-    // Parcourir tous les paragraphes et changer les couleurs des phrases
-
     const paragraphs = doc.querySelectorAll("p.kookit-text");
+
     paragraphs.forEach((p) => {
+      const text = p.innerText || ""; // Utiliser le texte brut
+      let coloredHTML = ""; // Stocker le contenu stylisé
       let colorIndex = 0;
-      // Découper le texte en phrases
-      const sentences = p.textContent?.split(/(?<=\.)/g) || []; // Divise le texte par les points
-      // Remplacer le contenu HTML des paragraphes par des phrases colorées
-      p.innerHTML = sentences
-        .map(
-          (sentence) => {
-            const color = colors[colorIndex % colors.length];
-            colorIndex++;
 
-            return `<span style="color: #${color}">${sentence}</span>`;
-          }
-        )
-        .join("");
+      // Trouver les lignes correspondant à ce paragraphe
+      const lines = lineEndings.filter((line) => text.includes(line.text));
+
+      lines.forEach((line) => {
+        const color = colors[colorIndex % colors.length];
+        colorIndex++;
+
+        // Ajouter chaque ligne colorée
+        coloredHTML += `<span style="color: ${color}">${line.text}</span><br/>`;
+      });
+
+      // Mettre à jour le contenu du paragraphe
+      p.innerHTML = coloredHTML;
     });
-    ;
-
-  }
-
-  // Générer une couleur aléatoire
-  getRandomColor = () => {
-    const letters = "0123456789ABCDEF";
-    let color = "";
-    for (let i = 0; i < 6; i++) {
-      color += letters[Math.floor(Math.random() * 16)];
-    }
-
-    let colors = JSON.parse(StorageUtil.getReaderConfig("readerColors") || "[]");
-
-    if (!colors.includes(color)) {
-      colors.push(color);
-      StorageUtil.setReaderConfig("readerColors", JSON.stringify(colors));
-    }
-
   };
+
+
+
 
 
 
@@ -538,8 +613,10 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
 
               }
               : {
+
                 left: this.state.pageOffset,
                 width: this.state.pageWidth,
+
               }
           }
         ></div>
@@ -553,5 +630,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
   }
 }
 export default withRouter(Viewer as any);
+
+
 
 
