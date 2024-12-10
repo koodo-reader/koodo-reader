@@ -2,7 +2,7 @@ import React from "react";
 import "./moreAction.css";
 import { Trans } from "react-i18next";
 import { MoreActionProps, MoreActionState } from "./interface";
-
+import { saveAs } from "file-saver";
 import toast from "react-hot-toast";
 import BookUtil from "../../../utils/file/bookUtil";
 import {
@@ -53,7 +53,7 @@ class ActionDialog extends React.Component<MoreActionProps, MoreActionState> {
                 this.props.currentBook.path
               ).then((result: any) => {
                 toast.success(this.props.t("Export successful"));
-                window.saveAs(
+                saveAs(
                   new Blob([result]),
                   this.props.currentBook.name +
                     `.${this.props.currentBook.format.toLocaleLowerCase()}`

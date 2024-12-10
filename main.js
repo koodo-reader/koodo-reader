@@ -13,7 +13,7 @@ const isDev = require("electron-is-dev");
 const Store = require("electron-store");
 const store = new Store();
 const fs = require("fs");
-const { sqlStatement, jsonToSqlite, sqliteToJson } = require('./src/sql-statement.js');
+const { sqlStatement, jsonToSqlite, sqliteToJson } = require('./sql-statement.js');
 const configDir = app.getPath("userData");
 const dirPath = path.join(configDir, "uploads");
 let mainWin;

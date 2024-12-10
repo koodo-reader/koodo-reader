@@ -5,6 +5,7 @@ import CoverUtil from "./coverUtil";
 import ConfigService from "../storage/configService";
 import { getCloudConfig } from "./common";
 import DatabaseService from "../storage/databaseService";
+import { saveAs } from "file-saver";
 import JSZip from "jszip";
 declare var window: any;
 export const backup = async (service: string): Promise<Boolean> => {
@@ -49,7 +50,7 @@ export const backup = async (service: string): Promise<Boolean> => {
       return false;
     }
     if (service === "local") {
-      window.saveAs(blob as Blob, fileName);
+      saveAs(blob as Blob, fileName);
       return true;
     } else {
       const { SyncUtil } = await import(

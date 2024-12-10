@@ -264,7 +264,7 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
                           toast(this.props.t("Pre-caching"));
                         }
 
-                        let result = await BookUtil.fetchBook(
+                        let result: any = await BookUtil.fetchBook(
                           selectedBook.key,
                           selectedBook.format.toLowerCase(),
                           true,
