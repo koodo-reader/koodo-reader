@@ -1,6 +1,6 @@
 import ConfigService from "../storage/configService";
 import { isElectron } from "react-device-detect";
-
+import localforage from "localforage";
 import BookModel from "../../models/Book";
 import toast from "react-hot-toast";
 import { copyArrayBuffer, getStorageLocation } from "../common";
@@ -38,7 +38,7 @@ class BookUtil {
         throw error;
       }
     } else {
-      return window.localforage.setItem(key, buffer);
+      return localforage.setItem(key, buffer);
     }
   }
   static deleteBook(key: string, format: string) {
@@ -60,7 +60,7 @@ class BookUtil {
         }
       });
     } else {
-      return window.localforage.removeItem(key);
+      return localforage.removeItem(key);
     }
   }
   static isBookExist(key: string, format: string, bookPath: string) {
@@ -85,7 +85,7 @@ class BookUtil {
           resolve(false);
         }
       } else {
-        window.localforage.getItem(key).then((result) => {
+        localforage.getItem(key).then((result) => {
           if (result) {
             resolve(true);
           } else {
@@ -131,7 +131,7 @@ class BookUtil {
         }
       });
     } else {
-      return window.localforage.getItem(key);
+      return localforage.getItem(key);
     }
   }
   static fetchAllBooks(Books: BookModel[]) {

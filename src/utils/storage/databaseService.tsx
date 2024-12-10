@@ -1,6 +1,7 @@
 import { isElectron } from "react-device-detect";
 import { getStorageLocation } from "../common";
 import SqlUtil from "../file/sqlUtil";
+import localforage from "localforage";
 declare var window: any;
 
 class DatabaseService {
@@ -23,7 +24,7 @@ class DatabaseService {
         });
       return records;
     } else {
-      const records = (await window.localforage.getItem(dbName)) || [];
+      const records = (await localforage.getItem(dbName)) || [];
       return records;
     }
   }
@@ -42,7 +43,7 @@ class DatabaseService {
           });
       }
     } else {
-      await window.localforage.setItem(dbName, records);
+      await localforage.setItem(dbName, records);
     }
   }
   static async deleteAllRecords(dbName: string) {
@@ -55,7 +56,7 @@ class DatabaseService {
         storagePath: getStorageLocation(),
       });
     } else {
-      await window.localforage.removeItem(dbName);
+      await localforage.removeItem(dbName);
     }
   }
   static async saveRecord(record: any, dbName: string) {
@@ -117,7 +118,7 @@ class DatabaseService {
   }
   static async getRecord(key: string, dbName: string): Promise<any | null> {
     if (isElectron) {
-      let record = window
+      let record = await window
         .require("electron")
         .ipcRenderer.invoke("database-command", {
           statement: "getStatement",

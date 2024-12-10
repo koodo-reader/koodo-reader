@@ -3,7 +3,7 @@ import DictHistory from "../../models/DictHistory";
 import Note from "../../models/Note";
 import BookUtil from "./bookUtil";
 import JSZip from "jszip";
-
+import { saveAs } from "file-saver";
 export const zipFilesToBlob = (buffers: ArrayBuffer[], names: string[]) => {
   var zip = new JSZip();
   for (let index = 0; index < buffers.length; index++) {
@@ -28,7 +28,7 @@ export const exportBooks = async (books: Book[]) => {
     return item.name + `.${item.format.toLocaleLowerCase()}`;
   });
 
-  window.saveAs(
+  saveAs(
     await zipFilesToBlob(booksBuffers, bookNames),
     "KoodoReader-Book-" +
       `${year}-${month <= 9 ? "0" + month : month}-${
@@ -55,7 +55,7 @@ export const exportNotes = (notes: Note[], books: Book[]) => {
         .author,
     };
   });
-  window.saveAs(
+  saveAs(
     new Blob([convertArrayToCSV(data)], { type: "text/csv,charset=UTF-8" }),
     "KoodoReader-Note-" +
       `${year}-${month <= 9 ? "0" + month : month}-${
@@ -84,7 +84,7 @@ export const exportHighlights = (highlights: Note[], books: Book[]) => {
     const { notes, ...rest } = highlight;
     return rest;
   });
-  window.saveAs(
+  saveAs(
     new Blob([convertArrayToCSV(data)], { type: "text/csv,charset=UTF-8" }),
     "KoodoReader-Highlight-" +
       `${year}-${month <= 9 ? "0" + month : month}-${
@@ -109,7 +109,7 @@ export const exportDictionaryHistory = (
     return history;
   });
 
-  window.saveAs(
+  saveAs(
     new Blob([convertArrayToCSV(data)], { type: "text/csv,charset=UTF-8" }),
     "KoodoReader-Dictionary-History-" +
       `${year}-${month <= 9 ? "0" + month : month}-${

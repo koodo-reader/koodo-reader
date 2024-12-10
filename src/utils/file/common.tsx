@@ -2,6 +2,11 @@ import { getStorageLocation } from "../common";
 import CoverUtil from "./coverUtil";
 import ConfigService from "../storage/configService";
 import DatabaseService from "../storage/databaseService";
+import localforage from "localforage";
+import Book from "../../models/Book";
+import Note from "../../models/Note";
+import Bookmark from "../../models/Bookmark";
+import DictHistory from "../../models/DictHistory";
 declare var window: any;
 export const changePath = async (newPath: string) => {
   if (isFolderContainsFile(newPath)) {
@@ -85,7 +90,7 @@ export const upgradeStorage = async (): Promise<Boolean> => {
     }
 
     fs.mkdirSync(path.join(dataPath, "cover"), { recursive: true });
-    let books = await window.localforage.getItem("books");
+    let books: Book[] | null = await localforage.getItem("books");
     if (books && books.length > 0) {
       books.forEach((item) => {
         let cover = item.cover;
@@ -102,7 +107,7 @@ export const upgradeStorage = async (): Promise<Boolean> => {
     }
 
     //uprade book files
-    if (fs.existsSync(path.join(dataPath, "book"))) {
+    if (fs.existsSync(path.join(dataPath, "book")) && books) {
       const files = fs.readdirSync(path.join(dataPath, "book"));
       if (files.length > 0) {
         for (let i = 0; i < files.length; i++) {
@@ -143,18 +148,18 @@ export const upgradeStorage = async (): Promise<Boolean> => {
     }
 
     //upgrade notes
-    let notes = await window.localforage.getItem("notes");
+    let notes: Note[] | null = await localforage.getItem("notes");
     if (notes && notes.length > 0) {
       await DatabaseService.saveAllRecords(notes, "notes");
     }
 
     //upgrade bookmarks
-    let bookmarks = await window.localforage.getItem("bookmarks");
+    let bookmarks: Bookmark[] | null = await localforage.getItem("bookmarks");
     if (bookmarks && bookmarks.length > 0) {
       await DatabaseService.saveAllRecords(bookmarks, "bookmarks");
     }
     //upgrade words
-    let words = await window.localforage.getItem("words");
+    let words: DictHistory[] | null = await localforage.getItem("words");
     if (words && words.length > 0) {
       await DatabaseService.saveAllRecords(words, "words");
     }

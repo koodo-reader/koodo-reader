@@ -10,6 +10,7 @@ import ActionDialog from "../dialogs/actionDialog";
 import { isElectron } from "react-device-detect";
 import toast from "react-hot-toast";
 import CoverUtil from "../../utils/file/coverUtil";
+import { saveAs } from "file-saver";
 declare var window: any;
 class BookListItem extends React.Component<BookItemProps, BookItemState> {
   constructor(props: BookItemProps) {
@@ -99,7 +100,7 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
       this.props.book.path
     ).then((result: any) => {
       toast.success(this.props.t("Export successful"));
-      window.saveAs(
+      saveAs(
         new Blob([result]),
         this.props.book.name + `.${this.props.book.format.toLocaleLowerCase()}`
       );

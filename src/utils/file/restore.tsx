@@ -1,5 +1,6 @@
 import { getStorageLocation } from "../common";
 import { getCloudConfig, upgradeConfig, upgradeStorage } from "./common";
+import localforage from "localforage";
 declare var window: any;
 let oldConfigArr = [
   "notes.json",
@@ -227,10 +228,7 @@ export const unzipOldConfig = (zipEntries: any) => {
           zipEntry.name === "books.json" ||
           zipEntry.name === "bookmarks.json"
         ) {
-          window.localforage.setItem(
-            zipEntry.name.split(".")[0],
-            JSON.parse(text)
-          );
+          localforage.setItem(zipEntry.name.split(".")[0], JSON.parse(text));
         } else if (zipEntry.name === "pdfjs.history.json") {
           localStorage.setItem("pdfjs.history", text);
         } else {
@@ -245,7 +243,7 @@ export const unzipOldConfig = (zipEntries: any) => {
 };
 export const unzipOldBook = (zipEntries: any) => {
   return new Promise<boolean>((resolve, reject) => {
-    window.localforage.getItem("books").then((value: any) => {
+    localforage.getItem("books").then((value: any) => {
       console.log("value", value);
       let count = 0;
       const fs = window.require("fs");

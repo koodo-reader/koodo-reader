@@ -2,6 +2,7 @@ import ConfigService from "../storage/configService";
 import { isElectron } from "react-device-detect";
 import { getIframeDoc, getIframeWin } from "./docUtil";
 import { handleExitFullScreen, handleFullScreen, sleep } from "../common";
+import Hammer from "hammerjs";
 declare var window: any;
 
 let throttleTime =
@@ -169,7 +170,7 @@ export const bindHtmlEvent = (
   });
 
   if (ConfigService.getReaderConfig("isTouch") === "yes") {
-    const mc = new window.Hammer(doc);
+    const mc = new Hammer(doc);
     mc.on("panleft panright panup pandown", async (event: any) => {
       if (readerMode === "scroll") {
         return;
