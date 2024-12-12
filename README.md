@@ -1,7 +1,7 @@
 <div align="left">
 
 [简体中文](https://github.com/koodo-reader/koodo-reader/blob/master/README_cn.md) | [हिंदी](https://github.com/koodo-reader/koodo-reader/blob/master/README_hi.md)
-|[Português](https://github.com/koodo-reader/koodo-reader/blob/master/README_pt.md) | English
+|[Português](https://github.com/koodo-reader/koodo-reader/blob/master/README_pt.md) | English |[తెలుగు](https://github.com/koodo-reader/koodo-reader/blob/master/README_te.md) |
 
 </div>
 
@@ -174,6 +174,7 @@ Make sure that you have installed yarn and git
 | Spanish         | es    | [View](./src/assets/locales/es/translation.json)    |
 | Swedish         | sv    | [View](./src/assets/locales/sv/translation.json)    |
 | Tamil           | ta    | [View](./src/assets/locales/ta/translation.json)    |
+| Telugu          | te    | [View](./src/assets/locales/te/translation.json)    |
 | Thai            | th    | [View](./src/assets/locales/th/translation.json)    |
 | Tibetan         | bo    | [View](./src/assets/locales/bo/translation.json)    |
 | Turkish         | tr    | [View](./src/assets/locales/tr/translation.json)    |
