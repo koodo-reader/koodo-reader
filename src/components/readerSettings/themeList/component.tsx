@@ -1,5 +1,5 @@
 import React from "react";
-import { backgroundList, lines, textList } from "../../../constants/themeList";
+import { backgroundList, colorsHighlightLignes, lines, newLines, textList } from "../../../constants/themeList";
 import StyleUtil from "../../../utils/readUtils/styleUtil";
 import "./themeList.css";
 import { Trans } from "react-i18next";
@@ -11,7 +11,8 @@ import ThemeUtil from "../../../utils/readUtils/themeUtil";
 import BookUtil from "../../../utils/fileUtils/bookUtil";
 import Lignescouleurs1 from "../../../assets/Lignescouleurs1.png"
 import Lignescouleurs2 from "../../../assets/Lignescouleurs2.png"
-
+import SurLignerLignes from "../../../assets/SurLignerLignes.png";
+import SurLignerLignes2 from "../../../assets/SurLignerLignes2.png";
 
 
 class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
@@ -113,22 +114,22 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
   };
 
 
-  handleChooseLineColor = (isButtonClicked) => {
+  handleStyleLines = (changeHighlightLine: string, changeColorsTriggered: boolean, colors: string[]) => {
+    try {
+      StorageUtil.setReaderConfig("changeColorsTriggered", JSON.stringify(changeColorsTriggered));
+      StorageUtil.setReaderConfig("highlightLines", JSON.stringify(changeHighlightLine));
+      StorageUtil.setReaderConfig("baseColors", JSON.stringify(colors));
 
-    if (isButtonClicked) {
-      this.props.renderBookFunc();
+      const event = new Event("localStorageChange");
+      window.dispatchEvent(event);
+      this.props.renderBookWithLineColors();
+    } catch (error) {
+      console.error("Erreur lors de la configuration des styles de ligne : ", error);
     }
-    this.setState({ isButtonClicked: false });
   }
 
 
-  handleClick = (changeColorsTriggered: boolean) => {
-    StorageUtil.setReaderConfig("changeColorsTriggered", changeColorsTriggered.toString());
-    StorageUtil.setReaderConfig("baseColors", JSON.stringify(lines));
-    const event = new Event('localStorageChange');
-    window.dispatchEvent(event);
-    this.props.renderBookWithLineColors();
-  };
+
 
   render() {
     const renderBackgroundColorList = () => {
@@ -246,12 +247,12 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
         )}
 
         <div className="background-color-line">
-          <Trans>Colorier les lignes</Trans>
+          <Trans>Colorier Les Lignes</Trans>
         </div>
         <div className="grp-btn-change-color-line">
           <button
             id="btn-change-color"
-            onClick={() => this.handleClick(true)}
+            onClick={() => this.handleStyleLines("", true, lines)}
             className="btn-style"
           >
 
@@ -259,10 +260,32 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
           </button>
 
           <button
-            onClick={() => this.handleChooseLineColor(!this.state.isButtonClicked)}
+            onClick={() => this.handleStyleLines("", true, newLines)}
             className="btn--reset-style"
           >
             <img src={Lignescouleurs2} alt="ligneCouleur" />
+          </button>
+
+        </div>
+
+        <div className="background-color-line">
+          <Trans>Surligner Les Lignes</Trans>
+        </div>
+        <div className="grp-btn-highlight-line">
+          <button
+            id="btn-change-color"
+            onClick={() => this.handleStyleLines("highlightColor", true, colorsHighlightLignes)}
+            className="btn-style"
+          >
+
+            <img src={SurLignerLignes} alt="SurlignerLignes" />
+          </button>
+
+          <button
+            // onClick={() => this.handleChooseLineColor(true, newLines)}
+            className="btn--reset-style"
+          >
+            <img src={SurLignerLignes2} alt="SurlignerLignes" />
           </button>
 
         </div>

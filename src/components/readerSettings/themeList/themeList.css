@@ -57,6 +57,7 @@
   opacity: 0.7;
 }
 
+.grp-btn-highlight-line,
 .grp-btn-change-color-line {
   display: flex;
   flex-direction: row;
@@ -70,12 +71,5 @@
     border: none;
     margin: 5px;
     font-size: xxx-large;
-  }
-
-  .btn-style {
-    color: orange;
-  }
-  .btn--reset-style {
-    color: black;
   }
 }

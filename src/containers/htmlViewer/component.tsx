@@ -208,7 +208,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
 
           await this.handleRest(rendition);
           rendition.on("rendered", () => {
-            this.changeSentenceColors(rendition);
+            this.changeStyleLinesColors(rendition);
 
           })
           this.props.handleReadingState(true);
@@ -262,92 +262,157 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     );
   };
 
+
+
+
+  /**
+   * On sélectionne les lignes de l'élément p
+   *
+   * @param p : élément à traiter
+   */
+  selectLines(p) {
+    const lines: string[] = [];
+    let range = new Range();
+    const textnodes = this.extractTextNode(p);
+    range.setStart(textnodes[0], 0); // démarre au début de p
+    do {
+      range = this.nextLineRange(range, textnodes); // sélectionne une ligne après l'autre
+      if (range.toString().length > 0) {
+        lines.push(range.toString());
+      }
+    } while (range.toString().length > 0); // jusqu'à ce qu'il n'y ait plus rien
+    return lines;
+  }
+
+  /**
+   * On part de la sélection précédente pour sélectionner la prochaine ligne de texte
+   * 
+   * @param range : sélection précédente
+   * @return nouvelle sélection ou null si on est arrivé en bout de paragraphe
+   */
+  nextLineRange(range, textnodes) {
+    const newRange = document.createRange();
+    newRange.setStart(range.endContainer, range.endOffset);
+
+    while (!this.hasNewLine(newRange.getClientRects())) {
+      if (newRange.endOffset >= newRange.endContainer.textContent!.length) {
+        const index = textnodes.indexOf(newRange.endContainer);
+        if (index + 1 < textnodes.length) {
+          newRange.setEnd(textnodes[index + 1], 0); // next child node
+        } else {
+          newRange.setEnd(newRange.endContainer, newRange.endContainer.textContent!.length); // end of paragraph
+          return newRange;
+        }
+      } else {
+        newRange.setEnd(newRange.endContainer, newRange.endOffset + 1); // next character
+      }
+    }
+
+    if (newRange.endOffset > 0) {
+      newRange.setEnd(newRange.endContainer, newRange.endOffset - 1); // move back to the line
+    }
+
+    return newRange;
+  }
   removeTagsFromParagraph(paragraph) {
     // Remplace le contenu HTML du paragraphe par son équivalent texte brut
     paragraph.innerHTML = paragraph.innerText || paragraph.textContent || "";
   }
 
-  getLineEndings(container) {
-    const paragraphs = container.querySelectorAll("p.kookit-text");
+  /**
+   * On extrait les noeuds de type TEXT_NODE
+   *
+   * @param p : élément à partir duquel on souhaite extraire les noeuds
+   */
+  extractTextNode(p) {
+    this.removeTagsFromParagraph(p)
+    const nodes: Node[] = [];
+    const walker = document.createTreeWalker(p, NodeFilter.SHOW_TEXT);
 
-    const lineEndings: LineEnding[] = [];
+    let currentNode = walker.nextNode();
+    while (currentNode) {
+      nodes.push(currentNode); // Ajoute chaque nœud texte à la liste
+      currentNode = walker.nextNode();
+    }
 
-    paragraphs.forEach((paragraph) => {
-
-      this.removeTagsFromParagraph(paragraph);
-
-      const range = container.createRange();
-
-      function extractTextFromNode(node) {
-        let text = '';
-        if (node.nodeType === Node.TEXT_NODE) {
-          text += node.textContent || '';
-        } else if (node.nodeType === Node.ELEMENT_NODE) {
-          // Parcourir les enfants du nœud et accumuler le texte
-          node.childNodes.forEach(child => {
-            text += extractTextFromNode(child);
-          });
-        }
-        return text;
-      }
-
-
-      function processNode(node) {
-        if (node.nodeType === Node.TEXT_NODE) {
-          let text = extractTextFromNode(node);
-          console.log("Texte extrait:", text);
-          let startOffset = 0;
-          let localOffset = 0;
-
-          // Réinitialisation pour chaque nœud de texte
-          for (let i = 0; i < text.length; i++) {
-            try {
-              range.setStart(node, localOffset);
-              range.setEnd(node, i + 1);
-            } catch (e) {
-              console.warn("Invalid offset:", e);
-              break;
-            }
-
-            const rects = range.getClientRects();
-            if (rects.length > 1) {
-              // Nouvelle ligne détectée, mise à jour de l'offset global
-              lineEndings.push({
-                start: startOffset,
-                end: startOffset + (i - localOffset),
-                text: text.slice(localOffset, i),
-              });
-              startOffset += i;
-              localOffset = i;
-            }
-          }
-
-          // Ajouter le texte restant à la fin
-          if (localOffset < text.length) {
-            lineEndings.push({
-              start: startOffset,
-              end: startOffset + (text.length - localOffset),
-              text: text.slice(localOffset),
-            });
-          }
-          startOffset += text.length;
-        } else if (node.nodeType === Node.ELEMENT_NODE) {
-          node.childNodes.forEach(child => {
-            // Continuer le traitement des nœuds enfants
-            processNode(child);
-
-          })
-        }
-      }
-
-      processNode(paragraph);
-    });
-
-    return lineEndings;
+    return nodes;
   }
 
-  changeSentenceColors = (rendition) => {
+  /**
+   * On a plusieurs lignes lorsqu'on a un rectangle dont le y est différent des autres rectangles
+   *
+   * @param rects : les rectangles issues de la sélection (range)
+   */
+  hasNewLine(rects) {
+    for (let i = 0; i < rects.length; i++) {
+      if (rects[i].y !== rects[0].y) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  changeHiglightLines = (paragraphs) => {
+    try {
+      const randomColors = StorageUtil.getReaderConfig("highlightColors") || "[]";
+      const colors = JSON.parse(randomColors);
+      let colorIndex = 0;
+      this.removeTagsFromParagraph(paragraphs)
+      paragraphs.forEach((p) => {
+
+        let coloredHTML = "";
+
+        // Trouver les lignes correspondant à ce paragraphe
+        const lines = this.selectLines(p);
+        lines.forEach((line) => {
+
+          const color = colors[colorIndex % colors.length];
+          colorIndex++;
+
+          // Ajouter chaque ligne colorée
+          coloredHTML += `<span style="background-color: ${color}">${line}</span>`;
+        });
+
+        // Mettre à jour le contenu du paragraphe
+        p.innerHTML = coloredHTML;
+      });
+    } catch (error) {
+      console.error("Erreur lors de l'application des couleurs de surlignage : ", error);
+    }
+  };
+
+  changeSentenceColors = (paragraphs) => {
+    try {
+      const randomColors = StorageUtil.getReaderConfig("baseColors") || "[]";
+      const colors = JSON.parse(randomColors);
+      let colorIndex = 0;
+      this.removeTagsFromParagraph(paragraphs)
+
+      paragraphs.forEach((p) => {
+        let coloredHTML = "";
+
+        // Trouver les lignes correspondant à ce paragraphe
+        const lines = this.selectLines(p);
+        lines.forEach((line) => {
+
+          const color = colors[colorIndex % colors.length];
+          colorIndex++;
+
+          // Ajouter chaque ligne colorée
+          coloredHTML += `<span style="color: ${color}">${line}</span>`;
+        });
+
+        // Mettre à jour le contenu du paragraphe
+        p.innerHTML = coloredHTML;
+      });
+    } catch (error) {
+      console.error("Erreur lors de l'application des couleurs de base : ", error);
+    }
+  };
+
+  changeStyleLinesColors = (rendition) => {
     if (!rendition) return;
+
     const iframe = rendition.element?.querySelector("iframe");
     if (!iframe) {
       console.error("Impossible de trouver l'iframe dans rendition.element");
@@ -360,38 +425,21 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       return;
     }
 
-    // Récupérer les index de début et de fin des lignes
-    const lineEndings = this.getLineEndings(doc);
+    try {
+      const highlightConfig = StorageUtil.getReaderConfig("highlightLines");
+      const lineHighlight = highlightConfig ? JSON.parse(highlightConfig) : null;
 
-    const randomColors = StorageUtil.getReaderConfig("baseColors") || "[]";
-    const colors = JSON.parse(randomColors);
+      const paragraphs = doc.querySelectorAll("p.kookit-text");
 
-    const paragraphs = doc.querySelectorAll("p.kookit-text");
-
-    paragraphs.forEach((p) => {
-      const text = p.innerText || ""; // Utiliser le texte brut
-      let coloredHTML = ""; // Stocker le contenu stylisé
-      let colorIndex = 0;
-
-      // Trouver les lignes correspondant à ce paragraphe
-      const lines = lineEndings.filter((line) => text.includes(line.text));
-
-      lines.forEach((line) => {
-        const color = colors[colorIndex % colors.length];
-        colorIndex++;
-
-        // Ajouter chaque ligne colorée
-        coloredHTML += `<span style="color: ${color}">${line.text}</span><br/>`;
-      });
-
-      // Mettre à jour le contenu du paragraphe
-      p.innerHTML = coloredHTML;
-    });
+      if (lineHighlight && lineHighlight !== "") {
+        this.changeHiglightLines(paragraphs);
+      } else {
+        this.changeSentenceColors(paragraphs);
+      }
+    } catch (error) {
+      console.error("Erreur lors de l'application des styles de ligne : ", error);
+    }
   };
-
-
-
-
 
 
   handleRest = async (rendition: any) => {
