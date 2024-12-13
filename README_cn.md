@@ -68,6 +68,25 @@ scoop bucket add extras
 scoop install extras/koodo-reader
 ```
 
+- 使用 宝塔面板-Docker应用商店 安装：
+  
+当你需要通过 宝塔面板 部署本项目之前，需要在服务器上先安装好 宝塔面板工具。 接下来的 部署流程 都建立在已有宝塔面板的前提下。
+
+宝塔安装请参考 ([宝塔官网](https://www.bt.cn/new/download.html?r=dk_koodoreader))
+
+> 注意：本项目需要宝塔面板版本 9.2.0 及以上
+
+1. 在 宝塔面板 -> Docker -> 应用商店 页面，搜索 koodo 找到本项目的docker应用；
+2. 点击 安装 开始部署本项目
+![install1](https://github.com/user-attachments/assets/2964291c-6daa-4045-adc9-e3ae85804fc6)
+
+3. 在项目配置页，根据要求开始配置环境变量；
+4. 如勾选 允许外部访问 配置，请注意为配置的 web端口 开放安全组端口访问权限；
+5. 点击 确认 开始自动部署。
+![install2](https://github.com/user-attachments/assets/07eb7aef-0e6a-42c6-8cab-a6cf211c1343)
+6. 通过根据 服务器IP地址 和配置的 web端口 http://$(host):$(port)，在浏览器中打开 koodo-reader。
+![install3](https://github.com/user-attachments/assets/84bf9645-9e09-4388-9207-e409e0043925)
+
 - 使用 Docker 安装：
 
 ```bash
