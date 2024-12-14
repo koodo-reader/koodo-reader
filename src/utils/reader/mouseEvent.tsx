@@ -146,8 +146,7 @@ export const bindHtmlEvent = (
         await sleep(200);
         await rendition.record();
         if (Math.abs(event.deltaX) === 0) {
-          let srollElement =
-            document.getElementsByClassName("html-viewer-page")[0];
+          let srollElement = document.getElementById("page-area");
           await scrollChapter(srollElement, rendition, event.deltaY);
         }
       } else {

@@ -167,9 +167,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         ConfigService.getReaderConfig("isSliding") === "yes" ? "sliding" : ""
       );
 
-      await rendition.renderTo(
-        document.getElementsByClassName("html-viewer-page")[0]
-      );
+      await rendition.renderTo(document.getElementById("page-area"));
       await this.handleRest(rendition);
       this.props.handleReadingState(true);
 

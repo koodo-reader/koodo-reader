@@ -3,7 +3,7 @@ import "./progressPanel.css";
 import { Trans } from "react-i18next";
 import { ProgressPanelProps, ProgressPanelState } from "./interface";
 import ConfigService from "../../../utils/storage/configService";
-declare var window: any;
+import _ from "underscore";
 class ProgressPanel extends React.Component<
   ProgressPanelProps,
   ProgressPanelState
@@ -42,7 +42,7 @@ class ProgressPanel extends React.Component<
     if (!href) {
       return;
     }
-    let chapterIndex = window._.findIndex(this.props.htmlBook.flattenChapters, {
+    let chapterIndex = _.findIndex(this.props.htmlBook.flattenChapters, {
       href,
     });
     this.setState({ targetChapterIndex: chapterIndex + 1 });
