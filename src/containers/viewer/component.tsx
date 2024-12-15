@@ -63,7 +63,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     this.props.handleFetchPlugins();
   }
   componentDidMount() {
-    window.rangy.init();
     this.handleRenderBook();
     //make sure page width is always 12 times, section = Math.floor(element.clientWidth / 12), or text will be blocked
     this.handlePageWidth();

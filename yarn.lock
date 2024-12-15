@@ -12188,6 +12188,11 @@ range-parser@^1.2.1, range-parser@~1.2.1:
   resolved "https://registry.yarnpkg.com/range-parser/-/range-parser-1.2.1.tgz#3cf37023d199e1c24d1a55b84800c2f3e6468031"
   integrity sha512-Hrgsx+orqoygnmhFbKaHE6c296J+HTAQXoxEF6gNupROmmGJRoyzfG3ccAveqCBrwr/2yxQ5BVd/GTl5agOwSg==
 
+rangy@1.3.0:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/rangy/-/rangy-1.3.0.tgz#b7c9a70aea05e5d8cdc74a8d4c8273d697271904"
+  integrity sha512-hcN1Oo5xO7UDLU81aCnO9BEv4Dss6JmxPyrQSFQ16fVL1opbfTRtVpC6GVcGyk1CNvMYoZkrD4g92DGaScABzw==
+
 raw-body@2.5.1:
   version "2.5.1"
   resolved "https://registry.yarnpkg.com/raw-body/-/raw-body-2.5.1.tgz#fe1b1628b181b700215e5fd42389f98b71392857"
