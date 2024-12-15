@@ -161,6 +161,7 @@ Make sure that you have installed yarn and git
 | Hindi           | hi    | [View](./src/assets/locales/hi/translation.json)    |
 | Indonesian      | id    | [View](./src/assets/locales/id/translation.json)    |
 | Interlingue     | ie    | [View](./src/assets/locales/ie/translation.json)    |
+| Irish           | ga    | [View](./src/assets/locales/ga/translation.json)    |
 | Italian         | it    | [View](./src/assets/locales/it/translation.json)    |
 | Japanese        | ja    | [View](./src/assets/locales/ja/translation.json)    |
 | Korean          | ko    | [View](./src/assets/locales/ko/translation.json)    |
