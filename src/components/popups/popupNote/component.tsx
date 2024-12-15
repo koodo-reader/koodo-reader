@@ -10,7 +10,6 @@ import toast from "react-hot-toast";
 import { getIframeDoc } from "../../../utils/reader/docUtil";
 import ConfigService from "../../../utils/storage/configService";
 import DatabaseService from "../../../utils/storage/databaseService";
-declare var window: any;
 
 class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
   constructor(props: PopupNoteProps) {
