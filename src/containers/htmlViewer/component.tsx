@@ -1,6 +1,6 @@
 import React from "react";
 import RecentBooks from "../../utils/readUtils/recordRecent";
-import { LineEnding, ViewerProps, ViewerState } from "./interface";
+import { ViewerProps, ViewerState } from "./interface";
 import { withRouter } from "react-router-dom";
 import BookUtil from "../../utils/fileUtils/bookUtil";
 import PopupMenu from "../../components/popups/popupMenu";
@@ -77,7 +77,9 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       this.handleLocalStorageChange();
     })
 
-
+    window.addEventListener("removeStyles", () => {
+      this.disableBackgroundColor();
+    })
     const changeColorsTriggered = StorageUtil.getReaderConfig("changeColorsTriggered") === "true";
 
     this.handleChangeStyle(changeColorsTriggered);
@@ -88,6 +90,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
   componentWillUnmount() {
 
     window.removeEventListener("localStorageChange", this.handleLocalStorageChange);
+    window.removeEventListener("removeStyles", this.disableBackgroundColor)
   }
 
 
@@ -292,14 +295,18 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
    */
   nextLineRange(range, textnodes) {
     const newRange = document.createRange();
+    //Le début de ce nouveau Range est défini à la fin du Range existant passé en paramètre
     newRange.setStart(range.endContainer, range.endOffset);
 
     while (!this.hasNewLine(newRange.getClientRects())) {
+      //Si la fin du Range atteint la fin du contenu du nœud actuel 
       if (newRange.endOffset >= newRange.endContainer.textContent!.length) {
+        // on passe a la noeud suivant 
         const index = textnodes.indexOf(newRange.endContainer);
         if (index + 1 < textnodes.length) {
           newRange.setEnd(textnodes[index + 1], 0); // next child node
         } else {
+          //Si c’est le dernier nœud, on définit la fin du Range à la fin du contenu du nœud actuel et on retourne le Range
           newRange.setEnd(newRange.endContainer, newRange.endContainer.textContent!.length); // end of paragraph
           return newRange;
         }
@@ -308,6 +315,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       }
     }
 
+    //reculant d’un caractère pour rester sur la même ligne.
     if (newRange.endOffset > 0) {
       newRange.setEnd(newRange.endContainer, newRange.endOffset - 1); // move back to the line
     }
@@ -352,6 +360,20 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     return false;
   }
 
+
+  disableBackgroundColor() {
+
+    let doc = getIframeDoc();
+    if (!doc) {
+      console.error("Impossible d'accéder au contenu de l'iframe");
+      return;
+    }
+    const allHighilightLines = Array.from(doc.getElementsByClassName('highlightLine'))
+
+    Object.keys(allHighilightLines).forEach((e) => allHighilightLines[e].style.backgroundColor = "")
+
+  }
+
   changeHiglightLines = (paragraphs) => {
     try {
       const randomColors = StorageUtil.getReaderConfig("highlightColors") || "[]";
@@ -362,6 +384,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
 
         let coloredHTML = "";
 
+
         // Trouver les lignes correspondant à ce paragraphe
         const lines = this.selectLines(p);
         lines.forEach((line) => {
@@ -370,7 +393,9 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           colorIndex++;
 
           // Ajouter chaque ligne colorée
-          coloredHTML += `<span style="background-color: ${color}">${line}</span>`;
+          coloredHTML += `<span class="highlightLine" style= "
+            font-size: ${StorageUtil.getReaderConfig("fontSize") || "17px"};
+            background-color: ${color}">${line}</span>`;
         });
 
         // Mettre à jour le contenu du paragraphe
@@ -394,12 +419,14 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         // Trouver les lignes correspondant à ce paragraphe
         const lines = this.selectLines(p);
         lines.forEach((line) => {
-
           const color = colors[colorIndex % colors.length];
           colorIndex++;
 
           // Ajouter chaque ligne colorée
-          coloredHTML += `<span style="color: ${color}">${line}</span>`;
+          coloredHTML += `<span style="
+          font-size: ${StorageUtil.getReaderConfig("fontSize") || "17px"};
+          line-height: ${StorageUtil.getReaderConfig("lineHeight") || "1.25"};
+          color: ${color};">${line}</span>`;
         });
 
         // Mettre à jour le contenu du paragraphe

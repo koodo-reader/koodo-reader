@@ -35,7 +35,7 @@ export function book(
     case "HANDLE_RENDER_BOOK_WITH_LINES_COLORED":
       return {
         ...state,
-        renderBookWithLineColors: action.payload
+        renderBookWithLineColorsFunc: action.payload
       }
 
     case "HANDLE_RENDER_NOTE_FUNC":

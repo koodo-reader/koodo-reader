@@ -30,7 +30,13 @@ class SliderList extends React.Component<SliderListProps, SliderListState> {
       BookUtil.reloadBooks();
       return;
     }
-    this.props.renderBookFunc();
+    const changeColorsTriggered = StorageUtil.getReaderConfig("changeColorsTriggered") === "true";
+    if (changeColorsTriggered) {
+      this.props.renderBookWithLineColorsFunc();
+    } else {
+      this.props.renderBookFunc();
+    }
+
   };
   onValueChange = (event: any) => {
     if (this.props.mode === "fontSize") {

@@ -1,5 +1,5 @@
 import React from "react";
-import { backgroundList, colorsHighlightLignes, lines, newLines, textList } from "../../../constants/themeList";
+import { backgroundList, colorsHighlightLignes, highlightLignesSecondaires, lines, newLines, textList } from "../../../constants/themeList";
 import StyleUtil from "../../../utils/readUtils/styleUtil";
 import "./themeList.css";
 import { Trans } from "react-i18next";
@@ -128,7 +128,11 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
     }
   }
 
+  removeHighlightLineStyle() {
 
+    const event = new Event("removeStyles");
+    window.dispatchEvent(event);
+  }
 
 
   render() {
@@ -278,14 +282,14 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
             className="btn-style"
           >
 
-            <img src={SurLignerLignes} alt="SurlignerLignes" />
+            <img src={SurLignerLignes2} alt="SurlignerLignes" />
           </button>
 
           <button
-            // onClick={() => this.handleChooseLineColor(true, newLines)}
+            onClick={() => this.removeHighlightLineStyle()}
             className="btn--reset-style"
           >
-            <img src={SurLignerLignes2} alt="SurlignerLignes" />
+            <img src={SurLignerLignes} alt="SurlignerLignes" />
           </button>
 
         </div>

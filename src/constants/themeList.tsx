@@ -57,4 +57,5 @@ export const colors = ["#FEF3CD", "#FBFACC", "#CEFACD", "#CDE9FA"];
 export const pdfColors = ["#fac106", "#ebe702", "#0be603", "#0493e6"];
 export const lines = ["#0000FF", "#FF0000", "#00CC00"];
 export const newLines = ["#0000FF", "#00CC00"];
-export const colorsHighlightLignes = ["#fcfe04", "#acb1b5"]
+export const colorsHighlightLignes = ["#fcfe04", "#acb1b5"];
+export const highlightLignesSecondaires = ["#fcfe04", "ffffff"] 

@@ -7,6 +7,7 @@ export interface SliderListProps {
   minLabel: string;
   maxLabel: string;
   renderBookFunc: () => void;
+  renderBookWithLineColorsFunc: () => void;
   t: (title: string) => string;
 }
 export interface SliderListState {
