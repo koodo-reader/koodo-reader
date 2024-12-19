@@ -9,7 +9,8 @@ import animationSuccess from "../../../assets/lotties/success.json";
 import ConfigService from "../../../utils/storage/configService";
 import { openExternalUrl } from "../../../utils/common";
 import { isElectron } from "react-device-detect";
-import { checkStableUpdate, sleep } from "../../../utils/common";
+import { sleep } from "../../../utils/common";
+import { CommonRequest } from "../../../assets/lib/kookit-extra-browser.min";
 const newOptions = {
   loop: false,
   autoplay: true,
@@ -48,7 +49,7 @@ class UpdateInfo extends React.Component<UpdateInfoProps, UpdateInfoState> {
         return;
       }
 
-      checkStableUpdate().then(async (res) => {
+      CommonRequest.checkStableUpdate().then(async (res) => {
         ConfigService.setReaderConfig(
           "lastTimeCheck",
           new Date().getTime() + ""

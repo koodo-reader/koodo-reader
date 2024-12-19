@@ -13,8 +13,9 @@ import packageInfo from "../../../../package.json";
 import _ from "underscore";
 import toast from "react-hot-toast";
 import { isElectron } from "react-device-detect";
-import { checkStableUpdate } from "../../../utils/common";
-declare var window: any;
+import { CommonRequest } from "../../../assets/lib/kookit-extra-browser.min";
+import { SyncUtil } from "../../../assets/lib/kookit-extra-browser.min";
+
 const successOptions = {
   loop: false,
   autoplay: true,
@@ -37,7 +38,7 @@ class BackupDialog extends React.Component<
     };
   }
   async componentDidMount() {
-    let stableLog = await checkStableUpdate();
+    let stableLog = await CommonRequest.checkStableUpdate();
     if (packageInfo.version.localeCompare(stableLog.version) > 0) {
       this.setState({ isDeveloperVer: true });
     }
@@ -177,14 +178,13 @@ class BackupDialog extends React.Component<
         );
       });
     };
+    let syncUtil = new SyncUtil(this.state.currentDrive, {});
+    console.log(this.state.currentDrive, syncUtil.getAuthUrl());
+    console.log();
 
     const dialogProps = {
       driveName: this.state.currentDrive,
-      url: driveList[
-        _.findLastIndex(driveList, {
-          icon: this.state.currentDrive,
-        })
-      ].url,
+      url: syncUtil.getAuthUrl(),
       title:
         driveList[
           _.findLastIndex(driveList, {

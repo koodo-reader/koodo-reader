@@ -15,7 +15,7 @@ import {
 } from "../../utils/file/common";
 import toast from "react-hot-toast";
 import { Trans } from "react-i18next";
-import { checkStableUpdate } from "../../utils/common";
+import { CommonRequest } from "../../assets/lib/kookit-extra-browser.min";
 import packageInfo from "../../../package.json";
 declare var window: any;
 class Header extends React.Component<HeaderProps, HeaderState> {
@@ -60,7 +60,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       }
       //Check for update
       try {
-        let stableLog = await checkStableUpdate();
+        let stableLog = await CommonRequest.checkStableUpdate();
         if (packageInfo.version.localeCompare(stableLog.version) > 0) {
           this.setState({ isDeveloperVer: true });
           // this.props.handleFeedbackDialog(true);

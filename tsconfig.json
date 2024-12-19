@@ -18,7 +18,7 @@
     "noImplicitAny": false,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src", "public/lib/MathJax/MathJax.js", "sql-statement copy.js"],
+  "include": ["src"],
   "exclude": ["utils"],
   "paths": {
     "*": ["./node_modules/@types", "./types"]

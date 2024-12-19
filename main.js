@@ -13,7 +13,6 @@ const isDev = require("electron-is-dev");
 const Store = require("electron-store");
 const store = new Store();
 const fs = require("fs");
-const { sqlStatement, jsonToSqlite, sqliteToJson } = require('./sql-statement.js');
 const configDir = app.getPath("userData");
 const dirPath = path.join(configDir, "uploads");
 let mainWin;
@@ -64,7 +63,7 @@ if (!singleInstance) {
     }
   });
 }
-const getDBConnection = (dbName, storagePath) => {
+const getDBConnection = (dbName, storagePath, sqlStatement) => {
   if (!dbConnection[dbName]) {
     if (!fs.existsSync(path.join(storagePath, "config"))) {
       fs.mkdirSync(path.join(storagePath, "config"), { recursive: true });
@@ -174,7 +173,7 @@ const createMainWin = () => {
   });
   ipcMain.handle("cloud-upload", async (event, config) => {
     let { service } = config;
-    const { SyncUtil } = await import('./src/assets/lib/kookit-sync.min.mjs');
+    const { SyncUtil } = await import('./src/assets/lib/kookit-extra.min.mjs');
     let syncUtil = new SyncUtil(service, config, dirPath);
     console.log(SyncUtil, syncUtil);
     let result = await syncUtil.uploadFile(config.fileName, "backup");
@@ -183,7 +182,7 @@ const createMainWin = () => {
   ipcMain.handle("cloud-download", async (event, config) => {
     console.log(config);
     let { service } = config;
-    const { SyncUtil } = await import('./src/assets/lib/kookit-sync.min.mjs');
+    const { SyncUtil } = await import('./src/assets/lib/kookit-extra.min.mjs');
     let syncUtil = new SyncUtil(service, config, dirPath);
     let result = await syncUtil.downloadFile(config.fileName, "backup");
     return result;
@@ -226,37 +225,39 @@ const createMainWin = () => {
       return filePath;
     }
   });
-  ipcMain.handle("database-command", (event, config) => {
+  ipcMain.handle("database-command", async (event, config) => {
+    const { SqlStatement } = await import('./src/assets/lib/kookit-extra.min.mjs');
     let { statement, statementType, executeType, dbName, data, storagePath } = config;
-    let db = getDBConnection(dbName, storagePath);
+    let db = getDBConnection(dbName, storagePath, SqlStatement.sqlStatement);
     let sql = ""
     if (statementType === "string") {
-      sql = sqlStatement[statement][dbName];
+      sql = SqlStatement.sqlStatement[statement][dbName];
     } else if (statementType === "function") {
-      sql = sqlStatement[statement][dbName](data);
+      sql = SqlStatement.sqlStatement[statement][dbName](data);
     }
     const row = db.prepare(sql);
     let result;
     if (data) {
       if (statement.startsWith("save") || statement.startsWith("update")) {
-        data = jsonToSqlite[dbName](data)
+        data = SqlStatement.jsonToSqlite[dbName](data)
       }
       result = row[executeType](data);
     } else {
       result = row[executeType]();
     }
     if (executeType === 'all') {
-      return result.map(item => sqliteToJson[dbName](item));
+      return result.map(item => SqlStatement.sqliteToJson[dbName](item));
     } else if (executeType === 'get') {
-      return sqliteToJson[dbName](result);
+      return SqlStatement.sqliteToJson[dbName](result);
     } else {
       return result;
     }
 
   });
-  ipcMain.handle("close-database", (event, config) => {
+  ipcMain.handle("close-database", async (event, config) => {
+    const { SqlStatement } = await import('./src/assets/lib/kookit-extra.min.mjs');
     let { dbName, storagePath } = config;
-    let db = getDBConnection(dbName, storagePath);
+    let db = getDBConnection(dbName, storagePath, SqlStatement.sqlStatement);
     delete dbConnection[dbName];
     db.close();
   });
