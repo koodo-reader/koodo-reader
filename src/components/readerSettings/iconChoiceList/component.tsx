@@ -3,6 +3,7 @@ import "./iconChoiceList.css";
 import { Trans } from "react-i18next";
 import { IconChoiceListProps, IconChoiceListState } from "./interface";
 import StorageUtil from "../../../utils/serviceUtils/storageUtil";
+import BookUtil from "../../../utils/fileUtils/bookUtil";
 import iconArial from '../../../assets/icons/arial.png';
 import iconVerdana from '../../../assets/icons/verdana.png';
 import iconLeftAlign from '../../../assets/icons/aligne_gauche.png';
@@ -35,23 +36,6 @@ class IconChoiceList extends React.Component<IconChoiceListProps, IconChoiceList
     },
     {
       id: 2,
-      title: "Word spacing",
-      value: "wordSpacing",
-      icons: [
-        {
-          value: "Add",
-          src: iconAdd,
-          alt: "Augmenter la police"
-        },
-        {
-          value: "Reduce",
-          src: iconReduce,
-          alt: "Réduire la police"
-        }
-      ]
-    },
-    {
-      id: 3,
       title: "Font family",
       value: "fontFamily",
       icons: [
@@ -68,7 +52,7 @@ class IconChoiceList extends React.Component<IconChoiceListProps, IconChoiceList
       ]
     },
     {
-      id: 4,
+      id: 3,
       title: "Line height",
       value: "lineHeight",
       icons: [
@@ -85,7 +69,7 @@ class IconChoiceList extends React.Component<IconChoiceListProps, IconChoiceList
       ]
     },
     {
-      id: 5,
+      id: 4,
       title: "Text alignment",
       value: "textAlign",
       icons: [
@@ -98,6 +82,74 @@ class IconChoiceList extends React.Component<IconChoiceListProps, IconChoiceList
           value: "Right",
           src: iconRightAlign,
           alt: "Aligner à droite"
+        }
+      ]
+    },
+    {
+      id: 5,
+      title: "Word spacing",
+      value: "wordSpacing",
+      icons: [
+        {
+          value: "Add",
+          src: iconAdd,
+          alt: "Augmenter l'espacement des mots"
+        },
+        {
+          value: "Reduce",
+          src: iconReduce,
+          alt: "Réduire l'espacement des mots"
+        }
+      ]
+    },
+    {
+      id: 6,
+      title: "Letter spacing",
+      value: "letterSpacing",
+      icons: [
+        {
+          value: "Add",
+          src: iconAdd,
+          alt: "Augmenter l'espacement des lettres"
+        },
+        {
+          value: "Reduce",
+          src: iconReduce,
+          alt: "Réduire l'espacement des lettres"
+        }
+      ]
+    },
+    {
+      id: 7,
+      title: "Margin",
+      value: "margin",
+      icons: [
+        {
+          value: "Add",
+          src: iconAdd,
+          alt: "Augmenter la marge"
+        },
+        {
+          value: "Reduce",
+          src: iconReduce,
+          alt: "Réduire la marge"
+        }
+      ]
+    },
+    {
+      id: 8,
+      title: "Page width",
+      value: "scale",
+      icons: [
+        {
+          value: "Add",
+          src: iconAdd,
+          alt: "Augmenter la largeur de page"
+        },
+        {
+          value: "Reduce",
+          src: iconReduce,
+          alt: "Réduire la largeur de page"
         }
       ]
     }
@@ -158,6 +210,35 @@ class IconChoiceList extends React.Component<IconChoiceListProps, IconChoiceList
         StorageUtil.setReaderConfig(option, value);
         console.log(`L'alignement appliqué est : ${value}`)
         break;
+      case "letterSpacing":
+        let currentLetterSpacing = StorageUtil.getReaderConfig(option)
+        let newLetterSpacing = currentLetterSpacing
+        if ((value === "Add" && currentLetterSpacing < 20) || (value === "Reduce" && currentLetterSpacing > 0) ) {
+          newLetterSpacing = value === "Add" ? newLetterSpacing + 2 : newLetterSpacing - 2
+          StorageUtil.setReaderConfig(option, newLetterSpacing);
+        }
+        console.log(`${option} : ${newLetterSpacing >= 0 && newLetterSpacing <= 20 ? "On change la taille et " : "On ne change pas la taille "} Nouvelle taille : ${newLetterSpacing} et Ancienne taille : ${currentLetterSpacing}`)      
+      break;
+      case "margin":
+        let currentMargin = StorageUtil.getReaderConfig(option)
+        let newMargin = currentMargin
+        if ((value === "Add" && currentMargin < 80) || (value === "Reduce" && currentMargin > 0) ) {
+          newMargin = value === "Add" ? newMargin + 10 : newMargin - 10
+          StorageUtil.setReaderConfig(option, newMargin);
+        }
+        console.log(`${option} : ${newMargin >= 0 && newMargin <= 80 ? "On change la taille et " : "On ne change pas la taille "} Nouvelle taille : ${newMargin} et Ancienne taille : ${currentMargin}`)
+        BookUtil.reloadBooks();
+        return;
+      case "scale":
+        let currentScale = StorageUtil.getReaderConfig(option)
+        let newScale = currentScale
+        if ((value === "Add" && currentScale < 3) || (value === "Reduce" && currentScale > 0.5) ) {
+          newScale = value === "Add" ? newScale + 0.5 : newScale - 0.5
+          StorageUtil.setReaderConfig(option, newScale);
+        }
+        console.log(`${option} : ${newScale >= 0.5 && newScale <= 3 ? "On change la taille et " : "On ne change pas la taille "} Nouvelle taille : ${newScale} et Ancienne taille : ${currentScale}`)
+        BookUtil.reloadBooks();
+        return;
       default:
         break;
     }
