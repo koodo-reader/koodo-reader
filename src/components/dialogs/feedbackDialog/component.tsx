@@ -4,13 +4,8 @@ import { FeedbackDialogProps, FeedbackDialogState } from "./interface";
 import toast from "react-hot-toast";
 import "./feedbackDialog.css";
 import packageInfo from "../../../../package.json";
+import { CommonRequest } from "../../../assets/lib/kookit-extra-browser.min";
 import { openExternalUrl } from "../../../utils/common";
-import {
-  checkDeveloperUpdate,
-  getUploadUrl,
-  uploadFile,
-} from "../../../utils/common";
-import axios from "axios";
 import JSZip from "jszip";
 declare var window: any;
 class FeedbackDialog extends Component<
@@ -28,9 +23,11 @@ class FeedbackDialog extends Component<
     };
   }
   async componentDidMount() {
-    let version = (await checkDeveloperUpdate()).version.substr(1);
+    let version = (await CommonRequest.checkDeveloperUpdate()).version.substr(
+      1
+    );
     this.setState({ developerVersion: version });
-    let url = await getUploadUrl();
+    let url = await CommonRequest.getUploadUrl();
     this.setState({ uploadUrl: url });
   }
   handleCancel = () => {
@@ -42,7 +39,7 @@ class FeedbackDialog extends Component<
 
     let uploadResult = true;
     if (this.state.fileContent && this.state.uploadUrl) {
-      uploadResult = await uploadFile(
+      uploadResult = await CommonRequest.uploadFile(
         this.state.uploadUrl,
         this.state.fileContent
       );
@@ -89,19 +86,9 @@ class FeedbackDialog extends Component<
       email,
       assets: fileName,
     });
+    let result = await CommonRequest.sendFeedback(data);
 
-    let config: any = {
-      method: "post",
-      maxBodyLength: Infinity,
-      url: "https://api.960960.xyz/api/feedback",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      data: data,
-    };
-
-    let res = await axios.request(config);
-    if (res.data.result !== "ok") {
+    if (result !== "ok") {
       toast.error(this.props.t("Error happened"));
       this.setState({ isSending: false });
       return;

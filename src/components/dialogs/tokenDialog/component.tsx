@@ -3,10 +3,9 @@ import "./tokenDialog.css";
 import { Trans } from "react-i18next";
 import { TokenDialogProps, TokenDialogState } from "./interface";
 import ConfigService from "../../../utils/storage/configService";
+import { SyncUtil } from "../../../assets/lib/kookit-extra-browser.min";
 import toast from "react-hot-toast";
 import { openExternalUrl } from "../../../utils/common";
-import axios from "axios";
-import { driveConfig } from "../../../constants/driveList";
 class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
   constructor(props: TokenDialogProps) {
     super(props);
@@ -20,14 +19,12 @@ class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
     let code: string = (
       document.querySelector("#token-dialog-token-box") as HTMLTextAreaElement
     ).value;
-    let res = await axios.post(driveConfig.dropboxAuthUrl, {
-      code,
-      redirect_uri: driveConfig.callbackUrl,
-    });
-    console.log(res);
+    let syncUtil = new SyncUtil("dropbox", {});
+    let refreshToken = await syncUtil.authToken(code);
+    console.log("refresh_token", refreshToken);
     ConfigService.setReaderConfig(
       `${this.props.driveName}_token`,
-      JSON.stringify({ refresh_token: res.data.refresh_token })
+      JSON.stringify({ refresh_token: refreshToken })
     );
     this.props.handleTokenDialog(false);
     toast.success(this.props.t("Addition successful"));
@@ -36,13 +33,11 @@ class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
     let code: string = (
       document.querySelector("#token-dialog-token-box") as HTMLTextAreaElement
     ).value;
-    let res = await axios.post(driveConfig.onedriveAuthUrl, {
-      code,
-      redirect_uri: driveConfig.callbackUrl,
-    });
+    let syncUtil = new SyncUtil("onedrive", {});
+    let refreshToken = await syncUtil.authToken(code);
     ConfigService.setReaderConfig(
       `${this.props.driveName}_token`,
-      JSON.stringify({ refresh_token: res.data.refresh_token })
+      JSON.stringify({ refresh_token: refreshToken })
     );
     this.props.handleTokenDialog(false);
     toast.success(this.props.t("Addition successful"));
@@ -51,14 +46,11 @@ class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
     let code: string = (
       document.querySelector("#token-dialog-token-box") as HTMLTextAreaElement
     ).value;
-    let res = await axios.post(driveConfig.googleAuthUrl, {
-      code,
-      redirect_uri: driveConfig.callbackUrl,
-      scope: driveConfig.googleScope,
-    });
+    let syncUtil = new SyncUtil("googledrive", {});
+    let refreshToken = await syncUtil.authToken(code);
     ConfigService.setReaderConfig(
       `${this.props.driveName}_token`,
-      JSON.stringify({ refresh_token: res.data.refresh_token })
+      JSON.stringify({ refresh_token: refreshToken })
     );
     this.props.handleTokenDialog(false);
     toast.success(this.props.t("Addition successful"));

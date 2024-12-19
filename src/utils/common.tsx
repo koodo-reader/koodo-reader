@@ -1,4 +1,3 @@
-import axios from "axios";
 import ConfigService from "./storage/configService";
 import Plugin from "../models/Plugin";
 import { isElectron } from "react-device-detect";
@@ -89,34 +88,6 @@ export const base64ArrayBuffer = (arrayBuffer: ArrayBuffer) => {
   return base64;
 };
 
-export const checkDeveloperUpdate = async () => {
-  let res = await axios.get("https://api.960960.xyz/api/update_dev");
-  return res.data;
-};
-export const getUploadUrl = async () => {
-  let res = await axios.get("https://api.960960.xyz/api/get_temp_upload_url");
-  return res.data;
-};
-export const uploadFile = async (url: string, file: any) => {
-  return new Promise<boolean>((resolve, reject) => {
-    axios
-      .put(url, file, {})
-      .then((res) => {
-        console.log(res);
-        resolve(true);
-      })
-      .catch((err) => {
-        console.log(err);
-        resolve(false);
-      });
-  });
-};
-export const checkStableUpdate = async () => {
-  let res = await axios.get(
-    `https://api.960960.xyz/api/update?name=${navigator.language}`
-  );
-  return res.data.log;
-};
 export const scrollContents = (chapterTitle: string, chapterHref: string) => {
   if (!chapterHref) return;
 

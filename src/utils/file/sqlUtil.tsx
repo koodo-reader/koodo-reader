@@ -1,8 +1,4 @@
-import {
-  sqlStatement,
-  sqliteToJson,
-  jsonToSqlite,
-} from "../../sql-statement.js";
+import { SqlStatement } from "../../assets/lib/kookit-extra-browser.min.js";
 declare var window: any;
 function addColonToKeys(obj: any): any {
   const newObj: any = {};
@@ -27,10 +23,12 @@ class SqlUtil {
   async dbBufferToJson(buffer: ArrayBuffer, type: string) {
     let SQL = await this.getConnection();
     let db = new SQL.Database(new Uint8Array(buffer));
-    let statement = db.prepare(sqlStatement["getAllStatement"][type]);
+    let statement = db.prepare(
+      SqlStatement.sqlStatement["getAllStatement"][type]
+    );
     let json: any = [];
     while (statement.step()) {
-      json.push(sqliteToJson[type](statement.getAsObject()));
+      json.push(SqlStatement.sqliteToJson[type](statement.getAsObject()));
     }
     statement.free();
     db.close();
@@ -39,12 +37,12 @@ class SqlUtil {
   async JsonToDbBuffer(json: any[], type: string) {
     let SQL = await this.getConnection();
     let db = new SQL.Database();
-    db.exec(sqlStatement["createTableStatement"][type]);
+    db.exec(SqlStatement.sqlStatement["createTableStatement"][type]);
     const statement = db.prepare(
-      sqlStatement["saveStatement"][type].replaceAll("@", ":")
+      SqlStatement.sqlStatement["saveStatement"][type].replaceAll("@", ":")
     );
     json.forEach((item) => {
-      statement.run(addColonToKeys(jsonToSqlite[type](item)));
+      statement.run(addColonToKeys(SqlStatement.jsonToSqlite[type](item)));
     });
     statement.free();
     let buffer = db.export();
