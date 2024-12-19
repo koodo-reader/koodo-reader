@@ -1,37 +1,37 @@
-export const dropdownList = [
-  {
-    id: 1,
-    title: "Font family",
-    value: "fontFamily",
-    option: [
-      "Built-in font",
-      "verdana",
-      "Arial",
-    ],
-  },
-  // {
-  //   id: 2,
-  //   title: "Line height",
-  //   value: "lineHeight",
-  //   option: ["Default", "1", "1.25", "1.5", "1.75", "2"],
-  // },
-  {
-    id: 2,
-    title: "Text alignment",
-    value: "textAlign",
-    option: ["Default", "Left", "Right"],
-  },
-  // {
-  //   id: 3,
-  //   title: "Conversoin of Chinese",
-  //   value: "convertChinese",
-  //   option: [
-  //     "Default",
-  //     "Simplified To Traditional",
-  //     "Traditional To Simplified",
-  //   ],
-  // },
-];
+// export const dropdownList = [
+//   {
+//     id: 1,
+//     title: "Font family",
+//     value: "fontFamily",
+//     option: [
+//       "Built-in font",
+//       "verdana",
+//       "Arial",
+//     ],
+//   },
+//   {
+//     id: 2,
+//     title: "Line height",
+//     value: "lineHeight",
+//     option: ["Default", "1", "1.25", "1.5", "1.75", "2"],
+//   },
+//   {
+//     id: 3,
+//     title: "Text alignment",
+//     value: "textAlign",
+//     option: ["Default", "Left", "Right"],
+//   },
+//   {
+//     id: 3,
+//     title: "Conversoin of Chinese",
+//     value: "convertChinese",
+//     option: [
+//       "Default",
+//       "Simplified To Traditional",
+//       "Traditional To Simplified",
+//     ],
+//   },
+// ];
 export const speedList = {
   id: 3,
   title: "Speed",

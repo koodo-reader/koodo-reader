@@ -1,4 +1,4 @@
-/* .paragraph-character-container {
+.paragraph-character-container {
   margin-bottom: 20px;
 }
 .paragraph-character-setting {
@@ -28,4 +28,13 @@
   font-weight: 500;
   line-height: 27px;
   text-align: left;
-} */
+}
+
+.icons-option {
+    display: 'block';
+    max-width: '50px';
+    height: '50px';
+    object-fit: 'contain';
+    padding-left : 5px;
+    padding-right : 5px;
+}
