@@ -92,7 +92,7 @@
   "homepage": "./",
   "build": {
     "appId": "xyz.960960.koodo",
-    "productName": "Koodo Reader",
+    "productName": "Cartable Fantastique Reader",
     "copyright": "Copyright (c) 2021-2022 ${author}",
     "files": [
       "build/**/*",

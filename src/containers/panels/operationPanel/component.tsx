@@ -213,7 +213,7 @@ class OperationPanel extends React.Component<
             } else {
               toast(
                 this.props.t(
-                  "Koodo Reader's web version are limited by the browser, for more powerful features, please download the desktop version."
+                  "Cartable Fantastique Reader's web version are limited by the browser, for more powerful features, please download the desktop version."
                 )
               );
             }

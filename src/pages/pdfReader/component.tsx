@@ -49,11 +49,11 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         result[window._.findIndex(result, { key })] ||
         JSON.parse(localStorage.getItem("tempBook") || "{}");
 
-      document.title = book.name + " - Koodo Reader";
+      document.title = book.name + " - Cartable Fantastique Reader";
       this.props.handleReadingState(true);
       RecentBooks.setRecent(key);
       this.props.handleReadingBook(book);
-      this.setState({ title: book.name + " - Koodo Reader" });
+      this.setState({ title: book.name + " - Cartable Fantastique Reader" });
       this.setState({ href: BookUtil.getPDFUrl(book) });
     });
     document

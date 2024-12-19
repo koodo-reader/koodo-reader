@@ -152,7 +152,7 @@ class FeedbackDialog extends Component<
               style={{ color: "rgb(231, 69, 69)" }}
             >
               <Trans>
-                You're not using the latest version of Koodo Reader. Please
+                You're not using the latest version of Cartable Fantastique Reader. Please
                 update first
               </Trans>
               &nbsp;

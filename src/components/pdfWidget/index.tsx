@@ -59,7 +59,7 @@ class PDFWidget extends React.Component<PDFWidgetProps, PDFWidgetState> {
               }
             } else {
               this.props.history.push("/manager/home");
-              document.title = "Koodo Reader";
+              document.title = "Cartable Fantastique Reader";
               this.props.handleReadingState(false);
             }
           }}
