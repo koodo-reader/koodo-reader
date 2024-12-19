@@ -2,7 +2,8 @@ import React from "react";
 import "./settingPanel.css";
 import ThemeList from "../../../components/readerSettings/themeList";
 import SliderList from "../../../components/readerSettings/sliderList";
-import DropdownList from "../../../components/readerSettings/dropdownList";
+// import DropdownList from "../../../components/readerSettings/dropdownList";
+import IconChoiceList from "../../../components/readerSettings/iconChoiceList";
 import ModeControl from "../../../components/readerSettings/modeControl";
 import SettingSwitch from "../../../components/readerSettings/settingSwitch";
 import { SettingPanelProps, SettingPanelState } from "./interface";
@@ -49,9 +50,11 @@ class SettingPanel extends React.Component<
           <Trans>Reading option</Trans>
         </div>
         <div className="setting-panel">
-          <ModeControl />
+          {/* <ModeControl /> */}
           <ThemeList />
-          <SliderList
+          <IconChoiceList />
+          <SettingSwitch />
+          {/* <SliderList
             {...{
               maxValue: 40,
               minValue: 13,
@@ -61,7 +64,7 @@ class SettingPanel extends React.Component<
               step: 1,
               title: "Font size",
             }}
-          />
+          /> */}
 
           <SliderList
             {...{
@@ -87,7 +90,7 @@ class SettingPanel extends React.Component<
             }}
           />
 
-          <SliderList
+          {/* <SliderList
             {...{
               maxValue: 20,
               minValue: 0,
@@ -97,7 +100,7 @@ class SettingPanel extends React.Component<
               step: 1,
               title: "Word spacing",
             }}
-          />
+          /> */}
 
           <SliderList
             {...{
@@ -135,8 +138,7 @@ class SettingPanel extends React.Component<
               title: "Brightness",
             }}
           />
-          <DropdownList />
-          <SettingSwitch />
+          {/* <DropdownList /> */}
         </div>
       </div>
     );

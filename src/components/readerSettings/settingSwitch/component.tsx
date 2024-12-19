@@ -1,9 +1,9 @@
 import React from "react";
 import { SettingSwitchProps, SettingSwitchState } from "./interface";
-import { Trans } from "react-i18next";
+// import { Trans } from "react-i18next";
 import TextToSpeech from "../../textToSpeech";
 import StorageUtil from "../../../utils/serviceUtils/storageUtil";
-import { readerSettingList } from "../../../constants/settingList";
+// import { readerSettingList } from "../../../constants/settingList";
 import toast from "react-hot-toast";
 import BookUtil from "../../../utils/fileUtils/bookUtil";
 class SettingSwitch extends React.Component<
@@ -65,7 +65,7 @@ class SettingSwitch extends React.Component<
     return (
       <>
         <TextToSpeech />
-        {readerSettingList.map((item) => (
+        {/* {readerSettingList.map((item) => (
           <div className="single-control-switch-container" key={item.title}>
             <span className="single-control-switch-title">
               <Trans>{item.title}</Trans>
@@ -136,7 +136,7 @@ class SettingSwitch extends React.Component<
               ></span>
             </span>
           </div>
-        ))}
+        ))} */}
       </>
     );
   }

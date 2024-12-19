@@ -7,7 +7,7 @@ import packageInfo from "../../../../package.json";
 import StorageUtil from "../../../utils/serviceUtils/storageUtil";
 import { changePath } from "../../../utils/syncUtils/common";
 import { isElectron } from "react-device-detect";
-import { dropdownList } from "../../../constants/dropdownList";
+// import { dropdownList } from "../../../constants/dropdownList";
 
 import { restore } from "../../../utils/syncUtils/restoreUtil";
 import {
@@ -23,6 +23,7 @@ import toast from "react-hot-toast";
 import { openExternalUrl } from "../../../utils/serviceUtils/urlUtil";
 import ManagerUtil from "../../../utils/fileUtils/managerUtil";
 import PluginList from "../../../utils/readUtils/pluginList";
+import iconChoiceList from "../../readerSettings/iconChoiceList";
 declare var window: any;
 class SettingDialog extends React.Component<
   SettingInfoProps,
@@ -600,7 +601,7 @@ class SettingDialog extends React.Component<
                     this.changeFont(event.target.value);
                   }}
                 >
-                  {dropdownList[0].option.map((item) => (
+                  {iconChoiceList[0].option.map((item) => (
                     <option
                       value={item}
                       key={item}

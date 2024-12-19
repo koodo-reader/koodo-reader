@@ -9,7 +9,7 @@
 </div>
 
 <h1 align="center">
-  Koodo Reader
+  Cartable Fantastique
 </h1>
 
 <h3 align="center">

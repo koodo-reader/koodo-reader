@@ -1,0 +1,40 @@
+.paragraph-character-container {
+  margin-bottom: 20px;
+}
+.paragraph-character-setting {
+  margin: 0px 22px;
+  width: calc(100% - 44px);
+}
+.general-setting-title {
+  font-size: 15px;
+  font-weight: 500;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.general-setting-dropdown {
+  width: 220px;
+  height: 30px;
+  margin-right: 5px;
+  font-size: 15px;
+  font-weight: 500;
+  text-align: center;
+  cursor: pointer;
+  position: relative;
+  left: 15px;
+  border-radius: 5px;
+}
+.general-setting-option {
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 27px;
+  text-align: left;
+}
+
+.icons-option {
+    display: 'block';
+    max-width: '50px';
+    height: '50px';
+    object-fit: 'contain';
+    padding-left : 5px;
+    padding-right : 5px;
+}
