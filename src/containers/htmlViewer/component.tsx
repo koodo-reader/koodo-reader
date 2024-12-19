@@ -88,19 +88,19 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
   }
 
   componentWillUnmount() {
-
+    //écouteur d’événement est nettoyé lorsque le composant se démonte
     window.removeEventListener("localStorageChange", this.handleLocalStorageChange);
     window.removeEventListener("removeStyles", this.disableBackgroundColor)
   }
 
 
-  handleChangeStyle = (changeColorsTriggered: boolean) => {
+  handleChangeStyle = async (changeColorsTriggered: boolean) => {
     if (changeColorsTriggered) {
-      this.handleRenderBookWithLinesColor();
+      await this.handleRenderBookWithLinesColor();
       this.props.handleRenderBookWithLinesColoredFunc(this.handleRenderBookWithLinesColor);
 
     } else {
-      this.handleRenderBook();
+      await this.handleRenderBook();
       this.props.handleRenderBookFunc(this.handleRenderBook);
     }
 
@@ -208,12 +208,12 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
             document.getElementsByClassName("html-viewer-page")[0]
           );
 
-
-          await this.handleRest(rendition);
           rendition.on("rendered", () => {
             this.changeStyleLinesColors(rendition);
 
           })
+
+          await this.handleRest(rendition);
           this.props.handleReadingState(true);
 
           RecentBooks.setRecent(this.props.currentBook.key);
@@ -368,10 +368,25 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       console.error("Impossible d'accéder au contenu de l'iframe");
       return;
     }
+    //resetStyles
     const allHighilightLines = Array.from(doc.getElementsByClassName('highlightLine'))
+    const highlightConfig = StorageUtil.getReaderConfig("highlightLines");
+    let config = null;
 
-    Object.keys(allHighilightLines).forEach((e) => allHighilightLines[e].style.backgroundColor = "")
-
+    try {
+      config = highlightConfig ? JSON.parse(highlightConfig) : null;
+      console.log("config", config)
+    } catch (error) {
+      console.error("Erreur de parsing JSON:", error);
+      return;
+    }
+    if (config && config === "resetStyles") {
+      Object.keys(allHighilightLines).forEach((e) => allHighilightLines[e].style.backgroundColor = "");
+      StorageUtil.setReaderConfig("highlightLines", "resetStyles");
+    } else if (config && config === "resetColorLines") {
+      Object.keys(allHighilightLines).forEach((e) => allHighilightLines[e].style.color = "");
+      StorageUtil.setReaderConfig("highlightLines", "resetColorLines");
+    }
   }
 
   changeHiglightLines = (paragraphs) => {
@@ -394,7 +409,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
 
           // Ajouter chaque ligne colorée
           coloredHTML += `<span class="highlightLine" style= "
-            font-size: ${StorageUtil.getReaderConfig("fontSize") || "17px"};
+          
             background-color: ${color}">${line}</span>`;
         });
 
@@ -423,7 +438,9 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           colorIndex++;
 
           // Ajouter chaque ligne colorée
-          coloredHTML += `<span style="
+          coloredHTML += `<span 
+          class="highlightLine"
+          style="
           font-size: ${StorageUtil.getReaderConfig("fontSize") || "17px"};
           line-height: ${StorageUtil.getReaderConfig("lineHeight") || "1.25"};
           color: ${color};">${line}</span>`;
@@ -458,7 +475,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
 
       const paragraphs = doc.querySelectorAll("p.kookit-text");
 
-      if (lineHighlight && lineHighlight !== "") {
+      if (lineHighlight && lineHighlight === "highlightColor") {
         this.changeHiglightLines(paragraphs);
       } else {
         this.changeSentenceColors(paragraphs);

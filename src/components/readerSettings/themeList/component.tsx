@@ -1,5 +1,5 @@
 import React from "react";
-import { backgroundList, colorsHighlightLignes, highlightLignesSecondaires, lines, newLines, textList } from "../../../constants/themeList";
+import { backgroundList, colorsHighlightLignes, lines, textList } from "../../../constants/themeList";
 import StyleUtil from "../../../utils/readUtils/styleUtil";
 import "./themeList.css";
 import { Trans } from "react-i18next";
@@ -10,10 +10,8 @@ import "rc-color-picker/assets/index.css";
 import ThemeUtil from "../../../utils/readUtils/themeUtil";
 import BookUtil from "../../../utils/fileUtils/bookUtil";
 import Lignescouleurs1 from "../../../assets/Lignescouleurs1.png"
-import Lignescouleurs2 from "../../../assets/Lignescouleurs2.png"
-import SurLignerLignes from "../../../assets/SurLignerLignes.png";
 import SurLignerLignes2 from "../../../assets/SurLignerLignes2.png";
-
+import gomme1 from "../../../assets/gomme1.png";
 
 class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
   constructor(props: ThemeListProps) {
@@ -128,8 +126,8 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
     }
   }
 
-  removeHighlightLineStyle() {
-
+  removeHighlightLineStyle(clearStyles: string) {
+    StorageUtil.setReaderConfig("highlightLines", JSON.stringify(clearStyles));
     const event = new Event("removeStyles");
     window.dispatchEvent(event);
   }
@@ -264,10 +262,10 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
           </button>
 
           <button
-            onClick={() => this.handleStyleLines("", true, newLines)}
+            onClick={() => this.removeHighlightLineStyle("resetColorLines")}
             className="btn--reset-style"
           >
-            <img src={Lignescouleurs2} alt="ligneCouleur" />
+            <img src={gomme1} alt="Effacer les couleurs" />
           </button>
 
         </div>
@@ -286,10 +284,10 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
           </button>
 
           <button
-            onClick={() => this.removeHighlightLineStyle()}
+            onClick={() => this.removeHighlightLineStyle("resetStyles")}
             className="btn--reset-style"
           >
-            <img src={SurLignerLignes} alt="SurlignerLignes" />
+            <img src={gomme1} alt="Effacer les couleurs" />
           </button>
 
         </div>
