@@ -1,5 +1,5 @@
 import React from "react";
-import { backgroundList, textList } from "../../../constants/themeList";
+import { backgroundList, colorsHighlightLignes, lines, textList } from "../../../constants/themeList";
 import StyleUtil from "../../../utils/readUtils/styleUtil";
 import "./themeList.css";
 import { Trans } from "react-i18next";
@@ -9,6 +9,9 @@ import { Panel as ColorPickerPanel } from "rc-color-picker";
 import "rc-color-picker/assets/index.css";
 import ThemeUtil from "../../../utils/readUtils/themeUtil";
 import BookUtil from "../../../utils/fileUtils/bookUtil";
+import Lignescouleurs1 from "../../../assets/Lignescouleurs1.png"
+import SurLignerLignes2 from "../../../assets/SurLignerLignes2.png";
+import gomme1 from "../../../assets/gomme1.png";
 
 class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
   constructor(props: ThemeListProps) {
@@ -31,8 +34,11 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
             (StorageUtil.getReaderConfig("textColor") || "rgba(0,0,0,1)")
           );
         }),
+
       isShowTextPicker: false,
       isShowBgPicker: false,
+      isButtonClicked: false,
+
     };
   }
   handleChangeBgColor = (color: string, index: number = -1) => {
@@ -68,6 +74,9 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
     }
     this.setState({ isShowTextPicker });
   };
+
+
+
   handleColorBgPicker = (isShowBgPicker: boolean) => {
     if (
       !isShowBgPicker &&
@@ -83,7 +92,10 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
     }
     this.setState({ isShowBgPicker });
   };
-  handleChooseTextColor = (color) => {
+  handleChooseTextColor = (color, changeColorsTriggered: boolean) => {
+    StorageUtil.setReaderConfig("changeColorsTriggered", changeColorsTriggered.toString());
+    const event = new Event('localStorageChange');
+    window.dispatchEvent(event);
     if (typeof color !== "object") {
       this.setState({
         currentTextIndex: textList
@@ -96,7 +108,31 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
       typeof color === "object" ? color.color : color
     );
     this.props.renderBookFunc();
+
   };
+
+
+  handleStyleLines = (changeHighlightLine: string, changeColorsTriggered: boolean, colors: string[]) => {
+    try {
+      StorageUtil.setReaderConfig("changeColorsTriggered", JSON.stringify(changeColorsTriggered));
+      StorageUtil.setReaderConfig("highlightLines", JSON.stringify(changeHighlightLine));
+      StorageUtil.setReaderConfig("baseColors", JSON.stringify(colors));
+
+      const event = new Event("localStorageChange");
+      window.dispatchEvent(event);
+      this.props.renderBookWithLineColors();
+    } catch (error) {
+      console.error("Erreur lors de la configuration des styles de ligne : ", error);
+    }
+  }
+
+  removeHighlightLineStyle(clearStyles: string) {
+    StorageUtil.setReaderConfig("highlightLines", JSON.stringify(clearStyles));
+    const event = new Event("removeStyles");
+    window.dispatchEvent(event);
+  }
+
+
   render() {
     const renderBackgroundColorList = () => {
       return backgroundList
@@ -113,15 +149,13 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
               onClick={() => {
                 this.handleChangeBgColor(item, index);
               }}
-              style={{ backgroundColor: item }}
-            >
+              style={{ backgroundColor: item }}>
               {index > 3 && index === this.state.currentBackgroundIndex && (
                 <span
                   className="icon-close"
                   onClick={() => {
                     ThemeUtil.clear(item);
-                  }}
-                ></span>
+                  }}></span>
               )}
             </li>
           );
@@ -138,22 +172,21 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
                 : "background-color-circle"
             }
             onClick={() => {
-              this.handleChooseTextColor(item);
+              this.handleChooseTextColor(item, false);
             }}
-            style={{ backgroundColor: item }}
-          >
+            style={{ backgroundColor: item }}>
             {index > 3 && index === this.state.currentTextIndex && (
               <span
                 className="icon-close"
                 onClick={() => {
                   ThemeUtil.clear(item);
-                }}
-              ></span>
+                }}></span>
             )}
           </li>
         );
       });
     };
+
     return (
       <div className="background-color-setting">
         <div className="background-color-text">
@@ -164,11 +197,11 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
             className="background-color-circle"
             onClick={() => {
               this.handleColorBgPicker(!this.state.isShowBgPicker);
-            }}
-          >
+            }}>
             <span
-              className={this.state.isShowBgPicker ? "icon-check" : "icon-more"}
-            ></span>
+              className={
+                this.state.isShowBgPicker ? "icon-check" : "icon-more"
+              }></span>
           </li>
 
           {renderBackgroundColorList()}
@@ -193,13 +226,11 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
             className="background-color-circle"
             onClick={() => {
               this.handleColorTextPicker(!this.state.isShowTextPicker);
-            }}
-          >
+            }}>
             <span
               className={
                 this.state.isShowTextPicker ? "icon-check" : "icon-more"
-              }
-            ></span>
+              }></span>
           </li>
 
           {renderTextColorList()}
@@ -216,6 +247,51 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
             }}
           />
         )}
+
+        <div className="background-color-line">
+          <Trans>Colorier Les Lignes</Trans>
+        </div>
+        <div className="grp-btn-change-color-line">
+          <button
+            id="btn-change-color"
+            onClick={() => this.handleStyleLines("", true, lines)}
+            className="btn-style"
+          >
+
+            <img src={Lignescouleurs1} alt="ligneCouleur" />
+          </button>
+
+          <button
+            onClick={() => this.removeHighlightLineStyle("resetColorLines")}
+            className="btn--reset-style"
+          >
+            <img src={gomme1} alt="Effacer les couleurs" />
+          </button>
+
+        </div>
+
+        <div className="background-color-line">
+          <Trans>Surligner Les Lignes</Trans>
+        </div>
+        <div className="grp-btn-highlight-line">
+          <button
+            id="btn-change-color"
+            onClick={() => this.handleStyleLines("highlightColor", true, colorsHighlightLignes)}
+            className="btn-style"
+          >
+
+            <img src={SurLignerLignes2} alt="SurlignerLignes" />
+          </button>
+
+          <button
+            onClick={() => this.removeHighlightLineStyle("resetStyles")}
+            className="btn--reset-style"
+          >
+            <img src={gomme1} alt="Effacer les couleurs" />
+          </button>
+
+        </div>
+
       </div>
     );
   }

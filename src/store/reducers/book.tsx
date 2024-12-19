@@ -6,8 +6,11 @@ const initState = {
   isReading: false,
   dragItem: "",
   currentBook: {},
-  renderBookFunc: () => {},
-  renderNoteFunc: () => {},
+  renderBookFunc: () => { },
+  renderNoteFunc: () => { },
+  renderBookWithLineColorsFunc: () => { }
+
+
 };
 export function book(
   state = initState,
@@ -29,6 +32,12 @@ export function book(
         ...state,
         renderBookFunc: action.payload,
       };
+    case "HANDLE_RENDER_BOOK_WITH_LINES_COLORED":
+      return {
+        ...state,
+        renderBookWithLineColorsFunc: action.payload
+      }
+
     case "HANDLE_RENDER_NOTE_FUNC":
       return {
         ...state,

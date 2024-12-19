@@ -5,6 +5,7 @@ import {
   handleReadingBook,
   handleHtmlBook,
   handleRenderBookFunc,
+  handleRenderBookWithLinesColoredFunc,
   handleFetchBooks,
   handleMenuMode,
   handleNoteKey,
@@ -15,6 +16,7 @@ import {
   handleFetchBookmarks,
   handlePercentage,
   handleFetchPercentage,
+
 } from "../../store/actions";
 import Viewer from "./component";
 import { stateType } from "../../store";
@@ -39,6 +41,7 @@ const actionCreator = {
   handleActionDialog,
   handleHtmlBook,
   handleRenderBookFunc,
+  handleRenderBookWithLinesColoredFunc,
   handleFetchBooks,
   handleOpenMenu,
   handleCurrentChapter,

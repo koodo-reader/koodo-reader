@@ -64,6 +64,7 @@ export type stateType = {
     currentBook: BookModel;
     renderBookFunc: () => void;
     renderNoteFunc: () => void;
+    renderBookWithLineColorsFunc: () => void;
   };
   backupPage: {
     isBackup: boolean;

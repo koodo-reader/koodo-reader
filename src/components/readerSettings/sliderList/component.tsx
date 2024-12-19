@@ -18,13 +18,11 @@ class SliderList extends React.Component<SliderListProps, SliderListState> {
             ? StorageUtil.getReaderConfig("scale") || "1"
             : this.props.mode === "letterSpacing"
               ? StorageUtil.getReaderConfig("letterSpacing") || "0"
-              : this.props.mode === "wordSpacing"
-                ? StorageUtil.getReaderConfig("wordSpacing") || "0"
-                : this.props.mode === "paraSpacing"
-                  ? StorageUtil.getReaderConfig("paraSpacing") || "0"
-                  : this.props.mode === "brightness"
-                    ? StorageUtil.getReaderConfig("brightness") || "1"
-                    : StorageUtil.getReaderConfig("margin") || "0",
+              : this.props.mode === "paraSpacing"
+                ? StorageUtil.getReaderConfig("paraSpacing") || "0"
+                : this.props.mode === "brightness"
+                  ? StorageUtil.getReaderConfig("brightness") || "1"
+                  : StorageUtil.getReaderConfig("margin") || "0",
     };
   }
   handleRest = async () => {
@@ -32,7 +30,13 @@ class SliderList extends React.Component<SliderListProps, SliderListState> {
       BookUtil.reloadBooks();
       return;
     }
-    this.props.renderBookFunc();
+    const changeColorsTriggered = StorageUtil.getReaderConfig("changeColorsTriggered") === "true";
+    if (changeColorsTriggered) {
+      this.props.renderBookWithLineColorsFunc();
+    } else {
+      this.props.renderBookFunc();
+    }
+
   };
   onValueChange = (event: any) => {
     if (this.props.mode === "fontSize") {

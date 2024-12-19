@@ -2,8 +2,9 @@
   width: calc(100% - 44px);
   margin: 10px 22px 0px;
 }
+.background-color-line,
 .background-color-text {
-  height: 20px;
+  height: 30px;
   width: 100%;
   font-size: 15px;
   font-weight: 500;
@@ -54,4 +55,21 @@
   margin: 6.5px;
   font-size: 18px;
   opacity: 0.7;
+}
+
+.grp-btn-highlight-line,
+.grp-btn-change-color-line {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 5rem;
+  .btn--reset-style,
+  .btn-style {
+    background-color: #ffffff;
+    width: 40px;
+    /* height: 40px; */
+    border: none;
+    margin: 5px;
+    font-size: xxx-large;
+  }
 }
