@@ -13,6 +13,7 @@ import TTSUtil from "../../../utils/reader/ttsUtil";
 import { isElectron } from "react-device-detect";
 import { handleExitFullScreen, handleFullScreen } from "../../../utils/common";
 import DatabaseService from "../../../utils/storage/databaseService";
+import BookLocation from "../../../models/BookLocation";
 declare var window: any;
 class OperationPanel extends React.Component<
   OperationPanelProps,
@@ -103,7 +104,7 @@ class OperationPanel extends React.Component<
   }
   handleAddBookmark = async () => {
     let bookKey = this.props.currentBook.key;
-    let bookLocation = ConfigService.getObjectConfig(
+    let bookLocation: BookLocation = ConfigService.getObjectConfig(
       bookKey,
       "recordLocation",
       {}
