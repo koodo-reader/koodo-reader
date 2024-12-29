@@ -118,12 +118,23 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     let highlighters: any = this.props.notes;
     if (!highlighters) return;
     let highlightersByChapter = highlighters.filter((item: Note) => {
-      return (
-        (item.chapter ===
-          rendition.getChapterDoc()[this.state.chapterDocIndex].label ||
-          item.chapterIndex === this.state.chapterDocIndex) &&
-        item.bookKey === this.props.currentBook.key
-      );
+      if (item.bookKey !== this.props.currentBook.key) {
+        return false;
+      }
+
+      let cfi = JSON.parse(item.cfi);
+      if (cfi.cfi) {
+        return (
+          item.chapter ===
+          rendition.getChapterDoc()[this.state.chapterDocIndex].label
+        );
+      } else {
+        return (
+          item.chapter ===
+            rendition.getChapterDoc()[this.state.chapterDocIndex].label &&
+          item.chapterIndex === this.state.chapterDocIndex
+        );
+      }
     });
 
     renderHighlighters(
