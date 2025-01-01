@@ -6,8 +6,6 @@ class styleUtil {
   static addDefaultCss() {
     let doc = getIframeDoc();
     if (!doc) return;
-
-    let css = this.getDefaultCss();
     let background = document.querySelector(".viewer");
     if (!background) return;
     background.setAttribute(
@@ -24,7 +22,7 @@ class styleUtil {
     if (!doc.head) {
       return;
     }
-
+    let css = this.getDefaultCss();
     let style = doc.createElement("style");
     style.id = "default-style";
     style.textContent = css;
