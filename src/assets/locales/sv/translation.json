@@ -30,7 +30,7 @@
   "Access token received, please continue": "Åtkomsttoken mottagen, vänligen fortsätt",
   "Change log": "Ändringslogg",
   "Update complete": "Uppdatering slutförd",
-  "Fetching acess token failed": "Misslyckad hämtning av åtkomsttoken",
+  "Fetching access token failed": "Misslyckad hämtning av åtkomsttoken",
   "Authorizing, please wait": "Auktoriserar, vänligen vänta",
   "Downloading, please wait": "Laddar ner, vänligen vänta",
   "Uploading, please wait": "Laddar upp, vänligen vänta",
