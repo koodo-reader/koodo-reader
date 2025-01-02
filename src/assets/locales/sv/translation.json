@@ -300,7 +300,7 @@
   "Select any text and click the highlight button on the popup menu": "Välj valfri text och klicka på markeringsknappen på popupmenyn",
   "Invert color": "Invertera färger",
   "Empty shelf": "Tom hylla",
-  "Move your mouse on top of any book, then click the more icon to add the book to the shelf": "För din muspekare över valfri bok, klicka på 'mer'-ikonen för att lägga till boken i hyllan",
+  "Move your mouse on top of any book, right-click it and you will get an option to add the book to the shelf": "För din muspekare över valfri bok, högerklicka på den och du kommer få möjligheten att lägga till den i hyllan",
   "Download failed, network problem or no backup": "Nedladdning misslyckades, nätverksproblem eller ingen backup",
   "Upload failed, check your connection": "Uppladdning misslyckades, kolla din uppkoppling",
   "Version": "Version:",
