@@ -348,7 +348,7 @@
   "Get rid of window frame, make reader hide into Word or any text editor, and can't be detected. You need to set up the reader's position, size and style first.": "Göra sig av med fönsterram, tvinga Läsaren att dölja sig i Word eller vilken annan text editor som helst, så den blir omöjlig att upptäcka. Först måste du bestämma Läsarens position, storlek samt stil.",
   "The imported books will not be copied to library, only linked to the original book path": "Importerade böcker kommer inte kopieras till biblioteket utan bara länkade till bokens ursprungsplats",
   "Reader menu will not be triggered by hovering but clicking on the area": "Läsmeny kommer inte triggas av svävning utan istället av klick över ytan",
-  "Gesture and UI optimization for touch screen": "Gest och UI-optimisering för pekskärm",
+  "Gesture and UI optimization for touch screen": "Gest och användargränssnittsoptimering för pekskärm",
   "The book that you read from last time will be open automatically when launching": "Boken du läste sist kommer automatiskt öppnas vid start",
   "All the folded content will be expanded in the navigation panel": "Allt ihopvikt innehåll kommer expandera i navigationspanelen",
   "Reader window will be maximized to fit the screen when opening a book": "Läsarfönstret kommer maximeras för att passa skärmen vid öppnandet av en bok",
