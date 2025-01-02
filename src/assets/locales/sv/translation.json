@@ -103,7 +103,7 @@
   "Appearance": "Stil",
   "Open url with built-in browser": "Öppna url med inbyggd webbläsare",
   "Light mode": "Ljust läge",
-  " mode": "Mörkt läge",
+  "Night mode": "Mörkt läge",
   "Turn on bionic reading": "Sätt på bionisk läsning",
   "This process is inreversible, and will completely overwrite your current library, make sure you know what you're doing before proceeding": "Denna process går ej att ångra och kommer helt skriva över ditt nuvarande bibliotek. Se till att du vet vad du gör innan du fortsätter",
   "Lemmatize words when looking up in a dictionary": "Förenkla ord vid uppslag",
