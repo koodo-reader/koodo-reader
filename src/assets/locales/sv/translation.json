@@ -272,7 +272,7 @@
   "Brightness": "Ljusstyrka",
   "How synchronisation works": "Hur synkronisering fungerar",
   "Sync function works with third-party cloud drive. You need to manually change the storage location to the same sync folder on different computers. When you click the sync button, Koodo Reader will automatically upload or download the data from this folder according to the timestamp.": "Synk-funktionen arbetar via tredjeparts molnenhet. Du behöver manuellt ändra lagringsplatsen för samma synkroniseringsfolder på olika datorer. När du klickar synkroniseringsknappen kommer Koodo Läsaren automatiskt ladda upp eller ladda ned datan i den här mappen enligt tidsstämpeln.",
-  "Line height": "linjehöjd",
+  "Line height": "Linjehöjd",
   "Please turn off open books in the main window first": "Vänligen slå av öppna böcker i huvudfönstret först",
   "Please turn off merge with word first": "Vänligen slå av ihopslagning med Word först",
   "Please choose an empty folder": "Vänligen välj en tom mapp",
