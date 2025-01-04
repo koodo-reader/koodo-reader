@@ -259,7 +259,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
                   return item;
                 }),
                 {
-                  title: bookLocation.chapterTitle.trim(),
+                  label: bookLocation.chapterTitle.trim(),
                 }
               )
             : 0;

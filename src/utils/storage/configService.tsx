@@ -102,7 +102,7 @@ class ConfigService {
     if (obj[objectName] === undefined) {
       obj[objectName] = [];
     }
-    if (obj[objectName].indexOf(itemName) === -1) {
+    if (itemName && obj[objectName].indexOf(itemName) === -1) {
       obj[objectName].unshift(itemName);
     }
     this.setAllMapConfig(obj, key);
