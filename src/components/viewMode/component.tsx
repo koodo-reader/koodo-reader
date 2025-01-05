@@ -1,7 +1,7 @@
 import React from "react";
 import "./viewMode.css";
 import { ViewModeProps, ViewModeState } from "./interface";
-import StorageUtil from "../../utils/serviceUtils/storageUtil";
+import ConfigService from "../../utils/storage/configService";
 import { viewMode } from "../../constants/viewMode";
 
 class ViewMode extends React.Component<ViewModeProps, ViewModeState> {
@@ -10,7 +10,7 @@ class ViewMode extends React.Component<ViewModeProps, ViewModeState> {
     this.state = {};
   }
   handleChange = (mode: string) => {
-    StorageUtil.setReaderConfig("viewMode", mode);
+    ConfigService.setReaderConfig("viewMode", mode);
     this.props.handleFetchList();
     setTimeout(() => {
       this.lazyLoad();

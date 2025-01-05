@@ -1,5 +1,5 @@
-export function handleShelfIndex(shelfIndex: number) {
-  return { type: "HANDLE_SHELF_INDEX", payload: shelfIndex };
+export function handleShelf(shelfTitle: string) {
+  return { type: "HANDLE_SHELF", payload: shelfTitle };
 }
 export function handleCollapse(isCollapsed: boolean) {
   return { type: "HANDLE_COLLAPSE", payload: isCollapsed };

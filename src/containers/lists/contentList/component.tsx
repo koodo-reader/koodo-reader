@@ -1,9 +1,8 @@
 import React from "react";
 import "./contentList.css";
 import { ContentListProps, ContentListState } from "./interface";
-import StorageUtil from "../../../utils/serviceUtils/storageUtil";
-import RecordLocation from "../../../utils/readUtils/recordLocation";
-import { scrollContents } from "../../../utils/commonUtil";
+import ConfigService from "../../../utils/storage/configService";
+import { scrollContents } from "../../../utils/common";
 
 class ContentList extends React.Component<ContentListProps, ContentListState> {
   constructor(props: ContentListProps) {
@@ -12,7 +11,8 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
       chapters: [],
       isCollapsed: true,
       currentIndex: -1,
-      isExpandContent: StorageUtil.getReaderConfig("isExpandContent") === "yes",
+      isExpandContent:
+        ConfigService.getReaderConfig("isExpandContent") === "yes",
     };
     this.handleJump = this.handleJump.bind(this);
   }
@@ -29,17 +29,18 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
             chapterTitle: string;
             chapterDocIndex: string;
             chapterHref: string;
-          } = RecordLocation.getHtmlLocation(this.props.currentBook.key);
+          } = ConfigService.getObjectConfig(
+            this.props.currentBook.key,
+            "recordLocation",
+            {}
+          );
 
           let chapter =
             bookLocation.chapterTitle ||
             (this.props.htmlBook && this.props.htmlBook.flattenChapters[0]
               ? this.props.htmlBook.flattenChapters[0].label
               : "Unknown chapter");
-          scrollContents(
-            chapter,
-            bookLocation.chapterHref,
-          );
+          scrollContents(chapter, bookLocation.chapterHref);
         }
       );
     }
@@ -68,7 +69,11 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
       percentage: string;
       cfi: string;
       page: string;
-    } = RecordLocation.getHtmlLocation(this.props.currentBook.key);
+    } = ConfigService.getObjectConfig(
+      this.props.currentBook.key,
+      "recordLocation",
+      {}
+    );
     const renderContentList = (items: any, level: number) => {
       level++;
       return items.map((item: any, index: number) => {

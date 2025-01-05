@@ -3,20 +3,17 @@ import "./operationPanel.css";
 import Bookmark from "../../../models/Bookmark";
 import { Trans } from "react-i18next";
 
-import RecordLocation from "../../../utils/readUtils/recordLocation";
 import { OperationPanelProps, OperationPanelState } from "./interface";
-import StorageUtil from "../../../utils/serviceUtils/storageUtil";
-import ReadingTime from "../../../utils/readUtils/readingTime";
+import ConfigService from "../../../utils/storage/configService";
 import { withRouter } from "react-router-dom";
 import toast from "react-hot-toast";
-import { HtmlMouseEvent } from "../../../utils/serviceUtils/mouseEvent";
-import storageUtil from "../../../utils/serviceUtils/storageUtil";
-import TTSUtil from "../../../utils/serviceUtils/ttsUtil";
+import { HtmlMouseEvent } from "../../../utils/reader/mouseEvent";
+import storageUtil from "../../../utils/storage/configService";
+import TTSUtil from "../../../utils/reader/ttsUtil";
 import { isElectron } from "react-device-detect";
-import {
-  handleExitFullScreen,
-  handleFullScreen,
-} from "../../../utils/commonUtil";
+import { handleExitFullScreen, handleFullScreen } from "../../../utils/common";
+import DatabaseService from "../../../utils/storage/databaseService";
+import BookLocation from "../../../models/BookLocation";
 declare var window: any;
 class OperationPanel extends React.Component<
   OperationPanelProps,
@@ -31,10 +28,16 @@ class OperationPanel extends React.Component<
     this.state = {
       isBookmark: false,
       time: 0,
-      currentPercentage: RecordLocation.getHtmlLocation(
-        this.props.currentBook.key
+      currentPercentage: ConfigService.getObjectConfig(
+        this.props.currentBook.key,
+        "recordLocation",
+        {}
       )
-        ? RecordLocation.getHtmlLocation(this.props.currentBook.key).percentage
+        ? ConfigService.getObjectConfig(
+            this.props.currentBook.key,
+            "recordLocation",
+            {}
+          ).percentage
         : 0,
       timeLeft: 0,
     };
@@ -64,29 +67,33 @@ class OperationPanel extends React.Component<
 
   handleShortcut() {}
   handleScreen() {
-    StorageUtil.getReaderConfig("isFullscreen") !== "yes"
+    ConfigService.getReaderConfig("isFullscreen") !== "yes"
       ? handleFullScreen()
       : handleExitFullScreen();
-    if (StorageUtil.getReaderConfig("isFullscreen") === "yes") {
-      StorageUtil.setReaderConfig("isFullscreen", "no");
+    if (ConfigService.getReaderConfig("isFullscreen") === "yes") {
+      ConfigService.setReaderConfig("isFullscreen", "no");
     } else {
-      StorageUtil.setReaderConfig("isFullscreen", "yes");
+      ConfigService.setReaderConfig("isFullscreen", "yes");
     }
   }
   handleExit() {
-    StorageUtil.setReaderConfig("isFullscreen", "no");
+    ConfigService.setReaderConfig("isFullscreen", "no");
     this.props.handleReadingState(false);
     this.props.handleSearch(false);
     window.speechSynthesis && window.speechSynthesis.cancel();
     TTSUtil.pauseAudio();
-    ReadingTime.setTime(this.props.currentBook.key, this.props.time);
+    ConfigService.setObjectConfig(
+      this.props.currentBook.key,
+      this.props.time,
+      "readingTime"
+    );
     handleExitFullScreen();
     if (this.props.htmlBook) {
       this.props.handleHtmlBook(null);
     }
 
     if (isElectron) {
-      if (StorageUtil.getReaderConfig("isOpenInMain") === "yes") {
+      if (ConfigService.getReaderConfig("isOpenInMain") === "yes") {
         window.require("electron").ipcRenderer.invoke("exit-tab", "ping");
       } else {
         window.close();
@@ -95,9 +102,13 @@ class OperationPanel extends React.Component<
       window.close();
     }
   }
-  handleAddBookmark = () => {
+  handleAddBookmark = async () => {
     let bookKey = this.props.currentBook.key;
-    let bookLocation = RecordLocation.getHtmlLocation(bookKey);
+    let bookLocation: BookLocation = ConfigService.getObjectConfig(
+      bookKey,
+      "recordLocation",
+      {}
+    );
     let text = bookLocation.text;
     let chapter = bookLocation.chapterTitle;
     let percentage = bookLocation.percentage;
@@ -120,10 +131,8 @@ class OperationPanel extends React.Component<
       percentage,
       chapter
     );
-    let bookmarkArr = this.props.bookmarks;
-    bookmarkArr.push(bookmark);
-    this.props.handleBookmarks(bookmarkArr);
-    window.localforage.setItem("bookmarks", bookmarkArr);
+    await DatabaseService.saveRecord(bookmark, "bookmarks");
+    this.props.handleFetchBookmarks();
     this.setState({ isBookmark: true });
     toast.success(this.props.t("Addition successful"));
     this.props.handleShowBookmark(true);
@@ -138,7 +147,11 @@ class OperationPanel extends React.Component<
       chapterHref: string;
       percentage: string;
       cfi: string;
-    } = RecordLocation.getHtmlLocation(this.props.currentBook.key);
+    } = ConfigService.getObjectConfig(
+      this.props.currentBook.key,
+      "recordLocation",
+      {}
+    );
     this.props.bookmarks.forEach((item) => {
       if (item.cfi === JSON.stringify(bookLocation)) {
         this.props.handleShowBookmark(true);

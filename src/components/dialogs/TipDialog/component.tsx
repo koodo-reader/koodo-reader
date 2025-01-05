@@ -3,7 +3,7 @@ import "./updateInfo.css";
 import { TipDialogProps, TipDialogState } from "./interface";
 import { Trans } from "react-i18next";
 import Lottie from "react-lottie";
-import animationDownload from "../../../assets/lotties/download.json";
+import animationDownload from "../../../assets/lotties/message.json";
 
 const downloadOptions = {
   loop: true,
@@ -57,7 +57,7 @@ class TipDialog extends React.Component<TipDialogProps, TipDialogState> {
         </div>
 
         <div className="download-desk-animation">
-          <Lottie options={downloadOptions} height={200} width={300} />
+          <Lottie options={downloadOptions} height={100} width={200} />
         </div>
       </div>
     );

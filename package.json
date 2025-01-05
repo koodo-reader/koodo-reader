@@ -19,28 +19,40 @@
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.485.0",
+    "@zip.js/zip.js": "^2.7.54",
     "adm-zip": "^0.5.2",
     "axios": "^0.19.2",
+    "basic-ftp": "^5.0.5",
+    "better-sqlite3": "^11.6.0",
     "buffer": "^6.0.3",
+    "chinese-s2t": "^1.0.0",
     "copy-text-to-clipboard": "^2.2.0",
     "dompurify": "^3.0.1",
     "electron-is-dev": "^1.1.0",
     "electron-store": "^8.0.1",
+    "fflate": "^0.8.2",
+    "file-saver": "^2.0.5",
     "font-list": "^1.4.5",
     "fs-extra": "^9.1.0",
-    "ftp": "^0.3.10",
+    "hammerjs": "^2.0.8",
     "howler": "^2.2.3",
     "iconv-lite": "^0.6.3",
+    "js-untar": "^2.0.0",
+    "jszip": "^3.10.1",
+    "localforage": "^1.10.0",
+    "mammoth": "^1.8.0",
+    "marked": "^15.0.3",
+    "mhtml2html": "^3.0.0",
     "qs": "^6.11.2",
+    "rangy": "1.3.0",
     "react-hot-toast": "^2.1.1",
     "react-tooltip": "^5.26.3",
     "ssh2-sftp-client": "^9.1.0",
-    "webdav": "^3.6.2",
-    "wink-lemmatizer": "^3.0.4",
-    "ws": "^8.13.0",
-    "zip-a-folder": "^0.0.12"
+    "underscore": "^1.13.7",
+    "webdav": "^5.7.1"
   },
   "devDependencies": {
+    "@types/hammerjs": "^2.0.46",
     "@types/i18next": "^13.0.0",
     "@types/iconv-lite": "^0.0.1",
     "@types/node": "^13.13.2",
@@ -51,12 +63,14 @@
     "@types/react-redux": "^7.1.7",
     "@types/react-router-dom": "^5.1.6",
     "@types/spark-md5": "^3.0.2",
+    "@types/underscore": "^1.13.0",
     "@types/ws": "^8.5.5",
     "classnames": "^2.2.6",
     "concurrently": "^5.0.1",
     "cross-env": "^6.0.3",
-    "electron": "14.1.1",
+    "electron": "20.3.12",
     "electron-builder": "^23.6.0",
+    "electron-rebuild": "^3.2.9",
     "hard-source-webpack-plugin": "^0.13.1",
     "html-react-parser": "^5.1.10",
     "i18next": "^20.2.4",
@@ -66,6 +80,7 @@
     "react-device-detect": "^1.12.1",
     "react-dom": "^17.0.2",
     "react-dropzone": "^11.3.0",
+    "react-hot-loader": "^4.13.1",
     "react-i18next": "^11.8.15",
     "react-lottie": "^1.2.3",
     "react-redux": "^7.2.0",
@@ -87,18 +102,21 @@
     "ele": "electron .",
     "dev": "concurrently \"cross-env BROWSER=none npm start\" \"wait-on http://127.0.0.1:3000/ && nodemon --watch main.js --exec electron .\"",
     "release": "electron-builder",
-    "prerelease": "react-scripts build"
+    "prerelease": "react-scripts build",
+    "postinstall": "electron-builder install-app-deps",
+    "rebuild": "electron-rebuild -f -w better-sqlite3"
   },
   "homepage": "./",
   "build": {
     "appId": "xyz.960960.koodo",
     "productName": "Koodo Reader",
-    "copyright": "Copyright (c) 2021-2022 ${author}",
+    "copyright": "Copyright (c) 2020-2024 ${author}",
     "files": [
       "build/**/*",
       "node_modules/**/*",
       "package.json",
-      "main.js"
+      "main.js",
+      "sql-statement.js"
     ],
     "directories": {
       "buildResources": "assets"
@@ -243,7 +261,6 @@
           "target": "deb",
           "arch": [
             "arm64",
-            "ia32",
             "x64"
           ]
         },
@@ -257,7 +274,6 @@
           "target": "AppImage",
           "arch": [
             "arm64",
-            "ia32",
             "x64"
           ]
         }
@@ -282,7 +298,10 @@
     }
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": "react-app",
+    "rules": {
+      "no-unused-vars": 2
+    }
   },
   "browserslist": {
     "production": [

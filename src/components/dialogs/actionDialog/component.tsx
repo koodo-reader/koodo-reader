@@ -2,11 +2,9 @@ import React from "react";
 import "./actionDialog.css";
 import { Trans } from "react-i18next";
 import { ActionDialogProps, ActionDialogState } from "./interface";
-import AddTrash from "../../../utils/readUtils/addTrash";
-
 import toast from "react-hot-toast";
-import AddFavorite from "../../../utils/readUtils/addFavorite";
 import MoreAction from "../moreAction";
+import ConfigService from "../../../utils/storage/configService";
 declare var window: any;
 class ActionDialog extends React.Component<
   ActionDialogProps,
@@ -41,13 +39,13 @@ class ActionDialog extends React.Component<
     this.props.handleActionDialog(false);
   };
   handleRestoreBook = () => {
-    AddTrash.clear(this.props.currentBook.key);
+    ConfigService.deleteListConfig(this.props.currentBook.key, "deletedBooks");
     this.props.handleActionDialog(false);
     toast.success(this.props.t("Restore successful"));
     this.props.handleFetchBooks();
   };
   handleLoveBook = () => {
-    AddFavorite.setFavorite(this.props.currentBook.key);
+    ConfigService.setListConfig(this.props.currentBook.key, "favoriteBooks");
     toast.success(this.props.t("Addition successful"));
     this.props.handleActionDialog(false);
   };
@@ -57,9 +55,10 @@ class ActionDialog extends React.Component<
     this.props.handleActionDialog(false);
   };
   handleCancelLoveBook = () => {
-    AddFavorite.clear(this.props.currentBook.key);
+    ConfigService.deleteListConfig(this.props.currentBook.key, "favoriteBooks");
     if (
-      Object.keys(AddFavorite.getAllFavorite()).length === 0 &&
+      Object.keys(ConfigService.getAllListConfig("favoriteBooks")).length ===
+        0 &&
       this.props.mode === "favorite"
     ) {
       this.props.history.push("/manager/empty");
@@ -127,7 +126,7 @@ class ActionDialog extends React.Component<
               className="action-dialog-add"
               onClick={() => {
                 if (
-                  AddFavorite.getAllFavorite().indexOf(
+                  ConfigService.getAllListConfig("favoriteBooks").indexOf(
                     this.props.currentBook.key
                   ) > -1
                 ) {
@@ -139,7 +138,7 @@ class ActionDialog extends React.Component<
             >
               <span className="icon-heart view-icon"></span>
               <p className="action-name">
-                {AddFavorite.getAllFavorite().indexOf(
+                {ConfigService.getAllListConfig("favoriteBooks").indexOf(
                   this.props.currentBook.key
                 ) > -1 ? (
                   <Trans>Remove from favorite</Trans>

@@ -11,6 +11,7 @@ import BookModel from "../models/Book";
 import NoteModel from "../models/Note";
 import BookmarkModel from "../models/Bookmark";
 import HtmlBookModel from "../models/HtmlBook";
+import PluginModel from "../models/Plugin";
 const rootReducer = combineReducers({
   book,
   manager,
@@ -33,6 +34,7 @@ export default store;
 export type stateType = {
   manager: {
     books: BookModel[];
+    plugins: PluginModel[];
     deletedBooks: BookModel[];
     searchResults: number[];
     isSearch: boolean;
@@ -87,7 +89,7 @@ export type stateType = {
   };
   sidebar: {
     mode: string;
-    shelfIndex: number;
+    shelfTitle: string;
     isCollapsed: boolean;
   };
   viewArea: {

@@ -4,7 +4,7 @@ import PopupNote from "../popupNote";
 import PopupTrans from "../popupTrans";
 import PopupDict from "../popupDict";
 import { PopupBoxProps, PopupBoxStates } from "./interface";
-import { getIframeDoc } from "../../../utils/serviceUtils/docUtil";
+import { getIframeDoc } from "../../../utils/reader/docUtil";
 
 class PopupBox extends React.Component<PopupBoxProps, PopupBoxStates> {
   highlighter: any;

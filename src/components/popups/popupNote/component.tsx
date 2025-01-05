@@ -1,24 +1,15 @@
 import React from "react";
 import "./popupNote.css";
 import Note from "../../../models/Note";
-
+import _ from "underscore";
 import { PopupNoteProps, PopupNoteState } from "./interface";
-import RecordLocation from "../../../utils/readUtils/recordLocation";
 import NoteTag from "../../noteTag";
 import NoteModel from "../../../models/Note";
 import { Trans } from "react-i18next";
 import toast from "react-hot-toast";
-import {
-  getHightlightCoords,
-  removePDFHighlight,
-} from "../../../utils/fileUtils/pdfUtil";
-import { getIframeDoc } from "../../../utils/serviceUtils/docUtil";
-import {
-  createOneNote,
-  removeOneNote,
-} from "../../../utils/serviceUtils/noteUtil";
-import { classes } from "../../../constants/themeList";
-declare var window: any;
+import { getIframeDoc } from "../../../utils/reader/docUtil";
+import ConfigService from "../../../utils/storage/configService";
+import DatabaseService from "../../../utils/storage/databaseService";
 
 class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
   constructor(props: PopupNoteProps) {
@@ -29,7 +20,7 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
     let textArea: any = document.querySelector(".editor-box");
     textArea && textArea.focus();
     if (this.props.noteKey) {
-      let noteIndex = window._.findLastIndex(this.props.notes, {
+      let noteIndex = _.findLastIndex(this.props.notes, {
         key: this.props.noteKey,
       });
       this.setState({
@@ -62,19 +53,17 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
     this.props.handleMenuMode("note");
     this.props.handleOpenMenu(true);
   };
-  createNote() {
+  async createNote() {
     let notes = (document.querySelector(".editor-box") as HTMLInputElement)
       .value;
-    let cfi = "";
-    if (this.props.currentBook.format === "PDF") {
-      cfi = JSON.stringify(
-        RecordLocation.getPDFLocation(this.props.currentBook.md5.split("-")[0])
-      );
-    } else {
-      cfi = JSON.stringify(
-        RecordLocation.getHtmlLocation(this.props.currentBook.key)
-      );
-    }
+    let cfi = JSON.stringify(
+      ConfigService.getObjectConfig(
+        this.props.currentBook.key,
+        "recordLocation",
+        {}
+      )
+    );
+
     if (this.props.noteKey) {
       this.props.notes.forEach((item) => {
         if (item.key === this.props.noteKey) {
@@ -83,7 +72,10 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
           item.cfi = cfi;
         }
       });
-      window.localforage.setItem("notes", this.props.notes).then(() => {
+      let newNote = this.props.notes.filter(
+        (item) => item.key === this.props.noteKey
+      )[0];
+      DatabaseService.updateRecord(newNote, "notes").then(() => {
         this.props.handleOpenMenu(false);
         toast.success(this.props.t("Addition successful"));
         this.props.handleFetchNotes();
@@ -93,27 +85,23 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
     } else {
       let bookKey = this.props.currentBook.key;
 
-      let pageArea = document.getElementById("page-area");
-      if (!pageArea) return;
-      let iframe = pageArea.getElementsByTagName("iframe")[0];
-      if (!iframe) return;
-      let doc = iframe.contentDocument;
-      if (!doc) {
-        return;
-      }
-      let charRange;
-      if (this.props.currentBook.format !== "PDF") {
-        charRange = window.rangy
-          .getSelection(iframe)
-          .saveCharacterRanges(doc.body)[0];
-      }
+      let range = JSON.stringify(
+        await this.props.htmlBook.rendition.getHightlightCoords(
+          this.props.chapterDocIndex
+        )
+      );
 
-      let range =
-        this.props.currentBook.format === "PDF"
-          ? JSON.stringify(getHightlightCoords())
-          : JSON.stringify(charRange);
-
-      let percentage = 0;
+      let percentage = ConfigService.getObjectConfig(
+        this.props.currentBook.key,
+        "recordLocation",
+        {}
+      ).percentage
+        ? ConfigService.getObjectConfig(
+            this.props.currentBook.key,
+            "recordLocation",
+            {}
+          ).percentage
+        : "0";
 
       let color = this.props.color || 0;
       let tag = this.state.tag;
@@ -130,51 +118,31 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
         color,
         tag
       );
-
-      let noteArr = this.props.notes;
-      noteArr.push(note);
-      window.localforage.setItem("notes", noteArr).then(() => {
+      DatabaseService.saveRecord(note, "notes").then(async () => {
         this.props.handleOpenMenu(false);
         toast.success(this.props.t("Addition successful"));
         this.props.handleFetchNotes();
         this.props.handleMenuMode("");
-        createOneNote(
+        await this.props.htmlBook.rendition.createOneNote(
           note,
-          this.props.currentBook.format,
           this.handleNoteClick
         );
       });
     }
   }
   handleClose = () => {
-    let noteIndex = -1;
-    let note: NoteModel;
     if (this.props.noteKey) {
-      this.props.notes.forEach((item, index) => {
-        if (item.key === this.props.noteKey) {
-          noteIndex = index;
-          note = item;
-        }
+      DatabaseService.deleteRecord(this.props.noteKey, "notes").then(() => {
+        toast.success(this.props.t("Deletion successful"));
+        this.props.handleMenuMode("");
+        this.props.handleFetchNotes();
+        this.props.handleNoteKey("");
+        this.props.htmlBook.rendition.removeOneNote(
+          this.props.noteKey,
+          this.props.currentBook.format
+        );
+        this.props.handleOpenMenu(false);
       });
-      if (noteIndex > -1) {
-        this.props.notes.splice(noteIndex, 1);
-        window.localforage.setItem("notes", this.props.notes).then(() => {
-          if (this.props.currentBook.format === "PDF") {
-            removePDFHighlight(
-              JSON.parse(note.range),
-              classes[note.color],
-              note.key
-            );
-          }
-
-          toast.success(this.props.t("Deletion successful"));
-          this.props.handleMenuMode("");
-          this.props.handleFetchNotes();
-          this.props.handleNoteKey("");
-          removeOneNote(note.key, this.props.currentBook.format);
-          this.props.handleOpenMenu(false);
-        });
-      }
     } else {
       this.props.handleOpenMenu(false);
       this.props.handleMenuMode("");

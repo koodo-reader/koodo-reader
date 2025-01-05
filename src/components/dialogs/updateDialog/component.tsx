@@ -6,10 +6,11 @@ import { Trans } from "react-i18next";
 import Lottie from "react-lottie";
 import animationNew from "../../../assets/lotties/new.json";
 import animationSuccess from "../../../assets/lotties/success.json";
-import StorageUtil from "../../../utils/serviceUtils/storageUtil";
-import { openExternalUrl } from "../../../utils/serviceUtils/urlUtil";
+import ConfigService from "../../../utils/storage/configService";
+import { openExternalUrl } from "../../../utils/common";
 import { isElectron } from "react-device-detect";
-import { checkStableUpdate, sleep } from "../../../utils/commonUtil";
+import { sleep } from "../../../utils/common";
+import { CommonRequest } from "../../../assets/lib/kookit-extra-browser.min";
 const newOptions = {
   loop: false,
   autoplay: true,
@@ -37,18 +38,7 @@ class UpdateInfo extends React.Component<UpdateInfoProps, UpdateInfoState> {
   }
   componentDidMount() {
     if (!this.props.currentBook.key) {
-      let lastTimeCheck: string = StorageUtil.getReaderConfig("lastTimeCheck");
-
-      if (
-        lastTimeCheck &&
-        new Date().getTime() - parseInt(lastTimeCheck) <
-          28 * 24 * 60 * 60 * 1000
-      ) {
-        return;
-      }
-
-      checkStableUpdate().then(async (res) => {
-        StorageUtil.setReaderConfig("lastTimeCheck", new Date().getTime() + "");
+      CommonRequest.checkStableUpdate().then(async (res) => {
         const newVersion = res.version;
         if (!isElectron) {
           return;
@@ -56,21 +46,21 @@ class UpdateInfo extends React.Component<UpdateInfoProps, UpdateInfoState> {
         await sleep(500);
 
         if (packageInfo.version.localeCompare(newVersion) < 0) {
-          if (StorageUtil.getReaderConfig("isDisableUpdate") !== "yes") {
+          if (ConfigService.getReaderConfig("isDisableUpdate") !== "yes") {
             this.setState({ updateLog: res });
             this.props.handleNewDialog(true);
           } else {
             this.props.handleNewWarning(true);
           }
         } else if (
-          StorageUtil.getReaderConfig("version") !== newVersion &&
-          StorageUtil.getReaderConfig("isFirst")
+          ConfigService.getReaderConfig("version") !== newVersion &&
+          ConfigService.getReaderConfig("isFirst")
         ) {
           this.setState({ isUpdated: true });
           this.props.handleNewDialog(true);
-          StorageUtil.setReaderConfig("version", newVersion);
+          ConfigService.setReaderConfig("version", newVersion);
         }
-        StorageUtil.setReaderConfig(
+        ConfigService.setReaderConfig(
           "appInfo",
           packageInfo.version.localeCompare(newVersion) < 0
             ? "new"

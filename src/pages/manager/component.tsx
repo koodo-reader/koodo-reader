@@ -10,8 +10,7 @@ import BackupDialog from "../../components/dialogs/backupDialog";
 import "./manager.css";
 import { ManagerProps, ManagerState } from "./interface";
 import { Trans } from "react-i18next";
-import StorageUtil from "../../utils/serviceUtils/storageUtil";
-import AddFavorite from "../../utils/readUtils/addFavorite";
+import ConfigService from "../../utils/storage/configService";
 import SettingDialog from "../../components/dialogs/settingDialog";
 import { isMobile } from "react-device-detect";
 import { Route, Switch, Redirect } from "react-router-dom";
@@ -28,8 +27,10 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
   constructor(props: ManagerProps) {
     super(props);
     this.state = {
-      totalBooks: parseInt(StorageUtil.getReaderConfig("totalBooks")) || 0,
-      favoriteBooks: Object.keys(AddFavorite.getAllFavorite()).length,
+      totalBooks: parseInt(ConfigService.getReaderConfig("totalBooks")) || 0,
+      favoriteBooks: Object.keys(
+        ConfigService.getAllListConfig("favoriteBooks")
+      ).length,
       isAuthed: false,
       isError: false,
       isCopied: false,
@@ -46,7 +47,7 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
           totalBooks: nextProps.books.length,
         },
         () => {
-          StorageUtil.setReaderConfig(
+          ConfigService.setReaderConfig(
             "totalBooks",
             this.state.totalBooks.toString()
           );
@@ -58,12 +59,15 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
     }
     if (this.props.mode !== nextProps.mode) {
       this.setState({
-        favoriteBooks: Object.keys(AddFavorite.getAllFavorite()).length,
+        favoriteBooks: Object.keys(
+          ConfigService.getAllListConfig("favoriteBooks")
+        ).length,
       });
     }
   }
   UNSAFE_componentWillMount() {
     this.props.handleFetchBooks();
+    this.props.handleFetchPlugins();
     this.props.handleFetchNotes();
     this.props.handleFetchBookmarks();
     this.props.handleFetchBookSortCode();
@@ -95,9 +99,9 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
           <div>
             <img
               src={
-                StorageUtil.getReaderConfig("appSkin") === "night" ||
-                (StorageUtil.getReaderConfig("appSkin") === "system" &&
-                  StorageUtil.getReaderConfig("isOSNight") === "yes")
+                ConfigService.getReaderConfig("appSkin") === "night" ||
+                (ConfigService.getReaderConfig("appSkin") === "system" &&
+                  ConfigService.getReaderConfig("isOSNight") === "yes")
                   ? "./assets/empty_dark.svg"
                   : "./assets/empty.svg"
               }

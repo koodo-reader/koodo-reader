@@ -1,9 +1,9 @@
 import React, { Component } from "react";
-import ShelfUtil from "../../../utils/readUtils/shelfUtil";
 import { Trans } from "react-i18next";
 import { AddDialogProps, AddDialogState } from "./interface";
 import "./addDialog.css";
 import toast from "react-hot-toast";
+import ConfigService from "../../../utils/storage/configService";
 
 class AddDialog extends Component<AddDialogProps, AddDialogState> {
   constructor(props: AddDialogProps) {
@@ -18,16 +18,9 @@ class AddDialog extends Component<AddDialogProps, AddDialogState> {
     const inputElement: HTMLInputElement = document.querySelector(
       ".add-dialog-new-shelf-box"
     ) as HTMLInputElement;
-    if (!isNaN(parseInt(inputElement.value))) {
-      toast(this.props.t("Shelf title can't be pure number"));
-      return;
-    }
     let shelfTitle: string = this.state.shelfTitle;
-    let shelfList = ShelfUtil.getShelf();
-    let shelfTitles = Object.keys(ShelfUtil.getShelf());
-    let shelfIndex = this.state.isNew
-      ? shelfTitles.length
-      : shelfTitles.indexOf(shelfTitle);
+    let shelfList = ConfigService.getAllMapConfig("shelfList");
+
     if (this.state.isNew) {
       shelfTitle = inputElement.value;
       if (shelfList.hasOwnProperty(shelfTitle)) {
@@ -41,29 +34,33 @@ class AddDialog extends Component<AddDialogProps, AddDialogState> {
     }
     if (
       !this.props.isSelectBook &&
-      shelfList[`${shelfTitle}`] &&
-      shelfList[`${shelfTitle}`].indexOf(this.props.currentBook.key) > -1
+      shelfList[shelfTitle] &&
+      shelfList[shelfTitle].indexOf(this.props.currentBook.key) > -1
     ) {
       toast(this.props.t("Duplicate book"));
       return;
     }
     if (this.props.isSelectBook) {
       this.props.selectedBooks.forEach((item) => {
-        ShelfUtil.setShelf(shelfTitle, item);
+        ConfigService.setMapConfig(shelfTitle, item, "shelfList");
       });
       this.props.handleSelectBook(!this.props.isSelectBook);
       if (this.props.isSelectBook) {
         this.props.handleSelectedBooks([]);
       }
     } else {
-      ShelfUtil.setShelf(shelfTitle, this.props.currentBook.key);
+      ConfigService.setMapConfig(
+        shelfTitle,
+        this.props.currentBook.key,
+        "shelfList"
+      );
     }
 
     this.props.handleAddDialog(false);
     toast.success(this.props.t("Addition successful"));
     this.props.handleActionDialog(false);
     this.props.handleMode("shelf");
-    this.props.handleShelfIndex(shelfIndex);
+    this.props.handleShelf(shelfTitle);
   };
   handleChange = (shelfTitle: string) => {
     if (shelfTitle === "New") {
@@ -75,8 +72,10 @@ class AddDialog extends Component<AddDialogProps, AddDialogState> {
   };
   render() {
     const renderShelfList = () => {
-      let shelfList = ShelfUtil.getShelf();
-      let shelfTitle = Object.keys(shelfList);
+      let shelfTitle = [
+        "New",
+        ...Object.keys(ConfigService.getAllMapConfig("shelfList")),
+      ];
       return shelfTitle.map((item) => {
         return (
           <option

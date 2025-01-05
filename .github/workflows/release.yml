@@ -27,6 +27,9 @@ jobs:
         with:
           # Log in to Snap Store
           snapcraft_token: ${{ secrets.snapcraft_token }}
+      - name: Install Gcc
+        if: startsWith(matrix.os, 'ubuntu')
+        run: sudo apt-get install gcc-multilib g++-multilib
 
       - name: Prepare for app notarization (macOS)
         if: startsWith(matrix.os, 'macos')

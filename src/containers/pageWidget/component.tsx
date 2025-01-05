@@ -1,22 +1,21 @@
 import React from "react";
 import "./background.css";
 import { BackgroundProps, BackgroundState } from "./interface";
-import StorageUtil from "../../utils/serviceUtils/storageUtil";
+import ConfigService from "../../utils/storage/configService";
 import { Trans } from "react-i18next";
-import RecordLocation from "../../utils/readUtils/recordLocation";
 class Background extends React.Component<BackgroundProps, BackgroundState> {
   isFirst: Boolean;
   constructor(props: any) {
     super(props);
     this.state = {
       isSingle:
-        StorageUtil.getReaderConfig("readerMode") &&
-        StorageUtil.getReaderConfig("readerMode") !== "double",
+        ConfigService.getReaderConfig("readerMode") &&
+        ConfigService.getReaderConfig("readerMode") !== "double",
       prevPage: 0,
       nextPage: 0,
-      scale: StorageUtil.getReaderConfig("scale") || 1,
-      isHideFooter: StorageUtil.getReaderConfig("isHideFooter") === "yes",
-      isHideHeader: StorageUtil.getReaderConfig("isHideHeader") === "yes",
+      scale: ConfigService.getReaderConfig("scale") || 1,
+      isHideFooter: ConfigService.getReaderConfig("isHideFooter") === "yes",
+      isHideHeader: ConfigService.getReaderConfig("isHideHeader") === "yes",
     };
     this.isFirst = true;
   }
@@ -32,16 +31,10 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
   }
   handleLocation = () => {
     let position = this.props.htmlBook.rendition.getPosition();
-    RecordLocation.recordHtmlLocation(
+    ConfigService.setObjectConfig(
       this.props.currentBook.key,
-      position.text,
-      position.chapterTitle,
-      position.chapterDocIndex,
-      position.chapterHref,
-      position.count,
-      position.percentage,
-      position.cfi,
-      position.page
+      position,
+      "recordLocation"
     );
   };
   async handlePageNum(rendition) {
@@ -61,13 +54,13 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
       <div
         className="background"
         style={{
-          color: StorageUtil.getReaderConfig("textColor")
-            ? StorageUtil.getReaderConfig("textColor")
+          color: ConfigService.getReaderConfig("textColor")
+            ? ConfigService.getReaderConfig("textColor")
             : "",
         }}
       >
         <div className="header-container">
-          {!this.state.isHideHeader && this.props.currentChapter && (
+          {!this.state.isHideHeader && this.props.currentChapter + "" && (
             <p
               className="header-chapter-name"
               style={
@@ -83,7 +76,7 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
             </p>
           )}
           {!this.state.isHideHeader &&
-            this.props.currentChapter &&
+            this.props.currentChapter + "" &&
             !this.state.isSingle && (
               <p
                 className="header-book-name"

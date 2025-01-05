@@ -1,8 +1,9 @@
 import React from "react";
 import "./sortDialog.css";
-import SortUtil from "../../../utils/readUtils/sortUtil";
+import SortUtil from "../../../utils/reader/sortUtil";
 import { Trans } from "react-i18next";
 import { SortDialogProps, SortDialogState } from "./interface";
+import ConfigService from "../../../utils/storage/configService";
 
 class SortDialog extends React.Component<SortDialogProps, SortDialogState> {
   constructor(props: SortDialogProps) {
@@ -18,13 +19,19 @@ class SortDialog extends React.Component<SortDialogProps, SortDialogState> {
       noteSortCode.sort = code;
       this.props.handleNoteSortCode(noteSortCode);
       this.props.handleNoteSort(true);
-      SortUtil.setNoteSortCode(code, this.props.noteSortCode.order);
+      ConfigService.setReaderConfig(
+        "noteSortCode",
+        JSON.stringify({ sort: code, order: this.props.noteSortCode.order })
+      );
     } else {
       let bookSortCode = this.props.bookSortCode;
       bookSortCode.sort = code;
       this.props.handleBookSortCode(bookSortCode);
       this.props.handleBookSort(true);
-      SortUtil.setBookSortCode(code, this.props.bookSortCode.order);
+      ConfigService.setReaderConfig(
+        "bookSortCode",
+        JSON.stringify({ sort: code, order: this.props.bookSortCode.order })
+      );
     }
   };
   handleOrder = (code: number) => {
@@ -32,13 +39,19 @@ class SortDialog extends React.Component<SortDialogProps, SortDialogState> {
       let noteSortCode = this.props.noteSortCode;
       noteSortCode.order = code;
       this.props.handleNoteSort(true);
-      SortUtil.setNoteSortCode(this.props.noteSortCode.sort, code);
+      ConfigService.setReaderConfig(
+        "noteSortCode",
+        JSON.stringify({ sort: this.props.noteSortCode.sort, order: code })
+      );
       this.props.handleNoteSortCode(noteSortCode);
     } else {
       let bookSortCode = this.props.bookSortCode;
       bookSortCode.order = code;
       this.props.handleBookSort(true);
-      SortUtil.setBookSortCode(this.props.bookSortCode.sort, code);
+      ConfigService.setReaderConfig(
+        "bookSortCode",
+        JSON.stringify({ sort: this.props.bookSortCode.sort, order: code })
+      );
       this.props.handleBookSortCode(bookSortCode);
     }
   };

@@ -2,15 +2,14 @@ import React from "react";
 import { TextToSpeechProps, TextToSpeechState } from "./interface";
 import { Trans } from "react-i18next";
 import { speedList } from "../../constants/dropdownList";
-import StorageUtil from "../../utils/serviceUtils/storageUtil";
-import { sleep } from "../../utils/commonUtil";
+import ConfigService from "../../utils/storage/configService";
+import { checkPlugin, getAllVoices, sleep } from "../../utils/common";
 import { isElectron } from "react-device-detect";
 import toast from "react-hot-toast";
-import RecordLocation from "../../utils/readUtils/recordLocation";
-import TTSUtil from "../../utils/serviceUtils/ttsUtil";
+import TTSUtil from "../../utils/reader/ttsUtil";
 import "./textToSpeech.css";
-import PluginList from "../../utils/readUtils/pluginList";
-import { openExternalUrl } from "../../utils/serviceUtils/urlUtil";
+import { openExternalUrl } from "../../utils/common";
+import DatabaseService from "../../utils/storage/databaseService";
 
 class TextToSpeech extends React.Component<
   TextToSpeechProps,
@@ -66,12 +65,15 @@ class TextToSpeech extends React.Component<
       this.setState({ isAudioOn: false });
     } else {
       if (isElectron) {
-        this.customVoices = TTSUtil.getVoiceList();
+        this.customVoices = TTSUtil.getVoiceList(this.props.plugins);
         this.voices = [...this.nativeVoices, ...this.customVoices];
       } else {
         this.voices = this.nativeVoices;
       }
-      if (this.voices.length === 0 && PluginList.getAllVoices().length === 0) {
+      if (
+        this.voices.length === 0 &&
+        getAllVoices(this.props.plugins).length === 0
+      ) {
         this.setState({ isAddNew: true });
         return;
       }
@@ -85,10 +87,10 @@ class TextToSpeech extends React.Component<
   };
   handleAudio = async () => {
     this.nodeList = await this.handleGetText();
-    let voiceIndex = parseInt(StorageUtil.getReaderConfig("voiceIndex")) || 0;
+    let voiceIndex = parseInt(ConfigService.getReaderConfig("voiceIndex")) || 0;
     if (
       voiceIndex > this.nativeVoices.length - 1 &&
-      PluginList.getAllVoices().length > 0
+      getAllVoices(this.props.plugins).length > 0
     ) {
       await this.handleRead();
     } else {
@@ -96,7 +98,7 @@ class TextToSpeech extends React.Component<
     }
   };
   handleGetText = async () => {
-    if (StorageUtil.getReaderConfig("isSliding") === "yes") {
+    if (ConfigService.getReaderConfig("isSliding") === "yes") {
       await sleep(1000);
     }
     this.nodeList = this.props.htmlBook.rendition
@@ -109,21 +111,23 @@ class TextToSpeech extends React.Component<
     return this.nodeList;
   };
   async handleRead() {
-    let voiceIndex = parseInt(StorageUtil.getReaderConfig("voiceIndex")) || 0;
-    let speed = parseFloat(StorageUtil.getReaderConfig("voiceSpeed")) || 1;
+    let voiceIndex = parseInt(ConfigService.getReaderConfig("voiceIndex")) || 0;
+    let speed = parseFloat(ConfigService.getReaderConfig("voiceSpeed")) || 1;
 
     TTSUtil.setAudioPaths();
     await TTSUtil.cacheAudio(
       [this.nodeList[0]],
       voiceIndex - this.nativeVoices.length,
-      speed * 100 - 100
+      speed * 100 - 100,
+      this.props.plugins
     );
 
     setTimeout(async () => {
       await TTSUtil.cacheAudio(
         this.nodeList.slice(1),
         voiceIndex - this.nativeVoices.length,
-        speed * 100 - 100
+        speed * 100 - 100,
+        this.props.plugins
       );
     }, 1);
 
@@ -140,8 +144,8 @@ class TextToSpeech extends React.Component<
       }
       let res = await this.handleSpeech(
         index,
-        parseInt(StorageUtil.getReaderConfig("voiceIndex")) || 0,
-        parseFloat(StorageUtil.getReaderConfig("voiceSpeed")) || 1
+        parseInt(ConfigService.getReaderConfig("voiceIndex")) || 0,
+        parseFloat(ConfigService.getReaderConfig("voiceSpeed")) || 1
       );
       if (
         this.nodeList[index] ===
@@ -159,16 +163,10 @@ class TextToSpeech extends React.Component<
       isElectron &&
         (await window.require("electron").ipcRenderer.invoke("clear-tts"));
       let position = this.props.htmlBook.rendition.getPosition();
-      RecordLocation.recordHtmlLocation(
+      ConfigService.setObjectConfig(
         this.props.currentBook.key,
-        position.text,
-        position.chapterTitle,
-        position.chapterDocIndex,
-        position.chapterHref,
-        position.count,
-        position.percentage,
-        position.cfi,
-        position.page
+        position,
+        "recordLocation"
       );
       this.nodeList = [];
       await this.handleAudio();
@@ -181,8 +179,8 @@ class TextToSpeech extends React.Component<
 
     let res = await this.handleSystemSpeech(
       index,
-      parseInt(StorageUtil.getReaderConfig("voiceIndex")) || 0,
-      parseFloat(StorageUtil.getReaderConfig("voiceSpeed")) || 1
+      parseInt(ConfigService.getReaderConfig("voiceIndex")) || 0,
+      parseFloat(ConfigService.getReaderConfig("voiceSpeed")) || 1
     );
 
     if (res === "start") {
@@ -201,16 +199,10 @@ class TextToSpeech extends React.Component<
         index === this.nodeList.length
       ) {
         let position = this.props.htmlBook.rendition.getPosition();
-        RecordLocation.recordHtmlLocation(
+        ConfigService.setObjectConfig(
           this.props.currentBook.key,
-          position.text,
-          position.chapterTitle,
-          position.chapterDocIndex,
-          position.chapterHref,
-          position.count,
-          position.percentage,
-          position.cfi,
-          position.page
+          position,
+          "recordLocation"
         );
         this.nodeList = [];
         await this.handleAudio();
@@ -323,7 +315,7 @@ class TextToSpeech extends React.Component<
                       TTSUtil.pauseAudio();
                       this.setState({ isAddNew: true, isAudioOn: false });
                     } else {
-                      StorageUtil.setReaderConfig(
+                      ConfigService.setReaderConfig(
                         "voiceIndex",
                         event.target.value
                       );
@@ -340,7 +332,7 @@ class TextToSpeech extends React.Component<
                         selected={
                           index ===
                           parseInt(
-                            StorageUtil.getReaderConfig("voiceIndex") || "0"
+                            ConfigService.getReaderConfig("voiceIndex") || "0"
                           )
                         }
                       >
@@ -362,7 +354,7 @@ class TextToSpeech extends React.Component<
                   id="text-speech-speed"
                   className="lang-setting-dropdown"
                   onChange={(event) => {
-                    StorageUtil.setReaderConfig(
+                    ConfigService.setReaderConfig(
                       "voiceSpeed",
                       event.target.value
                     );
@@ -376,7 +368,7 @@ class TextToSpeech extends React.Component<
                       key={item}
                       selected={
                         item ===
-                        (StorageUtil.getReaderConfig("voiceSpeed") || "1")
+                        (ConfigService.getReaderConfig("voiceSpeed") || "1")
                       }
                     >
                       {item}
@@ -401,7 +393,7 @@ class TextToSpeech extends React.Component<
 
                 <div
                   className="voice-add-confirm"
-                  onClick={() => {
+                  onClick={async () => {
                     let value: string = (
                       document.querySelector(
                         "#voice-add-content-box"
@@ -409,11 +401,21 @@ class TextToSpeech extends React.Component<
                     ).value;
                     if (value) {
                       let plugin = JSON.parse(value);
-                      let isSuccess = PluginList.addPlugin(plugin);
-                      if (!isSuccess) {
+                      plugin.key = plugin.identifier;
+                      if (!(await checkPlugin(plugin))) {
                         toast.error(this.props.t("Plugin verification failed"));
                         return;
                       }
+                      if (
+                        this.props.plugins.find(
+                          (item) => item.key === plugin.key
+                        )
+                      ) {
+                        await DatabaseService.updateRecord(plugin, "plugins");
+                      } else {
+                        await DatabaseService.saveRecord(plugin, "plugins");
+                      }
+                      this.props.handleFetchPlugins();
                       toast.success(this.props.t("Addition successful"));
                     }
                     this.setState({ isAddNew: false });
@@ -435,9 +437,9 @@ class TextToSpeech extends React.Component<
                     style={{ marginRight: "10px" }}
                     onClick={() => {
                       if (
-                        StorageUtil.getReaderConfig("lang") === "zhCN" ||
-                        StorageUtil.getReaderConfig("lang") === "zhTW" ||
-                        StorageUtil.getReaderConfig("lang") === "zhMO"
+                        ConfigService.getReaderConfig("lang") === "zhCN" ||
+                        ConfigService.getReaderConfig("lang") === "zhTW" ||
+                        ConfigService.getReaderConfig("lang") === "zhMO"
                       ) {
                         openExternalUrl(
                           "https://www.koodoreader.com/zh/plugin"

@@ -1,15 +1,13 @@
 import React from "react";
-import RecentBooks from "../../utils/readUtils/recordRecent";
 import "./bookCardItem.css";
 import { BookCardProps, BookCardState } from "./interface";
-import AddFavorite from "../../utils/readUtils/addFavorite";
 import ActionDialog from "../dialogs/actionDialog";
-import StorageUtil from "../../utils/serviceUtils/storageUtil";
+import ConfigService from "../../utils/storage/configService";
 import { withRouter } from "react-router-dom";
-import RecordLocation from "../../utils/readUtils/recordLocation";
 import { isElectron } from "react-device-detect";
 import EmptyCover from "../emptyCover";
-import BookUtil from "../../utils/fileUtils/bookUtil";
+import BookUtil from "../../utils/file/bookUtil";
+import CoverUtil from "../../utils/file/coverUtil";
 
 declare var window: any;
 
@@ -18,7 +16,9 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
     super(props);
     this.state = {
       isFavorite:
-        AddFavorite.getAllFavorite().indexOf(this.props.book.key) > -1,
+        ConfigService.getAllListConfig("favoriteBooks").indexOf(
+          this.props.book.key
+        ) > -1,
       left: 0,
       top: 0,
       direction: "horizontal",
@@ -35,21 +35,24 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
     }
 
     if (
-      StorageUtil.getReaderConfig("isOpenBook") === "yes" &&
-      RecentBooks.getAllRecent()[0] === this.props.book.key &&
+      ConfigService.getReaderConfig("isOpenBook") === "yes" &&
+      ConfigService.getAllListConfig("recentBooks")[0] ===
+        this.props.book.key &&
       !this.props.currentBook.key &&
       !filePath
     ) {
       this.props.handleReadingBook(this.props.book);
 
-      BookUtil.RedirectBook(this.props.book, this.props.t, this.props.history);
+      BookUtil.redirectBook(this.props.book, this.props.t);
     }
   }
   UNSAFE_componentWillReceiveProps(nextProps: BookCardProps) {
     if (nextProps.book.key !== this.props.book.key) {
       this.setState({
         isFavorite:
-          AddFavorite.getAllFavorite().indexOf(nextProps.book.key) > -1,
+          ConfigService.getAllListConfig("favoriteBooks").indexOf(
+            nextProps.book.key
+          ) > -1,
       });
     }
   }
@@ -94,34 +97,28 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
       );
       return;
     }
-    RecentBooks.setRecent(this.props.book.key);
+    ConfigService.setListConfig(this.props.book.key, "recentBooks");
     this.props.handleReadingBook(this.props.book);
-    BookUtil.RedirectBook(this.props.book, this.props.t, this.props.history);
+    BookUtil.redirectBook(this.props.book, this.props.t);
   };
   render() {
     let percentage = "0";
-    if (this.props.book.format === "PDF") {
-      if (
-        RecordLocation.getPDFLocation(this.props.book.md5.split("-")[0]) &&
-        RecordLocation.getPDFLocation(this.props.book.md5.split("-")[0]).page &&
-        this.props.book.page
-      ) {
-        percentage =
-          RecordLocation.getPDFLocation(this.props.book.md5.split("-")[0])
-            .page /
-            this.props.book.page +
-          "";
-      }
-    } else {
-      if (
-        RecordLocation.getHtmlLocation(this.props.book.key) &&
-        RecordLocation.getHtmlLocation(this.props.book.key).percentage
-      ) {
-        percentage = RecordLocation.getHtmlLocation(
-          this.props.book.key
-        ).percentage;
-      }
+    if (
+      ConfigService.getObjectConfig(
+        this.props.book.key,
+        "recordLocation",
+        {}
+      ) &&
+      ConfigService.getObjectConfig(this.props.book.key, "recordLocation", {})
+        .percentage
+    ) {
+      percentage = ConfigService.getObjectConfig(
+        this.props.book.key,
+        "recordLocation",
+        {}
+      ).percentage;
     }
+
     // let percentage = 0;
     const actionProps = { left: this.state.left, top: this.state.top };
     return (
@@ -144,7 +141,7 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
               this.setState({ isHover: false });
             }}
             style={
-              StorageUtil.getReaderConfig("isDisableCrop") === "yes"
+              ConfigService.getReaderConfig("isDisableCrop") === "yes"
                 ? {
                     height: "168px",
                     alignItems: "flex-end",
@@ -158,10 +155,9 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
                   }
             }
           >
-            {!this.props.book.cover ||
-            this.props.book.cover === "noCover" ||
+            {!CoverUtil.isCoverExist(this.props.book) ||
             (this.props.book.format === "PDF" &&
-              StorageUtil.getReaderConfig("isDisablePDFCover") === "yes") ? (
+              ConfigService.getReaderConfig("isDisablePDFCover") === "yes") ? (
               <div className="book-item-image">
                 <EmptyCover
                   {...{
@@ -173,12 +169,12 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
               </div>
             ) : (
               <img
-                data-src={this.props.book.cover}
+                data-src={CoverUtil.getCover(this.props.book)}
                 alt=""
                 className="lazy-image book-item-image"
                 style={
                   this.state.direction === "horizontal" ||
-                  StorageUtil.getReaderConfig("isDisableCrop") === "yes"
+                  ConfigService.getReaderConfig("isDisableCrop") === "yes"
                     ? { width: "100%" }
                     : { height: "100%" }
                 }
@@ -252,9 +248,9 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
               this.handleMoreAction(event);
             }}
           ></span>
-          {AddFavorite.getAllFavorite().indexOf(this.props.book.key) > -1 && (
-            <span className="icon-heart book-heart-action"></span>
-          )}
+          {ConfigService.getAllListConfig("favoriteBooks").indexOf(
+            this.props.book.key
+          ) > -1 && <span className="icon-heart book-heart-action"></span>}
         </div>
 
         {this.props.isOpenActionDialog &&

@@ -1,17 +1,15 @@
 import React from "react";
-import RecentBooks from "../../utils/readUtils/recordRecent";
 import "./bookCoverItem.css";
 import { BookCoverProps, BookCoverState } from "./interface";
-import AddFavorite from "../../utils/readUtils/addFavorite";
 import ActionDialog from "../dialogs/actionDialog";
-import StorageUtil from "../../utils/serviceUtils/storageUtil";
+import ConfigService from "../../utils/storage/configService";
 import { withRouter } from "react-router-dom";
-import RecordLocation from "../../utils/readUtils/recordLocation";
 import { isElectron } from "react-device-detect";
 import EmptyCover from "../emptyCover";
 import { Trans } from "react-i18next";
-import BookUtil from "../../utils/fileUtils/bookUtil";
+import BookUtil from "../../utils/file/bookUtil";
 import toast from "react-hot-toast";
+import CoverUtil from "../../utils/file/coverUtil";
 declare var window: any;
 
 class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
@@ -19,7 +17,9 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
     super(props);
     this.state = {
       isFavorite:
-        AddFavorite.getAllFavorite().indexOf(this.props.book.key) > -1,
+        ConfigService.getAllListConfig("favoriteBooks").indexOf(
+          this.props.book.key
+        ) > -1,
       left: 0,
       top: 0,
       direction: "horizontal",
@@ -37,20 +37,23 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
     }
 
     if (
-      StorageUtil.getReaderConfig("isOpenBook") === "yes" &&
-      RecentBooks.getAllRecent()[0] === this.props.book.key &&
+      ConfigService.getReaderConfig("isOpenBook") === "yes" &&
+      ConfigService.getAllListConfig("recentBooks")[0] ===
+        this.props.book.key &&
       !this.props.currentBook.key &&
       !filePath
     ) {
       this.props.handleReadingBook(this.props.book);
-      BookUtil.RedirectBook(this.props.book, this.props.t, this.props.history);
+      BookUtil.redirectBook(this.props.book, this.props.t);
     }
   }
   UNSAFE_componentWillReceiveProps(nextProps: BookCoverProps) {
     if (nextProps.book.key !== this.props.book.key) {
       this.setState({
         isFavorite:
-          AddFavorite.getAllFavorite().indexOf(nextProps.book.key) > -1,
+          ConfigService.getAllListConfig("favoriteBooks").indexOf(
+            nextProps.book.key
+          ) > -1,
       });
     }
   }
@@ -81,7 +84,7 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
     this.props.handleActionDialog(false);
   };
   handleLoveBook = () => {
-    AddFavorite.setFavorite(this.props.book.key);
+    ConfigService.setListConfig(this.props.book.key, "favoriteBooks");
     this.setState({ isFavorite: true });
     toast.success(this.props.t("Addition successful"));
   };
@@ -96,34 +99,29 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
       );
       return;
     }
-    RecentBooks.setRecent(this.props.book.key);
+    ConfigService.setListConfig(this.props.book.key, "recentBooks");
     this.props.handleReadingBook(this.props.book);
-    BookUtil.RedirectBook(this.props.book, this.props.t, this.props.history);
+    BookUtil.redirectBook(this.props.book, this.props.t);
   };
   render() {
     let percentage = "0";
-    if (this.props.book.format === "PDF") {
-      if (
-        RecordLocation.getPDFLocation(this.props.book.md5.split("-")[0]) &&
-        RecordLocation.getPDFLocation(this.props.book.md5.split("-")[0]).page &&
-        this.props.book.page
-      ) {
-        percentage =
-          RecordLocation.getPDFLocation(this.props.book.md5.split("-")[0])
-            .page /
-            this.props.book.page +
-          "";
-      }
-    } else {
-      if (
-        RecordLocation.getHtmlLocation(this.props.book.key) &&
-        RecordLocation.getHtmlLocation(this.props.book.key).percentage
-      ) {
-        percentage = RecordLocation.getHtmlLocation(
-          this.props.book.key
-        ).percentage;
-      }
+
+    if (
+      ConfigService.getObjectConfig(
+        this.props.book.key,
+        "recordLocation",
+        {}
+      ) &&
+      ConfigService.getObjectConfig(this.props.book.key, "recordLocation", {})
+        .percentage
+    ) {
+      percentage = ConfigService.getObjectConfig(
+        this.props.book.key,
+        "recordLocation",
+        {}
+      ).percentage;
     }
+
     var htmlString = this.props.book.description;
     var div = document.createElement("div");
     div.innerHTML = htmlString;
@@ -161,9 +159,9 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
                 this.handleMoreAction(event);
               }}
             ></span>
-            {AddFavorite.getAllFavorite().indexOf(this.props.book.key) > -1 && (
-              <span className="icon-heart book-heart-action"></span>
-            )}
+            {ConfigService.getAllListConfig("favoriteBooks").indexOf(
+              this.props.book.key
+            ) > -1 && <span className="icon-heart book-heart-action"></span>}
           </div>
 
           <div
@@ -178,7 +176,7 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
               this.setState({ isHover: false });
             }}
             style={
-              StorageUtil.getReaderConfig("isDisableCrop") === "yes"
+              ConfigService.getReaderConfig("isDisableCrop") === "yes"
                 ? {
                     height: "195px",
                     alignItems: "flex-start",
@@ -192,10 +190,9 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
                   }
             }
           >
-            {!this.props.book.cover ||
-            this.props.book.cover === "noCover" ||
+            {!CoverUtil.isCoverExist(this.props.book) ||
             (this.props.book.format === "PDF" &&
-              StorageUtil.getReaderConfig("isDisablePDFCover") === "yes") ? (
+              ConfigService.getReaderConfig("isDisablePDFCover") === "yes") ? (
               <div
                 className="book-item-image"
                 style={{ width: "120px", height: "170px" }}
@@ -210,11 +207,11 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
               </div>
             ) : (
               <img
-                data-src={this.props.book.cover}
+                data-src={CoverUtil.getCover(this.props.book)}
                 alt=""
                 style={
                   this.state.direction === "horizontal" ||
-                  StorageUtil.getReaderConfig("isDisableCrop") === "yes"
+                  ConfigService.getReaderConfig("isDisableCrop") === "yes"
                     ? { width: "100%" }
                     : { height: "100%" }
                 }

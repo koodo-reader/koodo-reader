@@ -14,7 +14,7 @@ export interface SearchBoxProps {
   height: string;
   currentBook: any;
   htmlBook: htmlBookModel;
-  shelfIndex: number;
+  shelfTitle: string;
   handleSearchResults: (results: number[]) => void;
   handleSearch: (isSearch: boolean) => void;
   handleNavSearchState: (state: string) => void;

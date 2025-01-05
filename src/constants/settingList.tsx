@@ -114,12 +114,12 @@ export const readingSettingList = [
     desc: "Turn it on when you want Koodo to work with other third-party translation service, right clicking on the selected text will trigger popup again",
     propName: "isDisablePopup",
   },
-  {
-    isElectron: true,
-    title: "Lemmatize words when looking up in a dictionary",
-    desc: "To reduce the different forms of a word to one single form, for example, reducing builds, building or built to build, reducing cats to cat, reducing fastest to fast",
-    propName: "isLemmatizeWord",
-  },
+  // {
+  //   isElectron: true,
+  //   title: "Lemmatize words when looking up in a dictionary",
+  //   desc: "To reduce the different forms of a word to one single form, for example, reducing builds, building or built to build, reducing cats to cat, reducing fastest to fast",
+  //   propName: "isLemmatizeWord",
+  // },
 ];
 export const langList = [
   { label: "简体中文", value: "zhCN" },

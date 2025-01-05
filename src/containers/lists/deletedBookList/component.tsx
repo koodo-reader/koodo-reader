@@ -3,14 +3,13 @@ import "./booklist.css";
 import BookCardItem from "../../../components/bookCardItem";
 import BookCoverItem from "../../../components/bookCoverItem";
 import BookListItem from "../../../components/bookListItem";
-import AddTrash from "../../../utils/readUtils/addTrash";
-import RecordRecent from "../../../utils/readUtils/recordRecent";
-import SortUtil from "../../../utils/readUtils/sortUtil";
+import SortUtil from "../../../utils/reader/sortUtil";
 import BookModel from "../../../models/Book";
 import { Trans } from "react-i18next";
 import { BookListProps, BookListState } from "./interface";
 import { Redirect, withRouter } from "react-router-dom";
 import ViewMode from "../../../components/viewMode";
+import ConfigService from "../../../utils/storage/configService";
 
 class BookList extends React.Component<BookListProps, BookListState> {
   constructor(props: BookListProps) {
@@ -78,10 +77,16 @@ class BookList extends React.Component<BookListProps, BookListState> {
   renderBookList = () => {
     //get the book data according to different scenarios
     let books = !this.props.isBookSort
-      ? this.handleKeyFilter(this.props.deletedBooks, AddTrash.getAllTrash())
+      ? this.handleKeyFilter(
+          this.props.deletedBooks,
+          ConfigService.getAllListConfig("deletedBooks")
+        )
       : this.props.isBookSort
       ? this.handleIndexFilter(
-          this.handleKeyFilter(this.props.deletedBooks, AddTrash.getAllTrash()),
+          this.handleKeyFilter(
+            this.props.deletedBooks,
+            ConfigService.getAllListConfig("deletedBooks")
+          ),
           //return the sorted book index
           SortUtil.sortBooks(
             this.props.deletedBooks,
@@ -99,7 +104,7 @@ class BookList extends React.Component<BookListProps, BookListState> {
         )
       : this.handleKeyFilter(
           this.props.deletedBooks,
-          RecordRecent.getAllRecent()
+          ConfigService.getAllListConfig("recentBooks")
         );
     if (books.length === 0) {
       return <Redirect to="/manager/empty" />;

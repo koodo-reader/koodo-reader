@@ -1,8 +1,9 @@
 import NoteModel from "../../models/Note";
 import BookmarkModel from "../../models/Bookmark";
 import HtmlBookModel from "../../models/HtmlBook";
-import AddTrash from "../../utils/readUtils/addTrash";
-declare var window: any;
+import ConfigService from "../../utils/storage/configService";
+import DatabaseService from "../../utils/storage/databaseService";
+
 export function handleNotes(notes: NoteModel[]) {
   return { type: "HANDLE_NOTES", payload: notes };
 }
@@ -35,14 +36,14 @@ export function handleNoteKey(key: string) {
 }
 export function handleFetchNotes() {
   return (dispatch: (arg0: { type: string; payload: NoteModel[] }) => void) => {
-    window.localforage.getItem("notes", (err, value) => {
+    DatabaseService.getAllRecords("notes").then((value) => {
       let noteArr: any;
       if (value === null) {
         noteArr = [];
       } else {
         noteArr = value;
       }
-      let keyArr = AddTrash.getAllTrash();
+      let keyArr = ConfigService.getAllListConfig("deletedBooks");
       dispatch(handleNotes(handleKeyRemove(noteArr, keyArr)));
       dispatch(
         handleDigests(
@@ -62,14 +63,14 @@ export function handleFetchBookmarks() {
   return (
     dispatch: (arg0: { type: string; payload: BookmarkModel[] }) => void
   ) => {
-    window.localforage.getItem("bookmarks", (err, value) => {
+    DatabaseService.getAllRecords("bookmarks").then((value) => {
       let bookmarkArr: any;
       if (value === null) {
         bookmarkArr = [];
       } else {
         bookmarkArr = value;
       }
-      let keyArr = AddTrash.getAllTrash();
+      let keyArr = ConfigService.getAllListConfig("deletedBooks");
       dispatch(handleBookmarks(handleKeyRemove(bookmarkArr, keyArr)));
     });
   };

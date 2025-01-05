@@ -3,12 +3,16 @@ import "./header.css";
 import SearchBox from "../../components/searchBox";
 import ImportLocal from "../../components/importLocal";
 import { HeaderProps, HeaderState } from "./interface";
-import StorageUtil from "../../utils/serviceUtils/storageUtil";
+import ConfigService from "../../utils/storage/configService";
 import UpdateInfo from "../../components/dialogs/updateDialog";
-import { restore } from "../../utils/syncUtils/restoreUtil";
-import { backup } from "../../utils/syncUtils/backupUtil";
+import { restoreFromConfigJson } from "../../utils/file/restore";
+import { backupToConfigJson } from "../../utils/file/backup";
 import { isElectron } from "react-device-detect";
-import { syncData } from "../../utils/syncUtils/common";
+import {
+  getLastSyncTimeFromConfigJson,
+  upgradeConfig,
+  upgradeStorage,
+} from "../../utils/file/common";
 import toast from "react-hot-toast";
 import { Trans } from "react-i18next";
 class Header extends React.Component<HeaderProps, HeaderState> {
@@ -17,7 +21,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
 
     this.state = {
       isOnlyLocal: false,
-      language: StorageUtil.getReaderConfig("lang"),
+      language: ConfigService.getReaderConfig("lang"),
       isNewVersion: false,
       width: document.body.clientWidth,
       isdataChange: false,
@@ -27,60 +31,52 @@ class Header extends React.Component<HeaderProps, HeaderState> {
   async componentDidMount() {
     // isElectron &&
     //   (await window.require("electron").ipcRenderer.invoke("s3-download"));
+    // let syncUtil = new window.KookitSync.SyncUtil("dropbox", {});
+    // console.log(syncUtil, window.KookitSync.SyncUtil);
+    // console.log(await syncUtil.listFiles("book"));
     if (isElectron) {
       const fs = window.require("fs");
       const path = window.require("path");
       const { ipcRenderer } = window.require("electron");
       const dirPath = ipcRenderer.sendSync("user-data", "ping");
       if (!fs.existsSync(dirPath)) {
-        fs.mkdirSync(dirPath);
-        fs.mkdirSync(path.join(dirPath, "data"));
-        fs.mkdirSync(path.join(dirPath, "data", "book"));
+        fs.mkdirSync(path.join(dirPath, "data", "book"), { recursive: true });
         console.log("folder created");
       } else {
         console.log("folder exist");
       }
 
       if (
-        StorageUtil.getReaderConfig("storageLocation") &&
+        ConfigService.getReaderConfig("storageLocation") &&
         !localStorage.getItem("storageLocation")
       ) {
         localStorage.setItem(
           "storageLocation",
-          StorageUtil.getReaderConfig("storageLocation")
+          ConfigService.getReaderConfig("storageLocation")
         );
       }
 
-      if (StorageUtil.getReaderConfig("appInfo") === "dev") {
+      if (ConfigService.getReaderConfig("appInfo") === "dev") {
         this.setState({ isDeveloperVer: true });
       }
 
       //Check for data update
-      let storageLocation = localStorage.getItem("storageLocation")
-        ? localStorage.getItem("storageLocation")
-        : window
-            .require("electron")
-            .ipcRenderer.sendSync("storage-location", "ping");
-      let sourcePath = path.join(
-        storageLocation,
-        "config",
-        "readerConfig.json"
-      );
+      //upgrade data from old version
+      let res1 = await upgradeStorage();
+      let res2 = upgradeConfig();
+      if (!res1 || !res2) {
+        toast.success("Upgrade failed");
+      }
       //Detect data modification
-      fs.readFile(sourcePath, "utf8", (err, data) => {
-        if (err) {
-          console.log(err);
-          return;
-        }
-        const readerConfig = JSON.parse(data);
-        if (
-          localStorage.getItem("lastSyncTime") &&
-          parseInt(readerConfig.lastSyncTime) >
-            parseInt(localStorage.getItem("lastSyncTime")!)
-        ) {
-          this.setState({ isdataChange: true });
-        }
-      });
+      let lastSyncTime = getLastSyncTimeFromConfigJson();
+      if (
+        localStorage.getItem("lastSyncTime") &&
+        lastSyncTime > parseInt(localStorage.getItem("lastSyncTime") || "0")
+      ) {
+        this.setState({ isdataChange: true });
+      }
+    } else {
+      upgradeConfig();
     }
     window.addEventListener("resize", () => {
       this.setState({ width: document.body.clientWidth });
@@ -93,50 +89,14 @@ class Header extends React.Component<HeaderProps, HeaderState> {
   }
 
   syncFromLocation = async () => {
-    const fs = window.require("fs");
-    const path = window.require("path");
-    const { zip } = window.require("zip-a-folder");
-    let storageLocation = localStorage.getItem("storageLocation")
-      ? localStorage.getItem("storageLocation")
-      : window
-          .require("electron")
-          .ipcRenderer.sendSync("storage-location", "ping");
-    let sourcePath = path.join(storageLocation, "config");
-    let outPath = path.join(storageLocation, "config.zip");
-    await zip(sourcePath, outPath);
-
-    var data = fs.readFileSync(outPath);
-
-    let blobTemp = new Blob([data], { type: "application/epub+zip" });
-    let fileTemp = new File([blobTemp], "config.zip", {
-      lastModified: new Date().getTime(),
-      type: blobTemp.type,
-    });
-    let result = await restore(fileTemp, true);
+    let result = await restoreFromConfigJson();
     if (result) {
       this.setState({ isdataChange: false });
       //Check for data update
-      let storageLocation = localStorage.getItem("storageLocation")
-        ? localStorage.getItem("storageLocation")
-        : window
-            .require("electron")
-            .ipcRenderer.sendSync("storage-location", "ping");
-      let sourcePath = path.join(
-        storageLocation,
-        "config",
-        "readerConfig.json"
-      );
-
-      fs.readFile(sourcePath, "utf8", (err, data) => {
-        if (err) {
-          console.log(err);
-          return;
-        }
-        const readerConfig = JSON.parse(data);
-        if (localStorage.getItem("lastSyncTime") && readerConfig.lastSyncTime) {
-          localStorage.setItem("lastSyncTime", readerConfig.lastSyncTime);
-        }
-      });
+      let lastSyncTime = getLastSyncTimeFromConfigJson();
+      if (localStorage.getItem("lastSyncTime") && lastSyncTime) {
+        localStorage.setItem("lastSyncTime", lastSyncTime + "");
+      }
     }
     if (!result) {
       toast.error(this.props.t("Sync Failed"));
@@ -145,57 +105,30 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     }
   };
   handleSync = () => {
-    if (StorageUtil.getReaderConfig("isFirst") !== "no") {
+    if (ConfigService.getReaderConfig("isFirst") !== "no") {
       this.props.handleTipDialog(true);
       this.props.handleTip(
         "Sync function works with third-party cloud drive. You need to manually change the storage location to the same sync folder on different computers. When you click the sync button, Koodo Reader will automatically upload or download the data from this folder according the timestamp."
       );
-      StorageUtil.setReaderConfig("isFirst", "no");
+      ConfigService.setReaderConfig("isFirst", "no");
       return;
     }
-    const fs = window.require("fs");
-    const path = window.require("path");
-    let storageLocation = localStorage.getItem("storageLocation")
-      ? localStorage.getItem("storageLocation")
-      : window
-          .require("electron")
-          .ipcRenderer.sendSync("storage-location", "ping");
-    let sourcePath = path.join(storageLocation, "config", "readerConfig.json");
-    fs.readFile(sourcePath, "utf8", async (err, data) => {
-      if (err || !data) {
-        this.syncToLocation();
-        return;
-      }
-      const readerConfig = JSON.parse(data);
-
-      if (
-        readerConfig &&
-        localStorage.getItem("lastSyncTime") &&
-        parseInt(readerConfig.lastSyncTime) >
-          parseInt(localStorage.getItem("lastSyncTime")!)
-      ) {
-        this.syncFromLocation();
-      } else {
-        this.syncToLocation();
-      }
-    });
+    let lastSyncTime = getLastSyncTimeFromConfigJson();
+    if (
+      localStorage.getItem("lastSyncTime") &&
+      lastSyncTime > parseInt(localStorage.getItem("lastSyncTime")!)
+    ) {
+      this.syncFromLocation();
+    } else {
+      this.syncToLocation();
+    }
   };
   syncToLocation = async () => {
     let timestamp = new Date().getTime().toString();
-    StorageUtil.setReaderConfig("lastSyncTime", timestamp);
+    ConfigService.setReaderConfig("lastSyncTime", timestamp);
     localStorage.setItem("lastSyncTime", timestamp);
-    let result = await backup(
-      this.props.books,
-      this.props.notes,
-      this.props.bookmarks,
-      true
-    );
-    if (!result) {
-      toast.error(this.props.t("Sync Failed"));
-    } else {
-      syncData(result as Blob, this.props.books, true);
-      toast.success(this.props.t("Synchronisation successful"));
-    }
+    backupToConfigJson();
+    toast.success(this.props.t("Synchronisation successful"));
   };
 
   render() {
@@ -274,7 +207,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
             <div
               className="setting-icon-container"
               onClick={() => {
-                // this.syncFromLocation();
                 this.handleSync();
               }}
               style={{ marginTop: "2px" }}

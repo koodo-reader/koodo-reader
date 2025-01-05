@@ -1,5 +1,4 @@
 import React from "react";
-import AddFavorite from "../../utils/readUtils/addFavorite";
 import BookModel from "../../models/Book";
 import "./selectBook.css";
 import { Trans } from "react-i18next";
@@ -11,35 +10,41 @@ import {
   exportDictionaryHistory,
   exportHighlights,
   exportNotes,
-} from "../../utils/syncUtils/exportUtil";
-import BookUtil from "../../utils/fileUtils/bookUtil";
-import ShelfUtil from "../../utils/readUtils/shelfUtil";
-import StorageUtil from "../../utils/serviceUtils/storageUtil";
-declare var window: any;
+} from "../../utils/file/export";
+import BookUtil from "../../utils/file/bookUtil";
+import ConfigService from "../../utils/storage/configService";
+import DatabaseService from "../../utils/storage/databaseService";
+
 class SelectBook extends React.Component<BookListProps, BookListState> {
   constructor(props: BookListProps) {
     super(props);
     this.state = {
       isOpenDelete: false,
       isShowExport: false,
-      favoriteBooks: Object.keys(AddFavorite.getAllFavorite()).length,
+      favoriteBooks: Object.keys(
+        ConfigService.getAllListConfig("favoriteBooks")
+      ).length,
     };
   }
   handleFilterShelfBook = (items: BookModel[]) => {
-    if (this.props.shelfIndex > 0) {
-      if (this.props.shelfIndex < 1) return items;
-      let shelfTitle = Object.keys(ShelfUtil.getShelf());
-      let currentShelfTitle = shelfTitle[this.props.shelfIndex];
+    if (this.props.shelfTitle) {
+      let currentShelfTitle = this.props.shelfTitle;
       if (!currentShelfTitle) return items;
-      let currentShelfList = ShelfUtil.getShelf()[currentShelfTitle];
+      let currentShelfList = ConfigService.getMapConfig(
+        currentShelfTitle,
+        "shelfList"
+      );
       let shelfItems = items.filter((item: BookModel) => {
         return currentShelfList.indexOf(item.key) > -1;
       });
       return shelfItems;
     } else {
-      if (StorageUtil.getReaderConfig("isHideShelfBook") === "yes") {
+      if (ConfigService.getReaderConfig("isHideShelfBook") === "yes") {
         return items.filter((item) => {
-          return ShelfUtil.getBookPosition(item.key).length === 0;
+          return (
+            ConfigService.getFromAllMapConfig(item.key, "shelfList").length ===
+            0
+          );
         });
       }
       return items;
@@ -47,10 +52,13 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
   };
   handleShelf(items: any, index: number) {
     if (index < 1) return items;
-    let shelfTitle = Object.keys(ShelfUtil.getShelf());
+    let shelfTitle = Object.keys(ConfigService.getAllMapConfig("shelfList"));
     let currentShelfTitle = shelfTitle[index];
     if (!currentShelfTitle) return items;
-    let currentShelfList = ShelfUtil.getShelf()[currentShelfTitle];
+    let currentShelfList = ConfigService.getMapConfig(
+      currentShelfTitle,
+      "shelfList"
+    );
     let shelfItems = items.filter((item: { key: number }) => {
       return currentShelfList.indexOf(item.key) > -1;
     });
@@ -85,11 +93,14 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
                       this.props.selectedBooks.indexOf(item.key) > -1
                   ).length > 0
                 ) {
-                  AddFavorite.setFavorites(
-                    this.props.books.filter(
-                      (item: BookModel) =>
-                        this.props.selectedBooks.indexOf(item.key) > -1
-                    )
+                  ConfigService.setAllListConfig(
+                    this.props.books
+                      .filter(
+                        (item: BookModel) =>
+                          this.props.selectedBooks.indexOf(item.key) > -1
+                      )
+                      .map((item: BookModel) => item.key),
+                    "favoriteBooks"
                   );
                   this.props.handleSelectBook(!this.props.isSelectBook);
                   if (this.props.isSelectBook) {
@@ -147,18 +158,12 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
                 <span
                   className="book-manage-title select-book-action"
                   onClick={async () => {
-                    if (
-                      this.props.books.filter(
-                        (item: BookModel) =>
-                          this.props.selectedBooks.indexOf(item.key) > -1
-                      ).length > 0
-                    ) {
-                      await exportBooks(
-                        this.props.books.filter(
-                          (item: BookModel) =>
-                            this.props.selectedBooks.indexOf(item.key) > -1
-                        )
-                      );
+                    let books = await DatabaseService.getRecordsByBookKeys(
+                      this.props.selectedBooks,
+                      "books"
+                    );
+                    if (books.length > 0) {
+                      await exportBooks(books);
                       toast.success(this.props.t("Export successful"));
                     } else {
                       toast(this.props.t("Nothing to export"));
@@ -170,27 +175,19 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
                 <span
                   className="book-manage-title select-book-action"
                   onClick={async () => {
-                    let selectedBooks = this.props.books.filter(
-                      (item: BookModel) =>
-                        this.props.selectedBooks.indexOf(item.key) > -1
-                    );
-                    if (
-                      this.props.notes.filter(
-                        (item) =>
-                          selectedBooks.filter(
-                            (subitem) => subitem.key === item.bookKey
-                          ).length > 0 && item.notes !== ""
-                      ).length > 0
-                    ) {
-                      exportNotes(
-                        this.props.notes.filter(
-                          (item) =>
-                            selectedBooks.filter(
-                              (subitem) => subitem.key === item.bookKey
-                            ).length > 0 && item.notes !== ""
-                        ),
-                        selectedBooks
+                    let selectedBooks =
+                      await DatabaseService.getRecordsByBookKeys(
+                        this.props.selectedBooks,
+                        "books"
                       );
+                    let notes = (
+                      await DatabaseService.getRecordsByBookKeys(
+                        this.props.selectedBooks,
+                        "notes"
+                      )
+                    ).filter((note) => note.notes !== "");
+                    if (notes.length > 0) {
+                      exportNotes(notes, selectedBooks);
                       toast.success(this.props.t("Export successful"));
                     } else {
                       toast(this.props.t("Nothing to export"));
@@ -202,27 +199,19 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
                 <span
                   className="book-manage-title select-book-action"
                   onClick={async () => {
-                    let selectedBooks = this.props.books.filter(
-                      (item: BookModel) =>
-                        this.props.selectedBooks.indexOf(item.key) > -1
-                    );
-                    if (
-                      this.props.notes.filter(
-                        (item) =>
-                          selectedBooks.filter(
-                            (subitem) => subitem.key === item.bookKey
-                          ).length > 0 && item.notes === ""
-                      ).length > 0
-                    ) {
-                      exportHighlights(
-                        this.props.notes.filter(
-                          (item) =>
-                            selectedBooks.filter(
-                              (subitem) => subitem.key === item.bookKey
-                            ).length > 0 && item.notes === ""
-                        ),
-                        selectedBooks
+                    let selectedBooks =
+                      await DatabaseService.getRecordsByBookKeys(
+                        this.props.selectedBooks,
+                        "books"
                       );
+                    let highlights = (
+                      await DatabaseService.getRecordsByBookKeys(
+                        this.props.selectedBooks,
+                        "notes"
+                      )
+                    ).filter((note) => note.notes === "");
+                    if (highlights.length > 0) {
+                      exportHighlights(highlights, selectedBooks);
                       toast.success(this.props.t("Export successful"));
                     } else {
                       toast(this.props.t("Nothing to export"));
@@ -234,18 +223,16 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
                 <span
                   className="book-manage-title select-book-action"
                   onClick={async () => {
-                    let selectedBooks = this.props.books.filter(
-                      (item: BookModel) =>
-                        this.props.selectedBooks.indexOf(item.key) > -1
-                    );
+                    let selectedBooks =
+                      await DatabaseService.getRecordsByBookKeys(
+                        this.props.selectedBooks,
+                        "books"
+                      );
                     let dictHistory =
-                      (await window.localforage.getItem("words")) || [];
-                    dictHistory = dictHistory.filter(
-                      (item) =>
-                        selectedBooks.filter(
-                          (subitem) => subitem.key === item.bookKey
-                        ).length > 0
-                    );
+                      await DatabaseService.getRecordsByBookKeys(
+                        this.props.selectedBooks,
+                        "words"
+                      );
                     if (dictHistory.length > 0) {
                       exportDictionaryHistory(dictHistory, selectedBooks);
                       toast.success(this.props.t("Export successful"));
@@ -259,20 +246,12 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
                 <span
                   className="book-manage-title select-book-action"
                   onClick={async () => {
-                    if (
-                      this.props.books.filter(
-                        (item: BookModel) =>
-                          this.props.selectedBooks.indexOf(item.key) > -1
-                      ).length > 0
-                    ) {
-                      let selectedBooks = this.props.books.filter(
-                        (item: BookModel) =>
-                          this.props.selectedBooks.indexOf(item.key) > -1
+                    let selectedBooks =
+                      await DatabaseService.getRecordsByBookKeys(
+                        this.props.selectedBooks,
+                        "books"
                       );
-                      if (selectedBooks.length === 0) {
-                        toast(this.props.t("Nothing to precache"));
-                        return;
-                      }
+                    if (selectedBooks.length > 0) {
                       for (
                         let index = 0;
                         index < selectedBooks.length;
@@ -285,8 +264,9 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
                           toast(this.props.t("Pre-caching"));
                         }
 
-                        let result = await BookUtil.fetchBook(
+                        let result: any = await BookUtil.fetchBook(
                           selectedBook.key,
+                          selectedBook.format.toLowerCase(),
                           true,
                           selectedBook.path
                         );
@@ -295,13 +275,17 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
                           selectedBook.format,
                           "",
                           selectedBook.charset,
-                          StorageUtil.getReaderConfig("isSliding") === "yes"
+                          ConfigService.getReaderConfig("isSliding") === "yes"
                             ? "sliding"
                             : ""
                         );
                         let cache = await rendition.preCache(result);
                         if (cache !== "err") {
-                          BookUtil.addBook("cache-" + selectedBook.key, cache);
+                          BookUtil.addBook(
+                            "cache-" + selectedBook.key,
+                            "zip",
+                            cache
+                          );
                           toast.success(this.props.t("Pre-caching successful"));
                         } else {
                           toast.error(this.props.t("Pre-caching failed"));
@@ -317,17 +301,21 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
                 <span
                   className="book-manage-title select-book-action"
                   onClick={async () => {
-                    let selectedBooks = this.props.books.filter(
-                      (item: BookModel) =>
-                        this.props.selectedBooks.indexOf(item.key) > -1
-                    );
+                    let selectedBooks =
+                      await DatabaseService.getRecordsByBookKeys(
+                        this.props.selectedBooks,
+                        "books"
+                      );
                     if (selectedBooks.length === 0) {
                       toast(this.props.t("Nothing to delete"));
                       return;
                     }
                     for (let index = 0; index < selectedBooks.length; index++) {
                       const selectedBook = selectedBooks[index];
-                      await BookUtil.deleteBook("cache-" + selectedBook.key);
+                      await BookUtil.deleteBook(
+                        "cache-" + selectedBook.key,
+                        "zip"
+                      );
                       toast.success(this.props.t("Deletion successful"));
                     }
                   }}

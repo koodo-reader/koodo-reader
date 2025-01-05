@@ -1,13 +1,13 @@
 import React from "react";
 import "./popupTrans.css";
 import { PopupTransProps, PopupTransState } from "./interface";
-import StorageUtil from "../../../utils/serviceUtils/storageUtil";
+import ConfigService from "../../../utils/storage/configService";
 import axios from "axios";
 import { Trans } from "react-i18next";
 import toast from "react-hot-toast";
-import PluginList from "../../../utils/readUtils/pluginList";
-import Plugin from "../../../models/Plugin";
-import { openExternalUrl } from "../../../utils/serviceUtils/urlUtil";
+import { openExternalUrl } from "../../../utils/common";
+import DatabaseService from "../../../utils/storage/databaseService";
+import { checkPlugin } from "../../../utils/common";
 declare var window: any;
 class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
   constructor(props: PopupTransProps) {
@@ -15,9 +15,9 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
     this.state = {
       translatedText: "",
       originalText: "",
-      transService: StorageUtil.getReaderConfig("transService") || "",
-      transTarget: StorageUtil.getReaderConfig("transTarget"),
-      transSource: StorageUtil.getReaderConfig("transSource"),
+      transService: ConfigService.getReaderConfig("transService") || "",
+      transTarget: ConfigService.getReaderConfig("transTarget"),
+      transSource: ConfigService.getReaderConfig("transSource"),
       isAddNew: false,
     };
   }
@@ -28,8 +28,8 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
       this.setState({ isAddNew: true });
     }
     if (
-      PluginList.getAllPlugins().findIndex(
-        (item) => item.identifier === this.state.transService
+      this.props.plugins.findIndex(
+        (item) => item.key === this.state.transService
       ) === -1
     ) {
       this.setState({ isAddNew: true });
@@ -39,15 +39,20 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
     this.handleTrans(originalText);
   }
   handleTrans = (text: string) => {
-    let plutin = PluginList.getPluginById(this.state.transService);
+    let plutin = this.props.plugins.find(
+      (item) => item.key === this.state.transService
+    );
+    if (!plutin) {
+      return;
+    }
     let translateFunc = plutin.script;
     // eslint-disable-next-line no-eval
     eval(translateFunc);
     window
       .translate(
         text,
-        StorageUtil.getReaderConfig("transSource") || "",
-        StorageUtil.getReaderConfig("transTarget") || "en",
+        ConfigService.getReaderConfig("transSource") || "",
+        ConfigService.getReaderConfig("transTarget") || "en",
         axios,
         plutin.config
       )
@@ -66,11 +71,17 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
   };
   handleChangeService(target: string) {
     this.setState({ transService: target }, () => {
-      StorageUtil.setReaderConfig("transService", target);
-      let autoValue = PluginList.getPluginById(target).autoValue;
+      ConfigService.setReaderConfig("transService", target);
+      let plugin = this.props.plugins.find(
+        (item) => item.key === this.state.transService
+      );
+      if (!plugin) {
+        return;
+      }
+      let autoValue = plugin.autoValue;
       this.setState({ transSource: autoValue, transTarget: "en" }, () => {
-        StorageUtil.setReaderConfig("transTarget", "en");
-        StorageUtil.setReaderConfig("transSource", autoValue);
+        ConfigService.setReaderConfig("transTarget", "en");
+        ConfigService.setReaderConfig("transSource", autoValue);
         this.handleTrans(this.props.originalText.replace(/(\r\n|\n|\r)/gm, ""));
       });
     });
@@ -80,19 +91,19 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
       return (
         <div className="trans-container">
           <div className="trans-service-selector-container">
-            {PluginList.getAllPlugins()
+            {this.props.plugins
               .filter((item) => item.type === "translation")
               .map((item, index) => {
                 return (
                   <div
                     className={
-                      this.state.transService === item.identifier
+                      this.state.transService === item.key
                         ? "trans-service-selector"
                         : "trans-service-selector-inactive"
                     }
                     onClick={() => {
                       this.setState({ isAddNew: false });
-                      this.handleChangeService(item.identifier);
+                      this.handleChangeService(item.key);
                     }}
                   >
                     <span className={`icon-${item.icon} trans-icon`}></span>
@@ -129,9 +140,9 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
                   style={{ color: "#f16464" }}
                   onClick={() => {
                     if (
-                      StorageUtil.getReaderConfig("lang") === "zhCN" ||
-                      StorageUtil.getReaderConfig("lang") === "zhTW" ||
-                      StorageUtil.getReaderConfig("lang") === "zhMO"
+                      ConfigService.getReaderConfig("lang") === "zhCN" ||
+                      ConfigService.getReaderConfig("lang") === "zhTW" ||
+                      ConfigService.getReaderConfig("lang") === "zhMO"
                     ) {
                       openExternalUrl("https://www.koodoreader.com/zh/plugin");
                     } else {
@@ -151,24 +162,35 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
                 </div>
                 <div
                   className="trans-add-confirm"
-                  onClick={() => {
+                  onClick={async () => {
                     let value: string = (
                       document.querySelector(
                         "#trans-add-content-box"
                       ) as HTMLTextAreaElement
                     ).value;
                     if (value) {
-                      let plugin: Plugin = JSON.parse(value);
-                      let isSuccess = PluginList.addPlugin(plugin);
-                      if (!isSuccess) {
+                      let plugin: any = JSON.parse(value);
+                      plugin.key = plugin.identifier;
+                      if (!(await checkPlugin(plugin))) {
                         toast.error(this.props.t("Plugin verification failed"));
                         return;
                       }
-                      this.setState({ transService: plugin.identifier });
+                      if (
+                        this.props.plugins.find(
+                          (item) => item.key === plugin.key
+                        )
+                      ) {
+                        await DatabaseService.updateRecord(plugin, "plugins");
+                      } else {
+                        await DatabaseService.saveRecord(plugin, "plugins");
+                      }
+                      this.props.handleFetchPlugins();
                       toast.success(this.props.t("Addition successful"));
-                      this.handleChangeService(plugin.identifier);
                     }
-                    this.setState({ isAddNew: false });
+                    this.setState({
+                      isAddNew: false,
+                      translatedText: "Please select the service",
+                    });
                   }}
                 >
                   <Trans>Confirm</Trans>
@@ -185,17 +207,19 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
                     style={{ maxWidth: "120px", margin: 0 }}
                     onChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
                       let targetLang = event.target.value;
-                      StorageUtil.setReaderConfig("transSource", targetLang);
+                      ConfigService.setReaderConfig("transSource", targetLang);
                       this.handleTrans(
                         this.props.originalText.replace(/(\r\n|\n|\r)/gm, "")
                       );
                     }}
                   >
-                    {PluginList.getPluginById(this.state.transService)
-                      .langList &&
+                    {this.props.plugins.find(
+                      (item) => item.key === this.state.transService
+                    )?.langList &&
                       Object.keys(
-                        PluginList.getPluginById(this.state.transService)
-                          .langList
+                        this.props.plugins.find(
+                          (item) => item.key === this.state.transService
+                        )?.langList as any
                       ).map((item, index) => {
                         return (
                           <option
@@ -203,7 +227,7 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
                             key={index}
                             className="add-dialog-shelf-list-option"
                             selected={
-                              StorageUtil.getReaderConfig("transSource") ===
+                              ConfigService.getReaderConfig("transSource") ===
                               item
                                 ? true
                                 : false
@@ -211,9 +235,9 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
                           >
                             {
                               Object.values(
-                                PluginList.getPluginById(
-                                  this.state.transService
-                                ).langList
+                                this.props.plugins.find(
+                                  (item) => item.key === this.state.transService
+                                )?.langList as any[]
                               )[index]
                             }
                           </option>
@@ -227,17 +251,19 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
                     style={{ maxWidth: "120px", margin: 0 }}
                     onChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
                       let targetLang = event.target.value;
-                      StorageUtil.setReaderConfig("transTarget", targetLang);
+                      ConfigService.setReaderConfig("transTarget", targetLang);
                       this.handleTrans(
                         this.props.originalText.replace(/(\r\n|\n|\r)/gm, "")
                       );
                     }}
                   >
-                    {PluginList.getPluginById(this.state.transService)
-                      .langList &&
+                    {this.props.plugins.find(
+                      (item) => item.key === this.state.transService
+                    )?.langList &&
                       Object.keys(
-                        PluginList.getPluginById(this.state.transService)
-                          .langList
+                        this.props.plugins.find(
+                          (item) => item.key === this.state.transService
+                        )?.langList as any
                       ).map((item, index) => {
                         return (
                           <option
@@ -245,7 +271,7 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
                             key={index}
                             className="add-dialog-shelf-list-option"
                             selected={
-                              StorageUtil.getReaderConfig("transTarget") ===
+                              ConfigService.getReaderConfig("transTarget") ===
                               item
                                 ? true
                                 : false
@@ -253,9 +279,9 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
                           >
                             {
                               Object.values(
-                                PluginList.getPluginById(
-                                  this.state.transService
-                                ).langList
+                                this.props.plugins.find(
+                                  (item) => item.key === this.state.transService
+                                )?.langList as any[]
                               )[index]
                             }
                           </option>

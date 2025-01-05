@@ -3,7 +3,7 @@ import {
   handleFetchList,
   handleFetchBooks,
   handleMode,
-  handleShelfIndex,
+  handleShelf,
   handleDeleteDialog,
 } from "../../../store/actions";
 import { stateType } from "../../../store";
@@ -27,7 +27,7 @@ const mappropsToProps = (state: stateType) => {
 const actionCreator = {
   handleFetchList,
   handleMode,
-  handleShelfIndex,
+  handleShelf,
   handleDeleteDialog,
   handleFetchBooks,
 };

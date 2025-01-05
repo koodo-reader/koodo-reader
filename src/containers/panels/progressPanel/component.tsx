@@ -2,9 +2,8 @@ import React from "react";
 import "./progressPanel.css";
 import { Trans } from "react-i18next";
 import { ProgressPanelProps, ProgressPanelState } from "./interface";
-
-import StorageUtil from "../../../utils/serviceUtils/storageUtil";
-declare var window: any;
+import ConfigService from "../../../utils/storage/configService";
+import _ from "underscore";
 class ProgressPanel extends React.Component<
   ProgressPanelProps,
   ProgressPanelState
@@ -18,8 +17,8 @@ class ProgressPanel extends React.Component<
       targetPage: 0,
       isEntered: false,
       isSingle:
-        StorageUtil.getReaderConfig("readerMode") &&
-        StorageUtil.getReaderConfig("readerMode") !== "double",
+        ConfigService.getReaderConfig("readerMode") &&
+        ConfigService.getReaderConfig("readerMode") !== "double",
     };
   }
   async UNSAFE_componentWillReceiveProps(nextProps: ProgressPanelProps) {
@@ -43,7 +42,7 @@ class ProgressPanel extends React.Component<
     if (!href) {
       return;
     }
-    let chapterIndex = window._.findIndex(this.props.htmlBook.flattenChapters, {
+    let chapterIndex = _.findIndex(this.props.htmlBook.flattenChapters, {
       href,
     });
     this.setState({ targetChapterIndex: chapterIndex + 1 });

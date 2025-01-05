@@ -15,7 +15,7 @@ const mapStateToProps = (state: stateType) => {
     isCollapsed: state.sidebar.isCollapsed,
     deletedBooks: state.manager.deletedBooks,
     mode: state.sidebar.mode,
-    shelfIndex: state.sidebar.shelfIndex,
+    shelfTitle: state.sidebar.shelfTitle,
   };
 };
 const actionCreator = {

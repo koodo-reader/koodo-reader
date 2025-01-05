@@ -4,7 +4,7 @@ import { Trans } from "react-i18next";
 import { NavListProps, NavListState } from "./interface";
 import DeleteIcon from "../../../components/deleteIcon";
 import toast from "react-hot-toast";
-import RecordLocation from "../../../utils/readUtils/recordLocation";
+import ConfigService from "../../../utils/storage/configService";
 class NavList extends React.Component<NavListProps, NavListState> {
   constructor(props: NavListProps) {
     super(props);
@@ -57,7 +57,11 @@ class NavList extends React.Component<NavListProps, NavListState> {
       chapterHref: string;
       percentage: string;
       cfi: string;
-    } = RecordLocation.getHtmlLocation(this.props.currentBook.key);
+    } = ConfigService.getObjectConfig(
+      this.props.currentBook.key,
+      "recordLocation",
+      {}
+    );
     this.props.bookmarks.forEach((item) => {
       if (item.cfi === JSON.stringify(bookLocation)) {
         this.props.handleShowBookmark(true);

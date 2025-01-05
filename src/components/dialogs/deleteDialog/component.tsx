@@ -1,19 +1,14 @@
 import React from "react";
 import "./deleteDialog.css";
-import DeleteUtil from "../../../utils/readUtils/deleteUtil";
-
-import ShelfUtil from "../../../utils/readUtils/shelfUtil";
-import RecordRecent from "../../../utils/readUtils/recordRecent";
-import RecordLocation from "../../../utils/readUtils/recordLocation";
-import AddFavorite from "../../../utils/readUtils/addFavorite";
 import { Trans } from "react-i18next";
 import { DeleteDialogProps, DeleteDialogState } from "./interface";
 import { withRouter } from "react-router-dom";
-import AddTrash from "../../../utils/readUtils/addTrash";
-import BookUtil from "../../../utils/fileUtils/bookUtil";
+import BookUtil from "../../../utils/file/bookUtil";
 import toast from "react-hot-toast";
-import StorageUtil from "../../../utils/serviceUtils/storageUtil";
-declare var window: any;
+import ConfigService from "../../../utils/storage/configService";
+import CoverUtil from "../../../utils/file/coverUtil";
+import DatabaseService from "../../../utils/storage/databaseService";
+
 class DeleteDialog extends React.Component<
   DeleteDialogProps,
   DeleteDialogState
@@ -22,37 +17,19 @@ class DeleteDialog extends React.Component<
     super(props);
     this.state = {
       isDeleteShelfBook:
-        StorageUtil.getReaderConfig("isDeleteShelfBook") === "yes",
+        ConfigService.getReaderConfig("isDeleteShelfBook") === "yes",
       isDisableTrashBin:
-        StorageUtil.getReaderConfig("isDisableTrashBin") === "yes",
+        ConfigService.getReaderConfig("isDisableTrashBin") === "yes",
     };
   }
   handleCancel = () => {
     this.props.handleDeleteDialog(false);
   };
-  handleDeleteOther = (key: string) => {
-    return new Promise<void>(async (resolve, reject) => {
-      if (this.props.bookmarks) {
-        let bookmarkArr = DeleteUtil.deleteBookmarks(this.props.bookmarks, key);
-        if (bookmarkArr.length === 0) {
-          await window.localforage.removeItem("bookmarks");
-        } else {
-          await window.localforage.setItem("bookmarks", bookmarkArr);
-        }
-        this.props.handleFetchBookmarks();
-      }
-      if (this.props.notes) {
-        let noteArr = DeleteUtil.deleteNotes(this.props.notes, key);
-        if (noteArr.length === 0) {
-          await window.localforage.removeItem("notes");
-          resolve();
-        } else {
-          await window.localforage.setItem("notes", noteArr);
-          resolve();
-        }
-        this.props.handleFetchNotes();
-      }
-    });
+  handleDeleteOther = async (key: string) => {
+    await DatabaseService.deleteRecordsByBookKey(key, "bookmarks");
+    this.props.handleFetchBookmarks();
+    await DatabaseService.deleteRecordsByBookKey(key, "notes");
+    this.props.handleFetchNotes();
   };
   handleComfirm = async () => {
     if (this.props.mode === "shelf" && !this.state.isDeleteShelfBook) {
@@ -65,14 +42,17 @@ class DeleteDialog extends React.Component<
     } else {
       this.deleteBooks();
     }
-
     this.props.handleDeleteDialog(false);
     toast.success(this.props.t("Deletion successful"));
   };
   deleteBookFromShelf = () => {
     if (this.props.isSelectBook) {
       this.props.selectedBooks.forEach((item) => {
-        ShelfUtil.clearShelf(this.props.shelfIndex, item);
+        ConfigService.deleteFromMapConfig(
+          this.props.shelfTitle,
+          item,
+          "shelfList"
+        );
       });
       this.props.handleSelectedBooks([]);
       this.props.handleFetchBooks();
@@ -81,12 +61,19 @@ class DeleteDialog extends React.Component<
       toast.success(this.props.t("Deletion successful"));
       return;
     }
-    ShelfUtil.clearShelf(this.props.shelfIndex, this.props.currentBook.key);
+    ConfigService.deleteFromMapConfig(
+      this.props.shelfTitle,
+      this.props.currentBook.key,
+      "shelfList"
+    );
   };
   deleteAllBookInTrash = async () => {
-    let keyArr = AddTrash.getAllTrash();
+    let keyArr = ConfigService.getAllListConfig("deletedBooks");
     for (let i = 0; i < keyArr.length; i++) {
-      await this.deleteBook(keyArr[i]);
+      let format = this.props.deletedBooks
+        .find((item) => item.key === keyArr[i])
+        ?.format.toLowerCase();
+      await this.deleteBook(keyArr[i], format || "epub");
     }
 
     if (this.props.books.length === 0) {
@@ -106,37 +93,37 @@ class DeleteDialog extends React.Component<
   };
   deleteSelectedBook = () => {
     this.props.selectedBooks.forEach((item) => {
-      AddTrash.setTrash(item);
-      AddFavorite.clear(item);
+      ConfigService.setListConfig(item, "deletedBooks");
+      ConfigService.deleteListConfig(item, "favoriteBooks");
     });
     this.props.handleSelectedBooks([]);
     this.props.handleFetchBooks();
     this.props.handleSelectBook(!this.props.isSelectBook);
   };
   deleteCurrentBook = () => {
-    AddTrash.setTrash(this.props.currentBook.key);
-    AddFavorite.clear(this.props.currentBook.key);
+    ConfigService.setListConfig(this.props.currentBook.key, "deletedBooks");
+    ConfigService.deleteListConfig(this.props.currentBook.key, "favoriteBooks");
     this.props.handleFetchBooks();
   };
-  deleteBook = (key: string) => {
+  deleteBook = (key: string, format: string) => {
     return new Promise<void>((resolve, reject) => {
-      this.props.books &&
-        window.localforage
-          .setItem("books", DeleteUtil.deleteBook(this.props.books, key))
-          .then(async () => {
-            await BookUtil.deleteBook(key);
-            await BookUtil.deleteBook("cache-" + key);
-            AddFavorite.clear(key);
-            AddTrash.clear(key);
-            ShelfUtil.deletefromAllShelf(key);
-            RecordRecent.clear(key);
-            RecordLocation.clear(key);
-            await this.handleDeleteOther(key);
-            resolve();
-          })
-          .catch(() => {
-            reject();
-          });
+      DatabaseService.deleteRecord(key, "books")
+        .then(async () => {
+          await BookUtil.deleteBook(key, format);
+          CoverUtil.deleteCover(key);
+          await BookUtil.deleteBook("cache-" + key, "zip");
+          ConfigService.deleteListConfig(key, "favoriteBooks");
+          ConfigService.deleteListConfig(key, "deletedBooks");
+          ConfigService.deleteFromAllMapConfig(key, "shelfList");
+          ConfigService.deleteListConfig(key, "recentBooks");
+          ConfigService.deleteObjectConfig(key, "recordLocation");
+          await this.handleDeleteOther(key);
+          resolve();
+        })
+        .catch((err) => {
+          console.log(err);
+          reject(err);
+        });
     });
   };
   render() {

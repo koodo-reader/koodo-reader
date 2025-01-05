@@ -8,7 +8,7 @@ class Note {
   cfi: string;
   range: string;
   notes: string;
-  percentage: number;
+  percentage: string;
   color: number;
   tag: string[];
   constructor(
@@ -19,7 +19,7 @@ class Note {
     cfi: string,
     range: string,
     notes: string,
-    percentage: number,
+    percentage: string,
     color: number,
     tag: string[]
   ) {

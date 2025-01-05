@@ -1,11 +1,14 @@
-import StorageUtil from "../../utils/serviceUtils/storageUtil";
-import SortUtil from "../../utils/readUtils/sortUtil";
+import ConfigService from "../../utils/storage/configService";
 import BookModel from "../../models/Book";
+import PluginModel from "../../models/Plugin";
 import { Dispatch } from "redux";
-import AddTrash from "../../utils/readUtils/addTrash";
-declare var window: any;
+import DatabaseService from "../../utils/storage/databaseService";
+
 export function handleBooks(books: BookModel[]) {
   return { type: "HANDLE_BOOKS", payload: books };
+}
+export function handlePlugins(plugins: PluginModel[]) {
+  return { type: "HANDLE_PLUGINS", payload: plugins };
 }
 export function handleDeletedBooks(deletedBooks: BookModel[]) {
   return { type: "HANDLE_DELETED_BOOKS", payload: deletedBooks };
@@ -78,29 +81,41 @@ export function handleNoteSortCode(noteSortCode: {
 
 export function handleFetchBooks() {
   return (dispatch: Dispatch) => {
-    window.localforage.getItem("books", (err, value) => {
+    DatabaseService.getAllRecords("books").then((value) => {
       let bookArr: any = value;
-      let keyArr = AddTrash.getAllTrash();
+      let keyArr = ConfigService.getAllListConfig("deletedBooks");
       dispatch(handleDeletedBooks(handleKeyFilter(bookArr, keyArr)));
       dispatch(handleBooks(handleKeyRemove(bookArr, keyArr)));
     });
   };
 }
+
+export function handleFetchPlugins() {
+  return async (dispatch: Dispatch) => {
+    DatabaseService.getAllRecords("plugins").then((value) => {
+      dispatch(handlePlugins(value));
+    });
+  };
+}
 export function handleFetchBookSortCode() {
   return (dispatch: Dispatch) => {
-    let bookSortCode = SortUtil.getBookSortCode();
+    let bookSortCode = JSON.parse(
+      ConfigService.getReaderConfig("bookSortCode") || '{"sort": 1, "order": 2}'
+    );
     dispatch(handleBookSortCode(bookSortCode));
   };
 }
 export function handleFetchNoteSortCode() {
   return (dispatch: Dispatch) => {
-    let noteSortCode = SortUtil.getNoteSortCode();
+    let noteSortCode = JSON.parse(
+      ConfigService.getReaderConfig("noteSortCode") || '{"sort": 2, "order": 2}'
+    );
     dispatch(handleNoteSortCode(noteSortCode));
   };
 }
 export function handleFetchList() {
   return (dispatch: Dispatch) => {
-    let viewMode = StorageUtil.getReaderConfig("viewMode") || "card";
+    let viewMode = ConfigService.getReaderConfig("viewMode") || "card";
     dispatch(handleViewMode(viewMode));
   };
 }
