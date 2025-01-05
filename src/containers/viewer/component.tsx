@@ -16,7 +16,7 @@ import { binicReadingProcess } from "../../utils/reader/bionicUtil";
 import PopupBox from "../../components/popups/popupBox";
 import Note from "../../models/Note";
 import PageWidget from "../pageWidget";
-import { scrollContents } from "../../utils/common";
+import { getPageWidth, scrollContents } from "../../utils/common";
 import _ from "underscore";
 declare var window: any;
 let lock = false; //prevent from clicking too fasts
@@ -65,58 +65,16 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
   componentDidMount() {
     this.handleRenderBook();
     //make sure page width is always 12 times, section = Math.floor(element.clientWidth / 12), or text will be blocked
-    this.handlePageWidth();
+    this.setState(
+      getPageWidth(this.state.readerMode, this.state.scale, this.state.margin)
+    );
     this.props.handleRenderBookFunc(this.handleRenderBook);
 
     window.addEventListener("resize", () => {
       BookUtil.reloadBooks();
     });
   }
-  handlePageWidth = () => {
-    const findValidMultiple = (limit: number) => {
-      let multiple = limit - (limit % 12);
 
-      while (multiple >= 0) {
-        if (((multiple - multiple / 12) / 2) % 2 === 0) {
-          return multiple;
-        }
-        multiple -= 12;
-      }
-
-      return limit;
-    };
-
-    if (document.body.clientWidth < 570) {
-      let width = findValidMultiple(document.body.clientWidth - 72);
-
-      this.setState({
-        pageOffset: `calc(50vw - ${width / 2}px)`,
-        pageWidth: `${width}px`,
-      });
-    } else if (this.state.readerMode === "scroll") {
-      let width = findValidMultiple(276 * parseFloat(this.state.scale) * 2);
-      this.setState({
-        pageOffset: `calc(50vw - ${width / 2}px)`,
-        pageWidth: `${width}px`,
-      });
-    } else if (this.state.readerMode === "single") {
-      let width = findValidMultiple(
-        276 * parseFloat(this.state.scale) * 2 - 36
-      );
-      this.setState({
-        pageOffset: `calc(50vw - ${width / 2}px)`,
-        pageWidth: `${width}px`,
-      });
-    } else if (this.state.readerMode === "double") {
-      let width = findValidMultiple(
-        document.body.clientWidth - 2 * this.state.margin - 80
-      );
-      this.setState({
-        pageOffset: `calc(50vw - ${width / 2}px)`,
-        pageWidth: `${width}px`,
-      });
-    }
-  };
   handleHighlight = async (rendition: any) => {
     let highlighters: any = this.props.notes;
     if (!highlighters) return;
