@@ -15,9 +15,6 @@ import {
 } from "../../utils/file/common";
 import toast from "react-hot-toast";
 import { Trans } from "react-i18next";
-import { CommonRequest } from "../../assets/lib/kookit-extra-browser.min";
-import packageInfo from "../../../package.json";
-declare var window: any;
 class Header extends React.Component<HeaderProps, HeaderState> {
   constructor(props: HeaderProps) {
     super(props);
@@ -58,17 +55,11 @@ class Header extends React.Component<HeaderProps, HeaderState> {
           ConfigService.getReaderConfig("storageLocation")
         );
       }
-      //Check for update
-      try {
-        let stableLog = await CommonRequest.checkStableUpdate();
-        if (packageInfo.version.localeCompare(stableLog.version) > 0) {
-          this.setState({ isDeveloperVer: true });
-          // this.props.handleFeedbackDialog(true);
-          // return;
-        }
-      } catch (error) {
-        console.log(error);
+
+      if (ConfigService.getReaderConfig("appInfo") === "dev") {
+        this.setState({ isDeveloperVer: true });
       }
+
       //Check for data update
       //upgrade data from old version
       let res1 = await upgradeStorage();
