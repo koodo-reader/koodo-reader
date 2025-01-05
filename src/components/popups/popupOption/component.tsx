@@ -4,18 +4,14 @@ import "./popupOption.css";
 import Note from "../../../models/Note";
 import { PopupOptionProps } from "./interface";
 import ColorOption from "../../colorOption";
-import RecordLocation from "../../../utils/readUtils/recordLocation";
-
 import { popupList } from "../../../constants/popupList";
-import StorageUtil from "../../../utils/serviceUtils/storageUtil";
+import ConfigService from "../../../utils/storage/configService";
 import toast from "react-hot-toast";
-import { getSelection } from "../../../utils/serviceUtils/mouseEvent";
+import { getSelection } from "../../../utils/reader/mouseEvent";
 import copy from "copy-text-to-clipboard";
-import { getHightlightCoords } from "../../../utils/fileUtils/pdfUtil";
-import { getIframeDoc } from "../../../utils/serviceUtils/docUtil";
-import { openExternalUrl } from "../../../utils/serviceUtils/urlUtil";
-import { isElectron } from "react-device-detect";
-import { createOneNote } from "../../../utils/serviceUtils/noteUtil";
+import { getIframeDoc } from "../../../utils/reader/docUtil";
+import { openExternalUrl } from "../../../utils/common";
+import DatabaseService from "../../../utils/storage/databaseService";
 
 declare var window: any;
 
@@ -35,45 +31,34 @@ class PopupOption extends React.Component<PopupOptionProps> {
     toast.success(this.props.t("Copying successful"));
   };
   handleTrans = () => {
-    if (!isElectron) {
-      toast(
-        this.props.t(
-          "Koodo Reader's web version are limited by the browser, for more powerful features, please download the desktop version."
-        )
-      );
-      return;
-    }
     this.props.handleMenuMode("trans");
     this.props.handleOriginalText(getSelection() || "");
   };
   handleDict = () => {
-    if (!isElectron) {
-      toast(
-        this.props.t(
-          "Koodo Reader's web version are limited by the browser, for more powerful features, please download the desktop version."
-        )
-      );
-      return;
-    }
     this.props.handleMenuMode("dict");
     this.props.handleOriginalText(getSelection() || "");
   };
-  handleDigest = () => {
+  handleDigest = async () => {
     let bookKey = this.props.currentBook.key;
-    let cfi = "";
-    if (this.props.currentBook.format === "PDF") {
-      cfi = JSON.stringify(
-        RecordLocation.getPDFLocation(this.props.currentBook.md5.split("-")[0])
-      );
-    } else {
-      cfi = JSON.stringify(
-        RecordLocation.getHtmlLocation(this.props.currentBook.key)
-      );
-    }
-    let percentage = RecordLocation.getHtmlLocation(this.props.currentBook.key)
-      .percentage
-      ? RecordLocation.getHtmlLocation(this.props.currentBook.key).percentage
-      : 0;
+    let cfi = JSON.stringify(
+      ConfigService.getObjectConfig(
+        this.props.currentBook.key,
+        "recordLocation",
+        {}
+      )
+    );
+
+    let percentage = ConfigService.getObjectConfig(
+      this.props.currentBook.key,
+      "recordLocation",
+      {}
+    ).percentage
+      ? ConfigService.getObjectConfig(
+          this.props.currentBook.key,
+          "recordLocation",
+          {}
+        ).percentage
+      : "0";
     let color = this.props.color;
     let notes = "";
     let pageArea = document.getElementById("page-area");
@@ -82,16 +67,12 @@ class PopupOption extends React.Component<PopupOptionProps> {
     if (!iframe) return;
     let doc = getIframeDoc();
     if (!doc) return;
-    let charRange;
-    if (this.props.currentBook.format !== "PDF") {
-      charRange = window.rangy
-        .getSelection(iframe)
-        .saveCharacterRanges(doc.body)[0];
-    }
-    let range =
-      this.props.currentBook.format === "PDF"
-        ? JSON.stringify(getHightlightCoords())
-        : JSON.stringify(charRange);
+    let range = JSON.stringify(
+      await this.props.htmlBook.rendition.getHightlightCoords(
+        this.props.chapterDocIndex
+      )
+    );
+
     let text = doc.getSelection()?.toString();
     if (!text) return;
     text = text.replace(/\s\s/g, "");
@@ -111,16 +92,13 @@ class PopupOption extends React.Component<PopupOptionProps> {
       color,
       []
     );
-    let noteArr = this.props.notes;
-    noteArr.push(digest);
-    window.localforage.setItem("notes", noteArr).then(() => {
+    DatabaseService.saveRecord(digest, "notes").then(async () => {
       this.props.handleOpenMenu(false);
       toast.success(this.props.t("Addition successful"));
       this.props.handleFetchNotes();
       this.props.handleMenuMode("");
-      createOneNote(
+      await this.props.htmlBook.rendition.createOneNote(
         digest,
-        this.props.currentBook.format,
         this.handleNoteClick
       );
     });
@@ -135,7 +113,7 @@ class PopupOption extends React.Component<PopupOptionProps> {
     openExternalUrl(url);
   };
   handleSearchInternet = () => {
-    switch (StorageUtil.getReaderConfig("searchEngine")) {
+    switch (ConfigService.getReaderConfig("searchEngine")) {
       case "google":
         this.handleJump("https://www.google.com/search?q=" + getSelection());
         break;

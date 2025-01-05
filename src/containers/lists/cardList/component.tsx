@@ -4,14 +4,14 @@ import NoteModel from "../../../models/Note";
 import { Trans } from "react-i18next";
 import { CardListProps, CardListStates } from "./interface";
 import DeleteIcon from "../../../components/deleteIcon";
-import RecordLocation from "../../../utils/readUtils/recordLocation";
 import { withRouter } from "react-router-dom";
-import SortUtil from "../../../utils/readUtils/sortUtil";
+import SortUtil from "../../../utils/reader/sortUtil";
 import { Redirect } from "react-router-dom";
 import NoteTag from "../../../components/noteTag";
-import BookUtil from "../../../utils/fileUtils/bookUtil";
+import BookUtil from "../../../utils/file/bookUtil";
 import toast from "react-hot-toast";
 import BookModel from "../../../models/Book";
+import ConfigService from "../../../utils/storage/configService";
 class CardList extends React.Component<CardListProps, CardListStates> {
   constructor(props: CardListProps) {
     super(props);
@@ -45,32 +45,17 @@ class CardList extends React.Component<CardListProps, CardListStates> {
       return;
     }
 
-    if (book.format === "PDF") {
-      let bookLocation = JSON.parse(note.cfi) || {};
-      RecordLocation.recordPDFLocation(book.md5.split("-")[0], bookLocation);
-    } else {
-      let bookLocation: any = {};
-      //compatile wiht lower version(1.4.2)
-      try {
-        bookLocation = JSON.parse(note.cfi) || {};
-      } catch (error) {
-        bookLocation.cfi = note.cfi;
-        bookLocation.chapterTitle = note.chapter;
-      }
-      RecordLocation.recordHtmlLocation(
-        note.bookKey,
-        bookLocation.text,
-        bookLocation.chapterTitle,
-        bookLocation.chapterDocIndex,
-        bookLocation.chapterHref,
-        bookLocation.count,
-        bookLocation.percentage,
-        bookLocation.cfi,
-        bookLocation.page
-      );
+    let bookLocation: any = {};
+    //compatile wiht lower version(1.4.2)
+    try {
+      bookLocation = JSON.parse(note.cfi) || {};
+    } catch (error) {
+      bookLocation.cfi = note.cfi;
+      bookLocation.chapterTitle = note.chapter;
     }
+    ConfigService.setObjectConfig(note.bookKey, bookLocation, "recordLocation");
 
-    BookUtil.RedirectBook(book, this.props.t, this.props.history);
+    BookUtil.redirectBook(book, this.props.t);
   };
   render() {
     let { cards } = this.props;

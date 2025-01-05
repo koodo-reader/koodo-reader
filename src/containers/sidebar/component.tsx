@@ -3,23 +3,22 @@ import "./sidebar.css";
 import { sideMenu } from "../../constants/sideMenu";
 import { SidebarProps, SidebarState } from "./interface";
 import { withRouter } from "react-router-dom";
-import StorageUtil from "../../utils/serviceUtils/storageUtil";
-import { openExternalUrl } from "../../utils/serviceUtils/urlUtil";
-import ShelfUtil from "../../utils/readUtils/shelfUtil";
+import ConfigService from "../../utils/storage/configService";
+import { openExternalUrl } from "../../utils/common";
 import DeletePopup from "../../components/dialogs/deletePopup";
 import { Trans } from "react-i18next";
 class Sidebar extends React.Component<SidebarProps, SidebarState> {
   constructor(props: SidebarProps) {
     super(props);
     this.state = {
-      index: 0,
-      hoverIndex: -1,
-      hoverShelfIndex: -1,
+      mode: "home",
+      hoverMode: "",
+      hoverShelfTitle: "",
       isCollpaseShelf: false,
       isOpenDelete: false,
-      shelfIndex: 0,
+      shelfTitle: "",
       isCollapsed:
-        StorageUtil.getReaderConfig("isCollapsed") === "yes" || false,
+        ConfigService.getReaderConfig("isCollapsed") === "yes" || false,
     };
   }
   componentDidMount() {
@@ -29,36 +28,35 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
         : document.URL.split("/").reverse()[0]
     );
   }
-  handleSidebar = (mode: string, index: number) => {
-    this.setState({ index: index });
+  handleSidebar = (mode: string) => {
+    this.setState({ mode: mode });
     this.props.handleSelectBook(false);
     this.props.history.push(`/manager/${mode}`);
     this.props.handleMode(mode);
-    this.props.handleShelfIndex(-1);
+    this.props.handleShelf("");
     this.props.handleSearch(false);
     this.props.handleSortDisplay(false);
   };
-  handleHover = (index: number) => {
-    this.setState({ hoverIndex: index });
+  handleHover = (mode: string) => {
+    this.setState({ hoverMode: mode });
   };
-  handleShelfHover = (index: number) => {
-    this.setState({ hoverShelfIndex: index });
+  handleShelfHover = (hoverShelfTitle: string) => {
+    this.setState({ hoverShelfTitle });
   };
   handleCollapse = (isCollapsed: boolean) => {
     this.setState({ isCollapsed });
     this.props.handleCollapse(isCollapsed);
-    StorageUtil.setReaderConfig("isCollapsed", isCollapsed ? "yes" : "no");
+    ConfigService.setReaderConfig("isCollapsed", isCollapsed ? "yes" : "no");
   };
   handleJump = (url: string) => {
     openExternalUrl(url);
   };
   handleDeleteShelf = () => {
-    if (this.state.shelfIndex < 1) return;
-    let shelfTitles = Object.keys(ShelfUtil.getShelf());
-    let currentShelfTitle = shelfTitles[this.state.shelfIndex];
-    ShelfUtil.removeShelf(currentShelfTitle);
-    this.setState({ shelfIndex: 0 }, () => {
-      this.props.handleShelfIndex(0);
+    if (!this.state.shelfTitle) return;
+    let currentShelfTitle = this.state.shelfTitle;
+    ConfigService.deleteMapConfig(currentShelfTitle, "shelfList");
+    this.setState({ shelfTitle: "" }, () => {
+      this.props.handleShelf("");
       this.props.handleMode("shelf");
     });
   };
@@ -66,37 +64,42 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
     this.setState({ isOpenDelete });
   };
   render() {
+    console.log(
+      this.props.shelfTitle,
+      this.props.mode,
+      "this.props.shelfTitle"
+    );
     const renderSideMenu = () => {
       return sideMenu.map((item, index) => {
         return (
           <li
             key={item.name}
             className={
-              this.state.index === index && this.props.mode !== "shelf"
+              this.props.mode === item.mode
                 ? "active side-menu-item"
                 : "side-menu-item"
             }
             id={`sidebar-${item.icon}`}
             onClick={() => {
-              this.handleSidebar(item.mode, index);
+              this.handleSidebar(item.mode);
             }}
             onMouseEnter={() => {
-              this.handleHover(index);
+              this.handleHover(item.mode);
             }}
             onMouseLeave={() => {
-              this.handleHover(-1);
+              this.handleHover("");
             }}
             style={this.props.isCollapsed ? { width: 40, marginLeft: 15 } : {}}
           >
-            {this.state.index === index && this.props.mode !== "shelf" ? (
+            {this.props.mode === item.mode ? (
               <div className="side-menu-selector-container"></div>
             ) : null}
-            {this.state.hoverIndex === index ? (
+            {this.state.hoverMode === item.mode ? (
               <div className="side-menu-hover-container"></div>
             ) : null}
             <div
               className={
-                this.state.index === index && this.props.mode !== "shelf"
+                this.props.mode === item.mode
                   ? "side-menu-selector active-selector"
                   : "side-menu-selector "
               }
@@ -107,7 +110,7 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
               >
                 <span
                   className={
-                    this.state.index === index && this.props.mode !== "shelf"
+                    this.props.mode === item.mode
                       ? `icon-${item.icon}  active-icon`
                       : `icon-${item.icon}`
                   }
@@ -134,7 +137,7 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
       });
     };
     const renderSideShelf = () => {
-      let shelfList = ShelfUtil.getShelf();
+      let shelfList = ConfigService.getAllMapConfig("shelfList");
       let shelfTitle = Object.keys(shelfList);
 
       return shelfTitle.map((item, index) => {
@@ -142,44 +145,34 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
           <li
             key={item}
             className={
-              this.props.shelfIndex === index
+              this.props.shelfTitle === item
                 ? "active side-menu-item"
                 : "side-menu-item"
             }
             id={`sidebar-${index}`}
             onClick={() => {
-              this.props.handleShelfIndex(index);
-              if (index > 0) {
-                this.props.handleMode("shelf");
-              } else {
-                this.props.handleMode("home");
-              }
-              this.setState({ index: -1 });
+              this.props.handleShelf(item);
+              this.props.handleMode("shelf");
+              this.setState({ mode: "" });
               this.props.history.push("/manager/shelf");
             }}
             onMouseEnter={() => {
-              this.handleShelfHover(index);
+              this.handleShelfHover(item);
             }}
             onMouseLeave={() => {
-              this.handleShelfHover(-1);
+              this.handleShelfHover("");
             }}
-            style={
-              index === 0
-                ? { display: "none" }
-                : this.props.isCollapsed
-                ? { width: 40, marginLeft: 15 }
-                : {}
-            }
+            style={this.props.isCollapsed ? { width: 40, marginLeft: 15 } : {}}
           >
-            {this.props.shelfIndex === index ? (
+            {this.props.shelfTitle === item ? (
               <div className="side-menu-selector-container"></div>
             ) : null}
-            {this.state.hoverShelfIndex === index ? (
+            {this.state.hoverShelfTitle === item ? (
               <div className="side-menu-hover-container"></div>
             ) : null}
             <div
               className={
-                this.props.shelfIndex === index
+                this.props.shelfTitle === item
                   ? "side-menu-selector active-selector"
                   : "side-menu-selector "
               }
@@ -190,7 +183,7 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
               >
                 <span
                   className={
-                    this.props.shelfIndex === index
+                    this.props.shelfTitle === item
                       ? `icon-bookshelf-line  active-icon sidebar-shelf-icon`
                       : `icon-bookshelf-line sidebar-shelf-icon`
                   }
@@ -218,7 +211,7 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
     };
     const deletePopupProps = {
       mode: "shelf",
-      name: Object.keys(ShelfUtil.getShelf())[this.state.shelfIndex],
+      name: this.state.shelfTitle,
       title: "Delete this shelf",
       description: "This action will clear and remove this shelf",
       handleDeletePopup: this.handleDeletePopup,
@@ -238,9 +231,9 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
 
           <img
             src={
-              StorageUtil.getReaderConfig("appSkin") === "night" ||
-              (StorageUtil.getReaderConfig("appSkin") === "system" &&
-                StorageUtil.getReaderConfig("isOSNight") === "yes")
+              ConfigService.getReaderConfig("appSkin") === "night" ||
+              (ConfigService.getReaderConfig("appSkin") === "system" &&
+                ConfigService.getReaderConfig("isOSNight") === "yes")
                 ? "./assets/label_light.png"
                 : "./assets/label.png"
             }

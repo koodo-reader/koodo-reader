@@ -2,15 +2,16 @@ import React from "react";
 import "./moreAction.css";
 import { Trans } from "react-i18next";
 import { MoreActionProps, MoreActionState } from "./interface";
-
+import { saveAs } from "file-saver";
 import toast from "react-hot-toast";
-import BookUtil from "../../../utils/fileUtils/bookUtil";
+import BookUtil from "../../../utils/file/bookUtil";
 import {
   exportDictionaryHistory,
   exportHighlights,
   exportNotes,
-} from "../../../utils/syncUtils/exportUtil";
-import StorageUtil from "../../../utils/serviceUtils/storageUtil";
+} from "../../../utils/file/export";
+import ConfigService from "../../../utils/storage/configService";
+import DatabaseService from "../../../utils/storage/databaseService";
 declare var window: any;
 class ActionDialog extends React.Component<MoreActionProps, MoreActionState> {
   constructor(props: MoreActionProps) {
@@ -47,11 +48,12 @@ class ActionDialog extends React.Component<MoreActionProps, MoreActionState> {
             onClick={() => {
               BookUtil.fetchBook(
                 this.props.currentBook.key,
+                this.props.currentBook.format.toLowerCase(),
                 true,
                 this.props.currentBook.path
               ).then((result: any) => {
                 toast.success(this.props.t("Export successful"));
-                window.saveAs(
+                saveAs(
                   new Blob([result]),
                   this.props.currentBook.name +
                     `.${this.props.currentBook.format.toLocaleLowerCase()}`
@@ -66,20 +68,18 @@ class ActionDialog extends React.Component<MoreActionProps, MoreActionState> {
           <div
             className="action-dialog-edit"
             style={{ paddingLeft: "0px" }}
-            onClick={() => {
-              if (
-                this.props.notes.filter(
-                  (item) =>
-                    item.bookKey === this.props.currentBook.key &&
-                    item.notes !== ""
-                ).length > 0
-              ) {
-                exportNotes(
-                  this.props.notes.filter(
-                    (item) => item.bookKey === this.props.currentBook.key
-                  ),
-                  [...this.props.books, ...this.props.deletedBooks]
-                );
+            onClick={async () => {
+              let notes = (
+                await DatabaseService.getRecordsByBookKey(
+                  this.props.currentBook.key,
+                  "notes"
+                )
+              ).filter((note) => note.notes !== "");
+              if (notes.length > 0) {
+                exportNotes(notes, [
+                  ...this.props.books,
+                  ...this.props.deletedBooks,
+                ]);
                 toast.success(this.props.t("Export successful"));
               } else {
                 toast(this.props.t("Nothing to export"));
@@ -93,20 +93,18 @@ class ActionDialog extends React.Component<MoreActionProps, MoreActionState> {
           <div
             className="action-dialog-edit"
             style={{ paddingLeft: "0px" }}
-            onClick={() => {
-              if (
-                this.props.notes.filter(
-                  (item) =>
-                    item.bookKey === this.props.currentBook.key &&
-                    item.notes === ""
-                ).length > 0
-              ) {
-                exportHighlights(
-                  this.props.notes.filter(
-                    (item) => item.bookKey === this.props.currentBook.key
-                  ),
-                  [...this.props.books, ...this.props.deletedBooks]
-                );
+            onClick={async () => {
+              let highlights = (
+                await DatabaseService.getRecordsByBookKey(
+                  this.props.currentBook.key,
+                  "notes"
+                )
+              ).filter((note) => note.notes === "");
+              if (highlights.length > 0) {
+                exportHighlights(highlights, [
+                  ...this.props.books,
+                  ...this.props.deletedBooks,
+                ]);
                 toast.success(this.props.t("Export successful"));
               } else {
                 toast(this.props.t("Nothing to export"));
@@ -121,13 +119,11 @@ class ActionDialog extends React.Component<MoreActionProps, MoreActionState> {
             className="action-dialog-edit"
             style={{ paddingLeft: "0px" }}
             onClick={async () => {
-              let dictHistory =
-                (await window.localforage.getItem("words")) || [];
-              if (
-                dictHistory.filter(
-                  (item) => item.bookKey === this.props.currentBook.key
-                ).length > 0
-              ) {
+              let dictHistory = await DatabaseService.getRecordsByBookKey(
+                this.props.currentBook.key,
+                "words"
+              );
+              if (dictHistory.length > 0) {
                 exportDictionaryHistory(dictHistory, [
                   ...this.props.books,
                   ...this.props.deletedBooks,
@@ -153,6 +149,7 @@ class ActionDialog extends React.Component<MoreActionProps, MoreActionState> {
               toast(this.props.t("Pre-caching"));
               BookUtil.fetchBook(
                 this.props.currentBook.key,
+                this.props.currentBook.format.toLowerCase(),
                 true,
                 this.props.currentBook.path
               ).then(async (result: any) => {
@@ -161,7 +158,7 @@ class ActionDialog extends React.Component<MoreActionProps, MoreActionState> {
                   this.props.currentBook.format,
                   "",
                   this.props.currentBook.charset,
-                  StorageUtil.getReaderConfig("isSliding") === "yes"
+                  ConfigService.getReaderConfig("isSliding") === "yes"
                     ? "sliding"
                     : ""
                 );
@@ -169,6 +166,7 @@ class ActionDialog extends React.Component<MoreActionProps, MoreActionState> {
                 if (cache !== "err") {
                   BookUtil.addBook(
                     "cache-" + this.props.currentBook.key,
+                    "zip",
                     cache
                   );
                   toast.success(this.props.t("Pre-caching successful"));
@@ -186,7 +184,10 @@ class ActionDialog extends React.Component<MoreActionProps, MoreActionState> {
             className="action-dialog-edit"
             style={{ paddingLeft: "0px" }}
             onClick={async () => {
-              await BookUtil.deleteBook("cache-" + this.props.currentBook.key);
+              await BookUtil.deleteBook(
+                "cache-" + this.props.currentBook.key,
+                "zip"
+              );
               toast.success(this.props.t("Deletion successful"));
             }}
           >

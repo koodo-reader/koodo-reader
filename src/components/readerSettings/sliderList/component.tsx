@@ -2,8 +2,8 @@ import React from "react";
 import { Trans } from "react-i18next";
 import { SliderListProps, SliderListState } from "./interface";
 import "./sliderList.css";
-import StorageUtil from "../../../utils/serviceUtils/storageUtil";
-import BookUtil from "../../../utils/fileUtils/bookUtil";
+import ConfigService from "../../../utils/storage/configService";
+import BookUtil from "../../../utils/file/bookUtil";
 class SliderList extends React.Component<SliderListProps, SliderListState> {
   constructor(props: SliderListProps) {
     super(props);
@@ -13,16 +13,16 @@ class SliderList extends React.Component<SliderListProps, SliderListState> {
       isEntered: false,
       value:
         this.props.mode === "fontSize"
-          ? StorageUtil.getReaderConfig("fontSize") || "17"
+          ? ConfigService.getReaderConfig("fontSize") || "17"
           : this.props.mode === "scale"
-          ? StorageUtil.getReaderConfig("scale") || "1"
+          ? ConfigService.getReaderConfig("scale") || "1"
           : this.props.mode === "letterSpacing"
-          ? StorageUtil.getReaderConfig("letterSpacing") || "0"
+          ? ConfigService.getReaderConfig("letterSpacing") || "0"
           : this.props.mode === "paraSpacing"
-          ? StorageUtil.getReaderConfig("paraSpacing") || "0"
+          ? ConfigService.getReaderConfig("paraSpacing") || "0"
           : this.props.mode === "brightness"
-          ? StorageUtil.getReaderConfig("brightness") || "1"
-          : StorageUtil.getReaderConfig("margin") || "0",
+          ? ConfigService.getReaderConfig("brightness") || "1"
+          : ConfigService.getReaderConfig("margin") || "0",
     };
   }
   handleRest = async () => {
@@ -36,30 +36,30 @@ class SliderList extends React.Component<SliderListProps, SliderListState> {
     if (this.props.mode === "fontSize") {
       const fontSize = event.target.value;
       this.setState({ value: fontSize });
-      StorageUtil.setReaderConfig("fontSize", fontSize);
+      ConfigService.setReaderConfig("fontSize", fontSize);
     } else if (this.props.mode === "scale") {
       const scale = event.target.value;
       this.setState({ value: scale });
-      StorageUtil.setReaderConfig("scale", scale);
+      ConfigService.setReaderConfig("scale", scale);
     } else if (this.props.mode === "letterSpacing") {
       const letterSpacing = event.target.value;
       this.setState({ value: letterSpacing });
-      StorageUtil.setReaderConfig("letterSpacing", letterSpacing);
+      ConfigService.setReaderConfig("letterSpacing", letterSpacing);
     } else if (this.props.mode === "paraSpacing") {
       const paraSpacing = event.target.value;
       this.setState({ value: paraSpacing });
-      StorageUtil.setReaderConfig("paraSpacing", paraSpacing);
+      ConfigService.setReaderConfig("paraSpacing", paraSpacing);
     } else if (this.props.mode === "brightness") {
       let brightness = event.target.value;
       if (brightness < 0.3) {
         brightness = 0.3;
       }
       this.setState({ value: brightness });
-      StorageUtil.setReaderConfig("brightness", brightness);
+      ConfigService.setReaderConfig("brightness", brightness);
     } else {
       const margin = event.target.value;
       this.setState({ value: margin });
-      StorageUtil.setReaderConfig("margin", margin);
+      ConfigService.setReaderConfig("margin", margin);
     }
   };
   onValueInput = (event: any) => {

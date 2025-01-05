@@ -2,10 +2,10 @@ import React from "react";
 import { SettingSwitchProps, SettingSwitchState } from "./interface";
 import { Trans } from "react-i18next";
 import TextToSpeech from "../../textToSpeech";
-import StorageUtil from "../../../utils/serviceUtils/storageUtil";
+import ConfigService from "../../../utils/storage/configService";
 import { readerSettingList } from "../../../constants/settingList";
 import toast from "react-hot-toast";
-import BookUtil from "../../../utils/fileUtils/bookUtil";
+import BookUtil from "../../../utils/file/bookUtil";
 class SettingSwitch extends React.Component<
   SettingSwitchProps,
   SettingSwitchState
@@ -13,22 +13,22 @@ class SettingSwitch extends React.Component<
   constructor(props: SettingSwitchProps) {
     super(props);
     this.state = {
-      isBold: StorageUtil.getReaderConfig("isBold") === "yes",
-      isIndent: StorageUtil.getReaderConfig("isIndent") === "yes",
-      isSliding: StorageUtil.getReaderConfig("isSliding") === "yes",
-      isUnderline: StorageUtil.getReaderConfig("isUnderline") === "yes",
-      isShadow: StorageUtil.getReaderConfig("isShadow") === "yes",
-      isItalic: StorageUtil.getReaderConfig("isItalic") === "yes",
-      isInvert: StorageUtil.getReaderConfig("isInvert") === "yes",
-      isBionic: StorageUtil.getReaderConfig("isBionic") === "yes",
+      isBold: ConfigService.getReaderConfig("isBold") === "yes",
+      isIndent: ConfigService.getReaderConfig("isIndent") === "yes",
+      isSliding: ConfigService.getReaderConfig("isSliding") === "yes",
+      isUnderline: ConfigService.getReaderConfig("isUnderline") === "yes",
+      isShadow: ConfigService.getReaderConfig("isShadow") === "yes",
+      isItalic: ConfigService.getReaderConfig("isItalic") === "yes",
+      isInvert: ConfigService.getReaderConfig("isInvert") === "yes",
+      isBionic: ConfigService.getReaderConfig("isBionic") === "yes",
       isHideBackground:
-        StorageUtil.getReaderConfig("isHideBackground") === "yes",
-      isHideFooter: StorageUtil.getReaderConfig("isHideFooter") === "yes",
-      isHideHeader: StorageUtil.getReaderConfig("isHideHeader") === "yes",
+        ConfigService.getReaderConfig("isHideBackground") === "yes",
+      isHideFooter: ConfigService.getReaderConfig("isHideFooter") === "yes",
+      isHideHeader: ConfigService.getReaderConfig("isHideHeader") === "yes",
       isHidePageButton:
-        StorageUtil.getReaderConfig("isHidePageButton") === "yes",
+        ConfigService.getReaderConfig("isHidePageButton") === "yes",
       isHideMenuButton:
-        StorageUtil.getReaderConfig("isHideMenuButton") === "yes",
+        ConfigService.getReaderConfig("isHideMenuButton") === "yes",
     };
   }
 
@@ -38,7 +38,7 @@ class SettingSwitch extends React.Component<
 
   _handleChange = (stateName: string) => {
     this.setState({ [stateName]: !this.state[stateName] } as any, () => {
-      StorageUtil.setReaderConfig(
+      ConfigService.setReaderConfig(
         stateName,
         this.state[stateName] ? "yes" : "no"
       );
@@ -51,7 +51,7 @@ class SettingSwitch extends React.Component<
 
   handleChange = (stateName: string) => {
     this.setState({ [stateName]: !this.state[stateName] } as any);
-    StorageUtil.setReaderConfig(
+    ConfigService.setReaderConfig(
       stateName,
       this.state[stateName] ? "no" : "yes"
     );

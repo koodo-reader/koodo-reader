@@ -21,106 +21,28 @@
       }
     </style>
     <title>Koodo Reader</title>
-  </head>
-  <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div>
-    <canvas id="the-canvas"></canvas>
-    <script
-      type="text/javascript"
-      src="%PUBLIC_URL%/lib/kookit/kookit.min.js"
-    ></script>
-    <script
-      type="text/javascript"
-      src="%PUBLIC_URL%/lib/JSZip/jszip.min.js"
-    ></script>
-    <script
-      type="text/javascript"
-      src="%PUBLIC_URL%/lib/chinese-s2t/chinese-s2t.js"
-    ></script>
-    <script
-      type="text/javascript"
-      src="%PUBLIC_URL%/lib/fflate/fflate.min.js"
-    ></script>
-    <script
-      type="text/javascript"
-      src="%PUBLIC_URL%/lib/localforage/localforage.min.js"
-    ></script>
-    <script
-      type="text/javascript"
-      src="%PUBLIC_URL%/lib/filesaver/FileSaver.min.js"
-    ></script>
-    <script
-      type="text/javascript"
-      src="%PUBLIC_URL%/lib/mhtml2html/mhtml2html.js"
-    ></script>
-    <script
-      type="text/javascript"
-      src="%PUBLIC_URL%/lib/js-untar/untar.js"
-    ></script>
-    <script
-      type="text/javascript"
-      src="%PUBLIC_URL%/lib/underscore/underscore-umd-min.js"
-    ></script>
     <script
       type="text/javascript"
       src="%PUBLIC_URL%/lib/7z-wasm/7zz.umd.js"
     ></script>
     <script
       type="text/javascript"
-      src="%PUBLIC_URL%/lib/zipjs/zip-no-worker.min.js"
-    ></script>
-    <script
-      type="text/javascript"
-      src="%PUBLIC_URL%/lib/marked/marked.js"
-    ></script>
-    <script
-      type="text/javascript"
       src="%PUBLIC_URL%/lib/libunrar/rpc.js"
     ></script>
-    <script
-      type="text/javascript"
-      src="%PUBLIC_URL%/lib/pdf/build/pdf.js"
-    ></script>
-    <script
-      type="text/javascript"
-      src="%PUBLIC_URL%/lib/Dropbox/Dropbox-sdk.min.js"
-    ></script>
-    <script
-      type="text/javascript"
-      src="%PUBLIC_URL%/lib/Rangy/rangy-core.js"
-    ></script>
-    <script
-      type="text/javascript"
-      src="%PUBLIC_URL%/lib/Rangy/rangy-serializer.js"
-    ></script>
-    <script
-      type="text/javascript"
-      src="%PUBLIC_URL%/lib/Rangy/rangy-classapplier.js"
-    ></script>
-    <script
-      type="text/javascript"
-      src="%PUBLIC_URL%/lib/Rangy/rangy-highlighter.js"
-    ></script>
-    <script
-      type="text/javascript"
-      src="%PUBLIC_URL%/lib/Rangy/rangy-textrange.js"
-    ></script>
-    <script
-      type="text/javascript"
-      src="%PUBLIC_URL%/lib/Hammer/hammer.min.js"
-    ></script>
-    <script
-      type="text/javascript"
-      src="%PUBLIC_URL%/lib/mammoth/mammoth.browser.min.js"
-    ></script>
-    <script>
-      if (window.location.href.indexOf("localhost") > -1) {
-        //load js from %PUBLIC_URL%/lib/kookit/kookit.js
-        var script = document.createElement("script");
-        script.src = "%PUBLIC_URL%/lib/kookit/kookit.js";
-        document.head.appendChild(script);
-      }
+    <script type="module">
+      import "%PUBLIC_URL%/lib/pdfjs/pdf.mjs";
+      console.log(window);
+      pdfjsLib.GlobalWorkerOptions.workerSrc =
+        "%PUBLIC_URL%/lib/pdfjs/pdf.worker.mjs";
     </script>
+    <script
+      type="text/javascript"
+      src="%PUBLIC_URL%/lib/sqljs-wasm/sql-wasm.js"
+    ></script>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+    <canvas id="the-canvas"></canvas>
   </body>
 </html>

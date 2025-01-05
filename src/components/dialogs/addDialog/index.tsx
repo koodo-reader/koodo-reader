@@ -3,7 +3,7 @@ import {
   handleAddDialog,
   handleActionDialog,
   handleMode,
-  handleShelfIndex,
+  handleShelf,
   handleSelectBook,
   handleSelectedBooks,
 } from "../../../store/actions";
@@ -28,7 +28,7 @@ const actionCreator = {
   handleActionDialog,
   handleSelectBook,
   handleMode,
-  handleShelfIndex,
+  handleShelf,
   handleSelectedBooks,
 };
 export default connect(

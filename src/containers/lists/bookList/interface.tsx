@@ -5,7 +5,7 @@ import { RouteComponentProps } from "react-router";
 export interface BookListProps extends RouteComponentProps<any> {
   books: BookModel[];
   mode: string;
-  shelfIndex: number;
+  shelfTitle: string;
   searchResults: number[];
   isSearch: boolean;
   isCollapsed: boolean;
@@ -21,7 +21,7 @@ export interface BookListProps extends RouteComponentProps<any> {
   handleAddDialog: (isShow: boolean) => void;
   handleMode: (mode: string) => void;
   handleFetchBooks: () => void;
-  handleShelfIndex: (index: number) => void;
+  handleShelf: (shelfTitle: string) => void;
   handleDeleteDialog: (isShow: boolean) => void;
   t: (title: string) => string;
 }

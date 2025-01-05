@@ -2,11 +2,10 @@ import React, { Component } from "react";
 import "./tokenDialog.css";
 import { Trans } from "react-i18next";
 import { TokenDialogProps, TokenDialogState } from "./interface";
-import StorageUtil from "../../../utils/serviceUtils/storageUtil";
+import ConfigService from "../../../utils/storage/configService";
+import { SyncUtil } from "../../../assets/lib/kookit-extra-browser.min";
 import toast from "react-hot-toast";
-import { openExternalUrl } from "../../../utils/serviceUtils/urlUtil";
-import axios from "axios";
-import { driveConfig } from "../../../constants/driveList";
+import { openExternalUrl } from "../../../utils/common";
 class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
   constructor(props: TokenDialogProps) {
     super(props);
@@ -16,11 +15,17 @@ class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
   handleCancel = () => {
     this.props.handleTokenDialog(false);
   };
-  handleDropboxComfirm = () => {
-    let token: string = (
+  handleDropboxComfirm = async () => {
+    let code: string = (
       document.querySelector("#token-dialog-token-box") as HTMLTextAreaElement
     ).value;
-    StorageUtil.setReaderConfig(`${this.props.driveName}_token`, token);
+    let syncUtil = new SyncUtil("dropbox", {});
+    let refreshToken = await syncUtil.authToken(code);
+    console.log("refresh_token", refreshToken);
+    ConfigService.setReaderConfig(
+      `${this.props.driveName}_token`,
+      JSON.stringify({ refresh_token: refreshToken })
+    );
     this.props.handleTokenDialog(false);
     toast.success(this.props.t("Addition successful"));
   };
@@ -28,13 +33,11 @@ class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
     let code: string = (
       document.querySelector("#token-dialog-token-box") as HTMLTextAreaElement
     ).value;
-    let res = await axios.post(driveConfig.onedriveAuthUrl, {
-      code,
-      redirect_uri: driveConfig.callbackUrl,
-    });
-    StorageUtil.setReaderConfig(
+    let syncUtil = new SyncUtil("onedrive", {});
+    let refreshToken = await syncUtil.authToken(code);
+    ConfigService.setReaderConfig(
       `${this.props.driveName}_token`,
-      res.data.refresh_token
+      JSON.stringify({ refresh_token: refreshToken })
     );
     this.props.handleTokenDialog(false);
     toast.success(this.props.t("Addition successful"));
@@ -43,14 +46,11 @@ class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
     let code: string = (
       document.querySelector("#token-dialog-token-box") as HTMLTextAreaElement
     ).value;
-    let res = await axios.post(driveConfig.googleAuthUrl, {
-      code,
-      redirect_uri: driveConfig.callbackUrl,
-      scope: driveConfig.googleScope,
-    });
-    StorageUtil.setReaderConfig(
+    let syncUtil = new SyncUtil("googledrive", {});
+    let refreshToken = await syncUtil.authToken(code);
+    ConfigService.setReaderConfig(
       `${this.props.driveName}_token`,
-      res.data.refresh_token
+      JSON.stringify({ refresh_token: refreshToken })
     );
     this.props.handleTokenDialog(false);
     toast.success(this.props.t("Addition successful"));
@@ -69,7 +69,7 @@ class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
         "#token-dialog-password-box"
       ) as HTMLTextAreaElement
     ).value;
-    StorageUtil.setReaderConfig(
+    ConfigService.setReaderConfig(
       `${this.props.driveName}_token`,
       JSON.stringify({ url, username, password })
     );
@@ -96,7 +96,7 @@ class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
     let ssl: string = (
       document.querySelector("#token-dialog-ssl-box") as HTMLTextAreaElement
     ).value;
-    StorageUtil.setReaderConfig(
+    ConfigService.setReaderConfig(
       `${this.props.driveName}_token`,
       JSON.stringify({ url, username, password, dir, ssl })
     );
@@ -121,7 +121,7 @@ class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
     let secretAccessKey: string = (
       document.querySelector("#token-dialog-key-box") as HTMLTextAreaElement
     ).value;
-    StorageUtil.setReaderConfig(
+    ConfigService.setReaderConfig(
       `${this.props.driveName}_token`,
       JSON.stringify({
         endpoint,
@@ -154,7 +154,7 @@ class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
     let port: string = (
       document.querySelector("#token-dialog-port-box") as HTMLTextAreaElement
     ).value;
-    StorageUtil.setReaderConfig(
+    ConfigService.setReaderConfig(
       `${this.props.driveName}_token`,
       JSON.stringify({ url, username, password, dir, port })
     );
@@ -179,7 +179,7 @@ class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
               <div
                 className="token-dialog-info-text"
                 style={
-                  StorageUtil.getReaderConfig("lang") === "en"
+                  ConfigService.getReaderConfig("lang") === "en"
                     ? { fontSize: "14px" }
                     : {}
                 }
@@ -327,7 +327,7 @@ class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
               <div
                 className="token-dialog-info-text"
                 style={
-                  StorageUtil.getReaderConfig("lang") === "en"
+                  ConfigService.getReaderConfig("lang") === "en"
                     ? { fontSize: "14px" }
                     : {}
                 }

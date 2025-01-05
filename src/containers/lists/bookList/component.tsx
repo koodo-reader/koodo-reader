@@ -3,16 +3,12 @@ import "./booklist.css";
 import BookCardItem from "../../../components/bookCardItem";
 import BookListItem from "../../../components/bookListItem";
 import BookCoverItem from "../../../components/bookCoverItem";
-import AddFavorite from "../../../utils/readUtils/addFavorite";
-import ShelfUtil from "../../../utils/readUtils/shelfUtil";
-import SortUtil from "../../../utils/readUtils/sortUtil";
+import SortUtil from "../../../utils/reader/sortUtil";
 import BookModel from "../../../models/Book";
 import { BookListProps, BookListState } from "./interface";
-import StorageUtil from "../../../utils/serviceUtils/storageUtil";
+import ConfigService from "../../../utils/storage/configService";
 import { Redirect, withRouter } from "react-router-dom";
 import ViewMode from "../../../components/viewMode";
-import { backup } from "../../../utils/syncUtils/backupUtil";
-import { isElectron } from "react-device-detect";
 import SelectBook from "../../../components/selectBook";
 import { Trans } from "react-i18next";
 import DeletePopup from "../../../components/dialogs/deletePopup";
@@ -23,8 +19,11 @@ class BookList extends React.Component<BookListProps, BookListState> {
     super(props);
     this.state = {
       isOpenDelete: false,
-      favoriteBooks: Object.keys(AddFavorite.getAllFavorite()).length,
-      isHideShelfBook: StorageUtil.getReaderConfig("isHideShelfBook") === "yes",
+      favoriteBooks: Object.keys(
+        ConfigService.getAllListConfig("favoriteBooks")
+      ).length,
+      isHideShelfBook:
+        ConfigService.getReaderConfig("isHideShelfBook") === "yes",
       isRefreshing: false,
     };
   }
@@ -55,12 +54,14 @@ class BookList extends React.Component<BookListProps, BookListState> {
     return itemArr;
   };
 
-  handleShelf(items: any, index: number) {
-    if (index < 1) return items;
-    let shelfTitle = Object.keys(ShelfUtil.getShelf());
-    let currentShelfTitle = shelfTitle[index];
-    if (!currentShelfTitle) return items;
-    let currentShelfList = ShelfUtil.getShelf()[currentShelfTitle];
+  handleShelf(items: any, shelfTitle: string) {
+    if (!shelfTitle) return items;
+    let currentShelfTitle = shelfTitle;
+    let currentShelfList = ConfigService.getMapConfig(
+      currentShelfTitle,
+      "shelfList"
+    );
+    console.log(currentShelfList);
     let shelfItems = items.filter((item: { key: number }) => {
       return currentShelfList.indexOf(item.key) > -1;
     });
@@ -77,28 +78,33 @@ class BookList extends React.Component<BookListProps, BookListState> {
   };
   handleFilterShelfBook = (items: BookModel[]) => {
     return items.filter((item) => {
-      return ShelfUtil.getBookPosition(item.key).length === 0;
+      return (
+        ConfigService.getFromAllMapConfig(item.key, "shelfList").length === 0
+      );
     });
   };
   renderBookList = () => {
     //get different book data according to different scenes
     let books = this.props.isSearch
       ? this.handleIndexFilter(this.props.books, this.props.searchResults)
-      : this.props.shelfIndex > 0
+      : this.props.shelfTitle
       ? this.handleIndexFilter(
-          this.handleShelf(this.props.books, this.props.shelfIndex),
+          this.handleShelf(this.props.books, this.props.shelfTitle),
           SortUtil.sortBooks(
-            this.handleShelf(this.props.books, this.props.shelfIndex),
+            this.handleShelf(this.props.books, this.props.shelfTitle),
             this.props.bookSortCode
           ) || []
         )
       : this.props.mode === "favorite"
       ? this.handleIndexFilter(
-          this.handleKeyFilter(this.props.books, AddFavorite.getAllFavorite()),
+          this.handleKeyFilter(
+            this.props.books,
+            ConfigService.getAllListConfig("favoriteBooks")
+          ),
           SortUtil.sortBooks(
             this.handleKeyFilter(
               this.props.books,
-              AddFavorite.getAllFavorite()
+              ConfigService.getAllListConfig("favoriteBooks")
             ),
             this.props.bookSortCode
           ) || []
@@ -157,12 +163,12 @@ class BookList extends React.Component<BookListProps, BookListState> {
     });
   };
   handleDeleteShelf = () => {
-    if (this.props.shelfIndex < 1) return;
-    let shelfTitles = Object.keys(ShelfUtil.getShelf());
-    let currentShelfTitle = shelfTitles[this.props.shelfIndex];
-    ShelfUtil.removeShelf(currentShelfTitle);
+    if (!this.props.shelfTitle) return;
+    let shelfTitles = Object.keys(ConfigService.getAllMapConfig("shelfList"));
+    let currentShelfTitle = this.props.shelfTitle;
+    ConfigService.deleteMapConfig(currentShelfTitle, "shelfList");
 
-    this.props.handleShelfIndex(-1);
+    this.props.handleShelf("");
     this.props.handleMode("home");
   };
   handleDeletePopup = (isOpenDelete: boolean) => {
@@ -196,27 +202,14 @@ class BookList extends React.Component<BookListProps, BookListState> {
     ) {
       return <Redirect to="/manager/empty" />;
     }
-    if (isElectron) {
-      //accommodate the previous version
-      window.localforage.getItem(this.props.books[0].key).then((result) => {
-        if (result) {
-          backup(
-            this.props.books,
-            this.props.notes,
-            this.props.bookmarks,
-            false
-          );
-        }
-      });
-    }
 
-    StorageUtil.setReaderConfig(
+    ConfigService.setReaderConfig(
       "totalBooks",
       this.props.books.length.toString()
     );
     const deletePopupProps = {
       mode: "shelf",
-      name: Object.keys(ShelfUtil.getShelf())[this.props.shelfIndex],
+      name: this.props.shelfTitle,
       title: "Delete this shelf",
       description: "This action will clear and remove this shelf",
       handleDeletePopup: this.handleDeletePopup,
@@ -234,7 +227,7 @@ class BookList extends React.Component<BookListProps, BookListState> {
           }
         >
           <SelectBook />
-          {this.props.shelfIndex > -1 && !this.props.isSelectBook && (
+          {this.props.shelfTitle && !this.props.isSelectBook && (
             <div
               className="booklist-delete-container"
               onClick={() => {

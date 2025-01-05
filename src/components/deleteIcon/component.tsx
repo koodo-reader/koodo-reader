@@ -1,10 +1,11 @@
 import React from "react";
 import "./deleteIcon.css";
 import { DeleteIconProps, DeleteIconStates } from "./interface";
-import TagUtil from "../../utils/readUtils/tagUtil";
 import DeletePopup from "../dialogs/deletePopup";
 import toast from "react-hot-toast";
-declare var window: any;
+import ConfigService from "../../utils/storage/configService";
+import DatabaseService from "../../utils/storage/databaseService";
+
 class DeleteIcon extends React.Component<DeleteIconProps, DeleteIconStates> {
   constructor(props: DeleteIconProps) {
     super(props);
@@ -15,47 +16,29 @@ class DeleteIcon extends React.Component<DeleteIconProps, DeleteIconStates> {
   }
 
   handleDelete = () => {
-    let deleteItems =
-      this.props.mode === "notes"
-        ? this.props.notes
-        : this.props.mode === "tags"
-        ? TagUtil.getAllTags()
-        : this.props.bookmarks;
     let deleteFunc =
       this.props.mode === "notes"
         ? this.props.handleFetchNotes
         : this.props.handleFetchBookmarks;
-    deleteItems.forEach((item: any, index: number) => {
-      if (this.props.mode === "tags") {
-        item === this.props.tagName && TagUtil.clear(item);
-        this.handleDeleteTagFromNote(item);
-        return;
-      }
-      if (item.key === this.props.itemKey) {
-        deleteItems.splice(index, 1);
-        if (deleteItems.length === 0) {
-          window.localforage
-            .removeItem(this.props.mode)
-            .then(() => {
-              deleteFunc();
-              toast.success(this.props.t("Deletion successful"));
-            })
-            .catch(() => {
-              console.log("delete failed");
-            });
-        } else {
-          window.localforage
-            .setItem(this.props.mode, deleteItems)
-            .then(() => {
-              deleteFunc();
-              toast.success(this.props.t("Deletion successful"));
-            })
-            .catch(() => {
-              console.log("modify failed");
-            });
-        }
-      }
-    });
+    if (this.props.mode === "tags") {
+      ConfigService.deleteListConfig(this.props.tagName, "noteTags");
+      this.handleDeleteTagFromNote(this.props.tagName);
+      return;
+    }
+    if (this.props.mode === "bookmarks") {
+      DatabaseService.deleteRecord(this.props.itemKey, "bookmarks").then(() => {
+        deleteFunc();
+        toast.success(this.props.t("Deletion successful"));
+      });
+      return;
+    }
+    if (this.props.mode === "notes") {
+      DatabaseService.deleteRecord(this.props.itemKey, "notes").then(() => {
+        deleteFunc();
+        toast.success(this.props.t("Deletion successful"));
+      });
+      return;
+    }
   };
   handleDeleteTagFromNote = (tagName: string) => {
     let noteList = this.props.notes.map((item) => {
@@ -64,7 +47,7 @@ class DeleteIcon extends React.Component<DeleteIconProps, DeleteIconStates> {
         tag: item.tag.filter((subitem) => subitem !== tagName),
       };
     });
-    window.localforage.setItem("notes", noteList).then(() => {
+    DatabaseService.updateAllRecords(noteList, "notes").then(() => {
       this.props.handleFetchNotes();
     });
   };

@@ -14,8 +14,8 @@
 }
 .download-desk-animation {
   position: absolute;
-  left: 25px;
-  bottom: -20px;
+  left: 70px;
+  bottom: 10px;
   z-index: -1;
 }
 .download-desk-title {

@@ -3,7 +3,7 @@ import { dropdownList } from "../../../constants/dropdownList";
 import "./dropdownList.css";
 import { Trans } from "react-i18next";
 import { DropdownListProps, DropdownListState } from "./interface";
-import StorageUtil from "../../../utils/serviceUtils/storageUtil";
+import ConfigService from "../../../utils/storage/configService";
 import { isElectron } from "react-device-detect";
 class DropdownList extends React.Component<
   DropdownListProps,
@@ -15,20 +15,23 @@ class DropdownList extends React.Component<
       currentFontFamilyIndex: dropdownList[0].option.findIndex((item: any) => {
         return (
           item ===
-          (StorageUtil.getReaderConfig("fontFamily") || "Built-in font")
+          (ConfigService.getReaderConfig("fontFamily") || "Built-in font")
         );
       }),
       currentLineHeightIndex: dropdownList[1].option.findIndex((item: any) => {
         return (
-          item === (StorageUtil.getReaderConfig("lineHeight") || "Default")
+          item === (ConfigService.getReaderConfig("lineHeight") || "Default")
         );
       }),
       currentTextAlignIndex: dropdownList[2].option.findIndex((item: any) => {
-        return item === (StorageUtil.getReaderConfig("textAlign") || "Default");
+        return (
+          item === (ConfigService.getReaderConfig("textAlign") || "Default")
+        );
       }),
       chineseConversionIndex: dropdownList[3].option.findIndex((item: any) => {
         return (
-          item === (StorageUtil.getReaderConfig("convertChinese") || "Default")
+          item ===
+          (ConfigService.getReaderConfig("convertChinese") || "Default")
         );
       }),
     };
@@ -45,7 +48,7 @@ class DropdownList extends React.Component<
             (item: any) => {
               return (
                 item ===
-                (StorageUtil.getReaderConfig("fontFamily") || "Built-in font")
+                (ConfigService.getReaderConfig("fontFamily") || "Built-in font")
               );
             }
           ),
@@ -56,14 +59,14 @@ class DropdownList extends React.Component<
 
   handleView(event: any, option: string) {
     let arr = event.target.value.split(",");
-    StorageUtil.setReaderConfig(option, arr[0]);
+    ConfigService.setReaderConfig(option, arr[0]);
     switch (option) {
       case "fontFamily":
         this.setState({
           currentFontFamilyIndex: arr[1],
         });
         if (arr[0] === "Built-in font") {
-          StorageUtil.setReaderConfig(option, "");
+          ConfigService.setReaderConfig(option, "");
         }
 
         break;

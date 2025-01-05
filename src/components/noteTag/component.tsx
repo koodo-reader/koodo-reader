@@ -1,9 +1,9 @@
 import React from "react";
 import "./noteTag.css";
 import { NoteTagProps, NoteTagState } from "./interface";
-import TagUtil from "../../utils/readUtils/tagUtil";
 import DeleteIcon from "../deleteIcon";
 import { Trans } from "react-i18next";
+import ConfigService from "../../utils/storage/configService";
 
 class NoteTag extends React.Component<NoteTagProps, NoteTagState> {
   constructor(props: NoteTagProps) {
@@ -34,8 +34,12 @@ class NoteTag extends React.Component<NoteTagProps, NoteTagState> {
   tagToIndex = (tag: string[]) => {
     let temp: number[] = [];
     if (!tag) return [];
-    for (let i = 0; i < TagUtil.getAllTags().length; i++) {
-      if (tag.indexOf(TagUtil.getAllTags()[i]) > -1) {
+    for (
+      let i = 0;
+      i < ConfigService.getAllListConfig("noteTags").length;
+      i++
+    ) {
+      if (tag.indexOf(ConfigService.getAllListConfig("noteTags")[i]) > -1) {
         temp.push(i);
       }
     }
@@ -44,7 +48,7 @@ class NoteTag extends React.Component<NoteTagProps, NoteTagState> {
   indextoTag = (tagIndex: number[]) => {
     let temp: any = [];
     for (let i = 0; i < tagIndex.length; i++) {
-      temp.push(TagUtil.getAllTags()[tagIndex[i]]);
+      temp.push(ConfigService.getAllListConfig("noteTags")[tagIndex[i]]);
     }
     return temp;
   };
@@ -67,7 +71,7 @@ class NoteTag extends React.Component<NoteTagProps, NoteTagState> {
     if (!event.target.value) {
       return;
     }
-    TagUtil.setTags(event.target.value);
+    ConfigService.setListConfig(event.target.value, "noteTags");
     this.setState({ tagIndex: [] });
     this.props.handleTag(this.indextoTag([]));
   };
@@ -90,7 +94,9 @@ class NoteTag extends React.Component<NoteTagProps, NoteTagState> {
   };
   render() {
     const renderTag = () => {
-      let noteTags = this.props.isCard ? this.props.tag : TagUtil.getAllTags();
+      let noteTags = this.props.isCard
+        ? this.props.tag
+        : ConfigService.getAllListConfig("noteTags");
       return noteTags.map((item: any, index: number) => {
         return (
           <li

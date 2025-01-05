@@ -2,13 +2,16 @@ import React from "react";
 import "./manager.css";
 import { RedirectProps, RedirectState } from "./interface";
 import { Trans } from "react-i18next";
-import { getParamsFromUrl } from "../../utils/syncUtils/common";
+import { getParamsFromUrl } from "../../utils/file/common";
 import copy from "copy-text-to-clipboard";
 import { withRouter } from "react-router-dom";
 import Lottie from "react-lottie";
+
 import animationSuccess from "../../assets/lotties/success.json";
 import toast, { Toaster } from "react-hot-toast";
-import StorageUtil from "../../utils/serviceUtils/storageUtil";
+import ConfigService from "../../utils/storage/configService";
+import * as Kookit from "../../assets/lib/kookit.min.js";
+declare var window: any;
 const successOptions = {
   loop: false,
   autoplay: true,
@@ -43,19 +46,24 @@ class Redirect extends React.Component<RedirectProps, RedirectState> {
     }
     if (url.indexOf("error") > -1) {
       this.setState({ isError: true });
-      return false;
+    }
+    if (url.indexOf("import") > -1) {
+      window.Kookit = Kookit;
     }
     if (url.indexOf("code") > -1) {
       let params: any = getParamsFromUrl();
       this.setState({ token: params.code });
       this.setState({ isAuthed: true });
-      return false;
-    }
-    if (url.indexOf("access_token") > -1) {
-      let params: any = getParamsFromUrl();
-      this.setState({ token: params.access_token });
-      this.setState({ isAuthed: true });
-      return false;
+      let state = params.state;
+      if (state) {
+        const encodedState = state.split("|")[1];
+        const customParams = JSON.parse(decodeURIComponent(encodedState));
+        if (customParams && customParams.deeplink) {
+          window.location.replace(
+            customParams.deeplink + "?code=" + params.code + "&state=" + state
+          );
+        }
+      }
     }
   }
 
@@ -115,9 +123,9 @@ class Redirect extends React.Component<RedirectProps, RedirectState> {
         </div>
         <img
           src={
-            StorageUtil.getReaderConfig("appSkin") === "night" ||
-            (StorageUtil.getReaderConfig("appSkin") === "system" &&
-              StorageUtil.getReaderConfig("isOSNight") === "yes")
+            ConfigService.getReaderConfig("appSkin") === "night" ||
+            (ConfigService.getReaderConfig("appSkin") === "system" &&
+              ConfigService.getReaderConfig("isOSNight") === "yes")
               ? "./assets/empty_dark.svg"
               : "./assets/empty.svg"
           }

@@ -1,5 +1,5 @@
 import React from "react";
-import StorageUtil from "../../utils/serviceUtils/storageUtil";
+import ConfigService from "../../utils/storage/configService";
 import "./colorOption.css";
 import { ColorProps, ColorStates } from "./interface";
 
@@ -25,7 +25,7 @@ class ColorOption extends React.Component<ColorProps, ColorStates> {
             key={item}
             onClick={() => {
               this.props.handleColor(index + 4);
-              StorageUtil.setReaderConfig(
+              ConfigService.setReaderConfig(
                 "highlightIndex",
                 (index + 4).toString()
               );
@@ -54,7 +54,7 @@ class ColorOption extends React.Component<ColorProps, ColorStates> {
             key={item}
             onClick={() => {
               this.props.handleColor(index);
-              StorageUtil.setReaderConfig("highlightIndex", index.toString());
+              ConfigService.setReaderConfig("highlightIndex", index.toString());
               setTimeout(() => {
                 this.props.handleDigest();
               }, 100);

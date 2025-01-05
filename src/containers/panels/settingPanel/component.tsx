@@ -7,7 +7,7 @@ import ModeControl from "../../../components/readerSettings/modeControl";
 import SettingSwitch from "../../../components/readerSettings/settingSwitch";
 import { SettingPanelProps, SettingPanelState } from "./interface";
 import { Trans } from "react-i18next";
-import StorageUtil from "../../../utils/serviceUtils/storageUtil";
+import ConfigService from "../../../utils/storage/configService";
 
 class SettingPanel extends React.Component<
   SettingPanelProps,
@@ -16,15 +16,17 @@ class SettingPanel extends React.Component<
   constructor(props: SettingPanelProps) {
     super(props);
     this.state = {
-      readerMode: StorageUtil.getReaderConfig("readerMode") || "double",
+      readerMode: ConfigService.getReaderConfig("readerMode") || "double",
       isSettingLocked:
-        StorageUtil.getReaderConfig("isSettingLocked") === "yes" ? true : false,
+        ConfigService.getReaderConfig("isSettingLocked") === "yes"
+          ? true
+          : false,
     };
   }
 
   handleLock = () => {
     this.setState({ isSettingLocked: !this.state.isSettingLocked }, () => {
-      StorageUtil.setReaderConfig(
+      ConfigService.setReaderConfig(
         "isSettingLocked",
         this.state.isSettingLocked ? "yes" : "no"
       );

@@ -2,20 +2,18 @@ import React from "react";
 import "./importLocal.css";
 import BookModel from "../../models/Book";
 
-import { fetchMD5 } from "../../utils/fileUtils/md5Util";
 import { Trans } from "react-i18next";
 import Dropzone from "react-dropzone";
 
 import { ImportLocalProps, ImportLocalState } from "./interface";
-import RecordRecent from "../../utils/readUtils/recordRecent";
 import { isElectron } from "react-device-detect";
 import { withRouter } from "react-router-dom";
-import BookUtil from "../../utils/fileUtils/bookUtil";
-import { fetchFileFromPath } from "../../utils/fileUtils/fileUtil";
+import BookUtil from "../../utils/file/bookUtil";
 import toast from "react-hot-toast";
-import StorageUtil from "../../utils/serviceUtils/storageUtil";
-
-import ShelfUtil from "../../utils/readUtils/shelfUtil";
+import ConfigService from "../../utils/storage/configService";
+import CoverUtil from "../../utils/file/coverUtil";
+import { calculateFileMD5, fetchFileFromPath } from "../../utils/common";
+import DatabaseService from "../../utils/storage/databaseService";
 declare var window: any;
 let clickFilePath = "";
 
@@ -58,7 +56,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
   }
   handleFilePath = async (filePath: string) => {
     clickFilePath = filePath;
-    let md5 = await fetchMD5(await fetchFileFromPath(filePath));
+    let md5 = await calculateFileMD5(await fetchFileFromPath(filePath));
     if ([...(this.props.books || []), ...this.props.deletedBooks].length > 0) {
       let isRepeat = false;
       let repeatBook: BookModel | null = null;
@@ -83,47 +81,47 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
   };
   handleJump = (book: BookModel) => {
     localStorage.setItem("tempBook", JSON.stringify(book));
-    BookUtil.RedirectBook(book, this.props.t, this.props.history);
+    BookUtil.redirectBook(book, this.props.t);
     this.props.history.push("/manager/home");
   };
   handleAddBook = (book: BookModel, buffer: ArrayBuffer) => {
     return new Promise<void>((resolve, reject) => {
       if (this.state.isOpenFile) {
-        StorageUtil.getReaderConfig("isImportPath") !== "yes" &&
-          StorageUtil.getReaderConfig("isPreventAdd") !== "yes" &&
-          BookUtil.addBook(book.key, buffer);
-        if (StorageUtil.getReaderConfig("isPreventAdd") === "yes") {
+        if (
+          ConfigService.getReaderConfig("isImportPath") !== "yes" &&
+          ConfigService.getReaderConfig("isPreventAdd") !== "yes"
+        ) {
+          BookUtil.addBook(book.key, book.format.toLowerCase(), buffer);
+        }
+        if (ConfigService.getReaderConfig("isPreventAdd") === "yes") {
           this.handleJump(book);
-
           this.setState({ isOpenFile: false });
-
           return resolve();
         }
       } else {
-        StorageUtil.getReaderConfig("isImportPath") !== "yes" &&
-          BookUtil.addBook(book.key, buffer);
+        ConfigService.getReaderConfig("isImportPath") !== "yes" &&
+          BookUtil.addBook(book.key, book.format.toLowerCase(), buffer);
+
+        CoverUtil.addCover(book);
       }
 
-      let bookArr = [...(this.props.books || []), ...this.props.deletedBooks];
-      if (bookArr == null) {
-        bookArr = [];
-      }
-      bookArr.push(book);
       this.props.handleReadingBook(book);
-      RecordRecent.setRecent(book.key);
-      window.localforage
-        .setItem("books", bookArr)
+      ConfigService.setListConfig(book.key, "recentBooks");
+      DatabaseService.saveRecord(book, "books")
         .then(() => {
           this.props.handleFetchBooks();
           if (this.props.mode === "shelf") {
-            let shelfTitles = Object.keys(ShelfUtil.getShelf());
-            ShelfUtil.setShelf(shelfTitles[this.props.shelfIndex], book.key);
+            ConfigService.setMapConfig(
+              this.props.shelfTitle,
+              book.key,
+              "shelfList"
+            );
           }
           toast.success(this.props.t("Addition successful"));
           setTimeout(() => {
             this.state.isOpenFile && this.handleJump(book);
             if (
-              StorageUtil.getReaderConfig("isOpenInMain") === "yes" &&
+              ConfigService.getReaderConfig("isOpenInMain") === "yes" &&
               this.state.isOpenFile
             ) {
               this.setState({ isOpenFile: false });
@@ -143,7 +141,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
 
   getMd5WithBrowser = async (file: any) => {
     return new Promise<void>(async (resolve, reject) => {
-      const md5 = await fetchMD5(file);
+      const md5 = await calculateFileMD5(file);
       if (!md5) {
         toast.error(this.props.t("Import failed"));
         return resolve();

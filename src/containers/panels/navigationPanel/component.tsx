@@ -8,7 +8,8 @@ import SearchBox from "../../../components/searchBox";
 import Parser from "html-react-parser";
 import * as DOMPurify from "dompurify";
 import EmptyCover from "../../../components/emptyCover";
-import StorageUtil from "../../../utils/serviceUtils/storageUtil";
+import ConfigService from "../../../utils/storage/configService";
+import CoverUtil from "../../../utils/file/coverUtil";
 
 class NavigationPanel extends React.Component<
   NavigationPanelProps,
@@ -24,7 +25,7 @@ class NavigationPanel extends React.Component<
       startIndex: 0,
       currentIndex: 0,
       isNavLocked:
-        StorageUtil.getReaderConfig("isNavLocked") === "yes" ? true : false,
+        ConfigService.getReaderConfig("isNavLocked") === "yes" ? true : false,
     };
   }
   handleNavSearchState = (state: string) => {
@@ -42,7 +43,7 @@ class NavigationPanel extends React.Component<
   };
   handleLock = () => {
     this.setState({ isNavLocked: !this.state.isNavLocked }, () => {
-      StorageUtil.setReaderConfig(
+      ConfigService.setReaderConfig(
         "isNavLocked",
         this.state.isNavLocked ? "yes" : "no"
       );
@@ -233,11 +234,10 @@ class NavigationPanel extends React.Component<
                 }}
               ></span>
 
-              {this.props.currentBook.cover &&
-              this.props.currentBook.cover !== "noCover" ? (
+              {CoverUtil.isCoverExist(this.props.currentBook) ? (
                 <img
                   className="book-cover"
-                  src={this.props.currentBook.cover}
+                  src={CoverUtil.getCover(this.props.currentBook)}
                   alt=""
                 />
               ) : (

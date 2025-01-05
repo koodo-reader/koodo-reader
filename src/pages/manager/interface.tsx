@@ -9,7 +9,7 @@ export interface ManagerProps extends RouteComponentProps<any> {
   bookmarks: BookmarkModel[];
   isReading: boolean;
   mode: string;
-  shelfIndex: number;
+  shelfTitle: string;
   isOpenEditDialog: boolean;
   isOpenDeleteDialog: boolean;
   isTipDialog: boolean;
@@ -25,6 +25,7 @@ export interface ManagerProps extends RouteComponentProps<any> {
   isOpenFeedbackDialog: boolean;
   dragItem: string;
   handleFetchBooks: () => void;
+  handleFetchPlugins: () => void;
   handleFetchNotes: () => void;
   handleFetchBookmarks: () => void;
   handleFetchBookSortCode: () => void;

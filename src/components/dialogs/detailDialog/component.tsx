@@ -5,6 +5,7 @@ import { Trans } from "react-i18next";
 import Parser from "html-react-parser";
 import * as DOMPurify from "dompurify";
 import EmptyCover from "../../emptyCover";
+import CoverUtil from "../../../utils/file/coverUtil";
 class DetailDialog extends React.Component<
   DetailDialogProps,
   DetailDialogState
@@ -35,9 +36,9 @@ class DetailDialog extends React.Component<
         >
           <div style={{ position: "relative" }}>
             <div className="detail-cover-container">
-              {this.props.currentBook.cover ? (
+              {CoverUtil.isCoverExist(this.props.currentBook) ? (
                 <img
-                  src={this.props.currentBook.cover}
+                  src={CoverUtil.getCover(this.props.currentBook)}
                   alt=""
                   className="detail-cover"
                 />

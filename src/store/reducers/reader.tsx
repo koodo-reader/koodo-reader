@@ -1,4 +1,4 @@
-import StorageUtil from "../../utils/serviceUtils/storageUtil";
+import ConfigService from "../../utils/storage/configService";
 const initState = {
   bookmarks: [],
   notes: [],
@@ -7,17 +7,17 @@ const initState = {
   currentChapter: "",
   currentChapterIndex: 0,
 
-  color: parseInt(StorageUtil.getReaderConfig("highlightIndex"))
-    ? parseInt(StorageUtil.getReaderConfig("highlightIndex"))
-    : StorageUtil.getReaderConfig("appSkin") === "night" ||
-      (StorageUtil.getReaderConfig("appSkin") === "system" &&
-        StorageUtil.getReaderConfig("isOSNight") === "yes")
+  color: parseInt(ConfigService.getReaderConfig("highlightIndex"))
+    ? parseInt(ConfigService.getReaderConfig("highlightIndex"))
+    : ConfigService.getReaderConfig("appSkin") === "night" ||
+      (ConfigService.getReaderConfig("appSkin") === "system" &&
+        ConfigService.getReaderConfig("isOSNight") === "yes")
     ? 3
     : 0,
   noteKey: "",
   originalText: "",
   htmlBook: null,
-  readerMode: StorageUtil.getReaderConfig("readerMode") || "double",
+  readerMode: ConfigService.getReaderConfig("readerMode") || "double",
 };
 export function reader(
   state = initState,

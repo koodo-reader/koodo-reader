@@ -4,7 +4,8 @@ import "./editDialog.css";
 import { Trans } from "react-i18next";
 import { EditDialogProps, EditDialogState } from "./interface";
 import toast from "react-hot-toast";
-declare var window: any;
+import DatabaseService from "../../../utils/storage/databaseService";
+
 class EditDialog extends React.Component<EditDialogProps, EditDialogState> {
   constructor(props: EditDialogProps) {
     super(props);
@@ -33,15 +34,9 @@ class EditDialog extends React.Component<EditDialogProps, EditDialogState> {
       ".edit-dialog-book-author-box"
     ) as HTMLInputElement;
     let author = authorBox.value;
-    let { books } = this.props;
-    books.forEach((item) => {
-      if (item.key === this.props.currentBook.key) {
-        item.name = name;
-        item.author = author;
-        return false;
-      }
-    });
-    window.localforage.setItem("books", books).then(() => {
+    this.props.currentBook.name = name;
+    this.props.currentBook.author = author;
+    DatabaseService.updateRecord(this.props.currentBook, "books").then(() => {
       this.props.handleEditDialog(false);
       this.props.handleFetchBooks();
     });

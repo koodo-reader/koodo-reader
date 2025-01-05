@@ -2,16 +2,17 @@ import React from "react";
 import { Trans } from "react-i18next";
 import { AboutDialogProps, AboutDialogState } from "./interface";
 import { isElectron } from "react-device-detect";
-import { openExternalUrl } from "../../../utils/serviceUtils/urlUtil";
+import { openExternalUrl } from "../../../utils/common";
 import toast from "react-hot-toast";
 import {
   exportBooks,
   exportDictionaryHistory,
   exportHighlights,
   exportNotes,
-} from "../../../utils/syncUtils/exportUtil";
+} from "../../../utils/file/export";
 import "./aboutDialog.css";
-import StorageUtil from "../../../utils/serviceUtils/storageUtil";
+import ConfigService from "../../../utils/storage/configService";
+import DatabaseService from "../../../utils/storage/databaseService";
 
 declare var window: any;
 class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
@@ -54,9 +55,9 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
               className="sort-by-category-list"
               onClick={() => {
                 if (
-                  StorageUtil.getReaderConfig("lang") === "zhCN" ||
-                  StorageUtil.getReaderConfig("lang") === "zhTW" ||
-                  StorageUtil.getReaderConfig("lang") === "zhMO"
+                  ConfigService.getReaderConfig("lang") === "zhCN" ||
+                  ConfigService.getReaderConfig("lang") === "zhTW" ||
+                  ConfigService.getReaderConfig("lang") === "zhMO"
                 ) {
                   this.handleJump("https://koodoreader.com/zh/document");
                 } else {
@@ -78,9 +79,9 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
               className="sort-by-category-list"
               onClick={() => {
                 if (
-                  StorageUtil.getReaderConfig("lang") === "zhCN" ||
-                  StorageUtil.getReaderConfig("lang") === "zhTW" ||
-                  StorageUtil.getReaderConfig("lang") === "zhMO"
+                  ConfigService.getReaderConfig("lang") === "zhCN" ||
+                  ConfigService.getReaderConfig("lang") === "zhTW" ||
+                  ConfigService.getReaderConfig("lang") === "zhMO"
                 ) {
                   this.handleJump("https://koodoreader.com/zh/roadmap");
                 } else {
@@ -232,8 +233,7 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
           <li
             className="sort-by-category-list"
             onClick={async () => {
-              let dictHistory =
-                (await window.localforage.getItem("words")) || [];
+              let dictHistory = await DatabaseService.getAllRecords("words");
               if (dictHistory.length > 0) {
                 exportDictionaryHistory(dictHistory, [
                   ...this.props.books,

@@ -4,12 +4,12 @@ import { SettingInfoProps, SettingInfoState } from "./interface";
 import { Trans } from "react-i18next";
 import i18n from "../../../i18n";
 import packageInfo from "../../../../package.json";
-import StorageUtil from "../../../utils/serviceUtils/storageUtil";
-import { changePath } from "../../../utils/syncUtils/common";
+import ConfigService from "../../../utils/storage/configService";
+import { changePath } from "../../../utils/file/common";
 import { isElectron } from "react-device-detect";
 import { dropdownList } from "../../../constants/dropdownList";
-
-import { restore } from "../../../utils/syncUtils/restoreUtil";
+import _ from "underscore";
+import { restoreFromConfigJson } from "../../../utils/file/restore";
 import {
   generalSettingList,
   appearanceSettingList,
@@ -20,9 +20,9 @@ import {
 } from "../../../constants/settingList";
 import { themeList } from "../../../constants/themeList";
 import toast from "react-hot-toast";
-import { openExternalUrl } from "../../../utils/serviceUtils/urlUtil";
-import ManagerUtil from "../../../utils/fileUtils/managerUtil";
-import PluginList from "../../../utils/readUtils/pluginList";
+import { openExternalUrl } from "../../../utils/common";
+import { getStorageLocation, reloadManager } from "../../../utils/common";
+import DatabaseService from "../../../utils/storage/databaseService";
 declare var window: any;
 class SettingDialog extends React.Component<
   SettingInfoProps,
@@ -32,114 +32,94 @@ class SettingDialog extends React.Component<
     super(props);
     this.state = {
       currentTab: "general",
-      pluginList: PluginList.getAllPlugins(),
-      isTouch: StorageUtil.getReaderConfig("isTouch") === "yes",
-      isImportPath: StorageUtil.getReaderConfig("isImportPath") === "yes",
-      isMergeWord: StorageUtil.getReaderConfig("isMergeWord") === "yes",
+      isTouch: ConfigService.getReaderConfig("isTouch") === "yes",
+      isImportPath: ConfigService.getReaderConfig("isImportPath") === "yes",
+      isMergeWord: ConfigService.getReaderConfig("isMergeWord") === "yes",
       isPreventTrigger:
-        StorageUtil.getReaderConfig("isPreventTrigger") === "yes",
+        ConfigService.getReaderConfig("isPreventTrigger") === "yes",
       isAutoFullscreen:
-        StorageUtil.getReaderConfig("isAutoFullscreen") === "yes",
-      isPreventAdd: StorageUtil.getReaderConfig("isPreventAdd") === "yes",
-      isLemmatizeWord: StorageUtil.getReaderConfig("isLemmatizeWord") === "yes",
-      isOpenBook: StorageUtil.getReaderConfig("isOpenBook") === "yes",
-      isExpandContent: StorageUtil.getReaderConfig("isExpandContent") === "yes",
-      isDisablePopup: StorageUtil.getReaderConfig("isDisablePopup") === "yes",
+        ConfigService.getReaderConfig("isAutoFullscreen") === "yes",
+      isPreventAdd: ConfigService.getReaderConfig("isPreventAdd") === "yes",
+      isLemmatizeWord:
+        ConfigService.getReaderConfig("isLemmatizeWord") === "yes",
+      isOpenBook: ConfigService.getReaderConfig("isOpenBook") === "yes",
+      isExpandContent:
+        ConfigService.getReaderConfig("isExpandContent") === "yes",
+      isDisablePopup: ConfigService.getReaderConfig("isDisablePopup") === "yes",
       isDisableTrashBin:
-        StorageUtil.getReaderConfig("isDisableTrashBin") === "yes",
+        ConfigService.getReaderConfig("isDisableTrashBin") === "yes",
       isDeleteShelfBook:
-        StorageUtil.getReaderConfig("isDeleteShelfBook") === "yes",
-      isHideShelfBook: StorageUtil.getReaderConfig("isHideShelfBook") === "yes",
-      isPreventSleep: StorageUtil.getReaderConfig("isPreventSleep") === "yes",
-      isOpenInMain: StorageUtil.getReaderConfig("isOpenInMain") === "yes",
-      isDisableUpdate: StorageUtil.getReaderConfig("isDisableUpdate") === "yes",
-      isPrecacheBook: StorageUtil.getReaderConfig("isPrecacheBook") === "yes",
-      appSkin: StorageUtil.getReaderConfig("appSkin"),
-      isUseBuiltIn: StorageUtil.getReaderConfig("isUseBuiltIn") === "yes",
-      isDisableCrop: StorageUtil.getReaderConfig("isDisableCrop") === "yes",
+        ConfigService.getReaderConfig("isDeleteShelfBook") === "yes",
+      isHideShelfBook:
+        ConfigService.getReaderConfig("isHideShelfBook") === "yes",
+      isPreventSleep: ConfigService.getReaderConfig("isPreventSleep") === "yes",
+      isOpenInMain: ConfigService.getReaderConfig("isOpenInMain") === "yes",
+      isDisableUpdate:
+        ConfigService.getReaderConfig("isDisableUpdate") === "yes",
+      isPrecacheBook: ConfigService.getReaderConfig("isPrecacheBook") === "yes",
+      appSkin: ConfigService.getReaderConfig("appSkin"),
+      isUseBuiltIn: ConfigService.getReaderConfig("isUseBuiltIn") === "yes",
+      isDisableCrop: ConfigService.getReaderConfig("isDisableCrop") === "yes",
       isDisablePDFCover:
-        StorageUtil.getReaderConfig("isDisablePDFCover") === "yes",
-      currentThemeIndex: window._.findLastIndex(themeList, {
-        name: StorageUtil.getReaderConfig("themeColor"),
+        ConfigService.getReaderConfig("isDisablePDFCover") === "yes",
+      currentThemeIndex: _.findLastIndex(themeList, {
+        name: ConfigService.getReaderConfig("themeColor"),
       }),
-      storageLocation: isElectron
-        ? localStorage.getItem("storageLocation")
-          ? localStorage.getItem("storageLocation")
-          : window
-              .require("electron")
-              .ipcRenderer.sendSync("storage-location", "ping")
-        : "",
+      storageLocation: getStorageLocation() || "",
     };
+  }
+  componentDidMount(): void {
+    this.props.handleFetchPlugins();
   }
   handleRest = (bool: boolean) => {
     toast.success(this.props.t("Change successful"));
   };
   changeLanguage = (lng: string) => {
     i18n.changeLanguage(lng);
-    StorageUtil.setReaderConfig("lang", lng);
+    ConfigService.setReaderConfig("lang", lng);
   };
   changeSearch = (searchEngine: string) => {
-    StorageUtil.setReaderConfig("searchEngine", searchEngine);
+    ConfigService.setReaderConfig("searchEngine", searchEngine);
   };
   changeSkin = (skin: string) => {
-    StorageUtil.setReaderConfig("appSkin", skin);
+    ConfigService.setReaderConfig("appSkin", skin);
 
     if (
       skin === "night" ||
-      (StorageUtil.getReaderConfig("appSkin") === "system" &&
-        StorageUtil.getReaderConfig("isOSNight") === "yes")
+      (ConfigService.getReaderConfig("appSkin") === "system" &&
+        ConfigService.getReaderConfig("isOSNight") === "yes")
     ) {
-      StorageUtil.setReaderConfig("backgroundColor", "rgba(44,47,49,1)");
-      StorageUtil.setReaderConfig("textColor", "rgba(255,255,255,1)");
+      ConfigService.setReaderConfig("backgroundColor", "rgba(44,47,49,1)");
+      ConfigService.setReaderConfig("textColor", "rgba(255,255,255,1)");
     } else if (
       skin === "light" ||
-      (StorageUtil.getReaderConfig("appSkin") === "system" &&
-        StorageUtil.getReaderConfig("isOSNight") !== "yes")
+      (ConfigService.getReaderConfig("appSkin") === "system" &&
+        ConfigService.getReaderConfig("isOSNight") !== "yes")
     ) {
-      StorageUtil.setReaderConfig("backgroundColor", "rgba(255,255,255,1)");
-      StorageUtil.setReaderConfig("textColor", "rgba(0,0,0,1)");
+      ConfigService.setReaderConfig("backgroundColor", "rgba(255,255,255,1)");
+      ConfigService.setReaderConfig("textColor", "rgba(0,0,0,1)");
     }
 
-    ManagerUtil.reloadManager();
+    reloadManager();
   };
   changeFont = (font: string) => {
     let body = document.getElementsByTagName("body")[0];
     body?.setAttribute("style", "font-family:" + font + "!important");
-    StorageUtil.setReaderConfig("systemFont", font);
+    ConfigService.setReaderConfig("systemFont", font);
   };
   handleJump = (url: string) => {
     openExternalUrl(url);
   };
   handleSetting = (stateName: string) => {
     this.setState({ [stateName]: !this.state[stateName] } as any);
-    StorageUtil.setReaderConfig(
+    ConfigService.setReaderConfig(
       stateName,
       this.state[stateName] ? "no" : "yes"
     );
     this.handleRest(this.state[stateName]);
   };
   syncFromLocation = async () => {
-    const fs = window.require("fs");
-    const path = window.require("path");
-    const { zip } = window.require("zip-a-folder");
-    let storageLocation = localStorage.getItem("storageLocation")
-      ? localStorage.getItem("storageLocation")
-      : window
-          .require("electron")
-          .ipcRenderer.sendSync("storage-location", "ping");
-    let sourcePath = path.join(storageLocation, "config");
-    let outPath = path.join(storageLocation, "config.zip");
-    await zip(sourcePath, outPath);
-
-    var data = fs.readFileSync(outPath);
-
-    let blobTemp = new Blob([data], { type: "application/epub+zip" });
-    let fileTemp = new File([blobTemp], "config.zip", {
-      lastModified: new Date().getTime(),
-      type: blobTemp.type,
-    });
-
-    let result = await restore(fileTemp, true);
+    let result = await restoreFromConfigJson();
     if (result) {
       toast.success(this.props.t("Change successful"));
     } else {
@@ -148,40 +128,32 @@ class SettingDialog extends React.Component<
   };
   handleChangeLocation = async () => {
     const { ipcRenderer } = window.require("electron");
-    const path = await ipcRenderer.invoke("change-path");
-    if (!path.filePaths[0]) {
+    const newPath = await ipcRenderer.invoke("select-path");
+    if (!newPath) {
       return;
     }
-    let result = await changePath(
-      localStorage.getItem("storageLocation")
-        ? localStorage.getItem("storageLocation")
-        : ipcRenderer.sendSync("storage-location", "ping"),
-      path.filePaths[0]
-    );
-    if (result === 1) {
-      this.syncFromLocation();
-    } else if (result === 2) {
-      this.props.handleFetchBooks();
-      toast.success(this.props.t("Change successful"));
-    } else {
+    let isSuccess = await changePath(newPath);
+    if (!isSuccess) {
       toast.error(this.props.t("Change failed"));
+      return;
     }
-    localStorage.setItem("storageLocation", path.filePaths[0]);
-    this.setState({ storageLocation: path.filePaths[0] });
+    localStorage.setItem("storageLocation", newPath);
+    this.setState({ storageLocation: newPath });
     document.getElementsByClassName(
       "setting-dialog-location-title"
     )[0].innerHTML =
-      path.filePaths[0] ||
+      newPath ||
       localStorage.getItem("storageLocation") ||
       ipcRenderer.sendSync("storage-location", "ping");
+    toast.success(this.props.t("Change successful"));
   };
   handleChangeTab = (currentTab: string) => {
     this.setState({ currentTab });
   };
   handleTheme = (name: string, index: number) => {
     this.setState({ currentThemeIndex: index });
-    StorageUtil.setReaderConfig("themeColor", name);
-    ManagerUtil.reloadManager();
+    ConfigService.setReaderConfig("themeColor", name);
+    reloadManager();
   };
   handleMergeWord = () => {
     if (this.state.isOpenInMain && !this.state.isMergeWord) {
@@ -192,8 +164,8 @@ class SettingDialog extends React.Component<
     this.handleMoyu();
   };
   handleMoyu = () => {
-    if (StorageUtil.getReaderConfig("isMergeWord") === "yes") {
-      StorageUtil.setReaderConfig("isHideBackground", "yes");
+    if (ConfigService.getReaderConfig("isMergeWord") === "yes") {
+      ConfigService.setReaderConfig("isHideBackground", "yes");
     }
   };
   handleOpenInMain = () => {
@@ -214,11 +186,11 @@ class SettingDialog extends React.Component<
           {packageInfo.version}
           &nbsp;&nbsp;
           <Trans>
-            {StorageUtil.getReaderConfig("appInfo") === "new"
+            {ConfigService.getReaderConfig("appInfo") === "new"
               ? "New version available"
-              : StorageUtil.getReaderConfig("appInfo") === "stable"
+              : ConfigService.getReaderConfig("appInfo") === "stable"
               ? "Latest stable version"
-              : StorageUtil.getReaderConfig("appInfo") === "dev"
+              : ConfigService.getReaderConfig("appInfo") === "dev"
               ? "Developer version"
               : ""}
           </Trans>
@@ -387,7 +359,7 @@ class SettingDialog extends React.Component<
                       className="lang-setting-option"
                       selected={
                         item.value ===
-                        (StorageUtil.getReaderConfig("lang") || "en")
+                        (ConfigService.getReaderConfig("lang") || "en")
                           ? true
                           : false
                       }
@@ -413,7 +385,7 @@ class SettingDialog extends React.Component<
                       className="lang-setting-option"
                       selected={
                         item.value ===
-                        (StorageUtil.getReaderConfig("searchEngine") ||
+                        (ConfigService.getReaderConfig("searchEngine") ||
                           (navigator.language === "zh-CN" ? "baidu" : "google"))
                           ? true
                           : false
@@ -581,7 +553,7 @@ class SettingDialog extends React.Component<
                       className="lang-setting-option"
                       selected={
                         item.value ===
-                        (StorageUtil.getReaderConfig("appSkin") || "system")
+                        (ConfigService.getReaderConfig("appSkin") || "system")
                           ? true
                           : false
                       }
@@ -606,7 +578,7 @@ class SettingDialog extends React.Component<
                       key={item}
                       className="lang-setting-option"
                       selected={
-                        item === StorageUtil.getReaderConfig("systemFont")
+                        item === ConfigService.getReaderConfig("systemFont")
                           ? true
                           : false
                       }
@@ -619,8 +591,8 @@ class SettingDialog extends React.Component<
             </>
           ) : (
             <>
-              {this.state.pluginList.length > 0 ? (
-                this.state.pluginList.map((item, index) => {
+              {this.props.plugins.length > 0 ? (
+                this.props.plugins.map((item, index) => {
                   return (
                     <div className="setting-dialog-new-title">
                       <span>
@@ -634,11 +606,12 @@ class SettingDialog extends React.Component<
 
                       <span
                         className="change-location-button"
-                        onClick={() => {
-                          PluginList.deletePluginById(item.identifier);
-                          this.setState({
-                            pluginList: PluginList.getAllPlugins(),
-                          });
+                        onClick={async () => {
+                          await DatabaseService.deleteRecord(
+                            item.key,
+                            "plugins"
+                          );
+                          this.props.handleFetchPlugins();
                           toast.success(this.props.t("Deletion successful"));
                         }}
                       >

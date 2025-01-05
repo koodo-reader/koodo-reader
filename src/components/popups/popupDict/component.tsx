@@ -1,18 +1,16 @@
 import React from "react";
 import "./popupDict.css";
 import { PopupDictProps, PopupDictState } from "./interface";
-import PluginList from "../../../utils/readUtils/pluginList";
-import Plugin from "../../../models/Plugin";
-import StorageUtil from "../../../utils/serviceUtils/storageUtil";
+import ConfigService from "../../../utils/storage/configService";
 import Parser from "html-react-parser";
 import * as DOMPurify from "dompurify";
 import axios from "axios";
-import RecordLocation from "../../../utils/readUtils/recordLocation";
 import DictHistory from "../../../models/DictHistory";
 import { Trans } from "react-i18next";
-import { openExternalUrl } from "../../../utils/serviceUtils/urlUtil";
-import lemmatize from "wink-lemmatizer";
+import { openExternalUrl } from "../../../utils/common";
 import toast from "react-hot-toast";
+import DatabaseService from "../../../utils/storage/databaseService";
+import { checkPlugin } from "../../../utils/common";
 declare var window: any;
 class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
   constructor(props: PopupDictProps) {
@@ -21,31 +19,28 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
       dictText: this.props.t("Please wait"),
       word: "",
       prototype: "",
-      dictService: StorageUtil.getReaderConfig("dictService"),
-      dictTarget: StorageUtil.getReaderConfig("dictTarget") || "en",
+      dictService: ConfigService.getReaderConfig("dictService"),
+      dictTarget: ConfigService.getReaderConfig("dictTarget") || "en",
       isAddNew: false,
     };
   }
   componentDidMount() {
     this.handleLookUp();
   }
-  handleLookUp() {
+  async handleLookUp() {
     let originalText = this.props.originalText
       .replace(/(\r\n|\n|\r)/gm, "")
       .replace(/-/gm, "");
     this.setState({ word: originalText });
-    let prototype = "";
-    prototype = lemmatize.verb(originalText);
-    prototype = lemmatize.noun(prototype);
-    prototype = lemmatize.adjective(prototype);
-    this.setState({ prototype });
-    if (StorageUtil.getReaderConfig("isLemmatizeWord") === "yes") {
-      originalText = prototype;
+    // let prototype = "";
+    this.setState({ prototype: originalText });
+    if (ConfigService.getReaderConfig("isLemmatizeWord") === "yes") {
+      originalText = originalText;
     }
     if (
       !this.state.dictService ||
-      PluginList.getAllPlugins().findIndex(
-        (item) => item.identifier === this.state.dictService
+      this.props.plugins.findIndex(
+        (item) => item.key === this.state.dictService
       ) === -1
     ) {
       this.setState({ isAddNew: true });
@@ -55,16 +50,21 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
   }
   handleRecordHistory = async (text: string) => {
     let bookKey = this.props.currentBook.key;
-    let bookLocation = RecordLocation.getHtmlLocation(bookKey);
+    let bookLocation = ConfigService.getObjectConfig(
+      bookKey,
+      "recordLocation",
+      {}
+    );
     let chapter = bookLocation.chapterTitle;
     let word = new DictHistory(bookKey, text, chapter);
-    let dictHistoryArr = (await window.localforage.getItem("words")) || [];
-    dictHistoryArr.push(word);
-    window.localforage.setItem("words", dictHistoryArr);
+    await DatabaseService.saveRecord(word, "words");
   };
   handleDict = async (text: string) => {
     try {
-      let plugin = PluginList.getPluginById(this.state.dictService);
+      let plugin = this.props.plugins.find(
+        (item) => item.key === this.state.dictService
+      );
+      if (!plugin) return;
       let dictFunc = plugin.script;
       // eslint-disable-next-line no-eval
       eval(dictFunc);
@@ -107,13 +107,13 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
         isAddNew: false,
       },
       () => {
-        StorageUtil.setReaderConfig("dictService", dictService);
+        ConfigService.setReaderConfig("dictService", dictService);
         this.setState(
           {
             dictTarget: "en",
           },
           () => {
-            StorageUtil.setReaderConfig("dictTarget", "en");
+            ConfigService.setReaderConfig("dictTarget", "en");
             this.handleLookUp();
           }
         );
@@ -136,18 +136,16 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
                 this.handleChangeDictService(event.target.value);
               }}
             >
-              {PluginList.getAllPlugins()
+              {this.props.plugins
                 .filter((item) => item.type === "dictionary")
                 .map((item, index) => {
                   return (
                     <option
-                      value={item.identifier}
-                      key={item.identifier}
+                      value={item.key}
+                      key={item.key}
                       className="add-dialog-shelf-list-option"
                       selected={
-                        this.state.dictService === item.identifier
-                          ? true
-                          : false
+                        this.state.dictService === item.key ? true : false
                       }
                     >
                       {item.displayName}
@@ -174,7 +172,7 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
                     dictTarget: event.target.value || "en",
                   },
                   () => {
-                    StorageUtil.setReaderConfig(
+                    ConfigService.setReaderConfig(
                       "dictTarget",
                       event.target.value
                     );
@@ -183,10 +181,13 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
                 );
               }}
             >
-              {PluginList.getPluginById(this.state.dictService).langList &&
+              {this.props.plugins.find(
+                (item) => item.key === this.state.dictService
+              )?.langList &&
                 (
-                  PluginList.getPluginById(this.state.dictService)
-                    .langList as any[]
+                  this.props.plugins.find(
+                    (item) => item.key === this.state.dictService
+                  )?.langList as any[]
                 ).map((item, index) => {
                   return (
                     <option
@@ -204,7 +205,7 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
             </select>
           </div>
           <div className="dict-word">
-            {StorageUtil.getReaderConfig("isLemmatizeWord") === "yes"
+            {ConfigService.getReaderConfig("isLemmatizeWord") === "yes"
               ? this.state.prototype
               : this.state.word}
           </div>
@@ -232,9 +233,9 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
                   style={{ color: "#2084e8" }}
                   onClick={() => {
                     if (
-                      StorageUtil.getReaderConfig("lang") === "zhCN" ||
-                      StorageUtil.getReaderConfig("lang") === "zhTW" ||
-                      StorageUtil.getReaderConfig("lang") === "zhMO"
+                      ConfigService.getReaderConfig("lang") === "zhCN" ||
+                      ConfigService.getReaderConfig("lang") === "zhTW" ||
+                      ConfigService.getReaderConfig("lang") === "zhMO"
                     ) {
                       openExternalUrl("https://www.koodoreader.com/zh/plugin");
                     } else {
@@ -255,25 +256,35 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
                 <div
                   className="trans-add-confirm"
                   style={{ backgroundColor: "#2084e8" }}
-                  onClick={() => {
+                  onClick={async () => {
                     let value: string = (
                       document.querySelector(
                         "#trans-add-content-box"
                       ) as HTMLTextAreaElement
                     ).value;
                     if (value) {
-                      let plugin: Plugin = JSON.parse(value);
-
-                      let isSuccess = PluginList.addPlugin(plugin);
-                      if (!isSuccess) {
+                      let plugin: any = JSON.parse(value);
+                      plugin.key = plugin.identifier;
+                      if (!(await checkPlugin(plugin))) {
                         toast.error(this.props.t("Plugin verification failed"));
                         return;
                       }
-                      this.setState({ dictService: plugin.identifier });
+                      if (
+                        this.props.plugins.find(
+                          (item) => item.key === plugin.key
+                        )
+                      ) {
+                        await DatabaseService.updateRecord(plugin, "plugins");
+                      } else {
+                        await DatabaseService.saveRecord(plugin, "plugins");
+                      }
+                      this.props.handleFetchPlugins();
                       toast.success(this.props.t("Addition successful"));
-                      this.handleChangeDictService(plugin.identifier);
                     }
-                    this.setState({ isAddNew: false });
+                    this.setState({
+                      isAddNew: false,
+                      dictText: this.props.t("Please select the service"),
+                    });
                   }}
                 >
                   <Trans>Confirm</Trans>

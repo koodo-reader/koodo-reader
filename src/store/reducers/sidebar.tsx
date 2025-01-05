@@ -1,8 +1,8 @@
-import StorageUtil from "../../utils/serviceUtils/storageUtil";
+import ConfigService from "../../utils/storage/configService";
 const initState = {
   mode: "home",
-  shelfIndex: -1,
-  isCollapsed: StorageUtil.getReaderConfig("isCollapsed") === "yes",
+  shelfTitle: "",
+  isCollapsed: ConfigService.getReaderConfig("isCollapsed") === "yes",
 };
 export function sidebar(
   state = initState,
@@ -14,10 +14,10 @@ export function sidebar(
         ...state,
         mode: action.payload,
       };
-    case "HANDLE_SHELF_INDEX":
+    case "HANDLE_SHELF":
       return {
         ...state,
-        shelfIndex: action.payload,
+        shelfTitle: action.payload,
       };
     case "HANDLE_COLLAPSE":
       return {

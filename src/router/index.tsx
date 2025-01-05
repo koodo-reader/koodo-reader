@@ -1,15 +1,14 @@
 import React, { useEffect } from "react";
 import { Route, Switch, HashRouter } from "react-router-dom";
 import Manager from "../pages/manager";
-import HtmlReader from "../pages/htmlReader";
-import PDFReader from "../pages/pdfReader";
+import HtmlReader from "../pages/reader";
 import _Redirect from "../pages/redirect";
 import i18n from "../i18n";
-import StorageUtil from "../utils/serviceUtils/storageUtil";
+import ConfigService from "../utils/storage/configService";
 
 const Router = () => {
   useEffect(() => {
-    const lng = StorageUtil.getReaderConfig("lang");
+    const lng = ConfigService.getReaderConfig("lang");
 
     if (lng) {
       //Compatile with 1.6.0 and older
@@ -23,85 +22,85 @@ const Router = () => {
     } else {
       if (navigator.language === "zh-CN" || navigator.language === "zh-SG") {
         i18n.changeLanguage("zhCN");
-        StorageUtil.setReaderConfig("lang", "zhCN");
+        ConfigService.setReaderConfig("lang", "zhCN");
       } else if (
         navigator.language === "zh-TW" ||
         navigator.language === "zh-HK"
       ) {
         i18n.changeLanguage("zhTW");
-        StorageUtil.setReaderConfig("lang", "zhTW");
+        ConfigService.setReaderConfig("lang", "zhTW");
       } else if (navigator.language === "zh-MO") {
         i18n.changeLanguage("zhMO");
-        StorageUtil.setReaderConfig("lang", "zhMO");
+        ConfigService.setReaderConfig("lang", "zhMO");
       } else if (navigator.language.startsWith("ro")) {
         i18n.changeLanguage("ro");
-        StorageUtil.setReaderConfig("lang", "ro");
+        ConfigService.setReaderConfig("lang", "ro");
       } else if (navigator.language.startsWith("ru")) {
         i18n.changeLanguage("ru");
-        StorageUtil.setReaderConfig("lang", "ru");
+        ConfigService.setReaderConfig("lang", "ru");
       } else if (navigator.language.startsWith("ja")) {
         i18n.changeLanguage("ja");
-        StorageUtil.setReaderConfig("lang", "ja");
+        ConfigService.setReaderConfig("lang", "ja");
       } else if (navigator.language.startsWith("bo")) {
         i18n.changeLanguage("bo");
-        StorageUtil.setReaderConfig("lang", "bo");
+        ConfigService.setReaderConfig("lang", "bo");
       } else if (navigator.language.startsWith("hy")) {
         i18n.changeLanguage("hy");
-        StorageUtil.setReaderConfig("lang", "hy");
+        ConfigService.setReaderConfig("lang", "hy");
       } else if (navigator.language.startsWith("hu")) {
         i18n.changeLanguage("hu");
-        StorageUtil.setReaderConfig("lang", "hu");
+        ConfigService.setReaderConfig("lang", "hu");
       } else if (navigator.language.startsWith("hi")) {
         i18n.changeLanguage("hi");
-        StorageUtil.setReaderConfig("lang", "hi");
+        ConfigService.setReaderConfig("lang", "hi");
       } else if (navigator.language.startsWith("id")) {
         i18n.changeLanguage("id");
-        StorageUtil.setReaderConfig("lang", "id");
+        ConfigService.setReaderConfig("lang", "id");
       } else if (navigator.language.startsWith("bg")) {
         i18n.changeLanguage("bg");
-        StorageUtil.setReaderConfig("lang", "bg");
+        ConfigService.setReaderConfig("lang", "bg");
       } else if (navigator.language.startsWith("it")) {
         i18n.changeLanguage("it");
-        StorageUtil.setReaderConfig("lang", "it");
+        ConfigService.setReaderConfig("lang", "it");
       } else if (navigator.language.startsWith("nl")) {
         i18n.changeLanguage("nl");
-        StorageUtil.setReaderConfig("lang", "nl");
+        ConfigService.setReaderConfig("lang", "nl");
       } else if (navigator.language.startsWith("bn")) {
         i18n.changeLanguage("bn");
-        StorageUtil.setReaderConfig("lang", "bn");
+        ConfigService.setReaderConfig("lang", "bn");
       } else if (navigator.language.startsWith("th")) {
         i18n.changeLanguage("th");
-        StorageUtil.setReaderConfig("lang", "th");
+        ConfigService.setReaderConfig("lang", "th");
       } else if (navigator.language.startsWith("tr")) {
         i18n.changeLanguage("tr");
-        StorageUtil.setReaderConfig("lang", "tr");
+        ConfigService.setReaderConfig("lang", "tr");
       } else if (navigator.language.startsWith("ar")) {
         i18n.changeLanguage("ar");
-        StorageUtil.setReaderConfig("lang", "ar");
+        ConfigService.setReaderConfig("lang", "ar");
       } else if (navigator.language.startsWith("fr")) {
         i18n.changeLanguage("fr");
-        StorageUtil.setReaderConfig("lang", "fr");
+        ConfigService.setReaderConfig("lang", "fr");
       } else if (navigator.language.startsWith("es")) {
         i18n.changeLanguage("es");
-        StorageUtil.setReaderConfig("lang", "es");
+        ConfigService.setReaderConfig("lang", "es");
       } else if (navigator.language.startsWith("pt")) {
         i18n.changeLanguage("ptBR");
-        StorageUtil.setReaderConfig("lang", "ptBR");
+        ConfigService.setReaderConfig("lang", "ptBR");
       } else if (navigator.language.startsWith("fa")) {
         i18n.changeLanguage("fa");
-        StorageUtil.setReaderConfig("lang", "fa");
+        ConfigService.setReaderConfig("lang", "fa");
       } else if (navigator.language.startsWith("cs")) {
         i18n.changeLanguage("cs");
-        StorageUtil.setReaderConfig("lang", "cs");
+        ConfigService.setReaderConfig("lang", "cs");
       } else if (navigator.language.startsWith("de")) {
         i18n.changeLanguage("de");
-        StorageUtil.setReaderConfig("lang", "de");
+        ConfigService.setReaderConfig("lang", "de");
       } else if (navigator.language.startsWith("pl")) {
         i18n.changeLanguage("pl");
-        StorageUtil.setReaderConfig("lang", "pl");
+        ConfigService.setReaderConfig("lang", "pl");
       } else {
         i18n.changeLanguage("en");
-        StorageUtil.setReaderConfig("lang", "en");
+        ConfigService.setReaderConfig("lang", "en");
       }
     }
   }, []);
@@ -127,7 +126,7 @@ const Router = () => {
         <Route component={HtmlReader} path="/xhtml" />
         <Route component={HtmlReader} path="/mhtml" />
         <Route component={HtmlReader} path="/href" />
-        <Route component={PDFReader} path="/pdf" />
+        <Route component={HtmlReader} path="/pdf" />
         <Route component={_Redirect} path="/" />
       </Switch>
     </HashRouter>

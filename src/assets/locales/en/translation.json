@@ -405,6 +405,10 @@
   "Plugin verification failed": "Plugin verification failed",
   "Add new plugin": "Add new plugin",
   "Pot is running": "Pot is running",
+  "Please select the service": "Please select the service",
+  "Upgrade failed": "Upgrade failed",
+  "Restore failed": "Restore failed",
+  "Backup failed": "Backup failed",
   "This feature is only available in the developer version": "This feature is only available in the developer version",
   "Subject can't be empty": "Subject can't be empty"
 }

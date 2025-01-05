@@ -2,10 +2,7 @@ import React from "react";
 import "./popupMenu.css";
 import PopupOption from "../popupOption";
 import { PopupMenuProps, PopupMenuStates } from "./interface";
-import {
-  getIframeDoc,
-  getPDFIframeDoc,
-} from "../../../utils/serviceUtils/docUtil";
+import { getIframeDoc } from "../../../utils/reader/docUtil";
 
 class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
   highlighter: any;
@@ -47,38 +44,12 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     let rect = this.state.rect;
     if (!rect) return;
     this.setState({ isRightEdge: false }, () => {
-      let { posX, posY } =
-        this.props.currentBook.format !== "PDF"
-          ? this.getHtmlPosition(rect)
-          : this.getPdfPosition(rect);
+      let { posX, posY } = this.getHtmlPosition(rect);
       this.props.handleOpenMenu(true);
       let popupMenu = document.querySelector(".popup-menu-container");
       popupMenu?.setAttribute("style", `left:${posX}px;top:${posY}px`);
     });
   };
-  getPdfPosition(rect: any) {
-    let posY = rect.bottom;
-    let posX = rect.left + rect.width / 2;
-    document
-      .querySelector(".ebook-viewer")
-      ?.setAttribute("style", "height:100%; overflow: hidden;");
-
-    let doc: any = getPDFIframeDoc();
-    if (
-      doc.document.body.scrollHeight - rect.top - rect.height < 188 &&
-      rect.top < 188
-    ) {
-      this.props.handleChangeDirection(true);
-      posY = rect.top + 16;
-    } else if (rect.bottom < doc.document.body.scrollHeight - 188) {
-      this.props.handleChangeDirection(true);
-      posY = posY + 16;
-    } else {
-      posY = posY - rect.height - 188;
-    }
-    posX = posX - 80;
-    return { posX, posY } as any;
-  }
   getHtmlPosition(rect: any) {
     let posY = rect.bottom - this.props.rendition.getPageSize().scrollTop;
     let posX = rect.left + rect.width / 2;
@@ -88,7 +59,6 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
         rect.width -
         this.props.rendition.getPageSize().sectionWidth / 2;
     }
-    console.log(posX, "posX");
     if (this.props.rendition.getPageSize().height - rect.height < 188) {
       this.props.handleChangeDirection(true);
       posY = rect.top + 16 + this.props.rendition.getPageSize().top;

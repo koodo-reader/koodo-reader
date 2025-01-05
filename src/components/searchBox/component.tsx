@@ -1,8 +1,8 @@
 import React from "react";
 import "./searchBox.css";
-import SearchUtil from "../../utils/serviceUtils/searchUtil";
+import SearchUtil from "../../utils/reader/searchUtil";
 import { SearchBoxProps } from "./interface";
-import StorageUtil from "../../utils/serviceUtils/storageUtil";
+import ConfigService from "../../utils/storage/configService";
 
 class SearchBox extends React.Component<SearchBoxProps> {
   componentDidMount() {
@@ -111,17 +111,17 @@ class SearchBox extends React.Component<SearchBoxProps> {
               : {}
           }
           onCompositionStart={() => {
-            if (StorageUtil.getReaderConfig("isNavLocked") === "yes") {
+            if (ConfigService.getReaderConfig("isNavLocked") === "yes") {
               return;
             } else {
-              StorageUtil.setReaderConfig("isTempLocked", "yes");
-              StorageUtil.setReaderConfig("isNavLocked", "yes");
+              ConfigService.setReaderConfig("isTempLocked", "yes");
+              ConfigService.setReaderConfig("isNavLocked", "yes");
             }
           }}
           onCompositionEnd={() => {
-            if (StorageUtil.getReaderConfig("isTempLocked") === "yes") {
-              StorageUtil.setReaderConfig("isNavLocked", "");
-              StorageUtil.setReaderConfig("isTempLocked", "");
+            if (ConfigService.getReaderConfig("isTempLocked") === "yes") {
+              ConfigService.setReaderConfig("isNavLocked", "");
+              ConfigService.setReaderConfig("isTempLocked", "");
             }
           }}
         />
