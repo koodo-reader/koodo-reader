@@ -199,3 +199,46 @@ export const openExternalUrl = (url: string) => {
       : window.require("electron").shell.openExternal(url)
     : window.open(url);
 };
+export const getPageWidth = (
+  readerMode: string,
+  scale: string,
+  margin: number
+) => {
+  const findValidMultiple = (limit: number) => {
+    let multiple = limit - (limit % 12);
+
+    while (multiple >= 0) {
+      if (((multiple - multiple / 12) / 2) % 2 === 0) {
+        return multiple;
+      }
+      multiple -= 12;
+    }
+
+    return limit;
+  };
+  let pageOffset = "";
+  let pageWidth = "";
+  if (document.body.clientWidth < 570) {
+    let width = findValidMultiple(document.body.clientWidth - 72);
+    pageOffset = `calc(50vw - ${width / 2}px)`;
+    pageWidth = `${width}px`;
+  } else if (readerMode === "scroll") {
+    let width = findValidMultiple(276 * parseFloat(scale) * 2);
+
+    pageOffset = `calc(50vw - ${width / 2}px)`;
+    pageWidth = `${width}px`;
+  } else if (readerMode === "single") {
+    let width = findValidMultiple(276 * parseFloat(scale) * 2 - 36);
+
+    pageOffset = `calc(50vw - ${width / 2}px)`;
+    pageWidth = `${width}px`;
+  } else if (readerMode === "double") {
+    let width = findValidMultiple(document.body.clientWidth - 2 * margin - 80);
+    pageOffset = `calc(50vw - ${width / 2}px)`;
+    pageWidth = `${width}px`;
+  }
+  return {
+    pageOffset,
+    pageWidth,
+  };
+};
