@@ -10,6 +10,8 @@ import Lottie from "react-lottie";
 import animationSuccess from "../../assets/lotties/success.json";
 import toast, { Toaster } from "react-hot-toast";
 import ConfigService from "../../utils/storage/configService";
+import * as Kookit from "../../assets/lib/kookit.min.js";
+declare var window: any;
 const successOptions = {
   loop: false,
   autoplay: true,
@@ -44,6 +46,9 @@ class Redirect extends React.Component<RedirectProps, RedirectState> {
     }
     if (url.indexOf("error") > -1) {
       this.setState({ isError: true });
+    }
+    if (url.indexOf("import") > -1) {
+      window.Kookit = Kookit;
     }
     if (url.indexOf("code") > -1) {
       let params: any = getParamsFromUrl();
