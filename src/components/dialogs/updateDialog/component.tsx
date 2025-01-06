@@ -10,7 +10,7 @@ import ConfigService from "../../../utils/storage/configService";
 import { openExternalUrl } from "../../../utils/common";
 import { isElectron } from "react-device-detect";
 import { sleep } from "../../../utils/common";
-import { CommonRequest } from "../../../assets/lib/kookit-extra-browser.min";
+import { checkStableUpdate } from "../../../utils/request/common";
 const newOptions = {
   loop: false,
   autoplay: true,
@@ -38,7 +38,7 @@ class UpdateInfo extends React.Component<UpdateInfoProps, UpdateInfoState> {
   }
   componentDidMount() {
     if (!this.props.currentBook.key) {
-      CommonRequest.checkStableUpdate().then(async (res) => {
+      checkStableUpdate().then(async (res) => {
         const newVersion = res.version;
         if (!isElectron) {
           return;
