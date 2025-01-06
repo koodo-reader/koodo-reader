@@ -67,6 +67,12 @@ scoop bucket add extras
 scoop install extras/koodo-reader
 ```
 
+- Install with Homebrew:
+
+```shell
+brew install --cask koodo-reader
+```
+
 - Install with Docker:
 
 ```bash

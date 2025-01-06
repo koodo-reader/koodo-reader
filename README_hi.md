@@ -66,6 +66,12 @@ scoop bucket add extras
 scoop install extras/koodo-reader
 ```
 
+- होमब्रू के साथ इंस्टॉल करें:
+
+```shell
+brew install --cask koodo-reader
+```
+
 - डॉकर के साथ इंस्टॉल करें:
 
 ```bash
