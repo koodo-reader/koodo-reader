@@ -13,8 +13,8 @@ import packageInfo from "../../../../package.json";
 import _ from "underscore";
 import toast from "react-hot-toast";
 import { isElectron } from "react-device-detect";
-import { CommonRequest } from "../../../assets/lib/kookit-extra-browser.min";
 import { SyncUtil } from "../../../assets/lib/kookit-extra-browser.min";
+import { checkStableUpdate } from "../../../utils/request/common";
 
 const successOptions = {
   loop: false,
@@ -38,7 +38,7 @@ class BackupDialog extends React.Component<
     };
   }
   async componentDidMount() {
-    let stableLog = await CommonRequest.checkStableUpdate();
+    let stableLog = await checkStableUpdate();
     if (packageInfo.version.localeCompare(stableLog.version) > 0) {
       this.setState({ isDeveloperVer: true });
     }
