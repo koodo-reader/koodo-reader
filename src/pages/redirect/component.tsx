@@ -65,6 +65,25 @@ class Redirect extends React.Component<RedirectProps, RedirectState> {
         }
       }
     }
+    if (url.indexOf("access_token") > -1) {
+      let params: any = getParamsFromUrl();
+      this.setState({ token: params.access_token });
+      this.setState({ isAuthed: true });
+      let state = params.state;
+      if (state) {
+        const encodedState = state.split("|")[1];
+        const customParams = JSON.parse(decodeURIComponent(encodedState));
+        if (customParams && customParams.deeplink) {
+          window.location.replace(
+            customParams.deeplink +
+              "?token=" +
+              params.access_token +
+              "&state=" +
+              state
+          );
+        }
+      }
+    }
   }
 
   render() {
