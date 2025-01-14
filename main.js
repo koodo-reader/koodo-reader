@@ -176,7 +176,7 @@ const createMainWin = () => {
     const { SyncUtil } = await import('./src/assets/lib/kookit-extra.min.mjs');
     let syncUtil = new SyncUtil(service, config, dirPath);
     console.log(SyncUtil, syncUtil);
-    let result = await syncUtil.uploadFile(config.fileName, "backup");
+    let result = await syncUtil.uploadFile(config.fileName, config.fileName, "backup");
     return result;
   });
   ipcMain.handle("cloud-download", async (event, config) => {
@@ -184,7 +184,7 @@ const createMainWin = () => {
     let { service } = config;
     const { SyncUtil } = await import('./src/assets/lib/kookit-extra.min.mjs');
     let syncUtil = new SyncUtil(service, config, dirPath);
-    let result = await syncUtil.downloadFile(config.fileName, "backup");
+    let result = await syncUtil.downloadFile(config.fileName, config.fileName, "backup");
     return result;
   });
   ipcMain.handle("clear-tts", async (event, config) => {
