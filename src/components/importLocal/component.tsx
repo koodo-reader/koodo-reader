@@ -4,7 +4,7 @@ import BookModel from "../../models/Book";
 
 import { Trans } from "react-i18next";
 import Dropzone from "react-dropzone";
-
+import * as Kookit from "../../assets/lib/kookit.min";
 import { ImportLocalProps, ImportLocalState } from "./interface";
 import { isElectron } from "react-device-detect";
 import { withRouter } from "react-router-dom";
@@ -14,6 +14,7 @@ import ConfigService from "../../utils/storage/configService";
 import CoverUtil from "../../utils/file/coverUtil";
 import { calculateFileMD5, fetchFileFromPath } from "../../utils/common";
 import DatabaseService from "../../utils/storage/databaseService";
+import { BookHelper } from "../../assets/lib/kookit-extra-browser.min";
 declare var window: any;
 let clickFilePath = "";
 
@@ -163,7 +164,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
       .reverse()[0]
       .toLocaleLowerCase();
     let bookName = file.name.substr(0, file.name.length - extension.length - 1);
-    let result: BookModel | string;
+    let result: BookModel;
     return new Promise<void>((resolve, reject) => {
       let isRepeat = false;
       if (this.props.books.length > 0) {
@@ -197,21 +198,43 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
           reader.onload = async (event) => {
             const file_content = (event.target as any).result;
             try {
-              result = await BookUtil.generateBook(
+              let rendition = BookHelper.getRendtion(
+                file_content,
+                extension.toUpperCase(),
+                "",
+                "",
+                ConfigService.getReaderConfig("isSliding") === "yes"
+                  ? "sliding"
+                  : "",
+                Kookit
+              );
+              result = await BookHelper.generateBook(
                 bookName,
                 extension,
                 md5,
                 file.size,
                 file.path || clickFilePath,
-                file_content
+                file_content,
+                rendition
               );
+              if (
+                ConfigService.getReaderConfig("isPrecacheBook") === "yes" &&
+                extension !== "pdf"
+              ) {
+                let cache = await rendition.preCache(file_content);
+                if (cache !== "err") {
+                  BookUtil.addBook("cache-" + result.key, "zip", cache);
+                }
+              }
             } catch (error) {
               console.log(error);
               throw error;
             }
 
             clickFilePath = "";
-            if (result === "get_metadata_error") {
+
+            // get metadata failed
+            if (!result || !result.key) {
               toast.error(this.props.t("Import failed"));
               return resolve();
             }

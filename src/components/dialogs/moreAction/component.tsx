@@ -12,7 +12,8 @@ import {
 } from "../../../utils/file/export";
 import ConfigService from "../../../utils/storage/configService";
 import DatabaseService from "../../../utils/storage/databaseService";
-declare var window: any;
+import { BookHelper } from "../../../assets/lib/kookit-extra-browser.min";
+import * as Kookit from "../../../assets/lib/kookit.min";
 class ActionDialog extends React.Component<MoreActionProps, MoreActionState> {
   constructor(props: MoreActionProps) {
     super(props);
@@ -153,14 +154,15 @@ class ActionDialog extends React.Component<MoreActionProps, MoreActionState> {
                 true,
                 this.props.currentBook.path
               ).then(async (result: any) => {
-                let rendition = BookUtil.getRendtion(
+                let rendition = BookHelper.getRendtion(
                   result,
                   this.props.currentBook.format,
                   "",
                   this.props.currentBook.charset,
                   ConfigService.getReaderConfig("isSliding") === "yes"
                     ? "sliding"
-                    : ""
+                    : "",
+                  Kookit
                 );
                 let cache = await rendition.preCache(result);
                 if (cache !== "err") {
