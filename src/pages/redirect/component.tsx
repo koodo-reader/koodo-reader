@@ -11,6 +11,7 @@ import animationSuccess from "../../assets/lotties/success.json";
 import toast, { Toaster } from "react-hot-toast";
 import ConfigService from "../../utils/storage/configService";
 import * as Kookit from "../../assets/lib/kookit.min.js";
+import { BookHelper } from "../../assets/lib/kookit-extra-browser.min";
 declare var window: any;
 const successOptions = {
   loop: false,
@@ -49,6 +50,7 @@ class Redirect extends React.Component<RedirectProps, RedirectState> {
     }
     if (url.indexOf("import") > -1) {
       window.Kookit = Kookit;
+      window.BookHelper = BookHelper;
     }
     if (url.indexOf("code") > -1) {
       let params: any = getParamsFromUrl();

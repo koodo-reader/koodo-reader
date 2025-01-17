@@ -14,7 +14,8 @@ import {
 import BookUtil from "../../utils/file/bookUtil";
 import ConfigService from "../../utils/storage/configService";
 import DatabaseService from "../../utils/storage/databaseService";
-
+import { BookHelper } from "../../assets/lib/kookit-extra-browser.min";
+import * as Kookit from "../../assets/lib/kookit.min";
 class SelectBook extends React.Component<BookListProps, BookListState> {
   constructor(props: BookListProps) {
     super(props);
@@ -270,14 +271,15 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
                           true,
                           selectedBook.path
                         );
-                        let rendition = BookUtil.getRendtion(
+                        let rendition = BookHelper.getRendtion(
                           result,
                           selectedBook.format,
                           "",
                           selectedBook.charset,
                           ConfigService.getReaderConfig("isSliding") === "yes"
                             ? "sliding"
-                            : ""
+                            : "",
+                          Kookit
                         );
                         let cache = await rendition.preCache(result);
                         if (cache !== "err") {

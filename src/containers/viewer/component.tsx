@@ -18,6 +18,8 @@ import Note from "../../models/Note";
 import PageWidget from "../pageWidget";
 import { getPageWidth, scrollContents } from "../../utils/common";
 import _ from "underscore";
+import { BookHelper } from "../../assets/lib/kookit-extra-browser.min";
+import * as Kookit from "../../assets/lib/kookit.min";
 declare var window: any;
 let lock = false; //prevent from clicking too fasts
 
@@ -127,12 +129,13 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         toast.error(this.props.t("Book not exsit"));
         return;
       }
-      let rendition = BookUtil.getRendtion(
+      let rendition = BookHelper.getRendtion(
         result,
         isCacheExsit ? "CACHE" : format,
         this.state.readerMode,
         this.props.currentBook.charset,
-        ConfigService.getReaderConfig("isSliding") === "yes" ? "sliding" : ""
+        ConfigService.getReaderConfig("isSliding") === "yes" ? "sliding" : "",
+        Kookit
       );
 
       await rendition.renderTo(document.getElementById("page-area"));
