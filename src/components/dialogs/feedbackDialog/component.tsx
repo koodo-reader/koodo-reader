@@ -171,35 +171,44 @@ class FeedbackDialog extends Component<
                   : { marginTop: "30px" }
               }
             />
-            <input
-              type="file"
-              multiple={true}
-              id="feedback-file-box"
-              name="file"
-              className="feedback-file-box"
-              onChange={(event) => {
-                if (!event || !event.target || !event.target.files) {
-                  toast.error("Empty files");
-                }
-                let files: any = event.target.files;
-                let zip = new JSZip();
-                for (let index = 0; index < files.length; index++) {
-                  const file = files[index];
-                  var fileSize = file.size;
-                  var fileSizeMB = fileSize / (1024 * 1024);
-                  if (fileSizeMB > 20) {
-                    toast.error(this.props.t("File size is larger than 20MB"));
-                    event.target.value = "";
-                    break;
-                  } else {
-                    zip.file(file.name, file);
+            <div className="feedback-dialog-file-container">
+              <div className="feedback-dialog-file-text">
+                <Trans>Upload attachments</Trans>
+              </div>
+              <div></div>
+              <input
+                type="file"
+                multiple={true}
+                id="feedback-file-box"
+                name="file"
+                className="feedback-file-box"
+                onChange={(event) => {
+                  if (!event || !event.target || !event.target.files) {
+                    toast.error("Empty files");
                   }
-                }
-                zip.generateAsync({ type: "blob" }).then((content) => {
-                  this.setState({ fileContent: content });
-                });
-              }}
-            />
+                  let files: any = event.target.files;
+                  let zip = new JSZip();
+                  for (let index = 0; index < files.length; index++) {
+                    const file = files[index];
+                    var fileSize = file.size;
+                    var fileSizeMB = fileSize / (1024 * 1024);
+                    if (fileSizeMB > 20) {
+                      toast.error(
+                        this.props.t("File size is larger than 20MB")
+                      );
+                      event.target.value = "";
+                      break;
+                    } else {
+                      zip.file(file.name, file);
+                    }
+                  }
+                  zip.generateAsync({ type: "blob" }).then((content) => {
+                    this.setState({ fileContent: content });
+                  });
+                }}
+              />
+            </div>
+
             <textarea
               name="content"
               placeholder={this.props.t("Detailed description of the problem")}

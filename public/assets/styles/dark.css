@@ -8,14 +8,12 @@ body {
 .booklist-shelf-list,
 .lang-setting-dropdown,
 .delete-tag-container,
-.add-dialog-shelf-list-option,
 .setting-subtitle,
 .book-subcontent-name {
   color: rgba(235, 235, 235, 1);
 }
 
 .add-dialog-shelf-list-box,
-.add-dialog-shelf-list-option,
 .add-dialog-new-shelf-box,
 .add-dialog-cancel,
 .delete-dialog-cancel,
@@ -67,6 +65,7 @@ body {
 .edit-dialog-confirm,
 .change-location-button,
 .token-dialog-confirm,
+.add-dialog-shelf-list-option,
 .voice-add-confirm,
 .new-version-open,
 .update-dialog-container-button,

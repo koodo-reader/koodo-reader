@@ -368,7 +368,7 @@
   "Get rid of window frame, make reader hide into Word or any text editor, and can't be detected. You need to set up the reader's position, size and style first.": "Get rid of window frame, make reader hide into Word or any text editor, and can't be detected. You need to set up the reader's position, size and style first.",
   "The imported books will not be copied to library, only linked to the original book path": "The imported books will not be copied to the library, only linked to the original book path",
   "Reader menu will not be triggered by hovering but clicking on the area": "Reader menu will not be triggered by hovering but clicking on the area",
-  "The book that you read from last time will be open automatically when launching": "The book you read last will open automatically at launch",
+  "The book that you read from last time will be open automatically when launching": "The last book you read will open automatically at launch",
   "All the folded content will be expanded in the navigation panel": "All the folded content will be expanded in the navigation panel",
   "Reader window will be maximized to fit the screen when opening a book": "Reader window will be maximized to fit the screen when opening a book",
   "Book won't be opened in a separate window but directly opened in the main window": "Book won't be opened in a separate window but directly opened in the main window",

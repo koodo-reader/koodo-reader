@@ -68,6 +68,15 @@ const Router = () => {
       } else if (navigator.language.startsWith("bn")) {
         i18n.changeLanguage("bn");
         ConfigService.setReaderConfig("lang", "bn");
+      } else if (navigator.language.startsWith("tl")) {
+        i18n.changeLanguage("tl");
+        ConfigService.setReaderConfig("lang", "tl");
+      } else if (navigator.language.startsWith("sv")) {
+        i18n.changeLanguage("sv");
+        ConfigService.setReaderConfig("lang", "sv");
+      } else if (navigator.language.startsWith("ga")) {
+        i18n.changeLanguage("ga");
+        ConfigService.setReaderConfig("lang", "ga");
       } else if (navigator.language.startsWith("th")) {
         i18n.changeLanguage("th");
         ConfigService.setReaderConfig("lang", "th");
