@@ -29,6 +29,7 @@ class DatabaseService {
     }
   }
   static async saveAllRecords(records: any[], dbName: string) {
+    console.log(dbName, "dbName");
     if (isElectron) {
       for (let record of records) {
         await window
@@ -147,7 +148,7 @@ class DatabaseService {
       let records = await window
         .require("electron")
         .ipcRenderer.invoke("database-command", {
-          statement: "getStatement",
+          statement: "getByBookKeyStatement",
           statementType: "string",
           executeType: "all",
           dbName: dbName,

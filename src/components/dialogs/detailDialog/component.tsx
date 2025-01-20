@@ -63,7 +63,7 @@ class DetailDialog extends React.Component<
             {this.props.currentBook.name}
           </p>
           <p className="detail-dialog-book-author">
-            <Trans>{this.props.currentBook.author}</Trans>
+            <Trans>{this.props.currentBook.author || "Unknown author"}</Trans>
           </p>
 
           <div className="detail-sub-info">

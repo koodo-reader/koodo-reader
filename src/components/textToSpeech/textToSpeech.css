@@ -6,7 +6,7 @@
   line-height: 14px;
   padding: 5px;
   margin-top: 10px;
-  margin-bottom: 10px;
+  margin-bottom: 0px;
   box-sizing: border-box;
   opacity: 1;
   border-radius: 5px;
@@ -42,4 +42,5 @@
 .voice-add-button-container {
   display: flex;
   justify-content: flex-start;
+  margin-bottom: 10px;
 }

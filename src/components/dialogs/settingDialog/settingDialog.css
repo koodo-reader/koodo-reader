@@ -141,14 +141,14 @@
 }
 .change-location-button {
   display: inline-block;
-  min-width: 60px;
+  min-width: 50px;
   padding-left: 10px;
   padding-right: 10px;
   height: 22px;
   opacity: 1;
   border-radius: 11px;
   position: relative;
-  top: 0px;
+  top: 2px;
   left: 2px;
   cursor: pointer;
   font-size: 13px;
@@ -177,4 +177,10 @@
   margin-left: 30px;
   margin-right: 25px;
   line-height: 15px;
+}
+.setting-dialog-new-plugin {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  cursor: pointer;
 }

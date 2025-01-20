@@ -209,6 +209,12 @@ const createMainWin = () => {
     });
     return path.filePaths[0];
   });
+  ipcMain.handle("reset-reader-position", async (event) => {
+    store.delete("windowX");
+    store.delete("windowY");
+    return "success"
+
+  });
 
   ipcMain.handle("select-file", async (event, config) => {
     const result = await dialog.showOpenDialog({
@@ -239,8 +245,10 @@ const createMainWin = () => {
     let result;
     if (data) {
       if (statement.startsWith("save") || statement.startsWith("update")) {
+        console.log(SqlStatement.jsonToSqlite[dbName])
         data = SqlStatement.jsonToSqlite[dbName](data)
       }
+      console.log(data)
       result = row[executeType](data);
     } else {
       result = row[executeType]();

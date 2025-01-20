@@ -65,7 +65,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       let res1 = await upgradeStorage();
       let res2 = upgradeConfig();
       if (!res1 || !res2) {
-        toast.success("Upgrade failed");
+        toast.error("Upgrade failed");
       }
       //Detect data modification
       let lastSyncTime = getLastSyncTimeFromConfigJson();
