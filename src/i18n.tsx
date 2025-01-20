@@ -18,6 +18,9 @@ import translationHI from "./assets/locales/hi/translation.json";
 import translationBG from "./assets/locales/bg/translation.json";
 import translationIT from "./assets/locales/it/translation.json";
 import translationBN from "./assets/locales/bn/translation.json";
+import translationTL from "./assets/locales/tl/translation.json";
+import translationSV from "./assets/locales/sv/translation.json";
+import translationGA from "./assets/locales/ga/translation.json";
 import translationNL from "./assets/locales/nl/translation.json";
 import translationKO from "./assets/locales/ko/translation.json";
 import translationDE from "./assets/locales/de/translation.json";
@@ -85,6 +88,15 @@ const resources = {
   },
   bn: {
     translation: translationBN,
+  },
+  tl: {
+    translation: translationTL,
+  },
+  sv: {
+    translation: translationSV,
+  },
+  ga: {
+    translation: translationGA,
   },
   ko: {
     translation: translationKO,

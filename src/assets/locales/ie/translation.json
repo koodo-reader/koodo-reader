@@ -353,7 +353,7 @@
   "The imported books will not be copied to library, only linked to the original book path": "The imported books will not be copied to the library, only linked to the original book path",
   "Reader menu will not be triggered by hovering but clicking on the area": "Reader menu will not be triggered by hovering but clicking on the area",
   "Gesture and UI optimization for touch screen": "Gesture and UI optimization for touch screen",
-  "The book that you read from last time will be open automatically when launching": "The book you read last will open automatically at launch",
+  "The book that you read from last time will be open automatically when launching": "The last book you read will open automatically at launch",
   "All the folded content will be expanded in the navigation panel": "All the folded content will be expanded in the navigation panel",
   "Reader window will be maximized to fit the screen when opening a book": "Reader window will be maximized to fit the screen when opening a book",
   "Open books in the main window": "Open books in the main window",

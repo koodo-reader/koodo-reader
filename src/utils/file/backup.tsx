@@ -8,6 +8,7 @@ import DatabaseService from "../storage/databaseService";
 import { saveAs } from "file-saver";
 import JSZip from "jszip";
 declare var window: any;
+export const databaseList = ["books", "notes", "bookmarks", "words", "plugins"];
 export const backup = async (service: string): Promise<Boolean> => {
   let fileName = "data.zip";
   if (service === "local") {
@@ -79,6 +80,7 @@ export const backupFromPath = async (targetPath: string, fileName: string) => {
     fs.mkdirSync(path.join(targetPath));
   }
   backupToConfigJson();
+
   if (fs.existsSync(path.join(dataPath, "book"))) {
     zip.addLocalFolder(path.join(dataPath, "book"), "book");
   }
@@ -88,21 +90,19 @@ export const backupFromPath = async (targetPath: string, fileName: string) => {
   if (fs.existsSync(path.join(dataPath, "config", "config.json"))) {
     zip.addLocalFile(path.join(dataPath, "config", "config.json"), "config");
   }
-  if (fs.existsSync(path.join(dataPath, "config", "notes.db"))) {
-    zip.addLocalFile(path.join(dataPath, "config", "notes.db"), "config");
+  for (let i = 0; i < databaseList.length; i++) {
+    await window.require("electron").ipcRenderer.invoke("close-database", {
+      dbName: databaseList[i],
+      storagePath: getStorageLocation(),
+    });
+    if (fs.existsSync(path.join(dataPath, "config", databaseList[i] + ".db"))) {
+      zip.addLocalFile(
+        path.join(dataPath, "config", databaseList[i] + ".db"),
+        "config"
+      );
+    }
   }
-  if (fs.existsSync(path.join(dataPath, "config", "books.db"))) {
-    zip.addLocalFile(path.join(dataPath, "config", "books.db"), "config");
-  }
-  if (fs.existsSync(path.join(dataPath, "config", "bookmarks.db"))) {
-    zip.addLocalFile(path.join(dataPath, "config", "bookmarks.db"), "config");
-  }
-  if (fs.existsSync(path.join(dataPath, "config", "words.db"))) {
-    zip.addLocalFile(path.join(dataPath, "config", "words.db"), "config");
-  }
-  if (fs.existsSync(path.join(dataPath, "config", "plugins.db"))) {
-    zip.addLocalFile(path.join(dataPath, "config", "plugins.db"), "config");
-  }
+
   await zip.writeZip(path.join(targetPath, fileName));
 
   // return new Blob([zip.toBuffer()], { type: "application/zip" });

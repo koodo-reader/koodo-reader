@@ -10,12 +10,29 @@
   animation: popup 0.1s ease-in-out 0s 1;
   border-radius: 5px;
 }
+.feedback-dialog-file-container {
+  width: 100%;
+  height: 30px;
+  /* margin-top: 10px; */
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 .feedback-file-box {
   display: inline-block;
   height: 30px;
-  margin-left: 35px;
+  /* margin-left: 35px; */
   cursor: pointer;
   font-size: 15px;
+  color: rgb(35, 170, 242);
+}
+.feedback-dialog-file-text {
+  margin-left: 25px;
+  min-width: 100px;
+  height: 30px;
+  font-size: 15px;
+  margin-top: 5px;
 }
 .feedback-file-box::placeholder {
   color: #999;
