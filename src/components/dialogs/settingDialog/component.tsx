@@ -20,7 +20,7 @@ import {
 } from "../../../constants/settingList";
 import { themeList } from "../../../constants/themeList";
 import toast from "react-hot-toast";
-import { openExternalUrl } from "../../../utils/common";
+import { checkPlugin, openExternalUrl } from "../../../utils/common";
 import { getStorageLocation, reloadManager } from "../../../utils/common";
 import DatabaseService from "../../../utils/storage/databaseService";
 declare var window: any;
@@ -66,6 +66,7 @@ class SettingDialog extends React.Component<
         name: ConfigService.getReaderConfig("themeColor"),
       }),
       storageLocation: getStorageLocation() || "",
+      isAddNew: false,
     };
   }
   componentDidMount(): void {
@@ -146,6 +147,12 @@ class SettingDialog extends React.Component<
       localStorage.getItem("storageLocation") ||
       ipcRenderer.sendSync("storage-location", "ping");
     toast.success(this.props.t("Change successful"));
+  };
+  handleResetReaderPosition = () => {
+    window
+      .require("electron")
+      .ipcRenderer.invoke("reset-reader-position", "ping");
+    toast.success(this.props.t("Reset successful"));
   };
   handleChangeTab = (currentTab: string) => {
     this.setState({ currentTab });
@@ -457,6 +464,22 @@ class SettingDialog extends React.Component<
                   </div>
                 );
               })}
+              {isElectron && (
+                <>
+                  <div className="setting-dialog-new-title">
+                    <Trans>Reset reader window's position</Trans>
+
+                    <span
+                      className="change-location-button"
+                      onClick={() => {
+                        this.handleResetReaderPosition();
+                      }}
+                    >
+                      <Trans>Reset</Trans>
+                    </span>
+                  </div>
+                </>
+              )}
             </>
           ) : this.state.currentTab === "appearance" ? (
             <>
@@ -591,38 +614,136 @@ class SettingDialog extends React.Component<
             </>
           ) : (
             <>
-              {this.props.plugins.length > 0 ? (
-                this.props.plugins.map((item, index) => {
-                  return (
-                    <div className="setting-dialog-new-title">
-                      <span>
-                        <span
-                          className={`icon-${item.icon} setting-plugin-icon`}
-                        ></span>
-                        <span className="setting-plugin-name">
-                          {item.displayName}
-                        </span>
-                      </span>
+              {(this.props.plugins.length === 0 || this.state.isAddNew) && (
+                <div className="navigation-panel-empty-bookmark">
+                  <div
+                    className="voice-add-new-container"
+                    style={{
+                      marginLeft: "10px",
+                      width: "88%",
+                      fontWeight: 500,
+                    }}
+                  >
+                    <textarea
+                      name="url"
+                      placeholder={this.props.t(
+                        "Paste the code of the plugin here, check out document to learn how to get more plugins"
+                      )}
+                      id="voice-add-content-box"
+                      className="voice-add-content-box"
+                    />
 
-                      <span
-                        className="change-location-button"
-                        onClick={async () => {
-                          await DatabaseService.deleteRecord(
-                            item.key,
-                            "plugins"
-                          );
+                    <div
+                      className="voice-add-confirm"
+                      onClick={async () => {
+                        let value: string = (
+                          document.querySelector(
+                            "#voice-add-content-box"
+                          ) as HTMLTextAreaElement
+                        ).value;
+                        if (value) {
+                          let plugin = JSON.parse(value);
+                          plugin.key = plugin.identifier;
+                          if (!(await checkPlugin(plugin))) {
+                            toast.error(
+                              this.props.t("Plugin verification failed")
+                            );
+                            return;
+                          }
+                          if (
+                            this.props.plugins.find(
+                              (item) => item.key === plugin.key
+                            )
+                          ) {
+                            await DatabaseService.updateRecord(
+                              plugin,
+                              "plugins"
+                            );
+                          } else {
+                            await DatabaseService.saveRecord(plugin, "plugins");
+                          }
                           this.props.handleFetchPlugins();
-                          toast.success(this.props.t("Deletion successful"));
+                          toast.success(this.props.t("Addition successful"));
+                        }
+                        this.setState({ isAddNew: false });
+                      }}
+                    >
+                      <Trans>Confirm</Trans>
+                    </div>
+                    <div className="voice-add-button-container">
+                      <div
+                        className="voice-add-cancel"
+                        onClick={() => {
+                          this.setState({ isAddNew: false });
                         }}
                       >
-                        <Trans>Delete</Trans>
-                      </span>
+                        <Trans>Cancel</Trans>
+                      </div>
+                      <div
+                        className="voice-add-cancel"
+                        style={{ marginRight: "10px" }}
+                        onClick={() => {
+                          if (
+                            ConfigService.getReaderConfig("lang") === "zhCN" ||
+                            ConfigService.getReaderConfig("lang") === "zhTW" ||
+                            ConfigService.getReaderConfig("lang") === "zhMO"
+                          ) {
+                            openExternalUrl(
+                              "https://www.koodoreader.com/zh/plugin"
+                            );
+                          } else {
+                            openExternalUrl(
+                              "https://www.koodoreader.com/en/plugin"
+                            );
+                          }
+                        }}
+                      >
+                        <Trans>Document</Trans>
+                      </div>
                     </div>
-                  );
-                })
-              ) : (
-                <div className="navigation-panel-empty-bookmark">
-                  <Trans>Empty</Trans>
+                  </div>
+                </div>
+              )}
+              {this.props.plugins.map((item, index) => {
+                return (
+                  <div className="setting-dialog-new-title">
+                    <span>
+                      <span
+                        className={`icon-${
+                          item.type === "dictionary"
+                            ? "dict"
+                            : item.type === "voice"
+                            ? "speaker"
+                            : "translation"
+                        } setting-plugin-icon`}
+                      ></span>
+                      <span className="setting-plugin-name">
+                        {item.displayName}
+                      </span>
+                    </span>
+
+                    <span
+                      className="change-location-button"
+                      onClick={async () => {
+                        await DatabaseService.deleteRecord(item.key, "plugins");
+                        this.props.handleFetchPlugins();
+                        toast.success(this.props.t("Deletion successful"));
+                      }}
+                    >
+                      <Trans>Delete</Trans>
+                    </span>
+                  </div>
+                );
+              })}
+
+              {this.props.plugins.length > 0 && (
+                <div
+                  className="setting-dialog-new-plugin"
+                  onClick={async () => {
+                    this.setState({ isAddNew: true });
+                  }}
+                >
+                  <Trans>Add new plugin</Trans>
                 </div>
               )}
             </>

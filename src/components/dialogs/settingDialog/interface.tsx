@@ -37,6 +37,7 @@ export interface SettingInfoState {
   isHideShelfBook: boolean;
   isPreventAdd: boolean;
   isLemmatizeWord: boolean;
+  isAddNew: boolean;
   currentThemeIndex: number;
   currentTab: string;
 }

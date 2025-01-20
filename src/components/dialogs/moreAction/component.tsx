@@ -76,6 +76,13 @@ class ActionDialog extends React.Component<MoreActionProps, MoreActionState> {
                   "notes"
                 )
               ).filter((note) => note.notes !== "");
+              console.log(
+                "notes",
+                await DatabaseService.getRecordsByBookKey(
+                  this.props.currentBook.key,
+                  "notes"
+                )
+              );
               if (notes.length > 0) {
                 exportNotes(notes, [
                   ...this.props.books,

@@ -5,12 +5,7 @@ export const generalSettingList = [
     desc: "The imported books will not be copied to library, only linked to the original book path",
     propName: "isImportPath",
   },
-  {
-    isElectron: false,
-    title: "Auto open last-read book",
-    desc: "The book that you read from last time will be open automatically when launching",
-    propName: "isOpenBook",
-  },
+
   {
     isElectron: false,
     title: "Disable trash bin",
@@ -41,12 +36,7 @@ export const generalSettingList = [
     desc: "When opening books in the file manager with Koodo, the opened books won't be added to the library",
     propName: "isPreventAdd",
   },
-  {
-    isElectron: true,
-    title: "Open books in the main window",
-    desc: "Book won't be opened in a separate window but directly opened in the main window",
-    propName: "isOpenInMain",
-  },
+
   {
     isElectron: false,
     title: "Auto precache books after import",
@@ -95,6 +85,18 @@ export const readingSettingList = [
     title: "Merge reader into Word",
     desc: "Get rid of window frame, make reader hide into Word or any text editor, and can't be detected. You need to set up the reader's position, size and style first.",
     propName: "isMergeWord",
+  },
+  {
+    isElectron: true,
+    title: "Open books in the main window",
+    desc: "Book won't be opened in a separate window but directly opened in the main window",
+    propName: "isOpenInMain",
+  },
+  {
+    isElectron: false,
+    title: "Auto open last-read book",
+    desc: "The book that you read from last time will be open automatically when launching",
+    propName: "isOpenBook",
   },
   {
     isElectron: true,

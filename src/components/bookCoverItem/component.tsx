@@ -270,7 +270,7 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
           <p className="book-cover-item-title">{this.props.book.name}</p>
           <p className="book-cover-item-author">
             <Trans>Author</Trans>:&nbsp;
-            <Trans>{this.props.book.author}</Trans>
+            <Trans>{this.props.book.author || "Unknown author"}</Trans>
           </p>
           <p className="book-cover-item-author">
             <Trans>Publisher</Trans>:&nbsp;

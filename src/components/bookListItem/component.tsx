@@ -270,11 +270,7 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
                 )}
             </p>
             <div className="book-item-list-author">
-              <Trans>
-                {this.props.book.author
-                  ? this.props.book.author
-                  : "Unknown author"}
-              </Trans>
+              <Trans>{this.props.book.author || "Unknown author"}</Trans>
             </div>
           </p>
         </div>
