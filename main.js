@@ -17,6 +17,7 @@ const configDir = app.getPath("userData");
 const dirPath = path.join(configDir, "uploads");
 let mainWin;
 let readerWindow;
+let urlWindow;
 let mainView;
 let dbConnection = {};
 const singleInstance = app.requestSingleInstanceLock();
@@ -269,7 +270,8 @@ const createMainWin = () => {
     event.returnValue = dirPath;
   });
   ipcMain.handle("hide-reader", (event, arg) => {
-    if (readerWindow && readerWindow.isFocused()) {
+    console.log(readerWindow)
+    if (!readerWindow.isDestroyed() && readerWindow && readerWindow.isFocused()) {
       readerWindow.minimize();
       event.returnvalue = true;
     } else if (mainWin && mainWin.isFocused()) {
@@ -352,6 +354,12 @@ const createMainWin = () => {
       readerWindow.setFullScreen(false);
       console.log("exit full");
     }
+  });
+  ipcMain.handle("open-url", (event, config) => {
+    if (!urlWindow || urlWindow.isDestroyed()) {
+      urlWindow = new BrowserWindow(options);
+    }
+    urlWindow.loadURL(config.url);
   });
   ipcMain.handle("switch-moyu", (event, arg) => {
     let id;

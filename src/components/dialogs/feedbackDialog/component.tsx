@@ -72,7 +72,7 @@ class FeedbackDialog extends Component<
       this.setState({ isSending: false });
       return;
     }
-    toast(this.props.t("Sending"));
+    toast.loading(this.props.t("Sending"), { id: "sending-id" });
     let version = packageInfo.version;
     const os = window.require("os");
     const system = os.platform() + " " + os.version();
@@ -96,7 +96,9 @@ class FeedbackDialog extends Component<
       this.setState({ isSending: false });
       return;
     }
-    toast.success(this.props.t("Sending successful"));
+    toast.success(this.props.t("Sending successful"), {
+      id: "sending-id",
+    });
     this.props.handleFeedbackDialog(false);
   };
   handleJump = (url: string) => {
@@ -171,43 +173,36 @@ class FeedbackDialog extends Component<
                   : { marginTop: "30px" }
               }
             />
-            <div className="feedback-dialog-file-container">
-              <div className="feedback-dialog-file-text">
-                <Trans>Upload attachments</Trans>
-              </div>
-              <div></div>
-              <input
-                type="file"
-                multiple={true}
-                id="feedback-file-box"
-                name="file"
-                className="feedback-file-box"
-                onChange={(event) => {
-                  if (!event || !event.target || !event.target.files) {
-                    toast.error("Empty files");
+
+            <input
+              type="file"
+              multiple={true}
+              id="feedback-file-box"
+              name="file"
+              className="feedback-file-box"
+              onChange={(event) => {
+                if (!event || !event.target || !event.target.files) {
+                  toast.error("Empty files");
+                }
+                let files: any = event.target.files;
+                let zip = new JSZip();
+                for (let index = 0; index < files.length; index++) {
+                  const file = files[index];
+                  var fileSize = file.size;
+                  var fileSizeMB = fileSize / (1024 * 1024);
+                  if (fileSizeMB > 20) {
+                    toast.error(this.props.t("File size is larger than 20MB"));
+                    event.target.value = "";
+                    break;
+                  } else {
+                    zip.file(file.name, file);
                   }
-                  let files: any = event.target.files;
-                  let zip = new JSZip();
-                  for (let index = 0; index < files.length; index++) {
-                    const file = files[index];
-                    var fileSize = file.size;
-                    var fileSizeMB = fileSize / (1024 * 1024);
-                    if (fileSizeMB > 20) {
-                      toast.error(
-                        this.props.t("File size is larger than 20MB")
-                      );
-                      event.target.value = "";
-                      break;
-                    } else {
-                      zip.file(file.name, file);
-                    }
-                  }
-                  zip.generateAsync({ type: "blob" }).then((content) => {
-                    this.setState({ fileContent: content });
-                  });
-                }}
-              />
-            </div>
+                }
+                zip.generateAsync({ type: "blob" }).then((content) => {
+                  this.setState({ fileContent: content });
+                });
+              }}
+            />
 
             <textarea
               name="content"

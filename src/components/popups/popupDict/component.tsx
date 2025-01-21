@@ -77,7 +77,7 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
         plugin.config
       );
       if (dictText.startsWith("https://")) {
-        window.open(dictText);
+        openExternalUrl(dictText, true);
       } else {
         this.setState(
           {
