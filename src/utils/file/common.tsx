@@ -193,6 +193,9 @@ export const upgradeConfig = (): Boolean => {
       ConfigService.setReaderConfig("bookSortCode", json);
     }
 
+    //remove dropbox token
+    ConfigService.setReaderConfig("dropbox_token", "");
+
     localStorage.setItem("isUpgradedConfig", "yes");
     return true;
   } catch (error) {

@@ -175,12 +175,10 @@ const createMainWin = () => {
     let { service } = config;
     const { SyncUtil } = await import('./src/assets/lib/kookit-extra.min.mjs');
     let syncUtil = new SyncUtil(service, config, dirPath);
-    console.log(SyncUtil, syncUtil);
     let result = await syncUtil.uploadFile(config.fileName, config.fileName, "backup");
     return result;
   });
   ipcMain.handle("cloud-download", async (event, config) => {
-    console.log(config);
     let { service } = config;
     const { SyncUtil } = await import('./src/assets/lib/kookit-extra.min.mjs');
     let syncUtil = new SyncUtil(service, config, dirPath);
@@ -245,10 +243,8 @@ const createMainWin = () => {
     let result;
     if (data) {
       if (statement.startsWith("save") || statement.startsWith("update")) {
-        console.log(SqlStatement.jsonToSqlite[dbName])
         data = SqlStatement.jsonToSqlite[dbName](data)
       }
-      console.log(data)
       result = row[executeType](data);
     } else {
       result = row[executeType]();

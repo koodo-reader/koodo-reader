@@ -115,7 +115,6 @@ export const backupFromStorage = async () => {
   let words = await DatabaseService.getDbBuffer("words");
   let plugins = await DatabaseService.getDbBuffer("plugins");
   let config = JSON.stringify(ConfigService.getConfigJson());
-  console.log(books, notes, bookmarks, words, plugins, config);
   await zipCover(zip);
   await zipBook(zip);
   let result = await zipConfig(

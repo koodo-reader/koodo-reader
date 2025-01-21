@@ -179,8 +179,6 @@ class BackupDialog extends React.Component<
       });
     };
     let syncUtil = new SyncUtil(this.state.currentDrive, {});
-    console.log(this.state.currentDrive, syncUtil.getAuthUrl());
-    console.log();
 
     const dialogProps = {
       driveName: this.state.currentDrive,

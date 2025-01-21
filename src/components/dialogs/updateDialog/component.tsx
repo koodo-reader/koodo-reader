@@ -38,7 +38,22 @@ class UpdateInfo extends React.Component<UpdateInfoProps, UpdateInfoState> {
   }
   componentDidMount() {
     if (!this.props.currentBook.key) {
+      let lastTimeCheck: string =
+        ConfigService.getReaderConfig("lastTimeCheck");
+
+      if (
+        lastTimeCheck &&
+        new Date().getTime() - parseInt(lastTimeCheck) <
+          28 * 24 * 60 * 60 * 1000
+      ) {
+        return;
+      }
+
       checkStableUpdate().then(async (res) => {
+        ConfigService.setReaderConfig(
+          "lastTimeCheck",
+          new Date().getTime() + ""
+        );
         const newVersion = res.version;
         if (!isElectron) {
           return;

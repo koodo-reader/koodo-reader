@@ -24,13 +24,11 @@ export const restore = async (service: string): Promise<Boolean> => {
   const { ipcRenderer } = window.require("electron");
   if (service === "local") {
     let filePath = await ipcRenderer.invoke("select-file", "ping");
-    console.log("filePath", filePath);
     if (!filePath) return false;
 
     return await restoreFromfilePath(filePath);
   } else {
     let tokenConfig = getCloudConfig(service);
-    console.log("tokenConfig", tokenConfig);
     await ipcRenderer.invoke("cloud-download", {
       ...tokenConfig,
       fileName: "data.zip",
@@ -62,7 +60,6 @@ export const restoreFromfilePath = async (filePath: string) => {
   if (!fs.existsSync(filePath)) {
     return false;
   }
-  console.log("filePath", filePath);
   var zip = new AdmZip(filePath);
   var zipEntries = zip.getEntries(); // an array of ZipEntry records
   if (
@@ -70,24 +67,18 @@ export const restoreFromfilePath = async (filePath: string) => {
       .map((item: any) => item.entryName)
       .indexOf("config/config.json") === -1
   ) {
-    console.log("old backup");
     return await restoreFromOldBackup(zipEntries);
   } else {
-    console.log("new backup");
     return await restoreFromNewBackup(zipEntries);
   }
 };
 export const restoreFromOldBackup = async (zipEntries: any) => {
   let result = await unzipOldConfig(zipEntries);
-  console.log("result", result);
   if (result) {
     let res = await unzipOldBook(zipEntries);
-    console.log("res", res);
     if (res) {
       let res1 = await upgradeStorage();
-      console.log("res1", res1);
       let res2 = upgradeConfig();
-      console.log("res2", res2);
       if (res1 && res2) {
         return true;
       } else {
@@ -244,7 +235,6 @@ export const unzipOldConfig = (zipEntries: any) => {
 export const unzipOldBook = (zipEntries: any) => {
   return new Promise<boolean>((resolve, reject) => {
     localforage.getItem("books").then((value: any) => {
-      console.log("value", value);
       let count = 0;
       const fs = window.require("fs");
       const path = window.require("path");
@@ -253,7 +243,6 @@ export const unzipOldBook = (zipEntries: any) => {
         value.length > 0 &&
         value.forEach((item: any) => {
           zipEntries.forEach(async (zipEntry) => {
-            console.log(zipEntry.name, item.key);
             if (zipEntry.name === item.key) {
               let buffer = zipEntry.getData();
 

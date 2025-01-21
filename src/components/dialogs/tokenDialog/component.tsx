@@ -21,7 +21,6 @@ class TokenDialog extends Component<TokenDialogProps, TokenDialogState> {
     ).value;
     let syncUtil = new SyncUtil("dropbox", {});
     let refreshToken = await syncUtil.authToken(code);
-    console.log("refresh_token", refreshToken);
     ConfigService.setReaderConfig(
       `${this.props.driveName}_token`,
       JSON.stringify({ refresh_token: refreshToken })
