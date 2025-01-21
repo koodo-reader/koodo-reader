@@ -36,7 +36,6 @@
     "fs-extra": "^9.1.0",
     "hammerjs": "^2.0.8",
     "howler": "^2.2.3",
-    "iconv-lite": "^0.6.3",
     "js-untar": "^2.0.0",
     "jszip": "^3.10.1",
     "localforage": "^1.10.0",
@@ -54,7 +53,6 @@
   "devDependencies": {
     "@types/hammerjs": "^2.0.46",
     "@types/i18next": "^13.0.0",
-    "@types/iconv-lite": "^0.0.1",
     "@types/node": "^13.13.2",
     "@types/react": "17.0.2",
     "@types/react-dom": "17.0.2",
