@@ -157,10 +157,10 @@ export const reloadManager = () => {
     window.location.reload();
   }
 };
-export const openExternalUrl = (url: string) => {
+export const openExternalUrl = (url: string, isPlugin: boolean = false) => {
   isElectron
-    ? ConfigService.getReaderConfig("isUseBuiltIn") === "yes"
-      ? window.open(url)
+    ? ConfigService.getReaderConfig("isUseBuiltIn") === "yes" || isPlugin
+      ? window.require("electron").ipcRenderer.invoke("open-url", { url })
       : window.require("electron").shell.openExternal(url)
     : window.open(url);
 };
