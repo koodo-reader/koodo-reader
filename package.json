@@ -25,6 +25,7 @@
     "basic-ftp": "^5.0.5",
     "better-sqlite3": "^11.6.0",
     "buffer": "^6.0.3",
+    "chardet": "^2.0.0",
     "chinese-s2t": "^1.0.0",
     "copy-text-to-clipboard": "^2.2.0",
     "dompurify": "^3.0.1",
