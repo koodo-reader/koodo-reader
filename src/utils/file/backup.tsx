@@ -55,7 +55,7 @@ export const backup = async (service: string): Promise<Boolean> => {
       return true;
     } else {
       const { SyncUtil } = await import(
-        "../../assets/lib/kookit-extra-browser.min.js"
+        "../../assets/lib/kookit-extra-browser.min"
       );
       let tokenConfig = getCloudConfig(service);
 

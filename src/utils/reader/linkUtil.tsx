@@ -4,7 +4,7 @@ export const handleLinkJump = async (event: any, rendition: any = {}) => {
   let href;
   if (event.target) {
     href =
-      (event.target.innerText.startsWith("http") && event.target.innerText) ||
+      (event.target.innerText && event.target.innerText.startsWith("http")) ||
       event.target.getAttribute("href") ||
       event.target.getAttribute("src") ||
       (event.target.parentNode &&

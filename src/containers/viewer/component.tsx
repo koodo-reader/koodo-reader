@@ -285,8 +285,10 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         }
       }
       if (this.state.isDisablePopup) return;
+      let selection = doc!.getSelection();
+      if (!selection || selection.rangeCount === 0) return;
 
-      var rect = doc!.getSelection()!.getRangeAt(0).getBoundingClientRect();
+      var rect = selection.getRangeAt(0).getBoundingClientRect();
       this.setState({ rect });
     });
     doc.addEventListener("contextmenu", (event) => {
@@ -299,9 +301,12 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       if (
         !doc!.getSelection() ||
         doc!.getSelection()!.toString().trim().length === 0
-      )
+      ) {
         return;
-      var rect = doc!.getSelection()!.getRangeAt(0).getBoundingClientRect();
+      }
+      let selection = doc!.getSelection();
+      if (!selection || selection.rangeCount === 0) return;
+      var rect = selection.getRangeAt(0).getBoundingClientRect();
       this.setState({ rect });
     });
   };
