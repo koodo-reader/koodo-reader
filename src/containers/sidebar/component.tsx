@@ -64,11 +64,6 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
     this.setState({ isOpenDelete });
   };
   render() {
-    console.log(
-      this.props.shelfTitle,
-      this.props.mode,
-      "this.props.shelfTitle"
-    );
     const renderSideMenu = () => {
       return sideMenu.map((item, index) => {
         return (

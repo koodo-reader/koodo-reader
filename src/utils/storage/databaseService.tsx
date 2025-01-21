@@ -29,7 +29,6 @@ class DatabaseService {
     }
   }
   static async saveAllRecords(records: any[], dbName: string) {
-    console.log(dbName, "dbName");
     if (isElectron) {
       for (let record of records) {
         await window

@@ -22,11 +22,18 @@ class styleUtil {
     if (!doc.head) {
       return;
     }
-    let css = this.getDefaultCss();
-    let style = doc.createElement("style");
-    style.id = "default-style";
-    style.textContent = css;
-    doc.head.appendChild(style);
+    //get style with id of default-style
+    let styleElement = doc.getElementById("default-style");
+    if (styleElement) {
+      styleElement.textContent = this.getDefaultCss();
+      return;
+    } else {
+      let css = this.getDefaultCss();
+      let style = doc.createElement("style");
+      style.id = "default-style";
+      style.textContent = css;
+      doc.head.appendChild(style);
+    }
   }
   // get default css for iframe
   static getDefaultCss() {

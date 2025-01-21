@@ -86,20 +86,12 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       }
 
       let cfi = JSON.parse(item.cfi);
-      console.log(cfi);
       if (cfi.cfi) {
         return (
           item.chapter ===
           rendition.getChapterDoc()[this.state.chapterDocIndex].label
         );
       } else {
-        console.log(rendition.getChapterDoc());
-        console.log(
-          item.chapter,
-          "--",
-          rendition.getChapterDoc()[this.state.chapterDocIndex].label
-        );
-        console.log(item.chapterIndex, this.state.chapterDocIndex);
         return (
           item.chapter ===
             rendition.getChapterDoc()[this.state.chapterDocIndex].label &&
@@ -107,7 +99,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         );
       }
     });
-    console.log(highlightersByChapter, "highlightersByChapter");
 
     await this.props.htmlBook.rendition.renderHighlighters(
       highlightersByChapter,

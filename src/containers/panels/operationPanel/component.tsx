@@ -82,11 +82,6 @@ class OperationPanel extends React.Component<
     this.props.handleSearch(false);
     window.speechSynthesis && window.speechSynthesis.cancel();
     TTSUtil.pauseAudio();
-    ConfigService.setObjectConfig(
-      this.props.currentBook.key,
-      this.props.time,
-      "readingTime"
-    );
     handleExitFullScreen();
     if (this.props.htmlBook) {
       this.props.handleHtmlBook(null);

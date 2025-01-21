@@ -42,13 +42,14 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         .querySelector("body")
         ?.setAttribute("style", "background-color: rgba(0,0,0,0)");
     }
-    let time = ConfigService.getObjectConfig(
-      this.props.currentBook.key,
-      "readingTime",
-      0
-    );
+
     this.tickTimer = setInterval(() => {
       if (this.props.currentBook.key) {
+        let time = ConfigService.getObjectConfig(
+          this.props.currentBook.key,
+          "readingTime",
+          0
+        );
         time += 1;
         this.setState({ time });
         ConfigService.setObjectConfig(

@@ -61,7 +61,6 @@ class BookList extends React.Component<BookListProps, BookListState> {
       currentShelfTitle,
       "shelfList"
     );
-    console.log(currentShelfList);
     let shelfItems = items.filter((item: { key: number }) => {
       return currentShelfList.indexOf(item.key) > -1;
     });
