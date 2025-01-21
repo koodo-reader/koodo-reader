@@ -4005,13 +4005,6 @@
   dependencies:
     i18next "*"
 
-"@types/iconv-lite@^0.0.1":
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/@types/iconv-lite/-/iconv-lite-0.0.1.tgz#aa3b8bda2be512b1ae0a057b942e869c370a5569"
-  integrity sha512-SsRBQxGw7/2/NxYJfBdiUx5a7Ms/voaUhOO9u2y9FTeTNBO1PXohzE4i3JfD8q2Te42HLTn5pyZtDf8j1bPKgQ==
-  dependencies:
-    "@types/node" "*"
-
 "@types/istanbul-lib-coverage@*", "@types/istanbul-lib-coverage@^2.0.0", "@types/istanbul-lib-coverage@^2.0.1":
   version "2.0.4"
   resolved "https://registry.yarnpkg.com/@types/istanbul-lib-coverage/-/istanbul-lib-coverage-2.0.4.tgz#8467d4b3c087805d63580480890791277ce35c44"
