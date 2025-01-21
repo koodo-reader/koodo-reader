@@ -1,4 +1,4 @@
-import { SqlStatement } from "../../assets/lib/kookit-extra-browser.min.js";
+import { SqlStatement } from "../../assets/lib/kookit-extra-browser.min";
 declare var window: any;
 function addColonToKeys(obj: any): any {
   const newObj: any = {};

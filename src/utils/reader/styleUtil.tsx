@@ -37,7 +37,7 @@ class styleUtil {
   }
   // get default css for iframe
   static getDefaultCss() {
-    return `::selection{background:#f3a6a68c}::-moz-selection{background:#f3a6a68c}.kookit-note:hover{cursor:pointer;}img{max-width:100% !important}.kookit-text{${this.getCustomCss()}}code,pre{white-space: pre-wrap;}`;
+    return `::selection{background:#f3a6a68c}::-moz-selection{background:#f3a6a68c}.kookit-note:hover{cursor:pointer;}.kookit-text{${this.getCustomCss()}}code,pre{white-space: pre-wrap;}`;
   }
   //force horionztal writing mode
   static getCustomCss() {
