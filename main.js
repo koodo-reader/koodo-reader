@@ -41,6 +41,9 @@ let options = {
 };
 const os = require('os');
 const Database = require("better-sqlite3");
+const libLocation = isDev
+  ? "./src/assets/lib/kookit-extra.min.mjs"
+  : `file://${path.join(__dirname, "./src/assets/lib/kookit-extra.min.mjs")}`;
 if (os.platform() === 'linux') {
   options = Object.assign({}, options, {
     icon: path.join(__dirname, "./build/assets/icon.png"),
@@ -177,14 +180,14 @@ const createMainWin = () => {
   });
   ipcMain.handle("cloud-upload", async (event, config) => {
     let { service } = config;
-    const { SyncUtil } = await import('./src/assets/lib/kookit-extra.min.mjs');
+    const { SyncUtil } = await import(libLocation);
     let syncUtil = new SyncUtil(service, config, dirPath);
     let result = await syncUtil.uploadFile(config.fileName, config.fileName, "backup");
     return result;
   });
   ipcMain.handle("cloud-download", async (event, config) => {
     let { service } = config;
-    const { SyncUtil } = await import('./src/assets/lib/kookit-extra.min.mjs');
+    const { SyncUtil } = await import(libLocation);
     let syncUtil = new SyncUtil(service, config, dirPath);
     let result = await syncUtil.downloadFile(config.fileName, config.fileName, "backup");
     return result;
@@ -234,7 +237,7 @@ const createMainWin = () => {
     }
   });
   ipcMain.handle("database-command", async (event, config) => {
-    const { SqlStatement } = await import('./src/assets/lib/kookit-extra.min.mjs');
+    const { SqlStatement } = await import(libLocation);
     let { statement, statementType, executeType, dbName, data, storagePath } = config;
     let db = getDBConnection(dbName, storagePath, SqlStatement.sqlStatement);
     let sql = ""
@@ -263,7 +266,7 @@ const createMainWin = () => {
 
   });
   ipcMain.handle("close-database", async (event, config) => {
-    const { SqlStatement } = await import('./src/assets/lib/kookit-extra.min.mjs');
+    const { SqlStatement } = await import(libLocation);
     let { dbName, storagePath } = config;
     let db = getDBConnection(dbName, storagePath, SqlStatement.sqlStatement);
     delete dbConnection[dbName];
