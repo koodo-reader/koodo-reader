@@ -368,6 +368,7 @@
   "Unknown author": "佚名",
   "Sync function works with third-party cloud drive. You need to manually change the storage location to the same sync folder on different computers. When you click the sync button, Koodo Reader will automatically upload or download the data from this folder according the timestamp.": "同步功能需要配合第三方同步盘实现，在不同电脑上把数据存储位置修改为同一个网盘文件夹。当在其中一台电脑上点击同步后，Koodo中的数据就会更新到这个文件夹中。经过网盘同步后，在另一台电脑上打开Koodo，点击同步按钮，数据就会同步到Koodo中。具体操作方法请查看帮助文档。",
   "Translation": "翻译",
+  "Please turn off auto open book in full screen": "请关闭图书窗口自动最大化",
   "No popup when selecting texts": "选中文字时不显示弹窗",
   "Turn it on when you want Koodo to work with other third-party translation service, right clicking on the selected text will trigger popup again": "可以配合三方取词翻译软件，如有道词典，再次右击选中的文字才会显示弹窗",
   "Disable trash bin": "禁用回收站功能",

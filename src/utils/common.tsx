@@ -207,3 +207,16 @@ export const getPageWidth = (
     pageWidth,
   };
 };
+export const loadFontData = async () => {
+  try {
+    const availableFonts = await window.queryLocalFonts();
+    return availableFonts.map((font: any) => {
+      return {
+        label: font.fullName,
+        value: font.family,
+      };
+    });
+  } catch (err) {
+    console.error(err);
+  }
+};

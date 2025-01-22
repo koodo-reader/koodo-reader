@@ -20,7 +20,11 @@ import {
 } from "../../../constants/settingList";
 import { themeList } from "../../../constants/themeList";
 import toast from "react-hot-toast";
-import { checkPlugin, openExternalUrl } from "../../../utils/common";
+import {
+  checkPlugin,
+  loadFontData,
+  openExternalUrl,
+} from "../../../utils/common";
 import { getStorageLocation, reloadManager } from "../../../utils/common";
 import DatabaseService from "../../../utils/storage/databaseService";
 declare var window: any;
@@ -71,6 +75,9 @@ class SettingDialog extends React.Component<
   }
   componentDidMount(): void {
     this.props.handleFetchPlugins();
+    loadFontData().then((result) => {
+      dropdownList[0].option = dropdownList[0].option.concat(result);
+    });
   }
   handleRest = (bool: boolean) => {
     toast.success(this.props.t("Change successful"));
@@ -167,10 +174,11 @@ class SettingDialog extends React.Component<
       toast(this.props.t("Please turn off open books in the main window"));
       return;
     }
+    if (this.state.isAutoFullscreen && !this.state.isMergeWord) {
+      toast(this.props.t("Please turn off auto open book in full screen"));
+      return;
+    }
     this.handleSetting("isMergeWord");
-    this.handleMoyu();
-  };
-  handleMoyu = () => {
     if (ConfigService.getReaderConfig("isMergeWord") === "yes") {
       ConfigService.setReaderConfig("isHideBackground", "yes");
     }
@@ -597,16 +605,17 @@ class SettingDialog extends React.Component<
                 >
                   {dropdownList[0].option.map((item) => (
                     <option
-                      value={item}
-                      key={item}
+                      value={item.value}
+                      key={item.value}
                       className="lang-setting-option"
                       selected={
-                        item === ConfigService.getReaderConfig("systemFont")
+                        item.value ===
+                        ConfigService.getReaderConfig("systemFont")
                           ? true
                           : false
                       }
                     >
-                      {this.props.t(item)}
+                      {this.props.t(item.label)}
                     </option>
                   ))}
                 </select>

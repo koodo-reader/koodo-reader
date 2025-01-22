@@ -5,6 +5,8 @@ import { Trans } from "react-i18next";
 import { DropdownListProps, DropdownListState } from "./interface";
 import ConfigService from "../../../utils/storage/configService";
 import { isElectron } from "react-device-detect";
+import { loadFontData } from "../../../utils/common";
+declare var window: any;
 class DropdownList extends React.Component<
   DropdownListProps,
   DropdownListState
@@ -37,24 +39,20 @@ class DropdownList extends React.Component<
     };
   }
   componentDidMount() {
-    if (isElectron) {
-      const fontList = window.require("font-list");
-      fontList.getFonts({ disableQuoting: true }).then((result) => {
-        if (!result || result.length === 0) return;
-        dropdownList[0].option = result;
-        dropdownList[0].option.push("Built-in font");
-        this.setState({
-          currentFontFamilyIndex: dropdownList[0].option.findIndex(
-            (item: any) => {
-              return (
-                item ===
-                (ConfigService.getReaderConfig("fontFamily") || "Built-in font")
-              );
-            }
-          ),
-        });
+    loadFontData().then((result) => {
+      if (!result || result.length === 0) return;
+      dropdownList[0].option = dropdownList[0].option.concat(result);
+      this.setState({
+        currentFontFamilyIndex: dropdownList[0].option.findIndex(
+          (item: any) => {
+            return (
+              item.value ===
+              (ConfigService.getReaderConfig("fontFamily") || "Built-in font")
+            );
+          }
+        ),
       });
-    }
+    });
   }
 
   handleView(event: any, option: string) {
@@ -67,6 +65,9 @@ class DropdownList extends React.Component<
         });
         if (arr[0] === "Built-in font") {
           ConfigService.setReaderConfig(option, "");
+        }
+        if (arr[0] === "Load local fonts") {
+          loadFontData();
         }
 
         break;
@@ -108,25 +109,33 @@ class DropdownList extends React.Component<
               this.handleView(event, item.value);
             }}
           >
-            {item.option.map((subItem: string, index: number) => (
-              <option
-                value={[subItem, index.toString()]}
-                key={index}
-                className="general-setting-option"
-                selected={
-                  index ===
-                  (item.value === "lineHeight"
-                    ? this.state.currentLineHeightIndex
-                    : item.value === "textAlign"
-                    ? this.state.currentTextAlignIndex
-                    : item.value === "convertChinese"
-                    ? this.state.chineseConversionIndex
-                    : this.state.currentFontFamilyIndex)
-                }
-              >
-                {this.props.t(subItem)}
-              </option>
-            ))}
+            {item.option.map(
+              (
+                subItem: {
+                  label: string;
+                  value: string;
+                },
+                index: number
+              ) => (
+                <option
+                  value={[subItem.value, index.toString()]}
+                  key={index}
+                  className="general-setting-option"
+                  selected={
+                    index ===
+                    (item.value === "lineHeight"
+                      ? this.state.currentLineHeightIndex
+                      : item.value === "textAlign"
+                      ? this.state.currentTextAlignIndex
+                      : item.value === "convertChinese"
+                      ? this.state.chineseConversionIndex
+                      : this.state.currentFontFamilyIndex)
+                  }
+                >
+                  {this.props.t(subItem.label)}
+                </option>
+              )
+            )}
           </select>
         </li>
       ));

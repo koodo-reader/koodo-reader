@@ -20,12 +20,4 @@ ReactDOM.render(
   </Provider>,
   document.getElementById("root")
 );
-if (isElectron) {
-  const fontList = window.require("font-list");
-  fontList.getFonts({ disableQuoting: true }).then((result) => {
-    if (!result || result.length === 0) return;
-    dropdownList[0].option = result;
-    dropdownList[0].option.push("Built-in font");
-  });
-}
 StyleUtil.applyTheme();

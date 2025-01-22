@@ -7952,11 +7952,6 @@ follow-redirects@^1.0.0, follow-redirects@^1.14.9:
   resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.15.2.tgz#b460864144ba63f2681096f274c4e57026da2c13"
   integrity sha512-VQLG33o04KaQ8uYi2tVNbdrWp1QWxNNea+nmIB4EVM28v0hmP17z7aG1+wAkNzVq4KeXTq3221ye5qTJP91JwA==
 
-font-list@^1.4.5:
-  version "1.4.5"
-  resolved "https://registry.yarnpkg.com/font-list/-/font-list-1.4.5.tgz#50a621ef35e3e6195a9787fee9a9b574c460600d"
-  integrity sha512-mLi7Sb4iitgk3mJsTZZDbixssHLoJB4/onWGlQOvTSPW8YPBDQNaMTGOdZ92axQI4UNWwPxV5FmCBOEo1Us7lg==
-
 for-each@^0.3.3:
   version "0.3.3"
   resolved "https://registry.yarnpkg.com/for-each/-/for-each-0.3.3.tgz#69b447e88a0a5d32c3e7084f3f1710034b21376e"

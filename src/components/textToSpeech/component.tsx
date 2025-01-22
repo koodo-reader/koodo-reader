@@ -363,15 +363,15 @@ class TextToSpeech extends React.Component<
                 >
                   {speedList.option.map((item) => (
                     <option
-                      value={item}
+                      value={item.value}
                       className="lang-setting-option"
-                      key={item}
+                      key={item.value}
                       selected={
                         item ===
                         (ConfigService.getReaderConfig("voiceSpeed") || "1")
                       }
                     >
-                      {item}
+                      {item.label}
                     </option>
                   ))}
                 </select>

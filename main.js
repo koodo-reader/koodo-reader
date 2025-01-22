@@ -116,9 +116,9 @@ const createMainWin = () => {
     }
     store.set({
       url,
-      isMergeWord: isMergeWord ? isMergeWord : "no",
-      isAutoFullscreen: isAutoFullscreen ? isAutoFullscreen : "no",
-      isPreventSleep: isPreventSleep ? isPreventSleep : "no",
+      isMergeWord: isMergeWord || "no",
+      isAutoFullscreen: isAutoFullscreen || "no",
+      isPreventSleep: isPreventSleep || "no",
     });
     let id;
     if (isPreventSleep === "yes") {
@@ -147,12 +147,15 @@ const createMainWin = () => {
     readerWindow.on("close", (event) => {
       if (!readerWindow.isDestroyed()) {
         let bounds = readerWindow.getBounds();
-        store.set({
-          windowWidth: bounds.width,
-          windowHeight: bounds.height,
-          windowX: bounds.x,
-          windowY: bounds.y,
-        });
+        console.log(bounds, 'boudns')
+        if (bounds.width > 0 && bounds.height > 0) {
+          store.set({
+            windowWidth: bounds.width,
+            windowHeight: bounds.height,
+            windowX: bounds.x,
+            windowY: bounds.y,
+          });
+        }
       }
       if (isPreventSleep && !readerWindow.isDestroyed()) {
         id && powerSaveBlocker.stop(id);
@@ -392,12 +395,14 @@ const createMainWin = () => {
       readerWindow.on("close", (event) => {
         if (!readerWindow.isDestroyed()) {
           let bounds = readerWindow.getBounds();
-          store.set({
-            windowWidth: bounds.width,
-            windowHeight: bounds.height,
-            windowX: bounds.x,
-            windowY: bounds.y,
-          });
+          if (bounds.width > 0 && bounds.height > 0) {
+            store.set({
+              windowWidth: bounds.width,
+              windowHeight: bounds.height,
+              windowX: bounds.x,
+              windowY: bounds.y,
+            });
+          }
         }
         if (store.get("isPreventSleep") && !readerWindow.isDestroyed()) {
           id && powerSaveBlocker.stop(id);
