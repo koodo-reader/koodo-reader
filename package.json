@@ -113,8 +113,8 @@
       "build/**/*",
       "node_modules/**/*",
       "package.json",
-      "main.js",
-      "sql-statement.js"
+      "src/assets/lib/kookit-extra.min.mjs",
+      "main.js"
     ],
     "directories": {
       "buildResources": "assets"
