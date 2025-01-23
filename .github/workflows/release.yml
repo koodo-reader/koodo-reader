@@ -38,7 +38,8 @@ jobs:
           mkdir -p ~/private_keys/
           echo ${{ github.ref }}
           echo '${{ secrets.api_key }}' > ~/private_keys/AuthKey_${{ secrets.api_key_id }}.p8
-          pip install setuptools
+          python3 -m pip install setuptools
+          brew install python-setuptools
       - name: Set environment variable USE_HARD_LINKS
         run: echo "USE_HARD_LINKS=false" >> $GITHUB_ENV
       - name: Build/release Electron app
