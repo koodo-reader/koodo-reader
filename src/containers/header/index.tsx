@@ -14,6 +14,7 @@ import {
 } from "../../store/actions";
 import { stateType } from "../../store";
 import Header from "./component";
+import { withRouter } from "react-router-dom";
 
 const mapStateToProps = (state: stateType) => {
   return {
@@ -43,4 +44,4 @@ const actionCreator = {
 export default connect(
   mapStateToProps,
   actionCreator
-)(withTranslation()(Header as any) as any);
+)(withTranslation()(withRouter(Header as any) as any) as any);

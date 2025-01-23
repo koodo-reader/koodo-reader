@@ -52,6 +52,9 @@ class BackupDialog extends React.Component<
     this.props.handleLoadingDialog(false);
     this.showMessage("Execute successful");
     this.props.handleFetchBooks();
+    setTimeout(() => {
+      this.props.history.push("/manager/home");
+    }, 1000);
   };
   showMessage = (message: string) => {
     toast(this.props.t(message));
