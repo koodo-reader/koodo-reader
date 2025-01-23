@@ -10,13 +10,13 @@ BUCKET="koodo-reader"
 R2_ACCOUNT_ID=$1
 R2_APPLICATION_KEY=$2
 R2_ENDPOINT=$3
-TAG=$4
+TAG="latest"
 
 # Create a directory with the name of the tag
 mkdir -p $TAG
 
 # Get the release details from GitHub API
-RELEASE=$(curl --silent "https://api.github.com/repos/$USER/$REPO/releases/tags/$TAG")
+RELEASE=$(curl --silent "https://api.github.com/repos/$USER/$REPO/releases/latest")
 
 # Get the assets from the release
 ASSETS=$(echo $RELEASE | jq -r '.assets[] | .browser_download_url')
