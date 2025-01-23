@@ -99,7 +99,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         return item.chapterIndex === this.state.chapterDocIndex;
       }
     });
-
     await this.props.htmlBook.rendition.renderHighlighters(
       highlightersByChapter,
       this.handleNoteClick
