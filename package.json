@@ -285,13 +285,6 @@
       "oneClick": false,
       "allowToChangeInstallationDirectory": true,
       "include": "assets/windows/installer.nsh"
-    },
-    "snap": {
-      "publish": [
-        {
-          "provider": "github"
-        }
-      ]
     }
   },
   "eslintConfig": {
