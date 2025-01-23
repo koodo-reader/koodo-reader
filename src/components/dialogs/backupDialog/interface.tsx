@@ -1,8 +1,9 @@
 import BookModel from "../../../models/Book";
 import NoteModel from "../../../models/Note";
 import BookmarkModel from "../../../models/Bookmark";
+import { RouteComponentProps } from "react-router-dom";
 
-export interface BackupDialogProps {
+export interface BackupDialogProps extends RouteComponentProps<any> {
   handleBackupDialog: (isBackup: boolean) => void;
   handleTokenDialog: (isOpenTokenDialog: boolean) => void;
   t: (title: string) => string;

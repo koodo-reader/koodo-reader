@@ -87,16 +87,16 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
 
       let cfi = JSON.parse(item.cfi);
       if (cfi.cfi) {
+        // epub from 1.5.2 or older
         return (
           item.chapter ===
           rendition.getChapterDoc()[this.state.chapterDocIndex].label
         );
+      } else if (cfi.fingerprint) {
+        // pdf from 1.7.4 or older
+        return cfi.page - 1 === this.state.chapterDocIndex;
       } else {
-        return (
-          item.chapter ===
-            rendition.getChapterDoc()[this.state.chapterDocIndex].label &&
-          item.chapterIndex === this.state.chapterDocIndex
-        );
+        return item.chapterIndex === this.state.chapterDocIndex;
       }
     });
 

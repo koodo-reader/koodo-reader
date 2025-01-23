@@ -9,7 +9,7 @@ import { connect } from "react-redux";
 import { withTranslation } from "react-i18next";
 import { stateType } from "../../../store";
 import BackupDialog from "./component";
-
+import { withRouter } from "react-router-dom";
 const mapStateToProps = (state: stateType) => {
   return {
     books: state.manager.books,
@@ -29,4 +29,4 @@ const actionCreator = {
 export default connect(
   mapStateToProps,
   actionCreator
-)(withTranslation()(BackupDialog as any) as any);
+)(withTranslation()(withRouter(BackupDialog as any) as any) as any);

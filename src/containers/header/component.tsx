@@ -62,11 +62,12 @@ class Header extends React.Component<HeaderProps, HeaderState> {
 
       //Check for data update
       //upgrade data from old version
-      let res1 = await upgradeStorage();
+      let res1 = await upgradeStorage(this.handleFinish);
       let res2 = upgradeConfig();
       if (!res1 || !res2) {
         toast.error("Upgrade failed");
       }
+
       //Detect data modification
       let lastSyncTime = getLastSyncTimeFromConfigJson();
       if (
@@ -87,6 +88,11 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       this.props.handleFetchBookmarks();
     });
   }
+  handleFinish = () => {
+    setTimeout(() => {
+      this.props.history.push("/manager/home");
+    }, 1000);
+  };
 
   syncFromLocation = async () => {
     let result = await restoreFromConfigJson();

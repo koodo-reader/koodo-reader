@@ -73,7 +73,9 @@ export function getParamsFromUrl() {
   return hashParams;
 }
 
-export const upgradeStorage = async (): Promise<Boolean> => {
+export const upgradeStorage = async (
+  handleFinish: () => void = () => {}
+): Promise<Boolean> => {
   try {
     let dataPath = getStorageLocation() || "";
     // localStorage.setItem("isUpgraded", "yes");
@@ -162,6 +164,7 @@ export const upgradeStorage = async (): Promise<Boolean> => {
     }
 
     localStorage.setItem("isUpgradedStorage", "yes");
+    handleFinish();
     return true;
   } catch (error) {
     console.log(error);
