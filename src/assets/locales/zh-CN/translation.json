@@ -372,6 +372,7 @@
   "No popup when selecting texts": "选中文字时不显示弹窗",
   "Turn it on when you want Koodo to work with other third-party translation service, right clicking on the selected text will trigger popup again": "可以配合三方取词翻译软件，如有道词典，再次右击选中的文字才会显示弹窗",
   "Disable trash bin": "禁用回收站功能",
+  "Load local fonts": "加载本地字体",
   "When deleting books, they will be deleted permanently instead of sending to trash bin": "删除的图书会被永久删除，而不是移动到回收站",
   "Hide books already added to the shelf": "隐藏添加到书架的图书",
   "Hide books which have been added to the shelf, so they won't show up in home page": "当把图书添加到书架后，该图书就不会展示在主页书架中",

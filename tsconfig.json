@@ -18,7 +18,7 @@
     "noImplicitAny": false,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src"],
+  "include": ["src", "src/assets/lib/kookit-extra.min.mjs"],
   "exclude": ["utils"],
   "paths": {
     "*": ["./node_modules/@types", "./types"]
