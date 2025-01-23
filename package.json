@@ -1,7 +1,7 @@
 {
   "name": "koodo-reader",
   "main": "main.js",
-  "version": "1.7.5",
+  "version": "1.7.6",
   "description": "A cross-platform ebook reader",
   "author": {
     "name": "App by Troye",
@@ -67,7 +67,7 @@
     "concurrently": "^5.0.1",
     "cross-env": "^6.0.3",
     "electron": "28.0.0",
-    "electron-builder": "^23.6.0",
+    "electron-builder": "^25.1.8",
     "electron-rebuild": "^3.2.9",
     "hard-source-webpack-plugin": "^0.13.1",
     "html-react-parser": "^5.1.10",
