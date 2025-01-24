@@ -233,6 +233,24 @@ const createMainWin = () => {
       return filePath;
     }
   });
+
+  ipcMain.handle("select-book", async (event, config) => {
+    const result = await dialog.showOpenDialog({
+      properties: ['openFile', 'multiSelections'],
+      filters: [{
+        name: 'Books', extensions: ["epub", "pdf", "txt", "mobi", "azw3", "azw", "htm", "html", "xml", "xhtml", "mhtml", "docx", "md", "fb2", "cbz", "cbt", "cbr", "cb7",]
+      }]
+    });
+
+    if (result.canceled) {
+      console.log('User canceled the file selection');
+      return [];
+    } else {
+      const filePaths = result.filePaths;
+      console.log('Selected file path:', filePaths);
+      return filePaths;
+    }
+  });
   ipcMain.handle("database-command", async (event, config) => {
     const { SqlStatement } = await import('./src/assets/lib/kookit-extra.min.mjs');
     let { statement, statementType, executeType, dbName, data, storagePath } = config;
