@@ -325,6 +325,7 @@
   "When Koodo is running, your computer won't enter sleep mode": "Koodo运行时，电脑不会进入休眠模式",
   "Prevent accidental trigger": "开启防误触模式",
   "Import books as link": "以引用的方式导入图书",
+  "Please turn off import books as link first": "请关闭以引用的方式导入图书",
   "Close main window while reading": "打开图书时自动关闭主窗口",
   "Merge reader into Word": "开启摸鱼模式",
   "Get rid of window frame, make reader hide into Word or any text editor, and can't be detected. You need to set up the reader's position, size and style first.": "隐藏阅读器边框，使其混入Word，无法被发现，需要您提前设置好窗口的大小、位置和样式",

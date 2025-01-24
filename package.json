@@ -1,7 +1,7 @@
 {
   "name": "koodo-reader",
   "main": "main.js",
-  "version": "1.7.6",
+  "version": "1.7.7",
   "description": "A cross-platform ebook reader",
   "author": {
     "name": "App by Troye",
@@ -285,6 +285,13 @@
       "oneClick": false,
       "allowToChangeInstallationDirectory": true,
       "include": "assets/windows/installer.nsh"
+    },
+    "snap": {
+      "publish": [
+        {
+          "provider": "github"
+        }
+      ]
     }
   },
   "eslintConfig": {

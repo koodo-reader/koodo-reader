@@ -256,6 +256,12 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
       <Dropzone
         onDrop={async (acceptedFiles) => {
           this.props.handleDrag(false);
+          if (ConfigService.getReaderConfig("isImportPath") === "yes") {
+            toast.error(
+              this.props.t("Please turn off import books as link first")
+            );
+            return;
+          }
           for (let item of acceptedFiles) {
             await this.getMd5WithBrowser(item);
           }
@@ -304,13 +310,36 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
               </span>
             )}
 
-            <input
-              type="file"
-              id="import-book-box"
-              className="import-book-box"
-              name="file"
-              {...getInputProps()}
-            />
+            {!isElectron ? (
+              <input
+                type="file"
+                id="import-book-box"
+                className="import-book-box"
+                name="file"
+                {...getInputProps()}
+              />
+            ) : (
+              <div
+                className="import-book-box"
+                onClick={async () => {
+                  const { ipcRenderer } = window.require("electron");
+                  const path = window.require("path");
+                  let filePaths = await ipcRenderer.invoke(
+                    "select-book",
+                    "ping"
+                  );
+                  for (let filePath of filePaths) {
+                    let response = await fetch(filePath);
+                    let blob = await response.blob();
+                    let fileName = path.basename(filePath);
+                    let file: any = new File([blob], fileName);
+                    file.path = filePath;
+                    console.log(file, "file");
+                    await this.getMd5WithBrowser(file);
+                  }
+                }}
+              ></div>
+            )}
           </div>
         )}
       </Dropzone>
