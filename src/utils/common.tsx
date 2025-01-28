@@ -220,3 +220,85 @@ export const loadFontData = async () => {
     console.error(err);
   }
 };
+export class BrowserFingerprint {
+  private static getHardwareInfo(): string {
+    return [
+      navigator.hardwareConcurrency,
+      window.screen.width,
+      window.screen.height,
+      window.devicePixelRatio,
+    ].join("|");
+  }
+
+  private static getWebGLInfo(): string {
+    const canvas = document.createElement("canvas");
+    const gl = canvas.getContext("webgl2") || canvas.getContext("webgl");
+    if (!gl) return "";
+
+    return [
+      gl.getSupportedExtensions(),
+      gl.getParameter(gl.RED_BITS),
+      gl.getParameter(gl.GREEN_BITS),
+      gl.getParameter(gl.BLUE_BITS),
+      gl.getParameter(gl.ALPHA_BITS),
+      gl.getParameter(gl.DEPTH_BITS),
+      gl.getParameter(gl.MAX_COMBINED_TEXTURE_IMAGE_UNITS),
+      gl.getParameter(gl.MAX_CUBE_MAP_TEXTURE_SIZE),
+      gl.getParameter(gl.MAX_FRAGMENT_UNIFORM_VECTORS),
+      gl.getParameter(gl.MAX_RENDERBUFFER_SIZE),
+      gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS),
+      gl.getParameter(gl.MAX_TEXTURE_SIZE),
+      gl.getParameter(gl.MAX_VARYING_VECTORS),
+      gl.getParameter(gl.MAX_VERTEX_ATTRIBS),
+      gl.getParameter(gl.MAX_VERTEX_TEXTURE_IMAGE_UNITS),
+      gl.getParameter(gl.MAX_VERTEX_UNIFORM_VECTORS),
+    ].join("|");
+  }
+
+  private static getFonts(): string {
+    const baseFonts = ["monospace", "sans-serif", "serif"];
+    const testString = "mmmmmmmmmmlli";
+    const testSize = "72px";
+    const canvas = document.createElement("canvas");
+    const context = canvas.getContext("2d");
+    if (!context) return "";
+
+    const getWidth = (fontFamily: string): number => {
+      context.font = `${testSize} ${fontFamily}`;
+      return context.measureText(testString).width;
+    };
+
+    const baseWidths = baseFonts.map(getWidth);
+    return baseWidths.join("|");
+  }
+
+  private static getMediaCapabilities(): string {
+    const audio = document.createElement("audio");
+    const video = document.createElement("video");
+
+    return [
+      audio.canPlayType("audio/mp4"),
+      audio.canPlayType("audio/webm"),
+      video.canPlayType("video/mp4"),
+      video.canPlayType("video/webm"),
+    ].join("|");
+  }
+
+  private static async hashComponent(component: string): Promise<string> {
+    const msgBuffer = new TextEncoder().encode(component);
+    const hashBuffer = await crypto.subtle.digest("SHA-256", msgBuffer);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
+  }
+
+  public static async generate(): Promise<string> {
+    const components = await Promise.all([
+      this.hashComponent(this.getHardwareInfo()),
+      this.hashComponent(this.getWebGLInfo()),
+      this.hashComponent(this.getFonts()),
+      this.hashComponent(this.getMediaCapabilities()),
+    ]);
+
+    return components.join("");
+  }
+}
