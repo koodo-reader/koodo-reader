@@ -1,4 +1,8 @@
 import axios from "axios";
+import toast from "react-hot-toast";
+import i18n from "../../i18n";
+import TokenService from "../storage/tokenServiceNode";
+import { useHistory } from "react-router-dom";
 const PUBLIC_URL = "https://api.960960.xyz";
 export const checkDeveloperUpdate = async () => {
   let res = await axios.get(PUBLIC_URL + "/api/update_dev");
@@ -42,10 +46,12 @@ export const sendFeedback = async (data: any) => {
   let res = await axios.request(config);
   return res.data.result;
 };
-export default {
-  checkDeveloperUpdate,
-  getUploadUrl,
-  uploadFile,
-  checkStableUpdate,
-  sendFeedback,
+export const handleExitApp = async () => {
+  const history = useHistory();
+  toast.error(i18n.t("Authorization failed, please login again"));
+  await TokenService.deleteToken("is_authed");
+  await TokenService.deleteToken("access_token");
+  await TokenService.deleteToken("refresh_token");
+  //路由到login页面
+  history.push("/login");
 };
