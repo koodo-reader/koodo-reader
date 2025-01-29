@@ -8,6 +8,7 @@ import {
   handleFetchBooks,
   handleFetchPlugins,
   setDataSource,
+  handleTokenDialog,
 } from "../../../store/actions";
 import { stateType } from "../../../store";
 
@@ -18,6 +19,7 @@ const mapStateToProps = (state: stateType) => {
     plugins: state.manager.plugins,
     notes: state.reader.notes,
     dataSourceList: state.backupPage.dataSourceList,
+    isOpenTokenDialog: state.backupPage.isOpenTokenDialog,
   };
 };
 const actionCreator = {
@@ -27,6 +29,7 @@ const actionCreator = {
   handleFetchBooks,
   handleFetchPlugins,
   setDataSource,
+  handleTokenDialog,
 };
 export default connect(
   mapStateToProps,

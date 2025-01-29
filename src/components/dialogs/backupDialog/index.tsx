@@ -17,6 +17,7 @@ const mapStateToProps = (state: stateType) => {
     notes: state.reader.notes,
     digests: state.reader.digests,
     isOpenTokenDialog: state.backupPage.isOpenTokenDialog,
+    dataSourceList: state.backupPage.dataSourceList,
   };
 };
 const actionCreator = {
