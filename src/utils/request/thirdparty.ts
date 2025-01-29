@@ -4,7 +4,7 @@ import {
   ThirdpartyRequest,
 } from "../../assets/lib/kookit-extra-browser.min";
 import ConfigService from "../storage/configService";
-import TokenService from "../storage/tokenServiceBrowser";
+import TokenService from "../storage/tokenService";
 import i18n from "../../i18n";
 import { handleExitApp } from "./common";
 
@@ -38,6 +38,11 @@ export const onSyncCallback = async (service: string, authCode: string) => {
 };
 export const encryptToken = async (service: string, config: any) => {
   let syncToken = JSON.stringify(config);
+  let isAuthed = await TokenService.getToken("is_authed");
+  if (!isAuthed) {
+    await TokenService.setToken(service + "_token", syncToken);
+    return 200;
+  }
   let thirdpartyRequest = await getThirdpartyRequest();
 
   let response = await thirdpartyRequest.encryptToken({
@@ -46,10 +51,7 @@ export const encryptToken = async (service: string, config: any) => {
   console.log(response, "response");
   if (response.code === 200) {
     console.log(67756765, service);
-    ConfigService.setReaderConfig(
-      service + "_token",
-      response.data.encrypted_token
-    );
+    TokenService.setToken(service + "_token", response.data.encrypted_token);
     console.log(response.data.encrypted_token, "response.data.encrypted_token");
   } else if (response.code === 401) {
     handleExitApp();
@@ -61,8 +63,13 @@ export const encryptToken = async (service: string, config: any) => {
   return response.code;
 };
 export const decryptToken = async (service: string) => {
+  let isAuthed = await TokenService.getToken("is_authed");
+  if (!isAuthed) {
+    let syncToken = (await TokenService.getToken(service + "_token")) || "{}";
+    return JSON.parse(syncToken);
+  }
   let thirdpartyRequest = await getThirdpartyRequest();
-  let encryptedToken = ConfigService.getReaderConfig(service + "_token");
+  let encryptedToken = TokenService.getToken(service + "_token");
   if (!encryptedToken) {
     return {};
   }

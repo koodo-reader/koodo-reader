@@ -27,6 +27,7 @@ import {
 } from "../../../utils/common";
 import { getStorageLocation, reloadManager } from "../../../utils/common";
 import DatabaseService from "../../../utils/storage/databaseService";
+import { driveList } from "../../../constants/driveList";
 declare var window: any;
 class SettingDialog extends React.Component<
   SettingInfoProps,
@@ -75,10 +76,22 @@ class SettingDialog extends React.Component<
   }
   componentDidMount(): void {
     this.props.handleFetchPlugins();
-    loadFontData().then((result) => {
-      dropdownList[0].option = dropdownList[0].option.concat(result);
-    });
+    this.loadFont();
+    let dataSourceList = ConfigService.getReaderConfig("dataSourceList") || [
+      "local",
+    ];
+    if (dataSourceList) {
+      dataSourceList = JSON.parse(dataSourceList);
+      this.props.setDataSource(dataSourceList);
+    }
   }
+  loadFont = () => {
+    if (dropdownList[0].option.length <= 2) {
+      loadFontData().then((result) => {
+        dropdownList[0].option = dropdownList[0].option.concat(result);
+      });
+    }
+  };
   handleRest = (bool: boolean) => {
     toast.success(this.props.t("Change successful"));
   };
@@ -111,6 +124,10 @@ class SettingDialog extends React.Component<
     reloadManager();
   };
   changeFont = (font: string) => {
+    if (font === "Load local fonts") {
+      this.loadFont();
+      return;
+    }
     let body = document.getElementsByTagName("body")[0];
     body?.setAttribute("style", "font-family:" + font + "!important");
     ConfigService.setReaderConfig("systemFont", font);
@@ -251,6 +268,19 @@ class SettingDialog extends React.Component<
               }}
             >
               <Trans>Appearance</Trans>
+            </span>
+            <span
+              className="book-bookmark-title"
+              style={
+                this.state.currentTab === "sync"
+                  ? { fontWeight: "bold", borderBottom: "2px solid" }
+                  : { opacity: 0.5 }
+              }
+              onClick={() => {
+                this.handleChangeTab("sync");
+              }}
+            >
+              <Trans>Sync and Backup</Trans>
             </span>
             <span
               className="book-bookmark-title"
@@ -618,6 +648,45 @@ class SettingDialog extends React.Component<
                       {this.props.t(item.label)}
                     </option>
                   ))}
+                </select>
+              </div>
+            </>
+          ) : this.state.currentTab === "sync" ? (
+            <>
+              <div className="setting-dialog-new-title">
+                <Trans>Add data source</Trans>
+                <select
+                  name=""
+                  className="lang-setting-dropdown"
+                  onChange={(event) => {
+                    if (
+                      (event.target.value === "ftp" ||
+                        event.target.value === "sftp") &&
+                      !isElectron
+                    ) {
+                      toast(
+                        this.props.t(
+                          "Koodo Reader's web version are limited by the browser, for more powerful features, please download the desktop version."
+                        )
+                      );
+                      return;
+                    }
+                    let dataSourceList = this.props.dataSourceList;
+                  }}
+                >
+                  {driveList
+                    .filter(
+                      (item) => !this.props.dataSourceList.includes(item.value)
+                    )
+                    .map((item) => (
+                      <option
+                        value={item.value}
+                        key={item.value}
+                        className="lang-setting-option"
+                      >
+                        {item.label}
+                      </option>
+                    ))}
                 </select>
               </div>
             </>

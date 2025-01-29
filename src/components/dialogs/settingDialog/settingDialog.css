@@ -1,8 +1,8 @@
 .setting-dialog-container {
-  width: 346px;
+  width: 480px;
   height: 480px;
   position: absolute;
-  left: calc(50% - 173px);
+  left: calc(50% - 240px);
   top: calc(50% - 240px);
   overflow: hidden;
   opacity: 1;
@@ -17,16 +17,16 @@
   opacity: 1;
   margin: 15px 0px 10px;
   text-align: center;
-  width: 346px;
 }
 .setting-dialog-new-title {
   font-size: 15px;
   line-height: 20px;
   opacity: 1;
   margin-top: 10px;
-  margin-left: 30px;
+  padding-left: 30px;
+  padding-right: 30px;
   margin-bottom: 5px;
-  width: 280px;
+  /* width: 280px; */
   display: flex;
   justify-content: space-between;
   font-weight: 500;
@@ -43,7 +43,6 @@
 .setting-dialog-info {
   height: 370px;
   overflow-y: scroll;
-  width: 346px;
 }
 .setting-dialog-illustration {
   width: 200px;
@@ -175,7 +174,7 @@
   font-size: 12px;
   opacity: 0.8;
   margin-left: 30px;
-  margin-right: 25px;
+  margin-right: 100px;
   line-height: 15px;
 }
 .setting-dialog-new-plugin {

@@ -6,6 +6,7 @@ export interface SettingInfoProps {
   handleSetting: (isSettingOpen: boolean) => void;
   handleTipDialog: (isTipDialog: boolean) => void;
   handleTip: (tip: string) => void;
+  setDataSource: (dataSourceList: string[]) => void;
   t: (title: string) => string;
   handleFetchBooks: () => void;
   handleFetchPlugins: () => void;
@@ -13,6 +14,7 @@ export interface SettingInfoProps {
   notes: NoteModel[];
   plugins: PluginModel[];
   books: BookModel[];
+  dataSourceList: string[];
 }
 export interface SettingInfoState {
   isTouch: boolean;

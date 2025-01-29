@@ -123,6 +123,7 @@ export const readingSettingList = [
   //   propName: "isLemmatizeWord",
   // },
 ];
+
 export const langList = [
   { label: "简体中文", value: "zhCN" },
   { label: "繁體中文", value: "zhTW" },

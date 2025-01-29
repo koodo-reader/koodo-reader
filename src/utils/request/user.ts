@@ -1,6 +1,6 @@
 import { UserRequest } from "../../assets/lib/kookit-extra-browser.min";
 import { BrowserFingerprint } from "../common";
-import TokenService from "../storage/tokenServiceBrowser";
+import TokenService from "../storage/tokenService";
 
 export const loginRegister = async (service: string, code: string) => {
   console.log(code);

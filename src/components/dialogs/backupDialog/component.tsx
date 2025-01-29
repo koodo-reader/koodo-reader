@@ -134,12 +134,12 @@ class BackupDialog extends React.Component<
       return driveList.map((item) => {
         return (
           <li
-            key={item.id}
+            key={item.value}
             className="backup-page-list-item"
             onClick={() => {
               //webdav is avavilible on desktop
               if (
-                (item.icon === "ftp" || item.icon === "sftp") &&
+                (item.value === "ftp" || item.value === "sftp") &&
                 !isElectron
               ) {
                 toast(
@@ -150,21 +150,21 @@ class BackupDialog extends React.Component<
                 return;
               }
               if (this.state.isBackup === "yes") {
-                this.handleBackup(item.icon);
+                this.handleBackup(item.value);
               } else {
-                this.handleRestore(item.icon);
+                this.handleRestore(item.value);
               }
             }}
           >
             <div className="backup-page-list-item-container">
               <span
-                className={`icon-${item.icon} backup-page-list-icon`}
+                className={`icon-${item.value} backup-page-list-icon`}
               ></span>
-              {ConfigService.getReaderConfig(item.icon + "_token") ? (
+              {ConfigService.getReaderConfig(item.value + "_token") ? (
                 <div
                   className="backup-page-list-title"
                   onClick={() => {
-                    ConfigService.setReaderConfig(item.icon + "_token", "");
+                    ConfigService.setReaderConfig(item.value + "_token", "");
                     this.showMessage("Unauthorize successful");
                   }}
                   style={{ color: "rgb(0, 120, 212)" }}
@@ -173,7 +173,7 @@ class BackupDialog extends React.Component<
                 </div>
               ) : (
                 <div className="backup-page-list-title">
-                  <Trans>{item.name}</Trans>
+                  <Trans>{item.label}</Trans>
                 </div>
               )}
             </div>
@@ -189,37 +189,15 @@ class BackupDialog extends React.Component<
       title:
         driveList[
           _.findLastIndex(driveList, {
-            icon: this.state.currentDrive,
+            value: this.state.currentDrive,
           })
-        ].name,
+        ].label,
     };
 
     return (
       <div className="backup-page-container">
-        {this.state.currentStep === 0 && this.state.isBackup === "no" && (
-          <div className="restore-warning">
-            <Trans>
-              This process is inreversible, and will completely overwrite your
-              current library, make sure you know what you're doing before
-              proceeding
-            </Trans>
-          </div>
-        )}
         {this.props.isOpenTokenDialog ? <TokenDialog {...dialogProps} /> : null}
 
-        {this.state.currentStep === 0 ? (
-          <div className="backup-page-title">
-            <Trans>Choose your operation</Trans>
-          </div>
-        ) : this.state.currentStep === 1 && this.state.isBackup === "yes" ? (
-          <div className="backup-page-title">
-            <Trans>Where to keep your data?</Trans>
-          </div>
-        ) : this.state.currentStep === 1 && this.state.isBackup === "no" ? (
-          <div className="backup-page-title">
-            <Trans>Where is your data?</Trans>
-          </div>
-        ) : null}
         {this.state.currentStep === 0 ? (
           <div className="backup-page-option">
             <div
@@ -286,15 +264,6 @@ class BackupDialog extends React.Component<
             </div>
           </div>
         )}
-        {this.state.isBackup === "yes" && this.state.currentStep === 0 ? (
-          <div className="backup-page-backup-selector"></div>
-        ) : null}
-        {this.state.isBackup === "no" && this.state.currentStep === 0 ? (
-          <div
-            className="backup-page-backup-selector"
-            style={{ marginLeft: "252px" }}
-          ></div>
-        ) : null}
         <div
           className="backup-page-close-icon"
           onClick={() => {
@@ -303,27 +272,6 @@ class BackupDialog extends React.Component<
         >
           <span className="icon-close backup-close-icon"></span>
         </div>
-
-        {this.state.currentStep === 1 ? (
-          <div
-            className="backup-page-next"
-            onClick={() => {
-              this.setState({ currentStep: 0 });
-            }}
-          >
-            <Trans>Last step</Trans>
-          </div>
-        ) : this.state.currentStep === 0 ? (
-          <div
-            className="backup-page-next"
-            onClick={() => {
-              this.setState({ currentStep: 1 });
-            }}
-            style={this.state.isBackup ? {} : { display: "none" }}
-          >
-            <Trans>Next step</Trans>
-          </div>
-        ) : null}
       </div>
     );
   }
