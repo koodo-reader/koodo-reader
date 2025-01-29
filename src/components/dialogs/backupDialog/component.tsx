@@ -5,7 +5,6 @@ import { backup } from "../../../utils/file/backup";
 import { restore } from "../../../utils/file/restore";
 import { Trans } from "react-i18next";
 import { BackupDialogProps, BackupDialogState } from "./interface";
-import TokenDialog from "../tokenDialog";
 import ConfigService from "../../../utils/storage/configService";
 import Lottie from "react-lottie";
 import animationSuccess from "../../../assets/lotties/success.json";
@@ -59,67 +58,34 @@ class BackupDialog extends React.Component<
   showMessage = (message: string) => {
     toast(this.props.t(message));
   };
-  handleBackup = (name: string) => {
-    this.setState({ currentDrive: name }, async () => {
-      if (name === "local") {
-        let result = await backup(name);
-        if (result) {
-          this.handleFinish();
-        } else {
-          this.showMessage("Upload failed, check your connection");
-        }
-        return;
-      }
-      if (name === "onedrive" || name === "googledrive" || name === "dropbox") {
-        if (!this.state.isDeveloperVer) {
-          this.showMessage(
-            "This feature is only available in the developer version"
-          );
-          return;
-        }
-      }
-      if (!ConfigService.getReaderConfig(name + "_token") && name !== "local") {
-        this.props.handleTokenDialog(true);
-        return;
-      }
-      this.showMessage("Uploading, please wait");
-      this.props.handleLoadingDialog(true);
+  handleBackup = async () => {
+    let name = this.state.currentDrive;
+    if (name === "local") {
       let result = await backup(name);
       if (result) {
         this.handleFinish();
       } else {
         this.showMessage("Upload failed, check your connection");
       }
-    });
+      return;
+    }
+
+    if (!ConfigService.getReaderConfig(name + "_token") && name !== "local") {
+      this.props.handleTokenDialog(true);
+      return;
+    }
+    this.showMessage("Uploading, please wait");
+    this.props.handleLoadingDialog(true);
+    let result = await backup(name);
+    if (result) {
+      this.handleFinish();
+    } else {
+      this.showMessage("Upload failed, check your connection");
+    }
   };
-  handleRestore = (name: string) => {
-    this.setState({ currentDrive: name }, async () => {
-      if (name === "local") {
-        let result = await restore(name);
-        if (result) {
-          this.handleFinish();
-        } else {
-          this.showMessage("Download failed,network problem or no backup");
-          this.props.handleLoadingDialog(false);
-        }
-        return;
-      }
-      if (name === "onedrive" || name === "googledrive" || name === "dropbox") {
-        if (!this.state.isDeveloperVer) {
-          this.showMessage(
-            "This feature is only available in the developer version"
-          );
-          return;
-        }
-      }
-
-      if (!ConfigService.getReaderConfig(name + "_token")) {
-        this.props.handleTokenDialog(true);
-        return;
-      }
-      this.props.handleLoadingDialog(true);
-      this.showMessage("Downloading, please wait");
-
+  handleRestore = async () => {
+    let name = this.state.currentDrive;
+    if (name === "local") {
       let result = await restore(name);
       if (result) {
         this.handleFinish();
@@ -127,123 +93,135 @@ class BackupDialog extends React.Component<
         this.showMessage("Download failed,network problem or no backup");
         this.props.handleLoadingDialog(false);
       }
-    });
+      return;
+    }
+
+    if (!ConfigService.getReaderConfig(name + "_token")) {
+      this.props.handleTokenDialog(true);
+      return;
+    }
+    this.props.handleLoadingDialog(true);
+    this.showMessage("Downloading, please wait");
+
+    let result = await restore(name);
+    if (result) {
+      this.handleFinish();
+    } else {
+      this.showMessage("Download failed,network problem or no backup");
+      this.props.handleLoadingDialog(false);
+    }
+  };
+  handleSelectSource = (event: any) => {
+    if (
+      (event.target.value === "ftp" ||
+        event.target.value === "webdav" ||
+        event.target.value === "sftp") &&
+      !isElectron
+    ) {
+      toast(
+        this.props.t(
+          "Koodo Reader's web version are limited by the browser, for more powerful features, please download the desktop version."
+        )
+      );
+      return;
+    }
+    if (
+      event.target.value === "google" ||
+      event.target.value === "s3compatible" ||
+      event.target.value === "microsoft" ||
+      event.target.value === "dropbox"
+    ) {
+      toast(this.props.t("This feature is not available in the free version"));
+      return;
+    }
+    if (event.target.value === "add") {
+      toast(this.props.t("Please add data source in the setting"));
+      return;
+    }
+    this.setState({ currentDrive: event.target.value });
   };
   render() {
-    const renderDrivePage = () => {
-      return driveList.map((item) => {
-        return (
-          <li
-            key={item.value}
-            className="backup-page-list-item"
-            onClick={() => {
-              //webdav is avavilible on desktop
-              if (
-                (item.value === "ftp" || item.value === "sftp") &&
-                !isElectron
-              ) {
-                toast(
-                  this.props.t(
-                    "Koodo Reader's web version are limited by the browser, for more powerful features, please download the desktop version."
-                  )
-                );
-                return;
-              }
-              if (this.state.isBackup === "yes") {
-                this.handleBackup(item.value);
-              } else {
-                this.handleRestore(item.value);
-              }
-            }}
-          >
-            <div className="backup-page-list-item-container">
-              <span
-                className={`icon-${item.value} backup-page-list-icon`}
-              ></span>
-              {ConfigService.getReaderConfig(item.value + "_token") ? (
-                <div
-                  className="backup-page-list-title"
-                  onClick={() => {
-                    ConfigService.setReaderConfig(item.value + "_token", "");
-                    this.showMessage("Unauthorize successful");
-                  }}
-                  style={{ color: "rgb(0, 120, 212)" }}
-                >
-                  <Trans>Unauthorize</Trans>
-                </div>
-              ) : (
-                <div className="backup-page-list-title">
-                  <Trans>{item.label}</Trans>
-                </div>
-              )}
-            </div>
-          </li>
-        );
-      });
-    };
-    let syncUtil = new SyncUtil(this.state.currentDrive, {});
-
-    const dialogProps = {
-      driveName: this.state.currentDrive,
-      url: syncUtil.getAuthUrl(),
-      title:
-        driveList[
-          _.findLastIndex(driveList, {
-            value: this.state.currentDrive,
-          })
-        ].label,
-    };
-
     return (
       <div className="backup-page-container">
-        {this.props.isOpenTokenDialog ? <TokenDialog {...dialogProps} /> : null}
-
         {this.state.currentStep === 0 ? (
           <div className="backup-page-option">
-            <div
-              className={
-                this.state.isBackup === "yes"
-                  ? "backup-page-backup active"
-                  : "backup-page-backup"
-              }
-              onClick={() => {
-                this.setState({ isBackup: "yes" });
-              }}
-            >
-              <span className="icon-backup"></span>
-              <div style={{ lineHeight: 1.0 }}>
-                <Trans>Backup</Trans>
-              </div>
-            </div>
-
-            <div
-              className={
-                this.state.isBackup === "no"
-                  ? "backup-page-backup active"
-                  : "backup-page-backup"
-              }
-              onClick={(event) => {
-                if (!isElectron) {
-                  event.preventDefault();
-                  toast(
-                    this.props.t(
-                      "Koodo Reader's web version are limited by the browser, for more powerful features, please download the desktop version."
+            <div className="backup-page-backup">
+              <span
+                className="icon-backup"
+                onClick={() => {
+                  this.setState({ currentStep: 1, isBackup: "yes" });
+                  this.handleBackup();
+                }}
+              ></span>
+              <div style={{ lineHeight: 1.0, fontSize: 15 }}>
+                <Trans>Backup to</Trans>
+                <select
+                  name=""
+                  className="backup-source-dropdown"
+                  onChange={this.handleSelectSource}
+                >
+                  {[...driveList, { label: "Add data source", value: "add" }]
+                    .filter(
+                      (item) =>
+                        this.props.dataSourceList.includes(item.value) ||
+                        item.value === "local" ||
+                        item.value === "add"
                     )
-                  );
-                  return;
-                }
-                this.setState({ isBackup: "no" });
-              }}
-            >
-              <span className="icon-restore"></span>
-              <div style={{ lineHeight: 1.0 }}>
-                <Trans>Restore</Trans>
+                    .map((item) => (
+                      <option
+                        value={item.value}
+                        key={item.value}
+                        className="lang-setting-option"
+                      >
+                        {this.props.t(item.label)}
+                      </option>
+                    ))}
+                </select>
               </div>
             </div>
-          </div>
-        ) : this.state.currentStep === 1 ? (
-          <div className="backup-page-drive-container">
-            <div>{renderDrivePage()}</div>
+            <div className="backup-page-backup">
+              <span
+                className="icon-restore"
+                onClick={(event) => {
+                  if (!isElectron) {
+                    event.preventDefault();
+                    toast(
+                      this.props.t(
+                        "Koodo Reader's web version are limited by the browser, for more powerful features, please download the desktop version."
+                      )
+                    );
+                    return;
+                  }
+                  this.setState({ currentStep: 1, isBackup: "no" });
+                  this.handleRestore();
+                }}
+              ></span>
+              <div style={{ lineHeight: 1.0, fontSize: 15 }}>
+                <Trans>Restore from</Trans>
+                <select
+                  name=""
+                  className="backup-source-dropdown"
+                  onChange={this.handleSelectSource}
+                >
+                  {[...driveList, { label: "Add data source", value: "add" }]
+                    .filter(
+                      (item) =>
+                        this.props.dataSourceList.includes(item.value) ||
+                        item.value === "local" ||
+                        item.value === "add"
+                    )
+                    .map((item) => (
+                      <option
+                        value={item.value}
+                        key={item.value}
+                        className="lang-setting-option"
+                      >
+                        {this.props.t(item.label)}
+                      </option>
+                    ))}
+                </select>
+              </div>
+            </div>
           </div>
         ) : (
           <div className="backup-page-finish-container">
@@ -256,11 +234,6 @@ class BackupDialog extends React.Component<
                     : "Restore successful"}
                 </Trans>
               </div>
-              {this.state.isBackup ? null : (
-                <div style={{ opacity: 0.6 }}>
-                  <Trans>Try refresh or restart</Trans>
-                </div>
-              )}
             </div>
           </div>
         )}

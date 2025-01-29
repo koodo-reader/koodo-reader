@@ -235,3 +235,16 @@
   line-height: 50px;
   font-size: 18px;
 }
+.backup-source-dropdown {
+  display: inline-block;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  border: 0px;
+  font-size: 15px;
+  line-height: 18px;
+  opacity: 1;
+  /* padding-left: 10px; */
+  cursor: pointer;
+  width: 60px;
+}

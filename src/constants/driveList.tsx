@@ -16,52 +16,57 @@ export const driveList = [
     label: "SFTP",
     value: "sftp",
   },
-
   {
-    label: "S3 Compatible",
+    label: "S3 Compatible (Pro)",
     value: "s3compatible",
   },
   {
-    label: "Dropbox",
+    label: "Dropbox (Pro)",
     value: "dropbox",
     isPro: true,
   },
   {
-    label: "OneDrive",
+    label: "OneDrive (Pro)",
     value: "microsoft",
     isPro: true,
   },
   {
-    label: "Google Drive",
+    label: "Google Drive (Pro)",
     value: "google",
     isPro: true,
   },
 ];
-export const driveInputConfig = {
+interface ConfigItem {
+  label: string;
+  value: string;
+  type: string;
+}
+
+// Type the driveInputConfig
+interface DriveInputConfig {
+  [key: string]: ConfigItem[];
+}
+export const driveInputConfig: DriveInputConfig = {
   webdav: [
     {
       label: "Server address",
       value: "url",
       type: "text",
-      placeholder: "https://example.com",
     },
     {
-      label: "Path",
+      label: "Server path",
       value: "path",
       type: "text",
-      placeholder: "/path/to/folder",
     },
     {
       label: "Username",
       value: "username",
       type: "text",
-      placeholder: "username",
     },
     {
       label: "Password",
       value: "password",
       type: "password",
-      placeholder: "password",
     },
   ],
   ftp: [
@@ -69,31 +74,26 @@ export const driveInputConfig = {
       label: "Server address",
       value: "url",
       type: "text",
-      placeholder: "ftp://example.com",
     },
     {
       label: "Server port",
       value: "port",
       type: "text",
-      placeholder: "21",
     },
     {
-      label: "Server Path",
+      label: "Server path",
       value: "path",
       type: "text",
-      placeholder: "/path/to/folder",
     },
     {
       label: "Username",
       value: "username",
       type: "text",
-      placeholder: "username",
     },
     {
       label: "Password",
       value: "password",
       type: "password",
-      placeholder: "password",
     },
   ],
   sftp: [
@@ -101,31 +101,26 @@ export const driveInputConfig = {
       label: "Server address",
       value: "url",
       type: "text",
-      placeholder: "sftp://example.com",
     },
     {
       label: "Server port",
       value: "port",
       type: "text",
-      placeholder: "22",
     },
     {
       label: "Server Path",
       value: "path",
       type: "text",
-      placeholder: "/path/to/folder",
     },
     {
       label: "Username",
       value: "username",
       type: "text",
-      placeholder: "username",
     },
     {
       label: "Password",
       value: "password",
       type: "password",
-      placeholder: "password",
     },
   ],
   s3compatible: [
@@ -142,6 +137,11 @@ export const driveInputConfig = {
     {
       label: "BucketName",
       value: "bucketName",
+      type: "text",
+    },
+    {
+      label: "Server Path",
+      value: "path",
       type: "text",
     },
     {

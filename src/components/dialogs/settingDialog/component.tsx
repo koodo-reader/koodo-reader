@@ -27,7 +27,8 @@ import {
 } from "../../../utils/common";
 import { getStorageLocation, reloadManager } from "../../../utils/common";
 import DatabaseService from "../../../utils/storage/databaseService";
-import { driveList } from "../../../constants/driveList";
+import { driveInputConfig, driveList } from "../../../constants/driveList";
+import { SyncUtil } from "../../../assets/lib/kookit-extra-browser.min";
 declare var window: any;
 class SettingDialog extends React.Component<
   SettingInfoProps,
@@ -72,18 +73,16 @@ class SettingDialog extends React.Component<
       }),
       storageLocation: getStorageLocation() || "",
       isAddNew: false,
+      currentDrive: "",
+      driveConfig: {},
     };
   }
   componentDidMount(): void {
     this.props.handleFetchPlugins();
     this.loadFont();
-    let dataSourceList = ConfigService.getReaderConfig("dataSourceList") || [
-      "local",
-    ];
-    if (dataSourceList) {
-      dataSourceList = JSON.parse(dataSourceList);
-      this.props.setDataSource(dataSourceList);
-    }
+    let dataSourceList = ConfigService.getAllListConfig("dataSourceList");
+
+    this.props.setDataSource(dataSourceList);
   }
   loadFont = () => {
     if (dropdownList[0].option.length <= 2) {
@@ -207,6 +206,36 @@ class SettingDialog extends React.Component<
     }
     this.handleSetting("isOpenInMain");
   };
+  handleCancel = () => {
+    this.setState({ currentDrive: "" });
+  };
+  handleConfirm = async () => {
+    if (
+      this.state.currentDrive === "webdav" ||
+      this.state.currentDrive === "ftp" ||
+      this.state.currentDrive === "sftp" ||
+      this.state.currentDrive === "s3compatible"
+    ) {
+      ConfigService.setReaderConfig(
+        `${this.state.currentDrive}_token`,
+        JSON.stringify(this.state.driveConfig)
+      );
+    } else {
+      let syncUtil = new SyncUtil(this.state.currentDrive, {});
+      let refreshToken = await syncUtil.authToken(this.state.driveConfig.token);
+      ConfigService.setReaderConfig(
+        `${this.state.currentDrive}_token`,
+        JSON.stringify({ refresh_token: refreshToken })
+      );
+    }
+    ConfigService.setListConfig(this.state.currentDrive, "dataSourceList");
+    this.props.setDataSource(
+      ConfigService.getAllListConfig("dataSourceList") || []
+    );
+
+    this.setState({ currentDrive: "" });
+    toast.success(this.props.t("Addition successful"));
+  };
   render() {
     return (
       <div className="setting-dialog-container">
@@ -280,7 +309,7 @@ class SettingDialog extends React.Component<
                 this.handleChangeTab("sync");
               }}
             >
-              <Trans>Sync and Backup</Trans>
+              <Trans>Sync and backup</Trans>
             </span>
             <span
               className="book-bookmark-title"
@@ -653,6 +682,96 @@ class SettingDialog extends React.Component<
             </>
           ) : this.state.currentTab === "sync" ? (
             <>
+              {this.state.currentDrive && (
+                <div
+                  className="voice-add-new-container"
+                  style={{
+                    marginLeft: "25px",
+                    width: "calc(100% - 50px)",
+                    fontWeight: 500,
+                  }}
+                >
+                  {this.state.currentDrive === "webdav" ||
+                  this.state.currentDrive === "ftp" ||
+                  this.state.currentDrive === "sftp" ||
+                  this.state.currentDrive === "s3compatible" ? (
+                    <>
+                      {driveInputConfig[this.state.currentDrive].map((item) => {
+                        return (
+                          <input
+                            type={item.type}
+                            name={item.value}
+                            key={item.value}
+                            placeholder={this.props.t(item.label)}
+                            onChange={(e) => {
+                              this.setState((prevState) => ({
+                                driveConfig: {
+                                  ...prevState.driveConfig,
+                                  [item.value]: e.target.value,
+                                },
+                              }));
+                            }}
+                            id={"token-dialog-" + item.value + "-box"}
+                            className="token-dialog-username-box"
+                          />
+                        );
+                      })}
+                    </>
+                  ) : (
+                    <>
+                      <textarea
+                        className="token-dialog-token-box"
+                        id="token-dialog-token-box"
+                        placeholder={this.props.t(
+                          "Please authorize your account, and fill the following box with the token"
+                        )}
+                        onChange={(e) => {
+                          this.setState((prevState) => ({
+                            driveConfig: {
+                              ...prevState.driveConfig,
+                              token: e.target.value,
+                            },
+                          }));
+                        }}
+                      />
+                    </>
+                  )}
+                  <div className="token-dialog-button-container">
+                    <div
+                      className="voice-add-confirm"
+                      onClick={async () => {
+                        this.handleConfirm();
+                      }}
+                    >
+                      <Trans>Confirm</Trans>
+                    </div>
+                    <div className="voice-add-button-container">
+                      <div
+                        className="voice-add-cancel"
+                        onClick={() => {
+                          this.handleCancel();
+                        }}
+                      >
+                        <Trans>Cancel</Trans>
+                      </div>
+                      <div
+                        className="voice-add-cancel"
+                        style={{ marginRight: "10px" }}
+                        onClick={() => {
+                          this.handleJump(
+                            new SyncUtil(
+                              this.state.currentDrive,
+                              {}
+                            ).getAuthUrl()
+                          );
+                        }}
+                      >
+                        <Trans>Authorize</Trans>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
               <div className="setting-dialog-new-title">
                 <Trans>Add data source</Trans>
                 <select
@@ -661,6 +780,7 @@ class SettingDialog extends React.Component<
                   onChange={(event) => {
                     if (
                       (event.target.value === "ftp" ||
+                        event.target.value === "webdav" ||
                         event.target.value === "sftp") &&
                       !isElectron
                     ) {
@@ -671,12 +791,27 @@ class SettingDialog extends React.Component<
                       );
                       return;
                     }
-                    let dataSourceList = this.props.dataSourceList;
+                    if (
+                      event.target.value === "google" ||
+                      event.target.value === "s3compatible" ||
+                      event.target.value === "microsoft" ||
+                      event.target.value === "dropbox"
+                    ) {
+                      toast(
+                        this.props.t(
+                          "This feature is not available in the free version"
+                        )
+                      );
+                      return;
+                    }
+                    this.setState({ currentDrive: event.target.value });
                   }}
                 >
-                  {driveList
+                  {[{ label: "Please select", value: "" }, ...driveList]
                     .filter(
-                      (item) => !this.props.dataSourceList.includes(item.value)
+                      (item) =>
+                        !this.props.dataSourceList.includes(item.value) &&
+                        item.value !== "local"
                     )
                     .map((item) => (
                       <option
@@ -684,7 +819,59 @@ class SettingDialog extends React.Component<
                         key={item.value}
                         className="lang-setting-option"
                       >
-                        {item.label}
+                        {this.props.t(item.label)}
+                      </option>
+                    ))}
+                </select>
+              </div>
+              <div className="setting-dialog-new-title">
+                <Trans>Delete data source</Trans>
+                <select
+                  name=""
+                  className="lang-setting-dropdown"
+                  onChange={(event) => {
+                    this.setState({ currentDrive: event.target.value });
+                  }}
+                >
+                  {[{ label: "Please select", value: "" }, ...driveList]
+                    .filter(
+                      (item) =>
+                        this.props.dataSourceList.includes(item.value) ||
+                        item.value === ""
+                    )
+                    .map((item) => (
+                      <option
+                        value={item.value}
+                        key={item.value}
+                        className="lang-setting-option"
+                      >
+                        {this.props.t(item.label)}
+                      </option>
+                    ))}
+                </select>
+              </div>
+              <div className="setting-dialog-new-title">
+                <Trans>Set default sync option</Trans>
+                <select
+                  name=""
+                  className="lang-setting-dropdown"
+                  onChange={(event) => {
+                    this.setState({ currentDrive: event.target.value });
+                  }}
+                >
+                  {[{ label: "Please select", value: "" }, ...driveList]
+                    .filter(
+                      (item) =>
+                        this.props.dataSourceList.includes(item.value) ||
+                        item.value === ""
+                    )
+                    .map((item) => (
+                      <option
+                        value={item.value}
+                        key={item.value}
+                        className="lang-setting-option"
+                      >
+                        {this.props.t(item.label)}
                       </option>
                     ))}
                 </select>
@@ -693,24 +880,23 @@ class SettingDialog extends React.Component<
           ) : (
             <>
               {(this.props.plugins.length === 0 || this.state.isAddNew) && (
-                <div className="navigation-panel-empty-bookmark">
-                  <div
-                    className="voice-add-new-container"
-                    style={{
-                      marginLeft: "10px",
-                      width: "88%",
-                      fontWeight: 500,
-                    }}
-                  >
-                    <textarea
-                      name="url"
-                      placeholder={this.props.t(
-                        "Paste the code of the plugin here, check out document to learn how to get more plugins"
-                      )}
-                      id="voice-add-content-box"
-                      className="voice-add-content-box"
-                    />
-
+                <div
+                  className="voice-add-new-container"
+                  style={{
+                    marginLeft: "25px",
+                    width: "calc(100% - 50px)",
+                    fontWeight: 500,
+                  }}
+                >
+                  <textarea
+                    name="url"
+                    placeholder={this.props.t(
+                      "Paste the code of the plugin here, check out document to learn how to get more plugins"
+                    )}
+                    id="voice-add-content-box"
+                    className="voice-add-content-box"
+                  />
+                  <div className="token-dialog-button-container">
                     <div
                       className="voice-add-confirm"
                       onClick={async () => {

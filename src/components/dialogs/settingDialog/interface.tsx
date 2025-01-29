@@ -5,6 +5,7 @@ import PluginModel from "../../../models/Plugin";
 export interface SettingInfoProps {
   handleSetting: (isSettingOpen: boolean) => void;
   handleTipDialog: (isTipDialog: boolean) => void;
+  handleTokenDialog: (isOpenTokenDialog: boolean) => void;
   handleTip: (tip: string) => void;
   setDataSource: (dataSourceList: string[]) => void;
   t: (title: string) => string;
@@ -12,6 +13,7 @@ export interface SettingInfoProps {
   handleFetchPlugins: () => void;
   bookmarks: BookmarkModel[];
   notes: NoteModel[];
+  isOpenTokenDialog: boolean;
   plugins: PluginModel[];
   books: BookModel[];
   dataSourceList: string[];
@@ -42,4 +44,6 @@ export interface SettingInfoState {
   isAddNew: boolean;
   currentThemeIndex: number;
   currentTab: string;
+  currentDrive: string;
+  driveConfig: any;
 }
