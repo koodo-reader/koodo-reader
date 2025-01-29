@@ -1,16 +1,8 @@
-const configList = [
-  "readerConfig",
-  "themeColors",
-  "readingTime",
-  "recentBooks",
-  "deletedBooks",
-  "favoriteBooks",
-  "shelfList",
-  "noteTags",
-  "recordLocation",
-];
+import { CommonTool } from "../../assets/lib/kookit-extra-browser.min";
+
 class ConfigService {
   static getConfigJson = () => {
+    let configList = CommonTool.configList;
     let config = {};
     for (let i = 0; i < configList.length; i++) {
       let item = configList[i];

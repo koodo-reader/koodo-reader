@@ -9,4 +9,5 @@ export interface TokenDialogProps {
 }
 export interface TokenDialogState {
   isNew: boolean;
+  config: any;
 }

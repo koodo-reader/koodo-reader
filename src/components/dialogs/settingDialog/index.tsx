@@ -7,6 +7,7 @@ import {
   handleTip,
   handleFetchBooks,
   handleFetchPlugins,
+  setDataSource,
 } from "../../../store/actions";
 import { stateType } from "../../../store";
 
@@ -16,6 +17,7 @@ const mapStateToProps = (state: stateType) => {
     books: state.manager.books,
     plugins: state.manager.plugins,
     notes: state.reader.notes,
+    dataSourceList: state.backupPage.dataSourceList,
   };
 };
 const actionCreator = {
@@ -24,6 +26,7 @@ const actionCreator = {
   handleTip,
   handleFetchBooks,
   handleFetchPlugins,
+  setDataSource,
 };
 export default connect(
   mapStateToProps,

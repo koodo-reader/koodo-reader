@@ -1,6 +1,7 @@
 const initState = {
   isBackup: false,
   isOpenTokenDialog: false,
+  dataSourceList: [],
 };
 export function backupPage(
   state = initState,
@@ -16,6 +17,11 @@ export function backupPage(
       return {
         ...state,
         isOpenTokenDialog: action.payload,
+      };
+    case "SET_DATA_SOURCE":
+      return {
+        ...state,
+        dataSourceList: action.payload,
       };
     default:
       return state;
