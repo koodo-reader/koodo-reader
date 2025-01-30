@@ -30,8 +30,7 @@ export const onSyncCallback = async (service: string, authCode: string) => {
   });
   console.log(code, "code43665");
   if (code === 200) {
-    ConfigService.setListConfig(service, "syncOptionList");
-
+    ConfigService.setListConfig(service, "dataSourceList");
     toast.success(i18n.t("Binding successful"));
   }
   return code;

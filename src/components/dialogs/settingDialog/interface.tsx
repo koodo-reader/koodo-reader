@@ -7,7 +7,8 @@ export interface SettingInfoProps {
   handleTipDialog: (isTipDialog: boolean) => void;
   handleTokenDialog: (isOpenTokenDialog: boolean) => void;
   handleTip: (tip: string) => void;
-  setDataSource: (dataSourceList: string[]) => void;
+  handleFetchDataSourceList: () => void;
+  handleFetchDefaultSyncOption: () => void;
   t: (title: string) => string;
   handleFetchBooks: () => void;
   handleFetchPlugins: () => void;
@@ -17,6 +18,7 @@ export interface SettingInfoProps {
   plugins: PluginModel[];
   books: BookModel[];
   dataSourceList: string[];
+  defaultSyncOption: string;
   isAuthed: boolean;
 }
 export interface SettingInfoState {

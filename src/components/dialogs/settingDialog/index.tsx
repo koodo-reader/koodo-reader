@@ -7,7 +7,8 @@ import {
   handleTip,
   handleFetchBooks,
   handleFetchPlugins,
-  setDataSource,
+  handleFetchDataSourceList,
+  handleFetchDefaultSyncOption,
   handleTokenDialog,
 } from "../../../store/actions";
 import { stateType } from "../../../store";
@@ -20,6 +21,7 @@ const mapStateToProps = (state: stateType) => {
     isAuthed: state.manager.isAuthed,
     notes: state.reader.notes,
     dataSourceList: state.backupPage.dataSourceList,
+    defaultSyncOption: state.backupPage.defaultSyncOption,
     isOpenTokenDialog: state.backupPage.isOpenTokenDialog,
   };
 };
@@ -29,8 +31,9 @@ const actionCreator = {
   handleTip,
   handleFetchBooks,
   handleFetchPlugins,
-  setDataSource,
+  handleFetchDataSourceList,
   handleTokenDialog,
+  handleFetchDefaultSyncOption,
 };
 export default connect(
   mapStateToProps,

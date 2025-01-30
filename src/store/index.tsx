@@ -72,6 +72,7 @@ export type stateType = {
     isBackup: boolean;
     isOpenTokenDialog: boolean;
     dataSourceList: string[];
+    defaultSyncOption: string;
   };
   progressPanel: {
     percentage: number;

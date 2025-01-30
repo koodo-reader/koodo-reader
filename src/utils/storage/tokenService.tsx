@@ -14,7 +14,7 @@ export default class TokenService {
 
   static async getAllToken(): Promise<string | null> {
     try {
-      const encrypted = localStorage.getItem("encryptedToken");
+      const encrypted = localStorage.getItem("encryptedToken") || "";
       return await this.decryptString(encrypted);
     } catch (error) {
       console.error("Failed to read token:", error);
@@ -61,19 +61,85 @@ export default class TokenService {
       throw error;
     }
   }
-  static async encryptString(token: string) {
+  // static async encryptString(token: string) {
+  //   let fingerprint = await BrowserFingerprint.generate();
+  //   return btoa(token + fingerprint);
+  // }
+  static async encryptString(token: string): Promise<string> {
     let fingerprint = await BrowserFingerprint.generate();
-    return btoa(token + fingerprint);
+    const hashBuffer = await crypto.subtle.digest(
+      "SHA-256",
+      new TextEncoder().encode(fingerprint)
+    );
+    const key = await crypto.subtle.importKey(
+      "raw",
+      hashBuffer,
+      { name: "AES-GCM", length: 256 },
+      false,
+      ["encrypt"]
+    );
+
+    const iv = crypto.getRandomValues(new Uint8Array(12)); // 生成随机初始化向量
+    const encoder = new TextEncoder();
+    const encodedToken = encoder.encode(token);
+    const encryptedToken = await crypto.subtle.encrypt(
+      {
+        name: "AES-GCM",
+        iv: iv,
+      },
+      key,
+      encodedToken
+    );
+
+    const buffer = new Uint8Array(encryptedToken);
+    const ivAndData = new Uint8Array(iv.length + buffer.length);
+    ivAndData.set(iv);
+    ivAndData.set(buffer, iv.length);
+    return String.fromCharCode(...ivAndData);
   }
-  static async decryptString(encrypted: string | null) {
-    if (!encrypted) return null;
-    let decoded = atob(encrypted);
-    console.log(decoded, "decoded");
+
+  static async decryptString(encryptedString: string): Promise<string> {
     let fingerprint = await BrowserFingerprint.generate();
-    if (decoded.endsWith(fingerprint)) {
-      return decoded.slice(0, -fingerprint.length);
-    } else {
-      return null;
-    }
+    const hashBuffer = await crypto.subtle.digest(
+      "SHA-256",
+      new TextEncoder().encode(fingerprint)
+    );
+    const key = await crypto.subtle.importKey(
+      "raw",
+      hashBuffer,
+      { name: "AES-GCM", length: 256 },
+      false,
+      ["decrypt"]
+    );
+
+    const ivAndData = new Uint8Array(
+      encryptedString.split("").map((char) => char.charCodeAt(0))
+    );
+    const iv = ivAndData.slice(0, 12);
+    const data = ivAndData.slice(12);
+
+    const decryptedToken = await crypto.subtle.decrypt(
+      {
+        name: "AES-GCM",
+        iv: iv,
+      },
+      key,
+      data
+    );
+
+    const decoder = new TextDecoder();
+    return decoder.decode(decryptedToken);
   }
+
+  // static async decryptString(encrypted: string | null) {
+  //   if (!encrypted) return null;
+  //   let decoded = atob(encrypted);
+  //   console.log(decoded, "decoded");
+  //   let fingerprint = await BrowserFingerprint.generate();
+  //   if (decoded.endsWith(fingerprint)) {
+  //     return decoded.slice(0, -fingerprint.length);
+  //   } else {
+  //     return null;
+  //   }
+  // }
 }

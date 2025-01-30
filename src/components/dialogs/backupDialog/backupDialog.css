@@ -134,7 +134,7 @@
   top: 65px;
 }
 .backup-page-backup {
-  width: 142px;
+  width: 200px;
   height: 142px;
   font-size: 18px;
   line-height: 40px;
@@ -246,5 +246,5 @@
   opacity: 1;
   /* padding-left: 10px; */
   cursor: pointer;
-  width: 60px;
+  width: 80px;
 }
