@@ -17,6 +17,7 @@ export interface SettingInfoProps {
   plugins: PluginModel[];
   books: BookModel[];
   dataSourceList: string[];
+  isAuthed: boolean;
 }
 export interface SettingInfoState {
   isTouch: boolean;

@@ -8,7 +8,7 @@ export interface HeaderProps extends RouteComponentProps<any> {
   isAboutOpen: boolean;
   isCollapsed: boolean;
   isNewWarning: boolean;
-
+  isAuthed: boolean;
   bookmarks: BookmarkModel[];
   notes: NoteModel[];
   books: BookModel[];
@@ -17,7 +17,7 @@ export interface HeaderProps extends RouteComponentProps<any> {
   handleAbout: (isAboutOpen: boolean) => void;
   handleBackupDialog: (isBackup: boolean) => void;
   handleFeedbackDialog: (isShow: boolean) => void;
-
+  handleFetchAuthed: () => void;
   handleDrag: (isDrag: boolean) => void;
   handleTipDialog: (isTipDialog: boolean) => void;
   handleTip: (tip: string) => void;

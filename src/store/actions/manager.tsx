@@ -3,6 +3,7 @@ import BookModel from "../../models/Book";
 import PluginModel from "../../models/Plugin";
 import { Dispatch } from "redux";
 import DatabaseService from "../../utils/storage/databaseService";
+import TokenService from "../../utils/storage/tokenService";
 
 export function handleBooks(books: BookModel[]) {
   return { type: "HANDLE_BOOKS", payload: books };
@@ -65,6 +66,9 @@ export function handleNoteSort(isNoteSort: boolean) {
 export function handleFeedbackDialog(mode: boolean) {
   return { type: "HANDLE_FEEDBACK_DIALOG", payload: mode };
 }
+export function handleAuthed(isAuthed: boolean) {
+  return { type: "HANDLE_AUTHED", payload: isAuthed };
+}
 export function handleBookSortCode(bookSortCode: {
   sort: number;
   order: number;
@@ -94,6 +98,15 @@ export function handleFetchPlugins() {
   return async (dispatch: Dispatch) => {
     DatabaseService.getAllRecords("plugins").then((value) => {
       dispatch(handlePlugins(value));
+    });
+  };
+}
+export function handleFetchAuthed() {
+  return (dispatch: Dispatch) => {
+    TokenService.getToken("is_authed").then((value) => {
+      console.log(value, "safsdfs");
+      let isAuthed = value === "yes";
+      dispatch(handleAuthed(isAuthed));
     });
   };
 }

@@ -299,7 +299,7 @@ export class BrowserFingerprint {
       this.hashComponent(this.getMediaCapabilities()),
     ]);
 
-    return components.join("");
+    return await generateSHA256Hash(components.join(""));
   }
 }
 export function removeSearchParams() {
