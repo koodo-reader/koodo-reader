@@ -15,6 +15,7 @@ import {
 } from "../../utils/file/common";
 import toast from "react-hot-toast";
 import { Trans } from "react-i18next";
+import TokenService from "../../utils/storage/tokenService";
 class Header extends React.Component<HeaderProps, HeaderState> {
   constructor(props: HeaderProps) {
     super(props);
@@ -29,6 +30,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     };
   }
   async componentDidMount() {
+    this.props.handleFetchAuthed();
     // isElectron &&
     //   (await window.require("electron").ipcRenderer.invoke("s3-download"));
     // let syncUtil = new window.KookitSync.SyncUtil("dropbox", {});
@@ -138,6 +140,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
   };
 
   render() {
+    console.log(this.props.isAuthed);
     return (
       <div
         className="header"
@@ -234,14 +237,16 @@ class Header extends React.Component<HeaderProps, HeaderState> {
           )}
         </div>
 
-        <div
-          className="header-report-container"
-          onClick={() => {
-            this.props.history.push("/login");
-          }}
-        >
-          <Trans>Pro version</Trans>
-        </div>
+        {!this.props.isAuthed ? (
+          <div
+            className="header-report-container"
+            onClick={() => {
+              this.props.history.push("/login");
+            }}
+          >
+            <Trans>Pro version</Trans>
+          </div>
+        ) : null}
 
         <ImportLocal
           {...{

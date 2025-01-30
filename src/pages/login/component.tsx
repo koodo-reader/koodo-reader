@@ -68,6 +68,7 @@ class Login extends React.Component<LoginProps, LoginState> {
     if (resCode === 200) {
       toast.success("登录成功");
       removeSearchParams();
+      this.props.handleFetchAuthed();
       this.setState({ currentStep: 3 });
     }
   };

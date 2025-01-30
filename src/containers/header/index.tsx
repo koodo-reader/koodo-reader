@@ -10,6 +10,7 @@ import {
   handleFeedbackDialog,
   handleFetchBooks,
   handleFetchNotes,
+  handleFetchAuthed,
   handleFetchBookmarks,
 } from "../../store/actions";
 import { stateType } from "../../store";
@@ -25,7 +26,7 @@ const mapStateToProps = (state: stateType) => {
     isCollapsed: state.sidebar.isCollapsed,
     isNewWarning: state.manager.isNewWarning,
     notes: state.reader.notes,
-
+    isAuthed: state.manager.isAuthed,
     isSortDisplay: state.manager.isSortDisplay,
   };
 };
@@ -40,6 +41,7 @@ const actionCreator = {
   handleFetchBooks,
   handleFetchNotes,
   handleFetchBookmarks,
+  handleFetchAuthed,
 };
 export default connect(
   mapStateToProps,

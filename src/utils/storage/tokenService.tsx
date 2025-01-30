@@ -43,6 +43,7 @@ export default class TokenService {
   static async getToken(key: string): Promise<string | null> {
     try {
       const tokens = JSON.parse((await this.getAllToken()) || "{}");
+      console.log(tokens, key);
       return tokens[key] || null;
     } catch (error) {
       console.error("Failed to get token:", error);
@@ -67,6 +68,7 @@ export default class TokenService {
   static async decryptString(encrypted: string | null) {
     if (!encrypted) return null;
     let decoded = atob(encrypted);
+    console.log(decoded, "decoded");
     let fingerprint = await BrowserFingerprint.generate();
     if (decoded.endsWith(fingerprint)) {
       return decoded.slice(0, -fingerprint.length);

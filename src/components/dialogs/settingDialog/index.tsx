@@ -17,6 +17,7 @@ const mapStateToProps = (state: stateType) => {
     bookmarks: state.reader.bookmarks,
     books: state.manager.books,
     plugins: state.manager.plugins,
+    isAuthed: state.manager.isAuthed,
     notes: state.reader.notes,
     dataSourceList: state.backupPage.dataSourceList,
     isOpenTokenDialog: state.backupPage.isOpenTokenDialog,

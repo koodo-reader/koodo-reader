@@ -8,6 +8,7 @@ const initState = {
   isAboutOpen: false,
   isBookSort: localStorage.getItem("bookSortCode") ? true : false,
   isNoteSort: false,
+  isAuthed: false,
   isSettingOpen: false,
   viewMode: "card",
   isSortDisplay: false,
@@ -58,6 +59,11 @@ export function manager(
       return {
         ...state,
         isSelectBook: action.payload,
+      };
+    case "HANDLE_AUTHED":
+      return {
+        ...state,
+        isAuthed: action.payload,
       };
     case "HANDLE_SELECTED_BOOKS":
       return {

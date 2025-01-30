@@ -206,6 +206,30 @@ class SettingDialog extends React.Component<
     }
     this.handleSetting("isOpenInMain");
   };
+  handleAddDataSource = (event: any) => {
+    if (
+      !driveList
+        .find((item) => item.value === event.target.value)
+        ?.support.includes("browser") &&
+      !isElectron
+    ) {
+      toast(
+        this.props.t(
+          "Koodo Reader's web version are limited by the browser, for more powerful features, please download the desktop version."
+        )
+      );
+      return;
+    }
+    console.log(this.props.isAuthed);
+    if (
+      driveList.find((item) => item.value === event.target.value)?.isPro &&
+      !this.props.isAuthed
+    ) {
+      toast(this.props.t("This feature is not available in the free version"));
+      return;
+    }
+    this.setState({ currentDrive: event.target.value });
+  };
   handleCancel = () => {
     this.setState({ currentDrive: "" });
   };
@@ -777,34 +801,7 @@ class SettingDialog extends React.Component<
                 <select
                   name=""
                   className="lang-setting-dropdown"
-                  onChange={(event) => {
-                    if (
-                      !driveList
-                        .find((item) => item.value === event.target.value)
-                        ?.support.includes("web") &&
-                      !isElectron
-                    ) {
-                      toast(
-                        this.props.t(
-                          "Koodo Reader's web version are limited by the browser, for more powerful features, please download the desktop version."
-                        )
-                      );
-                      return;
-                    }
-                    if (
-                      driveList.find(
-                        (item) => item.value === event.target.value
-                      )?.isPro
-                    ) {
-                      toast(
-                        this.props.t(
-                          "This feature is not available in the free version"
-                        )
-                      );
-                      return;
-                    }
-                    this.setState({ currentDrive: event.target.value });
-                  }}
+                  onChange={this.handleAddDataSource}
                 >
                   {[
                     { label: "Please select", value: "", isPro: false },
