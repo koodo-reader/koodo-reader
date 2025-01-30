@@ -29,6 +29,11 @@ import { getStorageLocation, reloadManager } from "../../../utils/common";
 import DatabaseService from "../../../utils/storage/databaseService";
 import { driveInputConfig, driveList } from "../../../constants/driveList";
 import { SyncUtil } from "../../../assets/lib/kookit-extra-browser.min";
+import {
+  getThirdpartyRequest,
+  onSyncCallback,
+} from "../../../utils/request/thirdparty";
+import TokenService from "../../../utils/storage/tokenService";
 declare var window: any;
 class SettingDialog extends React.Component<
   SettingInfoProps,
@@ -80,9 +85,8 @@ class SettingDialog extends React.Component<
   componentDidMount(): void {
     this.props.handleFetchPlugins();
     this.loadFont();
-    let dataSourceList = ConfigService.getAllListConfig("dataSourceList");
-
-    this.props.setDataSource(dataSourceList);
+    this.props.handleFetchDataSourceList();
+    this.props.handleFetchDefaultSyncOption();
   }
   loadFont = () => {
     if (dropdownList[0].option.length <= 2) {
@@ -207,6 +211,9 @@ class SettingDialog extends React.Component<
     this.handleSetting("isOpenInMain");
   };
   handleAddDataSource = (event: any) => {
+    if (!event.target.value) {
+      return;
+    }
     if (
       !driveList
         .find((item) => item.value === event.target.value)
@@ -230,6 +237,27 @@ class SettingDialog extends React.Component<
     }
     this.setState({ currentDrive: event.target.value });
   };
+  handleDeleteDataSource = (event: any) => {
+    if (!event.target.value) {
+      return;
+    }
+    if (event.target.value === this.props.defaultSyncOption) {
+      toast.error(this.props.t("Default sync option cannot be removed"));
+      return;
+    }
+    TokenService.setToken(event.target.value + "_token", "{}");
+    ConfigService.deleteListConfig(event.target.value, "dataSourceList");
+    this.props.handleFetchDataSourceList();
+    toast.success(this.props.t("Deletion successful"));
+  };
+  handleSetDefaultSyncOption = (event: any) => {
+    if (!event.target.value) {
+      return;
+    }
+    ConfigService.setReaderConfig("defaultSyncOption", event.target.value);
+    this.props.handleFetchDefaultSyncOption();
+    toast.success(this.props.t("Change successful"));
+  };
   handleCancel = () => {
     this.setState({ currentDrive: "" });
   };
@@ -245,17 +273,12 @@ class SettingDialog extends React.Component<
         JSON.stringify(this.state.driveConfig)
       );
     } else {
-      let syncUtil = new SyncUtil(this.state.currentDrive, {});
-      let refreshToken = await syncUtil.authToken(this.state.driveConfig.token);
-      ConfigService.setReaderConfig(
-        `${this.state.currentDrive}_token`,
-        JSON.stringify({ refresh_token: refreshToken })
+      await onSyncCallback(
+        this.state.currentDrive,
+        this.state.driveConfig.token
       );
     }
-    ConfigService.setListConfig(this.state.currentDrive, "dataSourceList");
-    this.props.setDataSource(
-      ConfigService.getAllListConfig("dataSourceList") || []
-    );
+    this.props.handleFetchDataSourceList();
 
     this.setState({ currentDrive: "" });
     toast.success(this.props.t("Addition successful"));
@@ -805,7 +828,6 @@ class SettingDialog extends React.Component<
                 >
                   {[
                     { label: "Please select", value: "", isPro: false },
-                    { label: "Local", value: "local", isPro: false },
                     ...driveList,
                   ]
                     .filter(
@@ -830,13 +852,10 @@ class SettingDialog extends React.Component<
                 <select
                   name=""
                   className="lang-setting-dropdown"
-                  onChange={(event) => {
-                    this.setState({ currentDrive: event.target.value });
-                  }}
+                  onChange={this.handleDeleteDataSource}
                 >
                   {[
                     { label: "Please select", value: "", isPro: false },
-                    { label: "Local", value: "local", isPro: false },
                     ...driveList,
                   ]
                     .filter(
@@ -861,9 +880,7 @@ class SettingDialog extends React.Component<
                 <select
                   name=""
                   className="lang-setting-dropdown"
-                  onChange={(event) => {
-                    this.setState({ currentDrive: event.target.value });
-                  }}
+                  onChange={this.handleSetDefaultSyncOption}
                 >
                   {[
                     { label: "Please select", value: "", isPro: false },
@@ -880,6 +897,11 @@ class SettingDialog extends React.Component<
                         value={item.value}
                         key={item.value}
                         className="lang-setting-option"
+                        selected={
+                          item.value === this.props.defaultSyncOption
+                            ? true
+                            : false
+                        }
                       >
                         {this.props.t(item.label) +
                           (item.isPro ? " (Pro)" : "")}
