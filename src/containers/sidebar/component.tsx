@@ -229,8 +229,8 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
               ConfigService.getReaderConfig("appSkin") === "night" ||
               (ConfigService.getReaderConfig("appSkin") === "system" &&
                 ConfigService.getReaderConfig("isOSNight") === "yes")
-                ? "./assets/label_light.png"
-                : "./assets/label.png"
+                ? require("../../assets/images/logo-dark.png")
+                : require("../../assets/images/logo-light.png")
             }
             alt=""
             onClick={() => {

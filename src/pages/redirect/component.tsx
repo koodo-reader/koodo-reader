@@ -147,8 +147,8 @@ class Redirect extends React.Component<RedirectProps, RedirectState> {
             ConfigService.getReaderConfig("appSkin") === "night" ||
             (ConfigService.getReaderConfig("appSkin") === "system" &&
               ConfigService.getReaderConfig("isOSNight") === "yes")
-              ? "./assets/empty_dark.svg"
-              : "./assets/empty.svg"
+              ? require("../../assets/images/empty-dark.svg")
+              : require("../../assets/images/empty-light.svg")
           }
           alt=""
           className="empty-page-illustration"

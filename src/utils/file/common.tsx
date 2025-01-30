@@ -72,7 +72,19 @@ export function getParamsFromUrl() {
   }
   return hashParams;
 }
+export function getLoginParamsFromUrl() {
+  const url = document.location.href;
+  const params = {};
+  const queryString = url.split("?")[1];
+  const regex = /([^&;=]+)=?([^&;]*)/g;
+  let match;
 
+  while ((match = regex.exec(queryString))) {
+    params[decodeURIComponent(match[1])] = decodeURIComponent(match[2]);
+  }
+
+  return params;
+}
 export const upgradeStorage = async (
   handleFinish: () => void = () => {}
 ): Promise<Boolean> => {

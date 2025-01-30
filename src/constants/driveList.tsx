@@ -1,39 +1,53 @@
 export const driveList = [
   {
-    label: "Local",
-    value: "local",
-  },
-  {
     label: "WebDAV",
     value: "webdav",
+    icon: "icon-webdav",
+    isPro: false,
+    support: ["desktop", "phone"],
   },
 
   {
+    label: "Dropbox",
+    value: "dropbox",
+    icon: "icon-dropbox",
+    isPro: true,
+    support: ["desktop", "browser", "phone"],
+  },
+  {
+    label: "OneDrive",
+    value: "microsoft",
+    icon: "icon-onedrive",
+    isPro: true,
+    support: ["desktop", "browser", "phone"],
+  },
+  {
+    label: "Google Drive",
+    value: "google",
+    icon: "icon-googledrive",
+    isPro: true,
+    support: ["desktop", "browser", "phone"],
+  },
+  {
+    label: "S3 Compatible",
+    value: "s3compatible",
+    icon: "icon-s3compatible",
+    isPro: true,
+    support: ["desktop", "browser", "phone"],
+  },
+  {
     label: "FTP",
     value: "ftp",
+    icon: "icon-ftp",
+    isPro: false,
+    support: ["desktop"],
   },
   {
     label: "SFTP",
     value: "sftp",
-  },
-  {
-    label: "S3 Compatible (Pro)",
-    value: "s3compatible",
-  },
-  {
-    label: "Dropbox (Pro)",
-    value: "dropbox",
-    isPro: true,
-  },
-  {
-    label: "OneDrive (Pro)",
-    value: "microsoft",
-    isPro: true,
-  },
-  {
-    label: "Google Drive (Pro)",
-    value: "google",
-    isPro: true,
+    icon: "icon-sftp",
+    isPro: false,
+    support: ["desktop"],
   },
 ];
 interface ConfigItem {

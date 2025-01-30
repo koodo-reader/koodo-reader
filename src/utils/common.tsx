@@ -302,3 +302,7 @@ export class BrowserFingerprint {
     return components.join("");
   }
 }
+export function removeSearchParams() {
+  const url = new URL(window.location.href.split("?")[0]);
+  window.history.replaceState({}, document.title, url.toString());
+}
