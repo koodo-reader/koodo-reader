@@ -7,6 +7,7 @@ const {
   dialog,
   powerSaveBlocker,
   nativeTheme,
+  protocol
 } = require("electron");
 const path = require("path");
 const isDev = require("electron-is-dev");
@@ -467,3 +468,26 @@ app.on("window-all-closed", () => {
 app.on("open-file", (e, pathToFile) => {
   filePath = pathToFile;
 });
+// Register protocol handler
+app.setAsDefaultProtocolClient('koodo-reader');
+// Handle deep linking
+app.on('second-instance', (event, commandLine) => {
+  const url = commandLine.pop();
+  if (url) {
+    handleCallback(url);
+  }
+});
+
+// Handle MacOS deep linking
+app.on('open-url', (event, url) => {
+  event.preventDefault();
+  handleCallback(url);
+});
+
+const handleCallback = (url) => {
+  const code = new URL(url).searchParams.get('code');
+  const state = new URL(url).searchParams.get('state');
+  if (code && mainWin) {
+    mainWin.webContents.send('oauth-callback', { code, state });
+  }
+};

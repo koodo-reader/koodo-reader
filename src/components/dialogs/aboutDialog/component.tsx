@@ -78,6 +78,14 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
             <li
               className="sort-by-category-list"
               onClick={() => {
+                this.props.handleFeedbackDialog(true);
+              }}
+            >
+              <Trans>Report</Trans>
+            </li>
+            <li
+              className="sort-by-category-list"
+              onClick={() => {
                 if (
                   ConfigService.getReaderConfig("lang") === "zhCN" ||
                   ConfigService.getReaderConfig("lang") === "zhTW" ||

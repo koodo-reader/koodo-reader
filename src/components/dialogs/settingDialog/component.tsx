@@ -779,9 +779,9 @@ class SettingDialog extends React.Component<
                   className="lang-setting-dropdown"
                   onChange={(event) => {
                     if (
-                      (event.target.value === "ftp" ||
-                        event.target.value === "webdav" ||
-                        event.target.value === "sftp") &&
+                      !driveList
+                        .find((item) => item.value === event.target.value)
+                        ?.support.includes("web") &&
                       !isElectron
                     ) {
                       toast(
@@ -792,10 +792,9 @@ class SettingDialog extends React.Component<
                       return;
                     }
                     if (
-                      event.target.value === "google" ||
-                      event.target.value === "s3compatible" ||
-                      event.target.value === "microsoft" ||
-                      event.target.value === "dropbox"
+                      driveList.find(
+                        (item) => item.value === event.target.value
+                      )?.isPro
                     ) {
                       toast(
                         this.props.t(
@@ -807,7 +806,11 @@ class SettingDialog extends React.Component<
                     this.setState({ currentDrive: event.target.value });
                   }}
                 >
-                  {[{ label: "Please select", value: "" }, ...driveList]
+                  {[
+                    { label: "Please select", value: "", isPro: false },
+                    { label: "Local", value: "local", isPro: false },
+                    ...driveList,
+                  ]
                     .filter(
                       (item) =>
                         !this.props.dataSourceList.includes(item.value) &&
@@ -819,7 +822,8 @@ class SettingDialog extends React.Component<
                         key={item.value}
                         className="lang-setting-option"
                       >
-                        {this.props.t(item.label)}
+                        {this.props.t(item.label) +
+                          (item.isPro ? " (Pro)" : "")}
                       </option>
                     ))}
                 </select>
@@ -833,7 +837,11 @@ class SettingDialog extends React.Component<
                     this.setState({ currentDrive: event.target.value });
                   }}
                 >
-                  {[{ label: "Please select", value: "" }, ...driveList]
+                  {[
+                    { label: "Please select", value: "", isPro: false },
+                    { label: "Local", value: "local", isPro: false },
+                    ...driveList,
+                  ]
                     .filter(
                       (item) =>
                         this.props.dataSourceList.includes(item.value) ||
@@ -845,7 +853,8 @@ class SettingDialog extends React.Component<
                         key={item.value}
                         className="lang-setting-option"
                       >
-                        {this.props.t(item.label)}
+                        {this.props.t(item.label) +
+                          (item.isPro ? " (Pro)" : "")}
                       </option>
                     ))}
                 </select>
@@ -859,11 +868,15 @@ class SettingDialog extends React.Component<
                     this.setState({ currentDrive: event.target.value });
                   }}
                 >
-                  {[{ label: "Please select", value: "" }, ...driveList]
+                  {[
+                    { label: "Please select", value: "", isPro: false },
+                    ...driveList,
+                  ]
                     .filter(
                       (item) =>
                         this.props.dataSourceList.includes(item.value) ||
-                        item.value === ""
+                        item.value === "" ||
+                        item.value === "local"
                     )
                     .map((item) => (
                       <option
@@ -871,7 +884,8 @@ class SettingDialog extends React.Component<
                         key={item.value}
                         className="lang-setting-option"
                       >
-                        {this.props.t(item.label)}
+                        {this.props.t(item.label) +
+                          (item.isPro ? " (Pro)" : "")}
                       </option>
                     ))}
                 </select>

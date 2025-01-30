@@ -113,9 +113,9 @@ class BackupDialog extends React.Component<
   };
   handleSelectSource = (event: any) => {
     if (
-      (event.target.value === "ftp" ||
-        event.target.value === "webdav" ||
-        event.target.value === "sftp") &&
+      !driveList
+        .find((item) => item.value === event.target.value)
+        ?.support.includes("web") &&
       !isElectron
     ) {
       toast(
@@ -125,12 +125,7 @@ class BackupDialog extends React.Component<
       );
       return;
     }
-    if (
-      event.target.value === "google" ||
-      event.target.value === "s3compatible" ||
-      event.target.value === "microsoft" ||
-      event.target.value === "dropbox"
-    ) {
+    if (driveList.find((item) => item.value === event.target.value)?.isPro) {
       toast(this.props.t("This feature is not available in the free version"));
       return;
     }
@@ -160,7 +155,11 @@ class BackupDialog extends React.Component<
                   className="backup-source-dropdown"
                   onChange={this.handleSelectSource}
                 >
-                  {[...driveList, { label: "Add data source", value: "add" }]
+                  {[
+                    { label: "Local", value: "local", isPro: false },
+                    ...driveList,
+                    { label: "Add data source", value: "add", isPro: false },
+                  ]
                     .filter(
                       (item) =>
                         this.props.dataSourceList.includes(item.value) ||
@@ -173,7 +172,9 @@ class BackupDialog extends React.Component<
                         key={item.value}
                         className="lang-setting-option"
                       >
-                        {this.props.t(item.label)}
+                        {this.props.t(item.label) +
+                          " " +
+                          (item.isPro ? "(Pro)" : "")}
                       </option>
                     ))}
                 </select>
@@ -203,7 +204,11 @@ class BackupDialog extends React.Component<
                   className="backup-source-dropdown"
                   onChange={this.handleSelectSource}
                 >
-                  {[...driveList, { label: "Add data source", value: "add" }]
+                  {[
+                    { label: "Local", value: "local", isPro: false },
+                    ...driveList,
+                    { label: "Add data source", value: "add", isPro: false },
+                  ]
                     .filter(
                       (item) =>
                         this.props.dataSourceList.includes(item.value) ||
@@ -216,7 +221,9 @@ class BackupDialog extends React.Component<
                         key={item.value}
                         className="lang-setting-option"
                       >
-                        {this.props.t(item.label)}
+                        {this.props.t(item.label) +
+                          " " +
+                          (item.isPro ? "(Pro)" : "")}
                       </option>
                     ))}
                 </select>

@@ -233,16 +233,16 @@ class Header extends React.Component<HeaderProps, HeaderState> {
             </div>
           )}
         </div>
-        {this.state.isDeveloperVer && (
-          <div
-            className="header-report-container"
-            onClick={() => {
-              this.props.handleFeedbackDialog(true);
-            }}
-          >
-            <Trans>Report</Trans>
-          </div>
-        )}
+
+        <div
+          className="header-report-container"
+          onClick={() => {
+            this.props.history.push("/login");
+          }}
+        >
+          <Trans>Pro version</Trans>
+        </div>
+
         <ImportLocal
           {...{
             handleDrag: this.props.handleDrag,
