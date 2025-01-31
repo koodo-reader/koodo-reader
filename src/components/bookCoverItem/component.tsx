@@ -44,7 +44,7 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
       !filePath
     ) {
       this.props.handleReadingBook(this.props.book);
-      BookUtil.redirectBook(this.props.book, this.props.t);
+      BookUtil.redirectBook(this.props.book);
     }
   }
   UNSAFE_componentWillReceiveProps(nextProps: BookCoverProps) {
@@ -101,7 +101,7 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
     }
     ConfigService.setListConfig(this.props.book.key, "recentBooks");
     this.props.handleReadingBook(this.props.book);
-    BookUtil.redirectBook(this.props.book, this.props.t);
+    BookUtil.redirectBook(this.props.book);
   };
   render() {
     let percentage = "0";

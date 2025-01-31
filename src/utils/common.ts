@@ -314,31 +314,6 @@ export const addChatbox = () => {
   script.charset = "UTF-8";
   script.setAttribute("crossorigin", "*");
 
-  script.onload = () => {
-    var Tawk_API = Tawk_API || {};
-    var Tawk_LoadStart = new Date();
-
-    Tawk_API.customStyle = {
-      visibility: {
-        desktop: {
-          position: "br",
-          xOffset: 15,
-          yOffset: 40,
-        },
-        mobile: {
-          position: "bl",
-          xOffset: 5,
-          yOffset: 50,
-        },
-        bubble: {
-          rotate: "0deg",
-          xOffset: -20,
-          yOffset: 0,
-        },
-      },
-    };
-  };
-
   const firstScript = document.getElementsByTagName("script")[0];
   if (firstScript && firstScript.parentNode) {
     firstScript.parentNode.insertBefore(script, firstScript);

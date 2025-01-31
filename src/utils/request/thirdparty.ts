@@ -50,7 +50,10 @@ export const encryptToken = async (service: string, config: any) => {
   console.log(response, "response");
   if (response.code === 200) {
     console.log(67756765, service);
-    TokenService.setToken(service + "_token", response.data.encrypted_token);
+    await TokenService.setToken(
+      service + "_token",
+      response.data.encrypted_token
+    );
     console.log(response.data.encrypted_token, "response.data.encrypted_token");
   } else if (response.code === 401) {
     handleExitApp();
@@ -68,14 +71,15 @@ export const decryptToken = async (service: string) => {
     return JSON.parse(syncToken);
   }
   let thirdpartyRequest = await getThirdpartyRequest();
-  let encryptedToken = TokenService.getToken(service + "_token");
+  let encryptedToken = await TokenService.getToken(service + "_token");
   if (!encryptedToken) {
     return {};
   }
+  console.log(encryptedToken, "encryptedToken");
   let response = await thirdpartyRequest.decryptToken({
     encrypted_token: encryptedToken,
   });
-  console.log(response.code);
+  console.log(response, "response");
   if (response.code === 200) {
     console.log(response.data.token, "token");
     return JSON.parse(response.data.token);

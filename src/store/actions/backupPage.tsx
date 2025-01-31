@@ -22,7 +22,7 @@ export function handleDefaultSyncOption(option: string) {
 export function handleFetchDefaultSyncOption() {
   return (dispatch: Dispatch) => {
     let defaultSyncOption =
-      ConfigService.getReaderConfig("defaultSyncOption") || "local";
+      ConfigService.getReaderConfig("defaultSyncOption") || "";
     dispatch(handleDefaultSyncOption(defaultSyncOption));
   };
 }

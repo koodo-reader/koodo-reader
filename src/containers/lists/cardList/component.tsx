@@ -55,7 +55,7 @@ class CardList extends React.Component<CardListProps, CardListStates> {
     }
     ConfigService.setObjectConfig(note.bookKey, bookLocation, "recordLocation");
 
-    BookUtil.redirectBook(book, this.props.t);
+    BookUtil.redirectBook(book);
   };
   render() {
     let { cards } = this.props;

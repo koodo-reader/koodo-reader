@@ -43,7 +43,7 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
     ) {
       this.props.handleReadingBook(this.props.book);
 
-      BookUtil.redirectBook(this.props.book, this.props.t);
+      BookUtil.redirectBook(this.props.book);
     }
   }
   UNSAFE_componentWillReceiveProps(nextProps: BookCardProps) {
@@ -99,7 +99,7 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
     }
     ConfigService.setListConfig(this.props.book.key, "recentBooks");
     this.props.handleReadingBook(this.props.book);
-    BookUtil.redirectBook(this.props.book, this.props.t);
+    BookUtil.redirectBook(this.props.book);
   };
   render() {
     let percentage = "0";

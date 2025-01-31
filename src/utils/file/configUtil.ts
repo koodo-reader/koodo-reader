@@ -33,11 +33,21 @@ class ConfigUtil {
     });
     await syncUtil.uploadFile(type + ".json", "config", configBlob);
   }
+  static async getCloudConfig(type: string) {
+    let configStr = await ConfigUtil.downloadConfig(type);
+    console.log(configStr, "configStr");
+    return JSON.parse(configStr);
+  }
   static async downloadDatabase(type: string) {
     let syncUtil = await SyncService.getSyncUtil();
     let dbBuffer = await syncUtil.downloadFile(type + ".db", "config");
     let sqlUtil = new SqlUtil();
     return await sqlUtil.dbBufferToJson(dbBuffer, type);
+  }
+  static async getCloudDatabase(database: string) {
+    let cloudRecords = await this.downloadDatabase(database);
+    console.log(cloudRecords, "cloudRecords");
+    return cloudRecords;
   }
   static async uploadDatabase(type: string) {
     let dbBuffer = await DatabaseService.getDbBuffer(type);

@@ -42,7 +42,7 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
       !filePath
     ) {
       this.props.handleReadingBook(this.props.book);
-      BookUtil.redirectBook(this.props.book, this.props.t);
+      BookUtil.redirectBook(this.props.book);
     }
   }
   UNSAFE_componentWillReceiveProps(nextProps: BookItemProps) {
@@ -90,7 +90,7 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
     }
     ConfigService.setListConfig(this.props.book.key, "recentBooks");
     this.props.handleReadingBook(this.props.book);
-    BookUtil.redirectBook(this.props.book, this.props.t);
+    BookUtil.redirectBook(this.props.book);
   };
   handleExportBook() {
     BookUtil.fetchBook(
