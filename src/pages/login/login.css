@@ -19,11 +19,12 @@
   left: 30px;
 }
 .login-cover-img {
-  width: 30%;
-  object-fit: cover;
   position: absolute;
   bottom: 0;
-  margin-left: 15%;
+  object-fit: cover;
+  height: auto; /* 确保高度自动调整 */
+  width: 60%;
+  margin-left: 0px;
 }
 .login-close-container {
   position: absolute;
@@ -156,4 +157,21 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+.login-sync-icon {
+  font-size: 10px;
+  color: #fff;
+}
+.login-sync-icon-container {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  background-color: #585858;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  opacity: 0.8;
 }

@@ -12,6 +12,7 @@ import {
   handleFetchNotes,
   handleFetchAuthed,
   handleFetchBookmarks,
+  handleFetchDefaultSyncOption,
 } from "../../store/actions";
 import { stateType } from "../../store";
 import Header from "./component";
@@ -27,6 +28,7 @@ const mapStateToProps = (state: stateType) => {
     isNewWarning: state.manager.isNewWarning,
     notes: state.reader.notes,
     isAuthed: state.manager.isAuthed,
+    defaultSyncOption: state.backupPage.defaultSyncOption,
     isSortDisplay: state.manager.isSortDisplay,
   };
 };
@@ -42,6 +44,7 @@ const actionCreator = {
   handleFetchNotes,
   handleFetchBookmarks,
   handleFetchAuthed,
+  handleFetchDefaultSyncOption,
 };
 export default connect(
   mapStateToProps,

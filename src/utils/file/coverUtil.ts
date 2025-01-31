@@ -2,6 +2,9 @@ import { isElectron } from "react-device-detect";
 import BookModel from "../../models/Book";
 import { getStorageLocation } from "../common";
 import { Buffer } from "buffer";
+import SyncService from "../storage/syncService";
+import DatabaseService from "../storage/databaseService";
+import Book from "../../models/Book";
 declare var window: any;
 
 class CoverUtil {
@@ -137,6 +140,48 @@ class CoverUtil {
     }
 
     return fileType;
+  }
+  static async downloadCover(key: string) {
+    let syncUtil = await SyncService.getSyncUtil();
+    let covers = await syncUtil.listFiles("cover");
+    console.log(covers, "covers");
+    for (let cover of covers) {
+      console.log(cover, key);
+      if (cover.startsWith(key)) {
+        let imgBuffer: ArrayBuffer = await syncUtil.downloadFile(
+          cover,
+          "cover"
+        );
+        let imgStr = new TextDecoder().decode(imgBuffer);
+        let base64 = `data:image/${
+          cover.split(".").reverse()[0]
+        };base64,${imgStr}`;
+        this.saveCover(key, base64);
+      }
+    }
+    console.log("finish download cover");
+  }
+  static async uploadCover(key: string) {
+    let syncUtil = await SyncService.getSyncUtil();
+    let book = await DatabaseService.getRecord(key, "books");
+    if (book && book.cover) {
+      let result = this.convertCoverBase64(book.cover);
+      let coverBlob = new Blob([result.arrayBuffer], {
+        type: `image/${result.extension}`,
+      });
+      await syncUtil.uploadFile(
+        `${key}.${result.extension}`,
+        "cover",
+        coverBlob
+      );
+    }
+  }
+  static async saveCover(key: string, base64: string) {
+    let book: Book = await DatabaseService.getRecord(key, "books");
+    if (book) {
+      book.cover = base64;
+      await DatabaseService.updateRecord(book, "books");
+    }
   }
 }
 

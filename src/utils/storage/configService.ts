@@ -135,6 +135,58 @@ class ConfigService {
     }
     return objectNameList;
   }
+  static getSyncRecord(syncId: {
+    type: string;
+    catergory: string;
+    name: string;
+    key: string;
+  }) {
+    let syncRecord = JSON.parse(localStorage.getItem("syncRecord") || "{}");
+    return (
+      syncRecord[
+        syncId.type +
+          "." +
+          syncId.catergory +
+          "." +
+          syncId.name +
+          "." +
+          syncId.key
+      ] || { operation: "", time: 0 }
+    );
+  }
+  static getAllSyncRecord() {
+    let syncRecord = JSON.parse(localStorage.getItem("syncRecord") || "{}");
+    return syncRecord;
+  }
+
+  static setSyncRecord(
+    syncId: {
+      type: string;
+      catergory: string;
+      name: string;
+      key: string;
+    },
+    record: {
+      operation: string;
+      time: number;
+    }
+  ) {
+    let syncRecord = JSON.parse(localStorage.getItem("syncRecord") || "{}");
+    syncRecord[
+      syncId.type +
+        "." +
+        syncId.catergory +
+        "." +
+        syncId.name +
+        "." +
+        syncId.key
+    ] = record;
+    localStorage.setItem("syncRecord", JSON.stringify(syncRecord));
+  }
+
+  static setAllSyncRecord(syncRecord: any) {
+    localStorage.setItem("syncRecord", JSON.stringify(syncRecord));
+  }
 }
 
 export default ConfigService;

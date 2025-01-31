@@ -5,6 +5,10 @@ import BookModel from "../../models/Book";
 import toast from "react-hot-toast";
 import { getStorageLocation } from "../common";
 import { Buffer } from "buffer";
+import SyncService from "../storage/syncService";
+import { CommonTool } from "../../assets/lib/kookit-extra-browser.min";
+import DatabaseService from "../storage/databaseService";
+import Book from "../../models/Book";
 declare var window: any;
 
 class BookUtil {
@@ -118,7 +122,7 @@ class BookUtil {
         }
       });
     } else {
-      return localforage.getItem(key);
+      return localforage.getItem(key) as Promise<ArrayBuffer>;
     }
   }
   static fetchAllBooks(Books: BookModel[]) {
@@ -180,6 +184,51 @@ class BookUtil {
     } else {
       window.location.reload();
     }
+  }
+  static async downloadCacheBook(key: string) {
+    let syncUtil = await SyncService.getSyncUtil();
+    let cache = await syncUtil.downloadFile("cache-" + key + ".zip", "book");
+    await this.addBook("cache-" + key, "zip", cache);
+  }
+  static async uploadCacheBook(key: string) {
+    let syncUtil = await SyncService.getSyncUtil();
+    let bookBuffer: any = await this.fetchBook("cache-" + key, "zip", true, "");
+    let bookBlob = new Blob([bookBuffer], {
+      type: "application/zip",
+    });
+    await syncUtil.uploadFile("cache-" + key + ".zip", "book", bookBlob);
+  }
+  static async downloadBook(key: string, format: string) {
+    let syncUtil = await SyncService.getSyncUtil();
+    let bookBuffer = await syncUtil.downloadFile(
+      key + "." + format.toLowerCase(),
+      "book"
+    );
+    await this.addBook(key, format, bookBuffer);
+  }
+  static async uploadBook(key: string, format: string) {
+    let syncUtil = await SyncService.getSyncUtil();
+    let bookBuffer: any = await this.fetchBook(key, format, true, "");
+    let bookBlob = new Blob([bookBuffer], {
+      type: CommonTool.getMimeType(format.toLowerCase()),
+    });
+    syncUtil.uploadFile(key + "." + format.toLowerCase(), "book", bookBlob);
+  }
+
+  static async deleteCacheBook(key: string) {
+    await this.deleteBook("cache-" + key, "zip");
+  }
+  static async offlineBook(key: string) {
+    await this.downloadCacheBook(key);
+  }
+  static async deleteOfflineBook(key: string) {
+    let book: Book = await DatabaseService.getRecord(key, "books");
+    await this.deleteBook(key, book.format.toLowerCase());
+    await this.deleteCacheBook(key);
+  }
+  static async isBookOffline(key: string) {
+    let book: Book = await DatabaseService.getRecord(key, "books");
+    return await this.isBookExist(key, book.format.toLowerCase(), "");
   }
 }
 

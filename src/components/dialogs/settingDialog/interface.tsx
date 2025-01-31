@@ -4,6 +4,8 @@ import BookmarkModel from "../../../models/Bookmark";
 import PluginModel from "../../../models/Plugin";
 export interface SettingInfoProps {
   handleSetting: (isSettingOpen: boolean) => void;
+  handleSettingMode: (settingMode: string) => void;
+  handleSettingDrive: (settingDrive: string) => void;
   handleTipDialog: (isTipDialog: boolean) => void;
   handleTokenDialog: (isOpenTokenDialog: boolean) => void;
   handleTip: (tip: string) => void;
@@ -20,6 +22,8 @@ export interface SettingInfoProps {
   dataSourceList: string[];
   defaultSyncOption: string;
   isAuthed: boolean;
+  settingMode: string;
+  settingDrive: string;
 }
 export interface SettingInfoState {
   isTouch: boolean;
@@ -46,7 +50,5 @@ export interface SettingInfoState {
   isLemmatizeWord: boolean;
   isAddNew: boolean;
   currentThemeIndex: number;
-  currentTab: string;
-  currentDrive: string;
   driveConfig: any;
 }

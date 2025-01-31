@@ -42,7 +42,6 @@ class SettingDialog extends React.Component<
   constructor(props: SettingInfoProps) {
     super(props);
     this.state = {
-      currentTab: "general",
       isTouch: ConfigService.getReaderConfig("isTouch") === "yes",
       isImportPath: ConfigService.getReaderConfig("isImportPath") === "yes",
       isMergeWord: ConfigService.getReaderConfig("isMergeWord") === "yes",
@@ -78,7 +77,6 @@ class SettingDialog extends React.Component<
       }),
       storageLocation: getStorageLocation() || "",
       isAddNew: false,
-      currentDrive: "",
       driveConfig: {},
     };
   }
@@ -181,9 +179,6 @@ class SettingDialog extends React.Component<
       .ipcRenderer.invoke("reset-reader-position", "ping");
     toast.success(this.props.t("Reset successful"));
   };
-  handleChangeTab = (currentTab: string) => {
-    this.setState({ currentTab });
-  };
   handleTheme = (name: string, index: number) => {
     this.setState({ currentThemeIndex: index });
     ConfigService.setReaderConfig("themeColor", name);
@@ -235,7 +230,7 @@ class SettingDialog extends React.Component<
       toast(this.props.t("This feature is not available in the free version"));
       return;
     }
-    this.setState({ currentDrive: event.target.value });
+    this.props.handleSettingDrive(event.target.value);
   };
   handleDeleteDataSource = (event: any) => {
     if (!event.target.value) {
@@ -245,7 +240,7 @@ class SettingDialog extends React.Component<
       toast.error(this.props.t("Default sync option cannot be removed"));
       return;
     }
-    TokenService.setToken(event.target.value + "_token", "{}");
+    TokenService.setToken(event.target.value + "_token", "");
     ConfigService.deleteListConfig(event.target.value, "dataSourceList");
     this.props.handleFetchDataSourceList();
     toast.success(this.props.t("Deletion successful"));
@@ -259,37 +254,36 @@ class SettingDialog extends React.Component<
     toast.success(this.props.t("Change successful"));
   };
   handleCancel = () => {
-    this.setState({ currentDrive: "" });
+    this.props.handleSettingDrive("");
   };
   handleConfirm = async () => {
     if (
-      this.state.currentDrive === "webdav" ||
-      this.state.currentDrive === "ftp" ||
-      this.state.currentDrive === "sftp" ||
-      this.state.currentDrive === "s3compatible"
+      this.props.settingDrive === "webdav" ||
+      this.props.settingDrive === "ftp" ||
+      this.props.settingDrive === "sftp" ||
+      this.props.settingDrive === "s3compatible"
     ) {
       ConfigService.setReaderConfig(
-        `${this.state.currentDrive}_token`,
+        `${this.props.settingDrive}_token`,
         JSON.stringify(this.state.driveConfig)
       );
     } else {
       await onSyncCallback(
-        this.state.currentDrive,
+        this.props.settingDrive,
         this.state.driveConfig.token
       );
     }
     this.props.handleFetchDataSourceList();
 
-    this.setState({ currentDrive: "" });
-    toast.success(this.props.t("Addition successful"));
+    this.props.handleSettingDrive("");
   };
   render() {
     return (
       <div className="setting-dialog-container">
-        <p className="setting-dialog-title">
+        <div className="setting-dialog-title">
           <Trans>Setting</Trans>
-        </p>
-        <p className="setting-subtitle">
+        </div>
+        <div className="setting-subtitle">
           <Trans>Version</Trans>
           {packageInfo.version}
           &nbsp;&nbsp;
@@ -309,10 +303,10 @@ class SettingDialog extends React.Component<
             <span
               className="book-bookmark-title"
               onClick={() => {
-                this.handleChangeTab("general");
+                this.props.handleSettingMode("general");
               }}
               style={
-                this.state.currentTab === "general"
+                this.props.settingMode === "general"
                   ? { fontWeight: "bold", borderBottom: "2px solid" }
                   : { opacity: 0.5 }
               }
@@ -322,12 +316,12 @@ class SettingDialog extends React.Component<
             <span
               className="book-bookmark-title"
               style={
-                this.state.currentTab === "reading"
+                this.props.settingMode === "reading"
                   ? { fontWeight: "bold", borderBottom: "2px solid" }
                   : { opacity: 0.5 }
               }
               onClick={() => {
-                this.handleChangeTab("reading");
+                this.props.handleSettingMode("reading");
               }}
             >
               <Trans>Reading</Trans>
@@ -335,12 +329,12 @@ class SettingDialog extends React.Component<
             <span
               className="book-bookmark-title"
               style={
-                this.state.currentTab === "appearance"
+                this.props.settingMode === "appearance"
                   ? { fontWeight: "bold", borderBottom: "2px solid" }
                   : { opacity: 0.5 }
               }
               onClick={() => {
-                this.handleChangeTab("appearance");
+                this.props.handleSettingMode("appearance");
               }}
             >
               <Trans>Appearance</Trans>
@@ -348,12 +342,12 @@ class SettingDialog extends React.Component<
             <span
               className="book-bookmark-title"
               style={
-                this.state.currentTab === "sync"
+                this.props.settingMode === "sync"
                   ? { fontWeight: "bold", borderBottom: "2px solid" }
                   : { opacity: 0.5 }
               }
               onClick={() => {
-                this.handleChangeTab("sync");
+                this.props.handleSettingMode("sync");
               }}
             >
               <Trans>Sync and backup</Trans>
@@ -361,18 +355,18 @@ class SettingDialog extends React.Component<
             <span
               className="book-bookmark-title"
               style={
-                this.state.currentTab === "plugins"
+                this.props.settingMode === "plugins"
                   ? { fontWeight: "bold", borderBottom: "2px solid" }
                   : { opacity: 0.5 }
               }
               onClick={() => {
-                this.handleChangeTab("plugins");
+                this.props.handleSettingMode("plugins");
               }}
             >
               <Trans>Plugins</Trans>
             </span>
           </div>
-        </p>
+        </div>
         <div
           className="setting-close-container"
           onClick={() => {
@@ -383,7 +377,7 @@ class SettingDialog extends React.Component<
         </div>
 
         <div className="setting-dialog-info">
-          {this.state.currentTab === "general" ? (
+          {this.props.settingMode === "general" ? (
             <>
               {generalSettingList.map((item, index) => {
                 return (
@@ -518,7 +512,7 @@ class SettingDialog extends React.Component<
                 </select>
               </div>
             </>
-          ) : this.state.currentTab === "reading" ? (
+          ) : this.props.settingMode === "reading" ? (
             <>
               {readingSettingList.map((item, index) => {
                 return (
@@ -595,7 +589,7 @@ class SettingDialog extends React.Component<
                 </>
               )}
             </>
-          ) : this.state.currentTab === "appearance" ? (
+          ) : this.props.settingMode === "appearance" ? (
             <>
               {appearanceSettingList.map((item, index) => {
                 return (
@@ -727,9 +721,9 @@ class SettingDialog extends React.Component<
                 </select>
               </div>
             </>
-          ) : this.state.currentTab === "sync" ? (
+          ) : this.props.settingMode === "sync" ? (
             <>
-              {this.state.currentDrive && (
+              {this.props.settingDrive && (
                 <div
                   className="voice-add-new-container"
                   style={{
@@ -738,12 +732,12 @@ class SettingDialog extends React.Component<
                     fontWeight: 500,
                   }}
                 >
-                  {this.state.currentDrive === "webdav" ||
-                  this.state.currentDrive === "ftp" ||
-                  this.state.currentDrive === "sftp" ||
-                  this.state.currentDrive === "s3compatible" ? (
+                  {this.props.settingDrive === "webdav" ||
+                  this.props.settingDrive === "ftp" ||
+                  this.props.settingDrive === "sftp" ||
+                  this.props.settingDrive === "s3compatible" ? (
                     <>
-                      {driveInputConfig[this.state.currentDrive].map((item) => {
+                      {driveInputConfig[this.props.settingDrive].map((item) => {
                         return (
                           <input
                             type={item.type}
@@ -801,20 +795,24 @@ class SettingDialog extends React.Component<
                       >
                         <Trans>Cancel</Trans>
                       </div>
-                      <div
-                        className="voice-add-cancel"
-                        style={{ marginRight: "10px" }}
-                        onClick={() => {
-                          this.handleJump(
-                            new SyncUtil(
-                              this.state.currentDrive,
-                              {}
-                            ).getAuthUrl()
-                          );
-                        }}
-                      >
-                        <Trans>Authorize</Trans>
-                      </div>
+                      {(this.props.settingDrive === "dropbox" ||
+                        this.props.settingDrive === "google" ||
+                        this.props.settingDrive === "microsoft") && (
+                        <div
+                          className="voice-add-cancel"
+                          style={{ marginRight: "10px" }}
+                          onClick={() => {
+                            this.handleJump(
+                              new SyncUtil(
+                                this.props.settingDrive,
+                                {}
+                              ).getAuthUrl()
+                            );
+                          }}
+                        >
+                          <Trans>Authorize</Trans>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -831,9 +829,7 @@ class SettingDialog extends React.Component<
                     ...driveList,
                   ]
                     .filter(
-                      (item) =>
-                        !this.props.dataSourceList.includes(item.value) &&
-                        item.value !== "local"
+                      (item) => !this.props.dataSourceList.includes(item.value)
                     )
                     .map((item) => (
                       <option

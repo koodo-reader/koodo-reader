@@ -80,7 +80,6 @@ class DeleteDialog extends React.Component<
       this.props.history.push("/manager/empty");
     }
     this.props.handleFetchBooks();
-    this.props.handleFetchBooks();
     this.props.handleFetchBookmarks();
     this.props.handleFetchNotes();
   };

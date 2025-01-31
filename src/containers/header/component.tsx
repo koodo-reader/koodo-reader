@@ -16,6 +16,14 @@ import {
 import toast from "react-hot-toast";
 import { Trans } from "react-i18next";
 import TokenService from "../../utils/storage/tokenService";
+import { addChatbox } from "../../utils/common";
+import { getThirdpartyRequest } from "../../utils/request/thirdparty";
+import { SyncHelper } from "../../assets/lib/kookit-extra-browser.min";
+import ConfigUtil from "../../utils/file/configUtil";
+import DatabaseService from "../../utils/storage/databaseService";
+import SyncService from "../../utils/storage/syncService";
+import CoverUtil from "../../utils/file/coverUtil";
+import BookUtil from "../../utils/file/bookUtil";
 class Header extends React.Component<HeaderProps, HeaderState> {
   constructor(props: HeaderProps) {
     super(props);
@@ -31,6 +39,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
   }
   async componentDidMount() {
     this.props.handleFetchAuthed();
+    this.props.handleFetchDefaultSyncOption();
     // isElectron &&
     //   (await window.require("electron").ipcRenderer.invoke("s3-download"));
     // let syncUtil = new window.KookitSync.SyncUtil("dropbox", {});
@@ -64,7 +73,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
 
       //Check for data update
       //upgrade data from old version
-      let res1 = await upgradeStorage(this.handleFinish);
+      let res1 = await upgradeStorage(this.handleFinishUpgrade);
       let res2 = upgradeConfig();
       if (!res1 || !res2) {
         toast.error("Upgrade failed");
@@ -90,7 +99,15 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       this.props.handleFetchBookmarks();
     });
   }
-  handleFinish = () => {
+  UNSAFE_componentWillReceiveProps(
+    nextProps: Readonly<HeaderProps>,
+    nextContext: any
+  ): void {
+    if (nextProps.isAuthed) {
+      addChatbox();
+    }
+  }
+  handleFinishUpgrade = () => {
     setTimeout(() => {
       this.props.history.push("/manager/home");
     }, 1000);
@@ -112,7 +129,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       toast.success(this.props.t("Synchronisation successful"));
     }
   };
-  handleSync = () => {
+  handleLocalSync = () => {
     if (ConfigService.getReaderConfig("isFirst") !== "no") {
       this.props.handleTipDialog(true);
       this.props.handleTip(
@@ -130,6 +147,69 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     } else {
       this.syncToLocation();
     }
+  };
+  handleFinish = async () => {
+    let thirdpartyRequest = await getThirdpartyRequest();
+    let deleteSyncResult = await thirdpartyRequest.deleteSyncState();
+    if (deleteSyncResult.code !== 200) {
+      toast.error(this.props.t("Failed to delete sync state"));
+    }
+  };
+  beforeSync = async () => {
+    console.log(this.props.defaultSyncOption, "defaultSyncOption");
+    if (!this.props.defaultSyncOption) {
+      toast.error(this.props.t("Please add sync option in the setting"));
+      return;
+    }
+    let thirdpartyRequest = await getThirdpartyRequest();
+    let getSyncResult = await thirdpartyRequest.getSyncState();
+    if (getSyncResult.code !== 200) {
+      toast.error(this.props.t("Failed to get sync state"));
+      await this.handleFinish();
+      return;
+    }
+    if (!getSyncResult.data) {
+      toast.error(
+        this.props.t(
+          "Sync state is occupied by other devices, please try again later"
+        )
+      );
+      await this.handleFinish();
+      return;
+    }
+    toast.loading(this.props.t("Start syncing") + "...");
+  };
+  getCompareResult = async () => {
+    let result = await ConfigUtil.downloadConfig("sync");
+    let cloudSyncRecords = JSON.parse(result ? result : "{}");
+    let localSyncRecords = ConfigService.getAllSyncRecord();
+    console.log(localSyncRecords, cloudSyncRecords);
+    return await SyncHelper.compareAll(localSyncRecords, cloudSyncRecords);
+  };
+  handleCloudSync = async () => {
+    await this.beforeSync();
+    let { compareResult, syncRecords } = await this.getCompareResult();
+    await this.handleSync(compareResult);
+  };
+  handleSuccess = async () => {
+    this.props.handleFetchBooks();
+    this.props.handleFetchBookmarks();
+    this.props.handleFetchNotes();
+  };
+  handleSync = async (compareResult) => {
+    await SyncHelper.startSync(
+      compareResult,
+      ConfigService,
+      DatabaseService,
+      SyncService,
+      ConfigUtil,
+      BookUtil,
+      CoverUtil
+    );
+    console.log("sync finish");
+    await this.handleFinish();
+    console.log("sync finish2");
+    await this.handleSuccess();
   };
   syncToLocation = async () => {
     let timestamp = new Date().getTime().toString();
@@ -212,29 +292,36 @@ class Header extends React.Component<HeaderProps, HeaderState> {
               <span className="icon-archive header-archive-icon"></span>
             </span>
           </div>
-          {isElectron && (
-            <div
-              className="setting-icon-container"
-              onClick={() => {
-                this.handleSync();
-              }}
-              style={{ marginTop: "2px" }}
+
+          <div
+            className="setting-icon-container"
+            onClick={() => {
+              if (!isElectron && !this.props.isAuthed) {
+                toast(
+                  this.props.t(
+                    "This feature is not available in the free version"
+                  )
+                );
+              }
+              if (this.props.isAuthed) {
+              } else {
+                this.handleLocalSync();
+              }
+            }}
+            style={{ marginTop: "2px" }}
+          >
+            <span
+              data-tooltip-id="my-tooltip"
+              data-tooltip-content={this.props.t("Sync")}
             >
               <span
-                data-tooltip-id="my-tooltip"
-                data-tooltip-content={this.props.t("Sync")}
-              >
-                <span
-                  className="icon-sync setting-icon"
-                  style={
-                    this.state.isdataChange
-                      ? { color: "rgb(35, 170, 242)" }
-                      : {}
-                  }
-                ></span>
-              </span>
-            </div>
-          )}
+                className="icon-sync setting-icon"
+                style={
+                  this.state.isdataChange ? { color: "rgb(35, 170, 242)" } : {}
+                }
+              ></span>
+            </span>
+          </div>
         </div>
 
         {!this.props.isAuthed ? (

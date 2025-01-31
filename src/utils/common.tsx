@@ -306,3 +306,41 @@ export function removeSearchParams() {
   const url = new URL(window.location.href.split("?")[0]);
   window.history.replaceState({}, document.title, url.toString());
 }
+export const addChatbox = () => {
+  const script = document.createElement("script");
+  script.type = "text/javascript";
+  script.async = true;
+  script.src = "https://embed.tawk.to/65ed4b039131ed19d977781c/1hojeq2jm";
+  script.charset = "UTF-8";
+  script.setAttribute("crossorigin", "*");
+
+  script.onload = () => {
+    var Tawk_API = Tawk_API || {};
+    var Tawk_LoadStart = new Date();
+
+    Tawk_API.customStyle = {
+      visibility: {
+        desktop: {
+          position: "br",
+          xOffset: 15,
+          yOffset: 40,
+        },
+        mobile: {
+          position: "bl",
+          xOffset: 5,
+          yOffset: 50,
+        },
+        bubble: {
+          rotate: "0deg",
+          xOffset: -20,
+          yOffset: 0,
+        },
+      },
+    };
+  };
+
+  const firstScript = document.getElementsByTagName("script")[0];
+  if (firstScript && firstScript.parentNode) {
+    firstScript.parentNode.insertBefore(script, firstScript);
+  }
+};

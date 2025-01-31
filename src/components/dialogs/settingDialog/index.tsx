@@ -10,6 +10,8 @@ import {
   handleFetchDataSourceList,
   handleFetchDefaultSyncOption,
   handleTokenDialog,
+  handleSettingMode,
+  handleSettingDrive,
 } from "../../../store/actions";
 import { stateType } from "../../../store";
 
@@ -19,6 +21,8 @@ const mapStateToProps = (state: stateType) => {
     books: state.manager.books,
     plugins: state.manager.plugins,
     isAuthed: state.manager.isAuthed,
+    settingMode: state.manager.settingMode,
+    settingDrive: state.manager.settingDrive,
     notes: state.reader.notes,
     dataSourceList: state.backupPage.dataSourceList,
     defaultSyncOption: state.backupPage.defaultSyncOption,
@@ -34,6 +38,8 @@ const actionCreator = {
   handleFetchDataSourceList,
   handleTokenDialog,
   handleFetchDefaultSyncOption,
+  handleSettingMode,
+  handleSettingDrive,
 };
 export default connect(
   mapStateToProps,

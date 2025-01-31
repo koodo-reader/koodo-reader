@@ -32,6 +32,12 @@ export function handleTip(tip: string) {
 export function handleSetting(isSettingOpen: boolean) {
   return { type: "HANDLE_SETTING", payload: isSettingOpen };
 }
+export function handleSettingMode(settingMode: string) {
+  return { type: "HANDLE_SETTING_MODE", payload: settingMode };
+}
+export function handleSettingDrive(settingDrive: string) {
+  return { type: "HANDLE_SETTING_DRIVE", payload: settingDrive };
+}
 export function handleAbout(isAboutOpen: boolean) {
   return { type: "HANDLE_ABOUT", payload: isAboutOpen };
 }
