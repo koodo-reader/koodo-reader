@@ -50,6 +50,8 @@ export type stateType = {
     isSelectBook: boolean;
     selectedBooks: string[];
     isTipDialog: boolean;
+    settingMode: string;
+    settingDrive: string;
     isDetailDialog: boolean;
     isOpenFeedbackDialog: boolean;
     bookSortCode: { sort: number; order: number };

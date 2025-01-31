@@ -13,7 +13,7 @@ export const getThirdpartyRequest = async () => {
   return thirdpartyRequest;
 };
 export const onSyncCallback = async (service: string, authCode: string) => {
-  toast.loading(i18n.t("Adding..."));
+  toast.loading(i18n.t("Adding..."), { id: "adding-sync-id" });
   console.log(service, authCode);
   let thirdpartyRequest = await getThirdpartyRequest();
   console.log(thirdpartyRequest, "thirdpartyRequest");
@@ -22,7 +22,7 @@ export const onSyncCallback = async (service: string, authCode: string) => {
   let refreshToken = await syncUtil.authToken(authCode);
   console.log(refreshToken, "refreshToken");
   if (!refreshToken) {
-    toast.error(i18n.t("Authorization failed"));
+    toast.error(i18n.t("Authorization failed"), { id: "adding-sync-id" });
     return;
   }
   let code = await encryptToken(service, {
@@ -31,7 +31,7 @@ export const onSyncCallback = async (service: string, authCode: string) => {
   console.log(code, "code43665");
   if (code === 200) {
     ConfigService.setListConfig(service, "dataSourceList");
-    toast.success(i18n.t("Binding successful"));
+    toast.success(i18n.t("Binding successful"), { id: "adding-sync-id" });
   }
   return code;
 };
