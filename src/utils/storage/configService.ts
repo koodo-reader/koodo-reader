@@ -1,26 +1,28 @@
-import { CommonTool } from "../../assets/lib/kookit-extra-browser.min";
-
 class ConfigService {
-  static getConfigJson = () => {
-    let configList = CommonTool.configList;
-    let config = {};
-    for (let i = 0; i < configList.length; i++) {
-      let item = configList[i];
-      if (localStorage.getItem(item)) {
-        config[item] = localStorage.getItem(item);
-      }
-    }
-    return config;
-  };
   static getReaderConfig(key: string) {
     let readerConfig = JSON.parse(localStorage.getItem("readerConfig")!) || {};
     return readerConfig[key];
   }
 
-  static setReaderConfig(key: string, value: string) {
+  static setReaderConfig(key: string, value: string, isRecord = true) {
     let readerConfig = JSON.parse(localStorage.getItem("readerConfig")!) || {};
     readerConfig[key] = value;
     localStorage.setItem("readerConfig", JSON.stringify(readerConfig));
+    if (isRecord) {
+      console.log(key, "sadfs2342df");
+      ConfigService.setSyncRecord(
+        {
+          type: "config",
+          catergory: "readerConfig",
+          name: "mobile",
+          key: key,
+        },
+        {
+          operation: "update",
+          time: Date.now(),
+        }
+      );
+    }
   }
 
   static getAllListConfig(key: string) {
@@ -50,13 +52,46 @@ class ConfigService {
 
     this.setAllListConfig(itemArr, key);
   }
-  static setAllListConfig(itemArr: string[], key: string) {
+  static setAllListConfig(itemArr: string[], key: string, isRecord = true) {
     localStorage.setItem(key, JSON.stringify(itemArr));
+    if (isRecord) {
+      ConfigService.setSyncRecord(
+        {
+          type: "config",
+          catergory: "listConfig",
+          name: "general",
+          key: key,
+        },
+        {
+          operation: "update",
+          time: Date.now(),
+        }
+      );
+    }
   }
 
-  static setObjectConfig(itemName: string, item: any, key: string) {
+  static setObjectConfig(
+    itemName: string,
+    item: any,
+    key: string,
+    isRecord = true
+  ) {
     let obj = this.getAllObjectConfig(key);
     obj[itemName] = item;
+    if (isRecord) {
+      ConfigService.setSyncRecord(
+        {
+          type: "config",
+          catergory: "objectConfig",
+          name: key,
+          key: itemName,
+        },
+        {
+          operation: "update",
+          time: Date.now(),
+        }
+      );
+    }
     this.setAllObjectConfig(obj, key);
   }
 
@@ -75,6 +110,18 @@ class ConfigService {
   static deleteObjectConfig(itemName: string, key: string) {
     let obj = this.getAllObjectConfig(key);
     delete obj[itemName];
+    ConfigService.setSyncRecord(
+      {
+        type: "config",
+        catergory: "objectConfig",
+        name: key,
+        key: itemName,
+      },
+      {
+        operation: "delete",
+        time: Date.now(),
+      }
+    );
     this.setAllObjectConfig(obj, key);
   }
   static getAllMapConfig(key: string) {
@@ -97,6 +144,45 @@ class ConfigService {
     if (itemName && obj[objectName].indexOf(itemName) === -1) {
       obj[objectName].unshift(itemName);
     }
+    ConfigService.setSyncRecord(
+      {
+        type: "config",
+        catergory: "mapConfig",
+        name: key,
+        key: objectName,
+      },
+      {
+        operation: "update",
+        time: Date.now(),
+      }
+    );
+    this.setAllMapConfig(obj, key);
+  }
+  static setOneMapConfig(
+    objectName: string,
+    itemArr: string[],
+    key: string,
+    isRecord = true
+  ) {
+    console.log(objectName, itemArr, key, "sad68568fsdf");
+    let obj = this.getAllMapConfig(key);
+    obj[objectName] = itemArr;
+    console.log(obj, key, "sadfsds254f");
+    if (isRecord) {
+      ConfigService.setSyncRecord(
+        {
+          type: "config",
+          catergory: "mapConfig",
+          name: key,
+          key: objectName,
+        },
+        {
+          operation: "update",
+          time: Date.now(),
+        }
+      );
+    }
+    console.log(obj, key, "sadfsdf");
     this.setAllMapConfig(obj, key);
   }
   static deleteFromMapConfig(
@@ -107,6 +193,18 @@ class ConfigService {
     let obj = this.getAllMapConfig(key);
     let index = obj[objectName].indexOf(itemName);
     obj[objectName].splice(index, 1);
+    ConfigService.setSyncRecord(
+      {
+        type: "config",
+        catergory: "mapConfig",
+        name: key,
+        key: objectName,
+      },
+      {
+        operation: "update",
+        time: Date.now(),
+      }
+    );
     this.setAllMapConfig(obj, key);
   }
   static deleteFromAllMapConfig(itemName: string, key: string) {
@@ -116,6 +214,18 @@ class ConfigService {
       let index = obj[item].indexOf(itemName);
       if (index > -1) {
         obj[item].splice(index, 1);
+        ConfigService.setSyncRecord(
+          {
+            type: "config",
+            catergory: "mapConfig",
+            name: key,
+            key: item,
+          },
+          {
+            operation: "update",
+            time: Date.now(),
+          }
+        );
       }
     });
     this.setAllMapConfig(obj, key);
@@ -123,6 +233,18 @@ class ConfigService {
   static deleteMapConfig(objectName: string, key: string) {
     let obj = this.getAllMapConfig(key);
     delete obj[objectName];
+    ConfigService.setSyncRecord(
+      {
+        type: "config",
+        catergory: "mapConfig",
+        name: key,
+        key: objectName,
+      },
+      {
+        operation: "delete",
+        time: Date.now(),
+      }
+    );
     this.setAllMapConfig(obj, key);
   }
   static getFromAllMapConfig(itemName: string, key: string) {

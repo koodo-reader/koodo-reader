@@ -7,6 +7,7 @@ import { getCloudConfig } from "./common";
 import DatabaseService from "../storage/databaseService";
 import { saveAs } from "file-saver";
 import JSZip from "jszip";
+import ConfigUtil from "./configUtil";
 declare var window: any;
 export const databaseList = ["books", "notes", "bookmarks", "words", "plugins"];
 export const backup = async (service: string): Promise<Boolean> => {
@@ -114,7 +115,7 @@ export const backupFromStorage = async () => {
   let bookmarks = await DatabaseService.getDbBuffer("bookmarks");
   let words = await DatabaseService.getDbBuffer("words");
   let plugins = await DatabaseService.getDbBuffer("plugins");
-  let config = JSON.stringify(ConfigService.getConfigJson());
+  let config = JSON.stringify(ConfigUtil.dumpConfig("config"));
   await zipCover(zip);
   await zipBook(zip);
   let result = await zipConfig(
@@ -131,7 +132,7 @@ export const backupFromStorage = async () => {
 };
 
 export const backupToConfigJson = () => {
-  let configStr = JSON.stringify(ConfigService.getConfigJson());
+  let configStr = JSON.stringify(ConfigUtil.dumpConfig("config"));
   const fs = window.require("fs");
   const path = window.require("path");
   const dataPath = getStorageLocation() || "";

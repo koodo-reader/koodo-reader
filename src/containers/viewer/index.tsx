@@ -31,6 +31,7 @@ const mapStateToProps = (state: stateType) => {
     isOpenMenu: state.viewArea.isOpenMenu,
     books: state.manager.books,
     notes: state.reader.notes,
+    defaultSyncOption: state.backupPage.defaultSyncOption,
     menuMode: state.viewArea.menuMode,
   };
 };

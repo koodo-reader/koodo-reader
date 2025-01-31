@@ -1,6 +1,6 @@
 import ConfigService from "../storage/configService";
 import { isElectron } from "react-device-detect";
-import localforage from "localforage";
+import localforage, { key } from "localforage";
 import BookModel from "../../models/Book";
 import toast from "react-hot-toast";
 import { getStorageLocation } from "../common";
@@ -9,6 +9,8 @@ import SyncService from "../storage/syncService";
 import { CommonTool } from "../../assets/lib/kookit-extra-browser.min";
 import DatabaseService from "../storage/databaseService";
 import Book from "../../models/Book";
+import i18n from "../../i18n";
+import TokenService from "../storage/tokenService";
 declare var window: any;
 
 class BookUtil {
@@ -135,12 +137,21 @@ class BookUtil {
       );
     });
   }
-  static async redirectBook(book: BookModel, t: (string) => string) {
+  static async redirectBook(book: BookModel) {
     if (
       !(await this.isBookExist(book.key, book.format.toLowerCase(), book.path))
     ) {
-      toast.error(t("Book not exist"));
-      return;
+      if (
+        ConfigService.getReaderConfig("defaultSyncOption") &&
+        (await TokenService.getToken("is_authed")) === "yes" &&
+        (await this.isBookExistInCloud(book.key))
+      ) {
+        toast(i18n.t("Book not exist, downloading from cloud"));
+        await this.downloadBook(book.key, book.format);
+      } else {
+        toast.error(i18n.t("Book not exist"));
+        return;
+      }
     }
     let ref = book.format.toLowerCase();
 
@@ -184,6 +195,10 @@ class BookUtil {
     } else {
       window.location.reload();
     }
+  }
+  static async isBookExistInCloud(key: string) {
+    let syncUtil = await SyncService.getSyncUtil();
+    return await syncUtil.isExist("book", key);
   }
   static async downloadCacheBook(key: string) {
     let syncUtil = await SyncService.getSyncUtil();
@@ -229,6 +244,14 @@ class BookUtil {
   static async isBookOffline(key: string) {
     let book: Book = await DatabaseService.getRecord(key, "books");
     return await this.isBookExist(key, book.format.toLowerCase(), "");
+  }
+  static async getLocalBookList() {
+    let books: Book[] | null = await DatabaseService.getAllRecords("books");
+    return books
+      ?.filter((book) =>
+        this.isBookExist(book.key, book.format.toLowerCase(), "")
+      )
+      .map((book) => book.key + "." + book.format.toLowerCase());
   }
 }
 

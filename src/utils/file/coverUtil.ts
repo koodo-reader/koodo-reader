@@ -5,6 +5,7 @@ import { Buffer } from "buffer";
 import SyncService from "../storage/syncService";
 import DatabaseService from "../storage/databaseService";
 import Book from "../../models/Book";
+import { CommonTool } from "../../assets/lib/kookit-extra-browser.min";
 declare var window: any;
 
 class CoverUtil {
@@ -152,11 +153,13 @@ class CoverUtil {
           cover,
           "cover"
         );
-        let imgStr = new TextDecoder().decode(imgBuffer);
+        let imgStr =
+          CommonTool.arrayBufferToBase64(imgBuffer).split("base64")[1];
         let base64 = `data:image/${
           cover.split(".").reverse()[0]
         };base64,${imgStr}`;
-        this.saveCover(key, base64);
+        console.log(base64, "base64");
+        await this.saveCover(key, base64);
       }
     }
     console.log("finish download cover");
@@ -178,10 +181,22 @@ class CoverUtil {
   }
   static async saveCover(key: string, base64: string) {
     let book: Book = await DatabaseService.getRecord(key, "books");
+    console.log(book, "saveCover");
     if (book) {
       book.cover = base64;
       await DatabaseService.updateRecord(book, "books");
     }
+  }
+  static async getLocalCoverList() {
+    let books: Book[] | null = await DatabaseService.getAllRecords("books");
+    return books
+      ?.map((book) => {
+        if (!book.cover) {
+          return "";
+        }
+        return book.key + "." + this.base64ToFileType(book.cover);
+      })
+      .filter((item) => item !== "");
   }
 }
 

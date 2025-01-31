@@ -158,15 +158,17 @@ class Header extends React.Component<HeaderProps, HeaderState> {
   beforeSync = async () => {
     console.log(this.props.defaultSyncOption, "defaultSyncOption");
     if (!this.props.defaultSyncOption) {
-      toast.error(this.props.t("Please add sync option in the setting"));
-      return;
+      toast.error(
+        this.props.t("Please set default sync option in the setting")
+      );
+      return false;
     }
     let thirdpartyRequest = await getThirdpartyRequest();
     let getSyncResult = await thirdpartyRequest.getSyncState();
     if (getSyncResult.code !== 200) {
       toast.error(this.props.t("Failed to get sync state"));
       await this.handleFinish();
-      return;
+      return false;
     }
     if (!getSyncResult.data) {
       toast.error(
@@ -175,9 +177,10 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         )
       );
       await this.handleFinish();
-      return;
+      return false;
     }
-    toast.loading(this.props.t("Start syncing") + "...");
+    toast.loading(this.props.t("Start syncing") + "...", { id: "syncing-id" });
+    return true;
   };
   getCompareResult = async () => {
     let result = await ConfigUtil.downloadConfig("sync");
@@ -187,14 +190,24 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     return await SyncHelper.compareAll(localSyncRecords, cloudSyncRecords);
   };
   handleCloudSync = async () => {
-    await this.beforeSync();
+    let res = await this.beforeSync();
+    if (!res) {
+      return;
+    }
     let { compareResult, syncRecords } = await this.getCompareResult();
+    ConfigService.setAllSyncRecord(syncRecords);
     await this.handleSync(compareResult);
   };
   handleSuccess = async () => {
     this.props.handleFetchBooks();
     this.props.handleFetchBookmarks();
     this.props.handleFetchNotes();
+    toast.success(this.props.t("Synchronisation successful"), {
+      id: "syncing-id",
+    });
+    setTimeout(() => {
+      this.props.history.push("/manager/home");
+    }, 1000);
   };
   handleSync = async (compareResult) => {
     await SyncHelper.startSync(
@@ -304,6 +317,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
                 );
               }
               if (this.props.isAuthed) {
+                this.handleCloudSync();
               } else {
                 this.handleLocalSync();
               }

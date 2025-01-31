@@ -2,7 +2,7 @@ const initState = {
   isBackup: false,
   isOpenTokenDialog: false,
   dataSourceList: [],
-  defaultSyncOption: "local",
+  defaultSyncOption: "",
 };
 export function backupPage(
   state = initState,

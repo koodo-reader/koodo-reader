@@ -232,7 +232,7 @@ class SettingDialog extends React.Component<
     }
     this.props.handleSettingDrive(event.target.value);
   };
-  handleDeleteDataSource = (event: any) => {
+  handleDeleteDataSource = async (event: any) => {
     if (!event.target.value) {
       return;
     }
@@ -240,7 +240,7 @@ class SettingDialog extends React.Component<
       toast.error(this.props.t("Default sync option cannot be removed"));
       return;
     }
-    TokenService.setToken(event.target.value + "_token", "");
+    await TokenService.setToken(event.target.value + "_token", "");
     ConfigService.deleteListConfig(event.target.value, "dataSourceList");
     this.props.handleFetchDataSourceList();
     toast.success(this.props.t("Deletion successful"));
@@ -272,6 +272,13 @@ class SettingDialog extends React.Component<
         this.props.settingDrive,
         this.state.driveConfig.token
       );
+    }
+    if (!this.props.defaultSyncOption) {
+      ConfigService.setReaderConfig(
+        "defaultSyncOption",
+        this.props.settingDrive
+      );
+      this.props.handleFetchDefaultSyncOption();
     }
     this.props.handleFetchDataSourceList();
 
