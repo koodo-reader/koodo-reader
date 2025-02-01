@@ -101,6 +101,7 @@ class SettingDialog extends React.Component<
     if (dropdownList[0].option.length <= 2) {
       loadFontData().then((result) => {
         dropdownList[0].option = dropdownList[0].option.concat(result);
+        console.log(dropdownList[0].option);
       });
     }
   };

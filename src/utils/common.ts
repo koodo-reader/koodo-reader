@@ -192,10 +192,11 @@ export const getPageWidth = (
 export const loadFontData = async () => {
   try {
     const availableFonts = await window.queryLocalFonts();
+    console.log(availableFonts);
     return availableFonts.map((font: any) => {
       return {
         label: font.fullName,
-        value: font.family,
+        value: font.postscriptName,
       };
     });
   } catch (err) {
