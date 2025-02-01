@@ -1,5 +1,5 @@
 import { getIframeDoc } from "./docUtil";
-import ConfigService from "../storage/configService";
+import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 
 class styleUtil {
   // add default css for iframe

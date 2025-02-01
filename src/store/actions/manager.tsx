@@ -1,4 +1,4 @@
-import ConfigService from "../../utils/storage/configService";
+import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import BookModel from "../../models/Book";
 import PluginModel from "../../models/Plugin";
 import { Dispatch } from "redux";

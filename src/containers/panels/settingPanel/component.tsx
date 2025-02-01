@@ -7,7 +7,7 @@ import ModeControl from "../../../components/readerSettings/modeControl";
 import SettingSwitch from "../../../components/readerSettings/settingSwitch";
 import { SettingPanelProps, SettingPanelState } from "./interface";
 import { Trans } from "react-i18next";
-import ConfigService from "../../../utils/storage/configService";
+import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 
 class SettingPanel extends React.Component<
   SettingPanelProps,

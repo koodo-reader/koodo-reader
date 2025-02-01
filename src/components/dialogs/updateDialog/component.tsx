@@ -6,11 +6,11 @@ import { Trans } from "react-i18next";
 import Lottie from "react-lottie";
 import animationNew from "../../../assets/lotties/new.json";
 import animationSuccess from "../../../assets/lotties/success.json";
-import ConfigService from "../../../utils/storage/configService";
 import { openExternalUrl } from "../../../utils/common";
 import { isElectron } from "react-device-detect";
 import { sleep } from "../../../utils/common";
 import { checkStableUpdate } from "../../../utils/request/common";
+import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 const newOptions = {
   loop: false,
   autoplay: true,

@@ -1,8 +1,10 @@
-import { CommonTool } from "../../assets/lib/kookit-extra-browser.min.js";
 import SyncService from "../storage/syncService";
-import ConfigService from "../storage/configService";
-import SqlUtil from "./sqlUtil";
+import {
+  ConfigService,
+  CommonTool,
+} from "../../assets/lib/kookit-extra-browser.min";
 import DatabaseService from "../storage/databaseService";
+import SqlUtil from "./sqlUtil";
 
 class ConfigUtil {
   static async downloadConfig(type: string) {

@@ -2,7 +2,7 @@ import BookUtil from "./bookUtil";
 import { isElectron } from "react-device-detect";
 import { getStorageLocation } from "../common";
 import CoverUtil from "./coverUtil";
-import ConfigService from "../storage/configService";
+import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import { getCloudConfig } from "./common";
 import DatabaseService from "../storage/databaseService";
 import { saveAs } from "file-saver";

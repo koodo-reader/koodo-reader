@@ -2,7 +2,7 @@ import React from "react";
 import "./searchBox.css";
 import SearchUtil from "../../utils/reader/searchUtil";
 import { SearchBoxProps } from "./interface";
-import ConfigService from "../../utils/storage/configService";
+import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 
 class SearchBox extends React.Component<SearchBoxProps> {
   componentDidMount() {

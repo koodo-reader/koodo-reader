@@ -3,7 +3,6 @@ import { ViewerProps, ViewerState } from "./interface";
 import { withRouter } from "react-router-dom";
 import BookUtil from "../../utils/file/bookUtil";
 import PopupMenu from "../../components/popups/popupMenu";
-import ConfigService from "../../utils/storage/configService";
 import Background from "../../components/background";
 import toast from "react-hot-toast";
 import StyleUtil from "../../utils/reader/styleUtil";
@@ -18,7 +17,10 @@ import Note from "../../models/Note";
 import PageWidget from "../pageWidget";
 import { getPageWidth, scrollContents } from "../../utils/common";
 import _ from "underscore";
-import { BookHelper } from "../../assets/lib/kookit-extra-browser.min";
+import {
+  BookHelper,
+  ConfigService,
+} from "../../assets/lib/kookit-extra-browser.min";
 import * as Kookit from "../../assets/lib/kookit.min";
 declare var window: any;
 let lock = false; //prevent from clicking too fasts

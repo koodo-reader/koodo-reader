@@ -1,6 +1,6 @@
 import BookModel from "../../models/Book";
 import NoteModel from "../../models/Note";
-import ConfigService from "../storage/configService";
+import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import _ from "underscore";
 
 const getBookName = (books: BookModel[]) => {

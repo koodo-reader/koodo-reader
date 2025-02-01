@@ -1,6 +1,6 @@
 import { getStorageLocation } from "../common";
 import CoverUtil from "./coverUtil";
-import ConfigService from "../storage/configService";
+import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import DatabaseService from "../storage/databaseService";
 import localforage from "localforage";
 import Book from "../../models/Book";

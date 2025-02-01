@@ -5,7 +5,7 @@ import Login from "../pages/login";
 import HtmlReader from "../pages/reader";
 import _Redirect from "../pages/redirect";
 import i18n from "../i18n";
-import ConfigService from "../utils/storage/configService";
+import { ConfigService } from "../assets/lib/kookit-extra-browser.min";
 
 const Router = () => {
   useEffect(() => {

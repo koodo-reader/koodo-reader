@@ -10,7 +10,7 @@ import { isElectron } from "react-device-detect";
 import { withRouter } from "react-router-dom";
 import BookUtil from "../../utils/file/bookUtil";
 import toast from "react-hot-toast";
-import ConfigService from "../../utils/storage/configService";
+import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import CoverUtil from "../../utils/file/coverUtil";
 import { calculateFileMD5, fetchFileFromPath } from "../../utils/common";
 import DatabaseService from "../../utils/storage/databaseService";

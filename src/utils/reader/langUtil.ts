@@ -1,4 +1,4 @@
-import ConfigService from "../storage/configService";
+import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import { getIframeDoc } from "./docUtil";
 import Chinese from "chinese-s2t";
 

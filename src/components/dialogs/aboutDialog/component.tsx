@@ -11,8 +11,8 @@ import {
   exportNotes,
 } from "../../../utils/file/export";
 import "./aboutDialog.css";
-import ConfigService from "../../../utils/storage/configService";
 import DatabaseService from "../../../utils/storage/databaseService";
+import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 
 declare var window: any;
 class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
