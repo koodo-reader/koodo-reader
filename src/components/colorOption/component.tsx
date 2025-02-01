@@ -1,7 +1,7 @@
 import React from "react";
-import ConfigService from "../../utils/storage/configService";
 import "./colorOption.css";
 import { ColorProps, ColorStates } from "./interface";
+import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 
 class ColorOption extends React.Component<ColorProps, ColorStates> {
   constructor(props: ColorProps) {

@@ -2,7 +2,8 @@ import BookModel from "../../../models/Book";
 import NoteModel from "../../../models/Note";
 import BookmarkModel from "../../../models/Bookmark";
 import PluginModel from "../../../models/Plugin";
-export interface SettingInfoProps {
+import { RouteComponentProps } from "react-router-dom";
+export interface SettingInfoProps extends RouteComponentProps<any> {
   handleSetting: (isSettingOpen: boolean) => void;
   handleSettingMode: (settingMode: string) => void;
   handleSettingDrive: (settingDrive: string) => void;
@@ -11,6 +12,10 @@ export interface SettingInfoProps {
   handleTip: (tip: string) => void;
   handleFetchDataSourceList: () => void;
   handleFetchDefaultSyncOption: () => void;
+  handleFetchLoginOptionList: () => void;
+  handleLoginOptionList: (loginOptionList: string[]) => void;
+  handleFetchAuthed: () => void;
+  handleLoadingDialog: (isShow: boolean) => void;
   t: (title: string) => string;
   handleFetchBooks: () => void;
   handleFetchPlugins: () => void;
@@ -20,6 +25,7 @@ export interface SettingInfoProps {
   plugins: PluginModel[];
   books: BookModel[];
   dataSourceList: string[];
+  loginOptionList: string[];
   defaultSyncOption: string;
   isAuthed: boolean;
   settingMode: string;
@@ -51,4 +57,6 @@ export interface SettingInfoState {
   isAddNew: boolean;
   currentThemeIndex: number;
   driveConfig: any;
+  loginConfig: any;
+  settingLogin: string;
 }

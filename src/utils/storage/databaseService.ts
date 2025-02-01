@@ -1,7 +1,7 @@
 import { isElectron } from "react-device-detect";
 import { getStorageLocation } from "../common";
-import SqlUtil from "../file/sqlUtil";
 import localforage from "localforage";
+import SqlUtil from "../file/sqlUtil";
 declare var window: any;
 
 class DatabaseService {

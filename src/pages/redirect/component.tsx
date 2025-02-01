@@ -9,7 +9,7 @@ import Lottie from "react-lottie";
 
 import animationSuccess from "../../assets/lotties/success.json";
 import toast, { Toaster } from "react-hot-toast";
-import ConfigService from "../../utils/storage/configService";
+import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import * as Kookit from "../../assets/lib/kookit.min";
 import { BookHelper } from "../../assets/lib/kookit-extra-browser.min";
 declare var window: any;

@@ -1,5 +1,5 @@
 import { getIframeDoc } from "./docUtil";
-import ConfigService from "../storage/configService";
+import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 
 /* Insert one Node after another Node */
 const insertAfter = (newNode, existingNode) => {

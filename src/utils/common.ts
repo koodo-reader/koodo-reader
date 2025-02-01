@@ -1,7 +1,10 @@
-import ConfigService from "./storage/configService";
 import Plugin from "../models/Plugin";
 import { isElectron } from "react-device-detect";
 import SparkMD5 from "spark-md5";
+import {
+  CommonTool,
+  ConfigService,
+} from "../assets/lib/kookit-extra-browser.min";
 declare var window: any;
 export const calculateFileMD5 = (file: File): Promise<string> => {
   return new Promise((resolve, reject) => {
@@ -45,12 +48,6 @@ export const fetchFileFromPath = (filePath: string) => {
 
 export const sleep = (time: number) => {
   return new Promise((resolve) => setTimeout(resolve, time));
-};
-
-export const copyArrayBuffer = (src) => {
-  var dst = new ArrayBuffer(src.byteLength);
-  new Uint8Array(dst).set(new Uint8Array(src));
-  return dst;
 };
 
 export const scrollContents = (chapterTitle: string, chapterHref: string) => {
@@ -103,23 +100,6 @@ export const getQueryParams = (url: string) => {
   }
   return queryParams;
 };
-export async function generateSHA256Hash(message) {
-  // Encode the message as a Uint8Array
-  const msgBuffer = new TextEncoder().encode(message);
-
-  // Hash the message
-  const hashBuffer = await crypto.subtle.digest("SHA-256", msgBuffer);
-
-  // Convert the hash to a byte array
-  const hashArray = Array.from(new Uint8Array(hashBuffer));
-
-  // Convert the byte array to a hex string
-  const hashHex = hashArray
-    .map((b) => b.toString(16).padStart(2, "0"))
-    .join("");
-
-  return hashHex;
-}
 export const getStorageLocation = () => {
   if (isElectron) {
     return localStorage.getItem("storageLocation")
@@ -144,7 +124,9 @@ export const getAllVoices = (pluginList: Plugin[]) => {
   return voiceList;
 };
 export const checkPlugin = async (plugin: Plugin) => {
-  if ((await generateSHA256Hash(plugin.script)) !== plugin.scriptSHA256) {
+  if (
+    (await CommonTool.generateSHA256Hash(plugin.script)) !== plugin.scriptSHA256
+  ) {
     return false;
   } else {
     return true;
@@ -299,7 +281,7 @@ export class BrowserFingerprint {
       this.hashComponent(this.getMediaCapabilities()),
     ]);
 
-    return await generateSHA256Hash(components.join(""));
+    return await CommonTool.generateSHA256Hash(components.join(""));
   }
 }
 export function removeSearchParams() {

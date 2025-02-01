@@ -1,8 +1,8 @@
 import axios from "axios";
 import toast from "react-hot-toast";
 import i18n from "../../i18n";
-import TokenService from "../storage/tokenService";
 import { useHistory } from "react-router-dom";
+import TokenService from "../storage/tokenService";
 const PUBLIC_URL = "https://api.960960.xyz";
 export const checkDeveloperUpdate = async () => {
   let res = await axios.get(PUBLIC_URL + "/api/update_dev");

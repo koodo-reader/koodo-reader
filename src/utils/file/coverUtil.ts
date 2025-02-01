@@ -142,41 +142,28 @@ class CoverUtil {
 
     return fileType;
   }
-  static async downloadCover(key: string) {
+  static async downloadCover(cover: string) {
     let syncUtil = await SyncService.getSyncUtil();
     let covers = await syncUtil.listFiles("cover");
     console.log(covers, "covers");
-    for (let cover of covers) {
-      console.log(cover, key);
-      if (cover.startsWith(key)) {
-        let imgBuffer: ArrayBuffer = await syncUtil.downloadFile(
-          cover,
-          "cover"
-        );
-        let imgStr =
-          CommonTool.arrayBufferToBase64(imgBuffer).split("base64")[1];
-        let base64 = `data:image/${
-          cover.split(".").reverse()[0]
-        };base64,${imgStr}`;
-        console.log(base64, "base64");
-        await this.saveCover(key, base64);
-      }
-    }
+
+    let imgBuffer: ArrayBuffer = await syncUtil.downloadFile(cover, "cover");
+    let imgStr = CommonTool.arrayBufferToBase64(imgBuffer).split("base64")[1];
+    let base64 = `data:image/${cover.split(".").reverse()[0]};base64,${imgStr}`;
+    console.log(base64, "base64");
+    await this.saveCover(cover, base64);
+
     console.log("finish download cover");
   }
-  static async uploadCover(key: string) {
+  static async uploadCover(cover: string) {
     let syncUtil = await SyncService.getSyncUtil();
-    let book = await DatabaseService.getRecord(key, "books");
+    let book = await DatabaseService.getRecord(cover.split(".")[0], "books");
     if (book && book.cover) {
       let result = this.convertCoverBase64(book.cover);
       let coverBlob = new Blob([result.arrayBuffer], {
         type: `image/${result.extension}`,
       });
-      await syncUtil.uploadFile(
-        `${key}.${result.extension}`,
-        "cover",
-        coverBlob
-      );
+      await syncUtil.uploadFile(cover, "cover", coverBlob);
     }
   }
   static async saveCover(key: string, base64: string) {

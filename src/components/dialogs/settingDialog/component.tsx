@@ -4,7 +4,6 @@ import { SettingInfoProps, SettingInfoState } from "./interface";
 import { Trans } from "react-i18next";
 import i18n from "../../../i18n";
 import packageInfo from "../../../../package.json";
-import ConfigService from "../../../utils/storage/configService";
 import { changePath } from "../../../utils/file/common";
 import { isElectron } from "react-device-detect";
 import { dropdownList } from "../../../constants/dropdownList";
@@ -28,12 +27,19 @@ import {
 import { getStorageLocation, reloadManager } from "../../../utils/common";
 import DatabaseService from "../../../utils/storage/databaseService";
 import { driveInputConfig, driveList } from "../../../constants/driveList";
-import { SyncUtil } from "../../../assets/lib/kookit-extra-browser.min";
+import {
+  ConfigService,
+  LoginHelper,
+  SyncUtil,
+} from "../../../assets/lib/kookit-extra-browser.min";
 import {
   getThirdpartyRequest,
   onSyncCallback,
 } from "../../../utils/request/thirdparty";
 import TokenService from "../../../utils/storage/tokenService";
+import { loginList } from "../../../constants/loginList";
+import { getUserRequest, loginRegister } from "../../../utils/request/user";
+import { handleExitApp } from "../../../utils/request/common";
 declare var window: any;
 class SettingDialog extends React.Component<
   SettingInfoProps,
@@ -77,7 +83,9 @@ class SettingDialog extends React.Component<
       }),
       storageLocation: getStorageLocation() || "",
       isAddNew: false,
+      settingLogin: "",
       driveConfig: {},
+      loginConfig: {},
     };
   }
   componentDidMount(): void {
@@ -253,10 +261,59 @@ class SettingDialog extends React.Component<
     this.props.handleFetchDefaultSyncOption();
     toast.success(this.props.t("Change successful"));
   };
-  handleCancel = () => {
+  handleAddLoginOption = (event: any) => {
+    if (!event.target.value) {
+      return;
+    }
+    this.setState({ settingLogin: event.target.value });
+  };
+  handleDeleteLoginOption = async (event: any) => {
+    if (!event.target.value) {
+      return;
+    }
+    if (this.props.loginOptionList.length === 1) {
+      toast.error(this.props.t("At least one login option should be kept"));
+      return;
+    }
+    toast.loading(this.props.t("Removing..."));
+    let userRequest = await getUserRequest();
+    let response = await userRequest.removeLogin({
+      provider: event.target.value,
+    });
+    console.log(response.code);
+    if (response.code === 200) {
+      toast.success(this.props.t("Removal successful"));
+      this.props.handleFetchLoginOptionList();
+      toast.success(this.props.t("Deletion successful"));
+    } else if (response.code === 401) {
+      handleExitApp();
+      return;
+    } else {
+      toast.error(this.props.t("Removal failed, error code: ") + response.code);
+    }
+  };
+  handleCancelLoginOption = async () => {
+    this.setState({ settingLogin: "" });
+  };
+  handleConfirmLoginOption = async () => {
+    this.props.handleLoadingDialog(true);
+    let resCode = await loginRegister(
+      this.state.settingLogin,
+      this.state.loginConfig.token
+    );
+    if (resCode === 200) {
+      this.props.handleLoadingDialog(false);
+      toast.success("登录成功");
+      this.props.handleFetchAuthed();
+      this.props.handleFetchLoginOptionList();
+      this.setState({ settingLogin: "" });
+      this.props.handleSetting(false);
+    }
+  };
+  handleCancelDrive = () => {
     this.props.handleSettingDrive("");
   };
-  handleConfirm = async () => {
+  handleConfirmDrive = async () => {
     if (
       this.props.settingDrive === "webdav" ||
       this.props.settingDrive === "ftp" ||
@@ -358,6 +415,19 @@ class SettingDialog extends React.Component<
               }}
             >
               <Trans>Sync and backup</Trans>
+            </span>
+            <span
+              className="book-bookmark-title"
+              style={
+                this.props.settingMode === "account"
+                  ? { fontWeight: "bold", borderBottom: "2px solid" }
+                  : { opacity: 0.5 }
+              }
+              onClick={() => {
+                this.props.handleSettingMode("account");
+              }}
+            >
+              <Trans>Account</Trans>
             </span>
             <span
               className="book-bookmark-title"
@@ -788,7 +858,7 @@ class SettingDialog extends React.Component<
                     <div
                       className="voice-add-confirm"
                       onClick={async () => {
-                        this.handleConfirm();
+                        this.handleConfirmDrive();
                       }}
                     >
                       <Trans>Confirm</Trans>
@@ -797,7 +867,7 @@ class SettingDialog extends React.Component<
                       <div
                         className="voice-add-cancel"
                         onClick={() => {
-                          this.handleCancel();
+                          this.handleCancelDrive();
                         }}
                       >
                         <Trans>Cancel</Trans>
@@ -911,6 +981,132 @@ class SettingDialog extends React.Component<
                       </option>
                     ))}
                 </select>
+              </div>
+            </>
+          ) : this.props.settingMode === "account" ? (
+            <>
+              {this.state.settingLogin && (
+                <div
+                  className="voice-add-new-container"
+                  style={{
+                    marginLeft: "25px",
+                    width: "calc(100% - 50px)",
+                    fontWeight: 500,
+                  }}
+                >
+                  <textarea
+                    className="token-dialog-token-box"
+                    id="token-dialog-token-box"
+                    placeholder={this.props.t(
+                      "Please authorize your account, and fill the following box with the token"
+                    )}
+                    onChange={(e) => {
+                      this.setState((prevState) => ({
+                        loginConfig: {
+                          ...prevState.loginConfig,
+                          token: e.target.value,
+                        },
+                      }));
+                    }}
+                  />
+                  <div className="token-dialog-button-container">
+                    <div
+                      className="voice-add-confirm"
+                      onClick={async () => {
+                        this.handleConfirmLoginOption();
+                      }}
+                    >
+                      <Trans>Confirm</Trans>
+                    </div>
+                    <div className="voice-add-button-container">
+                      <div
+                        className="voice-add-cancel"
+                        onClick={() => {
+                          this.handleCancelLoginOption();
+                        }}
+                      >
+                        <Trans>Cancel</Trans>
+                      </div>
+
+                      <div
+                        className="voice-add-cancel"
+                        style={{ marginRight: "10px" }}
+                        onClick={() => {
+                          let url = LoginHelper.getAuthUrl(
+                            this.state.settingLogin,
+                            "manual"
+                          );
+                          this.handleJump(url);
+                        }}
+                      >
+                        <Trans>Authorize</Trans>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+              <div className="setting-dialog-new-title">
+                <Trans>Add login option</Trans>
+                <select
+                  name=""
+                  className="lang-setting-dropdown"
+                  onChange={this.handleAddLoginOption}
+                >
+                  {[{ label: "Please select", value: "" }, ...loginList]
+                    .filter(
+                      (item) => !this.props.loginOptionList.includes(item.value)
+                    )
+                    .map((item) => (
+                      <option
+                        value={item.value}
+                        key={item.value}
+                        className="lang-setting-option"
+                      >
+                        {this.props.t(item.label)}
+                      </option>
+                    ))}
+                </select>
+              </div>
+              <div className="setting-dialog-new-title">
+                <Trans>Delete login option</Trans>
+                <select
+                  name=""
+                  className="lang-setting-dropdown"
+                  onChange={this.handleDeleteLoginOption}
+                >
+                  {[{ label: "Please select", value: "" }, ...loginList]
+                    .filter(
+                      (item) =>
+                        this.props.loginOptionList.includes(item.value) ||
+                        item.value === ""
+                    )
+                    .map((item) => (
+                      <option
+                        value={item.value}
+                        key={item.value}
+                        className="lang-setting-option"
+                      >
+                        {this.props.t(item.label)}
+                      </option>
+                    ))}
+                </select>
+              </div>
+              <div className="setting-dialog-new-title">
+                <Trans>Log out</Trans>
+
+                <span
+                  className="change-location-button"
+                  onClick={async () => {
+                    await TokenService.deleteToken("is_authed");
+                    await TokenService.deleteToken("access_token");
+                    await TokenService.deleteToken("refresh_token");
+                    this.props.handleFetchAuthed();
+                    this.props.handleLoginOptionList([]);
+                    toast.success(this.props.t("Log out successful"));
+                  }}
+                >
+                  <Trans>Log out</Trans>
+                </span>
               </div>
             </>
           ) : (

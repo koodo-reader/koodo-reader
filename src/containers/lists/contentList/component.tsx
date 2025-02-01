@@ -1,7 +1,7 @@
 import React from "react";
 import "./contentList.css";
 import { ContentListProps, ContentListState } from "./interface";
-import ConfigService from "../../../utils/storage/configService";
+import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import { scrollContents } from "../../../utils/common";
 
 class ContentList extends React.Component<ContentListProps, ContentListState> {

@@ -3,7 +3,7 @@ import "./header.css";
 import SearchBox from "../../components/searchBox";
 import ImportLocal from "../../components/importLocal";
 import { HeaderProps, HeaderState } from "./interface";
-import ConfigService from "../../utils/storage/configService";
+import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import UpdateInfo from "../../components/dialogs/updateDialog";
 import { restoreFromConfigJson } from "../../utils/file/restore";
 import { backupToConfigJson } from "../../utils/file/backup";
@@ -15,7 +15,6 @@ import {
 } from "../../utils/file/common";
 import toast from "react-hot-toast";
 import { Trans } from "react-i18next";
-import TokenService from "../../utils/storage/tokenService";
 import { addChatbox } from "../../utils/common";
 import { getThirdpartyRequest } from "../../utils/request/thirdparty";
 import { SyncHelper } from "../../assets/lib/kookit-extra-browser.min";
@@ -40,6 +39,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
   async componentDidMount() {
     this.props.handleFetchAuthed();
     this.props.handleFetchDefaultSyncOption();
+    this.props.handleFetchLoginOptionList();
     // isElectron &&
     //   (await window.require("electron").ipcRenderer.invoke("s3-download"));
     // let syncUtil = new window.KookitSync.SyncUtil("dropbox", {});

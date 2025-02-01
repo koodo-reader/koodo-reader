@@ -9,11 +9,16 @@ import {
   handleFetchPlugins,
   handleFetchDataSourceList,
   handleFetchDefaultSyncOption,
+  handleFetchLoginOptionList,
   handleTokenDialog,
   handleSettingMode,
   handleSettingDrive,
+  handleLoadingDialog,
+  handleFetchAuthed,
+  handleLoginOptionList,
 } from "../../../store/actions";
 import { stateType } from "../../../store";
+import { withRouter } from "react-router-dom";
 
 const mapStateToProps = (state: stateType) => {
   return {
@@ -26,6 +31,7 @@ const mapStateToProps = (state: stateType) => {
     notes: state.reader.notes,
     dataSourceList: state.backupPage.dataSourceList,
     defaultSyncOption: state.backupPage.defaultSyncOption,
+    loginOptionList: state.backupPage.loginOptionList,
     isOpenTokenDialog: state.backupPage.isOpenTokenDialog,
   };
 };
@@ -40,8 +46,12 @@ const actionCreator = {
   handleFetchDefaultSyncOption,
   handleSettingMode,
   handleSettingDrive,
+  handleFetchLoginOptionList,
+  handleLoadingDialog,
+  handleFetchAuthed,
+  handleLoginOptionList,
 };
 export default connect(
   mapStateToProps,
   actionCreator
-)(withTranslation()(SettingDialog as any) as any);
+)(withTranslation()(withRouter(SettingDialog as any) as any) as any);

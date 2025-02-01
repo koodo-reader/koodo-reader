@@ -6,7 +6,7 @@ import BookCoverItem from "../../../components/bookCoverItem";
 import SortUtil from "../../../utils/reader/sortUtil";
 import BookModel from "../../../models/Book";
 import { BookListProps, BookListState } from "./interface";
-import ConfigService from "../../../utils/storage/configService";
+import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import { Redirect, withRouter } from "react-router-dom";
 import ViewMode from "../../../components/viewMode";
 import SelectBook from "../../../components/selectBook";

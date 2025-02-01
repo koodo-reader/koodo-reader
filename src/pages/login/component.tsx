@@ -11,7 +11,7 @@ import Lottie from "react-lottie";
 
 import animationSuccess from "../../assets/lotties/success.json";
 import toast, { Toaster } from "react-hot-toast";
-import ConfigService from "../../utils/storage/configService";
+import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import { loginList } from "../../constants/loginList";
 import { openExternalUrl, removeSearchParams, sleep } from "../../utils/common";
 import { LoginHelper } from "../../assets/lib/kookit-extra-browser.min";
@@ -269,7 +269,10 @@ class Login extends React.Component<LoginProps, LoginState> {
                     key={item.value}
                     style={{}}
                     onClick={() => {
-                      let url = LoginHelper.getAuthUrl(item.value);
+                      let url = LoginHelper.getAuthUrl(
+                        item.value,
+                        isElectron ? "desktop" : "browser"
+                      );
                       if (url) {
                         openExternalUrl(url);
                       }
@@ -287,6 +290,15 @@ class Login extends React.Component<LoginProps, LoginState> {
                   </div>
                 );
               })}
+              <div
+                className="login-manual-token"
+                onClick={() => {
+                  this.props.handleSetting(true);
+                  this.props.handleSettingMode("account");
+                }}
+              >
+                手动输入登录凭证
+              </div>
               <div className="login-term">
                 点击继续即代表您已认真阅读并同意接受 Koodo Reader
                 的《服务条款》、《隐私政策》。

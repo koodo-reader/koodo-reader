@@ -74,6 +74,7 @@ export type stateType = {
     isBackup: boolean;
     isOpenTokenDialog: boolean;
     dataSourceList: string[];
+    loginOptionList: string[];
     defaultSyncOption: string;
   };
   progressPanel: {

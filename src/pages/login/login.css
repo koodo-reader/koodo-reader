@@ -12,6 +12,10 @@
   width: 40%;
   height: 100%;
 }
+.login-manual-token {
+  text-align: center;
+  cursor: pointer;
+}
 .login-logo-img {
   width: 120px;
   position: absolute;

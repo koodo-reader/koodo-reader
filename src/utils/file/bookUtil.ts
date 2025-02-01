@@ -1,4 +1,4 @@
-import ConfigService from "../storage/configService";
+import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import { isElectron } from "react-device-detect";
 import localforage, { key } from "localforage";
 import BookModel from "../../models/Book";
