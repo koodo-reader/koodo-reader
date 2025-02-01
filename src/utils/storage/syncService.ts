@@ -1,3 +1,4 @@
+import toast from "react-hot-toast";
 import {
   ConfigService,
   SyncUtil,
@@ -9,7 +10,11 @@ import TokenService from "./tokenService";
 class SyncService {
   private static syncUtilCache: { [key: string]: SyncUtil } = {};
   static async getSyncUtil() {
-    let service = ConfigService.getReaderConfig("defaultSyncOption");
+    let service = localStorage.getItem("defaultSyncOption");
+    if (!service) {
+      toast.error("Please select a sync service");
+      return new SyncUtil("", {}, new ThirdpartyRequest(TokenService));
+    }
     if (!this.syncUtilCache[service]) {
       let config = await decryptToken(service);
       let thirdpartyRequest = new ThirdpartyRequest(TokenService);

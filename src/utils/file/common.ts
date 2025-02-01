@@ -1,12 +1,17 @@
 import { getStorageLocation } from "../common";
 import CoverUtil from "./coverUtil";
-import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
+import {
+  CommonTool,
+  ConfigService,
+} from "../../assets/lib/kookit-extra-browser.min";
 import DatabaseService from "../storage/databaseService";
 import localforage from "localforage";
 import Book from "../../models/Book";
 import Note from "../../models/Note";
 import Bookmark from "../../models/Bookmark";
 import DictHistory from "../../models/DictHistory";
+import TokenService from "../storage/tokenService";
+import { decryptToken } from "../request/thirdparty";
 declare var window: any;
 export const changePath = async (newPath: string) => {
   if (isFolderContainsFile(newPath)) {
@@ -14,26 +19,15 @@ export const changePath = async (newPath: string) => {
   }
   let oldPath = getStorageLocation() || "";
   const fs = window.require("fs-extra");
-  await window.require("electron").ipcRenderer.invoke("close-database", {
-    dbName: "books",
-    storagePath: getStorageLocation(),
-  });
-  await window.require("electron").ipcRenderer.invoke("close-database", {
-    dbName: "notes",
-    storagePath: getStorageLocation(),
-  });
-  await window.require("electron").ipcRenderer.invoke("close-database", {
-    dbName: "bookmarks",
-    storagePath: getStorageLocation(),
-  });
-  await window.require("electron").ipcRenderer.invoke("close-database", {
-    dbName: "words",
-    storagePath: getStorageLocation(),
-  });
-  await window.require("electron").ipcRenderer.invoke("close-database", {
-    dbName: "plugins",
-    storagePath: getStorageLocation(),
-  });
+  let databaseList = CommonTool.databaseList;
+
+  for (let i = 0; i < databaseList.length; i++) {
+    await window.require("electron").ipcRenderer.invoke("close-database", {
+      dbName: databaseList[i],
+      storagePath: getStorageLocation(),
+    });
+  }
+
   try {
     await fs.copy(oldPath, newPath);
     fs.emptyDirSync(oldPath);
@@ -59,8 +53,10 @@ export const getLastSyncTimeFromConfigJson = () => {
     path.join(dataPath, "config", "config.json"),
     "utf-8"
   );
-  const readerConfig = JSON.parse(JSON.parse(data).readerConfig);
-  return parseInt(readerConfig.lastSyncTime);
+  console.log(data);
+
+  const readerConfig = JSON.parse(JSON.parse(data).readerConfig || "{}");
+  return parseInt(readerConfig.lastSyncTime || "0");
 };
 export function getParamsFromUrl() {
   var hashParams: any = {};
@@ -218,14 +214,12 @@ export const upgradeConfig = (): Boolean => {
     return false;
   }
 };
-export const getCloudConfig = (service: string) => {
+export const getCloudConfig = async (service: string) => {
   let tokenConfig = {};
   try {
     tokenConfig = JSON.parse(ConfigService.getReaderConfig(service + "_token"));
   } catch (e) {
-    tokenConfig = {
-      refresh_token: ConfigService.getReaderConfig(service + "_token"),
-    };
+    tokenConfig = await decryptToken(service);
   }
   return tokenConfig;
 };

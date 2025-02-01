@@ -5,7 +5,11 @@ import { Buffer } from "buffer";
 import SyncService from "../storage/syncService";
 import DatabaseService from "../storage/databaseService";
 import Book from "../../models/Book";
-import { CommonTool } from "../../assets/lib/kookit-extra-browser.min";
+import {
+  CommonTool,
+  ConfigService,
+} from "../../assets/lib/kookit-extra-browser.min";
+import { getCloudConfig } from "./common";
 declare var window: any;
 
 class CoverUtil {
@@ -143,31 +147,70 @@ class CoverUtil {
     return fileType;
   }
   static async downloadCover(cover: string) {
-    let syncUtil = await SyncService.getSyncUtil();
-    let covers = await syncUtil.listFiles("cover");
-    console.log(covers, "covers");
+    if (isElectron) {
+      const { ipcRenderer } = window.require("electron");
+      let service = localStorage.getItem("defaultSyncOption");
+      if (!service) {
+        return;
+      }
+      let tokenConfig = await getCloudConfig(service);
 
-    let imgBuffer: ArrayBuffer = await syncUtil.downloadFile(cover, "cover");
-    let imgStr = CommonTool.arrayBufferToBase64(imgBuffer).split("base64")[1];
-    let base64 = `data:image/${cover.split(".").reverse()[0]};base64,${imgStr}`;
-    console.log(base64, "base64");
-    await this.saveCover(cover, base64);
-
-    console.log("finish download cover");
-  }
-  static async uploadCover(cover: string) {
-    let syncUtil = await SyncService.getSyncUtil();
-    let book = await DatabaseService.getRecord(cover.split(".")[0], "books");
-    if (book && book.cover) {
-      let result = this.convertCoverBase64(book.cover);
-      let coverBlob = new Blob([result.arrayBuffer], {
-        type: `image/${result.extension}`,
+      await ipcRenderer.invoke("cloud-download", {
+        ...tokenConfig,
+        fileName: cover,
+        service: service,
+        type: "cover",
+        storagePath: getStorageLocation(),
       });
-      await syncUtil.uploadFile(cover, "cover", coverBlob);
+    } else {
+      let syncUtil = await SyncService.getSyncUtil();
+      let covers = await syncUtil.listFiles("cover");
+      console.log(covers, "covers");
+
+      let imgBuffer: ArrayBuffer = await syncUtil.downloadFile(cover, "cover");
+      let imgStr = CommonTool.arrayBufferToBase64(imgBuffer).split("base64")[1];
+      let base64 = `data:image/${
+        cover.split(".").reverse()[0]
+      };base64,${imgStr}`;
+      console.log(base64, "base64");
+      await this.saveCover(cover, base64);
+
+      console.log("finish download cover");
     }
   }
-  static async saveCover(key: string, base64: string) {
-    let book: Book = await DatabaseService.getRecord(key, "books");
+  static async uploadCover(cover: string) {
+    if (isElectron) {
+      const { ipcRenderer } = window.require("electron");
+      let service = localStorage.getItem("defaultSyncOption");
+      if (!service) {
+        return;
+      }
+      let tokenConfig = await getCloudConfig(service);
+
+      await ipcRenderer.invoke("cloud-upload", {
+        ...tokenConfig,
+        fileName: cover,
+        service: service,
+        type: "cover",
+        storagePath: getStorageLocation(),
+      });
+    } else {
+      let syncUtil = await SyncService.getSyncUtil();
+      let book = await DatabaseService.getRecord(cover.split(".")[0], "books");
+      if (book && book.cover) {
+        let result = this.convertCoverBase64(book.cover);
+        let coverBlob = new Blob([result.arrayBuffer], {
+          type: `image/${result.extension}`,
+        });
+        await syncUtil.uploadFile(cover, "cover", coverBlob);
+      }
+    }
+  }
+  static async saveCover(cover: string, base64: string) {
+    let book: Book = await DatabaseService.getRecord(
+      cover.split(".")[0],
+      "books"
+    );
     console.log(book, "saveCover");
     if (book) {
       book.cover = base64;
@@ -175,15 +218,31 @@ class CoverUtil {
     }
   }
   static async getLocalCoverList() {
-    let books: Book[] | null = await DatabaseService.getAllRecords("books");
-    return books
-      ?.map((book) => {
-        if (!book.cover) {
-          return "";
-        }
-        return book.key + "." + this.base64ToFileType(book.cover);
-      })
-      .filter((item) => item !== "");
+    if (isElectron) {
+      var fs = window.require("fs");
+      var path = window.require("path");
+      let directoryPath = path.join(getStorageLocation() || "", "cover");
+      if (!fs.existsSync(directoryPath)) {
+        return [];
+      }
+      const files = fs.readdirSync(directoryPath);
+      return files;
+    } else {
+      let books: Book[] | null = await DatabaseService.getAllRecords("books");
+      return books
+        ?.map((book) => {
+          if (!book.cover) {
+            return "";
+          }
+          return book.key + "." + this.base64ToFileType(book.cover);
+        })
+        .filter((item) => item !== "");
+    }
+  }
+  static async getCloudCoverList() {
+    let syncUtil = await SyncService.getSyncUtil();
+    let cloudCoverList = await syncUtil.listFiles("cover");
+    return cloudCoverList;
   }
 }
 

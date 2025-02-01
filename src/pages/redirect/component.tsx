@@ -6,7 +6,8 @@ import { getParamsFromUrl } from "../../utils/file/common";
 import copy from "copy-text-to-clipboard";
 import { withRouter } from "react-router-dom";
 import Lottie from "react-lottie";
-
+import emptyDark from "../../assets/images/empty-dark.svg";
+import emptyLight from "../../assets/images/empty-light.svg";
 import animationSuccess from "../../assets/lotties/success.json";
 import toast, { Toaster } from "react-hot-toast";
 import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
@@ -147,8 +148,8 @@ class Redirect extends React.Component<RedirectProps, RedirectState> {
             ConfigService.getReaderConfig("appSkin") === "night" ||
             (ConfigService.getReaderConfig("appSkin") === "system" &&
               ConfigService.getReaderConfig("isOSNight") === "yes")
-              ? require("../../assets/images/empty-dark.svg")
-              : require("../../assets/images/empty-light.svg")
+              ? emptyDark
+              : emptyLight
           }
           alt=""
           className="empty-page-illustration"

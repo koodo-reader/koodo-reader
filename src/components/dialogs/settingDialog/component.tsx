@@ -93,6 +93,9 @@ class SettingDialog extends React.Component<
     this.loadFont();
     this.props.handleFetchDataSourceList();
     this.props.handleFetchDefaultSyncOption();
+    if (this.props.isAuthed) {
+      this.props.handleFetchLoginOptionList();
+    }
   }
   loadFont = () => {
     if (dropdownList[0].option.length <= 2) {
@@ -230,7 +233,6 @@ class SettingDialog extends React.Component<
       );
       return;
     }
-    console.log(this.props.isAuthed);
     if (
       driveList.find((item) => item.value === event.target.value)?.isPro &&
       !this.props.isAuthed
@@ -257,7 +259,7 @@ class SettingDialog extends React.Component<
     if (!event.target.value) {
       return;
     }
-    ConfigService.setReaderConfig("defaultSyncOption", event.target.value);
+    localStorage.setItem("defaultSyncOption", event.target.value);
     this.props.handleFetchDefaultSyncOption();
     toast.success(this.props.t("Change successful"));
   };
@@ -331,10 +333,7 @@ class SettingDialog extends React.Component<
       );
     }
     if (!this.props.defaultSyncOption) {
-      ConfigService.setReaderConfig(
-        "defaultSyncOption",
-        this.props.settingDrive
-      );
+      localStorage.setItem("defaultSyncOption", this.props.settingDrive);
       this.props.handleFetchDefaultSyncOption();
     }
     this.props.handleFetchDataSourceList();
