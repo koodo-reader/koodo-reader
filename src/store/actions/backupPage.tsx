@@ -40,8 +40,7 @@ export function handleDefaultSyncOption(option: string) {
 }
 export function handleFetchDefaultSyncOption() {
   return (dispatch: Dispatch) => {
-    let defaultSyncOption =
-      ConfigService.getReaderConfig("defaultSyncOption") || "";
+    let defaultSyncOption = localStorage.getItem("defaultSyncOption") || "";
     dispatch(handleDefaultSyncOption(defaultSyncOption));
   };
 }

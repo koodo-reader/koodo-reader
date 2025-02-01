@@ -5,6 +5,9 @@ import {
 } from "../../assets/lib/kookit-extra-browser.min";
 import DatabaseService from "../storage/databaseService";
 import SqlUtil from "./sqlUtil";
+import { isElectron } from "react-device-detect";
+import { getStorageLocation } from "../common";
+import { getCloudConfig } from "./common";
 
 class ConfigUtil {
   static async downloadConfig(type: string) {
@@ -40,22 +43,68 @@ class ConfigUtil {
     console.log(configStr, "configStr");
     return JSON.parse(configStr);
   }
-  static async downloadDatabase(type: string) {
-    let syncUtil = await SyncService.getSyncUtil();
-    let dbBuffer = await syncUtil.downloadFile(type + ".db", "config");
-    let sqlUtil = new SqlUtil();
-    return await sqlUtil.dbBufferToJson(dbBuffer, type);
-  }
+
   static async getCloudDatabase(database: string) {
-    let cloudRecords = await this.downloadDatabase(database);
-    console.log(cloudRecords, "cloudRecords");
-    return cloudRecords;
+    if (isElectron) {
+      const { ipcRenderer } = window.require("electron");
+      let service = localStorage.getItem("defaultSyncOption");
+      if (!service) {
+        return;
+      }
+      let tokenConfig = await getCloudConfig(service);
+
+      await ipcRenderer.invoke("cloud-download", {
+        ...tokenConfig,
+        fileName: database + ".db",
+        service: service,
+        type: "config",
+        isTemp: true,
+        storagePath: getStorageLocation(),
+      });
+      let cloudRecords = await DatabaseService.getAllRecords(
+        "temp-" + database
+      );
+      await ipcRenderer.invoke("close-database", {
+        dbName: "temp-" + database,
+        storagePath: getStorageLocation(),
+      });
+      console.log(cloudRecords, "cloudRecords");
+      return cloudRecords;
+    } else {
+      let syncUtil = await SyncService.getSyncUtil();
+      let dbBuffer = await syncUtil.downloadFile(database + ".db", "config");
+      let sqlUtil = new SqlUtil();
+      let cloudRecords = await sqlUtil.dbBufferToJson(dbBuffer, database);
+      console.log(cloudRecords, "cloudRecords");
+      return cloudRecords;
+    }
   }
   static async uploadDatabase(type: string) {
-    let dbBuffer = await DatabaseService.getDbBuffer(type);
-    let dbBlob = new Blob([dbBuffer], { type: CommonTool.getMimeType("db") });
-    let syncUtil = await SyncService.getSyncUtil();
-    await syncUtil.uploadFile(type + ".db", "config", dbBlob);
+    if (isElectron) {
+      const { ipcRenderer } = window.require("electron");
+      await ipcRenderer.invoke("close-database", {
+        dbName: type,
+        storagePath: getStorageLocation(),
+      });
+      let service = localStorage.getItem("defaultSyncOption");
+      if (!service) {
+        return;
+      }
+      let tokenConfig = await getCloudConfig(service);
+
+      return await ipcRenderer.invoke("cloud-upload", {
+        ...tokenConfig,
+        fileName: type + ".db",
+        service: service,
+        type: "config",
+        storagePath: getStorageLocation(),
+      });
+    } else {
+      let dbBuffer = await DatabaseService.getDbBuffer(type);
+      let dbBlob = new Blob([dbBuffer], { type: CommonTool.getMimeType("db") });
+      let syncUtil = await SyncService.getSyncUtil();
+      await syncUtil.uploadFile(type + ".db", "config", dbBlob);
+    }
   }
 
   static async dumpConfig(type: string) {

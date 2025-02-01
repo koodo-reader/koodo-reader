@@ -7,6 +7,7 @@ const {
   dialog,
   powerSaveBlocker,
   nativeTheme,
+  safeStorage,
   protocol
 } = require("electron");
 const path = require("path");
@@ -21,6 +22,7 @@ let readerWindow;
 let urlWindow;
 let mainView;
 let dbConnection = {};
+let syncUtilCache = {};
 const singleInstance = app.requestSingleInstanceLock();
 var filePath = null;
 if (process.platform != "darwin" && process.argv.length >= 2) {
@@ -75,6 +77,14 @@ const getDBConnection = (dbName, storagePath, sqlStatement) => {
     dbConnection[dbName].exec(sqlStatement["createTableStatement"][dbName]);
   }
   return dbConnection[dbName];
+}
+const getSyncUtil = async (config) => {
+  if (!syncUtilCache[config.service]) {
+    const { SyncUtil, TokenService, ThirdpartyRequest } = await import('./src/assets/lib/kookit-extra.min.mjs');
+    let thirdpartyRequest = new ThirdpartyRequest(TokenService);
+    syncUtilCache[config.service] = new SyncUtil(config.service, config, config.storagePath, thirdpartyRequest);
+  }
+  return syncUtilCache[config.service];
 }
 const createMainWin = () => {
   mainWin = new BrowserWindow(options);
@@ -177,19 +187,23 @@ const createMainWin = () => {
 
   });
   ipcMain.handle("cloud-upload", async (event, config) => {
-    let { service } = config;
-    const { SyncUtil } = await import('./src/assets/lib/kookit-extra.min.mjs');
-    let syncUtil = new SyncUtil(service, config, dirPath);
-    let result = await syncUtil.uploadFile(config.fileName, config.fileName, "backup");
+    console.log(config)
+    let syncUtil = await getSyncUtil(config);
+    let result = await syncUtil.uploadFile(config.fileName, config.fileName, config.type);
+    console.log(result, 'uploadFile')
     return result;
   });
+
   ipcMain.handle("cloud-download", async (event, config) => {
-    let { service } = config;
-    const { SyncUtil } = await import('./src/assets/lib/kookit-extra.min.mjs');
-    let syncUtil = new SyncUtil(service, config, dirPath);
-    let result = await syncUtil.downloadFile(config.fileName, config.fileName, "backup");
+    console.log(config)
+    let syncUtil = await getSyncUtil(config);
+    console.log(syncUtil)
+    let result = await syncUtil.downloadFile(config.fileName, (config.isTemp ? "temp-" : "") + config.fileName, config.type);
+    console.log(result, 'download')
     return result;
   });
+
+
   ipcMain.handle("clear-tts", async (event, config) => {
     if (!fs.existsSync(path.join(dirPath, "tts"))) {
       return "pong";
@@ -212,6 +226,18 @@ const createMainWin = () => {
     });
     return path.filePaths[0];
   });
+  ipcMain.handle("encrypt-data", async (event, config) => {
+    let encrypted = safeStorage.encryptString(config.token).toString("base64");
+    store.set("encryptedToken", encrypted);
+    return "pong";
+  });
+  ipcMain.handle("decrypt-data", async (event) => {
+    let encrypted = store.get("encryptedToken");
+    if (!encrypted) return "";
+    let decrypted = safeStorage.decryptString(Buffer.from(encrypted, "base64"));
+    return decrypted;
+  });
+
   ipcMain.handle("reset-reader-position", async (event) => {
     store.delete("windowX");
     store.delete("windowY");

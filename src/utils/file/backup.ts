@@ -2,14 +2,17 @@ import BookUtil from "./bookUtil";
 import { isElectron } from "react-device-detect";
 import { getStorageLocation } from "../common";
 import CoverUtil from "./coverUtil";
-import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
+import {
+  CommonTool,
+  ConfigService,
+} from "../../assets/lib/kookit-extra-browser.min";
 import { getCloudConfig } from "./common";
 import DatabaseService from "../storage/databaseService";
 import { saveAs } from "file-saver";
 import JSZip from "jszip";
 import ConfigUtil from "./configUtil";
 declare var window: any;
-export const databaseList = ["books", "notes", "bookmarks", "words", "plugins"];
+
 export const backup = async (service: string): Promise<Boolean> => {
   let fileName = "data.zip";
   if (service === "local") {
@@ -38,12 +41,14 @@ export const backup = async (service: string): Promise<Boolean> => {
     if (service === "local") {
       return true;
     } else {
-      let tokenConfig = getCloudConfig(service);
+      let tokenConfig = await getCloudConfig(service);
 
       return await ipcRenderer.invoke("cloud-upload", {
         ...tokenConfig,
         fileName: "data.zip",
         service: service,
+        type: "backup",
+        storagePath: getStorageLocation(),
       });
     }
   } else {
@@ -58,7 +63,7 @@ export const backup = async (service: string): Promise<Boolean> => {
       const { SyncUtil } = await import(
         "../../assets/lib/kookit-extra-browser.min"
       );
-      let tokenConfig = getCloudConfig(service);
+      let tokenConfig = await getCloudConfig(service);
 
       let syncUtil = new SyncUtil(service, tokenConfig);
       let result = await syncUtil.uploadFile(fileName, "backup", blob as Blob);
@@ -91,6 +96,7 @@ export const backupFromPath = async (targetPath: string, fileName: string) => {
   if (fs.existsSync(path.join(dataPath, "config", "config.json"))) {
     zip.addLocalFile(path.join(dataPath, "config", "config.json"), "config");
   }
+  let databaseList = CommonTool.databaseList;
   for (let i = 0; i < databaseList.length; i++) {
     await window.require("electron").ipcRenderer.invoke("close-database", {
       dbName: databaseList[i],

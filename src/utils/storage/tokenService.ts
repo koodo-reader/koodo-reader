@@ -1,70 +1,49 @@
+import { isElectron } from "react-device-detect";
 import { BrowserFingerprint } from "../common";
 
 export default class TokenService {
   static async saveAllToken(token: string): Promise<void> {
-    try {
-      // Encrypt token using safeStorage
+    // Encrypt token using safeStorage
+    console.log(token, "savealltoken");
+    if (!token) return;
+    if (isElectron) {
+      const { ipcRenderer } = window.require("electron");
+      ipcRenderer.invoke("encrypt-data", { token });
+    } else {
       const encrypted = await this.encryptString(token);
       localStorage.setItem("encryptedToken", encrypted);
-    } catch (error) {
-      console.error("Failed to save token:", error);
-      throw error;
     }
   }
 
   static async getAllToken(): Promise<string | null> {
-    try {
-      const encrypted = localStorage.getItem("encryptedToken") || "";
+    if (isElectron) {
+      const { ipcRenderer } = window.require("electron");
+      return await ipcRenderer.invoke("decrypt-data");
+    } else {
+      let encrypted = localStorage.getItem("encryptedToken") || "";
+      console.log(encrypted, "encrypted");
+      if (!encrypted) return null;
       return await this.decryptString(encrypted);
-    } catch (error) {
-      console.error("Failed to read token:", error);
-      return null;
     }
   }
 
-  static async deleteAllToken(): Promise<void> {
-    try {
-      localStorage.removeItem("encryptedToken");
-    } catch (error) {
-      console.error("Failed to delete token:", error);
-    }
-  }
   static async setToken(key: string, value: string): Promise<void> {
-    try {
-      const tokens = JSON.parse((await this.getAllToken()) || "{}");
-      tokens[key] = value;
-      await this.saveAllToken(JSON.stringify(tokens));
-    } catch (error) {
-      console.error("Failed to set token:", error);
-      throw error;
-    }
+    const tokens = JSON.parse((await this.getAllToken()) || "{}");
+    tokens[key] = value;
+    await this.saveAllToken(JSON.stringify(tokens));
   }
 
   static async getToken(key: string): Promise<string | null> {
-    try {
-      const tokens = JSON.parse((await this.getAllToken()) || "{}");
-      console.log(tokens, key);
-      return tokens[key] || null;
-    } catch (error) {
-      console.error("Failed to get token:", error);
-      return null;
-    }
+    const tokens = JSON.parse((await this.getAllToken()) || "{}");
+    console.log(tokens, key);
+    return tokens[key] || null;
   }
 
   static async deleteToken(key: string): Promise<void> {
-    try {
-      const tokens = JSON.parse((await this.getAllToken()) || "{}");
-      delete tokens[key];
-      await this.saveAllToken(JSON.stringify(tokens));
-    } catch (error) {
-      console.error("Failed to delete token:", error);
-      throw error;
-    }
+    const tokens = JSON.parse((await this.getAllToken()) || "{}");
+    delete tokens[key];
+    await this.saveAllToken(JSON.stringify(tokens));
   }
-  // static async encryptString(token: string) {
-  //   let fingerprint = await BrowserFingerprint.generate();
-  //   return btoa(token + fingerprint);
-  // }
   static async encryptString(token: string): Promise<string> {
     let fingerprint = await BrowserFingerprint.generate();
     const hashBuffer = await crypto.subtle.digest(
@@ -130,16 +109,4 @@ export default class TokenService {
     const decoder = new TextDecoder();
     return decoder.decode(decryptedToken);
   }
-
-  // static async decryptString(encrypted: string | null) {
-  //   if (!encrypted) return null;
-  //   let decoded = atob(encrypted);
-  //   console.log(decoded, "decoded");
-  //   let fingerprint = await BrowserFingerprint.generate();
-  //   if (decoded.endsWith(fingerprint)) {
-  //     return decoded.slice(0, -fingerprint.length);
-  //   } else {
-  //     return null;
-  //   }
-  // }
 }

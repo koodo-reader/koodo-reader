@@ -39,7 +39,8 @@ class Header extends React.Component<HeaderProps, HeaderState> {
   async componentDidMount() {
     this.props.handleFetchAuthed();
     this.props.handleFetchDefaultSyncOption();
-    this.props.handleFetchLoginOptionList();
+    this.props.handleFetchDataSourceList();
+
     // isElectron &&
     //   (await window.require("electron").ipcRenderer.invoke("s3-download"));
     // let syncUtil = new window.KookitSync.SyncUtil("dropbox", {});
@@ -214,7 +215,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       compareResult,
       ConfigService,
       DatabaseService,
-      SyncService,
       ConfigUtil,
       BookUtil,
       CoverUtil
@@ -233,7 +233,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
   };
 
   render() {
-    console.log(this.props.isAuthed);
     return (
       <div
         className="header"

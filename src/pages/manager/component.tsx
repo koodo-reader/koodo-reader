@@ -9,7 +9,6 @@ import AboutDialog from "../../components/dialogs/aboutDialog";
 import BackupDialog from "../../components/dialogs/backupDialog";
 import { ManagerProps, ManagerState } from "./interface";
 import { Trans } from "react-i18next";
-import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import SettingDialog from "../../components/dialogs/settingDialog";
 import { isMobile } from "react-device-detect";
 import { Route, Switch, Redirect } from "react-router-dom";
@@ -21,6 +20,9 @@ import { Toaster } from "react-hot-toast";
 import DetailDialog from "../../components/dialogs/detailDialog";
 import FeedbackDialog from "../../components/dialogs/feedbackDialog";
 import { Tooltip } from "react-tooltip";
+import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
+import emptyDark from "../../assets/images/empty-dark.svg";
+import emptyLight from "../../assets/images/empty-light.svg";
 class Manager extends React.Component<ManagerProps, ManagerState> {
   timer!: NodeJS.Timeout;
   constructor(props: ManagerProps) {
@@ -101,8 +103,8 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
                 ConfigService.getReaderConfig("appSkin") === "night" ||
                 (ConfigService.getReaderConfig("appSkin") === "system" &&
                   ConfigService.getReaderConfig("isOSNight") === "yes")
-                  ? require("../../assets/images/empty-dark.svg")
-                  : require("../../assets/images/empty-light.svg")
+                  ? emptyDark
+                  : emptyLight
               }
               alt=""
               className="waring-pic"

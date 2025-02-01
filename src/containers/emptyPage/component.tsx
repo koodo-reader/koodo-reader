@@ -3,6 +3,9 @@ import "./emptyPage.css";
 import { emptyList } from "../../constants/emptyList";
 import { Trans } from "react-i18next";
 import { EmptyPageProps, EmptyPageState } from "./interface";
+import emptyDark from "../../assets/images/empty-dark.svg";
+import emptyLight from "../../assets/images/empty-light.svg";
+
 import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 
 class EmptyPage extends React.Component<EmptyPageProps, EmptyPageState> {
@@ -45,8 +48,8 @@ class EmptyPage extends React.Component<EmptyPageProps, EmptyPageState> {
               ConfigService.getReaderConfig("appSkin") === "night" ||
               (ConfigService.getReaderConfig("appSkin") === "system" &&
                 ConfigService.getReaderConfig("isOSNight") === "yes")
-                ? require("../../assets/images/empty-dark.svg")
-                : require("../../assets/images/empty-light.svg")
+                ? emptyDark
+                : emptyLight
             }
             alt=""
             className="empty-page-illustration"
