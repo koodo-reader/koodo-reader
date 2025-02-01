@@ -15,7 +15,6 @@ import {
 } from "../../utils/file/common";
 import toast from "react-hot-toast";
 import { Trans } from "react-i18next";
-import { addChatbox } from "../../utils/common";
 import { getThirdpartyRequest } from "../../utils/request/thirdparty";
 import { SyncHelper } from "../../assets/lib/kookit-extra-browser.min";
 import ConfigUtil from "../../utils/file/configUtil";
@@ -99,14 +98,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       this.props.handleFetchNotes();
       this.props.handleFetchBookmarks();
     });
-  }
-  UNSAFE_componentWillReceiveProps(
-    nextProps: Readonly<HeaderProps>,
-    nextContext: any
-  ): void {
-    if (nextProps.isAuthed) {
-      addChatbox();
-    }
   }
   handleFinishUpgrade = () => {
     setTimeout(() => {
