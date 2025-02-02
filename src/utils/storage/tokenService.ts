@@ -3,8 +3,6 @@ import { BrowserFingerprint } from "../common";
 
 export default class TokenService {
   static async saveAllToken(token: string): Promise<void> {
-    // Encrypt token using safeStorage
-    console.log(token, "savealltoken");
     if (!token) return;
     if (isElectron) {
       const { ipcRenderer } = window.require("electron");
@@ -21,7 +19,6 @@ export default class TokenService {
       return await ipcRenderer.invoke("decrypt-data");
     } else {
       let encrypted = localStorage.getItem("encryptedToken") || "";
-      console.log(encrypted, "encrypted");
       if (!encrypted) return null;
       return await this.decryptString(encrypted);
     }

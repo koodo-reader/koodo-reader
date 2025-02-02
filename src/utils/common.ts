@@ -289,3 +289,28 @@ export function removeSearchParams() {
   const url = new URL(window.location.href.split("?")[0]);
   window.history.replaceState({}, document.title, url.toString());
 }
+export function addChatBox() {
+  console.log("sfsdfsd");
+  const scriptContent = `
+    (function (d, t) {
+      var BASE_URL = "https://app.chatwoot.com";
+      var g = d.createElement(t),
+        s = d.getElementsByTagName(t)[0];
+      g.src = BASE_URL + "/packs/js/sdk.js";
+      g.defer = true;
+      g.async = true;
+      s.parentNode.insertBefore(g, s);
+      g.onload = function () {
+        window.chatwootSDK.run({
+          websiteToken: "svaD5wxfU5UY1r5ZzpMtLqv2",
+          baseUrl: BASE_URL,
+        });
+      };
+    })(document, "script");
+  `;
+
+  const scriptElement = document.createElement("script");
+  scriptElement.type = "text/javascript";
+  scriptElement.text = scriptContent;
+  document.head.appendChild(scriptElement);
+}

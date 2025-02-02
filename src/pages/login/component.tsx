@@ -274,7 +274,11 @@ class Login extends React.Component<LoginProps, LoginState> {
                         isElectron ? "desktop" : "browser"
                       );
                       if (url) {
-                        openExternalUrl(url);
+                        if (isElectron) {
+                          openExternalUrl(url);
+                        } else {
+                          window.location.replace(url);
+                        }
                       }
                     }}
                   >
@@ -452,7 +456,7 @@ class Login extends React.Component<LoginProps, LoginState> {
                   alt="logo"
                   className="login-mobile-qr"
                   style={{
-                    width: "45%",
+                    width: "35%",
                   }}
                 />
               </div>
