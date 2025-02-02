@@ -215,11 +215,5 @@ export const upgradeConfig = (): Boolean => {
   }
 };
 export const getCloudConfig = async (service: string) => {
-  let tokenConfig = {};
-  try {
-    tokenConfig = JSON.parse(ConfigService.getReaderConfig(service + "_token"));
-  } catch (e) {
-    tokenConfig = await decryptToken(service);
-  }
-  return tokenConfig;
+  return await decryptToken(service);
 };

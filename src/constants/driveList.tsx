@@ -4,7 +4,7 @@ export const driveList = [
     value: "webdav",
     icon: "icon-webdav",
     isPro: false,
-    support: ["desktop", "phone"],
+    support: ["desktop", "browser", "phone"],
   },
 
   {
@@ -69,7 +69,7 @@ export const driveInputConfig: DriveInputConfig = {
     },
     {
       label: "Server path",
-      value: "path",
+      value: "dir",
       type: "text",
     },
     {
@@ -96,7 +96,7 @@ export const driveInputConfig: DriveInputConfig = {
     },
     {
       label: "Server path",
-      value: "path",
+      value: "dir",
       type: "text",
     },
     {
@@ -123,7 +123,7 @@ export const driveInputConfig: DriveInputConfig = {
     },
     {
       label: "Server Path",
-      value: "path",
+      value: "dir",
       type: "text",
     },
     {
@@ -154,8 +154,8 @@ export const driveInputConfig: DriveInputConfig = {
       type: "text",
     },
     {
-      label: "Server Path",
-      value: "path",
+      label: "Path",
+      value: "dir",
       type: "text",
     },
     {

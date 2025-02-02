@@ -172,6 +172,10 @@ class CoverUtil {
 
       let imgBuffer: ArrayBuffer = await syncUtil.downloadFile(cover, "cover");
       let imgStr = CommonTool.arrayBufferToBase64(imgBuffer);
+      if (!imgStr) {
+        console.log("download cover failed");
+        return;
+      }
       let base64 = `data:image/${
         cover.split(".").reverse()[0]
       };base64,${imgStr}`;
@@ -200,11 +204,13 @@ class CoverUtil {
     } else {
       let syncUtil = await SyncService.getSyncUtil();
       let book = await DatabaseService.getRecord(cover.split(".")[0], "books");
+      console.log(book, "uploadCover");
       if (book && book.cover) {
         let result = this.convertCoverBase64(book.cover);
         let coverBlob = new Blob([result.arrayBuffer], {
           type: `image/${result.extension}`,
         });
+        console.log(coverBlob, "coverBlob");
         await syncUtil.uploadFile(cover, "cover", coverBlob);
       }
     }
@@ -243,9 +249,50 @@ class CoverUtil {
     }
   }
   static async getCloudCoverList() {
-    let syncUtil = await SyncService.getSyncUtil();
-    let cloudCoverList = await syncUtil.listFiles("cover");
-    return cloudCoverList;
+    if (isElectron) {
+      const { ipcRenderer } = window.require("electron");
+      let service = localStorage.getItem("defaultSyncOption");
+      if (!service) {
+        return [];
+      }
+      let tokenConfig = await getCloudConfig(service);
+
+      let cloudCoverList = await ipcRenderer.invoke("cloud-list", {
+        ...tokenConfig,
+        service: service,
+        type: "cover",
+      });
+      return cloudCoverList;
+    } else {
+      let syncUtil = await SyncService.getSyncUtil();
+      let cloudCoverList = await syncUtil.listFiles("cover");
+      return cloudCoverList;
+    }
+  }
+  static async deleteCloudCover(key: string) {
+    let coverList = await this.getCloudCoverList();
+    for (let cover of coverList) {
+      if (cover.startsWith(key)) {
+        if (isElectron) {
+          const { ipcRenderer } = window.require("electron");
+          let service = localStorage.getItem("defaultSyncOption");
+          if (!service) {
+            return;
+          }
+          let tokenConfig = await getCloudConfig(service);
+
+          await ipcRenderer.invoke("cloud-delete", {
+            ...tokenConfig,
+            fileName: cover,
+            service: service,
+            type: "cover",
+          });
+        } else {
+          let syncUtil = await SyncService.getSyncUtil();
+          await syncUtil.deleteFile(cover, "cover");
+        }
+      }
+    }
   }
 }
 
