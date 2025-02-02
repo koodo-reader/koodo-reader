@@ -33,6 +33,7 @@ import {
   SyncUtil,
 } from "../../../assets/lib/kookit-extra-browser.min";
 import {
+  encryptToken,
   getThirdpartyRequest,
   onSyncCallback,
 } from "../../../utils/request/thirdparty";
@@ -306,11 +307,13 @@ class SettingDialog extends React.Component<
     );
     if (resCode === 200) {
       this.props.handleLoadingDialog(false);
-      toast.success("登录成功");
+      toast.success("Login successful");
       this.props.handleFetchAuthed();
       this.props.handleFetchLoginOptionList();
       this.setState({ settingLogin: "" });
-      this.props.handleSetting(false);
+    } else {
+      this.props.handleLoadingDialog(false);
+      toast.error("Login failed");
     }
   };
   handleCancelDrive = () => {
@@ -323,10 +326,16 @@ class SettingDialog extends React.Component<
       this.props.settingDrive === "sftp" ||
       this.props.settingDrive === "s3compatible"
     ) {
-      ConfigService.setReaderConfig(
-        `${this.props.settingDrive}_token`,
-        JSON.stringify(this.state.driveConfig)
+      toast.loading(i18n.t("Adding"), { id: "adding-sync-id" });
+      let code = await encryptToken(
+        this.props.settingDrive,
+        this.state.driveConfig
       );
+      console.log(code, "code43665");
+      if (code === 200) {
+        ConfigService.setListConfig(this.props.settingDrive, "dataSourceList");
+        toast.success(i18n.t("Binding successful"), { id: "adding-sync-id" });
+      }
     } else {
       await onSyncCallback(
         this.props.settingDrive,

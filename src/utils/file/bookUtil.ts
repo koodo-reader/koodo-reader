@@ -304,9 +304,25 @@ class BookUtil {
       syncUtil.uploadFile(key + "." + format.toLowerCase(), "book", bookBlob);
     }
   }
-  static async deleteRemoteBook(key: string, format: string) {
-    let syncUtil = await SyncService.getSyncUtil();
-    await syncUtil.deleteFile(key + "." + format.toLowerCase(), "book");
+  static async deleteCloudBook(key: string, format: string) {
+    if (isElectron) {
+      const { ipcRenderer } = window.require("electron");
+      let service = localStorage.getItem("defaultSyncOption");
+      if (!service) {
+        return;
+      }
+      let tokenConfig = await getCloudConfig(service);
+
+      await ipcRenderer.invoke("cloud-delete", {
+        ...tokenConfig,
+        fileName: key + "." + format.toLowerCase(),
+        service: service,
+        type: "book",
+      });
+    } else {
+      let syncUtil = await SyncService.getSyncUtil();
+      await syncUtil.deleteFile(key + "." + format.toLowerCase(), "book");
+    }
   }
 
   static async deleteCacheBook(key: string) {
@@ -333,9 +349,24 @@ class BookUtil {
       .map((book) => book.key + "." + book.format.toLowerCase());
   }
   static async getCloudBookList() {
-    let syncUtil = await SyncService.getSyncUtil();
-    let cloudBookList = await syncUtil.listFiles("book");
-    return cloudBookList;
+    if (isElectron) {
+      const { ipcRenderer } = window.require("electron");
+      let service = localStorage.getItem("defaultSyncOption");
+      if (!service) {
+        return;
+      }
+      let tokenConfig = await getCloudConfig(service);
+
+      return await ipcRenderer.invoke("cloud-list", {
+        ...tokenConfig,
+        service: service,
+        type: "book",
+      });
+    } else {
+      let syncUtil = await SyncService.getSyncUtil();
+      let cloudBookList = await syncUtil.listFiles("book");
+      return cloudBookList;
+    }
   }
 }
 

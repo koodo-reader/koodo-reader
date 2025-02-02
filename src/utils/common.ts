@@ -314,3 +314,9 @@ export function addChatBox() {
   scriptElement.text = scriptContent;
   document.head.appendChild(scriptElement);
 }
+export function removeChatBox() {
+  const scriptElement = document.querySelector("script[src*='chatwoot']");
+  if (scriptElement) {
+    scriptElement.remove();
+  }
+}

@@ -47,11 +47,9 @@ export const sendFeedback = async (data: any) => {
   return res.data.result;
 };
 export const handleExitApp = async () => {
-  const history = useHistory();
   toast.error(i18n.t("Authorization failed, please login again"));
   await TokenService.deleteToken("is_authed");
   await TokenService.deleteToken("access_token");
   await TokenService.deleteToken("refresh_token");
   //路由到login页面
-  history.push("/login");
 };

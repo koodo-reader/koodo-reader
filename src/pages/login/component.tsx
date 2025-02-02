@@ -70,7 +70,7 @@ class Login extends React.Component<LoginProps, LoginState> {
     let resCode = await loginRegister(service, code);
     if (resCode === 200) {
       this.props.handleLoadingDialog(false);
-      toast.success("登录成功");
+      toast.success("Login successful");
       console.log(1, new Date().getTime());
       removeSearchParams();
       this.props.handleFetchAuthed();
@@ -118,11 +118,16 @@ class Login extends React.Component<LoginProps, LoginState> {
               />
 
               <div className="login-title">
-                为安卓和 iOS 平台精心设计和开发的客户端
+                <Trans>
+                  {this.props.t(
+                    "Meticulously designed and built for Android and iOS"
+                  )}
+                </Trans>
               </div>
               <div className="login-subtitle">
-                经过长达3年的设计和开发，移动版的 Koodo Reader
-                终于要和大家见面了
+                {this.props.t(
+                  "After three years of design and development, the mobile version of Koodo Reader is finally out"
+                )}
               </div>
               <div
                 className="login-next-button"
@@ -132,7 +137,7 @@ class Login extends React.Component<LoginProps, LoginState> {
                   });
                 }}
               >
-                下一个
+                {this.props.t("Next step")}
               </div>
               <div
                 className="login-close-container"
@@ -184,10 +189,14 @@ class Login extends React.Component<LoginProps, LoginState> {
               />
 
               <div className="login-title" style={{ marginTop: "20%" }}>
-                在您所有的设备之间自动同步图书和阅读记录
+                {this.props.t(
+                  "Automatically synchronize books and reading progress across all your devices"
+                )}
               </div>
               <div className="login-subtitle">
-                借助您绑定的网盘，WebDAV 和对象存储实现，您所有的数据都由您掌握
+                {this.props.t(
+                  "With the integration of your cloud drive, WebDAV, and object storage, all your data remains securely in your control"
+                )}
               </div>
               <div>
                 <div
@@ -202,7 +211,7 @@ class Login extends React.Component<LoginProps, LoginState> {
                     right: "140px",
                   }}
                 >
-                  上一个
+                  {this.props.t("Last step")}
                 </div>
                 <div
                   className="login-next-button"
@@ -212,7 +221,7 @@ class Login extends React.Component<LoginProps, LoginState> {
                     });
                   }}
                 >
-                  下一个
+                  {this.props.t("Next step")}
                 </div>
               </div>
 
@@ -260,7 +269,9 @@ class Login extends React.Component<LoginProps, LoginState> {
                 className="login-title"
                 style={{ marginTop: "100px", marginBottom: "15%" }}
               >
-                从一个账号开始，开始探索Koodo Reader 专业版
+                {this.props.t(
+                  "Embark on your journey of exploration with Koodo Reader Pro, starting from an account"
+                )}
               </div>
               {loginList.map((item) => {
                 return (
@@ -289,7 +300,9 @@ class Login extends React.Component<LoginProps, LoginState> {
                       ></span>
                     </div>
                     <div className="login-option-title">
-                      使用 {item.label} 继续
+                      <Trans i18nKey="Continue with" label={item.label}>
+                        Continue with {{ label: this.props.t(item.label) }}
+                      </Trans>
                     </div>
                   </div>
                 );
@@ -301,11 +314,12 @@ class Login extends React.Component<LoginProps, LoginState> {
                   this.props.handleSettingMode("account");
                 }}
               >
-                手动输入登录凭证
+                {this.props.t("Manually enter login credentials")}
               </div>
               <div className="login-term">
-                点击继续即代表您已认真阅读并同意接受 Koodo Reader
-                的《服务条款》、《隐私政策》。
+                {this.props.t(
+                  "By clicking continue, you acknowledge that you have carefully read and agree to accept Koodo Reader's Terms of Service and Privacy Policy"
+                )}
               </div>
               <div
                 className="login-close-container"
@@ -351,7 +365,9 @@ class Login extends React.Component<LoginProps, LoginState> {
                 className="login-title"
                 style={{ marginTop: "80px", marginBottom: "10%" }}
               >
-                添加数据源，用于数据同步和备份
+                {this.props.t(
+                  "Add a data source for data synchronization and backup"
+                )}
               </div>
               <div className="login-sync-container">
                 {driveList.map((item) => {
@@ -402,7 +418,7 @@ class Login extends React.Component<LoginProps, LoginState> {
                   right: "0px",
                 }}
               >
-                跳过
+                {this.props.t("Skip")}
               </div>
               <div
                 className="login-close-container"
@@ -448,7 +464,9 @@ class Login extends React.Component<LoginProps, LoginState> {
                 className="login-title"
                 style={{ marginTop: "80px", marginBottom: "10%" }}
               >
-                下载移动版，随时随地阅读和记录
+                {this.props.t(
+                  "Download the mobile version to read and take notes anytime, anywhere"
+                )}
               </div>
               <div className="login-mobile-container">
                 <img
@@ -470,7 +488,7 @@ class Login extends React.Component<LoginProps, LoginState> {
                   right: "0px",
                 }}
               >
-                跳过
+                {this.props.t("Finish")}
               </div>
               <div
                 className="login-close-container"

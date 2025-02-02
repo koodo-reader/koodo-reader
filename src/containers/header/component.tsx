@@ -22,7 +22,8 @@ import DatabaseService from "../../utils/storage/databaseService";
 import SyncService from "../../utils/storage/syncService";
 import CoverUtil from "../../utils/file/coverUtil";
 import BookUtil from "../../utils/file/bookUtil";
-import { addChatBox } from "../../utils/common";
+import { addChatBox, removeChatBox } from "../../utils/common";
+
 class Header extends React.Component<HeaderProps, HeaderState> {
   constructor(props: HeaderProps) {
     super(props);
@@ -107,6 +108,9 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     if (nextProps.isAuthed && nextProps.isAuthed !== this.props.isAuthed) {
       console.log("safsdfgfhfg");
       addChatBox();
+    }
+    if (!nextProps.isAuthed && nextProps.isAuthed !== this.props.isAuthed) {
+      removeChatBox();
     }
   }
   handleFinishUpgrade = () => {
@@ -312,19 +316,30 @@ class Header extends React.Component<HeaderProps, HeaderState> {
 
           <div
             className="setting-icon-container"
-            onClick={() => {
-              if (!isElectron && !this.props.isAuthed) {
-                toast(
-                  this.props.t(
-                    "This feature is not available in the free version"
-                  )
-                );
-              }
-              if (this.props.isAuthed) {
-                this.handleCloudSync();
-              } else {
-                this.handleLocalSync();
-              }
+            onClick={async () => {
+              console.log("sync");
+              // let result = await CoverUtil.uploadCover("1738469806090.jpeg");
+              // let result = await CoverUtil.downloadCover("1738469806090.jpeg");
+              let syncUtil = await SyncService.getSyncUtil();
+              let result = await syncUtil.listFiles("cover");
+              // let result = await syncUtil.deleteFile(
+              //   "1738469806090.jpeg",
+              //   "cover"
+              // );
+              console.log(result);
+              return;
+              // if (!isElectron && !this.props.isAuthed) {
+              //   toast(
+              //     this.props.t(
+              //       "This feature is not available in the free version"
+              //     )
+              //   );
+              // }
+              // if (this.props.isAuthed) {
+              //   this.handleCloudSync();
+              // } else {
+              //   this.handleLocalSync();
+              // }
             }}
             style={{ marginTop: "2px" }}
           >

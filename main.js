@@ -204,6 +204,18 @@ const createMainWin = () => {
     return result;
   });
 
+  ipcMain.handle("cloud-delete", async (event, config) => {
+    let syncUtil = await getSyncUtil(config);
+    let result = await syncUtil.deleteFile(config.fileName, config.type);
+    return result;
+  });
+
+  ipcMain.handle("cloud-list", async (event, config) => {
+    let syncUtil = await getSyncUtil(config);
+    let result = await syncUtil.listFiles(config.type);
+    return result;
+  });
+
 
   ipcMain.handle("clear-tts", async (event, config) => {
     if (!fs.existsSync(path.join(dirPath, "tts"))) {
@@ -315,6 +327,7 @@ const createMainWin = () => {
     delete dbConnection[dbName];
     db.close();
   });
+
   ipcMain.on("user-data", (event, arg) => {
     event.returnValue = dirPath;
   });
@@ -364,6 +377,7 @@ const createMainWin = () => {
       mainView.webContents.loadURL(config.url)
     }
   });
+
   ipcMain.handle("reload-tab", (event, config) => {
     if (mainWin && mainView) {
       mainView.webContents.reload()
