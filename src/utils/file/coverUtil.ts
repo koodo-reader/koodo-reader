@@ -88,7 +88,7 @@ class CoverUtil {
     }
     const mime = mimeMatch[1];
 
-    const extension = mime.split("/")[1];
+    let extension = mime.split("/")[1];
 
     const base64Data = base64.replace(/^data:.*;base64,/, "");
 
@@ -100,6 +100,9 @@ class CoverUtil {
     }
 
     const arrayBuffer = bytes.buffer;
+    if (extension === "jpg") {
+      extension = "jpeg";
+    }
 
     return {
       arrayBuffer,
@@ -122,10 +125,10 @@ class CoverUtil {
     let fileType = "unknown";
     const signatures: { [key: string]: string } = {
       "89504e47": "png",
-      ffd8ffe0: "jpg",
-      ffd8ffe1: "jpg",
-      ffd8ffdb: "jpg",
-      ffd8ffe2: "jpg",
+      ffd8ffe0: "jpeg",
+      ffd8ffe1: "jpeg",
+      ffd8ffdb: "jpeg",
+      ffd8ffe2: "jpeg",
       "47494638": "gif",
       "424d": "bmp",
       "49492a00": "tiff",
@@ -168,7 +171,7 @@ class CoverUtil {
       console.log(covers, "covers");
 
       let imgBuffer: ArrayBuffer = await syncUtil.downloadFile(cover, "cover");
-      let imgStr = CommonTool.arrayBufferToBase64(imgBuffer).split("base64")[1];
+      let imgStr = CommonTool.arrayBufferToBase64(imgBuffer);
       let base64 = `data:image/${
         cover.split(".").reverse()[0]
       };base64,${imgStr}`;

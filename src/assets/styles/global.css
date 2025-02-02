@@ -10,3 +10,23 @@
 *:focus {
   outline: none;
 }
+.woot-widget-bubble {
+  bottom: 40px !important;
+  z-index: 1 !important;
+  width: 50px !important;
+  height: 50px !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+}
+.chatwoot-container {
+  margin-bottom: 20px;
+}
+#woot-widget-bubble-icon {
+  margin: 15px !important;
+}
+.woot--close::before,
+.woot--close::after {
+  left: 24px !important;
+  top: 14px !important;
+}

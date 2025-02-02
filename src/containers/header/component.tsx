@@ -22,6 +22,7 @@ import DatabaseService from "../../utils/storage/databaseService";
 import SyncService from "../../utils/storage/syncService";
 import CoverUtil from "../../utils/file/coverUtil";
 import BookUtil from "../../utils/file/bookUtil";
+import { addChatBox } from "../../utils/common";
 class Header extends React.Component<HeaderProps, HeaderState> {
   constructor(props: HeaderProps) {
     super(props);
@@ -99,6 +100,15 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       this.props.handleFetchBookmarks();
     });
   }
+  UNSAFE_componentWillReceiveProps(
+    nextProps: Readonly<HeaderProps>,
+    nextContext: any
+  ): void {
+    if (nextProps.isAuthed && nextProps.isAuthed !== this.props.isAuthed) {
+      console.log("safsdfgfhfg");
+      addChatBox();
+    }
+  }
   handleFinishUpgrade = () => {
     setTimeout(() => {
       this.props.history.push("/manager/home");
@@ -159,7 +169,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     let getSyncResult = await thirdpartyRequest.getSyncState();
     if (getSyncResult.code !== 200) {
       toast.error(this.props.t("Failed to get sync state"));
-      await this.handleFinish();
       return false;
     }
     if (!getSyncResult.data) {
@@ -168,7 +177,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
           "Sync state is occupied by other devices, please try again later"
         )
       );
-      await this.handleFinish();
       return false;
     }
     toast.loading(this.props.t("Start syncing") + "...", { id: "syncing-id" });
@@ -202,18 +210,24 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     }, 1000);
   };
   handleSync = async (compareResult) => {
-    await SyncHelper.startSync(
-      compareResult,
-      ConfigService,
-      DatabaseService,
-      ConfigUtil,
-      BookUtil,
-      CoverUtil
-    );
-    console.log("sync finish");
-    await this.handleFinish();
-    console.log("sync finish2");
-    await this.handleSuccess();
+    try {
+      await SyncHelper.startSync(
+        compareResult,
+        ConfigService,
+        DatabaseService,
+        ConfigUtil,
+        BookUtil,
+        CoverUtil
+      );
+
+      await this.handleSuccess();
+    } catch (error) {
+      console.log(error);
+      toast.error(this.props.t("Sync failed"));
+      return;
+    } finally {
+      await this.handleFinish();
+    }
   };
   syncToLocation = async () => {
     let timestamp = new Date().getTime().toString();

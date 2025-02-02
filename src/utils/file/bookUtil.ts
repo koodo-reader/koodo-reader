@@ -15,7 +15,7 @@ import { getCloudConfig } from "./common";
 declare var window: any;
 
 class BookUtil {
-  static addBook(key: string, foramt: string, buffer: ArrayBuffer) {
+  static addBook(key: string, format: string, buffer: ArrayBuffer) {
     if (isElectron) {
       const fs = window.require("fs");
       const path = window.require("path");
@@ -25,7 +25,7 @@ class BookUtil {
           fs.mkdirSync(path.join(dataPath, "book"), { recursive: true });
         }
         fs.writeFileSync(
-          path.join(dataPath, "book", key + "." + foramt),
+          path.join(dataPath, "book", key + "." + format),
           Buffer.from(buffer)
         );
       } catch (error) {
@@ -34,6 +34,7 @@ class BookUtil {
     } else {
       return localforage.setItem(key, buffer);
     }
+    this.uploadBook(key, format);
   }
   static deleteBook(key: string, format: string) {
     if (isElectron) {
@@ -302,6 +303,10 @@ class BookUtil {
       });
       syncUtil.uploadFile(key + "." + format.toLowerCase(), "book", bookBlob);
     }
+  }
+  static async deleteRemoteBook(key: string, format: string) {
+    let syncUtil = await SyncService.getSyncUtil();
+    await syncUtil.deleteFile(key + "." + format.toLowerCase(), "book");
   }
 
   static async deleteCacheBook(key: string) {
