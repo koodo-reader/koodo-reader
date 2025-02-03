@@ -441,6 +441,7 @@
   "Pot is running": "Pot is running",
   "Please select the service": "Please select the service",
   "Set default sync option": "Set default sync option",
+  "Default sync option cannot be removed": "Default sync option cannot be removed",
   "This feature is not available in the free version": "This feature is not available in the free version",
   "Pro version": "Pro version",
   "Please add data source in the setting": "Please add data source in the setting",
