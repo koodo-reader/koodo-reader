@@ -36,7 +36,7 @@
   "Blue": "Modra",
   "Bold": "Krepko",
   "Book name": "Ime knjige",
-  "Book not exist": "Knjiga ne obstaja",
+  "Book not exists": "Knjiga ne obstaja",
   "Book page": "Stran {{count}}",
   "Book size is over 20M": "Velikost knjige je čez 20 MB",
   "Book won't be opened in a separate window but directly opened in the main window": "Knjiga se ne bo odprla v ločenem oknu, temveč neposredno v glavnem oknu",

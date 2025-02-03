@@ -13,7 +13,7 @@ export const getThirdpartyRequest = async () => {
   return thirdpartyRequest;
 };
 export const onSyncCallback = async (service: string, authCode: string) => {
-  toast.loading(i18n.t("Adding..."), { id: "adding-sync-id" });
+  toast.loading(i18n.t("Adding"), { id: "adding-sync-id" });
   console.log(service, authCode);
   let thirdpartyRequest = await getThirdpartyRequest();
   console.log(thirdpartyRequest, "thirdpartyRequest");

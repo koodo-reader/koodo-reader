@@ -41,7 +41,7 @@ class CardList extends React.Component<CardListProps, CardListStates> {
       }
     }
     if (!book) {
-      toast(this.props.t("Book not exist"));
+      toast(this.props.t("Book not exists"));
       return;
     }
 

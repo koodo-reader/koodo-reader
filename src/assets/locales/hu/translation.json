@@ -91,7 +91,7 @@
   "Descend": "Csökkenő",
   "Ascend": "Növekvő",
   "Token": "Jogkivonat",
-  "Book not exist": "A könyv nem létezik",
+  "Book not exists": "A könyv nem létezik",
   "Please authorize your account, and fill the following box with the token": "Engedélyezze fiókját, és töltse ki a következő bemenetet a jogkivonattal",
   "Copy link": "Link másolása",
   "Copy token": "Jogkivonat másolása",

@@ -131,7 +131,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         if (this.props.defaultSyncOption) {
           await BookUtil.downloadBook(key, format.toLowerCase());
         } else {
-          toast.error(this.props.t("Book not exist"));
+          toast.error(this.props.t("Book not exists"));
           return;
         }
       }
