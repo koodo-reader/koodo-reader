@@ -109,6 +109,11 @@ export const driveInputConfig: DriveInputConfig = {
       value: "password",
       type: "password",
     },
+    {
+      label: "Use SSL, 1 for use, 0 for not use",
+      value: "ssl",
+      type: "text",
+    },
   ],
   sftp: [
     {

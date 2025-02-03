@@ -320,26 +320,30 @@ class Header extends React.Component<HeaderProps, HeaderState> {
               console.log("sync");
               // let result = await CoverUtil.uploadCover("1738469806090.jpeg");
               // let result = await CoverUtil.downloadCover("1738469806090.jpeg");
-              let syncUtil = await SyncService.getSyncUtil();
-              let result = await syncUtil.listFiles("cover");
+              // let result = await CoverUtil.getCloudCoverList();
+              // let result = await CoverUtil.deleteCloudCover(
+              //   "1738469806090.jpeg"
+              // );
+              // let syncUtil = await SyncService.getSyncUtil();
+              // let result = await syncUtil.listFiles("cover");
               // let result = await syncUtil.deleteFile(
               //   "1738469806090.jpeg",
               //   "cover"
               // );
-              console.log(result);
-              return;
-              // if (!isElectron && !this.props.isAuthed) {
-              //   toast(
-              //     this.props.t(
-              //       "This feature is not available in the free version"
-              //     )
-              //   );
-              // }
-              // if (this.props.isAuthed) {
-              //   this.handleCloudSync();
-              // } else {
-              //   this.handleLocalSync();
-              // }
+              // console.log(result);
+              // return;
+              if (!isElectron && !this.props.isAuthed) {
+                toast(
+                  this.props.t(
+                    "This feature is not available in the free version"
+                  )
+                );
+              }
+              if (this.props.isAuthed) {
+                this.handleCloudSync();
+              } else {
+                this.handleLocalSync();
+              }
             }}
             style={{ marginTop: "2px" }}
           >
