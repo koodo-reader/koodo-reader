@@ -64,10 +64,20 @@ class TTSUtil {
       }
     }
   }
-  static async pauseAudio() {
+  static async stopAudio() {
     if (this.player && this.player.stop) {
       this.player.stop();
       window.require("electron").ipcRenderer.invoke("clear-tts");
+    }
+  }
+  static async pauseAudio() {
+    if (this.player && this.player.pause) {
+      this.player.pause();
+    }
+  }
+  static async resumeAudio() {
+    if (this.player && this.player.play) {
+      this.player.play();
     }
   }
   static getAudioPaths() {

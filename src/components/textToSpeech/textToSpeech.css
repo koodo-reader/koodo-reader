@@ -44,3 +44,23 @@
   justify-content: flex-start;
   margin-bottom: 10px;
 }
+.tts-control-button-container {
+  margin-left: 20px;
+  margin-top: 10px;
+  width: 88%;
+}
+
+.tts-pause-play-button {
+  padding: 8px 16px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+}
+
+.tts-pause-play-button:hover {
+  background-color: #45a049;
+}

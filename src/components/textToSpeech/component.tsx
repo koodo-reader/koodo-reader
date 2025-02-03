@@ -25,6 +25,7 @@ class TextToSpeech extends React.Component<
       isSupported: false,
       isAudioOn: false,
       isAddNew: false,
+      isPlaying: false,
     };
     this.nodeList = [];
     this.voices = [];
@@ -57,12 +58,26 @@ class TextToSpeech extends React.Component<
     };
     this.nativeVoices = await setSpeech();
   }
+  handlePauseResume = () => {
+    const { isPlaying } = this.state;
+    if (isPlaying) {
+      // 暂停语音
+      window.speechSynthesis && window.speechSynthesis.pause();
+      TTSUtil.pauseAudio();
+    } else {
+      // 恢复语音
+      window.speechSynthesis && window.speechSynthesis.resume();
+      TTSUtil.resumeAudio();
+    }
+    this.setState({ isPlaying: !isPlaying });
+  };
+
   handleChangeAudio = () => {
     this.setState({ isAddNew: false });
     if (this.state.isAudioOn) {
       window.speechSynthesis && window.speechSynthesis.cancel();
-      TTSUtil.pauseAudio();
-      this.setState({ isAudioOn: false });
+      TTSUtil.stopAudio();
+      this.setState({ isAudioOn: false, isPlaying: false });
     } else {
       if (isElectron) {
         this.customVoices = TTSUtil.getVoiceList(this.props.plugins);
@@ -80,8 +95,9 @@ class TextToSpeech extends React.Component<
       this.handleStartSpeech();
     }
   };
+
   handleStartSpeech = () => {
-    this.setState({ isAudioOn: true }, () => {
+    this.setState({ isAudioOn: true, isPlaying: true }, () => {
       this.handleAudio();
     });
   };
@@ -295,53 +311,69 @@ class TextToSpeech extends React.Component<
               </span>
             </div>
             {this.state.isAudioOn && (
-              <div
-                className="setting-dialog-new-title"
-                style={{
-                  marginLeft: "20px",
-                  width: "88%",
-                  marginTop: "20px",
-                  fontWeight: 500,
-                }}
-              >
-                <Trans>Voice</Trans>
-                <select
-                  name=""
-                  className="lang-setting-dropdown"
-                  id="text-speech-voice"
-                  onChange={(event) => {
-                    if (event.target.value === this.voices.length - 1 + "") {
-                      window.speechSynthesis && window.speechSynthesis.cancel();
-                      TTSUtil.pauseAudio();
-                      this.setState({ isAddNew: true, isAudioOn: false });
-                    } else {
-                      ConfigService.setReaderConfig(
-                        "voiceIndex",
-                        event.target.value
-                      );
-                      toast(this.props.t("Take effect at next startup"));
-                    }
+              <>
+                <div
+                  className="setting-dialog-new-title"
+                  style={{
+                    marginLeft: "20px",
+                    width: "88%",
+                    marginTop: "20px",
+                    fontWeight: 500,
                   }}
                 >
-                  {this.voices.map((item, index: number) => {
-                    return (
-                      <option
-                        value={index}
-                        key={item.name}
-                        className="lang-setting-option"
-                        selected={
-                          index ===
-                          parseInt(
-                            ConfigService.getReaderConfig("voiceIndex") || "0"
-                          )
-                        }
-                      >
-                        {this.props.t(item.displayName || item.name)}
-                      </option>
-                    );
-                  })}
-                </select>
-              </div>
+                  <Trans>Voice</Trans>
+                  <select
+                    name=""
+                    className="lang-setting-dropdown"
+                    id="text-speech-voice"
+                    onChange={(event) => {
+                      if (event.target.value === this.voices.length - 1 + "") {
+                        window.speechSynthesis && window.speechSynthesis.cancel();
+                        TTSUtil.stopAudio();
+                        this.setState({ isAddNew: true, isAudioOn: false });
+                      } else {
+                        ConfigService.setReaderConfig(
+                          "voiceIndex",
+                          event.target.value
+                        );
+                        toast(this.props.t("Take effect at next startup"));
+                      }
+                    }}
+                  >
+                    {this.voices.map((item, index: number) => {
+                      return (
+                        <option
+                          value={index}
+                          key={item.name}
+                          className="lang-setting-option"
+                          selected={
+                            index ===
+                            parseInt(
+                              ConfigService.getReaderConfig("voiceIndex") || "0"
+                            )
+                          }
+                        >
+                          {this.props.t(item.displayName || item.name)}
+                        </option>
+                      );
+                    })}
+                  </select>
+                </div>
+
+                {/* 添加暂停/播放按钮 */}
+                <div className="tts-control-button-container">
+                  <button
+                    className="tts-pause-play-button"
+                    onClick={this.handlePauseResume}
+                  >
+                    {this.state.isPlaying ? (
+                      <Trans>Pause</Trans>
+                    ) : (
+                      <Trans>Play</Trans>
+                    )}
+                  </button>
+                </div>
+              </>
             )}
             {this.state.isAudioOn && !this.state.isAddNew && (
               <div

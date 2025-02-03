@@ -15,4 +15,5 @@ export interface TextToSpeechState {
   isSupported: boolean;
   isAudioOn: boolean;
   isAddNew: boolean;
+  isPlaying: boolean;
 }
