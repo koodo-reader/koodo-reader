@@ -10,6 +10,7 @@ import {
   ConfigService,
 } from "../../assets/lib/kookit-extra-browser.min";
 import { getCloudConfig } from "./common";
+import TokenService from "../storage/tokenService";
 declare var window: any;
 
 class CoverUtil {
@@ -59,6 +60,7 @@ class CoverUtil {
       const imageFilePath = path.join(directoryPath, imageFiles[0]);
       fs.unlinkSync(imageFilePath);
     }
+    this.deleteCloudCover(key);
   }
   static addCover(book: BookModel) {
     if (!book.cover) return;
@@ -76,19 +78,10 @@ class CoverUtil {
       );
       book.cover = "";
     }
+    this.uploadCover(book.key + "." + this.base64ToFileType(book.cover));
   }
   static convertCoverBase64(base64: string) {
-    let mimeMatch = base64.match(/^data:(image\/\w+);base64,/);
-    if (!mimeMatch) {
-      let fileType = this.base64ToFileType(base64);
-      if (!fileType) {
-        throw new Error("Invalid base64 string");
-      }
-      mimeMatch = ["", `image/${fileType}`];
-    }
-    const mime = mimeMatch[1];
-
-    let extension = mime.split("/")[1];
+    let extension = this.base64ToFileType(base64);
 
     const base64Data = base64.replace(/^data:.*;base64,/, "");
 
@@ -110,44 +103,55 @@ class CoverUtil {
     };
   }
   static base64ToFileType(base64: string) {
-    // Decode base64 string to binary string
-    base64 = base64.replace(/^data:.*;base64,/, "");
-    const binaryString = window.atob(base64);
-    const len = binaryString.length;
-    const bytes = new Uint8Array(len);
+    let mimeMatch = base64.match(/^data:(image\/\w+);base64,/);
+    if (!mimeMatch) {
+      // Decode base64 string to binary string
+      base64 = base64.replace(/^data:.*;base64,/, "");
+      const binaryString = window.atob(base64);
+      const len = binaryString.length;
+      const bytes = new Uint8Array(len);
 
-    for (let i = 0; i < len; i++) {
-      bytes[i] = binaryString.charCodeAt(i);
+      for (let i = 0; i < len; i++) {
+        bytes[i] = binaryString.charCodeAt(i);
+      }
+
+      // Determine file type based on magic numbers
+      const header = bytes.subarray(0, 4);
+      let fileType = "unknown";
+      const signatures: { [key: string]: string } = {
+        "89504e47": "png",
+        ffd8ffe0: "jpeg",
+        ffd8ffe1: "jpeg",
+        ffd8ffdb: "jpeg",
+        ffd8ffe2: "jpeg",
+        "47494638": "gif",
+        "424d": "bmp",
+        "49492a00": "tiff",
+        "4d4d002a": "tiff",
+        "52494646": "webp", // 'RIFF' followed by 'WEBP'
+        "377abcaf271c": "webp", // WebP extended signature
+        "3c3f786d6c": "svg",
+        "00000100": "ico",
+      };
+
+      const headerHex = Array.from(header)
+        .map((b) => b.toString(16).padStart(2, "0"))
+        .join("");
+
+      if (signatures[headerHex]) {
+        fileType = signatures[headerHex];
+      }
+
+      if (!fileType) {
+        throw new Error("Invalid base64 string");
+      }
+      mimeMatch = ["", `image/${fileType}`];
     }
+    const mime = mimeMatch[1];
 
-    // Determine file type based on magic numbers
-    const header = bytes.subarray(0, 4);
-    let fileType = "unknown";
-    const signatures: { [key: string]: string } = {
-      "89504e47": "png",
-      ffd8ffe0: "jpeg",
-      ffd8ffe1: "jpeg",
-      ffd8ffdb: "jpeg",
-      ffd8ffe2: "jpeg",
-      "47494638": "gif",
-      "424d": "bmp",
-      "49492a00": "tiff",
-      "4d4d002a": "tiff",
-      "52494646": "webp", // 'RIFF' followed by 'WEBP'
-      "377abcaf271c": "webp", // WebP extended signature
-      "3c3f786d6c": "svg",
-      "00000100": "ico",
-    };
+    let extension = mime.split("/")[1];
 
-    const headerHex = Array.from(header)
-      .map((b) => b.toString(16).padStart(2, "0"))
-      .join("");
-
-    if (signatures[headerHex]) {
-      fileType = signatures[headerHex];
-    }
-
-    return fileType;
+    return extension;
   }
   static async downloadCover(cover: string) {
     if (isElectron) {
@@ -186,6 +190,10 @@ class CoverUtil {
     }
   }
   static async uploadCover(cover: string) {
+    let isAuthed = await TokenService.getToken("is_authed");
+    if (isAuthed !== "yes") {
+      return;
+    }
     if (isElectron) {
       const { ipcRenderer } = window.require("electron");
       let service = localStorage.getItem("defaultSyncOption");
@@ -270,6 +278,10 @@ class CoverUtil {
     }
   }
   static async deleteCloudCover(key: string) {
+    let isAuthed = await TokenService.getToken("is_authed");
+    if (isAuthed !== "yes") {
+      return;
+    }
     let coverList = await this.getCloudCoverList();
     for (let cover of coverList) {
       if (cover.startsWith(key)) {

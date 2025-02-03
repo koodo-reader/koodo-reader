@@ -89,7 +89,7 @@
   "Descend": "倒序",
   "Ascend": "正序",
   "Token": "憑證",
-  "Book not exist": "書籍不存在",
+  "Book not exists": "書籍不存在",
   "Please authorize your account, and fill the following box with the token": "登入授權後，您將取得一串代碼，請將代碼填入以下輸入框即可完成綁定",
   "Copy link": "複製連結",
   "Copy token": "複製憑證",

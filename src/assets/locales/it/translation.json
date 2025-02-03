@@ -89,7 +89,7 @@
   "Descend": "Crescente",
   "Ascend": "Decrescente",
   "Token": "Certificato",
-  "Book not exist": "Libro non presente",
+  "Book not exists": "Libro non presente",
   "Please authorize your account, and fill the following box with the token": "Autorizza il tuo account e carica il certificato nel prossimo box",
   "Copy link": "Copia link",
   "Copy token": "Copia certificato",

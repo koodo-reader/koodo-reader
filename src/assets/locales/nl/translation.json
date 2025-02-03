@@ -89,7 +89,7 @@
   "Descend": "Aflopend",
   "Ascend": "Oplopend",
   "Token": "Toegangssleutel",
-  "Book not exist": "Dit boek bestaat niet",
+  "Book not exists": "Dit boek bestaat niet",
   "Please authorize your account, and fill the following box with the token": "Koppel je account en voer hier de toegangssleutel in",
   "Copy link": "Link kopiëren",
   "Copy token": "Toegangssleutel kopiëren",

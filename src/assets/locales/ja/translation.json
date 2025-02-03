@@ -89,7 +89,7 @@
   "Descend": "降順",
   "Ascend": "昇順",
   "Token": "証憑",
-  "Book not exist": "書籍は存在しません",
+  "Book not exists": "書籍は存在しません",
   "Please authorize your account, and fill the following box with the token": "ログイン権限が付与されると、一連のコードが取得されます。次の入力ボックスにコードを入力するとバインドが完了します。",
   "Copy link": "リンクのコピー",
   "Copy token": "証明書のコピー",

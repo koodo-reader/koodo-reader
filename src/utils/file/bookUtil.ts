@@ -47,6 +47,7 @@ class BookUtil {
             path.join(dataPath, `book`, key + "." + format),
             (err) => {
               if (err) throw err;
+              this.deleteCloudBook(key, format);
               resolve();
             }
           );
@@ -55,6 +56,7 @@ class BookUtil {
         }
       });
     } else {
+      this.deleteCloudBook(key, format);
       return localforage.removeItem(key);
     }
   }
@@ -148,10 +150,10 @@ class BookUtil {
         (await TokenService.getToken("is_authed")) === "yes" &&
         (await this.isBookExistInCloud(book.key))
       ) {
-        toast(i18n.t("Book not exist, downloading from cloud"));
+        toast(i18n.t("Offline"));
         await this.downloadBook(book.key, book.format);
       } else {
-        toast.error(i18n.t("Book not exist"));
+        toast.error(i18n.t("Book not exists"));
         return;
       }
     }
@@ -280,6 +282,10 @@ class BookUtil {
     }
   }
   static async uploadBook(key: string, format: string) {
+    let isAuthed = await TokenService.getToken("is_authed");
+    if (isAuthed !== "yes") {
+      return;
+    }
     if (isElectron) {
       const { ipcRenderer } = window.require("electron");
       let service = localStorage.getItem("defaultSyncOption");
@@ -305,6 +311,10 @@ class BookUtil {
     }
   }
   static async deleteCloudBook(key: string, format: string) {
+    let isAuthed = await TokenService.getToken("is_authed");
+    if (isAuthed !== "yes") {
+      return;
+    }
     if (isElectron) {
       const { ipcRenderer } = window.require("electron");
       let service = localStorage.getItem("defaultSyncOption");
