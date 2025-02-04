@@ -35,6 +35,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       width: document.body.clientWidth,
       isdataChange: false,
       isDeveloperVer: false,
+      isSync: false,
     };
   }
   async componentDidMount() {
@@ -135,7 +136,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       toast.success(this.props.t("Synchronisation successful"));
     }
   };
-  handleLocalSync = () => {
+  handleLocalSync = async () => {
     if (ConfigService.getReaderConfig("isFirst") !== "no") {
       this.props.handleTipDialog(true);
       this.props.handleTip(
@@ -149,10 +150,11 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       localStorage.getItem("lastSyncTime") &&
       lastSyncTime > parseInt(localStorage.getItem("lastSyncTime")!)
     ) {
-      this.syncFromLocation();
+      await this.syncFromLocation();
     } else {
-      this.syncToLocation();
+      await this.syncToLocation();
     }
+    this.setState({ isSync: false });
   };
   handleFinish = async () => {
     // let thirdpartyRequest = await getThirdpartyRequest();
@@ -201,6 +203,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     let { compareResult, syncRecords } = await this.getCompareResult();
     ConfigService.setAllSyncRecord(syncRecords);
     await this.handleSync(compareResult);
+    this.setState({ isSync: false });
   };
   handleSuccess = async () => {
     this.props.handleFetchBooks();
@@ -317,6 +320,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
           <div
             className="setting-icon-container"
             onClick={async () => {
+              this.setState({ isSync: true });
               console.log("sync");
               // let result = await CoverUtil.uploadCover("1738469806090.jpeg");
               // let result = await CoverUtil.downloadCover("1738469806090.jpeg");
@@ -352,7 +356,10 @@ class Header extends React.Component<HeaderProps, HeaderState> {
               data-tooltip-content={this.props.t("Sync")}
             >
               <span
-                className="icon-sync setting-icon"
+                className={
+                  "icon-sync setting-icon" +
+                  (this.state.isSync ? " icon-rotate" : "")
+                }
                 style={
                   this.state.isdataChange ? { color: "rgb(35, 170, 242)" } : {}
                 }
