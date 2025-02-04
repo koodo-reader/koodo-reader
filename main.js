@@ -250,6 +250,10 @@ const createMainWin = () => {
     let decrypted = safeStorage.decryptString(Buffer.from(encrypted, "base64"));
     return decrypted;
   });
+  ipcMain.handle("get-mac", async (event, config) => {
+    const { machineIdSync } = require('node-machine-id');
+    return machineIdSync();
+  });
 
   ipcMain.handle("reset-reader-position", async (event) => {
     store.delete("windowX");

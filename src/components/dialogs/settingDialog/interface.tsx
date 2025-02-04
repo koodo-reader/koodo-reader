@@ -59,4 +59,6 @@ export interface SettingInfoState {
   driveConfig: any;
   loginConfig: any;
   settingLogin: string;
+  accountType: string;
+  validUntil: string;
 }

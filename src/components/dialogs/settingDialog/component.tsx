@@ -31,16 +31,17 @@ import {
   ConfigService,
   LoginHelper,
   SyncUtil,
+  TokenService,
 } from "../../../assets/lib/kookit-extra-browser.min";
 import {
   encryptToken,
   getThirdpartyRequest,
   onSyncCallback,
 } from "../../../utils/request/thirdparty";
-import TokenService from "../../../utils/storage/tokenService";
 import { loginList } from "../../../constants/loginList";
 import { getUserRequest, loginRegister } from "../../../utils/request/user";
 import { handleExitApp } from "../../../utils/request/common";
+import copyTextToClipboard from "copy-text-to-clipboard";
 declare var window: any;
 class SettingDialog extends React.Component<
   SettingInfoProps,
@@ -87,6 +88,8 @@ class SettingDialog extends React.Component<
       settingLogin: "",
       driveConfig: {},
       loginConfig: {},
+      accountType: "",
+      validUntil: "",
     };
   }
   componentDidMount(): void {
@@ -97,6 +100,13 @@ class SettingDialog extends React.Component<
     if (this.props.isAuthed) {
       this.props.handleFetchLoginOptionList();
     }
+    TokenService.getToken("user_type").then((value) => {
+      console.log(value, "user_type");
+      this.setState({ accountType: value });
+    });
+    TokenService.getToken("user_valid_until").then((value) => {
+      this.setState({ validUntil: value });
+    });
   }
   loadFont = () => {
     if (dropdownList[0].option.length <= 2) {
@@ -415,6 +425,19 @@ class SettingDialog extends React.Component<
             <span
               className="book-bookmark-title"
               style={
+                this.props.settingMode === "plugins"
+                  ? { fontWeight: "bold", borderBottom: "2px solid" }
+                  : { opacity: 0.5 }
+              }
+              onClick={() => {
+                this.props.handleSettingMode("plugins");
+              }}
+            >
+              <Trans>Plugins</Trans>
+            </span>
+            <span
+              className="book-bookmark-title"
+              style={
                 this.props.settingMode === "sync"
                   ? { fontWeight: "bold", borderBottom: "2px solid" }
                   : { opacity: 0.5 }
@@ -437,19 +460,6 @@ class SettingDialog extends React.Component<
               }}
             >
               <Trans>Account</Trans>
-            </span>
-            <span
-              className="book-bookmark-title"
-              style={
-                this.props.settingMode === "plugins"
-                  ? { fontWeight: "bold", borderBottom: "2px solid" }
-                  : { opacity: 0.5 }
-              }
-              onClick={() => {
-                this.props.handleSettingMode("plugins");
-              }}
-            >
-              <Trans>Plugins</Trans>
             </span>
           </div>
         </div>
@@ -1100,24 +1110,71 @@ class SettingDialog extends React.Component<
                     ))}
                 </select>
               </div>
-              <div className="setting-dialog-new-title">
-                <Trans>Log out</Trans>
 
-                <span
-                  className="change-location-button"
-                  onClick={async () => {
-                    await TokenService.deleteToken("is_authed");
-                    await TokenService.deleteToken("access_token");
-                    await TokenService.deleteToken("refresh_token");
-                    await TokenService.deleteToken("user_type");
-                    await TokenService.deleteToken("user_valid_until");
-                    this.props.handleFetchAuthed();
-                    this.props.handleLoginOptionList([]);
-                    toast.success(this.props.t("Log out successful"));
-                  }}
-                >
+              {this.props.isAuthed && (
+                <div className="setting-dialog-new-title">
                   <Trans>Log out</Trans>
-                </span>
+
+                  <span
+                    className="change-location-button"
+                    onClick={async () => {
+                      await TokenService.deleteToken("is_authed");
+                      await TokenService.deleteToken("access_token");
+                      await TokenService.deleteToken("refresh_token");
+                      await TokenService.deleteToken("user_type");
+                      await TokenService.deleteToken("user_valid_until");
+                      this.props.handleFetchAuthed();
+                      this.props.handleLoginOptionList([]);
+                      toast.success(this.props.t("Log out successful"));
+                    }}
+                  >
+                    <Trans>Log out</Trans>
+                  </span>
+                </div>
+              )}
+              {this.props.isAuthed && (
+                <div className="setting-dialog-new-title">
+                  <Trans>Get device identifier</Trans>
+
+                  <span
+                    className="change-location-button"
+                    onClick={async () => {
+                      let fingerPrint = await TokenService.getFingerprint();
+                      copyTextToClipboard(fingerPrint);
+                      toast.success(this.props.t("Copy successful"));
+                    }}
+                  >
+                    <Trans>Copy</Trans>
+                  </span>
+                </div>
+              )}
+              <div className="setting-dialog-new-title">
+                <Trans>Account type</Trans>
+                <div>
+                  <Trans>
+                    {this.state.accountType === "trial"
+                      ? "Trial user"
+                      : this.state.accountType === "trial"
+                      ? "Paid user"
+                      : "Free user"}
+                  </Trans>
+                  {this.state.accountType && (
+                    <>
+                      {" ("}
+                      <Trans
+                        i18nKey="Valid until"
+                        label={this.state.validUntil}
+                      >
+                        Valid until
+                        {{
+                          label: this.props.t("Beta pharse"),
+                          // label: this.state.validUntil,
+                        }}
+                      </Trans>
+                      {")"}
+                    </>
+                  )}
+                </div>
               </div>
             </>
           ) : (

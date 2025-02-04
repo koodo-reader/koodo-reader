@@ -3,9 +3,9 @@ import {
   ConfigService,
   SyncUtil,
   ThirdpartyRequest,
+  TokenService,
 } from "../../assets/lib/kookit-extra-browser.min";
 import { decryptToken } from "../request/thirdparty";
-import TokenService from "./tokenService";
 
 class SyncService {
   private static syncUtilCache: { [key: string]: SyncUtil } = {};

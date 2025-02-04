@@ -15,7 +15,6 @@ import CoverUtil from "../../utils/file/coverUtil";
 import { calculateFileMD5, fetchFileFromPath } from "../../utils/common";
 import DatabaseService from "../../utils/storage/databaseService";
 import { BookHelper } from "../../assets/lib/kookit-extra-browser.min";
-import TokenService from "../../utils/storage/tokenService";
 declare var window: any;
 let clickFilePath = "";
 
