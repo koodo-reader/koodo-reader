@@ -1,27 +1,15 @@
 import { isElectron } from "react-device-detect";
 import {
+  CommonTool,
   KookitConfig,
+  TokenService,
   UserRequest,
 } from "../../assets/lib/kookit-extra-browser.min";
-import { BrowserFingerprint } from "../common";
-import TokenService from "../storage/tokenService";
 
 export const loginRegister = async (service: string, code: string) => {
   console.log(code);
   let deviceName = detectBrowser();
   let userRequest = await getUserRequest();
-  console.log({
-    code,
-    provider: service,
-    scope: KookitConfig.LoginAuthRequest[service].extraParams.scope,
-    redirect_uri: KookitConfig.ThirdpartyConfig.callbackUrl,
-    device_name: deviceName,
-    device_type: isElectron ? "Desktop" : "Browser",
-    device_os: getOSName(),
-    locale: navigator.language,
-    os_version: getOsVersionNumber(),
-    device_uuid: await BrowserFingerprint.generate(),
-  });
   let response = await userRequest.loginRegister({
     code,
     provider: service,
@@ -32,9 +20,9 @@ export const loginRegister = async (service: string, code: string) => {
     device_os: getOSName(),
     locale: navigator.language,
     os_version: getOsVersionNumber(),
-    device_uuid: await BrowserFingerprint.generate(),
+    device_uuid: await TokenService.getFingerprint(),
   });
-  console.log(response.code);
+  console.log(response);
   if (response.code === 200) {
     await TokenService.setToken("is_authed", "yes");
     await TokenService.setToken("access_token", response.data.access_token);

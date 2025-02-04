@@ -10,7 +10,6 @@ import Book from "../../models/Book";
 import Note from "../../models/Note";
 import Bookmark from "../../models/Bookmark";
 import DictHistory from "../../models/DictHistory";
-import TokenService from "../storage/tokenService";
 import { decryptToken } from "../request/thirdparty";
 declare var window: any;
 export const changePath = async (newPath: string) => {

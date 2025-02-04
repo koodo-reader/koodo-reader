@@ -1,4 +1,7 @@
-import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
+import {
+  ConfigService,
+  TokenService,
+} from "../../assets/lib/kookit-extra-browser.min";
 import { isElectron } from "react-device-detect";
 import localforage, { key } from "localforage";
 import BookModel from "../../models/Book";
@@ -10,7 +13,6 @@ import { CommonTool } from "../../assets/lib/kookit-extra-browser.min";
 import DatabaseService from "../storage/databaseService";
 import Book from "../../models/Book";
 import i18n from "../../i18n";
-import TokenService from "../storage/tokenService";
 import { getCloudConfig } from "./common";
 declare var window: any;
 

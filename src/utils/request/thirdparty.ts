@@ -3,10 +3,10 @@ import {
   ConfigService,
   SyncUtil,
   ThirdpartyRequest,
+  TokenService,
 } from "../../assets/lib/kookit-extra-browser.min";
 import i18n from "../../i18n";
 import { handleExitApp } from "./common";
-import TokenService from "../storage/tokenService";
 
 export const getThirdpartyRequest = async () => {
   let thirdpartyRequest = new ThirdpartyRequest(TokenService);

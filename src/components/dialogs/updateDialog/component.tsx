@@ -46,7 +46,10 @@ class UpdateInfo extends React.Component<UpdateInfoProps, UpdateInfoState> {
         await sleep(500);
 
         if (packageInfo.version.localeCompare(newVersion) < 0) {
-          if (ConfigService.getReaderConfig("isDisableUpdate") !== "yes") {
+          if (
+            ConfigService.getReaderConfig("isDisableUpdate") !== "yes" ||
+            this.props.isAuthed
+          ) {
             this.setState({ updateLog: res });
             this.props.handleNewDialog(true);
           } else {
