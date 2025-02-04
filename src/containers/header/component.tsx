@@ -155,11 +155,11 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     }
   };
   handleFinish = async () => {
-    let thirdpartyRequest = await getThirdpartyRequest();
-    let deleteSyncResult = await thirdpartyRequest.deleteSyncState();
-    if (deleteSyncResult.code !== 200) {
-      toast.error(this.props.t("Failed to delete sync state"));
-    }
+    // let thirdpartyRequest = await getThirdpartyRequest();
+    // let deleteSyncResult = await thirdpartyRequest.deleteSyncState();
+    // if (deleteSyncResult.code !== 200) {
+    //   toast.error(this.props.t("Failed to delete sync state"));
+    // }
   };
   beforeSync = async () => {
     console.log(this.props.defaultSyncOption, "defaultSyncOption");
@@ -169,20 +169,20 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       );
       return false;
     }
-    let thirdpartyRequest = await getThirdpartyRequest();
-    let getSyncResult = await thirdpartyRequest.getSyncState();
-    if (getSyncResult.code !== 200) {
-      toast.error(this.props.t("Failed to get sync state"));
-      return false;
-    }
-    if (!getSyncResult.data) {
-      toast.error(
-        this.props.t(
-          "Sync state is occupied by other devices, please try again later"
-        )
-      );
-      return false;
-    }
+    // let thirdpartyRequest = await getThirdpartyRequest();
+    // let getSyncResult = await thirdpartyRequest.getSyncState();
+    // if (getSyncResult.code !== 200) {
+    //   toast.error(this.props.t("Failed to get sync state"));
+    //   return false;
+    // }
+    // if (!getSyncResult.data) {
+    //   toast.error(
+    //     this.props.t(
+    //       "Sync state is occupied by other devices, please try again later"
+    //     )
+    //   );
+    //   return false;
+    // }
     toast.loading(this.props.t("Start syncing") + "...", { id: "syncing-id" });
     return true;
   };

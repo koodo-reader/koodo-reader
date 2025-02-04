@@ -16,6 +16,7 @@ class ConfigUtil {
       type + ".json",
       "config"
     );
+    console.log(jsonBuffer, "jsonBuffer");
     let jsonStr = new TextDecoder().decode(jsonBuffer);
     return jsonStr;
   }

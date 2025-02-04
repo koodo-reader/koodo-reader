@@ -351,12 +351,14 @@ class BookUtil {
     return await this.isBookExist(key, book.format.toLowerCase(), "");
   }
   static async getLocalBookList() {
-    let books: Book[] | null = await DatabaseService.getAllRecords("books");
-    return books
-      ?.filter((book) =>
-        this.isBookExist(book.key, book.format.toLowerCase(), "")
-      )
-      .map((book) => book.key + "." + book.format.toLowerCase());
+    let books: Book[] = (await DatabaseService.getAllRecords("books")) || [];
+    let fileList: string[] = [];
+    for (let book of books) {
+      if (await this.isBookExist(book.key, book.format.toLowerCase(), "")) {
+        fileList.push(book.key + "." + book.format.toLowerCase());
+      }
+    }
+    return fileList;
   }
   static async getCloudBookList() {
     if (isElectron) {

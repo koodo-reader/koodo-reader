@@ -444,6 +444,7 @@
   "Default sync option cannot be removed": "Default sync option cannot be removed",
   "This feature is not available in the free version": "This feature is not available in the free version",
   "Offline": "Offline",
+  "Failed to get sync state": "Failed to get sync state",
   "Pro version": "Pro version",
   "Please add data source in the setting": "Please add data source in the setting",
   "Select data source": "Select data source",

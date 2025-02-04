@@ -64,6 +64,7 @@ class CoverUtil {
   }
   static addCover(book: BookModel) {
     if (!book.cover) return;
+
     if (isElectron) {
       var fs = window.require("fs");
       var path = window.require("path");
@@ -76,9 +77,9 @@ class CoverUtil {
         path.join(directoryPath, `${book.key}.${result.extension}`),
         Buffer.from(result.arrayBuffer)
       );
+      this.uploadCover(book.key + "." + this.base64ToFileType(book.cover));
       book.cover = "";
     }
-    this.uploadCover(book.key + "." + this.base64ToFileType(book.cover));
   }
   static convertCoverBase64(base64: string) {
     let extension = this.base64ToFileType(base64);
