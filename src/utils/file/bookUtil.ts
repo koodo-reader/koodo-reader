@@ -330,6 +330,7 @@ class BookUtil {
         fileName: key + "." + format.toLowerCase(),
         service: service,
         type: "book",
+        storagePath: getStorageLocation(),
       });
     } else {
       let syncUtil = await SyncService.getSyncUtil();
@@ -375,6 +376,7 @@ class BookUtil {
         ...tokenConfig,
         service: service,
         type: "book",
+        storagePath: getStorageLocation(),
       });
     } else {
       let syncUtil = await SyncService.getSyncUtil();

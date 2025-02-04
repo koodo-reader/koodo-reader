@@ -169,6 +169,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       toast.error(
         this.props.t("Please set default sync option in the setting")
       );
+      this.setState({ isSync: false });
       return false;
     }
     // let thirdpartyRequest = await getThirdpartyRequest();

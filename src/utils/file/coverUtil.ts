@@ -270,6 +270,7 @@ class CoverUtil {
         ...tokenConfig,
         service: service,
         type: "cover",
+        storagePath: getStorageLocation(),
       });
       return cloudCoverList;
     } else {
@@ -299,6 +300,7 @@ class CoverUtil {
             fileName: cover,
             service: service,
             type: "cover",
+            storagePath: getStorageLocation(),
           });
         } else {
           let syncUtil = await SyncService.getSyncUtil();
