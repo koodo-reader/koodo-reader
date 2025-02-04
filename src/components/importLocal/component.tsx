@@ -15,6 +15,7 @@ import CoverUtil from "../../utils/file/coverUtil";
 import { calculateFileMD5, fetchFileFromPath } from "../../utils/common";
 import DatabaseService from "../../utils/storage/databaseService";
 import { BookHelper } from "../../assets/lib/kookit-extra-browser.min";
+import TokenService from "../../utils/storage/tokenService";
 declare var window: any;
 let clickFilePath = "";
 
@@ -218,7 +219,8 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                 rendition
               );
               if (
-                ConfigService.getReaderConfig("isPrecacheBook") === "yes" &&
+                (ConfigService.getReaderConfig("isPrecacheBook") === "yes" ||
+                  this.props.isAuthed) &&
                 extension !== "pdf"
               ) {
                 let cache = await rendition.preCache(file_content);
