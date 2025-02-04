@@ -82,6 +82,8 @@ const getSyncUtil = async (config) => {
   if (!syncUtilCache[config.service]) {
     const { SyncUtil, TokenService, ThirdpartyRequest } = await import('./src/assets/lib/kookit-extra.min.mjs');
     let thirdpartyRequest = new ThirdpartyRequest(TokenService);
+
+    console.log(config.service, config, config.storagePath, thirdpartyRequest)
     syncUtilCache[config.service] = new SyncUtil(config.service, config, config.storagePath, thirdpartyRequest);
   }
   return syncUtilCache[config.service];

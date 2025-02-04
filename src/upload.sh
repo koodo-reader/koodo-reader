@@ -41,26 +41,98 @@ chmod +x ./rclone
 # 获取文件列表
 file_list=$(./rclone lsl r2:$BUCKET/$TAG)
 
-# 创建一个新的HTML文件
 html_file="file_list.html"
-echo "<html><body><table>" > $html_file
 
-# 添加表头
-echo "<tr><th style='text-align:left'>File Name</th><th style='width:150px;text-align:left'>File size</th><th style='width:150px;text-align:left'>Last Modified</th></tr>" >> $html_file
+# 创建HTML文件并添加响应式布局
+cat <<EOF > $html_file
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        /* 基础样式 */
+        body { 
+            font-family: Arial, sans-serif; 
+            margin: 20px;
+            word-wrap: break-word;
+        }
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 600px; /* 保持桌面端表格完整性 */
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f8f9fa;
+        }
+        a {
+            color: #0366d6;
+            text-decoration: none;
+        }
+        
+        /* 移动端适配 */
+        @media screen and (max-width: 768px) {
+            body {
+                margin: 10px;
+            }
+            th, td {
+                padding: 8px;
+                font-size: 1rem;
+            }
+            th:nth-child(3), td:nth-child(3) {
+                display: none; /* 在小屏幕上隐藏最后修改时间列 */
+            }
+        }
+    </style>
+</head>
+<body>
+<h2>Koodo Reader Release</h2>
+<div class="table-container">
+    <table>
+        <tr>
+            <th>File Name</th>
+            <th>File Size</th>
+            <th>Last Modified</th>
+        </tr>
+EOF
 
 # 遍历文件列表
 echo "$file_list" | while read line; do
-    # 获取文件名、文件类型和最后修改时间
     file_name=$(echo $line | awk '{print $4}')
     file_size=$(echo $line | awk '{print $1}')
     last_modified=$(echo $line | awk '{print $2}')
 
-    # 添加到HTML文件
-    echo "<tr><td><a href="./$TAG/$file_name">$(echo "$file_name" | sed 's/.*\///')</a></td><td style='width:100px'>$(($((file_size)) / 1024 / 1024)) MB</td><td style='width:100px'>$last_modified</td></tr>" >> $html_file
+    # 转换文件大小为更友好的格式
+    size_mb=$((file_size / 1024 / 1024))
+    if [ $size_mb -eq 0 ]; then
+        formatted_size="$((file_size / 1024)) KB"
+    else
+        formatted_size="${size_mb} MB"
+    fi
+
+    cat <<EOF >> $html_file
+        <tr>
+            <td><a href="./$TAG/$file_name">${file_name##*/}</a></td>
+            <td>${formatted_size}</td>
+            <td>${last_modified}</td>
+        </tr>
+EOF
 done
 
 # 结束HTML文件
-echo "</table></body></html>" >> $html_file
+cat <<EOF >> $html_file
+    </table>
+</div>
+</body>
+</html>
+EOF
 
 mv file_list.html $TAG.html
 ./rclone copy $TAG.html r2:$BUCKET

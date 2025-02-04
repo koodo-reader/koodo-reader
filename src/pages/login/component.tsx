@@ -190,7 +190,7 @@ class Login extends React.Component<LoginProps, LoginState> {
 
               <div className="login-title" style={{ marginTop: "20%" }}>
                 {this.props.t(
-                  "Automatically synchronize books and reading progress across all your devices"
+                  "Synchronize books and reading progress across all your devices"
                 )}
               </div>
               <div className="login-subtitle">
