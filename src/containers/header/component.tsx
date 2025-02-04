@@ -23,6 +23,7 @@ import SyncService from "../../utils/storage/syncService";
 import CoverUtil from "../../utils/file/coverUtil";
 import BookUtil from "../../utils/file/bookUtil";
 import { addChatBox, removeChatBox } from "../../utils/common";
+import { driveList } from "../../constants/driveList";
 
 class Header extends React.Component<HeaderProps, HeaderState> {
   constructor(props: HeaderProps) {
@@ -186,7 +187,14 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     //   );
     //   return false;
     // }
-    toast.loading(this.props.t("Start syncing") + "...", { id: "syncing-id" });
+    toast.loading(
+      this.props.t("Start syncing") +
+        " (" +
+        driveList.find((item) => item.value === this.props.defaultSyncOption)
+          ?.label +
+        ")",
+      { id: "syncing-id" }
+    );
     return true;
   };
   getCompareResult = async () => {
