@@ -16,7 +16,6 @@ class ConfigUtil {
       type + ".json",
       "config"
     );
-    console.log(jsonBuffer, "jsonBuffer");
     let jsonStr = new TextDecoder().decode(jsonBuffer);
     return jsonStr;
   }
@@ -41,7 +40,6 @@ class ConfigUtil {
   }
   static async getCloudConfig(type: string) {
     let configStr = await ConfigUtil.downloadConfig(type);
-    console.log(configStr, "configStr");
     return JSON.parse(configStr);
   }
 
@@ -69,14 +67,12 @@ class ConfigUtil {
         dbName: "temp-" + database,
         storagePath: getStorageLocation(),
       });
-      console.log(cloudRecords, "cloudRecords");
       return cloudRecords;
     } else {
       let syncUtil = await SyncService.getSyncUtil();
       let dbBuffer = await syncUtil.downloadFile(database + ".db", "config");
       let sqlUtil = new SqlUtil();
       let cloudRecords = await sqlUtil.dbBufferToJson(dbBuffer, database);
-      console.log(cloudRecords, "cloudRecords");
       return cloudRecords;
     }
   }

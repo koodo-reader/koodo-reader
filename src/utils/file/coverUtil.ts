@@ -173,7 +173,6 @@ class CoverUtil {
     } else {
       let syncUtil = await SyncService.getSyncUtil();
       let covers = await syncUtil.listFiles("cover");
-      console.log(covers, "covers");
 
       let imgBuffer: ArrayBuffer = await syncUtil.downloadFile(cover, "cover");
       let imgStr = CommonTool.arrayBufferToBase64(imgBuffer);
@@ -184,10 +183,7 @@ class CoverUtil {
       let base64 = `data:image/${
         cover.split(".").reverse()[0]
       };base64,${imgStr}`;
-      console.log(base64, "base64");
       await this.saveCover(cover, base64);
-
-      console.log("finish download cover");
     }
   }
   static async uploadCover(cover: string) {
@@ -213,13 +209,11 @@ class CoverUtil {
     } else {
       let syncUtil = await SyncService.getSyncUtil();
       let book = await DatabaseService.getRecord(cover.split(".")[0], "books");
-      console.log(book, "uploadCover");
       if (book && book.cover) {
         let result = this.convertCoverBase64(book.cover);
         let coverBlob = new Blob([result.arrayBuffer], {
           type: `image/${result.extension}`,
         });
-        console.log(coverBlob, "coverBlob");
         await syncUtil.uploadFile(cover, "cover", coverBlob);
       }
     }
@@ -229,7 +223,6 @@ class CoverUtil {
       cover.split(".")[0],
       "books"
     );
-    console.log(book, "saveCover");
     if (book) {
       book.cover = base64;
       await DatabaseService.updateRecord(book, "books");

@@ -29,8 +29,6 @@ export const restore = async (service: string): Promise<Boolean> => {
     return await restoreFromfilePath(filePath);
   } else {
     let tokenConfig = await getCloudConfig(service);
-    console.log(tokenConfig, "tokenConfig");
-    console.log(service, "service");
     await ipcRenderer.invoke("cloud-download", {
       ...tokenConfig,
       fileName: "data.zip",

@@ -112,7 +112,6 @@ export function handleFetchPlugins() {
 export function handleFetchAuthed() {
   return (dispatch: Dispatch) => {
     TokenService.getToken("is_authed").then((value) => {
-      console.log(value, "safsdfs");
       let isAuthed = value === "yes";
       dispatch(handleAuthed(isAuthed));
     });

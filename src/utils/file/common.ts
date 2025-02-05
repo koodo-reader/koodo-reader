@@ -52,7 +52,6 @@ export const getLastSyncTimeFromConfigJson = () => {
     path.join(dataPath, "config", "config.json"),
     "utf-8"
   );
-  console.log(data);
 
   const readerConfig = JSON.parse(JSON.parse(data).readerConfig || "{}");
   return parseInt(readerConfig.lastSyncTime || "0");

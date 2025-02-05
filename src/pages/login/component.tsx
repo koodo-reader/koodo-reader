@@ -30,11 +30,9 @@ class Login extends React.Component<LoginProps, LoginState> {
   }
 
   componentDidMount() {
-    console.log("isElectron", isElectron, new Date().getTime());
     if (isElectron) {
       const { ipcRenderer } = window.require("electron");
       ipcRenderer.on("oauth-callback", (event, config) => {
-        console.log("Received OAuth config:", config);
         let code = config.code;
         let state = config.state;
         this.setState({ currentStep: 2 });
@@ -42,24 +40,20 @@ class Login extends React.Component<LoginProps, LoginState> {
           let { service, deeplink } = JSON.parse(
             decodeURIComponent(state.split("|")[1])
           );
-          console.log(code, service, deeplink);
           this.handleLogin(code, service);
         }
       });
     } else {
       let url = document.location.href;
-      console.log(url, new Date().getTime());
       if (url.indexOf("code") > -1) {
         let params: any = getLoginParamsFromUrl();
         let code = params.code;
         let state = params.state;
         this.setState({ currentStep: 2 });
-        console.log(code, state, new Date().getTime());
         if (state) {
           let { service, deeplink } = JSON.parse(
             decodeURIComponent(state.split("|")[1])
           );
-          console.log(code, service, deeplink, new Date().getTime());
           this.handleLogin(code, service);
         }
       }
@@ -71,7 +65,6 @@ class Login extends React.Component<LoginProps, LoginState> {
     if (resCode === 200) {
       this.props.handleLoadingDialog(false);
       toast.success("Login successful");
-      console.log(1, new Date().getTime());
       removeSearchParams();
       this.props.handleFetchAuthed();
       this.setState({ currentStep: 3 });

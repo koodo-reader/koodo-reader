@@ -127,7 +127,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       path
     ).then(async (result: any) => {
       if (!result) {
-        console.log(this.props.defaultSyncOption, "sdfsd");
         if (this.props.defaultSyncOption) {
           await BookUtil.downloadBook(key, format.toLowerCase());
         } else {

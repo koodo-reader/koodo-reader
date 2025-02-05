@@ -26,7 +26,6 @@ export function handleFetchLoginOptionList() {
     let loginOptionList: string[] = [];
     let userRequest = await getUserRequest();
     let response = await userRequest.getLogins();
-    console.log(response.code);
     if (response.code === 200) {
       loginOptionList = response.data;
     } else if (response.code === 401) {
