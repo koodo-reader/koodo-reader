@@ -198,7 +198,6 @@ class DatabaseService {
       return record;
     } else {
       let records = await this.getAllRecords(dbName);
-      console.log(records, "get records");
       for (let record of records) {
         if (record.key === key) {
           return record;

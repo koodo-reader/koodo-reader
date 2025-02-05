@@ -192,7 +192,6 @@ export const getPageWidth = (
 export const loadFontData = async () => {
   try {
     const availableFonts = await window.queryLocalFonts();
-    console.log(availableFonts);
     return availableFonts.map((font: any) => {
       return {
         label: font.fullName,
@@ -208,7 +207,6 @@ export function removeSearchParams() {
   window.history.replaceState({}, document.title, url.toString());
 }
 export function addChatBox() {
-  console.log("sfsdfsd");
   const scriptContent = `
     (function (d, t) {
       var BASE_URL = "https://app.chatwoot.com";

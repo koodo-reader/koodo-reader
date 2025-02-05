@@ -19,7 +19,6 @@ class SyncService {
       let config = await decryptToken(service);
       let thirdpartyRequest = new ThirdpartyRequest(TokenService);
 
-      console.log(config, "config", service);
       this.syncUtilCache[service] = new SyncUtil(
         service,
         config,

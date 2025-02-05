@@ -17,7 +17,6 @@ export const uploadFile = async (url: string, file: any) => {
     axios
       .put(url, file, {})
       .then((res) => {
-        console.log(res);
         resolve(true);
       })
       .catch((err) => {

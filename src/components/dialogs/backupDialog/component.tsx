@@ -11,7 +11,10 @@ import packageInfo from "../../../../package.json";
 import _ from "underscore";
 import toast from "react-hot-toast";
 import { isElectron } from "react-device-detect";
-import { SyncUtil, TokenService } from "../../../assets/lib/kookit-extra-browser.min";
+import {
+  SyncUtil,
+  TokenService,
+} from "../../../assets/lib/kookit-extra-browser.min";
 import { checkStableUpdate } from "../../../utils/request/common";
 const successOptions = {
   loop: false,
@@ -110,7 +113,6 @@ class BackupDialog extends React.Component<
     }
   };
   handleSelectSource = (event: any) => {
-    console.log(event.target.value);
     if (
       !driveList
         .find((item) => item.value === event.target.value)

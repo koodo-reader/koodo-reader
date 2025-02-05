@@ -335,7 +335,6 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                     let fileName = path.basename(filePath);
                     let file: any = new File([blob], fileName);
                     file.path = filePath;
-                    console.log(file, "file");
                     await this.getMd5WithBrowser(file);
                   }
                 }}

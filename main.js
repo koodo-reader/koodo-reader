@@ -83,7 +83,6 @@ const getSyncUtil = async (config) => {
     const { SyncUtil, TokenService, ThirdpartyRequest } = await import('./src/assets/lib/kookit-extra.min.mjs');
     let thirdpartyRequest = new ThirdpartyRequest(TokenService);
 
-    console.log(config.service, config, config.storagePath, thirdpartyRequest)
     syncUtilCache[config.service] = new SyncUtil(config.service, config, config.storagePath, thirdpartyRequest);
   }
   return syncUtilCache[config.service];
@@ -160,7 +159,6 @@ const createMainWin = () => {
     readerWindow.on("close", (event) => {
       if (!readerWindow.isDestroyed()) {
         let bounds = readerWindow.getBounds();
-        console.log(bounds, 'boudns')
         if (bounds.width > 0 && bounds.height > 0) {
           store.set({
             windowWidth: bounds.width,
@@ -189,20 +187,14 @@ const createMainWin = () => {
 
   });
   ipcMain.handle("cloud-upload", async (event, config) => {
-    console.log(config)
     let syncUtil = await getSyncUtil(config);
     let result = await syncUtil.uploadFile(config.fileName, config.fileName, config.type);
-    console.log(result, 'uploadFile')
     return result;
   });
 
-
   ipcMain.handle("cloud-download", async (event, config) => {
-    console.log(config)
     let syncUtil = await getSyncUtil(config);
-    console.log(syncUtil)
     let result = await syncUtil.downloadFile(config.fileName, (config.isTemp ? "temp-" : "") + config.fileName, config.type);
-    console.log(result, 'download')
     return result;
   });
 
@@ -227,7 +219,6 @@ const createMainWin = () => {
       try {
         await fsExtra.remove(path.join(dirPath, "tts"));
         await fsExtra.mkdir(path.join(dirPath, "tts"));
-        console.log("success!");
         return "pong";
       } catch (err) {
         console.error(err);
@@ -338,7 +329,6 @@ const createMainWin = () => {
     event.returnValue = dirPath;
   });
   ipcMain.handle("hide-reader", (event, arg) => {
-    console.log(readerWindow)
     if (!readerWindow.isDestroyed() && readerWindow && readerWindow.isFocused()) {
       readerWindow.minimize();
       event.returnvalue = true;

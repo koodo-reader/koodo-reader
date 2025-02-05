@@ -108,7 +108,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     nextContext: any
   ): void {
     if (nextProps.isAuthed && nextProps.isAuthed !== this.props.isAuthed) {
-      console.log("safsdfgfhfg");
       addChatBox();
     }
     if (!nextProps.isAuthed && nextProps.isAuthed !== this.props.isAuthed) {
@@ -165,7 +164,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     // }
   };
   beforeSync = async () => {
-    console.log(this.props.defaultSyncOption, "defaultSyncOption");
     if (!this.props.defaultSyncOption) {
       toast.error(
         this.props.t("Please set default sync option in the setting")
@@ -198,10 +196,12 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     return true;
   };
   getCompareResult = async () => {
-    let result = await ConfigUtil.downloadConfig("sync");
-    let cloudSyncRecords = JSON.parse(result ? result : "{}");
     let localSyncRecords = ConfigService.getAllSyncRecord();
-    console.log(localSyncRecords, cloudSyncRecords);
+    let cloudSyncRecords = {};
+    let result = await ConfigUtil.downloadConfig("sync");
+    if (result) {
+      cloudSyncRecords = JSON.parse(result ? result : "{}");
+    }
     return await SyncHelper.compareAll(localSyncRecords, cloudSyncRecords);
   };
   handleCloudSync = async () => {
@@ -330,7 +330,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
             className="setting-icon-container"
             onClick={async () => {
               this.setState({ isSync: true });
-              console.log("sync");
               // let result = await CoverUtil.uploadCover("1738469806090.jpeg");
               // let result = await CoverUtil.downloadCover("1738469806090.jpeg");
               // let result = await CoverUtil.getCloudCoverList();

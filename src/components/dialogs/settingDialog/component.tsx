@@ -101,7 +101,6 @@ class SettingDialog extends React.Component<
       this.props.handleFetchLoginOptionList();
     }
     TokenService.getToken("user_type").then((value) => {
-      console.log(value, "user_type");
       this.setState({ accountType: value });
     });
     TokenService.getToken("user_valid_until").then((value) => {
@@ -112,7 +111,6 @@ class SettingDialog extends React.Component<
     if (dropdownList[0].option.length <= 2) {
       loadFontData().then((result) => {
         dropdownList[0].option = dropdownList[0].option.concat(result);
-        console.log(dropdownList[0].option);
       });
     }
   };
@@ -294,7 +292,6 @@ class SettingDialog extends React.Component<
     let response = await userRequest.removeLogin({
       provider: event.target.value,
     });
-    console.log(response.code);
     if (response.code === 200) {
       toast.success(this.props.t("Removal successful"));
       this.props.handleFetchLoginOptionList();
@@ -341,7 +338,6 @@ class SettingDialog extends React.Component<
         this.props.settingDrive,
         this.state.driveConfig
       );
-      console.log(code, "code43665");
       if (code === 200) {
         ConfigService.setListConfig(this.props.settingDrive, "dataSourceList");
         toast.success(i18n.t("Binding successful"), { id: "adding-sync-id" });

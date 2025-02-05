@@ -368,7 +368,7 @@ class BookUtil {
       const { ipcRenderer } = window.require("electron");
       let service = localStorage.getItem("defaultSyncOption");
       if (!service) {
-        return;
+        return [];
       }
       let tokenConfig = await getCloudConfig(service);
 
