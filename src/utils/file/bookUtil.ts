@@ -152,8 +152,13 @@ class BookUtil {
         (await TokenService.getToken("is_authed")) === "yes" &&
         (await this.isBookExistInCloud(book.key))
       ) {
-        toast(i18n.t("Offline"));
+        toast.loading(i18n.t("Offline"), {
+          id: "offline-book",
+        });
         await this.downloadBook(book.key, book.format);
+        toast.success(i18n.t("Offline successful"), {
+          id: "offline-book",
+        });
       } else {
         toast.error(i18n.t("Book not exists"));
         return;
@@ -309,7 +314,11 @@ class BookUtil {
       let bookBlob = new Blob([bookBuffer], {
         type: CommonTool.getMimeType(format.toLowerCase()),
       });
-      syncUtil.uploadFile(key + "." + format.toLowerCase(), "book", bookBlob);
+      await syncUtil.uploadFile(
+        key + "." + format.toLowerCase(),
+        "book",
+        bookBlob
+      );
     }
   }
   static async deleteCloudBook(key: string, format: string) {

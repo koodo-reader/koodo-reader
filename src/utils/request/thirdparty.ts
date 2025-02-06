@@ -9,7 +9,7 @@ import i18n from "../../i18n";
 import { handleExitApp } from "./common";
 
 export const getThirdpartyRequest = async () => {
-  let thirdpartyRequest = new ThirdpartyRequest(TokenService);
+  let thirdpartyRequest = new ThirdpartyRequest(TokenService, ConfigService);
   return thirdpartyRequest;
 };
 export const onSyncCallback = async (service: string, authCode: string) => {

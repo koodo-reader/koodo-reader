@@ -29,6 +29,7 @@ import DatabaseService from "../../../utils/storage/databaseService";
 import { driveInputConfig, driveList } from "../../../constants/driveList";
 import {
   ConfigService,
+  KookitConfig,
   LoginHelper,
   SyncUtil,
   TokenService,
@@ -308,19 +309,33 @@ class SettingDialog extends React.Component<
   };
   handleConfirmLoginOption = async () => {
     this.props.handleLoadingDialog(true);
-    let resCode = await loginRegister(
-      this.state.settingLogin,
-      this.state.loginConfig.token
-    );
+    let resCode = 200;
+    if (this.props.isAuthed) {
+      let userRequest = await getUserRequest();
+      let response = await userRequest.addLogin({
+        code: this.state.loginConfig.token,
+        provider: this.state.settingLogin,
+        scope:
+          KookitConfig.LoginAuthRequest[this.state.settingLogin].extraParams
+            .scope,
+        redirect_uri: KookitConfig.ThirdpartyConfig.callbackUrl,
+      });
+      resCode = response.code;
+    } else {
+      resCode = await loginRegister(
+        this.state.settingLogin,
+        this.state.loginConfig.token
+      );
+    }
     if (resCode === 200) {
       this.props.handleLoadingDialog(false);
-      toast.success("Login successful");
+      toast.success(this.props.t("Login successful"));
       this.props.handleFetchAuthed();
       this.props.handleFetchLoginOptionList();
       this.setState({ settingLogin: "" });
     } else {
       this.props.handleLoadingDialog(false);
-      toast.error("Login failed");
+      toast.error(this.props.t("Login failed"));
     }
   };
   handleCancelDrive = () => {
@@ -1137,7 +1152,30 @@ class SettingDialog extends React.Component<
                     onClick={async () => {
                       let fingerPrint = await TokenService.getFingerprint();
                       copyTextToClipboard(fingerPrint);
-                      toast.success(this.props.t("Copy successful"));
+                      toast.success(this.props.t("Copied"));
+                    }}
+                  >
+                    <Trans>Copy</Trans>
+                  </span>
+                </div>
+              )}
+              {this.props.isAuthed && (
+                <div className="setting-dialog-new-title">
+                  <Trans>Get error log</Trans>
+
+                  <span
+                    className="change-location-button"
+                    onClick={async () => {
+                      let errorLog = ConfigService.getItem("errorLog") || "";
+                      if (isElectron) {
+                        const { ipcRenderer } = window.require("electron");
+                        let log = await ipcRenderer.invoke("get-store-value", {
+                          key: "errorLog",
+                        });
+                        errorLog += log || "";
+                      }
+                      copyTextToClipboard(errorLog);
+                      toast.success(this.props.t("Copied"));
                     }}
                   >
                     <Trans>Copy</Trans>

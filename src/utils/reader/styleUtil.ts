@@ -1,5 +1,8 @@
 import { getIframeDoc } from "./docUtil";
-import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
+import {
+  ConfigService,
+  StyleHelper,
+} from "../../assets/lib/kookit-extra-browser.min";
 
 class styleUtil {
   // add default css for iframe
@@ -37,72 +40,26 @@ class styleUtil {
   }
   // get default css for iframe
   static getDefaultCss() {
-    return `::selection{background:#f3a6a68c}::-moz-selection{background:#f3a6a68c}.kookit-note:hover{cursor:pointer;}.kookit-text{${this.getCustomCss()}}code,pre{white-space: pre-wrap;}`;
+    return StyleHelper.getDefaultCss(ConfigService);
   }
   //force horionztal writing mode
   static getCustomCss() {
-    return `font-size: ${
-      ConfigService.getReaderConfig("fontSize") || 17
-    }px !important;line-height: ${
-      ConfigService.getReaderConfig("lineHeight") || "1.25"
-    } !important;font-family: ${
-      ConfigService.getReaderConfig("fontFamily") || ""
-    } !important;background-color: transparent;color: ${
-      ConfigService.getReaderConfig("textColor")
-        ? ConfigService.getReaderConfig("textColor")
-        : ConfigService.getReaderConfig("backgroundColor") ===
-            "rgba(44,47,49,1)" ||
-          ConfigService.getReaderConfig("appSkin") === "night" ||
-          (ConfigService.getReaderConfig("appSkin") === "system" &&
-            ConfigService.getReaderConfig("isOSNight") === "yes")
-        ? "white"
-        : ""
-    } !important;letter-spacing: ${
-      ConfigService.getReaderConfig("letterSpacing")
-        ? ConfigService.getReaderConfig("letterSpacing")
-        : ""
-    }px !important;text-align: ${
-      ConfigService.getReaderConfig("textAlign")
-        ? ConfigService.getReaderConfig("textAlign")
-        : ""
-    } !important;
-      font-weight: ${
-        ConfigService.getReaderConfig("isBold") === "yes"
-          ? "bold !important"
-          : ""
-      };font-style: ${
-      ConfigService.getReaderConfig("isItalic") === "yes"
-        ? "italic !important"
-        : ""
-    };text-shadow: ${
-      ConfigService.getReaderConfig("isShadow") === "yes"
-        ? "2px 2px 2px #cccccc !important"
-        : ""
-    };text-indent: ${
-      ConfigService.getReaderConfig("isIndent") === "yes" ? "2rem" : ""
-    };text-decoration: ${
-      ConfigService.getReaderConfig("isUnderline") === "yes"
-        ? "underline !important"
-        : ""
-    };margin-bottom: ${
-      ConfigService.getReaderConfig("paraSpacing") || 0
-    }px !important;padding:0px !important;word-wrap: break-word !important; writing-mode: horizontal-tb !important;`;
+    return StyleHelper.getCustomCss(ConfigService);
   }
-  static addStyle = (url: string) => {
-    const style = document.createElement("link");
-    style.href = url;
-    style.rel = "stylesheet";
-    document.head.appendChild(style);
-  };
 
   static applyTheme() {
-    ConfigService.getReaderConfig("themeColor") &&
-      ConfigService.getReaderConfig("themeColor") !== "default" &&
-      this.addStyle(
+    if (
+      ConfigService.getReaderConfig("themeColor") &&
+      ConfigService.getReaderConfig("themeColor") !== "default"
+    ) {
+      const style = document.createElement("link");
+      style.href =
         "./assets/styles/" +
-          ConfigService.getReaderConfig("themeColor") +
-          ".css"
-      );
+        ConfigService.getReaderConfig("themeColor") +
+        ".css";
+      style.rel = "stylesheet";
+      document.head.appendChild(style);
+    }
   }
 }
 

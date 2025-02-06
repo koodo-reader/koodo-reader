@@ -64,7 +64,7 @@ class Login extends React.Component<LoginProps, LoginState> {
     let resCode = await loginRegister(service, code);
     if (resCode === 200) {
       this.props.handleLoadingDialog(false);
-      toast.success("Login successful");
+      toast.success(this.props.t("Login successful"));
       removeSearchParams();
       this.props.handleFetchAuthed();
       this.setState({ currentStep: 3 });

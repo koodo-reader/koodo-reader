@@ -247,6 +247,9 @@ const createMainWin = () => {
     const { machineIdSync } = require('node-machine-id');
     return machineIdSync();
   });
+  ipcMain.handle("get-store-value", async (event, config) => {
+    return store.get(config.key);
+  });
 
   ipcMain.handle("reset-reader-position", async (event) => {
     store.delete("windowX");

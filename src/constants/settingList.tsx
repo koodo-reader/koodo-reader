@@ -155,6 +155,7 @@ export const langList = [
   { label: "Gaeilge", value: "ga" },
   { label: "Svenska", value: "sv" },
   { label: "Tagalog", value: "tl" },
+  { label: "Slovenščina", value: "sl" },
 ];
 
 export const searchList = [

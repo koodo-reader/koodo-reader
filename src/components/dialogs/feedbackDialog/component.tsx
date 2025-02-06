@@ -182,7 +182,7 @@ class FeedbackDialog extends Component<
               className="feedback-file-box"
               onChange={(event) => {
                 if (!event || !event.target || !event.target.files) {
-                  toast.error("Empty files");
+                  toast.error(this.props.t("Empty files"));
                 }
                 let files: any = event.target.files;
                 let zip = new JSZip();
