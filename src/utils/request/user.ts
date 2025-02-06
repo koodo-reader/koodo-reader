@@ -1,6 +1,7 @@
 import { isElectron } from "react-device-detect";
 import {
   CommonTool,
+  ConfigService,
   KookitConfig,
   TokenService,
   UserRequest,
@@ -34,7 +35,7 @@ export const loginRegister = async (service: string, code: string) => {
   return response.code;
 };
 export const getUserRequest = async () => {
-  let userRequest = new UserRequest(TokenService);
+  let userRequest = new UserRequest(TokenService, ConfigService);
   return userRequest;
 };
 export const getOSName = () => {

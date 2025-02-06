@@ -127,6 +127,7 @@
 }
 .login-sync-title {
   margin: 10px;
+  width: calc(100% - 40px);
   font-size: 16px;
   color: #585858;
   text-align: left;

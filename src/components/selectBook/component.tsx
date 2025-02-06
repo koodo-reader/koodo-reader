@@ -279,6 +279,8 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
                           ConfigService.getReaderConfig("isSliding") === "yes"
                             ? "sliding"
                             : "",
+                          ConfigService.getReaderConfig("isBionic"),
+                          ConfigService.getReaderConfig("convertChinese"),
                           Kookit
                         );
                         let cache = await rendition.preCache(result);

@@ -80,7 +80,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       let res1 = await upgradeStorage(this.handleFinishUpgrade);
       let res2 = upgradeConfig();
       if (!res1 || !res2) {
-        toast.error("Upgrade failed");
+        toast.error(this.props.t("Upgrade failed"));
       }
 
       //Detect data modification
@@ -211,6 +211,9 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     }
     let { compareResult, syncRecords } = await this.getCompareResult();
     ConfigService.setAllSyncRecord(syncRecords);
+    toast.loading(this.props.t("Start Transfering Data"), {
+      id: "syncing-id",
+    });
     await this.handleSync(compareResult);
     this.setState({ isSync: false });
   };
@@ -235,7 +238,9 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         BookUtil,
         CoverUtil
       );
-
+      toast.loading(this.props.t("Almost finished"), {
+        id: "syncing-id",
+      });
       await this.handleSuccess();
     } catch (error) {
       console.log(error);

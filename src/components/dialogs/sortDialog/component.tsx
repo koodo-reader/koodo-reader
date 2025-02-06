@@ -1,6 +1,5 @@
 import React from "react";
 import "./sortDialog.css";
-import SortUtil from "../../../utils/reader/sortUtil";
 import { Trans } from "react-i18next";
 import { SortDialogProps, SortDialogState } from "./interface";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";

@@ -206,6 +206,8 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                 ConfigService.getReaderConfig("isSliding") === "yes"
                   ? "sliding"
                   : "",
+                ConfigService.getReaderConfig("isBionic"),
+                ConfigService.getReaderConfig("convertChinese"),
                 Kookit
               );
               result = await BookHelper.generateBook(

@@ -10,8 +10,6 @@ import "./index.css";
 import { HtmlMouseEvent } from "../../utils/reader/mouseEvent";
 import ImageViewer from "../../components/imageViewer";
 import { getIframeDoc } from "../../utils/reader/docUtil";
-import { tsTransform } from "../../utils/reader/langUtil";
-import { binicReadingProcess } from "../../utils/reader/bionicUtil";
 import PopupBox from "../../components/popups/popupBox";
 import Note from "../../models/Note";
 import PageWidget from "../pageWidget";
@@ -140,6 +138,8 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         this.state.readerMode,
         this.props.currentBook.charset,
         ConfigService.getReaderConfig("isSliding") === "yes" ? "sliding" : "",
+        ConfigService.getReaderConfig("isBionic"),
+        ConfigService.getReaderConfig("convertChinese"),
         Kookit
       );
 
@@ -160,6 +160,8 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     );
     let chapters = rendition.getChapter();
     let chapterDocs = rendition.getChapterDoc();
+    console.log(chapters, "chapters");
+    console.log(chapterDocs, "chapterDocs");
     let flattenChapters = rendition.flatChapter(chapters);
     this.props.handleHtmlBook({
       key: this.props.currentBook.key,
@@ -170,8 +172,8 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     this.setState({ rendition });
 
     StyleUtil.addDefaultCss();
-    tsTransform();
-    binicReadingProcess();
+    rendition.tsTransform();
+    rendition.bionicReadingProcess();
     // rendition.setStyle(StyleUtil.getCustomCss());
     let bookLocation: {
       text: string;
@@ -250,8 +252,8 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       });
       scrollContents(chapter, bookLocation.chapterHref);
       StyleUtil.addDefaultCss();
-      tsTransform();
-      binicReadingProcess();
+      rendition.tsTransform();
+      rendition.bionicReadingProcess();
       this.handleBindGesture();
       await this.handleHighlight(rendition);
       lock = true;
