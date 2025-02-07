@@ -9,6 +9,7 @@ const initState = {
   isBookSort: localStorage.getItem("bookSortCode") ? true : false,
   isNoteSort: false,
   isAuthed: false,
+  userInfo: null,
   isSettingOpen: false,
   viewMode: "card",
   isSortDisplay: false,
@@ -50,6 +51,11 @@ export function manager(
       return {
         ...state,
         isOpenFeedbackDialog: action.payload,
+      };
+    case "HANDLE_USER_INFO":
+      return {
+        ...state,
+        userInfo: action.payload,
       };
     case "HANDLE_SETTING_MODE":
       return {

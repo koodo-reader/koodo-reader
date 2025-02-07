@@ -31,10 +31,10 @@ class BackupDialog extends React.Component<
   constructor(props: BackupDialogProps) {
     super(props);
     this.state = {
-      currentStep: 0,
       isBackup: "",
       currentDrive: "local",
       isDeveloperVer: false,
+      isFinish: false,
     };
   }
   async componentDidMount() {
@@ -48,7 +48,7 @@ class BackupDialog extends React.Component<
   };
 
   handleFinish = () => {
-    this.setState({ currentStep: 2 });
+    this.setState({ isFinish: true });
     this.props.handleLoadingDialog(false);
     this.showMessage("Execute successful");
     this.props.handleFetchBooks();
@@ -142,13 +142,13 @@ class BackupDialog extends React.Component<
   render() {
     return (
       <div className="backup-page-container">
-        {this.state.currentStep === 0 ? (
+        {!this.state.isFinish ? (
           <div className="backup-page-option">
             <div className="backup-page-backup">
               <span
                 className="icon-backup"
                 onClick={() => {
-                  this.setState({ currentStep: 1, isBackup: "yes" });
+                  this.setState({ isBackup: "yes" });
                   this.handleBackup();
                 }}
               ></span>
@@ -197,7 +197,7 @@ class BackupDialog extends React.Component<
                     );
                     return;
                   }
-                  this.setState({ currentStep: 1, isBackup: "no" });
+                  this.setState({ isBackup: "no" });
                   this.handleRestore();
                 }}
               ></span>

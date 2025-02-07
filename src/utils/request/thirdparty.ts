@@ -74,6 +74,8 @@ export const decryptToken = async (service: string) => {
     return JSON.parse(response.data.token);
   } else if (response.code === 401) {
     handleExitApp();
+  } else {
+    toast.error(i18n.t("Decryption failed, error code: ") + response.code);
   }
   return {};
 };

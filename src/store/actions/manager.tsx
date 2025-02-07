@@ -6,6 +6,8 @@ import BookModel from "../../models/Book";
 import PluginModel from "../../models/Plugin";
 import { Dispatch } from "redux";
 import DatabaseService from "../../utils/storage/databaseService";
+import { getUserRequest } from "../../utils/request/user";
+import { handleExitApp } from "../../utils/request/common";
 
 export function handleBooks(books: BookModel[]) {
   return { type: "HANDLE_BOOKS", payload: books };
@@ -21,6 +23,9 @@ export function handleSearchResults(searchResults: number[]) {
 }
 export function handleSearch(isSearch: boolean) {
   return { type: "HANDLE_SEARCH", payload: isSearch };
+}
+export function handleUserInfo(userInfo: any) {
+  return { type: "HANDLE_USER_INFO", payload: userInfo };
 }
 export function handleTipDialog(isTipDialog: boolean) {
   return { type: "HANDLE_TIP_DIALOG", payload: isTipDialog };
@@ -101,7 +106,19 @@ export function handleFetchBooks() {
     });
   };
 }
-
+export function handleFetchUserInfo() {
+  return async (dispatch: Dispatch) => {
+    let userInfo: any = {};
+    let userRequest = await getUserRequest();
+    let response = await userRequest.getUserInfo();
+    if (response.code === 200) {
+      userInfo = response.data;
+    } else if (response.code === 401) {
+      handleExitApp();
+    }
+    dispatch(handleUserInfo(userInfo));
+  };
+}
 export function handleFetchPlugins() {
   return async (dispatch: Dispatch) => {
     DatabaseService.getAllRecords("plugins").then((value) => {

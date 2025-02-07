@@ -134,7 +134,9 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
               this.props.handleTipDialog(false);
               this.props.handleDetailDialog(false);
               this.props.handleLoadingDialog(false);
-              this.props.handleNewDialog(false);
+              if (!this.props.isAuthed) {
+                this.props.handleNewDialog(false);
+              }
               this.props.handleBackupDialog(false);
               this.props.handleSetting(false);
               this.props.handleFeedbackDialog(false);

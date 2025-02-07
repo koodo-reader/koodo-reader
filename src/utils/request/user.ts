@@ -26,11 +26,6 @@ export const loginRegister = async (service: string, code: string) => {
     await TokenService.setToken("is_authed", "yes");
     await TokenService.setToken("access_token", response.data.access_token);
     await TokenService.setToken("refresh_token", response.data.refresh_token);
-    await TokenService.setToken(
-      "user_valid_until",
-      response.data.user.valid_until
-    );
-    await TokenService.setToken("user_type", response.data.user.type);
   }
   return response.code;
 };

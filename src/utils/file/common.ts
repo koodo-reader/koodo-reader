@@ -11,9 +11,13 @@ import Note from "../../models/Note";
 import Bookmark from "../../models/Bookmark";
 import DictHistory from "../../models/DictHistory";
 import { decryptToken } from "../request/thirdparty";
+import toast from "react-hot-toast";
+import i18n from "../../i18n";
 declare var window: any;
+let configCache: any = {};
 export const changePath = async (newPath: string) => {
   if (isFolderContainsFile(newPath)) {
+    toast.error(i18n.t("Please select an empty folder"));
     return false;
   }
   let oldPath = getStorageLocation() || "";
@@ -36,10 +40,34 @@ export const changePath = async (newPath: string) => {
     return false;
   }
 };
+export const changeLibrary = async (newPath: string) => {
+  if (!isKoodoLibrary(newPath)) {
+    toast.error(i18n.t("Please select a valid library"));
+    return false;
+  }
+  let databaseList = CommonTool.databaseList;
+
+  for (let i = 0; i < databaseList.length; i++) {
+    await window.require("electron").ipcRenderer.invoke("close-database", {
+      dbName: databaseList[i],
+      storagePath: getStorageLocation(),
+    });
+  }
+  return true;
+};
 const isFolderContainsFile = (folderPath: string) => {
   const fs = window.require("fs");
   const files = fs.readdirSync(folderPath);
   return files.length > 0;
+};
+const isKoodoLibrary = (folderPath: string) => {
+  const fs = window.require("fs");
+  const files = fs.readdirSync(folderPath);
+  return (
+    files.includes("config") &&
+    files.includes("book") &&
+    files.includes("cover")
+  );
 };
 export const getLastSyncTimeFromConfigJson = () => {
   const fs = window.require("fs");
@@ -213,5 +241,11 @@ export const upgradeConfig = (): Boolean => {
   }
 };
 export const getCloudConfig = async (service: string) => {
-  return await decryptToken(service);
+  if (configCache[service]) {
+    return configCache[service];
+  } else {
+    let config = await decryptToken(service);
+    configCache[service] = config;
+    return config;
+  }
 };

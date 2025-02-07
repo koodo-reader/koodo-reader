@@ -178,6 +178,7 @@ class BookList extends React.Component<BookListProps, BookListState> {
 
     this.props.handleShelf("");
     this.props.handleMode("home");
+    this.props.history.push("/manager/home");
   };
   handleDeletePopup = (isOpenDelete: boolean) => {
     this.setState({ isOpenDelete });

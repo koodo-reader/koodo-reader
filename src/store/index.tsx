@@ -45,6 +45,7 @@ export type stateType = {
     isAboutOpen: boolean;
     isShowLoading: boolean;
     isShowNew: boolean;
+    userInfo: any;
     isAuthed: boolean;
     isNewWarning: boolean;
     isSelectBook: boolean;

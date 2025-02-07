@@ -10,6 +10,16 @@
   border-radius: 5px;
   animation: popup 0.1s ease-in-out 0s 1;
 }
+.update-log-out-button {
+  min-width: 70px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  top: 20px;
+  cursor: pointer;
+  position: absolute;
+  right: 12px;
+}
 .new-version-title {
   font-size: 18px;
   font-weight: 500;

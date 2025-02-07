@@ -2,9 +2,16 @@ import Plugin from "../models/Plugin";
 import { isElectron } from "react-device-detect";
 import SparkMD5 from "spark-md5";
 import {
+  BookHelper,
   CommonTool,
   ConfigService,
 } from "../assets/lib/kookit-extra-browser.min";
+import Book from "../models/Book";
+import toast from "react-hot-toast";
+import i18n from "../i18n";
+import BookUtil from "./file/bookUtil";
+import * as Kookit from "../assets/lib/kookit.min";
+import DatabaseService from "./storage/databaseService";
 declare var window: any;
 export const calculateFileMD5 = (file: File): Promise<string> => {
   return new Promise((resolve, reject) => {
@@ -236,3 +243,57 @@ export function removeChatBox() {
     scriptElement.remove();
   }
 }
+export const preCacheAllBooks = async (bookList: Book[]) => {
+  for (let index = 0; index < bookList.length; index++) {
+    const selectedBook = bookList[index];
+    if (selectedBook.format === "PDF") {
+      continue;
+    }
+    if (
+      await BookUtil.isBookExist(
+        "cache-" + selectedBook.key,
+        "zip",
+        selectedBook.path
+      )
+    ) {
+      continue;
+    }
+
+    let result: any = await BookUtil.fetchBook(
+      selectedBook.key,
+      selectedBook.format.toLowerCase(),
+      true,
+      selectedBook.path
+    );
+    let rendition = BookHelper.getRendtion(
+      result,
+      selectedBook.format,
+      "",
+      selectedBook.charset,
+      ConfigService.getReaderConfig("isSliding") === "yes" ? "sliding" : "",
+      ConfigService.getReaderConfig("isBionic"),
+      ConfigService.getReaderConfig("convertChinese"),
+      Kookit
+    );
+    let cache = await rendition.preCache(result);
+    if (cache !== "err" || cache) {
+      BookUtil.addBook("cache-" + selectedBook.key, "zip", cache);
+    }
+  }
+};
+export const generateSyncRecord = async () => {
+  for (let database of CommonTool.databaseList) {
+    let itemList = await DatabaseService.getAllRecords(database);
+    for (let item of itemList) {
+      ConfigService.setSyncRecord(
+        {
+          type: "database",
+          catergory: "sqlite",
+          name: database,
+          key: item.key,
+        },
+        { operation: "save", time: Date.now() }
+      );
+    }
+  }
+};
