@@ -1,6 +1,8 @@
 import { getStorageLocation } from "../common";
 import { getCloudConfig, upgradeConfig, upgradeStorage } from "./common";
 import localforage from "localforage";
+import SqlUtil from "./sqlUtil";
+import DatabaseService from "../storage/databaseService";
 declare var window: any;
 let oldConfigArr = [
   "notes.json",
@@ -144,15 +146,20 @@ export const unzipConfig = async (zipEntries: any) => {
           flag = false;
           break;
         }
+        let dbName = zipEntries[i].name.split(".")[0];
         await window.require("electron").ipcRenderer.invoke("close-database", {
-          dbName: zipEntries[i].name.split(".")[0],
+          dbName: dbName,
           storagePath: getStorageLocation(),
         });
+        let arraybuffer = new Uint8Array(buffer).buffer;
+        let sqlUtil = new SqlUtil();
+        let cloudRecords = await sqlUtil.dbBufferToJson(arraybuffer, dbName);
+        await DatabaseService.saveAllRecords(cloudRecords, dbName);
 
-        fs.writeFileSync(
-          path.join(dataPath, "config", zipEntries[i].name),
-          buffer
-        );
+        // fs.writeFileSync(
+        //   path.join(dataPath, "config", zipEntries[i].name),
+        //   buffer
+        // );
       }
     }
   }
