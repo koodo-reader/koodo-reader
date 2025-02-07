@@ -464,7 +464,7 @@ class Login extends React.Component<LoginProps, LoginState> {
                   alt="logo"
                   className="login-mobile-qr"
                   style={{
-                    width: "35%",
+                    width: "40%",
                   }}
                 />
               </div>

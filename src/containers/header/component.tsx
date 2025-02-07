@@ -14,6 +14,7 @@ import { isElectron } from "react-device-detect";
 import {
   getLastSyncTimeFromConfigJson,
   upgradeConfig,
+  upgradePro,
   upgradeStorage,
 } from "../../utils/file/common";
 import toast from "react-hot-toast";
@@ -110,6 +111,18 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       this.props.handleFetchNotes();
       this.props.handleFetchBookmarks();
     });
+    if (this.props.isAuthed && this.props.books) {
+      if (ConfigService.getReaderConfig("isProUpgraded") !== "yes") {
+        toast.loading(this.props.t("Upgrading, please wait..."), {
+          id: "upgrading",
+        });
+        await upgradePro(this.props.books);
+        toast.success(this.props.t("Upgrade successful"), {
+          id: "upgrading",
+        });
+        ConfigService.setReaderConfig("isProUpgraded", "yes");
+      }
+    }
   }
   async UNSAFE_componentWillReceiveProps(
     nextProps: Readonly<HeaderProps>,
@@ -117,17 +130,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
   ) {
     if (nextProps.isAuthed && nextProps.isAuthed !== this.props.isAuthed) {
       addChatBox();
-      if (ConfigService.getReaderConfig("isProUpgraded") !== "yes") {
-        toast.loading(this.props.t("Upgrading, please wait..."), {
-          id: "upgrading",
-        });
-        await preCacheAllBooks(this.props.books);
-        await generateSyncRecord();
-        toast.success(this.props.t("Upgrade successful"), {
-          id: "upgrading",
-        });
-        ConfigService.setReaderConfig("isProUpgraded", "yes");
-      }
     }
     if (!nextProps.isAuthed && nextProps.isAuthed !== this.props.isAuthed) {
       removeChatBox();

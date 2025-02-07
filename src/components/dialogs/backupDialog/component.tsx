@@ -16,6 +16,8 @@ import {
   TokenService,
 } from "../../../assets/lib/kookit-extra-browser.min";
 import { checkStableUpdate } from "../../../utils/request/common";
+import DatabaseService from "../../../utils/storage/databaseService";
+import { upgradePro } from "../../../utils/file/common";
 const successOptions = {
   loop: false,
   autoplay: true,
@@ -47,11 +49,13 @@ class BackupDialog extends React.Component<
     this.props.handleBackupDialog(false);
   };
 
-  handleFinish = () => {
+  handleFinish = async () => {
     this.setState({ isFinish: true });
     this.props.handleLoadingDialog(false);
     this.showMessage("Execute successful");
     this.props.handleFetchBooks();
+    let books = await DatabaseService.getAllRecords("books");
+    await upgradePro(books);
     setTimeout(() => {
       this.props.history.push("/manager/home");
     }, 1000);

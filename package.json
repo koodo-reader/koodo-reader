@@ -2,7 +2,7 @@
   "name": "koodo-reader",
   "main": "main.js",
   "version": "1.7.8",
-  "description": "A cross-platform ebook reader",
+  "description": "Koodo Reader is a cross-platform ebook reader",
   "author": {
     "name": "App by Troye",
     "email": "feedback@koodoreader.com"
