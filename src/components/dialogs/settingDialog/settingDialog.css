@@ -130,8 +130,9 @@
   font-weight: 500;
   border-radius: 5px;
   padding: 5px;
-  width: 75%;
-  margin-left: 10.5%;
+  /* width: 75%; */
+  margin-left: 25px;
+  margin-right: 25px;
   text-overflow: ellipsis;
   word-break: break-all;
   margin-top: 6px;
@@ -173,7 +174,7 @@
 .setting-option-subtitle {
   font-size: 12px;
   opacity: 0.8;
-  margin-left: 30px;
+  margin-left: 25px;
   margin-right: 100px;
   line-height: 15px;
 }

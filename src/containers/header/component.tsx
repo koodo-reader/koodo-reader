@@ -3,7 +3,10 @@ import "./header.css";
 import SearchBox from "../../components/searchBox";
 import ImportLocal from "../../components/importLocal";
 import { HeaderProps, HeaderState } from "./interface";
-import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
+import {
+  ConfigService,
+  TokenService,
+} from "../../assets/lib/kookit-extra-browser.min";
 import UpdateInfo from "../../components/dialogs/updateDialog";
 import { restoreFromConfigJson } from "../../utils/file/restore";
 import { backupToConfigJson } from "../../utils/file/backup";
@@ -22,7 +25,12 @@ import DatabaseService from "../../utils/storage/databaseService";
 import SyncService from "../../utils/storage/syncService";
 import CoverUtil from "../../utils/file/coverUtil";
 import BookUtil from "../../utils/file/bookUtil";
-import { addChatBox, removeChatBox } from "../../utils/common";
+import {
+  addChatBox,
+  generateSyncRecord,
+  preCacheAllBooks,
+  removeChatBox,
+} from "../../utils/common";
 import { driveList } from "../../constants/driveList";
 
 class Header extends React.Component<HeaderProps, HeaderState> {
@@ -103,12 +111,23 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       this.props.handleFetchBookmarks();
     });
   }
-  UNSAFE_componentWillReceiveProps(
+  async UNSAFE_componentWillReceiveProps(
     nextProps: Readonly<HeaderProps>,
     nextContext: any
-  ): void {
+  ) {
     if (nextProps.isAuthed && nextProps.isAuthed !== this.props.isAuthed) {
       addChatBox();
+      if (ConfigService.getReaderConfig("isProUpgraded") !== "yes") {
+        toast.loading(this.props.t("Upgrading, please wait..."), {
+          id: "upgrading",
+        });
+        await preCacheAllBooks(this.props.books);
+        await generateSyncRecord();
+        toast.success(this.props.t("Upgrade successful"), {
+          id: "upgrading",
+        });
+        ConfigService.setReaderConfig("isProUpgraded", "yes");
+      }
     }
     if (!nextProps.isAuthed && nextProps.isAuthed !== this.props.isAuthed) {
       removeChatBox();
@@ -143,6 +162,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         "Sync function works with third-party cloud drive. You need to manually change the storage location to the same sync folder on different computers. When you click the sync button, Koodo Reader will automatically upload or download the data from this folder according the timestamp."
       );
       ConfigService.setReaderConfig("isFirst", "no");
+      this.setState({ isSync: false });
       return;
     }
     let lastSyncTime = getLastSyncTimeFromConfigJson();

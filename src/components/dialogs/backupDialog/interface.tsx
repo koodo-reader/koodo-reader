@@ -19,8 +19,8 @@ export interface BackupDialogProps extends RouteComponentProps<any> {
   bookmarks: BookmarkModel[];
 }
 export interface BackupDialogState {
-  currentStep: number | null;
   isBackup: string;
   currentDrive: string;
   isDeveloperVer: boolean;
+  isFinish: boolean;
 }

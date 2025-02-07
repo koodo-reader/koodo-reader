@@ -7,8 +7,9 @@ export interface UpdateInfoProps {
   t: (title: string) => string;
   handleNewDialog: (isShowNew: boolean) => void;
   handleNewWarning: (isNewWarning: boolean) => void;
+  handleFetchAuthed: () => void;
+  handleLoginOptionList: (loginOptionList: string[]) => void;
 }
 export interface UpdateInfoState {
   updateLog: any;
-  isUpdated: boolean;
 }

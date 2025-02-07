@@ -19,11 +19,13 @@ export interface SettingInfoProps extends RouteComponentProps<any> {
   t: (title: string) => string;
   handleFetchBooks: () => void;
   handleFetchPlugins: () => void;
+  handleFetchUserInfo: () => void;
   bookmarks: BookmarkModel[];
   notes: NoteModel[];
   isOpenTokenDialog: boolean;
   plugins: PluginModel[];
   books: BookModel[];
+  userInfo: any;
   dataSourceList: string[];
   loginOptionList: string[];
   defaultSyncOption: string;
@@ -59,6 +61,4 @@ export interface SettingInfoState {
   driveConfig: any;
   loginConfig: any;
   settingLogin: string;
-  accountType: string;
-  validUntil: string;
 }

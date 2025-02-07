@@ -252,6 +252,7 @@ class CoverUtil {
   }
   static async getCloudCoverList() {
     if (isElectron) {
+      // for ftp, sftp etc
       const { ipcRenderer } = window.require("electron");
       let service = localStorage.getItem("defaultSyncOption");
       if (!service) {

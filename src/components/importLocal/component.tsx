@@ -225,7 +225,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                 extension !== "pdf"
               ) {
                 let cache = await rendition.preCache(file_content);
-                if (cache !== "err") {
+                if (cache !== "err" || cache) {
                   BookUtil.addBook("cache-" + result.key, "zip", cache);
                 }
               }

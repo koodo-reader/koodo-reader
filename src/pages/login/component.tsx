@@ -74,6 +74,7 @@ class Login extends React.Component<LoginProps, LoginState> {
   render() {
     return (
       <>
+        <Toaster />
         {this.props.isSettingOpen && <SettingDialog />}
         {this.props.isShowLoading && <LoadingDialog />}
         {this.state.currentStep === 0 && (
@@ -141,7 +142,6 @@ class Login extends React.Component<LoginProps, LoginState> {
                 <span className="icon-close login-close-icon"></span>
               </div>
             </div>
-            <Toaster />
           </div>
         )}
         {this.state.currentStep === 1 && (
@@ -227,7 +227,6 @@ class Login extends React.Component<LoginProps, LoginState> {
                 <span className="icon-close login-close-icon"></span>
               </div>
             </div>
-            <Toaster />
           </div>
         )}
         {this.state.currentStep === 2 && (
@@ -323,7 +322,6 @@ class Login extends React.Component<LoginProps, LoginState> {
                 <span className="icon-close login-close-icon"></span>
               </div>
             </div>
-            <Toaster />
           </div>
         )}
         {this.state.currentStep === 3 && (
@@ -422,7 +420,6 @@ class Login extends React.Component<LoginProps, LoginState> {
                 <span className="icon-close login-close-icon"></span>
               </div>
             </div>
-            <Toaster />
           </div>
         )}
         {this.state.currentStep === 4 && (
@@ -492,7 +489,6 @@ class Login extends React.Component<LoginProps, LoginState> {
                 <span className="icon-close login-close-icon"></span>
               </div>
             </div>
-            <Toaster />
           </div>
         )}
       </>

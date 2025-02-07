@@ -50,7 +50,5 @@ export const handleExitApp = async () => {
   await TokenService.deleteToken("is_authed");
   await TokenService.deleteToken("access_token");
   await TokenService.deleteToken("refresh_token");
-  await TokenService.deleteToken("user_type");
-  await TokenService.deleteToken("user_valid_until");
   //路由到login页面
 };

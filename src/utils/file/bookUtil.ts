@@ -350,7 +350,7 @@ class BookUtil {
   static async deleteCacheBook(key: string) {
     await this.deleteBook("cache-" + key, "zip");
   }
-  static async offlineBook(key: string) {
+  static async offlineBook(key: string, format: string) {
     await this.downloadCacheBook(key);
   }
   static async deleteOfflineBook(key: string) {
@@ -368,6 +368,9 @@ class BookUtil {
     for (let book of books) {
       if (await this.isBookExist(book.key, book.format.toLowerCase(), "")) {
         fileList.push(book.key + "." + book.format.toLowerCase());
+      }
+      if (await this.isBookExist("cache-" + book.key, "zip", "")) {
+        fileList.push("cache-" + book.key + ".zip");
       }
     }
     return fileList;

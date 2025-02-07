@@ -4,7 +4,7 @@ import { SettingInfoProps, SettingInfoState } from "./interface";
 import { Trans } from "react-i18next";
 import i18n from "../../../i18n";
 import packageInfo from "../../../../package.json";
-import { changePath } from "../../../utils/file/common";
+import { changeLibrary, changePath } from "../../../utils/file/common";
 import { isElectron } from "react-device-detect";
 import { dropdownList } from "../../../constants/dropdownList";
 import _ from "underscore";
@@ -89,8 +89,6 @@ class SettingDialog extends React.Component<
       settingLogin: "",
       driveConfig: {},
       loginConfig: {},
-      accountType: "",
-      validUntil: "",
     };
   }
   componentDidMount(): void {
@@ -100,13 +98,8 @@ class SettingDialog extends React.Component<
     this.props.handleFetchDefaultSyncOption();
     if (this.props.isAuthed) {
       this.props.handleFetchLoginOptionList();
+      this.props.handleFetchUserInfo();
     }
-    TokenService.getToken("user_type").then((value) => {
-      this.setState({ accountType: value });
-    });
-    TokenService.getToken("user_valid_until").then((value) => {
-      this.setState({ validUntil: value });
-    });
   }
   loadFont = () => {
     if (dropdownList[0].option.length <= 2) {
@@ -187,13 +180,24 @@ class SettingDialog extends React.Component<
     }
     localStorage.setItem("storageLocation", newPath);
     this.setState({ storageLocation: newPath });
-    document.getElementsByClassName(
-      "setting-dialog-location-title"
-    )[0].innerHTML =
-      newPath ||
-      localStorage.getItem("storageLocation") ||
-      ipcRenderer.sendSync("storage-location", "ping");
     toast.success(this.props.t("Change successful"));
+    this.props.handleFetchBooks();
+  };
+  handleSwitchLibrary = async () => {
+    const { ipcRenderer } = window.require("electron");
+    const newPath = await ipcRenderer.invoke("select-path");
+    if (!newPath) {
+      return;
+    }
+    let isSuccess = await changeLibrary(newPath);
+    if (!isSuccess) {
+      toast.error(this.props.t("Switch failed"));
+      return;
+    }
+    localStorage.setItem("storageLocation", newPath);
+    this.setState({ storageLocation: newPath });
+    toast.success(this.props.t("Switch successful"));
+    this.props.handleFetchBooks();
   };
   handleResetReaderPosition = () => {
     window
@@ -363,10 +367,10 @@ class SettingDialog extends React.Component<
         this.state.driveConfig.token
       );
     }
-    if (!this.props.defaultSyncOption) {
-      localStorage.setItem("defaultSyncOption", this.props.settingDrive);
-      this.props.handleFetchDefaultSyncOption();
-    }
+
+    localStorage.setItem("defaultSyncOption", this.props.settingDrive);
+    this.props.handleFetchDefaultSyncOption();
+
     this.props.handleFetchDataSourceList();
 
     this.props.handleSettingDrive("");
@@ -559,6 +563,39 @@ class SettingDialog extends React.Component<
                       <Trans>Select</Trans>
                     </span>
                   </div>
+                  <p className="setting-option-subtitle">
+                    <Trans>
+                      {
+                        "Modify the storage location of the library, and the library will be moved to the new location. Please ensure that the new folder is empty"
+                      }
+                    </Trans>
+                  </p>
+                  <div className="setting-dialog-location-title">
+                    {this.state.storageLocation}
+                  </div>
+                </>
+              )}
+              {isElectron && (
+                <>
+                  <div className="setting-dialog-new-title">
+                    <Trans>Switch Library</Trans>
+
+                    <span
+                      className="change-location-button"
+                      onClick={() => {
+                        this.handleSwitchLibrary();
+                      }}
+                    >
+                      <Trans>Select</Trans>
+                    </span>
+                  </div>
+                  <p className="setting-option-subtitle">
+                    <Trans>
+                      {
+                        "Switch between multiple libraries without affecting the original library. For multi-device synchronization in the free version, please refer to the documentation"
+                      }
+                    </Trans>
+                  </p>
                   <div className="setting-dialog-location-title">
                     {this.state.storageLocation}
                   </div>
@@ -891,7 +928,7 @@ class SettingDialog extends React.Component<
                         this.handleConfirmDrive();
                       }}
                     >
-                      <Trans>Confirm</Trans>
+                      <Trans>Bind</Trans>
                     </div>
                     <div className="voice-add-button-container">
                       <div
@@ -906,7 +943,7 @@ class SettingDialog extends React.Component<
                         this.props.settingDrive === "google" ||
                         this.props.settingDrive === "microsoft") && (
                         <div
-                          className="voice-add-cancel"
+                          className="voice-add-confirm"
                           style={{ marginRight: "10px" }}
                           onClick={() => {
                             this.handleJump(
@@ -1046,7 +1083,7 @@ class SettingDialog extends React.Component<
                         this.handleConfirmLoginOption();
                       }}
                     >
-                      <Trans>Confirm</Trans>
+                      <Trans>Bind</Trans>
                     </div>
                     <div className="voice-add-button-container">
                       <div
@@ -1059,7 +1096,7 @@ class SettingDialog extends React.Component<
                       </div>
 
                       <div
-                        className="voice-add-cancel"
+                        className="voice-add-confirm"
                         style={{ marginRight: "10px" }}
                         onClick={() => {
                           let url = LoginHelper.getAuthUrl(
@@ -1132,8 +1169,6 @@ class SettingDialog extends React.Component<
                       await TokenService.deleteToken("is_authed");
                       await TokenService.deleteToken("access_token");
                       await TokenService.deleteToken("refresh_token");
-                      await TokenService.deleteToken("user_type");
-                      await TokenService.deleteToken("user_valid_until");
                       this.props.handleFetchAuthed();
                       this.props.handleLoginOptionList([]);
                       toast.success(this.props.t("Log out successful"));
@@ -1182,22 +1217,22 @@ class SettingDialog extends React.Component<
                   </span>
                 </div>
               )}
-              <div className="setting-dialog-new-title">
-                <Trans>Account type</Trans>
-                <div>
-                  <Trans>
-                    {this.state.accountType === "trial"
-                      ? "Trial user"
-                      : this.state.accountType === "trial"
-                      ? "Paid user"
-                      : "Free user"}
-                  </Trans>
-                  {this.state.accountType && (
+              {this.props.userInfo && (
+                <div className="setting-dialog-new-title">
+                  <Trans>Account type</Trans>
+                  <div>
+                    <Trans>
+                      {this.props.userInfo.type === "trial"
+                        ? "Trial user"
+                        : this.props.userInfo.type === "pro"
+                        ? "Paid user"
+                        : "Free user"}
+                    </Trans>
                     <>
                       {" ("}
                       <Trans
                         i18nKey="Valid until"
-                        label={this.state.validUntil}
+                        label={this.props.userInfo.valid_until}
                       >
                         Valid until
                         {{
@@ -1207,9 +1242,9 @@ class SettingDialog extends React.Component<
                       </Trans>
                       {")"}
                     </>
-                  )}
+                  </div>
                 </div>
-              </div>
+              )}
             </>
           ) : (
             <>

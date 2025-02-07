@@ -160,8 +160,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     );
     let chapters = rendition.getChapter();
     let chapterDocs = rendition.getChapterDoc();
-    console.log(chapters, "chapters");
-    console.log(chapterDocs, "chapterDocs");
     let flattenChapters = rendition.flatChapter(chapters);
     this.props.handleHtmlBook({
       key: this.props.currentBook.key,
