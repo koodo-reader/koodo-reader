@@ -1,7 +1,7 @@
 import React from "react";
 import "./popupTrans.css";
 import { PopupTransProps, PopupTransState } from "./interface";
-import ConfigService from "../../../utils/storage/configService";
+import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import axios from "axios";
 import { Trans } from "react-i18next";
 import toast from "react-hot-toast";

@@ -47,7 +47,7 @@
 .spine-shadow-left {
   width: 68px;
   height: 100%;
-  background: url("../../assets/dark-gradient-left.png") repeat-y;
+  background: url("../../assets/images/dark-gradient-left.png") repeat-y;
   z-index: 10;
   margin: 0;
   z-index: 10;
@@ -59,7 +59,7 @@
 .spine-shadow-right {
   width: 68px;
   height: 100%;
-  background: url("../../assets/dark-gradient-right.png") repeat-y;
+  background: url("../../assets/images/dark-gradient-right.png") repeat-y;
   z-index: 10;
   margin: 0;
   box-sizing: border-box;

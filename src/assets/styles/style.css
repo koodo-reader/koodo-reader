@@ -1,19 +1,18 @@
 @font-face {
-  font-family: "icomoon";
-  src: url("fonts/icomoon.eot?5we8z8");
-  src: url("fonts/icomoon.eot?5we8z8#iefix") format("embedded-opentype"),
-    url("fonts/icomoon.ttf?5we8z8") format("truetype"),
-    url("fonts/icomoon.woff?5we8z8") format("woff"),
-    url("fonts/icomoon.svg?5we8z8#icomoon") format("svg");
+  font-family: 'icomoon';
+  src:  url('fonts/icomoon.eot?fuy9qx');
+  src:  url('fonts/icomoon.eot?fuy9qx#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.ttf?fuy9qx') format('truetype'),
+    url('fonts/icomoon.woff?fuy9qx') format('woff'),
+    url('fonts/icomoon.svg?fuy9qx#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
 }
 
-[class^="icon-"],
-[class*=" icon-"] {
+[class^="icon-"], [class*=" icon-"] {
   /* use !important to prevent issues with browser extensions that change fonts */
-  font-family: "icomoon" !important;
+  font-family: 'icomoon' !important;
   speak: never;
   font-style: normal;
   font-weight: normal;
@@ -26,6 +25,36 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-backup:before {
+  content: "\e92b";
+}
+.icon-restore:before {
+  content: "\e92c";
+}
+.icon-desktop:before {
+  content: "\e959";
+  color: #585858;
+}
+.icon-phone:before {
+  content: "\e95a";
+  color: #585858;
+}
+.icon-github:before {
+  content: "\e90f";
+  color: #585858;
+}
+.icon-onedrive:before {
+  content: "\e930";
+  color: #585858;
+}
+.icon-facebook:before {
+  content: "\e931";
+  color: #585858;
+}
+.icon-microsoft:before {
+  content: "\e952";
+  color: #585858;
+}
 .icon-s3compatible:before {
   content: "\e958";
 }
@@ -40,12 +69,6 @@
 }
 .icon-smb:before {
   content: "\e955";
-}
-.icon-yandex:before {
-  content: "\e953";
-}
-.icon-deepl:before {
-  content: "\e952";
 }
 .icon-archive:before {
   content: "\e951";
@@ -118,12 +141,6 @@
 }
 .icon-search-book:before {
   content: "\e92f";
-}
-.icon-bing:before {
-  content: "\e930";
-}
-.icon-baidu:before {
-  content: "\e931";
 }
 .icon-digest:before {
   content: "\e927";
@@ -208,12 +225,6 @@
 .icon-local:before {
   content: "\e92a";
 }
-.icon-backup:before {
-  content: "\e92b";
-}
-.icon-restore:before {
-  content: "\e92c";
-}
 .icon-two-page:before {
   content: "\e925";
 }
@@ -247,14 +258,13 @@
 .icon-add:before {
   content: "\e90d";
 }
-.icon-onedrive:before {
-  content: "\e90f";
-}
 .icon-dropbox:before {
   content: "\e910";
+  color: #4b4b4b;
 }
 .icon-webdav:before {
   content: "\e916";
+  color: #4b4b4b;
 }
 .icon-exit:before {
   content: "\e919";
@@ -264,6 +274,7 @@
 }
 .icon-googledrive:before {
   content: "\e934";
+  color: #4b4b4b;
 }
 .icon-list:before {
   content: "\e937";

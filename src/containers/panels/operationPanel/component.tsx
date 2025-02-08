@@ -4,11 +4,10 @@ import Bookmark from "../../../models/Bookmark";
 import { Trans } from "react-i18next";
 
 import { OperationPanelProps, OperationPanelState } from "./interface";
-import ConfigService from "../../../utils/storage/configService";
+import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import { withRouter } from "react-router-dom";
 import toast from "react-hot-toast";
 import { HtmlMouseEvent } from "../../../utils/reader/mouseEvent";
-import storageUtil from "../../../utils/storage/configService";
 import TTSUtil from "../../../utils/reader/ttsUtil";
 import { isElectron } from "react-device-detect";
 import { handleExitFullScreen, handleFullScreen } from "../../../utils/common";
@@ -60,7 +59,7 @@ class OperationPanel extends React.Component<
       HtmlMouseEvent(
         this.props.htmlBook.rendition,
         this.props.currentBook.key,
-        storageUtil.getReaderConfig("readerMode")
+        ConfigService.getReaderConfig("readerMode")
       );
     });
   }

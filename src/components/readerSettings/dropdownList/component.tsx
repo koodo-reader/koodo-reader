@@ -3,7 +3,7 @@ import { dropdownList } from "../../../constants/dropdownList";
 import "./dropdownList.css";
 import { Trans } from "react-i18next";
 import { DropdownListProps, DropdownListState } from "./interface";
-import ConfigService from "../../../utils/storage/configService";
+import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import { isElectron } from "react-device-detect";
 import { loadFontData } from "../../../utils/common";
 declare var window: any;

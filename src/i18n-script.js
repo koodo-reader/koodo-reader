@@ -25,6 +25,7 @@ const resources = [
   "./assets/locales/ie/translation.json",
   "./assets/locales/it/translation.json",
   "./assets/locales/ja/translation.json",
+  "./assets/locales/sl/translation.json",
   "./assets/locales/ko/translation.json",
   "./assets/locales/nl/translation.json",
   "./assets/locales/pl/translation.json",

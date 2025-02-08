@@ -1,10 +1,11 @@
 import React, { useEffect } from "react";
 import { Route, Switch, HashRouter } from "react-router-dom";
 import Manager from "../pages/manager";
+import Login from "../pages/login";
 import HtmlReader from "../pages/reader";
 import _Redirect from "../pages/redirect";
 import i18n from "../i18n";
-import ConfigService from "../utils/storage/configService";
+import { ConfigService } from "../assets/lib/kookit-extra-browser.min";
 
 const Router = () => {
   useEffect(() => {
@@ -41,6 +42,9 @@ const Router = () => {
       } else if (navigator.language.startsWith("ja")) {
         i18n.changeLanguage("ja");
         ConfigService.setReaderConfig("lang", "ja");
+      } else if (navigator.language.startsWith("sl")) {
+        i18n.changeLanguage("sl");
+        ConfigService.setReaderConfig("lang", "sl");
       } else if (navigator.language.startsWith("bo")) {
         i18n.changeLanguage("bo");
         ConfigService.setReaderConfig("lang", "bo");
@@ -117,6 +121,7 @@ const Router = () => {
     <HashRouter>
       <Switch>
         <Route component={Manager} path="/manager" />
+        <Route component={Login} path="/login" />
         <Route component={HtmlReader} path="/epub" />
         <Route component={HtmlReader} path="/mobi" />
         <Route component={HtmlReader} path="/cbr" />

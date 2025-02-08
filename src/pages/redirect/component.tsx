@@ -6,12 +6,14 @@ import { getParamsFromUrl } from "../../utils/file/common";
 import copy from "copy-text-to-clipboard";
 import { withRouter } from "react-router-dom";
 import Lottie from "react-lottie";
-
+import emptyDark from "../../assets/images/empty-dark.svg";
+import emptyLight from "../../assets/images/empty-light.svg";
 import animationSuccess from "../../assets/lotties/success.json";
 import toast, { Toaster } from "react-hot-toast";
-import ConfigService from "../../utils/storage/configService";
+import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import * as Kookit from "../../assets/lib/kookit.min";
 import { BookHelper } from "../../assets/lib/kookit-extra-browser.min";
+import { removeSearchParams } from "../../utils/common";
 declare var window: any;
 const successOptions = {
   loop: false,
@@ -29,7 +31,6 @@ class Redirect extends React.Component<RedirectProps, RedirectState> {
     this.state = {
       isAuthed: false,
       isError: false,
-      isCopied: false,
       token: "",
     };
   }
@@ -54,6 +55,7 @@ class Redirect extends React.Component<RedirectProps, RedirectState> {
     }
     if (url.indexOf("code") > -1) {
       let params: any = getParamsFromUrl();
+      removeSearchParams();
       this.setState({ token: params.code });
       this.setState({ isAuthed: true });
       let state = params.state;
@@ -71,20 +73,6 @@ class Redirect extends React.Component<RedirectProps, RedirectState> {
       let params: any = getParamsFromUrl();
       this.setState({ token: params.access_token });
       this.setState({ isAuthed: true });
-      let state = params.state;
-      if (state) {
-        const encodedState = state.split("|")[1];
-        const customParams = JSON.parse(decodeURIComponent(encodedState));
-        if (customParams && customParams.deeplink) {
-          window.location.replace(
-            customParams.deeplink +
-              "?token=" +
-              params.access_token +
-              "&state=" +
-              state
-          );
-        }
-      }
     }
   }
 
@@ -92,6 +80,7 @@ class Redirect extends React.Component<RedirectProps, RedirectState> {
     if (this.state.isError || this.state.isAuthed) {
       return (
         <div className="backup-page-finish-container">
+          <Toaster />
           <div className="backup-page-finish">
             {this.state.isAuthed ? (
               <Lottie options={successOptions} height={80} width={80} />
@@ -111,14 +100,10 @@ class Redirect extends React.Component<RedirectProps, RedirectState> {
                 className="token-dialog-token-text"
                 onClick={() => {
                   copy(this.state.token);
-                  this.setState({ isCopied: true });
+                  toast.success(this.props.t("Copied"));
                 }}
               >
-                {this.state.isCopied ? (
-                  <Trans>Copied</Trans>
-                ) : (
-                  <Trans>Copy token</Trans>
-                )}
+                <Trans>Copy token</Trans>
               </div>
             ) : null}
           </div>
@@ -147,8 +132,8 @@ class Redirect extends React.Component<RedirectProps, RedirectState> {
             ConfigService.getReaderConfig("appSkin") === "night" ||
             (ConfigService.getReaderConfig("appSkin") === "system" &&
               ConfigService.getReaderConfig("isOSNight") === "yes")
-              ? "./assets/empty_dark.svg"
-              : "./assets/empty.svg"
+              ? emptyDark
+              : emptyLight
           }
           alt=""
           className="empty-page-illustration"

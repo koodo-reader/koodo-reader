@@ -3,10 +3,12 @@ import "./booklist.css";
 import BookCardItem from "../../../components/bookCardItem";
 import BookListItem from "../../../components/bookListItem";
 import BookCoverItem from "../../../components/bookCoverItem";
-import SortUtil from "../../../utils/reader/sortUtil";
 import BookModel from "../../../models/Book";
 import { BookListProps, BookListState } from "./interface";
-import ConfigService from "../../../utils/storage/configService";
+import {
+  ConfigService,
+  SortUtil,
+} from "../../../assets/lib/kookit-extra-browser.min";
 import { Redirect, withRouter } from "react-router-dom";
 import ViewMode from "../../../components/viewMode";
 import SelectBook from "../../../components/selectBook";
@@ -91,7 +93,8 @@ class BookList extends React.Component<BookListProps, BookListState> {
           this.handleShelf(this.props.books, this.props.shelfTitle),
           SortUtil.sortBooks(
             this.handleShelf(this.props.books, this.props.shelfTitle),
-            this.props.bookSortCode
+            this.props.bookSortCode,
+            ConfigService
           ) || []
         )
       : this.props.mode === "favorite"
@@ -105,7 +108,8 @@ class BookList extends React.Component<BookListProps, BookListState> {
               this.props.books,
               ConfigService.getAllListConfig("favoriteBooks")
             ),
-            this.props.bookSortCode
+            this.props.bookSortCode,
+            ConfigService
           ) || []
         )
       : this.state.isHideShelfBook
@@ -113,12 +117,17 @@ class BookList extends React.Component<BookListProps, BookListState> {
           this.handleFilterShelfBook(this.props.books),
           SortUtil.sortBooks(
             this.handleFilterShelfBook(this.props.books),
-            this.props.bookSortCode
+            this.props.bookSortCode,
+            ConfigService
           ) || []
         )
       : this.handleIndexFilter(
           this.props.books,
-          SortUtil.sortBooks(this.props.books, this.props.bookSortCode) || []
+          SortUtil.sortBooks(
+            this.props.books,
+            this.props.bookSortCode,
+            ConfigService
+          ) || []
         );
     if (books.length === 0 && !this.props.isSearch) {
       return <Redirect to="/manager/empty" />;
@@ -169,6 +178,7 @@ class BookList extends React.Component<BookListProps, BookListState> {
 
     this.props.handleShelf("");
     this.props.handleMode("home");
+    this.props.history.push("/manager/home");
   };
   handleDeletePopup = (isOpenDelete: boolean) => {
     this.setState({ isOpenDelete });

@@ -2,17 +2,36 @@ import BookModel from "../../../models/Book";
 import NoteModel from "../../../models/Note";
 import BookmarkModel from "../../../models/Bookmark";
 import PluginModel from "../../../models/Plugin";
-export interface SettingInfoProps {
+import { RouteComponentProps } from "react-router-dom";
+export interface SettingInfoProps extends RouteComponentProps<any> {
   handleSetting: (isSettingOpen: boolean) => void;
+  handleSettingMode: (settingMode: string) => void;
+  handleSettingDrive: (settingDrive: string) => void;
   handleTipDialog: (isTipDialog: boolean) => void;
+  handleTokenDialog: (isOpenTokenDialog: boolean) => void;
   handleTip: (tip: string) => void;
+  handleFetchDataSourceList: () => void;
+  handleFetchDefaultSyncOption: () => void;
+  handleFetchLoginOptionList: () => void;
+  handleLoginOptionList: (loginOptionList: string[]) => void;
+  handleFetchAuthed: () => void;
+  handleLoadingDialog: (isShow: boolean) => void;
   t: (title: string) => string;
   handleFetchBooks: () => void;
   handleFetchPlugins: () => void;
+  handleFetchUserInfo: () => void;
   bookmarks: BookmarkModel[];
   notes: NoteModel[];
+  isOpenTokenDialog: boolean;
   plugins: PluginModel[];
   books: BookModel[];
+  userInfo: any;
+  dataSourceList: string[];
+  loginOptionList: string[];
+  defaultSyncOption: string;
+  isAuthed: boolean;
+  settingMode: string;
+  settingDrive: string;
 }
 export interface SettingInfoState {
   isTouch: boolean;
@@ -39,5 +58,7 @@ export interface SettingInfoState {
   isLemmatizeWord: boolean;
   isAddNew: boolean;
   currentThemeIndex: number;
-  currentTab: string;
+  driveConfig: any;
+  loginConfig: any;
+  settingLogin: string;
 }

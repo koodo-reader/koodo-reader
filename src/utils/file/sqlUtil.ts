@@ -1,3 +1,4 @@
+import { isElectron } from "react-device-detect";
 import { SqlStatement } from "../../assets/lib/kookit-extra-browser.min";
 declare var window: any;
 function addColonToKeys(obj: any): any {
@@ -12,7 +13,10 @@ class SqlUtil {
   async getConnection() {
     if (!this.SQL) {
       let config = {
-        locateFile: (filename) => `./lib/sqljs-wasm/${filename}`,
+        locateFile: (filename) =>
+          isElectron
+            ? `public/lib/sqljs-wasm/${filename}`
+            : `./lib/sqljs-wasm/${filename}`,
       };
       this.SQL = await window.initSqlJs(config);
       return this.SQL;

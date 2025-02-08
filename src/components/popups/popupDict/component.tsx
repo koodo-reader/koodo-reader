@@ -1,7 +1,7 @@
 import React from "react";
 import "./popupDict.css";
 import { PopupDictProps, PopupDictState } from "./interface";
-import ConfigService from "../../../utils/storage/configService";
+import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import Parser from "html-react-parser";
 import * as DOMPurify from "dompurify";
 import axios from "axios";

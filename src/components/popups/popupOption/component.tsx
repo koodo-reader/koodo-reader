@@ -5,7 +5,7 @@ import Note from "../../../models/Note";
 import { PopupOptionProps } from "./interface";
 import ColorOption from "../../colorOption";
 import { popupList } from "../../../constants/popupList";
-import ConfigService from "../../../utils/storage/configService";
+import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import toast from "react-hot-toast";
 import { getSelection } from "../../../utils/reader/mouseEvent";
 import copy from "copy-text-to-clipboard";

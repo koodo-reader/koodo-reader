@@ -1,4 +1,8 @@
 import axios from "axios";
+import toast from "react-hot-toast";
+import i18n from "../../i18n";
+import { useHistory } from "react-router-dom";
+import { TokenService } from "../../assets/lib/kookit-extra-browser.min";
 const PUBLIC_URL = "https://api.960960.xyz";
 export const checkDeveloperUpdate = async () => {
   let res = await axios.get(PUBLIC_URL + "/api/update_dev");
@@ -13,7 +17,6 @@ export const uploadFile = async (url: string, file: any) => {
     axios
       .put(url, file, {})
       .then((res) => {
-        console.log(res);
         resolve(true);
       })
       .catch((err) => {
@@ -42,10 +45,10 @@ export const sendFeedback = async (data: any) => {
   let res = await axios.request(config);
   return res.data.result;
 };
-export default {
-  checkDeveloperUpdate,
-  getUploadUrl,
-  uploadFile,
-  checkStableUpdate,
-  sendFeedback,
+export const handleExitApp = async () => {
+  toast.error(i18n.t("Authorization failed, please login again"));
+  await TokenService.deleteToken("is_authed");
+  await TokenService.deleteToken("access_token");
+  await TokenService.deleteToken("refresh_token");
+  //路由到login页面
 };

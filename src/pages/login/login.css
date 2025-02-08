@@ -1,0 +1,182 @@
+.login-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+.login-cover-container {
+  width: 60%;
+  height: 100%;
+}
+.login-content-container {
+  width: 40%;
+  height: 100%;
+}
+.login-manual-token {
+  text-align: center;
+  cursor: pointer;
+}
+.login-logo-img {
+  width: 120px;
+  position: absolute;
+  top: 30px;
+  left: 30px;
+}
+.login-cover-img {
+  position: absolute;
+  bottom: 0;
+  object-fit: cover;
+  height: auto; /* 确保高度自动调整 */
+  width: 60%;
+  margin-left: 0px;
+}
+.login-close-container {
+  position: absolute;
+  top: 30px;
+  right: 30px;
+}
+.login-close-icon {
+  font-size: 25px;
+  opacity: 0.5;
+}
+.login-content-illustration {
+  width: 100px;
+  margin-left: 40px;
+  margin-top: 100px;
+}
+.login-title {
+  font-size: 30px;
+  line-height: 40px;
+  font-weight: bold;
+  margin: 28% 40px 20px 40px;
+  color: #585858;
+}
+.login-subtitle {
+  font-size: 18px;
+  line-height: 27px;
+  margin: 0 40px 20px 40px;
+  color: #585858;
+}
+.login-next-button {
+  width: 100px;
+  height: 40px;
+  border: 2px solid #585858;
+  color: #585858;
+  font-size: 17px;
+  position: absolute;
+  bottom: 30px;
+  right: 30px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+.login-term {
+  font-size: 12px;
+  color: #585858;
+  position: absolute;
+  bottom: 10px;
+  text-align: center;
+  width: 40%;
+  padding: 10px;
+  line-height: 18px;
+}
+.login-option-container {
+  margin: 20px 0px;
+  width: 240px;
+  margin-left: calc(50% - 120px);
+  height: 40px;
+  border-radius: 20px;
+  border: 2px solid #585858;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+}
+.login-option-icon {
+  margin: 10px;
+  font-size: 17px;
+}
+.login-option-title {
+  margin: 10px;
+  width: calc(100% - 40px);
+}
+.login-sync-box {
+  /* border: 1px solid #585858; */
+  border-radius: 15px;
+  background-color: rgba(88, 88, 88, 0.1);
+  width: 115px;
+  height: 90px;
+  position: relative;
+  cursor: pointer;
+}
+.login-sync-container {
+  width: 90%;
+  height: 50%;
+  margin: 0 auto;
+  /*实现三乘三的布局*/
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
+  grid-gap: 10px;
+  /* padding: 10px; */
+  align-items: center; /* 垂直居中 */
+  justify-items: center; /* 水平居中 */
+}
+.login-sync-title {
+  margin: 10px;
+  width: calc(100% - 40px);
+  font-size: 16px;
+  color: #585858;
+  text-align: left;
+  /* font-weight: bold; */
+}
+.login-sync-support {
+  display: inline;
+  font-size: 15px;
+  margin-left: 5px;
+}
+.login-sync-subtitle {
+  padding: 10px;
+  padding-bottom: 0px;
+  width: calc(100% - 20px);
+  font-size: 12px;
+  color: #585858;
+  opacity: 0.6;
+  text-align: right;
+  position: absolute;
+  bottom: 10px;
+  /* line-height: 20px; */
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+.login-mobile-qr {
+  width: 300px;
+}
+.login-mobile-container {
+  width: 100%;
+  height: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.login-sync-icon {
+  font-size: 10px;
+  color: #fff;
+}
+.login-sync-icon-container {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  background-color: #585858;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  opacity: 0.8;
+}

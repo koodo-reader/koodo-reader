@@ -1,8 +1,13 @@
-import ConfigService from "../../utils/storage/configService";
+import {
+  ConfigService,
+  TokenService,
+} from "../../assets/lib/kookit-extra-browser.min";
 import BookModel from "../../models/Book";
 import PluginModel from "../../models/Plugin";
 import { Dispatch } from "redux";
 import DatabaseService from "../../utils/storage/databaseService";
+import { getUserRequest } from "../../utils/request/user";
+import { handleExitApp } from "../../utils/request/common";
 
 export function handleBooks(books: BookModel[]) {
   return { type: "HANDLE_BOOKS", payload: books };
@@ -19,6 +24,9 @@ export function handleSearchResults(searchResults: number[]) {
 export function handleSearch(isSearch: boolean) {
   return { type: "HANDLE_SEARCH", payload: isSearch };
 }
+export function handleUserInfo(userInfo: any) {
+  return { type: "HANDLE_USER_INFO", payload: userInfo };
+}
 export function handleTipDialog(isTipDialog: boolean) {
   return { type: "HANDLE_TIP_DIALOG", payload: isTipDialog };
 }
@@ -30,6 +38,12 @@ export function handleTip(tip: string) {
 }
 export function handleSetting(isSettingOpen: boolean) {
   return { type: "HANDLE_SETTING", payload: isSettingOpen };
+}
+export function handleSettingMode(settingMode: string) {
+  return { type: "HANDLE_SETTING_MODE", payload: settingMode };
+}
+export function handleSettingDrive(settingDrive: string) {
+  return { type: "HANDLE_SETTING_DRIVE", payload: settingDrive };
 }
 export function handleAbout(isAboutOpen: boolean) {
   return { type: "HANDLE_ABOUT", payload: isAboutOpen };
@@ -65,6 +79,9 @@ export function handleNoteSort(isNoteSort: boolean) {
 export function handleFeedbackDialog(mode: boolean) {
   return { type: "HANDLE_FEEDBACK_DIALOG", payload: mode };
 }
+export function handleAuthed(isAuthed: boolean) {
+  return { type: "HANDLE_AUTHED", payload: isAuthed };
+}
 export function handleBookSortCode(bookSortCode: {
   sort: number;
   order: number;
@@ -89,11 +106,31 @@ export function handleFetchBooks() {
     });
   };
 }
-
+export function handleFetchUserInfo() {
+  return async (dispatch: Dispatch) => {
+    let userInfo: any = {};
+    let userRequest = await getUserRequest();
+    let response = await userRequest.getUserInfo();
+    if (response.code === 200) {
+      userInfo = response.data;
+    } else if (response.code === 401) {
+      handleExitApp();
+    }
+    dispatch(handleUserInfo(userInfo));
+  };
+}
 export function handleFetchPlugins() {
   return async (dispatch: Dispatch) => {
     DatabaseService.getAllRecords("plugins").then((value) => {
       dispatch(handlePlugins(value));
+    });
+  };
+}
+export function handleFetchAuthed() {
+  return (dispatch: Dispatch) => {
+    TokenService.getToken("is_authed").then((value) => {
+      let isAuthed = value === "yes";
+      dispatch(handleAuthed(isAuthed));
     });
   };
 }

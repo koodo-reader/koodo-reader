@@ -10,9 +10,11 @@ import {
   exportHighlights,
   exportNotes,
 } from "../../../utils/file/export";
-import ConfigService from "../../../utils/storage/configService";
 import DatabaseService from "../../../utils/storage/databaseService";
-import { BookHelper } from "../../../assets/lib/kookit-extra-browser.min";
+import {
+  BookHelper,
+  ConfigService,
+} from "../../../assets/lib/kookit-extra-browser.min";
 import * as Kookit from "../../../assets/lib/kookit.min";
 class ActionDialog extends React.Component<MoreActionProps, MoreActionState> {
   constructor(props: MoreActionProps) {
@@ -162,10 +164,12 @@ class ActionDialog extends React.Component<MoreActionProps, MoreActionState> {
                   ConfigService.getReaderConfig("isSliding") === "yes"
                     ? "sliding"
                     : "",
+                  ConfigService.getReaderConfig("isBionic"),
+                  ConfigService.getReaderConfig("convertChinese"),
                   Kookit
                 );
                 let cache = await rendition.preCache(result);
-                if (cache !== "err") {
+                if (cache !== "err" || cache) {
                   BookUtil.addBook(
                     "cache-" + this.props.currentBook.key,
                     "zip",

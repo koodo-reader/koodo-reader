@@ -1,7 +1,7 @@
 import React from "react";
 import "./viewMode.css";
 import { ViewModeProps, ViewModeState } from "./interface";
-import ConfigService from "../../utils/storage/configService";
+import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import { viewMode } from "../../constants/viewMode";
 
 class ViewMode extends React.Component<ViewModeProps, ViewModeState> {

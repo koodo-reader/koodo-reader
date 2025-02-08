@@ -1,5 +1,5 @@
 import { isElectron } from "react-device-detect";
-import ConfigService from "../storage/configService";
+import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 
 export const initTheme = () => {
   const style = document.createElement("link");

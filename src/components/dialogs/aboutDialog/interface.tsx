@@ -10,6 +10,7 @@ export interface AboutDialogProps {
   deletedBooks: BookModel[];
   handleSetting: (isSettingOpen: boolean) => void;
   handleAbout: (isAboutOpen: boolean) => void;
+  handleFeedbackDialog: (isShow: boolean) => void;
 
   t: (title: string) => string;
 }

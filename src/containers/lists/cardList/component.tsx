@@ -5,13 +5,15 @@ import { Trans } from "react-i18next";
 import { CardListProps, CardListStates } from "./interface";
 import DeleteIcon from "../../../components/deleteIcon";
 import { withRouter } from "react-router-dom";
-import SortUtil from "../../../utils/reader/sortUtil";
 import { Redirect } from "react-router-dom";
 import NoteTag from "../../../components/noteTag";
 import BookUtil from "../../../utils/file/bookUtil";
 import toast from "react-hot-toast";
 import BookModel from "../../../models/Book";
-import ConfigService from "../../../utils/storage/configService";
+import {
+  ConfigService,
+  SortUtil,
+} from "../../../assets/lib/kookit-extra-browser.min";
 class CardList extends React.Component<CardListProps, CardListStates> {
   constructor(props: CardListProps) {
     super(props);
@@ -41,7 +43,7 @@ class CardList extends React.Component<CardListProps, CardListStates> {
       }
     }
     if (!book) {
-      toast(this.props.t("Book not exist"));
+      toast(this.props.t("Book not exists"));
       return;
     }
 
@@ -55,7 +57,7 @@ class CardList extends React.Component<CardListProps, CardListStates> {
     }
     ConfigService.setObjectConfig(note.bookKey, bookLocation, "recordLocation");
 
-    BookUtil.redirectBook(book, this.props.t);
+    BookUtil.redirectBook(book);
   };
   render() {
     let { cards } = this.props;

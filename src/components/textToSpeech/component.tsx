@@ -2,7 +2,7 @@ import React from "react";
 import { TextToSpeechProps, TextToSpeechState } from "./interface";
 import { Trans } from "react-i18next";
 import { speedList } from "../../constants/dropdownList";
-import ConfigService from "../../utils/storage/configService";
+import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import { checkPlugin, getAllVoices, sleep } from "../../utils/common";
 import { isElectron } from "react-device-detect";
 import toast from "react-hot-toast";

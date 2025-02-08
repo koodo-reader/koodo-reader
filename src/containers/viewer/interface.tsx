@@ -13,6 +13,7 @@ export interface ViewerProps {
   htmlBook: HtmlBook;
   isShow: boolean;
   isOpenMenu: boolean;
+  defaultSyncOption: string;
   handleRenderBookFunc: (renderBookFunc: () => void) => void;
   renderNoteFunc: () => void;
   t: (title: string) => string;

@@ -8,6 +8,8 @@ const initState = {
   isAboutOpen: false,
   isBookSort: localStorage.getItem("bookSortCode") ? true : false,
   isNoteSort: false,
+  isAuthed: false,
+  userInfo: null,
   isSettingOpen: false,
   viewMode: "card",
   isSortDisplay: false,
@@ -20,6 +22,8 @@ const initState = {
   noteSortCode: { sort: 2, order: 2 },
   isSelectBook: false,
   message: "Addition successful",
+  settingMode: "general",
+  settingDrive: "",
   tip: "",
   selectedBooks: [],
 };
@@ -48,7 +52,21 @@ export function manager(
         ...state,
         isOpenFeedbackDialog: action.payload,
       };
-
+    case "HANDLE_USER_INFO":
+      return {
+        ...state,
+        userInfo: action.payload,
+      };
+    case "HANDLE_SETTING_MODE":
+      return {
+        ...state,
+        settingMode: action.payload,
+      };
+    case "HANDLE_SETTING_DRIVE":
+      return {
+        ...state,
+        settingDrive: action.payload,
+      };
     case "HANDLE_SEARCH_BOOKS":
       return {
         ...state,
@@ -58,6 +76,11 @@ export function manager(
       return {
         ...state,
         isSelectBook: action.payload,
+      };
+    case "HANDLE_AUTHED":
+      return {
+        ...state,
+        isAuthed: action.payload,
       };
     case "HANDLE_SELECTED_BOOKS":
       return {

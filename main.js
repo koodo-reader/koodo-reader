@@ -7,6 +7,8 @@ const {
   dialog,
   powerSaveBlocker,
   nativeTheme,
+  safeStorage,
+  protocol
 } = require("electron");
 const path = require("path");
 const isDev = require("electron-is-dev");
@@ -20,6 +22,7 @@ let readerWindow;
 let urlWindow;
 let mainView;
 let dbConnection = {};
+let syncUtilCache = {};
 const singleInstance = app.requestSingleInstanceLock();
 var filePath = null;
 if (process.platform != "darwin" && process.argv.length >= 2) {
@@ -74,6 +77,15 @@ const getDBConnection = (dbName, storagePath, sqlStatement) => {
     dbConnection[dbName].exec(sqlStatement["createTableStatement"][dbName]);
   }
   return dbConnection[dbName];
+}
+const getSyncUtil = async (config) => {
+  if (!syncUtilCache[config.service]) {
+    const { SyncUtil, TokenService, ThirdpartyRequest } = await import('./src/assets/lib/kookit-extra.min.mjs');
+    let thirdpartyRequest = new ThirdpartyRequest(TokenService);
+
+    syncUtilCache[config.service] = new SyncUtil(config.service, config, config.storagePath, thirdpartyRequest);
+  }
+  return syncUtilCache[config.service];
 }
 const createMainWin = () => {
   mainWin = new BrowserWindow(options);
@@ -147,7 +159,6 @@ const createMainWin = () => {
     readerWindow.on("close", (event) => {
       if (!readerWindow.isDestroyed()) {
         let bounds = readerWindow.getBounds();
-        console.log(bounds, 'boudns')
         if (bounds.width > 0 && bounds.height > 0) {
           store.set({
             windowWidth: bounds.width,
@@ -176,19 +187,30 @@ const createMainWin = () => {
 
   });
   ipcMain.handle("cloud-upload", async (event, config) => {
-    let { service } = config;
-    const { SyncUtil } = await import('./src/assets/lib/kookit-extra.min.mjs');
-    let syncUtil = new SyncUtil(service, config, dirPath);
-    let result = await syncUtil.uploadFile(config.fileName, config.fileName, "backup");
+    let syncUtil = await getSyncUtil(config);
+    let result = await syncUtil.uploadFile(config.fileName, config.fileName, config.type);
     return result;
   });
+
   ipcMain.handle("cloud-download", async (event, config) => {
-    let { service } = config;
-    const { SyncUtil } = await import('./src/assets/lib/kookit-extra.min.mjs');
-    let syncUtil = new SyncUtil(service, config, dirPath);
-    let result = await syncUtil.downloadFile(config.fileName, config.fileName, "backup");
+    let syncUtil = await getSyncUtil(config);
+    let result = await syncUtil.downloadFile(config.fileName, (config.isTemp ? "temp-" : "") + config.fileName, config.type);
     return result;
   });
+
+  ipcMain.handle("cloud-delete", async (event, config) => {
+    let syncUtil = await getSyncUtil(config);
+    let result = await syncUtil.deleteFile(config.fileName, config.type);
+    return result;
+  });
+
+  ipcMain.handle("cloud-list", async (event, config) => {
+    let syncUtil = await getSyncUtil(config);
+    let result = await syncUtil.listFiles(config.type);
+    return result;
+  });
+
+
   ipcMain.handle("clear-tts", async (event, config) => {
     if (!fs.existsSync(path.join(dirPath, "tts"))) {
       return "pong";
@@ -197,7 +219,6 @@ const createMainWin = () => {
       try {
         await fsExtra.remove(path.join(dirPath, "tts"));
         await fsExtra.mkdir(path.join(dirPath, "tts"));
-        console.log("success!");
         return "pong";
       } catch (err) {
         console.error(err);
@@ -211,6 +232,25 @@ const createMainWin = () => {
     });
     return path.filePaths[0];
   });
+  ipcMain.handle("encrypt-data", async (event, config) => {
+    let encrypted = safeStorage.encryptString(config.token).toString("base64");
+    store.set("encryptedToken", encrypted);
+    return "pong";
+  });
+  ipcMain.handle("decrypt-data", async (event) => {
+    let encrypted = store.get("encryptedToken");
+    if (!encrypted) return "";
+    let decrypted = safeStorage.decryptString(Buffer.from(encrypted, "base64"));
+    return decrypted;
+  });
+  ipcMain.handle("get-mac", async (event, config) => {
+    const { machineIdSync } = require('node-machine-id');
+    return machineIdSync();
+  });
+  ipcMain.handle("get-store-value", async (event, config) => {
+    return store.get(config.key);
+  });
+
   ipcMain.handle("reset-reader-position", async (event) => {
     store.delete("windowX");
     store.delete("windowY");
@@ -287,11 +327,11 @@ const createMainWin = () => {
     delete dbConnection[dbName];
     db.close();
   });
+
   ipcMain.on("user-data", (event, arg) => {
     event.returnValue = dirPath;
   });
   ipcMain.handle("hide-reader", (event, arg) => {
-    console.log(readerWindow)
     if (!readerWindow.isDestroyed() && readerWindow && readerWindow.isFocused()) {
       readerWindow.minimize();
       event.returnvalue = true;
@@ -336,6 +376,7 @@ const createMainWin = () => {
       mainView.webContents.loadURL(config.url)
     }
   });
+
   ipcMain.handle("reload-tab", (event, config) => {
     if (mainWin && mainView) {
       mainView.webContents.reload()
@@ -467,3 +508,26 @@ app.on("window-all-closed", () => {
 app.on("open-file", (e, pathToFile) => {
   filePath = pathToFile;
 });
+// Register protocol handler
+app.setAsDefaultProtocolClient('koodo-reader');
+// Handle deep linking
+app.on('second-instance', (event, commandLine) => {
+  const url = commandLine.pop();
+  if (url) {
+    handleCallback(url);
+  }
+});
+
+// Handle MacOS deep linking
+app.on('open-url', (event, url) => {
+  event.preventDefault();
+  handleCallback(url);
+});
+
+const handleCallback = (url) => {
+  const code = new URL(url).searchParams.get('code');
+  const state = new URL(url).searchParams.get('state');
+  if (code && mainWin) {
+    mainWin.webContents.send('oauth-callback', { code, state });
+  }
+};

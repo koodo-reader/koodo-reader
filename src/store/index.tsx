@@ -45,10 +45,14 @@ export type stateType = {
     isAboutOpen: boolean;
     isShowLoading: boolean;
     isShowNew: boolean;
+    userInfo: any;
+    isAuthed: boolean;
     isNewWarning: boolean;
     isSelectBook: boolean;
     selectedBooks: string[];
     isTipDialog: boolean;
+    settingMode: string;
+    settingDrive: string;
     isDetailDialog: boolean;
     isOpenFeedbackDialog: boolean;
     bookSortCode: { sort: number; order: number };
@@ -70,6 +74,9 @@ export type stateType = {
   backupPage: {
     isBackup: boolean;
     isOpenTokenDialog: boolean;
+    dataSourceList: string[];
+    loginOptionList: string[];
+    defaultSyncOption: string;
   };
   progressPanel: {
     percentage: number;

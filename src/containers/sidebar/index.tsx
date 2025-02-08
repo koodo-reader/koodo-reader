@@ -17,6 +17,7 @@ const mapStateToProps = (state: stateType) => {
     mode: state.sidebar.mode,
     isCollapsed: state.sidebar.isCollapsed,
     shelfTitle: state.sidebar.shelfTitle,
+    isAuthed: state.manager.isAuthed,
   };
 };
 const actionCreator = {

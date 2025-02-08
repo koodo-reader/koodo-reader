@@ -1,7 +1,8 @@
 import { isElectron } from "react-device-detect";
 import { getStorageLocation } from "../common";
-import SqlUtil from "../file/sqlUtil";
 import localforage from "localforage";
+import SqlUtil from "../file/sqlUtil";
+import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 declare var window: any;
 
 class DatabaseService {
@@ -28,7 +29,7 @@ class DatabaseService {
       return records;
     }
   }
-  static async saveAllRecords(records: any[], dbName: string) {
+  static async saveAllRecords(records: any[], dbName: string, isRecord = true) {
     if (isElectron) {
       for (let record of records) {
         await window
@@ -41,12 +42,50 @@ class DatabaseService {
             data: record,
             storagePath: getStorageLocation(),
           });
+        if (isRecord) {
+          ConfigService.setSyncRecord(
+            {
+              type: "database",
+              catergory: "sqlite",
+              name: dbName,
+              key: record.key,
+            },
+            { operation: "save", time: Date.now() }
+          );
+        }
       }
     } else {
       await localforage.setItem(dbName, records);
     }
+    for (let record of records) {
+      if (isRecord) {
+        ConfigService.setSyncRecord(
+          {
+            type: "database",
+            catergory: "sqlite",
+            name: dbName,
+            key: record.key,
+          },
+          { operation: "save", time: Date.now() }
+        );
+      }
+    }
   }
-  static async deleteAllRecords(dbName: string) {
+  static async deleteAllRecords(dbName: string, isRecord = true) {
+    let records = await this.getAllRecords(dbName);
+    for (let record of records) {
+      if (isRecord) {
+        ConfigService.setSyncRecord(
+          {
+            type: "database",
+            catergory: "sqlite",
+            name: dbName,
+            key: record.key,
+          },
+          { operation: "delete", time: Date.now() }
+        );
+      }
+    }
     if (isElectron) {
       await window.require("electron").ipcRenderer.invoke("database-command", {
         statement: "deleteAllStatement",
@@ -59,7 +98,7 @@ class DatabaseService {
       await localforage.removeItem(dbName);
     }
   }
-  static async saveRecord(record: any, dbName: string) {
+  static async saveRecord(record: any, dbName: string, isRecord = true) {
     if (isElectron) {
       await window.require("electron").ipcRenderer.invoke("database-command", {
         statement: "saveStatement",
@@ -74,8 +113,19 @@ class DatabaseService {
       records.push(record);
       await this.saveAllRecords(records, dbName);
     }
+    if (isRecord) {
+      ConfigService.setSyncRecord(
+        {
+          type: "database",
+          catergory: "sqlite",
+          name: dbName,
+          key: record.key,
+        },
+        { operation: "save", time: Date.now() }
+      );
+    }
   }
-  static async deleteRecord(key: string, dbName: string) {
+  static async deleteRecord(key: string, dbName: string, isRecord = true) {
     if (isElectron) {
       await window.require("electron").ipcRenderer.invoke("database-command", {
         statement: "deleteStatement",
@@ -94,8 +144,14 @@ class DatabaseService {
         await this.saveAllRecords(records, dbName);
       }
     }
+    if (isRecord) {
+      ConfigService.setSyncRecord(
+        { type: "database", catergory: "sqlite", name: dbName, key: key },
+        { operation: "delete", time: Date.now() }
+      );
+    }
   }
-  static async updateRecord(record: any, dbName: string) {
+  static async updateRecord(record: any, dbName: string, isRecord = true) {
     if (isElectron) {
       await window.require("electron").ipcRenderer.invoke("database-command", {
         statement: "updateStatement",
@@ -114,6 +170,17 @@ class DatabaseService {
         return b;
       });
       await this.saveAllRecords(records, dbName);
+    }
+    if (isRecord) {
+      ConfigService.setSyncRecord(
+        {
+          type: "database",
+          catergory: "sqlite",
+          name: dbName,
+          key: record.key,
+        },
+        { operation: "update", time: Date.now() }
+      );
     }
   }
   static async getRecord(key: string, dbName: string): Promise<any | null> {
@@ -181,7 +248,11 @@ class DatabaseService {
       return records.filter((record) => bookKeys.includes(record.bookKey));
     }
   }
-  static async updateAllRecords(records: any[], dbName: string) {
+  static async updateAllRecords(
+    records: any[],
+    dbName: string,
+    isRecord = true
+  ) {
     if (isElectron) {
       for (let record of records) {
         await window
@@ -194,12 +265,48 @@ class DatabaseService {
             data: record,
             storagePath: getStorageLocation(),
           });
+        if (isRecord) {
+          ConfigService.setSyncRecord(
+            {
+              type: "database",
+              catergory: "sqlite",
+              name: dbName,
+              key: record.key,
+            },
+            { operation: "update", time: Date.now() }
+          );
+        }
       }
     } else {
       await this.saveAllRecords(records, dbName);
     }
+    for (let record of records) {
+      if (isRecord) {
+        ConfigService.setSyncRecord(
+          {
+            type: "database",
+            catergory: "sqlite",
+            name: dbName,
+            key: record.key,
+          },
+          { operation: "update", time: Date.now() }
+        );
+      }
+    }
   }
   static async deleteRecordsByBookKey(bookKey: string, dbName: string) {
+    let records = await this.getRecordsByBookKey(bookKey, dbName);
+    for (let record of records) {
+      ConfigService.setSyncRecord(
+        {
+          type: "database",
+          catergory: "sqlite",
+          name: dbName,
+          key: record.key,
+        },
+        { operation: "delete", time: Date.now() }
+      );
+    }
     if (isElectron) {
       await window.require("electron").ipcRenderer.invoke("database-command", {
         statement: "deleteByBookKeyStatement",

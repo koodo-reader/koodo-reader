@@ -1,39 +1,40 @@
-import { getStorageLocation } from "../common";
+import {
+  generateSyncRecord,
+  getStorageLocation,
+  preCacheAllBooks,
+} from "../common";
 import CoverUtil from "./coverUtil";
-import ConfigService from "../storage/configService";
+import {
+  CommonTool,
+  ConfigService,
+} from "../../assets/lib/kookit-extra-browser.min";
 import DatabaseService from "../storage/databaseService";
 import localforage from "localforage";
 import Book from "../../models/Book";
 import Note from "../../models/Note";
 import Bookmark from "../../models/Bookmark";
 import DictHistory from "../../models/DictHistory";
+import { decryptToken } from "../request/thirdparty";
+import toast from "react-hot-toast";
+import i18n from "../../i18n";
 declare var window: any;
+let configCache: any = {};
 export const changePath = async (newPath: string) => {
   if (isFolderContainsFile(newPath)) {
+    toast.error(i18n.t("Please select an empty folder"));
     return false;
   }
   let oldPath = getStorageLocation() || "";
   const fs = window.require("fs-extra");
-  await window.require("electron").ipcRenderer.invoke("close-database", {
-    dbName: "books",
-    storagePath: getStorageLocation(),
-  });
-  await window.require("electron").ipcRenderer.invoke("close-database", {
-    dbName: "notes",
-    storagePath: getStorageLocation(),
-  });
-  await window.require("electron").ipcRenderer.invoke("close-database", {
-    dbName: "bookmarks",
-    storagePath: getStorageLocation(),
-  });
-  await window.require("electron").ipcRenderer.invoke("close-database", {
-    dbName: "words",
-    storagePath: getStorageLocation(),
-  });
-  await window.require("electron").ipcRenderer.invoke("close-database", {
-    dbName: "plugins",
-    storagePath: getStorageLocation(),
-  });
+  let databaseList = CommonTool.databaseList;
+
+  for (let i = 0; i < databaseList.length; i++) {
+    await window.require("electron").ipcRenderer.invoke("close-database", {
+      dbName: databaseList[i],
+      storagePath: getStorageLocation(),
+    });
+  }
+
   try {
     await fs.copy(oldPath, newPath);
     fs.emptyDirSync(oldPath);
@@ -43,10 +44,34 @@ export const changePath = async (newPath: string) => {
     return false;
   }
 };
+export const changeLibrary = async (newPath: string) => {
+  if (!isKoodoLibrary(newPath)) {
+    toast.error(i18n.t("Please select a valid library"));
+    return false;
+  }
+  let databaseList = CommonTool.databaseList;
+
+  for (let i = 0; i < databaseList.length; i++) {
+    await window.require("electron").ipcRenderer.invoke("close-database", {
+      dbName: databaseList[i],
+      storagePath: getStorageLocation(),
+    });
+  }
+  return true;
+};
 const isFolderContainsFile = (folderPath: string) => {
   const fs = window.require("fs");
   const files = fs.readdirSync(folderPath);
   return files.length > 0;
+};
+const isKoodoLibrary = (folderPath: string) => {
+  const fs = window.require("fs");
+  const files = fs.readdirSync(folderPath);
+  return (
+    files.includes("config") &&
+    files.includes("book") &&
+    files.includes("cover")
+  );
 };
 export const getLastSyncTimeFromConfigJson = () => {
   const fs = window.require("fs");
@@ -59,8 +84,9 @@ export const getLastSyncTimeFromConfigJson = () => {
     path.join(dataPath, "config", "config.json"),
     "utf-8"
   );
-  const readerConfig = JSON.parse(JSON.parse(data).readerConfig);
-  return parseInt(readerConfig.lastSyncTime);
+
+  const readerConfig = JSON.parse(JSON.parse(data).readerConfig || "{}");
+  return parseInt(readerConfig.lastSyncTime || "0");
 };
 export function getParamsFromUrl() {
   var hashParams: any = {};
@@ -72,7 +98,19 @@ export function getParamsFromUrl() {
   }
   return hashParams;
 }
+export function getLoginParamsFromUrl() {
+  const url = document.location.href;
+  const params = {};
+  const queryString = url.split("?")[1];
+  const regex = /([^&;=]+)=?([^&;]*)/g;
+  let match;
 
+  while ((match = regex.exec(queryString))) {
+    params[decodeURIComponent(match[1])] = decodeURIComponent(match[2]);
+  }
+
+  return params;
+}
 export const upgradeStorage = async (
   handleFinish: () => void = () => {}
 ): Promise<Boolean> => {
@@ -206,14 +244,16 @@ export const upgradeConfig = (): Boolean => {
     return false;
   }
 };
-export const getCloudConfig = (service: string) => {
-  let tokenConfig = {};
-  try {
-    tokenConfig = JSON.parse(ConfigService.getReaderConfig(service + "_token"));
-  } catch (e) {
-    tokenConfig = {
-      refresh_token: ConfigService.getReaderConfig(service + "_token"),
-    };
+export const upgradePro = async (books: Book[]) => {
+  await preCacheAllBooks(books);
+  await generateSyncRecord();
+};
+export const getCloudConfig = async (service: string) => {
+  if (configCache[service]) {
+    return configCache[service];
+  } else {
+    let config = await decryptToken(service);
+    configCache[service] = config;
+    return config;
   }
-  return tokenConfig;
 };
