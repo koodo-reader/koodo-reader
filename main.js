@@ -87,6 +87,11 @@ const getSyncUtil = async (config) => {
   }
   return syncUtilCache[config.service];
 }
+const removeSyncUtil = (config) => {
+  if (syncUtilCache[config.service]) {
+    syncUtilCache[config.service] = null;
+  }
+}
 const createMainWin = () => {
   mainWin = new BrowserWindow(options);
 
@@ -187,6 +192,7 @@ const createMainWin = () => {
 
   });
   ipcMain.handle("cloud-upload", async (event, config) => {
+    console.log(config);
     let syncUtil = await getSyncUtil(config);
     let result = await syncUtil.uploadFile(config.fileName, config.fileName, config.type);
     return result;
@@ -208,6 +214,10 @@ const createMainWin = () => {
     let syncUtil = await getSyncUtil(config);
     let result = await syncUtil.listFiles(config.type);
     return result;
+  });
+  ipcMain.handle("cloud-close", async (event, config) => {
+    removeSyncUtil(config);
+    return "pong";
   });
 
 

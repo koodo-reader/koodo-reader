@@ -257,3 +257,6 @@ export const getCloudConfig = async (service: string) => {
     return config;
   }
 };
+export const removeCloudConfig = (service: string) => {
+  delete configCache[service];
+};

@@ -459,7 +459,7 @@
   "Set default sync option": "Set default sync option",
   "Default sync option cannot be removed": "Default sync option cannot be removed",
   "This feature is not available in the free version": "This feature is not available in the free version",
-  "Offline": "Offline",
+  "Make it offline": "Make it offline",
   "Get device identifier": "Get device identifier",
   "Sync failed": "Sync failed",
   "Please set default sync option in the setting": "Please set default sync option in the setting",

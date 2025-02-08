@@ -219,11 +219,8 @@ class Header extends React.Component<HeaderProps, HeaderState> {
   };
   getCompareResult = async () => {
     let localSyncRecords = ConfigService.getAllSyncRecord();
-    let cloudSyncRecords = {};
-    let result = await ConfigUtil.downloadConfig("sync");
-    if (result) {
-      cloudSyncRecords = JSON.parse(result ? result : "{}");
-    }
+    let cloudSyncRecords = await ConfigUtil.getCloudConfig("sync");
+    console.log(localSyncRecords, cloudSyncRecords);
     return await SyncHelper.compareAll(localSyncRecords, cloudSyncRecords);
   };
   handleCloudSync = async () => {
@@ -232,6 +229,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       return;
     }
     let { compareResult, syncRecords } = await this.getCompareResult();
+    console.log(compareResult);
     ConfigService.setAllSyncRecord(syncRecords);
     toast.loading(this.props.t("Start Transfering Data"), {
       id: "syncing-id",
@@ -309,6 +307,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
             <span
               data-tooltip-id="my-tooltip"
               data-tooltip-content={this.props.t("Sort by")}
+              data-tooltip-place="left"
             >
               <span className="icon-sort-desc header-sort-icon"></span>
             </span>
@@ -326,6 +325,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
             <span
               data-tooltip-id="my-tooltip"
               data-tooltip-content={this.props.t("Setting")}
+              data-tooltip-place="left"
             >
               <span
                 className="icon-setting setting-icon"
@@ -348,6 +348,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
             <span
               data-tooltip-id="my-tooltip"
               data-tooltip-content={this.props.t("Backup")}
+              data-tooltip-place="left"
             >
               <span className="icon-archive header-archive-icon"></span>
             </span>
@@ -389,6 +390,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
             <span
               data-tooltip-id="my-tooltip"
               data-tooltip-content={this.props.t("Sync")}
+              data-tooltip-place="left"
             >
               <span
                 className={
