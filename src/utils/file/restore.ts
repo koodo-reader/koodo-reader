@@ -147,10 +147,10 @@ export const unzipConfig = async (zipEntries: any) => {
           break;
         }
         let dbName = zipEntries[i].name.split(".")[0];
-        await window.require("electron").ipcRenderer.invoke("close-database", {
-          dbName: dbName,
-          storagePath: getStorageLocation(),
-        });
+        // await window.require("electron").ipcRenderer.invoke("close-database", {
+        //   dbName: dbName,
+        //   storagePath: getStorageLocation(),
+        // });
         let arraybuffer = new Uint8Array(buffer).buffer;
         let sqlUtil = new SqlUtil();
         let cloudRecords = await sqlUtil.dbBufferToJson(arraybuffer, dbName);
