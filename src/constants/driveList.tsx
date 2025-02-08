@@ -4,7 +4,7 @@ export const driveList = [
     value: "webdav",
     icon: "icon-webdav",
     isPro: false,
-    support: ["desktop", "browser", "phone"],
+    support: ["desktop", "phone"],
   },
 
   {
