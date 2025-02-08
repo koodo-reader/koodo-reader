@@ -29,5 +29,8 @@ class SyncService {
     }
     return this.syncUtilCache[service];
   }
+  static async removeSyncUtil(service) {
+    delete this.syncUtilCache[service];
+  }
 }
 export default SyncService;

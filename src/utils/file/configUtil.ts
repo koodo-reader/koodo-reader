@@ -11,13 +11,43 @@ import { getCloudConfig } from "./common";
 
 class ConfigUtil {
   static async downloadConfig(type: string) {
-    let syncUtil = await SyncService.getSyncUtil();
-    let jsonBuffer: ArrayBuffer = await syncUtil.downloadFile(
-      type + ".json",
-      "config"
-    );
-    let jsonStr = new TextDecoder().decode(jsonBuffer);
-    return jsonStr;
+    if (isElectron) {
+      const { ipcRenderer } = window.require("electron");
+      let service = localStorage.getItem("defaultSyncOption");
+      if (!service) {
+        return;
+      }
+      let tokenConfig = await getCloudConfig(service);
+
+      let result = await ipcRenderer.invoke("cloud-download", {
+        ...tokenConfig,
+        fileName: type + ".json",
+        service: service,
+        type: "config",
+        storagePath: getStorageLocation(),
+      });
+      console.log(result, "download " + type);
+      if (!result) {
+        return "{}";
+      }
+      let fs = window.require("fs");
+      if (!fs.existsSync(getStorageLocation() + "/config/" + type + ".json")) {
+        return "{}";
+      }
+      let configStr = fs.readFileSync(
+        getStorageLocation() + "/config/" + type + ".json",
+        "utf-8"
+      );
+      return configStr;
+    } else {
+      let syncUtil = await SyncService.getSyncUtil();
+      let jsonBuffer: ArrayBuffer = await syncUtil.downloadFile(
+        type + ".json",
+        "config"
+      );
+      let jsonStr = new TextDecoder().decode(jsonBuffer);
+      return jsonStr;
+    }
   }
   static async uploadConfig(type: string) {
     let config = {};
@@ -32,14 +62,39 @@ class ConfigUtil {
         }
       }
     }
-    let syncUtil = await SyncService.getSyncUtil();
-    let configBlob = new Blob([JSON.stringify(config)], {
-      type: "application/json",
-    });
-    await syncUtil.uploadFile(type + ".json", "config", configBlob);
+    if (isElectron) {
+      const { ipcRenderer } = window.require("electron");
+      let service = localStorage.getItem("defaultSyncOption");
+      if (!service) {
+        return;
+      }
+      let tokenConfig = await getCloudConfig(service);
+      let fs = window.require("fs");
+      if (!fs.existsSync(getStorageLocation() + "/config")) {
+        fs.mkdirSync(getStorageLocation() + "/config");
+      }
+      fs.writeFileSync(
+        getStorageLocation() + "/config/" + type + ".json",
+        JSON.stringify(config)
+      );
+
+      await ipcRenderer.invoke("cloud-upload", {
+        ...tokenConfig,
+        fileName: type + ".json",
+        service: service,
+        type: "config",
+        storagePath: getStorageLocation(),
+      });
+    } else {
+      let syncUtil = await SyncService.getSyncUtil();
+      let configBlob = new Blob([JSON.stringify(config)], {
+        type: "application/json",
+      });
+      await syncUtil.uploadFile(type + ".json", "config", configBlob);
+    }
   }
   static async getCloudConfig(type: string) {
-    let configStr = await ConfigUtil.downloadConfig(type);
+    let configStr = (await ConfigUtil.downloadConfig(type)) || "{}";
     return JSON.parse(configStr);
   }
 

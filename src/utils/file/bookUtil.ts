@@ -152,7 +152,7 @@ class BookUtil {
         (await TokenService.getToken("is_authed")) === "yes" &&
         (await this.isBookExistInCloud(book.key))
       ) {
-        toast.loading(i18n.t("Offline"), {
+        toast.loading(i18n.t("Make it offline"), {
           id: "offline-book",
         });
         await this.downloadBook(book.key, book.format);

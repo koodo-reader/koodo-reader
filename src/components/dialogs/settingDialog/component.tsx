@@ -4,7 +4,11 @@ import { SettingInfoProps, SettingInfoState } from "./interface";
 import { Trans } from "react-i18next";
 import i18n from "../../../i18n";
 import packageInfo from "../../../../package.json";
-import { changeLibrary, changePath } from "../../../utils/file/common";
+import {
+  changeLibrary,
+  changePath,
+  removeCloudConfig,
+} from "../../../utils/file/common";
 import { isElectron } from "react-device-detect";
 import { dropdownList } from "../../../constants/dropdownList";
 import _ from "underscore";
@@ -43,6 +47,7 @@ import { loginList } from "../../../constants/loginList";
 import { getUserRequest, loginRegister } from "../../../utils/request/user";
 import { handleExitApp } from "../../../utils/request/common";
 import copyTextToClipboard from "copy-text-to-clipboard";
+import SyncService from "../../../utils/storage/syncService";
 declare var window: any;
 class SettingDialog extends React.Component<
   SettingInfoProps,
@@ -266,6 +271,14 @@ class SettingDialog extends React.Component<
       return;
     }
     await TokenService.setToken(event.target.value + "_token", "");
+    SyncService.removeSyncUtil(event.target.value);
+    removeCloudConfig(event.target.value);
+    if (isElectron) {
+      const { ipcRenderer } = window.require("electron");
+      await ipcRenderer.invoke("cloud-close", {
+        service: event.target.value,
+      });
+    }
     ConfigService.deleteListConfig(event.target.value, "dataSourceList");
     this.props.handleFetchDataSourceList();
     toast.success(this.props.t("Deletion successful"));

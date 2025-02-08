@@ -27,6 +27,7 @@ export const restore = async (service: string): Promise<Boolean> => {
   if (service === "local") {
     let filePath = await ipcRenderer.invoke("select-file", "ping");
     if (!filePath) return false;
+    console.log(filePath, "local");
 
     return await restoreFromfilePath(filePath);
   } else {
@@ -40,7 +41,8 @@ export const restore = async (service: string): Promise<Boolean> => {
     });
     const path = window.require("path");
     let dataPath = await ipcRenderer.sendSync("user-data", "ping");
-    let filePath = path.join(dataPath, "backup", "data.zip");
+    let filePath = path.join(dataPath, "data", "backup", "data.zip");
+    console.log(filePath);
     return await restoreFromfilePath(filePath);
   }
 };
@@ -61,9 +63,12 @@ export const restoreFromConfigJson = () => {
 export const restoreFromfilePath = async (filePath: string) => {
   const fs = window.require("fs");
   const AdmZip = window.require("adm-zip");
+  console.log("check file exist", filePath);
+  console.log(fs.existsSync(filePath));
   if (!fs.existsSync(filePath)) {
     return false;
   }
+  console.log("file exist", filePath);
   var zip = new AdmZip(filePath);
   var zipEntries = zip.getEntries(); // an array of ZipEntry records
   if (
@@ -73,6 +78,7 @@ export const restoreFromfilePath = async (filePath: string) => {
   ) {
     return await restoreFromOldBackup(zipEntries);
   } else {
+    console.log("new backup");
     return await restoreFromNewBackup(zipEntries);
   }
 };
@@ -100,6 +106,7 @@ export const restoreFromNewBackup = async (zipEntries: any) => {
   if (result) {
     let res1 = await unzipBook(zipEntries);
     let res2 = await unzipCover(zipEntries);
+    console.log(res1, res2);
     if (res1 || res2) {
       return true;
     } else {

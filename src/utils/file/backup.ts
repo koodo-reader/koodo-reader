@@ -5,12 +5,14 @@ import CoverUtil from "./coverUtil";
 import {
   CommonTool,
   ConfigService,
+  SyncUtil,
 } from "../../assets/lib/kookit-extra-browser.min";
 import { getCloudConfig } from "./common";
 import DatabaseService from "../storage/databaseService";
 import { saveAs } from "file-saver";
 import JSZip from "jszip";
 import ConfigUtil from "./configUtil";
+import SyncService from "../storage/syncService";
 declare var window: any;
 
 export const backup = async (service: string): Promise<Boolean> => {
@@ -35,7 +37,7 @@ export const backup = async (service: string): Promise<Boolean> => {
     } else {
       const path = window.require("path");
       let dataPath = await ipcRenderer.sendSync("user-data", "ping");
-      targetPath = path.join(dataPath, "backup");
+      targetPath = path.join(dataPath, "data", "backup");
     }
     await backupFromPath(targetPath, fileName);
     if (service === "local") {
@@ -60,12 +62,7 @@ export const backup = async (service: string): Promise<Boolean> => {
       saveAs(blob as Blob, fileName);
       return true;
     } else {
-      const { SyncUtil } = await import(
-        "../../assets/lib/kookit-extra-browser.min"
-      );
-      let tokenConfig = await getCloudConfig(service);
-
-      let syncUtil = new SyncUtil(service, tokenConfig);
+      let syncUtil = await SyncService.getSyncUtil();
       let result = await syncUtil.uploadFile(fileName, "backup", blob as Blob);
       if (result) {
         return true;
