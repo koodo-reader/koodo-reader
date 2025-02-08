@@ -5,9 +5,9 @@ import { DeleteDialogProps, DeleteDialogState } from "./interface";
 import { withRouter } from "react-router-dom";
 import BookUtil from "../../../utils/file/bookUtil";
 import toast from "react-hot-toast";
-import ConfigService from "../../../utils/storage/configService";
 import CoverUtil from "../../../utils/file/coverUtil";
 import DatabaseService from "../../../utils/storage/databaseService";
+import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 
 class DeleteDialog extends React.Component<
   DeleteDialogProps,
@@ -79,7 +79,6 @@ class DeleteDialog extends React.Component<
     if (this.props.books.length === 0) {
       this.props.history.push("/manager/empty");
     }
-    this.props.handleFetchBooks();
     this.props.handleFetchBooks();
     this.props.handleFetchBookmarks();
     this.props.handleFetchNotes();

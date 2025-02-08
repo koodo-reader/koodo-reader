@@ -3,7 +3,6 @@ import "./bookListItem.css";
 import { BookItemProps, BookItemState } from "./interface";
 import { Trans } from "react-i18next";
 import { withRouter } from "react-router-dom";
-import ConfigService from "../../utils/storage/configService";
 import EmptyCover from "../emptyCover";
 import BookUtil from "../../utils/file/bookUtil";
 import ActionDialog from "../dialogs/actionDialog";
@@ -11,6 +10,7 @@ import { isElectron } from "react-device-detect";
 import toast from "react-hot-toast";
 import CoverUtil from "../../utils/file/coverUtil";
 import { saveAs } from "file-saver";
+import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 declare var window: any;
 class BookListItem extends React.Component<BookItemProps, BookItemState> {
   constructor(props: BookItemProps) {
@@ -42,7 +42,7 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
       !filePath
     ) {
       this.props.handleReadingBook(this.props.book);
-      BookUtil.redirectBook(this.props.book, this.props.t);
+      BookUtil.redirectBook(this.props.book);
     }
   }
   UNSAFE_componentWillReceiveProps(nextProps: BookItemProps) {
@@ -90,7 +90,7 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
     }
     ConfigService.setListConfig(this.props.book.key, "recentBooks");
     this.props.handleReadingBook(this.props.book);
-    BookUtil.redirectBook(this.props.book, this.props.t);
+    BookUtil.redirectBook(this.props.book);
   };
   handleExportBook() {
     BookUtil.fetchBook(

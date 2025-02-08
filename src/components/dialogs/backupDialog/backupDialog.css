@@ -2,8 +2,8 @@
   width: 454px;
   height: 278px;
   position: absolute;
-  left: calc(50% - 225px);
-  top: calc(50% - 150px);
+  left: calc(50% - 227px);
+  top: calc(50% - 139px);
   overflow: hidden;
   z-index: 20;
   opacity: 1;
@@ -86,32 +86,6 @@
   text-align: center;
   cursor: pointer;
 }
-.icon-onedrive {
-  font-size: 40px;
-  position: relative;
-  left: 40px;
-}
-.icon-googledrive {
-  font-size: 45px;
-}
-.icon-s3compatible {
-  font-size: 60px;
-}
-.icon-ftp {
-  font-size: 65px;
-  position: relative;
-  left: 43px;
-}
-.icon-sftp {
-  font-size: 65px;
-  position: relative;
-  left: 43px;
-}
-.icon-webdav {
-  font-size: 35px;
-  position: relative;
-  left: 40px;
-}
 
 .backup-page-close-icon {
   position: absolute;
@@ -134,7 +108,7 @@
   top: 65px;
 }
 .backup-page-backup {
-  width: 142px;
+  width: 200px;
   height: 142px;
   font-size: 18px;
   line-height: 40px;
@@ -152,7 +126,7 @@
 .icon-backup,
 .icon-restore {
   display: inline-block;
-  font-size: 90px;
+  font-size: 70px;
   margin-top: 10px;
 }
 .backup-page-next {
@@ -234,4 +208,17 @@
 .backup-page-finish-text {
   line-height: 50px;
   font-size: 18px;
+}
+.backup-source-dropdown {
+  display: inline-block;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  border: 0px;
+  font-size: 15px;
+  line-height: 18px;
+  opacity: 1;
+  /* padding-left: 10px; */
+  cursor: pointer;
+  width: 80px;
 }

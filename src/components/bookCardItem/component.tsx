@@ -2,12 +2,12 @@ import React from "react";
 import "./bookCardItem.css";
 import { BookCardProps, BookCardState } from "./interface";
 import ActionDialog from "../dialogs/actionDialog";
-import ConfigService from "../../utils/storage/configService";
 import { withRouter } from "react-router-dom";
 import { isElectron } from "react-device-detect";
 import EmptyCover from "../emptyCover";
 import BookUtil from "../../utils/file/bookUtil";
 import CoverUtil from "../../utils/file/coverUtil";
+import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 
 declare var window: any;
 
@@ -43,7 +43,7 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
     ) {
       this.props.handleReadingBook(this.props.book);
 
-      BookUtil.redirectBook(this.props.book, this.props.t);
+      BookUtil.redirectBook(this.props.book);
     }
   }
   UNSAFE_componentWillReceiveProps(nextProps: BookCardProps) {
@@ -99,7 +99,7 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
     }
     ConfigService.setListConfig(this.props.book.key, "recentBooks");
     this.props.handleReadingBook(this.props.book);
-    BookUtil.redirectBook(this.props.book, this.props.t);
+    BookUtil.redirectBook(this.props.book);
   };
   render() {
     let percentage = "0";

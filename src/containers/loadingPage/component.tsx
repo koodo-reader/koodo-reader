@@ -1,7 +1,7 @@
 import React from "react";
 import "./loadingPage.css";
 import { LoadingPageProps } from "./interface";
-import ConfigService from "../../utils/storage/configService";
+import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import { Redirect } from "react-router-dom";
 
 class LoadingPage extends React.Component<LoadingPageProps> {

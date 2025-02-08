@@ -8,16 +8,20 @@ export interface HeaderProps extends RouteComponentProps<any> {
   isAboutOpen: boolean;
   isCollapsed: boolean;
   isNewWarning: boolean;
-
+  isAuthed: boolean;
   bookmarks: BookmarkModel[];
   notes: NoteModel[];
   books: BookModel[];
+  defaultSyncOption: string;
   handleSortDisplay: (isSortDisplay: boolean) => void;
   handleSetting: (isSettingOpen: boolean) => void;
   handleAbout: (isAboutOpen: boolean) => void;
   handleBackupDialog: (isBackup: boolean) => void;
   handleFeedbackDialog: (isShow: boolean) => void;
-
+  handleFetchAuthed: () => void;
+  handleFetchDefaultSyncOption: () => void;
+  handleFetchLoginOptionList: () => void;
+  handleFetchDataSourceList: () => void;
   handleDrag: (isDrag: boolean) => void;
   handleTipDialog: (isTipDialog: boolean) => void;
   handleTip: (tip: string) => void;
@@ -34,4 +38,5 @@ export interface HeaderState {
   isNewVersion: boolean;
   isdataChange: boolean;
   isDeveloperVer: boolean;
+  isSync: boolean;
 }

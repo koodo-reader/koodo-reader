@@ -12,10 +12,11 @@ import {
   exportNotes,
 } from "../../utils/file/export";
 import BookUtil from "../../utils/file/bookUtil";
-import ConfigService from "../../utils/storage/configService";
+import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import DatabaseService from "../../utils/storage/databaseService";
 import { BookHelper } from "../../assets/lib/kookit-extra-browser.min";
 import * as Kookit from "../../assets/lib/kookit.min";
+import { preCacheAllBooks } from "../../utils/common";
 class SelectBook extends React.Component<BookListProps, BookListState> {
   constructor(props: BookListProps) {
     super(props);
@@ -253,46 +254,8 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
                         "books"
                       );
                     if (selectedBooks.length > 0) {
-                      for (
-                        let index = 0;
-                        index < selectedBooks.length;
-                        index++
-                      ) {
-                        const selectedBook = selectedBooks[index];
-                        if (selectedBook.format === "PDF") {
-                          toast(this.props.t("Not supported yet"));
-                        } else {
-                          toast(this.props.t("Pre-caching"));
-                        }
-
-                        let result: any = await BookUtil.fetchBook(
-                          selectedBook.key,
-                          selectedBook.format.toLowerCase(),
-                          true,
-                          selectedBook.path
-                        );
-                        let rendition = BookHelper.getRendtion(
-                          result,
-                          selectedBook.format,
-                          "",
-                          selectedBook.charset,
-                          ConfigService.getReaderConfig("isSliding") === "yes"
-                            ? "sliding"
-                            : "",
-                          Kookit
-                        );
-                        let cache = await rendition.preCache(result);
-                        if (cache !== "err") {
-                          BookUtil.addBook(
-                            "cache-" + selectedBook.key,
-                            "zip",
-                            cache
-                          );
-                          toast.success(this.props.t("Pre-caching successful"));
-                        } else {
-                          toast.error(this.props.t("Pre-caching failed"));
-                        }
-                      }
+                      await preCacheAllBooks(selectedBooks);
+                      toast.success(this.props.t("Pre-caching successful"));
                     } else {
                       toast(this.props.t("Nothing to precache"));
                     }

@@ -4,7 +4,7 @@ export interface SidebarProps extends RouteComponentProps<any> {
   mode: string;
   isCollapsed: boolean;
   shelfTitle: string;
-
+  isAuthed: boolean;
   handleMode: (mode: string) => void;
   handleSearch: (isSearch: boolean) => void;
   handleCollapse: (isCollapsed: boolean) => void;

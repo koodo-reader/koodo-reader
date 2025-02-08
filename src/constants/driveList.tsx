@@ -1,42 +1,198 @@
 export const driveList = [
   {
-    id: 1,
-    name: "Local",
-    icon: "local",
+    label: "WebDAV",
+    value: "webdav",
+    icon: "icon-webdav",
+    isPro: false,
+    support: ["desktop", "phone"],
+  },
+
+  {
+    label: "Dropbox",
+    value: "dropbox",
+    icon: "icon-dropbox",
+    isPro: true,
+    support: ["desktop", "browser", "phone"],
   },
   {
-    id: 2,
-    name: "Dropbox",
-    icon: "dropbox",
+    label: "OneDrive",
+    value: "microsoft",
+    icon: "icon-onedrive",
+    isPro: true,
+    support: ["desktop", "browser", "phone"],
   },
   {
-    id: 3,
-    name: "WebDAV",
-    icon: "webdav",
+    label: "Google Drive",
+    value: "google",
+    icon: "icon-googledrive",
+    isPro: true,
+    support: ["desktop", "browser", "phone"],
   },
   {
-    id: 4,
-    name: "OneDrive",
-    icon: "onedrive",
+    label: "S3 Compatible",
+    value: "s3compatible",
+    icon: "icon-s3compatible",
+    isPro: true,
+    support: ["desktop", "browser", "phone"],
   },
   {
-    id: 5,
-    name: "FTP",
-    icon: "ftp",
+    label: "FTP",
+    value: "ftp",
+    icon: "icon-ftp",
+    isPro: false,
+    support: ["desktop"],
   },
   {
-    id: 6,
-    name: "SFTP",
-    icon: "sftp",
-  },
-  {
-    id: 7,
-    name: "Google Drive",
-    icon: "googledrive",
-  },
-  {
-    id: 8,
-    name: "S3 Compatible",
-    icon: "s3compatible",
+    label: "SFTP",
+    value: "sftp",
+    icon: "icon-sftp",
+    isPro: false,
+    support: ["desktop"],
   },
 ];
+interface ConfigItem {
+  label: string;
+  value: string;
+  type: string;
+}
+
+// Type the driveInputConfig
+interface DriveInputConfig {
+  [key: string]: ConfigItem[];
+}
+export const driveInputConfig: DriveInputConfig = {
+  webdav: [
+    {
+      label: "Server address",
+      value: "url",
+      type: "text",
+    },
+    {
+      label: "Server path",
+      value: "dir",
+      type: "text",
+    },
+    {
+      label: "Username",
+      value: "username",
+      type: "text",
+    },
+    {
+      label: "Password",
+      value: "password",
+      type: "password",
+    },
+  ],
+  ftp: [
+    {
+      label: "Server address",
+      value: "url",
+      type: "text",
+    },
+    {
+      label: "Server port",
+      value: "port",
+      type: "text",
+    },
+    {
+      label: "Server path",
+      value: "dir",
+      type: "text",
+    },
+    {
+      label: "Username",
+      value: "username",
+      type: "text",
+    },
+    {
+      label: "Password",
+      value: "password",
+      type: "password",
+    },
+    {
+      label: "Use SSL, 1 for use, 0 for not use",
+      value: "ssl",
+      type: "text",
+    },
+  ],
+  sftp: [
+    {
+      label: "Server address",
+      value: "url",
+      type: "text",
+    },
+    {
+      label: "Server port",
+      value: "port",
+      type: "text",
+    },
+    {
+      label: "Server Path",
+      value: "dir",
+      type: "text",
+    },
+    {
+      label: "Username",
+      value: "username",
+      type: "text",
+    },
+    {
+      label: "Password",
+      value: "password",
+      type: "password",
+    },
+  ],
+  s3compatible: [
+    {
+      label: "Endpoint",
+      value: "endpoint",
+      type: "text",
+    },
+    {
+      label: "Region",
+      value: "region",
+      type: "text",
+    },
+    {
+      label: "BucketName",
+      value: "bucketName",
+      type: "text",
+    },
+    {
+      label: "Path",
+      value: "dir",
+      type: "text",
+    },
+    {
+      label: "AccessKeyId",
+      value: "accessKeyId",
+      type: "text",
+    },
+    {
+      label: "SecretAccessKey",
+      value: "secretAccessKey",
+      type: "text",
+    },
+  ],
+  google: [
+    {
+      label: "Token",
+      value: "token",
+      type: "text",
+    },
+  ],
+  microsoft: [
+    {
+      label: "Token",
+      value: "token",
+      type: "text",
+    },
+  ],
+  dropbox: [
+    {
+      label: "Token",
+      value: "code",
+      type: "text",
+    },
+  ],
+};

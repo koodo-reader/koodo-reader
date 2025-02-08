@@ -1,8 +1,8 @@
 .setting-dialog-container {
-  width: 346px;
+  width: 454px;
   height: 480px;
   position: absolute;
-  left: calc(50% - 173px);
+  left: calc(50% - 227px);
   top: calc(50% - 240px);
   overflow: hidden;
   opacity: 1;
@@ -17,16 +17,16 @@
   opacity: 1;
   margin: 15px 0px 10px;
   text-align: center;
-  width: 346px;
 }
 .setting-dialog-new-title {
   font-size: 15px;
   line-height: 20px;
   opacity: 1;
   margin-top: 10px;
-  margin-left: 30px;
+  margin-left: 25px;
+  width: calc(100% - 50px);
   margin-bottom: 5px;
-  width: 280px;
+  /* width: 280px; */
   display: flex;
   justify-content: space-between;
   font-weight: 500;
@@ -43,7 +43,6 @@
 .setting-dialog-info {
   height: 370px;
   overflow-y: scroll;
-  width: 346px;
 }
 .setting-dialog-illustration {
   width: 200px;
@@ -131,8 +130,9 @@
   font-weight: 500;
   border-radius: 5px;
   padding: 5px;
-  width: 75%;
-  margin-left: 10.5%;
+  /* width: 75%; */
+  margin-left: 25px;
+  margin-right: 25px;
   text-overflow: ellipsis;
   word-break: break-all;
   margin-top: 6px;
@@ -174,8 +174,8 @@
 .setting-option-subtitle {
   font-size: 12px;
   opacity: 0.8;
-  margin-left: 30px;
-  margin-right: 25px;
+  margin-left: 25px;
+  margin-right: 100px;
   line-height: 15px;
 }
 .setting-dialog-new-plugin {
@@ -183,4 +183,34 @@
   bottom: 10px;
   right: 10px;
   cursor: pointer;
+}
+.token-dialog-button-container {
+  margin-top: 20px;
+  margin-bottom: 30px;
+}
+.token-dialog-token-box {
+  width: 100%;
+  height: 100px;
+  opacity: 1;
+  font-size: 13px;
+  line-height: 14px;
+  opacity: 1;
+  box-sizing: border-box;
+  /* left: 30px; */
+  border-radius: 5px;
+  padding: 5px;
+  margin-top: 10px;
+  box-sizing: border-box;
+}
+.token-dialog-username-box {
+  width: 100%;
+  height: 30px;
+  opacity: 1;
+  font-size: 13px;
+  line-height: 14px;
+  opacity: 1;
+  margin-top: 9px;
+  padding-left: 5px;
+  border-radius: 5px;
+  box-sizing: border-box;
 }

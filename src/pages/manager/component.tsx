@@ -7,10 +7,8 @@ import AddDialog from "../../components/dialogs/addDialog";
 import SortDialog from "../../components/dialogs/sortDialog";
 import AboutDialog from "../../components/dialogs/aboutDialog";
 import BackupDialog from "../../components/dialogs/backupDialog";
-import "./manager.css";
 import { ManagerProps, ManagerState } from "./interface";
 import { Trans } from "react-i18next";
-import ConfigService from "../../utils/storage/configService";
 import SettingDialog from "../../components/dialogs/settingDialog";
 import { isMobile } from "react-device-detect";
 import { Route, Switch, Redirect } from "react-router-dom";
@@ -22,6 +20,9 @@ import { Toaster } from "react-hot-toast";
 import DetailDialog from "../../components/dialogs/detailDialog";
 import FeedbackDialog from "../../components/dialogs/feedbackDialog";
 import { Tooltip } from "react-tooltip";
+import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
+import emptyDark from "../../assets/images/empty-dark.svg";
+import emptyLight from "../../assets/images/empty-light.svg";
 class Manager extends React.Component<ManagerProps, ManagerState> {
   timer!: NodeJS.Timeout;
   constructor(props: ManagerProps) {
@@ -102,8 +103,8 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
                 ConfigService.getReaderConfig("appSkin") === "night" ||
                 (ConfigService.getReaderConfig("appSkin") === "system" &&
                   ConfigService.getReaderConfig("isOSNight") === "yes")
-                  ? "./assets/empty_dark.svg"
-                  : "./assets/empty.svg"
+                  ? emptyDark
+                  : emptyLight
               }
               alt=""
               className="waring-pic"
@@ -133,7 +134,9 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
               this.props.handleTipDialog(false);
               this.props.handleDetailDialog(false);
               this.props.handleLoadingDialog(false);
-              this.props.handleNewDialog(false);
+              if (!this.props.isAuthed) {
+                this.props.handleNewDialog(false);
+              }
               this.props.handleBackupDialog(false);
               this.props.handleSetting(false);
               this.props.handleFeedbackDialog(false);

@@ -1,7 +1,17 @@
-import ConfigService from "./storage/configService";
 import Plugin from "../models/Plugin";
 import { isElectron } from "react-device-detect";
 import SparkMD5 from "spark-md5";
+import {
+  BookHelper,
+  CommonTool,
+  ConfigService,
+} from "../assets/lib/kookit-extra-browser.min";
+import Book from "../models/Book";
+import toast from "react-hot-toast";
+import i18n from "../i18n";
+import BookUtil from "./file/bookUtil";
+import * as Kookit from "../assets/lib/kookit.min";
+import DatabaseService from "./storage/databaseService";
 declare var window: any;
 export const calculateFileMD5 = (file: File): Promise<string> => {
   return new Promise((resolve, reject) => {
@@ -45,12 +55,6 @@ export const fetchFileFromPath = (filePath: string) => {
 
 export const sleep = (time: number) => {
   return new Promise((resolve) => setTimeout(resolve, time));
-};
-
-export const copyArrayBuffer = (src) => {
-  var dst = new ArrayBuffer(src.byteLength);
-  new Uint8Array(dst).set(new Uint8Array(src));
-  return dst;
 };
 
 export const scrollContents = (chapterTitle: string, chapterHref: string) => {
@@ -103,23 +107,6 @@ export const getQueryParams = (url: string) => {
   }
   return queryParams;
 };
-export async function generateSHA256Hash(message) {
-  // Encode the message as a Uint8Array
-  const msgBuffer = new TextEncoder().encode(message);
-
-  // Hash the message
-  const hashBuffer = await crypto.subtle.digest("SHA-256", msgBuffer);
-
-  // Convert the hash to a byte array
-  const hashArray = Array.from(new Uint8Array(hashBuffer));
-
-  // Convert the byte array to a hex string
-  const hashHex = hashArray
-    .map((b) => b.toString(16).padStart(2, "0"))
-    .join("");
-
-  return hashHex;
-}
 export const getStorageLocation = () => {
   if (isElectron) {
     return localStorage.getItem("storageLocation")
@@ -144,7 +131,9 @@ export const getAllVoices = (pluginList: Plugin[]) => {
   return voiceList;
 };
 export const checkPlugin = async (plugin: Plugin) => {
-  if ((await generateSHA256Hash(plugin.script)) !== plugin.scriptSHA256) {
+  if (
+    (await CommonTool.generateSHA256Hash(plugin.script)) !== plugin.scriptSHA256
+  ) {
     return false;
   } else {
     return true;
@@ -213,10 +202,98 @@ export const loadFontData = async () => {
     return availableFonts.map((font: any) => {
       return {
         label: font.fullName,
-        value: font.family,
+        value: font.postscriptName,
       };
     });
   } catch (err) {
     console.error(err);
+  }
+};
+export function removeSearchParams() {
+  const url = new URL(window.location.href.split("?")[0]);
+  window.history.replaceState({}, document.title, url.toString());
+}
+export function addChatBox() {
+  const scriptContent = `
+    (function (d, t) {
+      var BASE_URL = "https://app.chatwoot.com";
+      var g = d.createElement(t),
+        s = d.getElementsByTagName(t)[0];
+      g.src = BASE_URL + "/packs/js/sdk.js";
+      g.defer = true;
+      g.async = true;
+      s.parentNode.insertBefore(g, s);
+      g.onload = function () {
+        window.chatwootSDK.run({
+          websiteToken: "svaD5wxfU5UY1r5ZzpMtLqv2",
+          baseUrl: BASE_URL,
+        });
+      };
+    })(document, "script");
+  `;
+
+  const scriptElement = document.createElement("script");
+  scriptElement.type = "text/javascript";
+  scriptElement.text = scriptContent;
+  document.head.appendChild(scriptElement);
+}
+export function removeChatBox() {
+  const scriptElement = document.querySelector("script[src*='chatwoot']");
+  if (scriptElement) {
+    scriptElement.remove();
+  }
+}
+export const preCacheAllBooks = async (bookList: Book[]) => {
+  for (let index = 0; index < bookList.length; index++) {
+    const selectedBook = bookList[index];
+    if (selectedBook.format === "PDF") {
+      continue;
+    }
+    if (
+      await BookUtil.isBookExist(
+        "cache-" + selectedBook.key,
+        "zip",
+        selectedBook.path
+      )
+    ) {
+      continue;
+    }
+
+    let result: any = await BookUtil.fetchBook(
+      selectedBook.key,
+      selectedBook.format.toLowerCase(),
+      true,
+      selectedBook.path
+    );
+    let rendition = BookHelper.getRendtion(
+      result,
+      selectedBook.format,
+      "",
+      selectedBook.charset,
+      ConfigService.getReaderConfig("isSliding") === "yes" ? "sliding" : "",
+      ConfigService.getReaderConfig("isBionic"),
+      ConfigService.getReaderConfig("convertChinese"),
+      Kookit
+    );
+    let cache = await rendition.preCache(result);
+    if (cache !== "err" || cache) {
+      BookUtil.addBook("cache-" + selectedBook.key, "zip", cache);
+    }
+  }
+};
+export const generateSyncRecord = async () => {
+  for (let database of CommonTool.databaseList) {
+    let itemList = await DatabaseService.getAllRecords(database);
+    for (let item of itemList) {
+      ConfigService.setSyncRecord(
+        {
+          type: "database",
+          catergory: "sqlite",
+          name: database,
+          key: item.key,
+        },
+        { operation: "save", time: Date.now() }
+      );
+    }
   }
 };

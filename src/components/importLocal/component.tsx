@@ -10,7 +10,7 @@ import { isElectron } from "react-device-detect";
 import { withRouter } from "react-router-dom";
 import BookUtil from "../../utils/file/bookUtil";
 import toast from "react-hot-toast";
-import ConfigService from "../../utils/storage/configService";
+import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import CoverUtil from "../../utils/file/coverUtil";
 import { calculateFileMD5, fetchFileFromPath } from "../../utils/common";
 import DatabaseService from "../../utils/storage/databaseService";
@@ -82,7 +82,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
   };
   handleJump = (book: BookModel) => {
     localStorage.setItem("tempBook", JSON.stringify(book));
-    BookUtil.redirectBook(book, this.props.t);
+    BookUtil.redirectBook(book);
     this.props.history.push("/manager/home");
   };
   handleAddBook = (book: BookModel, buffer: ArrayBuffer) => {
@@ -206,6 +206,8 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                 ConfigService.getReaderConfig("isSliding") === "yes"
                   ? "sliding"
                   : "",
+                ConfigService.getReaderConfig("isBionic"),
+                ConfigService.getReaderConfig("convertChinese"),
                 Kookit
               );
               result = await BookHelper.generateBook(
@@ -218,11 +220,12 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                 rendition
               );
               if (
-                ConfigService.getReaderConfig("isPrecacheBook") === "yes" &&
+                (ConfigService.getReaderConfig("isPrecacheBook") === "yes" ||
+                  this.props.isAuthed) &&
                 extension !== "pdf"
               ) {
                 let cache = await rendition.preCache(file_content);
-                if (cache !== "err") {
+                if (cache !== "err" || cache) {
                   BookUtil.addBook("cache-" + result.key, "zip", cache);
                 }
               }
@@ -334,7 +337,6 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                     let fileName = path.basename(filePath);
                     let file: any = new File([blob], fileName);
                     file.path = filePath;
-                    console.log(file, "file");
                     await this.getMd5WithBrowser(file);
                   }
                 }}

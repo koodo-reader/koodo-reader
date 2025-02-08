@@ -1,4 +1,4 @@
-import ConfigService from "../../utils/storage/configService";
+import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 const initState = {
   mode: "home",
   shelfTitle: "",

@@ -3,7 +3,6 @@ import { ViewerProps, ViewerState } from "./interface";
 import { withRouter } from "react-router-dom";
 import BookUtil from "../../utils/file/bookUtil";
 import PopupMenu from "../../components/popups/popupMenu";
-import ConfigService from "../../utils/storage/configService";
 import Background from "../../components/background";
 import toast from "react-hot-toast";
 import StyleUtil from "../../utils/reader/styleUtil";
@@ -11,14 +10,15 @@ import "./index.css";
 import { HtmlMouseEvent } from "../../utils/reader/mouseEvent";
 import ImageViewer from "../../components/imageViewer";
 import { getIframeDoc } from "../../utils/reader/docUtil";
-import { tsTransform } from "../../utils/reader/langUtil";
-import { binicReadingProcess } from "../../utils/reader/bionicUtil";
 import PopupBox from "../../components/popups/popupBox";
 import Note from "../../models/Note";
 import PageWidget from "../pageWidget";
 import { getPageWidth, scrollContents } from "../../utils/common";
 import _ from "underscore";
-import { BookHelper } from "../../assets/lib/kookit-extra-browser.min";
+import {
+  BookHelper,
+  ConfigService,
+} from "../../assets/lib/kookit-extra-browser.min";
 import * as Kookit from "../../assets/lib/kookit.min";
 declare var window: any;
 let lock = false; //prevent from clicking too fasts
@@ -125,8 +125,12 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       path
     ).then(async (result: any) => {
       if (!result) {
-        toast.error(this.props.t("Book not exsit"));
-        return;
+        if (this.props.defaultSyncOption) {
+          await BookUtil.downloadBook(key, format.toLowerCase());
+        } else {
+          toast.error(this.props.t("Book not exists"));
+          return;
+        }
       }
       let rendition = BookHelper.getRendtion(
         result,
@@ -134,6 +138,8 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         this.state.readerMode,
         this.props.currentBook.charset,
         ConfigService.getReaderConfig("isSliding") === "yes" ? "sliding" : "",
+        ConfigService.getReaderConfig("isBionic"),
+        ConfigService.getReaderConfig("convertChinese"),
         Kookit
       );
 
@@ -164,8 +170,8 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     this.setState({ rendition });
 
     StyleUtil.addDefaultCss();
-    tsTransform();
-    binicReadingProcess();
+    rendition.tsTransform();
+    rendition.bionicReadingProcess();
     // rendition.setStyle(StyleUtil.getCustomCss());
     let bookLocation: {
       text: string;
@@ -244,8 +250,8 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       });
       scrollContents(chapter, bookLocation.chapterHref);
       StyleUtil.addDefaultCss();
-      tsTransform();
-      binicReadingProcess();
+      rendition.tsTransform();
+      rendition.bionicReadingProcess();
       this.handleBindGesture();
       await this.handleHighlight(rendition);
       lock = true;
