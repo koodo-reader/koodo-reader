@@ -9,7 +9,7 @@ jobs:
     # Platforms to build on/for
     strategy:
       matrix:
-        os: [macos-latest, ubuntu-latest, windows-latest]
+        os: [macos-latest, ubuntu-22.04, windows-latest]
 
     steps:
       - name: Check out Git repository
@@ -29,7 +29,9 @@ jobs:
           snapcraft_token: ${{ secrets.snapcraft_token }}
       - name: Install Gcc
         if: startsWith(matrix.os, 'ubuntu')
-        run: sudo apt-get install gcc-multilib g++-multilib
+        run: |
+          sudo apt update
+          sudo apt-get install gcc-multilib g++-multilib
 
       - name: Prepare for app notarization (macOS)
         if: startsWith(matrix.os, 'macos')
