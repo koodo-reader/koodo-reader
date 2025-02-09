@@ -3,6 +3,7 @@ import { getCloudConfig, upgradeConfig, upgradeStorage } from "./common";
 import localforage from "localforage";
 import SqlUtil from "./sqlUtil";
 import DatabaseService from "../storage/databaseService";
+import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 declare var window: any;
 let oldConfigArr = [
   "notes.json",
@@ -50,13 +51,17 @@ export const restoreFromConfigJson = () => {
   const fs = window.require("fs");
   const path = window.require("path");
   const dataPath = getStorageLocation() || "";
-  if (!fs.existsSync(path.join(dataPath, "config.json"))) {
+  console.log(dataPath, "dataPath");
+  if (!fs.existsSync(path.join(dataPath, "config", "config.json"))) {
     return false;
   }
-  let configStr = fs.readFileSync(path.join(dataPath, "config.json"), "utf-8");
+  let configStr = fs.readFileSync(
+    path.join(dataPath, "config", "config.json"),
+    "utf-8"
+  );
   let config = JSON.parse(configStr);
   for (let key in config) {
-    localStorage.setItem(key, config[key]);
+    ConfigService.setItem(key, config[key]);
   }
   return true;
 };
@@ -145,7 +150,7 @@ export const unzipConfig = async (zipEntries: any) => {
         }
         let config = JSON.parse(text);
         for (let key in config) {
-          localStorage.setItem(key, config[key]);
+          ConfigService.setItem(key, config[key]);
         }
       } else {
         let buffer = zipEntries[i].getData();
@@ -226,7 +231,7 @@ export const unzipCover = async (zipEntries: any) => {
 };
 
 export const unzipOldConfig = (zipEntries: any) => {
-  return new Promise<boolean>((resolve, reject) => {
+  return new Promise<boolean>((resolve) => {
     zipEntries.forEach(function (zipEntry) {
       let text = zipEntry.getData().toString("utf8");
       if (oldConfigArr.indexOf(zipEntry.name) > -1 && text) {
@@ -237,19 +242,19 @@ export const unzipOldConfig = (zipEntries: any) => {
         ) {
           localforage.setItem(zipEntry.name.split(".")[0], JSON.parse(text));
         } else if (zipEntry.name === "pdfjs.history.json") {
-          localStorage.setItem("pdfjs.history", text);
+          ConfigService.setItem("pdfjs.history", text);
         } else {
-          localStorage.setItem(zipEntry.name.split(".")[0], text);
+          ConfigService.setItem(zipEntry.name.split(".")[0], text);
         }
       }
     });
-    localStorage.setItem("isUpgradedStorage", "no");
-    localStorage.setItem("isUpgradedConfig", "no");
+    ConfigService.setItem("isUpgradedStorage", "no");
+    ConfigService.setItem("isUpgradedConfig", "no");
     resolve(true);
   });
 };
 export const unzipOldBook = (zipEntries: any) => {
-  return new Promise<boolean>((resolve, reject) => {
+  return new Promise<boolean>((resolve) => {
     localforage.getItem("books").then((value: any) => {
       let count = 0;
       const fs = window.require("fs");

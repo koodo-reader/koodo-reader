@@ -8,10 +8,7 @@ import "./i18n";
 import store from "./store";
 import Router from "./router/index";
 import StyleUtil from "./utils/reader/styleUtil";
-import { isElectron } from "react-device-detect";
-import { dropdownList } from "./constants/dropdownList";
 import { initSystemFont, initTheme } from "./utils/reader/launchUtil";
-declare var window: any;
 initTheme();
 initSystemFont();
 ReactDOM.render(

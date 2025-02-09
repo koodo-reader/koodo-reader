@@ -14,8 +14,6 @@ import {
 import BookUtil from "../../utils/file/bookUtil";
 import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import DatabaseService from "../../utils/storage/databaseService";
-import { BookHelper } from "../../assets/lib/kookit-extra-browser.min";
-import * as Kookit from "../../assets/lib/kookit.min";
 import { preCacheAllBooks } from "../../utils/common";
 class SelectBook extends React.Component<BookListProps, BookListState> {
   constructor(props: BookListProps) {
@@ -135,7 +133,7 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
             <div className="select-more-actions-container">
               <span
                 className="book-manage-title"
-                onMouseEnter={(event) => {
+                onMouseEnter={() => {
                   this.setState({ isShowExport: true });
                 }}
                 onMouseLeave={(event) => {

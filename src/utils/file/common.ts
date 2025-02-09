@@ -116,12 +116,12 @@ export const upgradeStorage = async (
 ): Promise<Boolean> => {
   try {
     let dataPath = getStorageLocation() || "";
-    // localStorage.setItem("isUpgraded", "yes");
+    // ConfigService.setItem("isUpgraded", "yes");
     //check if folder named cover exsits
     const fs = window.require("fs");
     const path = window.require("path");
     // upgrage cover and book
-    if (localStorage.getItem("isUpgradedStorage") === "yes") {
+    if (ConfigService.getItem("isUpgradedStorage") === "yes") {
       console.log("upgraded");
       return true;
     }
@@ -170,9 +170,9 @@ export const upgradeStorage = async (
 
     //upgrade plugin
     let plugins =
-      localStorage.getItem("pluginList") !== "{}" &&
-      localStorage.getItem("pluginList")
-        ? JSON.parse(localStorage.getItem("pluginList") || "")
+      ConfigService.getItem("pluginList") !== "{}" &&
+      ConfigService.getItem("pluginList")
+        ? JSON.parse(ConfigService.getItem("pluginList") || "")
         : [];
     if (plugins.length > 0) {
       plugins = plugins.map((item: any) => {
@@ -201,7 +201,7 @@ export const upgradeStorage = async (
       await DatabaseService.saveAllRecords(words, "words");
     }
 
-    localStorage.setItem("isUpgradedStorage", "yes");
+    ConfigService.setItem("isUpgradedStorage", "yes");
     handleFinish();
     return true;
   } catch (error) {
@@ -211,7 +211,7 @@ export const upgradeStorage = async (
 };
 export const upgradeConfig = (): Boolean => {
   try {
-    if (localStorage.getItem("isUpgradedConfig") === "yes") {
+    if (ConfigService.getItem("isUpgradedConfig") === "yes") {
       console.log("upgraded");
       return true;
     }
@@ -223,13 +223,13 @@ export const upgradeConfig = (): Boolean => {
     }
 
     //upgrade noteSortCode
-    let json = localStorage.getItem("noteSortCode");
+    let json = ConfigService.getItem("noteSortCode");
     if (json) {
       ConfigService.setReaderConfig("noteSortCode", json);
     }
 
     //upgrade bookSortCode
-    json = localStorage.getItem("bookSortCode");
+    json = ConfigService.getItem("bookSortCode");
     if (json) {
       ConfigService.setReaderConfig("bookSortCode", json);
     }
@@ -237,7 +237,7 @@ export const upgradeConfig = (): Boolean => {
     //remove dropbox token
     ConfigService.setReaderConfig("dropbox_token", "");
 
-    localStorage.setItem("isUpgradedConfig", "yes");
+    ConfigService.setItem("isUpgradedConfig", "yes");
     return true;
   } catch (error) {
     console.log(error);

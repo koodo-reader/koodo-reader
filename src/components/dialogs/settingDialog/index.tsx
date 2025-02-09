@@ -20,7 +20,6 @@ import {
 } from "../../../store/actions";
 import { stateType } from "../../../store";
 import { withRouter } from "react-router-dom";
-import { userInfo } from "os";
 
 const mapStateToProps = (state: stateType) => {
   return {

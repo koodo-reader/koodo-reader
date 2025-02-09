@@ -40,7 +40,7 @@ class TextToSpeech extends React.Component<
       this.setState({ isAudioOn: false });
     }
     const setSpeech = () => {
-      return new Promise((resolve, reject) => {
+      return new Promise((resolve) => {
         let synth = window.speechSynthesis;
         let id;
         if (synth) {
@@ -213,8 +213,8 @@ class TextToSpeech extends React.Component<
       return;
     }
   }
-  handleSpeech = async (index: number, voiceIndex: number, speed: number) => {
-    return new Promise<string>(async (resolve, reject) => {
+  handleSpeech = async (index: number, _voiceIndex: number, _speed: number) => {
+    return new Promise<string>(async (resolve) => {
       let res = await TTSUtil.readAloud(index);
       if (res === "loaderror") {
         resolve("start");
@@ -234,7 +234,7 @@ class TextToSpeech extends React.Component<
     voiceIndex: number,
     speed: number
   ) => {
-    return new Promise<string>(async (resolve, reject) => {
+    return new Promise<string>(async (resolve) => {
       var msg = new SpeechSynthesisUtterance();
       msg.text = this.nodeList[index]
         .replace(/\s\s/g, "")
@@ -253,7 +253,7 @@ class TextToSpeech extends React.Component<
         resolve("end");
       };
 
-      msg.onend = async (event) => {
+      msg.onend = async () => {
         if (!(this.state.isAudioOn && this.props.isReading)) {
           resolve("end");
         }

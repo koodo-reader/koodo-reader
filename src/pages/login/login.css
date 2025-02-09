@@ -79,14 +79,13 @@
   position: absolute;
   bottom: 10px;
   text-align: center;
-  width: 40%;
   padding: 10px;
   line-height: 18px;
 }
 .login-option-container {
   margin: 20px 0px;
-  width: 240px;
-  margin-left: calc(50% - 120px);
+  width: 260px;
+  margin-left: calc(50% - 130px);
   height: 40px;
   border-radius: 20px;
   border: 2px solid #585858;

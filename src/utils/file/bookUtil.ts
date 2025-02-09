@@ -3,7 +3,7 @@ import {
   TokenService,
 } from "../../assets/lib/kookit-extra-browser.min";
 import { isElectron } from "react-device-detect";
-import localforage, { key } from "localforage";
+import localforage from "localforage";
 import BookModel from "../../models/Book";
 import toast from "react-hot-toast";
 import { getStorageLocation } from "../common";
@@ -63,7 +63,7 @@ class BookUtil {
     }
   }
   static isBookExist(key: string, format: string, bookPath: string) {
-    return new Promise<boolean>((resolve, reject) => {
+    return new Promise<boolean>((resolve) => {
       if (isElectron) {
         var fs = window.require("fs");
         var path = window.require("path");
@@ -101,7 +101,7 @@ class BookUtil {
     bookPath: string
   ) {
     if (isElectron) {
-      return new Promise<File | ArrayBuffer | boolean>((resolve, reject) => {
+      return new Promise<File | ArrayBuffer | boolean>((resolve) => {
         var fs = window.require("fs");
         var path = window.require("path");
         let _bookPath = path.join(
@@ -148,7 +148,7 @@ class BookUtil {
       !(await this.isBookExist(book.key, book.format.toLowerCase(), book.path))
     ) {
       if (
-        localStorage.getItem("defaultSyncOption") &&
+        ConfigService.getItem("defaultSyncOption") &&
         (await TokenService.getToken("is_authed")) === "yes" &&
         (await this.isBookExistInCloud(book.key))
       ) {
@@ -208,13 +208,30 @@ class BookUtil {
     }
   }
   static async isBookExistInCloud(key: string) {
-    let syncUtil = await SyncService.getSyncUtil();
-    return await syncUtil.isExist("book", key);
+    if (isElectron) {
+      const { ipcRenderer } = window.require("electron");
+      let service = ConfigService.getItem("defaultSyncOption");
+      if (!service) {
+        return false;
+      }
+      let tokenConfig = await getCloudConfig(service);
+
+      return await ipcRenderer.invoke("cloud-exist", {
+        ...tokenConfig,
+        fileName: key,
+        service: service,
+        type: "book",
+        storagePath: getStorageLocation(),
+      });
+    } else {
+      let syncUtil = await SyncService.getSyncUtil();
+      return await syncUtil.isExist(key, "book");
+    }
   }
   static async downloadCacheBook(key: string) {
     if (isElectron) {
       const { ipcRenderer } = window.require("electron");
-      let service = localStorage.getItem("defaultSyncOption");
+      let service = ConfigService.getItem("defaultSyncOption");
       if (!service) {
         return;
       }
@@ -236,7 +253,7 @@ class BookUtil {
   static async uploadCacheBook(key: string) {
     if (isElectron) {
       const { ipcRenderer } = window.require("electron");
-      let service = localStorage.getItem("defaultSyncOption");
+      let service = ConfigService.getItem("defaultSyncOption");
       if (!service) {
         return;
       }
@@ -266,7 +283,7 @@ class BookUtil {
   static async downloadBook(key: string, format: string) {
     if (isElectron) {
       const { ipcRenderer } = window.require("electron");
-      let service = localStorage.getItem("defaultSyncOption");
+      let service = ConfigService.getItem("defaultSyncOption");
       if (!service) {
         return;
       }
@@ -295,7 +312,7 @@ class BookUtil {
     }
     if (isElectron) {
       const { ipcRenderer } = window.require("electron");
-      let service = localStorage.getItem("defaultSyncOption");
+      let service = ConfigService.getItem("defaultSyncOption");
       if (!service) {
         return;
       }
@@ -328,7 +345,7 @@ class BookUtil {
     }
     if (isElectron) {
       const { ipcRenderer } = window.require("electron");
-      let service = localStorage.getItem("defaultSyncOption");
+      let service = ConfigService.getItem("defaultSyncOption");
       if (!service) {
         return;
       }
@@ -350,7 +367,7 @@ class BookUtil {
   static async deleteCacheBook(key: string) {
     await this.deleteBook("cache-" + key, "zip");
   }
-  static async offlineBook(key: string, format: string) {
+  static async offlineBook(key: string, _format: string) {
     await this.downloadCacheBook(key);
   }
   static async deleteOfflineBook(key: string) {
@@ -378,7 +395,7 @@ class BookUtil {
   static async getCloudBookList() {
     if (isElectron) {
       const { ipcRenderer } = window.require("electron");
-      let service = localStorage.getItem("defaultSyncOption");
+      let service = ConfigService.getItem("defaultSyncOption");
       if (!service) {
         return [];
       }

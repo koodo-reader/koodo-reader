@@ -65,7 +65,7 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
   };
   render() {
     const renderSideMenu = () => {
-      return sideMenu.map((item, index) => {
+      return sideMenu.map((item) => {
         return (
           <li
             key={item.name}

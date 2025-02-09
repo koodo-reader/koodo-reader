@@ -1,3 +1,5 @@
+import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
+
 const initState = {
   books: null,
   plugins: null,
@@ -6,7 +8,7 @@ const initState = {
   isSearch: false,
   isOpenFeedbackDialog: false,
   isAboutOpen: false,
-  isBookSort: localStorage.getItem("bookSortCode") ? true : false,
+  isBookSort: ConfigService.getItem("bookSortCode") ? true : false,
   isNoteSort: false,
   isAuthed: false,
   userInfo: null,

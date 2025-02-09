@@ -37,7 +37,7 @@ class LoadingPage extends React.Component<LoadingPageProps> {
       );
     } else {
       const renderLoadingList = () => {
-        return arr.map((item, index) => {
+        return arr.map((item) => {
           return (
             <div className="loading-page-list" key={item}>
               <div className="loading-page-list-cover"></div>

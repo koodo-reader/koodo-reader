@@ -93,7 +93,7 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
           <div className="trans-service-selector-container">
             {this.props.plugins
               .filter((item) => item.type === "translation")
-              .map((item, index) => {
+              .map((item) => {
                 return (
                   <div
                     className={

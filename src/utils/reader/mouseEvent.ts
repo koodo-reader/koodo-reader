@@ -182,7 +182,7 @@ export const bindHtmlEvent = (
     });
   }
 
-  doc.addEventListener("touchend", async (event) => {
+  doc.addEventListener("touchend", async () => {
     if (lock) return;
     lock = true;
     if (readerMode === "scroll") {

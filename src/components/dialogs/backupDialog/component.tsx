@@ -11,10 +11,7 @@ import packageInfo from "../../../../package.json";
 import _ from "underscore";
 import toast from "react-hot-toast";
 import { isElectron } from "react-device-detect";
-import {
-  SyncUtil,
-  TokenService,
-} from "../../../assets/lib/kookit-extra-browser.min";
+import { TokenService } from "../../../assets/lib/kookit-extra-browser.min";
 import { checkStableUpdate } from "../../../utils/request/common";
 import DatabaseService from "../../../utils/storage/databaseService";
 import { upgradePro } from "../../../utils/file/common";

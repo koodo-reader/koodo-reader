@@ -4,7 +4,7 @@ import { stateType } from "../../../store";
 import { withTranslation } from "react-i18next";
 import DeletePopup from "./component";
 
-const mapStateToProps = (state: stateType) => {
+const mapStateToProps = (_state: stateType) => {
   return {};
 };
 const actionCreator = {

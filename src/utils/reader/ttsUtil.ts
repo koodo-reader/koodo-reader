@@ -7,7 +7,7 @@ class TTSUtil {
   static currentAudioPath: string = "";
   static audioPaths: string[] = [];
   static async readAloud(currentIndex: number) {
-    return new Promise<string>(async (resolve, reject) => {
+    return new Promise<string>(async (resolve) => {
       let audioPath = this.audioPaths[currentIndex];
       if (!audioPath) {
         resolve("loaderror");

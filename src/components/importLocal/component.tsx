@@ -29,8 +29,8 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
   componentDidMount() {
     if (isElectron) {
       const { ipcRenderer } = window.require("electron");
-      if (!localStorage.getItem("storageLocation")) {
-        localStorage.setItem(
+      if (!ConfigService.getItem("storageLocation")) {
+        ConfigService.setItem(
           "storageLocation",
           ipcRenderer.sendSync("storage-location", "ping")
         );
@@ -42,7 +42,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
       }
       window.addEventListener(
         "focus",
-        (event) => {
+        () => {
           const _filePath = ipcRenderer.sendSync("get-file-data");
           if (_filePath && _filePath !== ".") {
             this.handleFilePath(_filePath);
@@ -81,12 +81,12 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
     });
   };
   handleJump = (book: BookModel) => {
-    localStorage.setItem("tempBook", JSON.stringify(book));
+    ConfigService.setItem("tempBook", JSON.stringify(book));
     BookUtil.redirectBook(book);
     this.props.history.push("/manager/home");
   };
   handleAddBook = (book: BookModel, buffer: ArrayBuffer) => {
-    return new Promise<void>((resolve, reject) => {
+    return new Promise<void>((resolve) => {
       if (this.state.isOpenFile) {
         if (
           ConfigService.getReaderConfig("isImportPath") !== "yes" &&
@@ -141,7 +141,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
   };
 
   getMd5WithBrowser = async (file: any) => {
-    return new Promise<void>(async (resolve, reject) => {
+    return new Promise<void>(async (resolve) => {
       const md5 = await calculateFileMD5(file);
       if (!md5) {
         toast.error(this.props.t("Import failed"));
@@ -165,7 +165,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
       .toLocaleLowerCase();
     let bookName = file.name.substr(0, file.name.length - extension.length - 1);
     let result: BookModel;
-    return new Promise<void>((resolve, reject) => {
+    return new Promise<void>((resolve) => {
       let isRepeat = false;
       if (this.props.books.length > 0) {
         this.props.books.forEach((item) => {

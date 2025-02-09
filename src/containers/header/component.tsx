@@ -3,10 +3,7 @@ import "./header.css";
 import SearchBox from "../../components/searchBox";
 import ImportLocal from "../../components/importLocal";
 import { HeaderProps, HeaderState } from "./interface";
-import {
-  ConfigService,
-  TokenService,
-} from "../../assets/lib/kookit-extra-browser.min";
+import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import UpdateInfo from "../../components/dialogs/updateDialog";
 import { restoreFromConfigJson } from "../../utils/file/restore";
 import { backupToConfigJson } from "../../utils/file/backup";
@@ -19,19 +16,12 @@ import {
 } from "../../utils/file/common";
 import toast from "react-hot-toast";
 import { Trans } from "react-i18next";
-import { getThirdpartyRequest } from "../../utils/request/thirdparty";
 import { SyncHelper } from "../../assets/lib/kookit-extra-browser.min";
 import ConfigUtil from "../../utils/file/configUtil";
 import DatabaseService from "../../utils/storage/databaseService";
-import SyncService from "../../utils/storage/syncService";
 import CoverUtil from "../../utils/file/coverUtil";
 import BookUtil from "../../utils/file/bookUtil";
-import {
-  addChatBox,
-  generateSyncRecord,
-  preCacheAllBooks,
-  removeChatBox,
-} from "../../utils/common";
+import { addChatBox, removeChatBox } from "../../utils/common";
 import { driveList } from "../../constants/driveList";
 
 class Header extends React.Component<HeaderProps, HeaderState> {
@@ -72,9 +62,9 @@ class Header extends React.Component<HeaderProps, HeaderState> {
 
       if (
         ConfigService.getReaderConfig("storageLocation") &&
-        !localStorage.getItem("storageLocation")
+        !ConfigService.getItem("storageLocation")
       ) {
-        localStorage.setItem(
+        ConfigService.setItem(
           "storageLocation",
           ConfigService.getReaderConfig("storageLocation")
         );
@@ -95,8 +85,8 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       //Detect data modification
       let lastSyncTime = getLastSyncTimeFromConfigJson();
       if (
-        localStorage.getItem("lastSyncTime") &&
-        lastSyncTime > parseInt(localStorage.getItem("lastSyncTime") || "0")
+        ConfigService.getItem("lastSyncTime") &&
+        lastSyncTime > parseInt(ConfigService.getItem("lastSyncTime") || "0")
       ) {
         this.setState({ isdataChange: true });
       }
@@ -126,7 +116,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
   }
   async UNSAFE_componentWillReceiveProps(
     nextProps: Readonly<HeaderProps>,
-    nextContext: any
+    _nextContext: any
   ) {
     if (nextProps.isAuthed && nextProps.isAuthed !== this.props.isAuthed) {
       addChatBox();
@@ -147,14 +137,19 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       this.setState({ isdataChange: false });
       //Check for data update
       let lastSyncTime = getLastSyncTimeFromConfigJson();
-      if (localStorage.getItem("lastSyncTime") && lastSyncTime) {
-        localStorage.setItem("lastSyncTime", lastSyncTime + "");
+      if (ConfigService.getItem("lastSyncTime") && lastSyncTime) {
+        ConfigService.setItem("lastSyncTime", lastSyncTime + "");
       }
     }
     if (!result) {
       toast.error(this.props.t("Sync Failed"));
     } else {
-      toast.success(this.props.t("Synchronisation successful"));
+      toast.success(
+        this.props.t("Synchronisation successful") +
+          " (" +
+          this.props.t("Local") +
+          ")"
+      );
     }
   };
   handleLocalSync = async () => {
@@ -169,12 +164,14 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     }
     let lastSyncTime = getLastSyncTimeFromConfigJson();
     if (
-      localStorage.getItem("lastSyncTime") &&
-      lastSyncTime > parseInt(localStorage.getItem("lastSyncTime")!)
+      ConfigService.getItem("lastSyncTime") &&
+      lastSyncTime < parseInt(ConfigService.getItem("lastSyncTime")!)
     ) {
-      await this.syncFromLocation();
-    } else {
+      console.log("local data is older");
       await this.syncToLocation();
+    } else {
+      console.log("local data is newer");
+      await this.syncFromLocation();
     }
     this.setState({ isSync: false });
   };
@@ -273,9 +270,14 @@ class Header extends React.Component<HeaderProps, HeaderState> {
   syncToLocation = async () => {
     let timestamp = new Date().getTime().toString();
     ConfigService.setReaderConfig("lastSyncTime", timestamp);
-    localStorage.setItem("lastSyncTime", timestamp);
+    ConfigService.setItem("lastSyncTime", timestamp);
     backupToConfigJson();
-    toast.success(this.props.t("Synchronisation successful"));
+    toast.success(
+      this.props.t("Synchronisation successful") +
+        " (" +
+        this.props.t("Local") +
+        ")"
+    );
   };
 
   render() {

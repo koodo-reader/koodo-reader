@@ -7,8 +7,6 @@ import {
   ConfigService,
 } from "../assets/lib/kookit-extra-browser.min";
 import Book from "../models/Book";
-import toast from "react-hot-toast";
-import i18n from "../i18n";
 import BookUtil from "./file/bookUtil";
 import * as Kookit from "../assets/lib/kookit.min";
 import DatabaseService from "./storage/databaseService";
@@ -31,7 +29,7 @@ export const calculateFileMD5 = (file: File): Promise<string> => {
   });
 };
 export const fetchFileFromPath = (filePath: string) => {
-  return new Promise<File>((resolve, reject) => {
+  return new Promise<File>((resolve) => {
     const fs = window.require("fs");
 
     fs.readFile(filePath, (err, data) => {
@@ -63,7 +61,7 @@ export const scrollContents = (chapterTitle: string, chapterHref: string) => {
   let contentBody = document.getElementsByClassName("navigation-body")[0];
   if (!contentBody) return;
   let contentList = contentBody.getElementsByClassName("book-content-name");
-  let targetContent = Array.from(contentList).filter((item, index) => {
+  let targetContent = Array.from(contentList).filter((item) => {
     item.setAttribute("style", "");
     return item.textContent === chapterTitle;
   });
@@ -109,13 +107,13 @@ export const getQueryParams = (url: string) => {
 };
 export const getStorageLocation = () => {
   if (isElectron) {
-    return localStorage.getItem("storageLocation")
-      ? localStorage.getItem("storageLocation")
+    return ConfigService.getItem("storageLocation")
+      ? ConfigService.getItem("storageLocation")
       : window
           .require("electron")
           .ipcRenderer.sendSync("storage-location", "ping");
   } else {
-    return localStorage.getItem("storageLocation");
+    return ConfigService.getItem("storageLocation");
   }
 };
 export const getAllVoices = (pluginList: Plugin[]) => {

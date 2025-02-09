@@ -39,7 +39,7 @@ export function handleDefaultSyncOption(option: string) {
 }
 export function handleFetchDefaultSyncOption() {
   return (dispatch: Dispatch) => {
-    let defaultSyncOption = localStorage.getItem("defaultSyncOption") || "";
+    let defaultSyncOption = ConfigService.getItem("defaultSyncOption") || "";
     dispatch(handleDefaultSyncOption(defaultSyncOption));
   };
 }
