@@ -13,10 +13,18 @@ class SqlUtil {
   async getConnection() {
     if (!this.SQL) {
       let config = {
-        locateFile: (filename) =>
-          isElectron
-            ? `build/lib/sqljs-wasm/${filename}`
-            : `./lib/sqljs-wasm/${filename}`,
+        locateFile: (filename) => {
+          if (isElectron) {
+            const path = window.require("path");
+            const { ipcRenderer } = window.require("electron");
+            return `${path.join(
+              ipcRenderer.sendSync("get-dirname", "ping"),
+              "/build/lib/sqljs-wasm/" + filename
+            )}`;
+          } else {
+            return `./lib/sqljs-wasm/${filename}`;
+          }
+        },
       };
       this.SQL = await window.initSqlJs(config);
       return this.SQL;
