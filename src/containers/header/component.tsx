@@ -167,10 +167,8 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       ConfigService.getItem("lastSyncTime") &&
       lastSyncTime < parseInt(ConfigService.getItem("lastSyncTime")!)
     ) {
-      console.log("local data is older");
       await this.syncToLocation();
     } else {
-      console.log("local data is newer");
       await this.syncFromLocation();
     }
     this.setState({ isSync: false });
@@ -217,7 +215,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
   getCompareResult = async () => {
     let localSyncRecords = ConfigService.getAllSyncRecord();
     let cloudSyncRecords = await ConfigUtil.getCloudConfig("sync");
-    console.log(localSyncRecords, cloudSyncRecords);
     return await SyncHelper.compareAll(localSyncRecords, cloudSyncRecords);
   };
   handleCloudSync = async () => {
@@ -226,7 +223,31 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       return;
     }
     let { compareResult, syncRecords } = await this.getCompareResult();
-    console.log(compareResult);
+    if (
+      compareResult["books"].conflict.length > 0 ||
+      compareResult["notes"].conflict.length > 0 ||
+      compareResult["bookmarks"].conflict.length > 0 ||
+      compareResult["plugins"].conflict.length > 0 ||
+      compareResult["words"].conflict.length > 0 ||
+      compareResult["objectConfig"].conflict.length > 0 ||
+      compareResult["mapConfig"].conflict.length > 0
+    ) {
+      // handleConflict();
+      // TODO handle conflict, for now keep cloud
+      let itemList = Object.keys(compareResult);
+      for (let itemName of itemList) {
+        if (
+          compareResult[itemName].conflict &&
+          compareResult[itemName].conflict.length > 0
+        ) {
+          compareResult[itemName].update = [
+            ...compareResult[itemName].update,
+            ...compareResult[itemName].conflict,
+          ];
+          compareResult[itemName].conflict = [];
+        }
+      }
+    }
     ConfigService.setAllSyncRecord(syncRecords);
     toast.loading(this.props.t("Start Transfering Data"), {
       id: "syncing-id",

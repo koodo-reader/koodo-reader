@@ -370,12 +370,11 @@ class SettingDialog extends React.Component<
         this.state.driveConfig.token
       );
     }
-
-    ConfigService.setItem("defaultSyncOption", this.props.settingDrive);
-    this.props.handleFetchDefaultSyncOption();
-
+    if (this.props.isAuthed) {
+      ConfigService.setItem("defaultSyncOption", this.props.settingDrive);
+      this.props.handleFetchDefaultSyncOption();
+    }
     this.props.handleFetchDataSourceList();
-
     this.props.handleSettingDrive("");
   };
   render() {
@@ -1018,40 +1017,42 @@ class SettingDialog extends React.Component<
                     ))}
                 </select>
               </div>
-              <div className="setting-dialog-new-title">
-                <Trans>Set default sync option</Trans>
-                <select
-                  name=""
-                  className="lang-setting-dropdown"
-                  onChange={this.handleSetDefaultSyncOption}
-                >
-                  {[
-                    { label: "Please select", value: "", isPro: false },
-                    ...driveList,
-                  ]
-                    .filter(
-                      (item) =>
-                        this.props.dataSourceList.includes(item.value) ||
-                        item.value === "" ||
-                        item.value === "local"
-                    )
-                    .map((item) => (
-                      <option
-                        value={item.value}
-                        key={item.value}
-                        className="lang-setting-option"
-                        selected={
-                          item.value === this.props.defaultSyncOption
-                            ? true
-                            : false
-                        }
-                      >
-                        {this.props.t(item.label) +
-                          (item.isPro ? " (Pro)" : "")}
-                      </option>
-                    ))}
-                </select>
-              </div>
+              {this.props.isAuthed && (
+                <div className="setting-dialog-new-title">
+                  <Trans>Set default sync option</Trans>
+                  <select
+                    name=""
+                    className="lang-setting-dropdown"
+                    onChange={this.handleSetDefaultSyncOption}
+                  >
+                    {[
+                      { label: "Please select", value: "", isPro: false },
+                      ...driveList,
+                    ]
+                      .filter(
+                        (item) =>
+                          this.props.dataSourceList.includes(item.value) ||
+                          item.value === "" ||
+                          item.value === "local"
+                      )
+                      .map((item) => (
+                        <option
+                          value={item.value}
+                          key={item.value}
+                          className="lang-setting-option"
+                          selected={
+                            item.value === this.props.defaultSyncOption
+                              ? true
+                              : false
+                          }
+                        >
+                          {this.props.t(item.label) +
+                            (item.isPro ? " (Pro)" : "")}
+                        </option>
+                      ))}
+                  </select>
+                </div>
+              )}
             </>
           ) : this.props.settingMode === "account" ? (
             <>

@@ -192,7 +192,6 @@ const createMainWin = () => {
 
   });
   ipcMain.handle("cloud-upload", async (event, config) => {
-    console.log(config);
     let syncUtil = await getSyncUtil(config);
     let result = await syncUtil.uploadFile(config.fileName, config.fileName, config.type);
     return result;
