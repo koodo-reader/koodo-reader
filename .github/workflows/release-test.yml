@@ -6,7 +6,6 @@ jobs:
   release:
     runs-on: ${{ matrix.os }}
 
-    # Platforms to build on/for
     strategy:
       matrix:
         os: [ubuntu-22.04]
@@ -29,12 +28,13 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
-            const release = await github.repos.getReleaseByTag({
+            const octokit = github.getOctokit(process.env.GITHUB_TOKEN);
+            const { data: release } = await octokit.repos.getReleaseByTag({
               owner: context.repo.owner,
               repo: context.repo.repo,
               tag: process.env.GITHUB_REF.split('/').pop()
             });
-            return release.data.upload_url;
+            return release.upload_url;
 
       - name: Upload arm64 APK to Release
         uses: actions/upload-release-asset@v1
