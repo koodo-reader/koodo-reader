@@ -76,8 +76,11 @@
 .login-term {
   font-size: 12px;
   color: #585858;
-  position: absolute;
-  bottom: 10px;
+  width: 300px;
+  margin: 0 auto;
+  margin-top: 10px;
+  /* position: absolute;
+  bottom: 10px; */
   text-align: center;
   padding: 10px;
   line-height: 18px;
