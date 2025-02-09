@@ -62,3 +62,44 @@ jobs:
           # macOS notarization API key
           API_KEY_ID: ${{ secrets.api_key_id }}
           API_KEY_ISSUER_ID: ${{ secrets.api_key_issuer_id }}
+
+      - name: Download files
+        run: |
+          curl -O https://dl.koodoreader.com/build/app-arm64-v8a-release.apk
+          curl -O https://dl.koodoreader.com/build/app-universal-release.apk
+          TAG=${GITHUB_REF##*/}
+          echo "Current ref tag: $TAG"
+          mv app-arm64-v8a-release.apk "Koodo-Reader-$TAG-arm64.apk"
+          mv app-universal-release.apk "Koodo-Reader-$TAG-universal.apk"
+
+      - name: Get current ref upload URL
+        id: get_release
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const release = await github.repos.getReleaseByTag({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              tag: process.env.GITHUB_REF.split('/').pop()
+            });
+            return release.data.upload_url;
+
+      - name: Upload arm64 APK to Release
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.get_release.outputs.upload_url }}
+          asset_path: ./Koodo-Reader-$TAG-arm64.apk
+          asset_name: Koodo-Reader-$TAG-arm64.apk
+          asset_content_type: application/vnd.android.package-archive
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload universal APK to Release
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.get_release.outputs.upload_url }}
+          asset_path: ./Koodo-Reader-$TAG-universal.apk
+          asset_name: Koodo-Reader-$TAG-universal.apk
+          asset_content_type: application/vnd.android.package-archive
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

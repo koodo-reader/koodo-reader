@@ -8,26 +8,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-      - name: Download files
-        run: |
-          # Add your file URLs here
-          curl -O https://dl.koodoreader.com/build/app-arm64-v8a-release.apk
-          curl -O https://dl.koodoreader.com/build/app-universal-release.apk
-          RELEASE=$(curl --silent "https://api.github.com/repos/koodo-reader/koodo-reader/releases/latest")
-          TAG=$(echo $RELEASE | jq -r '.tag_name')
-          echo "Latest release tag: $TAG"
-          mv app-arm64-v8a-release.apk "Koodo-Reader-$TAG-arm64.apk"
-          mv app-universal-release.apk "Koodo-Reader-$TAG-universal.apk"
-
-      - name: Upload to Release
-        uses: softprops/action-gh-release@v1
-        with:
-          files: |
-            Koodo-Reader-$TAG-arm64.apk
-            Koodo-Reader-$TAG-universal.apk
-          tag_name: ${{ github.ref }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Run custom script
         run: |
