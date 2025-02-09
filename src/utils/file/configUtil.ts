@@ -26,7 +26,6 @@ class ConfigUtil {
         type: "config",
         storagePath: getStorageLocation(),
       });
-      console.log(result, "download " + type);
       if (!result) {
         return "{}";
       }
@@ -161,7 +160,6 @@ class ConfigUtil {
 
   static async dumpConfig(type: string) {
     let config = {};
-    console.log("dump config", type);
     if (type === "sync") {
       config = ConfigService.getAllSyncRecord();
     } else {
@@ -169,12 +167,10 @@ class ConfigUtil {
       for (let i = 0; i < configList.length; i++) {
         let item = configList[i];
         if (ConfigService.getItem(item)) {
-          console.log(ConfigService.getItem(item));
           config[item] = ConfigService.getItem(item);
         }
       }
     }
-    console.log(config, "config");
     return config;
   }
   static clearConfig(type: string) {
