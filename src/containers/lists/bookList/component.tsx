@@ -172,7 +172,6 @@ class BookList extends React.Component<BookListProps, BookListState> {
   };
   handleDeleteShelf = () => {
     if (!this.props.shelfTitle) return;
-    let shelfTitles = Object.keys(ConfigService.getAllMapConfig("shelfList"));
     let currentShelfTitle = this.props.shelfTitle;
     ConfigService.deleteMapConfig(currentShelfTitle, "shelfList");
 

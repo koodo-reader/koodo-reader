@@ -13,7 +13,7 @@ class ConfigUtil {
   static async downloadConfig(type: string) {
     if (isElectron) {
       const { ipcRenderer } = window.require("electron");
-      let service = localStorage.getItem("defaultSyncOption");
+      let service = ConfigService.getItem("defaultSyncOption");
       if (!service) {
         return;
       }
@@ -57,14 +57,14 @@ class ConfigUtil {
       let configList = CommonTool.configList;
       for (let i = 0; i < configList.length; i++) {
         let item = configList[i];
-        if (localStorage.getItem(item)) {
-          config[item] = localStorage.getItem(item);
+        if (ConfigService.getItem(item)) {
+          config[item] = ConfigService.getItem(item);
         }
       }
     }
     if (isElectron) {
       const { ipcRenderer } = window.require("electron");
-      let service = localStorage.getItem("defaultSyncOption");
+      let service = ConfigService.getItem("defaultSyncOption");
       if (!service) {
         return;
       }
@@ -101,7 +101,7 @@ class ConfigUtil {
   static async getCloudDatabase(database: string) {
     if (isElectron) {
       const { ipcRenderer } = window.require("electron");
-      let service = localStorage.getItem("defaultSyncOption");
+      let service = ConfigService.getItem("defaultSyncOption");
       if (!service) {
         return;
       }
@@ -138,7 +138,7 @@ class ConfigUtil {
         dbName: type,
         storagePath: getStorageLocation(),
       });
-      let service = localStorage.getItem("defaultSyncOption");
+      let service = ConfigService.getItem("defaultSyncOption");
       if (!service) {
         return;
       }
@@ -161,27 +161,30 @@ class ConfigUtil {
 
   static async dumpConfig(type: string) {
     let config = {};
+    console.log("dump config", type);
     if (type === "sync") {
       config = ConfigService.getAllSyncRecord();
     } else {
       let configList = CommonTool.configList;
       for (let i = 0; i < configList.length; i++) {
         let item = configList[i];
-        if (localStorage.getItem(item)) {
-          config[item] = localStorage.getItem(item);
+        if (ConfigService.getItem(item)) {
+          console.log(ConfigService.getItem(item));
+          config[item] = ConfigService.getItem(item);
         }
       }
     }
+    console.log(config, "config");
     return config;
   }
   static clearConfig(type: string) {
     if (type === "sync") {
-      localStorage.removeItem("syncRecord");
+      ConfigService.removeItem("syncRecord");
     } else {
       let configList = CommonTool.configList;
       for (let i = 0; i < configList.length; i++) {
         let item = configList[i];
-        localStorage.removeItem(item);
+        ConfigService.removeItem(item);
       }
     }
   }
@@ -191,7 +194,7 @@ class ConfigUtil {
       ConfigService.setAllSyncRecord(tempConfig);
     } else {
       for (let key in tempConfig) {
-        localStorage.setItem(key, tempConfig[key]);
+        ConfigService.setItem(key, tempConfig[key]);
       }
     }
   }

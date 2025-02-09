@@ -157,7 +157,7 @@ class CoverUtil {
   static async downloadCover(cover: string) {
     if (isElectron) {
       const { ipcRenderer } = window.require("electron");
-      let service = localStorage.getItem("defaultSyncOption");
+      let service = ConfigService.getItem("defaultSyncOption");
       if (!service) {
         return;
       }
@@ -172,7 +172,6 @@ class CoverUtil {
       });
     } else {
       let syncUtil = await SyncService.getSyncUtil();
-      let covers = await syncUtil.listFiles("cover");
 
       let imgBuffer: ArrayBuffer = await syncUtil.downloadFile(cover, "cover");
       let imgStr = CommonTool.arrayBufferToBase64(imgBuffer);
@@ -193,7 +192,7 @@ class CoverUtil {
     }
     if (isElectron) {
       const { ipcRenderer } = window.require("electron");
-      let service = localStorage.getItem("defaultSyncOption");
+      let service = ConfigService.getItem("defaultSyncOption");
       if (!service) {
         return;
       }
@@ -254,7 +253,7 @@ class CoverUtil {
     if (isElectron) {
       // for ftp, sftp etc
       const { ipcRenderer } = window.require("electron");
-      let service = localStorage.getItem("defaultSyncOption");
+      let service = ConfigService.getItem("defaultSyncOption");
       if (!service) {
         return [];
       }
@@ -283,7 +282,7 @@ class CoverUtil {
       if (cover.startsWith(key)) {
         if (isElectron) {
           const { ipcRenderer } = window.require("electron");
-          let service = localStorage.getItem("defaultSyncOption");
+          let service = ConfigService.getItem("defaultSyncOption");
           if (!service) {
             return;
           }

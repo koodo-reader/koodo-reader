@@ -1,19 +1,11 @@
 import React from "react";
 import { LoginProps, LoginState } from "./interface";
 import { Trans } from "react-i18next";
-import {
-  getLoginParamsFromUrl,
-  getParamsFromUrl,
-} from "../../utils/file/common";
-import copy from "copy-text-to-clipboard";
+import { getLoginParamsFromUrl } from "../../utils/file/common";
 import { withRouter } from "react-router-dom";
-import Lottie from "react-lottie";
-
-import animationSuccess from "../../assets/lotties/success.json";
 import toast, { Toaster } from "react-hot-toast";
-import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import { loginList } from "../../constants/loginList";
-import { openExternalUrl, removeSearchParams, sleep } from "../../utils/common";
+import { openExternalUrl, removeSearchParams } from "../../utils/common";
 import { LoginHelper } from "../../assets/lib/kookit-extra-browser.min";
 import { isElectron } from "react-device-detect";
 import { driveList } from "../../constants/driveList";
@@ -32,14 +24,12 @@ class Login extends React.Component<LoginProps, LoginState> {
   componentDidMount() {
     if (isElectron) {
       const { ipcRenderer } = window.require("electron");
-      ipcRenderer.on("oauth-callback", (event, config) => {
+      ipcRenderer.on("oauth-callback", (_event, config) => {
         let code = config.code;
         let state = config.state;
         this.setState({ currentStep: 2 });
         if (state) {
-          let { service, deeplink } = JSON.parse(
-            decodeURIComponent(state.split("|")[1])
-          );
+          let { service } = JSON.parse(decodeURIComponent(state.split("|")[1]));
           this.handleLogin(code, service);
         }
       });
@@ -51,9 +41,7 @@ class Login extends React.Component<LoginProps, LoginState> {
         let state = params.state;
         this.setState({ currentStep: 2 });
         if (state) {
-          let { service, deeplink } = JSON.parse(
-            decodeURIComponent(state.split("|")[1])
-          );
+          let { service } = JSON.parse(decodeURIComponent(state.split("|")[1]));
           this.handleLogin(code, service);
         }
       }
@@ -259,10 +247,10 @@ class Login extends React.Component<LoginProps, LoginState> {
             <div className="login-content-container">
               <div
                 className="login-title"
-                style={{ marginTop: "100px", marginBottom: "15%" }}
+                style={{ marginTop: "80px", marginBottom: "50px" }}
               >
                 {this.props.t(
-                  "Embark on your journey of exploration with Koodo Reader Pro, starting from an account"
+                  "Embark on your journey of exploration with Koodo Reader Pro"
                 )}
               </div>
               {loginList.map((item) => {
@@ -452,7 +440,7 @@ class Login extends React.Component<LoginProps, LoginState> {
             <div className="login-content-container">
               <div
                 className="login-title"
-                style={{ marginTop: "80px", marginBottom: "10%" }}
+                style={{ marginTop: "50px", marginBottom: "20px" }}
               >
                 {this.props.t(
                   "Download the mobile version to read and take notes anytime, anywhere"

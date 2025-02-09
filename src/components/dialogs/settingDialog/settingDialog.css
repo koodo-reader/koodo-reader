@@ -1,8 +1,8 @@
 .setting-dialog-container {
-  width: 454px;
+  width: 500px;
   height: 480px;
   position: absolute;
-  left: calc(50% - 227px);
+  left: calc(50% - 250px);
   top: calc(50% - 240px);
   overflow: hidden;
   opacity: 1;

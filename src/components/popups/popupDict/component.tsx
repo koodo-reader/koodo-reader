@@ -138,7 +138,7 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
             >
               {this.props.plugins
                 .filter((item) => item.type === "dictionary")
-                .map((item, index) => {
+                .map((item) => {
                   return (
                     <option
                       value={item.key}
@@ -188,7 +188,7 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
                   this.props.plugins.find(
                     (item) => item.key === this.state.dictService
                   )?.langList as any[]
-                ).map((item, index) => {
+                ).map((item) => {
                   return (
                     <option
                       value={item.code}
@@ -299,7 +299,7 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
                   this.state.dictText + "<address></address>"
                 ) || " ",
                 {
-                  replace: (domNode) => {},
+                  replace: (_domNode) => {},
                 }
               )}
             </div>

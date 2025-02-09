@@ -5,7 +5,7 @@ import { handleLoadingDialog } from "../../store/actions";
 import Redirect from "./component";
 import { withTranslation } from "react-i18next";
 import { withRouter } from "react-router-dom";
-const mapStateToProps = (state: stateType) => {
+const mapStateToProps = (_state: stateType) => {
   return {};
 };
 const actionCreator = { handleLoadingDialog };

@@ -70,7 +70,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
       if (!book) {
         return;
       }
-      book = book || JSON.parse(localStorage.getItem("tempBook") || "{}");
+      book = book || JSON.parse(ConfigService.getItem("tempBook") || "{}");
       this.props.handleReadingBook(book);
       this.props.handleFetchPercentage(book);
     });
@@ -289,7 +289,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
 
         <div
           className="setting-panel-container"
-          onMouseLeave={(event) => {
+          onMouseLeave={() => {
             this.handleLeaveReader("right");
           }}
           style={
@@ -304,7 +304,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         </div>
         <div
           className="navigation-panel-container"
-          onMouseLeave={(event) => {
+          onMouseLeave={() => {
             this.handleLeaveReader("left");
           }}
           style={
@@ -319,7 +319,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         </div>
         <div
           className="progress-panel-container"
-          onMouseLeave={(event) => {
+          onMouseLeave={() => {
             this.handleLeaveReader("bottom");
           }}
           style={
@@ -334,7 +334,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         </div>
         <div
           className="operation-panel-container"
-          onMouseLeave={(event) => {
+          onMouseLeave={() => {
             this.handleLeaveReader("top");
           }}
           style={

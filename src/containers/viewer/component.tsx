@@ -276,7 +276,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
   handleBindGesture = () => {
     let doc = getIframeDoc();
     if (!doc) return;
-    doc.addEventListener("click", (event) => {
+    doc.addEventListener("click", () => {
       this.props.handleLeaveReader("left");
       this.props.handleLeaveReader("right");
       this.props.handleLeaveReader("top");

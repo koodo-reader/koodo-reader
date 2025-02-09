@@ -1,6 +1,5 @@
 import { isElectron } from "react-device-detect";
 import {
-  CommonTool,
   ConfigService,
   KookitConfig,
   TokenService,

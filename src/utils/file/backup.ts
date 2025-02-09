@@ -2,11 +2,7 @@ import BookUtil from "./bookUtil";
 import { isElectron } from "react-device-detect";
 import { getStorageLocation } from "../common";
 import CoverUtil from "./coverUtil";
-import {
-  CommonTool,
-  ConfigService,
-  SyncUtil,
-} from "../../assets/lib/kookit-extra-browser.min";
+import { CommonTool } from "../../assets/lib/kookit-extra-browser.min";
 import { getCloudConfig } from "./common";
 import DatabaseService from "../storage/databaseService";
 import { saveAs } from "file-saver";
@@ -118,7 +114,7 @@ export const backupFromStorage = async () => {
   let bookmarks = await DatabaseService.getDbBuffer("bookmarks");
   let words = await DatabaseService.getDbBuffer("words");
   let plugins = await DatabaseService.getDbBuffer("plugins");
-  let config = JSON.stringify(ConfigUtil.dumpConfig("config"));
+  let config = JSON.stringify(await ConfigUtil.dumpConfig("config"));
   await zipCover(zip);
   await zipBook(zip);
   let result = await zipConfig(
@@ -134,8 +130,8 @@ export const backupFromStorage = async () => {
   return await zip.generateAsync({ type: "blob" });
 };
 
-export const backupToConfigJson = () => {
-  let configStr = JSON.stringify(ConfigUtil.dumpConfig("config"));
+export const backupToConfigJson = async () => {
+  let configStr = JSON.stringify(await ConfigUtil.dumpConfig("config"));
   const fs = window.require("fs");
   const path = window.require("path");
   const dataPath = getStorageLocation() || "";
@@ -149,7 +145,7 @@ export const backupToConfigJson = () => {
   );
 };
 export const zipBook = (zip: any) => {
-  return new Promise<boolean>(async (resolve, reject) => {
+  return new Promise<boolean>(async (resolve) => {
     let books = await DatabaseService.getAllRecords("books");
     let bookZip = zip.folder("book");
     let data: any = [];
@@ -200,7 +196,7 @@ export const zipConfig = (
   pluginBuffer: ArrayBuffer,
   config: string
 ) => {
-  return new Promise<boolean>((resolve, reject) => {
+  return new Promise<boolean>((resolve) => {
     try {
       let configZip = zip.folder("config");
       configZip

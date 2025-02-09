@@ -12,7 +12,6 @@ import {
 import { isElectron } from "react-device-detect";
 import { dropdownList } from "../../../constants/dropdownList";
 import _ from "underscore";
-import { restoreFromConfigJson } from "../../../utils/file/restore";
 import {
   generalSettingList,
   appearanceSettingList,
@@ -40,7 +39,6 @@ import {
 } from "../../../assets/lib/kookit-extra-browser.min";
 import {
   encryptToken,
-  getThirdpartyRequest,
   onSyncCallback,
 } from "../../../utils/request/thirdparty";
 import { loginList } from "../../../constants/loginList";
@@ -113,7 +111,7 @@ class SettingDialog extends React.Component<
       });
     }
   };
-  handleRest = (bool: boolean) => {
+  handleRest = (_bool: boolean) => {
     toast.success(this.props.t("Change successful"));
   };
   changeLanguage = (lng: string) => {
@@ -164,14 +162,6 @@ class SettingDialog extends React.Component<
     );
     this.handleRest(this.state[stateName]);
   };
-  syncFromLocation = async () => {
-    let result = await restoreFromConfigJson();
-    if (result) {
-      toast.success(this.props.t("Change successful"));
-    } else {
-      toast.error(this.props.t("Change failed"));
-    }
-  };
   handleChangeLocation = async () => {
     const { ipcRenderer } = window.require("electron");
     const newPath = await ipcRenderer.invoke("select-path");
@@ -183,7 +173,7 @@ class SettingDialog extends React.Component<
       toast.error(this.props.t("Change failed"));
       return;
     }
-    localStorage.setItem("storageLocation", newPath);
+    ConfigService.setItem("storageLocation", newPath);
     this.setState({ storageLocation: newPath });
     toast.success(this.props.t("Change successful"));
     this.props.handleFetchBooks();
@@ -199,7 +189,7 @@ class SettingDialog extends React.Component<
       toast.error(this.props.t("Switch failed"));
       return;
     }
-    localStorage.setItem("storageLocation", newPath);
+    ConfigService.setItem("storageLocation", newPath);
     this.setState({ storageLocation: newPath });
     toast.success(this.props.t("Switch successful"));
     this.props.handleFetchBooks();
@@ -287,7 +277,7 @@ class SettingDialog extends React.Component<
     if (!event.target.value) {
       return;
     }
-    localStorage.setItem("defaultSyncOption", event.target.value);
+    ConfigService.setItem("defaultSyncOption", event.target.value);
     this.props.handleFetchDefaultSyncOption();
     toast.success(this.props.t("Change successful"));
   };
@@ -381,7 +371,7 @@ class SettingDialog extends React.Component<
       );
     }
 
-    localStorage.setItem("defaultSyncOption", this.props.settingDrive);
+    ConfigService.setItem("defaultSyncOption", this.props.settingDrive);
     this.props.handleFetchDefaultSyncOption();
 
     this.props.handleFetchDataSourceList();
@@ -503,7 +493,7 @@ class SettingDialog extends React.Component<
         <div className="setting-dialog-info">
           {this.props.settingMode === "general" ? (
             <>
-              {generalSettingList.map((item, index) => {
+              {generalSettingList.map((item) => {
                 return (
                   <div
                     style={
@@ -671,7 +661,7 @@ class SettingDialog extends React.Component<
             </>
           ) : this.props.settingMode === "reading" ? (
             <>
-              {readingSettingList.map((item, index) => {
+              {readingSettingList.map((item) => {
                 return (
                   <div
                     style={
@@ -748,7 +738,7 @@ class SettingDialog extends React.Component<
             </>
           ) : this.props.settingMode === "appearance" ? (
             <>
-              {appearanceSettingList.map((item, index) => {
+              {appearanceSettingList.map((item) => {
                 return (
                   <div
                     style={
@@ -1350,7 +1340,7 @@ class SettingDialog extends React.Component<
                   </div>
                 </div>
               )}
-              {this.props.plugins.map((item, index) => {
+              {this.props.plugins.map((item) => {
                 return (
                   <div className="setting-dialog-new-title">
                     <span>

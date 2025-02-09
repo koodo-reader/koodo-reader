@@ -1,7 +1,6 @@
 import axios from "axios";
 import toast from "react-hot-toast";
 import i18n from "../../i18n";
-import { useHistory } from "react-router-dom";
 import { TokenService } from "../../assets/lib/kookit-extra-browser.min";
 const PUBLIC_URL = "https://api.960960.xyz";
 export const checkDeveloperUpdate = async () => {
@@ -13,10 +12,10 @@ export const getUploadUrl = async () => {
   return res.data;
 };
 export const uploadFile = async (url: string, file: any) => {
-  return new Promise<boolean>((resolve, reject) => {
+  return new Promise<boolean>((resolve) => {
     axios
       .put(url, file, {})
-      .then((res) => {
+      .then(() => {
         resolve(true);
       })
       .catch((err) => {

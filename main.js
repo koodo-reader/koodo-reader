@@ -215,11 +215,16 @@ const createMainWin = () => {
     let result = await syncUtil.listFiles(config.type);
     return result;
   });
+
+  ipcMain.handle("cloud-exist", async (event, config) => {
+    let syncUtil = await getSyncUtil(config);
+    let result = await syncUtil.isExist(config.fileName, config.type);
+    return result;
+  });
   ipcMain.handle("cloud-close", async (event, config) => {
     removeSyncUtil(config);
     return "pong";
   });
-
 
   ipcMain.handle("clear-tts", async (event, config) => {
     if (!fs.existsSync(path.join(dirPath, "tts"))) {

@@ -5,7 +5,6 @@ import packageInfo from "../../../../package.json";
 import { Trans } from "react-i18next";
 import Lottie from "react-lottie";
 import animationNew from "../../../assets/lotties/new.json";
-import animationSuccess from "../../../assets/lotties/success.json";
 import { openExternalUrl } from "../../../utils/common";
 import { isElectron } from "react-device-detect";
 import { sleep } from "../../../utils/common";
@@ -19,14 +18,6 @@ const newOptions = {
   loop: false,
   autoplay: true,
   animationData: animationNew,
-  rendererSettings: {
-    preserveAspectRatio: "xMidYMid slice",
-  },
-};
-const successOptions = {
-  loop: false,
-  autoplay: true,
-  animationData: animationSuccess,
   rendererSettings: {
     preserveAspectRatio: "xMidYMid slice",
   },
