@@ -28,11 +28,11 @@ jobs:
           files: Koodo-Reader-$TAG-arm64.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          RELEASE_TAG: $TAG # 替换为你的标签
+          RELEASE_TAG: ${{ github.ref }}
       - name: Upload to Release
         uses: softprops/action-gh-release@v1
         with:
           files: Koodo-Reader-$TAG-universal.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          RELEASE_TAG: $TAG # 替换为你的标签
+          RELEASE_TAG: ${{ github.ref }}
