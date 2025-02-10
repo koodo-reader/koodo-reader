@@ -67,7 +67,7 @@
     "classnames": "^2.2.6",
     "concurrently": "^5.0.1",
     "cross-env": "^6.0.3",
-    "electron": "32.2.7",
+    "electron": "33.3.1",
     "electron-builder": "24.13.3",
     "electron-rebuild": "^3.2.9",
     "hard-source-webpack-plugin": "^0.13.1",
