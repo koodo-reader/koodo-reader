@@ -10,6 +10,7 @@ import Book from "../models/Book";
 import BookUtil from "./file/bookUtil";
 import * as Kookit from "../assets/lib/kookit.min";
 import DatabaseService from "./storage/databaseService";
+import packageJson from "../../package.json";
 declare var window: any;
 export const calculateFileMD5 = (file: File): Promise<string> => {
   return new Promise((resolve, reject) => {
@@ -212,6 +213,14 @@ export function removeSearchParams() {
   window.history.replaceState({}, document.title, url.toString());
 }
 export function addChatBox() {
+  const getLocale = () => {
+    if (navigator.language.startsWith("zh")) {
+      return "zh_CN";
+    } else {
+      return "en";
+    }
+  };
+  console.log(getLocale());
   const scriptContent = `
     (function (d, t) {
       var BASE_URL = "https://app.chatwoot.com";
@@ -225,6 +234,13 @@ export function addChatBox() {
         window.chatwootSDK.run({
           websiteToken: "svaD5wxfU5UY1r5ZzpMtLqv2",
           baseUrl: BASE_URL,
+        });
+        window.addEventListener('chatwoot:ready', function() {
+          window.$chatwoot.setLocale('${getLocale()}');
+          window.$chatwoot.setCustomAttributes({
+            version: '${packageJson.version}',
+            client: '${isElectron ? "desktop" : "web"}',
+          });
         });
       };
     })(document, "script");

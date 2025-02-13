@@ -40,8 +40,7 @@ export const restore = async (service: string): Promise<Boolean> => {
       storagePath: getStorageLocation(),
     });
     const path = window.require("path");
-    let dataPath = await ipcRenderer.sendSync("user-data", "ping");
-    let filePath = path.join(dataPath, "data", "backup", "data.zip");
+    let filePath = path.join(getStorageLocation(), "backup", "data.zip");
     return await restoreFromfilePath(filePath);
   }
 };

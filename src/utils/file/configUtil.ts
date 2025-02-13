@@ -70,7 +70,7 @@ class ConfigUtil {
       let tokenConfig = await getCloudConfig(service);
       let fs = window.require("fs");
       if (!fs.existsSync(getStorageLocation() + "/config")) {
-        fs.mkdirSync(getStorageLocation() + "/config");
+        fs.mkdirSync(getStorageLocation() + "/config", { recursive: true });
       }
       fs.writeFileSync(
         getStorageLocation() + "/config/" + type + ".json",

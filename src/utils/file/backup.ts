@@ -32,8 +32,7 @@ export const backup = async (service: string): Promise<Boolean> => {
       targetPath = backupPath;
     } else {
       const path = window.require("path");
-      let dataPath = await ipcRenderer.sendSync("user-data", "ping");
-      targetPath = path.join(dataPath, "data", "backup");
+      targetPath = path.join(getStorageLocation(), "data", "backup");
     }
     await backupFromPath(targetPath, fileName);
     if (service === "local") {
@@ -76,7 +75,7 @@ export const backupFromPath = async (targetPath: string, fileName: string) => {
   let zip = new AdmZip();
   const fs = window.require("fs");
   if (!fs.existsSync(path.join(targetPath))) {
-    fs.mkdirSync(path.join(targetPath));
+    fs.mkdirSync(path.join(targetPath), { recursive: true });
   }
   backupToConfigJson();
 

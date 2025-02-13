@@ -64,7 +64,6 @@ class CoverUtil {
   }
   static addCover(book: BookModel) {
     if (!book.cover) return;
-
     if (isElectron) {
       var fs = window.require("fs");
       var path = window.require("path");

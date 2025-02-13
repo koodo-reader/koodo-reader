@@ -72,6 +72,7 @@ class ActionDialog extends React.Component<MoreActionProps, MoreActionState> {
             className="action-dialog-edit"
             style={{ paddingLeft: "0px" }}
             onClick={async () => {
+              let books = await DatabaseService.getAllRecords("books");
               let notes = (
                 await DatabaseService.getRecordsByBookKey(
                   this.props.currentBook.key,
@@ -79,10 +80,7 @@ class ActionDialog extends React.Component<MoreActionProps, MoreActionState> {
                 )
               ).filter((note) => note.notes !== "");
               if (notes.length > 0) {
-                exportNotes(notes, [
-                  ...this.props.books,
-                  ...this.props.deletedBooks,
-                ]);
+                exportNotes(notes, books);
                 toast.success(this.props.t("Export successful"));
               } else {
                 toast(this.props.t("Nothing to export"));
@@ -97,6 +95,7 @@ class ActionDialog extends React.Component<MoreActionProps, MoreActionState> {
             className="action-dialog-edit"
             style={{ paddingLeft: "0px" }}
             onClick={async () => {
+              let books = await DatabaseService.getAllRecords("books");
               let highlights = (
                 await DatabaseService.getRecordsByBookKey(
                   this.props.currentBook.key,
@@ -104,10 +103,7 @@ class ActionDialog extends React.Component<MoreActionProps, MoreActionState> {
                 )
               ).filter((note) => note.notes === "");
               if (highlights.length > 0) {
-                exportHighlights(highlights, [
-                  ...this.props.books,
-                  ...this.props.deletedBooks,
-                ]);
+                exportHighlights(highlights, books);
                 toast.success(this.props.t("Export successful"));
               } else {
                 toast(this.props.t("Nothing to export"));
@@ -126,11 +122,9 @@ class ActionDialog extends React.Component<MoreActionProps, MoreActionState> {
                 this.props.currentBook.key,
                 "words"
               );
+              let books = await DatabaseService.getAllRecords("books");
               if (dictHistory.length > 0) {
-                exportDictionaryHistory(dictHistory, [
-                  ...this.props.books,
-                  ...this.props.deletedBooks,
-                ]);
+                exportDictionaryHistory(dictHistory, books);
                 toast.success(this.props.t("Export successful"));
               } else {
                 toast(this.props.t("Nothing to export"));
