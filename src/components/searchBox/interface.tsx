@@ -6,6 +6,7 @@ export interface SearchBoxProps {
   isSearch: boolean;
   isNavSearch: boolean;
   isReading: boolean;
+  isNavLocked: boolean;
   mode: string;
   tabMode: string;
   notes: NoteModel[];

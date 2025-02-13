@@ -11,6 +11,7 @@ const mapStateToProps = (state: stateType) => {
     locations: state.progressPanel.locations,
     currentChapter: state.reader.currentChapter,
     readerMode: state.reader.readerMode,
+    isNavLocked: state.reader.isNavLocked,
     currentChapterIndex: state.reader.currentChapterIndex,
     htmlBook: state.reader.htmlBook,
     isShowBookmark: state.viewArea.isShowBookmark,

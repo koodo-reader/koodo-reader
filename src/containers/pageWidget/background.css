@@ -1,19 +1,21 @@
 .header-chapter-name,
 .header-book-name {
-  width: 45vw;
+  width: 50%;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
   line-height: 30px;
   text-align: center;
   opacity: 0.3;
+  float: left;
 }
 .header-container,
 .footer-container {
   width: 100%;
-  display: flex;
-  justify-content: space-around;
   height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .header-container {
   position: absolute;
@@ -21,18 +23,19 @@
 }
 .footer-container {
   position: absolute;
-  bottom: 3px;
+  bottom: 5px;
 }
 
 .background-page-left,
 .background-page-right {
-  max-width: 45vw;
+  width: 50%;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
   line-height: 30px;
   text-align: center;
   opacity: 0.3;
+  float: left;
 }
 .bookmark {
   height: 40px;
@@ -54,4 +57,16 @@
   box-sizing: border-box;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
+}
+.background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  box-sizing: border-box;
+  z-index: -10;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

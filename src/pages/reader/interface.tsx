@@ -5,6 +5,7 @@ export interface ReaderProps {
   percentage: number;
   t: (title: string) => string;
   htmlBook: HtmlBookModel;
+  isNavLocked: boolean;
   handleFetchNotes: () => void;
   handleReaderMode: (readerMode: string) => void;
   handleFetchBooks: () => void;

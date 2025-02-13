@@ -10,6 +10,7 @@ import * as DOMPurify from "dompurify";
 import EmptyCover from "../../../components/emptyCover";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import CoverUtil from "../../../utils/file/coverUtil";
+import BookUtil from "../../../utils/file/bookUtil";
 
 class NavigationPanel extends React.Component<
   NavigationPanelProps,
@@ -24,8 +25,6 @@ class NavigationPanel extends React.Component<
       searchList: null,
       startIndex: 0,
       currentIndex: 0,
-      isNavLocked:
-        ConfigService.getReaderConfig("isNavLocked") === "yes" ? true : false,
     };
   }
   handleNavSearchState = (state: string) => {
@@ -42,12 +41,12 @@ class NavigationPanel extends React.Component<
     this.setState({ currentTab });
   };
   handleLock = () => {
-    this.setState({ isNavLocked: !this.state.isNavLocked }, () => {
-      ConfigService.setReaderConfig(
-        "isNavLocked",
-        this.state.isNavLocked ? "yes" : "no"
-      );
-    });
+    this.props.handleNavLock(!this.props.isNavLocked);
+    ConfigService.setReaderConfig(
+      "isNavLocked",
+      !this.props.isNavLocked ? "yes" : "no"
+    );
+    BookUtil.reloadBooks();
   };
   renderBeforeSearch = () => {
     if (this.state.searchState === "searching") {
@@ -225,7 +224,7 @@ class NavigationPanel extends React.Component<
             <div className="navigation-header">
               <span
                 className={
-                  this.state.isNavLocked
+                  this.props.isNavLocked
                     ? "icon-lock nav-lock-icon"
                     : "icon-unlock nav-lock-icon"
                 }

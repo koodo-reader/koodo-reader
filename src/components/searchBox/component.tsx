@@ -113,7 +113,7 @@ class SearchBox extends React.Component<SearchBoxProps> {
               : {}
           }
           onCompositionStart={() => {
-            if (ConfigService.getReaderConfig("isNavLocked") === "yes") {
+            if (this.props.isNavLocked) {
               return;
             } else {
               ConfigService.setReaderConfig("isTempLocked", "yes");

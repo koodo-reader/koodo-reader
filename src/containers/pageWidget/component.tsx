@@ -55,6 +55,20 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
           color: ConfigService.getReaderConfig("textColor")
             ? ConfigService.getReaderConfig("textColor")
             : "",
+          width: !this.props.isNavLocked ? "100%" : "calc(100% - 300px)",
+          left: !this.props.isNavLocked ? "0" : "300px",
+          backgroundColor: ConfigService.getReaderConfig("backgroundColor")
+            ? ConfigService.getReaderConfig("backgroundColor")
+            : ConfigService.getReaderConfig("appSkin") === "night" ||
+              (ConfigService.getReaderConfig("appSkin") === "system" &&
+                ConfigService.getReaderConfig("isOSNight") === "yes")
+            ? "rgba(44,47,49,1)"
+            : "rgba(255,255,255,1)",
+          filter: `brightnessbrightness(${
+            ConfigService.getReaderConfig("brightness") || 1
+          }) invert(${
+            ConfigService.getReaderConfig("isInvert") === "yes" ? 1 : 0
+          })`,
         }}
       >
         <div className="header-container">

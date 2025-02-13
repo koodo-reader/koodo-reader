@@ -155,7 +155,8 @@ export const openExternalUrl = (url: string, isPlugin: boolean = false) => {
 export const getPageWidth = (
   readerMode: string,
   scale: string,
-  margin: number
+  margin: number,
+  isNavLocked: boolean
 ) => {
   const findValidMultiple = (limit: number) => {
     let multiple = limit - (limit % 12);
@@ -171,23 +172,29 @@ export const getPageWidth = (
   };
   let pageOffset = "";
   let pageWidth = "";
-  if (document.body.clientWidth < 570) {
-    let width = findValidMultiple(document.body.clientWidth - 72);
+  if (document.body.clientWidth < 720) {
+    let width = findValidMultiple(
+      document.body.clientWidth -
+        document.body.clientWidth * 0.4 -
+        (isNavLocked ? 300 : 0)
+    );
     pageOffset = `calc(50vw - ${width / 2}px)`;
     pageWidth = `${width}px`;
-  } else if (readerMode === "scroll") {
-    let width = findValidMultiple(276 * parseFloat(scale) * 2);
+  } else if (readerMode === "scroll" || readerMode === "single") {
+    let preWidth =
+      document.body.clientWidth * parseFloat(scale) -
+      document.body.clientWidth * 0.4 -
+      (isNavLocked ? 300 : 0);
+    console.log(preWidth, "preWidth");
+    let width = findValidMultiple(preWidth < 720 ? 720 : preWidth);
 
-    pageOffset = `calc(50vw - ${width / 2}px)`;
-    pageWidth = `${width}px`;
-  } else if (readerMode === "single") {
-    let width = findValidMultiple(276 * parseFloat(scale) * 2 - 36);
-
-    pageOffset = `calc(50vw - ${width / 2}px)`;
+    pageOffset = `calc(50vw + ${isNavLocked ? 150 : 0}px - ${width / 2}px)`;
     pageWidth = `${width}px`;
   } else if (readerMode === "double") {
-    let width = findValidMultiple(document.body.clientWidth - 2 * margin - 80);
-    pageOffset = `calc(50vw - ${width / 2}px)`;
+    let width = findValidMultiple(
+      document.body.clientWidth - 2 * margin - 80 - (isNavLocked ? 300 : 0)
+    );
+    pageOffset = `calc(50vw + ${isNavLocked ? 150 : 0}px - ${width / 2}px)`;
     pageWidth = `${width}px`;
   }
   return {
