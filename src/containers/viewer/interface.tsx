@@ -43,6 +43,7 @@ export interface ViewerState {
   isDisablePopup: boolean;
   margin: number;
   readerMode: string;
+  pdfReaderMode: string;
   chapter: string;
   pageOffset: string;
   pageWidth: string;

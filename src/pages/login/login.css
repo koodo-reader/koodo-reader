@@ -96,6 +96,7 @@
   justify-content: space-between;
   align-items: center;
   cursor: pointer;
+  position: relative;
 }
 .login-option-icon {
   margin: 10px;
@@ -103,7 +104,11 @@
 }
 .login-option-title {
   margin: 10px;
-  width: calc(100% - 40px);
+  width: calc(100%);
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .login-sync-box {
   /* border: 1px solid #585858; */

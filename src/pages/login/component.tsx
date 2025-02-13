@@ -63,6 +63,14 @@ class Login extends React.Component<LoginProps, LoginState> {
     return (
       <>
         <Toaster />
+        <div
+          className="login-close-container"
+          onClick={() => {
+            this.props.history.push("/manager/home");
+          }}
+        >
+          <span className="icon-close login-close-icon"></span>
+        </div>
         {this.props.isSettingOpen && <SettingDialog />}
         {this.props.isShowLoading && <LoadingDialog />}
         {this.state.currentStep === 0 && (
@@ -120,14 +128,6 @@ class Login extends React.Component<LoginProps, LoginState> {
                 }}
               >
                 {this.props.t("Next step")}
-              </div>
-              <div
-                className="login-close-container"
-                onClick={() => {
-                  this.props.history.push("/manager/home");
-                }}
-              >
-                <span className="icon-close login-close-icon"></span>
               </div>
             </div>
           </div>
@@ -204,15 +204,6 @@ class Login extends React.Component<LoginProps, LoginState> {
                 >
                   {this.props.t("Next step")}
                 </div>
-              </div>
-
-              <div
-                className="login-close-container"
-                onClick={() => {
-                  this.props.history.push("/manager/home");
-                }}
-              >
-                <span className="icon-close login-close-icon"></span>
               </div>
             </div>
           </div>
@@ -300,14 +291,6 @@ class Login extends React.Component<LoginProps, LoginState> {
                 {this.props.t(
                   "By clicking continue, you acknowledge that you have carefully read and agree to accept Koodo Reader's Terms of Service and Privacy Policy"
                 )}
-              </div>
-              <div
-                className="login-close-container"
-                onClick={() => {
-                  this.props.history.push("/manager/home");
-                }}
-              >
-                <span className="icon-close login-close-icon"></span>
               </div>
             </div>
           </div>
@@ -399,14 +382,6 @@ class Login extends React.Component<LoginProps, LoginState> {
               >
                 {this.props.t("Skip")}
               </div>
-              <div
-                className="login-close-container"
-                onClick={() => {
-                  this.props.history.push("/manager/home");
-                }}
-              >
-                <span className="icon-close login-close-icon"></span>
-              </div>
             </div>
           </div>
         )}
@@ -467,14 +442,6 @@ class Login extends React.Component<LoginProps, LoginState> {
                 }}
               >
                 {this.props.t("Finish")}
-              </div>
-              <div
-                className="login-close-container"
-                onClick={() => {
-                  this.props.history.push("/manager/home");
-                }}
-              >
-                <span className="icon-close login-close-icon"></span>
               </div>
             </div>
           </div>

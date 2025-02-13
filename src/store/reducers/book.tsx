@@ -6,6 +6,8 @@ const initState = {
   isReading: false,
   dragItem: "",
   currentBook: {},
+  currentPage: 1,
+  totalPage: 1,
   renderBookFunc: () => {},
   renderNoteFunc: () => {},
 };
@@ -23,6 +25,11 @@ export function book(
       return {
         ...state,
         isOpenDeleteDialog: action.payload,
+      };
+    case "HANDLE_CURRENT_PAGE":
+      return {
+        ...state,
+        currentPage: action.payload,
       };
     case "HANDLE_RENDER_BOOK_FUNC":
       return {
@@ -48,6 +55,11 @@ export function book(
       return {
         ...state,
         isReading: action.payload,
+      };
+    case "HANDLE_TOTAL_PAGE":
+      return {
+        ...state,
+        totalPage: action.payload,
       };
     case "HANDLE_READING_BOOK":
       return {

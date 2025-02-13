@@ -196,9 +196,9 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
               }}
             >
               <img
-                data-src={CoverUtil.getCover(this.props.book)}
+                src={CoverUtil.getCover(this.props.book)}
                 alt=""
-                className="lazy-image book-item-image"
+                className="book-item-image"
                 style={{ width: "100%" }}
                 onLoad={(res: any) => {
                   if (

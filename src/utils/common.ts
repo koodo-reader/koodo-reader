@@ -311,3 +311,16 @@ export const generateSyncRecord = async () => {
     }
   }
 };
+export const handleContextMenu = (id: string, isInput: boolean = false) => {
+  if (!isElectron) return;
+  const clipboard = window.require("electron").clipboard;
+  const text = clipboard.readText();
+  console.log(text);
+  // fill the text into the box
+  if (!isInput) {
+    let textarea = document.getElementById(id) as HTMLTextAreaElement;
+    textarea.textContent = text;
+  } else {
+    document.getElementById(id)?.setAttribute("value", text);
+  }
+};

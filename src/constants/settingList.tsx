@@ -67,6 +67,15 @@ export const appearanceSettingList = [
     propName: "isDisableCrop",
   },
 ];
+export const accountSettingList = [
+  {
+    isElectron: true,
+    title:
+      "Don't automatically pre-cache books for mobile version after import",
+    desc: "Upon importing, books will be automatically pre-cached, enabling seamless access in the mobile version. However, this process may consume additional storage space and extend the import duration. You can still do it manually",
+    propName: "isDisableMobilePrecache",
+  },
+];
 export const readingSettingList = [
   {
     isElectron: false,

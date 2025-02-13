@@ -41,6 +41,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           {}
         ).chapterTitle || "",
       readerMode: ConfigService.getReaderConfig("readerMode") || "double",
+      pdfReaderMode: ConfigService.getReaderConfig("pdfReaderMode") || "scroll",
       isDisablePopup: ConfigService.getReaderConfig("isDisablePopup") === "yes",
       isTouch: ConfigService.getReaderConfig("isTouch") === "yes",
       margin: parseInt(ConfigService.getReaderConfig("margin")) || 0,
@@ -135,7 +136,9 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       let rendition = BookHelper.getRendtion(
         result,
         isCacheExsit ? "CACHE" : format,
-        this.state.readerMode,
+        format === "PDF" || format.startsWith("CB")
+          ? this.state.pdfReaderMode
+          : this.state.readerMode,
         this.props.currentBook.charset,
         ConfigService.getReaderConfig("isSliding") === "yes" ? "sliding" : "",
         ConfigService.getReaderConfig("isBionic"),

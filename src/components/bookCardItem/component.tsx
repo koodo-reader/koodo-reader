@@ -169,9 +169,9 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
               </div>
             ) : (
               <img
-                data-src={CoverUtil.getCover(this.props.book)}
+                src={CoverUtil.getCover(this.props.book)}
                 alt=""
-                className="lazy-image book-item-image"
+                className="book-item-image"
                 style={
                   this.state.direction === "horizontal" ||
                   ConfigService.getReaderConfig("isDisableCrop") === "yes"

@@ -18,13 +18,6 @@ class BookList extends React.Component<BookListProps, BookListState> {
     super(props);
     this.state = { isRefreshing: false };
   }
-  componentDidMount() {
-    setTimeout(() => {
-      this.lazyLoad();
-      window.addEventListener("scroll", this.lazyLoad);
-      window.addEventListener("resize", this.lazyLoad);
-    }, 0);
-  }
   UNSAFE_componentWillMount() {
     this.props.handleFetchBooks();
   }
@@ -33,16 +26,6 @@ class BookList extends React.Component<BookListProps, BookListState> {
       this.setState({ isRefreshing: false });
     });
   }
-  lazyLoad = () => {
-    const lazyImages: any = document.querySelectorAll(".lazy-image");
-
-    lazyImages.forEach((lazyImage) => {
-      if (this.isElementInViewport(lazyImage) && lazyImage.dataset.src) {
-        lazyImage.src = lazyImage.dataset.src;
-        lazyImage.classList.remove("lazy-image");
-      }
-    });
-  };
   isElementInViewport = (element) => {
     const rect = element.getBoundingClientRect();
 
@@ -113,16 +96,6 @@ class BookList extends React.Component<BookListProps, BookListState> {
     if (books.length === 0) {
       return <Redirect to="/manager/empty" />;
     }
-    setTimeout(() => {
-      this.lazyLoad();
-    }, 0);
-    let listElements = document.querySelector(".book-list-item-box");
-    let covers = listElements?.querySelectorAll("img");
-    covers?.forEach((cover) => {
-      if (!cover.classList.contains("lazy-image")) {
-        cover.classList.add("lazy-image");
-      }
-    });
     return books.map((item: BookModel, index: number) => {
       return this.props.viewMode === "list" ? (
         <BookListItem
@@ -163,12 +136,7 @@ class BookList extends React.Component<BookListProps, BookListState> {
           }
         >
           <div className="book-list-container">
-            <ul
-              className="book-list-item-box"
-              onScroll={() => {
-                this.lazyLoad();
-              }}
-            >
+            <ul className="book-list-item-box">
               {!this.state.isRefreshing && this.renderBookList()}
             </ul>
           </div>

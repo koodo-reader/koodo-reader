@@ -19,11 +19,13 @@ import {
   langList,
   searchList,
   skinList,
+  accountSettingList,
 } from "../../../constants/settingList";
 import { themeList } from "../../../constants/themeList";
 import toast from "react-hot-toast";
 import {
   checkPlugin,
+  handleContextMenu,
   loadFontData,
   openExternalUrl,
 } from "../../../utils/common";
@@ -79,6 +81,8 @@ class SettingDialog extends React.Component<
       isDisableUpdate:
         ConfigService.getReaderConfig("isDisableUpdate") === "yes",
       isPrecacheBook: ConfigService.getReaderConfig("isPrecacheBook") === "yes",
+      isDisableMobilePrecache:
+        ConfigService.getReaderConfig("isDisableMobilePrecache") === "yes",
       appSkin: ConfigService.getReaderConfig("appSkin"),
       isUseBuiltIn: ConfigService.getReaderConfig("isUseBuiltIn") === "yes",
       isDisableCrop: ConfigService.getReaderConfig("isDisableCrop") === "yes",
@@ -377,6 +381,58 @@ class SettingDialog extends React.Component<
     this.props.handleFetchDataSourceList();
     this.props.handleSettingDrive("");
   };
+  renderSwitchOption = (optionList: any[]) => {
+    return optionList.map((item) => {
+      return (
+        <div
+          style={item.isElectron ? (isElectron ? {} : { display: "none" }) : {}}
+          key={item.propName}
+        >
+          <div className="setting-dialog-new-title" key={item.title}>
+            <span style={{ width: "250px" }}>
+              <Trans>{item.title}</Trans>
+            </span>
+
+            <span
+              className="single-control-switch"
+              onClick={() => {
+                switch (item.propName) {
+                  case "isMergeWord":
+                    this.handleMergeWord();
+                    break;
+                  case "isOpenInMain":
+                    this.handleOpenInMain();
+                    break;
+                  default:
+                    this.handleSetting(item.propName);
+                    break;
+                }
+              }}
+              style={this.state[item.propName] ? {} : { opacity: 0.6 }}
+            >
+              <span
+                className="single-control-button"
+                style={
+                  this.state[item.propName]
+                    ? {
+                        transform: "translateX(20px)",
+                        transition: "transform 0.5s ease",
+                      }
+                    : {
+                        transform: "translateX(0px)",
+                        transition: "transform 0.5s ease",
+                      }
+                }
+              ></span>
+            </span>
+          </div>
+          <p className="setting-option-subtitle">
+            <Trans>{item.desc}</Trans>
+          </p>
+        </div>
+      );
+    });
+  };
   render() {
     return (
       <div className="setting-dialog-container">
@@ -484,6 +540,7 @@ class SettingDialog extends React.Component<
           className="setting-close-container"
           onClick={() => {
             this.props.handleSetting(false);
+            this.props.handleSettingMode("general");
           }}
         >
           <span className="icon-close setting-close"></span>
@@ -492,64 +549,7 @@ class SettingDialog extends React.Component<
         <div className="setting-dialog-info">
           {this.props.settingMode === "general" ? (
             <>
-              {generalSettingList.map((item) => {
-                return (
-                  <div
-                    style={
-                      item.isElectron
-                        ? isElectron
-                          ? {}
-                          : { display: "none" }
-                        : {}
-                    }
-                    key={item.propName}
-                  >
-                    <div className="setting-dialog-new-title" key={item.title}>
-                      <span style={{ width: "250px" }}>
-                        <Trans>{item.title}</Trans>
-                      </span>
-
-                      <span
-                        className="single-control-switch"
-                        onClick={() => {
-                          switch (item.propName) {
-                            case "isMergeWord":
-                              this.handleMergeWord();
-                              break;
-                            case "isOpenInMain":
-                              this.handleOpenInMain();
-                              break;
-                            default:
-                              this.handleSetting(item.propName);
-                              break;
-                          }
-                        }}
-                        style={
-                          this.state[item.propName] ? {} : { opacity: 0.6 }
-                        }
-                      >
-                        <span
-                          className="single-control-button"
-                          style={
-                            this.state[item.propName]
-                              ? {
-                                  transform: "translateX(20px)",
-                                  transition: "transform 0.5s ease",
-                                }
-                              : {
-                                  transform: "translateX(0px)",
-                                  transition: "transform 0.5s ease",
-                                }
-                          }
-                        ></span>
-                      </span>
-                    </div>
-                    <p className="setting-option-subtitle">
-                      <Trans>{item.desc}</Trans>
-                    </p>
-                  </div>
-                );
-              })}
+              {this.renderSwitchOption(generalSettingList)}
 
               {isElectron && (
                 <>
@@ -660,64 +660,7 @@ class SettingDialog extends React.Component<
             </>
           ) : this.props.settingMode === "reading" ? (
             <>
-              {readingSettingList.map((item) => {
-                return (
-                  <div
-                    style={
-                      item.isElectron
-                        ? isElectron
-                          ? {}
-                          : { display: "none" }
-                        : {}
-                    }
-                    key={item.propName}
-                  >
-                    <div className="setting-dialog-new-title" key={item.title}>
-                      <span style={{ width: "250px" }}>
-                        <Trans>{item.title}</Trans>
-                      </span>
-
-                      <span
-                        className="single-control-switch"
-                        onClick={() => {
-                          switch (item.propName) {
-                            case "isMergeWord":
-                              this.handleMergeWord();
-                              break;
-                            case "isOpenInMain":
-                              this.handleOpenInMain();
-                              break;
-                            default:
-                              this.handleSetting(item.propName);
-                              break;
-                          }
-                        }}
-                        style={
-                          this.state[item.propName] ? {} : { opacity: 0.6 }
-                        }
-                      >
-                        <span
-                          className="single-control-button"
-                          style={
-                            this.state[item.propName]
-                              ? {
-                                  transform: "translateX(20px)",
-                                  transition: "transform 0.5s ease",
-                                }
-                              : {
-                                  transform: "translateX(0px)",
-                                  transition: "transform 0.5s ease",
-                                }
-                          }
-                        ></span>
-                      </span>
-                    </div>
-                    <p className="setting-option-subtitle">
-                      <Trans>{item.desc}</Trans>
-                    </p>
-                  </div>
-                );
-              })}
+              {this.renderSwitchOption(readingSettingList)}
               {isElectron && (
                 <>
                   <div className="setting-dialog-new-title">
@@ -737,64 +680,7 @@ class SettingDialog extends React.Component<
             </>
           ) : this.props.settingMode === "appearance" ? (
             <>
-              {appearanceSettingList.map((item) => {
-                return (
-                  <div
-                    style={
-                      item.isElectron
-                        ? isElectron
-                          ? {}
-                          : { display: "none" }
-                        : {}
-                    }
-                    key={item.propName}
-                  >
-                    <div className="setting-dialog-new-title" key={item.title}>
-                      <span style={{ width: "250px" }}>
-                        <Trans>{item.title}</Trans>
-                      </span>
-
-                      <span
-                        className="single-control-switch"
-                        onClick={() => {
-                          switch (item.propName) {
-                            case "isMergeWord":
-                              this.handleMergeWord();
-                              break;
-                            case "isOpenInMain":
-                              this.handleOpenInMain();
-                              break;
-                            default:
-                              this.handleSetting(item.propName);
-                              break;
-                          }
-                        }}
-                        style={
-                          this.state[item.propName] ? {} : { opacity: 0.6 }
-                        }
-                      >
-                        <span
-                          className="single-control-button"
-                          style={
-                            this.state[item.propName]
-                              ? {
-                                  transform: "translateX(20px)",
-                                  transition: "transform 0.5s ease",
-                                }
-                              : {
-                                  transform: "translateX(0px)",
-                                  transition: "transform 0.5s ease",
-                                }
-                          }
-                        ></span>
-                      </span>
-                    </div>
-                    <p className="setting-option-subtitle">
-                      <Trans>{item.desc}</Trans>
-                    </p>
-                  </div>
-                );
-              })}
+              {this.renderSwitchOption(appearanceSettingList)}
               <div className="setting-dialog-new-title">
                 <Trans>Theme color</Trans>
                 <ul className="theme-setting-container">
@@ -898,6 +784,12 @@ class SettingDialog extends React.Component<
                                 },
                               }));
                             }}
+                            onContextMenu={() => {
+                              handleContextMenu(
+                                "token-dialog-" + item.value + "-box",
+                                true
+                              );
+                            }}
                             id={"token-dialog-" + item.value + "-box"}
                             className="token-dialog-username-box"
                           />
@@ -919,6 +811,9 @@ class SettingDialog extends React.Component<
                               token: e.target.value,
                             },
                           }));
+                        }}
+                        onContextMenu={() => {
+                          handleContextMenu("token-dialog-token-box");
                         }}
                       />
                     </>
@@ -947,7 +842,7 @@ class SettingDialog extends React.Component<
                         <div
                           className="voice-add-confirm"
                           style={{ marginRight: "10px" }}
-                          onClick={() => {
+                          onClick={async () => {
                             this.handleJump(
                               new SyncUtil(
                                 this.props.settingDrive,
@@ -959,6 +854,54 @@ class SettingDialog extends React.Component<
                           <Trans>Authorize</Trans>
                         </div>
                       )}
+                      {isElectron &&
+                        (this.props.settingDrive === "webdav" ||
+                          this.props.settingDrive === "ftp" ||
+                          this.props.settingDrive === "sftp" ||
+                          this.props.settingDrive === "s3compatible") && (
+                          <div
+                            className="voice-add-confirm"
+                            style={{ marginRight: "10px" }}
+                            onClick={async () => {
+                              const { ipcRenderer } =
+                                window.require("electron");
+                              const fs = window.require("fs");
+                              fs.writeFileSync(
+                                getStorageLocation() + "/config/test.txt",
+                                "Hello world!"
+                              );
+                              let result = await ipcRenderer.invoke(
+                                "cloud-upload",
+                                {
+                                  ...this.state.driveConfig,
+                                  fileName: "test.txt",
+                                  service: this.props.settingDrive,
+                                  type: "config",
+                                  storagePath: getStorageLocation(),
+                                }
+                              );
+                              if (result) {
+                                toast.success(
+                                  this.props.t("Connection successful")
+                                );
+                                await ipcRenderer.invoke("cloud-delete", {
+                                  ...this.state.driveConfig,
+                                  fileName: "test.txt",
+                                  service: this.props.settingDrive,
+                                  type: "config",
+                                  storagePath: getStorageLocation(),
+                                });
+                                fs.unlinkSync(
+                                  getStorageLocation() + "/config/test.txt"
+                                );
+                              } else {
+                                toast.error(this.props.t("Connection failed"));
+                              }
+                            }}
+                          >
+                            <Trans>Test</Trans>
+                          </div>
+                        )}
                     </div>
                   </div>
                 </div>
@@ -1071,6 +1014,9 @@ class SettingDialog extends React.Component<
                     placeholder={this.props.t(
                       "Please authorize your account, and fill the following box with the token"
                     )}
+                    onContextMenu={() => {
+                      handleContextMenu("token-dialog-token-box");
+                    }}
                     onChange={(e) => {
                       this.setState((prevState) => ({
                         loginConfig: {
@@ -1249,6 +1195,7 @@ class SettingDialog extends React.Component<
                   </div>
                 </div>
               )}
+              {this.renderSwitchOption(accountSettingList)}
             </>
           ) : (
             <>
@@ -1268,6 +1215,9 @@ class SettingDialog extends React.Component<
                     )}
                     id="voice-add-content-box"
                     className="voice-add-content-box"
+                    onContextMenu={() => {
+                      handleContextMenu("voice-add-content-box");
+                    }}
                   />
                   <div className="token-dialog-button-container">
                     <div

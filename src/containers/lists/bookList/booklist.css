@@ -57,3 +57,30 @@
   padding: 6px 10px;
   border-radius: 5px;
 }
+.book-list-page-navigator {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 5px;
+  margin-left: 10px;
+}
+.book-list-prev-page {
+  cursor: pointer;
+  margin-right: 10px;
+}
+.book-list-next-page {
+  cursor: pointer;
+  margin-left: 10px;
+}
+.book-list-page-input {
+  width: 50px;
+  height: 30px;
+  text-align: center;
+  border: 1px solid #d9d9d9;
+  border-radius: 5px;
+  margin: 0 10px;
+}
+.book-list-page-container {
+  display: flex;
+  align-items: center;
+}
