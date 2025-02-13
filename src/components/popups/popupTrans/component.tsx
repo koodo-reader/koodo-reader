@@ -5,7 +5,7 @@ import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import axios from "axios";
 import { Trans } from "react-i18next";
 import toast from "react-hot-toast";
-import { openExternalUrl } from "../../../utils/common";
+import { handleContextMenu, openExternalUrl } from "../../../utils/common";
 import DatabaseService from "../../../utils/storage/databaseService";
 import { checkPlugin } from "../../../utils/common";
 declare var window: any;
@@ -133,6 +133,9 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
                 )}
                 id="trans-add-content-box"
                 className="trans-add-content-box"
+                onContextMenu={() => {
+                  handleContextMenu("trans-add-content-box");
+                }}
               />
               <div className="trans-add-button-container">
                 <div

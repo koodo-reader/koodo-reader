@@ -207,7 +207,7 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
               </div>
             ) : (
               <img
-                data-src={CoverUtil.getCover(this.props.book)}
+                src={CoverUtil.getCover(this.props.book)}
                 alt=""
                 style={
                   this.state.direction === "horizontal" ||
@@ -215,7 +215,7 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
                     ? { width: "100%" }
                     : { height: "100%" }
                 }
-                className="lazy-image book-item-image"
+                className="book-item-image"
                 onLoad={(res: any) => {
                   if (
                     res.target.naturalHeight / res.target.naturalWidth >

@@ -7,7 +7,7 @@ import * as DOMPurify from "dompurify";
 import axios from "axios";
 import DictHistory from "../../../models/DictHistory";
 import { Trans } from "react-i18next";
-import { openExternalUrl } from "../../../utils/common";
+import { handleContextMenu, openExternalUrl } from "../../../utils/common";
 import toast from "react-hot-toast";
 import DatabaseService from "../../../utils/storage/databaseService";
 import { checkPlugin } from "../../../utils/common";
@@ -226,6 +226,9 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
                 )}
                 id="trans-add-content-box"
                 className="trans-add-content-box"
+                onContextMenu={() => {
+                  handleContextMenu("trans-add-content-box");
+                }}
               />
               <div className="trans-add-button-container">
                 <div

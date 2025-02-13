@@ -26,3 +26,9 @@ export function handleReadingBook(book: BookModel) {
 export function handleDragItem(key: string) {
   return { type: "HANDLE_DRAG_ITEM", payload: key };
 }
+export function handleCurrentPage(page: number) {
+  return { type: "HANDLE_CURRENT_PAGE", payload: page };
+}
+export function handleTotalPage(page: number) {
+  return { type: "HANDLE_TOTAL_PAGE", payload: page };
+}

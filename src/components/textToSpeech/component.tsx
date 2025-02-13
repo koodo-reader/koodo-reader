@@ -3,7 +3,12 @@ import { TextToSpeechProps, TextToSpeechState } from "./interface";
 import { Trans } from "react-i18next";
 import { speedList } from "../../constants/dropdownList";
 import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
-import { checkPlugin, getAllVoices, sleep } from "../../utils/common";
+import {
+  checkPlugin,
+  getAllVoices,
+  handleContextMenu,
+  sleep,
+} from "../../utils/common";
 import { isElectron } from "react-device-detect";
 import toast from "react-hot-toast";
 import TTSUtil from "../../utils/reader/ttsUtil";
@@ -389,6 +394,10 @@ class TextToSpeech extends React.Component<
                   )}
                   id="voice-add-content-box"
                   className="voice-add-content-box"
+                  onContextMenu={() => {
+                    handleContextMenu("voice-add-content-box");
+                  }}
+                  style={{ marginBottom: "10px" }}
                 />
 
                 <div

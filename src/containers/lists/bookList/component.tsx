@@ -14,8 +14,8 @@ import ViewMode from "../../../components/viewMode";
 import SelectBook from "../../../components/selectBook";
 import { Trans } from "react-i18next";
 import DeletePopup from "../../../components/dialogs/deletePopup";
-
 declare var window: any;
+let currentBookMode = "home";
 class BookList extends React.Component<BookListProps, BookListState> {
   constructor(props: BookListProps) {
     super(props);
@@ -37,11 +37,6 @@ class BookList extends React.Component<BookListProps, BookListState> {
     if (!this.props.books || !this.props.books[0]) {
       return <Redirect to="manager/empty" />;
     }
-    setTimeout(() => {
-      this.lazyLoad();
-      window.addEventListener("scroll", this.lazyLoad);
-      window.addEventListener("resize", this.lazyLoad);
-    }, 0);
   }
 
   handleKeyFilter = (items: any[], arr: string[]) => {
@@ -86,89 +81,105 @@ class BookList extends React.Component<BookListProps, BookListState> {
   };
   renderBookList = () => {
     //get different book data according to different scenes
-    let books = this.props.isSearch
-      ? this.handleIndexFilter(this.props.books, this.props.searchResults)
+    let bookMode = this.props.isSearch
+      ? "search"
       : this.props.shelfTitle
-      ? this.handleIndexFilter(
-          this.handleShelf(this.props.books, this.props.shelfTitle),
-          SortUtil.sortBooks(
-            this.handleShelf(this.props.books, this.props.shelfTitle),
-            this.props.bookSortCode,
-            ConfigService
-          ) || []
-        )
+      ? "shelf"
       : this.props.mode === "favorite"
-      ? this.handleIndexFilter(
-          this.handleKeyFilter(
-            this.props.books,
-            ConfigService.getAllListConfig("favoriteBooks")
-          ),
-          SortUtil.sortBooks(
+      ? "favorite"
+      : this.state.isHideShelfBook
+      ? "hide"
+      : "home";
+    let books =
+      bookMode === "search"
+        ? this.handleIndexFilter(this.props.books, this.props.searchResults)
+        : bookMode === "shelf"
+        ? this.handleIndexFilter(
+            this.handleShelf(this.props.books, this.props.shelfTitle),
+            SortUtil.sortBooks(
+              this.handleShelf(this.props.books, this.props.shelfTitle),
+              this.props.bookSortCode,
+              ConfigService
+            ) || []
+          )
+        : bookMode === "favorite"
+        ? this.handleIndexFilter(
             this.handleKeyFilter(
               this.props.books,
               ConfigService.getAllListConfig("favoriteBooks")
             ),
-            this.props.bookSortCode,
-            ConfigService
-          ) || []
-        )
-      : this.state.isHideShelfBook
-      ? this.handleIndexFilter(
-          this.handleFilterShelfBook(this.props.books),
-          SortUtil.sortBooks(
+            SortUtil.sortBooks(
+              this.handleKeyFilter(
+                this.props.books,
+                ConfigService.getAllListConfig("favoriteBooks")
+              ),
+              this.props.bookSortCode,
+              ConfigService
+            ) || []
+          )
+        : bookMode === "hide"
+        ? this.handleIndexFilter(
             this.handleFilterShelfBook(this.props.books),
-            this.props.bookSortCode,
-            ConfigService
-          ) || []
-        )
-      : this.handleIndexFilter(
-          this.props.books,
-          SortUtil.sortBooks(
+            SortUtil.sortBooks(
+              this.handleFilterShelfBook(this.props.books),
+              this.props.bookSortCode,
+              ConfigService
+            ) || []
+          )
+        : this.handleIndexFilter(
             this.props.books,
-            this.props.bookSortCode,
-            ConfigService
-          ) || []
-        );
+            SortUtil.sortBooks(
+              this.props.books,
+              this.props.bookSortCode,
+              ConfigService
+            ) || []
+          );
     if (books.length === 0 && !this.props.isSearch) {
       return <Redirect to="/manager/empty" />;
     }
-    setTimeout(() => {
-      this.lazyLoad();
-    }, 0);
-    let listElements = document.querySelector(".book-list-item-box");
-    let covers = listElements?.querySelectorAll("img");
-    covers?.forEach((cover) => {
-      if (!cover.classList.contains("lazy-image")) {
-        cover.classList.add("lazy-image");
-      }
-    });
-    return books.map((item: BookModel, index: number) => {
-      return this.props.viewMode === "list" ? (
-        <BookListItem
-          {...{
-            key: index,
-            book: item,
-            isSelected: this.props.selectedBooks.indexOf(item.key) > -1,
-          }}
-        />
-      ) : this.props.viewMode === "card" ? (
-        <BookCardItem
-          {...{
-            key: index,
-            book: item,
-            isSelected: this.props.selectedBooks.indexOf(item.key) > -1,
-          }}
-        />
-      ) : (
-        <BookCoverItem
-          {...{
-            key: index,
-            book: item,
-            isSelected: this.props.selectedBooks.indexOf(item.key) > -1,
-          }}
-        />
-      );
-    });
+    this.props.handleTotalPage(
+      books.length % 24 === 0
+        ? books.length / 24
+        : Math.floor(books.length / 24) + 1
+    );
+    if (bookMode !== currentBookMode) {
+      this.props.handleCurrentPage(1);
+      currentBookMode = bookMode;
+    }
+
+    return books
+      .filter(
+        (_, index) =>
+          index >= (this.props.currentPage - 1) * 24 &&
+          index < this.props.currentPage * 24
+      )
+      .map((item: BookModel, index: number) => {
+        return this.props.viewMode === "list" ? (
+          <BookListItem
+            {...{
+              key: index,
+              book: item,
+              isSelected: this.props.selectedBooks.indexOf(item.key) > -1,
+            }}
+          />
+        ) : this.props.viewMode === "card" ? (
+          <BookCardItem
+            {...{
+              key: index,
+              book: item,
+              isSelected: this.props.selectedBooks.indexOf(item.key) > -1,
+            }}
+          />
+        ) : (
+          <BookCoverItem
+            {...{
+              key: index,
+              book: item,
+              isSelected: this.props.selectedBooks.indexOf(item.key) > -1,
+            }}
+          />
+        );
+      });
   };
   handleDeleteShelf = () => {
     if (!this.props.shelfTitle) return;
@@ -181,15 +192,6 @@ class BookList extends React.Component<BookListProps, BookListState> {
   };
   handleDeletePopup = (isOpenDelete: boolean) => {
     this.setState({ isOpenDelete });
-  };
-  lazyLoad = () => {
-    const lazyImages: any = document.querySelectorAll(".lazy-image");
-    lazyImages.forEach((lazyImage) => {
-      if (this.isElementInViewport(lazyImage) && lazyImage.dataset.src) {
-        lazyImage.src = lazyImage.dataset.src;
-        lazyImage.classList.remove("lazy-image");
-      }
-    });
   };
   isElementInViewport = (element) => {
     const rect = element.getBoundingClientRect();
@@ -258,14 +260,51 @@ class BookList extends React.Component<BookListProps, BookListState> {
           }
         >
           <div className="book-list-container">
-            <ul
-              className="book-list-item-box"
-              onScroll={() => {
-                this.lazyLoad();
-              }}
-            >
+            <ul className="book-list-item-box">
               {!this.state.isRefreshing && this.renderBookList()}
             </ul>
+            {this.props.totalPage > 1 && (
+              <div
+                className="book-list-page-navigator"
+                style={this.props.isSelectBook ? { display: "none" } : {}}
+              >
+                <div
+                  className="book-list-prev-page"
+                  onClick={() => {
+                    if (this.props.currentPage === 1) return;
+                    this.props.handleCurrentPage(this.props.currentPage - 1);
+                  }}
+                >
+                  <Trans>Previous page</Trans>
+                </div>
+                <div className="book-list-page-container">
+                  <input
+                    type="number"
+                    className="book-list-page-input"
+                    value={this.props.currentPage}
+                    onChange={(e) => {
+                      this.props.handleCurrentPage(parseInt(e.target.value));
+                    }}
+                    onBlur={(e) => {
+                      this.props.handleCurrentPage(parseInt(e.target.value));
+                    }}
+                    onFocus={(e) => {
+                      e.target.select();
+                    }}
+                  />
+                  <span>/ {this.props.totalPage}</span>
+                </div>
+                <div
+                  className="book-list-next-page"
+                  onClick={() => {
+                    if (this.props.currentPage === this.props.totalPage) return;
+                    this.props.handleCurrentPage(this.props.currentPage + 1);
+                  }}
+                >
+                  <Trans>Next page</Trans>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </>
