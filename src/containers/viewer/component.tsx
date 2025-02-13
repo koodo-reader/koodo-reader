@@ -67,7 +67,12 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     this.handleRenderBook();
     //make sure page width is always 12 times, section = Math.floor(element.clientWidth / 12), or text will be blocked
     this.setState(
-      getPageWidth(this.props.readerMode, this.state.scale, this.state.margin)
+      getPageWidth(
+        this.props.readerMode,
+        this.state.scale,
+        this.state.margin,
+        this.props.isNavLocked
+      )
     );
     this.props.handleRenderBookFunc(this.handleRenderBook);
 
@@ -363,12 +368,12 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
             this.props.readerMode === "scroll" &&
             document.body.clientWidth >= 570
               ? {
-                  marginLeft: this.state.pageOffset,
-                  marginRight: this.state.pageOffset,
+                  // marginLeft: this.state.pageOffset,
+                  // marginRight: this.state.pageOffset,
                   paddingLeft: "20px",
                   paddingRight: "15px",
-                  left: 0,
-                  right: 0,
+                  left: this.state.pageOffset,
+                  width: this.state.pageWidth,
                 }
               : {
                   left: this.state.pageOffset,

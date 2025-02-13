@@ -16,6 +16,7 @@ const mapStateToProps = (state: stateType) => {
     currentBook: state.book.currentBook,
     percentage: state.progressPanel.percentage,
     htmlBook: state.reader.htmlBook,
+    isNavLocked: state.reader.isNavLocked,
   };
 };
 const actionCreator = {

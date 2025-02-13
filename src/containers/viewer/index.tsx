@@ -29,6 +29,7 @@ const mapStateToProps = (state: stateType) => {
     isReading: state.book.isReading,
     renderNoteFunc: state.book.renderNoteFunc,
     htmlBook: state.reader.htmlBook,
+    isNavLocked: state.reader.isNavLocked,
     isOpenMenu: state.viewArea.isOpenMenu,
     books: state.manager.books,
     notes: state.reader.notes,

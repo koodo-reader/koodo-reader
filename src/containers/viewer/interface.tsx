@@ -14,6 +14,7 @@ export interface ViewerProps {
   isShow: boolean;
   readerMode: string;
   isOpenMenu: boolean;
+  isNavLocked: boolean;
   defaultSyncOption: string;
   handleRenderBookFunc: (renderBookFunc: () => void) => void;
   renderNoteFunc: () => void;

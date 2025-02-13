@@ -20,7 +20,9 @@ class styleUtil {
             "rgba(255,255,255,1)"
       };filter: brightness(${
         ConfigService.getReaderConfig("brightness") || 1
-      }) invert(${ConfigService.getReaderConfig("isInvert") === "yes" ? 1 : 0})`
+      }) invert(${
+        ConfigService.getReaderConfig("isInvert") === "yes" ? 1 : 0
+      });`
     );
     if (!doc.head) {
       return;

@@ -6,6 +6,7 @@ export interface BackgroundProps {
   currentChapter: string;
   readerMode: string;
   currentChapterIndex: number;
+  isNavLocked: boolean;
   htmlBook: HtmlBookModel;
   isShowBookmark: boolean;
   handleCurrentChapter: (currentChapter: string) => void;

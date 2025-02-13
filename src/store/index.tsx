@@ -91,6 +91,7 @@ export type stateType = {
     color: number;
     chapters: any[];
     readerMode: string;
+    isNavLocked: boolean;
     noteKey: string;
     currentChapter: string;
     currentChapterIndex: number;
