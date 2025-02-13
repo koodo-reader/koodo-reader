@@ -90,6 +90,7 @@ export type stateType = {
     digests: NoteModel[];
     color: number;
     chapters: any[];
+    readerMode: string;
     noteKey: string;
     currentChapter: string;
     currentChapterIndex: number;

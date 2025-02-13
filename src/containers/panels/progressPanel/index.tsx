@@ -8,6 +8,7 @@ const mapStateToProps = (state: stateType) => {
     isReading: state.book.isReading,
     percentage: state.progressPanel.percentage,
     htmlBook: state.reader.htmlBook,
+    readerMode: state.reader.readerMode,
     currentChapterIndex: state.reader.currentChapterIndex,
     currentChapter: state.reader.currentChapter,
     renderBookFunc: state.book.renderBookFunc,

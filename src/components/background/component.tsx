@@ -8,14 +8,13 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
   constructor(props: any) {
     super(props);
     this.state = {
-      isSingle:
-        ConfigService.getReaderConfig("readerMode") &&
-        ConfigService.getReaderConfig("readerMode") !== "double",
+      isSingle: this.props.readerMode !== "double",
       scale: ConfigService.getReaderConfig("scale") || 1,
     };
     this.isFirst = true;
   }
   componentDidMount() {
+    console.log(this.props.readerMode, "readermode");
     let background = document.querySelector(".background");
     if (!background) return;
     background?.setAttribute(

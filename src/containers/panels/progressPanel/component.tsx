@@ -2,7 +2,6 @@ import React from "react";
 import "./progressPanel.css";
 import { Trans } from "react-i18next";
 import { ProgressPanelProps, ProgressPanelState } from "./interface";
-import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import _ from "underscore";
 class ProgressPanel extends React.Component<
   ProgressPanelProps,
@@ -16,9 +15,7 @@ class ProgressPanel extends React.Component<
       targetChapterIndex: 0,
       targetPage: 0,
       isEntered: false,
-      isSingle:
-        ConfigService.getReaderConfig("readerMode") &&
-        ConfigService.getReaderConfig("readerMode") !== "double",
+      isSingle: this.props.readerMode !== "double",
     };
   }
   async UNSAFE_componentWillReceiveProps(nextProps: ProgressPanelProps) {

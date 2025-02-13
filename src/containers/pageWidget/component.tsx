@@ -8,9 +8,7 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
   constructor(props: any) {
     super(props);
     this.state = {
-      isSingle:
-        ConfigService.getReaderConfig("readerMode") &&
-        ConfigService.getReaderConfig("readerMode") !== "double",
+      isSingle: this.props.readerMode !== "double",
       prevPage: 0,
       nextPage: 0,
       scale: ConfigService.getReaderConfig("scale") || 1,

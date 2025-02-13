@@ -13,6 +13,7 @@ export interface OperationPanelProps extends RouteComponentProps<any> {
   locations: any;
   rendition: any;
   time: number;
+  readerMode: string;
   handleBookmarks: (bookmarks: BookmarkModel[]) => void;
   handleReadingState: (isReading: boolean) => void;
   handleFetchBookmarks: () => void;

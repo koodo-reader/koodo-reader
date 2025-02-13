@@ -34,6 +34,9 @@ export function handleChapters(chapters: any) {
 export function handleNoteKey(key: string) {
   return { type: "HANDLE_NOTE_KEY", payload: key };
 }
+export function handleReaderMode(readerMode: string) {
+  return { type: "HANDLE_READER_MODE", payload: readerMode };
+}
 export function handleFetchNotes() {
   return (dispatch: (arg0: { type: string; payload: NoteModel[] }) => void) => {
     DatabaseService.getAllRecords("notes").then((value) => {
