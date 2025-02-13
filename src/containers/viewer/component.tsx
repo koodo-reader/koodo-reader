@@ -40,8 +40,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           "recordLocation",
           {}
         ).chapterTitle || "",
-      readerMode: ConfigService.getReaderConfig("readerMode") || "double",
-      pdfReaderMode: ConfigService.getReaderConfig("pdfReaderMode") || "scroll",
       isDisablePopup: ConfigService.getReaderConfig("isDisablePopup") === "yes",
       isTouch: ConfigService.getReaderConfig("isTouch") === "yes",
       margin: parseInt(ConfigService.getReaderConfig("margin")) || 0,
@@ -69,7 +67,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     this.handleRenderBook();
     //make sure page width is always 12 times, section = Math.floor(element.clientWidth / 12), or text will be blocked
     this.setState(
-      getPageWidth(this.state.readerMode, this.state.scale, this.state.margin)
+      getPageWidth(this.props.readerMode, this.state.scale, this.state.margin)
     );
     this.props.handleRenderBookFunc(this.handleRenderBook);
 
@@ -133,12 +131,11 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           return;
         }
       }
+
       let rendition = BookHelper.getRendtion(
         result,
         isCacheExsit ? "CACHE" : format,
-        format === "PDF" || format.startsWith("CB")
-          ? this.state.pdfReaderMode
-          : this.state.readerMode,
+        this.props.readerMode,
         this.props.currentBook.charset,
         ConfigService.getReaderConfig("isSliding") === "yes" ? "sliding" : "",
         ConfigService.getReaderConfig("isBionic"),
@@ -159,7 +156,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     HtmlMouseEvent(
       rendition,
       this.props.currentBook.key,
-      this.state.readerMode
+      this.props.readerMode
     );
     let chapters = rendition.getChapter();
     let chapterDocs = rendition.getChapterDoc();
@@ -357,13 +354,13 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         )}
         <div
           className={
-            this.state.readerMode === "scroll"
+            this.props.readerMode === "scroll"
               ? "html-viewer-page scrolling-html-viewer-page"
               : "html-viewer-page"
           }
           id="page-area"
           style={
-            this.state.readerMode === "scroll" &&
+            this.props.readerMode === "scroll" &&
             document.body.clientWidth >= 570
               ? {
                   marginLeft: this.state.pageOffset,

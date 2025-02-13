@@ -6,6 +6,7 @@ export interface ReaderProps {
   t: (title: string) => string;
   htmlBook: HtmlBookModel;
   handleFetchNotes: () => void;
+  handleReaderMode: (readerMode: string) => void;
   handleFetchBooks: () => void;
   handleFetchBookmarks: () => void;
   handleFetchPercentage: (currentBook: BookModel) => void;

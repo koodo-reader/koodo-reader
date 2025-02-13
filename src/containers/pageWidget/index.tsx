@@ -10,6 +10,7 @@ const mapStateToProps = (state: stateType) => {
     currentBook: state.book.currentBook,
     locations: state.progressPanel.locations,
     currentChapter: state.reader.currentChapter,
+    readerMode: state.reader.readerMode,
     currentChapterIndex: state.reader.currentChapterIndex,
     htmlBook: state.reader.htmlBook,
     isShowBookmark: state.viewArea.isShowBookmark,

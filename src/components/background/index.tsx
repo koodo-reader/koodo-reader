@@ -5,6 +5,7 @@ import Background from "./component";
 const mapStateToProps = (state: stateType) => {
   return {
     currentBook: state.book.currentBook,
+    readerMode: state.reader.readerMode,
   };
 };
 const actionCreator = {};

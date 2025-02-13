@@ -16,7 +16,6 @@ class SettingPanel extends React.Component<
   constructor(props: SettingPanelProps) {
     super(props);
     this.state = {
-      readerMode: ConfigService.getReaderConfig("readerMode") || "double",
       isSettingLocked:
         ConfigService.getReaderConfig("isSettingLocked") === "yes"
           ? true
@@ -101,7 +100,7 @@ class SettingPanel extends React.Component<
             }}
           />
 
-          {this.state.readerMode && this.state.readerMode !== "double" ? (
+          {this.props.readerMode && this.props.readerMode !== "double" ? (
             <SliderList
               {...{
                 maxValue: 3,

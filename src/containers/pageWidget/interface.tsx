@@ -4,6 +4,7 @@ export interface BackgroundProps {
   currentBook: BookModel;
   locations: any;
   currentChapter: string;
+  readerMode: string;
   currentChapterIndex: number;
   htmlBook: HtmlBookModel;
   isShowBookmark: boolean;

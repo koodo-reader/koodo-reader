@@ -59,7 +59,7 @@ class OperationPanel extends React.Component<
       HtmlMouseEvent(
         this.props.htmlBook.rendition,
         this.props.currentBook.key,
-        ConfigService.getReaderConfig("readerMode")
+        this.props.readerMode
       );
     });
   }
