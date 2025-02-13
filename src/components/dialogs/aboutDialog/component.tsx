@@ -187,13 +187,9 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
           <li
             className="sort-by-category-list"
             onClick={async () => {
-              if (
-                [...this.props.books, ...this.props.deletedBooks].length > 0
-              ) {
-                await exportBooks([
-                  ...this.props.books,
-                  ...this.props.deletedBooks,
-                ]);
+              let books = await DatabaseService.getAllRecords("books");
+              if (books.length > 0) {
+                await exportBooks(books);
                 toast.success(this.props.t("Export successful"));
               } else {
                 toast(this.props.t("Nothing to export"));
@@ -204,13 +200,14 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
           </li>
           <li
             className="sort-by-category-list"
-            onClick={() => {
+            onClick={async () => {
+              let books = await DatabaseService.getAllRecords("books");
               if (
                 this.props.notes.filter((item) => item.notes !== "").length > 0
               ) {
                 exportNotes(
                   this.props.notes.filter((item) => item.notes !== ""),
-                  [...this.props.books, ...this.props.deletedBooks]
+                  books
                 );
                 toast.success(this.props.t("Export successful"));
               } else {
@@ -222,13 +219,14 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
           </li>
           <li
             className="sort-by-category-list"
-            onClick={() => {
+            onClick={async () => {
+              let books = await DatabaseService.getAllRecords("books");
               if (
                 this.props.notes.filter((item) => item.notes === "").length > 0
               ) {
                 exportHighlights(
                   this.props.notes.filter((item) => item.notes === ""),
-                  [...this.props.books, ...this.props.deletedBooks]
+                  books
                 );
                 toast.success(this.props.t("Export successful"));
               } else {
@@ -242,11 +240,9 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
             className="sort-by-category-list"
             onClick={async () => {
               let dictHistory = await DatabaseService.getAllRecords("words");
+              let books = await DatabaseService.getAllRecords("books");
               if (dictHistory.length > 0) {
-                exportDictionaryHistory(dictHistory, [
-                  ...this.props.books,
-                  ...this.props.deletedBooks,
-                ]);
+                exportDictionaryHistory(dictHistory, books);
                 toast.success(this.props.t("Export successful"));
               } else {
                 toast(this.props.t("Nothing to export"));
