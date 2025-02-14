@@ -186,7 +186,7 @@ export const getPageWidth = (
       document.body.clientWidth * 0.4 -
       (isNavLocked ? 300 : 0);
     console.log(preWidth, "preWidth");
-    let width = findValidMultiple(preWidth < 720 ? 720 : preWidth);
+    let width = findValidMultiple(preWidth);
 
     pageOffset = `calc(50vw + ${isNavLocked ? 150 : 0}px - ${width / 2}px)`;
     pageWidth = `${width}px`;

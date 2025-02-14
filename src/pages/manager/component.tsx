@@ -15,7 +15,6 @@ import { Route, Switch, Redirect } from "react-router-dom";
 import { routes } from "../../router/routes";
 import Arrow from "../../components/arrow";
 import LoadingDialog from "../../components/dialogs/loadingDialog";
-import TipDialog from "../../components/dialogs/TipDialog";
 import { Toaster } from "react-hot-toast";
 import DetailDialog from "../../components/dialogs/detailDialog";
 import FeedbackDialog from "../../components/dialogs/feedbackDialog";
@@ -131,7 +130,6 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
               this.props.handleEditDialog(false);
               this.props.handleDeleteDialog(false);
               this.props.handleAddDialog(false);
-              this.props.handleTipDialog(false);
               this.props.handleDetailDialog(false);
               this.props.handleLoadingDialog(false);
               if (!this.props.isAuthed) {
@@ -151,7 +149,6 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
               this.props.isOpenEditDialog ||
               this.props.isDetailDialog ||
               this.props.isOpenAddDialog ||
-              this.props.isTipDialog ||
               this.props.isShowLoading ||
               this.state.isDrag
                 ? {}
@@ -182,7 +179,6 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
         {this.props.isBackup && <BackupDialog />}
         {this.props.isOpenFeedbackDialog && <FeedbackDialog />}{" "}
         {this.props.isSettingOpen && <SettingDialog />}
-        {this.props.isTipDialog && <TipDialog />}
         {this.props.isDetailDialog && <DetailDialog />}
         {(!books || books.length === 0) && this.state.totalBooks ? (
           <Redirect to="/manager/loading" />
