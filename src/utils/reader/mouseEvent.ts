@@ -3,6 +3,7 @@ import { isElectron } from "react-device-detect";
 import { getIframeDoc, getIframeWin } from "./docUtil";
 import { handleExitFullScreen, handleFullScreen, sleep } from "../common";
 import Hammer from "hammerjs";
+import BookUtil from "../file/bookUtil";
 declare var window: any;
 
 let throttleTime =
@@ -140,6 +141,20 @@ export const bindHtmlEvent = (
   doc.addEventListener(
     "wheel",
     async (event) => {
+      if (event.ctrlKey && readerMode !== "double") {
+        let scale = parseFloat(ConfigService.getReaderConfig("scale") || "1");
+        if (event.deltaY < 0) {
+          console.log("Ctrl + Mouse Wheel Up");
+          // 在这里添加向上滚动的处理逻辑
+          ConfigService.setReaderConfig("scale", scale + 0.1 + "");
+        } else {
+          console.log("Ctrl + Mouse Wheel Down");
+          // 在这里添加向下滚动的处理逻辑
+          ConfigService.setReaderConfig("scale", scale - 0.1 + "");
+        }
+        BookUtil.reloadBooks();
+        return;
+      }
       if (lock) return;
       lock = true;
       if (readerMode === "scroll") {

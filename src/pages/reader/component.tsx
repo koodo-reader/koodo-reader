@@ -11,6 +11,7 @@ import { Tooltip } from "react-tooltip";
 import "./index.css";
 import Book from "../../models/Book";
 import DatabaseService from "../../utils/storage/databaseService";
+import BookUtil from "../../utils/file/bookUtil";
 
 let lock = false; //prevent from clicking too fasts
 let throttleTime =
@@ -31,9 +32,11 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
       hoverPanel: "",
       isOpenLeftPanel: this.props.isNavLocked,
       time: 0,
+      scale: ConfigService.getReaderConfig("scale"),
       isTouch: ConfigService.getReaderConfig("isTouch") === "yes",
       isPreventTrigger:
         ConfigService.getReaderConfig("isPreventTrigger") === "yes",
+      isShowScale: false,
     };
   }
   componentDidMount() {
@@ -199,6 +202,47 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
             <span className="icon-grid reader-setting-icon"></span>
           </div>
         )}
+        {(this.props.readerMode === "scroll" ||
+          this.props.readerMode === "single") && (
+          <>
+            <div
+              className="reader-zoom-in-icon-container"
+              onClick={() => {
+                this.setState({ isShowScale: !this.state.isShowScale });
+              }}
+            >
+              <span className="icon-zoom-in reader-setting-icon"></span>
+            </div>
+            {this.state.isShowScale && (
+              <input
+                className="input-progress"
+                value={this.state.scale}
+                type="range"
+                max={1.5}
+                min={0.5}
+                step={0.1}
+                onInput={(event: any) => {
+                  const scale = event.target.value;
+                  ConfigService.setReaderConfig("scale", scale);
+                }}
+                onChange={(event) => {
+                  this.setState({ scale: event.target.value });
+                }}
+                onMouseUp={() => {
+                  BookUtil.reloadBooks();
+                }}
+                style={{
+                  position: "absolute",
+                  top: "18px",
+                  right: "100px",
+                  zIndex: 100,
+                  width: "120px",
+                }}
+              />
+            )}
+          </>
+        )}
+
         <Toaster />
 
         <div

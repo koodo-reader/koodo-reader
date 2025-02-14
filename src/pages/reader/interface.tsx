@@ -6,6 +6,7 @@ export interface ReaderProps {
   t: (title: string) => string;
   htmlBook: HtmlBookModel;
   isNavLocked: boolean;
+  readerMode: string;
   handleFetchNotes: () => void;
   handleReaderMode: (readerMode: string) => void;
   handleFetchBooks: () => void;
@@ -22,5 +23,7 @@ export interface ReaderState {
   isTouch: boolean;
   isPreventTrigger: boolean;
   hoverPanel: string;
+  scale: string;
+  isShowScale: boolean;
   time: number;
 }

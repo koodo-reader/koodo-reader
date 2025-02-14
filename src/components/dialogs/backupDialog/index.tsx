@@ -2,7 +2,6 @@ import {
   handleBackupDialog,
   handleTokenDialog,
   handleLoadingDialog,
-  handleTipDialog,
   handleFetchBooks,
 } from "../../../store/actions";
 import { connect } from "react-redux";
@@ -25,7 +24,6 @@ const actionCreator = {
   handleBackupDialog,
   handleTokenDialog,
   handleLoadingDialog,
-  handleTipDialog,
   handleFetchBooks,
 };
 export default connect(

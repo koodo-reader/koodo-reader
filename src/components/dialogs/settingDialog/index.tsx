@@ -3,8 +3,6 @@ import SettingDialog from "./component";
 import { withTranslation } from "react-i18next";
 import {
   handleSetting,
-  handleTipDialog,
-  handleTip,
   handleFetchBooks,
   handleFetchPlugins,
   handleFetchDataSourceList,
@@ -39,8 +37,6 @@ const mapStateToProps = (state: stateType) => {
 };
 const actionCreator = {
   handleSetting,
-  handleTipDialog,
-  handleTip,
   handleFetchBooks,
   handleFetchPlugins,
   handleFetchDataSourceList,

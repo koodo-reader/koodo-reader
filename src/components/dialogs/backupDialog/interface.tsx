@@ -8,7 +8,6 @@ export interface BackupDialogProps extends RouteComponentProps<any> {
   handleTokenDialog: (isOpenTokenDialog: boolean) => void;
   t: (title: string) => string;
   handleLoadingDialog: (isShowLoading: boolean) => void;
-  handleTipDialog: (isTipDialog: boolean) => void;
   handleFetchBooks: () => void;
   isOpenTokenDialog: boolean;
   isAuthed: boolean;

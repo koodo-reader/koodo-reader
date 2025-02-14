@@ -7,9 +7,7 @@ export interface SettingInfoProps extends RouteComponentProps<any> {
   handleSetting: (isSettingOpen: boolean) => void;
   handleSettingMode: (settingMode: string) => void;
   handleSettingDrive: (settingDrive: string) => void;
-  handleTipDialog: (isTipDialog: boolean) => void;
   handleTokenDialog: (isOpenTokenDialog: boolean) => void;
-  handleTip: (tip: string) => void;
   handleFetchDataSourceList: () => void;
   handleFetchDefaultSyncOption: () => void;
   handleFetchLoginOptionList: () => void;

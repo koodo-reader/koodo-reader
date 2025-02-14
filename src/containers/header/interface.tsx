@@ -23,8 +23,6 @@ export interface HeaderProps extends RouteComponentProps<any> {
   handleFetchLoginOptionList: () => void;
   handleFetchDataSourceList: () => void;
   handleDrag: (isDrag: boolean) => void;
-  handleTipDialog: (isTipDialog: boolean) => void;
-  handleTip: (tip: string) => void;
   handleFetchBooks: () => void;
   t: (title: string) => string;
   handleFetchNotes: () => void;

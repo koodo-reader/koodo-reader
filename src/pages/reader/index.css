@@ -220,7 +220,8 @@
   margin: 8px;
   opacity: 0.5;
 }
-.reader-setting-icon-container {
+.reader-setting-icon-container,
+.reader-zoom-in-icon-container {
   width: 50px;
   height: 50px;
   position: absolute;
@@ -236,6 +237,11 @@
   align-items: center;
   transition: 0, 2s;
 }
-.reader-setting-icon-container:hover {
+.reader-setting-icon-container:hover,
+.reader-zoom-in-icon-container:hover {
   border-radius: 50%;
+}
+.reader-zoom-in-icon-container {
+  right: 50px;
+  font-size: 23px;
 }
