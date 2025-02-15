@@ -245,6 +245,7 @@
   "Modify the storage location of the library, and the library will be moved to the new location. Please ensure that the new folder is empty": "修改图书库的存储位置，图书库会被迁移到新位置，请确保新文件夹为空",
   "Switch between multiple libraries without affecting the original library. For multi-device synchronization in the free version, please refer to the documentation": "在多个书库中切换，原书库不受影响，免费版多端同步请参考帮助文档",
   "Authorization failed, please login again": "授权失败，请重新登录",
+  "Authorization failed": "授权失败",
   "Encryption failed, error code: ": "加密失败，错误代码：",
   "Decryption failed, error code: ": "解密失败，错误代码：",
   "Meticulously designed and built for Android and iOS": "为安卓和 iOS 平台精心设计和开发的客户端",

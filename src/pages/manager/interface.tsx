@@ -16,6 +16,7 @@ export interface ManagerProps extends RouteComponentProps<any> {
   isOpenAddDialog: boolean;
   isBookSort: boolean;
   isSortDisplay: boolean;
+  isShowChat: boolean;
   isBackup: boolean;
   isSettingOpen: boolean;
   isAboutOpen: boolean;
@@ -51,6 +52,7 @@ export interface ManagerState {
   isError: boolean;
   isCopied: boolean;
   isUpdated: boolean;
+  isShowChatBox: boolean;
   isDrag: boolean;
   token: string;
 }

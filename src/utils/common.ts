@@ -66,6 +66,7 @@ export const scrollContents = (chapterTitle: string, chapterHref: string) => {
     item.setAttribute("style", "");
     return item.textContent === chapterTitle;
   });
+  console.log(targetContent, "targetContent");
   if (targetContent.length > 0) {
     contentBody.scrollTo({
       left: 0,
@@ -219,15 +220,15 @@ export function removeSearchParams() {
   const url = new URL(window.location.href.split("?")[0]);
   window.history.replaceState({}, document.title, url.toString());
 }
+export const getChatLocale = () => {
+  if (navigator.language.startsWith("zh")) {
+    return "zh_CN";
+  } else {
+    return "en";
+  }
+};
 export function addChatBox() {
-  const getLocale = () => {
-    if (navigator.language.startsWith("zh")) {
-      return "zh_CN";
-    } else {
-      return "en";
-    }
-  };
-  console.log(getLocale());
+  console.log(getChatLocale());
   const scriptContent = `
     (function (d, t) {
       var BASE_URL = "https://app.chatwoot.com";
@@ -243,7 +244,7 @@ export function addChatBox() {
           baseUrl: BASE_URL,
         });
         window.addEventListener('chatwoot:ready', function() {
-          window.$chatwoot.setLocale('${getLocale()}');
+          window.$chatwoot.setLocale('${getChatLocale()}');
           window.$chatwoot.setCustomAttributes({
             version: '${packageJson.version}',
             client: '${isElectron ? "desktop" : "web"}',

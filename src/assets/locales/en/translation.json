@@ -87,6 +87,7 @@
   "Modify the storage location of the library, and the library will be moved to the new location. Please ensure that the new folder is empty": "Modify the storage location of the library, and the library will be moved to the new location. Please ensure that the new folder is empty",
   "Switch between multiple libraries without affecting the original library. For multi-device synchronization in the free version, please refer to the documentation": "Switch between multiple libraries without affecting the original library. For multi-device synchronization in the free version, please refer to the documentation",
   "Authorization failed, please login again": "Authorization failed, please login again",
+  "Authorization failed": "Authorization failed",
   "Account": "Account",
   "Encryption failed, error code: ": "Encryption failed, error code: ",
   "Decryption failed, error code: ": "Decryption failed, error code: ",

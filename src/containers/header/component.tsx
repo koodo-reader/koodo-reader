@@ -119,10 +119,18 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     _nextContext: any
   ) {
     if (nextProps.isAuthed && nextProps.isAuthed !== this.props.isAuthed) {
-      addChatBox();
+      if (isElectron) {
+        this.props.handleShowChat(true);
+      } else {
+        addChatBox();
+      }
     }
     if (!nextProps.isAuthed && nextProps.isAuthed !== this.props.isAuthed) {
-      removeChatBox();
+      if (isElectron) {
+        this.props.handleShowChat(false);
+      } else {
+        removeChatBox();
+      }
     }
   }
   handleFinishUpgrade = () => {

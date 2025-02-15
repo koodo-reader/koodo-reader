@@ -37,6 +37,7 @@ const mapStateToProps = (state: stateType) => {
     isOpenEditDialog: state.book.isOpenEditDialog,
     isDetailDialog: state.manager.isDetailDialog,
     isAuthed: state.manager.isAuthed,
+    isShowChat: state.manager.isShowChat,
     isOpenDeleteDialog: state.book.isOpenDeleteDialog,
     isOpenAddDialog: state.book.isOpenAddDialog,
     isSettingOpen: state.manager.isSettingOpen,
