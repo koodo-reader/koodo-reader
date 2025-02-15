@@ -80,7 +80,6 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         book.format === "PDF" || book.format.startsWith("CB")
           ? ConfigService.getReaderConfig("pdfReaderMode") || "scroll"
           : ConfigService.getReaderConfig("readerMode") || "double";
-      console.log(readerMode, "readerMode23423");
       this.props.handleReaderMode(readerMode);
       this.props.handleReadingBook(book);
     });
@@ -171,6 +170,9 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
                 await this.props.htmlBook.rendition.prev();
                 this.handleLocation();
                 setTimeout(() => (lock = false), throttleTime);
+              }}
+              style={{
+                left: this.props.isNavLocked ? 320 : 20,
               }}
             >
               <span className="icon-dropdown previous-chapter-single"></span>

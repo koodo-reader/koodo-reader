@@ -183,7 +183,14 @@ class NavigationPanel extends React.Component<
       currentTab: this.state.currentTab,
     };
     return (
-      <div className="navigation-panel">
+      <div
+        className="navigation-panel"
+        style={{
+          backgroundColor: this.props.isNavLocked
+            ? ConfigService.getReaderConfig("backgroundColor")
+            : "",
+        }}
+      >
         {this.state.searchState ? (
           <>
             <div

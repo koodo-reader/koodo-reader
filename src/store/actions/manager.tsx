@@ -30,6 +30,9 @@ export function handleUserInfo(userInfo: any) {
 export function handleDetailDialog(isDetailDialog: boolean) {
   return { type: "HANDLE_DETAIL_DIALOG", payload: isDetailDialog };
 }
+export function handleShowChat(isShowChat: boolean) {
+  return { type: "HANDLE_SHOW_CHAT", payload: isShowChat };
+}
 export function handleSetting(isSettingOpen: boolean) {
   return { type: "HANDLE_SETTING", payload: isSettingOpen };
 }

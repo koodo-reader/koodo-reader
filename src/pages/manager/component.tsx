@@ -22,6 +22,7 @@ import { Tooltip } from "react-tooltip";
 import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import emptyDark from "../../assets/images/empty-dark.svg";
 import emptyLight from "../../assets/images/empty-light.svg";
+import { getChatLocale } from "../../utils/common";
 class Manager extends React.Component<ManagerProps, ManagerState> {
   timer!: NodeJS.Timeout;
   constructor(props: ManagerProps) {
@@ -36,6 +37,7 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
       isCopied: false,
       isUpdated: false,
       isDrag: false,
+      isShowChatBox: false,
       token: "",
     };
   }
@@ -170,6 +172,37 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
         <Sidebar />
         <Toaster />
         <Header {...{ handleDrag: this.handleDrag }} />
+        {this.props.isShowChat ? (
+          this.state.isShowChatBox ? (
+            <span
+              className="chat-widget-icon"
+              onClick={() => {
+                this.setState({ isShowChatBox: false });
+                window
+                  .require("electron")
+                  .ipcRenderer.invoke("exit-chat", "ping");
+              }}
+            >
+              <span
+                className="icon-close"
+                style={{ fontSize: 20, color: "white" }}
+              ></span>
+            </span>
+          ) : (
+            <img
+              src={require("../../assets/images/chat-widget.png")}
+              alt="chat-widget"
+              className="chat-widget-icon"
+              onClick={() => {
+                this.setState({ isShowChatBox: true });
+                window.require("electron").ipcRenderer.invoke("new-chat", {
+                  url: "https://dl.koodoreader.com/chat.html",
+                  locale: getChatLocale(),
+                });
+              }}
+            />
+          )
+        ) : null}
         {this.props.isOpenDeleteDialog && <DeleteDialog />}
         {this.props.isOpenEditDialog && <EditDialog />}
         {this.props.isOpenAddDialog && <AddDialog />}
