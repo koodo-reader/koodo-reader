@@ -45,7 +45,7 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
                   width: `calc(${this.state.pageWidth} + 105px)`,
                   boxShadow: "0 0 0px rgba(191, 191, 191, 1)",
                 }
-              : { left: this.props.isNavLocked ? 305 : 0 }
+              : { left: this.props.isNavLocked ? 305 : 5 }
           }
         ></div>
 
@@ -60,7 +60,7 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
                   left: this.state.pageOffset,
                   width: `calc(${this.state.pageWidth} + 107px)`,
                 }
-              : { left: this.props.isNavLocked ? 307 : 0 }
+              : { left: this.props.isNavLocked ? 307 : 7 }
           }
         >
           {(!ConfigService.getReaderConfig("backgroundColor") &&
@@ -132,7 +132,7 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
                   width: `calc(${this.state.pageWidth} + 109px)`,
                   boxShadow: "0 0 0px rgba(191, 191, 191, 1)",
                 }
-              : { left: this.props.isNavLocked ? 309 : 0 }
+              : { left: this.props.isNavLocked ? 309 : 9 }
           }
         ></div>
       </>

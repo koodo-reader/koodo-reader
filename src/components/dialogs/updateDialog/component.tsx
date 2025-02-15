@@ -50,9 +50,6 @@ class UpdateInfo extends React.Component<UpdateInfoProps, UpdateInfoState> {
           } else {
             this.props.handleNewWarning(true);
           }
-        } else if (ConfigService.getReaderConfig("version") !== newVersion) {
-          this.props.handleNewDialog(true);
-          ConfigService.setReaderConfig("version", newVersion);
         }
         ConfigService.setReaderConfig(
           "appInfo",

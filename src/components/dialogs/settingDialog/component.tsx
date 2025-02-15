@@ -19,7 +19,7 @@ import {
   langList,
   searchList,
   skinList,
-  accountSettingList,
+  syncSettingList,
 } from "../../../constants/settingList";
 import { themeList } from "../../../constants/themeList";
 import toast from "react-hot-toast";
@@ -85,6 +85,7 @@ class SettingDialog extends React.Component<
         ConfigService.getReaderConfig("isDisableMobilePrecache") === "yes",
       appSkin: ConfigService.getReaderConfig("appSkin"),
       isUseBuiltIn: ConfigService.getReaderConfig("isUseBuiltIn") === "yes",
+      isKeepLocal: ConfigService.getItem("isKeepLocal") === "yes",
       isDisableCrop: ConfigService.getReaderConfig("isDisableCrop") === "yes",
       isDisablePDFCover:
         ConfigService.getReaderConfig("isDisablePDFCover") === "yes",
@@ -160,10 +161,18 @@ class SettingDialog extends React.Component<
   };
   handleSetting = (stateName: string) => {
     this.setState({ [stateName]: !this.state[stateName] } as any);
-    ConfigService.setReaderConfig(
-      stateName,
-      this.state[stateName] ? "no" : "yes"
-    );
+    if (
+      stateName === "isKeepLocal" ||
+      stateName === "isDisableMobilePrecache"
+    ) {
+      ConfigService.setItem(stateName, this.state[stateName] ? "no" : "yes");
+    } else {
+      ConfigService.setReaderConfig(
+        stateName,
+        this.state[stateName] ? "no" : "yes"
+      );
+    }
+
     this.handleRest(this.state[stateName]);
   };
   handleChangeLocation = async () => {
@@ -389,7 +398,7 @@ class SettingDialog extends React.Component<
           key={item.propName}
         >
           <div className="setting-dialog-new-title" key={item.title}>
-            <span style={{ width: "250px" }}>
+            <span style={{ width: "calc(100% - 100px)" }}>
               <Trans>{item.title}</Trans>
             </span>
 
@@ -996,6 +1005,7 @@ class SettingDialog extends React.Component<
                   </select>
                 </div>
               )}
+              {this.renderSwitchOption(syncSettingList)}
             </>
           ) : this.props.settingMode === "account" ? (
             <>
@@ -1195,7 +1205,6 @@ class SettingDialog extends React.Component<
                   </div>
                 </div>
               )}
-              {this.renderSwitchOption(accountSettingList)}
             </>
           ) : (
             <>

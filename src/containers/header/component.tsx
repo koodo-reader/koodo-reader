@@ -3,7 +3,10 @@ import "./header.css";
 import SearchBox from "../../components/searchBox";
 import ImportLocal from "../../components/importLocal";
 import { HeaderProps, HeaderState } from "./interface";
-import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
+import {
+  ConfigService,
+  TokenService,
+} from "../../assets/lib/kookit-extra-browser.min";
 import UpdateInfo from "../../components/dialogs/updateDialog";
 import { restoreFromConfigJson } from "../../utils/file/restore";
 import { backupToConfigJson } from "../../utils/file/backup";
@@ -214,40 +217,20 @@ class Header extends React.Component<HeaderProps, HeaderState> {
   getCompareResult = async () => {
     let localSyncRecords = ConfigService.getAllSyncRecord();
     let cloudSyncRecords = await ConfigUtil.getCloudConfig("sync");
-    return await SyncHelper.compareAll(localSyncRecords, cloudSyncRecords);
+    return await SyncHelper.compareAll(
+      localSyncRecords,
+      cloudSyncRecords,
+      ConfigService,
+      TokenService
+    );
   };
   handleCloudSync = async () => {
     let res = await this.beforeSync();
     if (!res) {
       return;
     }
-    let { compareResult, syncRecords } = await this.getCompareResult();
-    if (
-      compareResult["books"].conflict.length > 0 ||
-      compareResult["notes"].conflict.length > 0 ||
-      compareResult["bookmarks"].conflict.length > 0 ||
-      compareResult["plugins"].conflict.length > 0 ||
-      compareResult["words"].conflict.length > 0 ||
-      compareResult["objectConfig"].conflict.length > 0 ||
-      compareResult["mapConfig"].conflict.length > 0
-    ) {
-      // handleConflict();
-      // TODO handle conflict, for now keep cloud
-      let itemList = Object.keys(compareResult);
-      for (let itemName of itemList) {
-        if (
-          compareResult[itemName].conflict &&
-          compareResult[itemName].conflict.length > 0
-        ) {
-          compareResult[itemName].update = [
-            ...compareResult[itemName].update,
-            ...compareResult[itemName].conflict,
-          ];
-          compareResult[itemName].conflict = [];
-        }
-      }
-    }
-    ConfigService.setAllSyncRecord(syncRecords);
+    let compareResult = await this.getCompareResult();
+
     toast.loading(this.props.t("Start Transfering Data"), {
       id: "syncing-id",
     });

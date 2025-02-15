@@ -29,6 +29,13 @@ class NavigationPanel extends React.Component<
   }
   handleNavSearchState = (state: string) => {
     this.setState({ searchState: state });
+    if (state) {
+      this.props.handleNavLock(true);
+    } else {
+      if (ConfigService.getReaderConfig("isNavLocked") !== "yes") {
+        this.props.handleNavLock(false);
+      }
+    }
   };
   handleSearchList = (searchList: any) => {
     this.setState({ searchList });

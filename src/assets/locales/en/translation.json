@@ -89,6 +89,8 @@
   "Authorization failed, please login again": "Authorization failed, please login again",
   "Authorization failed": "Authorization failed",
   "Account": "Account",
+  "Always keep local data when resolving sync conflicts": "Always keep local data when resolving sync conflicts",
+  "If you update a piece of data that has already been deleted in the cloud before synchronization, it will cause a conflict. In this case, we will keep the cloud data by default. If you turn this option on, we will keep the local data": "If you update a piece of data that has already been deleted in the cloud before synchronization, it will cause a conflict. In this case, we will keep the cloud data by default. If you turn this option on, we will keep the local data",
   "Encryption failed, error code: ": "Encryption failed, error code: ",
   "Decryption failed, error code: ": "Decryption failed, error code: ",
   "Delete login option": "Delete login option",

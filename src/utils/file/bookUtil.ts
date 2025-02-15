@@ -208,12 +208,13 @@ class BookUtil {
     }
   }
   static async isBookExistInCloud(key: string) {
+    let service = ConfigService.getItem("defaultSyncOption");
+    if (!service) {
+      return false;
+    }
     if (isElectron) {
       const { ipcRenderer } = window.require("electron");
-      let service = ConfigService.getItem("defaultSyncOption");
-      if (!service) {
-        return false;
-      }
+
       let tokenConfig = await getCloudConfig(service);
 
       return await ipcRenderer.invoke("cloud-exist", {
@@ -229,12 +230,13 @@ class BookUtil {
     }
   }
   static async downloadCacheBook(key: string) {
+    let service = ConfigService.getItem("defaultSyncOption");
+    if (!service) {
+      return;
+    }
     if (isElectron) {
       const { ipcRenderer } = window.require("electron");
-      let service = ConfigService.getItem("defaultSyncOption");
-      if (!service) {
-        return;
-      }
+
       let tokenConfig = await getCloudConfig(service);
 
       await ipcRenderer.invoke("cloud-download", {
@@ -251,12 +253,13 @@ class BookUtil {
     }
   }
   static async uploadCacheBook(key: string) {
+    let service = ConfigService.getItem("defaultSyncOption");
+    if (!service) {
+      return;
+    }
     if (isElectron) {
       const { ipcRenderer } = window.require("electron");
-      let service = ConfigService.getItem("defaultSyncOption");
-      if (!service) {
-        return;
-      }
+
       let tokenConfig = await getCloudConfig(service);
 
       await ipcRenderer.invoke("cloud-upload", {
@@ -281,12 +284,13 @@ class BookUtil {
     }
   }
   static async downloadBook(key: string, format: string) {
+    let service = ConfigService.getItem("defaultSyncOption");
+    if (!service) {
+      return;
+    }
     if (isElectron) {
       const { ipcRenderer } = window.require("electron");
-      let service = ConfigService.getItem("defaultSyncOption");
-      if (!service) {
-        return;
-      }
+
       let tokenConfig = await getCloudConfig(service);
 
       await ipcRenderer.invoke("cloud-download", {
@@ -310,12 +314,13 @@ class BookUtil {
     if (isAuthed !== "yes") {
       return;
     }
+    let service = ConfigService.getItem("defaultSyncOption");
+    if (!service) {
+      return;
+    }
     if (isElectron) {
       const { ipcRenderer } = window.require("electron");
-      let service = ConfigService.getItem("defaultSyncOption");
-      if (!service) {
-        return;
-      }
+
       let tokenConfig = await getCloudConfig(service);
 
       await ipcRenderer.invoke("cloud-upload", {
@@ -343,12 +348,13 @@ class BookUtil {
     if (isAuthed !== "yes") {
       return;
     }
+    let service = ConfigService.getItem("defaultSyncOption");
+    if (!service) {
+      return;
+    }
     if (isElectron) {
       const { ipcRenderer } = window.require("electron");
-      let service = ConfigService.getItem("defaultSyncOption");
-      if (!service) {
-        return;
-      }
+
       let tokenConfig = await getCloudConfig(service);
 
       await ipcRenderer.invoke("cloud-delete", {
@@ -393,12 +399,13 @@ class BookUtil {
     return fileList;
   }
   static async getCloudBookList() {
+    let service = ConfigService.getItem("defaultSyncOption");
+    if (!service) {
+      return [];
+    }
     if (isElectron) {
       const { ipcRenderer } = window.require("electron");
-      let service = ConfigService.getItem("defaultSyncOption");
-      if (!service) {
-        return [];
-      }
+
       let tokenConfig = await getCloudConfig(service);
 
       return await ipcRenderer.invoke("cloud-list", {
