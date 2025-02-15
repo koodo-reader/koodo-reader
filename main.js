@@ -98,6 +98,7 @@ const createMainWin = () => {
   if (!isDev) {
     Menu.setApplicationMenu(null);
   }
+
   const urlLocation = isDev
     ? "http://localhost:3000"
     : `file://${path.join(__dirname, "./build/index.html")}`;
@@ -108,19 +109,19 @@ const createMainWin = () => {
   });
   mainWin.on("resize", () => {
     if (mainView) {
-      let [width, height] = mainWin.getSize()
+      let { width, height } = mainWin.getContentBounds()
       mainView.setBounds({ x: 0, y: 0, width: width, height: height })
     }
   });
   mainWin.on("maximize", () => {
     if (mainView) {
-      let [width, height] = mainWin.getSize()
+      let { width, height } = mainWin.getContentBounds()
       mainView.setBounds({ x: 0, y: 0, width: width, height: height })
     }
   });
   mainWin.on("unmaximize", () => {
     if (mainView) {
-      let [width, height] = mainWin.getSize()
+      let { width, height } = mainWin.getContentBounds()
       mainView.setBounds({ x: 0, y: 0, width: width, height: height })
     }
   });
@@ -385,8 +386,8 @@ const createMainWin = () => {
     if (mainWin) {
       mainView = new WebContentsView({ ...options, transparent: true })
       mainWin.contentView.addChildView(mainView)
-      let [width, height] = mainWin.getSize()
-      mainView.setBounds({ x: width - 480, y: height - 590, width: 400, height: 500 })
+      let { width, height } = mainWin.getContentBounds()
+      mainView.setBounds({ x: width - 460, y: height - 580, width: 400, height: 500 })
       mainView.setBackgroundColor("#00000000");
       mainView.webContents.loadURL(config.url)
       mainView.webContents.insertCSS(`html, body { overflow: hidden; background: transparent} #cw-widget-holder { width: calc(100% - 20px) !important; height: calc(100% - 20px) !important; margin: 0 !important; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); overflow: hidden !important; right: 10px !important; top: 10px !important; }`);
@@ -440,7 +441,7 @@ const createMainWin = () => {
     if (mainWin) {
       mainView = new WebContentsView(options)
       mainWin.contentView.addChildView(mainView)
-      let [width, height] = mainWin.getSize()
+      let { width, height } = mainWin.getContentBounds()
       mainView.setBounds({ x: 0, y: 0, width: width, height: height })
       mainView.webContents.loadURL(config.url)
     }
@@ -452,7 +453,7 @@ const createMainWin = () => {
   });
   ipcMain.handle("adjust-tab-size", (event, config) => {
     if (mainWin && mainView) {
-      let [width, height] = mainWin.getSize()
+      let { width, height } = mainWin.getContentBounds()
       mainView.setBounds({ x: 0, y: 0, width: width, height: height })
     }
   });

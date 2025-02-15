@@ -67,13 +67,19 @@ export const appearanceSettingList = [
     propName: "isDisableCrop",
   },
 ];
-export const accountSettingList = [
+export const syncSettingList = [
   {
-    isElectron: true,
+    isElectron: false,
     title:
       "Don't automatically pre-cache books for mobile version after import",
     desc: "Upon importing, books will be automatically pre-cached, enabling seamless access in the mobile version. However, this process may consume additional storage space and extend the import duration. You can still do it manually",
     propName: "isDisableMobilePrecache",
+  },
+  {
+    isElectron: false,
+    title: "Always keep local data when resolving sync conflicts",
+    desc: "If you update a piece of data that has already been deleted in the cloud before synchronization, it will cause a conflict. In this case, we will keep the cloud data by default. If you turn this option on, we will keep the local data",
+    propName: "isKeepLocal",
   },
 ];
 export const readingSettingList = [

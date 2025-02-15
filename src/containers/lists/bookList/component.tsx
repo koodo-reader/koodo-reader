@@ -16,6 +16,7 @@ import { Trans } from "react-i18next";
 import DeletePopup from "../../../components/dialogs/deletePopup";
 declare var window: any;
 let currentBookMode = "home";
+let totalPage = 0;
 class BookList extends React.Component<BookListProps, BookListState> {
   constructor(props: BookListProps) {
     super(props);
@@ -137,11 +138,11 @@ class BookList extends React.Component<BookListProps, BookListState> {
     if (books.length === 0 && !this.props.isSearch) {
       return <Redirect to="/manager/empty" />;
     }
-    this.props.handleTotalPage(
+    totalPage =
       books.length % 24 === 0
         ? books.length / 24
-        : Math.floor(books.length / 24) + 1
-    );
+        : Math.floor(books.length / 24) + 1;
+
     if (bookMode !== currentBookMode) {
       this.props.handleCurrentPage(1);
       currentBookMode = bookMode;
@@ -213,10 +214,6 @@ class BookList extends React.Component<BookListProps, BookListState> {
       return <Redirect to="/manager/empty" />;
     }
 
-    ConfigService.setReaderConfig(
-      "totalBooks",
-      this.props.books.length.toString()
-    );
     const deletePopupProps = {
       mode: "shelf",
       name: this.props.shelfTitle,
@@ -292,12 +289,12 @@ class BookList extends React.Component<BookListProps, BookListState> {
                       e.target.select();
                     }}
                   />
-                  <span>/ {this.props.totalPage}</span>
+                  <span>/ {totalPage}</span>
                 </div>
                 <div
                   className="book-list-next-page"
                   onClick={() => {
-                    if (this.props.currentPage === this.props.totalPage) return;
+                    if (this.props.currentPage === totalPage) return;
                     this.props.handleCurrentPage(this.props.currentPage + 1);
                   }}
                 >
