@@ -150,7 +150,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
         try {
           await this.handleBook(file, md5);
         } catch (error) {
-          console.log(error, "564565");
+          console.log(error);
         }
 
         return resolve();

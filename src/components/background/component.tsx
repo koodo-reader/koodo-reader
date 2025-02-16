@@ -17,7 +17,6 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
     this.isFirst = true;
   }
   componentDidMount() {
-    console.log(this.props.readerMode, "readermode");
     this.setState(
       getPageWidth(
         this.props.readerMode,
@@ -29,8 +28,6 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
   }
 
   render() {
-    console.log(this.state.pageOffset, "pageOffset");
-    console.log(this.state.pageWidth, "pageWidth");
     return (
       <>
         <div

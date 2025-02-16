@@ -66,7 +66,6 @@ export const scrollContents = (chapterTitle: string, chapterHref: string) => {
     item.setAttribute("style", "");
     return item.textContent === chapterTitle;
   });
-  console.log(targetContent, "targetContent");
   if (targetContent.length > 0) {
     contentBody.scrollTo({
       left: 0,
@@ -186,7 +185,6 @@ export const getPageWidth = (
       document.body.clientWidth * parseFloat(scale) -
       document.body.clientWidth * 0.4 -
       (isNavLocked ? 300 : 0);
-    console.log(preWidth, "preWidth");
     let width = findValidMultiple(preWidth);
 
     pageOffset = `calc(50vw + ${isNavLocked ? 150 : 0}px - ${width / 2}px)`;
@@ -228,7 +226,6 @@ export const getChatLocale = () => {
   }
 };
 export function addChatBox() {
-  console.log(getChatLocale());
   const scriptContent = `
     (function (d, t) {
       var BASE_URL = "https://app.chatwoot.com";

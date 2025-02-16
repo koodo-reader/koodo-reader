@@ -35,7 +35,6 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
       position,
       "recordLocation"
     );
-    console.log(position, "position");
     scrollContents(position.chapterTitle, position.chapterHref);
   };
   async handlePageNum(rendition) {
