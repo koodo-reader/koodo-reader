@@ -343,8 +343,6 @@
   "Hide books which have been added to the shelf, so they won't show up in home page": "Գրադարանի գլխավոր էջից թաքցնել բոլոր այն գրքերը, որոնք ավելացվել են դարակների մեջ",
   "Delete book from shelf also deleting book itself": "Դարակից հեռացնելիս՝ ջնջել գրքերը",
   "When deleting book from shelf, the book will be deleted as well": "Գրքերը դարակների մեջից հեռացնելիս՝ դրանք մեկընդմիշտ կջնջվեն։",
-  "Chinese Coversion": "Չինարենի փոխարկում",
-  "Unknown Authur": "Անհայտ հեղինակ",
   "Minute": "Րոպե",
   "You need to manually change the storage location to the same sync folder on different computers. When you click the sync button, Koodo Reader will automatically upload or download the data from this folder according the timestamp.": "Դուք պետք է ձեռքով փոխեք պահեստավորման վայրը տարբեր համակարգիչների վրա: Երբ սեղմեք սինքրոնիզացման կոճակը, Koodo Reader-ը ավտոմատ կերպով կվերբեռնի կամ կներբեռնի տվյալներն այս թղթապանակից՝ կախված նրանից, թե որտեղ է կատարվել վերջին փոփոխությունը։",
   "Turn on bionic reading": "Միացնել բիոնիկ ընթերցումը",
