@@ -18,6 +18,7 @@ const mapStateToProps = (state: stateType) => {
     htmlBook: state.reader.htmlBook,
     readerMode: state.reader.readerMode,
     isNavLocked: state.reader.isNavLocked,
+    isSearch: state.manager.isSearch,
   };
 };
 const actionCreator = {

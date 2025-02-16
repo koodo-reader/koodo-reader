@@ -260,7 +260,7 @@ class BookList extends React.Component<BookListProps, BookListState> {
             <ul className="book-list-item-box">
               {!this.state.isRefreshing && this.renderBookList()}
             </ul>
-            {this.props.totalPage > 1 && (
+            {totalPage > 1 && (
               <div
                 className="book-list-page-navigator"
                 style={this.props.isSelectBook ? { display: "none" } : {}}
