@@ -122,7 +122,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         }
 
       case "left":
-        if (this.props.isNavLocked) {
+        if (this.props.isNavLocked || this.props.isSearch) {
           break;
         } else {
           this.setState({ isOpenLeftPanel: false });

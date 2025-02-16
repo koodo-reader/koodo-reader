@@ -32,7 +32,7 @@ export const backup = async (service: string): Promise<Boolean> => {
       targetPath = backupPath;
     } else {
       const path = window.require("path");
-      targetPath = path.join(getStorageLocation(), "data", "backup");
+      targetPath = path.join(getStorageLocation(), "backup");
     }
     await backupFromPath(targetPath, fileName);
     if (service === "local") {
