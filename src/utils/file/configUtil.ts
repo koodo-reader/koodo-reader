@@ -60,7 +60,6 @@ class ConfigUtil {
           config[item] = ConfigService.getItem(item);
         }
       }
-      console.log(config, "config");
     }
     if (isElectron) {
       const { ipcRenderer } = window.require("electron");

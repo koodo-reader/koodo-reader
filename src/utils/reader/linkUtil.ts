@@ -37,8 +37,6 @@ export const handleLinkJump = async (event: any, rendition: any = {}) => {
       );
     }
     let id = href.split("#").reverse()[0];
-    console.log(id, "id");
-    console.log(doc.body.querySelector("#" + id), "doc.body.querySelector");
     await rendition.goToNode(doc.body.querySelector("#" + id) || doc.body);
   } else if (
     href &&
