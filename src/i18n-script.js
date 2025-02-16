@@ -1,50 +1,37 @@
-// the translations
-const resources = [
-  "./assets/locales/ar/translation.json",
-  "./assets/locales/bg/translation.json",
-  "./assets/locales/bn/translation.json",
-  "./assets/locales/sv/translation.json",
-  "./assets/locales/ga/translation.json",
-  "./assets/locales/bo/translation.json",
-  "./assets/locales/cs/translation.json",
-  "./assets/locales/da/translation.json",
-  "./assets/locales/de/translation.json",
-  "./assets/locales/el/translation.json",
-  "./assets/locales/en/translation.json",
-  "./assets/locales/eo/translation.json",
-  "./assets/locales/es/translation.json",
-  "./assets/locales/fa/translation.json",
-  "./assets/locales/fi/translation.json",
-  "./assets/locales/fr/translation.json",
-  "./assets/locales/hi/translation.json",
-  "./assets/locales/hu/translation.json",
-  "./assets/locales/hy/translation.json",
-  "./assets/locales/id/translation.json",
-  "./assets/locales/ie/translation.json",
-  "./assets/locales/it/translation.json",
-  "./assets/locales/ja/translation.json",
-  "./assets/locales/sl/translation.json",
-  "./assets/locales/ko/translation.json",
-  "./assets/locales/nl/translation.json",
-  "./assets/locales/pl/translation.json",
-  "./assets/locales/pt/translation.json",
-  "./assets/locales/pt-BR/translation.json",
-  "./assets/locales/ro/translation.json",
-  "./assets/locales/ru/translation.json",
-  "./assets/locales/sl/translation.json",
-  "./assets/locales/sv/translation.json",
-  "./assets/locales/ta/translation.json",
-  "./assets/locales/th/translation.json",
-  "./assets/locales/tl/translation.json",
-  "./assets/locales/tr/translation.json",
-  "./assets/locales/uk/translation.json",
-  "./assets/locales/vi/translation.json",
-  "./assets/locales/zh-CN/translation.json",
-  "./assets/locales/zh-TW/translation.json",
-  "./assets/locales/zh-MO/translation.json",
-];
+
+
+//list the folders in ./assets/locales
 const fs = require("fs");
 const path = require("path");
+const localesPath = path.join(__dirname, "./assets/locales");
+const folders = fs.readdirSync(localesPath);
+let resources = [];
+for (let index = 0; index < folders.length; index++) {
+  const folder = folders[index];
+  resources.push(path.join(__dirname, `./assets/locales/${folder}/translation.json`));
+}
+console.log(resources);
+// const zhdataRaw = fs.readFileSync(
+//   path.join(__dirname, "./assets/locales/zh-CN/translation.json"),
+//   "utf-8"
+// );
+// const enDataRaw = fs.readFileSync(path.join(__dirname, "./assets/locales/en/translation.json"),
+//   "utf-8"
+// );
+// //find the missing terms in the target language
+// const zhData = JSON.parse(zhdataRaw);
+// const enData = JSON.parse(enDataRaw);
+// let missingTerms = {};
+// for (let index = 0; index < Object.keys(zhData).length; index++) {
+//   const term = Object.keys(zhData)[index];
+//   if (Object.keys(enData).indexOf(term) === -1) {
+//     console.log(zhData[term]);
+//     missingTerms[term] = zhData[term];
+//   }
+// }
+// console.log(missingTerms);
+// console.log(Object.keys(zhData).length, Object.keys(enData).length);
+
 const data = fs.readFileSync(
   path.join(__dirname, "./assets/locales/en/translation.json"),
   "utf-8"

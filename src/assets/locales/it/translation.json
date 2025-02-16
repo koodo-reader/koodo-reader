@@ -343,8 +343,6 @@
   "Hide books which have been added to the shelf, so they won't show up in home page": "Nascondi i libri che sono stati aggiunti allo scaffale, in modo che non vengano visualizzati nella home page",
   "Delete book from shelf also deleting book itself": "Elimina il libro dallo scaffale eliminando anche il libro stesso",
   "When deleting book from shelf, the book will be deleted as well": "Quando elimini il libro dallo scaffale, anche il libro verrà eliminato",
-  "Chinese Coversion": "Conversione cinese",
-  "Unknown Authur": "Autore sconosciuto",
   "Minute": "Minuto",
   "You need to manually change the storage location to the same sync folder on different computers. When you click the sync button, Koodo Reader will automatically upload or download the data from this folder according the timestamp.": "È necessario modificare manualmente la posizione di archiviazione nella stessa cartella di sincronizzazione su computer diversi. Quando fai clic sul pulsante di sincronizzazione, Koodo Reader caricherà o scaricherà automaticamente i dati da questa cartella in base al timestamp.",
   "Turn on bionic reading": "Abiita la lettura bionica",

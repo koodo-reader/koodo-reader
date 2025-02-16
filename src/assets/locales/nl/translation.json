@@ -343,8 +343,6 @@
   "Hide books which have been added to the shelf, so they won't show up in home page": "Verberg boeken op het overzicht die reeds op de boekenplank staan",
   "Delete book from shelf also deleting book itself": "Boek van boekenplank permanent verwijderen",
   "When deleting book from shelf, the book will be deleted as well": "Verwijder een boek permanent na het van de boekenplank te hebben verwijderd",
-  "Chinese Coversion": "Chinese conversie",
-  "Unknown Authur": "Onbekende auteur",
   "Minute": "Minuut",
   "You need to manually change the storage location to the same sync folder on different computers. When you click the sync button, Koodo Reader will automatically upload or download the data from this folder according the timestamp.": "Wijzig de opslaglocatie in die van dezelfde map als op andere computers. Na het aanklikken van de synchronisatieknop, zal Koodo gegevens uit deze map up- of downloaden op basis van het tijdstempel.",
   "Turn on bionic reading": "Turn on bionic reading",
