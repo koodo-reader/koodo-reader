@@ -8,7 +8,7 @@ const folders = fs.readdirSync(localesPath);
 let resources = [];
 for (let index = 0; index < folders.length; index++) {
   const folder = folders[index];
-  resources.push(path.join(__dirname, `./assets/locales/${folder}/translation.json`));
+  resources.push(`./assets/locales/${folder}/translation.json`);
 }
 console.log(resources);
 // const zhdataRaw = fs.readFileSync(
