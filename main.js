@@ -387,7 +387,8 @@ const createMainWin = () => {
       mainView = new WebContentsView({ ...options, transparent: true })
       mainWin.contentView.addChildView(mainView)
       let { width, height } = mainWin.getContentBounds()
-      mainView.setBounds({ x: width - 460, y: height - 580, width: 400, height: 500 })
+      // mainView.setBounds({ x: width - 400, y: height - 540, width: 400, height: 500 })
+      mainView.setBounds({ x: width - 80, y: height - 100, width: 80, height: 80 })
       mainView.setBackgroundColor("#00000000");
       mainView.webContents.loadURL(config.url)
       mainView.webContents.insertCSS(`html, body { overflow: hidden; background: transparent} #cw-widget-holder { width: calc(100% - 20px) !important; height: calc(100% - 20px) !important; margin: 0 !important; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); overflow: hidden !important; right: 10px !important; top: 10px !important; }`);
@@ -416,7 +417,6 @@ const createMainWin = () => {
                     baseUrl: BASE_URL,
                   });
                   window.addEventListener('chatwoot:ready', function () {
-                    window.$chatwoot.toggle('open');
                     window.$chatwoot.setLocale('${config.locale}');
                   });
                 };
@@ -425,8 +425,21 @@ const createMainWin = () => {
             \`;
             document.head.appendChild(script);
           `)
+          event.returnvalue = true;
 
         })
+      });
+      mainView.webContents.on('focus', () => {
+        mainView.setBounds({ x: width - 400, y: height - 520, width: 400, height: 500 })
+        mainView.webContents.executeJavaScript(`
+          window.$chatwoot.toggle('open');
+        `)
+      });
+      mainView.webContents.on('blur', () => {
+        mainView.webContents.executeJavaScript(`
+          window.$chatwoot.toggle('close');
+        `)
+        mainView.setBounds({ x: width - 80, y: height - 100, width: 80, height: 80 })
       });
     }
   });

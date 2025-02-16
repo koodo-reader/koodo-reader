@@ -12,7 +12,6 @@ import {
   handleFetchBookmarks,
   handleFetchDefaultSyncOption,
   handleFetchLoginOptionList,
-  handleShowChat,
   handleFetchDataSourceList,
 } from "../../store/actions";
 import { stateType } from "../../store";
@@ -36,7 +35,6 @@ const mapStateToProps = (state: stateType) => {
 const actionCreator = {
   handleSortDisplay,
   handleBackupDialog,
-  handleShowChat,
   handleSetting,
   handleAbout,
   handleFeedbackDialog,

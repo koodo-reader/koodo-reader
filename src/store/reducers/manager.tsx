@@ -8,7 +8,7 @@ const initState = {
   isSearch: false,
   isOpenFeedbackDialog: false,
   isAboutOpen: false,
-  isBookSort: ConfigService.getItem("bookSortCode") ? true : false,
+  isBookSort: ConfigService.getReaderConfig("bookSortCode") ? true : false,
   isNoteSort: false,
   isAuthed: false,
   userInfo: null,
@@ -25,7 +25,6 @@ const initState = {
   message: "Addition successful",
   settingMode: "general",
   settingDrive: "",
-  isShowChat: false,
   selectedBooks: [],
 };
 export function manager(
@@ -47,11 +46,6 @@ export function manager(
       return {
         ...state,
         deletedBooks: action.payload,
-      };
-    case "HANDLE_SHOW_CHAT":
-      return {
-        ...state,
-        isShowChat: action.payload,
       };
     case "HANDLE_FEEDBACK_DIALOG":
       return {

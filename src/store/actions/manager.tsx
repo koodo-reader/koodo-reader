@@ -30,9 +30,6 @@ export function handleUserInfo(userInfo: any) {
 export function handleDetailDialog(isDetailDialog: boolean) {
   return { type: "HANDLE_DETAIL_DIALOG", payload: isDetailDialog };
 }
-export function handleShowChat(isShowChat: boolean) {
-  return { type: "HANDLE_SHOW_CHAT", payload: isShowChat };
-}
 export function handleSetting(isSettingOpen: boolean) {
   return { type: "HANDLE_SETTING", payload: isSettingOpen };
 }
@@ -125,10 +122,14 @@ export function handleFetchPlugins() {
 }
 export function handleFetchAuthed() {
   return (dispatch: Dispatch) => {
-    TokenService.getToken("is_authed").then((value) => {
-      let isAuthed = value === "yes";
-      dispatch(handleAuthed(isAuthed));
-    });
+    try {
+      TokenService.getToken("is_authed").then((value) => {
+        let isAuthed = value === "yes";
+        dispatch(handleAuthed(isAuthed));
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
 }
 export function handleFetchBookSortCode() {
