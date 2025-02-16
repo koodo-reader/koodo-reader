@@ -165,6 +165,7 @@ Make sure that you have installed yarn and git
 | German          | de    | [View](./src/assets/locales/de/translation.json)    |
 | Greek           | el    | [View](./src/assets/locales/el/translation.json)    |
 | Hindi           | hi    | [View](./src/assets/locales/hi/translation.json)    |
+| Hungarian       | hu    | [View](./src/assets/locales/hu/translation.json)    |
 | Indonesian      | id    | [View](./src/assets/locales/id/translation.json)    |
 | Interlingue     | ie    | [View](./src/assets/locales/ie/translation.json)    |
 | Irish           | ga    | [View](./src/assets/locales/ga/translation.json)    |
@@ -182,6 +183,7 @@ Make sure that you have installed yarn and git
 | Swedish         | sv    | [View](./src/assets/locales/sv/translation.json)    |
 | Tamil           | ta    | [View](./src/assets/locales/ta/translation.json)    |
 | Thai            | th    | [View](./src/assets/locales/th/translation.json)    |
+| Tagalog         | tl    | [View](./src/assets/locales/tl/translation.json)    |
 | Tibetan         | bo    | [View](./src/assets/locales/bo/translation.json)    |
 | Turkish         | tr    | [View](./src/assets/locales/tr/translation.json)    |
 | Ukrainian       | uk    | [View](./src/assets/locales/uk/translation.json)    |
