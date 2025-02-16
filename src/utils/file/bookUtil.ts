@@ -378,6 +378,9 @@ class BookUtil {
   }
   static async deleteOfflineBook(key: string) {
     let book: Book = await DatabaseService.getRecord(key, "books");
+    if (!book) {
+      return;
+    }
     await this.deleteBook(key, book.format.toLowerCase());
     await this.deleteCacheBook(key);
   }

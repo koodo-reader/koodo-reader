@@ -24,7 +24,7 @@ import ConfigUtil from "../../utils/file/configUtil";
 import DatabaseService from "../../utils/storage/databaseService";
 import CoverUtil from "../../utils/file/coverUtil";
 import BookUtil from "../../utils/file/bookUtil";
-import { addChatBox, removeChatBox } from "../../utils/common";
+import { addChatBox, getChatLocale, removeChatBox } from "../../utils/common";
 import { driveList } from "../../constants/driveList";
 
 class Header extends React.Component<HeaderProps, HeaderState> {
@@ -104,7 +104,20 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       this.props.handleFetchNotes();
       this.props.handleFetchBookmarks();
     });
-    if (this.props.isAuthed && this.props.books) {
+  }
+  async UNSAFE_componentWillReceiveProps(
+    nextProps: Readonly<HeaderProps>,
+    _nextContext: any
+  ) {
+    if (nextProps.isAuthed && nextProps.isAuthed !== this.props.isAuthed) {
+      if (isElectron) {
+        window.require("electron").ipcRenderer.invoke("new-chat", {
+          url: "https://dl.koodoreader.com/chat.html",
+          locale: getChatLocale(),
+        });
+      } else {
+        addChatBox();
+      }
       if (ConfigService.getReaderConfig("isProUpgraded") !== "yes") {
         toast.loading(this.props.t("Upgrading, please wait..."), {
           id: "upgrading",
@@ -116,21 +129,12 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         ConfigService.setReaderConfig("isProUpgraded", "yes");
       }
     }
-  }
-  async UNSAFE_componentWillReceiveProps(
-    nextProps: Readonly<HeaderProps>,
-    _nextContext: any
-  ) {
-    if (nextProps.isAuthed && nextProps.isAuthed !== this.props.isAuthed) {
-      if (isElectron) {
-        this.props.handleShowChat(true);
-      } else {
-        addChatBox();
-      }
-    }
     if (!nextProps.isAuthed && nextProps.isAuthed !== this.props.isAuthed) {
       if (isElectron) {
-        this.props.handleShowChat(false);
+        window.require("electron").ipcRenderer.invoke("new-chat", {
+          url: "https://dl.koodoreader.com/chat.html",
+          locale: getChatLocale(),
+        });
       } else {
         removeChatBox();
       }
@@ -184,9 +188,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
   };
   beforeSync = async () => {
     if (!this.props.defaultSyncOption) {
-      toast.error(
-        this.props.t("Please set default sync option in the setting")
-      );
+      toast.error(this.props.t("Please add data source in the setting"));
       this.setState({ isSync: false });
       return false;
     }
@@ -221,7 +223,8 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       localSyncRecords,
       cloudSyncRecords,
       ConfigService,
-      TokenService
+      TokenService,
+      ConfigUtil
     );
   };
   handleCloudSync = async () => {

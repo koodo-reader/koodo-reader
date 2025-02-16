@@ -85,7 +85,7 @@ class SettingDialog extends React.Component<
         ConfigService.getReaderConfig("isDisableMobilePrecache") === "yes",
       appSkin: ConfigService.getReaderConfig("appSkin"),
       isUseBuiltIn: ConfigService.getReaderConfig("isUseBuiltIn") === "yes",
-      isKeepLocal: ConfigService.getItem("isKeepLocal") === "yes",
+      isKeepLocal: ConfigService.getReaderConfig("isKeepLocal") === "yes",
       isDisableCrop: ConfigService.getReaderConfig("isDisableCrop") === "yes",
       isDisablePDFCover:
         ConfigService.getReaderConfig("isDisablePDFCover") === "yes",
@@ -872,6 +872,12 @@ class SettingDialog extends React.Component<
                             className="voice-add-confirm"
                             style={{ marginRight: "10px" }}
                             onClick={async () => {
+                              toast.loading(
+                                this.props.t("Testing connection..."),
+                                {
+                                  id: "testing-connection-id",
+                                }
+                              );
                               const { ipcRenderer } =
                                 window.require("electron");
                               const fs = window.require("fs");
@@ -891,7 +897,10 @@ class SettingDialog extends React.Component<
                               );
                               if (result) {
                                 toast.success(
-                                  this.props.t("Connection successful")
+                                  this.props.t("Connection successful"),
+                                  {
+                                    id: "testing-connection-id",
+                                  }
                                 );
                                 await ipcRenderer.invoke("cloud-delete", {
                                   ...this.state.driveConfig,
