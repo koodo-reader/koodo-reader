@@ -21,6 +21,7 @@ let mainWin;
 let readerWindow;
 let urlWindow;
 let mainView;
+let chatView;
 let dbConnection = {};
 let syncUtilCache = {};
 const singleInstance = app.requestSingleInstanceLock();
@@ -111,6 +112,10 @@ const createMainWin = () => {
     if (mainView) {
       let { width, height } = mainWin.getContentBounds()
       mainView.setBounds({ x: 0, y: 0, width: width, height: height })
+    }
+    if (chatView) {
+      let { width, height } = mainWin.getContentBounds()
+      chatView.setBounds({ x: width - 80, y: height - 100, width: 80, height: 80 })
     }
   });
   mainWin.on("maximize", () => {
@@ -384,22 +389,22 @@ const createMainWin = () => {
   });
   ipcMain.handle("new-chat", (event, config) => {
     if (mainWin) {
-      mainView = new WebContentsView({ ...options, transparent: true })
-      mainWin.contentView.addChildView(mainView)
+      chatView = new WebContentsView({ ...options, transparent: true })
+      mainWin.contentView.addChildView(chatView)
       let { width, height } = mainWin.getContentBounds()
       // mainView.setBounds({ x: width - 400, y: height - 540, width: 400, height: 500 })
-      mainView.setBounds({ x: width - 80, y: height - 100, width: 80, height: 80 })
-      mainView.setBackgroundColor("#00000000");
-      mainView.webContents.loadURL(config.url)
-      mainView.webContents.insertCSS(`html, body { overflow: hidden; background: transparent} #cw-widget-holder { width: calc(100% - 20px) !important; height: calc(100% - 20px) !important; margin: 0 !important; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); overflow: hidden !important; right: 10px !important; top: 10px !important; }`);
-      mainView.webContents.once('did-navigate', () => {
+      chatView.setBounds({ x: width - 80, y: height - 100, width: 80, height: 80 })
+      chatView.setBackgroundColor("#00000000");
+      chatView.webContents.loadURL(config.url)
+      chatView.webContents.insertCSS(`html, body { overflow: hidden; background: transparent} #cw-widget-holder { width: calc(100% - 20px) !important; height: calc(100% - 20px) !important; margin: 0 !important; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); overflow: hidden !important; right: 10px !important; top: 10px !important; }`);
+      chatView.webContents.once('did-navigate', () => {
 
         // THIS WORKS!!! So did-navigate is working!
         console.log("Main view logs this no problem....");
-        mainView.webContents.once('dom-ready', () => {
+        chatView.webContents.once('dom-ready', () => {
 
           // NOT WORKING!!! Why?
-          mainView.webContents.executeJavaScript(`
+          chatView.webContents.executeJavaScript(`
             const script = document.createElement('script');
             script.type = 'text/javascript';
             script.text = \`
@@ -429,23 +434,23 @@ const createMainWin = () => {
 
         })
       });
-      mainView.webContents.on('focus', () => {
-        mainView.setBounds({ x: width - 400, y: height - 520, width: 400, height: 500 })
-        mainView.webContents.executeJavaScript(`
+      chatView.webContents.on('focus', () => {
+        chatView.setBounds({ x: width - 400, y: height - 520, width: 400, height: 500 })
+        chatView.webContents.executeJavaScript(`
           window.$chatwoot.toggle('open');
         `)
       });
-      mainView.webContents.on('blur', () => {
-        mainView.webContents.executeJavaScript(`
+      chatView.webContents.on('blur', () => {
+        chatView.webContents.executeJavaScript(`
           window.$chatwoot.toggle('close');
         `)
-        mainView.setBounds({ x: width - 80, y: height - 100, width: 80, height: 80 })
+        chatView.setBounds({ x: width - 80, y: height - 100, width: 80, height: 80 })
       });
     }
   });
   ipcMain.handle("exit-chat", (event, config) => {
-    if (mainWin && mainView) {
-      mainWin.contentView.removeChildView(mainView)
+    if (mainWin && chatView) {
+      mainWin.contentView.removeChildView(chatView)
     }
   });
 
