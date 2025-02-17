@@ -24,7 +24,12 @@ import ConfigUtil from "../../utils/file/configUtil";
 import DatabaseService from "../../utils/storage/databaseService";
 import CoverUtil from "../../utils/file/coverUtil";
 import BookUtil from "../../utils/file/bookUtil";
-import { addChatBox, getChatLocale, removeChatBox } from "../../utils/common";
+import {
+  addChatBox,
+  getChatLocale,
+  openExternalUrl,
+  removeChatBox,
+} from "../../utils/common";
 import { driveList } from "../../constants/driveList";
 
 class Header extends React.Component<HeaderProps, HeaderState> {
@@ -419,7 +424,15 @@ class Header extends React.Component<HeaderProps, HeaderState> {
           <div
             className="header-report-container"
             onClick={() => {
-              this.props.history.push("/login");
+              if (isElectron) {
+                this.props.history.push("/login");
+              } else {
+                if (navigator.language.startsWith("zh")) {
+                  openExternalUrl("https://www.koodoreader.com/zh/about-pro");
+                } else {
+                  openExternalUrl("https://www.koodoreader.com/en/about-pro");
+                }
+              }
             }}
           >
             <Trans>Pro version</Trans>
