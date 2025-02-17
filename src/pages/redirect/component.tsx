@@ -36,7 +36,6 @@ class Redirect extends React.Component<RedirectProps, RedirectState> {
   }
   handleFinish = () => {
     this.props.handleLoadingDialog(false);
-    alert("数据恢复成功");
   };
   showMessage = (message: string) => {
     toast(this.props.t(message));
