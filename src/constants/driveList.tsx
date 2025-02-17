@@ -29,6 +29,20 @@ export const driveList = [
     support: ["desktop", "browser", "phone"],
   },
   {
+    label: "Mega",
+    value: "mega",
+    icon: "icon-mega",
+    isPro: true,
+    support: ["desktop", "browser", "phone"],
+  },
+  {
+    label: "Box",
+    value: "boxnet",
+    icon: "icon-box",
+    isPro: true,
+    support: ["desktop", "browser", "phone"],
+  },
+  {
     label: "S3 Compatible",
     value: "s3compatible",
     icon: "icon-s3compatible",
@@ -81,6 +95,35 @@ export const driveInputConfig: DriveInputConfig = {
       label: "Password",
       value: "password",
       type: "password",
+    },
+  ],
+  mega: [
+    {
+      label: "Username",
+      value: "username",
+      type: "text",
+    },
+    {
+      label: "Password",
+      value: "password",
+      type: "password",
+    },
+    {
+      label: "2FA code",
+      value: "code",
+      type: "text",
+    },
+    {
+      label: "Path",
+      value: "path",
+      type: "text",
+    },
+  ],
+  box: [
+    {
+      label: "Token",
+      value: "token",
+      type: "text",
     },
   ],
   ftp: [

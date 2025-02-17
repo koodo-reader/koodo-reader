@@ -366,6 +366,7 @@ class SettingDialog extends React.Component<
       this.props.settingDrive === "webdav" ||
       this.props.settingDrive === "ftp" ||
       this.props.settingDrive === "sftp" ||
+      this.props.settingDrive === "mega" ||
       this.props.settingDrive === "s3compatible"
     ) {
       toast.loading(i18n.t("Adding"), { id: "adding-sync-id" });
@@ -776,6 +777,7 @@ class SettingDialog extends React.Component<
                   {this.props.settingDrive === "webdav" ||
                   this.props.settingDrive === "ftp" ||
                   this.props.settingDrive === "sftp" ||
+                  this.props.settingDrive === "mega" ||
                   this.props.settingDrive === "s3compatible" ? (
                     <>
                       {driveInputConfig[this.props.settingDrive].map((item) => {
@@ -847,6 +849,7 @@ class SettingDialog extends React.Component<
                       </div>
                       {(this.props.settingDrive === "dropbox" ||
                         this.props.settingDrive === "google" ||
+                        this.props.settingDrive === "boxnet" ||
                         this.props.settingDrive === "microsoft") && (
                         <div
                           className="voice-add-confirm"
@@ -867,6 +870,7 @@ class SettingDialog extends React.Component<
                         (this.props.settingDrive === "webdav" ||
                           this.props.settingDrive === "ftp" ||
                           this.props.settingDrive === "sftp" ||
+                          this.props.settingDrive === "mega" ||
                           this.props.settingDrive === "s3compatible") && (
                           <div
                             className="voice-add-confirm"
