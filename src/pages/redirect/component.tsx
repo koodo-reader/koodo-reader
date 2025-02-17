@@ -72,8 +72,7 @@ class Redirect extends React.Component<RedirectProps, RedirectState> {
               state.replace("$", "|")
           );
         }
-      }
-      if (state) {
+      } else if (state) {
         const encodedState = state.split("|")[1];
         const customParams = JSON.parse(decodeURIComponent(encodedState));
         if (customParams && customParams.deeplink) {
