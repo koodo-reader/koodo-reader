@@ -59,6 +59,20 @@ class Redirect extends React.Component<RedirectProps, RedirectState> {
       this.setState({ token: params.code });
       this.setState({ isAuthed: true });
       let state = params.state;
+      // boxnet doesn't allow | in state
+      if (state.indexOf("boxnet") > -1) {
+        const encodedState = state.split("$")[1];
+        const customParams = JSON.parse(decodeURIComponent(encodedState));
+        if (customParams && customParams.deeplink) {
+          window.location.replace(
+            customParams.deeplink +
+              "?code=" +
+              params.code +
+              "&state=" +
+              state.replace("$", "|")
+          );
+        }
+      }
       if (state) {
         const encodedState = state.split("|")[1];
         const customParams = JSON.parse(decodeURIComponent(encodedState));
