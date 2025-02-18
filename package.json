@@ -51,6 +51,7 @@
     "react-tooltip": "^5.28.0",
     "ssh2-sftp-client": "^11.0.0",
     "underscore": "^1.13.7",
+    "uuid": "^11.0.5",
     "webdav": "^5.7.1"
   },
   "devDependencies": {
