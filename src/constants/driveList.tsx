@@ -33,12 +33,19 @@ export const driveList = [
     value: "mega",
     icon: "icon-mega",
     isPro: true,
-    support: ["desktop", "browser", "phone"],
+    support: ["desktop", "browser"],
   },
   {
     label: "Box",
     value: "boxnet",
     icon: "icon-box",
+    isPro: true,
+    support: ["desktop", "browser", "phone"],
+  },
+  {
+    label: "阿里云盘",
+    value: "adrive",
+    icon: "icon-adrive",
     isPro: true,
     support: ["desktop", "browser", "phone"],
   },
@@ -99,19 +106,14 @@ export const driveInputConfig: DriveInputConfig = {
   ],
   mega: [
     {
-      label: "Username",
-      value: "username",
+      label: "Email",
+      value: "email",
       type: "text",
     },
     {
       label: "Password",
       value: "password",
       type: "password",
-    },
-    {
-      label: "2FA code",
-      value: "code",
-      type: "text",
     },
     {
       label: "Path",

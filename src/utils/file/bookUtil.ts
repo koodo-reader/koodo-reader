@@ -18,6 +18,7 @@ declare var window: any;
 
 class BookUtil {
   static addBook(key: string, format: string, buffer: ArrayBuffer) {
+    this.uploadBook(key, format);
     if (isElectron) {
       const fs = window.require("fs");
       const path = window.require("path");
@@ -36,7 +37,6 @@ class BookUtil {
     } else {
       return localforage.setItem(key, buffer);
     }
-    this.uploadBook(key, format);
   }
   static deleteBook(key: string, format: string) {
     if (isElectron) {

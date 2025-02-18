@@ -60,7 +60,7 @@ class Redirect extends React.Component<RedirectProps, RedirectState> {
       let state = params.state;
       // boxnet doesn't allow | in state
       if (state) {
-        if (state.indexOf("boxnet") > -1) {
+        if (state.indexOf("boxnet") > -1 || state.indexOf("adrive") > -1) {
           const encodedState = state.split("$")[1];
           const customParams = JSON.parse(decodeURIComponent(encodedState));
           if (customParams && customParams.deeplink) {
