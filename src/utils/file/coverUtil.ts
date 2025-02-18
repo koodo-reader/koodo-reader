@@ -78,6 +78,8 @@ class CoverUtil {
       );
       this.uploadCover(book.key + "." + this.base64ToFileType(book.cover));
       book.cover = "";
+    } else {
+      this.uploadCover(book.key + "." + this.base64ToFileType(book.cover));
     }
   }
   static convertCoverBase64(base64: string) {

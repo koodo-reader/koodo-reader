@@ -246,6 +246,7 @@
   "Authorization failed": "授权失败",
   "Testing connection...": "测试连接中...",
   "Connection failed": "连接失败",
+  "Email": "邮箱",
   "Connection successful": "连接成功",
   "Encryption failed, error code: ": "加密失败，错误代码：",
   "Decryption failed, error code: ": "解密失败，错误代码：",
