@@ -155,10 +155,16 @@ class BookUtil {
         toast.loading(i18n.t("Make it offline"), {
           id: "offline-book",
         });
-        await this.downloadBook(book.key, book.format);
-        toast.success(i18n.t("Offline successful"), {
-          id: "offline-book",
-        });
+        let result = await this.downloadBook(book.key, book.format);
+        if (result) {
+          toast.success(i18n.t("Offline successful"), {
+            id: "offline-book",
+          });
+        } else {
+          toast.error(i18n.t("Offline failed"), {
+            id: "offline-book",
+          });
+        }
       } else {
         toast.error(i18n.t("Book not exists"));
         return;
@@ -293,20 +299,25 @@ class BookUtil {
 
       let tokenConfig = await getCloudConfig(service);
 
-      await ipcRenderer.invoke("cloud-download", {
+      let result = await ipcRenderer.invoke("cloud-download", {
         ...tokenConfig,
         fileName: key + "." + format.toLowerCase(),
         service: service,
         type: "book",
         storagePath: getStorageLocation(),
       });
+      return result;
     } else {
       let syncUtil = await SyncService.getSyncUtil();
       let bookBuffer = await syncUtil.downloadFile(
         key + "." + format.toLowerCase(),
         "book"
       );
+      if (!bookBuffer) {
+        return false;
+      }
       await this.addBook(key, format, bookBuffer);
+      return true;
     }
   }
   static async uploadBook(key: string, format: string) {
