@@ -324,8 +324,42 @@ export const handleContextMenu = (id: string, isInput: boolean = false) => {
   // fill the text into the box
   if (!isInput) {
     let textarea = document.getElementById(id) as HTMLTextAreaElement;
+    textarea.value = text;
     textarea.textContent = text;
+    triggerReactChange(id, text);
   } else {
     document.getElementById(id)?.setAttribute("value", text);
+    triggerReactChange(id, text);
   }
 };
+function triggerReactChange(id: string, value: string) {
+  const element: any = document.getElementById(id);
+  if (!element) return;
+
+  // 设置值
+  element.value = value;
+
+  // 创建合成事件对象
+  const syntheticEvent = {
+    target: {
+      id: id,
+      value: value,
+    },
+    currentTarget: {
+      value: value,
+    },
+    preventDefault: () => {},
+    stopPropagation: () => {},
+  };
+
+  // 获取 React 实例
+  const reactPropKey = Object.keys(element).find((key) =>
+    key.startsWith("__reactProps$")
+  );
+  const reactInstance = reactPropKey ? element[reactPropKey] : null;
+
+  // 调用 onChange 处理函数
+  if (reactInstance && reactInstance.onChange) {
+    reactInstance.onChange(syntheticEvent);
+  }
+}
