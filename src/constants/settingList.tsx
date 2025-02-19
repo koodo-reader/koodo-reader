@@ -171,6 +171,7 @@ export const langList = [
   { label: "Svenska", value: "sv" },
   { label: "Tagalog", value: "tl" },
   { label: "Slovenščina", value: "sl" },
+  { label: "Srpski", value: "sr"},
 ];
 
 export const searchList = [
