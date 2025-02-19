@@ -36,7 +36,6 @@ class Redirect extends React.Component<RedirectProps, RedirectState> {
   }
   handleFinish = () => {
     this.props.handleLoadingDialog(false);
-    alert("数据恢复成功");
   };
   showMessage = (message: string) => {
     toast(this.props.t(message));
@@ -59,13 +58,28 @@ class Redirect extends React.Component<RedirectProps, RedirectState> {
       this.setState({ token: params.code });
       this.setState({ isAuthed: true });
       let state = params.state;
+      // boxnet doesn't allow | in state
       if (state) {
-        const encodedState = state.split("|")[1];
-        const customParams = JSON.parse(decodeURIComponent(encodedState));
-        if (customParams && customParams.deeplink) {
-          window.location.replace(
-            customParams.deeplink + "?code=" + params.code + "&state=" + state
-          );
+        if (state.indexOf("boxnet") > -1 || state.indexOf("adrive") > -1) {
+          const encodedState = state.split("$")[1];
+          const customParams = JSON.parse(decodeURIComponent(encodedState));
+          if (customParams && customParams.deeplink) {
+            window.location.replace(
+              customParams.deeplink +
+                "?code=" +
+                params.code +
+                "&state=" +
+                state.replace("$", "|")
+            );
+          }
+        } else {
+          const encodedState = state.split("|")[1];
+          const customParams = JSON.parse(decodeURIComponent(encodedState));
+          if (customParams && customParams.deeplink) {
+            window.location.replace(
+              customParams.deeplink + "?code=" + params.code + "&state=" + state
+            );
+          }
         }
       }
     }

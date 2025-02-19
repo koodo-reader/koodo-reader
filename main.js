@@ -205,6 +205,7 @@ const createMainWin = () => {
 
   ipcMain.handle("cloud-download", async (event, config) => {
     let syncUtil = await getSyncUtil(config);
+    console.log(config, 'sdfds');
     let result = await syncUtil.downloadFile(config.fileName, (config.isTemp ? "temp-" : "") + config.fileName, config.type);
     return result;
   });

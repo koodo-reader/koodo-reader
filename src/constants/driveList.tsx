@@ -29,6 +29,27 @@ export const driveList = [
     support: ["desktop", "browser", "phone"],
   },
   {
+    label: "Mega",
+    value: "mega",
+    icon: "icon-mega",
+    isPro: true,
+    support: ["desktop", "browser"],
+  },
+  {
+    label: "Box",
+    value: "boxnet",
+    icon: "icon-box",
+    isPro: true,
+    support: ["desktop", "browser", "phone"],
+  },
+  {
+    label: "阿里云盘",
+    value: "adrive",
+    icon: "icon-adrive",
+    isPro: true,
+    support: ["desktop", "browser", "phone"],
+  },
+  {
     label: "S3 Compatible",
     value: "s3compatible",
     icon: "icon-s3compatible",
@@ -81,6 +102,30 @@ export const driveInputConfig: DriveInputConfig = {
       label: "Password",
       value: "password",
       type: "password",
+    },
+  ],
+  mega: [
+    {
+      label: "Email",
+      value: "email",
+      type: "text",
+    },
+    {
+      label: "Password",
+      value: "password",
+      type: "password",
+    },
+    {
+      label: "Path",
+      value: "path",
+      type: "text",
+    },
+  ],
+  box: [
+    {
+      label: "Token",
+      value: "token",
+      type: "text",
     },
   ],
   ftp: [
