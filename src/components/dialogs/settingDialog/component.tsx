@@ -850,6 +850,7 @@ class SettingDialog extends React.Component<
                       {(this.props.settingDrive === "dropbox" ||
                         this.props.settingDrive === "google" ||
                         this.props.settingDrive === "boxnet" ||
+                        this.props.settingDrive === "pcloud" ||
                         this.props.settingDrive === "adrive" ||
                         this.props.settingDrive === "microsoft") && (
                         <div
