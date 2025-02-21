@@ -43,6 +43,13 @@ export const driveList = [
     support: ["desktop", "browser", "phone"],
   },
   {
+    label: "pCloud",
+    value: "pcloud",
+    icon: "icon-pcloud",
+    isPro: true,
+    support: ["desktop", "browser", "phone"],
+  },
+  {
     label: "阿里云盘",
     value: "adrive",
     icon: "icon-adrive",
