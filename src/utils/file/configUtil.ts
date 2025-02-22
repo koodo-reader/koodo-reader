@@ -27,6 +27,7 @@ class ConfigUtil {
         storagePath: getStorageLocation(),
       });
       if (!result) {
+        console.log("no config file");
         return "{}";
       }
       let fs = window.require("fs");
@@ -44,6 +45,9 @@ class ConfigUtil {
         type + ".json",
         "config"
       );
+      if (!jsonBuffer) {
+        return "{}";
+      }
       let jsonStr = new TextDecoder().decode(jsonBuffer);
       return jsonStr;
     }
@@ -106,7 +110,7 @@ class ConfigUtil {
       }
       let tokenConfig = await getCloudConfig(service);
 
-      await ipcRenderer.invoke("cloud-download", {
+      let result = await ipcRenderer.invoke("cloud-download", {
         ...tokenConfig,
         fileName: database + ".db",
         service: service,
@@ -114,6 +118,10 @@ class ConfigUtil {
         isTemp: true,
         storagePath: getStorageLocation(),
       });
+      if (!result) {
+        console.log("no database file");
+        return [];
+      }
       let cloudRecords = await DatabaseService.getAllRecords(
         "temp-" + database
       );
@@ -125,6 +133,9 @@ class ConfigUtil {
     } else {
       let syncUtil = await SyncService.getSyncUtil();
       let dbBuffer = await syncUtil.downloadFile(database + ".db", "config");
+      if (!dbBuffer) {
+        return [];
+      }
       let sqlUtil = new SqlUtil();
       let cloudRecords = await sqlUtil.dbBufferToJson(dbBuffer, database);
       return cloudRecords;

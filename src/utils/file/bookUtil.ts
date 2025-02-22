@@ -245,16 +245,24 @@ class BookUtil {
 
       let tokenConfig = await getCloudConfig(service);
 
-      await ipcRenderer.invoke("cloud-download", {
+      let result = await ipcRenderer.invoke("cloud-download", {
         ...tokenConfig,
         fileName: "cache-" + key + ".zip",
         service: service,
         type: "book",
         storagePath: getStorageLocation(),
       });
+      if (!result) {
+        console.log("download cache failed");
+        return;
+      }
     } else {
       let syncUtil = await SyncService.getSyncUtil();
       let cache = await syncUtil.downloadFile("cache-" + key + ".zip", "book");
+      if (!cache) {
+        console.log("download cache failed");
+        return;
+      }
       await this.addBook("cache-" + key, "zip", cache);
     }
   }
