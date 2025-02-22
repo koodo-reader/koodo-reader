@@ -59,13 +59,16 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
             : "",
           width: !this.props.isNavLocked ? "100%" : "calc(100% - 300px)",
           left: !this.props.isNavLocked ? "0" : "300px",
-          backgroundColor: ConfigService.getReaderConfig("backgroundColor")
-            ? ConfigService.getReaderConfig("backgroundColor")
-            : ConfigService.getReaderConfig("appSkin") === "night" ||
-              (ConfigService.getReaderConfig("appSkin") === "system" &&
-                ConfigService.getReaderConfig("isOSNight") === "yes")
-            ? "rgba(44,47,49,1)"
-            : "rgba(255,255,255,1)",
+          backgroundColor:
+            ConfigService.getReaderConfig("isMergeWord") === "yes"
+              ? "rgba(0,0,0,0)"
+              : ConfigService.getReaderConfig("backgroundColor")
+              ? ConfigService.getReaderConfig("backgroundColor")
+              : ConfigService.getReaderConfig("appSkin") === "night" ||
+                (ConfigService.getReaderConfig("appSkin") === "system" &&
+                  ConfigService.getReaderConfig("isOSNight") === "yes")
+              ? "rgba(44,47,49,1)"
+              : "rgba(255,255,255,1)",
           filter: `brightnessbrightness(${
             ConfigService.getReaderConfig("brightness") || 1
           }) invert(${

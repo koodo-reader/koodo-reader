@@ -42,7 +42,7 @@ class PopupBox extends React.Component<PopupBoxProps, PopupBoxStates> {
       <>
         <div
           className="popup-box-container"
-          // style={this.props.isOpenMenu ? {} : { display: "none" }}
+          style={{ marginLeft: this.props.isNavLocked ? 150 : 0 }}
         >
           {this.props.menuMode === "note" ? (
             <PopupNote {...PopupProps} />

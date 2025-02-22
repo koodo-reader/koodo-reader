@@ -376,7 +376,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
               ? {
                   // marginLeft: this.state.pageOffset,
                   // marginRight: this.state.pageOffset,
-                  paddingLeft: "20px",
+                  paddingLeft: "0px",
                   paddingRight: "15px",
                   left: this.state.pageOffset,
                   width: this.state.pageWidth,

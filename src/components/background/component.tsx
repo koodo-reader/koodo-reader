@@ -39,7 +39,7 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
               ? {
                   left: this.state.pageOffset,
                   marginLeft: -50,
-                  width: `calc(${this.state.pageWidth} + 105px)`,
+                  width: `calc(${this.state.pageWidth} + 98px)`,
                   boxShadow: "0 0 0px rgba(191, 191, 191, 1)",
                 }
               : { left: this.props.isNavLocked ? 305 : 5 }
@@ -55,7 +55,7 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
               ? {
                   marginLeft: -50,
                   left: this.state.pageOffset,
-                  width: `calc(${this.state.pageWidth} + 107px)`,
+                  width: `calc(${this.state.pageWidth} + 100px)`,
                 }
               : { left: this.props.isNavLocked ? 307 : 7 }
           }
@@ -126,7 +126,7 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
               ? {
                   marginLeft: -50,
                   left: this.state.pageOffset,
-                  width: `calc(${this.state.pageWidth} + 109px)`,
+                  width: `calc(${this.state.pageWidth} + 102px)`,
                   boxShadow: "0 0 0px rgba(191, 191, 191, 1)",
                 }
               : { left: this.props.isNavLocked ? 309 : 9 }

@@ -17,6 +17,7 @@ const store = new Store();
 const fs = require("fs");
 const configDir = app.getPath("userData");
 const dirPath = path.join(configDir, "uploads");
+const packageJson = require("./package.json");
 let mainWin;
 let readerWindow;
 let urlWindow;
@@ -79,8 +80,10 @@ const getDBConnection = (dbName, storagePath, sqlStatement) => {
   }
   return dbConnection[dbName];
 }
-const getSyncUtil = async (config) => {
-  if (!syncUtilCache[config.service]) {
+const getSyncUtil = async (config, isUseCache = true) => {
+  console.log(!isUseCache || !syncUtilCache[config.service], 'sdfds');
+  if (!isUseCache || !syncUtilCache[config.service]) {
+    console.log('create new sync util');
     const { SyncUtil, TokenService, ThirdpartyRequest } = await import('./src/assets/lib/kookit-extra.min.mjs');
     let thirdpartyRequest = new ThirdpartyRequest(TokenService);
 
@@ -198,7 +201,8 @@ const createMainWin = () => {
 
   });
   ipcMain.handle("cloud-upload", async (event, config) => {
-    let syncUtil = await getSyncUtil(config);
+    console.log(config, 'sdffhghgfds');
+    let syncUtil = await getSyncUtil(config, config.isUseCache);
     let result = await syncUtil.uploadFile(config.fileName, config.fileName, config.type);
     return result;
   });
@@ -211,7 +215,7 @@ const createMainWin = () => {
   });
 
   ipcMain.handle("cloud-delete", async (event, config) => {
-    let syncUtil = await getSyncUtil(config);
+    let syncUtil = await getSyncUtil(config, config.isUseCache);
     let result = await syncUtil.deleteFile(config.fileName, config.type);
     return result;
   });
@@ -389,7 +393,7 @@ const createMainWin = () => {
     }
   });
   ipcMain.handle("new-chat", (event, config) => {
-    if (mainWin) {
+    if (mainWin && !chatView) {
       chatView = new WebContentsView({ ...options, transparent: true })
       mainWin.contentView.addChildView(chatView)
       let { width, height } = mainWin.getContentBounds()
@@ -424,6 +428,10 @@ const createMainWin = () => {
                   });
                   window.addEventListener('chatwoot:ready', function () {
                     window.$chatwoot.setLocale('${config.locale}');
+                    window.$chatwoot.setCustomAttributes({
+                      version: '${packageJson.version}',
+                      client: 'desktop',
+                    });
                   });
                 };
 

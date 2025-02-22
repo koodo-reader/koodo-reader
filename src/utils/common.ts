@@ -203,6 +203,7 @@ export const getPageWidth = (
 };
 export const loadFontData = async () => {
   try {
+    if (!window.queryLocalFonts) return [];
     const availableFonts = await window.queryLocalFonts();
     return availableFonts.map((font: any) => {
       return {
@@ -244,7 +245,7 @@ export function addChatBox() {
           window.$chatwoot.setLocale('${getChatLocale()}');
           window.$chatwoot.setCustomAttributes({
             version: '${packageJson.version}',
-            client: '${isElectron ? "desktop" : "web"}',
+            client: 'web',
           });
         });
       };

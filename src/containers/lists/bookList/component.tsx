@@ -17,6 +17,7 @@ import DeletePopup from "../../../components/dialogs/deletePopup";
 declare var window: any;
 let currentBookMode = "home";
 let totalPage = 0;
+let totalBook = 0;
 class BookList extends React.Component<BookListProps, BookListState> {
   constructor(props: BookListProps) {
     super(props);
@@ -142,7 +143,7 @@ class BookList extends React.Component<BookListProps, BookListState> {
       books.length % 24 === 0
         ? books.length / 24
         : Math.floor(books.length / 24) + 1;
-
+    totalBook = books.length;
     if (bookMode !== currentBookMode) {
       this.props.handleCurrentPage(1);
       currentBookMode = bookMode;
@@ -244,7 +245,16 @@ class BookList extends React.Component<BookListProps, BookListState> {
               <Trans>Delete this shelf</Trans>
             </div>
           )}
-          <div style={this.props.isSelectBook ? { display: "none" } : {}}>
+
+          <div
+            style={this.props.isSelectBook ? { display: "none" } : {}}
+            className="book-list-header-right"
+          >
+            <div className="book-list-total-page">
+              <Trans i18nKey="Total books" count={totalBook}>
+                {"Total " + totalBook + " books"}
+              </Trans>
+            </div>
             <ViewMode />
           </div>
         </div>

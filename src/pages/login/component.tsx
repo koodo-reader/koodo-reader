@@ -244,53 +244,57 @@ class Login extends React.Component<LoginProps, LoginState> {
                   "Embark on your journey of exploration with Koodo Reader Pro"
                 )}
               </div>
-              {loginList.map((item) => {
-                return (
+              <div className="login-option-box">
+                <div>
+                  {loginList.map((item) => {
+                    return (
+                      <div
+                        className="login-option-container"
+                        key={item.value}
+                        style={{}}
+                        onClick={() => {
+                          let url = LoginHelper.getAuthUrl(
+                            item.value,
+                            isElectron ? "desktop" : "browser"
+                          );
+                          if (url) {
+                            if (isElectron) {
+                              openExternalUrl(url);
+                            } else {
+                              window.location.replace(url);
+                            }
+                          }
+                        }}
+                      >
+                        <div className="login-option-icon">
+                          <span
+                            className={item.icon + " login-option-icon"}
+                            style={{ fontSize: item.fontsize }}
+                          ></span>
+                        </div>
+                        <div className="login-option-title">
+                          <Trans i18nKey="Continue with" label={item.label}>
+                            Continue with {{ label: this.props.t(item.label) }}
+                          </Trans>
+                        </div>
+                      </div>
+                    );
+                  })}
                   <div
-                    className="login-option-container"
-                    key={item.value}
-                    style={{}}
+                    className="login-manual-token"
                     onClick={() => {
-                      let url = LoginHelper.getAuthUrl(
-                        item.value,
-                        isElectron ? "desktop" : "browser"
-                      );
-                      if (url) {
-                        if (isElectron) {
-                          openExternalUrl(url);
-                        } else {
-                          window.location.replace(url);
-                        }
-                      }
+                      this.props.handleSetting(true);
+                      this.props.handleSettingMode("account");
                     }}
                   >
-                    <div className="login-option-icon">
-                      <span
-                        className={item.icon + " login-option-icon"}
-                        style={{ fontSize: item.fontsize }}
-                      ></span>
-                    </div>
-                    <div className="login-option-title">
-                      <Trans i18nKey="Continue with" label={item.label}>
-                        Continue with {{ label: this.props.t(item.label) }}
-                      </Trans>
-                    </div>
+                    {this.props.t("Manually enter login credentials")}
                   </div>
-                );
-              })}
-              <div
-                className="login-manual-token"
-                onClick={() => {
-                  this.props.handleSetting(true);
-                  this.props.handleSettingMode("account");
-                }}
-              >
-                {this.props.t("Manually enter login credentials")}
-              </div>
-              <div className="login-term">
-                {this.props.t(
-                  "By clicking continue, you acknowledge that you have carefully read and agree to accept Koodo Reader's Terms of Service and Privacy Policy"
-                )}
+                  <div className="login-term">
+                    {this.props.t(
+                      "By clicking continue, you acknowledge that you have carefully read and agree to accept Koodo Reader's Terms of Service and Privacy Policy"
+                    )}
+                  </div>
+                </div>
               </div>
             </div>
           </div>

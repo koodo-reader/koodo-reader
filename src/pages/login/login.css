@@ -30,6 +30,13 @@
   width: 60%;
   margin-left: 0px;
 }
+.login-option-box {
+  width: 100%;
+  height: calc(100% - 250px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .login-close-container {
   position: absolute;
   top: 30px;
