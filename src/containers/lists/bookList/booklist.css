@@ -11,9 +11,15 @@
   align-items: center;
   justify-content: space-between;
   position: absolute;
-  bottom: 10px;
+  bottom: 0px;
   left: 220px;
   width: calc(100% - 220px);
+}
+.book-list-header-right {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-right: 20px;
 }
 .book-list-container {
   width: 100%;
@@ -63,6 +69,15 @@
   align-items: center;
   margin-top: 5px;
   margin-left: 10px;
+}
+.book-list-total-page {
+  margin-left: 25px;
+  /* width: 50px; */
+  height: 40px;
+  margin: 0 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .book-list-prev-page {
   cursor: pointer;

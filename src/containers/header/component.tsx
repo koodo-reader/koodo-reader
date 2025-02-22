@@ -274,7 +274,9 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       await this.handleSuccess();
     } catch (error) {
       console.log(error);
-      toast.error(this.props.t("Sync failed"));
+      toast.error(this.props.t("Sync failed"), {
+        id: "syncing-id",
+      });
       return;
     } finally {
       await this.handleFinish();

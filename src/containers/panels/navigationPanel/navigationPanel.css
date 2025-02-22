@@ -69,13 +69,17 @@
   margin: 1% 1%;
 }
 .book-bookmark-title {
-  line-height: 27px;
+  line-height: 20px;
   opacity: 1;
   cursor: pointer;
-  max-width: 40%;
-  overflow-x: hidden;
+  max-width: 25%;
+  /* overflow-x: hidden; */
   text-align: center;
   margin: 1% 1%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 5px;
 }
 .navigation-body-parent {
   position: absolute;

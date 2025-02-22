@@ -308,32 +308,54 @@ class SettingDialog extends React.Component<
       toast.error(this.props.t("At least one login option should be kept"));
       return;
     }
-    toast.loading(this.props.t("Removing..."));
+    toast.loading(this.props.t("Removing..."), {
+      id: "remove-login-option",
+    });
     let userRequest = await getUserRequest();
     let response = await userRequest.removeLogin({
       provider: event.target.value,
     });
     if (response.code === 200) {
-      toast.success(this.props.t("Removal successful"));
+      toast.success(this.props.t("Removal successful"), {
+        id: "remove-login-option",
+      });
       this.props.handleFetchLoginOptionList();
-      toast.success(this.props.t("Deletion successful"));
     } else if (response.code === 401) {
+      toast.error(
+        this.props.t("Removal failed, error code: ") + response.code,
+        {
+          id: "remove-login-option",
+        }
+      );
       handleExitApp();
       return;
     } else {
-      toast.error(this.props.t("Removal failed, error code: ") + response.code);
+      toast.error(
+        this.props.t("Removal failed, error code: ") + response.code,
+        {
+          id: "remove-login-option",
+        }
+      );
     }
   };
   handleCancelLoginOption = async () => {
     this.setState({ settingLogin: "" });
   };
   handleConfirmLoginOption = async () => {
+    if (
+      !this.state.loginConfig.token ||
+      !this.state.loginConfig.token.trim() ||
+      !this.state.settingLogin
+    ) {
+      toast.error(this.props.t("Missing parameters") + this.props.t("Token"));
+      return;
+    }
     this.props.handleLoadingDialog(true);
     let resCode = 200;
     if (this.props.isAuthed) {
       let userRequest = await getUserRequest();
       let response = await userRequest.addLogin({
-        code: this.state.loginConfig.token,
+        code: this.state.loginConfig.token.trim(),
         provider: this.state.settingLogin,
         scope:
           KookitConfig.LoginAuthRequest[this.state.settingLogin].extraParams
@@ -344,7 +366,7 @@ class SettingDialog extends React.Component<
     } else {
       resCode = await loginRegister(
         this.state.settingLogin,
-        this.state.loginConfig.token
+        this.state.loginConfig.token.trim()
       );
     }
     if (resCode === 200) {
@@ -362,6 +384,27 @@ class SettingDialog extends React.Component<
     this.props.handleSettingDrive("");
   };
   handleConfirmDrive = async () => {
+    console.log(this.state.driveConfig, "dfdfg");
+    let flag = true;
+    for (let item of driveInputConfig[this.props.settingDrive]) {
+      if (
+        !this.state.driveConfig[item.value] ||
+        !this.state.driveConfig[item.value].trim()
+      ) {
+        toast.error(
+          this.props.t("Missing parameters") + ": " + this.props.t(item.label)
+        );
+        flag = false;
+        break;
+      }
+    }
+    if (!flag) {
+      return;
+    }
+    let driveConfig: any = {};
+    for (let item in this.state.driveConfig) {
+      driveConfig[item] = this.state.driveConfig[item].trim();
+    }
     if (
       this.props.settingDrive === "webdav" ||
       this.props.settingDrive === "ftp" ||
@@ -370,19 +413,15 @@ class SettingDialog extends React.Component<
       this.props.settingDrive === "s3compatible"
     ) {
       toast.loading(i18n.t("Adding"), { id: "adding-sync-id" });
-      let code = await encryptToken(
-        this.props.settingDrive,
-        this.state.driveConfig
-      );
+      let code = await encryptToken(this.props.settingDrive, driveConfig);
       if (code === 200) {
         ConfigService.setListConfig(this.props.settingDrive, "dataSourceList");
         toast.success(i18n.t("Binding successful"), { id: "adding-sync-id" });
+      } else {
+        toast.error(i18n.t("Binding failed"), { id: "adding-sync-id" });
       }
     } else {
-      await onSyncCallback(
-        this.props.settingDrive,
-        this.state.driveConfig.token
-      );
+      await onSyncCallback(this.props.settingDrive, driveConfig.token);
     }
     if (this.props.isAuthed) {
       ConfigService.setItem("defaultSyncOption", this.props.settingDrive);
@@ -522,8 +561,12 @@ class SettingDialog extends React.Component<
               className="book-bookmark-title"
               style={
                 this.props.settingMode === "sync"
-                  ? { fontWeight: "bold", borderBottom: "2px solid" }
-                  : { opacity: 0.5 }
+                  ? {
+                      fontWeight: "bold",
+                      borderBottom: "2px solid",
+                      lineHeight: "20px",
+                    }
+                  : { opacity: 0.5, lineHeight: "20px" }
               }
               onClick={() => {
                 this.props.handleSettingMode("sync");
@@ -891,14 +934,24 @@ class SettingDialog extends React.Component<
                                 getStorageLocation() + "/config/test.txt",
                                 "Hello world!"
                               );
+                              console.log(
+                                this.state.driveConfig,
+                                "driveconfig"
+                              );
+                              let driveConfig: any = {};
+                              for (let item in this.state.driveConfig) {
+                                driveConfig[item] =
+                                  this.state.driveConfig[item].trim();
+                              }
                               let result = await ipcRenderer.invoke(
                                 "cloud-upload",
                                 {
-                                  ...this.state.driveConfig,
+                                  ...driveConfig,
                                   fileName: "test.txt",
                                   service: this.props.settingDrive,
                                   type: "config",
                                   storagePath: getStorageLocation(),
+                                  isUseCache: false,
                                 }
                               );
                               if (result) {
@@ -909,18 +962,21 @@ class SettingDialog extends React.Component<
                                   }
                                 );
                                 await ipcRenderer.invoke("cloud-delete", {
-                                  ...this.state.driveConfig,
+                                  ...driveConfig,
                                   fileName: "test.txt",
                                   service: this.props.settingDrive,
                                   type: "config",
                                   storagePath: getStorageLocation(),
+                                  isUseCache: false,
                                 });
-                                fs.unlinkSync(
-                                  getStorageLocation() + "/config/test.txt"
-                                );
                               } else {
-                                toast.error(this.props.t("Connection failed"));
+                                toast.error(this.props.t("Connection failed"), {
+                                  id: "testing-connection-id",
+                                });
                               }
+                              fs.unlinkSync(
+                                getStorageLocation() + "/config/test.txt"
+                              );
                             }}
                           >
                             <Trans>Test</Trans>

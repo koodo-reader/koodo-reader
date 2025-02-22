@@ -149,7 +149,6 @@ class BookList extends React.Component<BookListProps, BookListState> {
               : {}
           }
         >
-          <div></div>
           <div
             className="booklist-delete-container"
             onClick={() => {

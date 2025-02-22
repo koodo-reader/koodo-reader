@@ -92,7 +92,9 @@ class FeedbackDialog extends Component<
     let result = await sendFeedback(data);
 
     if (result !== "ok") {
-      toast.error(this.props.t("Error happened"));
+      toast.error(this.props.t("Error happened"), {
+        id: "sending-id",
+      });
       this.setState({ isSending: false });
       return;
     }
