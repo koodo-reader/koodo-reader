@@ -32,13 +32,17 @@ export const restore = async (service: string): Promise<Boolean> => {
     return await restoreFromfilePath(filePath);
   } else {
     let tokenConfig = await getCloudConfig(service);
-    await ipcRenderer.invoke("cloud-download", {
+    let result = await ipcRenderer.invoke("cloud-download", {
       ...tokenConfig,
       fileName: "data.zip",
       service: service,
       type: "backup",
       storagePath: getStorageLocation(),
     });
+    if (!result) {
+      console.log("no backup file");
+      return false;
+    }
     const path = window.require("path");
     let filePath = path.join(getStorageLocation(), "backup", "data.zip");
     return await restoreFromfilePath(filePath);

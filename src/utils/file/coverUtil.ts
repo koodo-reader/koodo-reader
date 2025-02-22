@@ -164,17 +164,25 @@ class CoverUtil {
       }
       let tokenConfig = await getCloudConfig(service);
 
-      await ipcRenderer.invoke("cloud-download", {
+      let result = await ipcRenderer.invoke("cloud-download", {
         ...tokenConfig,
         fileName: cover,
         service: service,
         type: "cover",
         storagePath: getStorageLocation(),
       });
+      if (!result) {
+        console.log("download cover failed");
+        return;
+      }
     } else {
       let syncUtil = await SyncService.getSyncUtil();
 
       let imgBuffer: ArrayBuffer = await syncUtil.downloadFile(cover, "cover");
+      if (!imgBuffer) {
+        console.log("download cover failed");
+        return;
+      }
       let imgStr = CommonTool.arrayBufferToBase64(imgBuffer);
       if (!imgStr) {
         console.log("download cover failed");

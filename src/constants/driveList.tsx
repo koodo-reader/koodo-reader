@@ -47,7 +47,7 @@ export const driveList = [
     value: "pcloud",
     icon: "icon-pcloud",
     isPro: true,
-    support: ["desktop", "browser", "phone"],
+    support: ["desktop", "phone"],
   },
   {
     label: "阿里云盘",

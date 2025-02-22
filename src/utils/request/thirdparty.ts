@@ -22,6 +22,7 @@ export const onSyncCallback = async (service: string, authCode: string) => {
     toast.error(i18n.t("Authorization failed"), { id: "adding-sync-id" });
     return;
   }
+  // FOR PCLOUD, THE REFRESH TOKEN IS THE ACCESS TOKEN, ACCESS TOKEN NEVER EXPIRES
   let code = await encryptToken(service, {
     refresh_token: refreshToken,
   });
