@@ -26,7 +26,7 @@ export const loginRegister = async (service: string, code: string) => {
     await TokenService.setToken("access_token", response.data.access_token);
     await TokenService.setToken("refresh_token", response.data.refresh_token);
   }
-  return response.code;
+  return response;
 };
 export const getUserRequest = async () => {
   let userRequest = new UserRequest(TokenService, ConfigService);

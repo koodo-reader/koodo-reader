@@ -322,7 +322,7 @@ class SettingDialog extends React.Component<
       this.props.handleFetchLoginOptionList();
     } else if (response.code === 401) {
       toast.error(
-        this.props.t("Removal failed, error code: ") + response.code,
+        this.props.t("Removal failed, error code") + ": " + response.msg,
         {
           id: "remove-login-option",
         }
@@ -331,7 +331,7 @@ class SettingDialog extends React.Component<
       return;
     } else {
       toast.error(
-        this.props.t("Removal failed, error code: ") + response.code,
+        this.props.t("Removal failed, error code") + ": " + response.msg,
         {
           id: "remove-login-option",
         }
@@ -342,34 +342,29 @@ class SettingDialog extends React.Component<
     this.setState({ settingLogin: "" });
   };
   handleConfirmLoginOption = async () => {
-    if (
-      !this.state.loginConfig.token ||
-      !this.state.loginConfig.token.trim() ||
-      !this.state.settingLogin
-    ) {
+    if (!this.state.loginConfig.token || !this.state.settingLogin) {
       toast.error(this.props.t("Missing parameters") + this.props.t("Token"));
       return;
     }
     this.props.handleLoadingDialog(true);
-    let resCode = 200;
+    let res = { code: 200 };
     if (this.props.isAuthed) {
       let userRequest = await getUserRequest();
-      let response = await userRequest.addLogin({
-        code: this.state.loginConfig.token.trim(),
+      res = await userRequest.addLogin({
+        code: this.state.loginConfig.token,
         provider: this.state.settingLogin,
         scope:
           KookitConfig.LoginAuthRequest[this.state.settingLogin].extraParams
             .scope,
         redirect_uri: KookitConfig.ThirdpartyConfig.callbackUrl,
       });
-      resCode = response.code;
     } else {
-      resCode = await loginRegister(
+      res = await loginRegister(
         this.state.settingLogin,
-        this.state.loginConfig.token.trim()
+        this.state.loginConfig.token
       );
     }
-    if (resCode === 200) {
+    if (res.code === 200) {
       this.props.handleLoadingDialog(false);
       toast.success(this.props.t("Login successful"));
       this.props.handleFetchAuthed();
@@ -377,20 +372,16 @@ class SettingDialog extends React.Component<
       this.setState({ settingLogin: "" });
     } else {
       this.props.handleLoadingDialog(false);
-      toast.error(this.props.t("Login failed"));
+      toast.error(this.props.t("Login failed, error code"));
     }
   };
   handleCancelDrive = () => {
     this.props.handleSettingDrive("");
   };
   handleConfirmDrive = async () => {
-    console.log(this.state.driveConfig, "dfdfg");
     let flag = true;
     for (let item of driveInputConfig[this.props.settingDrive]) {
-      if (
-        !this.state.driveConfig[item.value] ||
-        !this.state.driveConfig[item.value].trim()
-      ) {
+      if (!this.state.driveConfig[item.value]) {
         toast.error(
           this.props.t("Missing parameters") + ": " + this.props.t(item.label)
         );
@@ -401,10 +392,6 @@ class SettingDialog extends React.Component<
     if (!flag) {
       return;
     }
-    let driveConfig: any = {};
-    for (let item in this.state.driveConfig) {
-      driveConfig[item] = this.state.driveConfig[item].trim();
-    }
     if (
       this.props.settingDrive === "webdav" ||
       this.props.settingDrive === "ftp" ||
@@ -413,7 +400,10 @@ class SettingDialog extends React.Component<
       this.props.settingDrive === "s3compatible"
     ) {
       toast.loading(i18n.t("Adding"), { id: "adding-sync-id" });
-      let code = await encryptToken(this.props.settingDrive, driveConfig);
+      let code = await encryptToken(
+        this.props.settingDrive,
+        this.state.driveConfig
+      );
       if (code === 200) {
         ConfigService.setListConfig(this.props.settingDrive, "dataSourceList");
         toast.success(i18n.t("Binding successful"), { id: "adding-sync-id" });
@@ -421,7 +411,10 @@ class SettingDialog extends React.Component<
         toast.error(i18n.t("Binding failed"), { id: "adding-sync-id" });
       }
     } else {
-      await onSyncCallback(this.props.settingDrive, driveConfig.token);
+      await onSyncCallback(
+        this.props.settingDrive,
+        this.state.driveConfig.token
+      );
     }
     if (this.props.isAuthed) {
       ConfigService.setItem("defaultSyncOption", this.props.settingDrive);
@@ -831,12 +824,14 @@ class SettingDialog extends React.Component<
                             key={item.value}
                             placeholder={this.props.t(item.label)}
                             onChange={(e) => {
-                              this.setState((prevState) => ({
-                                driveConfig: {
-                                  ...prevState.driveConfig,
-                                  [item.value]: e.target.value,
-                                },
-                              }));
+                              if (e.target.value) {
+                                this.setState((prevState) => ({
+                                  driveConfig: {
+                                    ...prevState.driveConfig,
+                                    [item.value]: e.target.value.trim(),
+                                  },
+                                }));
+                              }
                             }}
                             onContextMenu={() => {
                               handleContextMenu(
@@ -859,12 +854,14 @@ class SettingDialog extends React.Component<
                           "Please authorize your account, and fill the following box with the token"
                         )}
                         onChange={(e) => {
-                          this.setState((prevState) => ({
-                            driveConfig: {
-                              ...prevState.driveConfig,
-                              token: e.target.value,
-                            },
-                          }));
+                          if (e.target.value) {
+                            this.setState((prevState) => ({
+                              driveConfig: {
+                                ...prevState.driveConfig,
+                                token: e.target.value.trim(),
+                              },
+                            }));
+                          }
                         }}
                         onContextMenu={() => {
                           handleContextMenu("token-dialog-token-box");
@@ -934,14 +931,10 @@ class SettingDialog extends React.Component<
                                 getStorageLocation() + "/config/test.txt",
                                 "Hello world!"
                               );
-                              console.log(
-                                this.state.driveConfig,
-                                "driveconfig"
-                              );
                               let driveConfig: any = {};
                               for (let item in this.state.driveConfig) {
                                 driveConfig[item] =
-                                  this.state.driveConfig[item].trim();
+                                  this.state.driveConfig[item];
                               }
                               let result = await ipcRenderer.invoke(
                                 "cloud-upload",
@@ -1099,12 +1092,14 @@ class SettingDialog extends React.Component<
                       handleContextMenu("token-dialog-token-box");
                     }}
                     onChange={(e) => {
-                      this.setState((prevState) => ({
-                        loginConfig: {
-                          ...prevState.loginConfig,
-                          token: e.target.value,
-                        },
-                      }));
+                      if (e.target.value) {
+                        this.setState((prevState) => ({
+                          loginConfig: {
+                            ...prevState.loginConfig,
+                            token: e.target.value.trim(),
+                          },
+                        }));
+                      }
                     }}
                   />
                   <div className="token-dialog-button-container">

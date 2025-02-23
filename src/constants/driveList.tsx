@@ -29,7 +29,7 @@ export const driveList = [
     support: ["desktop", "browser", "phone"],
   },
   {
-    label: "Mega",
+    label: "MEGA",
     value: "mega",
     icon: "icon-mega",
     isPro: true,
@@ -50,7 +50,7 @@ export const driveList = [
     support: ["desktop", "phone"],
   },
   {
-    label: "阿里云盘",
+    label: "Aliyun Drive",
     value: "adrive",
     icon: "icon-adrive",
     isPro: true,
@@ -123,13 +123,8 @@ export const driveInputConfig: DriveInputConfig = {
       value: "password",
       type: "password",
     },
-    {
-      label: "Path",
-      value: "path",
-      type: "text",
-    },
   ],
-  box: [
+  boxnet: [
     {
       label: "Token",
       value: "token",
@@ -242,6 +237,20 @@ export const driveInputConfig: DriveInputConfig = {
     },
   ],
   dropbox: [
+    {
+      label: "Token",
+      value: "token",
+      type: "text",
+    },
+  ],
+  pcloud: [
+    {
+      label: "Token",
+      value: "token",
+      type: "text",
+    },
+  ],
+  adrive: [
     {
       label: "Token",
       value: "token",

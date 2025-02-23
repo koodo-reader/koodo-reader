@@ -70,10 +70,8 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
     let key = url.substring(lastIndexOfSlash + 1, firstIndexOfQuestion);
     this.props.handleFetchBooks();
     DatabaseService.getRecord(key, "books").then((book: Book | null) => {
-      if (!book) {
-        return;
-      }
       book = book || JSON.parse(ConfigService.getItem("tempBook") || "{}");
+      if (!book) return;
 
       this.props.handleFetchPercentage(book);
       let readerMode =

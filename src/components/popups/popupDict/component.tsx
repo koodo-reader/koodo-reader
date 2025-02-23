@@ -3,7 +3,7 @@ import "./popupDict.css";
 import { PopupDictProps, PopupDictState } from "./interface";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import Parser from "html-react-parser";
-import * as DOMPurify from "dompurify";
+import DOMPurify from "dompurify";
 import axios from "axios";
 import DictHistory from "../../../models/DictHistory";
 import { Trans } from "react-i18next";

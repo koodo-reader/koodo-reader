@@ -81,9 +81,7 @@ const getDBConnection = (dbName, storagePath, sqlStatement) => {
   return dbConnection[dbName];
 }
 const getSyncUtil = async (config, isUseCache = true) => {
-  console.log(!isUseCache || !syncUtilCache[config.service], 'sdfds');
   if (!isUseCache || !syncUtilCache[config.service]) {
-    console.log('create new sync util');
     const { SyncUtil, TokenService, ThirdpartyRequest } = await import('./src/assets/lib/kookit-extra.min.mjs');
     let thirdpartyRequest = new ThirdpartyRequest(TokenService);
 
@@ -201,7 +199,6 @@ const createMainWin = () => {
 
   });
   ipcMain.handle("cloud-upload", async (event, config) => {
-    console.log(config, 'sdffhghgfds');
     let syncUtil = await getSyncUtil(config, config.isUseCache);
     let result = await syncUtil.uploadFile(config.fileName, config.fileName, config.type);
     return result;
@@ -209,7 +206,6 @@ const createMainWin = () => {
 
   ipcMain.handle("cloud-download", async (event, config) => {
     let syncUtil = await getSyncUtil(config);
-    console.log(config, 'sdfds');
     let result = await syncUtil.downloadFile(config.fileName, (config.isTemp ? "temp-" : "") + config.fileName, config.type);
     return result;
   });

@@ -33,6 +33,10 @@ class CoverUtil {
     }
   }
   static isCoverExist(book: BookModel) {
+    if (!book) return false;
+    if (book.cover) {
+      return true;
+    }
     if (isElectron) {
       var fs = window.require("fs");
       var path = window.require("path");

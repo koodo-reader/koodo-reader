@@ -44,7 +44,6 @@ class UpdateInfo extends React.Component<UpdateInfoProps, UpdateInfoState> {
             ConfigService.getReaderConfig("isDisableUpdate") !== "yes" ||
             this.props.isAuthed
           ) {
-            console.log(res);
             this.setState({ updateLog: res });
             this.props.handleNewDialog(true);
           } else {
