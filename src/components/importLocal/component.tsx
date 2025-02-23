@@ -93,6 +93,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
           ConfigService.getReaderConfig("isPreventAdd") !== "yes"
         ) {
           BookUtil.addBook(book.key, book.format.toLowerCase(), buffer);
+          CoverUtil.addCover(book);
         }
         if (ConfigService.getReaderConfig("isPreventAdd") === "yes") {
           this.handleJump(book);

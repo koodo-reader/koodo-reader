@@ -6,7 +6,7 @@ import { Trans } from "react-i18next";
 import { NavigationPanelProps, NavigationPanelState } from "./interface";
 import SearchBox from "../../../components/searchBox";
 import Parser from "html-react-parser";
-import * as DOMPurify from "dompurify";
+import DOMPurify from "dompurify";
 import EmptyCover from "../../../components/emptyCover";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import CoverUtil from "../../../utils/file/coverUtil";

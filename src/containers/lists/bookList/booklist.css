@@ -19,7 +19,6 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-right: 20px;
 }
 .book-list-container {
   width: 100%;

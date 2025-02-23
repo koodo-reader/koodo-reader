@@ -53,7 +53,7 @@ export const encryptToken = async (service: string, config: any) => {
     handleExitApp();
     return;
   } else {
-    toast.error(i18n.t("Encryption failed, error code: ") + response.code);
+    toast.error(i18n.t("Encryption failed, error code") + ": " + response.msg);
   }
   return response.code;
 };
@@ -76,7 +76,7 @@ export const decryptToken = async (service: string) => {
   } else if (response.code === 401) {
     handleExitApp();
   } else {
-    toast.error(i18n.t("Decryption failed, error code: ") + response.code);
+    toast.error(i18n.t("Decryption failed, error code") + ": " + response.msg);
   }
   return {};
 };

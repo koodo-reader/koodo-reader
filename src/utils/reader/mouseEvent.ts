@@ -144,12 +144,8 @@ export const bindHtmlEvent = (
       if (event.ctrlKey && readerMode !== "double") {
         let scale = parseFloat(ConfigService.getReaderConfig("scale") || "1");
         if (event.deltaY < 0) {
-          console.log("Ctrl + Mouse Wheel Up");
-          // 在这里添加向上滚动的处理逻辑
           ConfigService.setReaderConfig("scale", scale + 0.1 + "");
         } else {
-          console.log("Ctrl + Mouse Wheel Down");
-          // 在这里添加向下滚动的处理逻辑
           ConfigService.setReaderConfig("scale", scale - 0.1 + "");
         }
         BookUtil.reloadBooks();

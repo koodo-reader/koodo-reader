@@ -3,7 +3,7 @@ import "./updateInfo.css";
 import { DetailDialogProps, DetailDialogState } from "./interface";
 import { Trans } from "react-i18next";
 import Parser from "html-react-parser";
-import * as DOMPurify from "dompurify";
+import DOMPurify from "dompurify";
 import EmptyCover from "../../emptyCover";
 import CoverUtil from "../../../utils/file/coverUtil";
 class DetailDialog extends React.Component<
