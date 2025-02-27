@@ -3,8 +3,9 @@ import {
   ConfigService,
   SyncUtil,
 } from "../../assets/lib/kookit-extra-browser.min";
-import { decryptToken, getThirdpartyRequest } from "../request/thirdparty";
+import { getThirdpartyRequest } from "../request/thirdparty";
 import i18n from "../../i18n";
+import { getCloudConfig } from "../file/common";
 
 class SyncService {
   private static syncUtilCache: { [key: string]: SyncUtil } = {};
@@ -16,7 +17,7 @@ class SyncService {
       return new SyncUtil("", {}, thirdpartyRequest);
     }
     if (!this.syncUtilCache[service]) {
-      let config = await decryptToken(service);
+      let config = await getCloudConfig(service);
       let thirdpartyRequest = await getThirdpartyRequest();
 
       this.syncUtilCache[service] = new SyncUtil(
