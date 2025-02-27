@@ -252,7 +252,11 @@ export const getCloudConfig = async (service: string) => {
   if (configCache[service]) {
     return configCache[service];
   } else {
-    let config = await decryptToken(service);
+    let result = await decryptToken(service);
+    if (result.code !== 200) {
+      return {};
+    }
+    let config = JSON.parse(result.data.token);
     configCache[service] = config;
     return config;
   }

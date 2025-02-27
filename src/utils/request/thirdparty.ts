@@ -23,14 +23,14 @@ export const onSyncCallback = async (service: string, authCode: string) => {
     return;
   }
   // FOR PCLOUD, THE REFRESH TOKEN IS THE ACCESS TOKEN, ACCESS TOKEN NEVER EXPIRES
-  let code = await encryptToken(service, {
+  let res = await encryptToken(service, {
     refresh_token: refreshToken,
   });
-  if (code === 200) {
+  if (res.code === 200) {
     ConfigService.setListConfig(service, "dataSourceList");
     toast.success(i18n.t("Binding successful"), { id: "adding-sync-id" });
   }
-  return code;
+  return res;
 };
 export const encryptToken = async (service: string, config: any) => {
   let syncToken = JSON.stringify(config);
@@ -49,13 +49,14 @@ export const encryptToken = async (service: string, config: any) => {
       service + "_token",
       response.data.encrypted_token
     );
+    return response;
   } else if (response.code === 401) {
     handleExitApp();
-    return;
+    return response;
   } else {
     toast.error(i18n.t("Encryption failed, error code") + ": " + response.msg);
+    return response;
   }
-  return response.code;
 };
 export const decryptToken = async (service: string) => {
   let isAuthed = await TokenService.getToken("is_authed");
@@ -72,11 +73,12 @@ export const decryptToken = async (service: string) => {
     encrypted_token: encryptedToken,
   });
   if (response.code === 200) {
-    return JSON.parse(response.data.token);
+    return response;
   } else if (response.code === 401) {
     handleExitApp();
+    return response;
   } else {
     toast.error(i18n.t("Decryption failed, error code") + ": " + response.msg);
+    return response;
   }
-  return {};
 };

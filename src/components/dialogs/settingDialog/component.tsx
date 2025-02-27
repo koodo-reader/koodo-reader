@@ -400,11 +400,11 @@ class SettingDialog extends React.Component<
       this.props.settingDrive === "s3compatible"
     ) {
       toast.loading(i18n.t("Adding"), { id: "adding-sync-id" });
-      let code = await encryptToken(
+      let res = await encryptToken(
         this.props.settingDrive,
         this.state.driveConfig
       );
-      if (code === 200) {
+      if (res.code === 200) {
         ConfigService.setListConfig(this.props.settingDrive, "dataSourceList");
         toast.success(i18n.t("Binding successful"), { id: "adding-sync-id" });
       } else {
