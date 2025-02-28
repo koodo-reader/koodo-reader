@@ -5,6 +5,7 @@ import { NavListProps, NavListState } from "./interface";
 import DeleteIcon from "../../../components/deleteIcon";
 import toast from "react-hot-toast";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
+import { classes, colors, lines } from "../../../constants/themeList";
 class NavList extends React.Component<NavListProps, NavListState> {
   constructor(props: NavListProps) {
     super(props);
@@ -71,6 +72,17 @@ class NavList extends React.Component<NavListProps, NavListState> {
   handleShowDelete = (index: number) => {
     this.setState({ deleteIndex: index });
   };
+  convertColorCode = (color: string) => {
+    console.log(color, "color");
+    let colorType = color.split("-")[0];
+    let colorIndex = parseInt(color.split("-")[1]);
+    return colorType === "color"
+      ? { backgroundColor: colors[colorIndex] }
+      : {
+          borderBottom: `2px solid ${lines[colorIndex]}`,
+          display: "inline",
+        };
+  };
   render() {
     let currentData: any = (
       (this.props.currentTab === "bookmarks"
@@ -87,6 +99,7 @@ class NavList extends React.Component<NavListProps, NavListState> {
           itemKey: item.key,
           mode: this.props.currentTab === "bookmarks" ? "bookmarks" : "notes",
         };
+        console.log(item, "item");
         return (
           <li
             className="book-bookmark-list"
@@ -98,13 +111,37 @@ class NavList extends React.Component<NavListProps, NavListState> {
               this.handleShowDelete(-1);
             }}
           >
-            <p className="book-bookmark-digest">
-              {this.props.currentTab === "bookmarks"
-                ? item.label
-                : this.props.currentTab === "notes"
-                ? item.notes
-                : item.text}
-            </p>
+            <div
+              style={{
+                margin: "5px",
+                marginTop: "10px",
+                marginBottom: "10px",
+                width: "100%",
+                maxHeight: "198px",
+              }}
+            >
+              <p
+                className="book-bookmark-digest"
+                style={
+                  item.color !== undefined && item.color !== null
+                    ? this.convertColorCode(classes[item.color])
+                    : {}
+                }
+                onClick={async () => {
+                  await this.handleJump(item.cfi);
+                }}
+              >
+                {this.props.currentTab === "bookmarks"
+                  ? item.label
+                  : this.props.currentTab === "notes"
+                  ? item.text
+                  : item.text}
+              </p>
+              <div style={{ marginTop: "10px", fontWeight: "bold" }}>
+                {this.props.currentTab === "notes" ? item.notes : null}
+              </div>
+            </div>
+
             <div className="bookmark-page-list-item-title">
               <Trans>{item.chapter}</Trans>
             </div>
@@ -114,15 +151,6 @@ class NavList extends React.Component<NavListProps, NavListState> {
             {this.state.deleteIndex === index ? (
               <DeleteIcon {...bookmarkProps} />
             ) : null}
-            <div
-              className="book-bookmark-link"
-              onClick={async () => {
-                await this.handleJump(item.cfi);
-              }}
-              style={{ cursor: "pointer" }}
-            >
-              <Trans>Go to</Trans>
-            </div>
           </li>
         );
       });

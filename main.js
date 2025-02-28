@@ -116,6 +116,9 @@ const createMainWin = () => {
     }
     if (chatView) {
       let { width, height } = mainWin.getContentBounds()
+      chatView.webContents.executeJavaScript(`
+          window.$chatwoot.toggle('close');
+        `)
       chatView.setBounds({ x: width - 80, y: height - 100, width: 80, height: 80 })
     }
   });
@@ -440,16 +443,20 @@ const createMainWin = () => {
         })
       });
       chatView.webContents.on('focus', () => {
+        let { width, height } = mainWin.getContentBounds()
+        console.log(width, height, 'focus')
         chatView.setBounds({ x: width - 400, y: height - 520, width: 400, height: 500 })
         chatView.webContents.executeJavaScript(`
           window.$chatwoot.toggle('open');
         `)
       });
       chatView.webContents.on('blur', () => {
+        let { width, height } = mainWin.getContentBounds()
+        chatView.setBounds({ x: width - 80, y: height - 100, width: 80, height: 80 })
         chatView.webContents.executeJavaScript(`
           window.$chatwoot.toggle('close');
         `)
-        chatView.setBounds({ x: width - 80, y: height - 100, width: 80, height: 80 })
+
       });
     }
   });
@@ -511,7 +518,7 @@ const createMainWin = () => {
   });
   ipcMain.handle("open-url", (event, config) => {
     if (!urlWindow || urlWindow.isDestroyed()) {
-      urlWindow = new BrowserWindow(options);
+      urlWindow = new BrowserWindow();
     }
     urlWindow.loadURL(config.url);
   });

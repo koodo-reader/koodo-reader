@@ -7,9 +7,6 @@
   position: relative;
 }
 .book-bookmark-digest {
-  margin: 15px 5px 10px;
-  width: 240px;
-  max-height: 198px;
   font-size: 13px;
   line-height: 15px;
   opacity: 1;
@@ -22,6 +19,7 @@
   word-break: keep-all;
   overflow: hidden;
   position: relative;
+  cursor: pointer;
 }
 .book-bookmark-index {
   float: left;
@@ -47,7 +45,7 @@
   /* margin-top: 8px; */
   font-size: 13px;
   opacity: 1;
-  float: left;
+  float: right;
   line-height: 15px;
 }
 .book-bookmark-link {
@@ -66,7 +64,7 @@
   bottom: 5px;
 }
 .bookmark-page-list-item-title {
-  width: 140px;
+  width: calc(100% - 50px);
   overflow: hidden;
   height: 18px;
   margin-top: -3px;

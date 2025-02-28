@@ -164,7 +164,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       }
     }
     if (!result) {
-      toast.error(this.props.t("Sync Failed"));
+      toast.error(this.props.t("Sync failed"));
     } else {
       toast.success(
         this.props.t("Synchronisation successful") +
@@ -172,18 +172,32 @@ class Header extends React.Component<HeaderProps, HeaderState> {
           this.props.t("Local") +
           ")"
       );
+      toast.success(
+        this.props.t(
+          "Your data has been imported from your local folder, Upgrade to pro to get more advanced features"
+        ),
+        {
+          duration: 4000,
+        }
+      );
     }
   };
   handleLocalSync = async () => {
     let lastSyncTime = getLastSyncTimeFromConfigJson();
-    if (
-      ConfigService.getItem("lastSyncTime") &&
-      lastSyncTime < parseInt(ConfigService.getItem("lastSyncTime")!)
-    ) {
+    console.log(lastSyncTime, ConfigService.getItem("lastSyncTime"));
+    if (!lastSyncTime && ConfigService.getItem("lastSyncTime")) {
       await this.syncToLocation();
     } else {
-      await this.syncFromLocation();
+      if (
+        ConfigService.getItem("lastSyncTime") &&
+        lastSyncTime < parseInt(ConfigService.getItem("lastSyncTime")!)
+      ) {
+        await this.syncToLocation();
+      } else {
+        await this.syncFromLocation();
+      }
     }
+
     this.setState({ isSync: false });
   };
   handleFinish = async () => {
@@ -216,8 +230,10 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     toast.loading(
       this.props.t("Start syncing") +
         " (" +
-        driveList.find((item) => item.value === this.props.defaultSyncOption)
-          ?.label +
+        this.props.t(
+          driveList.find((item) => item.value === this.props.defaultSyncOption)
+            ?.label || ""
+        ) +
         ")",
       { id: "syncing-id" }
     );
@@ -292,6 +308,14 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         " (" +
         this.props.t("Local") +
         ")"
+    );
+    toast.success(
+      this.props.t(
+        "Your data has been exported to your local folder, learn how to sync your data to your other devices by visiting our documentation, Upgrade to pro to get more advanced features"
+      ),
+      {
+        duration: 4000,
+      }
     );
   };
 

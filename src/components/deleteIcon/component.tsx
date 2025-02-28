@@ -37,6 +37,10 @@ class DeleteIcon extends React.Component<DeleteIconProps, DeleteIconStates> {
         deleteFunc();
         toast.success(this.props.t("Deletion successful"));
       });
+      this.props.htmlBook.rendition.removeOneNote(
+        this.props.itemKey,
+        this.props.currentBook.format
+      );
       return;
     }
   };

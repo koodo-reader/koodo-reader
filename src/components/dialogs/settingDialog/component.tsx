@@ -878,6 +878,7 @@ class SettingDialog extends React.Component<
                     >
                       <Trans>Bind</Trans>
                     </div>
+
                     <div className="voice-add-button-container">
                       <div
                         className="voice-add-cancel"
@@ -973,6 +974,24 @@ class SettingDialog extends React.Component<
                             }}
                           >
                             <Trans>Test</Trans>
+                          </div>
+                        )}
+                      {(this.props.settingDrive === "webdav" ||
+                        this.props.settingDrive === "ftp" ||
+                        this.props.settingDrive === "sftp") &&
+                        (ConfigService.getReaderConfig("lang") === "zhCN" ||
+                          ConfigService.getReaderConfig("lang") === "zhTW" ||
+                          ConfigService.getReaderConfig("lang") === "zhMO") && (
+                          <div
+                            className="voice-add-cancel"
+                            style={{ borderWidth: 0 }}
+                            onClick={() => {
+                              openExternalUrl(
+                                "https://www.koodoreader.com/zh/add-source"
+                              );
+                            }}
+                          >
+                            {this.props.t("How to fill out")}
                           </div>
                         )}
                     </div>
