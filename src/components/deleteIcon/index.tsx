@@ -13,6 +13,8 @@ const mapStateToProps = (state: stateType) => {
     bookmarks: state.reader.bookmarks,
     notes: state.reader.notes,
     isReading: state.book.isReading,
+    htmlBook: state.reader.htmlBook,
+    currentBook: state.book.currentBook,
   };
 };
 const actionCreator = {

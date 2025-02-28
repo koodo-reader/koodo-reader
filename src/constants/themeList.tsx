@@ -43,3 +43,15 @@ export const themeList = [
     title: "Purple",
   },
 ];
+export const classes = [
+  "color-0",
+  "color-1",
+  "color-2",
+  "color-3",
+  "line-0",
+  "line-1",
+  "line-2",
+  "line-3",
+];
+export const colors = ["#FEF3CD", "#FBFACC", "#CEFACD", "#CDE9FA"];
+export const lines = ["#FF0000", "#000080", "#0000FF", "#2EFF2E"];
