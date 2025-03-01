@@ -7,9 +7,12 @@ import {
 } from "../../assets/lib/kookit-extra-browser.min";
 import i18n from "../../i18n";
 import { handleExitApp } from "./common";
-
+let thirdpartyRequest: ThirdpartyRequest;
 export const getThirdpartyRequest = async () => {
-  let thirdpartyRequest = new ThirdpartyRequest(TokenService, ConfigService);
+  if (thirdpartyRequest) {
+    return thirdpartyRequest;
+  }
+  thirdpartyRequest = new ThirdpartyRequest(TokenService, ConfigService);
   return thirdpartyRequest;
 };
 export const onSyncCallback = async (service: string, authCode: string) => {
@@ -37,7 +40,7 @@ export const encryptToken = async (service: string, config: any) => {
   let isAuthed = await TokenService.getToken("is_authed");
   if (!isAuthed) {
     await TokenService.setToken(service + "_token", syncToken);
-    return 200;
+    return { code: 200, msg: "success", data: syncToken };
   }
   let thirdpartyRequest = await getThirdpartyRequest();
 
@@ -62,7 +65,7 @@ export const decryptToken = async (service: string) => {
   let isAuthed = await TokenService.getToken("is_authed");
   if (!isAuthed) {
     let syncToken = (await TokenService.getToken(service + "_token")) || "{}";
-    return JSON.parse(syncToken);
+    return { code: 200, msg: "success", data: JSON.parse(syncToken) };
   }
   let thirdpartyRequest = await getThirdpartyRequest();
   let encryptedToken = await TokenService.getToken(service + "_token");

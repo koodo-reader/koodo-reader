@@ -627,9 +627,23 @@ app.on('open-url', (event, url) => {
 });
 
 const handleCallback = (url) => {
-  const code = new URL(url).searchParams.get('code');
-  const state = new URL(url).searchParams.get('state');
-  if (code && mainWin) {
-    mainWin.webContents.send('oauth-callback', { code, state });
+  try {
+    // 检查 URL 是否有效
+    if (!url.startsWith('koodo-reader://')) {
+      console.error('Invalid URL format:', url);
+      return;
+    }
+
+    // 解析 URL
+    const parsedUrl = new URL(url);
+    const code = parsedUrl.searchParams.get('code');
+    const state = parsedUrl.searchParams.get('state');
+
+    if (code && mainWin) {
+      mainWin.webContents.send('oauth-callback', { code, state });
+    }
+  } catch (error) {
+    console.error('Error handling callback URL:', error);
+    console.log('Problematic URL:', url);
   }
 };
