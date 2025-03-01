@@ -6,7 +6,7 @@ import {
   UserRequest,
 } from "../../assets/lib/kookit-extra-browser.min";
 import packageJson from "../../../package.json";
-
+let userRequest: UserRequest;
 export const loginRegister = async (service: string, code: string) => {
   let deviceName = detectBrowser();
   let userRequest = await getUserRequest();
@@ -31,7 +31,10 @@ export const loginRegister = async (service: string, code: string) => {
   return response;
 };
 export const getUserRequest = async () => {
-  let userRequest = new UserRequest(TokenService, ConfigService);
+  if (userRequest) {
+    return userRequest;
+  }
+  userRequest = new UserRequest(TokenService, ConfigService);
   return userRequest;
 };
 export const getOSName = () => {
