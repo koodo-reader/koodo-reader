@@ -56,6 +56,9 @@ class Login extends React.Component<LoginProps, LoginState> {
       removeSearchParams();
       this.props.handleFetchAuthed();
       this.setState({ currentStep: 3 });
+    } else {
+      this.props.handleLoadingDialog(false);
+      toast.error(this.props.t("Login failed, error code") + ": " + res.msg);
     }
   };
 

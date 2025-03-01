@@ -55,6 +55,7 @@
 }
 .booklist-manage-container {
   cursor: pointer;
+  margin-bottom: 10px;
 }
 .book-manage-title {
   font-size: 15px;

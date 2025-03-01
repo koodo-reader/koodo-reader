@@ -66,7 +66,7 @@ export const decryptToken = async (service: string) => {
   }
   let thirdpartyRequest = await getThirdpartyRequest();
   let encryptedToken = await TokenService.getToken(service + "_token");
-  if (!encryptedToken) {
+  if (!encryptedToken || encryptedToken === "{}") {
     return {};
   }
   let response = await thirdpartyRequest.decryptToken({

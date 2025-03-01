@@ -111,10 +111,12 @@ const createMainWin = () => {
   });
   mainWin.on("resize", () => {
     if (mainView) {
+      if (!mainWin) return
       let { width, height } = mainWin.getContentBounds()
       mainView.setBounds({ x: 0, y: 0, width: width, height: height })
     }
     if (chatView) {
+      if (!mainWin) return
       let { width, height } = mainWin.getContentBounds()
       chatView.webContents.executeJavaScript(`
           window.$chatwoot.toggle('close');
@@ -396,7 +398,6 @@ const createMainWin = () => {
       chatView = new WebContentsView({ ...options, transparent: true })
       mainWin.contentView.addChildView(chatView)
       let { width, height } = mainWin.getContentBounds()
-      // mainView.setBounds({ x: width - 400, y: height - 540, width: 400, height: 500 })
       chatView.setBounds({ x: width - 80, y: height - 100, width: 80, height: 80 })
       chatView.setBackgroundColor("#00000000");
       chatView.webContents.loadURL(config.url)
@@ -443,6 +444,7 @@ const createMainWin = () => {
         })
       });
       chatView.webContents.on('focus', () => {
+        if (!mainWin) return
         let { width, height } = mainWin.getContentBounds()
         console.log(width, height, 'focus')
         chatView.setBounds({ x: width - 400, y: height - 520, width: 400, height: 500 })
@@ -451,6 +453,7 @@ const createMainWin = () => {
         `)
       });
       chatView.webContents.on('blur', () => {
+        if (!mainWin) return
         let { width, height } = mainWin.getContentBounds()
         chatView.setBounds({ x: width - 80, y: height - 100, width: 80, height: 80 })
         chatView.webContents.executeJavaScript(`
