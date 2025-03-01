@@ -61,11 +61,17 @@ export const changeLibrary = async (newPath: string) => {
 };
 const isFolderContainsFile = (folderPath: string) => {
   const fs = window.require("fs");
+  if (!fs.existsSync(folderPath)) {
+    return false;
+  }
   const files = fs.readdirSync(folderPath);
   return files.length > 0;
 };
 const isKoodoLibrary = (folderPath: string) => {
   const fs = window.require("fs");
+  if (!fs.existsSync(folderPath)) {
+    return false;
+  }
   const files = fs.readdirSync(folderPath);
   return (
     files.includes("config") &&

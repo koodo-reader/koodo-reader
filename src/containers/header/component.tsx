@@ -12,6 +12,7 @@ import { restoreFromConfigJson } from "../../utils/file/restore";
 import { backupToConfigJson } from "../../utils/file/backup";
 import { isElectron } from "react-device-detect";
 import {
+  getCloudConfig,
   getLastSyncTimeFromConfigJson,
   upgradeConfig,
   upgradePro,
@@ -213,6 +214,12 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       this.setState({ isSync: false });
       return false;
     }
+    let config = getCloudConfig(this.props.defaultSyncOption);
+    if (Object.keys(config).length === 0) {
+      toast.error(this.props.t("Cannot get sync config"));
+      this.setState({ isSync: false });
+      return false;
+    }
     // let thirdpartyRequest = await getThirdpartyRequest();
     // let getSyncResult = await thirdpartyRequest.getSyncState();
     // if (getSyncResult.code !== 200) {
@@ -270,6 +277,16 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     toast.success(this.props.t("Synchronisation successful"), {
       id: "syncing-id",
     });
+    if (this.props.defaultSyncOption === "adrive") {
+      toast.success(
+        this.props.t(
+          "Due to Aliyun Drive's stringent concurrency restrictions, we have bypassed the synchronization of books and covers. Please manually download the books by clicking on them"
+        ),
+        {
+          duration: 4000,
+        }
+      );
+    }
     setTimeout(() => {
       this.props.history.push("/manager/home");
     }, 1000);

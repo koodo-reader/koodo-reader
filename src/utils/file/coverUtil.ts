@@ -19,6 +19,9 @@ class CoverUtil {
       var fs = window.require("fs");
       var path = window.require("path");
       let directoryPath = path.join(getStorageLocation() || "", "cover");
+      if (!fs.existsSync(directoryPath)) {
+        return book.cover;
+      }
       const files = fs.readdirSync(directoryPath);
       const imageFiles = files.filter((file) => file.startsWith(book.key));
       if (imageFiles.length === 0) {
@@ -26,6 +29,9 @@ class CoverUtil {
       }
       let format = imageFiles[0].split(".")[1];
       const imageFilePath = path.join(directoryPath, imageFiles[0]);
+      if (!fs.existsSync(imageFilePath)) {
+        return book.cover;
+      }
       let buffer = fs.readFileSync(imageFilePath);
       return `data:image/${format};base64,${buffer.toString("base64")}`;
     } else {
@@ -56,6 +62,9 @@ class CoverUtil {
       var fs = window.require("fs");
       var path = window.require("path");
       let directoryPath = path.join(getStorageLocation() || "", "cover");
+      if (!fs.existsSync(directoryPath)) {
+        return;
+      }
       const files = fs.readdirSync(directoryPath);
       const imageFiles = files.filter((file) => file.startsWith(key));
       if (imageFiles.length === 0) {

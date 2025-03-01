@@ -5,6 +5,7 @@ import {
   TokenService,
   UserRequest,
 } from "../../assets/lib/kookit-extra-browser.min";
+import packageJson from "../../../package.json";
 
 export const loginRegister = async (service: string, code: string) => {
   let deviceName = detectBrowser();
@@ -20,6 +21,7 @@ export const loginRegister = async (service: string, code: string) => {
     locale: navigator.language,
     os_version: getOsVersionNumber(),
     device_uuid: await TokenService.getFingerprint(),
+    app_version: packageJson.version,
   });
   if (response.code === 200) {
     await TokenService.setToken("is_authed", "yes");

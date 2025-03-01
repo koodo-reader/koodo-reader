@@ -139,6 +139,7 @@ class ActionDialog extends React.Component<MoreActionProps, MoreActionState> {
             className="action-dialog-edit"
             style={{ paddingLeft: "0px" }}
             onClick={() => {
+              console.log("safsdf");
               if (this.props.currentBook.format === "PDF") {
                 toast(this.props.t("Not supported yet"));
                 return;
@@ -161,6 +162,10 @@ class ActionDialog extends React.Component<MoreActionProps, MoreActionState> {
                   ConfigService.getReaderConfig("isBionic"),
                   ConfigService.getReaderConfig("convertChinese"),
                   Kookit
+                );
+                console.log(
+                  rendition,
+                  ConfigService.getReaderConfig("readerMode")
                 );
                 let cache = await rendition.preCache(result);
                 if (cache !== "err" || cache) {

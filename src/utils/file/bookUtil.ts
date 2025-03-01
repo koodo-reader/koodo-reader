@@ -14,6 +14,7 @@ import DatabaseService from "../storage/databaseService";
 import Book from "../../models/Book";
 import i18n from "../../i18n";
 import { getCloudConfig } from "./common";
+import CoverUtil from "./coverUtil";
 declare var window: any;
 
 class BookUtil {
@@ -156,6 +157,15 @@ class BookUtil {
           id: "offline-book",
         });
         let result = await this.downloadBook(book.key, book.format);
+        if (ConfigService.getItem("defaultSyncOption") === "adrive") {
+          let syncUtil = await SyncService.getSyncUtil();
+          let covers = await syncUtil.listFiles("cover");
+          for (let cover of covers) {
+            if (cover.startsWith(book.key)) {
+              await CoverUtil.downloadCover(cover);
+            }
+          }
+        }
         if (result) {
           toast.success(i18n.t("Offline successful"), {
             id: "offline-book",
@@ -164,6 +174,16 @@ class BookUtil {
           toast.error(i18n.t("Offline failed"), {
             id: "offline-book",
           });
+          if (ConfigService.getItem("defaultSyncOption") === "adrive") {
+            toast.error(
+              i18n.t(
+                "Aliyun Drive imposes strict limits on concurrent downloads. It is recommended that you wait 10 seconds before attempting to download again."
+              ),
+              {
+                id: "offline-book",
+              }
+            );
+          }
         }
       } else {
         toast.error(i18n.t("Book not exists"));

@@ -5,7 +5,11 @@ import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import axios from "axios";
 import { Trans } from "react-i18next";
 import toast from "react-hot-toast";
-import { handleContextMenu, openExternalUrl } from "../../../utils/common";
+import {
+  getDefaultTransTarget,
+  handleContextMenu,
+  openExternalUrl,
+} from "../../../utils/common";
 import DatabaseService from "../../../utils/storage/databaseService";
 import { checkPlugin } from "../../../utils/common";
 declare var window: any;
@@ -38,6 +42,7 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
 
     this.handleTrans(originalText);
   }
+
   handleTrans = (text: string) => {
     let plutin = this.props.plugins.find(
       (item) => item.key === this.state.transService
@@ -48,11 +53,20 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
     let translateFunc = plutin.script;
     // eslint-disable-next-line no-eval
     eval(translateFunc);
+    console.log(
+      getDefaultTransTarget(plutin.langList),
+      "getDefaultTransTarget(plutin.langList)"
+    );
+    console.log(
+      ConfigService.getReaderConfig("transTarget"),
+      'ConfigService.getReaderConfig("transTarget")'
+    );
     window
       .translate(
         text,
         ConfigService.getReaderConfig("transSource") || "",
-        ConfigService.getReaderConfig("transTarget") || "en",
+        ConfigService.getReaderConfig("transTarget") ||
+          getDefaultTransTarget(plutin.langList),
         axios,
         plutin.config
       )
@@ -79,11 +93,22 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
         return;
       }
       let autoValue = plugin.autoValue;
-      this.setState({ transSource: autoValue, transTarget: "en" }, () => {
-        ConfigService.setReaderConfig("transTarget", "en");
-        ConfigService.setReaderConfig("transSource", autoValue);
-        this.handleTrans(this.props.originalText.replace(/(\r\n|\n|\r)/gm, ""));
-      });
+      this.setState(
+        {
+          transSource: autoValue,
+          transTarget: getDefaultTransTarget(plugin.langList),
+        },
+        () => {
+          ConfigService.setReaderConfig(
+            "transTarget",
+            getDefaultTransTarget(plugin?.langList)
+          );
+          ConfigService.setReaderConfig("transSource", autoValue);
+          this.handleTrans(
+            this.props.originalText.replace(/(\r\n|\n|\r)/gm, "")
+          );
+        }
+      );
     });
   }
   render() {

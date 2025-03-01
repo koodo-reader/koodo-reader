@@ -111,3 +111,6 @@
 .textLayer.selecting .endOfContent {
   top: 0;
 }
+#koodoPDFLayerExtra {
+  display: none;
+}

@@ -269,10 +269,6 @@ class SettingDialog extends React.Component<
     if (!event.target.value) {
       return;
     }
-    if (event.target.value === this.props.defaultSyncOption) {
-      toast.error(this.props.t("Default sync option cannot be removed"));
-      return;
-    }
     await TokenService.setToken(event.target.value + "_token", "");
     SyncService.removeSyncUtil(event.target.value);
     removeCloudConfig(event.target.value);
@@ -347,7 +343,7 @@ class SettingDialog extends React.Component<
       return;
     }
     this.props.handleLoadingDialog(true);
-    let res = { code: 200 };
+    let res = { code: 200, msg: "success" };
     if (this.props.isAuthed) {
       let userRequest = await getUserRequest();
       res = await userRequest.addLogin({
@@ -372,7 +368,7 @@ class SettingDialog extends React.Component<
       this.setState({ settingLogin: "" });
     } else {
       this.props.handleLoadingDialog(false);
-      toast.error(this.props.t("Login failed, error code"));
+      toast.error(this.props.t("Login failed, error code") + ": " + res.msg);
     }
   };
   handleCancelDrive = () => {
