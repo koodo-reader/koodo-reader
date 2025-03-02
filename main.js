@@ -27,14 +27,13 @@ let dbConnection = {};
 let syncUtilCache = {};
 const singleInstance = app.requestSingleInstanceLock();
 var filePath = null;
-if (process.platform != "darwin" && process.argv.length >= 0) {
-  // find the file path from the command line arguments
-  for (let i = 0; i < process.argv.length; i++) {
-    if (process.argv[i] && fs.existsSync(process.argv[i]) && fs.statSync(process.argv[i]).isFile()) {
-      filePath = process.argv[i];
-      break;
-    }
-  }
+fs.writeFileSync(
+  path.join(dirPath, "log.json"),
+  JSON.stringify({ filePath: JSON.stringify(process.argv) }),
+  "utf-8"
+);
+if (process.platform != "darwin" && process.argv.length >= 2) {
+  filePath = process.argv[1];
 }
 let options = {
   width: 1050,
