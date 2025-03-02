@@ -39,7 +39,10 @@ class PopupOption extends React.Component<PopupOptionProps> {
     this.props.handleOriginalText(getSelection() || "");
   };
   handleDigest = async () => {
-    if (ConfigService.getReaderConfig("pdfReaderMode") === "double") {
+    if (
+      ConfigService.getReaderConfig("pdfReaderMode") === "double" &&
+      this.props.currentBook.format === "PDF"
+    ) {
       toast.error(
         this.props.t(
           "PDF files in double page mode does not support note taking"
