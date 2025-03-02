@@ -163,10 +163,6 @@ class ActionDialog extends React.Component<MoreActionProps, MoreActionState> {
                   ConfigService.getReaderConfig("convertChinese"),
                   Kookit
                 );
-                console.log(
-                  rendition,
-                  ConfigService.getReaderConfig("readerMode")
-                );
                 let cache = await rendition.preCache(result);
                 if (cache !== "err" || cache) {
                   BookUtil.addBook(
