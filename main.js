@@ -72,6 +72,8 @@ if (!singleInstance) {
     if (mainWin) {
       if (!mainWin.isVisible()) mainWin.show();
       mainWin.focus();
+    } else {
+      createMainWin();
     }
   });
 }
