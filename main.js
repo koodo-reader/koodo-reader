@@ -27,19 +27,9 @@ let dbConnection = {};
 let syncUtilCache = {};
 const singleInstance = app.requestSingleInstanceLock();
 var filePath = null;
-fs.writeFileSync(
-  path.join(dirPath, "log1.json"),
-  JSON.stringify({ filePath: JSON.stringify(process.argv), singleInstance: singleInstance }),
-  "utf-8"
-);
 if (process.platform != "darwin" && process.argv.length >= 2) {
   filePath = process.argv[1];
 }
-fs.writeFileSync(
-  path.join(dirPath, "log2.json"),
-  JSON.stringify({ filePath }),
-  "utf-8"
-);
 let options = {
   width: 1050,
   height: 660,
@@ -64,13 +54,6 @@ if (os.platform() === 'linux') {
 // Single Instance Lock
 if (!singleInstance) {
   app.quit();
-  if (filePath) {
-    fs.writeFileSync(
-      path.join(dirPath, "log.json"),
-      JSON.stringify({ filePath }),
-      "utf-8"
-    );
-  }
 } else {
   app.on("second-instance", (event, argv, workingDir) => {
     if (mainWin) {
@@ -78,6 +61,13 @@ if (!singleInstance) {
       mainWin.focus();
     }
   });
+}
+if (filePath) {
+  fs.writeFileSync(
+    path.join(dirPath, "log.json"),
+    JSON.stringify({ filePath }),
+    "utf-8"
+  );
 }
 const getDBConnection = (dbName, storagePath, sqlStatement) => {
   if (!dbConnection[dbName]) {
