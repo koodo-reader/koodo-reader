@@ -28,7 +28,7 @@ let syncUtilCache = {};
 const singleInstance = app.requestSingleInstanceLock();
 var filePath = null;
 fs.writeFileSync(
-  path.join(dirPath, "log.json"),
+  path.join(dirPath, "log1.json"),
   JSON.stringify({ filePath: JSON.stringify(process.argv) }),
   "utf-8"
 );
@@ -71,8 +71,6 @@ if (!singleInstance) {
     if (mainWin) {
       if (!mainWin.isVisible()) mainWin.show();
       mainWin.focus();
-    } else {
-      createMainWin();
     }
   });
 }
