@@ -139,7 +139,6 @@ class ActionDialog extends React.Component<MoreActionProps, MoreActionState> {
             className="action-dialog-edit"
             style={{ paddingLeft: "0px" }}
             onClick={() => {
-              console.log("safsdf");
               if (this.props.currentBook.format === "PDF") {
                 toast(this.props.t("Not supported yet"));
                 return;

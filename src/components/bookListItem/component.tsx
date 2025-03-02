@@ -32,7 +32,7 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
     //open book when app start
     if (isElectron) {
       const { ipcRenderer } = window.require("electron");
-      filePath = ipcRenderer.sendSync("get-file-data");
+      filePath = ipcRenderer.sendSync("check-file-data");
     }
     if (
       ConfigService.getReaderConfig("isOpenBook") === "yes" &&

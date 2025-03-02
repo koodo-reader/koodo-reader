@@ -205,7 +205,6 @@ export const loadFontData = async () => {
   try {
     if (!window.queryLocalFonts) return [];
     const availableFonts = await window.queryLocalFonts();
-    console.log(availableFonts);
     return availableFonts.map((font: any) => {
       return {
         label: font.fullName,
@@ -398,11 +397,8 @@ export const getDefaultTransTarget = (langList) => {
     bg: "Bulgarian",
     fa: "Persian",
   };
-  console.log(langMap2);
-  console.log(ConfigService.getReaderConfig("lang"));
   const lang = ConfigService.getReaderConfig("lang");
   const langKeys = Object.keys(langMap);
   let langTarget = langKeys.find((key) => key.includes(langMap2[lang]));
-  console.log(langTarget);
   return langMap[langTarget || "English"];
 };
