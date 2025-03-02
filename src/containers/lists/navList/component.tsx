@@ -73,7 +73,6 @@ class NavList extends React.Component<NavListProps, NavListState> {
     this.setState({ deleteIndex: index });
   };
   convertColorCode = (color: string) => {
-    console.log(color, "color");
     let colorType = color.split("-")[0];
     let colorIndex = parseInt(color.split("-")[1]);
     return colorType === "color"
@@ -99,7 +98,6 @@ class NavList extends React.Component<NavListProps, NavListState> {
           itemKey: item.key,
           mode: this.props.currentTab === "bookmarks" ? "bookmarks" : "notes",
         };
-        console.log(item, "item");
         return (
           <li
             className="book-bookmark-list"

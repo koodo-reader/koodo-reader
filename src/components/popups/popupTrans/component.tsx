@@ -53,14 +53,6 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
     let translateFunc = plutin.script;
     // eslint-disable-next-line no-eval
     eval(translateFunc);
-    console.log(
-      getDefaultTransTarget(plutin.langList),
-      "getDefaultTransTarget(plutin.langList)"
-    );
-    console.log(
-      ConfigService.getReaderConfig("transTarget"),
-      'ConfigService.getReaderConfig("transTarget")'
-    );
     window
       .translate(
         text,

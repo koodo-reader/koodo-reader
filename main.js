@@ -605,6 +605,19 @@ const createMainWin = () => {
     event.returnValue = filePath;
     filePath = null;
   });
+  ipcMain.on("check-file-data", function (event) {
+    if (fs.existsSync(path.join(dirPath, "log.json"))) {
+      const _data = JSON.parse(
+        fs.readFileSync(path.join(dirPath, "log.json"), "utf-8") || "{}"
+      );
+      if (_data && _data.filePath) {
+        filePath = _data.filePath;
+      }
+    }
+
+    event.returnValue = filePath;
+    filePath = null;
+  });
 };
 app.on("ready", () => {
   createMainWin();

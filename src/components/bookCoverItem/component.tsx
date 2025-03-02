@@ -33,7 +33,7 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
     // Get file path from electron
     if (isElectron) {
       const { ipcRenderer } = window.require("electron");
-      filePath = ipcRenderer.sendSync("get-file-data");
+      filePath = ipcRenderer.sendSync("check-file-data");
     }
 
     if (
