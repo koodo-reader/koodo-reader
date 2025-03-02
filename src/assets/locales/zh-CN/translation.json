@@ -250,6 +250,7 @@
   "Offline failed": "离线失败",
   "Email": "邮箱",
   "Binding failed": "绑定失败",
+  "PDF files in double page mode does not support note taking": "双页模式下的PDF文件不支持笔记功能",
   "Connection successful": "连接成功",
   "Encryption failed, error code": "加密失败，错误代码",
   "Decryption failed, error code": "解密失败，错误代码",
