@@ -139,7 +139,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     }
     if (!nextProps.isAuthed && nextProps.isAuthed !== this.props.isAuthed) {
       if (isElectron) {
-        window.require("electron").ipcRenderer.invoke("new-chat", {
+        window.require("electron").ipcRenderer.invoke("exit-chat", {
           url: "https://dl.koodoreader.com/chat.html",
           locale: getChatLocale(),
         });
@@ -213,7 +213,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       this.setState({ isSync: false });
       return false;
     }
-    let config = getCloudConfig(this.props.defaultSyncOption);
+    let config = await getCloudConfig(this.props.defaultSyncOption);
     if (Object.keys(config).length === 0) {
       toast.error(this.props.t("Cannot get sync config"));
       this.setState({ isSync: false });

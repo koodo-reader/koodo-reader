@@ -83,7 +83,10 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
         this.props.handleNoteKey("");
       });
     } else {
-      if (ConfigService.getReaderConfig("pdfReaderMode") === "double") {
+      if (
+        ConfigService.getReaderConfig("pdfReaderMode") === "double" &&
+        this.props.currentBook.format === "PDF"
+      ) {
         toast.error(
           this.props.t(
             "PDF files in double page mode does not support note taking"
