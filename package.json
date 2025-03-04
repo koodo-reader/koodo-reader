@@ -123,6 +123,12 @@
       "src/assets/lib/kookit-extra.min.mjs",
       "main.js"
     ],
+    "protocols": {
+      "name": "KoodoReader",
+      "schemes": [
+        "koodo-reader"
+      ]
+    },
     "directories": {
       "buildResources": "assets"
     },
