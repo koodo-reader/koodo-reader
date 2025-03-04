@@ -89,7 +89,7 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
       ) {
         toast.error(
           this.props.t(
-            "PDF files in double page mode does not support note taking"
+            "PDF files in double page mode does not support note taking yet"
           )
         );
         return;

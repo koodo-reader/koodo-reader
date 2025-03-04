@@ -172,15 +172,7 @@ export const getPageWidth = (
   };
   let pageOffset = "";
   let pageWidth = "";
-  if (document.body.clientWidth < 720) {
-    let width = findValidMultiple(
-      document.body.clientWidth -
-        document.body.clientWidth * 0.4 -
-        (isNavLocked ? 300 : 0)
-    );
-    pageOffset = `calc(50vw - ${width / 2}px)`;
-    pageWidth = `${width}px`;
-  } else if (readerMode === "scroll" || readerMode === "single") {
+  if (readerMode === "scroll" || readerMode === "single") {
     let preWidth =
       document.body.clientWidth * parseFloat(scale) -
       document.body.clientWidth * 0.4 -

@@ -87,22 +87,22 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
     switch (position) {
       case "right":
         this.setState({
-          isOpenRightPanel: this.state.isOpenRightPanel ? false : true,
+          isOpenRightPanel: true,
         });
         break;
       case "left":
         this.setState({
-          isOpenLeftPanel: this.state.isOpenLeftPanel ? false : true,
+          isOpenLeftPanel: true,
         });
         break;
       case "top":
         this.setState({
-          isOpenTopPanel: this.state.isOpenTopPanel ? false : true,
+          isOpenTopPanel: true,
         });
         break;
       case "bottom":
         this.setState({
-          isOpenBottomPanel: this.state.isOpenBottomPanel ? false : true,
+          isOpenBottomPanel: true,
         });
         break;
       default:

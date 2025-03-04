@@ -53,11 +53,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     this.props.handleFetchDefaultSyncOption();
     this.props.handleFetchDataSourceList();
 
-    // isElectron &&
-    //   (await window.require("electron").ipcRenderer.invoke("s3-download"));
-    // let syncUtil = new window.KookitSync.SyncUtil("dropbox", {});
-    // console.log(syncUtil, window.KookitSync.SyncUtil);
-    // console.log(await syncUtil.listFiles("book"));
     if (isElectron) {
       const fs = window.require("fs");
       const path = window.require("path");
@@ -65,9 +60,9 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       const dirPath = ipcRenderer.sendSync("user-data", "ping");
       if (!fs.existsSync(dirPath)) {
         fs.mkdirSync(path.join(dirPath, "data", "book"), { recursive: true });
-        console.log("folder created");
+        console.info("folder created");
       } else {
-        console.log("folder exist");
+        console.info("folder exist");
       }
 
       if (
@@ -419,20 +414,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
             className="setting-icon-container"
             onClick={async () => {
               this.setState({ isSync: true });
-              // let result = await CoverUtil.uploadCover("1738469806090.jpeg");
-              // let result = await CoverUtil.downloadCover("1738469806090.jpeg");
-              // let result = await CoverUtil.getCloudCoverList();
-              // let result = await CoverUtil.deleteCloudCover(
-              //   "1738469806090.jpeg"
-              // );
-              // let syncUtil = await SyncService.getSyncUtil();
-              // let result = await syncUtil.listFiles("cover");
-              // let result = await syncUtil.deleteFile(
-              //   "1738469806090.jpeg",
-              //   "cover"
-              // );
-              // console.log(result);
-              // return;
               if (!isElectron && !this.props.isAuthed) {
                 toast(
                   this.props.t(

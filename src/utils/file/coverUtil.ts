@@ -185,7 +185,7 @@ class CoverUtil {
         storagePath: getStorageLocation(),
       });
       if (!result) {
-        console.log("download cover failed");
+        console.error("download cover failed");
         return;
       }
     } else {
@@ -193,12 +193,12 @@ class CoverUtil {
 
       let imgBuffer: ArrayBuffer = await syncUtil.downloadFile(cover, "cover");
       if (!imgBuffer) {
-        console.log("download cover failed");
+        console.error("download cover failed");
         return;
       }
       let imgStr = CommonTool.arrayBufferToBase64(imgBuffer);
       if (!imgStr) {
-        console.log("download cover failed");
+        console.error("download cover failed");
         return;
       }
       let base64 = `data:image/${
