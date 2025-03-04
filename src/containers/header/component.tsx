@@ -44,7 +44,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       width: document.body.clientWidth,
       isdataChange: false,
       isDeveloperVer: false,
-      isHidePro: false,
+      isHidePro: true,
       isSync: false,
     };
   }
