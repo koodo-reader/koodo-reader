@@ -208,7 +208,7 @@ class NavigationPanel extends React.Component<
                 this.setState({ searchList: null });
               }}
             >
-              <span className="icon-close"></span>
+              <span className="icon-close theme-color-delete"></span>
             </div>
 
             <div className="header-search-container">

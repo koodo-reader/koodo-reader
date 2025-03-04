@@ -17,6 +17,9 @@
 .backup-close-icon {
   margin-top: 10px;
   margin-right: 10px;
+  float: right;
+  font-size: 18px;
+  cursor: pointer;
 }
 @keyframes popup {
   0% {

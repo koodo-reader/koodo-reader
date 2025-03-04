@@ -93,6 +93,9 @@
 .setting-close {
   margin-right: 10px;
   margin-top: 10px;
+  float: right;
+  font-size: 18px;
+  cursor: pointer;
 }
 .setting-subtitle {
   font-size: 15px;

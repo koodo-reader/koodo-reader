@@ -72,7 +72,7 @@ class Login extends React.Component<LoginProps, LoginState> {
             this.props.history.push("/manager/home");
           }}
         >
-          <span className="icon-close login-close-icon"></span>
+          <span className="icon-close login-close-icon theme-color-delete"></span>
         </div>
         {this.props.isSettingOpen && <SettingDialog />}
         {this.props.isShowLoading && <LoadingDialog />}

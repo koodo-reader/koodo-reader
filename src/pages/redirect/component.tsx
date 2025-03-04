@@ -99,7 +99,7 @@ class Redirect extends React.Component<RedirectProps, RedirectState> {
             {this.state.isAuthed ? (
               <Lottie options={successOptions} height={80} width={80} />
             ) : (
-              <span className="icon-close auth-page-close-icon"></span>
+              <span className="icon-close auth-page-close-icon theme-color-delete"></span>
             )}
 
             <div className="backup-page-finish-text">

@@ -36,5 +36,6 @@ export interface HeaderState {
   isNewVersion: boolean;
   isdataChange: boolean;
   isDeveloperVer: boolean;
+  isHidePro: boolean;
   isSync: boolean;
 }
