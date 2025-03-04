@@ -478,7 +478,6 @@ const createMainWin = () => {
       chatView.webContents.on('focus', () => {
         if (!mainWin) return
         let { width, height } = mainWin.getContentBounds()
-        console.log(width, height, 'focus')
         chatView.setBounds({ x: width - 400, y: height - 520, width: 400, height: 500 })
         chatView.webContents.executeJavaScript(`
           window.$chatwoot.toggle('open');

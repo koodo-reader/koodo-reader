@@ -40,7 +40,7 @@ export const restore = async (service: string): Promise<Boolean> => {
       storagePath: getStorageLocation(),
     });
     if (!result) {
-      console.log("no backup file");
+      console.error("no backup file");
       return false;
     }
     const path = window.require("path");

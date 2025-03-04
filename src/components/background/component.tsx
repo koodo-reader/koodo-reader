@@ -33,9 +33,7 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
         <div
           className="background-box2"
           style={
-            document.body.clientWidth < 720
-              ? { left: 5, right: 8 }
-              : this.state.isSingle
+            this.state.isSingle
               ? {
                   left: this.state.pageOffset,
                   marginLeft: -50,
@@ -49,9 +47,7 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
         <div
           className="background-box3"
           style={
-            document.body.clientWidth < 720
-              ? { left: 5, right: 10 }
-              : this.state.isSingle
+            this.state.isSingle
               ? {
                   marginLeft: -50,
                   left: this.state.pageOffset,
@@ -120,9 +116,7 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
         <div
           className="background-box1"
           style={
-            document.body.clientWidth < 720
-              ? { left: 5, right: 6 }
-              : this.state.isSingle
+            this.state.isSingle
               ? {
                   marginLeft: -50,
                   left: this.state.pageOffset,

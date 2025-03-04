@@ -27,7 +27,7 @@ class ConfigUtil {
         storagePath: getStorageLocation(),
       });
       if (!result) {
-        console.log("no config file");
+        console.error("no config file");
         return "{}";
       }
       let fs = window.require("fs");
@@ -119,7 +119,7 @@ class ConfigUtil {
         storagePath: getStorageLocation(),
       });
       if (!result) {
-        console.log("no database file");
+        console.error("no database file");
         return [];
       }
       let cloudRecords = await DatabaseService.getAllRecords(

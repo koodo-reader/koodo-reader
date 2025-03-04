@@ -128,7 +128,7 @@ export const upgradeStorage = async (
     const path = window.require("path");
     // upgrage cover and book
     if (ConfigService.getItem("isUpgradedStorage") === "yes") {
-      console.log("upgraded");
+      console.info("upgraded");
       return true;
     }
 
@@ -218,7 +218,7 @@ export const upgradeStorage = async (
 export const upgradeConfig = (): Boolean => {
   try {
     if (ConfigService.getItem("isUpgradedConfig") === "yes") {
-      console.log("upgraded");
+      console.info("upgraded");
       return true;
     }
     //upgrade shelf
