@@ -7,7 +7,6 @@ const {
   dialog,
   powerSaveBlocker,
   nativeTheme,
-  safeStorage,
   protocol
 } = require("electron");
 const path = require("path");
@@ -93,6 +92,26 @@ const removeSyncUtil = (config) => {
   if (syncUtilCache[config.service]) {
     syncUtilCache[config.service] = null;
   }
+}
+// Simple encryption function
+const encrypt = (text, key) => {
+  let result = "";
+  for (let i = 0; i < text.length; i++) {
+    const charCode = text.charCodeAt(i) ^ key.charCodeAt(i % key.length);
+    result += String.fromCharCode(charCode);
+  }
+  return Buffer.from(result).toString("base64");
+}
+
+// Simple decryption function
+const decrypt = (encryptedText, key) => {
+  const buff = Buffer.from(encryptedText, "base64").toString();
+  let result = "";
+  for (let i = 0; i < buff.length; i++) {
+    const charCode = buff.charCodeAt(i) ^ key.charCodeAt(i % key.length);
+    result += String.fromCharCode(charCode);
+  }
+  return result;
 }
 const createMainWin = () => {
   mainWin = new BrowserWindow(options);
@@ -259,15 +278,28 @@ const createMainWin = () => {
     return path.filePaths[0];
   });
   ipcMain.handle("encrypt-data", async (event, config) => {
-    let encrypted = safeStorage.encryptString(config.token).toString("base64");
+    const { TokenService } = await import('./src/assets/lib/kookit-extra.min.mjs');
+    let fingerprint = await TokenService.getFingerprint();
+    let encrypted = encrypt(config.token, fingerprint);
     store.set("encryptedToken", encrypted);
     return "pong";
   });
   ipcMain.handle("decrypt-data", async (event) => {
     let encrypted = store.get("encryptedToken");
     if (!encrypted) return "";
-    let decrypted = safeStorage.decryptString(Buffer.from(encrypted, "base64"));
-    return decrypted;
+    const { TokenService } = await import('./src/assets/lib/kookit-extra.min.mjs');
+    let fingerprint = await TokenService.getFingerprint();
+    let decrypted = decrypt(encrypted, fingerprint);
+    if (decrypted.startsWith("{") && decrypted.endsWith("}")) {
+      return decrypted
+    } else {
+      const { safeStorage } = require("electron")
+      decrypted = safeStorage.decryptString(Buffer.from(encrypted, "base64"));
+      let newEncrypted = encrypt(decrypted, fingerprint);
+      store.set("encryptedToken", newEncrypted);
+      return decrypted;
+    }
+
   });
   ipcMain.handle("get-mac", async (event, config) => {
     const { machineIdSync } = require('node-machine-id');
