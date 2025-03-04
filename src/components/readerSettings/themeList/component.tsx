@@ -127,7 +127,7 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
             >
               {index > 3 && index === this.state.currentBackgroundIndex && (
                 <span
-                  className="icon-close"
+                  className="icon-close theme-color-delete"
                   onClick={() => {
                     ConfigService.deleteListConfig(item, "themeColors");
                   }}
@@ -156,7 +156,7 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
             >
               {index > 3 && index === this.state.currentTextIndex && (
                 <span
-                  className="icon-close"
+                  className="icon-close theme-color-delete"
                   onClick={() => {
                     ConfigService.deleteListConfig(item, "themeColors");
                   }}

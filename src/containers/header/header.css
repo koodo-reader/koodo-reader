@@ -8,7 +8,13 @@
 .setting-icon-container:hover {
   border-radius: 50%;
 }
-
+.icon-pro-close {
+  font-size: 12px !important;
+  line-height: 30px !important;
+  display: inline-block;
+  /* margin: 0px 5px; */
+  opacity: 0.5;
+}
 .header-sort-icon {
   float: left;
   margin-top: 3px;
@@ -152,7 +158,7 @@
   position: absolute;
   top: 30px;
   right: 180px;
-  text-decoration: underline;
+
   text-underline-offset: 3px;
 }
 .setting-icon-container {

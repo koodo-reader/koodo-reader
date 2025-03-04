@@ -17,4 +17,7 @@
   margin-right: 3.5px;
   margin-top: 3px;
   cursor: pointer;
+  float: right;
+  font-size: 18px;
+  cursor: pointer;
 }

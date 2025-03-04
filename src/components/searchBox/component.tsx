@@ -137,7 +137,7 @@ class SearchBox extends React.Component<SearchBoxProps> {
               this.props.mode === "nav" ? { right: "-9px", top: "14px" } : {}
             }
           >
-            <span className="icon-close"></span>
+            <span className="icon-close theme-color-delete"></span>
           </span>
         ) : (
           <span className="header-search-text">

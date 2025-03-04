@@ -44,6 +44,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       width: document.body.clientWidth,
       isdataChange: false,
       isDeveloperVer: false,
+      isHidePro: false,
       isSync: false,
     };
   }
@@ -81,6 +82,9 @@ class Header extends React.Component<HeaderProps, HeaderState> {
 
       if (ConfigService.getReaderConfig("appInfo") === "dev") {
         this.setState({ isDeveloperVer: true });
+      }
+      if (ConfigService.getReaderConfig("isHidePro") !== "yes") {
+        this.setState({ isHidePro: false });
       }
 
       //Check for data update
@@ -462,24 +466,47 @@ class Header extends React.Component<HeaderProps, HeaderState> {
           </div>
         </div>
 
-        {!this.props.isAuthed ? (
-          <div
-            className="header-report-container"
-            onClick={() => {
-              if (isElectron) {
-                this.props.history.push("/login");
-              } else {
-                if (navigator.language.startsWith("zh")) {
-                  openExternalUrl("https://www.koodoreader.com/zh/about-pro");
+        {!this.props.isAuthed && !this.state.isHidePro ? (
+          <div className="header-report-container">
+            <span
+              style={{ textDecoration: "underline" }}
+              onClick={() => {
+                if (isElectron) {
+                  this.props.history.push("/login");
                 } else {
-                  openExternalUrl("https://www.koodoreader.com/en/about-pro");
+                  if (navigator.language.startsWith("zh")) {
+                    openExternalUrl("https://www.koodoreader.com/zh/about-pro");
+                  } else {
+                    openExternalUrl("https://www.koodoreader.com/en/about-pro");
+                  }
                 }
-              }
-            }}
-          >
-            <Trans>Pro version</Trans>
+              }}
+            >
+              <Trans>Pro version</Trans>
+              <span> </span>
+            </span>
+            {this.state.isDeveloperVer && (
+              <span
+                className="icon-close icon-pro-close"
+                onClick={() => {
+                  ConfigService.setReaderConfig("isHidePro", "yes");
+                  this.setState({ isHidePro: true });
+                }}
+              ></span>
+            )}
           </div>
         ) : null}
+        {this.state.isDeveloperVer && this.state.isHidePro && (
+          <div
+            className="header-report-container"
+            style={{ textDecoration: "underline" }}
+            onClick={() => {
+              this.props.handleFeedbackDialog(true);
+            }}
+          >
+            <Trans>Report</Trans>
+          </div>
+        )}
 
         <ImportLocal
           {...{
