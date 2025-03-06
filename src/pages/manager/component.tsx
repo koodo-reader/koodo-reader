@@ -134,6 +134,7 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
               this.props.handleLoadingDialog(false);
               if (!this.props.isAuthed) {
                 this.props.handleNewDialog(false);
+                this.props.handleShowSupport(false);
               }
               this.props.handleBackupDialog(false);
               this.props.handleSetting(false);
@@ -145,6 +146,7 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
               this.props.isOpenFeedbackDialog ||
               this.props.isBackup ||
               this.props.isShowNew ||
+              this.props.isShowSupport ||
               this.props.isOpenDeleteDialog ||
               this.props.isOpenEditDialog ||
               this.props.isDetailDialog ||

@@ -105,12 +105,11 @@ class UpdateInfo extends React.Component<UpdateInfoProps, UpdateInfoState> {
                   await TokenService.deleteToken("access_token");
                   await TokenService.deleteToken("refresh_token");
                   this.props.handleFetchAuthed();
-                  this.props.handleLoginOptionList([]);
                   toast.success(this.props.t("Log out successful"));
                   this.handleClose();
                 }}
               >
-                {this.props.t("Log out")}
+                {this.props.t("Exit Pro")}
               </div>
             )}
             <div className="update-dialog-info" style={{ height: 420 }}>

@@ -6,6 +6,9 @@ import {
   UserRequest,
 } from "../../assets/lib/kookit-extra-browser.min";
 import packageJson from "../../../package.json";
+import toast from "react-hot-toast";
+import i18n from "../../i18n";
+import { handleExitApp } from "./common";
 let userRequest: UserRequest;
 export const loginRegister = async (service: string, code: string) => {
   let deviceName = detectBrowser();
@@ -27,6 +30,27 @@ export const loginRegister = async (service: string, code: string) => {
     await TokenService.setToken("is_authed", "yes");
     await TokenService.setToken("access_token", response.data.access_token);
     await TokenService.setToken("refresh_token", response.data.refresh_token);
+  }
+  return response;
+};
+export const getTempToken = async () => {
+  let userRequest = await getUserRequest();
+  let response = await userRequest.getTempToken();
+  if (response.code === 200) {
+    return response;
+  } else if (response.code === 401) {
+    handleExitApp();
+    return response;
+  } else {
+    toast.error(i18n.t("Fetch failed, error code") + ": " + response.msg);
+    return response;
+  }
+};
+export const fetchUserInfo = async () => {
+  let userRequest = await getUserRequest();
+  let response = await userRequest.getUserInfo();
+  if (response.code === 401) {
+    handleExitApp();
   }
   return response;
 };
