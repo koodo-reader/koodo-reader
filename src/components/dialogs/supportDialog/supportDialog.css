@@ -1,0 +1,18 @@
+.support-us-out-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  bottom: 20px;
+  cursor: pointer;
+  position: absolute;
+  right: 12px;
+}
+.support-us-need-help,
+.support-us-log-out {
+  min-width: 60px;
+  margin-right: 20px;
+}
+.support-us-info {
+  margin-top: 10px;
+  height: 330px;
+}

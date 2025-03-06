@@ -8,6 +8,7 @@ import {
   handleDetailDialog,
   handleLoadingDialog,
   handleNewDialog,
+  handleShowSupport,
   handleFeedbackDialog,
   handleSetting,
   handleBackupDialog,
@@ -46,6 +47,7 @@ const mapStateToProps = (state: stateType) => {
     isSortDisplay: state.manager.isSortDisplay,
     isShowLoading: state.manager.isShowLoading,
     isShowNew: state.manager.isShowNew,
+    isShowSupport: state.manager.isShowSupport,
     DetailDialog: state.manager.isDetailDialog,
     isBackup: state.backupPage.isBackup,
   };
@@ -66,6 +68,7 @@ const actionCreator = {
   handleDetailDialog,
   handleLoadingDialog,
   handleNewDialog,
+  handleShowSupport,
   handleBackupDialog,
   handleReadingState,
 };

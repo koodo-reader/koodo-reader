@@ -6,8 +6,7 @@ import BookModel from "../../models/Book";
 import PluginModel from "../../models/Plugin";
 import { Dispatch } from "redux";
 import DatabaseService from "../../utils/storage/databaseService";
-import { getUserRequest } from "../../utils/request/user";
-import { handleExitApp } from "../../utils/request/common";
+import { fetchUserInfo } from "../../utils/request/user";
 
 export function handleBooks(books: BookModel[]) {
   return { type: "HANDLE_BOOKS", payload: books };
@@ -64,6 +63,9 @@ export function handleSelectedBooks(selectedBooks: string[]) {
 export function handleNewWarning(isNewWarning: boolean) {
   return { type: "HANDLE_NEW_WARNING", payload: isNewWarning };
 }
+export function handleShowSupport(isShowSupport: boolean) {
+  return { type: "HANDLE_SHOW_SUPPORT", payload: isShowSupport };
+}
 export function handleBookSort(isBookSort: boolean) {
   return { type: "HANDLE_BOOK_SORT", payload: isBookSort };
 }
@@ -102,13 +104,10 @@ export function handleFetchBooks() {
 }
 export function handleFetchUserInfo() {
   return async (dispatch: Dispatch) => {
-    let userInfo: any = {};
-    let userRequest = await getUserRequest();
-    let response = await userRequest.getUserInfo();
+    let response = await fetchUserInfo();
+    let userInfo: any = null;
     if (response.code === 200) {
       userInfo = response.data;
-    } else if (response.code === 401) {
-      handleExitApp();
     }
     dispatch(handleUserInfo(userInfo));
   };

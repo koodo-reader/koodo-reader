@@ -21,6 +21,7 @@ export interface ManagerProps extends RouteComponentProps<any> {
   isAboutOpen: boolean;
   isShowLoading: boolean;
   isShowNew: boolean;
+  isShowSupport: boolean;
   isAuthed: boolean;
   isOpenFeedbackDialog: boolean;
   dragItem: string;
@@ -38,6 +39,7 @@ export interface ManagerProps extends RouteComponentProps<any> {
   handleFeedbackDialog: (isShow: boolean) => void;
   handleLoadingDialog: (isShowLoading: boolean) => void;
   handleNewDialog: (isShowNew: boolean) => void;
+  handleShowSupport: (isShowSupport: boolean) => void;
   handleBackupDialog: (isBackup: boolean) => void;
   handleReadingState: (isReading: boolean) => void;
   handleSetting: (isSettingOpen: boolean) => void;

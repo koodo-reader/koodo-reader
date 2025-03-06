@@ -32,6 +32,7 @@ import {
   removeChatBox,
 } from "../../utils/common";
 import { driveList } from "../../constants/driveList";
+import SupportDialog from "../../components/dialogs/supportDialog";
 
 class Header extends React.Component<HeaderProps, HeaderState> {
   constructor(props: HeaderProps) {
@@ -44,7 +45,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       width: document.body.clientWidth,
       isdataChange: false,
       isDeveloperVer: false,
-      isHidePro: true,
+      isHidePro: false,
       isSync: false,
     };
   }
@@ -78,8 +79,8 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       if (ConfigService.getReaderConfig("appInfo") === "dev") {
         this.setState({ isDeveloperVer: true });
       }
-      if (ConfigService.getReaderConfig("isHidePro") !== "yes") {
-        this.setState({ isHidePro: false });
+      if (ConfigService.getReaderConfig("isHidePro") === "yes") {
+        this.setState({ isHidePro: true });
       }
 
       //Check for data update
@@ -495,6 +496,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
           }}
         />
         <UpdateInfo />
+        <SupportDialog />
       </div>
     );
   }
