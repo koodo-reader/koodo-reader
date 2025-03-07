@@ -45,8 +45,6 @@ class SupporDialog extends React.Component<
     } else {
       this.props.handleFetchUserInfo();
     }
-
-    console.log(this.props.isAuthed, this.props.userInfo);
   }
   UNSAFE_componentWillReceiveProps(
     nextProps: Readonly<SupporDialogProps>,

@@ -20,7 +20,7 @@ export const uploadFile = async (url: string, file: any) => {
         resolve(true);
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err);
         resolve(false);
       });
   });
