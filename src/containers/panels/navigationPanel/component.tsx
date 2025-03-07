@@ -196,6 +196,9 @@ class NavigationPanel extends React.Component<
           backgroundColor: this.props.isNavLocked
             ? ConfigService.getReaderConfig("backgroundColor")
             : "",
+          color: this.props.isNavLocked
+            ? ConfigService.getReaderConfig("textColor")
+            : "",
         }}
       >
         {this.state.searchState ? (
