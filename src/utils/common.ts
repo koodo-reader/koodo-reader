@@ -35,7 +35,7 @@ export const fetchFileFromPath = (filePath: string) => {
 
     fs.readFile(filePath, (err, data) => {
       if (err) {
-        console.log(err);
+        console.error(err);
         return;
       }
       const file = new File(
@@ -200,7 +200,7 @@ export const loadFontData = async () => {
     return availableFonts.map((font: any) => {
       return {
         label: font.fullName,
-        value: font.fullName,
+        value: `"${font.fullName}", "${font.family}", "${font.postscriptName}"`,
       };
     });
   } catch (err) {

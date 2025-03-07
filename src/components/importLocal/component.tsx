@@ -151,7 +151,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
         try {
           await this.handleBook(file, md5);
         } catch (error) {
-          console.log(error);
+          console.error(error);
         }
 
         return resolve();
@@ -244,7 +244,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                 }
               }
             } catch (error) {
-              console.log(error);
+              console.error(error);
               return resolve();
             }
 
@@ -340,18 +340,29 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                 className="import-book-box"
                 onClick={async () => {
                   const { ipcRenderer } = window.require("electron");
-                  const path = window.require("path");
                   let filePaths = await ipcRenderer.invoke(
                     "select-book",
                     "ping"
                   );
                   for (let filePath of filePaths) {
-                    let response = await fetch(filePath);
-                    let blob = await response.blob();
-                    let fileName = path.basename(filePath);
-                    let file: any = new File([blob], fileName);
-                    file.path = filePath;
-                    await this.getMd5WithBrowser(file);
+                    try {
+                      const fs = window.require("fs").promises;
+                      const path = window.require("path");
+                      const buffer = await fs.readFile(filePath);
+
+                      let arraybuffer = new Uint8Array(buffer).buffer;
+                      let blob = new Blob([arraybuffer]);
+                      let fileName = path.basename(filePath);
+                      let file: any = new File([blob], fileName);
+                      file.path = filePath;
+
+                      await this.getMd5WithBrowser(file);
+                    } catch (error) {
+                      console.error(
+                        `Error processing file ${filePath}:`,
+                        error
+                      );
+                    }
                   }
                 }}
               ></div>

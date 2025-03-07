@@ -211,7 +211,7 @@ export const upgradeStorage = async (
     handleFinish();
     return true;
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return false;
   }
 };
@@ -246,7 +246,7 @@ export const upgradeConfig = (): Boolean => {
     ConfigService.setItem("isUpgradedConfig", "yes");
     return true;
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return false;
   }
 };

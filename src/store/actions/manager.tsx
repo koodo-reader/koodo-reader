@@ -127,7 +127,7 @@ export function handleFetchAuthed() {
         dispatch(handleAuthed(isAuthed));
       });
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 }

@@ -254,7 +254,7 @@ class TextToSpeech extends React.Component<
       window.speechSynthesis && window.speechSynthesis.cancel();
       window.speechSynthesis.speak(msg);
       msg.onerror = (err) => {
-        console.log(err);
+        console.error(err);
         resolve("end");
       };
 

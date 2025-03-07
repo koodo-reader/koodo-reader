@@ -15,23 +15,25 @@ class DropdownList extends React.Component<
     this.state = {
       currentFontFamilyIndex: dropdownList[0].option.findIndex((item: any) => {
         return (
-          item ===
+          item.value ===
           (ConfigService.getReaderConfig("fontFamily") || "Built-in font")
         );
       }),
       currentLineHeightIndex: dropdownList[1].option.findIndex((item: any) => {
         return (
-          item === (ConfigService.getReaderConfig("lineHeight") || "Default")
+          item.value ===
+          (ConfigService.getReaderConfig("lineHeight") || "Default")
         );
       }),
       currentTextAlignIndex: dropdownList[2].option.findIndex((item: any) => {
         return (
-          item === (ConfigService.getReaderConfig("textAlign") || "Default")
+          item.value ===
+          (ConfigService.getReaderConfig("textAlign") || "Default")
         );
       }),
       chineseConversionIndex: dropdownList[3].option.findIndex((item: any) => {
         return (
-          item ===
+          item.value ===
           (ConfigService.getReaderConfig("convertChinese") || "Default")
         );
       }),
@@ -55,7 +57,7 @@ class DropdownList extends React.Component<
   }
 
   handleView(event: any, option: string) {
-    let arr = event.target.value.split(",");
+    let arr = event.target.value.split("#");
     ConfigService.setReaderConfig(option, arr[0]);
     switch (option) {
       case "fontFamily":
@@ -117,7 +119,7 @@ class DropdownList extends React.Component<
                 index: number
               ) => (
                 <option
-                  value={[subItem.value, index.toString()]}
+                  value={subItem.value + "#" + index.toString()}
                   key={index}
                   className="general-setting-option"
                   selected={

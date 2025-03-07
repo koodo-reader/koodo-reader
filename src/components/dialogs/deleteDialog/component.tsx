@@ -121,7 +121,7 @@ class DeleteDialog extends React.Component<
           resolve();
         })
         .catch((err) => {
-          console.log(err);
+          console.error(err);
           reject(err);
         });
     });

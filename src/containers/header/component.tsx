@@ -131,7 +131,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         try {
           await upgradePro(this.props.books);
         } catch (error) {
-          console.log(error);
+          console.error(error);
         }
 
         ConfigService.setReaderConfig("isProUpgraded", "yes");
@@ -305,7 +305,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       });
       await this.handleSuccess();
     } catch (error) {
-      console.log(error);
+      console.error(error);
       toast.error(this.props.t("Sync failed"), {
         id: "syncing-id",
       });
@@ -478,17 +478,19 @@ class Header extends React.Component<HeaderProps, HeaderState> {
             )}
           </div>
         ) : null}
-        {this.state.isDeveloperVer && this.state.isHidePro && (
-          <div
-            className="header-report-container"
-            style={{ textDecoration: "underline" }}
-            onClick={() => {
-              this.props.handleFeedbackDialog(true);
-            }}
-          >
-            <Trans>Report</Trans>
-          </div>
-        )}
+        {this.state.isDeveloperVer &&
+          this.state.isHidePro &&
+          !this.props.isAuthed && (
+            <div
+              className="header-report-container"
+              style={{ textDecoration: "underline" }}
+              onClick={() => {
+                this.props.handleFeedbackDialog(true);
+              }}
+            >
+              <Trans>Report</Trans>
+            </div>
+          )}
 
         <ImportLocal
           {...{
