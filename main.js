@@ -365,7 +365,6 @@ const createMainWin = () => {
     }
     const row = db.prepare(sql);
     let result;
-    console.log(statement, statementType, executeType, dbName, data, storagePath);
     if (data) {
       if (statement.startsWith("save") || statement.startsWith("update")) {
         data = SqlStatement.jsonToSqlite[dbName](data)
