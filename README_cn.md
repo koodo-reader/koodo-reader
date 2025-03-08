@@ -27,10 +27,10 @@
 <div align="center">
   <br/>
   <br/>
-  <kbd><img src="https://dl.koodoreader.com/screenshots/1.png" width="800px"></kbd>
+  <img src="https://dl.koodoreader.com/screenshots/7.png" width="800px">
   <br/>
   <br/>
-  <kbd><img src="https://dl.koodoreader.com/screenshots/5.png" width="800px"></kbd>
+  <img src="https://dl.koodoreader.com/screenshots/8.png" width="800px">
   <br/>
   <br/>
 </div>
@@ -46,9 +46,8 @@
   - 富文本 (**.md**, **.docx**)
   - FB2 (**.fb2**)
   - 超文本 (**.html**, **.xml**, **.xhtml**, **.mhtml**, **.htm**)
-- 支持 **Windows**，**macOS**，**Linux** 和 **网页版**
-- 备份数据到 **OneDrive**, **Google Drive**, **Dropbox**, **FTP**, **SFTP**, **WebDAV**, **S3**, **S3 Compatible**
-- 自定义源文件夹，利用 OneDrive、百度网盘、iCloud、Dropbox 等进行多设备同步
+- 支持 **Windows**，**macOS**，**Linux** ，**安卓** ，**iOS** 和 **网页版**
+- 利用 **OneDrive**, **Google Drive**, **Dropbox**, **MEGA**, **pCloud**, **阿里云盘**, **Box**, **FTP**, **SFTP**, **WebDAV**, **对象存储** 实现数据多端同步和备份
 - 双页模式，单页模式，滚动模式
 - 听书功能，翻译功能，词典功能，触控屏支持，批量导入图书
 - 支持目录，书签，笔记，高亮，书架，标签
@@ -83,6 +82,18 @@ docker run -d -p 80:80 --name koodo-reader ghcr.io/koodo-reader/koodo-reader:mas
 ## 截图
 
 <div align="center">
+  <b>图书列表</b>
+  <br/>
+  <br/>
+  <kbd><img src="https://dl.koodoreader.com/screenshots/1.png" width="800px"></kbd>
+  <br/>
+  <br/>
+  <b>图书展示</b>
+  <br/>
+  <br/>
+  <kbd><img src="https://dl.koodoreader.com/screenshots/5.png" width="800px"></kbd>
+  <br/>
+  <br/>
   <b>列表模式</b>
   <br/>
   <br/>

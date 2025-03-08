@@ -26,10 +26,11 @@
 
 <div align="center">
   <br/>
-  <kbd><img src="https://dl.koodoreader.com/screenshots/1.png" width="800px"></kbd>
+  <br/>
+  <img src="https://dl.koodoreader.com/screenshots/7.png" width="800px">
   <br/>
   <br/>
-  <kbd><img src="https://dl.koodoreader.com/screenshots/5.png" width="800px"></kbd>
+  <img src="https://dl.koodoreader.com/screenshots/8.png" width="800px">
   <br/>
   <br/>
 </div>
@@ -83,6 +84,18 @@ docker run -d -p 80:80 --name koodo-reader ghcr.io/koodo-reader/koodo-reader:mas
 ## Tangkapan Layar
 
 <div align="center">
+  <b>Daftar buku</b>
+  <br/>
+  <br/>
+  <kbd><img src="https://dl.koodoreader.com/screenshots/1.png" width="800px"></kbd>
+  <br/>
+  <br/>
+  <b>tampilan buku</b>
+  <br/>
+  <br/>
+  <kbd><img src="https://dl.koodoreader.com/screenshots/5.png" width="800px"></kbd>
+  <br/>
+  <br/>
   <b>Mode daftar</b>
   <br/>
   <br/>
