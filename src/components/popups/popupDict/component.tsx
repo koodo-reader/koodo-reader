@@ -7,7 +7,11 @@ import DOMPurify from "dompurify";
 import axios from "axios";
 import DictHistory from "../../../models/DictHistory";
 import { Trans } from "react-i18next";
-import { handleContextMenu, openExternalUrl } from "../../../utils/common";
+import {
+  handleContextMenu,
+  openExternalUrl,
+  WEBSITE_URL,
+} from "../../../utils/common";
 import toast from "react-hot-toast";
 import DatabaseService from "../../../utils/storage/databaseService";
 import { checkPlugin } from "../../../utils/common";
@@ -240,9 +244,9 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
                       ConfigService.getReaderConfig("lang") === "zhTW" ||
                       ConfigService.getReaderConfig("lang") === "zhMO"
                     ) {
-                      openExternalUrl("https://www.koodoreader.com/zh/plugin");
+                      openExternalUrl(WEBSITE_URL + "/zh/plugin");
                     } else {
-                      openExternalUrl("https://www.koodoreader.com/en/plugin");
+                      openExternalUrl(WEBSITE_URL + "/en/plugin");
                     }
                   }}
                 >

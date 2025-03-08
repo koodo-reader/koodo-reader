@@ -8,6 +8,7 @@ import {
   getAllVoices,
   handleContextMenu,
   sleep,
+  WEBSITE_URL,
 } from "../../utils/common";
 import { isElectron } from "react-device-detect";
 import toast from "react-hot-toast";
@@ -450,13 +451,9 @@ class TextToSpeech extends React.Component<
                         ConfigService.getReaderConfig("lang") === "zhTW" ||
                         ConfigService.getReaderConfig("lang") === "zhMO"
                       ) {
-                        openExternalUrl(
-                          "https://www.koodoreader.com/zh/plugin"
-                        );
+                        openExternalUrl(WEBSITE_URL + "/zh/plugin");
                       } else {
-                        openExternalUrl(
-                          "https://www.koodoreader.com/en/plugin"
-                        );
+                        openExternalUrl(WEBSITE_URL + "/en/plugin");
                       }
                     }}
                   >

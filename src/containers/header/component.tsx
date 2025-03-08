@@ -30,6 +30,7 @@ import {
   getChatLocale,
   openExternalUrl,
   removeChatBox,
+  WEBSITE_URL,
 } from "../../utils/common";
 import { driveList } from "../../constants/driveList";
 import SupportDialog from "../../components/dialogs/supportDialog";
@@ -457,9 +458,9 @@ class Header extends React.Component<HeaderProps, HeaderState> {
                   this.props.history.push("/login");
                 } else {
                   if (navigator.language.startsWith("zh")) {
-                    openExternalUrl("https://www.koodoreader.com/zh/about-pro");
+                    openExternalUrl(WEBSITE_URL + "/zh/about-pro");
                   } else {
-                    openExternalUrl("https://www.koodoreader.com/en/about-pro");
+                    openExternalUrl(WEBSITE_URL + "/en/about-pro");
                   }
                 }
               }}

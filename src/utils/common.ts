@@ -394,3 +394,11 @@ export const getDefaultTransTarget = (langList) => {
   let langTarget = langKeys.find((key) => key.includes(langMap2[lang]));
   return langMap[langTarget || "English"];
 };
+export const WEBSITE_URL = "https://koodoreader.com";
+export const formatTimestamp = (timestamp) => {
+  if (!timestamp) return "";
+
+  const date = new Date(timestamp);
+  // return date.toLocaleDateString() + " " + date.toLocaleTimeString();
+  return date.toLocaleDateString();
+};

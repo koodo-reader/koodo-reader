@@ -25,9 +25,11 @@ import { themeList } from "../../../constants/themeList";
 import toast from "react-hot-toast";
 import {
   checkPlugin,
+  formatTimestamp,
   handleContextMenu,
   loadFontData,
   openExternalUrl,
+  WEBSITE_URL,
 } from "../../../utils/common";
 import { getStorageLocation, reloadManager } from "../../../utils/common";
 import DatabaseService from "../../../utils/storage/databaseService";
@@ -44,7 +46,11 @@ import {
   onSyncCallback,
 } from "../../../utils/request/thirdparty";
 import { loginList } from "../../../constants/loginList";
-import { getUserRequest, loginRegister } from "../../../utils/request/user";
+import {
+  getTempToken,
+  getUserRequest,
+  loginRegister,
+} from "../../../utils/request/user";
 import { handleExitApp } from "../../../utils/request/common";
 import copyTextToClipboard from "copy-text-to-clipboard";
 import SyncService from "../../../utils/storage/syncService";
@@ -472,6 +478,7 @@ class SettingDialog extends React.Component<
     });
   };
   render() {
+    console.log(this.props.userInfo, "userinfo");
     return (
       <div className="setting-dialog-container">
         <div className="setting-dialog-title">
@@ -982,9 +989,7 @@ class SettingDialog extends React.Component<
                             className="voice-add-cancel"
                             style={{ borderWidth: 0 }}
                             onClick={() => {
-                              openExternalUrl(
-                                "https://www.koodoreader.com/zh/add-source"
-                              );
+                              openExternalUrl(WEBSITE_URL + "/zh/add-source");
                             }}
                           >
                             {this.props.t("How to fill out")}
@@ -1161,9 +1166,13 @@ class SettingDialog extends React.Component<
                   onChange={this.handleAddLoginOption}
                 >
                   {[{ label: "Please select", value: "" }, ...loginList]
-                    .filter(
-                      (item) => !this.props.loginOptionList.includes(item.value)
-                    )
+                    .filter((item) => {
+                      if (this.props.loginOptionList.length > 0) {
+                        return !this.props.loginOptionList.includes(item.value);
+                      } else {
+                        return true;
+                      }
+                    })
                     .map((item) => (
                       <option
                         value={item.value}
@@ -1183,11 +1192,16 @@ class SettingDialog extends React.Component<
                   onChange={this.handleDeleteLoginOption}
                 >
                   {[{ label: "Please select", value: "" }, ...loginList]
-                    .filter(
-                      (item) =>
-                        this.props.loginOptionList.includes(item.value) ||
-                        item.value === ""
-                    )
+                    .filter((item) => {
+                      if (item.value === "") {
+                        return true;
+                      }
+                      if (this.props.loginOptionList.length > 0) {
+                        return this.props.loginOptionList.includes(item.value);
+                      } else {
+                        return false;
+                      }
+                    })
                     .map((item) => (
                       <option
                         value={item.value}
@@ -1258,7 +1272,7 @@ class SettingDialog extends React.Component<
                   </span>
                 </div>
               )}
-              {this.props.userInfo && (
+              {this.props.isAuthed && this.props.userInfo && (
                 <div className="setting-dialog-new-title">
                   <Trans>Account type</Trans>
                   <div>
@@ -1277,12 +1291,61 @@ class SettingDialog extends React.Component<
                       >
                         Valid until
                         {{
-                          label: this.props.t("Beta pharse"),
-                          // label: this.state.validUntil,
+                          label: formatTimestamp(
+                            this.props.userInfo.valid_until * 1000
+                          ),
                         }}
                       </Trans>
                       {")"}
                     </>
+                  </div>
+                </div>
+              )}
+              {this.props.isAuthed && this.props.userInfo && (
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    margin: 20,
+                  }}
+                >
+                  <div
+                    className="new-version-open"
+                    onClick={async () => {
+                      let response = await getTempToken();
+                      if (response.code === 200) {
+                        let tempToken = response.data.access_token;
+                        let deviceUuid = await TokenService.getFingerprint();
+                        openExternalUrl(
+                          WEBSITE_URL +
+                            (ConfigService.getReaderConfig("lang").startsWith(
+                              "zh"
+                            )
+                              ? "zh"
+                              : "en") +
+                            "/pricing?temp_token=" +
+                            tempToken +
+                            "&device_uuid=" +
+                            deviceUuid
+                        );
+                      } else if (response.code === 401) {
+                        this.props.handleFetchAuthed();
+                      }
+                    }}
+                    style={{
+                      fontWeight: "bold",
+                      position: "absolute",
+                      bottom: "20px",
+                      paddingLeft: "20px",
+                      paddingRight: "20px",
+                    }}
+                  >
+                    <Trans>
+                      {this.props.userInfo.valid_until <
+                      parseInt(new Date().getTime() / 1000 + "")
+                        ? "Upgrade to Pro"
+                        : "Renew Pro"}
+                    </Trans>
                   </div>
                 </div>
               )}
@@ -1365,13 +1428,9 @@ class SettingDialog extends React.Component<
                             ConfigService.getReaderConfig("lang") === "zhTW" ||
                             ConfigService.getReaderConfig("lang") === "zhMO"
                           ) {
-                            openExternalUrl(
-                              "https://www.koodoreader.com/zh/plugin"
-                            );
+                            openExternalUrl(WEBSITE_URL + "/zh/plugin");
                           } else {
-                            openExternalUrl(
-                              "https://www.koodoreader.com/en/plugin"
-                            );
+                            openExternalUrl(WEBSITE_URL + "/en/plugin");
                           }
                         }}
                       >
