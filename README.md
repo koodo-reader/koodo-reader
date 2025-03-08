@@ -26,10 +26,12 @@
 
 <div align="center">
   <br/>
-  <kbd><img src="https://dl.koodoreader.com/screenshots/1.png" width="800px"></kbd>
+  <br/>
+  <img src="https://dl.koodoreader.com/screenshots/7.png" width="800px">
   <br/>
   <br/>
-  <kbd><img src="https://dl.koodoreader.com/screenshots/5.png" width="800px"></kbd>
+  <img src="https://dl.koodoreader.com/screenshots/8.png" width="800px">
+  <br/>
   <br/>
 </div>
 
@@ -44,9 +46,8 @@
   - Comic book archive (**.cbr**, **.cbz**, **.cbt**, **.cb7**)
   - Rich text (**.md**, **.docx**)
   - Hyper Text (**.html**, **.xml**, **.xhtml**, **.mhtml**, **.htm**)
-- Platform support: **Windows**, **macOS**, **Linux** and **Web**
-- Save your data to **OneDrive**, **Google Drive**, **Dropbox**, **FTP**, **SFTP**, **WebDAV**, **S3**, **S3 Compatible**
-- Customize the source folder and synchronize among multiple devices using OneDrive, iCloud, Dropbox, etc.
+- Platform support: **Windows**, **macOS**, **Linux**, **Android**, **iOS** and **Web**
+- Utilize **OneDrive**, **Google Drive**, **Dropbox**, **MEGA**, **pCloud**, **Aliyun Drive**, **Box**, **FTP**, **SFTP**, **WebDAV**, **Object Storage** to sync and backup your data.
 - Single-column, two-column, or continuous scrolling layouts
 - Text-to-speech, translation, dictionary, touch screen support, batch import
 - Add bookmarks, notes, highlights to your books
@@ -82,6 +83,17 @@ docker run -d -p 80:80 --name koodo-reader ghcr.io/koodo-reader/koodo-reader:mas
 ## Screenshot
 
 <div align="center">
+  <b>Book list</b>
+  <br/>
+  <br/>
+  <kbd><img src="https://dl.koodoreader.com/screenshots/1.png" width="800px"></kbd>
+  <br/>
+  <br/>
+  <b>Book display</b>
+  <br/>
+  <br/>
+  <kbd><img src="https://dl.koodoreader.com/screenshots/5.png" width="800px"></kbd>
+  <br/>
   <br/>
   <b>List mode</b>
   <br/>

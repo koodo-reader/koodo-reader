@@ -1,6 +1,7 @@
 <div align="left">
 
 [简体中文](https://github.com/koodo-reader/koodo-reader/blob/master/README_cn.md) | [हिंदी](https://github.com/koodo-reader/koodo-reader/blob/master/README_hi.md) | Português | [English](https://github.com/koodo-reader/koodo-reader/blob/master/README.md) | [Indonesian](https://github.com/koodo-reader/koodo-reader/blob/master/README_id.md)
+
 </div>
 
 <div align="center" >
@@ -24,10 +25,11 @@
 
 <div align="center">
   <br/>
-  <kbd><img src="https://dl.koodoreader.com/screenshots/1.png" width="800px"></kbd>
+  <br/>
+  <img src="https://dl.koodoreader.com/screenshots/7.png" width="800px">
   <br/>
   <br/>
-  <kbd><img src="https://dl.koodoreader.com/screenshots/5.png" width="800px"></kbd>
+  <img src="https://dl.koodoreader.com/screenshots/8.png" width="800px">
   <br/>
   <br/>
 </div>
@@ -81,6 +83,18 @@ docker run -d -p 80:80 --name koodo-reader ghcr.io/koodo-reader/koodo-reader:mas
 ## Capturas de tela
 
 <div align="center">
+  <b>Lista de livros</b>
+  <br/>
+  <br/>
+  <kbd><img src="https://dl.koodoreader.com/screenshots/1.png" width="800px"></kbd>
+  <br/>
+  <br/>
+  <b>exposição de livro</b>
+  <br/>
+  <br/>
+  <kbd><img src="https://dl.koodoreader.com/screenshots/5.png" width="800px"></kbd>
+  <br/>
+  <br/>
   <b>Modo em lista</b>
   <br/>
   <br/>
