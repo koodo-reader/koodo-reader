@@ -31,7 +31,7 @@ class SupporDialog extends React.Component<
 > {
   constructor(props: SupporDialogProps) {
     super(props);
-    this.state = { tempToken: "" };
+    this.state = {};
   }
   componentDidMount() {
     if (isElectron) {
@@ -58,13 +58,6 @@ class SupporDialog extends React.Component<
     ) {
       // TODO wait for official launch
       // this.props.handleShowSupport(true);
-      getTempToken().then((response) => {
-        if (response.code === 200) {
-          this.setState({ tempToken: response.data.access_token });
-        } else if (response.code === 401) {
-          this.props.handleFetchAuthed();
-        }
-      });
     }
   }
 
@@ -134,18 +127,27 @@ class SupporDialog extends React.Component<
                 <div
                   className="new-version-open"
                   onClick={async () => {
-                    let deviceUuid = await TokenService.getFingerprint();
-                    openExternalUrl(
-                      WEBSITE_URL +
-                        (ConfigService.getReaderConfig("lang").startsWith("zh")
-                          ? "zh"
-                          : "en") +
-                        "/pricing?temp_token=" +
-                        this.state.tempToken +
-                        "&device_uuid=" +
-                        deviceUuid
-                    );
+                    let response = await getTempToken();
+                    if (response.code === 200) {
+                      let tempToken = response.data.access_token;
+                      let deviceUuid = await TokenService.getFingerprint();
+                      openExternalUrl(
+                        WEBSITE_URL +
+                          (ConfigService.getReaderConfig("lang").startsWith(
+                            "zh"
+                          )
+                            ? "zh"
+                            : "en") +
+                          "/pricing?temp_token=" +
+                          tempToken +
+                          "&device_uuid=" +
+                          deviceUuid
+                      );
+                    } else if (response.code === 401) {
+                      this.props.handleFetchAuthed();
+                    }
                   }}
+                  style={{ fontWeight: "bold" }}
                 >
                   <Trans>Upgrade</Trans>
                 </div>
@@ -157,7 +159,7 @@ class SupporDialog extends React.Component<
                 <Trans>Please support our development</Trans>
               </p>
               <p
-                className="update-dialog-list"
+                className="support-dialog-list"
                 style={{ textAlign: "center", lineHeight: "1.5" }}
               >
                 {this.props.t(

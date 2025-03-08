@@ -5,7 +5,7 @@ import packageInfo from "../../../../package.json";
 import { Trans } from "react-i18next";
 import Lottie from "react-lottie";
 import animationNew from "../../../assets/lotties/new.json";
-import { openExternalUrl } from "../../../utils/common";
+import { openExternalUrl, WEBSITE_URL } from "../../../utils/common";
 import { isElectron } from "react-device-detect";
 import { sleep } from "../../../utils/common";
 import { checkStableUpdate } from "../../../utils/request/common";
@@ -120,7 +120,7 @@ class UpdateInfo extends React.Component<UpdateInfoProps, UpdateInfoState> {
                 <div
                   className="new-version-open"
                   onClick={() => {
-                    openExternalUrl("https://koodoreader.com/en");
+                    openExternalUrl(WEBSITE_URL);
                   }}
                 >
                   <Trans>Download</Trans>

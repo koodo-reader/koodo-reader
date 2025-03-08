@@ -12,6 +12,4 @@ export interface SupporDialogProps {
   handleLoginOptionList: (loginOptionList: string[]) => void;
   handleFetchUserInfo: () => void;
 }
-export interface SupporDialogState {
-  tempToken: string;
-}
+export interface SupporDialogState {}

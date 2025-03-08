@@ -4,7 +4,7 @@ import { FeedbackDialogProps, FeedbackDialogState } from "./interface";
 import toast from "react-hot-toast";
 import "./feedbackDialog.css";
 import packageInfo from "../../../../package.json";
-import { openExternalUrl } from "../../../utils/common";
+import { openExternalUrl, WEBSITE_URL } from "../../../utils/common";
 import JSZip from "jszip";
 import {
   checkDeveloperUpdate,
@@ -132,7 +132,7 @@ class FeedbackDialog extends Component<
             &nbsp;
             <span
               onClick={() => {
-                this.handleJump(`https://koodoreader.com/en/support`);
+                this.handleJump(WEBSITE_URL + "/en/support");
               }}
               style={{ color: "rgb(35, 170, 242)", cursor: "pointer" }}
             >

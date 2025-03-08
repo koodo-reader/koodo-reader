@@ -269,6 +269,8 @@
   "Login failed, error code": "登录失败，错误代码",
   "Aliyun Drive": "阿里云盘",
   "How to fill out": "如何填写",
+  "Upgrade to Pro": "升级到专业版",
+  "Renew Pro": "续费专业版",
   "Your data has been exported to your local folder, learn how to sync your data to your other devices by visiting our documentation, Upgrade to pro to get more advanced features": "您的数据已经导出到本地文件夹，请查看帮助文档了解如何同步到其他设备，升级到专业版以获得更多高级功能",
   "Your data has been imported from your local folder, Upgrade to pro to get more advanced features": "您的数据已经从本地文件夹导入，升级到专业版以获得更多高级功能",
   "Always keep local data when resolving sync conflicts": "解决同步冲突时始终保留本地数据",

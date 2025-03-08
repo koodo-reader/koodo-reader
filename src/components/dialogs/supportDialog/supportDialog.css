@@ -16,3 +16,13 @@
   margin-top: 10px;
   height: 330px;
 }
+.support-dialog-list {
+  font-size: 15px;
+  line-height: 18px;
+  opacity: 1;
+  margin: 12px;
+  min-height: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

@@ -9,6 +9,7 @@ import {
   getDefaultTransTarget,
   handleContextMenu,
   openExternalUrl,
+  WEBSITE_URL,
 } from "../../../utils/common";
 import DatabaseService from "../../../utils/storage/databaseService";
 import { checkPlugin } from "../../../utils/common";
@@ -164,9 +165,9 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
                       ConfigService.getReaderConfig("lang") === "zhTW" ||
                       ConfigService.getReaderConfig("lang") === "zhMO"
                     ) {
-                      openExternalUrl("https://www.koodoreader.com/zh/plugin");
+                      openExternalUrl(WEBSITE_URL + "/zh/plugin");
                     } else {
-                      openExternalUrl("https://www.koodoreader.com/en/plugin");
+                      openExternalUrl(WEBSITE_URL + "/en/plugin");
                     }
                   }}
                 >

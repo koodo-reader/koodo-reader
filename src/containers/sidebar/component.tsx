@@ -4,7 +4,7 @@ import { sideMenu } from "../../constants/sideMenu";
 import { SidebarProps, SidebarState } from "./interface";
 import { withRouter } from "react-router-dom";
 import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
-import { openExternalUrl } from "../../utils/common";
+import { openExternalUrl, WEBSITE_URL } from "../../utils/common";
 import DeletePopup from "../../components/dialogs/deletePopup";
 import { Trans } from "react-i18next";
 class Sidebar extends React.Component<SidebarProps, SidebarState> {
@@ -238,7 +238,7 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
             }
             alt=""
             onClick={() => {
-              this.handleJump("https://koodoreader.com");
+              this.handleJump(WEBSITE_URL);
             }}
             style={this.state.isCollapsed ? { display: "none" } : {}}
             className="logo"
