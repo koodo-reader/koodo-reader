@@ -5,17 +5,12 @@ import { Trans } from "react-i18next";
 import Lottie from "react-lottie";
 import packageInfo from "../../../../package.json";
 import animation from "../../../assets/lotties/support.json";
-import { openExternalUrl, sleep } from "../../../utils/common";
-import {
-  ConfigService,
-  TokenService,
-} from "../../../assets/lib/kookit-extra-browser.min";
+import { openExternalUrl, sleep, WEBSITE_URL } from "../../../utils/common";
+import { TokenService } from "../../../assets/lib/kookit-extra-browser.min";
 import toast from "react-hot-toast";
 import { isElectron } from "react-device-detect";
 import { checkStableUpdate } from "../../../utils/request/common";
 import { fetchUserInfo, getTempToken } from "../../../utils/request/user";
-const WEBSITE_URL = "http://192.168.28.159:3000/";
-// const WEBSITE_URL = "https://www.koodoreader.com/";
 const newOptions = {
   loop: true,
   autoplay: true,
@@ -44,20 +39,6 @@ class SupporDialog extends React.Component<
       });
     } else {
       this.props.handleFetchUserInfo();
-    }
-  }
-  UNSAFE_componentWillReceiveProps(
-    nextProps: Readonly<SupporDialogProps>,
-    _nextContext: any
-  ): void {
-    if (
-      nextProps.userInfo &&
-      !this.props.userInfo &&
-      nextProps.userInfo.valid_until <
-        parseInt(new Date().getTime() / 1000 + "")
-    ) {
-      // TODO wait for official launch
-      // this.props.handleShowSupport(true);
     }
   }
 
@@ -89,6 +70,9 @@ class SupporDialog extends React.Component<
               </div>
               <div
                 onClick={async () => {
+                  toast.loading(this.props.t("Checking payment status"), {
+                    id: "check-payment-status",
+                  });
                   let res = await fetchUserInfo();
                   if (res.code === 200) {
                     let userInfo = res.data;
@@ -97,10 +81,15 @@ class SupporDialog extends React.Component<
                       parseInt(new Date().getTime() / 1000 + "")
                     ) {
                       toast.error(
-                        this.props.t("You haven't upgraded to Pro yet")
+                        this.props.t("You haven't upgraded to Pro yet"),
+                        {
+                          id: "check-payment-status",
+                        }
                       );
                     } else {
-                      toast.success(this.props.t("Thanks for your support"));
+                      toast.success(this.props.t("Thanks for your support"), {
+                        id: "check-payment-status",
+                      });
                       this.props.handleShowSupport(false);
                     }
                   } else {
@@ -127,18 +116,17 @@ class SupporDialog extends React.Component<
                 <div
                   className="new-version-open"
                   onClick={async () => {
+                    toast.loading(this.props.t("Generating payment link"), {
+                      id: "generate-payment-link",
+                    });
                     let response = await getTempToken();
                     if (response.code === 200) {
+                      toast.dismiss("generate-payment-link");
                       let tempToken = response.data.access_token;
                       let deviceUuid = await TokenService.getFingerprint();
                       openExternalUrl(
                         WEBSITE_URL +
-                          (ConfigService.getReaderConfig("lang").startsWith(
-                            "zh"
-                          )
-                            ? "zh"
-                            : "en") +
-                          "/pricing?temp_token=" +
+                          "/en/pricing?temp_token=" +
                           tempToken +
                           "&device_uuid=" +
                           deviceUuid

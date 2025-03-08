@@ -371,6 +371,7 @@ class SettingDialog extends React.Component<
       toast.success(this.props.t("Login successful"));
       this.props.handleFetchAuthed();
       this.props.handleFetchLoginOptionList();
+      this.props.handleFetchUserInfo();
       this.setState({ settingLogin: "" });
     } else {
       this.props.handleLoadingDialog(false);

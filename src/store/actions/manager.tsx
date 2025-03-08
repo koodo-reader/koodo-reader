@@ -109,6 +109,12 @@ export function handleFetchUserInfo() {
     if (response.code === 200) {
       userInfo = response.data;
     }
+    if (
+      userInfo &&
+      userInfo.valid_until < parseInt(new Date().getTime() / 1000 + "")
+    ) {
+      dispatch(handleShowSupport(true));
+    }
     dispatch(handleUserInfo(userInfo));
   };
 }
