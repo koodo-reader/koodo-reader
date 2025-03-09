@@ -1321,8 +1321,8 @@ class SettingDialog extends React.Component<
                             (ConfigService.getReaderConfig("lang").startsWith(
                               "zh"
                             )
-                              ? "zh"
-                              : "en") +
+                              ? "/zh"
+                              : "/en") +
                             "/pricing?temp_token=" +
                             tempToken +
                             "&device_uuid=" +
