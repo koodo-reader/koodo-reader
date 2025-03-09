@@ -345,7 +345,6 @@
   "When deleting book from shelf, the book will be deleted as well": "Quando elimini il libro dallo scaffale, anche il libro verrà eliminato",
   "Minute": "Minuto",
   "You need to manually change the storage location to the same sync folder on different computers. When you click the sync button, Koodo Reader will automatically upload or download the data from this folder according the timestamp.": "È necessario modificare manualmente la posizione di archiviazione nella stessa cartella di sincronizzazione su computer diversi. Quando fai clic sul pulsante di sincronizzazione, Koodo Reader caricherà o scaricherà automaticamente i dati da questa cartella in base al timestamp.",
-  "Turn on bionic reading": "Abiita la lettura bionica",
   "This process is inreversible, and will completely overwrite your current library, make sure you know what you're doing before proceeding": "Questo processo è irreversibile e sovrascrive completamente la libreria corrente; assicuratevi di essere consapevoli di ciò che state facendo prima di procedere.",
   "Lemmatize words when looking up in a dictionary": "Lemmatizzare le parole quando le si cerca nel dizionario",
   "To reduce the different forms of a word to one single form, for example, reducing builds, building or built to build, reducing cats to cat, reducing fastest to fast": "Ridurre le diverse forme di una parola a un'unica forma, ad esempio: ridurre costruire, costruzione o costruito a costruire, ridurre gatti a gatto, ridurre velocissimo a veloce",

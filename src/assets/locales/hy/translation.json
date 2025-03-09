@@ -345,7 +345,6 @@
   "When deleting book from shelf, the book will be deleted as well": "Գրքերը դարակների մեջից հեռացնելիս՝ դրանք մեկընդմիշտ կջնջվեն։",
   "Minute": "Րոպե",
   "You need to manually change the storage location to the same sync folder on different computers. When you click the sync button, Koodo Reader will automatically upload or download the data from this folder according the timestamp.": "Դուք պետք է ձեռքով փոխեք պահեստավորման վայրը տարբեր համակարգիչների վրա: Երբ սեղմեք սինքրոնիզացման կոճակը, Koodo Reader-ը ավտոմատ կերպով կվերբեռնի կամ կներբեռնի տվյալներն այս թղթապանակից՝ կախված նրանից, թե որտեղ է կատարվել վերջին փոփոխությունը։",
-  "Turn on bionic reading": "Միացնել բիոնիկ ընթերցումը",
   "This process is inreversible, and will completely overwrite your current library, make sure you know what you're doing before proceeding": "Այս գործողությունն անշրջելի է և լիովին կփոխի ձեր ներկայիս գրադարանը։ Նախքան կատարելը՝ համոզվեք, որ գիտեք, թե ինչ եք անում։",
   "Lemmatize words when looking up in a dictionary": "Բառարանում որոնում կատարելիս լեմմատիզացնել բառերը",
   "To reduce the different forms of a word to one single form, for example, reducing builds, building or built to build, reducing cats to cat, reducing fastest to fast": "Այս դեպքում բառարանում կորոնվի միայն բառի ուղղակի ձևը՝ առանց վերջավորությունների։ Օրինակ՝ կառուցելով կամ կառուցելիս բառերի փոխարեն կցուցադրի կառուցել բառի բացատրությունը",

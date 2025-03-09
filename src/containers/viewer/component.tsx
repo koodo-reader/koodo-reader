@@ -182,7 +182,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
 
     StyleUtil.addDefaultCss();
     rendition.tsTransform();
-    rendition.bionicReadingProcess();
     // rendition.setStyle(StyleUtil.getCustomCss());
     let bookLocation: {
       text: string;
@@ -262,7 +261,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       scrollContents(chapter, bookLocation.chapterHref);
       StyleUtil.addDefaultCss();
       rendition.tsTransform();
-      rendition.bionicReadingProcess();
       this.handleBindGesture();
       await this.handleHighlight(rendition);
       lock = true;

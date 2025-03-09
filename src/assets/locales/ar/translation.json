@@ -337,7 +337,6 @@
   "Unknown author": "مؤلف غير معروف",
   "Sync function works with third-party cloud drive. You need to manually change the storage location to the same sync folder on different computers. When you click the sync button, Koodo Reader will automatically upload or download the data from this folder according the timestamp.": "تعمل وظيفة المزامنة مع محرك الأقراص السحابي التابع لجهة خارجية. تحتاج إلى تغيير موقع التخزين يدويا إلى نفس مجلد المزامنة على أجهزة الحاسوب المختلفة. عند النقر فوق زر المزامنة ، سيقوم Koodo Reader تلقائياً بتحميل أو تنزيل البيانات من هذا المجلد وفقا للطابع الزمني.",
   "Translation": "الترجمة",
-  "Turn on bionic reading": "تشغيل وضع القراءة البيونيك",
   "This process is inreversible, and will completely overwrite your current library, make sure you know what you're doing before proceeding": "This process is irreversible, and will completely overwrite your current library, make sure you know what you're doing before proceeding",
   "Lemmatize words when looking up in a dictionary": "Lemmatize words when looking up in a dictionary",
   "To reduce the different forms of a word to one single form, for example, reducing builds, building or built to build, reducing cats to cat, reducing fastest to fast": "To reduce the different forms of a word to one single form, for example, reducing builds, building or built to build, reducing cats to cat, reducing fastest to fast",

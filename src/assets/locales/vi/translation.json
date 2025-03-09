@@ -175,7 +175,6 @@
   "Open console": "Mở bàn điều khiển",
   "Appearance": "Hình dạng",
   "Open url with built-in browser": "Mở URL bằng trình duyệt tích hợp",
-  "Turn on bionic reading": "Bật phương pháp Bionic Reading",
   "This process is inreversible, and will completely overwrite your current library, make sure you know what you're doing before proceeding": "Quá trình này sẽ ghi đè hoàn toàn thư viện hiện tại của bạn và không thể đảo ngược, cân nhắc trước khi tiếp tục",
   "Lemmatize words when looking up in a dictionary": "Sử dụng gốc từ khi tra từ điển",
   "To reduce the different forms of a word to one single form, for example, reducing builds, building or built to build, reducing cats to cat, reducing fastest to fast": "Để giảm các dạng khác nhau của một từ thành một dạng duy nhất, ví dụ: builds, building hoặc built thành build, giảm cats thành cat, giảm fastest thành fast",

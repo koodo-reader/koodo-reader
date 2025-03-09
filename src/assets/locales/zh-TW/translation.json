@@ -330,7 +330,6 @@
   "Open url with built-in browser": "使用內建瀏覽器開啟連結",
   "Light mode": "日間模式",
   "Night mode": "夜間模式",
-  "Turn on bionic reading": "開啟仿生閱讀",
   "This process is inreversible, and will completely overwrite your current library, make sure you know what you're doing before proceeding": "此操作將完全覆蓋您當前的書庫並且無法復原，請確保您知道自己在做什麼再繼續",
   "Lemmatize words when looking up in a dictionary": "查字典時對單字進行詞性還原",
   "To reduce the different forms of a word to one single form, for example, reducing builds, building or built to build, reducing cats to cat, reducing fastest to fast": "將英文單詞的詞性還原到最基本的型態，例如：builds/building/built → build, cats → cat, fastest → fast)",
