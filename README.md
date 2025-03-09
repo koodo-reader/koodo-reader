@@ -48,6 +48,7 @@
   - Hyper Text (**.html**, **.xml**, **.xhtml**, **.mhtml**, **.htm**)
 - Platform support: **Windows**, **macOS**, **Linux**, **Android**, **iOS** and **Web**
 - Utilize **OneDrive**, **Google Drive**, **Dropbox**, **MEGA**, **pCloud**, **Aliyun Drive**, **Box**, **FTP**, **SFTP**, **WebDAV**, **Object Storage** to sync and backup your data.
+- AI Translation, AI Dictionary, AI Summary
 - Single-column, two-column, or continuous scrolling layouts
 - Text-to-speech, translation, dictionary, touch screen support, batch import
 - Add bookmarks, notes, highlights to your books
@@ -61,8 +62,8 @@
   - Stable Version (Recommended): [Download](https://koodoreader.com/en)
   - Developer version: [Download](https://github.com/koodo-reader/koodo-reader/releases/latest) ( With new feature and bug fix, but may induce some unknown bugs)
 - Web Version：[Preview](https://web.koodoreader.com)
-- Android Version：[Download](https://koodoreader.com/zh/download)
-- iOS Version：[Download](https://koodoreader.com/zh/download)
+- Android Version：[Download](https://koodoreader.com/en/download)
+- iOS Version：[Download](https://koodoreader.com/en/download)
 - Install with Scoop:
 
 ```shell
