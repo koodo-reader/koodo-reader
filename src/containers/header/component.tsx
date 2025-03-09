@@ -25,13 +25,7 @@ import ConfigUtil from "../../utils/file/configUtil";
 import DatabaseService from "../../utils/storage/databaseService";
 import CoverUtil from "../../utils/file/coverUtil";
 import BookUtil from "../../utils/file/bookUtil";
-import {
-  addChatBox,
-  getChatLocale,
-  openExternalUrl,
-  removeChatBox,
-  WEBSITE_URL,
-} from "../../utils/common";
+import { addChatBox, getChatLocale, removeChatBox } from "../../utils/common";
 import { driveList } from "../../constants/driveList";
 import SupportDialog from "../../components/dialogs/supportDialog";
 
@@ -454,15 +448,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
             <span
               style={{ textDecoration: "underline" }}
               onClick={() => {
-                if (isElectron) {
-                  this.props.history.push("/login");
-                } else {
-                  if (navigator.language.startsWith("zh")) {
-                    openExternalUrl(WEBSITE_URL + "/zh/about-pro");
-                  } else {
-                    openExternalUrl(WEBSITE_URL + "/en/about-pro");
-                  }
-                }
+                this.props.history.push("/login");
               }}
             >
               <Trans>Pro version</Trans>
