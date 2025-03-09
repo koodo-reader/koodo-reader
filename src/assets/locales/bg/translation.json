@@ -345,7 +345,6 @@
   "When deleting book from shelf, the book will be deleted as well": "Когато изтриете книга от лавицата, книгата също ще бъде изтрита",
   "Minute": "Минута",
   "You need to manually change the storage location to the same sync folder on different computers. When you click the sync button, Koodo Reader will automatically upload or download the data from this folder according the timestamp.": "Трябва ръчно да промените мястото за съхранение на една и съща папка за синхронизиране на различни компютри. Когато щракнете върху бутона за синхронизиране, Koodo Reader автоматично ще качи или изтегли данните от тази папка според клеймото за време.",
-  "Turn on bionic reading": "Turn on bionic reading",
   "This process is inreversible, and will completely overwrite your current library, make sure you know what you're doing before proceeding": "This process is irreversible, and will completely overwrite your current library, make sure you know what you're doing before proceeding",
   "Lemmatize words when looking up in a dictionary": "Lemmatize words when looking up in a dictionary",
   "To reduce the different forms of a word to one single form, for example, reducing builds, building or built to build, reducing cats to cat, reducing fastest to fast": "To reduce the different forms of a word to one single form, for example, reducing builds, building or built to build, reducing cats to cat, reducing fastest to fast",

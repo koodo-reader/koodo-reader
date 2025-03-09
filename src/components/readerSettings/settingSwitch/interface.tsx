@@ -18,7 +18,6 @@ export interface SettingSwitchState {
   isUnderline: boolean;
   isItalic: boolean;
   isInvert: boolean;
-  isBionic: boolean;
   isPurePdf: boolean;
   isHideHeader: boolean;
   isHidePageButton: boolean;

@@ -337,7 +337,6 @@
   "Unknown author": "Bilinmeyen yazar",
   "Sync function works with third-party cloud drive. You need to manually change the storage location to the same sync folder on different computers. When you click the sync button, Koodo Reader will automatically upload or download the data from this folder according the timestamp.": "Eşitleme özelliği üçüncü taraf bulut servisleriyle çalışır. Depolama konumu olarak farklı bilgisayarlarda aynı bulut sürücüsü klasörünü seçmeniz gerekir. Eşitle düğmesine tıkladığınızda, Koodo Reader verilerinizi bu klasörden otomatik olarak yükleyecek veya indirecek, tüm bilgisayarlarınız arasında verileri eşitlenmiş hale getirecektir.",
   "Translation": "Çeviri",
-  "Turn on bionic reading": "Fiziksel okumayı etkinleştir",
   "This process is inreversible, and will completely overwrite your current library, make sure you know what you're doing before proceeding": "Bu işlem geri alınamaz ve mevcut kitaplığınızın üstüne yazar, devam etmeden önce ne yaptığınızdan emin olun",
   "Lemmatize words when looking up in a dictionary": "Sözlükten bakarken kelimeleri kök olarak alın",
   "To reduce the different forms of a word to one single form, for example, reducing builds, building or built to build, reducing cats to cat, reducing fastest to fast": "Bir kelimeyi ararken işleri kolaylaştırmak için kelimeleri sadece kök olarak alın. Örnek: Kediler sözcüğü kedi, hızlı sözcüğü hız, inşaat sözcüğü inşa sözcüğü olarak geçecek gibi.",

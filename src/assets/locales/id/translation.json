@@ -345,7 +345,6 @@
   "When deleting book from shelf, the book will be deleted as well": "Saat menghapus buku dari rak, buku tersebut juga akan dihapus",
   "Minute": "Menit",
   "You need to manually change the storage location to the same sync folder on different computers. When you click the sync button, Koodo Reader will automatically upload or download the data from this folder according the timestamp.": "Anda perlu mengubah lokasi penyimpanan secara manual ke folder sinkronisasi yang sama pada komputer yang berbeda. Ketika Anda mengklik tombol sinkronisasi, Koodo Reader akan secara otomatis mengunggah atau mengunduh data dari folder ini sesuai dengan stempel waktu.",
-  "Turn on bionic reading": "Aktifkan bionic reading",
   "This process is inreversible, and will completely overwrite your current library, make sure you know what you're doing before proceeding": "Proses ini tidak dapat dibatalkan dan akan sepenuhnya menimpa perpustakaan Anda saat ini, pastikan Anda tahu apa yang Anda lakukan sebelum melanjutkan",
   "Lemmatize words when looking up in a dictionary": "Lematisasi kata saat mencari di kamus",
   "To reduce the different forms of a word to one single form, for example, reducing builds, building or built to build, reducing cats to cat, reducing fastest to fast": "Untuk menyederhanakan berbagai bentuk kata menjadi satu bentuk saja, misalnya, mengubah builds, building, atau built menjadi build, mengubah cats menjadi cat, mengubah fastest menjadi fast",

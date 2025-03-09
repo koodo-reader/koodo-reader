@@ -343,7 +343,6 @@
   "Hide books which have been added to the shelf, so they won't show up in home page": "དཔེ་སྒྲོམ་ནང་དུ་བསྣན་ཟིན་པའི་དཔེ་ཆ་སྦས་སྐུང་བྱས་ན། དཔེ་ཆ་དེ་ཉིད་གཙོ་ངོས་ནས་མི་མངོན།",
   "Delete book from shelf also deleting book itself": "དཔེ་སྒྲོམ་ནང་གི་དཔེ་ཆ་གསུབ་ན། དཔེ་ཆ་དེ་དུས་གཏན་དུ་གསུབ་འགྲོ། ",
   "When deleting book from shelf, the book will be deleted as well": "དཔེ་སྒྲོམ་ནང་གི་དཔེ་ཆ་གསུབ་ན། དཔེ་ཆ་དེ་དུས་གཏན་དུ་གསུབ་འགྲོ།",
-  "Turn on bionic reading": "རིག་ནུས་དཔེ་ཀློག་གི་ཁ་ཕྱེས།",
   "Export all books": "དཔེ་ཆ་ཚང་མ་ཕྱིར་ཕྱུངས།",
   "Export all notes": "ཟིན་བྲིས་ཚང་མ་ཕྱིར་ཕྱུངས།",
   "Export all highlights": "རྟགས་བཀོད་ཚང་མ་ཕྱིར་ཕྱུངས།",

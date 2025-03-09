@@ -65,7 +65,6 @@ export const decryptToken = async (service: string) => {
   let isAuthed = await TokenService.getToken("is_authed");
   if (!isAuthed) {
     let syncToken = (await TokenService.getToken(service + "_token")) || "{}";
-    console.log(syncToken);
     return {
       code: 200,
       msg: "success",

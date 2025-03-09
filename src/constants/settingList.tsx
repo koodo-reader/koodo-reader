@@ -171,7 +171,7 @@ export const langList = [
   { label: "Svenska", value: "sv" },
   { label: "Tagalog", value: "tl" },
   { label: "Slovenščina", value: "sl" },
-  { label: "Srpski", value: "sr"},
+  { label: "Srpski", value: "sr" },
 ];
 
 export const searchList = [
@@ -224,10 +224,6 @@ export const readerSettingList = [
   {
     title: "Invert color",
     propName: "isInvert",
-  },
-  {
-    title: "Turn on bionic reading",
-    propName: "isBionic",
   },
   {
     title: "Hide footer",

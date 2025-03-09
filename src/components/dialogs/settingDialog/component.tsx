@@ -479,7 +479,6 @@ class SettingDialog extends React.Component<
     });
   };
   render() {
-    console.log(this.props.userInfo, "userinfo");
     return (
       <div className="setting-dialog-container">
         <div className="setting-dialog-title">
