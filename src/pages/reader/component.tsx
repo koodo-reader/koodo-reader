@@ -187,6 +187,24 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
             >
               <span className="icon-dropdown next-chapter-single"></span>
             </div>
+            <div
+              className="next-chapter-single-container"
+              onClick={async () => {
+                this.props.handleMenuMode("assistant");
+                this.props.handleOriginalText(
+                  this.props.htmlBook.rendition.chapterText()
+                );
+                this.props.handleOpenMenu(true);
+              }}
+              style={{
+                right: "70px",
+                transform: "rotate(0deg)",
+                fontWeight: "bold",
+                fontSize: "17px",
+              }}
+            >
+              AI
+            </div>
           </>
         )}
         {ConfigService.getReaderConfig("isHideMenuButton") !== "yes" && (

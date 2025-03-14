@@ -3,6 +3,7 @@ import PluginModel from "../../../models/Plugin";
 export interface PopupDictProps {
   originalText: string;
   plugins: PluginModel[];
+  isAuthed: boolean;
   currentBook: BookModel;
   handleOpenMenu: (isOpenMenu: boolean) => void;
   handleMenuMode: (menu: string) => void;
@@ -15,5 +16,6 @@ export interface PopupDictState {
   prototype: string;
   dictService: string;
   dictTarget: string;
+  dictSource: string;
   isAddNew: boolean;
 }

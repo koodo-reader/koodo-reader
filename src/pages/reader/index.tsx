@@ -5,6 +5,9 @@ import {
   handleReadingBook,
   handleFetchPercentage,
   handleReaderMode,
+  handleMenuMode,
+  handleOriginalText,
+  handleOpenMenu,
 } from "../../store/actions";
 import { connect } from "react-redux";
 import { stateType } from "../../store";
@@ -28,6 +31,9 @@ const actionCreator = {
   handleReadingBook,
   handleFetchPercentage,
   handleReaderMode,
+  handleMenuMode,
+  handleOriginalText,
+  handleOpenMenu,
 };
 export default connect(
   mapStateToProps,

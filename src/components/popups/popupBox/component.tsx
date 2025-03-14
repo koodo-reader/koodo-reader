@@ -5,6 +5,7 @@ import PopupTrans from "../popupTrans";
 import PopupDict from "../popupDict";
 import { PopupBoxProps, PopupBoxStates } from "./interface";
 import { getIframeDoc } from "../../../utils/reader/docUtil";
+import PopupAssist from "../popupAssist";
 
 class PopupBox extends React.Component<PopupBoxProps, PopupBoxStates> {
   highlighter: any;
@@ -50,6 +51,8 @@ class PopupBox extends React.Component<PopupBoxProps, PopupBoxStates> {
             <PopupTrans {...PopupProps} />
           ) : this.props.menuMode === "dict" ? (
             <PopupDict {...PopupProps} />
+          ) : this.props.menuMode === "assistant" ? (
+            <PopupAssist {...PopupProps} />
           ) : null}
           <span
             className="icon-close popup-close"

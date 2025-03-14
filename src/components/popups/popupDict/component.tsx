@@ -15,6 +15,7 @@ import {
 import toast from "react-hot-toast";
 import DatabaseService from "../../../utils/storage/databaseService";
 import { checkPlugin } from "../../../utils/common";
+import { getDictText } from "../../../utils/request/reader";
 declare var window: any;
 class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
   constructor(props: PopupDictProps) {
@@ -25,6 +26,7 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
       prototype: "",
       dictService: ConfigService.getReaderConfig("dictService"),
       dictTarget: ConfigService.getReaderConfig("dictTarget") || "en",
+      dictSource: ConfigService.getReaderConfig("dictSource") || "en",
       isAddNew: false,
     };
   }
@@ -41,11 +43,13 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
     if (ConfigService.getReaderConfig("isLemmatizeWord") === "yes") {
       originalText = originalText;
     }
+    console.log(this.props.isAuthed, "this.props.isAuthed");
     if (
-      !this.state.dictService ||
-      this.props.plugins.findIndex(
-        (item) => item.key === this.state.dictService
-      ) === -1
+      (!this.state.dictService ||
+        this.props.plugins.findIndex(
+          (item) => item.key === this.state.dictService
+        ) === -1) &&
+      !this.props.isAuthed
     ) {
       this.setState({ isAddNew: true });
     }
@@ -64,22 +68,38 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
     await DatabaseService.saveRecord(word, "words");
   };
   handleDict = async (text: string) => {
+    let dictText = "";
     try {
-      let plugin = this.props.plugins.find(
-        (item) => item.key === this.state.dictService
-      );
-      if (!plugin) return;
-      let dictFunc = plugin.script;
-      // eslint-disable-next-line no-eval
-      eval(dictFunc);
-      let dictText = await window.getDictText(
-        text,
-        "auto",
-        this.state.dictTarget,
-        axios,
-        this.props.t,
-        plugin.config
-      );
+      if (
+        this.state.dictService &&
+        this.state.dictService !== "official-ai-dict-plugin"
+      ) {
+        let plugin = this.props.plugins.find(
+          (item) => item.key === this.state.dictService
+        );
+        if (!plugin) return;
+        let dictFunc = plugin.script;
+        // eslint-disable-next-line no-eval
+        eval(dictFunc);
+        dictText = await window.getDictText(
+          text,
+          "auto",
+          this.state.dictTarget,
+          axios,
+          this.props.t,
+          plugin.config
+        );
+      } else if (this.props.isAuthed) {
+        dictText = await getDictText(
+          text,
+          this.state.dictTarget === "en" ? "eng" : this.state.dictTarget,
+          ConfigService.getReaderConfig("lang") &&
+            ConfigService.getReaderConfig("lang").startsWith("zh")
+            ? "chs"
+            : "eng"
+        );
+      }
+
       if (dictText.startsWith("https://")) {
         openExternalUrl(dictText, true);
       } else {
@@ -91,7 +111,9 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
             let moreElement = document.querySelector(".dict-learn-more");
             if (moreElement) {
               moreElement.addEventListener("click", () => {
-                openExternalUrl(window.learnMoreUrl);
+                openExternalUrl(
+                  window.learnMoreUrl || "https://www.koodoreader.com"
+                );
               });
             }
           }
@@ -124,7 +146,9 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
       }
     );
   };
+
   render() {
+    console.log(this.props.plugins, "this.props.plugins");
     const renderDictBox = () => {
       return (
         <div className="dict-container">
@@ -152,7 +176,7 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
                         this.state.dictService === item.key ? true : false
                       }
                     >
-                      {item.displayName}
+                      {this.props.t(item.displayName)}
                     </option>
                   );
                 })}

@@ -246,3 +246,33 @@ export const readerSettingList = [
     propName: "isHideMenuButton",
   },
 ];
+export const officialTranList = {
+  English: "English",
+  "Simplified Chinese": "Simplified Chinese",
+  "Traditional Chinese": "Traditional Chinese",
+  Japanese: "Japanese",
+  Korean: "Korean",
+  French: "French",
+  German: "German",
+  Spanish: "Spanish",
+  Italian: "Italian",
+  Russian: "Russian",
+  Portuguese: "Portuguese",
+};
+export const officialDictList = [
+  { lang: "English", code: "eng", nativeLang: "English" },
+  { lang: "Simplified Chinese", code: "chs", nativeLang: "Simplified Chinese" },
+  {
+    lang: "Traditional Chinese",
+    code: "cht",
+    nativeLang: "Traditional Chinese",
+  },
+  { lang: "Japanese", code: "jpn", nativeLang: "Japanese" },
+  { lang: "Korean", code: "kor", nativeLang: "Korean" },
+  { lang: "French", code: "fra", nativeLang: "French" },
+  { lang: "German", code: "deu", nativeLang: "German" },
+  { lang: "Spanish", code: "spa", nativeLang: "Spanish" },
+  { lang: "Italian", code: "ita", nativeLang: "Italian" },
+  { lang: "Russian", code: "rus", nativeLang: "Russian" },
+  { lang: "Portuguese", code: "por", nativeLang: "Portuguese" },
+];

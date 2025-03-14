@@ -17,6 +17,7 @@ import {
   handleFetchPercentage,
   handleFetchPlugins,
   handleReaderMode,
+  handleFetchAuthed,
 } from "../../store/actions";
 import Viewer from "./component";
 import { stateType } from "../../store";
@@ -56,6 +57,7 @@ const actionCreator = {
   handleMenuMode,
   handleFetchPlugins,
   handleReaderMode,
+  handleFetchAuthed,
 };
 export default connect(
   mapStateToProps,

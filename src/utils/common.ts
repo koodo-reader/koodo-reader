@@ -285,6 +285,7 @@ export const preCacheAllBooks = async (bookList: Book[]) => {
       ConfigService.getReaderConfig("isSliding") === "yes" ? "sliding" : "",
       ConfigService.getReaderConfig("isBionic"),
       ConfigService.getReaderConfig("convertChinese"),
+      "",
       Kookit
     );
     let cache = await rendition.preCache(result);

@@ -11,6 +11,7 @@ const mapStateToProps = (state: stateType) => {
   return {
     originalText: state.reader.originalText,
     plugins: state.manager.plugins,
+    isAuthed: state.manager.isAuthed,
     noteKey: state.reader.noteKey,
   };
 };
