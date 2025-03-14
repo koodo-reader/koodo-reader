@@ -10,7 +10,10 @@ export interface ReaderProps {
   readerMode: string;
   handleFetchNotes: () => void;
   handleReaderMode: (readerMode: string) => void;
+  handleMenuMode: (menuMode: string) => void;
+  handleOriginalText: (originalText: string) => void;
   handleFetchBooks: () => void;
+  handleOpenMenu: (isOpen: boolean) => void;
   handleFetchBookmarks: () => void;
   handleFetchPercentage: (currentBook: BookModel) => void;
   handleReadingBook: (book: BookModel) => void;

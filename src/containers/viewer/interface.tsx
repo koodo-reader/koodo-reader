@@ -18,6 +18,7 @@ export interface ViewerProps {
   defaultSyncOption: string;
   handleRenderBookFunc: (renderBookFunc: () => void) => void;
   renderNoteFunc: () => void;
+  handleFetchAuthed: () => void;
   t: (title: string) => string;
   handleReadingState: (isReading: boolean) => void;
   handleReadingBook: (book: Book) => void;

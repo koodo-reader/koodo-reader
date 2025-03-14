@@ -62,6 +62,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     this.props.handleFetchNotes();
     this.props.handleFetchBooks();
     this.props.handleFetchPlugins();
+    this.props.handleFetchAuthed();
   }
   componentDidMount() {
     this.handleRenderBook();
@@ -151,6 +152,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         ConfigService.getReaderConfig("isSliding") === "yes" ? "sliding" : "",
         ConfigService.getReaderConfig("isBionic"),
         ConfigService.getReaderConfig("convertChinese"),
+        "",
         Kookit
       );
 
@@ -341,6 +343,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         this.props.htmlBook &&
         (this.props.menuMode === "dict" ||
           this.props.menuMode === "trans" ||
+          this.props.menuMode === "assistant" ||
           this.props.menuMode === "note") ? (
           <PopupBox
             {...{

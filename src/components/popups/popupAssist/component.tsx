@@ -1,13 +1,13 @@
 import React from "react";
-import "./popupDict.css";
-import { PopupDictProps, PopupDictState } from "./interface";
+import "./popupAssist.css";
+import { PopupAssistProps, PopupAssistState } from "./interface";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import Parser from "html-react-parser";
 import DOMPurify from "dompurify";
 import axios from "axios";
-import DictHistory from "../../../models/DictHistory";
 import { Trans } from "react-i18next";
 import {
+  getDefaultTransTarget,
   handleContextMenu,
   openExternalUrl,
   WEBSITE_URL,
@@ -15,97 +15,98 @@ import {
 import toast from "react-hot-toast";
 import DatabaseService from "../../../utils/storage/databaseService";
 import { checkPlugin } from "../../../utils/common";
-import { getDictText } from "../../../utils/request/reader";
+import { getSummaryStream } from "../../../utils/request/reader";
 declare var window: any;
-class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
-  constructor(props: PopupDictProps) {
+class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
+  constructor(props: PopupAssistProps) {
     super(props);
     this.state = {
-      dictText: this.props.t("Please wait"),
-      word: "",
+      sumText: this.props.t("Please wait"),
       prototype: "",
-      dictService: ConfigService.getReaderConfig("dictService"),
-      dictTarget: ConfigService.getReaderConfig("dictTarget") || "en",
-      dictSource: ConfigService.getReaderConfig("dictSource") || "en",
+      sumService:
+        ConfigService.getReaderConfig("sumService") ||
+        "official-ai-assistant-plugin",
+      sumTarget: ConfigService.getReaderConfig("sumTarget") || "English",
       isAddNew: false,
     };
   }
   componentDidMount() {
-    this.handleLookUp();
+    this.handleSum();
   }
-  async handleLookUp() {
+  async handleSum() {
     let originalText = this.props.originalText
       .replace(/(\r\n|\n|\r)/gm, "")
       .replace(/-/gm, "");
-    this.setState({ word: originalText });
-    // let prototype = "";
-    this.setState({ prototype: originalText });
-    if (ConfigService.getReaderConfig("isLemmatizeWord") === "yes") {
-      originalText = originalText;
-    }
     console.log(this.props.isAuthed, "this.props.isAuthed");
     if (
-      (!this.state.dictService ||
+      (!this.state.sumService ||
         this.props.plugins.findIndex(
-          (item) => item.key === this.state.dictService
+          (item) => item.key === this.state.sumService
         ) === -1) &&
       !this.props.isAuthed
     ) {
       this.setState({ isAddNew: true });
     }
-    this.handleDict(originalText);
-    this.handleRecordHistory(originalText);
+    this.handleSummary(originalText);
   }
-  handleRecordHistory = async (text: string) => {
-    let bookKey = this.props.currentBook.key;
-    let bookLocation = ConfigService.getObjectConfig(
-      bookKey,
-      "recordLocation",
-      {}
-    );
-    let chapter = bookLocation.chapterTitle;
-    let word = new DictHistory(bookKey, text, chapter);
-    await DatabaseService.saveRecord(word, "words");
-  };
-  handleDict = async (text: string) => {
-    let dictText = "";
+  handleSummary = async (text: string) => {
+    let sumText = "";
     try {
       if (
-        this.state.dictService &&
-        this.state.dictService !== "official-ai-dict-plugin"
+        this.state.sumService &&
+        this.state.sumService !== "official-ai-assistant-plugin"
       ) {
         let plugin = this.props.plugins.find(
-          (item) => item.key === this.state.dictService
+          (item) => item.key === this.state.sumService
         );
         if (!plugin) return;
         let dictFunc = plugin.script;
         // eslint-disable-next-line no-eval
         eval(dictFunc);
-        dictText = await window.getDictText(
+        sumText = await window.getsumText(
           text,
           "auto",
-          this.state.dictTarget,
+          this.state.sumTarget,
           axios,
           this.props.t,
           plugin.config
         );
       } else if (this.props.isAuthed) {
-        dictText = await getDictText(
+        let plugin = this.props.plugins.find(
+          (item) => item.key === "official-ai-assistant-plugin"
+        );
+        if (!plugin) {
+          return;
+        }
+        let isFirst = true;
+        getSummaryStream(
           text,
-          this.state.dictTarget === "en" ? "eng" : this.state.dictTarget,
-          ConfigService.getReaderConfig("lang") &&
-            ConfigService.getReaderConfig("lang").startsWith("zh")
-            ? "chs"
-            : "eng"
+          ConfigService.getReaderConfig("sumTarget") ||
+            getDefaultTransTarget(plugin.langList),
+          (result) => {
+            console.log(result);
+            if (result && result.text) {
+              if (isFirst) {
+                this.setState({
+                  sumText: result.text,
+                });
+                isFirst = false;
+              } else {
+                this.setState({
+                  sumText: this.state.sumText + result.text,
+                });
+              }
+            }
+          }
         );
       }
 
-      if (dictText.startsWith("https://")) {
-        openExternalUrl(dictText, true);
+      if (sumText.startsWith("https://")) {
+        openExternalUrl(sumText, true);
       } else {
         this.setState(
           {
-            dictText: dictText,
+            sumText: sumText,
           },
           () => {
             let moreElement = document.querySelector(".dict-learn-more");
@@ -122,25 +123,34 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
     } catch (error) {
       console.error(error);
       this.setState({
-        dictText: this.props.t("Error happened"),
+        sumText: this.props.t("Error happened"),
       });
     }
   };
-  handleChangeDictService = (dictService: string) => {
+  handleChangesumService = (sumService: string) => {
+    let plugin = this.props.plugins.find((item) => item.key === sumService);
+    if (!plugin) {
+      return;
+    }
     this.setState(
       {
-        dictService: dictService,
+        sumService: sumService,
         isAddNew: false,
       },
       () => {
-        ConfigService.setReaderConfig("dictService", dictService);
+        ConfigService.setReaderConfig("sumService", sumService);
+        if (!plugin) return;
         this.setState(
           {
-            dictTarget: "en",
+            sumTarget: getDefaultTransTarget(plugin.langList),
           },
           () => {
-            ConfigService.setReaderConfig("dictTarget", "en");
-            this.handleLookUp();
+            if (!plugin) return;
+            ConfigService.setReaderConfig(
+              "sumTarget",
+              getDefaultTransTarget(plugin.langList)
+            );
+            this.handleSum();
           }
         );
       }
@@ -149,7 +159,14 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
 
   render() {
     console.log(this.props.plugins, "this.props.plugins");
-    const renderDictBox = () => {
+    const renderSumBox = () => {
+      console.log(
+        this.props.plugins.filter((item) => item.type === "assistant")
+      );
+      console.log(
+        this.props.plugins.find((item) => item.key === this.state.sumService)
+          ?.langList
+      );
       return (
         <div className="dict-container">
           <div className="dict-service-container">
@@ -161,11 +178,11 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
                   this.setState({ isAddNew: true });
                   return;
                 }
-                this.handleChangeDictService(event.target.value);
+                this.handleChangesumService(event.target.value);
               }}
             >
               {this.props.plugins
-                .filter((item) => item.type === "dictionary")
+                .filter((item) => item.type === "assistant")
                 .map((item) => {
                   return (
                     <option
@@ -173,7 +190,7 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
                       key={item.key}
                       className="add-dialog-shelf-list-option"
                       selected={
-                        this.state.dictService === item.key ? true : false
+                        this.state.sumService === item.key ? true : false
                       }
                     >
                       {this.props.t(item.displayName)}
@@ -195,57 +212,65 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
               className="dict-service-selector"
               style={{ margin: 0 }}
               onChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
+                let plugin = this.props.plugins.find(
+                  (item) => item.key === this.state.sumService
+                );
+                console.log(plugin, "plugin435345");
+                if (!plugin) {
+                  return;
+                }
+                console.log(plugin.langList, "plugin.langList");
                 this.setState(
                   {
-                    dictTarget: event.target.value || "en",
+                    sumTarget:
+                      event.target.value ||
+                      getDefaultTransTarget(plugin.langList),
                   },
                   () => {
                     ConfigService.setReaderConfig(
-                      "dictTarget",
+                      "sumTarget",
                       event.target.value
                     );
-                    this.handleLookUp();
+                    this.handleSum();
                   }
                 );
               }}
             >
               {this.props.plugins.find(
-                (item) => item.key === this.state.dictService
+                (item) => item.key === this.state.sumService
               )?.langList &&
-                (
+                Object.keys(
                   this.props.plugins.find(
-                    (item) => item.key === this.state.dictService
-                  )?.langList as any[]
-                ).map((item) => {
+                    (item) => item.key === this.state.sumService
+                  )?.langList as any
+                ).map((item, index) => {
                   return (
                     <option
-                      value={item.code}
-                      key={item.code}
+                      value={item}
+                      key={index}
                       className="add-dialog-shelf-list-option"
                       selected={
-                        this.state.dictTarget === item.code ? true : false
+                        ConfigService.getReaderConfig("sumTarget") === item
+                          ? true
+                          : false
                       }
                     >
-                      {item["nativeLang"]}
+                      {
+                        Object.values(
+                          this.props.plugins.find(
+                            (item) => item.key === this.state.sumService
+                          )?.langList as any[]
+                        )[index]
+                      }
                     </option>
                   );
                 })}
             </select>
           </div>
-          <div className="dict-word">
-            {ConfigService.getReaderConfig("isLemmatizeWord") === "yes"
-              ? this.state.prototype
-              : this.state.word}
-          </div>
-          <div className="dict-original-word">
-            <Trans>Prototype</Trans>
-            <span>:</span>
-            <span>{this.state.prototype}</span>
-          </div>
           {this.state.isAddNew && (
             <div
               className="trans-add-new-container"
-              style={{ fontWeight: 500 }}
+              style={{ fontWeight: 500, marginTop: "60px", height: "170px" }}
             >
               <textarea
                 name="url"
@@ -314,7 +339,7 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
                     }
                     this.setState({
                       isAddNew: false,
-                      dictText: this.props.t("Please select the service"),
+                      sumText: this.props.t("Please select the service"),
                     });
                   }}
                 >
@@ -324,10 +349,13 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
             </div>
           )}
           {!this.state.isAddNew && (
-            <div className="dict-text-box">
+            <div
+              className="dict-text-box"
+              style={{ marginTop: "60px", height: "230px" }}
+            >
               {Parser(
                 DOMPurify.sanitize(
-                  this.state.dictText + "<address></address>"
+                  this.state.sumText + "<address></address>"
                 ) || " ",
                 {
                   replace: (_domNode) => {},
@@ -338,7 +366,7 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
         </div>
       );
     };
-    return renderDictBox();
+    return renderSumBox();
   }
 }
-export default PopupDict;
+export default PopupAssist;

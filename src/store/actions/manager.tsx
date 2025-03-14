@@ -7,6 +7,10 @@ import PluginModel from "../../models/Plugin";
 import { Dispatch } from "redux";
 import DatabaseService from "../../utils/storage/databaseService";
 import { fetchUserInfo } from "../../utils/request/user";
+import {
+  officialDictList,
+  officialTranList,
+} from "../../constants/settingList";
 
 export function handleBooks(books: BookModel[]) {
   return { type: "HANDLE_BOOKS", payload: books };
@@ -120,8 +124,60 @@ export function handleFetchUserInfo() {
 }
 export function handleFetchPlugins() {
   return async (dispatch: Dispatch) => {
-    DatabaseService.getAllRecords("plugins").then((value) => {
-      dispatch(handlePlugins(value));
+    DatabaseService.getAllRecords("plugins").then((pluginList) => {
+      console.log(pluginList, "pluginList");
+      try {
+        TokenService.getToken("is_authed").then((value) => {
+          let isAuthed = value === "yes";
+          if (isAuthed) {
+            let dictPlugin = new PluginModel(
+              "official-ai-dict-plugin",
+              "dictionary",
+              "Official AI Dictionary",
+              "dict",
+              "1.0.0",
+              "",
+              {},
+              officialDictList,
+              [],
+              "",
+              ""
+            );
+            pluginList.push(dictPlugin);
+            let transPlugin = new PluginModel(
+              "official-ai-trans-plugin",
+              "translation",
+              "Official AI Translation",
+              "translation",
+              "1.0.0",
+              "",
+              {},
+              officialTranList,
+              [],
+              "",
+              ""
+            );
+            pluginList.push(transPlugin);
+            let sumPlugin = new PluginModel(
+              "official-ai-assistant-plugin",
+              "assistant",
+              "Official AI Assistant",
+              "assistant",
+              "1.0.0",
+              "",
+              {},
+              officialTranList,
+              [],
+              "",
+              ""
+            );
+            pluginList.push(sumPlugin);
+            dispatch(handlePlugins(pluginList));
+          }
+        });
+      } catch (error) {
+        console.error(error);
+      }
     });
   };
 }

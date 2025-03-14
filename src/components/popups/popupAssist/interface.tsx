@@ -1,6 +1,6 @@
 import BookModel from "../../../models/Book";
 import PluginModel from "../../../models/Plugin";
-export interface PopupDictProps {
+export interface PopupAssistProps {
   originalText: string;
   plugins: PluginModel[];
   isAuthed: boolean;
@@ -10,12 +10,10 @@ export interface PopupDictProps {
   handleFetchPlugins: () => void;
   t: (title: string) => string;
 }
-export interface PopupDictState {
-  dictText: string;
-  word: string;
+export interface PopupAssistState {
+  sumText: string;
   prototype: string;
-  dictService: string;
-  dictTarget: string;
-  dictSource: string;
+  sumService: string;
+  sumTarget: string;
   isAddNew: boolean;
 }

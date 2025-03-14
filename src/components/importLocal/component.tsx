@@ -220,6 +220,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                   : "",
                 ConfigService.getReaderConfig("isBionic"),
                 ConfigService.getReaderConfig("convertChinese"),
+                "",
                 Kookit
               );
               result = await BookHelper.generateBook(

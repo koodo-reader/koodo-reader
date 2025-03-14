@@ -3,6 +3,7 @@ import Plugin from "../../../models/Plugin";
 export interface PopupTransProps {
   originalText: string;
   plugins: Plugin[];
+  isAuthed: boolean;
   handleOpenMenu: (isOpenMenu: boolean) => void;
   handleMenuMode: (menu: string) => void;
   handleFetchPlugins: () => void;

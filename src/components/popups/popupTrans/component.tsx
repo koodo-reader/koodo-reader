@@ -13,6 +13,7 @@ import {
 } from "../../../utils/common";
 import DatabaseService from "../../../utils/storage/databaseService";
 import { checkPlugin } from "../../../utils/common";
+import { getTransStream } from "../../../utils/request/reader";
 declare var window: any;
 class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
   constructor(props: PopupTransProps) {
@@ -45,36 +46,70 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
   }
 
   handleTrans = (text: string) => {
-    let plutin = this.props.plugins.find(
-      (item) => item.key === this.state.transService
-    );
-    if (!plutin) {
-      return;
-    }
-    let translateFunc = plutin.script;
-    // eslint-disable-next-line no-eval
-    eval(translateFunc);
-    window
-      .translate(
+    if (
+      this.state.transService &&
+      this.state.transService !== "official-ai-trans-plugin"
+    ) {
+      let plugin = this.props.plugins.find(
+        (item) => item.key === this.state.transService
+      );
+      if (!plugin) {
+        return;
+      }
+      let translateFunc = plugin.script;
+      // eslint-disable-next-line no-eval
+      eval(translateFunc);
+      window
+        .translate(
+          text,
+          ConfigService.getReaderConfig("transSource") || "",
+          ConfigService.getReaderConfig("transTarget") ||
+            getDefaultTransTarget(plugin.langList),
+          axios,
+          plugin.config
+        )
+        .then((res: string) => {
+          if (res.startsWith("https://")) {
+            openExternalUrl(res, true);
+          } else {
+            this.setState({
+              translatedText: res,
+            });
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    } else if (this.props.isAuthed) {
+      let plugin = this.props.plugins.find(
+        (item) => item.key === "official-ai-trans-plugin"
+      );
+      if (!plugin) {
+        return;
+      }
+      let isFirst = true;
+      getTransStream(
         text,
-        ConfigService.getReaderConfig("transSource") || "",
+        ConfigService.getReaderConfig("transSource") || "Automatic",
         ConfigService.getReaderConfig("transTarget") ||
-          getDefaultTransTarget(plutin.langList),
-        axios,
-        plutin.config
-      )
-      .then((res: string) => {
-        if (res.startsWith("https://")) {
-          openExternalUrl(res, true);
-        } else {
-          this.setState({
-            translatedText: res,
-          });
+          getDefaultTransTarget(plugin.langList),
+        (result) => {
+          console.log(result);
+          if (result && result.text) {
+            if (isFirst) {
+              this.setState({
+                translatedText: result.text,
+              });
+              isFirst = false;
+            } else {
+              this.setState({
+                translatedText: this.state.translatedText + result.text,
+              });
+            }
+          }
         }
-      })
-      .catch((err) => {
-        console.error(err);
-      });
+      );
+    }
   };
   handleChangeService(target: string) {
     this.setState({ transService: target }, () => {
@@ -125,7 +160,7 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
                     }}
                   >
                     <span className={`icon-${item.icon} trans-icon`}></span>
-                    {item.displayName}
+                    {this.props.t(item.displayName)}
                   </div>
                 );
               })}
