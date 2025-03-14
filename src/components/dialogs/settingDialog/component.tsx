@@ -167,18 +167,10 @@ class SettingDialog extends React.Component<
   };
   handleSetting = (stateName: string) => {
     this.setState({ [stateName]: !this.state[stateName] } as any);
-    if (
-      stateName === "isKeepLocal" ||
-      stateName === "isDisableMobilePrecache"
-    ) {
-      ConfigService.setItem(stateName, this.state[stateName] ? "no" : "yes");
-    } else {
-      ConfigService.setReaderConfig(
-        stateName,
-        this.state[stateName] ? "no" : "yes"
-      );
-    }
-
+    ConfigService.setReaderConfig(
+      stateName,
+      this.state[stateName] ? "no" : "yes"
+    );
     this.handleRest(this.state[stateName]);
   };
   handleChangeLocation = async () => {

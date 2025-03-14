@@ -30,10 +30,9 @@
 }
 .dict-word-type,
 .dict-learn-more {
-  font-weight: bold;
   color: #2084e8;
   margin-bottom: 5px;
-  margin-top: 5px;
+  margin-top: 15px;
 }
 .dict-learn-more {
   cursor: pointer;

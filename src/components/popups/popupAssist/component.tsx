@@ -349,19 +349,24 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
             </div>
           )}
           {!this.state.isAddNew && (
-            <div
-              className="dict-text-box"
-              style={{ marginTop: "60px", height: "230px" }}
-            >
-              {Parser(
-                DOMPurify.sanitize(
-                  this.state.sumText + "<address></address>"
-                ) || " ",
-                {
-                  replace: (_domNode) => {},
-                }
-              )}
-            </div>
+            <>
+              <div
+                className="dict-text-box"
+                style={{ marginTop: "60px", height: "180px" }}
+              >
+                {Parser(
+                  DOMPurify.sanitize(
+                    this.state.sumText + "<address></address>"
+                  ) || " ",
+                  {
+                    replace: (_domNode) => {},
+                  }
+                )}
+              </div>
+              <p className="dict-learn-more">
+                {this.props.t("Generated with AI")}
+              </p>
+            </>
           )}
         </div>
       );
