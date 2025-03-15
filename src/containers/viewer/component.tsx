@@ -150,7 +150,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         this.props.readerMode,
         this.props.currentBook.charset,
         ConfigService.getReaderConfig("isSliding") === "yes" ? "sliding" : "",
-        ConfigService.getReaderConfig("isBionic"),
         ConfigService.getReaderConfig("convertChinese"),
         "",
         Kookit

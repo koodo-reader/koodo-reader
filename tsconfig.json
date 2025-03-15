@@ -16,8 +16,8 @@
     "noEmit": true,
     "jsx": "react",
     "noImplicitAny": false,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
+    // "noUnusedLocals": true,
+    // "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
   "include": ["src", "src/assets/lib/kookit-extra.min.mjs"],

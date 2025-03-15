@@ -283,7 +283,6 @@ export const preCacheAllBooks = async (bookList: Book[]) => {
       "",
       selectedBook.charset,
       ConfigService.getReaderConfig("isSliding") === "yes" ? "sliding" : "",
-      ConfigService.getReaderConfig("isBionic"),
       ConfigService.getReaderConfig("convertChinese"),
       "",
       Kookit

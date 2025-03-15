@@ -1,0 +1,215 @@
+import React from "react";
+import { SettingInfoProps, SettingInfoState } from "./interface";
+import { Trans } from "react-i18next";
+import _ from "underscore";
+import { themeList } from "../../../constants/themeList";
+import toast from "react-hot-toast";
+import {
+  checkPlugin,
+  handleContextMenu,
+  openExternalUrl,
+  WEBSITE_URL,
+} from "../../../utils/common";
+import { getStorageLocation } from "../../../utils/common";
+import DatabaseService from "../../../utils/storage/databaseService";
+import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
+class SettingDialog extends React.Component<
+  SettingInfoProps,
+  SettingInfoState
+> {
+  constructor(props: SettingInfoProps) {
+    super(props);
+    this.state = {
+      isTouch: ConfigService.getReaderConfig("isTouch") === "yes",
+      isImportPath: ConfigService.getReaderConfig("isImportPath") === "yes",
+      isMergeWord: ConfigService.getReaderConfig("isMergeWord") === "yes",
+      isPreventTrigger:
+        ConfigService.getReaderConfig("isPreventTrigger") === "yes",
+      isAutoFullscreen:
+        ConfigService.getReaderConfig("isAutoFullscreen") === "yes",
+      isPreventAdd: ConfigService.getReaderConfig("isPreventAdd") === "yes",
+      isLemmatizeWord:
+        ConfigService.getReaderConfig("isLemmatizeWord") === "yes",
+      isOpenBook: ConfigService.getReaderConfig("isOpenBook") === "yes",
+      isExpandContent:
+        ConfigService.getReaderConfig("isExpandContent") === "yes",
+      isDisablePopup: ConfigService.getReaderConfig("isDisablePopup") === "yes",
+      isDisableTrashBin:
+        ConfigService.getReaderConfig("isDisableTrashBin") === "yes",
+      isDeleteShelfBook:
+        ConfigService.getReaderConfig("isDeleteShelfBook") === "yes",
+      isHideShelfBook:
+        ConfigService.getReaderConfig("isHideShelfBook") === "yes",
+      isPreventSleep: ConfigService.getReaderConfig("isPreventSleep") === "yes",
+      isOpenInMain: ConfigService.getReaderConfig("isOpenInMain") === "yes",
+      isDisableUpdate:
+        ConfigService.getReaderConfig("isDisableUpdate") === "yes",
+      isPrecacheBook: ConfigService.getReaderConfig("isPrecacheBook") === "yes",
+      isDisableMobilePrecache:
+        ConfigService.getReaderConfig("isDisableMobilePrecache") === "yes",
+      appSkin: ConfigService.getReaderConfig("appSkin"),
+      isUseBuiltIn: ConfigService.getReaderConfig("isUseBuiltIn") === "yes",
+      isKeepLocal: ConfigService.getReaderConfig("isKeepLocal") === "yes",
+      isDisableCrop: ConfigService.getReaderConfig("isDisableCrop") === "yes",
+      isDisablePDFCover:
+        ConfigService.getReaderConfig("isDisablePDFCover") === "yes",
+      currentThemeIndex: _.findLastIndex(themeList, {
+        name: ConfigService.getReaderConfig("themeColor"),
+      }),
+      storageLocation: getStorageLocation() || "",
+      isAddNew: false,
+      settingLogin: "",
+      driveConfig: {},
+      loginConfig: {},
+    };
+  }
+
+  handleRest = (_bool: boolean) => {
+    toast.success(this.props.t("Change successful"));
+  };
+  handleSetting = (stateName: string) => {
+    this.setState({ [stateName]: !this.state[stateName] } as any);
+    ConfigService.setReaderConfig(
+      stateName,
+      this.state[stateName] ? "no" : "yes"
+    );
+    this.handleRest(this.state[stateName]);
+  };
+  render() {
+    return (
+      <>
+        {this.props.plugins &&
+          (this.props.plugins.length === 0 || this.state.isAddNew) && (
+            <div
+              className="voice-add-new-container"
+              style={{
+                marginLeft: "25px",
+                width: "calc(100% - 50px)",
+                fontWeight: 500,
+              }}
+            >
+              <textarea
+                name="url"
+                placeholder={this.props.t(
+                  "Paste the code of the plugin here, check out document to learn how to get more plugins"
+                )}
+                id="voice-add-content-box"
+                className="voice-add-content-box"
+                onContextMenu={() => {
+                  handleContextMenu("voice-add-content-box");
+                }}
+              />
+              <div className="token-dialog-button-container">
+                <div
+                  className="voice-add-confirm"
+                  onClick={async () => {
+                    let value: string = (
+                      document.querySelector(
+                        "#voice-add-content-box"
+                      ) as HTMLTextAreaElement
+                    ).value;
+                    if (value) {
+                      let plugin = JSON.parse(value);
+                      plugin.key = plugin.identifier;
+                      if (!(await checkPlugin(plugin))) {
+                        toast.error(this.props.t("Plugin verification failed"));
+                        return;
+                      }
+                      if (
+                        this.props.plugins.find(
+                          (item) => item.key === plugin.key
+                        )
+                      ) {
+                        await DatabaseService.updateRecord(plugin, "plugins");
+                      } else {
+                        await DatabaseService.saveRecord(plugin, "plugins");
+                      }
+                      this.props.handleFetchPlugins();
+                      toast.success(this.props.t("Addition successful"));
+                    }
+                    this.setState({ isAddNew: false });
+                  }}
+                >
+                  <Trans>Confirm</Trans>
+                </div>
+                <div className="voice-add-button-container">
+                  <div
+                    className="voice-add-cancel"
+                    onClick={() => {
+                      this.setState({ isAddNew: false });
+                    }}
+                  >
+                    <Trans>Cancel</Trans>
+                  </div>
+                  <div
+                    className="voice-add-cancel"
+                    style={{ marginRight: "10px" }}
+                    onClick={() => {
+                      if (
+                        ConfigService.getReaderConfig("lang") === "zhCN" ||
+                        ConfigService.getReaderConfig("lang") === "zhTW" ||
+                        ConfigService.getReaderConfig("lang") === "zhMO"
+                      ) {
+                        openExternalUrl(WEBSITE_URL + "/zh/plugin");
+                      } else {
+                        openExternalUrl(WEBSITE_URL + "/en/plugin");
+                      }
+                    }}
+                  >
+                    <Trans>Document</Trans>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        {this.props.plugins &&
+          this.props.plugins.map((item) => {
+            return (
+              <div className="setting-dialog-new-title" key={item.key}>
+                <span>
+                  <span
+                    className={`icon-${
+                      item.type === "dictionary"
+                        ? "dict"
+                        : item.type === "voice"
+                        ? "speaker"
+                        : "translation"
+                    } setting-plugin-icon`}
+                  ></span>
+                  <span className="setting-plugin-name">
+                    {this.props.t(item.displayName)}
+                  </span>
+                </span>
+
+                {!item.key.startsWith("official") && (
+                  <span
+                    className="change-location-button"
+                    onClick={async () => {
+                      await DatabaseService.deleteRecord(item.key, "plugins");
+                      this.props.handleFetchPlugins();
+                      toast.success(this.props.t("Deletion successful"));
+                    }}
+                  >
+                    <Trans>Delete</Trans>
+                  </span>
+                )}
+              </div>
+            );
+          })}
+
+        {this.props.plugins && this.props.plugins.length > 0 && (
+          <div
+            className="setting-dialog-new-plugin"
+            onClick={async () => {
+              this.setState({ isAddNew: true });
+            }}
+          >
+            <Trans>Add new plugin</Trans>
+          </div>
+        )}
+      </>
+    );
+  }
+}
+
+export default SettingDialog;

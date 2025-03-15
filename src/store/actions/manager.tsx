@@ -173,6 +173,8 @@ export function handleFetchPlugins() {
             );
             pluginList.push(sumPlugin);
             dispatch(handlePlugins(pluginList));
+          } else {
+            dispatch(handlePlugins(pluginList));
           }
         });
       } catch (error) {

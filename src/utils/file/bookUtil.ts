@@ -19,6 +19,7 @@ declare var window: any;
 
 class BookUtil {
   static addBook(key: string, format: string, buffer: ArrayBuffer) {
+    // for both original books and cached boks
     this.uploadBook(key, format);
     if (isElectron) {
       const fs = window.require("fs");
