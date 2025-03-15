@@ -6,7 +6,10 @@ import Lottie from "react-lottie";
 import packageInfo from "../../../../package.json";
 import animation from "../../../assets/lotties/support.json";
 import { openExternalUrl, sleep, WEBSITE_URL } from "../../../utils/common";
-import { TokenService } from "../../../assets/lib/kookit-extra-browser.min";
+import {
+  ConfigService,
+  TokenService,
+} from "../../../assets/lib/kookit-extra-browser.min";
 import toast from "react-hot-toast";
 import { isElectron } from "react-device-detect";
 import { checkStableUpdate } from "../../../utils/request/common";
@@ -60,6 +63,8 @@ class SupporDialog extends React.Component<
                   await TokenService.deleteToken("is_authed");
                   await TokenService.deleteToken("access_token");
                   await TokenService.deleteToken("refresh_token");
+                  ConfigService.removeItem("defaultSyncOption");
+                  ConfigService.removeItem("dataSourceList");
                   this.props.handleFetchAuthed();
                   toast.success(this.props.t("Log out successful"));
                   this.handleClose();

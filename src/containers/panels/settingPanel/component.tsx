@@ -90,11 +90,11 @@ class SettingPanel extends React.Component<
 
           <SliderList
             {...{
-              maxValue: 60,
+              maxValue: 120,
               minValue: 0,
               mode: "paraSpacing",
               minLabel: "0",
-              maxLabel: "60",
+              maxLabel: "120",
               step: 1,
               title: "Paragraph spacing",
             }}

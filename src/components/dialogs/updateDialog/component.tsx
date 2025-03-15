@@ -104,6 +104,8 @@ class UpdateInfo extends React.Component<UpdateInfoProps, UpdateInfoState> {
                   await TokenService.deleteToken("is_authed");
                   await TokenService.deleteToken("access_token");
                   await TokenService.deleteToken("refresh_token");
+                  ConfigService.removeItem("defaultSyncOption");
+                  ConfigService.removeItem("dataSourceList");
                   this.props.handleFetchAuthed();
                   toast.success(this.props.t("Log out successful"));
                   this.handleClose();

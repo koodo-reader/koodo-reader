@@ -158,7 +158,6 @@ class ActionDialog extends React.Component<MoreActionProps, MoreActionState> {
                   ConfigService.getReaderConfig("isSliding") === "yes"
                     ? "sliding"
                     : "",
-                  ConfigService.getReaderConfig("isBionic"),
                   ConfigService.getReaderConfig("convertChinese"),
                   "",
                   Kookit
