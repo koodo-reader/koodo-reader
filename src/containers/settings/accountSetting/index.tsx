@@ -5,15 +5,15 @@ import {
   handleSetting,
   handleFetchBooks,
   handleFetchPlugins,
-  handleFetchDataSourceList,
-  handleFetchDefaultSyncOption,
-  handleFetchLoginOptionList,
   handleTokenDialog,
   handleSettingMode,
   handleSettingDrive,
   handleLoadingDialog,
   handleFetchAuthed,
   handleLoginOptionList,
+  handleFetchDataSourceList,
+  handleFetchDefaultSyncOption,
+  handleFetchLoginOptionList,
   handleFetchUserInfo,
 } from "../../../store/actions";
 import { stateType } from "../../../store";

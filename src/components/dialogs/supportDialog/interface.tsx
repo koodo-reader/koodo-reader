@@ -11,5 +11,7 @@ export interface SupporDialogProps {
   handleFetchAuthed: () => void;
   handleLoginOptionList: (loginOptionList: string[]) => void;
   handleFetchUserInfo: () => void;
+  handleFetchDataSourceList: () => void;
+  handleFetchDefaultSyncOption: () => void;
 }
 export interface SupporDialogState {}

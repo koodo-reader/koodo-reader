@@ -8,6 +8,8 @@ export interface UpdateInfoProps {
   handleNewDialog: (isShowNew: boolean) => void;
   handleNewWarning: (isNewWarning: boolean) => void;
   handleFetchAuthed: () => void;
+  handleFetchDataSourceList: () => void;
+  handleFetchDefaultSyncOption: () => void;
   handleLoginOptionList: (loginOptionList: string[]) => void;
 }
 export interface UpdateInfoState {
