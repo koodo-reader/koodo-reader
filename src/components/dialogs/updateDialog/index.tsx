@@ -4,6 +4,8 @@ import {
   handleNewWarning,
   handleFetchAuthed,
   handleLoginOptionList,
+  handleFetchDataSourceList,
+  handleFetchDefaultSyncOption,
 } from "../../../store/actions";
 import UpdateInfo from "./component";
 import { withTranslation } from "react-i18next";
@@ -22,6 +24,8 @@ const actionCreator = {
   handleNewWarning,
   handleFetchAuthed,
   handleLoginOptionList,
+  handleFetchDataSourceList,
+  handleFetchDefaultSyncOption,
 };
 export default connect(
   mapStateToProps,

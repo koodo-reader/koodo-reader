@@ -54,6 +54,9 @@ class SqlUtil {
       SqlStatement.sqlStatement["saveStatement"][type].replaceAll("@", ":")
     );
     json.forEach((item) => {
+      if (type === "books") {
+        item["cover"] = "";
+      }
       statement.run(addColonToKeys(SqlStatement.jsonToSqlite[type](item)));
     });
     statement.free();

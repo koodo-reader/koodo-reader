@@ -66,6 +66,9 @@ class SupporDialog extends React.Component<
                   ConfigService.removeItem("defaultSyncOption");
                   ConfigService.removeItem("dataSourceList");
                   this.props.handleFetchAuthed();
+                  this.props.handleFetchDataSourceList();
+                  this.props.handleFetchDefaultSyncOption();
+                  this.props.handleLoginOptionList([]);
                   toast.success(this.props.t("Log out successful"));
                   this.handleClose();
                 }}

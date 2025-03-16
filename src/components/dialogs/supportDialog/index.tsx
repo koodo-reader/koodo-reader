@@ -5,6 +5,8 @@ import {
   handleFetchUserInfo,
   handleLoginOptionList,
   handleShowSupport,
+  handleFetchDataSourceList,
+  handleFetchDefaultSyncOption,
 } from "../../../store/actions";
 import SupporDialog from "./component";
 import { withTranslation } from "react-i18next";
@@ -25,6 +27,8 @@ const actionCreator = {
   handleLoginOptionList,
   handleFetchUserInfo,
   handleShowSupport,
+  handleFetchDataSourceList,
+  handleFetchDefaultSyncOption,
 };
 export default connect(
   mapStateToProps,
