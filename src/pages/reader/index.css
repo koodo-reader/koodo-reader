@@ -220,6 +220,9 @@
   margin: 8px;
   opacity: 0.7;
 }
+.scale-container {
+  min-width: 200px;
+}
 .reader-setting-icon-container,
 .reader-zoom-in-icon-container {
   width: 50px;

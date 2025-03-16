@@ -55,6 +55,7 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
     if (!this.state.shelfTitle) return;
     let currentShelfTitle = this.state.shelfTitle;
     ConfigService.deleteMapConfig(currentShelfTitle, "shelfList");
+    ConfigService.deleteListConfig(currentShelfTitle || "", "sortedShelfList");
     this.setState({ shelfTitle: "" }, () => {
       this.props.handleShelf("");
       this.props.handleMode("shelf");

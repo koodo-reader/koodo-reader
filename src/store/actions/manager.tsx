@@ -125,7 +125,6 @@ export function handleFetchUserInfo() {
 export function handleFetchPlugins() {
   return async (dispatch: Dispatch) => {
     DatabaseService.getAllRecords("plugins").then((pluginList) => {
-      console.log(pluginList, "pluginList");
       try {
         TokenService.getToken("is_authed").then((value) => {
           let isAuthed = value === "yes";
