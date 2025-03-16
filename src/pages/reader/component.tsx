@@ -12,7 +12,6 @@ import "./index.css";
 import Book from "../../models/Book";
 import DatabaseService from "../../utils/storage/databaseService";
 import BookUtil from "../../utils/file/bookUtil";
-import { parse } from "path";
 
 let lock = false; //prevent from clicking too fasts
 let throttleTime =
