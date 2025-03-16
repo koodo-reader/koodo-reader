@@ -55,9 +55,8 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
               className="sort-by-category-list"
               onClick={() => {
                 if (
-                  ConfigService.getReaderConfig("lang") === "zhCN" ||
-                  ConfigService.getReaderConfig("lang") === "zhTW" ||
-                  ConfigService.getReaderConfig("lang") === "zhMO"
+                  ConfigService.getReaderConfig("lang") &&
+                  ConfigService.getReaderConfig("lang").startsWith("zh")
                 ) {
                   this.handleJump(WEBSITE_URL + "/zh/document");
                 } else {
@@ -89,9 +88,8 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
               className="sort-by-category-list"
               onClick={() => {
                 if (
-                  ConfigService.getReaderConfig("lang") === "zhCN" ||
-                  ConfigService.getReaderConfig("lang") === "zhTW" ||
-                  ConfigService.getReaderConfig("lang") === "zhMO"
+                  ConfigService.getReaderConfig("lang") &&
+                  ConfigService.getReaderConfig("lang").startsWith("zh")
                 ) {
                   this.handleJump(WEBSITE_URL + "/zh/roadmap");
                 } else {

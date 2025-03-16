@@ -262,9 +262,8 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
                   style={{ color: "#2084e8" }}
                   onClick={() => {
                     if (
-                      ConfigService.getReaderConfig("lang") === "zhCN" ||
-                      ConfigService.getReaderConfig("lang") === "zhTW" ||
-                      ConfigService.getReaderConfig("lang") === "zhMO"
+                      ConfigService.getReaderConfig("lang") &&
+                      ConfigService.getReaderConfig("lang").startsWith("zh")
                     ) {
                       openExternalUrl(WEBSITE_URL + "/zh/plugin");
                     } else {

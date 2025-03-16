@@ -447,9 +447,8 @@ class TextToSpeech extends React.Component<
                     style={{ marginRight: "10px" }}
                     onClick={() => {
                       if (
-                        ConfigService.getReaderConfig("lang") === "zhCN" ||
-                        ConfigService.getReaderConfig("lang") === "zhTW" ||
-                        ConfigService.getReaderConfig("lang") === "zhMO"
+                        ConfigService.getReaderConfig("lang") &&
+                        ConfigService.getReaderConfig("lang").startsWith("zh")
                       ) {
                         openExternalUrl(WEBSITE_URL + "/zh/plugin");
                       } else {
