@@ -227,6 +227,12 @@ export const upgradeConfig = (): Boolean => {
     if ("New" in shelfList) {
       ConfigService.deleteMapConfig("New", "shelfList");
     }
+    let sortedShelfList =
+      ConfigService.getAllListConfig("sortedShelfList") || [];
+    if (sortedShelfList.length === 0) {
+      ConfigService.setAllListConfig("Default", "sortedShelfList");
+      ConfigService.setAllListConfig(Object.keys(shelfList), "sortedShelfList");
+    }
 
     //upgrade noteSortCode
     let json = ConfigService.getItem("noteSortCode");

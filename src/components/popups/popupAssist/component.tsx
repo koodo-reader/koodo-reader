@@ -37,7 +37,6 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
     let originalText = this.props.originalText
       .replace(/(\r\n|\n|\r)/gm, "")
       .replace(/-/gm, "");
-    console.log(this.props.isAuthed, "this.props.isAuthed");
     if (
       (!this.state.sumService ||
         this.props.plugins.findIndex(
@@ -84,7 +83,6 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
           ConfigService.getReaderConfig("sumTarget") ||
             getDefaultTransTarget(plugin.langList),
           (result) => {
-            console.log(result);
             if (result && result.text) {
               if (isFirst) {
                 this.setState({
@@ -158,15 +156,7 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
   };
 
   render() {
-    console.log(this.props.plugins, "this.props.plugins");
     const renderSumBox = () => {
-      console.log(
-        this.props.plugins.filter((item) => item.type === "assistant")
-      );
-      console.log(
-        this.props.plugins.find((item) => item.key === this.state.sumService)
-          ?.langList
-      );
       return (
         <div className="dict-container">
           <div className="dict-service-container">
@@ -215,11 +205,9 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
                 let plugin = this.props.plugins.find(
                   (item) => item.key === this.state.sumService
                 );
-                console.log(plugin, "plugin435345");
                 if (!plugin) {
                   return;
                 }
-                console.log(plugin.langList, "plugin.langList");
                 this.setState(
                   {
                     sumTarget:

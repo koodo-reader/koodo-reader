@@ -12,6 +12,7 @@ import "./index.css";
 import Book from "../../models/Book";
 import DatabaseService from "../../utils/storage/databaseService";
 import BookUtil from "../../utils/file/bookUtil";
+import { parse } from "path";
 
 let lock = false; //prevent from clicking too fasts
 let throttleTime =
@@ -232,31 +233,72 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
               <span className="icon-zoom-in reader-setting-icon"></span>
             </div>
             {this.state.isShowScale && (
-              <input
-                className="input-progress"
-                value={this.state.scale}
-                type="range"
-                max={1.5}
-                min={0.5}
-                step={0.1}
-                onInput={(event: any) => {
-                  const scale = event.target.value;
-                  ConfigService.setReaderConfig("scale", scale);
-                }}
-                onChange={(event) => {
-                  this.setState({ scale: event.target.value });
-                }}
-                onMouseUp={() => {
-                  BookUtil.reloadBooks();
-                }}
-                style={{
-                  position: "absolute",
-                  top: "18px",
-                  right: "100px",
-                  zIndex: 100,
-                  width: "120px",
-                }}
-              />
+              <div className="scale-container">
+                <div
+                  style={{
+                    position: "absolute",
+                    top: "7px",
+                    right: "190px",
+                    zIndex: 100,
+                    width: "120px",
+                  }}
+                >
+                  <input
+                    className="input-value"
+                    defaultValue={
+                      ConfigService.getReaderConfig("scale")
+                        ? parseFloat(ConfigService.getReaderConfig("scale")) *
+                          100
+                        : 100
+                    }
+                    type="number"
+                    onInput={(event: any) => {
+                      let fieldVal = event.target.value;
+                      ConfigService.setReaderConfig(
+                        "scale",
+                        parseFloat(fieldVal) / 100 + ""
+                      );
+                    }}
+                    onChange={(event) => {
+                      let fieldVal = event.target.value;
+                      ConfigService.setReaderConfig(
+                        "scale",
+                        parseFloat(fieldVal) / 100 + ""
+                      );
+                    }}
+                    onBlur={(event) => {
+                      BookUtil.reloadBooks();
+                    }}
+                  />
+                  <span> %</span>
+                </div>
+
+                <input
+                  className="input-progress"
+                  value={this.state.scale}
+                  type="range"
+                  max={1.5}
+                  min={0.5}
+                  step={0.01}
+                  onInput={(event: any) => {
+                    const scale = event.target.value;
+                    ConfigService.setReaderConfig("scale", scale);
+                  }}
+                  onChange={(event) => {
+                    this.setState({ scale: event.target.value });
+                  }}
+                  onMouseUp={() => {
+                    BookUtil.reloadBooks();
+                  }}
+                  style={{
+                    position: "absolute",
+                    top: "18px",
+                    right: "100px",
+                    zIndex: 100,
+                    width: "120px",
+                  }}
+                />
+              </div>
             )}
           </>
         )}

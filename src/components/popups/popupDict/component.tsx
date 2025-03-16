@@ -43,7 +43,6 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
     if (ConfigService.getReaderConfig("isLemmatizeWord") === "yes") {
       originalText = originalText;
     }
-    console.log(this.props.isAuthed, "this.props.isAuthed");
     if (
       (!this.state.dictService ||
         this.props.plugins.findIndex(
@@ -148,7 +147,6 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
   };
 
   render() {
-    console.log(this.props.plugins, "this.props.plugins");
     const renderDictBox = () => {
       return (
         <div className="dict-container">

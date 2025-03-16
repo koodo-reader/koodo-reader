@@ -27,6 +27,7 @@ class AddDialog extends Component<AddDialogProps, AddDialogState> {
         toast(this.props.t("Duplicate shelf"));
         return;
       }
+      ConfigService.setListConfig(shelfTitle, "sortedShelfList");
     }
     if (!shelfTitle) {
       toast(this.props.t("Shelf Title is Empty"));

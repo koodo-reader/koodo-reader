@@ -94,7 +94,6 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
         ConfigService.getReaderConfig("transTarget") ||
           getDefaultTransTarget(plugin.langList),
         (result) => {
-          console.log(result);
           if (result && result.text) {
             if (isFirst) {
               this.setState({
