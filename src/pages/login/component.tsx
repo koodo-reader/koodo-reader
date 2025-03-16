@@ -6,7 +6,10 @@ import { withRouter } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 import { loginList } from "../../constants/loginList";
 import { openExternalUrl, removeSearchParams } from "../../utils/common";
-import { LoginHelper } from "../../assets/lib/kookit-extra-browser.min";
+import {
+  ConfigService,
+  LoginHelper,
+} from "../../assets/lib/kookit-extra-browser.min";
 import { isElectron } from "react-device-detect";
 import { driveList } from "../../constants/driveList";
 import { loginRegister } from "../../utils/request/user";
@@ -357,6 +360,15 @@ class Login extends React.Component<LoginProps, LoginState> {
                       <div className="login-sync-icon-container">
                         <span className={"icon-add login-sync-icon"}></span>
                       </div>
+                      {ConfigService.getReaderConfig("lang") &&
+                        ConfigService.getReaderConfig("lang").startsWith(
+                          "zh"
+                        ) &&
+                        item.value === "webdav" && (
+                          <div className="login-sync-text">
+                            {this.props.t("Recommended (use with Nutstore)")}
+                          </div>
+                        )}
                       <div className="login-sync-subtitle">
                         <div>
                           {item.support.map((support) => {

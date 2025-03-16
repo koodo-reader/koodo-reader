@@ -126,6 +126,14 @@
   position: relative;
   cursor: pointer;
 }
+.login-sync-text {
+  font-size: 12px;
+  color: #585858;
+  font-weight: bold;
+  text-align: left;
+  margin: 10px;
+  margin-top: -5px;
+}
 .login-sync-container {
   width: 90%;
   height: 50%;

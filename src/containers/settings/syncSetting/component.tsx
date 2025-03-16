@@ -400,9 +400,8 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                   this.props.settingDrive === "ftp" ||
                   this.props.settingDrive === "s3compatible" ||
                   this.props.settingDrive === "sftp") &&
-                  (ConfigService.getReaderConfig("lang") === "zhCN" ||
-                    ConfigService.getReaderConfig("lang") === "zhTW" ||
-                    ConfigService.getReaderConfig("lang") === "zhMO") && (
+                  ConfigService.getReaderConfig("lang") &&
+                  ConfigService.getReaderConfig("lang").startsWith("zh") && (
                     <div
                       className="voice-add-cancel"
                       style={{ borderWidth: 0 }}
