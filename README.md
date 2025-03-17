@@ -48,7 +48,7 @@
   - Hyper Text (**.html**, **.xml**, **.xhtml**, **.mhtml**, **.htm**)
 - Platform support: **Windows**, **macOS**, **Linux**, **Android**, **iOS** and **Web**
 - Utilize **OneDrive**, **Google Drive**, **Dropbox**, **MEGA**, **pCloud**, **Aliyun Drive**, **Box**, **FTP**, **SFTP**, **WebDAV**, **Object Storage** to sync and backup your data.
-- AI Translation, AI Dictionary, AI Summary
+- AI Translation, AI Dictionary, AI Summarization
 - Single-column, two-column, or continuous scrolling layouts
 - Text-to-speech, translation, dictionary, touch screen support, batch import
 - Add bookmarks, notes, highlights to your books
