@@ -77,6 +77,12 @@ class AccountSetting extends React.Component<
       loginConfig: {},
     };
   }
+  componentDidMount(): void {
+    if (this.props.isAuthed) {
+      this.props.handleFetchLoginOptionList();
+      this.props.handleFetchUserInfo();
+    }
+  }
   handleRest = (_bool: boolean) => {
     toast.success(this.props.t("Change successful"));
   };

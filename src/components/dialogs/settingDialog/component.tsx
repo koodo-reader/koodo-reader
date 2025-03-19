@@ -78,10 +78,6 @@ class SettingDialog extends React.Component<
     this.loadFont();
     this.props.handleFetchDataSourceList();
     this.props.handleFetchDefaultSyncOption();
-    if (this.props.isAuthed) {
-      this.props.handleFetchLoginOptionList();
-      this.props.handleFetchUserInfo();
-    }
   }
   loadFont = () => {
     if (dropdownList[0].option.length <= 2) {
