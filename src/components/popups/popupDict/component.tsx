@@ -89,6 +89,10 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
           plugin.config
         );
       } else if (this.props.isAuthed) {
+        this.setState({
+          dictService: "official-ai-dict-plugin",
+          isAddNew: false,
+        });
         dictText = await getDictText(
           text,
           this.state.dictTarget === "en" ? "eng" : this.state.dictTarget,

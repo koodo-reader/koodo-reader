@@ -72,6 +72,11 @@ class FeedbackDialog extends Component<
       this.setState({ isSending: false });
       return;
     }
+    if (email === "") {
+      toast(this.props.t("Email can't be empty"));
+      this.setState({ isSending: false });
+      return;
+    }
     toast.loading(this.props.t("Sending"), { id: "sending-id" });
     let version = packageInfo.version;
     const os = window.require("os");
@@ -215,9 +220,7 @@ class FeedbackDialog extends Component<
 
             <textarea
               name="email"
-              placeholder={this.props.t(
-                "Your email(optional), We may contact you for further investigation"
-              )}
+              placeholder={this.props.t("Your email")}
               id="feedback-dialog-email-box"
               className="feedback-dialog-content-box"
             />

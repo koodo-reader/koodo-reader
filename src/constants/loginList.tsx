@@ -11,12 +11,12 @@ export const loginList = [
     icon: "icon-google",
     fontsize: "17px",
   },
-  // {
-  //   label: "Facebook",
-  //   value: "facebook",
-  //   icon: "icon-facebook",
-  //   fontsize: "20px",
-  // },
+  {
+    label: "Email",
+    value: "email",
+    icon: "icon-email",
+    fontsize: "20px",
+  },
   {
     label: "Microsoft",
     value: "microsoft",

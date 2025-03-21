@@ -13,6 +13,7 @@ import {
 } from "../../../utils/common";
 import { getStorageLocation } from "../../../utils/common";
 import {
+  CommonTool,
   ConfigService,
   KookitConfig,
   LoginHelper,
@@ -34,47 +35,11 @@ class AccountSetting extends React.Component<
   constructor(props: SettingInfoProps) {
     super(props);
     this.state = {
-      isTouch: ConfigService.getReaderConfig("isTouch") === "yes",
-      isImportPath: ConfigService.getReaderConfig("isImportPath") === "yes",
-      isMergeWord: ConfigService.getReaderConfig("isMergeWord") === "yes",
-      isPreventTrigger:
-        ConfigService.getReaderConfig("isPreventTrigger") === "yes",
-      isAutoFullscreen:
-        ConfigService.getReaderConfig("isAutoFullscreen") === "yes",
-      isPreventAdd: ConfigService.getReaderConfig("isPreventAdd") === "yes",
-      isLemmatizeWord:
-        ConfigService.getReaderConfig("isLemmatizeWord") === "yes",
-      isOpenBook: ConfigService.getReaderConfig("isOpenBook") === "yes",
-      isExpandContent:
-        ConfigService.getReaderConfig("isExpandContent") === "yes",
-      isDisablePopup: ConfigService.getReaderConfig("isDisablePopup") === "yes",
-      isDisableTrashBin:
-        ConfigService.getReaderConfig("isDisableTrashBin") === "yes",
-      isDeleteShelfBook:
-        ConfigService.getReaderConfig("isDeleteShelfBook") === "yes",
-      isHideShelfBook:
-        ConfigService.getReaderConfig("isHideShelfBook") === "yes",
-      isPreventSleep: ConfigService.getReaderConfig("isPreventSleep") === "yes",
-      isOpenInMain: ConfigService.getReaderConfig("isOpenInMain") === "yes",
-      isDisableUpdate:
-        ConfigService.getReaderConfig("isDisableUpdate") === "yes",
-      isPrecacheBook: ConfigService.getReaderConfig("isPrecacheBook") === "yes",
-      isDisableMobilePrecache:
-        ConfigService.getReaderConfig("isDisableMobilePrecache") === "yes",
-      appSkin: ConfigService.getReaderConfig("appSkin"),
-      isUseBuiltIn: ConfigService.getReaderConfig("isUseBuiltIn") === "yes",
-      isKeepLocal: ConfigService.getReaderConfig("isKeepLocal") === "yes",
-      isDisableCrop: ConfigService.getReaderConfig("isDisableCrop") === "yes",
-      isDisablePDFCover:
-        ConfigService.getReaderConfig("isDisablePDFCover") === "yes",
-      currentThemeIndex: _.findLastIndex(themeList, {
-        name: ConfigService.getReaderConfig("themeColor"),
-      }),
-      storageLocation: getStorageLocation() || "",
       isAddNew: false,
       settingLogin: "",
-      driveConfig: {},
       loginConfig: {},
+      isSendingCode: false,
+      countdown: 0,
     };
   }
   componentDidMount(): void {
@@ -145,6 +110,7 @@ class AccountSetting extends React.Component<
     this.setState({ settingLogin: "" });
   };
   handleConfirmLoginOption = async () => {
+    console.log(this.state.loginConfig);
     if (!this.state.loginConfig.token || !this.state.settingLogin) {
       toast.error(this.props.t("Missing parameters") + this.props.t("Token"));
       return;
@@ -229,7 +195,9 @@ class AccountSetting extends React.Component<
   render() {
     return (
       <>
-        {this.state.settingLogin && (
+        {(this.state.settingLogin === "google" ||
+          this.state.settingLogin === "microsoft" ||
+          this.state.settingLogin === "github") && (
           <div
             className="voice-add-new-container"
             style={{
@@ -291,6 +259,160 @@ class AccountSetting extends React.Component<
                   <Trans>Authorize</Trans>
                 </div>
               </div>
+            </div>
+          </div>
+        )}
+        {this.state.settingLogin === "email" && (
+          <div
+            className="voice-add-new-container"
+            style={{
+              marginLeft: "25px",
+              width: "calc(100% - 50px)",
+              fontWeight: 500,
+            }}
+          >
+            <input
+              type={"text"}
+              name={"email"}
+              placeholder={this.props.t("Enter your email")}
+              onChange={(e) => {
+                if (e.target.value) {
+                  this.setState((prevState) => ({
+                    loginConfig: {
+                      ...prevState.loginConfig,
+                      ["email"]: e.target.value.trim(),
+                    },
+                  }));
+                }
+              }}
+              onContextMenu={() => {
+                handleContextMenu("token-dialog-email-box", true);
+              }}
+              id={"token-dialog-email-box"}
+              className="token-dialog-username-box"
+            />
+            <input
+              type={"text"}
+              name={"code"}
+              placeholder={this.props.t("Enter code")}
+              onChange={(e) => {
+                if (e.target.value) {
+                  this.setState((prevState) => ({
+                    loginConfig: {
+                      ...prevState.loginConfig,
+                      ["token"]:
+                        this.state.loginConfig.email +
+                        "#" +
+                        e.target.value.trim(),
+                    },
+                  }));
+                }
+              }}
+              onContextMenu={() => {
+                handleContextMenu("token-dialog-email-box", true);
+              }}
+              id={"token-dialog-email-box"}
+              className="token-dialog-username-box"
+            />
+            <div className="token-dialog-button-container">
+              <div
+                className="voice-add-confirm"
+                onClick={async () => {
+                  this.handleConfirmLoginOption();
+                }}
+              >
+                <Trans>Bind</Trans>
+              </div>
+              <div className="voice-add-button-container">
+                <div
+                  className="voice-add-cancel"
+                  onClick={() => {
+                    this.handleCancelLoginOption();
+                  }}
+                >
+                  <Trans>Cancel</Trans>
+                </div>
+
+                <div
+                  className="voice-add-confirm"
+                  style={{
+                    marginRight: "10px",
+                    opacity: this.state.isSendingCode ? 0.6 : 1,
+                  }}
+                  onClick={async () => {
+                    if (!this.state.loginConfig.email) {
+                      toast.error(this.props.t("Enter your email"));
+                      return;
+                    }
+                    if (this.state.isSendingCode || this.state.countdown) {
+                      return;
+                    }
+                    this.setState({ isSendingCode: true });
+                    toast.loading(this.props.t("Sending"), {
+                      id: "send-email-code",
+                    });
+                    let userRequest = await getUserRequest();
+                    let response = await userRequest.sendEmailCode({
+                      email: this.state.loginConfig.email,
+                    });
+                    if (response.code === 200) {
+                      toast.success(this.props.t("Send successfully"), {
+                        id: "send-email-code",
+                      });
+                      this.setState({ isSendingCode: false });
+                      let countdown = 60;
+                      let timer = setInterval(() => {
+                        countdown--;
+                        this.setState({ countdown });
+                        if (countdown === 0) {
+                          clearInterval(timer);
+                        }
+                      }, 1000);
+                    } else {
+                      this.setState({ isSendingCode: false });
+                      toast.error(
+                        this.props.t("Failed to send code, error code") +
+                          ": " +
+                          response.msg,
+                        { id: "send-email-code" }
+                      );
+                    }
+                  }}
+                >
+                  {this.state.countdown ? (
+                    this.state.countdown + "s"
+                  ) : this.state.isSendingCode ? (
+                    <Trans>Sending</Trans>
+                  ) : (
+                    <Trans>Send code</Trans>
+                  )}
+                </div>
+              </div>
+            </div>
+            <div
+              style={{
+                fontSize: "13px",
+                lineHeight: "20px",
+                marginTop: "-15px",
+                opacity: 0.6,
+                color: "rgb(231, 69, 69)",
+              }}
+            >
+              {this.props.t(
+                "Due to the limited number of emails we can send each day, to prevent login issues after reaching the sending limit, please make sure to add additional login options as backups after logging in."
+              )}
+            </div>
+            <div
+              style={{
+                fontSize: "13px",
+                lineHeight: "16px",
+                opacity: 0.6,
+                marginTop: "10px",
+              }}
+            >
+              {this.props.t("Supported email providers")}
+              <br />
+              {CommonTool.EmailProviders.join(", ")}
             </div>
           </div>
         )}

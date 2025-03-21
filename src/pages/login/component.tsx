@@ -5,14 +5,19 @@ import { getLoginParamsFromUrl } from "../../utils/file/common";
 import { withRouter } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 import { loginList } from "../../constants/loginList";
-import { openExternalUrl, removeSearchParams } from "../../utils/common";
 import {
+  handleContextMenu,
+  openExternalUrl,
+  removeSearchParams,
+} from "../../utils/common";
+import {
+  CommonTool,
   ConfigService,
   LoginHelper,
 } from "../../assets/lib/kookit-extra-browser.min";
 import { isElectron } from "react-device-detect";
 import { driveList } from "../../constants/driveList";
-import { loginRegister } from "../../utils/request/user";
+import { getUserRequest, loginRegister } from "../../utils/request/user";
 import SettingDialog from "../../components/dialogs/settingDialog";
 import LoadingDialog from "../../components/dialogs/loadingDialog";
 
@@ -21,6 +26,9 @@ class Login extends React.Component<LoginProps, LoginState> {
     super(props);
     this.state = {
       currentStep: 0,
+      loginConfig: {},
+      countdown: 0,
+      isSendingCode: false,
     };
   }
 
@@ -259,6 +267,10 @@ class Login extends React.Component<LoginProps, LoginState> {
                         key={item.value}
                         style={{}}
                         onClick={() => {
+                          if (item.value === "email") {
+                            this.setState({ currentStep: 5 });
+                            return;
+                          }
                           let url = LoginHelper.getAuthUrl(
                             item.value,
                             isElectron ? "desktop" : "browser"
@@ -461,6 +473,198 @@ class Login extends React.Component<LoginProps, LoginState> {
                 }}
               >
                 {this.props.t("Finish")}
+              </div>
+            </div>
+          </div>
+        )}
+        {this.state.currentStep === 5 && (
+          <div
+            className="login-container"
+            style={{
+              backgroundColor: "#dcd7c7",
+            }}
+          >
+            <div
+              className="login-cover-container"
+              style={{
+                backgroundColor: "#e4e1d8",
+              }}
+            >
+              <div className="login-logo">
+                <img
+                  src={require("../../assets/images/logo-login.png")}
+                  alt="logo"
+                  className="login-logo-img"
+                />
+              </div>
+
+              <img
+                src={require("../../assets/images/background3.png")}
+                alt="cover"
+                className="login-cover-img"
+              />
+            </div>
+            <div className="login-content-container">
+              <div
+                className="login-title"
+                style={{ marginTop: "80px", marginBottom: "50px" }}
+              >
+                {this.props.t(
+                  "Embark on your journey of exploration with Koodo Reader Pro"
+                )}
+              </div>
+              <div className="login-option-box">
+                <div>
+                  <input
+                    type={"text"}
+                    name={"email"}
+                    placeholder={this.props.t("Enter your email")}
+                    onChange={(e) => {
+                      if (e.target.value) {
+                        this.setState((prevState) => ({
+                          loginConfig: {
+                            ...prevState.loginConfig,
+                            ["email"]: e.target.value.trim(),
+                          },
+                        }));
+                      }
+                    }}
+                    onContextMenu={() => {
+                      handleContextMenu("token-dialog-email-box", true);
+                    }}
+                    id={"token-dialog-email-box"}
+                    className="login-input-container"
+                    style={{}}
+                  />
+                  <div style={{ position: "relative" }}>
+                    <input
+                      type={"text"}
+                      name={"code"}
+                      placeholder={this.props.t("Enter code")}
+                      onChange={(e) => {
+                        if (e.target.value) {
+                          this.setState((prevState) => ({
+                            loginConfig: {
+                              ...prevState.loginConfig,
+                              ["token"]: e.target.value.trim(),
+                            },
+                          }));
+                        }
+                      }}
+                      onContextMenu={() => {
+                        handleContextMenu("token-dialog-email-box", true);
+                      }}
+                      id={"token-dialog-email-box"}
+                      className="login-input-container"
+                    />
+
+                    <div
+                      className="login-manual-token"
+                      onClick={async () => {
+                        if (!this.state.loginConfig.email) {
+                          toast.error(this.props.t("Enter your email"));
+                          return;
+                        }
+                        if (this.state.isSendingCode || this.state.countdown) {
+                          return;
+                        }
+                        if (
+                          !CommonTool.EmailProviders.includes(
+                            this.state.loginConfig.email.split("@")[1]
+                          )
+                        ) {
+                          toast.error(
+                            this.props.t("Unsupported email provider")
+                          );
+                          return;
+                        }
+                        this.setState({ isSendingCode: true });
+                        toast.loading(this.props.t("Sending"), {
+                          id: "send-email-code",
+                        });
+                        let userRequest = await getUserRequest();
+                        let response = await userRequest.sendEmailCode({
+                          email: this.state.loginConfig.email,
+                        });
+                        if (response.code === 200) {
+                          toast.success(this.props.t("Send successfully"), {
+                            id: "send-email-code",
+                          });
+                          this.setState({ isSendingCode: false });
+                          let countdown = 60;
+                          let timer = setInterval(() => {
+                            countdown--;
+                            this.setState({ countdown });
+                            if (countdown === 0) {
+                              clearInterval(timer);
+                            }
+                          }, 1000);
+                        } else {
+                          this.setState({ isSendingCode: false });
+                          toast.error(
+                            this.props.t("Failed to send code, error code") +
+                              ": " +
+                              response.msg,
+                            { id: "send-email-code" }
+                          );
+                        }
+                      }}
+                      style={{
+                        position: "absolute",
+                        right: "30px",
+                        top: "30px",
+                        textAlign: "right",
+                        cursor: "pointer",
+                        fontSize: "15px",
+                      }}
+                    >
+                      {this.state.countdown ? (
+                        this.state.countdown + "s"
+                      ) : this.state.isSendingCode ? (
+                        <Trans>Sending</Trans>
+                      ) : (
+                        <Trans>Send code</Trans>
+                      )}
+                    </div>
+                  </div>
+
+                  <div
+                    className="login-manual-token"
+                    onClick={async () => {
+                      if (
+                        !this.state.loginConfig.token ||
+                        !this.state.loginConfig.email
+                      ) {
+                        toast.error(
+                          this.props.t("Missing parameters") +
+                            this.props.t("Token")
+                        );
+                        return;
+                      }
+                      this.handleLogin(
+                        this.state.loginConfig.email +
+                          "#" +
+                          this.state.loginConfig.token,
+                        "email"
+                      );
+                    }}
+                    style={{
+                      marginTop: "10px",
+                    }}
+                  >
+                    {this.props.t("Log in")}
+                  </div>
+                  <div className="login-term" style={{ opacity: 0.8 }}>
+                    {this.props.t(
+                      "Due to the limited number of emails we can send each day, to prevent login issues after reaching the sending limit, please make sure to add additional login options as backups after logging in."
+                    )}
+                  </div>
+                  <div className="login-term">
+                    {this.props.t("Supported email providers")}
+                    <br />
+                    {CommonTool.EmailProviders.join(", ")}
+                  </div>
+                </div>
               </div>
             </div>
           </div>

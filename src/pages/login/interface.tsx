@@ -12,4 +12,7 @@ export interface LoginProps extends RouteComponentProps<any> {
 
 export interface LoginState {
   currentStep: number;
+  loginConfig: any;
+  isSendingCode: boolean;
+  countdown: number;
 }
