@@ -65,19 +65,20 @@ export const getDictText = async (word: string, from: string, to: string) => {
     let dictText =
       `<p class="dict-word-type">[${i18n.t("Pronunciations")}]</p></p>` +
       (res.data[0].pronunciation ? res.data[0].pronunciation : "") +
-      `<br/>` +
-      `<div class="audio-container"><audio controls class="audio-player" controlsList="nodownload noplaybackrate"><source src="${res.data[0].audio}" type="audio/mpeg"></audio></div>` +
+      (res.data[0].audio &&
+        `<div class="audio-container"><audio controls class="audio-player" controlsList="nodownload noplaybackrate"><source src="${res.data[0].audio}" type="audio/mpeg"></audio></div>`) +
       res.data[0].meaning
         .map((item) => {
-          return `<p><p class="dict-word-type">[${
-            item.type
-          }]</p><div  style="font-weight: bold">${
-            item.definition
-          }</div><div>${item.examples
-            .map((item) => {
-              return `<p>${item.sentence}</p>` + `<p>${item.translation}</p>`;
-            })
-            .join("</div><div>")}</div></p>`;
+          return (
+            (item.type && `<p><p class="dict-word-type">[${item.type}]</p>`) +
+            `<div  style="font-weight: bold">${
+              item.definition
+            }</div><div>${item.examples
+              .map((item) => {
+                return `<p>${item.sentence}</p>` + `<p>${item.translation}</p>`;
+              })
+              .join("</div><div>")}</div></p>`
+          );
         })
         .join("") +
       `<p class="dict-learn-more">${i18n.t("Generated with AI")}</p>`;

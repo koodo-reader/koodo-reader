@@ -166,5 +166,8 @@
   overflow: hidden;
   border-radius: 15px;
   margin-right: 10px;
-  margin-top: 5px;
+  margin-left: 10px;
+  margin-top: -10px;
+  position: relative;
+  top: 10px;
 }

@@ -11,6 +11,12 @@ import i18n from "../../i18n";
 import { handleExitApp } from "./common";
 let userRequest: UserRequest;
 export const loginRegister = async (service: string, code: string) => {
+  console.log(
+    KookitConfig,
+    service,
+    code,
+    KookitConfig.LoginAuthRequest[service]
+  );
   let deviceName = detectBrowser();
   let userRequest = await getUserRequest();
   let response = await userRequest.loginRegister({

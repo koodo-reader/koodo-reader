@@ -32,33 +32,9 @@ export interface SettingInfoProps extends RouteComponentProps<any> {
   settingDrive: string;
 }
 export interface SettingInfoState {
-  isTouch: boolean;
-  isPreventTrigger: boolean;
-  isMergeWord: boolean;
-  appSkin: string;
-  storageLocation: string;
-  isImportPath: boolean;
-  isOpenBook: boolean;
-  isExpandContent: boolean;
-  isDisablePopup: boolean;
-  isDisableTrashBin: boolean;
-  isDeleteShelfBook: boolean;
-  isPreventSleep: boolean;
-  isOpenInMain: boolean;
-  isDisableUpdate: boolean;
-  isPrecacheBook: boolean;
-  isDisableMobilePrecache: boolean;
-  isKeepLocal: boolean;
-  isUseBuiltIn: boolean;
-  isDisableCrop: boolean;
-  isDisablePDFCover: boolean;
-  isAutoFullscreen: boolean;
-  isHideShelfBook: boolean;
-  isPreventAdd: boolean;
-  isLemmatizeWord: boolean;
   isAddNew: boolean;
-  currentThemeIndex: number;
-  driveConfig: any;
   loginConfig: any;
   settingLogin: string;
+  isSendingCode: boolean;
+  countdown: number;
 }

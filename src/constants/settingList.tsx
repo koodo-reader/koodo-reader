@@ -275,4 +275,9 @@ export const officialDictList = [
   { lang: "Italian", code: "ita", nativeLang: "Italian" },
   { lang: "Russian", code: "rus", nativeLang: "Russian" },
   { lang: "Portuguese", code: "por", nativeLang: "Portuguese" },
+  {
+    lang: "Classical Chinese",
+    code: "ancient",
+    nativeLang: "Classical Chinese",
+  },
 ];

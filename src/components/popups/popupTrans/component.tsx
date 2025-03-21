@@ -29,18 +29,7 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
   }
   componentDidMount() {
     let originalText = this.props.originalText.replace(/(\r\n|\n|\r)/gm, "");
-    this.setState({ originalText: originalText });
-    if (!this.state.transService) {
-      this.setState({ isAddNew: true });
-    }
-    if (
-      this.props.plugins.findIndex(
-        (item) => item.key === this.state.transService
-      ) === -1
-    ) {
-      this.setState({ isAddNew: true });
-      return;
-    }
+    this.setState({ originalText: originalText, isAddNew: true });
 
     this.handleTrans(originalText);
   }
@@ -81,6 +70,10 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
           console.error(err);
         });
     } else if (this.props.isAuthed) {
+      this.setState({
+        transService: "official-ai-trans-plugin",
+        isAddNew: false,
+      });
       let plugin = this.props.plugins.find(
         (item) => item.key === "official-ai-trans-plugin"
       );

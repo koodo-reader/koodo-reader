@@ -135,6 +135,6 @@ cat <<EOF >> $html_file
 EOF
 
 mv file_list.html $TAG.html
-./rclone copy $TAG.html r2:$BUCKET
+# ./rclone copy $TAG.html r2:$BUCKET
 ./rclone copyto $TAG.html r2:$BUCKET/latest.html
 
