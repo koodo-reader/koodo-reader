@@ -21,7 +21,6 @@ class SettingDialog extends React.Component<
     super(props);
     this.state = {
       isTouch: ConfigService.getReaderConfig("isTouch") === "yes",
-      isImportPath: ConfigService.getReaderConfig("isImportPath") === "yes",
       isMergeWord: ConfigService.getReaderConfig("isMergeWord") === "yes",
       isPreventTrigger:
         ConfigService.getReaderConfig("isPreventTrigger") === "yes",
@@ -45,12 +44,9 @@ class SettingDialog extends React.Component<
       isDisableUpdate:
         ConfigService.getReaderConfig("isDisableUpdate") === "yes",
       isPrecacheBook: ConfigService.getReaderConfig("isPrecacheBook") === "yes",
-      isDisableMobilePrecache:
-        ConfigService.getReaderConfig("isDisableMobilePrecache") === "yes",
       appSkin: ConfigService.getReaderConfig("appSkin"),
       isUseBuiltIn: ConfigService.getReaderConfig("isUseBuiltIn") === "yes",
       isKeepLocal: ConfigService.getReaderConfig("isKeepLocal") === "yes",
-      isDisableCrop: ConfigService.getReaderConfig("isDisableCrop") === "yes",
       isDisablePDFCover:
         ConfigService.getReaderConfig("isDisablePDFCover") === "yes",
       currentThemeIndex: _.findLastIndex(themeList, {

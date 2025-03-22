@@ -31,7 +31,6 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
     super(props);
     this.state = {
       isTouch: ConfigService.getReaderConfig("isTouch") === "yes",
-      isImportPath: ConfigService.getReaderConfig("isImportPath") === "yes",
       isMergeWord: ConfigService.getReaderConfig("isMergeWord") === "yes",
       isPreventTrigger:
         ConfigService.getReaderConfig("isPreventTrigger") === "yes",
@@ -60,7 +59,6 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
       appSkin: ConfigService.getReaderConfig("appSkin"),
       isUseBuiltIn: ConfigService.getReaderConfig("isUseBuiltIn") === "yes",
       isKeepLocal: ConfigService.getReaderConfig("isKeepLocal") === "yes",
-      isDisableCrop: ConfigService.getReaderConfig("isDisableCrop") === "yes",
       isDisablePDFCover:
         ConfigService.getReaderConfig("isDisablePDFCover") === "yes",
       currentThemeIndex: _.findLastIndex(themeList, {

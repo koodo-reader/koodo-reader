@@ -66,6 +66,11 @@ export const appearanceSettingList = [
     title: "Don't crop book cover",
     propName: "isDisableCrop",
   },
+  {
+    isElectron: false,
+    title: "Overwrite the default link style in the book",
+    propName: "isOverwriteLink",
+  },
 ];
 export const syncSettingList = [
   {

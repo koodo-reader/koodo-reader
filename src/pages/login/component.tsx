@@ -552,9 +552,9 @@ class Login extends React.Component<LoginProps, LoginState> {
                         }
                       }}
                       onContextMenu={() => {
-                        handleContextMenu("token-dialog-email-box", true);
+                        handleContextMenu("token-dialog-token-box", true);
                       }}
-                      id={"token-dialog-email-box"}
+                      id={"token-dialog-token-box"}
                       className="login-input-container"
                     />
 

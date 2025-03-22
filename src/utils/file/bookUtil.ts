@@ -20,7 +20,7 @@ declare var window: any;
 class BookUtil {
   static addBook(key: string, format: string, buffer: ArrayBuffer) {
     // for both original books and cached boks
-    this.uploadBook(key, format);
+
     if (isElectron) {
       const fs = window.require("fs");
       const path = window.require("path");
@@ -33,11 +33,13 @@ class BookUtil {
           path.join(dataPath, "book", key + "." + format),
           Buffer.from(buffer)
         );
+        this.uploadBook(key, format);
       } catch (error) {
         throw error;
       }
     } else {
-      return localforage.setItem(key, buffer);
+      localforage.setItem(key, buffer);
+      this.uploadBook(key, format);
     }
   }
   static deleteBook(key: string, format: string) {
@@ -172,18 +174,26 @@ class BookUtil {
             id: "offline-book",
           });
         } else {
-          toast.error(i18n.t("Offline failed"), {
-            id: "offline-book",
-          });
-          if (ConfigService.getItem("defaultSyncOption") === "adrive") {
-            toast.error(
-              i18n.t(
-                "Aliyun Drive imposes strict limits on concurrent downloads. It is recommended that you wait 10 seconds before attempting to download again."
-              ),
-              {
-                id: "offline-book",
-              }
-            );
+          let result = await this.downloadCacheBook(book.key);
+          if (result) {
+            toast.success(i18n.t("Offline successful"), {
+              id: "offline-book",
+            });
+          } else {
+            toast.error(i18n.t("Offline failed"), {
+              id: "offline-book",
+            });
+            if (ConfigService.getItem("defaultSyncOption") === "adrive") {
+              toast.error(
+                i18n.t(
+                  "Aliyun Drive imposes strict limits on concurrent downloads. It is recommended that you wait 10 seconds before attempting to download again."
+                ),
+                {
+                  id: "offline-book",
+                }
+              );
+            }
+            return;
           }
         }
       } else {
@@ -259,7 +269,7 @@ class BookUtil {
   static async downloadCacheBook(key: string) {
     let service = ConfigService.getItem("defaultSyncOption");
     if (!service) {
-      return;
+      return false;
     }
     if (isElectron) {
       const { ipcRenderer } = window.require("electron");
@@ -275,16 +285,18 @@ class BookUtil {
       });
       if (!result) {
         console.error("download cache failed");
-        return;
+        return false;
       }
+      return true;
     } else {
       let syncUtil = await SyncService.getSyncUtil();
       let cache = await syncUtil.downloadFile("cache-" + key + ".zip", "book");
       if (!cache) {
         console.error("download cache failed");
-        return;
+        return false;
       }
       await this.addBook("cache-" + key, "zip", cache);
+      return true;
     }
   }
   static async uploadCacheBook(key: string) {

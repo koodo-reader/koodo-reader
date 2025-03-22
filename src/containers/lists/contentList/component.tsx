@@ -45,6 +45,7 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
     }
   }
   async handleJump(item: any) {
+    console.log(item, "item");
     await this.props.htmlBook.rendition.goToChapter(
       item.index,
       item.href,
