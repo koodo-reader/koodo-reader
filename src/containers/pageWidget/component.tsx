@@ -39,6 +39,7 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
   };
   async handlePageNum(rendition) {
     let pageInfo = await rendition.getProgress();
+    console.log(pageInfo, "pageInfo");
     this.setState({
       prevPage: this.state.isSingle
         ? pageInfo.currentPage

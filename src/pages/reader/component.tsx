@@ -170,7 +170,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
                 setTimeout(() => (lock = false), throttleTime);
               }}
               style={{
-                left: this.props.isNavLocked ? 320 : 20,
+                left: this.props.isNavLocked ? 315 : 15,
               }}
             >
               <span className="icon-dropdown previous-chapter-single"></span>
@@ -197,7 +197,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
                 this.props.handleOpenMenu(true);
               }}
               style={{
-                right: "70px",
+                bottom: "55px",
                 transform: "rotate(0deg)",
                 fontWeight: "bold",
                 fontSize: "17px",

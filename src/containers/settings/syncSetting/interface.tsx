@@ -37,7 +37,6 @@ export interface SettingInfoState {
   isMergeWord: boolean;
   appSkin: string;
   storageLocation: string;
-  isImportPath: boolean;
   isOpenBook: boolean;
   isExpandContent: boolean;
   isDisablePopup: boolean;
@@ -50,7 +49,6 @@ export interface SettingInfoState {
   isDisableMobilePrecache: boolean;
   isKeepLocal: boolean;
   isUseBuiltIn: boolean;
-  isDisableCrop: boolean;
   isDisablePDFCover: boolean;
   isAutoFullscreen: boolean;
   isHideShelfBook: boolean;

@@ -176,8 +176,8 @@
   height: 40px !important;
   border-radius: 50%;
   position: absolute;
-  bottom: 15px;
-  left: 20px;
+  bottom: 10px;
+  left: 10px;
   font-size: 30px;
   transform: rotate(90deg);
   cursor: pointer;
@@ -192,8 +192,8 @@
   height: 40px;
   border-radius: 50%;
   position: absolute;
-  bottom: 15px;
-  right: 20px;
+  bottom: 10px;
+  right: 15px;
   transform: rotate(-90deg);
   cursor: pointer;
   opacity: 0.2;

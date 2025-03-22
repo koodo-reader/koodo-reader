@@ -309,10 +309,10 @@ class AccountSetting extends React.Component<
                 }
               }}
               onContextMenu={() => {
-                handleContextMenu("token-dialog-email-box", true);
+                handleContextMenu("token-dialog-token-box", true);
               }}
               id={"token-dialog-email-box"}
-              className="token-dialog-username-box"
+              className="token-dialog-token-box"
             />
             <div className="token-dialog-button-container">
               <div

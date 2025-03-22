@@ -49,12 +49,9 @@ class GeneralSetting extends React.Component<
       isDisableUpdate:
         ConfigService.getReaderConfig("isDisableUpdate") === "yes",
       isPrecacheBook: ConfigService.getReaderConfig("isPrecacheBook") === "yes",
-      isDisableMobilePrecache:
-        ConfigService.getReaderConfig("isDisableMobilePrecache") === "yes",
       appSkin: ConfigService.getReaderConfig("appSkin"),
       isUseBuiltIn: ConfigService.getReaderConfig("isUseBuiltIn") === "yes",
       isKeepLocal: ConfigService.getReaderConfig("isKeepLocal") === "yes",
-      isDisableCrop: ConfigService.getReaderConfig("isDisableCrop") === "yes",
       isDisablePDFCover:
         ConfigService.getReaderConfig("isDisablePDFCover") === "yes",
       currentThemeIndex: _.findLastIndex(themeList, {
