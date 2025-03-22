@@ -64,7 +64,8 @@ export const scrollContents = (chapterTitle: string, chapterHref: string) => {
   let contentList = contentBody.getElementsByClassName("book-content-name");
   let targetContent = Array.from(contentList).filter((item) => {
     item.setAttribute("style", "");
-    return item.textContent === chapterTitle;
+    let dataHref = (item as any).getAttribute("data-href");
+    return item.textContent === chapterTitle && dataHref === chapterHref;
   });
   if (targetContent.length > 0) {
     contentBody.scrollTo({

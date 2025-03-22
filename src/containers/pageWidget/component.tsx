@@ -23,6 +23,7 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
     if (nextProps.htmlBook !== this.props.htmlBook && nextProps.htmlBook) {
       await this.handlePageNum(nextProps.htmlBook.rendition);
       nextProps.htmlBook.rendition.on("page-changed", async () => {
+        console.log("page-changed");
         await this.handlePageNum(nextProps.htmlBook.rendition);
         this.handleLocation();
       });
@@ -35,7 +36,11 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
       position,
       "recordLocation"
     );
-    scrollContents(position.chapterTitle, position.chapterHref);
+    console.log(position, "position");
+    this.props.handleCurrentChapter(position.chapterTitle);
+    setTimeout(() => {
+      scrollContents(position.chapterTitle, position.chapterHref);
+    }, 1000);
   };
   async handlePageNum(rendition) {
     let pageInfo = await rendition.getProgress();

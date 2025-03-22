@@ -7,7 +7,7 @@ import BookUtil from "../file/bookUtil";
 declare var window: any;
 
 let throttleTime =
-  ConfigService.getReaderConfig("isSliding") === "yes" ? 1000 : 400;
+  ConfigService.getReaderConfig("isSliding") === "yes" ? 1000 : 100;
 
 export const getSelection = () => {
   let doc = getIframeDoc();
