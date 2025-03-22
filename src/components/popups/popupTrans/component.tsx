@@ -25,6 +25,7 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
       transTarget: ConfigService.getReaderConfig("transTarget"),
       transSource: ConfigService.getReaderConfig("transSource"),
       isAddNew: false,
+      isFinishOutput: false,
     };
   }
   componentDidMount() {
@@ -34,7 +35,7 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
     this.handleTrans(originalText);
   }
 
-  handleTrans = (text: string) => {
+  handleTrans = async (text: string) => {
     if (
       this.state.transService &&
       this.state.transService !== "official-ai-trans-plugin"
@@ -81,12 +82,16 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
         return;
       }
       let isFirst = true;
-      getTransStream(
+      await getTransStream(
         text,
         ConfigService.getReaderConfig("transSource") || "Automatic",
         ConfigService.getReaderConfig("transTarget") ||
           getDefaultTransTarget(plugin.langList),
         (result) => {
+          if (result && result.done) {
+            this.setState({ isFinishOutput: true });
+            return;
+          }
           if (result && result.text) {
             if (isFirst) {
               this.setState({
@@ -101,6 +106,7 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
           }
         }
       );
+      this.setState({ isFinishOutput: true });
     }
   };
   handleChangeService(target: string) {
@@ -342,7 +348,18 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
                   <div className="original-text">{this.state.originalText}</div>
                 </div>
                 <div className="trans-text-box">
-                  <div className="trans-text">{this.state.translatedText}</div>
+                  <div className="trans-text">
+                    {this.state.translatedText}
+                    {this.state.transService.includes("ai-trans") &&
+                      this.state.isFinishOutput && (
+                        <p
+                          className="dict-learn-more"
+                          style={{ color: "#f16464" }}
+                        >
+                          {this.props.t("Generated with AI")}
+                        </p>
+                      )}
+                  </div>
                 </div>
               </div>
             </>

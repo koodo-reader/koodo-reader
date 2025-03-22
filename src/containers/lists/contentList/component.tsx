@@ -74,6 +74,7 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
       "recordLocation",
       {}
     );
+    console.log(bookLocation, "bookLocation43534");
     const renderContentList = (items: any, level: number) => {
       level++;
       return items.map((item: any, index: number) => {
@@ -94,7 +95,12 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
                   style={
                     this.state.currentIndex === index ||
                     item.subitems.filter(
-                      (item) => item.href === bookLocation.chapterHref
+                      (item) =>
+                        item.href === bookLocation.chapterHref ||
+                        (bookLocation.chapterHref &&
+                          bookLocation.chapterHref.includes(
+                            item.href.split("#")[0]
+                          ))
                     ).length > 0
                       ? {}
                       : { transform: "rotate(-90deg)" }
@@ -107,6 +113,7 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
                 this.handleJump(item);
               }}
               className="book-content-name"
+              data-href={item.href}
             >
               {item.label}
             </span>
@@ -115,8 +122,14 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
             (this.state.currentIndex === index ||
               level > 2 ||
               this.state.isExpandContent ||
+              this.props.currentBook.format === "PDF" ||
+              (bookLocation.chapterHref &&
+                bookLocation.chapterHref.includes(item.href.split("#")[0])) ||
               item.subitems.filter(
-                (item) => item.href === bookLocation.chapterHref
+                (item) =>
+                  item.href === bookLocation.chapterHref ||
+                  (bookLocation.chapterHref &&
+                    bookLocation.chapterHref.includes(item.href.split("#")[0]))
               ).length > 0) ? (
               <ul>{renderContentList(item.subitems, level)}</ul>
             ) : null}
