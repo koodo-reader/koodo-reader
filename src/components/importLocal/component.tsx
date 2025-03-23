@@ -119,7 +119,6 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
 
       this.props.handleReadingBook(book);
       ConfigService.setListConfig(book.key, "recentBooks");
-      console.log(book);
       DatabaseService.saveRecord(book, "books")
         .then(() => {
           this.props.handleFetchBooks();
@@ -163,7 +162,6 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
     let bookBlob = new Blob([bookBuffer], {
       type: CommonTool.getMimeType(book.format.toLowerCase()),
     });
-    console.log(bookBlob, "bookBlob");
     await syncUtil.uploadFile(
       book.key + "." + book.format.toLowerCase(),
       "book",
