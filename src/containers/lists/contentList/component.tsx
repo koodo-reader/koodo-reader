@@ -45,7 +45,6 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
     }
   }
   async handleJump(item: any) {
-    console.log(item, "item");
     await this.props.htmlBook.rendition.goToChapter(
       item.index,
       item.href,
@@ -74,7 +73,6 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
       "recordLocation",
       {}
     );
-    console.log(bookLocation, "bookLocation43534");
     const renderContentList = (items: any, level: number) => {
       level++;
       return items.map((item: any, index: number) => {

@@ -110,7 +110,6 @@ class AccountSetting extends React.Component<
     this.setState({ settingLogin: "" });
   };
   handleConfirmLoginOption = async () => {
-    console.log(this.state.loginConfig);
     if (!this.state.loginConfig.token || !this.state.settingLogin) {
       toast.error(this.props.t("Missing parameters") + this.props.t("Token"));
       return;
