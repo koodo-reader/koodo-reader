@@ -286,13 +286,13 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
                                 : false
                             }
                           >
-                            {
+                            {this.props.t(
                               Object.values(
                                 this.props.plugins.find(
                                   (item) => item.key === this.state.transService
                                 )?.langList as any[]
                               )[index]
-                            }
+                            )}
                           </option>
                         );
                       })}
@@ -330,13 +330,13 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
                                 : false
                             }
                           >
-                            {
+                            {this.props.t(
                               Object.values(
                                 this.props.plugins.find(
                                   (item) => item.key === this.state.transService
                                 )?.langList as any[]
                               )[index]
-                            }
+                            )}
                           </option>
                         );
                       })}
