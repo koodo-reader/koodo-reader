@@ -114,7 +114,9 @@ class AccountSetting extends React.Component<
       toast.error(this.props.t("Missing parameters") + this.props.t("Token"));
       return;
     }
-    this.props.handleLoadingDialog(true);
+    toast.loading(this.props.t("Logging in"), {
+      id: "bind-login-option",
+    });
     let res = { code: 200, msg: "success" };
     if (this.props.isAuthed) {
       let userRequest = await getUserRequest();
@@ -133,15 +135,17 @@ class AccountSetting extends React.Component<
       );
     }
     if (res.code === 200) {
-      this.props.handleLoadingDialog(false);
-      toast.success(this.props.t("Login successful"));
+      toast.success(this.props.t("Login successful"), {
+        id: "bind-login-option",
+      });
       this.props.handleFetchAuthed();
       this.props.handleFetchLoginOptionList();
       this.props.handleFetchUserInfo();
       this.setState({ settingLogin: "" });
     } else {
-      this.props.handleLoadingDialog(false);
-      toast.error(this.props.t("Login failed, error code") + ": " + res.msg);
+      toast.error(this.props.t("Login failed, error code") + ": " + res.msg, {
+        id: "bind-login-option",
+      });
     }
   };
 
@@ -308,10 +312,10 @@ class AccountSetting extends React.Component<
                 }
               }}
               onContextMenu={() => {
-                handleContextMenu("token-dialog-token-box", true);
+                handleContextMenu("token-dialog-code-box", true);
               }}
-              id={"token-dialog-email-box"}
-              className="token-dialog-token-box"
+              id={"token-dialog-code-box"}
+              className="token-dialog-username-box"
             />
             <div className="token-dialog-button-container">
               <div

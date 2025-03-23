@@ -66,11 +66,6 @@ export const appearanceSettingList = [
     title: "Don't crop book cover",
     propName: "isDisableCrop",
   },
-  {
-    isElectron: false,
-    title: "Overwrite the default link style in the book",
-    propName: "isOverwriteLink",
-  },
 ];
 export const syncSettingList = [
   {
@@ -135,6 +130,11 @@ export const readingSettingList = [
     title: "No popup when selecting texts",
     desc: "Turn it on when you want Koodo to work with other third-party translation service, right clicking on the selected text will trigger popup again",
     propName: "isDisablePopup",
+  },
+  {
+    isElectron: false,
+    title: "Overwrite the default link style in the book",
+    propName: "isOverwriteLink",
   },
   // {
   //   isElectron: true,

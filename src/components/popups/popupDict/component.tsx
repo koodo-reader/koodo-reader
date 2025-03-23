@@ -228,7 +228,7 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
                         this.state.dictTarget === item.code ? true : false
                       }
                     >
-                      {item["nativeLang"]}
+                      {this.props.t(item["nativeLang"])}
                     </option>
                   );
                 })}
