@@ -14,4 +14,7 @@ export interface SupporDialogProps {
   handleFetchDataSourceList: () => void;
   handleFetchDefaultSyncOption: () => void;
 }
-export interface SupporDialogState {}
+export interface SupporDialogState {
+  isRedeemCode: boolean;
+  redeemCode: string;
+}

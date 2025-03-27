@@ -12,6 +12,7 @@ import {
   sendFeedback,
   uploadFile,
 } from "../../../utils/request/common";
+import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 declare var window: any;
 class FeedbackDialog extends Component<
   FeedbackDialogProps,
@@ -137,7 +138,14 @@ class FeedbackDialog extends Component<
             &nbsp;
             <span
               onClick={() => {
-                this.handleJump(WEBSITE_URL + "/en/support");
+                if (
+                  ConfigService.getReaderConfig("lang") &&
+                  ConfigService.getReaderConfig("lang").startsWith("zh")
+                ) {
+                  openExternalUrl(WEBSITE_URL + "/zh/support");
+                } else {
+                  openExternalUrl(WEBSITE_URL + "/en/support");
+                }
               }}
               style={{ color: "rgb(35, 170, 242)", cursor: "pointer" }}
             >
