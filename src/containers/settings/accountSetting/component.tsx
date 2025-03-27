@@ -38,7 +38,10 @@ class AccountSetting extends React.Component<
       isAddNew: false,
       settingLogin: "",
       loginConfig: {},
+      isRedeemCode: false,
+      redeemCode: "",
       isSendingCode: false,
+
       countdown: 0,
     };
   }
@@ -392,7 +395,7 @@ class AccountSetting extends React.Component<
                 </div>
               </div>
             </div>
-            <div
+            {/* <div
               style={{
                 fontSize: "13px",
                 lineHeight: "20px",
@@ -404,7 +407,7 @@ class AccountSetting extends React.Component<
               {this.props.t(
                 "Due to the limited number of emails we can send each day, to prevent login issues after reaching the sending limit, please make sure to add additional login options as backups after logging in."
               )}
-            </div>
+            </div> */}
             <div
               style={{
                 fontSize: "13px",
@@ -416,6 +419,88 @@ class AccountSetting extends React.Component<
               {this.props.t("Supported email providers")}
               <br />
               {CommonTool.EmailProviders.join(", ")}
+            </div>
+          </div>
+        )}
+        {this.state.isRedeemCode && (
+          <div
+            className="voice-add-new-container"
+            style={{
+              marginLeft: "25px",
+              width: "calc(100% - 50px)",
+              fontWeight: 500,
+            }}
+          >
+            <input
+              type={"text"}
+              name={"redeemCode"}
+              placeholder={this.props.t("Enter your redemption code")}
+              onChange={(e) => {
+                if (e.target.value) {
+                  this.setState({
+                    redeemCode: e.target.value.trim().toUpperCase(),
+                  });
+                }
+              }}
+              onContextMenu={() => {
+                handleContextMenu("token-dialog-redeem-code-box", true);
+              }}
+              id={"token-dialog-redeem-code-box"}
+              className="token-dialog-username-box"
+              style={{ height: "35px" }}
+            />
+            <div className="token-dialog-button-container">
+              <div
+                className="voice-add-confirm"
+                onClick={async () => {
+                  toast.loading(this.props.t("Verifying..."), {
+                    id: "redeem-code",
+                  });
+                  let userRequest = await getUserRequest();
+                  let response = await userRequest.redeemCode({
+                    code: this.state.redeemCode,
+                  });
+                  if (response.code === 200) {
+                    toast.success(this.props.t("Redeem successful"), {
+                      id: "redeem-code",
+                    });
+                    this.props.handleFetchUserInfo();
+                    this.setState({ isRedeemCode: false });
+                  } else if (response.code === 401) {
+                    toast.error(
+                      this.props.t("Redeem failed, error code") +
+                        ": " +
+                        response.msg,
+                      {
+                        id: "redeem-code",
+                      }
+                    );
+                    handleExitApp();
+                    return;
+                  } else {
+                    toast.error(
+                      this.props.t("Redeem failed, error code") +
+                        ": " +
+                        response.msg,
+                      {
+                        id: "redeem-code",
+                      }
+                    );
+                  }
+                }}
+              >
+                <Trans>Redeem</Trans>
+              </div>
+              <div className="voice-add-button-container">
+                <div
+                  className="voice-add-cancel"
+                  onClick={() => {
+                    this.setState({ isRedeemCode: false });
+                  }}
+                >
+                  <Trans>Cancel</Trans>
+                </div>
+              </div>
             </div>
           </div>
         )}
@@ -569,13 +654,14 @@ class AccountSetting extends React.Component<
         {this.props.isAuthed && this.props.userInfo && (
           <div
             style={{
+              position: "absolute",
+              bottom: "20px",
+              right: "20px",
               display: "flex",
               justifyContent: "center",
-              margin: 20,
             }}
           >
             <div
-              className="new-version-open"
               onClick={async () => {
                 let response = await getTempToken();
                 if (response.code === 200) {
@@ -596,11 +682,10 @@ class AccountSetting extends React.Component<
                 }
               }}
               style={{
+                paddingLeft: "10px",
+                paddingRight: "10px",
                 fontWeight: "bold",
-                position: "absolute",
-                bottom: "20px",
-                paddingLeft: "20px",
-                paddingRight: "20px",
+                cursor: "pointer",
               }}
             >
               <Trans>
@@ -609,6 +694,19 @@ class AccountSetting extends React.Component<
                   ? "Upgrade to Pro"
                   : "Renew Pro"}
               </Trans>
+            </div>
+            <div
+              onClick={async () => {
+                this.setState({ isRedeemCode: true });
+              }}
+              style={{
+                fontWeight: "bold",
+                paddingLeft: "10px",
+                paddingRight: "10px",
+                cursor: "pointer",
+              }}
+            >
+              <Trans>{"Redeem with code"}</Trans>
             </div>
           </div>
         )}

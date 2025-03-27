@@ -69,7 +69,14 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
             <li
               className="sort-by-category-list"
               onClick={async () => {
-                this.handleJump(WEBSITE_URL + "/en/support");
+                if (
+                  ConfigService.getReaderConfig("lang") &&
+                  ConfigService.getReaderConfig("lang").startsWith("zh")
+                ) {
+                  openExternalUrl(WEBSITE_URL + "/zh/support");
+                } else {
+                  openExternalUrl(WEBSITE_URL + "/en/support");
+                }
               }}
             >
               <Trans>Feedback</Trans>

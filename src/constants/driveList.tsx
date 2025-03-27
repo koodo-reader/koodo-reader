@@ -54,7 +54,7 @@ export const driveList = [
     value: "adrive",
     icon: "icon-adrive",
     isPro: true,
-    support: ["desktop", "browser", "phone"],
+    support: ["desktop", "phone"],
   },
   {
     label: "S3 Compatible",

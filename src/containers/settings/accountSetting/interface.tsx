@@ -33,8 +33,11 @@ export interface SettingInfoProps extends RouteComponentProps<any> {
 }
 export interface SettingInfoState {
   isAddNew: boolean;
+  isRedeemCode: boolean;
+  redeemCode: string;
   loginConfig: any;
   settingLogin: string;
+
   isSendingCode: boolean;
   countdown: number;
 }

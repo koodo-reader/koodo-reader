@@ -183,8 +183,8 @@
 }
 .setting-dialog-new-plugin {
   position: absolute;
-  bottom: 10px;
-  right: 10px;
+  bottom: 20px;
+  right: 20px;
   cursor: pointer;
 }
 .token-dialog-button-container {
