@@ -239,7 +239,16 @@ const createMainWin = () => {
     let result = await syncUtil.downloadFile(config.fileName, (config.isTemp ? "temp-" : "") + config.fileName, config.type);
     return result;
   });
-
+  ipcMain.handle("cloud-reset", async (event, config) => {
+    let syncUtil = await getSyncUtil(config);
+    let result = syncUtil.resetCounters();
+    return result;
+  });
+  ipcMain.handle("cloud-stats", async (event, config) => {
+    let syncUtil = await getSyncUtil(config);
+    let result = syncUtil.getStats();
+    return result;
+  });
   ipcMain.handle("cloud-delete", async (event, config) => {
     let syncUtil = await getSyncUtil(config, config.isUseCache);
     let result = await syncUtil.deleteFile(config.fileName, config.type);

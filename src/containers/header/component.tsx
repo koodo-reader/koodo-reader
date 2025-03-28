@@ -25,11 +25,18 @@ import ConfigUtil from "../../utils/file/configUtil";
 import DatabaseService from "../../utils/storage/databaseService";
 import CoverUtil from "../../utils/file/coverUtil";
 import BookUtil from "../../utils/file/bookUtil";
-import { addChatBox, getChatLocale, removeChatBox } from "../../utils/common";
+import {
+  addChatBox,
+  getChatLocale,
+  getStorageLocation,
+  removeChatBox,
+} from "../../utils/common";
 import { driveList } from "../../constants/driveList";
 import SupportDialog from "../../components/dialogs/supportDialog";
+import SyncService from "../../utils/storage/syncService";
 
 class Header extends React.Component<HeaderProps, HeaderState> {
+  timer: any;
   constructor(props: HeaderProps) {
     super(props);
 
@@ -195,13 +202,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
 
     this.setState({ isSync: false });
   };
-  handleFinish = async () => {
-    // let thirdpartyRequest = await getThirdpartyRequest();
-    // let deleteSyncResult = await thirdpartyRequest.deleteSyncState();
-    // if (deleteSyncResult.code !== 200) {
-    //   toast.error(this.props.t("Failed to delete sync state"));
-    // }
-  };
   beforeSync = async () => {
     if (!this.props.defaultSyncOption) {
       toast.error(this.props.t("Please add data source in the setting"));
@@ -214,20 +214,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       this.setState({ isSync: false });
       return false;
     }
-    // let thirdpartyRequest = await getThirdpartyRequest();
-    // let getSyncResult = await thirdpartyRequest.getSyncState();
-    // if (getSyncResult.code !== 200) {
-    //   toast.error(this.props.t("Failed to get sync state"));
-    //   return false;
-    // }
-    // if (!getSyncResult.data) {
-    //   toast.error(
-    //     this.props.t(
-    //       "Sync state is occupied by other devices, please try again later"
-    //     )
-    //   );
-    //   return false;
-    // }
     toast.loading(
       this.props.t("Start syncing") +
         " (" +
@@ -236,7 +222,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
             ?.label || ""
         ) +
         ")",
-      { id: "syncing-id" }
+      { id: "syncing" }
     );
     return true;
   };
@@ -252,15 +238,63 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     );
   };
   handleCloudSync = async () => {
+    let config = {};
+    if (isElectron) {
+      let service = ConfigService.getItem("defaultSyncOption");
+      if (!service) {
+        return false;
+      }
+      let tokenConfig = await getCloudConfig(service);
+      config = {
+        ...tokenConfig,
+        service: service,
+        storagePath: getStorageLocation(),
+      };
+      await window
+        .require("electron")
+        .ipcRenderer.invoke("cloud-reset", config);
+    } else {
+      let syncUtil = await SyncService.getSyncUtil();
+      syncUtil.resetCounters();
+    }
+    this.timer = setInterval(async () => {
+      if (isElectron) {
+        let stats = await window
+          .require("electron")
+          .ipcRenderer.invoke("cloud-stats", config);
+        toast.loading(
+          this.props.t("Start Transfering Data") +
+            " (" +
+            stats.completed +
+            "/" +
+            stats.total +
+            ")",
+          {
+            id: "syncing",
+          }
+        );
+      } else {
+        let syncUtil = await SyncService.getSyncUtil();
+        let stats = await syncUtil.getStats();
+        toast.loading(
+          this.props.t("Start Transfering Data") +
+            " (" +
+            stats.completed +
+            "/" +
+            stats.total +
+            ")",
+          {
+            id: "syncing",
+          }
+        );
+      }
+    }, 1000);
     let res = await this.beforeSync();
     if (!res) {
       return;
     }
     let compareResult = await this.getCompareResult();
 
-    toast.loading(this.props.t("Start Transfering Data"), {
-      id: "syncing-id",
-    });
     await this.handleSync(compareResult);
     this.setState({ isSync: false });
   };
@@ -269,7 +303,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     this.props.handleFetchBookmarks();
     this.props.handleFetchNotes();
     toast.success(this.props.t("Synchronisation successful"), {
-      id: "syncing-id",
+      id: "syncing",
     });
     if (this.props.defaultSyncOption === "adrive") {
       toast.success(
@@ -287,7 +321,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
   };
   handleSync = async (compareResult) => {
     try {
-      await SyncHelper.startSync(
+      let tasks = await SyncHelper.startSync(
         compareResult,
         ConfigService,
         DatabaseService,
@@ -295,18 +329,22 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         BookUtil,
         CoverUtil
       );
+      await SyncHelper.runTasksWithLimit(
+        tasks,
+        99,
+        ConfigService.getItem("defaultSyncOption")
+      );
+      clearInterval(this.timer);
       toast.loading(this.props.t("Almost finished"), {
-        id: "syncing-id",
+        id: "syncing",
       });
       await this.handleSuccess();
     } catch (error) {
       console.error(error);
       toast.error(this.props.t("Sync failed"), {
-        id: "syncing-id",
+        id: "syncing",
       });
       return;
-    } finally {
-      await this.handleFinish();
     }
   };
   syncToLocation = async () => {
