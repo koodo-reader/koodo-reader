@@ -142,7 +142,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
   handleConfirmDrive = async () => {
     let flag = true;
     for (let item of driveInputConfig[this.props.settingDrive]) {
-      if (!this.state.driveConfig[item.value]) {
+      if (!this.state.driveConfig[item.value] && item.required) {
         toast.error(
           this.props.t("Missing parameters") + ": " + this.props.t(item.label)
         );
@@ -254,7 +254,12 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                       type={item.type}
                       name={item.value}
                       key={item.value}
-                      placeholder={this.props.t(item.label)}
+                      placeholder={
+                        this.props.t(item.label) +
+                        (item.required
+                          ? ""
+                          : " (" + this.props.t("Optional") + ")")
+                      }
                       onChange={(e) => {
                         if (e.target.value) {
                           this.setState((prevState) => ({

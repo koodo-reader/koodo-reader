@@ -34,7 +34,7 @@ export interface HeaderState {
   language: string;
   width: number;
   isNewVersion: boolean;
-  isdataChange: boolean;
+  isDataChange: boolean;
   isDeveloperVer: boolean;
   isHidePro: boolean;
   isSync: boolean;

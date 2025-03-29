@@ -5,6 +5,8 @@ export interface LoginProps extends RouteComponentProps<any> {
   handleSettingMode: (settingMode: string) => void;
   handleSettingDrive: (settingDrive: string) => void;
   handleFetchAuthed: () => void;
+  handleFetchDataSourceList: () => void;
+  handleFetchDefaultSyncOption: () => void;
   t: (title: string) => string;
   isSettingOpen: boolean;
   isShowLoading: boolean;

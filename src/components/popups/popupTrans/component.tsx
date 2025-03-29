@@ -324,8 +324,13 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
                             key={index}
                             className="add-dialog-shelf-list-option"
                             selected={
-                              ConfigService.getReaderConfig("transTarget") ===
-                              item
+                              (ConfigService.getReaderConfig("transTarget") ||
+                                getDefaultTransTarget(
+                                  this.props.plugins.find(
+                                    (item) =>
+                                      item.key === this.state.transService
+                                  )?.langList
+                                )) === item
                                 ? true
                                 : false
                             }

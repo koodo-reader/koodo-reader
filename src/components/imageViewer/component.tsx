@@ -33,12 +33,19 @@ class ImageViewer extends React.Component<ImageViewerProps, ImageViewerStates> {
       this.props.handleLeaveReader("bottom");
     }
     await handleLinkJump(event, this.props.rendition);
-
+    let href;
+    if (event.target.tagName === "IMG" && event.target.src) {
+      href = event.target.src;
+    }
+    console.log(event.target.tagName, event.target.getAttribute("xlink:href"));
     if (
-      !event.target.getAttribute("src") ||
-      event.target.getAttribute("href") ||
-      event.target.parentNode.getAttribute("href")
+      event.target.tagName === "image" &&
+      event.target.getAttribute("xlink:href")
     ) {
+      href = event.target.getAttribute("xlink:href");
+    }
+
+    if (!href) {
       return;
     }
     if (this.state.isShowImage) {
@@ -59,11 +66,11 @@ class ImageViewer extends React.Component<ImageViewerProps, ImageViewerStates> {
         this.naturalWidth / this.naturalHeight > 1 ? "horizontal" : "vertical"
       );
     });
-    img.src = event.target.src;
+    img.src = href;
     let image: HTMLImageElement | null =
       document.querySelector("#selectedImage");
     if (image) {
-      image!.src = event.target.src;
+      image!.src = href;
       this.setState({ isShowImage: true });
       if (this.state.imageRatio === "horizontal") {
         image.style.width = "60vw";

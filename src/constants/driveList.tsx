@@ -95,21 +95,25 @@ export const driveInputConfig: DriveInputConfig = {
       label: "Server address",
       value: "url",
       type: "text",
+      required: true,
     },
     {
       label: "Server path",
       value: "dir",
       type: "text",
+      required: true,
     },
     {
       label: "Username",
       value: "username",
       type: "text",
+      required: true,
     },
     {
       label: "Password",
       value: "password",
       type: "password",
+      required: true,
     },
   ],
   mega: [
@@ -117,11 +121,13 @@ export const driveInputConfig: DriveInputConfig = {
       label: "Email",
       value: "email",
       type: "text",
+      required: true,
     },
     {
       label: "Password",
       value: "password",
       type: "password",
+      required: true,
     },
   ],
   boxnet: [
@@ -129,6 +135,7 @@ export const driveInputConfig: DriveInputConfig = {
       label: "Token",
       value: "token",
       type: "text",
+      required: true,
     },
   ],
   ftp: [
@@ -136,31 +143,37 @@ export const driveInputConfig: DriveInputConfig = {
       label: "Server address",
       value: "url",
       type: "text",
+      required: true,
     },
     {
       label: "Server port",
       value: "port",
       type: "text",
+      required: true,
     },
     {
       label: "Server path",
       value: "dir",
       type: "text",
+      required: false,
     },
     {
       label: "Username",
       value: "username",
       type: "text",
+      required: true,
     },
     {
       label: "Password",
       value: "password",
       type: "password",
+      required: true,
     },
     {
       label: "Use SSL, 1 for use, 0 for not use",
       value: "ssl",
       type: "text",
+      required: true,
     },
   ],
   sftp: [
@@ -168,26 +181,31 @@ export const driveInputConfig: DriveInputConfig = {
       label: "Server address",
       value: "url",
       type: "text",
+      required: true,
     },
     {
       label: "Server port",
       value: "port",
       type: "text",
+      required: true,
     },
     {
       label: "Server Path",
       value: "dir",
       type: "text",
+      required: false,
     },
     {
       label: "Username",
       value: "username",
       type: "text",
+      required: true,
     },
     {
       label: "Password",
       value: "password",
       type: "password",
+      required: true,
     },
   ],
   s3compatible: [
@@ -195,31 +213,37 @@ export const driveInputConfig: DriveInputConfig = {
       label: "Endpoint",
       value: "endpoint",
       type: "text",
+      required: true,
     },
     {
       label: "Region",
       value: "region",
       type: "text",
+      required: true,
     },
     {
       label: "BucketName",
       value: "bucketName",
       type: "text",
+      required: true,
     },
     {
       label: "Path",
       value: "dir",
       type: "text",
+      required: false,
     },
     {
       label: "AccessKeyId",
       value: "accessKeyId",
       type: "text",
+      required: true,
     },
     {
       label: "SecretAccessKey",
       value: "secretAccessKey",
       type: "password",
+      required: true,
     },
   ],
   google: [
@@ -227,6 +251,7 @@ export const driveInputConfig: DriveInputConfig = {
       label: "Token",
       value: "token",
       type: "text",
+      required: true,
     },
   ],
   microsoft: [
@@ -234,6 +259,7 @@ export const driveInputConfig: DriveInputConfig = {
       label: "Token",
       value: "token",
       type: "text",
+      required: true,
     },
   ],
   dropbox: [
@@ -241,6 +267,7 @@ export const driveInputConfig: DriveInputConfig = {
       label: "Token",
       value: "token",
       type: "text",
+      required: true,
     },
   ],
   pcloud: [
@@ -248,6 +275,7 @@ export const driveInputConfig: DriveInputConfig = {
       label: "Token",
       value: "token",
       type: "text",
+      required: true,
     },
   ],
   adrive: [
@@ -255,6 +283,7 @@ export const driveInputConfig: DriveInputConfig = {
       label: "Token",
       value: "token",
       type: "text",
+      required: true,
     },
   ],
 };

@@ -64,6 +64,10 @@ class Login extends React.Component<LoginProps, LoginState> {
     if (res.code === 200) {
       this.props.handleLoadingDialog(false);
       toast.success(this.props.t("Login successful"));
+      ConfigService.removeItem("defaultSyncOption");
+      ConfigService.removeItem("dataSourceList");
+      this.props.handleFetchDataSourceList();
+      this.props.handleFetchDefaultSyncOption();
       removeSearchParams();
       this.props.handleFetchAuthed();
       this.setState({ currentStep: 3 });

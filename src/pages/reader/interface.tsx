@@ -7,6 +7,7 @@ export interface ReaderProps {
   htmlBook: HtmlBookModel;
   isNavLocked: boolean;
   isSearch: boolean;
+  isAuthed: boolean;
   readerMode: string;
   handleFetchNotes: () => void;
   handleReaderMode: (readerMode: string) => void;

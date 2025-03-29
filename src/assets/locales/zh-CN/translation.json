@@ -130,6 +130,8 @@
   "Redeem failed, error code": "兑换失败, 错误代码",
   "Nothing to precache": "无需预缓存",
   "Verifying...": "验证中...",
+  "Optional": "可选",
+  "Required": "必填",
   "Supported email providers": "支持的邮箱",
   "Log in": "登录",
   "Unsupported email provider": "不支持的邮箱",
