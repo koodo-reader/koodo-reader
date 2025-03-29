@@ -28,6 +28,8 @@ body {
 .import-from-cloud,
 .booklist-shelf-list,
 .token-dialog-token-box,
+.voice-add-content-box,
+.token-dialog-username-box,
 .feedback-dialog-content-box,
 .token-dialog-url-box,
 .token-dialog-username-box,
@@ -51,6 +53,9 @@ body {
 .header-search-box,
 .header-search-box::placeholder,
 .feedback-dialog-content-box::placeholder,
+.voice-add-content-box::placeholder,
+.token-dialog-username-box::placeholder,
+.token-dialog-token-box::placeholder,
 .header-search-text {
   color: rgba(235, 235, 235, 0.8);
 }
@@ -75,6 +80,9 @@ body {
 .book-bookmark-link,
 .message-box-container,
 .only-local-icon,
+.voice-add-content-box,
+.token-dialog-username-box,
+.token-dialog-token-box,
 .popup-close {
   background-color: rgba(71, 76, 80, 1);
   color: rgba(235, 235, 235, 1);

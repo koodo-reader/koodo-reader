@@ -143,6 +143,10 @@ class AccountSetting extends React.Component<
       });
       this.props.handleFetchAuthed();
       this.props.handleFetchLoginOptionList();
+      ConfigService.removeItem("defaultSyncOption");
+      ConfigService.removeItem("dataSourceList");
+      this.props.handleFetchDataSourceList();
+      this.props.handleFetchDefaultSyncOption();
       this.props.handleFetchUserInfo();
       this.setState({ settingLogin: "" });
     } else {
@@ -343,7 +347,10 @@ class AccountSetting extends React.Component<
                   className="voice-add-confirm"
                   style={{
                     marginRight: "10px",
-                    opacity: this.state.isSendingCode ? 0.6 : 1,
+                    opacity:
+                      this.state.isSendingCode || this.state.countdown
+                        ? 0.6
+                        : 1,
                   }}
                   onClick={async () => {
                     if (!this.state.loginConfig.email) {
@@ -570,10 +577,11 @@ class AccountSetting extends React.Component<
                 await TokenService.deleteToken("is_authed");
                 await TokenService.deleteToken("access_token");
                 await TokenService.deleteToken("refresh_token");
-                ConfigService.removeItem("defaultSyncOption");
-                ConfigService.removeItem("dataSourceList");
+
                 this.props.handleFetchAuthed();
                 this.props.handleLoginOptionList([]);
+                ConfigService.removeItem("defaultSyncOption");
+                ConfigService.removeItem("dataSourceList");
                 this.props.handleFetchDataSourceList();
                 this.props.handleFetchDefaultSyncOption();
                 toast.success(this.props.t("Log out successful"));

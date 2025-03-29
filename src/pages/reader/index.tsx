@@ -21,6 +21,7 @@ const mapStateToProps = (state: stateType) => {
     htmlBook: state.reader.htmlBook,
     readerMode: state.reader.readerMode,
     isNavLocked: state.reader.isNavLocked,
+    isAuthed: state.manager.isAuthed,
     isSearch: state.manager.isSearch,
   };
 };

@@ -7,6 +7,8 @@ import {
   handleSetting,
   handleSettingMode,
   handleSettingDrive,
+  handleFetchDataSourceList,
+  handleFetchDefaultSyncOption,
 } from "../../store/actions";
 import Login from "./component";
 import { withTranslation } from "react-i18next";
@@ -23,6 +25,8 @@ const actionCreator = {
   handleSetting,
   handleSettingMode,
   handleSettingDrive,
+  handleFetchDataSourceList,
+  handleFetchDefaultSyncOption,
 };
 export default connect(
   mapStateToProps,

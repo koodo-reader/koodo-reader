@@ -45,7 +45,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       language: ConfigService.getReaderConfig("lang"),
       isNewVersion: false,
       width: document.body.clientWidth,
-      isdataChange: false,
+      isDataChange: false,
       isDeveloperVer: false,
       isHidePro: false,
       isSync: false,
@@ -90,7 +90,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       let res1 = await upgradeStorage(this.handleFinishUpgrade);
       let res2 = upgradeConfig();
       if (!res1 || !res2) {
-        toast.error(this.props.t("Upgrade failed"));
+        console.error("upgrade failed");
       }
 
       //Detect data modification
@@ -99,7 +99,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         ConfigService.getItem("lastSyncTime") &&
         lastSyncTime > parseInt(ConfigService.getItem("lastSyncTime") || "0")
       ) {
-        this.setState({ isdataChange: true });
+        this.setState({ isDataChange: true });
       }
     } else {
       upgradeConfig();
@@ -159,11 +159,14 @@ class Header extends React.Component<HeaderProps, HeaderState> {
   syncFromLocation = async () => {
     let result = await restoreFromConfigJson();
     if (result) {
-      this.setState({ isdataChange: false });
+      this.setState({ isDataChange: false });
       //Check for data update
       let lastSyncTime = getLastSyncTimeFromConfigJson();
       if (ConfigService.getItem("lastSyncTime") && lastSyncTime) {
         ConfigService.setItem("lastSyncTime", lastSyncTime + "");
+      } else {
+        let timestamp = new Date().getTime().toString();
+        ConfigService.setItem("lastSyncTime", timestamp);
       }
     }
     if (!result) {
@@ -187,6 +190,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
   };
   handleLocalSync = async () => {
     let lastSyncTime = getLastSyncTimeFromConfigJson();
+    console.log(lastSyncTime, ConfigService.getItem("lastSyncTime"));
     if (!lastSyncTime && ConfigService.getItem("lastSyncTime")) {
       await this.syncToLocation();
     } else {
@@ -239,11 +243,13 @@ class Header extends React.Component<HeaderProps, HeaderState> {
   };
   handleCloudSync = async () => {
     let config = {};
+    let service = ConfigService.getItem("defaultSyncOption");
+    if (!service) {
+      toast.error(this.props.t("Please add data source in the setting"));
+      this.setState({ isSync: false });
+      return false;
+    }
     if (isElectron) {
-      let service = ConfigService.getItem("defaultSyncOption");
-      if (!service) {
-        return false;
-      }
       let tokenConfig = await getCloudConfig(service);
       config = {
         ...tokenConfig,
@@ -349,7 +355,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
   };
   syncToLocation = async () => {
     let timestamp = new Date().getTime().toString();
-    ConfigService.setReaderConfig("lastSyncTime", timestamp);
     ConfigService.setItem("lastSyncTime", timestamp);
     backupToConfigJson();
     toast.success(
@@ -474,7 +479,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
                   (this.state.isSync ? " icon-rotate" : "")
                 }
                 style={
-                  this.state.isdataChange ? { color: "rgb(35, 170, 242)" } : {}
+                  this.state.isDataChange ? { color: "rgb(35, 170, 242)" } : {}
                 }
               ></span>
             </span>
