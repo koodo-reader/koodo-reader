@@ -37,7 +37,6 @@ class ImageViewer extends React.Component<ImageViewerProps, ImageViewerStates> {
     if (event.target.tagName === "IMG" && event.target.src) {
       href = event.target.src;
     }
-    console.log(event.target.tagName, event.target.getAttribute("xlink:href"));
     if (
       event.target.tagName === "image" &&
       event.target.getAttribute("xlink:href")
