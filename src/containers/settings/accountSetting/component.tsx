@@ -659,65 +659,79 @@ class AccountSetting extends React.Component<
             </div>
           </div>
         )}
-        {this.props.isAuthed && this.props.userInfo && (
+        <div
+          style={{
+            position: "absolute",
+            bottom: "20px",
+            right: "20px",
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
           <div
+            onClick={async () => {
+              if (!this.props.isAuthed) {
+                openExternalUrl(
+                  WEBSITE_URL +
+                    (ConfigService.getReaderConfig("lang").startsWith("zh")
+                      ? "/zh"
+                      : "/en") +
+                    "/pricing"
+                );
+                return;
+              }
+              let response = await getTempToken();
+              if (response.code === 200) {
+                let tempToken = response.data.access_token;
+                let deviceUuid = await TokenService.getFingerprint();
+                openExternalUrl(
+                  WEBSITE_URL +
+                    (ConfigService.getReaderConfig("lang").startsWith("zh")
+                      ? "/zh"
+                      : "/en") +
+                    "/pricing?temp_token=" +
+                    tempToken +
+                    "&device_uuid=" +
+                    deviceUuid
+                );
+              } else if (response.code === 401) {
+                this.props.handleFetchAuthed();
+              }
+            }}
             style={{
-              position: "absolute",
-              bottom: "20px",
-              right: "20px",
-              display: "flex",
-              justifyContent: "center",
+              paddingLeft: "10px",
+              paddingRight: "10px",
+              fontWeight: "bold",
+              cursor: "pointer",
             }}
           >
-            <div
-              onClick={async () => {
-                let response = await getTempToken();
-                if (response.code === 200) {
-                  let tempToken = response.data.access_token;
-                  let deviceUuid = await TokenService.getFingerprint();
-                  openExternalUrl(
-                    WEBSITE_URL +
-                      (ConfigService.getReaderConfig("lang").startsWith("zh")
-                        ? "/zh"
-                        : "/en") +
-                      "/pricing?temp_token=" +
-                      tempToken +
-                      "&device_uuid=" +
-                      deviceUuid
-                  );
-                } else if (response.code === 401) {
-                  this.props.handleFetchAuthed();
-                }
-              }}
-              style={{
-                paddingLeft: "10px",
-                paddingRight: "10px",
-                fontWeight: "bold",
-                cursor: "pointer",
-              }}
-            >
-              <Trans>
-                {this.props.userInfo.valid_until <
-                parseInt(new Date().getTime() / 1000 + "")
+            <Trans>
+              {this.props.isAuthed
+                ? this.props.userInfo.valid_until <
+                  parseInt(new Date().getTime() / 1000 + "")
                   ? "Upgrade to Pro"
-                  : "Renew Pro"}
-              </Trans>
-            </div>
-            <div
-              onClick={async () => {
-                this.setState({ isRedeemCode: true });
-              }}
-              style={{
-                fontWeight: "bold",
-                paddingLeft: "10px",
-                paddingRight: "10px",
-                cursor: "pointer",
-              }}
-            >
-              <Trans>{"Redeem with code"}</Trans>
-            </div>
+                  : "Renew Pro"
+                : "Upgrade to Pro"}
+            </Trans>
           </div>
-        )}
+          <div
+            onClick={async () => {
+              if (!this.props.isAuthed) {
+                toast(this.props.t("Please log in first"));
+                return;
+              }
+              this.setState({ isRedeemCode: true });
+            }}
+            style={{
+              fontWeight: "bold",
+              paddingLeft: "10px",
+              paddingRight: "10px",
+              cursor: "pointer",
+            }}
+          >
+            <Trans>{"Redeem with code"}</Trans>
+          </div>
+        </div>
       </>
     );
   }
