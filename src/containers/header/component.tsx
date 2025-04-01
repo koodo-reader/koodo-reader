@@ -131,12 +131,11 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         ConfigService.getReaderConfig("isProUpgraded") !== "yes"
       ) {
         try {
-          await upgradePro(this.props.books);
+          ConfigService.setReaderConfig("isProUpgraded", "yes");
+          await upgradePro();
         } catch (error) {
           console.error(error);
         }
-
-        ConfigService.setReaderConfig("isProUpgraded", "yes");
       }
     }
     if (!nextProps.isAuthed && nextProps.isAuthed !== this.props.isAuthed) {

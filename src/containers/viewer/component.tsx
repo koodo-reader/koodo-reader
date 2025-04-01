@@ -133,13 +133,13 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         if (this.props.defaultSyncOption) {
           let result = await BookUtil.downloadBook(key, format.toLowerCase());
           if (result) {
-            toast.success(this.props.t("Offline successful"));
+            toast.success(this.props.t("Download successful"));
           } else {
             result = await BookUtil.downloadCacheBook(key);
             if (result) {
-              toast.success(this.props.t("Offline successful"));
+              toast.success(this.props.t("Download successful"));
             } else {
-              toast.error(this.props.t("Offline failed"));
+              toast.error(this.props.t("Download failed"));
               return;
             }
           }

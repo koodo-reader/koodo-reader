@@ -1,8 +1,4 @@
-import {
-  generateSyncRecord,
-  getStorageLocation,
-  preCacheAllBooks,
-} from "../common";
+import { generateSyncRecord, getStorageLocation } from "../common";
 import CoverUtil from "./coverUtil";
 import {
   CommonTool,
@@ -255,8 +251,7 @@ export const upgradeConfig = (): Boolean => {
     return false;
   }
 };
-export const upgradePro = async (books: Book[]) => {
-  await preCacheAllBooks(books);
+export const upgradePro = async () => {
   await generateSyncRecord();
 };
 export const getCloudConfig = async (service: string) => {

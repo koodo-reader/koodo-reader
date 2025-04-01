@@ -51,9 +51,8 @@ class BackupDialog extends React.Component<
     this.props.handleLoadingDialog(false);
     this.showMessage("Execute successful");
     this.props.handleFetchBooks();
-    let books = await DatabaseService.getAllRecords("books");
     if (this.props.isAuthed) {
-      await upgradePro(books);
+      await upgradePro();
     }
     setTimeout(() => {
       this.props.history.push("/manager/home");

@@ -156,7 +156,7 @@ class BookUtil {
         (await TokenService.getToken("is_authed")) === "yes" &&
         (await this.isBookExistInCloud(book.key))
       ) {
-        toast.loading(i18n.t("Make it offline"), {
+        toast.loading(i18n.t("Downloading"), {
           id: "offline-book",
         });
         let result = await this.downloadBook(book.key, book.format);
@@ -170,17 +170,17 @@ class BookUtil {
           }
         }
         if (result) {
-          toast.success(i18n.t("Offline successful"), {
+          toast.success(i18n.t("Download successful"), {
             id: "offline-book",
           });
         } else {
           let result = await this.downloadCacheBook(book.key);
           if (result) {
-            toast.success(i18n.t("Offline successful"), {
+            toast.success(i18n.t("Download successful"), {
               id: "offline-book",
             });
           } else {
-            toast.error(i18n.t("Offline failed"), {
+            toast.error(i18n.t("Download failed"), {
               id: "offline-book",
             });
             if (ConfigService.getItem("defaultSyncOption") === "adrive") {
