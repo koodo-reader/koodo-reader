@@ -250,6 +250,8 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                   : "",
                 ConfigService.getReaderConfig("convertChinese"),
                 "",
+                "no",
+                "no",
                 Kookit
               );
               result = await BookHelper.generateBook(

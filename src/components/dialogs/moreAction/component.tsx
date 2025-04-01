@@ -160,6 +160,8 @@ class ActionDialog extends React.Component<MoreActionProps, MoreActionState> {
                     : "",
                   ConfigService.getReaderConfig("convertChinese"),
                   "",
+                  "no",
+                  "no",
                   Kookit
                 );
                 let cache = await rendition.preCache(result);
