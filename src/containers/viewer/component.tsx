@@ -157,6 +157,8 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         ConfigService.getReaderConfig("isSliding") === "yes" ? "sliding" : "",
         ConfigService.getReaderConfig("convertChinese"),
         "",
+        "no",
+        "no",
         Kookit
       );
 
