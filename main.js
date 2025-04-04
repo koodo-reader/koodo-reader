@@ -735,7 +735,7 @@ const createMainWin = () => {
     filePath = null;
   });
 };
-if (process.platform === "linux") { app.commandLine.appendSwitch("no-sandbox") };
+app.enableSandbox();
 app.on("ready", () => {
   createMainWin();
 });
