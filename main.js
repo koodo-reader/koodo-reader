@@ -735,7 +735,7 @@ const createMainWin = () => {
     filePath = null;
   });
 };
-app.enableSandbox();
+
 app.on("ready", () => {
   createMainWin();
 });

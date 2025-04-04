@@ -19,7 +19,6 @@
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.485.0",
-    "@zip.js/zip.js": "^2.7.54",
     "adm-zip": "^0.5.2",
     "axios": "^0.19.2",
     "basic-ftp": "^5.0.5",
@@ -74,7 +73,7 @@
     "concurrently": "^5.0.1",
     "cross-env": "^6.0.3",
     "electron": "^34.0.1",
-    "electron-builder": "^25.1.8",
+    "electron-builder": "^26.0.12",
     "electron-rebuild": "^3.2.9",
     "hard-source-webpack-plugin": "^0.13.1",
     "html-react-parser": "^5.1.10",
