@@ -42,6 +42,7 @@ let options = {
     nodeIntegrationInSubFrames: false,
     allowRunningInsecureContent: false,
     enableRemoteModule: true,
+    sandbox: false,
   },
 };
 const os = require('os');
@@ -734,6 +735,7 @@ const createMainWin = () => {
     filePath = null;
   });
 };
+if (process.platform === "linux") { app.commandLine.appendSwitch("no-sandbox") };
 app.on("ready", () => {
   createMainWin();
 });
