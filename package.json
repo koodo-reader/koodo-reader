@@ -113,7 +113,7 @@
   "homepage": "./",
   "build": {
     "appId": "xyz.960960.koodo",
-    "productName": "Koodo Reader",
+    "productName": "KoodoReader",
     "copyright": "Copyright (c) 2020-2024 ${author}",
     "files": [
       "build/**/*",
