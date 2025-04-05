@@ -149,7 +149,12 @@ class BookUtil {
   }
   static async redirectBook(book: BookModel) {
     if (
-      !(await this.isBookExist(book.key, book.format.toLowerCase(), book.path))
+      !(await this.isBookExist(
+        book.key,
+        book.format.toLowerCase(),
+        book.path
+      )) &&
+      !(await this.isBookExist("cache-" + book.key, "zip", book.path))
     ) {
       if (
         ConfigService.getItem("defaultSyncOption") &&
@@ -362,6 +367,9 @@ class BookUtil {
     }
   }
   static async uploadBook(key: string, format: string) {
+    if (key.startsWith("cache")) {
+      return;
+    }
     let isAuthed = await TokenService.getToken("is_authed");
     if (isAuthed !== "yes") {
       return;
@@ -425,8 +433,12 @@ class BookUtil {
   static async deleteCacheBook(key: string) {
     await this.deleteBook("cache-" + key, "zip");
   }
-  static async offlineBook(key: string, _format: string) {
-    await this.downloadCacheBook(key);
+  static async offlineBook(key: string, format: string) {
+    let result = await this.downloadBook(key, format);
+    if (!result) {
+      result = await this.downloadCacheBook(key);
+    }
+    return result;
   }
   static async deleteOfflineBook(key: string) {
     let book: Book = await DatabaseService.getRecord(key, "books");
