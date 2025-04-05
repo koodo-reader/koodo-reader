@@ -668,6 +668,20 @@ class Login extends React.Component<LoginProps, LoginState> {
                     <br />
                     {CommonTool.EmailProviders.join(", ")}
                   </div>
+                  <div
+                    className="login-next-button"
+                    onClick={() => {
+                      this.setState({
+                        currentStep: 2,
+                      });
+                    }}
+                    style={{
+                      borderWidth: "0px",
+                      right: "0px",
+                    }}
+                  >
+                    {this.props.t("Back")}
+                  </div>
                 </div>
               </div>
             </div>

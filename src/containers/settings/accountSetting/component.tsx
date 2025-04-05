@@ -706,7 +706,7 @@ class AccountSetting extends React.Component<
             }}
           >
             <Trans>
-              {this.props.isAuthed
+              {this.props.isAuthed && this.props.userInfo
                 ? this.props.userInfo.valid_until <
                   parseInt(new Date().getTime() / 1000 + "")
                   ? "Upgrade to Pro"
