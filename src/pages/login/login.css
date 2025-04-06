@@ -142,6 +142,7 @@
 }
 .login-sync-text {
   font-size: 12px;
+  line-height: 1.25;
   color: #585858;
   font-weight: bold;
   text-align: left;
