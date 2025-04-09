@@ -101,13 +101,35 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         // pdf from 1.7.4 or older
         return cfi.page - 1 === this.state.chapterDocIndex;
       } else {
-        return item.chapterIndex === this.state.chapterDocIndex;
+        return (
+          item.chapterIndex === this.state.chapterDocIndex ||
+          (this.props.currentBook.format === "PDF" &&
+            this.props.readerMode === "double" &&
+            item.chapterIndex === this.state.chapterDocIndex + 1)
+        );
       }
     });
+    console.log(
+      highlightersByChapter,
+      "highlightersByChapter",
+      this.state.chapterDocIndex
+    );
+
     await this.props.htmlBook.rendition.renderHighlighters(
       highlightersByChapter,
-      this.handleNoteClick
+      this.handleNoteClick,
+      this.state.chapterDocIndex
     );
+    if (
+      this.props.currentBook.format === "PDF" &&
+      this.props.readerMode === "double"
+    ) {
+      await this.props.htmlBook.rendition.renderHighlighters(
+        highlightersByChapter,
+        this.handleNoteClick,
+        this.state.chapterDocIndex + 1
+      );
+    }
   };
   handleNoteClick = (event: Event) => {
     this.props.handleNoteKey((event.target as any).dataset.key);
@@ -118,8 +140,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     if (lock) return;
     let { key, path, format, name } = this.props.currentBook;
     this.props.handleHtmlBook(null);
-    let doc = getIframeDoc();
-    if (doc && this.state.rendition) {
+    if (this.state.rendition) {
       this.state.rendition.removeContent();
     }
     let isCacheExsit = await BookUtil.isBookExist("cache-" + key, "zip", path);
@@ -175,7 +196,8 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     HtmlMouseEvent(
       rendition,
       this.props.currentBook.key,
-      this.props.readerMode
+      this.props.readerMode,
+      this.props.currentBook.format
     );
     let chapters = rendition.getChapter();
     let chapterDocs = rendition.getChapterDoc();
@@ -291,48 +313,76 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     );
   };
   handleBindGesture = () => {
-    let doc = getIframeDoc();
-    if (!doc) return;
-    doc.addEventListener("click", () => {
-      this.props.handleLeaveReader("left");
-      this.props.handleLeaveReader("right");
-      this.props.handleLeaveReader("top");
-      this.props.handleLeaveReader("bottom");
-    });
-    doc.addEventListener("mouseup", () => {
-      if (this.state.isDisablePopup) {
-        if (doc!.getSelection()!.toString().trim().length === 0) {
-          let rect = doc!.getSelection()!.getRangeAt(0).getBoundingClientRect();
-          this.setState({ rect });
+    let docs = getIframeDoc(this.props.currentBook.format);
+    for (let i = 0; i < docs.length; i++) {
+      let doc = docs[i];
+      if (!doc) continue;
+      doc.addEventListener("click", () => {
+        this.props.handleLeaveReader("left");
+        this.props.handleLeaveReader("right");
+        this.props.handleLeaveReader("top");
+        this.props.handleLeaveReader("bottom");
+      });
+      doc.addEventListener("mouseup", (event) => {
+        if (this.props.currentBook.format === "PDF") {
+          let ownerDoc = (event.target as HTMLElement).ownerDocument;
+          let targetIframe = ownerDoc?.defaultView?.frameElement;
+          console.log(targetIframe, "targetIframe");
+          let id = targetIframe?.getAttribute("id") || "";
+          let chapterDocIndex = id ? parseInt(id.split("-").reverse()[0]) : 0;
+          console.log(chapterDocIndex, "chapterDocIndex");
+          this.setState({ chapterDocIndex });
         }
-      }
-      if (this.state.isDisablePopup) return;
-      let selection = doc!.getSelection();
-      if (!selection || selection.rangeCount === 0) return;
 
-      var rect = selection.getRangeAt(0).getBoundingClientRect();
-      this.setState({ rect });
-    });
-    doc.addEventListener("contextmenu", (event) => {
-      if (document.location.href.indexOf("localhost") === -1) {
-        event.preventDefault();
-      }
+        if (this.state.isDisablePopup) {
+          if (doc!.getSelection()!.toString().trim().length === 0) {
+            let rect = doc!
+              .getSelection()!
+              .getRangeAt(0)
+              .getBoundingClientRect();
+            this.setState({ rect });
+          }
+        }
+        if (this.state.isDisablePopup) return;
+        let selection = doc!.getSelection();
+        console.log(selection, "selection");
+        if (!selection || selection.rangeCount === 0) return;
 
-      if (!this.state.isDisablePopup && !this.state.isTouch) return;
+        var rect = selection.getRangeAt(0).getBoundingClientRect();
+        this.setState({ rect });
+      });
+      doc.addEventListener("contextmenu", (event) => {
+        console.log("right click");
+        if (this.props.currentBook.format === "PDF") {
+          let ownerDoc = (event.target as HTMLElement).ownerDocument;
+          let targetIframe = ownerDoc?.defaultView?.frameElement;
+          console.log(targetIframe, "targetIframe");
+          let id = targetIframe?.getAttribute("id") || "";
+          let chapterDocIndex = id ? parseInt(id.split("-").reverse()[0]) : 0;
+          console.log(chapterDocIndex, "chapterDocIndex");
+          this.setState({ chapterDocIndex });
+        }
+        if (document.location.href.indexOf("localhost") === -1) {
+          event.preventDefault();
+        }
 
-      if (
-        !doc!.getSelection() ||
-        doc!.getSelection()!.toString().trim().length === 0
-      ) {
-        return;
-      }
-      let selection = doc!.getSelection();
-      if (!selection || selection.rangeCount === 0) return;
-      var rect = selection.getRangeAt(0).getBoundingClientRect();
-      this.setState({ rect });
-    });
+        if (!this.state.isDisablePopup && !this.state.isTouch) return;
+
+        if (
+          !doc!.getSelection() ||
+          doc!.getSelection()!.toString().trim().length === 0
+        ) {
+          return;
+        }
+        let selection = doc!.getSelection();
+        if (!selection || selection.rangeCount === 0) return;
+        var rect = selection.getRangeAt(0).getBoundingClientRect();
+        this.setState({ rect });
+      });
+    }
   };
   render() {
+    console.log(this.props.htmlBook, "htmlBook");
     return (
       <>
         {this.props.htmlBook ? (

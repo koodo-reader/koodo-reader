@@ -9,14 +9,22 @@ declare var window: any;
 let throttleTime =
   ConfigService.getReaderConfig("isSliding") === "yes" ? 1000 : 100;
 
-export const getSelection = () => {
-  let doc = getIframeDoc();
-  if (!doc) return;
-  let sel = doc.getSelection();
-  if (!sel) return;
-  let text = sel.toString();
-  text = text && text.trim();
-  return text || "";
+export const getSelection = (format: string) => {
+  let docs = getIframeDoc(format);
+  let text = "";
+  for (let i = 0; i < docs.length; i++) {
+    let doc = docs[i];
+    if (!doc) continue;
+    let sel = doc.getSelection();
+    if (!sel) continue;
+    let text = sel.toString();
+    text = text && text.trim();
+    if (text) {
+      break;
+    }
+  }
+
+  return text;
 };
 let lock = false; //prevent from clicking too fasts
 const arrowKeys = async (
@@ -141,6 +149,7 @@ export const bindHtmlEvent = (
   doc.addEventListener(
     "wheel",
     async (event) => {
+      console.log(event, "sdfsd");
       if (event.ctrlKey && readerMode !== "double") {
         let scale = parseFloat(ConfigService.getReaderConfig("scale") || "1");
         if (event.deltaY < 0) {
@@ -207,15 +216,20 @@ export const bindHtmlEvent = (
 export const HtmlMouseEvent = (
   rendition: any,
   key: string,
-  readerMode: string
+  readerMode: string,
+  format: string
 ) => {
+  console.log("sdfsdfds");
   rendition.on("rendered", () => {
     let iframe = getIframeWin();
     if (!iframe) return;
     iframe?.focus();
-    let doc = getIframeDoc();
-    if (!doc) return;
+    let docs = getIframeDoc(format);
+    for (let i = 0; i < docs.length; i++) {
+      let doc = docs[i];
+      if (!doc) continue;
+      bindHtmlEvent(rendition, doc, key, readerMode);
+    }
     lock = false;
-    bindHtmlEvent(rendition, doc, key, readerMode);
   });
 };

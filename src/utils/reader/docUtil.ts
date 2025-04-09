@@ -1,15 +1,23 @@
-export const getIframeDoc = () => {
+export const getIframeDoc = (format: string) => {
   let pageArea = document.getElementById("page-area");
 
-  if (!pageArea) return null;
+  if (!pageArea) return [];
   let iframe = pageArea.getElementsByTagName("iframe")[0];
-  if (!iframe) return null;
+  if (!iframe) return [];
   let doc = iframe.contentDocument;
 
   if (!doc) {
-    return null;
+    return [];
   }
-  return doc;
+  if (format === "PDF") {
+    let subIframes = doc.querySelectorAll("iframe");
+    return Array.from(subIframes).map((subIframe) => {
+      let subDoc = subIframe.contentDocument;
+      return subDoc;
+    });
+  } else {
+    return [doc];
+  }
 };
 export const getIframeWin = () => {
   let pageArea = document.getElementById("page-area");

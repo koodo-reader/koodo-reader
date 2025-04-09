@@ -28,14 +28,18 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
       });
       textArea.value = this.props.notes[noteIndex].notes;
     } else {
-      let doc = getIframeDoc();
-      if (!doc) {
-        return;
+      let docs = getIframeDoc(this.props.currentBook.format);
+      let text = "";
+      for (let i = 0; i < docs.length; i++) {
+        let doc = docs[i];
+        if (!doc) continue;
+        let text = doc.getSelection()?.toString();
+        if (text) {
+          break;
+        }
       }
-      let text = doc.getSelection()?.toString();
-      if (!text) {
-        return;
-      }
+      if (!text) return;
+
       text = text.replace(/\s\s/g, "");
       text = text.replace(/\r/g, "");
       text = text.replace(/\n/g, "");
@@ -135,7 +139,8 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
         this.props.handleMenuMode("");
         await this.props.htmlBook.rendition.createOneNote(
           note,
-          this.handleNoteClick
+          this.handleNoteClick,
+          this.props.chapterDocIndex
         );
       });
     }
@@ -149,7 +154,7 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
         this.props.handleNoteKey("");
         this.props.htmlBook.rendition.removeOneNote(
           this.props.noteKey,
-          this.props.currentBook.format
+          this.props.chapterDocIndex
         );
         this.props.handleOpenMenu(false);
       });

@@ -18,9 +18,12 @@ class ImageViewer extends React.Component<ImageViewerProps, ImageViewerStates> {
 
   componentDidMount() {
     this.props.rendition.on("rendered", () => {
-      let doc = getIframeDoc();
-      if (!doc) return;
-      doc.addEventListener("click", this.showImage);
+      let docs = getIframeDoc(this.props.currentBook.format);
+      for (let i = 0; i < docs.length; i++) {
+        let doc = docs[i];
+        if (!doc) continue;
+        doc.removeEventListener("click", this.showImage);
+      }
     });
   }
 

@@ -19,6 +19,7 @@ const mapStateToProps = (state: stateType) => {
     currentBook: state.book.currentBook,
     isOpenMenu: state.viewArea.isOpenMenu,
     menuMode: state.viewArea.menuMode,
+    readerMode: state.reader.readerMode,
     color: state.reader.color,
     isChangeDirection: state.viewArea.isChangeDirection,
   };
