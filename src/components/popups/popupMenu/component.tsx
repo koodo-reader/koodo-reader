@@ -84,6 +84,15 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
         this.props.rendition.getPageSize().sectionWidth +
         this.props.rendition.getPageSize().gap;
     }
+    if (
+      this.props.currentBook.format === "PDF" &&
+      this.props.readerMode === "scroll"
+    ) {
+      posY =
+        posY +
+        this.props.chapterDocIndex *
+          this.props.rendition.getPageSize().sectionHeight;
+    }
     return { posX, posY } as any;
   }
 
@@ -96,10 +105,11 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
       let doc = docs[i];
       if (!doc) continue;
       sel = doc.getSelection();
-      if (sel && sel.rangeCount > 0) {
+      if (sel && sel.rangeCount > 0 && !sel.isCollapsed) {
         break;
       }
     }
+    console.log("sel", sel);
     this.props.handleChangeDirection(false);
     if (this.props.isOpenMenu) {
       this.props.handleMenuMode("");

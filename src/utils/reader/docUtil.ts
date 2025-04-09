@@ -11,10 +11,13 @@ export const getIframeDoc = (format: string) => {
   }
   if (format === "PDF") {
     let subIframes = doc.querySelectorAll("iframe");
-    return Array.from(subIframes).map((subIframe) => {
-      let subDoc = subIframe.contentDocument;
-      return subDoc;
-    });
+    return [
+      doc,
+      ...Array.from(subIframes).map((subIframe) => {
+        let subDoc = subIframe.contentDocument;
+        return subDoc;
+      }),
+    ];
   } else {
     return [doc];
   }
