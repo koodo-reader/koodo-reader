@@ -74,14 +74,32 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
       posY = posY - rect.height - 188 + this.props.rendition.getPageSize().top;
     }
     posX = posX - 80 + this.props.rendition.getPageSize().left;
+    if (
+      this.props.currentBook.format === "PDF" &&
+      this.props.readerMode === "double" &&
+      this.props.chapterDocIndex % 2 === 1
+    ) {
+      posX =
+        posX +
+        this.props.rendition.getPageSize().sectionWidth +
+        this.props.rendition.getPageSize().gap;
+    }
     return { posX, posY } as any;
   }
 
   openMenu = () => {
+    console.log("openMenu");
     this.setState({ deleteKey: "" });
-    let doc = getIframeDoc();
-    if (!doc) return;
-    let sel = doc.getSelection();
+    let docs = getIframeDoc(this.props.currentBook.format);
+    let sel: Selection | null = null;
+    for (let i = 0; i < docs.length; i++) {
+      let doc = docs[i];
+      if (!doc) continue;
+      sel = doc.getSelection();
+      if (sel && sel.rangeCount > 0) {
+        break;
+      }
+    }
     this.props.handleChangeDirection(false);
     if (this.props.isOpenMenu) {
       this.props.handleMenuMode("");

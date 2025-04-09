@@ -21,35 +21,27 @@ class PopupOption extends React.Component<PopupOptionProps> {
     this.props.handleMenuMode("note");
   };
   handleCopy = () => {
-    let text = getSelection();
+    let text = getSelection(this.props.currentBook.format);
     if (!text) return;
     copy(text);
     this.props.handleOpenMenu(false);
-    let doc = getIframeDoc();
-    if (!doc) return;
-    doc.getSelection()?.empty();
+    let docs = getIframeDoc(this.props.currentBook.format);
+    for (let i = 0; i < docs.length; i++) {
+      let doc = docs[i];
+      if (!doc) continue;
+      doc.getSelection()?.empty();
+    }
     toast.success(this.props.t("Copying successful"));
   };
   handleTrans = () => {
     this.props.handleMenuMode("trans");
-    this.props.handleOriginalText(getSelection() || "");
+    this.props.handleOriginalText(getSelection(this.props.currentBook.format));
   };
   handleDict = () => {
     this.props.handleMenuMode("dict");
-    this.props.handleOriginalText(getSelection() || "");
+    this.props.handleOriginalText(getSelection(this.props.currentBook.format));
   };
   handleDigest = async () => {
-    if (
-      ConfigService.getReaderConfig("pdfReaderMode") === "double" &&
-      this.props.currentBook.format === "PDF"
-    ) {
-      toast.error(
-        this.props.t(
-          "PDF files in double page mode does not support note taking yet"
-        )
-      );
-      return;
-    }
     let bookKey = this.props.currentBook.key;
     let cfi = JSON.stringify(
       ConfigService.getObjectConfig(
@@ -76,15 +68,22 @@ class PopupOption extends React.Component<PopupOptionProps> {
     if (!pageArea) return;
     let iframe = pageArea.getElementsByTagName("iframe")[0];
     if (!iframe) return;
-    let doc = getIframeDoc();
-    if (!doc) return;
+    let docs = getIframeDoc(this.props.currentBook.format);
+    let text = "";
+    for (let i = 0; i < docs.length; i++) {
+      let doc = docs[i];
+      if (!doc) continue;
+      text = doc.getSelection()?.toString() || "";
+      if (text) {
+        break;
+      }
+    }
+
     let range = JSON.stringify(
       await this.props.htmlBook.rendition.getHightlightCoords(
         this.props.chapterDocIndex
       )
     );
-
-    let text = doc.getSelection()?.toString();
     if (!text) return;
     text = text.replace(/\s\s/g, "");
     text = text.replace(/\r/g, "");
@@ -110,7 +109,8 @@ class PopupOption extends React.Component<PopupOptionProps> {
       this.props.handleMenuMode("");
       await this.props.htmlBook.rendition.createOneNote(
         digest,
-        this.handleNoteClick
+        this.handleNoteClick,
+        this.props.chapterDocIndex
       );
     });
   };
@@ -126,40 +126,66 @@ class PopupOption extends React.Component<PopupOptionProps> {
   handleSearchInternet = () => {
     switch (ConfigService.getReaderConfig("searchEngine")) {
       case "google":
-        this.handleJump("https://www.google.com/search?q=" + getSelection());
+        this.handleJump(
+          "https://www.google.com/search?q=" +
+            getSelection(this.props.currentBook.format)
+        );
         break;
       case "baidu":
-        this.handleJump("https://www.baidu.com/s?wd=" + getSelection());
+        this.handleJump(
+          "https://www.baidu.com/s?wd=" +
+            getSelection(this.props.currentBook.format)
+        );
         break;
       case "bing":
-        this.handleJump("https://www.bing.com/search?q=" + getSelection());
+        this.handleJump(
+          "https://www.bing.com/search?q=" +
+            getSelection(this.props.currentBook.format)
+        );
         break;
       case "duckduckgo":
-        this.handleJump("https://duckduckgo.com/?q=" + getSelection());
+        this.handleJump(
+          "https://duckduckgo.com/?q=" +
+            getSelection(this.props.currentBook.format)
+        );
         break;
       case "yandex":
-        this.handleJump("https://yandex.com/search/?text=" + getSelection());
+        this.handleJump(
+          "https://yandex.com/search/?text=" +
+            getSelection(this.props.currentBook.format)
+        );
         break;
       case "yahoo":
-        this.handleJump("https://search.yahoo.com/search?p=" + getSelection());
+        this.handleJump(
+          "https://search.yahoo.com/search?p=" +
+            getSelection(this.props.currentBook.format)
+        );
         break;
       case "naver":
         this.handleJump(
           "https://search.naver.com/search.naver?where=nexearch&sm=top_hty&fbm=1&ie=utf8&query=" +
-            getSelection()
+            getSelection(this.props.currentBook.format)
         );
         break;
       case "baike":
-        this.handleJump("https://baike.baidu.com/item/" + getSelection());
+        this.handleJump(
+          "https://baike.baidu.com/item/" +
+            getSelection(this.props.currentBook.format)
+        );
         break;
       case "wiki":
-        this.handleJump("https://en.wikipedia.org/wiki/" + getSelection());
+        this.handleJump(
+          "https://en.wikipedia.org/wiki/" +
+            getSelection(this.props.currentBook.format)
+        );
         break;
       default:
         this.handleJump(
           navigator.language === "zh-CN"
-            ? "https://www.baidu.com/s?wd=" + getSelection()
-            : "https://www.google.com/search?q=" + getSelection()
+            ? "https://www.baidu.com/s?wd=" +
+                getSelection(this.props.currentBook.format)
+            : "https://www.google.com/search?q=" +
+                getSelection(this.props.currentBook.format)
         );
         break;
     }
@@ -182,7 +208,7 @@ class PopupOption extends React.Component<PopupOptionProps> {
     searchBox.dispatchEvent(focusEvent);
     let searchIcon = document.querySelector(".header-search-icon");
     searchIcon?.dispatchEvent(clickEvent);
-    searchBox.value = getSelection() || "";
+    searchBox.value = getSelection(this.props.currentBook.format);
     const keyEvent: any = new KeyboardEvent("keydown", {
       bubbles: true,
       cancelable: true,
@@ -194,7 +220,7 @@ class PopupOption extends React.Component<PopupOptionProps> {
 
   handleSpeak = () => {
     var msg = new SpeechSynthesisUtterance();
-    msg.text = getSelection() || "";
+    msg.text = getSelection(this.props.currentBook.format);
     if (window.speechSynthesis && window.speechSynthesis.getVoices) {
       msg.voice = window.speechSynthesis.getVoices()[0];
       window.speechSynthesis.speak(msg);

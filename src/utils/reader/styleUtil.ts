@@ -7,7 +7,7 @@ import {
 class styleUtil {
   // add default css for iframe
   static addDefaultCss() {
-    let doc = getIframeDoc();
+    let doc = getIframeDoc("ANY")[0];
     if (!doc) return;
     let background = document.querySelector(".viewer");
     if (!background) return;
