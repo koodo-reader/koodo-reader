@@ -107,7 +107,7 @@ class TextToSpeech extends React.Component<
     if (ConfigService.getReaderConfig("isSliding") === "yes") {
       await sleep(1000);
     }
-    this.nodeList = this.props.htmlBook.rendition
+    this.nodeList = await this.props.htmlBook.rendition
       .audioText()
       .filter((item: string) => item && item.trim());
     if (this.nodeList.length === 0) {
@@ -153,11 +153,9 @@ class TextToSpeech extends React.Component<
         parseInt(ConfigService.getReaderConfig("voiceIndex")) || 0,
         parseFloat(ConfigService.getReaderConfig("voiceSpeed")) || 1
       );
+      let visibleTextList = await this.props.htmlBook.rendition.visibleText();
       if (
-        this.nodeList[index] ===
-        this.props.htmlBook.rendition.visibleText()[
-          this.props.htmlBook.rendition.visibleText().length - 1
-        ]
+        this.nodeList[index] === visibleTextList[visibleTextList.length - 1]
       ) {
         await this.props.htmlBook.rendition.next();
       }
@@ -191,11 +189,9 @@ class TextToSpeech extends React.Component<
 
     if (res === "start") {
       index++;
+      let visibleTextList = await this.props.htmlBook.rendition.visibleText();
       if (
-        this.nodeList[index] ===
-        this.props.htmlBook.rendition.visibleText()[
-          this.props.htmlBook.rendition.visibleText().length - 1
-        ]
+        this.nodeList[index] === visibleTextList[visibleTextList.length - 1]
       ) {
         await this.props.htmlBook.rendition.next();
       }

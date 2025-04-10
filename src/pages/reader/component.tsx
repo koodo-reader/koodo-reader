@@ -193,7 +193,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
                 onClick={async () => {
                   this.props.handleMenuMode("assistant");
                   this.props.handleOriginalText(
-                    this.props.htmlBook.rendition.chapterText()
+                    await this.props.htmlBook.rendition.chapterText()
                   );
                   this.props.handleOpenMenu(true);
                 }}
