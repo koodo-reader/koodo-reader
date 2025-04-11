@@ -18,6 +18,8 @@ declare var window: any;
 let currentBookMode = "home";
 let totalPage = 0;
 let totalBook = 0;
+let bookCount =
+  ConfigService.getReaderConfig("isDisablePagination") === "yes" ? 999 : 24;
 class BookList extends React.Component<BookListProps, BookListState> {
   constructor(props: BookListProps) {
     super(props);
@@ -140,9 +142,9 @@ class BookList extends React.Component<BookListProps, BookListState> {
       return <Redirect to="/manager/empty" />;
     }
     totalPage =
-      books.length % 24 === 0
-        ? books.length / 24
-        : Math.floor(books.length / 24) + 1;
+      books.length % bookCount === 0
+        ? books.length / bookCount
+        : Math.floor(books.length / bookCount) + 1;
     totalBook = books.length;
     if (bookMode !== currentBookMode) {
       this.props.handleCurrentPage(1);
@@ -152,8 +154,8 @@ class BookList extends React.Component<BookListProps, BookListState> {
     return books
       .filter(
         (_, index) =>
-          index >= (this.props.currentPage - 1) * 24 &&
-          index < this.props.currentPage * 24
+          index >= (this.props.currentPage - 1) * bookCount &&
+          index < this.props.currentPage * bookCount
       )
       .map((item: BookModel, index: number) => {
         return this.props.viewMode === "list" ? (

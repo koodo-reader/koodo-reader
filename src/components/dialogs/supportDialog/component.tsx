@@ -282,7 +282,7 @@ class SupporDialog extends React.Component<
                     style={{ textAlign: "center", lineHeight: "1.5" }}
                   >
                     {this.props.t(
-                      "For just the price of a takeout meal each year, you can continue to enjoy the premium features and support our development"
+                      "For just the price of a cup of coffee per year, you can continue to enjoy the premium features and support our development"
                     )}
                   </p>
                 </div>
