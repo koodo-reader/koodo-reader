@@ -49,6 +49,7 @@ export interface SettingInfoState {
   isKeepLocal: boolean;
   isUseBuiltIn: boolean;
   isDisableCrop: boolean;
+  isDisablePagination: boolean;
   isOverwriteLink: boolean;
   isDisablePDFCover: boolean;
   isAutoFullscreen: boolean;
