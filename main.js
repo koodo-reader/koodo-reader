@@ -471,6 +471,17 @@ const createMainWin = () => {
         chatView.webContents.once('dom-ready', () => {
           // Add the chat SDK script
           chatView.webContents.executeJavaScript(`
+          // Define the API for renderer to communicate with main
+          window.electronAPI = {
+            mouseEnterChat: function() {
+              const { ipcRenderer } = require('electron');
+              ipcRenderer.send('chat-mouse-enter');
+            },
+            mouseLeaveChat: function() {
+              const { ipcRenderer } = require('electron');
+              ipcRenderer.send('chat-mouse-leave');
+            },
+          };
           const script = document.createElement('script');
           script.type = 'text/javascript';
           script.text = \`
@@ -502,26 +513,19 @@ const createMainWin = () => {
                 });
               };
             })(document, "script");
-          \`;
+          \`; 
           document.head.appendChild(script);
 
           // Add mouse event handlers
           document.body.addEventListener('mouseenter', function() {
             window.electronAPI.mouseEnterChat();
           });
+          document.addEventListener('mouseup', function() {
+            window.electronAPI.mouseLeaveChat();
+          });
           
           
-          // Define the API for renderer to communicate with main
-          window.electronAPI = {
-            mouseEnterChat: function() {
-              const { ipcRenderer } = require('electron');
-              ipcRenderer.send('chat-mouse-enter');
-            },
-            mouseLeaveChat: function() {
-              const { ipcRenderer } = require('electron');
-              ipcRenderer.send('chat-mouse-leave');
-            },
-          };
+          
 
           // Add a slight delay to catch any initial mouse position
           setTimeout(() => {
@@ -572,8 +576,8 @@ const createMainWin = () => {
         setTimeout(() => {
           chatView.setBounds({ x: width - 80, y: height - 100, width: 80, height: 80 });
           chatView.webContents.executeJavaScript(`
-        window.$chatwoot && window.$chatwoot.toggle('close');
-      `);
+            window.$chatwoot && window.$chatwoot.toggle('close');
+          `);
         }, 300);
       });
     }

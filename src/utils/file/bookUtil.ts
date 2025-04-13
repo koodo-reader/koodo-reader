@@ -156,8 +156,11 @@ class BookUtil {
       )) &&
       !(await this.isBookExist("cache-" + book.key, "zip", book.path))
     ) {
+      if (!ConfigService.getItem("defaultSyncOption")) {
+        toast.error(i18n.t("Please select a sync service"));
+        return;
+      }
       if (
-        ConfigService.getItem("defaultSyncOption") &&
         (await TokenService.getToken("is_authed")) === "yes" &&
         (await this.isBookExistInCloud(book.key))
       ) {

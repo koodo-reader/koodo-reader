@@ -149,7 +149,6 @@ export const bindHtmlEvent = (
   doc.addEventListener(
     "wheel",
     async (event) => {
-      console.log(event, "sdfsd");
       if (event.ctrlKey && readerMode !== "double") {
         let scale = parseFloat(ConfigService.getReaderConfig("scale") || "1");
         if (event.deltaY < 0) {
@@ -219,7 +218,6 @@ export const HtmlMouseEvent = (
   readerMode: string,
   format: string
 ) => {
-  console.log("sdfsdfds");
   rendition.on("rendered", () => {
     let iframe = getIframeWin();
     if (!iframe) return;

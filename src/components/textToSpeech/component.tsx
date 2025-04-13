@@ -16,7 +16,8 @@ import TTSUtil from "../../utils/reader/ttsUtil";
 import "./textToSpeech.css";
 import { openExternalUrl } from "../../utils/common";
 import DatabaseService from "../../utils/storage/databaseService";
-
+declare var window: any;
+declare var global: any;
 class TextToSpeech extends React.Component<
   TextToSpeechProps,
   TextToSpeechState
@@ -107,9 +108,9 @@ class TextToSpeech extends React.Component<
     if (ConfigService.getReaderConfig("isSliding") === "yes") {
       await sleep(1000);
     }
-    this.nodeList = await this.props.htmlBook.rendition
-      .audioText()
-      .filter((item: string) => item && item.trim());
+    this.nodeList = (await this.props.htmlBook.rendition.audioText()).filter(
+      (item: string) => item && item.trim()
+    );
     if (this.nodeList.length === 0) {
       await this.props.htmlBook.rendition.next();
       this.nodeList = await this.handleGetText();
@@ -369,7 +370,7 @@ class TextToSpeech extends React.Component<
                       className="lang-setting-option"
                       key={item.value}
                       selected={
-                        item ===
+                        item.value ===
                         (ConfigService.getReaderConfig("voiceSpeed") || "1")
                       }
                     >
@@ -411,6 +412,17 @@ class TextToSpeech extends React.Component<
                       if (!(await checkPlugin(plugin))) {
                         toast.error(this.props.t("Plugin verification failed"));
                         return;
+                      }
+                      if (
+                        plugin.type === "voice" &&
+                        plugin.voiceList.length === 0
+                      ) {
+                        let voiceFunc = plugin.script;
+                        // eslint-disable-next-line no-eval
+                        eval(voiceFunc);
+                        plugin.voiceList = await global.getTTSVoice(
+                          plugin.config
+                        );
                       }
                       if (
                         this.props.plugins.find(

@@ -9,6 +9,8 @@ import { saveAs } from "file-saver";
 import JSZip from "jszip";
 import ConfigUtil from "./configUtil";
 import SyncService from "../storage/syncService";
+import toast from "react-hot-toast";
+import i18n from "../../i18n";
 declare var window: any;
 
 export const backup = async (service: string): Promise<Boolean> => {
@@ -27,6 +29,7 @@ export const backup = async (service: string): Promise<Boolean> => {
     if (service === "local") {
       const backupPath = await ipcRenderer.invoke("select-path");
       if (!backupPath) {
+        toast.error(i18n.t("Please select a backup path"));
         return false;
       }
       targetPath = backupPath;
