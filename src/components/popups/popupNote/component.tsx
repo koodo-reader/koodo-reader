@@ -67,7 +67,12 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
         {}
       )
     );
-
+    if (this.props.currentBook.format === "PDF") {
+      let bookLocation = this.props.htmlBook.rendition.getPositionByChapter(
+        this.props.chapterDocIndex
+      );
+      cfi = JSON.stringify(bookLocation);
+    }
     if (this.props.noteKey) {
       this.props.notes.forEach((item) => {
         if (item.key === this.props.noteKey) {
@@ -87,17 +92,6 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
         this.props.handleNoteKey("");
       });
     } else {
-      if (
-        ConfigService.getReaderConfig("pdfReaderMode") === "double" &&
-        this.props.currentBook.format === "PDF"
-      ) {
-        toast.error(
-          this.props.t(
-            "PDF files in double page mode does not support note taking yet"
-          )
-        );
-        return;
-      }
       let bookKey = this.props.currentBook.key;
       let range = JSON.stringify(
         await this.props.htmlBook.rendition.getHightlightCoords(
