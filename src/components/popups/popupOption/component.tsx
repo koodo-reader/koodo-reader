@@ -50,7 +50,12 @@ class PopupOption extends React.Component<PopupOptionProps> {
         {}
       )
     );
-
+    if (this.props.currentBook.format === "PDF") {
+      let bookLocation = this.props.htmlBook.rendition.getPositionByChapter(
+        this.props.chapterDocIndex
+      );
+      cfi = JSON.stringify(bookLocation);
+    }
     let percentage = ConfigService.getObjectConfig(
       this.props.currentBook.key,
       "recordLocation",

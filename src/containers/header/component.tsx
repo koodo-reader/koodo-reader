@@ -118,15 +118,14 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     _nextContext: any
   ) {
     if (nextProps.isAuthed && nextProps.isAuthed !== this.props.isAuthed) {
-      // if (isElectron) {
-      //   window.require("electron").ipcRenderer.invoke("new-chat", {
-      //     url: "https://dl.koodoreader.com/chat.html",
-      //     locale: getChatLocale(),
-      //   });
-      // } else {
-      //   addChatBox();
-      // }
-      addChatBox();
+      if (isElectron) {
+        window.require("electron").ipcRenderer.invoke("new-chat", {
+          url: "https://dl.koodoreader.com/chat.html",
+          locale: getChatLocale(),
+        });
+      } else {
+        addChatBox();
+      }
       if (
         this.props.books &&
         ConfigService.getReaderConfig("isProUpgraded") !== "yes"
