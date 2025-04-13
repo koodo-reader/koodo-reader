@@ -424,8 +424,23 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
             className="lang-setting-dropdown"
             onChange={this.handleAddDataSource}
           >
-            {[{ label: "Please select", value: "", isPro: false }, ...driveList]
+            {[
+              {
+                label: "Please select",
+                value: "",
+                isPro: false,
+                support: ["desktop", "browser", "phone"],
+              },
+              ...driveList,
+            ]
               .filter((item) => !this.props.dataSourceList.includes(item.value))
+              .filter((item) => {
+                if (!isElectron) {
+                  return item.support.includes("browser");
+                } else {
+                  return true;
+                }
+              })
               .map((item) => (
                 <option
                   value={item.value}

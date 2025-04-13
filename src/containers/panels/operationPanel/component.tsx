@@ -110,7 +110,7 @@ class OperationPanel extends React.Component<
 
     let cfi = JSON.stringify(bookLocation);
     if (!text) {
-      text = await this.props.htmlBook.rendition.visibleText().join(" ");
+      text = (await this.props.htmlBook.rendition.visibleText()).join(" ");
     }
     text = text
       .replace(/\s\s/g, "")

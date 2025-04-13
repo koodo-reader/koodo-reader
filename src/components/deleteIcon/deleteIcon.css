@@ -13,11 +13,10 @@
 .delete-digest-icon {
   position: relative;
   float: right;
-  font-size: 12px;
   margin-right: 3.5px;
   margin-top: 3px;
   cursor: pointer;
   float: right;
-  font-size: 18px;
+  font-size: 12px;
   cursor: pointer;
 }

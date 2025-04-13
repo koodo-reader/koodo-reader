@@ -109,11 +109,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         );
       }
     });
-    console.log(
-      highlightersByChapter,
-      "highlightersByChapter",
-      this.state.chapterDocIndex
-    );
 
     await this.props.htmlBook.rendition.renderHighlighters(
       highlightersByChapter,
@@ -327,10 +322,8 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         if (this.props.currentBook.format === "PDF") {
           let ownerDoc = (event.target as HTMLElement).ownerDocument;
           let targetIframe = ownerDoc?.defaultView?.frameElement;
-          console.log(targetIframe, "targetIframe");
           let id = targetIframe?.getAttribute("id") || "";
           let chapterDocIndex = id ? parseInt(id.split("-").reverse()[0]) : 0;
-          console.log(chapterDocIndex, "chapterDocIndex");
           this.setState({ chapterDocIndex });
         }
 
@@ -345,21 +338,17 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         }
         if (this.state.isDisablePopup) return;
         let selection = doc!.getSelection();
-        console.log(selection, "selection");
         if (!selection || selection.rangeCount === 0) return;
 
         var rect = selection.getRangeAt(0).getBoundingClientRect();
         this.setState({ rect });
       });
       doc.addEventListener("contextmenu", (event) => {
-        console.log("right click");
         if (this.props.currentBook.format === "PDF") {
           let ownerDoc = (event.target as HTMLElement).ownerDocument;
           let targetIframe = ownerDoc?.defaultView?.frameElement;
-          console.log(targetIframe, "targetIframe");
           let id = targetIframe?.getAttribute("id") || "";
           let chapterDocIndex = id ? parseInt(id.split("-").reverse()[0]) : 0;
-          console.log(chapterDocIndex, "chapterDocIndex");
           this.setState({ chapterDocIndex });
         }
         if (document.location.href.indexOf("localhost") === -1) {
@@ -382,7 +371,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     }
   };
   render() {
-    console.log(this.props.htmlBook, "htmlBook");
     return (
       <>
         {this.props.htmlBook ? (

@@ -68,7 +68,7 @@ class BackupDialog extends React.Component<
       if (result) {
         this.handleFinish();
       } else {
-        this.showMessage("Upload failed, check your connection");
+        this.showMessage("Backup failed");
       }
       return;
     }

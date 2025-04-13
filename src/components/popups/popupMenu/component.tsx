@@ -97,7 +97,6 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
   }
 
   openMenu = () => {
-    console.log("openMenu");
     this.setState({ deleteKey: "" });
     let docs = getIframeDoc(this.props.currentBook.format);
     let sel: Selection | null = null;
@@ -109,7 +108,6 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
         break;
       }
     }
-    console.log("sel", sel);
     this.props.handleChangeDirection(false);
     if (this.props.isOpenMenu) {
       this.props.handleMenuMode("");
