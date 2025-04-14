@@ -160,13 +160,13 @@ class BookUtil {
         toast.error(i18n.t("Please select a sync service"));
         return;
       }
+      toast.loading(i18n.t("Downloading"), {
+        id: "offline-book",
+      });
       if (
         (await TokenService.getToken("is_authed")) === "yes" &&
         (await this.isBookExistInCloud(book.key))
       ) {
-        toast.loading(i18n.t("Downloading"), {
-          id: "offline-book",
-        });
         let result = await this.downloadBook(book.key, book.format);
         if (ConfigService.getItem("defaultSyncOption") === "adrive") {
           let syncUtil = await SyncService.getSyncUtil();
@@ -205,7 +205,9 @@ class BookUtil {
           }
         }
       } else {
-        toast.error(i18n.t("Book not exists"));
+        toast.error(i18n.t("Book not exists"), {
+          id: "offline-book",
+        });
         return;
       }
     }

@@ -114,8 +114,7 @@ class PopupOption extends React.Component<PopupOptionProps> {
       this.props.handleMenuMode("");
       await this.props.htmlBook.rendition.createOneNote(
         digest,
-        this.handleNoteClick,
-        this.props.chapterDocIndex
+        this.handleNoteClick
       );
     });
   };

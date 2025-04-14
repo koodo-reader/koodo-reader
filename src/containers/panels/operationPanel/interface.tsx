@@ -12,7 +12,7 @@ export interface OperationPanelProps extends RouteComponentProps<any> {
   htmlBook: HtmlBookModel;
   locations: any;
   rendition: any;
-  time: number;
+  currentDuration: number;
   readerMode: string;
   handleBookmarks: (bookmarks: BookmarkModel[]) => void;
   handleReadingState: (isReading: boolean) => void;

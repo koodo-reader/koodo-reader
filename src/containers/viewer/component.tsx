@@ -85,7 +85,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
   handleHighlight = async (rendition: any) => {
     let highlighters: any = this.props.notes;
     if (!highlighters) return;
-    console.log(highlighters, "highlighters", this.state.chapterDocIndex);
     let highlightersByChapter = highlighters.filter((item: Note) => {
       if (item.bookKey !== this.props.currentBook.key) {
         return false;
@@ -110,15 +109,9 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         );
       }
     });
-    console.log(
-      highlightersByChapter,
-      "highlightersByChapter",
-      this.state.chapterDocIndex
-    );
     await this.props.htmlBook.rendition.renderHighlighters(
       highlightersByChapter,
-      this.handleNoteClick,
-      this.state.chapterDocIndex
+      this.handleNoteClick
     );
     if (
       this.props.currentBook.format === "PDF" &&
@@ -126,8 +119,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     ) {
       await this.props.htmlBook.rendition.renderHighlighters(
         highlightersByChapter,
-        this.handleNoteClick,
-        this.state.chapterDocIndex + 1
+        this.handleNoteClick
       );
     }
   };
