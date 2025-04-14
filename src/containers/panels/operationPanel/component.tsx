@@ -160,11 +160,13 @@ class OperationPanel extends React.Component<
           <span>
             <Trans
               i18nKey="Current reading time"
-              count={Math.floor(Math.abs(Math.floor(this.props.time / 60)))}
+              count={Math.floor(
+                Math.abs(Math.floor(this.props.currentDuration / 60))
+              )}
             >
               Current reading time:
               {{
-                count: Math.abs(Math.floor(this.props.time / 60)),
+                count: Math.abs(Math.floor(this.props.currentDuration / 60)),
               }}
               min
             </Trans>

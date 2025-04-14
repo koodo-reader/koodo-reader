@@ -30,5 +30,6 @@ export interface ReaderState {
   hoverPanel: string;
   scale: string;
   isShowScale: boolean;
-  time: number;
+  totalDuration: number;
+  currentDuration: number;
 }

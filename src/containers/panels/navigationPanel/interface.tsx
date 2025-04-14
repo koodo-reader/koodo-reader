@@ -6,7 +6,7 @@ export interface NavigationPanelProps {
   currentBook: BookModel;
   htmlBook: HtmlBookModel;
   bookmarks: BookmarkModel[];
-  time: number;
+  totalDuration: number;
   isNavLocked: boolean;
   handleFetchBookmarks: () => void;
   handleSearch: (isSearch: boolean) => void;

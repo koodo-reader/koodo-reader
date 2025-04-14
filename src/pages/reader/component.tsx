@@ -31,7 +31,8 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
       isOpenBottomPanel: false,
       hoverPanel: "",
       isOpenLeftPanel: this.props.isNavLocked,
-      time: 0,
+      totalDuration: 0,
+      currentDuration: 0,
       scale: ConfigService.getReaderConfig("scale"),
       isTouch: ConfigService.getReaderConfig("isTouch") === "yes",
       isPreventTrigger:
@@ -45,19 +46,24 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         .querySelector("body")
         ?.setAttribute("style", "background-color: rgba(0,0,0,0)");
     }
+    let totalDuration = 0;
+    let seconds = 0;
 
     this.tickTimer = setInterval(() => {
-      if (this.props.currentBook.key) {
-        let time = ConfigService.getObjectConfig(
+      if (totalDuration === 0) {
+        totalDuration = ConfigService.getObjectConfig(
           this.props.currentBook.key,
           "readingTime",
           0
         );
-        time += 1;
-        this.setState({ time });
+      }
+      if (this.props.currentBook.key) {
+        seconds += 1;
+        this.setState({ totalDuration: totalDuration + seconds });
+        this.setState({ currentDuration: seconds });
         ConfigService.setObjectConfig(
           this.props.currentBook.key,
-          time,
+          totalDuration + seconds,
           "readingTime"
         );
       }
@@ -456,7 +462,11 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
                 }
           }
         >
-          <NavigationPanel {...{ time: this.state.time }} />
+          <NavigationPanel
+            {...{
+              totalDuration: this.state.totalDuration,
+            }}
+          />
         </div>
         <div
           className="progress-panel-container"
@@ -472,7 +482,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
                 }
           }
         >
-          <ProgressPanel {...{ time: this.state.time }} />
+          <ProgressPanel />
         </div>
         <div
           className="operation-panel-container"
@@ -489,7 +499,11 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
           }
         >
           {this.props.htmlBook && (
-            <OperationPanel {...{ time: this.state.time }} />
+            <OperationPanel
+              {...{
+                currentDuration: this.state.currentDuration,
+              }}
+            />
           )}
         </div>
 

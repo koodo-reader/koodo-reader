@@ -133,8 +133,7 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
         this.props.handleMenuMode("");
         await this.props.htmlBook.rendition.createOneNote(
           note,
-          this.handleNoteClick,
-          this.props.chapterDocIndex
+          this.handleNoteClick
         );
       });
     }

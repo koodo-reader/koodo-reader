@@ -276,7 +276,8 @@ class NavigationPanel extends React.Component<
                 </Trans>
               </p>
               <span className="reading-duration">
-                <Trans>Reading time</Trans>: {Math.floor(this.props.time / 60)}
+                <Trans>Reading time</Trans>:{" "}
+                {Math.floor(this.props.totalDuration / 60)}
                 &nbsp; min
               </span>
               <div className="navigation-search-box">
