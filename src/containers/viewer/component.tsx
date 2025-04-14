@@ -101,12 +101,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         // pdf from 1.7.4 or older
         return cfi.page - 1 === this.state.chapterDocIndex;
       } else {
-        return (
-          item.chapterIndex === this.state.chapterDocIndex ||
-          (this.props.currentBook.format === "PDF" &&
-            this.props.readerMode === "double" &&
-            item.chapterIndex === this.state.chapterDocIndex + 1)
-        );
+        return item.chapterIndex === this.state.chapterDocIndex;
       }
     });
     await this.props.htmlBook.rendition.renderHighlighters(
@@ -117,6 +112,13 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       this.props.currentBook.format === "PDF" &&
       this.props.readerMode === "double"
     ) {
+      let highlightersByChapter = highlighters.filter((item: Note) => {
+        if (item.bookKey !== this.props.currentBook.key) {
+          return false;
+        }
+
+        return item.chapterIndex === this.state.chapterDocIndex + 1;
+      });
       await this.props.htmlBook.rendition.renderHighlighters(
         highlightersByChapter,
         this.handleNoteClick
