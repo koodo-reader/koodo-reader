@@ -81,11 +81,11 @@ class NavigationPanel extends React.Component<
           ? this.state.searchList.length
           : this.state.currentIndex * 10 + 10
       )
-      .map((item: any, index: number) => {
+      .map((item: any) => {
         return (
           <li
             className="nav-search-list-item"
-            key={index}
+            key={item.text}
             onClick={async () => {
               let bookLocation = JSON.parse(item.cfi) || {};
               await this.props.htmlBook.rendition.goToPosition(
