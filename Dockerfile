@@ -1,5 +1,5 @@
 FROM node:20-slim as builder
-RUN apt-get update && apt-get install -y jq curl wget python3
+RUN apt-get update && apt-get install -y jq curl wget python3 git
 WORKDIR /app
 
 ### Get the latest release source code tarball
