@@ -46,7 +46,6 @@ class ProgressPanel extends React.Component<
   };
   async handlePageNum(rendition) {
     let pageInfo = await rendition.getProgress();
-
     this.setState({
       currentPage: pageInfo.currentPage,
       totalPage: pageInfo.totalPage,
@@ -100,7 +99,11 @@ class ProgressPanel extends React.Component<
             value={
               this.state.targetPage
                 ? this.state.targetPage
-                : this.state.currentPage * (readerMode === "double" ? 2 : 1)
+                : this.state.currentPage *
+                  (readerMode === "double" &&
+                  this.props.currentBook.format !== "PDF"
+                    ? 2
+                    : 1)
             }
             onFocus={() => {
               this.setState({ targetPage: " " });
