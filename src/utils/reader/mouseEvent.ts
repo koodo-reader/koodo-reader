@@ -17,7 +17,7 @@ export const getSelection = (format: string) => {
     if (!doc) continue;
     let sel = doc.getSelection();
     if (!sel) continue;
-    let text = sel.toString();
+    text = sel.toString();
     text = text && text.trim();
     if (text) {
       break;

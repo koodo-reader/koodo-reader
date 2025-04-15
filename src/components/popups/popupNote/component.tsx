@@ -33,7 +33,7 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
       for (let i = 0; i < docs.length; i++) {
         let doc = docs[i];
         if (!doc) continue;
-        let text = doc.getSelection()?.toString();
+        text = doc.getSelection()?.toString() || "";
         if (text) {
           break;
         }

@@ -43,30 +43,19 @@ class PopupOption extends React.Component<PopupOptionProps> {
   };
   handleDigest = async () => {
     let bookKey = this.props.currentBook.key;
-    let cfi = JSON.stringify(
-      ConfigService.getObjectConfig(
-        this.props.currentBook.key,
-        "recordLocation",
-        {}
-      )
+    let bookLocation = ConfigService.getObjectConfig(
+      this.props.currentBook.key,
+      "recordLocation",
+      {}
     );
+    let cfi = JSON.stringify(bookLocation);
     if (this.props.currentBook.format === "PDF") {
       let bookLocation = this.props.htmlBook.rendition.getPositionByChapter(
         this.props.chapterDocIndex
       );
       cfi = JSON.stringify(bookLocation);
     }
-    let percentage = ConfigService.getObjectConfig(
-      this.props.currentBook.key,
-      "recordLocation",
-      {}
-    ).percentage
-      ? ConfigService.getObjectConfig(
-          this.props.currentBook.key,
-          "recordLocation",
-          {}
-        ).percentage
-      : "0";
+    let percentage = bookLocation.percentage ? bookLocation.percentage : "0";
     let color = this.props.color;
     let notes = "";
     let pageArea = document.getElementById("page-area");
