@@ -55,13 +55,12 @@ class OperationPanel extends React.Component<
           1000,
       });
       this.handleDisplayBookmark();
-
-      HtmlMouseEvent(
-        this.props.htmlBook.rendition,
-        this.props.currentBook.key,
-        this.props.readerMode,
-        this.props.currentBook.format
-      );
+      // HtmlMouseEvent(
+      //   this.props.htmlBook.rendition,
+      //   this.props.currentBook.key,
+      //   this.props.readerMode,
+      //   this.props.currentBook.format
+      // );
     });
   }
 
