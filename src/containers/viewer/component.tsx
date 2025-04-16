@@ -176,8 +176,20 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         "no",
         Kookit
       );
+      if (this.props.currentBook.format === "TXT") {
+        let bookLocation = ConfigService.getObjectConfig(
+          this.props.currentBook.key,
+          "recordLocation",
+          {}
+        );
+        await rendition.renderTo(
+          document.getElementById("page-area"),
+          bookLocation
+        );
+      } else {
+        await rendition.renderTo(document.getElementById("page-area"));
+      }
 
-      await rendition.renderTo(document.getElementById("page-area"));
       await this.handleRest(rendition);
       this.props.handleReadingState(true);
 
@@ -237,6 +249,19 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           isFirst: true,
         })
       );
+    }
+    if (this.props.currentBook.format === "TXT") {
+      setTimeout(async () => {
+        await rendition.refreshContent();
+        let chapters = rendition.getChapter();
+        let flattenChapters = rendition.flatChapter(chapters);
+        this.props.handleHtmlBook({
+          key: this.props.currentBook.key,
+          chapters,
+          flattenChapters,
+          rendition: rendition,
+        });
+      }, 1000);
     }
 
     rendition.on("rendered", async () => {
