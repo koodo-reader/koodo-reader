@@ -201,7 +201,7 @@ export const loadFontData = async () => {
     return availableFonts.map((font: any) => {
       return {
         label: font.fullName,
-        value: `"${font.fullName}", "${font.family}", "${font.postscriptName}"`,
+        value: `"${font.fullName}", "${font.postscriptName}"`,
       };
     });
   } catch (err) {

@@ -22,7 +22,7 @@ class ImageViewer extends React.Component<ImageViewerProps, ImageViewerStates> {
       for (let i = 0; i < docs.length; i++) {
         let doc = docs[i];
         if (!doc) continue;
-        doc.removeEventListener("click", this.showImage);
+        doc.addEventListener("click", this.showImage);
       }
     });
   }

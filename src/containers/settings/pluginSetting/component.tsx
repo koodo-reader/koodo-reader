@@ -13,6 +13,8 @@ import {
 import { getStorageLocation } from "../../../utils/common";
 import DatabaseService from "../../../utils/storage/databaseService";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
+import { isElectron } from "react-device-detect";
+declare var global: any;
 class SettingDialog extends React.Component<
   SettingInfoProps,
   SettingInfoState
@@ -110,6 +112,25 @@ class SettingDialog extends React.Component<
                       if (!(await checkPlugin(plugin))) {
                         toast.error(this.props.t("Plugin verification failed"));
                         return;
+                      }
+                      if (plugin.type === "voice" && !isElectron) {
+                        toast.error(
+                          this.props.t(
+                            "Only desktop version supports TTS plugin"
+                          )
+                        );
+                        return;
+                      }
+                      if (
+                        plugin.type === "voice" &&
+                        plugin.voiceList.length === 0
+                      ) {
+                        let voiceFunc = plugin.script;
+                        // eslint-disable-next-line no-eval
+                        eval(voiceFunc);
+                        plugin.voiceList = await global.getTTSVoice(
+                          plugin.config
+                        );
                       }
                       if (
                         this.props.plugins.find(
