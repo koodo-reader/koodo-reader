@@ -269,6 +269,7 @@
   "Switch Library": "切换书库",
   "Bind": "绑定",
   "Please select a backup path": "请选择一个备份路径",
+  "Only desktop version supports TTS plugin": "仅桌面版支持语音插件",
   "Disable pagination in book list": "图书列表不使用分页展示",
   "Modify the storage location of the library, and the library will be moved to the new location. Please ensure that the new folder is empty": "修改图书库的存储位置，图书库会被迁移到新位置，请确保新文件夹为空",
   "Switch between multiple libraries without affecting the original library. For multi-device synchronization in the free version, please refer to the documentation": "在多个书库中切换，原书库不受影响，免费版多端同步请参考帮助文档",

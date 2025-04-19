@@ -405,7 +405,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                   ConfigService.getReaderConfig("lang").startsWith("zh") && (
                     <div
                       className="voice-add-cancel"
-                      style={{ borderWidth: 0 }}
+                      style={{ borderWidth: 0, lineHeight: "30px" }}
                       onClick={() => {
                         openExternalUrl(WEBSITE_URL + "/zh/add-source");
                       }}

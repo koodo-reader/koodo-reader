@@ -1,6 +1,7 @@
 import { openExternalUrl } from "../common";
 
 export const handleLinkJump = async (event: any, rendition: any = {}) => {
+  console.log(event, "event");
   let href;
   if (event.target) {
     href =
@@ -19,6 +20,7 @@ export const handleLinkJump = async (event: any, rendition: any = {}) => {
             event.target.parentNode.parentNode.getAttribute("src")))) ||
       "";
   }
+  console.log(href, "href");
   if (href && href.indexOf("#") > -1) {
     let pageArea = document.getElementById("page-area");
     if (!pageArea) return;
