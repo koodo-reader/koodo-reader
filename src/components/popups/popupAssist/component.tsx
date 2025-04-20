@@ -36,7 +36,15 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
   async handleSum() {
     let originalText = this.props.originalText
       .replace(/(\r\n|\n|\r)/gm, "")
-      .replace(/-/gm, "");
+      .replace(/-/gm, "")
+      // Remove common garbage characters
+      .replace(
+        /[^\x20-\x7E\u00A0-\u00FF\u0100-\u017F\u4E00-\u9FFF\u3000-\u303F]/g,
+        ""
+      )
+      // Remove consecutive spaces
+      .replace(/\s{2,}/g, " ")
+      .trim();
     if (
       (!this.state.sumService ||
         this.props.plugins.findIndex(
