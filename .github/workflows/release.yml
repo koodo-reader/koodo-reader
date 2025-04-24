@@ -39,7 +39,7 @@ jobs:
         run: |
           mkdir -p ~/private_keys/
           echo ${{ github.ref }}
-          echo '${{ secrets.api_key }}' > ~/private_keys/AuthKey_${{ secrets.api_key_id }}.p8
+          echo '${{ secrets.API_KEY }}' > ~/private_keys/AuthKey_${{ secrets.API_KEY_ID }}.p8
           brew install python-setuptools
       - name: Set environment variable USE_HARD_LINKS
         run: echo "USE_HARD_LINKS=false" >> $GITHUB_ENV
@@ -52,13 +52,13 @@ jobs:
           github_token: ${{ secrets.github_token }}
 
           # macOS code signing certificate
-          mac_certs: ${{ secrets.mac_certs }}
-          mac_certs_password: ${{ secrets.mac_certs_password }}
+          mac_certs: ${{ secrets.MAC_CERTS }}
+          mac_certs_password: ${{ secrets.MAC_CERTS_PASSWORD }}
 
           # If the commit is tagged with a version (e.g. "v1.0.0"),
           # release the app after building
           release: ${{ startsWith(github.ref, 'refs/tags/v') }}
         env:
           # macOS notarization API key
-          API_KEY_ID: ${{ secrets.api_key_id }}
-          API_KEY_ISSUER_ID: ${{ secrets.api_key_issuer_id }}
+          API_KEY_ID: ${{ secrets.API_KEY_ID }}
+          API_KEY_ISSUER_ID: ${{ secrets.API_KEY_ISSUER_ID }}
