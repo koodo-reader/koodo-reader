@@ -217,6 +217,15 @@
       ]
     },
     "mac": {
+      "darkModeSupport": true,
+      "entitlements": "assets/macos/entitlements.mac.plist",
+      "entitlementsInherit": "assets/macos/entitlements.mac.plist",
+      "identity": "Liang Guo",
+      "gatekeeperAssess": false,
+      "hardenedRuntime": true,
+      "notarize": {
+        "teamId": "8R8C65C469"
+      },
       "target": [
         {
           "target": "dmg",
