@@ -223,9 +223,7 @@
       "identity": "Liang Guo",
       "gatekeeperAssess": false,
       "hardenedRuntime": true,
-      "notarize": {
-        "teamId": "8R8C65C469"
-      },
+      "notarize": true,
       "target": [
         {
           "target": "dmg",
