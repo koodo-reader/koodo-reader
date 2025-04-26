@@ -83,35 +83,6 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
   };
   render() {
     let { books } = this.props;
-    if (isMobile && document.location.href.indexOf("192.168") === -1) {
-      return (
-        <>
-          <p className="waring-title">
-            <Trans>Warning</Trans>
-          </p>
-          <div className="mobile-warning">
-            <span>
-              <Trans>
-                For better user experince, please visit this site on a computer
-              </Trans>
-            </span>
-          </div>
-          <div>
-            <img
-              src={
-                ConfigService.getReaderConfig("appSkin") === "night" ||
-                (ConfigService.getReaderConfig("appSkin") === "system" &&
-                  ConfigService.getReaderConfig("isOSNight") === "yes")
-                  ? emptyDark
-                  : emptyLight
-              }
-              alt=""
-              className="waring-pic"
-            />
-          </div>
-        </>
-      );
-    }
     return (
       <div
         className="manager"
