@@ -26,7 +26,13 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
       sumService:
         ConfigService.getReaderConfig("sumService") ||
         "official-ai-assistant-plugin",
-      sumTarget: ConfigService.getReaderConfig("sumTarget") || "English",
+      sumTarget:
+        ConfigService.getReaderConfig("sumTarget") ||
+        getDefaultTransTarget({
+          English: "English",
+          "Simplified Chinese": "Simplified Chinese",
+          "Traditional Chinese": "Traditional Chinese",
+        }),
       isAddNew: false,
     };
   }
@@ -245,19 +251,15 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
                       value={item}
                       key={index}
                       className="add-dialog-shelf-list-option"
-                      selected={
-                        ConfigService.getReaderConfig("sumTarget") === item
-                          ? true
-                          : false
-                      }
+                      selected={this.state.sumTarget === item ? true : false}
                     >
-                      {
+                      {this.props.t(
                         Object.values(
                           this.props.plugins.find(
                             (item) => item.key === this.state.sumService
                           )?.langList as any[]
                         )[index]
-                      }
+                      )}
                     </option>
                   );
                 })}

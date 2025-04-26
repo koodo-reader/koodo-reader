@@ -394,7 +394,9 @@ export const getDefaultTransTarget = (langList) => {
   };
   const lang = ConfigService.getReaderConfig("lang");
   const langKeys = Object.keys(langMap);
+  console.log(lang, langKeys);
   let langTarget = langKeys.find((key) => key.includes(langMap2[lang]));
+  console.log(langTarget, "langTarget");
   return langMap[langTarget || "English"];
 };
 export const WEBSITE_URL = "https://koodoreader.com";
