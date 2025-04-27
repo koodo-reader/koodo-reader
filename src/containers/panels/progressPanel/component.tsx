@@ -24,6 +24,7 @@ class ProgressPanel extends React.Component<
       nextProps.htmlBook.rendition.on("page-changed", async () => {
         await this.handlePageNum(nextProps.htmlBook.rendition);
         this.handleCurrentChapterIndex(nextProps.htmlBook.rendition);
+        this.props.handleFetchPercentage(this.props.currentBook);
       });
       nextProps.htmlBook.rendition.on("rendered", async () => {
         await this.handlePageNum(nextProps.htmlBook.rendition);

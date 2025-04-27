@@ -216,6 +216,8 @@ class SupporDialog extends React.Component<
                               id: "check-payment-status",
                             }
                           );
+                          let userRequest = await getUserRequest();
+                          await userRequest.refreshUserToken();
                           this.props.handleShowSupport(false);
                         }
                       } else {
