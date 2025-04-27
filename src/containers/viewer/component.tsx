@@ -302,7 +302,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       }
       this.props.handleCurrentChapter(chapter);
       this.props.handleCurrentChapterIndex(chapterDocIndex);
-      this.props.handleFetchPercentage(this.props.currentBook);
+
       this.setState({
         chapter,
         chapterDocIndex,
