@@ -392,7 +392,6 @@ const createMainWin = () => {
     } else {
       return result;
     }
-
   });
   ipcMain.handle("close-database", async (event, config) => {
     const { SqlStatement } = await import('./src/assets/lib/kookit-extra.min.mjs');
