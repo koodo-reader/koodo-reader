@@ -39,6 +39,25 @@ export const getSummaryStream = async (
   );
   return result;
 };
+export const getAnswerStream = async (
+  text: string,
+  question: string,
+  history: any[],
+  mode: string,
+  onMessage: (result) => void
+) => {
+  let readerRequest = await getReaderRequest();
+  let result = await readerRequest.getAnswerFetch(
+    {
+      text,
+      question,
+      history,
+      mode,
+    },
+    onMessage
+  );
+  return result;
+};
 export const getDictionary = async (word: string, from: string, to: string) => {
   let readerRequest = await getReaderRequest();
   let result = await readerRequest.getDictionary({ word, from, to });

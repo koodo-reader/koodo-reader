@@ -284,3 +284,21 @@ export const officialDictList = [
     nativeLang: "Classical Chinese",
   },
 ];
+export const sampleQuestion = [
+  {
+    mode: "ask",
+    question: "Summarize this chapter for me",
+  },
+  {
+    mode: "ask",
+    question: "What are the key points of this chapter",
+  },
+  {
+    mode: "chat",
+    question: "Recommend me some books from Colleen Hoover",
+  },
+  {
+    mode: "chat",
+    question: "Explain Stoicism and its principles to me",
+  },
+];

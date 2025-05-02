@@ -1,0 +1,50 @@
+.send-icon {
+  position: absolute;
+  bottom: 16px;
+  right: 35px;
+  font-size: 18px;
+  cursor: pointer;
+}
+.popup-assist-shortcut-container {
+  width: 100%;
+}
+.popup-assist-shortcut {
+  margin-right: 20px;
+  color: #f16464;
+  opacity: 0.8;
+  cursor: pointer;
+  margin-top: 10px;
+}
+.trans-add-content-box::placeholder {
+  opacity: 0.8;
+}
+.popup-message-user {
+  background-color: #f0f0f0;
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 10px;
+  float: right;
+  border-bottom-right-radius: 0px;
+}
+.popup-message-assistant {
+  padding: 10px;
+  padding-left: 0px;
+  padding-right: 0px;
+  margin-bottom: 10px;
+  float: left;
+  width: 100%;
+}
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Apply the animation to the icon-loading class */
+.icon-loading {
+  display: inline-block;
+  animation: spin 1s linear infinite;
+}
