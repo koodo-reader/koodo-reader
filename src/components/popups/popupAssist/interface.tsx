@@ -11,9 +11,13 @@ export interface PopupAssistProps {
   t: (title: string) => string;
 }
 export interface PopupAssistState {
-  sumText: string;
-  prototype: string;
-  sumService: string;
-  sumTarget: string;
+  aiService: string;
   isAddNew: boolean;
+  isWaiting: boolean;
+  question: string;
+  askHistory: any[];
+  chatHistory: any[];
+  answer: string;
+  mode: string;
+  inputQuestion: string;
 }

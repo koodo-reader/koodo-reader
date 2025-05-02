@@ -63,6 +63,8 @@
   "Default": "Default",
   "Small": "Small",
   "Medium": "Medium",
+  "Reading Assistant": "Reading",
+  "Chat Assistant": "Chat",
   "Large": "Large",
   "Cancellation successful": "Cancellation successful",
   "Only supported by desktop version": "Only supported with the desktop version",
