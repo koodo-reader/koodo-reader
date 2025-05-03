@@ -70,6 +70,10 @@ class AccountSetting extends React.Component<
       return;
     }
     this.setState({ settingLogin: event.target.value });
+    if (event.target.value !== "email") {
+      let url = LoginHelper.getAuthUrl(event.target.value, "manual");
+      this.handleJump(url);
+    }
   };
   handleDeleteLoginOption = async (event: any) => {
     if (!event.target.value) {
@@ -220,7 +224,7 @@ class AccountSetting extends React.Component<
               className="token-dialog-token-box"
               id="token-dialog-token-box"
               placeholder={this.props.t(
-                "Please authorize your account, and fill the following box with the token"
+                "Please click the authorize button below to authorize your account, enter the obtained credentials here, and then click the bind button below"
               )}
               onContextMenu={() => {
                 handleContextMenu("token-dialog-token-box");

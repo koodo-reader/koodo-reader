@@ -405,3 +405,19 @@ export const formatTimestamp = (timestamp) => {
   // return date.toLocaleDateString() + " " + date.toLocaleTimeString();
   return date.toLocaleDateString();
 };
+export const checkMissingBook = (bookList: Book[]) => {
+  if (!isElectron) return;
+  var fs = window.require("fs");
+  var path = window.require("path");
+  for (let index = 0; index < bookList.length; index++) {
+    const book = bookList[index];
+    let fileName = book.key + "." + book.format.toLowerCase();
+    let expectedPath = path.join(getStorageLocation() || "", `book`, fileName);
+    if (fs.existsSync(expectedPath)) {
+      continue;
+    }
+    if (book.path && fs.existsSync(book.path)) {
+      fs.copyFileSync(book.path, expectedPath);
+    }
+  }
+};

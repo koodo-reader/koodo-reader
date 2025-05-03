@@ -37,10 +37,13 @@ class DeleteIcon extends React.Component<DeleteIconProps, DeleteIconStates> {
         (item) => item.key === this.props.itemKey
       );
       if (!note) return;
-      this.props.htmlBook.rendition.removeOneNote(
-        this.props.itemKey,
-        note.chapterIndex
-      );
+      if (this.props.htmlBook && this.props.htmlBook.rendition) {
+        this.props.htmlBook.rendition.removeOneNote(
+          this.props.itemKey,
+          note.chapterIndex
+        );
+      }
+
       DatabaseService.deleteRecord(this.props.itemKey, "notes").then(() => {
         deleteFunc();
         toast.success(this.props.t("Deletion successful"));

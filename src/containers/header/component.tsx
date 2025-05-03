@@ -27,6 +27,7 @@ import CoverUtil from "../../utils/file/coverUtil";
 import BookUtil from "../../utils/file/bookUtil";
 import {
   addChatBox,
+  checkMissingBook,
   getChatLocale,
   getStorageLocation,
   removeChatBox,
@@ -216,6 +217,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       this.setState({ isSync: false });
       return false;
     }
+    checkMissingBook(this.props.books);
     toast.loading(
       this.props.t("Start syncing") +
         " (" +
@@ -312,7 +314,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     if (this.props.defaultSyncOption === "adrive") {
       toast.success(
         this.props.t(
-          "Due to Aliyun Drive's stringent concurrency restrictions, we have bypassed the synchronization of books and covers. Please manually download the books by clicking on them"
+          "We have bypassed the synchronization of book cover for Aliyun Drive"
         ),
         {
           duration: 4000,
