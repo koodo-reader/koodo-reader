@@ -108,6 +108,17 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
       return;
     }
     this.props.handleSettingDrive(event.target.value);
+    let settingDrive = event.target.value;
+    if (
+      settingDrive === "dropbox" ||
+      settingDrive === "google" ||
+      settingDrive === "boxnet" ||
+      settingDrive === "pcloud" ||
+      settingDrive === "adrive" ||
+      settingDrive === "microsoft"
+    ) {
+      this.handleJump(new SyncUtil(settingDrive, {}).getAuthUrl());
+    }
   };
   handleDeleteDataSource = async (event: any) => {
     if (!event.target.value) {
@@ -286,7 +297,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                   className="token-dialog-token-box"
                   id="token-dialog-token-box"
                   placeholder={this.props.t(
-                    "Please authorize your account, and fill the following box with the token"
+                    "Please click the authorize button below to authorize your account, enter the obtained credentials here, and then click the bind button below"
                   )}
                   onChange={(e) => {
                     if (e.target.value) {
