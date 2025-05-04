@@ -95,7 +95,6 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
             : this.state.chatHistory,
           this.state.mode,
           (result) => {
-            console.log(result, "result");
             if (result && result.text) {
               if (isFirst) {
                 this.setState({
@@ -112,7 +111,6 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
             this.scrollToBottom();
           }
         );
-        console.log(res, "res4534543");
         if (res.data && res.data.done) {
           if (this.state.mode === "ask") {
             this.setState({

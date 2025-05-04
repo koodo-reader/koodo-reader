@@ -181,7 +181,6 @@ export const getPageWidth = (
       (isNavLocked ? 300 : 0) -
       (isSettingLocked ? 300 : 0);
     let width = findValidMultiple(preWidth);
-    console.log(isNavLocked, isSettingLocked, preWidth, width);
     pageOffset = `calc(50vw + ${isNavLocked ? 150 : 0}px - ${
       isSettingLocked ? 150 : 0
     }px - ${width / 2}px)`;
