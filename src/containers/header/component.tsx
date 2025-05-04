@@ -452,14 +452,15 @@ class Header extends React.Component<HeaderProps, HeaderState> {
           <div
             className="setting-icon-container"
             onClick={async () => {
-              this.setState({ isSync: true });
               if (!isElectron && !this.props.isAuthed) {
                 toast(
                   this.props.t(
                     "This feature is not available in the free version"
                   )
                 );
+                return;
               }
+              this.setState({ isSync: true });
               if (this.props.isAuthed) {
                 this.handleCloudSync();
               } else {

@@ -7,6 +7,7 @@ const mapStateToProps = (state: stateType) => {
     currentBook: state.book.currentBook,
     readerMode: state.reader.readerMode,
     isNavLocked: state.reader.isNavLocked,
+    isSettingLocked: state.reader.isSettingLocked,
   };
 };
 const actionCreator = {};

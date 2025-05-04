@@ -31,6 +31,7 @@ const mapStateToProps = (state: stateType) => {
     renderNoteFunc: state.book.renderNoteFunc,
     htmlBook: state.reader.htmlBook,
     isNavLocked: state.reader.isNavLocked,
+    isSettingLocked: state.reader.isSettingLocked,
     isOpenMenu: state.viewArea.isOpenMenu,
     books: state.manager.books,
     notes: state.reader.notes,

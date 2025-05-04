@@ -18,6 +18,7 @@ const initState = {
   htmlBook: null,
   readerMode: "double",
   isNavLocked: ConfigService.getReaderConfig("isNavLocked") === "yes",
+  isSettingLocked: ConfigService.getReaderConfig("isSettingLocked") === "yes",
 };
 export function reader(
   state = initState,
@@ -54,6 +55,11 @@ export function reader(
       return {
         ...state,
         isNavLocked: action.payload,
+      };
+    case "HANDLE_SETTING_LOCK":
+      return {
+        ...state,
+        isSettingLocked: action.payload,
       };
     case "HANDLE_HTML_BOOK":
       return {

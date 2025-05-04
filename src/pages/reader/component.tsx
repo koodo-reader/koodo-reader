@@ -23,14 +23,11 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
   constructor(props: ReaderProps) {
     super(props);
     this.state = {
-      isOpenRightPanel:
-        ConfigService.getReaderConfig("isSettingLocked") === "yes"
-          ? true
-          : false,
       isOpenTopPanel: false,
       isOpenBottomPanel: false,
       hoverPanel: "",
       isOpenLeftPanel: this.props.isNavLocked,
+      isOpenRightPanel: this.props.isSettingLocked,
       totalDuration: 0,
       currentDuration: 0,
       scale: ConfigService.getReaderConfig("scale"),
@@ -118,7 +115,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
   handleLeaveReader = (position: string) => {
     switch (position) {
       case "right":
-        if (ConfigService.getReaderConfig("isSettingLocked") === "yes") {
+        if (this.props.isSettingLocked) {
           break;
         } else {
           this.setState({ isOpenRightPanel: false });
@@ -190,6 +187,9 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
                 this.handleLocation();
                 setTimeout(() => (lock = false), throttleTime);
               }}
+              style={{
+                right: this.props.isSettingLocked ? 315 : 15,
+              }}
             >
               <span className="icon-dropdown next-chapter-single"></span>
             </div>
@@ -208,6 +208,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
                   transform: "rotate(0deg)",
                   fontWeight: "bold",
                   fontSize: "17px",
+                  right: this.props.isSettingLocked ? 315 : 15,
                 }}
               >
                 AI
@@ -224,13 +225,19 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
               this.handleEnterReader("bottom");
               this.handleEnterReader("top");
             }}
+            style={{ right: this.props.isSettingLocked ? 315 : 15 }}
           >
             <span className="icon-grid reader-setting-icon"></span>
           </div>
         )}
         {(this.props.readerMode === "scroll" ||
           this.props.readerMode === "single") && (
-          <>
+          <div
+            style={{
+              position: "absolute",
+              right: this.props.isSettingLocked ? 315 : 15,
+            }}
+          >
             <div
               className="reader-zoom-in-icon-container"
               onClick={() => {
@@ -307,7 +314,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
                 />
               </div>
             )}
-          </>
+          </div>
         )}
 
         <Toaster />
@@ -387,8 +394,19 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
           }}
           style={
             this.state.hoverPanel === "top"
-              ? { opacity: 0.5, marginLeft: this.props.isNavLocked ? 150 : 0 }
-              : { marginLeft: this.props.isNavLocked ? 150 : 0 }
+              ? {
+                  opacity: 0.5,
+                  marginLeft:
+                    this.props.isNavLocked && !this.props.isSettingLocked
+                      ? 150
+                      : 0,
+                }
+              : {
+                  marginLeft:
+                    this.props.isNavLocked && !this.props.isSettingLocked
+                      ? 150
+                      : 0,
+                }
           }
           onMouseLeave={() => {
             isHovering = false;
@@ -419,8 +437,19 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
           }}
           style={
             this.state.hoverPanel === "bottom"
-              ? { opacity: 0.5, marginLeft: this.props.isNavLocked ? 150 : 0 }
-              : { marginLeft: this.props.isNavLocked ? 150 : 0 }
+              ? {
+                  opacity: 0.5,
+                  marginLeft:
+                    this.props.isNavLocked && !this.props.isSettingLocked
+                      ? 150
+                      : 0,
+                }
+              : {
+                  marginLeft:
+                    this.props.isNavLocked && !this.props.isSettingLocked
+                      ? 150
+                      : 0,
+                }
           }
           onMouseLeave={() => {
             isHovering = false;
@@ -440,10 +469,9 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
           }}
           style={
             this.state.isOpenRightPanel
-              ? { marginLeft: this.props.isNavLocked ? 150 : 0 }
+              ? {}
               : {
                   transform: "translateX(309px)",
-                  marginLeft: this.props.isNavLocked ? 150 : 0,
                 }
           }
         >
@@ -475,10 +503,18 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
           }}
           style={
             this.state.isOpenBottomPanel
-              ? { marginLeft: this.props.isNavLocked ? 150 : 0 }
+              ? {
+                  marginLeft:
+                    this.props.isNavLocked && !this.props.isSettingLocked
+                      ? 150
+                      : 0,
+                }
               : {
                   transform: "translateY(110px)",
-                  marginLeft: this.props.isNavLocked ? 150 : 0,
+                  marginLeft:
+                    this.props.isNavLocked && !this.props.isSettingLocked
+                      ? 150
+                      : 0,
                 }
           }
         >
@@ -491,10 +527,18 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
           }}
           style={
             this.state.isOpenTopPanel
-              ? { marginLeft: this.props.isNavLocked ? 150 : 0 }
+              ? {
+                  marginLeft:
+                    this.props.isNavLocked && !this.props.isSettingLocked
+                      ? 150
+                      : 0,
+                }
               : {
                   transform: "translateY(-110px)",
-                  marginLeft: this.props.isNavLocked ? 150 : 0,
+                  marginLeft:
+                    this.props.isNavLocked && !this.props.isSettingLocked
+                      ? 150
+                      : 0,
                 }
           }
         >

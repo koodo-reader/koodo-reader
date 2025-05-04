@@ -157,7 +157,8 @@ export const getPageWidth = (
   readerMode: string,
   scale: string,
   margin: number,
-  isNavLocked: boolean
+  isNavLocked: boolean,
+  isSettingLocked: boolean
 ) => {
   const findValidMultiple = (limit: number) => {
     let multiple = limit - (limit % 12);
@@ -177,16 +178,25 @@ export const getPageWidth = (
     let preWidth =
       document.body.clientWidth * parseFloat(scale) -
       document.body.clientWidth * 0.4 -
-      (isNavLocked ? 300 : 0);
+      (isNavLocked ? 300 : 0) -
+      (isSettingLocked ? 300 : 0);
     let width = findValidMultiple(preWidth);
-
-    pageOffset = `calc(50vw + ${isNavLocked ? 150 : 0}px - ${width / 2}px)`;
+    console.log(isNavLocked, isSettingLocked, preWidth, width);
+    pageOffset = `calc(50vw + ${isNavLocked ? 150 : 0}px - ${
+      isSettingLocked ? 150 : 0
+    }px - ${width / 2}px)`;
     pageWidth = `${width}px`;
   } else if (readerMode === "double") {
     let width = findValidMultiple(
-      document.body.clientWidth - 2 * margin - 80 - (isNavLocked ? 300 : 0)
+      document.body.clientWidth -
+        2 * margin -
+        80 -
+        (isNavLocked ? 300 : 0) -
+        (isSettingLocked ? 300 : 0)
     );
-    pageOffset = `calc(50vw + ${isNavLocked ? 150 : 0}px - ${width / 2}px)`;
+    pageOffset = `calc(50vw + ${isNavLocked ? 150 : 0}px - ${
+      isSettingLocked ? 150 : 0
+    }px - ${width / 2}px)`;
     pageWidth = `${width}px`;
   }
   return {

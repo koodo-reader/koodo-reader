@@ -6,6 +6,7 @@ export interface ReaderProps {
   t: (title: string) => string;
   htmlBook: HtmlBookModel;
   isNavLocked: boolean;
+  isSettingLocked: boolean;
   isSearch: boolean;
   isAuthed: boolean;
   readerMode: string;

@@ -48,6 +48,7 @@ class PopupBox extends React.Component<PopupBoxProps, PopupBoxStates> {
           className="popup-box-container"
           style={{
             marginLeft: this.props.isNavLocked ? 150 : 0,
+            marginRight: this.props.isSettingLocked ? 150 : 0,
             height: this.props.menuMode === "assistant" ? "400px" : "300px",
           }}
         >
