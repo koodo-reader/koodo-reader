@@ -22,7 +22,8 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
         this.props.readerMode,
         this.state.scale,
         this.state.margin,
-        this.props.isNavLocked
+        this.props.isNavLocked,
+        this.props.isSettingLocked
       )
     );
   }
@@ -40,7 +41,10 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
                   width: `calc(${this.state.pageWidth} + 98px)`,
                   boxShadow: "0 0 0px rgba(191, 191, 191, 1)",
                 }
-              : { left: this.props.isNavLocked ? 305 : 5 }
+              : {
+                  left: this.props.isNavLocked ? 305 : 5,
+                  right: this.props.isSettingLocked ? 305 : 5,
+                }
           }
         ></div>
 
@@ -53,7 +57,10 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
                   left: this.state.pageOffset,
                   width: `calc(${this.state.pageWidth} + 100px)`,
                 }
-              : { left: this.props.isNavLocked ? 307 : 7 }
+              : {
+                  left: this.props.isNavLocked ? 307 : 7,
+                  right: this.props.isSettingLocked ? 307 : 7,
+                }
           }
         >
           {(!ConfigService.getReaderConfig("backgroundColor") &&
@@ -123,7 +130,10 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
                   width: `calc(${this.state.pageWidth} + 102px)`,
                   boxShadow: "0 0 0px rgba(191, 191, 191, 1)",
                 }
-              : { left: this.props.isNavLocked ? 309 : 9 }
+              : {
+                  left: this.props.isNavLocked ? 309 : 9,
+                  right: this.props.isSettingLocked ? 309 : 9,
+                }
           }
         ></div>
       </>

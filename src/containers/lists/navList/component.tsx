@@ -76,7 +76,7 @@ class NavList extends React.Component<NavListProps, NavListState> {
     let colorType = color.split("-")[0];
     let colorIndex = parseInt(color.split("-")[1]);
     return colorType === "color"
-      ? { backgroundColor: colors[colorIndex] }
+      ? { backgroundColor: colors[colorIndex], color: "#000" }
       : {
           borderBottom: `2px solid ${lines[colorIndex]}`,
           display: "inline",

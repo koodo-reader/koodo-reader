@@ -8,6 +8,7 @@ import SettingSwitch from "../../../components/readerSettings/settingSwitch";
 import { SettingPanelProps, SettingPanelState } from "./interface";
 import { Trans } from "react-i18next";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
+import BookUtil from "../../../utils/file/bookUtil";
 
 class SettingPanel extends React.Component<
   SettingPanelProps,
@@ -24,20 +25,30 @@ class SettingPanel extends React.Component<
   }
 
   handleLock = () => {
-    this.setState({ isSettingLocked: !this.state.isSettingLocked }, () => {
-      ConfigService.setReaderConfig(
-        "isSettingLocked",
-        this.state.isSettingLocked ? "yes" : "no"
-      );
-    });
+    this.props.handleSettingLock(!this.props.isSettingLocked);
+    ConfigService.setReaderConfig(
+      "isSettingLocked",
+      !this.props.isSettingLocked ? "yes" : "no"
+    );
+    BookUtil.reloadBooks();
   };
 
   render() {
     return (
-      <div className="setting-panel-parent">
+      <div
+        className="setting-panel-parent"
+        style={{
+          backgroundColor: this.props.isSettingLocked
+            ? ConfigService.getReaderConfig("backgroundColor")
+            : "",
+          color: this.props.isSettingLocked
+            ? ConfigService.getReaderConfig("textColor")
+            : "",
+        }}
+      >
         <span
           className={
-            this.state.isSettingLocked
+            this.props.isSettingLocked
               ? "icon-lock lock-icon"
               : "icon-unlock lock-icon"
           }

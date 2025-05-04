@@ -72,7 +72,8 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         this.props.readerMode,
         this.state.scale,
         this.state.margin,
-        this.props.isNavLocked
+        this.props.isNavLocked,
+        this.props.isSettingLocked
       )
     );
     this.props.handleRenderBookFunc(this.handleRenderBook);

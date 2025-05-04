@@ -10,6 +10,7 @@ export interface PopupBoxProps {
   notes: NoteModel[];
   color: number;
   isNavLocked: boolean;
+  isSettingLocked: boolean;
   rendition: any;
   // cfiRange: any;
   rect: any;

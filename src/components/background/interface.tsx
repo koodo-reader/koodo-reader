@@ -3,6 +3,7 @@ export interface BackgroundProps {
   currentBook: BookModel;
   readerMode: string;
   isNavLocked: boolean;
+  isSettingLocked: boolean;
 }
 export interface BackgroundState {
   isSingle: boolean;

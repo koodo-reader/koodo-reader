@@ -40,6 +40,9 @@ export function handleReaderMode(readerMode: string) {
 export function handleNavLock(isNavLocked: boolean) {
   return { type: "HANDLE_NAV_LOCK", payload: isNavLocked };
 }
+export function handleSettingLock(isSettingLocked: boolean) {
+  return { type: "HANDLE_SETTING_LOCK", payload: isSettingLocked };
+}
 export function handleFetchNotes() {
   return (dispatch: (arg0: { type: string; payload: NoteModel[] }) => void) => {
     DatabaseService.getAllRecords("notes").then((value) => {
