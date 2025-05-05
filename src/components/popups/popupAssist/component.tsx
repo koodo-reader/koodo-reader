@@ -404,10 +404,11 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
               className="dict-text-box"
               style={{
                 marginTop: "60px",
+                width: "calc(100% + 20px)",
                 height: "225px",
                 paddingBottom: "60px",
                 paddingLeft: "0px",
-                paddingRight: "0px",
+                paddingRight: "20px",
               }}
               ref={this.chatBoxRef}
             >
