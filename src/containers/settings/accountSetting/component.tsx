@@ -9,6 +9,7 @@ import {
   formatTimestamp,
   handleContextMenu,
   openExternalUrl,
+  reloadManager,
   WEBSITE_URL,
 } from "../../../utils/common";
 import { getStorageLocation } from "../../../utils/common";
@@ -589,6 +590,7 @@ class AccountSetting extends React.Component<
                 this.props.handleFetchDataSourceList();
                 this.props.handleFetchDefaultSyncOption();
                 toast.success(this.props.t("Log out successful"));
+                reloadManager();
               }}
             >
               <Trans>Log out</Trans>
