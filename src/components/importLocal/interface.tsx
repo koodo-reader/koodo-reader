@@ -14,10 +14,12 @@ export interface ImportLocalProps extends RouteComponentProps<any> {
   bookmarks: BookmarkModel[];
   handleFetchBooks: () => void;
   handleDrag: (isDrag: boolean) => void;
+  handleImportDialog: (isOpenImportDialog: boolean) => void;
   handleReadingBook: (book: BookModel) => void;
   t: (title: string) => string;
 }
 export interface ImportLocalState {
   isOpenFile: boolean;
+  isMoreOptionsVisible: boolean;
   width: number;
 }

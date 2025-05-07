@@ -8,6 +8,7 @@ body {
 .lang-setting-dropdown,
 .delete-tag-container,
 .setting-subtitle,
+.more-option-text,
 .book-subcontent-name {
   color: rgba(235, 235, 235, 1);
 }
@@ -153,6 +154,7 @@ body {
 .input-value,
 .tag-list-item-new,
 .tag-list-item,
+.more-options-dropdown,
 .setting-panel-parent {
   background: rgba(47, 52, 55, 1);
   box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.2);
