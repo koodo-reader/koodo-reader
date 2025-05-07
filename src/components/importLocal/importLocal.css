@@ -12,7 +12,7 @@
   line-height: 42px;
   text-align: center;
   cursor: pointer;
-  z-index: 0;
+  z-index: 5;
   font-size: 15px;
   transition: 0.1s;
   font-weight: 500;
@@ -37,5 +37,65 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 10;
+  z-index: 5;
+}
+.more-import-option {
+  position: absolute;
+  width: 30px;
+  right: 0px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  z-index: 11;
+  background-color: rgba(0, 0, 0, 0.1); /* Semi-transparent white overlay */
+  border-radius: 0 30px 30px 0;
+}
+
+.icon-more {
+  font-size: 20px;
+}
+
+.more-options-dropdown {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  border-radius: 10px;
+  width: 180px;
+  z-index: 999;
+  margin-top: 5px;
+  overflow: hidden;
+  height: 45px;
+  padding-top: 4px;
+}
+
+.more-option-item {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding-left: 20px;
+  transition: background-color 0.2s;
+}
+
+.more-option-item:hover {
+  background-color: #f5f5f5;
+}
+
+.more-option-item .icon-cloud {
+  margin-right: 8px;
+  font-size: 16px;
+}
+
+.more-option-text {
+  /* font-size: 14px; */
+}
+.dropdown-triangle {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  margin-left: 2px;
+  margin-bottom: 5px;
+  vertical-align: middle;
+  border-top: 6px solid currentColor;
+  border-right: 4px solid transparent;
+  border-left: 4px solid transparent;
 }

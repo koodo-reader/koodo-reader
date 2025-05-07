@@ -1,6 +1,7 @@
 const initState = {
   isBackup: false,
   isOpenTokenDialog: false,
+  isOpenImportDialog: false,
   dataSourceList: [],
   loginOptionList: [],
   defaultSyncOption: "",
@@ -14,6 +15,11 @@ export function backupPage(
       return {
         ...state,
         isBackup: action.payload,
+      };
+    case "HANDLE_IMPORT_DIALOG":
+      return {
+        ...state,
+        isOpenImportDialog: action.payload,
       };
     case "HANDLE_TOKEN_DIALOG":
       return {

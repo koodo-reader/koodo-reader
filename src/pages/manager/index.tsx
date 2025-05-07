@@ -12,6 +12,7 @@ import {
   handleFeedbackDialog,
   handleSetting,
   handleBackupDialog,
+  handleImportDialog,
   handleFetchNotes,
   handleFetchBookmarks,
   handleEditDialog,
@@ -50,6 +51,7 @@ const mapStateToProps = (state: stateType) => {
     isShowSupport: state.manager.isShowSupport,
     DetailDialog: state.manager.isDetailDialog,
     isBackup: state.backupPage.isBackup,
+    isOpenImportDialog: state.backupPage.isOpenImportDialog,
   };
 };
 const actionCreator = {
@@ -70,6 +72,7 @@ const actionCreator = {
   handleNewDialog,
   handleShowSupport,
   handleBackupDialog,
+  handleImportDialog,
   handleReadingState,
 };
 export default connect(

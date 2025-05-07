@@ -7,6 +7,7 @@ import AddDialog from "../../components/dialogs/addDialog";
 import SortDialog from "../../components/dialogs/sortDialog";
 import AboutDialog from "../../components/dialogs/aboutDialog";
 import BackupDialog from "../../components/dialogs/backupDialog";
+import ImportDialog from "../../components/dialogs/importDialog";
 import { ManagerProps, ManagerState } from "./interface";
 import { Trans } from "react-i18next";
 import SettingDialog from "../../components/dialogs/settingDialog";
@@ -108,6 +109,7 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
                 this.props.handleShowSupport(false);
               }
               this.props.handleBackupDialog(false);
+              this.props.handleImportDialog(false);
               this.props.handleSetting(false);
               this.props.handleFeedbackDialog(false);
               this.handleDrag(false);
@@ -116,6 +118,7 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
               this.props.isSettingOpen ||
               this.props.isOpenFeedbackDialog ||
               this.props.isBackup ||
+              this.props.isOpenImportDialog ||
               this.props.isShowNew ||
               this.props.isShowSupport ||
               this.props.isOpenDeleteDialog ||
@@ -150,6 +153,7 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
         {this.props.isSortDisplay && <SortDialog />}
         {this.props.isAboutOpen && <AboutDialog />}
         {this.props.isBackup && <BackupDialog />}
+        {this.props.isOpenImportDialog && <ImportDialog />}
         {this.props.isOpenFeedbackDialog && <FeedbackDialog />}{" "}
         {this.props.isSettingOpen && <SettingDialog />}
         {this.props.isDetailDialog && <DetailDialog />}

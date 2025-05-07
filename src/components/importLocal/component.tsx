@@ -28,6 +28,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
     this.state = {
       isOpenFile: false,
       width: document.body.clientWidth,
+      isMoreOptionsVisible: false,
     };
   }
   componentDidMount() {
@@ -297,7 +298,20 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
       }
     });
   };
+  toggleMoreOptions = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent triggering the Dropzone
+    this.setState((prevState) => ({
+      isMoreOptionsVisible: !prevState.isMoreOptionsVisible,
+    }));
+  };
 
+  // Add method to handle cloud import
+  handleCloudImport = async (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent triggering the Dropzone
+    this.setState({ isMoreOptionsVisible: false });
+
+    this.props.handleImportDialog(true);
+  };
   render() {
     return (
       <Dropzone
@@ -345,6 +359,24 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                 : {}
             }
           >
+            <div
+              className="more-import-option"
+              onClick={this.toggleMoreOptions}
+            >
+              <span className="dropdown-triangle"></span>
+              {this.state.isMoreOptionsVisible && (
+                <div className="more-options-dropdown">
+                  <div
+                    className="more-option-item"
+                    onClick={this.handleCloudImport}
+                  >
+                    <span className="more-option-text">
+                      <Trans>From cloud storage</Trans>
+                    </span>
+                  </div>
+                </div>
+              )}
+            </div>
             <div className="animation-mask-local"></div>
             {this.props.isCollapsed && this.state.width < 950 ? (
               <span
