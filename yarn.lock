@@ -10588,10 +10588,10 @@ media-typer@0.3.0:
   resolved "https://registry.yarnpkg.com/media-typer/-/media-typer-0.3.0.tgz#8710d7af0aa626f8fffa1ce00168545263255748"
   integrity sha512-dq+qelQ9akHpcOl/gUVRTxVIOkAJ1wR3QAvb4RsVjS8oVoFjDGTc679wJYmUmknUF5HwMLOgb5O+a3KxfWapPQ==
 
-megajs@^1.3.7:
-  version "1.3.7"
-  resolved "https://registry.yarnpkg.com/megajs/-/megajs-1.3.7.tgz#cc8f1ff10c0386bb5a4e01340becbd0e2f93e25d"
-  integrity sha512-DqEkY8UaFGAcsyh0oxGe+llQuiPIJFdrt1iaxVvq/2HjozNJeF13FXEcq6/7aJlfs8IUYrHcv8I8G6Q40jD2Ug==
+megajs@1.3.9-next.17:
+  version "1.3.9-next.17"
+  resolved "https://registry.yarnpkg.com/megajs/-/megajs-1.3.9-next.17.tgz#7e8d65977b57c9b514e60e7a24a04923d8d8a96a"
+  integrity sha512-wfGcxOWgO25E/7BP7GbVz6EDKHES/4Q87kdHs9aCzne1veRVRJh1LsKZBczZ35N0zu0Xd0+vNCDdwNGK9QJPVw==
   dependencies:
     pumpify "^2.0.1"
     stream-skip "^1.0.3"
