@@ -13,7 +13,6 @@ import toast from "react-hot-toast";
 import { isElectron } from "react-device-detect";
 import { TokenService } from "../../../assets/lib/kookit-extra-browser.min";
 import { checkStableUpdate } from "../../../utils/request/common";
-import DatabaseService from "../../../utils/storage/databaseService";
 import { upgradePro } from "../../../utils/file/common";
 const successOptions = {
   loop: false,

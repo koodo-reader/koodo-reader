@@ -59,6 +59,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
     window.addEventListener("resize", () => {
       this.setState({ width: document.body.clientWidth });
     });
+    this.props.handleImportBookFunc(this.getMd5WithBrowser);
   }
   handleFilePath = async (filePath: string) => {
     clickFilePath = filePath;

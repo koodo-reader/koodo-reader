@@ -70,6 +70,7 @@ export type stateType = {
     totalPage: number;
     currentBook: BookModel;
     renderBookFunc: () => void;
+    importBookFunc: (file: any) => Promise<void>;
     renderNoteFunc: () => void;
   };
   backupPage: {

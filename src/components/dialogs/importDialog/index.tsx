@@ -3,6 +3,7 @@ import {
   handleTokenDialog,
   handleLoadingDialog,
   handleFetchBooks,
+  handleImportBookFunc,
 } from "../../../store/actions";
 import { connect } from "react-redux";
 import { withTranslation } from "react-i18next";
@@ -18,6 +19,7 @@ const mapStateToProps = (state: stateType) => {
     digests: state.reader.digests,
     isOpenImportDialog: state.backupPage.isOpenImportDialog,
     dataSourceList: state.backupPage.dataSourceList,
+    importBookFunc: state.book.importBookFunc,
   };
 };
 const actionCreator = {
@@ -25,6 +27,7 @@ const actionCreator = {
   handleTokenDialog,
   handleLoadingDialog,
   handleFetchBooks,
+  handleImportBookFunc,
 };
 export default connect(
   mapStateToProps,

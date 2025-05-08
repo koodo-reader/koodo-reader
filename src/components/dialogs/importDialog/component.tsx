@@ -5,7 +5,6 @@ import { backup } from "../../../utils/file/backup";
 import { restore } from "../../../utils/file/restore";
 import { Trans } from "react-i18next";
 import { ImportDialogProps, ImportDialogState } from "./interface";
-import Lottie from "react-lottie";
 import animationSuccess from "../../../assets/lotties/success.json";
 import packageInfo from "../../../../package.json";
 import _ from "underscore";
@@ -13,16 +12,9 @@ import toast from "react-hot-toast";
 import { isElectron } from "react-device-detect";
 import { TokenService } from "../../../assets/lib/kookit-extra-browser.min";
 import { checkStableUpdate } from "../../../utils/request/common";
-import DatabaseService from "../../../utils/storage/databaseService";
-import { upgradePro } from "../../../utils/file/common";
-const successOptions = {
-  loop: false,
-  autoplay: true,
-  animationData: animationSuccess,
-  rendererSettings: {
-    preserveAspectRatio: "xMidYMid slice",
-  },
-};
+import { getCloudConfig, upgradePro } from "../../../utils/file/common";
+import SyncService from "../../../utils/storage/syncService";
+import { getStorageLocation } from "../../../utils/common";
 class ImportDialog extends React.Component<
   ImportDialogProps,
   ImportDialogState
@@ -31,7 +23,10 @@ class ImportDialog extends React.Component<
     super(props);
     this.state = {
       isBackup: "",
-      currentDrive: "local",
+      currentDrive: "",
+      currentPath: "",
+      currentFileList: [],
+      selectedFileList: [],
       isDeveloperVer: false,
       isFinish: false,
     };
@@ -115,15 +110,10 @@ class ImportDialog extends React.Component<
     }
   };
   handleSelectSource = (event: any) => {
-    if (
-      !driveList
-        .find((item) => item.value === event.target.value)
-        ?.support.includes("browser") &&
-      !isElectron
-    ) {
+    if (!this.props.dataSourceList.includes(event.target.value)) {
       toast(
         this.props.t(
-          "Koodo Reader's web version are limited by the browser, for more powerful features, please download the desktop version."
+          "Please add data source in the setting-Sync and backup first"
         )
       );
       return;
@@ -141,115 +131,165 @@ class ImportDialog extends React.Component<
     }
     this.setState({ currentDrive: event.target.value });
   };
+  listFolder = async (drive: string, path: string) => {
+    console.log(drive, path);
+    let fileList = [];
+    if (isElectron) {
+      const { ipcRenderer } = window.require("electron");
+      let tokenConfig = await getCloudConfig(drive);
+      fileList = await ipcRenderer.invoke("picker-list", {
+        ...tokenConfig,
+        service: drive,
+        currentPath: path,
+        storagePath: getStorageLocation(),
+      });
+    } else {
+      let pickerUtil = await SyncService.getPickerUtil(drive);
+      fileList = await pickerUtil.listFiles(path);
+    }
+    console.log(fileList);
+    this.setState({
+      currentFileList: fileList,
+    });
+  };
   render() {
     return (
       <div className="backup-page-container">
-        {!this.state.isFinish ? (
-          <div className="backup-page-option">
-            <div className="backup-page-backup">
-              <span
-                className="icon-backup"
-                onClick={() => {
-                  this.setState({ isBackup: "yes" });
-                  this.handleBackup();
-                }}
-              ></span>
-              <div style={{ lineHeight: 1.0, fontSize: 15 }}>
-                <Trans>Backup to</Trans>
-                <select
-                  name=""
-                  className="backup-source-dropdown"
-                  onChange={this.handleSelectSource}
-                >
-                  {[
-                    { label: "Local", value: "local", isPro: false },
-                    ...driveList,
-                    { label: "Add data source", value: "add", isPro: false },
-                  ]
-                    .filter(
-                      (item) =>
-                        this.props.dataSourceList.includes(item.value) ||
-                        item.value === "local" ||
-                        item.value === "add"
-                    )
-                    .map((item) => (
-                      <option
-                        value={item.value}
-                        key={item.value}
-                        className="lang-setting-option"
-                      >
-                        {this.props.t(item.label) +
-                          " " +
-                          (item.isPro ? "(Pro)" : "")}
-                      </option>
-                    ))}
-                </select>
-              </div>
-            </div>
-            <div className="backup-page-backup">
-              <span
-                className="icon-restore"
-                onClick={(event) => {
-                  if (!isElectron) {
-                    event.preventDefault();
-                    toast(
-                      this.props.t(
-                        "Koodo Reader's web version are limited by the browser, for more powerful features, please download the desktop version."
-                      )
+        <div className="edit-dialog-title">
+          <Trans>From cloud storage</Trans>
+        </div>
+        <div className="import-dialog-option">
+          {this.state.currentDrive === "" && (
+            <>
+              {driveList
+                .filter(
+                  (item) =>
+                    !item.scoped &&
+                    item.support.includes(isElectron ? "desktop" : "browser")
+                )
+                .map((item) => (
+                  <div
+                    key={item.value}
+                    className={`cloud-drive-item `}
+                    onClick={() => {
+                      if (!this.props.dataSourceList.includes(item.value)) {
+                        toast(
+                          this.props.t(
+                            "Please add data source in the setting-Sync and backup first"
+                          )
+                        );
+                        return;
+                      }
+                      this.setState({
+                        currentDrive: item.value,
+                        currentPath: "",
+                      });
+                      this.listFolder(item.value, "");
+                    }}
+                  >
+                    <span className="cloud-drive-label">
+                      {this.props.t(item.label)}
+                    </span>
+                    <span className="icon-dropdown import-dialog-more-file"></span>
+                  </div>
+                ))}
+            </>
+          )}
+          {this.state.currentDrive !== "" &&
+            this.state.currentFileList.length > 0 &&
+            this.state.currentFileList.map((item, index) => (
+              <div
+                key={index}
+                className={`cloud-drive-item `}
+                onClick={async () => {
+                  if (item.indexOf(".") === -1) {
+                    this.setState(
+                      {
+                        currentPath: this.state.currentPath + "/" + item,
+                      },
+                      async () => {
+                        let pickerUtil = await SyncService.getPickerUtil(
+                          this.state.currentDrive
+                        );
+                        let fileList = await pickerUtil.listFiles(
+                          this.state.currentPath
+                        );
+                        this.setState({
+                          currentFileList: fileList,
+                        });
+                      }
                     );
-                    return;
+                  } else {
+                    let sourcePath = this.state.currentPath + "/" + item;
+                    toast.loading(this.props.t("Downloading"), {
+                      id: "importing",
+                    });
+                    let destPath = "temp/" + sourcePath.split("/").pop();
+                    let file: any = null;
+                    if (isElectron) {
+                      const fs = window.require("fs");
+                      const path = window.require("path");
+                      const dataPath = getStorageLocation() || "";
+                      const { ipcRenderer } = window.require("electron");
+                      let tokenConfig = await getCloudConfig(
+                        this.state.currentDrive
+                      );
+                      if (!fs.existsSync(path.join(dataPath, "temp"))) {
+                        fs.mkdirSync(path.join(dataPath, "temp"), {
+                          recursive: true,
+                        });
+                      }
+                      await ipcRenderer.invoke("picker-download", {
+                        ...tokenConfig,
+                        sourcePath: sourcePath,
+                        destPath: destPath,
+                        service: this.state.currentDrive,
+                        storagePath: dataPath,
+                      });
+                      console.log("finished download", sourcePath);
+                      const buffer = await fs.readFile(
+                        path.join(dataPath, destPath)
+                      );
+
+                      let arraybuffer = new Uint8Array(buffer).buffer;
+                      let blob = new Blob([arraybuffer]);
+                      let fileName = path.basename(sourcePath);
+                      file = new File([blob], fileName);
+                      file.path = sourcePath;
+                    } else {
+                      let pickerUtil = await SyncService.getPickerUtil(
+                        this.state.currentDrive
+                      );
+                      let arraybuffer = await pickerUtil.remote.downloadFile(
+                        sourcePath.substring(1)
+                      );
+                      console.log(arraybuffer);
+                      let blob = new Blob([arraybuffer]);
+                      let fileName = sourcePath.split("/").pop() || "file";
+                      file = new File([blob], fileName);
+                    }
+                    toast.dismiss("importing");
+                    this.props.importBookFunc(file);
                   }
-                  this.setState({ isBackup: "no" });
-                  this.handleRestore();
                 }}
-              ></span>
-              <div style={{ lineHeight: 1.0, fontSize: 15 }}>
-                <Trans>Restore from</Trans>
-                <select
-                  name=""
-                  className="backup-source-dropdown"
-                  onChange={this.handleSelectSource}
-                >
-                  {[
-                    { label: "Local", value: "local", isPro: false },
-                    ...driveList,
-                    { label: "Add data source", value: "add", isPro: false },
-                  ]
-                    .filter(
-                      (item) =>
-                        this.props.dataSourceList.includes(item.value) ||
-                        item.value === "local" ||
-                        item.value === "add"
-                    )
-                    .map((item) => (
-                      <option
-                        value={item.value}
-                        key={item.value}
-                        className="lang-setting-option"
-                      >
-                        {this.props.t(item.label) +
-                          " " +
-                          (item.isPro ? "(Pro)" : "")}
-                      </option>
-                    ))}
-                </select>
+              >
+                <span className="cloud-drive-label">{item}</span>
+                {item.indexOf(".") === -1 && (
+                  <span className="icon-dropdown import-dialog-more-file"></span>
+                )}
               </div>
-            </div>
-          </div>
-        ) : (
-          <div className="backup-page-finish-container">
-            <div className="backup-page-finish">
-              <Lottie options={successOptions} height={80} width={80} />
-              <div className="backup-page-finish-text">
-                <Trans>
-                  {this.state.isBackup === "yes"
-                    ? "Backup successful"
-                    : "Restore successful"}
-                </Trans>
+            ))}
+          {this.state.currentDrive !== "" &&
+            this.state.currentFileList.length === 0 && (
+              <div className="loading-animation" style={{ marginTop: "-20px" }}>
+                <div className="loader"></div>
               </div>
-            </div>
-          </div>
-        )}
+            )}
+        </div>
+        <div className="import-dialog-back-button">
+          {this.props.t("Back to parent")}
+        </div>
+
         <div
           className="backup-page-close-icon"
           onClick={() => {

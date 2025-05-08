@@ -5,6 +5,7 @@ export const driveList = [
     icon: "icon-webdav",
     isPro: false,
     support: ["desktop", "phone"],
+    scoped: false,
   },
 
   {
@@ -13,6 +14,7 @@ export const driveList = [
     icon: "icon-dropbox",
     isPro: true,
     support: ["desktop", "browser", "phone"],
+    scoped: true,
   },
   {
     label: "OneDrive",
@@ -20,6 +22,7 @@ export const driveList = [
     icon: "icon-onedrive",
     isPro: true,
     support: ["desktop", "browser", "phone"],
+    scoped: true,
   },
   {
     label: "Google Drive",
@@ -27,6 +30,7 @@ export const driveList = [
     icon: "icon-googledrive",
     isPro: true,
     support: ["desktop", "browser", "phone"],
+    scoped: true,
   },
   {
     label: "MEGA",
@@ -34,6 +38,7 @@ export const driveList = [
     icon: "icon-mega",
     isPro: true,
     support: ["desktop", "browser"],
+    scoped: false,
   },
   {
     label: "Box",
@@ -41,6 +46,7 @@ export const driveList = [
     icon: "icon-box",
     isPro: true,
     support: ["desktop", "browser", "phone"],
+    scoped: false,
   },
   {
     label: "pCloud",
@@ -48,6 +54,7 @@ export const driveList = [
     icon: "icon-pcloud",
     isPro: true,
     support: ["desktop", "phone"],
+    scoped: true,
   },
   {
     label: "Aliyun Drive",
@@ -55,6 +62,7 @@ export const driveList = [
     icon: "icon-adrive",
     isPro: true,
     support: ["desktop", "phone"],
+    scoped: false,
   },
   {
     label: "S3 Compatible",
@@ -62,6 +70,7 @@ export const driveList = [
     icon: "icon-s3compatible",
     isPro: true,
     support: ["desktop", "browser", "phone"],
+    scoped: false,
   },
   {
     label: "FTP",
@@ -69,6 +78,7 @@ export const driveList = [
     icon: "icon-ftp",
     isPro: false,
     support: ["desktop"],
+    scoped: false,
   },
   {
     label: "SFTP",
@@ -76,6 +86,7 @@ export const driveList = [
     icon: "icon-sftp",
     isPro: false,
     support: ["desktop"],
+    scoped: false,
   },
 ];
 interface ConfigItem {
