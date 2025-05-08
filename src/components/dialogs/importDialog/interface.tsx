@@ -8,7 +8,9 @@ export interface ImportDialogProps extends RouteComponentProps<any> {
   handleTokenDialog: (isOpenTokenDialog: boolean) => void;
   t: (title: string) => string;
   handleLoadingDialog: (isShowLoading: boolean) => void;
+  handleImportBookFunc: (importBookFunc: (file: any) => Promise<void>) => void;
   handleFetchBooks: () => void;
+  importBookFunc: (file: any) => Promise<void>;
   isOpenTokenDialog: boolean;
   isAuthed: boolean;
   books: BookModel[];
@@ -20,6 +22,9 @@ export interface ImportDialogProps extends RouteComponentProps<any> {
 export interface ImportDialogState {
   isBackup: string;
   currentDrive: string;
+  currentPath: string;
+  currentFileList: string[];
+  selectedFileList: string[];
   isDeveloperVer: boolean;
   isFinish: boolean;
 }

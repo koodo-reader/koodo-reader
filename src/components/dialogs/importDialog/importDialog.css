@@ -1,227 +1,45 @@
-.backup-page-container {
-  width: 454px;
-  height: 278px;
-  position: absolute;
-  left: calc(50% - 227px);
-  top: calc(50% - 139px);
-  overflow: hidden;
-  z-index: 20;
-  opacity: 1;
+.cloud-drive-list {
   display: flex;
-  flex-wrap: wrap;
-  align-content: flex-start;
-  border-radius: 5px;
-  z-index: 10;
-  animation: popup 0.1s ease-in-out 0s 1;
-}
-.backup-close-icon {
-  margin-top: 10px;
-  margin-right: 10px;
-  float: right;
-  font-size: 18px;
-  cursor: pointer;
-}
-@keyframes popup {
-  0% {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-  80% {
-    opacity: 0.95;
-    transform: scale(1.005);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-@keyframes popout {
-  0% {
-    opacity: 1;
-    transform: scale(1);
-  }
-  100% {
-    opacity: 0;
-    transform: scale(0.9);
-  }
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 0;
 }
 
-.backup-page-title {
-  width: 100%;
-  font-size: 18px;
-  line-height: 60px;
-  opacity: 1;
-  text-align: center;
+.cloud-drive-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 15px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.cloud-drive-label {
+  font-size: 15px;
   font-weight: 500;
 }
-.backup-page-drive-container {
+.import-dialog-more-file {
+  transform: rotate(-90deg);
+  font-size: 13px;
+}
+.import-dialog-option {
   width: 100%;
-  height: calc(100% - 80px);
-  position: relative;
-  bottom: 10px;
-}
-.backup-page-list-item {
-  float: left;
-  width: 93px;
-  height: 93px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 10px;
-  box-sizing: border-box;
-  margin-right: 10px;
-  margin-left: 10px;
-}
 
-.backup-page-list-icon {
-  font-size: 50px;
-  position: relative;
-  left: 45px;
-  cursor: pointer;
-  line-height: 50px !important;
-}
-.backup-page-list-title {
-  width: 150px !important;
-  font-size: 14px;
-  line-height: 30px;
-  opacity: 1;
-  width: 100%;
-  text-align: center;
-  cursor: pointer;
-}
-
-.backup-page-close-icon {
+  padding-left: 10px;
+  padding-right: 10px;
+  overflow-y: scroll;
   position: absolute;
-  right: 10px;
-  top: 10px;
-  cursor: pointer;
-  transition: 0.1s;
-  width: 38px;
-  height: 38px;
+  top: 60px;
+  bottom: 40px;
 }
-.backup-page-close-icon:hover {
-  border-radius: 50%;
-}
-.backup-page-option {
-  width: 100%;
-  display: flex;
-  justify-content: space-evenly;
-  align-items: center;
+.import-dialog-back-button {
   position: absolute;
-  top: 65px;
-}
-.backup-page-backup {
-  width: 200px;
-  height: 142px;
-  font-size: 18px;
-  line-height: 40px;
-  opacity: 1;
-  text-align: center;
-  cursor: pointer;
-}
-.backup-page-backup:hover {
-  border-radius: 10px;
-}
-.active {
-  color: white;
-  cursor: pointer;
-}
-.icon-backup,
-.icon-restore {
-  display: inline-block;
-  font-size: 70px;
-  margin-top: 10px;
-}
-.backup-page-next {
+  bottom: 20px;
+  right: 20px;
   font-size: 16px;
-  line-height: 20px;
-  opacity: 1;
-  position: absolute;
-  bottom: 8px;
-  right: 27px;
-  cursor: pointer;
-  padding: 5px;
-  border-radius: 5px;
-}
-.backup-page-previous {
-  font-size: 18px;
-  line-height: 20px;
-  opacity: 1;
-  position: absolute;
-  bottom: 21px;
-  right: 108px;
   cursor: pointer;
 }
-.backup-page-backup-selector {
-  width: 142px;
-  height: 142px;
-  opacity: 1;
-  animation: popup 0.1s ease-in-out 0s 1;
-  margin-left: 54px;
-  margin-top: 5px;
-  border-radius: 5px;
-}
-.restore-warning {
-  font-size: 12px;
-  line-height: 1.25;
-  margin-top: 12px;
-  position: absolute;
-  bottom: 35px;
-  padding-left: 20px;
-  padding-right: 20px;
-  color: rgb(231, 69, 69);
-}
-.icon-local {
-  opacity: 1;
-}
-.restore-file {
-  position: absolute;
-  left: 0px;
-  bottom: 105px;
-  width: 93px;
-  height: 93px;
-  z-index: 10;
-  opacity: 0.5;
-  cursor: pointer;
-  font-size: 0;
-  border-radius: 10px;
-  box-sizing: border-box;
-  margin-right: 10px;
-  margin-left: 10px;
-  /* background-color: pink; */
-}
-::-webkit-file-upload-button {
-  display: none;
-}
-::file-selector-button {
-  display: none;
-}
-.backup-page-finish-container {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-}
-.backup-page-finish-icon {
-  font-size: 60px;
-  margin: 0px;
-}
-.backup-page-finish-text {
-  line-height: 50px;
-  font-size: 18px;
-}
-.backup-source-dropdown {
-  display: inline-block;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  border-radius: 5px;
-  border: 0px;
-  font-size: 15px;
-  line-height: 18px;
-  opacity: 1;
-  /* padding-left: 10px; */
-  cursor: pointer;
-  width: 80px;
+.cloud-drive-label:hover {
+  text-decoration: underline;
 }

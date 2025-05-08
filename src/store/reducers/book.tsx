@@ -9,6 +9,7 @@ const initState = {
   currentPage: 1,
   totalPage: 1,
   renderBookFunc: () => {},
+  importBookFunc: () => {},
   renderNoteFunc: () => {},
 };
 export function book(
@@ -35,6 +36,11 @@ export function book(
       return {
         ...state,
         renderBookFunc: action.payload,
+      };
+    case "HANDLE_IMPORT_BOOK_FUNC":
+      return {
+        ...state,
+        importBookFunc: action.payload,
       };
     case "HANDLE_RENDER_NOTE_FUNC":
       return {

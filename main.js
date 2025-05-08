@@ -24,6 +24,7 @@ let mainView;
 let chatView;
 let dbConnection = {};
 let syncUtilCache = {};
+let pickerUtilCache = {};
 let isChatExpand = false;
 const singleInstance = app.requestSingleInstanceLock();
 var filePath = null;
@@ -97,6 +98,20 @@ const getSyncUtil = async (config, isUseCache = true) => {
 const removeSyncUtil = (config) => {
   if (syncUtilCache[config.service]) {
     syncUtilCache[config.service] = null;
+  }
+}
+const getPickerUtil = async (config, isUseCache = true) => {
+  if (!isUseCache || !pickerUtilCache[config.service]) {
+    const { SyncUtil, TokenService, ThirdpartyRequest } = await import('./src/assets/lib/kookit-extra.min.mjs');
+    let thirdpartyRequest = new ThirdpartyRequest(TokenService);
+
+    pickerUtilCache[config.service] = new SyncUtil(config.service, config, config.storagePath, thirdpartyRequest);
+  }
+  return pickerUtilCache[config.service];
+}
+const removePickerUtil = (config) => {
+  if (pickerUtilCache[config.service]) {
+    pickerUtilCache[config.service] = null;
   }
 }
 // Simple encryption function
@@ -240,6 +255,11 @@ const createMainWin = () => {
     let result = await syncUtil.downloadFile(config.fileName, (config.isTemp ? "temp-" : "") + config.fileName, config.type);
     return result;
   });
+  ipcMain.handle("picker-download", async (event, config) => {
+    let pickerUtil = await getPickerUtil(config);
+    let result = await pickerUtil.remote.downloadFile(config.sourcePath, config.destPath);
+    return result;
+  });
   ipcMain.handle("cloud-reset", async (event, config) => {
     let syncUtil = await getSyncUtil(config);
     let result = syncUtil.resetCounters();
@@ -261,7 +281,11 @@ const createMainWin = () => {
     let result = await syncUtil.listFiles(config.type);
     return result;
   });
-
+  ipcMain.handle("picker-list", async (event, config) => {
+    let pickerUtil = await getPickercUtil(config);
+    let result = await pickerUtil.listFiles(config.currentPath);
+    return result;
+  });
   ipcMain.handle("cloud-exist", async (event, config) => {
     let syncUtil = await getSyncUtil(config);
     let result = await syncUtil.isExist(config.fileName, config.type);

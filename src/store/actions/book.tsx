@@ -11,6 +11,9 @@ export function handleAddDialog(mode: boolean) {
 export function handleRenderBookFunc(renderBookFunc: () => void) {
   return { type: "HANDLE_RENDER_BOOK_FUNC", payload: renderBookFunc };
 }
+export function handleImportBookFunc(importBookFunc: () => void) {
+  return { type: "HANDLE_IMPORT_BOOK_FUNC", payload: importBookFunc };
+}
 export function handleRenderNoteFunc(renderNoteFunc: () => void) {
   return { type: "HANDLE_RENDER_NOTE_FUNC", payload: renderNoteFunc };
 }
