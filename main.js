@@ -282,7 +282,7 @@ const createMainWin = () => {
     return result;
   });
   ipcMain.handle("picker-list", async (event, config) => {
-    let pickerUtil = await getPickercUtil(config);
+    let pickerUtil = await getPickerUtil(config);
     let result = await pickerUtil.listFiles(config.currentPath);
     return result;
   });

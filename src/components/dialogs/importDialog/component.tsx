@@ -139,6 +139,7 @@ class ImportDialog extends React.Component<
       let tokenConfig = await getCloudConfig(drive);
       fileList = await ipcRenderer.invoke("picker-list", {
         ...tokenConfig,
+        baseFolder: "",
         service: drive,
         currentPath: path,
         storagePath: getStorageLocation(),
@@ -208,15 +209,10 @@ class ImportDialog extends React.Component<
                         currentPath: this.state.currentPath + "/" + item,
                       },
                       async () => {
-                        let pickerUtil = await SyncService.getPickerUtil(
-                          this.state.currentDrive
-                        );
-                        let fileList = await pickerUtil.listFiles(
+                        this.listFolder(
+                          this.state.currentDrive,
                           this.state.currentPath
                         );
-                        this.setState({
-                          currentFileList: fileList,
-                        });
                       }
                     );
                   } else {
@@ -241,13 +237,17 @@ class ImportDialog extends React.Component<
                       }
                       await ipcRenderer.invoke("picker-download", {
                         ...tokenConfig,
-                        sourcePath: sourcePath,
+                        baseFolder: "",
+                        sourcePath: sourcePath.substring(1),
                         destPath: destPath,
                         service: this.state.currentDrive,
                         storagePath: dataPath,
                       });
-                      console.log("finished download", sourcePath);
-                      const buffer = await fs.readFile(
+                      console.log(
+                        "finished download",
+                        path.join(dataPath, destPath)
+                      );
+                      const buffer = fs.readFileSync(
                         path.join(dataPath, destPath)
                       );
 
@@ -286,7 +286,22 @@ class ImportDialog extends React.Component<
               </div>
             )}
         </div>
-        <div className="import-dialog-back-button">
+        <div
+          className="import-dialog-back-button"
+          onClick={async () => {
+            console.log("currentPath", this.state.currentPath);
+            if (this.state.currentPath === "") {
+              this.setState({ currentDrive: "", currentFileList: [] });
+              return;
+            }
+            let parentPath = this.state.currentPath
+              .split("/")
+              .slice(0, -1)
+              .join("/");
+            this.setState({ currentPath: parentPath });
+            this.listFolder(this.state.currentDrive, parentPath);
+          }}
+        >
           {this.props.t("Back to parent")}
         </div>
 
