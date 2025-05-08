@@ -5,7 +5,6 @@ import { backup } from "../../../utils/file/backup";
 import { restore } from "../../../utils/file/restore";
 import { Trans } from "react-i18next";
 import { ImportDialogProps, ImportDialogState } from "./interface";
-import animationSuccess from "../../../assets/lotties/success.json";
 import packageInfo from "../../../../package.json";
 import _ from "underscore";
 import toast from "react-hot-toast";
@@ -41,73 +40,8 @@ class ImportDialog extends React.Component<
     this.props.handleImportDialog(false);
   };
 
-  handleFinish = async () => {
-    this.setState({ isFinish: true });
-    this.props.handleLoadingDialog(false);
-    this.showMessage("Execute successful");
-    this.props.handleFetchBooks();
-    if (this.props.isAuthed) {
-      await upgradePro();
-    }
-    setTimeout(() => {
-      this.props.history.push("/manager/home");
-    }, 1000);
-  };
   showMessage = (message: string) => {
     toast(this.props.t(message));
-  };
-  handleBackup = async () => {
-    let name = this.state.currentDrive;
-    if (name === "local") {
-      let result = await backup(name);
-      if (result) {
-        this.handleFinish();
-      } else {
-        this.showMessage("Backup failed");
-      }
-      return;
-    }
-
-    if (!(await TokenService.getToken(name + "_token")) && name !== "local") {
-      this.props.handleTokenDialog(true);
-      return;
-    }
-    this.showMessage("Uploading, please wait");
-    this.props.handleLoadingDialog(true);
-    let result = await backup(name);
-    if (result) {
-      this.handleFinish();
-    } else {
-      this.showMessage("Upload failed, check your connection");
-    }
-  };
-  handleRestore = async () => {
-    let name = this.state.currentDrive;
-    if (name === "local") {
-      let result = await restore(name);
-      if (result) {
-        this.handleFinish();
-      } else {
-        this.showMessage("Download failed,network problem or no backup");
-        this.props.handleLoadingDialog(false);
-      }
-      return;
-    }
-
-    if (!(await TokenService.getToken(name + "_token"))) {
-      this.props.handleTokenDialog(true);
-      return;
-    }
-    this.props.handleLoadingDialog(true);
-    this.showMessage("Downloading, please wait");
-
-    let result = await restore(name);
-    if (result) {
-      this.handleFinish();
-    } else {
-      this.showMessage("Download failed,network problem or no backup");
-      this.props.handleLoadingDialog(false);
-    }
   };
   handleSelectSource = (event: any) => {
     if (!this.props.dataSourceList.includes(event.target.value)) {
@@ -152,6 +86,67 @@ class ImportDialog extends React.Component<
     this.setState({
       currentFileList: fileList,
     });
+  };
+  handleClickItem = async (item: string) => {
+    if (item.indexOf(".") === -1) {
+      this.setState(
+        {
+          currentPath: this.state.currentPath + "/" + item,
+        },
+        async () => {
+          this.listFolder(this.state.currentDrive, this.state.currentPath);
+        }
+      );
+    } else {
+      let sourcePath = this.state.currentPath + "/" + item;
+      this.handleImportBook(sourcePath);
+    }
+  };
+  handleImportBook = async (sourcePath: string) => {
+    toast.loading(this.props.t("Downloading"), {
+      id: "importing",
+    });
+    let destPath = "temp/" + sourcePath.split("/").pop();
+    let file: any = null;
+    if (isElectron) {
+      const fs = window.require("fs");
+      const path = window.require("path");
+      const dataPath = getStorageLocation() || "";
+      const { ipcRenderer } = window.require("electron");
+      let tokenConfig = await getCloudConfig(this.state.currentDrive);
+      if (!fs.existsSync(path.join(dataPath, "temp"))) {
+        fs.mkdirSync(path.join(dataPath, "temp"), {
+          recursive: true,
+        });
+      }
+      await ipcRenderer.invoke("picker-download", {
+        ...tokenConfig,
+        baseFolder: "",
+        sourcePath: sourcePath.substring(1),
+        destPath: destPath,
+        service: this.state.currentDrive,
+        storagePath: dataPath,
+      });
+      console.log("finished download", path.join(dataPath, destPath));
+      const buffer = fs.readFileSync(path.join(dataPath, destPath));
+
+      let arraybuffer = new Uint8Array(buffer).buffer;
+      let blob = new Blob([arraybuffer]);
+      let fileName = path.basename(sourcePath);
+      file = new File([blob], fileName);
+      file.path = sourcePath;
+    } else {
+      let pickerUtil = await SyncService.getPickerUtil(this.state.currentDrive);
+      let arraybuffer = await pickerUtil.remote.downloadFile(
+        sourcePath.substring(1)
+      );
+      console.log(arraybuffer);
+      let blob = new Blob([arraybuffer]);
+      let fileName = sourcePath.split("/").pop() || "file";
+      file = new File([blob], fileName);
+    }
+    toast.dismiss("importing");
+    this.props.importBookFunc(file);
   };
   render() {
     return (
@@ -199,83 +194,48 @@ class ImportDialog extends React.Component<
           {this.state.currentDrive !== "" &&
             this.state.currentFileList.length > 0 &&
             this.state.currentFileList.map((item, index) => (
-              <div
-                key={index}
-                className={`cloud-drive-item `}
-                onClick={async () => {
-                  if (item.indexOf(".") === -1) {
-                    this.setState(
-                      {
-                        currentPath: this.state.currentPath + "/" + item,
-                      },
-                      async () => {
-                        this.listFolder(
-                          this.state.currentDrive,
-                          this.state.currentPath
-                        );
-                      }
-                    );
-                  } else {
-                    let sourcePath = this.state.currentPath + "/" + item;
-                    toast.loading(this.props.t("Downloading"), {
-                      id: "importing",
-                    });
-                    let destPath = "temp/" + sourcePath.split("/").pop();
-                    let file: any = null;
-                    if (isElectron) {
-                      const fs = window.require("fs");
-                      const path = window.require("path");
-                      const dataPath = getStorageLocation() || "";
-                      const { ipcRenderer } = window.require("electron");
-                      let tokenConfig = await getCloudConfig(
-                        this.state.currentDrive
-                      );
-                      if (!fs.existsSync(path.join(dataPath, "temp"))) {
-                        fs.mkdirSync(path.join(dataPath, "temp"), {
-                          recursive: true,
-                        });
-                      }
-                      await ipcRenderer.invoke("picker-download", {
-                        ...tokenConfig,
-                        baseFolder: "",
-                        sourcePath: sourcePath.substring(1),
-                        destPath: destPath,
-                        service: this.state.currentDrive,
-                        storagePath: dataPath,
+              <div key={index} className={`cloud-drive-item `}>
+                <span
+                  className="cloud-drive-label"
+                  onClick={async () => {
+                    this.handleClickItem(item);
+                  }}
+                >
+                  {item}
+                </span>
+                {item.indexOf(".") === -1 ? (
+                  <span
+                    className="icon-dropdown import-dialog-more-file"
+                    onClick={async () => {
+                      this.handleClickItem(item);
+                    }}
+                  ></span>
+                ) : this.state.selectedFileList.includes(
+                    this.state.currentPath + "/" + item
+                  ) ? (
+                  <span
+                    className="icon-check import-dialog-check-file"
+                    style={{ fontWeight: "bold" }}
+                    onClick={() => {
+                      this.setState({
+                        selectedFileList: this.state.selectedFileList.filter(
+                          (file) => file !== this.state.currentPath + "/" + item
+                        ),
                       });
-                      console.log(
-                        "finished download",
-                        path.join(dataPath, destPath)
-                      );
-                      const buffer = fs.readFileSync(
-                        path.join(dataPath, destPath)
-                      );
-
-                      let arraybuffer = new Uint8Array(buffer).buffer;
-                      let blob = new Blob([arraybuffer]);
-                      let fileName = path.basename(sourcePath);
-                      file = new File([blob], fileName);
-                      file.path = sourcePath;
-                    } else {
-                      let pickerUtil = await SyncService.getPickerUtil(
-                        this.state.currentDrive
-                      );
-                      let arraybuffer = await pickerUtil.remote.downloadFile(
-                        sourcePath.substring(1)
-                      );
-                      console.log(arraybuffer);
-                      let blob = new Blob([arraybuffer]);
-                      let fileName = sourcePath.split("/").pop() || "file";
-                      file = new File([blob], fileName);
-                    }
-                    toast.dismiss("importing");
-                    this.props.importBookFunc(file);
-                  }
-                }}
-              >
-                <span className="cloud-drive-label">{item}</span>
-                {item.indexOf(".") === -1 && (
-                  <span className="icon-dropdown import-dialog-more-file"></span>
+                    }}
+                  ></span>
+                ) : (
+                  <span
+                    className="icon-add import-dialog-more-file"
+                    onClick={() => {
+                      this.setState({
+                        selectedFileList: [
+                          ...this.state.selectedFileList,
+                          this.state.currentPath + "/" + item,
+                        ],
+                      });
+                    }}
+                  ></span>
                 )}
               </div>
             ))}
@@ -285,6 +245,28 @@ class ImportDialog extends React.Component<
                 <div className="loader"></div>
               </div>
             )}
+        </div>
+        <div
+          className="import-dialog-back-button"
+          style={{ left: "20px", color: "rgb(231, 69, 69)" }}
+          onClick={async () => {
+            if (this.state.selectedFileList.length === 0) {
+              toast.error(this.props.t("No file selected"));
+              return;
+            }
+            for (let i = 0; i < this.state.selectedFileList.length; i++) {
+              let sourcePath = this.state.selectedFileList[i];
+              await this.handleImportBook(sourcePath);
+            }
+            this.setState({
+              selectedFileList: [],
+            });
+          }}
+        >
+          {this.props.t("Import") +
+            " (" +
+            this.state.selectedFileList.length +
+            ")"}
         </div>
         <div
           className="import-dialog-back-button"
