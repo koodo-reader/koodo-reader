@@ -327,6 +327,7 @@
   "Import from": "导入自",
   "Back to parent": "返回上一级",
   "No file selected": "没有选择文件",
+  "Send": "发送",
   "Please add data source in the setting-Sync and backup first": "请先在设置-同步和备份中添加数据源",
   "If you update a piece of data that has already been deleted in the cloud before synchronization, it will cause a conflict. In this case, we will keep the cloud data by default. If you turn this option on, we will keep the local data": "如果您在同步前更新了一条已经在云端删除的数据，会引发冲突。此时我们默认保留云端数据。如果您开启此选项，我们将保留本地数据",
   "Meticulously designed and built for Android and iOS": "为安卓和 iOS 平台精心设计和开发的客户端",

@@ -96,3 +96,15 @@ option:hover {
 .epub-container {
   overflow-x: hidden !important;
 }
+input,
+textarea,
+input::placeholder,
+textarea::placeholder {
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+    Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif !important; /* 继承父元素字体 */
+  font-weight: 500 !important; /* 继承父元素字体粗细 */
+}
+input,
+textarea {
+  color: inherit !important; /* 继承父元素字体颜色 */
+}

@@ -458,60 +458,80 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
                 </div>
               )}
             </div>
-            <div className="popup-assist-shortcut-container">
-              {sampleQuestion
-                .filter((item) => item.mode === this.state.mode)
-                .map((item) => {
-                  return (
-                    <div
-                      className="popup-assist-shortcut"
-                      onClick={() => {
-                        this.handleNewQuestion(item.question);
-                      }}
-                    >
-                      {this.props.t(item.question)}
-                    </div>
-                  );
-                })}
-            </div>
+            <div
+              style={{
+                marginLeft: "-25px",
+                marginRight: "-25px",
+                marginBottom: "-25px",
+                padding: "0px 25px",
+              }}
+            >
+              <div className="popup-assist-shortcut-container">
+                {sampleQuestion
+                  .filter((item) => item.mode === this.state.mode)
+                  .map((item) => {
+                    return (
+                      <div
+                        className="popup-assist-shortcut"
+                        onClick={() => {
+                          this.handleNewQuestion(item.question);
+                        }}
+                      >
+                        {this.props.t(item.question)}
+                      </div>
+                    );
+                  })}
+              </div>
 
-            <div>
-              <textarea
-                name="url"
-                placeholder={this.props.t(
-                  this.state.mode === "ask"
-                    ? "Ask anything about this chapter"
-                    : "Ask anything about reading or learning"
-                )}
-                id="trans-add-content-box"
-                className="trans-add-content-box"
+              <div
                 style={{
-                  height: "40px",
-                  paddingRight: "40px",
-                  resize: "none",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
                 }}
-                onContextMenu={() => {
-                  handleContextMenu("trans-add-content-box");
-                }}
-                value={this.state.inputQuestion}
-                onChange={(event: React.ChangeEvent<HTMLTextAreaElement>) => {
-                  this.setState({
-                    inputQuestion: event.target.value,
-                  });
-                }}
-              />
-              <span
-                className={`icon-send send-icon`}
-                onClick={() => {
-                  if (this.state.answer || this.state.isWaiting) {
-                    return;
-                  }
-                  this.handleNewQuestion(this.state.inputQuestion);
-                  this.setState({
-                    inputQuestion: "",
-                  });
-                }}
-              ></span>
+              >
+                <textarea
+                  name="url"
+                  placeholder={this.props.t(
+                    this.state.mode === "ask"
+                      ? "Ask anything about this chapter"
+                      : "Ask anything about reading or learning"
+                  )}
+                  id="trans-add-content-box"
+                  className="trans-add-content-box"
+                  style={{
+                    height: "40px",
+                    paddingRight: "40px",
+                    resize: "none",
+
+                    marginRight: "10px",
+                    marginBottom: "0px",
+                  }}
+                  onContextMenu={() => {
+                    handleContextMenu("trans-add-content-box");
+                  }}
+                  value={this.state.inputQuestion}
+                  onChange={(event: React.ChangeEvent<HTMLTextAreaElement>) => {
+                    this.setState({
+                      inputQuestion: event.target.value,
+                    });
+                  }}
+                />
+                <div
+                  className="popup-assistant-send-button"
+                  onClick={() => {
+                    if (this.state.answer || this.state.isWaiting) {
+                      return;
+                    }
+                    this.handleNewQuestion(this.state.inputQuestion);
+                    this.setState({
+                      inputQuestion: "",
+                    });
+                  }}
+                >
+                  {this.props.t("Send")}
+                </div>
+              </div>
             </div>
           </>
         )}
