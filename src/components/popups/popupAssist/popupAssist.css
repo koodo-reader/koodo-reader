@@ -48,3 +48,13 @@
   display: inline-block;
   animation: spin 1s linear infinite;
 }
+.popup-assistant-send-button {
+  border: 2px solid #f16464;
+  color: #f16464;
+  border-radius: 8px;
+  padding: 10px;
+  margin-top: 10px;
+  cursor: pointer;
+  text-align: center;
+  width: 60px;
+}
