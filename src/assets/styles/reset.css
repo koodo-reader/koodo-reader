@@ -103,8 +103,10 @@ textarea::placeholder {
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif !important; /* 继承父元素字体 */
   font-weight: 500 !important; /* 继承父元素字体粗细 */
+  line-height: 1.25 !important; /* 继承父元素行高 */
 }
 input,
 textarea {
   color: inherit !important; /* 继承父元素字体颜色 */
+  line-height: 1.25 !important; /* 继承父元素行高 */
 }

@@ -495,7 +495,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
                 this.props.history.push("/login");
               }}
             >
-              <Trans>Pro version</Trans>
+              <Trans>Upgrade to Pro</Trans>
               <span> </span>
             </span>
             {this.state.isDeveloperVer && (

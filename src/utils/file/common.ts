@@ -226,7 +226,10 @@ export const upgradeConfig = (): Boolean => {
     let sortedShelfList =
       ConfigService.getAllListConfig("sortedShelfList") || [];
     if (sortedShelfList.length === 0) {
-      ConfigService.setAllListConfig(Object.keys(shelfList), "sortedShelfList");
+      ConfigService.setAllListConfig(
+        Object.keys(shelfList).filter((item) => item !== "New"),
+        "sortedShelfList"
+      );
     }
 
     //upgrade noteSortCode
