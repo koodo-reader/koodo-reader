@@ -127,10 +127,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       } else {
         addChatBox();
       }
-      if (
-        this.props.books &&
-        ConfigService.getReaderConfig("isProUpgraded") !== "yes"
-      ) {
+      if (ConfigService.getReaderConfig("isProUpgraded") !== "yes") {
         try {
           ConfigService.setReaderConfig("isProUpgraded", "yes");
           await upgradePro();

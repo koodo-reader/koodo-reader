@@ -1,12 +1,15 @@
 import { openExternalUrl } from "../common";
 
-export const handleLinkJump = async (event: any, rendition: any = {}) => {
+export const handleLinkJump = async (
+  event: any,
+  rendition: any = {}
+): Promise<boolean> => {
   let href;
   if (event.target) {
     href =
       (event.target.innerText && event.target.innerText.startsWith("http")) ||
-      event.target.getAttribute("href") ||
-      event.target.getAttribute("src") ||
+      (event.target.tagName !== "IMG" && event.target.getAttribute("href")) ||
+      (event.target.tagName !== "IMG" && event.target.getAttribute("src")) ||
       (event.target.parentNode &&
         ((event.target.parentNode.getAttribute &&
           event.target.parentNode.getAttribute("href")) ||
@@ -19,14 +22,15 @@ export const handleLinkJump = async (event: any, rendition: any = {}) => {
             event.target.parentNode.parentNode.getAttribute("src")))) ||
       "";
   }
+  console.log("href", href);
   if (href && href.indexOf("#") > -1) {
     let pageArea = document.getElementById("page-area");
-    if (!pageArea) return;
+    if (!pageArea) return false;
     let iframe = pageArea.getElementsByTagName("iframe")[0];
-    if (!iframe) return;
+    if (!iframe) return false;
     let doc: any = iframe.contentDocument;
     if (!doc) {
-      return;
+      return false;
     }
     if (href.indexOf("#") !== 0) {
       let chapterInfo = rendition.resolveChapter(href.split("#")[0]);
@@ -38,6 +42,7 @@ export const handleLinkJump = async (event: any, rendition: any = {}) => {
     }
     let id = href.split("#").reverse()[0];
     await rendition.goToNode(doc.body.querySelector("#" + id) || doc.body);
+    return true;
   } else if (
     href &&
     rendition.resolveChapter &&
@@ -49,6 +54,7 @@ export const handleLinkJump = async (event: any, rendition: any = {}) => {
       chapterInfo.href,
       chapterInfo.label
     );
+    return true;
   } else if (
     href &&
     href.indexOf("../") === -1 &&
@@ -60,5 +66,7 @@ export const handleLinkJump = async (event: any, rendition: any = {}) => {
     href.indexOf("data:application") === -1
   ) {
     openExternalUrl(href);
+    return true;
   }
+  return false;
 };
