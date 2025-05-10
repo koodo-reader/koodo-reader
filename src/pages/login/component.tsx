@@ -1,7 +1,7 @@
 import React from "react";
 import { LoginProps, LoginState } from "./interface";
 import { Trans } from "react-i18next";
-import { getLoginParamsFromUrl } from "../../utils/file/common";
+import { getLoginParamsFromUrl, upgradePro } from "../../utils/file/common";
 import { withRouter } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 import { loginList } from "../../constants/loginList";
@@ -71,6 +71,14 @@ class Login extends React.Component<LoginProps, LoginState> {
       removeSearchParams();
       this.props.handleFetchAuthed();
       this.setState({ currentStep: 3 });
+      if (ConfigService.getReaderConfig("isProUpgraded") !== "yes") {
+        try {
+          ConfigService.setReaderConfig("isProUpgraded", "yes");
+          await upgradePro();
+        } catch (error) {
+          console.error(error);
+        }
+      }
     } else {
       this.props.handleLoadingDialog(false);
       toast.error(this.props.t("Login failed, error code") + ": " + res.msg);
@@ -358,50 +366,58 @@ class Login extends React.Component<LoginProps, LoginState> {
                 )}
               </div>
               <div className="login-sync-container">
-                {driveList.map((item) => {
-                  return (
-                    <div
-                      className="login-sync-box"
-                      key={item.value}
-                      style={{}}
-                      onClick={() => {
-                        this.props.handleSetting(true);
-                        this.props.handleSettingMode("sync");
-                        this.props.handleSettingDrive(item.value);
-                      }}
-                    >
-                      <div className="login-sync-title">
-                        {this.props.t(item.label)}
-                      </div>
-                      <div className="login-sync-icon-container">
-                        <span className={"icon-add login-sync-icon"}></span>
-                      </div>
-                      {ConfigService.getReaderConfig("lang") &&
-                        ConfigService.getReaderConfig("lang").startsWith(
-                          "zh"
-                        ) &&
-                        item.value === "webdav" && (
-                          <div className="login-sync-text">
-                            {this.props.t("Recommended (use with Nutstore)")}
+                {driveList
+                  .filter((item) => {
+                    if (!isElectron) {
+                      return item.support.includes("browser");
+                    } else {
+                      return true;
+                    }
+                  })
+                  .map((item) => {
+                    return (
+                      <div
+                        className="login-sync-box"
+                        key={item.value}
+                        style={{}}
+                        onClick={() => {
+                          this.props.handleSetting(true);
+                          this.props.handleSettingMode("sync");
+                          this.props.handleSettingDrive(item.value);
+                        }}
+                      >
+                        <div className="login-sync-title">
+                          {this.props.t(item.label)}
+                        </div>
+                        <div className="login-sync-icon-container">
+                          <span className={"icon-add login-sync-icon"}></span>
+                        </div>
+                        {ConfigService.getReaderConfig("lang") &&
+                          ConfigService.getReaderConfig("lang").startsWith(
+                            "zh"
+                          ) &&
+                          item.value === "webdav" && (
+                            <div className="login-sync-text">
+                              {this.props.t("Recommended (use with Nutstore)")}
+                            </div>
+                          )}
+                        <div className="login-sync-subtitle">
+                          <div>
+                            {item.support.map((support) => {
+                              return (
+                                <span
+                                  key={support}
+                                  className={
+                                    "icon-" + support + " login-sync-support"
+                                  }
+                                ></span>
+                              );
+                            })}
                           </div>
-                        )}
-                      <div className="login-sync-subtitle">
-                        <div>
-                          {item.support.map((support) => {
-                            return (
-                              <span
-                                key={support}
-                                className={
-                                  "icon-" + support + " login-sync-support"
-                                }
-                              ></span>
-                            );
-                          })}
                         </div>
                       </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })}
               </div>
               <div
                 className="login-next-button"

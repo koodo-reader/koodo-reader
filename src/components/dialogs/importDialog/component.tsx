@@ -9,9 +9,8 @@ import packageInfo from "../../../../package.json";
 import _ from "underscore";
 import toast from "react-hot-toast";
 import { isElectron } from "react-device-detect";
-import { TokenService } from "../../../assets/lib/kookit-extra-browser.min";
 import { checkStableUpdate } from "../../../utils/request/common";
-import { getCloudConfig, upgradePro } from "../../../utils/file/common";
+import { getCloudConfig } from "../../../utils/file/common";
 import SyncService from "../../../utils/storage/syncService";
 import { getStorageLocation } from "../../../utils/common";
 class ImportDialog extends React.Component<
