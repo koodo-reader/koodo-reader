@@ -1,4 +1,4 @@
-import { getStorageLocation } from "../common";
+import { generateSyncRecord, getStorageLocation } from "../common";
 import { getCloudConfig, upgradeConfig, upgradeStorage } from "./common";
 import localforage from "localforage";
 import SqlUtil from "./sqlUtil";
@@ -29,7 +29,9 @@ export const restore = async (service: string): Promise<Boolean> => {
     let filePath = await ipcRenderer.invoke("select-file", "ping");
     if (!filePath) return false;
 
-    return await restoreFromfilePath(filePath);
+    let restoreRes = await restoreFromfilePath(filePath);
+    await generateSyncRecord();
+    return restoreRes;
   } else {
     let tokenConfig = await getCloudConfig(service);
     let result = await ipcRenderer.invoke("cloud-download", {
@@ -45,7 +47,9 @@ export const restore = async (service: string): Promise<Boolean> => {
     }
     const path = window.require("path");
     let filePath = path.join(getStorageLocation(), "backup", "data.zip");
-    return await restoreFromfilePath(filePath);
+    let restoreRes = await restoreFromfilePath(filePath);
+    await generateSyncRecord();
+    return restoreRes;
   }
 };
 export const restoreFromConfigJson = () => {
@@ -147,6 +151,13 @@ export const unzipConfig = async (zipEntries: any) => {
         for (let key in config) {
           ConfigService.setItem(key, config[key]);
         }
+      } else if (zipEntries[i].name === "sync.json") {
+        let text = zipEntries[i].getData().toString("utf8");
+        if (!text) {
+          flag = false;
+          break;
+        }
+        ConfigService.setItem("syncRecord", text);
       } else {
         let buffer = zipEntries[i].getData();
         if (!buffer) {

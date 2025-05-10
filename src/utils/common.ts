@@ -306,8 +306,10 @@ export const preCacheAllBooks = async (bookList: Book[]) => {
   }
 };
 export const generateSyncRecord = async () => {
+  console.log("generateSyncRecord");
   for (let database of CommonTool.databaseList) {
     let itemList = await DatabaseService.getAllRecords(database);
+    console.log(itemList, "itemList");
     for (let item of itemList) {
       ConfigService.setSyncRecord(
         {
@@ -318,6 +320,71 @@ export const generateSyncRecord = async () => {
         },
         { operation: "save", time: Date.now() }
       );
+    }
+  }
+  for (let config of CommonTool.configList) {
+    if (
+      config === "themeColors" ||
+      config === "recentBooks" ||
+      config === "deletedBooks" ||
+      config === "favoriteBooks" ||
+      config === "noteTags"
+    ) {
+      if (ConfigService.getAllListConfig(config).length > 0) {
+        ConfigService.setSyncRecord(
+          {
+            type: "config",
+            catergory: "listConfig",
+            name: "general",
+            key: config,
+          },
+          {
+            operation: "update",
+            time: Date.now(),
+          }
+        );
+      }
+    }
+    if (config === "readingTime" || config === "recordLocation") {
+      let configItems: string[] = Object.keys(
+        ConfigService.getAllObjectConfig(config)
+      );
+      for (let index = 0; index < configItems.length; index++) {
+        let itemName = configItems[index];
+        ConfigService.setSyncRecord(
+          {
+            type: "config",
+            catergory: "objectConfig",
+            name: config,
+            key: itemName,
+          },
+          {
+            operation: "update",
+            time: Date.now(),
+          }
+        );
+      }
+    }
+    if (config === "shelfList") {
+      let itemMap = ConfigService.getAllMapConfig(config);
+      let itemNameList = Object.keys(itemMap);
+      console.log(itemNameList, "itemNameList");
+      for (let index = 0; index < itemNameList.length; index++) {
+        let itemName = itemNameList[index];
+        if (itemName === "New") continue;
+        ConfigService.setSyncRecord(
+          {
+            type: "config",
+            catergory: "mapConfig",
+            name: config,
+            key: itemName,
+          },
+          {
+            operation: "update",
+            time: Date.now(),
+          }
+        );
+      }
     }
   }
 };

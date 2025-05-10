@@ -80,7 +80,8 @@ export const backupFromPath = async (targetPath: string, fileName: string) => {
   if (!fs.existsSync(path.join(targetPath))) {
     fs.mkdirSync(path.join(targetPath), { recursive: true });
   }
-  backupToConfigJson();
+  await backupToConfigJson();
+  await backupToSyncJson();
 
   if (fs.existsSync(path.join(dataPath, "book"))) {
     zip.addLocalFolder(path.join(dataPath, "book"), "book");
@@ -90,6 +91,9 @@ export const backupFromPath = async (targetPath: string, fileName: string) => {
   }
   if (fs.existsSync(path.join(dataPath, "config", "config.json"))) {
     zip.addLocalFile(path.join(dataPath, "config", "config.json"), "config");
+  }
+  if (fs.existsSync(path.join(dataPath, "config", "sync.json"))) {
+    zip.addLocalFile(path.join(dataPath, "config", "sync.json"), "config");
   }
   let databaseList = CommonTool.databaseList;
   for (let i = 0; i < databaseList.length; i++) {
@@ -117,6 +121,7 @@ export const backupFromStorage = async () => {
   let words = await DatabaseService.getDbBuffer("words");
   let plugins = await DatabaseService.getDbBuffer("plugins");
   let config = JSON.stringify(await ConfigUtil.dumpConfig("config"));
+  let sync = JSON.stringify(await ConfigUtil.dumpConfig("sync"));
   await zipCover(zip);
   await zipBook(zip);
   let result = await zipConfig(
@@ -126,7 +131,8 @@ export const backupFromStorage = async () => {
     bookmarks,
     words,
     plugins,
-    config
+    config,
+    sync
   );
   if (!result) return false;
   return await zip.generateAsync({ type: "blob" });
@@ -146,6 +152,21 @@ export const backupToConfigJson = async () => {
     "utf-8"
   );
 };
+export const backupToSyncJson = async () => {
+  let syncStr = JSON.stringify(await ConfigUtil.dumpConfig("sync"));
+  const fs = window.require("fs");
+  const path = window.require("path");
+  const dataPath = getStorageLocation() || "";
+  if (!fs.existsSync(path.join(dataPath))) {
+    fs.mkdirSync(path.join(dataPath), { recursive: true });
+  }
+  fs.writeFileSync(
+    path.join(dataPath, "config", "sync.json"),
+    syncStr,
+    "utf-8"
+  );
+};
+
 export const zipBook = (zip: any) => {
   return new Promise<boolean>(async (resolve) => {
     let books = await DatabaseService.getAllRecords("books");
@@ -196,7 +217,8 @@ export const zipConfig = (
   bookmarkBuffer: ArrayBuffer,
   wordBuffer: ArrayBuffer,
   pluginBuffer: ArrayBuffer,
-  config: string
+  config: string,
+  sync: string
 ) => {
   return new Promise<boolean>((resolve) => {
     try {
@@ -207,7 +229,8 @@ export const zipConfig = (
         .file("bookmarks.db", bookmarkBuffer)
         .file("words.db", wordBuffer)
         .file("plugins.db", pluginBuffer)
-        .file("config.json", config);
+        .file("config.json", config)
+        .file("sync.json", sync);
       resolve(true);
     } catch (error) {
       resolve(false);
