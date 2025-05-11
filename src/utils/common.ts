@@ -306,10 +306,8 @@ export const preCacheAllBooks = async (bookList: Book[]) => {
   }
 };
 export const generateSyncRecord = async () => {
-  console.log("generateSyncRecord");
   for (let database of CommonTool.databaseList) {
     let itemList = await DatabaseService.getAllRecords(database);
-    console.log(itemList, "itemList");
     for (let item of itemList) {
       ConfigService.setSyncRecord(
         {
@@ -368,7 +366,6 @@ export const generateSyncRecord = async () => {
     if (config === "shelfList") {
       let itemMap = ConfigService.getAllMapConfig(config);
       let itemNameList = Object.keys(itemMap);
-      console.log(itemNameList, "itemNameList");
       for (let index = 0; index < itemNameList.length; index++) {
         let itemName = itemNameList[index];
         if (itemName === "New") continue;
