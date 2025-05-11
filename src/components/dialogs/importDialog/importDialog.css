@@ -34,8 +34,8 @@
   padding-right: 10px;
   overflow-y: scroll;
   position: absolute;
-  top: 60px;
-  bottom: 40px;
+  top: 50px;
+  bottom: 50px;
 }
 .import-dialog-back-button {
   position: absolute;
@@ -45,5 +45,5 @@
   cursor: pointer;
 }
 .cloud-drive-label:hover {
-  text-decoration: underline;
+  color: #f16464;
 }

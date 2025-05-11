@@ -25,15 +25,8 @@ class ImportDialog extends React.Component<
       currentPath: "",
       currentFileList: [],
       selectedFileList: [],
-      isDeveloperVer: false,
-      isFinish: false,
+      isWaitList: false,
     };
-  }
-  async componentDidMount() {
-    let stableLog = await checkStableUpdate();
-    if (packageInfo.version.localeCompare(stableLog.version) > 0) {
-      this.setState({ isDeveloperVer: true });
-    }
   }
   handleClose = () => {
     this.props.handleImportDialog(false);
@@ -65,6 +58,7 @@ class ImportDialog extends React.Component<
     this.setState({ currentDrive: event.target.value });
   };
   listFolder = async (drive: string, path: string) => {
+    this.setState({ isWaitList: true });
     let fileList = [];
     if (isElectron) {
       const { ipcRenderer } = window.require("electron");
@@ -82,6 +76,7 @@ class ImportDialog extends React.Component<
     }
     this.setState({
       currentFileList: fileList,
+      isWaitList: false,
     });
   };
   handleClickItem = async (item: string) => {
@@ -145,7 +140,10 @@ class ImportDialog extends React.Component<
   };
   render() {
     return (
-      <div className="backup-page-container">
+      <div
+        className="backup-page-container"
+        style={{ height: "450px", top: "calc(50% - 225px)" }}
+      >
         <div className="edit-dialog-title">
           <Trans>From cloud storage</Trans>
         </div>
@@ -235,9 +233,17 @@ class ImportDialog extends React.Component<
               </div>
             ))}
           {this.state.currentDrive !== "" &&
-            this.state.currentFileList.length === 0 && (
-              <div className="loading-animation" style={{ marginTop: "-20px" }}>
+            this.state.currentFileList.length === 0 &&
+            this.state.isWaitList && (
+              <div className="loading-animation" style={{ height: "100%" }}>
                 <div className="loader"></div>
+              </div>
+            )}
+          {this.state.currentDrive !== "" &&
+            this.state.currentFileList.length === 0 &&
+            !this.state.isWaitList && (
+              <div className="loading-animation" style={{ height: "100%" }}>
+                {this.props.t("Empty")}
               </div>
             )}
         </div>

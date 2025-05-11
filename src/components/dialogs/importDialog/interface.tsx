@@ -25,6 +25,5 @@ export interface ImportDialogState {
   currentPath: string;
   currentFileList: string[];
   selectedFileList: string[];
-  isDeveloperVer: boolean;
-  isFinish: boolean;
+  isWaitList: boolean;
 }
