@@ -13,6 +13,7 @@ export const getThirdpartyRequest = async () => {
     return thirdpartyRequest;
   }
   thirdpartyRequest = new ThirdpartyRequest(TokenService, ConfigService);
+  await thirdpartyRequest.refreshUserToken();
   return thirdpartyRequest;
 };
 export const onSyncCallback = async (service: string, authCode: string) => {

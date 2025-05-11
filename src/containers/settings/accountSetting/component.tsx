@@ -473,10 +473,13 @@ class AccountSetting extends React.Component<
                     code: this.state.redeemCode,
                   });
                   if (response.code === 200) {
+                    this.props.handleFetchUserInfo();
+                    let userRequest = await getUserRequest();
+                    await userRequest.refreshUserToken();
                     toast.success(this.props.t("Redeem successful"), {
                       id: "redeem-code",
                     });
-                    this.props.handleFetchUserInfo();
+
                     this.setState({ isRedeemCode: false });
                   } else if (response.code === 401) {
                     toast.error(

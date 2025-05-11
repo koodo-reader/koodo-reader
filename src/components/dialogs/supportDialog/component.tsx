@@ -127,10 +127,13 @@ class SupporDialog extends React.Component<
                         code: this.state.redeemCode,
                       });
                       if (response.code === 200) {
+                        this.props.handleFetchUserInfo();
+                        let userRequest = await getUserRequest();
+                        await userRequest.refreshUserToken();
                         toast.success(this.props.t("Redeem successful"), {
                           id: "redeem-code",
                         });
-                        this.props.handleFetchUserInfo();
+
                         this.setState({ isRedeemCode: false });
                         this.props.handleShowSupport(false);
                       } else if (response.code === 401) {
@@ -210,14 +213,16 @@ class SupporDialog extends React.Component<
                             }
                           );
                         } else {
+                          this.props.handleFetchUserInfo();
+                          let userRequest = await getUserRequest();
+                          await userRequest.refreshUserToken();
                           toast.success(
                             this.props.t("Thanks for your support"),
                             {
                               id: "check-payment-status",
                             }
                           );
-                          let userRequest = await getUserRequest();
-                          await userRequest.refreshUserToken();
+
                           this.props.handleShowSupport(false);
                         }
                       } else {

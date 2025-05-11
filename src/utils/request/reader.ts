@@ -76,6 +76,7 @@ export const getReaderRequest = async () => {
     return readerRequest;
   }
   readerRequest = new ReaderRequest(TokenService, ConfigService);
+  await readerRequest.refreshUserToken();
   return readerRequest;
 };
 export const getDictText = async (word: string, from: string, to: string) => {

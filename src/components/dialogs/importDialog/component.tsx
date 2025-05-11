@@ -65,7 +65,6 @@ class ImportDialog extends React.Component<
     this.setState({ currentDrive: event.target.value });
   };
   listFolder = async (drive: string, path: string) => {
-    console.log(drive, path);
     let fileList = [];
     if (isElectron) {
       const { ipcRenderer } = window.require("electron");
@@ -81,7 +80,6 @@ class ImportDialog extends React.Component<
       let pickerUtil = await SyncService.getPickerUtil(drive);
       fileList = await pickerUtil.listFiles(path);
     }
-    console.log(fileList);
     this.setState({
       currentFileList: fileList,
     });
@@ -126,7 +124,6 @@ class ImportDialog extends React.Component<
         service: this.state.currentDrive,
         storagePath: dataPath,
       });
-      console.log("finished download", path.join(dataPath, destPath));
       const buffer = fs.readFileSync(path.join(dataPath, destPath));
 
       let arraybuffer = new Uint8Array(buffer).buffer;
@@ -139,7 +136,6 @@ class ImportDialog extends React.Component<
       let arraybuffer = await pickerUtil.remote.downloadFile(
         sourcePath.substring(1)
       );
-      console.log(arraybuffer);
       let blob = new Blob([arraybuffer]);
       let fileName = sourcePath.split("/").pop() || "file";
       file = new File([blob], fileName);
@@ -270,7 +266,6 @@ class ImportDialog extends React.Component<
         <div
           className="import-dialog-back-button"
           onClick={async () => {
-            console.log("currentPath", this.state.currentPath);
             if (this.state.currentPath === "") {
               this.setState({ currentDrive: "", currentFileList: [] });
               return;
