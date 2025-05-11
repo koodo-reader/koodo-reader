@@ -163,6 +163,7 @@ Make sure that you have installed yarn and git
 
 | Language(A-Z)   | Code  | View                                                |
 | --------------- | ----- | --------------------------------------------------- |
+| Amharic         | am    | [View](./src/assets/locales/am/translation.json)    |
 | Arabic          | ar    | [View](./src/assets/locales/ar/translation.json)    |
 | Armenian        | hy    | [View](./src/assets/locales/hy/translation.json)    |
 | Bengali         | bn    | [View](./src/assets/locales/bn/translation.json)    |
