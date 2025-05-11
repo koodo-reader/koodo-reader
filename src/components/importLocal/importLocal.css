@@ -73,7 +73,6 @@
   align-items: center;
   justify-content: flex-start;
   padding-left: 20px;
-  transition: background-color 0.2s;
 }
 
 .more-option-item:hover {
