@@ -75,6 +75,12 @@ export const appearanceSettingList = [
 export const syncSettingList = [
   {
     isElectron: false,
+    title: "Enable Koodo Sync",
+    desc: "To ensure a smooth synchronization experience, your reading progress, notes, highlights, bookmarks, and other data will be stored and synced through our cloud service",
+    propName: "isEnableKoodoSync",
+  },
+  {
+    isElectron: false,
     title: "Always keep local data when resolving sync conflicts",
     desc: "If you update a piece of data that has already been deleted in the cloud before synchronization, it will cause a conflict. In this case, we will keep the cloud data by default. If you turn this option on, we will keep the local data",
     propName: "isKeepLocal",

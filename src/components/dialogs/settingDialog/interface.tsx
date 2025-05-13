@@ -46,7 +46,6 @@ export interface SettingInfoState {
   isOpenInMain: boolean;
   isDisableUpdate: boolean;
   isPrecacheBook: boolean;
-  isKeepLocal: boolean;
   isUseBuiltIn: boolean;
   isDisableCrop: boolean;
   isDisablePagination: boolean;

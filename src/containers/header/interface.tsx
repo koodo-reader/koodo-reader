@@ -20,6 +20,7 @@ export interface HeaderProps extends RouteComponentProps<any> {
   handleImportDialog: (isOpenImportDialog: boolean) => void;
   handleFeedbackDialog: (isShow: boolean) => void;
   handleFetchAuthed: () => void;
+  handleFetchUserConfig: () => void;
   handleFetchDefaultSyncOption: () => void;
   handleFetchLoginOptionList: () => void;
   handleFetchDataSourceList: () => void;

@@ -73,6 +73,7 @@
   align-items: center;
   justify-content: flex-start;
   padding-left: 20px;
+  transition: 0.2s;
 }
 
 .more-option-item:hover {

@@ -12,6 +12,7 @@ const initState = {
   isNoteSort: false,
   isAuthed: false,
   userInfo: null,
+  userConfig: null,
   isSettingOpen: false,
   viewMode: "card",
   isSortDisplay: false,
@@ -57,6 +58,11 @@ export function manager(
       return {
         ...state,
         userInfo: action.payload,
+      };
+    case "HANDLE_USER_CONFIG":
+      return {
+        ...state,
+        userConfig: action.payload,
       };
     case "HANDLE_SETTING_MODE":
       return {

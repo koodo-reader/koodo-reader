@@ -54,6 +54,24 @@ export const fetchUserInfo = async () => {
   }
   return response;
 };
+export const fetchUserConfig = async () => {
+  let userRequest = await getUserRequest();
+  let response = await userRequest.getUserConfig();
+  if (response.code === 401) {
+    handleExitApp();
+  }
+  return response;
+};
+export const updateUserConfig = async (config: any) => {
+  let userRequest = await getUserRequest();
+  let response = await userRequest.updateUserConfig(config);
+  if (response.code === 200) {
+  } else if (response.code === 401) {
+    handleExitApp();
+  } else {
+    toast.error(i18n.t("Setup failed, error code") + ": " + response.msg);
+  }
+};
 export const getUserRequest = async () => {
   if (userRequest) {
     return userRequest;
