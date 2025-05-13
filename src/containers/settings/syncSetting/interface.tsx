@@ -47,6 +47,7 @@ export interface SettingInfoState {
   isDisableUpdate: boolean;
   isPrecacheBook: boolean;
   isKeepLocal: boolean;
+  isEnableKoodoSync: boolean;
   isUseBuiltIn: boolean;
   isDisablePDFCover: boolean;
   isAutoFullscreen: boolean;

@@ -135,6 +135,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
           console.error(error);
         }
       }
+      nextProps.handleFetchUserConfig();
     }
     if (!nextProps.isAuthed && nextProps.isAuthed !== this.props.isAuthed) {
       if (isElectron) {
@@ -317,6 +318,9 @@ class Header extends React.Component<HeaderProps, HeaderState> {
           duration: 4000,
         }
       );
+    }
+    if (ConfigService.getReaderConfig("isEnableKoodoSync") === "yes") {
+      ConfigUtil.updateSyncData();
     }
     setTimeout(() => {
       this.props.history.push("/manager/home");

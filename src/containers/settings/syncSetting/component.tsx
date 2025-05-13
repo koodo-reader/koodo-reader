@@ -25,6 +25,7 @@ import {
   onSyncCallback,
 } from "../../../utils/request/thirdparty";
 import SyncService from "../../../utils/storage/syncService";
+import { updateUserConfig } from "../../../utils/request/user";
 declare var window: any;
 class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
   constructor(props: SettingInfoProps) {
@@ -57,6 +58,8 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
       appSkin: ConfigService.getReaderConfig("appSkin"),
       isUseBuiltIn: ConfigService.getReaderConfig("isUseBuiltIn") === "yes",
       isKeepLocal: ConfigService.getReaderConfig("isKeepLocal") === "yes",
+      isEnableKoodoSync:
+        ConfigService.getReaderConfig("isEnableKoodoSync") === "yes",
       isDisablePDFCover:
         ConfigService.getReaderConfig("isDisablePDFCover") === "yes",
       currentThemeIndex: _.findLastIndex(themeList, {
@@ -209,6 +212,14 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
               className="single-control-switch"
               onClick={() => {
                 switch (item.propName) {
+                  case "isEnableKoodoSync":
+                    updateUserConfig({
+                      is_enable_koodo_sync: !this.state.isEnableKoodoSync
+                        ? "yes"
+                        : "no",
+                    });
+                    this.handleSetting(item.propName);
+                    break;
                   default:
                     this.handleSetting(item.propName);
                     break;

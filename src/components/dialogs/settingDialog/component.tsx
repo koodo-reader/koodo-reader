@@ -56,7 +56,6 @@ class SettingDialog extends React.Component<
       isPrecacheBook: ConfigService.getReaderConfig("isPrecacheBook") === "yes",
       appSkin: ConfigService.getReaderConfig("appSkin"),
       isUseBuiltIn: ConfigService.getReaderConfig("isUseBuiltIn") === "yes",
-      isKeepLocal: ConfigService.getReaderConfig("isKeepLocal") === "yes",
       isDisableCrop: ConfigService.getReaderConfig("isDisableCrop") === "yes",
       isDisablePagination:
         ConfigService.getReaderConfig("isDisablePagination") === "yes",
