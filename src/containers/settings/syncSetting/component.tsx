@@ -58,6 +58,8 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
       appSkin: ConfigService.getReaderConfig("appSkin"),
       isUseBuiltIn: ConfigService.getReaderConfig("isUseBuiltIn") === "yes",
       isKeepLocal: ConfigService.getReaderConfig("isKeepLocal") === "yes",
+      isDisableAutoSync:
+        ConfigService.getReaderConfig("isDisableAutoSync") === "yes",
       isEnableKoodoSync:
         ConfigService.getReaderConfig("isEnableKoodoSync") === "yes",
       isDisablePDFCover:

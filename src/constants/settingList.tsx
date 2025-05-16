@@ -75,6 +75,12 @@ export const appearanceSettingList = [
 export const syncSettingList = [
   {
     isElectron: false,
+    title: "Disable automatic sync",
+    desc: "By default, Koodo Reader will automatically synchronize your data when you open the app and exit reading",
+    propName: "isDisableAutoSync",
+  },
+  {
+    isElectron: false,
     title: "Enable Koodo Sync",
     desc: "To ensure a smooth synchronization experience, your reading progress, notes, highlights, bookmarks, and other data will be stored and synced through our cloud service",
     propName: "isEnableKoodoSync",

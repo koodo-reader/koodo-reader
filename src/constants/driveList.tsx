@@ -247,7 +247,7 @@ export const driveInputConfig: DriveInputConfig = {
     {
       label: "AccessKeyId",
       value: "accessKeyId",
-      type: "text",
+      type: "password",
       required: true,
     },
     {
