@@ -40,4 +40,5 @@ export interface HeaderState {
   isDeveloperVer: boolean;
   isHidePro: boolean;
   isSync: boolean;
+  isAutoSync: boolean;
 }
