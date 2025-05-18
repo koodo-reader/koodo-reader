@@ -106,7 +106,7 @@
 /* .dict-container li div {
   display: inline;
 } */
-.dict-container ul {
+/* .dict-container ul {
   counter-reset: my-counter;
 }
 
@@ -117,6 +117,37 @@
 .dict-container li::before {
   content: counter(my-counter) ". ";
   font-weight: bold;
+} */
+/* 在 popupDict.css 中添加这些规则，它们会覆盖 reset.css 中的全局规则 */
+.dict-container ul {
+  list-style-type: disc !important; /* 实心圆点 */
+  padding-left: 2em !important; /* 添加缩进 */
+  margin: 1em 0 !important; /* 添加上下边距 */
+}
+
+.dict-container ol {
+  list-style-type: decimal !important; /* 数字编号 */
+  padding-left: 2em !important; /* 添加缩进 */
+  margin: 1em 0 !important; /* 添加上下边距 */
+}
+
+.dict-container li {
+  list-style: inherit !important; /* 继承父元素的列表样式 */
+  display: list-item !important; /* 显示为列表项 */
+  margin: 0.5em 0 !important; /* 添加上下边距 */
+}
+
+/* 定义嵌套列表的样式 */
+.dict-container ul ul {
+  list-style-type: circle !important; /* 二级列表使用空心圆点 */
+}
+
+.dict-container ul ul ul {
+  list-style-type: square !important; /* 三级列表使用方块 */
+}
+
+.dict-container ol ol {
+  list-style-type: lower-alpha !important; /* 二级有序列表使用小写字母 */
 }
 .audio-player {
   width: 100px;

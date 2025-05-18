@@ -65,6 +65,9 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         );
       }
     }, 1000);
+    window.addEventListener("beforeunload", function (event) {
+      ConfigService.setItem("isFinshReading", "yes");
+    });
   }
   UNSAFE_componentWillMount() {
     let url = document.location.href;

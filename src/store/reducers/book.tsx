@@ -10,6 +10,7 @@ const initState = {
   totalPage: 1,
   renderBookFunc: () => {},
   importBookFunc: () => {},
+  cloudSyncFunc: () => {},
   renderNoteFunc: () => {},
 };
 export function book(
@@ -41,6 +42,11 @@ export function book(
       return {
         ...state,
         importBookFunc: action.payload,
+      };
+    case "HANDLE_CLOUD_SYNC_FUNC":
+      return {
+        ...state,
+        cloudSyncFunc: action.payload,
       };
     case "HANDLE_RENDER_NOTE_FUNC":
       return {

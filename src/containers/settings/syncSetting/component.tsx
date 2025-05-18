@@ -11,6 +11,7 @@ import toast from "react-hot-toast";
 import {
   handleContextMenu,
   openExternalUrl,
+  testConnection,
   WEBSITE_URL,
 } from "../../../utils/common";
 import { getStorageLocation } from "../../../utils/common";
@@ -89,12 +90,13 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
     this.handleRest(this.state[stateName]);
   };
   handleAddDataSource = (event: any) => {
-    if (!event.target.value) {
+    let targetDrive = event.target.value;
+    if (!targetDrive) {
       return;
     }
     if (
       !driveList
-        .find((item) => item.value === event.target.value)
+        .find((item) => item.value === targetDrive)
         ?.support.includes("browser") &&
       !isElectron
     ) {
@@ -106,14 +108,14 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
       return;
     }
     if (
-      driveList.find((item) => item.value === event.target.value)?.isPro &&
+      driveList.find((item) => item.value === targetDrive)?.isPro &&
       !this.props.isAuthed
     ) {
       toast(this.props.t("This feature is not available in the free version"));
       return;
     }
-    this.props.handleSettingDrive(event.target.value);
-    let settingDrive = event.target.value;
+    this.props.handleSettingDrive(targetDrive);
+    let settingDrive = targetDrive;
     if (
       settingDrive === "dropbox" ||
       settingDrive === "google" ||
@@ -126,20 +128,25 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
     }
   };
   handleDeleteDataSource = async (event: any) => {
-    if (!event.target.value) {
+    let targetDrive = event.target.value;
+    if (!targetDrive) {
       return;
     }
-    await TokenService.setToken(event.target.value + "_token", "");
-    SyncService.removeSyncUtil(event.target.value);
-    removeCloudConfig(event.target.value);
+    await TokenService.setToken(targetDrive + "_token", "");
+    SyncService.removeSyncUtil(targetDrive);
+    removeCloudConfig(targetDrive);
     if (isElectron) {
       const { ipcRenderer } = window.require("electron");
       await ipcRenderer.invoke("cloud-close", {
-        service: event.target.value,
+        service: targetDrive,
       });
     }
-    ConfigService.deleteListConfig(event.target.value, "dataSourceList");
+    ConfigService.deleteListConfig(targetDrive, "dataSourceList");
     this.props.handleFetchDataSourceList();
+    if (targetDrive === ConfigService.getItem("defaultSyncOption")) {
+      ConfigService.removeItem("defaultSyncOption");
+      this.props.handleFetchDefaultSyncOption();
+    }
     toast.success(this.props.t("Deletion successful"));
   };
   handleSetDefaultSyncOption = (event: any) => {
@@ -328,10 +335,37 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                 />
               </>
             )}
+            {this.props.settingDrive === "webdav" && !isElectron && (
+              <div
+                className="token-dialog-tip"
+                style={{
+                  marginTop: "10px",
+                  fontSize: "13px",
+                  lineHeight: "16px",
+                  color: "rgba(231, 69, 69, 0.8)",
+                }}
+              >
+                {this.props.t(
+                  "Only WebDAV service provided by Alist is directly supported in Browser, Other WebDAV services need to enable CORS to work properly"
+                )}
+              </div>
+            )}
             <div className="token-dialog-button-container">
               <div
                 className="voice-add-confirm"
                 onClick={async () => {
+                  if (
+                    this.props.settingDrive === "webdav" ||
+                    this.props.settingDrive === "s3compatible"
+                  ) {
+                    let result = await testConnection(
+                      this.props.settingDrive,
+                      this.state.driveConfig
+                    );
+                    if (!result) {
+                      return;
+                    }
+                  }
                   this.handleConfirmDrive();
                 }}
               >
@@ -365,62 +399,24 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                     <Trans>Authorize</Trans>
                   </div>
                 )}
-                {isElectron &&
-                  (this.props.settingDrive === "webdav" ||
-                    this.props.settingDrive === "ftp" ||
-                    this.props.settingDrive === "sftp" ||
-                    this.props.settingDrive === "mega" ||
-                    this.props.settingDrive === "s3compatible") && (
-                    <div
-                      className="voice-add-confirm"
-                      style={{ marginRight: "10px" }}
-                      onClick={async () => {
-                        toast.loading(this.props.t("Testing connection..."), {
-                          id: "testing-connection-id",
-                        });
-                        const { ipcRenderer } = window.require("electron");
-                        const fs = window.require("fs");
-                        fs.writeFileSync(
-                          getStorageLocation() + "/config/test.txt",
-                          "Hello world!"
-                        );
-                        let driveConfig: any = {};
-                        for (let item in this.state.driveConfig) {
-                          driveConfig[item] = this.state.driveConfig[item];
-                        }
-                        let result = await ipcRenderer.invoke("cloud-upload", {
-                          ...driveConfig,
-                          fileName: "test.txt",
-                          service: this.props.settingDrive,
-                          type: "config",
-                          storagePath: getStorageLocation(),
-                          isUseCache: false,
-                        });
-                        if (result) {
-                          toast.success(this.props.t("Connection successful"), {
-                            id: "testing-connection-id",
-                          });
-                          await ipcRenderer.invoke("cloud-delete", {
-                            ...driveConfig,
-                            fileName: "test.txt",
-                            service: this.props.settingDrive,
-                            type: "config",
-                            storagePath: getStorageLocation(),
-                            isUseCache: false,
-                          });
-                        } else {
-                          toast.error(this.props.t("Connection failed"), {
-                            id: "testing-connection-id",
-                          });
-                        }
-                        fs.unlinkSync(
-                          getStorageLocation() + "/config/test.txt"
-                        );
-                      }}
-                    >
-                      <Trans>Test</Trans>
-                    </div>
-                  )}
+                {(this.props.settingDrive === "webdav" ||
+                  this.props.settingDrive === "ftp" ||
+                  this.props.settingDrive === "sftp" ||
+                  this.props.settingDrive === "mega" ||
+                  this.props.settingDrive === "s3compatible") && (
+                  <div
+                    className="voice-add-confirm"
+                    style={{ marginRight: "10px" }}
+                    onClick={async () => {
+                      testConnection(
+                        this.props.settingDrive,
+                        this.state.driveConfig
+                      );
+                    }}
+                  >
+                    <Trans>Test</Trans>
+                  </div>
+                )}
                 {(this.props.settingDrive === "webdav" ||
                   this.props.settingDrive === "ftp" ||
                   this.props.settingDrive === "s3compatible" ||

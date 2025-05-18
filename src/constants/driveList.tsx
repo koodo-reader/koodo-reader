@@ -4,10 +4,9 @@ export const driveList = [
     value: "webdav",
     icon: "icon-webdav",
     isPro: false,
-    support: ["desktop", "phone"],
+    support: ["desktop", "browser", "phone"],
     scoped: false,
   },
-
   {
     label: "Dropbox",
     value: "dropbox",

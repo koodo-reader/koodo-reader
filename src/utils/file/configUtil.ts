@@ -116,7 +116,6 @@ class ConfigUtil {
     let response = await thirdpartyRequest.getSyncData();
     if (response.code === 200) {
       let syncData = response.data;
-      console.log("getSyncData", syncData);
       this.syncData = syncData;
       return JSON.parse(this.syncData[type] || defaultValue);
     } else if (response.code === 401) {
@@ -130,8 +129,6 @@ class ConfigUtil {
     }
   }
   static async updateSyncData() {
-    console.log("updateSyncData", this.updateData);
-
     let thirdpartyRequest = await getThirdpartyRequest();
 
     let response = await thirdpartyRequest.updateSyncData(this.updateData);
@@ -159,7 +156,6 @@ class ConfigUtil {
   static async getCloudDatabase(database: string) {
     if (ConfigService.getReaderConfig("isEnableKoodoSync") === "yes") {
       let data = await this.getSyncData(database);
-      console.log("getCloudDatabase", database, data);
       return data || [];
     }
     if (isElectron) {
@@ -210,7 +206,6 @@ class ConfigUtil {
           return record;
         });
       }
-      console.log("uploadDatabase", type, data);
       this.updateData[type] = JSON.stringify(data);
       return;
     }

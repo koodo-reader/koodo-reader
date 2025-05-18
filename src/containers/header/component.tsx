@@ -114,6 +114,21 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       this.props.handleFetchNotes();
       this.props.handleFetchBookmarks();
     });
+    this.props.handleCloudSyncFunc(this.handleCloudSync);
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "visible") {
+        if (ConfigService.getItem("isFinshReading") === "yes") {
+          ConfigService.setItem("isFinshReading", "no");
+          if (
+            this.state.isAutoSync &&
+            ConfigService.getItem("defaultSyncOption")
+          ) {
+            this.setState({ isSync: true });
+            this.handleCloudSync();
+          }
+        }
+      }
+    });
   }
   async UNSAFE_componentWillReceiveProps(
     nextProps: Readonly<HeaderProps>,
@@ -136,11 +151,10 @@ class Header extends React.Component<HeaderProps, HeaderState> {
           console.error(error);
         }
       }
-      if (this.state.isAutoSync) {
+      if (this.state.isAutoSync && ConfigService.getItem("defaultSyncOption")) {
         this.setState({ isSync: true });
         await this.handleCloudSync();
       }
-      nextProps.handleFetchUserConfig();
     }
     if (!nextProps.isAuthed && nextProps.isAuthed !== this.props.isAuthed) {
       if (isElectron) {
@@ -338,9 +352,9 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     if (ConfigService.getReaderConfig("isEnableKoodoSync") === "yes") {
       ConfigUtil.updateSyncData();
     }
-    setTimeout(() => {
-      this.props.history.push("/manager/home");
-    }, 1000);
+    // setTimeout(() => {
+    //   this.props.history.push("/manager/home");
+    // }, 1000);
   };
   handleSync = async (compareResult) => {
     try {
