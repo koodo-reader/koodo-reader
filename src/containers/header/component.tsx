@@ -266,10 +266,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     let config = {};
     let service = ConfigService.getItem("defaultSyncOption");
     if (!service) {
-      if (!this.state.isAutoSync) {
-        toast.error(this.props.t("Please add data source in the setting"));
-      }
-
+      toast(this.props.t("Please add data source in the setting"));
       this.setState({ isSync: false });
       return false;
     }
@@ -352,9 +349,10 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     if (ConfigService.getReaderConfig("isEnableKoodoSync") === "yes") {
       ConfigUtil.updateSyncData();
     }
-    // setTimeout(() => {
-    //   this.props.history.push("/manager/home");
-    // }, 1000);
+    //when book is empty, need to refresh the book list
+    setTimeout(() => {
+      this.props.history.push("/manager/home");
+    }, 1000);
   };
   handleSync = async (compareResult) => {
     try {

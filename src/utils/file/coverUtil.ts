@@ -71,7 +71,9 @@ class CoverUtil {
         return;
       }
       const imageFilePath = path.join(directoryPath, imageFiles[0]);
-      fs.unlinkSync(imageFilePath);
+      if (fs.existsSync(imageFilePath)) {
+        fs.unlinkSync(imageFilePath);
+      }
     }
     this.deleteCloudCover(key);
   }

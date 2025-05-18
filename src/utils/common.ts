@@ -493,6 +493,12 @@ export const checkMissingBook = (bookList: Book[]) => {
     if (fs.existsSync(expectedPath)) {
       continue;
     }
+    // create folder if not exists
+    if (!fs.existsSync(path.join(getStorageLocation() || "", "book"))) {
+      fs.mkdirSync(path.join(getStorageLocation() || "", "book"), {
+        recursive: true,
+      });
+    }
     if (book.path && fs.existsSync(book.path)) {
       fs.copyFileSync(book.path, expectedPath);
     }
@@ -505,6 +511,9 @@ export const testConnection = async (driveName: string, driveConfig: any) => {
   if (isElectron) {
     const { ipcRenderer } = window.require("electron");
     const fs = window.require("fs");
+    if (!fs.existsSync(getStorageLocation() + "/config")) {
+      fs.mkdirSync(getStorageLocation() + "/config", { recursive: true });
+    }
     fs.writeFileSync(getStorageLocation() + "/config/test.txt", "Hello world!");
     let result = await ipcRenderer.invoke("cloud-upload", {
       ...driveConfig,
@@ -531,7 +540,9 @@ export const testConnection = async (driveName: string, driveConfig: any) => {
         id: "testing-connection-id",
       });
     }
-    fs.unlinkSync(getStorageLocation() + "/config/test.txt");
+    if (fs.existsSync(getStorageLocation() + "/config/test.txt")) {
+      fs.unlinkSync(getStorageLocation() + "/config/test.txt");
+    }
     return result;
   } else {
     let thirdpartyRequest = await getThirdpartyRequest();

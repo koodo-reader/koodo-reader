@@ -529,7 +529,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
             </select>
           </div>
         )}
-        {this.renderSwitchOption(syncSettingList)}
+        {this.props.isAuthed && this.renderSwitchOption(syncSettingList)}
       </>
     );
   }
