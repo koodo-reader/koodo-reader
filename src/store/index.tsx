@@ -47,7 +47,6 @@ export type stateType = {
     isShowSupport: boolean;
     isShowNew: boolean;
     userInfo: any;
-    userConfig: any;
     isAuthed: boolean;
     isNewWarning: boolean;
     isSelectBook: boolean;
@@ -72,6 +71,7 @@ export type stateType = {
     currentBook: BookModel;
     renderBookFunc: () => void;
     importBookFunc: (file: any) => Promise<void>;
+    cloudSyncFunc: () => Promise<void>;
     renderNoteFunc: () => void;
   };
   backupPage: {

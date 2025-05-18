@@ -54,14 +54,6 @@ export const fetchUserInfo = async () => {
   }
   return response;
 };
-export const fetchUserConfig = async () => {
-  let userRequest = await getUserRequest();
-  let response = await userRequest.getUserConfig();
-  if (response.code === 401) {
-    handleExitApp();
-  }
-  return response;
-};
 export const updateUserConfig = async (config: any) => {
   let userRequest = await getUserRequest();
   let response = await userRequest.updateUserConfig(config);

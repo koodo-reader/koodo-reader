@@ -647,7 +647,7 @@ class AccountSetting extends React.Component<
                 {this.props.userInfo.type === "trial"
                   ? "Trial user"
                   : this.props.userInfo.type === "pro"
-                  ? "Paid user"
+                  ? "Pro user"
                   : "Free user"}
               </Trans>
               <>

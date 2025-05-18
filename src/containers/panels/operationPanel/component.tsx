@@ -75,8 +75,9 @@ class OperationPanel extends React.Component<
       ConfigService.setReaderConfig("isFullscreen", "yes");
     }
   }
-  handleExit() {
+  async handleExit() {
     ConfigService.setReaderConfig("isFullscreen", "no");
+    ConfigService.setItem("isFinshReading", "yes");
     this.props.handleReadingState(false);
     this.props.handleSearch(false);
     window.speechSynthesis && window.speechSynthesis.cancel();
@@ -85,7 +86,6 @@ class OperationPanel extends React.Component<
     if (this.props.htmlBook) {
       this.props.handleHtmlBook(null);
     }
-
     if (isElectron) {
       if (ConfigService.getReaderConfig("isOpenInMain") === "yes") {
         window.require("electron").ipcRenderer.invoke("exit-tab", "ping");
