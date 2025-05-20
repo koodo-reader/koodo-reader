@@ -97,7 +97,6 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
       );
       return;
     }
-    ConfigService.setListConfig(this.props.book.key, "recentBooks");
     this.props.handleReadingBook(this.props.book);
 
     BookUtil.redirectBook(this.props.book);
