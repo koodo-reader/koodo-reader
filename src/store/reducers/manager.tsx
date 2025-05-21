@@ -7,6 +7,7 @@ const initState = {
   searchResults: [],
   isSearch: false,
   isOpenFeedbackDialog: false,
+  isShowPopupNote: false,
   isAboutOpen: false,
   isBookSort: ConfigService.getReaderConfig("bookSortCode") ? true : false,
   isNoteSort: false,
@@ -48,6 +49,11 @@ export function manager(
       return {
         ...state,
         deletedBooks: action.payload,
+      };
+    case "HANDLE_SHOW_POPUP_NOTE":
+      return {
+        ...state,
+        isShowPopupNote: action.payload,
       };
     case "HANDLE_FEEDBACK_DIALOG":
       return {

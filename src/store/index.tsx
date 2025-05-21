@@ -44,6 +44,7 @@ export type stateType = {
     isSortDisplay: boolean;
     isAboutOpen: boolean;
     isShowLoading: boolean;
+    isShowPopupNote: boolean;
     isShowSupport: boolean;
     isShowNew: boolean;
     userInfo: any;

@@ -51,7 +51,7 @@
   cursor: pointer;
   font-size: 15px;
   width: calc(50vw - 135px);
-  height: 176px;
+  height: 186px;
   opacity: 1;
   border: 15px solid transparent;
   font-size: 15px;
@@ -62,7 +62,7 @@
 }
 .card-list-item-card {
   height: 100%;
-  border-radius: 5px;
+  border-radius: 10px;
 }
 .card-list-item-chapter {
   overflow: hidden;
@@ -78,7 +78,7 @@
 .card-list-item-citation {
   font-size: 15px;
   position: absolute;
-  bottom: 30px;
+  bottom: 40px;
   right: 5px;
   margin: 5px;
   white-space: nowrap;
@@ -153,16 +153,21 @@
   position: relative;
   top: 2px;
 }
-
-.card-list-item-show-more {
+.card-list-item-show-more-container {
+  position: absolute;
+  bottom: 10px;
+  display: flex;
+  justify-content: flex-end;
   width: 100%;
+  right: 20px;
+}
+.card-list-item-show-more {
   font-size: 15px;
   line-height: 18px;
   opacity: 1;
   text-align: center;
-  position: absolute;
-  bottom: 20px;
   cursor: pointer;
+  padding: 0px 10px;
 }
 .card-list-show-more-icon {
   /* display: block; */

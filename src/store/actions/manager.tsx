@@ -39,6 +39,9 @@ export function handleSetting(isSettingOpen: boolean) {
 export function handleSettingMode(settingMode: string) {
   return { type: "HANDLE_SETTING_MODE", payload: settingMode };
 }
+export function handleShowPopupNote(isShowPopupNote: boolean) {
+  return { type: "HANDLE_SHOW_POPUP_NOTE", payload: isShowPopupNote };
+}
 export function handleSettingDrive(settingDrive: string) {
   return { type: "HANDLE_SETTING_DRIVE", payload: settingDrive };
 }
