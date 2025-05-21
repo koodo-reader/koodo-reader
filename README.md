@@ -62,8 +62,8 @@
   - Stable Version (Recommended): [Download](https://koodoreader.com/en)
   - Developer version: [Download](https://github.com/koodo-reader/koodo-reader/releases/latest) ( With new feature and bug fix, but may induce some unknown bugs)
 - Web Version：[Preview](https://web.koodoreader.com)
-- Android Version：[Download](https://koodoreader.com/en/download)
-- iOS Version：[Download](https://koodoreader.com/en/download)
+- Android Version (works with developer version)：[Download](https://koodoreader.com/en/download)
+- iOS Version (works with developer version)：[Download](https://koodoreader.com/en/download)
 - Install with Scoop:
 
 ```shell
