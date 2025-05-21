@@ -64,7 +64,7 @@ class AddDialog extends Component<AddDialogProps, AddDialogState> {
     this.props.handleShelf(shelfTitle);
   };
   handleChange = (shelfTitle: string) => {
-    if (shelfTitle === "New") {
+    if (shelfTitle === "New shelf") {
       this.setState({ isNew: true });
     } else {
       this.setState({ shelfTitle });
@@ -74,7 +74,7 @@ class AddDialog extends Component<AddDialogProps, AddDialogState> {
   render() {
     const renderShelfList = () => {
       let shelfTitle = [
-        "New",
+        "New shelf",
         ...Object.keys(ConfigService.getAllMapConfig("shelfList")),
       ];
       return shelfTitle.map((item) => {
@@ -109,7 +109,7 @@ class AddDialog extends Component<AddDialogProps, AddDialogState> {
         </div>
         <div className="add-dialog-new-shelf-container">
           <div className="add-dialog-new-shelf-text">
-            <Trans>New shelf</Trans>
+            <Trans>New</Trans>
           </div>
           <input
             className="add-dialog-new-shelf-box"

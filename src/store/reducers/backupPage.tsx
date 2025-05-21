@@ -2,6 +2,7 @@ const initState = {
   isBackup: false,
   isOpenTokenDialog: false,
   isOpenImportDialog: false,
+  isOpenSortShelfDialog: false,
   dataSourceList: [],
   loginOptionList: [],
   defaultSyncOption: "",
@@ -20,6 +21,11 @@ export function backupPage(
       return {
         ...state,
         isOpenImportDialog: action.payload,
+      };
+    case "HANDLE_SORT_SHELF_DIALOG":
+      return {
+        ...state,
+        isOpenSortShelfDialog: action.payload,
       };
     case "HANDLE_TOKEN_DIALOG":
       return {

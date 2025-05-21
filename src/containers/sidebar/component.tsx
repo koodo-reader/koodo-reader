@@ -7,7 +7,9 @@ import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import { openExternalUrl, WEBSITE_URL } from "../../utils/common";
 import DeletePopup from "../../components/dialogs/deletePopup";
 import { Trans } from "react-i18next";
+import toast from "react-hot-toast";
 class Sidebar extends React.Component<SidebarProps, SidebarState> {
+  private newShelfInput = React.createRef<HTMLInputElement>();
   constructor(props: SidebarProps) {
     super(props);
     this.state = {
@@ -19,6 +21,8 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
       shelfTitle: "",
       isCollapsed:
         ConfigService.getReaderConfig("isCollapsed") === "yes" || false,
+      isCreateShelf: false,
+      newShelfName: "",
     };
   }
   componentDidMount() {
@@ -27,6 +31,20 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
         ? "home"
         : document.URL.split("/").reverse()[0]
     );
+  }
+  componentDidUpdate(prevProps: SidebarProps, prevState: SidebarState) {
+    // Focus the input when isCreateShelf changes from false to true
+    if (
+      !prevState.isCreateShelf &&
+      this.state.isCreateShelf &&
+      this.newShelfInput.current
+    ) {
+      this.newShelfInput.current.focus();
+    }
+    // check for isOpenSortShelfDialog update the component
+    if (prevProps.isOpenSortShelfDialog !== this.props.isOpenSortShelfDialog) {
+      this.setState({ isCreateShelf: false, newShelfName: "" });
+    }
   }
   handleSidebar = (mode: string) => {
     this.setState({ mode: mode });
@@ -51,18 +69,22 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
   handleJump = (url: string) => {
     openExternalUrl(url);
   };
-  handleDeleteShelf = () => {
-    if (!this.state.shelfTitle) return;
-    let currentShelfTitle = this.state.shelfTitle;
-    ConfigService.deleteMapConfig(currentShelfTitle, "shelfList");
-    ConfigService.deleteListConfig(currentShelfTitle || "", "sortedShelfList");
-    this.setState({ shelfTitle: "" }, () => {
-      this.props.handleShelf("");
-      this.props.handleMode("shelf");
-    });
-  };
-  handleDeletePopup = (isOpenDelete: boolean) => {
-    this.setState({ isOpenDelete });
+  handleCreateShelf = () => {
+    if (!this.state.newShelfName) {
+      toast(this.props.t("Shelf Title is Empty"));
+      this.setState({ isCreateShelf: false, newShelfName: "" });
+      return;
+    }
+    let shelfList = ConfigService.getAllMapConfig("shelfList");
+    if (shelfList.hasOwnProperty(this.state.newShelfName)) {
+      toast(this.props.t("Duplicate shelf"));
+      return;
+    }
+    ConfigService.setListConfig(this.state.newShelfName, "sortedShelfList");
+
+    ConfigService.setOneMapConfig(this.state.newShelfName, [], "shelfList");
+    toast.success(this.props.t("Created successfully"));
+    this.setState({ isCreateShelf: false, newShelfName: "" });
   };
   render() {
     const renderSideMenu = () => {
@@ -133,85 +155,83 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
       });
     };
     const renderSideShelf = () => {
+      let sortedShelfList =
+        ConfigService.getAllListConfig("sortedShelfList") || [];
       let shelfList = ConfigService.getAllMapConfig("shelfList");
-      let shelfTitle = Object.keys(shelfList);
+      let shelfTitleList = Object.keys(shelfList);
 
-      return shelfTitle.map((item, index) => {
-        return (
-          <li
-            key={item}
-            className={
-              this.props.shelfTitle === item
-                ? "active side-menu-item"
-                : "side-menu-item"
-            }
-            id={`sidebar-${index}`}
-            onClick={() => {
-              this.props.handleShelf(item);
-              this.props.handleMode("shelf");
-              this.setState({ mode: "" });
-              this.props.history.push("/manager/shelf");
-            }}
-            onMouseEnter={() => {
-              this.handleShelfHover(item);
-            }}
-            onMouseLeave={() => {
-              this.handleShelfHover("");
-            }}
-            style={this.props.isCollapsed ? { width: 40, marginLeft: 15 } : {}}
-          >
-            {this.props.shelfTitle === item ? (
-              <div className="side-menu-selector-container"></div>
-            ) : null}
-            {this.state.hoverShelfTitle === item ? (
-              <div className="side-menu-hover-container"></div>
-            ) : null}
-            <div
+      return Array.from(new Set([...sortedShelfList, ...shelfTitleList])).map(
+        (item, index) => {
+          return (
+            <li
+              key={item}
               className={
                 this.props.shelfTitle === item
-                  ? "side-menu-selector active-selector"
-                  : "side-menu-selector "
+                  ? "active side-menu-item"
+                  : "side-menu-item"
+              }
+              id={`sidebar-${index}`}
+              onClick={() => {
+                this.props.handleShelf(item);
+                this.props.handleMode("shelf");
+                this.setState({ mode: "" });
+                this.props.history.push("/manager/shelf");
+              }}
+              onMouseEnter={() => {
+                this.handleShelfHover(item);
+              }}
+              onMouseLeave={() => {
+                this.handleShelfHover("");
+              }}
+              style={
+                this.props.isCollapsed ? { width: 40, marginLeft: 15 } : {}
               }
             >
+              {this.props.shelfTitle === item ? (
+                <div className="side-menu-selector-container"></div>
+              ) : null}
+              {this.state.hoverShelfTitle === item ? (
+                <div className="side-menu-hover-container"></div>
+              ) : null}
               <div
-                className="side-menu-icon"
-                style={this.props.isCollapsed ? {} : { marginLeft: "38px" }}
-              >
-                <span
-                  className={
-                    this.props.shelfTitle === item
-                      ? `icon-bookshelf-line  active-icon sidebar-shelf-icon`
-                      : `icon-bookshelf-line sidebar-shelf-icon`
-                  }
-                  style={
-                    this.props.isCollapsed
-                      ? { position: "relative", marginLeft: "-8px" }
-                      : {}
-                  }
-                ></span>
-              </div>
-
-              <span
-                style={
-                  this.props.isCollapsed
-                    ? { display: "none", width: "70%" }
-                    : { width: "60%" }
+                className={
+                  this.props.shelfTitle === item
+                    ? "side-menu-selector active-selector"
+                    : "side-menu-selector "
                 }
               >
-                {this.props.t(item)}
-              </span>
-            </div>
-          </li>
-        );
-      });
-    };
-    const deletePopupProps = {
-      mode: "shelf",
-      name: this.state.shelfTitle,
-      title: "Delete this shelf",
-      description: "This action will clear and remove this shelf",
-      handleDeletePopup: this.handleDeletePopup,
-      handleDeleteOpearion: this.handleDeleteShelf,
+                <div
+                  className="side-menu-icon"
+                  style={this.props.isCollapsed ? {} : { marginLeft: "38px" }}
+                >
+                  <span
+                    className={
+                      this.props.shelfTitle === item
+                        ? `icon-bookshelf-line  active-icon sidebar-shelf-icon`
+                        : `icon-bookshelf-line sidebar-shelf-icon`
+                    }
+                    style={
+                      this.props.isCollapsed
+                        ? { position: "relative", marginLeft: "-8px" }
+                        : {}
+                    }
+                  ></span>
+                </div>
+
+                <span
+                  style={
+                    this.props.isCollapsed
+                      ? { display: "none", width: "70%" }
+                      : { width: "60%" }
+                  }
+                >
+                  {this.props.t(item)}
+                </span>
+              </div>
+            </li>
+          );
+        }
+      );
     };
     return (
       <>
@@ -276,13 +296,103 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
                 }
               ></span>
             </div>
+            {!this.state.isCreateShelf ? (
+              <div
+                className={"side-menu-selector"}
+                style={{ cursor: "pointer" }}
+              >
+                <div
+                  className="side-menu-icon"
+                  style={{
+                    borderRadius: "5px",
+                    backgroundColor: "rgba(0, 0, 0, 0.06)",
+                    padding: "4px 0px",
+                    width: "24px",
+                  }}
+                >
+                  <span
+                    className={`icon-add sidebar-shelf-icon`}
+                    style={{ fontSize: "11px" }}
+                  ></span>
+                </div>
 
+                <span
+                  style={
+                    this.props.isCollapsed
+                      ? { display: "none", width: "70%" }
+                      : { width: "60%" }
+                  }
+                  onClick={() => {
+                    this.setState({ isCreateShelf: true });
+                  }}
+                >
+                  {this.props.t("New shelf")}
+                </span>
+              </div>
+            ) : (
+              <div>
+                <input
+                  ref={this.newShelfInput}
+                  type="text"
+                  name="newShelf"
+                  id="sidebar-new-shelf"
+                  className="tag-list-item-new"
+                  onChange={(event) => {
+                    this.setState({ newShelfName: event.target.value });
+                  }}
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter") {
+                      this.handleCreateShelf();
+                    }
+                  }}
+                />
+                <span
+                  className={`icon-check sidebar-shelf-icon`}
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    this.handleCreateShelf();
+                  }}
+                  style={{ cursor: "pointer" }}
+                ></span>
+              </div>
+            )}
+            <div
+              className={"side-menu-selector"}
+              style={{ cursor: "pointer" }}
+              onClick={() => {
+                this.props.handleSortShelfDialog(true);
+              }}
+            >
+              <div
+                className="side-menu-icon"
+                style={{
+                  borderRadius: "5px",
+                  backgroundColor: "rgba(0, 0, 0, 0.06)",
+                  padding: "4px 0px",
+                  width: "24px",
+                }}
+              >
+                <span
+                  className={`icon-edit-line sidebar-shelf-icon`}
+                  style={{ fontSize: "17px" }}
+                ></span>
+              </div>
+
+              <span
+                style={
+                  this.props.isCollapsed
+                    ? { display: "none", width: "70%" }
+                    : { width: "60%" }
+                }
+              >
+                {this.props.t("Edit shelf")}
+              </span>
+            </div>
             {!this.state.isCollpaseShelf && (
               <ul className="side-shelf-container">{renderSideShelf()}</ul>
             )}
           </div>
         </div>
-        {this.state.isOpenDelete && <DeletePopup {...deletePopupProps} />}
       </>
     );
   }

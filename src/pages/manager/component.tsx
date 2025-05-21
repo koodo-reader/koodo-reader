@@ -4,7 +4,7 @@ import Header from "../../containers/header";
 import DeleteDialog from "../../components/dialogs/deleteDialog";
 import EditDialog from "../../components/dialogs/editDialog";
 import AddDialog from "../../components/dialogs/addDialog";
-import SortDialog from "../../components/dialogs/sortDialog";
+import SortDialog from "../../components/dialogs/sortBookDialog";
 import AboutDialog from "../../components/dialogs/aboutDialog";
 import BackupDialog from "../../components/dialogs/backupDialog";
 import ImportDialog from "../../components/dialogs/importDialog";
@@ -23,6 +23,7 @@ import { Tooltip } from "react-tooltip";
 import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import emptyDark from "../../assets/images/empty-dark.svg";
 import emptyLight from "../../assets/images/empty-light.svg";
+import SortShelfDialog from "../../components/dialogs/sortShelfDialog";
 class Manager extends React.Component<ManagerProps, ManagerState> {
   timer!: NodeJS.Timeout;
   constructor(props: ManagerProps) {
@@ -119,6 +120,7 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
               this.props.isOpenFeedbackDialog ||
               this.props.isBackup ||
               this.props.isOpenImportDialog ||
+              this.props.isOpenSortShelfDialog ||
               this.props.isShowNew ||
               this.props.isShowSupport ||
               this.props.isOpenDeleteDialog ||
@@ -154,7 +156,8 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
         {this.props.isAboutOpen && <AboutDialog />}
         {this.props.isBackup && <BackupDialog />}
         {this.props.isOpenImportDialog && <ImportDialog />}
-        {this.props.isOpenFeedbackDialog && <FeedbackDialog />}{" "}
+        {this.props.isOpenSortShelfDialog && <SortShelfDialog />}
+        {this.props.isOpenFeedbackDialog && <FeedbackDialog />}
         {this.props.isSettingOpen && <SettingDialog />}
         {this.props.isDetailDialog && <DetailDialog />}
         {(!books || books.length === 0) && this.state.totalBooks ? (

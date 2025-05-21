@@ -18,6 +18,15 @@
   overflow-x: hidden;
   overflow-y: scroll;
 }
+#sidebar-new-shelf {
+  margin-left: 20px;
+  width: calc(100% - 80px);
+  height: 30px;
+  cursor: text;
+  padding: 0px 10px;
+  border-radius: 15px;
+  font-size: 15px;
+}
 .side-menu-container-parent:hover::-webkit-scrollbar-thumb,
 .side-menu-container-parent:active::-webkit-scrollbar-thumb,
 .side-menu-container-parent:focus::-webkit-scrollbar-thumb {
