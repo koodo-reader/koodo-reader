@@ -9,6 +9,9 @@ export function handleBackupDialog(mode: boolean) {
 export function handleImportDialog(mode: boolean) {
   return { type: "HANDLE_IMPORT_DIALOG", payload: mode };
 }
+export function handleSortShelfDialog(isOpen: boolean) {
+  return { type: "HANDLE_SORT_SHELF_DIALOG", payload: isOpen };
+}
 export function handleTokenDialog(mode: boolean) {
   return { type: "HANDLE_TOKEN_DIALOG", payload: mode };
 }

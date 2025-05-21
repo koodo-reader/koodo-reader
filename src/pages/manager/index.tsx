@@ -52,6 +52,7 @@ const mapStateToProps = (state: stateType) => {
     DetailDialog: state.manager.isDetailDialog,
     isBackup: state.backupPage.isBackup,
     isOpenImportDialog: state.backupPage.isOpenImportDialog,
+    isOpenSortShelfDialog: state.backupPage.isOpenSortShelfDialog,
   };
 };
 const actionCreator = {

@@ -77,6 +77,7 @@ export type stateType = {
   backupPage: {
     isBackup: boolean;
     isOpenImportDialog: boolean;
+    isOpenSortShelfDialog: boolean;
     isOpenTokenDialog: boolean;
     dataSourceList: string[];
     loginOptionList: string[];

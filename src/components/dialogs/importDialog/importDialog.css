@@ -18,6 +18,7 @@
 
 .cloud-drive-label {
   font-size: 15px;
+  line-height: 1.5;
   font-weight: 500;
   width: calc(100% - 50px);
   text-overflow: ellipsis;
