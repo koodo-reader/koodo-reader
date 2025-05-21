@@ -24,6 +24,7 @@ import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import emptyDark from "../../assets/images/empty-dark.svg";
 import emptyLight from "../../assets/images/empty-light.svg";
 import SortShelfDialog from "../../components/dialogs/sortShelfDialog";
+import PopupNote from "../../components/popups/popupNote";
 class Manager extends React.Component<ManagerProps, ManagerState> {
   timer!: NodeJS.Timeout;
   constructor(props: ManagerProps) {
@@ -85,6 +86,10 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
   };
   render() {
     let { books } = this.props;
+    const PopupProps = {
+      chapterDocIndex: 0,
+      chapter: "test",
+    };
     return (
       <div
         className="manager"
@@ -96,6 +101,18 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
         }}
       >
         <Tooltip id="my-tooltip" style={{ zIndex: 25 }} />
+        {this.props.isShowPopupNote && (
+          <div
+            className="popup-box-container"
+            style={{
+              marginLeft: 0,
+              height: "300px",
+            }}
+          >
+            <PopupNote {...PopupProps} />
+          </div>
+        )}
+
         {!this.props.dragItem && (
           <div
             className="drag-background"
@@ -111,6 +128,8 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
               }
               this.props.handleBackupDialog(false);
               this.props.handleImportDialog(false);
+              this.props.handleShowPopupNote(false);
+              this.props.handleSortShelfDialog(false);
               this.props.handleSetting(false);
               this.props.handleFeedbackDialog(false);
               this.handleDrag(false);
@@ -126,6 +145,7 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
               this.props.isOpenDeleteDialog ||
               this.props.isOpenEditDialog ||
               this.props.isDetailDialog ||
+              this.props.isShowPopupNote ||
               this.props.isOpenAddDialog ||
               this.props.isShowLoading ||
               this.state.isDrag

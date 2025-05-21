@@ -90,6 +90,7 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
         this.props.handleFetchNotes();
         this.props.handleMenuMode("");
         this.props.handleNoteKey("");
+        this.props.handleShowPopupNote(false);
       });
     } else {
       let bookKey = this.props.currentBook.key;
@@ -150,6 +151,7 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
           this.props.chapterDocIndex
         );
         this.props.handleOpenMenu(false);
+        this.props.handleShowPopupNote(false);
       });
     } else {
       this.props.handleOpenMenu(false);
