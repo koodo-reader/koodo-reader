@@ -53,7 +53,7 @@ class PopupBox extends React.Component<PopupBoxProps, PopupBoxStates> {
                 : !this.props.isNavLocked && this.props.isSettingLocked
                 ? -150
                 : 0,
-            height: this.props.menuMode === "assistant" ? "400px" : "300px",
+            height: this.props.menuMode === "assistant" ? "400px" : "320px",
           }}
         >
           {this.props.menuMode === "note" ? (

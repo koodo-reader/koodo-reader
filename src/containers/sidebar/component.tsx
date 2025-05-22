@@ -345,6 +345,9 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
                       this.handleCreateShelf();
                     }
                   }}
+                  onBlur={() => {
+                    this.setState({ isCreateShelf: false, newShelfName: "" });
+                  }}
                 />
                 <span
                   className={`icon-check sidebar-shelf-icon`}

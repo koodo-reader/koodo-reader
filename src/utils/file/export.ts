@@ -39,6 +39,9 @@ export const exportBooks = async (books: Book[]) => {
 
 export const exportNotes = (notes: Note[], books: Book[]) => {
   let data = notes.map((item) => {
+    let book = books.filter((subitem) => subitem.key === item.bookKey)[0];
+    let bookName = book ? book.name : "Unknown book";
+    let bookAuthor = book ? book.author : "Unknown author";
     return {
       ...item,
       date: `${item.date.year}-${
@@ -50,9 +53,8 @@ export const exportNotes = (notes: Note[], books: Book[]) => {
         ...["#FF0000", "#000080", "#0000FF", "#2EFF2E"],
       ][item.color],
       highlightType: item.color > 3 ? "line" : "background",
-      bookName: books.filter((subitem) => subitem.key === item.bookKey)[0].name,
-      bookAuthor: books.filter((subitem) => subitem.key === item.bookKey)[0]
-        .author,
+      bookName: bookName,
+      bookAuthor: bookAuthor,
     };
   });
   saveAs(
@@ -66,6 +68,9 @@ export const exportNotes = (notes: Note[], books: Book[]) => {
 
 export const exportHighlights = (highlights: Note[], books: Book[]) => {
   let data = highlights.map((item) => {
+    let book = books.filter((subitem) => subitem.key === item.bookKey)[0];
+    let bookName = book ? book.name : "Unknown book";
+    let bookAuthor = book ? book.author : "Unknown author";
     let highlight = {
       ...item,
       date: `${item.date.year}-${
@@ -77,9 +82,8 @@ export const exportHighlights = (highlights: Note[], books: Book[]) => {
         ...["#FF0000", "#000080", "#0000FF", "#2EFF2E"],
       ][item.color],
       highlightType: item.color > 3 ? "line" : "background",
-      bookName: books.filter((subitem) => subitem.key === item.bookKey)[0].name,
-      bookAuthor: books.filter((subitem) => subitem.key === item.bookKey)[0]
-        .author,
+      bookName: bookName,
+      bookAuthor: bookAuthor,
     };
     const { notes, ...rest } = highlight;
     return rest;
@@ -97,14 +101,16 @@ export const exportDictionaryHistory = (
   books: Book[]
 ) => {
   let data = dictHistory.map((item) => {
+    let book = books.filter((subitem) => subitem.key === item.bookKey)[0];
+    let bookName = book ? book.name : "Unknown book";
+    let bookAuthor = book ? book.author : "Unknown author";
     let history = {
       ...item,
       date: `${item.date.year}-${
         item.date.month <= 9 ? "0" + item.date.month : item.date.month
       }-${item.date.day <= 9 ? "0" + item.date.day : item.date.day}`,
-      bookName: books.filter((subitem) => subitem.key === item.bookKey)[0].name,
-      bookAuthor: books.filter((subitem) => subitem.key === item.bookKey)[0]
-        .author,
+      bookName: bookName,
+      bookAuthor: bookAuthor,
     };
     return history;
   });

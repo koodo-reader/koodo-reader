@@ -10,6 +10,7 @@ import toast from "react-hot-toast";
 import { getIframeDoc } from "../../../utils/reader/docUtil";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import DatabaseService from "../../../utils/storage/databaseService";
+import ColorOption from "../../colorOption";
 
 class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
   constructor(props: PopupNoteProps) {
@@ -60,25 +61,13 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
   async createNote() {
     let notes = (document.querySelector(".editor-box") as HTMLInputElement)
       .value;
-    let cfi = JSON.stringify(
-      ConfigService.getObjectConfig(
-        this.props.currentBook.key,
-        "recordLocation",
-        {}
-      )
-    );
-    if (this.props.currentBook.format === "PDF") {
-      let bookLocation = this.props.htmlBook.rendition.getPositionByChapter(
-        this.props.chapterDocIndex
-      );
-      cfi = JSON.stringify(bookLocation);
-    }
+
     if (this.props.noteKey) {
       this.props.notes.forEach((item) => {
         if (item.key === this.props.noteKey) {
           item.notes = notes;
           item.tag = this.state.tag;
-          item.cfi = cfi;
+          item.color = this.props.color || item.color;
         }
       });
       let newNote = this.props.notes.filter(
@@ -91,8 +80,31 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
         this.props.handleMenuMode("");
         this.props.handleNoteKey("");
         this.props.handleShowPopupNote(false);
+        if (this.props.htmlBook.rendition) {
+          this.props.htmlBook.rendition.removeOneNote(
+            this.props.noteKey,
+            this.props.chapterDocIndex
+          );
+          this.props.htmlBook.rendition.createOneNote(
+            newNote,
+            this.handleNoteClick
+          );
+        }
       });
     } else {
+      let cfi = JSON.stringify(
+        ConfigService.getObjectConfig(
+          this.props.currentBook.key,
+          "recordLocation",
+          {}
+        )
+      );
+      if (this.props.currentBook.format === "PDF") {
+        let bookLocation = this.props.htmlBook.rendition.getPositionByChapter(
+          this.props.chapterDocIndex
+        );
+        cfi = JSON.stringify(bookLocation);
+      }
       let bookKey = this.props.currentBook.key;
       let range = JSON.stringify(
         await this.props.htmlBook.rendition.getHightlightCoords(
@@ -139,6 +151,7 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
       });
     }
   }
+  handleUpdateHighlight = (color: number) => {};
   handleClose = () => {
     if (this.props.noteKey) {
       DatabaseService.deleteRecord(this.props.noteKey, "notes").then(() => {
@@ -146,10 +159,13 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
         this.props.handleMenuMode("");
         this.props.handleFetchNotes();
         this.props.handleNoteKey("");
-        this.props.htmlBook.rendition.removeOneNote(
-          this.props.noteKey,
-          this.props.chapterDocIndex
-        );
+        if (this.props.htmlBook.rendition) {
+          this.props.htmlBook.rendition.removeOneNote(
+            this.props.noteKey,
+            this.props.chapterDocIndex
+          );
+        }
+
         this.props.handleOpenMenu(false);
         this.props.handleShowPopupNote(false);
       });
@@ -161,6 +177,10 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
   };
 
   render() {
+    const PopupProps = {
+      handleDigest: this.handleUpdateHighlight,
+      isEdit: true,
+    };
     let note: NoteModel;
     if (this.props.noteKey) {
       this.props.notes.forEach((item) => {
@@ -188,7 +208,7 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
               }}
             />
           </div>
-
+          <ColorOption {...PopupProps} />
           <div className="note-button-container">
             <span
               className="book-manage-title"

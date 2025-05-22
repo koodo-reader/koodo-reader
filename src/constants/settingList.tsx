@@ -82,7 +82,7 @@ export const syncSettingList = [
   {
     isElectron: false,
     title: "Enable Koodo Sync",
-    desc: "Enable this option to increase synchronization speed. Your reading progress, notes, highlights, bookmarks, and other reading-related data will be stored and synced via our cloud service. Turning off this option will remove the above data from our cloud.",
+    desc: "Enable this option to increase synchronization speed. Your reading progress, notes, highlights, bookmarks, and other reading-related data will be stored and synced via our cloud service, your books and covers will still be synced by your added data sources. Turning off this option will remove the above data from our cloud.",
     propName: "isEnableKoodoSync",
   },
   {

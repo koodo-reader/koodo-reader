@@ -1,8 +1,8 @@
 .feedback-dialog-container {
-  width: 346px;
+  width: 400px;
   height: 480px;
   position: absolute;
-  left: calc(50% - 173px);
+  left: calc(50% - 200px);
   top: calc(50% - 240px);
   overflow: hidden;
   opacity: 1;
@@ -41,7 +41,7 @@
   font-weight: 500;
   line-height: 1.25;
   opacity: 1;
-  text-align: center;
+  text-align: left;
   margin-top: 10px;
   margin-left: 5%;
   margin-bottom: 10px;
@@ -65,9 +65,9 @@
 .feedback-dialog-content-box {
   width: calc(100% - 50px);
   margin-left: 25px;
-  height: 50px;
+  height: 60px;
   opacity: 1;
-  font-size: 13px;
+  font-size: 15px;
   line-height: 14px;
   background-color: rgba(75, 75, 75, 0);
   padding: 5px;
