@@ -211,10 +211,11 @@ export const loadFontData = async () => {
   try {
     if (!window.queryLocalFonts) return [];
     const availableFonts = await window.queryLocalFonts();
+    console.log(availableFonts);
     return availableFonts.map((font: any) => {
       return {
         label: font.fullName,
-        value: `"${font.fullName}", "${font.postscriptName}"`,
+        value: `"${font.fullName}", "${font.postscriptName}", "${font.family}"`,
       };
     });
   } catch (err) {

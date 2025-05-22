@@ -98,6 +98,8 @@ class SortShelfDialog extends React.Component<
               scrollSensitivity={140} // Distance from edge that triggers scrolling (px)
               scrollSpeed={20} // Scrolling speed
               bubbleScroll={true}
+              filter={"input"}
+              preventOnFilter={false}
               onEnd={() => {
                 console.log("onEnd", this.state.sortedShelfList);
                 let sortedShelfList = this.state.sortedShelfList.map(
@@ -121,9 +123,11 @@ class SortShelfDialog extends React.Component<
                       className="tag-list-item-new"
                       defaultValue={item.name}
                       onChange={(event) => {
+                        console.log(event.target.value);
                         this.setState({ newShelfName: event.target.value });
                       }}
                       onKeyDown={(event) => {
+                        console.log(event.key);
                         if (event.key === "Enter") {
                           this.handleRenameShelf();
                         }

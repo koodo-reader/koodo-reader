@@ -21,6 +21,7 @@ class ColorOption extends React.Component<ColorProps, ColorStates> {
             className="line-option"
             style={{
               border: `${this.props.color === index + 4 ? "" : "2px"}`,
+              animation: `${this.props.isEdit ? undefined : ""}`,
             }}
             key={item}
             onClick={() => {
@@ -50,6 +51,7 @@ class ColorOption extends React.Component<ColorProps, ColorStates> {
             style={{
               backgroundColor: item,
               border: `${this.props.color === index ? "" : "0px"}`,
+              animation: `${this.props.isEdit ? undefined : ""}`,
             }}
             key={item}
             onClick={() => {
@@ -64,15 +66,36 @@ class ColorOption extends React.Component<ColorProps, ColorStates> {
       });
     };
     return (
-      <div className="color-option-container">
-        {!this.state.isLine && renderColor()}
-        <span
-          className="icon-sort popup-color-more"
-          onClick={() => {
-            this.handleChangeOption();
-          }}
-        ></span>
-        {this.state.isLine && renderLine()}
+      <div
+        className="color-option-container"
+        style={
+          this.props.isEdit
+            ? {
+                position: "absolute",
+                top: "calc(100% - 65px)",
+                width: "70%",
+                marginLeft: 0,
+              }
+            : {}
+        }
+      >
+        {this.props.isEdit ? (
+          <>
+            {renderColor()}
+            {renderLine()}
+          </>
+        ) : (
+          <>
+            {!this.state.isLine && renderColor()}
+            <span
+              className="icon-sort popup-color-more"
+              onClick={() => {
+                this.handleChangeOption();
+              }}
+            ></span>
+            {this.state.isLine && renderLine()}
+          </>
+        )}
       </div>
     );
   }

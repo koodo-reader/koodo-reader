@@ -142,6 +142,26 @@ class CardList extends React.Component<CardListProps, CardListStates> {
                 />
               </div>
               <div className="card-list-item-show-more-container">
+                {this.props.mode === "note" && (
+                  <span
+                    data-tooltip-id="my-tooltip"
+                    data-tooltip-content={this.props.t("Edit")}
+                  >
+                    <span
+                      className="icon-edit-line"
+                      style={{
+                        fontSize: "22px",
+                        marginRight:
+                          this.props.mode === "note" ? "15px" : "0px",
+                        marginLeft: this.props.mode === "note" ? "15px" : "0px",
+                      }}
+                      onClick={() => {
+                        this.props.handleNoteKey(item.key);
+                        this.props.handleShowPopupNote(true);
+                      }}
+                    ></span>
+                  </span>
+                )}
                 <span
                   data-tooltip-id="my-tooltip"
                   data-tooltip-content={this.props.t("Show in the book")}
@@ -150,25 +170,11 @@ class CardList extends React.Component<CardListProps, CardListStates> {
                     className="icon-idea-line"
                     style={{
                       fontSize: "22px",
-                      marginRight: "15px",
-                      marginLeft: "15px",
+
                       fontWeight: 400,
                     }}
                     onClick={() => {
                       this.handleJump(item);
-                    }}
-                  ></span>
-                </span>
-                <span
-                  data-tooltip-id="my-tooltip"
-                  data-tooltip-content={this.props.t("Edit")}
-                >
-                  <span
-                    className="icon-edit-line"
-                    style={{ fontSize: "22px" }}
-                    onClick={() => {
-                      this.props.handleNoteKey(item.key);
-                      this.props.handleShowPopupNote(true);
                     }}
                   ></span>
                 </span>

@@ -219,6 +219,7 @@ body {
 .import-from-cloud,
 .only-local-slider,
 .single-control-button,
+.setting-dialog-pro-button,
 .progress-slide-circle {
   background: rgba(255, 255, 255, 1);
 }

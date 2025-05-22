@@ -185,7 +185,7 @@ class FeedbackDialog extends Component<
                 packageInfo.version.localeCompare(this.state.developerVersion) <
                 0
                   ? {}
-                  : { marginTop: "30px" }
+                  : { marginTop: "10px" }
               }
             />
 

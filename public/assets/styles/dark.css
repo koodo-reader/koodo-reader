@@ -207,6 +207,7 @@ body {
 .add-dialog-new-shelf-box,
 .edit-dialog-book-name-box,
 .edit-dialog-book-author-box,
+.setting-dialog-pro-button,
 .booklist-shelf-list,
 .progress-slide-circle {
   background: rgba(47, 52, 55, 1);
