@@ -141,7 +141,7 @@ class TextToSpeech extends React.Component<
     for (let index = 0; index < this.nodeList.length; index++) {
       let currentText = this.nodeList[index];
       let style = "background: #f3a6a68c;";
-      this.props.htmlBook.rendition.highlightNode(currentText, style);
+      this.props.htmlBook.rendition.highlightAudioNode(currentText, style);
 
       if (index > TTSUtil.getAudioPaths().length - 1) {
         while (true) {
@@ -180,7 +180,7 @@ class TextToSpeech extends React.Component<
   async handleSystemRead(index) {
     let currentText = this.nodeList[index];
     let style = "background: #f3a6a68c;";
-    this.props.htmlBook.rendition.highlightNode(currentText, style);
+    this.props.htmlBook.rendition.highlightAudioNode(currentText, style);
 
     let res = await this.handleSystemSpeech(
       index,

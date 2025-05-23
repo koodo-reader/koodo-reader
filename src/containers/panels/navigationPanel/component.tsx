@@ -103,8 +103,8 @@ class NavigationPanel extends React.Component<
                 })
               );
               let style = "background: #f3a6a68c;";
-              this.props.htmlBook.rendition.highlightNode(
-                bookLocation.text,
+              this.props.htmlBook.rendition.highlightSearchNode(
+                bookLocation.keyword,
                 style
               );
             }}
