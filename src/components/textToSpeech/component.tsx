@@ -46,6 +46,7 @@ class TextToSpeech extends React.Component<
     if (this.state.isAudioOn) {
       window.speechSynthesis && window.speechSynthesis.cancel();
       this.setState({ isAudioOn: false });
+      this.nodeList = [];
     }
     const setSpeech = () => {
       return new Promise((resolve) => {
@@ -71,6 +72,7 @@ class TextToSpeech extends React.Component<
       window.speechSynthesis && window.speechSynthesis.cancel();
       TTSUtil.pauseAudio();
       this.setState({ isAudioOn: false });
+      this.nodeList = [];
     } else {
       if (isElectron) {
         this.customVoices = TTSUtil.getVoiceList(this.props.plugins);

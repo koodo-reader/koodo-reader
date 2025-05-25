@@ -22,3 +22,6 @@ export interface SearchBoxProps {
   handleSearchList: (searchList: any) => void;
   t: any;
 }
+export interface SearchBoxState {
+  isFocused: boolean;
+}
