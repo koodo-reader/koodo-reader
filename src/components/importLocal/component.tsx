@@ -120,6 +120,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
       }
 
       this.props.handleReadingBook(book);
+      ConfigService.setListConfig(book.key, "recentBooks");
       DatabaseService.saveRecord(book, "books")
         .then(() => {
           this.props.handleFetchBooks();

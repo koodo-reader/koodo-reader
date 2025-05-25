@@ -6,6 +6,7 @@ class TTSUtil {
   static player: any;
   static currentAudioPath: string = "";
   static audioPaths: string[] = [];
+  static isPaused: boolean = false;
   static async readAloud(currentIndex: number) {
     return new Promise<string>(async (resolve) => {
       let audioPath = this.audioPaths[currentIndex];
@@ -31,6 +32,7 @@ class TTSUtil {
     speed: number,
     plugins: PluginModel[]
   ) {
+    this.isPaused = false;
     let voiceList = getAllVoices(plugins);
     if (voiceIndex >= voiceList.length) {
       voiceIndex = 0;
@@ -44,6 +46,9 @@ class TTSUtil {
       return;
     }
     for (let index = 0; index < nodeList.length; index++) {
+      if (this.isPaused) {
+        break;
+      }
       const nodeText = nodeList[index];
       let audioPath = await window
         .require("electron")
@@ -67,7 +72,11 @@ class TTSUtil {
   static async pauseAudio() {
     if (this.player && this.player.stop) {
       this.player.stop();
-      window.require("electron").ipcRenderer.invoke("clear-tts");
+      this.isPaused = true;
+      setTimeout(() => {
+        window.require("electron").ipcRenderer.invoke("clear-tts");
+        this.audioPaths = [];
+      }, 1000);
     }
   }
   static getAudioPaths() {
