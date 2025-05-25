@@ -46,6 +46,7 @@
 .login-close-icon {
   font-size: 25px;
   opacity: 0.5;
+  color: rgba(75, 75, 75, 1);
 }
 .login-content-illustration {
   width: 100px;

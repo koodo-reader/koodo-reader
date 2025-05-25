@@ -350,6 +350,21 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                 )}
               </div>
             )}
+            {this.props.settingDrive === "s3compatible" && !isElectron && (
+              <div
+                className="token-dialog-tip"
+                style={{
+                  marginTop: "10px",
+                  fontSize: "13px",
+                  lineHeight: "16px",
+                  color: "rgba(231, 69, 69, 0.8)",
+                }}
+              >
+                {this.props.t(
+                  "Some S3 services are not compatible with browser environments. If you encounter connection issues, please refer to the service provider's official documentation for instructions on enabling CORS."
+                )}
+              </div>
+            )}
             <div className="token-dialog-button-container">
               <div
                 className="voice-add-confirm"

@@ -101,6 +101,7 @@
   "This process is inreversible, and will completely overwrite your current library, make sure you know what you're doing before proceeding": "这个过程是不可逆的，并且会完全覆盖现有的图书库",
   "Lemmatize words when looking up in a dictionary": "查询单词前将词性还原",
   "To reduce the different forms of a word to one single form, for example, reducing builds, building or built to build, reducing cats to cat, reducing fastest to fast": "将不同变形的单词还原成单词原形，例如将builds, building 和 built 还原为 build，将cats还原为cat，fastest还原成fast",
+  "Some S3 services are not compatible with browser environments. If you encounter connection issues, please refer to the service provider's official documentation for instructions on enabling CORS.": "某些 S3 服务不支持浏览器环境，如果您遇到连接问题，请参考服务提供商的官方文档，了解如何开启 CORS",
   "Export all books": "导出所有图书",
   "Export all dictionary history": "导出所有查词历史",
   "Export dictionary history": "导出查词历史",
