@@ -211,7 +211,6 @@ export const loadFontData = async () => {
   try {
     if (!window.queryLocalFonts) return [];
     const availableFonts = await window.queryLocalFonts();
-    console.log(availableFonts);
     return availableFonts.map((font: any) => {
       return {
         label: font.fullName,
@@ -221,6 +220,38 @@ export const loadFontData = async () => {
   } catch (err) {
     console.error(err);
   }
+};
+export const splitSentences = (text) => {
+  // 正则表达式匹配中英文句子结束标点（包括后续可能跟的引号或空格）
+  const pattern = /([。！？……——.!?…—][’”"]?\s*)/g;
+
+  // 按标点分割，同时保留标点符号
+  const parts = text.split(pattern);
+
+  // 过滤空字符串并整理结果
+  const sentences: string[] = [];
+  let currentSentence = "";
+
+  for (let i = 0; i < parts.length; i++) {
+    const part = parts[i].trim();
+    if (!part) continue;
+
+    // 如果是标点部分
+    if (/^[。！？……——.!?…—]/.test(part)) {
+      currentSentence += part;
+      sentences.push(currentSentence.trim());
+      currentSentence = "";
+    } else {
+      currentSentence += part;
+    }
+  }
+
+  // 添加最后未结束的句子
+  if (currentSentence.trim()) {
+    sentences.push(currentSentence.trim());
+  }
+
+  return sentences.filter((s) => s.length > 0);
 };
 export function removeSearchParams() {
   const url = new URL(window.location.href.split("?")[0]);

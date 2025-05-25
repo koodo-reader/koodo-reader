@@ -8,6 +8,7 @@ import {
   getAllVoices,
   handleContextMenu,
   sleep,
+  splitSentences,
   WEBSITE_URL,
 } from "../../utils/common";
 import { isElectron } from "react-device-detect";
@@ -108,9 +109,15 @@ class TextToSpeech extends React.Component<
     if (ConfigService.getReaderConfig("isSliding") === "yes") {
       await sleep(1000);
     }
-    this.nodeList = (await this.props.htmlBook.rendition.audioText()).filter(
+    let nodeTextList = (await this.props.htmlBook.rendition.audioText()).filter(
       (item: string) => item && item.trim()
     );
+    let rawNodeList = nodeTextList.map((text) => {
+      return splitSentences(text);
+    });
+    this.nodeList = rawNodeList
+      .flat()
+      .filter((item) => item !== "img" && !item.startsWith("img"));
     if (this.nodeList.length === 0) {
       await this.props.htmlBook.rendition.next();
       this.nodeList = await this.handleGetText();
@@ -155,8 +162,12 @@ class TextToSpeech extends React.Component<
         parseFloat(ConfigService.getReaderConfig("voiceSpeed")) || 1
       );
       let visibleTextList = await this.props.htmlBook.rendition.visibleText();
+      let lastVisibleTextList = splitSentences(
+        visibleTextList[visibleTextList.length - 1]
+      ).filter((item) => item !== "img" && !item.startsWith("img"));
       if (
-        this.nodeList[index] === visibleTextList[visibleTextList.length - 1]
+        this.nodeList[index] ===
+        lastVisibleTextList[lastVisibleTextList.length - 1]
       ) {
         await this.props.htmlBook.rendition.next();
       }
@@ -189,10 +200,13 @@ class TextToSpeech extends React.Component<
     );
 
     if (res === "start") {
-      index++;
       let visibleTextList = await this.props.htmlBook.rendition.visibleText();
+      let lastVisibleTextList = splitSentences(
+        visibleTextList[visibleTextList.length - 1]
+      ).filter((item) => item !== "img" && !item.startsWith("img"));
       if (
-        this.nodeList[index] === visibleTextList[visibleTextList.length - 1]
+        this.nodeList[index] ===
+        lastVisibleTextList[lastVisibleTextList.length - 1]
       ) {
         await this.props.htmlBook.rendition.next();
       }
@@ -211,6 +225,7 @@ class TextToSpeech extends React.Component<
         await this.handleAudio();
         return;
       }
+      index++;
       await this.handleSystemRead(index);
     } else if (res === "end") {
       return;
