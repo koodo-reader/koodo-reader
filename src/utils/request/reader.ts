@@ -60,23 +60,27 @@ export const getAnswerStream = async (
 };
 export const getDictionary = async (word: string, from: string, to: string) => {
   let readerRequest = await getReaderRequest();
-  let result = await readerRequest.getDictionary({ word, from, to });
-  if (result.code === 200) {
-    return result;
-  } else if (result.code === 401) {
+  let response = await readerRequest.getDictionary({ word, from, to });
+  if (response.code === 200) {
+    return response;
+  } else if (response.code === 401) {
     handleExitApp();
     return;
   } else {
-    toast.error(i18n.t("Fetch failed, error code") + ": " + result.msg);
+    toast.error(i18n.t("Fetch failed, error code") + ": " + response.msg);
+    if (response.code === 20004) {
+      toast(
+        i18n.t("Please login again to update your membership on this device")
+      );
+    }
   }
-  return result;
+  return response;
 };
 export const getReaderRequest = async () => {
   if (readerRequest) {
     return readerRequest;
   }
   readerRequest = new ReaderRequest(TokenService, ConfigService);
-  await readerRequest.refreshUserToken();
   return readerRequest;
 };
 export const getDictText = async (word: string, from: string, to: string) => {
