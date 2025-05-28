@@ -5,8 +5,10 @@ import { TokenService } from "../../assets/lib/kookit-extra-browser.min";
 import { reloadManager } from "../common";
 const PUBLIC_URL = "https://api.960960.xyz";
 export const checkDeveloperUpdate = async () => {
-  let res = await axios.get(PUBLIC_URL + "/api/update_dev");
-  return res.data;
+  let res = await axios.get(
+    PUBLIC_URL + `/api/update_dev?name=${navigator.language}`
+  );
+  return res.data.log;
 };
 export const getUploadUrl = async () => {
   let res = await axios.get(PUBLIC_URL + "/api/get_temp_upload_url");

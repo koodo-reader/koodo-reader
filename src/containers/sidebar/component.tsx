@@ -308,6 +308,7 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
                     backgroundColor: "rgba(0, 0, 0, 0.06)",
                     padding: "4px 0px",
                     width: "24px",
+                    height: "14px",
                   }}
                 >
                   <span
@@ -370,6 +371,7 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
                   backgroundColor: "rgba(0, 0, 0, 0.06)",
                   padding: "4px 0px",
                   width: "24px",
+                  height: "14px",
                 }}
               >
                 <span

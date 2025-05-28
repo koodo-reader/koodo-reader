@@ -1,0 +1,6 @@
+.popup-ref-box {
+  width: 250px;
+  max-height: 250px;
+  padding: 20px;
+  overflow: scroll;
+}

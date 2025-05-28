@@ -8,7 +8,10 @@ import animationNew from "../../../assets/lotties/new.json";
 import { openExternalUrl, WEBSITE_URL } from "../../../utils/common";
 import { isElectron } from "react-device-detect";
 import { sleep } from "../../../utils/common";
-import { checkStableUpdate } from "../../../utils/request/common";
+import {
+  checkDeveloperUpdate,
+  checkStableUpdate,
+} from "../../../utils/request/common";
 import {
   ConfigService,
   TokenService,
@@ -58,6 +61,26 @@ class UpdateInfo extends React.Component<UpdateInfoProps, UpdateInfoState> {
             ? "stable"
             : "dev"
         );
+        if (ConfigService.getReaderConfig("appInfo") === "dev") {
+          checkDeveloperUpdate().then(async (res) => {
+            const newVersion = res.version;
+            if (!isElectron) {
+              return;
+            }
+
+            if (packageInfo.version.localeCompare(newVersion) < 0) {
+              if (
+                ConfigService.getReaderConfig("isDisableUpdate") !== "yes" ||
+                this.props.isAuthed
+              ) {
+                this.setState({ updateLog: res });
+                this.props.handleNewDialog(true);
+              } else {
+                this.props.handleNewWarning(true);
+              }
+            }
+          });
+        }
       });
     }
   }
@@ -125,7 +148,18 @@ class UpdateInfo extends React.Component<UpdateInfoProps, UpdateInfoState> {
                 <div
                   className="new-version-open"
                   onClick={() => {
-                    openExternalUrl(WEBSITE_URL);
+                    if (ConfigService.getReaderConfig("appInfo") === "dev") {
+                      if (
+                        ConfigService.getReaderConfig("lang") &&
+                        ConfigService.getReaderConfig("lang").startsWith("zh")
+                      ) {
+                        openExternalUrl(WEBSITE_URL + "/zh/download");
+                      } else {
+                        openExternalUrl(WEBSITE_URL + "/en/download");
+                      }
+                    } else {
+                      openExternalUrl(WEBSITE_URL);
+                    }
                   }}
                 >
                   <Trans>Download</Trans>

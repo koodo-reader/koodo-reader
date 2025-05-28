@@ -2,9 +2,8 @@ import React from "react";
 import "./imageViewer.css";
 import { ImageViewerProps, ImageViewerStates } from "./interface";
 import { saveAs } from "file-saver";
-import { handleLinkJump } from "../../utils/reader/linkUtil";
 import { getIframeDoc } from "../../utils/reader/docUtil";
-declare var window: any;
+import { getTargetHref } from "../../utils/common";
 class ImageViewer extends React.Component<ImageViewerProps, ImageViewerStates> {
   constructor(props: ImageViewerProps) {
     super(props);
@@ -35,11 +34,11 @@ class ImageViewer extends React.Component<ImageViewerProps, ImageViewerStates> {
       this.props.handleLeaveReader("top");
       this.props.handleLeaveReader("bottom");
     }
-    let result = await handleLinkJump(event, this.props.rendition);
-    if (result) {
+
+    let href = getTargetHref(event);
+    if (href && href.indexOf("#") === 0) {
       return;
     }
-    let href;
     if (event.target.tagName === "IMG" && event.target.src) {
       href = event.target.src;
     }
