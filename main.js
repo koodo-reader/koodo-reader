@@ -12,6 +12,7 @@ const {
 const path = require("path");
 const isDev = require("electron-is-dev");
 const Store = require("electron-store");
+const os = require("os");
 const store = new Store();
 const fs = require("fs");
 const configDir = app.getPath("userData");
@@ -31,6 +32,12 @@ var filePath = null;
 if (process.platform != "darwin" && process.argv.length >= 2) {
   filePath = process.argv[1];
 }
+store.set(
+  "appVersion", packageJson.version,
+);
+store.set(
+  "appPlatform", os.platform() + " " + os.release(),
+);
 let options = {
   width: 1050,
   height: 660,
@@ -46,7 +53,6 @@ let options = {
     sandbox: false,
   },
 };
-const os = require('os');
 const Database = require("better-sqlite3");
 if (os.platform() === 'linux') {
   options = Object.assign({}, options, {
@@ -88,8 +94,8 @@ const getDBConnection = (dbName, storagePath, sqlStatement) => {
 }
 const getSyncUtil = async (config, isUseCache = true) => {
   if (!isUseCache || !syncUtilCache[config.service]) {
-    const { SyncUtil, TokenService, ThirdpartyRequest } = await import('./src/assets/lib/kookit-extra.min.mjs');
-    let thirdpartyRequest = new ThirdpartyRequest(TokenService);
+    const { SyncUtil, TokenService, ConfigService, ThirdpartyRequest } = await import('./src/assets/lib/kookit-extra.min.mjs');
+    let thirdpartyRequest = new ThirdpartyRequest(TokenService, ConfigService);
 
     syncUtilCache[config.service] = new SyncUtil(config.service, config, config.storagePath, thirdpartyRequest);
   }
@@ -103,7 +109,7 @@ const removeSyncUtil = (config) => {
 const getPickerUtil = async (config, isUseCache = true) => {
   if (!isUseCache || !pickerUtilCache[config.service]) {
     const { SyncUtil, TokenService, ThirdpartyRequest } = await import('./src/assets/lib/kookit-extra.min.mjs');
-    let thirdpartyRequest = new ThirdpartyRequest(TokenService);
+    let thirdpartyRequest = new ThirdpartyRequest(TokenService, ConfigService);
 
     pickerUtilCache[config.service] = new SyncUtil(config.service, config, config.storagePath, thirdpartyRequest);
   }

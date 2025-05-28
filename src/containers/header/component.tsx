@@ -290,22 +290,49 @@ class Header extends React.Component<HeaderProps, HeaderState> {
           .require("electron")
           .ipcRenderer.invoke("cloud-stats", config);
         if (stats.total > 0) {
-          toast.loading(
-            this.props.t("Start Transfering Data") +
-              " (" +
-              stats.completed +
-              "/" +
-              stats.total +
-              ")",
-            {
-              id: "syncing",
-            }
-          );
+          if (stats.hasFailedTasks) {
+            toast.error(
+              this.props.t(
+                "Tasks failed after multiple retries, please check the network connection"
+              ),
+              {
+                id: "syncing",
+              }
+            );
+            clearInterval(this.timer);
+            this.setState({ isSync: false });
+            return;
+          } else {
+            toast.loading(
+              this.props.t("Start Transfering Data") +
+                " (" +
+                stats.completed +
+                "/" +
+                stats.total +
+                ")",
+              {
+                id: "syncing",
+              }
+            );
+          }
         }
       } else {
         let syncUtil = await SyncService.getSyncUtil();
         let stats = await syncUtil.getStats();
         if (stats.total > 0) {
+          if (stats.hasFailedTasks) {
+            toast.error(
+              this.props.t(
+                "Tasks failed after multiple retries, please check the network connection"
+              ),
+              {
+                id: "syncing",
+              }
+            );
+            clearInterval(this.timer);
+            this.setState({ isSync: false });
+            return;
+          }
           toast.loading(
             this.props.t("Start Transfering Data") +
               " (" +
@@ -339,7 +366,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     if (this.props.defaultSyncOption === "adrive") {
       toast.success(
         this.props.t(
-          "We have bypassed the synchronization of book cover for Aliyun Drive"
+          "We have bypassed the synchronization of book cover for Aliyun Drive, covers will be downloaded automatically when you open the book next time."
         ),
         {
           duration: 4000,

@@ -21,8 +21,8 @@ export const initTheme = () => {
       window.matchMedia("(prefers-color-scheme: dark)").matches;
   }
   ConfigService.setReaderConfig("isOSNight", isNight ? "yes" : "no");
-  ConfigService.setReaderConfig("appVersion", packageJson.version);
-  ConfigService.setReaderConfig(
+  ConfigService.setItem("appVersion", packageJson.version);
+  ConfigService.setItem(
     "appPlatform",
     isElectron ? osName + " " + osVersion : browserName + " " + browserVersion
   );
