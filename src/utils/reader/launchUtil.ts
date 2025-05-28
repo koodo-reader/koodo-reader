@@ -1,6 +1,13 @@
-import { isElectron } from "react-device-detect";
+import {
+  browserName,
+  browserVersion,
+  isBrowser,
+  isElectron,
+  osName,
+  osVersion,
+} from "react-device-detect";
 import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
-
+import packageJson from "../../../package.json";
 export const initTheme = () => {
   const style = document.createElement("link");
   style.rel = "stylesheet";
@@ -14,6 +21,11 @@ export const initTheme = () => {
       window.matchMedia("(prefers-color-scheme: dark)").matches;
   }
   ConfigService.setReaderConfig("isOSNight", isNight ? "yes" : "no");
+  ConfigService.setReaderConfig("appVersion", packageJson.version);
+  ConfigService.setReaderConfig(
+    "appPlatform",
+    isElectron ? osName + " " + osVersion : browserName + " " + browserVersion
+  );
   if (!ConfigService.getReaderConfig("appSkin")) {
     ConfigService.setReaderConfig("appSkin", "system");
     //new user don't need to upgrade

@@ -231,7 +231,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
               this.handleEnterReader("bottom");
               this.handleEnterReader("top");
             }}
-            style={{ right: this.props.isSettingLocked ? 315 : 15 }}
+            style={{ right: this.props.isSettingLocked ? 305 : 5 }}
           >
             <span className="icon-grid reader-setting-icon"></span>
           </div>
@@ -241,7 +241,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
           <div
             style={{
               position: "absolute",
-              right: this.props.isSettingLocked ? 315 : 15,
+              right: this.props.isSettingLocked ? 300 : 0,
             }}
           >
             <div

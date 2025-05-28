@@ -13,6 +13,13 @@ import {
   uploadFile,
 } from "../../../utils/request/common";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
+import {
+  browserName,
+  browserVersion,
+  isElectron,
+  osName,
+  osVersion,
+} from "react-device-detect";
 declare var window: any;
 class FeedbackDialog extends Component<
   FeedbackDialogProps,
@@ -80,8 +87,9 @@ class FeedbackDialog extends Component<
     }
     toast.loading(this.props.t("Sending"), { id: "sending-id" });
     let version = packageInfo.version;
-    const os = window.require("os");
-    const system = os.platform() + " " + os.version();
+    const system = isElectron
+      ? osName + " " + osVersion
+      : browserName + " " + browserVersion;
     let fileName = "";
     if (this.state.fileContent && this.state.uploadUrl) {
       var segments = this.state.uploadUrl.split("/").reverse()[0];

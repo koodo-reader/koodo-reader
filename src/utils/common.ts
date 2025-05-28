@@ -600,3 +600,21 @@ export const testConnection = async (driveName: string, driveConfig: any) => {
     return await syncUtil.deleteFile("test.txt", "config");
   }
 };
+export const getTargetHref = (event: any) => {
+  let href =
+    (event.target.innerText && event.target.innerText.startsWith("http")) ||
+    (event.target.tagName !== "IMG" && event.target.getAttribute("href")) ||
+    (event.target.tagName !== "IMG" && event.target.getAttribute("src")) ||
+    (event.target.parentNode &&
+      ((event.target.parentNode.getAttribute &&
+        event.target.parentNode.getAttribute("href")) ||
+        (event.target.parentNode.getAttribute &&
+          event.target.parentNode.getAttribute("src")))) ||
+    (event.target.parentNode.parentNode &&
+      ((event.target.parentNode.parentNode.getAttribute &&
+        event.target.parentNode.parentNode.getAttribute("href")) ||
+        (event.target.parentNode.parentNode.getAttribute &&
+          event.target.parentNode.parentNode.getAttribute("src")))) ||
+    "";
+  return href;
+};

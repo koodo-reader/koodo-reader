@@ -202,7 +202,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
 
       if (this.props.books && this.props.books.length > 0) {
         this.props.books.forEach((item) => {
-          if (item.md5 === md5 && item.size === file.size) {
+          if (item.md5 === md5) {
             isRepeat = true;
             toast.error(this.props.t("Duplicate book"));
             return resolve();
@@ -211,7 +211,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
       }
       if (this.props.deletedBooks && this.props.deletedBooks.length > 0) {
         this.props.deletedBooks.forEach((item) => {
-          if (item.md5 === md5 && item.size === file.size) {
+          if (item.md5 === md5) {
             isRepeat = true;
             toast.error(this.props.t("Duplicate book in trash bin"));
             return resolve();
@@ -221,7 +221,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
       if (!this.props.books) {
         let books = await DatabaseService.getAllRecords("books");
         books.forEach((item) => {
-          if (item.md5 === md5 && item.size === file.size) {
+          if (item.md5 === md5) {
             isRepeat = true;
             toast.error(this.props.t("Duplicate book"));
             return resolve();

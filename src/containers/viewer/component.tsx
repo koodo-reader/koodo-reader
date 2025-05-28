@@ -20,6 +20,7 @@ import {
   ConfigService,
 } from "../../assets/lib/kookit-extra-browser.min";
 import * as Kookit from "../../assets/lib/kookit.min";
+import PopupRefer from "../../components/popups/popupRefer";
 declare var window: any;
 let lock = false; //prevent from clicking too fasts
 
@@ -405,6 +406,14 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
               rect: this.state.rect,
               chapterDocIndex: this.state.chapterDocIndex,
               chapter: this.state.chapter,
+            }}
+          />
+        ) : null}
+        {this.props.htmlBook ? (
+          <PopupRefer
+            {...{
+              rendition: this.props.htmlBook.rendition,
+              chapterDocIndex: this.state.chapterDocIndex,
             }}
           />
         ) : null}
