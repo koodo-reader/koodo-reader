@@ -40,7 +40,6 @@ export interface HeaderState {
   width: number;
   isNewVersion: boolean;
   isDataChange: boolean;
-  isDeveloperVer: boolean;
   isHidePro: boolean;
   isSync: boolean;
   isAutoSync: boolean;

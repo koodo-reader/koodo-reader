@@ -238,13 +238,7 @@ class CoverUtil {
         let coverBlob = new Blob([result.arrayBuffer], {
           type: `image/${result.extension}`,
         });
-        toast.loading("Uploading cover", {
-          id: "upload-cover",
-        });
         await syncUtil.uploadFile(cover, "cover", coverBlob);
-        toast.success("Upload successful", {
-          id: "upload-cover",
-        });
       }
     }
   }

@@ -47,7 +47,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       isNewVersion: false,
       width: document.body.clientWidth,
       isDataChange: false,
-      isDeveloperVer: false,
       isHidePro: false,
       isSync: false,
       isAutoSync: ConfigService.getReaderConfig("isDisableAutoSync") !== "yes",
@@ -78,10 +77,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
           "storageLocation",
           ConfigService.getReaderConfig("storageLocation")
         );
-      }
-
-      if (ConfigService.getReaderConfig("appInfo") === "dev") {
-        this.setState({ isDeveloperVer: true });
       }
       if (ConfigService.getReaderConfig("isHidePro") === "yes") {
         this.setState({ isHidePro: true });
@@ -556,30 +551,27 @@ class Header extends React.Component<HeaderProps, HeaderState> {
               <Trans>Pro version</Trans>
               <span> </span>
             </span>
-            {this.state.isDeveloperVer && (
-              <span
-                className="icon-close icon-pro-close"
-                onClick={() => {
-                  ConfigService.setReaderConfig("isHidePro", "yes");
-                  this.setState({ isHidePro: true });
-                }}
-              ></span>
-            )}
+
+            <span
+              className="icon-close icon-pro-close"
+              onClick={() => {
+                ConfigService.setReaderConfig("isHidePro", "yes");
+                this.setState({ isHidePro: true });
+              }}
+            ></span>
           </div>
         ) : null}
-        {this.state.isDeveloperVer &&
-          this.state.isHidePro &&
-          !this.props.isAuthed && (
-            <div
-              className="header-report-container"
-              style={{ textDecoration: "underline" }}
-              onClick={() => {
-                this.props.handleFeedbackDialog(true);
-              }}
-            >
-              <Trans>Report</Trans>
-            </div>
-          )}
+        {this.state.isHidePro && !this.props.isAuthed && (
+          <div
+            className="header-report-container"
+            style={{ textDecoration: "underline" }}
+            onClick={() => {
+              this.props.handleFeedbackDialog(true);
+            }}
+          >
+            <Trans>Report</Trans>
+          </div>
+        )}
 
         <ImportLocal
           {...{

@@ -246,7 +246,36 @@ class GeneralSetting extends React.Component<
             </div>
           </>
         )}
-
+        <div className="setting-dialog-new-title">
+          <Trans>Select update channel</Trans>
+          <select
+            name=""
+            className="lang-setting-dropdown"
+            onChange={(event) => {
+              ConfigService.setReaderConfig(
+                "updateChannel",
+                event.target.value
+              );
+              toast.success(this.props.t("Change successful"));
+            }}
+          >
+            {[
+              { value: "dev", label: "Developer version" },
+              { value: "stable", label: "Stable version" },
+            ].map((item) => (
+              <option
+                value={item.value}
+                key={item.value}
+                className="lang-setting-option"
+                selected={
+                  item.value === ConfigService.getReaderConfig("updateChannel")
+                }
+              >
+                {this.props.t(item.label)}
+              </option>
+            ))}
+          </select>
+        </div>
         <div className="setting-dialog-new-title">
           <Trans>Language</Trans>
           <select
