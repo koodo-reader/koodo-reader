@@ -116,3 +116,16 @@
   opacity: 0.6;
   margin-top: 15px;
 }
+.new-version-skip {
+  min-width: 80px;
+  padding: 0px 10px;
+  height: 25px;
+  opacity: 1;
+  border-radius: 25px;
+  line-height: 32px;
+  text-align: center;
+  cursor: pointer;
+  z-index: 50;
+  transition: 0.1s;
+  font-size: 13px;
+}

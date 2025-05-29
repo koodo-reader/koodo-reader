@@ -265,16 +265,6 @@ class SettingDialog extends React.Component<
         <div className="setting-subtitle">
           <Trans>Version</Trans>
           {packageInfo.version}
-          &nbsp;&nbsp;
-          <Trans>
-            {ConfigService.getReaderConfig("appInfo") === "new"
-              ? "New version available"
-              : ConfigService.getReaderConfig("appInfo") === "stable"
-              ? "Latest stable version"
-              : ConfigService.getReaderConfig("appInfo") === "dev"
-              ? "Developer version"
-              : ""}
-          </Trans>
           <div
             className="navigation-navigation"
             style={{ position: "unset", marginTop: "5px" }}

@@ -20,6 +20,5 @@ export interface BackupDialogProps extends RouteComponentProps<any> {
 export interface BackupDialogState {
   isBackup: string;
   currentDrive: string;
-  isDeveloperVer: boolean;
   isFinish: boolean;
 }

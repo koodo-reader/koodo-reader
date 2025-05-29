@@ -356,13 +356,24 @@ class BookUtil {
       const { ipcRenderer } = window.require("electron");
 
       let tokenConfig = await getCloudConfig(service);
-
-      await ipcRenderer.invoke("cloud-upload", {
+      toast.loading(i18n.t("Uploading book"), {
+        id: "upload-book",
+      });
+      let result = await ipcRenderer.invoke("cloud-upload", {
         ...tokenConfig,
         fileName: key + "." + format.toLowerCase(),
         service: service,
         type: "book",
         storagePath: getStorageLocation(),
+      });
+      if (!result) {
+        toast.error(i18n.t("Upload failed"), {
+          id: "upload-book",
+        });
+        return;
+      }
+      toast.success(i18n.t("Upload successful"), {
+        id: "upload-book",
       });
     } else {
       let syncUtil = await SyncService.getSyncUtil();
@@ -373,11 +384,17 @@ class BookUtil {
       toast.loading(i18n.t("Uploading book"), {
         id: "upload-book",
       });
-      await syncUtil.uploadFile(
+      let result = await syncUtil.uploadFile(
         key + "." + format.toLowerCase(),
         "book",
         bookBlob
       );
+      if (!result) {
+        toast.error(i18n.t("Upload failed"), {
+          id: "upload-book",
+        });
+        return;
+      }
       toast.success(i18n.t("Upload successful"), {
         id: "upload-book",
       });

@@ -33,55 +33,37 @@ class UpdateInfo extends React.Component<UpdateInfoProps, UpdateInfoState> {
       updateLog: "",
     };
   }
-  componentDidMount() {
+  async componentDidMount() {
     if (!this.props.currentBook.key) {
-      checkStableUpdate().then(async (res) => {
-        const newVersion = res.version;
-        if (!isElectron) {
-          return;
-        }
-        await sleep(500);
+      if (!isElectron) {
+        return;
+      }
+      let res;
+      if (ConfigService.getReaderConfig("updateChannel") === "stable") {
+        res = await checkStableUpdate();
+      } else {
+        res = await checkDeveloperUpdate();
+      }
+      const newVersion = res.version;
 
-        if (packageInfo.version.localeCompare(newVersion) < 0) {
-          if (
-            ConfigService.getReaderConfig("isDisableUpdate") !== "yes" ||
-            this.props.isAuthed
-          ) {
-            this.setState({ updateLog: res });
-            this.props.handleNewDialog(true);
-          } else {
-            this.props.handleNewWarning(true);
-          }
+      await sleep(500);
+      if (
+        res.stable === "no" &&
+        ConfigService.getReaderConfig("skipVersion") === newVersion
+      ) {
+        return;
+      }
+      if (packageInfo.version.localeCompare(newVersion) < 0) {
+        if (
+          ConfigService.getReaderConfig("isDisableUpdate") !== "yes" ||
+          this.props.isAuthed
+        ) {
+          this.setState({ updateLog: res });
+          this.props.handleNewDialog(true);
+        } else {
+          this.props.handleNewWarning(true);
         }
-        ConfigService.setReaderConfig(
-          "appInfo",
-          packageInfo.version.localeCompare(newVersion) < 0
-            ? "new"
-            : packageInfo.version.localeCompare(newVersion) === 0
-            ? "stable"
-            : "dev"
-        );
-        if (ConfigService.getReaderConfig("appInfo") === "dev") {
-          checkDeveloperUpdate().then(async (res) => {
-            const newVersion = res.version;
-            if (!isElectron) {
-              return;
-            }
-
-            if (packageInfo.version.localeCompare(newVersion) < 0) {
-              if (
-                ConfigService.getReaderConfig("isDisableUpdate") !== "yes" ||
-                this.props.isAuthed
-              ) {
-                this.setState({ updateLog: res });
-                this.props.handleNewDialog(true);
-              } else {
-                this.props.handleNewWarning(true);
-              }
-            }
-          });
-        }
-      });
+      }
     }
   }
   renderList = (arr: any[]) => {
@@ -148,22 +130,40 @@ class UpdateInfo extends React.Component<UpdateInfoProps, UpdateInfoState> {
                 <div
                   className="new-version-open"
                   onClick={() => {
-                    if (ConfigService.getReaderConfig("appInfo") === "dev") {
-                      if (
-                        ConfigService.getReaderConfig("lang") &&
-                        ConfigService.getReaderConfig("lang").startsWith("zh")
-                      ) {
-                        openExternalUrl(WEBSITE_URL + "/zh/download");
-                      } else {
-                        openExternalUrl(WEBSITE_URL + "/en/download");
-                      }
+                    if (
+                      ConfigService.getReaderConfig("lang") &&
+                      ConfigService.getReaderConfig("lang").startsWith("zh")
+                    ) {
+                      openExternalUrl(WEBSITE_URL + "/zh/download");
                     } else {
-                      openExternalUrl(WEBSITE_URL);
+                      openExternalUrl(WEBSITE_URL + "/en/download");
                     }
                   }}
                 >
                   <Trans>Download</Trans>
                 </div>
+              </div>
+              <div
+                className="new-version-skip"
+                onClick={() => {
+                  ConfigService.setReaderConfig(
+                    "skipVersion",
+                    this.state.updateLog.version
+                  );
+                  this.handleClose();
+                }}
+                style={{ marginTop: 5 }}
+              >
+                <Trans>Skip this version</Trans>
+              </div>
+              <div
+                className="new-version-skip"
+                onClick={() => {
+                  ConfigService.setReaderConfig("updateChannel", "stable");
+                  this.handleClose();
+                }}
+              >
+                <Trans>Only receive stable version</Trans>
               </div>
 
               {this.state.updateLog && (
