@@ -46,19 +46,6 @@ class SupporDialog extends React.Component<
       redeemCode: "",
     };
   }
-  componentDidMount() {
-    if (isElectron) {
-      checkStableUpdate().then(async (res) => {
-        const newVersion = res.version;
-        await sleep(500);
-        if (packageInfo.version.localeCompare(newVersion) >= 0) {
-          this.props.handleFetchUserInfo();
-        }
-      });
-    } else {
-      this.props.handleFetchUserInfo();
-    }
-  }
 
   handleClose = () => {
     this.props.handleShowSupport(false);

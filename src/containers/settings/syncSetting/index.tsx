@@ -14,7 +14,6 @@ import {
   handleLoadingDialog,
   handleFetchAuthed,
   handleLoginOptionList,
-  handleFetchUserInfo,
 } from "../../../store/actions";
 import { stateType } from "../../../store";
 import { withRouter } from "react-router-dom";
@@ -48,7 +47,6 @@ const actionCreator = {
   handleLoadingDialog,
   handleFetchAuthed,
   handleLoginOptionList,
-  handleFetchUserInfo,
 };
 export default connect(
   mapStateToProps,

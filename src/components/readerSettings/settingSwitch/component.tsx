@@ -25,6 +25,7 @@ class SettingSwitch extends React.Component<
         ConfigService.getReaderConfig("isHideBackground") === "yes",
       isHideFooter: ConfigService.getReaderConfig("isHideFooter") === "yes",
       isHideHeader: ConfigService.getReaderConfig("isHideHeader") === "yes",
+      isHideAIButton: ConfigService.getReaderConfig("isHideAIButton") === "yes",
       isHidePageButton:
         ConfigService.getReaderConfig("isHidePageButton") === "yes",
       isHideMenuButton:
@@ -113,6 +114,9 @@ class SettingSwitch extends React.Component<
                     break;
                   case "isHideMenuButton":
                     this.handleChange("isHideMenuButton");
+                    break;
+                  case "isHideAIButton":
+                    this.handleChange("isHideAIButton");
                     break;
                   default:
                     break;

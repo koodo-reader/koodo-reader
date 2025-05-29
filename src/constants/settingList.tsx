@@ -260,6 +260,10 @@ export const readerSettingList = [
     title: "Hide menu button",
     propName: "isHideMenuButton",
   },
+  {
+    title: "Hide AI button",
+    propName: "isHideAIButton",
+  },
 ];
 export const officialTranList = {
   English: "English",

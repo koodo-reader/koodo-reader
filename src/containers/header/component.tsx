@@ -151,6 +151,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
           console.error(error);
         }
       }
+      await this.props.handleFetchUserInfo();
       if (this.state.isAutoSync && ConfigService.getItem("defaultSyncOption")) {
         this.setState({ isSync: true });
         await this.handleCloudSync();
@@ -518,6 +519,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
               }
               this.setState({ isSync: true });
               if (this.props.isAuthed) {
+                await this.props.handleFetchUserInfo();
                 this.handleCloudSync();
               } else {
                 this.handleLocalSync();

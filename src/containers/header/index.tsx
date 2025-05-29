@@ -14,6 +14,7 @@ import {
   handleFetchLoginOptionList,
   handleFetchDataSourceList,
   handleCloudSyncFunc,
+  handleFetchUserInfo,
 } from "../../store/actions";
 import { stateType } from "../../store";
 import Header from "./component";
@@ -47,6 +48,7 @@ const actionCreator = {
   handleFetchLoginOptionList,
   handleFetchDataSourceList,
   handleCloudSyncFunc,
+  handleFetchUserInfo,
 };
 export default connect(
   mapStateToProps,
