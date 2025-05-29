@@ -309,37 +309,6 @@ class BookUtil {
       return true;
     }
   }
-  static async uploadCacheBook(key: string) {
-    let service = ConfigService.getItem("defaultSyncOption");
-    if (!service) {
-      return;
-    }
-    if (isElectron) {
-      const { ipcRenderer } = window.require("electron");
-
-      let tokenConfig = await getCloudConfig(service);
-
-      await ipcRenderer.invoke("cloud-upload", {
-        ...tokenConfig,
-        fileName: "cache-" + key + ".zip",
-        service: service,
-        type: "book",
-        storagePath: getStorageLocation(),
-      });
-    } else {
-      let syncUtil = await SyncService.getSyncUtil();
-      let bookBuffer: any = await this.fetchBook(
-        "cache-" + key,
-        "zip",
-        true,
-        ""
-      );
-      let bookBlob = new Blob([bookBuffer], {
-        type: "application/zip",
-      });
-      await syncUtil.uploadFile("cache-" + key + ".zip", "book", bookBlob);
-    }
-  }
   static async downloadBook(key: string, format: string) {
     let service = ConfigService.getItem("defaultSyncOption");
     if (!service) {
@@ -401,11 +370,17 @@ class BookUtil {
       let bookBlob = new Blob([bookBuffer], {
         type: CommonTool.getMimeType(format.toLowerCase()),
       });
+      toast.loading(i18n.t("Uploading book"), {
+        id: "upload-book",
+      });
       await syncUtil.uploadFile(
         key + "." + format.toLowerCase(),
         "book",
         bookBlob
       );
+      toast.success(i18n.t("Upload successful"), {
+        id: "upload-book",
+      });
     }
   }
   static async deleteCloudBook(key: string, format: string) {

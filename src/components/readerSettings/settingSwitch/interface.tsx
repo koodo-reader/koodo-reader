@@ -21,5 +21,6 @@ export interface SettingSwitchState {
   isPurePdf: boolean;
   isHideHeader: boolean;
   isHidePageButton: boolean;
+  isHideAIButton: boolean;
   isHideMenuButton: boolean;
 }

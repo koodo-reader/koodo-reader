@@ -199,27 +199,28 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
             >
               <span className="icon-dropdown next-chapter-single"></span>
             </div>
-            {this.props.isAuthed && (
-              <div
-                className="next-chapter-single-container"
-                onClick={async () => {
-                  this.props.handleMenuMode("assistant");
-                  this.props.handleOriginalText(
-                    await this.props.htmlBook.rendition.chapterText()
-                  );
-                  this.props.handleOpenMenu(true);
-                }}
-                style={{
-                  bottom: "55px",
-                  transform: "rotate(0deg)",
-                  fontWeight: "bold",
-                  fontSize: "17px",
-                  right: this.props.isSettingLocked ? 315 : 15,
-                }}
-              >
-                AI
-              </div>
-            )}
+            {this.props.isAuthed &&
+              ConfigService.getReaderConfig("isHideAIButton") !== "yes" && (
+                <div
+                  className="next-chapter-single-container"
+                  onClick={async () => {
+                    this.props.handleMenuMode("assistant");
+                    this.props.handleOriginalText(
+                      await this.props.htmlBook.rendition.chapterText()
+                    );
+                    this.props.handleOpenMenu(true);
+                  }}
+                  style={{
+                    bottom: "55px",
+                    transform: "rotate(0deg)",
+                    fontWeight: "bold",
+                    fontSize: "17px",
+                    right: this.props.isSettingLocked ? 315 : 15,
+                  }}
+                >
+                  AI
+                </div>
+              )}
           </>
         )}
         {ConfigService.getReaderConfig("isHideMenuButton") !== "yes" && (

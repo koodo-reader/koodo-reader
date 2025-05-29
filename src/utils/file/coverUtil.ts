@@ -11,6 +11,7 @@ import {
   TokenService,
 } from "../../assets/lib/kookit-extra-browser.min";
 import { getCloudConfig } from "./common";
+import toast from "react-hot-toast";
 declare var window: any;
 
 class CoverUtil {
@@ -237,7 +238,13 @@ class CoverUtil {
         let coverBlob = new Blob([result.arrayBuffer], {
           type: `image/${result.extension}`,
         });
+        toast.loading("Uploading cover", {
+          id: "upload-cover",
+        });
         await syncUtil.uploadFile(cover, "cover", coverBlob);
+        toast.success("Upload successful", {
+          id: "upload-cover",
+        });
       }
     }
   }
