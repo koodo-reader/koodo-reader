@@ -45,7 +45,6 @@ class UpdateInfo extends React.Component<UpdateInfoProps, UpdateInfoState> {
         res = await checkDeveloperUpdate();
       }
       const newVersion = res.version;
-
       await sleep(500);
       if (
         res.stable === "no" &&
@@ -89,6 +88,21 @@ class UpdateInfo extends React.Component<UpdateInfoProps, UpdateInfoState> {
             <div className="new-version-title">
               <Trans>Update to</Trans>
               {" " + this.state.updateLog.version}
+              <div
+                className="new-version-badge"
+                style={{
+                  backgroundColor:
+                    this.state.updateLog.stable === "yes"
+                      ? "#4CAF50"
+                      : "#0295D7",
+                }}
+              >
+                {this.props.t(
+                  this.state.updateLog.stable === "yes"
+                    ? "Stable version"
+                    : "Developer version"
+                )}
+              </div>
             </div>
             {(this.props.isAuthed &&
               this.state.updateLog.skippable === "yes") ||
@@ -143,28 +157,32 @@ class UpdateInfo extends React.Component<UpdateInfoProps, UpdateInfoState> {
                   <Trans>Download</Trans>
                 </div>
               </div>
-              <div
-                className="new-version-skip"
-                onClick={() => {
-                  ConfigService.setReaderConfig(
-                    "skipVersion",
-                    this.state.updateLog.version
-                  );
-                  this.handleClose();
-                }}
-                style={{ marginTop: 5 }}
-              >
-                <Trans>Skip this version</Trans>
-              </div>
-              <div
-                className="new-version-skip"
-                onClick={() => {
-                  ConfigService.setReaderConfig("updateChannel", "stable");
-                  this.handleClose();
-                }}
-              >
-                <Trans>Only receive stable version</Trans>
-              </div>
+              {this.state.updateLog.stable !== "yes" && (
+                <div
+                  className="new-version-skip"
+                  onClick={() => {
+                    ConfigService.setReaderConfig(
+                      "skipVersion",
+                      this.state.updateLog.version
+                    );
+                    this.handleClose();
+                  }}
+                  style={{ marginTop: 5 }}
+                >
+                  <Trans>Skip this version</Trans>
+                </div>
+              )}
+              {this.state.updateLog.stable !== "yes" && (
+                <div
+                  className="new-version-skip"
+                  onClick={() => {
+                    ConfigService.setReaderConfig("updateChannel", "stable");
+                    this.handleClose();
+                  }}
+                >
+                  <Trans>Only receive stable version</Trans>
+                </div>
+              )}
 
               {this.state.updateLog && (
                 <>

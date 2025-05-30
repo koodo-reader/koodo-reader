@@ -129,3 +129,16 @@
   transition: 0.1s;
   font-size: 13px;
 }
+.new-version-badge {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: bold;
+  color: white;
+  margin-left: 10px;
+  height: 20px;
+  line-height: 20px;
+  border-radius: 5px;
+  padding: 0px 5px;
+  position: relative;
+  top: -2px;
+}
