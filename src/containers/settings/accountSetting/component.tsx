@@ -372,6 +372,7 @@ class AccountSetting extends React.Component<
                     let userRequest = await getUserRequest();
                     let response = await userRequest.sendEmailCode({
                       email: this.state.loginConfig.email,
+                      lang: ConfigService.getReaderConfig("lang"),
                     });
                     if (response.code === 200) {
                       toast.success(this.props.t("Send successfully"), {

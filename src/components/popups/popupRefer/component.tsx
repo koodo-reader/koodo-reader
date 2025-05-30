@@ -4,7 +4,7 @@ import { PopupReferProps, PopupReferStates } from "./interface";
 import { getIframeDoc } from "../../../utils/reader/docUtil";
 import { getTargetHref, openExternalUrl } from "../../../utils/common";
 import Parser from "html-react-parser";
-import DOMPurify from "dompurify";
+
 class PopupRefer extends React.Component<PopupReferProps, PopupReferStates> {
   highlighter: any;
   timer!: NodeJS.Timeout;
@@ -63,10 +63,44 @@ class PopupRefer extends React.Component<PopupReferProps, PopupReferStates> {
         let node = doc.body.querySelector("#" + id);
         if (!node) return false;
         console.log("node", event.target.getBoundingClientRect());
+        console.log(node.innerHTML, "innerHTML");
+        //将html代码中的img标签由blob转换为base64
+        let htmlContent = node.innerHTML;
+
+        const convertBlobToDataURL = async (blobUrl) => {
+          const response = await fetch(blobUrl);
+          const blob = await response.blob();
+          return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onloadend = () => resolve(reader.result);
+            reader.onerror = reject;
+            reader.readAsDataURL(blob);
+          });
+        };
+
+        const processHtml = async (html) => {
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(html, "text/html");
+          const images: any[] = Array.from(doc.getElementsByTagName("img"));
+          for (const img of images) {
+            if (img.src && img.src.startsWith("blob:")) {
+              try {
+                const dataUrl = await convertBlobToDataURL(img.src);
+                img.src = dataUrl;
+                img.style.maxWidth = "100%"; // 确保图片不会超出容器宽度
+              } catch (error) {
+                console.error("Error converting blob to data URL:", error);
+              }
+            }
+          }
+          return doc.body.innerHTML;
+        };
+
+        htmlContent = await processHtml(htmlContent);
         this.setState(
           {
             rect: event.target.getBoundingClientRect(),
-            footnote: node.innerHTML,
+            footnote: htmlContent,
             isOpenMenu: true,
           },
           () => {
@@ -185,8 +219,15 @@ class PopupRefer extends React.Component<PopupReferProps, PopupReferStates> {
           className="popup-menu-container popup-ref-container"
           style={this.state.isOpenMenu ? {} : { display: "none" }}
         >
-          <div className="popup-menu-box popup-ref-box">
-            {Parser(DOMPurify.sanitize(this.state.footnote))}
+          <div
+            className="popup-menu-box popup-ref-box"
+            onClick={(event) => {
+              this.handleLinkJump(event, this.props.rendition);
+              event.stopPropagation();
+              event.preventDefault();
+            }}
+          >
+            {Parser(this.state.footnote)}
           </div>
         </div>
       </div>

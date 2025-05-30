@@ -356,9 +356,6 @@ class BookUtil {
       const { ipcRenderer } = window.require("electron");
 
       let tokenConfig = await getCloudConfig(service);
-      toast.loading(i18n.t("Uploading book"), {
-        id: "upload-book",
-      });
       let result = await ipcRenderer.invoke("cloud-upload", {
         ...tokenConfig,
         fileName: key + "." + format.toLowerCase(),
@@ -372,17 +369,11 @@ class BookUtil {
         });
         return;
       }
-      toast.success(i18n.t("Upload successful"), {
-        id: "upload-book",
-      });
     } else {
       let syncUtil = await SyncService.getSyncUtil();
       let bookBuffer: any = await this.fetchBook(key, format, true, "");
       let bookBlob = new Blob([bookBuffer], {
         type: CommonTool.getMimeType(format.toLowerCase()),
-      });
-      toast.loading(i18n.t("Uploading book"), {
-        id: "upload-book",
       });
       let result = await syncUtil.uploadFile(
         key + "." + format.toLowerCase(),
@@ -395,9 +386,6 @@ class BookUtil {
         });
         return;
       }
-      toast.success(i18n.t("Upload successful"), {
-        id: "upload-book",
-      });
     }
   }
   static async deleteCloudBook(key: string, format: string) {
