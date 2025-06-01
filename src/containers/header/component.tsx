@@ -561,17 +561,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
             ></span>
           </div>
         ) : null}
-        {this.state.isHidePro && !this.props.isAuthed && (
-          <div
-            className="header-report-container"
-            style={{ textDecoration: "underline" }}
-            onClick={() => {
-              this.props.handleFeedbackDialog(true);
-            }}
-          >
-            <Trans>Report</Trans>
-          </div>
-        )}
 
         <ImportLocal
           {...{

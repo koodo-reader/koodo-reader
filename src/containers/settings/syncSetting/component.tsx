@@ -279,35 +279,42 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
               <>
                 {driveInputConfig[this.props.settingDrive].map((item) => {
                   return (
-                    <input
-                      type={item.type}
-                      name={item.value}
-                      key={item.value}
-                      placeholder={
-                        this.props.t(item.label) +
-                        (item.required
-                          ? ""
-                          : " (" + this.props.t("Optional") + ")")
-                      }
-                      onChange={(e) => {
-                        if (e.target.value) {
-                          this.setState((prevState) => ({
-                            driveConfig: {
-                              ...prevState.driveConfig,
-                              [item.value]: e.target.value.trim(),
-                            },
-                          }));
+                    <>
+                      <input
+                        type={item.type}
+                        name={item.value}
+                        key={item.value}
+                        placeholder={
+                          this.props.t(item.label) +
+                          (item.required
+                            ? ""
+                            : " (" + this.props.t("Optional") + ")")
                         }
-                      }}
-                      onContextMenu={() => {
-                        handleContextMenu(
-                          "token-dialog-" + item.value + "-box",
-                          true
-                        );
-                      }}
-                      id={"token-dialog-" + item.value + "-box"}
-                      className="token-dialog-username-box"
-                    />
+                        onChange={(e) => {
+                          if (e.target.value) {
+                            this.setState((prevState) => ({
+                              driveConfig: {
+                                ...prevState.driveConfig,
+                                [item.value]: e.target.value.trim(),
+                              },
+                            }));
+                          }
+                        }}
+                        onContextMenu={() => {
+                          handleContextMenu(
+                            "token-dialog-" + item.value + "-box",
+                            true
+                          );
+                        }}
+                        id={"token-dialog-" + item.value + "-box"}
+                        className="token-dialog-username-box"
+                      />
+                      {item.example && (
+                        <div style={{ marginTop: "5px", fontSize: "12px" }}>
+                          {this.props.t("Example")}: {item.example}
+                        </div>
+                      )}
+                    </>
                   );
                 })}
               </>

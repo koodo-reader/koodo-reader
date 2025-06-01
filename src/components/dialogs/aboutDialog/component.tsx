@@ -81,16 +81,16 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
             >
               <Trans>Feedback</Trans>
             </li>
-            {ConfigService.getReaderConfig("isHidePro") !== "yes" && (
-              <li
-                className="sort-by-category-list"
-                onClick={() => {
-                  this.props.handleFeedbackDialog(true);
-                }}
-              >
-                <Trans>Report</Trans>
-              </li>
-            )}
+
+            <li
+              className="sort-by-category-list"
+              onClick={() => {
+                this.props.handleFeedbackDialog(true);
+              }}
+            >
+              <Trans>Report</Trans>
+            </li>
+
             <li
               className="sort-by-category-list"
               onClick={() => {
