@@ -110,7 +110,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       this.props.handleFetchBookmarks();
     });
     this.props.handleCloudSyncFunc(this.handleCloudSync);
-    document.addEventListener("visibilitychange", () => {
+    document.addEventListener("visibilitychange", async () => {
       if (document.visibilityState === "visible") {
         if (ConfigService.getItem("isFinshReading") === "yes") {
           ConfigService.setItem("isFinshReading", "no");
@@ -118,6 +118,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
             this.state.isAutoSync &&
             ConfigService.getItem("defaultSyncOption")
           ) {
+            await this.props.handleFetchUserInfo();
             this.setState({ isSync: true });
             this.handleCloudSync();
           }
@@ -219,12 +220,14 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     this.setState({ isSync: false });
   };
   beforeSync = async () => {
-    if (!this.props.defaultSyncOption) {
+    if (!ConfigService.getItem("defaultSyncOption")) {
       toast.error(this.props.t("Please add data source in the setting"));
       this.setState({ isSync: false });
       return false;
     }
-    let config = await getCloudConfig(this.props.defaultSyncOption);
+    let config = await getCloudConfig(
+      ConfigService.getItem("defaultSyncOption") || ""
+    );
     if (Object.keys(config).length === 0) {
       toast.error(this.props.t("Cannot get sync config"));
       this.setState({ isSync: false });
@@ -237,7 +240,8 @@ class Header extends React.Component<HeaderProps, HeaderState> {
           " (" +
           this.props.t(
             driveList.find(
-              (item) => item.value === this.props.defaultSyncOption
+              (item) =>
+                item.value === ConfigService.getItem("defaultSyncOption")
             )?.label || ""
           ) +
           ")",
@@ -359,7 +363,14 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     toast.success(this.props.t("Synchronisation successful"), {
       id: "syncing",
     });
-    if (this.props.defaultSyncOption === "adrive") {
+    setTimeout(() => {
+      toast.dismiss("syncing");
+    }, 1000);
+    if (
+      ConfigService.getItem("defaultSyncOption") === "adrive" &&
+      ConfigService.getReaderConfig("hasShowAliyunWarning") !== "yes"
+    ) {
+      ConfigService.setReaderConfig("hasShowAliyunWarning", "yes");
       toast.success(
         this.props.t(
           "We have bypassed the synchronization of book cover for Aliyun Drive, covers will be downloaded automatically when you open the book next time."
