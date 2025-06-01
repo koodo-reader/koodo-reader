@@ -4,6 +4,7 @@ import { PopupReferProps, PopupReferStates } from "./interface";
 import { getIframeDoc } from "../../../utils/reader/docUtil";
 import { getTargetHref, openExternalUrl } from "../../../utils/common";
 import Parser from "html-react-parser";
+import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 
 class PopupRefer extends React.Component<PopupReferProps, PopupReferStates> {
   highlighter: any;
@@ -23,6 +24,9 @@ class PopupRefer extends React.Component<PopupReferProps, PopupReferStates> {
       rect: {},
       isOpenMenu: false,
       footnote: "",
+      href: "",
+      isJump: false,
+      returnPosition: null,
     };
   }
   componentDidMount() {
@@ -47,7 +51,6 @@ class PopupRefer extends React.Component<PopupReferProps, PopupReferStates> {
     rendition: any = {}
   ): Promise<boolean> => {
     let href = getTargetHref(event);
-    console.log(event.target, href);
     if (href && href.indexOf("#") > -1) {
       let pageArea = document.getElementById("page-area");
       if (!pageArea) return false;
@@ -57,13 +60,11 @@ class PopupRefer extends React.Component<PopupReferProps, PopupReferStates> {
       if (!doc) {
         return false;
       }
-      console.log(href, "href");
+      this.setState({ href: href });
       if (href.indexOf("#") === 0) {
         let id = href.split("#").reverse()[0];
         let node = doc.body.querySelector("#" + id);
         if (!node) return false;
-        console.log("node", event.target.getBoundingClientRect());
-        console.log(node.innerHTML, "innerHTML");
         //将html代码中的img标签由blob转换为base64
         let htmlContent = node.innerHTML;
 
@@ -228,6 +229,54 @@ class PopupRefer extends React.Component<PopupReferProps, PopupReferStates> {
             }}
           >
             {Parser(this.state.footnote)}
+            <div className="popup-ref-button">
+              <span
+                style={{ marginRight: 10 }}
+                onClick={() => {
+                  navigator.clipboard.writeText(
+                    this.state.footnote.replace(/<[^>]+>/g, "").trim()
+                  );
+                }}
+              >
+                {this.props.t("Copy")}
+              </span>
+              <span
+                onClick={async () => {
+                  if (this.state.isJump && this.state.returnPosition) {
+                    await this.props.rendition.goToPosition(
+                      JSON.stringify(this.state.returnPosition)
+                    );
+                    this.setState({ isJump: false, returnPosition: null });
+                    return;
+                  }
+                  let pageArea = document.getElementById("page-area");
+                  if (!pageArea) return false;
+                  let iframe = pageArea.getElementsByTagName("iframe")[0];
+                  if (!iframe) return false;
+                  let doc: any = iframe.contentDocument;
+                  if (!doc) {
+                    return false;
+                  }
+                  let id = this.state.href.split("#").reverse()[0];
+                  this.setState({
+                    isJump: true,
+                    returnPosition: ConfigService.getObjectConfig(
+                      this.props.currentBook.key,
+                      "recordLocation",
+                      {}
+                    ),
+                  });
+                  await this.props.rendition.goToNode(
+                    doc.body.querySelector("#" + id) || doc.body
+                  );
+                }}
+                style={{
+                  color: this.state.isJump ? "rgba(231, 69, 69, 0.8)" : "",
+                }}
+              >
+                {this.props.t(this.state.isJump ? "Return" : "Go to")}
+              </span>
+            </div>
           </div>
         </div>
       </div>

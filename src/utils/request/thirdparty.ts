@@ -12,7 +12,6 @@ export const getThirdpartyRequest = async () => {
   if (thirdpartyRequest) {
     return thirdpartyRequest;
   }
-  console.log("Initializing ThirdpartyRequest", TokenService, ConfigService);
   thirdpartyRequest = new ThirdpartyRequest(TokenService, ConfigService);
   return thirdpartyRequest;
 };

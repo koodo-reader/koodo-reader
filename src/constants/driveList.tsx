@@ -93,6 +93,7 @@ interface ConfigItem {
   value: string;
   type: string;
   required?: boolean;
+  example?: string;
 }
 
 // Type the driveInputConfig
@@ -106,12 +107,14 @@ export const driveInputConfig: DriveInputConfig = {
       value: "url",
       type: "text",
       required: true,
+      example: "https://example.com/dav",
     },
     {
       label: "Server path",
       value: "dir",
       type: "text",
       required: true,
+      example: "KoodoReader",
     },
     {
       label: "Username",
@@ -154,18 +157,21 @@ export const driveInputConfig: DriveInputConfig = {
       value: "url",
       type: "text",
       required: true,
+      example: "192.168.28.173",
     },
     {
       label: "Server port",
       value: "port",
       type: "text",
       required: true,
+      example: "21",
     },
     {
       label: "Server path",
       value: "dir",
       type: "text",
       required: false,
+      example: "KoodoReader",
     },
     {
       label: "Username",
@@ -192,18 +198,21 @@ export const driveInputConfig: DriveInputConfig = {
       value: "url",
       type: "text",
       required: true,
+      example: "192.168.28.173",
     },
     {
       label: "Server port",
       value: "port",
       type: "text",
       required: true,
+      example: "22",
     },
     {
       label: "Server Path",
       value: "dir",
       type: "text",
       required: false,
+      example: "KoodoReader",
     },
     {
       label: "Username",
@@ -224,24 +233,28 @@ export const driveInputConfig: DriveInputConfig = {
       value: "endpoint",
       type: "text",
       required: true,
+      example: "https://endpoint.example.com",
     },
     {
       label: "Region",
       value: "region",
       type: "text",
       required: true,
+      example: "ap-west-1",
     },
     {
       label: "BucketName",
       value: "bucketName",
       type: "text",
       required: true,
+      example: "koodo-reader-bucket",
     },
     {
       label: "Path",
       value: "dir",
       type: "text",
       required: false,
+      example: "KoodoReader",
     },
     {
       label: "AccessKeyId",

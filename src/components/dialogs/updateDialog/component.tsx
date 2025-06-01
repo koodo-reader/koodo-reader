@@ -93,8 +93,8 @@ class UpdateInfo extends React.Component<UpdateInfoProps, UpdateInfoState> {
                 style={{
                   backgroundColor:
                     this.state.updateLog.stable === "yes"
-                      ? "#4CAF50"
-                      : "#0295D7",
+                      ? "rgba(94, 178, 148, 1)"
+                      : "rgba(92, 143, 211, 1)",
                 }}
               >
                 {this.props.t(
