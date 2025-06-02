@@ -18,4 +18,23 @@ RUN yarn --ignore-scripts\
 
 ### Nginx or Apache can also be used, Caddy is just smaller in size
 FROM caddy:latest
+
+# Install Node.js in the Caddy image
+RUN apk add --no-cache nodejs npm
+
+# Copy built website files to Caddy
 COPY --from=builder /app/build /usr/share/caddy
+
+# Copy httpServer.js
+COPY --from=builder /app/httpServer.js /app/httpServer.js
+
+# Expose both Caddy (80) and httpServer (8000) ports
+EXPOSE 80 8000
+
+# Create startup script to run both services
+RUN echo '#!/bin/sh' > /start.sh && \
+    echo 'node /app/httpServer.js &' >> /start.sh && \
+    echo 'caddy run --config /etc/caddy/Caddyfile' >> /start.sh && \
+    chmod +x /start.sh
+
+CMD ["/start.sh"]
