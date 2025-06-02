@@ -3,8 +3,10 @@ RUN apt-get update && apt-get install -y jq curl wget python3 git
 WORKDIR /app
 
 ### Get the latest release source code tarball
-RUN tarball_url=$(curl -s https://api.github.com/repos/koodo-reader/koodo-reader/releases/latest | jq -r ".tarball_url") \
-    && wget -qO- $tarball_url \
+# RUN tarball_url=$(curl -s https://api.github.com/repos/koodo-reader/koodo-reader/releases/latest | jq -r ".tarball_url") \
+#     && wget -qO- $tarball_url \
+#     | tar xvfz - --strip 1
+RUN wget -qO- https://github.com/koodo-reader/koodo-reader/archive/refs/heads/master.tar.gz \
     | tar xvfz - --strip 1
 
 ### --network-timeout 1000000 as a workaround for slow devices
@@ -28,13 +30,37 @@ COPY --from=builder /app/build /usr/share/caddy
 # Copy httpServer.js
 COPY --from=builder /app/httpServer.js /app/httpServer.js
 
+# Create uploads directory with proper permissions
+RUN mkdir -p /app/uploads && \
+    chmod 755 /app/uploads
+
 # Expose both Caddy (80) and httpServer (8000) ports
 EXPOSE 80 8000
 
 # Create startup script to run both services
 RUN echo '#!/bin/sh' > /start.sh && \
-    echo 'node /app/httpServer.js &' >> /start.sh && \
+    echo 'cd /app' >> /start.sh && \
+    echo 'node httpServer.js &' >> /start.sh && \
     echo 'caddy run --config /etc/caddy/Caddyfile' >> /start.sh && \
     chmod +x /start.sh
 
+# Set default environment variables (can be overridden at runtime)
+ENV SERVER_USERNAME=admin
+ENV SERVER_PASSWORD=securePass123
+ENV PORT=8000
+
+# Define volume for uploads directory
+VOLUME ["/app/uploads"]
+
 CMD ["/start.sh"]
+
+
+# docker run -d \
+#   --name koodo-reader \
+#   -p 80:80 \
+#   -p 8000:8000 \
+#   -e SERVER_USERNAME=your_username \
+#   -e SERVER_PASSWORD=your_password \
+#   -v /path/to/host/uploads:/app/uploads \
+#   -v /path/to/host/data:/app/data \
+#   your-image-name
