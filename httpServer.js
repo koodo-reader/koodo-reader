@@ -6,6 +6,7 @@ const url = require('url');
 // 配置信息
 const UPLOAD_DIR = path.resolve('./uploads'); // 使用绝对路径
 const PORT = process.env.PORT || 8000;
+const SERVER_ENABLED = process.env.ENABLE_HTTP_SERVER === 'true'; // 新增：控制服务器是否启用
 const VALID_CREDENTIALS = {
   username: process.env.SERVER_USERNAME || 'admin',
   password: process.env.SERVER_PASSWORD || 'securePass123'
@@ -16,12 +17,29 @@ if (!process.env.SERVER_USERNAME || !process.env.SERVER_PASSWORD) {
   console.warn('Warning: Using default credentials. Set SERVER_USERNAME and SERVER_PASSWORD environment variables for production.');
 }
 
+// 检查服务器是否启用
+if (!SERVER_ENABLED) {
+  console.log('HTTP Server is disabled. Set ENABLE_HTTP_SERVER=true to enable it.');
+  process.exit(0);
+}
+
 // 创建上传目录（如果不存在）
 if (!fs.existsSync(UPLOAD_DIR)) {
   fs.mkdirSync(UPLOAD_DIR, { recursive: true });
 }
 
 const server = http.createServer((req, res) => {
+  // 设置CORS头部
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+
+  // 处理预检请求
+  if (req.method === 'OPTIONS') {
+    res.writeHead(200);
+    return res.end();
+  }
   // 认证检查
   if (!authenticate(req)) {
     res.writeHead(401, {
@@ -38,6 +56,10 @@ const server = http.createServer((req, res) => {
     handleUpload(req, res, parsedUrl.query.dir || '');
   } else if (req.method === 'GET' && parsedUrl.pathname === '/download') {
     handleDownload(req, res, parsedUrl.query.dir || '');
+  } else if (req.method === 'DELETE' && parsedUrl.pathname === '/delete') {
+    handleDelete(req, res, parsedUrl.query.dir || '');
+  } else if (req.method === 'GET' && parsedUrl.pathname === '/list') {
+    handleList(req, res, parsedUrl.query.dir || '');
   } else {
     res.writeHead(404, { 'Content-Type': 'text/plain' });
     res.end('Not Found');
@@ -218,6 +240,124 @@ function handleDownload(req, res, dirParam) {
     fs.createReadStream(filePath).pipe(res);
   } catch (err) {
     console.error('Download error:', err);
+    res.writeHead(400, { 'Content-Type': 'text/plain' });
+    res.end(err.message);
+  }
+}
+function handleDelete(req, res, dirParam) {
+  try {
+    const parsedUrl = url.parse(req.url, true);
+    const filename = parsedUrl.query.filename;
+
+    if (!filename) {
+      res.writeHead(400, { 'Content-Type': 'text/plain' });
+      return res.end('Missing filename parameter');
+    }
+
+    // 安全处理文件名
+    const safeFilename = sanitizeFilename(filename);
+
+    // 验证文件名
+    if (!safeFilename || safeFilename === '.' || safeFilename === '..') {
+      res.writeHead(400, { 'Content-Type': 'text/plain' });
+      return res.end('Invalid filename');
+    }
+
+    // 解析并验证文件路径
+    const filePath = resolveSafePath(dirParam, safeFilename);
+
+    // 检查文件是否存在
+    if (!fs.existsSync(filePath)) {
+      res.writeHead(404, { 'Content-Type': 'text/plain' });
+      return res.end('File not found');
+    }
+
+    // 检查是否为文件（非目录）
+    const stat = fs.statSync(filePath);
+    if (!stat.isFile()) {
+      res.writeHead(400, { 'Content-Type': 'text/plain' });
+      return res.end('Target is not a file');
+    }
+
+    // 删除文件
+    fs.unlink(filePath, (err) => {
+      if (err) {
+        console.error('File delete error:', err);
+        res.writeHead(500, { 'Content-Type': 'text/plain' });
+        return res.end('Internal Server Error');
+      }
+
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({
+        success: true,
+        filename: safeFilename,
+        directory: dirParam,
+        message: 'File deleted successfully'
+      }));
+    });
+  } catch (err) {
+    console.error('Delete error:', err);
+    res.writeHead(400, { 'Content-Type': 'text/plain' });
+    res.end(err.message);
+  }
+}
+
+// 目录列表处理
+function handleList(req, res, dirParam) {
+  try {
+    // 解析并验证目录路径
+    const targetDir = resolveSafePath(dirParam);
+
+    // 检查目录是否存在
+    if (!fs.existsSync(targetDir)) {
+      res.writeHead(404, { 'Content-Type': 'text/plain' });
+      return res.end('Directory not found');
+    }
+
+    // 检查是否为目录
+    const stat = fs.statSync(targetDir);
+    if (!stat.isDirectory()) {
+      res.writeHead(400, { 'Content-Type': 'text/plain' });
+      return res.end('Target is not a directory');
+    }
+
+    // 读取目录内容
+    fs.readdir(targetDir, { withFileTypes: true }, (err, entries) => {
+      if (err) {
+        console.error('Directory read error:', err);
+        res.writeHead(500, { 'Content-Type': 'text/plain' });
+        return res.end('Internal Server Error');
+      }
+
+      const fileList = entries.map(entry => {
+        const stat = fs.statSync(path.join(targetDir, entry.name));
+        return {
+          name: entry.name,
+          type: entry.isDirectory() ? 'directory' : 'file',
+          size: entry.isFile() ? stat.size : null,
+          modifiedTime: stat.mtime.toISOString(),
+          createdTime: stat.birthtime.toISOString()
+        };
+      });
+
+      // 按类型和名称排序（目录在前，然后按名称排序）
+      fileList.sort((a, b) => {
+        if (a.type !== b.type) {
+          return a.type === 'directory' ? -1 : 1;
+        }
+        return a.name.localeCompare(b.name);
+      });
+
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({
+        success: true,
+        directory: dirParam,
+        files: fileList,
+        totalCount: fileList.length
+      }));
+    });
+  } catch (err) {
+    console.error('List error:', err);
     res.writeHead(400, { 'Content-Type': 'text/plain' });
     res.end(err.message);
   }
