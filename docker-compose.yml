@@ -1,10 +1,23 @@
-version: '3.5'
+version: "3.8"
+
 services:
-  koodo:
-    container_name: koodo
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - "80:80/tcp"
+  koodo-reader:
+    build: .
+    container_name: koodo-reader
     restart: unless-stopped
+    ports:
+      - "80:80"
+      - "8000:8000"
+    environment:
+      - SERVER_USERNAME=${SERVER_USERNAME:-admin}
+      - SERVER_PASSWORD=${SERVER_PASSWORD:-securePass123}
+      - PORT=8000
+    volumes:
+      # 使用主机目录（推荐）
+      - /opt/uploads:/app/uploads
+      # 或者使用命名卷
+      # - uploads_data:/app/uploads
+# 如果使用命名卷，取消注释以下内容
+# volumes:
+#   uploads_data:
+#     driver: local
