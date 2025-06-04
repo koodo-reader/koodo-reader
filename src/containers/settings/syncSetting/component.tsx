@@ -176,6 +176,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
     }
     if (
       this.props.settingDrive === "webdav" ||
+      this.props.settingDrive === "docker" ||
       this.props.settingDrive === "ftp" ||
       this.props.settingDrive === "sftp" ||
       this.props.settingDrive === "mega" ||
@@ -272,6 +273,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
             }}
           >
             {this.props.settingDrive === "webdav" ||
+            this.props.settingDrive === "docker" ||
             this.props.settingDrive === "ftp" ||
             this.props.settingDrive === "sftp" ||
             this.props.settingDrive === "mega" ||
@@ -279,7 +281,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
               <>
                 {driveInputConfig[this.props.settingDrive].map((item) => {
                   return (
-                    <>
+                    <div key={item.value}>
                       <input
                         type={item.type}
                         name={item.value}
@@ -310,11 +312,18 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                         className="token-dialog-username-box"
                       />
                       {item.example && (
-                        <div style={{ marginTop: "5px", fontSize: "12px" }}>
+                        <div
+                          style={{
+                            marginTop: "5px",
+                            marginLeft: "2px",
+                            fontSize: "12px",
+                            opacity: 0.8,
+                          }}
+                        >
                           {this.props.t("Example")}: {item.example}
                         </div>
                       )}
-                    </>
+                    </div>
                   );
                 })}
               </>
@@ -357,6 +366,21 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                 )}
               </div>
             )}
+            {this.props.settingDrive === "docker" && !isElectron && (
+              <div
+                className="token-dialog-tip"
+                style={{
+                  marginTop: "10px",
+                  fontSize: "13px",
+                  lineHeight: "16px",
+                  color: "rgba(231, 69, 69, 0.8)",
+                }}
+              >
+                {this.props.t(
+                  "The Koodo Reader Docker version does not support the data source feature by default. You need to modify the configuration parameters during deployment to manually enable it"
+                )}
+              </div>
+            )}
             {this.props.settingDrive === "s3compatible" && !isElectron && (
               <div
                 className="token-dialog-tip"
@@ -377,6 +401,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                 className="voice-add-confirm"
                 onClick={async () => {
                   if (
+                    this.props.settingDrive === "docker" ||
                     this.props.settingDrive === "webdav" ||
                     this.props.settingDrive === "s3compatible"
                   ) {
@@ -422,6 +447,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                   </div>
                 )}
                 {(this.props.settingDrive === "webdav" ||
+                  this.props.settingDrive === "docker" ||
                   this.props.settingDrive === "ftp" ||
                   this.props.settingDrive === "sftp" ||
                   this.props.settingDrive === "mega" ||

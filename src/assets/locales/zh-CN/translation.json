@@ -251,6 +251,7 @@
   "Margin": "页边距",
   "Do you want to open this link in browser": "是否使用浏览器打开此链接",
   "WebDAV Info": "WebDAV是一种简单高效的数据备份方式，这里推荐使用坚果云提供的WebDAV服务",
+  "The Koodo Reader Docker version does not support the data source feature by default. You need to modify the configuration parameters during deployment to manually enable it": "Koodo Reader Docker 版默认不支持数据源功能，您需要在部署时修改配置参数手动开启",
   "Please wait": "请稍侯",
   "Server address": "服务器地址",
   "Username": "用户名",

@@ -59,8 +59,8 @@ CMD ["/start.sh"]
 #   --name koodo-reader \
 #   -p 80:80 \
 #   -p 8000:8000 \
-#   -e SERVER_ENABLED=false \
+#   -e ENABLE_HTTP_SERVER=false \
 #   -e SERVER_USERNAME=admin \
 #   -e SERVER_PASSWORD=securePass123 \
 #   -v /path/to/host/uploads:/app/uploads \
-#   koodo-reader:master
+#   koodo-reader-test:latest
