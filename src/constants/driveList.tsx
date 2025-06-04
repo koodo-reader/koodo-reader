@@ -72,6 +72,14 @@ export const driveList = [
     scoped: false,
   },
   {
+    label: "Docker",
+    value: "docker",
+    icon: "icon-docker",
+    isPro: true,
+    support: ["desktop", "browser", "phone"],
+    scoped: true,
+  },
+  {
     label: "FTP",
     value: "ftp",
     icon: "icon-ftp",
@@ -115,6 +123,27 @@ export const driveInputConfig: DriveInputConfig = {
       type: "text",
       required: true,
       example: "KoodoReader",
+    },
+    {
+      label: "Username",
+      value: "username",
+      type: "text",
+      required: true,
+    },
+    {
+      label: "Password",
+      value: "password",
+      type: "password",
+      required: true,
+    },
+  ],
+  docker: [
+    {
+      label: "Server address",
+      value: "url",
+      type: "text",
+      required: true,
+      example: "http://192.168.28.14:8000",
     },
     {
       label: "Username",

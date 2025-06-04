@@ -108,13 +108,21 @@ function resolveSafePath(...pathSegments) {
 
 // 文件上传处理
 function handleUpload(req, res, dirParam) {
-  const boundary = req.headers['content-type']?.split('=')[1];
-  if (!boundary) {
+  const contentType = req.headers['content-type'];
+  if (!contentType || !contentType.includes('multipart/form-data')) {
     res.writeHead(400, { 'Content-Type': 'text/plain' });
-    return res.end('Invalid Content-Type');
+    return res.end('Invalid Content-Type. Expected multipart/form-data');
   }
 
+  const boundaryMatch = contentType.match(/boundary=(.+)$/);
+  if (!boundaryMatch) {
+    res.writeHead(400, { 'Content-Type': 'text/plain' });
+    return res.end('Missing boundary in Content-Type');
+  }
+
+  const boundary = boundaryMatch[1];
   let body = [];
+
   req.on('data', (chunk) => body.push(chunk));
   req.on('end', () => {
     try {
@@ -122,6 +130,7 @@ function handleUpload(req, res, dirParam) {
       const parts = parseMultipart(buffer, boundary);
 
       if (!parts.file || !parts.filename) {
+        console.log('Parsed parts:', Object.keys(parts)); // 调试信息
         throw new Error('No valid file uploaded');
       }
 
@@ -166,38 +175,53 @@ function handleUpload(req, res, dirParam) {
   });
 }
 
-// 解析multipart数据
+// 解析multipart数据 - 改进版本
 function parseMultipart(buffer, boundary) {
   const result = {};
-  const boundaryPrefix = `--${boundary}`;
-  const sections = buffer.toString('binary').split(boundaryPrefix);
+  const boundaryBuffer = Buffer.from(`--${boundary}`);
+  const parts = [];
 
-  for (const section of sections) {
-    if (!section.trim() || section.includes('--')) continue;
+  let start = 0;
+  let end = buffer.indexOf(boundaryBuffer, start);
 
-    const headerEnd = section.indexOf('\r\n\r\n');
-    if (headerEnd === -1) continue;
+  while (end !== -1) {
+    if (start !== 0) { // 跳过第一个边界前的内容
+      parts.push(buffer.slice(start, end));
+    }
+    start = end + boundaryBuffer.length;
+    end = buffer.indexOf(boundaryBuffer, start);
+  }
 
-    const headers = section.substring(0, headerEnd);
-    const content = section.substring(headerEnd + 4).trim();
+  for (const part of parts) {
+    if (part.length === 0) continue;
+
+    // 查找头部结束位置
+    const headerEndIndex = part.indexOf('\r\n\r\n');
+    if (headerEndIndex === -1) continue;
+
+    const headers = part.slice(0, headerEndIndex).toString();
+    const content = part.slice(headerEndIndex + 4);
+
+    // 移除结尾的 \r\n
+    const actualContent = content.slice(0, content.length - 2);
 
     const nameMatch = headers.match(/name="([^"]+)"/);
     const filenameMatch = headers.match(/filename="([^"]+)"/);
 
     if (nameMatch) {
       const name = nameMatch[1];
-      if (filenameMatch) {
+      if (filenameMatch && filenameMatch[1]) {
         result.filename = filenameMatch[1];
-        result.file = Buffer.from(content, 'binary');
+        result.file = actualContent;
+        console.log(`Found file: ${result.filename}, size: ${actualContent.length} bytes`); // 调试信息
       } else {
-        result[name] = content;
+        result[name] = actualContent.toString();
       }
     }
   }
 
   return result;
 }
-
 // 文件下载处理
 function handleDownload(req, res, dirParam) {
   try {
