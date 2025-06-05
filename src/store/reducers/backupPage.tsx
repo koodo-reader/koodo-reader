@@ -1,5 +1,6 @@
 const initState = {
   isBackup: false,
+  isOpenLocalFileDialog: false,
   isOpenTokenDialog: false,
   isOpenImportDialog: false,
   isOpenSortShelfDialog: false,
@@ -16,6 +17,11 @@ export function backupPage(
       return {
         ...state,
         isBackup: action.payload,
+      };
+    case "HANDLE_LOCAL_FILE_DIALOG":
+      return {
+        ...state,
+        isOpenLocalFileDialog: action.payload,
       };
     case "HANDLE_IMPORT_DIALOG":
       return {

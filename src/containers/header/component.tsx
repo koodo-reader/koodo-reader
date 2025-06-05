@@ -35,6 +35,8 @@ import {
 import { driveList } from "../../constants/driveList";
 import SupportDialog from "../../components/dialogs/supportDialog";
 import SyncService from "../../utils/storage/syncService";
+import { LocalFileManager } from "../../utils/file/localFile";
+declare var window: any;
 
 class Header extends React.Component<HeaderProps, HeaderState> {
   timer: any;
@@ -100,6 +102,20 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       }
     } else {
       upgradeConfig();
+      if (
+        !ConfigService.getReaderConfig("isUseLocal") &&
+        LocalFileManager.isSupported()
+      ) {
+        this.props.handleLocalFileDialog(true);
+      }
+      if (ConfigService.getReaderConfig("isUseLocal") === "yes") {
+        LocalFileManager.hasValidAccess().then((hasAccess) => {
+          if (!hasAccess) {
+            ConfigService.setReaderConfig("isUseLocal", "");
+            this.props.handleLocalFileDialog(true);
+          }
+        });
+      }
     }
     window.addEventListener("resize", () => {
       this.setState({ width: document.body.clientWidth });

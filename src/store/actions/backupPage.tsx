@@ -6,6 +6,9 @@ import { handleExitApp } from "../../utils/request/common";
 export function handleBackupDialog(mode: boolean) {
   return { type: "HANDLE_BACKUP", payload: mode };
 }
+export function handleLocalFileDialog(isOpen: boolean) {
+  return { type: "HANDLE_LOCAL_FILE_DIALOG", payload: isOpen };
+}
 export function handleImportDialog(mode: boolean) {
   return { type: "HANDLE_IMPORT_DIALOG", payload: mode };
 }
