@@ -56,18 +56,18 @@ class DatabaseService {
       }
     } else {
       await localforage.setItem(dbName, records);
-    }
-    for (let record of records) {
-      if (isRecord) {
-        ConfigService.setSyncRecord(
-          {
-            type: "database",
-            catergory: "sqlite",
-            name: dbName,
-            key: record.key,
-          },
-          { operation: "save", time: Date.now() }
-        );
+      for (let record of records) {
+        if (isRecord) {
+          ConfigService.setSyncRecord(
+            {
+              type: "database",
+              catergory: "sqlite",
+              name: dbName,
+              key: record.key,
+            },
+            { operation: "save", time: Date.now() }
+          );
+        }
       }
     }
   }
