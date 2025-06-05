@@ -14,6 +14,9 @@ import { decryptToken } from "../request/thirdparty";
 import toast from "react-hot-toast";
 import i18n from "../../i18n";
 declare var window: any;
+
+// File System Access API type declarations
+
 let configCache: any = {};
 export const changePath = async (newPath: string) => {
   if (isFolderContainsFile(newPath)) {

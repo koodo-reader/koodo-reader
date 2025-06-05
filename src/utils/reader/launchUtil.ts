@@ -34,6 +34,7 @@ export const initTheme = () => {
     if (isNight) {
     }
   }
+
   if (
     ConfigService.getReaderConfig("appSkin") === "night" ||
     (ConfigService.getReaderConfig("appSkin") === "system" &&

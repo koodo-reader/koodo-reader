@@ -7,6 +7,7 @@ import AddDialog from "../../components/dialogs/addDialog";
 import SortDialog from "../../components/dialogs/sortBookDialog";
 import AboutDialog from "../../components/dialogs/aboutDialog";
 import BackupDialog from "../../components/dialogs/backupDialog";
+import LocalFileDialog from "../../components/dialogs/localFileDialog";
 import ImportDialog from "../../components/dialogs/importDialog";
 import { ManagerProps, ManagerState } from "./interface";
 import { Trans } from "react-i18next";
@@ -127,6 +128,7 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
                 this.props.handleShowSupport(false);
               }
               this.props.handleBackupDialog(false);
+              this.props.handleLocalFileDialog(false);
               this.props.handleImportDialog(false);
               this.props.handleShowPopupNote(false);
               this.props.handleSortShelfDialog(false);
@@ -144,6 +146,7 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
               this.props.isShowSupport ||
               this.props.isOpenDeleteDialog ||
               this.props.isOpenEditDialog ||
+              this.props.isOpenLocalFileDialog ||
               this.props.isDetailDialog ||
               this.props.isShowPopupNote ||
               this.props.isOpenAddDialog ||
@@ -175,6 +178,7 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
         {this.props.isSortDisplay && <SortDialog />}
         {this.props.isAboutOpen && <AboutDialog />}
         {this.props.isBackup && <BackupDialog />}
+        {this.props.isOpenLocalFileDialog && <LocalFileDialog />}
         {this.props.isOpenImportDialog && <ImportDialog />}
         {this.props.isOpenSortShelfDialog && <SortShelfDialog />}
         {this.props.isOpenFeedbackDialog && <FeedbackDialog />}
