@@ -41,7 +41,21 @@ class LocalFileDialog extends React.Component<
     this.state = {
       isFinish: false,
       hasLocalAccess: false,
+      status: {
+        hasAccess: false,
+        needsReauthorization: false,
+        directoryName: "",
+      },
     };
+  }
+  async componentDidMount() {
+    if (!isElectron) {
+      const status = await LocalFileManager.getPermissionStatus();
+      console.log(status, "status");
+      this.setState({
+        status,
+      });
+    }
   }
   handleClose = () => {
     this.props.handleLocalFileDialog(false);
@@ -65,18 +79,23 @@ class LocalFileDialog extends React.Component<
           "localDirectoryName",
           directoryHandle.name
         );
+        toast.loading(
+          this.props.t("Granting access to local folder, please wait"),
+          {
+            id: "local-folder-access",
+          }
+        );
         await exportToLocalFile();
-
+        toast.dismiss("local-folder-access");
         this.setState({
           isFinish: true,
           hasLocalAccess: true,
         });
 
         this.showMessage("Local folder access granted successfully");
-
-        // 2秒后自动关闭对话框
+        this.props.handleFetchBooks();
         setTimeout(() => {
-          this.handleClose();
+          this.props.history.push("/manager/home");
         }, 2000);
       } else {
         this.showMessage("Failed to get folder access permission");
@@ -103,10 +122,20 @@ class LocalFileDialog extends React.Component<
             <div className="backup-page-finish">
               <Lottie options={safeOptions} height={120} width={150} />
               <div className="backup-page-warning-text">
-                <Trans>
-                  Grant access to local folder to save your data and reduce the
-                  risk of data loss
-                </Trans>
+                {this.state.status.needsReauthorization ? (
+                  this.props.t("Need to reauthorize the access to directory") +
+                  " " +
+                  this.state.status.directoryName +
+                  ", " +
+                  this.props.t(
+                    "Please click the allow on every visit button to avoid this popup once and for all"
+                  )
+                ) : (
+                  <Trans>
+                    Grant access to local folder to save your data and reduce
+                    the risk of data loss
+                  </Trans>
+                )}
               </div>
             </div>
             <div className="add-dialog-button-container">
@@ -120,14 +149,34 @@ class LocalFileDialog extends React.Component<
               >
                 <Trans>Continue to store in the browser</Trans>
               </div>
-              <div
-                className="add-dialog-confirm"
-                onClick={() => {
-                  this.handleSelectFolder();
-                }}
-              >
-                <Trans>Select folder</Trans>
-              </div>
+              {this.state.status.needsReauthorization ? (
+                <div
+                  className="add-dialog-confirm"
+                  onClick={async () => {
+                    await LocalFileManager.ensureDirectoryAccess();
+                    this.setState({
+                      hasLocalAccess: true,
+                      isFinish: true,
+                    });
+
+                    this.props.handleFetchBooks();
+                    setTimeout(() => {
+                      this.props.history.push("/manager/home");
+                    }, 2000);
+                  }}
+                >
+                  <Trans>Authorize</Trans>
+                </div>
+              ) : (
+                <div
+                  className="add-dialog-confirm"
+                  onClick={() => {
+                    this.handleSelectFolder();
+                  }}
+                >
+                  <Trans>Select folder</Trans>
+                </div>
+              )}
             </div>
           </div>
         ) : (

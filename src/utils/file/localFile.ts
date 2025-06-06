@@ -75,8 +75,67 @@ export class LocalFileManager {
       return null;
     }
   }
+  // 添加用户友好的权限状态检查方法
+  static async getPermissionStatus(): Promise<{
+    hasAccess: boolean;
+    needsReauthorization: boolean;
+    directoryName?: string;
+  }> {
+    try {
+      const storedHandle = await this.retrieveDirectoryHandle();
 
-  // 获取已存储的目录句柄
+      if (!storedHandle) {
+        return { hasAccess: false, needsReauthorization: false };
+      }
+
+      const permission = await (storedHandle as any).queryPermission({
+        mode: "readwrite",
+      });
+
+      return {
+        hasAccess: permission === "granted",
+        needsReauthorization: permission === "prompt",
+        directoryName: storedHandle.name,
+      };
+    } catch (error) {
+      return { hasAccess: false, needsReauthorization: false };
+    }
+  }
+  // 修改 ensureDirectoryAccess 方法，移除自动权限请求
+  static async ensureDirectoryAccess(): Promise<FileSystemDirectoryHandle | null> {
+    try {
+      // 首先尝试获取已存储的句柄
+      const storedHandle = await this.retrieveDirectoryHandle();
+
+      if (storedHandle) {
+        const permission = await (storedHandle as any).queryPermission({
+          mode: "readwrite",
+        });
+
+        if (permission === "granted") {
+          this.directoryHandle = storedHandle;
+          return storedHandle;
+        } else if (permission === "prompt") {
+          // 只有在用户直接交互中才能请求权限
+          const newPermission = await (storedHandle as any).requestPermission({
+            mode: "readwrite",
+          });
+          if (newPermission === "granted") {
+            this.directoryHandle = storedHandle;
+            return storedHandle;
+          }
+        }
+      }
+
+      // 如果没有有效的句柄，请求新的目录访问权限
+      return await this.requestDirectoryAccess();
+    } catch (error) {
+      console.error("Error ensuring directory access:", error);
+      return null;
+    }
+  }
+
+  // 修改 getStoredDirectoryHandle，移除自动权限请求
   static async getStoredDirectoryHandle(): Promise<FileSystemDirectoryHandle | null> {
     try {
       if (this.directoryHandle) {
@@ -99,21 +158,26 @@ export class LocalFileManager {
         if (permission === "granted") {
           this.directoryHandle = storedHandle;
           return storedHandle;
-        } else if (permission === "prompt") {
-          // 重新请求权限
-          const newPermission = await (storedHandle as any).requestPermission({
-            mode: "readwrite",
-          });
-          if (newPermission === "granted") {
-            this.directoryHandle = storedHandle;
-            return storedHandle;
-          }
+        }
+
+        // 如果权限被拒绝，清除存储的句柄
+        if (permission === "denied") {
+          await this.clearStoredAccess();
+          throw new Error(
+            "Directory access was denied. Please select a directory again."
+          );
         }
       }
 
       return null;
     } catch (error) {
       console.error("Error getting stored directory handle:", error);
+      if (
+        (error instanceof Error && error.message?.includes("denied")) ||
+        (error instanceof Error && error.name === "NotAllowedError")
+      ) {
+        await this.clearStoredAccess();
+      }
       return null;
     }
   }
