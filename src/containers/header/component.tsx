@@ -102,19 +102,22 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       }
     } else {
       upgradeConfig();
+      const status = await LocalFileManager.getPermissionStatus();
       if (
         !ConfigService.getReaderConfig("isUseLocal") &&
         LocalFileManager.isSupported()
       ) {
         this.props.handleLocalFileDialog(true);
-      }
-      if (ConfigService.getReaderConfig("isUseLocal") === "yes") {
-        LocalFileManager.hasValidAccess().then((hasAccess) => {
-          if (!hasAccess) {
-            ConfigService.setReaderConfig("isUseLocal", "");
-            this.props.handleLocalFileDialog(true);
-          }
-        });
+      } else if (
+        ConfigService.getReaderConfig("isUseLocal") === "yes" &&
+        !status.directoryName
+      ) {
+        this.props.handleLocalFileDialog(true);
+      } else if (
+        ConfigService.getReaderConfig("isUseLocal") === "yes" &&
+        (status.needsReauthorization || !status.hasAccess)
+      ) {
+        this.props.handleLocalFileDialog(true);
       }
     }
     window.addEventListener("resize", () => {
