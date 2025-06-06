@@ -96,6 +96,7 @@ class BookList extends React.Component<BookListProps, BookListState> {
     if (books.length === 0) {
       return <Redirect to="/manager/empty" />;
     }
+    console.log(books, "books");
     return books.map((item: BookModel, index: number) => {
       return this.props.viewMode === "list" ? (
         <BookListItem

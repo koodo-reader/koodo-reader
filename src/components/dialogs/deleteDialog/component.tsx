@@ -109,7 +109,7 @@ class DeleteDialog extends React.Component<
       DatabaseService.deleteRecord(key, "books")
         .then(async () => {
           await BookUtil.deleteBook(key, format);
-          CoverUtil.deleteCover(key);
+          await CoverUtil.deleteCover(key);
           await BookUtil.deleteBook("cache-" + key, "zip");
           ConfigService.deleteListConfig(key, "favoriteBooks");
           ConfigService.deleteListConfig(key, "deletedBooks");

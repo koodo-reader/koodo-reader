@@ -21,4 +21,6 @@ export interface NavigationPanelState {
   currentIndex: number;
   searchState: string;
   searchList: any;
+  cover: string;
+  isCoverExist: boolean;
 }

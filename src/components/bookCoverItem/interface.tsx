@@ -29,4 +29,6 @@ export interface BookCoverState {
   top: number;
   direction: string;
   desc: string;
+  cover: string;
+  isCoverExist: boolean;
 }
