@@ -12,10 +12,11 @@ import {
 } from "../../assets/lib/kookit-extra-browser.min";
 import { getCloudConfig } from "./common";
 import toast from "react-hot-toast";
+import { LocalFileManager } from "./localFile";
 declare var window: any;
 
 class CoverUtil {
-  static getCover(book: BookModel) {
+  static async getCover(book: BookModel) {
     if (isElectron) {
       var fs = window.require("fs");
       var path = window.require("path");
@@ -36,10 +37,30 @@ class CoverUtil {
       let buffer = fs.readFileSync(imageFilePath);
       return `data:image/${format};base64,${buffer.toString("base64")}`;
     } else {
-      return book.cover;
+      if (ConfigService.getReaderConfig("isUseLocal") === "yes") {
+        let coverList = await this.getLocalCoverList();
+        if (!coverList || coverList.length === 0) {
+          return book.cover;
+        }
+        let cover = coverList.find((item) => item.startsWith(book.key));
+        if (!cover) {
+          return book.cover;
+        }
+        let coverBuffer = await LocalFileManager.readFile(cover, "cover");
+        if (!coverBuffer) {
+          return book.cover;
+        }
+        let coverStr = CommonTool.arrayBufferToBase64(coverBuffer);
+        if (!coverStr) {
+          return book.cover;
+        }
+        return `data:image/${cover.split(".").reverse()[0]};base64,${coverStr}`;
+      } else {
+        return book.cover;
+      }
     }
   }
-  static isCoverExist(book: BookModel) {
+  static async isCoverExist(book: BookModel) {
     if (!book) return false;
     if (book.cover) {
       return true;
@@ -55,10 +76,22 @@ class CoverUtil {
       const imageFiles = files.filter((file) => file.startsWith(book.key));
       return imageFiles.length > 0;
     } else {
-      return book.cover !== "";
+      if (ConfigService.getReaderConfig("isUseLocal") === "yes") {
+        let coverList = await this.getLocalCoverList();
+        if (!coverList || coverList.length === 0) {
+          return book.cover !== "";
+        }
+        let cover = coverList.find((item) => item.startsWith(book.key));
+        if (!cover) {
+          return book.cover !== "";
+        }
+        return true;
+      } else {
+        return book.cover !== "";
+      }
     }
   }
-  static deleteCover(key: string) {
+  static async deleteCover(key: string) {
     if (isElectron) {
       var fs = window.require("fs");
       var path = window.require("path");
@@ -75,10 +108,22 @@ class CoverUtil {
       if (fs.existsSync(imageFilePath)) {
         fs.unlinkSync(imageFilePath);
       }
+    } else {
+      if (ConfigService.getReaderConfig("isUseLocal") === "yes") {
+        let coverList = await this.getLocalCoverList();
+        if (!coverList || coverList.length === 0) {
+          return;
+        }
+        let cover = coverList.find((item) => item.startsWith(key));
+        if (!cover) {
+          return;
+        }
+        await LocalFileManager.deleteFile(cover, "cover");
+      }
     }
     this.deleteCloudCover(key);
   }
-  static addCover(book: BookModel) {
+  static async addCover(book: BookModel) {
     if (!book.cover) return;
     if (isElectron) {
       var fs = window.require("fs");
@@ -95,6 +140,15 @@ class CoverUtil {
       this.uploadCover(book.key + "." + this.base64ToFileType(book.cover));
       book.cover = "";
     } else {
+      if (ConfigService.getReaderConfig("isUseLocal") === "yes") {
+        let result = this.convertCoverBase64(book.cover);
+        await LocalFileManager.saveFile(
+          `${book.key}.${result.extension}`,
+          result.arrayBuffer,
+          "cover"
+        );
+        book.cover = "";
+      }
       this.uploadCover(book.key + "." + this.base64ToFileType(book.cover));
     }
   }
@@ -199,15 +253,19 @@ class CoverUtil {
         console.error("download cover failed");
         return;
       }
-      let imgStr = CommonTool.arrayBufferToBase64(imgBuffer);
-      if (!imgStr) {
-        console.error("download cover failed");
-        return;
+      if (ConfigService.getReaderConfig("isUseLocal") === "yes") {
+        await LocalFileManager.saveFile(cover, imgBuffer, "cover");
+      } else {
+        let imgStr = CommonTool.arrayBufferToBase64(imgBuffer);
+        if (!imgStr) {
+          console.error("download cover failed");
+          return;
+        }
+        let base64 = `data:image/${
+          cover.split(".").reverse()[0]
+        };base64,${imgStr}`;
+        await this.saveCover(cover, base64);
       }
-      let base64 = `data:image/${
-        cover.split(".").reverse()[0]
-      };base64,${imgStr}`;
-      await this.saveCover(cover, base64);
     }
   }
   static async uploadCover(cover: string) {
@@ -263,15 +321,20 @@ class CoverUtil {
       const files = fs.readdirSync(directoryPath);
       return files;
     } else {
-      let books: Book[] | null = await DatabaseService.getAllRecords("books");
-      return books
-        ?.map((book) => {
-          if (!book.cover) {
-            return "";
-          }
-          return book.key + "." + this.base64ToFileType(book.cover);
-        })
-        .filter((item) => item !== "");
+      if (ConfigService.getReaderConfig("isUseLocal") === "yes") {
+        let coverList = await LocalFileManager.listFiles("cover");
+        return coverList;
+      } else {
+        let books: Book[] | null = await DatabaseService.getAllRecords("books");
+        return books
+          ?.map((book) => {
+            if (!book.cover) {
+              return "";
+            }
+            return book.key + "." + this.base64ToFileType(book.cover);
+          })
+          .filter((item) => item !== "");
+      }
     }
   }
   static async getCloudCoverList() {

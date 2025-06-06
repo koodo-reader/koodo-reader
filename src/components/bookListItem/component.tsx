@@ -25,9 +25,15 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
       left: 0,
       top: 0,
       isHover: false,
+      cover: "",
+      isCoverExist: false,
     };
   }
-  componentDidMount() {
+  async componentDidMount() {
+    this.setState({
+      cover: await CoverUtil.getCover(this.props.book),
+      isCoverExist: await CoverUtil.isCoverExist(this.props.book),
+    });
     let filePath = "";
     //open book when app start
     if (isElectron) {
@@ -45,13 +51,15 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
       BookUtil.redirectBook(this.props.book);
     }
   }
-  UNSAFE_componentWillReceiveProps(nextProps: BookItemProps) {
+  async UNSAFE_componentWillReceiveProps(nextProps: BookItemProps) {
     if (nextProps.book.key !== this.props.book.key) {
       this.setState({
         isFavorite:
           ConfigService.getAllListConfig("favoriteBooks").indexOf(
             nextProps.book.key
           ) > -1,
+        cover: await CoverUtil.getCover(this.props.book),
+        isCoverExist: await CoverUtil.isCoverExist(this.props.book),
       });
     }
   }
@@ -155,7 +163,7 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
             this.handleMoreAction(event);
           }}
         >
-          {!CoverUtil.isCoverExist(this.props.book) ||
+          {!this.state.isCoverExist ||
           (this.props.book.format === "PDF" &&
             ConfigService.getReaderConfig("isDisablePDFCover") === "yes") ? (
             <div
@@ -195,7 +203,7 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
               }}
             >
               <img
-                src={CoverUtil.getCover(this.props.book)}
+                src={this.state.cover}
                 alt=""
                 className="book-item-image"
                 style={{ width: "100%" }}

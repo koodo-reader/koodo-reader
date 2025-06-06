@@ -6,4 +6,6 @@ export interface DetailDialogProps {
 export interface DetailDialogState {
   backgroundColor: string;
   textColor: string;
+  cover: string;
+  isCoverExist: boolean;
 }

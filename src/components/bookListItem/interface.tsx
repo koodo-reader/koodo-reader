@@ -33,4 +33,6 @@ export interface BookItemState {
   direction: string;
   left: number;
   top: number;
+  cover: string;
+  isCoverExist: boolean;
 }

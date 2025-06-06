@@ -24,4 +24,6 @@ export interface BookCardState {
   left: number;
   top: number;
   direction: string;
+  cover: string;
+  isCoverExist: boolean;
 }

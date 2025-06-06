@@ -204,7 +204,9 @@ export const zipCover = async (zip: any) => {
   if (isElectron) {
   } else {
     for (let i = 0; i < books.length; i++) {
-      const result = CoverUtil.convertCoverBase64(CoverUtil.getCover(books[i]));
+      const result = CoverUtil.convertCoverBase64(
+        await CoverUtil.getCover(books[i])
+      );
       coverZip.file(`${books[i].key}.${result.extension}`, result.arrayBuffer);
     }
   }

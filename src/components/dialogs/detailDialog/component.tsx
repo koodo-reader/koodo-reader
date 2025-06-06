@@ -15,7 +15,15 @@ class DetailDialog extends React.Component<
     this.state = {
       backgroundColor: "#333",
       textColor: "#333",
+      cover: "",
+      isCoverExist: false,
     };
+  }
+  async componentDidMount() {
+    this.setState({
+      cover: await CoverUtil.getCover(this.props.currentBook),
+      isCoverExist: await CoverUtil.isCoverExist(this.props.currentBook),
+    });
   }
   handleClose = () => {
     this.props.handleDetailDialog(false);
@@ -36,12 +44,8 @@ class DetailDialog extends React.Component<
         >
           <div style={{ position: "relative" }}>
             <div className="detail-cover-container">
-              {CoverUtil.isCoverExist(this.props.currentBook) ? (
-                <img
-                  src={CoverUtil.getCover(this.props.currentBook)}
-                  alt=""
-                  className="detail-cover"
-                />
+              {this.state.isCoverExist ? (
+                <img src={this.state.cover} alt="" className="detail-cover" />
               ) : (
                 <div
                   className="detail-cover"
