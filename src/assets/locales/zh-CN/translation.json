@@ -359,7 +359,7 @@
   "Please add data source in the setting-Sync and backup first": "请先在设置-同步和备份中添加数据源",
   "If you update a piece of data that has already been deleted in the cloud before synchronization, it will cause a conflict. In this case, we will keep the cloud data by default. If you turn this option on, we will keep the local data": "如果您在同步前更新了一条已经在云端删除的数据，会引发冲突。此时我们默认保留云端数据。如果您开启此选项，我们将保留本地数据",
   "Meticulously designed and built for Android and iOS": "为安卓和 iOS 平台精心设计和开发的客户端",
-  "After three years of design and development, the mobile version of Koodo Reader is finally out": "经过长达3年的设计和开发，移动版的 Koodo Reader 终于要和大家见面了",
+  "After three years of design and development, the mobile version of Koodo Reader is finally out": "经过3年的设计和开发，移动版的 Koodo Reader 终于正式上线了",
   "Synchronize books and reading progress across all your devices": "在您所有的设备之间同步图书和阅读记录",
   "With the integration of your cloud drive, WebDAV, and object storage, all your data remains securely in your control": "借助您绑定的网盘，WebDAV 和对象存储实现，您所有的数据都由您掌握",
   "Embark on your journey of exploration with Koodo Reader Pro": "从一个账号开始，开始探索 Koodo Reader 专业版",
