@@ -36,7 +36,15 @@ class ImageViewer extends React.Component<ImageViewerProps, ImageViewerStates> {
     }
 
     let href = getTargetHref(event);
-    if (href && href.indexOf("#") === 0) {
+    console.log(href);
+    if (
+      href &&
+      (this.props.rendition.resolveChapter(href) ||
+        href.indexOf("../") > -1 ||
+        href.indexOf("http") > -1 ||
+        href.indexOf("OEBPF") > -1 ||
+        href.indexOf("footnote") > -1)
+    ) {
       return;
     }
     if (event.target.tagName === "IMG" && event.target.src) {
