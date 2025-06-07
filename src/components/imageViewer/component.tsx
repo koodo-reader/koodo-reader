@@ -40,8 +40,9 @@ class ImageViewer extends React.Component<ImageViewerProps, ImageViewerStates> {
     if (
       href &&
       (this.props.rendition.resolveChapter(href) ||
-        href.indexOf("../") > -1 ||
-        href.indexOf("http") > -1 ||
+        href.indexOf("#") > -1 ||
+        href.indexOf("../") === 0 ||
+        href.indexOf("http") === 0 ||
         href.indexOf("OEBPF") > -1 ||
         href.indexOf("footnote") > -1)
     ) {
