@@ -16,19 +16,6 @@ class EmptyPage extends React.Component<EmptyPageProps, EmptyPageState> {
       isOpenDelete: false,
     };
   }
-  handleDeleteShelf = () => {
-    if (!this.props.shelfTitle) return;
-    let currentShelfTitle = this.props.shelfTitle;
-    ConfigService.deleteMapConfig(currentShelfTitle, "shelfList");
-    ConfigService.deleteListConfig(currentShelfTitle, "sortedShelfList");
-
-    this.props.handleShelf("");
-    this.props.handleMode("home");
-    this.props.history.push("/manager/home");
-  };
-  handleDeletePopup = (isOpenDelete: boolean) => {
-    this.setState({ isOpenDelete });
-  };
   render() {
     const renderEmptyList = () => {
       return emptyList.map((item) => {
@@ -50,17 +37,8 @@ class EmptyPage extends React.Component<EmptyPageProps, EmptyPageState> {
         );
       });
     };
-    const deletePopupProps = {
-      mode: "shelf",
-      name: this.props.shelfTitle,
-      title: "Delete this shelf",
-      description: "This action will clear and remove this shelf",
-      handleDeletePopup: this.handleDeletePopup,
-      handleDeleteOpearion: this.handleDeleteShelf,
-    };
     return (
       <>
-        {this.state.isOpenDelete && <DeletePopup {...deletePopupProps} />}
         <div
           className="empty-page-container"
           style={
@@ -87,27 +65,6 @@ class EmptyPage extends React.Component<EmptyPageProps, EmptyPageState> {
           </div>
 
           {renderEmptyList()}
-          {this.props.shelfTitle && !this.props.isSelectBook && (
-            <div
-              className="book-list-header"
-              style={
-                this.props.isCollapsed
-                  ? { width: "calc(100% - 70px)", left: "-77px" }
-                  : { left: "22px" }
-              }
-            >
-              <div></div>
-              <div
-                className="booklist-delete-container"
-                onClick={() => {
-                  this.handleDeletePopup(true);
-                }}
-              >
-                <Trans>Delete this shelf</Trans>
-              </div>
-              <div></div>
-            </div>
-          )}
         </div>
       </>
     );

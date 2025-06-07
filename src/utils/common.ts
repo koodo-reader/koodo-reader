@@ -478,6 +478,7 @@ export const getDefaultTransTarget = (langList) => {
     zhTW: "Chinese",
     zhMO: "Chinese",
     ja: "Japanese",
+    uk: "Ukrainian",
     ko: "Korean",
     vi: "Vietnamese",
     th: "Thai",

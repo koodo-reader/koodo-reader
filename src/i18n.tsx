@@ -10,6 +10,7 @@ import translationRO from "./assets/locales/ro/translation.json";
 import translationPL from "./assets/locales/pl/translation.json";
 import translationCS from "./assets/locales/cs/translation.json";
 import translationJA from "./assets/locales/ja/translation.json";
+import translationUK from "./assets/locales/uk/translation.json";
 import translationSL from "./assets/locales/sl/translation.json";
 import translationBO from "./assets/locales/bo/translation.json";
 import translationID from "./assets/locales/id/translation.json";
@@ -30,7 +31,7 @@ import translationFR from "./assets/locales/fr/translation.json";
 import translationES from "./assets/locales/es/translation.json";
 import translationFA from "./assets/locales/fa/translation.json";
 import translationPTBR from "./assets/locales/pt-BR/translation.json";
-import translationTH from "./assets/locales/th/translation.json"
+import translationTH from "./assets/locales/th/translation.json";
 import translationSR from "./assets/locales/sr/translation.json";
 // the translations
 const resources = {
@@ -63,6 +64,9 @@ const resources = {
   },
   ja: {
     translation: translationJA,
+  },
+  uk: {
+    translation: translationUK,
   },
   sl: {
     translation: translationSL,

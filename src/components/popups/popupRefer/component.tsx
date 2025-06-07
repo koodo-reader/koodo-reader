@@ -204,11 +204,11 @@ class PopupRefer extends React.Component<PopupReferProps, PopupReferStates> {
     if (posY < 0) {
       posY = 20;
     }
-    if (posX > document.body.clientWidth - 250) {
-      posX = document.body.clientWidth - 250;
+    if (posX > document.body.clientWidth - 290 - 20) {
+      posX = document.body.clientWidth - 290 - 20;
     }
-    if (posY > document.body.clientHeight - 250) {
-      posY = document.body.clientHeight - 250;
+    if (posY > document.body.clientHeight - 250 - 20) {
+      posY = document.body.clientHeight - 250 - 20;
     }
     return { posX, posY } as any;
   }

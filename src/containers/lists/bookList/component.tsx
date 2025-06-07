@@ -24,7 +24,6 @@ class BookList extends React.Component<BookListProps, BookListState> {
   constructor(props: BookListProps) {
     super(props);
     this.state = {
-      isOpenDelete: false,
       favoriteBooks: Object.keys(
         ConfigService.getAllListConfig("favoriteBooks")
       ).length,
@@ -186,18 +185,6 @@ class BookList extends React.Component<BookListProps, BookListState> {
         );
       });
   };
-  handleDeleteShelf = () => {
-    if (!this.props.shelfTitle) return;
-    let currentShelfTitle = this.props.shelfTitle;
-    ConfigService.deleteMapConfig(currentShelfTitle, "shelfList");
-
-    this.props.handleShelf("");
-    this.props.handleMode("home");
-    this.props.history.push("/manager/home");
-  };
-  handleDeletePopup = (isOpenDelete: boolean) => {
-    this.setState({ isOpenDelete });
-  };
   isElementInViewport = (element) => {
     const rect = element.getBoundingClientRect();
 
@@ -217,18 +204,8 @@ class BookList extends React.Component<BookListProps, BookListState> {
     ) {
       return <Redirect to="/manager/empty" />;
     }
-
-    const deletePopupProps = {
-      mode: "shelf",
-      name: this.props.shelfTitle,
-      title: "Delete this shelf",
-      description: "This action will clear and remove this shelf",
-      handleDeletePopup: this.handleDeletePopup,
-      handleDeleteOpearion: this.handleDeleteShelf,
-    };
     return (
       <>
-        {this.state.isOpenDelete && <DeletePopup {...deletePopupProps} />}
         <div
           className="book-list-header"
           style={
@@ -238,16 +215,6 @@ class BookList extends React.Component<BookListProps, BookListState> {
           }
         >
           <SelectBook />
-          {this.props.shelfTitle && !this.props.isSelectBook && (
-            <div
-              className="booklist-delete-container"
-              onClick={() => {
-                this.handleDeletePopup(true);
-              }}
-            >
-              <Trans>Delete this shelf</Trans>
-            </div>
-          )}
 
           <div
             style={this.props.isSelectBook ? { display: "none" } : {}}

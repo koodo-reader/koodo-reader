@@ -32,6 +32,5 @@ export interface BookListProps extends RouteComponentProps<any> {
 export interface BookListState {
   favoriteBooks: number;
   isHideShelfBook: boolean;
-  isOpenDelete: boolean;
   isRefreshing: boolean;
 }

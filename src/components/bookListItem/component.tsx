@@ -53,13 +53,15 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
   }
   async UNSAFE_componentWillReceiveProps(nextProps: BookItemProps) {
     if (nextProps.book.key !== this.props.book.key) {
+      let cover = await CoverUtil.getCover(nextProps.book);
+      let isCoverExist = await CoverUtil.isCoverExist(nextProps.book);
       this.setState({
         isFavorite:
           ConfigService.getAllListConfig("favoriteBooks").indexOf(
             nextProps.book.key
           ) > -1,
-        cover: await CoverUtil.getCover(this.props.book),
-        isCoverExist: await CoverUtil.isCoverExist(this.props.book),
+        cover,
+        isCoverExist,
       });
     }
   }
