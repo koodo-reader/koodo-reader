@@ -13,6 +13,7 @@ import {
 import "./aboutDialog.css";
 import DatabaseService from "../../../utils/storage/databaseService";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
+import ConfigUtil from "../../../utils/file/configUtil";
 
 declare var window: any;
 class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
@@ -145,6 +146,15 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
                 <Trans>Open console</Trans>
               </li>
             )}
+            <li
+              className="sort-by-category-list"
+              onClick={() => {
+                ConfigUtil.clearConfig("sync");
+                toast.success(this.props.t("Reset successful"));
+              }}
+            >
+              <Trans>Reset sync records</Trans>
+            </li>
             {this.props.isNewWarning && (
               <li
                 className="sort-by-category-list"

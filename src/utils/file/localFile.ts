@@ -345,6 +345,7 @@ export class LocalFileManager {
     filename: string,
     folderPath?: string
   ): Promise<ArrayBuffer | null> {
+    console.log(filename, folderPath, "filename, folderPath in readFile");
     try {
       const directoryHandle = await this.getStoredDirectoryHandle();
       if (!directoryHandle) {
@@ -363,9 +364,15 @@ export class LocalFileManager {
           targetDirectory = await targetDirectory.getDirectoryHandle(part);
         }
       }
+      let isExist = await this.fileExists(filename, folderPath);
+      if (!isExist) {
+        console.info(`File ${filename} does not exist in ${folderPath}`);
+        return null;
+      }
 
       const fileHandle = await targetDirectory.getFileHandle(filename);
       const file = await fileHandle.getFile();
+      console.log("Reading file as ArrayBuffer:", file);
       return await file.arrayBuffer();
     } catch (error) {
       console.error("Error reading file as ArrayBuffer:", error);
@@ -430,6 +437,11 @@ export class LocalFileManager {
         for (const part of pathParts) {
           targetDirectory = await targetDirectory.getDirectoryHandle(part);
         }
+      }
+      let isExist = await this.fileExists(filename, folderPath);
+      if (!isExist) {
+        console.info(`File ${filename} does not exist in ${folderPath}`);
+        return false;
       }
 
       await targetDirectory.removeEntry(filename);

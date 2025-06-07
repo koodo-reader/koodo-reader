@@ -124,7 +124,9 @@ class CoverUtil {
     this.deleteCloudCover(key);
   }
   static async addCover(book: BookModel) {
-    if (!book.cover) return;
+    console.log(book, "add cover util");
+    let coverBase64 = book.cover;
+    if (!coverBase64) return;
     if (isElectron) {
       var fs = window.require("fs");
       var path = window.require("path");
@@ -141,15 +143,18 @@ class CoverUtil {
       book.cover = "";
     } else {
       if (ConfigService.getReaderConfig("isUseLocal") === "yes") {
-        let result = this.convertCoverBase64(book.cover);
+        let result = this.convertCoverBase64(coverBase64);
         await LocalFileManager.saveFile(
           `${book.key}.${result.extension}`,
           result.arrayBuffer,
           "cover"
         );
-        book.cover = "";
       }
-      this.uploadCover(book.key + "." + this.base64ToFileType(book.cover));
+      console.log(JSON.stringify(book), "uposafsad");
+      await this.uploadCover(
+        book.key + "." + this.base64ToFileType(coverBase64)
+      );
+      book.cover = "";
     }
   }
   static convertCoverBase64(base64: string) {
@@ -291,12 +296,20 @@ class CoverUtil {
     } else {
       let syncUtil = await SyncService.getSyncUtil();
       let book = await DatabaseService.getRecord(cover.split(".")[0], "books");
-      if (book && book.cover) {
-        let result = this.convertCoverBase64(book.cover);
-        let coverBlob = new Blob([result.arrayBuffer], {
-          type: `image/${result.extension}`,
-        });
-        await syncUtil.uploadFile(cover, "cover", coverBlob);
+      if (ConfigService.getReaderConfig("isUseLocal") === "yes") {
+        let coverBuffer = await LocalFileManager.readFile(cover, "cover");
+        if (!coverBuffer) {
+          return;
+        }
+        await syncUtil.uploadFile(cover, "cover", coverBuffer);
+      } else {
+        if (book && book.cover) {
+          let result = this.convertCoverBase64(book.cover);
+          let coverBlob = new Blob([result.arrayBuffer], {
+            type: `image/${result.extension}`,
+          });
+          await syncUtil.uploadFile(cover, "cover", coverBlob);
+        }
       }
     }
   }

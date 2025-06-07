@@ -537,6 +537,21 @@ export const checkMissingBook = (bookList: Book[]) => {
     }
   }
 };
+export const checkBrokenData = async () => {
+  let localSyncRecords = ConfigService.getAllSyncRecord();
+  let localBooks = Object.keys(localSyncRecords).filter(
+    (item) =>
+      item.startsWith("database.sqlite.books") &&
+      localSyncRecords[item].operation !== "delete"
+  );
+  let actualbooks = await DatabaseService.getAllRecords("books");
+  console.log("localBooks", localBooks);
+  console.log("actualbooks", actualbooks);
+  if (localBooks.length > 0 && actualbooks.length === 0) {
+    return true;
+  }
+  return false;
+};
 export const testConnection = async (driveName: string, driveConfig: any) => {
   toast.loading(i18n.t("Testing connection..."), {
     id: "testing-connection-id",
