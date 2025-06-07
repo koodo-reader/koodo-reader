@@ -108,7 +108,7 @@ const removeSyncUtil = (config) => {
 }
 const getPickerUtil = async (config, isUseCache = true) => {
   if (!isUseCache || !pickerUtilCache[config.service]) {
-    const { SyncUtil, TokenService, ThirdpartyRequest } = await import('./src/assets/lib/kookit-extra.min.mjs');
+    const { SyncUtil, TokenService, ThirdpartyRequest, ConfigService } = await import('./src/assets/lib/kookit-extra.min.mjs');
     let thirdpartyRequest = new ThirdpartyRequest(TokenService, ConfigService);
 
     pickerUtilCache[config.service] = new SyncUtil(config.service, config, config.storagePath, thirdpartyRequest);

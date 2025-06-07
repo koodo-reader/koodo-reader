@@ -34,8 +34,9 @@ class CoverUtil {
       if (!fs.existsSync(imageFilePath)) {
         return book.cover;
       }
-      let buffer = fs.readFileSync(imageFilePath);
-      return `data:image/${format};base64,${buffer.toString("base64")}`;
+      // let buffer = fs.readFileSync(imageFilePath);
+      // return `data:image/${format};base64,${buffer.toString("base64")}`;
+      return `file://${imageFilePath.replace(/\\/g, "/")}`;
     } else {
       if (ConfigService.getReaderConfig("isUseLocal") === "yes") {
         let coverList = await this.getLocalCoverList();
@@ -50,11 +51,10 @@ class CoverUtil {
         if (!coverBuffer) {
           return book.cover;
         }
-        let coverStr = CommonTool.arrayBufferToBase64(coverBuffer);
-        if (!coverStr) {
-          return book.cover;
-        }
-        return `data:image/${cover.split(".").reverse()[0]};base64,${coverStr}`;
+        const extension = cover.split(".").reverse()[0];
+        const blob = new Blob([coverBuffer], { type: `image/${extension}` });
+        const objectUrl = URL.createObjectURL(blob);
+        return objectUrl;
       } else {
         return book.cover;
       }
