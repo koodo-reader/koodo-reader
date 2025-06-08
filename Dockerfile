@@ -3,9 +3,6 @@ RUN apt-get update && apt-get install -y jq curl wget python3 git
 WORKDIR /app
 
 ### Get the latest release source code tarball
-# RUN tarball_url=$(curl -s https://api.github.com/repos/koodo-reader/koodo-reader/releases/latest | jq -r ".tarball_url") \
-#     && wget -qO- $tarball_url \
-#     | tar xvfz - --strip 1
 RUN wget -qO- https://github.com/koodo-reader/koodo-reader/archive/refs/heads/master.tar.gz \
     | tar xvfz - --strip 1
 
