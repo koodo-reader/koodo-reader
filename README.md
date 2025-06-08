@@ -79,6 +79,8 @@ brew install --cask koodo-reader
 
 - Install with Docker:
 
+If you only need to deploy the web version, simply use the command below.
+
 ```bash
 docker run -d \
   --name koodo-reader \
@@ -90,6 +92,14 @@ docker run -d \
   -v /path/to/host/uploads:/app/uploads \
   ghcr.io/koodo-reader/koodo-reader:master
 ```
+
+If you also want to enable the **data source feature**, please:
+
+1. Set **`ENABLE_HTTP_SERVER`** to **`true`**
+2. Change **`SERVER_USERNAME`** and **`SERVER_PASSWORD`** to a secure username and password
+3. Replace **`/path/to/host/uploads`** with the folder where you want to store reading data
+
+Then, select **Docker** as the data source in Koodo Reader.
 
 ## Screenshot
 
