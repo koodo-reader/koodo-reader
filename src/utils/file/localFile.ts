@@ -294,12 +294,6 @@ export class LocalFileManager {
       const writable = await fileHandle.createWritable();
       await writable.write(content);
       await writable.close();
-
-      console.log(
-        `File saved successfully: ${
-          folderPath ? folderPath + "/" : ""
-        }${filename}`
-      );
       return true;
     } catch (error) {
       console.error("Error saving file:", error);
@@ -345,7 +339,6 @@ export class LocalFileManager {
     filename: string,
     folderPath?: string
   ): Promise<ArrayBuffer | null> {
-    console.log(filename, folderPath, "filename, folderPath in readFile");
     try {
       const directoryHandle = await this.getStoredDirectoryHandle();
       if (!directoryHandle) {
@@ -372,7 +365,6 @@ export class LocalFileManager {
 
       const fileHandle = await targetDirectory.getFileHandle(filename);
       const file = await fileHandle.getFile();
-      console.log("Reading file as ArrayBuffer:", file);
       return await file.arrayBuffer();
     } catch (error) {
       console.error("Error reading file as ArrayBuffer:", error);
@@ -445,11 +437,6 @@ export class LocalFileManager {
       }
 
       await targetDirectory.removeEntry(filename);
-      console.log(
-        `File deleted successfully: ${
-          folderPath ? folderPath + "/" : ""
-        }${filename}`
-      );
       return true;
     } catch (error) {
       console.error("Error deleting file:", error);
@@ -531,7 +518,6 @@ export const exportToLocalFile = async (): Promise<void> => {
               CommonTool.base64ToArrayBuffer(book.cover.split("base64,")[1]),
               "cover"
             );
-            console.log(`Exported cover for book ${book.name} successfully`);
           } catch (error) {
             console.error(
               `Failed to export cover for book ${book.name}:`,
@@ -553,7 +539,6 @@ export const exportToLocalFile = async (): Promise<void> => {
               bookBuffer,
               "book"
             );
-            console.log(`Exported book ${book.name} successfully`);
           } catch (error) {
             console.error(`Failed to export book ${book.name}:`, error);
           }
@@ -572,7 +557,6 @@ export const exportToLocalFile = async (): Promise<void> => {
     }
     try {
       await LocalFileManager.saveFile(fileName, dbBuffer, "config");
-      console.log(`Exported ${fileName} successfully`);
     } catch (error) {
       console.error(`Failed to export ${fileName}:`, error);
     }
