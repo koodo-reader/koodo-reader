@@ -6,8 +6,8 @@ WORKDIR /app
 # RUN tarball_url=$(curl -s https://api.github.com/repos/koodo-reader/koodo-reader/releases/latest | jq -r ".tarball_url") \
 #     && wget -qO- $tarball_url \
 #     | tar xvfz - --strip 1
-RUN wget -qO- https://github.com/koodo-reader/koodo-reader/archive/refs/heads/master.tar.gz \
-    | tar xvfz - --strip 1
+RUN git clone https://github.com/koodo-reader/koodo-reader.git . && \
+    git checkout master
 
 ### --network-timeout 1000000 as a workaround for slow devices
 ### when the package being installed is too large, Yarn assumes it's a network problem and throws an error
