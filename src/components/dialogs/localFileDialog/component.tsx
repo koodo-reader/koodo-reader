@@ -51,7 +51,6 @@ class LocalFileDialog extends React.Component<
   async componentDidMount() {
     if (!isElectron) {
       const status = await LocalFileManager.getPermissionStatus();
-      console.log(status, "status");
       this.setState({
         status,
       });

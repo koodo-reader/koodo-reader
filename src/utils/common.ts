@@ -545,8 +545,6 @@ export const checkBrokenData = async () => {
       localSyncRecords[item].operation !== "delete"
   );
   let actualbooks = await DatabaseService.getAllRecords("books");
-  console.log("localBooks", localBooks);
-  console.log("actualbooks", actualbooks);
   if (localBooks.length > 0 && actualbooks.length === 0) {
     return true;
   }

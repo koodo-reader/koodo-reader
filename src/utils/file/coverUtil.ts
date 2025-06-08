@@ -124,7 +124,6 @@ class CoverUtil {
     this.deleteCloudCover(key);
   }
   static async addCover(book: BookModel) {
-    console.log(book, "add cover util");
     let coverBase64 = book.cover;
     if (!coverBase64) return;
     if (isElectron) {
@@ -150,7 +149,6 @@ class CoverUtil {
           "cover"
         );
       }
-      console.log(JSON.stringify(book), "uposafsad");
       await this.uploadCover(
         book.key + "." + this.base64ToFileType(coverBase64)
       );

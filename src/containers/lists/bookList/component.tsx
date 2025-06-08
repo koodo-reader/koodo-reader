@@ -149,7 +149,6 @@ class BookList extends React.Component<BookListProps, BookListState> {
       this.props.handleCurrentPage(1);
       currentBookMode = bookMode;
     }
-    console.log(books, "books");
 
     return books
       .filter(

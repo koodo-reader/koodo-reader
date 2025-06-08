@@ -382,7 +382,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       return;
     }
     let compareResult = await this.getCompareResult();
-    console.log(compareResult, "compareResult");
     await this.handleSync(compareResult);
     this.setState({ isSync: false });
   };
