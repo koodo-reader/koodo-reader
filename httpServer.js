@@ -5,7 +5,7 @@ const url = require('url');
 
 // 配置信息
 const UPLOAD_DIR = path.resolve('./uploads'); // 使用绝对路径
-const PORT = process.env.PORT || 8000;
+const PORT = process.env.PORT || 8080;
 const SERVER_ENABLED = process.env.ENABLE_HTTP_SERVER === 'true'; // 新增：控制服务器是否启用
 const VALID_CREDENTIALS = {
   username: process.env.SERVER_USERNAME || 'admin',

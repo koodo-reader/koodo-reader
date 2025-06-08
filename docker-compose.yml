@@ -7,11 +7,12 @@ services:
     restart: unless-stopped
     ports:
       - "80:80"
-      - "8000:8000"
+      - "8080:8080"
     environment:
       - SERVER_USERNAME=${SERVER_USERNAME:-admin}
       - SERVER_PASSWORD=${SERVER_PASSWORD:-securePass123}
-      - PORT=8000
+      - PORT=8080
+      - ENABLE_HTTP_SERVER=false
     volumes:
       # 使用主机目录（推荐）
       - /opt/uploads:/app/uploads
