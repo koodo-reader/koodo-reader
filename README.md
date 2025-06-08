@@ -80,7 +80,15 @@ brew install --cask koodo-reader
 - Install with Docker:
 
 ```bash
-docker run -d -p 80:80 --name koodo-reader ghcr.io/koodo-reader/koodo-reader:master
+docker run -d \
+  --name koodo-reader \
+  -p 80:80 \
+  -p 8080:8080 \
+  -e ENABLE_HTTP_SERVER=false \
+  -e SERVER_USERNAME=admin \
+  -e SERVER_PASSWORD=securePass123 \
+  -v /path/to/host/uploads:/app/uploads \
+  ghcr.io/koodo-reader/koodo-reader:master
 ```
 
 ## Screenshot

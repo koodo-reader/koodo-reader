@@ -143,7 +143,7 @@ export const driveInputConfig: DriveInputConfig = {
       value: "url",
       type: "text",
       required: true,
-      example: "http://192.168.28.14:8000",
+      example: "http://192.168.28.14:8080",
     },
     {
       label: "Username",
