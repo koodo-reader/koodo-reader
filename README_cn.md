@@ -78,9 +78,27 @@ brew install --cask koodo-reader
 
 - 使用 Docker 安装：
 
+如果您只需要部署网页版，直接使用下面的命令即可
+
 ```bash
-docker run -d -p 80:80 --name koodo-reader ghcr.io/koodo-reader/koodo-reader:master
+docker run -d \
+  --name koodo-reader \
+  -p 80:80 \
+  -p 8080:8080 \
+  -e ENABLE_HTTP_SERVER=false \
+  -e SERVER_USERNAME=admin \
+  -e SERVER_PASSWORD=securePass123 \
+  -v /path/to/host/uploads:/app/uploads \
+  ghcr.io/koodo-reader/koodo-reader:master
 ```
+
+如果您还需要启用数据源功能，请作如下修改
+
+1. 将 **`ENABLE_HTTP_SERVER`** 设为 **`true`**
+2. 将 **`SERVER_USERNAME`** 和 **`SERVER_PASSWORD`** 改为您认为安全的用户名和密码
+3. 将 **`/path/to/host/uploads`** 改为您希望用来保存阅读数据的文件夹
+
+部署完成后，在 Koodo Reader 中选择 **Docker** 作为数据源。
 
 ## 截图
 
