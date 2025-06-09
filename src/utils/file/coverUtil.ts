@@ -152,7 +152,7 @@ class CoverUtil {
       await this.uploadCover(
         book.key + "." + this.base64ToFileType(coverBase64)
       );
-      book.cover = "";
+      // book.cover = "";
     }
   }
   static convertCoverBase64(base64: string) {

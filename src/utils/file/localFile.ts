@@ -545,6 +545,11 @@ export const exportToLocalFile = async (): Promise<void> => {
         }
       }
     }
+    let records = await DatabaseService.getAllRecords(dbName);
+    if (!records || records.length === 0) {
+      console.warn(`No records found in database ${dbName}`);
+      continue;
+    }
     let dbBuffer = await DatabaseService.getDbBuffer(dbName);
     if (!dbBuffer) {
       console.error(`Database buffer for ${dbName} is null`);

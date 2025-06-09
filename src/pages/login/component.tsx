@@ -438,6 +438,7 @@ class Login extends React.Component<LoginProps, LoginState> {
                 style={{
                   borderWidth: "0px",
                   right: "0px",
+                  bottom: "10px",
                 }}
               >
                 {this.props.t("Skip")}

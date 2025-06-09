@@ -154,6 +154,7 @@
   width: 90%;
   height: 50%;
   margin: 0 auto;
+  margin-top: -20px;
   /*实现三乘三的布局*/
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;

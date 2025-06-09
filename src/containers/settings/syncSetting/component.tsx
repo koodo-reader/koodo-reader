@@ -362,7 +362,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                 }}
               >
                 {this.props.t(
-                  "Only WebDAV service provided by Alist is directly supported in Browser, Other WebDAV services need to enable CORS to work properly"
+                  "Only WebDAV service provided by Alist is directly supported in Browser, Other WebDAV services need to enable CORS to work properly. Also due to browser's security restrictions, the WebDAV service must be accessed via HTTPS protocol when you're visiting Koodo Reader via HTTPS protocal."
                 )}
               </div>
             )}
@@ -377,7 +377,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                 }}
               >
                 {this.props.t(
-                  "The Koodo Reader Docker version does not support the data source feature by default. You need to modify the configuration parameters during deployment to manually enable it"
+                  "The Koodo Reader Docker version does not support the data source feature by default. You need to modify the configuration parameters during deployment to manually enable it. Also due to browser's security restrictions, the Docker service must be accessed via HTTPS protocol when you're visiting Koodo Reader via HTTPS protocal."
                 )}
               </div>
             )}
@@ -392,7 +392,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                 }}
               >
                 {this.props.t(
-                  "Some S3 services are not compatible with browser environments. If you encounter connection issues, please refer to the service provider's official documentation for instructions on enabling CORS."
+                  "Some S3 services are not compatible with browser environments. If you encounter connection issues, please refer to the service provider's official documentation for instructions on enabling CORS. Also due to browser's security restrictions, the S3 service must be accessed via HTTPS protocol when you're visiting Koodo Reader via HTTPS protocal."
                 )}
               </div>
             )}

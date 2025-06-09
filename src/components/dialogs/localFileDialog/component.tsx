@@ -73,11 +73,7 @@ class LocalFileDialog extends React.Component<
 
       if (directoryHandle) {
         // 成功获取权限
-        ConfigService.setReaderConfig("isUseLocal", "yes");
-        ConfigService.setReaderConfig(
-          "localDirectoryName",
-          directoryHandle.name
-        );
+
         toast.loading(
           this.props.t("Granting access to local folder, please wait"),
           {
@@ -90,7 +86,11 @@ class LocalFileDialog extends React.Component<
           isFinish: true,
           hasLocalAccess: true,
         });
-
+        ConfigService.setReaderConfig("isUseLocal", "yes");
+        ConfigService.setReaderConfig(
+          "localDirectoryName",
+          directoryHandle.name
+        );
         this.showMessage("Local folder access granted successfully");
         this.props.handleFetchBooks();
         setTimeout(() => {
