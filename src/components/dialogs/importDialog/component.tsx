@@ -13,6 +13,7 @@ import { checkStableUpdate } from "../../../utils/request/common";
 import { getCloudConfig } from "../../../utils/file/common";
 import SyncService from "../../../utils/storage/syncService";
 import { getStorageLocation } from "../../../utils/common";
+import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 class ImportDialog extends React.Component<
   ImportDialogProps,
   ImportDialogState
@@ -151,6 +152,12 @@ class ImportDialog extends React.Component<
           {this.state.currentDrive === "" && (
             <>
               {driveList
+                .filter((item) => {
+                  if (ConfigService.getItem("serverRegion") === "china") {
+                    return item.isCNAvailable;
+                  }
+                  return true;
+                })
                 .filter(
                   (item) =>
                     !item.scoped &&

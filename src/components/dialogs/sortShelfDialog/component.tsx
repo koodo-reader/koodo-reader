@@ -1,6 +1,5 @@
 import React from "react";
 import "./sortShelfDialog.css";
-import { driveList } from "../../../constants/driveList";
 import { Trans } from "react-i18next";
 import { SortShelfDialogProps, SortShelfDialogState } from "./interface";
 import _ from "underscore";

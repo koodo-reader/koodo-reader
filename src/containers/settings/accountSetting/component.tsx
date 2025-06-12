@@ -42,7 +42,6 @@ class AccountSetting extends React.Component<
       isRedeemCode: false,
       redeemCode: "",
       isSendingCode: false,
-
       countdown: 0,
     };
   }
@@ -521,13 +520,60 @@ class AccountSetting extends React.Component<
           </div>
         )}
         <div className="setting-dialog-new-title">
+          <Trans>Select server region</Trans>
+          <select
+            name=""
+            className="lang-setting-dropdown"
+            onChange={(event) => {
+              if (!event.target.value) {
+                return;
+              }
+              if (event.target.value === "china") {
+                toast(
+                  this.props.t(
+                    "Some login options and data sources are not available in your selected server region"
+                  )
+                );
+              }
+              ConfigService.setItem("serverRegion", event.target.value);
+              toast.success(this.props.t("Setup successful"));
+            }}
+          >
+            {[
+              { value: "", label: "Please select" },
+              { value: "global", label: "Global" },
+              { value: "china", label: "China" },
+            ].map((item) => (
+              <option
+                value={item.value}
+                key={item.value}
+                className="lang-setting-option"
+                selected={
+                  item.value ===
+                  (ConfigService.getItem("serverRegion") || "global")
+                }
+              >
+                {this.props.t(item.label)}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="setting-dialog-new-title">
           <Trans>Add login option</Trans>
           <select
             name=""
             className="lang-setting-dropdown"
             onChange={this.handleAddLoginOption}
           >
-            {[{ label: "Please select", value: "" }, ...loginList]
+            {[
+              { label: "Please select", value: "" },
+              ...loginList.filter((item) => {
+                if (ConfigService.getItem("serverRegion") === "china") {
+                  return item.isCNAvailable;
+                }
+                return true;
+              }),
+            ]
               .filter((item) => {
                 if (this.props.loginOptionList.length > 0) {
                   return !this.props.loginOptionList.includes(item.value);
@@ -553,7 +599,15 @@ class AccountSetting extends React.Component<
             className="lang-setting-dropdown"
             onChange={this.handleDeleteLoginOption}
           >
-            {[{ label: "Please select", value: "" }, ...loginList]
+            {[
+              { label: "Please select", value: "" },
+              ...loginList.filter((item) => {
+                if (ConfigService.getItem("serverRegion") === "china") {
+                  return item.isCNAvailable;
+                }
+                return true;
+              }),
+            ]
               .filter((item) => {
                 if (item.value === "") {
                   return true;
