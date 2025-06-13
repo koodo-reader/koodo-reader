@@ -387,7 +387,7 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
                     : { width: "60%" }
                 }
               >
-                {this.props.t("Edit shelf")}
+                {this.props.t("Manage shelf")}
               </span>
             </div>
             {!this.state.isCollpaseShelf && (

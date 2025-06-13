@@ -15,6 +15,7 @@ import toast from "react-hot-toast";
 import { openExternalUrl } from "../../../utils/common";
 import { getStorageLocation } from "../../../utils/common";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
+import { LocalFileManager } from "../../../utils/file/localFile";
 
 declare var window: any;
 class GeneralSetting extends React.Component<
@@ -61,7 +62,20 @@ class GeneralSetting extends React.Component<
       settingLogin: "",
       driveConfig: {},
       loginConfig: {},
+      status: {
+        hasAccess: false,
+        needsReauthorization: false,
+        directoryName: "",
+      },
     };
+  }
+  async componentDidMount() {
+    if (!isElectron) {
+      const status = await LocalFileManager.getPermissionStatus();
+      this.setState({
+        storageLocation: status.directoryName || "",
+      });
+    }
   }
   handleRest = (_bool: boolean) => {
     toast.success(this.props.t("Change successful"));
@@ -101,20 +115,50 @@ class GeneralSetting extends React.Component<
     this.props.handleFetchBooks();
   };
   handleSwitchLibrary = async () => {
-    const { ipcRenderer } = window.require("electron");
-    const newPath = await ipcRenderer.invoke("select-path");
-    if (!newPath) {
-      return;
+    if (isElectron) {
+      const { ipcRenderer } = window.require("electron");
+      const newPath = await ipcRenderer.invoke("select-path");
+      if (!newPath) {
+        return;
+      }
+      let isSuccess = await changeLibrary(newPath);
+      if (!isSuccess) {
+        toast.error(this.props.t("Switch failed"));
+        return;
+      }
+      ConfigService.setItem("storageLocation", newPath);
+      this.setState({ storageLocation: newPath });
+      toast.success(this.props.t("Switch successful"));
+      this.props.handleFetchBooks();
+    } else {
+      try {
+        const directoryHandle = await LocalFileManager.requestDirectoryAccess();
+
+        if (directoryHandle) {
+          // 成功获取权限
+          ConfigService.setReaderConfig("isUseLocal", "yes");
+          ConfigService.setReaderConfig(
+            "localDirectoryName",
+            directoryHandle.name
+          );
+          this.setState({
+            storageLocation: directoryHandle.name,
+          });
+          toast.success(
+            this.props.t("Local folder access granted successfully")
+          );
+          this.props.handleFetchBooks();
+          setTimeout(() => {
+            this.props.history.push("/manager/home");
+          }, 2000);
+        } else {
+          toast.success(this.props.t("Failed to get folder access permission"));
+        }
+      } catch (error) {
+        console.error("Error selecting folder:", error);
+        toast.success(this.props.t("Error occurred while selecting folder"));
+      }
     }
-    let isSuccess = await changeLibrary(newPath);
-    if (!isSuccess) {
-      toast.error(this.props.t("Switch failed"));
-      return;
-    }
-    ConfigService.setItem("storageLocation", newPath);
-    this.setState({ storageLocation: newPath });
-    toast.success(this.props.t("Switch successful"));
-    this.props.handleFetchBooks();
   };
   handleMergeWord = () => {
     if (this.state.isOpenInMain && !this.state.isMergeWord) {
@@ -198,15 +242,27 @@ class GeneralSetting extends React.Component<
           <>
             <div className="setting-dialog-new-title">
               <Trans>Change storage location</Trans>
-
-              <span
-                className="change-location-button"
-                onClick={() => {
-                  this.handleChangeLocation();
-                }}
-              >
-                <Trans>Select</Trans>
-              </span>
+              <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                {" "}
+                <span
+                  className="change-location-button"
+                  onClick={() => {
+                    const { shell } = window.require("electron");
+                    shell.openPath(this.state.storageLocation);
+                  }}
+                  style={{ marginRight: "10px" }}
+                >
+                  <Trans>Locate</Trans>
+                </span>
+                <span
+                  className="change-location-button"
+                  onClick={() => {
+                    this.handleChangeLocation();
+                  }}
+                >
+                  <Trans>Select</Trans>
+                </span>
+              </div>
             </div>
             <p className="setting-option-subtitle">
               <Trans>
@@ -220,19 +276,32 @@ class GeneralSetting extends React.Component<
             </div>
           </>
         )}
-        {isElectron && (
+        {this.state.storageLocation && (
           <>
             <div className="setting-dialog-new-title">
               <Trans>Switch Library</Trans>
-
-              <span
-                className="change-location-button"
-                onClick={() => {
-                  this.handleSwitchLibrary();
-                }}
-              >
-                <Trans>Select</Trans>
-              </span>
+              <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                {isElectron && (
+                  <span
+                    className="change-location-button"
+                    onClick={() => {
+                      const { shell } = window.require("electron");
+                      shell.openPath(this.state.storageLocation);
+                    }}
+                    style={{ marginRight: "10px" }}
+                  >
+                    <Trans>Locate</Trans>
+                  </span>
+                )}
+                <span
+                  className="change-location-button"
+                  onClick={() => {
+                    this.handleSwitchLibrary();
+                  }}
+                >
+                  <Trans>Select</Trans>
+                </span>
+              </div>
             </div>
             <p className="setting-option-subtitle">
               <Trans>
@@ -246,6 +315,7 @@ class GeneralSetting extends React.Component<
             </div>
           </>
         )}
+
         <div className="setting-dialog-new-title">
           <Trans>Select update channel</Trans>
           <select

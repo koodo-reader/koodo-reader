@@ -16,6 +16,8 @@ import {
   ConfigService,
 } from "../../../assets/lib/kookit-extra-browser.min";
 import * as Kookit from "../../../assets/lib/kookit.min";
+import { isElectron } from "react-device-detect";
+import { getStorageLocation } from "../../../utils/common";
 class ActionDialog extends React.Component<MoreActionProps, MoreActionState> {
   constructor(props: MoreActionProps) {
     super(props);
@@ -197,6 +199,40 @@ class ActionDialog extends React.Component<MoreActionProps, MoreActionState> {
               <Trans>Delete pre-cache</Trans>
             </p>
           </div>
+          {isElectron && (
+            <div
+              className="action-dialog-edit"
+              style={{ paddingLeft: "0px" }}
+              onClick={async () => {
+                if (!this.props.currentBook.path) {
+                  toast.error(this.props.t("No path found for this book"));
+                  return;
+                }
+                const fs = window.require("fs");
+                const path = window.require("path");
+                const bookPath =
+                  this.props.currentBook.path ||
+                  path.join(
+                    getStorageLocation() || "",
+                    `book`,
+                    this.props.currentBook.key +
+                      "." +
+                      this.props.currentBook.format.toLowerCase()
+                  );
+                if (!fs.existsSync(bookPath)) {
+                  toast.error(this.props.t("File not found"));
+                  return;
+                }
+
+                const { shell } = window.require("electron");
+                shell.showItemInFolder(bookPath);
+              }}
+            >
+              <p className="action-name">
+                <Trans>Locate in the folder</Trans>
+              </p>
+            </div>
+          )}
         </div>
       </div>
     );
