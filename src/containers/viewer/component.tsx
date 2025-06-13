@@ -174,7 +174,9 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         ConfigService.getReaderConfig("isSliding") === "yes" ? "sliding" : "",
         ConfigService.getReaderConfig("convertChinese"),
         "",
-        "no",
+        ConfigService.getReaderConfig("backgroundColor") === "rgba(44,47,49,1)"
+          ? "yes"
+          : "no",
         "no",
         Kookit
       );

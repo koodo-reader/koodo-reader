@@ -85,7 +85,7 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
                   ConfigService.getReaderConfig("isOSNight") === "yes")
               ? "rgba(44,47,49,1)"
               : "rgba(255,255,255,1)",
-          filter: `brightnessbrightness(${
+          filter: `brightness(${
             ConfigService.getReaderConfig("brightness") || 1
           }) invert(${
             ConfigService.getReaderConfig("isInvert") === "yes" ? 1 : 0
