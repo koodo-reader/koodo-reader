@@ -43,6 +43,7 @@ class AccountSetting extends React.Component<
       redeemCode: "",
       isSendingCode: false,
       countdown: 0,
+      serverRegion: ConfigService.getItem("serverRegion") || "global",
     };
   }
   componentDidMount(): void {
@@ -71,6 +72,7 @@ class AccountSetting extends React.Component<
     }
     this.setState({ settingLogin: event.target.value });
     if (event.target.value !== "email") {
+      console.log(event.target.value);
       let url = LoginHelper.getAuthUrl(event.target.value, "manual");
       this.handleJump(url);
     }
@@ -83,7 +85,7 @@ class AccountSetting extends React.Component<
       toast.error(this.props.t("At least one login option should be kept"));
       return;
     }
-    toast.loading(this.props.t("Removing..."), {
+    toast.loading(this.props.t("Removing"), {
       id: "remove-login-option",
     });
     let userRequest = await getUserRequest();
@@ -536,6 +538,9 @@ class AccountSetting extends React.Component<
                 );
               }
               ConfigService.setItem("serverRegion", event.target.value);
+              this.setState({
+                serverRegion: event.target.value,
+              });
               toast.success(this.props.t("Setup successful"));
             }}
           >
@@ -558,30 +563,23 @@ class AccountSetting extends React.Component<
             ))}
           </select>
         </div>
-        <div className="setting-dialog-new-title">
-          <Trans>Add login option</Trans>
-          <select
-            name=""
-            className="lang-setting-dropdown"
-            onChange={this.handleAddLoginOption}
-          >
-            {[
-              { label: "Please select", value: "" },
-              ...loginList.filter((item) => {
-                if (ConfigService.getItem("serverRegion") === "china") {
-                  return item.isCNAvailable;
-                }
-                return true;
-              }),
-            ]
-              .filter((item) => {
-                if (this.props.loginOptionList.length > 0) {
-                  return !this.props.loginOptionList.includes(item.value);
-                } else {
+        {!this.props.isAuthed && (
+          <div className="setting-dialog-new-title">
+            <Trans>Select login method</Trans>
+            <select
+              name=""
+              className="lang-setting-dropdown"
+              onChange={this.handleAddLoginOption}
+            >
+              {[
+                { label: "Please select", value: "" },
+                ...loginList.filter((item) => {
+                  if (ConfigService.getItem("serverRegion") === "china") {
+                    return item.isCNAvailable;
+                  }
                   return true;
-                }
-              })
-              .map((item) => (
+                }),
+              ].map((item) => (
                 <option
                   value={item.value}
                   key={item.value}
@@ -590,45 +588,92 @@ class AccountSetting extends React.Component<
                   {this.props.t(item.label)}
                 </option>
               ))}
-          </select>
-        </div>
-        <div className="setting-dialog-new-title">
-          <Trans>Delete login option</Trans>
-          <select
-            name=""
-            className="lang-setting-dropdown"
-            onChange={this.handleDeleteLoginOption}
-          >
-            {[
-              { label: "Please select", value: "" },
-              ...loginList.filter((item) => {
-                if (ConfigService.getItem("serverRegion") === "china") {
-                  return item.isCNAvailable;
-                }
-                return true;
-              }),
-            ]
-              .filter((item) => {
-                if (item.value === "") {
-                  return true;
-                }
-                if (this.props.loginOptionList.length > 0) {
-                  return this.props.loginOptionList.includes(item.value);
-                } else {
-                  return false;
-                }
-              })
-              .map((item) => (
-                <option
-                  value={item.value}
-                  key={item.value}
-                  className="lang-setting-option"
+            </select>
+          </div>
+        )}
+        {this.props.isAuthed &&
+          loginList
+            .filter((item) => {
+              if (this.state.serverRegion === "china") {
+                return item.isCNAvailable;
+              }
+              return true;
+            })
+            .map((login) => (
+              <div className="setting-dialog-new-title">
+                <Trans>{this.props.t(login.label)}</Trans>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    cursor: "pointer",
+                  }}
+                  onClick={() => {
+                    if (
+                      !this.props.loginOptionList.find(
+                        (item) => item.provider === login.value
+                      )
+                    ) {
+                      this.handleAddLoginOption({
+                        target: { value: login.value },
+                      });
+                    }
+                  }}
                 >
-                  {this.props.t(item.label)}
-                </option>
-              ))}
-          </select>
-        </div>
+                  <div>
+                    {this.props.loginOptionList.find(
+                      (item) => item.provider === login.value
+                    ) ? (
+                      this.props.loginOptionList.find(
+                        (item) => item.provider === login.value
+                      )?.email ? (
+                        <span>
+                          {
+                            this.props.loginOptionList.find(
+                              (item) => item.provider === login.value
+                            )?.email
+                          }
+                        </span>
+                      ) : (
+                        <span>{this.props.t("Bound")}</span>
+                      )
+                    ) : (
+                      <span style={{ opacity: 0.4 }}>
+                        {this.props.t("Not bound")}
+                      </span>
+                    )}
+                  </div>
+                  {this.props.loginOptionList.find(
+                    (item) => item.provider === login.value
+                  ) ? (
+                    <span
+                      className="icon-trash"
+                      style={{
+                        fontSize: 13,
+                        opacity: 0.8,
+                        marginLeft: "10px",
+                      }}
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        this.handleDeleteLoginOption({
+                          target: { value: login.value },
+                        });
+                      }}
+                    ></span>
+                  ) : (
+                    <span
+                      className="icon-dropdown"
+                      style={{
+                        fontSize: 13,
+                        opacity: 0.8,
+                        transform: "rotate(-90deg)",
+                        marginLeft: "10px",
+                      }}
+                    ></span>
+                  )}
+                </div>
+              </div>
+            ))}
 
         {this.props.isAuthed && (
           <div className="setting-dialog-new-title">

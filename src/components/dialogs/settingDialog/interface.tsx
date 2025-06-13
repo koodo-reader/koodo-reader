@@ -11,7 +11,9 @@ export interface SettingInfoProps extends RouteComponentProps<any> {
   handleFetchDataSourceList: () => void;
   handleFetchDefaultSyncOption: () => void;
   handleFetchLoginOptionList: () => void;
-  handleLoginOptionList: (loginOptionList: string[]) => void;
+  handleLoginOptionList: (
+    loginOptionList: { email: string; provider: string }[]
+  ) => void;
   handleFetchAuthed: () => void;
   handleLoadingDialog: (isShow: boolean) => void;
   t: (title: string) => string;
@@ -25,7 +27,7 @@ export interface SettingInfoProps extends RouteComponentProps<any> {
   books: BookModel[];
   userInfo: any;
   dataSourceList: string[];
-  loginOptionList: string[];
+  loginOptionList: { email: string; provider: string }[];
   defaultSyncOption: string;
   isAuthed: boolean;
   settingMode: string;
