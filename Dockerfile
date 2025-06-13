@@ -48,20 +48,8 @@ RUN echo '#!/bin/sh' > /start.sh && \
 ENV SERVER_USERNAME=admin
 ENV SERVER_PASSWORD=securePass123
 ENV SERVER_PASSWORD_FILE=my_secret
-ENV PORT=8080
 
 # Define volume for uploads directory
 VOLUME ["/app/uploads"]
 
 CMD ["/start.sh"]
-
-# docker run -d \
-#   --name koodo-reader \
-#   -p 80:80 \
-#   -p 8080:8080 \
-#   -e ENABLE_HTTP_SERVER=false \
-#   -e SERVER_USERNAME=admin \
-#   -e SERVER_PASSWORD=securePass123 \
-#   -e SERVER_PASSWORD_FILE=my_secret \
-#   -v /path/to/host/uploads:/app/uploads \
-#   ghcr.io/koodo-reader/koodo-reader:master
