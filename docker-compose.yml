@@ -11,6 +11,7 @@ services:
     environment:
       - SERVER_USERNAME=${SERVER_USERNAME:-admin}
       - SERVER_PASSWORD=${SERVER_PASSWORD:-securePass123}
+      - SERVER_PASSWORD_FILE=${SERVER_PASSWORD_FILE:-my_secret}
       - PORT=8080
       - ENABLE_HTTP_SERVER=false
     volumes:
