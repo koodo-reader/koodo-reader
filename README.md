@@ -101,6 +101,8 @@ If you also want to enable the **data source feature**, please:
 
 Then, select **Docker** as the data source in Koodo Reader.
 
+Data source functionality use port 8080, and web version use port 80 by default. If you want to switch to port 8090, just change **`-p 8080:8080`** to **`-p 8090:8080`**.
+
 ## Screenshot
 
 <div align="center">
