@@ -3,18 +3,42 @@ const fs = require('fs');
 const path = require('path');
 const url = require('url');
 
+// 从 Docker Secrets 读取密码的函数
+function getDockerSecret(secretName) {
+  try {
+    const secretPath = `/run/secrets/${secretName}`;
+    if (fs.existsSync(secretPath)) {
+      return fs.readFileSync(secretPath, 'utf8').trim();
+    }
+  } catch (err) {
+    console.warn(`Failed to read Docker secret '${secretName}':`, err.message);
+  }
+  return null;
+}
+
 // 配置信息
 const UPLOAD_DIR = path.resolve('./uploads'); // 使用绝对路径
 const PORT = process.env.PORT || 8080;
 const SERVER_ENABLED = process.env.ENABLE_HTTP_SERVER === 'true'; // 新增：控制服务器是否启用
+// 优先从 Docker Secrets 读取密码，如果没有则回退到环境变量
+const SERVER_PASSWORD_FILE = process.env.SERVER_PASSWORD_FILE || 'my_secret';
+const SERVER_PASSWORD = getDockerSecret(SERVER_PASSWORD_FILE) || process.env.SERVER_PASSWORD || 'securePass123';
 const VALID_CREDENTIALS = {
   username: process.env.SERVER_USERNAME || 'admin',
-  password: process.env.SERVER_PASSWORD || 'securePass123'
+  password: SERVER_PASSWORD
 };
 
-// 验证必要的环境变量
-if (!process.env.SERVER_USERNAME || !process.env.SERVER_PASSWORD) {
-  console.warn('Warning: Using default credentials. Set SERVER_USERNAME and SERVER_PASSWORD environment variables for production.');
+// 验证密码来源
+if (getDockerSecret(SERVER_PASSWORD_FILE)) {
+  console.log('Using password from Docker Secret');
+} else if (process.env.SERVER_PASSWORD) {
+  console.warn('Using password from environment variable (less secure)');
+} else {
+  console.warn('Warning: Using default password. Set Docker Secret or SERVER_PASSWORD environment variable for production.');
+}
+
+if (!process.env.SERVER_USERNAME) {
+  console.warn('Warning: Using default username. Set SERVER_USERNAME environment variable for production.');
 }
 
 // 检查服务器是否启用
