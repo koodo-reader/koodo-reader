@@ -58,4 +58,5 @@ export interface SettingInfoState {
   driveConfig: any;
   loginConfig: any;
   settingLogin: string;
+  status: any;
 }

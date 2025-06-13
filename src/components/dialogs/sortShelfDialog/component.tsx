@@ -115,7 +115,7 @@ class SortShelfDialog extends React.Component<
       >
         {this.state.isOpenDelete && <DeletePopup {...deletePopupProps} />}
         <div className="edit-dialog-title">
-          <Trans>Edit shelf</Trans>
+          <Trans>Manage shelf</Trans>
         </div>
         <div className="import-dialog-option">
           {
@@ -188,7 +188,7 @@ class SortShelfDialog extends React.Component<
                         });
                         this.handleDeletePopup(true);
                       }}
-                      style={{ fontSize: "18px", marginRight: "15px" }}
+                      style={{ fontSize: "20px", marginRight: "15px" }}
                     ></span>
                     <span
                       className="icon-edit-line "
