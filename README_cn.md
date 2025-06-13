@@ -57,26 +57,31 @@
 
 ## 使用方法
 
-- 桌面端：
-  - 稳定版 (推荐下载)：[官网](https://koodoreader.com/zh)
-  - 开发版：[GitHub Release](https://github.com/koodo-reader/koodo-reader/releases/latest) （包含新功能和 bug 修复，但也可能引入更多未知 bug）
-- 网页版：[前往](https://web.koodoreader.com)
-- 安卓版 (需要配合开发版使用)：[前往](https://koodoreader.com/zh/download)
-- iOS 版 (需要配合开发版使用)：[前往](https://koodoreader.com/zh/download)
-- 使用 Scoop 安装：
+### 桌面端：
+
+- 稳定版 (推荐下载)：[官网](https://koodoreader.com/zh)
+- 开发版：[GitHub Release](https://github.com/koodo-reader/koodo-reader/releases/latest) （包含新功能和 bug 修复，但也可能引入更多未知 bug）
+
+### 网页版：[前往](https://web.koodoreader.com)
+
+### 安卓版 (需要配合开发版使用)：[前往](https://koodoreader.com/zh/download)
+
+### iOS 版 (需要配合开发版使用)：[前往](https://koodoreader.com/zh/download)
+
+### 使用 Scoop 安装：
 
 ```shell
 scoop bucket add extras
 scoop install extras/koodo-reader
 ```
 
-- 使用 Homebrew 安装：
+### 使用 Homebrew 安装：
 
 ```shell
 brew install --cask koodo-reader
 ```
 
-- 使用 Docker 安装：
+### 使用 Docker 安装：
 
 如果您只需要部署网页版，直接使用下面的命令即可
 
