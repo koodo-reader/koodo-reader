@@ -82,7 +82,7 @@ export type stateType = {
     isOpenSortShelfDialog: boolean;
     isOpenTokenDialog: boolean;
     dataSourceList: string[];
-    loginOptionList: string[];
+    loginOptionList: { email: string; provider: string }[];
     defaultSyncOption: string;
   };
   progressPanel: {
