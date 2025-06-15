@@ -107,6 +107,8 @@ docker run -d \
 
 数据源功能默认使用 8080 端口，网页版默认使用 80 端口，您也可以使用其他端口。如果您需要使用 8090 端口，则将 **`-p 8080:8080`** 改为 **`-p 8090:8080`**
 
+如果您希望使用 Docker Secrets 来配置服务器密码，请参考[docker-compose-secret.yml](https://github.com/koodo-reader/koodo-reader/blob/master/docker-compose-secret.yml)
+
 ## 截图
 
 <div align="center">
