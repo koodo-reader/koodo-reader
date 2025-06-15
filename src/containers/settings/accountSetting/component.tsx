@@ -72,7 +72,6 @@ class AccountSetting extends React.Component<
     }
     this.setState({ settingLogin: event.target.value });
     if (event.target.value !== "email") {
-      console.log(event.target.value);
       let url = LoginHelper.getAuthUrl(event.target.value, "manual");
       this.handleJump(url);
     }
