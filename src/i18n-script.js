@@ -28,10 +28,10 @@ console.log(resources);
 //   const term = Object.keys(zhData)[index];
 //   if (Object.keys(enData).indexOf(term) === -1) {
 //     console.log(zhData[term]);
-//     missingTerms[term] = zhData[term];
+//     missingTerms[term] = term;
 //   }
 // }
-// console.log(missingTerms);
+// console.log(JSON.stringify(missingTerms));
 // console.log(Object.keys(zhData).length, Object.keys(enData).length);
 
 
