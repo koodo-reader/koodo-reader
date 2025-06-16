@@ -160,53 +160,6 @@ class AccountSetting extends React.Component<
       });
     }
   };
-
-  renderSwitchOption = (optionList: any[]) => {
-    return optionList.map((item) => {
-      return (
-        <div
-          style={item.isElectron ? (isElectron ? {} : { display: "none" }) : {}}
-          key={item.propName}
-        >
-          <div className="setting-dialog-new-title" key={item.title}>
-            <span style={{ width: "calc(100% - 100px)" }}>
-              <Trans>{item.title}</Trans>
-            </span>
-
-            <span
-              className="single-control-switch"
-              onClick={() => {
-                switch (item.propName) {
-                  default:
-                    this.handleSetting(item.propName);
-                    break;
-                }
-              }}
-              style={this.state[item.propName] ? {} : { opacity: 0.6 }}
-            >
-              <span
-                className="single-control-button"
-                style={
-                  this.state[item.propName]
-                    ? {
-                        transform: "translateX(20px)",
-                        transition: "transform 0.5s ease",
-                      }
-                    : {
-                        transform: "translateX(0px)",
-                        transition: "transform 0.5s ease",
-                      }
-                }
-              ></span>
-            </span>
-          </div>
-          <p className="setting-option-subtitle">
-            <Trans>{item.desc}</Trans>
-          </p>
-        </div>
-      );
-    });
-  };
   render() {
     return (
       <>
@@ -599,7 +552,7 @@ class AccountSetting extends React.Component<
               return true;
             })
             .map((login) => (
-              <div className="setting-dialog-new-title">
+              <div className="setting-dialog-new-title" key={login.value}>
                 <Trans>{this.props.t(login.label)}</Trans>
                 <div
                   style={{
