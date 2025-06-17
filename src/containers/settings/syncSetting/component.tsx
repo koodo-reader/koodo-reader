@@ -122,6 +122,8 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
       settingDrive === "boxnet" ||
       settingDrive === "pcloud" ||
       settingDrive === "adrive" ||
+      settingDrive === "microsoft_exp" ||
+      settingDrive === "google_exp" ||
       settingDrive === "microsoft"
     ) {
       this.handleJump(new SyncUtil(settingDrive, {}).getAuthUrl());
@@ -433,6 +435,8 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                   this.props.settingDrive === "boxnet" ||
                   this.props.settingDrive === "pcloud" ||
                   this.props.settingDrive === "adrive" ||
+                  this.props.settingDrive === "microsoft_exp" ||
+                  this.props.settingDrive === "google_exp" ||
                   this.props.settingDrive === "microsoft") && (
                   <div
                     className="voice-add-confirm"

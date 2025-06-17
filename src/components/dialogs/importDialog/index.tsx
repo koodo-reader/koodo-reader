@@ -4,6 +4,9 @@ import {
   handleLoadingDialog,
   handleFetchBooks,
   handleImportBookFunc,
+  handleSetting,
+  handleSettingMode,
+  handleSettingDrive,
 } from "../../../store/actions";
 import { connect } from "react-redux";
 import { withTranslation } from "react-i18next";
@@ -28,6 +31,9 @@ const actionCreator = {
   handleLoadingDialog,
   handleFetchBooks,
   handleImportBookFunc,
+  handleSetting,
+  handleSettingMode,
+  handleSettingDrive,
 };
 export default connect(
   mapStateToProps,

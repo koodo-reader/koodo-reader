@@ -28,6 +28,9 @@ export const onSyncCallback = async (service: string, authCode: string) => {
   // FOR PCLOUD, THE REFRESH TOKEN IS THE ACCESS TOKEN, ACCESS TOKEN NEVER EXPIRES
   let res = await encryptToken(service, {
     refresh_token: refreshToken,
+    auth_date: new Date().getTime(),
+    service: service,
+    version: 1,
   });
   if (res.code === 200) {
     ConfigService.setListConfig(service, "dataSourceList");

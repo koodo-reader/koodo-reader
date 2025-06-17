@@ -11,6 +11,9 @@ export interface ImportDialogProps extends RouteComponentProps<any> {
   handleImportBookFunc: (importBookFunc: (file: any) => Promise<void>) => void;
   handleFetchBooks: () => void;
   importBookFunc: (file: any) => Promise<void>;
+  handleSetting: (isShow: boolean) => void;
+  handleSettingMode: (settingMode: string) => void;
+  handleSettingDrive: (settingDrive: string) => void;
   isOpenTokenDialog: boolean;
   isAuthed: boolean;
   books: BookModel[];
