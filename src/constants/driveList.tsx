@@ -72,6 +72,24 @@ export const driveList = [
     isCNAvailable: true,
   },
   {
+    label: "OneDrive (Experimental)",
+    value: "microsoft_exp",
+    icon: "icon-onedrive",
+    isPro: true,
+    support: ["desktop", "browser", "phone"],
+    scoped: false,
+    isCNAvailable: true,
+  },
+  {
+    label: "Google Drive (Experimental)",
+    value: "google_exp",
+    icon: "icon-googledrive",
+    isPro: true,
+    support: ["desktop", "browser", "phone"],
+    scoped: false,
+    isCNAvailable: false,
+  },
+  {
     label: "S3 Compatible",
     value: "s3compatible",
     icon: "icon-s3compatible",
@@ -319,6 +337,22 @@ export const driveInputConfig: DriveInputConfig = {
     },
   ],
   microsoft: [
+    {
+      label: "Token",
+      value: "token",
+      type: "text",
+      required: true,
+    },
+  ],
+  google_exp: [
+    {
+      label: "Token",
+      value: "token",
+      type: "text",
+      required: true,
+    },
+  ],
+  microsoft_exp: [
     {
       label: "Token",
       value: "token",

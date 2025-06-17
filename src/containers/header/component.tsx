@@ -14,6 +14,7 @@ import { isElectron } from "react-device-detect";
 import {
   getCloudConfig,
   getLastSyncTimeFromConfigJson,
+  removeCloudConfig,
   upgradeConfig,
   upgradePro,
   upgradeStorage,
@@ -37,6 +38,7 @@ import { driveList } from "../../constants/driveList";
 import SupportDialog from "../../components/dialogs/supportDialog";
 import SyncService from "../../utils/storage/syncService";
 import { LocalFileManager } from "../../utils/file/localFile";
+import { updateUserConfig } from "../../utils/request/user";
 declare var window: any;
 
 class Header extends React.Component<HeaderProps, HeaderState> {
@@ -250,6 +252,45 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     );
     if (Object.keys(config).length === 0) {
       toast.error(this.props.t("Cannot get sync config"));
+      this.setState({ isSync: false });
+      return false;
+    }
+    if (
+      ConfigService.getItem("defaultSyncOption") === "google" &&
+      !config.version
+    ) {
+      let targetDrive = "google";
+      await TokenService.setToken(targetDrive + "_token", "");
+      SyncService.removeSyncUtil(targetDrive);
+      removeCloudConfig(targetDrive);
+      if (isElectron) {
+        const { ipcRenderer } = window.require("electron");
+        await ipcRenderer.invoke("cloud-close", {
+          service: targetDrive,
+        });
+      }
+      ConfigService.deleteListConfig(targetDrive, "dataSourceList");
+      this.props.handleFetchDataSourceList();
+      if (targetDrive === ConfigService.getItem("defaultSyncOption")) {
+        ConfigService.removeItem("defaultSyncOption");
+        this.props.handleFetchDefaultSyncOption();
+      }
+      if (ConfigService.getReaderConfig("isEnableKoodoSync") === "yes") {
+        await updateUserConfig({
+          is_enable_koodo_sync: "no",
+        });
+        setTimeout(() => {
+          updateUserConfig({
+            is_enable_koodo_sync: "yes",
+          });
+        }, 1000);
+      }
+      toast(
+        this.props.t(
+          "In order to let you directly manage your data in Google Drive, we have deprecated the old Google Drive token. Please reauthorize Google Drive in the settings. Your new data will be stored in the root directory of your Google Drive, and you can manage it directly in the Google Drive web interface."
+        ),
+        { duration: 10000 }
+      );
       this.setState({ isSync: false });
       return false;
     }

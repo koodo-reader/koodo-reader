@@ -169,11 +169,9 @@ class ImportDialog extends React.Component<
                     className={`cloud-drive-item `}
                     onClick={() => {
                       if (!this.props.dataSourceList.includes(item.value)) {
-                        toast(
-                          this.props.t(
-                            "Please add data source in the setting-Sync and backup first"
-                          )
-                        );
+                        this.props.handleSetting(true);
+                        this.props.handleSettingMode("sync");
+                        this.props.handleSettingDrive(item.value);
                         return;
                       }
                       this.setState({

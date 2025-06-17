@@ -645,6 +645,9 @@
   "Server path": "服务器路径",
   "Add data source": "添加数据源",
   "S3 Compatible": "S3 兼容",
+  "OneDrive (Experimental)": "OneDrive (实验性)",
+  "Google Drive (Experimental)": "Google Drive (实验性)",
+  "In order to let you directly manage your data in Google Drive, we have deprecated the old Google Drive token. Please reauthorize Google Drive in the settings. Your new data will be stored in the root directory of your Google Drive, and you can manage it directly in the Google Drive web interface.": "为了让您直接管理 Google Drive 中的数据，我们已经废弃了旧的 Google Drive 令牌。请在设置中重新授权 Google Drive。您的新数据将存储在 Google Drive 的根目录中，您可以直接在 Google Drive 网页界面中管理它。",
   "This feature is only available in the developer version": "本功能仅支持开发版",
   "Paste the code of the plugin here, check out document to learn how to get more plugins": "将插件的代码粘贴在这里，查看帮助文档了解如何获取更多插件",
   "Full screen": "全屏模式"
