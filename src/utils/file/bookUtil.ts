@@ -19,7 +19,7 @@ import { LocalFileManager } from "./localFile";
 declare var window: any;
 
 class BookUtil {
-  static addBook(key: string, format: string, buffer: ArrayBuffer) {
+  static async addBook(key: string, format: string, buffer: ArrayBuffer) {
     // for both original books and cached boks
 
     if (isElectron) {
@@ -40,9 +40,9 @@ class BookUtil {
       }
     } else {
       if (ConfigService.getReaderConfig("isUseLocal") === "yes") {
-        LocalFileManager.saveFile(key + "." + format, buffer, "book");
+        await LocalFileManager.saveFile(key + "." + format, buffer, "book");
       } else {
-        localforage.setItem(key, buffer);
+        await localforage.setItem(key, buffer);
       }
 
       this.uploadBook(key, format);
@@ -397,6 +397,7 @@ class BookUtil {
     } else {
       let syncUtil = await SyncService.getSyncUtil();
       let bookBuffer: any = await this.fetchBook(key, format, true, "");
+      console.log("upload book", key, format, bookBuffer);
       let bookBlob = new Blob([bookBuffer], {
         type: CommonTool.getMimeType(format.toLowerCase()),
       });

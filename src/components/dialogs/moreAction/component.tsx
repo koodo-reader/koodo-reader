@@ -168,7 +168,7 @@ class ActionDialog extends React.Component<MoreActionProps, MoreActionState> {
                 );
                 let cache = await rendition.preCache(result);
                 if (cache !== "err" || cache) {
-                  BookUtil.addBook(
+                  await BookUtil.addBook(
                     "cache-" + this.props.currentBook.key,
                     "zip",
                     cache
