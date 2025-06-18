@@ -16,6 +16,26 @@ import toast from "react-hot-toast";
 import i18n from "../i18n";
 import { getThirdpartyRequest } from "./request/thirdparty";
 declare var window: any;
+export const supportedFormats = [
+  ".epub",
+  ".pdf",
+  ".txt",
+  ".mobi",
+  ".azw3",
+  ".azw",
+  ".htm",
+  ".html",
+  ".xml",
+  ".xhtml",
+  ".mhtml",
+  ".docx",
+  ".md",
+  ".fb2",
+  ".cbz",
+  ".cbt",
+  ".cbr",
+  ".cb7",
+];
 export const calculateFileMD5 = (file: File): Promise<string> => {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -337,7 +357,7 @@ export const preCacheAllBooks = async (bookList: Book[]) => {
     );
     let cache = await rendition.preCache(result);
     if (cache !== "err" || cache) {
-      BookUtil.addBook("cache-" + selectedBook.key, "zip", cache);
+      await BookUtil.addBook("cache-" + selectedBook.key, "zip", cache);
     }
   }
 };

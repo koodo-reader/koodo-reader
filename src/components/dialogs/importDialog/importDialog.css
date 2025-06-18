@@ -5,7 +5,18 @@
   width: 100%;
   padding: 10px 0;
 }
-
+.import-dialog-folder-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 15px;
+  margin-right: 15px;
+}
+.import-dialog-folder-icon {
+  font-size: 20px;
+}
 .cloud-drive-item {
   display: flex;
   justify-content: space-between;

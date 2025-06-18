@@ -139,6 +139,85 @@ class ImportDialog extends React.Component<
     toast.dismiss("importing");
     this.props.importBookFunc(file);
   };
+  listAllFilesRecursively = async (folderName: string) => {
+    toast.loading(this.props.t("Scanning folder"), {
+      id: "scanning",
+    });
+
+    try {
+      const allFiles = await this.getAllFilesInFolder(
+        this.state.currentPath + "/" + folderName
+      );
+
+      // Filter only files (not folders) and get full paths
+      const fileList = allFiles.filter((file) => file.indexOf(".") !== -1);
+
+      if (fileList.length === 0) {
+        toast.dismiss("scanning");
+        toast(this.props.t("No files found in this folder"));
+        return;
+      }
+
+      // Add all files to selected list
+      this.setState({
+        selectedFileList: [
+          ...this.state.selectedFileList,
+          ...fileList.filter(
+            (file) => !this.state.selectedFileList.includes(file)
+          ),
+        ],
+      });
+
+      toast.dismiss("scanning");
+      toast.success(this.props.t("Successfully scanned folder"));
+    } catch (error) {
+      toast.dismiss("scanning");
+      toast.error(this.props.t("Error scanning folder"));
+      console.error("Error scanning folder:", error);
+    }
+  };
+
+  getAllFilesInFolder = async (folderPath: string): Promise<string[]> => {
+    let allFiles: string[] = [];
+
+    try {
+      let fileList: string[] = [];
+
+      if (isElectron) {
+        const { ipcRenderer } = window.require("electron");
+        let tokenConfig = await getCloudConfig(this.state.currentDrive);
+        fileList = await ipcRenderer.invoke("picker-list", {
+          ...tokenConfig,
+          baseFolder: "",
+          service: this.state.currentDrive,
+          currentPath: folderPath,
+          storagePath: getStorageLocation(),
+        });
+      } else {
+        let pickerUtil = await SyncService.getPickerUtil(
+          this.state.currentDrive
+        );
+        fileList = await pickerUtil.listFiles(folderPath);
+      }
+
+      for (const item of fileList) {
+        const fullPath = folderPath + "/" + item;
+
+        if (item.indexOf(".") === -1) {
+          // It's a folder, recursively get files from it
+          const subFiles = await this.getAllFilesInFolder(fullPath);
+          allFiles = allFiles.concat(subFiles);
+        } else {
+          // It's a file, add to list
+          allFiles.push(fullPath);
+        }
+      }
+    } catch (error) {
+      console.error("Error listing files in folder:", error);
+    }
+
+    return allFiles;
+  };
   render() {
     return (
       <div
@@ -201,6 +280,22 @@ class ImportDialog extends React.Component<
                 >
                   {item}
                 </span>
+                {item.indexOf(".") === -1 && (
+                  <span
+                    className="import-dialog-folder-button"
+                    onClick={() => {
+                      //list all files in the folder and its subfolder
+                      this.listAllFilesRecursively(item);
+                    }}
+                  >
+                    <span
+                      data-tooltip-id="my-tooltip"
+                      data-tooltip-content={this.props.t("Import folder")}
+                    >
+                      <span className="icon-import import-dialog-folder-icon"></span>
+                    </span>
+                  </span>
+                )}
                 {item.indexOf(".") === -1 ? (
                   <span
                     className="icon-dropdown import-dialog-more-file"
