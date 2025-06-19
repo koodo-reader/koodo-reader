@@ -17,4 +17,5 @@ export interface LoginState {
   loginConfig: any;
   isSendingCode: boolean;
   countdown: number;
+  serverRegion: string;
 }

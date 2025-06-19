@@ -107,6 +107,17 @@
   cursor: pointer;
   position: relative;
 }
+.login-region-container {
+  margin: 0px 0px;
+  width: 260px;
+  margin-left: calc(50% - 130px);
+  height: 25px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+}
 .login-input-container {
   margin: 15px 0px;
   width: 260px;

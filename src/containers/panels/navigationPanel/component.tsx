@@ -42,12 +42,18 @@ class NavigationPanel extends React.Component<
   handleSearchList = (searchList: any) => {
     this.setState({ searchList });
   };
-  async componentDidMount() {
+  async UNSAFE_componentWillReceiveProps(nextProps: NavigationPanelProps) {
+    if (nextProps.currentBook.key !== this.props.currentBook.key) {
+      let cover = await CoverUtil.getCover(nextProps.currentBook);
+      let isCoverExist = await CoverUtil.isCoverExist(nextProps.currentBook);
+      this.setState({
+        cover,
+        isCoverExist,
+      });
+    }
+  }
+  componentDidMount() {
     this.props.handleFetchBookmarks();
-    this.setState({
-      cover: await CoverUtil.getCover(this.props.currentBook),
-      isCoverExist: await CoverUtil.isCoverExist(this.props.currentBook),
-    });
   }
 
   handleChangeTab = (currentTab: string) => {

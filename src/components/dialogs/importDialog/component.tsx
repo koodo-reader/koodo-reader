@@ -12,8 +12,11 @@ import { isElectron } from "react-device-detect";
 import { checkStableUpdate } from "../../../utils/request/common";
 import { getCloudConfig } from "../../../utils/file/common";
 import SyncService from "../../../utils/storage/syncService";
-import { getStorageLocation } from "../../../utils/common";
-import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
+import { getStorageLocation, openExternalUrl } from "../../../utils/common";
+import {
+  ConfigService,
+  SyncUtil,
+} from "../../../assets/lib/kookit-extra-browser.min";
 class ImportDialog extends React.Component<
   ImportDialogProps,
   ImportDialogState
@@ -160,12 +163,14 @@ class ImportDialog extends React.Component<
 
       // Add all files to selected list
       this.setState({
-        selectedFileList: [
-          ...this.state.selectedFileList,
-          ...fileList.filter(
-            (file) => !this.state.selectedFileList.includes(file)
-          ),
-        ],
+        selectedFileList: Array.from(
+          new Set([
+            ...this.state.selectedFileList,
+            ...fileList.filter(
+              (file) => !this.state.selectedFileList.includes(file)
+            ),
+          ])
+        ),
       });
 
       toast.dismiss("scanning");
@@ -251,6 +256,21 @@ class ImportDialog extends React.Component<
                         this.props.handleSetting(true);
                         this.props.handleSettingMode("sync");
                         this.props.handleSettingDrive(item.value);
+                        let settingDrive = item.value;
+                        if (
+                          settingDrive === "dropbox" ||
+                          settingDrive === "google" ||
+                          settingDrive === "boxnet" ||
+                          settingDrive === "pcloud" ||
+                          settingDrive === "adrive" ||
+                          settingDrive === "microsoft_exp" ||
+                          settingDrive === "google_exp" ||
+                          settingDrive === "microsoft"
+                        ) {
+                          openExternalUrl(
+                            new SyncUtil(settingDrive, {}).getAuthUrl()
+                          );
+                        }
                         return;
                       }
                       this.setState({

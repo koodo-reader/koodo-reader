@@ -25,9 +25,12 @@ import {
   getTempToken,
   getUserRequest,
   loginRegister,
+  resetUserRequest,
 } from "../../../utils/request/user";
 import { handleExitApp } from "../../../utils/request/common";
 import copyTextToClipboard from "copy-text-to-clipboard";
+import { resetReaderRequest } from "../../../utils/request/reader";
+import { resetThirdpartyRequest } from "../../../utils/request/thirdparty";
 declare var window: any;
 class AccountSetting extends React.Component<
   SettingInfoProps,
@@ -155,6 +158,9 @@ class AccountSetting extends React.Component<
       this.props.handleFetchUserInfo();
       this.setState({ settingLogin: "" });
     } else {
+      if (this.state.settingLogin === "email") {
+        toast(this.props.t("Please make sure the email and code are correct"));
+      }
       toast.error(this.props.t("Login failed, error code") + ": " + res.msg, {
         id: "bind-login-option",
       });
@@ -331,6 +337,14 @@ class AccountSetting extends React.Component<
                       toast.success(this.props.t("Send successfully"), {
                         id: "send-email-code",
                       });
+                      toast(
+                        this.props.t(
+                          "If you didn't receive the verification code, please check the spam folder or use another email address"
+                        ),
+                        {
+                          duration: 6000,
+                        }
+                      );
                       this.setState({ isSendingCode: false });
                       let countdown = 60;
                       let timer = setInterval(() => {
@@ -493,6 +507,9 @@ class AccountSetting extends React.Component<
               this.setState({
                 serverRegion: event.target.value,
               });
+              resetReaderRequest();
+              resetUserRequest();
+              resetThirdpartyRequest();
               toast.success(this.props.t("Setup successful"));
             }}
           >
@@ -694,15 +711,15 @@ class AccountSetting extends React.Component<
         {this.props.isAuthed && this.props.userInfo && (
           <div className="setting-dialog-new-title">
             <Trans>Account type</Trans>
-            <div>
-              <Trans>
-                {this.props.userInfo.type === "trial"
-                  ? "Trial user"
-                  : this.props.userInfo.type === "pro"
-                  ? "Pro user"
-                  : "Free user"}
-              </Trans>
-              <>
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <span>
+                <Trans>
+                  {this.props.userInfo.type === "trial"
+                    ? "Trial user"
+                    : this.props.userInfo.type === "pro"
+                    ? "Pro user"
+                    : "Free user"}
+                </Trans>
                 {" ("}
                 <Trans
                   i18nKey="Valid until"
@@ -716,7 +733,22 @@ class AccountSetting extends React.Component<
                   }}
                 </Trans>
                 {")"}
-              </>
+              </span>
+              <span
+                className="change-location-button"
+                style={{ marginLeft: "10px", cursor: "pointer" }}
+                onClick={async () => {
+                  toast.loading(this.props.t("Refreshing"), {
+                    id: "refresh-user-info",
+                  });
+                  await this.props.handleFetchUserInfo();
+                  toast.success(this.props.t("Refresh successful"), {
+                    id: "refresh-user-info",
+                  });
+                }}
+              >
+                <Trans>Refresh</Trans>
+              </span>
             </div>
           </div>
         )}

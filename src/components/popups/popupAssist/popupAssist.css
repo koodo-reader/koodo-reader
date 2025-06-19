@@ -44,7 +44,7 @@
 }
 
 /* Apply the animation to the icon-loading class */
-.icon-loading {
+.popup-assistant-loading {
   display: inline-block;
   animation: spin 1s linear infinite;
 }
