@@ -423,7 +423,7 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
                   style={{ float: "left" }}
                 >
                   <span
-                    className="icon-loading"
+                    className="icon-loading popup-assistant-loading"
                     style={{
                       marginRight: "10px",
                       marginTop: "5px",

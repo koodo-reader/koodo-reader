@@ -17,9 +17,15 @@ import {
 } from "../../assets/lib/kookit-extra-browser.min";
 import { isElectron } from "react-device-detect";
 import { driveList } from "../../constants/driveList";
-import { getUserRequest, loginRegister } from "../../utils/request/user";
+import {
+  getUserRequest,
+  loginRegister,
+  resetUserRequest,
+} from "../../utils/request/user";
 import SettingDialog from "../../components/dialogs/settingDialog";
 import LoadingDialog from "../../components/dialogs/loadingDialog";
+import { resetReaderRequest } from "../../utils/request/reader";
+import { resetThirdpartyRequest } from "../../utils/request/thirdparty";
 
 class Login extends React.Component<LoginProps, LoginState> {
   constructor(props: LoginProps) {
@@ -29,6 +35,7 @@ class Login extends React.Component<LoginProps, LoginState> {
       loginConfig: {},
       countdown: 0,
       isSendingCode: false,
+      serverRegion: ConfigService.getItem("serverRegion") || "global",
     };
   }
 
@@ -81,8 +88,18 @@ class Login extends React.Component<LoginProps, LoginState> {
       }
     } else {
       this.props.handleLoadingDialog(false);
+      if (service === "email") {
+        toast(this.props.t("Please make sure the email and code are correct"));
+      }
       toast.error(this.props.t("Login failed, error code") + ": " + res.msg);
     }
+  };
+  handleServerRegionChange = (region: string) => {
+    ConfigService.setItem("serverRegion", region);
+    this.setState({ serverRegion: region });
+    resetReaderRequest();
+    resetUserRequest();
+    resetThirdpartyRequest();
   };
 
   render() {
@@ -272,9 +289,47 @@ class Login extends React.Component<LoginProps, LoginState> {
               </div>
               <div className="login-option-box">
                 <div>
+                  <div className="login-region-container">
+                    <div className="login-region-title">
+                      {this.props.t("Server region")}
+                    </div>
+                    <div>
+                      <span
+                        onClick={() => {
+                          this.handleServerRegionChange("global");
+                        }}
+                        style={
+                          this.state.serverRegion === "global"
+                            ? { textDecoration: "underline" }
+                            : {}
+                        }
+                      >
+                        {this.props.t("Global")}
+                      </span>
+                      <span>{" | "}</span>
+                      <span
+                        onClick={() => {
+                          this.handleServerRegionChange("china");
+
+                          toast(
+                            this.props.t(
+                              "Some login options and data sources are not available in your selected server region"
+                            )
+                          );
+                        }}
+                        style={
+                          this.state.serverRegion === "china"
+                            ? { textDecoration: "underline" }
+                            : {}
+                        }
+                      >
+                        {this.props.t("China")}
+                      </span>
+                    </div>
+                  </div>
                   {loginList
                     .filter((item) => {
-                      if (ConfigService.getItem("serverRegion") === "china") {
+                      if (this.state.serverRegion === "china") {
                         return item.isCNAvailable;
                       }
                       return true;
@@ -635,6 +690,14 @@ class Login extends React.Component<LoginProps, LoginState> {
                           toast.success(this.props.t("Send successfully"), {
                             id: "send-email-code",
                           });
+                          toast(
+                            this.props.t(
+                              "If you didn't receive the verification code, please check the spam folder or use another email address"
+                            ),
+                            {
+                              duration: 6000,
+                            }
+                          );
                           this.setState({ isSendingCode: false });
                           let countdown = 60;
                           let timer = setInterval(() => {

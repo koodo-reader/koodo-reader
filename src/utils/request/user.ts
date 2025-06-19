@@ -15,7 +15,7 @@ import packageJson from "../../../package.json";
 import toast from "react-hot-toast";
 import i18n from "../../i18n";
 import { handleExitApp } from "./common";
-let userRequest: UserRequest;
+let userRequest: UserRequest | undefined;
 export const loginRegister = async (service: string, code: string) => {
   let deviceName = detectBrowser();
   let userRequest = await getUserRequest();
@@ -76,6 +76,9 @@ export const getUserRequest = async () => {
   }
   userRequest = new UserRequest(TokenService, ConfigService);
   return userRequest;
+};
+export const resetUserRequest = () => {
+  userRequest = undefined;
 };
 export const getOSName = () => {
   return isElectron ? osName : browserName;

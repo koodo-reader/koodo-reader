@@ -6,7 +6,7 @@ import {
 } from "../../assets/lib/kookit-extra-browser.min";
 import i18n from "../../i18n";
 import { handleExitApp } from "./common";
-let readerRequest: ReaderRequest;
+let readerRequest: ReaderRequest | undefined;
 export const getTransStream = async (
   text: string,
   from: string,
@@ -82,6 +82,9 @@ export const getReaderRequest = async () => {
   }
   readerRequest = new ReaderRequest(TokenService, ConfigService);
   return readerRequest;
+};
+export const resetReaderRequest = () => {
+  readerRequest = undefined;
 };
 export const getDictText = async (word: string, from: string, to: string) => {
   let res = await getDictionary(word, from, to);

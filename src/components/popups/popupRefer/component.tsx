@@ -61,11 +61,28 @@ class PopupRefer extends React.Component<PopupReferProps, PopupReferStates> {
         return false;
       }
       this.setState({ href: href });
-      if (href.indexOf("#") === 0) {
+      if (href.indexOf("#") > -1) {
         let id = href.split("#").reverse()[0];
         let node = doc.body.querySelector("#" + id);
-        if (!node) return false;
+        if (!node) {
+          //can't find the node, go to href
+          if (href.indexOf("#") !== 0) {
+            let chapterInfo = rendition.resolveChapter(href.split("#")[0]);
+            await rendition.goToChapter(
+              chapterInfo.index,
+              chapterInfo.href,
+              chapterInfo.label
+            );
+          }
+          await rendition.goToNode(
+            doc.body.querySelector("#" + id) || doc.body
+          );
+          return true;
+        }
         //将html代码中的img标签由blob转换为base64
+        if (node.textContent.trim() === event.target.textContent.trim()) {
+          node = node.parentElement;
+        }
         let htmlContent = node.innerHTML;
 
         const convertBlobToDataURL = async (blobUrl) => {
@@ -111,17 +128,6 @@ class PopupRefer extends React.Component<PopupReferProps, PopupReferStates> {
 
         return true;
       }
-      if (href.indexOf("#") !== 0) {
-        let chapterInfo = rendition.resolveChapter(href.split("#")[0]);
-        await rendition.goToChapter(
-          chapterInfo.index,
-          chapterInfo.href,
-          chapterInfo.label
-        );
-      }
-      let id = href.split("#").reverse()[0];
-      await rendition.goToNode(doc.body.querySelector("#" + id) || doc.body);
-      return true;
     } else if (
       href &&
       rendition.resolveChapter &&

@@ -7,13 +7,16 @@ import {
 } from "../../assets/lib/kookit-extra-browser.min";
 import i18n from "../../i18n";
 import { handleExitApp } from "./common";
-let thirdpartyRequest: ThirdpartyRequest;
+let thirdpartyRequest: ThirdpartyRequest | undefined;
 export const getThirdpartyRequest = async () => {
   if (thirdpartyRequest) {
     return thirdpartyRequest;
   }
   thirdpartyRequest = new ThirdpartyRequest(TokenService, ConfigService);
   return thirdpartyRequest;
+};
+export const resetThirdpartyRequest = () => {
+  thirdpartyRequest = undefined;
 };
 export const onSyncCallback = async (service: string, authCode: string) => {
   toast.loading(i18n.t("Adding"), { id: "adding-sync-id" });

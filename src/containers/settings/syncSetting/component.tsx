@@ -151,9 +151,24 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
     }
     toast.success(this.props.t("Deletion successful"));
   };
-  handleSetDefaultSyncOption = (event: any) => {
+  handleSetDefaultSyncOption = async (event: any) => {
     if (!event.target.value) {
       return;
+    }
+    if (
+      ConfigService.getItem("defaultSyncOption") &&
+      ConfigService.getItem("defaultSyncOption") !== event.target.value
+    ) {
+      if (ConfigService.getReaderConfig("isEnableKoodoSync") === "yes") {
+        await updateUserConfig({
+          is_enable_koodo_sync: "no",
+        });
+        setTimeout(() => {
+          updateUserConfig({
+            is_enable_koodo_sync: "yes",
+          });
+        }, 1000);
+      }
     }
     ConfigService.setItem("defaultSyncOption", event.target.value);
     this.props.handleFetchDefaultSyncOption();
@@ -201,7 +216,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
         this.state.driveConfig.token
       );
     }
-    if (this.props.isAuthed) {
+    if (this.props.isAuthed && !ConfigService.getItem("defaultSyncOption")) {
       ConfigService.setItem("defaultSyncOption", this.props.settingDrive);
       this.props.handleFetchDefaultSyncOption();
     }
@@ -523,6 +538,9 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                   value={item.value}
                   key={item.value}
                   className="lang-setting-option"
+                  selected={
+                    item.value === this.props.settingDrive ? true : false
+                  }
                 >
                   {this.props.t(item.label) + (item.isPro ? " (Pro)" : "")}
                 </option>
@@ -567,7 +585,9 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
             <select
               name=""
               className="lang-setting-dropdown"
-              onChange={this.handleSetDefaultSyncOption}
+              onChange={(event) => {
+                this.handleSetDefaultSyncOption(event);
+              }}
             >
               {[
                 { label: "Please select", value: "", isPro: false },
