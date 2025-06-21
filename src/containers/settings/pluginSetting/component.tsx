@@ -41,7 +41,6 @@ class SettingDialog extends React.Component<
         ConfigService.getReaderConfig("isDeleteShelfBook") === "yes",
       isHideShelfBook:
         ConfigService.getReaderConfig("isHideShelfBook") === "yes",
-      isPreventSleep: ConfigService.getReaderConfig("isPreventSleep") === "yes",
       isOpenInMain: ConfigService.getReaderConfig("isOpenInMain") === "yes",
       isDisableUpdate:
         ConfigService.getReaderConfig("isDisableUpdate") === "yes",

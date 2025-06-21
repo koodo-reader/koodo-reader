@@ -261,6 +261,7 @@
   "Server region": "服务器地区",
   "Global": "全球",
   "China": "中国",
+  "Windows always on top": "窗口始终置顶",
   "Some login options and data sources are not available in your selected server region": "您所选择的服务器地区不支持部分登录选项和数据源",
   "Grant access to local folder to save your data and reduce the risk of data loss": "授权访问本地文件夹来保存您的数据，减少数据丢失的风险",
   "Never lose your data": "不要丢失您的数据",
