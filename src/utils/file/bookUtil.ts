@@ -254,6 +254,7 @@ class BookUtil {
           isMergeWord: ConfigService.getReaderConfig("isMergeWord"),
           isAutoFullscreen: ConfigService.getReaderConfig("isAutoFullscreen"),
           isPreventSleep: ConfigService.getReaderConfig("isPreventSleep"),
+          isAlwaysOnTop: ConfigService.getReaderConfig("isAlwaysOnTop"),
         });
       }
     } else {

@@ -141,7 +141,12 @@ const decrypt = (encryptedText, key) => {
   return result;
 }
 const createMainWin = () => {
+
   mainWin = new BrowserWindow(options);
+  console.log(store.get("isAlwaysOnTop"), 'isAlwaysOnTop');
+  if (store.get("isAlwaysOnTop") === "yes") {
+    mainWin.setAlwaysOnTop(true);
+  }
 
   if (!isDev) {
     Menu.setApplicationMenu(null);
@@ -193,6 +198,7 @@ const createMainWin = () => {
       console.log(powerSaveBlocker.isStarted(id));
     }
 
+
     if (isAutoFullscreen === "yes") {
       readerWindow = new BrowserWindow(options);
       readerWindow.loadURL(url);
@@ -210,6 +216,9 @@ const createMainWin = () => {
       });
       readerWindow.loadURL(url);
       // readerWindow.webContents.openDevTools();
+    }
+    if (store.get("isAlwaysOnTop") === "yes") {
+      readerWindow.setAlwaysOnTop(true);
     }
     readerWindow.on("close", (event) => {
       if (!readerWindow.isDestroyed()) {
@@ -421,6 +430,25 @@ const createMainWin = () => {
     delete dbConnection[dbName];
     db.close();
   });
+  ipcMain.handle("set-always-on-top", async (event, config) => {
+    store.set("isAlwaysOnTop", config.isAlwaysOnTop);
+    if (mainWin && !mainWin.isDestroyed()) {
+      if (config.isAlwaysOnTop === "yes") {
+        mainWin.setAlwaysOnTop(true);
+      } else {
+        mainWin.setAlwaysOnTop(false);
+      }
+
+    }
+    if (readerWindow && !readerWindow.isDestroyed()) {
+      if (config.isAlwaysOnTop === "yes") {
+        readerWindow.setAlwaysOnTop(true);
+      } else {
+        readerWindow.setAlwaysOnTop(false);
+      }
+    }
+    return "pong";
+  })
 
   ipcMain.on("user-data", (event, arg) => {
     event.returnValue = dirPath;

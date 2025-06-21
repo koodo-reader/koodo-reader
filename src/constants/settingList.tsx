@@ -32,6 +32,11 @@ export const generalSettingList = [
   },
   {
     isElectron: true,
+    title: "Windows always on top",
+    propName: "isAlwaysOnTop",
+  },
+  {
+    isElectron: true,
     title: "Open book without adding it to library",
     desc: "When opening books in the file manager with Koodo, the opened books won't be added to the library",
     propName: "isPreventAdd",

@@ -46,6 +46,7 @@ export interface SettingInfoState {
   isDisableTrashBin: boolean;
   isDeleteShelfBook: boolean;
   isPreventSleep: boolean;
+  isAlwaysOnTop: boolean;
   isOpenInMain: boolean;
   isDisableUpdate: boolean;
   isPrecacheBook: boolean;
