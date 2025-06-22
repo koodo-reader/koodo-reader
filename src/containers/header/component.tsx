@@ -413,6 +413,8 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     }, 1000);
     let res = await this.beforeSync();
     if (!res) {
+      this.setState({ isSync: false });
+      clearInterval(this.timer);
       return;
     }
     let compareResult = await this.getCompareResult();
@@ -476,6 +478,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       toast.error(this.props.t("Sync failed"), {
         id: "syncing",
       });
+      clearInterval(this.timer);
       return;
     }
   };
