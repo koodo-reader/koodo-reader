@@ -26,7 +26,7 @@ import {
   onSyncCallback,
 } from "../../../utils/request/thirdparty";
 import SyncService from "../../../utils/storage/syncService";
-import { updateUserConfig } from "../../../utils/request/user";
+import { resetKoodoSync, updateUserConfig } from "../../../utils/request/user";
 declare var window: any;
 class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
   constructor(props: SettingInfoProps) {
@@ -154,21 +154,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
     if (!event.target.value) {
       return;
     }
-    if (
-      ConfigService.getItem("defaultSyncOption") &&
-      ConfigService.getItem("defaultSyncOption") !== event.target.value
-    ) {
-      if (ConfigService.getReaderConfig("isEnableKoodoSync") === "yes") {
-        await updateUserConfig({
-          is_enable_koodo_sync: "no",
-        });
-        setTimeout(() => {
-          updateUserConfig({
-            is_enable_koodo_sync: "yes",
-          });
-        }, 1000);
-      }
-    }
+    resetKoodoSync(event.target.value);
     ConfigService.setItem("defaultSyncOption", event.target.value);
     this.props.handleFetchDefaultSyncOption();
     toast.success(this.props.t("Change successful"));
