@@ -12,7 +12,11 @@ import { isElectron } from "react-device-detect";
 import { checkStableUpdate } from "../../../utils/request/common";
 import { getCloudConfig } from "../../../utils/file/common";
 import SyncService from "../../../utils/storage/syncService";
-import { getStorageLocation, openExternalUrl } from "../../../utils/common";
+import {
+  getStorageLocation,
+  openExternalUrl,
+  supportedFormats,
+} from "../../../utils/common";
 import {
   ConfigService,
   SyncUtil,
@@ -130,6 +134,8 @@ class ImportDialog extends React.Component<
       let fileName = path.basename(sourcePath);
       file = new File([blob], fileName);
       file.path = sourcePath;
+      // Clean up the temp file after import
+      fs.unlinkSync(path.join(dataPath, destPath));
     } else {
       let pickerUtil = await SyncService.getPickerUtil(this.state.currentDrive);
       let arraybuffer = await pickerUtil.remote.downloadFile(
@@ -140,7 +146,7 @@ class ImportDialog extends React.Component<
       file = new File([blob], fileName);
     }
     toast.dismiss("importing");
-    this.props.importBookFunc(file);
+    await this.props.importBookFunc(file);
   };
   listAllFilesRecursively = async (folderName: string) => {
     toast.loading(this.props.t("Scanning folder"), {
@@ -160,21 +166,17 @@ class ImportDialog extends React.Component<
         toast(this.props.t("No files found in this folder"));
         return;
       }
-
-      // Add all files to selected list
-      this.setState({
-        selectedFileList: Array.from(
-          new Set([
-            ...this.state.selectedFileList,
-            ...fileList.filter(
-              (file) => !this.state.selectedFileList.includes(file)
-            ),
-          ])
-        ),
-      });
-
+      let selectedFileList = fileList.filter((file) =>
+        supportedFormats.includes(
+          "." + file.split(".").pop()?.toLowerCase() || ""
+        )
+      );
       toast.dismiss("scanning");
       toast.success(this.props.t("Successfully scanned folder"));
+      for (let i = 0; i < selectedFileList.length; i++) {
+        let sourcePath = selectedFileList[i];
+        await this.handleImportBook(sourcePath);
+      }
     } catch (error) {
       toast.dismiss("scanning");
       toast.error(this.props.t("Error scanning folder"));

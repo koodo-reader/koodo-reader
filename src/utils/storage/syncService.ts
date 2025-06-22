@@ -13,7 +13,6 @@ class SyncService {
   static async getSyncUtil() {
     let service = ConfigService.getItem("defaultSyncOption");
     if (!service) {
-      // toast(i18n.t("Please select a sync service"));
       let thirdpartyRequest = await getThirdpartyRequest();
       return new SyncUtil("", {}, thirdpartyRequest);
     }

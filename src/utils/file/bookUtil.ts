@@ -182,7 +182,7 @@ class BookUtil {
       !(await this.isBookExist("cache-" + book.key, "zip", book.path))
     ) {
       if (!ConfigService.getItem("defaultSyncOption")) {
-        toast(i18n.t("Please select a sync service"));
+        toast(i18n.t("Please add data source in the setting"));
         return;
       }
       toast.loading(i18n.t("Downloading"), {
