@@ -143,7 +143,6 @@ const decrypt = (encryptedText, key) => {
 const createMainWin = () => {
 
   mainWin = new BrowserWindow(options);
-  console.log(store.get("isAlwaysOnTop"), 'isAlwaysOnTop');
   if (store.get("isAlwaysOnTop") === "yes") {
     mainWin.setAlwaysOnTop(true);
   }

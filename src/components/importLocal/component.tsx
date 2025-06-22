@@ -169,12 +169,6 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
     let bookBlob = new Blob([bookBuffer], {
       type: CommonTool.getMimeType(book.format.toLowerCase()),
     });
-    console.log(
-      bookBuffer,
-      bookBlob,
-      book.key + "." + book.format.toLowerCase(),
-      "dfgdfgdf"
-    );
     await syncUtil.uploadFile(
       book.key + "." + book.format.toLowerCase(),
       "book",
@@ -372,7 +366,6 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                         if (!newPath) {
                           return;
                         }
-                        console.log("Selected folder path:", newPath);
                         //get all files in the folder
                         const fs = window.require("fs");
                         const path = window.require("path");
@@ -412,10 +405,6 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
 
                         // Get all supported book files
                         const allFiles = getAllFiles(newPath);
-                        console.log(
-                          `Found ${allFiles.length} supported book files`
-                        );
-
                         // Process each file
                         for (const filePath of allFiles) {
                           try {
@@ -461,12 +450,10 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                           cursor: "pointer",
                         }}
                         onChange={async (e) => {
-                          console.log("Selected folder:", e);
                           const files = e.target.files;
                           if (!files || files.length === 0) {
                             return;
                           }
-                          console.log(files);
                           for (let item of files) {
                             if (
                               !supportedFormats.find((format) =>

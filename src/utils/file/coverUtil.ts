@@ -294,7 +294,6 @@ class CoverUtil {
       let book = await DatabaseService.getRecord(cover.split(".")[0], "books");
       if (ConfigService.getReaderConfig("isUseLocal") === "yes") {
         let coverBuffer = await LocalFileManager.readFile(cover, "cover");
-        console.log("coverBuffer", coverBuffer);
         if (!coverBuffer) {
           return;
         }
