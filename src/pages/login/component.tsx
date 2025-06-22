@@ -281,7 +281,7 @@ class Login extends React.Component<LoginProps, LoginState> {
             <div className="login-content-container">
               <div
                 className="login-title"
-                style={{ marginTop: "80px", marginBottom: "50px" }}
+                style={{ marginTop: "80px", marginBottom: "30px" }}
               >
                 {this.props.t(
                   "Embark on your journey of exploration with Koodo Reader Pro"
@@ -507,7 +507,7 @@ class Login extends React.Component<LoginProps, LoginState> {
                 style={{
                   borderWidth: "0px",
                   right: "0px",
-                  bottom: "10px",
+                  // bottom: "10px",
                 }}
               >
                 {this.props.t("Skip")}
@@ -692,7 +692,7 @@ class Login extends React.Component<LoginProps, LoginState> {
                           });
                           toast(
                             this.props.t(
-                              "If you didn't receive the verification code, please check the spam folder or use another email address"
+                              "If you didn't receive the verification code, please check the spam folder or use another email provider"
                             ),
                             {
                               duration: 6000,
@@ -762,11 +762,6 @@ class Login extends React.Component<LoginProps, LoginState> {
                   >
                     {this.props.t("Log in")}
                   </div>
-                  {/* <div className="login-term" style={{ opacity: 0.8 }}>
-                    {this.props.t(
-                      "Due to the limited number of emails we can send each day, to prevent login issues after reaching the sending limit, please make sure to add additional login options as backups after logging in."
-                    )}
-                  </div> */}
                   <div className="login-term">
                     {this.props.t("Supported email providers")}
                     <br />

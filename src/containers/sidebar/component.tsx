@@ -5,7 +5,6 @@ import { SidebarProps, SidebarState } from "./interface";
 import { withRouter } from "react-router-dom";
 import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import { openExternalUrl, WEBSITE_URL } from "../../utils/common";
-import DeletePopup from "../../components/dialogs/deletePopup";
 import { Trans } from "react-i18next";
 import toast from "react-hot-toast";
 class Sidebar extends React.Component<SidebarProps, SidebarState> {
@@ -296,7 +295,7 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
                 }
               ></span>
             </div>
-            {!this.state.isCreateShelf ? (
+            {this.props.isCollapsed ? null : !this.state.isCreateShelf ? (
               <div
                 className={"side-menu-selector"}
                 style={{ cursor: "pointer" }}
@@ -309,6 +308,8 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
                     padding: "4px 0px",
                     width: "24px",
                     height: "14px",
+                    marginLeft: "20px",
+                    marginRight: "15px",
                   }}
                 >
                   <span
@@ -357,39 +358,43 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
                 ></span>
               </div>
             )}
-            <div
-              className={"side-menu-selector"}
-              style={{ cursor: "pointer" }}
-              onClick={() => {
-                this.props.handleSortShelfDialog(true);
-              }}
-            >
+            {!this.props.isCollapsed && (
               <div
-                className="side-menu-icon"
-                style={{
-                  borderRadius: "5px",
-                  backgroundColor: "rgba(0, 0, 0, 0.06)",
-                  padding: "4px 0px",
-                  width: "24px",
-                  height: "14px",
+                className={"side-menu-selector"}
+                style={{ cursor: "pointer" }}
+                onClick={() => {
+                  this.props.handleSortShelfDialog(true);
                 }}
               >
-                <span
-                  className={`icon-edit-line sidebar-shelf-icon`}
-                  style={{ fontSize: "17px" }}
-                ></span>
-              </div>
+                <div
+                  className="side-menu-icon"
+                  style={{
+                    borderRadius: "5px",
+                    backgroundColor: "rgba(0, 0, 0, 0.06)",
+                    padding: "4px 0px",
+                    width: "24px",
+                    height: "14px",
+                    marginLeft: "20px",
+                    marginRight: "15px",
+                  }}
+                >
+                  <span
+                    className={`icon-edit-line sidebar-shelf-icon`}
+                    style={{ fontSize: "17px" }}
+                  ></span>
+                </div>
 
-              <span
-                style={
-                  this.props.isCollapsed
-                    ? { display: "none", width: "70%" }
-                    : { width: "60%" }
-                }
-              >
-                {this.props.t("Manage shelf")}
-              </span>
-            </div>
+                <span
+                  style={
+                    this.props.isCollapsed
+                      ? { display: "none", width: "70%" }
+                      : { width: "60%" }
+                  }
+                >
+                  {this.props.t("Manage shelf")}
+                </span>
+              </div>
+            )}
             {!this.state.isCollpaseShelf && (
               <ul className="side-shelf-container">{renderSideShelf()}</ul>
             )}

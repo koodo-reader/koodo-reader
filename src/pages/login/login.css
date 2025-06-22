@@ -163,7 +163,8 @@
 }
 .login-sync-container {
   width: 90%;
-  height: 50%;
+  height: 58%;
+  overflow-y: scroll;
   margin: 0 auto;
   margin-top: -20px;
   /*实现三乘三的布局*/

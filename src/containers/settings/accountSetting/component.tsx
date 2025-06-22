@@ -339,7 +339,7 @@ class AccountSetting extends React.Component<
                       });
                       toast(
                         this.props.t(
-                          "If you didn't receive the verification code, please check the spam folder or use another email address"
+                          "If you didn't receive the verification code, please check the spam folder or use another email provider"
                         ),
                         {
                           duration: 6000,

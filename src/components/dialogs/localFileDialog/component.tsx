@@ -80,7 +80,12 @@ class LocalFileDialog extends React.Component<
             id: "local-folder-access",
           }
         );
-        await exportToLocalFile();
+        let fileList = await LocalFileManager.listFiles("config");
+        console.log("File list:", fileList);
+        if (fileList.length > 0 && fileList.indexOf("books.db") > -1) {
+        } else {
+          await exportToLocalFile();
+        }
         toast.dismiss("local-folder-access");
         this.setState({
           isFinish: true,

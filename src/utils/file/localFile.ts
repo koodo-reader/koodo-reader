@@ -1,8 +1,13 @@
-import { CommonTool } from "../../assets/lib/kookit-extra-browser.min";
+import {
+  CommonTool,
+  ConfigService,
+} from "../../assets/lib/kookit-extra-browser.min";
 import DatabaseService from "../storage/databaseService";
 import Book from "../../models/Book";
 import CoverUtil from "./coverUtil";
 import BookUtil from "./bookUtil";
+import toast from "react-hot-toast";
+import i18n from "../../i18n";
 
 declare global {
   interface FileSystemDirectoryHandle {
@@ -368,6 +373,14 @@ export class LocalFileManager {
       return await file.arrayBuffer();
     } catch (error) {
       console.error("Error reading file as ArrayBuffer:", error);
+      toast.error(
+        i18n.t(
+          "Failed to read file, please refresh and grant directory access again"
+        )
+      );
+      ConfigService.setReaderConfig("isUseLocal", "");
+      await this.clearStoredAccess();
+
       return null;
     }
   }
