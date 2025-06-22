@@ -26,7 +26,6 @@ let chatWindow;
 let dbConnection = {};
 let syncUtilCache = {};
 let pickerUtilCache = {};
-let isChatExpand = false;
 const singleInstance = app.requestSingleInstanceLock();
 var filePath = null;
 if (process.platform != "darwin" && process.argv.length >= 2) {
@@ -102,9 +101,7 @@ const getSyncUtil = async (config, isUseCache = true) => {
   return syncUtilCache[config.service];
 }
 const removeSyncUtil = (config) => {
-  if (syncUtilCache[config.service]) {
-    syncUtilCache[config.service] = null;
-  }
+  delete syncUtilCache[config.service];
 }
 const getPickerUtil = async (config, isUseCache = true) => {
   if (!isUseCache || !pickerUtilCache[config.service]) {

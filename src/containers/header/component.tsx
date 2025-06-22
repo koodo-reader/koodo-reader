@@ -282,7 +282,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         this.props.t(
           "In order to let you directly manage your data in Google Drive, we have deprecated the old Google Drive token. Please reauthorize Google Drive in the settings. Your new data will be stored in the root directory of your Google Drive, and you can manage it directly in the Google Drive web interface."
         ),
-        { duration: 10000 }
+        { duration: 4000 }
       );
       this.setState({ isSync: false });
       return false;
