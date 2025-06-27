@@ -188,7 +188,7 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
               ? {
                   position: "absolute",
                   left: "665px",
-                  top: "250px",
+                  top: isElectron ? "300px" : "270px",
                 }
               : { display: "none" }
           }

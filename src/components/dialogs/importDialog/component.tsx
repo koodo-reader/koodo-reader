@@ -254,6 +254,14 @@ class ImportDialog extends React.Component<
                     key={item.value}
                     className={`cloud-drive-item `}
                     onClick={() => {
+                      if (!this.props.isAuthed) {
+                        toast(
+                          this.props.t(
+                            "This feature is not available in the free version"
+                          )
+                        );
+                        return;
+                      }
                       if (!this.props.dataSourceList.includes(item.value)) {
                         this.props.handleSetting(true);
                         this.props.handleSettingMode("sync");
