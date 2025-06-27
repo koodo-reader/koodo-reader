@@ -9,7 +9,6 @@ export interface EditDialogProps {
   handleActionDialog: (isShow: boolean) => void;
   books: BookModel[];
   notes: NoteModel[];
-  digests: NoteModel[];
   bookmarks: BookmarkModel[];
   isOpenDeleteDialog: boolean;
   currentBook: BookModel;

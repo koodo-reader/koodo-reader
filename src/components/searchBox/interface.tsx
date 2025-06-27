@@ -10,7 +10,6 @@ export interface SearchBoxProps {
   mode: string;
   tabMode: string;
   notes: NoteModel[];
-  digests: NoteModel[];
   width: string;
   height: string;
   currentBook: any;

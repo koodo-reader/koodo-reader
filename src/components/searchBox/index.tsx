@@ -8,7 +8,6 @@ const mapStateToProps = (state: stateType) => {
     books: state.manager.books,
     notes: state.reader.notes,
     htmlBook: state.reader.htmlBook,
-    digests: state.reader.digests,
     isNavLocked: state.reader.isNavLocked,
     isSearch: state.manager.isSearch,
     isReading: state.book.isReading,

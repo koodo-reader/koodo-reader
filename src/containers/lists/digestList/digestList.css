@@ -1,8 +1,0 @@
-.digest-list-container-parent {
-  position: absolute;
-  top: 75px;
-  left: 200px;
-  width: calc(100% - 200px);
-  height: calc(100% - 75px);
-  overflow: hidden;
-}

@@ -4,7 +4,6 @@ import NoteModel from "../../models/Note";
 export interface DeleteIconProps {
   bookmarks: BookmarkModel[];
   notes: NoteModel[];
-  digests: NoteModel[];
   mode: string;
   index: number;
   tagName: string;

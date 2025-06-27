@@ -10,7 +10,6 @@ export interface DeleteDialogProps extends RouteComponentProps<any> {
   currentBook: BookModel;
   bookmarks: BookmarkModel[];
   notes: NoteModel[];
-  digests: NoteModel[];
   mode: string;
   shelfTitle: string;
   selectedBooks: string[];

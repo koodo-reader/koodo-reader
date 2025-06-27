@@ -16,9 +16,6 @@ export function handleColor(color: number) {
 export function handleBookmarks(bookmarks: BookmarkModel[]) {
   return { type: "HANDLE_BOOKMARKS", payload: bookmarks };
 }
-export function handleDigests(digests: NoteModel[]) {
-  return { type: "HANDLE_DIGESTS", payload: digests };
-}
 export function handleHtmlBook(htmlBook: HtmlBookModel) {
   return { type: "HANDLE_HTML_BOOK", payload: htmlBook };
 }
@@ -54,16 +51,6 @@ export function handleFetchNotes() {
       }
       let keyArr = ConfigService.getAllListConfig("deletedBooks");
       dispatch(handleNotes(handleKeyRemove(noteArr, keyArr)));
-      dispatch(
-        handleDigests(
-          handleKeyRemove(
-            noteArr.filter((item: NoteModel) => {
-              return item.notes === "";
-            }),
-            keyArr
-          )
-        )
-      );
     });
   };
 }
