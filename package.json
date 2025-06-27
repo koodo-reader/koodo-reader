@@ -1,7 +1,7 @@
 {
   "name": "koodo-reader",
   "main": "main.js",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "description": "Koodo Reader is a cross-platform ebook reader",
   "author": {
     "name": "App by Troye",
@@ -20,6 +20,7 @@
   "dependencies": {
     "@aws-sdk/client-s3": "^3.485.0",
     "adm-zip": "^0.5.2",
+    "auto-launch": "^5.0.6",
     "axios": "^0.19.2",
     "basic-ftp": "^5.0.5",
     "better-sqlite3": "^11.6.0",

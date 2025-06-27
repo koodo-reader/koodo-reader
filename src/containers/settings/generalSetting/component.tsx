@@ -47,6 +47,7 @@ class GeneralSetting extends React.Component<
         ConfigService.getReaderConfig("isHideShelfBook") === "yes",
       isPreventSleep: ConfigService.getReaderConfig("isPreventSleep") === "yes",
       isAlwaysOnTop: ConfigService.getReaderConfig("isAlwaysOnTop") === "yes",
+      isAutoLaunch: ConfigService.getReaderConfig("isAutoLaunch") === "yes",
       isOpenInMain: ConfigService.getReaderConfig("isOpenInMain") === "yes",
       isDisableUpdate:
         ConfigService.getReaderConfig("isDisableUpdate") === "yes",
@@ -189,6 +190,13 @@ class GeneralSetting extends React.Component<
     });
     this.handleSetting("isAlwaysOnTop");
   };
+  handleAutoLaunch = () => {
+    const { ipcRenderer } = window.require("electron");
+    ipcRenderer.invoke("toggle-auto-launch", {
+      isAutoLaunch: this.state.isAutoLaunch ? "no" : "yes",
+    });
+    this.handleSetting("isAutoLaunch");
+  };
   renderSwitchOption = (optionList: any[]) => {
     return optionList.map((item) => {
       return (
@@ -213,6 +221,9 @@ class GeneralSetting extends React.Component<
                     break;
                   case "isAlwaysOnTop":
                     this.handleAlwaysOnTop();
+                    break;
+                  case "isAutoLaunch":
+                    this.handleAutoLaunch();
                     break;
                   default:
                     this.handleSetting(item.propName);

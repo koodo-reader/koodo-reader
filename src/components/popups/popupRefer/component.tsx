@@ -63,7 +63,7 @@ class PopupRefer extends React.Component<PopupReferProps, PopupReferStates> {
       this.setState({ href: href });
       if (href.indexOf("#") > -1) {
         let id = href.split("#").reverse()[0];
-        let node = doc.body.querySelector("#" + id);
+        let node = doc.body.querySelector("#" + CSS.escape(id));
         if (!node) {
           //can't find the node, go to href
           if (href.indexOf("#") !== 0) {
@@ -75,7 +75,7 @@ class PopupRefer extends React.Component<PopupReferProps, PopupReferStates> {
             );
           }
           await rendition.goToNode(
-            doc.body.querySelector("#" + id) || doc.body
+            doc.body.querySelector("#" + CSS.escape(id)) || doc.body
           );
           return true;
         }
@@ -273,7 +273,7 @@ class PopupRefer extends React.Component<PopupReferProps, PopupReferStates> {
                     ),
                   });
                   await this.props.rendition.goToNode(
-                    doc.body.querySelector("#" + id) || doc.body
+                    doc.body.querySelector("#" + CSS.escape(id)) || doc.body
                   );
                 }}
                 style={{

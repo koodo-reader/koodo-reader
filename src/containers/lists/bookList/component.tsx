@@ -13,11 +13,8 @@ import { Redirect, withRouter } from "react-router-dom";
 import ViewMode from "../../../components/viewMode";
 import SelectBook from "../../../components/selectBook";
 import { Trans } from "react-i18next";
-import DeletePopup from "../../../components/dialogs/deletePopup";
 declare var window: any;
 let currentBookMode = "home";
-let totalPage = 0;
-let totalBook = 0;
 let bookCount =
   ConfigService.getReaderConfig("isDisablePagination") === "yes" ? 999 : 24;
 class BookList extends React.Component<BookListProps, BookListState> {
@@ -140,11 +137,6 @@ class BookList extends React.Component<BookListProps, BookListState> {
     if (books.length === 0 && !this.props.isSearch) {
       return <Redirect to="/manager/empty" />;
     }
-    totalPage =
-      books.length % bookCount === 0
-        ? books.length / bookCount
-        : Math.floor(books.length / bookCount) + 1;
-    totalBook = books.length;
     if (bookMode !== currentBookMode) {
       this.props.handleCurrentPage(1);
       currentBookMode = bookMode;
@@ -195,6 +187,40 @@ class BookList extends React.Component<BookListProps, BookListState> {
       rect.right <= (window.innerWidth || document.documentElement.clientWidth)
     );
   };
+  calculateTotalBooksAndPage = () => {
+    let bookMode = this.props.isSearch
+      ? "search"
+      : this.props.shelfTitle
+      ? "shelf"
+      : this.props.mode === "favorite"
+      ? "favorite"
+      : this.state.isHideShelfBook
+      ? "hide"
+      : "home";
+
+    let books =
+      bookMode === "search"
+        ? this.handleIndexFilter(this.props.books, this.props.searchResults)
+        : bookMode === "shelf"
+        ? this.handleShelf(this.props.books, this.props.shelfTitle)
+        : bookMode === "favorite"
+        ? this.handleKeyFilter(
+            this.props.books,
+            ConfigService.getAllListConfig("favoriteBooks")
+          )
+        : bookMode === "hide"
+        ? this.handleFilterShelfBook(this.props.books)
+        : this.props.books;
+
+    return {
+      totalBook: books.length,
+      totalPage:
+        books.length % bookCount === 0
+          ? books.length / bookCount
+          : Math.floor(books.length / bookCount) + 1,
+    };
+  };
+
   render() {
     if (
       (this.state.favoriteBooks === 0 && this.props.mode === "favorite") ||
@@ -203,6 +229,7 @@ class BookList extends React.Component<BookListProps, BookListState> {
     ) {
       return <Redirect to="/manager/empty" />;
     }
+    const { totalBook, totalPage } = this.calculateTotalBooksAndPage();
     return (
       <>
         <div
