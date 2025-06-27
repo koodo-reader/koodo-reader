@@ -39,7 +39,11 @@
   box-sizing: border-box;
   position: relative;
 }
-
+.theme-color-clear-button {
+  cursor: pointer;
+  margin-left: 10px;
+  opacity: 0.8;
+}
 .background-color-circle .icon-more {
   position: absolute;
   margin: 8px;
