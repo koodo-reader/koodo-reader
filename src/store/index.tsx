@@ -92,7 +92,6 @@ export type stateType = {
   reader: {
     bookmarks: BookmarkModel[];
     notes: NoteModel[];
-    digests: NoteModel[];
     color: number;
     chapters: any[];
     readerMode: string;

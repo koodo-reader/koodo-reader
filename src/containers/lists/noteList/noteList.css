@@ -6,3 +6,14 @@
   height: calc(100% - 75px);
   overflow: hidden;
 }
+.note-list-filter-label {
+  font-size: 15px;
+  font-weight: 500;
+  margin-right: 10px;
+}
+.note-list-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+}

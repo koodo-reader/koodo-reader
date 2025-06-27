@@ -9,7 +9,6 @@ import DeleteIcon from "./component";
 import { withTranslation } from "react-i18next";
 const mapStateToProps = (state: stateType) => {
   return {
-    digests: state.reader.digests,
     bookmarks: state.reader.bookmarks,
     notes: state.reader.notes,
     isReading: state.book.isReading,

@@ -88,7 +88,7 @@ class NavList extends React.Component<NavListProps, NavListState> {
         ? this.props.bookmarks
         : this.props.currentTab === "notes"
         ? this.props.notes.filter((item) => item.notes !== "")
-        : this.props.digests) as any
+        : this.props.notes.filter((item) => item.notes === "")) as any
     ).filter((item: any) => {
       return item.bookKey === this.props.currentBook.key;
     });

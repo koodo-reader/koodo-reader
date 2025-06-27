@@ -5,7 +5,6 @@ import { RouteComponentProps } from "react-router";
 export interface ManagerProps extends RouteComponentProps<any> {
   books: BookModel[];
   notes: NoteModel[];
-  digests: NoteModel[];
   bookmarks: BookmarkModel[];
   isReading: boolean;
   mode: string;

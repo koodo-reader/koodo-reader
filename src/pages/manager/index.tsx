@@ -33,7 +33,6 @@ const mapStateToProps = (state: stateType) => {
   return {
     books: state.manager.books,
     notes: state.reader.notes,
-    digests: state.reader.digests,
     bookmarks: state.reader.bookmarks,
     isReading: state.book.isReading,
     mode: state.sidebar.mode,

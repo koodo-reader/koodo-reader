@@ -18,7 +18,6 @@ export interface ImportDialogProps extends RouteComponentProps<any> {
   isAuthed: boolean;
   books: BookModel[];
   notes: NoteModel[];
-  digests: NoteModel[];
   dataSourceList: string[];
   bookmarks: BookmarkModel[];
 }

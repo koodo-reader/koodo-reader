@@ -7,7 +7,6 @@ export interface NavListProps {
   bookmarks: BookmarkModel[];
   notes: NoteModel[];
   htmlBook: HtmlBookModel;
-  digests: NoteModel[];
   currentTab: string;
   t: (title: string) => string;
   handleShowBookmark: (isShowBookmark: boolean) => void;

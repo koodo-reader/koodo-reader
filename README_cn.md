@@ -48,6 +48,7 @@
   - 超文本 (**.html**, **.xml**, **.xhtml**, **.mhtml**, **.htm**)
 - 支持 **Windows**，**macOS**，**Linux** ，**安卓** ，**iOS** 和 **网页版**
 - 利用 **OneDrive**, **Google Drive**, **Dropbox**, **MEGA**, **pCloud**, **阿里云盘**, **Box**, **FTP**, **SFTP**, **WebDAV**, **对象存储** 实现数据多端同步和备份
+- 轻松从 **OneDrive**, **Google Drive**, **MEGA**, **Aliyun Drive**, **Box**, **FTP**, **SFTP**, **WebDAV**, **Object Storage** 导入图书
 - AI 翻译，AI 词典，AI 总结
 - 双页模式，单页模式，滚动模式
 - 听书功能，翻译功能，词典功能，触控屏支持，批量导入图书

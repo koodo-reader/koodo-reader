@@ -10,7 +10,6 @@ const mapStateToProps = (state: stateType) => {
 
     bookmarks: state.reader.bookmarks,
     notes: state.reader.notes,
-    digests: state.reader.digests,
   };
 };
 const actionCreator = { handleShowBookmark };
