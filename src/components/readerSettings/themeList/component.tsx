@@ -8,6 +8,7 @@ import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import { Panel as ColorPickerPanel } from "rc-color-picker";
 import "rc-color-picker/assets/index.css";
 import BookUtil from "../../../utils/file/bookUtil";
+import toast from "react-hot-toast";
 
 class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
   constructor(props: ThemeListProps) {
@@ -168,8 +169,26 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
     };
     return (
       <div className="background-color-setting">
-        <div className="background-color-text">
+        <div
+          className="background-color-text"
+          style={{
+            display: "flex",
+            justifyContent: "flex-start",
+            alignItems: "center",
+          }}
+        >
           <Trans>Background color</Trans>
+          <span
+            className="theme-color-clear-button"
+            onClick={() => {
+              ConfigService.setReaderConfig("backgroundColor", "");
+              toast.success("Removal successful");
+              BookUtil.reloadBooks();
+            }}
+          >
+            <Trans>Clear</Trans>{" "}
+            <span className="icon-trash" style={{ fontSize: "13px" }}></span>
+          </span>
         </div>
         <ul className="background-color-list">
           <li
@@ -197,8 +216,26 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
             }}
           />
         )}
-        <div className="background-color-text">
+        <div
+          className="background-color-text"
+          style={{
+            display: "flex",
+            justifyContent: "flex-start",
+            alignItems: "center",
+          }}
+        >
           <Trans>Text color</Trans>
+          <span
+            className="theme-color-clear-button"
+            onClick={() => {
+              ConfigService.setReaderConfig("textColor", "");
+              toast.success("Removal successful");
+              this.props.renderBookFunc();
+            }}
+          >
+            <Trans>Clear</Trans>{" "}
+            <span className="icon-trash" style={{ fontSize: "13px" }}></span>
+          </span>
         </div>
         <ul className="background-color-list">
           <li
