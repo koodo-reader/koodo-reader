@@ -19,5 +19,4 @@ export interface BackgroundState {
   isHideHeader: boolean;
   prevPage: number;
   nextPage: number;
-  scale: string;
 }

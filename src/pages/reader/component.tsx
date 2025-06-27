@@ -30,7 +30,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
       isOpenRightPanel: this.props.isSettingLocked,
       totalDuration: 0,
       currentDuration: 0,
-      scale: ConfigService.getReaderConfig("scale"),
+      scale: ConfigService.getReaderConfig("scale") || "1",
       isTouch: ConfigService.getReaderConfig("isTouch") === "yes",
       isPreventTrigger:
         ConfigService.getReaderConfig("isPreventTrigger") === "yes",

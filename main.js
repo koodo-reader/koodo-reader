@@ -446,7 +446,9 @@ const createMainWin = () => {
     return "pong";
   })
   ipcMain.handle("toggle-auto-launch", async (event, config) => {
-    store.set("isAutoLaunch", config.isAutoLaunch);
+    app.setLoginItemSettings({
+      openAtLogin: config.isAutoLaunch === "yes"
+    })
     return "pong";
   })
 
@@ -490,13 +492,14 @@ const createMainWin = () => {
     }
   });
   ipcMain.handle("new-chat", (event, config) => {
-    if (!chatWindow) {
+    if (!chatWindow && mainWin) {
+      let bounds = mainWin.getBounds();
       chatWindow = new BrowserWindow({
         ...options,
         width: 450,
-        height: parseInt(store.get("windowHeight") || "660"),
-        x: parseInt(store.get("windowX")) + (parseInt(store.get("windowWidth") || "1050") - 450),
-        y: parseInt(store.get("windowY")),
+        height: bounds.height,
+        x: bounds.x + (bounds.width - 450),
+        y: bounds.y,
         frame: true,
         hasShadow: true,
         transparent: false,
@@ -719,9 +722,6 @@ app.on('open-url', (event, url) => {
   event.preventDefault();
   handleCallback(url);
 });
-app.setLoginItemSettings({
-  openAtLogin: store.get("isAutoLaunch") === "yes"
-})
 const handleCallback = (url) => {
   try {
     // 检查 URL 是否有效

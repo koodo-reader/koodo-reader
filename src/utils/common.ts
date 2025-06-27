@@ -200,7 +200,7 @@ export const getPageWidth = (
   let pageWidth = "";
   if (readerMode === "scroll" || readerMode === "single") {
     let preWidth =
-      document.body.clientWidth * parseFloat(scale) -
+      document.body.clientWidth * Math.abs(parseFloat(scale)) -
       document.body.clientWidth * 0.4 -
       (isNavLocked ? 300 : 0) -
       (isSettingLocked ? 300 : 0);

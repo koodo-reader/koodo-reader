@@ -9,7 +9,7 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
     super(props);
     this.state = {
       isSingle: this.props.readerMode !== "double",
-      scale: ConfigService.getReaderConfig("scale") || 1,
+      scale: ConfigService.getReaderConfig("scale") || "1",
       margin: parseInt(ConfigService.getReaderConfig("margin")) || 0,
       pageOffset: "",
       pageWidth: "",
