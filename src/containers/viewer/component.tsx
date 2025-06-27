@@ -34,7 +34,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       rect: null,
       key: "",
       isFirst: true,
-      scale: ConfigService.getReaderConfig("scale") || 1,
+      scale: ConfigService.getReaderConfig("scale") || "1",
       chapterTitle:
         ConfigService.getObjectConfig(
           this.props.currentBook.key,

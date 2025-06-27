@@ -411,15 +411,26 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         }
       }
     }, 1000);
-    let res = await this.beforeSync();
-    if (!res) {
-      this.setState({ isSync: false });
+    try {
+      let res = await this.beforeSync();
+      if (!res) {
+        this.setState({ isSync: false });
+        clearInterval(this.timer);
+        return;
+      }
+      let compareResult = await this.getCompareResult();
+      await this.handleSync(compareResult);
       clearInterval(this.timer);
+      this.setState({ isSync: false });
+    } catch (error) {
+      console.error(error);
+      toast.error(this.props.t("Sync failed"), {
+        id: "syncing",
+      });
+      clearInterval(this.timer);
+      this.setState({ isSync: false });
       return;
     }
-    let compareResult = await this.getCompareResult();
-    await this.handleSync(compareResult);
-    this.setState({ isSync: false });
   };
   handleSuccess = async () => {
     this.props.handleFetchBooks();

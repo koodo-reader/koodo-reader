@@ -12,7 +12,6 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
       isSingle: this.props.readerMode !== "double",
       prevPage: 0,
       nextPage: 0,
-      scale: ConfigService.getReaderConfig("scale") || 1,
       isHideFooter: ConfigService.getReaderConfig("isHideFooter") === "yes",
       isHideHeader: ConfigService.getReaderConfig("isHideHeader") === "yes",
     };
