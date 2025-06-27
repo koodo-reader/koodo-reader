@@ -10,7 +10,6 @@ const {
   protocol
 } = require("electron");
 const path = require("path");
-const AutoLaunch = require('auto-launch');
 const isDev = require("electron-is-dev");
 const Store = require("electron-store");
 const os = require("os");
@@ -38,13 +37,6 @@ store.set(
 store.set(
   "appPlatform", os.platform() + " " + os.release(),
 );
-let autoLaunch = new AutoLaunch({
-  name: 'Koodo Reader',
-  path: app.getPath('exe'),
-});
-autoLaunch.isEnabled().then((isEnabled) => {
-  if (!isEnabled && store.get("isAutoLaunch") === "yes") autoLaunch.enable();
-});
 let options = {
   width: 1050,
   height: 660,
@@ -454,7 +446,7 @@ const createMainWin = () => {
     return "pong";
   })
   ipcMain.handle("toggle-auto-launch", async (event, config) => {
-    store.set("isAutoLaunch", config.isAuthLaunch);
+    store.set("isAutoLaunch", config.isAutoLaunch);
     return "pong";
   })
 
@@ -727,7 +719,9 @@ app.on('open-url', (event, url) => {
   event.preventDefault();
   handleCallback(url);
 });
-
+app.setLoginItemSettings({
+  openAtLogin: store.get("isAutoLaunch") === "yes"
+})
 const handleCallback = (url) => {
   try {
     // 检查 URL 是否有效
