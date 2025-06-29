@@ -81,7 +81,6 @@ class LocalFileDialog extends React.Component<
           }
         );
         let fileList = await LocalFileManager.listFiles("config");
-        console.log("File list:", fileList);
         if (fileList.length > 0 && fileList.indexOf("books.db") > -1) {
         } else {
           await exportToLocalFile();
