@@ -166,18 +166,26 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         }
       }
 
-      let rendition = BookHelper.getRendtion(
+      let rendition = BookHelper.getRendition(
         result,
-        isCacheExsit ? "CACHE" : format,
-        this.props.readerMode,
-        this.props.currentBook.charset,
-        ConfigService.getReaderConfig("isSliding") === "yes" ? "sliding" : "",
-        ConfigService.getReaderConfig("convertChinese"),
-        "",
-        ConfigService.getReaderConfig("backgroundColor") === "rgba(44,47,49,1)"
-          ? "yes"
-          : "no",
-        "no",
+        {
+          format: isCacheExsit ? "CACHE" : format,
+          readerMode: this.props.readerMode,
+          charset: this.props.currentBook.charset,
+          animation:
+            ConfigService.getReaderConfig("isSliding") === "yes"
+              ? "sliding"
+              : "",
+          convertChinese: ConfigService.getReaderConfig("convertChinese"),
+          parserRegex: "",
+          isDarkMode:
+            ConfigService.getReaderConfig("backgroundColor") ===
+            "rgba(44,47,49,1)"
+              ? "yes"
+              : "no",
+          isMobile: "no",
+          isStartFromEven: ConfigService.getReaderConfig("isStartFromEven"),
+        },
         Kookit
       );
       if (this.props.currentBook.format === "TXT") {

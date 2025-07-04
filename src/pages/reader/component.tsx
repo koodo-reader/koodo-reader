@@ -514,6 +514,8 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
                   marginLeft:
                     this.props.isNavLocked && !this.props.isSettingLocked
                       ? 150
+                      : !this.props.isNavLocked && this.props.isSettingLocked
+                      ? -150
                       : 0,
                 }
               : {
@@ -521,6 +523,8 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
                   marginLeft:
                     this.props.isNavLocked && !this.props.isSettingLocked
                       ? 150
+                      : !this.props.isNavLocked && this.props.isSettingLocked
+                      ? -150
                       : 0,
                 }
           }
@@ -538,6 +542,8 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
                   marginLeft:
                     this.props.isNavLocked && !this.props.isSettingLocked
                       ? 150
+                      : !this.props.isNavLocked && this.props.isSettingLocked
+                      ? -150
                       : 0,
                 }
               : {
@@ -545,6 +551,8 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
                   marginLeft:
                     this.props.isNavLocked && !this.props.isSettingLocked
                       ? 150
+                      : !this.props.isNavLocked && this.props.isSettingLocked
+                      ? -150
                       : 0,
                 }
           }
