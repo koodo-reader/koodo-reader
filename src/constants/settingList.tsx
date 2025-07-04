@@ -222,11 +222,10 @@ export const readerSettingList = [
     title: "Sliding animation",
     propName: "isSliding",
   },
-  //TODO: add this feature in the future
-  // {
-  //   title: "Turn on pure mode for PDF",
-  //   propName: "isPurePdf",
-  // },
+  {
+    title: "Render PDF from even page",
+    propName: "isStartFromEven",
+  },
   {
     title: "Text indentation",
     propName: "isIndent",
