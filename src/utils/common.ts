@@ -343,16 +343,19 @@ export const preCacheAllBooks = async (bookList: Book[]) => {
       true,
       selectedBook.path
     );
-    let rendition = BookHelper.getRendtion(
+    let rendition = BookHelper.getRendition(
       result,
-      selectedBook.format,
-      "",
-      selectedBook.charset,
-      ConfigService.getReaderConfig("isSliding") === "yes" ? "sliding" : "",
-      ConfigService.getReaderConfig("convertChinese"),
-      "",
-      "no",
-      "no",
+      {
+        format: selectedBook.format,
+        readerMode: "",
+        charset: selectedBook.charset,
+        animation:
+          ConfigService.getReaderConfig("isSliding") === "yes" ? "sliding" : "",
+        convertChinese: ConfigService.getReaderConfig("convertChinese"),
+        parserRegex: "",
+        isDarkMode: "no",
+        isMobile: "no",
+      },
       Kookit
     );
     let cache = await rendition.preCache(result);

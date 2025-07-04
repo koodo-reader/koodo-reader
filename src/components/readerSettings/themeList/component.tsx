@@ -182,7 +182,7 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
             className="theme-color-clear-button"
             onClick={() => {
               ConfigService.setReaderConfig("backgroundColor", "");
-              toast.success("Removal successful");
+              toast.success(this.props.t("Removal successful"));
               BookUtil.reloadBooks();
             }}
           >
@@ -229,7 +229,7 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
             className="theme-color-clear-button"
             onClick={() => {
               ConfigService.setReaderConfig("textColor", "");
-              toast.success("Removal successful");
+              toast.success(this.props.t("Removal successful"));
               this.props.renderBookFunc();
             }}
           >

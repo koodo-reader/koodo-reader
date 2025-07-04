@@ -148,7 +148,7 @@ export const driveInputConfig: DriveInputConfig = {
       example: "https://example.com/dav",
     },
     {
-      label: "Server path",
+      label: "Server path (Please first create this folder manually)",
       value: "dir",
       type: "text",
       required: true,
