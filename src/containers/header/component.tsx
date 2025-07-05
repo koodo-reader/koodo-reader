@@ -373,6 +373,14 @@ class Header extends React.Component<HeaderProps, HeaderState> {
                 stats.completed +
                 "/" +
                 stats.total +
+                ")" +
+                " (" +
+                this.props.t(
+                  driveList.find(
+                    (item) =>
+                      item.value === ConfigService.getItem("defaultSyncOption")
+                  )?.label || ""
+                ) +
                 ")",
               {
                 id: "syncing",
