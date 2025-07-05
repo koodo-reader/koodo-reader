@@ -344,6 +344,7 @@ export class LocalFileManager {
     filename: string,
     folderPath?: string
   ): Promise<ArrayBuffer | null> {
+    console.log(`Reading file: ${filename} from folder: ${folderPath}`);
     try {
       const directoryHandle = await this.getStoredDirectoryHandle();
       if (!directoryHandle) {
@@ -373,14 +374,6 @@ export class LocalFileManager {
       return await file.arrayBuffer();
     } catch (error) {
       console.error("Error reading file as ArrayBuffer:", error);
-      toast.error(
-        i18n.t(
-          "Failed to read file, please refresh and grant directory access again"
-        )
-      );
-      ConfigService.setReaderConfig("isUseLocal", "");
-      await this.clearStoredAccess();
-
       return null;
     }
   }
@@ -459,6 +452,7 @@ export class LocalFileManager {
 
   // 列出文件夹中的文件（支持指定文件夹）
   static async listFiles(folderPath?: string): Promise<string[]> {
+    console.log("Listing files in folder:", folderPath);
     try {
       const directoryHandle = await this.getStoredDirectoryHandle();
       if (!directoryHandle) {
