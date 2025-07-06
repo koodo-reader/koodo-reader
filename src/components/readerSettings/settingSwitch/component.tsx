@@ -20,7 +20,8 @@ class SettingSwitch extends React.Component<
       isShadow: ConfigService.getReaderConfig("isShadow") === "yes",
       isItalic: ConfigService.getReaderConfig("isItalic") === "yes",
       isInvert: ConfigService.getReaderConfig("isInvert") === "yes",
-      isPurePdf: ConfigService.getReaderConfig("isPurePdf") === "yes",
+      isStartFromEven:
+        ConfigService.getReaderConfig("isStartFromEven") === "yes",
       isHideBackground:
         ConfigService.getReaderConfig("isHideBackground") === "yes",
       isHideFooter: ConfigService.getReaderConfig("isHideFooter") === "yes",
@@ -97,8 +98,8 @@ class SettingSwitch extends React.Component<
                   case "isInvert":
                     this._handleChange("isInvert");
                     break;
-                  case "isPurePdf":
-                    this._handleChange("isPurePdf");
+                  case "isStartFromEven":
+                    this._handleChange("isStartFromEven");
                     break;
                   case "isHideFooter":
                     this.handleChange("isHideFooter");

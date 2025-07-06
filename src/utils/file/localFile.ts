@@ -373,14 +373,6 @@ export class LocalFileManager {
       return await file.arrayBuffer();
     } catch (error) {
       console.error("Error reading file as ArrayBuffer:", error);
-      toast.error(
-        i18n.t(
-          "Failed to read file, please refresh and grant directory access again"
-        )
-      );
-      ConfigService.setReaderConfig("isUseLocal", "");
-      await this.clearStoredAccess();
-
       return null;
     }
   }
