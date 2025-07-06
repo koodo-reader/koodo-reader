@@ -55,7 +55,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       isDataChange: false,
       isHidePro: false,
       isSync: false,
-      isAutoSync: ConfigService.getReaderConfig("isDisableAutoSync") !== "yes",
     };
   }
   async componentDidMount() {
@@ -138,7 +137,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         if (ConfigService.getItem("isFinshReading") === "yes") {
           ConfigService.setItem("isFinshReading", "no");
           if (
-            this.state.isAutoSync &&
+            ConfigService.getReaderConfig("isDisableAutoSync") !== "yes" &&
             ConfigService.getItem("defaultSyncOption")
           ) {
             await this.props.handleFetchUserInfo();
@@ -167,7 +166,10 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         }
       }
       await this.props.handleFetchUserInfo();
-      if (this.state.isAutoSync && ConfigService.getItem("defaultSyncOption")) {
+      if (
+        ConfigService.getReaderConfig("isDisableAutoSync") !== "yes" &&
+        ConfigService.getItem("defaultSyncOption")
+      ) {
         this.setState({ isSync: true });
         await this.handleCloudSync();
       }
@@ -411,6 +413,14 @@ class Header extends React.Component<HeaderProps, HeaderState> {
               stats.completed +
               "/" +
               stats.total +
+              ")" +
+              " (" +
+              this.props.t(
+                driveList.find(
+                  (item) =>
+                    item.value === ConfigService.getItem("defaultSyncOption")
+                )?.label || ""
+              ) +
               ")",
             {
               id: "syncing",
