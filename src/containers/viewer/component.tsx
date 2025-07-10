@@ -13,7 +13,11 @@ import { getIframeDoc } from "../../utils/reader/docUtil";
 import PopupBox from "../../components/popups/popupBox";
 import Note from "../../models/Note";
 import PageWidget from "../pageWidget";
-import { getPageWidth, scrollContents } from "../../utils/common";
+import {
+  getPageWidth,
+  getPdfPassword,
+  scrollContents,
+} from "../../utils/common";
 import _ from "underscore";
 import {
   BookHelper,
@@ -185,6 +189,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
               : "no",
           isMobile: "no",
           isStartFromEven: ConfigService.getReaderConfig("isStartFromEven"),
+          password: getPdfPassword(this.props.currentBook),
         },
         Kookit
       );
