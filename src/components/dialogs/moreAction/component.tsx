@@ -17,7 +17,7 @@ import {
 } from "../../../assets/lib/kookit-extra-browser.min";
 import * as Kookit from "../../../assets/lib/kookit.min";
 import { isElectron } from "react-device-detect";
-import { getStorageLocation } from "../../../utils/common";
+import { getPdfPassword, getStorageLocation } from "../../../utils/common";
 class ActionDialog extends React.Component<MoreActionProps, MoreActionState> {
   constructor(props: MoreActionProps) {
     super(props);
@@ -167,6 +167,7 @@ class ActionDialog extends React.Component<MoreActionProps, MoreActionState> {
                     parserRegex: "",
                     isDarkMode: "no",
                     isMobile: "no",
+                    password: getPdfPassword(this.props.currentBook),
                   },
                   Kookit
                 );

@@ -9,7 +9,7 @@
 }
 .scrolling-html-viewer-page {
   overflow-y: auto;
-  overflow-x: hidden;
+  overflow-x: auto;
 }
 .scrolling-html-viewer-page:hover::-webkit-scrollbar-thumb,
 .scrolling-html-viewer-page:active::-webkit-scrollbar-thumb,

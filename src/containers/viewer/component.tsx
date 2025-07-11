@@ -13,7 +13,11 @@ import { getIframeDoc } from "../../utils/reader/docUtil";
 import PopupBox from "../../components/popups/popupBox";
 import Note from "../../models/Note";
 import PageWidget from "../pageWidget";
-import { getPageWidth, scrollContents } from "../../utils/common";
+import {
+  getPageWidth,
+  getPdfPassword,
+  scrollContents,
+} from "../../utils/common";
 import _ from "underscore";
 import {
   BookHelper,
@@ -185,6 +189,8 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
               : "no",
           isMobile: "no",
           isStartFromEven: ConfigService.getReaderConfig("isStartFromEven"),
+          password: getPdfPassword(this.props.currentBook),
+          scale: parseFloat(this.state.scale),
         },
         Kookit
       );
@@ -229,7 +235,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     this.setState({ rendition });
 
     StyleUtil.addDefaultCss();
-    rendition.tsTransform();
+    rendition.tranformText();
     // rendition.setStyle(StyleUtil.getCustomCss());
     let bookLocation: {
       text: string;
@@ -321,7 +327,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       });
       scrollContents(chapter, bookLocation.chapterHref);
       StyleUtil.addDefaultCss();
-      rendition.tsTransform();
+      rendition.tranformText();
       this.handleBindGesture();
       await this.handleHighlight(rendition);
       lock = true;

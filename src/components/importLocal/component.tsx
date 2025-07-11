@@ -18,6 +18,7 @@ import CoverUtil from "../../utils/file/coverUtil";
 import {
   calculateFileMD5,
   fetchFileFromPath,
+  getPdfPassword,
   supportedFormats,
 } from "../../utils/common";
 import DatabaseService from "../../utils/storage/databaseService";
@@ -262,6 +263,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                   parserRegex: "",
                   isDarkMode: "no",
                   isMobile: "no",
+                  password: "",
                 },
                 Kookit
               );

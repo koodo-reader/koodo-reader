@@ -196,8 +196,33 @@ export const getPageWidth = (
 
     return limit;
   };
+  if (
+    document.body.clientWidth * Math.abs(parseFloat(scale)) -
+      document.body.clientWidth * 0.4 >
+    document.body.clientWidth
+  ) {
+    if (
+      document.body.clientWidth * Math.abs(parseFloat(scale)) -
+        document.body.clientWidth * 0.4 >
+      document.body.clientWidth
+    ) {
+      let pageWidth = document.body.clientWidth - 106;
+      let pageOffset = 50 + "px";
+      return {
+        pageOffset,
+        pageWidth: pageWidth + "px",
+      };
+    }
+    let pageWidth = document.body.clientWidth - 106;
+    let pageOffset = 50 + "px";
+    return {
+      pageOffset,
+      pageWidth: pageWidth + "px",
+    };
+  }
+
   let pageOffset = "";
-  let pageWidth = "";
+  let pageWidth = 0;
   if (readerMode === "scroll" || readerMode === "single") {
     let preWidth =
       document.body.clientWidth * Math.abs(parseFloat(scale)) -
@@ -208,7 +233,7 @@ export const getPageWidth = (
     pageOffset = `calc(50vw + ${isNavLocked ? 150 : 0}px - ${
       isSettingLocked ? 150 : 0
     }px - ${width / 2}px)`;
-    pageWidth = `${width}px`;
+    pageWidth = width;
   } else if (readerMode === "double") {
     let width = findValidMultiple(
       document.body.clientWidth -
@@ -220,11 +245,16 @@ export const getPageWidth = (
     pageOffset = `calc(50vw + ${isNavLocked ? 150 : 0}px - ${
       isSettingLocked ? 150 : 0
     }px - ${width / 2}px)`;
-    pageWidth = `${width}px`;
+    pageWidth = width;
+  }
+  console.log(`Page Offset: ${pageOffset}, Page Width: ${pageWidth}`);
+  if (pageWidth > document.body.clientWidth) {
+    pageWidth = document.body.clientWidth - 106;
+    pageOffset = 50 + "px";
   }
   return {
     pageOffset,
-    pageWidth,
+    pageWidth: pageWidth + "px",
   };
 };
 export const loadFontData = async () => {
@@ -355,6 +385,7 @@ export const preCacheAllBooks = async (bookList: Book[]) => {
         parserRegex: "",
         isDarkMode: "no",
         isMobile: "no",
+        password: getPdfPassword(selectedBook),
       },
       Kookit
     );
@@ -654,4 +685,10 @@ export const getTargetHref = (event: any) => {
           event.target.parentNode.parentNode.getAttribute("src")))) ||
     "";
   return href;
+};
+export const getPdfPassword = (book: Book) => {
+  if (book.format !== "PDF" || !book?.description) return "";
+  // 匹配形如 protected PDF: #password# 的内容
+  const match = book.description.match(/protected PDF: #(.+?)#/);
+  return match ? match[1] : "";
 };
