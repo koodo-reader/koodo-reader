@@ -38,8 +38,10 @@ store.set(
   "appPlatform", os.platform() + " " + os.release(),
 );
 let options = {
-  width: 1050,
-  height: 660,
+  width: parseInt(store.get("mainWinWidth") || 1050),
+  height: parseInt(store.get("mainWinHeight") || 660),
+  x: parseInt(store.get("mainWinX")),
+  y: parseInt(store.get("mainWinY")),
   backgroundColor: '#fff',
   webPreferences: {
     webSecurity: false,
@@ -154,6 +156,17 @@ const createMainWin = () => {
   mainWin.loadURL(urlLocation);
 
   mainWin.on("close", () => {
+    if (!mainWin.isDestroyed()) {
+      let bounds = mainWin.getBounds();
+      if (bounds.width > 0 && bounds.height > 0) {
+        store.set({
+          mainWinWidth: bounds.width,
+          mainWinHeight: bounds.height,
+          mainWinX: bounds.x,
+          mainWinY: bounds.y,
+        });
+      }
+    }
     mainWin = null;
   });
   mainWin.on("resize", () => {
@@ -354,6 +367,14 @@ const createMainWin = () => {
   ipcMain.handle("reset-reader-position", async (event) => {
     store.delete("windowX");
     store.delete("windowY");
+    return "success"
+
+  });
+  ipcMain.handle("reset-main-position", async (event) => {
+    store.delete("mainWinX");
+    store.delete("mainWinY");
+    app.relaunch()
+    app.exit()
     return "success"
 
   });

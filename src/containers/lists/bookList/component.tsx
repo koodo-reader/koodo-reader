@@ -15,8 +15,21 @@ import SelectBook from "../../../components/selectBook";
 import { Trans } from "react-i18next";
 declare var window: any;
 let currentBookMode = "home";
-let bookCount =
-  ConfigService.getReaderConfig("isDisablePagination") === "yes" ? 999 : 24;
+function getBookCountPerPage() {
+  if (ConfigService.getReaderConfig("isDisablePagination") === "yes")
+    return 999;
+  const container = document.querySelector(
+    ".book-list-container"
+  ) as HTMLElement;
+  if (!container) return 24; // fallback
+  const containerWidth = container.clientWidth;
+  const containerHeight = container.clientHeight;
+  const bookWidth = 133;
+  const bookHeight = 201;
+  const columns = Math.max(1, Math.floor(containerWidth / bookWidth));
+  const rows = Math.max(1, Math.floor(containerHeight / bookHeight)) + 2;
+  return columns * rows;
+}
 class BookList extends React.Component<BookListProps, BookListState> {
   constructor(props: BookListProps) {
     super(props);
@@ -29,6 +42,10 @@ class BookList extends React.Component<BookListProps, BookListState> {
       isRefreshing: false,
     };
   }
+  get bookCount() {
+    console.log(getBookCountPerPage(), "getBookCountPerPage()");
+    return getBookCountPerPage();
+  }
   UNSAFE_componentWillMount() {
     this.props.handleFetchBooks();
   }
@@ -37,6 +54,11 @@ class BookList extends React.Component<BookListProps, BookListState> {
     if (!this.props.books || !this.props.books[0]) {
       return <Redirect to="manager/empty" />;
     }
+    window.addEventListener("resize", () => {
+      //recount the book count per page when the window is resized
+      this.props.handleFetchBooks();
+      this.props.handleCurrentPage(1);
+    });
   }
 
   handleKeyFilter = (items: any[], arr: string[]) => {
@@ -145,8 +167,8 @@ class BookList extends React.Component<BookListProps, BookListState> {
     return books
       .filter(
         (_, index) =>
-          index >= (this.props.currentPage - 1) * bookCount &&
-          index < this.props.currentPage * bookCount
+          index >= (this.props.currentPage - 1) * this.bookCount &&
+          index < this.props.currentPage * this.bookCount
       )
       .map((item: BookModel, index: number) => {
         return this.props.viewMode === "list" ? (
@@ -215,9 +237,9 @@ class BookList extends React.Component<BookListProps, BookListState> {
     return {
       totalBook: books.length,
       totalPage:
-        books.length % bookCount === 0
-          ? books.length / bookCount
-          : Math.floor(books.length / bookCount) + 1,
+        books.length % this.bookCount === 0
+          ? books.length / this.bookCount
+          : Math.floor(books.length / this.bookCount) + 1,
     };
   };
 
