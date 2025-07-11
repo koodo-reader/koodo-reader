@@ -190,6 +190,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           isMobile: "no",
           isStartFromEven: ConfigService.getReaderConfig("isStartFromEven"),
           password: getPdfPassword(this.props.currentBook),
+          scale: parseFloat(this.state.scale),
         },
         Kookit
       );

@@ -196,6 +196,31 @@ export const getPageWidth = (
 
     return limit;
   };
+  if (
+    document.body.clientWidth * Math.abs(parseFloat(scale)) -
+      document.body.clientWidth * 0.4 >
+    document.body.clientWidth
+  ) {
+    if (
+      document.body.clientWidth * Math.abs(parseFloat(scale)) -
+        document.body.clientWidth * 0.4 >
+      document.body.clientWidth
+    ) {
+      let pageWidth = document.body.clientWidth - 106;
+      let pageOffset = 50 + "px";
+      return {
+        pageOffset,
+        pageWidth: pageWidth + "px",
+      };
+    }
+    let pageWidth = document.body.clientWidth - 106;
+    let pageOffset = 50 + "px";
+    return {
+      pageOffset,
+      pageWidth: pageWidth + "px",
+    };
+  }
+
   let pageOffset = "";
   let pageWidth = 0;
   if (readerMode === "scroll" || readerMode === "single") {
@@ -223,9 +248,9 @@ export const getPageWidth = (
     pageWidth = width;
   }
   console.log(`Page Offset: ${pageOffset}, Page Width: ${pageWidth}`);
-  if (pageWidth > document.body.clientWidth - (isNavLocked ? 150 : 0)) {
-    pageWidth = document.body.clientWidth - 106 - (isNavLocked ? 150 : 0); // Ensure page width does not exceed viewport width
-    pageOffset = "50px";
+  if (pageWidth > document.body.clientWidth) {
+    pageWidth = document.body.clientWidth - 106;
+    pageOffset = 50 + "px";
   }
   return {
     pageOffset,

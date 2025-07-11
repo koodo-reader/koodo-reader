@@ -60,11 +60,11 @@
   opacity: 0.9;
 }
 .left-panel {
-  width: 30px;
-  height: 400px;
+  width: 40px;
+  height: 60%;
   position: absolute;
   left: 0px;
-  top: calc(50vh - 200px);
+  top: calc(50vh - 30%);
   background-color: rgba(75, 75, 75, 0.3);
   border-bottom-right-radius: 20px;
   border-top-right-radius: 20px;
@@ -76,11 +76,11 @@
   cursor: pointer;
 }
 .right-panel {
-  width: 30px;
-  height: 400px;
+  width: 40px;
+  height: 60%;
   position: absolute;
   right: 0px;
-  top: calc(50vh - 200px);
+  top: calc(50vh - 30%);
   background-color: rgba(75, 75, 75, 0.3);
   border-bottom-left-radius: 20px;
   border-top-left-radius: 20px;
@@ -92,10 +92,10 @@
   cursor: pointer;
 }
 .top-panel {
-  width: 400px;
-  height: 30px;
+  width: 60%;
+  height: 40px;
   position: absolute;
-  left: calc(50vw - 200px);
+  left: calc(50vw - 30%);
   top: 0px;
   background-color: rgba(75, 75, 75, 0.3);
   border-bottom-left-radius: 20px;
@@ -108,10 +108,10 @@
   cursor: pointer;
 }
 .bottom-panel {
-  width: 400px;
-  height: 30px;
+  width: 60%;
+  height: 40px;
   position: absolute;
-  left: calc(50vw - 200px);
+  left: calc(50vw - 30%);
   bottom: 0px;
   background-color: rgba(75, 75, 75, 0.3);
   border-top-left-radius: 20px;
