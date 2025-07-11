@@ -178,6 +178,12 @@ class SettingDialog extends React.Component<
       .ipcRenderer.invoke("reset-reader-position", "ping");
     toast.success(this.props.t("Reset successful"));
   };
+  handleResetMainPosition = () => {
+    window
+      .require("electron")
+      .ipcRenderer.invoke("reset-main-position", "ping");
+    toast.success(this.props.t("Reset successful"));
+  };
   handleTheme = (name: string, index: number) => {
     this.setState({ currentThemeIndex: index });
     ConfigService.setReaderConfig("themeColor", name);
@@ -378,6 +384,18 @@ class SettingDialog extends React.Component<
                       className="change-location-button"
                       onClick={() => {
                         this.handleResetReaderPosition();
+                      }}
+                    >
+                      <Trans>Reset</Trans>
+                    </span>
+                  </div>
+                  <div className="setting-dialog-new-title">
+                    <Trans>Reset main window's position</Trans>
+
+                    <span
+                      className="change-location-button"
+                      onClick={() => {
+                        this.handleResetMainPosition();
                       }}
                     >
                       <Trans>Reset</Trans>

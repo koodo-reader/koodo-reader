@@ -116,13 +116,13 @@ class ProgressPanel extends React.Component<
             //TODO
             onBlur={(event) => {
               if (event.target.value.trim()) {
-                // this.handleJumpChapter(event);
-                this.setState({ targetPage: "" });
+                this.props.htmlBook.rendition.goToPage(
+                  parseInt(event.target.value.trim())
+                );
               } else {
                 this.setState({ targetPage: "" });
               }
             }}
-            disabled
           />
           <span>/ {this.state.totalPage}</span>
           &nbsp;&nbsp;&nbsp;
