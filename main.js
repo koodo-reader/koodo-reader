@@ -7,7 +7,8 @@ const {
   dialog,
   powerSaveBlocker,
   nativeTheme,
-  protocol
+  protocol,
+  screen
 } = require("electron");
 const path = require("path");
 const isDev = require("electron-is-dev");
@@ -699,6 +700,16 @@ const createMainWin = () => {
 };
 
 app.on("ready", () => {
+  const scaleFactor = screen.getPrimaryDisplay().scaleFactor;
+  console.log(`Current scale factor: ${scaleFactor}`);
+  options = Object.assign({}, options, {
+    width: Math.round(options.width * scaleFactor),
+    height: Math.round(options.height * scaleFactor),
+    webPreferences: {
+      ...options.webPreferences,
+      zoomFactor: 1.0 / scaleFactor // 抵消系统缩放
+    }
+  });
   createMainWin();
 });
 app.on("window-all-closed", () => {
