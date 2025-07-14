@@ -283,6 +283,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     }
 
     rendition.on("rendered", async () => {
+      console.log(window.chapterDocIndex);
       this.handleLocation();
       let bookLocation: {
         text: string;

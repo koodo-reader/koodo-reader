@@ -43,7 +43,6 @@ class BookList extends React.Component<BookListProps, BookListState> {
     };
   }
   get bookCount() {
-    console.log(getBookCountPerPage(), "getBookCountPerPage()");
     return getBookCountPerPage();
   }
   UNSAFE_componentWillMount() {

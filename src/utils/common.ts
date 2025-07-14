@@ -247,7 +247,6 @@ export const getPageWidth = (
     }px - ${width / 2}px)`;
     pageWidth = width;
   }
-  console.log(`Page Offset: ${pageOffset}, Page Width: ${pageWidth}`);
   if (pageWidth > document.body.clientWidth) {
     pageWidth = document.body.clientWidth - 106;
     pageOffset = 50 + "px";

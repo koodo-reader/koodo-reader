@@ -667,16 +667,6 @@ class Login extends React.Component<LoginProps, LoginState> {
                         if (this.state.isSendingCode || this.state.countdown) {
                           return;
                         }
-                        if (
-                          !CommonTool.EmailProviders.includes(
-                            this.state.loginConfig.email.split("@")[1]
-                          )
-                        ) {
-                          toast.error(
-                            this.props.t("Unsupported email provider")
-                          );
-                          return;
-                        }
                         this.setState({ isSendingCode: true });
                         toast.loading(this.props.t("Sending"), {
                           id: "send-email-code",
@@ -763,7 +753,9 @@ class Login extends React.Component<LoginProps, LoginState> {
                     {this.props.t("Log in")}
                   </div>
                   <div className="login-term">
-                    {this.props.t("Supported email providers")}
+                    {this.props.t(
+                      "Note that 7-days free trial only applys to users who registered with recommended email providers. Recommended email providers are as follows"
+                    )}
                     <br />
                     {CommonTool.EmailProviders.join(", ")}
                   </div>
