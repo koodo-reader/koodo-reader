@@ -396,7 +396,9 @@ class AccountSetting extends React.Component<
                 marginTop: "10px",
               }}
             >
-              {this.props.t("Supported email providers")}
+              {this.props.t(
+                "Note that 7-days free trial only applys to users who registered with recommended email providers. Recommended email providers are as follows"
+              )}
               <br />
               {CommonTool.EmailProviders.join(", ")}
             </div>
