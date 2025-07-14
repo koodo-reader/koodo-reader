@@ -3,10 +3,10 @@ name: Build Android APK
 on:
   push:
     branches:
-      - main
+      - aikoodoreader
   pull_request:
     branches:
-      - main
+      - aikoodoreader
 
 jobs:
   build:
