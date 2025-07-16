@@ -15,6 +15,8 @@ import packageJson from "../../package.json";
 import toast from "react-hot-toast";
 import i18n from "../i18n";
 import { getThirdpartyRequest } from "./request/thirdparty";
+import { getCloudConfig } from "./file/common";
+import SyncService from "./storage/syncService";
 declare var window: any;
 export const supportedFormats = [
   ".epub",
@@ -690,4 +692,74 @@ export const getPdfPassword = (book: Book) => {
   // 匹配形如 protected PDF: #password# 的内容
   const match = book.description.match(/protected PDF: #(.+?)#/);
   return match ? match[1] : "";
+};
+export const showDownloadProgress = (
+  service: string,
+  type: string,
+  bookSize: number
+) => {
+  if (bookSize === 0) {
+    return setTimeout(() => {
+      console.warn("Book size is 0, skipping download progress.");
+    }, 1000);
+  }
+  let isFirst = true;
+  let timer = setInterval(async () => {
+    let downloadedSize = 0;
+    if (isElectron) {
+      if (type === "cloud") {
+        let tokenConfig = await getCloudConfig(service);
+        let config = {
+          ...tokenConfig,
+          service: service,
+          storagePath: getStorageLocation(),
+        };
+        downloadedSize = await window
+          .require("electron")
+          .ipcRenderer.invoke("cloud-progress", config);
+      } else {
+        let tokenConfig = await getCloudConfig(service);
+        downloadedSize = await window
+          .require("electron")
+          .ipcRenderer.invoke("picker-progress", {
+            ...tokenConfig,
+            baseFolder: "",
+            service: service,
+            currentPath: "",
+            storagePath: getStorageLocation(),
+          });
+      }
+      if (isFirst && downloadedSize > 0) {
+        downloadedSize = 0;
+        isFirst = false;
+      }
+      let progress = downloadedSize / bookSize;
+      toast.loading(
+        i18n.t("Downloading") + " (" + parseInt(progress * 100 + "") + "%)",
+        {
+          id: "offline-book",
+        }
+      );
+    } else {
+      if (type === "cloud") {
+        let syncUtil = await SyncService.getSyncUtil();
+        downloadedSize = await syncUtil.getDownloadedSize();
+      } else {
+        let pickerUtil = await SyncService.getPickerUtil(service);
+        downloadedSize = await pickerUtil.getDownloadedSize();
+      }
+      if (isFirst && downloadedSize > 0) {
+        downloadedSize = 0;
+        isFirst = false;
+      }
+      let progress = downloadedSize / bookSize;
+      toast.loading(
+        i18n.t("Downloading") + " (" + parseInt(progress * 100 + "") + "%)",
+        {
+          id: "offline-book",
+        }
+      );
+    }
+  }, 500);
+  return timer;
 };

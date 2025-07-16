@@ -1,26 +1,31 @@
 import React from "react";
 import "./importDialog.css";
 import { driveList } from "../../../constants/driveList";
-import { backup } from "../../../utils/file/backup";
-import { restore } from "../../../utils/file/restore";
 import { Trans } from "react-i18next";
 import { ImportDialogProps, ImportDialogState } from "./interface";
-import packageInfo from "../../../../package.json";
 import _ from "underscore";
 import toast from "react-hot-toast";
 import { isElectron } from "react-device-detect";
-import { checkStableUpdate } from "../../../utils/request/common";
 import { getCloudConfig } from "../../../utils/file/common";
 import SyncService from "../../../utils/storage/syncService";
 import {
   getStorageLocation,
   openExternalUrl,
+  showDownloadProgress,
   supportedFormats,
 } from "../../../utils/common";
 import {
   ConfigService,
   SyncUtil,
 } from "../../../assets/lib/kookit-extra-browser.min";
+
+type FileInfo = {
+  name: string;
+  size: number;
+  type: string;
+  modified: string;
+  path: string;
+};
 class ImportDialog extends React.Component<
   ImportDialogProps,
   ImportDialogState
@@ -67,11 +72,11 @@ class ImportDialog extends React.Component<
   };
   listFolder = async (drive: string, path: string) => {
     this.setState({ isWaitList: true });
-    let fileList = [];
+    let fileInfoList = [];
     if (isElectron) {
       const { ipcRenderer } = window.require("electron");
       let tokenConfig = await getCloudConfig(drive);
-      fileList = await ipcRenderer.invoke("picker-list", {
+      fileInfoList = await ipcRenderer.invoke("picker-list", {
         ...tokenConfig,
         baseFolder: "",
         service: drive,
@@ -80,33 +85,34 @@ class ImportDialog extends React.Component<
       });
     } else {
       let pickerUtil = await SyncService.getPickerUtil(drive);
-      fileList = await pickerUtil.listFiles(path);
+      fileInfoList = await pickerUtil.listFileInfos(path);
     }
     this.setState({
-      currentFileList: fileList,
+      currentFileList: fileInfoList,
       isWaitList: false,
     });
   };
-  handleClickItem = async (item: string) => {
-    if (item.indexOf(".") === -1) {
+  handleClickItem = async (item: FileInfo) => {
+    if (item.type === "folder") {
       this.setState(
         {
-          currentPath: this.state.currentPath + "/" + item,
+          currentPath: this.state.currentPath + "/" + item.name,
         },
         async () => {
           this.listFolder(this.state.currentDrive, this.state.currentPath);
         }
       );
     } else {
-      let sourcePath = this.state.currentPath + "/" + item;
-      this.handleImportBook(sourcePath);
+      let sourcePath = this.state.currentPath + "/" + item.name;
+      item.path = sourcePath; // Add path to item for reference
+      this.handleImportBook(item);
     }
   };
-  handleImportBook = async (sourcePath: string) => {
+  handleImportBook = async (item: FileInfo) => {
     toast.loading(this.props.t("Downloading"), {
-      id: "importing",
+      id: "offline-book",
     });
-    let destPath = "temp/" + sourcePath.split("/").pop();
+    let destPath = "temp/" + item.path.split("/").pop();
     let file: any = null;
     if (isElectron) {
       const fs = window.require("fs");
@@ -119,30 +125,45 @@ class ImportDialog extends React.Component<
           recursive: true,
         });
       }
+      let timer = showDownloadProgress(
+        this.state.currentDrive,
+        "picker",
+        item.size
+      );
       await ipcRenderer.invoke("picker-download", {
         ...tokenConfig,
         baseFolder: "",
-        sourcePath: sourcePath.substring(1),
+        sourcePath: item.path.substring(1),
         destPath: destPath,
         service: this.state.currentDrive,
         storagePath: dataPath,
       });
+      clearInterval(timer);
+      toast.dismiss("offline-book");
       const buffer = fs.readFileSync(path.join(dataPath, destPath));
 
       let arraybuffer = new Uint8Array(buffer).buffer;
       let blob = new Blob([arraybuffer]);
-      let fileName = path.basename(sourcePath);
+      let fileName = path.basename(item.path);
       file = new File([blob], fileName);
-      file.path = sourcePath;
+      file.path = item.path;
       // Clean up the temp file after import
       fs.unlinkSync(path.join(dataPath, destPath));
     } else {
-      let pickerUtil = await SyncService.getPickerUtil(this.state.currentDrive);
-      let arraybuffer = await pickerUtil.remote.downloadFile(
-        sourcePath.substring(1)
+      let timer = showDownloadProgress(
+        this.state.currentDrive,
+        "picker",
+        item.size
       );
+      let pickerUtil = await SyncService.getPickerUtil(this.state.currentDrive);
+
+      let arraybuffer = await pickerUtil.remote.downloadFile(
+        item.path.substring(1)
+      );
+      clearInterval(timer);
+      toast.dismiss("offline-book");
       let blob = new Blob([arraybuffer]);
-      let fileName = sourcePath.split("/").pop() || "file";
+      let fileName = item.path.split("/").pop() || "file";
       file = new File([blob], fileName);
     }
     toast.dismiss("importing");
@@ -159,23 +180,24 @@ class ImportDialog extends React.Component<
       );
 
       // Filter only files (not folders) and get full paths
-      const fileList = allFiles.filter((file) => file.indexOf(".") !== -1);
+      const fileInfoList = allFiles.filter((file) => file.type === "file");
 
-      if (fileList.length === 0) {
+      if (fileInfoList.length === 0) {
         toast.dismiss("scanning");
         toast(this.props.t("No files found in this folder"));
         return;
       }
-      let selectedFileList = fileList.filter((file) =>
+      let selectedFileList = fileInfoList.filter((file) =>
         supportedFormats.includes(
-          "." + file.split(".").pop()?.toLowerCase() || ""
+          "." + file.name.split(".").pop()?.toLowerCase() || ""
         )
       );
       toast.dismiss("scanning");
       toast.success(this.props.t("Successfully scanned folder"));
       for (let i = 0; i < selectedFileList.length; i++) {
-        let sourcePath = selectedFileList[i];
-        await this.handleImportBook(sourcePath);
+        let fileInfo = selectedFileList[i];
+
+        await this.handleImportBook(fileInfo);
       }
     } catch (error) {
       toast.dismiss("scanning");
@@ -184,16 +206,16 @@ class ImportDialog extends React.Component<
     }
   };
 
-  getAllFilesInFolder = async (folderPath: string): Promise<string[]> => {
-    let allFiles: string[] = [];
+  getAllFilesInFolder = async (folderPath: string): Promise<FileInfo[]> => {
+    let allFiles: FileInfo[] = [];
 
     try {
-      let fileList: string[] = [];
+      let fileInfoList: FileInfo[] = [];
 
       if (isElectron) {
         const { ipcRenderer } = window.require("electron");
         let tokenConfig = await getCloudConfig(this.state.currentDrive);
-        fileList = await ipcRenderer.invoke("picker-list", {
+        fileInfoList = await ipcRenderer.invoke("picker-list", {
           ...tokenConfig,
           baseFolder: "",
           service: this.state.currentDrive,
@@ -204,19 +226,20 @@ class ImportDialog extends React.Component<
         let pickerUtil = await SyncService.getPickerUtil(
           this.state.currentDrive
         );
-        fileList = await pickerUtil.listFiles(folderPath);
+        fileInfoList = await pickerUtil.listFileInfos(folderPath);
       }
 
-      for (const item of fileList) {
-        const fullPath = folderPath + "/" + item;
+      for (const item of fileInfoList) {
+        const fullPath = folderPath + "/" + item.name;
+        item.path = fullPath; // Add path to item for reference
 
-        if (item.indexOf(".") === -1) {
+        if (item.type === "folder") {
           // It's a folder, recursively get files from it
           const subFiles = await this.getAllFilesInFolder(fullPath);
           allFiles = allFiles.concat(subFiles);
         } else {
           // It's a file, add to list
-          allFiles.push(fullPath);
+          allFiles.push(item);
         }
       }
     } catch (error) {
@@ -308,14 +331,20 @@ class ImportDialog extends React.Component<
                     this.handleClickItem(item);
                   }}
                 >
-                  {item}
+                  {item.name}
                 </span>
-                {item.indexOf(".") === -1 && (
+                {item.size > 0 && item.type === "file" && (
+                  <span className="cloud-drive-label">
+                    {(item.size / (1024 * 1024)).toFixed(2)} MB
+                  </span>
+                )}
+
+                {item.type === "folder" && (
                   <span
                     className="import-dialog-folder-button"
                     onClick={() => {
                       //list all files in the folder and its subfolder
-                      this.listAllFilesRecursively(item);
+                      this.listAllFilesRecursively(item.name);
                     }}
                   >
                     <span
@@ -326,23 +355,25 @@ class ImportDialog extends React.Component<
                     </span>
                   </span>
                 )}
-                {item.indexOf(".") === -1 ? (
+                {item.type === "folder" ? (
                   <span
                     className="icon-dropdown import-dialog-more-file"
                     onClick={async () => {
                       this.handleClickItem(item);
                     }}
                   ></span>
-                ) : this.state.selectedFileList.includes(
-                    this.state.currentPath + "/" + item
-                  ) ? (
+                ) : this.state.selectedFileList
+                    .map((item) => item.path)
+                    .includes(this.state.currentPath + "/" + item.name) ? (
                   <span
                     className="icon-check import-dialog-check-file"
                     style={{ fontWeight: "bold" }}
                     onClick={() => {
                       this.setState({
                         selectedFileList: this.state.selectedFileList.filter(
-                          (file) => file !== this.state.currentPath + "/" + item
+                          (file) =>
+                            file.name !==
+                            this.state.currentPath + "/" + item.name
                         ),
                       });
                     }}
@@ -354,7 +385,10 @@ class ImportDialog extends React.Component<
                       this.setState({
                         selectedFileList: [
                           ...this.state.selectedFileList,
-                          this.state.currentPath + "/" + item,
+                          {
+                            ...item,
+                            path: this.state.currentPath + "/" + item.name,
+                          },
                         ],
                       });
                     }}
@@ -386,8 +420,9 @@ class ImportDialog extends React.Component<
               return;
             }
             for (let i = 0; i < this.state.selectedFileList.length; i++) {
-              let sourcePath = this.state.selectedFileList[i];
-              await this.handleImportBook(sourcePath);
+              let fileInfo = this.state.selectedFileList[i];
+
+              await this.handleImportBook(fileInfo);
             }
             this.setState({
               selectedFileList: [],
