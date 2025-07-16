@@ -25,7 +25,19 @@ export interface ImportDialogState {
   isBackup: string;
   currentDrive: string;
   currentPath: string;
-  currentFileList: string[];
-  selectedFileList: string[];
+  currentFileList: {
+    name: string;
+    size: number;
+    type: string;
+    modified: string;
+    path: string;
+  }[];
+  selectedFileList: {
+    name: string;
+    size: number;
+    type: string;
+    modified: string;
+    path: string;
+  }[];
   isWaitList: boolean;
 }

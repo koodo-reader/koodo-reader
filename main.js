@@ -270,9 +270,19 @@ const createMainWin = () => {
     let result = await syncUtil.downloadFile(config.fileName, (config.isTemp ? "temp-" : "") + config.fileName, config.type);
     return result;
   });
+  ipcMain.handle("cloud-progress", async (event, config) => {
+    let syncUtil = await getSyncUtil(config);
+    let result = syncUtil.getDownloadedSize();
+    return result;
+  });
   ipcMain.handle("picker-download", async (event, config) => {
     let pickerUtil = await getPickerUtil(config);
     let result = await pickerUtil.remote.downloadFile(config.sourcePath, config.destPath);
+    return result;
+  });
+  ipcMain.handle("picker-progress", async (event, config) => {
+    let pickerUtil = await getPickerUtil(config);
+    let result = await pickerUtil.getDownloadedSize();
     return result;
   });
   ipcMain.handle("cloud-reset", async (event, config) => {
@@ -298,7 +308,7 @@ const createMainWin = () => {
   });
   ipcMain.handle("picker-list", async (event, config) => {
     let pickerUtil = await getPickerUtil(config);
-    let result = await pickerUtil.listFiles(config.currentPath);
+    let result = await pickerUtil.listFileInfos(config.currentPath);
     return result;
   });
   ipcMain.handle("cloud-exist", async (event, config) => {

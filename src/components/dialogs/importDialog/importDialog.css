@@ -34,6 +34,7 @@
   width: calc(100% - 50px);
   text-overflow: ellipsis;
   overflow: hidden;
+  margin-right: 10px;
 }
 .import-dialog-more-file {
   transform: rotate(-90deg);

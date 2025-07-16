@@ -6,7 +6,7 @@ import { isElectron } from "react-device-detect";
 import localforage from "localforage";
 import BookModel from "../../models/Book";
 import toast from "react-hot-toast";
-import { getStorageLocation } from "../common";
+import { getStorageLocation, showDownloadProgress } from "../common";
 import { Buffer } from "buffer";
 import SyncService from "../storage/syncService";
 import { CommonTool } from "../../assets/lib/kookit-extra-browser.min";
@@ -192,7 +192,14 @@ class BookUtil {
         (await TokenService.getToken("is_authed")) === "yes" &&
         (await this.isBookExistInCloud(book.key))
       ) {
+        let timer = showDownloadProgress(
+          ConfigService.getItem("defaultSyncOption") || "",
+          "cloud",
+          book.size
+        );
         let result = await this.downloadBook(book.key, book.format);
+        clearInterval(timer);
+        toast.dismiss("offline-book");
         if (ConfigService.getItem("defaultSyncOption") === "adrive") {
           let syncUtil = await SyncService.getSyncUtil();
           let covers = await syncUtil.listFiles("cover");
