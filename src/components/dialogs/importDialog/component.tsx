@@ -334,7 +334,10 @@ class ImportDialog extends React.Component<
                   {item.name}
                 </span>
                 {item.size > 0 && item.type === "file" && (
-                  <span className="cloud-drive-label">
+                  <span
+                    className="cloud-drive-label"
+                    style={{ maxWidth: "80px" }}
+                  >
                     {(item.size / (1024 * 1024)).toFixed(2)} MB
                   </span>
                 )}
