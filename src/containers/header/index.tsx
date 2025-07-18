@@ -3,6 +3,7 @@ import { withTranslation } from "react-i18next";
 import {
   handleSortDisplay,
   handleSetting,
+  handleSettingMode,
   handleAbout,
   handleBackupDialog,
   handleLocalFileDialog,
@@ -40,6 +41,7 @@ const actionCreator = {
   handleBackupDialog,
   handleLocalFileDialog,
   handleSetting,
+  handleSettingMode,
   handleAbout,
   handleFeedbackDialog,
   handleFetchBooks,

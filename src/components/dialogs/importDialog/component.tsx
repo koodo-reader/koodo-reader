@@ -109,6 +109,17 @@ class ImportDialog extends React.Component<
     }
   };
   handleImportBook = async (item: FileInfo) => {
+    let isSupported = supportedFormats.includes(
+      "." + item.name.split(".").pop()?.toLowerCase() || ""
+    );
+    if (!isSupported) {
+      toast.error(
+        this.props.t("Unsupported file format") +
+          ": " +
+          item.name.split(".").pop()
+      );
+      return;
+    }
     toast.loading(this.props.t("Downloading"), {
       id: "offline-book",
     });
@@ -372,10 +383,17 @@ class ImportDialog extends React.Component<
                     className="icon-check import-dialog-check-file"
                     style={{ fontWeight: "bold" }}
                     onClick={() => {
+                      console.log(
+                        this.state.selectedFileList.filter(
+                          (file) =>
+                            file.path !==
+                            this.state.currentPath + "/" + item.name
+                        )
+                      );
                       this.setState({
                         selectedFileList: this.state.selectedFileList.filter(
                           (file) =>
-                            file.name !==
+                            file.path !==
                             this.state.currentPath + "/" + item.name
                         ),
                       });

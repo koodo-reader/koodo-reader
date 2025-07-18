@@ -398,27 +398,6 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                 )}
               </div>
             )}
-            {this.props.isAuthed &&
-              (this.props.settingDrive === "webdav" ||
-                this.props.settingDrive === "docker" ||
-                this.props.settingDrive === "ftp" ||
-                this.props.settingDrive === "sftp" ||
-                this.props.settingDrive === "mega" ||
-                this.props.settingDrive === "s3compatible") && (
-                <div
-                  className="token-dialog-tip"
-                  style={{
-                    marginTop: "10px",
-                    fontSize: "13px",
-                    lineHeight: "16px",
-                    opacity: 0.8,
-                  }}
-                >
-                  {this.props.t(
-                    "We will ultilize our server to encrypt your credentials, and then store the encrypted credentials locally. The credentials will NOT be stored in our server or sent to any third-party services, and will only be used for data synchronization. If you have any concerns about this, please do not use this feature"
-                  )}
-                </div>
-              )}
             <div className="token-dialog-button-container">
               <div
                 className="voice-add-confirm"
