@@ -272,7 +272,11 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
                           100
                         : 100
                     }
-                    value={parseFloat(this.state.scale) * 100}
+                    value={
+                      this.state.scale === " "
+                        ? this.state.scale
+                        : Math.round(parseFloat(this.state.scale) * 100)
+                    }
                     type="number"
                     onInput={(event: any) => {
                       let fieldVal = event.target.value;
@@ -281,14 +285,21 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
                         parseFloat(fieldVal) / 100 + ""
                       );
                     }}
+                    onFocus={() => {
+                      this.setState({ scale: " " });
+                    }}
                     onChange={(event) => {
                       let fieldVal = event.target.value;
-                      ConfigService.setReaderConfig(
-                        "scale",
-                        parseFloat(fieldVal) / 100 + ""
-                      );
+                      this.setState({ scale: parseFloat(fieldVal) / 100 + "" });
                     }}
                     onBlur={(event) => {
+                      let fieldVal = event.target.value;
+                      if (fieldVal.trim() !== "") {
+                        ConfigService.setReaderConfig(
+                          "scale",
+                          parseFloat(fieldVal) / 100 + ""
+                        );
+                      }
                       BookUtil.reloadBooks();
                     }}
                   />

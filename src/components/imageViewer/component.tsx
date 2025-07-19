@@ -10,6 +10,7 @@ class ImageViewer extends React.Component<ImageViewerProps, ImageViewerStates> {
     this.state = {
       isShowImage: false,
       imageRatio: "horizontal",
+      imageName: "",
       zoomIndex: 0,
       rotateIndex: 0,
     };
@@ -56,7 +57,9 @@ class ImageViewer extends React.Component<ImageViewerProps, ImageViewerStates> {
     ) {
       href = event.target.getAttribute("xlink:href");
     }
-
+    if (event.target.tagName === "IMG" && event.target.getAttribute("alt")) {
+      this.setState({ imageName: event.target.getAttribute("alt") });
+    }
     if (!href) {
       return;
     }
@@ -131,7 +134,12 @@ class ImageViewer extends React.Component<ImageViewerProps, ImageViewerStates> {
   handleSave = async () => {
     let image: any = document.querySelector("#selectedImage");
     let blob = await fetch(image.src).then((r) => r.blob());
-    saveAs(blob, `${new Date().toLocaleDateString()}`);
+    saveAs(
+      blob,
+      this.state.imageName
+        ? this.state.imageName
+        : `${new Date().toLocaleDateString()}`
+    );
   };
   handleClock = () => {
     let image: any = document.querySelector("#selectedImage");
@@ -164,7 +172,7 @@ class ImageViewer extends React.Component<ImageViewerProps, ImageViewerStates> {
         ></div>
         <img
           src=""
-          alt=""
+          alt={this.state.imageName}
           className="image"
           id="selectedImage"
           style={

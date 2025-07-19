@@ -33,15 +33,15 @@
   margin-top: -5px;
   min-width: 80px;
   padding: 0px 10px;
-  height: 32px;
+  height: 36px;
   opacity: 1;
   border-radius: 25px;
-  line-height: 32px;
+  line-height: 36px;
   text-align: center;
   cursor: pointer;
   z-index: 50;
   transition: 0.1s;
-  font-size: 13px;
+  font-size: 15px;
 }
 .new-version-copy {
   cursor: pointer;

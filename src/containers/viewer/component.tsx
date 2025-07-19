@@ -276,8 +276,12 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         })
       );
     }
-    if (this.props.currentBook.format === "TXT") {
+    if (
+      this.props.currentBook.format === "TXT" &&
+      rendition.format !== "CACHE"
+    ) {
       setTimeout(async () => {
+        console.log(rendition, "renditon");
         await rendition.refreshContent();
         let chapters = rendition.getChapter();
         let flattenChapters = rendition.flatChapter(chapters);
