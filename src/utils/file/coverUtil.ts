@@ -397,6 +397,12 @@ class CoverUtil {
     } else {
       let syncUtil = await SyncService.getSyncUtil();
       let cloudCoverList = await syncUtil.listFiles("cover");
+      let books: Book[] | null = await DatabaseService.getAllRecords("books");
+      if (books && books.length > 0) {
+        cloudCoverList = cloudCoverList.filter((item) => {
+          return books?.some((book) => item.startsWith(book.key));
+        });
+      }
       return cloudCoverList;
     }
   }

@@ -76,7 +76,7 @@ class NoteList extends React.Component<NoteListProps, NoteListState> {
               ? item.notes !== ""
               : item.notes === ""
           ),
-      mode: "note",
+      mode: this.props.tabMode,
     };
     return (
       <div
