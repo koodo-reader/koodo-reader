@@ -383,13 +383,6 @@ class ImportDialog extends React.Component<
                     className="icon-check import-dialog-check-file"
                     style={{ fontWeight: "bold" }}
                     onClick={() => {
-                      console.log(
-                        this.state.selectedFileList.filter(
-                          (file) =>
-                            file.path !==
-                            this.state.currentPath + "/" + item.name
-                        )
-                      );
                       this.setState({
                         selectedFileList: this.state.selectedFileList.filter(
                           (file) =>

@@ -281,7 +281,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       rendition.format !== "CACHE"
     ) {
       setTimeout(async () => {
-        console.log(rendition, "renditon");
         await rendition.refreshContent();
         let chapters = rendition.getChapter();
         let flattenChapters = rendition.flatChapter(chapters);
@@ -295,7 +294,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     }
 
     rendition.on("rendered", async () => {
-      console.log(window.chapterDocIndex);
       this.handleLocation();
       let bookLocation: {
         text: string;
