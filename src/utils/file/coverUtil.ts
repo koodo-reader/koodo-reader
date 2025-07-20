@@ -14,7 +14,34 @@ import { getCloudConfig } from "./common";
 import toast from "react-hot-toast";
 import { LocalFileManager } from "./localFile";
 declare var window: any;
+class AsyncQueue {
+  private queue: (() => Promise<void>)[] = [];
+  private running = false;
 
+  async add(task: () => Promise<void>) {
+    this.queue.push(task);
+    if (!this.running) {
+      this.running = true;
+      await this.run();
+    }
+  }
+
+  private async run() {
+    while (this.queue.length > 0) {
+      const task = this.queue.shift();
+      if (task) {
+        try {
+          await task();
+        } catch (e) {
+          console.error("AsyncQueue task error:", e);
+        }
+      }
+    }
+    this.running = false;
+  }
+}
+
+const saveCoverQueue = new AsyncQueue();
 class CoverUtil {
   static async getCover(book: BookModel) {
     if (isElectron) {
@@ -310,14 +337,16 @@ class CoverUtil {
     }
   }
   static async saveCover(cover: string, base64: string) {
-    let book: Book = await DatabaseService.getRecord(
-      cover.split(".")[0],
-      "books"
-    );
-    if (book) {
-      book.cover = base64;
-      await DatabaseService.updateRecord(book, "books");
-    }
+    await saveCoverQueue.add(async () => {
+      let book: Book = await DatabaseService.getRecord(
+        cover.split(".")[0],
+        "books"
+      );
+      if (book) {
+        book.cover = base64;
+        await DatabaseService.updateRecord(book, "books");
+      }
+    });
   }
   static async getLocalCoverList() {
     if (isElectron) {
@@ -366,6 +395,12 @@ class CoverUtil {
     } else {
       let syncUtil = await SyncService.getSyncUtil();
       let cloudCoverList = await syncUtil.listFiles("cover");
+      let books: Book[] | null = await DatabaseService.getAllRecords("books");
+      if (books && books.length > 0) {
+        cloudCoverList = cloudCoverList.filter((item) => {
+          return books?.some((book) => item.startsWith(book.key));
+        });
+      }
       return cloudCoverList;
     }
   }

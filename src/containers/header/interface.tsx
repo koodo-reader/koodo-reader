@@ -22,6 +22,7 @@ export interface HeaderProps extends RouteComponentProps<any> {
   handleFeedbackDialog: (isShow: boolean) => void;
   handleFetchAuthed: () => void;
   handleFetchUserInfo: () => Promise<void>;
+  handleSettingMode: (settingMode: string) => void;
   handleFetchDefaultSyncOption: () => void;
   handleFetchLoginOptionList: () => void;
   handleFetchDataSourceList: () => void;

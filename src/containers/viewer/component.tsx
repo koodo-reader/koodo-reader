@@ -17,6 +17,7 @@ import {
   getPageWidth,
   getPdfPassword,
   scrollContents,
+  showDownloadProgress,
 } from "../../utils/common";
 import _ from "underscore";
 import {
@@ -152,7 +153,14 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     ).then(async (result: any) => {
       if (!result) {
         if (this.props.defaultSyncOption) {
+          let timer = showDownloadProgress(
+            this.props.defaultSyncOption,
+            "cloud",
+            this.props.currentBook.size
+          );
           let result = await BookUtil.downloadBook(key, format.toLowerCase());
+          clearInterval(timer);
+          toast.dismiss("offline-book");
           if (result) {
             toast.success(this.props.t("Download successful"));
           } else {
@@ -268,7 +276,10 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         })
       );
     }
-    if (this.props.currentBook.format === "TXT") {
+    if (
+      this.props.currentBook.format === "TXT" &&
+      rendition.format !== "CACHE"
+    ) {
       setTimeout(async () => {
         await rendition.refreshContent();
         let chapters = rendition.getChapter();
@@ -283,7 +294,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     }
 
     rendition.on("rendered", async () => {
-      console.log(window.chapterDocIndex);
       this.handleLocation();
       let bookLocation: {
         text: string;

@@ -10,6 +10,7 @@ export interface ImageViewerProps {
 export interface ImageViewerStates {
   isShowImage: boolean;
   imageRatio: string;
+  imageName: string;
   zoomIndex: number;
   rotateIndex: number;
 }
