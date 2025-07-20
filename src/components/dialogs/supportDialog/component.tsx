@@ -122,7 +122,12 @@ class SupporDialog extends React.Component<
                     </div>
                     <p
                       className="update-dialog-new-title"
-                      style={{ textAlign: "center", margin: 20, marginLeft: 0 }}
+                      style={{
+                        textAlign: "center",
+                        margin: 20,
+                        marginLeft: 0,
+                        marginRight: 0,
+                      }}
                     >
                       {this.props.t(
                         "Once you exit the Pro version, you will no longer be able to use synchronization and other premium features"

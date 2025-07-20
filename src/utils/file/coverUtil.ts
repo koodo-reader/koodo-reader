@@ -275,7 +275,6 @@ class CoverUtil {
       }
     } else {
       let syncUtil = await SyncService.getSyncUtil();
-      console.log(cover, "cover");
 
       let imgBuffer: ArrayBuffer = await syncUtil.downloadFile(cover, "cover");
       if (!imgBuffer) {
@@ -293,7 +292,6 @@ class CoverUtil {
         let base64 = `data:image/${
           cover.split(".").reverse()[0]
         };base64,${imgStr}`;
-        console.log(base64, "base64");
         await this.saveCover(cover, base64);
       }
     }
