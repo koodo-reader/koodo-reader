@@ -31,7 +31,12 @@ jobs:
         key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
 
     - name: Build with Gradle
-      run: ./gradlew assembleRelease
+      uses: nick-fields/retry@v2
+      with:
+        timeout_minutes: 30
+        max_attempts: 3
+        retry_on: error
+        command: ./gradlew assembleRelease
 
     - name: Upload APK
       uses: actions/upload-artifact@v4
