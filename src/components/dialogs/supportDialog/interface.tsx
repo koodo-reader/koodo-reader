@@ -18,5 +18,6 @@ export interface SupporDialogProps {
 }
 export interface SupporDialogState {
   isRedeemCode: boolean;
+  isExitPro: boolean;
   redeemCode: string;
 }

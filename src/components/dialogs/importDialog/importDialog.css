@@ -34,10 +34,13 @@
   width: calc(100% - 50px);
   text-overflow: ellipsis;
   overflow: hidden;
+  margin-right: 10px;
 }
 .import-dialog-more-file {
   transform: rotate(-90deg);
   font-size: 13px;
+  width: 20px;
+  height: 20px;
 }
 .import-dialog-option {
   width: 100%;
