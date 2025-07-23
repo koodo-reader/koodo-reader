@@ -2,7 +2,7 @@ import React from "react";
 import SettingPanel from "../../containers/panels/settingPanel";
 import NavigationPanel from "../../containers/panels/navigationPanel";
 import OperationPanel from "../../containers/panels/operationPanel";
-import { Toaster } from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 import ProgressPanel from "../../containers/panels/progressPanel";
 import { ReaderProps, ReaderState } from "./interface";
 import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
@@ -223,118 +223,151 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
               )}
           </>
         )}
-        {ConfigService.getReaderConfig("isHideMenuButton") !== "yes" && (
-          <div
-            className="reader-setting-icon-container"
-            onClick={() => {
-              this.handleEnterReader("left");
-              this.handleEnterReader("right");
-              this.handleEnterReader("bottom");
-              this.handleEnterReader("top");
-            }}
-            style={{ right: this.props.isSettingLocked ? 305 : 5 }}
-          >
-            <span className="icon-grid reader-setting-icon"></span>
-          </div>
-        )}
-        {(this.props.readerMode === "scroll" ||
-          this.props.readerMode === "single") && (
-          <div
-            style={{
-              position: "absolute",
-              right: this.props.isSettingLocked ? 300 : 0,
-            }}
-          >
+        <div
+          style={{
+            position: "absolute",
+            top: "7px",
+            right: this.props.isSettingLocked ? 300 : 0,
+            zIndex: 10,
+            width: "120px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "flex-end",
+          }}
+        >
+          {(this.props.readerMode === "scroll" ||
+            this.props.readerMode === "single") && (
             <div
-              className="reader-zoom-in-icon-container"
-              onClick={() => {
-                this.setState({ isShowScale: !this.state.isShowScale });
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "flex-end",
               }}
             >
-              <span className="icon-zoom-in reader-setting-icon"></span>
-            </div>
-            {this.state.isShowScale && (
-              <div className="scale-container">
-                <div
-                  style={{
-                    position: "absolute",
-                    top: "7px",
-                    right: "190px",
-                    zIndex: 100,
-                    width: "120px",
-                  }}
-                >
-                  <input
-                    className="input-value"
-                    defaultValue={
-                      ConfigService.getReaderConfig("scale")
-                        ? parseFloat(ConfigService.getReaderConfig("scale")) *
-                          100
-                        : 100
-                    }
-                    value={
-                      this.state.scale === " "
-                        ? this.state.scale
-                        : Math.round(parseFloat(this.state.scale) * 100)
-                    }
-                    type="number"
-                    onInput={(event: any) => {
-                      let fieldVal = event.target.value;
-                      ConfigService.setReaderConfig(
-                        "scale",
-                        parseFloat(fieldVal) / 100 + ""
-                      );
+              {this.state.isShowScale && (
+                <div className="scale-container">
+                  <div
+                    style={{
+                      zIndex: 100,
+                      width: "100px",
                     }}
-                    onFocus={() => {
-                      this.setState({ scale: " " });
-                    }}
-                    onChange={(event) => {
-                      let fieldVal = event.target.value;
-                      this.setState({ scale: parseFloat(fieldVal) / 100 + "" });
-                    }}
-                    onBlur={(event) => {
-                      let fieldVal = event.target.value;
-                      if (fieldVal.trim() !== "") {
+                  >
+                    <input
+                      className="input-value"
+                      defaultValue={
+                        ConfigService.getReaderConfig("scale")
+                          ? parseFloat(ConfigService.getReaderConfig("scale")) *
+                            100
+                          : 100
+                      }
+                      value={
+                        this.state.scale === " "
+                          ? this.state.scale
+                          : Math.round(parseFloat(this.state.scale) * 100)
+                      }
+                      type="number"
+                      onInput={(event: any) => {
+                        let fieldVal = event.target.value;
                         ConfigService.setReaderConfig(
                           "scale",
                           parseFloat(fieldVal) / 100 + ""
                         );
-                      }
+                      }}
+                      onFocus={() => {
+                        this.setState({ scale: " " });
+                      }}
+                      onChange={(event) => {
+                        let fieldVal = event.target.value;
+                        this.setState({
+                          scale: parseFloat(fieldVal) / 100 + "",
+                        });
+                      }}
+                      onBlur={(event) => {
+                        let fieldVal = event.target.value;
+                        if (fieldVal.trim() !== "") {
+                          ConfigService.setReaderConfig(
+                            "scale",
+                            parseFloat(fieldVal) / 100 + ""
+                          );
+                        }
+                        BookUtil.reloadBooks();
+                      }}
+                    />
+                    <span> %</span>
+                  </div>
+
+                  <input
+                    className="input-progress"
+                    value={this.state.scale}
+                    type="range"
+                    max={4}
+                    min={0.5}
+                    step={0.01}
+                    onInput={(event: any) => {
+                      const scale = event.target.value;
+                      ConfigService.setReaderConfig("scale", scale);
+                    }}
+                    onChange={(event) => {
+                      this.setState({ scale: event.target.value });
+                    }}
+                    onMouseUp={() => {
                       BookUtil.reloadBooks();
                     }}
+                    style={{
+                      zIndex: 100,
+                      width: "120px",
+                    }}
                   />
-                  <span> %</span>
                 </div>
-
-                <input
-                  className="input-progress"
-                  value={this.state.scale}
-                  type="range"
-                  max={4}
-                  min={0.5}
-                  step={0.01}
-                  onInput={(event: any) => {
-                    const scale = event.target.value;
-                    ConfigService.setReaderConfig("scale", scale);
-                  }}
-                  onChange={(event) => {
-                    this.setState({ scale: event.target.value });
-                  }}
-                  onMouseUp={() => {
-                    BookUtil.reloadBooks();
-                  }}
-                  style={{
-                    position: "absolute",
-                    top: "18px",
-                    right: "100px",
-                    zIndex: 100,
-                    width: "120px",
-                  }}
-                />
+              )}
+              <div
+                className="reader-zoom-in-icon-container"
+                onClick={() => {
+                  this.setState({ isShowScale: !this.state.isShowScale });
+                }}
+              >
+                <span className="icon-zoom-in reader-setting-icon"></span>
               </div>
-            )}
-          </div>
-        )}
+            </div>
+          )}
+          {this.props.currentBook.format === "PDF" && (
+            <div
+              className="reader-setting-icon-container"
+              onClick={() => {
+                ConfigService.setReaderConfig(
+                  "isConvertPDF",
+                  ConfigService.getReaderConfig("isConvertPDF") === "yes"
+                    ? "no"
+                    : "yes"
+                );
+                toast.success(
+                  ConfigService.getReaderConfig("isConvertPDF") === "yes"
+                    ? this.props.t("PDF to Text is enabled")
+                    : this.props.t("PDF to Text is disabled")
+                );
+                BookUtil.reloadBooks();
+              }}
+            >
+              <span
+                className="icon-convert-text reader-setting-icon"
+                style={{ fontSize: 26 }}
+              ></span>
+            </div>
+          )}
+          {ConfigService.getReaderConfig("isHideMenuButton") !== "yes" && (
+            <div
+              className="reader-setting-icon-container"
+              onClick={() => {
+                this.handleEnterReader("left");
+                this.handleEnterReader("right");
+                this.handleEnterReader("bottom");
+                this.handleEnterReader("top");
+              }}
+            >
+              <span className="icon-grid reader-setting-icon"></span>
+            </div>
+          )}
+        </div>
 
         <Toaster />
 

@@ -49,7 +49,10 @@ class PopupOption extends React.Component<PopupOptionProps> {
       {}
     );
     let cfi = JSON.stringify(bookLocation);
-    if (this.props.currentBook.format === "PDF") {
+    if (
+      this.props.currentBook.format === "PDF" &&
+      ConfigService.getReaderConfig("isConvertPDF") !== "yes"
+    ) {
       let bookLocation = this.props.htmlBook.rendition.getPositionByChapter(
         this.props.chapterDocIndex
       );

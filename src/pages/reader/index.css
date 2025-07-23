@@ -219,17 +219,19 @@
 .reader-setting-icon {
   margin: 8px;
   opacity: 0.7;
+  width: 50px;
+  padding: 15px;
 }
 .scale-container {
   min-width: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
 }
 .reader-setting-icon-container,
 .reader-zoom-in-icon-container {
   width: 50px;
   height: 50px;
-  position: absolute;
-  top: -3px;
-  right: 5px;
   font-size: 20px;
   cursor: pointer;
   z-index: 10;
@@ -239,12 +241,12 @@
   justify-content: center;
   align-items: center;
   transition: 0, 2s;
+  float: right;
 }
 .reader-setting-icon-container:hover,
 .reader-zoom-in-icon-container:hover {
   border-radius: 50%;
 }
 .reader-zoom-in-icon-container {
-  right: 50px;
   font-size: 23px;
 }
