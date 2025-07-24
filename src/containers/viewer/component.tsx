@@ -207,6 +207,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
             : ocrLangList.find(
                 (item) => item.lang === ConfigService.getReaderConfig("lang")
               )?.value || "chi_sim",
+          ocrEngine: ConfigService.getReaderConfig("ocrEngine") || "tesseract",
           paraSpacingValue:
             ConfigService.getReaderConfig("paraSpacingValue") || "1.5",
           titleSizeValue:
