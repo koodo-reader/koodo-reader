@@ -73,3 +73,40 @@ export const speedList = {
     { label: "5", value: "5" },
   ],
 };
+export const ocrLangList = [
+  { label: "Simplified Chinese", value: "chi_sim", lang: "zhCN" },
+  { label: "Traditional Chinese", value: "chi_tra", lang: "zhTW" },
+  { label: "English", value: "eng", lang: "en" },
+  { label: "Japanese", value: "jpn", lang: "ja" },
+  { label: "Korean", value: "kor", lang: "ko" },
+  { label: "French", value: "fra", lang: "fr" },
+  { label: "German", value: "deu", lang: "de" },
+  { label: "Spanish", value: "spa", lang: "es" },
+  { label: "Russian", value: "rus", lang: "ru" },
+  { label: "Italian", value: "ita", lang: "it" },
+  { label: "Portuguese", value: "por", lang: "pt" },
+];
+export const paraSpacingList = [
+  { label: "1", value: "1" },
+  { label: "1.1", value: "1.1" },
+  { label: "1.2", value: "1.2" },
+  { label: "1.3", value: "1.3" },
+  { label: "1.4", value: "1.4" },
+  { label: "1.5", value: "1.5" },
+  { label: "2", value: "2" },
+  { label: "3", value: "3" },
+  { label: "4", value: "4" },
+  { label: "5", value: "5" },
+];
+export const titleSizeList = [
+  { label: "1", value: "1" },
+  { label: "1.1", value: "1.1" },
+  { label: "1.2", value: "1.2" },
+  { label: "1.3", value: "1.3" },
+  { label: "1.4", value: "1.4" },
+  { label: "1.5", value: "1.5" },
+  { label: "2", value: "2" },
+  { label: "3", value: "3" },
+  { label: "4", value: "4" },
+  { label: "5", value: "5" },
+];

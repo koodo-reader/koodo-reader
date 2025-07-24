@@ -97,6 +97,7 @@ export type stateType = {
     readerMode: string;
     isNavLocked: boolean;
     isSettingLocked: boolean;
+    isConvertOpen: boolean;
     noteKey: string;
     currentChapter: string;
     currentChapterIndex: number;

@@ -13,6 +13,9 @@ export function handleOriginalText(originalText: string) {
 export function handleColor(color: number) {
   return { type: "HANDLE_COLOR", payload: color };
 }
+export function handleConvertDialog(isConvertOpen: boolean) {
+  return { type: "HANDLE_CONVERT_DIALOG", payload: isConvertOpen };
+}
 export function handleBookmarks(bookmarks: BookmarkModel[]) {
   return { type: "HANDLE_BOOKMARKS", payload: bookmarks };
 }

@@ -48,6 +48,7 @@ export function handleSettingDrive(settingDrive: string) {
 export function handleAbout(isAboutOpen: boolean) {
   return { type: "HANDLE_ABOUT", payload: isAboutOpen };
 }
+
 export function handleViewMode(mode: string) {
   return { type: "HANDLE_VIEW_MODE", payload: mode };
 }

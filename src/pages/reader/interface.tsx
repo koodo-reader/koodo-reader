@@ -7,11 +7,13 @@ export interface ReaderProps {
   htmlBook: HtmlBookModel;
   isNavLocked: boolean;
   isSettingLocked: boolean;
+  isConvertOpen: boolean;
   isSearch: boolean;
   isAuthed: boolean;
   readerMode: string;
   handleFetchNotes: () => void;
   handleReaderMode: (readerMode: string) => void;
+  handleConvertDialog: (isConvertOpen: boolean) => void;
   handleMenuMode: (menuMode: string) => void;
   handleOriginalText: (originalText: string) => void;
   handleFetchBooks: () => void;

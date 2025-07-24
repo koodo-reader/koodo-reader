@@ -60,6 +60,7 @@ export function manager(
         ...state,
         isOpenFeedbackDialog: action.payload,
       };
+
     case "HANDLE_USER_INFO":
       return {
         ...state,
