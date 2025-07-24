@@ -16,6 +16,7 @@ const initState = {
   originalText: "",
   htmlBook: null,
   readerMode: "double",
+  isConvertOpen: false,
   isNavLocked: ConfigService.getReaderConfig("isNavLocked") === "yes",
   isSettingLocked: ConfigService.getReaderConfig("isSettingLocked") === "yes",
 };
@@ -39,6 +40,11 @@ export function reader(
       return {
         ...state,
         currentChapter: action.payload,
+      };
+    case "HANDLE_CONVERT_DIALOG":
+      return {
+        ...state,
+        isConvertOpen: action.payload,
       };
     case "HANDLE_CURRENT_CHAPTER_INDEX":
       return {

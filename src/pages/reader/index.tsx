@@ -8,6 +8,7 @@ import {
   handleMenuMode,
   handleOriginalText,
   handleOpenMenu,
+  handleConvertDialog,
 } from "../../store/actions";
 import { connect } from "react-redux";
 import { stateType } from "../../store";
@@ -21,6 +22,7 @@ const mapStateToProps = (state: stateType) => {
     htmlBook: state.reader.htmlBook,
     readerMode: state.reader.readerMode,
     isNavLocked: state.reader.isNavLocked,
+    isConvertOpen: state.reader.isConvertOpen,
     isSettingLocked: state.reader.isSettingLocked,
     isAuthed: state.manager.isAuthed,
     isSearch: state.manager.isSearch,
@@ -36,6 +38,7 @@ const actionCreator = {
   handleMenuMode,
   handleOriginalText,
   handleOpenMenu,
+  handleConvertDialog,
 };
 export default connect(
   mapStateToProps,

@@ -26,6 +26,7 @@ import {
 } from "../../assets/lib/kookit-extra-browser.min";
 import * as Kookit from "../../assets/lib/kookit.min";
 import PopupRefer from "../../components/popups/popupRefer";
+import { ocrLangList } from "../../constants/dropdownList";
 declare var window: any;
 let lock = false; //prevent from clicking too fasts
 
@@ -201,6 +202,15 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           password: getPdfPassword(this.props.currentBook),
           scale: parseFloat(this.state.scale),
           isConvertPDF: ConfigService.getReaderConfig("isConvertPDF"),
+          ocrLang: ConfigService.getReaderConfig("ocrLang")
+            ? ConfigService.getReaderConfig("ocrLang")
+            : ocrLangList.find(
+                (item) => item.lang === ConfigService.getReaderConfig("lang")
+              )?.value || "chi_sim",
+          paraSpacingValue:
+            ConfigService.getReaderConfig("paraSpacingValue") || "1.5",
+          titleSizeValue:
+            ConfigService.getReaderConfig("titleSizeValue") || "1.2",
           isScannedPDF:
             this.props.currentBook.description.indexOf("scanned PDF") > -1
               ? "yes"

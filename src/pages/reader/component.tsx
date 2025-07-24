@@ -12,6 +12,7 @@ import "./index.css";
 import Book from "../../models/Book";
 import DatabaseService from "../../utils/storage/databaseService";
 import BookUtil from "../../utils/file/bookUtil";
+import ConvertDialog from "../../components/dialogs/convertDialog";
 
 let lock = false; //prevent from clicking too fasts
 let throttleTime =
@@ -336,18 +337,19 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
             <div
               className="reader-setting-icon-container"
               onClick={() => {
-                ConfigService.setReaderConfig(
-                  "isConvertPDF",
-                  ConfigService.getReaderConfig("isConvertPDF") === "yes"
-                    ? "no"
-                    : "yes"
-                );
-                toast.success(
-                  ConfigService.getReaderConfig("isConvertPDF") === "yes"
-                    ? this.props.t("PDF to Text is enabled")
-                    : this.props.t("PDF to Text is disabled")
-                );
-                BookUtil.reloadBooks();
+                this.props.handleConvertDialog(!this.props.isConvertOpen);
+                // ConfigService.setReaderConfig(
+                //   "isConvertPDF",
+                //   ConfigService.getReaderConfig("isConvertPDF") === "yes"
+                //     ? "no"
+                //     : "yes"
+                // );
+                // toast.success(
+                //   ConfigService.getReaderConfig("isConvertPDF") === "yes"
+                //     ? this.props.t("PDF to Text is enabled")
+                //     : this.props.t("PDF to Text is disabled")
+                // );
+                // BookUtil.reloadBooks();
               }}
             >
               <span
@@ -614,6 +616,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         </div>
 
         {this.props.currentBook.key && <Viewer {...renditionProps} />}
+        {this.props.isConvertOpen && <ConvertDialog />}
       </div>
     );
   }
