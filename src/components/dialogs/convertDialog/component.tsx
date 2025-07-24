@@ -126,6 +126,65 @@ class ConvertDialog extends React.Component<
             ])}
             {this.props.currentBook.description.indexOf("scanned PDF") > -1 ? (
               <>
+                {/* TODO support more engine */}
+                {/* <div
+                  className="setting-dialog-new-title"
+                  style={{
+                    marginLeft: 10,
+                    width: "calc(100% - 20px)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Trans>OCR engine</Trans>
+
+                  <select
+                    name=""
+                    className="lang-setting-dropdown"
+                    onChange={(event) => {
+                      ConfigService.setReaderConfig(
+                        "ocrEngine",
+                        event.target.value
+                      );
+                      if (
+                        ConfigService.getReaderConfig("isConvertPDF") === "yes"
+                      ) {
+                        BookUtil.reloadBooks();
+                      }
+                    }}
+                  >
+                    {[
+                      { label: "Please select", value: "", lang: "" },
+                      { label: "Tesseract", value: "tesseract", lang: "" },
+                      { label: "System OCR", value: "system", lang: "" },
+                    ]
+                      .filter((item) => {
+                        if (!isElectron) {
+                          return item.value !== "system"; // Hide system OCR option in Electron
+                        } else {
+                          return true; // Show all options in web
+                        }
+                      })
+                      .map((item) => (
+                        <option
+                          value={item.value}
+                          key={item.value}
+                          className="lang-setting-option"
+                          selected={
+                            ConfigService.getReaderConfig("ocrEngine")
+                              ? item.value ===
+                                ConfigService.getReaderConfig("ocrEngine")
+                              : item.value === "tesseract"
+                              ? true
+                              : false
+                          }
+                        >
+                          {this.props.t(item.label)}
+                        </option>
+                      ))}
+                  </select>
+                </div> */}
                 <div
                   className="setting-dialog-new-title"
                   style={{
