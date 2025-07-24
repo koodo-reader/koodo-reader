@@ -264,6 +264,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                   isDarkMode: "no",
                   isMobile: "no",
                   password: "",
+                  isScannedPDF: "no",
                 },
                 Kookit
               );

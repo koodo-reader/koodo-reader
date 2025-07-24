@@ -3,6 +3,7 @@ import "./popupMenu.css";
 import PopupOption from "../popupOption";
 import { PopupMenuProps, PopupMenuStates } from "./interface";
 import { getIframeDoc } from "../../../utils/reader/docUtil";
+import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 
 class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
   highlighter: any;
@@ -86,7 +87,8 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     if (
       this.props.currentBook.format === "PDF" &&
       this.props.readerMode === "double" &&
-      this.props.chapterDocIndex % 2 === 1
+      this.props.chapterDocIndex % 2 === 1 &&
+      ConfigService.getReaderConfig("isConvertPDF") !== "yes"
     ) {
       posX =
         posX +
@@ -95,7 +97,8 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     }
     if (
       this.props.currentBook.format === "PDF" &&
-      this.props.readerMode === "scroll"
+      this.props.readerMode === "scroll" &&
+      ConfigService.getReaderConfig("isConvertPDF") !== "yes"
     ) {
       posY =
         posY +

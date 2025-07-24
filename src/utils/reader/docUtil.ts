@@ -1,3 +1,5 @@
+import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
+
 export const getIframeDoc = (format: string) => {
   let pageArea = document.getElementById("page-area");
 
@@ -9,7 +11,10 @@ export const getIframeDoc = (format: string) => {
   if (!doc) {
     return [];
   }
-  if (format === "PDF") {
+  if (
+    format === "PDF" &&
+    ConfigService.getReaderConfig("isConvertPDF") !== "yes"
+  ) {
     let subIframes = doc.querySelectorAll("iframe");
     return [
       doc,

@@ -117,7 +117,8 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     );
     if (
       this.props.currentBook.format === "PDF" &&
-      this.props.readerMode === "double"
+      this.props.readerMode === "double" &&
+      ConfigService.getReaderConfig("isConvertPDF") !== "yes"
     ) {
       let highlightersByChapter = highlighters.filter((item: Note) => {
         if (item.bookKey !== this.props.currentBook.key) {
@@ -200,6 +201,10 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           password: getPdfPassword(this.props.currentBook),
           scale: parseFloat(this.state.scale),
           isConvertPDF: ConfigService.getReaderConfig("isConvertPDF"),
+          isScannedPDF:
+            this.props.currentBook.description.indexOf("scanned PDF") > -1
+              ? "yes"
+              : "no",
         },
         Kookit
       );
@@ -373,7 +378,10 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         this.props.handleLeaveReader("bottom");
       });
       doc.addEventListener("mouseup", (event) => {
-        if (this.props.currentBook.format === "PDF") {
+        if (
+          this.props.currentBook.format === "PDF" &&
+          ConfigService.getReaderConfig("isConvertPDF") !== "yes"
+        ) {
           let ownerDoc = (event.target as HTMLElement).ownerDocument;
           let targetIframe = ownerDoc?.defaultView?.frameElement;
           let id = targetIframe?.getAttribute("id") || "";
@@ -398,7 +406,10 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         this.setState({ rect });
       });
       doc.addEventListener("contextmenu", (event) => {
-        if (this.props.currentBook.format === "PDF") {
+        if (
+          this.props.currentBook.format === "PDF" &&
+          ConfigService.getReaderConfig("isConvertPDF") !== "yes"
+        ) {
           let ownerDoc = (event.target as HTMLElement).ownerDocument;
           let targetIframe = ownerDoc?.defaultView?.frameElement;
           let id = targetIframe?.getAttribute("id") || "";

@@ -168,6 +168,7 @@ class ActionDialog extends React.Component<MoreActionProps, MoreActionState> {
                     isDarkMode: "no",
                     isMobile: "no",
                     password: getPdfPassword(this.props.currentBook),
+                    isScannedPDF: "no",
                   },
                   Kookit
                 );
