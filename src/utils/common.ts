@@ -387,6 +387,8 @@ export const preCacheAllBooks = async (bookList: Book[]) => {
         isDarkMode: "no",
         isMobile: "no",
         password: getPdfPassword(selectedBook),
+        isScannedPDF:
+          selectedBook.description.indexOf("scanned PDF") > -1 ? "yes" : "no",
       },
       Kookit
     );

@@ -120,7 +120,8 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
             (this.state.currentIndex === index ||
               level > 2 ||
               this.state.isExpandContent ||
-              this.props.currentBook.format === "PDF" ||
+              (this.props.currentBook.format === "PDF" &&
+                ConfigService.getReaderConfig("isConvertPDF") !== "yes") ||
               (bookLocation.chapterHref &&
                 bookLocation.chapterHref.includes(item.href.split("#")[0])) ||
               item.subitems.filter(
