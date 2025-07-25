@@ -221,58 +221,82 @@ export const readerSettingList = [
   {
     title: "Sliding animation",
     propName: "isSliding",
+    isPDF: true,
   },
   {
     title: "Render PDF from even page",
     propName: "isStartFromEven",
+    isPDF: true,
   },
   {
     title: "Text indentation",
     propName: "isIndent",
+    isPDF: false,
   },
   {
     title: "Bold",
     propName: "isBold",
+    isPDF: false,
   },
   {
     title: "Italic",
     propName: "isItalic",
+    isPDF: false,
   },
   {
     title: "Underline",
     propName: "isUnderline",
+    isPDF: false,
   },
   {
     title: "Shadow",
     propName: "isShadow",
+    isPDF: false,
   },
   {
     title: "Invert color",
     propName: "isInvert",
+    isPDF: true,
   },
   {
     title: "Hide footer",
     propName: "isHideFooter",
+    isPDF: true,
   },
   {
     title: "Hide header",
     propName: "isHideHeader",
+    isPDF: true,
   },
   {
     title: "Hide mimical background",
     propName: "isHideBackground",
+    isPDF: true,
   },
   {
     title: "Hide navigation button",
     propName: "isHidePageButton",
+    isPDF: true,
   },
   {
     title: "Hide menu button",
     propName: "isHideMenuButton",
+    isPDF: true,
   },
   {
     title: "Hide AI button",
     propName: "isHideAIButton",
+    isPDF: true,
+  },
+  {
+    title: "Hide page scale button",
+    propName: "isHideScaleButton",
+    isPDF: true,
+  },
+  {
+    title: "Hide pdf to text button",
+    propName: "isHidePDFConvertButton",
+    isPDF: true,
   },
 ];
 export const officialTranList = {

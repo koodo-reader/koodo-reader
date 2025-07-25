@@ -61,7 +61,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     this.props.handleFetchAuthed();
     this.props.handleFetchDefaultSyncOption();
     this.props.handleFetchDataSourceList();
-
+    // console.log(Chinese.t2s("再怎麼温和也是一隻怪物啊！"));
     if (isElectron) {
       const fs = window.require("fs");
       const path = window.require("path");

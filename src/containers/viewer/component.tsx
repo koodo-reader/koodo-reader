@@ -197,6 +197,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
             "rgba(44,47,49,1)"
               ? "yes"
               : "no",
+          backgroundColor: ConfigService.getReaderConfig("backgroundColor"),
           isMobile: "no",
           isStartFromEven: ConfigService.getReaderConfig("isStartFromEven"),
           password: getPdfPassword(this.props.currentBook),

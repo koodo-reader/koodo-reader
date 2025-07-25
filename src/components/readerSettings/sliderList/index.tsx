@@ -5,6 +5,7 @@ import { stateType } from "../../../store";
 
 const mapStateToProps = (state: stateType) => {
   return {
+    currentBook: state.book.currentBook,
     renderBookFunc: state.book.renderBookFunc,
   };
 };
