@@ -395,6 +395,8 @@
   "Broken data detected, please click the setting button to reset the sync records": "检测到数据损坏，请前往设置-重置同步记录",
   "Reset sync records": "重置同步记录",
   "Your Pro trial has expired, please renew it to continue using the Pro features": "您的专业版试用已过期，请续费以继续使用专业版功能",
+  "Hide page scale button": "不显示页面缩放按钮",
+  "Hide pdf to text button": "不显示 PDF 转文本按钮",
   "With the integration of your cloud drive, WebDAV, and object storage, all your data remains securely in your control": "借助您绑定的网盘，WebDAV 和对象存储实现，您所有的数据都由您掌握",
   "Embark on your journey of exploration with Koodo Reader Pro": "从一个账号开始，开始探索Koodo Reader专业版",
   "Continue with": "使用 {{label}} 继续",

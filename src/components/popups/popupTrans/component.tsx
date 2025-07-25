@@ -30,7 +30,12 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
   }
   componentDidMount() {
     let originalText = this.props.originalText.replace(/(\r\n|\n|\r)/gm, "");
-    this.setState({ originalText: originalText, isAddNew: true });
+    this.setState({ originalText: originalText });
+    if (!this.state.transService) {
+      this.setState({
+        isAddNew: true,
+      });
+    }
 
     this.handleTrans(originalText);
   }

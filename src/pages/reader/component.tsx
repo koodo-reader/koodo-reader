@@ -239,125 +239,117 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
           }}
         >
           {(this.props.readerMode === "scroll" ||
-            this.props.readerMode === "single") && (
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "flex-end",
-              }}
-            >
-              {this.state.isShowScale && (
-                <div className="scale-container">
-                  <div
-                    style={{
-                      zIndex: 100,
-                      width: "100px",
-                    }}
-                  >
-                    <input
-                      className="input-value"
-                      defaultValue={
-                        ConfigService.getReaderConfig("scale")
-                          ? parseFloat(ConfigService.getReaderConfig("scale")) *
-                            100
-                          : 100
-                      }
-                      value={
-                        this.state.scale === " "
-                          ? this.state.scale
-                          : Math.round(parseFloat(this.state.scale) * 100)
-                      }
-                      type="number"
-                      onInput={(event: any) => {
-                        let fieldVal = event.target.value;
-                        ConfigService.setReaderConfig(
-                          "scale",
-                          parseFloat(fieldVal) / 100 + ""
-                        );
+            this.props.readerMode === "single") &&
+            ConfigService.getReaderConfig("isHideScaleButton") !== "yes" && (
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "flex-end",
+                }}
+              >
+                {this.state.isShowScale && (
+                  <div className="scale-container">
+                    <div
+                      style={{
+                        zIndex: 100,
+                        width: "100px",
                       }}
-                      onFocus={() => {
-                        this.setState({ scale: " " });
-                      }}
-                      onChange={(event) => {
-                        let fieldVal = event.target.value;
-                        this.setState({
-                          scale: parseFloat(fieldVal) / 100 + "",
-                        });
-                      }}
-                      onBlur={(event) => {
-                        let fieldVal = event.target.value;
-                        if (fieldVal.trim() !== "") {
+                    >
+                      <input
+                        className="input-value"
+                        defaultValue={
+                          ConfigService.getReaderConfig("scale")
+                            ? parseFloat(
+                                ConfigService.getReaderConfig("scale")
+                              ) * 100
+                            : 100
+                        }
+                        value={
+                          this.state.scale === " "
+                            ? this.state.scale
+                            : Math.round(parseFloat(this.state.scale) * 100)
+                        }
+                        type="number"
+                        onInput={(event: any) => {
+                          let fieldVal = event.target.value;
                           ConfigService.setReaderConfig(
                             "scale",
                             parseFloat(fieldVal) / 100 + ""
                           );
-                        }
+                        }}
+                        onFocus={() => {
+                          this.setState({ scale: " " });
+                        }}
+                        onChange={(event) => {
+                          let fieldVal = event.target.value;
+                          this.setState({
+                            scale: parseFloat(fieldVal) / 100 + "",
+                          });
+                        }}
+                        onBlur={(event) => {
+                          let fieldVal = event.target.value;
+                          if (fieldVal.trim() !== "") {
+                            ConfigService.setReaderConfig(
+                              "scale",
+                              parseFloat(fieldVal) / 100 + ""
+                            );
+                          }
+                          BookUtil.reloadBooks();
+                        }}
+                      />
+                      <span> %</span>
+                    </div>
+
+                    <input
+                      className="input-progress"
+                      value={this.state.scale}
+                      type="range"
+                      max={4}
+                      min={0.5}
+                      step={0.01}
+                      onInput={(event: any) => {
+                        const scale = event.target.value;
+                        ConfigService.setReaderConfig("scale", scale);
+                      }}
+                      onChange={(event) => {
+                        this.setState({ scale: event.target.value });
+                      }}
+                      onMouseUp={() => {
                         BookUtil.reloadBooks();
                       }}
+                      style={{
+                        zIndex: 100,
+                        width: "120px",
+                      }}
                     />
-                    <span> %</span>
                   </div>
-
-                  <input
-                    className="input-progress"
-                    value={this.state.scale}
-                    type="range"
-                    max={4}
-                    min={0.5}
-                    step={0.01}
-                    onInput={(event: any) => {
-                      const scale = event.target.value;
-                      ConfigService.setReaderConfig("scale", scale);
-                    }}
-                    onChange={(event) => {
-                      this.setState({ scale: event.target.value });
-                    }}
-                    onMouseUp={() => {
-                      BookUtil.reloadBooks();
-                    }}
-                    style={{
-                      zIndex: 100,
-                      width: "120px",
-                    }}
-                  />
+                )}
+                <div
+                  className="reader-zoom-in-icon-container"
+                  onClick={() => {
+                    this.setState({ isShowScale: !this.state.isShowScale });
+                  }}
+                >
+                  <span className="icon-zoom-in reader-setting-icon"></span>
                 </div>
-              )}
+              </div>
+            )}
+          {this.props.currentBook.format === "PDF" &&
+            ConfigService.getReaderConfig("isHidePDFConvertButton") !==
+              "yes" && (
               <div
-                className="reader-zoom-in-icon-container"
+                className="reader-setting-icon-container"
                 onClick={() => {
-                  this.setState({ isShowScale: !this.state.isShowScale });
+                  this.props.handleConvertDialog(!this.props.isConvertOpen);
                 }}
               >
-                <span className="icon-zoom-in reader-setting-icon"></span>
+                <span
+                  className="icon-convert-text reader-setting-icon"
+                  style={{ fontSize: 26 }}
+                ></span>
               </div>
-            </div>
-          )}
-          {this.props.currentBook.format === "PDF" && (
-            <div
-              className="reader-setting-icon-container"
-              onClick={() => {
-                this.props.handleConvertDialog(!this.props.isConvertOpen);
-                // ConfigService.setReaderConfig(
-                //   "isConvertPDF",
-                //   ConfigService.getReaderConfig("isConvertPDF") === "yes"
-                //     ? "no"
-                //     : "yes"
-                // );
-                // toast.success(
-                //   ConfigService.getReaderConfig("isConvertPDF") === "yes"
-                //     ? this.props.t("PDF to Text is enabled")
-                //     : this.props.t("PDF to Text is disabled")
-                // );
-                // BookUtil.reloadBooks();
-              }}
-            >
-              <span
-                className="icon-convert-text reader-setting-icon"
-                style={{ fontSize: 26 }}
-              ></span>
-            </div>
-          )}
+            )}
           {ConfigService.getReaderConfig("isHideMenuButton") !== "yes" && (
             <div
               className="reader-setting-icon-container"

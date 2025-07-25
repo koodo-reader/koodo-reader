@@ -1,17 +1,17 @@
+import BookModel from "../../../models/Book";
 export interface SliderListProps {
-  maxValue: string;
-  minValue: string;
-  mode: string;
-  step: number;
-  title: string;
-  minLabel: string;
-  maxLabel: string;
+  currentBook: BookModel;
   renderBookFunc: () => void;
   t: (title: string) => string;
 }
 export interface SliderListState {
-  value: string;
   inputValue: string;
   isTyping: boolean;
   isEntered: boolean;
+  fontSize: string;
+  scale: string;
+  letterSpacing: string;
+  paraSpacing: string;
+  brightness: string;
+  margin: string;
 }

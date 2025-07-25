@@ -162,8 +162,8 @@ const createMainWin = () => {
         store.set({
           mainWinWidth: bounds.width,
           mainWinHeight: bounds.height,
-          mainWinX: bounds.x,
-          mainWinY: bounds.y,
+          mainWinX: mainWin.isMaximized() ? 0 : bounds.x,
+          mainWinY: mainWin.isMaximized() ? 0 : bounds.y,
         });
       }
     }
@@ -236,8 +236,8 @@ const createMainWin = () => {
           store.set({
             windowWidth: bounds.width,
             windowHeight: bounds.height,
-            windowX: bounds.x,
-            windowY: bounds.y,
+            windowX: readerWindow.isMaximized() ? 0 : bounds.x,
+            windowY: readerWindow.isMaximized() ? 0 : bounds.y,
           });
         }
       }
@@ -674,8 +674,8 @@ const createMainWin = () => {
             store.set({
               windowWidth: bounds.width,
               windowHeight: bounds.height,
-              windowX: bounds.x,
-              windowY: bounds.y,
+              windowX: readerWindow.isMaximized() ? 0 : bounds.x,
+              windowY: readerWindow.isMaximized() ? 0 : bounds.y,
             });
           }
         }

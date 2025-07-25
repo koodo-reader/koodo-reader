@@ -117,9 +117,7 @@ class TextToSpeech extends React.Component<
     let rawNodeList = nodeTextList.map((text) => {
       return splitSentences(text);
     });
-    this.nodeList = rawNodeList
-      .flat()
-      .filter((item) => item !== "img" && !item.startsWith("img"));
+    this.nodeList = rawNodeList.flat();
     if (this.nodeList.length === 0) {
       await this.props.htmlBook.rendition.next();
       this.nodeList = await this.handleGetText();
@@ -166,7 +164,7 @@ class TextToSpeech extends React.Component<
       let visibleTextList = await this.props.htmlBook.rendition.visibleText();
       let lastVisibleTextList = splitSentences(
         visibleTextList[visibleTextList.length - 1]
-      ).filter((item) => item !== "img" && !item.startsWith("img"));
+      );
       if (
         this.nodeList[index] ===
         lastVisibleTextList[lastVisibleTextList.length - 1]
@@ -205,7 +203,7 @@ class TextToSpeech extends React.Component<
       let visibleTextList = await this.props.htmlBook.rendition.visibleText();
       let lastVisibleTextList = splitSentences(
         visibleTextList[visibleTextList.length - 1]
-      ).filter((item) => item !== "img" && !item.startsWith("img"));
+      );
       if (
         this.nodeList[index] ===
         lastVisibleTextList[lastVisibleTextList.length - 1]
