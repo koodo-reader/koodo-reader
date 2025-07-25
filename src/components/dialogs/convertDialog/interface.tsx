@@ -12,5 +12,5 @@ export interface ConvertDialogProps {
 }
 export interface ConvertDialogState {
   isShowExportAll: boolean;
-  isConvertPDF: string;
+  isConvertPDF: boolean;
 }

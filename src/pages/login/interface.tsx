@@ -7,9 +7,11 @@ export interface LoginProps extends RouteComponentProps<any> {
   handleFetchAuthed: () => void;
   handleFetchDataSourceList: () => void;
   handleFetchDefaultSyncOption: () => void;
+  handleFetchUserInfo: () => Promise<void>;
   t: (title: string) => string;
   isSettingOpen: boolean;
   isShowLoading: boolean;
+  isShowSupport: boolean;
 }
 
 export interface LoginState {

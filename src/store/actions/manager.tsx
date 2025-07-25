@@ -11,6 +11,8 @@ import {
   officialDictList,
   officialTranList,
 } from "../../constants/settingList";
+import toast from "react-hot-toast";
+import i18n from "../../i18n";
 
 export function handleBooks(books: BookModel[]) {
   return { type: "HANDLE_BOOKS", payload: books };

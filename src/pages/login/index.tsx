@@ -9,6 +9,7 @@ import {
   handleSettingDrive,
   handleFetchDataSourceList,
   handleFetchDefaultSyncOption,
+  handleFetchUserInfo,
 } from "../../store/actions";
 import Login from "./component";
 import { withTranslation } from "react-i18next";
@@ -17,6 +18,7 @@ const mapStateToProps = (state: stateType) => {
   return {
     isSettingOpen: state.manager.isSettingOpen,
     isShowLoading: state.manager.isShowLoading,
+    isShowSupport: state.manager.isShowSupport,
   };
 };
 const actionCreator = {
@@ -27,6 +29,7 @@ const actionCreator = {
   handleSettingDrive,
   handleFetchDataSourceList,
   handleFetchDefaultSyncOption,
+  handleFetchUserInfo,
 };
 export default connect(
   mapStateToProps,
