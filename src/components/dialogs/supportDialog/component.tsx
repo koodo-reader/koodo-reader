@@ -142,7 +142,7 @@ class SupporDialog extends React.Component<
                       }}
                     >
                       {this.props.t(
-                        "In the future, we will introduce more member-exclusive features, including reading statistics and automatic synchronization of your notes, highlights, reading progress, and vocabulary lists to platforms like Notion, Obsidian, GoodReads, Anki, and more."
+                        "In the future, we will introduce more member-exclusive features, including reading statistics and automatic synchronization of your notes, highlights, reading progress, and vocabulary lists to platforms like Notion, Obsidian, Logseq, Anki, and more."
                       )}
                     </p>
                   </div>
