@@ -31,6 +31,14 @@ class NavigationPanel extends React.Component<
   }
   handleNavSearchState = (state: string) => {
     this.setState({ searchState: state });
+    console.log("handleNavSearchState", state);
+    if (state === "searching") {
+      this.setState({
+        searchList: null,
+        startIndex: 0,
+        currentIndex: 0,
+      });
+    }
     if (state) {
       this.props.handleSearch(true);
     } else {
@@ -66,17 +74,6 @@ class NavigationPanel extends React.Component<
       !this.props.isNavLocked ? "yes" : "no"
     );
     BookUtil.reloadBooks();
-  };
-  renderBeforeSearch = () => {
-    if (this.state.searchState === "searching") {
-      return (
-        <div className="loading-animation search-animation">
-          <div className="loader"></div>
-        </div>
-      );
-    } else {
-      return null;
-    }
   };
   renderSearchList = () => {
     if (!this.state.searchList[0]) {
@@ -180,11 +177,6 @@ class NavigationPanel extends React.Component<
             {i + startIndex + 1}
           </li>
         );
-      }
-      if (total - startIndex < 5) {
-        for (let i = 0; i < 6 - pageList.length; i++) {
-          pageList.push(<li className="nav-search-page-item">EOF</li>);
-        }
       }
     }
     return pageList;

@@ -91,6 +91,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
   }
 
   handleHighlight = async (rendition: any) => {
+    console.log("window.chapterDocIndex", window.chapterDocIndex);
     let highlighters: any = this.props.notes;
     if (!highlighters) return;
     let highlightersByChapter = highlighters.filter((item: Note) => {
@@ -118,7 +119,8 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     );
     if (
       this.props.currentBook.format === "PDF" &&
-      this.props.readerMode === "double" &&
+      (this.props.readerMode === "double" ||
+        this.props.readerMode === "scroll") &&
       ConfigService.getReaderConfig("isConvertPDF") !== "yes"
     ) {
       let highlightersByChapter = highlighters.filter((item: Note) => {
@@ -312,6 +314,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     }
 
     rendition.on("rendered", async () => {
+      console.log("rendered");
       this.handleLocation();
       let bookLocation: {
         text: string;
