@@ -30,7 +30,7 @@ class ConvertDialog extends React.Component<
     super(props);
     this.state = {
       isShowExportAll: false,
-      isConvertPDF: ConfigService.getReaderConfig("isConvertPDF"),
+      isConvertPDF: ConfigService.getReaderConfig("isConvertPDF") === "yes",
     };
   }
   handleJump = (url: string) => {

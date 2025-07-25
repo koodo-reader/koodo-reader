@@ -231,7 +231,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
             position: "absolute",
             top: "7px",
             right: this.props.isSettingLocked ? 300 : 0,
-            zIndex: 10,
+            zIndex: 11,
             width: "120px",
             display: "flex",
             alignItems: "center",

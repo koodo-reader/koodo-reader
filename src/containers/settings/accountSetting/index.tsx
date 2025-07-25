@@ -25,6 +25,7 @@ const mapStateToProps = (state: stateType) => {
     books: state.manager.books,
     plugins: state.manager.plugins,
     isAuthed: state.manager.isAuthed,
+    isShowSupport: state.manager.isShowSupport,
     settingMode: state.manager.settingMode,
     settingDrive: state.manager.settingDrive,
     userInfo: state.manager.userInfo,

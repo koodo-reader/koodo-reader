@@ -23,6 +23,7 @@ export interface SettingInfoProps extends RouteComponentProps<any> {
   bookmarks: BookmarkModel[];
   notes: NoteModel[];
   isOpenTokenDialog: boolean;
+  isShowSupport: boolean;
   plugins: PluginModel[];
   books: BookModel[];
   userInfo: any;

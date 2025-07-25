@@ -55,6 +55,21 @@ class AccountSetting extends React.Component<
       this.props.handleFetchUserInfo();
     }
   }
+  UNSAFE_componentWillReceiveProps(
+    nextProps: Readonly<SettingInfoProps>,
+    nextContext: any
+  ): void {
+    if (
+      nextProps.isShowSupport &&
+      nextProps.isShowSupport !== this.props.isShowSupport
+    ) {
+      toast(
+        this.props.t(
+          "Your Pro trial has expired, please renew it to continue using the Pro features"
+        )
+      );
+    }
+  }
   handleRest = (_bool: boolean) => {
     toast.success(this.props.t("Change successful"));
   };

@@ -78,7 +78,9 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
     toast.success(this.props.t("Change successful"));
   };
   handleJump = (url: string) => {
-    openExternalUrl(url);
+    isElectron
+      ? window.require("electron").shell.openExternal(url)
+      : window.open(url);
   };
   handleSetting = (stateName: string) => {
     this.setState({ [stateName]: !this.state[stateName] } as any);

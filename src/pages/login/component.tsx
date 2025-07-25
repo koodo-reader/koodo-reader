@@ -65,6 +65,21 @@ class Login extends React.Component<LoginProps, LoginState> {
       }
     }
   }
+  UNSAFE_componentWillReceiveProps(
+    nextProps: Readonly<LoginProps>,
+    nextContext: any
+  ): void {
+    if (
+      nextProps.isShowSupport &&
+      nextProps.isShowSupport !== this.props.isShowSupport
+    ) {
+      toast(
+        this.props.t(
+          "Your Pro trial has expired, please renew it to continue using the Pro features"
+        )
+      );
+    }
+  }
   handleLogin = async (code: string, service: string) => {
     this.props.handleLoadingDialog(true);
     let res = await loginRegister(service, code);
@@ -77,6 +92,7 @@ class Login extends React.Component<LoginProps, LoginState> {
       this.props.handleFetchDefaultSyncOption();
       removeSearchParams();
       this.props.handleFetchAuthed();
+      await this.props.handleFetchUserInfo();
       this.setState({ currentStep: 3 });
       if (ConfigService.getReaderConfig("isProUpgraded") !== "yes") {
         try {

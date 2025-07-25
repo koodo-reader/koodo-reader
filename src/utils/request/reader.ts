@@ -93,7 +93,7 @@ export const getDictText = async (word: string, from: string, to: string) => {
       `<p class="dict-word-type">[${i18n.t("Pronunciations")}]</p></p>` +
       (res.data[0].pronunciation ? res.data[0].pronunciation : "") +
       (res.data[0].audio &&
-        `<div class="audio-container"><audio controls class="audio-player" controlsList="nodownload noplaybackrate"><source src="${res.data[0].audio}" type="audio/mpeg"></audio></div>`) +
+        `<div class="audio-container"><audio controls preload="auto"    class="audio-player" controlsList="nodownload noplaybackrate"><source src="${res.data[0].audio}" type="audio/mpeg"></audio></div>`) +
       res.data[0].meaning
         .map((item) => {
           return (
