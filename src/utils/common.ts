@@ -179,6 +179,11 @@ export const openExternalUrl = (url: string, isPlugin: boolean = false) => {
       : window.require("electron").shell.openExternal(url)
     : window.open(url);
 };
+export const openInBrowser = (url: string) => {
+  isElectron
+    ? window.require("electron").shell.openExternal(url)
+    : window.open(url);
+};
 export const getPageWidth = (
   readerMode: string,
   scale: string,

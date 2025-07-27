@@ -7,7 +7,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { loginList } from "../../constants/loginList";
 import {
   handleContextMenu,
-  openExternalUrl,
+  openInBrowser,
   removeSearchParams,
 } from "../../utils/common";
 import {
@@ -367,7 +367,7 @@ class Login extends React.Component<LoginProps, LoginState> {
                             );
                             if (url) {
                               if (isElectron) {
-                                openExternalUrl(url);
+                                openInBrowser(url);
                               } else {
                                 window.location.replace(url);
                               }

@@ -10,7 +10,7 @@ import { getCloudConfig } from "../../../utils/file/common";
 import SyncService from "../../../utils/storage/syncService";
 import {
   getStorageLocation,
-  openExternalUrl,
+  openInBrowser,
   showDownloadProgress,
   supportedFormats,
 } from "../../../utils/common";
@@ -311,7 +311,7 @@ class ImportDialog extends React.Component<
                           settingDrive === "google_exp" ||
                           settingDrive === "microsoft"
                         ) {
-                          openExternalUrl(
+                          openInBrowser(
                             new SyncUtil(settingDrive, {}).getAuthUrl()
                           );
                         }

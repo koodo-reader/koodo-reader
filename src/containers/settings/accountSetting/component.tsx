@@ -8,7 +8,7 @@ import toast from "react-hot-toast";
 import {
   formatTimestamp,
   handleContextMenu,
-  openExternalUrl,
+  openInBrowser,
   reloadManager,
   WEBSITE_URL,
 } from "../../../utils/common";
@@ -74,7 +74,7 @@ class AccountSetting extends React.Component<
     toast.success(this.props.t("Change successful"));
   };
   handleJump = (url: string) => {
-    openExternalUrl(url);
+    openInBrowser(url);
   };
   handleSetting = (stateName: string) => {
     this.setState({ [stateName]: !this.state[stateName] } as any);
@@ -787,7 +787,7 @@ class AccountSetting extends React.Component<
           <div
             onClick={async () => {
               if (!this.props.isAuthed) {
-                openExternalUrl(
+                openInBrowser(
                   WEBSITE_URL +
                     (ConfigService.getReaderConfig("lang").startsWith("zh")
                       ? "/zh"
@@ -800,7 +800,7 @@ class AccountSetting extends React.Component<
               if (response.code === 200) {
                 let tempToken = response.data.access_token;
                 let deviceUuid = await TokenService.getFingerprint();
-                openExternalUrl(
+                openInBrowser(
                   WEBSITE_URL +
                     (ConfigService.getReaderConfig("lang").startsWith("zh")
                       ? "/zh"
