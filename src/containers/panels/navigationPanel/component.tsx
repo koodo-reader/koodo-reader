@@ -31,7 +31,6 @@ class NavigationPanel extends React.Component<
   }
   handleNavSearchState = (state: string) => {
     this.setState({ searchState: state });
-    console.log("handleNavSearchState", state);
     if (state === "searching") {
       this.setState({
         searchList: null,
