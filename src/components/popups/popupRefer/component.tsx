@@ -51,6 +51,12 @@ class PopupRefer extends React.Component<PopupReferProps, PopupReferStates> {
     rendition: any = {}
   ): Promise<boolean> => {
     let href = getTargetHref(event);
+
+    if (href && href.startsWith("kindle:")) {
+      let result = await this.props.rendition.resolveHref(href);
+      href = "#" + result;
+    }
+
     if (href && href.indexOf("#") > -1) {
       let pageArea = document.getElementById("page-area");
       if (!pageArea) return false;
@@ -79,12 +85,15 @@ class PopupRefer extends React.Component<PopupReferProps, PopupReferStates> {
           );
           return true;
         }
-        //将html代码中的img标签由blob转换为base64
-        if (node.textContent.trim() === event.target.textContent.trim()) {
+
+        if (
+          node.textContent.trim() === event.target.textContent.trim() ||
+          !node.textContent.trim()
+        ) {
           node = node.parentElement;
         }
         let htmlContent = node.innerHTML;
-
+        //将html代码中的img标签由blob转换为base64
         const convertBlobToDataURL = async (blobUrl) => {
           const response = await fetch(blobUrl);
           const blob = await response.blob();

@@ -23,14 +23,12 @@ class PopupOption extends React.Component<PopupOptionProps> {
   handleCopy = () => {
     let text = getSelection(this.props.currentBook.format);
     if (!text) return;
-    console.log("text", text);
     if (
       this.props.currentBook.format === "PDF" &&
       ConfigService.getReaderConfig("isConvertPDF") !== "yes"
     ) {
       text = text.split("\n").join(" ").trim();
     }
-    console.log("text after split", text);
     copy(text);
     this.props.handleOpenMenu(false);
     let docs = getIframeDoc(this.props.currentBook.format);
