@@ -11,6 +11,7 @@ import toast from "react-hot-toast";
 import {
   handleContextMenu,
   openExternalUrl,
+  openInBrowser,
   testConnection,
   WEBSITE_URL,
 } from "../../../utils/common";
@@ -78,9 +79,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
     toast.success(this.props.t("Change successful"));
   };
   handleJump = (url: string) => {
-    isElectron
-      ? window.require("electron").shell.openExternal(url)
-      : window.open(url);
+    openInBrowser(url);
   };
   handleSetting = (stateName: string) => {
     this.setState({ [stateName]: !this.state[stateName] } as any);

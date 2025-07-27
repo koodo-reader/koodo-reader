@@ -7,7 +7,7 @@ import supportAnimation from "../../../assets/lotties/support.json";
 import exitAnimation from "../../../assets/lotties/exit.json";
 import {
   handleContextMenu,
-  openExternalUrl,
+  openInBrowser,
   WEBSITE_URL,
 } from "../../../utils/common";
 import {
@@ -337,7 +337,7 @@ class SupporDialog extends React.Component<
                               let tempToken = response.data.access_token;
                               let deviceUuid =
                                 await TokenService.getFingerprint();
-                              openExternalUrl(
+                              openInBrowser(
                                 WEBSITE_URL +
                                   (ConfigService.getReaderConfig(
                                     "lang"

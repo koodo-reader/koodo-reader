@@ -12,7 +12,6 @@ import {
 } from "../../../constants/settingList";
 import { themeList } from "../../../constants/themeList";
 import toast from "react-hot-toast";
-import { openExternalUrl } from "../../../utils/common";
 import { getStorageLocation } from "../../../utils/common";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import { LocalFileManager } from "../../../utils/file/localFile";
@@ -88,9 +87,6 @@ class GeneralSetting extends React.Component<
   };
   changeSearch = (searchEngine: string) => {
     ConfigService.setReaderConfig("searchEngine", searchEngine);
-  };
-  handleJump = (url: string) => {
-    openExternalUrl(url);
   };
   handleSetting = (stateName: string) => {
     this.setState({ [stateName]: !this.state[stateName] } as any);

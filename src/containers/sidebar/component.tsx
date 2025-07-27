@@ -4,7 +4,7 @@ import { sideMenu } from "../../constants/sideMenu";
 import { SidebarProps, SidebarState } from "./interface";
 import { withRouter } from "react-router-dom";
 import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
-import { openExternalUrl, WEBSITE_URL } from "../../utils/common";
+import { openInBrowser, WEBSITE_URL } from "../../utils/common";
 import { Trans } from "react-i18next";
 import toast from "react-hot-toast";
 class Sidebar extends React.Component<SidebarProps, SidebarState> {
@@ -66,7 +66,7 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
     ConfigService.setReaderConfig("isCollapsed", isCollapsed ? "yes" : "no");
   };
   handleJump = (url: string) => {
-    openExternalUrl(url);
+    openInBrowser(url);
   };
   handleCreateShelf = () => {
     if (!this.state.newShelfName) {

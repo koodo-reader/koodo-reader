@@ -126,9 +126,6 @@ class SettingDialog extends React.Component<
     body?.setAttribute("style", "font-family:" + font + "!important");
     ConfigService.setReaderConfig("systemFont", font);
   };
-  handleJump = (url: string) => {
-    openExternalUrl(url);
-  };
   handleSetting = (stateName: string) => {
     this.setState({ [stateName]: !this.state[stateName] } as any);
     ConfigService.setReaderConfig(

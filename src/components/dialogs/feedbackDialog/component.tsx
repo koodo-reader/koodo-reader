@@ -4,7 +4,11 @@ import { FeedbackDialogProps, FeedbackDialogState } from "./interface";
 import toast from "react-hot-toast";
 import "./feedbackDialog.css";
 import packageInfo from "../../../../package.json";
-import { openExternalUrl, WEBSITE_URL } from "../../../utils/common";
+import {
+  openExternalUrl,
+  openInBrowser,
+  WEBSITE_URL,
+} from "../../../utils/common";
 import JSZip from "jszip";
 import {
   checkDeveloperUpdate,
@@ -118,7 +122,7 @@ class FeedbackDialog extends Component<
     this.props.handleFeedbackDialog(false);
   };
   handleJump = (url: string) => {
-    openExternalUrl(url);
+    openInBrowser(url);
   };
   getFileName(url: string) {
     var regex = /([^?]+)(?=\?|$)/;

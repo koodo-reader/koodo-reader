@@ -2,18 +2,8 @@ import React from "react";
 import { Trans } from "react-i18next";
 import { ConvertDialogProps, ConvertDialogState } from "./interface";
 import { isElectron } from "react-device-detect";
-import { openExternalUrl, WEBSITE_URL } from "../../../utils/common";
-import toast from "react-hot-toast";
-import {
-  exportBooks,
-  exportDictionaryHistory,
-  exportHighlights,
-  exportNotes,
-} from "../../../utils/file/export";
 import "./convertDialog.css";
-import DatabaseService from "../../../utils/storage/databaseService";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
-import ConfigUtil from "../../../utils/file/configUtil";
 import BookUtil from "../../../utils/file/bookUtil";
 import {
   ocrLangList,
@@ -21,7 +11,6 @@ import {
   titleSizeList,
 } from "../../../constants/dropdownList";
 
-declare var window: any;
 class ConvertDialog extends React.Component<
   ConvertDialogProps,
   ConvertDialogState
@@ -33,10 +22,6 @@ class ConvertDialog extends React.Component<
       isConvertPDF: ConfigService.getReaderConfig("isConvertPDF") === "yes",
     };
   }
-  handleJump = (url: string) => {
-    openExternalUrl(url);
-    this.props.handleConvertDialog(false);
-  };
   renderSwitchOption = (optionList: any[]) => {
     return optionList.map((item) => {
       return (
