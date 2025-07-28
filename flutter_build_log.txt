@@ -1,0 +1,9 @@
+=== Build started at 2025/07/20 ���� 21:16:28.30 === 
+Checking Flutter installation... 
+C:\flutter\bin\flutter
+C:\flutter\bin\flutter.bat
+Flutter version info: 
+Flutter 3.32.6 • channel stable • https://github.com/flutter/flutter.git
+Framework • revision 077b4a4ce1 (12 days ago) • 2025-07-08 13:31:08 -0700
+Engine • revision 72f2b18bb0 (12 days ago) • 2025-07-08 10:33:53 -0700
+Tools • Dart 3.8.1 • DevTools 2.45.1

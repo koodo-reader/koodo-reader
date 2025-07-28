@@ -1,0 +1,11 @@
+version: "3.8"
+
+services:
+  build-apk:
+    build:
+      context: .
+      dockerfile: Dockerfile.apk
+    container_name: build-apk
+    volumes:
+      - ./apk-output:/app/output
+    command: cp /app.apk /app/output/app-release.apk

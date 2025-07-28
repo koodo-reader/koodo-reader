@@ -1,0 +1,23 @@
+# 使用国内Flutter镜像
+FROM hub-mirror.c.163.com/flutter/flutter:stable AS builder
+
+# 设置工作目录
+WORKDIR /app
+
+# 复制项目文件到容器中
+COPY my_flutter_app/ .
+
+# 下载依赖（使用国内源）
+RUN flutter pub get --pub-hosted-url=https://pub.flutter-io.cn
+
+# 构建APK
+RUN flutter build apk --release
+
+# 创建一个新的阶段来提取APK
+FROM hub-mirror.c.163.com/library/alpine:latest
+
+# 复制构建好的APK到新的阶段
+COPY --from=builder /app/build/app/outputs/flutter-apk/app-release.apk /app.apk
+
+# 设置入口点，当容器运行时显示APK位置
+CMD ["echo", "APK构建完成，位于/app.apk"]
