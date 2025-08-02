@@ -504,6 +504,16 @@ const createMainWin = () => {
     })
     return "pong";
   })
+  ipcMain.handle("open-explorer-folder", async (event, config) => {
+    const { shell } = require("electron");
+    if (config.isFolder) {
+      shell.openPath(config.path);
+    } else {
+      shell.showItemInFolder(config.path);
+    }
+
+    return "pong";
+  })
 
   ipcMain.on("user-data", (event, arg) => {
     event.returnValue = dirPath;

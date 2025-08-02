@@ -283,8 +283,11 @@ class GeneralSetting extends React.Component<
                 <span
                   className="change-location-button"
                   onClick={() => {
-                    const { shell } = window.require("electron");
-                    shell.openPath(this.state.storageLocation);
+                    const { ipcRenderer } = window.require("electron");
+                    ipcRenderer.invoke("open-explorer-folder", {
+                      path: this.state.storageLocation,
+                      isFolder: true,
+                    });
                   }}
                   style={{ marginRight: "10px" }}
                 >
@@ -321,8 +324,11 @@ class GeneralSetting extends React.Component<
                   <span
                     className="change-location-button"
                     onClick={() => {
-                      const { shell } = window.require("electron");
-                      shell.openPath(this.state.storageLocation);
+                      const { ipcRenderer } = window.require("electron");
+                      ipcRenderer.invoke("open-explorer-folder", {
+                        path: this.state.storageLocation,
+                        isFolder: true,
+                      });
                     }}
                     style={{ marginRight: "10px" }}
                   >

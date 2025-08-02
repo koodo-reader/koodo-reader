@@ -229,9 +229,11 @@ class ActionDialog extends React.Component<MoreActionProps, MoreActionState> {
                   toast.error(this.props.t("File not found"));
                   return;
                 }
-
-                const { shell } = window.require("electron");
-                shell.showItemInFolder(bookPath);
+                const { ipcRenderer } = window.require("electron");
+                ipcRenderer.invoke("open-explorer-folder", {
+                  path: bookPath,
+                  isFolder: false,
+                });
               }}
             >
               <p className="action-name">
