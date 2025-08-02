@@ -51,7 +51,6 @@ export interface SettingInfoState {
   isDisableAutoSync: boolean;
   isUseBuiltIn: boolean;
   isDisablePDFCover: boolean;
-  isAutoFullscreen: boolean;
   isHideShelfBook: boolean;
   isPreventAdd: boolean;
   isLemmatizeWord: boolean;

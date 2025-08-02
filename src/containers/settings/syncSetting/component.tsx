@@ -37,8 +37,6 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
       isMergeWord: ConfigService.getReaderConfig("isMergeWord") === "yes",
       isPreventTrigger:
         ConfigService.getReaderConfig("isPreventTrigger") === "yes",
-      isAutoFullscreen:
-        ConfigService.getReaderConfig("isAutoFullscreen") === "yes",
       isPreventAdd: ConfigService.getReaderConfig("isPreventAdd") === "yes",
       isLemmatizeWord:
         ConfigService.getReaderConfig("isLemmatizeWord") === "yes",

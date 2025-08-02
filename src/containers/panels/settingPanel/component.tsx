@@ -9,6 +9,7 @@ import { SettingPanelProps, SettingPanelState } from "./interface";
 import { Trans } from "react-i18next";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import BookUtil from "../../../utils/file/bookUtil";
+import { sliderConfigs } from "../../../constants/dropdownList";
 
 class SettingPanel extends React.Component<
   SettingPanelProps,
@@ -63,7 +64,19 @@ class SettingPanel extends React.Component<
         <div className="setting-panel">
           <ModeControl />
           <ThemeList />
-          <SliderList />
+          {sliderConfigs
+            .filter((item) => {
+              if (
+                this.props.currentBook.format === "PDF" &&
+                ConfigService.getReaderConfig("isConvertPDF") !== "yes"
+              ) {
+                return item.isPDF;
+              }
+              return true;
+            })
+            .map((item) => (
+              <SliderList {...{ item }} />
+            ))}
           <DropdownList />
           <SettingSwitch />
         </div>

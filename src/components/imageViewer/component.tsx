@@ -37,6 +37,7 @@ class ImageViewer extends React.Component<ImageViewerProps, ImageViewerStates> {
     }
 
     let href = getTargetHref(event);
+    console.log(href);
     if (
       href &&
       (this.props.rendition.resolveChapter(href) ||

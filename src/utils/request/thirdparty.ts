@@ -28,9 +28,16 @@ export const onSyncCallback = async (service: string, authCode: string) => {
     toast.error(i18n.t("Authorization failed"), { id: "adding-sync-id" });
     return;
   }
+  let region = "0";
+  if (service === "pcloud" && authCode.indexOf("$") > -1) {
+    // pCloud uses authCode with region info
+    let parts = authCode.split("$");
+    region = parts[1];
+  }
   // FOR PCLOUD, THE REFRESH TOKEN IS THE ACCESS TOKEN, ACCESS TOKEN NEVER EXPIRES
   let res = await encryptToken(service, {
     refresh_token: refreshToken,
+    region,
     auth_date: new Date().getTime(),
     service: service,
     version: 1,

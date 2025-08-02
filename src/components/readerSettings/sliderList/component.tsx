@@ -4,7 +4,6 @@ import { SliderListProps, SliderListState } from "./interface";
 import "./sliderList.css";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import BookUtil from "../../../utils/file/bookUtil";
-import { sliderConfigs } from "../../../constants/dropdownList";
 class SliderList extends React.Component<SliderListProps, SliderListState> {
   constructor(props: SliderListProps) {
     super(props);
@@ -79,99 +78,92 @@ class SliderList extends React.Component<SliderListProps, SliderListState> {
     );
   };
   render() {
-    return sliderConfigs
-      .filter((item) => {
-        if (
-          this.props.currentBook.format === "PDF" &&
-          ConfigService.getReaderConfig("isConvertPDF") !== "yes"
-        ) {
-          return item.isPDF;
-        }
-        return true;
-      })
-      .map((item) => (
-        <div className="font-size-setting">
-          <div className="font-size-title">
-            <span style={{ marginRight: "10px" }}>
-              <Trans>{item.title}</Trans>
-            </span>
+    return (
+      <div className="font-size-setting">
+        <div className="font-size-title">
+          <span style={{ marginRight: "10px" }}>
+            <Trans>{this.props.item.title}</Trans>
+          </span>
 
-            <input
-              className="input-value"
-              value={
-                this.state.isTyping
-                  ? this.state.inputValue
-                  : this.state[item.mode]
-              }
-              type="number"
-              step={
-                item.title === "Page width" || item.title === "Brightness"
-                  ? "0.1"
-                  : "1"
-              }
-              onInput={(event: any) => {
+          <input
+            className="input-value"
+            value={
+              this.state.isTyping
+                ? this.state.inputValue
+                : this.state[this.props.item.mode]
+            }
+            type="number"
+            step={
+              this.props.item.title === "Page width" ||
+              this.props.item.title === "Brightness"
+                ? "0.1"
+                : "1"
+            }
+            onInput={(event: any) => {
+              let fieldVal = event.target.value;
+              this.setState({ inputValue: fieldVal });
+            }}
+            onChange={(event) => {
+              let fieldVal = event.target.value;
+              this.setState({ inputValue: fieldVal });
+            }}
+            onFocus={() => {
+              this.setState({ isTyping: true });
+            }}
+            onBlur={(event) => {
+              if (!this.state.isEntered) {
                 let fieldVal = event.target.value;
-                this.setState({ inputValue: fieldVal });
+                if (!fieldVal) return;
+                this.onValueChange(event, this.props.item.mode);
+                this.setState({ isTyping: false });
+                this.handleRest(this.props.item.mode);
+              } else {
+                this.setState({ isEntered: false });
+              }
+            }}
+            onKeyDown={(event: any) => {
+              if (event.key === "Enter") {
+                this.setState({ isEntered: true });
+                let fieldVal = event.target.value;
+                if (!fieldVal) return;
+                this.onValueChange(event, this.props.item.mode);
+                this.setState({ isTyping: false });
+                this.handleRest(this.props.item.mode);
+              }
+            }}
+          />
+          <span style={{ marginLeft: "10px" }}>
+            {this.state[this.props.item.mode]}
+          </span>
+        </div>
+        <div style={{ display: "flex", justifyContent: "space-around" }}>
+          <span className="ultra-small-size">{this.props.item.minLabel}</span>
+          <div className="font-size-selector">
+            <input
+              className="input-progress"
+              value={this.state[this.props.item.mode]}
+              type="range"
+              max={this.props.item.maxValue}
+              min={this.props.item.minValue}
+              step={this.props.item.step}
+              onInput={(event) => {
+                this.onValueChange(event, this.props.item.mode);
               }}
               onChange={(event) => {
-                let fieldVal = event.target.value;
-                this.setState({ inputValue: fieldVal });
+                this.onValueInput(event, this.props.item.mode);
               }}
-              onFocus={() => {
-                this.setState({ isTyping: true });
+              onMouseUp={() => {
+                this.handleRest(this.props.item.mode);
               }}
-              onBlur={(event) => {
-                if (!this.state.isEntered) {
-                  let fieldVal = event.target.value;
-                  if (!fieldVal) return;
-                  this.onValueChange(event, item.mode);
-                  this.setState({ isTyping: false });
-                  this.handleRest(item.mode);
-                } else {
-                  this.setState({ isEntered: false });
-                }
-              }}
-              onKeyDown={(event: any) => {
-                if (event.key === "Enter") {
-                  this.setState({ isEntered: true });
-                  let fieldVal = event.target.value;
-                  if (!fieldVal) return;
-                  this.onValueChange(event, item.mode);
-                  this.setState({ isTyping: false });
-                  this.handleRest(item.mode);
-                }
-              }}
+              style={{ position: "absolute", bottom: "11px" }}
             />
-            <span style={{ marginLeft: "10px" }}>{this.state[item.mode]}</span>
           </div>
-          <div style={{ display: "flex", justifyContent: "space-around" }}>
-            <span className="ultra-small-size">{item.minLabel}</span>
-            <div className="font-size-selector">
-              <input
-                className="input-progress"
-                value={this.state[item.mode]}
-                type="range"
-                max={item.maxValue}
-                min={item.minValue}
-                step={item.step}
-                onInput={(event) => {
-                  this.onValueChange(event, item.mode);
-                }}
-                onChange={(event) => {
-                  this.onValueInput(event, item.mode);
-                }}
-                onMouseUp={() => {
-                  this.handleRest(item.mode);
-                }}
-                style={{ position: "absolute", bottom: "11px" }}
-              />
-            </div>
-            <span className="ultra-large-size" style={{ fontSize: "16px" }}>
-              {item.maxLabel}
-            </span>
-          </div>
+          <span className="ultra-large-size" style={{ fontSize: "16px" }}>
+            {this.props.item.maxLabel}
+          </span>
         </div>
-      ));
+      </div>
+    );
   }
 }
 
