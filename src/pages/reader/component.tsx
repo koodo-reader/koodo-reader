@@ -229,8 +229,8 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         <div
           style={{
             position: "absolute",
-            top: "7px",
-            right: this.props.isSettingLocked ? 300 : 0,
+            top: "0px",
+            right: this.props.isSettingLocked ? 300 : 5,
             zIndex: 11,
             width: "120px",
             display: "flex",

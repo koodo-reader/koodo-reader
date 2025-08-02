@@ -1,9 +1,9 @@
 .setting-dialog-container {
-  width: 500px;
-  height: 480px;
+  width: 510px;
+  height: 490px;
   position: absolute;
-  left: calc(50% - 250px);
-  top: calc(50% - 240px);
+  left: calc(50% - 255px);
+  top: calc(50% - 245px);
   overflow: hidden;
   opacity: 1;
   z-index: 20;

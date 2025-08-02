@@ -55,6 +55,9 @@ class Redirect extends React.Component<RedirectProps, RedirectState> {
     if (url.indexOf("code") > -1) {
       let params: any = getParamsFromUrl();
       removeSearchParams();
+      if (params.locationid) {
+        params.code = params.code + "$" + params.locationid;
+      }
       this.setState({ token: params.code });
       this.setState({ isAuthed: true });
       let state = params.state;

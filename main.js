@@ -145,6 +145,9 @@ const createMainWin = () => {
   if (store.get("isAlwaysOnTop") === "yes") {
     mainWin.setAlwaysOnTop(true);
   }
+  if (store.get("isAutoMaximizeWin") === "yes") {
+    mainWin.maximize();
+  }
 
   if (!isDev) {
     Menu.setApplicationMenu(null);
@@ -464,6 +467,25 @@ const createMainWin = () => {
         mainWin.setAlwaysOnTop(true);
       } else {
         mainWin.setAlwaysOnTop(false);
+      }
+
+    }
+    if (readerWindow && !readerWindow.isDestroyed()) {
+      if (config.isAlwaysOnTop === "yes") {
+        readerWindow.setAlwaysOnTop(true);
+      } else {
+        readerWindow.setAlwaysOnTop(false);
+      }
+    }
+    return "pong";
+  })
+  ipcMain.handle("set-auto-maximize", async (event, config) => {
+    store.set("isAutoMaximizeWin", config.isAutoMaximizeWin);
+    if (mainWin && !mainWin.isDestroyed()) {
+      if (config.isAutoMaximizeWin === "yes") {
+        mainWin.maximize();
+      } else {
+        mainWin.unmaximize();
       }
 
     }

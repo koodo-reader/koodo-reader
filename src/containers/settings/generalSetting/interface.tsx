@@ -47,6 +47,7 @@ export interface SettingInfoState {
   isDeleteShelfBook: boolean;
   isPreventSleep: boolean;
   isAlwaysOnTop: boolean;
+  isAutoMaximizeWin: boolean;
   isAutoLaunch: boolean;
   isOpenInMain: boolean;
   isDisableUpdate: boolean;

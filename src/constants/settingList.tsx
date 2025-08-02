@@ -37,6 +37,12 @@ export const generalSettingList = [
   },
   {
     isElectron: true,
+    title: "Auto maximize main window",
+    desc: "Main window will be maximized to fit the screen when launching",
+    propName: "isAutoMaximizeWin",
+  },
+  {
+    isElectron: true,
     title: "Automatically launch on system startup",
     propName: "isAutoLaunch",
   },
@@ -133,6 +139,7 @@ export const readingSettingList = [
     desc: "The book that you read from last time will be open automatically when launching",
     propName: "isOpenBook",
   },
+
   {
     isElectron: true,
     title: "Auto open book in full screen",

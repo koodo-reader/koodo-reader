@@ -392,6 +392,8 @@
   "Meticulously designed and built for Android and iOS": "为安卓和 iOS 平台精心设计和开发的客户端",
   "After three years of design and development, the mobile version of Koodo Reader is finally out": "经过3年的设计和开发，移动版的 Koodo Reader 终于正式上线了",
   "Synchronize books and reading progress across all your devices": "在您所有的设备之间同步您的整个图书库",
+  "Auto maximize main window": "自动最大化主窗口",
+  "Main window will be maximized to fit the screen when launching": "启动时自动最大化主窗口",
   "Broken data detected, please click the setting button to reset the sync records": "检测到数据损坏，请前往设置-重置同步记录",
   "Reset sync records": "重置同步记录",
   "Your Pro trial has expired, please renew it to continue using the Pro features": "您的专业版试用已过期，请续费以继续使用专业版功能",
