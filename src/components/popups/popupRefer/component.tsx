@@ -117,12 +117,16 @@ class PopupRefer extends React.Component<PopupReferProps, PopupReferStates> {
             doc.body.querySelector("#" + CSS.escape(id))
           );
         }
-
         if (
-          node.textContent.trim() === event.target.textContent.trim() ||
-          !node.textContent.trim()
+          (node.textContent.trim() === event.target.textContent.trim() ||
+            !node.textContent.trim()) &&
+          node.parentElement
         ) {
-          node = node.parentElement;
+          if (node.parentElement.tagName !== "BODY") {
+            node = node.parentElement;
+          } else {
+            return false;
+          }
         }
         let htmlContent = node.innerHTML;
         //将html代码中的img标签由blob转换为base64
