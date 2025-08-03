@@ -56,7 +56,6 @@ class PopupRefer extends React.Component<PopupReferProps, PopupReferStates> {
       let result = await this.props.rendition.resolveHref(href);
       if (!result) {
         let chapterInfo = rendition.resolveChapter(href);
-        console.log("chapterInfo", href, chapterInfo);
         await rendition.goToChapter(
           chapterInfo.index,
           chapterInfo.href,
@@ -82,7 +81,6 @@ class PopupRefer extends React.Component<PopupReferProps, PopupReferStates> {
         let node = doc.body.querySelector("#" + CSS.escape(id));
         if (!node) {
           if (href.indexOf("filepos") > -1) {
-            console.log("filepos", href);
             let chapterInfo = rendition.resolveChapter(href);
             await rendition.goToChapter(
               chapterInfo.index,

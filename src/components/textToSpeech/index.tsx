@@ -10,6 +10,7 @@ const mapStateToProps = (state: stateType) => {
     locations: state.progressPanel.locations,
     isReading: state.book.isReading,
     plugins: state.manager.plugins,
+    readerMode: state.reader.readerMode,
   };
 };
 const actionCreator = { handleFetchPlugins };
