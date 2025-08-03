@@ -8,6 +8,7 @@ export interface TextToSpeechProps {
   plugins: PluginModel[];
   htmlBook: HtmlBook;
   isReading: boolean;
+  readerMode: string;
   handleFetchPlugins: () => void;
   t: (title: string) => string;
 }

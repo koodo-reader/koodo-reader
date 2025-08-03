@@ -102,7 +102,7 @@ class TextToSpeech extends React.Component<
       voiceIndex > this.nativeVoices.length - 1 &&
       getAllVoices(this.props.plugins).length > 0
     ) {
-      await this.handleRead();
+      await this.handleCustomRead();
     } else {
       await this.handleSystemRead(0);
     }
@@ -114,20 +114,39 @@ class TextToSpeech extends React.Component<
     let nodeTextList = (await this.props.htmlBook.rendition.audioText()).filter(
       (item: string) => item && item.trim()
     );
-    let rawNodeList = nodeTextList.map((text) => {
-      return splitSentences(text);
-    });
-    this.nodeList = rawNodeList.flat();
+    this.nodeList = nodeTextList;
+    if (
+      this.props.currentBook.format === "PDF" &&
+      ConfigService.getReaderConfig("isConvertPDF") !== "yes"
+    ) {
+    } else {
+      let rawNodeList = nodeTextList.map((text) => {
+        return splitSentences(text);
+      });
+      this.nodeList = rawNodeList.flat();
+    }
+
     if (this.nodeList.length === 0) {
-      await this.props.htmlBook.rendition.next();
+      if (
+        this.props.currentBook.format === "PDF" &&
+        ConfigService.getReaderConfig("isConvertPDF") !== "yes"
+      ) {
+        let currentPosition = this.props.htmlBook.rendition.getPosition();
+        await this.props.htmlBook.rendition.goToChapterIndex(
+          parseInt(currentPosition.chapterDocIndex) +
+            (this.props.readerMode === "double" ? 2 : 1)
+        );
+      } else {
+        await this.props.htmlBook.rendition.next();
+      }
+
       this.nodeList = await this.handleGetText();
     }
     return this.nodeList;
   };
-  async handleRead() {
+  async handleCustomRead() {
     let voiceIndex = parseInt(ConfigService.getReaderConfig("voiceIndex")) || 0;
     let speed = parseFloat(ConfigService.getReaderConfig("voiceSpeed")) || 1;
-
     TTSUtil.setAudioPaths();
     await TTSUtil.cacheAudio(
       [this.nodeList[0]],
@@ -162,14 +181,33 @@ class TextToSpeech extends React.Component<
         parseFloat(ConfigService.getReaderConfig("voiceSpeed")) || 1
       );
       let visibleTextList = await this.props.htmlBook.rendition.visibleText();
-      let lastVisibleTextList = splitSentences(
-        visibleTextList[visibleTextList.length - 1]
-      );
+      let lastVisibleTextList = visibleTextList;
+      if (
+        this.props.currentBook.format === "PDF" &&
+        ConfigService.getReaderConfig("isConvertPDF") !== "yes"
+      ) {
+      } else {
+        lastVisibleTextList = splitSentences(
+          visibleTextList[visibleTextList.length - 1]
+        );
+      }
+
       if (
         this.nodeList[index] ===
         lastVisibleTextList[lastVisibleTextList.length - 1]
       ) {
-        await this.props.htmlBook.rendition.next();
+        if (
+          this.props.currentBook.format === "PDF" &&
+          ConfigService.getReaderConfig("isConvertPDF") !== "yes"
+        ) {
+          let currentPosition = this.props.htmlBook.rendition.getPosition();
+          await this.props.htmlBook.rendition.goToChapterIndex(
+            parseInt(currentPosition.chapterDocIndex) +
+              (this.props.readerMode === "double" ? 2 : 1)
+          );
+        } else {
+          await this.props.htmlBook.rendition.next();
+        }
       }
       if (res === "end") {
         break;
@@ -189,6 +227,11 @@ class TextToSpeech extends React.Component<
     }
   }
   async handleSystemRead(index) {
+    if (index >= this.nodeList.length) {
+      this.nodeList = [];
+      await this.handleAudio();
+      return;
+    }
     let currentText = this.nodeList[index];
     let style = "background: #f3a6a68c;";
     this.props.htmlBook.rendition.highlightAudioNode(currentText, style);
@@ -201,14 +244,32 @@ class TextToSpeech extends React.Component<
 
     if (res === "start") {
       let visibleTextList = await this.props.htmlBook.rendition.visibleText();
-      let lastVisibleTextList = splitSentences(
-        visibleTextList[visibleTextList.length - 1]
-      );
+      let lastVisibleTextList = visibleTextList;
+      if (
+        this.props.currentBook.format === "PDF" &&
+        ConfigService.getReaderConfig("isConvertPDF") !== "yes"
+      ) {
+      } else {
+        lastVisibleTextList = splitSentences(
+          visibleTextList[visibleTextList.length - 1]
+        );
+      }
       if (
         this.nodeList[index] ===
         lastVisibleTextList[lastVisibleTextList.length - 1]
       ) {
-        await this.props.htmlBook.rendition.next();
+        if (
+          this.props.currentBook.format === "PDF" &&
+          ConfigService.getReaderConfig("isConvertPDF") !== "yes"
+        ) {
+          let currentPosition = this.props.htmlBook.rendition.getPosition();
+          await this.props.htmlBook.rendition.goToChapterIndex(
+            parseInt(currentPosition.chapterDocIndex) +
+              (this.props.readerMode === "double" ? 2 : 1)
+          );
+        } else {
+          await this.props.htmlBook.rendition.next();
+        }
       }
       if (
         this.state.isAudioOn &&
@@ -337,6 +398,7 @@ class TextToSpeech extends React.Component<
                         "voiceIndex",
                         event.target.value
                       );
+
                       toast(this.props.t("Take effect at next startup"));
                     }
                   }}
@@ -376,7 +438,8 @@ class TextToSpeech extends React.Component<
                       "voiceSpeed",
                       event.target.value
                     );
-                    toast(this.props.t("Take effect at next startup"));
+
+                    toast(this.props.t("Take effect in a while"));
                   }}
                 >
                   {speedList.option.map((item) => (
