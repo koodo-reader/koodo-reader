@@ -13,6 +13,7 @@ import {
 import {
   CommonTool,
   ConfigService,
+  KookitConfig,
   LoginHelper,
 } from "../../assets/lib/kookit-extra-browser.min";
 import { isElectron } from "react-device-detect";
@@ -363,7 +364,11 @@ class Login extends React.Component<LoginProps, LoginState> {
                             }
                             let url = LoginHelper.getAuthUrl(
                               item.value,
-                              isElectron ? "desktop" : "browser"
+                              isElectron ? "desktop" : "browser",
+                              ConfigService.getItem("serverRegion") ===
+                                "china" && item.value === "microsoft"
+                                ? KookitConfig.ThirdpartyConfig.cnCallbackUrl
+                                : KookitConfig.ThirdpartyConfig.callbackUrl
                             );
                             if (url) {
                               if (isElectron) {

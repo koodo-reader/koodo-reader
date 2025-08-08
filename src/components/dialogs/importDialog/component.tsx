@@ -16,6 +16,7 @@ import {
 } from "../../../utils/common";
 import {
   ConfigService,
+  KookitConfig,
   SyncUtil,
 } from "../../../assets/lib/kookit-extra-browser.min";
 
@@ -312,7 +313,15 @@ class ImportDialog extends React.Component<
                           settingDrive === "microsoft"
                         ) {
                           openInBrowser(
-                            new SyncUtil(settingDrive, {}).getAuthUrl()
+                            new SyncUtil(settingDrive, {}).getAuthUrl(
+                              ConfigService.getItem("serverRegion") ===
+                                "china" &&
+                                (settingDrive === "microsoft" ||
+                                  settingDrive === "microsoft_exp" ||
+                                  settingDrive === "adrive")
+                                ? KookitConfig.ThirdpartyConfig.cnCallbackUrl
+                                : KookitConfig.ThirdpartyConfig.callbackUrl
+                            )
                           );
                         }
                         return;

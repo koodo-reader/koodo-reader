@@ -90,7 +90,14 @@ class AccountSetting extends React.Component<
     }
     this.setState({ settingLogin: event.target.value });
     if (event.target.value !== "email") {
-      let url = LoginHelper.getAuthUrl(event.target.value, "manual");
+      let url = LoginHelper.getAuthUrl(
+        event.target.value,
+        "manual",
+        ConfigService.getItem("serverRegion") === "china" &&
+          event.target.value === "microsoft"
+          ? KookitConfig.ThirdpartyConfig.cnCallbackUrl
+          : KookitConfig.ThirdpartyConfig.callbackUrl
+      );
       this.handleJump(url);
     }
   };
@@ -152,7 +159,11 @@ class AccountSetting extends React.Component<
         scope:
           KookitConfig.LoginAuthRequest[this.state.settingLogin].extraParams
             .scope,
-        redirect_uri: KookitConfig.ThirdpartyConfig.callbackUrl,
+        redirect_uri:
+          ConfigService.getItem("serverRegion") === "china" &&
+          this.state.settingLogin === "microsoft"
+            ? KookitConfig.ThirdpartyConfig.cnCallbackUrl
+            : KookitConfig.ThirdpartyConfig.callbackUrl,
       });
     } else {
       res = await loginRegister(
@@ -240,7 +251,11 @@ class AccountSetting extends React.Component<
                   onClick={() => {
                     let url = LoginHelper.getAuthUrl(
                       this.state.settingLogin,
-                      "manual"
+                      "manual",
+                      ConfigService.getItem("serverRegion") === "china" &&
+                        this.state.settingLogin === "microsoft"
+                        ? KookitConfig.ThirdpartyConfig.cnCallbackUrl
+                        : KookitConfig.ThirdpartyConfig.callbackUrl
                     );
                     this.handleJump(url);
                   }}
