@@ -677,7 +677,8 @@ class Header extends React.Component<HeaderProps, HeaderState> {
               onClick={() => {
                 if (
                   window.location.href.startsWith("http") &&
-                  window.location.hostname !== "web.koodoreader.com"
+                  window.location.hostname !== "web.koodoreader.com" &&
+                  window.location.hostname !== "web.koodoreader.cn"
                 ) {
                   this.props.handleSetting(true);
                   this.props.handleSettingMode("account");

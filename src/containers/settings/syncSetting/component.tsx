@@ -19,6 +19,7 @@ import { getStorageLocation } from "../../../utils/common";
 import { driveInputConfig, driveList } from "../../../constants/driveList";
 import {
   ConfigService,
+  KookitConfig,
   SyncUtil,
   TokenService,
 } from "../../../assets/lib/kookit-extra-browser.min";
@@ -124,7 +125,16 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
       settingDrive === "google_exp" ||
       settingDrive === "microsoft"
     ) {
-      this.handleJump(new SyncUtil(settingDrive, {}).getAuthUrl());
+      this.handleJump(
+        new SyncUtil(settingDrive, {}).getAuthUrl(
+          ConfigService.getItem("serverRegion") === "china" &&
+            (settingDrive === "microsoft" ||
+              settingDrive === "microsoft_exp" ||
+              settingDrive === "adrive")
+            ? KookitConfig.ThirdpartyConfig.cnCallbackUrl
+            : KookitConfig.ThirdpartyConfig.callbackUrl
+        )
+      );
     }
   };
   handleDeleteDataSource = async (event: any) => {
@@ -442,7 +452,14 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                     style={{ marginRight: "10px" }}
                     onClick={async () => {
                       this.handleJump(
-                        new SyncUtil(this.props.settingDrive, {}).getAuthUrl()
+                        new SyncUtil(this.props.settingDrive, {}).getAuthUrl(
+                          ConfigService.getItem("serverRegion") === "china" &&
+                            (this.props.settingDrive === "microsoft" ||
+                              this.props.settingDrive === "microsoft_exp" ||
+                              this.props.settingDrive === "adrive")
+                            ? KookitConfig.ThirdpartyConfig.cnCallbackUrl
+                            : KookitConfig.ThirdpartyConfig.callbackUrl
+                        )
                       );
                     }}
                   >

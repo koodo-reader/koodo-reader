@@ -299,9 +299,15 @@ const createMainWin = () => {
     return result;
   });
   ipcMain.handle("cloud-delete", async (event, config) => {
-    let syncUtil = await getSyncUtil(config, config.isUseCache);
-    let result = await syncUtil.deleteFile(config.fileName, config.type);
-    return result;
+    try {
+      let syncUtil = await getSyncUtil(config, config.isUseCache);
+      let result = await syncUtil.deleteFile(config.fileName, config.type);
+      return result;
+    } catch (error) {
+      console.error("Error deleting file:", error);
+    }
+    return false;
+
   });
 
   ipcMain.handle("cloud-list", async (event, config) => {

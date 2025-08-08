@@ -23,7 +23,10 @@ export const loginRegister = async (service: string, code: string) => {
     code,
     provider: service,
     scope: KookitConfig.LoginAuthRequest[service].extraParams.scope,
-    redirect_uri: KookitConfig.ThirdpartyConfig.callbackUrl,
+    redirect_uri:
+      service === "microsoft"
+        ? KookitConfig.ThirdpartyConfig.cnCallbackUrl
+        : KookitConfig.ThirdpartyConfig.callbackUrl,
     device_name: deviceName,
     device_type: isElectron ? "Desktop" : "Browser",
     device_os: getOSName(),
