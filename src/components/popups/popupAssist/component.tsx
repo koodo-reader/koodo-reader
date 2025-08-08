@@ -4,10 +4,8 @@ import { PopupAssistProps, PopupAssistState } from "./interface";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import Parser from "html-react-parser";
 import DOMPurify from "dompurify";
-import axios from "axios";
 import { Trans } from "react-i18next";
 import {
-  getDefaultTransTarget,
   handleContextMenu,
   openExternalUrl,
   WEBSITE_URL,
@@ -18,7 +16,6 @@ import { checkPlugin } from "../../../utils/common";
 import { getAnswerStream } from "../../../utils/request/reader";
 import { marked } from "marked";
 import { sampleQuestion } from "../../../constants/settingList";
-declare var window: any;
 class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
   private chatBoxRef: React.RefObject<HTMLDivElement>;
 
@@ -111,8 +108,9 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
             this.scrollToBottom();
           }
         );
-        if (res.data && res.data.done) {
+        if (res.data && res.done) {
           if (this.state.mode === "ask") {
+            console.log(this.state.mode, "this.state.mode");
             this.setState({
               askHistory: [
                 ...this.state.askHistory,
