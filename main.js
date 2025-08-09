@@ -744,6 +744,11 @@ if (!singleInstance) {
       mainWin.focus();
     }
   });
+  if (!mainWin || (mainWin && mainWin.isDestroyed())) {
+    if (app.isReady()) {
+      createMainWin();
+    }
+  }
 }
 if (filePath) {
   // Make sure the directory exists
@@ -761,9 +766,9 @@ if (filePath) {
 app.on("ready", () => {
   createMainWin();
 });
-app.on("window-all-closed", () => {
-  app.quit();
-});
+// app.on("window-all-closed", () => {
+//   app.quit();
+// });
 app.on("open-file", (e, pathToFile) => {
   filePath = pathToFile;
 });
