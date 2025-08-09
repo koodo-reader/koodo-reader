@@ -160,6 +160,12 @@ export const readingSettingList = [
   },
   {
     isElectron: false,
+    title: "Disable auto scroll to next or previous chapter",
+    desc: "Disable auto scroll to next or previous chapter when reaching the end of the current chapter",
+    propName: "isDisableAutoScroll",
+  },
+  {
+    isElectron: false,
     title: "Overwrite the default link style in the book",
     propName: "isOverwriteLink",
   },

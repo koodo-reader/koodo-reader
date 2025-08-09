@@ -43,6 +43,8 @@ class SettingDialog extends React.Component<
       isExpandContent:
         ConfigService.getReaderConfig("isExpandContent") === "yes",
       isDisablePopup: ConfigService.getReaderConfig("isDisablePopup") === "yes",
+      isDisableAutoScroll:
+        ConfigService.getReaderConfig("isDisableAutoScroll") === "yes",
       isDisableTrashBin:
         ConfigService.getReaderConfig("isDisableTrashBin") === "yes",
       isDeleteShelfBook:
