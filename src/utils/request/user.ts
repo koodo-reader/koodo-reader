@@ -24,6 +24,7 @@ export const loginRegister = async (service: string, code: string) => {
     provider: service,
     scope: KookitConfig.LoginAuthRequest[service].extraParams.scope,
     redirect_uri:
+      ConfigService.getItem("serverRegion") === "china" &&
       service === "microsoft"
         ? KookitConfig.ThirdpartyConfig.cnCallbackUrl
         : KookitConfig.ThirdpartyConfig.callbackUrl,

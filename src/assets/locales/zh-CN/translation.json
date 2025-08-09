@@ -253,6 +253,8 @@
   "Remaining reading time": "读完本章需要：{{count}}分钟",
   "Book page": "第{{count}}页",
   "Total books": "一共{{count}}本书",
+  "Disable auto scroll to next or previous chapter": "禁用自动滚动到下一章或上一章",
+  "Disable auto scroll to next or previous chapter when reaching the end of the current chapter": "当到达当前章节末尾或开头时，禁用自动滚动到下一章或上一章",
   "Pages": "页数",
   "Missing parameters": "缺少参数",
   "Chapters": "章节数",

@@ -60,11 +60,21 @@ if (os.platform() === 'linux') {
     icon: path.join(__dirname, "./build/assets/icon.png"),
   });
 }
+fs.writeFileSync(
+  path.join(dirPath, "test.json"),
+  JSON.stringify({ singleInstance }),
+  "utf-8"
+);
 // Single Instance Lock
 if (!singleInstance) {
   app.quit();
 } else {
   app.on("second-instance", (event, argv, workingDir) => {
+    fs.writeFileSync(
+      path.join(dirPath, "test.json"),
+      JSON.stringify({ singleInstance, secondInstance: true, mainWin: mainWin ? true : false }),
+      "utf-8"
+    );
     if (mainWin) {
       if (!mainWin.isVisible()) mainWin.show();
       mainWin.focus();

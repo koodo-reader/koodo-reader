@@ -164,7 +164,10 @@ export const bindHtmlEvent = (
       if (readerMode === "scroll") {
         await sleep(200);
         await rendition.record();
-        if (Math.abs(event.deltaX) === 0) {
+        if (
+          Math.abs(event.deltaX) === 0 &&
+          ConfigService.getReaderConfig("isDisableAutoScroll") !== "yes"
+        ) {
           let srollElement = document.getElementById("page-area");
           await scrollChapter(srollElement, rendition, event.deltaY);
         }
