@@ -60,26 +60,19 @@ if (os.platform() === 'linux') {
     icon: path.join(__dirname, "./build/assets/icon.png"),
   });
 }
-fs.writeFileSync(
-  path.join(dirPath, "test.json"),
-  JSON.stringify({ singleInstance }),
-  "utf-8"
-);
 // Single Instance Lock
 if (!singleInstance) {
   app.quit();
 } else {
   app.on("second-instance", (event, argv, workingDir) => {
-    fs.writeFileSync(
-      path.join(dirPath, "test.json"),
-      JSON.stringify({ singleInstance, secondInstance: true, mainWin: mainWin ? true : false }),
-      "utf-8"
-    );
     if (mainWin) {
       if (!mainWin.isVisible()) mainWin.show();
       mainWin.focus();
     }
   });
+  if (!mainWin || (mainWin && mainWin.isDestroyed())) {
+    createMainWin();
+  }
 }
 if (filePath) {
   // Make sure the directory exists
@@ -557,17 +550,6 @@ const createMainWin = () => {
   ipcMain.handle("reload-main", (event, arg) => {
     if (mainWin) {
       mainWin.reload();
-    }
-  });
-  ipcMain.handle("focus-on-main", (event, arg) => {
-    if (mainWin) {
-      if (!mainWin.isVisible()) mainWin.show();
-      mainWin.focus();
-    }
-  });
-  ipcMain.handle("create-new-main", (event, arg) => {
-    if (!mainWin) {
-      createMainWin();
     }
   });
   ipcMain.handle("new-chat", (event, config) => {
