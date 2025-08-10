@@ -110,7 +110,6 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
         );
         if (res.data && res.done) {
           if (this.state.mode === "ask") {
-            console.log(this.state.mode, "this.state.mode");
             this.setState({
               askHistory: [
                 ...this.state.askHistory,

@@ -55,6 +55,33 @@ let options = {
   },
 };
 const Database = require("better-sqlite3");
+if (os.platform() === 'linux') {
+  options = Object.assign({}, options, {
+    icon: path.join(__dirname, "./build/assets/icon.png"),
+  });
+}
+// Single Instance Lock
+if (!singleInstance) {
+  app.quit();
+} else {
+  app.on("second-instance", (event, argv, workingDir) => {
+    if (mainWin) {
+      if (!mainWin.isVisible()) mainWin.show();
+      mainWin.focus();
+    }
+  });
+}
+if (filePath) {
+  // Make sure the directory exists
+  if (!fs.existsSync(dirPath)) {
+    fs.mkdirSync(dirPath, { recursive: true });
+  }
+  fs.writeFileSync(
+    path.join(dirPath, "log.json"),
+    JSON.stringify({ filePath }),
+    "utf-8"
+  );
+}
 const getDBConnection = (dbName, storagePath, sqlStatement) => {
   if (!dbConnection[dbName]) {
     if (!fs.existsSync(path.join(storagePath, "config"))) {
@@ -729,46 +756,14 @@ const createMainWin = () => {
     filePath = null;
   });
 };
-if (os.platform() === 'linux') {
-  options = Object.assign({}, options, {
-    icon: path.join(__dirname, "./build/assets/icon.png"),
-  });
-}
-// Single Instance Lock
-if (!singleInstance) {
-  app.quit();
-} else {
-  app.on("second-instance", (event, argv, workingDir) => {
-    if (mainWin) {
-      if (!mainWin.isVisible()) mainWin.show();
-      mainWin.focus();
-    }
-  });
-  if (!mainWin || (mainWin && mainWin.isDestroyed())) {
-    if (app.isReady()) {
-      createMainWin();
-    }
-  }
-}
-if (filePath) {
-  // Make sure the directory exists
-  if (!fs.existsSync(dirPath)) {
-    fs.mkdirSync(dirPath, { recursive: true });
-  }
-  fs.writeFileSync(
-    path.join(dirPath, "log.json"),
-    JSON.stringify({ filePath }),
-    "utf-8"
-  );
-}
 
 
 app.on("ready", () => {
   createMainWin();
 });
-// app.on("window-all-closed", () => {
-//   app.quit();
-// });
+app.on("window-all-closed", () => {
+  app.quit();
+});
 app.on("open-file", (e, pathToFile) => {
   filePath = pathToFile;
 });
