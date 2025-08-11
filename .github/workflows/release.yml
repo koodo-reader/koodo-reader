@@ -73,6 +73,7 @@ jobs:
               arch = @("arm64")
             }
           )
+          $packageJson.build.nsis.artifactName = "${productName}-${version}-${arch}.${ext}"
           $packageJson | ConvertTo-Json -Depth 10 | Set-Content package.json
       - name: Build/release arm64 Electron app
         uses: samuelmeuli/action-electron-builder@v1.6.0
@@ -92,7 +93,7 @@ jobs:
             }
           )
           $packageJson | ConvertTo-Json -Depth 10 | Set-Content package.json
-      - name: Build/release ia32 Electron app
+      - name: Build/release x32 Electron app
         uses: samuelmeuli/action-electron-builder@v1.6.0
         with:
           build_script_name: "build"
