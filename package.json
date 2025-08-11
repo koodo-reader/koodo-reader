@@ -300,7 +300,7 @@
       "artifactName": "${productName}-${version}-Portable.${ext}"
     },
     "nsis": {
-      "artifactName": "${productName}-${version}.${ext}",
+      "artifactName": "${productName}-${version}-${arch}.${ext}",
       "oneClick": false,
       "allowToChangeInstallationDirectory": true,
       "include": "assets/windows/installer.nsh"
