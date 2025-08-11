@@ -115,7 +115,7 @@
   "homepage": "./",
   "build": {
     "appId": "xyz.960960.koodo",
-    "productName": "Koodo Reader",
+    "productName": "KoodoReader",
     "copyright": "Copyright (c) 2020-2025 ${author}",
     "files": [
       "build/**/*",
@@ -297,7 +297,7 @@
       "artifactName": "${productName}-${version}-${arch}.${ext}"
     },
     "portable": {
-      "artifactName": "${productName}-${version}-Portable.${ext}"
+      "artifactName": "${productName}-${version}-${arch}-Portable.${ext}"
     },
     "nsis": {
       "artifactName": "${productName}-${version}-${arch}.${ext}",
