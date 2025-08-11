@@ -244,16 +244,13 @@
         {
           "target": "nsis",
           "arch": [
-            "x64",
-            "arm64"
+            "x64"
           ]
         },
         {
           "target": "zip",
           "arch": [
-            "x64",
-            "ia32",
-            "arm64"
+            "x64"
           ]
         },
         {
