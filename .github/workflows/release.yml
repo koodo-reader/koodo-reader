@@ -9,7 +9,7 @@ jobs:
     # Platforms to build on/for
     strategy:
       matrix:
-        os: [windows-latest]
+        os: [ubuntu-22.04]
         # os: [macos-latest, ubuntu-22.04, windows-latest]
 
     steps:
