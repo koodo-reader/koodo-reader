@@ -9,7 +9,7 @@ jobs:
     # Platforms to build on/for
     strategy:
       matrix:
-        os: [windows-latest]
+        os: [windows-latest, windows-2022, windows-11-arm]
         # os: [macos-latest, ubuntu-22.04, windows-latest]
 
     steps:
@@ -63,13 +63,8 @@ jobs:
           # macOS notarization API key
           API_KEY_ID: ${{ secrets.API_KEY_ID }}
           API_KEY_ISSUER_ID: ${{ secrets.API_KEY_ISSUER_ID }}
-      - name: Clean build and dist folders
-        if: startsWith(matrix.os, 'windows')
-        run: |
-          if (Test-Path build) { Remove-Item -Recurse -Force build }
-          if (Test-Path dist) { Remove-Item -Recurse -Force dist }
       - name: Modify package.json for Windows arm64 build
-        if: startsWith(matrix.os, 'windows')
+        if: matrix.os == 'windows-11-arm'
         run: |
           $packageJson = Get-Content package.json -Raw | ConvertFrom-Json
           $packageJson.build.win.target = @(
@@ -80,21 +75,16 @@ jobs:
           )
           $packageJson.build.nsis.artifactName = "${productName}-${version}-${arch}.${ext}"
           $packageJson | ConvertTo-Json -Depth 10 | Set-Content package.json
-
       - name: Build/release arm64 Electron app
+        if: matrix.os == 'windows-11-arm'
         uses: samuelmeuli/action-electron-builder@v1.6.0
         with:
           build_script_name: "build"
           # GitHub token, automatically provided to the action
           # (No need to define this secret in the repo settings)
           github_token: ${{ secrets.github_token }}
-      - name: Clean build and dist folders
-        if: startsWith(matrix.os, 'windows')
-        run: |
-          if (Test-Path build) { Remove-Item -Recurse -Force build }
-          if (Test-Path dist) { Remove-Item -Recurse -Force dist }
       - name: Modify package.json for Windows x32 build
-        if: startsWith(matrix.os, 'windows')
+        if: matrix.os == 'windows-2022'
         run: |
           $packageJson = Get-Content package.json -Raw | ConvertFrom-Json
           $packageJson.build.win.target = @(
@@ -103,8 +93,10 @@ jobs:
               arch = @("ia32")
             }
           )
+          $packageJson.build.nsis.artifactName = "${productName}-${version}-${arch}.${ext}"
           $packageJson | ConvertTo-Json -Depth 10 | Set-Content package.json
       - name: Build/release x32 Electron app
+        if: matrix.os == 'windows-2022'
         uses: samuelmeuli/action-electron-builder@v1.6.0
         with:
           build_script_name: "build"
