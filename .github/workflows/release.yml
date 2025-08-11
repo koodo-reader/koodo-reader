@@ -45,6 +45,7 @@ jobs:
       - name: Set environment variable USE_HARD_LINKS
         run: echo "USE_HARD_LINKS=false" >> $GITHUB_ENV
       - name: Build/release Electron app
+        if: matrix.os != 'windows-2022' && matrix.os != 'windows-11-arm'
         uses: samuelmeuli/action-electron-builder@v1.6.0
         with:
           build_script_name: "build"
