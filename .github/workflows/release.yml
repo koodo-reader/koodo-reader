@@ -63,6 +63,11 @@ jobs:
           # macOS notarization API key
           API_KEY_ID: ${{ secrets.API_KEY_ID }}
           API_KEY_ISSUER_ID: ${{ secrets.API_KEY_ISSUER_ID }}
+      - name: Clean build and dist folders
+        if: startsWith(matrix.os, 'windows')
+        run: |
+          if (Test-Path build) { Remove-Item -Recurse -Force build }
+          if (Test-Path dist) { Remove-Item -Recurse -Force dist }
       - name: Modify package.json for Windows arm64 build
         if: startsWith(matrix.os, 'windows')
         run: |
@@ -75,6 +80,7 @@ jobs:
           )
           $packageJson.build.nsis.artifactName = "${productName}-${version}-${arch}.${ext}"
           $packageJson | ConvertTo-Json -Depth 10 | Set-Content package.json
+
       - name: Build/release arm64 Electron app
         uses: samuelmeuli/action-electron-builder@v1.6.0
         with:
@@ -82,6 +88,11 @@ jobs:
           # GitHub token, automatically provided to the action
           # (No need to define this secret in the repo settings)
           github_token: ${{ secrets.github_token }}
+      - name: Clean build and dist folders
+        if: startsWith(matrix.os, 'windows')
+        run: |
+          if (Test-Path build) { Remove-Item -Recurse -Force build }
+          if (Test-Path dist) { Remove-Item -Recurse -Force dist }
       - name: Modify package.json for Windows x32 build
         if: startsWith(matrix.os, 'windows')
         run: |
