@@ -54,18 +54,16 @@ jobs:
       - name: Modify package.json for Linux arm64 build
         if: startsWith(matrix.os, 'ubuntu-24.04-arm')
         run: |
-          $packageJson = Get-Content package.json -Raw | ConvertFrom-Json
-          $packageJson.build.linux.target = @(
-            @{
-              target = "deb"
-              arch = @("arm64")
+          jq '.build.linux.target = [
+            {
+              "target": "deb",
+              "arch": ["arm64"]
             },
-            @{
-              target = "AppImage"
-              arch = @("arm64")
+            {
+              "target": "AppImage", 
+              "arch": ["arm64"]
             }
-          )
-          $packageJson | ConvertTo-Json -Depth 10 | Set-Content package.json
+          ]' package.json > package.json.tmp && mv package.json.tmp package.json
       - name: Build/release Electron app
         uses: samuelmeuli/action-electron-builder@v1.6.0
         with:
