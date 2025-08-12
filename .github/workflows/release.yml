@@ -10,7 +10,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-24.04-arm]
-        # os: [macos-latest, ubuntu-22.04, windows-latest]
+        # os: [macos-latest, ubuntu-latest, windows-latest]
 
     steps:
       - name: Check out Git repository
@@ -24,11 +24,21 @@ jobs:
       - name: Install Snapcraft
         uses: samuelmeuli/action-snapcraft@v1.2.0
         # Only install Snapcraft on Ubuntu
-        if: startsWith(matrix.os, 'ubuntu')
+        if: startsWith(matrix.os, 'ubuntu-22.04')
         with:
           # Log in to Snap Store
           snapcraft_token: ${{ secrets.snapcraft_token }}
-
+      - name: Install Gcc
+        if: startsWith(matrix.os, 'ubuntu-latest')
+        run: |
+          sudo apt update
+          sudo apt-get install gcc-multilib g++-multilib
+      - name: Install FPM
+        if: startsWith(matrix.os, 'ubuntu-24.04-arm')
+        run: |
+          sudo apt update
+          sudo apt-get install -y ruby-full build-essential zlib1g-dev liblzma-dev
+          sudo gem install --no-document fpm
       - name: Prepare for app notarization (macOS)
         if: startsWith(matrix.os, 'macos')
         # Import Apple API key for app notarization on macOS
@@ -37,7 +47,7 @@ jobs:
           echo ${{ github.ref }}
           echo '${{ secrets.API_KEY }}' > ~/private_keys/AuthKey_${{ secrets.API_KEY_ID }}.p8
           brew install python-setuptools
-      - name: Set environment variable USE_HARD_LINKS
+      - name: Set environment variable USE_SYSTEM_FPM
         if: startsWith(matrix.os, 'ubuntu-24.04-arm')
         run: echo "USE_SYSTEM_FPM=true" >> $GITHUB_ENV
       - name: Set environment variable USE_HARD_LINKS
