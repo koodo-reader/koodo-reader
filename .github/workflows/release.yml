@@ -38,6 +38,9 @@ jobs:
           echo '${{ secrets.API_KEY }}' > ~/private_keys/AuthKey_${{ secrets.API_KEY_ID }}.p8
           brew install python-setuptools
       - name: Set environment variable USE_HARD_LINKS
+        if: startsWith(matrix.os, 'ubuntu-24.04-arm')
+        run: echo "USE_SYSTEM_FPM=true" >> $GITHUB_ENV
+      - name: Set environment variable USE_HARD_LINKS
         run: echo "USE_HARD_LINKS=false" >> $GITHUB_ENV
       - name: Build/release Electron app
         uses: samuelmeuli/action-electron-builder@v1.6.0
