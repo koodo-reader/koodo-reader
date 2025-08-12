@@ -159,7 +159,7 @@ const createMainWin = () => {
   mainWin.loadURL(urlLocation);
 
   mainWin.on("close", () => {
-    if (!mainWin.isDestroyed()) {
+    if (mainWin && !mainWin.isDestroyed()) {
       let bounds = mainWin.getBounds();
       if (bounds.width > 0 && bounds.height > 0) {
         store.set({
@@ -233,7 +233,7 @@ const createMainWin = () => {
       readerWindow.setAlwaysOnTop(true);
     }
     readerWindow.on("close", (event) => {
-      if (!readerWindow.isDestroyed()) {
+      if (readerWindow && !readerWindow.isDestroyed()) {
         let bounds = readerWindow.getBounds();
         if (bounds.width > 0 && bounds.height > 0) {
           store.set({

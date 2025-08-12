@@ -268,15 +268,27 @@
       "category": "Office",
       "target": [
         {
+          "target": "snap",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
           "target": "deb",
           "arch": [
-            "arm64"
+            "x64"
+          ]
+        },
+        {
+          "target": "rpm",
+          "arch": [
+            "x64"
           ]
         },
         {
           "target": "AppImage",
           "arch": [
-            "arm64"
+            "x64"
           ]
         }
       ],
