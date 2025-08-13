@@ -3,6 +3,7 @@ import "./contentList.css";
 import { ContentListProps, ContentListState } from "./interface";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import { scrollContents } from "../../../utils/common";
+import { Trans } from "react-i18next";
 
 class ContentList extends React.Component<ContentListProps, ContentListState> {
   constructor(props: ContentListProps) {
@@ -11,6 +12,7 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
       chapters: [],
       isCollapsed: true,
       currentIndex: -1,
+      currentChapterIndex: 0,
       isExpandContent:
         ConfigService.getReaderConfig("isExpandContent") === "yes",
     };
@@ -139,6 +141,33 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
 
     return (
       <div className="book-content-container">
+        {this.props.htmlBook && (
+          <div className="book-content-header">
+            <div>
+              <Trans>Total chapters</Trans>:
+              {this.props.htmlBook.flattenChapters.length}
+            </div>
+            <div
+              onClick={() => {
+                ConfigService.setReaderConfig(
+                  "isExpandContent",
+                  this.state.isExpandContent ? "no" : "yes"
+                );
+                this.setState({
+                  isExpandContent: !this.state.isExpandContent,
+                });
+              }}
+              className="book-content-expand"
+            >
+              <span className="icon-collapse"></span>
+              {this.state.isExpandContent ? (
+                <Trans>Collapse chapters</Trans>
+              ) : (
+                <Trans>Expand chapters</Trans>
+              )}
+            </div>
+          </div>
+        )}
         <ul className="book-content">
           {this.state.chapters && renderContentList(this.state.chapters, 1)}
         </ul>
