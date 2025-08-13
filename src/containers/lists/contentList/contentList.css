@@ -41,3 +41,20 @@
   cursor: pointer;
   transition: transform 0.1s ease;
 }
+.book-content-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-left: 10px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  font-size: 15px;
+}
+.book-content-expand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 10px;
+}

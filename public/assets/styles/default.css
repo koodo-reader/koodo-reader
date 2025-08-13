@@ -244,6 +244,7 @@ body {
   color: rgba(255, 255, 255, 1);
 }
 .book-content-name,
+.book-content-header,
 .book-subcontent-name,
 .book-bookmark-list,
 .nav-search-list-item,

@@ -35,8 +35,6 @@ class GeneralSetting extends React.Component<
       isLemmatizeWord:
         ConfigService.getReaderConfig("isLemmatizeWord") === "yes",
       isOpenBook: ConfigService.getReaderConfig("isOpenBook") === "yes",
-      isExpandContent:
-        ConfigService.getReaderConfig("isExpandContent") === "yes",
       isDisablePopup: ConfigService.getReaderConfig("isDisablePopup") === "yes",
       isDisableTrashBin:
         ConfigService.getReaderConfig("isDisableTrashBin") === "yes",

@@ -148,12 +148,6 @@ export const readingSettingList = [
   },
   {
     isElectron: false,
-    title: "Auto expand content",
-    desc: "All the folded content will be expanded in the navigation panel",
-    propName: "isExpandContent",
-  },
-  {
-    isElectron: false,
     title: "No popup when selecting texts",
     desc: "Turn it on when you want Koodo to work with other third-party translation service, right clicking on the selected text will trigger popup again",
     propName: "isDisablePopup",
