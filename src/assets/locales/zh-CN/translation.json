@@ -257,6 +257,8 @@
   "Disable auto scroll to next or previous chapter when reaching the end of the current chapter": "当到达当前章节末尾或开头时，禁用自动滚动到下一章或上一章",
   "Pages": "页数",
   "Total chapters": "总章节数",
+  "Clear all data": "清除所有数据",
+  "Please type 'CLEAR' to confirm": "请键入 'CLEAR' 以确认",
   "Current chapter": "当前章节",
   "Show all": "显示所有",
   "Expand chapters": "展开章节",

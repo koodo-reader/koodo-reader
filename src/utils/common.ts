@@ -17,6 +17,7 @@ import i18n from "../i18n";
 import { getThirdpartyRequest } from "./request/thirdparty";
 import { getCloudConfig } from "./file/common";
 import SyncService from "./storage/syncService";
+import localforage from "localforage";
 declare var window: any;
 export const supportedFormats = [
   ".epub",
@@ -53,6 +54,20 @@ export const calculateFileMD5 = (file: File): Promise<string> => {
     };
 
     reader.readAsArrayBuffer(file);
+  });
+};
+export const vexPromptAsync = (message, placeholder = "", value = "") => {
+  return new Promise((resolve) => {
+    window.vex.dialog.buttons.YES.text = i18n.t("Confirm");
+    window.vex.dialog.buttons.NO.text = i18n.t("Cancel");
+    window.vex.dialog.prompt({
+      message,
+      placeholder,
+      value,
+      callback: function (input) {
+        resolve(input);
+      },
+    });
   });
 };
 export const fetchFileFromPath = (filePath: string) => {
@@ -770,4 +785,52 @@ export const showDownloadProgress = (
   }, 500);
   return timer;
 };
-export const showGooglePicker = () => {};
+export const clearAllData = async () => {
+  localStorage.clear();
+  sessionStorage.clear();
+  //clear all indexed db data
+
+  if (isElectron) {
+    let storageLocation = getStorageLocation();
+    const fs = window.require("fs");
+    console.log(`Clearing all data in ${storageLocation}`);
+    let databaseList = CommonTool.databaseList;
+    for (let i = 0; i < databaseList.length; i++) {
+      await window.require("electron").ipcRenderer.invoke("close-database", {
+        dbName: databaseList[i],
+        storagePath: getStorageLocation(),
+      });
+    }
+    if (fs.existsSync(storageLocation)) {
+      fs.rmSync(storageLocation, { recursive: true, force: true });
+    }
+  }
+  await localforage.clear();
+};
+const convertBlobToDataURL = async (blobUrl) => {
+  const response = await fetch(blobUrl);
+  const blob = await response.blob();
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onloadend = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(blob);
+  });
+};
+export const processHtml = async (html) => {
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(html, "text/html");
+  const images: any[] = Array.from(doc.getElementsByTagName("img"));
+  for (const img of images) {
+    if (img.src && img.src.startsWith("blob:")) {
+      try {
+        const dataUrl = await convertBlobToDataURL(img.src);
+        img.src = dataUrl;
+        img.style.maxWidth = "100%"; // 确保图片不会超出容器宽度
+      } catch (error) {
+        console.error("Error converting blob to data URL:", error);
+      }
+    }
+  }
+  return doc.body.innerHTML;
+};
