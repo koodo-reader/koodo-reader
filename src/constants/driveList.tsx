@@ -32,7 +32,7 @@ export const driveList = [
     icon: "icon-googledrive",
     isPro: true,
     support: ["desktop", "browser", "phone"],
-    scoped: true,
+    scoped: false,
     isCNAvailable: false,
   },
   {
@@ -79,15 +79,6 @@ export const driveList = [
     support: ["desktop", "browser", "phone"],
     scoped: false,
     isCNAvailable: true,
-  },
-  {
-    label: "Google Drive (Experimental)",
-    value: "google_exp",
-    icon: "icon-googledrive",
-    isPro: true,
-    support: ["desktop", "browser", "phone"],
-    scoped: false,
-    isCNAvailable: false,
   },
   {
     label: "S3 Compatible",
@@ -337,14 +328,6 @@ export const driveInputConfig: DriveInputConfig = {
     },
   ],
   microsoft: [
-    {
-      label: "Token",
-      value: "token",
-      type: "text",
-      required: true,
-    },
-  ],
-  google_exp: [
     {
       label: "Token",
       value: "token",

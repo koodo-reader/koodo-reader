@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.485.0",
+    "@googleworkspace/drive-picker-element": "^0.6.1",
     "adm-zip": "^0.5.2",
     "axios": "^0.19.2",
     "basic-ftp": "^5.0.5",
