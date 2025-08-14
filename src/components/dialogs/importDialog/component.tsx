@@ -366,11 +366,7 @@ class ImportDialog extends React.Component<
                         );
                         return;
                       }
-                      // 特殊处理Google Drive，使用Picker API
-                      if (item.value === "google") {
-                        this.handleGooglePicker();
-                        return;
-                      }
+
                       if (!this.props.dataSourceList.includes(item.value)) {
                         this.props.handleSetting(true);
                         this.props.handleSettingMode("sync");
@@ -399,10 +395,15 @@ class ImportDialog extends React.Component<
                         }
                         return;
                       }
+                      if (item.value === "google") {
+                        this.handleGooglePicker();
+                        return;
+                      }
                       this.setState({
                         currentDrive: item.value,
                         currentPath: "",
                       });
+
                       this.listFolder(item.value, "");
                     }}
                   >
