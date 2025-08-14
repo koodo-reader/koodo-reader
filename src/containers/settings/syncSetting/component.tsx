@@ -98,7 +98,6 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
       settingDrive === "pcloud" ||
       settingDrive === "adrive" ||
       settingDrive === "microsoft_exp" ||
-      settingDrive === "google_exp" ||
       settingDrive === "microsoft"
     ) {
       this.handleJump(
@@ -129,6 +128,11 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
     }
     ConfigService.deleteListConfig(targetDrive, "dataSourceList");
     this.props.handleFetchDataSourceList();
+    console.log(
+      "targetDrive",
+      targetDrive,
+      ConfigService.getItem("defaultSyncOption")
+    );
     if (targetDrive === ConfigService.getItem("defaultSyncOption")) {
       ConfigService.removeItem("defaultSyncOption");
       this.props.handleFetchDefaultSyncOption();
@@ -421,7 +425,6 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                   this.props.settingDrive === "pcloud" ||
                   this.props.settingDrive === "adrive" ||
                   this.props.settingDrive === "microsoft_exp" ||
-                  this.props.settingDrive === "google_exp" ||
                   this.props.settingDrive === "microsoft") && (
                   <div
                     className="voice-add-confirm"

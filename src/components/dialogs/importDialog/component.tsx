@@ -19,7 +19,8 @@ import {
   KookitConfig,
   SyncUtil,
 } from "../../../assets/lib/kookit-extra-browser.min";
-
+import { GooglePickerUtil } from "../../../utils/file/googlePicker";
+declare var window: any;
 type FileInfo = {
   name: string;
   size: number;
@@ -31,6 +32,7 @@ class ImportDialog extends React.Component<
   ImportDialogProps,
   ImportDialogState
 > {
+  googlePickerUtil: any;
   constructor(props: ImportDialogProps) {
     super(props);
     this.state = {
@@ -260,6 +262,73 @@ class ImportDialog extends React.Component<
 
     return allFiles;
   };
+  // 新增Google Picker处理方法
+  handleGooglePicker = async () => {
+    try {
+      let pickerUtil: any = await SyncService.getPickerUtil("google");
+      await pickerUtil.remote.refreshToken();
+      console.log("Using Google Picker with access token:", pickerUtil.remote);
+      this.googlePickerUtil = new GooglePickerUtil({
+        accessToken: pickerUtil.remote.config.access_token,
+        apiKey: "",
+        appId: "1051055003225",
+      });
+
+      await this.googlePickerUtil.createPicker(this.handlePickerCallback);
+    } catch (error) {
+      console.error("Error creating Google Picker:", error);
+      toast.error(this.props.t("Failed to open Google Picker"));
+    }
+  };
+
+  // Google Picker回调处理
+  handlePickerCallback = async (data: any) => {
+    if (data.action === window.google.picker.Action.PICKED) {
+      const files = data.docs;
+
+      for (const file of files) {
+        await this.handleImportGoogleFile(file);
+      }
+    }
+  };
+
+  // 处理Google文件导入
+  handleImportGoogleFile = async (googleFile: any) => {
+    try {
+      const tokenConfig = await getCloudConfig("google");
+
+      // 检查文件格式
+      const fileExtension =
+        "." + googleFile.name.split(".").pop()?.toLowerCase();
+      if (!supportedFormats.includes(fileExtension)) {
+        toast.error(
+          this.props.t("Unsupported file format") + ": " + fileExtension
+        );
+        return;
+      }
+
+      toast.loading(this.props.t("Downloading") + ": " + googleFile.name, {
+        id: "google-download-" + googleFile.id,
+      });
+
+      // 下载文件
+      const arrayBuffer = await this.googlePickerUtil.downloadFile(
+        googleFile.id
+      );
+      const blob = new Blob([arrayBuffer]);
+      const file = new File([blob], googleFile.name);
+
+      toast.dismiss("google-download-" + googleFile.id);
+      await this.props.importBookFunc(file);
+
+      toast.success(
+        this.props.t("Successfully imported") + ": " + googleFile.name
+      );
+    } catch (error) {
+      console.error("Error importing Google file:", error);
+      toast.error(this.props.t("Failed to import") + ": " + googleFile.name);
+    }
+  };
   render() {
     return (
       <div
@@ -297,6 +366,11 @@ class ImportDialog extends React.Component<
                         );
                         return;
                       }
+                      // 特殊处理Google Drive，使用Picker API
+                      if (item.value === "google") {
+                        this.handleGooglePicker();
+                        return;
+                      }
                       if (!this.props.dataSourceList.includes(item.value)) {
                         this.props.handleSetting(true);
                         this.props.handleSettingMode("sync");
@@ -309,7 +383,6 @@ class ImportDialog extends React.Component<
                           settingDrive === "pcloud" ||
                           settingDrive === "adrive" ||
                           settingDrive === "microsoft_exp" ||
-                          settingDrive === "google_exp" ||
                           settingDrive === "microsoft"
                         ) {
                           openInBrowser(
