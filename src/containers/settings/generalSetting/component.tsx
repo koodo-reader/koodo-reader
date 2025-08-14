@@ -12,7 +12,11 @@ import {
 } from "../../../constants/settingList";
 import { themeList } from "../../../constants/themeList";
 import toast from "react-hot-toast";
-import { getStorageLocation } from "../../../utils/common";
+import {
+  clearAllData,
+  getStorageLocation,
+  vexPromptAsync,
+} from "../../../utils/common";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import { LocalFileManager } from "../../../utils/file/localFile";
 
@@ -448,6 +452,29 @@ class GeneralSetting extends React.Component<
               </option>
             ))}
           </select>
+        </div>
+        <div className="setting-dialog-new-title">
+          <Trans>Clear all data</Trans>
+          <span
+            className="change-location-button"
+            onClick={async () => {
+              let answer = await vexPromptAsync(
+                this.props.t("Please type 'CLEAR' to confirm"),
+                "",
+                ""
+              );
+              window.vex.closeAll(); // 关闭对话框
+              if (answer === "CLEAR") {
+                await clearAllData();
+                toast.success(this.props.t("Clear successful"));
+                this.props.handleFetchBooks();
+              } else {
+                toast.error(this.props.t("Please type 'CLEAR' to confirm"));
+              }
+            }}
+          >
+            <Trans>Clear</Trans>
+          </span>
         </div>
       </>
     );
