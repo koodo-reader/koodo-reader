@@ -22,8 +22,6 @@ class SettingDialog extends React.Component<
   constructor(props: SettingInfoProps) {
     super(props);
     this.state = {
-      isTouch: ConfigService.getReaderConfig("isTouch") === "yes",
-      isMergeWord: ConfigService.getReaderConfig("isMergeWord") === "yes",
       isPreventTrigger:
         ConfigService.getReaderConfig("isPreventTrigger") === "yes",
       isPreventAdd: ConfigService.getReaderConfig("isPreventAdd") === "yes",

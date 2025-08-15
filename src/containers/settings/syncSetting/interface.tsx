@@ -38,6 +38,7 @@ export interface SettingInfoState {
   isKeepLocal: boolean;
   isEnableKoodoSync: boolean;
   isDisableAutoSync: boolean;
+  autoOffline: boolean;
   currentThemeIndex: number;
   driveConfig: any;
   loginConfig: any;

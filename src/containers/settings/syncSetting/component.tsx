@@ -36,6 +36,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
     this.state = {
       appSkin: ConfigService.getReaderConfig("appSkin"),
       isKeepLocal: ConfigService.getReaderConfig("isKeepLocal") === "yes",
+      autoOffline: ConfigService.getReaderConfig("autoOffline") === "yes",
       isDisableAutoSync:
         ConfigService.getReaderConfig("isDisableAutoSync") === "yes",
       isEnableKoodoSync:

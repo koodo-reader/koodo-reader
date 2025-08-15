@@ -107,7 +107,7 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
             className="popup-box-container"
             style={{
               marginLeft: 0,
-              height: "320px",
+              height: "360px",
             }}
           >
             <PopupNote {...PopupProps} />

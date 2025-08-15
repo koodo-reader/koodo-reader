@@ -18,6 +18,7 @@ let lock = false; //prevent from clicking too fasts
 let throttleTime =
   ConfigService.getReaderConfig("isSliding") === "yes" ? 1000 : 200;
 let isHovering = false;
+let isMouseMoving = false;
 class Reader extends React.Component<ReaderProps, ReaderState> {
   messageTimer!: NodeJS.Timeout;
   tickTimer!: NodeJS.Timeout;
@@ -68,6 +69,12 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
     }, 1000);
     window.addEventListener("beforeunload", function (event) {
       ConfigService.setItem("isFinshReading", "yes");
+    });
+    window.addEventListener("mousemove", () => {
+      isMouseMoving = true;
+      setTimeout(() => {
+        isMouseMoving = false;
+      }, 100);
     });
   }
   UNSAFE_componentWillMount() {
@@ -371,18 +378,21 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
           className="left-panel"
           onMouseEnter={() => {
             isHovering = true;
-            setTimeout(() => {
-              if (!isHovering) return;
-              if (
-                this.state.isTouch ||
-                this.state.isOpenLeftPanel ||
-                this.state.isPreventTrigger
-              ) {
-                this.setState({ hoverPanel: "left" });
-                return;
-              }
-              this.handleEnterReader("left");
-            }, 500);
+            setTimeout(
+              () => {
+                if (!isHovering || isMouseMoving) return;
+                if (
+                  this.state.isTouch ||
+                  this.state.isOpenLeftPanel ||
+                  this.state.isPreventTrigger
+                ) {
+                  this.setState({ hoverPanel: "left" });
+                  return;
+                }
+                this.handleEnterReader("left");
+              },
+              this.state.isPreventTrigger ? 0 : 500
+            );
           }}
           onMouseLeave={() => {
             isHovering = false;
@@ -399,18 +409,21 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
           className="right-panel"
           onMouseEnter={() => {
             isHovering = true;
-            setTimeout(() => {
-              if (!isHovering) return;
-              if (
-                this.state.isTouch ||
-                this.state.isOpenRightPanel ||
-                this.state.isPreventTrigger
-              ) {
-                this.setState({ hoverPanel: "right" });
-                return;
-              }
-              this.handleEnterReader("right");
-            }, 500);
+            setTimeout(
+              () => {
+                if (!isHovering || isMouseMoving) return;
+                if (
+                  this.state.isTouch ||
+                  this.state.isOpenRightPanel ||
+                  this.state.isPreventTrigger
+                ) {
+                  this.setState({ hoverPanel: "right" });
+                  return;
+                }
+                this.handleEnterReader("right");
+              },
+              this.state.isPreventTrigger ? 0 : 500
+            );
           }}
           onMouseLeave={() => {
             isHovering = false;
@@ -427,18 +440,21 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
           className="top-panel"
           onMouseEnter={() => {
             isHovering = true;
-            setTimeout(() => {
-              if (!isHovering) return;
-              if (
-                this.state.isTouch ||
-                this.state.isOpenTopPanel ||
-                this.state.isPreventTrigger
-              ) {
-                this.setState({ hoverPanel: "top" });
-                return;
-              }
-              this.handleEnterReader("top");
-            }, 500);
+            setTimeout(
+              () => {
+                if (!isHovering || isMouseMoving) return;
+                if (
+                  this.state.isTouch ||
+                  this.state.isOpenTopPanel ||
+                  this.state.isPreventTrigger
+                ) {
+                  this.setState({ hoverPanel: "top" });
+                  return;
+                }
+                this.handleEnterReader("top");
+              },
+              this.state.isPreventTrigger ? 0 : 500
+            );
           }}
           style={
             this.state.hoverPanel === "top"
@@ -470,18 +486,28 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
           className="bottom-panel"
           onMouseEnter={() => {
             isHovering = true;
-            setTimeout(() => {
-              if (!isHovering) return;
-              if (
-                this.state.isTouch ||
-                this.state.isOpenBottomPanel ||
-                this.state.isPreventTrigger
-              ) {
-                this.setState({ hoverPanel: "bottom" });
-                return;
-              }
-              this.handleEnterReader("bottom");
-            }, 500);
+            setTimeout(
+              () => {
+                if (!isHovering || isMouseMoving) return;
+                if (
+                  this.state.isTouch ||
+                  this.state.isOpenBottomPanel ||
+                  this.state.isPreventTrigger
+                ) {
+                  this.setState({ hoverPanel: "bottom" });
+                  return;
+                }
+                this.handleEnterReader("bottom");
+              },
+              this.state.isPreventTrigger ? 0 : 500
+            );
+          }}
+          onMouseLeave={() => {
+            isHovering = false;
+            this.setState({ hoverPanel: "" });
+          }}
+          onClick={() => {
+            this.handleEnterReader("bottom");
           }}
           style={
             this.state.hoverPanel === "bottom"
@@ -499,13 +525,6 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
                       : 0,
                 }
           }
-          onMouseLeave={() => {
-            isHovering = false;
-            this.setState({ hoverPanel: "" });
-          }}
-          onClick={() => {
-            this.handleEnterReader("bottom");
-          }}
         >
           <span className="icon-grid panel-icon"></span>
         </div>

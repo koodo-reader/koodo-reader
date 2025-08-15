@@ -26,6 +26,7 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
       });
       this.setState({
         text: this.props.notes[noteIndex].text,
+        tag: this.props.notes[noteIndex].tag,
       });
       textArea.value = this.props.notes[noteIndex].notes;
     } else {
@@ -80,7 +81,7 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
         this.props.handleMenuMode("");
         this.props.handleNoteKey("");
         this.props.handleShowPopupNote(false);
-        if (this.props.htmlBook.rendition) {
+        if (this.props.htmlBook && this.props.htmlBook.rendition) {
           this.props.htmlBook.rendition.removeOneNote(
             this.props.noteKey,
             this.props.chapterDocIndex
@@ -162,7 +163,7 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
         this.props.handleMenuMode("");
         this.props.handleFetchNotes();
         this.props.handleNoteKey("");
-        if (this.props.htmlBook.rendition) {
+        if (this.props.htmlBook && this.props.htmlBook.rendition) {
           this.props.htmlBook.rendition.removeOneNote(
             this.props.noteKey,
             this.props.chapterDocIndex
@@ -184,7 +185,7 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
       handleDigest: this.handleUpdateHighlight,
       isEdit: true,
     };
-    let note: NoteModel;
+    let note: NoteModel | undefined;
     if (this.props.noteKey) {
       this.props.notes.forEach((item) => {
         if (item.key === this.props.noteKey) {
@@ -192,6 +193,7 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
         }
       });
     }
+    console.log("PopupNote render", this.props.noteKey, note);
 
     const renderNoteEditor = () => {
       return (
@@ -201,8 +203,13 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
             <textarea className="editor-box" />
           </div>
           <div
-            className="note-tags"
-            style={{ position: "absolute", bottom: "0px", height: "40px" }}
+            className="note-tags note-tags-container"
+            style={{
+              position: "absolute",
+              bottom: "35px",
+              height: "40px",
+              width: "460px",
+            }}
           >
             <NoteTag
               {...{

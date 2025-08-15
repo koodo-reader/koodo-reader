@@ -1,5 +1,7 @@
 export interface NoteTagProps {
   isReading: boolean;
+  isShowPopupNote: boolean;
+  isEdit: boolean;
   noteKey: string;
   isCard: boolean;
   tag: string[];

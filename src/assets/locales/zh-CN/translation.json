@@ -256,6 +256,8 @@
   "Disable auto scroll to next or previous chapter": "禁用自动滚动到下一章或上一章",
   "Disable auto scroll to next or previous chapter when reaching the end of the current chapter": "当到达当前章节末尾或开头时，禁用自动滚动到下一章或上一章",
   "Pages": "页数",
+  "Auto download cloud books": "自动下载云端图书",
+  "To reduce storage usage, only the book metadata is downloaded by default, and the book files are not downloaded. After enabling this option, all book files will be downloaded during synchronization": "为了减少存储空间的使用，默认情况下只下载图书的元数据，而不下载图书文件。开启此选项后，所有图书文件将在同步时被下载",
   "Total chapters": "总章节数",
   "Clear all data": "清除所有数据",
   "Please type 'CLEAR' to confirm": "请键入 'CLEAR' 以确认",

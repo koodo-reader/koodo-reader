@@ -81,8 +81,41 @@
   cursor: pointer;
   margin-right: 20px;
 }
-.note-tags {
-  width: 320px;
-  overflow-x: scroll;
+.note-tags-container {
+  overflow-x: auto;
   overflow-y: hidden;
+  /* 默认隐藏滚动条 */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+}
+
+/* 隐藏 WebKit 浏览器的滚动条 */
+.note-tags-container::-webkit-scrollbar {
+  display: none;
+}
+
+/* 悬停时显示滚动条 */
+.note-tags-container:hover {
+  scrollbar-width: thin; /* Firefox */
+  -ms-overflow-style: auto; /* IE/Edge */
+}
+
+/* 悬停时显示 WebKit 浏览器的滚动条 */
+.note-tags-container:hover::-webkit-scrollbar {
+  display: block;
+  height: 8px;
+}
+
+.note-tags-container:hover::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+}
+
+.note-tags-container:hover::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+}
+
+.note-tags-container:hover::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.5);
 }

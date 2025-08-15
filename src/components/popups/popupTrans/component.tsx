@@ -87,6 +87,12 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
         return;
       }
       let isFirst = true;
+      let targetLang =
+        ConfigService.getReaderConfig("transTarget") ||
+        getDefaultTransTarget(plugin.langList);
+      if (targetLang === "Traditional Chinese") {
+        targetLang = "繁体中文";
+      }
       await getTransStream(
         text,
         ConfigService.getReaderConfig("transSource") || "Automatic",
