@@ -49,6 +49,7 @@
   padding-top: 10px;
   padding-bottom: 10px;
   font-size: 15px;
+  font-weight: 600;
 }
 .book-content-expand {
   display: flex;

@@ -33,9 +33,7 @@ export interface SettingInfoProps extends RouteComponentProps<any> {
   settingDrive: string;
 }
 export interface SettingInfoState {
-  isTouch: boolean;
   isPreventTrigger: boolean;
-  isMergeWord: boolean;
   appSkin: string;
   storageLocation: string;
   isOpenBook: boolean;

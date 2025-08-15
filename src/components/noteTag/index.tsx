@@ -7,6 +7,7 @@ const mapStateToProps = (state: stateType) => {
   return {
     isReading: state.book.isReading,
     noteKey: state.reader.noteKey,
+    isShowPopupNote: state.manager.isShowPopupNote,
   };
 };
 const actionCreator = {

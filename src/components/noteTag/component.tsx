@@ -17,13 +17,13 @@ class NoteTag extends React.Component<NoteTagProps, NoteTagState> {
     };
   }
   componentDidMount() {
-    if (this.props.isReading) {
+    if (this.props.isReading || this.props.isShowPopupNote) {
       this.setState({ tagIndex: this.tagToIndex(this.props.tag) });
     }
   }
   UNSAFE_componentWillReceiveProps(nextProps: NoteTagProps) {
     if (
-      this.props.isReading &&
+      (this.props.isReading || this.props.isShowPopupNote) &&
       nextProps.tag &&
       nextProps.tag.length > 0 &&
       this.props.tag !== nextProps.tag
@@ -72,8 +72,9 @@ class NoteTag extends React.Component<NoteTagProps, NoteTagState> {
       return;
     }
     ConfigService.setListConfig(event.target.value, "noteTags");
-    this.setState({ tagIndex: [] });
-    this.props.handleTag(this.indextoTag([]));
+    console.log(this.props.tag, this.tagToIndex(this.props.tag));
+    this.setState({ tagIndex: this.tagToIndex(this.props.tag) });
+    this.props.handleTag(this.indextoTag(this.tagToIndex(this.props.tag)));
   };
   handleInput = () => {
     this.setState({ isInput: true }, () => {
@@ -110,6 +111,7 @@ class NoteTag extends React.Component<NoteTagProps, NoteTagState> {
             <div className="delete-tag-container">
               {this.state.tagIndex.indexOf(index) > -1 &&
               !this.props.isReading &&
+              !this.props.isShowPopupNote &&
               !this.props.isCard ? (
                 <DeleteIcon
                   {...{
@@ -136,9 +138,15 @@ class NoteTag extends React.Component<NoteTagProps, NoteTagState> {
     return (
       <div
         className="note-tag-container"
-        style={this.props.isReading ? { width: "1999px" } : {}}
+        style={
+          this.props.isReading || this.props.isShowPopupNote
+            ? { width: "1999px" }
+            : {}
+        }
       >
-        {this.props.isReading || this.props.isCard ? null : (
+        {this.props.isReading ||
+        this.props.isShowPopupNote ||
+        this.props.isCard ? null : (
           <div className="tag-title">
             <Trans>All tags</Trans>
             <div
@@ -160,6 +168,7 @@ class NoteTag extends React.Component<NoteTagProps, NoteTagState> {
 
         {(this.state.isShowTags ||
           this.props.isReading ||
+          this.props.isShowPopupNote ||
           this.props.isCard) && (
           <ul className="tag-container">
             {!this.props.isCard && (

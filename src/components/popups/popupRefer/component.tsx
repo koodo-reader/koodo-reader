@@ -99,6 +99,7 @@ class PopupRefer extends React.Component<PopupReferProps, PopupReferStates> {
         return false;
       }
       let currentPosition = rendition.getPosition();
+      console.log(result, "---", currentPosition);
       if (result.index === parseInt(currentPosition.chapterDocIndex)) {
         let doc = getIframeDoc(this.props.currentBook.format)[0];
         let node = result.anchor(doc);

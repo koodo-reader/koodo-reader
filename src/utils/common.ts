@@ -646,6 +646,9 @@ export const testConnection = async (driveName: string, driveConfig: any) => {
       storagePath: getStorageLocation(),
       isUseCache: false,
     });
+    if (fs.existsSync(getStorageLocation() + "/config/test.txt")) {
+      fs.unlinkSync(getStorageLocation() + "/config/test.txt");
+    }
     if (result) {
       toast.success(i18n.t("Connection successful"), {
         id: "testing-connection-id",
@@ -663,9 +666,7 @@ export const testConnection = async (driveName: string, driveConfig: any) => {
         id: "testing-connection-id",
       });
     }
-    if (fs.existsSync(getStorageLocation() + "/config/test.txt")) {
-      fs.unlinkSync(getStorageLocation() + "/config/test.txt");
-    }
+
     return result;
   } else {
     let thirdpartyRequest = await getThirdpartyRequest();

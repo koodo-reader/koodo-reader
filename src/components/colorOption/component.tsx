@@ -72,7 +72,7 @@ class ColorOption extends React.Component<ColorProps, ColorStates> {
           this.props.isEdit
             ? {
                 position: "absolute",
-                top: "calc(100% - 65px)",
+                top: "calc(100% - 100px)",
                 width: "70%",
                 marginLeft: 0,
               }

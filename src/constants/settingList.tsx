@@ -97,6 +97,12 @@ export const syncSettingList = [
   },
   {
     isElectron: false,
+    title: "Auto download cloud books",
+    desc: "To reduce storage usage, only the book metadata is downloaded by default, and the book files are not downloaded. After enabling this option, all book files will be downloaded during synchronization",
+    propName: "autoOffline",
+  },
+  {
+    isElectron: false,
     title: "Enable Koodo Sync",
     desc: "Enable this option to increase synchronization speed. Your reading progress, notes, highlights, bookmarks, and other reading-related data will be stored and synced via our cloud service, your books and covers will still be synced by your added data sources. Turning off this option will remove the above data from our cloud.",
     propName: "isEnableKoodoSync",

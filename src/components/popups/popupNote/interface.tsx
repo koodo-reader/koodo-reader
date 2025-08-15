@@ -6,6 +6,7 @@ export interface PopupNoteProps {
   notes: NoteModel[];
   color: number;
   noteKey: string;
+
   chapterDocIndex: number;
   chapter: string;
   htmlBook: HtmlBook;
