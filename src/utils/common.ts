@@ -809,7 +809,6 @@ export const clearAllData = async () => {
   if (isElectron) {
     let storageLocation = getStorageLocation();
     const fs = window.require("fs");
-    console.log(`Clearing all data in ${storageLocation}`);
     let databaseList = CommonTool.databaseList;
     for (let i = 0; i < databaseList.length; i++) {
       await window.require("electron").ipcRenderer.invoke("close-database", {

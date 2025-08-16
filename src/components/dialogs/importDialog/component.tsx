@@ -267,7 +267,6 @@ class ImportDialog extends React.Component<
     try {
       let pickerUtil: any = await SyncService.getPickerUtil("google");
       await pickerUtil.remote.refreshToken();
-      console.log("Using Google Picker with access token:", pickerUtil.remote);
       this.googlePickerUtil = new GooglePickerUtil({
         accessToken: pickerUtil.remote.config.access_token,
         apiKey: "",
