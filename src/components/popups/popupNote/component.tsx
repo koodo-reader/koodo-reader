@@ -193,7 +193,6 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
         }
       });
     }
-    console.log("PopupNote render", this.props.noteKey, note);
 
     const renderNoteEditor = () => {
       return (

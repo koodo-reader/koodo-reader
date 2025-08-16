@@ -129,11 +129,6 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
     }
     ConfigService.deleteListConfig(targetDrive, "dataSourceList");
     this.props.handleFetchDataSourceList();
-    console.log(
-      "targetDrive",
-      targetDrive,
-      ConfigService.getItem("defaultSyncOption")
-    );
     if (targetDrive === ConfigService.getItem("defaultSyncOption")) {
       ConfigService.removeItem("defaultSyncOption");
       this.props.handleFetchDefaultSyncOption();

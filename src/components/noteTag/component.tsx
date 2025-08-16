@@ -72,7 +72,6 @@ class NoteTag extends React.Component<NoteTagProps, NoteTagState> {
       return;
     }
     ConfigService.setListConfig(event.target.value, "noteTags");
-    console.log(this.props.tag, this.tagToIndex(this.props.tag));
     this.setState({ tagIndex: this.tagToIndex(this.props.tag) });
     this.props.handleTag(this.indextoTag(this.tagToIndex(this.props.tag)));
   };

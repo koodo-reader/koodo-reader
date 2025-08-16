@@ -82,10 +82,8 @@ class PopupRefer extends React.Component<PopupReferProps, PopupReferStates> {
     rendition: any = {}
   ): Promise<boolean> => {
     let href = getTargetHref(event);
-    console.log("handleLinkJump2123", href);
 
     if (href && href.startsWith("kindle:")) {
-      console.log(href);
       let chapterInfo = rendition.resolveChapter(href);
       if (chapterInfo) {
         await rendition.goToChapter(
@@ -100,7 +98,6 @@ class PopupRefer extends React.Component<PopupReferProps, PopupReferStates> {
         return false;
       }
       let currentPosition = rendition.getPosition();
-      console.log(result, "---", currentPosition);
       if (result.index === parseInt(currentPosition.chapterDocIndex)) {
         let doc = getIframeDoc(this.props.currentBook.format)[0];
         let node = result.anchor(doc);
