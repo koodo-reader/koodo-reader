@@ -185,6 +185,7 @@ class ConvertDialog extends React.Component<
                   <select
                     name=""
                     className="lang-setting-dropdown"
+                    style={{ width: "70px" }}
                     onChange={(event) => {
                       ConfigService.setReaderConfig(
                         "ocrLang",
@@ -238,6 +239,7 @@ class ConvertDialog extends React.Component<
                     <select
                       name=""
                       className="lang-setting-dropdown"
+                      style={{ width: "70px" }}
                       onChange={(event) => {
                         ConfigService.setReaderConfig(
                           "paraSpacingValue",
@@ -298,6 +300,7 @@ class ConvertDialog extends React.Component<
                     <select
                       name=""
                       className="lang-setting-dropdown"
+                      style={{ width: "70px" }}
                       onChange={(event) => {
                         ConfigService.setReaderConfig(
                           "titleSizeValue",
