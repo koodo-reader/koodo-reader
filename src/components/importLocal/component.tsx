@@ -364,6 +364,16 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                 <div
                   className="more-options-dropdown"
                   onMouseLeave={this.toggleMoreOptions}
+                  style={
+                    this.state.width < 950
+                      ? {
+                          bottom: "calc(100% + 5px)",
+                          top: "unset",
+                          right: "unset",
+                          left: "-110px",
+                        }
+                      : {}
+                  }
                 >
                   <div
                     className="more-option-item"
