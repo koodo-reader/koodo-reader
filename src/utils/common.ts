@@ -693,21 +693,36 @@ export const testConnection = async (driveName: string, driveConfig: any) => {
   }
 };
 export const getTargetHref = (event: any) => {
-  let href =
-    (event.target.innerText && event.target.innerText.startsWith("http")) ||
-    (event.target.tagName !== "IMG" && event.target.getAttribute("href")) ||
-    (event.target.tagName !== "IMG" && event.target.getAttribute("src")) ||
-    (event.target.parentNode &&
-      ((event.target.parentNode.getAttribute &&
+  let href = "";
+  if (!event || !event.target) return href;
+  if (event.target.innerText && event.target.innerText.startsWith("http")) {
+    href = event.target.innerText;
+  }
+  if (event.target.tagName !== "IMG") {
+    href =
+      (event.target.getAttribute && event.target.getAttribute("href")) ||
+      (event.target.getAttribute && event.target.getAttribute("src")) ||
+      "";
+  }
+  if (event.target.parentNode) {
+    href =
+      href ||
+      (event.target.parentNode.getAttribute &&
         event.target.parentNode.getAttribute("href")) ||
-        (event.target.parentNode.getAttribute &&
-          event.target.parentNode.getAttribute("src")))) ||
-    (event.target.parentNode.parentNode &&
-      ((event.target.parentNode.parentNode.getAttribute &&
+      (event.target.parentNode.getAttribute &&
+        event.target.parentNode.getAttribute("src")) ||
+      "";
+  }
+  if (event.target.parentNode.parentNode) {
+    href =
+      href ||
+      (event.target.parentNode.parentNode.getAttribute &&
         event.target.parentNode.parentNode.getAttribute("href")) ||
-        (event.target.parentNode.parentNode.getAttribute &&
-          event.target.parentNode.parentNode.getAttribute("src")))) ||
-    "";
+      (event.target.parentNode.parentNode.getAttribute &&
+        event.target.parentNode.parentNode.getAttribute("src")) ||
+      "";
+  }
+
   return href;
 };
 export const getPdfPassword = (book: Book) => {

@@ -3,7 +3,10 @@ body {
   background: rgba(47, 52, 55, 1);
   color: rgba(235, 235, 235, 1);
 }
-
+a {
+  color: lightskyblue;
+  text-decoration: none;
+}
 .booklist-shelf-list,
 .lang-setting-dropdown,
 .delete-tag-container,
@@ -116,6 +119,7 @@ body {
 .animation-mask,
 .animation-mask-local,
 .sort-by-category-list:hover,
+.more-option-item:hover,
 .sort-by-order-list:hover,
 .backup-page-backup:hover,
 .action-dialog-add:hover,
@@ -187,7 +191,12 @@ body {
 .background-box3 {
   box-shadow: 0px 0px 2px rgba(235, 235, 235, 0.18);
 }
-
+.book-spine,
+.background-box1,
+.background-box2,
+.background-box3 {
+  border: 1px solid rgba(191, 191, 191, 0.3);
+}
 .add-dialog-cancel,
 .delete-dialog-cancel,
 .edit-dialog-cancel,
@@ -261,7 +270,7 @@ input,
 .book-bookmark-list,
 .nav-search-list-item,
 .sort-dialog-seperator {
-  border-bottom: 1px solid rgba(235, 235, 235, 0.5);
+  border-bottom: 1px solid rgba(235, 235, 235, 0.1);
 }
 .popup-menu-triangle-up,
 .active-tag,

@@ -1,6 +1,8 @@
 .header-chapter-name,
 .header-book-name {
   width: 50%;
+  padding-left: 5%;
+  padding-right: 5%;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;

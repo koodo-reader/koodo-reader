@@ -92,6 +92,7 @@
   height: 30px;
   text-align: center;
   border: 1px solid #d9d9d9;
+  background-color: transparent;
   border-radius: 5px;
   margin: 0 10px;
 }
