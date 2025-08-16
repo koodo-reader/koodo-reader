@@ -82,6 +82,7 @@ class PopupRefer extends React.Component<PopupReferProps, PopupReferStates> {
     rendition: any = {}
   ): Promise<boolean> => {
     let href = getTargetHref(event);
+    console.log("handleLinkJump2123", href);
 
     if (href && href.startsWith("kindle:")) {
       console.log(href);

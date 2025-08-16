@@ -361,7 +361,10 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
             >
               <span className="dropdown-triangle"></span>
               {this.state.isMoreOptionsVisible && (
-                <div className="more-options-dropdown">
+                <div
+                  className="more-options-dropdown"
+                  onMouseLeave={this.toggleMoreOptions}
+                >
                   <div
                     className="more-option-item"
                     onClick={async (event) => {

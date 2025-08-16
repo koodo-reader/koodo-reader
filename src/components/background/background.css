@@ -4,7 +4,6 @@
   right: 5px;
   top: 5px;
   bottom: 5px;
-  border: 1px solid rgba(191, 191, 191, 1);
   z-index: 0;
 }
 .background-box2 {
@@ -13,7 +12,6 @@
   right: 7px;
   top: 5px;
   bottom: 5px;
-  border: 1px solid rgba(191, 191, 191, 1);
   z-index: 1;
 }
 .background-box3 {
@@ -22,7 +20,6 @@
   right: 9px;
   top: 5px;
   bottom: 5px;
-  border: 1px solid rgba(191, 191, 191, 1);
   z-index: 2;
   /* display: flex;
   justify-content: space-between;
@@ -38,7 +35,7 @@
   left: 50%;
   /* bottom: 100%; */
   bottom: 0;
-  border: 2px solid rgba(191, 191, 191, 1);
+  /* border: 2px solid rgba(191, 191, 191, 1); */
   border-left: none;
   box-sizing: border-box;
   z-index: 10;

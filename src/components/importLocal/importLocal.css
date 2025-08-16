@@ -75,18 +75,11 @@
   transition: 0.2s;
 }
 
-.more-option-item:hover {
-  background-color: #f5f5f5;
-}
-
 .more-option-item .icon-cloud {
   margin-right: 8px;
   font-size: 16px;
 }
 
-.more-option-text {
-  /* font-size: 14px; */
-}
 .dropdown-triangle {
   display: inline-block;
   width: 0;
