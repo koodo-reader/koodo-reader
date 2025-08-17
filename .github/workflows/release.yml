@@ -9,7 +9,7 @@ jobs:
     # Platforms to build on/for
     strategy:
       matrix:
-        os: [macos-latest, ubuntu-latest, windows-latest, ubuntu-24.04-arm]
+        os: [macos-latest, ubuntu-22.04, windows-latest, ubuntu-24.04-arm]
 
     steps:
       - name: Check out Git repository
@@ -28,7 +28,7 @@ jobs:
           # Log in to Snap Store
           snapcraft_token: ${{ secrets.snapcraft_token }}
       - name: Install Gcc
-        if: startsWith(matrix.os, 'ubuntu-latest')
+        if: startsWith(matrix.os, 'ubuntu-22.04')
         run: |
           sudo apt update
           sudo apt-get install gcc-multilib g++-multilib
