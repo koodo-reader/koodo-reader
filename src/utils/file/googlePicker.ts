@@ -1,5 +1,3 @@
-import { isElectron } from "react-device-detect";
-
 declare var window: any;
 export class GooglePickerUtil {
   private accessToken: string;
@@ -39,6 +37,7 @@ export class GooglePickerUtil {
   // 创建并显示文件选择器
   async createPicker(callback: (data: any) => void): Promise<void> {
     await this.loadPickerApi();
+
     // 创建文档视图，显示完整的文件夹结构
     const docsView = new window.google.picker.DocsView(
       window.google.picker.ViewId.DOCS
@@ -68,9 +67,7 @@ export class GooglePickerUtil {
     )
       .setIncludeFolders(true)
       .setSelectFolderEnabled(false);
-    const origin = isElectron
-      ? "https://koodoreader.com"
-      : window.location.protocol + "//" + window.location.host;
+
     const picker = new window.google.picker.PickerBuilder()
       .enableFeature(window.google.picker.Feature.MULTISELECT_ENABLED)
       // 移除 NAV_HIDDEN 特性，这样可以显示导航面板
@@ -78,7 +75,7 @@ export class GooglePickerUtil {
       .setDeveloperKey(this.apiKey)
       .setAppId(this.appId)
       .setOAuthToken(this.accessToken)
-      .setOrigin(origin)
+      .setOrigin(window.location.origin + "//" + window.location.host)
       .addView(docsView)
       .addView(folderView)
       .setCallback(callback)
