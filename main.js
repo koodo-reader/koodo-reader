@@ -49,9 +49,15 @@ let options = {
     contextIsolation: false,
     nativeWindowOpen: true,
     nodeIntegrationInSubFrames: false,
-    allowRunningInsecureContent: false,
     enableRemoteModule: true,
     sandbox: false,
+    allowRunningInsecureContent: true, // 添加这个
+    experimentalFeatures: true, // 添加这个
+    // 添加以下设置来处理Google API
+    additionalArguments: [
+      '--disable-web-security',
+      '--disable-features=VizDisplayCompositor'
+    ]
   },
 };
 const Database = require("better-sqlite3");

@@ -377,18 +377,18 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         <div
           className="left-panel"
           onMouseEnter={() => {
+            if (
+              this.state.isTouch ||
+              this.state.isOpenLeftPanel ||
+              this.state.isPreventTrigger
+            ) {
+              this.setState({ hoverPanel: "left" });
+              return;
+            }
             isHovering = true;
             setTimeout(
               () => {
                 if (!isHovering || isMouseMoving) return;
-                if (
-                  this.state.isTouch ||
-                  this.state.isOpenLeftPanel ||
-                  this.state.isPreventTrigger
-                ) {
-                  this.setState({ hoverPanel: "left" });
-                  return;
-                }
                 this.handleEnterReader("left");
               },
               this.state.isPreventTrigger ? 0 : 500
@@ -408,18 +408,19 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         <div
           className="right-panel"
           onMouseEnter={() => {
+            if (
+              this.state.isTouch ||
+              this.state.isOpenRightPanel ||
+              this.state.isPreventTrigger
+            ) {
+              this.setState({ hoverPanel: "right" });
+              return;
+            }
             isHovering = true;
             setTimeout(
               () => {
                 if (!isHovering || isMouseMoving) return;
-                if (
-                  this.state.isTouch ||
-                  this.state.isOpenRightPanel ||
-                  this.state.isPreventTrigger
-                ) {
-                  this.setState({ hoverPanel: "right" });
-                  return;
-                }
+
                 this.handleEnterReader("right");
               },
               this.state.isPreventTrigger ? 0 : 500
@@ -439,18 +440,24 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         <div
           className="top-panel"
           onMouseEnter={() => {
+            console.log(
+              this.state.isTouch,
+              this.state.isOpenTopPanel,
+              this.state.isPreventTrigger
+            );
+            if (
+              this.state.isTouch ||
+              this.state.isOpenTopPanel ||
+              this.state.isPreventTrigger
+            ) {
+              this.setState({ hoverPanel: "top" });
+              return;
+            }
             isHovering = true;
             setTimeout(
               () => {
                 if (!isHovering || isMouseMoving) return;
-                if (
-                  this.state.isTouch ||
-                  this.state.isOpenTopPanel ||
-                  this.state.isPreventTrigger
-                ) {
-                  this.setState({ hoverPanel: "top" });
-                  return;
-                }
+
                 this.handleEnterReader("top");
               },
               this.state.isPreventTrigger ? 0 : 500
@@ -485,18 +492,19 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         <div
           className="bottom-panel"
           onMouseEnter={() => {
+            if (
+              this.state.isTouch ||
+              this.state.isOpenBottomPanel ||
+              this.state.isPreventTrigger
+            ) {
+              this.setState({ hoverPanel: "bottom" });
+              return;
+            }
             isHovering = true;
             setTimeout(
               () => {
                 if (!isHovering || isMouseMoving) return;
-                if (
-                  this.state.isTouch ||
-                  this.state.isOpenBottomPanel ||
-                  this.state.isPreventTrigger
-                ) {
-                  this.setState({ hoverPanel: "bottom" });
-                  return;
-                }
+
                 this.handleEnterReader("bottom");
               },
               this.state.isPreventTrigger ? 0 : 500

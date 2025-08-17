@@ -72,7 +72,7 @@ export const driveList = [
     isCNAvailable: true,
   },
   {
-    label: "OneDrive (Experimental)",
+    label: "OneDrive (full access)",
     value: "microsoft_exp",
     icon: "icon-onedrive",
     isPro: true,
