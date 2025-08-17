@@ -273,7 +273,23 @@ class ImportDialog extends React.Component<
         appId: "1051055003225",
       });
 
-      await this.googlePickerUtil.createPicker(this.handlePickerCallback);
+      if (isElectron) {
+        const { ipcRenderer } = window.require("electron");
+        ipcRenderer.invoke("google-picker", {
+          url:
+            "https://dl.koodoreader.com/websites/google-picker.html?access_token=" +
+            pickerUtil.remote.config.access_token,
+        });
+        ipcRenderer.once("picker-finished", async (event: any, config: any) => {
+          if (config && config.action === "picked" && config.docs) {
+            for (const file of config.docs) {
+              await this.handleImportGoogleFile(file);
+            }
+          }
+        });
+      } else {
+        await this.googlePickerUtil.createPicker(this.handlePickerCallback);
+      }
     } catch (error) {
       console.error("Error creating Google Picker:", error);
       toast.error(this.props.t("Failed to open Google Picker"));

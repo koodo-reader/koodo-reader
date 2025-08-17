@@ -23,6 +23,7 @@ let readerWindow;
 let urlWindow;
 let mainView;
 let chatWindow;
+let googlePickerView;
 let dbConnection = {};
 let syncUtilCache = {};
 let pickerUtilCache = {};
@@ -589,12 +590,6 @@ const createMainWin = () => {
                   client: 'desktop',
                 });
               });
-              window.addEventListener('chatwoot:on-message', function(e) {
-                window.electronAPI.mouseEnterChat(); 
-              });
-              window.addEventListener('chatwoot:on-close', function(e) {
-                window.electronAPI.mouseLeaveChat(); 
-              });
             };
           })(document, "script");
         \`; 
@@ -611,7 +606,27 @@ const createMainWin = () => {
     }
   });
 
-
+  ipcMain.handle("google-picker", (event, config) => {
+    if (!googlePickerView && mainWin) {
+      googlePickerView = new WebContentsView({ ...options, transparent: true })
+      mainWin.contentView.addChildView(googlePickerView)
+      let { width, height } = mainWin.getContentBounds()
+      googlePickerView.setBounds({ x: 0, y: 0, width, height })
+      googlePickerView.setBackgroundColor("#00000000");
+      googlePickerView.webContents.loadURL(config.url)
+    }
+  });
+  ipcMain.on('finish-picker', (event, config) => {
+    console.log("Picker finished with data:", config);
+    //将数据传递给主窗口
+    if (mainWin && !mainWin.isDestroyed()) {
+      mainWin.webContents.send('picker-finished', config);
+    }
+    if (googlePickerView) {
+      mainWin.contentView.removeChildView(googlePickerView);
+      googlePickerView = null;
+    }
+  });
   ipcMain.handle("new-tab", (event, config) => {
     if (mainWin) {
       mainView = new WebContentsView(options)
