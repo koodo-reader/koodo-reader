@@ -321,7 +321,7 @@ class ImportDialog extends React.Component<
       await this.props.importBookFunc(file);
 
       toast.success(
-        this.props.t("Successfully imported") + ": " + googleFile.name
+        this.props.t("Addition successful") + ": " + googleFile.name
       );
     } catch (error) {
       console.error("Error importing Google file:", error);

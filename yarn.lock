@@ -2774,11 +2774,6 @@
   resolved "https://registry.yarnpkg.com/@gar/promisify/-/promisify-1.1.3.tgz#555193ab2e3bb3b6adc3d551c9c030d9e860daf6"
   integrity sha512-k2Ty1JcVojjJFwrg/ThKi2ujJ7XNLYaFGNB/bWT9wGR+oSMJHMa5w+CUq6p/pVrKeNNgA7pCqEcjSnHVoqJQFw==
 
-"@googleworkspace/drive-picker-element@^0.6.1":
-  version "0.6.1"
-  resolved "https://registry.yarnpkg.com/@googleworkspace/drive-picker-element/-/drive-picker-element-0.6.1.tgz#078b0f541ef3c80875551c8bb71810df993df5a4"
-  integrity sha512-ZpSq+9sZaVrdpPMFjEW61/W3G2rdVTXRhjQ3lXqXhUkXmi1i7U8MyIWlw3aZKyPmtazRQO8GqmFXD0bydzuz8Q==
-
 "@hapi/hoek@^9.0.0":
   version "9.3.0"
   resolved "https://registry.yarnpkg.com/@hapi/hoek/-/hoek-9.3.0.tgz#8368869dcb735be2e7f5cb7647de78e167a251fb"
