@@ -137,7 +137,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
               "shelfList"
             );
           }
-          toast.success(this.props.t("Addition successful"));
+          toast.success(this.props.t("Addition successful") + ": " + book.name);
           setTimeout(() => {
             this.state.isOpenFile && this.handleJump(book);
             if (

@@ -616,13 +616,14 @@ const createMainWin = () => {
       googlePickerView.webContents.loadURL(config.url)
     }
   });
-  ipcMain.on('finish-picker', (event, config) => {
+  ipcMain.on('picker-action', (event, config) => {
     console.log("Picker finished with data:", config);
     //将数据传递给主窗口
-    if (mainWin && !mainWin.isDestroyed()) {
+
+    if (mainWin && !mainWin.isDestroyed() && config.action === 'picked') {
       mainWin.webContents.send('picker-finished', config);
     }
-    if (googlePickerView) {
+    if (googlePickerView && (config.action === 'cancel' || config.action === 'picked')) {
       mainWin.contentView.removeChildView(googlePickerView);
       googlePickerView = null;
     }

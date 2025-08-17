@@ -310,8 +310,6 @@ class ImportDialog extends React.Component<
   // 处理Google文件导入
   handleImportGoogleFile = async (googleFile: any) => {
     try {
-      const tokenConfig = await getCloudConfig("google");
-
       // 检查文件格式
       const fileExtension =
         "." + googleFile.name.split(".").pop()?.toLowerCase();
@@ -335,10 +333,6 @@ class ImportDialog extends React.Component<
 
       toast.dismiss("google-download-" + googleFile.id);
       await this.props.importBookFunc(file);
-
-      toast.success(
-        this.props.t("Addition successful") + ": " + googleFile.name
-      );
     } catch (error) {
       console.error("Error importing Google file:", error);
       toast.error(this.props.t("Failed to import") + ": " + googleFile.name);
