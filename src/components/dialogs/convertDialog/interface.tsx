@@ -6,7 +6,6 @@ export interface ConvertDialogProps {
   currentBook: BookModel;
   handleSetting: (isSettingOpen: boolean) => void;
   handleConvertDialog: (isAboutOpen: boolean) => void;
-  handleFeedbackDialog: (isShow: boolean) => void;
 
   t: (title: string) => string;
 }

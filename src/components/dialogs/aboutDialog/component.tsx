@@ -80,32 +80,7 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
                 }
               }}
             >
-              <Trans>Feedback</Trans>
-            </li>
-
-            <li
-              className="sort-by-category-list"
-              onClick={() => {
-                this.props.handleFeedbackDialog(true);
-              }}
-            >
-              <Trans>Report</Trans>
-            </li>
-
-            <li
-              className="sort-by-category-list"
-              onClick={() => {
-                if (
-                  ConfigService.getReaderConfig("lang") &&
-                  ConfigService.getReaderConfig("lang").startsWith("zh")
-                ) {
-                  this.handleJump(WEBSITE_URL + "/zh/roadmap");
-                } else {
-                  this.handleJump(WEBSITE_URL + "/en/roadmap");
-                }
-              }}
-            >
-              <Trans>Roadmap</Trans>
+              <Trans>Support</Trans>
             </li>
             <li
               className="sort-by-category-list"
@@ -146,15 +121,6 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
                 <Trans>Open console</Trans>
               </li>
             )}
-            <li
-              className="sort-by-category-list"
-              onClick={() => {
-                ConfigUtil.clearConfig("sync");
-                toast.success(this.props.t("Reset successful"));
-              }}
-            >
-              <Trans>Reset sync records</Trans>
-            </li>
             {this.props.isNewWarning && (
               <li
                 className="sort-by-category-list"
@@ -188,7 +154,7 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
               ? {
                   position: "absolute",
                   left: "665px",
-                  top: isElectron ? "300px" : "270px",
+                  top: isElectron ? "2300px" : "200px",
                 }
               : { display: "none" }
           }

@@ -595,7 +595,17 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
             </select>
           </div>
         )}
+
         {this.props.isAuthed && this.renderSwitchOption(syncSettingList)}
+        {this.props.isAuthed && (
+          <div className="setting-dialog-new-title">
+            <Trans>Reset sync records</Trans>
+
+            <span className="change-location-button" onClick={async () => {}}>
+              <Trans>Reset</Trans>
+            </span>
+          </div>
+        )}
       </>
     );
   }

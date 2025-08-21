@@ -1,9 +1,5 @@
 import { connect } from "react-redux";
-import {
-  handleSetting,
-  handleConvertDialog,
-  handleFeedbackDialog,
-} from "../../../store/actions";
+import { handleSetting, handleConvertDialog } from "../../../store/actions";
 import { stateType } from "../../../store";
 import ConvertDialog from "./component";
 import { withTranslation } from "react-i18next";
@@ -17,7 +13,6 @@ const mapStateToProps = (state: stateType) => {
 const actionCreator = {
   handleSetting,
   handleConvertDialog,
-  handleFeedbackDialog,
 };
 export default connect(
   mapStateToProps,

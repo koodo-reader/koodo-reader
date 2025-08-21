@@ -19,7 +19,6 @@ export interface HeaderProps extends RouteComponentProps<any> {
   handleBackupDialog: (isBackup: boolean) => void;
   handleLocalFileDialog: (isOpenLocalFileDialog: boolean) => void;
   handleImportDialog: (isOpenImportDialog: boolean) => void;
-  handleFeedbackDialog: (isShow: boolean) => void;
   handleFetchAuthed: () => void;
   handleFetchUserInfo: () => Promise<void>;
   handleSettingMode: (settingMode: string) => void;

@@ -19,11 +19,8 @@ import Arrow from "../../components/arrow";
 import LoadingDialog from "../../components/dialogs/loadingDialog";
 import { Toaster } from "react-hot-toast";
 import DetailDialog from "../../components/dialogs/detailDialog";
-import FeedbackDialog from "../../components/dialogs/feedbackDialog";
 import { Tooltip } from "react-tooltip";
 import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
-import emptyDark from "../../assets/images/empty-dark.svg";
-import emptyLight from "../../assets/images/empty-light.svg";
 import SortShelfDialog from "../../components/dialogs/sortShelfDialog";
 import PopupNote from "../../components/popups/popupNote";
 class Manager extends React.Component<ManagerProps, ManagerState> {
@@ -133,12 +130,10 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
               this.props.handleShowPopupNote(false);
               this.props.handleSortShelfDialog(false);
               this.props.handleSetting(false);
-              this.props.handleFeedbackDialog(false);
               this.handleDrag(false);
             }}
             style={
               this.props.isSettingOpen ||
-              this.props.isOpenFeedbackDialog ||
               this.props.isBackup ||
               this.props.isOpenImportDialog ||
               this.props.isOpenSortShelfDialog ||
@@ -181,7 +176,6 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
         {this.props.isOpenLocalFileDialog && <LocalFileDialog />}
         {this.props.isOpenImportDialog && <ImportDialog />}
         {this.props.isOpenSortShelfDialog && <SortShelfDialog />}
-        {this.props.isOpenFeedbackDialog && <FeedbackDialog />}
         {this.props.isSettingOpen && <SettingDialog />}
         {this.props.isDetailDialog && <DetailDialog />}
         {(!books || books.length === 0) && this.state.totalBooks ? (

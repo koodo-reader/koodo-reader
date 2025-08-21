@@ -33,20 +33,6 @@ export const checkStableUpdate = async () => {
   );
   return res.data.log;
 };
-export const sendFeedback = async (data: any) => {
-  let config: any = {
-    method: "post",
-    maxBodyLength: Infinity,
-    url: PUBLIC_URL + "/api/feedback",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    data: data,
-  };
-
-  let res = await axios.request(config);
-  return res.data.result;
-};
 export const handleExitApp = async () => {
   toast.error(i18n.t("Authorization failed, please login again"));
   await TokenService.deleteToken("is_authed");
