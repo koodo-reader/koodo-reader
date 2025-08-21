@@ -148,9 +148,23 @@ class UpdateInfo extends React.Component<UpdateInfoProps, UpdateInfoState> {
                       ConfigService.getReaderConfig("lang") &&
                       ConfigService.getReaderConfig("lang").startsWith("zh")
                     ) {
-                      openExternalUrl(WEBSITE_URL + "/zh/download");
+                      openExternalUrl(
+                        WEBSITE_URL +
+                          "/zh/download" +
+                          "?version=" +
+                          (this.state.updateLog.stable === "yes"
+                            ? "stable"
+                            : "developer")
+                      );
                     } else {
-                      openExternalUrl(WEBSITE_URL + "/en/download");
+                      openExternalUrl(
+                        WEBSITE_URL +
+                          "/en/download" +
+                          "?version=" +
+                          (this.state.updateLog.stable === "yes"
+                            ? "stable"
+                            : "developer")
+                      );
                     }
                   }}
                 >

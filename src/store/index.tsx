@@ -55,7 +55,6 @@ export type stateType = {
     settingMode: string;
     settingDrive: string;
     isDetailDialog: boolean;
-    isOpenFeedbackDialog: boolean;
     bookSortCode: { sort: number; order: number };
     noteSortCode: { sort: number; order: number };
   };
