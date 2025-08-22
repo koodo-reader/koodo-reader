@@ -85,6 +85,9 @@ brew install --cask koodo-reader
 
 ### Install with Docker:
 
+> [!NOTE]
+> The Docker version saves data in the browser cache by default. For your data security, please deploy and access it via HTTPS, then save the data to your local folder. Alternatively, you can enable the data source feature to synchronize the data to a specified server path.
+
 If you only need to deploy the web version, simply use the command below.
 
 ```bash

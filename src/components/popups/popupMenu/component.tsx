@@ -63,10 +63,17 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     }
     if (
       this.props.rendition.getPageSize().height - rect.height < 188 &&
-      this.props.rendition.getPageSize().height - rect.height > 0
+      this.props.rendition.getPageSize().height - rect.height > 0 &&
+      this.props.readerMode !== "scroll"
     ) {
       this.props.handleChangeDirection(true);
       posY = rect.top + 16 + this.props.rendition.getPageSize().top;
+    } else if (
+      this.props.rendition.getPageSize().height - rect.height < 188 &&
+      this.props.rendition.getPageSize().height - rect.height > 0
+    ) {
+      this.props.handleChangeDirection(true);
+      posY = rect.top - this.props.rendition.getPageSize().scrollTop + 16;
     } else if (
       rect.height - this.props.rendition.getPageSize().height > 0 &&
       this.props.readerMode === "scroll"
