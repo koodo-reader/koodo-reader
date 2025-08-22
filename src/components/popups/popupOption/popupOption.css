@@ -3,7 +3,7 @@
   flex-direction: row;
   flex-wrap: wrap;
   width: 158px;
-  height: 132px;
+  height: 147px;
   padding-left: 1px;
 }
 .note-option,
@@ -30,7 +30,7 @@
   font-weight: 500;
   margin: 5px;
   margin-bottom: 0px;
-  margin-top: 3px;
+  margin-top: 1px;
 }
 .note-option:hover,
 .digest-option:hover,

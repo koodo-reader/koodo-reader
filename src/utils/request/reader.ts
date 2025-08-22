@@ -111,7 +111,7 @@ export const getDictText = async (word: string, from: string, to: string) => {
       `<p class="dict-learn-more">${i18n.t("Generated with AI")}</p>`;
     return dictText;
   } else {
-    toast.error(i18n.t("No result found"));
+    toast.error(i18n.t("No result found") + " " + from + "-" + to);
     return "";
   }
 };
