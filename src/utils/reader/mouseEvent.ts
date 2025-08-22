@@ -139,17 +139,22 @@ export const bindHtmlEvent = (
   key: string = "",
   readerMode: string = ""
 ) => {
-  doc.addEventListener("keydown", async (event) => {
-    if (lock) return;
-    lock = true;
-    await arrowKeys(rendition, event.keyCode, event, readerMode);
-    handleLocation(key, rendition);
-    setTimeout(() => (lock = false), throttleTime);
-  });
+  doc.addEventListener(
+    "keydown",
+    async (event) => {
+      if (lock) return;
+      lock = true;
+      await arrowKeys(rendition, event.keyCode, event, readerMode);
+      handleLocation(key, rendition);
+      setTimeout(() => (lock = false), throttleTime);
+    },
+    { passive: false }
+  );
   doc.addEventListener(
     "wheel",
     async (event) => {
       if (event.ctrlKey && readerMode !== "double") {
+        event.preventDefault();
         let scale = parseFloat(ConfigService.getReaderConfig("scale") || "1");
         if (event.deltaY < 0) {
           ConfigService.setReaderConfig("scale", scale + 0.1 + "");
@@ -179,16 +184,20 @@ export const bindHtmlEvent = (
       handleLocation(key, rendition);
       setTimeout(() => (lock = false), throttleTime);
     },
-    false
+    { passive: false }
   );
 
-  window.addEventListener("keydown", async (event) => {
-    if (lock) return;
-    lock = true;
-    await arrowKeys(rendition, event.keyCode, event, readerMode);
-    handleLocation(key, rendition);
-    setTimeout(() => (lock = false), throttleTime);
-  });
+  window.addEventListener(
+    "keydown",
+    async (event) => {
+      if (lock) return;
+      lock = true;
+      await arrowKeys(rendition, event.keyCode, event, readerMode);
+      handleLocation(key, rendition);
+      setTimeout(() => (lock = false), throttleTime);
+    },
+    { passive: false }
+  );
 
   if (ConfigService.getReaderConfig("isTouch") === "yes") {
     const mc = new Hammer(doc);
@@ -204,16 +213,20 @@ export const bindHtmlEvent = (
     });
   }
 
-  doc.addEventListener("touchend", async () => {
-    if (lock) return;
-    lock = true;
-    if (readerMode === "scroll") {
-      await sleep(200);
-      await rendition.record();
-    }
-    handleLocation(key, rendition);
-    setTimeout(() => (lock = false), throttleTime);
-  });
+  doc.addEventListener(
+    "touchend",
+    async () => {
+      if (lock) return;
+      lock = true;
+      if (readerMode === "scroll") {
+        await sleep(200);
+        await rendition.record();
+      }
+      handleLocation(key, rendition);
+      setTimeout(() => (lock = false), throttleTime);
+    },
+    { passive: false }
+  );
 };
 export const HtmlMouseEvent = (
   rendition: any,

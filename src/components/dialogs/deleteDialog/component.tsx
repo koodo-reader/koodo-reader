@@ -32,7 +32,11 @@ class DeleteDialog extends React.Component<
     this.props.handleFetchNotes();
   };
   handleComfirm = async () => {
-    if (this.props.mode === "shelf" && !this.state.isDeleteShelfBook) {
+    if (
+      this.props.mode === "shelf" &&
+      !this.state.isDeleteShelfBook &&
+      !this.state.isDisableTrashBin
+    ) {
       this.deleteBookFromShelf();
     } else if (this.props.mode === "trash") {
       await this.deleteAllBookInTrash();

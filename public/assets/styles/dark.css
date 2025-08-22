@@ -87,6 +87,7 @@ a {
 .voice-add-content-box,
 .token-dialog-username-box,
 .token-dialog-token-box,
+.backup-source-dropdown,
 .popup-close {
   background-color: rgba(71, 76, 80, 1);
   color: rgba(235, 235, 235, 1);

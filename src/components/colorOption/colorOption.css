@@ -1,9 +1,8 @@
 .color-option-container {
   width: 90%;
-  height: 40px;
+  height: 25px;
   margin-left: 5%;
-  position: relative;
-  top: 15px;
+  padding-bottom: 5px;
   display: flex;
   justify-content: space-around;
 }
@@ -13,8 +12,6 @@
   border-radius: 50%;
   opacity: 1;
   box-sizing: border-box;
-  position: relative;
-  bottom: 5px;
   cursor: pointer;
   animation: slide-left 0.2s ease-in-out 0s 1;
 }
@@ -23,7 +20,7 @@
   width: 10px;
   position: relative;
   right: 3px;
-  top: 0px;
+  top: 4px;
   opacity: 0.7;
   cursor: pointer;
 }
