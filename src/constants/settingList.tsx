@@ -170,7 +170,7 @@ export const readingSettingList = [
     propName: "isOverwriteLink",
   },
   // {
-  //   isElectron: true,
+  //   isElectron: false,
   //   title: "Lemmatize words when looking up in a dictionary",
   //   desc: "To reduce the different forms of a word to one single form, for example, reducing builds, building or built to build, reducing cats to cat, reducing fastest to fast",
   //   propName: "isLemmatizeWord",

@@ -56,7 +56,6 @@ export interface SettingInfoState {
   isAutoFullscreen: boolean;
   isHideShelfBook: boolean;
   isPreventAdd: boolean;
-  isLemmatizeWord: boolean;
   isAddNew: boolean;
   currentThemeIndex: number;
   driveConfig: any;
