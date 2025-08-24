@@ -9,6 +9,7 @@ import { syncSettingList } from "../../../constants/settingList";
 import { themeList } from "../../../constants/themeList";
 import toast from "react-hot-toast";
 import {
+  generateSyncRecord,
   handleContextMenu,
   openExternalUrl,
   openInBrowser,
@@ -601,7 +602,13 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
           <div className="setting-dialog-new-title">
             <Trans>Reset sync records</Trans>
 
-            <span className="change-location-button" onClick={async () => {}}>
+            <span
+              className="change-location-button"
+              onClick={async () => {
+                await generateSyncRecord();
+                toast.success(this.props.t("Reset successful"));
+              }}
+            >
               <Trans>Reset</Trans>
             </span>
           </div>

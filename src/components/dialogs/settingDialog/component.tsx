@@ -128,6 +128,12 @@ class SettingDialog extends React.Component<
     ConfigService.setReaderConfig("systemFont", font);
   };
   handleSetting = (stateName: string) => {
+    if (stateName === "isLemmatizeWord" && !this.props.isAuthed) {
+      toast.error(
+        this.props.t("This feature is not available in the free version")
+      );
+      return;
+    }
     this.setState({ [stateName]: !this.state[stateName] } as any);
     ConfigService.setReaderConfig(
       stateName,

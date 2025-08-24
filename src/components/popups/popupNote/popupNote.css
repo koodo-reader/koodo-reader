@@ -114,6 +114,7 @@
 .note-tags-container:hover::-webkit-scrollbar-thumb {
   background: rgba(0, 0, 0, 0.3);
   border-radius: 4px;
+  height: 4px;
 }
 
 .note-tags-container:hover::-webkit-scrollbar-thumb:hover {

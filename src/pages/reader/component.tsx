@@ -440,11 +440,6 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         <div
           className="top-panel"
           onMouseEnter={() => {
-            console.log(
-              this.state.isTouch,
-              this.state.isOpenTopPanel,
-              this.state.isPreventTrigger
-            );
             if (
               this.state.isTouch ||
               this.state.isOpenTopPanel ||

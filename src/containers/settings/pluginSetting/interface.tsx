@@ -46,7 +46,6 @@ export interface SettingInfoState {
   isDisablePDFCover: boolean;
   isHideShelfBook: boolean;
   isPreventAdd: boolean;
-  isLemmatizeWord: boolean;
   isAddNew: boolean;
   currentThemeIndex: number;
   driveConfig: any;
