@@ -579,17 +579,20 @@ const createMainWin = () => {
             g.async = true;
             s.parentNode.insertBefore(g, s);
             g.onload = function () {
-              window.chatwootSDK.run({
-                websiteToken: "svaD5wxfU5UY1r5ZzpMtLqv2",
-                baseUrl: BASE_URL,
-              });
-              window.addEventListener('chatwoot:ready', function () {
-                window.$chatwoot.setLocale('${config.locale}');
-                window.$chatwoot.setCustomAttributes({
-                  version: '${packageJson.version}',
-                  client: 'desktop',
+              setTimeout(() => {
+                window.chatwootSDK.run({
+                  websiteToken: "svaD5wxfU5UY1r5ZzpMtLqv2",
+                  baseUrl: BASE_URL,
                 });
-              });
+                window.addEventListener('chatwoot:ready', function () {
+                  window.$chatwoot.setLocale('${config.locale}');
+                  window.$chatwoot.setCustomAttributes({
+                    version: '${packageJson.version}',
+                    client: 'desktop',
+                  });
+                });
+              }, 1000);
+              
             };
           })(document, "script");
         \`; 
