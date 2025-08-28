@@ -46,16 +46,21 @@ class DatabaseService {
   static async saveAllRecords(records: any[], dbName: string, isRecord = true) {
     if (isElectron) {
       for (let record of records) {
-        await window
-          .require("electron")
-          .ipcRenderer.invoke("database-command", {
-            statement: "saveStatement",
-            statementType: "string",
-            executeType: "run",
-            dbName: dbName,
-            data: record,
-            storagePath: getStorageLocation(),
-          });
+        try {
+          await window
+            .require("electron")
+            .ipcRenderer.invoke("database-command", {
+              statement: "saveStatement",
+              statementType: "string",
+              executeType: "run",
+              dbName: dbName,
+              data: record,
+              storagePath: getStorageLocation(),
+            });
+        } catch (error) {
+          console.error("Error saving record:", error);
+        }
+
         if (isRecord) {
           ConfigService.setSyncRecord(
             {
@@ -279,16 +284,21 @@ class DatabaseService {
   ) {
     if (isElectron) {
       for (let record of records) {
-        await window
-          .require("electron")
-          .ipcRenderer.invoke("database-command", {
-            statement: "updateStatement",
-            statementType: "string",
-            executeType: "run",
-            dbName: dbName,
-            data: record,
-            storagePath: getStorageLocation(),
-          });
+        try {
+          await window
+            .require("electron")
+            .ipcRenderer.invoke("database-command", {
+              statement: "updateStatement",
+              statementType: "string",
+              executeType: "run",
+              dbName: dbName,
+              data: record,
+              storagePath: getStorageLocation(),
+            });
+        } catch (error) {
+          console.error("Error updating record:", error);
+        }
+
         if (isRecord) {
           ConfigService.setSyncRecord(
             {

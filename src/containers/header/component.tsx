@@ -16,7 +16,6 @@ import {
   getLastSyncTimeFromConfigJson,
   removeCloudConfig,
   upgradeConfig,
-  upgradePro,
   upgradeStorage,
 } from "../../utils/file/common";
 import toast from "react-hot-toast";
@@ -30,6 +29,7 @@ import {
   addChatBox,
   checkBrokenData,
   checkMissingBook,
+  generateSyncRecord,
   getChatLocale,
   getStorageLocation,
   removeChatBox,
@@ -159,7 +159,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       if (ConfigService.getReaderConfig("isProUpgraded") !== "yes") {
         try {
           ConfigService.setReaderConfig("isProUpgraded", "yes");
-          await upgradePro();
+          await generateSyncRecord();
         } catch (error) {
           console.error(error);
         }
@@ -183,7 +183,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
   handleFinishUpgrade = () => {
     setTimeout(() => {
       this.props.history.push("/manager/home");
-    }, 1000);
+    }, 2000);
   };
 
   syncFromLocation = async () => {

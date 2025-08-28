@@ -419,6 +419,7 @@ export const preCacheAllBooks = async (bookList: Book[]) => {
   }
 };
 export const generateSyncRecord = async () => {
+  ConfigService.setAllSyncRecord({});
   for (let database of CommonTool.databaseList) {
     let itemList = await DatabaseService.getAllRecords(database);
     for (let item of itemList) {

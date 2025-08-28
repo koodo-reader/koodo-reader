@@ -1,4 +1,4 @@
-import { generateSyncRecord, getStorageLocation } from "../common";
+import { getStorageLocation } from "../common";
 import CoverUtil from "./coverUtil";
 import {
   CommonTool,
@@ -127,7 +127,7 @@ export const upgradeStorage = async (
     const path = window.require("path");
     // upgrage cover and book
     if (ConfigService.getItem("isUpgradedStorage") === "yes") {
-      console.info("upgraded");
+      console.info("storage upgraded");
       return true;
     }
 
@@ -143,6 +143,10 @@ export const upgradeStorage = async (
             Buffer.from(result.arrayBuffer)
           );
           item.cover = "";
+        }
+        //fix sqlite3 text issue
+        if (typeof item.author !== "string") {
+          item.author = "";
         }
       });
       await DatabaseService.saveAllRecords(books, "books");
@@ -211,13 +215,14 @@ export const upgradeStorage = async (
     return true;
   } catch (error) {
     console.error(error);
+    handleFinish();
     return false;
   }
 };
 export const upgradeConfig = (): Boolean => {
   try {
     if (ConfigService.getItem("isUpgradedConfig") === "yes") {
-      console.info("upgraded");
+      console.info("config upgraded");
       return true;
     }
     //upgrade shelf
@@ -256,9 +261,6 @@ export const upgradeConfig = (): Boolean => {
     console.error(error);
     return false;
   }
-};
-export const upgradePro = async () => {
-  await generateSyncRecord();
 };
 export const getCloudConfig = async (service: string) => {
   if (configCache[service]) {

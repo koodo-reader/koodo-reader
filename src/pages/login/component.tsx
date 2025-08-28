@@ -1,11 +1,12 @@
 import React from "react";
 import { LoginProps, LoginState } from "./interface";
 import { Trans } from "react-i18next";
-import { getLoginParamsFromUrl, upgradePro } from "../../utils/file/common";
+import { getLoginParamsFromUrl } from "../../utils/file/common";
 import { withRouter } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 import { loginList } from "../../constants/loginList";
 import {
+  generateSyncRecord,
   handleContextMenu,
   openInBrowser,
   removeSearchParams,
@@ -98,7 +99,7 @@ class Login extends React.Component<LoginProps, LoginState> {
       if (ConfigService.getReaderConfig("isProUpgraded") !== "yes") {
         try {
           ConfigService.setReaderConfig("isProUpgraded", "yes");
-          await upgradePro();
+          await generateSyncRecord();
         } catch (error) {
           console.error(error);
         }
