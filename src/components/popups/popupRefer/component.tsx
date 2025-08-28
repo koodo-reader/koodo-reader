@@ -53,7 +53,11 @@ class PopupRefer extends React.Component<PopupReferProps, PopupReferStates> {
   handleShowMenu = async (node, targetElement, rect) => {
     if (
       (node.textContent.trim() === targetElement.textContent.trim() ||
-        !node.textContent.trim()) &&
+        !node.textContent.trim() ||
+        "[" + node.textContent.trim() + "]" ===
+          targetElement.textContent.trim() ||
+        node.textContent.trim() ===
+          "[" + targetElement.textContent.trim() + "]") &&
       node.parentElement
     ) {
       if (node.parentElement.tagName !== "BODY") {

@@ -14,6 +14,7 @@ import {
   openExternalUrl,
   openInBrowser,
   testConnection,
+  testCORS,
   WEBSITE_URL,
 } from "../../../utils/common";
 import { getStorageLocation } from "../../../utils/common";
@@ -389,15 +390,28 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                 className="voice-add-confirm"
                 onClick={async () => {
                   if (
+                    this.props.settingDrive === "webdav" ||
+                    this.props.settingDrive === "s3compatible"
+                  ) {
+                    let corsonResult = await testCORS(
+                      this.props.settingDrive === "webdav"
+                        ? this.state.driveConfig.url
+                        : this.state.driveConfig.endpoint
+                    );
+                    if (!corsonResult) {
+                      return;
+                    }
+                  }
+                  if (
                     this.props.settingDrive === "docker" ||
                     this.props.settingDrive === "webdav" ||
                     this.props.settingDrive === "s3compatible"
                   ) {
-                    let result = await testConnection(
+                    let connectionResult = await testConnection(
                       this.props.settingDrive,
                       this.state.driveConfig
                     );
-                    if (!result) {
+                    if (!connectionResult) {
                       return;
                     }
                   }
@@ -452,6 +466,19 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                     className="voice-add-confirm"
                     style={{ marginRight: "10px" }}
                     onClick={async () => {
+                      if (
+                        this.props.settingDrive === "webdav" ||
+                        this.props.settingDrive === "s3compatible"
+                      ) {
+                        let corsonResult = await testCORS(
+                          this.props.settingDrive === "webdav"
+                            ? this.state.driveConfig.url
+                            : this.state.driveConfig.endpoint
+                        );
+                        if (!corsonResult) {
+                          return;
+                        }
+                      }
                       testConnection(
                         this.props.settingDrive,
                         this.state.driveConfig

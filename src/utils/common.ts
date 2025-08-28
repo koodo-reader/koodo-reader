@@ -692,6 +692,46 @@ export const testConnection = async (driveName: string, driveConfig: any) => {
     return await syncUtil.deleteFile("test.txt", "config");
   }
 };
+export const testCORS = async (url: string) => {
+  if (isElectron) return true;
+  if (window.location.href.startsWith("https://")) {
+    if (url.startsWith("http://")) {
+      toast.error(
+        i18n.t(
+          "This data source cannot be accessed due to browser's security policy. Please switch to another data source or HTTPS-based service provider."
+        )
+      );
+      return false;
+    }
+  }
+  try {
+    const response = await fetch(url, {
+      method: "GET", // 或 'POST' 等
+      mode: "cors", // 明确指定跨域模式
+      headers: {
+        "Content-Type": "application/json", // 如果是POST，可添加
+      },
+      // body: JSON.stringify({ test: 'data' }) // 如果是POST
+    });
+    if (response.ok) {
+      const data = await response.text();
+      console.log("CORS supported:", data);
+      return true;
+    } else {
+      console.log("Request failed but CORS may be supported");
+      return true;
+    }
+  } catch (error) {
+    toast.error(
+      i18n.t(
+        "This data source cannot be accessed from browser due to CORS policy. Please switch to another data source or CORS-enabled service provider."
+      )
+    );
+    console.error("CORS not supported:", error);
+    return false;
+  }
+};
+
 export const getTargetHref = (event: any) => {
   let href = "";
   if (!event || !event.target) return href;

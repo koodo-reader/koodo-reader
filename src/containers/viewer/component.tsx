@@ -200,6 +200,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
               : "no",
           backgroundColor: ConfigService.getReaderConfig("backgroundColor"),
           isMobile: "no",
+          isIndent: ConfigService.getReaderConfig("isIndent"),
           isStartFromEven: ConfigService.getReaderConfig("isStartFromEven"),
           password: getPdfPassword(this.props.currentBook),
           scale: parseFloat(this.state.scale),

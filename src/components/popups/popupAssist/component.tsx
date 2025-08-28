@@ -402,8 +402,8 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
               style={{
                 marginTop: "60px",
                 width: "calc(100% + 20px)",
-                height: "225px",
-                paddingBottom: "60px",
+                height: "210px",
+                paddingBottom: "0px",
                 paddingLeft: "0px",
                 paddingRight: "20px",
               }}
@@ -459,7 +459,7 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
               style={{
                 marginLeft: "-25px",
                 marginRight: "-25px",
-                marginBottom: "-25px",
+                marginBottom: "-20px",
                 padding: "0px 25px",
               }}
             >
@@ -474,7 +474,7 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
                           this.handleNewQuestion(item.question);
                         }}
                       >
-                        {this.props.t(item.question)}
+                        {item.emoji + " " + this.props.t(item.question)}
                       </div>
                     );
                   })}

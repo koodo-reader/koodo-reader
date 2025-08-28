@@ -771,7 +771,7 @@ class Login extends React.Component<LoginProps, LoginState> {
                       marginTop: "10px",
                     }}
                   >
-                    {this.props.t("Log in")}
+                    {this.props.t("Continue")}
                   </div>
                   <div className="login-term">
                     {this.props.t(
