@@ -14,6 +14,7 @@ import { themeList } from "../../../constants/themeList";
 import toast from "react-hot-toast";
 import {
   clearAllData,
+  generateSyncRecord,
   getStorageLocation,
   vexPromptAsync,
 } from "../../../utils/common";
@@ -113,6 +114,10 @@ class GeneralSetting extends React.Component<
     this.setState({ storageLocation: newPath });
     toast.success(this.props.t("Change successful"));
     this.props.handleFetchBooks();
+    await generateSyncRecord();
+    setTimeout(() => {
+      this.props.history.push("/manager/home");
+    }, 2000);
   };
   handleSwitchLibrary = async () => {
     if (isElectron) {
@@ -130,6 +135,10 @@ class GeneralSetting extends React.Component<
       this.setState({ storageLocation: newPath });
       toast.success(this.props.t("Switch successful"));
       this.props.handleFetchBooks();
+      await generateSyncRecord();
+      setTimeout(() => {
+        this.props.history.push("/manager/home");
+      }, 2000);
     } else {
       try {
         const directoryHandle = await LocalFileManager.requestDirectoryAccess();

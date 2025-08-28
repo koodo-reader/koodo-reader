@@ -14,7 +14,7 @@ import {
   ConfigService,
   TokenService,
 } from "../../../assets/lib/kookit-extra-browser.min";
-import { upgradePro } from "../../../utils/file/common";
+import { generateSyncRecord } from "../../../utils/common";
 const successOptions = {
   loop: false,
   autoplay: true,
@@ -44,12 +44,12 @@ class BackupDialog extends React.Component<
     this.props.handleLoadingDialog(false);
     this.showMessage("Execute successful");
     this.props.handleFetchBooks();
-    if (this.props.isAuthed) {
-      await upgradePro();
-    }
+
+    await generateSyncRecord();
+
     setTimeout(() => {
       this.props.history.push("/manager/home");
-    }, 1000);
+    }, 2000);
   };
   showMessage = (message: string) => {
     toast(this.props.t(message));

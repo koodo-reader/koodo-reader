@@ -144,38 +144,6 @@ class SettingDialog extends React.Component<
       reloadManager();
     }
   };
-  handleChangeLocation = async () => {
-    const { ipcRenderer } = window.require("electron");
-    const newPath = await ipcRenderer.invoke("select-path");
-    if (!newPath) {
-      return;
-    }
-    let isSuccess = await changePath(newPath);
-    if (!isSuccess) {
-      toast.error(this.props.t("Change failed"));
-      return;
-    }
-    ConfigService.setItem("storageLocation", newPath);
-    this.setState({ storageLocation: newPath });
-    toast.success(this.props.t("Change successful"));
-    this.props.handleFetchBooks();
-  };
-  handleSwitchLibrary = async () => {
-    const { ipcRenderer } = window.require("electron");
-    const newPath = await ipcRenderer.invoke("select-path");
-    if (!newPath) {
-      return;
-    }
-    let isSuccess = await changeLibrary(newPath);
-    if (!isSuccess) {
-      toast.error(this.props.t("Switch failed"));
-      return;
-    }
-    ConfigService.setItem("storageLocation", newPath);
-    this.setState({ storageLocation: newPath });
-    toast.success(this.props.t("Switch successful"));
-    this.props.handleFetchBooks();
-  };
   handleResetReaderPosition = () => {
     window
       .require("electron")
