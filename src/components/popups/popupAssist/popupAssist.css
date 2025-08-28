@@ -10,16 +10,20 @@
 }
 .popup-assist-shortcut {
   margin-right: 20px;
-  color: #f16464;
+  line-height: 1.25;
   opacity: 0.8;
   cursor: pointer;
   margin-top: 10px;
+}
+.popup-assist-shortcut:hover {
+  color: #f16464;
+  opacity: 1;
 }
 .trans-add-content-box::placeholder {
   opacity: 0.8;
 }
 .popup-message-user {
-  background-color: #f0f0f0;
+  background-color: rgba(75, 75, 75, 0.05);
   border-radius: 8px;
   padding: 10px;
   margin-bottom: 10px;

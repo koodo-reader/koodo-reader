@@ -4,6 +4,7 @@ import { ImageViewerProps, ImageViewerStates } from "./interface";
 import { saveAs } from "file-saver";
 import { getIframeDoc } from "../../utils/reader/docUtil";
 import { getTargetHref } from "../../utils/common";
+declare var window: any;
 class ImageViewer extends React.Component<ImageViewerProps, ImageViewerStates> {
   constructor(props: ImageViewerProps) {
     super(props);
@@ -47,6 +48,17 @@ class ImageViewer extends React.Component<ImageViewerProps, ImageViewerStates> {
         href.indexOf("kindle:") > -1 ||
         href.indexOf("footnote") > -1)
     ) {
+      return;
+    }
+    if (
+      event.target.tagName === "IMG" &&
+      event.target.getAttribute("alt") &&
+      ((event.target.getAttribute("class") &&
+        event.target.getAttribute("class").indexOf("footnote") > -1) ||
+        (event.target.getAttribute("id") &&
+          event.target.getAttribute("id").indexOf("footnote") > -1))
+    ) {
+      window.vex.dialog.alert(event.target.getAttribute("alt"));
       return;
     }
     if (event.target.tagName === "IMG" && event.target.src) {

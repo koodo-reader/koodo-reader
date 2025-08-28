@@ -382,18 +382,22 @@ export const officialDictList = [
 export const sampleQuestion = [
   {
     mode: "ask",
+    emoji: "📖",
     question: "Summarize this chapter for me",
   },
   {
     mode: "ask",
+    emoji: "📃",
     question: "What are the key points of this chapter",
   },
   {
     mode: "chat",
+    emoji: "📰",
     question: "Recommend me some books from Colleen Hoover",
   },
   {
     mode: "chat",
+    emoji: "🗞️",
     question: "Explain Stoicism and its principles to me",
   },
 ];
