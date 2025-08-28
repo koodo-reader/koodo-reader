@@ -545,7 +545,8 @@ class Header extends React.Component<HeaderProps, HeaderState> {
                   WEBSITE_URL +
                   (ConfigService.getReaderConfig("lang").startsWith("zh")
                     ? "/zh/faq"
-                    : "/en/faq"),
+                    : "/en/faq") +
+                  "?referer=app",
                 locale: getChatLocale(),
               });
             }}

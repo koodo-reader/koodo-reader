@@ -70,7 +70,7 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
       posY = rect.top + 16 + this.props.rendition.getPageSize().top;
     } else if (
       this.props.rendition.getPageSize().height - rect.height < 188 &&
-      this.props.rendition.getPageSize().height - rect.height > 0
+      Math.abs(this.props.rendition.getPageSize().height - rect.height) < 10
     ) {
       this.props.handleChangeDirection(true);
       posY = rect.top - this.props.rendition.getPageSize().scrollTop + 16;
