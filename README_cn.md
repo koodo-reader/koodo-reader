@@ -58,16 +58,13 @@
 
 ## 使用方法
 
-### 桌面端：
-
-- 稳定版 (推荐下载)：[官网](https://koodoreader.com/zh)
-- 开发版：[GitHub Release](https://github.com/koodo-reader/koodo-reader/releases/latest) （包含新功能和 bug 修复，但也可能引入更多未知 bug）
+### 桌面端：[下载](https://koodoreader.com/zh/download)
 
 ### 网页版：[前往](https://web.koodoreader.com)
 
-### 安卓版 (需要配合开发版使用)：[前往](https://koodoreader.com/zh/download)
+### 安卓版：[下载](https://koodoreader.com/zh/download)
 
-### iOS 版 (需要配合开发版使用)：[前往](https://koodoreader.com/zh/download)
+### iOS 版：[下载](https://koodoreader.com/zh/download)
 
 ### 使用 Scoop 安装：
 

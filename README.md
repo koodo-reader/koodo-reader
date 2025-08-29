@@ -59,16 +59,13 @@
 
 ## Installation
 
-### Desktop Version:
-
-- Stable Version (Recommended): [Download](https://koodoreader.com/en)
-- Developer version: [Download](https://github.com/koodo-reader/koodo-reader/releases/latest) ( With new feature and bug fix, but may induce some unknown bugs)
+### Desktop Version: [Download](https://koodoreader.com/en/download)
 
 ### Web Version：[Visit](https://web.koodoreader.com)
 
-### Android Version (works with developer version)：[Download](https://koodoreader.com/en/download)
+### Android Version：[Download](https://koodoreader.com/en/download)
 
-### iOS Version (works with developer version)：[Download](https://koodoreader.com/en/download)
+### iOS Version：[Download](https://koodoreader.com/en/download)
 
 ### Install with Scoop:
 
@@ -86,7 +83,7 @@ brew install --cask koodo-reader
 ### Install with Docker:
 
 > [!NOTE]
-> The Docker version saves data in the browser cache by default. For your data security, please deploy and access it via HTTPS, then save the data to your local folder. Alternatively, you can enable the data source feature to synchronize the data to a specified server path.
+> The Docker version stores data in the browser cache by default. For your data security, please deploy and access it via HTTPS, then save the data to your local folder. Alternatively, you can enable the data source feature to synchronize the data to a specified server path.
 
 If you only need to deploy the web version, simply use the command below.
 
