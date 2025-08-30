@@ -194,6 +194,7 @@
   "Unsupported file format": "不支持的文件格式",
   "When the spacing between two lines of text is n times of regular spacing, they will be split into two paragraphs": "当两行文字之间的间距为常规间距的n倍时，将被分为两个段落",
   "Please login again to update your membership on this device": "请重新登录以更新您在此设备上的会员状态",
+  "Invalid email format": "无效的邮箱格式",
   "Scrolling mode": "滚动模式",
   "Paragraph spacing threshold": "段落间距阈值",
   "Loading": "加载中",
