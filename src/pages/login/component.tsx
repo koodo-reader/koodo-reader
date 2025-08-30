@@ -653,6 +653,16 @@ class Login extends React.Component<LoginProps, LoginState> {
                     onContextMenu={() => {
                       handleContextMenu("token-dialog-email-box", true);
                     }}
+                    onBlur={(e) => {
+                      const email = e.target.value.trim();
+                      if (email) {
+                        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                        if (email && !emailRegex.test(email)) {
+                          toast.error(this.props.t("Invalid email format"));
+                          return;
+                        }
+                      }
+                    }}
                     id={"token-dialog-email-box"}
                     className="login-input-container"
                     style={{}}
