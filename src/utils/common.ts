@@ -716,10 +716,8 @@ export const testCORS = async (url: string) => {
     });
     if (response.ok) {
       const data = await response.text();
-      console.log("CORS supported:", data);
       return true;
     } else {
-      console.log("Request failed but CORS may be supported");
       return true;
     }
   } catch (error) {
