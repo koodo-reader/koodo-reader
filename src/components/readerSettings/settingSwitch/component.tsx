@@ -6,6 +6,8 @@ import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import { readerSettingList } from "../../../constants/settingList";
 import toast from "react-hot-toast";
 import BookUtil from "../../../utils/file/bookUtil";
+import { vexPromptAsync } from "../../../utils/common";
+declare var window: any;
 class SettingSwitch extends React.Component<
   SettingSwitchProps,
   SettingSwitchState
@@ -55,7 +57,7 @@ class SettingSwitch extends React.Component<
     });
   };
 
-  handleChange = (stateName: string) => {
+  handleChange = (stateName: string, isReset: boolean) => {
     this.setState({ [stateName]: !this.state[stateName] } as any);
     ConfigService.setReaderConfig(
       stateName,
@@ -63,9 +65,11 @@ class SettingSwitch extends React.Component<
     );
 
     toast(this.props.t("Change successful"));
-    setTimeout(() => {
-      this._handleRest();
-    }, 500);
+    if (isReset) {
+      setTimeout(() => {
+        this._handleRest();
+      }, 500);
+    }
   };
   render() {
     return (
@@ -89,7 +93,7 @@ class SettingSwitch extends React.Component<
 
               <span
                 className="single-control-switch"
-                onClick={() => {
+                onClick={async () => {
                   switch (item.propName) {
                     case "isBold":
                       this._handleChange("isBold");
@@ -116,28 +120,52 @@ class SettingSwitch extends React.Component<
                       this._handleChange("isStartFromEven");
                       break;
                     case "isHideFooter":
-                      this.handleChange("isHideFooter");
+                      this.handleChange("isHideFooter", true);
                       break;
                     case "isHideHeader":
-                      this.handleChange("isHideHeader");
+                      this.handleChange("isHideHeader", true);
                       break;
                     case "isHideBackground":
-                      this.handleChange("isHideBackground");
+                      this.handleChange("isHideBackground", true);
                       break;
                     case "isHidePageButton":
-                      this.handleChange("isHidePageButton");
+                      this.handleChange("isHidePageButton", false);
                       break;
                     case "isHideMenuButton":
-                      this.handleChange("isHideMenuButton");
+                      console.log(this.state["isHideMenuButton"]);
+                      if (!this.state["isHideMenuButton"]) {
+                        window.vex.dialog.confirm({
+                          message: this.props.t(
+                            "After hiding the menu button, you can move the mouse to the edge of the window to show it again."
+                          ),
+                          callback: (value) => {
+                            if (value) {
+                              this.setState({
+                                ["isHideMenuButton"]:
+                                  !this.state["isHideMenuButton"],
+                              } as any);
+                              ConfigService.setReaderConfig(
+                                "isHideMenuButton",
+                                this.state["isHideMenuButton"] ? "yes" : "no"
+                              );
+
+                              toast(this.props.t("Change successful"));
+                            }
+                          },
+                        });
+                      } else {
+                        this.handleChange("isHideMenuButton", false);
+                      }
+
                       break;
                     case "isHideAIButton":
-                      this.handleChange("isHideAIButton");
+                      this.handleChange("isHideAIButton", false);
                       break;
                     case "isHideScaleButton":
-                      this.handleChange("isHideScaleButton");
+                      this.handleChange("isHideScaleButton", false);
                       break;
                     case "isHidePDFConvertButton":
-                      this.handleChange("isHidePDFConvertButton");
+                      this.handleChange("isHidePDFConvertButton", false);
                       break;
                     default:
                       break;
