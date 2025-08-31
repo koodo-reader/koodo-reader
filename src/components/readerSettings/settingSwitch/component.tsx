@@ -132,7 +132,6 @@ class SettingSwitch extends React.Component<
                       this.handleChange("isHidePageButton", false);
                       break;
                     case "isHideMenuButton":
-                      console.log(this.state["isHideMenuButton"]);
                       if (!this.state["isHideMenuButton"]) {
                         window.vex.dialog.confirm({
                           message: this.props.t(
