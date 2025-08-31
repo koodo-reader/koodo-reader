@@ -136,9 +136,11 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         }
 
       case "left":
+        console.log("leave left", this.props.isSearch, this.props.isNavLocked);
         if (
           this.props.isNavLocked ||
-          ConfigService.getReaderConfig("isTempLocked") === "yes"
+          ConfigService.getReaderConfig("isTempLocked") === "yes" ||
+          this.props.isSearch
         ) {
           break;
         } else {
@@ -550,6 +552,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         <div
           className="navigation-panel-container"
           onMouseLeave={() => {
+            console.log("leave left");
             this.handleLeaveReader("left");
           }}
           style={
