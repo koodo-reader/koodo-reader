@@ -297,6 +297,20 @@ class AccountSetting extends React.Component<
                     toast.error(this.props.t("Invalid email format"));
                     return;
                   }
+                  // clear code and token if email changed
+                  this.setState((prevState) => ({
+                    loginConfig: {
+                      ...prevState.loginConfig,
+                      ["token"]: "",
+                    },
+                  }));
+                  //empty code box
+                  const codeBox = document.getElementById(
+                    "token-dialog-code-box"
+                  ) as HTMLInputElement;
+                  if (codeBox) {
+                    codeBox.value = "";
+                  }
                 }
               }}
               onContextMenu={() => {

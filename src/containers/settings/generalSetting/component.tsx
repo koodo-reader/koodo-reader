@@ -114,10 +114,6 @@ class GeneralSetting extends React.Component<
     this.setState({ storageLocation: newPath });
     toast.success(this.props.t("Change successful"));
     this.props.handleFetchBooks();
-    await generateSyncRecord();
-    setTimeout(() => {
-      this.props.history.push("/manager/home");
-    }, 2000);
   };
   handleSwitchLibrary = async () => {
     if (isElectron) {
