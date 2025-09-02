@@ -114,7 +114,7 @@
   },
   "homepage": "./",
   "build": {
-    "appId": "xyz.960960.koodo",
+    "appId": "com.koodoreader.electron",
     "productName": "Koodo Reader",
     "copyright": "Copyright (c) 2020-2025 ${author}",
     "files": [
@@ -241,7 +241,14 @@
     },
     "win": {
       "target": [
-        "appx",
+        {
+          "target": "appx",
+          "arch": [
+            "x64",
+            "arm64",
+            "ia32"
+          ]
+        },
         {
           "target": "nsis",
           "arch": [
@@ -299,7 +306,7 @@
       "artifactName": "${productName}-${version}-${arch}-Portable.${ext}"
     },
     "appx": {
-      "applicationId": "xyz.960960.koodo",
+      "applicationId": "com.koodoreader.electron",
       "identityName": "AppbyTroye.KoodoReader",
       "publisher": "CN=0AEAD7C6-DF4A-4D05-8FA0-D816D7DE37FF",
       "publisherDisplayName": "App by Troye",

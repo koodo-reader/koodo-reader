@@ -52,7 +52,7 @@ class UpdateInfo extends React.Component<UpdateInfoProps, UpdateInfoState> {
       ) {
         return;
       }
-      if ((process as any).windowsStore || (process as any).mas) {
+      if ((process as any).windowsStore) {
         return;
       }
       if (packageInfo.version.localeCompare(newVersion) < 0) {
