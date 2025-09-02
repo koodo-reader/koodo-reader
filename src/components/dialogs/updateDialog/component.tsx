@@ -52,6 +52,9 @@ class UpdateInfo extends React.Component<UpdateInfoProps, UpdateInfoState> {
       ) {
         return;
       }
+      if ((process as any).windowsStore || (process as any).mas) {
+        return;
+      }
       if (packageInfo.version.localeCompare(newVersion) < 0) {
         if (
           ConfigService.getReaderConfig("isDisableUpdate") !== "yes" ||
