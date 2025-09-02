@@ -40,7 +40,6 @@ export interface SettingInfoState {
   isDisablePopup: boolean;
   isDeleteShelfBook: boolean;
   isOpenInMain: boolean;
-  isDisableUpdate: boolean;
   isPrecacheBook: boolean;
   isUseBuiltIn: boolean;
   isDisablePDFCover: boolean;
