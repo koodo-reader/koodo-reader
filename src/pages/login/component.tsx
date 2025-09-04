@@ -487,7 +487,8 @@ class Login extends React.Component<LoginProps, LoginState> {
                           ConfigService.getReaderConfig("lang").startsWith(
                             "zh"
                           ) &&
-                          item.value === "webdav" && (
+                          item.value === "webdav" &&
+                          isElectron && (
                             <div className="login-sync-text">
                               {this.props.t("Recommended (use with Nutstore)")}
                             </div>
@@ -575,7 +576,12 @@ class Login extends React.Component<LoginProps, LoginState> {
               </div>
               <div className="login-mobile-container">
                 <img
-                  src={require("../../assets/images/mobile-qr.png")}
+                  src={
+                    ConfigService.getReaderConfig("lang") &&
+                    ConfigService.getReaderConfig("lang").startsWith("zh")
+                      ? require("../../assets/images/mobile-qr-zh.png")
+                      : require("../../assets/images/mobile-qr.png")
+                  }
                   alt="logo"
                   className="login-mobile-qr"
                   style={{

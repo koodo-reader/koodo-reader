@@ -114,9 +114,7 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
             let moreElement = document.querySelector(".dict-learn-more");
             if (moreElement) {
               moreElement.addEventListener("click", () => {
-                openExternalUrl(
-                  window.learnMoreUrl || "https://www.koodoreader.com"
-                );
+                openExternalUrl(window.learnMoreUrl || WEBSITE_URL);
               });
             }
           }

@@ -8,7 +8,7 @@
 }
 .card-list-container {
   width: 100%;
-  height: calc(100% - 38px);
+  height: calc(100% - 50px);
   overflow-y: scroll;
   display: flex;
   flex-wrap: wrap;
