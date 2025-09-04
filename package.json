@@ -268,7 +268,7 @@
           ]
         }
       ],
-      "icon": "assets/icons/icon.ico",
+      "icon": "build/icon.ico",
       "artifactName": "${productName}-${version}-${arch}-Win.${ext}"
     },
     "linux": {
