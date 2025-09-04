@@ -15,6 +15,7 @@ dist/
 
 /build/*
 !/build/appx/
+!/build/icon.png
 /.vscode
 
 # misc
