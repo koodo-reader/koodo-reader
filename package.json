@@ -242,14 +242,6 @@
     "win": {
       "target": [
         {
-          "target": "appx",
-          "arch": [
-            "x64",
-            "arm64",
-            "ia32"
-          ]
-        },
-        {
           "target": "nsis",
           "arch": [
             "x64"
@@ -311,7 +303,6 @@
       "publisher": "CN=0AEAD7C6-DF4A-4D05-8FA0-D816D7DE37FF",
       "publisherDisplayName": "App by Troye",
       "artifactName": "${productName}-${version}-${arch}.${ext}",
-      "backgroundColor": "#FFFFFF",
       "displayName": "Koodo Reader"
     },
     "nsis": {
