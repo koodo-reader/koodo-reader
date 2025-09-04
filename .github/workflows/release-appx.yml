@@ -1,4 +1,4 @@
-name: Build/release
+name: Build/release-appx
 
 on: workflow_dispatch
 
