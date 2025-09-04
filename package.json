@@ -268,7 +268,7 @@
           ]
         }
       ],
-      "icon": "build/icon.ico",
+      "icon": "assets/icons/icon.ico",
       "artifactName": "${productName}-${version}-${arch}-Win.${ext}"
     },
     "linux": {
@@ -311,6 +311,7 @@
       "publisher": "CN=0AEAD7C6-DF4A-4D05-8FA0-D816D7DE37FF",
       "publisherDisplayName": "App by Troye",
       "artifactName": "${productName}-${version}-${arch}.${ext}",
+      "backgroundColor": "#FFFFFF",
       "displayName": "Koodo Reader"
     },
     "nsis": {
