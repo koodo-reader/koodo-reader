@@ -13,7 +13,8 @@
 
 dist/
 
-/build
+/build/*
+!/build/appx/
 /.vscode
 
 # misc
