@@ -71,6 +71,7 @@
   "Hide mimical background": "不使用仿真背景",
   "Auto hide cursor when reading": "阅读时自动隐藏鼠标",
   "Disable update notification": "关闭更新提醒",
+  "This endpoint usually don't contain bucket name": "此 Url 通常不包含存储桶名称",
   "Roadmap": "开发计划",
   "Paragraph spacing": "段落间距",
   "Unlock": "解锁",

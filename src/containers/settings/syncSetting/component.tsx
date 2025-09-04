@@ -300,6 +300,22 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                         id={"token-dialog-" + item.value + "-box"}
                         className="token-dialog-username-box"
                       />
+                      {item.value === "endpoint" ? (
+                        <div
+                          style={{
+                            marginTop: "5px",
+                            marginLeft: "2px",
+                            fontSize: "12px",
+                            fontWeight: "bold",
+                          }}
+                        >
+                          {this.props.t(
+                            "This endpoint usually don't contain bucket name"
+                          )}
+                        </div>
+                      ) : (
+                        ""
+                      )}
                       {item.example && (
                         <div
                           style={{
@@ -389,16 +405,10 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
               <div
                 className="voice-add-confirm"
                 onClick={async () => {
-                  if (
-                    this.props.settingDrive === "webdav" ||
-                    this.props.settingDrive === "s3compatible"
-                  ) {
-                    let corsonResult = await testCORS(
-                      this.props.settingDrive === "webdav"
-                        ? this.state.driveConfig.url
-                        : this.state.driveConfig.endpoint
-                    );
-                    if (!corsonResult) {
+                  if (this.props.settingDrive === "webdav") {
+                    let corsResult = await testCORS(this.state.driveConfig.url);
+
+                    if (!corsResult) {
                       return;
                     }
                   }
@@ -466,16 +476,12 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                     className="voice-add-confirm"
                     style={{ marginRight: "10px" }}
                     onClick={async () => {
-                      if (
-                        this.props.settingDrive === "webdav" ||
-                        this.props.settingDrive === "s3compatible"
-                      ) {
-                        let corsonResult = await testCORS(
-                          this.props.settingDrive === "webdav"
-                            ? this.state.driveConfig.url
-                            : this.state.driveConfig.endpoint
+                      if (this.props.settingDrive === "webdav") {
+                        let corsResult = await testCORS(
+                          this.state.driveConfig.url
                         );
-                        if (!corsonResult) {
+                        console.log(corsResult, "sdf");
+                        if (!corsResult) {
                           return;
                         }
                       }
