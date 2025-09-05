@@ -153,8 +153,10 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
           return resolve();
         })
         .catch((error) => {
-          console.error(error);
-          toast.error(this.props.t("Import failed"));
+          console.error(error, book.name);
+          toast.error(this.props.t("Import failed") + ": " + book.name, {
+            duration: 4000,
+          });
           return resolve();
         });
     });
@@ -181,8 +183,10 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
     return new Promise<void>(async (resolve) => {
       const md5 = await calculateFileMD5(file);
       if (!md5) {
-        console.error("md5 error");
-        toast.error(this.props.t("Import failed"));
+        console.error("md5 error", file.name);
+        toast.error(this.props.t("Import failed") + ": " + file.name, {
+          duration: 4000,
+        });
         return resolve();
       } else {
         try {
@@ -240,8 +244,10 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
 
         reader.onload = async (e) => {
           if (!e.target) {
-            console.error("e.target error");
-            toast.error(this.props.t("Import failed"));
+            console.error("e.target error", bookName);
+            toast.error(this.props.t("Import failed") + ": " + bookName, {
+              duration: 4000,
+            });
             return resolve();
           }
           let reader = new FileReader();
@@ -287,7 +293,10 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                 }
               }
             } catch (error) {
-              console.error(error);
+              console.error(error, bookName);
+              toast.error(this.props.t("Import failed") + ": " + bookName, {
+                duration: 4000,
+              });
               return resolve();
             }
 
@@ -295,8 +304,10 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
 
             // get metadata failed
             if (!result || !result.key) {
-              console.error("get metadata failed");
-              toast.error(this.props.t("Import failed"));
+              console.error("get metadata failed", bookName);
+              toast.error(this.props.t("Import failed") + ": " + bookName, {
+                duration: 4000,
+              });
               return resolve();
             }
             await this.handleAddBook(

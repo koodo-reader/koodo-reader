@@ -60,6 +60,11 @@ export const generalSettingList = [
     propName: "isPrecacheBook",
   },
   {
+    isElectron: false,
+    title: "Export books with original name",
+    propName: "isExportOriginalName",
+  },
+  {
     isElectron: true,
     title: "Disable update notification",
     propName: "isDisableUpdate",

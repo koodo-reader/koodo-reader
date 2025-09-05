@@ -46,6 +46,9 @@ class DeleteDialog extends React.Component<
     } else {
       this.deleteBooks();
     }
+    if (this.props.isSearch) {
+      this.props.handleSearch(false);
+    }
     this.props.handleDeleteDialog(false);
     toast.success(this.props.t("Deletion successful"));
   };

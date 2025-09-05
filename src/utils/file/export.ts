@@ -4,6 +4,7 @@ import Note from "../../models/Note";
 import BookUtil from "./bookUtil";
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
+import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 export const zipFilesToBlob = (buffers: ArrayBuffer[], names: string[]) => {
   var zip = new JSZip();
   for (let index = 0; index < buffers.length; index++) {
@@ -25,7 +26,7 @@ export const exportBooks = async (books: Book[]) => {
     booksBuffers.push(await fetchPromises[index]);
   }
   let bookNames = books.map((item) => {
-    return item.name + `.${item.format.toLocaleLowerCase()}`;
+    return getBookName(item);
   });
 
   saveAs(
@@ -36,7 +37,15 @@ export const exportBooks = async (books: Book[]) => {
       }.zip`
   );
 };
-
+export const getBookName = (item: Book) => {
+  if (ConfigService.getReaderConfig("isExportOriginalName") === "yes") {
+    let filename =
+      item.path.replace(/\\/g, "/").split("/").pop() ||
+      item.name + `.${item.format.toLowerCase()}`;
+    return filename;
+  }
+  return item.name + `.${item.format.toLocaleLowerCase()}`;
+};
 export const exportNotes = (notes: Note[], books: Book[]) => {
   let data = notes.map((item) => {
     let book = books.filter((subitem) => subitem.key === item.bookKey)[0];

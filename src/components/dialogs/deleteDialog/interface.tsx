@@ -6,6 +6,7 @@ import { RouteComponentProps } from "react-router";
 export interface DeleteDialogProps extends RouteComponentProps<any> {
   books: BookModel[];
   deletedBooks: BookModel[];
+  isSearch: boolean;
   isOpenDeleteDialog: boolean;
   currentBook: BookModel;
   bookmarks: BookmarkModel[];
@@ -21,6 +22,7 @@ export interface DeleteDialogProps extends RouteComponentProps<any> {
   handleFetchBookmarks: () => void;
   handleSelectedBooks: (selectedBooks: string[]) => void;
   handleFetchNotes: () => void;
+  handleSearch: (isSearch: boolean) => void;
   t: (title: string) => string;
 }
 export interface DeleteDialogState {
