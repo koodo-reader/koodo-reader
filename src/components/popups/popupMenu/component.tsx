@@ -103,16 +103,25 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
         this.props.rendition.getPageSize().sectionWidth +
         this.props.rendition.getPageSize().gap;
     }
+    console.log("chapterDocIndex:", this.props.chapterDocIndex, posX, posY);
     if (
       this.props.currentBook.format === "PDF" &&
       this.props.readerMode === "scroll" &&
-      ConfigService.getReaderConfig("isConvertPDF") !== "yes"
+      ConfigService.getReaderConfig("isConvertPDF") !== "yes" &&
+      posY < 0
     ) {
       posY =
         posY +
         this.props.chapterDocIndex *
           this.props.rendition.getPageSize().sectionHeight;
     }
+    if (posY < 0) {
+      posY = 16;
+    }
+    if (posY > this.props.rendition.getPageSize().height - 188) {
+      posY = this.props.rendition.getPageSize().height - 188;
+    }
+    console.log("posX, posY:", posX, posY);
     return { posX, posY } as any;
   }
 

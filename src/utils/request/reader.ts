@@ -6,6 +6,7 @@ import {
 } from "../../assets/lib/kookit-extra-browser.min";
 import i18n from "../../i18n";
 import { handleExitApp } from "./common";
+import { officialDictList } from "../../constants/settingList";
 let readerRequest: ReaderRequest | undefined;
 export const getTransStream = async (
   text: string,
@@ -111,7 +112,18 @@ export const getDictText = async (word: string, from: string, to: string) => {
       `<p class="dict-learn-more">${i18n.t("Generated with AI")}</p>`;
     return dictText;
   } else {
-    toast.error(i18n.t("No result found") + " " + from + "-" + to);
+    toast.error(
+      i18n.t("No result found") +
+        " " +
+        i18n.t(
+          officialDictList.find((item) => item.code === from)?.nativeLang ||
+            from
+        ) +
+        "-" +
+        i18n.t(
+          officialDictList.find((item) => item.code === to)?.nativeLang || to
+        )
+    );
     return "";
   }
 };
