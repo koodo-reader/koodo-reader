@@ -16,6 +16,7 @@ import {
   clearAllData,
   generateSyncRecord,
   getStorageLocation,
+  reloadManager,
   vexPromptAsync,
 } from "../../../utils/common";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
@@ -51,7 +52,8 @@ class GeneralSetting extends React.Component<
         ConfigService.getReaderConfig("isAutoMaximizeWin") === "yes",
       isAutoLaunch: ConfigService.getReaderConfig("isAutoLaunch") === "yes",
       isOpenInMain: ConfigService.getReaderConfig("isOpenInMain") === "yes",
-      isExportOriginalName: ConfigService.getReaderConfig("isExportOriginalName") === "yes",
+      isExportOriginalName:
+        ConfigService.getReaderConfig("isExportOriginalName") === "yes",
       isDisableUpdate:
         ConfigService.getReaderConfig("isDisableUpdate") === "yes",
       isPrecacheBook: ConfigService.getReaderConfig("isPrecacheBook") === "yes",
@@ -471,7 +473,9 @@ class GeneralSetting extends React.Component<
               if (answer === "CLEAR") {
                 await clearAllData();
                 toast.success(this.props.t("Clear successful"));
-                this.props.handleFetchBooks();
+                setTimeout(() => {
+                  reloadManager();
+                }, 1000);
               } else {
                 toast.error(this.props.t("Please type 'CLEAR' to confirm"));
               }

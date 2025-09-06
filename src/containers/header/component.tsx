@@ -367,7 +367,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
             clearInterval(this.timer);
             this.setState({ isSync: false });
             return;
-          } else {
+          } else if (this.state.isSync) {
             toast.loading(
               this.props.t("Start Transfering Data") +
                 " (" +
@@ -387,6 +387,9 @@ class Header extends React.Component<HeaderProps, HeaderState> {
                 id: "syncing",
               }
             );
+          } else {
+            toast.dismiss("syncing");
+            clearInterval(this.timer);
           }
         }
       } else {
@@ -405,26 +408,30 @@ class Header extends React.Component<HeaderProps, HeaderState> {
             clearInterval(this.timer);
             this.setState({ isSync: false });
             return;
+          } else if (this.state.isSync) {
+            toast.loading(
+              this.props.t("Start Transfering Data") +
+                " (" +
+                stats.completed +
+                "/" +
+                stats.total +
+                ")" +
+                " (" +
+                this.props.t(
+                  driveList.find(
+                    (item) =>
+                      item.value === ConfigService.getItem("defaultSyncOption")
+                  )?.label || ""
+                ) +
+                ")",
+              {
+                id: "syncing",
+              }
+            );
+          } else {
+            toast.dismiss("syncing");
+            clearInterval(this.timer);
           }
-          toast.loading(
-            this.props.t("Start Transfering Data") +
-              " (" +
-              stats.completed +
-              "/" +
-              stats.total +
-              ")" +
-              " (" +
-              this.props.t(
-                driveList.find(
-                  (item) =>
-                    item.value === ConfigService.getItem("defaultSyncOption")
-                )?.label || ""
-              ) +
-              ")",
-            {
-              id: "syncing",
-            }
-          );
         }
       }
     }, 1000);
@@ -450,6 +457,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     }
   };
   handleSuccess = async () => {
+    clearInterval(this.timer);
     this.props.handleFetchBooks();
     this.props.handleFetchBookmarks();
     this.props.handleFetchNotes();
@@ -496,6 +504,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         99,
         ConfigService.getItem("defaultSyncOption")
       );
+
       clearInterval(this.timer);
       toast.loading(this.props.t("Almost finished"), {
         id: "syncing",
@@ -503,10 +512,12 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       await this.handleSuccess();
     } catch (error) {
       console.error(error);
+      clearInterval(this.timer);
+
       toast.error(this.props.t("Sync failed"), {
         id: "syncing",
       });
-      clearInterval(this.timer);
+      this.setState({ isSync: false });
       return;
     }
   };

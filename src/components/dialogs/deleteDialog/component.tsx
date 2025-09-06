@@ -25,12 +25,6 @@ class DeleteDialog extends React.Component<
   handleCancel = () => {
     this.props.handleDeleteDialog(false);
   };
-  handleDeleteOther = async (key: string) => {
-    await DatabaseService.deleteRecordsByBookKey(key, "bookmarks");
-    this.props.handleFetchBookmarks();
-    await DatabaseService.deleteRecordsByBookKey(key, "notes");
-    this.props.handleFetchNotes();
-  };
   handleComfirm = async () => {
     if (
       this.props.mode === "shelf" &&
@@ -124,7 +118,8 @@ class DeleteDialog extends React.Component<
           ConfigService.deleteListConfig(key, "recentBooks");
           ConfigService.deleteObjectConfig(key, "recordLocation");
           ConfigService.deleteObjectConfig(key, "readingTime");
-          await this.handleDeleteOther(key);
+          await DatabaseService.deleteRecordsByBookKey(key, "bookmarks");
+          await DatabaseService.deleteRecordsByBookKey(key, "notes");
           resolve();
         })
         .catch((err) => {
