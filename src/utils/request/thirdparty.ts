@@ -20,10 +20,26 @@ export const resetThirdpartyRequest = () => {
 };
 export const onSyncCallback = async (service: string, authCode: string) => {
   toast.loading(i18n.t("Adding"), { id: "adding-sync-id" });
+
   let thirdpartyRequest = await getThirdpartyRequest();
 
   let syncUtil = new SyncUtil(service, {}, thirdpartyRequest);
+  let timer = setTimeout(() => {
+    if (
+      ConfigService.getItem("serverRegion") !== "china" &&
+      navigator.language === "zh-CN"
+    ) {
+      toast.error(
+        i18n.t(
+          "Request timed out, You may change the server region to China to solve the connection issue in mainland China. Go to Settings > Account"
+        ),
+        { id: "adding-sync-error", duration: 8000 }
+      );
+      return;
+    }
+  }, 10000);
   let refreshToken = await syncUtil.authToken(authCode);
+  clearTimeout(timer);
   if (!refreshToken) {
     toast.error(i18n.t("Authorization failed"), { id: "adding-sync-id" });
     return;
@@ -56,10 +72,24 @@ export const encryptToken = async (service: string, config: any) => {
     return { code: 200, msg: "success", data: syncToken };
   }
   let thirdpartyRequest = await getThirdpartyRequest();
-
+  let timer = setTimeout(() => {
+    if (
+      ConfigService.getItem("serverRegion") !== "china" &&
+      navigator.language === "zh-CN"
+    ) {
+      toast.error(
+        i18n.t(
+          "Request timed out, You may change the server region to China to solve the connection issue in mainland China. Go to Settings > Account"
+        ),
+        { id: "adding-sync-error", duration: 8000 }
+      );
+      return;
+    }
+  }, 10000);
   let response = await thirdpartyRequest.encryptToken({
     token: syncToken,
   });
+  clearTimeout(timer);
   if (response.code === 200) {
     await TokenService.setToken(
       service + "_token",
@@ -90,7 +120,22 @@ export const decryptToken = async (service: string) => {
     };
   }
   let thirdpartyRequest = await getThirdpartyRequest();
+  let timer = setTimeout(() => {
+    if (
+      ConfigService.getItem("serverRegion") !== "china" &&
+      navigator.language === "zh-CN"
+    ) {
+      toast.error(
+        i18n.t(
+          "Request timed out, You may change the server region to China to solve the connection issue in mainland China. Go to Settings > Account"
+        ),
+        { id: "adding-sync-error", duration: 8000 }
+      );
+      return;
+    }
+  }, 10000);
   let encryptedToken = await TokenService.getToken(service + "_token");
+  clearTimeout(timer);
   if (!encryptedToken || encryptedToken === "{}") {
     return {};
   }

@@ -662,6 +662,7 @@
   "Portuguese": "葡萄牙语",
   "Make it offline": "下载中",
   "Binding": "绑定中",
+  "Request timed out, You may change the server region to China to solve the connection issue in mainland China. Go to Settings > Account": "请求超时，您可以将服务器地区切换到中国，以解决在国内的连接问题。前往 设置 > 账户",
   "Please log in first": "请先登录",
   "Logging in": "登录中",
   "Failed to get sync state": "无法获取同步状态",
