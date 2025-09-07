@@ -367,7 +367,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
             clearInterval(this.timer);
             this.setState({ isSync: false });
             return;
-          } else if (this.state.isSync) {
+          } else {
             toast.loading(
               this.props.t("Start Transfering Data") +
                 " (" +
@@ -387,9 +387,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
                 id: "syncing",
               }
             );
-          } else {
-            toast.dismiss("syncing");
-            clearInterval(this.timer);
           }
         }
       } else {
@@ -408,7 +405,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
             clearInterval(this.timer);
             this.setState({ isSync: false });
             return;
-          } else if (this.state.isSync) {
+          } else {
             toast.loading(
               this.props.t("Start Transfering Data") +
                 " (" +
@@ -428,9 +425,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
                 id: "syncing",
               }
             );
-          } else {
-            toast.dismiss("syncing");
-            clearInterval(this.timer);
           }
         }
       }
@@ -438,8 +432,8 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     try {
       let res = await this.beforeSync();
       if (!res) {
-        this.setState({ isSync: false });
         clearInterval(this.timer);
+        this.setState({ isSync: false });
         return;
       }
       let compareResult = await this.getCompareResult();
@@ -455,18 +449,18 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       this.setState({ isSync: false });
       return;
     }
+    setTimeout(() => {
+      toast.dismiss("syncing");
+    }, 2000);
   };
   handleSuccess = async () => {
-    clearInterval(this.timer);
     this.props.handleFetchBooks();
     this.props.handleFetchBookmarks();
     this.props.handleFetchNotes();
     toast.success(this.props.t("Synchronisation successful"), {
       id: "syncing",
     });
-    setTimeout(() => {
-      toast.dismiss("syncing");
-    }, 1000);
+
     if (
       ConfigService.getItem("defaultSyncOption") === "adrive" &&
       ConfigService.getReaderConfig("hasShowAliyunWarning") !== "yes"
@@ -506,6 +500,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       );
 
       clearInterval(this.timer);
+      this.setState({ isSync: false });
       toast.loading(this.props.t("Almost finished"), {
         id: "syncing",
       });
@@ -513,11 +508,11 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     } catch (error) {
       console.error(error);
       clearInterval(this.timer);
-
+      this.setState({ isSync: false });
       toast.error(this.props.t("Sync failed"), {
         id: "syncing",
       });
-      this.setState({ isSync: false });
+
       return;
     }
   };
