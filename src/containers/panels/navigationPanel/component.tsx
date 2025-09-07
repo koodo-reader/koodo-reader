@@ -203,6 +203,12 @@ class NavigationPanel extends React.Component<
             ? ConfigService.getReaderConfig("textColor")
             : "",
         }}
+        onMouseLeave={(event) => {
+          if (this.state.searchState !== "done") {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+        }}
       >
         {this.state.searchState ? (
           <>

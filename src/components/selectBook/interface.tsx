@@ -6,7 +6,9 @@ export interface BookListProps extends RouteComponentProps<any> {
   notes: NoteModel[];
   shelfTitle: string;
   deletedBooks: BookModel[];
+  searchResults: number[];
   isSelectBook: boolean;
+  isSearch: boolean;
   isCollapsed: boolean;
   selectedBooks: string[];
   handleAddDialog: (isShow: boolean) => void;

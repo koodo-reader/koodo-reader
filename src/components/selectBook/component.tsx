@@ -64,6 +64,13 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
     });
     return shelfItems;
   }
+  handleIndexFilter = (items: any, arr: number[]) => {
+    let itemArr: any[] = [];
+    arr.forEach((item) => {
+      items[item] && itemArr.push(items[item]);
+    });
+    return itemArr;
+  };
   render() {
     return (
       <div
@@ -93,15 +100,10 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
                       this.props.selectedBooks.indexOf(item.key) > -1
                   ).length > 0
                 ) {
-                  ConfigService.setAllListConfig(
-                    this.props.books
-                      .filter(
-                        (item: BookModel) =>
-                          this.props.selectedBooks.indexOf(item.key) > -1
-                      )
-                      .map((item: BookModel) => item.key),
-                    "favoriteBooks"
-                  );
+                  this.props.selectedBooks.forEach((item) => {
+                    ConfigService.setListConfig(item, "favoriteBooks");
+                  });
+
                   this.props.handleSelectBook(!this.props.isSelectBook);
                   if (this.props.isSelectBook) {
                     this.props.handleSelectedBooks([]);
@@ -291,7 +293,14 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
             <span
               className="book-manage-title select-book-action"
               onClick={() => {
-                if (
+                if (this.props.isSearch) {
+                  this.props.handleSelectedBooks(
+                    this.handleIndexFilter(
+                      this.props.books,
+                      this.props.searchResults
+                    ).map((item) => item.key)
+                  );
+                } else if (
                   this.props.selectedBooks.length ===
                   this.handleFilterShelfBook(this.props.books).length
                 ) {

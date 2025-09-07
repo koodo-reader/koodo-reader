@@ -112,6 +112,19 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         return item.chapterIndex === this.state.chapterDocIndex;
       }
     });
+    if (this.props.currentBook.format === "PDF") {
+      highlightersByChapter = highlightersByChapter.map((item: Note) => {
+        let cfi = JSON.parse(item.cfi);
+        if (cfi.fingerprint) {
+          item.chapterIndex = cfi.page - 1;
+          cfi.chapterDocIndex = cfi.page - 1 + "";
+          cfi.chapterHref = "title" + (cfi.page - 1);
+          item.cfi = JSON.stringify(cfi);
+        }
+
+        return item;
+      });
+    }
     await this.props.htmlBook.rendition.renderHighlighters(
       highlightersByChapter,
       this.handleNoteClick
@@ -126,9 +139,27 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         if (item.bookKey !== this.props.currentBook.key) {
           return false;
         }
-
-        return item.chapterIndex === this.state.chapterDocIndex + 1;
+        let cfi = JSON.parse(item.cfi);
+        if (cfi.fingerprint) {
+          // pdf from 1.7.4 or older
+          return cfi.page === this.state.chapterDocIndex;
+        } else {
+          return item.chapterIndex === this.state.chapterDocIndex + 1;
+        }
       });
+      if (this.props.currentBook.format === "PDF") {
+        highlightersByChapter = highlightersByChapter.map((item: Note) => {
+          let cfi = JSON.parse(item.cfi);
+          if (cfi.fingerprint) {
+            item.chapterIndex = cfi.page - 1;
+            cfi.chapterDocIndex = cfi.page - 1 + "";
+            cfi.chapterHref = "title" + (cfi.page - 1);
+            item.cfi = JSON.stringify(cfi);
+          }
+
+          return item;
+        });
+      }
       await this.props.htmlBook.rendition.renderHighlighters(
         highlightersByChapter,
         this.handleNoteClick
