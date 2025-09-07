@@ -55,6 +55,10 @@ class CardList extends React.Component<CardListProps, CardListStates> {
       bookLocation.cfi = note.cfi;
       bookLocation.chapterTitle = note.chapter;
     }
+    if (bookLocation.fingerprint) {
+      bookLocation.chapterDocIndex = bookLocation.page - 1 + "";
+      bookLocation.chapterHref = "title" + (bookLocation.page - 1);
+    }
     ConfigService.setObjectConfig(note.bookKey, bookLocation, "recordLocation");
 
     BookUtil.redirectBook(book);

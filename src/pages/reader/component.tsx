@@ -138,8 +138,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
       case "left":
         if (
           this.props.isNavLocked ||
-          ConfigService.getReaderConfig("isTempLocked") === "yes" ||
-          this.props.isSearch
+          ConfigService.getReaderConfig("isTempLocked") === "yes"
         ) {
           break;
         } else {

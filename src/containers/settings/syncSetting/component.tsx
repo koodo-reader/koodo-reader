@@ -480,7 +480,6 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                         let corsResult = await testCORS(
                           this.state.driveConfig.url
                         );
-                        console.log(corsResult, "sdf");
                         if (!corsResult) {
                           return;
                         }
