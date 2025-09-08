@@ -18,6 +18,15 @@ export const driveList = [
     isCNAvailable: false,
   },
   {
+    label: "Dubox",
+    value: "dubox",
+    icon: "icon-dubox",
+    isPro: true,
+    support: ["desktop", "phone"],
+    scoped: false,
+    isCNAvailable: true,
+  },
+  {
     label: "OneDrive",
     value: "microsoft",
     icon: "icon-onedrive",
@@ -344,6 +353,14 @@ export const driveInputConfig: DriveInputConfig = {
     },
   ],
   dropbox: [
+    {
+      label: "Token",
+      value: "token",
+      type: "text",
+      required: true,
+    },
+  ],
+  dubox: [
     {
       label: "Token",
       value: "token",
