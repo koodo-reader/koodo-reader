@@ -27,6 +27,15 @@ export const driveList = [
     isCNAvailable: true,
   },
   {
+    label: "115 Yun",
+    value: "yiyiwu",
+    icon: "icon-yiyiwu",
+    isPro: true,
+    support: ["desktop", "phone"],
+    scoped: false,
+    isCNAvailable: true,
+  },
+  {
     label: "OneDrive",
     value: "microsoft",
     icon: "icon-onedrive",
@@ -361,6 +370,14 @@ export const driveInputConfig: DriveInputConfig = {
     },
   ],
   dubox: [
+    {
+      label: "Token",
+      value: "token",
+      type: "text",
+      required: true,
+    },
+  ],
+  yiyiwu: [
     {
       label: "Token",
       value: "token",
