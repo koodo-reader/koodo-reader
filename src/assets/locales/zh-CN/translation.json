@@ -665,6 +665,7 @@
   "Request timed out, You may change the server region to China to solve the connection issue in mainland China. Go to Settings > Account": "请求超时，您可以将服务器地区切换到中国，以解决在国内的连接问题。前往 设置 > 账户",
   "Please log in first": "请先登录",
   "Dubox": "百度网盘",
+  "115 Yun": "115 网盘",
   "Logging in": "登录中",
   "Failed to get sync state": "无法获取同步状态",
   "Sync state is occupied by other devices, please try again later": "同步状态被其他设备占用，请稍后再试",

@@ -383,6 +383,8 @@ class ImportDialog extends React.Component<
                         let settingDrive = item.value;
                         if (
                           settingDrive === "dropbox" ||
+                          settingDrive === "yiyiwu" ||
+                          settingDrive === "dubox" ||
                           settingDrive === "google" ||
                           settingDrive === "boxnet" ||
                           settingDrive === "pcloud" ||
@@ -390,6 +392,18 @@ class ImportDialog extends React.Component<
                           settingDrive === "microsoft_exp" ||
                           settingDrive === "microsoft"
                         ) {
+                          console.log(
+                            "open auth url",
+                            new SyncUtil(settingDrive, {}).getAuthUrl(
+                              ConfigService.getItem("serverRegion") ===
+                                "china" &&
+                                (settingDrive === "microsoft" ||
+                                  settingDrive === "microsoft_exp" ||
+                                  settingDrive === "adrive")
+                                ? KookitConfig.ThirdpartyConfig.cnCallbackUrl
+                                : KookitConfig.ThirdpartyConfig.callbackUrl
+                            )
+                          );
                           openInBrowser(
                             new SyncUtil(settingDrive, {}).getAuthUrl(
                               ConfigService.getItem("serverRegion") ===
