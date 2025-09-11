@@ -821,4 +821,4 @@ const handleCallback = (url) => {
     console.error('Error handling callback URL:', error);
     console.log('Problematic URL:', url);
   }
-};
+};   
