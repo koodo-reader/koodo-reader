@@ -147,14 +147,12 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
           <div className="book-cover-item-header">
             <div className="reading-progress-icon">
               <div style={{ position: "relative", left: "4px" }}>
-                {percentage
+                {percentage && !isNaN(parseFloat(percentage))
                   ? Math.floor(parseFloat(percentage) * 100) === 0
                     ? "New"
-                    : Math.floor(parseFloat(percentage) * 100) < 10
-                    ? Math.floor(parseFloat(percentage) * 100)
                     : Math.floor(parseFloat(percentage) * 100) === 100
                     ? "Done"
-                    : Math.floor(parseFloat(percentage) * 100)
+                    : (parseFloat(percentage) * 100).toFixed(2)
                   : "0"}
                 {Math.floor(parseFloat(percentage) * 100) > 0 &&
                   Math.floor(parseFloat(percentage) * 100) < 100 && (

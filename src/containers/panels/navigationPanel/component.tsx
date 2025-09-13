@@ -204,7 +204,7 @@ class NavigationPanel extends React.Component<
             : "",
         }}
         onMouseLeave={(event) => {
-          if (this.state.searchState !== "done") {
+          if (this.state.searchState && this.state.searchState !== "done") {
             event.preventDefault();
             event.stopPropagation();
           }

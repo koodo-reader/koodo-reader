@@ -185,7 +185,7 @@ class ProgressPanel extends React.Component<
           </div>
           <input
             className="input-progress"
-            defaultValue={Math.round(this.props.percentage * 100)}
+            defaultValue={(this.props.percentage * 100).toFixed(2) || 0}
             type="range"
             max="100"
             min="0"
