@@ -19,6 +19,20 @@ let userRequest: UserRequest | undefined;
 export const loginRegister = async (service: string, code: string) => {
   let deviceName = detectBrowser();
   let userRequest = await getUserRequest();
+  let timer = setTimeout(() => {
+    if (
+      ConfigService.getItem("serverRegion") !== "china" &&
+      navigator.language === "zh-CN"
+    ) {
+      toast.error(
+        i18n.t(
+          "Request timed out, You may change the server region to China to solve the connection issue in mainland China. Go to Settings > Account"
+        ),
+        { id: "adding-sync-error", duration: 6000 }
+      );
+      return;
+    }
+  }, 10000);
   let response = await userRequest.loginRegister({
     code,
     provider: service,
@@ -36,6 +50,7 @@ export const loginRegister = async (service: string, code: string) => {
     device_uuid: await TokenService.getFingerprint(),
     app_version: packageJson.version,
   });
+  clearTimeout(timer);
   if (response.code === 200) {
     await TokenService.setToken("is_authed", "yes");
     await TokenService.setToken("access_token", response.data.access_token);
