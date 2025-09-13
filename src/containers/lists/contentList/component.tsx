@@ -13,11 +13,80 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
       isCollapsed: true,
       currentIndex: -1,
       currentChapterIndex: 0,
+      expandedItems: new Set<string>(), // 存储展开的项目路径
       isExpandContent:
         ConfigService.getReaderConfig("isExpandContent") === "yes",
     };
     this.handleJump = this.handleJump.bind(this);
   }
+
+  // 查找包含当前章节的路径并自动展开
+  findAndExpandCurrentChapter = (
+    chapters: any[],
+    bookLocation: any,
+    parentPath: string = ""
+  ): Set<string> => {
+    const expandedPaths = new Set<string>();
+
+    const findInChapters = (items: any[], currentParentPath: string) => {
+      items.forEach((item, index) => {
+        const currentPath = currentParentPath
+          ? `${currentParentPath}-${index}`
+          : `${index}`;
+
+        // 检查当前项是否匹配当前章节
+        const isCurrentChapter =
+          item.href === bookLocation.chapterHref ||
+          (bookLocation.chapterHref &&
+            bookLocation.chapterHref.includes(item.href.split("#")[0]));
+
+        if (isCurrentChapter) {
+          // 如果找到当前章节，展开其所有父路径
+          const pathParts = currentPath.split("-");
+          for (let i = 0; i < pathParts.length - 1; i++) {
+            const parentPath = pathParts.slice(0, i + 1).join("-");
+            expandedPaths.add(parentPath);
+          }
+        }
+
+        // 检查子项中是否包含当前章节
+        if (item.subitems && item.subitems.length > 0) {
+          const hasCurrentChapterInSubitems = item.subitems.some(
+            (subitem: any) =>
+              this.checkIfContainsCurrentChapter(subitem, bookLocation)
+          );
+
+          if (hasCurrentChapterInSubitems) {
+            expandedPaths.add(currentPath);
+          }
+
+          findInChapters(item.subitems, currentPath);
+        }
+      });
+    };
+
+    findInChapters(chapters, parentPath);
+    return expandedPaths;
+  };
+
+  // 递归检查是否包含当前章节
+  checkIfContainsCurrentChapter = (item: any, bookLocation: any): boolean => {
+    const isCurrentChapter =
+      item.href === bookLocation.chapterHref ||
+      (bookLocation.chapterHref &&
+        bookLocation.chapterHref.includes(item.href.split("#")[0]));
+
+    if (isCurrentChapter) return true;
+
+    if (item.subitems && item.subitems.length > 0) {
+      return item.subitems.some((subitem: any) =>
+        this.checkIfContainsCurrentChapter(subitem, bookLocation)
+      );
+    }
+
+    return false;
+  };
+
   componentDidMount() {
     if (this.props.htmlBook) {
       this.setState(
@@ -27,7 +96,6 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
         () => {
           let bookLocation: {
             text: string;
-            count: string;
             chapterTitle: string;
             chapterDocIndex: string;
             chapterHref: string;
@@ -36,6 +104,16 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
             "recordLocation",
             {}
           );
+
+          // 自动展开包含当前章节的路径
+          if (bookLocation.chapterHref) {
+            const expandedPaths = this.findAndExpandCurrentChapter(
+              this.props.htmlBook.chapters,
+              bookLocation
+            );
+            this.setState({ expandedItems: expandedPaths });
+          }
+
           let chapter =
             bookLocation.chapterTitle ||
             (this.props.htmlBook && this.props.htmlBook.flattenChapters[0]
@@ -75,36 +153,35 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
       "recordLocation",
       {}
     );
-    const renderContentList = (items: any, level: number) => {
+    const renderContentList = (
+      items: any,
+      level: number,
+      parentPath: string = ""
+    ) => {
       level++;
       return items.map((item: any, index: number) => {
+        const currentPath = parentPath ? `${parentPath}-${index}` : `${index}`;
+        const isExpanded = this.state.expandedItems.has(currentPath);
+
         return (
           <li key={index} className="book-content-list">
             {item.subitems &&
               item.subitems.length > 0 &&
-              level <= 2 &&
               !this.state.isExpandContent && (
                 <span
                   className="icon-dropdown content-dropdown"
                   onClick={() => {
+                    const newExpandedItems = new Set(this.state.expandedItems);
+                    if (isExpanded) {
+                      newExpandedItems.delete(currentPath);
+                    } else {
+                      newExpandedItems.add(currentPath);
+                    }
                     this.setState({
-                      currentIndex:
-                        this.state.currentIndex === index ? -1 : index,
+                      expandedItems: newExpandedItems,
                     });
                   }}
-                  style={
-                    this.state.currentIndex === index ||
-                    item.subitems.filter(
-                      (item) =>
-                        item.href === bookLocation.chapterHref ||
-                        (bookLocation.chapterHref &&
-                          bookLocation.chapterHref.includes(
-                            item.href.split("#")[0]
-                          ))
-                    ).length > 0
-                      ? {}
-                      : { transform: "rotate(-90deg)" }
-                  }
+                  style={isExpanded ? {} : { transform: "rotate(-90deg)" }}
                 ></span>
               )}
 
@@ -119,18 +196,8 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
             </span>
             {item.subitems &&
             item.subitems.length > 0 &&
-            (this.state.currentIndex === index ||
-              level > 2 ||
-              this.state.isExpandContent ||
-              (bookLocation.chapterHref &&
-                bookLocation.chapterHref.includes(item.href.split("#")[0])) ||
-              item.subitems.filter(
-                (item) =>
-                  item.href === bookLocation.chapterHref ||
-                  (bookLocation.chapterHref &&
-                    bookLocation.chapterHref.includes(item.href.split("#")[0]))
-              ).length > 0) ? (
-              <ul>{renderContentList(item.subitems, level)}</ul>
+            (isExpanded || this.state.isExpandContent) ? (
+              <ul>{renderContentList(item.subitems, level, currentPath)}</ul>
             ) : null}
           </li>
         );
@@ -167,7 +234,7 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
           </div>
         )}
         <ul className="book-content">
-          {this.state.chapters && renderContentList(this.state.chapters, 1)}
+          {this.state.chapters && renderContentList(this.state.chapters, 1, "")}
         </ul>
       </div>
     );

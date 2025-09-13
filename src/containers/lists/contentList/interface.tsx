@@ -15,4 +15,5 @@ export interface ContentListState {
   currentChapterIndex: number;
   isCollapsed: boolean;
   isExpandContent: boolean;
+  expandedItems: Set<string>;
 }

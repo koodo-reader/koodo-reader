@@ -264,14 +264,12 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
             </div>
 
             <p className="book-item-list-percentage">
-              {percentage
+              {percentage && !isNaN(parseFloat(percentage))
                 ? Math.floor(parseFloat(percentage) * 100) === 0
                   ? "New"
-                  : Math.floor(parseFloat(percentage) * 100) < 10
-                  ? Math.floor(parseFloat(percentage) * 100)
                   : Math.floor(parseFloat(percentage) * 100) === 100
                   ? "Done"
-                  : Math.floor(parseFloat(percentage) * 100)
+                  : (parseFloat(percentage) * 100).toFixed(2)
                 : "0"}
               {Math.floor(parseFloat(percentage) * 100) > 0 &&
                 Math.floor(parseFloat(percentage) * 100) < 100 && (
