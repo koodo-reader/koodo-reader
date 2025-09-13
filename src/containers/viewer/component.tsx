@@ -494,7 +494,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
             }}
           />
         ) : null}
-        {this.props.htmlBook && this.props.currentBook.format !== "PDF" ? (
+        {this.props.htmlBook ? (
           <PopupRefer
             {...{
               rendition: this.props.htmlBook.rendition,
