@@ -33,7 +33,7 @@ export const onSyncCallback = async (service: string, authCode: string) => {
         i18n.t(
           "Request timed out, You may change the server region to China to solve the connection issue in mainland China. Go to Settings > Account"
         ),
-        { id: "adding-sync-error", duration: 8000 }
+        { id: "adding-sync-error", duration: 6000 }
       );
       return;
     }
@@ -81,7 +81,7 @@ export const encryptToken = async (service: string, config: any) => {
         i18n.t(
           "Request timed out, You may change the server region to China to solve the connection issue in mainland China. Go to Settings > Account"
         ),
-        { id: "adding-sync-error", duration: 8000 }
+        { id: "adding-sync-error", duration: 6000 }
       );
       return;
     }
@@ -129,7 +129,7 @@ export const decryptToken = async (service: string) => {
         i18n.t(
           "Request timed out, You may change the server region to China to solve the connection issue in mainland China. Go to Settings > Account"
         ),
-        { id: "adding-sync-error", duration: 8000 }
+        { id: "adding-sync-error", duration: 6000 }
       );
       return;
     }
