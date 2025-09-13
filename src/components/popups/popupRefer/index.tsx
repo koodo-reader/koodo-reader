@@ -1,13 +1,7 @@
-import {
-  handleSelection,
-  handleOpenMenu,
-  handleMenuMode,
-  handleNoteKey,
-  handleRenderNoteFunc,
-} from "../../../store/actions";
+import { handleSelection } from "../../../store/actions";
 import { connect } from "react-redux";
 import { stateType } from "../../../store";
-import PopupMenu from "./component";
+import PopupRefer from "./component";
 import { withTranslation } from "react-i18next";
 
 const mapStateToProps = (state: stateType) => {
@@ -24,4 +18,4 @@ const actionCreator = {
 export default connect(
   mapStateToProps,
   actionCreator
-)(withTranslation()(PopupMenu as any) as any);
+)(withTranslation()(PopupRefer as any) as any);
