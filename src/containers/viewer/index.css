@@ -10,14 +10,70 @@
 .scrolling-html-viewer-page {
   overflow-y: auto;
   overflow-x: auto;
+  /* 设置滚动条样式 */
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
 }
-.scrolling-html-viewer-page:hover::-webkit-scrollbar-thumb,
-.scrolling-html-viewer-page:active::-webkit-scrollbar-thumb,
-.scrolling-html-viewer-page:focus::-webkit-scrollbar-thumb {
-  display: block;
+
+/* WebKit 浏览器滚动条样式 */
+.scrolling-html-viewer-page::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
 }
+
+.scrolling-html-viewer-page::-webkit-scrollbar-track {
+  background: transparent;
+}
+
 .scrolling-html-viewer-page::-webkit-scrollbar-thumb {
-  display: none;
+  background: transparent;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+/* 鼠标悬停时显示滚动条 */
+.scrolling-html-viewer-page:hover {
+  scrollbar-color: rgba(0, 0, 0, 0.3) transparent;
+}
+
+.scrolling-html-viewer-page:hover::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.scrolling-html-viewer-page:hover::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+/* 暗黑模式下的滚动条样式 */
+body[style*="background: rgba(47, 52, 55, 1)"]
+  .scrolling-html-viewer-page:hover,
+body[style*="background:rgba(47,52,55,1)"] .scrolling-html-viewer-page:hover,
+[style*="background-color: rgba(44, 47, 49, 1)"]
+  .scrolling-html-viewer-page:hover,
+[style*="backgroundColor: rgba(44,47,49,1)"] .scrolling-html-viewer-page:hover {
+  scrollbar-color: rgba(255, 255, 255, 0.4) transparent;
+}
+
+body[style*="background: rgba(47, 52, 55, 1)"]
+  .scrolling-html-viewer-page:hover::-webkit-scrollbar-thumb,
+body[style*="background:rgba(47,52,55,1)"]
+  .scrolling-html-viewer-page:hover::-webkit-scrollbar-thumb,
+[style*="background-color: rgba(44, 47, 49, 1)"]
+  .scrolling-html-viewer-page:hover::-webkit-scrollbar-thumb,
+[style*="backgroundColor: rgba(44,47,49,1)"]
+  .scrolling-html-viewer-page:hover::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+body[style*="background: rgba(47, 52, 55, 1)"]
+  .scrolling-html-viewer-page:hover::-webkit-scrollbar-thumb:hover,
+body[style*="background:rgba(47,52,55,1)"]
+  .scrolling-html-viewer-page:hover::-webkit-scrollbar-thumb:hover,
+[style*="background-color: rgba(44, 47, 49, 1)"]
+  .scrolling-html-viewer-page:hover::-webkit-scrollbar-thumb:hover,
+[style*="backgroundColor: rgba(44,47,49,1)"]
+  .scrolling-html-viewer-page:hover::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.6);
 }
 .popup-menu-container {
   position: absolute;
