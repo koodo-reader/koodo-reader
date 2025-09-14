@@ -32,7 +32,7 @@ export const loginRegister = async (service: string, code: string) => {
       );
       return;
     }
-  }, 10000);
+  }, 6000);
   let response = await userRequest.loginRegister({
     code,
     provider: service,
