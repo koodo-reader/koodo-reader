@@ -37,7 +37,7 @@ export const onSyncCallback = async (service: string, authCode: string) => {
       );
       return;
     }
-  }, 10000);
+  }, 6000);
   let refreshToken = await syncUtil.authToken(authCode);
   clearTimeout(timer);
   if (!refreshToken) {
@@ -85,7 +85,7 @@ export const encryptToken = async (service: string, config: any) => {
       );
       return;
     }
-  }, 10000);
+  }, 6000);
   let response = await thirdpartyRequest.encryptToken({
     token: syncToken,
   });
@@ -133,7 +133,7 @@ export const decryptToken = async (service: string) => {
       );
       return;
     }
-  }, 10000);
+  }, 6000);
   let encryptedToken = await TokenService.getToken(service + "_token");
   clearTimeout(timer);
   if (!encryptedToken || encryptedToken === "{}") {
