@@ -38,9 +38,9 @@ export const onSyncCallback = async (service: string, authCode: string) => {
       return;
     }
   }, 6000);
-  let refreshToken = await syncUtil.authToken(authCode);
+  let result = await syncUtil.authToken(authCode);
   clearTimeout(timer);
-  if (!refreshToken) {
+  if (!result.refresh_token) {
     toast.error(i18n.t("Authorization failed"), { id: "adding-sync-id" });
     return;
   }
@@ -51,13 +51,28 @@ export const onSyncCallback = async (service: string, authCode: string) => {
     region = parts[1];
   }
   // FOR PCLOUD, THE REFRESH TOKEN IS THE ACCESS TOKEN, ACCESS TOKEN NEVER EXPIRES
-  let res = await encryptToken(service, {
-    refresh_token: refreshToken,
-    region,
-    auth_date: new Date().getTime(),
-    service: service,
-    version: 1,
-  });
+  let res = await encryptToken(
+    service,
+    service === "yiyiwu" || service === "dubox"
+      ? {
+          refresh_token: result.refresh_token,
+          access_token: result.access_token || "",
+          expires_at:
+            new Date().getTime() +
+            (service === "yiyiwu" ? 7200 * 1000 : 2592000 * 1000),
+          region,
+          auth_date: new Date().getTime(),
+          service: service,
+          version: 1,
+        }
+      : {
+          refresh_token: result.refresh_token,
+          region,
+          auth_date: new Date().getTime(),
+          service: service,
+          version: 1,
+        }
+  );
   if (res.code === 200) {
     ConfigService.setListConfig(service, "dataSourceList");
     toast.success(i18n.t("Binding successful"), { id: "adding-sync-id" });

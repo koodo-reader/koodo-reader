@@ -1,7 +1,7 @@
 .book-content-list {
   float: left;
   width: calc(100% - 15px);
-  margin-left: 18px;
+  margin-left: 15px;
 }
 .book-content-name {
   display: block;
