@@ -33,48 +33,17 @@
 
 /* 鼠标悬停时显示滚动条 */
 .scrolling-html-viewer-page:hover {
-  scrollbar-color: rgba(0, 0, 0, 0.3) transparent;
+  scrollbar-color: #ccc transparent;
 }
 
 .scrolling-html-viewer-page:hover::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.3);
+  background: #ccc;
 }
 
 .scrolling-html-viewer-page:hover::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 0, 0, 0.5);
+  background: #ccc;
 }
 
-/* 暗黑模式下的滚动条样式 */
-body[style*="background: rgba(47, 52, 55, 1)"]
-  .scrolling-html-viewer-page:hover,
-body[style*="background:rgba(47,52,55,1)"] .scrolling-html-viewer-page:hover,
-[style*="background-color: rgba(44, 47, 49, 1)"]
-  .scrolling-html-viewer-page:hover,
-[style*="backgroundColor: rgba(44,47,49,1)"] .scrolling-html-viewer-page:hover {
-  scrollbar-color: rgba(255, 255, 255, 0.4) transparent;
-}
-
-body[style*="background: rgba(47, 52, 55, 1)"]
-  .scrolling-html-viewer-page:hover::-webkit-scrollbar-thumb,
-body[style*="background:rgba(47,52,55,1)"]
-  .scrolling-html-viewer-page:hover::-webkit-scrollbar-thumb,
-[style*="background-color: rgba(44, 47, 49, 1)"]
-  .scrolling-html-viewer-page:hover::-webkit-scrollbar-thumb,
-[style*="backgroundColor: rgba(44,47,49,1)"]
-  .scrolling-html-viewer-page:hover::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.4);
-}
-
-body[style*="background: rgba(47, 52, 55, 1)"]
-  .scrolling-html-viewer-page:hover::-webkit-scrollbar-thumb:hover,
-body[style*="background:rgba(47,52,55,1)"]
-  .scrolling-html-viewer-page:hover::-webkit-scrollbar-thumb:hover,
-[style*="background-color: rgba(44, 47, 49, 1)"]
-  .scrolling-html-viewer-page:hover::-webkit-scrollbar-thumb:hover,
-[style*="backgroundColor: rgba(44,47,49,1)"]
-  .scrolling-html-viewer-page:hover::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.6);
-}
 .popup-menu-container {
   position: absolute;
   left: 100px;
