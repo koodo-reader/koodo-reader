@@ -59,7 +59,7 @@ export const onSyncCallback = async (service: string, authCode: string) => {
           access_token: result.access_token || "",
           expires_at:
             new Date().getTime() +
-            (service === "yiyiwu" ? 7200 * 1000 : 2592000 * 1000),
+            (service === "yiyiwu" ? 30 * 60 * 1000 : 2592000 * 1000),
           region,
           auth_date: new Date().getTime(),
           service: service,
