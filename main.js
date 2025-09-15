@@ -12,6 +12,7 @@ const {
 const path = require("path");
 const isDev = require("electron-is-dev");
 const Store = require("electron-store");
+const { autoUpdater } = require('electron-updater');
 const os = require("os");
 const store = new Store();
 const fs = require("fs");
@@ -192,7 +193,12 @@ const createMainWin = () => {
       mainView.setBounds({ x: 0, y: 0, width: width, height: height })
     }
   });
-
+  mainWin.once('ready-to-show', () => {
+    autoUpdater.checkForUpdatesAndNotify();
+  });
+  ipcMain.on('update-app', () => {
+    autoUpdater.quitAndInstall();
+  });
   ipcMain.handle("open-book", (event, config) => {
     let { url, isMergeWord, isAutoFullscreen, isPreventSleep } = config;
     options.webPreferences.nodeIntegrationInSubFrames = true;
@@ -821,4 +827,11 @@ const handleCallback = (url) => {
     console.error('Error handling callback URL:', error);
     console.log('Problematic URL:', url);
   }
-};   
+};
+
+autoUpdater.on('update-available', () => {
+  console.log('Update available');
+});
+autoUpdater.on('update-downloaded', () => {
+  console.log('Update downloaded');
+});
