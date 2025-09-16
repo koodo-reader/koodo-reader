@@ -39,8 +39,8 @@
   line-height: 36px;
   text-align: center;
   cursor: pointer;
-  z-index: 50;
   transition: 0.1s;
+  z-index: 50;
   font-size: 15px;
 }
 .new-version-copy {

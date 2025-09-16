@@ -17,6 +17,7 @@ import {
   TokenService,
 } from "../../../assets/lib/kookit-extra-browser.min";
 import toast from "react-hot-toast";
+import { isWindows } from "react-device-detect";
 const newOptions = {
   loop: false,
   autoplay: true,
@@ -31,6 +32,10 @@ class UpdateInfo extends React.Component<UpdateInfoProps, UpdateInfoState> {
     super(props);
     this.state = {
       updateLog: "",
+      progress: 0,
+      downloadedMB: 0,
+      totalMB: 0,
+      isDownloading: false,
     };
   }
   async componentDidMount() {
@@ -143,37 +148,86 @@ class UpdateInfo extends React.Component<UpdateInfoProps, UpdateInfoState> {
               <div className="new-version-animation">
                 <Lottie options={newOptions} height={220} width={220} />
               </div>
-              <div style={{ display: "flex", justifyContent: "center" }}>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  marginBottom: 10,
+                }}
+              >
                 <div
                   className="new-version-open"
                   onClick={() => {
-                    if (
-                      ConfigService.getReaderConfig("lang") &&
-                      ConfigService.getReaderConfig("lang").startsWith("zh")
-                    ) {
-                      openExternalUrl(
-                        WEBSITE_URL +
-                          "/zh/download" +
-                          "?version=" +
-                          (this.state.updateLog.stable === "yes"
-                            ? "stable"
-                            : "developer")
+                    if (isWindows) {
+                      const { ipcRenderer } = window.require("electron");
+                      // 先注册事件监听器，再调用下载
+                      this.setState({ isDownloading: true });
+                      ipcRenderer.on(
+                        "download-app-progress",
+                        (_event: any, config: any) => {
+                          console.log("download-app-progress", config);
+                          this.setState({
+                            progress: config.progress,
+                            downloadedMB: config.downloadedMB,
+                            totalMB: config.totalMB,
+                          });
+                          toast.loading(
+                            this.props.t("Downloading") +
+                              `(${config.downloadedMB} / ${config.totalMB} MB)`,
+                            { id: "download-progress" }
+                          );
+                        }
                       );
+                      ipcRenderer.invoke("update-win-app", {
+                        version: this.state.updateLog.version,
+                      });
                     } else {
-                      openExternalUrl(
-                        WEBSITE_URL +
-                          "/en/download" +
-                          "?version=" +
-                          (this.state.updateLog.stable === "yes"
-                            ? "stable"
-                            : "developer")
-                      );
+                      if (
+                        ConfigService.getReaderConfig("lang") &&
+                        ConfigService.getReaderConfig("lang").startsWith("zh")
+                      ) {
+                        openExternalUrl(
+                          WEBSITE_URL +
+                            "/zh/download" +
+                            "?version=" +
+                            (this.state.updateLog.stable === "yes"
+                              ? "stable"
+                              : "developer")
+                        );
+                      } else {
+                        openExternalUrl(
+                          WEBSITE_URL +
+                            "/en/download" +
+                            "?version=" +
+                            (this.state.updateLog.stable === "yes"
+                              ? "stable"
+                              : "developer")
+                        );
+                      }
                     }
                   }}
                 >
-                  <Trans>Download</Trans>
+                  {this.state.isDownloading ? (
+                    <span style={{ fontSize: 13 }}>{this.state.progress}%</span>
+                  ) : (
+                    <Trans>Download</Trans>
+                  )}
                 </div>
               </div>
+              {isWindows && (
+                <div
+                  className="new-version-skip"
+                  onClick={() => {
+                    ConfigService.setReaderConfig(
+                      "skipVersion",
+                      this.state.updateLog.version
+                    );
+                    this.handleClose();
+                  }}
+                >
+                  <Trans>Download in Browser</Trans>
+                </div>
+              )}
               {this.state.updateLog.stable !== "yes" && (
                 <div
                   className="new-version-skip"
@@ -184,7 +238,6 @@ class UpdateInfo extends React.Component<UpdateInfoProps, UpdateInfoState> {
                     );
                     this.handleClose();
                   }}
-                  style={{ marginTop: 5 }}
                 >
                   <Trans>Skip this version</Trans>
                 </div>

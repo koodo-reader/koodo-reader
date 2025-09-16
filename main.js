@@ -12,7 +12,6 @@ const {
 const path = require("path");
 const isDev = require("electron-is-dev");
 const Store = require("electron-store");
-const { autoUpdater } = require('electron-updater');
 const os = require("os");
 const store = new Store();
 const fs = require("fs");
@@ -193,11 +192,68 @@ const createMainWin = () => {
       mainView.setBounds({ x: 0, y: 0, width: width, height: height })
     }
   });
-  mainWin.once('ready-to-show', () => {
-    autoUpdater.checkForUpdatesAndNotify();
-  });
-  ipcMain.on('update-app', () => {
-    autoUpdater.quitAndInstall();
+  ipcMain.handle('update-win-app', (event, config) => {
+    let fileName = `koodo-reader-installer.exe`;
+    let supportedArchs = ['x64', 'ia32', 'arm64'];
+    //get system arch
+    let arch = os.arch();
+    if (!supportedArchs.includes(arch)) {
+      return;
+    }
+
+    let url = `https://dl.koodoreader.com/v${config.version}/Koodo-Reader-${config.version}-${arch}.exe`;
+    const https = require("https");
+    const { spawn } = require("child_process");
+    const file = fs.createWriteStream(path.join(app.getPath('temp'), fileName));
+    https.get(url, (res) => {
+      const totalSize = parseInt(res.headers['content-length'], 10);
+      let downloadedSize = 0;
+      res.on('data', (chunk) => {
+        downloadedSize += chunk.length;
+        const progress = ((downloadedSize / totalSize) * 100).toFixed(2);
+        const downloadedMB = (downloadedSize / 1024 / 1024).toFixed(2);
+        const totalMB = (totalSize / 1024 / 1024).toFixed(2);
+        mainWin.webContents.send('download-app-progress', { progress, downloadedMB, totalMB });
+      });
+
+      res.pipe(file);
+      file.on('finish', () => {
+        console.log('\n下载完成！');
+        file.close();
+
+
+        let updateExePath = path.join(app.getPath('temp'), fileName);
+        if (!fs.existsSync(updateExePath)) {
+          console.error('更新包不存在:', updateExePath);
+          return;
+        }
+        // 验证文件可执行性
+        try {
+          fs.accessSync(updateExePath, fs.constants.X_OK);
+          console.info('更新包可执行性验证通过');
+        } catch (err) {
+          console.error('更新包不可执行:', err.message);
+          return;
+        }
+        try {
+          // 使用 spawn 执行非静默安装
+          const child = spawn(updateExePath, [], {
+            stdio: ['ignore', 'pipe', 'pipe'], // 捕获 stdout 和 stderr 以便调试
+            detached: true,                    // 独立进程
+            shell: true,                      // 确保 UAC 提示
+            windowsHide: false                // 确保窗口可见
+          });
+
+
+          setTimeout(() => {
+            app.quit();
+          }, 1000);
+          child.unref();
+        } catch (err) {
+          console.error(`spawn 执行异常: ${err.message}`);
+        }
+      });
+    });
   });
   ipcMain.handle("open-book", (event, config) => {
     let { url, isMergeWord, isAutoFullscreen, isPreventSleep } = config;
@@ -573,9 +629,9 @@ const createMainWin = () => {
       chatWindow.loadURL(config.url);
       //insert chatwoot script
       const script = `
-        const script = document.createElement('script');
-        script.type = 'text/javascript';
-        script.text = \`
+    const script = document.createElement('script');
+    script.type = 'text/javascript';
+    script.text = \`
           (function (d, t) {
             var BASE_URL = "https://app.chatwoot.com";
             var g = d.createElement(t),
@@ -828,10 +884,3 @@ const handleCallback = (url) => {
     console.log('Problematic URL:', url);
   }
 };
-
-autoUpdater.on('update-available', () => {
-  console.log('Update available');
-});
-autoUpdater.on('update-downloaded', () => {
-  console.log('Update downloaded');
-});
