@@ -244,7 +244,9 @@
         {
           "target": "nsis",
           "arch": [
-            "x64"
+            "x64",
+            "ia32",
+            "arm64"
           ]
         },
         {
@@ -311,8 +313,9 @@
     },
     "nsis": {
       "artifactName": "${productName}-${version}-${arch}.${ext}",
-      "oneClick": true,
-      "allowToChangeInstallationDirectory": false,
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "buildUniversalInstaller": false,
       "include": "assets/windows/installer.nsh"
     },
     "snap": {
