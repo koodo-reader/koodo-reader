@@ -19,6 +19,12 @@ RELEASE=$(curl --silent "https://api.github.com/repos/$USER/$REPO/releases/lates
 # Get the assets from the release
 ASSETS=$(echo $RELEASE | jq -r '.assets[] | .browser_download_url')
 
+# 只过滤掉文件名中包含arm64-Win.zip的链接
+ASSETS=$(echo "$ASSETS" | grep -v '/arm64-Win.zip$')
+ASSETS=$(echo "$ASSETS" | grep -v '/ia32-Win.zip$')
+ASSETS=$(echo "$ASSETS" | grep -v '/arm64-Portable.exe$')
+ASSETS=$(echo "$ASSETS" | grep -v '/ia32-Portable.exe$')
+
 # Get the tag name
 TAG=$(echo $RELEASE | jq -r '.tag_name')
 
