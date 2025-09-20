@@ -309,8 +309,8 @@
     },
     "nsis": {
       "artifactName": "${productName}-${version}-${arch}.${ext}",
-      "oneClick": false,
-      "allowToChangeInstallationDirectory": true,
+      "oneClick": true,
+      "allowToChangeInstallationDirectory": false,
       "buildUniversalInstaller": false,
       "include": "assets/windows/installer.nsh"
     },
