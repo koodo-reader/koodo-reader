@@ -83,41 +83,41 @@ jobs:
           # macOS notarization API key
           API_KEY_ID: ${{ secrets.API_KEY_ID }}
           API_KEY_ISSUER_ID: ${{ secrets.API_KEY_ISSUER_ID }}
-      - name: Modify package.json for Windows arm64 build
-        if: startsWith(matrix.os, 'windows')
-        run: |
-          $packageJson = Get-Content package.json -Raw | ConvertFrom-Json
-          $packageJson.build.win.target = @(
-            @{
-              target = "nsis"
-              arch = @("arm64")
-            }
-          )
-          $packageJson | ConvertTo-Json -Depth 10 | Set-Content package.json
-      - name: Build/release arm64 Electron app
-        if: startsWith(matrix.os, 'windows')
-        uses: samuelmeuli/action-electron-builder@v1.6.0
-        with:
-          build_script_name: "build"
-          # GitHub token, automatically provided to the action
-          # (No need to define this secret in the repo settings)
-          github_token: ${{ secrets.github_token }}
-      - name: Modify package.json for Windows x32 build
-        if: startsWith(matrix.os, 'windows')
-        run: |
-          $packageJson = Get-Content package.json -Raw | ConvertFrom-Json
-          $packageJson.build.win.target = @(
-            @{
-              target = "nsis"
-              arch = @("ia32")
-            }
-          )
-          $packageJson | ConvertTo-Json -Depth 10 | Set-Content package.json
-      - name: Build/release x32 Electron app
-        if: startsWith(matrix.os, 'windows')
-        uses: samuelmeuli/action-electron-builder@v1.6.0
-        with:
-          build_script_name: "build"
-          # GitHub token, automatically provided to the action
-          # (No need to define this secret in the repo settings)
-          github_token: ${{ secrets.github_token }}
+      # - name: Modify package.json for Windows arm64 build
+      #   if: startsWith(matrix.os, 'windows')
+      #   run: |
+      #     $packageJson = Get-Content package.json -Raw | ConvertFrom-Json
+      #     $packageJson.build.win.target = @(
+      #       @{
+      #         target = "nsis"
+      #         arch = @("arm64")
+      #       }
+      #     )
+      #     $packageJson | ConvertTo-Json -Depth 10 | Set-Content package.json
+      # - name: Build/release arm64 Electron app
+      #   if: startsWith(matrix.os, 'windows')
+      #   uses: samuelmeuli/action-electron-builder@v1.6.0
+      #   with:
+      #     build_script_name: "build"
+      #     # GitHub token, automatically provided to the action
+      #     # (No need to define this secret in the repo settings)
+      #     github_token: ${{ secrets.github_token }}
+      # - name: Modify package.json for Windows x32 build
+      #   if: startsWith(matrix.os, 'windows')
+      #   run: |
+      #     $packageJson = Get-Content package.json -Raw | ConvertFrom-Json
+      #     $packageJson.build.win.target = @(
+      #       @{
+      #         target = "nsis"
+      #         arch = @("ia32")
+      #       }
+      #     )
+      #     $packageJson | ConvertTo-Json -Depth 10 | Set-Content package.json
+      # - name: Build/release x32 Electron app
+      #   if: startsWith(matrix.os, 'windows')
+      #   uses: samuelmeuli/action-electron-builder@v1.6.0
+      #   with:
+      #     build_script_name: "build"
+      #     # GitHub token, automatically provided to the action
+      #     # (No need to define this secret in the repo settings)
+      #     github_token: ${{ secrets.github_token }}
