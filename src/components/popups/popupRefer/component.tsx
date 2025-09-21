@@ -188,7 +188,6 @@ class PopupRefer extends React.Component<PopupReferProps, PopupReferStates> {
       rendition.resolveChapter(href)
     ) {
       let chapterInfo = rendition.resolveChapter(href);
-      console.log(href, chapterInfo);
       await rendition.goToChapter(
         chapterInfo.index,
         chapterInfo.href,

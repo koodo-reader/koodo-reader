@@ -165,7 +165,6 @@ class UpdateInfo extends React.Component<UpdateInfoProps, UpdateInfoState> {
                       ipcRenderer.on(
                         "download-app-progress",
                         (_event: any, config: any) => {
-                          console.log("download-app-progress", config);
                           this.setState({
                             progress: config.progress,
                             downloadedMB: config.downloadedMB,
