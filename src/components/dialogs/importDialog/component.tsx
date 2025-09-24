@@ -383,6 +383,7 @@ class ImportDialog extends React.Component<
                         let settingDrive = item.value;
                         if (
                           settingDrive === "dropbox" ||
+                          settingDrive === "yandex" ||
                           settingDrive === "yiyiwu" ||
                           settingDrive === "dubox" ||
                           settingDrive === "google" ||
