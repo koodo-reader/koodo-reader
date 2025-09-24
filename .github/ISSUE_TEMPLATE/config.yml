@@ -5,10 +5,16 @@ contact_links:
     about: Have questions or need help using Koodo Reader.
   - name: 问题咨询
     url: https://koodoreader.com/zh/support
-    about: 有疑问或需要帮助？在这里询问，我们会尽快提供帮助。
-  - name: Bug Report
+    about: 有疑问或需要帮助
+  - name: Report Issue
     url: https://koodoreader.com/en/support
-    about: Things don't work as intended
-  - name: 提交 Bug
+    about: Encountered a bug or technical problem
+  - name: 报告问题
     url: https://koodoreader.com/zh/support
-    about: 我在使用 Koodo Reader 时遇到了Bug
+    about: 遇到错误或技术问题
+  - name: Feature Request
+    url: https://koodoreader.com/en/support
+    about: Have an idea for a new feature or improvement
+  - name: 功能建议
+    url: https://koodoreader.com/zh/support
+    about: 希望添加新功能或觉得需要改进
