@@ -187,7 +187,7 @@ Make sure that you have installed yarn and git
 
 3. Translate the terms to your target language based on the given English reference
 
-4. Sumbit the translation file or just translation snippets based on the amount of your translation to [this link](https://github.com/koodo-reader/koodo-reader/issues/new?assignees=&labels=submit+translation&projects=&template=3_submit_translation.yml). Pull request is also welcomed.
+4. Sumbit the translation file or just translation snippets based on the amount of your translation to [this link](https://github.com/koodo-reader/koodo-reader/issues/new?assignees=&labels=submit+translation&projects=&template=submit_translation.yml). Pull request is also welcomed.
 
 | Language(A-Z)   | Code  | View                                                |
 | --------------- | ----- | --------------------------------------------------- |
@@ -237,4 +237,4 @@ Make sure that you have installed yarn and git
 
 1. If you can't find your target language from the above list, Download the Engish source file from [this link](./src/assets/locales/en/translation.json)
 
-2. When you finish translation, submit the source file to [this link](https://github.com/koodo-reader/koodo-reader/issues/new?assignees=&labels=submit+translation&projects=&template=3_submit_translation.yml). Pull request is also welcomed.
+2. When you finish translation, submit the source file to [this link](https://github.com/koodo-reader/koodo-reader/issues/new?assignees=&labels=submit+translation&projects=&template=submit_translation.yml). Pull request is also welcomed.
