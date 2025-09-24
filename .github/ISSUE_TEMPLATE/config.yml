@@ -1,14 +1,14 @@
 blank_issues_enabled: false
 contact_links:
-  - name: Bug Report
-    url: https://koodoreader.com/en/support
-    about: Things don't work as intended
-  - name: 提交 Bug
-    url: https://koodoreader.com/zh/support
-    about: 我在使用 Koodo Reader 时遇到了Bug
   - name: General Inquiry
     url: https://koodoreader.com/en/support
     about: Have questions or need help using Koodo Reader.
   - name: 问题咨询
     url: https://koodoreader.com/zh/support
     about: 有疑问或需要帮助？在这里询问，我们会尽快提供帮助。
+  - name: Bug Report
+    url: https://koodoreader.com/en/support
+    about: Things don't work as intended
+  - name: 提交 Bug
+    url: https://koodoreader.com/zh/support
+    about: 我在使用 Koodo Reader 时遇到了Bug
