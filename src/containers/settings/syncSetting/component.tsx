@@ -96,6 +96,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
     let settingDrive = targetDrive;
     if (
       settingDrive === "dropbox" ||
+      settingDrive === "yandex" ||
       settingDrive === "dubox" ||
       settingDrive === "yiyiwu" ||
       settingDrive === "google" ||
@@ -444,6 +445,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                 </div>
                 {(this.props.settingDrive === "dropbox" ||
                   this.props.settingDrive === "dubox" ||
+                  this.props.settingDrive === "yandex" ||
                   this.props.settingDrive === "yiyiwu" ||
                   this.props.settingDrive === "google" ||
                   this.props.settingDrive === "boxnet" ||
