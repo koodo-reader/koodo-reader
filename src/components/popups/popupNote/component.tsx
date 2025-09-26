@@ -202,7 +202,7 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
             <textarea className="editor-box" />
           </div>
           <div
-            className="note-tags note-tags-container"
+            className="note-tags"
             style={{
               position: "absolute",
               bottom: "35px",

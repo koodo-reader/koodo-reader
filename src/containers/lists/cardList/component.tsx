@@ -15,10 +15,116 @@ import {
   SortUtil,
 } from "../../../assets/lib/kookit-extra-browser.min";
 class CardList extends React.Component<CardListProps, CardListStates> {
+  private containerRef: React.RefObject<HTMLDivElement>;
+  private scrollTimer: NodeJS.Timeout | null = null;
+
   constructor(props: CardListProps) {
     super(props);
-    this.state = { deleteKey: "" };
+    this.containerRef = React.createRef();
+    this.state = {
+      displayedCards: [],
+      currentPage: 1,
+      itemsPerPage: 16, // 每页显示16个卡片，适合屏幕显示
+      isLoading: false,
+    };
   }
+
+  componentDidMount() {
+    this.loadInitialCards();
+    this.addScrollListener();
+  }
+
+  componentDidUpdate(prevProps: CardListProps) {
+    // 当cards prop发生变化时，重新初始化
+    if (prevProps.cards !== this.props.cards) {
+      this.loadInitialCards();
+    }
+  }
+
+  componentWillUnmount() {
+    this.removeScrollListener();
+    // 清理定时器
+    if (this.scrollTimer) {
+      clearTimeout(this.scrollTimer);
+    }
+  }
+
+  loadInitialCards = () => {
+    const { cards } = this.props;
+    const { itemsPerPage } = this.state;
+
+    // 根据屏幕大小动态调整每页显示的卡片数量
+    const screenHeight = window.innerHeight;
+    const adaptiveItemsPerPage =
+      screenHeight > 800 ? itemsPerPage + 8 : itemsPerPage;
+
+    this.setState({
+      displayedCards: cards.slice(0, adaptiveItemsPerPage),
+      currentPage: 1,
+      isLoading: false,
+      itemsPerPage: adaptiveItemsPerPage,
+    });
+  };
+
+  loadMoreCards = () => {
+    const { cards } = this.props;
+    const { displayedCards, currentPage, itemsPerPage, isLoading } = this.state;
+
+    if (isLoading || displayedCards.length >= cards.length) {
+      return;
+    }
+
+    this.setState({ isLoading: true });
+
+    // 模拟异步加载延迟
+    setTimeout(() => {
+      const nextPage = currentPage + 1;
+      const startIndex = currentPage * itemsPerPage;
+      const endIndex = nextPage * itemsPerPage;
+      const newCards = cards.slice(startIndex, endIndex);
+
+      this.setState({
+        displayedCards: [...displayedCards, ...newCards],
+        currentPage: nextPage,
+        isLoading: false,
+      });
+    }, 200);
+  };
+
+  handleScroll = () => {
+    // 清除之前的定时器
+    if (this.scrollTimer) {
+      clearTimeout(this.scrollTimer);
+    }
+
+    // 设置防抖定时器
+    this.scrollTimer = setTimeout(() => {
+      const container = this.containerRef.current;
+      if (!container) return;
+
+      const { scrollTop, scrollHeight, clientHeight } = container;
+
+      // 当滚动到距离底部100px时开始加载更多
+      if (scrollHeight - scrollTop - clientHeight < 100) {
+        this.loadMoreCards();
+      }
+    }, 100); // 100ms防抖延迟
+  };
+
+  addScrollListener = () => {
+    const container = this.containerRef.current;
+    if (container) {
+      container.addEventListener("scroll", this.handleScroll);
+    }
+  };
+
+  removeScrollListener = () => {
+    const container = this.containerRef.current;
+    if (container) {
+      container.removeEventListener("scroll", this.handleScroll);
+    }
+  };
+
   handleBookName = (bookKey: string) => {
     let { books } = this.props;
     let bookName = "";
@@ -30,8 +136,14 @@ class CardList extends React.Component<CardListProps, CardListStates> {
     }
     return bookName;
   };
-  handleShowDelete = (deleteKey: string) => {
-    this.setState({ deleteKey });
+
+  formatTimestamp = (timestamp: string) => {
+    try {
+      const date = new Date(parseInt(timestamp));
+      return date.toLocaleString();
+    } catch (error) {
+      return timestamp; // 如果转换失败，返回原始值
+    }
   };
   handleJump = (note: NoteModel) => {
     let { books } = this.props;
@@ -65,31 +177,18 @@ class CardList extends React.Component<CardListProps, CardListStates> {
   };
   render() {
     let { cards } = this.props;
+    const { displayedCards, isLoading } = this.state;
+
     if (cards.length === 0) {
       return <Redirect to="/manager/empty" />;
     }
 
-    let noteObj = SortUtil.sortNotes(
-      cards,
-      this.props.noteSortCode,
-      this.props.books
-    );
-    const renderCardListItem = (title: string) => {
-      return noteObj![title].map((item: NoteModel, index: number) => {
-        const cardProps = {
-          itemKey: item.key,
-          mode: "notes",
-        };
+    const renderCardListItem = (notes) => {
+      return notes.map((item: NoteModel, index: number) => {
         return (
           <li
             className="card-list-item"
             key={index}
-            onMouseOver={() => {
-              this.handleShowDelete(item.key);
-            }}
-            onMouseLeave={() => {
-              this.handleShowDelete("");
-            }}
             style={
               this.props.mode === "note" && !this.props.isCollapsed
                 ? { height: "250px" }
@@ -101,10 +200,11 @@ class CardList extends React.Component<CardListProps, CardListStates> {
             }
           >
             <div className="card-list-item-card">
-              <div style={{ position: "relative", bottom: "25px" }}>
-                {this.state.deleteKey === item.key ? (
-                  <DeleteIcon {...cardProps} />
-                ) : null}
+              <div
+                className="card-list-item-title"
+                style={{ padding: 15, opacity: 0.6 }}
+              >
+                {this.formatTimestamp(item.key)}
               </div>
               <div className="card-list-item-text-parent">
                 <div className="card-list-item-note">
@@ -127,23 +227,6 @@ class CardList extends React.Component<CardListProps, CardListStates> {
                 <div className="card-list-item-chapter card-list-item-title">
                   》{item.chapter}
                 </div>
-              </div>
-              <div
-                className="note-tags"
-                style={{
-                  position: "absolute",
-                  bottom: "60px",
-                  height: "30px",
-                  overflow: "hidden",
-                }}
-              >
-                <NoteTag
-                  {...{
-                    handleTag: () => {},
-                    tag: item.tag || [],
-                    isCard: true,
-                  }}
-                />
               </div>
               <div className="card-list-item-show-more-container">
                 <span
@@ -186,19 +269,16 @@ class CardList extends React.Component<CardListProps, CardListStates> {
         );
       });
     };
-    const renderCardList = () => {
-      return Object.keys(noteObj!).map((item, index) => {
-        return (
-          <li className="card-page-item" key={index}>
-            <div className="card-page-item-date">{item}</div>
-            <ul className="card-list-container-box">
-              {renderCardListItem(item)}
-            </ul>
-          </li>
-        );
-      });
-    };
-    return <div className="card-list-container">{renderCardList()}</div>;
+    return (
+      <div className="card-list-container" ref={this.containerRef}>
+        {renderCardListItem(displayedCards)}
+        {isLoading && (
+          <div className="card-list-loading">
+            <div className="loading-spinner">{this.props.t("Loading")}...</div>
+          </div>
+        )}
+      </div>
+    );
   }
 }
 

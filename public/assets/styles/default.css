@@ -59,7 +59,7 @@ a {
 .token-dialog-link-text,
 .token-dialog-token-text,
 .nav-search-page-item {
-  border: 2px solid rgba(75, 75, 75, 1);
+  border: 1.5px solid rgba(75, 75, 75, 1);
 }
 .header-search-box,
 .header-search-box::placeholder,
@@ -196,7 +196,6 @@ a {
 .exit-reading-button,
 .add-bookmark-button,
 .enter-fullscreen-button,
-.card-list-item-card,
 .navigation-header,
 .book-cover {
   box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.18);
@@ -260,4 +259,7 @@ a {
 .nav-search-list-item,
 .sort-dialog-seperator {
   border-bottom: 1px solid rgba(75, 75, 75, 0.1);
+}
+.card-list-item-card {
+  border: 1.5px solid rgba(75, 75, 75, 0.15);
 }

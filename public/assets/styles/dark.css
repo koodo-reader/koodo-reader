@@ -51,7 +51,7 @@ a {
 .token-dialog-link-text,
 .token-dialog-token-text,
 .nav-search-page-item {
-  border: 2px solid rgba(235, 235, 235, 1);
+  border: 1.5px solid rgba(235, 235, 235, 1);
 }
 
 .header-search-box,
@@ -182,7 +182,6 @@ a {
 .exit-reading-button,
 .add-bookmark-button,
 .enter-fullscreen-button,
-.card-list-item-card,
 .navigation-header {
   box-shadow: 0px 0px 5px rgba(30, 30, 30, 1);
 }
@@ -272,6 +271,9 @@ input,
 .nav-search-list-item,
 .sort-dialog-seperator {
   border-bottom: 1px solid rgba(235, 235, 235, 0.1);
+}
+.card-list-item-card {
+  border: 1px solid rgba(235, 235, 235, 0.1);
 }
 .popup-menu-triangle-up,
 .active-tag,

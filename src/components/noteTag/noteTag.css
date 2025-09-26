@@ -1,19 +1,21 @@
 .tag-list-item {
   min-width: 45px;
-  height: 20px;
+  height: 24px;
   opacity: 1;
-  border-radius: 12px;
+  border-radius: 15px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  display: inline-block;
   margin-right: 10px;
   font-size: 13px;
   margin-top: 5px;
-  padding-left: 5px;
-  padding-right: 5px;
   font-weight: 500;
+  flex-shrink: 0;
+  white-space: nowrap;
+  padding: 10;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
 .tag-title {
@@ -24,8 +26,47 @@
   font-weight: 500;
 }
 .tag-container {
-  display: inline-block;
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: flex-start;
   margin: 0px 10px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  width: max-content;
+  min-width: calc(100% - 20px);
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
+
+.tag-container:hover {
+  scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+}
+
+.tag-container::-webkit-scrollbar {
+  height: 4px;
+}
+
+.tag-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.tag-container::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 2px;
+}
+
+.tag-container:hover::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.tag-container:hover::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.note-tag-container {
+  display: flex;
+  flex-direction: column;
+  overflow: visible;
 }
 .tag-dropdown-icon {
   float: right;
@@ -61,18 +102,19 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  display: inline-block;
   margin-right: 10px;
   font-size: 10px;
-  margin-top: 5px;
+  margin-top: 9px;
   position: relative;
   bottom: 1px;
   box-sizing: border-box;
+  flex-shrink: 0;
 }
 .icon-add {
   font-weight: bold;
 }
 .delete-tag-container {
   position: relative;
-  left: 25px;
+  left: 30px;
+  bottom: 10px;
 }
