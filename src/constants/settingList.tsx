@@ -87,11 +87,6 @@ export const appearanceSettingList = [
     title: "Don't crop book cover",
     propName: "isDisableCrop",
   },
-  {
-    isElectron: false,
-    title: "Disable pagination in book list",
-    propName: "isDisablePagination",
-  },
 ];
 export const syncSettingList = [
   {

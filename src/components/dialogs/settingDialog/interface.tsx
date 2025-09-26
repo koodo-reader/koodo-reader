@@ -49,7 +49,6 @@ export interface SettingInfoState {
   isPrecacheBook: boolean;
   isUseBuiltIn: boolean;
   isDisableCrop: boolean;
-  isDisablePagination: boolean;
   isOverwriteLink: boolean;
   isDisablePDFCover: boolean;
   isAutoFullscreen: boolean;

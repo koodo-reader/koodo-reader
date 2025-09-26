@@ -56,8 +56,6 @@ class SettingDialog extends React.Component<
       appSkin: ConfigService.getReaderConfig("appSkin"),
       isUseBuiltIn: ConfigService.getReaderConfig("isUseBuiltIn") === "yes",
       isDisableCrop: ConfigService.getReaderConfig("isDisableCrop") === "yes",
-      isDisablePagination:
-        ConfigService.getReaderConfig("isDisablePagination") === "yes",
       isOverwriteLink:
         ConfigService.getReaderConfig("isOverwriteLink") === "yes",
       isDisablePDFCover:
@@ -138,9 +136,6 @@ class SettingDialog extends React.Component<
       this.state[stateName] ? "no" : "yes"
     );
     this.handleRest(this.state[stateName]);
-    if (stateName === "isDisablePagination") {
-      reloadManager();
-    }
   };
   handleResetReaderPosition = () => {
     window

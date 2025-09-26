@@ -17,8 +17,6 @@ import Book from "../../../models/Book";
 declare var window: any;
 let currentBookMode = "home";
 function getBookCountPerPage() {
-  if (ConfigService.getReaderConfig("isDisablePagination") === "yes")
-    return 999;
   const container = document.querySelector(
     ".book-list-container"
   ) as HTMLElement;
