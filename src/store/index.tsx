@@ -66,8 +66,6 @@ export type stateType = {
     isOpenActionDialog: boolean;
     isReading: boolean;
     dragItem: string;
-    currentPage: number;
-    totalPage: number;
     currentBook: BookModel;
     renderBookFunc: () => void;
     importBookFunc: (file: any) => Promise<void>;
