@@ -88,7 +88,7 @@
 .card-list-item-text-parent {
   position: absolute;
   width: 100%;
-  height: 104px;
+  height: 120px;
 }
 .card-list-item-text-note {
   position: absolute;
@@ -111,9 +111,9 @@
 }
 .card-list-item-note {
   width: calc(100% - 25px);
-  height: 73px;
+  height: calc(100% - 48px);
   overflow-y: scroll;
-  margin: 14px 10px 0px 10px;
+  margin: 38px 15px 0px 15px;
   position: absolute;
   cursor: text;
   line-height: 18px;
@@ -178,4 +178,38 @@
   position: absolute;
   bottom: 5px;
   margin-left: calc(50% - 6px);
+}
+
+/* 分页加载相关样式 */
+.card-list-loading {
+  width: 100%;
+  text-align: center;
+  padding: 20px 0;
+  margin: 10px 0;
+}
+
+.loading-spinner {
+  display: inline-block;
+  padding: 12px 24px;
+  font-size: 14px;
+  color: #666;
+  background-color: #f5f5f5;
+  border-radius: 6px;
+  opacity: 0.8;
+}
+
+.card-list-end {
+  width: 100%;
+  text-align: center;
+  padding: 20px 0;
+  margin: 10px 0;
+}
+
+.end-message {
+  display: inline-block;
+  padding: 12px 24px;
+  font-size: 14px;
+  color: #999;
+  border-top: 1px solid #e0e0e0;
+  opacity: 0.6;
 }

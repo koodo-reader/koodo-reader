@@ -88,11 +88,11 @@ class NoteList extends React.Component<NoteListProps, NoteListState> {
         }
       >
         <div className="note-list-header">
-          <div className="note-tags">
+          <div className="note-tags" style={{ width: "calc(100% - 240px)" }}>
             <NoteTag {...{ handleTag: this.handleTag }} />
           </div>
           {noteProps.cards.length > 0 && (
-            <div style={{ marginRight: "10px" }}>
+            <div style={{ marginRight: "10px", marginBottom: "3px" }}>
               <span className="note-list-filter-label">
                 <Trans>Filter by book</Trans>
               </span>

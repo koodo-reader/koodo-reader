@@ -18,5 +18,8 @@ export interface CardListProps extends RouteComponentProps<any> {
   handleShowPopupNote: (isShowPopupNote: boolean) => void;
 }
 export interface CardListStates {
-  deleteKey: string;
+  displayedCards: NoteModel[];
+  currentPage: number;
+  itemsPerPage: number;
+  isLoading: boolean;
 }
