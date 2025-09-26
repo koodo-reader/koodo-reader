@@ -31,4 +31,6 @@ export interface BookListState {
   favoriteBooks: number;
   isHideShelfBook: boolean;
   isRefreshing: boolean;
+  displayedBooksCount: number;
+  isLoadingMore: boolean;
 }
