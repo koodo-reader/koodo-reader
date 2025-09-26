@@ -85,9 +85,7 @@ class ProgressPanel extends React.Component<
         <p className="progress-text" style={{ marginTop: 10 }}>
           <span>
             <Trans>Progress</Trans>:{" "}
-            {Math.round(
-              this.props.percentage > 1 ? 100 : this.props.percentage * 100
-            )}
+            {(parseFloat(this.props.percentage + "") * 100).toFixed(2)}
             %&nbsp;&nbsp;&nbsp;
           </span>
         </p>

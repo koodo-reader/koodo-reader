@@ -129,7 +129,6 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
       ).percentage;
     }
 
-    // let percentage = 0;
     const actionProps = { left: this.state.left, top: this.state.top };
     return (
       <>
@@ -237,16 +236,16 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
           <div className="reading-progress-icon">
             <div style={{ position: "relative", left: "4px" }}>
               {percentage && !isNaN(parseFloat(percentage))
-                ? Math.floor(parseFloat(percentage) * 100) === 0
+                ? percentage === "0"
                   ? "New"
-                  : Math.floor(parseFloat(percentage) * 100) === 100
+                  : percentage === "1"
                   ? "Done"
                   : (parseFloat(percentage) * 100).toFixed(2)
                 : "0"}
-              {Math.floor(parseFloat(percentage) * 100) > 0 &&
-                Math.floor(parseFloat(percentage) * 100) < 100 && (
-                  <span>%</span>
-                )}
+              {percentage &&
+                !isNaN(parseFloat(percentage)) &&
+                percentage !== "0" &&
+                percentage !== "1" && <span>%</span>}
             </div>
           </div>
 

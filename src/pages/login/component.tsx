@@ -493,13 +493,14 @@ class Login extends React.Component<LoginProps, LoginState> {
                               {this.props.t("Recommended (use with Nutstore)")}
                             </div>
                           )}
+
                         {ConfigService.getReaderConfig("lang") &&
                           ConfigService.getReaderConfig("lang").startsWith(
                             "zh"
                           ) &&
-                          item.value === "microsoft" && (
+                          item.value === "yiyiwu" && (
                             <div className="login-sync-text">
-                              {this.props.t("Access may be unstable in China")}
+                              {this.props.t("Only recommended for VIP users")}
                             </div>
                           )}
                         <div className="login-sync-subtitle">

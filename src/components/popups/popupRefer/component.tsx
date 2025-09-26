@@ -67,6 +67,13 @@ class PopupRefer extends React.Component<PopupReferProps, PopupReferStates> {
       }
     }
     let htmlContent = node.innerHTML;
+    console.log(node, node.textContent.trim());
+    if (!node.textContent.trim()) {
+      return false;
+    }
+    if (node.textContent.trim() && node.textContent.trim().length > 300) {
+      return false;
+    }
     //将html代码中的img标签由blob转换为base64
 
     htmlContent = await processHtml(htmlContent);
