@@ -20,8 +20,11 @@ const dirPath = path.join(configDir, "uploads");
 const packageJson = require("./package.json");
 let mainWin;
 let readerWindow;
+let readerWindowList = []
 let urlWindow;
 let mainView;
+//multi tab
+// let mainViewList = []
 let chatWindow;
 let googlePickerView;
 let dbConnection = {};
@@ -275,10 +278,16 @@ const createMainWin = () => {
 
 
     if (isAutoFullscreen === "yes") {
+      if (readerWindow) {
+        readerWindowList.push(readerWindow)
+      }
       readerWindow = new BrowserWindow(options);
       readerWindow.loadURL(url);
       readerWindow.maximize();
     } else {
+      if (readerWindow) {
+        readerWindowList.push(readerWindow)
+      }
       readerWindow = new BrowserWindow({
         ...options,
         width: parseInt(store.get("windowWidth") || 1050),
@@ -603,7 +612,16 @@ const createMainWin = () => {
     event.returnvalue = true;
   });
   ipcMain.handle("reload-reader", (event, arg) => {
-    if (readerWindow) {
+    console.log("reload-reader", readerWindowList.length);
+    if (readerWindowList.length > 0) {
+      readerWindowList.forEach(win => {
+        console.log("reload-reader win", win, !win.isDestroyed());
+        if (win && !win.isDestroyed()) {
+          win.reload();
+        }
+      })
+    }
+    if (readerWindow && !readerWindow.isDestroyed()) {
       readerWindow.reload();
     }
   });
@@ -774,7 +792,11 @@ const createMainWin = () => {
         "isMergeWord",
         store.get("isMergeWord") !== "yes" ? "yes" : "no"
       );
+      if (readerWindow) {
+        readerWindowList.push(readerWindow)
+      }
       readerWindow = new BrowserWindow(options);
+
       readerWindow.loadURL(store.get("url"));
       readerWindow.on("close", (event) => {
         if (!readerWindow.isDestroyed()) {
