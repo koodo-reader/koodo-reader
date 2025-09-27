@@ -60,8 +60,23 @@ class PopupRefer extends React.Component<PopupReferProps, PopupReferStates> {
           "[" + targetElement.textContent.trim() + "]") &&
       node.parentElement
     ) {
-      if (node.parentElement.tagName !== "BODY") {
+      if (
+        node.parentElement.tagName !== "BODY" &&
+        node.parentElement.textContent.trim().length <= 3000
+      ) {
         node = node.parentElement;
+      } else if (node.tagName === "A") {
+        //获取当前a标签和下一个a标签之间的内容
+        let next = node.nextSibling;
+        let content = node.textContent;
+        while (next && next.tagName !== "A") {
+          content += next.textContent;
+          next = next.nextSibling;
+        }
+        if (content.trim() && content.trim().length <= 3000) {
+          node = document.createElement("div");
+          node.innerHTML = content;
+        }
       } else {
         return false;
       }
@@ -71,7 +86,8 @@ class PopupRefer extends React.Component<PopupReferProps, PopupReferStates> {
     if (!node.textContent.trim()) {
       return false;
     }
-    if (node.textContent.trim() && node.textContent.trim().length > 300) {
+    console.log(node, node.textContent.trim(), node.textContent.trim().length);
+    if (node.textContent.trim() && node.textContent.trim().length > 3000) {
       return false;
     }
     //将html代码中的img标签由blob转换为base64
