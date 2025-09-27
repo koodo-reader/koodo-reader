@@ -118,7 +118,6 @@
   cursor: text;
   line-height: 18px;
   font-size: 15px;
-  padding-right: 5px;
   overflow-x: hidden;
 }
 ::-webkit-scrollbar {
