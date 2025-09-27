@@ -476,7 +476,7 @@ class GeneralSetting extends React.Component<
                 setTimeout(() => {
                   reloadManager();
                 }, 300);
-              } else {
+              } else if (answer) {
                 toast.error(this.props.t("Please type 'CLEAR' to confirm"));
               }
             }}

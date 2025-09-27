@@ -72,7 +72,7 @@ a {
 }
 ::-webkit-scrollbar-thumb,
 ::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(75, 75, 75, 0.5);
+  background-color: rgba(75, 75, 75, 0.3);
 }
 .delete-digest-button,
 .add-dialog-confirm,

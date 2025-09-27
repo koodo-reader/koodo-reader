@@ -121,7 +121,7 @@
   overflow-x: hidden;
 }
 ::-webkit-scrollbar {
-  width: 7px;
+  width: 5px;
   height: 0.5rem;
 }
 
@@ -133,8 +133,9 @@
   border-radius: 0;
   transition: all 0.2s;
   border-radius: 0.5rem;
-  opacity: 0.5;
+  opacity: 0.2;
   border-left: solid 0.5rem transparent;
+  cursor: pointer;
 }
 .card-list-item-title {
   float: left;
