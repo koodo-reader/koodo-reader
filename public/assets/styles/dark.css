@@ -227,7 +227,7 @@ a {
 .active-tag,
 .active-page,
 .sk-chase-dot:before {
-  background-color: rgba(235, 235, 235, 1) !important;
+  background-color: rgba(235, 235, 235, 0.5);
 }
 .exit-reading-text,
 .add-bookmark-text,
