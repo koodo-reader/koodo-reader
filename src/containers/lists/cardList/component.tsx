@@ -17,7 +17,6 @@ import {
 class CardList extends React.Component<CardListProps, CardListStates> {
   private containerRef: React.RefObject<HTMLDivElement>;
   private scrollTimer: NodeJS.Timeout | null = null;
-
   constructor(props: CardListProps) {
     super(props);
     this.containerRef = React.createRef();
@@ -36,7 +35,10 @@ class CardList extends React.Component<CardListProps, CardListStates> {
 
   componentDidUpdate(prevProps: CardListProps) {
     // 当cards prop发生变化时，重新初始化
-    if (prevProps.cards !== this.props.cards) {
+    if (
+      prevProps.cards !== this.props.cards ||
+      prevProps.noteSortCode !== this.props.noteSortCode
+    ) {
       this.loadInitialCards();
     }
   }
@@ -50,7 +52,14 @@ class CardList extends React.Component<CardListProps, CardListStates> {
   }
 
   loadInitialCards = () => {
-    const { cards } = this.props;
+    let sortedCards = Object.values(
+      SortUtil.sortNotes(
+        this.props.cards,
+        this.props.noteSortCode,
+        this.props.books
+      )
+    ).flat() as NoteModel[];
+    console.log("sortedCards", sortedCards);
     const { itemsPerPage } = this.state;
 
     // 根据屏幕大小动态调整每页显示的卡片数量
@@ -59,7 +68,7 @@ class CardList extends React.Component<CardListProps, CardListStates> {
       screenHeight > 800 ? itemsPerPage + 8 : itemsPerPage;
 
     this.setState({
-      displayedCards: cards.slice(0, adaptiveItemsPerPage),
+      displayedCards: sortedCards.slice(0, adaptiveItemsPerPage),
       currentPage: 1,
       isLoading: false,
       itemsPerPage: adaptiveItemsPerPage,
@@ -67,10 +76,16 @@ class CardList extends React.Component<CardListProps, CardListStates> {
   };
 
   loadMoreCards = () => {
-    const { cards } = this.props;
+    let sortedCards = Object.values(
+      SortUtil.sortNotes(
+        this.props.cards,
+        this.props.noteSortCode,
+        this.props.books
+      )
+    ).flat() as NoteModel[];
     const { displayedCards, currentPage, itemsPerPage, isLoading } = this.state;
 
-    if (isLoading || displayedCards.length >= cards.length) {
+    if (isLoading || displayedCards.length >= sortedCards.length) {
       return;
     }
 
@@ -81,7 +96,7 @@ class CardList extends React.Component<CardListProps, CardListStates> {
       const nextPage = currentPage + 1;
       const startIndex = currentPage * itemsPerPage;
       const endIndex = nextPage * itemsPerPage;
-      const newCards = cards.slice(startIndex, endIndex);
+      const newCards = sortedCards.slice(startIndex, endIndex);
 
       this.setState({
         displayedCards: [...displayedCards, ...newCards],
