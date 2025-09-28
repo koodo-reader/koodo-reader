@@ -82,11 +82,9 @@ class PopupRefer extends React.Component<PopupReferProps, PopupReferStates> {
       }
     }
     let htmlContent = node.innerHTML;
-    console.log(node, node.textContent.trim());
     if (!node.textContent.trim()) {
       return false;
     }
-    console.log(node, node.textContent.trim(), node.textContent.trim().length);
     if (node.textContent.trim() && node.textContent.trim().length > 3000) {
       return false;
     }
