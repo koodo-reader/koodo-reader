@@ -477,11 +477,9 @@ const createMainWin = () => {
     });
 
     if (result.canceled) {
-      console.log('User canceled the file selection');
       return "";
     } else {
       const filePath = result.filePaths[0];
-      console.log('Selected file path:', filePath);
       return filePath;
     }
   });
@@ -612,10 +610,8 @@ const createMainWin = () => {
     event.returnvalue = true;
   });
   ipcMain.handle("reload-reader", (event, arg) => {
-    console.log("reload-reader", readerWindowList.length);
     if (readerWindowList.length > 0) {
       readerWindowList.forEach(win => {
-        console.log("reload-reader win", win, !win.isDestroyed());
         if (win && !win.isDestroyed()) {
           win.reload();
         }
