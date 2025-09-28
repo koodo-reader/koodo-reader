@@ -237,20 +237,50 @@ class BookList extends React.Component<BookListProps, BookListState> {
       : this.state.isHideShelfBook
       ? "hide"
       : "home";
-
     let books =
       bookMode === "search"
         ? this.handleIndexFilter(this.props.books, this.props.searchResults)
         : bookMode === "shelf"
-        ? this.handleShelf(this.props.books, this.props.shelfTitle)
+        ? this.handleIndexFilter(
+            this.handleShelf(this.props.books, this.props.shelfTitle),
+            SortUtil.sortBooks(
+              this.handleShelf(this.props.books, this.props.shelfTitle),
+              this.props.bookSortCode,
+              ConfigService
+            ) || []
+          )
         : bookMode === "favorite"
-        ? this.handleKeyFilter(
-            this.props.books,
-            ConfigService.getAllListConfig("favoriteBooks")
+        ? this.handleIndexFilter(
+            this.handleKeyFilter(
+              this.props.books,
+              ConfigService.getAllListConfig("favoriteBooks")
+            ),
+            SortUtil.sortBooks(
+              this.handleKeyFilter(
+                this.props.books,
+                ConfigService.getAllListConfig("favoriteBooks")
+              ),
+              this.props.bookSortCode,
+              ConfigService
+            ) || []
           )
         : bookMode === "hide"
-        ? this.handleFilterShelfBook(this.props.books)
-        : this.props.books;
+        ? this.handleIndexFilter(
+            this.handleFilterShelfBook(this.props.books),
+            SortUtil.sortBooks(
+              this.handleFilterShelfBook(this.props.books),
+              this.props.bookSortCode,
+              ConfigService
+            ) || []
+          )
+        : this.handleIndexFilter(
+            this.props.books,
+            SortUtil.sortBooks(
+              this.props.books,
+              this.props.bookSortCode,
+              ConfigService
+            ) || []
+          );
 
     return {
       books,
