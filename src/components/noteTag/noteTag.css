@@ -13,9 +13,7 @@
   font-weight: 500;
   flex-shrink: 0;
   white-space: nowrap;
-  padding: 10;
-  padding-left: 10px;
-  padding-right: 10px;
+  padding: 10px;
 }
 
 .tag-title {
