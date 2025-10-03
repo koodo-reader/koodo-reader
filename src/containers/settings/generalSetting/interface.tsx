@@ -51,6 +51,7 @@ export interface SettingInfoState {
   isOpenInMain: boolean;
   isDisableUpdate: boolean;
   isExportOriginalName: boolean;
+  isUseOriginalName: boolean;
   isPrecacheBook: boolean;
   isUseBuiltIn: boolean;
   isDisablePDFCover: boolean;

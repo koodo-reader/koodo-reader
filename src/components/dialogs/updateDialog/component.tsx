@@ -160,54 +160,67 @@ class UpdateInfo extends React.Component<UpdateInfoProps, UpdateInfoState> {
                   onClick={() => {
                     if (isWindows) {
                       const { ipcRenderer } = window.require("electron");
-                      // 先注册事件监听器，再调用下载
-                      this.setState({ isDownloading: true });
-                      ipcRenderer.on(
-                        "download-app-progress",
-                        (_event: any, config: any) => {
-                          this.setState({
-                            progress: config.progress,
-                            downloadedMB: config.downloadedMB,
-                            totalMB: config.totalMB,
-                          });
-                          toast.loading(
-                            this.props.t("Downloading") +
-                              `(${config.downloadedMB} / ${config.totalMB} MB)`,
-                            { id: "download-progress" }
+                      if (!this.state.isDownloading) {
+                        // 先注册事件监听器，再调用下载
+                        this.setState({ isDownloading: true });
+                        ipcRenderer.on(
+                          "download-app-progress",
+                          (_event: any, config: any) => {
+                            this.setState({
+                              progress: config.progress,
+                              downloadedMB: config.downloadedMB,
+                              totalMB: config.totalMB,
+                            });
+                            toast.loading(
+                              this.props.t("Downloading") +
+                                `(${config.downloadedMB} / ${config.totalMB} MB)`,
+                              { id: "download-progress" }
+                            );
+                          }
+                        );
+                        ipcRenderer.invoke("update-win-app", {
+                          version: this.state.updateLog.version,
+                        });
+                      } else {
+                        ipcRenderer.invoke("cancel-download-app", {});
+                        this.setState({
+                          isDownloading: false,
+                          progress: 0,
+                          downloadedMB: 0,
+                          totalMB: 0,
+                        });
+                        setTimeout(() => {
+                          toast.success(
+                            this.props.t("Cancellation successful"),
+                            {
+                              id: "download-progress",
+                            }
                           );
-                        }
-                      );
-                      ipcRenderer.invoke("update-win-app", {
-                        version: this.state.updateLog.version,
-                      });
+                        }, 500);
+                      }
                     } else {
+                      let lang = "en";
                       if (
                         ConfigService.getReaderConfig("lang") &&
                         ConfigService.getReaderConfig("lang").startsWith("zh")
                       ) {
-                        openExternalUrl(
-                          WEBSITE_URL +
-                            "/zh/download" +
-                            "?version=" +
-                            (this.state.updateLog.stable === "yes"
-                              ? "stable"
-                              : "developer")
-                        );
-                      } else {
-                        openExternalUrl(
-                          WEBSITE_URL +
-                            "/en/download" +
-                            "?version=" +
-                            (this.state.updateLog.stable === "yes"
-                              ? "stable"
-                              : "developer")
-                        );
+                        lang = "zh";
                       }
+                      openExternalUrl(
+                        WEBSITE_URL +
+                          "/" +
+                          lang +
+                          "/download" +
+                          "?version=" +
+                          (this.state.updateLog.stable === "yes"
+                            ? "stable"
+                            : "developer")
+                      );
                     }
                   }}
                 >
                   {this.state.isDownloading ? (
-                    <span style={{ fontSize: 13 }}>{this.state.progress}%</span>
+                    <Trans>Cancel</Trans>
                   ) : (
                     <Trans>Download</Trans>
                   )}
@@ -217,11 +230,23 @@ class UpdateInfo extends React.Component<UpdateInfoProps, UpdateInfoState> {
                 <div
                   className="new-version-skip"
                   onClick={() => {
-                    ConfigService.setReaderConfig(
-                      "skipVersion",
-                      this.state.updateLog.version
+                    let lang = "en";
+                    if (
+                      ConfigService.getReaderConfig("lang") &&
+                      ConfigService.getReaderConfig("lang").startsWith("zh")
+                    ) {
+                      lang = "zh";
+                    }
+                    openExternalUrl(
+                      WEBSITE_URL +
+                        "/" +
+                        lang +
+                        "/download" +
+                        "?version=" +
+                        (this.state.updateLog.stable === "yes"
+                          ? "stable"
+                          : "developer")
                     );
-                    this.handleClose();
                   }}
                 >
                   <Trans>Download in Browser</Trans>

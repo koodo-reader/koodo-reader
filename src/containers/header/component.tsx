@@ -125,11 +125,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     window.addEventListener("resize", () => {
       this.setState({ width: document.body.clientWidth });
     });
-    window.addEventListener("focus", () => {
-      this.props.handleFetchBooks();
-      this.props.handleFetchNotes();
-      this.props.handleFetchBookmarks();
-    });
     this.props.handleCloudSyncFunc(this.handleCloudSync);
     document.addEventListener("visibilitychange", async () => {
       if (document.visibilityState === "visible") {
