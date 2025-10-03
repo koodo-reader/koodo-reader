@@ -137,13 +137,13 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
             });
           }
         }
-        if (res.code === 20006) {
-          this.setState({
-            isWaiting: false,
-            answer: "",
-            question: "",
-          });
-        }
+        // if (res.code === 20006) {
+        //   this.setState({
+        //     isWaiting: false,
+        //     answer: "",
+        //     question: "",
+        //   });
+        // }
         this.scrollToBottom();
       }
     } catch (error) {
@@ -236,6 +236,7 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
     }, 100);
   };
   render() {
+    console.log(this.state.answer, "this.state.answer");
     return (
       <div className="dict-container">
         <div

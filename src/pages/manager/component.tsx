@@ -164,7 +164,7 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
           </div>
         )}
         <Sidebar />
-        <Toaster />
+        <Toaster position="bottom-center" />
         <Header {...{ handleDrag: this.handleDrag }} />
         {this.props.isOpenDeleteDialog && <DeleteDialog />}
         {this.props.isOpenEditDialog && <EditDialog />}
