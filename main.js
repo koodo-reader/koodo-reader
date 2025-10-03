@@ -30,6 +30,7 @@ let googlePickerView;
 let dbConnection = {};
 let syncUtilCache = {};
 let pickerUtilCache = {};
+let downloadRequest = null;
 const singleInstance = app.requestSingleInstanceLock();
 var filePath = null;
 if (process.platform != "darwin" && process.argv.length >= 2) {
@@ -195,6 +196,17 @@ const createMainWin = () => {
       mainView.setBounds({ x: 0, y: 0, width: width, height: height })
     }
   });
+  //cancel-download-app
+  ipcMain.handle('cancel-download-app', (event, arg) => {
+    // Implement cancellation logic here
+    // Note: In this example, we are not keeping a reference to the request,
+    // so we cannot actually abort it. This is a placeholder for demonstration.
+    if (downloadRequest) {
+      downloadRequest.abort();
+      downloadRequest = null;
+    }
+    event.returnValue = 'cancelled';
+  });
   ipcMain.handle('update-win-app', (event, config) => {
     let fileName = `koodo-reader-installer.exe`;
     let supportedArchs = ['x64', 'ia32', 'arm64'];
@@ -208,7 +220,7 @@ const createMainWin = () => {
     const https = require("https");
     const { spawn } = require("child_process");
     const file = fs.createWriteStream(path.join(app.getPath('temp'), fileName));
-    https.get(url, (res) => {
+    downloadRequest = https.get(url, (res) => {
       const totalSize = parseInt(res.headers['content-length'], 10);
       let downloadedSize = 0;
       res.on('data', (chunk) => {
@@ -247,10 +259,9 @@ const createMainWin = () => {
             windowsHide: false                // 确保窗口可见
           });
 
-
           setTimeout(() => {
             app.quit();
-          }, 1000);
+          }, 3000);
           child.unref();
         } catch (err) {
           console.error(`spawn 执行异常: ${err.message}`);

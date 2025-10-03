@@ -29,8 +29,6 @@ function getBookCountPerPage() {
   const rows = Math.max(1, Math.floor(containerHeight / bookHeight)) + 2;
   return columns * rows;
 }
-// 每页显示的图书数量
-const BOOKS_PER_PAGE = getBookCountPerPage();
 
 class BookList extends React.Component<BookListProps, BookListState> {
   private scrollContainer: React.RefObject<HTMLUListElement>;
@@ -45,7 +43,7 @@ class BookList extends React.Component<BookListProps, BookListState> {
       isHideShelfBook:
         ConfigService.getReaderConfig("isHideShelfBook") === "yes",
       isRefreshing: false,
-      displayedBooksCount: BOOKS_PER_PAGE,
+      displayedBooksCount: getBookCountPerPage(),
       isLoadingMore: false,
     };
   }
@@ -80,7 +78,7 @@ class BookList extends React.Component<BookListProps, BookListState> {
       prevProps.shelfTitle !== this.props.shelfTitle
     ) {
       this.setState({
-        displayedBooksCount: BOOKS_PER_PAGE,
+        displayedBooksCount: getBookCountPerPage(),
         isLoadingMore: false,
       });
       // 滚动到顶部
@@ -129,7 +127,7 @@ class BookList extends React.Component<BookListProps, BookListState> {
     setTimeout(() => {
       this.setState({
         displayedBooksCount: Math.min(
-          displayedBooksCount + BOOKS_PER_PAGE,
+          displayedBooksCount + getBookCountPerPage(),
           books.length
         ),
         isLoadingMore: false,

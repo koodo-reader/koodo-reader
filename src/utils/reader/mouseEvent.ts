@@ -89,7 +89,7 @@ const handleShortcut = (event: any) => {
     }
   }
   if (event.keyCode === 123) {
-    if (isElectron) {
+    if (isElectron && ConfigService.getReaderConfig("isMergeWord")) {
       event.preventDefault();
       ConfigService.setReaderConfig(
         "isMergeWord",

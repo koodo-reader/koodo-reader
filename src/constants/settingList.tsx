@@ -65,6 +65,11 @@ export const generalSettingList = [
     propName: "isExportOriginalName",
   },
   {
+    isElectron: false,
+    title: "Use file name as book title",
+    propName: "isUseOriginalName",
+  },
+  {
     isElectron: true,
     title: "Disable update notification",
     propName: "isDisableUpdate",

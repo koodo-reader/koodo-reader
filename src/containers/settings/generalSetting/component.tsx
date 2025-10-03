@@ -52,6 +52,8 @@ class GeneralSetting extends React.Component<
         ConfigService.getReaderConfig("isAutoMaximizeWin") === "yes",
       isAutoLaunch: ConfigService.getReaderConfig("isAutoLaunch") === "yes",
       isOpenInMain: ConfigService.getReaderConfig("isOpenInMain") === "yes",
+      isUseOriginalName:
+        ConfigService.getReaderConfig("isUseOriginalName") === "yes",
       isExportOriginalName:
         ConfigService.getReaderConfig("isExportOriginalName") === "yes",
       isDisableUpdate:
