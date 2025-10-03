@@ -372,7 +372,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
           )}
         </div>
 
-        <Toaster position="bottom-center"/>
+        <Toaster />
 
         <div
           className="left-panel"

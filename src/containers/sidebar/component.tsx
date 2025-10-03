@@ -332,7 +332,13 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
                 </span>
               </div>
             ) : (
-              <div>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+              >
                 <input
                   ref={this.newShelfInput}
                   type="text"
@@ -354,7 +360,11 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
                     event.stopPropagation();
                     this.handleCreateShelf();
                   }}
-                  style={{ cursor: "pointer" }}
+                  style={{
+                    cursor: "pointer",
+                    marginRight: "30px",
+                    marginTop: "5px",
+                  }}
                 ></span>
               </div>
             )}
