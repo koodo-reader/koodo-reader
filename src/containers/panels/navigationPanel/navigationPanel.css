@@ -106,7 +106,7 @@
   background-color: rgba(75, 75, 75, 0.2);
 }
 .navigation-body::-webkit-scrollbar-thumb {
-  display: none;
+  border-radius: 0px;
 }
 .navigation-body::-webkit-scrollbar {
   width: 15px;

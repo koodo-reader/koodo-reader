@@ -47,7 +47,7 @@
   - Teks kaya (**.md**, **.docx**)
   - Hiperteks (**.html**, **.xml**, **.xhtml**, **.mhtml**, **.htm**)
 - Platform yang didukung: **Windows**, **macOS**, **Linux**, dan **Web**
-- Simpan data Anda di **OneDrive**, **Google Drive**, **Dropbox**, **FTP**, **SFTP**, **WebDAV**, **S3**, **S3 Compatible**
+- Simpan data Anda di **OneDrive**, **Google Drive**, **Dropbox**, **Yandex Disk**, **FTP**, **SFTP**, **WebDAV**, **SMB**, **S3**, **S3 Compatible**
 - Sesuaikan folder sumber dan sinkronkan antar perangkat menggunakan OneDrive, iCloud, Dropbox, dll.
 - Tata letak satu kolom, dua kolom, atau gulir kontinu
 - Text-to-speech, terjemahan, bilah kemajuan, dukungan layar sentuh, impor massal

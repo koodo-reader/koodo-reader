@@ -47,8 +47,8 @@
   - Rich text (**.md**, **.docx**)
   - Hyper Text (**.html**, **.xml**, **.xhtml**, **.mhtml**, **.htm**)
 - Platform support: **Windows**, **macOS**, **Linux**, **Android**, **iOS** and **Web**
-- Utilize **OneDrive**, **Google Drive**, **Dropbox**, **MEGA**, **pCloud**, **Aliyun Drive**, **Box**, **FTP**, **SFTP**, **WebDAV**, **Object Storage** to sync and backup your data.
-- Easily import books from **OneDrive**, **Google Drive**, **MEGA**, **Aliyun Drive**, **Box**, **FTP**, **SFTP**, **WebDAV**, **Object Storage**
+- Utilize **OneDrive**, **Google Drive**, **Dropbox**, **MEGA**, **pCloud**, **Yandex Disk**, **Box**, **FTP**, **SFTP**, **WebDAV**, **SMB**, **Object Storage** to sync and backup your data.
+- Easily import books from **OneDrive**, **Google Drive**, **MEGA**, **Yandex Disk**, **Box**, **FTP**, **SFTP**, **WebDAV**, **SMB**, **Object Storage**
 - AI Translation, AI Dictionary, AI Summarization
 - Single-column, two-column, or continuous scrolling layouts
 - Text-to-speech, translation, dictionary, touch screen support, batch import

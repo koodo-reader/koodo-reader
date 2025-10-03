@@ -123,7 +123,7 @@ class Login extends React.Component<LoginProps, LoginState> {
   render() {
     return (
       <>
-        <Toaster position="bottom-center"/>
+        <Toaster />
         <div
           className="login-close-container"
           onClick={() => {
@@ -237,7 +237,7 @@ class Login extends React.Component<LoginProps, LoginState> {
               </div>
               <div className="login-subtitle">
                 {this.props.t(
-                  "With the integration of your cloud drive, WebDAV, and object storage, all your data remains securely in your control"
+                  "With the integration of popular cloud storage services, WebDAV, FTP, SFTP, SMB, Docker, and object storage, all your data remains securely in your control"
                 )}
               </div>
               <div>

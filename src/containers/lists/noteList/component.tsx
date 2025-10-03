@@ -87,59 +87,62 @@ class NoteList extends React.Component<NoteListProps, NoteListState> {
             : {}
         }
       >
-        <div className="note-list-header">
-          <div className="note-tags" style={{ width: "calc(100% - 240px)" }}>
-            <NoteTag {...{ handleTag: this.handleTag }} />
-          </div>
-          {noteProps.cards.length > 0 && (
-            <div style={{ marginRight: "10px", marginTop: "3px" }}>
-              <span className="note-list-filter-label">
-                <Trans>Filter by book</Trans>
-              </span>
-
-              <select
-                name=""
-                className="lang-setting-dropdown"
-                onChange={(event) => {
-                  this.setState({
-                    currentSelectedBook: event.target.value,
-                  });
-                }}
-              >
-                {[
-                  { value: "", label: this.props.t("Please select") },
-                  ...this.props.notes
-                    .filter((item) =>
-                      this.props.tabMode === "note"
-                        ? item.notes !== ""
-                        : item.notes === ""
-                    )
-                    .map((note) => {
-                      let book = this.props.books.find(
-                        (book) => book.key === note.bookKey
-                      );
-                      return {
-                        label: book?.name || "Unknown book",
-                        value: note.bookKey,
-                      };
-                    })
-                    .filter(
-                      (item, index, self) =>
-                        self.findIndex((t) => t.value === item.value) === index
-                    ),
-                ].map((item) => (
-                  <option
-                    value={item.value}
-                    key={item.value}
-                    className="lang-setting-option"
-                  >
-                    {item.label}
-                  </option>
-                ))}
-              </select>
+        {noteProps.cards.length > 0 && (
+          <div className="note-list-header">
+            <div className="note-tags" style={{ width: "calc(100% - 240px)" }}>
+              <NoteTag {...{ handleTag: this.handleTag }} />
             </div>
-          )}
-        </div>
+            {noteProps.cards.length > 0 && (
+              <div style={{ marginRight: "10px", marginTop: "3px" }}>
+                <span className="note-list-filter-label">
+                  <Trans>Filter by book</Trans>
+                </span>
+
+                <select
+                  name=""
+                  className="lang-setting-dropdown"
+                  onChange={(event) => {
+                    this.setState({
+                      currentSelectedBook: event.target.value,
+                    });
+                  }}
+                >
+                  {[
+                    { value: "", label: this.props.t("Please select") },
+                    ...this.props.notes
+                      .filter((item) =>
+                        this.props.tabMode === "note"
+                          ? item.notes !== ""
+                          : item.notes === ""
+                      )
+                      .map((note) => {
+                        let book = this.props.books.find(
+                          (book) => book.key === note.bookKey
+                        );
+                        return {
+                          label: book?.name || "Unknown book",
+                          value: note.bookKey,
+                        };
+                      })
+                      .filter(
+                        (item, index, self) =>
+                          self.findIndex((t) => t.value === item.value) ===
+                          index
+                      ),
+                  ].map((item) => (
+                    <option
+                      value={item.value}
+                      key={item.value}
+                      className="lang-setting-option"
+                    >
+                      {item.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
+          </div>
+        )}
 
         {noteProps.cards.length === 0 ? (
           <div

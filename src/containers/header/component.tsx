@@ -310,7 +310,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
             )?.label || ""
           ) +
           ")",
-        { id: "syncing", style: { top: "700px" } }
+        { id: "syncing", position: "bottom-center" }
       );
     }
 
@@ -385,6 +385,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
                 ")",
               {
                 id: "syncing",
+                position: "bottom-center",
               }
             );
           }
@@ -423,6 +424,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
                 ")",
               {
                 id: "syncing",
+                position: "bottom-center",
               }
             );
           }
@@ -503,6 +505,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       this.setState({ isSync: false });
       toast.loading(this.props.t("Almost finished"), {
         id: "syncing",
+        position: "bottom-center",
       });
       await this.handleSuccess();
     } catch (error) {

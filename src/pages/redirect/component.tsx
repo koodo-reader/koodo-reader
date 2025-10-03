@@ -97,7 +97,7 @@ class Redirect extends React.Component<RedirectProps, RedirectState> {
     if (this.state.isError || this.state.isAuthed) {
       return (
         <div className="backup-page-finish-container">
-          <Toaster position="bottom-center" />
+          <Toaster />
           <div className="backup-page-finish">
             {this.state.isAuthed ? (
               <Lottie options={successOptions} height={80} width={80} />
@@ -155,7 +155,7 @@ class Redirect extends React.Component<RedirectProps, RedirectState> {
           alt=""
           className="empty-page-illustration"
         />
-        <Toaster position="bottom-center" />
+        <Toaster />
       </div>
     );
   }
