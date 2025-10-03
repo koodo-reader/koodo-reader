@@ -310,7 +310,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
             )?.label || ""
           ) +
           ")",
-        { id: "syncing" }
+        { id: "syncing", style: { top: "700px" } }
       );
     }
 

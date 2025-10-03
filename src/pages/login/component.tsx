@@ -123,7 +123,7 @@ class Login extends React.Component<LoginProps, LoginState> {
   render() {
     return (
       <>
-        <Toaster />
+        <Toaster position="bottom-center"/>
         <div
           className="login-close-container"
           onClick={() => {
