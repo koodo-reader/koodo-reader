@@ -4,6 +4,7 @@ import { PopupReferProps, PopupReferStates } from "./interface";
 import { getIframeDoc } from "../../../utils/reader/docUtil";
 import {
   getTargetHref,
+  isElementFootnote,
   openExternalUrl,
   processHtml,
 } from "../../../utils/common";
@@ -51,44 +52,34 @@ class PopupRefer extends React.Component<PopupReferProps, PopupReferStates> {
     this.handleLinkJump(event, this.props.rendition);
   };
   handleShowMenu = async (node, targetElement, rect) => {
-    if (
-      (node.textContent.trim() === targetElement.textContent.trim() ||
-        !node.textContent.trim() ||
-        "[" + node.textContent.trim() + "]" ===
-          targetElement.textContent.trim() ||
-        node.textContent.trim() ===
-          "[" + targetElement.textContent.trim() + "]") &&
-      node.parentElement
-    ) {
-      if (
-        node.parentElement.tagName !== "BODY" &&
-        node.parentElement.textContent.trim().length <= 3000
-      ) {
-        node = node.parentElement;
-      } else if (node.tagName === "A") {
-        //获取当前a标签和下一个a标签之间的内容
-        let next = node.nextSibling;
-        let content = node.textContent;
-        while (next && next.tagName !== "A") {
-          content += next.textContent;
-          next = next.nextSibling;
-        }
-        if (content.trim() && content.trim().length <= 3000) {
-          node = document.createElement("div");
-          node.innerHTML = content;
-        }
-      } else {
-        return false;
+    console.log(node, targetElement, rect);
+    console.log(isElementFootnote(node));
+    if (isElementFootnote(node) || !node.textContent.trim()) {
+      //获取当前a标签和下一个a标签之间的内容
+      let next = node.nextSibling;
+      let content = node.textContent;
+      console.log(next, next.tagName, node.tagName);
+      while (next && next.tagName !== node.tagName) {
+        content += next.textContent;
+        next = next.nextSibling;
+      }
+      if (content.trim() && content.trim().length <= 3000) {
+        node = document.createElement("div");
+        node.innerHTML = content;
       }
     }
+    console.log(1);
     let htmlContent = node.innerHTML;
+    console.log(2);
     if (!node.textContent.trim()) {
       return false;
     }
+    console.log(3);
     if (node.textContent.trim() && node.textContent.trim().length > 3000) {
       return false;
     }
     //将html代码中的img标签由blob转换为base64
+    console.log(htmlContent);
 
     htmlContent = await processHtml(htmlContent);
     this.setState(
@@ -110,6 +101,7 @@ class PopupRefer extends React.Component<PopupReferProps, PopupReferStates> {
 
     if (href && href.startsWith("kindle:")) {
       let chapterInfo = rendition.resolveChapter(href);
+      console.log(chapterInfo);
       if (chapterInfo) {
         await rendition.goToChapter(
           chapterInfo.index,
@@ -119,10 +111,12 @@ class PopupRefer extends React.Component<PopupReferProps, PopupReferStates> {
         return true;
       }
       let result = await this.props.rendition.resolveHref(href);
+      console.log(result);
       if (!result.anchor) {
         return false;
       }
       let currentPosition = rendition.getPosition();
+      console.log(result, currentPosition);
       if (result.index === parseInt(currentPosition.chapterDocIndex)) {
         let doc = getIframeDoc(this.props.currentBook.format)[0];
         let node = result.anchor(doc);
@@ -143,10 +137,14 @@ class PopupRefer extends React.Component<PopupReferProps, PopupReferStates> {
         let doc = getIframeDoc(this.props.currentBook.format)[0];
         let node = result.anchor(doc);
         await rendition.goToNode(node);
-        await this.handleShowMenu(node, event.target, rect);
+        if (isElementFootnote(event.target)) {
+          await this.handleShowMenu(node, event.target, rect);
+        }
+
         return true;
       }
     }
+    console.log(href, event.target);
 
     if (href && href.indexOf("#") > -1) {
       let pageArea = document.getElementById("page-area");
@@ -158,51 +156,52 @@ class PopupRefer extends React.Component<PopupReferProps, PopupReferStates> {
         return false;
       }
       this.setState({ href: href });
-      if (href.indexOf("#") > -1) {
-        let id = href.split("#").reverse()[0];
-        let node = doc.body.querySelector("#" + CSS.escape(id));
-        let rect = event.target.getBoundingClientRect();
-        if (!node) {
-          if (href.indexOf("filepos") > -1) {
-            let chapterInfo = rendition.resolveChapter(href);
-            await rendition.goToChapter(
-              chapterInfo.index,
-              chapterInfo.href,
-              chapterInfo.label
-            );
-            return true;
+      let id = href.split("#").reverse()[0];
+      let node = doc.body.querySelector("#" + CSS.escape(id));
+      let rect = event.target.getBoundingClientRect();
+
+      if (!node) {
+        if (href.indexOf("filepos") > -1) {
+          let chapterInfo = rendition.resolveChapter(href);
+
+          await rendition.goToChapter(
+            chapterInfo.index,
+            chapterInfo.href,
+            chapterInfo.label
+          );
+          return true;
+        }
+        //can't find the node, go to href
+        if (href.indexOf("#") !== 0) {
+          while (href.startsWith(".")) {
+            href = href.substring(1);
           }
-          //can't find the node, go to href
-          if (href.indexOf("#") !== 0) {
-            while (href.startsWith(".")) {
-              href = href.substring(1);
-            }
-            let chapterInfo = rendition.resolveChapter(href.split("#")[0]);
-            await rendition.goToChapter(
-              chapterInfo.index,
-              chapterInfo.href,
-              chapterInfo.label
-            );
-          }
-          node = doc.body.querySelector("#" + CSS.escape(id));
-          if (!node) {
-            return false;
-          }
-          this.setState({
-            isJump: true,
-            returnPosition: ConfigService.getObjectConfig(
-              this.props.currentBook.key,
-              "recordLocation",
-              {}
-            ),
-          });
-          await rendition.goToNode(
-            doc.body.querySelector("#" + CSS.escape(id))
+          let chapterInfo = rendition.resolveChapter(href.split("#")[0]);
+          await rendition.goToChapter(
+            chapterInfo.index,
+            chapterInfo.href,
+            chapterInfo.label
           );
         }
-        await this.handleShowMenu(node, event.target, rect);
-        return true;
+        node = doc.body.querySelector("#" + CSS.escape(id));
+        if (!node) {
+          return false;
+        }
+        this.setState({
+          isJump: true,
+          returnPosition: ConfigService.getObjectConfig(
+            this.props.currentBook.key,
+            "recordLocation",
+            {}
+          ),
+        });
+        await rendition.goToNode(node);
       }
+      console.log(node, event.target, rect, isElementFootnote(event.target));
+      if (isElementFootnote(event.target)) {
+        await this.handleShowMenu(node, event.target, rect);
+      }
+      return true;
     } else if (
       href &&
       rendition.resolveChapter &&
@@ -218,7 +217,7 @@ class PopupRefer extends React.Component<PopupReferProps, PopupReferStates> {
     } else if (
       href &&
       href.indexOf("../") === -1 &&
-      href.indexOf("http") === 0 &&
+      (href.indexOf("http") === 0 || href.indexOf("mailto") === 0) &&
       href.indexOf("OEBPF") === -1 &&
       href.indexOf("OEBPS") === -1 &&
       href.indexOf("footnote") === -1 &&

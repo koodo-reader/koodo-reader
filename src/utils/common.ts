@@ -730,36 +730,43 @@ export const testCORS = async (url: string) => {
     return false;
   }
 };
+export const isElementFootnote = (element: HTMLElement) => {
+  if (!element) return false;
+  console.log(element.tagName);
+  if (element.tagName === "IMG") {
+    return true;
+  }
+  if (element.textContent) {
+    let textContent = element.textContent.trim();
+    // Check for patterns like [1], [a], (1), (a)
+    const footnotePattern = /^(\[|\()([a-zA-Z0-9]+)(\]|\))$|^\d+$/;
+    if (footnotePattern.test(textContent)) {
+      return true;
+    }
+  }
 
+  return false;
+};
 export const getTargetHref = (event: any) => {
   let href = "";
   if (!event || !event.target) return href;
   if (event.target.innerText && event.target.innerText.startsWith("http")) {
     href = event.target.innerText;
   }
-  if (event.target.tagName !== "IMG") {
-    href =
-      (event.target.getAttribute && event.target.getAttribute("href")) ||
-      (event.target.getAttribute && event.target.getAttribute("src")) ||
-      "";
-  }
-  if (event.target.parentNode) {
-    href =
-      href ||
-      (event.target.parentNode.getAttribute &&
-        event.target.parentNode.getAttribute("href")) ||
-      (event.target.parentNode.getAttribute &&
-        event.target.parentNode.getAttribute("src")) ||
-      "";
-  }
-  if (event.target.parentNode.parentNode) {
-    href =
-      href ||
-      (event.target.parentNode.parentNode.getAttribute &&
-        event.target.parentNode.parentNode.getAttribute("href")) ||
-      (event.target.parentNode.parentNode.getAttribute &&
-        event.target.parentNode.parentNode.getAttribute("src")) ||
-      "";
+  // if (event.target.tagName === "IMG") {
+  //   return href;
+  // }
+  let currentElement = event.target;
+  while (currentElement && currentElement.tagName !== "BODY") {
+    if (currentElement.getAttribute) {
+      const elementHref = currentElement.getAttribute("href");
+
+      if (elementHref) {
+        href = elementHref || "";
+        break;
+      }
+    }
+    currentElement = currentElement.parentNode;
   }
 
   return href;
