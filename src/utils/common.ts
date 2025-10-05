@@ -98,15 +98,17 @@ export const sleep = (time: number) => {
 };
 
 export const scrollContents = (chapterTitle: string, chapterHref: string) => {
-  if (!chapterHref) return;
-
   let contentBody = document.getElementsByClassName("navigation-body")[0];
   if (!contentBody) return;
   let contentList = contentBody.getElementsByClassName("book-content-name");
   let targetContent = Array.from(contentList).filter((item) => {
     item.setAttribute("style", "");
     let dataHref = (item as any).getAttribute("data-href");
-    return item.textContent === chapterTitle && dataHref === chapterHref;
+    if (chapterHref) {
+      return item.textContent === chapterTitle && dataHref === chapterHref;
+    } else {
+      return item.textContent === chapterTitle;
+    }
   });
   if (targetContent.length > 0) {
     contentBody.scrollTo({
@@ -732,7 +734,6 @@ export const testCORS = async (url: string) => {
 };
 export const isElementFootnote = (element: HTMLElement) => {
   if (!element) return false;
-  console.log(element.tagName);
   if (element.tagName === "IMG") {
     return true;
   }

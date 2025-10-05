@@ -388,6 +388,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         chapter,
         chapterDocIndex,
       });
+
       scrollContents(chapter, bookLocation.chapterHref);
       StyleUtil.addDefaultCss();
       rendition.tranformText();

@@ -90,8 +90,8 @@ export const getLastSyncTimeFromConfigJson = () => {
     "utf-8"
   );
 
-  const readerConfig = JSON.parse(JSON.parse(data).readerConfig || "{}");
-  return parseInt(readerConfig.lastSyncTime || "0");
+  const config = JSON.parse(data);
+  return parseInt(config.lastSyncTime || "0");
 };
 export function getParamsFromUrl() {
   var hashParams: any = {};
