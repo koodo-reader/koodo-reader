@@ -236,7 +236,6 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
     }, 100);
   };
   render() {
-    console.log(this.state.answer, "this.state.answer");
     return (
       <div className="dict-container">
         <div

@@ -59,7 +59,6 @@ class CardList extends React.Component<CardListProps, CardListStates> {
         this.props.books
       )
     ).flat() as NoteModel[];
-    console.log("sortedCards", sortedCards);
     const { itemsPerPage } = this.state;
 
     // 根据屏幕大小动态调整每页显示的卡片数量

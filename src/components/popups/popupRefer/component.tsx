@@ -52,13 +52,10 @@ class PopupRefer extends React.Component<PopupReferProps, PopupReferStates> {
     this.handleLinkJump(event, this.props.rendition);
   };
   handleShowMenu = async (node, targetElement, rect) => {
-    console.log(node, targetElement, rect);
-    console.log(isElementFootnote(node));
     if (isElementFootnote(node) || !node.textContent.trim()) {
       //获取当前a标签和下一个a标签之间的内容
       let next = node.nextSibling;
       let content = node.textContent;
-      console.log(next, next.tagName, node.tagName);
       while (next && next.tagName !== node.tagName) {
         content += next.textContent;
         next = next.nextSibling;
@@ -68,18 +65,13 @@ class PopupRefer extends React.Component<PopupReferProps, PopupReferStates> {
         node.innerHTML = content;
       }
     }
-    console.log(1);
     let htmlContent = node.innerHTML;
-    console.log(2);
     if (!node.textContent.trim()) {
       return false;
     }
-    console.log(3);
     if (node.textContent.trim() && node.textContent.trim().length > 3000) {
       return false;
     }
-    //将html代码中的img标签由blob转换为base64
-    console.log(htmlContent);
 
     htmlContent = await processHtml(htmlContent);
     this.setState(
@@ -101,7 +93,6 @@ class PopupRefer extends React.Component<PopupReferProps, PopupReferStates> {
 
     if (href && href.startsWith("kindle:")) {
       let chapterInfo = rendition.resolveChapter(href);
-      console.log(chapterInfo);
       if (chapterInfo) {
         await rendition.goToChapter(
           chapterInfo.index,
@@ -111,12 +102,10 @@ class PopupRefer extends React.Component<PopupReferProps, PopupReferStates> {
         return true;
       }
       let result = await this.props.rendition.resolveHref(href);
-      console.log(result);
       if (!result.anchor) {
         return false;
       }
       let currentPosition = rendition.getPosition();
-      console.log(result, currentPosition);
       if (result.index === parseInt(currentPosition.chapterDocIndex)) {
         let doc = getIframeDoc(this.props.currentBook.format)[0];
         let node = result.anchor(doc);
@@ -144,7 +133,6 @@ class PopupRefer extends React.Component<PopupReferProps, PopupReferStates> {
         return true;
       }
     }
-    console.log(href, event.target);
 
     if (href && href.indexOf("#") > -1) {
       let pageArea = document.getElementById("page-area");
@@ -197,7 +185,6 @@ class PopupRefer extends React.Component<PopupReferProps, PopupReferStates> {
         });
         await rendition.goToNode(node);
       }
-      console.log(node, event.target, rect, isElementFootnote(event.target));
       if (isElementFootnote(event.target)) {
         await this.handleShowMenu(node, event.target, rect);
       }

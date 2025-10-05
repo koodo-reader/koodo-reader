@@ -215,12 +215,12 @@ class Header extends React.Component<HeaderProps, HeaderState> {
   };
   handleLocalSync = async () => {
     let lastSyncTime = getLastSyncTimeFromConfigJson();
-    if (!lastSyncTime && ConfigService.getItem("lastSyncTime")) {
+    if (!lastSyncTime) {
       await this.syncToLocation();
     } else {
       if (
         ConfigService.getItem("lastSyncTime") &&
-        lastSyncTime < parseInt(ConfigService.getItem("lastSyncTime")!)
+        lastSyncTime <= parseInt(ConfigService.getItem("lastSyncTime")!)
       ) {
         await this.syncToLocation();
       } else {
