@@ -42,6 +42,9 @@ const Router = () => {
       } else if (navigator.language.startsWith("ja")) {
         i18n.changeLanguage("ja");
         ConfigService.setReaderConfig("lang", "ja");
+      } else if (navigator.language.startsWith("ta")) {
+        i18n.changeLanguage("ta");
+        ConfigService.setReaderConfig("lang", "ta");
       } else if (navigator.language.startsWith("uk")) {
         i18n.changeLanguage("uk");
         ConfigService.setReaderConfig("lang", "uk");

@@ -68,7 +68,11 @@
   color: #0078d4;
   float: left;
 }
-
+.setting-tab {
+  max-width: 18% !important;
+  text-overflow: ellipsis;
+  max-height: 40px;
+}
 .setting-language {
   width: 30px;
   height: 30px;

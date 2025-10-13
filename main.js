@@ -772,6 +772,8 @@ const createMainWin = () => {
       urlWindow = new BrowserWindow();
     }
     urlWindow.loadURL(config.url);
+    urlWindow.focus();
+    event.returnvalue = true;
   });
   ipcMain.handle("switch-moyu", (event, arg) => {
     let id;

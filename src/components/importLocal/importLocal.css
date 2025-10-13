@@ -74,6 +74,10 @@
   justify-content: flex-start;
   padding-left: 20px;
   transition: 0.2s;
+  line-height: 1;
+  height: 40px;
+  cursor: pointer;
+  text-align: left;
 }
 
 .more-option-item .icon-cloud {
