@@ -56,23 +56,27 @@ class PopupRefer extends React.Component<PopupReferProps, PopupReferStates> {
       //获取当前a标签和下一个a标签之间的内容
       let next = node.nextSibling;
       let content = node.textContent;
-      while (next && next.tagName !== node.tagName) {
+      console.log(next);
+      while (next && (next.tagName !== node.tagName || !content.trim())) {
         content += next.textContent;
         next = next.nextSibling;
       }
+      console.log("footnote content", content);
       if (content.trim() && content.trim().length <= 3000) {
         node = document.createElement("div");
         node.innerHTML = content;
       }
     }
+    console.log("handleShowMenu", node, node.textContent);
     let htmlContent = node.innerHTML;
     if (!node.textContent.trim()) {
       return false;
     }
+    console.log(1);
     if (node.textContent.trim() && node.textContent.trim().length > 3000) {
       return false;
     }
-
+    console.log(2);
     htmlContent = await processHtml(htmlContent);
     this.setState(
       {
@@ -90,7 +94,7 @@ class PopupRefer extends React.Component<PopupReferProps, PopupReferStates> {
     rendition: any = {}
   ): Promise<boolean> => {
     let href = getTargetHref(event);
-
+    console.log("handleLinkJump", href, event);
     if (href && href.startsWith("kindle:")) {
       let chapterInfo = rendition.resolveChapter(href);
       if (chapterInfo) {
@@ -147,11 +151,11 @@ class PopupRefer extends React.Component<PopupReferProps, PopupReferStates> {
       let id = href.split("#").reverse()[0];
       let node = doc.body.querySelector("#" + CSS.escape(id));
       let rect = event.target.getBoundingClientRect();
+      console.log("find node by id", node, id);
 
       if (!node) {
-        if (href.indexOf("filepos") > -1) {
+        if (href.indexOf("filepos") > -1 && rendition.resolveChapter(href)) {
           let chapterInfo = rendition.resolveChapter(href);
-
           await rendition.goToChapter(
             chapterInfo.index,
             chapterInfo.href,
@@ -185,6 +189,7 @@ class PopupRefer extends React.Component<PopupReferProps, PopupReferStates> {
         });
         await rendition.goToNode(node);
       }
+      console.log("go to node", isElementFootnote(event.target));
       if (isElementFootnote(event.target)) {
         await this.handleShowMenu(node, event.target, rect);
       }

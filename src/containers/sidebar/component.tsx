@@ -204,17 +204,22 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
                   style={this.props.isCollapsed ? {} : { marginLeft: "38px" }}
                 >
                   <span
-                    className={
-                      this.props.shelfTitle === item
-                        ? `icon-bookshelf-line  active-icon sidebar-shelf-icon`
-                        : `icon-bookshelf-line sidebar-shelf-icon`
-                    }
-                    style={
-                      this.props.isCollapsed
-                        ? { position: "relative", marginLeft: "-8px" }
-                        : {}
-                    }
-                  ></span>
+                    data-tooltip-id="my-tooltip"
+                    data-tooltip-content={item}
+                  >
+                    <span
+                      className={
+                        this.props.shelfTitle === item
+                          ? `icon-bookshelf-line  active-icon sidebar-shelf-icon`
+                          : `icon-bookshelf-line sidebar-shelf-icon`
+                      }
+                      style={
+                        this.props.isCollapsed
+                          ? { position: "relative", marginLeft: "-8px" }
+                          : {}
+                      }
+                    ></span>
+                  </span>
                 </div>
 
                 <span

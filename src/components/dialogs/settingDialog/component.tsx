@@ -235,7 +235,7 @@ class SettingDialog extends React.Component<
             style={{ position: "unset", marginTop: "5px" }}
           >
             <span
-              className="book-bookmark-title"
+              className="book-bookmark-title setting-tab"
               onClick={() => {
                 this.props.handleSettingMode("general");
               }}
@@ -248,7 +248,7 @@ class SettingDialog extends React.Component<
               <Trans>General</Trans>
             </span>
             <span
-              className="book-bookmark-title"
+              className="book-bookmark-title setting-tab"
               style={
                 this.props.settingMode === "reading"
                   ? { fontWeight: "bold", borderBottom: "2px solid" }
@@ -261,7 +261,7 @@ class SettingDialog extends React.Component<
               <Trans>Reading</Trans>
             </span>
             <span
-              className="book-bookmark-title"
+              className="book-bookmark-title setting-tab"
               style={
                 this.props.settingMode === "appearance"
                   ? { fontWeight: "bold", borderBottom: "2px solid" }
@@ -274,7 +274,7 @@ class SettingDialog extends React.Component<
               <Trans>Appearance</Trans>
             </span>
             <span
-              className="book-bookmark-title"
+              className="book-bookmark-title setting-tab"
               style={
                 this.props.settingMode === "plugins"
                   ? { fontWeight: "bold", borderBottom: "2px solid" }
@@ -287,7 +287,7 @@ class SettingDialog extends React.Component<
               <Trans>Plugins</Trans>
             </span>
             <span
-              className="book-bookmark-title"
+              className="book-bookmark-title setting-tab"
               style={
                 this.props.settingMode === "sync"
                   ? {
@@ -304,7 +304,7 @@ class SettingDialog extends React.Component<
               <Trans>Sync and backup</Trans>
             </span>
             <span
-              className="book-bookmark-title"
+              className="book-bookmark-title setting-tab"
               style={
                 this.props.settingMode === "account"
                   ? { fontWeight: "bold", borderBottom: "2px solid" }
