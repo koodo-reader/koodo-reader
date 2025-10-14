@@ -17,6 +17,8 @@ export interface ViewerProps {
   isNavLocked: boolean;
   isSettingLocked: boolean;
   defaultSyncOption: string;
+  scale: string;
+  margin: string;
   handleRenderBookFunc: (renderBookFunc: () => void) => void;
   renderNoteFunc: () => void;
   handleFetchAuthed: () => void;
@@ -41,12 +43,10 @@ export interface ViewerProps {
 }
 export interface ViewerState {
   key: string;
-  scale: string;
   isFirst: boolean;
   isTouch: boolean;
   chapterTitle: string;
   isDisablePopup: boolean;
-  margin: number;
   chapter: string;
   pageOffset: string;
   pageWidth: string;

@@ -9,8 +9,6 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
     super(props);
     this.state = {
       isSingle: this.props.readerMode !== "double",
-      scale: ConfigService.getReaderConfig("scale") || "1",
-      margin: parseInt(ConfigService.getReaderConfig("margin")) || 0,
       pageOffset: "",
       pageWidth: "",
     };
@@ -20,12 +18,34 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
     this.setState(
       getPageWidth(
         this.props.readerMode,
-        this.state.scale,
-        this.state.margin,
+        this.props.scale,
+        parseInt(this.props.margin),
         this.props.isNavLocked,
         this.props.isSettingLocked
       )
     );
+  }
+  async UNSAFE_componentWillReceiveProps(nextProps: BackgroundProps) {
+    if (
+      nextProps.margin !== this.props.margin ||
+      nextProps.scale !== this.props.scale ||
+      nextProps.readerMode !== this.props.readerMode ||
+      nextProps.isNavLocked !== this.props.isNavLocked ||
+      nextProps.isSettingLocked !== this.props.isSettingLocked
+    ) {
+      this.setState(
+        getPageWidth(
+          nextProps.readerMode,
+          nextProps.scale,
+          parseInt(nextProps.margin),
+          nextProps.isNavLocked,
+          nextProps.isSettingLocked
+        )
+      );
+    }
+    if (nextProps.readerMode !== this.props.readerMode) {
+      this.setState({ isSingle: nextProps.readerMode !== "double" });
+    }
   }
 
   render() {

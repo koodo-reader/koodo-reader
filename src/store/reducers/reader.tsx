@@ -12,9 +12,22 @@ const initState = {
         ConfigService.getReaderConfig("isOSNight") === "yes")
     ? 3
     : 0,
+  backgroundColor:
+    ConfigService.getReaderConfig("isMergeWord") === "yes"
+      ? "rgba(0,0,0,0)"
+      : ConfigService.getReaderConfig("backgroundColor")
+      ? ConfigService.getReaderConfig("backgroundColor")
+      : ConfigService.getReaderConfig("appSkin") === "night" ||
+        (ConfigService.getReaderConfig("appSkin") === "system" &&
+          ConfigService.getReaderConfig("isOSNight") === "yes")
+      ? "rgba(44,47,49,1)"
+      : "rgba(255,255,255,1)",
   noteKey: "",
   originalText: "",
   htmlBook: null,
+  scale: ConfigService.getReaderConfig("scale") || "1",
+  margin: ConfigService.getReaderConfig("margin") || "0",
+  section: null,
   readerMode: "double",
   isConvertOpen: false,
   isNavLocked: ConfigService.getReaderConfig("isNavLocked") === "yes",
@@ -76,7 +89,11 @@ export function reader(
         ...state,
         color: action.payload,
       };
-
+    case "HANDLE_BACKGROUND_COLOR":
+      return {
+        ...state,
+        backgroundColor: action.payload,
+      };
     case "HANDLE_NOTE_KEY":
       return {
         ...state,
@@ -96,6 +113,16 @@ export function reader(
       return {
         ...state,
         readerMode: action.payload,
+      };
+    case "HANDLE_SCALE":
+      return {
+        ...state,
+        scale: action.payload,
+      };
+    case "HANDLE_MARGIN":
+      return {
+        ...state,
+        margin: action.payload,
       };
     default:
       return state;

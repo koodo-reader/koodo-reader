@@ -13,7 +13,9 @@ const mapStateToProps = (state: stateType) => {
     currentBook: state.book.currentBook,
     bookmarks: state.reader.bookmarks,
     htmlBook: state.reader.htmlBook,
+    backgroundColor: state.reader.backgroundColor,
     isNavLocked: state.reader.isNavLocked,
+    renderBookFunc: state.book.renderBookFunc,
   };
 };
 const actionCreator = { handleFetchBookmarks, handleSearch, handleNavLock };

@@ -37,6 +37,15 @@ export function handleNoteKey(key: string) {
 export function handleReaderMode(readerMode: string) {
   return { type: "HANDLE_READER_MODE", payload: readerMode };
 }
+export function handleScale(scale: string) {
+  return { type: "HANDLE_SCALE", payload: scale };
+}
+export function handleMargin(margin: string) {
+  return { type: "HANDLE_MARGIN", payload: margin };
+}
+export function handleBackgroundColor(backgroundColor: string) {
+  return { type: "HANDLE_BACKGROUND_COLOR", payload: backgroundColor };
+}
 export function handleNavLock(isNavLocked: boolean) {
   return { type: "HANDLE_NAV_LOCK", payload: isNavLocked };
 }

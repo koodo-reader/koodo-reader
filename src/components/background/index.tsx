@@ -8,6 +8,8 @@ const mapStateToProps = (state: stateType) => {
     readerMode: state.reader.readerMode,
     isNavLocked: state.reader.isNavLocked,
     isSettingLocked: state.reader.isSettingLocked,
+    scale: state.reader.scale,
+    margin: state.reader.margin,
   };
 };
 const actionCreator = {};

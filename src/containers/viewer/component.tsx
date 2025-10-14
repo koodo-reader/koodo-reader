@@ -40,7 +40,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       rect: null,
       key: "",
       isFirst: true,
-      scale: ConfigService.getReaderConfig("scale") || "1",
       chapterTitle:
         ConfigService.getObjectConfig(
           this.props.currentBook.key,
@@ -49,7 +48,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         ).chapterTitle || "",
       isDisablePopup: ConfigService.getReaderConfig("isDisablePopup") === "yes",
       isTouch: ConfigService.getReaderConfig("isTouch") === "yes",
-      margin: parseInt(ConfigService.getReaderConfig("margin")) || 0,
       chapterDocIndex: parseInt(
         ConfigService.getObjectConfig(
           this.props.currentBook.key,
@@ -77,8 +75,8 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     this.setState(
       getPageWidth(
         this.props.readerMode,
-        this.state.scale,
-        this.state.margin,
+        this.props.scale,
+        parseInt(this.props.margin),
         this.props.isNavLocked,
         this.props.isSettingLocked
       )
@@ -89,7 +87,25 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       BookUtil.reloadBooks();
     });
   }
-
+  async UNSAFE_componentWillReceiveProps(nextProps: ViewerProps) {
+    if (
+      nextProps.margin !== this.props.margin ||
+      nextProps.scale !== this.props.scale ||
+      nextProps.readerMode !== this.props.readerMode ||
+      nextProps.isNavLocked !== this.props.isNavLocked ||
+      nextProps.isSettingLocked !== this.props.isSettingLocked
+    ) {
+      this.setState(
+        getPageWidth(
+          nextProps.readerMode,
+          nextProps.scale,
+          parseInt(nextProps.margin),
+          nextProps.isNavLocked,
+          nextProps.isSettingLocked
+        )
+      );
+    }
+  }
   handleHighlight = async (rendition: any) => {
     let highlighters: any = this.props.notes;
     if (!highlighters) return;
@@ -234,7 +250,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           isIndent: ConfigService.getReaderConfig("isIndent"),
           isStartFromEven: ConfigService.getReaderConfig("isStartFromEven"),
           password: getPdfPassword(this.props.currentBook),
-          scale: parseFloat(this.state.scale),
+          scale: parseFloat(this.props.scale),
           isConvertPDF: ConfigService.getReaderConfig("isConvertPDF"),
           ocrLang: ConfigService.getReaderConfig("ocrLang")
             ? ConfigService.getReaderConfig("ocrLang")

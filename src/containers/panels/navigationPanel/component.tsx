@@ -72,7 +72,7 @@ class NavigationPanel extends React.Component<
       "isNavLocked",
       !this.props.isNavLocked ? "yes" : "no"
     );
-    BookUtil.reloadBooks();
+    this.props.renderBookFunc();
   };
   renderSearchList = () => {
     if (!this.state.searchList[0]) {
@@ -197,7 +197,7 @@ class NavigationPanel extends React.Component<
         className="navigation-panel"
         style={{
           backgroundColor: this.props.isNavLocked
-            ? ConfigService.getReaderConfig("backgroundColor")
+            ? this.props.backgroundColor
             : "",
           color: this.props.isNavLocked
             ? ConfigService.getReaderConfig("textColor")

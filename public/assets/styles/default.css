@@ -59,7 +59,7 @@ a {
 .token-dialog-link-text,
 .token-dialog-token-text,
 .nav-search-page-item {
-  border: 1.5px solid rgba(75, 75, 75, 1);
+  border: 2px solid rgba(75, 75, 75, 1);
 }
 .header-search-box,
 .header-search-box::placeholder,
@@ -261,5 +261,5 @@ a {
   border-bottom: 1px solid rgba(75, 75, 75, 0.1);
 }
 .card-list-item-card {
-  border: 1.5px solid rgba(75, 75, 75, 0.15);
+  border: 2px solid rgba(75, 75, 75, 0.15);
 }

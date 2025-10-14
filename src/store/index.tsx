@@ -92,6 +92,10 @@ export type stateType = {
     color: number;
     chapters: any[];
     readerMode: string;
+    scale: string;
+    margin: string;
+    backgroundColor: string;
+    section: any;
     isNavLocked: boolean;
     isSettingLocked: boolean;
     isConvertOpen: boolean;

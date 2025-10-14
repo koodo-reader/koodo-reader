@@ -10,6 +10,7 @@ export interface BackgroundProps {
   isSettingLocked: boolean;
   htmlBook: HtmlBookModel;
   isShowBookmark: boolean;
+  backgroundColor: string;
   handleCurrentChapter: (currentChapter: string) => void;
   handleCurrentChapterIndex: (currentChapterIndex: number) => void;
 }
