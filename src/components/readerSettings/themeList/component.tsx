@@ -37,6 +37,7 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
   }
   handleChangeBgColor = (color: string, index: number = -1) => {
     ConfigService.setReaderConfig("backgroundColor", color);
+    this.props.handleBackgroundColor(color);
     this.setState({
       currentBackgroundIndex: index,
     });
@@ -48,11 +49,13 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
     ) {
       ConfigService.setReaderConfig("textColor", "rgba(0,0,0,1)");
     }
-    BookUtil.reloadBooks();
+    this.props.renderBookFunc();
+    // BookUtil.reloadBooks();
   };
 
   handleChooseBgColor = (color) => {
     ConfigService.setReaderConfig("backgroundColor", color.color);
+    this.props.handleBackgroundColor(color.color);
     StyleUtil.addDefaultCss();
   };
   handleColorTextPicker = (isShowTextPicker: boolean) => {
@@ -182,6 +185,7 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
             className="theme-color-clear-button"
             onClick={() => {
               ConfigService.setReaderConfig("backgroundColor", "");
+              this.props.handleBackgroundColor("");
               toast.success(this.props.t("Removal successful"));
               BookUtil.reloadBooks();
             }}

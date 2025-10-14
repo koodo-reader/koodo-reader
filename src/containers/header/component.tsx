@@ -128,6 +128,9 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     this.props.handleCloudSyncFunc(this.handleCloudSync);
     document.addEventListener("visibilitychange", async () => {
       if (document.visibilityState === "visible") {
+        this.props.handleFetchBooks();
+        this.props.handleFetchBookmarks();
+        this.props.handleFetchNotes();
         if (ConfigService.getItem("isFinshReading") === "yes") {
           ConfigService.setItem("isFinshReading", "no");
           if (

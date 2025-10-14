@@ -26,6 +26,7 @@ const mapStateToProps = (state: stateType) => {
     isSettingLocked: state.reader.isSettingLocked,
     isAuthed: state.manager.isAuthed,
     isSearch: state.manager.isSearch,
+    scale: state.reader.scale,
   };
 };
 const actionCreator = {

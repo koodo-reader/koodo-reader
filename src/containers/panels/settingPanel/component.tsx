@@ -31,7 +31,7 @@ class SettingPanel extends React.Component<
       "isSettingLocked",
       !this.props.isSettingLocked ? "yes" : "no"
     );
-    BookUtil.reloadBooks();
+    this.props.renderBookFunc();
   };
 
   render() {
@@ -40,7 +40,7 @@ class SettingPanel extends React.Component<
         className="setting-panel-parent"
         style={{
           backgroundColor: this.props.isSettingLocked
-            ? ConfigService.getReaderConfig("backgroundColor")
+            ? this.props.backgroundColor
             : "",
           color: this.props.isSettingLocked
             ? ConfigService.getReaderConfig("textColor")

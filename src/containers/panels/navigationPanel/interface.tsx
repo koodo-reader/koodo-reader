@@ -7,11 +7,13 @@ export interface NavigationPanelProps {
   htmlBook: HtmlBookModel;
   bookmarks: BookmarkModel[];
   totalDuration: number;
+  backgroundColor: string;
   isNavLocked: boolean;
   handleFetchBookmarks: () => void;
   handleSearch: (isSearch: boolean) => void;
   handleNavLock: (isNavLocked: boolean) => void;
   t: (title: string) => string;
+  renderBookFunc: () => void;
 }
 
 export interface NavigationPanelState {

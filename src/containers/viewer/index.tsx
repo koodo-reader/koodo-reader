@@ -38,6 +38,8 @@ const mapStateToProps = (state: stateType) => {
     readerMode: state.reader.readerMode,
     defaultSyncOption: state.backupPage.defaultSyncOption,
     menuMode: state.viewArea.menuMode,
+    scale: state.reader.scale,
+    margin: state.reader.margin,
   };
 };
 const actionCreator = {

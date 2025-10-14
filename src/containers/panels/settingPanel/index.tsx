@@ -9,7 +9,9 @@ const mapStateToProps = (state: stateType) => {
     locations: state.progressPanel.locations,
     isReading: state.book.isReading,
     readerMode: state.reader.readerMode,
+    backgroundColor: state.reader.backgroundColor,
     isSettingLocked: state.reader.isSettingLocked,
+    renderBookFunc: state.book.renderBookFunc,
   };
 };
 const actionCreator = { handleSettingLock };

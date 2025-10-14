@@ -23,7 +23,7 @@ class ModeControl extends React.Component<ModeControlProps, ModeControlState> {
     }
 
     this.props.handleReaderMode(mode);
-    BookUtil.reloadBooks();
+    this.props.renderBookFunc();
   };
   render() {
     return (

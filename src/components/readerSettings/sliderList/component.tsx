@@ -20,10 +20,6 @@ class SliderList extends React.Component<SliderListProps, SliderListState> {
     };
   }
   handleRest = async (mode) => {
-    if (mode === "scale" || mode === "margin") {
-      BookUtil.reloadBooks();
-      return;
-    }
     this.props.renderBookFunc();
   };
   onValueChange = (event: any, mode: string) => {
@@ -34,6 +30,7 @@ class SliderList extends React.Component<SliderListProps, SliderListState> {
     } else if (mode === "scale") {
       const scale = event.target.value;
       this.setState({ [mode]: scale });
+      this.props.handleScale(scale);
       ConfigService.setReaderConfig("scale", scale);
     } else if (mode === "letterSpacing") {
       const letterSpacing = event.target.value;
@@ -53,6 +50,7 @@ class SliderList extends React.Component<SliderListProps, SliderListState> {
     } else {
       const margin = event.target.value;
       this.setState({ [mode]: margin } as any);
+      this.props.handleMargin(margin);
       ConfigService.setReaderConfig("margin", margin);
     }
   };

@@ -11,6 +11,7 @@ export interface ReaderProps {
   isSearch: boolean;
   isAuthed: boolean;
   readerMode: string;
+  scale: string;
   handleFetchNotes: () => void;
   handleReaderMode: (readerMode: string) => void;
   handleConvertDialog: (isConvertOpen: boolean) => void;
