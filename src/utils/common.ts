@@ -748,30 +748,6 @@ export const isElementFootnote = (element: HTMLElement) => {
 
   return false;
 };
-export const getTargetHref = (event: any) => {
-  let href = "";
-  if (!event || !event.target) return href;
-  if (event.target.innerText && event.target.innerText.startsWith("http")) {
-    href = event.target.innerText;
-  }
-  // if (event.target.tagName === "IMG") {
-  //   return href;
-  // }
-  let currentElement = event.target;
-  while (currentElement && currentElement.tagName !== "BODY") {
-    if (currentElement.getAttribute) {
-      const elementHref = currentElement.getAttribute("href");
-
-      if (elementHref) {
-        href = elementHref || "";
-        break;
-      }
-    }
-    currentElement = currentElement.parentNode;
-  }
-
-  return href;
-};
 export const getPdfPassword = (book: Book) => {
   if (book.format !== "PDF" || !book?.description) return "";
   // 匹配形如 protected PDF: #password# 的内容

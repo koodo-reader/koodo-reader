@@ -40,10 +40,6 @@ class SettingSwitch extends React.Component<
     };
   }
 
-  _handleRest = () => {
-    BookUtil.reloadBooks();
-  };
-
   _handleChange = (stateName: string) => {
     this.setState({ [stateName]: !this.state[stateName] } as any, () => {
       ConfigService.setReaderConfig(
