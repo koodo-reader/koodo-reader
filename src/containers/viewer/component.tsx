@@ -7,7 +7,7 @@ import Background from "../../components/background";
 import toast from "react-hot-toast";
 import StyleUtil from "../../utils/reader/styleUtil";
 import "./index.css";
-import { HtmlMouseEvent } from "../../utils/reader/mouseEvent";
+import { htmlMouseEvent } from "../../utils/reader/mouseEvent";
 import ImageViewer from "../../components/imageViewer";
 import { getIframeDoc } from "../../utils/reader/docUtil";
 import PopupBox from "../../components/popups/popupBox";
@@ -293,11 +293,13 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
   };
 
   handleRest = async (rendition: any) => {
-    HtmlMouseEvent(
+    htmlMouseEvent(
       rendition,
       this.props.currentBook.key,
       this.props.readerMode,
-      this.props.currentBook.format
+      this.props.currentBook.format,
+      this.props.handleScale,
+      this.props.renderBookFunc
     );
     let chapters = rendition.getChapter();
     let chapterDocs = rendition.getChapterDoc();

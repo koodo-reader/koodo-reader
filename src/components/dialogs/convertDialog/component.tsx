@@ -49,18 +49,6 @@ class ConvertDialog extends React.Component<
                   this.state[item.propName] ? "no" : "yes"
                 );
                 BookUtil.reloadBooks();
-                // ConfigService.setReaderConfig(
-                //   "isConvertPDF",
-                //   ConfigService.getReaderConfig("isConvertPDF") === "yes"
-                //     ? "no"
-                //     : "yes"
-                // );
-                // toast.success(
-                //   ConfigService.getReaderConfig("isConvertPDF") === "yes"
-                //     ? this.props.t("PDF to Text is enabled")
-                //     : this.props.t("PDF to Text is disabled")
-                // );
-                // BookUtil.reloadBooks();
               }}
               style={this.state[item.propName] ? {} : { opacity: 0.6 }}
             >

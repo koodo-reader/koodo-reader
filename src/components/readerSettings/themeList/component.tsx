@@ -50,7 +50,6 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
       ConfigService.setReaderConfig("textColor", "rgba(0,0,0,1)");
     }
     this.props.renderBookFunc();
-    // BookUtil.reloadBooks();
   };
 
   handleChooseBgColor = (color) => {
@@ -187,7 +186,7 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
               ConfigService.setReaderConfig("backgroundColor", "");
               this.props.handleBackgroundColor("");
               toast.success(this.props.t("Removal successful"));
-              BookUtil.reloadBooks();
+              this.props.renderBookFunc();
             }}
           >
             <Trans>Clear</Trans>{" "}
