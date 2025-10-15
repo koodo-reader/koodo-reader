@@ -30,6 +30,11 @@ const mapStateToProps = (state: stateType) => {
     isSearch: state.manager.isSearch,
     scale: state.reader.scale,
     renderBookFunc: state.book.renderBookFunc,
+    isHidePageButton: state.reader.isHidePageButton,
+    isHideMenuButton: state.reader.isHideMenuButton,
+    isHideAIButton: state.reader.isHideAIButton,
+    isHidePDFConvertButton: state.reader.isHidePDFConvertButton,
+    isHideScaleButton: state.reader.isHideScaleButton,
   };
 };
 const actionCreator = {

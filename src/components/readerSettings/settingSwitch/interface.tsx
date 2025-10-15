@@ -6,7 +6,15 @@ export interface SettingSwitchProps {
   isReading: boolean;
   htmlBook: HtmlBookModel;
   renderBookFunc: () => void;
+  handleHideFooter: (isHideFooter: boolean) => void;
+  handleHideHeader: (isHideHeader: boolean) => void;
   t: (title: string) => string;
+  handleHideBackground: (isHideBackground: boolean) => void;
+  handleHidePageButton: (isHidePageButton: boolean) => void;
+  handleHideMenuButton: (isHideMenuButton: boolean) => void;
+  handleHideAIButton: (isHideAIButton: boolean) => void;
+  handleHideScaleButton: (isHideScaleButton: boolean) => void;
+  handleHidePDFConvertButton: (isHidePDFConvertButton: boolean) => void;
 }
 export interface SettingSwitchState {
   isHideBackground: boolean;

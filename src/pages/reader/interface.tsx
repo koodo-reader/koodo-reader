@@ -10,6 +10,11 @@ export interface ReaderProps {
   isConvertOpen: boolean;
   isSearch: boolean;
   isAuthed: boolean;
+  isHidePageButton: boolean;
+  isHideMenuButton: boolean;
+  isHideAIButton: boolean;
+  isHidePDFConvertButton: boolean;
+  isHideScaleButton: boolean;
   readerMode: string;
   scale: string;
   handleFetchNotes: () => void;

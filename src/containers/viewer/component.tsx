@@ -571,8 +571,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           }
         ></div>
         <PageWidget />
-        {ConfigService.getReaderConfig("isHideBackground") ===
-        "yes" ? null : this.props.currentBook.key ? (
+        {this.props.isHideBackground ? null : this.props.currentBook.key ? (
           <Background />
         ) : null}
       </>

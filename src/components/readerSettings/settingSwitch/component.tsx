@@ -57,7 +57,7 @@ class SettingSwitch extends React.Component<
     });
   };
 
-  handleChange = (stateName: string, isReset: boolean) => {
+  handleChange = (stateName: string) => {
     this.setState({ [stateName]: !this.state[stateName] } as any);
     ConfigService.setReaderConfig(
       stateName,
@@ -65,11 +65,6 @@ class SettingSwitch extends React.Component<
     );
 
     toast(this.props.t("Change successful"));
-    if (isReset) {
-      setTimeout(() => {
-        this._handleRest();
-      }, 500);
-    }
   };
   render() {
     return (
@@ -120,16 +115,24 @@ class SettingSwitch extends React.Component<
                       this._handleChange("isStartFromEven");
                       break;
                     case "isHideFooter":
-                      this.handleChange("isHideFooter", true);
+                      this.props.handleHideFooter(!this.state.isHideFooter);
+                      this.handleChange("isHideFooter");
                       break;
                     case "isHideHeader":
-                      this.handleChange("isHideHeader", true);
+                      this.props.handleHideHeader(!this.state.isHideHeader);
+                      this.handleChange("isHideHeader");
                       break;
                     case "isHideBackground":
-                      this.handleChange("isHideBackground", true);
+                      this.props.handleHideBackground(
+                        !this.state.isHideBackground
+                      );
+                      this.handleChange("isHideBackground");
                       break;
                     case "isHidePageButton":
-                      this.handleChange("isHidePageButton", false);
+                      this.props.handleHidePageButton(
+                        !this.state.isHidePageButton
+                      );
+                      this.handleChange("isHidePageButton");
                       break;
                     case "isHideMenuButton":
                       if (!this.state["isHideMenuButton"]) {
@@ -139,32 +142,36 @@ class SettingSwitch extends React.Component<
                           ),
                           callback: (value) => {
                             if (value) {
-                              this.setState({
-                                ["isHideMenuButton"]:
-                                  !this.state["isHideMenuButton"],
-                              } as any);
-                              ConfigService.setReaderConfig(
-                                "isHideMenuButton",
-                                this.state["isHideMenuButton"] ? "yes" : "no"
+                              this.props.handleHideMenuButton(
+                                !this.state.isHideMenuButton
                               );
-
-                              toast(this.props.t("Change successful"));
+                              this.handleChange("isHideMenuButton");
                             }
                           },
                         });
                       } else {
-                        this.handleChange("isHideMenuButton", false);
+                        this.props.handleHideMenuButton(
+                          !this.state.isHideMenuButton
+                        );
+                        this.handleChange("isHideMenuButton");
                       }
 
                       break;
                     case "isHideAIButton":
-                      this.handleChange("isHideAIButton", false);
+                      this.props.handleHideAIButton(!this.state.isHideAIButton);
+                      this.handleChange("isHideAIButton");
                       break;
                     case "isHideScaleButton":
-                      this.handleChange("isHideScaleButton", false);
+                      this.props.handleHideScaleButton(
+                        !this.state.isHideScaleButton
+                      );
+                      this.handleChange("isHideScaleButton");
                       break;
                     case "isHidePDFConvertButton":
-                      this.handleChange("isHidePDFConvertButton", false);
+                      this.props.handleHidePDFConvertButton(
+                        !this.state.isHidePDFConvertButton
+                      );
+                      this.handleChange("isHidePDFConvertButton");
                       break;
                     default:
                       break;

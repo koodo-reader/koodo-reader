@@ -16,6 +16,7 @@ export interface ViewerProps {
   isOpenMenu: boolean;
   isNavLocked: boolean;
   isSettingLocked: boolean;
+  isHideBackground: boolean;
   defaultSyncOption: string;
   scale: string;
   margin: string;

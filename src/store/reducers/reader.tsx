@@ -32,6 +32,16 @@ const initState = {
   isConvertOpen: false,
   isNavLocked: ConfigService.getReaderConfig("isNavLocked") === "yes",
   isSettingLocked: ConfigService.getReaderConfig("isSettingLocked") === "yes",
+  isHideFooter: ConfigService.getReaderConfig("isHideFooter") === "yes",
+  isHideHeader: ConfigService.getReaderConfig("isHideHeader") === "yes",
+  isHideBackground: ConfigService.getReaderConfig("isHideBackground") === "yes",
+  isHidePageButton: ConfigService.getReaderConfig("isHidePageButton") === "yes",
+  isHideMenuButton: ConfigService.getReaderConfig("isHideMenuButton") === "yes",
+  isHideAIButton: ConfigService.getReaderConfig("isHideAIButton") === "yes",
+  isHideScaleButton:
+    ConfigService.getReaderConfig("isHideScaleButton") === "yes",
+  isHidePDFConvertButton:
+    ConfigService.getReaderConfig("isHidePDFConvertButton") === "yes",
 };
 export function reader(
   state = initState,
@@ -78,6 +88,46 @@ export function reader(
       return {
         ...state,
         isSettingLocked: action.payload,
+      };
+    case "HANDLE_HIDE_FOOTER":
+      return {
+        ...state,
+        isHideFooter: action.payload,
+      };
+    case "HANDLE_HIDE_HEADER":
+      return {
+        ...state,
+        isHideHeader: action.payload,
+      };
+    case "HANDLE_HIDE_BACKGROUND":
+      return {
+        ...state,
+        isHideBackground: action.payload,
+      };
+    case "HANDLE_HIDE_PAGE_BUTTON":
+      return {
+        ...state,
+        isHidePageButton: action.payload,
+      };
+    case "HANDLE_HIDE_MENU_BUTTON":
+      return {
+        ...state,
+        isHideMenuButton: action.payload,
+      };
+    case "HANDLE_HIDE_AI_BUTTON":
+      return {
+        ...state,
+        isHideAIButton: action.payload,
+      };
+    case "HANDLE_HIDE_SCALE_BUTTON":
+      return {
+        ...state,
+        isHideScaleButton: action.payload,
+      };
+    case "HANDLE_HIDE_PDF_CONVERT_BUTTON":
+      return {
+        ...state,
+        isHidePDFConvertButton: action.payload,
       };
     case "HANDLE_HTML_BOOK":
       return {
