@@ -99,6 +99,14 @@ export type stateType = {
     isNavLocked: boolean;
     isSettingLocked: boolean;
     isConvertOpen: boolean;
+    isHideFooter: boolean;
+    isHideHeader: boolean;
+    isHideBackground: boolean;
+    isHidePageButton: boolean;
+    isHideMenuButton: boolean;
+    isHideAIButton: boolean;
+    isHideScaleButton: boolean;
+    isHidePDFConvertButton: boolean;
     noteKey: string;
     currentChapter: string;
     currentChapterIndex: number;

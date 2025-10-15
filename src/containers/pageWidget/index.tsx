@@ -14,6 +14,8 @@ const mapStateToProps = (state: stateType) => {
     isNavLocked: state.reader.isNavLocked,
     isSettingLocked: state.reader.isSettingLocked,
     backgroundColor: state.reader.backgroundColor,
+    isHideFooter: state.reader.isHideFooter,
+    isHideHeader: state.reader.isHideHeader,
     currentChapterIndex: state.reader.currentChapterIndex,
     htmlBook: state.reader.htmlBook,
     isShowBookmark: state.viewArea.isShowBookmark,

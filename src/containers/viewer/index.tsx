@@ -41,6 +41,7 @@ const mapStateToProps = (state: stateType) => {
     menuMode: state.viewArea.menuMode,
     scale: state.reader.scale,
     margin: state.reader.margin,
+    isHideBackground: state.reader.isHideBackground,
     renderBookFunc: state.book.renderBookFunc,
   };
 };

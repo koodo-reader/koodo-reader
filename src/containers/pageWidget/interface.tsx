@@ -10,14 +10,14 @@ export interface BackgroundProps {
   isSettingLocked: boolean;
   htmlBook: HtmlBookModel;
   isShowBookmark: boolean;
+  isHideFooter: boolean;
+  isHideHeader: boolean;
   backgroundColor: string;
   handleCurrentChapter: (currentChapter: string) => void;
   handleCurrentChapterIndex: (currentChapterIndex: number) => void;
 }
 export interface BackgroundState {
   isSingle: boolean;
-  isHideFooter: boolean;
-  isHideHeader: boolean;
   prevPage: number;
   nextPage: number;
 }
