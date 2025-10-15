@@ -137,7 +137,9 @@ export const bindHtmlEvent = (
   rendition: any,
   doc: any,
   key: string = "",
-  readerMode: string = ""
+  readerMode: string = "",
+  handleScale: (scale: string) => void,
+  renderBookFunc: () => void
 ) => {
   doc.addEventListener(
     "keydown",
@@ -161,7 +163,8 @@ export const bindHtmlEvent = (
         } else {
           ConfigService.setReaderConfig("scale", scale - 0.1 + "");
         }
-        BookUtil.reloadBooks();
+        handleScale(ConfigService.getReaderConfig("scale") || "1");
+        renderBookFunc();
         return;
       }
       if (lock) return;
@@ -228,11 +231,13 @@ export const bindHtmlEvent = (
     { passive: false }
   );
 };
-export const HtmlMouseEvent = (
+export const htmlMouseEvent = (
   rendition: any,
   key: string,
   readerMode: string,
-  format: string
+  format: string,
+  handleScale: (scale: string) => void,
+  renderBookFunc: () => void
 ) => {
   rendition.on("rendered", () => {
     let iframe = getIframeWin();
@@ -242,7 +247,14 @@ export const HtmlMouseEvent = (
     for (let i = 0; i < docs.length; i++) {
       let doc = docs[i];
       if (!doc) continue;
-      bindHtmlEvent(rendition, doc, key, readerMode);
+      bindHtmlEvent(
+        rendition,
+        doc,
+        key,
+        readerMode,
+        handleScale,
+        renderBookFunc
+      );
     }
     lock = false;
   });

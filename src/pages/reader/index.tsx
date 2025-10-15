@@ -9,11 +9,13 @@ import {
   handleOriginalText,
   handleOpenMenu,
   handleConvertDialog,
+  handleScale,
 } from "../../store/actions";
 import { connect } from "react-redux";
 import { stateType } from "../../store";
 import Reader from "./component";
 import { withTranslation } from "react-i18next";
+import { render } from "react-dom";
 
 const mapStateToProps = (state: stateType) => {
   return {
@@ -27,6 +29,7 @@ const mapStateToProps = (state: stateType) => {
     isAuthed: state.manager.isAuthed,
     isSearch: state.manager.isSearch,
     scale: state.reader.scale,
+    renderBookFunc: state.book.renderBookFunc,
   };
 };
 const actionCreator = {
@@ -40,6 +43,7 @@ const actionCreator = {
   handleOriginalText,
   handleOpenMenu,
   handleConvertDialog,
+  handleScale,
 };
 export default connect(
   mapStateToProps,

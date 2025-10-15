@@ -22,6 +22,8 @@ export interface ReaderProps {
   handleFetchBookmarks: () => void;
   handleFetchPercentage: (currentBook: BookModel) => void;
   handleReadingBook: (book: BookModel) => void;
+  handleScale: (scale: string) => void;
+  renderBookFunc: () => void;
 }
 
 export interface ReaderState {

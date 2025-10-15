@@ -40,6 +40,8 @@ export interface ViewerProps {
   handleCurrentChapterIndex: (currentChapterIndex: number) => void;
   handlePercentage: (percentage: number) => void;
   handleFetchPercentage: (book: Book) => void;
+  handleScale: (scale: string) => void;
+  renderBookFunc: () => void;
 }
 export interface ViewerState {
   key: string;

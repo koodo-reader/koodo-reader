@@ -302,7 +302,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
                               parseFloat(fieldVal) / 100 + ""
                             );
                           }
-                          BookUtil.reloadBooks();
+                          this.props.renderBookFunc();
                         }}
                       />
                       <span> %</span>
@@ -323,7 +323,8 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
                         this.setState({ scale: event.target.value });
                       }}
                       onMouseUp={() => {
-                        BookUtil.reloadBooks();
+                        this.props.handleScale(this.state.scale);
+                        this.props.renderBookFunc();
                       }}
                       style={{
                         zIndex: 100,

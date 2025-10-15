@@ -18,6 +18,7 @@ import {
   handleFetchPlugins,
   handleReaderMode,
   handleFetchAuthed,
+  handleScale,
 } from "../../store/actions";
 import Viewer from "./component";
 import { stateType } from "../../store";
@@ -40,6 +41,7 @@ const mapStateToProps = (state: stateType) => {
     menuMode: state.viewArea.menuMode,
     scale: state.reader.scale,
     margin: state.reader.margin,
+    renderBookFunc: state.book.renderBookFunc,
   };
 };
 const actionCreator = {
@@ -61,6 +63,7 @@ const actionCreator = {
   handleFetchPlugins,
   handleReaderMode,
   handleFetchAuthed,
+  handleScale,
 };
 export default connect(
   mapStateToProps,
