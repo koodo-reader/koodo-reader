@@ -3,7 +3,6 @@ import "./imageViewer.css";
 import { ImageViewerProps, ImageViewerStates } from "./interface";
 import { saveAs } from "file-saver";
 import { getIframeDoc } from "../../utils/reader/docUtil";
-import { getTargetHref } from "../../utils/common";
 declare var window: any;
 class ImageViewer extends React.Component<ImageViewerProps, ImageViewerStates> {
   constructor(props: ImageViewerProps) {
@@ -37,7 +36,7 @@ class ImageViewer extends React.Component<ImageViewerProps, ImageViewerStates> {
       this.props.handleLeaveReader("bottom");
     }
 
-    let href = getTargetHref(event);
+    let href = this.props.rendition.getTargetHref(event);
     if (
       href &&
       (this.props.rendition.resolveChapter(href) ||

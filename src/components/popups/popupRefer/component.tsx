@@ -3,7 +3,6 @@ import "./popupRefer.css";
 import { PopupReferProps, PopupReferStates } from "./interface";
 import { getIframeDoc } from "../../../utils/reader/docUtil";
 import {
-  getTargetHref,
   isElementFootnote,
   openExternalUrl,
   processHtml,
@@ -93,133 +92,162 @@ class PopupRefer extends React.Component<PopupReferProps, PopupReferStates> {
     event: any,
     rendition: any = {}
   ): Promise<boolean> => {
-    let href = getTargetHref(event);
+    let href = this.props.rendition.getTargetHref(event);
     console.log("handleLinkJump", href, event);
-    if (href && href.startsWith("kindle:")) {
-      let chapterInfo = rendition.resolveChapter(href);
-      if (chapterInfo) {
-        await rendition.goToChapter(
-          chapterInfo.index,
-          chapterInfo.href,
-          chapterInfo.label
-        );
-        return true;
-      }
-      let result = await this.props.rendition.resolveHref(href);
-      if (!result.anchor) {
-        return false;
-      }
-      let currentPosition = rendition.getPosition();
-      if (result.index === parseInt(currentPosition.chapterDocIndex)) {
-        let doc = getIframeDoc(this.props.currentBook.format)[0];
-        let node = result.anchor(doc);
-        if (node) {
-          href = "#" + node.getAttribute("id");
-        }
-      } else {
-        this.setState({
-          isJump: true,
-          returnPosition: ConfigService.getObjectConfig(
-            this.props.currentBook.key,
-            "recordLocation",
-            {}
-          ),
-        });
-        let rect = event.target.getBoundingClientRect();
-        await rendition.goToChapterDocIndex(result.index);
-        let doc = getIframeDoc(this.props.currentBook.format)[0];
-        let node = result.anchor(doc);
-        await rendition.goToNode(node);
-        if (isElementFootnote(event.target)) {
-          await this.handleShowMenu(node, event.target, rect);
-        }
-
-        return true;
-      }
+    let result = await this.props.rendition.handleLinkJump(href, event);
+    console.log("handleLinkJump result", result);
+    if (!result.handled) {
+      return false;
     }
-
-    if (href && href.indexOf("#") > -1) {
-      let pageArea = document.getElementById("page-area");
-      if (!pageArea) return false;
-      let iframe = pageArea.getElementsByTagName("iframe")[0];
-      if (!iframe) return false;
-      let doc: any = iframe.contentDocument;
-      if (!doc) {
-        return false;
-      }
-      this.setState({ href: href });
-      let id = href.split("#").reverse()[0];
-      let node = doc.body.querySelector("#" + CSS.escape(id));
-      let rect = event.target.getBoundingClientRect();
-      console.log("find node by id", node, id);
-
-      if (!node) {
-        if (href.indexOf("filepos") > -1 && rendition.resolveChapter(href)) {
-          let chapterInfo = rendition.resolveChapter(href);
-          await rendition.goToChapter(
-            chapterInfo.index,
-            chapterInfo.href,
-            chapterInfo.label
-          );
-          return true;
-        }
-        //can't find the node, go to href
-        if (href.indexOf("#") !== 0) {
-          while (href.startsWith(".")) {
-            href = href.substring(1);
-          }
-          let chapterInfo = rendition.resolveChapter(href.split("#")[0]);
-          await rendition.goToChapter(
-            chapterInfo.index,
-            chapterInfo.href,
-            chapterInfo.label
-          );
-        }
-        node = doc.body.querySelector("#" + CSS.escape(id));
-        if (!node) {
-          return false;
-        }
-        this.setState({
-          isJump: true,
-          returnPosition: ConfigService.getObjectConfig(
-            this.props.currentBook.key,
-            "recordLocation",
-            {}
-          ),
-        });
-        await rendition.goToNode(node);
-      }
-      console.log("go to node", isElementFootnote(event.target));
-      if (isElementFootnote(event.target)) {
-        await this.handleShowMenu(node, event.target, rect);
-      }
-      return true;
-    } else if (
-      href &&
-      rendition.resolveChapter &&
-      rendition.resolveChapter(href)
-    ) {
-      let chapterInfo = rendition.resolveChapter(href);
-      await rendition.goToChapter(
-        chapterInfo.index,
-        chapterInfo.href,
-        chapterInfo.label
-      );
-      return true;
-    } else if (
-      href &&
-      href.indexOf("../") === -1 &&
-      (href.indexOf("http") === 0 || href.indexOf("mailto") === 0) &&
-      href.indexOf("OEBPF") === -1 &&
-      href.indexOf("OEBPS") === -1 &&
-      href.indexOf("footnote") === -1 &&
-      href.indexOf("blob") === -1 &&
-      href.indexOf("data:application") === -1
-    ) {
+    if (result.external) {
       openExternalUrl(href);
       return true;
     }
-    return false;
+    if (result.isJump) {
+      this.setState({
+        isJump: true,
+        returnPosition: ConfigService.getObjectConfig(
+          this.props.currentBook.key,
+          "recordLocation",
+          {}
+        ),
+      });
+    }
+    if (result.href) {
+      this.setState({ href: result.href });
+    }
+    if (result.isShowMenu) {
+      let rect = event.target.getBoundingClientRect();
+      console.log("show menu", event.target, rect);
+      await this.handleShowMenu(result.node, event.target, rect);
+      return true;
+    }
+    return true;
+    // if (href && href.startsWith("kindle:")) {
+    //   let chapterInfo = rendition.resolveChapter(href);
+    //   if (chapterInfo) {
+    //     await rendition.goToChapter(
+    //       chapterInfo.index,
+    //       chapterInfo.href,
+    //       chapterInfo.label
+    //     );
+    //     return true;
+    //   }
+    //   let result = await this.props.rendition.resolveHref(href);
+    //   if (!result.anchor) {
+    //     return false;
+    //   }
+    //   let currentPosition = rendition.getPosition();
+    //   if (result.index === parseInt(currentPosition.chapterDocIndex)) {
+    //     let doc = getIframeDoc(this.props.currentBook.format)[0];
+    //     let node = result.anchor(doc);
+    //     if (node) {
+    //       href = "#" + node.getAttribute("id");
+    //     }
+    //   } else {
+    //     this.setState({
+    //       isJump: true,
+    //       returnPosition: ConfigService.getObjectConfig(
+    //         this.props.currentBook.key,
+    //         "recordLocation",
+    //         {}
+    //       ),
+    //     });
+    //     let rect = event.target.getBoundingClientRect();
+    //     await rendition.goToChapterDocIndex(result.index);
+    //     let doc = getIframeDoc(this.props.currentBook.format)[0];
+    //     let node = result.anchor(doc);
+    //     await rendition.goToNode(node);
+    //     if (isElementFootnote(event.target)) {
+    //       await this.handleShowMenu(node, event.target, rect);
+    //     }
+
+    //     return true;
+    //   }
+    // }
+
+    // if (href && href.indexOf("#") > -1) {
+    //   let pageArea = document.getElementById("page-area");
+    //   if (!pageArea) return false;
+    //   let iframe = pageArea.getElementsByTagName("iframe")[0];
+    //   if (!iframe) return false;
+    //   let doc: any = iframe.contentDocument;
+    //   if (!doc) {
+    //     return false;
+    //   }
+    //   this.setState({ href: href });
+    //   let id = href.split("#").reverse()[0];
+    //   let node = doc.body.querySelector("#" + CSS.escape(id));
+    //   let rect = event.target.getBoundingClientRect();
+    //   console.log("find node by id", node, id);
+
+    //   if (!node) {
+    //     if (href.indexOf("filepos") > -1 && rendition.resolveChapter(href)) {
+    //       let chapterInfo = rendition.resolveChapter(href);
+    //       await rendition.goToChapter(
+    //         chapterInfo.index,
+    //         chapterInfo.href,
+    //         chapterInfo.label
+    //       );
+    //       return true;
+    //     }
+    //     //can't find the node, go to href
+    //     if (href.indexOf("#") !== 0) {
+    //       while (href.startsWith(".")) {
+    //         href = href.substring(1);
+    //       }
+    //       let chapterInfo = rendition.resolveChapter(href.split("#")[0]);
+    //       await rendition.goToChapter(
+    //         chapterInfo.index,
+    //         chapterInfo.href,
+    //         chapterInfo.label
+    //       );
+    //     }
+    //     node = doc.body.querySelector("#" + CSS.escape(id));
+    //     if (!node) {
+    //       return false;
+    //     }
+    //     this.setState({
+    //       isJump: true,
+    //       returnPosition: ConfigService.getObjectConfig(
+    //         this.props.currentBook.key,
+    //         "recordLocation",
+    //         {}
+    //       ),
+    //     });
+    //     await rendition.goToNode(node);
+    //   }
+    //   console.log("go to node", isElementFootnote(event.target));
+    //   if (isElementFootnote(event.target)) {
+    //     await this.handleShowMenu(node, event.target, rect);
+    //   }
+    //   return true;
+    // } else if (
+    //   href &&
+    //   rendition.resolveChapter &&
+    //   rendition.resolveChapter(href)
+    // ) {
+    //   let chapterInfo = rendition.resolveChapter(href);
+    //   await rendition.goToChapter(
+    //     chapterInfo.index,
+    //     chapterInfo.href,
+    //     chapterInfo.label
+    //   );
+    //   return true;
+    // } else if (
+    //   href &&
+    //   href.indexOf("../") === -1 &&
+    //   (href.indexOf("http") === 0 || href.indexOf("mailto") === 0) &&
+    //   href.indexOf("OEBPF") === -1 &&
+    //   href.indexOf("OEBPS") === -1 &&
+    //   href.indexOf("footnote") === -1 &&
+    //   href.indexOf("blob") === -1 &&
+    //   href.indexOf("data:application") === -1
+    // ) {
+    //   openExternalUrl(href);
+    //   return true;
+    // }
+    // return false;
   };
 
   showMenu = () => {
