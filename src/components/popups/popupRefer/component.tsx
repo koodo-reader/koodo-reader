@@ -2,11 +2,7 @@ import React from "react";
 import "./popupRefer.css";
 import { PopupReferProps, PopupReferStates } from "./interface";
 import { getIframeDoc } from "../../../utils/reader/docUtil";
-import {
-  isElementFootnote,
-  openExternalUrl,
-  processHtml,
-} from "../../../utils/common";
+import { openExternalUrl } from "../../../utils/common";
 import Parser from "html-react-parser";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 
@@ -48,39 +44,15 @@ class PopupRefer extends React.Component<PopupReferProps, PopupReferStates> {
       this.setState({ isOpenMenu: false });
       return;
     }
-    this.handleLinkJump(event, this.props.rendition);
+    this.handleLinkJump(event);
   };
-  handleShowMenu = async (node, targetElement, rect) => {
-    if (isElementFootnote(node) || !node.textContent.trim()) {
-      //获取当前a标签和下一个a标签之间的内容
-      let next = node.nextSibling;
-      let content = node.textContent;
-      console.log(next);
-      while (next && (next.tagName !== node.tagName || !content.trim())) {
-        content += next.textContent;
-        next = next.nextSibling;
-      }
-      console.log("footnote content", content);
-      if (content.trim() && content.trim().length <= 3000) {
-        node = document.createElement("div");
-        node.innerHTML = content;
-      }
-    }
-    console.log("handleShowMenu", node, node.textContent);
-    let htmlContent = node.innerHTML;
-    if (!node.textContent.trim()) {
-      return false;
-    }
-    console.log(1);
-    if (node.textContent.trim() && node.textContent.trim().length > 3000) {
-      return false;
-    }
-    console.log(2);
-    htmlContent = await processHtml(htmlContent);
+  handleShowMenu = async (node, rect) => {
+    let result = await this.props.rendition.getFootnoteContent(node);
+    if (!result.handled) return;
     this.setState(
       {
         rect: rect,
-        footnote: htmlContent,
+        footnote: result.content,
         isOpenMenu: true,
       },
       () => {
@@ -88,10 +60,7 @@ class PopupRefer extends React.Component<PopupReferProps, PopupReferStates> {
       }
     );
   };
-  handleLinkJump = async (
-    event: any,
-    rendition: any = {}
-  ): Promise<boolean> => {
+  handleLinkJump = async (event: any): Promise<boolean> => {
     let href = this.props.rendition.getTargetHref(event);
     console.log("handleLinkJump", href, event);
     let result = await this.props.rendition.handleLinkJump(href, event);
@@ -117,137 +86,12 @@ class PopupRefer extends React.Component<PopupReferProps, PopupReferStates> {
       this.setState({ href: result.href });
     }
     if (result.isShowMenu) {
-      let rect = event.target.getBoundingClientRect();
-      console.log("show menu", event.target, rect);
-      await this.handleShowMenu(result.node, event.target, rect);
+      let targetElement = event.target;
+      let rect = targetElement.getBoundingClientRect();
+      await this.handleShowMenu(result.node, rect);
       return true;
     }
     return true;
-    // if (href && href.startsWith("kindle:")) {
-    //   let chapterInfo = rendition.resolveChapter(href);
-    //   if (chapterInfo) {
-    //     await rendition.goToChapter(
-    //       chapterInfo.index,
-    //       chapterInfo.href,
-    //       chapterInfo.label
-    //     );
-    //     return true;
-    //   }
-    //   let result = await this.props.rendition.resolveHref(href);
-    //   if (!result.anchor) {
-    //     return false;
-    //   }
-    //   let currentPosition = rendition.getPosition();
-    //   if (result.index === parseInt(currentPosition.chapterDocIndex)) {
-    //     let doc = getIframeDoc(this.props.currentBook.format)[0];
-    //     let node = result.anchor(doc);
-    //     if (node) {
-    //       href = "#" + node.getAttribute("id");
-    //     }
-    //   } else {
-    //     this.setState({
-    //       isJump: true,
-    //       returnPosition: ConfigService.getObjectConfig(
-    //         this.props.currentBook.key,
-    //         "recordLocation",
-    //         {}
-    //       ),
-    //     });
-    //     let rect = event.target.getBoundingClientRect();
-    //     await rendition.goToChapterDocIndex(result.index);
-    //     let doc = getIframeDoc(this.props.currentBook.format)[0];
-    //     let node = result.anchor(doc);
-    //     await rendition.goToNode(node);
-    //     if (isElementFootnote(event.target)) {
-    //       await this.handleShowMenu(node, event.target, rect);
-    //     }
-
-    //     return true;
-    //   }
-    // }
-
-    // if (href && href.indexOf("#") > -1) {
-    //   let pageArea = document.getElementById("page-area");
-    //   if (!pageArea) return false;
-    //   let iframe = pageArea.getElementsByTagName("iframe")[0];
-    //   if (!iframe) return false;
-    //   let doc: any = iframe.contentDocument;
-    //   if (!doc) {
-    //     return false;
-    //   }
-    //   this.setState({ href: href });
-    //   let id = href.split("#").reverse()[0];
-    //   let node = doc.body.querySelector("#" + CSS.escape(id));
-    //   let rect = event.target.getBoundingClientRect();
-    //   console.log("find node by id", node, id);
-
-    //   if (!node) {
-    //     if (href.indexOf("filepos") > -1 && rendition.resolveChapter(href)) {
-    //       let chapterInfo = rendition.resolveChapter(href);
-    //       await rendition.goToChapter(
-    //         chapterInfo.index,
-    //         chapterInfo.href,
-    //         chapterInfo.label
-    //       );
-    //       return true;
-    //     }
-    //     //can't find the node, go to href
-    //     if (href.indexOf("#") !== 0) {
-    //       while (href.startsWith(".")) {
-    //         href = href.substring(1);
-    //       }
-    //       let chapterInfo = rendition.resolveChapter(href.split("#")[0]);
-    //       await rendition.goToChapter(
-    //         chapterInfo.index,
-    //         chapterInfo.href,
-    //         chapterInfo.label
-    //       );
-    //     }
-    //     node = doc.body.querySelector("#" + CSS.escape(id));
-    //     if (!node) {
-    //       return false;
-    //     }
-    //     this.setState({
-    //       isJump: true,
-    //       returnPosition: ConfigService.getObjectConfig(
-    //         this.props.currentBook.key,
-    //         "recordLocation",
-    //         {}
-    //       ),
-    //     });
-    //     await rendition.goToNode(node);
-    //   }
-    //   console.log("go to node", isElementFootnote(event.target));
-    //   if (isElementFootnote(event.target)) {
-    //     await this.handleShowMenu(node, event.target, rect);
-    //   }
-    //   return true;
-    // } else if (
-    //   href &&
-    //   rendition.resolveChapter &&
-    //   rendition.resolveChapter(href)
-    // ) {
-    //   let chapterInfo = rendition.resolveChapter(href);
-    //   await rendition.goToChapter(
-    //     chapterInfo.index,
-    //     chapterInfo.href,
-    //     chapterInfo.label
-    //   );
-    //   return true;
-    // } else if (
-    //   href &&
-    //   href.indexOf("../") === -1 &&
-    //   (href.indexOf("http") === 0 || href.indexOf("mailto") === 0) &&
-    //   href.indexOf("OEBPF") === -1 &&
-    //   href.indexOf("OEBPS") === -1 &&
-    //   href.indexOf("footnote") === -1 &&
-    //   href.indexOf("blob") === -1 &&
-    //   href.indexOf("data:application") === -1
-    // ) {
-    //   openExternalUrl(href);
-    //   return true;
-    // }
-    // return false;
   };
 
   showMenu = () => {
@@ -258,47 +102,34 @@ class PopupRefer extends React.Component<PopupReferProps, PopupReferStates> {
     popupMenu?.setAttribute("style", `left:${posX}px;top:${posY}px`);
   };
   getHtmlPosition(rect: any) {
-    let posY = rect.bottom - this.props.rendition.getPageSize().scrollTop;
+    let pageSize = this.props.rendition.getPageSize();
+    let posY = rect.bottom - pageSize.scrollTop;
     let posX = rect.left + rect.width / 2;
-    if (rect.width > this.props.rendition.getPageSize().sectionWidth) {
-      posX =
-        rect.left +
-        rect.width -
-        this.props.rendition.getPageSize().sectionWidth / 2;
+    if (rect.width > pageSize.sectionWidth) {
+      posX = rect.left + rect.width - pageSize.sectionWidth / 2;
     }
-    if (this.props.rendition.getPageSize().height - rect.height < 188) {
-      posY = rect.top + 16 + this.props.rendition.getPageSize().top;
-    } else if (
-      posY <
-      this.props.rendition.getPageSize().height -
-        188 +
-        this.props.rendition.getPageSize().top
-    ) {
-      posY = posY + 16 + this.props.rendition.getPageSize().top;
+    if (pageSize.height - rect.height < 188) {
+      posY = rect.top + 16 + pageSize.top;
+    } else if (posY < pageSize.height - 188 + pageSize.top) {
+      posY = posY + 16 + pageSize.top;
     } else {
-      posY = posY - rect.height - 188 + this.props.rendition.getPageSize().top;
+      posY = posY - rect.height - 188 + pageSize.top;
     }
-    posX = posX - 135 + this.props.rendition.getPageSize().left;
+    posX = posX - 135 + pageSize.left;
     if (
       this.props.currentBook.format === "PDF" &&
       this.props.readerMode === "double" &&
       this.props.chapterDocIndex % 2 === 1 &&
       ConfigService.getReaderConfig("isConvertPDF") !== "yes"
     ) {
-      posX =
-        posX +
-        this.props.rendition.getPageSize().sectionWidth +
-        this.props.rendition.getPageSize().gap;
+      posX = posX + pageSize.sectionWidth + pageSize.gap;
     }
     if (
       this.props.currentBook.format === "PDF" &&
       this.props.readerMode === "scroll" &&
       ConfigService.getReaderConfig("isConvertPDF") !== "yes"
     ) {
-      posY =
-        posY +
-        this.props.chapterDocIndex *
-          this.props.rendition.getPageSize().sectionHeight;
+      posY = posY + this.props.chapterDocIndex * pageSize.sectionHeight;
     }
     if (posX < 0) {
       posX = 20;
@@ -311,6 +142,12 @@ class PopupRefer extends React.Component<PopupReferProps, PopupReferStates> {
     }
     if (posY > document.body.clientHeight - 250 - 20) {
       posY = document.body.clientHeight - 250 - 20;
+    }
+    if (
+      this.props.readerMode === "scroll" &&
+      this.props.currentBook.format === "PDF"
+    ) {
+      posX = posX - pageSize.scrollLeft;
     }
     return { posX, posY } as any;
   }
@@ -325,7 +162,7 @@ class PopupRefer extends React.Component<PopupReferProps, PopupReferStates> {
           <div
             className="popup-menu-box popup-ref-box"
             onClick={(event) => {
-              this.handleLinkJump(event, this.props.rendition);
+              this.handleLinkJump(event);
               event.stopPropagation();
               event.preventDefault();
             }}
