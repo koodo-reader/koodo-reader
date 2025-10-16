@@ -52,56 +52,46 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     });
   };
   getHtmlPosition(rect: any) {
-    let posY = rect.bottom - this.props.rendition.getPageSize().scrollTop;
+    let pageSize = this.props.rendition.getPageSize();
+    let posY = rect.bottom - pageSize.scrollTop;
+    console.log(pageSize);
     let posX = rect.left + rect.width / 2;
     // fix popup position when crossing pages
-    if (
-      rect.width > this.props.rendition.getPageSize().sectionWidth &&
-      rect.left < 0
-    ) {
+    if (rect.width > pageSize.sectionWidth && rect.left < 0) {
       posX = rect.left + rect.width;
     }
     if (
       rect.top < 188 &&
-      this.props.rendition.getPageSize().height - rect.top - rect.height <
-        188 &&
+      pageSize.height - rect.top - rect.height < 188 &&
       this.props.readerMode !== "scroll"
     ) {
       this.props.handleChangeDirection(true);
-      posY = rect.top + 16 + this.props.rendition.getPageSize().top;
+      posY = rect.top + 16 + pageSize.top;
     } else if (
-      this.props.rendition.getPageSize().height - rect.height < 188 &&
-      this.props.rendition.getPageSize().height - rect.height > -10
+      pageSize.height - rect.height < 188 &&
+      pageSize.height - rect.height > -10
     ) {
       this.props.handleChangeDirection(true);
-      posY = rect.top - this.props.rendition.getPageSize().scrollTop + 16;
+      posY = rect.top - pageSize.scrollTop + 16;
     } else if (
-      rect.height - this.props.rendition.getPageSize().height > 0 &&
+      rect.height - pageSize.height > 0 &&
       this.props.readerMode === "scroll"
     ) {
       posY = 40;
-    } else if (
-      posY <
-      this.props.rendition.getPageSize().height -
-        188 +
-        this.props.rendition.getPageSize().top
-    ) {
+    } else if (posY < pageSize.height - 188 + pageSize.top) {
       this.props.handleChangeDirection(true);
-      posY = posY + 16 + this.props.rendition.getPageSize().top;
+      posY = posY + 16 + pageSize.top;
     } else {
-      posY = posY - rect.height - 188 + this.props.rendition.getPageSize().top;
+      posY = posY - rect.height - 188 + pageSize.top;
     }
-    posX = posX - 80 + this.props.rendition.getPageSize().left;
+    posX = posX - 80 + pageSize.left;
     if (
       this.props.currentBook.format === "PDF" &&
       this.props.readerMode === "double" &&
       this.props.chapterDocIndex % 2 === 1 &&
       ConfigService.getReaderConfig("isConvertPDF") !== "yes"
     ) {
-      posX =
-        posX +
-        this.props.rendition.getPageSize().sectionWidth +
-        this.props.rendition.getPageSize().gap;
+      posX = posX + pageSize.sectionWidth + pageSize.gap;
     }
     if (
       this.props.currentBook.format === "PDF" &&
@@ -109,16 +99,19 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
       ConfigService.getReaderConfig("isConvertPDF") !== "yes" &&
       posY < 0
     ) {
-      posY =
-        posY +
-        this.props.chapterDocIndex *
-          this.props.rendition.getPageSize().sectionHeight;
+      posY = posY + this.props.chapterDocIndex * pageSize.sectionHeight;
     }
     if (posY < 0) {
       posY = 16;
     }
-    if (posY > this.props.rendition.getPageSize().height - 188) {
-      posY = this.props.rendition.getPageSize().height - 188;
+    if (posY > pageSize.height - 188) {
+      posY = pageSize.height - 188;
+    }
+    if (
+      this.props.readerMode === "scroll" &&
+      this.props.currentBook.format === "PDF"
+    ) {
+      posX = posX - pageSize.scrollLeft;
     }
     return { posX, posY } as any;
   }
