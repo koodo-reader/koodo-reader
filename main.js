@@ -8,6 +8,7 @@ const {
   powerSaveBlocker,
   nativeTheme,
   protocol,
+  screen
 } = require("electron");
 const path = require("path");
 const isDev = require("electron-is-dev");
@@ -42,9 +43,10 @@ store.set(
 store.set(
   "appPlatform", os.platform() + " " + os.release(),
 );
+const mainWinDisplayScale = store.get("mainWinDisplayScale") || 1
 let options = {
-  width: parseInt(store.get("mainWinWidth") || 1050),
-  height: parseInt(store.get("mainWinHeight") || 660),
+  width: parseInt(store.get("mainWinWidth") || 1050) / mainWinDisplayScale,
+  height: parseInt(store.get("mainWinHeight") || 660) / mainWinDisplayScale,
   x: parseInt(store.get("mainWinX")),
   y: parseInt(store.get("mainWinY")),
   backgroundColor: '#fff',
@@ -144,6 +146,26 @@ const decrypt = (encryptedText, key) => {
   }
   return result;
 }
+// Helper to check if two rectangles intersect (for partial visibility)
+const rectanglesIntersect = (rect1, rect2) => {
+  return !(
+    rect1.x + rect1.width <= rect2.x ||
+    rect1.y + rect1.height <= rect2.y ||
+    rect1.x >= rect2.x + rect2.width ||
+    rect1.y >= rect2.y + rect2.height
+  );
+}
+
+// Check if the window is at least partially visible on any display
+const isWindowPartiallyVisible = (bounds) => {
+  const displays = screen.getAllDisplays();
+  for (const display of displays) {
+    if (rectanglesIntersect(bounds, display.workArea)) {
+      return true;
+    }
+  }
+  return false;
+}
 const createMainWin = () => {
 
   mainWin = new BrowserWindow(options);
@@ -166,12 +188,15 @@ const createMainWin = () => {
   mainWin.on("close", () => {
     if (mainWin && !mainWin.isDestroyed()) {
       let bounds = mainWin.getBounds();
+      const currentDisplay = screen.getDisplayMatching(bounds);
+      const primaryDisplay = screen.getPrimaryDisplay();
       if (bounds.width > 0 && bounds.height > 0) {
         store.set({
           mainWinWidth: bounds.width,
           mainWinHeight: bounds.height,
           mainWinX: mainWin.isMaximized() ? 0 : bounds.x,
           mainWinY: mainWin.isMaximized() ? 0 : bounds.y,
+          mainWinDisplayScale: currentDisplay.scaleFactor / primaryDisplay.scaleFactor,
         });
       }
     }
@@ -299,12 +324,20 @@ const createMainWin = () => {
       if (readerWindow) {
         readerWindowList.push(readerWindow)
       }
-      readerWindow = new BrowserWindow({
-        ...options,
-        width: parseInt(store.get("windowWidth") || 1050),
-        height: parseInt(store.get("windowHeight") || 660),
+      const scaleRatio = store.get("windowDisplayScale") || 1
+      const isWindowVisible = isWindowPartiallyVisible({
         x: parseInt(store.get("windowX")),
         y: parseInt(store.get("windowY")),
+        width: parseInt(store.get("windowWidth") || 1050) / scaleRatio,
+        height: parseInt(store.get("windowHeight") || 660) / scaleRatio,
+      });
+      console.log(isWindowVisible, 'isWindowVisible')
+      readerWindow = new BrowserWindow({
+        ...options,
+        width: parseInt(store.get("windowWidth") || 1050) / scaleRatio,
+        height: parseInt(store.get("windowHeight") || 660) / scaleRatio,
+        x: isWindowVisible ? parseInt(store.get("windowX")) : undefined,
+        y: isWindowVisible ? parseInt(store.get("windowY")) : undefined,
         frame: isMergeWord === "yes" ? false : true,
         hasShadow: isMergeWord === "yes" ? false : true,
         transparent: isMergeWord === "yes" ? true : false,
@@ -318,12 +351,16 @@ const createMainWin = () => {
     readerWindow.on("close", (event) => {
       if (readerWindow && !readerWindow.isDestroyed()) {
         let bounds = readerWindow.getBounds();
+        const currentDisplay = screen.getDisplayMatching(bounds);
+        const primaryDisplay = screen.getPrimaryDisplay();
+        console.log(currentDisplay, primaryDisplay)
         if (bounds.width > 0 && bounds.height > 0) {
           store.set({
             windowWidth: bounds.width,
             windowHeight: bounds.height,
             windowX: readerWindow.isMaximized() ? 0 : bounds.x,
             windowY: readerWindow.isMaximized() ? 0 : bounds.y,
+            windowDisplayScale: currentDisplay.scaleFactor / primaryDisplay.scaleFactor,
           });
         }
       }
@@ -786,9 +823,10 @@ const createMainWin = () => {
       if (store.get("isMergeWord") === "yes") {
         delete options.backgroundColor
       }
+      const scaleRatio = store.get("windowDisplayScale") || 1
       Object.assign(options, {
-        width: parseInt(store.get("windowWidth") || 1050),
-        height: parseInt(store.get("windowHeight") || 660),
+        width: parseInt(store.get("windowWidth") || 1050) / scaleRatio,
+        height: parseInt(store.get("windowHeight") || 660) / scaleRatio,
         x: parseInt(store.get("windowX")),
         y: parseInt(store.get("windowY")),
         frame: store.get("isMergeWord") !== "yes" ? false : true,
