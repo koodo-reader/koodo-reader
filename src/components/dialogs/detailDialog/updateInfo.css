@@ -15,6 +15,13 @@
   padding-top: 10px;
   line-height: 17px;
 }
+.detail-dialog-shelf-location {
+  margin-top: 10px;
+  margin-left: 5%;
+  margin-right: 5%;
+  display: flex;
+  flex-wrap: wrap;
+}
 .download-desk-feature-item {
   font-size: 15px;
   line-height: 23px;

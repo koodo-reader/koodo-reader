@@ -8,4 +8,5 @@ export interface DetailDialogState {
   textColor: string;
   cover: string;
   isCoverExist: boolean;
+  shelfLocation: string[];
 }
