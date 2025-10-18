@@ -6,6 +6,7 @@ import Parser from "html-react-parser";
 import DOMPurify from "dompurify";
 import EmptyCover from "../../emptyCover";
 import CoverUtil from "../../../utils/file/coverUtil";
+import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 class DetailDialog extends React.Component<
   DetailDialogProps,
   DetailDialogState
@@ -17,6 +18,7 @@ class DetailDialog extends React.Component<
       textColor: "#333",
       cover: "",
       isCoverExist: false,
+      shelfLocation: [],
     };
   }
   async componentDidMount() {
@@ -24,11 +26,34 @@ class DetailDialog extends React.Component<
       cover: await CoverUtil.getCover(this.props.currentBook),
       isCoverExist: await CoverUtil.isCoverExist(this.props.currentBook),
     });
+    let shelfList = ConfigService.getAllMapConfig("shelfList");
+    let shelfLocation: string[] = [];
+    for (let shelf in shelfList) {
+      if (shelfList[shelf].indexOf(this.props.currentBook.key) > -1) {
+        shelfLocation.push(shelf);
+      }
+    }
+    this.setState({ shelfLocation });
   }
   handleClose = () => {
     this.props.handleDetailDialog(false);
   };
   render() {
+    const renderShelfLocation = (shelfLocation: string[]) => {
+      return shelfLocation.map((item: any, index: number) => {
+        return (
+          <li
+            key={item}
+            className={"tag-list-item"}
+            style={{ borderWidth: 1.5 }}
+          >
+            <div className="center">
+              <Trans>{item}</Trans>
+            </div>
+          </li>
+        );
+      });
+    };
     return (
       <div
         className="download-desk-container"
@@ -133,6 +158,16 @@ class DetailDialog extends React.Component<
               </p>
             </p>
           </div>
+          {this.state.shelfLocation.length > 0 && (
+            <div>
+              <p className="detail-dialog-book-desc">
+                <Trans>Shelf location</Trans>:
+              </p>
+              <div className="detail-dialog-shelf-location">
+                {renderShelfLocation(this.state.shelfLocation)}
+              </div>
+            </div>
+          )}
           <div>
             <p className="detail-dialog-book-desc">
               <Trans>Description</Trans>:
