@@ -167,7 +167,17 @@ const isWindowPartiallyVisible = (bounds) => {
   return false;
 }
 const createMainWin = () => {
-
+  const isMainWindVisible = isWindowPartiallyVisible({
+    width: parseInt(store.get("mainWinWidth") || 1050) / mainWinDisplayScale,
+    height: parseInt(store.get("mainWinHeight") || 660) / mainWinDisplayScale,
+    x: parseInt(store.get("mainWinX")),
+    y: parseInt(store.get("mainWinY")),
+  });
+  console.log(isMainWindVisible, 'isMainWindVisible')
+  if (!isMainWindVisible) {
+    delete options.x
+    delete options.y
+  }
   mainWin = new BrowserWindow(options);
   if (store.get("isAlwaysOnTop") === "yes") {
     mainWin.setAlwaysOnTop(true);
@@ -353,13 +363,13 @@ const createMainWin = () => {
         let bounds = readerWindow.getBounds();
         const currentDisplay = screen.getDisplayMatching(bounds);
         const primaryDisplay = screen.getPrimaryDisplay();
-        console.log(currentDisplay, primaryDisplay)
+        console.log(currentDisplay, primaryDisplay, bounds)
         if (bounds.width > 0 && bounds.height > 0) {
           store.set({
             windowWidth: bounds.width,
             windowHeight: bounds.height,
-            windowX: readerWindow.isMaximized() ? 0 : bounds.x,
-            windowY: readerWindow.isMaximized() ? 0 : bounds.y,
+            windowX: readerWindow.isMaximized() && currentDisplay.id === primaryDisplay.id ? 0 : bounds.x,
+            windowY: readerWindow.isMaximized() && currentDisplay.id === primaryDisplay.id ? 0 : (bounds.y < 0 ? 0 : bounds.y),
             windowDisplayScale: currentDisplay.scaleFactor / primaryDisplay.scaleFactor,
           });
         }
@@ -755,6 +765,9 @@ const createMainWin = () => {
       googlePickerView = null;
     }
   });
+  ipcMain.handle('clear-all-data', (event, config) => {
+    store.clear();
+  });
   ipcMain.handle("new-tab", (event, config) => {
     if (mainWin) {
       mainView = new WebContentsView(options)
@@ -848,12 +861,15 @@ const createMainWin = () => {
       readerWindow.on("close", (event) => {
         if (!readerWindow.isDestroyed()) {
           let bounds = readerWindow.getBounds();
+          const currentDisplay = screen.getDisplayMatching(bounds);
+          const primaryDisplay = screen.getPrimaryDisplay();
+          console.log(currentDisplay, primaryDisplay, bounds)
           if (bounds.width > 0 && bounds.height > 0) {
             store.set({
               windowWidth: bounds.width,
               windowHeight: bounds.height,
-              windowX: readerWindow.isMaximized() ? 0 : bounds.x,
-              windowY: readerWindow.isMaximized() ? 0 : bounds.y,
+              windowX: readerWindow.isMaximized() && currentDisplay.id === primaryDisplay.id ? 0 : bounds.x,
+              windowY: readerWindow.isMaximized() && currentDisplay.id === primaryDisplay.id ? 0 : (bounds.y < 0 ? 0 : bounds.y),
             });
           }
         }

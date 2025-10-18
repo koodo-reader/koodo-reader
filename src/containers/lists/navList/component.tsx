@@ -117,6 +117,9 @@ class NavList extends React.Component<NavListProps, NavListState> {
                 width: "100%",
                 maxHeight: "198px",
               }}
+              onClick={async () => {
+                await this.handleJump(item.cfi);
+              }}
             >
               <p
                 className="book-bookmark-digest"
@@ -125,9 +128,6 @@ class NavList extends React.Component<NavListProps, NavListState> {
                     ? this.convertColorCode(classes[item.color])
                     : {}
                 }
-                onClick={async () => {
-                  await this.handleJump(item.cfi);
-                }}
               >
                 {this.props.currentTab === "bookmarks"
                   ? item.label
@@ -140,7 +140,12 @@ class NavList extends React.Component<NavListProps, NavListState> {
               </div>
             </div>
 
-            <div className="bookmark-page-list-item-title">
+            <div
+              className="bookmark-page-list-item-title"
+              onClick={async () => {
+                await this.handleJump(item.cfi);
+              }}
+            >
               <Trans>{item.chapter}</Trans>
             </div>
             <div className="book-bookmark-progress">

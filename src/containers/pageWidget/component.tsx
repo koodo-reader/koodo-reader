@@ -24,6 +24,9 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
         this.handleLocation();
       });
     }
+    if (nextProps.readerMode !== this.props.readerMode) {
+      this.setState({ isSingle: nextProps.readerMode !== "double" });
+    }
   }
   handleLocation = () => {
     let position = this.props.htmlBook.rendition.getPosition();

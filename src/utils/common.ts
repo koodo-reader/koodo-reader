@@ -826,6 +826,8 @@ export const clearAllData = async () => {
     if (fs.existsSync(storageLocation)) {
       fs.rmSync(storageLocation, { recursive: true, force: true });
     }
+    const { ipcRenderer } = window.require("electron");
+    ipcRenderer.invoke("clear-all-data", {});
   }
   await localforage.clear();
 };
