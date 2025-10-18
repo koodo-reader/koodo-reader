@@ -71,4 +71,5 @@
   text-overflow: ellipsis;
   float: left;
   margin-left: 5px;
+  cursor: pointer;
 }
