@@ -173,7 +173,6 @@ const createMainWin = () => {
     x: parseInt(store.get("mainWinX")),
     y: parseInt(store.get("mainWinY")),
   });
-  console.log(isMainWindVisible, 'isMainWindVisible')
   if (!isMainWindVisible) {
     delete options.x
     delete options.y
@@ -375,8 +374,7 @@ const createMainWin = () => {
       if (isPreventSleep && !readerWindow.isDestroyed()) {
         id && powerSaveBlocker.stop(id);
       }
-      // readerWindow && readerWindow.destroy();
-      // readerWindow = null;
+      mainWin.webContents.send('reading-finished', {});
     });
 
 
@@ -873,8 +871,7 @@ const createMainWin = () => {
         if (store.get("isPreventSleep") && !readerWindow.isDestroyed()) {
           id && powerSaveBlocker.stop(id);
         }
-        // readerWindow && readerWindow.destroy();
-        // readerWindow = null;
+        mainWin.webContents.send('reading-finished', {});
       });
     }
     event.returnvalue = false;
