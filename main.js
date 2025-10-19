@@ -341,7 +341,6 @@ const createMainWin = () => {
         width: parseInt(store.get("windowWidth") || 1050) / scaleRatio,
         height: parseInt(store.get("windowHeight") || 660) / scaleRatio,
       });
-      console.log(isWindowVisible, 'isWindowVisible')
       readerWindow = new BrowserWindow({
         ...options,
         width: parseInt(store.get("windowWidth") || 1050) / scaleRatio,
@@ -363,7 +362,6 @@ const createMainWin = () => {
         let bounds = readerWindow.getBounds();
         const currentDisplay = screen.getDisplayMatching(bounds);
         const primaryDisplay = screen.getPrimaryDisplay();
-        console.log(currentDisplay, primaryDisplay, bounds)
         if (bounds.width > 0 && bounds.height > 0) {
           store.set({
             windowWidth: bounds.width,
@@ -863,7 +861,6 @@ const createMainWin = () => {
           let bounds = readerWindow.getBounds();
           const currentDisplay = screen.getDisplayMatching(bounds);
           const primaryDisplay = screen.getPrimaryDisplay();
-          console.log(currentDisplay, primaryDisplay, bounds)
           if (bounds.width > 0 && bounds.height > 0) {
             store.set({
               windowWidth: bounds.width,
