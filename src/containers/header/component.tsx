@@ -102,6 +102,9 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       ) {
         this.setState({ isDataChange: true });
       }
+      ipcRenderer.on("reading-finished", async (event: any, config: any) => {
+        this.handleFinishReading();
+      });
     } else {
       upgradeConfig();
       const status = await LocalFileManager.getPermissionStatus();
@@ -126,22 +129,10 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       this.setState({ width: document.body.clientWidth });
     });
     this.props.handleCloudSyncFunc(this.handleCloudSync);
-    document.addEventListener("visibilitychange", async () => {
+    document.addEventListener("visibilitychange", async (event) => {
+      console.log(event, "visibilitychange");
       if (document.visibilityState === "visible") {
-        this.props.handleFetchBooks();
-        this.props.handleFetchBookmarks();
-        this.props.handleFetchNotes();
-        if (ConfigService.getItem("isFinshReading") === "yes") {
-          ConfigService.setItem("isFinshReading", "no");
-          if (
-            ConfigService.getReaderConfig("isDisableAutoSync") !== "yes" &&
-            ConfigService.getItem("defaultSyncOption")
-          ) {
-            await this.props.handleFetchUserInfo();
-            this.setState({ isSync: true });
-            this.handleCloudSync();
-          }
-        }
+        this.handleFinishReading();
       }
     });
   }
@@ -178,6 +169,22 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       }
     }
   }
+  handleFinishReading = async () => {
+    this.props.handleFetchBooks();
+    this.props.handleFetchBookmarks();
+    this.props.handleFetchNotes();
+    if (ConfigService.getItem("isFinshReading") === "yes") {
+      ConfigService.setItem("isFinshReading", "no");
+      if (
+        ConfigService.getReaderConfig("isDisableAutoSync") !== "yes" &&
+        ConfigService.getItem("defaultSyncOption")
+      ) {
+        await this.props.handleFetchUserInfo();
+        this.setState({ isSync: true });
+        this.handleCloudSync();
+      }
+    }
+  };
   handleFinishUpgrade = () => {
     setTimeout(() => {
       this.props.history.push("/manager/home");
