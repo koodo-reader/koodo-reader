@@ -54,7 +54,6 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
   getHtmlPosition(rect: any) {
     let pageSize = this.props.rendition.getPageSize();
     let posY = rect.bottom - pageSize.scrollTop;
-    console.log(pageSize);
     let posX = rect.left + rect.width / 2;
     // fix popup position when crossing pages
     if (rect.width > pageSize.sectionWidth && rect.left < 0) {

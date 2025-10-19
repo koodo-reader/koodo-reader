@@ -99,7 +99,6 @@ class OperationPanel extends React.Component<
     let text = bookLocation.text;
     let chapter = bookLocation.chapterTitle;
     let percentage = bookLocation.percentage;
-    console.log(bookLocation, "bookLocation");
 
     let cfi = JSON.stringify(bookLocation);
     if (!text) {
