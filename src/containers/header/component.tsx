@@ -40,6 +40,7 @@ import SupportDialog from "../../components/dialogs/supportDialog";
 import SyncService from "../../utils/storage/syncService";
 import { LocalFileManager } from "../../utils/file/localFile";
 import { updateUserConfig } from "../../utils/request/user";
+import packageJson from "../../../package.json";
 declare var window: any;
 
 class Header extends React.Component<HeaderProps, HeaderState> {
@@ -560,7 +561,9 @@ class Header extends React.Component<HeaderProps, HeaderState> {
                   (ConfigService.getReaderConfig("lang").startsWith("zh")
                     ? "/zh/faq"
                     : "/en/faq") +
-                  "?referer=app",
+                  "?referer=app&version=" +
+                  packageJson.version +
+                  "&client=desktop",
                 locale: getChatLocale(),
               });
             }}

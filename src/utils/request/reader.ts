@@ -119,7 +119,7 @@ export const getDictText = async (word: string, from: string, to: string) => {
           officialDictList.find((item) => item.code === from)?.nativeLang ||
             from
         ) +
-        "-" +
+        " -> " +
         i18n.t(
           officialDictList.find((item) => item.code === to)?.nativeLang || to
         )
