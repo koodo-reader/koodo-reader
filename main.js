@@ -295,7 +295,7 @@ const createMainWin = () => {
 
           setTimeout(() => {
             app.quit();
-          }, 3000);
+          }, 1000);
           child.unref();
         } catch (err) {
           console.error(`spawn 执行异常: ${err.message}`);
@@ -694,41 +694,8 @@ const createMainWin = () => {
         hasShadow: true,
         transparent: false,
       });
+      console.log(config.url)
       chatWindow.loadURL(config.url);
-      //insert chatwoot script
-      const script = `
-    const script = document.createElement('script');
-    script.type = 'text/javascript';
-    script.text = \`
-          (function (d, t) {
-            var BASE_URL = "https://app.chatwoot.com";
-            var g = d.createElement(t),
-              s = d.getElementsByTagName(t)[0];
-            g.src = BASE_URL + "/packs/js/sdk.js";
-            g.defer = true;
-            g.async = true;
-            s.parentNode.insertBefore(g, s);
-            g.onload = function () {
-              setTimeout(() => {
-                window.chatwootSDK.run({
-                  websiteToken: "svaD5wxfU5UY1r5ZzpMtLqv2",
-                  baseUrl: BASE_URL,
-                });
-                window.addEventListener('chatwoot:ready', function () {
-                  window.$chatwoot.setLocale('${config.locale}');
-                  window.$chatwoot.setCustomAttributes({
-                    version: '${packageJson.version}',
-                    client: 'desktop',
-                  });
-                });
-              }, 1000);
-              
-            };
-          })(document, "script");
-        \`; 
-        document.head.appendChild(script);
-      `;
-      chatWindow.webContents.executeJavaScript(script);
       chatWindow.on("close", (event) => {
         chatWindow && chatWindow.destroy();
         chatWindow = null;
