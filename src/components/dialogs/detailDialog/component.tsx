@@ -55,10 +55,7 @@ class DetailDialog extends React.Component<
       });
     };
     return (
-      <div
-        className="download-desk-container"
-        style={{ color: this.state.textColor }}
-      >
+      <div className="download-desk-container">
         <div
           className="detail-dialog-book-info"
           style={{

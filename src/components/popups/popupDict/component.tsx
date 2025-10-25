@@ -257,6 +257,7 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
                 onContextMenu={() => {
                   handleContextMenu("trans-add-content-box");
                 }}
+                style={{ height: "170px" }}
               />
               <div className="trans-add-button-container">
                 <div
