@@ -198,6 +198,7 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
                 onContextMenu={() => {
                   handleContextMenu("trans-add-content-box");
                 }}
+                style={{ height: "180px" }}
               />
               <div className="trans-add-button-container">
                 <div
