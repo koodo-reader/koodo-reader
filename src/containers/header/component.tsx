@@ -131,7 +131,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     });
     this.props.handleCloudSyncFunc(this.handleCloudSync);
     document.addEventListener("visibilitychange", async (event) => {
-      console.log(event, "visibilitychange");
       if (document.visibilityState === "visible") {
         this.handleFinishReading();
       }
