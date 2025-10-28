@@ -91,10 +91,16 @@ export const getDictText = async (word: string, from: string, to: string) => {
   let res = await getDictionary(word, from, to);
   if (res.code === 200 && res.data && res.data.length > 0) {
     let dictText =
-      `<p class="dict-word-type">[${i18n.t("Pronunciations")}]</p></p>` +
+      `<p class="dict-word-type">[${i18n.t("Pronunciations")}]</p>` +
       (res.data[0].pronunciation ? res.data[0].pronunciation : "") +
       (res.data[0].audio &&
         `<div class="audio-container"><audio controls preload="auto"    class="audio-player" controlsList="nodownload noplaybackrate"><source src="${res.data[0].audio}" type="audio/mpeg"></audio></div>`) +
+      (res.data[0].form
+        ? `<p class="dict-word-type">[${i18n.t("Inflection")}]</p>`
+        : "") +
+      (res.data[0].form
+        ? Array.from(new Set(res.data[0].form)).join(", ")
+        : "") +
       res.data[0].meaning
         .map((item) => {
           return (
@@ -109,6 +115,15 @@ export const getDictText = async (word: string, from: string, to: string) => {
           );
         })
         .join("") +
+      (res.data[0].comparison
+        ? `<p class="dict-word-type">[${i18n.t("Word comparison")}]</p>`
+        : "") +
+      (res.data[0].comparison
+        ? res.data[0].comparison.map(
+            (item) =>
+              `<p class="dict-learn-more">${item.word_to_compare}: </p>${item.analysis}`
+          )
+        : "") +
       `<p class="dict-learn-more">${i18n.t("Generated with AI")}</p>`;
     return dictText;
   } else {
@@ -124,6 +139,13 @@ export const getDictText = async (word: string, from: string, to: string) => {
           officialDictList.find((item) => item.code === to)?.nativeLang || to
         )
     );
+    if (from === "auto") {
+      toast(
+        i18n.t(
+          "Language auto-detection may not be accurate. Please try selecting the source language manually"
+        )
+      );
+    }
     return "";
   }
 };

@@ -364,6 +364,7 @@ export const officialTranList = {
   Vietnamese: "Vietnamese",
 };
 export const officialDictList = [
+  { lang: "Automatic", code: "auto", nativeLang: "Automatic" },
   { lang: "English", code: "eng", nativeLang: "English" },
   { lang: "Simplified Chinese", code: "chs", nativeLang: "Simplified Chinese" },
   {
