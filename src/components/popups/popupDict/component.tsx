@@ -95,7 +95,7 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
         });
         dictText = await getDictText(
           text,
-          this.state.dictTarget === "en" ? "eng" : this.state.dictTarget,
+          ConfigService.getReaderConfig("dictTarget") || "auto",
           ConfigService.getReaderConfig("lang") &&
             ConfigService.getReaderConfig("lang").startsWith("zh")
             ? "chs"
