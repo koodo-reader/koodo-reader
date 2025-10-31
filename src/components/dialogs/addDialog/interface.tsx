@@ -7,6 +7,8 @@ export interface AddDialogProps {
   currentBook: BookModel;
   selectedBooks: string[];
   isSelectBook: boolean;
+  mode: string;
+  shelfTitle: string;
   t: (title: string) => string;
   handleMode: (mode: string) => void;
   handleShelf: (shelfTitle: string) => void;
@@ -15,4 +17,5 @@ export interface AddDialogProps {
 export interface AddDialogState {
   isNew: boolean;
   shelfTitle: string;
+  actionType: string;
 }

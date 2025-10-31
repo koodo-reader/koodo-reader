@@ -16,17 +16,16 @@
   opacity: 1;
   width: 100%;
   text-align: center;
-  position: absolute;
-  top: 22px;
   font-weight: 500;
+  margin-top: 15px;
 }
 .add-dialog-shelf-list-container {
   width: 100%;
   font-size: 15px;
   line-height: 14px;
   opacity: 1;
-  position: absolute;
-  top: 55px;
+  margin-top: 15px;
+  height: 30px;
 }
 .add-dialog-shelf-list-text {
   width: 50px;
@@ -54,14 +53,6 @@
   line-height: 31px;
   cursor: pointer;
   text-align: left;
-}
-.add-dialog-new-shelf-container {
-  width: 100%;
-  font-size: 15px;
-  line-height: 14px;
-  opacity: 1;
-  position: absolute;
-  top: 95px;
 }
 .add-dialog-new-shelf-text {
   width: 50px;
