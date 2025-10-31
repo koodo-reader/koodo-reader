@@ -8,7 +8,7 @@ import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 class AddDialog extends Component<AddDialogProps, AddDialogState> {
   constructor(props: AddDialogProps) {
     super(props);
-    this.state = { isNew: true, shelfTitle: "" };
+    this.state = { isNew: true, shelfTitle: "", actionType: "copy" };
   }
 
   handleCancel = () => {
@@ -43,6 +43,13 @@ class AddDialog extends Component<AddDialogProps, AddDialogState> {
     }
     if (this.props.isSelectBook) {
       this.props.selectedBooks.forEach((item) => {
+        if (this.state.actionType === "move") {
+          ConfigService.deleteFromMapConfig(
+            this.props.shelfTitle,
+            item,
+            "shelfList"
+          );
+        }
         ConfigService.setMapConfig(shelfTitle, item, "shelfList");
       });
       this.props.handleSelectBook(!this.props.isSelectBook);
@@ -50,6 +57,15 @@ class AddDialog extends Component<AddDialogProps, AddDialogState> {
         this.props.handleSelectedBooks([]);
       }
     } else {
+      console.log(this.state.actionType, "actionType");
+      if (this.state.actionType === "move") {
+        ConfigService.deleteFromMapConfig(
+          this.props.shelfTitle,
+          this.props.currentBook.key,
+          "shelfList"
+        );
+      }
+
       ConfigService.setMapConfig(
         shelfTitle,
         this.props.currentBook.key,
@@ -90,10 +106,33 @@ class AddDialog extends Component<AddDialogProps, AddDialogState> {
       });
     };
     return (
-      <div className="add-dialog-container">
+      <div
+        className="add-dialog-container"
+        style={{ height: this.props.mode === "shelf" ? "240px" : "189px" }}
+      >
         <div className="add-dialog-title">
           <Trans>Add to shelf</Trans>
         </div>
+        {this.props.mode === "shelf" && (
+          <div className="add-dialog-shelf-list-container">
+            <div className="add-dialog-shelf-list-text">
+              <Trans>Action</Trans>
+            </div>
+            <select
+              className="add-dialog-shelf-list-box"
+              onChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
+                this.setState({ actionType: event.target.value });
+              }}
+            >
+              <option value="copy" className="add-dialog-shelf-list-option">
+                {this.props.t("Copy to")}
+              </option>
+              <option value="move" className="add-dialog-shelf-list-option">
+                {this.props.t("Move to")}
+              </option>
+            </select>
+          </div>
+        )}
         <div className="add-dialog-shelf-list-container">
           <div className="add-dialog-shelf-list-text">
             <Trans>Select</Trans>
@@ -107,7 +146,7 @@ class AddDialog extends Component<AddDialogProps, AddDialogState> {
             {renderShelfList()}
           </select>
         </div>
-        <div className="add-dialog-new-shelf-container">
+        <div className="add-dialog-shelf-list-container">
           <div className="add-dialog-new-shelf-text">
             <Trans>New</Trans>
           </div>

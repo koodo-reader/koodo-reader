@@ -374,7 +374,10 @@ const createMainWin = () => {
       if (isPreventSleep && !readerWindow.isDestroyed()) {
         id && powerSaveBlocker.stop(id);
       }
-      mainWin.webContents.send('reading-finished', {});
+      if (mainWin && !mainWin.isDestroyed()) {
+        mainWin.webContents.send('reading-finished', {});
+      }
+
     });
 
 
