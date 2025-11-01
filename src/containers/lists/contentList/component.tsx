@@ -117,7 +117,7 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
           let chapter =
             bookLocation.chapterTitle ||
             (this.props.htmlBook && this.props.htmlBook.flattenChapters[0]
-              ? this.props.htmlBook.flattenChapters[0].label
+              ? ""
               : "Unknown chapter");
           scrollContents(chapter, bookLocation.chapterHref);
         }

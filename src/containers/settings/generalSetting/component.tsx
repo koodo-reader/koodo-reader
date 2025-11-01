@@ -165,6 +165,10 @@ class GeneralSetting extends React.Component<
           toast.success(this.props.t("Failed to get folder access permission"));
         }
       } catch (error) {
+        toast.error(
+          "Error selecting folder:" +
+            (error instanceof Error ? error.message : String(error))
+        );
         console.error("Error selecting folder:", error);
         toast.success(this.props.t("Error occurred while selecting folder"));
       }

@@ -121,6 +121,11 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
         );
       }
     } catch (error) {
+      toast.error(
+        this.props.t("Error happened") +
+          ": " +
+          (error instanceof Error ? error.message : String(error))
+      );
       console.error(error);
       this.setState({
         dictText: this.props.t("Error happened"),

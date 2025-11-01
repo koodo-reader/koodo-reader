@@ -73,6 +73,11 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
           }
         })
         .catch((err) => {
+          toast.error(
+            this.props.t("Translation failed") +
+              ": " +
+              (err instanceof Error ? err.message : String(err))
+          );
           console.error(err);
         });
     } else if (this.props.isAuthed) {

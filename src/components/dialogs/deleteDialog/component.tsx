@@ -123,6 +123,7 @@ class DeleteDialog extends React.Component<
           resolve();
         })
         .catch((err) => {
+          toast.error("Delete book error: " + err.message);
           console.error(err);
           reject(err);
         });
