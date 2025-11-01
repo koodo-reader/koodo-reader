@@ -3,7 +3,9 @@ import "./imageViewer.css";
 import { ImageViewerProps, ImageViewerStates } from "./interface";
 import { saveAs } from "file-saver";
 import { getIframeDoc } from "../../utils/reader/docUtil";
+import toast from "react-hot-toast";
 declare var window: any;
+declare var ClipboardItem: any;
 class ImageViewer extends React.Component<ImageViewerProps, ImageViewerStates> {
   constructor(props: ImageViewerProps) {
     super(props);
@@ -154,6 +156,33 @@ class ImageViewer extends React.Component<ImageViewerProps, ImageViewerStates> {
         : `${new Date().toLocaleDateString()}`
     );
   };
+  handleCopy = async () => {
+    let image: any = document.querySelector("#selectedImage");
+    let blob = await fetch(image.src).then((r) => r.blob());
+
+    // Convert blob to PNG if not already a supported format
+    const img = new Image();
+    img.src = URL.createObjectURL(blob);
+    await new Promise((resolve) => {
+      img.onload = resolve;
+    });
+
+    const canvas = document.createElement("canvas");
+    canvas.width = img.naturalWidth;
+    canvas.height = img.naturalHeight;
+    const ctx = canvas.getContext("2d");
+    ctx?.drawImage(img, 0, 0);
+
+    canvas.toBlob(async (pngBlob) => {
+      if (pngBlob) {
+        const data = [new ClipboardItem({ "image/png": pngBlob })];
+        await (navigator.clipboard as any).write(data);
+      }
+    }, "image/png");
+
+    URL.revokeObjectURL(img.src);
+    toast.success(this.props.t("Image copied to clipboard"));
+  };
   handleClock = () => {
     let image: any = document.querySelector("#selectedImage");
     this.setState({ rotateIndex: this.state.rotateIndex + 1 }, () => {
@@ -211,6 +240,12 @@ class ImageViewer extends React.Component<ImageViewerProps, ImageViewerStates> {
             className="icon-save save-icon"
             onClick={() => {
               this.handleSave();
+            }}
+          ></span>
+          <span
+            className="icon-copy save-icon"
+            onClick={() => {
+              this.handleCopy();
             }}
           ></span>
           <span
