@@ -217,6 +217,7 @@ export const langList = [
   { label: "Srpski", value: "sr" },
   { label: "Українська", value: "uk" },
   { label: "தமிழ்", value: "ta" },
+  { label: "ελληνικά", value: "el" },
 ];
 
 export const searchList = [

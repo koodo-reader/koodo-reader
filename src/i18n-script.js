@@ -12,14 +12,14 @@ for (let index = 0; index < folders.length; index++) {
 }
 console.log(resources);
 
-// // find the missing terms in the english
-// const zhdataRaw = fs.readFileSync(
-//   path.join(__dirname, "./assets/locales/zh-CN/translation.json"),
-//   "utf-8"
-// );
-// const enDataRaw = fs.readFileSync(path.join(__dirname, "./assets/locales/en/translation.json"),
-//   "utf-8"
-// );
+// find the missing terms in the english
+const zhdataRaw = fs.readFileSync(
+  path.join(__dirname, "./assets/locales/zh-CN/translation.json"),
+  "utf-8"
+);
+const enDataRaw = fs.readFileSync(path.join(__dirname, "./assets/locales/en/translation.json"),
+  "utf-8"
+);
 // //find the missing terms in the target language
 // const zhData = JSON.parse(zhdataRaw);
 // const enData = JSON.parse(enDataRaw);
