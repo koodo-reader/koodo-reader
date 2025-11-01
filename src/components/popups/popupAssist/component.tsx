@@ -147,6 +147,11 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
         this.scrollToBottom();
       }
     } catch (error) {
+      toast.error(
+        this.props.t("Error happened") +
+          ": " +
+          (error instanceof Error ? error.message : String(error))
+      );
       console.error(error);
       this.setState({
         answer: this.props.t("Error happened"),

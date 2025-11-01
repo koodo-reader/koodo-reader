@@ -104,6 +104,9 @@ class LocalFileDialog extends React.Component<
         this.showMessage("Failed to get folder access permission");
       }
     } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
+      toast.error("Error selecting folder:" + errorMessage);
       console.error("Error selecting folder:", error);
       this.showMessage("Error occurred while selecting folder");
     }

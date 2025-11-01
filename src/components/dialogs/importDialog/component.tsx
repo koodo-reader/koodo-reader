@@ -215,7 +215,11 @@ class ImportDialog extends React.Component<
       }
     } catch (error) {
       toast.dismiss("scanning");
-      toast.error(this.props.t("Error scanning folder"));
+      toast.error(
+        "Error scanning folder" +
+          ": " +
+          (error instanceof Error ? error.message : String(error))
+      );
       console.error("Error scanning folder:", error);
     }
   };
@@ -257,6 +261,10 @@ class ImportDialog extends React.Component<
         }
       }
     } catch (error) {
+      toast.error(
+        "Error listing files in folder: " +
+          (error instanceof Error ? error.message : String(error))
+      );
       console.error("Error listing files in folder:", error);
     }
 
@@ -291,6 +299,7 @@ class ImportDialog extends React.Component<
         await this.googlePickerUtil.createPicker(this.handlePickerCallback);
       }
     } catch (error) {
+      toast.error(error instanceof Error ? error.message : String(error));
       console.error("Error creating Google Picker:", error);
       toast.error(this.props.t("Failed to open Google Picker"));
     }
@@ -334,6 +343,13 @@ class ImportDialog extends React.Component<
       toast.dismiss("google-download-" + googleFile.id);
       await this.props.importBookFunc(file);
     } catch (error) {
+      toast.error(
+        "Error importing Google file: " +
+          (error instanceof Error ? error.message : String(error)),
+        {
+          id: "google-download-" + googleFile.id,
+        }
+      );
       console.error("Error importing Google file:", error);
       toast.error(this.props.t("Failed to import") + ": " + googleFile.name);
     }
