@@ -57,7 +57,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         );
       }
       if (this.props.currentBook.key) {
-        seconds += 1;
+        seconds += 5;
         this.setState({ totalDuration: totalDuration + seconds });
         this.setState({ currentDuration: seconds });
         ConfigService.setObjectConfig(
@@ -66,7 +66,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
           "readingTime"
         );
       }
-    }, 1000);
+    }, 5000);
     window.addEventListener("beforeunload", function (event) {
       ConfigService.setItem("isFinshReading", "yes");
     });
