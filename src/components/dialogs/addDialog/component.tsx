@@ -57,7 +57,6 @@ class AddDialog extends Component<AddDialogProps, AddDialogState> {
         this.props.handleSelectedBooks([]);
       }
     } else {
-      console.log(this.state.actionType, "actionType");
       if (this.state.actionType === "move") {
         ConfigService.deleteFromMapConfig(
           this.props.shelfTitle,

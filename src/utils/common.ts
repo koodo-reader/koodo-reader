@@ -244,7 +244,6 @@ export const getPageWidth = (
       document.body.clientWidth * 0.4 -
       (isNavLocked ? 300 : 0) -
       (isSettingLocked ? 300 : 0);
-    console.log(preWidth, "preWidth");
     let width = findValidMultiple(preWidth);
     pageOffset = `calc(50vw + ${isNavLocked ? 150 : 0}px - ${
       isSettingLocked ? 150 : 0
@@ -263,12 +262,10 @@ export const getPageWidth = (
     }px - ${width / 2}px)`;
     pageWidth = width;
   }
-  console.log(pageWidth, document.body.clientWidth, "pageWidth check");
   if (pageWidth > document.body.clientWidth) {
     pageWidth = document.body.clientWidth - 106;
     pageOffset = 50 + "px";
   }
-  console.log(pageOffset, pageWidth, "pageWidth");
   return {
     pageOffset,
     pageWidth: pageWidth + "px",
