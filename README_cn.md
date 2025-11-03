@@ -81,34 +81,7 @@ brew install --cask koodo-reader
 
 ### 使用 Docker 安装：
 
-> [!NOTE]
-> Docker 版默认将数据保存在浏览器缓存中。为了您的数据安全，请通过 HTTPS 部署和访问，然后将数据保存到您的本地文件夹。或者您也可以启用数据源功能，将数据同步到指定的服务器路径
-
-如果您只需要部署网页版，直接使用下面的命令即可
-
-```bash
-docker run -d \
-  --name koodo-reader \
-  -p 80:80 \
-  -p 8080:8080 \
-  -e ENABLE_HTTP_SERVER=false \
-  -e SERVER_USERNAME=admin \
-  -e SERVER_PASSWORD=securePass123 \
-  -v /path/to/host/uploads:/app/uploads \
-  ghcr.io/koodo-reader/koodo-reader:master
-```
-
-如果您还需要启用数据源功能，请作如下修改
-
-1. 将 **`ENABLE_HTTP_SERVER`** 设为 **`true`**
-2. 将 **`SERVER_USERNAME`** 和 **`SERVER_PASSWORD`** 改为您认为安全的用户名和密码
-3. 将 **`/path/to/host/uploads`** 改为您希望用来保存阅读数据的文件夹
-
-部署完成后，在 Koodo Reader 中选择 **Docker** 作为数据源。
-
-数据源功能默认使用 8080 端口，网页版默认使用 80 端口，您也可以使用其他端口。如果您需要使用 8090 端口，则将 **`-p 8080:8080`** 改为 **`-p 8090:8080`**
-
-如果您希望使用 Docker Secrets 来配置服务器密码，请参考[docker-compose-secret.yml](https://github.com/koodo-reader/koodo-reader/blob/master/docker-compose-secret.yml)
+[部署教程](https://koodoreader.com/zh/deploy-docker)
 
 ## 截图
 

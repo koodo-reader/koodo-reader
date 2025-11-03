@@ -82,34 +82,7 @@ brew install --cask koodo-reader
 
 ### Install with Docker:
 
-> [!NOTE]
-> The Docker version stores data in the browser cache by default. For your data security, please deploy and access it via HTTPS, then save the data to your local folder. Alternatively, you can enable the data source feature to synchronize the data to a specified server path.
-
-If you only need to deploy the web version, simply use the command below.
-
-```bash
-docker run -d \
-  --name koodo-reader \
-  -p 80:80 \
-  -p 8080:8080 \
-  -e ENABLE_HTTP_SERVER=false \
-  -e SERVER_USERNAME=admin \
-  -e SERVER_PASSWORD=securePass123 \
-  -v /path/to/host/uploads:/app/uploads \
-  ghcr.io/koodo-reader/koodo-reader:master
-```
-
-If you also want to enable the **data source feature**, please:
-
-1. Set **`ENABLE_HTTP_SERVER`** to **`true`**
-2. Change **`SERVER_USERNAME`** and **`SERVER_PASSWORD`** to a secure username and password
-3. Replace **`/path/to/host/uploads`** with the folder where you want to store reading data
-
-Then, select **Docker** as the data source in Koodo Reader.
-
-Data source functionality use port 8080, and web version use port 80 by default. If you want to switch to port 8090, just change **`-p 8080:8080`** to **`-p 8090:8080`**.
-
-If you want to use Docker Secrets to set **`SERVER_PASSWORD`**, please refer to [docker-compose-secret.yml](https://github.com/koodo-reader/koodo-reader/blob/master/docker-compose-secret.yml)
+[Installation Guide](https://koodoreader.com/en/deploy-docker)
 
 ## Screenshot
 

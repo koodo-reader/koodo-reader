@@ -76,9 +76,7 @@ brew install --cask koodo-reader
 
 - Instalar com o Docker:
 
-```bash
-docker run -d -p 80:80 --name koodo-reader ghcr.io/koodo-reader/koodo-reader:master
-```
+[Installation Guide](https://koodoreader.com/en/deploy-docker)
 
 ## Capturas de tela
 
