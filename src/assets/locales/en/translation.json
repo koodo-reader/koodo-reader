@@ -648,7 +648,7 @@
   "Enable Koodo Sync": "Enable Koodo Sync",
   "Disable automatic sync": "Disable automatic sync",
   "By default, Koodo Reader will automatically synchronize your data when you open the app and exit reading": "By default, Koodo Reader will automatically synchronize your data when you open the app and exit reading",
-  "This endpoint usually don't contain bucket name": "This endpoint usually don't contain bucket name",
+  "This endpoint usually don't contain bucket name": "This endpoint usually doesn't contain bucket name",
   "Export books with original name": "Export books with original name",
   "Failed to import": "Failed to import",
   "Clear successful": "Clear successful",
