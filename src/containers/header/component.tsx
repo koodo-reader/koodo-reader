@@ -374,7 +374,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
             return;
           } else {
             toast.loading(
-              this.props.t("Start Transfering Data") +
+              this.props.t("Start Transferring Data") +
                 " (" +
                 stats.completed +
                 "/" +
@@ -413,7 +413,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
             return;
           } else {
             toast.loading(
-              this.props.t("Start Transfering Data") +
+              this.props.t("Start Transferring Data") +
                 " (" +
                 stats.completed +
                 "/" +

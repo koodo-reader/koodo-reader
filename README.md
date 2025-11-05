@@ -35,37 +35,37 @@
   <br/>
 </div>
 
-## Feature
+## Features
 
 - Format support:
   - EPUB (**.epub**)
   - PDF (**.pdf**)
   - DRM-free Mobipocket (**.mobi**) and Kindle (**.azw3**, **.azw**)
-  - Plain text (**.txt**)
+  - Plain-text (**.txt**)
   - FictionBook (**.fb2**)
   - Comic book archive (**.cbr**, **.cbz**, **.cbt**, **.cb7**)
   - Rich text (**.md**, **.docx**)
-  - Hyper Text (**.html**, **.xml**, **.xhtml**, **.mhtml**, **.htm**)
+  - HyperText (**.html**, **.xml**, **.xhtml**, **.mhtml**, **.htm**)
 - Platform support: **Windows**, **macOS**, **Linux**, **Android**, **iOS** and **Web**
-- Utilize **OneDrive**, **Google Drive**, **Dropbox**, **MEGA**, **pCloud**, **Yandex Disk**, **Box**, **FTP**, **SFTP**, **WebDAV**, **SMB**, **Object Storage** to sync and backup your data.
-- Easily import books from **OneDrive**, **Google Drive**, **MEGA**, **Yandex Disk**, **Box**, **FTP**, **SFTP**, **WebDAV**, **SMB**, **Object Storage**
-- AI Translation, AI Dictionary, AI Summarization
-- Single-column, two-column, or continuous scrolling layouts
-- Text-to-speech, translation, dictionary, touch screen support, batch import
-- Add bookmarks, notes, highlights to your books
+- Sync and backup your data with **OneDrive**, **Google Drive**, **Dropbox**, **MEGA**, **pCloud**, **Yandex Disk**, **Box**, **FTP**, **SFTP**, **WebDAV**, **SMB**, or **Object Storage**
+- Easily import books from **OneDrive**, **Google Drive**, **MEGA**, **Yandex Disk**, **Box**, **FTP**, **SFTP**, **WebDAV**, **SMB**, or **Object Storage**
+- AI dictionary, summarization, and translation
+- Single-column, two-column or continuous scrolling layouts
+- Text-to-speech, translation, dictionary, touch screen support, and batch import
+- Add bookmarks, notes, and highlights to your books
 - Adjust font size, font family, line-spacing, paragraph spacing, background color, text color, margins, and brightness
 - Night mode and theme color
-- Text highlight, underline, boldness, italics and shadow
+- Text highlighting, underline, boldness, italics, and shadow
 
 ## Installation
 
-### Desktop Version: [Download](https://koodoreader.com/en/download)
+### Desktop version: [Download](https://koodoreader.com/en/download)
 
-### Web Version：[Visit](https://web.koodoreader.com)
+### Web version：[Visit](https://web.koodoreader.com)
 
-### Android Version：[Download](https://koodoreader.com/en/download)
+### Android version：[Download](https://koodoreader.com/en/download)
 
-### iOS Version：[Download](https://koodoreader.com/en/download)
+### iOS version：[Download](https://koodoreader.com/en/download)
 
 ### Install with Scoop:
 
@@ -124,8 +124,6 @@ brew install --cask koodo-reader
   <br/>
 </div>
 
-</div>
-
 ## Develop
 
 Make sure that you have installed yarn and git
@@ -160,10 +158,10 @@ Make sure that you have installed yarn and git
 
 3. Translate the terms to your target language based on the given English reference
 
-4. Sumbit the translation file or just translation snippets based on the amount of your translation to [this link](https://github.com/koodo-reader/koodo-reader/issues/new?assignees=&labels=submit+translation&projects=&template=submit_translation.yml). Pull request is also welcomed.
+4. Submit the translation file or just translation snippets based on the amount of your translation to [this link](https://github.com/koodo-reader/koodo-reader/issues/new?assignees=&labels=submit+translation&projects=&template=submit_translation.yml). Pull request is also welcomed.
 
 | Language(A-Z)   | Code  | View                                                |
-| --------------- | ----- | --------------------------------------------------- |
+|-----------------|-------|-----------------------------------------------------|
 | Amharic         | am    | [View](./src/assets/locales/am/translation.json)    |
 | Arabic          | ar    | [View](./src/assets/locales/ar/translation.json)    |
 | Armenian        | hy    | [View](./src/assets/locales/hy/translation.json)    |
@@ -208,6 +206,6 @@ Make sure that you have installed yarn and git
 
 ### Add new language
 
-1. If you can't find your target language from the above list, Download the Engish source file from [this link](./src/assets/locales/en/translation.json)
+1. If you can't find your target language from the above list, download the English source file from [this link](./src/assets/locales/en/translation.json).
 
-2. When you finish translation, submit the source file to [this link](https://github.com/koodo-reader/koodo-reader/issues/new?assignees=&labels=submit+translation&projects=&template=submit_translation.yml). Pull request is also welcomed.
+2. When you're finished translating, submit the source file to [this link](https://github.com/koodo-reader/koodo-reader/issues/new?assignees=&labels=submit+translation&projects=&template=submit_translation.yml). Pull requests are also welcome.

@@ -45,7 +45,7 @@
   - Arquivo de quadrinhos (**.cbr**, **.cbz**, **.cbt**, **.cb7**)
   - Texto rico (**.md**, **.docx**)
   - Hiper texto (**.html**, **.xml**, **.xhtml**, **.mhtml**, **.htm**)
-- Plataformas suportadas : **Windows**, **macOS**, **Linux** e **Web**
+- Plataformas suportadas: **Windows**, **macOS**, **Linux** e **Web**
 - Guarde seus dados no **OneDrive**, **Google Drive**, **Dropbox**, **Yandex Disk**, **FTP**, **SFTP**, **WebDAV**, **SMB**, **S3**, **S3 Compatible**
 - Personalize a pasta de origem e sincronize entre varios dispositivos usando OneDrive, iCloud, Dropbox, etc..
 - Layouts de uma coluna, duas colunas ou de rolagem continua
@@ -59,7 +59,7 @@
 
 - Versão para computador:
   - Versão estável (Recomendada): [Baixar](https://koodoreader.com/en)
-  - Versão do desenvolvedor: [Baixar](https://github.com/koodo-reader/koodo-reader/releases/latest) ( Com novos recursos e correção de bugs, mas podendo ainda conter alguns problemas desconhecidos)
+  - Versão do desenvolvedor: [Baixar](https://github.com/koodo-reader/koodo-reader/releases/latest) (Com novos recursos e correção de bugs, mas podendo ainda conter alguns problemas desconhecidos)
 - Versão para Web：[Pré-visualizar](https://web.koodoreader.com)
 - Instalar com o Scoop:
 
@@ -119,8 +119,6 @@ brew install --cask koodo-reader
   <br/>
 </div>
 
-</div>
-
 ## Desenvolver
 
 Certifique-se de ter instalado yarn e git, a versão.
@@ -131,7 +129,7 @@ Certifique-se de ter instalado yarn e git, a versão.
    git clone https://github.com/koodo-reader/koodo-reader.git
    ```
 
-2. Entre no modo desktop
+2. Entre no modo de desktop
 
    ```
    yarn
