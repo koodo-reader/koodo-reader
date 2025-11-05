@@ -451,7 +451,7 @@ class AccountSetting extends React.Component<
               }}
             >
               {this.props.t(
-                "7-days free trial only applys to users who registered with recommended email providers. Recommended email providers are as follows"
+                "7-days free trial only applies to users who registered with recommended email providers. Recommended email providers are as follows"
               )}
               <br />
               {CommonTool.EmailProviders.join(", ")}
