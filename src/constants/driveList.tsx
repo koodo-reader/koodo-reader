@@ -97,7 +97,7 @@ export const driveList = [
     value: "yandex",
     icon: "icon-yandex",
     isPro: true,
-    support: ["desktop", "browser", "phone"],
+    support: ["desktop", "phone"],
     scoped: false,
     isCNAvailable: false,
   },
