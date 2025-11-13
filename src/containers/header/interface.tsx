@@ -13,6 +13,7 @@ export interface HeaderProps extends RouteComponentProps<any> {
   notes: NoteModel[];
   books: BookModel[];
   defaultSyncOption: string;
+  bookSortCode: { sort: number; order: number };
   handleSortDisplay: (isSortDisplay: boolean) => void;
   handleSetting: (isSettingOpen: boolean) => void;
   handleAbout: (isAboutOpen: boolean) => void;
