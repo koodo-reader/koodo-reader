@@ -352,6 +352,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                         <div
                           style={{
                             marginTop: "5px",
+                            marginBottom: "2px",
                             marginLeft: "2px",
                             fontSize: "12px",
                             opacity: 0.8,
