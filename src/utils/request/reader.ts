@@ -88,6 +88,9 @@ export const resetReaderRequest = () => {
   readerRequest = undefined;
 };
 export const getDictText = async (word: string, from: string, to: string) => {
+  if (from === "en") {
+    from = "eng";
+  }
   let res = await getDictionary(word, from, to);
   if (res.code === 200 && res.data && res.data.length > 0) {
     let dictText =

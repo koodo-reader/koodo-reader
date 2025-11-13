@@ -33,6 +33,7 @@ import {
   getChatLocale,
   getStorageLocation,
   removeChatBox,
+  showTaskProgress,
   WEBSITE_URL,
 } from "../../utils/common";
 import { driveList } from "../../constants/driveList";
@@ -335,110 +336,11 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       ConfigUtil
     );
   };
-  handleCloudSync = async () => {
-    let config = {};
-    let service = ConfigService.getItem("defaultSyncOption");
-    if (!service) {
-      toast(this.props.t("Please add data source in the setting"));
-      this.setState({ isSync: false });
+  handleCloudSync = async (): Promise<false | undefined> => {
+    this.timer = await showTaskProgress();
+    if (!this.timer) {
       return false;
     }
-    if (isElectron) {
-      let tokenConfig = await getCloudConfig(service);
-      config = {
-        ...tokenConfig,
-        service: service,
-        storagePath: getStorageLocation(),
-      };
-      await window
-        .require("electron")
-        .ipcRenderer.invoke("cloud-reset", config);
-    } else {
-      let syncUtil = await SyncService.getSyncUtil();
-      syncUtil.resetCounters();
-    }
-    this.timer = setInterval(async () => {
-      if (isElectron) {
-        let stats = await window
-          .require("electron")
-          .ipcRenderer.invoke("cloud-stats", config);
-        if (stats.total > 0) {
-          if (stats.hasFailedTasks) {
-            toast.error(
-              this.props.t(
-                "Tasks failed after multiple retries, please check the network connection"
-              ),
-              {
-                id: "syncing",
-              }
-            );
-            clearInterval(this.timer);
-            this.setState({ isSync: false });
-            return;
-          } else {
-            toast.loading(
-              this.props.t("Start Transferring Data") +
-                " (" +
-                stats.completed +
-                "/" +
-                stats.total +
-                ")" +
-                " (" +
-                this.props.t(
-                  driveList.find(
-                    (item) =>
-                      item.value === ConfigService.getItem("defaultSyncOption")
-                  )?.label || ""
-                ) +
-                ")",
-              {
-                id: "syncing",
-                position: "bottom-center",
-              }
-            );
-          }
-        }
-      } else {
-        let syncUtil = await SyncService.getSyncUtil();
-        let stats = await syncUtil.getStats();
-        if (stats.total > 0) {
-          if (stats.hasFailedTasks) {
-            toast.error(
-              this.props.t(
-                "Tasks failed after multiple retries, please check the network connection"
-              ),
-              {
-                id: "syncing",
-              }
-            );
-            clearInterval(this.timer);
-            this.setState({ isSync: false });
-            return;
-          } else {
-            toast.loading(
-              this.props.t("Start Transferring Data") +
-                " (" +
-                stats.completed +
-                "/" +
-                stats.total +
-                ")" +
-                " (" +
-                this.props.t(
-                  driveList.find(
-                    (item) =>
-                      item.value === ConfigService.getItem("defaultSyncOption")
-                  )?.label || ""
-                ) +
-                ")",
-              {
-                id: "syncing",
-                position: "bottom-center",
-              }
-            );
-          }
-        }
-      }
-    }, 1000);
     try {
       let res = await this.beforeSync();
       if (!res) {
@@ -462,11 +364,12 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       );
       clearInterval(this.timer);
       this.setState({ isSync: false });
-      return;
+      return false;
     }
     setTimeout(() => {
       toast.dismiss("syncing");
-    }, 2000);
+    }, 3000);
+    return;
   };
   handleSuccess = async () => {
     this.props.handleFetchBooks();

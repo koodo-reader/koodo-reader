@@ -74,6 +74,16 @@
   opacity: 0.8;
   color: rgb(231, 69, 69);
 }
+.book-download-action {
+  /* position: absolute;
+  bottom: 23px;
+  right: 40px; */
+  font-size: 15px;
+  margin-right: 2px;
+  margin-left: 2px;
+  position: relative;
+  top: 2px;
+}
 .reading-progress-icon {
   /* position: absolute;
   bottom: 18px;

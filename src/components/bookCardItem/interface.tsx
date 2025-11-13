@@ -26,4 +26,5 @@ export interface BookCardState {
   direction: string;
   cover: string;
   isCoverExist: boolean;
+  isBookOffline: boolean;
 }

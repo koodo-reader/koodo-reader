@@ -25,6 +25,7 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
       isHover: false,
       cover: "",
       isCoverExist: false,
+      isBookOffline: true,
     };
   }
 
@@ -32,6 +33,7 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
     this.setState({
       cover: await CoverUtil.getCover(this.props.book),
       isCoverExist: await CoverUtil.isCoverExist(this.props.book),
+      isBookOffline: await BookUtil.isBookOffline(this.props.book.key),
     });
     let filePath = "";
     //open book when app start
@@ -232,7 +234,12 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
             ></span>
           ) : null}
 
-          <p className="book-item-title">{this.props.book.name}</p>
+          <p className="book-item-title">
+            {!this.state.isBookOffline && (
+              <span className="icon-cloud book-download-action"></span>
+            )}
+            {this.props.book.name}
+          </p>
           <div className="reading-progress-icon">
             <div style={{ position: "relative", left: "4px" }}>
               {percentage && !isNaN(parseFloat(percentage))

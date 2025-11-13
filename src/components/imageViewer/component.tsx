@@ -243,7 +243,7 @@ class ImageViewer extends React.Component<ImageViewerProps, ImageViewerStates> {
             }}
           ></span>
           <span
-            className="icon-copy save-icon"
+            className="icon-copy-line save-icon"
             onClick={() => {
               this.handleCopy();
             }}
