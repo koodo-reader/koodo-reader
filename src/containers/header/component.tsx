@@ -170,7 +170,10 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     }
   }
   handleFinishReading = async () => {
-    this.props.handleFetchBooks();
+    console.log("finish reading detected", this.props.bookSortCode.sort);
+    if (this.props.bookSortCode.sort === 1) {
+      this.props.handleFetchBooks();
+    }
     this.props.handleFetchBookmarks();
     this.props.handleFetchNotes();
     if (ConfigService.getItem("isFinshReading") === "yes") {

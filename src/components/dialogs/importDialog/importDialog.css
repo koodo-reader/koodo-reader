@@ -43,8 +43,7 @@
   height: 20px;
 }
 .import-dialog-option {
-  width: calc(100% - 15px);
-
+  width: calc(100% - 10px);
   padding-left: 10px;
   overflow-y: scroll;
   position: absolute;
