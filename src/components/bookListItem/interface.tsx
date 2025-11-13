@@ -35,4 +35,5 @@ export interface BookItemState {
   top: number;
   cover: string;
   isCoverExist: boolean;
+  isBookOffline: boolean;
 }

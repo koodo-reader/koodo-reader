@@ -8,7 +8,7 @@
   overflow: scroll;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   z-index: 50;
 }
 .image {
@@ -16,7 +16,7 @@
 }
 .image-operation {
   position: fixed;
-  left: calc(50% - 160px);
+  left: calc(50% - 200px);
   bottom: 30px;
   font-size: 25px;
   z-index: 6;

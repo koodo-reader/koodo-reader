@@ -27,6 +27,7 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
       isHover: false,
       cover: "",
       isCoverExist: false,
+      isBookOffline: true,
     };
   }
 
@@ -34,6 +35,7 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
     this.setState({
       cover: await CoverUtil.getCover(this.props.book),
       isCoverExist: await CoverUtil.isCoverExist(this.props.book),
+      isBookOffline: await BookUtil.isBookOffline(this.props.book.key),
     });
     let filePath = "";
     // Get file path from electron
@@ -274,7 +276,15 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
             ) : null}
           </div>
 
-          <p className="book-cover-item-title">{this.props.book.name}</p>
+          <p className="book-cover-item-title">
+            {!this.state.isBookOffline && (
+              <span
+                className="icon-cloud book-download-action"
+                style={{ fontWeight: "bold" }}
+              ></span>
+            )}
+            {this.props.book.name}
+          </p>
           <p className="book-cover-item-author">
             <Trans>Author</Trans>:&nbsp;
             <Trans>{this.props.book.author || "Unknown author"}</Trans>

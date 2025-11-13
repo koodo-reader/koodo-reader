@@ -18,6 +18,7 @@ import { getThirdpartyRequest } from "./request/thirdparty";
 import { getCloudConfig } from "./file/common";
 import SyncService from "./storage/syncService";
 import localforage from "localforage";
+import { driveList } from "../constants/driveList";
 declare var window: any;
 export const supportedFormats = [
   ".epub",
@@ -797,6 +798,108 @@ export const showDownloadProgress = (
       );
     }
   }, 500);
+  return timer;
+};
+export const showTaskProgress = async () => {
+  let config = {};
+  let timer: any;
+  let service = ConfigService.getItem("defaultSyncOption");
+  if (!service) {
+    toast(i18n.t("Please add data source in the setting"));
+    return null;
+  }
+  if (isElectron) {
+    let tokenConfig = await getCloudConfig(service);
+    config = {
+      ...tokenConfig,
+      service: service,
+      storagePath: getStorageLocation(),
+    };
+    await window.require("electron").ipcRenderer.invoke("cloud-reset", config);
+  } else {
+    let syncUtil = await SyncService.getSyncUtil();
+    syncUtil.resetCounters();
+  }
+  timer = setInterval(async () => {
+    if (isElectron) {
+      let stats = await window
+        .require("electron")
+        .ipcRenderer.invoke("cloud-stats", config);
+      if (stats.total > 0) {
+        if (stats.hasFailedTasks) {
+          toast.error(
+            i18n.t(
+              "Tasks failed after multiple retries, please check the network connection"
+            ),
+            {
+              id: "syncing",
+            }
+          );
+          clearInterval(timer);
+          return;
+        } else {
+          toast.loading(
+            i18n.t("Start Transferring Data") +
+              " (" +
+              stats.completed +
+              "/" +
+              stats.total +
+              ")" +
+              " (" +
+              i18n.t(
+                driveList.find(
+                  (item) =>
+                    item.value === ConfigService.getItem("defaultSyncOption")
+                )?.label || ""
+              ) +
+              ")",
+            {
+              id: "syncing",
+              position: "bottom-center",
+            }
+          );
+        }
+      }
+    } else {
+      let syncUtil = await SyncService.getSyncUtil();
+      let stats = await syncUtil.getStats();
+      if (stats.total > 0) {
+        if (stats.hasFailedTasks) {
+          toast.error(
+            i18n.t(
+              "Tasks failed after multiple retries, please check the network connection"
+            ),
+            {
+              id: "syncing",
+            }
+          );
+          clearInterval(timer);
+          return;
+        } else {
+          toast.loading(
+            i18n.t("Start Transferring Data") +
+              " (" +
+              stats.completed +
+              "/" +
+              stats.total +
+              ")" +
+              " (" +
+              i18n.t(
+                driveList.find(
+                  (item) =>
+                    item.value === ConfigService.getItem("defaultSyncOption")
+                )?.label || ""
+              ) +
+              ")",
+            {
+              id: "syncing",
+              position: "bottom-center",
+            }
+          );
+        }
+      }
+    }
+  }, 1000);
   return timer;
 };
 export const clearAllData = async () => {

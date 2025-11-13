@@ -13,6 +13,7 @@ import {
   handleContextMenu,
   openExternalUrl,
   openInBrowser,
+  showTaskProgress,
   testConnection,
   testCORS,
   WEBSITE_URL,
@@ -22,6 +23,7 @@ import { driveInputConfig, driveList } from "../../../constants/driveList";
 import {
   ConfigService,
   KookitConfig,
+  SyncHelper,
   SyncUtil,
   TokenService,
 } from "../../../assets/lib/kookit-extra-browser.min";
@@ -31,6 +33,7 @@ import {
 } from "../../../utils/request/thirdparty";
 import SyncService from "../../../utils/storage/syncService";
 import { resetKoodoSync, updateUserConfig } from "../../../utils/request/user";
+import BookUtil from "../../../utils/file/bookUtil";
 declare var window: any;
 class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
   constructor(props: SettingInfoProps) {
@@ -212,7 +215,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
 
             <span
               className="single-control-switch"
-              onClick={() => {
+              onClick={async () => {
                 switch (item.propName) {
                   case "isEnableKoodoSync":
                     updateUserConfig({
@@ -221,6 +224,32 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                         : "no",
                     });
                     this.handleSetting(item.propName);
+                    break;
+                  case "autoOffline":
+                    this.handleSetting(item.propName);
+                    if (!this.state.autoOffline) {
+                      let downloadTasks = await SyncHelper.syncBook(
+                        ConfigService,
+                        BookUtil
+                      );
+                      let timer = await showTaskProgress();
+                      if (!timer) {
+                        return;
+                      }
+                      await SyncHelper.runTasksWithLimit(
+                        downloadTasks,
+                        99,
+                        ConfigService.getItem("defaultSyncOption")
+                      );
+                      clearInterval(timer);
+                      toast.success(this.props.t("Download completed"), {
+                        id: "autoOffline",
+                      });
+                      setTimeout(() => {
+                        toast.dismiss("syncing");
+                      }, 3000);
+                    }
+
                     break;
                   default:
                     this.handleSetting(item.propName);
