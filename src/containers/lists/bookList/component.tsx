@@ -81,6 +81,7 @@ class BookList extends React.Component<BookListProps, BookListState> {
         displayedBooksCount: getBookCountPerPage(),
         isLoadingMore: false,
       });
+      this.props.handleLoadMore(false);
       // 滚动到顶部
       if (this.scrollContainer.current) {
         this.scrollContainer.current.scrollTop = 0;
@@ -122,7 +123,7 @@ class BookList extends React.Component<BookListProps, BookListState> {
     }
 
     this.setState({ isLoadingMore: true });
-
+    this.props.handleLoadMore(true);
     // 模拟异步加载延迟
     setTimeout(() => {
       this.setState({

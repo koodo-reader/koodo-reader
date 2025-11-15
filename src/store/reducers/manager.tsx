@@ -19,6 +19,7 @@ const initState = {
   isShowLoading: false,
   isNewWarning: false,
   isDetailDialog: false,
+  isLoadMore: false,
   isShowNew: false,
   isShowSupport: false,
   bookSortCode: { sort: 1, order: 2 },
@@ -145,6 +146,11 @@ export function manager(
       return {
         ...state,
         isShowSupport: action.payload,
+      };
+    case "HANDLE_LOAD_MORE":
+      return {
+        ...state,
+        isLoadMore: action.payload,
       };
     case "HANDLE_SHOW_NEW":
       return {
