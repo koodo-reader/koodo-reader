@@ -34,6 +34,7 @@ import {
 import SyncService from "../../../utils/storage/syncService";
 import { resetKoodoSync, updateUserConfig } from "../../../utils/request/user";
 import BookUtil from "../../../utils/file/bookUtil";
+import Book from "../../../models/Book";
 declare var window: any;
 class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
   constructor(props: SettingInfoProps) {
@@ -149,6 +150,11 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
     }
     resetKoodoSync(event.target.value);
     ConfigService.setItem("defaultSyncOption", event.target.value);
+    if (ConfigService.getItem("isEnableKoodoSync") === "yes") {
+      updateUserConfig({
+        default_sync_option: event.target.value,
+      });
+    }
     this.props.handleFetchDefaultSyncOption();
     toast.success(this.props.t("Change successful"));
   };
@@ -222,6 +228,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                       is_enable_koodo_sync: !this.state.isEnableKoodoSync
                         ? "yes"
                         : "no",
+                      default_sync_option: this.props.defaultSyncOption,
                     });
                     this.handleSetting(item.propName);
                     break;
@@ -630,8 +637,37 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
             <select
               name=""
               className="lang-setting-dropdown"
-              onChange={(event) => {
-                this.handleSetDefaultSyncOption(event);
+              onChange={async (event) => {
+                event.preventDefault();
+                const newValue = event.target.value;
+                const currentValue = this.props.defaultSyncOption;
+
+                let onlineBooks: Book[] = [];
+                for (let i = 0; i < this.props.books.length; i++) {
+                  if (
+                    !(await BookUtil.isBookOffline(this.props.books[i].key))
+                  ) {
+                    onlineBooks.push(this.props.books[i]);
+                  }
+                }
+                if (onlineBooks.length > 0) {
+                  window.vex.dialog.confirm({
+                    message: this.props.t(
+                      "Some of your books are currently not downloaded to the local. Changing the default sync option may lead to data loss. We recommend downloading all books to the local by turn on Auto download cloud books in the setting before changing the default sync option. Click 'OK' to proceed without downloading."
+                    ),
+                    callback: (value) => {
+                      if (value) {
+                        this.handleSetDefaultSyncOption({
+                          target: { value: newValue },
+                        });
+                      } else {
+                        event.target.value = currentValue;
+                      }
+                    },
+                  });
+                } else {
+                  this.handleSetDefaultSyncOption(event);
+                }
               }}
             >
               {[
