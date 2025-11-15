@@ -8,6 +8,7 @@ export interface HeaderProps extends RouteComponentProps<any> {
   isAboutOpen: boolean;
   isCollapsed: boolean;
   isNewWarning: boolean;
+  isLoadMore: boolean;
   isAuthed: boolean;
   bookmarks: BookmarkModel[];
   notes: NoteModel[];

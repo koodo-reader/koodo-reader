@@ -33,6 +33,7 @@ const mapStateToProps = (state: stateType) => {
     isAuthed: state.manager.isAuthed,
     defaultSyncOption: state.backupPage.defaultSyncOption,
     userInfo: state.manager.userInfo,
+    isLoadMore: state.manager.isLoadMore,
     isSortDisplay: state.manager.isSortDisplay,
     bookSortCode: state.manager.bookSortCode,
   };

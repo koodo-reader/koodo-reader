@@ -171,12 +171,13 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     }
   }
   handleFinishReading = async () => {
-    console.log("finish reading detected", this.props.bookSortCode.sort);
-    if (this.props.bookSortCode.sort === 1) {
+    console.log(this.props.isLoadMore, "loadmore");
+    if (!this.props.isLoadMore) {
       this.props.handleFetchBooks();
     }
     this.props.handleFetchBookmarks();
     this.props.handleFetchNotes();
+
     if (ConfigService.getItem("isFinshReading") === "yes") {
       ConfigService.setItem("isFinshReading", "no");
       if (
@@ -396,7 +397,10 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     return;
   };
   handleSuccess = async () => {
-    this.props.handleFetchBooks();
+    console.log(this.props.isLoadMore, "loadmore");
+    if (!this.props.isLoadMore) {
+      this.props.handleFetchBooks();
+    }
     this.props.handleFetchBookmarks();
     this.props.handleFetchNotes();
     toast.success(this.props.t("Synchronisation successful"), {

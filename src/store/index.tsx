@@ -46,6 +46,7 @@ export type stateType = {
     isShowLoading: boolean;
     isShowPopupNote: boolean;
     isShowSupport: boolean;
+    isLoadMore: boolean;
     isShowNew: boolean;
     userInfo: any;
     isAuthed: boolean;
