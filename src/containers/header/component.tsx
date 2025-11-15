@@ -250,6 +250,28 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       this.setState({ isSync: false });
       return false;
     }
+    if (
+      ConfigService.getReaderConfig("isEnableKoodoSync") === "yes" &&
+      this.props.userInfo &&
+      this.props.userInfo.default_sync_option &&
+      this.props.userInfo.default_sync_option !== this.props.defaultSyncOption
+    ) {
+      toast.error(
+        this.props.t(
+          "The default sync options in the local and cloud are inconsistent, please set the local default sync option to "
+        ) +
+          this.props.t(
+            driveList.find(
+              (item) => item.value === this.props.userInfo.default_sync_option
+            )?.label || ""
+          ),
+        {
+          duration: 4000,
+        }
+      );
+      this.setState({ isSync: false });
+      return false;
+    }
     let config = await getCloudConfig(
       ConfigService.getItem("defaultSyncOption") || ""
     );
@@ -281,6 +303,8 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       if (ConfigService.getReaderConfig("isEnableKoodoSync") === "yes") {
         await updateUserConfig({
           is_enable_koodo_sync: "no",
+          default_sync_option:
+            ConfigService.getItem("defaultSyncOption") === "google",
         });
         setTimeout(() => {
           updateUserConfig({

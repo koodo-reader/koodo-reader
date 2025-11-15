@@ -32,6 +32,7 @@ const mapStateToProps = (state: stateType) => {
     notes: state.reader.notes,
     isAuthed: state.manager.isAuthed,
     defaultSyncOption: state.backupPage.defaultSyncOption,
+    userInfo: state.manager.userInfo,
     isSortDisplay: state.manager.isSortDisplay,
     bookSortCode: state.manager.bookSortCode,
   };
