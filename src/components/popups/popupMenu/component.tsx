@@ -122,6 +122,12 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     for (let i = 0; i < docs.length; i++) {
       let doc = docs[i];
       if (!doc) continue;
+      let targetIframe = doc?.defaultView?.frameElement;
+      let id = targetIframe?.getAttribute("id") || "";
+      let chapterDocIndex = id ? parseInt(id.split("-").reverse()[0]) : 0;
+      if (chapterDocIndex !== this.props.chapterDocIndex) {
+        continue;
+      }
       sel = doc.getSelection();
       if (sel && sel.rangeCount > 0 && !sel.isCollapsed) {
         break;
