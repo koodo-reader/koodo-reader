@@ -34,6 +34,8 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
     this.setState({
       cover: await CoverUtil.getCover(this.props.book),
       isCoverExist: await CoverUtil.isCoverExist(this.props.book),
+    });
+    this.setState({
       isBookOffline: await BookUtil.isBookOffline(this.props.book.key),
     });
     let filePath = "";
@@ -64,6 +66,9 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
           ) > -1,
         cover,
         isCoverExist,
+      });
+      this.setState({
+        isBookOffline: await BookUtil.isBookOffline(nextProps.book.key),
       });
     }
   }

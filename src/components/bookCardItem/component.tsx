@@ -33,6 +33,8 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
     this.setState({
       cover: await CoverUtil.getCover(this.props.book),
       isCoverExist: await CoverUtil.isCoverExist(this.props.book),
+    });
+    this.setState({
       isBookOffline: await BookUtil.isBookOffline(this.props.book.key),
     });
     let filePath = "";
@@ -65,6 +67,9 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
           ) > -1,
         cover,
         isCoverExist,
+      });
+      this.setState({
+        isBookOffline: await BookUtil.isBookOffline(nextProps.book.key),
       });
     }
   }

@@ -80,7 +80,8 @@
   color: #f16464;
   background-color: rgba(241, 100, 100, 0.05);
   height: 34px;
-  float: left;
+  display: inline-block; /* 修改：从 float: left 改为 inline-block */
+  vertical-align: top; /* 添加：对齐方式 */
   padding-left: 10px;
   padding-right: 10px;
   border-radius: 8px;
@@ -103,7 +104,8 @@
 .trans-service-selector-inactive {
   border: 1px solid rgba(0, 0, 0, 0.05);
   color: #f16464;
-  float: left;
+  display: inline-block; /* 修改：从 float: left 改为 inline-block */
+  vertical-align: top; /* 添加：对齐方式 */
   height: 34px;
   padding-left: 10px;
   padding-right: 10px;
@@ -117,10 +119,32 @@
   position: absolute;
   top: 20px;
   width: 90%;
-  display: flex;
-  justify-content: flex-start;
   overflow-x: scroll;
   overflow-y: hidden;
+  white-space: nowrap; /* 添加：防止换行 */
+  height: 42px; /* 添加：给容器一个固定高度 */
+}
+/* 滚动条样式 - 仅在悬停时显示 */
+.trans-service-selector-container::-webkit-scrollbar {
+  height: 4px; /* 滚动条高度 */
+}
+
+.trans-service-selector-container::-webkit-scrollbar-track {
+  background: transparent; /* 轨道背景透明 */
+}
+
+.trans-service-selector-container::-webkit-scrollbar-thumb {
+  background: transparent; /* 默认透明 */
+  border-radius: 2px;
+  transition: background 0.3s ease;
+}
+
+.trans-service-selector-container:hover::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2); /* 悬停时显示 */
+}
+
+.trans-service-selector-container::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.4); /* 滚动条本身悬停时加深 */
 }
 .trans-button-container {
   position: absolute;
