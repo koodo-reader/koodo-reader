@@ -171,7 +171,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     }
   }
   handleFinishReading = async () => {
-    console.log(this.props.isLoadMore, "loadmore");
     if (!this.props.isLoadMore) {
       this.props.handleFetchBooks();
     }
@@ -397,7 +396,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     return;
   };
   handleSuccess = async () => {
-    console.log(this.props.isLoadMore, "loadmore");
     if (!this.props.isLoadMore) {
       this.props.handleFetchBooks();
     }
