@@ -32,7 +32,7 @@ import {
   onSyncCallback,
 } from "../../../utils/request/thirdparty";
 import SyncService from "../../../utils/storage/syncService";
-import { resetKoodoSync, updateUserConfig } from "../../../utils/request/user";
+import { updateUserConfig } from "../../../utils/request/user";
 import BookUtil from "../../../utils/file/bookUtil";
 import Book from "../../../models/Book";
 declare var window: any;
@@ -148,7 +148,6 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
     if (!event.target.value) {
       return;
     }
-    resetKoodoSync(event.target.value);
     ConfigService.setItem("defaultSyncOption", event.target.value);
     if (ConfigService.getItem("isEnableKoodoSync") === "yes") {
       updateUserConfig({

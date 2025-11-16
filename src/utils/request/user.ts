@@ -126,22 +126,3 @@ export const detectBrowser = () => {
 export const getOsVersionNumber = (): string => {
   return isElectron ? osVersion : browserVersion;
 };
-export const resetKoodoSync = (service: string) => {
-  if (
-    ConfigService.getItem("defaultSyncOption") &&
-    ConfigService.getItem("defaultSyncOption") !== service
-  ) {
-    if (ConfigService.getReaderConfig("isEnableKoodoSync") === "yes") {
-      updateUserConfig({
-        is_enable_koodo_sync: "no",
-        default_sync_option: service,
-      });
-      setTimeout(() => {
-        updateUserConfig({
-          is_enable_koodo_sync: "yes",
-          default_sync_option: service,
-        });
-      }, 1000);
-    }
-  }
-};

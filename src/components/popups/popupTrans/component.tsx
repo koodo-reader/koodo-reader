@@ -158,6 +158,15 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
       return (
         <div className="trans-container">
           <div className="trans-service-selector-container">
+            <div
+              className="trans-service-selector-inactive"
+              onClick={() => {
+                this.setState({ isAddNew: true });
+              }}
+            >
+              <span className="icon-add trans-add-icon"></span>
+              <Trans>Add</Trans>
+            </div>
             {this.props.plugins
               .filter((item) => item.type === "translation")
               .map((item) => {
@@ -178,15 +187,6 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
                   </div>
                 );
               })}
-            <div
-              className="trans-service-selector-inactive"
-              onClick={() => {
-                this.setState({ isAddNew: true });
-              }}
-            >
-              <span className="icon-add trans-add-icon"></span>
-              <Trans>Add</Trans>
-            </div>
           </div>
           {this.state.isAddNew && (
             <div
