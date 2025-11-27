@@ -31,7 +31,6 @@ import {
   checkMissingBook,
   generateSyncRecord,
   getChatLocale,
-  getStorageLocation,
   getWebsiteUrl,
   removeChatBox,
   showTaskProgress,
@@ -191,7 +190,9 @@ class Header extends React.Component<HeaderProps, HeaderState> {
   };
   handleFinishUpgrade = () => {
     setTimeout(() => {
-      this.props.history.push("/manager/home");
+      if (this.props.mode === "home") {
+        this.props.history.push("/manager/home");
+      }
     }, 2000);
   };
 
@@ -424,7 +425,9 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     }
     //when book is empty, need to refresh the book list
     setTimeout(() => {
-      this.props.history.push("/manager/home");
+      if (this.props.mode === "home") {
+        this.props.history.push("/manager/home");
+      }
     }, 1000);
   };
   handleSync = async (compareResult) => {
