@@ -7,12 +7,11 @@ import { themeList } from "../../../constants/themeList";
 import toast from "react-hot-toast";
 import {
   formatTimestamp,
+  getWebsiteUrl,
   handleContextMenu,
   openInBrowser,
   reloadManager,
-  WEBSITE_URL,
 } from "../../../utils/common";
-import { getStorageLocation } from "../../../utils/common";
 import {
   CommonTool,
   ConfigService,
@@ -827,7 +826,7 @@ class AccountSetting extends React.Component<
             onClick={async () => {
               if (!this.props.isAuthed) {
                 openInBrowser(
-                  WEBSITE_URL +
+                  getWebsiteUrl() +
                     (ConfigService.getReaderConfig("lang").startsWith("zh")
                       ? "/zh"
                       : "/en") +
@@ -840,7 +839,7 @@ class AccountSetting extends React.Component<
                 let tempToken = response.data.access_token;
                 let deviceUuid = await TokenService.getFingerprint();
                 openInBrowser(
-                  WEBSITE_URL +
+                  getWebsiteUrl() +
                     (ConfigService.getReaderConfig("lang").startsWith("zh")
                       ? "/zh"
                       : "/en") +

@@ -32,9 +32,9 @@ import {
   generateSyncRecord,
   getChatLocale,
   getStorageLocation,
+  getWebsiteUrl,
   removeChatBox,
   showTaskProgress,
-  WEBSITE_URL,
 } from "../../utils/common";
 import { driveList } from "../../constants/driveList";
 import SupportDialog from "../../components/dialogs/supportDialog";
@@ -498,7 +498,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
             onClick={() => {
               window.require("electron").ipcRenderer.invoke("new-chat", {
                 url:
-                  WEBSITE_URL +
+                  getWebsiteUrl() +
                   (ConfigService.getReaderConfig("lang").startsWith("zh")
                     ? "/zh/faq"
                     : "/en/faq") +

@@ -1,18 +1,29 @@
 import axios from "axios";
 import toast from "react-hot-toast";
 import i18n from "../../i18n";
-import { TokenService } from "../../assets/lib/kookit-extra-browser.min";
+import {
+  ConfigService,
+  TokenService,
+} from "../../assets/lib/kookit-extra-browser.min";
 import { reloadManager } from "../common";
 const PUBLIC_URL = "https://api.960960.xyz";
+const CN_PUBLIC_URL = "https://api.koodoreader.cn";
+export const getPublicUrl = () => {
+  let isUseCN = false;
+  if (ConfigService.getItem("serverRegion")) {
+    isUseCN = ConfigService.getItem("serverRegion") === "china";
+  } else {
+    if (navigator.language && navigator.language === "zh-CN") {
+      isUseCN = true;
+    }
+  }
+  return isUseCN ? CN_PUBLIC_URL : PUBLIC_URL;
+};
 export const checkDeveloperUpdate = async () => {
   let res = await axios.get(
-    PUBLIC_URL + `/api/update_dev?name=${navigator.language}`
+    getPublicUrl() + `/api/update_dev?name=${navigator.language}`
   );
   return res.data.log;
-};
-export const getUploadUrl = async () => {
-  let res = await axios.get(PUBLIC_URL + "/api/get_temp_upload_url");
-  return res.data;
 };
 export const uploadFile = async (url: string, file: any) => {
   return new Promise<boolean>((resolve) => {
@@ -29,7 +40,7 @@ export const uploadFile = async (url: string, file: any) => {
 };
 export const checkStableUpdate = async () => {
   let res = await axios.get(
-    PUBLIC_URL + `/api/update?name=${navigator.language}`
+    getPublicUrl() + `/api/update?name=${navigator.language}`
   );
   return res.data.log;
 };

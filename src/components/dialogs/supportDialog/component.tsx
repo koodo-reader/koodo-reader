@@ -6,9 +6,9 @@ import Lottie from "react-lottie";
 import supportAnimation from "../../../assets/lotties/support.json";
 import exitAnimation from "../../../assets/lotties/exit.json";
 import {
+  getWebsiteUrl,
   handleContextMenu,
   openInBrowser,
-  WEBSITE_URL,
 } from "../../../utils/common";
 import {
   ConfigService,
@@ -338,7 +338,7 @@ class SupporDialog extends React.Component<
                               let deviceUuid =
                                 await TokenService.getFingerprint();
                               openInBrowser(
-                                WEBSITE_URL +
+                                getWebsiteUrl() +
                                   (ConfigService.getReaderConfig(
                                     "lang"
                                   ).startsWith("zh")

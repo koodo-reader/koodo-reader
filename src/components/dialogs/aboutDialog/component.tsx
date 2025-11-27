@@ -2,7 +2,7 @@ import React from "react";
 import { Trans } from "react-i18next";
 import { AboutDialogProps, AboutDialogState } from "./interface";
 import { isElectron } from "react-device-detect";
-import { openExternalUrl, WEBSITE_URL } from "../../../utils/common";
+import { getWebsiteUrl, openExternalUrl } from "../../../utils/common";
 import toast from "react-hot-toast";
 import {
   exportBooks,
@@ -59,9 +59,9 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
                   ConfigService.getReaderConfig("lang") &&
                   ConfigService.getReaderConfig("lang").startsWith("zh")
                 ) {
-                  this.handleJump(WEBSITE_URL + "/zh/document");
+                  this.handleJump(getWebsiteUrl() + "/zh/document");
                 } else {
-                  this.handleJump(WEBSITE_URL + "/en/document");
+                  this.handleJump(getWebsiteUrl() + "/en/document");
                 }
               }}
             >
@@ -74,9 +74,9 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
                   ConfigService.getReaderConfig("lang") &&
                   ConfigService.getReaderConfig("lang").startsWith("zh")
                 ) {
-                  openExternalUrl(WEBSITE_URL + "/zh/support");
+                  openExternalUrl(getWebsiteUrl() + "/zh/support");
                 } else {
-                  openExternalUrl(WEBSITE_URL + "/en/support");
+                  openExternalUrl(getWebsiteUrl() + "/en/support");
                 }
               }}
             >
@@ -85,7 +85,7 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
             <li
               className="sort-by-category-list"
               onClick={() => {
-                this.handleJump(WEBSITE_URL);
+                this.handleJump(getWebsiteUrl());
               }}
             >
               <Trans>Our website</Trans>
@@ -125,7 +125,7 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
               <li
                 className="sort-by-category-list"
                 onClick={() => {
-                  this.handleJump(WEBSITE_URL);
+                  this.handleJump(getWebsiteUrl());
                 }}
                 style={{ color: "rgb(35, 170, 242)" }}
               >
