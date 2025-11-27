@@ -30,6 +30,7 @@ const mapStateToProps = (state: stateType) => {
     isCollapsed: state.sidebar.isCollapsed,
     isNewWarning: state.manager.isNewWarning,
     notes: state.reader.notes,
+    mode: state.sidebar.mode,
     isAuthed: state.manager.isAuthed,
     defaultSyncOption: state.backupPage.defaultSyncOption,
     userInfo: state.manager.userInfo,

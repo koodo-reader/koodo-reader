@@ -13,8 +13,7 @@ import {
 import "./aboutDialog.css";
 import DatabaseService from "../../../utils/storage/databaseService";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
-import ConfigUtil from "../../../utils/file/configUtil";
-
+import copyTextToClipboard from "copy-text-to-clipboard";
 declare var window: any;
 class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
   constructor(props: AboutDialogProps) {
@@ -89,6 +88,15 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
               }}
             >
               <Trans>Our website</Trans>
+            </li>
+            <li
+              className="sort-by-category-list"
+              onClick={() => {
+                copyTextToClipboard("feedback@koodoreader.com");
+                toast.success(this.props.t("Email copied to clipboard"));
+              }}
+            >
+              <Trans>Send email</Trans>
             </li>
             <li
               className="sort-by-category-list"

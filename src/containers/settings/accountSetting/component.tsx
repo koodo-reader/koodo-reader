@@ -3,7 +3,6 @@ import { SettingInfoProps, SettingInfoState } from "./interface";
 import { Trans } from "react-i18next";
 import { isElectron } from "react-device-detect";
 import _ from "underscore";
-import { themeList } from "../../../constants/themeList";
 import toast from "react-hot-toast";
 import {
   formatTimestamp,

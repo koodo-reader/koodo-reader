@@ -215,13 +215,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           if (result) {
             toast.success(this.props.t("Download successful"));
           } else {
-            result = await BookUtil.downloadCacheBook(key);
-            if (result) {
-              toast.success(this.props.t("Download successful"));
-            } else {
-              toast.error(this.props.t("Download failed"));
-              return;
-            }
+            toast.error(this.props.t("Book not exists"));
           }
         } else {
           toast.error(this.props.t("Book not exists"));
