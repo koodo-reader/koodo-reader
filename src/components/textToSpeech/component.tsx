@@ -6,10 +6,10 @@ import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import {
   checkPlugin,
   getAllVoices,
+  getWebsiteUrl,
   handleContextMenu,
   sleep,
   splitSentences,
-  WEBSITE_URL,
 } from "../../utils/common";
 import { isElectron } from "react-device-detect";
 import toast from "react-hot-toast";
@@ -536,9 +536,9 @@ class TextToSpeech extends React.Component<
                         ConfigService.getReaderConfig("lang") &&
                         ConfigService.getReaderConfig("lang").startsWith("zh")
                       ) {
-                        openExternalUrl(WEBSITE_URL + "/zh/plugin");
+                        openExternalUrl(getWebsiteUrl() + "/zh/plugin");
                       } else {
-                        openExternalUrl(WEBSITE_URL + "/en/plugin");
+                        openExternalUrl(getWebsiteUrl() + "/en/plugin");
                       }
                     }}
                   >

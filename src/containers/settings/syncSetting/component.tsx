@@ -10,13 +10,13 @@ import { themeList } from "../../../constants/themeList";
 import toast from "react-hot-toast";
 import {
   generateSyncRecord,
+  getWebsiteUrl,
   handleContextMenu,
   openExternalUrl,
   openInBrowser,
   showTaskProgress,
   testConnection,
   testCORS,
-  WEBSITE_URL,
 } from "../../../utils/common";
 import { getStorageLocation } from "../../../utils/common";
 import { driveInputConfig, driveList } from "../../../constants/driveList";
@@ -545,7 +545,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                       className="voice-add-cancel"
                       style={{ borderWidth: 0, lineHeight: "30px" }}
                       onClick={() => {
-                        openExternalUrl(WEBSITE_URL + "/zh/add-source");
+                        openExternalUrl(getWebsiteUrl() + "/zh/add-source");
                       }}
                     >
                       {this.props.t("How to fill out")}
