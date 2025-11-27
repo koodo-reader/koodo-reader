@@ -1,23 +1,12 @@
 import axios from "axios";
 import toast from "react-hot-toast";
 import i18n from "../../i18n";
-import {
-  ConfigService,
-  TokenService,
-} from "../../assets/lib/kookit-extra-browser.min";
-import { reloadManager } from "../common";
+import { TokenService } from "../../assets/lib/kookit-extra-browser.min";
+import { getServerRegion, reloadManager } from "../common";
 const PUBLIC_URL = "https://api.960960.xyz";
 const CN_PUBLIC_URL = "https://api.koodoreader.cn";
 export const getPublicUrl = () => {
-  let isUseCN = false;
-  if (ConfigService.getItem("serverRegion")) {
-    isUseCN = ConfigService.getItem("serverRegion") === "china";
-  } else {
-    if (navigator.language && navigator.language === "zh-CN") {
-      isUseCN = true;
-    }
-  }
-  return isUseCN ? CN_PUBLIC_URL : PUBLIC_URL;
+  return getServerRegion() === "china" ? CN_PUBLIC_URL : PUBLIC_URL;
 };
 export const checkDeveloperUpdate = async () => {
   let res = await axios.get(

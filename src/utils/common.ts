@@ -593,15 +593,7 @@ export const getServerRegion = () => {
   return isUseCN ? "china" : "global";
 };
 export const getWebsiteUrl = () => {
-  let isUseCN = false;
-  if (ConfigService.getItem("serverRegion")) {
-    isUseCN = ConfigService.getItem("serverRegion") === "china";
-  } else {
-    if (navigator.language && navigator.language === "zh-CN") {
-      isUseCN = true;
-    }
-  }
-  return isUseCN ? CN_WEBSITE_URL : WEBSITE_URL;
+  return getServerRegion() === "china" ? CN_WEBSITE_URL : WEBSITE_URL;
 };
 export const formatTimestamp = (timestamp) => {
   if (!timestamp) return "";
