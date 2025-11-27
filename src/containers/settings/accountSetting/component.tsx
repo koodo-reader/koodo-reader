@@ -7,6 +7,7 @@ import { themeList } from "../../../constants/themeList";
 import toast from "react-hot-toast";
 import {
   formatTimestamp,
+  getServerRegion,
   getWebsiteUrl,
   handleContextMenu,
   openInBrowser,
@@ -45,7 +46,7 @@ class AccountSetting extends React.Component<
       redeemCode: "",
       isSendingCode: false,
       countdown: 0,
-      serverRegion: ConfigService.getItem("serverRegion") || "global",
+      serverRegion: getServerRegion(),
     };
   }
   componentDidMount(): void {
@@ -92,8 +93,7 @@ class AccountSetting extends React.Component<
       let url = LoginHelper.getAuthUrl(
         event.target.value,
         "manual",
-        ConfigService.getItem("serverRegion") === "china" &&
-          event.target.value === "microsoft"
+        getServerRegion() === "china" && event.target.value === "microsoft"
           ? KookitConfig.ThirdpartyConfig.cnCallbackUrl
           : KookitConfig.ThirdpartyConfig.callbackUrl
       );
@@ -159,7 +159,7 @@ class AccountSetting extends React.Component<
           KookitConfig.LoginAuthRequest[this.state.settingLogin].extraParams
             .scope,
         redirect_uri:
-          ConfigService.getItem("serverRegion") === "china" &&
+          getServerRegion() === "china" &&
           this.state.settingLogin === "microsoft"
             ? KookitConfig.ThirdpartyConfig.cnCallbackUrl
             : KookitConfig.ThirdpartyConfig.callbackUrl,
@@ -251,7 +251,7 @@ class AccountSetting extends React.Component<
                     let url = LoginHelper.getAuthUrl(
                       this.state.settingLogin,
                       "manual",
-                      ConfigService.getItem("serverRegion") === "china" &&
+                      getServerRegion() === "china" &&
                         this.state.settingLogin === "microsoft"
                         ? KookitConfig.ThirdpartyConfig.cnCallbackUrl
                         : KookitConfig.ThirdpartyConfig.callbackUrl
@@ -577,10 +577,7 @@ class AccountSetting extends React.Component<
                 value={item.value}
                 key={item.value}
                 className="lang-setting-option"
-                selected={
-                  item.value ===
-                  (ConfigService.getItem("serverRegion") || "global")
-                }
+                selected={item.value === getServerRegion()}
               >
                 {this.props.t(item.label)}
               </option>
@@ -598,7 +595,7 @@ class AccountSetting extends React.Component<
               {[
                 { label: "Please select", value: "" },
                 ...loginList.filter((item) => {
-                  if (ConfigService.getItem("serverRegion") === "china") {
+                  if (getServerRegion() === "china") {
                     return item.isCNAvailable;
                   }
                   return true;

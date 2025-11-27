@@ -7,6 +7,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { loginList } from "../../constants/loginList";
 import {
   generateSyncRecord,
+  getServerRegion,
   handleContextMenu,
   openInBrowser,
   removeSearchParams,
@@ -37,7 +38,7 @@ class Login extends React.Component<LoginProps, LoginState> {
       loginConfig: {},
       countdown: 0,
       isSendingCode: false,
-      serverRegion: ConfigService.getItem("serverRegion") || "global",
+      serverRegion: getServerRegion(),
     };
   }
 
@@ -366,8 +367,8 @@ class Login extends React.Component<LoginProps, LoginState> {
                             let url = LoginHelper.getAuthUrl(
                               item.value,
                               isElectron ? "desktop" : "browser",
-                              ConfigService.getItem("serverRegion") ===
-                                "china" && item.value === "microsoft"
+                              getServerRegion() === "china" &&
+                                item.value === "microsoft"
                                 ? KookitConfig.ThirdpartyConfig.cnCallbackUrl
                                 : KookitConfig.ThirdpartyConfig.callbackUrl
                             );
@@ -453,7 +454,7 @@ class Login extends React.Component<LoginProps, LoginState> {
               <div className="login-sync-container">
                 {driveList
                   .filter((item) => {
-                    if (ConfigService.getItem("serverRegion") === "china") {
+                    if (getServerRegion() === "china") {
                       return item.isCNAvailable;
                     }
                     return true;

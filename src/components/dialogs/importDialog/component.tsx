@@ -9,6 +9,7 @@ import { isElectron } from "react-device-detect";
 import { getCloudConfig } from "../../../utils/file/common";
 import SyncService from "../../../utils/storage/syncService";
 import {
+  getServerRegion,
   getStorageLocation,
   openInBrowser,
   showDownloadProgress,
@@ -368,7 +369,7 @@ class ImportDialog extends React.Component<
             <>
               {driveList
                 .filter((item) => {
-                  if (ConfigService.getItem("serverRegion") === "china") {
+                  if (getServerRegion() === "china") {
                     return item.isCNAvailable;
                   }
                   return true;
@@ -411,8 +412,7 @@ class ImportDialog extends React.Component<
                         ) {
                           openInBrowser(
                             new SyncUtil(settingDrive, {}).getAuthUrl(
-                              ConfigService.getItem("serverRegion") ===
-                                "china" &&
+                              getServerRegion() === "china" &&
                                 (settingDrive === "microsoft" ||
                                   settingDrive === "microsoft_exp" ||
                                   settingDrive === "adrive")
