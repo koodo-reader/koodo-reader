@@ -16,6 +16,7 @@ import PageWidget from "../pageWidget";
 import {
   getPageWidth,
   getPdfPassword,
+  getServerRegion,
   scrollContents,
   showDownloadProgress,
 } from "../../utils/common";
@@ -258,7 +259,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
                 (item) => item.lang === ConfigService.getReaderConfig("lang")
               )?.value || "chi_sim",
           ocrEngine: ConfigService.getReaderConfig("ocrEngine") || "tesseract",
-          serverRegion: ConfigService.getItem("serverRegion") || "global",
+          serverRegion: getServerRegion(),
           paraSpacingValue:
             ConfigService.getReaderConfig("paraSpacingValue") || "1.5",
           titleSizeValue:
