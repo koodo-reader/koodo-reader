@@ -170,23 +170,17 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     }
   }
   handleFinishReading = async () => {
-    if (!this.props.isLoadMore) {
-      this.props.handleFetchBooks();
-    }
-    this.props.handleFetchBookmarks();
-    this.props.handleFetchNotes();
-
     if (ConfigService.getItem("isFinshReading") === "yes") {
-      ConfigService.setItem("isFinshReading", "no");
       if (
         ConfigService.getReaderConfig("isDisableAutoSync") !== "yes" &&
         ConfigService.getItem("defaultSyncOption")
       ) {
         await this.props.handleFetchUserInfo();
         this.setState({ isSync: true });
-        this.handleCloudSync();
+        await this.handleCloudSync();
       }
     }
+    ConfigService.setItem("isFinshReading", "no");
   };
   handleFinishUpgrade = () => {
     setTimeout(() => {
@@ -397,9 +391,10 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     return;
   };
   handleSuccess = async () => {
-    if (!this.props.isLoadMore) {
+    if (ConfigService.getItem("isFinshReading") !== "yes") {
       this.props.handleFetchBooks();
     }
+
     this.props.handleFetchBookmarks();
     this.props.handleFetchNotes();
     toast.success(this.props.t("Synchronisation successful"), {

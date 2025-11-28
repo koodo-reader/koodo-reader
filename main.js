@@ -669,12 +669,12 @@ const createMainWin = () => {
   ipcMain.handle("reload-reader", (event, arg) => {
     if (readerWindowList.length > 0) {
       readerWindowList.forEach(win => {
-        if (win && !win.isDestroyed()) {
+        if (win && !win.isDestroyed() && win.webContents.getURL().indexOf(arg.bookKey) > -1) {
           win.reload();
         }
       })
     }
-    if (readerWindow && !readerWindow.isDestroyed()) {
+    if (readerWindow && !readerWindow.isDestroyed() && readerWindow.webContents.getURL().indexOf(arg.bookKey) > -1) {
       readerWindow.reload();
     }
   });
