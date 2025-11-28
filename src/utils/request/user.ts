@@ -40,6 +40,7 @@ export const loginRegister = async (service: string, code: string) => {
     await TokenService.setToken("is_authed", "yes");
     await TokenService.setToken("access_token", response.data.access_token);
     await TokenService.setToken("refresh_token", response.data.refresh_token);
+    ConfigService.setItem("serverRegion", getServerRegion());
   }
   return response;
 };

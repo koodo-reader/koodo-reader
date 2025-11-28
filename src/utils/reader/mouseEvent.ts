@@ -132,7 +132,7 @@ export const scrollChapter = async (
     }
   }
 };
-
+let lastScaleTime = 0;
 export const bindHtmlEvent = (
   rendition: any,
   doc: any,
@@ -152,10 +152,17 @@ export const bindHtmlEvent = (
     },
     { passive: false }
   );
+
   doc.addEventListener(
     "wheel",
     async (event) => {
       if (event.ctrlKey && readerMode !== "double") {
+        const currentTime = Date.now();
+        console.log(currentTime, lastScaleTime, currentTime - lastScaleTime);
+        if (currentTime - lastScaleTime < 2000) {
+          return;
+        }
+        lastScaleTime = currentTime;
         event.preventDefault();
         let scale = parseFloat(ConfigService.getReaderConfig("scale") || "1");
         if (event.deltaY < 0) {
