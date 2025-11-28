@@ -113,10 +113,9 @@ class ConfigUtil {
     }
     let thirdpartyRequest = await getThirdpartyRequest();
 
-    let response = await thirdpartyRequest.getSyncData();
+    let response = await thirdpartyRequest.getSyncDataByType({ type });
     if (response.code === 200) {
-      let syncData = response.data;
-      this.syncData = syncData;
+      this.syncData[type] = response.data;
       return JSON.parse(this.syncData[type] || defaultValue);
     } else if (response.code === 401) {
       handleExitApp();

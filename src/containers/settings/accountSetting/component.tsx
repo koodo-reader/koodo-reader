@@ -523,6 +523,27 @@ class AccountSetting extends React.Component<
                         id: "redeem-code",
                       }
                     );
+                    if (response.code === 10009) {
+                      if (getServerRegion() === "china") {
+                        toast(
+                          this.props.t(
+                            "If you have purchase the code directly from our website, please redeem with an account registered in global server region"
+                          ),
+                          {
+                            duration: 8000,
+                          }
+                        );
+                      } else {
+                        toast(
+                          this.props.t(
+                            "If you have purchase the code from Tabao store, please redeem with an account registered in Chinese server region"
+                          ),
+                          {
+                            duration: 8000,
+                          }
+                        );
+                      }
+                    }
                   }
                 }}
               >
