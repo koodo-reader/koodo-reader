@@ -63,7 +63,6 @@ class PopupRefer extends React.Component<PopupReferProps, PopupReferStates> {
   handleLinkJump = async (event: any): Promise<boolean> => {
     let href = this.props.rendition.getTargetHref(event);
     let result = await this.props.rendition.handleLinkJump(href, event);
-    console.log(result, "we3463454");
     if (!result.handled) {
       return false;
     }

@@ -242,7 +242,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
   beforeSync = async () => {
     if (!ConfigService.getItem("defaultSyncOption")) {
       toast.error(this.props.t("Please add data source in the setting"));
-      console.log("testsats");
       return false;
     }
     if (
@@ -352,16 +351,13 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     );
   };
   handleCloudSync = async (): Promise<false | undefined> => {
-    console.log("dsgdfgdf");
     this.timer = await showTaskProgress();
     if (!this.timer) {
       this.setState({ isSync: false });
       return false;
     }
     try {
-      console.log("fghdfhfg");
       let res = await this.beforeSync();
-      console.log(res, "res");
       if (!res) {
         clearInterval(this.timer);
         this.setState({ isSync: false });
@@ -591,7 +587,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
           <div
             className="setting-icon-container"
             onClick={async () => {
-              console.log("sadfsagsgfd");
               if (!isElectron && !this.props.isAuthed) {
                 toast(
                   this.props.t(

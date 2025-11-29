@@ -85,7 +85,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     this.props.handleRenderBookFunc(this.handleRenderBook);
     let resizeTimer: NodeJS.Timeout;
     window.addEventListener("resize", (event) => {
-      console.log(event);
       clearTimeout(resizeTimer);
       resizeTimer = setTimeout(() => {
         BookUtil.reloadBooks(this.props.currentBook);
