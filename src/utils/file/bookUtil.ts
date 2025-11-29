@@ -200,15 +200,15 @@ class BookUtil {
         let result = await this.downloadBook(book.key, book.format);
         clearInterval(timer);
         toast.dismiss("offline-book");
-        if (ConfigService.getItem("defaultSyncOption") === "adrive") {
-          let syncUtil = await SyncService.getSyncUtil();
-          let covers = await syncUtil.listFiles("cover");
-          for (let cover of covers) {
-            if (cover.startsWith(book.key)) {
-              await CoverUtil.downloadCover(cover);
-            }
+
+        let covers = await CoverUtil.getCloudCoverList();
+        console.log(covers, "covers");
+        for (let cover of covers) {
+          if (cover.startsWith(book.key)) {
+            await CoverUtil.downloadCover(cover);
           }
         }
+
         if (result) {
           toast.success(i18n.t("Download successful"), {
             id: "offline-book",
