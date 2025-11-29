@@ -202,7 +202,6 @@ class BookUtil {
         toast.dismiss("offline-book");
 
         let covers = await CoverUtil.getCloudCoverList();
-        console.log(covers, "covers");
         for (let cover of covers) {
           if (cover.startsWith(book.key)) {
             await CoverUtil.downloadCover(cover);

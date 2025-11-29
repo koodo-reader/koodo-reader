@@ -697,7 +697,6 @@ const createMainWin = () => {
         hasShadow: true,
         transparent: false,
       });
-      console.log(config.url)
       chatWindow.loadURL(config.url);
       chatWindow.on("close", (event) => {
         chatWindow && chatWindow.destroy();
@@ -720,7 +719,6 @@ const createMainWin = () => {
     }
   });
   ipcMain.on('picker-action', (event, config) => {
-    console.log("Picker finished with data:", config);
     //将数据传递给主窗口
 
     if (mainWin && !mainWin.isDestroyed() && config.action === 'picked') {
