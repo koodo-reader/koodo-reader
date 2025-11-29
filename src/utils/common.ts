@@ -844,7 +844,7 @@ export const showTaskProgress = async () => {
         if (stats.hasFailedTasks) {
           toast.error(
             i18n.t(
-              "Tasks failed after multiple retries, please check the network connection"
+              "Tasks failed after multiple retries, please check the network connection or reauthorize the data source in the settings"
             ),
             {
               id: "syncing",
@@ -882,7 +882,7 @@ export const showTaskProgress = async () => {
         if (stats.hasFailedTasks) {
           toast.error(
             i18n.t(
-              "Tasks failed after multiple retries, please check the network connection"
+              "Tasks failed after multiple retries, please check the network connection or reauthorize the data source in the settings"
             ),
             {
               id: "syncing",

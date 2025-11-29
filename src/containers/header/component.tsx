@@ -242,7 +242,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
   beforeSync = async () => {
     if (!ConfigService.getItem("defaultSyncOption")) {
       toast.error(this.props.t("Please add data source in the setting"));
-      this.setState({ isSync: false });
+      console.log("testsats");
       return false;
     }
     if (
@@ -264,7 +264,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
           duration: 4000,
         }
       );
-      this.setState({ isSync: false });
       return false;
     }
     let config = await getCloudConfig(
@@ -272,7 +271,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     );
     if (Object.keys(config).length === 0) {
       toast.error(this.props.t("Cannot get sync config"));
-      this.setState({ isSync: false });
       return false;
     }
     if (
@@ -313,7 +311,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         ),
         { duration: 4000 }
       );
-      this.setState({ isSync: false });
       return false;
     }
     checkMissingBook(this.props.books);
@@ -324,7 +321,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
           "Broken data detected, please click the setting button to reset the sync records"
         )
       );
-      this.setState({ isSync: false });
       return false;
     }
     if (ConfigService.getReaderConfig("isEnableKoodoSync") !== "yes") {
@@ -356,12 +352,16 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     );
   };
   handleCloudSync = async (): Promise<false | undefined> => {
+    console.log("dsgdfgdf");
     this.timer = await showTaskProgress();
     if (!this.timer) {
+      this.setState({ isSync: false });
       return false;
     }
     try {
+      console.log("fghdfhfg");
       let res = await this.beforeSync();
+      console.log(res, "res");
       if (!res) {
         clearInterval(this.timer);
         this.setState({ isSync: false });
@@ -591,6 +591,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
           <div
             className="setting-icon-container"
             onClick={async () => {
+              console.log("sadfsagsgfd");
               if (!isElectron && !this.props.isAuthed) {
                 toast(
                   this.props.t(
