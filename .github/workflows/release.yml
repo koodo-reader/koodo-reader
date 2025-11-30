@@ -56,9 +56,9 @@ jobs:
         shell: bash
         run: |
           if [[ "${{ matrix.os }}" == "windows-latest" ]]; then
-            powershell -Command "(Get-Content package.json) -replace '\"productName\": \"([^\"]+)\"', '\"productName\": \"\$1-dev\"' | Set-Content package.json"
+            powershell -Command "(Get-Content package.json) -replace '\"productName\": \"Koodo Reader\"', '\"productName\": \"Koodo Reader DEV\"' | Set-Content package.json"
           else
-            sed -i.bak 's/"productName": "\([^"]*\)"/"productName": "\1-dev"/' package.json
+            sed -i.bak 's/"productName": "Koodo Reader"/"productName": "Koodo Reader DEV"/' package.json
           fi
       - name: Modify package.json for Linux arm64 build
         if: startsWith(matrix.os, 'ubuntu-24.04-arm')
