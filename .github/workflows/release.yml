@@ -56,7 +56,7 @@ jobs:
         shell: bash
         run: |
           if [[ "${{ matrix.os }}" == "windows-latest" ]]; then
-            powershell -Command "(Get-Content package.json) -replace '\"productName\": \"([^\"]+)\"', '\"productName\": \"`$1-dev\"' | Set-Content package.json"
+            powershell -Command "(Get-Content package.json) -replace '\"productName\": \"([^\"]+)\"', '\"productName\": \"\$1-dev\"' | Set-Content package.json"
           else
             sed -i.bak 's/"productName": "\([^"]*\)"/"productName": "\1-dev"/' package.json
           fi
