@@ -242,7 +242,7 @@ class SupporDialog extends React.Component<
                               if (getServerRegion() === "china") {
                                 toast(
                                   this.props.t(
-                                    "If you have purchase the code directly from our website, please redeem with an account registered in global server region"
+                                    "If you have purchased the code directly from our website, please redeem with an account registered in global server region"
                                   ),
                                   {
                                     duration: 8000,
@@ -251,7 +251,7 @@ class SupporDialog extends React.Component<
                               } else {
                                 toast(
                                   this.props.t(
-                                    "If you have purchase the code from Tabao store, please redeem with an account registered in Chinese server region"
+                                    "If you have purchased the code from Tabao store, please redeem with an account registered in Chinese server region"
                                   ),
                                   {
                                     duration: 8000,
