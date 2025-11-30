@@ -3,16 +3,15 @@ import { SettingInfoProps, SettingInfoState } from "./interface";
 import { Trans } from "react-i18next";
 import { isElectron } from "react-device-detect";
 import _ from "underscore";
-import { themeList } from "../../../constants/themeList";
 import toast from "react-hot-toast";
 import {
   formatTimestamp,
+  getServerRegion,
+  getWebsiteUrl,
   handleContextMenu,
   openInBrowser,
   reloadManager,
-  WEBSITE_URL,
 } from "../../../utils/common";
-import { getStorageLocation } from "../../../utils/common";
 import {
   CommonTool,
   ConfigService,
@@ -46,7 +45,7 @@ class AccountSetting extends React.Component<
       redeemCode: "",
       isSendingCode: false,
       countdown: 0,
-      serverRegion: ConfigService.getItem("serverRegion") || "global",
+      serverRegion: getServerRegion(),
     };
   }
   componentDidMount(): void {
@@ -93,8 +92,7 @@ class AccountSetting extends React.Component<
       let url = LoginHelper.getAuthUrl(
         event.target.value,
         "manual",
-        ConfigService.getItem("serverRegion") === "china" &&
-          event.target.value === "microsoft"
+        getServerRegion() === "china" && event.target.value === "microsoft"
           ? KookitConfig.ThirdpartyConfig.cnCallbackUrl
           : KookitConfig.ThirdpartyConfig.callbackUrl
       );
@@ -160,7 +158,7 @@ class AccountSetting extends React.Component<
           KookitConfig.LoginAuthRequest[this.state.settingLogin].extraParams
             .scope,
         redirect_uri:
-          ConfigService.getItem("serverRegion") === "china" &&
+          getServerRegion() === "china" &&
           this.state.settingLogin === "microsoft"
             ? KookitConfig.ThirdpartyConfig.cnCallbackUrl
             : KookitConfig.ThirdpartyConfig.callbackUrl,
@@ -252,7 +250,7 @@ class AccountSetting extends React.Component<
                     let url = LoginHelper.getAuthUrl(
                       this.state.settingLogin,
                       "manual",
-                      ConfigService.getItem("serverRegion") === "china" &&
+                      getServerRegion() === "china" &&
                         this.state.settingLogin === "microsoft"
                         ? KookitConfig.ThirdpartyConfig.cnCallbackUrl
                         : KookitConfig.ThirdpartyConfig.callbackUrl
@@ -525,6 +523,27 @@ class AccountSetting extends React.Component<
                         id: "redeem-code",
                       }
                     );
+                    if (response.code === 10009) {
+                      if (getServerRegion() === "china") {
+                        toast(
+                          this.props.t(
+                            "If you have purchased the code directly from our website, please redeem with an account registered in global server region"
+                          ),
+                          {
+                            duration: 8000,
+                          }
+                        );
+                      } else {
+                        toast(
+                          this.props.t(
+                            "If you have purchased the code from Tabao store, please redeem with an account registered in Chinese server region"
+                          ),
+                          {
+                            duration: 8000,
+                          }
+                        );
+                      }
+                    }
                   }
                 }}
               >
@@ -544,49 +563,56 @@ class AccountSetting extends React.Component<
           </div>
         )}
         <div className="setting-dialog-new-title">
-          <Trans>Select server region</Trans>
-          <select
-            name=""
-            className="lang-setting-dropdown"
-            onChange={(event) => {
-              if (!event.target.value) {
-                return;
-              }
-              if (event.target.value === "china") {
-                toast(
-                  this.props.t(
-                    "Some login options and data sources are not available in your selected server region"
-                  )
-                );
-              }
-              ConfigService.setItem("serverRegion", event.target.value);
-              this.setState({
-                serverRegion: event.target.value,
-              });
-              resetReaderRequest();
-              resetUserRequest();
-              resetThirdpartyRequest();
-              toast.success(this.props.t("Setup successful"));
-            }}
-          >
-            {[
-              { value: "", label: "Please select" },
-              { value: "global", label: "Global" },
-              { value: "china", label: "China" },
-            ].map((item) => (
-              <option
-                value={item.value}
-                key={item.value}
-                className="lang-setting-option"
-                selected={
-                  item.value ===
-                  (ConfigService.getItem("serverRegion") || "global")
+          <Trans>
+            {this.props.isAuthed ? "Server region" : "Select server region"}
+          </Trans>
+          {this.props.isAuthed ? (
+            <div className="lang-setting-option">
+              <Trans>
+                {getServerRegion() === "china" ? "China" : "Global"}
+              </Trans>
+            </div>
+          ) : (
+            <select
+              name=""
+              className="lang-setting-dropdown"
+              onChange={(event) => {
+                if (!event.target.value) {
+                  return;
                 }
-              >
-                {this.props.t(item.label)}
-              </option>
-            ))}
-          </select>
+                if (event.target.value === "china") {
+                  toast(
+                    this.props.t(
+                      "Some login options and data sources are not available in your selected server region"
+                    )
+                  );
+                }
+                ConfigService.setItem("serverRegion", event.target.value);
+                this.setState({
+                  serverRegion: event.target.value,
+                });
+                resetReaderRequest();
+                resetUserRequest();
+                resetThirdpartyRequest();
+                toast.success(this.props.t("Setup successful"));
+              }}
+            >
+              {[
+                { value: "", label: "Please select" },
+                { value: "global", label: "Global" },
+                { value: "china", label: "China" },
+              ].map((item) => (
+                <option
+                  value={item.value}
+                  key={item.value}
+                  className="lang-setting-option"
+                  selected={item.value === getServerRegion()}
+                >
+                  {this.props.t(item.label)}
+                </option>
+              ))}
+            </select>
+          )}
         </div>
         {!this.props.isAuthed && (
           <div className="setting-dialog-new-title">
@@ -599,7 +625,7 @@ class AccountSetting extends React.Component<
               {[
                 { label: "Please select", value: "" },
                 ...loginList.filter((item) => {
-                  if (ConfigService.getItem("serverRegion") === "china") {
+                  if (getServerRegion() === "china") {
                     return item.isCNAvailable;
                   }
                   return true;
@@ -827,7 +853,7 @@ class AccountSetting extends React.Component<
             onClick={async () => {
               if (!this.props.isAuthed) {
                 openInBrowser(
-                  WEBSITE_URL +
+                  getWebsiteUrl() +
                     (ConfigService.getReaderConfig("lang").startsWith("zh")
                       ? "/zh"
                       : "/en") +
@@ -840,7 +866,7 @@ class AccountSetting extends React.Component<
                 let tempToken = response.data.access_token;
                 let deviceUuid = await TokenService.getFingerprint();
                 openInBrowser(
-                  WEBSITE_URL +
+                  getWebsiteUrl() +
                     (ConfigService.getReaderConfig("lang").startsWith("zh")
                       ? "/zh"
                       : "/en") +

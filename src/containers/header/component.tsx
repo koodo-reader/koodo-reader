@@ -31,10 +31,9 @@ import {
   checkMissingBook,
   generateSyncRecord,
   getChatLocale,
-  getStorageLocation,
+  getWebsiteUrl,
   removeChatBox,
   showTaskProgress,
-  WEBSITE_URL,
 } from "../../utils/common";
 import { driveList } from "../../constants/driveList";
 import SupportDialog from "../../components/dialogs/supportDialog";
@@ -171,27 +170,23 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     }
   }
   handleFinishReading = async () => {
-    if (!this.props.isLoadMore) {
-      this.props.handleFetchBooks();
-    }
-    this.props.handleFetchBookmarks();
-    this.props.handleFetchNotes();
-
     if (ConfigService.getItem("isFinshReading") === "yes") {
-      ConfigService.setItem("isFinshReading", "no");
       if (
         ConfigService.getReaderConfig("isDisableAutoSync") !== "yes" &&
         ConfigService.getItem("defaultSyncOption")
       ) {
         await this.props.handleFetchUserInfo();
         this.setState({ isSync: true });
-        this.handleCloudSync();
+        await this.handleCloudSync();
       }
     }
+    ConfigService.setItem("isFinshReading", "no");
   };
   handleFinishUpgrade = () => {
     setTimeout(() => {
-      this.props.history.push("/manager/home");
+      if (this.props.mode === "home") {
+        this.props.history.push("/manager/home");
+      }
     }, 2000);
   };
 
@@ -247,7 +242,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
   beforeSync = async () => {
     if (!ConfigService.getItem("defaultSyncOption")) {
       toast.error(this.props.t("Please add data source in the setting"));
-      this.setState({ isSync: false });
       return false;
     }
     if (
@@ -269,7 +263,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
           duration: 4000,
         }
       );
-      this.setState({ isSync: false });
       return false;
     }
     let config = await getCloudConfig(
@@ -277,7 +270,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     );
     if (Object.keys(config).length === 0) {
       toast.error(this.props.t("Cannot get sync config"));
-      this.setState({ isSync: false });
       return false;
     }
     if (
@@ -318,7 +310,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         ),
         { duration: 4000 }
       );
-      this.setState({ isSync: false });
       return false;
     }
     checkMissingBook(this.props.books);
@@ -329,7 +320,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
           "Broken data detected, please click the setting button to reset the sync records"
         )
       );
-      this.setState({ isSync: false });
       return false;
     }
     if (ConfigService.getReaderConfig("isEnableKoodoSync") !== "yes") {
@@ -363,6 +353,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
   handleCloudSync = async (): Promise<false | undefined> => {
     this.timer = await showTaskProgress();
     if (!this.timer) {
+      this.setState({ isSync: false });
       return false;
     }
     try {
@@ -396,9 +387,10 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     return;
   };
   handleSuccess = async () => {
-    if (!this.props.isLoadMore) {
+    if (ConfigService.getItem("isFinshReading") !== "yes") {
       this.props.handleFetchBooks();
     }
+
     this.props.handleFetchBookmarks();
     this.props.handleFetchNotes();
     toast.success(this.props.t("Synchronisation successful"), {
@@ -424,7 +416,9 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     }
     //when book is empty, need to refresh the book list
     setTimeout(() => {
-      this.props.history.push("/manager/home");
+      if (this.props.mode === "home") {
+        this.props.history.push("/manager/home");
+      }
     }, 1000);
   };
   handleSync = async (compareResult) => {
@@ -498,7 +492,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
             onClick={() => {
               window.require("electron").ipcRenderer.invoke("new-chat", {
                 url:
-                  WEBSITE_URL +
+                  getWebsiteUrl() +
                   (ConfigService.getReaderConfig("lang").startsWith("zh")
                     ? "/zh/faq"
                     : "/en/faq") +

@@ -669,12 +669,12 @@ const createMainWin = () => {
   ipcMain.handle("reload-reader", (event, arg) => {
     if (readerWindowList.length > 0) {
       readerWindowList.forEach(win => {
-        if (win && !win.isDestroyed()) {
+        if (win && !win.isDestroyed() && win.webContents.getURL().indexOf(arg.bookKey) > -1) {
           win.reload();
         }
       })
     }
-    if (readerWindow && !readerWindow.isDestroyed()) {
+    if (readerWindow && !readerWindow.isDestroyed() && readerWindow.webContents.getURL().indexOf(arg.bookKey) > -1) {
       readerWindow.reload();
     }
   });
@@ -697,7 +697,6 @@ const createMainWin = () => {
         hasShadow: true,
         transparent: false,
       });
-      console.log(config.url)
       chatWindow.loadURL(config.url);
       chatWindow.on("close", (event) => {
         chatWindow && chatWindow.destroy();
@@ -720,7 +719,6 @@ const createMainWin = () => {
     }
   });
   ipcMain.on('picker-action', (event, config) => {
-    console.log("Picker finished with data:", config);
     //将数据传递给主窗口
 
     if (mainWin && !mainWin.isDestroyed() && config.action === 'picked') {

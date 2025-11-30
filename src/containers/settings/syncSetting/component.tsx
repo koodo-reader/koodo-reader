@@ -10,13 +10,14 @@ import { themeList } from "../../../constants/themeList";
 import toast from "react-hot-toast";
 import {
   generateSyncRecord,
+  getServerRegion,
+  getWebsiteUrl,
   handleContextMenu,
   openExternalUrl,
   openInBrowser,
   showTaskProgress,
   testConnection,
   testCORS,
-  WEBSITE_URL,
 } from "../../../utils/common";
 import { getStorageLocation } from "../../../utils/common";
 import { driveInputConfig, driveList } from "../../../constants/driveList";
@@ -112,7 +113,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
     ) {
       this.handleJump(
         new SyncUtil(settingDrive, {}).getAuthUrl(
-          ConfigService.getItem("serverRegion") === "china" &&
+          getServerRegion() === "china" &&
             (settingDrive === "microsoft" ||
               settingDrive === "microsoft_exp" ||
               settingDrive === "adrive")
@@ -149,7 +150,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
       return;
     }
     ConfigService.setItem("defaultSyncOption", event.target.value);
-    if (ConfigService.getItem("isEnableKoodoSync") === "yes") {
+    if (ConfigService.getReaderConfig("isEnableKoodoSync") === "yes") {
       updateUserConfig({
         default_sync_option: event.target.value,
       });
@@ -495,7 +496,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                     onClick={async () => {
                       this.handleJump(
                         new SyncUtil(this.props.settingDrive, {}).getAuthUrl(
-                          ConfigService.getItem("serverRegion") === "china" &&
+                          getServerRegion() === "china" &&
                             (this.props.settingDrive === "microsoft" ||
                               this.props.settingDrive === "microsoft_exp" ||
                               this.props.settingDrive === "adrive")
@@ -545,7 +546,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                       className="voice-add-cancel"
                       style={{ borderWidth: 0, lineHeight: "30px" }}
                       onClick={() => {
-                        openExternalUrl(WEBSITE_URL + "/zh/add-source");
+                        openExternalUrl(getWebsiteUrl() + "/zh/add-source");
                       }}
                     >
                       {this.props.t("How to fill out")}
@@ -570,7 +571,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                 support: ["desktop", "browser", "phone"],
               },
               ...driveList.filter((item) => {
-                if (ConfigService.getItem("serverRegion") === "china") {
+                if (getServerRegion() === "china") {
                   return item.isCNAvailable;
                 }
                 return true;
@@ -608,7 +609,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
             {[
               { label: "Please select", value: "", isPro: false },
               ...driveList.filter((item) => {
-                if (ConfigService.getItem("serverRegion") === "china") {
+                if (getServerRegion() === "china") {
                   return item.isCNAvailable;
                 }
                 return true;
@@ -672,7 +673,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
               {[
                 { label: "Please select", value: "", isPro: false },
                 ...driveList.filter((item) => {
-                  if (ConfigService.getItem("serverRegion") === "china") {
+                  if (getServerRegion() === "china") {
                     return item.isCNAvailable;
                   }
                   return true;

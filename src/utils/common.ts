@@ -580,6 +580,21 @@ export const getDefaultTransTarget = (langList) => {
   return langMap[langTarget || "English"];
 };
 export const WEBSITE_URL = "https://koodoreader.com";
+export const CN_WEBSITE_URL = "https://koodoreader.cn";
+export const getServerRegion = () => {
+  let isUseCN = false;
+  if (ConfigService.getItem("serverRegion")) {
+    isUseCN = ConfigService.getItem("serverRegion") === "china";
+  } else {
+    if (navigator.language && navigator.language === "zh-CN") {
+      isUseCN = true;
+    }
+  }
+  return isUseCN ? "china" : "global";
+};
+export const getWebsiteUrl = () => {
+  return getServerRegion() === "china" ? CN_WEBSITE_URL : WEBSITE_URL;
+};
 export const formatTimestamp = (timestamp) => {
   if (!timestamp) return "";
 
@@ -829,7 +844,7 @@ export const showTaskProgress = async () => {
         if (stats.hasFailedTasks) {
           toast.error(
             i18n.t(
-              "Tasks failed after multiple retries, please check the network connection"
+              "Tasks failed after multiple retries, please check the network connection or reauthorize the data source in the settings"
             ),
             {
               id: "syncing",
@@ -867,7 +882,7 @@ export const showTaskProgress = async () => {
         if (stats.hasFailedTasks) {
           toast.error(
             i18n.t(
-              "Tasks failed after multiple retries, please check the network connection"
+              "Tasks failed after multiple retries, please check the network connection or reauthorize the data source in the settings"
             ),
             {
               id: "syncing",

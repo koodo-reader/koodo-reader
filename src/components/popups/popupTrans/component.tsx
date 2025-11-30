@@ -7,9 +7,9 @@ import { Trans } from "react-i18next";
 import toast from "react-hot-toast";
 import {
   getDefaultTransTarget,
+  getWebsiteUrl,
   handleContextMenu,
   openExternalUrl,
-  WEBSITE_URL,
 } from "../../../utils/common";
 import DatabaseService from "../../../utils/storage/databaseService";
 import { checkPlugin } from "../../../utils/common";
@@ -214,9 +214,9 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
                       ConfigService.getReaderConfig("lang") &&
                       ConfigService.getReaderConfig("lang").startsWith("zh")
                     ) {
-                      openExternalUrl(WEBSITE_URL + "/zh/plugin");
+                      openExternalUrl(getWebsiteUrl() + "/zh/plugin");
                     } else {
-                      openExternalUrl(WEBSITE_URL + "/en/plugin");
+                      openExternalUrl(getWebsiteUrl() + "/en/plugin");
                     }
                   }}
                 >
