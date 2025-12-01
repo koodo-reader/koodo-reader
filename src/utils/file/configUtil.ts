@@ -284,7 +284,6 @@ class ConfigUtil {
   static async isCloudEmpty() {
     let syncDataStr = await this.downloadConfig("sync");
     let syncData = JSON.parse(syncDataStr || "{}");
-    console.log(syncData, "syncdata");
     if (!syncData || Object.keys(syncData).length === 0) {
       return true;
     }
