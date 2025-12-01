@@ -105,7 +105,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         this.setState({ isDataChange: true });
       }
       ipcRenderer.on("reading-finished", async (event: any, config: any) => {
-        console.log("reding finshi");
         this.handleFinishReading();
       });
     } else {
@@ -172,18 +171,18 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     }
   }
   handleFinishReading = async () => {
-    console.log("handleFinishReading");
     ConfigService.setItem("isFinshReading", "yes");
     if (
       ConfigService.getReaderConfig("isDisableAutoSync") !== "yes" &&
-      ConfigService.getItem("defaultSyncOption")
+      ConfigService.getItem("defaultSyncOption") &&
+      !this.state.isSync
     ) {
       await this.props.handleFetchUserInfo();
-      this.setState({ isSync: true });
-      await this.handleCloudSync();
+      this.setState({ isSync: true }, async () => {
+        await this.handleCloudSync();
+        ConfigService.setItem("isFinshReading", "no");
+      });
     }
-
-    ConfigService.setItem("isFinshReading", "no");
   };
   handleFinishUpgrade = () => {
     setTimeout(() => {

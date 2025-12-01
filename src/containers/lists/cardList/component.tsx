@@ -32,7 +32,6 @@ class CardList extends React.Component<CardListProps, CardListStates> {
   }
 
   componentDidUpdate(prevProps: CardListProps) {
-    console.log(this.props.noteSortCode);
     // 当cards prop发生变化时，重新初始化
     if (
       prevProps.cards !== this.props.cards ||
@@ -51,10 +50,8 @@ class CardList extends React.Component<CardListProps, CardListStates> {
   }
 
   loadInitialCards = () => {
-    console.log(this.props.cards);
     let sortedCards = [...this.props.cards];
     // 按照key排序
-    console.log(this.props.noteSortCode);
     sortedCards.sort((a, b) => {
       return this.props.noteSortCode.order === 2
         ? b.key.localeCompare(a.key)
