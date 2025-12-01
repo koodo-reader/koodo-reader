@@ -7,12 +7,17 @@ import {
 } from "../../assets/lib/kookit-extra-browser.min";
 import i18n from "../../i18n";
 import { handleExitApp } from "./common";
+import { getServerRegion } from "../common";
 let thirdpartyRequest: ThirdpartyRequest | undefined;
 export const getThirdpartyRequest = async () => {
   if (thirdpartyRequest) {
     return thirdpartyRequest;
   }
-  thirdpartyRequest = new ThirdpartyRequest(TokenService, ConfigService);
+  thirdpartyRequest = new ThirdpartyRequest(
+    TokenService,
+    ConfigService,
+    getServerRegion()
+  );
   return thirdpartyRequest;
 };
 export const resetThirdpartyRequest = () => {

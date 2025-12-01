@@ -67,9 +67,6 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         );
       }
     }, 5000);
-    window.addEventListener("beforeunload", function (event) {
-      ConfigService.setItem("isFinshReading", "yes");
-    });
     window.addEventListener("mousemove", () => {
       isMouseMoving = true;
       setTimeout(() => {

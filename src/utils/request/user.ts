@@ -79,7 +79,7 @@ export const getUserRequest = async () => {
   if (userRequest) {
     return userRequest;
   }
-  userRequest = new UserRequest(TokenService, ConfigService);
+  userRequest = new UserRequest(TokenService, ConfigService, getServerRegion());
   return userRequest;
 };
 export const resetUserRequest = () => {
