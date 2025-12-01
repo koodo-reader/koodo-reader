@@ -33,6 +33,7 @@ import {
   getChatLocale,
   getWebsiteUrl,
   removeChatBox,
+  resetKoodoSync,
   showTaskProgress,
 } from "../../utils/common";
 import { driveList } from "../../constants/driveList";
@@ -295,16 +296,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         this.props.handleFetchDefaultSyncOption();
       }
       if (ConfigService.getReaderConfig("isEnableKoodoSync") === "yes") {
-        await updateUserConfig({
-          is_enable_koodo_sync: "no",
-          default_sync_option:
-            ConfigService.getItem("defaultSyncOption") === "google",
-        });
-        setTimeout(() => {
-          updateUserConfig({
-            is_enable_koodo_sync: "yes",
-          });
-        }, 1000);
+        await resetKoodoSync();
       }
       toast(
         this.props.t(

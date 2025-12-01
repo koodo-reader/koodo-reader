@@ -209,6 +209,7 @@
   "Page width": "页面宽度",
   "Tasks failed after multiple retries, please check the network connection": "多次重试后任务失败，请检查网络连接",
   "Tasks failed after multiple retries, please check the network connection or reauthorize the data source in the settings": "多次重试后任务失败，请检查网络连接或在设置中重新授权数据源",
+  "This data source already contains a library. If you need to merge local and cloud data, please turn off Koodo Sync and resync.": "此数据源已经存在了一个图书库，如果需要将本地和云端的数据合并。请关闭 Koodo Sync 后重新同步。",
   "Render PDF from even page": "从偶数页开始渲染 PDF",
   "Filter by book": "按图书筛选",
   "Server path (Please first create this folder manually)": "服务器路径（请先手动创建此文件夹）",
