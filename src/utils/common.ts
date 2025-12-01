@@ -19,6 +19,7 @@ import { getCloudConfig } from "./file/common";
 import SyncService from "./storage/syncService";
 import localforage from "localforage";
 import { driveList } from "../constants/driveList";
+import { updateUserConfig } from "./request/user";
 declare var window: any;
 export const supportedFormats = [
   ".epub",
@@ -943,4 +944,16 @@ export const clearAllData = async () => {
     ipcRenderer.invoke("clear-all-data", {});
   }
   await localforage.clear();
+};
+export const resetKoodoSync = async () => {
+  await updateUserConfig({
+    is_enable_koodo_sync: "no",
+    default_sync_option: ConfigService.getItem("defaultSyncOption"),
+  });
+  setTimeout(() => {
+    updateUserConfig({
+      is_enable_koodo_sync: "yes",
+      default_sync_option: ConfigService.getItem("defaultSyncOption"),
+    });
+  }, 1000);
 };

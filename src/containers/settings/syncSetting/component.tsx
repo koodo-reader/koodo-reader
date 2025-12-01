@@ -15,6 +15,7 @@ import {
   handleContextMenu,
   openExternalUrl,
   openInBrowser,
+  resetKoodoSync,
   showTaskProgress,
   testConnection,
   testCORS,
@@ -36,6 +37,7 @@ import SyncService from "../../../utils/storage/syncService";
 import { updateUserConfig } from "../../../utils/request/user";
 import BookUtil from "../../../utils/file/bookUtil";
 import Book from "../../../models/Book";
+import ConfigUtil from "../../../utils/file/configUtil";
 declare var window: any;
 class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
   constructor(props: SettingInfoProps) {
@@ -151,12 +153,23 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
     }
     ConfigService.setItem("defaultSyncOption", event.target.value);
     if (ConfigService.getReaderConfig("isEnableKoodoSync") === "yes") {
-      updateUserConfig({
-        default_sync_option: event.target.value,
-      });
+      await resetKoodoSync();
     }
     this.props.handleFetchDefaultSyncOption();
     toast.success(this.props.t("Change successful"));
+    if (
+      !(await ConfigUtil.isCloudEmpty()) &&
+      ConfigService.getReaderConfig("isEnableKoodoSync") === "yes"
+    ) {
+      toast(
+        this.props.t(
+          "This data source already contains a library. If you need to merge local and cloud data, please turn off Koodo Sync and resync."
+        ),
+        {
+          duration: 10000,
+        }
+      );
+    }
   };
   handleCancelDrive = () => {
     this.props.handleSettingDrive("");
