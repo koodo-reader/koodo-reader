@@ -3,10 +3,8 @@ import "./cardList.css";
 import NoteModel from "../../../models/Note";
 import { Trans } from "react-i18next";
 import { CardListProps, CardListStates } from "./interface";
-import DeleteIcon from "../../../components/deleteIcon";
 import { withRouter } from "react-router-dom";
 import { Redirect } from "react-router-dom";
-import NoteTag from "../../../components/noteTag";
 import BookUtil from "../../../utils/file/bookUtil";
 import toast from "react-hot-toast";
 import BookModel from "../../../models/Book";
@@ -34,6 +32,7 @@ class CardList extends React.Component<CardListProps, CardListStates> {
   }
 
   componentDidUpdate(prevProps: CardListProps) {
+    console.log(this.props.noteSortCode);
     // 当cards prop发生变化时，重新初始化
     if (
       prevProps.cards !== this.props.cards ||
@@ -52,13 +51,15 @@ class CardList extends React.Component<CardListProps, CardListStates> {
   }
 
   loadInitialCards = () => {
-    let sortedCards = Object.values(
-      SortUtil.sortNotes(
-        this.props.cards,
-        this.props.noteSortCode,
-        this.props.books
-      )
-    ).flat() as NoteModel[];
+    console.log(this.props.cards);
+    let sortedCards = [...this.props.cards];
+    // 按照key排序
+    console.log(this.props.noteSortCode);
+    sortedCards.sort((a, b) => {
+      return this.props.noteSortCode.order === 2
+        ? b.key.localeCompare(a.key)
+        : a.key.localeCompare(b.key);
+    });
     const { itemsPerPage } = this.state;
 
     // 根据屏幕大小动态调整每页显示的卡片数量
@@ -75,13 +76,12 @@ class CardList extends React.Component<CardListProps, CardListStates> {
   };
 
   loadMoreCards = () => {
-    let sortedCards = Object.values(
-      SortUtil.sortNotes(
-        this.props.cards,
-        this.props.noteSortCode,
-        this.props.books
-      )
-    ).flat() as NoteModel[];
+    let sortedCards = [...this.props.cards];
+    sortedCards.sort((a, b) => {
+      return this.props.noteSortCode.order === 2
+        ? b.key.localeCompare(a.key)
+        : a.key.localeCompare(b.key);
+    });
     const { displayedCards, currentPage, itemsPerPage, isLoading } = this.state;
 
     if (isLoading || displayedCards.length >= sortedCards.length) {

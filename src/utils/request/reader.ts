@@ -7,6 +7,7 @@ import {
 import i18n from "../../i18n";
 import { handleExitApp } from "./common";
 import { officialDictList } from "../../constants/settingList";
+import { getServerRegion } from "../common";
 let readerRequest: ReaderRequest | undefined;
 export const getTransStream = async (
   text: string,
@@ -81,7 +82,11 @@ export const getReaderRequest = async () => {
   if (readerRequest) {
     return readerRequest;
   }
-  readerRequest = new ReaderRequest(TokenService, ConfigService);
+  readerRequest = new ReaderRequest(
+    TokenService,
+    ConfigService,
+    getServerRegion()
+  );
   return readerRequest;
 };
 export const resetReaderRequest = () => {

@@ -68,29 +68,17 @@ class SortDialog extends React.Component<SortDialogProps, SortDialogState> {
         onMouseEnter={() => {
           this.props.handleSortDisplay(true);
         }}
-        style={this.state.isNote ? { height: "132px" } : {}}
+        style={this.state.isNote ? { height: "102px" } : {}}
       >
         {this.state.isNote ? (
           <ul className="sort-by-category">
-            {["Book name", "Sort by Date"].map((item, index) => {
-              return (
-                <li
-                  className="sort-by-category-list"
-                  onClick={() => {
-                    this.handleSort(index + 1);
-                  }}
-                  style={sortCode.sort === index + 1 ? {} : { opacity: 0.34 }}
-                >
-                  <Trans>{item}</Trans>
-                  {sortCode.sort === index + 1 && (
-                    <span
-                      className="icon-check"
-                      style={{ fontWeight: "bold" }}
-                    ></span>
-                  )}
-                </li>
-              );
-            })}
+            <li className="sort-by-category-list">
+              <Trans>{"Sort by Date"}</Trans>
+              <span
+                className="icon-check"
+                style={{ fontWeight: "bold" }}
+              ></span>
+            </li>
           </ul>
         ) : (
           <ul className="sort-by-category">

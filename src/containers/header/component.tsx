@@ -104,6 +104,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         this.setState({ isDataChange: true });
       }
       ipcRenderer.on("reading-finished", async (event: any, config: any) => {
+        console.log("reding finshi");
         this.handleFinishReading();
       });
     } else {
@@ -131,7 +132,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     });
     this.props.handleCloudSyncFunc(this.handleCloudSync);
     document.addEventListener("visibilitychange", async (event) => {
-      if (document.visibilityState === "visible") {
+      if (document.visibilityState === "visible" && !isElectron) {
         this.handleFinishReading();
       }
     });
@@ -170,16 +171,17 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     }
   }
   handleFinishReading = async () => {
-    if (ConfigService.getItem("isFinshReading") === "yes") {
-      if (
-        ConfigService.getReaderConfig("isDisableAutoSync") !== "yes" &&
-        ConfigService.getItem("defaultSyncOption")
-      ) {
-        await this.props.handleFetchUserInfo();
-        this.setState({ isSync: true });
-        await this.handleCloudSync();
-      }
+    console.log("handleFinishReading");
+    ConfigService.setItem("isFinshReading", "yes");
+    if (
+      ConfigService.getReaderConfig("isDisableAutoSync") !== "yes" &&
+      ConfigService.getItem("defaultSyncOption")
+    ) {
+      await this.props.handleFetchUserInfo();
+      this.setState({ isSync: true });
+      await this.handleCloudSync();
     }
+
     ConfigService.setItem("isFinshReading", "no");
   };
   handleFinishUpgrade = () => {
@@ -350,8 +352,11 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       ConfigUtil
     );
   };
+  handleSyncStateChange = (isSyncing: boolean) => {
+    this.setState({ isSync: isSyncing });
+  };
   handleCloudSync = async (): Promise<false | undefined> => {
-    this.timer = await showTaskProgress();
+    this.timer = await showTaskProgress(this.handleSyncStateChange);
     if (!this.timer) {
       this.setState({ isSync: false });
       return false;

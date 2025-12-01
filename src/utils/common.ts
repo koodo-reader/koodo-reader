@@ -815,7 +815,9 @@ export const showDownloadProgress = (
   }, 500);
   return timer;
 };
-export const showTaskProgress = async () => {
+export const showTaskProgress = async (
+  handleSyncStateChange: (isSync: boolean) => void
+) => {
   let config = {};
   let timer: any;
   let service = ConfigService.getItem("defaultSyncOption");
@@ -851,6 +853,7 @@ export const showTaskProgress = async () => {
             }
           );
           clearInterval(timer);
+          handleSyncStateChange(false);
           return;
         } else {
           toast.loading(
@@ -889,6 +892,7 @@ export const showTaskProgress = async () => {
             }
           );
           clearInterval(timer);
+          handleSyncStateChange(false);
           return;
         } else {
           toast.loading(

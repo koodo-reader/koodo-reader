@@ -225,7 +225,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           return;
         }
       }
-
       let rendition = BookHelper.getRendition(
         result,
         {
@@ -256,7 +255,10 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
                 (item) => item.lang === ConfigService.getReaderConfig("lang")
               )?.value || "chi_sim",
           ocrEngine: ConfigService.getReaderConfig("ocrEngine") || "tesseract",
-          serverRegion: getServerRegion(),
+          serverRegion:
+            ConfigService.getItem("serverRegion") === "china"
+              ? "china"
+              : "global",
           paraSpacingValue:
             ConfigService.getReaderConfig("paraSpacingValue") || "1.5",
           titleSizeValue:

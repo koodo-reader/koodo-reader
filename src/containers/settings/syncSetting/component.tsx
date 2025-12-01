@@ -239,7 +239,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                         ConfigService,
                         BookUtil
                       );
-                      let timer = await showTaskProgress();
+                      let timer = await showTaskProgress((_: boolean) => {});
                       if (!timer) {
                         return;
                       }
@@ -453,8 +453,11 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                     }
                   }
                   if (
-                    this.props.settingDrive === "docker" ||
                     this.props.settingDrive === "webdav" ||
+                    this.props.settingDrive === "docker" ||
+                    this.props.settingDrive === "ftp" ||
+                    this.props.settingDrive === "sftp" ||
+                    this.props.settingDrive === "mega" ||
                     this.props.settingDrive === "s3compatible"
                   ) {
                     let connectionResult = await testConnection(

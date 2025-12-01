@@ -158,7 +158,7 @@ export const bindHtmlEvent = (
     async (event) => {
       if (event.ctrlKey && readerMode !== "double") {
         const currentTime = Date.now();
-        if (currentTime - lastScaleTime < 2000) {
+        if (currentTime - lastScaleTime < 1500) {
           return;
         }
         lastScaleTime = currentTime;
