@@ -40,12 +40,12 @@ import { driveList } from "../../constants/driveList";
 import SupportDialog from "../../components/dialogs/supportDialog";
 import SyncService from "../../utils/storage/syncService";
 import { LocalFileManager } from "../../utils/file/localFile";
-import { updateUserConfig } from "../../utils/request/user";
 import packageJson from "../../../package.json";
 declare var window: any;
 
 class Header extends React.Component<HeaderProps, HeaderState> {
   timer: any;
+  private isSyncing: boolean = false;
   constructor(props: HeaderProps) {
     super(props);
 
@@ -132,8 +132,13 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     });
     this.props.handleCloudSyncFunc(this.handleCloudSync);
     document.addEventListener("visibilitychange", async (event) => {
-      if (document.visibilityState === "visible" && !isElectron) {
+      if (
+        document.visibilityState === "visible" &&
+        !isElectron &&
+        ConfigService.getReaderConfig("isFinishWebReading") === "yes"
+      ) {
         this.handleFinishReading();
+        ConfigService.setReaderConfig("isFinishWebReading", "no");
       }
     });
   }
@@ -347,12 +352,19 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     this.setState({ isSync: isSyncing });
   };
   handleCloudSync = async (): Promise<false | undefined> => {
-    this.timer = await showTaskProgress(this.handleSyncStateChange);
-    if (!this.timer) {
-      this.setState({ isSync: false });
+    if (this.isSyncing) {
+      console.info("Sync already in progress, skipping...");
       return false;
     }
+    this.isSyncing = true;
+
     try {
+      this.timer = await showTaskProgress(this.handleSyncStateChange);
+      if (!this.timer) {
+        this.setState({ isSync: false });
+        return false;
+      }
+
       let res = await this.beforeSync();
       if (!res) {
         clearInterval(this.timer);
@@ -376,6 +388,8 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       clearInterval(this.timer);
       this.setState({ isSync: false });
       return false;
+    } finally {
+      this.isSyncing = false;
     }
     setTimeout(() => {
       toast.dismiss("syncing");
@@ -383,7 +397,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     return;
   };
   handleSuccess = async () => {
-    if (ConfigService.getItem("isFinshReading") !== "yes") {
+    if (ConfigService.getItem("isFinshReading") !== "yes" || !isElectron) {
       this.props.handleFetchBooks();
     }
 

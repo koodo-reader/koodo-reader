@@ -85,6 +85,7 @@ class OperationPanel extends React.Component<
         window.close();
       }
     } else {
+      ConfigService.setReaderConfig("isFinishWebReading", "yes");
       window.close();
     }
   }
