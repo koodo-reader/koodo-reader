@@ -153,7 +153,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
     }
     ConfigService.setItem("defaultSyncOption", event.target.value);
     if (ConfigService.getReaderConfig("isEnableKoodoSync") === "yes") {
-      await resetKoodoSync();
+      resetKoodoSync();
     }
     this.props.handleFetchDefaultSyncOption();
     toast.success(this.props.t("Change successful"));

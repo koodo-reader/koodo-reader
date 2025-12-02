@@ -295,7 +295,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         this.props.handleFetchDefaultSyncOption();
       }
       if (ConfigService.getReaderConfig("isEnableKoodoSync") === "yes") {
-        await resetKoodoSync();
+        resetKoodoSync();
       }
       toast(
         this.props.t(
