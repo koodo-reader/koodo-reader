@@ -11,8 +11,8 @@ import { Tooltip } from "react-tooltip";
 import "./index.css";
 import Book from "../../models/Book";
 import DatabaseService from "../../utils/storage/databaseService";
-import BookUtil from "../../utils/file/bookUtil";
 import ConvertDialog from "../../components/dialogs/convertDialog";
+import { isElectron } from "react-device-detect";
 
 let lock = false; //prevent from clicking too fasts
 let throttleTime =
@@ -67,8 +67,11 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         );
       }
     }, 5000);
+
     window.addEventListener("beforeunload", function (event) {
-      ConfigService.setItem("isFinshReading", "yes");
+      if (!isElectron) {
+        ConfigService.setReaderConfig("isFinishWebReading", "yes");
+      }
     });
     window.addEventListener("mousemove", () => {
       isMouseMoving = true;

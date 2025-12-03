@@ -10,13 +10,15 @@ import { themeList } from "../../../constants/themeList";
 import toast from "react-hot-toast";
 import {
   generateSyncRecord,
+  getServerRegion,
+  getWebsiteUrl,
   handleContextMenu,
   openExternalUrl,
   openInBrowser,
+  resetKoodoSync,
   showTaskProgress,
   testConnection,
   testCORS,
-  WEBSITE_URL,
 } from "../../../utils/common";
 import { getStorageLocation } from "../../../utils/common";
 import { driveInputConfig, driveList } from "../../../constants/driveList";
@@ -35,6 +37,7 @@ import SyncService from "../../../utils/storage/syncService";
 import { updateUserConfig } from "../../../utils/request/user";
 import BookUtil from "../../../utils/file/bookUtil";
 import Book from "../../../models/Book";
+import ConfigUtil from "../../../utils/file/configUtil";
 declare var window: any;
 class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
   constructor(props: SettingInfoProps) {
@@ -112,7 +115,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
     ) {
       this.handleJump(
         new SyncUtil(settingDrive, {}).getAuthUrl(
-          ConfigService.getItem("serverRegion") === "china" &&
+          getServerRegion() === "china" &&
             (settingDrive === "microsoft" ||
               settingDrive === "microsoft_exp" ||
               settingDrive === "adrive")
@@ -149,13 +152,24 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
       return;
     }
     ConfigService.setItem("defaultSyncOption", event.target.value);
-    if (ConfigService.getItem("isEnableKoodoSync") === "yes") {
-      updateUserConfig({
-        default_sync_option: event.target.value,
-      });
+    if (ConfigService.getReaderConfig("isEnableKoodoSync") === "yes") {
+      resetKoodoSync();
     }
     this.props.handleFetchDefaultSyncOption();
     toast.success(this.props.t("Change successful"));
+    if (
+      !(await ConfigUtil.isCloudEmpty()) &&
+      ConfigService.getReaderConfig("isEnableKoodoSync") === "yes"
+    ) {
+      toast(
+        this.props.t(
+          "This data source already contains a library. If you need to merge local and cloud data, please turn off Koodo Sync and resync."
+        ),
+        {
+          duration: 10000,
+        }
+      );
+    }
   };
   handleCancelDrive = () => {
     this.props.handleSettingDrive("");
@@ -238,7 +252,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                         ConfigService,
                         BookUtil
                       );
-                      let timer = await showTaskProgress();
+                      let timer = await showTaskProgress((_: boolean) => {});
                       if (!timer) {
                         return;
                       }
@@ -452,8 +466,11 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                     }
                   }
                   if (
-                    this.props.settingDrive === "docker" ||
                     this.props.settingDrive === "webdav" ||
+                    this.props.settingDrive === "docker" ||
+                    this.props.settingDrive === "ftp" ||
+                    this.props.settingDrive === "sftp" ||
+                    this.props.settingDrive === "mega" ||
                     this.props.settingDrive === "s3compatible"
                   ) {
                     let connectionResult = await testConnection(
@@ -495,7 +512,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                     onClick={async () => {
                       this.handleJump(
                         new SyncUtil(this.props.settingDrive, {}).getAuthUrl(
-                          ConfigService.getItem("serverRegion") === "china" &&
+                          getServerRegion() === "china" &&
                             (this.props.settingDrive === "microsoft" ||
                               this.props.settingDrive === "microsoft_exp" ||
                               this.props.settingDrive === "adrive")
@@ -545,7 +562,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                       className="voice-add-cancel"
                       style={{ borderWidth: 0, lineHeight: "30px" }}
                       onClick={() => {
-                        openExternalUrl(WEBSITE_URL + "/zh/add-source");
+                        openExternalUrl(getWebsiteUrl() + "/zh/add-source");
                       }}
                     >
                       {this.props.t("How to fill out")}
@@ -570,7 +587,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                 support: ["desktop", "browser", "phone"],
               },
               ...driveList.filter((item) => {
-                if (ConfigService.getItem("serverRegion") === "china") {
+                if (getServerRegion() === "china") {
                   return item.isCNAvailable;
                 }
                 return true;
@@ -608,7 +625,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
             {[
               { label: "Please select", value: "", isPro: false },
               ...driveList.filter((item) => {
-                if (ConfigService.getItem("serverRegion") === "china") {
+                if (getServerRegion() === "china") {
                   return item.isCNAvailable;
                 }
                 return true;
@@ -672,7 +689,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
               {[
                 { label: "Please select", value: "", isPro: false },
                 ...driveList.filter((item) => {
-                  if (ConfigService.getItem("serverRegion") === "china") {
+                  if (getServerRegion() === "china") {
                     return item.isCNAvailable;
                   }
                   return true;

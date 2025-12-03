@@ -6,9 +6,10 @@ import Lottie from "react-lottie";
 import supportAnimation from "../../../assets/lotties/support.json";
 import exitAnimation from "../../../assets/lotties/exit.json";
 import {
+  getServerRegion,
+  getWebsiteUrl,
   handleContextMenu,
   openInBrowser,
-  WEBSITE_URL,
 } from "../../../utils/common";
 import {
   ConfigService,
@@ -237,6 +238,27 @@ class SupporDialog extends React.Component<
                                 id: "redeem-code",
                               }
                             );
+                            if (response.code === 10009) {
+                              if (getServerRegion() === "china") {
+                                toast(
+                                  this.props.t(
+                                    "If you have purchased the code directly from our website, please redeem with an account registered in global server region"
+                                  ),
+                                  {
+                                    duration: 8000,
+                                  }
+                                );
+                              } else {
+                                toast(
+                                  this.props.t(
+                                    "If you have purchased the code from Tabao store, please redeem with an account registered in Chinese server region"
+                                  ),
+                                  {
+                                    duration: 8000,
+                                  }
+                                );
+                              }
+                            }
                           }
                         }}
                       >
@@ -338,7 +360,7 @@ class SupporDialog extends React.Component<
                               let deviceUuid =
                                 await TokenService.getFingerprint();
                               openInBrowser(
-                                WEBSITE_URL +
+                                getWebsiteUrl() +
                                   (ConfigService.getReaderConfig(
                                     "lang"
                                   ).startsWith("zh")

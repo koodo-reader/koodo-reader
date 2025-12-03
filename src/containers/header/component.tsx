@@ -31,21 +31,21 @@ import {
   checkMissingBook,
   generateSyncRecord,
   getChatLocale,
-  getStorageLocation,
+  getWebsiteUrl,
   removeChatBox,
+  resetKoodoSync,
   showTaskProgress,
-  WEBSITE_URL,
 } from "../../utils/common";
 import { driveList } from "../../constants/driveList";
 import SupportDialog from "../../components/dialogs/supportDialog";
 import SyncService from "../../utils/storage/syncService";
 import { LocalFileManager } from "../../utils/file/localFile";
-import { updateUserConfig } from "../../utils/request/user";
 import packageJson from "../../../package.json";
 declare var window: any;
 
 class Header extends React.Component<HeaderProps, HeaderState> {
   timer: any;
+  private isSyncing: boolean = false;
   constructor(props: HeaderProps) {
     super(props);
 
@@ -132,8 +132,13 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     });
     this.props.handleCloudSyncFunc(this.handleCloudSync);
     document.addEventListener("visibilitychange", async (event) => {
-      if (document.visibilityState === "visible") {
+      if (
+        document.visibilityState === "visible" &&
+        !isElectron &&
+        ConfigService.getReaderConfig("isFinishWebReading") === "yes"
+      ) {
         this.handleFinishReading();
+        ConfigService.setReaderConfig("isFinishWebReading", "no");
       }
     });
   }
@@ -171,27 +176,24 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     }
   }
   handleFinishReading = async () => {
-    if (!this.props.isLoadMore) {
-      this.props.handleFetchBooks();
-    }
-    this.props.handleFetchBookmarks();
-    this.props.handleFetchNotes();
-
-    if (ConfigService.getItem("isFinshReading") === "yes") {
-      ConfigService.setItem("isFinshReading", "no");
-      if (
-        ConfigService.getReaderConfig("isDisableAutoSync") !== "yes" &&
-        ConfigService.getItem("defaultSyncOption")
-      ) {
-        await this.props.handleFetchUserInfo();
-        this.setState({ isSync: true });
-        this.handleCloudSync();
-      }
+    ConfigService.setItem("isFinshReading", "yes");
+    if (
+      ConfigService.getReaderConfig("isDisableAutoSync") !== "yes" &&
+      ConfigService.getItem("defaultSyncOption") &&
+      !this.state.isSync
+    ) {
+      await this.props.handleFetchUserInfo();
+      this.setState({ isSync: true }, async () => {
+        await this.handleCloudSync();
+        ConfigService.setItem("isFinshReading", "no");
+      });
     }
   };
   handleFinishUpgrade = () => {
     setTimeout(() => {
-      this.props.history.push("/manager/home");
+      if (this.props.mode === "home") {
+        this.props.history.push("/manager/home");
+      }
     }, 2000);
   };
 
@@ -247,7 +249,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
   beforeSync = async () => {
     if (!ConfigService.getItem("defaultSyncOption")) {
       toast.error(this.props.t("Please add data source in the setting"));
-      this.setState({ isSync: false });
       return false;
     }
     if (
@@ -269,7 +270,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
           duration: 4000,
         }
       );
-      this.setState({ isSync: false });
       return false;
     }
     let config = await getCloudConfig(
@@ -277,7 +277,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     );
     if (Object.keys(config).length === 0) {
       toast.error(this.props.t("Cannot get sync config"));
-      this.setState({ isSync: false });
       return false;
     }
     if (
@@ -301,16 +300,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         this.props.handleFetchDefaultSyncOption();
       }
       if (ConfigService.getReaderConfig("isEnableKoodoSync") === "yes") {
-        await updateUserConfig({
-          is_enable_koodo_sync: "no",
-          default_sync_option:
-            ConfigService.getItem("defaultSyncOption") === "google",
-        });
-        setTimeout(() => {
-          updateUserConfig({
-            is_enable_koodo_sync: "yes",
-          });
-        }, 1000);
+        resetKoodoSync();
       }
       toast(
         this.props.t(
@@ -318,7 +308,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         ),
         { duration: 4000 }
       );
-      this.setState({ isSync: false });
       return false;
     }
     checkMissingBook(this.props.books);
@@ -329,7 +318,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
           "Broken data detected, please click the setting button to reset the sync records"
         )
       );
-      this.setState({ isSync: false });
       return false;
     }
     if (ConfigService.getReaderConfig("isEnableKoodoSync") !== "yes") {
@@ -360,12 +348,23 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       ConfigUtil
     );
   };
+  handleSyncStateChange = (isSyncing: boolean) => {
+    this.setState({ isSync: isSyncing });
+  };
   handleCloudSync = async (): Promise<false | undefined> => {
-    this.timer = await showTaskProgress();
-    if (!this.timer) {
+    if (this.isSyncing) {
+      console.info("Sync already in progress, skipping...");
       return false;
     }
+    this.isSyncing = true;
+
     try {
+      this.timer = await showTaskProgress(this.handleSyncStateChange);
+      if (!this.timer) {
+        this.setState({ isSync: false });
+        return false;
+      }
+
       let res = await this.beforeSync();
       if (!res) {
         clearInterval(this.timer);
@@ -389,6 +388,8 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       clearInterval(this.timer);
       this.setState({ isSync: false });
       return false;
+    } finally {
+      this.isSyncing = false;
     }
     setTimeout(() => {
       toast.dismiss("syncing");
@@ -396,9 +397,10 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     return;
   };
   handleSuccess = async () => {
-    if (!this.props.isLoadMore) {
+    if (ConfigService.getItem("isFinshReading") !== "yes" || !isElectron) {
       this.props.handleFetchBooks();
     }
+
     this.props.handleFetchBookmarks();
     this.props.handleFetchNotes();
     toast.success(this.props.t("Synchronisation successful"), {
@@ -424,7 +426,9 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     }
     //when book is empty, need to refresh the book list
     setTimeout(() => {
-      this.props.history.push("/manager/home");
+      if (this.props.mode === "home") {
+        this.props.history.push("/manager/home");
+      }
     }, 1000);
   };
   handleSync = async (compareResult) => {
@@ -498,7 +502,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
             onClick={() => {
               window.require("electron").ipcRenderer.invoke("new-chat", {
                 url:
-                  WEBSITE_URL +
+                  getWebsiteUrl() +
                   (ConfigService.getReaderConfig("lang").startsWith("zh")
                     ? "/zh/faq"
                     : "/en/faq") +

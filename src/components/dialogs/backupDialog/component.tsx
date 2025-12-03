@@ -14,7 +14,7 @@ import {
   ConfigService,
   TokenService,
 } from "../../../assets/lib/kookit-extra-browser.min";
-import { generateSyncRecord } from "../../../utils/common";
+import { generateSyncRecord, getServerRegion } from "../../../utils/common";
 const successOptions = {
   loop: false,
   autoplay: true,
@@ -157,7 +157,7 @@ class BackupDialog extends React.Component<
                   {[
                     { label: "Local", value: "local", isPro: false },
                     ...driveList.filter((item) => {
-                      if (ConfigService.getItem("serverRegion") === "china") {
+                      if (getServerRegion() === "china") {
                         return item.isCNAvailable;
                       }
                       return true;
@@ -211,7 +211,7 @@ class BackupDialog extends React.Component<
                   {[
                     { label: "Local", value: "local", isPro: false },
                     ...driveList.filter((item) => {
-                      if (ConfigService.getItem("serverRegion") === "china") {
+                      if (getServerRegion() === "china") {
                         return item.isCNAvailable;
                       }
                       return true;

@@ -6,9 +6,9 @@ import { themeList } from "../../../constants/themeList";
 import toast from "react-hot-toast";
 import {
   checkPlugin,
+  getWebsiteUrl,
   handleContextMenu,
   openExternalUrl,
-  WEBSITE_URL,
 } from "../../../utils/common";
 import { getStorageLocation } from "../../../utils/common";
 import DatabaseService from "../../../utils/storage/databaseService";
@@ -152,9 +152,9 @@ class SettingDialog extends React.Component<
                         ConfigService.getReaderConfig("lang") &&
                         ConfigService.getReaderConfig("lang").startsWith("zh")
                       ) {
-                        openExternalUrl(WEBSITE_URL + "/zh/plugin");
+                        openExternalUrl(getWebsiteUrl() + "/zh/plugin");
                       } else {
-                        openExternalUrl(WEBSITE_URL + "/en/plugin");
+                        openExternalUrl(getWebsiteUrl() + "/en/plugin");
                       }
                     }}
                   >

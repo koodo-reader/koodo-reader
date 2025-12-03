@@ -8,9 +8,9 @@ import axios from "axios";
 import DictHistory from "../../../models/DictHistory";
 import { Trans } from "react-i18next";
 import {
+  getWebsiteUrl,
   handleContextMenu,
   openExternalUrl,
-  WEBSITE_URL,
 } from "../../../utils/common";
 import toast from "react-hot-toast";
 import DatabaseService from "../../../utils/storage/databaseService";
@@ -114,7 +114,7 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
             let moreElement = document.querySelector(".dict-learn-more");
             if (moreElement) {
               moreElement.addEventListener("click", () => {
-                openExternalUrl(window.learnMoreUrl || WEBSITE_URL);
+                openExternalUrl(window.learnMoreUrl || getWebsiteUrl());
               });
             }
           }
@@ -273,9 +273,9 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
                       ConfigService.getReaderConfig("lang") &&
                       ConfigService.getReaderConfig("lang").startsWith("zh")
                     ) {
-                      openExternalUrl(WEBSITE_URL + "/zh/plugin");
+                      openExternalUrl(getWebsiteUrl() + "/zh/plugin");
                     } else {
-                      openExternalUrl(WEBSITE_URL + "/en/plugin");
+                      openExternalUrl(getWebsiteUrl() + "/en/plugin");
                     }
                   }}
                 >
