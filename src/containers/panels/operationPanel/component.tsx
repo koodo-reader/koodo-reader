@@ -70,7 +70,6 @@ class OperationPanel extends React.Component<
   }
   async handleExit() {
     ConfigService.setReaderConfig("isFullscreen", "no");
-    ConfigService.setItem("isFinshReading", "yes");
     this.props.handleReadingState(false);
     this.props.handleSearch(false);
     window.speechSynthesis && window.speechSynthesis.cancel();
@@ -86,6 +85,7 @@ class OperationPanel extends React.Component<
         window.close();
       }
     } else {
+      ConfigService.setReaderConfig("isFinishWebReading", "yes");
       window.close();
     }
   }

@@ -51,6 +51,15 @@ jobs:
         run: echo "USE_SYSTEM_FPM=true" >> $GITHUB_ENV
       - name: Set environment variable USE_HARD_LINKS
         run: echo "USE_HARD_LINKS=false" >> $GITHUB_ENV
+      - name: Modify package.json for dev branch
+        if: github.ref == 'refs/heads/dev'
+        shell: bash
+        run: |
+          if [[ "${{ matrix.os }}" == "windows-latest" ]]; then
+            powershell -Command "(Get-Content package.json) -replace '\"productName\": \"Koodo Reader\"', '\"productName\": \"Koodo Reader DEV\"' | Set-Content package.json"
+          else
+            sed -i.bak 's/"productName": "Koodo Reader"/"productName": "Koodo Reader DEV"/' package.json
+          fi
       - name: Modify package.json for Linux arm64 build
         if: startsWith(matrix.os, 'ubuntu-24.04-arm')
         run: |

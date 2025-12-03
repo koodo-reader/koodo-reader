@@ -16,6 +16,7 @@ import PageWidget from "../pageWidget";
 import {
   getPageWidth,
   getPdfPassword,
+  getServerRegion,
   scrollContents,
   showDownloadProgress,
 } from "../../utils/common";
@@ -82,9 +83,12 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       )
     );
     this.props.handleRenderBookFunc(this.handleRenderBook);
-
-    window.addEventListener("resize", () => {
-      BookUtil.reloadBooks();
+    let resizeTimer: NodeJS.Timeout;
+    window.addEventListener("resize", (event) => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        BookUtil.reloadBooks(this.props.currentBook);
+      }, 300); // 300ms 防抖
     });
   }
   async UNSAFE_componentWillReceiveProps(nextProps: ViewerProps) {
@@ -214,20 +218,13 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           if (result) {
             toast.success(this.props.t("Download successful"));
           } else {
-            result = await BookUtil.downloadCacheBook(key);
-            if (result) {
-              toast.success(this.props.t("Download successful"));
-            } else {
-              toast.error(this.props.t("Download failed"));
-              return;
-            }
+            toast.error(this.props.t("Book not exists"));
           }
         } else {
           toast.error(this.props.t("Book not exists"));
           return;
         }
       }
-
       let rendition = BookHelper.getRendition(
         result,
         {
@@ -258,7 +255,10 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
                 (item) => item.lang === ConfigService.getReaderConfig("lang")
               )?.value || "chi_sim",
           ocrEngine: ConfigService.getReaderConfig("ocrEngine") || "tesseract",
-          serverRegion: ConfigService.getItem("serverRegion") || "global",
+          serverRegion:
+            ConfigService.getItem("serverRegion") === "china"
+              ? "china"
+              : "global",
           paraSpacingValue:
             ConfigService.getReaderConfig("paraSpacingValue") || "1.5",
           titleSizeValue:

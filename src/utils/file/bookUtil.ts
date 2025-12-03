@@ -200,15 +200,14 @@ class BookUtil {
         let result = await this.downloadBook(book.key, book.format);
         clearInterval(timer);
         toast.dismiss("offline-book");
-        if (ConfigService.getItem("defaultSyncOption") === "adrive") {
-          let syncUtil = await SyncService.getSyncUtil();
-          let covers = await syncUtil.listFiles("cover");
-          for (let cover of covers) {
-            if (cover.startsWith(book.key)) {
-              await CoverUtil.downloadCover(cover);
-            }
+
+        let covers = await CoverUtil.getCloudCoverList();
+        for (let cover of covers) {
+          if (cover.startsWith(book.key)) {
+            await CoverUtil.downloadCover(cover);
           }
         }
+
         if (result) {
           toast.success(i18n.t("Download successful"), {
             id: "offline-book",
@@ -276,12 +275,16 @@ class BookUtil {
     let ref = book.format.toLowerCase();
     return `/${ref}/${book.key}`;
   }
-  static reloadBooks() {
+  static reloadBooks(currentBook: BookModel) {
     if (isElectron) {
       if (ConfigService.getReaderConfig("isOpenInMain") === "yes") {
-        window.require("electron").ipcRenderer.invoke("reload-tab", "ping");
+        window
+          .require("electron")
+          .ipcRenderer.invoke("reload-tab", { bookKey: currentBook.key });
       } else {
-        window.require("electron").ipcRenderer.invoke("reload-reader", "ping");
+        window.require("electron").ipcRenderer.invoke("reload-reader", {
+          bookKey: currentBook.key,
+        });
       }
     } else {
       window.location.reload();

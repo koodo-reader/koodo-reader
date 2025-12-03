@@ -113,10 +113,9 @@ class ConfigUtil {
     }
     let thirdpartyRequest = await getThirdpartyRequest();
 
-    let response = await thirdpartyRequest.getSyncData();
+    let response = await thirdpartyRequest.getSyncDataByType({ type });
     if (response.code === 200) {
-      let syncData = response.data;
-      this.syncData = syncData;
+      this.syncData[type] = response.data;
       return JSON.parse(this.syncData[type] || defaultValue);
     } else if (response.code === 401) {
       handleExitApp();
@@ -281,6 +280,14 @@ class ConfigUtil {
         ConfigService.setItem(key, tempConfig[key]);
       }
     }
+  }
+  static async isCloudEmpty() {
+    let syncDataStr = await this.downloadConfig("sync");
+    let syncData = JSON.parse(syncDataStr || "{}");
+    if (!syncData || Object.keys(syncData).length === 0) {
+      return true;
+    }
+    return false;
   }
 }
 export default ConfigUtil;

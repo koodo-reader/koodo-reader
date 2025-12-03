@@ -195,6 +195,9 @@ export function handleFetchAuthed() {
     try {
       TokenService.getToken("is_authed").then((value) => {
         let isAuthed = value === "yes";
+        if (isAuthed && !ConfigService.getItem("serverRegion")) {
+          ConfigService.setItem("serverRegion", "global");
+        }
         dispatch(handleAuthed(isAuthed));
       });
     } catch (error) {

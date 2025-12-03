@@ -48,7 +48,7 @@ class ConvertDialog extends React.Component<
                   item.propName,
                   this.state[item.propName] ? "no" : "yes"
                 );
-                BookUtil.reloadBooks();
+                BookUtil.reloadBooks(this.props.currentBook);
               }}
               style={this.state[item.propName] ? {} : { opacity: 0.6 }}
             >
@@ -123,7 +123,7 @@ class ConvertDialog extends React.Component<
                       if (
                         ConfigService.getReaderConfig("isConvertPDF") === "yes"
                       ) {
-                        BookUtil.reloadBooks();
+                        BookUtil.reloadBooks(this.props.currentBook);
                       }
                     }}
                   >
@@ -182,7 +182,7 @@ class ConvertDialog extends React.Component<
                       if (
                         ConfigService.getReaderConfig("isConvertPDF") === "yes"
                       ) {
-                        BookUtil.reloadBooks();
+                        BookUtil.reloadBooks(this.props.currentBook);
                       }
                     }}
                   >
@@ -237,7 +237,7 @@ class ConvertDialog extends React.Component<
                           ConfigService.getReaderConfig("isConvertPDF") ===
                           "yes"
                         ) {
-                          BookUtil.reloadBooks();
+                          BookUtil.reloadBooks(this.props.currentBook);
                         }
                       }}
                     >
@@ -298,7 +298,7 @@ class ConvertDialog extends React.Component<
                           ConfigService.getReaderConfig("isConvertPDF") ===
                           "yes"
                         ) {
-                          BookUtil.reloadBooks();
+                          BookUtil.reloadBooks(this.props.currentBook);
                         }
                       }}
                     >
