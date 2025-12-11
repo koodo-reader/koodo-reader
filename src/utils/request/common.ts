@@ -3,7 +3,7 @@ import toast from "react-hot-toast";
 import i18n from "../../i18n";
 import { TokenService } from "../../assets/lib/kookit-extra-browser.min";
 import { getServerRegion, reloadManager } from "../common";
-const PUBLIC_URL = "https://api.960960.xyz";
+const PUBLIC_URL = "https://api.koodoreader.com";
 const CN_PUBLIC_URL = "https://api.koodoreader.cn";
 export const getPublicUrl = () => {
   return getServerRegion() === "china" ? CN_PUBLIC_URL : PUBLIC_URL;
