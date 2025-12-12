@@ -327,6 +327,9 @@ const createMainWin = () => {
         readerWindowList.push(readerWindow)
       }
       readerWindow = new BrowserWindow(options);
+      if (store.get("isAlwaysOnTop") === "yes") {
+        readerWindow.setAlwaysOnTop(true);
+      }
       readerWindow.loadURL(url);
       readerWindow.maximize();
     } else {
@@ -820,6 +823,9 @@ const createMainWin = () => {
         readerWindowList.push(readerWindow)
       }
       readerWindow = new BrowserWindow(options);
+      if (store.get("isAlwaysOnTop") === "yes") {
+        readerWindow.setAlwaysOnTop(true);
+      }
 
       readerWindow.loadURL(store.get("url"));
       readerWindow.on("close", (event) => {
