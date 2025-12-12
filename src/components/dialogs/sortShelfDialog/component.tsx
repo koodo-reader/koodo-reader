@@ -151,7 +151,7 @@ class SortShelfDialog extends React.Component<
                       type="text"
                       name="newShelf"
                       id="sidebar-new-shelf"
-                      style={{ marginLeft: "0px" }}
+                      style={{ margin: "0px", height: "25px" }}
                       className="tag-list-item-new"
                       defaultValue={item.name}
                       onChange={(event) => {
