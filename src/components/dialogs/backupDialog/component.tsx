@@ -156,12 +156,7 @@ class BackupDialog extends React.Component<
                 >
                   {[
                     { label: "Local", value: "local", isPro: false },
-                    ...driveList.filter((item) => {
-                      if (getServerRegion() === "china") {
-                        return item.isCNAvailable;
-                      }
-                      return true;
-                    }),
+                    ...driveList,
                     { label: "Add data source", value: "add", isPro: false },
                   ]
                     .filter(
@@ -210,12 +205,7 @@ class BackupDialog extends React.Component<
                 >
                   {[
                     { label: "Local", value: "local", isPro: false },
-                    ...driveList.filter((item) => {
-                      if (getServerRegion() === "china") {
-                        return item.isCNAvailable;
-                      }
-                      return true;
-                    }),
+                    ...driveList,
                     { label: "Add data source", value: "add", isPro: false },
                   ]
                     .filter(

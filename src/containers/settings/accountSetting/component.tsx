@@ -622,109 +622,96 @@ class AccountSetting extends React.Component<
               className="lang-setting-dropdown"
               onChange={this.handleAddLoginOption}
             >
-              {[
-                { label: "Please select", value: "" },
-                ...loginList.filter((item) => {
-                  if (getServerRegion() === "china") {
-                    return item.isCNAvailable;
-                  }
-                  return true;
-                }),
-              ].map((item) => (
-                <option
-                  value={item.value}
-                  key={item.value}
-                  className="lang-setting-option"
-                >
-                  {this.props.t(item.label)}
-                </option>
-              ))}
+              {[{ label: "Please select", value: "" }, ...loginList].map(
+                (item) => (
+                  <option
+                    value={item.value}
+                    key={item.value}
+                    className="lang-setting-option"
+                  >
+                    {this.props.t(item.label)}
+                  </option>
+                )
+              )}
             </select>
           </div>
         )}
         {this.props.isAuthed &&
-          loginList
-            .filter((item) => {
-              if (this.state.serverRegion === "china") {
-                return item.isCNAvailable;
-              }
-              return true;
-            })
-            .map((login) => (
-              <div className="setting-dialog-new-title" key={login.value}>
-                <Trans>{this.props.t(login.label)}</Trans>
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    cursor: "pointer",
-                  }}
-                  onClick={() => {
-                    if (
-                      !this.props.loginOptionList.find(
-                        (item) => item.provider === login.value
-                      )
-                    ) {
-                      this.handleAddLoginOption({
-                        target: { value: login.value },
-                      });
-                    }
-                  }}
-                >
-                  <div>
-                    {this.props.loginOptionList.find(
+          loginList.map((login) => (
+            <div className="setting-dialog-new-title" key={login.value}>
+              <Trans>{this.props.t(login.label)}</Trans>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  cursor: "pointer",
+                }}
+                onClick={() => {
+                  if (
+                    !this.props.loginOptionList.find(
                       (item) => item.provider === login.value
-                    ) ? (
-                      this.props.loginOptionList.find(
-                        (item) => item.provider === login.value
-                      )?.email ? (
-                        <span>
-                          {
-                            this.props.loginOptionList.find(
-                              (item) => item.provider === login.value
-                            )?.email
-                          }
-                        </span>
-                      ) : (
-                        <span>{this.props.t("Bound")}</span>
-                      )
-                    ) : (
-                      <span style={{ opacity: 0.4 }}>
-                        {this.props.t("Not bound")}
-                      </span>
-                    )}
-                  </div>
+                    )
+                  ) {
+                    this.handleAddLoginOption({
+                      target: { value: login.value },
+                    });
+                  }
+                }}
+              >
+                <div>
                   {this.props.loginOptionList.find(
                     (item) => item.provider === login.value
                   ) ? (
-                    <span
-                      className="icon-trash"
-                      style={{
-                        fontSize: 13,
-                        opacity: 0.8,
-                        marginLeft: "10px",
-                      }}
-                      onClick={(event) => {
-                        event.stopPropagation();
-                        this.handleDeleteLoginOption({
-                          target: { value: login.value },
-                        });
-                      }}
-                    ></span>
+                    this.props.loginOptionList.find(
+                      (item) => item.provider === login.value
+                    )?.email ? (
+                      <span>
+                        {
+                          this.props.loginOptionList.find(
+                            (item) => item.provider === login.value
+                          )?.email
+                        }
+                      </span>
+                    ) : (
+                      <span>{this.props.t("Bound")}</span>
+                    )
                   ) : (
-                    <span
-                      className="icon-dropdown"
-                      style={{
-                        fontSize: 13,
-                        opacity: 0.8,
-                        transform: "rotate(-90deg)",
-                        marginLeft: "10px",
-                      }}
-                    ></span>
+                    <span style={{ opacity: 0.4 }}>
+                      {this.props.t("Not bound")}
+                    </span>
                   )}
                 </div>
+                {this.props.loginOptionList.find(
+                  (item) => item.provider === login.value
+                ) ? (
+                  <span
+                    className="icon-trash"
+                    style={{
+                      fontSize: 13,
+                      opacity: 0.8,
+                      marginLeft: "10px",
+                    }}
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      this.handleDeleteLoginOption({
+                        target: { value: login.value },
+                      });
+                    }}
+                  ></span>
+                ) : (
+                  <span
+                    className="icon-dropdown"
+                    style={{
+                      fontSize: 13,
+                      opacity: 0.8,
+                      transform: "rotate(-90deg)",
+                      marginLeft: "10px",
+                    }}
+                  ></span>
+                )}
               </div>
-            ))}
+            </div>
+          ))}
 
         {this.props.isAuthed && (
           <div className="setting-dialog-new-title">
