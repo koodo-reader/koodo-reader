@@ -586,12 +586,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                 isPro: false,
                 support: ["desktop", "browser", "phone"],
               },
-              ...driveList.filter((item) => {
-                if (getServerRegion() === "china") {
-                  return item.isCNAvailable;
-                }
-                return true;
-              }),
+              ...driveList,
             ]
               .filter((item) => !this.props.dataSourceList.includes(item.value))
               .filter((item) => {
@@ -622,15 +617,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
             className="lang-setting-dropdown"
             onChange={this.handleDeleteDataSource}
           >
-            {[
-              { label: "Please select", value: "", isPro: false },
-              ...driveList.filter((item) => {
-                if (getServerRegion() === "china") {
-                  return item.isCNAvailable;
-                }
-                return true;
-              }),
-            ]
+            {[{ label: "Please select", value: "", isPro: false }, ...driveList]
               .filter(
                 (item) =>
                   this.props.dataSourceList.includes(item.value) ||
@@ -688,12 +675,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
             >
               {[
                 { label: "Please select", value: "", isPro: false },
-                ...driveList.filter((item) => {
-                  if (getServerRegion() === "china") {
-                    return item.isCNAvailable;
-                  }
-                  return true;
-                }),
+                ...driveList,
               ]
                 .filter(
                   (item) =>

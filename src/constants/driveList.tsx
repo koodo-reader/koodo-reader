@@ -6,7 +6,6 @@ export const driveList = [
     isPro: false,
     support: ["desktop", "browser", "phone"],
     scoped: false,
-    isCNAvailable: true,
   },
   {
     label: "S3 Compatible",
@@ -15,7 +14,6 @@ export const driveList = [
     isPro: true,
     support: ["desktop", "browser", "phone"],
     scoped: false,
-    isCNAvailable: true,
   },
   {
     label: "Docker",
@@ -24,7 +22,6 @@ export const driveList = [
     isPro: true,
     support: ["desktop", "browser", "phone"],
     scoped: true,
-    isCNAvailable: true,
   },
   {
     label: "OneDrive",
@@ -33,7 +30,6 @@ export const driveList = [
     isPro: true,
     support: ["desktop", "browser", "phone"],
     scoped: true,
-    isCNAvailable: true,
   },
   {
     label: "Google Drive",
@@ -42,7 +38,6 @@ export const driveList = [
     isPro: true,
     support: ["desktop", "browser", "phone"],
     scoped: false,
-    isCNAvailable: false,
   },
   {
     label: "Dropbox",
@@ -51,7 +46,6 @@ export const driveList = [
     isPro: true,
     support: ["desktop", "browser", "phone"],
     scoped: true,
-    isCNAvailable: false,
   },
 
   {
@@ -61,7 +55,6 @@ export const driveList = [
     isPro: true,
     support: ["desktop", "phone"],
     scoped: false,
-    isCNAvailable: true,
   },
 
   {
@@ -71,7 +64,6 @@ export const driveList = [
     isPro: true,
     support: ["desktop", "browser", "phone"],
     scoped: false,
-    isCNAvailable: false,
   },
 
   {
@@ -81,7 +73,6 @@ export const driveList = [
     isPro: true,
     support: ["desktop", "browser"],
     scoped: false,
-    isCNAvailable: false,
   },
   {
     label: "Aliyun Drive",
@@ -90,7 +81,6 @@ export const driveList = [
     isPro: true,
     support: ["desktop", "phone"],
     scoped: false,
-    isCNAvailable: true,
   },
   {
     label: "Yandex Disk",
@@ -99,7 +89,6 @@ export const driveList = [
     isPro: true,
     support: ["desktop", "phone"],
     scoped: false,
-    isCNAvailable: false,
   },
   {
     label: "115 Yun",
@@ -108,7 +97,6 @@ export const driveList = [
     isPro: true,
     support: ["desktop", "phone"],
     scoped: false,
-    isCNAvailable: true,
   },
 
   {
@@ -118,7 +106,6 @@ export const driveList = [
     isPro: true,
     support: ["desktop", "phone"],
     scoped: true,
-    isCNAvailable: false,
   },
 
   {
@@ -128,7 +115,6 @@ export const driveList = [
     isPro: true,
     support: ["desktop", "browser", "phone"],
     scoped: false,
-    isCNAvailable: true,
   },
 
   {
@@ -138,7 +124,6 @@ export const driveList = [
     isPro: false,
     support: ["desktop"],
     scoped: false,
-    isCNAvailable: true,
   },
   {
     label: "SFTP",
@@ -147,7 +132,6 @@ export const driveList = [
     isPro: false,
     support: ["desktop"],
     scoped: false,
-    isCNAvailable: true,
   },
 ];
 interface ConfigItem {

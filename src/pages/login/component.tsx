@@ -346,56 +346,48 @@ class Login extends React.Component<LoginProps, LoginState> {
                       </span>
                     </div>
                   </div>
-                  {loginList
-                    .filter((item) => {
-                      if (this.state.serverRegion === "china") {
-                        return item.isCNAvailable;
-                      }
-                      return true;
-                    })
-                    .map((item) => {
-                      return (
-                        <div
-                          className="login-option-container"
-                          key={item.value}
-                          style={{}}
-                          onClick={() => {
-                            if (item.value === "email") {
-                              this.setState({ currentStep: 5 });
-                              return;
+                  {loginList.map((item) => {
+                    return (
+                      <div
+                        className="login-option-container"
+                        key={item.value}
+                        style={{}}
+                        onClick={() => {
+                          if (item.value === "email") {
+                            this.setState({ currentStep: 5 });
+                            return;
+                          }
+                          let url = LoginHelper.getAuthUrl(
+                            item.value,
+                            isElectron ? "desktop" : "browser",
+                            getServerRegion() === "china" &&
+                              item.value === "microsoft"
+                              ? KookitConfig.ThirdpartyConfig.cnCallbackUrl
+                              : KookitConfig.ThirdpartyConfig.callbackUrl
+                          );
+                          if (url) {
+                            if (isElectron) {
+                              openInBrowser(url);
+                            } else {
+                              window.location.replace(url);
                             }
-                            let url = LoginHelper.getAuthUrl(
-                              item.value,
-                              isElectron ? "desktop" : "browser",
-                              getServerRegion() === "china" &&
-                                item.value === "microsoft"
-                                ? KookitConfig.ThirdpartyConfig.cnCallbackUrl
-                                : KookitConfig.ThirdpartyConfig.callbackUrl
-                            );
-                            if (url) {
-                              if (isElectron) {
-                                openInBrowser(url);
-                              } else {
-                                window.location.replace(url);
-                              }
-                            }
-                          }}
-                        >
-                          <div className="login-option-icon">
-                            <span
-                              className={item.icon + " login-option-icon"}
-                              style={{ fontSize: item.fontsize }}
-                            ></span>
-                          </div>
-                          <div className="login-option-title">
-                            <Trans i18nKey="Continue with" label={item.label}>
-                              Continue with{" "}
-                              {{ label: this.props.t(item.label) }}
-                            </Trans>
-                          </div>
+                          }
+                        }}
+                      >
+                        <div className="login-option-icon">
+                          <span
+                            className={item.icon + " login-option-icon"}
+                            style={{ fontSize: item.fontsize }}
+                          ></span>
                         </div>
-                      );
-                    })}
+                        <div className="login-option-title">
+                          <Trans i18nKey="Continue with" label={item.label}>
+                            Continue with {{ label: this.props.t(item.label) }}
+                          </Trans>
+                        </div>
+                      </div>
+                    );
+                  })}
                   <div
                     className="login-manual-token"
                     onClick={() => {
@@ -453,12 +445,6 @@ class Login extends React.Component<LoginProps, LoginState> {
               </div>
               <div className="login-sync-container">
                 {driveList
-                  .filter((item) => {
-                    if (getServerRegion() === "china") {
-                      return item.isCNAvailable;
-                    }
-                    return true;
-                  })
                   .filter((item) => {
                     if (!isElectron) {
                       return item.support.includes("browser");

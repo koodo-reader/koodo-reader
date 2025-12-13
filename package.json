@@ -40,7 +40,7 @@
     "localforage": "^1.10.0",
     "mammoth": "^1.8.0",
     "marked": "^15.0.11",
-    "megajs": "1.3.9-next.17",
+    "megajs": "^1.3.9",
     "mhtml2html": "^3.0.0",
     "node-machine-id": "^1.1.12",
     "qs": "^6.11.2",
