@@ -141,7 +141,9 @@
     "buildDependenciesFromSource": false,
     "nodeGypRebuild": false,
     "electronLanguages": [
-      "en-US"
+      "en-US",
+      "zh-CN",
+      "zh-TW"
     ],
     "fileAssociations": [
       {
