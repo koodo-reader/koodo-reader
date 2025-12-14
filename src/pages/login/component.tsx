@@ -329,12 +329,6 @@ class Login extends React.Component<LoginProps, LoginState> {
                       <span
                         onClick={() => {
                           this.handleServerRegionChange("china");
-
-                          toast(
-                            this.props.t(
-                              "Some login options and data sources are not available in your selected server region"
-                            )
-                          );
                         }}
                         style={
                           this.state.serverRegion === "china"

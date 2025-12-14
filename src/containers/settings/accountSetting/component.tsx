@@ -580,13 +580,6 @@ class AccountSetting extends React.Component<
                 if (!event.target.value) {
                   return;
                 }
-                if (event.target.value === "china") {
-                  toast(
-                    this.props.t(
-                      "Some login options and data sources are not available in your selected server region"
-                    )
-                  );
-                }
                 ConfigService.setItem("serverRegion", event.target.value);
                 this.setState({
                   serverRegion: event.target.value,
