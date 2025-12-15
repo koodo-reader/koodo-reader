@@ -72,11 +72,7 @@ const isKoodoLibrary = (folderPath: string) => {
     return false;
   }
   const files = fs.readdirSync(folderPath);
-  return (
-    files.includes("config") &&
-    files.includes("book") &&
-    files.includes("cover")
-  );
+  return files.includes("config");
 };
 export const getLastSyncTimeFromConfigJson = () => {
   const fs = window.require("fs");

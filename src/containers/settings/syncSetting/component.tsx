@@ -19,6 +19,7 @@ import {
   showTaskProgress,
   testConnection,
   testCORS,
+  vexComfirmAsync,
 } from "../../../utils/common";
 import { getStorageLocation } from "../../../utils/common";
 import { driveInputConfig, driveList } from "../../../constants/driveList";
@@ -653,21 +654,21 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                     onlineBooks.push(this.props.books[i]);
                   }
                 }
-                if (onlineBooks.length > 0) {
-                  window.vex.dialog.confirm({
-                    message: this.props.t(
-                      "Some of your books are currently not downloaded to the local. Changing the default sync option may lead to data loss. We recommend downloading all books to the local by turn on Auto download cloud books in the setting before changing the default sync option. Click 'OK' to proceed without downloading."
-                    ),
-                    callback: (value) => {
-                      if (value) {
-                        this.handleSetDefaultSyncOption({
-                          target: { value: newValue },
-                        });
-                      } else {
-                        event.target.value = currentValue;
-                      }
-                    },
-                  });
+                if (
+                  onlineBooks.length > 0 &&
+                  this.props.defaultSyncOption &&
+                  newValue !== this.props.defaultSyncOption
+                ) {
+                  let result = await vexComfirmAsync(
+                    "Some of your books are currently not downloaded to the local. Changing the default sync option may lead to data loss. We recommend downloading all books to the local by turn on Auto download cloud books in the setting before changing the default sync option. Click 'OK' to proceed without downloading."
+                  );
+                  if (result) {
+                    this.handleSetDefaultSyncOption({
+                      target: { value: newValue },
+                    });
+                  } else {
+                    event.target.value = currentValue;
+                  }
                 } else {
                   this.handleSetDefaultSyncOption(event);
                 }

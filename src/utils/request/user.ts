@@ -60,7 +60,7 @@ export const getTempToken = async () => {
 export const fetchUserInfo = async () => {
   let userRequest = await getUserRequest();
   let response = await userRequest.getUserInfo();
-  if (response.code === 401) {
+  if (response.code === 401 || response.code === 10002) {
     handleExitApp();
   }
   return response;

@@ -11,6 +11,7 @@ import {
   handleContextMenu,
   openInBrowser,
   reloadManager,
+  vexComfirmAsync,
 } from "../../../utils/common";
 import {
   CommonTool,
@@ -82,6 +83,19 @@ class AccountSetting extends React.Component<
       this.state[stateName] ? "no" : "yes"
     );
     this.handleRest(this.state[stateName]);
+  };
+  handleLogout = async () => {
+    await TokenService.deleteToken("is_authed");
+    await TokenService.deleteToken("access_token");
+    await TokenService.deleteToken("refresh_token");
+
+    this.props.handleFetchAuthed();
+    this.props.handleLoginOptionList([]);
+    ConfigService.removeItem("defaultSyncOption");
+    ConfigService.removeItem("dataSourceList");
+    this.props.handleFetchDataSourceList();
+    this.props.handleFetchDefaultSyncOption();
+    toast.success(this.props.t("Log out successful"));
   };
   handleAddLoginOption = (event: any) => {
     if (!event.target.value) {
@@ -567,10 +581,27 @@ class AccountSetting extends React.Component<
             {this.props.isAuthed ? "Server region" : "Select server region"}
           </Trans>
           {this.props.isAuthed ? (
-            <div className="lang-setting-option">
+            <div
+              className="lang-setting-option"
+              style={{ display: "flex", alignItems: "center" }}
+            >
               <Trans>
                 {getServerRegion() === "china" ? "China" : "Global"}
               </Trans>
+              <span
+                className="change-location-button"
+                style={{ marginLeft: "10px" }}
+                onClick={async () => {
+                  let result = await vexComfirmAsync(
+                    "We have two server regions(Global and China). To change the server region, you need to log out first. Do you want to log out now?"
+                  );
+                  if (result) {
+                    await this.handleLogout();
+                  }
+                }}
+              >
+                <Trans>Change</Trans>
+              </span>
             </div>
           ) : (
             <select
@@ -713,17 +744,7 @@ class AccountSetting extends React.Component<
             <span
               className="change-location-button"
               onClick={async () => {
-                await TokenService.deleteToken("is_authed");
-                await TokenService.deleteToken("access_token");
-                await TokenService.deleteToken("refresh_token");
-
-                this.props.handleFetchAuthed();
-                this.props.handleLoginOptionList([]);
-                ConfigService.removeItem("defaultSyncOption");
-                ConfigService.removeItem("dataSourceList");
-                this.props.handleFetchDataSourceList();
-                this.props.handleFetchDefaultSyncOption();
-                toast.success(this.props.t("Log out successful"));
+                await this.handleLogout();
                 reloadManager();
               }}
             >

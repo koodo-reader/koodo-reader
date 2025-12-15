@@ -72,6 +72,22 @@ export const vexPromptAsync = (message, placeholder = "", value = "") => {
     });
   });
 };
+export const vexComfirmAsync = (message) => {
+  return new Promise((resolve) => {
+    window.vex.dialog.buttons.YES.text = i18n.t("Confirm");
+    window.vex.dialog.buttons.NO.text = i18n.t("Cancel");
+    window.vex.dialog.confirm({
+      message: i18n.t(message),
+      callback: (value) => {
+        if (value) {
+          resolve(true);
+        } else {
+          resolve(false);
+        }
+      },
+    });
+  });
+};
 export const fetchFileFromPath = (filePath: string) => {
   return new Promise<File>((resolve) => {
     const fs = window.require("fs");
