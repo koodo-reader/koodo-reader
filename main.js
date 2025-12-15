@@ -912,7 +912,13 @@ app.on('second-instance', (event, commandLine) => {
     handleCallback(url);
   }
 });
-
+const originalConsoleLog = console.log;
+console.log = function (...args) {
+  originalConsoleLog(...args); // 保留原日志
+  if (mainWin && mainWin.webContents) {
+    mainWin.webContents.send('log-message', args.join(' '));
+  }
+};
 // Handle MacOS deep linking
 app.on('open-url', (event, url) => {
   event.preventDefault();
