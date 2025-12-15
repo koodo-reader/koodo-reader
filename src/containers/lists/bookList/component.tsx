@@ -76,13 +76,8 @@ class BookList extends React.Component<BookListProps, BookListState> {
         "visibilitychange",
         ConfigService.getReaderConfig("isFinishWebReading")
       );
-      if (
-        document.visibilityState === "visible" &&
-        !isElectron &&
-        ConfigService.getReaderConfig("isFinishWebReading") === "yes"
-      ) {
+      if (document.visibilityState === "visible" && !isElectron) {
         await this.handleFinishReading();
-        ConfigService.setReaderConfig("isFinishWebReading", "no");
       }
     };
     document.addEventListener("visibilitychange", this.visibilityChangeHandler);
@@ -174,7 +169,7 @@ class BookList extends React.Component<BookListProps, BookListState> {
 
     const { scrollTop, scrollHeight, clientHeight } = scrollContainer;
     // 当滚动到底部附近时触发加载更多
-    if (scrollTop + clientHeight >= scrollHeight - 100) {
+    if (scrollTop + clientHeight >= scrollHeight - 300) {
       this.loadMoreBooks();
     }
   };

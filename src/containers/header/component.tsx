@@ -137,8 +137,8 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         !isElectron &&
         ConfigService.getReaderConfig("isFinishWebReading") === "yes"
       ) {
-        this.handleFinishReading();
-        ConfigService.setReaderConfig("isFinishWebReading", "no");
+        await this.handleFinishReading();
+        // ConfigService.setReaderConfig("isFinishWebReading", "no");
       }
     });
   }
@@ -380,10 +380,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       toast.error(
         this.props.t("Sync failed") +
           ": " +
-          (error instanceof Error ? error.message : String(error)),
-        {
-          id: "syncing",
-        }
+          (error instanceof Error ? error.message : String(error))
       );
       clearInterval(this.timer);
       this.setState({ isSync: false });
@@ -461,10 +458,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       toast.error(
         this.props.t("Sync failed") +
           ": " +
-          (error instanceof Error ? error.message : String(error)),
-        {
-          id: "syncing",
-        }
+          (error instanceof Error ? error.message : String(error))
       );
 
       return;
