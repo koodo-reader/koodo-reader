@@ -596,6 +596,10 @@ class AccountSetting extends React.Component<
                     "We have two server regions(Global and China). To change the server region, you need to log out first. Do you want to log out now?"
                   );
                   if (result) {
+                    ConfigService.setItem(
+                      "serverRegion",
+                      getServerRegion() === "china" ? "global" : "china"
+                    );
                     await this.handleLogout();
                   }
                 }}
