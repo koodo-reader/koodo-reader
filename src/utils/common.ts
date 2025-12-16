@@ -867,6 +867,7 @@ export const showTaskProgress = async (
             ),
             {
               id: "syncing",
+              duration: 6000,
             }
           );
           clearInterval(timer);
@@ -906,6 +907,7 @@ export const showTaskProgress = async (
             ),
             {
               id: "syncing",
+              duration: 6000,
             }
           );
           clearInterval(timer);
@@ -937,6 +939,29 @@ export const showTaskProgress = async (
     }
   }, 1000);
   return timer;
+};
+export const compareVersions = (version1: string, version2: string) => {
+  // Split strings by '.' and convert segments to numbers
+  const parts1 = version1.split(".").map(Number);
+  const parts2 = version2.split(".").map(Number);
+
+  // Determine the maximum length to handle unequal segment counts
+  const maxLength = Math.max(parts1.length, parts2.length);
+
+  for (let i = 0; i < maxLength; i++) {
+    // Use 0 for missing segments in shorter versions
+    const part1 = parts1[i] || 0;
+    const part2 = parts2[i] || 0;
+
+    if (part1 > part2) {
+      return 1; // version1 is greater
+    }
+    if (part1 < part2) {
+      return -1; // version2 is greater
+    }
+  }
+
+  return 0; // Versions are equal
 };
 export const clearAllData = async () => {
   localStorage.clear();

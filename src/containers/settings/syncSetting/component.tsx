@@ -702,19 +702,28 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
 
         {this.props.isAuthed && this.renderSwitchOption(syncSettingList)}
         {this.props.isAuthed && (
-          <div className="setting-dialog-new-title">
-            <Trans>Reset sync records</Trans>
+          <>
+            <div className="setting-dialog-new-title">
+              <Trans>Reset sync records</Trans>
 
-            <span
-              className="change-location-button"
-              onClick={async () => {
-                await generateSyncRecord();
-                toast.success(this.props.t("Reset successful"));
-              }}
-            >
-              <Trans>Reset</Trans>
-            </span>
-          </div>
+              <span
+                className="change-location-button"
+                onClick={async () => {
+                  await generateSyncRecord();
+                  toast.success(this.props.t("Reset successful"));
+                }}
+              >
+                <Trans>Reset</Trans>
+              </span>
+            </div>
+            <p className="setting-option-subtitle">
+              <Trans>
+                {
+                  "There are some unwanted books, notes, highlights show up in other devices after sync is done. But the data in this device is normal. You can reset the sync record in this device, delete the KoodoReader folder in the data source(Turn off Koodo Sync if necessary), and sync again. This should resolve the issue."
+                }
+              </Trans>
+            </p>
+          </>
         )}
       </>
     );
