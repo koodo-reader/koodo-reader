@@ -692,6 +692,11 @@ class Login extends React.Component<LoginProps, LoginState> {
                           toast.error(this.props.t("Enter your email"));
                           return;
                         }
+                        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                        if (!emailRegex.test(this.state.loginConfig.email)) {
+                          toast.error(this.props.t("Invalid email format"));
+                          return;
+                        }
                         if (this.state.isSendingCode || this.state.countdown) {
                           return;
                         }
