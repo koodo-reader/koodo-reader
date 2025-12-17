@@ -13,6 +13,7 @@ const {
 const path = require("path");
 const isDev = require("electron-is-dev");
 const Store = require("electron-store");
+const log = require('electron-log/main');
 const os = require("os");
 const store = new Store();
 const fs = require("fs");
@@ -37,6 +38,9 @@ var filePath = null;
 if (process.platform != "darwin" && process.argv.length >= 2) {
   filePath = process.argv[1];
 }
+log.transports.file.fileName = "debug.log";
+log.transports.file.maxSize = 1024 * 1024; // 1MB
+log.initialize();
 store.set(
   "appVersion", packageJson.version,
 );
@@ -193,6 +197,10 @@ const createMainWin = () => {
     ? "http://localhost:3000"
     : `file://${path.join(__dirname, "./build/index.html")}`;
   mainWin.loadURL(urlLocation);
+  mainWin.webContents.on('console-message', (event, level, message, line, sourceId) => {
+    console.log(`[Renderer Console] Level: ${level}, Message: ${message}, Line: ${line}, Source: ${sourceId}`);
+    // 这里你可以进一步处理消息，例如写入文件或发送到其他地方
+  });
 
   mainWin.on("close", () => {
     if (mainWin && !mainWin.isDestroyed()) {
@@ -650,6 +658,12 @@ const createMainWin = () => {
 
     return "pong";
   })
+  ipcMain.handle("get-debug-logs", async (event, config) => {
+    const { shell } = require("electron");
+    const file = log.transports.file.getFile();
+    shell.showItemInFolder(file.path);
+    return "pong";
+  })
 
   ipcMain.on("user-data", (event, arg) => {
     event.returnValue = dirPath;
@@ -915,9 +929,7 @@ app.on('second-instance', (event, commandLine) => {
 const originalConsoleLog = console.log;
 console.log = function (...args) {
   originalConsoleLog(...args); // 保留原日志
-  if (mainWin && mainWin.webContents) {
-    mainWin.webContents.send('log-message', args.join(' '));
-  }
+  log.info(args.join(' ')); // 写入日志文件
 };
 // Handle MacOS deep linking
 app.on('open-url', (event, url) => {

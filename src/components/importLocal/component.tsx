@@ -192,6 +192,9 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
         try {
           await this.handleBook(file, md5);
         } catch (error) {
+          const errorMessage =
+            error instanceof Error ? error.message : String(error);
+          toast.error(errorMessage);
           console.error(error);
         }
 
@@ -433,6 +436,11 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                                 }
                               }
                             } catch (error) {
+                              const errorMessage =
+                                error instanceof Error
+                                  ? error.message
+                                  : String(error);
+                              toast.error(errorMessage);
                               console.error(
                                 `Error reading directory ${dirPath}:`,
                                 error
@@ -459,6 +467,11 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
 
                               await this.getMd5WithBrowser(file);
                             } catch (error) {
+                              const errorMessage =
+                                error instanceof Error
+                                  ? error.message
+                                  : String(error);
+                              toast.error(errorMessage);
                               console.error(
                                 `Error processing file ${filePath}:`,
                                 error
@@ -565,6 +578,9 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
 
                       await this.getMd5WithBrowser(file);
                     } catch (error) {
+                      const errorMessage =
+                        error instanceof Error ? error.message : String(error);
+                      toast.error(errorMessage);
                       console.error(
                         `Error processing file ${filePath}:`,
                         error

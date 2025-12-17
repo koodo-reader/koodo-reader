@@ -5,6 +5,7 @@ import ImportLocal from "../../components/importLocal";
 import { HeaderProps, HeaderState } from "./interface";
 import {
   ConfigService,
+  KookitConfig,
   TokenService,
 } from "../../assets/lib/kookit-extra-browser.min";
 import UpdateInfo from "../../components/dialogs/updateDialog";
@@ -658,6 +659,21 @@ class Header extends React.Component<HeaderProps, HeaderState> {
                 this.setState({ isHidePro: true });
               }}
             ></span>
+          </div>
+        ) : null}
+
+        {KookitConfig.CloudMode !== "production" ? (
+          <div className="header-report-container" style={{ right: "300px" }}>
+            <span
+              style={{
+                color: "red",
+                opacity: 1,
+                fontWeight: "bold",
+              }}
+            >
+              <Trans>TEST</Trans>
+              <span> </span>
+            </span>
           </div>
         ) : null}
 

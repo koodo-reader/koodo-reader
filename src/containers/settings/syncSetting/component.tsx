@@ -249,6 +249,15 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                   case "autoOffline":
                     this.handleSetting(item.propName);
                     if (!this.state.autoOffline) {
+                      if (this.props.defaultSyncOption === "adrive") {
+                        toast.error(
+                          this.props.t(
+                            "Due to Aliyun Drive's stringent concurrency restrictions, we have bypassed the synchronization of books and covers. Please manually download the books by clicking on them"
+                          ),
+                          { id: "autoOffline" }
+                        );
+                        return;
+                      }
                       let downloadTasks = await SyncHelper.syncBook(
                         ConfigService,
                         BookUtil
@@ -263,9 +272,11 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                         ConfigService.getItem("defaultSyncOption")
                       );
                       clearInterval(timer);
+
                       toast.success(this.props.t("Download completed"), {
                         id: "autoOffline",
                       });
+
                       setTimeout(() => {
                         toast.dismiss("syncing");
                       }, 3000);
