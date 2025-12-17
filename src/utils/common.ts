@@ -299,8 +299,10 @@ export const loadFontData = async () => {
         value: `"${font.fullName}", "${font.postscriptName}", "${font.family}"`,
       };
     });
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    toast.error(errorMessage);
+    console.error(error);
   }
 };
 export const splitSentences = (text) => {

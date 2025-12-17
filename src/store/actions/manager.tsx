@@ -11,6 +11,7 @@ import {
   officialDictList,
   officialTranList,
 } from "../../constants/settingList";
+import toast from "react-hot-toast";
 
 export function handleBooks(books: BookModel[]) {
   return { type: "HANDLE_BOOKS", payload: books };
@@ -185,6 +186,9 @@ export function handleFetchPlugins() {
           }
         });
       } catch (error) {
+        const errorMessage =
+          error instanceof Error ? error.message : String(error);
+        toast.error(errorMessage);
         console.error(error);
       }
     });
