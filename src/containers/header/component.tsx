@@ -10,7 +10,7 @@ import {
 } from "../../assets/lib/kookit-extra-browser.min";
 import UpdateInfo from "../../components/dialogs/updateDialog";
 import { restoreFromConfigJson } from "../../utils/file/restore";
-import { backupToConfigJson } from "../../utils/file/backup";
+import { backupToConfigJson, backupToSyncJson } from "../../utils/file/backup";
 import { isElectron } from "react-device-detect";
 import {
   getCloudConfig,
@@ -471,7 +471,8 @@ class Header extends React.Component<HeaderProps, HeaderState> {
   syncToLocation = async () => {
     let timestamp = new Date().getTime().toString();
     ConfigService.setItem("lastSyncTime", timestamp);
-    backupToConfigJson();
+    await backupToConfigJson();
+    await backupToSyncJson();
     toast.success(
       this.props.t("Synchronisation successful") +
         " (" +

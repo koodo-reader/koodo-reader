@@ -869,6 +869,9 @@ const createMainWin = () => {
   ipcMain.on("storage-location", (event, config) => {
     event.returnValue = path.join(dirPath, "data");
   });
+  ipcMain.on("url-window-status", (event, config) => {
+    event.returnValue = urlWindow && !urlWindow.isDestroyed() ? true : false;
+  });
   ipcMain.on("get-dirname", (event, arg) => {
     event.returnValue = __dirname;
   });

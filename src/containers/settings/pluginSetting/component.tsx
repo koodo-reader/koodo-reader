@@ -204,6 +204,7 @@ class SettingDialog extends React.Component<
         {this.props.plugins && this.props.plugins.length > 0 && (
           <div
             className="setting-dialog-new-plugin"
+            style={{ fontWeight: "bold" }}
             onClick={async () => {
               this.setState({ isAddNew: true });
             }}

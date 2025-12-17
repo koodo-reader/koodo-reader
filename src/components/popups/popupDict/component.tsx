@@ -28,6 +28,7 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
       dictTarget: ConfigService.getReaderConfig("dictTarget") || "en",
       dictSource: ConfigService.getReaderConfig("dictSource") || "en",
       isAddNew: false,
+      isShowUrl: false,
     };
   }
   componentDidMount() {
