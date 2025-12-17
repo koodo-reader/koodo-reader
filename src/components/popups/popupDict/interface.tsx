@@ -18,4 +18,5 @@ export interface PopupDictState {
   dictTarget: string;
   dictSource: string;
   isAddNew: boolean;
+  isShowUrl: boolean;
 }
