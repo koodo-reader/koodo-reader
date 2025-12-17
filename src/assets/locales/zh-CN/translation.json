@@ -211,7 +211,7 @@
   "We have two server regions(Global and China). To change the server region, you need to log out first. Do you want to log out now?": "我们有两个服务器地区：全球和中国。要更改服务器地区，您需要先退出登录。是否现在退出？",
   "Tasks failed after multiple retries, please check the network connection": "多次重试后任务失败，请检查网络连接",
   "Get debug logs": "获取调试日志",
-  "There are some unwanted books, notes, highlights show up in other devices after sync is done. But the data in this device is normal. You can reset the sync record in this device, delete the KoodoReader folder in the data source(Turn off Koodo Sync if necessary), and sync again. This should resolve the issue.": "同步完成后，其他设备上出现了一些不需要的图书、笔记和高亮。但此设备中的数据是正常的。您可以在此设备中重置同步记录，删除数据源中的 KoodoReader 文件夹（如有必要，请关闭 Koodo Sync），然后重新同步。这应该可以解决问题。",
+  "Data in other devices is messed up, but the data in this device is normal. You can reset the sync record in this device, delete the KoodoReader folder in the data source(Turn off Koodo Sync if necessary), and sync again. This should resolve the issue": "其他设备上数据有问题，但此设备中的数据是正常的。您可以在此设备中重置同步记录，删除数据源中的 KoodoReader 文件夹（如有必要，请关闭 Koodo Sync），然后重新同步",
   "Tasks failed after multiple retries, please check the network connection or reauthorize the data source in the settings": "多次重试后任务失败，请检查网络连接或在设置中重新授权数据源",
   "This data source already contains a library. If you need to merge local and cloud data, please turn off Koodo Sync and resync.": "此数据源已经存在了一个图书库，如果需要将本地和云端的数据合并。请关闭 Koodo Sync 后重新同步。",
   "Render PDF from even page": "从偶数页开始渲染 PDF",

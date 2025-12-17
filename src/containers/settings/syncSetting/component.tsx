@@ -730,7 +730,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
             <p className="setting-option-subtitle">
               <Trans>
                 {
-                  "There are some unwanted books, notes, highlights show up in other devices after sync is done. But the data in this device is normal. You can reset the sync record in this device, delete the KoodoReader folder in the data source(Turn off Koodo Sync if necessary), and sync again. This should resolve the issue."
+                  "Data in other devices is messed up, but the data in this device is normal. You can reset the sync record in this device, delete the KoodoReader folder in the data source(Turn off Koodo Sync if necessary), and sync again. This should resolve the issue"
                 }
               </Trans>
             </p>
