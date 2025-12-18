@@ -64,11 +64,6 @@ class UpdateInfo extends React.Component<UpdateInfoProps, UpdateInfoState> {
       if ((process as any).windowsStore) {
         return;
       }
-      console.log(
-        packageInfo.version,
-        newVersion,
-        compareVersions(packageInfo.version, newVersion)
-      );
       if (compareVersions(newVersion, packageInfo.version) > 0) {
         if (
           ConfigService.getReaderConfig("isDisableUpdate") !== "yes" ||

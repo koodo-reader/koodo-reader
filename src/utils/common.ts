@@ -1008,7 +1008,6 @@ export const resetKoodoSync = async () => {
 };
 export const handleCloudSync = async () => {
   let syncRes = await getCloudSyncToken();
-  console.log(syncRes, "syncres");
   if (
     syncRes.code === 200 &&
     syncRes.data.default_sync_option &&

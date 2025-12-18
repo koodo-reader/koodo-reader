@@ -111,9 +111,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       ipcRenderer.on("reading-finished", async (event: any, config: any) => {
         this.handleFinishReading();
       });
-      ipcRenderer.on("log-message", (event, message) => {
-        console.log(`[Main Process Log]: ${message}`);
-      });
     } else {
       upgradeConfig();
       const status = await LocalFileManager.getPermissionStatus();

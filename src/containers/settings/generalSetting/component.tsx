@@ -140,7 +140,6 @@ class GeneralSetting extends React.Component<
           window.require("path").join(newPath, "config", "config.json"),
           "utf-8"
         );
-        console.log(text, "text");
         let config = JSON.parse(text);
         for (let key in config) {
           ConfigService.setItem(key, config[key]);
