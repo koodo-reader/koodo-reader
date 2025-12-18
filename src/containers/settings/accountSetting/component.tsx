@@ -8,6 +8,7 @@ import {
   formatTimestamp,
   getServerRegion,
   getWebsiteUrl,
+  handleCloudSync,
   handleContextMenu,
   openInBrowser,
   reloadManager,
@@ -189,8 +190,16 @@ class AccountSetting extends React.Component<
       });
       this.props.handleFetchAuthed();
       this.props.handleFetchLoginOptionList();
-      ConfigService.removeItem("defaultSyncOption");
-      ConfigService.removeItem("dataSourceList");
+      let result = await handleCloudSync();
+      if (result) {
+        this.props.cloudSyncFunc();
+      } else {
+        ConfigService.removeItem("defaultSyncOption");
+        ConfigService.removeItem("dataSourceList");
+      }
+      toast.success(this.props.t("Login successful"), {
+        id: "login",
+      });
       this.props.handleFetchDataSourceList();
       this.props.handleFetchDefaultSyncOption();
       this.props.handleFetchUserInfo();
@@ -601,10 +610,15 @@ class AccountSetting extends React.Component<
                     "We have two server regions(Global and China). To change the server region, you need to log out first. Do you want to log out now?"
                   );
                   if (result) {
-                    ConfigService.setItem(
-                      "serverRegion",
-                      getServerRegion() === "china" ? "global" : "china"
-                    );
+                    let newRegion =
+                      getServerRegion() === "china" ? "global" : "china";
+                    ConfigService.setItem("serverRegion", newRegion);
+                    this.setState({
+                      serverRegion: newRegion,
+                    });
+                    resetReaderRequest();
+                    resetUserRequest();
+                    resetThirdpartyRequest();
                     await this.handleLogout();
                   }
                 }}

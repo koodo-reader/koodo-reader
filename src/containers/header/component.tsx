@@ -36,12 +36,14 @@ import {
   removeChatBox,
   resetKoodoSync,
   showTaskProgress,
+  vexComfirmAsync,
 } from "../../utils/common";
 import { driveList } from "../../constants/driveList";
 import SupportDialog from "../../components/dialogs/supportDialog";
 import SyncService from "../../utils/storage/syncService";
 import { LocalFileManager } from "../../utils/file/localFile";
 import packageJson from "../../../package.json";
+import { updateUserConfig } from "../../utils/request/user";
 declare var window: any;
 
 class Header extends React.Component<HeaderProps, HeaderState> {
@@ -64,6 +66,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     this.props.handleFetchAuthed();
     this.props.handleFetchDefaultSyncOption();
     this.props.handleFetchDataSourceList();
+
     if (isElectron) {
       const fs = window.require("fs");
       const path = window.require("path");
@@ -426,9 +429,45 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       ConfigUtil.updateSyncData();
     }
     //when book is empty, need to refresh the book list
-    setTimeout(() => {
+    setTimeout(async () => {
       if (this.props.mode === "home") {
         this.props.history.push("/manager/home");
+        if (
+          ConfigService.getReaderConfig("isFirstSync") !== "no" &&
+          ConfigService.getReaderConfig("isEnableKoodoSync") !== "yes" &&
+          this.props.defaultSyncOption !== "webdav" &&
+          this.props.defaultSyncOption !== "ftp" &&
+          this.props.defaultSyncOption !== "sftp" &&
+          this.props.defaultSyncOption !== "smb" &&
+          this.props.defaultSyncOption !== "s3compatible" &&
+          this.props.defaultSyncOption !== "docker"
+        ) {
+          ConfigService.setReaderConfig("isFirstSync", "no");
+          let result = await vexComfirmAsync(
+            `<h3>${this.props.t("Enable Koodo Sync")}</h3><p>${
+              this.props.t(
+                "To enjoy a faster and seamless synchronization experience."
+              ) +
+              " " +
+              this.props.t(
+                "Your reading progress, notes, highlights, bookmarks, and other data will be stored and synced through our cloud service. Your books and covers will still be synced by your added data sources. To save you from repeatedly entering your data source credentials on new devices, your credentials will be encrypted and stored securely in our cloud too. You can disable this feature anytime in the settings."
+              )
+            }</p>`
+          );
+          if (result) {
+            ConfigService.setReaderConfig("isEnableKoodoSync", "yes");
+            let encryptedToken = await TokenService.getToken(
+              this.props.defaultSyncOption + "_token"
+            );
+            await updateUserConfig({
+              is_enable_koodo_sync: "yes",
+              default_sync_option: this.props.defaultSyncOption,
+              default_sync_token: encryptedToken || "",
+            });
+            toast.success(this.props.t("Setup successful"));
+            this.handleCloudSync();
+          }
+        }
       }
     }, 1000);
   };

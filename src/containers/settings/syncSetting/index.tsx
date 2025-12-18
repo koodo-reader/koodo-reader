@@ -32,6 +32,7 @@ const mapStateToProps = (state: stateType) => {
     defaultSyncOption: state.backupPage.defaultSyncOption,
     loginOptionList: state.backupPage.loginOptionList,
     isOpenTokenDialog: state.backupPage.isOpenTokenDialog,
+    cloudSyncFunc: state.book.cloudSyncFunc,
   };
 };
 const actionCreator = {

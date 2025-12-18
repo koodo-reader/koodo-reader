@@ -10,11 +10,8 @@ import animationSuccess from "../../../assets/lotties/success.json";
 import _ from "underscore";
 import toast from "react-hot-toast";
 import { isElectron } from "react-device-detect";
-import {
-  ConfigService,
-  TokenService,
-} from "../../../assets/lib/kookit-extra-browser.min";
-import { generateSyncRecord, getServerRegion } from "../../../utils/common";
+import { TokenService } from "../../../assets/lib/kookit-extra-browser.min";
+import { generateSyncRecord } from "../../../utils/common";
 const successOptions = {
   loop: false,
   autoplay: true,

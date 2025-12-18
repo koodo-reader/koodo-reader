@@ -238,13 +238,23 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
               onClick={async () => {
                 switch (item.propName) {
                   case "isEnableKoodoSync":
-                    updateUserConfig({
-                      is_enable_koodo_sync: !this.state.isEnableKoodoSync
-                        ? "yes"
-                        : "no",
-                      default_sync_option: this.props.defaultSyncOption,
-                    });
                     this.handleSetting(item.propName);
+                    let encryptToken = await TokenService.getToken(
+                      this.props.defaultSyncOption + "_token"
+                    );
+                    updateUserConfig({
+                      is_enable_koodo_sync:
+                        ConfigService.getReaderConfig("isEnableKoodoSync"),
+                      default_sync_option: this.props.defaultSyncOption,
+                      default_sync_token: encryptToken || "",
+                    });
+                    if (
+                      ConfigService.getReaderConfig("isEnableKoodoSync") ===
+                      "yes"
+                    ) {
+                      this.props.cloudSyncFunc();
+                    }
+
                     break;
                   case "autoOffline":
                     this.handleSetting(item.propName);

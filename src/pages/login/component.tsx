@@ -8,6 +8,7 @@ import { loginList } from "../../constants/loginList";
 import {
   generateSyncRecord,
   getServerRegion,
+  handleCloudSync,
   handleContextMenu,
   openInBrowser,
   removeSearchParams,
@@ -88,15 +89,21 @@ class Login extends React.Component<LoginProps, LoginState> {
     let res = await loginRegister(service, code);
     if (res.code === 200) {
       this.props.handleLoadingDialog(false);
-      toast.success(this.props.t("Login successful"));
-      ConfigService.removeItem("defaultSyncOption");
-      ConfigService.removeItem("dataSourceList");
+      let result = await handleCloudSync();
+      if (result) {
+        this.props.cloudSyncFunc();
+      } else {
+        ConfigService.removeItem("defaultSyncOption");
+        ConfigService.removeItem("dataSourceList");
+      }
+
       this.props.handleFetchDataSourceList();
       this.props.handleFetchDefaultSyncOption();
       removeSearchParams();
       this.props.handleFetchAuthed();
       await this.props.handleFetchUserInfo();
-      this.setState({ currentStep: 3 });
+      toast.success(this.props.t("Login successful"));
+      this.setState({ currentStep: result ? 4 : 3 });
       if (ConfigService.getReaderConfig("isProUpgraded") !== "yes") {
         try {
           ConfigService.setReaderConfig("isProUpgraded", "yes");
