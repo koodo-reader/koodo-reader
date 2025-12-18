@@ -8,6 +8,7 @@ export interface LoginProps extends RouteComponentProps<any> {
   handleFetchDataSourceList: () => void;
   handleFetchDefaultSyncOption: () => void;
   handleFetchUserInfo: () => Promise<void>;
+  cloudSyncFunc: () => Promise<void>;
   t: (title: string) => string;
   isSettingOpen: boolean;
   isShowLoading: boolean;

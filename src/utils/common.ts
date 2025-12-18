@@ -6,6 +6,7 @@ import {
   CommonTool,
   ConfigService,
   SyncUtil,
+  TokenService,
 } from "../assets/lib/kookit-extra-browser.min";
 import Book from "../models/Book";
 import BookUtil from "./file/bookUtil";
@@ -14,7 +15,7 @@ import DatabaseService from "./storage/databaseService";
 import packageJson from "../../package.json";
 import toast from "react-hot-toast";
 import i18n from "../i18n";
-import { getThirdpartyRequest } from "./request/thirdparty";
+import { getCloudSyncToken, getThirdpartyRequest } from "./request/thirdparty";
 import { getCloudConfig } from "./file/common";
 import SyncService from "./storage/syncService";
 import localforage from "localforage";
@@ -77,7 +78,7 @@ export const vexComfirmAsync = (message) => {
     window.vex.dialog.buttons.YES.text = i18n.t("Confirm");
     window.vex.dialog.buttons.NO.text = i18n.t("Cancel");
     window.vex.dialog.confirm({
-      message: i18n.t(message),
+      unsafeMessage: i18n.t(message),
       callback: (value) => {
         if (value) {
           resolve(true);
@@ -989,14 +990,44 @@ export const clearAllData = async () => {
   await localforage.clear();
 };
 export const resetKoodoSync = async () => {
+  let encryptToken = await TokenService.getToken(
+    ConfigService.getItem("defaultSyncOption") + "_token"
+  );
   await updateUserConfig({
     is_enable_koodo_sync: "no",
     default_sync_option: ConfigService.getItem("defaultSyncOption"),
+    default_sync_token: encryptToken || "",
   });
   setTimeout(() => {
     updateUserConfig({
       is_enable_koodo_sync: "yes",
       default_sync_option: ConfigService.getItem("defaultSyncOption"),
+      default_sync_token: encryptToken || "",
     });
   }, 1000);
+};
+export const handleCloudSync = async () => {
+  let syncRes = await getCloudSyncToken();
+  console.log(syncRes, "syncres");
+  if (
+    syncRes.code === 200 &&
+    syncRes.data.default_sync_option &&
+    syncRes.data.default_sync_token
+  ) {
+    ConfigService.setItem(
+      "defaultSyncOption",
+      syncRes.data.default_sync_option
+    );
+    ConfigService.setReaderConfig("isEnableKoodoSync", "yes");
+    await TokenService.setToken(
+      syncRes.data.default_sync_option + "_token",
+      syncRes.data.default_sync_token
+    );
+    ConfigService.setListConfig(
+      syncRes.data.default_sync_option,
+      "dataSourceList"
+    );
+    return true;
+  }
+  return false;
 };

@@ -140,3 +140,16 @@ export const decryptToken = async (service: string) => {
     return response;
   }
 };
+export const getCloudSyncToken = async () => {
+  let thirdpartyRequest = await getThirdpartyRequest();
+  let response = await thirdpartyRequest.getSyncToken();
+  if (response.code === 200) {
+    return response;
+  } else if (response.code === 401) {
+    handleExitApp();
+    return {};
+  } else {
+    toast.error(i18n.t("Fetch failed, error code") + ": " + response.msg);
+    return {};
+  }
+};
