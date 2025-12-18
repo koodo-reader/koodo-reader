@@ -71,11 +71,6 @@ class BookList extends React.Component<BookListProps, BookListState> {
 
     // 保存 visibilitychange 监听器引用
     this.visibilityChangeHandler = async (event) => {
-      console.log(
-        document.visibilityState,
-        "visibilitychange",
-        ConfigService.getReaderConfig("isFinishWebReading")
-      );
       if (document.visibilityState === "visible" && !isElectron) {
         await this.handleFinishReading();
       }
@@ -85,7 +80,6 @@ class BookList extends React.Component<BookListProps, BookListState> {
     if (isElectron) {
       const { ipcRenderer } = window.require("electron");
       ipcRenderer.on("reading-finished", async (event: any, config: any) => {
-        console.log("asdfasgfdd");
         this.handleFinishReading();
       });
     }
@@ -137,7 +131,6 @@ class BookList extends React.Component<BookListProps, BookListState> {
     }
   }
   handleFinishReading = async () => {
-    console.log(this.scrollContainer, "scrollContainer");
     if (!this.scrollContainer.current) return;
     if (
       this.scrollContainer.current &&

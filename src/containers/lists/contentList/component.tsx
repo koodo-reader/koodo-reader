@@ -114,7 +114,6 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
           "recordLocation",
           {}
         );
-        console.log(bookLocation, "booklasf");
 
         // 自动展开包含当前章节的路径
         if (bookLocation.chapterHref) {
@@ -122,7 +121,6 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
             htmlBook.chapters,
             bookLocation
           );
-          console.log(expandedPaths, "expandedPaths");
           this.setState({ expandedItems: expandedPaths });
         }
 
