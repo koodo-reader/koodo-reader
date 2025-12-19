@@ -1006,13 +1006,25 @@ export const resetKoodoSync = async () => {
     });
   }, 1000);
 };
-export const handleCloudSync = async () => {
+export const handleAutoCloudSync = async () => {
   let syncRes = await getCloudSyncToken();
   if (
     syncRes.code === 200 &&
     syncRes.data.default_sync_option &&
     syncRes.data.default_sync_token
   ) {
+    let supportedSources = driveList
+      .filter((item) => {
+        if (isElectron) {
+          return item.support.includes("desktop");
+        } else {
+          return item.support.includes("browser");
+        }
+      })
+      .map((item) => item.value);
+    if (!supportedSources.includes(syncRes.data.default_sync_option)) {
+      return false;
+    }
     ConfigService.setItem(
       "defaultSyncOption",
       syncRes.data.default_sync_option

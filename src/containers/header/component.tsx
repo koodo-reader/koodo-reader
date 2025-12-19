@@ -461,6 +461,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
               default_sync_option: this.props.defaultSyncOption,
               default_sync_token: encryptedToken || "",
             });
+            await this.props.handleFetchUserInfo();
             toast.success(this.props.t("Setup successful"));
             this.handleCloudSync();
           }

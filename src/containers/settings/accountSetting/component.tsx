@@ -8,7 +8,7 @@ import {
   formatTimestamp,
   getServerRegion,
   getWebsiteUrl,
-  handleCloudSync,
+  handleAutoCloudSync,
   handleContextMenu,
   openInBrowser,
   reloadManager,
@@ -190,7 +190,7 @@ class AccountSetting extends React.Component<
       });
       this.props.handleFetchAuthed();
       this.props.handleFetchLoginOptionList();
-      let result = await handleCloudSync();
+      let result = await handleAutoCloudSync();
       if (result) {
         this.props.cloudSyncFunc();
       } else {
