@@ -242,12 +242,13 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                     let encryptToken = await TokenService.getToken(
                       this.props.defaultSyncOption + "_token"
                     );
-                    updateUserConfig({
+                    await updateUserConfig({
                       is_enable_koodo_sync:
                         ConfigService.getReaderConfig("isEnableKoodoSync"),
                       default_sync_option: this.props.defaultSyncOption,
                       default_sync_token: encryptToken || "",
                     });
+                    await this.props.handleFetchUserInfo();
                     if (
                       ConfigService.getReaderConfig("isEnableKoodoSync") ===
                       "yes"

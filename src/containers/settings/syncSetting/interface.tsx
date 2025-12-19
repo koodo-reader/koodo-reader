@@ -20,6 +20,7 @@ export interface SettingInfoProps extends RouteComponentProps<any> {
   handleFetchBooks: () => void;
   handleFetchPlugins: () => void;
   cloudSyncFunc: () => Promise<void>;
+  handleFetchUserInfo: () => Promise<void>;
   bookmarks: BookmarkModel[];
   notes: NoteModel[];
   isOpenTokenDialog: boolean;

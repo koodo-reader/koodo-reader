@@ -8,7 +8,7 @@ import { loginList } from "../../constants/loginList";
 import {
   generateSyncRecord,
   getServerRegion,
-  handleCloudSync,
+  handleAutoCloudSync,
   handleContextMenu,
   openInBrowser,
   removeSearchParams,
@@ -89,7 +89,7 @@ class Login extends React.Component<LoginProps, LoginState> {
     let res = await loginRegister(service, code);
     if (res.code === 200) {
       this.props.handleLoadingDialog(false);
-      let result = await handleCloudSync();
+      let result = await handleAutoCloudSync();
       if (result) {
         this.props.cloudSyncFunc();
       } else {
