@@ -65,7 +65,7 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
         )
         .then((res: string) => {
           if (res.startsWith("https://")) {
-            openExternalUrl(res, true);
+            openExternalUrl(res, true, "trans");
           } else {
             this.setState({
               translatedText: res,

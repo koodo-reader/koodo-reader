@@ -208,10 +208,14 @@ export const reloadManager = () => {
     window.location.reload();
   }
 };
-export const openExternalUrl = (url: string, isPlugin: boolean = false) => {
+export const openExternalUrl = (
+  url: string,
+  isPlugin: boolean = false,
+  type: string = "link"
+) => {
   isElectron
     ? ConfigService.getReaderConfig("isUseBuiltIn") === "yes" || isPlugin
-      ? window.require("electron").ipcRenderer.invoke("open-url", { url })
+      ? window.require("electron").ipcRenderer.invoke("open-url", { url, type })
       : window.require("electron").shell.openExternal(url)
     : window.open(url);
 };

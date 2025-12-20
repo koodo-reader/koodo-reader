@@ -31,7 +31,10 @@ class PopupBox extends React.Component<PopupBoxProps, PopupBoxStates> {
   componentDidMount(): void {
     if (isElectron) {
       const { ipcRenderer } = window.require("electron");
-      let isShowUrl = ipcRenderer.sendSync("url-window-status", "ping");
+      let isShowUrl = ipcRenderer.sendSync("url-window-status", {
+        type: this.props.menuMode,
+      });
+      console.log(isShowUrl, "ishowurl");
       this.setState({ isShowUrl });
     }
   }
