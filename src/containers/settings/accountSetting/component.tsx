@@ -160,34 +160,51 @@ class AccountSetting extends React.Component<
       toast.error(this.props.t("Missing parameters") + this.props.t("Token"));
       return;
     }
+    toast.loading(this.props.t("Adding"), {
+      id: "adding",
+    });
+    let userRequest = await getUserRequest();
+    let res = await userRequest.addLogin({
+      code: this.state.loginConfig.token,
+      provider: this.state.settingLogin,
+      scope:
+        KookitConfig.LoginAuthRequest[this.state.settingLogin].extraParams
+          .scope,
+      redirect_uri:
+        getServerRegion() === "china" && this.state.settingLogin === "microsoft"
+          ? KookitConfig.ThirdpartyConfig.cnCallbackUrl
+          : KookitConfig.ThirdpartyConfig.callbackUrl,
+    });
+
+    if (res.code === 200) {
+      this.props.handleFetchLoginOptionList();
+      toast.success(this.props.t("Addition successful"), {
+        id: "adding",
+      });
+      this.setState({ settingLogin: "" });
+    } else {
+      if (this.state.settingLogin === "email") {
+        toast(this.props.t("Please make sure the email and code are correct"));
+      }
+      toast.error(this.props.t("Login failed, error code") + ": " + res.msg, {
+        id: "adding",
+      });
+    }
+  };
+  handleLoginRegister = async () => {
+    if (!this.state.loginConfig.token || !this.state.settingLogin) {
+      toast.error(this.props.t("Missing parameters") + this.props.t("Token"));
+      return;
+    }
     toast.loading(this.props.t("Logging in"), {
       id: "bind-login-option",
     });
-    let res = { code: 200, msg: "success" };
-    if (this.props.isAuthed) {
-      let userRequest = await getUserRequest();
-      res = await userRequest.addLogin({
-        code: this.state.loginConfig.token,
-        provider: this.state.settingLogin,
-        scope:
-          KookitConfig.LoginAuthRequest[this.state.settingLogin].extraParams
-            .scope,
-        redirect_uri:
-          getServerRegion() === "china" &&
-          this.state.settingLogin === "microsoft"
-            ? KookitConfig.ThirdpartyConfig.cnCallbackUrl
-            : KookitConfig.ThirdpartyConfig.callbackUrl,
-      });
-    } else {
-      res = await loginRegister(
-        this.state.settingLogin,
-        this.state.loginConfig.token
-      );
-    }
+    let res = await loginRegister(
+      this.state.settingLogin,
+      this.state.loginConfig.token
+    );
+
     if (res.code === 200) {
-      toast.success(this.props.t("Login successful"), {
-        id: "bind-login-option",
-      });
       this.props.handleFetchAuthed();
       this.props.handleFetchLoginOptionList();
       let result = await handleAutoCloudSync();
@@ -198,7 +215,7 @@ class AccountSetting extends React.Component<
         ConfigService.removeItem("dataSourceList");
       }
       toast.success(this.props.t("Login successful"), {
-        id: "login",
+        id: "bind-login-option",
       });
       this.props.handleFetchDataSourceList();
       this.props.handleFetchDefaultSyncOption();
@@ -251,7 +268,11 @@ class AccountSetting extends React.Component<
               <div
                 className="voice-add-confirm"
                 onClick={async () => {
-                  this.handleConfirmLoginOption();
+                  if (this.props.isAuthed) {
+                    this.handleConfirmLoginOption();
+                    return;
+                  }
+                  this.handleLoginRegister();
                 }}
               >
                 <Trans>Bind</Trans>
@@ -367,7 +388,11 @@ class AccountSetting extends React.Component<
               <div
                 className="voice-add-confirm"
                 onClick={async () => {
-                  this.handleConfirmLoginOption();
+                  if (this.props.isAuthed) {
+                    this.handleConfirmLoginOption();
+                    return;
+                  }
+                  this.handleLoginRegister();
                 }}
               >
                 <Trans>Bind</Trans>
