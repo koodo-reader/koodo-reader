@@ -79,6 +79,7 @@ export const vexComfirmAsync = (message) => {
     window.vex.dialog.buttons.NO.text = i18n.t("Cancel");
     window.vex.dialog.confirm({
       unsafeMessage: i18n.t(message),
+      contentClassName: "custom-confirm-width",
       callback: (value) => {
         if (value) {
           resolve(true);
