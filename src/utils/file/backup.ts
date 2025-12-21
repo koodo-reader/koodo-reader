@@ -140,7 +140,6 @@ export const backupFromStorage = async () => {
 
 export const backupToConfigJson = async () => {
   let configStr = JSON.stringify(await ConfigUtil.dumpConfig("config"));
-  console.log(configStr, "configstr");
   const fs = window.require("fs");
   const path = window.require("path");
   const dataPath = getStorageLocation() || "";

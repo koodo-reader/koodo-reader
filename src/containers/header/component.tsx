@@ -242,10 +242,8 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         ConfigService.getItem("lastSyncTime") &&
         lastSyncTime <= parseInt(ConfigService.getItem("lastSyncTime")!)
       ) {
-        console.log("1");
         await this.syncToLocation();
       } else {
-        console.log(2);
         await this.syncFromLocation();
       }
     }
@@ -401,7 +399,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
   };
   handleSuccess = async () => {
     if (ConfigService.getItem("isFinshReading") !== "yes" || !isElectron) {
-      console.log("fetchbookss");
       this.props.handleFetchBooks();
     }
 

@@ -34,7 +34,6 @@ class PopupBox extends React.Component<PopupBoxProps, PopupBoxStates> {
       let isShowUrl = ipcRenderer.sendSync("url-window-status", {
         type: this.props.menuMode,
       });
-      console.log(isShowUrl, "ishowurl");
       this.setState({ isShowUrl });
     }
   }
