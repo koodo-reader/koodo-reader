@@ -360,6 +360,9 @@ class DatabaseService {
       }
     }
   }
+  static async dumpDatabase(dbName: string) {
+    return;
+  }
 }
 
 export default DatabaseService;

@@ -36,6 +36,9 @@ class BookUtil {
         );
         this.uploadBook(key, format);
       } catch (error) {
+        const errorMessage =
+          error instanceof Error ? error.message : String(error);
+        toast.error(errorMessage);
         throw error;
       }
     } else {

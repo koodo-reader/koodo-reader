@@ -6,6 +6,7 @@ import PopupDict from "../popupDict";
 import { PopupBoxProps, PopupBoxStates } from "./interface";
 import { getIframeDoc } from "../../../utils/reader/docUtil";
 import PopupAssist from "../popupAssist";
+import { isElectron } from "react-device-detect";
 
 class PopupBox extends React.Component<PopupBoxProps, PopupBoxStates> {
   highlighter: any;
@@ -24,7 +25,17 @@ class PopupBox extends React.Component<PopupBoxProps, PopupBoxStates> {
     this.state = {
       deleteKey: "",
       rect: this.props.rect,
+      isShowUrl: false,
     };
+  }
+  componentDidMount(): void {
+    if (isElectron) {
+      const { ipcRenderer } = window.require("electron");
+      let isShowUrl = ipcRenderer.sendSync("url-window-status", {
+        type: this.props.menuMode,
+      });
+      this.setState({ isShowUrl });
+    }
   }
   handleClose() {
     this.props.handleOpenMenu(false);
@@ -43,7 +54,15 @@ class PopupBox extends React.Component<PopupBoxProps, PopupBoxStates> {
       chapter: this.props.chapter,
     };
     return (
-      <>
+      <div
+        style={{
+          display:
+            this.state.isShowUrl &&
+            (this.props.menuMode === "dict" || this.props.menuMode === "trans")
+              ? "none"
+              : "block",
+        }}
+      >
         <div
           className="popup-box-container"
           style={{
@@ -84,7 +103,7 @@ class PopupBox extends React.Component<PopupBoxProps, PopupBoxStates> {
             this.handleClose();
           }}
         ></div>
-      </>
+      </div>
     );
   }
 }

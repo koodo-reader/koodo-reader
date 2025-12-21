@@ -14,6 +14,7 @@ import {
   handleLoadingDialog,
   handleFetchAuthed,
   handleLoginOptionList,
+  handleFetchUserInfo,
 } from "../../../store/actions";
 import { stateType } from "../../../store";
 import { withRouter } from "react-router-dom";
@@ -32,6 +33,7 @@ const mapStateToProps = (state: stateType) => {
     defaultSyncOption: state.backupPage.defaultSyncOption,
     loginOptionList: state.backupPage.loginOptionList,
     isOpenTokenDialog: state.backupPage.isOpenTokenDialog,
+    cloudSyncFunc: state.book.cloudSyncFunc,
   };
 };
 const actionCreator = {
@@ -47,6 +49,7 @@ const actionCreator = {
   handleLoadingDialog,
   handleFetchAuthed,
   handleLoginOptionList,
+  handleFetchUserInfo,
 };
 export default connect(
   mapStateToProps,

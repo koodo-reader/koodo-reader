@@ -134,6 +134,20 @@ class GeneralSetting extends React.Component<
       }
       ConfigService.setItem("storageLocation", newPath);
       this.setState({ storageLocation: newPath });
+      try {
+        let fs = window.require("fs");
+        let text = fs.readFileSync(
+          window.require("path").join(newPath, "config", "config.json"),
+          "utf-8"
+        );
+        let config = JSON.parse(text);
+        for (let key in config) {
+          ConfigService.setItem(key, config[key]);
+        }
+      } catch (error) {
+        console.error("Error reading config.json:", error);
+      }
+
       toast.success(this.props.t("Switch successful"));
       this.props.handleFetchBooks();
       await generateSyncRecord();
@@ -488,6 +502,18 @@ class GeneralSetting extends React.Component<
             }}
           >
             <Trans>Clear</Trans>
+          </span>
+        </div>
+        <div className="setting-dialog-new-title">
+          <Trans>Get debug logs</Trans>
+          <span
+            className="change-location-button"
+            onClick={async () => {
+              const { ipcRenderer } = window.require("electron");
+              ipcRenderer.invoke("get-debug-logs", "ping");
+            }}
+          >
+            <Trans>Locate</Trans>
           </span>
         </div>
       </>

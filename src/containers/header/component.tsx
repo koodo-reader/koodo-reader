@@ -5,11 +5,12 @@ import ImportLocal from "../../components/importLocal";
 import { HeaderProps, HeaderState } from "./interface";
 import {
   ConfigService,
+  KookitConfig,
   TokenService,
 } from "../../assets/lib/kookit-extra-browser.min";
 import UpdateInfo from "../../components/dialogs/updateDialog";
 import { restoreFromConfigJson } from "../../utils/file/restore";
-import { backupToConfigJson } from "../../utils/file/backup";
+import { backupToConfigJson, backupToSyncJson } from "../../utils/file/backup";
 import { isElectron } from "react-device-detect";
 import {
   getCloudConfig,
@@ -35,12 +36,14 @@ import {
   removeChatBox,
   resetKoodoSync,
   showTaskProgress,
+  vexComfirmAsync,
 } from "../../utils/common";
 import { driveList } from "../../constants/driveList";
 import SupportDialog from "../../components/dialogs/supportDialog";
 import SyncService from "../../utils/storage/syncService";
 import { LocalFileManager } from "../../utils/file/localFile";
 import packageJson from "../../../package.json";
+import { updateUserConfig } from "../../utils/request/user";
 declare var window: any;
 
 class Header extends React.Component<HeaderProps, HeaderState> {
@@ -63,6 +66,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     this.props.handleFetchAuthed();
     this.props.handleFetchDefaultSyncOption();
     this.props.handleFetchDataSourceList();
+
     if (isElectron) {
       const fs = window.require("fs");
       const path = window.require("path");
@@ -137,8 +141,8 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         !isElectron &&
         ConfigService.getReaderConfig("isFinishWebReading") === "yes"
       ) {
-        this.handleFinishReading();
-        ConfigService.setReaderConfig("isFinishWebReading", "no");
+        await this.handleFinishReading();
+        // ConfigService.setReaderConfig("isFinishWebReading", "no");
       }
     });
   }
@@ -176,12 +180,12 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     }
   }
   handleFinishReading = async () => {
-    ConfigService.setItem("isFinshReading", "yes");
     if (
       ConfigService.getReaderConfig("isDisableAutoSync") !== "yes" &&
       ConfigService.getItem("defaultSyncOption") &&
       !this.state.isSync
     ) {
+      ConfigService.setItem("isFinshReading", "yes");
       await this.props.handleFetchUserInfo();
       this.setState({ isSync: true }, async () => {
         await this.handleCloudSync();
@@ -380,10 +384,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       toast.error(
         this.props.t("Sync failed") +
           ": " +
-          (error instanceof Error ? error.message : String(error)),
-        {
-          id: "syncing",
-        }
+          (error instanceof Error ? error.message : String(error))
       );
       clearInterval(this.timer);
       this.setState({ isSync: false });
@@ -425,9 +426,46 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       ConfigUtil.updateSyncData();
     }
     //when book is empty, need to refresh the book list
-    setTimeout(() => {
+    setTimeout(async () => {
       if (this.props.mode === "home") {
         this.props.history.push("/manager/home");
+        if (
+          ConfigService.getReaderConfig("isFirstSync") !== "no" &&
+          ConfigService.getReaderConfig("isEnableKoodoSync") !== "yes" &&
+          this.props.defaultSyncOption !== "webdav" &&
+          this.props.defaultSyncOption !== "ftp" &&
+          this.props.defaultSyncOption !== "sftp" &&
+          this.props.defaultSyncOption !== "smb" &&
+          this.props.defaultSyncOption !== "s3compatible" &&
+          this.props.defaultSyncOption !== "docker"
+        ) {
+          ConfigService.setReaderConfig("isFirstSync", "no");
+          let result = await vexComfirmAsync(
+            `<h3>${this.props.t("Enable Koodo Sync")}</h3><p>${
+              this.props.t(
+                "To enjoy a faster and seamless synchronization experience."
+              ) +
+              " " +
+              this.props.t(
+                "Your reading progress, notes, highlights, bookmarks, and other data will be stored and synced through our cloud service. Your books and covers will still be synced by your added data sources. To save you from repeatedly entering your data source credentials on new devices, your credentials will be encrypted and stored securely in our cloud too. You can disable this feature anytime in the settings."
+              )
+            }</p>`
+          );
+          if (result) {
+            ConfigService.setReaderConfig("isEnableKoodoSync", "yes");
+            let encryptedToken = await TokenService.getToken(
+              this.props.defaultSyncOption + "_token"
+            );
+            await updateUserConfig({
+              is_enable_koodo_sync: "yes",
+              default_sync_option: this.props.defaultSyncOption,
+              default_sync_token: encryptedToken || "",
+            });
+            await this.props.handleFetchUserInfo();
+            toast.success(this.props.t("Setup successful"));
+            this.handleCloudSync();
+          }
+        }
       }
     }, 1000);
   };
@@ -461,10 +499,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       toast.error(
         this.props.t("Sync failed") +
           ": " +
-          (error instanceof Error ? error.message : String(error)),
-        {
-          id: "syncing",
-        }
+          (error instanceof Error ? error.message : String(error))
       );
 
       return;
@@ -473,7 +508,8 @@ class Header extends React.Component<HeaderProps, HeaderState> {
   syncToLocation = async () => {
     let timestamp = new Date().getTime().toString();
     ConfigService.setItem("lastSyncTime", timestamp);
-    backupToConfigJson();
+    await backupToConfigJson();
+    await backupToSyncJson();
     toast.success(
       this.props.t("Synchronisation successful") +
         " (" +
@@ -661,6 +697,21 @@ class Header extends React.Component<HeaderProps, HeaderState> {
                 this.setState({ isHidePro: true });
               }}
             ></span>
+          </div>
+        ) : null}
+
+        {KookitConfig.CloudMode !== "production" ? (
+          <div className="header-report-container" style={{ right: "300px" }}>
+            <span
+              style={{
+                color: "red",
+                opacity: 1,
+                fontWeight: "bold",
+              }}
+            >
+              <Trans>TEST</Trans>
+              <span> </span>
+            </span>
           </div>
         ) : null}
 

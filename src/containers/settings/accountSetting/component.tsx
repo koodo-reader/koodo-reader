@@ -8,9 +8,11 @@ import {
   formatTimestamp,
   getServerRegion,
   getWebsiteUrl,
+  handleAutoCloudSync,
   handleContextMenu,
   openInBrowser,
   reloadManager,
+  vexComfirmAsync,
 } from "../../../utils/common";
 import {
   CommonTool,
@@ -83,6 +85,19 @@ class AccountSetting extends React.Component<
     );
     this.handleRest(this.state[stateName]);
   };
+  handleLogout = async () => {
+    await TokenService.deleteToken("is_authed");
+    await TokenService.deleteToken("access_token");
+    await TokenService.deleteToken("refresh_token");
+
+    this.props.handleFetchAuthed();
+    this.props.handleLoginOptionList([]);
+    ConfigService.removeItem("defaultSyncOption");
+    ConfigService.removeItem("dataSourceList");
+    this.props.handleFetchDataSourceList();
+    this.props.handleFetchDefaultSyncOption();
+    toast.success(this.props.t("Log out successful"));
+  };
   handleAddLoginOption = (event: any) => {
     if (!event.target.value) {
       return;
@@ -145,38 +160,63 @@ class AccountSetting extends React.Component<
       toast.error(this.props.t("Missing parameters") + this.props.t("Token"));
       return;
     }
+    toast.loading(this.props.t("Adding"), {
+      id: "adding",
+    });
+    let userRequest = await getUserRequest();
+    let res = await userRequest.addLogin({
+      code: this.state.loginConfig.token,
+      provider: this.state.settingLogin,
+      scope:
+        KookitConfig.LoginAuthRequest[this.state.settingLogin].extraParams
+          .scope,
+      redirect_uri:
+        getServerRegion() === "china" && this.state.settingLogin === "microsoft"
+          ? KookitConfig.ThirdpartyConfig.cnCallbackUrl
+          : KookitConfig.ThirdpartyConfig.callbackUrl,
+    });
+
+    if (res.code === 200) {
+      this.props.handleFetchLoginOptionList();
+      toast.success(this.props.t("Addition successful"), {
+        id: "adding",
+      });
+      this.setState({ settingLogin: "" });
+    } else {
+      if (this.state.settingLogin === "email") {
+        toast(this.props.t("Please make sure the email and code are correct"));
+      }
+      toast.error(this.props.t("Login failed, error code") + ": " + res.msg, {
+        id: "adding",
+      });
+    }
+  };
+  handleLoginRegister = async () => {
+    if (!this.state.loginConfig.token || !this.state.settingLogin) {
+      toast.error(this.props.t("Missing parameters") + this.props.t("Token"));
+      return;
+    }
     toast.loading(this.props.t("Logging in"), {
       id: "bind-login-option",
     });
-    let res = { code: 200, msg: "success" };
-    if (this.props.isAuthed) {
-      let userRequest = await getUserRequest();
-      res = await userRequest.addLogin({
-        code: this.state.loginConfig.token,
-        provider: this.state.settingLogin,
-        scope:
-          KookitConfig.LoginAuthRequest[this.state.settingLogin].extraParams
-            .scope,
-        redirect_uri:
-          getServerRegion() === "china" &&
-          this.state.settingLogin === "microsoft"
-            ? KookitConfig.ThirdpartyConfig.cnCallbackUrl
-            : KookitConfig.ThirdpartyConfig.callbackUrl,
-      });
-    } else {
-      res = await loginRegister(
-        this.state.settingLogin,
-        this.state.loginConfig.token
-      );
-    }
+    let res = await loginRegister(
+      this.state.settingLogin,
+      this.state.loginConfig.token
+    );
+
     if (res.code === 200) {
+      this.props.handleFetchAuthed();
+      this.props.handleFetchLoginOptionList();
+      let result = await handleAutoCloudSync();
+      if (result) {
+        this.props.cloudSyncFunc();
+      } else {
+        ConfigService.removeItem("defaultSyncOption");
+        ConfigService.removeItem("dataSourceList");
+      }
       toast.success(this.props.t("Login successful"), {
         id: "bind-login-option",
       });
-      this.props.handleFetchAuthed();
-      this.props.handleFetchLoginOptionList();
-      ConfigService.removeItem("defaultSyncOption");
-      ConfigService.removeItem("dataSourceList");
       this.props.handleFetchDataSourceList();
       this.props.handleFetchDefaultSyncOption();
       this.props.handleFetchUserInfo();
@@ -228,7 +268,11 @@ class AccountSetting extends React.Component<
               <div
                 className="voice-add-confirm"
                 onClick={async () => {
-                  this.handleConfirmLoginOption();
+                  if (this.props.isAuthed) {
+                    this.handleConfirmLoginOption();
+                    return;
+                  }
+                  this.handleLoginRegister();
                 }}
               >
                 <Trans>Bind</Trans>
@@ -344,7 +388,11 @@ class AccountSetting extends React.Component<
               <div
                 className="voice-add-confirm"
                 onClick={async () => {
-                  this.handleConfirmLoginOption();
+                  if (this.props.isAuthed) {
+                    this.handleConfirmLoginOption();
+                    return;
+                  }
+                  this.handleLoginRegister();
                 }}
               >
                 <Trans>Bind</Trans>
@@ -371,6 +419,11 @@ class AccountSetting extends React.Component<
                   onClick={async () => {
                     if (!this.state.loginConfig.email) {
                       toast.error(this.props.t("Enter your email"));
+                      return;
+                    }
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    if (!emailRegex.test(this.state.loginConfig.email)) {
+                      toast.error(this.props.t("Invalid email format"));
                       return;
                     }
                     if (this.state.isSendingCode || this.state.countdown) {
@@ -567,10 +620,36 @@ class AccountSetting extends React.Component<
             {this.props.isAuthed ? "Server region" : "Select server region"}
           </Trans>
           {this.props.isAuthed ? (
-            <div className="lang-setting-option">
+            <div
+              className="lang-setting-option"
+              style={{ display: "flex", alignItems: "center" }}
+            >
               <Trans>
                 {getServerRegion() === "china" ? "China" : "Global"}
               </Trans>
+              <span
+                className="change-location-button"
+                style={{ marginLeft: "10px" }}
+                onClick={async () => {
+                  let result = await vexComfirmAsync(
+                    "We have two server regions(Global and China). To change the server region, you need to log out first. Do you want to log out now?"
+                  );
+                  if (result) {
+                    let newRegion =
+                      getServerRegion() === "china" ? "global" : "china";
+                    ConfigService.setItem("serverRegion", newRegion);
+                    this.setState({
+                      serverRegion: newRegion,
+                    });
+                    resetReaderRequest();
+                    resetUserRequest();
+                    resetThirdpartyRequest();
+                    await this.handleLogout();
+                  }
+                }}
+              >
+                <Trans>Change</Trans>
+              </span>
             </div>
           ) : (
             <select
@@ -579,13 +658,6 @@ class AccountSetting extends React.Component<
               onChange={(event) => {
                 if (!event.target.value) {
                   return;
-                }
-                if (event.target.value === "china") {
-                  toast(
-                    this.props.t(
-                      "Some login options and data sources are not available in your selected server region"
-                    )
-                  );
                 }
                 ConfigService.setItem("serverRegion", event.target.value);
                 this.setState({
@@ -622,109 +694,96 @@ class AccountSetting extends React.Component<
               className="lang-setting-dropdown"
               onChange={this.handleAddLoginOption}
             >
-              {[
-                { label: "Please select", value: "" },
-                ...loginList.filter((item) => {
-                  if (getServerRegion() === "china") {
-                    return item.isCNAvailable;
-                  }
-                  return true;
-                }),
-              ].map((item) => (
-                <option
-                  value={item.value}
-                  key={item.value}
-                  className="lang-setting-option"
-                >
-                  {this.props.t(item.label)}
-                </option>
-              ))}
+              {[{ label: "Please select", value: "" }, ...loginList].map(
+                (item) => (
+                  <option
+                    value={item.value}
+                    key={item.value}
+                    className="lang-setting-option"
+                  >
+                    {this.props.t(item.label)}
+                  </option>
+                )
+              )}
             </select>
           </div>
         )}
         {this.props.isAuthed &&
-          loginList
-            .filter((item) => {
-              if (this.state.serverRegion === "china") {
-                return item.isCNAvailable;
-              }
-              return true;
-            })
-            .map((login) => (
-              <div className="setting-dialog-new-title" key={login.value}>
-                <Trans>{this.props.t(login.label)}</Trans>
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    cursor: "pointer",
-                  }}
-                  onClick={() => {
-                    if (
-                      !this.props.loginOptionList.find(
-                        (item) => item.provider === login.value
-                      )
-                    ) {
-                      this.handleAddLoginOption({
-                        target: { value: login.value },
-                      });
-                    }
-                  }}
-                >
-                  <div>
-                    {this.props.loginOptionList.find(
+          loginList.map((login) => (
+            <div className="setting-dialog-new-title" key={login.value}>
+              <Trans>{this.props.t(login.label)}</Trans>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  cursor: "pointer",
+                }}
+                onClick={() => {
+                  if (
+                    !this.props.loginOptionList.find(
                       (item) => item.provider === login.value
-                    ) ? (
-                      this.props.loginOptionList.find(
-                        (item) => item.provider === login.value
-                      )?.email ? (
-                        <span>
-                          {
-                            this.props.loginOptionList.find(
-                              (item) => item.provider === login.value
-                            )?.email
-                          }
-                        </span>
-                      ) : (
-                        <span>{this.props.t("Bound")}</span>
-                      )
-                    ) : (
-                      <span style={{ opacity: 0.4 }}>
-                        {this.props.t("Not bound")}
-                      </span>
-                    )}
-                  </div>
+                    )
+                  ) {
+                    this.handleAddLoginOption({
+                      target: { value: login.value },
+                    });
+                  }
+                }}
+              >
+                <div>
                   {this.props.loginOptionList.find(
                     (item) => item.provider === login.value
                   ) ? (
-                    <span
-                      className="icon-trash"
-                      style={{
-                        fontSize: 13,
-                        opacity: 0.8,
-                        marginLeft: "10px",
-                      }}
-                      onClick={(event) => {
-                        event.stopPropagation();
-                        this.handleDeleteLoginOption({
-                          target: { value: login.value },
-                        });
-                      }}
-                    ></span>
+                    this.props.loginOptionList.find(
+                      (item) => item.provider === login.value
+                    )?.email ? (
+                      <span>
+                        {
+                          this.props.loginOptionList.find(
+                            (item) => item.provider === login.value
+                          )?.email
+                        }
+                      </span>
+                    ) : (
+                      <span>{this.props.t("Bound")}</span>
+                    )
                   ) : (
-                    <span
-                      className="icon-dropdown"
-                      style={{
-                        fontSize: 13,
-                        opacity: 0.8,
-                        transform: "rotate(-90deg)",
-                        marginLeft: "10px",
-                      }}
-                    ></span>
+                    <span style={{ opacity: 0.4 }}>
+                      {this.props.t("Not bound")}
+                    </span>
                   )}
                 </div>
+                {this.props.loginOptionList.find(
+                  (item) => item.provider === login.value
+                ) ? (
+                  <span
+                    className="icon-trash"
+                    style={{
+                      fontSize: 13,
+                      opacity: 0.8,
+                      marginLeft: "10px",
+                    }}
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      this.handleDeleteLoginOption({
+                        target: { value: login.value },
+                      });
+                    }}
+                  ></span>
+                ) : (
+                  <span
+                    className="icon-dropdown"
+                    style={{
+                      fontSize: 13,
+                      opacity: 0.8,
+                      transform: "rotate(-90deg)",
+                      marginLeft: "10px",
+                    }}
+                  ></span>
+                )}
               </div>
-            ))}
+            </div>
+          ))}
 
         {this.props.isAuthed && (
           <div className="setting-dialog-new-title">
@@ -733,17 +792,7 @@ class AccountSetting extends React.Component<
             <span
               className="change-location-button"
               onClick={async () => {
-                await TokenService.deleteToken("is_authed");
-                await TokenService.deleteToken("access_token");
-                await TokenService.deleteToken("refresh_token");
-
-                this.props.handleFetchAuthed();
-                this.props.handleLoginOptionList([]);
-                ConfigService.removeItem("defaultSyncOption");
-                ConfigService.removeItem("dataSourceList");
-                this.props.handleFetchDataSourceList();
-                this.props.handleFetchDefaultSyncOption();
-                toast.success(this.props.t("Log out successful"));
+                await this.handleLogout();
                 reloadManager();
               }}
             >

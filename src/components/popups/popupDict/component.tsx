@@ -28,6 +28,7 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
       dictTarget: ConfigService.getReaderConfig("dictTarget") || "en",
       dictSource: ConfigService.getReaderConfig("dictSource") || "en",
       isAddNew: false,
+      isShowUrl: false,
     };
   }
   componentDidMount() {
@@ -104,7 +105,7 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
       }
 
       if (dictText.startsWith("https://")) {
-        openExternalUrl(dictText, true);
+        openExternalUrl(dictText, true, "dict");
       } else {
         this.setState(
           {

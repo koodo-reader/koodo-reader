@@ -19,6 +19,7 @@ import {
   showTaskProgress,
   testConnection,
   testCORS,
+  vexComfirmAsync,
 } from "../../../utils/common";
 import { getStorageLocation } from "../../../utils/common";
 import { driveInputConfig, driveList } from "../../../constants/driveList";
@@ -237,17 +238,37 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
               onClick={async () => {
                 switch (item.propName) {
                   case "isEnableKoodoSync":
-                    updateUserConfig({
-                      is_enable_koodo_sync: !this.state.isEnableKoodoSync
-                        ? "yes"
-                        : "no",
-                      default_sync_option: this.props.defaultSyncOption,
-                    });
                     this.handleSetting(item.propName);
+                    let encryptToken = await TokenService.getToken(
+                      this.props.defaultSyncOption + "_token"
+                    );
+                    await updateUserConfig({
+                      is_enable_koodo_sync:
+                        ConfigService.getReaderConfig("isEnableKoodoSync"),
+                      default_sync_option: this.props.defaultSyncOption,
+                      default_sync_token: encryptToken || "",
+                    });
+                    await this.props.handleFetchUserInfo();
+                    if (
+                      ConfigService.getReaderConfig("isEnableKoodoSync") ===
+                      "yes"
+                    ) {
+                      this.props.cloudSyncFunc();
+                    }
+
                     break;
                   case "autoOffline":
                     this.handleSetting(item.propName);
                     if (!this.state.autoOffline) {
+                      if (this.props.defaultSyncOption === "adrive") {
+                        toast.error(
+                          this.props.t(
+                            "Due to Aliyun Drive's stringent concurrency restrictions, we have bypassed the synchronization of books and covers. Please manually download the books by clicking on them"
+                          ),
+                          { id: "autoOffline" }
+                        );
+                        return;
+                      }
                       let downloadTasks = await SyncHelper.syncBook(
                         ConfigService,
                         BookUtil
@@ -262,9 +283,11 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                         ConfigService.getItem("defaultSyncOption")
                       );
                       clearInterval(timer);
+
                       toast.success(this.props.t("Download completed"), {
                         id: "autoOffline",
                       });
+
                       setTimeout(() => {
                         toast.dismiss("syncing");
                       }, 3000);
@@ -586,12 +609,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                 isPro: false,
                 support: ["desktop", "browser", "phone"],
               },
-              ...driveList.filter((item) => {
-                if (getServerRegion() === "china") {
-                  return item.isCNAvailable;
-                }
-                return true;
-              }),
+              ...driveList,
             ]
               .filter((item) => !this.props.dataSourceList.includes(item.value))
               .filter((item) => {
@@ -622,15 +640,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
             className="lang-setting-dropdown"
             onChange={this.handleDeleteDataSource}
           >
-            {[
-              { label: "Please select", value: "", isPro: false },
-              ...driveList.filter((item) => {
-                if (getServerRegion() === "china") {
-                  return item.isCNAvailable;
-                }
-                return true;
-              }),
-            ]
+            {[{ label: "Please select", value: "", isPro: false }, ...driveList]
               .filter(
                 (item) =>
                   this.props.dataSourceList.includes(item.value) ||
@@ -666,21 +676,21 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                     onlineBooks.push(this.props.books[i]);
                   }
                 }
-                if (onlineBooks.length > 0) {
-                  window.vex.dialog.confirm({
-                    message: this.props.t(
-                      "Some of your books are currently not downloaded to the local. Changing the default sync option may lead to data loss. We recommend downloading all books to the local by turn on Auto download cloud books in the setting before changing the default sync option. Click 'OK' to proceed without downloading."
-                    ),
-                    callback: (value) => {
-                      if (value) {
-                        this.handleSetDefaultSyncOption({
-                          target: { value: newValue },
-                        });
-                      } else {
-                        event.target.value = currentValue;
-                      }
-                    },
-                  });
+                if (
+                  onlineBooks.length > 0 &&
+                  this.props.defaultSyncOption &&
+                  newValue !== this.props.defaultSyncOption
+                ) {
+                  let result = await vexComfirmAsync(
+                    "Some of your books are currently not downloaded to the local. Changing the default sync option may lead to data loss. We recommend downloading all books to the local by turn on Auto download cloud books in the setting before changing the default sync option. Click 'OK' to proceed without downloading."
+                  );
+                  if (result) {
+                    this.handleSetDefaultSyncOption({
+                      target: { value: newValue },
+                    });
+                  } else {
+                    event.target.value = currentValue;
+                  }
                 } else {
                   this.handleSetDefaultSyncOption(event);
                 }
@@ -688,12 +698,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
             >
               {[
                 { label: "Please select", value: "", isPro: false },
-                ...driveList.filter((item) => {
-                  if (getServerRegion() === "china") {
-                    return item.isCNAvailable;
-                  }
-                  return true;
-                }),
+                ...driveList,
               ]
                 .filter(
                   (item) =>
@@ -719,19 +724,28 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
 
         {this.props.isAuthed && this.renderSwitchOption(syncSettingList)}
         {this.props.isAuthed && (
-          <div className="setting-dialog-new-title">
-            <Trans>Reset sync records</Trans>
+          <>
+            <div className="setting-dialog-new-title">
+              <Trans>Reset sync records</Trans>
 
-            <span
-              className="change-location-button"
-              onClick={async () => {
-                await generateSyncRecord();
-                toast.success(this.props.t("Reset successful"));
-              }}
-            >
-              <Trans>Reset</Trans>
-            </span>
-          </div>
+              <span
+                className="change-location-button"
+                onClick={async () => {
+                  await generateSyncRecord();
+                  toast.success(this.props.t("Reset successful"));
+                }}
+              >
+                <Trans>Reset</Trans>
+              </span>
+            </div>
+            <p className="setting-option-subtitle">
+              <Trans>
+                {
+                  "Data in other devices is messed up, but the data in this device is normal. You can reset the sync record in this device, delete the KoodoReader/config folder in the data source(Turn off Koodo Sync if necessary), and sync again. This should resolve the issue"
+                }
+              </Trans>
+            </p>
+          </>
         )}
       </>
     );

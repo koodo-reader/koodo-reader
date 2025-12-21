@@ -194,6 +194,9 @@ export const zipBook = (zip: any) => {
       }
       resolve(true);
     } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
+      toast.error(errorMessage);
       resolve(false);
     }
   });
@@ -235,6 +238,9 @@ export const zipConfig = (
         .file("sync.json", sync);
       resolve(true);
     } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
+      toast.error(errorMessage);
       resolve(false);
     }
   });

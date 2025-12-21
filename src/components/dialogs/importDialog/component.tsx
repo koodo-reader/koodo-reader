@@ -368,12 +368,6 @@ class ImportDialog extends React.Component<
           {this.state.currentDrive === "" && (
             <>
               {driveList
-                .filter((item) => {
-                  if (getServerRegion() === "china") {
-                    return item.isCNAvailable;
-                  }
-                  return true;
-                })
                 .filter(
                   (item) =>
                     !item.scoped &&
