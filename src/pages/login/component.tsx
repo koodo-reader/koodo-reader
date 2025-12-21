@@ -8,6 +8,7 @@ import { loginList } from "../../constants/loginList";
 import {
   generateSyncRecord,
   getServerRegion,
+  handleAutoCloudSync,
   handleContextMenu,
   openInBrowser,
   removeSearchParams,
@@ -88,15 +89,21 @@ class Login extends React.Component<LoginProps, LoginState> {
     let res = await loginRegister(service, code);
     if (res.code === 200) {
       this.props.handleLoadingDialog(false);
-      toast.success(this.props.t("Login successful"));
-      ConfigService.removeItem("defaultSyncOption");
-      ConfigService.removeItem("dataSourceList");
+      let result = await handleAutoCloudSync();
+      if (result) {
+        this.props.cloudSyncFunc();
+      } else {
+        ConfigService.removeItem("defaultSyncOption");
+        ConfigService.removeItem("dataSourceList");
+      }
+
       this.props.handleFetchDataSourceList();
       this.props.handleFetchDefaultSyncOption();
       removeSearchParams();
       this.props.handleFetchAuthed();
       await this.props.handleFetchUserInfo();
-      this.setState({ currentStep: 3 });
+      toast.success(this.props.t("Login successful"));
+      this.setState({ currentStep: result ? 4 : 3 });
       if (ConfigService.getReaderConfig("isProUpgraded") !== "yes") {
         try {
           ConfigService.setReaderConfig("isProUpgraded", "yes");
@@ -329,12 +336,6 @@ class Login extends React.Component<LoginProps, LoginState> {
                       <span
                         onClick={() => {
                           this.handleServerRegionChange("china");
-
-                          toast(
-                            this.props.t(
-                              "Some login options and data sources are not available in your selected server region"
-                            )
-                          );
                         }}
                         style={
                           this.state.serverRegion === "china"
@@ -346,56 +347,48 @@ class Login extends React.Component<LoginProps, LoginState> {
                       </span>
                     </div>
                   </div>
-                  {loginList
-                    .filter((item) => {
-                      if (this.state.serverRegion === "china") {
-                        return item.isCNAvailable;
-                      }
-                      return true;
-                    })
-                    .map((item) => {
-                      return (
-                        <div
-                          className="login-option-container"
-                          key={item.value}
-                          style={{}}
-                          onClick={() => {
-                            if (item.value === "email") {
-                              this.setState({ currentStep: 5 });
-                              return;
+                  {loginList.map((item) => {
+                    return (
+                      <div
+                        className="login-option-container"
+                        key={item.value}
+                        style={{}}
+                        onClick={() => {
+                          if (item.value === "email") {
+                            this.setState({ currentStep: 5 });
+                            return;
+                          }
+                          let url = LoginHelper.getAuthUrl(
+                            item.value,
+                            isElectron ? "desktop" : "browser",
+                            getServerRegion() === "china" &&
+                              item.value === "microsoft"
+                              ? KookitConfig.ThirdpartyConfig.cnCallbackUrl
+                              : KookitConfig.ThirdpartyConfig.callbackUrl
+                          );
+                          if (url) {
+                            if (isElectron) {
+                              openInBrowser(url);
+                            } else {
+                              window.location.replace(url);
                             }
-                            let url = LoginHelper.getAuthUrl(
-                              item.value,
-                              isElectron ? "desktop" : "browser",
-                              getServerRegion() === "china" &&
-                                item.value === "microsoft"
-                                ? KookitConfig.ThirdpartyConfig.cnCallbackUrl
-                                : KookitConfig.ThirdpartyConfig.callbackUrl
-                            );
-                            if (url) {
-                              if (isElectron) {
-                                openInBrowser(url);
-                              } else {
-                                window.location.replace(url);
-                              }
-                            }
-                          }}
-                        >
-                          <div className="login-option-icon">
-                            <span
-                              className={item.icon + " login-option-icon"}
-                              style={{ fontSize: item.fontsize }}
-                            ></span>
-                          </div>
-                          <div className="login-option-title">
-                            <Trans i18nKey="Continue with" label={item.label}>
-                              Continue with{" "}
-                              {{ label: this.props.t(item.label) }}
-                            </Trans>
-                          </div>
+                          }
+                        }}
+                      >
+                        <div className="login-option-icon">
+                          <span
+                            className={item.icon + " login-option-icon"}
+                            style={{ fontSize: item.fontsize }}
+                          ></span>
                         </div>
-                      );
-                    })}
+                        <div className="login-option-title">
+                          <Trans i18nKey="Continue with" label={item.label}>
+                            Continue with {{ label: this.props.t(item.label) }}
+                          </Trans>
+                        </div>
+                      </div>
+                    );
+                  })}
                   <div
                     className="login-manual-token"
                     onClick={() => {
@@ -453,12 +446,6 @@ class Login extends React.Component<LoginProps, LoginState> {
               </div>
               <div className="login-sync-container">
                 {driveList
-                  .filter((item) => {
-                    if (getServerRegion() === "china") {
-                      return item.isCNAvailable;
-                    }
-                    return true;
-                  })
                   .filter((item) => {
                     if (!isElectron) {
                       return item.support.includes("browser");
@@ -710,6 +697,11 @@ class Login extends React.Component<LoginProps, LoginState> {
                       onClick={async () => {
                         if (!this.state.loginConfig.email) {
                           toast.error(this.props.t("Enter your email"));
+                          return;
+                        }
+                        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                        if (!emailRegex.test(this.state.loginConfig.email)) {
+                          toast.error(this.props.t("Invalid email format"));
                           return;
                         }
                         if (this.state.isSendingCode || this.state.countdown) {

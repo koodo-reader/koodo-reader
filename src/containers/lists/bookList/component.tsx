@@ -14,6 +14,7 @@ import ViewMode from "../../../components/viewMode";
 import SelectBook from "../../../components/selectBook";
 import { Trans } from "react-i18next";
 import Book from "../../../models/Book";
+import { isElectron } from "react-device-detect";
 declare var window: any;
 let currentBookMode = "home";
 function getBookCountPerPage() {
@@ -32,6 +33,8 @@ function getBookCountPerPage() {
 
 class BookList extends React.Component<BookListProps, BookListState> {
   private scrollContainer: React.RefObject<HTMLUListElement>;
+  private visibilityChangeHandler: ((event: Event) => void) | null = null;
+  private resizeHandler: (() => void) | null = null;
 
   constructor(props: BookListProps) {
     super(props);
@@ -55,18 +58,57 @@ class BookList extends React.Component<BookListProps, BookListState> {
     if (!this.props.books || !this.props.books[0]) {
       return <Redirect to="manager/empty" />;
     }
-    window.addEventListener("resize", () => {
+
+    // 保存 resize 监听器引用
+    this.resizeHandler = () => {
       //recount the book count per page when the window is resized
       this.props.handleFetchBooks();
-    });
+    };
+    window.addEventListener("resize", this.resizeHandler);
 
     // 设置滚动监听器
     this.setupScrollListener();
+
+    // 保存 visibilitychange 监听器引用
+    this.visibilityChangeHandler = async (event) => {
+      if (document.visibilityState === "visible" && !isElectron) {
+        await this.handleFinishReading();
+      }
+    };
+    document.addEventListener("visibilitychange", this.visibilityChangeHandler);
+
+    if (isElectron) {
+      const { ipcRenderer } = window.require("electron");
+      ipcRenderer.on("reading-finished", async (event: any, config: any) => {
+        this.handleFinishReading();
+      });
+    }
   }
 
   componentWillUnmount() {
     // 清理滚动监听器
     this.cleanupScrollListener();
+
+    // 清理 resize 监听器
+    if (this.resizeHandler) {
+      window.removeEventListener("resize", this.resizeHandler);
+      this.resizeHandler = null;
+    }
+
+    // 清理 visibilitychange 监听器
+    if (this.visibilityChangeHandler) {
+      document.removeEventListener(
+        "visibilitychange",
+        this.visibilityChangeHandler
+      );
+      this.visibilityChangeHandler = null;
+    }
+
+    // 清理 IPC 监听器
+    if (isElectron) {
+      const { ipcRenderer } = window.require("electron");
+      ipcRenderer.removeAllListeners("reading-finished");
+    }
   }
 
   componentDidUpdate(prevProps: BookListProps) {
@@ -88,6 +130,17 @@ class BookList extends React.Component<BookListProps, BookListState> {
       }
     }
   }
+  handleFinishReading = async () => {
+    if (!this.scrollContainer.current) return;
+    if (
+      this.scrollContainer.current &&
+      this.scrollContainer.current.scrollTop > 100
+    ) {
+      //ignore if the scroll is not at top
+    } else {
+      this.props.handleFetchBooks();
+    }
+  };
 
   setupScrollListener = () => {
     const scrollContainer = this.scrollContainer.current;
@@ -109,7 +162,7 @@ class BookList extends React.Component<BookListProps, BookListState> {
 
     const { scrollTop, scrollHeight, clientHeight } = scrollContainer;
     // 当滚动到底部附近时触发加载更多
-    if (scrollTop + clientHeight >= scrollHeight - 100) {
+    if (scrollTop + clientHeight >= scrollHeight - 300) {
       this.loadMoreBooks();
     }
   };

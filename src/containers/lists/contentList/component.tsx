@@ -87,42 +87,49 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
     return false;
   };
 
-  componentDidMount() {
-    if (this.props.htmlBook) {
-      this.setState(
-        {
-          chapters: this.props.htmlBook.chapters,
-        },
-        () => {
-          let bookLocation: {
-            text: string;
-            chapterTitle: string;
-            chapterDocIndex: string;
-            chapterHref: string;
-          } = ConfigService.getObjectConfig(
-            this.props.currentBook.key,
-            "recordLocation",
-            {}
-          );
-
-          // 自动展开包含当前章节的路径
-          if (bookLocation.chapterHref) {
-            const expandedPaths = this.findAndExpandCurrentChapter(
-              this.props.htmlBook.chapters,
-              bookLocation
-            );
-            this.setState({ expandedItems: expandedPaths });
-          }
-
-          let chapter =
-            bookLocation.chapterTitle ||
-            (this.props.htmlBook && this.props.htmlBook.flattenChapters[0]
-              ? ""
-              : "Unknown chapter");
-          scrollContents(chapter, bookLocation.chapterHref);
-        }
-      );
+  UNSAFE_componentWillUpdate(nextProps: Readonly<ContentListProps>): void {
+    if (nextProps.htmlBook && nextProps.htmlBook !== this.props.htmlBook) {
+      this.handleScrollToChapter(nextProps.htmlBook);
     }
+    if (
+      nextProps.currentChapter !== this.props.currentChapter &&
+      this.props.htmlBook
+    ) {
+      this.handleScrollToChapter(this.props.htmlBook);
+    }
+  }
+  async handleScrollToChapter(htmlBook: any) {
+    this.setState(
+      {
+        chapters: htmlBook.chapters,
+      },
+      () => {
+        let bookLocation: {
+          text: string;
+          chapterTitle: string;
+          chapterDocIndex: string;
+          chapterHref: string;
+        } = ConfigService.getObjectConfig(
+          this.props.currentBook.key,
+          "recordLocation",
+          {}
+        );
+
+        // 自动展开包含当前章节的路径
+        if (bookLocation.chapterHref) {
+          const expandedPaths = this.findAndExpandCurrentChapter(
+            htmlBook.chapters,
+            bookLocation
+          );
+          this.setState({ expandedItems: expandedPaths });
+        }
+
+        let chapter =
+          bookLocation.chapterTitle ||
+          (htmlBook && htmlBook.flattenChapters[0] ? "" : "Unknown chapter");
+        scrollContents(chapter, bookLocation.chapterHref);
+      }
+    );
   }
   async handleJump(item: any) {
     await this.props.htmlBook.rendition.goToChapter(

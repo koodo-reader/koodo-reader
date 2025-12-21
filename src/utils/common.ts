@@ -6,6 +6,7 @@ import {
   CommonTool,
   ConfigService,
   SyncUtil,
+  TokenService,
 } from "../assets/lib/kookit-extra-browser.min";
 import Book from "../models/Book";
 import BookUtil from "./file/bookUtil";
@@ -14,7 +15,7 @@ import DatabaseService from "./storage/databaseService";
 import packageJson from "../../package.json";
 import toast from "react-hot-toast";
 import i18n from "../i18n";
-import { getThirdpartyRequest } from "./request/thirdparty";
+import { getCloudSyncToken, getThirdpartyRequest } from "./request/thirdparty";
 import { getCloudConfig } from "./file/common";
 import SyncService from "./storage/syncService";
 import localforage from "localforage";
@@ -68,6 +69,22 @@ export const vexPromptAsync = (message, placeholder = "", value = "") => {
       value,
       callback: function (input) {
         resolve(input);
+      },
+    });
+  });
+};
+export const vexComfirmAsync = (message) => {
+  return new Promise((resolve) => {
+    window.vex.dialog.buttons.YES.text = i18n.t("Confirm");
+    window.vex.dialog.buttons.NO.text = i18n.t("Cancel");
+    window.vex.dialog.confirm({
+      unsafeMessage: i18n.t(message),
+      callback: (value) => {
+        if (value) {
+          resolve(true);
+        } else {
+          resolve(false);
+        }
       },
     });
   });
@@ -191,10 +208,14 @@ export const reloadManager = () => {
     window.location.reload();
   }
 };
-export const openExternalUrl = (url: string, isPlugin: boolean = false) => {
+export const openExternalUrl = (
+  url: string,
+  isPlugin: boolean = false,
+  type: string = "link"
+) => {
   isElectron
     ? ConfigService.getReaderConfig("isUseBuiltIn") === "yes" || isPlugin
-      ? window.require("electron").ipcRenderer.invoke("open-url", { url })
+      ? window.require("electron").ipcRenderer.invoke("open-url", { url, type })
       : window.require("electron").shell.openExternal(url)
     : window.open(url);
 };
@@ -283,8 +304,10 @@ export const loadFontData = async () => {
         value: `"${font.fullName}", "${font.postscriptName}", "${font.family}"`,
       };
     });
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    toast.error(errorMessage);
+    console.error(error);
   }
 };
 export const splitSentences = (text) => {
@@ -851,6 +874,7 @@ export const showTaskProgress = async (
             ),
             {
               id: "syncing",
+              duration: 6000,
             }
           );
           clearInterval(timer);
@@ -890,6 +914,7 @@ export const showTaskProgress = async (
             ),
             {
               id: "syncing",
+              duration: 6000,
             }
           );
           clearInterval(timer);
@@ -922,6 +947,29 @@ export const showTaskProgress = async (
   }, 1000);
   return timer;
 };
+export const compareVersions = (version1: string, version2: string) => {
+  // Split strings by '.' and convert segments to numbers
+  const parts1 = version1.split(".").map(Number);
+  const parts2 = version2.split(".").map(Number);
+
+  // Determine the maximum length to handle unequal segment counts
+  const maxLength = Math.max(parts1.length, parts2.length);
+
+  for (let i = 0; i < maxLength; i++) {
+    // Use 0 for missing segments in shorter versions
+    const part1 = parts1[i] || 0;
+    const part2 = parts2[i] || 0;
+
+    if (part1 > part2) {
+      return 1; // version1 is greater
+    }
+    if (part1 < part2) {
+      return -1; // version2 is greater
+    }
+  }
+
+  return 0; // Versions are equal
+};
 export const clearAllData = async () => {
   localStorage.clear();
   sessionStorage.clear();
@@ -946,14 +994,55 @@ export const clearAllData = async () => {
   await localforage.clear();
 };
 export const resetKoodoSync = async () => {
+  let encryptToken = await TokenService.getToken(
+    ConfigService.getItem("defaultSyncOption") + "_token"
+  );
   await updateUserConfig({
     is_enable_koodo_sync: "no",
     default_sync_option: ConfigService.getItem("defaultSyncOption"),
+    default_sync_token: encryptToken || "",
   });
   setTimeout(() => {
     updateUserConfig({
       is_enable_koodo_sync: "yes",
       default_sync_option: ConfigService.getItem("defaultSyncOption"),
+      default_sync_token: encryptToken || "",
     });
   }, 1000);
+};
+export const handleAutoCloudSync = async () => {
+  let syncRes = await getCloudSyncToken();
+  if (
+    syncRes.code === 200 &&
+    syncRes.data.default_sync_option &&
+    syncRes.data.default_sync_token
+  ) {
+    let supportedSources = driveList
+      .filter((item) => {
+        if (isElectron) {
+          return item.support.includes("desktop");
+        } else {
+          return item.support.includes("browser");
+        }
+      })
+      .map((item) => item.value);
+    if (!supportedSources.includes(syncRes.data.default_sync_option)) {
+      return false;
+    }
+    ConfigService.setItem(
+      "defaultSyncOption",
+      syncRes.data.default_sync_option
+    );
+    ConfigService.setReaderConfig("isEnableKoodoSync", "yes");
+    await TokenService.setToken(
+      syncRes.data.default_sync_option + "_token",
+      syncRes.data.default_sync_token
+    );
+    ConfigService.setListConfig(
+      syncRes.data.default_sync_option,
+      "dataSourceList"
+    );
+    return true;
+  }
+  return false;
 };

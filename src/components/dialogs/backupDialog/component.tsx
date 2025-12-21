@@ -10,11 +10,8 @@ import animationSuccess from "../../../assets/lotties/success.json";
 import _ from "underscore";
 import toast from "react-hot-toast";
 import { isElectron } from "react-device-detect";
-import {
-  ConfigService,
-  TokenService,
-} from "../../../assets/lib/kookit-extra-browser.min";
-import { generateSyncRecord, getServerRegion } from "../../../utils/common";
+import { TokenService } from "../../../assets/lib/kookit-extra-browser.min";
+import { generateSyncRecord } from "../../../utils/common";
 const successOptions = {
   loop: false,
   autoplay: true,
@@ -156,12 +153,7 @@ class BackupDialog extends React.Component<
                 >
                   {[
                     { label: "Local", value: "local", isPro: false },
-                    ...driveList.filter((item) => {
-                      if (getServerRegion() === "china") {
-                        return item.isCNAvailable;
-                      }
-                      return true;
-                    }),
+                    ...driveList,
                     { label: "Add data source", value: "add", isPro: false },
                   ]
                     .filter(
@@ -210,12 +202,7 @@ class BackupDialog extends React.Component<
                 >
                   {[
                     { label: "Local", value: "local", isPro: false },
-                    ...driveList.filter((item) => {
-                      if (getServerRegion() === "china") {
-                        return item.isCNAvailable;
-                      }
-                      return true;
-                    }),
+                    ...driveList,
                     { label: "Add data source", value: "add", isPro: false },
                   ]
                     .filter(

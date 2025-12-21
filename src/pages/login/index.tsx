@@ -19,6 +19,7 @@ const mapStateToProps = (state: stateType) => {
     isSettingOpen: state.manager.isSettingOpen,
     isShowLoading: state.manager.isShowLoading,
     isShowSupport: state.manager.isShowSupport,
+    cloudSyncFunc: state.book.cloudSyncFunc,
   };
 };
 const actionCreator = {

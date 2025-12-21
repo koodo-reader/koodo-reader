@@ -5,7 +5,11 @@ import packageInfo from "../../../../package.json";
 import { Trans } from "react-i18next";
 import Lottie from "react-lottie";
 import animationNew from "../../../assets/lotties/new.json";
-import { getWebsiteUrl, openExternalUrl } from "../../../utils/common";
+import {
+  compareVersions,
+  getWebsiteUrl,
+  openExternalUrl,
+} from "../../../utils/common";
 import { isElectron } from "react-device-detect";
 import { sleep } from "../../../utils/common";
 import {
@@ -60,7 +64,7 @@ class UpdateInfo extends React.Component<UpdateInfoProps, UpdateInfoState> {
       if ((process as any).windowsStore) {
         return;
       }
-      if (packageInfo.version.localeCompare(newVersion) < 0) {
+      if (compareVersions(newVersion, packageInfo.version) > 0) {
         if (
           ConfigService.getReaderConfig("isDisableUpdate") !== "yes" ||
           this.props.isAuthed

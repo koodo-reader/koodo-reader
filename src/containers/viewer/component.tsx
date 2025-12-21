@@ -313,7 +313,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     this.setState({ rendition });
 
     StyleUtil.addDefaultCss();
-    rendition.tranformText();
+    // rendition.tranformText();
     // rendition.setStyle(StyleUtil.getCustomCss());
     let bookLocation: {
       text: string;
@@ -346,23 +346,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         })
       );
     }
-    if (
-      this.props.currentBook.format === "TXT" &&
-      rendition.format !== "CACHE"
-    ) {
-      setTimeout(async () => {
-        await rendition.refreshContent();
-        let chapters = rendition.getChapter();
-        let flattenChapters = rendition.flatChapter(chapters);
-        this.props.handleHtmlBook({
-          key: this.props.currentBook.key,
-          chapters,
-          flattenChapters,
-          rendition: rendition,
-        });
-      }, 1000);
-    }
-
     rendition.on("rendered", async () => {
       this.handleLocation();
       let bookLocation: {
@@ -409,7 +392,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
 
       scrollContents(chapter, bookLocation.chapterHref);
       StyleUtil.addDefaultCss();
-      rendition.tranformText();
+      // rendition.tranformText();
       this.handleBindGesture();
       await this.handleHighlight(rendition);
       lock = true;
@@ -418,6 +401,28 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       }, 1000);
       return false;
     });
+    if (
+      this.props.currentBook.format === "TXT" &&
+      rendition.format !== "CACHE"
+    ) {
+      if (
+        flattenChapters.length === 1 &&
+        flattenChapters[0].label === "Title"
+      ) {
+        return;
+      }
+      setTimeout(async () => {
+        await rendition.refreshContent();
+        let chapters = rendition.getChapter();
+        let flattenChapters = rendition.flatChapter(chapters);
+        this.props.handleHtmlBook({
+          key: this.props.currentBook.key,
+          chapters,
+          flattenChapters,
+          rendition: rendition,
+        });
+      }, 1000);
+    }
   };
 
   handleLocation = () => {

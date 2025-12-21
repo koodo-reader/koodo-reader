@@ -26,4 +26,5 @@ export interface PopupBoxProps {
 export interface PopupBoxStates {
   deleteKey: string;
   rect: DOMRect | null;
+  isShowUrl: boolean;
 }

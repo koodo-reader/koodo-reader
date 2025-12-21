@@ -38,8 +38,10 @@ export const changePath = async (newPath: string) => {
     await fs.copy(oldPath, newPath);
     fs.emptyDirSync(oldPath);
     return true;
-  } catch (err) {
-    console.error(`Error copying folder: ${err}`);
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    toast.error(errorMessage);
+    console.error(`Error copying folder: ${error}`);
     return false;
   }
 };
@@ -72,11 +74,7 @@ const isKoodoLibrary = (folderPath: string) => {
     return false;
   }
   const files = fs.readdirSync(folderPath);
-  return (
-    files.includes("config") &&
-    files.includes("book") &&
-    files.includes("cover")
-  );
+  return files.includes("config");
 };
 export const getLastSyncTimeFromConfigJson = () => {
   const fs = window.require("fs");

@@ -5,9 +5,7 @@ import TextToSpeech from "../../textToSpeech";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import { readerSettingList } from "../../../constants/settingList";
 import toast from "react-hot-toast";
-import BookUtil from "../../../utils/file/bookUtil";
-import { vexPromptAsync } from "../../../utils/common";
-declare var window: any;
+import { vexComfirmAsync } from "../../../utils/common";
 class SettingSwitch extends React.Component<
   SettingSwitchProps,
   SettingSwitchState
@@ -132,19 +130,20 @@ class SettingSwitch extends React.Component<
                       break;
                     case "isHideMenuButton":
                       if (!this.state["isHideMenuButton"]) {
-                        window.vex.dialog.confirm({
-                          message: this.props.t(
-                            "After hiding the menu button, you can move the mouse to the edge of the window to show it again."
-                          ),
-                          callback: (value) => {
-                            if (value) {
-                              this.props.handleHideMenuButton(
-                                !this.state.isHideMenuButton
-                              );
-                              this.handleChange("isHideMenuButton");
-                            }
-                          },
-                        });
+                        let result = await vexComfirmAsync(
+                          "After hiding the menu button, you can move the mouse to the edge of the window to show it again."
+                        );
+                        if (result) {
+                          this.props.handleHideMenuButton(
+                            !this.state.isHideMenuButton
+                          );
+                          ConfigService.setReaderConfig(
+                            "isHideMenuButton",
+                            "yes"
+                          );
+
+                          toast(this.props.t("Change successful"));
+                        }
                       } else {
                         this.props.handleHideMenuButton(
                           !this.state.isHideMenuButton

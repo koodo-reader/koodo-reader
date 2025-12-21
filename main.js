@@ -13,6 +13,7 @@ const {
 const path = require("path");
 const isDev = require("electron-is-dev");
 const Store = require("electron-store");
+const log = require('electron-log/main');
 const os = require("os");
 const store = new Store();
 const fs = require("fs");
@@ -22,7 +23,9 @@ const packageJson = require("./package.json");
 let mainWin;
 let readerWindow;
 let readerWindowList = []
-let urlWindow;
+let dictWindow;
+let transWindow;
+let linkWindow;
 let mainView;
 //multi tab
 // let mainViewList = []
@@ -37,6 +40,9 @@ var filePath = null;
 if (process.platform != "darwin" && process.argv.length >= 2) {
   filePath = process.argv[1];
 }
+log.transports.file.fileName = "debug.log";
+log.transports.file.maxSize = 1024 * 1024; // 1MB
+log.initialize();
 store.set(
   "appVersion", packageJson.version,
 );
@@ -94,7 +100,7 @@ const getDBConnection = (dbName, storagePath, sqlStatement) => {
     if (!fs.existsSync(path.join(storagePath, "config"))) {
       fs.mkdirSync(path.join(storagePath, "config"), { recursive: true });
     }
-    dbConnection[dbName] = new Database(path.join(storagePath, "config", `${dbName}.db`), { verbose: console.log });
+    dbConnection[dbName] = new Database(path.join(storagePath, "config", `${dbName}.db`), {});
     dbConnection[dbName].pragma('journal_mode = WAL');
     dbConnection[dbName].exec(sqlStatement["createTableStatement"][dbName]);
   }
@@ -193,6 +199,10 @@ const createMainWin = () => {
     ? "http://localhost:3000"
     : `file://${path.join(__dirname, "./build/index.html")}`;
   mainWin.loadURL(urlLocation);
+  mainWin.webContents.on('console-message', (event, level, message, line, sourceId) => {
+    console.log(`[Renderer Console] Message: ${message}`);
+    // 这里你可以进一步处理消息，例如写入文件或发送到其他地方
+  });
 
   mainWin.on("close", () => {
     if (mainWin && !mainWin.isDestroyed()) {
@@ -327,6 +337,12 @@ const createMainWin = () => {
         readerWindowList.push(readerWindow)
       }
       readerWindow = new BrowserWindow(options);
+      readerWindow.webContents.on('console-message', (event, level, message, line, sourceId) => {
+        console.log(`[Renderer Console] Message: ${message}`);
+      });
+      if (store.get("isAlwaysOnTop") === "yes") {
+        readerWindow.setAlwaysOnTop(true);
+      }
       readerWindow.loadURL(url);
       readerWindow.maximize();
     } else {
@@ -349,6 +365,9 @@ const createMainWin = () => {
         frame: isMergeWord === "yes" ? false : true,
         hasShadow: isMergeWord === "yes" ? false : true,
         transparent: isMergeWord === "yes" ? true : false,
+      });
+      readerWindow.webContents.on('console-message', (event, level, message, line, sourceId) => {
+        console.log(`[Renderer Console] Message: ${message}`);
       });
       readerWindow.loadURL(url);
       // readerWindow.webContents.openDevTools();
@@ -647,6 +666,12 @@ const createMainWin = () => {
 
     return "pong";
   })
+  ipcMain.handle("get-debug-logs", async (event, config) => {
+    const { shell } = require("electron");
+    const file = log.transports.file.getFile();
+    shell.showItemInFolder(file.path);
+    return "pong";
+  })
 
   ipcMain.on("user-data", (event, arg) => {
     event.returnValue = dirPath;
@@ -782,11 +807,26 @@ const createMainWin = () => {
     }
   });
   ipcMain.handle("open-url", (event, config) => {
-    if (!urlWindow || urlWindow.isDestroyed()) {
-      urlWindow = new BrowserWindow();
+    if (config.type === "dict") {
+      if (!dictWindow || dictWindow.isDestroyed()) {
+        dictWindow = new BrowserWindow();
+      }
+      dictWindow.loadURL(config.url);
+      dictWindow.focus();
+    } else if (config.type === "trans") {
+      if (!transWindow || transWindow.isDestroyed()) {
+        transWindow = new BrowserWindow();
+      }
+      transWindow.loadURL(config.url);
+      transWindow.focus();
+    } else {
+      if (!linkWindow || linkWindow.isDestroyed()) {
+        linkWindow = new BrowserWindow();
+      }
+      linkWindow.loadURL(config.url);
+      linkWindow.focus();
     }
-    urlWindow.loadURL(config.url);
-    urlWindow.focus();
+
     event.returnvalue = true;
   });
   ipcMain.handle("switch-moyu", (event, arg) => {
@@ -820,6 +860,12 @@ const createMainWin = () => {
         readerWindowList.push(readerWindow)
       }
       readerWindow = new BrowserWindow(options);
+      readerWindow.webContents.on('console-message', (event, level, message, line, sourceId) => {
+        console.log(`[Renderer Console] Message: ${message}`);
+      });
+      if (store.get("isAlwaysOnTop") === "yes") {
+        readerWindow.setAlwaysOnTop(true);
+      }
 
       readerWindow.loadURL(store.get("url"));
       readerWindow.on("close", (event) => {
@@ -839,13 +885,26 @@ const createMainWin = () => {
         if (store.get("isPreventSleep") && !readerWindow.isDestroyed()) {
           id && powerSaveBlocker.stop(id);
         }
-        mainWin.webContents.send('reading-finished', {});
+        if (mainWin && !mainWin.isDestroyed()) {
+          mainWin.webContents.send('reading-finished', {});
+        }
       });
     }
     event.returnvalue = false;
   });
   ipcMain.on("storage-location", (event, config) => {
     event.returnValue = path.join(dirPath, "data");
+  });
+  ipcMain.on("url-window-status", (event, config) => {
+    console.log(config, 'url status')
+    if (config.type === "dict") {
+      event.returnValue = dictWindow && !dictWindow.isDestroyed() ? true : false;
+    } else if (config.type === "trans") {
+      event.returnValue = transWindow && !transWindow.isDestroyed() ? true : false;
+    } else {
+      event.returnValue = linkWindow && !linkWindow.isDestroyed() ? true : false;
+    }
+
   });
   ipcMain.on("get-dirname", (event, arg) => {
     event.returnValue = __dirname;
@@ -904,7 +963,26 @@ app.on('second-instance', (event, commandLine) => {
     handleCallback(url);
   }
 });
-
+const originalConsoleLog = console.log;
+console.log = function (...args) {
+  originalConsoleLog(...args); // 保留原日志
+  log.info(args.join(' ')); // 写入日志文件
+};
+const originalConsoleError = console.error;
+console.error = function (...args) {
+  originalConsoleError(...args); // 保留原错误日志
+  log.error(args.join(' ')); // 写入错误日志文件
+};
+const originalConsoleWarn = console.warn;
+console.warn = function (...args) {
+  originalConsoleWarn(...args); // 保留原警告日志
+  log.warn(args.join(' ')); // 写入警告日志文件
+};
+const originalConsoleInfo = console.info;
+console.info = function (...args) {
+  originalConsoleInfo(...args); // 保留原信息日志
+  log.info(args.join(' ')); // 写入信息日志文件
+};
 // Handle MacOS deep linking
 app.on('open-url', (event, url) => {
   event.preventDefault();
