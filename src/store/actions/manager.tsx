@@ -12,6 +12,7 @@ import {
   officialTranList,
 } from "../../constants/settingList";
 import toast from "react-hot-toast";
+import BookUtil from "../../utils/file/bookUtil";
 
 export function handleBooks(books: BookModel[]) {
   return { type: "HANDLE_BOOKS", payload: books };
@@ -102,13 +103,112 @@ export function handleNoteSortCode(noteSortCode: {
 }
 
 export function handleFetchBooks() {
-  return (dispatch: Dispatch) => {
-    DatabaseService.getAllRecords("books").then((value) => {
-      let bookArr: any = value;
-      let keyArr = ConfigService.getAllListConfig("deletedBooks");
-      dispatch(handleDeletedBooks(handleKeyFilter(bookArr, keyArr)));
-      dispatch(handleBooks(handleKeyRemove(bookArr, keyArr)));
-    });
+  return async (dispatch: Dispatch) => {
+    let bookSortCodeStr =
+      ConfigService.getReaderConfig("bookSortCode") || '{"sort":1,"order":2}';
+    let bookSortCode = JSON.parse(bookSortCodeStr);
+    let sortField = "key";
+    switch (bookSortCode.sort) {
+      case 1:
+        sortField = "recentRead";
+        break;
+      case 2:
+        sortField = "name";
+        break;
+      case 3:
+        sortField = "key";
+        break;
+      case 4:
+        sortField = "readingTime";
+        break;
+      case 5:
+        sortField = "author";
+        break;
+      case 5:
+        sortField = "percentage";
+        break;
+    }
+    let orderField = "ASC";
+    if (bookSortCode.order === 2) {
+      orderField = "DESC";
+    }
+    let bookList: { key: string }[] = [];
+    if (sortField === "recentRead") {
+      let allBookKeys = await DatabaseService.getAllRecordKeys("books");
+      let recentBookLKeys = ConfigService.getAllListConfig("recentBooks") || [];
+      let sortedKeys = [
+        ...recentBookLKeys,
+        ...allBookKeys.filter((key) => !recentBookLKeys.includes(key)),
+      ];
+      if (bookSortCode.order === 1) {
+        sortedKeys = sortedKeys.reverse();
+      }
+      sortedKeys = sortedKeys;
+      bookList = sortedKeys.map((key: string) => {
+        return { key };
+      });
+    } else if (sortField === "readingTime") {
+      let allBookKeys = await DatabaseService.getAllRecordKeys("books");
+      let durationObj = ConfigService.getAllObjectConfig("readingTime");
+      var sortable: any[] = [];
+      for (let obj in durationObj) {
+        sortable.push([obj, durationObj[obj]]);
+      }
+      sortable.sort(function (a, b) {
+        return a[1] - b[1];
+      });
+      let recentBookLKeys = Object.keys(durationObj) || [];
+      let sortedKeys = [
+        ...recentBookLKeys,
+        ...allBookKeys.filter((key) => !recentBookLKeys.includes(key)),
+      ];
+      if (bookSortCode.order === 1) {
+        sortedKeys = sortedKeys.reverse();
+      }
+      sortedKeys = sortedKeys;
+      bookList = sortedKeys.map((key: string) => {
+        return { key };
+      });
+    } else if (sortField === "percentage") {
+      let allBookKeys = await DatabaseService.getAllRecordKeys("books");
+      let locationObj = ConfigService.getAllObjectConfig("recordLocation");
+      var sortable: any[] = [];
+      for (let obj in locationObj) {
+        sortable.push([obj, locationObj[obj].percentage || 0]);
+      }
+      sortable.sort(function (a, b) {
+        return a[1] - b[1];
+      });
+      let recentBookLKeys = sortable.map((item) => item[0]) || [];
+      let sortedKeys = [
+        ...recentBookLKeys,
+        ...allBookKeys.filter((key) => !recentBookLKeys.includes(key)),
+      ];
+      if (bookSortCode.order === 1) {
+        sortedKeys = sortedKeys.reverse();
+      }
+      sortedKeys = sortedKeys;
+      bookList = sortedKeys.map((key: string) => {
+        return { key };
+      });
+    } else {
+      bookList = await BookUtil.getBookKeysWithSort(sortField, orderField);
+    }
+
+    let deletedBookKeys = ConfigService.getAllListConfig("deletedBooks");
+    let books = bookList.filter(
+      (item: { key: string }) => !deletedBookKeys.includes(item.key)
+    );
+    dispatch(handleBooks(books as BookModel[]));
+    dispatch(
+      handleDeletedBooks(deletedBookKeys.map((key) => ({ key })) as BookModel[])
+    );
+    // DatabaseService.getAllRecords("books").then((value) => {
+    //   let bookArr: any = value;
+    //   let keyArr = ConfigService.getAllListConfig("deletedBooks");
+    //   dispatch(handleDeletedBooks(handleKeyFilter(bookArr, keyArr)));
+    //   dispatch(handleBooks(handleKeyRemove(bookArr, keyArr)));
+    // });
   };
 }
 export function handleFetchUserInfo() {

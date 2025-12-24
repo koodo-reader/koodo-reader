@@ -44,7 +44,6 @@ const mapStateToProps = (state: stateType) => {
     isOpenAddDialog: state.book.isOpenAddDialog,
     isSettingOpen: state.manager.isSettingOpen,
     isAboutOpen: state.manager.isAboutOpen,
-    isBookSort: state.manager.isBookSort,
     isSortDisplay: state.manager.isSortDisplay,
     isShowLoading: state.manager.isShowLoading,
     isShowNew: state.manager.isShowNew,

@@ -8,10 +8,7 @@ import { Redirect } from "react-router-dom";
 import BookUtil from "../../../utils/file/bookUtil";
 import toast from "react-hot-toast";
 import BookModel from "../../../models/Book";
-import {
-  ConfigService,
-  SortUtil,
-} from "../../../assets/lib/kookit-extra-browser.min";
+import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 class CardList extends React.Component<CardListProps, CardListStates> {
   private containerRef: React.RefObject<HTMLDivElement>;
   private scrollTimer: NodeJS.Timeout | null = null;

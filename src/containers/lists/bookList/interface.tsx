@@ -11,7 +11,6 @@ export interface BookListProps extends RouteComponentProps<any> {
   isCollapsed: boolean;
   currentPage: number;
   totalPage: number;
-  isBookSort: boolean;
   isSelectBook: boolean;
   viewMode: string;
   selectedBooks: string[];

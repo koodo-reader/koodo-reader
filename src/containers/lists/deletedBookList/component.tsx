@@ -8,10 +8,6 @@ import { Trans } from "react-i18next";
 import { BookListProps, BookListState } from "./interface";
 import { Redirect, withRouter } from "react-router-dom";
 import ViewMode from "../../../components/viewMode";
-import {
-  ConfigService,
-  SortUtil,
-} from "../../../assets/lib/kookit-extra-browser.min";
 
 class BookList extends React.Component<BookListProps, BookListState> {
   constructor(props: BookListProps) {
@@ -61,38 +57,7 @@ class BookList extends React.Component<BookListProps, BookListState> {
   };
   renderBookList = () => {
     //get the book data according to different scenarios
-    let books = !this.props.isBookSort
-      ? this.handleKeyFilter(
-          this.props.deletedBooks,
-          ConfigService.getAllListConfig("deletedBooks")
-        )
-      : this.props.isBookSort
-      ? this.handleIndexFilter(
-          this.handleKeyFilter(
-            this.props.deletedBooks,
-            ConfigService.getAllListConfig("deletedBooks")
-          ),
-          //return the sorted book index
-          SortUtil.sortBooks(
-            this.props.deletedBooks,
-            this.props.bookSortCode,
-            ConfigService
-          ) || []
-        )
-      : this.props.isBookSort
-      ? this.handleIndexFilter(
-          this.props.deletedBooks,
-          //return the sorted book index
-          SortUtil.sortBooks(
-            this.props.deletedBooks,
-            this.props.bookSortCode,
-            ConfigService
-          ) || []
-        )
-      : this.handleKeyFilter(
-          this.props.deletedBooks,
-          ConfigService.getAllListConfig("recentBooks")
-        );
+    let books = this.props.deletedBooks;
     if (books.length === 0) {
       return <Redirect to="/manager/empty" />;
     }

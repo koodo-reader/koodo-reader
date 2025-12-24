@@ -511,6 +511,66 @@ class BookUtil {
       return cloudBookList;
     }
   }
+  static async getBookKeysWithSort(sortField: string, orderField: string) {
+    if (isElectron) {
+      const { ipcRenderer } = window.require("electron");
+      return await ipcRenderer.invoke("custom-database-command", {
+        query: `SELECT key FROM books ORDER BY ${sortField} ${orderField}`,
+        dbName: "books",
+        storagePath: getStorageLocation(),
+      });
+    } else {
+      let books: Book[] = (await DatabaseService.getAllRecords("books")) || [];
+      if (sortField === "name") {
+        books.sort((a, b) => {
+          if (orderField === "ASC") {
+            return a.name.localeCompare(b.name);
+          } else {
+            return b.name.localeCompare(a.name);
+          }
+        });
+        return books.map((item) => {
+          return { key: item.key };
+        });
+      } else if (sortField === "author") {
+        books.sort((a, b) => {
+          if (orderField === "ASC") {
+            return a.author.localeCompare(b.author);
+          } else {
+            return b.author.localeCompare(a.author);
+          }
+        });
+        return books.map((item) => {
+          return { key: item.key };
+        });
+      } else if (sortField === "key") {
+        if (orderField === "DESC") {
+          books = books.reverse();
+        }
+        return books.map((item) => {
+          return { key: item.key };
+        });
+      }
+    }
+  }
+  static async getBookByMd5(md5: string) {
+    if (isElectron) {
+      const { ipcRenderer } = window.require("electron");
+      return await ipcRenderer.invoke("custom-database-command", {
+        query: `SELECT * FROM books WHERE md5='${md5}' LIMIT 1`,
+        dbName: "books",
+        storagePath: getStorageLocation(),
+      });
+    } else {
+      let books: Book[] = (await DatabaseService.getAllRecords("books")) || [];
+      for (let book of books) {
+        if (book.md5 === md5) {
+          return book;
+        }
+      }
+      return null;
+    }
+  }
 }
 
 export default BookUtil;

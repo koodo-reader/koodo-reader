@@ -14,7 +14,6 @@ export interface ManagerProps extends RouteComponentProps<any> {
   isDetailDialog: boolean;
   isOpenAddDialog: boolean;
   isOpenImportDialog: boolean;
-  isBookSort: boolean;
   isSortDisplay: boolean;
   isBackup: boolean;
   isSettingOpen: boolean;
