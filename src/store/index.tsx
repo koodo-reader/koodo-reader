@@ -38,7 +38,6 @@ export type stateType = {
     deletedBooks: BookModel[];
     searchResults: number[];
     isSearch: boolean;
-    isBookSort: boolean;
     isSettingOpen: boolean;
     viewMode: string;
     isSortDisplay: boolean;

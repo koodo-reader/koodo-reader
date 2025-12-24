@@ -5,10 +5,7 @@ import BookListItem from "../../../components/bookListItem";
 import BookCoverItem from "../../../components/bookCoverItem";
 import BookModel from "../../../models/Book";
 import { BookListProps, BookListState } from "./interface";
-import {
-  ConfigService,
-  SortUtil,
-} from "../../../assets/lib/kookit-extra-browser.min";
+import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import { Redirect, withRouter } from "react-router-dom";
 import ViewMode from "../../../components/viewMode";
 import SelectBook from "../../../components/selectBook";
@@ -293,46 +290,15 @@ class BookList extends React.Component<BookListProps, BookListState> {
       bookMode === "search"
         ? this.handleIndexFilter(this.props.books, this.props.searchResults)
         : bookMode === "shelf"
-        ? this.handleIndexFilter(
-            this.handleShelf(this.props.books, this.props.shelfTitle),
-            SortUtil.sortBooks(
-              this.handleShelf(this.props.books, this.props.shelfTitle),
-              this.props.bookSortCode,
-              ConfigService
-            ) || []
-          )
+        ? this.handleShelf(this.props.books, this.props.shelfTitle)
         : bookMode === "favorite"
-        ? this.handleIndexFilter(
-            this.handleKeyFilter(
-              this.props.books,
-              ConfigService.getAllListConfig("favoriteBooks")
-            ),
-            SortUtil.sortBooks(
-              this.handleKeyFilter(
-                this.props.books,
-                ConfigService.getAllListConfig("favoriteBooks")
-              ),
-              this.props.bookSortCode,
-              ConfigService
-            ) || []
+        ? this.handleKeyFilter(
+            this.props.books,
+            ConfigService.getAllListConfig("favoriteBooks")
           )
         : bookMode === "hide"
-        ? this.handleIndexFilter(
-            this.handleFilterShelfBook(this.props.books),
-            SortUtil.sortBooks(
-              this.handleFilterShelfBook(this.props.books),
-              this.props.bookSortCode,
-              ConfigService
-            ) || []
-          )
-        : this.handleIndexFilter(
-            this.props.books,
-            SortUtil.sortBooks(
-              this.props.books,
-              this.props.bookSortCode,
-              ConfigService
-            ) || []
-          );
+        ? this.handleFilterShelfBook(this.props.books)
+        : this.props.books;
 
     return {
       books,

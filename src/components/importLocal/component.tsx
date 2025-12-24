@@ -69,18 +69,9 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
   handleFilePath = async (filePath: string) => {
     clickFilePath = filePath;
     let md5 = await calculateFileMD5(await fetchFileFromPath(filePath));
-    if ([...(this.props.books || []), ...this.props.deletedBooks].length > 0) {
-      let isRepeat = false;
-      let repeatBook: BookModel | null = null;
-      [...(this.props.books || []), ...this.props.deletedBooks].forEach(
-        (item) => {
-          if (item.md5 === md5) {
-            isRepeat = true;
-            repeatBook = item;
-          }
-        }
-      );
-      if (isRepeat && repeatBook) {
+    if (this.props.books.length > 0 || this.props.deletedBooks.length > 0) {
+      let repeatBook: BookModel | null = await BookUtil.getBookByMd5(md5);
+      if (repeatBook) {
         this.handleJump(repeatBook);
         return;
       }
@@ -212,34 +203,27 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
     let result: BookModel;
     return new Promise<void>(async (resolve) => {
       let isRepeat = false;
-
-      if (this.props.books && this.props.books.length > 0) {
-        this.props.books.forEach((item) => {
-          if (item.md5 === md5) {
-            isRepeat = true;
-            toast.error(this.props.t("Duplicate book"));
-            return resolve();
-          }
-        });
-      }
-      if (this.props.deletedBooks && this.props.deletedBooks.length > 0) {
-        this.props.deletedBooks.forEach((item) => {
-          if (item.md5 === md5) {
-            isRepeat = true;
-            toast.error(this.props.t("Duplicate book in trash bin"));
-            return resolve();
-          }
-        });
-      }
-      if (!this.props.books) {
-        let books = await DatabaseService.getAllRecords("books");
-        books.forEach((item) => {
-          if (item.md5 === md5) {
-            isRepeat = true;
-            toast.error(this.props.t("Duplicate book"));
-            return resolve();
-          }
-        });
+      let repeatBook: BookModel | null = await BookUtil.getBookByMd5(md5);
+      if (repeatBook) {
+        isRepeat = true;
+        if (this.props.books && this.props.books.length > 0) {
+          this.props.books.forEach((item) => {
+            if (item.key === repeatBook!.key) {
+              toast.error(this.props.t("Duplicate book"));
+              return resolve();
+            }
+          });
+        }
+        if (this.props.deletedBooks && this.props.deletedBooks.length > 0) {
+          this.props.deletedBooks.forEach((item) => {
+            if (item.key === repeatBook!.key) {
+              toast.error(this.props.t("Duplicate book in trash bin"));
+              return resolve();
+            }
+          });
+        }
+        toast.error(this.props.t("Duplicate book"));
+        return resolve();
       }
       if (!isRepeat) {
         let reader = new FileReader();

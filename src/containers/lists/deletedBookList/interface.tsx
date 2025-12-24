@@ -5,7 +5,6 @@ export interface BookListProps extends RouteComponentProps<any> {
   deletedBooks: BookModel[];
   mode: string;
   selectedBooks: string[];
-  isBookSort: boolean;
   isCollapsed: boolean;
   isSelectBook: boolean;
 
