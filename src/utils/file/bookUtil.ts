@@ -571,6 +571,25 @@ class BookUtil {
       return null;
     }
   }
+  static async searchBooksByKeyword(keyword: string) {
+    if (isElectron) {
+      const { ipcRenderer } = window.require("electron");
+      return await ipcRenderer.invoke("custom-database-command", {
+        query: `SELECT * FROM books WHERE name LIKE '%${keyword}%' OR author LIKE '%${keyword}%'`,
+        dbName: "books",
+        storagePath: getStorageLocation(),
+      });
+    } else {
+      let books: Book[] = (await DatabaseService.getAllRecords("books")) || [];
+      let results: Book[] = [];
+      for (let book of books) {
+        if (book.name.includes(keyword) || book.author.includes(keyword)) {
+          results.push(book);
+        }
+      }
+      return results;
+    }
+  }
 }
 
 export default BookUtil;
