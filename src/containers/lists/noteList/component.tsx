@@ -64,14 +64,7 @@ class NoteList extends React.Component<NoteListProps, NoteListState> {
   render() {
     const noteProps = {
       cards: this.props.isSearch
-        ? this.handleFilter(
-            this.props.notes.filter((item) =>
-              this.props.tabMode === "note"
-                ? item.notes !== ""
-                : item.notes === ""
-            ),
-            this.props.searchResults
-          )
+        ? this.props.searchResults
         : this.state.tag.length > 0
         ? this.filterTag(
             this.props.notes.filter((item) =>

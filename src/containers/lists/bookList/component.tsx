@@ -43,7 +43,6 @@ class BookList extends React.Component<BookListProps, BookListState> {
       ).length,
       isHideShelfBook:
         ConfigService.getReaderConfig("isHideShelfBook") === "yes",
-      isRefreshing: false,
       displayedBooksCount: getBookCountPerPage(),
       isLoadingMore: false,
       fullBooksData: [], // 存储从数据库加载的完整书籍数据
@@ -274,7 +273,9 @@ class BookList extends React.Component<BookListProps, BookListState> {
     }
 
     // 使用状态中已加载的完整书籍数据
-    const displayedBooks = this.state.fullBooksData;
+    const displayedBooks = this.props.isSearch
+      ? books
+      : this.state.fullBooksData;
 
     return displayedBooks.map((item: BookModel, index: number) => {
       return this.props.viewMode === "list" ? (
@@ -316,7 +317,7 @@ class BookList extends React.Component<BookListProps, BookListState> {
       : "home";
     let books =
       bookMode === "search"
-        ? this.handleIndexFilter(this.props.books, this.props.searchResults)
+        ? this.props.searchResults
         : bookMode === "shelf"
         ? this.handleShelf(this.props.books, this.props.shelfTitle)
         : bookMode === "favorite"
@@ -327,7 +328,6 @@ class BookList extends React.Component<BookListProps, BookListState> {
         : bookMode === "hide"
         ? this.handleFilterShelfBook(this.props.books)
         : this.props.books;
-
     return {
       books,
       bookMode,
@@ -343,7 +343,6 @@ class BookList extends React.Component<BookListProps, BookListState> {
       return <Redirect to="/manager/empty" />;
     }
     const { books, bookMode } = this.handleBooks();
-
     return (
       <>
         <div
@@ -378,7 +377,7 @@ class BookList extends React.Component<BookListProps, BookListState> {
         >
           <div className="book-list-container">
             <ul className="book-list-item-box" ref={this.scrollContainer}>
-              {!this.state.isRefreshing && this.renderBookList(books, bookMode)}
+              {this.renderBookList(books, bookMode)}
             </ul>
           </div>
         </div>

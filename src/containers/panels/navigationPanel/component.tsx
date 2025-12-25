@@ -328,10 +328,12 @@ class NavigationPanel extends React.Component<
                 <span
                   className="book-bookmark-title"
                   style={
-                    this.state.currentTab === "digests" ? {} : { opacity: 0.5 }
+                    this.state.currentTab === "highlights"
+                      ? {}
+                      : { opacity: 0.5 }
                   }
                   onClick={() => {
-                    this.handleChangeTab("digests");
+                    this.handleChangeTab("highlights");
                   }}
                 >
                   <Trans>Highlight</Trans>
