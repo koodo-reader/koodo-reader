@@ -8,7 +8,7 @@ class SortDialog extends React.Component<SortDialogProps, SortDialogState> {
   constructor(props: SortDialogProps) {
     super(props);
     this.state = {
-      isNote: this.props.mode === "note" || this.props.mode === "digest",
+      isNote: this.props.mode === "note" || this.props.mode === "highlight",
     };
   }
 

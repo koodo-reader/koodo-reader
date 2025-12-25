@@ -244,7 +244,118 @@ class ConfigUtil {
       await syncUtil.uploadFile(type + ".db", "config", dbBlob);
     }
   }
-
+  static async getNotesByBookKeyAndType(
+    bookKey: string,
+    type: string,
+    order: string = "DESC"
+  ) {
+    if (isElectron) {
+      let queryString = "";
+      let data: any[] = [];
+      if (type === "note" && bookKey) {
+        queryString = `SELECT key, bookKey, chapterIndex FROM notes WHERE bookKey = ? AND notes != '' ORDER BY key ${order}`;
+        data = [bookKey];
+      } else if (type === "highlight" && bookKey) {
+        queryString = `SELECT key, bookKey, chapterIndex FROM notes WHERE bookKey = ? AND notes = '' ORDER BY key ${order}`;
+        data = [bookKey];
+      } else if (type === "note" && !bookKey) {
+        queryString = `SELECT key, bookKey, chapterIndex FROM notes WHERE notes != '' ORDER BY key ${order}`;
+      } else if (type === "highlight" && !bookKey) {
+        queryString = `SELECT key, bookKey, chapterIndex FROM notes WHERE notes = '' ORDER BY key ${order}`;
+      } else if (!type && bookKey) {
+        queryString = `SELECT key, bookKey, chapterIndex FROM notes WHERE bookKey = ? ORDER BY key ${order}`;
+        data = [bookKey];
+      } else {
+        queryString = `SELECT key, bookKey, chapterIndex FROM notes ORDER BY key ${order}`;
+      }
+      const { ipcRenderer } = window.require("electron");
+      return await ipcRenderer.invoke("custom-database-command", {
+        dbName: "notes",
+        storagePath: getStorageLocation(),
+        queryString: queryString,
+        data: data,
+      });
+    } else {
+      let notes = await DatabaseService.getAllRecords("notes");
+      let filteredNotes = notes.filter((note) => {
+        let typeMatch =
+          (type === "note" && note.notes !== "") ||
+          (type === "highlight" && note.notes === "") ||
+          !type;
+        let bookKeyMatch = bookKey ? note.bookKey === bookKey : true;
+        return typeMatch && bookKeyMatch;
+      });
+      filteredNotes.sort((a, b) => {
+        if (order === "ASC") {
+          return a.key - b.key;
+        } else {
+          return b.key - a.key;
+        }
+      });
+      return filteredNotes;
+    }
+  }
+  static async searchNotesByKeyword(
+    keyword: string,
+    bookKey: string,
+    type: string
+  ) {
+    if (isElectron) {
+      const { ipcRenderer } = window.require("electron");
+      let queryString = "";
+      let data: any[] = [];
+      if (type === "note" && bookKey) {
+        queryString = `SELECT * FROM notes WHERE bookKey = ? AND (notes LIKE ? OR text LIKE ?) ORDER BY key DESC`;
+        data = [
+          bookKey,
+          `%${keyword.toLowerCase()}%`,
+          `%${keyword.toLowerCase()}%`,
+        ];
+      } else if (type === "highlight" && bookKey) {
+        queryString = `SELECT * FROM notes WHERE bookKey = ? AND (notes = '' AND (notes LIKE ? OR text LIKE ?)) ORDER BY key DESC`;
+        data = [
+          bookKey,
+          `%${keyword.toLowerCase()}%`,
+          `%${keyword.toLowerCase()}%`,
+        ];
+      } else if (type === "note" && !bookKey) {
+        queryString = `SELECT * FROM notes WHERE (notes != '' AND (notes LIKE ? OR text LIKE ?)) ORDER BY key DESC`;
+        data = [`%${keyword.toLowerCase()}%`, `%${keyword.toLowerCase()}%`];
+      } else if (type === "highlight" && !bookKey) {
+        queryString = `SELECT * FROM notes WHERE (notes = '' AND (notes LIKE ? OR text LIKE ?)) ORDER BY key DESC`;
+        data = [`%${keyword.toLowerCase()}%`, `%${keyword.toLowerCase()}%`];
+      } else if (!type && bookKey) {
+        queryString = `SELECT * FROM notes WHERE bookKey = ? AND (notes LIKE ? OR text LIKE ?) ORDER BY key DESC`;
+        data = [
+          bookKey,
+          `%${keyword.toLowerCase()}%`,
+          `%${keyword.toLowerCase()}%`,
+        ];
+      } else {
+        queryString = `SELECT * FROM notes WHERE (notes LIKE ? OR text LIKE ?) ORDER BY key DESC`;
+        data = [`%${keyword.toLowerCase()}%`, `%${keyword.toLowerCase()}%`];
+      }
+      return await ipcRenderer.invoke("custom-database-command", {
+        dbName: "notes",
+        storagePath: getStorageLocation(),
+        queryString: queryString,
+        data: data,
+      });
+    } else {
+      let notes = await DatabaseService.getAllRecords("notes");
+      let filteredNotes = notes.filter(
+        (note) =>
+          ((type === "note" && note.notes !== "") ||
+            (type === "highlight" && note.notes === "") ||
+            !type) &&
+          (note.bookKey === bookKey || !bookKey) &&
+          (note.notes.toLowerCase().includes(keyword.toLowerCase()) ||
+            note.text.toLowerCase().includes(keyword.toLowerCase()))
+      );
+      filteredNotes.sort((a, b) => b.key - a.key);
+      return filteredNotes;
+    }
+  }
   static async dumpConfig(type: string) {
     let config = {};
     if (type === "sync") {
