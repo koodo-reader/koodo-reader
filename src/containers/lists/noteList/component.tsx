@@ -7,6 +7,7 @@ import NoteModel from "../../../models/Note";
 import Empty from "../../emptyPage";
 import { Trans } from "react-i18next";
 import DatabaseService from "../../../utils/storage/databaseService";
+import ConfigUtil from "../../../utils/file/configUtil";
 
 class NoteList extends React.Component<NoteListProps, NoteListState> {
   constructor(props: NoteListProps) {
@@ -15,11 +16,18 @@ class NoteList extends React.Component<NoteListProps, NoteListState> {
       tag: [],
       currentSelectedBook: "",
       bookNamesMap: {},
+      cardList: [],
     };
   }
-  UNSAFE_componentWillMount() {
+  async UNSAFE_componentWillMount() {
     this.props.handleFetchNotes();
     this.handleNamesMap();
+    this.setState({
+      cardList: await ConfigUtil.getNotesByBookKeyAndType(
+        "",
+        this.props.tabMode
+      ),
+    });
   }
   handleNamesMap = async () => {
     let map: any = {};
@@ -66,26 +74,8 @@ class NoteList extends React.Component<NoteListProps, NoteListState> {
       cards: this.props.isSearch
         ? this.props.searchResults
         : this.state.tag.length > 0
-        ? this.filterTag(
-            this.props.notes.filter((item) =>
-              this.props.tabMode === "note"
-                ? item.notes !== ""
-                : item.notes === ""
-            )
-          )
-        : this.state.currentSelectedBook
-        ? this.props.notes
-            .filter((item) =>
-              this.props.tabMode === "note"
-                ? item.notes !== ""
-                : item.notes === ""
-            )
-            .filter((item) => item.bookKey === this.state.currentSelectedBook)
-        : this.props.notes.filter((item) =>
-            this.props.tabMode === "note"
-              ? item.notes !== ""
-              : item.notes === ""
-          ),
+        ? this.filterTag(this.state.cardList)
+        : this.state.cardList,
       mode: this.props.tabMode,
       bookNamesMap: this.state.bookNamesMap,
     };
@@ -111,20 +101,19 @@ class NoteList extends React.Component<NoteListProps, NoteListState> {
               <select
                 name=""
                 className="lang-setting-dropdown"
-                onChange={(event) => {
+                onChange={async (event) => {
                   this.setState({
                     currentSelectedBook: event.target.value,
+                    cardList: await ConfigUtil.getNotesByBookKeyAndType(
+                      event.target.value,
+                      this.props.tabMode
+                    ),
                   });
                 }}
               >
                 {[
                   { value: "", label: this.props.t("Please select") },
-                  ...this.props.notes
-                    .filter((item) =>
-                      this.props.tabMode === "note"
-                        ? item.notes !== ""
-                        : item.notes === ""
-                    )
+                  ...this.state.cardList
                     .map((note) => {
                       return {
                         label:

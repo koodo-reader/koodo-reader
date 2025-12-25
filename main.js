@@ -583,8 +583,8 @@ const createMainWin = () => {
     let db = getDBConnection(dbName, storagePath, SqlStatement.sqlStatement);
     const row = db.prepare(query);
     let result;
-    if (data) {
-      result = row[executeType](data);
+    if (data && data.length > 0) {
+      result = row[executeType](...data);
     } else {
       result = row[executeType]();
     }

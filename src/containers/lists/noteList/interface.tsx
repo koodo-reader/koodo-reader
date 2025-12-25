@@ -15,4 +15,5 @@ export interface NoteListState {
   tag: string[];
   currentSelectedBook: string;
   bookNamesMap: { [key: string]: string };
+  cardList: NoteModel[];
 }

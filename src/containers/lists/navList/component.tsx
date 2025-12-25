@@ -6,17 +6,42 @@ import DeleteIcon from "../../../components/deleteIcon";
 import toast from "react-hot-toast";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import { classes, colors, lines } from "../../../constants/themeList";
+import ConfigUtil from "../../../utils/file/configUtil";
+import DatabaseService from "../../../utils/storage/databaseService";
 class NavList extends React.Component<NavListProps, NavListState> {
   constructor(props: NavListProps) {
     super(props);
     this.state = {
       deleteIndex: -1,
+      currentData: [],
     };
   }
-  componentDidMount(): void {
+  async componentDidMount() {
     this.props.htmlBook.rendition.on("rendered", () => {
       this.handleDisplayBookmark();
     });
+    if (this.props.currentTab === "bookmarks") {
+      this.setState({
+        currentData: await DatabaseService.getRecordsByBookKey(
+          this.props.currentBook.key,
+          "bookmarks"
+        ),
+      });
+    } else if (this.props.currentTab === "notes") {
+      this.setState({
+        currentData: await ConfigUtil.getNotesByBookKeyAndType(
+          this.props.currentBook.key,
+          "note"
+        ),
+      });
+    } else {
+      this.setState({
+        currentData: await ConfigUtil.getNotesByBookKeyAndType(
+          this.props.currentBook.key,
+          "highlight"
+        ),
+      });
+    }
   }
   async handleJump(cfi: string) {
     //bookmark redirect
@@ -48,7 +73,7 @@ class NavList extends React.Component<NavListProps, NavListState> {
       })
     );
   }
-  handleDisplayBookmark() {
+  async handleDisplayBookmark() {
     this.props.handleShowBookmark(false);
     let bookLocation: {
       text: string;
@@ -63,7 +88,11 @@ class NavList extends React.Component<NavListProps, NavListState> {
       "recordLocation",
       {}
     );
-    this.props.bookmarks.forEach((item) => {
+    let bookmarks = await DatabaseService.getRecordsByBookKey(
+      this.props.currentBook.key,
+      "bookmarks"
+    );
+    bookmarks.forEach((item) => {
       if (item.cfi === JSON.stringify(bookLocation)) {
         this.props.handleShowBookmark(true);
       }
@@ -83,15 +112,7 @@ class NavList extends React.Component<NavListProps, NavListState> {
         };
   };
   render() {
-    let currentData: any = (
-      (this.props.currentTab === "bookmarks"
-        ? this.props.bookmarks
-        : this.props.currentTab === "notes"
-        ? this.props.notes.filter((item) => item.notes !== "")
-        : this.props.notes.filter((item) => item.notes === "")) as any
-    ).filter((item: any) => {
-      return item.bookKey === this.props.currentBook.key;
-    });
+    const currentData = this.state.currentData;
     const renderBookNavList = () => {
       return currentData.reverse().map((item: any, index: number) => {
         const bookmarkProps = {
