@@ -21,7 +21,7 @@ class NoteList extends React.Component<NoteListProps, NoteListState> {
   }
   async UNSAFE_componentWillMount() {
     this.props.handleFetchNotes();
-    this.handleNamesMap();
+
     this.setState({
       cardList: await ConfigUtil.getNotesByBookKeyAndType(
         "",
@@ -29,15 +29,19 @@ class NoteList extends React.Component<NoteListProps, NoteListState> {
       ),
     });
   }
+  async componentDidMount() {
+    this.handleNamesMap();
+  }
   handleNamesMap = async () => {
     let map: any = {};
-    for (let i = 0; i < this.props.books.length; i++) {
-      let book = await DatabaseService.getRecord(
-        this.props.books[i].key,
-        "books"
-      );
+    let notes = await ConfigUtil.getNotesByBookKeyAndType(
+      "",
+      this.props.tabMode
+    );
+    for (let i = 0; i < notes.length; i++) {
+      let book = await DatabaseService.getRecord(notes[i].bookKey, "books");
       if (book) {
-        map[this.props.books[i].key] = book.name;
+        map[this.props.notes[i].bookKey] = book.name;
       }
     }
 
@@ -113,7 +117,7 @@ class NoteList extends React.Component<NoteListProps, NoteListState> {
               >
                 {[
                   { value: "", label: this.props.t("Please select") },
-                  ...this.state.cardList
+                  ...this.props.notes
                     .map((note) => {
                       return {
                         label:
@@ -124,7 +128,7 @@ class NoteList extends React.Component<NoteListProps, NoteListState> {
                     })
                     .filter(
                       (item, index, self) =>
-                        self.findIndex((t) => t.value === item.value) === index
+                        self.findIndex((t) => t.label === item.label) === index
                     ),
                 ].map((item) => (
                   <option
