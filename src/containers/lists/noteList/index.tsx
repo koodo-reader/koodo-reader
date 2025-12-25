@@ -7,6 +7,7 @@ import { withTranslation } from "react-i18next";
 const mapStateToProps = (state: stateType) => {
   return {
     notes: state.reader.notes,
+    highlights: state.reader.highlights,
     books: state.manager.books,
     isSearch: state.manager.isSearch,
     isCollapsed: state.sidebar.isCollapsed,
