@@ -1,6 +1,5 @@
 import { connect } from "react-redux";
 import {
-  handleFetchList,
   handleFetchBooks,
   handleMode,
   handleShelf,
@@ -14,7 +13,7 @@ const mappropsToProps = (state: stateType) => {
     books: state.manager.books,
     deletedBooks: state.manager.deletedBooks,
     mode: state.sidebar.mode,
-    isBookSort: state.manager.isBookSort,
+
     isCollapsed: state.sidebar.isCollapsed,
     viewMode: state.manager.viewMode,
     bookSortCode: state.manager.bookSortCode,
@@ -25,7 +24,6 @@ const mappropsToProps = (state: stateType) => {
   };
 };
 const actionCreator = {
-  handleFetchList,
   handleMode,
   handleShelf,
   handleDeleteDialog,

@@ -18,7 +18,6 @@ export interface BookListProps extends RouteComponentProps<any> {
   notes: NoteModel[];
   bookSortCode: { sort: number; order: number };
   noteSortCode: { sort: number; order: number };
-  handleFetchList: () => void;
   handleAddDialog: (isShow: boolean) => void;
   handleMode: (mode: string) => void;
   handleFetchBooks: () => void;
@@ -33,4 +32,5 @@ export interface BookListState {
   isRefreshing: boolean;
   displayedBooksCount: number;
   isLoadingMore: boolean;
+  fullBooksData: BookModel[];
 }

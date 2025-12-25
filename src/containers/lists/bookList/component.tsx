@@ -12,6 +12,7 @@ import SelectBook from "../../../components/selectBook";
 import { Trans } from "react-i18next";
 import Book from "../../../models/Book";
 import { isElectron } from "react-device-detect";
+import DatabaseService from "../../../utils/storage/databaseService";
 declare var window: any;
 let currentBookMode = "home";
 function getBookCountPerPage() {
@@ -45,6 +46,7 @@ class BookList extends React.Component<BookListProps, BookListState> {
       isRefreshing: false,
       displayedBooksCount: getBookCountPerPage(),
       isLoadingMore: false,
+      fullBooksData: [], // 存储从数据库加载的完整书籍数据
     };
   }
   UNSAFE_componentWillMount() {
@@ -80,6 +82,9 @@ class BookList extends React.Component<BookListProps, BookListState> {
         this.handleFinishReading();
       });
     }
+
+    // 初始加载完整的书籍数据
+    await this.loadFullBooksData();
   }
 
   componentWillUnmount() {
@@ -125,8 +130,29 @@ class BookList extends React.Component<BookListProps, BookListState> {
       if (this.scrollContainer.current) {
         this.scrollContainer.current.scrollTop = 0;
       }
+      // 重新加载完整的书籍数据
+      this.loadFullBooksData();
     }
   }
+
+  // 从数据库加载完整的书籍数据
+  loadFullBooksData = async () => {
+    const { books } = this.handleBooks();
+    const displayedBooks = books.slice(0, this.state.displayedBooksCount);
+
+    const fullBooksData: Book[] = [];
+    for (let i = 0; i < displayedBooks.length; i++) {
+      const book = await DatabaseService.getRecord(
+        displayedBooks[i].key,
+        "books"
+      );
+      if (book) {
+        fullBooksData.push(book);
+      }
+    }
+
+    this.setState({ fullBooksData });
+  };
   handleFinishReading = async () => {
     if (!this.scrollContainer.current) return;
     if (
@@ -174,14 +200,27 @@ class BookList extends React.Component<BookListProps, BookListState> {
 
     this.setState({ isLoadingMore: true });
     this.props.handleLoadMore(true);
-    // 模拟异步加载延迟
-    setTimeout(() => {
+    // 异步加载更多书籍数据
+    setTimeout(async () => {
+      const newDisplayedBooksCount = Math.min(
+        displayedBooksCount + getBookCountPerPage(),
+        books.length
+      );
+
+      // 加载新增的书籍数据
+      const newBooks = books.slice(displayedBooksCount, newDisplayedBooksCount);
+      const newFullBooksData: Book[] = [];
+      for (let i = 0; i < newBooks.length; i++) {
+        const book = await DatabaseService.getRecord(newBooks[i].key, "books");
+        if (book) {
+          newFullBooksData.push(book);
+        }
+      }
+
       this.setState({
-        displayedBooksCount: Math.min(
-          displayedBooksCount + getBookCountPerPage(),
-          books.length
-        ),
+        displayedBooksCount: newDisplayedBooksCount,
         isLoadingMore: false,
+        fullBooksData: [...this.state.fullBooksData, ...newFullBooksData],
       });
     }, 100);
   };
@@ -234,8 +273,8 @@ class BookList extends React.Component<BookListProps, BookListState> {
       currentBookMode = bookMode;
     }
 
-    // 只渲染指定数量的图书
-    const displayedBooks = books.slice(0, this.state.displayedBooksCount);
+    // 使用状态中已加载的完整书籍数据
+    const displayedBooks = this.state.fullBooksData;
 
     return displayedBooks.map((item: BookModel, index: number) => {
       return this.props.viewMode === "list" ? (
@@ -264,17 +303,6 @@ class BookList extends React.Component<BookListProps, BookListState> {
         />
       );
     });
-  };
-  isElementInViewport = (element) => {
-    const rect = element.getBoundingClientRect();
-
-    return (
-      rect.top >= 0 &&
-      rect.left >= 0 &&
-      rect.bottom <=
-        (window.innerHeight || document.documentElement.clientHeight) &&
-      rect.right <= (window.innerWidth || document.documentElement.clientWidth)
-    );
   };
   handleBooks = () => {
     let bookMode = this.props.isSearch
@@ -315,7 +343,6 @@ class BookList extends React.Component<BookListProps, BookListState> {
       return <Redirect to="/manager/empty" />;
     }
     const { books, bookMode } = this.handleBooks();
-    const hasMoreBooks = this.state.displayedBooksCount < books.length;
 
     return (
       <>

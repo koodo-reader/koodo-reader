@@ -11,7 +11,6 @@ export interface BookListProps extends RouteComponentProps<any> {
   viewMode: string;
   bookSortCode: { sort: number; order: number };
   noteSortCode: { sort: number; order: number };
-  handleFetchList: () => void;
   handleMode: (mode: string) => void;
   handleDeleteDialog: (isShow: boolean) => void;
   handleFetchBooks: () => void;

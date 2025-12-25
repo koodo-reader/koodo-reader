@@ -3,8 +3,6 @@ import {
   handleBookSortCode,
   handleNoteSortCode,
   handleSortDisplay,
-  handleBookSort,
-  handleNoteSort,
 } from "../../../store/actions";
 import { stateType } from "../../../store";
 import SortDialog from "./component";
@@ -21,7 +19,5 @@ const actionCreator = {
   handleBookSortCode,
   handleSortDisplay,
   handleNoteSortCode,
-  handleBookSort,
-  handleNoteSort,
 };
 export default connect(mapStateToProps, actionCreator)(SortDialog as any);

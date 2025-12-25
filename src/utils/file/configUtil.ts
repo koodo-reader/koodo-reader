@@ -274,6 +274,7 @@ class ConfigUtil {
         storagePath: getStorageLocation(),
         queryString: queryString,
         data: data,
+        executeType: "all",
       });
     } else {
       let notes = await DatabaseService.getAllRecords("notes");
@@ -340,6 +341,7 @@ class ConfigUtil {
         storagePath: getStorageLocation(),
         queryString: queryString,
         data: data,
+        executeType: "all",
       });
     } else {
       let notes = await DatabaseService.getAllRecords("notes");

@@ -32,7 +32,7 @@ export interface ManagerProps extends RouteComponentProps<any> {
   handleFetchBookmarks: () => void;
   handleFetchBookSortCode: () => void;
   handleFetchNoteSortCode: () => void;
-  handleFetchList: () => void;
+  handleFetchViewMode: () => void;
   handleEditDialog: (isOpenEditDialog: boolean) => void;
   handleDeleteDialog: (isOpenDeleteDialog: boolean) => void;
   handleAddDialog: (isOpenAddDialog: boolean) => void;
