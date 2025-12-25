@@ -133,18 +133,6 @@ class CardList extends React.Component<CardListProps, CardListStates> {
     }
   };
 
-  handleBookName = (bookKey: string) => {
-    let { books } = this.props;
-    let bookName = "";
-    for (let i = 0; i < this.props.books.length; i++) {
-      if (books[i].key === bookKey) {
-        bookName = books[i].name;
-        break;
-      }
-    }
-    return bookName;
-  };
-
   formatTimestamp = (timestamp: string) => {
     try {
       const date = new Date(parseInt(timestamp));
@@ -230,7 +218,7 @@ class CardList extends React.Component<CardListProps, CardListStates> {
                   <Trans>From</Trans>《
                 </div>
                 <div className="card-list-item-chapter card-list-item-title">
-                  {this.handleBookName(item.bookKey)}
+                  {this.props.bookNamesMap[item.bookKey]}
                 </div>
                 <div className="card-list-item-chapter card-list-item-title">
                   》{item.chapter}

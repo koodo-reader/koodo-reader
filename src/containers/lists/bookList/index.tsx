@@ -1,6 +1,5 @@
 import { connect } from "react-redux";
 import {
-  handleFetchList,
   handleFetchBooks,
   handleMode,
   handleShelf,
@@ -29,7 +28,6 @@ const mappropsToProps = (state: stateType) => {
   };
 };
 const actionCreator = {
-  handleFetchList,
   handleMode,
   handleShelf,
   handleFetchBooks,

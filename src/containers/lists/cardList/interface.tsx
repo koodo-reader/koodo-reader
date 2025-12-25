@@ -16,6 +16,7 @@ export interface CardListProps extends RouteComponentProps<any> {
   handleNoteKey: (noteKey: string) => void;
   t: (title: string) => string;
   handleShowPopupNote: (isShowPopupNote: boolean) => void;
+  bookNamesMap: { [key: string]: string };
 }
 export interface CardListStates {
   displayedCards: NoteModel[];

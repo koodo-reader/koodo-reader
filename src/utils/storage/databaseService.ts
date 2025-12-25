@@ -240,7 +240,7 @@ class DatabaseService {
       let keys = await window
         .require("electron")
         .ipcRenderer.invoke("database-command", {
-          statement: "getAllKeysStatement",
+          statement: "getKeysStatement",
           statementType: "string",
           executeType: "all",
           dbName: dbName,

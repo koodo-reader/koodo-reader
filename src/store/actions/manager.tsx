@@ -79,12 +79,6 @@ export function handleShowSupport(isShowSupport: boolean) {
 export function handleLoadMore(isLoadMore: boolean) {
   return { type: "HANDLE_LOAD_MORE", payload: isLoadMore };
 }
-export function handleBookSort(isBookSort: boolean) {
-  return { type: "HANDLE_BOOK_SORT", payload: isBookSort };
-}
-export function handleNoteSort(isNoteSort: boolean) {
-  return { type: "HANDLE_NOTE_SORT", payload: isNoteSort };
-}
 export function handleAuthed(isAuthed: boolean) {
   return { type: "HANDLE_AUTHED", payload: isAuthed };
 }
@@ -325,7 +319,7 @@ export function handleFetchNoteSortCode() {
     dispatch(handleNoteSortCode(noteSortCode));
   };
 }
-export function handleFetchList() {
+export function handleFetchViewMode() {
   return (dispatch: Dispatch) => {
     let viewMode = ConfigService.getReaderConfig("viewMode") || "card";
     dispatch(handleViewMode(viewMode));

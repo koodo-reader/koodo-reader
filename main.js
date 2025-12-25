@@ -578,7 +578,8 @@ const createMainWin = () => {
     }
   });
   ipcMain.handle("custom-database-command", async (event, config) => {
-    let { query, storagePath, data, dbName } = config;
+    const { SqlStatement } = await import('./src/assets/lib/kookit-extra.min.mjs');
+    let { query, storagePath, data, dbName, executeType } = config;
     let db = getDBConnection(dbName, storagePath, SqlStatement.sqlStatement);
     const row = db.prepare(query);
     let result;

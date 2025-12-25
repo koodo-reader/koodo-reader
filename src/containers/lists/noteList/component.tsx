@@ -6,6 +6,7 @@ import NoteTag from "../../../components/noteTag";
 import NoteModel from "../../../models/Note";
 import Empty from "../../emptyPage";
 import { Trans } from "react-i18next";
+import DatabaseService from "../../../utils/storage/databaseService";
 
 class NoteList extends React.Component<NoteListProps, NoteListState> {
   constructor(props: NoteListProps) {
@@ -13,11 +14,27 @@ class NoteList extends React.Component<NoteListProps, NoteListState> {
     this.state = {
       tag: [],
       currentSelectedBook: "",
+      bookNamesMap: {},
     };
   }
   UNSAFE_componentWillMount() {
     this.props.handleFetchNotes();
+    this.handleNamesMap();
   }
+  handleNamesMap = async () => {
+    let map: any = {};
+    for (let i = 0; i < this.props.books.length; i++) {
+      let book = await DatabaseService.getRecord(
+        this.props.books[i].key,
+        "books"
+      );
+      if (book) {
+        map[this.props.books[i].key] = book.name;
+      }
+    }
+
+    this.setState({ bookNamesMap: map });
+  };
   handleTag = (tag: string[]) => {
     this.setState({ tag });
   };
@@ -77,6 +94,7 @@ class NoteList extends React.Component<NoteListProps, NoteListState> {
               : item.notes === ""
           ),
       mode: this.props.tabMode,
+      bookNamesMap: this.state.bookNamesMap,
     };
     return (
       <div
@@ -115,11 +133,10 @@ class NoteList extends React.Component<NoteListProps, NoteListState> {
                         : item.notes === ""
                     )
                     .map((note) => {
-                      let book = this.props.books.find(
-                        (book) => book.key === note.bookKey
-                      );
                       return {
-                        label: book?.name || "Unknown book",
+                        label:
+                          this.state.bookNamesMap[note.bookKey] ||
+                          "Unknown book",
                         value: note.bookKey,
                       };
                     })

@@ -518,6 +518,7 @@ class BookUtil {
         query: `SELECT key FROM books ORDER BY ${sortField} ${orderField}`,
         dbName: "books",
         storagePath: getStorageLocation(),
+        executeType: "all",
       });
     } else {
       let books: Book[] = (await DatabaseService.getAllRecords("books")) || [];
@@ -560,6 +561,7 @@ class BookUtil {
         query: `SELECT * FROM books WHERE md5='${md5}' LIMIT 1`,
         dbName: "books",
         storagePath: getStorageLocation(),
+        executeType: "get",
       });
     } else {
       let books: Book[] = (await DatabaseService.getAllRecords("books")) || [];
@@ -578,6 +580,7 @@ class BookUtil {
         query: `SELECT * FROM books WHERE name LIKE '%${keyword}%' OR author LIKE '%${keyword}%'`,
         dbName: "books",
         storagePath: getStorageLocation(),
+        executeType: "all",
       });
     } else {
       let books: Book[] = (await DatabaseService.getAllRecords("books")) || [];
@@ -588,6 +591,20 @@ class BookUtil {
         }
       }
       return results;
+    }
+  }
+  static async getBookList() {
+    if (isElectron) {
+      const { ipcRenderer } = window.require("electron");
+      return await ipcRenderer.invoke("custom-database-command", {
+        query: `SELECT key, format, md5 FROM books`,
+        dbName: "books",
+        storagePath: getStorageLocation(),
+        executeType: "all",
+      });
+    } else {
+      let books: Book[] = (await DatabaseService.getAllRecords("books")) || [];
+      return books;
     }
   }
 }
