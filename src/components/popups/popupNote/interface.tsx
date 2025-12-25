@@ -20,4 +20,5 @@ export interface PopupNoteProps {
 export interface PopupNoteState {
   tag: string[];
   text: string;
+  note: NoteModel | null;
 }

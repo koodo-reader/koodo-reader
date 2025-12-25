@@ -13,4 +13,5 @@ export interface NavListProps {
 }
 export interface NavListState {
   deleteIndex: number;
+  currentData: (BookmarkModel | NoteModel)[];
 }

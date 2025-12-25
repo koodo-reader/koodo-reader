@@ -269,10 +269,17 @@ class ConfigUtil {
         queryString = `SELECT key, bookKey, chapterIndex FROM notes ORDER BY key ${order}`;
       }
       const { ipcRenderer } = window.require("electron");
+      console.log({
+        dbName: "notes",
+        storagePath: getStorageLocation(),
+        query: queryString,
+        data: data,
+        executeType: "all",
+      });
       return await ipcRenderer.invoke("custom-database-command", {
         dbName: "notes",
         storagePath: getStorageLocation(),
-        queryString: queryString,
+        query: queryString,
         data: data,
         executeType: "all",
       });
@@ -339,7 +346,7 @@ class ConfigUtil {
       return await ipcRenderer.invoke("custom-database-command", {
         dbName: "notes",
         storagePath: getStorageLocation(),
-        queryString: queryString,
+        query: queryString,
         data: data,
         executeType: "all",
       });
@@ -356,6 +363,78 @@ class ConfigUtil {
       );
       filteredNotes.sort((a, b) => b.key - a.key);
       return filteredNotes;
+    }
+  }
+  static async getNoteWithTag(tagName: string) {
+    if (isElectron) {
+      const { ipcRenderer } = window.require("electron");
+      let queryString = `SELECT * FROM notes WHERE instr(tag, ?) > 0 ORDER BY key DESC`;
+      let data = [tagName];
+      return await ipcRenderer.invoke("custom-database-command", {
+        dbName: "notes",
+        storagePath: getStorageLocation(),
+        query: queryString,
+        data: data,
+        executeType: "all",
+      });
+    } else {
+      let notes = await DatabaseService.getAllRecords("notes");
+      let filteredNotes = notes.filter((note) => note.tag.includes(tagName));
+      filteredNotes.sort((a, b) => b.key - a.key);
+      return filteredNotes;
+    }
+  }
+  static async deleteTagFromNotes(tagName: string) {
+    if (isElectron) {
+      const { ipcRenderer } = window.require("electron");
+      let notes: any[] = await ipcRenderer.invoke("custom-database-command", {
+        dbName: "notes",
+        storagePath: getStorageLocation(),
+        query: `SELECT * FROM notes WHERE instr(tag, ?) > 0`,
+        data: [tagName],
+        executeType: "all",
+      });
+      let updatedNotes = notes.map((item) => {
+        return {
+          ...item,
+          tag: item.tag.filter((subitem: string) => subitem !== tagName),
+        };
+      });
+      for (let i = 0; i < updatedNotes.length; i++) {
+        await ipcRenderer.invoke("custom-database-command", {
+          dbName: "notes",
+          storagePath: getStorageLocation(),
+          query: `UPDATE notes SET tag = ? WHERE key = ?`,
+          data: [updatedNotes[i].tag, updatedNotes[i].key],
+          executeType: "run",
+        });
+      }
+    } else {
+      let notes: any[] = await DatabaseService.getAllRecords("notes");
+      let filteredNotes = notes.filter((note) => note.tag.includes(tagName));
+      let updatedNotes = filteredNotes.map((item) => {
+        return {
+          ...item,
+          tag: item.tag.filter((subitem) => subitem !== tagName),
+        };
+      });
+      await DatabaseService.updateAllRecords(updatedNotes, "notes");
+    }
+  }
+  static async getNoteList() {
+    if (isElectron) {
+      const { ipcRenderer } = window.require("electron");
+      let queryString = `SELECT key, bookKey, chapterIndex FROM notes ORDER BY key DESC`;
+      return await ipcRenderer.invoke("custom-database-command", {
+        dbName: "notes",
+        storagePath: getStorageLocation(),
+        query: queryString,
+        executeType: "all",
+      });
+    } else {
+      let notes = await DatabaseService.getAllRecords("notes");
+      notes.sort((a, b) => b.key - a.key);
+      return notes;
     }
   }
   static async dumpConfig(type: string) {
