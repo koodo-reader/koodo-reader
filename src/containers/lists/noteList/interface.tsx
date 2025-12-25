@@ -3,6 +3,7 @@ import BookModel from "../../../models/Book";
 
 export interface NoteListProps {
   notes: NoteModel[];
+  highlights: NoteModel[];
   books: BookModel[];
   isSearch: boolean;
   isCollapsed: boolean;

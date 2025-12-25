@@ -10,6 +10,9 @@ import Bookmark from "../../models/Bookmark";
 export function handleNotes(notes: NoteModel[]) {
   return { type: "HANDLE_NOTES", payload: notes };
 }
+export function handleHighlights(highlights: NoteModel[]) {
+  return { type: "HANDLE_HIGHLIGHTS", payload: highlights };
+}
 export function handleOriginalText(originalText: string) {
   return { type: "HANDLE_ORIGINAL_TEXT", payload: originalText };
 }
@@ -86,9 +89,17 @@ export function handleFetchNotes() {
   return async (
     dispatch: (arg0: { type: string; payload: NoteModel[] }) => void
   ) => {
-    let notes: Note[] = await ConfigUtil.getNoteList();
+    let notes: Note[] = await ConfigUtil.getNotesByBookKeyAndType("", "note");
+    let highlights: Note[] = await ConfigUtil.getNotesByBookKeyAndType(
+      "",
+      "highlight"
+    );
     let deletedBookKeys = ConfigService.getAllListConfig("deletedBooks");
     notes = notes.filter((note) => !deletedBookKeys.includes(note.bookKey));
+    highlights = highlights.filter(
+      (highlight) => !deletedBookKeys.includes(highlight.bookKey)
+    );
+    dispatch(handleHighlights(highlights));
     dispatch(handleNotes(notes));
   };
 }

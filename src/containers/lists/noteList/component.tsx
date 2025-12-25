@@ -23,10 +23,10 @@ class NoteList extends React.Component<NoteListProps, NoteListState> {
     this.props.handleFetchNotes();
 
     this.setState({
-      cardList: await ConfigUtil.getNotesByBookKeyAndType(
-        "",
-        this.props.tabMode
-      ),
+      cardList:
+        this.props.tabMode === "note"
+          ? this.props.notes
+          : this.props.highlights,
     });
   }
   async componentDidMount() {
@@ -34,14 +34,12 @@ class NoteList extends React.Component<NoteListProps, NoteListState> {
   }
   handleNamesMap = async () => {
     let map: any = {};
-    let notes = await ConfigUtil.getNotesByBookKeyAndType(
-      "",
-      this.props.tabMode
-    );
+    let notes =
+      this.props.tabMode === "note" ? this.props.notes : this.props.highlights;
     for (let i = 0; i < notes.length; i++) {
       let book = await DatabaseService.getRecord(notes[i].bookKey, "books");
       if (book) {
-        map[this.props.notes[i].bookKey] = book.name;
+        map[notes[i].bookKey] = book.name;
       }
     }
 
@@ -117,7 +115,10 @@ class NoteList extends React.Component<NoteListProps, NoteListState> {
               >
                 {[
                   { value: "", label: this.props.t("Please select") },
-                  ...this.props.notes
+                  ...(this.props.tabMode === "note"
+                    ? this.props.notes
+                    : this.props.highlights
+                  )
                     .map((note) => {
                       return {
                         label:
