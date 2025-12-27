@@ -2,6 +2,7 @@ import SyncService from "../storage/syncService";
 import {
   ConfigService,
   CommonTool,
+  SqlStatement,
 } from "../../assets/lib/kookit-extra-browser.min";
 import DatabaseService from "../storage/databaseService";
 import SqlUtil from "./sqlUtil";
@@ -365,11 +366,18 @@ class ConfigUtil {
       return filteredNotes;
     }
   }
-  static async getNoteWithTag(tagName: string) {
+  static async getNoteWithTags(tags: string[]) {
     if (isElectron) {
       const { ipcRenderer } = window.require("electron");
-      let queryString = `SELECT * FROM notes WHERE instr(tag, ?) > 0 ORDER BY key DESC`;
-      let data = [tagName];
+      let queryString = "";
+      let data: any[] = [];
+      if (tags.length > 0) {
+        let instrArr = tags.map(() => "instr(tag, ?) > 0").join(" AND ");
+        queryString = `SELECT * FROM notes WHERE ${instrArr} ORDER BY key DESC`;
+        data = tags;
+      } else {
+        queryString = `SELECT * FROM notes ORDER BY key DESC`;
+      }
       return await ipcRenderer.invoke("custom-database-command", {
         dbName: "notes",
         storagePath: getStorageLocation(),
@@ -379,7 +387,14 @@ class ConfigUtil {
       });
     } else {
       let notes = await DatabaseService.getAllRecords("notes");
-      let filteredNotes = notes.filter((note) => note.tag.includes(tagName));
+      let filteredNotes = notes.filter((note) => {
+        for (let i = 0; i < tags.length; i++) {
+          if (!note.tag.includes(tags[i])) {
+            return false;
+          }
+        }
+        return true;
+      });
       filteredNotes.sort((a, b) => b.key - a.key);
       return filteredNotes;
     }
@@ -387,13 +402,20 @@ class ConfigUtil {
   static async deleteTagFromNotes(tagName: string) {
     if (isElectron) {
       const { ipcRenderer } = window.require("electron");
-      let notes: any[] = await ipcRenderer.invoke("custom-database-command", {
-        dbName: "notes",
-        storagePath: getStorageLocation(),
-        query: `SELECT * FROM notes WHERE instr(tag, ?) > 0`,
-        data: [tagName],
-        executeType: "all",
-      });
+      let rawNotes: any[] = await ipcRenderer.invoke(
+        "custom-database-command",
+        {
+          dbName: "notes",
+          storagePath: getStorageLocation(),
+          query: `SELECT * FROM notes WHERE instr(tag, ?) > 0`,
+          data: [tagName],
+          executeType: "all",
+        }
+      );
+      let notes = rawNotes.map((item) =>
+        SqlStatement.sqliteToJson["notes"](item)
+      );
+      console.log(notes, "notes");
       let updatedNotes = notes.map((item) => {
         return {
           ...item,
@@ -405,7 +427,7 @@ class ConfigUtil {
           dbName: "notes",
           storagePath: getStorageLocation(),
           query: `UPDATE notes SET tag = ? WHERE key = ?`,
-          data: [updatedNotes[i].tag, updatedNotes[i].key],
+          data: [JSON.stringify(updatedNotes[i].tag), updatedNotes[i].key],
           executeType: "run",
         });
       }
@@ -418,7 +440,9 @@ class ConfigUtil {
           tag: item.tag.filter((subitem) => subitem !== tagName),
         };
       });
-      await DatabaseService.updateAllRecords(updatedNotes, "notes");
+      for (let i = 0; i < updatedNotes.length; i++) {
+        await DatabaseService.updateRecord(updatedNotes[i], "notes");
+      }
     }
   }
   static async getNoteList() {
