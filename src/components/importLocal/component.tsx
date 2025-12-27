@@ -222,7 +222,6 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
             }
           });
         }
-        toast.error(this.props.t("Duplicate book"));
         return resolve();
       }
       if (!isRepeat) {
