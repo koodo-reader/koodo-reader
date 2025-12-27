@@ -59,38 +59,26 @@ class NoteList extends React.Component<NoteListProps, NoteListState> {
 
     this.setState({ bookNamesMap: map });
   };
-  handleTag = (tag: string[]) => {
-    this.setState({ tag });
-  };
-  handleFilter = (items: any, arr: number[]) => {
-    let itemArr: any[] = [];
-    arr.forEach((item) => {
-      items[item] && itemArr.push(items[item]);
-    });
-    return itemArr;
-  };
-  filterTag = (notes: NoteModel[]) => {
-    let temp: NoteModel[] = [];
-    for (let i = 0; i < notes.length; i++) {
-      let flag = false;
-      for (let j = 0; j < this.state.tag.length; j++) {
-        if (notes[i].tag && notes[i].tag.indexOf(this.state.tag[j]) > -1) {
-          flag = true;
-          break;
-        }
-      }
-      if (flag) {
-        temp.push(notes[i]);
-      }
+  handleTag = async (tag: string[]) => {
+    if (tag.length === 0) {
+      this.setState({
+        tag: [],
+        cardList:
+          this.props.tabMode === "note"
+            ? this.props.notes
+            : this.props.highlights,
+      });
+      return;
     }
-    return temp;
+    let cardList = await ConfigUtil.getNoteWithTags(tag);
+    this.setState({ tag, cardList });
   };
   render() {
     const noteProps = {
       cards: this.props.isSearch
         ? this.props.searchResults
         : this.state.tag.length > 0
-        ? this.filterTag(this.state.cardList)
+        ? this.state.cardList
         : this.state.cardList,
       mode: this.props.tabMode,
       bookNamesMap: this.state.bookNamesMap,
