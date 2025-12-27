@@ -6,7 +6,7 @@ export interface ViewerProps {
   book: BookModel;
   rendition: any;
   currentBook: BookModel;
-  books: BookModel[];
+
   menuMode: string;
 
   isReading: boolean;

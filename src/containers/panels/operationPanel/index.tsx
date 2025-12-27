@@ -18,7 +18,7 @@ const mapStateToProps = (state: stateType) => {
     currentBook: state.book.currentBook,
 
     readerMode: state.reader.readerMode,
-    books: state.manager.books,
+
     htmlBook: state.reader.htmlBook,
     locations: state.progressPanel.locations,
   };

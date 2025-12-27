@@ -5,7 +5,6 @@ export interface AboutDialogProps {
   isSettingOpen: boolean;
   isAboutOpen: boolean;
   isNewWarning: boolean;
-  books: BookModel[];
 
   deletedBooks: BookModel[];
   handleSetting: (isSettingOpen: boolean) => void;
