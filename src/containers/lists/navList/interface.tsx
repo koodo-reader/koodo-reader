@@ -6,6 +6,7 @@ export interface NavListProps {
   currentBook: BookModel;
   bookmarks: BookmarkModel[];
   notes: NoteModel[];
+  highlights: NoteModel[];
   htmlBook: HtmlBookModel;
   currentTab: string;
   t: (title: string) => string;

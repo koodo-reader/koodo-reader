@@ -189,9 +189,6 @@ class NavigationPanel extends React.Component<
       handleNavSearchState: this.handleNavSearchState,
       handleSearchList: this.handleSearchList,
     };
-    const bookmarkProps = {
-      currentTab: this.state.currentTab,
-    };
     return (
       <div
         className="navigation-panel"
@@ -345,7 +342,7 @@ class NavigationPanel extends React.Component<
                 {this.state.currentTab === "contents" ? (
                   <ContentList />
                 ) : (
-                  <BookNavList {...bookmarkProps} />
+                  <BookNavList {...{ currentTab: this.state.currentTab }} />
                 )}
               </div>
             </div>

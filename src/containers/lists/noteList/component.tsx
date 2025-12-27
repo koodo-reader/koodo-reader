@@ -32,6 +32,20 @@ class NoteList extends React.Component<NoteListProps, NoteListState> {
   async componentDidMount() {
     this.handleNamesMap();
   }
+  async componentWillReceiveProps(
+    nextProps: Readonly<NoteListProps>,
+    nextContext: any
+  ) {
+    if (
+      nextProps.notes !== this.props.notes ||
+      nextProps.highlights !== this.props.highlights
+    ) {
+      this.setState({
+        cardList:
+          nextProps.tabMode === "note" ? nextProps.notes : nextProps.highlights,
+      });
+    }
+  }
   handleNamesMap = async () => {
     let map: any = {};
     let notes =
