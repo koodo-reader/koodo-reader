@@ -11,7 +11,6 @@ const mapStateToProps = (state: stateType) => {
     books: state.manager.books,
     isOpenDeleteDialog: state.book.isOpenDeleteDialog,
     currentBook: state.book.currentBook,
-    bookmarks: state.reader.bookmarks,
   };
 };
 const actionCreator = {

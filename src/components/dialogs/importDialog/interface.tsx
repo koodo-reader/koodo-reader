@@ -19,7 +19,6 @@ export interface ImportDialogProps extends RouteComponentProps<any> {
   books: BookModel[];
 
   dataSourceList: string[];
-  bookmarks: BookmarkModel[];
 }
 export interface ImportDialogState {
   isBackup: string;

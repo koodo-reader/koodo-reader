@@ -23,7 +23,6 @@ const mapStateToProps = (state: stateType) => {
     searchResults: state.manager.searchResults,
     isOpenDeleteDialog: state.book.isOpenDeleteDialog,
     currentBook: state.book.currentBook,
-    bookmarks: state.reader.bookmarks,
 
     deletedBooks: state.manager.deletedBooks,
     mode: state.sidebar.mode,

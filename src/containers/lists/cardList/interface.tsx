@@ -5,7 +5,7 @@ import { RouteComponentProps } from "react-router";
 
 export interface CardListProps extends RouteComponentProps<any> {
   currentBook: BookModel;
-  bookmarks: BookmarkModel[];
+
   chapters: any;
   books: BookModel[];
   cards: NoteModel[];

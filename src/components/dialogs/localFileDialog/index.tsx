@@ -12,7 +12,6 @@ import { withRouter } from "react-router-dom";
 const mapStateToProps = (state: stateType) => {
   return {
     books: state.manager.books,
-    bookmarks: state.reader.bookmarks,
 
     isAuthed: state.manager.isAuthed,
     isOpenTokenDialog: state.backupPage.isOpenTokenDialog,
