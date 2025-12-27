@@ -15,7 +15,7 @@ import { stateType } from "../../../store";
 const mapStateToProps = (state: stateType) => {
   return {
     currentBook: state.book.currentBook,
-    books: state.manager.books,
+
     isAuthed: state.manager.isAuthed,
     isShowSupport: state.manager.isShowSupport,
     userInfo: state.manager.userInfo,

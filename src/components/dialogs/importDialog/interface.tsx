@@ -16,10 +16,8 @@ export interface ImportDialogProps extends RouteComponentProps<any> {
   handleSettingDrive: (settingDrive: string) => void;
   isOpenTokenDialog: boolean;
   isAuthed: boolean;
-  books: BookModel[];
-  notes: NoteModel[];
+
   dataSourceList: string[];
-  bookmarks: BookmarkModel[];
 }
 export interface ImportDialogState {
   isBackup: string;

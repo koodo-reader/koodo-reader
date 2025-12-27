@@ -8,8 +8,6 @@ const initState = {
   isSearch: false,
   isShowPopupNote: false,
   isAboutOpen: false,
-  isBookSort: ConfigService.getReaderConfig("bookSortCode") ? true : false,
-  isNoteSort: false,
   isAuthed: false,
   userInfo: null,
   userConfig: null,
@@ -115,16 +113,6 @@ export function manager(
       return {
         ...state,
         isAboutOpen: action.payload,
-      };
-    case "HANDLE_BOOK_SORT":
-      return {
-        ...state,
-        isBookSort: action.payload,
-      };
-    case "HANDLE_NOTE_SORT":
-      return {
-        ...state,
-        isNoteSort: action.payload,
       };
 
     case "HANDLE_VIEW_MODE":

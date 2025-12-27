@@ -314,7 +314,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       );
       return false;
     }
-    checkMissingBook(this.props.books);
+    await checkMissingBook();
     let checkResult = await checkBrokenData();
     if (checkResult) {
       toast.error(

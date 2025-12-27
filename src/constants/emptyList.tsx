@@ -20,7 +20,7 @@ export const emptyList = [
     sub: "Select any text and click the note button on the popup menu",
   },
   {
-    mode: "digest",
+    mode: "highlight",
     main: "Empty highlight",
     sub: "Select any text and click the highlight button on the popup menu",
   },

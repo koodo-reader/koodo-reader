@@ -5,6 +5,7 @@ import DeletePopup from "../dialogs/deletePopup";
 import toast from "react-hot-toast";
 import DatabaseService from "../../utils/storage/databaseService";
 import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
+import ConfigUtil from "../../utils/file/configUtil";
 
 class DeleteIcon extends React.Component<DeleteIconProps, DeleteIconStates> {
   constructor(props: DeleteIconProps) {
@@ -15,7 +16,7 @@ class DeleteIcon extends React.Component<DeleteIconProps, DeleteIconStates> {
     };
   }
 
-  handleDelete = () => {
+  handleDelete = async () => {
     let deleteFunc =
       this.props.mode === "notes"
         ? this.props.handleFetchNotes
@@ -33,9 +34,7 @@ class DeleteIcon extends React.Component<DeleteIconProps, DeleteIconStates> {
       return;
     }
     if (this.props.mode === "notes") {
-      let note = this.props.notes.find(
-        (item) => item.key === this.props.itemKey
-      );
+      let note = await DatabaseService.getRecord(this.props.itemKey, "notes");
       if (!note) return;
       if (this.props.htmlBook && this.props.htmlBook.rendition) {
         this.props.htmlBook.rendition.removeOneNote(
@@ -52,16 +51,8 @@ class DeleteIcon extends React.Component<DeleteIconProps, DeleteIconStates> {
       return;
     }
   };
-  handleDeleteTagFromNote = (tagName: string) => {
-    let noteList = this.props.notes.map((item) => {
-      return {
-        ...item,
-        tag: item.tag.filter((subitem) => subitem !== tagName),
-      };
-    });
-    DatabaseService.updateAllRecords(noteList, "notes").then(() => {
-      this.props.handleFetchNotes();
-    });
+  handleDeleteTagFromNote = async (tagName: string) => {
+    await ConfigUtil.deleteTagFromNotes(tagName);
   };
   handleDeletePopup = (isOpenDelete: boolean) => {
     this.setState({ isOpenDelete });

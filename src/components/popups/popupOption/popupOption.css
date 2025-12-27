@@ -7,7 +7,7 @@
   padding-left: 1px;
 }
 .note-option,
-.digest-option,
+.highlight-option,
 .translation-option,
 .speaker-option,
 .search-book-option,
@@ -33,7 +33,7 @@
   margin-top: 1px;
 }
 .note-option:hover,
-.digest-option:hover,
+.highlight-option:hover,
 .translation-option:hover,
 .speaker-option:hover,
 .search-book-option:hover,
@@ -54,7 +54,7 @@
 .bing-icon,
 .copy-icon,
 .wikipedia-icon,
-.digest-icon {
+.highlight-icon {
   line-height: 45px !important;
   font-size: 27px;
 }
@@ -64,7 +64,7 @@
 .copy-icon {
   color: #ff9900;
 }
-.digest-icon {
+.highlight-icon {
   color: #5e7fff;
 }
 .note-icon {

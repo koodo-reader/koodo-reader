@@ -3,9 +3,15 @@ import BookmarkModel from "../../models/Bookmark";
 import HtmlBookModel from "../../models/HtmlBook";
 import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import DatabaseService from "../../utils/storage/databaseService";
+import ConfigUtil from "../../utils/file/configUtil";
+import Note from "../../models/Note";
+import Bookmark from "../../models/Bookmark";
 
 export function handleNotes(notes: NoteModel[]) {
   return { type: "HANDLE_NOTES", payload: notes };
+}
+export function handleHighlights(highlights: NoteModel[]) {
+  return { type: "HANDLE_HIGHLIGHTS", payload: highlights };
 }
 export function handleOriginalText(originalText: string) {
   return { type: "HANDLE_ORIGINAL_TEXT", payload: originalText };
@@ -80,17 +86,21 @@ export function handleHidePDFConvertButton(isHidePDFConvertButton: boolean) {
   };
 }
 export function handleFetchNotes() {
-  return (dispatch: (arg0: { type: string; payload: NoteModel[] }) => void) => {
-    DatabaseService.getAllRecords("notes").then((value) => {
-      let noteArr: any;
-      if (value === null) {
-        noteArr = [];
-      } else {
-        noteArr = value;
-      }
-      let keyArr = ConfigService.getAllListConfig("deletedBooks");
-      dispatch(handleNotes(handleKeyRemove(noteArr, keyArr)));
-    });
+  return async (
+    dispatch: (arg0: { type: string; payload: NoteModel[] }) => void
+  ) => {
+    let notes: Note[] = await ConfigUtil.getNotesByBookKeyAndType("", "note");
+    let highlights: Note[] = await ConfigUtil.getNotesByBookKeyAndType(
+      "",
+      "highlight"
+    );
+    let deletedBookKeys = ConfigService.getAllListConfig("deletedBooks");
+    notes = notes.filter((note) => !deletedBookKeys.includes(note.bookKey));
+    highlights = highlights.filter(
+      (highlight) => !deletedBookKeys.includes(highlight.bookKey)
+    );
+    dispatch(handleHighlights(highlights));
+    dispatch(handleNotes(notes));
   };
 }
 
@@ -98,27 +108,12 @@ export function handleFetchBookmarks() {
   return (
     dispatch: (arg0: { type: string; payload: BookmarkModel[] }) => void
   ) => {
-    DatabaseService.getAllRecords("bookmarks").then((value) => {
-      let bookmarkArr: any;
-      if (value === null) {
-        bookmarkArr = [];
-      } else {
-        bookmarkArr = value;
-      }
-      let keyArr = ConfigService.getAllListConfig("deletedBooks");
-      dispatch(handleBookmarks(handleKeyRemove(bookmarkArr, keyArr)));
+    DatabaseService.getAllRecords("bookmarks").then((bookmarks: Bookmark[]) => {
+      let deletedBookKeys = ConfigService.getAllListConfig("deletedBooks");
+      bookmarks = bookmarks.filter(
+        (bookmark) => !deletedBookKeys.includes(bookmark.bookKey)
+      );
+      dispatch(handleBookmarks(bookmarks));
     });
   };
 }
-const handleKeyRemove = (items: any[], arr: string[]) => {
-  let itemArr: any[] = [];
-  if (!arr[0]) {
-    return items;
-  }
-  for (let i = 0; i < items.length; i++) {
-    if (arr.indexOf(items[i].bookKey) === -1) {
-      itemArr.push(items[i]);
-    }
-  }
-  return itemArr;
-};

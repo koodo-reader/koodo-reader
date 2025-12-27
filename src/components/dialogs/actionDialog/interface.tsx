@@ -4,9 +4,9 @@ import NoteModel from "../../../models/Note";
 
 export interface ActionDialogProps extends RouteComponentProps<any> {
   book: BookModel;
-  books: BookModel[];
+
   deletedBooks: BookModel[];
-  notes: NoteModel[];
+
   currentBook: BookModel;
   left: number;
   top: number;

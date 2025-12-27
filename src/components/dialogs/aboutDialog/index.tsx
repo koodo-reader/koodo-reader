@@ -9,8 +9,7 @@ const mapStateToProps = (state: stateType) => {
     isSettingOpen: state.manager.isSettingOpen,
     isAboutOpen: state.manager.isAboutOpen,
     isNewWarning: state.manager.isNewWarning,
-    books: state.manager.books,
-    notes: state.reader.notes,
+
     deletedBooks: state.manager.deletedBooks,
   };
 };

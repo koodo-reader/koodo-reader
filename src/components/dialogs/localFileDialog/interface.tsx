@@ -11,10 +11,8 @@ export interface LocalFileDialogProps extends RouteComponentProps<any> {
   handleFetchBooks: () => void;
   isOpenTokenDialog: boolean;
   isAuthed: boolean;
-  books: BookModel[];
-  notes: NoteModel[];
+
   dataSourceList: string[];
-  bookmarks: BookmarkModel[];
 }
 export interface LocalFileDialogState {
   isFinish: boolean;

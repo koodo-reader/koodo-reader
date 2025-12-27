@@ -28,6 +28,7 @@ import {
 import * as Kookit from "../../assets/lib/kookit.min";
 import PopupRefer from "../../components/popups/popupRefer";
 import { ocrLangList } from "../../constants/dropdownList";
+import DatabaseService from "../../utils/storage/databaseService";
 declare var window: any;
 let lock = false; //prevent from clicking too fasts
 
@@ -111,13 +112,12 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     }
   }
   handleHighlight = async (rendition: any) => {
-    let highlighters: any = this.props.notes;
+    let highlighters: any = await DatabaseService.getRecordsByBookKey(
+      this.props.currentBook.key,
+      "notes"
+    );
     if (!highlighters) return;
     let highlightersByChapter = highlighters.filter((item: Note) => {
-      if (item.bookKey !== this.props.currentBook.key) {
-        return false;
-      }
-
       let cfi = JSON.parse(item.cfi);
       if (cfi.cfi) {
         // epub from 1.5.2 or older
@@ -156,9 +156,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       ConfigService.getReaderConfig("isConvertPDF") !== "yes"
     ) {
       let highlightersByChapter = highlighters.filter((item: Note) => {
-        if (item.bookKey !== this.props.currentBook.key) {
-          return false;
-        }
         let cfi = JSON.parse(item.cfi);
         if (cfi.fingerprint) {
           // pdf from 1.7.4 or older

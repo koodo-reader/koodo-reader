@@ -5,7 +5,7 @@ import { RouteComponentProps } from "react-router";
 
 export interface CardListProps extends RouteComponentProps<any> {
   currentBook: BookModel;
-  bookmarks: BookmarkModel[];
+
   chapters: any;
   books: BookModel[];
   cards: NoteModel[];
@@ -16,6 +16,7 @@ export interface CardListProps extends RouteComponentProps<any> {
   handleNoteKey: (noteKey: string) => void;
   t: (title: string) => string;
   handleShowPopupNote: (isShowPopupNote: boolean) => void;
+  bookNamesMap: { [key: string]: string };
 }
 export interface CardListStates {
   displayedCards: NoteModel[];
