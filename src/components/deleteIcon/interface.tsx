@@ -3,7 +3,7 @@ import BookmarkModel from "../../models/Bookmark";
 import NoteModel from "../../models/Note";
 export interface DeleteIconProps {
   bookmarks: BookmarkModel[];
-  notes: NoteModel[];
+
   mode: string;
   index: number;
   tagName: string;

@@ -16,7 +16,7 @@ const mapStateToProps = (state: stateType) => {
   return {
     currentBook: state.book.currentBook,
     selection: state.viewArea.selection,
-    notes: state.reader.notes,
+
     color: state.reader.color,
     htmlBook: state.reader.htmlBook,
   };

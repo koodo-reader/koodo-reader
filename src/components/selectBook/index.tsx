@@ -12,7 +12,7 @@ import SelectBook from "./component";
 const mappropsToProps = (state: stateType) => {
   return {
     books: state.manager.books,
-    notes: state.reader.notes,
+
     deletedBooks: state.manager.deletedBooks,
     selectedBooks: state.manager.selectedBooks,
     isCollapsed: state.sidebar.isCollapsed,

@@ -35,7 +35,7 @@ const mapStateToProps = (state: stateType) => {
     isSettingLocked: state.reader.isSettingLocked,
     isOpenMenu: state.viewArea.isOpenMenu,
     books: state.manager.books,
-    notes: state.reader.notes,
+
     readerMode: state.reader.readerMode,
     defaultSyncOption: state.backupPage.defaultSyncOption,
     menuMode: state.viewArea.menuMode,

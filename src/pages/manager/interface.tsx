@@ -4,7 +4,7 @@ import BookmarkModel from "../../models/Bookmark";
 import { RouteComponentProps } from "react-router";
 export interface ManagerProps extends RouteComponentProps<any> {
   books: BookModel[];
-  notes: NoteModel[];
+
   bookmarks: BookmarkModel[];
   isReading: boolean;
   mode: string;

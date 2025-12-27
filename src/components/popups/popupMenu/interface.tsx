@@ -6,7 +6,7 @@ export interface PopupMenuProps {
   isOpenMenu: boolean;
   isChangeDirection: boolean;
   menuMode: string;
-  notes: NoteModel[];
+
   color: number;
   rendition: any;
   // cfiRange: any;

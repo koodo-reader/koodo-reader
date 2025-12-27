@@ -21,7 +21,7 @@ const mapStateToProps = (state: stateType) => {
     mode: state.sidebar.mode,
     currentBook: state.book.currentBook,
     books: state.manager.books,
-    notes: state.reader.notes,
+
     isSelectBook: state.manager.isSelectBook,
 
     deletedBooks: state.manager.deletedBooks,

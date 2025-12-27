@@ -22,7 +22,7 @@ export interface SettingInfoProps extends RouteComponentProps<any> {
   handleFetchUserInfo: () => Promise<void>;
   cloudSyncFunc: () => Promise<void>;
   bookmarks: BookmarkModel[];
-  notes: NoteModel[];
+
   isOpenTokenDialog: boolean;
   isShowSupport: boolean;
   plugins: PluginModel[];

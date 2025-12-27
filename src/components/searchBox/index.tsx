@@ -6,7 +6,7 @@ import SearchBox from "./component";
 const mapStateToProps = (state: stateType) => {
   return {
     books: state.manager.books,
-    notes: state.reader.notes,
+
     htmlBook: state.reader.htmlBook,
     isNavLocked: state.reader.isNavLocked,
     isSearch: state.manager.isSearch,
