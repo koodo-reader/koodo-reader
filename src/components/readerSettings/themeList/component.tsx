@@ -7,7 +7,6 @@ import { ThemeListProps, ThemeListState } from "./interface";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import { Panel as ColorPickerPanel } from "rc-color-picker";
 import "rc-color-picker/assets/index.css";
-import BookUtil from "../../../utils/file/bookUtil";
 import toast from "react-hot-toast";
 
 class ThemeList extends React.Component<ThemeListProps, ThemeListState> {

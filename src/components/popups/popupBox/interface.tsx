@@ -1,5 +1,4 @@
 import BookModel from "../../../models/Book";
-import NoteModel from "../../../models/Note";
 
 export interface PopupBoxProps {
   currentBook: BookModel;

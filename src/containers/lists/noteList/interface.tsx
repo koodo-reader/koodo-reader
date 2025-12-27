@@ -1,5 +1,4 @@
 import NoteModel from "../../../models/Note";
-import BookModel from "../../../models/Book";
 
 export interface NoteListProps {
   notes: NoteModel[];

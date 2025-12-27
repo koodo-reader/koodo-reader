@@ -1,5 +1,4 @@
-import BookModel from "../../../models/Book";
-import NoteModel from "../../../models/Note";
+import type BookModel from "../../../models/Book";
 
 export interface AboutDialogProps {
   isSettingOpen: boolean;

@@ -6,7 +6,7 @@ import BookListItem from "../../../components/bookListItem";
 import BookModel from "../../../models/Book";
 import { Trans } from "react-i18next";
 import { BookListProps, BookListState } from "./interface";
-import { Redirect, withRouter } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import ViewMode from "../../../components/viewMode";
 import DatabaseService from "../../../utils/storage/databaseService";
 import EmptyPage from "../../emptyPage";

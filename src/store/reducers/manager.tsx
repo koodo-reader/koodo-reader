@@ -1,5 +1,3 @@
-import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
-
 const initState = {
   books: null,
   plugins: null,

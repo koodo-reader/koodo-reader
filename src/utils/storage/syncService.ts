@@ -1,10 +1,8 @@
-import toast from "react-hot-toast";
 import {
   ConfigService,
   SyncUtil,
 } from "../../assets/lib/kookit-extra-browser.min";
 import { getThirdpartyRequest } from "../request/thirdparty";
-import i18n from "../../i18n";
 import { getCloudConfig } from "../file/common";
 
 class SyncService {

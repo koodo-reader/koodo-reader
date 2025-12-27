@@ -6,7 +6,6 @@ import DeleteIcon from "../../../components/deleteIcon";
 import toast from "react-hot-toast";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import { classes, colors, lines } from "../../../constants/themeList";
-import ConfigUtil from "../../../utils/file/configUtil";
 import DatabaseService from "../../../utils/storage/databaseService";
 import Book from "../../../models/Book";
 import Bookmark from "../../../models/Bookmark";

@@ -3,7 +3,6 @@ import "./modeControl.css";
 import { ModeControlProps, ModeControlState } from "./interface";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import { Trans } from "react-i18next";
-import BookUtil from "../../../utils/file/bookUtil";
 
 class ModeControl extends React.Component<ModeControlProps, ModeControlState> {
   constructor(props: ModeControlProps) {

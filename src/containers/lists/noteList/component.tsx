@@ -3,7 +3,6 @@ import "./noteList.css";
 import { NoteListProps, NoteListState } from "./interface";
 import CardList from "../cardList";
 import NoteTag from "../../../components/noteTag";
-import NoteModel from "../../../models/Note";
 import Empty from "../../emptyPage";
 import { Trans } from "react-i18next";
 import DatabaseService from "../../../utils/storage/databaseService";

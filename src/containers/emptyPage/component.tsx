@@ -7,7 +7,6 @@ import emptyDark from "../../assets/images/empty-dark.svg";
 import emptyLight from "../../assets/images/empty-light.svg";
 
 import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
-import DeletePopup from "../../components/dialogs/deletePopup";
 
 class EmptyPage extends React.Component<EmptyPageProps, EmptyPageState> {
   constructor(props: EmptyPageProps) {
