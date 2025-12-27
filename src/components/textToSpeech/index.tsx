@@ -7,7 +7,6 @@ const mapStateToProps = (state: stateType) => {
   return {
     currentBook: state.book.currentBook,
     htmlBook: state.reader.htmlBook,
-    locations: state.progressPanel.locations,
     isReading: state.book.isReading,
     plugins: state.manager.plugins,
     readerMode: state.reader.readerMode,

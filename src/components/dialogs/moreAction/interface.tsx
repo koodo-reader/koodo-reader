@@ -4,13 +4,10 @@ import NoteModel from "../../../models/Note";
 
 export interface MoreActionProps extends RouteComponentProps<any> {
   book: BookModel;
-
   deletedBooks: BookModel[];
-
   currentBook: BookModel;
   left: number;
   top: number;
-  mode: string;
   isSelectBook: boolean;
   isShowExport: boolean;
   isShowDetail: boolean;

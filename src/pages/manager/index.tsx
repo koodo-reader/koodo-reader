@@ -31,8 +31,6 @@ import { withRouter } from "react-router-dom";
 const mapStateToProps = (state: stateType) => {
   return {
     books: state.manager.books,
-
-    isReading: state.book.isReading,
     mode: state.sidebar.mode,
     dragItem: state.book.dragItem,
     shelfTitle: state.sidebar.shelfTitle,

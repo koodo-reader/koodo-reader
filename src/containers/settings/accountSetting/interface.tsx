@@ -21,17 +21,13 @@ export interface SettingInfoProps extends RouteComponentProps<any> {
   handleFetchPlugins: () => void;
   handleFetchUserInfo: () => Promise<void>;
   cloudSyncFunc: () => Promise<void>;
-
-  isOpenTokenDialog: boolean;
   isShowSupport: boolean;
   plugins: PluginModel[];
 
   userInfo: any;
-  dataSourceList: string[];
   loginOptionList: { email: string; provider: string }[];
   defaultSyncOption: string;
   isAuthed: boolean;
-  settingMode: string;
   settingDrive: string;
 }
 export interface SettingInfoState {

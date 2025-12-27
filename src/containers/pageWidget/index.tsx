@@ -8,7 +8,6 @@ import {
 const mapStateToProps = (state: stateType) => {
   return {
     currentBook: state.book.currentBook,
-    locations: state.progressPanel.locations,
     currentChapter: state.reader.currentChapter,
     readerMode: state.reader.readerMode,
     isNavLocked: state.reader.isNavLocked,

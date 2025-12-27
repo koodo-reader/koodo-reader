@@ -8,7 +8,6 @@ export interface OperationPanelProps extends RouteComponentProps<any> {
   currentBook: BookModel;
 
   htmlBook: HtmlBookModel;
-  locations: any;
   rendition: any;
   currentDuration: number;
   readerMode: string;

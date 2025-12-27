@@ -12,8 +12,6 @@ import { withRouter } from "react-router-dom";
 const mapStateToProps = (state: stateType) => {
   return {
     isAuthed: state.manager.isAuthed,
-    isOpenTokenDialog: state.backupPage.isOpenTokenDialog,
-    dataSourceList: state.backupPage.dataSourceList,
   };
 };
 const actionCreator = {

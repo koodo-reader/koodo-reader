@@ -1,6 +1,4 @@
-import BookModel from "../../models/Book";
 export interface BackgroundProps {
-  currentBook: BookModel;
   readerMode: string;
   scale: string;
   margin: string;
