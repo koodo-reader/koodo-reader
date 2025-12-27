@@ -16,11 +16,8 @@ import OperationPanel from "./component";
 const mapStateToProps = (state: stateType) => {
   return {
     currentBook: state.book.currentBook,
-
     readerMode: state.reader.readerMode,
-
     htmlBook: state.reader.htmlBook,
-    locations: state.progressPanel.locations,
   };
 };
 const actionCreator = {

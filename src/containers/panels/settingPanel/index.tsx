@@ -6,8 +6,6 @@ import { handleSettingLock } from "../../../store/actions";
 const mapStateToProps = (state: stateType) => {
   return {
     currentBook: state.book.currentBook,
-    locations: state.progressPanel.locations,
-    isReading: state.book.isReading,
     readerMode: state.reader.readerMode,
     backgroundColor: state.reader.backgroundColor,
     isSettingLocked: state.reader.isSettingLocked,

@@ -28,7 +28,6 @@ const mapStateToProps = (state: stateType) => {
   return {
     isOpenActionDialog: state.book.isOpenActionDialog,
     currentBook: state.book.currentBook,
-    isReading: state.book.isReading,
     renderNoteFunc: state.book.renderNoteFunc,
     htmlBook: state.reader.htmlBook,
     isNavLocked: state.reader.isNavLocked,

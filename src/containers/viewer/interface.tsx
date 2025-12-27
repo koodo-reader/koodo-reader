@@ -8,8 +8,6 @@ export interface ViewerProps {
   currentBook: BookModel;
 
   menuMode: string;
-
-  isReading: boolean;
   htmlBook: HtmlBook;
   isShow: boolean;
   readerMode: string;

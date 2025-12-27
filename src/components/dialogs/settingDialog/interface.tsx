@@ -20,12 +20,7 @@ export interface SettingInfoProps extends RouteComponentProps<any> {
   handleFetchBooks: () => void;
   handleFetchPlugins: () => void;
   handleFetchUserInfo: () => void;
-
-  isOpenTokenDialog: boolean;
   plugins: PluginModel[];
-
-  userInfo: any;
-  dataSourceList: string[];
   loginOptionList: { email: string; provider: string }[];
   defaultSyncOption: string;
   isAuthed: boolean;

@@ -1,6 +1,5 @@
 const initState = {
   percentage: null,
-  locations: null,
 };
 export function progressPanel(
   state = initState,
@@ -17,11 +16,6 @@ export function progressPanel(
       return {
         ...state,
         section: action.payload,
-      };
-    case "HANDLE_LOCATIONS":
-      return {
-        ...state,
-        locations: action.payload,
       };
     default:
       return state;
