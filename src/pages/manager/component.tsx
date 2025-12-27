@@ -178,9 +178,7 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
         {this.props.isOpenSortShelfDialog && <SortShelfDialog />}
         {this.props.isSettingOpen && <SettingDialog />}
         {this.props.isDetailDialog && <DetailDialog />}
-        {(!books || books.length === 0) && this.state.totalBooks ? (
-          <Redirect to="/manager/loading" />
-        ) : (
+        {(!books || books.length === 0) && this.state.totalBooks ? null : (
           <Switch>
             {routes.map((ele) => (
               <Route
