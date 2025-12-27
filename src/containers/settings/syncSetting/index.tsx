@@ -24,14 +24,10 @@ const mapStateToProps = (state: stateType) => {
     books: state.manager.books,
     plugins: state.manager.plugins,
     isAuthed: state.manager.isAuthed,
-    settingMode: state.manager.settingMode,
     settingDrive: state.manager.settingDrive,
-    userInfo: state.manager.userInfo,
-
     dataSourceList: state.backupPage.dataSourceList,
     defaultSyncOption: state.backupPage.defaultSyncOption,
     loginOptionList: state.backupPage.loginOptionList,
-    isOpenTokenDialog: state.backupPage.isOpenTokenDialog,
     cloudSyncFunc: state.book.cloudSyncFunc,
   };
 };

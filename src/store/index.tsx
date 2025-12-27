@@ -84,7 +84,6 @@ export type stateType = {
   };
   progressPanel: {
     percentage: number;
-    locations: any[];
   };
   reader: {
     bookmarks: BookmarkModel[];

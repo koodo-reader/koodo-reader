@@ -6,7 +6,6 @@ import ProgressPanel from "./component";
 const mapStateToProps = (state: stateType) => {
   return {
     currentBook: state.book.currentBook,
-    isReading: state.book.isReading,
     percentage: state.progressPanel.percentage,
     htmlBook: state.reader.htmlBook,
     readerMode: state.reader.readerMode,

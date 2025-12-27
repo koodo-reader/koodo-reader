@@ -9,7 +9,6 @@ const mapStateToProps = (state: stateType) => {
     isNavLocked: state.reader.isNavLocked,
     isSearch: state.manager.isSearch,
     isReading: state.book.isReading,
-    currentBook: state.book.currentBook,
     tabMode: state.sidebar.mode,
     shelfTitle: state.sidebar.shelfTitle,
   };

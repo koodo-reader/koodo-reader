@@ -4,8 +4,6 @@ import BookmarkModel from "../../models/Bookmark";
 import { RouteComponentProps } from "react-router";
 export interface ManagerProps extends RouteComponentProps<any> {
   books: BookModel[];
-
-  isReading: boolean;
   mode: string;
   shelfTitle: string;
   isOpenEditDialog: boolean;

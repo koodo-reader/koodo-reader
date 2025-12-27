@@ -5,7 +5,6 @@ import ColorOption from "./component";
 const mapStateToProps = (state: stateType) => {
   return {
     color: state.reader.color,
-    currentBook: state.book.currentBook,
   };
 };
 const actionCreator = {

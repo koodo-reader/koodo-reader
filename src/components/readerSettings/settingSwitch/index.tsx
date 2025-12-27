@@ -16,8 +16,6 @@ import {
 const mapStateToProps = (state: stateType) => {
   return {
     currentBook: state.book.currentBook,
-    locations: state.progressPanel.locations,
-    isReading: state.book.isReading,
     renderBookFunc: state.book.renderBookFunc,
   };
 };
