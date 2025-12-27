@@ -6,7 +6,7 @@ export interface PopupBoxProps {
   isOpenMenu: boolean;
   isChangeDirection: boolean;
   menuMode: string;
-  notes: NoteModel[];
+
   color: number;
   isNavLocked: boolean;
   isSettingLocked: boolean;

@@ -12,7 +12,7 @@ export interface LocalFileDialogProps extends RouteComponentProps<any> {
   isOpenTokenDialog: boolean;
   isAuthed: boolean;
   books: BookModel[];
-  notes: NoteModel[];
+
   dataSourceList: string[];
   bookmarks: BookmarkModel[];
 }

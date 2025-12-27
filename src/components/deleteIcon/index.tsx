@@ -10,7 +10,7 @@ import { withTranslation } from "react-i18next";
 const mapStateToProps = (state: stateType) => {
   return {
     bookmarks: state.reader.bookmarks,
-    notes: state.reader.notes,
+
     isReading: state.book.isReading,
     htmlBook: state.reader.htmlBook,
     currentBook: state.book.currentBook,

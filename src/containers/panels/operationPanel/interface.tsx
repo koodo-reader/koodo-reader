@@ -7,7 +7,7 @@ import { RouteComponentProps } from "react-router";
 export interface OperationPanelProps extends RouteComponentProps<any> {
   currentBook: BookModel;
   bookmarks: BookmarkModel[];
-  notes: NoteModel[];
+
   books: BookModel[];
   htmlBook: HtmlBookModel;
   locations: any;

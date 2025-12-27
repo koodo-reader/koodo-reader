@@ -21,7 +21,6 @@ const mapStateToProps = (state: stateType) => {
     bookmarks: state.reader.bookmarks,
     mode: state.sidebar.mode,
     shelfTitle: state.sidebar.shelfTitle,
-    notes: state.reader.notes,
   };
 };
 const actionCreator = {

@@ -17,7 +17,7 @@ const mapStateToProps = (state: stateType) => {
   return {
     books: state.manager.books,
     bookmarks: state.reader.bookmarks,
-    notes: state.reader.notes,
+
     isAuthed: state.manager.isAuthed,
     isOpenImportDialog: state.backupPage.isOpenImportDialog,
     dataSourceList: state.backupPage.dataSourceList,

@@ -9,7 +9,7 @@ export interface SearchBoxProps {
   isNavLocked: boolean;
   mode: string;
   tabMode: string;
-  notes: NoteModel[];
+
   width: string;
   height: string;
   currentBook: any;

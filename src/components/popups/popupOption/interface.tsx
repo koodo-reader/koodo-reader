@@ -4,7 +4,7 @@ import NoteModel from "../../../models/Note";
 export interface PopupOptionProps {
   currentBook: BookModel;
   selection: string;
-  notes: NoteModel[];
+
   color: number;
   noteKey: string;
   rect: DOMRect;

@@ -11,7 +11,7 @@ export interface HeaderProps extends RouteComponentProps<any> {
   isLoadMore: boolean;
   isAuthed: boolean;
   bookmarks: BookmarkModel[];
-  notes: NoteModel[];
+
   books: BookModel[];
   defaultSyncOption: string;
   mode: string;
