@@ -14,7 +14,6 @@ export interface LocalFileDialogProps extends RouteComponentProps<any> {
   books: BookModel[];
 
   dataSourceList: string[];
-  bookmarks: BookmarkModel[];
 }
 export interface LocalFileDialogState {
   isFinish: boolean;

@@ -16,7 +16,6 @@ import OperationPanel from "./component";
 const mapStateToProps = (state: stateType) => {
   return {
     currentBook: state.book.currentBook,
-    bookmarks: state.reader.bookmarks,
 
     readerMode: state.reader.readerMode,
     books: state.manager.books,

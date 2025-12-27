@@ -14,7 +14,6 @@ export interface BookListProps extends RouteComponentProps<any> {
   isSelectBook: boolean;
   viewMode: string;
   selectedBooks: string[];
-  bookmarks: BookmarkModel[];
 
   bookSortCode: { sort: number; order: number };
   noteSortCode: { sort: number; order: number };

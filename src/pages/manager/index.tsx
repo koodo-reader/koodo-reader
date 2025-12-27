@@ -32,7 +32,6 @@ const mapStateToProps = (state: stateType) => {
   return {
     books: state.manager.books,
 
-    bookmarks: state.reader.bookmarks,
     isReading: state.book.isReading,
     mode: state.sidebar.mode,
     dragItem: state.book.dragItem,

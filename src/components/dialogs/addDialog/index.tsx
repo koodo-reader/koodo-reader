@@ -18,7 +18,7 @@ const mapStateToProps = (state: stateType) => {
     isSelectBook: state.manager.isSelectBook,
     isOpenDeleteDialog: state.book.isOpenDeleteDialog,
     currentBook: state.book.currentBook,
-    bookmarks: state.reader.bookmarks,
+
     mode: state.sidebar.mode,
     shelfTitle: state.sidebar.shelfTitle,
   };
