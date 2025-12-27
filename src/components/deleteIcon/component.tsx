@@ -17,38 +17,45 @@ class DeleteIcon extends React.Component<DeleteIconProps, DeleteIconStates> {
   }
 
   handleDelete = async () => {
-    let deleteFunc =
-      this.props.mode === "notes"
-        ? this.props.handleFetchNotes
-        : this.props.handleFetchBookmarks;
-    if (this.props.mode === "tags") {
-      ConfigService.deleteListConfig(this.props.tagName, "noteTags");
-      this.handleDeleteTagFromNote(this.props.tagName);
-      return;
-    }
-    if (this.props.mode === "bookmarks") {
-      DatabaseService.deleteRecord(this.props.itemKey, "bookmarks").then(() => {
-        deleteFunc();
-        toast.success(this.props.t("Deletion successful"));
-      });
-      return;
-    }
-    if (this.props.mode === "notes") {
-      let note = await DatabaseService.getRecord(this.props.itemKey, "notes");
-      if (!note) return;
-      if (this.props.htmlBook && this.props.htmlBook.rendition) {
-        this.props.htmlBook.rendition.removeOneNote(
-          this.props.itemKey,
-          note.chapterIndex
-        );
+    try {
+      let deleteFunc =
+        this.props.mode === "notes"
+          ? this.props.handleFetchNotes
+          : this.props.handleFetchBookmarks;
+      
+      if (this.props.mode === "tags") {
+        ConfigService.deleteListConfig(this.props.tagName, "noteTags");
+        await this.handleDeleteTagFromNote(this.props.tagName);
+        // Note: Toast is shown by DeletePopup component
+        return;
       }
-
-      DatabaseService.deleteRecord(this.props.itemKey, "notes").then(() => {
+      
+      if (this.props.mode === "bookmarks") {
+        await DatabaseService.deleteRecord(this.props.itemKey, "bookmarks");
         deleteFunc();
         toast.success(this.props.t("Deletion successful"));
-      });
+        return;
+      }
+      
+      if (this.props.mode === "notes") {
+        let note = await DatabaseService.getRecord(this.props.itemKey, "notes");
+        if (!note) return;
+        
+        if (this.props.htmlBook && this.props.htmlBook.rendition) {
+          this.props.htmlBook.rendition.removeOneNote(
+            this.props.itemKey,
+            note.chapterIndex
+          );
+        }
 
-      return;
+        await DatabaseService.deleteRecord(this.props.itemKey, "notes");
+        deleteFunc();
+        toast.success(this.props.t("Deletion successful"));
+        return;
+      }
+    } catch (error) {
+      console.error("Error deleting item:", error);
+      toast.error(this.props.t("Deletion failed"));
     }
   };
   handleDeleteTagFromNote = async (tagName: string) => {
@@ -66,7 +73,7 @@ class DeleteIcon extends React.Component<DeleteIconProps, DeleteIconStates> {
       title: "Delete this tag",
       description: "This action will clear and remove this tag",
       handleDeletePopup: this.handleDeletePopup,
-      handleDeleteOpearion: this.handleDelete,
+      handleDeleteOperation: this.handleDelete,
     };
     return (
       <>

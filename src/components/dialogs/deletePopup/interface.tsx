@@ -4,5 +4,5 @@ export interface DeletePopupProps {
   title: string;
   description: string;
   handleDeletePopup: (isOpenDelete: boolean) => void;
-  handleDeleteOpearion: () => void;
+  handleDeleteOperation: () => void;
 }

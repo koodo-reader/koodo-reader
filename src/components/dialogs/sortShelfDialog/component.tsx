@@ -102,7 +102,7 @@ class SortShelfDialog extends React.Component<
       title: "Delete this shelf",
       description: "This action will clear and remove this shelf",
       handleDeletePopup: this.handleDeletePopup,
-      handleDeleteOpearion: this.handleDeleteShelf,
+      handleDeleteOperation: this.handleDeleteShelf,
     };
     return (
       <div

@@ -8,7 +8,7 @@ class DeletePopup extends React.Component<DeletePopupProps> {
   };
   handleComfirm = () => {
     this.props.handleDeletePopup(false);
-    this.props.handleDeleteOpearion();
+    this.props.handleDeleteOperation();
     toast.success(this.props.t("Deletion successful"));
   };
   render() {
