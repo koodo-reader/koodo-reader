@@ -1,7 +1,6 @@
 import BookModel from "../../../models/Book";
 import { RouteComponentProps } from "react-router";
 export interface BookListProps extends RouteComponentProps<any> {
-  books: BookModel[];
   deletedBooks: BookModel[];
   mode: string;
   selectedBooks: string[];

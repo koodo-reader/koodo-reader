@@ -26,7 +26,6 @@ const mapStateToProps = (state: stateType) => {
     isSearch: state.manager.isSearch,
     isAboutOpen: state.manager.isAboutOpen,
 
-    books: state.manager.books,
     isCollapsed: state.sidebar.isCollapsed,
     isNewWarning: state.manager.isNewWarning,
 

@@ -7,7 +7,6 @@ export interface EditDialogProps {
   handleFetchBooks: () => void;
   handleEditDialog: (isShow: boolean) => void;
   handleActionDialog: (isShow: boolean) => void;
-  books: BookModel[];
 
   isOpenDeleteDialog: boolean;
   currentBook: BookModel;

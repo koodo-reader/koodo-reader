@@ -4,7 +4,7 @@ import NoteModel from "../../../models/Note";
 
 export interface MoreActionProps extends RouteComponentProps<any> {
   book: BookModel;
-  books: BookModel[];
+
   deletedBooks: BookModel[];
 
   currentBook: BookModel;

@@ -22,7 +22,7 @@ export interface SettingInfoProps extends RouteComponentProps<any> {
 
   isOpenTokenDialog: boolean;
   plugins: PluginModel[];
-  books: BookModel[];
+
   userInfo: any;
   dataSourceList: string[];
   loginOptionList: { email: string; provider: string }[];

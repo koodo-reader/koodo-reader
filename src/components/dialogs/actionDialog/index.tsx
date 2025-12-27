@@ -20,7 +20,6 @@ const mapStateToProps = (state: stateType) => {
   return {
     mode: state.sidebar.mode,
     currentBook: state.book.currentBook,
-    books: state.manager.books,
 
     isSelectBook: state.manager.isSelectBook,
 

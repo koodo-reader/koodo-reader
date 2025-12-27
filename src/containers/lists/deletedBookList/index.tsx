@@ -10,7 +10,6 @@ import BookList from "./component";
 
 const mappropsToProps = (state: stateType) => {
   return {
-    books: state.manager.books,
     deletedBooks: state.manager.deletedBooks,
     mode: state.sidebar.mode,
 

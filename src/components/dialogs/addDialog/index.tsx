@@ -13,7 +13,6 @@ import AddDialog from "./component";
 
 const mapStateToProps = (state: stateType) => {
   return {
-    books: state.manager.books,
     selectedBooks: state.manager.selectedBooks,
     isSelectBook: state.manager.isSelectBook,
     isOpenDeleteDialog: state.book.isOpenDeleteDialog,
