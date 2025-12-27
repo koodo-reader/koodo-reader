@@ -11,7 +11,7 @@ class ViewMode extends React.Component<ViewModeProps, ViewModeState> {
   }
   handleChange = (mode: string) => {
     ConfigService.setReaderConfig("viewMode", mode);
-    this.props.handleFetchList();
+    this.props.handleFetchViewMode();
   };
   isElementInViewport = (element) => {
     const rect = element.getBoundingClientRect();

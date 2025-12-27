@@ -4,7 +4,7 @@ import {
   handleFetchPlugins,
   handleFetchBookSortCode,
   handleFetchNoteSortCode,
-  handleFetchList,
+  handleFetchViewMode,
   handleDetailDialog,
   handleLoadingDialog,
   handleNewDialog,
@@ -31,8 +31,7 @@ import { withRouter } from "react-router-dom";
 const mapStateToProps = (state: stateType) => {
   return {
     books: state.manager.books,
-    notes: state.reader.notes,
-    bookmarks: state.reader.bookmarks,
+
     isReading: state.book.isReading,
     mode: state.sidebar.mode,
     dragItem: state.book.dragItem,
@@ -44,7 +43,6 @@ const mapStateToProps = (state: stateType) => {
     isOpenAddDialog: state.book.isOpenAddDialog,
     isSettingOpen: state.manager.isSettingOpen,
     isAboutOpen: state.manager.isAboutOpen,
-    isBookSort: state.manager.isBookSort,
     isSortDisplay: state.manager.isSortDisplay,
     isShowLoading: state.manager.isShowLoading,
     isShowNew: state.manager.isShowNew,
@@ -64,7 +62,7 @@ const actionCreator = {
   handleFetchBookmarks,
   handleFetchBookSortCode,
   handleFetchNoteSortCode,
-  handleFetchList,
+  handleFetchViewMode,
   handleEditDialog,
   handleDeleteDialog,
   handleAddDialog,

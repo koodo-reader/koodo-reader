@@ -2,14 +2,13 @@ import BookModel from "../../models/Book";
 import NoteModel from "../../models/Note";
 import htmlBookModel from "../../models/HtmlBook";
 export interface SearchBoxProps {
-  books: BookModel[];
   isSearch: boolean;
   isNavSearch: boolean;
   isReading: boolean;
   isNavLocked: boolean;
   mode: string;
   tabMode: string;
-  notes: NoteModel[];
+
   width: string;
   height: string;
   currentBook: any;

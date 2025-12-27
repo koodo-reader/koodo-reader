@@ -235,6 +235,23 @@ class DatabaseService {
       return null;
     }
   }
+  static async getAllRecordKeys(dbName: string): Promise<string[]> {
+    if (isElectron) {
+      let keys = await window
+        .require("electron")
+        .ipcRenderer.invoke("database-command", {
+          statement: "getKeysStatement",
+          statementType: "string",
+          executeType: "all",
+          dbName: dbName,
+          storagePath: getStorageLocation(),
+        });
+      return keys.map((k: any) => k.key);
+    } else {
+      let records = await this.getAllRecords(dbName);
+      return records.map((record) => record.key);
+    }
+  }
   static async getRecordsByBookKey(
     bookKey: string,
     dbName: string

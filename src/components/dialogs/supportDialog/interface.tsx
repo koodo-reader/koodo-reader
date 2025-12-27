@@ -1,7 +1,7 @@
 import BookModel from "../../../models/Book";
 export interface SupporDialogProps {
   currentBook: BookModel;
-  books: BookModel[];
+
   isShowSupport: boolean;
   isAuthed: boolean;
   userInfo: any;

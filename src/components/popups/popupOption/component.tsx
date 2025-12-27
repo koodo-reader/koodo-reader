@@ -93,7 +93,7 @@ class PopupOption extends React.Component<PopupOptionProps> {
     text = text.replace(/\n/g, "");
     text = text.replace(/\t/g, "");
     text = text.replace(/\f/g, "");
-    let digest = new Note(
+    let highlight = new Note(
       bookKey,
       this.props.chapter,
       this.props.chapterDocIndex,
@@ -105,13 +105,13 @@ class PopupOption extends React.Component<PopupOptionProps> {
       color,
       []
     );
-    DatabaseService.saveRecord(digest, "notes").then(async () => {
+    DatabaseService.saveRecord(highlight, "notes").then(async () => {
       this.props.handleOpenMenu(false);
       toast.success(this.props.t("Addition successful"));
       this.props.handleFetchNotes();
       this.props.handleMenuMode("");
       await this.props.htmlBook.rendition.createOneNote(
-        digest,
+        highlight,
         this.handleNoteClick
       );
     });

@@ -3,7 +3,7 @@ import HtmlBook from "../../../models/HtmlBook";
 import NoteModel from "../../../models/Note";
 export interface PopupNoteProps {
   currentBook: BookModel;
-  notes: NoteModel[];
+
   color: number;
   noteKey: string;
 
@@ -20,4 +20,5 @@ export interface PopupNoteProps {
 export interface PopupNoteState {
   tag: string[];
   text: string;
+  note: NoteModel | null;
 }

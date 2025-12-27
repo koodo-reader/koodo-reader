@@ -87,17 +87,6 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
     return false;
   };
 
-  UNSAFE_componentWillUpdate(nextProps: Readonly<ContentListProps>): void {
-    if (nextProps.htmlBook && nextProps.htmlBook !== this.props.htmlBook) {
-      this.handleScrollToChapter(nextProps.htmlBook);
-    }
-    if (
-      nextProps.currentChapter !== this.props.currentChapter &&
-      this.props.htmlBook
-    ) {
-      this.handleScrollToChapter(this.props.htmlBook);
-    }
-  }
   async handleScrollToChapter(htmlBook: any) {
     this.setState(
       {
@@ -143,6 +132,13 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
   UNSAFE_componentWillReceiveProps(nextProps: ContentListProps) {
     if (nextProps.htmlBook && nextProps.htmlBook !== this.props.htmlBook) {
       this.setState({ chapters: nextProps.htmlBook.chapters });
+      this.handleScrollToChapter(nextProps.htmlBook);
+    }
+    if (
+      nextProps.currentChapter !== this.props.currentChapter &&
+      this.props.htmlBook
+    ) {
+      this.handleScrollToChapter(this.props.htmlBook);
     }
   }
   render() {

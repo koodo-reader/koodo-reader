@@ -577,6 +577,20 @@ const createMainWin = () => {
       return filePaths;
     }
   });
+  ipcMain.handle("custom-database-command", async (event, config) => {
+    const { SqlStatement } = await import('./src/assets/lib/kookit-extra.min.mjs');
+    let { query, storagePath, data, dbName, executeType } = config;
+    let db = getDBConnection(dbName, storagePath, SqlStatement.sqlStatement);
+    const row = db.prepare(query);
+    let result;
+    if (data && data.length > 0) {
+      result = row[executeType](...data);
+    } else {
+      result = row[executeType]();
+    }
+    return result;
+
+  });
   ipcMain.handle("database-command", async (event, config) => {
     const { SqlStatement } = await import('./src/assets/lib/kookit-extra.min.mjs');
     let { statement, statementType, executeType, dbName, data, storagePath } = config;

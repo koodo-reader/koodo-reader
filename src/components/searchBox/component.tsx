@@ -1,10 +1,9 @@
 import React from "react";
 import "./searchBox.css";
 import { SearchBoxProps, SearchBoxState } from "./interface";
-import {
-  ConfigService,
-  SearchUtil,
-} from "../../assets/lib/kookit-extra-browser.min";
+import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
+import ConfigUtil from "../../utils/file/configUtil";
+import BookUtil from "../../utils/file/bookUtil";
 
 class SearchBox extends React.Component<SearchBoxProps, SearchBoxState> {
   constructor(props: SearchBoxProps) {
@@ -19,7 +18,7 @@ class SearchBox extends React.Component<SearchBoxProps, SearchBoxState> {
       searchBox && searchBox.focus();
     }
   }
-  handleMouse = () => {
+  handleMouse = async () => {
     let value = (this.refs.searchBox as any).value;
     if (this.props.isNavSearch) {
       value && this.search(value);
@@ -28,16 +27,15 @@ class SearchBox extends React.Component<SearchBoxProps, SearchBoxState> {
     if (this.props.mode === "nav") {
       this.props.handleNavSearchState("searching");
     }
+    let keyword = (
+      document.querySelector(".header-search-box") as HTMLInputElement
+    ).value.toLowerCase();
     let results =
       this.props.tabMode === "note"
-        ? SearchUtil.mouseNoteSearch(
-            this.props.notes.filter((item) => item.notes !== "")
-          )
-        : this.props.tabMode === "digest"
-        ? SearchUtil.mouseNoteSearch(
-            this.props.notes.filter((item) => item.notes === "")
-          )
-        : SearchUtil.mouseSearch(this.props.books);
+        ? await ConfigUtil.searchNotesByKeyword(keyword, "", "note")
+        : this.props.tabMode === "highlight"
+        ? await ConfigUtil.searchNotesByKeyword(keyword, "", "highlight")
+        : await BookUtil.searchBooksByKeyword(keyword);
     if (results) {
       this.props.handleSearchResults(results);
       this.props.handleSearch(true);
@@ -46,7 +44,7 @@ class SearchBox extends React.Component<SearchBoxProps, SearchBoxState> {
       }
     }
   };
-  handleKey = (event: any) => {
+  handleKey = async (event: any) => {
     if (event.keyCode !== 13) {
       return;
     }
@@ -55,23 +53,20 @@ class SearchBox extends React.Component<SearchBoxProps, SearchBoxState> {
       value && this.search(value);
     }
     this.setState({ isFocused: false });
-    let results =
-      this.props.tabMode === "note"
-        ? SearchUtil.keyNoteSearch(
-            event,
-            this.props.notes.filter((item) => item.notes !== "")
-          )
-        : this.props.tabMode === "digest"
-        ? SearchUtil.keyNoteSearch(
-            event,
-            this.props.notes.filter((item) => item.notes === "")
-          )
-        : SearchUtil.keySearch(event, this.props.books);
-    if (results) {
-      this.props.handleSearchResults(results);
-      this.props.handleSearch(true);
-      if (this.props.mode === "nav") {
-        this.props.handleNavSearchState("done");
+    if (event && event.keyCode === 13) {
+      let keyword = event.target.value.toLowerCase();
+      let results =
+        this.props.tabMode === "note"
+          ? await ConfigUtil.searchNotesByKeyword(keyword, "", "note")
+          : this.props.tabMode === "highlight"
+          ? await ConfigUtil.searchNotesByKeyword(keyword, "", "highlight")
+          : await BookUtil.searchBooksByKeyword(keyword);
+      if (results) {
+        this.props.handleSearchResults(results);
+        this.props.handleSearch(true);
+        if (this.props.mode === "nav") {
+          this.props.handleNavSearchState("done");
+        }
       }
     }
   };
@@ -123,7 +118,7 @@ class SearchBox extends React.Component<SearchBoxProps, SearchBoxState> {
               ? this.props.t("Search in the Book")
               : this.props.tabMode === "note"
               ? this.props.t("Search my notes")
-              : this.props.tabMode === "digest"
+              : this.props.tabMode === "highlight"
               ? this.props.t("Search my highlights")
               : this.props.t("Search my library")
           }
