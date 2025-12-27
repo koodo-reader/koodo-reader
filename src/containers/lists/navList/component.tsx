@@ -153,11 +153,11 @@ class NavList extends React.Component<NavListProps, NavListState> {
       this.props.currentBook.key,
       "bookmarks"
     );
-    bookmarks.forEach((item) => {
-      if (item.cfi === JSON.stringify(bookLocation)) {
+    for (let i = 0; i < bookmarks.length; i++) {
+      if (bookmarks[i].cfi === JSON.stringify(bookLocation)) {
         this.props.handleShowBookmark(true);
       }
-    });
+    }
   }
   handleShowDelete = (index: number) => {
     this.setState({ deleteIndex: index });
@@ -173,8 +173,8 @@ class NavList extends React.Component<NavListProps, NavListState> {
         };
   };
   render() {
-    const renderBookNavList = (currentData: any[]) => {
-      return currentData.map((item: any, index: number) => {
+    const renderBookNavList = () => {
+      return this.state.currentData.map((item: any, index: number) => {
         const bookmarkProps = {
           itemKey: item.key,
           mode: this.props.currentTab === "bookmarks" ? "bookmarks" : "notes",
@@ -248,9 +248,7 @@ class NavList extends React.Component<NavListProps, NavListState> {
     }
     return (
       <div className="book-bookmark-container">
-        <ul className="book-bookmark">
-          {renderBookNavList(this.state.currentData)}
-        </ul>
+        <ul className="book-bookmark">{renderBookNavList()}</ul>
       </div>
     );
   }
