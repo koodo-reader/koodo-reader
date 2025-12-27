@@ -4,7 +4,6 @@ import HtmlBookModel from "../../../models/HtmlBook";
 
 export interface ProgressPanelProps {
   currentBook: BookModel;
-  isReading: boolean;
   currentChapter: string;
   readerMode: string;
   currentChapterIndex: number;

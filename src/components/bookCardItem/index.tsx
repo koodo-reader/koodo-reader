@@ -14,8 +14,6 @@ import { withRouter } from "react-router-dom";
 
 const mapStateToProps = (state: stateType) => {
   return {
-    mode: state.sidebar.mode,
-
     isOpenActionDialog: state.book.isOpenActionDialog,
     dragItem: state.book.dragItem,
     currentBook: state.book.currentBook,

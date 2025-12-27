@@ -6,7 +6,6 @@ import { handleMargin, handleScale } from "../../../store/actions";
 
 const mapStateToProps = (state: stateType) => {
   return {
-    currentBook: state.book.currentBook,
     renderBookFunc: state.book.renderBookFunc,
     scale: state.reader.scale,
     margin: state.reader.margin,

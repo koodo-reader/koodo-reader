@@ -11,7 +11,6 @@ import { withRouter } from "react-router-dom";
 const mapStateToProps = (state: stateType) => {
   return {
     isOpenSortShelfDialog: state.backupPage.isOpenSortShelfDialog,
-    mode: state.sidebar.mode,
   };
 };
 const actionCreator = {

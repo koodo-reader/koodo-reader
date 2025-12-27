@@ -8,10 +8,8 @@ export interface SearchBoxProps {
   isNavLocked: boolean;
   mode: string;
   tabMode: string;
-
   width: string;
   height: string;
-  currentBook: any;
   htmlBook: htmlBookModel;
   shelfTitle: string;
   handleSearchResults: (results: number[]) => void;
