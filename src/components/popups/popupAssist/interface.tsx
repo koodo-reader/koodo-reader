@@ -1,4 +1,3 @@
-import BookModel from "../../../models/Book";
 import PluginModel from "../../../models/Plugin";
 export interface PopupAssistProps {
   originalText: string;

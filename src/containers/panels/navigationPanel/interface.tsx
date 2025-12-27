@@ -1,5 +1,4 @@
 import BookModel from "../../../models/Book";
-import BookmarkModel from "../../../models/Bookmark";
 import HtmlBookModel from "../../../models/HtmlBook";
 
 export interface NavigationPanelProps {

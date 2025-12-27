@@ -14,7 +14,6 @@ import "./aboutDialog.css";
 import DatabaseService from "../../../utils/storage/databaseService";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import copyTextToClipboard from "copy-text-to-clipboard";
-import ConfigUtil from "../../../utils/file/configUtil";
 declare var window: any;
 class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
   constructor(props: AboutDialogProps) {

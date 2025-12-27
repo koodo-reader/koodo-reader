@@ -10,7 +10,6 @@ import DOMPurify from "dompurify";
 import EmptyCover from "../../../components/emptyCover";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import CoverUtil from "../../../utils/file/coverUtil";
-import BookUtil from "../../../utils/file/bookUtil";
 
 class NavigationPanel extends React.Component<
   NavigationPanelProps,

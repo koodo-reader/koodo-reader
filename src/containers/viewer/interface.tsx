@@ -1,6 +1,5 @@
 import BookModel from "../../models/Book";
 import HtmlBook from "../../models/HtmlBook";
-import NoteModel from "../../models/Note";
 
 export interface ViewerProps {
   book: BookModel;

@@ -3,7 +3,6 @@ import { isElectron } from "react-device-detect";
 import { getIframeDoc, getIframeWin } from "./docUtil";
 import { handleExitFullScreen, handleFullScreen, sleep } from "../common";
 import Hammer from "hammerjs";
-import BookUtil from "../file/bookUtil";
 declare var window: any;
 
 let throttleTime =

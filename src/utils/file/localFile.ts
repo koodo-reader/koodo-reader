@@ -1,13 +1,8 @@
-import {
-  CommonTool,
-  ConfigService,
-} from "../../assets/lib/kookit-extra-browser.min";
+import { CommonTool } from "../../assets/lib/kookit-extra-browser.min";
 import DatabaseService from "../storage/databaseService";
 import Book from "../../models/Book";
 import CoverUtil from "./coverUtil";
 import BookUtil from "./bookUtil";
-import toast from "react-hot-toast";
-import i18n from "../../i18n";
 
 declare global {
   interface FileSystemDirectoryHandle {
