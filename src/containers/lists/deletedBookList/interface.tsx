@@ -16,5 +16,5 @@ export interface BookListProps extends RouteComponentProps<any> {
   handleFetchBooks: () => void;
 }
 export interface BookListState {
-  isRefreshing: boolean;
+  fullBooksData: BookModel[];
 }

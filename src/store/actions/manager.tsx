@@ -325,29 +325,3 @@ export function handleFetchViewMode() {
     dispatch(handleViewMode(viewMode));
   };
 }
-const handleKeyRemove = (items: any[], arr: string[]) => {
-  if (!items) return [];
-  let itemArr: any[] = [];
-  if (!arr[0]) {
-    return items;
-  }
-  for (let item of items) {
-    if (arr.indexOf(item.key) === -1) {
-      itemArr.push(item);
-    }
-  }
-
-  return itemArr;
-};
-const handleKeyFilter = (items: any[], arr: string[]) => {
-  if (!items) {
-    return [];
-  }
-  let itemArr: any[] = [];
-  for (let item of items) {
-    if (arr.indexOf(item.key) > -1) {
-      itemArr.push(item);
-    }
-  }
-  return itemArr;
-};
