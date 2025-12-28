@@ -248,6 +248,10 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
       setTimeout(() => {
         this.props.history.push("/manager/home");
       }, 2000);
+    } else {
+      toast.error(this.props.t("Restore failed"), {
+        id: "restore-snapshot",
+      });
     }
   };
   renderSwitchOption = (optionList: any[]) => {
