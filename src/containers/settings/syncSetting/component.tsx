@@ -61,7 +61,13 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
       settingLogin: "",
       driveConfig: {},
       loginConfig: {},
+      snapshotList: [],
     };
+  }
+  componentDidMount(): void {
+    this.setState({
+      snapshotList: getSnapshots(),
+    });
   }
   handleRest = (_bool: boolean) => {
     toast.success(this.props.t("Change successful"));
@@ -253,6 +259,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
         id: "restore-snapshot",
       });
     }
+    event.target.value = "";
   };
   renderSwitchOption = (optionList: any[]) => {
     return optionList.map((item) => {
@@ -766,7 +773,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                 <option value={""} className="lang-setting-option">
                   {this.props.t("Please select")}
                 </option>
-                {getSnapshots()
+                {this.state.snapshotList
                   .map((item) => {
                     return {
                       label: new Date(item.time).toLocaleString(),
