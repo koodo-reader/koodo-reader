@@ -13,6 +13,7 @@ import {
 } from "../../constants/settingList";
 import toast from "react-hot-toast";
 import BookUtil from "../../utils/file/bookUtil";
+import { getStorageLocation } from "../../utils/common";
 
 export function handleBooks(books: BookModel[]) {
   return { type: "HANDLE_BOOKS", payload: books };
@@ -131,7 +132,7 @@ export function handleFetchBooks() {
       let allBookKeys = await DatabaseService.getAllRecordKeys("books");
       let recentBookLKeys = ConfigService.getAllListConfig("recentBooks") || [];
       let sortedKeys = [
-        ...recentBookLKeys,
+        ...recentBookLKeys.filter((key) => allBookKeys.includes(key)),
         ...allBookKeys.filter((key) => !recentBookLKeys.includes(key)),
       ];
       if (bookSortCode.order === 1) {
@@ -153,7 +154,7 @@ export function handleFetchBooks() {
       });
       let recentBookLKeys = Object.keys(durationObj) || [];
       let sortedKeys = [
-        ...recentBookLKeys,
+        ...recentBookLKeys.filter((key) => allBookKeys.includes(key)),
         ...allBookKeys.filter((key) => !recentBookLKeys.includes(key)),
       ];
       if (bookSortCode.order === 1) {
@@ -175,7 +176,7 @@ export function handleFetchBooks() {
       });
       let recentBookLKeys = sortable.map((item) => item[0]) || [];
       let sortedKeys = [
-        ...recentBookLKeys,
+        ...recentBookLKeys.filter((key) => allBookKeys.includes(key)),
         ...allBookKeys.filter((key) => !recentBookLKeys.includes(key)),
       ];
       if (bookSortCode.order === 1) {
