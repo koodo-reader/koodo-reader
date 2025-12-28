@@ -242,9 +242,6 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
     if (!confirm) {
       return;
     }
-    toast.loading(this.props.t("Restore") + "...", {
-      id: "restore-snapshot",
-    });
     let result = await restoreFromSnapshot(targetFile);
     if (result) {
       toast.success(this.props.t("Restore successful"), {
@@ -254,10 +251,6 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
       setTimeout(() => {
         this.props.history.push("/manager/home");
       }, 2000);
-    } else {
-      toast.error(this.props.t("Restore failed"), {
-        id: "restore-snapshot",
-      });
     }
     event.target.value = "";
   };
