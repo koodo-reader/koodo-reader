@@ -242,7 +242,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
     if (!confirm) {
       return;
     }
-    toast.loading(this.props.t("Restoring") + "...", {
+    toast.loading(this.props.t("Restore") + "...", {
       id: "restore-snapshot",
     });
     let result = await restoreFromSnapshot(targetFile);
