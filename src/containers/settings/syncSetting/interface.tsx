@@ -39,4 +39,5 @@ export interface SettingInfoState {
   loginConfig: any;
   settingLogin: string;
   isAddNew: boolean;
+  snapshotList: { file: string; time: number }[];
 }
