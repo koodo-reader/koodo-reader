@@ -29,14 +29,6 @@ class NavList extends React.Component<NavListProps, NavListState> {
       this.props.notes,
       this.props.highlights
     );
-    console.log(
-      this.props.highlights.filter(
-        (item) => item.bookKey === this.props.currentBook.key
-      ),
-      this.props.notes.filter(
-        (item) => item.bookKey === this.props.currentBook.key
-      )
-    );
   }
   UNSAFE_componentWillReceiveProps(
     nextProps: Readonly<NavListProps>,

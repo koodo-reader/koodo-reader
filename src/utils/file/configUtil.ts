@@ -270,13 +270,6 @@ class ConfigUtil {
         queryString = `SELECT key, bookKey, chapterIndex FROM notes ORDER BY key ${order}`;
       }
       const { ipcRenderer } = window.require("electron");
-      console.log({
-        dbName: "notes",
-        storagePath: getStorageLocation(),
-        query: queryString,
-        data: data,
-        executeType: "all",
-      });
       return await ipcRenderer.invoke("custom-database-command", {
         dbName: "notes",
         storagePath: getStorageLocation(),
@@ -415,7 +408,6 @@ class ConfigUtil {
       let notes = rawNotes.map((item) =>
         SqlStatement.sqliteToJson["notes"](item)
       );
-      console.log(notes, "notes");
       let updatedNotes = notes.map((item) => {
         return {
           ...item,
