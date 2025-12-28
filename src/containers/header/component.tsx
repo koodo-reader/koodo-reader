@@ -64,7 +64,11 @@ class Header extends React.Component<HeaderProps, HeaderState> {
   }
   async componentDidMount() {
     if (isElectron) {
-      await generateSnapshot();
+      try {
+        await generateSnapshot();
+      } catch (error) {
+        console.error("Failed to generate snapshot:", error);
+      }
     }
     this.props.handleFetchAuthed();
     this.props.handleFetchDefaultSyncOption();
