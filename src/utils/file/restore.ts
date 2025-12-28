@@ -69,17 +69,16 @@ export const restoreFromSnapshot = async (fileName: string) => {
     }
     const zip = new AdmZip(filePath);
     const zipEntries = zip.getEntries();
+    const zipEntryNames = new Set(
+      zipEntries.map((item: any) => item.entryName)
+    );
     let databaseList = CommonTool.databaseList;
     for (let i = 0; i < databaseList.length; i++) {
       await window.require("electron").ipcRenderer.invoke("close-database", {
         dbName: databaseList[i],
         storagePath: getStorageLocation(),
       });
-      if (
-        zipEntries
-          .map((item: any) => item.entryName)
-          .indexOf("config/" + databaseList[i] + ".db") === -1
-      ) {
+      if (!zipEntryNames.has("config/" + databaseList[i] + ".db")) {
         continue;
       }
       if (
