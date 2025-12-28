@@ -3,7 +3,11 @@ import { getCloudConfig, upgradeConfig, upgradeStorage } from "./common";
 import localforage from "localforage";
 import SqlUtil from "./sqlUtil";
 import DatabaseService from "../storage/databaseService";
-import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
+import {
+  CommonTool,
+  ConfigService,
+} from "../../assets/lib/kookit-extra-browser.min";
+import toast from "react-hot-toast";
 declare var window: any;
 let oldConfigArr = [
   "notes.json",
@@ -51,6 +55,64 @@ export const restore = async (service: string): Promise<Boolean> => {
     await generateSyncRecord();
     return restoreRes;
   }
+};
+export const restoreFromSnapshot = async (fileName: string) => {
+  try {
+    const path = window.require("path");
+    const fs = window.require("fs");
+    const AdmZip = window.require("adm-zip");
+    const dataPath = getStorageLocation() || "";
+
+    let filePath = path.join(getStorageLocation(), "snapshot", fileName);
+    if (!fs.existsSync(filePath)) {
+      return false;
+    }
+    const zip = new AdmZip(filePath);
+    const zipEntries = zip.getEntries();
+    let databaseList = CommonTool.databaseList;
+    for (let i = 0; i < databaseList.length; i++) {
+      await window.require("electron").ipcRenderer.invoke("close-database", {
+        dbName: databaseList[i],
+        storagePath: getStorageLocation(),
+      });
+      if (
+        zipEntries
+          .map((item: any) => item.entryName)
+          .indexOf("config/" + databaseList[i] + ".db") === -1
+      ) {
+        continue;
+      }
+      if (
+        fs.existsSync(path.join(dataPath, "config", databaseList[i] + ".db"))
+      ) {
+        fs.unlinkSync(path.join(dataPath, "config", databaseList[i] + ".db"));
+      }
+      zip.extractEntryTo(
+        "config/" + databaseList[i] + ".db",
+        path.join(dataPath, "config"),
+        false,
+        true
+      );
+    }
+
+    let configText = zip
+      .getEntry("config/config.json")
+      .getData()
+      .toString("utf8");
+    let config = JSON.parse(configText);
+    for (let key in config) {
+      ConfigService.setItem(key, config[key]);
+    }
+    await generateSyncRecord();
+  } catch (error) {
+    console.error("restore snapshot error:", error);
+    toast.error(error instanceof Error ? error.message : String(error), {
+      id: "restore-snapshot",
+    });
+    return false;
+  }
+
+  return true;
 };
 export const restoreFromConfigJson = () => {
   const fs = window.require("fs");
