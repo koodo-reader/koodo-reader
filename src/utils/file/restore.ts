@@ -93,15 +93,19 @@ export const restoreFromSnapshot = async (fileName: string) => {
         true
       );
     }
-
-    let configText = zip
-      .getEntry("config/config.json")
-      .getData()
-      .toString("utf8");
-    let config = JSON.parse(configText);
-    for (let key in config) {
-      ConfigService.setItem(key, config[key]);
+    try {
+      let configText = zip
+        .getEntry("config/config.json")
+        .getData()
+        .toString("utf8");
+      let config = JSON.parse(configText);
+      for (let key in config) {
+        ConfigService.setItem(key, config[key]);
+      }
+    } catch (error) {
+      console.error("restore config error:", error);
     }
+
     await generateSyncRecord();
   } catch (error) {
     console.error("restore snapshot error:", error);
@@ -120,14 +124,20 @@ export const restoreFromConfigJson = () => {
   if (!fs.existsSync(path.join(dataPath, "config", "config.json"))) {
     return false;
   }
-  let configStr = fs.readFileSync(
-    path.join(dataPath, "config", "config.json"),
-    "utf-8"
-  );
-  let config = JSON.parse(configStr);
-  for (let key in config) {
-    ConfigService.setItem(key, config[key]);
+  try {
+    let configStr = fs.readFileSync(
+      path.join(dataPath, "config", "config.json"),
+      "utf-8"
+    );
+    let config = JSON.parse(configStr);
+    for (let key in config) {
+      ConfigService.setItem(key, config[key]);
+    }
+  } catch (error) {
+    console.error("restore config error:", error);
+    return false;
   }
+
   return true;
 };
 export const restoreFromfilePath = async (filePath: string) => {
