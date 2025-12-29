@@ -83,12 +83,10 @@ export const generateSnapshot = async () => {
     await backupToConfigJson();
     let databaseList = CommonTool.databaseList;
     for (let i = 0; i < databaseList.length; i++) {
-      await window
-        .require("electron")
-        .ipcRenderer.invoke("close-database", {
-          dbName: databaseList[i],
-          storagePath: getStorageLocation(),
-        });
+      await window.require("electron").ipcRenderer.invoke("close-database", {
+        dbName: databaseList[i],
+        storagePath: getStorageLocation(),
+      });
       if (
         fs.existsSync(path.join(dataPath, "config", databaseList[i] + ".db"))
       ) {
@@ -110,10 +108,10 @@ export const generateSnapshot = async () => {
     await zip.writeZip(path.join(snapshotPath, fileName));
     //delete old snapshots
     let snapshots = getSnapshots();
-    if (snapshots.length <= 10) {
+    if (snapshots.length <= 30) {
       return;
     }
-    for (let i = 10; i < snapshots.length; i++) {
+    for (let i = 30; i < snapshots.length; i++) {
       fs.unlinkSync(path.join(snapshotPath, snapshots[i].file));
     }
   } catch (error) {
