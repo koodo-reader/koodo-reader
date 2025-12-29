@@ -218,6 +218,12 @@ export const langList = [
   { label: "Українська", value: "uk" },
   { label: "தமிழ்", value: "ta" },
   { label: "ελληνικά", value: "el" },
+  { label: "አማርኛ", value: "am" },
+  { label: "Dansk", value: "da" },
+  { label: "Suomi", value: "fi" },
+  { label: "Interlingue", value: "ie" },
+  { label: "Português", value: "pt" },
+  { label: "Tiếng Việt", value: "vi" },
 ];
 
 export const searchList = [
