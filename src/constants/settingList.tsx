@@ -174,6 +174,11 @@ export const readingSettingList = [
     title: "Overwrite the default link style in the book",
     propName: "isOverwriteLink",
   },
+  {
+    isElectron: false,
+    title: "Overwrite the default text style in the book",
+    propName: "isOverwriteText",
+  },
   // {
   //   isElectron: false,
   //   title: "Lemmatize words when looking up in a dictionary",

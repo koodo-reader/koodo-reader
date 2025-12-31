@@ -409,6 +409,8 @@ class ImportDialog extends React.Component<
                               getServerRegion() === "china" &&
                                 (settingDrive === "microsoft" ||
                                   settingDrive === "microsoft_exp" ||
+                                  settingDrive === "dubox" ||
+                                  settingDrive === "yiyiwu" ||
                                   settingDrive === "adrive")
                                 ? KookitConfig.ThirdpartyConfig.cnCallbackUrl
                                 : KookitConfig.ThirdpartyConfig.callbackUrl
