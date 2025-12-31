@@ -130,6 +130,9 @@ export const generateSnapshot = async () => {
   }
 };
 export const getSnapshots = () => {
+  if (!isElectron) {
+    return [];
+  }
   const path = window.require("path");
   const fs = window.require("fs");
   const dataPath = getStorageLocation() || "";

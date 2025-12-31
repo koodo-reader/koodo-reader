@@ -41,6 +41,7 @@ export interface SettingInfoState {
   isUseBuiltIn: boolean;
   isDisableCrop: boolean;
   isOverwriteLink: boolean;
+  isOverwriteText: boolean;
   isDisablePDFCover: boolean;
   isAutoFullscreen: boolean;
   isHideShelfBook: boolean;
