@@ -722,8 +722,8 @@ class Header extends React.Component<HeaderProps, HeaderState> {
             handleDrag: this.props.handleDrag,
           }}
         />
-        <UpdateInfo />
         <SupportDialog />
+        <UpdateInfo />
       </div>
     );
   }
