@@ -680,7 +680,10 @@ class Header extends React.Component<HeaderProps, HeaderState> {
             <span
               style={{ textDecoration: "underline" }}
               onClick={() => {
-                if (window.location.hostname !== "web.koodoreader.com") {
+                if (
+                  window.location.hostname !== "web.koodoreader.com" &&
+                  !isElectron
+                ) {
                   this.props.handleSetting(true);
                   this.props.handleSettingMode("account");
                   return;
