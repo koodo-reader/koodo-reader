@@ -171,6 +171,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
   };
 
   getMd5WithBrowser = async (file: any) => {
+    console.log("file import", file);
     return new Promise<void>(async (resolve) => {
       const md5 = await calculateFileMD5(file);
       if (!md5) {
