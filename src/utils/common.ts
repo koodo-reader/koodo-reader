@@ -121,9 +121,11 @@ export const scrollContents = (chapterTitle: string, chapterHref: string) => {
   let contentBody = document.getElementsByClassName("navigation-body")[0];
   if (!contentBody) return;
   let contentList = contentBody.getElementsByClassName("book-content-name");
+  console.log(contentList);
   let targetContent = Array.from(contentList).filter((item) => {
     item.setAttribute("style", "");
     let dataHref = (item as any).getAttribute("data-href");
+    console.log("dataHref", dataHref);
     if (chapterHref) {
       return item.textContent === chapterTitle && dataHref === chapterHref;
     } else {

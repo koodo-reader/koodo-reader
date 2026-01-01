@@ -88,6 +88,7 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
   };
 
   async handleScrollToChapter(htmlBook: any) {
+    console.log("scroll", htmlBook);
     this.setState(
       {
         chapters: htmlBook.chapters,
@@ -110,13 +111,17 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
             htmlBook.chapters,
             bookLocation
           );
-          this.setState({ expandedItems: expandedPaths });
+          this.setState({ expandedItems: expandedPaths }, () => {
+            let chapter =
+              bookLocation.chapterTitle ||
+              (htmlBook && htmlBook.flattenChapters[0]
+                ? ""
+                : "Unknown chapter");
+            console.log(chapter, bookLocation.chapterHref, "chapter");
+            scrollContents(chapter, bookLocation.chapterHref);
+          });
+          return;
         }
-
-        let chapter =
-          bookLocation.chapterTitle ||
-          (htmlBook && htmlBook.flattenChapters[0] ? "" : "Unknown chapter");
-        scrollContents(chapter, bookLocation.chapterHref);
       }
     );
   }
@@ -129,9 +134,14 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
     this.props.handleCurrentChapter(item.label);
     this.props.handleCurrentChapterIndex(item.index);
   }
+  componentDidMount() {
+    if (this.props.htmlBook) {
+      this.handleScrollToChapter(this.props.htmlBook);
+    }
+  }
   UNSAFE_componentWillReceiveProps(nextProps: ContentListProps) {
     if (nextProps.htmlBook && nextProps.htmlBook !== this.props.htmlBook) {
-      this.setState({ chapters: nextProps.htmlBook.chapters });
+      console.log(nextProps.htmlBook, "htmlBook");
       this.handleScrollToChapter(nextProps.htmlBook);
     }
     if (
@@ -142,20 +152,6 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
     }
   }
   render() {
-    let bookLocation: {
-      text: string;
-      count: string;
-      chapterTitle: string;
-      chapterDocIndex: string;
-      chapterHref: string;
-      percentage: string;
-      cfi: string;
-      page: string;
-    } = ConfigService.getObjectConfig(
-      this.props.currentBook.key,
-      "recordLocation",
-      {}
-    );
     const renderContentList = (
       items: any,
       level: number,
@@ -206,7 +202,7 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
         );
       });
     };
-
+    console.log(this.state.chapters, "chapters");
     return (
       <div className="book-content-container">
         {this.props.htmlBook && (

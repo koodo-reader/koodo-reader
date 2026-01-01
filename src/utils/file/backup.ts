@@ -118,15 +118,8 @@ export const generateSnapshot = async () => {
     // Log error for debugging and avoid unhandled exceptions
     console.error("Failed to generate snapshot:", error);
     // Best-effort user notification; ignore any errors from toast/i18n
-    try {
-      const message =
-        typeof i18n?.t === "function"
-          ? i18n.t("backup.snapshotFailed")
-          : "Failed to generate snapshot.";
-      toast.error(message);
-    } catch (e) {
-      // ignore notification errors
-    }
+    let message = error instanceof Error ? error.message : String(error);
+    toast.error(message);
   }
 };
 export const getSnapshots = () => {
@@ -232,8 +225,8 @@ export const backupToConfigJson = async () => {
   const fs = window.require("fs");
   const path = window.require("path");
   const dataPath = getStorageLocation() || "";
-  if (!fs.existsSync(path.join(dataPath))) {
-    fs.mkdirSync(path.join(dataPath), { recursive: true });
+  if (!fs.existsSync(path.join(dataPath, "config"))) {
+    fs.mkdirSync(path.join(dataPath, "config"), { recursive: true });
   }
   fs.writeFileSync(
     path.join(dataPath, "config", "config.json"),
@@ -246,8 +239,8 @@ export const backupToSyncJson = async () => {
   const fs = window.require("fs");
   const path = window.require("path");
   const dataPath = getStorageLocation() || "";
-  if (!fs.existsSync(path.join(dataPath))) {
-    fs.mkdirSync(path.join(dataPath), { recursive: true });
+  if (!fs.existsSync(path.join(dataPath, "config"))) {
+    fs.mkdirSync(path.join(dataPath, "config"), { recursive: true });
   }
   fs.writeFileSync(
     path.join(dataPath, "config", "sync.json"),
