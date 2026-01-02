@@ -17,7 +17,6 @@ import {
   supportedFormats,
 } from "../../../utils/common";
 import {
-  ConfigService,
   KookitConfig,
   SyncUtil,
 } from "../../../assets/lib/kookit-extra-browser.min";
@@ -294,7 +293,7 @@ class ImportDialog extends React.Component<
 
       if (isElectron) {
         openExternalUrl(
-          "https://dl.koodoreader.com/websites/picker1.html?access_token=" +
+          "https://dl.koodoreader.com/websites/google-picker.html?access_token=" +
             pickerUtil.remote.config.access_token
         );
         const { ipcRenderer } = window.require("electron");

@@ -20,7 +20,6 @@ class ProgressPanel extends React.Component<
       isEntered: false,
     };
   }
-  componentDidMount() {}
   async UNSAFE_componentWillReceiveProps(nextProps: ProgressPanelProps) {
     if (nextProps.htmlBook !== this.props.htmlBook && nextProps.htmlBook) {
       await this.handlePageNum(nextProps.htmlBook.rendition);

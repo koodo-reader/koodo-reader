@@ -2,7 +2,7 @@ import React from "react";
 import SettingPanel from "../../containers/panels/settingPanel";
 import NavigationPanel from "../../containers/panels/navigationPanel";
 import OperationPanel from "../../containers/panels/operationPanel";
-import toast, { Toaster } from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 import ProgressPanel from "../../containers/panels/progressPanel";
 import { ReaderProps, ReaderState } from "./interface";
 import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
