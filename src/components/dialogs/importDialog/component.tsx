@@ -319,8 +319,6 @@ class ImportDialog extends React.Component<
   handlePickerCallback = async (data: any) => {
     if (data.action === window.google.picker.Action.PICKED) {
       const files = data.docs;
-      console.log(data.docs, "docs");
-
       for (const file of files) {
         await this.handleImportGoogleFile(file);
       }

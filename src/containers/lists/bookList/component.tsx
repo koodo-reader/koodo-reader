@@ -26,7 +26,6 @@ function getBookCountPerPage() {
   const bookHeight = 201;
   const columns = Math.max(1, Math.floor(containerWidth / bookWidth));
   const rows = Math.max(1, Math.floor(containerHeight / bookHeight)) + 2;
-  console.log(columns, rows, "columns, rows");
   return columns * rows;
 }
 
@@ -339,7 +338,6 @@ class BookList extends React.Component<BookListProps, BookListState> {
   };
 
   render() {
-    console.log(getBookCountPerPage(), "getBookCountPerPage()");
     if (
       (this.state.favoriteBooks === 0 && this.props.mode === "favorite") ||
       !this.props.books ||

@@ -570,19 +570,6 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                     className="voice-add-confirm"
                     style={{ marginRight: "10px" }}
                     onClick={async () => {
-                      console.log(
-                        new SyncUtil(this.props.settingDrive, {}).getAuthUrl(
-                          getServerRegion() === "china" &&
-                            (this.props.settingDrive === "microsoft" ||
-                              this.props.settingDrive === "microsoft_exp" ||
-                              this.props.settingDrive === "dubox" ||
-                              this.props.settingDrive === "yiyiwu" ||
-                              this.props.settingDrive === "adrive")
-                            ? KookitConfig.ThirdpartyConfig.cnCallbackUrl
-                            : KookitConfig.ThirdpartyConfig.callbackUrl
-                        ),
-                        "gdfgdssgdf"
-                      );
                       this.handleJump(
                         new SyncUtil(this.props.settingDrive, {}).getAuthUrl(
                           getServerRegion() === "china" &&
