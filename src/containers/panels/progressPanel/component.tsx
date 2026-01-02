@@ -25,14 +25,12 @@ class ProgressPanel extends React.Component<
     if (nextProps.htmlBook !== this.props.htmlBook && nextProps.htmlBook) {
       await this.handlePageNum(nextProps.htmlBook.rendition);
       nextProps.htmlBook.rendition.on("page-changed", async () => {
-        console.log("page-changed");
         this.handleLocation();
         await this.handlePageNum(nextProps.htmlBook.rendition);
         this.handleCurrentChapterIndex(nextProps.htmlBook.rendition);
         this.props.handleFetchPercentage(this.props.currentBook);
       });
       nextProps.htmlBook.rendition.on("rendered", async () => {
-        console.log("rendered");
         await this.handlePageNum(nextProps.htmlBook.rendition);
         this.handleCurrentChapterIndex(nextProps.htmlBook.rendition);
       });
@@ -48,7 +46,6 @@ class ProgressPanel extends React.Component<
         "recordLocation",
         {}
       );
-      console.log(bookLocation, "booksafsd");
       if (bookLocation.percentage) {
         let percentage = (parseFloat(bookLocation.percentage) * 100).toFixed(2);
         this.setState({ currentPercentage: parseFloat(percentage) });
@@ -56,7 +53,6 @@ class ProgressPanel extends React.Component<
     }
     if (nextProps.percentage !== this.props.percentage && nextProps.htmlBook) {
       let percentage = (nextProps.percentage * 100).toFixed(2);
-      console.log(percentage, "percentage");
       this.setState({ currentPercentage: parseFloat(percentage) });
     }
   }

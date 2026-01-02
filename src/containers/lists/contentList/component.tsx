@@ -111,14 +111,12 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
             htmlBook.chapters,
             bookLocation
           );
-          console.log(expandedPaths);
           this.setState({ expandedItems: expandedPaths }, () => {
             let chapter =
               bookLocation.chapterTitle ||
               (htmlBook && htmlBook.flattenChapters[0]
                 ? ""
                 : "Unknown chapter");
-            console.log(chapter, bookLocation.chapterHref, "chapter");
             scrollContents(chapter, bookLocation.chapterHref);
           });
           return;
@@ -138,13 +136,11 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
   }
   componentDidMount() {
     if (this.props.htmlBook) {
-      console.log(0);
       this.handleScrollToChapter(this.props.htmlBook);
     }
   }
   UNSAFE_componentWillReceiveProps(nextProps: ContentListProps) {
     if (nextProps.htmlBook && !this.props.htmlBook) {
-      console.log("1");
       this.handleScrollToChapter(nextProps.htmlBook);
     }
     if (
@@ -155,7 +151,6 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
         label: nextProps.currentChapter,
         index: nextProps.currentChapterIndex,
       });
-      console.log(chapter, "chapterchange");
       if (!chapter || !chapter.href) {
         return;
       }
@@ -175,12 +170,10 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
         this.props.htmlBook.chapters,
         bookLocation
       );
-      console.log(expandedPaths);
       this.setState({ expandedItems: expandedPaths }, () => {
         let chapter =
           bookLocation.chapterTitle ||
           (this.props.htmlBook.flattenChapters[0] ? "" : "Unknown chapter");
-        console.log(chapter, bookLocation.chapterHref, "chapter");
         scrollContents(chapter, bookLocation.chapterHref);
       });
     }
