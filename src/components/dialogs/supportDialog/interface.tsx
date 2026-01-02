@@ -1,4 +1,4 @@
-export interface SupporDialogProps {
+export interface SupportDialogProps {
   isShowSupport: boolean;
   isAuthed: boolean;
   t: (title: string) => string;
@@ -12,7 +12,7 @@ export interface SupporDialogProps {
   handleFetchDataSourceList: () => void;
   handleFetchDefaultSyncOption: () => void;
 }
-export interface SupporDialogState {
+export interface SupportDialogState {
   isRedeemCode: boolean;
   isExitPro: boolean;
   redeemCode: string;

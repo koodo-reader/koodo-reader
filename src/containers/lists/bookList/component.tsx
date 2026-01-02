@@ -43,7 +43,7 @@ class BookList extends React.Component<BookListProps, BookListState> {
       ).length,
       isHideShelfBook:
         ConfigService.getReaderConfig("isHideShelfBook") === "yes",
-      displayedBooksCount: getBookCountPerPage(),
+      displayedBooksCount: 24,
       isLoadingMore: false,
       fullBooksData: [], // 存储从数据库加载的完整书籍数据
     };
@@ -56,6 +56,9 @@ class BookList extends React.Component<BookListProps, BookListState> {
     if (!this.props.books || !this.props.books[0]) {
       return <Redirect to="manager/empty" />;
     }
+    this.setState({
+      displayedBooksCount: getBookCountPerPage(),
+    });
 
     // 保存 resize 监听器引用
     this.resizeHandler = () => {

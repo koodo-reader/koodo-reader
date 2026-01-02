@@ -55,6 +55,8 @@ class SettingDialog extends React.Component<
       appSkin: ConfigService.getReaderConfig("appSkin"),
       isUseBuiltIn: ConfigService.getReaderConfig("isUseBuiltIn") === "yes",
       isDisableCrop: ConfigService.getReaderConfig("isDisableCrop") === "yes",
+      isOverwriteText:
+        ConfigService.getReaderConfig("isOverwriteText") === "yes",
       isOverwriteLink:
         ConfigService.getReaderConfig("isOverwriteLink") === "yes",
       isDisablePDFCover:

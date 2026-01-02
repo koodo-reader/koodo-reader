@@ -4,6 +4,7 @@ import { Trans } from "react-i18next";
 import { ProgressPanelProps, ProgressPanelState } from "./interface";
 import _ from "underscore";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
+import { scrollContents } from "../../../utils/common";
 class ProgressPanel extends React.Component<
   ProgressPanelProps,
   ProgressPanelState
@@ -15,6 +16,7 @@ class ProgressPanel extends React.Component<
       totalPage: 0,
       targetChapterIndex: 0,
       targetPage: 0,
+      currentPercentage: 0,
       isEntered: false,
     };
   }
@@ -22,6 +24,7 @@ class ProgressPanel extends React.Component<
     if (nextProps.htmlBook !== this.props.htmlBook && nextProps.htmlBook) {
       await this.handlePageNum(nextProps.htmlBook.rendition);
       nextProps.htmlBook.rendition.on("page-changed", async () => {
+        this.handleLocation();
         await this.handlePageNum(nextProps.htmlBook.rendition);
         this.handleCurrentChapterIndex(nextProps.htmlBook.rendition);
         this.props.handleFetchPercentage(this.props.currentBook);
@@ -31,8 +34,39 @@ class ProgressPanel extends React.Component<
         this.handleCurrentChapterIndex(nextProps.htmlBook.rendition);
       });
       this.handleCurrentChapterIndex(nextProps.htmlBook.rendition);
+      let bookLocation: {
+        text: string;
+        chapterTitle: string;
+        chapterDocIndex: string;
+        chapterHref: string;
+        percentage: string;
+      } = ConfigService.getObjectConfig(
+        this.props.currentBook.key,
+        "recordLocation",
+        {}
+      );
+      if (bookLocation.percentage) {
+        let percentage = (parseFloat(bookLocation.percentage) * 100).toFixed(2);
+        this.setState({ currentPercentage: parseFloat(percentage) });
+      }
+    }
+    if (nextProps.percentage !== this.props.percentage && nextProps.htmlBook) {
+      let percentage = (nextProps.percentage * 100).toFixed(2);
+      this.setState({ currentPercentage: parseFloat(percentage) });
     }
   }
+  handleLocation = () => {
+    let position = this.props.htmlBook.rendition.getPosition();
+    ConfigService.setObjectConfig(
+      this.props.currentBook.key,
+      position,
+      "recordLocation"
+    );
+    this.props.handleCurrentChapter(position.chapterTitle);
+    setTimeout(() => {
+      scrollContents(position.chapterTitle, position.chapterHref);
+    }, 1000);
+  };
   handleCurrentChapterIndex = (rendition) => {
     let position = rendition.getPosition();
 
@@ -54,6 +88,7 @@ class ProgressPanel extends React.Component<
   }
   onProgressChange = async (event: any) => {
     const percentage = event.target.value / 100;
+    this.setState({ currentPercentage: event.target.value });
     await this.props.htmlBook.rendition.goToPercentage(percentage);
   };
   nextChapter = async () => {
@@ -84,8 +119,7 @@ class ProgressPanel extends React.Component<
       <div className="progress-panel">
         <p className="progress-text" style={{ marginTop: 10 }}>
           <span>
-            <Trans>Progress</Trans>:{" "}
-            {(parseFloat(this.props.percentage + "") * 100).toFixed(2)}
+            <Trans>Progress</Trans>: {this.state.currentPercentage}
             %&nbsp;&nbsp;&nbsp;
           </span>
         </p>
@@ -183,7 +217,7 @@ class ProgressPanel extends React.Component<
           </div>
           <input
             className="input-progress"
-            defaultValue={(this.props.percentage * 100).toFixed(2) || 0}
+            value={this.state.currentPercentage}
             type="range"
             max="100"
             min="0"
@@ -193,6 +227,11 @@ class ProgressPanel extends React.Component<
             }}
             onTouchEnd={(event) => {
               this.onProgressChange(event);
+            }}
+            onChange={(event) => {
+              this.setState({
+                currentPercentage: parseInt(event.target.value),
+              });
             }}
             style={{ width: "80%" }}
           />

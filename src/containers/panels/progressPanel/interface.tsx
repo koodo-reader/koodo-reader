@@ -12,6 +12,7 @@ export interface ProgressPanelProps {
   htmlBook: HtmlBookModel;
   renderBookFunc: (id: string) => void;
   handleFetchPercentage: (book: Book) => void;
+  handleCurrentChapter: (currentChapter: string) => void;
 }
 export interface ProgressPanelState {
   currentPage: number;
@@ -19,4 +20,5 @@ export interface ProgressPanelState {
   targetChapterIndex: number | string;
   targetPage: number | string;
   isEntered: boolean;
+  currentPercentage: number;
 }

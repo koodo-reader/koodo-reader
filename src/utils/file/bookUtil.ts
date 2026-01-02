@@ -511,6 +511,37 @@ class BookUtil {
       return cloudBookList;
     }
   }
+  static async getBookNamesMapByKeys(bookKeys: string[]) {
+    if (bookKeys.length === 0) {
+      return {};
+    }
+    if (isElectron) {
+      const { ipcRenderer } = window.require("electron");
+      let placeholders = bookKeys.map(() => "?").join(",");
+      let query = `SELECT key, name FROM books WHERE key IN (${placeholders})`;
+      let results = await ipcRenderer.invoke("custom-database-command", {
+        query: query,
+        data: bookKeys,
+        dbName: "books",
+        storagePath: getStorageLocation(),
+        executeType: "all",
+      });
+      let map: { [key: string]: string } = {};
+      for (let item of results) {
+        map[item.key] = item.name;
+      }
+      return map;
+    } else {
+      let books: Book[] = (await DatabaseService.getAllRecords("books")) || [];
+      let map: { [key: string]: string } = {};
+      for (let book of books) {
+        if (bookKeys.includes(book.key)) {
+          map[book.key] = book.name;
+        }
+      }
+      return map;
+    }
+  }
   static async getBookKeysWithSort(sortField: string, orderField: string) {
     if (isElectron) {
       const { ipcRenderer } = window.require("electron");

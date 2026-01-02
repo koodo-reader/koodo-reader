@@ -5,8 +5,8 @@ import CardList from "../cardList";
 import NoteTag from "../../../components/noteTag";
 import Empty from "../../emptyPage";
 import { Trans } from "react-i18next";
-import DatabaseService from "../../../utils/storage/databaseService";
 import ConfigUtil from "../../../utils/file/configUtil";
+import BookUtil from "../../../utils/file/bookUtil";
 
 class NoteList extends React.Component<NoteListProps, NoteListState> {
   constructor(props: NoteListProps) {
@@ -46,15 +46,10 @@ class NoteList extends React.Component<NoteListProps, NoteListState> {
     }
   }
   handleNamesMap = async () => {
-    let map: any = {};
     let notes =
       this.props.tabMode === "note" ? this.props.notes : this.props.highlights;
-    for (let i = 0; i < notes.length; i++) {
-      let book = await DatabaseService.getRecord(notes[i].bookKey, "books");
-      if (book) {
-        map[notes[i].bookKey] = book.name;
-      }
-    }
+    let uniqueBookKeys = Array.from(new Set(notes.map((note) => note.bookKey)));
+    let map = await BookUtil.getBookNamesMapByKeys(uniqueBookKeys);
 
     this.setState({ bookNamesMap: map });
   };
