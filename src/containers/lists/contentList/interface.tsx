@@ -3,6 +3,7 @@ import BookModel from "../../../models/Book";
 export interface ContentListProps {
   currentBook: BookModel;
   currentChapter: string;
+  currentChapterIndex: number;
   chapters: any;
   htmlBook: HtmlBookModel;
   renderBookFunc: (id: string) => void;

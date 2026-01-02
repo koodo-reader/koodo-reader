@@ -4,6 +4,7 @@ import { ContentListProps, ContentListState } from "./interface";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import { scrollContents } from "../../../utils/common";
 import { Trans } from "react-i18next";
+import _ from "underscore";
 
 class ContentList extends React.Component<ContentListProps, ContentListState> {
   constructor(props: ContentListProps) {
@@ -88,7 +89,6 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
   };
 
   async handleScrollToChapter(htmlBook: any) {
-    console.log("scroll", htmlBook);
     this.setState(
       {
         chapters: htmlBook.chapters,
@@ -111,6 +111,7 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
             htmlBook.chapters,
             bookLocation
           );
+          console.log(expandedPaths);
           this.setState({ expandedItems: expandedPaths }, () => {
             let chapter =
               bookLocation.chapterTitle ||
@@ -133,22 +134,55 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
     );
     this.props.handleCurrentChapter(item.label);
     this.props.handleCurrentChapterIndex(item.index);
+    scrollContents(item.label, item.href);
   }
   componentDidMount() {
     if (this.props.htmlBook) {
+      console.log(0);
       this.handleScrollToChapter(this.props.htmlBook);
     }
   }
   UNSAFE_componentWillReceiveProps(nextProps: ContentListProps) {
-    if (nextProps.htmlBook && nextProps.htmlBook !== this.props.htmlBook) {
-      console.log(nextProps.htmlBook, "htmlBook");
+    if (nextProps.htmlBook && !this.props.htmlBook) {
+      console.log("1");
       this.handleScrollToChapter(nextProps.htmlBook);
     }
     if (
-      nextProps.currentChapter !== this.props.currentChapter &&
+      nextProps.currentChapterIndex !== this.props.currentChapterIndex &&
       this.props.htmlBook
     ) {
-      this.handleScrollToChapter(this.props.htmlBook);
+      let chapter = _.find(nextProps.htmlBook.flattenChapters, {
+        label: nextProps.currentChapter,
+        index: nextProps.currentChapterIndex,
+      });
+      console.log(chapter, "chapterchange");
+      if (!chapter || !chapter.href) {
+        return;
+      }
+      // scrollContents(chapter.label, chapter.href);
+      let bookLocation: {
+        text: string;
+        chapterTitle: string;
+        chapterDocIndex: number;
+        chapterHref: string;
+      } = {
+        text: "",
+        chapterTitle: chapter.label,
+        chapterDocIndex: chapter.index,
+        chapterHref: chapter.href,
+      };
+      const expandedPaths = this.findAndExpandCurrentChapter(
+        this.props.htmlBook.chapters,
+        bookLocation
+      );
+      console.log(expandedPaths);
+      this.setState({ expandedItems: expandedPaths }, () => {
+        let chapter =
+          bookLocation.chapterTitle ||
+          (this.props.htmlBook.flattenChapters[0] ? "" : "Unknown chapter");
+        console.log(chapter, bookLocation.chapterHref, "chapter");
+        scrollContents(chapter, bookLocation.chapterHref);
+      });
     }
   }
   render() {
@@ -202,7 +236,6 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
         );
       });
     };
-    console.log(this.state.chapters, "chapters");
     return (
       <div className="book-content-container">
         {this.props.htmlBook && (

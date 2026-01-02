@@ -1,7 +1,10 @@
 import { connect } from "react-redux";
 import { stateType } from "../../../store";
 import { withTranslation } from "react-i18next";
-import { handleFetchPercentage } from "../../../store/actions";
+import {
+  handleFetchPercentage,
+  handleCurrentChapter,
+} from "../../../store/actions";
 import ProgressPanel from "./component";
 const mapStateToProps = (state: stateType) => {
   return {
@@ -14,7 +17,7 @@ const mapStateToProps = (state: stateType) => {
     renderBookFunc: state.book.renderBookFunc,
   };
 };
-const actionCreator = { handleFetchPercentage };
+const actionCreator = { handleFetchPercentage, handleCurrentChapter };
 export default connect(
   mapStateToProps,
   actionCreator
