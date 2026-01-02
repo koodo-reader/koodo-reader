@@ -512,6 +512,9 @@ class BookUtil {
     }
   }
   static async getBookNamesMapByKeys(bookKeys: string[]) {
+    if (bookKeys.length === 0) {
+      return {};
+    }
     if (isElectron) {
       const { ipcRenderer } = window.require("electron");
       let placeholders = bookKeys.map(() => "?").join(",");

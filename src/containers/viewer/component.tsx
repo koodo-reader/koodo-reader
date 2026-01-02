@@ -16,8 +16,6 @@ import PageWidget from "../pageWidget";
 import {
   getPageWidth,
   getPdfPassword,
-  getServerRegion,
-  scrollContents,
   showDownloadProgress,
 } from "../../utils/common";
 import _ from "underscore";

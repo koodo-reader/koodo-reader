@@ -3,7 +3,6 @@ import "./background.css";
 import { BackgroundProps, BackgroundState } from "./interface";
 import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import { Trans } from "react-i18next";
-import { scrollContents } from "../../utils/common";
 class Background extends React.Component<BackgroundProps, BackgroundState> {
   isFirst: Boolean;
   constructor(props: any) {
