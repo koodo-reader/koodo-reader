@@ -818,6 +818,24 @@ class AccountSetting extends React.Component<
         )}
         {this.props.isAuthed && (
           <div className="setting-dialog-new-title">
+            <Trans>Delete account</Trans>
+
+            <span
+              className="change-location-button"
+              onClick={async () => {
+                vexComfirmAsync(
+                  this.props.t(
+                    "To delete your account, you need to use the mobile app. After logging in, go to Settings → Account, and follow the instructions."
+                  )
+                );
+              }}
+            >
+              <Trans>How to</Trans>
+            </span>
+          </div>
+        )}
+        {this.props.isAuthed && (
+          <div className="setting-dialog-new-title">
             <Trans>Get error log</Trans>
 
             <span

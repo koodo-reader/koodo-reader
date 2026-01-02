@@ -31,6 +31,6 @@
   top: 14px !important;
 }
 .custom-confirm-width {
-  width: 600px !important; /* 设置你需要的宽度 */
+  width: 580px !important; /* 设置你需要的宽度 */
   max-width: 95% !important; /* 确保在移动端不会溢出 */
 }

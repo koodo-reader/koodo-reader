@@ -11,12 +11,12 @@ import SyncService from "../../../utils/storage/syncService";
 import {
   getServerRegion,
   getStorageLocation,
+  openExternalUrl,
   openInBrowser,
   showDownloadProgress,
   supportedFormats,
 } from "../../../utils/common";
 import {
-  ConfigService,
   KookitConfig,
   SyncUtil,
 } from "../../../assets/lib/kookit-extra-browser.min";
@@ -274,6 +274,14 @@ class ImportDialog extends React.Component<
   // 新增Google Picker处理方法
   handleGooglePicker = async () => {
     try {
+      if (isElectron) {
+        toast.loading(
+          this.props.t("Please select the books in the Google Drive Picker"),
+          {
+            id: "google-picker",
+          }
+        );
+      }
       let pickerUtil: any = await SyncService.getPickerUtil("google");
       await pickerUtil.remote.refreshToken();
       this.googlePickerUtil = new GooglePickerUtil({
@@ -281,14 +289,14 @@ class ImportDialog extends React.Component<
         apiKey: "",
         appId: "1051055003225",
       });
+      toast.dismiss("google-picker");
 
       if (isElectron) {
+        openExternalUrl(
+          "https://dl.koodoreader.com/websites/google-picker.html?access_token=" +
+            pickerUtil.remote.config.access_token
+        );
         const { ipcRenderer } = window.require("electron");
-        ipcRenderer.invoke("google-picker", {
-          url:
-            "https://dl.koodoreader.com/websites/google-picker.html?access_token=" +
-            pickerUtil.remote.config.access_token,
-        });
         ipcRenderer.once("picker-finished", async (event: any, config: any) => {
           if (config && config.action === "picked" && config.docs) {
             for (const file of config.docs) {
@@ -310,7 +318,6 @@ class ImportDialog extends React.Component<
   handlePickerCallback = async (data: any) => {
     if (data.action === window.google.picker.Action.PICKED) {
       const files = data.docs;
-
       for (const file of files) {
         await this.handleImportGoogleFile(file);
       }
@@ -342,6 +349,7 @@ class ImportDialog extends React.Component<
       const file = new File([blob], googleFile.name);
 
       toast.dismiss("google-download-" + googleFile.id);
+
       await this.props.importBookFunc(file);
     } catch (error) {
       toast.error(
@@ -409,6 +417,8 @@ class ImportDialog extends React.Component<
                               getServerRegion() === "china" &&
                                 (settingDrive === "microsoft" ||
                                   settingDrive === "microsoft_exp" ||
+                                  settingDrive === "dubox" ||
+                                  settingDrive === "yiyiwu" ||
                                   settingDrive === "adrive")
                                 ? KookitConfig.ThirdpartyConfig.cnCallbackUrl
                                 : KookitConfig.ThirdpartyConfig.callbackUrl

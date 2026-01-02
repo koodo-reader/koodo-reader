@@ -681,9 +681,8 @@ class Header extends React.Component<HeaderProps, HeaderState> {
               style={{ textDecoration: "underline" }}
               onClick={() => {
                 if (
-                  window.location.href.startsWith("http") &&
                   window.location.hostname !== "web.koodoreader.com" &&
-                  window.location.hostname !== "web.koodoreader.cn"
+                  !isElectron
                 ) {
                   this.props.handleSetting(true);
                   this.props.handleSettingMode("account");
@@ -726,8 +725,8 @@ class Header extends React.Component<HeaderProps, HeaderState> {
             handleDrag: this.props.handleDrag,
           }}
         />
-        <UpdateInfo />
         <SupportDialog />
+        <UpdateInfo />
       </div>
     );
   }

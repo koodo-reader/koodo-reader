@@ -1,7 +1,6 @@
 import {
   browserName,
   browserVersion,
-  isBrowser,
   isElectron,
   osName,
   osVersion,

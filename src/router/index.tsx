@@ -120,6 +120,21 @@ const Router = () => {
       } else if (navigator.language.startsWith("pl")) {
         i18n.changeLanguage("pl");
         ConfigService.setReaderConfig("lang", "pl");
+      } else if (navigator.language.startsWith("am")) {
+        i18n.changeLanguage("am");
+        ConfigService.setReaderConfig("lang", "am");
+      } else if (navigator.language.startsWith("da")) {
+        i18n.changeLanguage("da");
+        ConfigService.setReaderConfig("lang", "da");
+      } else if (navigator.language.startsWith("fi")) {
+        i18n.changeLanguage("fi");
+        ConfigService.setReaderConfig("lang", "fi");
+      } else if (navigator.language.startsWith("ie")) {
+        i18n.changeLanguage("ie");
+        ConfigService.setReaderConfig("lang", "ie");
+      } else if (navigator.language.startsWith("vi")) {
+        i18n.changeLanguage("vi");
+        ConfigService.setReaderConfig("lang", "vi");
       } else {
         i18n.changeLanguage("en");
         ConfigService.setReaderConfig("lang", "en");

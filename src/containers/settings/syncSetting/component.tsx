@@ -65,9 +65,11 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
     };
   }
   componentDidMount(): void {
-    this.setState({
-      snapshotList: getSnapshots(),
-    });
+    if (isElectron) {
+      this.setState({
+        snapshotList: getSnapshots(),
+      });
+    }
   }
   handleRest = (_bool: boolean) => {
     toast.success(this.props.t("Change successful"));
@@ -127,6 +129,8 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
           getServerRegion() === "china" &&
             (settingDrive === "microsoft" ||
               settingDrive === "microsoft_exp" ||
+              settingDrive === "dubox" ||
+              settingDrive === "yiyiwu" ||
               settingDrive === "adrive")
             ? KookitConfig.ThirdpartyConfig.cnCallbackUrl
             : KookitConfig.ThirdpartyConfig.callbackUrl
@@ -571,6 +575,8 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                           getServerRegion() === "china" &&
                             (this.props.settingDrive === "microsoft" ||
                               this.props.settingDrive === "microsoft_exp" ||
+                              this.props.settingDrive === "dubox" ||
+                              this.props.settingDrive === "yiyiwu" ||
                               this.props.settingDrive === "adrive")
                             ? KookitConfig.ThirdpartyConfig.cnCallbackUrl
                             : KookitConfig.ThirdpartyConfig.callbackUrl

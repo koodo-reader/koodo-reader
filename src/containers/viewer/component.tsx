@@ -16,8 +16,6 @@ import PageWidget from "../pageWidget";
 import {
   getPageWidth,
   getPdfPassword,
-  getServerRegion,
-  scrollContents,
   showDownloadProgress,
 } from "../../utils/common";
 import _ from "underscore";
@@ -386,8 +384,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         chapter,
         chapterDocIndex,
       });
-
-      scrollContents(chapter, bookLocation.chapterHref);
       StyleUtil.addDefaultCss();
       // rendition.tranformText();
       this.handleBindGesture();

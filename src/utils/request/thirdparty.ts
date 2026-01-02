@@ -1,6 +1,7 @@
 import toast from "react-hot-toast";
 import {
   ConfigService,
+  KookitConfig,
   SyncUtil,
   ThirdpartyRequest,
   TokenService,
@@ -29,7 +30,17 @@ export const onSyncCallback = async (service: string, authCode: string) => {
   let thirdpartyRequest = await getThirdpartyRequest();
 
   let syncUtil = new SyncUtil(service, {}, thirdpartyRequest);
-  let result = await syncUtil.authToken(authCode);
+  let result = await syncUtil.authToken(
+    authCode,
+    getServerRegion() === "china" &&
+      (service === "microsoft" ||
+        service === "microsoft_exp" ||
+        service === "dubox" ||
+        service === "yiyiwu" ||
+        service === "adrive")
+      ? KookitConfig.ThirdpartyConfig.cnCallbackUrl
+      : KookitConfig.ThirdpartyConfig.callbackUrl
+  );
   if (!result.refresh_token) {
     toast.error(i18n.t("Authorization failed"), { id: "adding-sync-id" });
     return;

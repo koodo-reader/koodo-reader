@@ -55,7 +55,6 @@ class CoverUtil {
       if (imageFiles.length === 0) {
         return book.cover;
       }
-      let format = imageFiles[0].split(".")[1];
       const imageFilePath = path.join(directoryPath, imageFiles[0]);
       if (!fs.existsSync(imageFilePath)) {
         return book.cover;

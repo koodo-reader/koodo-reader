@@ -8,7 +8,7 @@ import {
   handleFetchDataSourceList,
   handleFetchDefaultSyncOption,
 } from "../../../store/actions";
-import SupporDialog from "./component";
+import SupportDialog from "./component";
 import { withTranslation } from "react-i18next";
 import { stateType } from "../../../store";
 
@@ -30,4 +30,4 @@ const actionCreator = {
 export default connect(
   mapStateToProps,
   actionCreator
-)(withTranslation()(SupporDialog as any) as any);
+)(withTranslation()(SupportDialog as any) as any);

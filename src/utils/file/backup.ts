@@ -83,12 +83,10 @@ export const generateSnapshot = async () => {
     await backupToConfigJson();
     let databaseList = CommonTool.databaseList;
     for (let i = 0; i < databaseList.length; i++) {
-      await window
-        .require("electron")
-        .ipcRenderer.invoke("close-database", {
-          dbName: databaseList[i],
-          storagePath: getStorageLocation(),
-        });
+      await window.require("electron").ipcRenderer.invoke("close-database", {
+        dbName: databaseList[i],
+        storagePath: getStorageLocation(),
+      });
       if (
         fs.existsSync(path.join(dataPath, "config", databaseList[i] + ".db"))
       ) {
@@ -110,28 +108,24 @@ export const generateSnapshot = async () => {
     await zip.writeZip(path.join(snapshotPath, fileName));
     //delete old snapshots
     let snapshots = getSnapshots();
-    if (snapshots.length <= 10) {
+    if (snapshots.length <= 30) {
       return;
     }
-    for (let i = 10; i < snapshots.length; i++) {
+    for (let i = 30; i < snapshots.length; i++) {
       fs.unlinkSync(path.join(snapshotPath, snapshots[i].file));
     }
   } catch (error) {
     // Log error for debugging and avoid unhandled exceptions
     console.error("Failed to generate snapshot:", error);
     // Best-effort user notification; ignore any errors from toast/i18n
-    try {
-      const message =
-        typeof i18n?.t === "function"
-          ? i18n.t("backup.snapshotFailed")
-          : "Failed to generate snapshot.";
-      toast.error(message);
-    } catch (e) {
-      // ignore notification errors
-    }
+    let message = error instanceof Error ? error.message : String(error);
+    toast.error(message);
   }
 };
 export const getSnapshots = () => {
+  if (!isElectron) {
+    return [];
+  }
   const path = window.require("path");
   const fs = window.require("fs");
   const dataPath = getStorageLocation() || "";
@@ -231,8 +225,8 @@ export const backupToConfigJson = async () => {
   const fs = window.require("fs");
   const path = window.require("path");
   const dataPath = getStorageLocation() || "";
-  if (!fs.existsSync(path.join(dataPath))) {
-    fs.mkdirSync(path.join(dataPath), { recursive: true });
+  if (!fs.existsSync(path.join(dataPath, "config"))) {
+    fs.mkdirSync(path.join(dataPath, "config"), { recursive: true });
   }
   fs.writeFileSync(
     path.join(dataPath, "config", "config.json"),
@@ -245,8 +239,8 @@ export const backupToSyncJson = async () => {
   const fs = window.require("fs");
   const path = window.require("path");
   const dataPath = getStorageLocation() || "";
-  if (!fs.existsSync(path.join(dataPath))) {
-    fs.mkdirSync(path.join(dataPath), { recursive: true });
+  if (!fs.existsSync(path.join(dataPath, "config"))) {
+    fs.mkdirSync(path.join(dataPath, "config"), { recursive: true });
   }
   fs.writeFileSync(
     path.join(dataPath, "config", "sync.json"),

@@ -759,7 +759,9 @@ export const testCORS = async (url: string) => {
     toast.error(
       i18n.t(
         "This data source cannot be accessed from browser due to CORS policy. Please switch to another data source or CORS-enabled service provider."
-      )
+      ) +
+        " " +
+        i18n.t("You can also use the desktop app to avoid this issue.")
     );
     console.error("CORS not supported:", error);
     return false;
