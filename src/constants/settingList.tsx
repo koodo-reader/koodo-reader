@@ -227,7 +227,7 @@ export const langList = [
   { label: "Dansk", value: "da" },
   { label: "Suomi", value: "fi" },
   { label: "Interlingue", value: "ie" },
-  { label: "Português", value: "pt" },
+  { label: "Português(PT)", value: "pt" },
   { label: "Tiếng Việt", value: "vi" },
 ];
 

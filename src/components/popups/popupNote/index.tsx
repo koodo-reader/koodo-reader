@@ -5,6 +5,7 @@ import {
   handleNoteKey,
   handleFetchNotes,
   handleShowPopupNote,
+  handleColor,
 } from "../../../store/actions";
 import { stateType } from "../../../store";
 import { withTranslation } from "react-i18next";
@@ -24,6 +25,7 @@ const actionCreator = {
   handleNoteKey,
   handleFetchNotes,
   handleShowPopupNote,
+  handleColor,
 };
 export default connect(
   mapStateToProps,

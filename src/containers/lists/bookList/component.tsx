@@ -120,6 +120,7 @@ class BookList extends React.Component<BookListProps, BookListState> {
     if (
       prevProps.books !== this.props.books ||
       prevProps.searchResults !== this.props.searchResults ||
+      prevProps.isSearch !== this.props.isSearch ||
       prevProps.mode !== this.props.mode ||
       prevProps.shelfTitle !== this.props.shelfTitle
     ) {

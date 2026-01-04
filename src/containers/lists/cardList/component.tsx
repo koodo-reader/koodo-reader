@@ -147,12 +147,13 @@ class CardList extends React.Component<CardListProps, CardListStates> {
       return timestamp; // 如果转换失败，返回原始值
     }
   };
-  handleJump = (note: NoteModel) => {
+  handleJump = async (note: NoteModel) => {
+    note = await DatabaseService.getRecord(note.key, "notes");
     let { books } = this.props;
     let book: BookModel | null = null;
     for (let i = 0; i < books.length; i++) {
       if (books[i].key === note.bookKey) {
-        book = books[i];
+        book = await DatabaseService.getRecord(books[i].key, "books");
         break;
       }
     }

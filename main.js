@@ -199,7 +199,7 @@ const createMainWin = () => {
     : `file://${path.join(__dirname, "./build/index.html")}`;
   mainWin.loadURL(urlLocation);
   mainWin.webContents.on('console-message', (event, level, message, line, sourceId) => {
-    console.log(`[Renderer Console] Message: ${message}, source: ${sourceId}, line: ${line}`);
+    console.log(`[Renderer Console] Message: ${message}`);
     // 这里你可以进一步处理消息，例如写入文件或发送到其他地方
   });
 
@@ -337,7 +337,7 @@ const createMainWin = () => {
       }
       readerWindow = new BrowserWindow(options);
       readerWindow.webContents.on('console-message', (event, level, message, line, sourceId) => {
-        console.log(`[Renderer Console] Message: ${message}, source: ${sourceId}, line: ${line}`);
+        console.log(`[Renderer Console] Message: ${message}`);
       });
       if (store.get("isAlwaysOnTop") === "yes") {
         readerWindow.setAlwaysOnTop(true);
@@ -366,7 +366,7 @@ const createMainWin = () => {
         transparent: isMergeWord === "yes" ? true : false,
       });
       readerWindow.webContents.on('console-message', (event, level, message, line, sourceId) => {
-        console.log(`[Renderer Console] Message: ${message}, source: ${sourceId}, line: ${line}`);
+        console.log(`[Renderer Console] Message: ${message}`);
       });
       readerWindow.loadURL(url);
       // readerWindow.webContents.openDevTools();
@@ -852,7 +852,7 @@ const createMainWin = () => {
       }
       readerWindow = new BrowserWindow(options);
       readerWindow.webContents.on('console-message', (event, level, message, line, sourceId) => {
-        console.log(`[Renderer Console] Message: ${message}, source: ${sourceId}, line: ${line}`);
+        console.log(`[Renderer Console] Message: ${message}`);
       });
       if (store.get("isAlwaysOnTop") === "yes") {
         readerWindow.setAlwaysOnTop(true);
