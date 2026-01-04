@@ -102,7 +102,6 @@ export function handleFetchBooks() {
       ConfigService.getReaderConfig("bookSortCode") || '{"sort":1,"order":2}';
     let bookSortCode = JSON.parse(bookSortCodeStr);
     let sortField = "key";
-    console.log(bookSortCode, "booksortcode");
     switch (bookSortCode.sort) {
       case 1:
         sortField = "recentRead";
@@ -167,7 +166,6 @@ export function handleFetchBooks() {
     } else if (sortField === "percentage") {
       let allBookKeys = await DatabaseService.getAllRecordKeys("books");
       let locationObj = ConfigService.getAllObjectConfig("recordLocation");
-      console.log(locationObj, "locationobj");
       var sortable: any[] = [];
       for (let obj in locationObj) {
         sortable.push([obj, locationObj[obj].percentage || 0]);
@@ -176,7 +174,6 @@ export function handleFetchBooks() {
         return b[1] - a[1];
       });
       let recentBookLKeys = sortable.map((item) => item[0]) || [];
-      console.log(recentBookLKeys);
       let sortedKeys = [
         ...recentBookLKeys.filter((key) => allBookKeys.includes(key)),
         ...allBookKeys.filter((key) => !recentBookLKeys.includes(key)),
