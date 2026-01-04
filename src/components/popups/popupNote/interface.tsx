@@ -11,6 +11,7 @@ export interface PopupNoteProps {
   chapter: string;
   htmlBook: HtmlBook;
   handleNoteKey: (key: string) => void;
+  handleColor: (color: number) => void;
   handleOpenMenu: (isOpenMenu: boolean) => void;
   handleShowPopupNote: (isShowPopupNote: boolean) => void;
   handleMenuMode: (menu: string) => void;

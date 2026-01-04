@@ -7,6 +7,7 @@ import Empty from "../../emptyPage";
 import { Trans } from "react-i18next";
 import ConfigUtil from "../../../utils/file/configUtil";
 import BookUtil from "../../../utils/file/bookUtil";
+import Note from "../../../models/Note";
 
 class NoteList extends React.Component<NoteListProps, NoteListState> {
   constructor(props: NoteListProps) {
@@ -29,7 +30,7 @@ class NoteList extends React.Component<NoteListProps, NoteListState> {
     });
   }
   async componentDidMount() {
-    this.handleNamesMap();
+    this.props.handleFetchNotes();
   }
   async componentWillReceiveProps(
     nextProps: Readonly<NoteListProps>,
@@ -39,15 +40,16 @@ class NoteList extends React.Component<NoteListProps, NoteListState> {
       nextProps.notes !== this.props.notes ||
       nextProps.highlights !== this.props.highlights
     ) {
+      this.handleNamesMap(
+        nextProps.tabMode === "note" ? nextProps.notes : nextProps.highlights
+      );
       this.setState({
         cardList:
           nextProps.tabMode === "note" ? nextProps.notes : nextProps.highlights,
       });
     }
   }
-  handleNamesMap = async () => {
-    let notes =
-      this.props.tabMode === "note" ? this.props.notes : this.props.highlights;
+  handleNamesMap = async (notes: Note[]) => {
     let uniqueBookKeys = Array.from(new Set(notes.map((note) => note.bookKey)));
     let map = await BookUtil.getBookNamesMapByKeys(uniqueBookKeys);
 
@@ -65,6 +67,10 @@ class NoteList extends React.Component<NoteListProps, NoteListState> {
       return;
     }
     let cardList = await ConfigUtil.getNoteWithTags(tag);
+    console.log(cardList, "cardlist");
+    cardList = cardList.filter((note) =>
+      this.props.tabMode === "note" ? note.notes !== "" : note.notes === ""
+    );
     this.setState({ tag, cardList });
   };
   render() {

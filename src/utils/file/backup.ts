@@ -80,7 +80,6 @@ export const generateSnapshot = async () => {
     const dataPath = getStorageLocation() || "";
     let snapshotPath = path.join(dataPath, "snapshot");
     let fileName = `${new Date().getTime()}.zip`;
-    await backupToConfigJson();
     let databaseList = CommonTool.databaseList;
     for (let i = 0; i < databaseList.length; i++) {
       await window.require("electron").ipcRenderer.invoke("close-database", {
@@ -96,12 +95,9 @@ export const generateSnapshot = async () => {
         );
       }
     }
-    if (fs.existsSync(path.join(dataPath, "config", "config.json"))) {
-      zip.addLocalFile(path.join(dataPath, "config", "config.json"), "config");
-    }
-    if (fs.existsSync(path.join(dataPath, "config", "sync.json"))) {
-      zip.addLocalFile(path.join(dataPath, "config", "sync.json"), "config");
-    }
+    let configStr = JSON.stringify(await ConfigUtil.dumpConfig("config"));
+    zip.addFile("config/config.json", Buffer.from(configStr, "utf-8"));
+
     if (!fs.existsSync(snapshotPath)) {
       fs.mkdirSync(snapshotPath, { recursive: true });
     }
