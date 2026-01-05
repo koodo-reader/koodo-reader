@@ -1,0 +1,4 @@
+reviews:
+  auto_review:
+    path_filters:
+      - "!src/assets/**" # Exclude all files in the 'test_files' directory

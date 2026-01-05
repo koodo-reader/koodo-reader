@@ -4,6 +4,7 @@ import { ContentListProps, ContentListState } from "./interface";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import { scrollContents } from "../../../utils/common";
 import { Trans } from "react-i18next";
+import _ from "underscore";
 
 class ContentList extends React.Component<ContentListProps, ContentListState> {
   constructor(props: ContentListProps) {
@@ -87,17 +88,6 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
     return false;
   };
 
-  UNSAFE_componentWillUpdate(nextProps: Readonly<ContentListProps>): void {
-    if (nextProps.htmlBook && nextProps.htmlBook !== this.props.htmlBook) {
-      this.handleScrollToChapter(nextProps.htmlBook);
-    }
-    if (
-      nextProps.currentChapter !== this.props.currentChapter &&
-      this.props.htmlBook
-    ) {
-      this.handleScrollToChapter(this.props.htmlBook);
-    }
-  }
   async handleScrollToChapter(htmlBook: any) {
     this.setState(
       {
@@ -121,13 +111,16 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
             htmlBook.chapters,
             bookLocation
           );
-          this.setState({ expandedItems: expandedPaths });
+          this.setState({ expandedItems: expandedPaths }, () => {
+            let chapter =
+              bookLocation.chapterTitle ||
+              (htmlBook && htmlBook.flattenChapters[0]
+                ? ""
+                : "Unknown chapter");
+            scrollContents(chapter, bookLocation.chapterHref);
+          });
+          return;
         }
-
-        let chapter =
-          bookLocation.chapterTitle ||
-          (htmlBook && htmlBook.flattenChapters[0] ? "" : "Unknown chapter");
-        scrollContents(chapter, bookLocation.chapterHref);
       }
     );
   }
@@ -139,27 +132,50 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
     );
     this.props.handleCurrentChapter(item.label);
     this.props.handleCurrentChapterIndex(item.index);
+    scrollContents(item.label, item.href);
+  }
+  componentDidMount() {
+    if (this.props.htmlBook) {
+      this.handleScrollToChapter(this.props.htmlBook);
+    }
   }
   UNSAFE_componentWillReceiveProps(nextProps: ContentListProps) {
-    if (nextProps.htmlBook && nextProps.htmlBook !== this.props.htmlBook) {
-      this.setState({ chapters: nextProps.htmlBook.chapters });
+    if (nextProps.htmlBook && !this.props.htmlBook) {
+      this.handleScrollToChapter(nextProps.htmlBook);
+    }
+    if (
+      nextProps.currentChapterIndex !== this.props.currentChapterIndex &&
+      this.props.htmlBook
+    ) {
+      let chapter = _.find(nextProps.htmlBook.flattenChapters, {
+        label: nextProps.currentChapter,
+        index: nextProps.currentChapterIndex,
+      });
+      if (!chapter || !chapter.href) {
+        return;
+      }
+      // scrollContents(chapter.label, chapter.href);
+      let bookLocation: {
+        text: string;
+        chapterTitle: string;
+        chapterDocIndex: number;
+        chapterHref: string;
+      } = {
+        text: "",
+        chapterTitle: chapter.label,
+        chapterDocIndex: chapter.index,
+        chapterHref: chapter.href,
+      };
+      const expandedPaths = this.findAndExpandCurrentChapter(
+        this.props.htmlBook.chapters,
+        bookLocation
+      );
+      this.setState({ expandedItems: expandedPaths }, () => {
+        scrollContents(chapter.label, bookLocation.chapterHref);
+      });
     }
   }
   render() {
-    let bookLocation: {
-      text: string;
-      count: string;
-      chapterTitle: string;
-      chapterDocIndex: string;
-      chapterHref: string;
-      percentage: string;
-      cfi: string;
-      page: string;
-    } = ConfigService.getObjectConfig(
-      this.props.currentBook.key,
-      "recordLocation",
-      {}
-    );
     const renderContentList = (
       items: any,
       level: number,
@@ -210,7 +226,6 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
         );
       });
     };
-
     return (
       <div className="book-content-container">
         {this.props.htmlBook && (

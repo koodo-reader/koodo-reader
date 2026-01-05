@@ -1,6 +1,4 @@
 import BookModel from "../../../models/Book";
-import NoteModel from "../../../models/Note";
-import BookmarkModel from "../../../models/Bookmark";
 import { RouteComponentProps } from "react-router";
 
 export interface DeleteDialogProps extends RouteComponentProps<any> {
@@ -9,8 +7,7 @@ export interface DeleteDialogProps extends RouteComponentProps<any> {
   isSearch: boolean;
   isOpenDeleteDialog: boolean;
   currentBook: BookModel;
-  bookmarks: BookmarkModel[];
-  notes: NoteModel[];
+
   mode: string;
   shelfTitle: string;
   selectedBooks: string[];

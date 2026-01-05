@@ -38,7 +38,6 @@ export type stateType = {
     deletedBooks: BookModel[];
     searchResults: number[];
     isSearch: boolean;
-    isBookSort: boolean;
     isSettingOpen: boolean;
     viewMode: string;
     isSortDisplay: boolean;
@@ -85,11 +84,11 @@ export type stateType = {
   };
   progressPanel: {
     percentage: number;
-    locations: any[];
   };
   reader: {
     bookmarks: BookmarkModel[];
     notes: NoteModel[];
+    highlights: NoteModel[];
     color: number;
     chapters: any[];
     readerMode: string;

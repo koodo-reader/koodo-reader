@@ -1,9 +1,9 @@
 import NoteModel from "../../../models/Note";
-import BookModel from "../../../models/Book";
 
 export interface NoteListProps {
   notes: NoteModel[];
-  books: BookModel[];
+  highlights: NoteModel[];
+
   isSearch: boolean;
   isCollapsed: boolean;
   searchResults: number[];
@@ -14,4 +14,6 @@ export interface NoteListProps {
 export interface NoteListState {
   tag: string[];
   currentSelectedBook: string;
+  bookNamesMap: { [key: string]: string };
+  cardList: NoteModel[];
 }

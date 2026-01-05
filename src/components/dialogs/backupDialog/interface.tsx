@@ -1,6 +1,3 @@
-import BookModel from "../../../models/Book";
-import NoteModel from "../../../models/Note";
-import BookmarkModel from "../../../models/Bookmark";
 import { RouteComponentProps } from "react-router-dom";
 
 export interface BackupDialogProps extends RouteComponentProps<any> {
@@ -9,12 +6,9 @@ export interface BackupDialogProps extends RouteComponentProps<any> {
   t: (title: string) => string;
   handleLoadingDialog: (isShowLoading: boolean) => void;
   handleFetchBooks: () => void;
-  isOpenTokenDialog: boolean;
   isAuthed: boolean;
-  books: BookModel[];
-  notes: NoteModel[];
+
   dataSourceList: string[];
-  bookmarks: BookmarkModel[];
 }
 export interface BackupDialogState {
   isBackup: string;

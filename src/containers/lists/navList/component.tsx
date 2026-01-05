@@ -6,18 +6,51 @@ import DeleteIcon from "../../../components/deleteIcon";
 import toast from "react-hot-toast";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import { classes, colors, lines } from "../../../constants/themeList";
+import DatabaseService from "../../../utils/storage/databaseService";
+import Book from "../../../models/Book";
+import Bookmark from "../../../models/Bookmark";
+import Note from "../../../models/Note";
 class NavList extends React.Component<NavListProps, NavListState> {
   constructor(props: NavListProps) {
     super(props);
     this.state = {
       deleteIndex: -1,
+      currentData: [],
     };
   }
-  componentDidMount(): void {
+  componentDidMount() {
     this.props.htmlBook.rendition.on("rendered", () => {
       this.handleDisplayBookmark();
     });
+    this.handleCurrentDataUpdate(
+      this.props.currentTab,
+      this.props.currentBook,
+      this.props.bookmarks,
+      this.props.notes,
+      this.props.highlights
+    );
   }
+  UNSAFE_componentWillReceiveProps(
+    nextProps: Readonly<NavListProps>,
+    nextContext: any
+  ): void {
+    if (
+      nextProps.currentTab !== this.props.currentTab ||
+      nextProps.currentBook.key !== this.props.currentBook.key ||
+      nextProps.bookmarks !== this.props.bookmarks ||
+      nextProps.notes !== this.props.notes ||
+      nextProps.highlights !== this.props.highlights
+    ) {
+      this.handleCurrentDataUpdate(
+        nextProps.currentTab,
+        nextProps.currentBook,
+        nextProps.bookmarks,
+        nextProps.notes,
+        nextProps.highlights
+      );
+    }
+  }
+
   async handleJump(cfi: string) {
     //bookmark redirect
     if (!cfi) {
@@ -48,7 +81,51 @@ class NavList extends React.Component<NavListProps, NavListState> {
       })
     );
   }
-  handleDisplayBookmark() {
+  async handleCurrentDataUpdate(
+    currentTab: string,
+    currentBook: Book,
+    bookmarks: Bookmark[],
+    notes: Note[],
+    highlights: Note[]
+  ) {
+    if (currentTab === "bookmarks") {
+      this.setState({
+        currentData: bookmarks
+          .filter((item) => item.bookKey === currentBook.key)
+          .reverse(),
+      });
+    } else if (currentTab === "notes") {
+      let noteList = notes.filter((item) => item.bookKey === currentBook.key);
+      let fullNotes: any[] = [];
+      for (let i = 0; i < noteList.length; i++) {
+        let note = await DatabaseService.getRecord(noteList[i].key, "notes");
+        if (note) {
+          fullNotes.push(note);
+        }
+      }
+      this.setState({
+        currentData: fullNotes,
+      });
+    } else {
+      let highlightList = highlights.filter(
+        (item) => item.bookKey === currentBook.key
+      );
+      let fullHighlights: any[] = [];
+      for (let i = 0; i < highlightList.length; i++) {
+        let highlight = await DatabaseService.getRecord(
+          highlightList[i].key,
+          "notes"
+        );
+        if (highlight) {
+          fullHighlights.push(highlight);
+        }
+      }
+      this.setState({
+        currentData: fullHighlights,
+      });
+    }
+  }
+  async handleDisplayBookmark() {
     this.props.handleShowBookmark(false);
     let bookLocation: {
       text: string;
@@ -63,11 +140,15 @@ class NavList extends React.Component<NavListProps, NavListState> {
       "recordLocation",
       {}
     );
-    this.props.bookmarks.forEach((item) => {
-      if (item.cfi === JSON.stringify(bookLocation)) {
+    let bookmarks = await DatabaseService.getRecordsByBookKey(
+      this.props.currentBook.key,
+      "bookmarks"
+    );
+    for (let i = 0; i < bookmarks.length; i++) {
+      if (bookmarks[i].cfi === JSON.stringify(bookLocation)) {
         this.props.handleShowBookmark(true);
       }
-    });
+    }
   }
   handleShowDelete = (index: number) => {
     this.setState({ deleteIndex: index });
@@ -83,17 +164,8 @@ class NavList extends React.Component<NavListProps, NavListState> {
         };
   };
   render() {
-    let currentData: any = (
-      (this.props.currentTab === "bookmarks"
-        ? this.props.bookmarks
-        : this.props.currentTab === "notes"
-        ? this.props.notes.filter((item) => item.notes !== "")
-        : this.props.notes.filter((item) => item.notes === "")) as any
-    ).filter((item: any) => {
-      return item.bookKey === this.props.currentBook.key;
-    });
     const renderBookNavList = () => {
-      return currentData.reverse().map((item: any, index: number) => {
+      return this.state.currentData.map((item: any, index: number) => {
         const bookmarkProps = {
           itemKey: item.key,
           mode: this.props.currentTab === "bookmarks" ? "bookmarks" : "notes",
@@ -158,7 +230,7 @@ class NavList extends React.Component<NavListProps, NavListState> {
         );
       });
     };
-    if (!currentData[0]) {
+    if (!this.state.currentData[0]) {
       return (
         <div className="navigation-panel-empty-bookmark">
           <Trans>Empty</Trans>

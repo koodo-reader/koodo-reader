@@ -295,10 +295,7 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
               onClick={() => {
                 if (this.props.isSearch) {
                   this.props.handleSelectedBooks(
-                    this.handleIndexFilter(
-                      this.props.books,
-                      this.props.searchResults
-                    ).map((item) => item.key)
+                    this.props.searchResults.map((item) => item.key)
                   );
                 } else if (
                   this.props.selectedBooks.length ===

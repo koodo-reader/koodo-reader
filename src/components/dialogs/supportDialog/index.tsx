@@ -8,17 +8,14 @@ import {
   handleFetchDataSourceList,
   handleFetchDefaultSyncOption,
 } from "../../../store/actions";
-import SupporDialog from "./component";
+import SupportDialog from "./component";
 import { withTranslation } from "react-i18next";
 import { stateType } from "../../../store";
 
 const mapStateToProps = (state: stateType) => {
   return {
-    currentBook: state.book.currentBook,
-    books: state.manager.books,
     isAuthed: state.manager.isAuthed,
     isShowSupport: state.manager.isShowSupport,
-    userInfo: state.manager.userInfo,
   };
 };
 const actionCreator = {
@@ -33,4 +30,4 @@ const actionCreator = {
 export default connect(
   mapStateToProps,
   actionCreator
-)(withTranslation()(SupporDialog as any) as any);
+)(withTranslation()(SupportDialog as any) as any);

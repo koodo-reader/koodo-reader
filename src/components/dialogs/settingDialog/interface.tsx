@@ -1,6 +1,3 @@
-import BookModel from "../../../models/Book";
-import NoteModel from "../../../models/Note";
-import BookmarkModel from "../../../models/Bookmark";
 import PluginModel from "../../../models/Plugin";
 import { RouteComponentProps } from "react-router-dom";
 export interface SettingInfoProps extends RouteComponentProps<any> {
@@ -20,13 +17,7 @@ export interface SettingInfoProps extends RouteComponentProps<any> {
   handleFetchBooks: () => void;
   handleFetchPlugins: () => void;
   handleFetchUserInfo: () => void;
-  bookmarks: BookmarkModel[];
-  notes: NoteModel[];
-  isOpenTokenDialog: boolean;
   plugins: PluginModel[];
-  books: BookModel[];
-  userInfo: any;
-  dataSourceList: string[];
   loginOptionList: { email: string; provider: string }[];
   defaultSyncOption: string;
   isAuthed: boolean;
@@ -50,6 +41,7 @@ export interface SettingInfoState {
   isUseBuiltIn: boolean;
   isDisableCrop: boolean;
   isOverwriteLink: boolean;
+  isOverwriteText: boolean;
   isDisablePDFCover: boolean;
   isAutoFullscreen: boolean;
   isHideShelfBook: boolean;

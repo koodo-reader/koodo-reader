@@ -3,7 +3,6 @@ import PluginModel from "../../models/Plugin";
 import HtmlBook from "../../models/HtmlBook";
 
 export interface TextToSpeechProps {
-  locations: any;
   currentBook: BookModel;
   plugins: PluginModel[];
   htmlBook: HtmlBook;

@@ -8,7 +8,6 @@ import SettingSwitch from "../../../components/readerSettings/settingSwitch";
 import { SettingPanelProps, SettingPanelState } from "./interface";
 import { Trans } from "react-i18next";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
-import BookUtil from "../../../utils/file/bookUtil";
 import { sliderConfigs } from "../../../constants/dropdownList";
 
 class SettingPanel extends React.Component<

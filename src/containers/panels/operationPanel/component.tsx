@@ -124,7 +124,7 @@ class OperationPanel extends React.Component<
     toast.success(this.props.t("Addition successful"));
     this.props.handleShowBookmark(true);
   };
-  handleDisplayBookmark() {
+  async handleDisplayBookmark() {
     this.props.handleShowBookmark(false);
     let bookLocation: {
       text: string;
@@ -139,7 +139,11 @@ class OperationPanel extends React.Component<
       "recordLocation",
       {}
     );
-    this.props.bookmarks.forEach((item) => {
+    let bookmarks = await DatabaseService.getRecordsByBookKey(
+      this.props.currentBook.key,
+      "bookmarks"
+    );
+    bookmarks.forEach((item) => {
       if (item.cfi === JSON.stringify(bookLocation)) {
         this.props.handleShowBookmark(true);
       }

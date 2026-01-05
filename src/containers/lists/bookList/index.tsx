@@ -1,6 +1,5 @@
 import { connect } from "react-redux";
 import {
-  handleFetchList,
   handleFetchBooks,
   handleMode,
   handleShelf,
@@ -15,22 +14,19 @@ const mappropsToProps = (state: stateType) => {
   return {
     books: state.manager.books,
     mode: state.sidebar.mode,
-    bookmarks: state.reader.bookmarks,
-    notes: state.reader.notes,
+
     selectedBooks: state.manager.selectedBooks,
     shelfTitle: state.sidebar.shelfTitle,
     isCollapsed: state.sidebar.isCollapsed,
     searchResults: state.manager.searchResults,
     isSearch: state.manager.isSearch,
     isSelectBook: state.manager.isSelectBook,
-    isBookSort: state.manager.isBookSort,
     viewMode: state.manager.viewMode,
     bookSortCode: state.manager.bookSortCode,
     noteSortCode: state.manager.noteSortCode,
   };
 };
 const actionCreator = {
-  handleFetchList,
   handleMode,
   handleShelf,
   handleFetchBooks,

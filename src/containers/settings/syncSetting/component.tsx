@@ -39,6 +39,8 @@ import { updateUserConfig } from "../../../utils/request/user";
 import BookUtil from "../../../utils/file/bookUtil";
 import Book from "../../../models/Book";
 import ConfigUtil from "../../../utils/file/configUtil";
+import { getSnapshots } from "../../../utils/file/backup";
+import { restoreFromSnapshot } from "../../../utils/file/restore";
 declare var window: any;
 class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
   constructor(props: SettingInfoProps) {
@@ -59,7 +61,15 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
       settingLogin: "",
       driveConfig: {},
       loginConfig: {},
+      snapshotList: [],
     };
+  }
+  componentDidMount(): void {
+    if (isElectron) {
+      this.setState({
+        snapshotList: getSnapshots(),
+      });
+    }
   }
   handleRest = (_bool: boolean) => {
     toast.success(this.props.t("Change successful"));
@@ -119,6 +129,8 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
           getServerRegion() === "china" &&
             (settingDrive === "microsoft" ||
               settingDrive === "microsoft_exp" ||
+              settingDrive === "dubox" ||
+              settingDrive === "yiyiwu" ||
               settingDrive === "adrive")
             ? KookitConfig.ThirdpartyConfig.cnCallbackUrl
             : KookitConfig.ThirdpartyConfig.callbackUrl
@@ -220,6 +232,31 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
     }
     this.props.handleFetchDataSourceList();
     this.props.handleSettingDrive("");
+  };
+  handleRestoreSnapshot = async (event: any) => {
+    let targetFile = event.target.value;
+    if (!targetFile) {
+      return;
+    }
+    let confirm = await vexComfirmAsync(
+      this.props.t(
+        "Restoring from a snapshot will overwrite your current data. Are you sure you want to continue?"
+      )
+    );
+    if (!confirm) {
+      return;
+    }
+    let result = await restoreFromSnapshot(targetFile);
+    if (result) {
+      toast.success(this.props.t("Restore successful"), {
+        id: "restore-snapshot",
+      });
+      this.props.handleFetchBooks();
+      setTimeout(() => {
+        this.props.history.push("/manager/home");
+      }, 2000);
+    }
+    event.target.value = "";
   };
   renderSwitchOption = (optionList: any[]) => {
     return optionList.map((item) => {
@@ -538,6 +575,8 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                           getServerRegion() === "china" &&
                             (this.props.settingDrive === "microsoft" ||
                               this.props.settingDrive === "microsoft_exp" ||
+                              this.props.settingDrive === "dubox" ||
+                              this.props.settingDrive === "yiyiwu" ||
                               this.props.settingDrive === "adrive")
                             ? KookitConfig.ThirdpartyConfig.cnCallbackUrl
                             : KookitConfig.ThirdpartyConfig.callbackUrl
@@ -720,6 +759,45 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                 ))}
             </select>
           </div>
+        )}
+        {isElectron && (
+          <>
+            <div className="setting-dialog-new-title">
+              <Trans>Restore from snapshots</Trans>
+              <select
+                name=""
+                className="lang-setting-dropdown"
+                onChange={this.handleRestoreSnapshot}
+              >
+                <option value={""} className="lang-setting-option">
+                  {this.props.t("Please select")}
+                </option>
+                {this.state.snapshotList
+                  .map((item) => {
+                    return {
+                      label: new Date(item.time).toLocaleString(),
+                      value: item.file,
+                    };
+                  })
+                  .map((item) => (
+                    <option
+                      value={item.value}
+                      key={item.value}
+                      className="lang-setting-option"
+                    >
+                      {item.label}
+                    </option>
+                  ))}
+              </select>
+            </div>
+            <p className="setting-option-subtitle">
+              <Trans>
+                {
+                  "Each time you open Koodo Reader, it automatically creates a snapshot of your library (excluding books and covers). You can use these snapshots to restore your library to a previous state. Please note that restoring from a snapshot will overwrite your current data"
+                }
+              </Trans>
+            </p>
+          </>
         )}
 
         {this.props.isAuthed && this.renderSwitchOption(syncSettingList)}

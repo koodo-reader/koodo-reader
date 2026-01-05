@@ -1,12 +1,11 @@
 import BookModel from "../../models/Book";
-import NoteModel from "../../models/Note";
 import { RouteComponentProps } from "react-router";
 export interface BookListProps extends RouteComponentProps<any> {
   books: BookModel[];
-  notes: NoteModel[];
+
   shelfTitle: string;
   deletedBooks: BookModel[];
-  searchResults: number[];
+  searchResults: any[];
   isSelectBook: boolean;
   isSearch: boolean;
   isCollapsed: boolean;

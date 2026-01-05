@@ -5,16 +5,14 @@ import BookListItem from "../../../components/bookListItem";
 import BookCoverItem from "../../../components/bookCoverItem";
 import BookModel from "../../../models/Book";
 import { BookListProps, BookListState } from "./interface";
-import {
-  ConfigService,
-  SortUtil,
-} from "../../../assets/lib/kookit-extra-browser.min";
+import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import { Redirect, withRouter } from "react-router-dom";
 import ViewMode from "../../../components/viewMode";
 import SelectBook from "../../../components/selectBook";
 import { Trans } from "react-i18next";
 import Book from "../../../models/Book";
 import { isElectron } from "react-device-detect";
+import DatabaseService from "../../../utils/storage/databaseService";
 declare var window: any;
 let currentBookMode = "home";
 function getBookCountPerPage() {
@@ -45,9 +43,9 @@ class BookList extends React.Component<BookListProps, BookListState> {
       ).length,
       isHideShelfBook:
         ConfigService.getReaderConfig("isHideShelfBook") === "yes",
-      isRefreshing: false,
-      displayedBooksCount: getBookCountPerPage(),
+      displayedBooksCount: 24,
       isLoadingMore: false,
+      fullBooksData: [], // 存储从数据库加载的完整书籍数据
     };
   }
   UNSAFE_componentWillMount() {
@@ -58,6 +56,9 @@ class BookList extends React.Component<BookListProps, BookListState> {
     if (!this.props.books || !this.props.books[0]) {
       return <Redirect to="manager/empty" />;
     }
+    this.setState({
+      displayedBooksCount: getBookCountPerPage(),
+    });
 
     // 保存 resize 监听器引用
     this.resizeHandler = () => {
@@ -83,6 +84,9 @@ class BookList extends React.Component<BookListProps, BookListState> {
         this.handleFinishReading();
       });
     }
+
+    // 初始加载完整的书籍数据
+    await this.loadFullBooksData();
   }
 
   componentWillUnmount() {
@@ -116,6 +120,7 @@ class BookList extends React.Component<BookListProps, BookListState> {
     if (
       prevProps.books !== this.props.books ||
       prevProps.searchResults !== this.props.searchResults ||
+      prevProps.isSearch !== this.props.isSearch ||
       prevProps.mode !== this.props.mode ||
       prevProps.shelfTitle !== this.props.shelfTitle
     ) {
@@ -128,8 +133,29 @@ class BookList extends React.Component<BookListProps, BookListState> {
       if (this.scrollContainer.current) {
         this.scrollContainer.current.scrollTop = 0;
       }
+      // 重新加载完整的书籍数据
+      this.loadFullBooksData();
     }
   }
+
+  // 从数据库加载完整的书籍数据
+  loadFullBooksData = async () => {
+    const { books } = this.handleBooks();
+    const displayedBooks = books.slice(0, this.state.displayedBooksCount);
+
+    const fullBooksData: Book[] = [];
+    for (let i = 0; i < displayedBooks.length; i++) {
+      const book = await DatabaseService.getRecord(
+        displayedBooks[i].key,
+        "books"
+      );
+      if (book) {
+        fullBooksData.push(book);
+      }
+    }
+
+    this.setState({ fullBooksData });
+  };
   handleFinishReading = async () => {
     if (!this.scrollContainer.current) return;
     if (
@@ -177,14 +203,27 @@ class BookList extends React.Component<BookListProps, BookListState> {
 
     this.setState({ isLoadingMore: true });
     this.props.handleLoadMore(true);
-    // 模拟异步加载延迟
-    setTimeout(() => {
+    // 异步加载更多书籍数据
+    setTimeout(async () => {
+      const newDisplayedBooksCount = Math.min(
+        displayedBooksCount + getBookCountPerPage(),
+        books.length
+      );
+
+      // 加载新增的书籍数据
+      const newBooks = books.slice(displayedBooksCount, newDisplayedBooksCount);
+      const newFullBooksData: Book[] = [];
+      for (let i = 0; i < newBooks.length; i++) {
+        const book = await DatabaseService.getRecord(newBooks[i].key, "books");
+        if (book) {
+          newFullBooksData.push(book);
+        }
+      }
+
       this.setState({
-        displayedBooksCount: Math.min(
-          displayedBooksCount + getBookCountPerPage(),
-          books.length
-        ),
+        displayedBooksCount: newDisplayedBooksCount,
         isLoadingMore: false,
+        fullBooksData: [...this.state.fullBooksData, ...newFullBooksData],
       });
     }, 100);
   };
@@ -237,8 +276,10 @@ class BookList extends React.Component<BookListProps, BookListState> {
       currentBookMode = bookMode;
     }
 
-    // 只渲染指定数量的图书
-    const displayedBooks = books.slice(0, this.state.displayedBooksCount);
+    // 使用状态中已加载的完整书籍数据
+    const displayedBooks = this.props.isSearch
+      ? books
+      : this.state.fullBooksData;
 
     return displayedBooks.map((item: BookModel, index: number) => {
       return this.props.viewMode === "list" ? (
@@ -268,17 +309,6 @@ class BookList extends React.Component<BookListProps, BookListState> {
       );
     });
   };
-  isElementInViewport = (element) => {
-    const rect = element.getBoundingClientRect();
-
-    return (
-      rect.top >= 0 &&
-      rect.left >= 0 &&
-      rect.bottom <=
-        (window.innerHeight || document.documentElement.clientHeight) &&
-      rect.right <= (window.innerWidth || document.documentElement.clientWidth)
-    );
-  };
   handleBooks = () => {
     let bookMode = this.props.isSearch
       ? "search"
@@ -291,49 +321,17 @@ class BookList extends React.Component<BookListProps, BookListState> {
       : "home";
     let books =
       bookMode === "search"
-        ? this.handleIndexFilter(this.props.books, this.props.searchResults)
+        ? this.props.searchResults
         : bookMode === "shelf"
-        ? this.handleIndexFilter(
-            this.handleShelf(this.props.books, this.props.shelfTitle),
-            SortUtil.sortBooks(
-              this.handleShelf(this.props.books, this.props.shelfTitle),
-              this.props.bookSortCode,
-              ConfigService
-            ) || []
-          )
+        ? this.handleShelf(this.props.books, this.props.shelfTitle)
         : bookMode === "favorite"
-        ? this.handleIndexFilter(
-            this.handleKeyFilter(
-              this.props.books,
-              ConfigService.getAllListConfig("favoriteBooks")
-            ),
-            SortUtil.sortBooks(
-              this.handleKeyFilter(
-                this.props.books,
-                ConfigService.getAllListConfig("favoriteBooks")
-              ),
-              this.props.bookSortCode,
-              ConfigService
-            ) || []
+        ? this.handleKeyFilter(
+            this.props.books,
+            ConfigService.getAllListConfig("favoriteBooks")
           )
         : bookMode === "hide"
-        ? this.handleIndexFilter(
-            this.handleFilterShelfBook(this.props.books),
-            SortUtil.sortBooks(
-              this.handleFilterShelfBook(this.props.books),
-              this.props.bookSortCode,
-              ConfigService
-            ) || []
-          )
-        : this.handleIndexFilter(
-            this.props.books,
-            SortUtil.sortBooks(
-              this.props.books,
-              this.props.bookSortCode,
-              ConfigService
-            ) || []
-          );
-
+        ? this.handleFilterShelfBook(this.props.books)
+        : this.props.books;
     return {
       books,
       bookMode,
@@ -349,8 +347,6 @@ class BookList extends React.Component<BookListProps, BookListState> {
       return <Redirect to="/manager/empty" />;
     }
     const { books, bookMode } = this.handleBooks();
-    const hasMoreBooks = this.state.displayedBooksCount < books.length;
-
     return (
       <>
         <div
@@ -385,7 +381,7 @@ class BookList extends React.Component<BookListProps, BookListState> {
         >
           <div className="book-list-container">
             <ul className="book-list-item-box" ref={this.scrollContainer}>
-              {!this.state.isRefreshing && this.renderBookList(books, bookMode)}
+              {this.renderBookList(books, bookMode)}
             </ul>
           </div>
         </div>

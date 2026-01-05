@@ -11,6 +11,7 @@ import ConfigUtil from "./configUtil";
 import SyncService from "../storage/syncService";
 import toast from "react-hot-toast";
 import i18n from "../../i18n";
+
 declare var window: any;
 
 export const backup = async (service: string): Promise<Boolean> => {
@@ -70,7 +71,85 @@ export const backup = async (service: string): Promise<Boolean> => {
     }
   }
 };
+export const generateSnapshot = async () => {
+  try {
+    const path = window.require("path");
+    const fs = window.require("fs");
+    const AdmZip = window.require("adm-zip");
+    let zip = new AdmZip();
+    const dataPath = getStorageLocation() || "";
+    let snapshotPath = path.join(dataPath, "snapshot");
+    let fileName = `${new Date().getTime()}.zip`;
+    let databaseList = CommonTool.databaseList;
+    for (let i = 0; i < databaseList.length; i++) {
+      await window.require("electron").ipcRenderer.invoke("close-database", {
+        dbName: databaseList[i],
+        storagePath: getStorageLocation(),
+      });
+      if (
+        fs.existsSync(path.join(dataPath, "config", databaseList[i] + ".db"))
+      ) {
+        zip.addLocalFile(
+          path.join(dataPath, "config", databaseList[i] + ".db"),
+          "config"
+        );
+      }
+    }
+    let configStr = JSON.stringify(await ConfigUtil.dumpConfig("config"));
+    zip.addFile("config/config.json", Buffer.from(configStr, "utf-8"));
 
+    if (!fs.existsSync(snapshotPath)) {
+      fs.mkdirSync(snapshotPath, { recursive: true });
+    }
+    await zip.writeZip(path.join(snapshotPath, fileName));
+    //delete old snapshots
+    let snapshots = getSnapshots();
+    if (snapshots.length <= 30) {
+      return;
+    }
+    for (let i = 30; i < snapshots.length; i++) {
+      fs.unlinkSync(path.join(snapshotPath, snapshots[i].file));
+    }
+  } catch (error) {
+    // Log error for debugging and avoid unhandled exceptions
+    console.error("Failed to generate snapshot:", error);
+    // Best-effort user notification; ignore any errors from toast/i18n
+    let message = error instanceof Error ? error.message : String(error);
+    toast.error(message);
+  }
+};
+export const getSnapshots = () => {
+  if (!isElectron) {
+    return [];
+  }
+  const path = window.require("path");
+  const fs = window.require("fs");
+  const dataPath = getStorageLocation() || "";
+  let snapshotPath = path.join(dataPath, "snapshot");
+  let snapshots: { file: string; time: number }[] = [];
+  if (!fs.existsSync(snapshotPath)) {
+    return snapshots;
+  }
+  let files = fs.readdirSync(snapshotPath);
+  for (let i = 0; i < files.length; i++) {
+    const fileName = files[i];
+    // Only process .zip files with a numeric base name
+    if (!fileName.endsWith(".zip")) {
+      continue;
+    }
+    const baseName = fileName.slice(0, -4); // remove ".zip"
+    const time = parseInt(baseName, 10);
+    if (Number.isNaN(time)) {
+      continue;
+    }
+    snapshots.push({
+      file: fileName,
+      time: time,
+    });
+  }
+  snapshots.sort((a, b) => b.time - a.time);
+  return snapshots;
+};
 export const backupFromPath = async (targetPath: string, fileName: string) => {
   const path = window.require("path");
   const AdmZip = window.require("adm-zip");
@@ -81,7 +160,6 @@ export const backupFromPath = async (targetPath: string, fileName: string) => {
     fs.mkdirSync(path.join(targetPath), { recursive: true });
   }
   await backupToConfigJson();
-  await backupToSyncJson();
 
   if (fs.existsSync(path.join(dataPath, "book"))) {
     zip.addLocalFolder(path.join(dataPath, "book"), "book");
@@ -143,8 +221,8 @@ export const backupToConfigJson = async () => {
   const fs = window.require("fs");
   const path = window.require("path");
   const dataPath = getStorageLocation() || "";
-  if (!fs.existsSync(path.join(dataPath))) {
-    fs.mkdirSync(path.join(dataPath), { recursive: true });
+  if (!fs.existsSync(path.join(dataPath, "config"))) {
+    fs.mkdirSync(path.join(dataPath, "config"), { recursive: true });
   }
   fs.writeFileSync(
     path.join(dataPath, "config", "config.json"),
@@ -157,8 +235,8 @@ export const backupToSyncJson = async () => {
   const fs = window.require("fs");
   const path = window.require("path");
   const dataPath = getStorageLocation() || "";
-  if (!fs.existsSync(path.join(dataPath))) {
-    fs.mkdirSync(path.join(dataPath), { recursive: true });
+  if (!fs.existsSync(path.join(dataPath, "config"))) {
+    fs.mkdirSync(path.join(dataPath, "config"), { recursive: true });
   }
   fs.writeFileSync(
     path.join(dataPath, "config", "sync.json"),

@@ -1,6 +1,3 @@
-import BookModel from "../../models/Book";
-import NoteModel from "../../models/Note";
-import BookmarkModel from "../../models/Bookmark";
 import { RouteComponentProps } from "react-router-dom";
 export interface HeaderProps extends RouteComponentProps<any> {
   isSearch: boolean;
@@ -10,9 +7,7 @@ export interface HeaderProps extends RouteComponentProps<any> {
   isNewWarning: boolean;
   isLoadMore: boolean;
   isAuthed: boolean;
-  bookmarks: BookmarkModel[];
-  notes: NoteModel[];
-  books: BookModel[];
+
   defaultSyncOption: string;
   mode: string;
   userInfo: any;

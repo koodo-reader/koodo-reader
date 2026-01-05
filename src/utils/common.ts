@@ -627,10 +627,11 @@ export const formatTimestamp = (timestamp) => {
   // return date.toLocaleDateString() + " " + date.toLocaleTimeString();
   return date.toLocaleDateString();
 };
-export const checkMissingBook = (bookList: Book[]) => {
+export const checkMissingBook = async () => {
   if (!isElectron) return;
   var fs = window.require("fs");
   var path = window.require("path");
+  let bookList = (await BookUtil.getBookList()) as Book[];
   for (let index = 0; index < bookList.length; index++) {
     const book = bookList[index];
     let fileName = book.key + "." + book.format.toLowerCase();
@@ -656,7 +657,7 @@ export const checkBrokenData = async () => {
       item.startsWith("database.sqlite.books") &&
       localSyncRecords[item].operation !== "delete"
   );
-  let actualbooks = await DatabaseService.getAllRecords("books");
+  let actualbooks = await DatabaseService.getAllRecordKeys("books");
   if (localBooks.length > 0 && actualbooks.length === 0) {
     return true;
   }
@@ -758,7 +759,9 @@ export const testCORS = async (url: string) => {
     toast.error(
       i18n.t(
         "This data source cannot be accessed from browser due to CORS policy. Please switch to another data source or CORS-enabled service provider."
-      )
+      ) +
+        " " +
+        i18n.t("You can also use the desktop app to avoid this issue.")
     );
     console.error("CORS not supported:", error);
     return false;

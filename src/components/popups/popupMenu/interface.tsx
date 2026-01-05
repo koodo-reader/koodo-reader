@@ -1,12 +1,11 @@
 import BookModel from "../../../models/Book";
-import NoteModel from "../../../models/Note";
 
 export interface PopupMenuProps {
   currentBook: BookModel;
   isOpenMenu: boolean;
   isChangeDirection: boolean;
   menuMode: string;
-  notes: NoteModel[];
+
   color: number;
   rendition: any;
   // cfiRange: any;

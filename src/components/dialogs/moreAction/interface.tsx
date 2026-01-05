@@ -1,16 +1,12 @@
 import { RouteComponentProps } from "react-router";
 import BookModel from "../../../models/Book";
-import NoteModel from "../../../models/Note";
 
 export interface MoreActionProps extends RouteComponentProps<any> {
   book: BookModel;
-  books: BookModel[];
   deletedBooks: BookModel[];
-  notes: NoteModel[];
   currentBook: BookModel;
   left: number;
   top: number;
-  mode: string;
   isSelectBook: boolean;
   isShowExport: boolean;
   isShowDetail: boolean;

@@ -6,25 +6,33 @@ import BookListItem from "../../../components/bookListItem";
 import BookModel from "../../../models/Book";
 import { Trans } from "react-i18next";
 import { BookListProps, BookListState } from "./interface";
-import { Redirect, withRouter } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import ViewMode from "../../../components/viewMode";
-import {
-  ConfigService,
-  SortUtil,
-} from "../../../assets/lib/kookit-extra-browser.min";
+import DatabaseService from "../../../utils/storage/databaseService";
+import EmptyPage from "../../emptyPage";
 
 class BookList extends React.Component<BookListProps, BookListState> {
   constructor(props: BookListProps) {
     super(props);
-    this.state = { isRefreshing: false };
+    this.state = {
+      fullBooksData: [],
+    };
   }
   UNSAFE_componentWillMount() {
     this.props.handleFetchBooks();
   }
-  UNSAFE_componentWillReceiveProps() {
-    this.setState({ isRefreshing: true }, () => {
-      this.setState({ isRefreshing: false });
-    });
+  async UNSAFE_componentWillReceiveProps(nextProps: Readonly<BookListProps>) {
+    if (nextProps.deletedBooks !== this.props.deletedBooks) {
+      let fullBooksData: BookModel[] = [];
+      for (let i = 0; i < nextProps.deletedBooks.length; i++) {
+        let book = nextProps.deletedBooks[i];
+        let fullBook = await DatabaseService.getRecord(book.key, "books");
+        if (fullBook) {
+          fullBooksData.push(fullBook);
+        }
+      }
+      this.setState({ fullBooksData });
+    }
   }
   isElementInViewport = (element) => {
     const rect = element.getBoundingClientRect();
@@ -61,41 +69,7 @@ class BookList extends React.Component<BookListProps, BookListState> {
   };
   renderBookList = () => {
     //get the book data according to different scenarios
-    let books = !this.props.isBookSort
-      ? this.handleKeyFilter(
-          this.props.deletedBooks,
-          ConfigService.getAllListConfig("deletedBooks")
-        )
-      : this.props.isBookSort
-      ? this.handleIndexFilter(
-          this.handleKeyFilter(
-            this.props.deletedBooks,
-            ConfigService.getAllListConfig("deletedBooks")
-          ),
-          //return the sorted book index
-          SortUtil.sortBooks(
-            this.props.deletedBooks,
-            this.props.bookSortCode,
-            ConfigService
-          ) || []
-        )
-      : this.props.isBookSort
-      ? this.handleIndexFilter(
-          this.props.deletedBooks,
-          //return the sorted book index
-          SortUtil.sortBooks(
-            this.props.deletedBooks,
-            this.props.bookSortCode,
-            ConfigService
-          ) || []
-        )
-      : this.handleKeyFilter(
-          this.props.deletedBooks,
-          ConfigService.getAllListConfig("recentBooks")
-        );
-    if (books.length === 0) {
-      return <Redirect to="/manager/empty" />;
-    }
+    let books = this.state.fullBooksData;
     return books.map((item: BookModel, index: number) => {
       return this.props.viewMode === "list" ? (
         <BookListItem
@@ -127,40 +101,44 @@ class BookList extends React.Component<BookListProps, BookListState> {
   render() {
     return (
       <>
-        <div
-          className="book-list-container-parent"
-          style={
-            this.props.isCollapsed
-              ? { width: "calc(100vw - 70px)", left: "70px" }
-              : {}
-          }
-        >
-          <div className="book-list-container">
-            <ul className="book-list-item-box">
-              {!this.state.isRefreshing && this.renderBookList()}
-            </ul>
-          </div>
-        </div>
-        <div
-          className="book-list-header"
-          style={
-            this.props.isCollapsed
-              ? { width: "calc(100% - 70px)", left: "70px" }
-              : {}
-          }
-        >
-          <div></div>
+        {this.state.fullBooksData.length > 0 ? (
           <div
-            className="booklist-delete-container"
-            onClick={() => {
-              this.props.handleDeleteDialog(true);
-            }}
-            style={this.props.isCollapsed ? { left: "calc(50% - 60px)" } : {}}
+            className="book-list-container-parent"
+            style={
+              this.props.isCollapsed
+                ? { width: "calc(100vw - 70px)", left: "70px" }
+                : {}
+            }
           >
-            <Trans>Delete all books</Trans>
+            <div className="book-list-container">
+              <ul className="book-list-item-box">{this.renderBookList()}</ul>
+            </div>
           </div>
-          <ViewMode />
-        </div>
+        ) : (
+          <EmptyPage />
+        )}
+        {this.state.fullBooksData.length > 0 ? (
+          <div
+            className="book-list-header"
+            style={
+              this.props.isCollapsed
+                ? { width: "calc(100% - 70px)", left: "70px" }
+                : {}
+            }
+          >
+            <div></div>
+            <div
+              className="booklist-delete-container"
+              onClick={() => {
+                this.props.handleDeleteDialog(true);
+              }}
+              style={this.props.isCollapsed ? { left: "calc(50% - 60px)" } : {}}
+            >
+              <Trans>Delete all books</Trans>
+            </div>
+            <ViewMode />
+          </div>
+        ) : null}
       </>
     );
   }

@@ -8,10 +8,9 @@ import { Redirect } from "react-router-dom";
 import BookUtil from "../../../utils/file/bookUtil";
 import toast from "react-hot-toast";
 import BookModel from "../../../models/Book";
-import {
-  ConfigService,
-  SortUtil,
-} from "../../../assets/lib/kookit-extra-browser.min";
+import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
+import DatabaseService from "../../../utils/storage/databaseService";
+import Note from "../../../models/Note";
 class CardList extends React.Component<CardListProps, CardListStates> {
   private containerRef: React.RefObject<HTMLDivElement>;
   private scrollTimer: NodeJS.Timeout | null = null;
@@ -49,23 +48,25 @@ class CardList extends React.Component<CardListProps, CardListStates> {
     }
   }
 
-  loadInitialCards = () => {
+  loadInitialCards = async () => {
     let sortedCards = [...this.props.cards];
-    // 按照key排序
-    sortedCards.sort((a, b) => {
-      return this.props.noteSortCode.order === 2
-        ? b.key.localeCompare(a.key)
-        : a.key.localeCompare(b.key);
-    });
     const { itemsPerPage } = this.state;
 
     // 根据屏幕大小动态调整每页显示的卡片数量
     const screenHeight = window.innerHeight;
     const adaptiveItemsPerPage =
       screenHeight > 800 ? itemsPerPage + 8 : itemsPerPage;
+    let initialCards = sortedCards.slice(0, adaptiveItemsPerPage);
+    let initialDisplayedCards: Note[] = [];
+    for (let i = 0; i < initialCards.length; i++) {
+      let card = await DatabaseService.getRecord(initialCards[i].key, "notes");
+      if (card) {
+        initialDisplayedCards.push(card);
+      }
+    }
 
     this.setState({
-      displayedCards: sortedCards.slice(0, adaptiveItemsPerPage),
+      displayedCards: initialDisplayedCards,
       currentPage: 1,
       isLoading: false,
       itemsPerPage: adaptiveItemsPerPage,
@@ -74,11 +75,6 @@ class CardList extends React.Component<CardListProps, CardListStates> {
 
   loadMoreCards = () => {
     let sortedCards = [...this.props.cards];
-    sortedCards.sort((a, b) => {
-      return this.props.noteSortCode.order === 2
-        ? b.key.localeCompare(a.key)
-        : a.key.localeCompare(b.key);
-    });
     const { displayedCards, currentPage, itemsPerPage, isLoading } = this.state;
 
     if (isLoading || displayedCards.length >= sortedCards.length) {
@@ -88,14 +84,21 @@ class CardList extends React.Component<CardListProps, CardListStates> {
     this.setState({ isLoading: true });
 
     // 模拟异步加载延迟
-    setTimeout(() => {
+    setTimeout(async () => {
       const nextPage = currentPage + 1;
       const startIndex = currentPage * itemsPerPage;
       const endIndex = nextPage * itemsPerPage;
-      const newCards = sortedCards.slice(startIndex, endIndex);
+      let newCards = sortedCards.slice(startIndex, endIndex);
+      let newDisplayedCards: Note[] = [];
+      for (let i = 0; i < newCards.length; i++) {
+        let card = await DatabaseService.getRecord(newCards[i].key, "notes");
+        if (card) {
+          newDisplayedCards.push(card);
+        }
+      }
 
       this.setState({
-        displayedCards: [...displayedCards, ...newCards],
+        displayedCards: [...displayedCards, ...newDisplayedCards],
         currentPage: nextPage,
         isLoading: false,
       });
@@ -136,18 +139,6 @@ class CardList extends React.Component<CardListProps, CardListStates> {
     }
   };
 
-  handleBookName = (bookKey: string) => {
-    let { books } = this.props;
-    let bookName = "";
-    for (let i = 0; i < this.props.books.length; i++) {
-      if (books[i].key === bookKey) {
-        bookName = books[i].name;
-        break;
-      }
-    }
-    return bookName;
-  };
-
   formatTimestamp = (timestamp: string) => {
     try {
       const date = new Date(parseInt(timestamp));
@@ -156,12 +147,13 @@ class CardList extends React.Component<CardListProps, CardListStates> {
       return timestamp; // 如果转换失败，返回原始值
     }
   };
-  handleJump = (note: NoteModel) => {
+  handleJump = async (note: NoteModel) => {
+    note = await DatabaseService.getRecord(note.key, "notes");
     let { books } = this.props;
     let book: BookModel | null = null;
     for (let i = 0; i < books.length; i++) {
       if (books[i].key === note.bookKey) {
-        book = books[i];
+        book = await DatabaseService.getRecord(books[i].key, "books");
         break;
       }
     }
@@ -233,7 +225,7 @@ class CardList extends React.Component<CardListProps, CardListStates> {
                   <Trans>From</Trans>《
                 </div>
                 <div className="card-list-item-chapter card-list-item-title">
-                  {this.handleBookName(item.bookKey)}
+                  {this.props.bookNamesMap[item.bookKey]}
                 </div>
                 <div className="card-list-item-chapter card-list-item-title">
                   》{item.chapter}

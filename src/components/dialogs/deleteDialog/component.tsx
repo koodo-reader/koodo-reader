@@ -70,8 +70,18 @@ class DeleteDialog extends React.Component<
   };
   deleteAllBookInTrash = async () => {
     let keyArr = ConfigService.getAllListConfig("deletedBooks");
+    let fullDeteletedBooks: any[] = [];
+    for (let i = 0; i < this.props.deletedBooks.length; i++) {
+      let deletedBook = await DatabaseService.getRecord(
+        this.props.deletedBooks[i].key,
+        "books"
+      );
+      if (deletedBook) {
+        fullDeteletedBooks.push(deletedBook);
+      }
+    }
     for (let i = 0; i < keyArr.length; i++) {
-      let format = this.props.deletedBooks
+      let format = fullDeteletedBooks
         .find((item) => item.key === keyArr[i])
         ?.format.toLowerCase();
       await this.deleteBook(keyArr[i], format || "epub");

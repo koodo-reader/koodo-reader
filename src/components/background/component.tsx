@@ -83,61 +83,42 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
                 }
           }
         >
-          {(!ConfigService.getReaderConfig("backgroundColor") &&
-            (ConfigService.getReaderConfig("appSkin") === "night" ||
-              (ConfigService.getReaderConfig("appSkin") === "system" &&
-                ConfigService.getReaderConfig("isOSNight") === "yes"))) ||
-          ConfigService.getReaderConfig("backgroundColor") ===
-            "rgba(44,47,49,1)" ? (
-            <div
-              className="spine-shadow-left"
-              style={
-                this.state.isSingle
-                  ? { display: "none", opacity: 0.5 }
-                  : { opacity: 0.5 }
-              }
-            ></div>
-          ) : (
-            <div
-              className="spine-shadow-left"
-              style={this.state.isSingle ? { display: "none" } : {}}
-            ></div>
-          )}
-          <div
-            className="book-spine"
-            style={this.state.isSingle ? { display: "none" } : {}}
-          ></div>
-          {(!ConfigService.getReaderConfig("backgroundColor") &&
-            (ConfigService.getReaderConfig("appSkin") === "night" ||
-              (ConfigService.getReaderConfig("appSkin") === "system" &&
-                ConfigService.getReaderConfig("isOSNight") === "yes"))) ||
-          ConfigService.getReaderConfig("backgroundColor") ===
-            "rgba(44,47,49,1)" ? (
-            <div
-              className="spine-shadow-right"
-              style={
-                this.state.isSingle
-                  ? {
+          {(() => {
+            const isDarkMode =
+              (!this.props.backgroundColor &&
+                (ConfigService.getReaderConfig("appSkin") === "night" ||
+                  (ConfigService.getReaderConfig("appSkin") === "system" &&
+                    ConfigService.getReaderConfig("isOSNight") === "yes"))) ||
+              this.props.backgroundColor === "rgba(44,47,49,1)";
+
+            const shadowOpacity = isDarkMode ? 0.5 : undefined;
+
+            return (
+              <>
+                <div
+                  className="spine-shadow-left"
+                  style={{
+                    ...(this.state.isSingle && { display: "none" }),
+                    ...(shadowOpacity && { opacity: shadowOpacity }),
+                  }}
+                ></div>
+                <div
+                  className="book-spine"
+                  style={this.state.isSingle ? { display: "none" } : {}}
+                ></div>
+                <div
+                  className="spine-shadow-right"
+                  style={{
+                    ...(this.state.isSingle && {
                       position: "relative",
                       right: 0,
-                      opacity: 0.5,
-                    }
-                  : { opacity: 0.5 }
-              }
-            ></div>
-          ) : (
-            <div
-              className="spine-shadow-right"
-              style={
-                this.state.isSingle
-                  ? {
-                      position: "relative",
-                      right: 0,
-                    }
-                  : {}
-              }
-            ></div>
-          )}
+                    }),
+                    ...(shadowOpacity && { opacity: shadowOpacity }),
+                  }}
+                ></div>
+              </>
+            );
+          })()}
         </div>
 
         <div

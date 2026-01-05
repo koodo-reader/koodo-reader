@@ -4,7 +4,6 @@ import Note from "../../../models/Note";
 import _ from "underscore";
 import { PopupNoteProps, PopupNoteState } from "./interface";
 import NoteTag from "../../noteTag";
-import NoteModel from "../../../models/Note";
 import { Trans } from "react-i18next";
 import toast from "react-hot-toast";
 import { getIframeDoc } from "../../../utils/reader/docUtil";
@@ -15,20 +14,23 @@ import copy from "copy-text-to-clipboard";
 class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
   constructor(props: PopupNoteProps) {
     super(props);
-    this.state = { tag: [], text: "" };
+    this.state = { tag: [], text: "", note: null };
   }
-  componentDidMount() {
+  async componentDidMount() {
     let textArea: any = document.querySelector(".editor-box");
     textArea && textArea.focus();
     if (this.props.noteKey) {
-      let noteIndex = _.findLastIndex(this.props.notes, {
-        key: this.props.noteKey,
-      });
+      let note = await DatabaseService.getRecord(this.props.noteKey, "notes");
       this.setState({
-        text: this.props.notes[noteIndex].text,
-        tag: this.props.notes[noteIndex].tag,
+        text: note.text,
+        tag: note.tag,
+        note: note,
       });
-      textArea.value = this.props.notes[noteIndex].notes;
+      textArea.value = note.notes;
+      if (this.props.htmlBook && this.props.htmlBook.rendition) {
+      } else {
+        this.props.handleColor(note.color);
+      }
     } else {
       let docs = getIframeDoc(this.props.currentBook.format);
       let text = "";
@@ -64,16 +66,13 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
       .value;
 
     if (this.props.noteKey) {
-      this.props.notes.forEach((item) => {
-        if (item.key === this.props.noteKey) {
-          item.notes = notes;
-          item.tag = this.state.tag;
-          item.color = this.props.color || item.color;
-        }
-      });
-      let newNote = this.props.notes.filter(
-        (item) => item.key === this.props.noteKey
-      )[0];
+      let newNote = await DatabaseService.getRecord(
+        this.props.noteKey,
+        "notes"
+      );
+      newNote.notes = notes;
+      newNote.tag = this.state.tag;
+      newNote.color = this.props.color || newNote.color;
       DatabaseService.updateRecord(newNote, "notes").then(() => {
         this.props.handleOpenMenu(false);
         toast.success(this.props.t("Addition successful"));
@@ -185,14 +184,7 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
       handleDigest: this.handleUpdateHighlight,
       isEdit: true,
     };
-    let note: NoteModel | undefined;
-    if (this.props.noteKey) {
-      this.props.notes.forEach((item) => {
-        if (item.key === this.props.noteKey) {
-          note = item;
-        }
-      });
-    }
+    let note = this.state.note;
 
     const renderNoteEditor = () => {
       return (

@@ -1,6 +1,4 @@
-import BookModel from "../../../models/Book";
 export interface SliderListProps {
-  currentBook: BookModel;
   item: any;
   renderBookFunc: () => void;
   t: (title: string) => string;

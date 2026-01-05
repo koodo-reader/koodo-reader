@@ -7,7 +7,7 @@ const mapStateToProps = (state: stateType) => {
   return {
     currentBook: state.book.currentBook,
     htmlBook: state.reader.htmlBook,
-
+    highlights: state.reader.highlights,
     bookmarks: state.reader.bookmarks,
     notes: state.reader.notes,
   };

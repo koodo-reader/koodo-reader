@@ -1,6 +1,6 @@
 import React from "react";
 import "./supportDialog.css";
-import { SupporDialogProps, SupporDialogState } from "./interface";
+import { SupportDialogProps, SupportDialogState } from "./interface";
 import { Trans } from "react-i18next";
 import Lottie from "react-lottie";
 import supportAnimation from "../../../assets/lotties/support.json";
@@ -38,11 +38,11 @@ const exitOptions = {
     preserveAspectRatio: "xMidYMid slice",
   },
 };
-class SupporDialog extends React.Component<
-  SupporDialogProps,
-  SupporDialogState
+class SupportDialog extends React.Component<
+  SupportDialogProps,
+  SupportDialogState
 > {
-  constructor(props: SupporDialogProps) {
+  constructor(props: SupportDialogProps) {
     super(props);
     this.state = {
       isRedeemCode: false,
@@ -406,4 +406,4 @@ class SupporDialog extends React.Component<
   }
 }
 
-export default SupporDialog;
+export default SupportDialog;

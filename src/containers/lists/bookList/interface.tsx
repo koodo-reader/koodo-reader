@@ -1,6 +1,4 @@
 import BookModel from "../../../models/Book";
-import NoteModel from "../../../models/Note";
-import BookmarkModel from "../../../models/Bookmark";
 import { RouteComponentProps } from "react-router";
 export interface BookListProps extends RouteComponentProps<any> {
   books: BookModel[];
@@ -11,15 +9,12 @@ export interface BookListProps extends RouteComponentProps<any> {
   isCollapsed: boolean;
   currentPage: number;
   totalPage: number;
-  isBookSort: boolean;
   isSelectBook: boolean;
   viewMode: string;
   selectedBooks: string[];
-  bookmarks: BookmarkModel[];
-  notes: NoteModel[];
+
   bookSortCode: { sort: number; order: number };
   noteSortCode: { sort: number; order: number };
-  handleFetchList: () => void;
   handleAddDialog: (isShow: boolean) => void;
   handleMode: (mode: string) => void;
   handleFetchBooks: () => void;
@@ -31,7 +26,7 @@ export interface BookListProps extends RouteComponentProps<any> {
 export interface BookListState {
   favoriteBooks: number;
   isHideShelfBook: boolean;
-  isRefreshing: boolean;
   displayedBooksCount: number;
   isLoadingMore: boolean;
+  fullBooksData: BookModel[];
 }

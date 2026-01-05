@@ -1,11 +1,10 @@
-import BookModel from "../../models/Book";
 export interface BackgroundProps {
-  currentBook: BookModel;
   readerMode: string;
   scale: string;
   margin: string;
   isNavLocked: boolean;
   isSettingLocked: boolean;
+  backgroundColor: string;
 }
 export interface BackgroundState {
   isSingle: boolean;

@@ -193,13 +193,12 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
             className="sort-by-category-list"
             onClick={async () => {
               let books = await DatabaseService.getAllRecords("books");
-              if (
-                this.props.notes.filter((item) => item.notes !== "").length > 0
-              ) {
-                exportNotes(
-                  this.props.notes.filter((item) => item.notes !== ""),
-                  books
-                );
+              let notes = await DatabaseService.getAllRecords("notes");
+              notes = notes.filter(
+                (note) => note.notes && note.notes.length > 0
+              );
+              if (notes.length > 0) {
+                exportNotes(notes, books);
                 toast.success(this.props.t("Export successful"));
               } else {
                 toast(this.props.t("Nothing to export"));
@@ -212,13 +211,10 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
             className="sort-by-category-list"
             onClick={async () => {
               let books = await DatabaseService.getAllRecords("books");
-              if (
-                this.props.notes.filter((item) => item.notes === "").length > 0
-              ) {
-                exportHighlights(
-                  this.props.notes.filter((item) => item.notes === ""),
-                  books
-                );
+              let notes = await DatabaseService.getAllRecords("notes");
+              notes = notes.filter((note) => note.notes === "");
+              if (notes.length > 0) {
+                exportHighlights(notes, books);
                 toast.success(this.props.t("Export successful"));
               } else {
                 toast(this.props.t("Nothing to export"));

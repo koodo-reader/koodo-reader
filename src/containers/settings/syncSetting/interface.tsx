@@ -1,6 +1,4 @@
 import BookModel from "../../../models/Book";
-import NoteModel from "../../../models/Note";
-import BookmarkModel from "../../../models/Bookmark";
 import PluginModel from "../../../models/Plugin";
 import { RouteComponentProps } from "react-router-dom";
 export interface SettingInfoProps extends RouteComponentProps<any> {
@@ -21,17 +19,12 @@ export interface SettingInfoProps extends RouteComponentProps<any> {
   handleFetchPlugins: () => void;
   cloudSyncFunc: () => Promise<void>;
   handleFetchUserInfo: () => Promise<void>;
-  bookmarks: BookmarkModel[];
-  notes: NoteModel[];
-  isOpenTokenDialog: boolean;
   plugins: PluginModel[];
   books: BookModel[];
-  userInfo: any;
   dataSourceList: string[];
   loginOptionList: { email: string; provider: string }[];
   defaultSyncOption: string;
   isAuthed: boolean;
-  settingMode: string;
   settingDrive: string;
 }
 export interface SettingInfoState {
@@ -46,4 +39,5 @@ export interface SettingInfoState {
   loginConfig: any;
   settingLogin: string;
   isAddNew: boolean;
+  snapshotList: { file: string; time: number }[];
 }

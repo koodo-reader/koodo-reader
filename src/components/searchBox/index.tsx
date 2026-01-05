@@ -5,13 +5,10 @@ import { withTranslation } from "react-i18next";
 import SearchBox from "./component";
 const mapStateToProps = (state: stateType) => {
   return {
-    books: state.manager.books,
-    notes: state.reader.notes,
     htmlBook: state.reader.htmlBook,
     isNavLocked: state.reader.isNavLocked,
     isSearch: state.manager.isSearch,
     isReading: state.book.isReading,
-    currentBook: state.book.currentBook,
     tabMode: state.sidebar.mode,
     shelfTitle: state.sidebar.shelfTitle,
   };
