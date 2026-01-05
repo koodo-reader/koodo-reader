@@ -1,8 +1,7 @@
-import BookModel from "../../models/Book";
 export interface ColorProps {
   color: number;
+  targetColor: number;
   isEdit: boolean;
-  currentBook: BookModel;
   handleColor: (color: number) => void;
   handleDigest: () => void;
 }

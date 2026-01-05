@@ -4,7 +4,6 @@ import { SettingInfoProps, SettingInfoState } from "./interface";
 import { Trans } from "react-i18next";
 import i18n from "../../../i18n";
 import packageInfo from "../../../../package.json";
-import { changeLibrary, changePath } from "../../../utils/file/common";
 import { isElectron } from "react-device-detect";
 import { dropdownList } from "../../../constants/dropdownList";
 import _ from "underscore";
@@ -15,7 +14,7 @@ import {
 } from "../../../constants/settingList";
 import { themeList } from "../../../constants/themeList";
 import toast from "react-hot-toast";
-import { loadFontData, openExternalUrl } from "../../../utils/common";
+import { loadFontData } from "../../../utils/common";
 import { getStorageLocation, reloadManager } from "../../../utils/common";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import GeneralSetting from "../../../containers/settings/generalSetting";
@@ -56,6 +55,8 @@ class SettingDialog extends React.Component<
       appSkin: ConfigService.getReaderConfig("appSkin"),
       isUseBuiltIn: ConfigService.getReaderConfig("isUseBuiltIn") === "yes",
       isDisableCrop: ConfigService.getReaderConfig("isDisableCrop") === "yes",
+      isOverwriteText:
+        ConfigService.getReaderConfig("isOverwriteText") === "yes",
       isOverwriteLink:
         ConfigService.getReaderConfig("isOverwriteLink") === "yes",
       isDisablePDFCover:

@@ -11,7 +11,7 @@ import NavigationPanel from "./component";
 const mapStateToProps = (state: stateType) => {
   return {
     currentBook: state.book.currentBook,
-    bookmarks: state.reader.bookmarks,
+
     htmlBook: state.reader.htmlBook,
     backgroundColor: state.reader.backgroundColor,
     isNavLocked: state.reader.isNavLocked,

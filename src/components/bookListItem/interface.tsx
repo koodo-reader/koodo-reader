@@ -6,14 +6,11 @@ export interface BookItemProps extends RouteComponentProps<any> {
   percentage: number;
   currentBook: BookModel;
   dragItem: string;
-  mode: string;
   isOpenActionDialog: boolean;
-
   isSelectBook: boolean;
   isSelected: boolean;
   selectedBooks: string[];
   handleSelectBook: (isSelectBook: boolean) => void;
-
   handleReadingBook: (book: BookModel) => void;
   handleEditDialog: (isShow: boolean) => void;
   handleDeleteDialog: (isShow: boolean) => void;

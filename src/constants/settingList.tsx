@@ -174,6 +174,11 @@ export const readingSettingList = [
     title: "Overwrite the default link style in the book",
     propName: "isOverwriteLink",
   },
+  {
+    isElectron: false,
+    title: "Overwrite the default text style in the book",
+    propName: "isOverwriteText",
+  },
   // {
   //   isElectron: false,
   //   title: "Lemmatize words when looking up in a dictionary",
@@ -218,6 +223,12 @@ export const langList = [
   { label: "Українська", value: "uk" },
   { label: "தமிழ்", value: "ta" },
   { label: "ελληνικά", value: "el" },
+  { label: "አማርኛ", value: "am" },
+  { label: "Dansk", value: "da" },
+  { label: "Suomi", value: "fi" },
+  { label: "Interlingue", value: "ie" },
+  { label: "Português(PT)", value: "pt" },
+  { label: "Tiếng Việt", value: "vi" },
 ];
 
 export const searchList = [

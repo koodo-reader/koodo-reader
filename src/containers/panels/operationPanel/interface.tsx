@@ -1,16 +1,12 @@
 import BookModel from "../../../models/Book";
-import NoteModel from "../../../models/Note";
 import HtmlBookModel from "../../../models/HtmlBook";
 import BookmarkModel from "../../../models/Bookmark";
 import { RouteComponentProps } from "react-router";
 
 export interface OperationPanelProps extends RouteComponentProps<any> {
   currentBook: BookModel;
-  bookmarks: BookmarkModel[];
-  notes: NoteModel[];
-  books: BookModel[];
+
   htmlBook: HtmlBookModel;
-  locations: any;
   rendition: any;
   currentDuration: number;
   readerMode: string;

@@ -12,8 +12,6 @@ import { withRouter } from "react-router-dom";
 const mapStateToProps = (state: stateType) => {
   return {
     isCollapsed: state.sidebar.isCollapsed,
-    currentBook: state.book.currentBook,
-    bookmarks: state.reader.bookmarks,
     chapters: state.reader.chapters,
     books: state.manager.books,
     noteSortCode: state.manager.noteSortCode,

@@ -3,9 +3,11 @@ import "./noteList.css";
 import { NoteListProps, NoteListState } from "./interface";
 import CardList from "../cardList";
 import NoteTag from "../../../components/noteTag";
-import NoteModel from "../../../models/Note";
 import Empty from "../../emptyPage";
 import { Trans } from "react-i18next";
+import ConfigUtil from "../../../utils/file/configUtil";
+import BookUtil from "../../../utils/file/bookUtil";
+import Note from "../../../models/Note";
 
 class NoteList extends React.Component<NoteListProps, NoteListState> {
   constructor(props: NoteListProps) {
@@ -13,70 +15,72 @@ class NoteList extends React.Component<NoteListProps, NoteListState> {
     this.state = {
       tag: [],
       currentSelectedBook: "",
+      bookNamesMap: {},
+      cardList: [],
     };
   }
-  UNSAFE_componentWillMount() {
+  async UNSAFE_componentWillMount() {
+    this.props.handleFetchNotes();
+
+    this.setState({
+      cardList:
+        this.props.tabMode === "note"
+          ? this.props.notes
+          : this.props.highlights,
+    });
+  }
+  async componentDidMount() {
     this.props.handleFetchNotes();
   }
-  handleTag = (tag: string[]) => {
-    this.setState({ tag });
-  };
-  handleFilter = (items: any, arr: number[]) => {
-    let itemArr: any[] = [];
-    arr.forEach((item) => {
-      items[item] && itemArr.push(items[item]);
-    });
-    return itemArr;
-  };
-  filterTag = (notes: NoteModel[]) => {
-    let temp: NoteModel[] = [];
-    for (let i = 0; i < notes.length; i++) {
-      let flag = false;
-      for (let j = 0; j < this.state.tag.length; j++) {
-        if (notes[i].tag && notes[i].tag.indexOf(this.state.tag[j]) > -1) {
-          flag = true;
-          break;
-        }
-      }
-      if (flag) {
-        temp.push(notes[i]);
-      }
+  async componentWillReceiveProps(
+    nextProps: Readonly<NoteListProps>,
+    nextContext: any
+  ) {
+    if (
+      nextProps.notes !== this.props.notes ||
+      nextProps.highlights !== this.props.highlights
+    ) {
+      this.handleNamesMap(
+        nextProps.tabMode === "note" ? nextProps.notes : nextProps.highlights
+      );
+      this.setState({
+        cardList:
+          nextProps.tabMode === "note" ? nextProps.notes : nextProps.highlights,
+      });
     }
-    return temp;
+  }
+  handleNamesMap = async (notes: Note[]) => {
+    let uniqueBookKeys = Array.from(new Set(notes.map((note) => note.bookKey)));
+    let map = await BookUtil.getBookNamesMapByKeys(uniqueBookKeys);
+
+    this.setState({ bookNamesMap: map });
+  };
+  handleTag = async (tag: string[]) => {
+    if (tag.length === 0) {
+      this.setState({
+        tag: [],
+        cardList:
+          this.props.tabMode === "note"
+            ? this.props.notes
+            : this.props.highlights,
+      });
+      return;
+    }
+    let cardList = await ConfigUtil.getNoteWithTags(tag);
+    cardList = cardList.filter((note) =>
+      this.props.tabMode === "note" ? note.notes !== "" : note.notes === ""
+    );
+    this.setState({ tag, cardList });
   };
   render() {
     const noteProps = {
       cards: this.props.isSearch
-        ? this.handleFilter(
-            this.props.notes.filter((item) =>
-              this.props.tabMode === "note"
-                ? item.notes !== ""
-                : item.notes === ""
-            ),
-            this.props.searchResults
-          )
+        ? this.props.searchResults
         : this.state.tag.length > 0
-        ? this.filterTag(
-            this.props.notes.filter((item) =>
-              this.props.tabMode === "note"
-                ? item.notes !== ""
-                : item.notes === ""
-            )
-          )
-        : this.state.currentSelectedBook
-        ? this.props.notes
-            .filter((item) =>
-              this.props.tabMode === "note"
-                ? item.notes !== ""
-                : item.notes === ""
-            )
-            .filter((item) => item.bookKey === this.state.currentSelectedBook)
-        : this.props.notes.filter((item) =>
-            this.props.tabMode === "note"
-              ? item.notes !== ""
-              : item.notes === ""
-          ),
+        ? this.state.cardList
+        : this.state.cardList,
       mode: this.props.tabMode,
+      bookNamesMap: this.state.bookNamesMap,
     };
     return (
       <div
@@ -100,32 +104,33 @@ class NoteList extends React.Component<NoteListProps, NoteListState> {
               <select
                 name=""
                 className="lang-setting-dropdown"
-                onChange={(event) => {
+                onChange={async (event) => {
                   this.setState({
                     currentSelectedBook: event.target.value,
+                    cardList: await ConfigUtil.getNotesByBookKeyAndType(
+                      event.target.value,
+                      this.props.tabMode
+                    ),
                   });
                 }}
               >
                 {[
                   { value: "", label: this.props.t("Please select") },
-                  ...this.props.notes
-                    .filter((item) =>
-                      this.props.tabMode === "note"
-                        ? item.notes !== ""
-                        : item.notes === ""
-                    )
+                  ...(this.props.tabMode === "note"
+                    ? this.props.notes
+                    : this.props.highlights
+                  )
                     .map((note) => {
-                      let book = this.props.books.find(
-                        (book) => book.key === note.bookKey
-                      );
                       return {
-                        label: book?.name || "Unknown book",
+                        label:
+                          this.state.bookNamesMap[note.bookKey] ||
+                          "Unknown book",
                         value: note.bookKey,
                       };
                     })
                     .filter(
                       (item, index, self) =>
-                        self.findIndex((t) => t.value === item.value) === index
+                        self.findIndex((t) => t.label === item.label) === index
                     ),
                 ].map((item) => (
                   <option

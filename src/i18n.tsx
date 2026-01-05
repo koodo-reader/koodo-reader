@@ -35,6 +35,12 @@ import translationFA from "./assets/locales/fa/translation.json";
 import translationPTBR from "./assets/locales/pt-BR/translation.json";
 import translationTH from "./assets/locales/th/translation.json";
 import translationSR from "./assets/locales/sr/translation.json";
+import translationAM from "./assets/locales/am/translation.json";
+import translationDA from "./assets/locales/da/translation.json";
+import translationFI from "./assets/locales/fi/translation.json";
+import translationIE from "./assets/locales/ie/translation.json";
+import translationPT from "./assets/locales/pt/translation.json";
+import translationVI from "./assets/locales/vi/translation.json";
 // the translations
 const resources = {
   en: {
@@ -141,6 +147,24 @@ const resources = {
   },
   sr: {
     translation: translationSR,
+  },
+  am: {
+    translation: translationAM,
+  },
+  da: {
+    translation: translationDA,
+  },
+  fi: {
+    translation: translationFI,
+  },
+  ie: {
+    translation: translationIE,
+  },
+  pt: {
+    translation: translationPT,
+  },
+  vi: {
+    translation: translationVI,
   },
 };
 

@@ -21,18 +21,11 @@ import { withRouter } from "react-router-dom";
 
 const mapStateToProps = (state: stateType) => {
   return {
-    bookmarks: state.reader.bookmarks,
-    books: state.manager.books,
     plugins: state.manager.plugins,
     isAuthed: state.manager.isAuthed,
-    settingMode: state.manager.settingMode,
     settingDrive: state.manager.settingDrive,
-    userInfo: state.manager.userInfo,
-    notes: state.reader.notes,
-    dataSourceList: state.backupPage.dataSourceList,
     defaultSyncOption: state.backupPage.defaultSyncOption,
     loginOptionList: state.backupPage.loginOptionList,
-    isOpenTokenDialog: state.backupPage.isOpenTokenDialog,
   };
 };
 const actionCreator = {

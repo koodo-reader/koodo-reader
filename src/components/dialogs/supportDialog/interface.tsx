@@ -1,10 +1,6 @@
-import BookModel from "../../../models/Book";
-export interface SupporDialogProps {
-  currentBook: BookModel;
-  books: BookModel[];
+export interface SupportDialogProps {
   isShowSupport: boolean;
   isAuthed: boolean;
-  userInfo: any;
   t: (title: string) => string;
   handleShowSupport: (isShowSupport: boolean) => void;
   handleNewWarning: (isNewWarning: boolean) => void;
@@ -16,7 +12,7 @@ export interface SupporDialogProps {
   handleFetchDataSourceList: () => void;
   handleFetchDefaultSyncOption: () => void;
 }
-export interface SupporDialogState {
+export interface SupportDialogState {
   isRedeemCode: boolean;
   isExitPro: boolean;
   redeemCode: string;

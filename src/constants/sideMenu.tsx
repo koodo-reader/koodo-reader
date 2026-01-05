@@ -18,7 +18,7 @@ export const sideMenu = [
   {
     name: "Highlights",
     icon: "highlight-line",
-    mode: "digest",
+    mode: "highlight",
   },
   {
     name: "Deleted Books",

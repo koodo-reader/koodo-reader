@@ -1,12 +1,7 @@
 import BookModel from "../../models/Book";
-import NoteModel from "../../models/Note";
-import BookmarkModel from "../../models/Bookmark";
 import { RouteComponentProps } from "react-router";
 export interface ManagerProps extends RouteComponentProps<any> {
   books: BookModel[];
-  notes: NoteModel[];
-  bookmarks: BookmarkModel[];
-  isReading: boolean;
   mode: string;
   shelfTitle: string;
   isOpenEditDialog: boolean;
@@ -14,7 +9,6 @@ export interface ManagerProps extends RouteComponentProps<any> {
   isDetailDialog: boolean;
   isOpenAddDialog: boolean;
   isOpenImportDialog: boolean;
-  isBookSort: boolean;
   isSortDisplay: boolean;
   isBackup: boolean;
   isSettingOpen: boolean;
@@ -33,7 +27,7 @@ export interface ManagerProps extends RouteComponentProps<any> {
   handleFetchBookmarks: () => void;
   handleFetchBookSortCode: () => void;
   handleFetchNoteSortCode: () => void;
-  handleFetchList: () => void;
+  handleFetchViewMode: () => void;
   handleEditDialog: (isOpenEditDialog: boolean) => void;
   handleDeleteDialog: (isOpenDeleteDialog: boolean) => void;
   handleAddDialog: (isOpenAddDialog: boolean) => void;

@@ -17,12 +17,8 @@ import ActionDialog from "./component";
 
 const mapStateToProps = (state: stateType) => {
   return {
-    mode: state.sidebar.mode,
     currentBook: state.book.currentBook,
-    books: state.manager.books,
-    notes: state.reader.notes,
     isSelectBook: state.manager.isSelectBook,
-
     deletedBooks: state.manager.deletedBooks,
   };
 };

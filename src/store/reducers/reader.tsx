@@ -2,6 +2,7 @@ import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 const initState = {
   bookmarks: [],
   notes: [],
+  highlights: [],
   chapters: null,
   currentChapter: "",
   currentChapterIndex: 0,
@@ -57,6 +58,11 @@ export function reader(
       return {
         ...state,
         notes: action.payload,
+      };
+    case "HANDLE_HIGHLIGHTS":
+      return {
+        ...state,
+        highlights: action.payload,
       };
 
     case "HANDLE_CURRENT_CHAPTER":

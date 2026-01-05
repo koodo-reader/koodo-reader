@@ -4,10 +4,10 @@ import Background from "./component";
 
 const mapStateToProps = (state: stateType) => {
   return {
-    currentBook: state.book.currentBook,
     readerMode: state.reader.readerMode,
     isNavLocked: state.reader.isNavLocked,
     isSettingLocked: state.reader.isSettingLocked,
+    backgroundColor: state.reader.backgroundColor,
     scale: state.reader.scale,
     margin: state.reader.margin,
   };

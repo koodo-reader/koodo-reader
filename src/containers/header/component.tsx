@@ -10,7 +10,7 @@ import {
 } from "../../assets/lib/kookit-extra-browser.min";
 import UpdateInfo from "../../components/dialogs/updateDialog";
 import { restoreFromConfigJson } from "../../utils/file/restore";
-import { backupToConfigJson, backupToSyncJson } from "../../utils/file/backup";
+import { backupToConfigJson, generateSnapshot } from "../../utils/file/backup";
 import { isElectron } from "react-device-detect";
 import {
   getCloudConfig,
@@ -63,10 +63,16 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     };
   }
   async componentDidMount() {
+    if (isElectron) {
+      try {
+        await generateSnapshot();
+      } catch (error) {
+        console.error("Failed to generate snapshot:", error);
+      }
+    }
     this.props.handleFetchAuthed();
     this.props.handleFetchDefaultSyncOption();
     this.props.handleFetchDataSourceList();
-
     if (isElectron) {
       const fs = window.require("fs");
       const path = window.require("path");
@@ -108,6 +114,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       ) {
         this.setState({ isDataChange: true });
       }
+
       ipcRenderer.on("reading-finished", async (event: any, config: any) => {
         this.handleFinishReading();
       });
@@ -314,7 +321,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       );
       return false;
     }
-    checkMissingBook(this.props.books);
+    await checkMissingBook();
     let checkResult = await checkBrokenData();
     if (checkResult) {
       toast.error(
@@ -509,7 +516,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     let timestamp = new Date().getTime().toString();
     ConfigService.setItem("lastSyncTime", timestamp);
     await backupToConfigJson();
-    await backupToSyncJson();
     toast.success(
       this.props.t("Synchronisation successful") +
         " (" +
@@ -675,9 +681,8 @@ class Header extends React.Component<HeaderProps, HeaderState> {
               style={{ textDecoration: "underline" }}
               onClick={() => {
                 if (
-                  window.location.href.startsWith("http") &&
                   window.location.hostname !== "web.koodoreader.com" &&
-                  window.location.hostname !== "web.koodoreader.cn"
+                  !isElectron
                 ) {
                   this.props.handleSetting(true);
                   this.props.handleSettingMode("account");
@@ -720,8 +725,8 @@ class Header extends React.Component<HeaderProps, HeaderState> {
             handleDrag: this.props.handleDrag,
           }}
         />
-        <UpdateInfo />
         <SupportDialog />
+        <UpdateInfo />
       </div>
     );
   }

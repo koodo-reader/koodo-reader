@@ -161,7 +161,7 @@ Make sure that you have installed yarn and git
 4. Submit the translation file or just translation snippets based on the amount of your translation to [this link](https://github.com/koodo-reader/koodo-reader/issues/new?assignees=&labels=submit+translation&projects=&template=submit_translation.yml). Pull request is also welcomed.
 
 | Language(A-Z)   | Code  | View                                                |
-|-----------------|-------|-----------------------------------------------------|
+| --------------- | ----- | --------------------------------------------------- |
 | Amharic         | am    | [View](./src/assets/locales/am/translation.json)    |
 | Arabic          | ar    | [View](./src/assets/locales/ar/translation.json)    |
 | Armenian        | hy    | [View](./src/assets/locales/hy/translation.json)    |
@@ -174,7 +174,6 @@ Make sure that you have installed yarn and git
 | Danish          | da    | [View](./src/assets/locales/da/translation.json)    |
 | Dutch           | nl    | [View](./src/assets/locales/nl/translation.json)    |
 | English         | en    | [View](./src/assets/locales/en/translation.json)    |
-| Esperanto       | eo    | [View](./src/assets/locales/eo/translation.json)    |
 | Finnish         | fi    | [View](./src/assets/locales/fi/translation.json)    |
 | French          | fr    | [View](./src/assets/locales/fr/translation.json)    |
 | German          | de    | [View](./src/assets/locales/de/translation.json)    |

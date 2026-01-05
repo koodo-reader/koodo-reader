@@ -13,15 +13,13 @@ import AddDialog from "./component";
 
 const mapStateToProps = (state: stateType) => {
   return {
-    books: state.manager.books,
     selectedBooks: state.manager.selectedBooks,
     isSelectBook: state.manager.isSelectBook,
     isOpenDeleteDialog: state.book.isOpenDeleteDialog,
     currentBook: state.book.currentBook,
-    bookmarks: state.reader.bookmarks,
+
     mode: state.sidebar.mode,
     shelfTitle: state.sidebar.shelfTitle,
-    notes: state.reader.notes,
   };
 };
 const actionCreator = {

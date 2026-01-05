@@ -11,7 +11,6 @@ import {
   TokenService,
 } from "../../assets/lib/kookit-extra-browser.min";
 import { getCloudConfig } from "./common";
-import toast from "react-hot-toast";
 import { LocalFileManager } from "./localFile";
 declare var window: any;
 class AsyncQueue {
@@ -56,7 +55,6 @@ class CoverUtil {
       if (imageFiles.length === 0) {
         return book.cover;
       }
-      let format = imageFiles[0].split(".")[1];
       const imageFilePath = path.join(directoryPath, imageFiles[0]);
       if (!fs.existsSync(imageFilePath)) {
         return book.cover;

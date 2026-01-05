@@ -17,11 +17,9 @@ import BookListItem from "./component";
 import { withRouter } from "react-router-dom";
 const mapStateToProps = (state: stateType) => {
   return {
-    isReading: state.book.isReading,
     percentage: state.progressPanel.percentage,
     currentBook: state.book.currentBook,
     dragItem: state.book.dragItem,
-    mode: state.sidebar.mode,
     isSelectBook: state.manager.isSelectBook,
     selectedBooks: state.manager.selectedBooks,
     isOpenActionDialog: state.book.isOpenActionDialog,

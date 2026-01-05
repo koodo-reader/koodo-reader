@@ -12,8 +12,7 @@ import ImportDialog from "../../components/dialogs/importDialog";
 import { ManagerProps, ManagerState } from "./interface";
 import { Trans } from "react-i18next";
 import SettingDialog from "../../components/dialogs/settingDialog";
-import { isMobile } from "react-device-detect";
-import { Route, Switch, Redirect } from "react-router-dom";
+import { Route, Switch } from "react-router-dom";
 import { routes } from "../../router/routes";
 import Arrow from "../../components/arrow";
 import LoadingDialog from "../../components/dialogs/loadingDialog";
@@ -73,7 +72,7 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
     this.props.handleFetchBookmarks();
     this.props.handleFetchBookSortCode();
     this.props.handleFetchNoteSortCode();
-    this.props.handleFetchList();
+    this.props.handleFetchViewMode();
   }
   componentDidMount() {
     this.props.handleReadingState(false);
@@ -178,9 +177,7 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
         {this.props.isOpenSortShelfDialog && <SortShelfDialog />}
         {this.props.isSettingOpen && <SettingDialog />}
         {this.props.isDetailDialog && <DetailDialog />}
-        {(!books || books.length === 0) && this.state.totalBooks ? (
-          <Redirect to="/manager/loading" />
-        ) : (
+        {(!books || books.length === 0) && this.state.totalBooks ? null : (
           <Switch>
             {routes.map((ele) => (
               <Route

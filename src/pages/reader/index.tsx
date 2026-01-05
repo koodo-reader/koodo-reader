@@ -15,7 +15,6 @@ import { connect } from "react-redux";
 import { stateType } from "../../store";
 import Reader from "./component";
 import { withTranslation } from "react-i18next";
-import { render } from "react-dom";
 
 const mapStateToProps = (state: stateType) => {
   return {

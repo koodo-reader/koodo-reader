@@ -8,7 +8,7 @@ class SortDialog extends React.Component<SortDialogProps, SortDialogState> {
   constructor(props: SortDialogProps) {
     super(props);
     this.state = {
-      isNote: this.props.mode === "note" || this.props.mode === "digest",
+      isNote: this.props.mode === "note" || this.props.mode === "highlight",
     };
   }
 
@@ -17,7 +17,6 @@ class SortDialog extends React.Component<SortDialogProps, SortDialogState> {
       let noteSortCode = this.props.noteSortCode;
       noteSortCode.sort = code;
       this.props.handleNoteSortCode(noteSortCode);
-      this.props.handleNoteSort(true);
       ConfigService.setReaderConfig(
         "noteSortCode",
         JSON.stringify({ sort: code, order: this.props.noteSortCode.order })
@@ -26,18 +25,17 @@ class SortDialog extends React.Component<SortDialogProps, SortDialogState> {
       let bookSortCode = this.props.bookSortCode;
       bookSortCode.sort = code;
       this.props.handleBookSortCode(bookSortCode);
-      this.props.handleBookSort(true);
       ConfigService.setReaderConfig(
         "bookSortCode",
         JSON.stringify({ sort: code, order: this.props.bookSortCode.order })
       );
+      this.props.handleFetchBooks();
     }
   };
   handleOrder = (code: number) => {
     if (this.state.isNote) {
       let noteSortCode = this.props.noteSortCode;
       noteSortCode.order = code;
-      this.props.handleNoteSort(true);
       ConfigService.setReaderConfig(
         "noteSortCode",
         JSON.stringify({ sort: this.props.noteSortCode.sort, order: code })
@@ -46,12 +44,12 @@ class SortDialog extends React.Component<SortDialogProps, SortDialogState> {
     } else {
       let bookSortCode = this.props.bookSortCode;
       bookSortCode.order = code;
-      this.props.handleBookSort(true);
       ConfigService.setReaderConfig(
         "bookSortCode",
         JSON.stringify({ sort: this.props.bookSortCode.sort, order: code })
       );
       this.props.handleBookSortCode(bookSortCode);
+      this.props.handleFetchBooks();
     }
   };
 

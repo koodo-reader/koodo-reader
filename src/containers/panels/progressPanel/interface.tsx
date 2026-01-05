@@ -4,7 +4,6 @@ import HtmlBookModel from "../../../models/HtmlBook";
 
 export interface ProgressPanelProps {
   currentBook: BookModel;
-  isReading: boolean;
   currentChapter: string;
   readerMode: string;
   currentChapterIndex: number;
@@ -13,6 +12,7 @@ export interface ProgressPanelProps {
   htmlBook: HtmlBookModel;
   renderBookFunc: (id: string) => void;
   handleFetchPercentage: (book: Book) => void;
+  handleCurrentChapter: (currentChapter: string) => void;
 }
 export interface ProgressPanelState {
   currentPage: number;
@@ -20,4 +20,5 @@ export interface ProgressPanelState {
   targetChapterIndex: number | string;
   targetPage: number | string;
   isEntered: boolean;
+  currentPercentage: number;
 }

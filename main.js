@@ -30,7 +30,6 @@ let mainView;
 //multi tab
 // let mainViewList = []
 let chatWindow;
-let googlePickerView;
 let dbConnection = {};
 let syncUtilCache = {};
 let pickerUtilCache = {};
@@ -577,6 +576,20 @@ const createMainWin = () => {
       return filePaths;
     }
   });
+  ipcMain.handle("custom-database-command", async (event, config) => {
+    const { SqlStatement } = await import('./src/assets/lib/kookit-extra.min.mjs');
+    let { query, storagePath, data, dbName, executeType } = config;
+    let db = getDBConnection(dbName, storagePath, SqlStatement.sqlStatement);
+    const row = db.prepare(query);
+    let result;
+    if (data && data.length > 0) {
+      result = row[executeType](...data);
+    } else {
+      result = row[executeType]();
+    }
+    return result;
+
+  });
   ipcMain.handle("database-command", async (event, config) => {
     const { SqlStatement } = await import('./src/assets/lib/kookit-extra.min.mjs');
     let { statement, statementType, executeType, dbName, data, storagePath } = config;
@@ -730,28 +743,6 @@ const createMainWin = () => {
     } else if (chatWindow && !chatWindow.isDestroyed()) {
       chatWindow.show();
       chatWindow.focus();
-    }
-  });
-
-  ipcMain.handle("google-picker", (event, config) => {
-    if (!googlePickerView && mainWin) {
-      googlePickerView = new WebContentsView({ ...options, transparent: true })
-      mainWin.contentView.addChildView(googlePickerView)
-      let { width, height } = mainWin.getContentBounds()
-      googlePickerView.setBounds({ x: 0, y: 0, width, height })
-      googlePickerView.setBackgroundColor("#00000000");
-      googlePickerView.webContents.loadURL(config.url)
-    }
-  });
-  ipcMain.on('picker-action', (event, config) => {
-    //将数据传递给主窗口
-
-    if (mainWin && !mainWin.isDestroyed() && config.action === 'picked') {
-      mainWin.webContents.send('picker-finished', config);
-    }
-    if (googlePickerView && (config.action === 'cancel' || config.action === 'picked')) {
-      mainWin.contentView.removeChildView(googlePickerView);
-      googlePickerView = null;
     }
   });
   ipcMain.handle('clear-all-data', (event, config) => {
@@ -1000,9 +991,15 @@ const handleCallback = (url) => {
     const parsedUrl = new URL(url);
     const code = parsedUrl.searchParams.get('code');
     const state = parsedUrl.searchParams.get('state');
+    const pickerData = parsedUrl.searchParams.get('pickerData');
+
 
     if (code && mainWin) {
       mainWin.webContents.send('oauth-callback', { code, state });
+    }
+    if (pickerData && mainWin) {
+      let config = JSON.parse(decodeURIComponent(pickerData));
+      mainWin.webContents.send('picker-finished', config);
     }
   } catch (error) {
     console.error('Error handling callback URL:', error);

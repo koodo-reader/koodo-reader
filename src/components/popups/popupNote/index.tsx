@@ -5,6 +5,7 @@ import {
   handleNoteKey,
   handleFetchNotes,
   handleShowPopupNote,
+  handleColor,
 } from "../../../store/actions";
 import { stateType } from "../../../store";
 import { withTranslation } from "react-i18next";
@@ -12,7 +13,7 @@ import PopupNote from "./component";
 const mapStateToProps = (state: stateType) => {
   return {
     currentBook: state.book.currentBook,
-    notes: state.reader.notes,
+
     color: state.reader.color,
     htmlBook: state.reader.htmlBook,
     noteKey: state.reader.noteKey,
@@ -24,6 +25,7 @@ const actionCreator = {
   handleNoteKey,
   handleFetchNotes,
   handleShowPopupNote,
+  handleColor,
 };
 export default connect(
   mapStateToProps,

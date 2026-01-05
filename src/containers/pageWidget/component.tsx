@@ -3,7 +3,6 @@ import "./background.css";
 import { BackgroundProps, BackgroundState } from "./interface";
 import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import { Trans } from "react-i18next";
-import { scrollContents } from "../../utils/common";
 class Background extends React.Component<BackgroundProps, BackgroundState> {
   isFirst: Boolean;
   constructor(props: any) {
@@ -21,25 +20,13 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
       await this.handlePageNum(nextProps.htmlBook.rendition);
       nextProps.htmlBook.rendition.on("page-changed", async () => {
         await this.handlePageNum(nextProps.htmlBook.rendition);
-        this.handleLocation();
       });
     }
     if (nextProps.readerMode !== this.props.readerMode) {
       this.setState({ isSingle: nextProps.readerMode !== "double" });
     }
   }
-  handleLocation = () => {
-    let position = this.props.htmlBook.rendition.getPosition();
-    ConfigService.setObjectConfig(
-      this.props.currentBook.key,
-      position,
-      "recordLocation"
-    );
-    this.props.handleCurrentChapter(position.chapterTitle);
-    setTimeout(() => {
-      scrollContents(position.chapterTitle, position.chapterHref);
-    }, 1000);
-  };
+
   async handlePageNum(rendition) {
     let pageInfo = await rendition.getProgress();
     if (

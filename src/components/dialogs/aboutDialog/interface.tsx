@@ -1,12 +1,10 @@
-import BookModel from "../../../models/Book";
-import NoteModel from "../../../models/Note";
+import type BookModel from "../../../models/Book";
 
 export interface AboutDialogProps {
   isSettingOpen: boolean;
   isAboutOpen: boolean;
   isNewWarning: boolean;
-  books: BookModel[];
-  notes: NoteModel[];
+
   deletedBooks: BookModel[];
   handleSetting: (isSettingOpen: boolean) => void;
   handleAbout: (isAboutOpen: boolean) => void;

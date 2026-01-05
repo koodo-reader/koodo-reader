@@ -1,10 +1,9 @@
 import BookModel from "../../../models/Book";
 import HtmlBook from "../../../models/HtmlBook";
-import NoteModel from "../../../models/Note";
 export interface PopupOptionProps {
   currentBook: BookModel;
   selection: string;
-  notes: NoteModel[];
+
   color: number;
   noteKey: string;
   rect: DOMRect;
