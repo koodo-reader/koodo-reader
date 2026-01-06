@@ -311,7 +311,8 @@
       "publisher": "CN=0AEAD7C6-DF4A-4D05-8FA0-D816D7DE37FF",
       "publisherDisplayName": "App by Troye",
       "artifactName": "${productName}-${version}-${arch}.${ext}",
-      "displayName": "Koodo Reader"
+      "displayName": "Koodo Reader",
+      "backgroundColor": "transparent"
     },
     "nsis": {
       "artifactName": "${productName}-${version}-${arch}.${ext}",
