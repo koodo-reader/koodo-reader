@@ -140,7 +140,7 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
     }
   }
   UNSAFE_componentWillReceiveProps(nextProps: ContentListProps) {
-    if (nextProps.htmlBook && !this.props.htmlBook) {
+    if (nextProps.htmlBook !== this.props.htmlBook && nextProps.htmlBook) {
       this.handleScrollToChapter(nextProps.htmlBook);
     }
     if (
