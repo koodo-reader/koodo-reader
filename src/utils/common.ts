@@ -73,9 +73,9 @@ export const vexPromptAsync = (message, placeholder = "", value = "") => {
     });
   });
 };
-export const vexComfirmAsync = (message) => {
+export const vexComfirmAsync = (message, confirmText: string = "Confirm") => {
   return new Promise((resolve) => {
-    window.vex.dialog.buttons.YES.text = i18n.t("Confirm");
+    window.vex.dialog.buttons.YES.text = i18n.t(confirmText);
     window.vex.dialog.buttons.NO.text = i18n.t("Cancel");
     window.vex.dialog.confirm({
       unsafeMessage: i18n.t(message),

@@ -17,6 +17,7 @@ const mapStateToProps = (state: stateType) => {
   return {
     currentBook: state.book.currentBook,
     renderBookFunc: state.book.renderBookFunc,
+    plugins: state.manager.plugins,
   };
 };
 const actionCreator = {
