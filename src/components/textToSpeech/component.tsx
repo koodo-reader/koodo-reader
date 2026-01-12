@@ -216,7 +216,8 @@ class TextToSpeech extends React.Component<
           voiceEngine,
           this.props.plugins,
           this.nodeList,
-          3
+          5,
+          true
         );
         toast.dismiss("tts-load");
         if (result === "error") {
@@ -238,7 +239,8 @@ class TextToSpeech extends React.Component<
         voiceEngine,
         this.props.plugins,
         this.nodeList,
-        5
+        10,
+        false
       );
       let res = await this.handleSpeech(index);
       if (res === "error") {
