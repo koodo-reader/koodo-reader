@@ -10,7 +10,7 @@ import { fetchUserInfo } from "../../utils/request/user";
 import {
   officialDictList,
   officialTranList,
-  voiceList,
+  officialVoiceList,
 } from "../../constants/settingList";
 import toast from "react-hot-toast";
 import BookUtil from "../../utils/file/bookUtil";
@@ -276,12 +276,13 @@ export function handleFetchPlugins() {
               ""
             );
             pluginList.push(sumPlugin);
+            let sortedVoiceList = [...officialVoiceList];
             if (
               ConfigService.getReaderConfig("lang") &&
               ConfigService.getReaderConfig("lang").startsWith("zh")
             ) {
               //move zh-CN to first
-              voiceList.sort((a: any, b: any) => {
+              sortedVoiceList.sort((a: any, b: any) => {
                 if (a.locale === "zh-CN") {
                   return -1;
                 } else if (b.locale === "zh-CN") {
@@ -300,7 +301,7 @@ export function handleFetchPlugins() {
               "",
               {},
               {},
-              voiceList.map((item: any) => {
+              sortedVoiceList.map((item: any) => {
                 item.plugin = "official-ai-voice-plugin";
                 item.config = {};
                 item.displayName =
