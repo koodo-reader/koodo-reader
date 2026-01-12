@@ -10,6 +10,7 @@ class TTSUtil {
   static audioPaths: { index: number; audioPath: string }[] = [];
   static isPaused: boolean = false;
   static voiceEngine: string = "";
+  static processingIndexes: Set<number> = new Set();
   static async readAloud(currentIndex: number) {
     return new Promise<string>(async (resolve) => {
       let audioPath = this.audioPaths.find(
@@ -43,7 +44,8 @@ class TTSUtil {
     voiceEngine: string,
     plugins: PluginModel[],
     audioNodeList: string[],
-    targetCacheCount: number
+    targetCacheCount: number,
+    isFirst: boolean
   ) {
     this.voiceEngine = voiceEngine;
     this.isPaused = false;
@@ -76,10 +78,16 @@ class TTSUtil {
           const index = startIndex + i + j;
           if (index >= audioNodeList.length) break;
 
-          // 如果已经缓存过，跳过
-          if (this.audioPaths.find((item) => item.index === index)) {
+          // 如果已经缓存过或正在处理中，跳过
+          if (
+            this.audioPaths.find((item) => item.index === index) ||
+            this.processingIndexes.has(index)
+          ) {
             continue;
           }
+
+          // 标记为正在处理
+          this.processingIndexes.add(index);
 
           const text = audioNodeList[index];
           // 创建异步任务
@@ -88,9 +96,12 @@ class TTSUtil {
             speed,
             voiceEngine,
             plugin,
-            voice
+            voice,
+            isFirst
           )
             .then(async (res) => {
+              // 处理完成后，从处理集合中移除
+              this.processingIndexes.delete(index);
               if (res) {
                 return { index, audioPath: res };
               } else {
@@ -99,10 +110,12 @@ class TTSUtil {
               }
             })
             .catch((error) => {
+              // 出错时也要从处理集合中移除
+              this.processingIndexes.delete(index);
               console.error(`Error caching audio for index ${index}:`, error);
               return null;
             });
-
+          console.log(index, "index");
           batch.push(task);
         }
         console.log(batch, "batch");
@@ -149,7 +162,8 @@ class TTSUtil {
           speed,
           voiceEngine,
           plugin,
-          voice
+          voice,
+          isFirst
         );
         if (audioPath) {
           this.audioPaths.push({ index: index, audioPath: audioPath });
@@ -167,6 +181,7 @@ class TTSUtil {
       setTimeout(() => {
         this.clearAudioPaths();
         this.audioPaths = [];
+        this.processingIndexes.clear();
       }, 1000);
     }
   }
@@ -185,16 +200,17 @@ class TTSUtil {
     speed: number,
     voiceEngine: string,
     plugin,
-    voice
+    voice,
+    isFirst: boolean
   ) {
     if (voiceEngine === "official-ai-voice-plugin") {
-      console.log(speed, "spped");
       let res = await getTTSAudio(
         text,
         voice.language,
         voice.name,
         (speed + 100) / 100,
-        1.0
+        1.0,
+        isFirst
       );
       console.log(res, "res");
       if (res && res.data && res.data.audio_base64) {
@@ -205,13 +221,7 @@ class TTSUtil {
       let audioPath = await window
         .require("electron")
         .ipcRenderer.invoke("generate-tts", {
-          text: text
-            .replace(/\s\s/g, "")
-            .replace(/\r/g, "")
-            .replace(/\n/g, "")
-            .replace(/\t/g, "")
-            .replace(/&/g, "")
-            .replace(/\f/g, ""),
+          text: text,
           speed,
           plugin: plugin,
           config: voice.config,
@@ -221,6 +231,7 @@ class TTSUtil {
   }
   static setAudioPaths() {
     this.audioPaths = [];
+    this.processingIndexes.clear();
   }
   static getPlayer() {
     return this.player;

@@ -169,16 +169,20 @@ export const getTTSAudio = async (
   language: string,
   voice: string,
   speed: number,
-  pitch: number
+  pitch: number,
+  isFirst: boolean
 ) => {
   let readerRequest = await getReaderRequest();
+  console.log(text, "text");
   let response = await readerRequest.getTTSAudio({
     text,
     language,
     voice,
     speed,
     pitch,
+    is_first: isFirst,
   });
+  console.log(response, "safsdf");
   if (response.code === 200) {
     return response;
   } else if (response.code === 401) {
