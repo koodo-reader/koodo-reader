@@ -11,7 +11,6 @@ const mapStateToProps = (state: stateType) => {
     plugins: state.manager.plugins,
     readerMode: state.reader.readerMode,
     isAuthed: state.manager.isAuthed,
-    userInfo: state.manager.userInfo,
   };
 };
 const actionCreator = { handleFetchPlugins };

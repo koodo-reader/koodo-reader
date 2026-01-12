@@ -109,30 +109,6 @@ class TextToSpeech extends React.Component<
         }
       }
     }
-    if (
-      ConfigService.getReaderConfig("voiceEngine") ===
-        "official-ai-voice-plugin" &&
-      this.props.isAuthed
-    ) {
-      let res = await fetchUserInfo();
-      if (res.code === 200) {
-        if (res.data && res.data.type !== "pro") {
-          toast.error(
-            this.props.t(
-              "AI voice is only available for Pro users, please upgrade to Pro to use this feature"
-            )
-          );
-          return;
-        }
-      }
-    }
-    if (
-      ConfigService.getReaderConfig("voiceEngine") ===
-        "official-ai-voice-plugin" &&
-      !this.props.isAuthed
-    ) {
-      ConfigService.setReaderConfig("voiceEngine", "system");
-    }
   }
   handleChangeAudio = async () => {
     this.setState({ isAddNew: false });
@@ -142,6 +118,30 @@ class TextToSpeech extends React.Component<
       this.setState({ isAudioOn: false });
       this.nodeList = [];
     } else {
+      if (
+        ConfigService.getReaderConfig("voiceEngine") ===
+          "official-ai-voice-plugin" &&
+        this.props.isAuthed
+      ) {
+        let res = await fetchUserInfo();
+        if (res.code === 200) {
+          if (res.data && res.data.type !== "pro") {
+            toast.error(
+              this.props.t(
+                "AI voice is only available for Pro users, please upgrade to Pro to use this feature"
+              )
+            );
+            return;
+          }
+        }
+      }
+      if (
+        ConfigService.getReaderConfig("voiceEngine") ===
+          "official-ai-voice-plugin" &&
+        !this.props.isAuthed
+      ) {
+        ConfigService.setReaderConfig("voiceEngine", "system");
+      }
       this.handleStartSpeech();
     }
   };
@@ -201,8 +201,6 @@ class TextToSpeech extends React.Component<
     let voiceEngine = ConfigService.getReaderConfig("voiceEngine");
     let speed = parseFloat(ConfigService.getReaderConfig("voiceSpeed")) || 1;
     TTSUtil.setAudioPaths();
-    if (voiceEngine === "official-ai-voice-plugin") {
-    }
     for (let index = nodeIndex; index < this.nodeList.length; index++) {
       let currentText = this.nodeList[index];
       let style = "background: #f3a6a68c;";
@@ -220,7 +218,6 @@ class TextToSpeech extends React.Component<
           this.nodeList,
           3
         );
-        console.log(result, "result");
         toast.dismiss("tts-load");
         if (result === "error") {
           toast.error(this.props.t("Audio loading failed, stopped playback"));
@@ -479,6 +476,9 @@ class TextToSpeech extends React.Component<
                         (item) => item.name === event.target.value
                       );
                       console.log(voice, "saggaga");
+                      if (!voice) {
+                        return;
+                      }
                       if (voice.plugin) {
                         ConfigService.setReaderConfig(
                           "voiceEngine",

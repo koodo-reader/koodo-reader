@@ -12,12 +12,10 @@ class TTSUtil {
   static voiceEngine: string = "";
   static async readAloud(currentIndex: number) {
     return new Promise<string>(async (resolve) => {
-      console.log(this.audioPaths, currentIndex, "audiospaths");
       let audioPath = this.audioPaths.find(
         (item) => item.index === currentIndex
       )?.audioPath;
       if (!audioPath) {
-        console.log("sadfsaf");
         resolve("loaderror");
         return;
       }
@@ -57,9 +55,6 @@ class TTSUtil {
       (voice) => voice.name === voiceName
     );
     if (!voice) {
-      return "error";
-    }
-    if (this.isPaused) {
       return "error";
     }
     if (voiceEngine === "official-ai-voice-plugin") {

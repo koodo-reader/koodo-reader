@@ -470,7 +470,7 @@ export const sampleQuestion = [
     question: "Explain Stoicism and its principles to me",
   },
 ];
-export const voiceList = [
+export const officialVoiceList = [
   {
     name: "af_alloy",
     gender: "female",
