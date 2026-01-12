@@ -123,6 +123,9 @@ class TextToSpeech extends React.Component<
           "official-ai-voice-plugin" &&
         this.props.isAuthed
       ) {
+        toast.loading(this.props.t("Loading audio, please wait..."), {
+          id: "tts-load",
+        });
         let res = await fetchUserInfo();
         if (res.code === 200) {
           if (res.data && res.data.type !== "pro") {
@@ -206,9 +209,6 @@ class TextToSpeech extends React.Component<
       let style = "background: #f3a6a68c;";
       this.props.htmlBook.rendition.highlightAudioNode(currentText, style);
       if (index === nodeIndex) {
-        toast.loading(this.props.t("Loading audio, please wait..."), {
-          id: "tts-load",
-        });
         let result = await TTSUtil.cacheAudio(
           index,
           voiceName,
