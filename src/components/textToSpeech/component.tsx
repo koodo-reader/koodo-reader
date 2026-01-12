@@ -44,11 +44,9 @@ class TextToSpeech extends React.Component<
     if ("speechSynthesis" in window) {
       this.setState({ isSupported: true });
     }
-    if (this.state.isAudioOn) {
-      window.speechSynthesis && window.speechSynthesis.cancel();
-      this.setState({ isAudioOn: false });
-      this.nodeList = [];
-    }
+    window.speechSynthesis && window.speechSynthesis.cancel();
+    this.setState({ isAudioOn: false });
+    this.nodeList = [];
     const setSpeech = () => {
       return new Promise((resolve) => {
         let synth = window.speechSynthesis;
@@ -66,6 +64,75 @@ class TextToSpeech extends React.Component<
       });
     };
     this.nativeVoices = await setSpeech();
+    if (isElectron) {
+      this.customVoices = TTSUtil.getVoiceList(this.props.plugins);
+      this.voices = [...this.nativeVoices, ...this.customVoices];
+    } else {
+      this.customVoices = getAllVoices(
+        this.props.plugins.filter(
+          (item) => item.key === "official-ai-voice-plugin"
+        )
+      );
+      this.voices = [...this.nativeVoices, ...this.customVoices];
+    }
+    if (
+      this.voices.length === 0 &&
+      getAllVoices(this.props.plugins).length === 0
+    ) {
+      this.setState({ isAddNew: true });
+      return;
+    }
+    if (this.voices.length > 0) {
+      let voiceName = ConfigService.getReaderConfig("voiceName");
+      let voiceEngine = ConfigService.getReaderConfig("voiceEngine");
+      let voiceIndex = parseInt(ConfigService.getReaderConfig("voiceIndex"));
+      if (
+        !voiceName &&
+        ConfigService.getReaderConfig("voiceIndex") &&
+        !isNaN(voiceIndex)
+      ) {
+        ConfigService.setReaderConfig(
+          "voiceName",
+          this.voices[voiceIndex]
+            ? this.voices[voiceIndex].name
+            : this.voices[0].name
+        );
+      }
+      if (!voiceEngine && ConfigService.getReaderConfig("voiceName")) {
+        let voice = this.voices.find(
+          (item) => item.name === ConfigService.getReaderConfig("voiceName")
+        );
+        if (voice && voice.plugin) {
+          ConfigService.setReaderConfig("voiceEngine", voice.plugin);
+        } else {
+          ConfigService.setReaderConfig("voiceEngine", "system");
+        }
+      }
+    }
+    if (
+      ConfigService.getReaderConfig("voiceEngine") ===
+        "official-ai-voice-plugin" &&
+      this.props.isAuthed
+    ) {
+      let res = await fetchUserInfo();
+      if (res.code === 200) {
+        if (res.data && res.data.type !== "pro") {
+          toast.error(
+            this.props.t(
+              "AI voice is only available for Pro users, please upgrade to Pro to use this feature"
+            )
+          );
+          return;
+        }
+      }
+    }
+    if (
+      ConfigService.getReaderConfig("voiceEngine") ===
+        "official-ai-voice-plugin" &&
+      !this.props.isAuthed
+    ) {
+      ConfigService.setReaderConfig("voiceEngine", "system");
+    }
   }
   handleChangeAudio = async () => {
     this.setState({ isAddNew: false });
@@ -75,67 +142,6 @@ class TextToSpeech extends React.Component<
       this.setState({ isAudioOn: false });
       this.nodeList = [];
     } else {
-      if (isElectron) {
-        this.customVoices = TTSUtil.getVoiceList(this.props.plugins);
-        this.voices = [...this.nativeVoices, ...this.customVoices];
-      } else {
-        this.customVoices = getAllVoices(
-          this.props.plugins.filter(
-            (item) => item.key === "official-ai-voice-plugin"
-          )
-        );
-        this.voices = [...this.nativeVoices, ...this.customVoices];
-      }
-      if (
-        this.voices.length === 0 &&
-        getAllVoices(this.props.plugins).length === 0
-      ) {
-        this.setState({ isAddNew: true });
-        return;
-      }
-      if (this.voices.length > 0) {
-        let voiceName = ConfigService.getReaderConfig("voiceName");
-        let voiceEngine = ConfigService.getReaderConfig("voiceEngine");
-        let voiceIndex = parseInt(ConfigService.getReaderConfig("voiceIndex"));
-        if (
-          !voiceName &&
-          ConfigService.getReaderConfig("voiceIndex") &&
-          !isNaN(voiceIndex)
-        ) {
-          ConfigService.setReaderConfig(
-            "voiceName",
-            this.voices[voiceIndex]
-              ? this.voices[voiceIndex].name
-              : this.voices[0].name
-          );
-        }
-        if (!voiceEngine && ConfigService.getReaderConfig("voiceName")) {
-          let voice = this.voices.find(
-            (item) => item.name === ConfigService.getReaderConfig("voiceName")
-          );
-          if (voice && voice.plugin) {
-            ConfigService.setReaderConfig("voiceEngine", voice.plugin);
-          } else {
-            ConfigService.setReaderConfig("voiceEngine", "system");
-          }
-        }
-      }
-      if (
-        ConfigService.getReaderConfig("voiceEngine") ===
-        "official-ai-voice-plugin"
-      ) {
-        let res = await fetchUserInfo();
-        if (res.code === 200) {
-          if (res.data && res.data.type !== "pro") {
-            toast.error(
-              this.props.t(
-                "AI voice is only available for Pro users, please upgrade to Pro to use this feature"
-              )
-            );
-            return;
-          }
-        }
-      }
       this.handleStartSpeech();
     }
   };
@@ -205,16 +211,23 @@ class TextToSpeech extends React.Component<
         toast.loading(this.props.t("Loading audio, please wait..."), {
           id: "tts-load",
         });
-        await TTSUtil.cacheAudio(
+        let result = await TTSUtil.cacheAudio(
           index,
           voiceName,
           speed * 100 - 100,
           voiceEngine,
           this.props.plugins,
           this.nodeList,
-          5
+          3
         );
+        console.log(result, "result");
         toast.dismiss("tts-load");
+        if (result === "error") {
+          toast.error(this.props.t("Audio loading failed, stopped playback"));
+          this.setState({ isAudioOn: false });
+          this.nodeList = [];
+          return;
+        }
       }
       if (ConfigService.getReaderConfig("voiceEngine") === "system") {
         await this.handleSystemRead(index);
@@ -228,7 +241,7 @@ class TextToSpeech extends React.Component<
         voiceEngine,
         this.props.plugins,
         this.nodeList,
-        10
+        5
       );
       let res = await this.handleSpeech(index);
       if (res === "error") {
@@ -437,7 +450,7 @@ class TextToSpeech extends React.Component<
                 ></span>
               </span>
             </div>
-            {this.state.isAudioOn && (
+            {!this.state.isAddNew && (
               <div
                 className="setting-dialog-new-title"
                 style={{
@@ -497,7 +510,7 @@ class TextToSpeech extends React.Component<
                 </select>
               </div>
             )}
-            {this.state.isAudioOn && !this.state.isAddNew && (
+            {!this.state.isAddNew && (
               <div
                 className="setting-dialog-new-title"
                 style={{ marginLeft: "20px", width: "88%", fontWeight: 500 }}

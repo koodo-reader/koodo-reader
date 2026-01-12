@@ -63,7 +63,7 @@ class SettingSwitch extends React.Component<
   render() {
     return (
       <>
-        <TextToSpeech />
+        {this.props.plugins && <TextToSpeech />}
         {readerSettingList
           .filter((item) => {
             if (
