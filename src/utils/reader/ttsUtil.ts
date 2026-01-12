@@ -51,16 +51,16 @@ class TTSUtil {
     this.isPaused = false;
     let plugin = plugins.find((item) => item.key === voiceEngine);
     if (!plugin) {
-      return;
+      return "error";
     }
     let voice = (plugin.voiceList as any[]).find(
       (voice) => voice.name === voiceName
     );
     if (!voice) {
-      return;
+      return "error";
     }
     if (this.isPaused) {
-      return;
+      return "error";
     }
     if (voiceEngine === "official-ai-voice-plugin") {
       const cacheCount = Math.min(
@@ -129,6 +129,9 @@ class TTSUtil {
             } else {
               this.audioPaths.push(result);
             }
+          } else {
+            this.isPaused = true;
+            return "error";
           }
         }
       }

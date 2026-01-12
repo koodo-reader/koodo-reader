@@ -304,6 +304,8 @@ export function handleFetchPlugins() {
                 item.plugin = "official-ai-voice-plugin";
                 item.config = {};
                 item.displayName =
+                  i18n.t("Official AI Voice") +
+                  " - " +
                   item.displayName +
                   " - " +
                   item.language +
