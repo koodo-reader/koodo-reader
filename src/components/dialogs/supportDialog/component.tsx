@@ -229,6 +229,16 @@ class SupportDialog extends React.Component<
                             );
                             handleExitApp();
                             return;
+                          } else if (response.code === 10010) {
+                            toast.error(
+                              this.props.t(
+                                "This code has already been used, if you have redeemed it before, there is no need to redeem it again. Just log in to same account to use Pro features"
+                              ),
+                              {
+                                id: "redeem-code",
+                                duration: 6000,
+                              }
+                            );
                           } else {
                             toast.error(
                               this.props.t("Redeem failed, error code") +

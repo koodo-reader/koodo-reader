@@ -90,6 +90,19 @@ export const vexComfirmAsync = (message, confirmText: string = "Confirm") => {
     });
   });
 };
+export const getFormatFromAudioPath = (audioPath: string) => {
+  let format = "mp3";
+  if (audioPath.indexOf(".wav") > -1) {
+    format = "wav";
+  } else if (audioPath.indexOf(".ogg") > -1) {
+    format = "ogg";
+  } else if (audioPath.indexOf(".flac") > -1) {
+    format = "flac";
+  } else if (audioPath.indexOf(".aac") > -1) {
+    format = "aac";
+  }
+  return format;
+};
 export const fetchFileFromPath = (filePath: string) => {
   return new Promise<File>((resolve) => {
     const fs = window.require("fs");
@@ -306,8 +319,6 @@ export const loadFontData = async () => {
       };
     });
   } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : String(error);
-    toast.error(errorMessage);
     console.error(error);
   }
 };

@@ -598,6 +598,8 @@
   "When Koodo is running, your computer won't enter sleep mode": "Koodo运行时，电脑不会进入休眠模式",
   "Prevent accidental trigger": "开启防误触模式",
   "Import books as link": "以引用的方式导入图书",
+  "Deleting...": "删除中...",
+  "This code has already been used, if you have redeemed it before, there is no need to redeem it again. Just log in to same account to use Pro features": "该兑换码已被使用过，如果您之前兑换过，则无需再次兑换。只需登录同一账户即可使用专业版功能",
   "With the integration of popular cloud storage services, WebDAV, FTP, SFTP, SMB, Docker, and object storage, all your data remains securely in your control": "与流行的网盘、WebDAV、FTP、SFTP、SMB、 Docker 和对象存储集成，所有数据都由您掌控",
   "Please turn off import books as link first": "请关闭以引用的方式导入图书",
   "Close main window while reading": "打开图书时自动关闭主窗口",
