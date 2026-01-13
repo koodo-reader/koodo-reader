@@ -1,6 +1,6 @@
 import { Howl } from "howler";
 import PluginModel from "../../models/Plugin";
-import { getAllVoices } from "../common";
+import { getAllVoices, getFormatFromAudioPath } from "../common";
 import { getTTSAudio } from "../request/reader";
 import { isElectron } from "react-device-detect";
 
@@ -22,9 +22,7 @@ class TTSUtil {
       }
       var sound = new Howl({
         src: [audioPath],
-        ...(this.voiceEngine === "official-ai-voice-plugin"
-          ? { format: ["mp3"] }
-          : {}),
+        format: [getFormatFromAudioPath(audioPath)],
         onloaderror: () => {
           console.log("safsdfsd");
           resolve("loaderror");

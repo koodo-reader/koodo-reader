@@ -69,6 +69,9 @@ class DeleteDialog extends React.Component<
     );
   };
   deleteAllBookInTrash = async () => {
+    toast.loading(this.props.t("Deleting..."), {
+      id: "delete-books",
+    });
     let keyArr = ConfigService.getAllListConfig("deletedBooks");
     let fullDeteletedBooks: any[] = [];
     for (let i = 0; i < this.props.deletedBooks.length; i++) {
@@ -86,7 +89,9 @@ class DeleteDialog extends React.Component<
         ?.format.toLowerCase();
       await this.deleteBook(keyArr[i], format || "epub");
     }
-
+    toast.success(this.props.t("Deletion successful"), {
+      id: "delete-books",
+    });
     if (this.props.books.length === 0) {
       this.props.history.push("/manager/empty");
     }
