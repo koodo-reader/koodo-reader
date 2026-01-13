@@ -13,6 +13,7 @@ class TTSUtil {
   static processingIndexes: Set<number> = new Set();
   static async readAloud(currentIndex: number) {
     return new Promise<string>(async (resolve) => {
+      console.log(currentIndex, this.audioPaths, "audiopaths");
       let audioPath = this.audioPaths.find(
         (item) => item.index === currentIndex
       )?.audioPath;

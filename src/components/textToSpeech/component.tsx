@@ -221,6 +221,7 @@ class TextToSpeech extends React.Component<
         );
         toast.dismiss("tts-load");
         if (result === "error") {
+          console.log("dfgdsfgsdf");
           toast.error(this.props.t("Audio loading failed, stopped playback"));
           this.setState({ isAudioOn: false });
           this.nodeList = [];
@@ -244,6 +245,7 @@ class TextToSpeech extends React.Component<
       );
       let res = await this.handleSpeech(index);
       if (res === "error") {
+        console.log(index, "asgdfgdsf");
         toast.error(this.props.t("Audio loading failed, stopped playback"));
         this.setState({ isAudioOn: false });
         this.nodeList = [];
