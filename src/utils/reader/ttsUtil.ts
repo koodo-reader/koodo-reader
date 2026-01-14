@@ -90,13 +90,14 @@ class TTSUtil {
 
           const text = audioNodeList[index];
           // 创建异步任务
+          console.log(batch.length, "batch.length");
           const task = this.getAudioPath(
             text,
             speed,
             voiceEngine,
             plugin,
             voice,
-            isFirst
+            isFirst || batch.length > 0
           )
             .then(async (res) => {
               // 处理完成后，从处理集合中移除

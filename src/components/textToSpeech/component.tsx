@@ -2,14 +2,16 @@ import React from "react";
 import { TextToSpeechProps, TextToSpeechState } from "./interface";
 import { Trans } from "react-i18next";
 import { speedList } from "../../constants/dropdownList";
-import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
+import {
+  CommonTool,
+  ConfigService,
+} from "../../assets/lib/kookit-extra-browser.min";
 import {
   checkPlugin,
   getAllVoices,
   getWebsiteUrl,
   handleContextMenu,
   sleep,
-  splitSentences,
 } from "../../utils/common";
 import { isElectron } from "react-device-detect";
 import toast from "react-hot-toast";
@@ -176,10 +178,15 @@ class TextToSpeech extends React.Component<
     ) {
     } else {
       let rawNodeList = nodeTextList.map((text) => {
-        return splitSentences(text);
+        return CommonTool.splitSentences(
+          text,
+          ConfigService.getReaderConfig("voiceEngine"),
+          ConfigService.getReaderConfig("voiceName")
+        );
       });
       this.nodeList = rawNodeList.flat();
     }
+    console.log(this.nodeList, "nodelist");
 
     if (this.nodeList.length === 0) {
       if (
@@ -258,8 +265,10 @@ class TextToSpeech extends React.Component<
         ConfigService.getReaderConfig("isConvertPDF") !== "yes"
       ) {
       } else {
-        lastVisibleTextList = splitSentences(
-          visibleTextList[visibleTextList.length - 1]
+        lastVisibleTextList = CommonTool.splitSentences(
+          visibleTextList[visibleTextList.length - 1],
+          ConfigService.getReaderConfig("voiceEngine"),
+          ConfigService.getReaderConfig("voiceName")
         );
       }
 
@@ -320,8 +329,10 @@ class TextToSpeech extends React.Component<
         ConfigService.getReaderConfig("isConvertPDF") !== "yes"
       ) {
       } else {
-        lastVisibleTextList = splitSentences(
-          visibleTextList[visibleTextList.length - 1]
+        lastVisibleTextList = CommonTool.splitSentences(
+          visibleTextList[visibleTextList.length - 1],
+          ConfigService.getReaderConfig("voiceEngine"),
+          ConfigService.getReaderConfig("voiceName")
         );
       }
       if (
