@@ -173,7 +173,7 @@ export const getTTSAudio = async (
   isFirst: boolean
 ) => {
   let readerRequest = await getReaderRequest();
-  console.log(text, "text");
+  console.log(text, isFirst, "text");
   let response = await readerRequest.getTTSAudio({
     text,
     language,
