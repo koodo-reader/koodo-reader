@@ -899,7 +899,9 @@ const createMainWin = () => {
       );
       if (_data && _data.filePath) {
         filePath = _data.filePath;
-        fs.writeFileSync(path.join(dirPath, "log.json"), "", "utf-8");
+        setTimeout(() => {
+          fs.writeFileSync(path.join(dirPath, "log.json"), "", "utf-8");
+        }, 1000);
       }
     }
 
