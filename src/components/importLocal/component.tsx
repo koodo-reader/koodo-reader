@@ -68,13 +68,13 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
   handleFilePath = async (filePath: string) => {
     clickFilePath = filePath;
     let md5 = await calculateFileMD5(await fetchFileFromPath(filePath));
-    if (this.props.books.length > 0 || this.props.deletedBooks.length > 0) {
-      let repeatBook: BookModel | null = await BookUtil.getBookByMd5(md5);
-      if (repeatBook) {
-        this.handleJump(repeatBook);
-        return;
-      }
+
+    let repeatBook: BookModel | null = await BookUtil.getBookByMd5(md5);
+    if (repeatBook) {
+      this.handleJump(repeatBook);
+      return;
     }
+
     const fileTemp = await fetchFileFromPath(filePath);
 
     this.setState({ isOpenFile: true }, async () => {
