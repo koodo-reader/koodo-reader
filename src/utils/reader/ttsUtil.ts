@@ -25,7 +25,6 @@ class TTSUtil {
         src: [audioPath],
         format: [getFormatFromAudioPath(audioPath)],
         onloaderror: () => {
-          console.log("safsdfsd");
           resolve("loaderror");
         },
         onload: async () => {
