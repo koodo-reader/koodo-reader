@@ -503,7 +503,9 @@ class TextToSpeech extends React.Component<
                         ConfigService.setReaderConfig("voiceEngine", "system");
                       }
 
-                      toast(this.props.t("Take effect in a while"));
+                      if (this.state.isAudioOn) {
+                        toast(this.props.t("Take effect in a while"));
+                      }
                     }
                   }}
                 >
@@ -540,8 +542,9 @@ class TextToSpeech extends React.Component<
                       "voiceSpeed",
                       event.target.value
                     );
-
-                    toast(this.props.t("Take effect in a while"));
+                    if (this.state.isAudioOn) {
+                      toast(this.props.t("Take effect in a while"));
+                    }
                   }}
                 >
                   {speedList.option.map((item) => (

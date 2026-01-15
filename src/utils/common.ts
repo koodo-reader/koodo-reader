@@ -715,7 +715,10 @@ export const testCORS = async (url: string) => {
       toast.error(
         i18n.t(
           "This data source cannot be accessed due to browser's security policy. Please switch to another data source or HTTPS-based service provider."
-        )
+        ),
+        {
+          duration: 8000,
+        }
       );
       return false;
     }
