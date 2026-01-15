@@ -229,6 +229,12 @@ a {
 .sk-chase-dot:before {
   background-color: rgba(235, 235, 235, 0.5);
 }
+@-moz-document url-prefix() {
+  .single-control-switch {
+    border: 1.5px solid rgba(235, 235, 235, 0.3);
+    background-color: rgba(71, 76, 80, 1);
+  }
+}
 .exit-reading-text,
 .add-bookmark-text,
 .token-dialog-token-text,
