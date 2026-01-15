@@ -589,7 +589,8 @@ class BookUtil {
     if (isElectron) {
       const { ipcRenderer } = window.require("electron");
       return await ipcRenderer.invoke("custom-database-command", {
-        query: `SELECT * FROM books WHERE md5='${md5}' LIMIT 1`,
+        query: `SELECT * FROM books WHERE md5=? LIMIT 1`,
+        data: [md5],
         dbName: "books",
         storagePath: getStorageLocation(),
         executeType: "get",
@@ -608,7 +609,8 @@ class BookUtil {
     if (isElectron) {
       const { ipcRenderer } = window.require("electron");
       return await ipcRenderer.invoke("custom-database-command", {
-        query: `SELECT * FROM books WHERE name LIKE '%${keyword}%' OR author LIKE '%${keyword}%'`,
+        query: `SELECT * FROM books WHERE name LIKE ? OR author LIKE ?`,
+        data: [`%${keyword}%`, `%${keyword}%`],
         dbName: "books",
         storagePath: getStorageLocation(),
         executeType: "all",
@@ -616,8 +618,13 @@ class BookUtil {
     } else {
       let books: Book[] = (await DatabaseService.getAllRecords("books")) || [];
       let results: Book[] = [];
+      const lowerKeyword = keyword.toLowerCase();
+      console.log(books, lowerKeyword, "books");
       for (let book of books) {
-        if (book.name.includes(keyword) || book.author.includes(keyword)) {
+        if (
+          book.name.toLowerCase().includes(lowerKeyword) ||
+          book.author.toLowerCase().includes(lowerKeyword)
+        ) {
           results.push(book);
         }
       }

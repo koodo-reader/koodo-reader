@@ -30,12 +30,7 @@ class SearchBox extends React.Component<SearchBoxProps, SearchBoxState> {
     let keyword = (
       document.querySelector(".header-search-box") as HTMLInputElement
     ).value.toLowerCase();
-    let results =
-      this.props.tabMode === "note"
-        ? await ConfigUtil.searchNotesByKeyword(keyword, "", "note")
-        : this.props.tabMode === "highlight"
-        ? await ConfigUtil.searchNotesByKeyword(keyword, "", "highlight")
-        : await BookUtil.searchBooksByKeyword(keyword);
+    let results = await this.handleGetSearchResults(keyword);
     if (results) {
       this.props.handleSearchResults(results);
       this.props.handleSearch(true);
@@ -44,6 +39,27 @@ class SearchBox extends React.Component<SearchBoxProps, SearchBoxState> {
       }
     }
   };
+  handleGetSearchResults = async (keyword: string) => {
+    let results =
+      this.props.tabMode === "note"
+        ? await ConfigUtil.searchNotesByKeyword(keyword, "", "note")
+        : this.props.tabMode === "highlight"
+        ? await ConfigUtil.searchNotesByKeyword(keyword, "", "highlight")
+        : await BookUtil.searchBooksByKeyword(keyword);
+    console.log(results, "results");
+    let deletedBookKeys = ConfigService.getAllListConfig("deletedBooks");
+    results = results.filter((result: any) => {
+      return !deletedBookKeys.includes(
+        result[
+          this.props.tabMode === "note" || this.props.tabMode === "highlight"
+            ? "bookKey"
+            : "key"
+        ]
+      );
+    });
+    return results;
+  };
+
   handleKey = async (event: any) => {
     if (event.keyCode !== 13) {
       return;
@@ -55,12 +71,7 @@ class SearchBox extends React.Component<SearchBoxProps, SearchBoxState> {
     this.setState({ isFocused: false });
     if (event && event.keyCode === 13) {
       let keyword = event.target.value.toLowerCase();
-      let results =
-        this.props.tabMode === "note"
-          ? await ConfigUtil.searchNotesByKeyword(keyword, "", "note")
-          : this.props.tabMode === "highlight"
-          ? await ConfigUtil.searchNotesByKeyword(keyword, "", "highlight")
-          : await BookUtil.searchBooksByKeyword(keyword);
+      let results = await this.handleGetSearchResults(keyword);
       if (results) {
         this.props.handleSearchResults(results);
         this.props.handleSearch(true);
