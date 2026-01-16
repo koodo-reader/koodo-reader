@@ -1033,3 +1033,12 @@ export const handleAutoCloudSync = async () => {
   }
   return false;
 };
+export const splitSentences = (text: string) => {
+  const segmenter = new (Intl as any).Segmenter("zh", {
+    granularity: "sentence",
+  });
+  const segments = segmenter.segment(text);
+
+  const sentences = Array.from(segments).map((s: any) => s.segment);
+  return sentences;
+};
