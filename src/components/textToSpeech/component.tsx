@@ -12,6 +12,7 @@ import {
   getWebsiteUrl,
   handleContextMenu,
   sleep,
+  splitSentences,
 } from "../../utils/common";
 import { isElectron } from "react-device-detect";
 import toast from "react-hot-toast";
@@ -172,17 +173,14 @@ class TextToSpeech extends React.Component<
       (item: string) => item && item.trim()
     );
     this.nodeList = nodeTextList;
+    console.log(nodeTextList, "nodeTextList");
     if (
       this.props.currentBook.format === "PDF" &&
       ConfigService.getReaderConfig("isConvertPDF") !== "yes"
     ) {
     } else {
       let rawNodeList = nodeTextList.map((text) => {
-        return CommonTool.splitSentences(
-          text,
-          ConfigService.getReaderConfig("voiceEngine"),
-          ConfigService.getReaderConfig("voiceName")
-        );
+        return splitSentences(text);
       });
       this.nodeList = rawNodeList.flat();
     }
@@ -265,10 +263,8 @@ class TextToSpeech extends React.Component<
         ConfigService.getReaderConfig("isConvertPDF") !== "yes"
       ) {
       } else {
-        lastVisibleTextList = CommonTool.splitSentences(
-          visibleTextList[visibleTextList.length - 1],
-          ConfigService.getReaderConfig("voiceEngine"),
-          ConfigService.getReaderConfig("voiceName")
+        lastVisibleTextList = splitSentences(
+          visibleTextList[visibleTextList.length - 1]
         );
       }
 
@@ -329,10 +325,8 @@ class TextToSpeech extends React.Component<
         ConfigService.getReaderConfig("isConvertPDF") !== "yes"
       ) {
       } else {
-        lastVisibleTextList = CommonTool.splitSentences(
-          visibleTextList[visibleTextList.length - 1],
-          ConfigService.getReaderConfig("voiceEngine"),
-          ConfigService.getReaderConfig("voiceName")
+        lastVisibleTextList = splitSentences(
+          visibleTextList[visibleTextList.length - 1]
         );
       }
       if (
