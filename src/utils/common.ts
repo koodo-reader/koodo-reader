@@ -1040,5 +1040,5 @@ export const splitSentences = (text: string) => {
   const segments = segmenter.segment(text);
 
   const sentences = Array.from(segments).map((s: any) => s.segment);
-  return sentences;
+  return sentences.filter((sentence) => sentence.trim() !== "");
 };
