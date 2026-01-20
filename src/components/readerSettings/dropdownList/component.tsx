@@ -22,19 +22,19 @@ class DropdownList extends React.Component<
       currentLineHeightIndex: dropdownList[1].option.findIndex((item: any) => {
         return (
           item.value ===
-          (ConfigService.getReaderConfig("lineHeight") || "Default")
+          (ConfigService.getReaderConfig("lineHeight") || "")
         );
       }),
       currentTextAlignIndex: dropdownList[2].option.findIndex((item: any) => {
         return (
           item.value ===
-          (ConfigService.getReaderConfig("textAlign") || "Default")
+          (ConfigService.getReaderConfig("textAlign") || "")
         );
       }),
       chineseConversionIndex: dropdownList[3].option.findIndex((item: any) => {
         return (
           item.value ===
-          (ConfigService.getReaderConfig("convertChinese") || "Default")
+          (ConfigService.getReaderConfig("convertChinese") || "")
         );
       }),
     };
@@ -127,10 +127,10 @@ class DropdownList extends React.Component<
                     (item.value === "lineHeight"
                       ? this.state.currentLineHeightIndex
                       : item.value === "textAlign"
-                      ? this.state.currentTextAlignIndex
-                      : item.value === "convertChinese"
-                      ? this.state.chineseConversionIndex
-                      : this.state.currentFontFamilyIndex)
+                        ? this.state.currentTextAlignIndex
+                        : item.value === "convertChinese"
+                          ? this.state.chineseConversionIndex
+                          : this.state.currentFontFamilyIndex)
                   }
                 >
                   {this.props.t(subItem.label)}

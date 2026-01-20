@@ -13,15 +13,12 @@ class styleUtil {
     if (!background) return;
     background.setAttribute(
       "style",
-      `background-color:${
-        ConfigService.getReaderConfig("isMergeWord") === "yes"
-          ? "rgba(0,0,0,0)"
-          : ConfigService.getReaderConfig("backgroundColor") ||
-            "rgba(255,255,255,1)"
-      };filter: brightness(${
-        ConfigService.getReaderConfig("brightness") || 1
-      }) invert(${
-        ConfigService.getReaderConfig("isInvert") === "yes" ? 1 : 0
+      `background-color:${ConfigService.getReaderConfig("isMergeWord") === "yes"
+        ? "rgba(0,0,0,0)"
+        : ConfigService.getReaderConfig("backgroundColor") ||
+        "rgba(255,255,255,1)"
+      };filter: brightness(${ConfigService.getReaderConfig("brightness") || 1
+      }) invert(${ConfigService.getReaderConfig("isInvert") === "yes" ? 1 : 0
       });`
     );
     if (!doc.head) {
@@ -43,10 +40,6 @@ class styleUtil {
   // get default css for iframe
   static getDefaultCss() {
     return StyleHelper.getDefaultCss(ConfigService);
-  }
-  //force horionztal writing mode
-  static getCustomCss() {
-    return StyleHelper.getCustomCss(ConfigService);
   }
 
   static applyTheme() {
