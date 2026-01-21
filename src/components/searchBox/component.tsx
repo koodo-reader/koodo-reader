@@ -44,16 +44,15 @@ class SearchBox extends React.Component<SearchBoxProps, SearchBoxState> {
       this.props.tabMode === "note"
         ? await ConfigUtil.searchNotesByKeyword(keyword, "", "note")
         : this.props.tabMode === "highlight"
-        ? await ConfigUtil.searchNotesByKeyword(keyword, "", "highlight")
-        : await BookUtil.searchBooksByKeyword(keyword);
-    console.log(results, "results");
+          ? await ConfigUtil.searchNotesByKeyword(keyword, "", "highlight")
+          : await BookUtil.searchBooksByKeyword(keyword);
     let deletedBookKeys = ConfigService.getAllListConfig("deletedBooks");
     results = results.filter((result: any) => {
       return !deletedBookKeys.includes(
         result[
-          this.props.tabMode === "note" || this.props.tabMode === "highlight"
-            ? "bookKey"
-            : "key"
+        this.props.tabMode === "note" || this.props.tabMode === "highlight"
+          ? "bookKey"
+          : "key"
         ]
       );
     });
@@ -128,18 +127,18 @@ class SearchBox extends React.Component<SearchBoxProps, SearchBoxState> {
             this.props.isNavSearch || this.props.mode === "nav"
               ? this.props.t("Search in the Book")
               : this.props.tabMode === "note"
-              ? this.props.t("Search my notes")
-              : this.props.tabMode === "highlight"
-              ? this.props.t("Search my highlights")
-              : this.props.t("Search my library")
+                ? this.props.t("Search my notes")
+                : this.props.tabMode === "highlight"
+                  ? this.props.t("Search my highlights")
+                  : this.props.t("Search my library")
           }
           style={
             this.props.mode === "nav"
               ? {
-                  width: this.props.width,
-                  height: this.props.height,
-                  paddingRight: "30px",
-                }
+                width: this.props.width,
+                height: this.props.height,
+                paddingRight: "30px",
+              }
               : {}
           }
           onCompositionStart={() => {

@@ -873,7 +873,6 @@ const createMainWin = () => {
     event.returnValue = path.join(dirPath, "data");
   });
   ipcMain.on("url-window-status", (event, config) => {
-    console.log(config, 'url status')
     if (config.type === "dict") {
       event.returnValue = dictWindow && !dictWindow.isDestroyed() ? true : false;
     } else if (config.type === "trans") {

@@ -13,7 +13,6 @@ class TTSUtil {
   static processingIndexes: Set<number> = new Set();
   static async readAloud(currentIndex: number) {
     return new Promise<string>(async (resolve) => {
-      console.log(currentIndex, this.audioPaths, "audiopaths");
       let audioPath = this.audioPaths.find(
         (item) => item.index === currentIndex
       )?.audioPath;
@@ -89,7 +88,6 @@ class TTSUtil {
 
           const text = audioNodeList[index];
           // 创建异步任务
-          console.log(batch.length, "batch.length");
           const task = this.getAudioPath(
             text,
             speed,
@@ -114,10 +112,8 @@ class TTSUtil {
               console.error(`Error caching audio for index ${index}:`, error);
               return null;
             });
-          console.log(index, "index");
           batch.push(task);
         }
-        console.log(batch, "batch");
 
         // 等待当前批次完成
         const batchResults = await Promise.all(batch);
@@ -211,7 +207,6 @@ class TTSUtil {
         1.0,
         isFirst
       );
-      console.log(res, "res");
       if (res && res.data && res.data.audio_base64) {
         return res.data.audio_base64;
       }

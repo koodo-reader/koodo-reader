@@ -560,7 +560,6 @@ class BookUtil {
           results = results.reverse();
         }
       }
-      console.log(results)
 
       return results.map((item: any) => ({ key: item.key }));
     } else {
@@ -625,7 +624,6 @@ class BookUtil {
       let books: Book[] = (await DatabaseService.getAllRecords("books")) || [];
       let results: Book[] = [];
       const lowerKeyword = keyword.toLowerCase();
-      console.log(books, lowerKeyword, "books");
       for (let book of books) {
         if (
           book.name.toLowerCase().includes(lowerKeyword) ||
