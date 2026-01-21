@@ -123,7 +123,7 @@ class TextToSpeech extends React.Component<
     } else {
       if (
         ConfigService.getReaderConfig("voiceEngine") ===
-          "official-ai-voice-plugin" &&
+        "official-ai-voice-plugin" &&
         this.props.isAuthed
       ) {
         toast.loading(this.props.t("Loading audio, please wait..."), {
@@ -143,7 +143,7 @@ class TextToSpeech extends React.Component<
       }
       if (
         ConfigService.getReaderConfig("voiceEngine") ===
-          "official-ai-voice-plugin" &&
+        "official-ai-voice-plugin" &&
         !this.props.isAuthed
       ) {
         ConfigService.setReaderConfig("voiceEngine", "system");
@@ -173,7 +173,6 @@ class TextToSpeech extends React.Component<
       (item: string) => item && item.trim()
     );
     this.nodeList = nodeTextList;
-    console.log(nodeTextList, "nodeTextList");
     if (
       this.props.currentBook.format === "PDF" &&
       ConfigService.getReaderConfig("isConvertPDF") !== "yes"
@@ -184,7 +183,6 @@ class TextToSpeech extends React.Component<
       });
       this.nodeList = rawNodeList.flat();
     }
-    console.log(this.nodeList, "nodelist");
 
     if (this.nodeList.length === 0) {
       if (
@@ -194,7 +192,7 @@ class TextToSpeech extends React.Component<
         let currentPosition = this.props.htmlBook.rendition.getPosition();
         await this.props.htmlBook.rendition.goToChapterIndex(
           parseInt(currentPosition.chapterDocIndex) +
-            (this.props.readerMode === "double" ? 2 : 1)
+          (this.props.readerMode === "double" ? 2 : 1)
         );
       } else {
         await this.props.htmlBook.rendition.next();
@@ -226,7 +224,6 @@ class TextToSpeech extends React.Component<
         );
         toast.dismiss("tts-load");
         if (result === "error") {
-          console.log("dfgdsfgsdf");
           toast.error(this.props.t("Audio loading failed, stopped playback"));
           this.setState({ isAudioOn: false });
           this.nodeList = [];
@@ -250,7 +247,6 @@ class TextToSpeech extends React.Component<
       );
       let res = await this.handleSpeech(index);
       if (res === "error") {
-        console.log(index, "asgdfgdsf");
         toast.error(this.props.t("Audio loading failed, stopped playback"));
         this.setState({ isAudioOn: false });
         this.nodeList = [];
@@ -279,7 +275,7 @@ class TextToSpeech extends React.Component<
           let currentPosition = this.props.htmlBook.rendition.getPosition();
           await this.props.htmlBook.rendition.goToChapterIndex(
             parseInt(currentPosition.chapterDocIndex) +
-              (this.props.readerMode === "double" ? 2 : 1)
+            (this.props.readerMode === "double" ? 2 : 1)
           );
         } else {
           await this.props.htmlBook.rendition.next();
@@ -340,7 +336,7 @@ class TextToSpeech extends React.Component<
           let currentPosition = this.props.htmlBook.rendition.getPosition();
           await this.props.htmlBook.rendition.goToChapterIndex(
             parseInt(currentPosition.chapterDocIndex) +
-              (this.props.readerMode === "double" ? 2 : 1)
+            (this.props.readerMode === "double" ? 2 : 1)
           );
         } else {
           await this.props.htmlBook.rendition.next();
@@ -445,13 +441,13 @@ class TextToSpeech extends React.Component<
                   style={
                     this.state.isAudioOn
                       ? {
-                          transform: "translateX(20px)",
-                          transition: "transform 0.5s ease",
-                        }
+                        transform: "translateX(20px)",
+                        transition: "transform 0.5s ease",
+                      }
                       : {
-                          transform: "translateX(0px)",
-                          transition: "transform 0.5s ease",
-                        }
+                        transform: "translateX(0px)",
+                        transition: "transform 0.5s ease",
+                      }
                   }
                 ></span>
               </span>
@@ -484,7 +480,6 @@ class TextToSpeech extends React.Component<
                       let voice = this.voices.find(
                         (item) => item.name === event.target.value
                       );
-                      console.log(voice, "saggaga");
                       if (!voice) {
                         return;
                       }

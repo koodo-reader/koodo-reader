@@ -120,8 +120,7 @@ export const getDictText = async (word: string, from: string, to: string) => {
         .map((item) => {
           return (
             (item.type && `<p><p class="dict-word-type">[${item.type}]</p>`) +
-            `<div  style="font-weight: bold">${
-              item.definition
+            `<div  style="font-weight: bold">${item.definition
             }</div><div>${item.examples
               .map((item) => {
                 return `<p>${item.sentence}</p>` + `<p>${item.translation}</p>`;
@@ -135,24 +134,24 @@ export const getDictText = async (word: string, from: string, to: string) => {
         : "") +
       (res.data[0].comparison
         ? res.data[0].comparison.map(
-            (item) =>
-              `<p class="dict-learn-more">${item.word_to_compare}: </p>${item.analysis}`
-          )
+          (item) =>
+            `<p class="dict-learn-more">${item.word_to_compare}: </p>${item.analysis}`
+        )
         : "") +
       `<p class="dict-learn-more">${i18n.t("Generated with AI")}</p>`;
     return dictText;
   } else {
     toast.error(
       i18n.t("No result found") +
-        " " +
-        i18n.t(
-          officialDictList.find((item) => item.code === from)?.nativeLang ||
-            from
-        ) +
-        " -> " +
-        i18n.t(
-          officialDictList.find((item) => item.code === to)?.nativeLang || to
-        )
+      " " +
+      i18n.t(
+        officialDictList.find((item) => item.code === from)?.nativeLang ||
+        from
+      ) +
+      " -> " +
+      i18n.t(
+        officialDictList.find((item) => item.code === to)?.nativeLang || to
+      )
     );
     if (from === "auto") {
       toast(
@@ -173,7 +172,6 @@ export const getTTSAudio = async (
   isFirst: boolean
 ) => {
   let readerRequest = await getReaderRequest();
-  console.log(text, isFirst, "text");
   let response = await readerRequest.getTTSAudio({
     text,
     language,
@@ -182,7 +180,6 @@ export const getTTSAudio = async (
     pitch,
     is_first: isFirst,
   });
-  console.log(response, "safsdf");
   if (response.code === 200) {
     return response;
   } else if (response.code === 401) {
@@ -205,10 +202,10 @@ export const getTTSAudio = async (
         quotaAlertDismissTime = Date.now();
         openExternalUrl(
           getWebsiteUrl() +
-            (ConfigService.getReaderConfig("lang").startsWith("zh")
-              ? "/zh"
-              : "/en") +
-            "/tts-quota"
+          (ConfigService.getReaderConfig("lang").startsWith("zh")
+            ? "/zh"
+            : "/en") +
+          "/tts-quota"
         );
       } else {
         isShowingQuotaAlert = false;
