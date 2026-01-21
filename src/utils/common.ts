@@ -1014,6 +1014,11 @@ export const handleAutoCloudSync = async () => {
     if (!supportedSources.includes(syncRes.data.default_sync_option)) {
       return false;
     }
+    if (!isElectron && (
+      syncRes.data.default_sync_option === "webdav" ||
+      syncRes.data.default_sync_option === "s3compatible")) {
+      return false;
+    }
     ConfigService.setItem(
       "defaultSyncOption",
       syncRes.data.default_sync_option
