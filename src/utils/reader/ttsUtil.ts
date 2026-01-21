@@ -94,7 +94,7 @@ class TTSUtil {
             voiceEngine,
             plugin,
             voice,
-            isFirst || batch.length > 0
+            isFirst
           )
             .then(async (res) => {
               // 处理完成后，从处理集合中移除
