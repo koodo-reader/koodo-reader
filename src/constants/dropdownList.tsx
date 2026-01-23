@@ -69,9 +69,9 @@ export const sliderConfigs = [
   },
   {
     maxValue: 80,
-    minValue: -20,
+    minValue: -40,
     mode: "margin",
-    minLabel: "-20",
+    minLabel: "-40",
     maxLabel: "80",
     step: 5,
     title: "Margin",
