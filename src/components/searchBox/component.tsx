@@ -86,9 +86,10 @@ class SearchBox extends React.Component<SearchBoxProps, SearchBoxState> {
     this.props.handleNavSearchState("pending");
     this.props.handleSearchList(
       searchList.map((item: any) => {
+        const regex = new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
         item.excerpt = item.excerpt.replace(
-          q,
-          `<span class="content-search-text">${q}</span>`
+          regex,
+          `<span class="content-search-text">$&</span>`
         );
         return item;
       })
