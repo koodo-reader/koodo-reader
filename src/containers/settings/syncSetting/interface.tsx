@@ -9,6 +9,7 @@ export interface SettingInfoProps extends RouteComponentProps<any> {
   handleFetchDataSourceList: () => void;
   handleFetchDefaultSyncOption: () => void;
   handleFetchLoginOptionList: () => void;
+  userInfo: any;
   handleLoginOptionList: (
     loginOptionList: { email: string; provider: string }[]
   ) => void;

@@ -44,7 +44,9 @@ class DeleteDialog extends React.Component<
       this.props.handleSearch(false);
     }
     this.props.handleDeleteDialog(false);
-    toast.success(this.props.t("Deletion successful"));
+    toast.success(this.props.t("Deletion successful"), {
+      id: "delete-books",
+    });
   };
   deleteBookFromShelf = () => {
     if (this.props.isSelectBook) {
@@ -59,7 +61,9 @@ class DeleteDialog extends React.Component<
       this.props.handleFetchBooks();
       this.props.handleSelectBook(!this.props.isSelectBook);
       this.props.handleDeleteDialog(false);
-      toast.success(this.props.t("Deletion successful"));
+      toast.success(this.props.t("Deletion successful"), {
+        id: "delete-books",
+      });
       return;
     }
     ConfigService.deleteFromMapConfig(
@@ -89,9 +93,6 @@ class DeleteDialog extends React.Component<
         ?.format.toLowerCase();
       await this.deleteBook(keyArr[i], format || "epub");
     }
-    toast.success(this.props.t("Deletion successful"), {
-      id: "delete-books",
-    });
     if (this.props.books.length === 0) {
       this.props.history.push("/manager/empty");
     }
@@ -138,7 +139,9 @@ class DeleteDialog extends React.Component<
           resolve();
         })
         .catch((err) => {
-          toast.error("Delete book error: " + err.message);
+          toast.error("Delete book error: " + err.message, {
+            id: "delete-books",
+          });
           console.error(err);
           reject(err);
         });

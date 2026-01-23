@@ -135,7 +135,9 @@ class TextToSpeech extends React.Component<
             toast.error(
               this.props.t(
                 "AI voice is only available for Pro users, please upgrade to Pro to use this feature"
-              )
+              ), {
+              id: "tts-load",
+            }
             );
             return;
           }

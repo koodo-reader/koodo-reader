@@ -178,7 +178,7 @@ export const getTTSAudio = async (
     voice,
     speed,
     pitch,
-    is_first: isFirst,
+    is_first: isFirst
   });
   if (response.code === 200) {
     return response;

@@ -231,6 +231,9 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
     }
     if (this.props.isAuthed && !ConfigService.getItem("defaultSyncOption")) {
       ConfigService.setItem("defaultSyncOption", this.props.settingDrive);
+      if (ConfigService.getReaderConfig("isEnableKoodoSync") === "yes" && this.props.userInfo.default_sync_option !== this.props.settingDrive) {
+        resetKoodoSync();
+      }
       this.props.handleFetchDefaultSyncOption();
     }
     this.props.handleFetchDataSourceList();
