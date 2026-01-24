@@ -148,6 +148,44 @@ class CoverUtil {
     }
     this.deleteCloudCover(key);
   }
+  static async deleteOfflineCover(key: string) {
+    try {
+      if (isElectron) {
+        var fs = window.require("fs");
+        var path = window.require("path");
+        let directoryPath = path.join(getStorageLocation() || "", "cover");
+        if (!fs.existsSync(directoryPath)) {
+          return;
+        }
+        const files = fs.readdirSync(directoryPath);
+        const imageFiles = files.filter((file) => file.startsWith(key));
+        if (imageFiles.length === 0) {
+          return;
+        }
+        const imageFilePath = path.join(directoryPath, imageFiles[0]);
+        if (fs.existsSync(imageFilePath)) {
+          fs.unlinkSync(imageFilePath);
+        }
+      } else {
+        if (ConfigService.getReaderConfig("isUseLocal") === "yes") {
+          let coverList = await this.getLocalCoverList();
+          if (!coverList || coverList.length === 0) {
+            return;
+          }
+          let cover = coverList.find((item) => item.startsWith(key));
+          if (!cover) {
+            return;
+          }
+          await LocalFileManager.deleteFile(cover, "cover");
+        }
+      }
+    } catch (error) {
+      console.error("deleteOfflineCover error:", error);
+      return;
+
+    }
+
+  }
   static async addCover(book: BookModel) {
     let coverBase64 = book.cover;
     if (!coverBase64) return;
@@ -287,9 +325,8 @@ class CoverUtil {
           console.error("download cover failed");
           return;
         }
-        let base64 = `data:image/${
-          cover.split(".").reverse()[0]
-        };base64,${imgStr}`;
+        let base64 = `data:image/${cover.split(".").reverse()[0]
+          };base64,${imgStr}`;
         await this.saveCover(cover, base64);
       }
     }

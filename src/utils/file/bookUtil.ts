@@ -52,31 +52,35 @@ class BookUtil {
     }
   }
   static deleteBook(key: string, format: string) {
-    if (isElectron) {
-      const fs_extra = window.require("fs-extra");
-      const path = window.require("path");
-      const dataPath = getStorageLocation() || "";
-      return new Promise<void>((resolve, reject) => {
-        try {
-          fs_extra.remove(
-            path.join(dataPath, `book`, key + "." + format),
-            (err) => {
-              if (err) throw err;
-              this.deleteCloudBook(key, format);
-              resolve();
-            }
-          );
-        } catch (e) {
-          reject();
-        }
-      });
-    } else {
-      this.deleteCloudBook(key, format);
-      if (ConfigService.getReaderConfig("isUseLocal") === "yes") {
-        return LocalFileManager.deleteFile(key + "." + format, "book");
+    try {
+      if (isElectron) {
+        const fs_extra = window.require("fs-extra");
+        const path = window.require("path");
+        const dataPath = getStorageLocation() || "";
+        return new Promise<void>((resolve, reject) => {
+          try {
+            fs_extra.remove(
+              path.join(dataPath, `book`, key + "." + format),
+              (err) => {
+                if (err) throw err;
+                this.deleteCloudBook(key, format);
+                resolve();
+              }
+            );
+          } catch (e) {
+            reject();
+          }
+        });
       } else {
-        return localforage.removeItem(key);
+        this.deleteCloudBook(key, format);
+        if (ConfigService.getReaderConfig("isUseLocal") === "yes") {
+          return LocalFileManager.deleteFile(key + "." + format, "book");
+        } else {
+          return localforage.removeItem(key);
+        }
       }
+    } catch (error) {
+      console.error("delete book error:", error);
     }
   }
   static isBookExist(key: string, format: string, bookPath: string) {
@@ -468,6 +472,7 @@ class BookUtil {
     }
     await this.deleteBook(key, book.format.toLowerCase());
     await this.deleteCacheBook(key);
+    await CoverUtil.deleteOfflineCover(key);
   }
   static async isBookOffline(key: string) {
     let book: Book = await DatabaseService.getRecord(key, "books");
