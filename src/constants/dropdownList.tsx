@@ -17,7 +17,7 @@ export const dropdownList = [
     title: "Line height",
     value: "lineHeight",
     option: [
-      { label: "Default", value: "Default" },
+      { label: "Default", value: "" },
       { label: "1", value: "1" },
       { label: "1.25", value: "1.25" },
       { label: "1.5", value: "1.5" },
@@ -31,7 +31,7 @@ export const dropdownList = [
     title: "Text alignment",
     value: "textAlign",
     option: [
-      { label: "Default", value: "Default" },
+      { label: "Default", value: "" },
       { label: "Left", value: "Left" },
       { label: "Justify", value: "Justify" },
       { label: "Right", value: "Right" },
@@ -43,7 +43,7 @@ export const dropdownList = [
     title: "Conversion of Chinese",
     value: "convertChinese",
     option: [
-      { label: "Default", value: "Default" },
+      { label: "Default", value: "" },
       {
         label: "Simplified To Traditional",
         value: "Simplified To Traditional",
@@ -69,9 +69,9 @@ export const sliderConfigs = [
   },
   {
     maxValue: 80,
-    minValue: 0,
+    minValue: -40,
     mode: "margin",
-    minLabel: "0",
+    minLabel: "-40",
     maxLabel: "80",
     step: 5,
     title: "Margin",

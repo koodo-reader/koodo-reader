@@ -30,12 +30,7 @@ class SearchBox extends React.Component<SearchBoxProps, SearchBoxState> {
     let keyword = (
       document.querySelector(".header-search-box") as HTMLInputElement
     ).value.toLowerCase();
-    let results =
-      this.props.tabMode === "note"
-        ? await ConfigUtil.searchNotesByKeyword(keyword, "", "note")
-        : this.props.tabMode === "highlight"
-        ? await ConfigUtil.searchNotesByKeyword(keyword, "", "highlight")
-        : await BookUtil.searchBooksByKeyword(keyword);
+    let results = await this.handleGetSearchResults(keyword);
     if (results) {
       this.props.handleSearchResults(results);
       this.props.handleSearch(true);
@@ -44,6 +39,26 @@ class SearchBox extends React.Component<SearchBoxProps, SearchBoxState> {
       }
     }
   };
+  handleGetSearchResults = async (keyword: string) => {
+    let results =
+      this.props.tabMode === "note"
+        ? await ConfigUtil.searchNotesByKeyword(keyword, "", "note")
+        : this.props.tabMode === "highlight"
+          ? await ConfigUtil.searchNotesByKeyword(keyword, "", "highlight")
+          : await BookUtil.searchBooksByKeyword(keyword);
+    let deletedBookKeys = ConfigService.getAllListConfig("deletedBooks");
+    results = results.filter((result: any) => {
+      return !deletedBookKeys.includes(
+        result[
+        this.props.tabMode === "note" || this.props.tabMode === "highlight"
+          ? "bookKey"
+          : "key"
+        ]
+      );
+    });
+    return results;
+  };
+
   handleKey = async (event: any) => {
     if (event.keyCode !== 13) {
       return;
@@ -55,12 +70,7 @@ class SearchBox extends React.Component<SearchBoxProps, SearchBoxState> {
     this.setState({ isFocused: false });
     if (event && event.keyCode === 13) {
       let keyword = event.target.value.toLowerCase();
-      let results =
-        this.props.tabMode === "note"
-          ? await ConfigUtil.searchNotesByKeyword(keyword, "", "note")
-          : this.props.tabMode === "highlight"
-          ? await ConfigUtil.searchNotesByKeyword(keyword, "", "highlight")
-          : await BookUtil.searchBooksByKeyword(keyword);
+      let results = await this.handleGetSearchResults(keyword);
       if (results) {
         this.props.handleSearchResults(results);
         this.props.handleSearch(true);
@@ -76,9 +86,10 @@ class SearchBox extends React.Component<SearchBoxProps, SearchBoxState> {
     this.props.handleNavSearchState("pending");
     this.props.handleSearchList(
       searchList.map((item: any) => {
+        const regex = new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
         item.excerpt = item.excerpt.replace(
-          q,
-          `<span class="content-search-text">${q}</span>`
+          regex,
+          `<span class="content-search-text">$&</span>`
         );
         return item;
       })
@@ -117,18 +128,18 @@ class SearchBox extends React.Component<SearchBoxProps, SearchBoxState> {
             this.props.isNavSearch || this.props.mode === "nav"
               ? this.props.t("Search in the Book")
               : this.props.tabMode === "note"
-              ? this.props.t("Search my notes")
-              : this.props.tabMode === "highlight"
-              ? this.props.t("Search my highlights")
-              : this.props.t("Search my library")
+                ? this.props.t("Search my notes")
+                : this.props.tabMode === "highlight"
+                  ? this.props.t("Search my highlights")
+                  : this.props.t("Search my library")
           }
           style={
             this.props.mode === "nav"
               ? {
-                  width: this.props.width,
-                  height: this.props.height,
-                  paddingRight: "30px",
-                }
+                width: this.props.width,
+                height: this.props.height,
+                paddingRight: "30px",
+              }
               : {}
           }
           onCompositionStart={() => {

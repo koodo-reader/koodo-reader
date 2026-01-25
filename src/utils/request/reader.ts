@@ -7,8 +7,15 @@ import {
 import i18n from "../../i18n";
 import { handleExitApp } from "./common";
 import { officialDictList } from "../../constants/settingList";
-import { getServerRegion } from "../common";
+import {
+  getServerRegion,
+  getWebsiteUrl,
+  openExternalUrl,
+  vexComfirmAsync,
+} from "../common";
 let readerRequest: ReaderRequest | undefined;
+let isShowingQuotaAlert = false;
+let quotaAlertDismissTime = 0;
 export const getTransStream = async (
   text: string,
   from: string,
@@ -113,8 +120,7 @@ export const getDictText = async (word: string, from: string, to: string) => {
         .map((item) => {
           return (
             (item.type && `<p><p class="dict-word-type">[${item.type}]</p>`) +
-            `<div  style="font-weight: bold">${
-              item.definition
+            `<div  style="font-weight: bold">${item.definition
             }</div><div>${item.examples
               .map((item) => {
                 return `<p>${item.sentence}</p>` + `<p>${item.translation}</p>`;
@@ -128,24 +134,24 @@ export const getDictText = async (word: string, from: string, to: string) => {
         : "") +
       (res.data[0].comparison
         ? res.data[0].comparison.map(
-            (item) =>
-              `<p class="dict-learn-more">${item.word_to_compare}: </p>${item.analysis}`
-          )
+          (item) =>
+            `<p class="dict-learn-more">${item.word_to_compare}: </p>${item.analysis}`
+        )
         : "") +
       `<p class="dict-learn-more">${i18n.t("Generated with AI")}</p>`;
     return dictText;
   } else {
     toast.error(
       i18n.t("No result found") +
-        " " +
-        i18n.t(
-          officialDictList.find((item) => item.code === from)?.nativeLang ||
-            from
-        ) +
-        " -> " +
-        i18n.t(
-          officialDictList.find((item) => item.code === to)?.nativeLang || to
-        )
+      " " +
+      i18n.t(
+        officialDictList.find((item) => item.code === from)?.nativeLang ||
+        from
+      ) +
+      " -> " +
+      i18n.t(
+        officialDictList.find((item) => item.code === to)?.nativeLang || to
+      )
     );
     if (from === "auto") {
       toast(
@@ -156,4 +162,59 @@ export const getDictText = async (word: string, from: string, to: string) => {
     }
     return "";
   }
+};
+export const getTTSAudio = async (
+  text: string,
+  language: string,
+  voice: string,
+  speed: number,
+  pitch: number,
+  isFirst: boolean
+) => {
+  let readerRequest = await getReaderRequest();
+  let response = await readerRequest.getTTSAudio({
+    text,
+    language,
+    voice,
+    speed,
+    pitch,
+    is_first: isFirst
+  });
+  if (response.code === 200) {
+    return response;
+  } else if (response.code === 401) {
+    handleExitApp();
+    return;
+  } else if (response.code === 20009) {
+    const now = Date.now();
+    const timeSinceDismiss = now - quotaAlertDismissTime;
+
+    if (!isShowingQuotaAlert && timeSinceDismiss >= 10000) {
+      isShowingQuotaAlert = true;
+      let result = await vexComfirmAsync(
+        i18n.t(
+          "You have exhausted your daily free AI voice character quota. Please purchase more quota to continue using this feature or wait until the quota resets. You can also use other TTS voices instead."
+        ),
+        "Purchase more quota"
+      );
+      if (result) {
+        isShowingQuotaAlert = false;
+        quotaAlertDismissTime = Date.now();
+        openExternalUrl(
+          getWebsiteUrl() +
+          (ConfigService.getReaderConfig("lang").startsWith("zh")
+            ? "/zh"
+            : "/en") +
+          "/tts-quota"
+        );
+      } else {
+        isShowingQuotaAlert = false;
+        quotaAlertDismissTime = Date.now();
+      }
+    }
+    return response;
+  } else {
+    toast.error(i18n.t("Fetch failed, error code") + ": " + response.msg);
+  }
+  return null;
 };

@@ -10,9 +10,11 @@ import { fetchUserInfo } from "../../utils/request/user";
 import {
   officialDictList,
   officialTranList,
+  officialVoiceList,
 } from "../../constants/settingList";
 import toast from "react-hot-toast";
 import BookUtil from "../../utils/file/bookUtil";
+import i18n from "../../i18n";
 
 export function handleBooks(books: BookModel[]) {
   return { type: "HANDLE_BOOKS", payload: books };
@@ -274,6 +276,50 @@ export function handleFetchPlugins() {
               ""
             );
             pluginList.push(sumPlugin);
+            let sortedVoiceList = [...officialVoiceList];
+            if (
+              ConfigService.getReaderConfig("lang") &&
+              ConfigService.getReaderConfig("lang").startsWith("zh")
+            ) {
+              //move zh-CN to first
+              sortedVoiceList.sort((a: any, b: any) => {
+                if (a.locale === "zh-CN") {
+                  return -1;
+                } else if (b.locale === "zh-CN") {
+                  return 1;
+                } else {
+                  return 0;
+                }
+              });
+            }
+            let voicePlugin = new PluginModel(
+              "official-ai-voice-plugin",
+              "voice",
+              "Official AI Voice",
+              "speaker",
+              "1.0.0",
+              "",
+              {},
+              {},
+              sortedVoiceList.map((item: any) => {
+                item.plugin = "official-ai-voice-plugin";
+                item.config = {};
+                item.displayName =
+                  i18n.t("Official AI Voice") +
+                  " - " +
+                  item.displayName +
+                  " - " +
+                  item.language +
+                  " - " +
+                  (item.gender === "female"
+                    ? i18n.t("Female voice")
+                    : i18n.t("Male voice"));
+                return item;
+              }),
+              "",
+              ""
+            );
+            pluginList.push(voicePlugin);
             dispatch(handlePlugins(pluginList));
           } else {
             dispatch(handlePlugins(pluginList));
