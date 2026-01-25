@@ -52,31 +52,35 @@ class BookUtil {
     }
   }
   static deleteBook(key: string, format: string) {
-    if (isElectron) {
-      const fs_extra = window.require("fs-extra");
-      const path = window.require("path");
-      const dataPath = getStorageLocation() || "";
-      return new Promise<void>((resolve, reject) => {
-        try {
-          fs_extra.remove(
-            path.join(dataPath, `book`, key + "." + format),
-            (err) => {
-              if (err) throw err;
-              this.deleteCloudBook(key, format);
-              resolve();
-            }
-          );
-        } catch (e) {
-          reject();
-        }
-      });
-    } else {
-      this.deleteCloudBook(key, format);
-      if (ConfigService.getReaderConfig("isUseLocal") === "yes") {
-        return LocalFileManager.deleteFile(key + "." + format, "book");
+    try {
+      if (isElectron) {
+        const fs_extra = window.require("fs-extra");
+        const path = window.require("path");
+        const dataPath = getStorageLocation() || "";
+        return new Promise<void>((resolve, reject) => {
+          try {
+            fs_extra.remove(
+              path.join(dataPath, `book`, key + "." + format),
+              (err) => {
+                if (err) throw err;
+                this.deleteCloudBook(key, format);
+                resolve();
+              }
+            );
+          } catch (e) {
+            reject();
+          }
+        });
       } else {
-        return localforage.removeItem(key);
+        this.deleteCloudBook(key, format);
+        if (ConfigService.getReaderConfig("isUseLocal") === "yes") {
+          return LocalFileManager.deleteFile(key + "." + format, "book");
+        } else {
+          return localforage.removeItem(key);
+        }
       }
+    } catch (error) {
+      console.error("delete book error:", error);
     }
   }
   static isBookExist(key: string, format: string, bookPath: string) {
@@ -250,16 +254,14 @@ class BookUtil {
     if (isElectron) {
       if (ConfigService.getReaderConfig("isOpenInMain") === "yes") {
         window.require("electron").ipcRenderer.invoke("new-tab", {
-          url: `${window.location.href.split("#")[0]}#/${ref}/${
-            book.key
-          }?title=${book.name}&file=${book.key}`,
+          url: `${window.location.href.split("#")[0]}#/${ref}/${book.key
+            }?title=${book.name}&file=${book.key}`,
         });
       } else {
         const { ipcRenderer } = window.require("electron");
         ipcRenderer.invoke("open-book", {
-          url: `${window.location.href.split("#")[0]}#/${ref}/${
-            book.key
-          }?title=${book.name}&file=${book.key}`,
+          url: `${window.location.href.split("#")[0]}#/${ref}/${book.key
+            }?title=${book.name}&file=${book.key}`,
           isMergeWord: ConfigService.getReaderConfig("isMergeWord"),
           isAutoFullscreen: ConfigService.getReaderConfig("isAutoFullscreen"),
           isPreventSleep: ConfigService.getReaderConfig("isPreventSleep"),
@@ -268,8 +270,7 @@ class BookUtil {
       }
     } else {
       window.open(
-        `${window.location.href.split("#")[0]}#/${ref}/${book.key}?title=${
-          book.name
+        `${window.location.href.split("#")[0]}#/${ref}/${book.key}?title=${book.name
         }&file=${book.key}`
       );
     }
@@ -471,6 +472,7 @@ class BookUtil {
     }
     await this.deleteBook(key, book.format.toLowerCase());
     await this.deleteCacheBook(key);
+    await CoverUtil.deleteOfflineCover(key);
   }
   static async isBookOffline(key: string) {
     let book: Book = await DatabaseService.getRecord(key, "books");
@@ -545,32 +547,40 @@ class BookUtil {
   static async getBookKeysWithSort(sortField: string, orderField: string) {
     if (isElectron) {
       const { ipcRenderer } = window.require("electron");
-      return await ipcRenderer.invoke("custom-database-command", {
-        query: `SELECT key FROM books ORDER BY ${sortField} ${orderField}`,
+      // Get all books first, then sort in JavaScript for natural sorting
+      let results = await ipcRenderer.invoke("custom-database-command", {
+        query: `SELECT key, ${sortField} FROM books`,
         dbName: "books",
         storagePath: getStorageLocation(),
         executeType: "all",
       });
+
+      if (sortField === "name" || sortField === "author") {
+        results.sort((a: any, b: any) => {
+          const comparison = a[sortField].localeCompare(b[sortField], undefined, { numeric: true, sensitivity: "base" });
+          return orderField === "ASC" ? comparison : -comparison;
+        });
+      } else if (sortField === "key") {
+        if (orderField === "DESC") {
+          results = results.reverse();
+        }
+      }
+
+      return results.map((item: any) => ({ key: item.key }));
     } else {
       let books: Book[] = (await DatabaseService.getAllRecords("books")) || [];
       if (sortField === "name") {
         books.sort((a, b) => {
-          if (orderField === "ASC") {
-            return a.name.localeCompare(b.name);
-          } else {
-            return b.name.localeCompare(a.name);
-          }
+          const comparison = a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: "base" });
+          return orderField === "ASC" ? comparison : -comparison;
         });
         return books.map((item) => {
           return { key: item.key };
         });
       } else if (sortField === "author") {
         books.sort((a, b) => {
-          if (orderField === "ASC") {
-            return a.author.localeCompare(b.author);
-          } else {
-            return b.author.localeCompare(a.author);
-          }
+          const comparison = a.author.localeCompare(b.author, undefined, { numeric: true, sensitivity: "base" });
+          return orderField === "ASC" ? comparison : -comparison;
         });
         return books.map((item) => {
           return { key: item.key };
@@ -589,7 +599,8 @@ class BookUtil {
     if (isElectron) {
       const { ipcRenderer } = window.require("electron");
       return await ipcRenderer.invoke("custom-database-command", {
-        query: `SELECT * FROM books WHERE md5='${md5}' LIMIT 1`,
+        query: `SELECT * FROM books WHERE md5=? LIMIT 1`,
+        data: [md5],
         dbName: "books",
         storagePath: getStorageLocation(),
         executeType: "get",
@@ -608,7 +619,8 @@ class BookUtil {
     if (isElectron) {
       const { ipcRenderer } = window.require("electron");
       return await ipcRenderer.invoke("custom-database-command", {
-        query: `SELECT * FROM books WHERE name LIKE '%${keyword}%' OR author LIKE '%${keyword}%'`,
+        query: `SELECT * FROM books WHERE name LIKE ? OR author LIKE ?`,
+        data: [`%${keyword}%`, `%${keyword}%`],
         dbName: "books",
         storagePath: getStorageLocation(),
         executeType: "all",
@@ -616,8 +628,12 @@ class BookUtil {
     } else {
       let books: Book[] = (await DatabaseService.getAllRecords("books")) || [];
       let results: Book[] = [];
+      const lowerKeyword = keyword.toLowerCase();
       for (let book of books) {
-        if (book.name.includes(keyword) || book.author.includes(keyword)) {
+        if (
+          book.name.toLowerCase().includes(lowerKeyword) ||
+          book.author.toLowerCase().includes(lowerKeyword)
+        ) {
           results.push(book);
         }
       }

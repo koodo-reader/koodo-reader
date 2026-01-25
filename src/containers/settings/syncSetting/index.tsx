@@ -25,6 +25,7 @@ const mapStateToProps = (state: stateType) => {
     plugins: state.manager.plugins,
     isAuthed: state.manager.isAuthed,
     settingDrive: state.manager.settingDrive,
+    userInfo: state.manager.userInfo,
     dataSourceList: state.backupPage.dataSourceList,
     defaultSyncOption: state.backupPage.defaultSyncOption,
     loginOptionList: state.backupPage.loginOptionList,

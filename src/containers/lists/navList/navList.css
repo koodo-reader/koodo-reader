@@ -10,15 +10,6 @@
   font-size: 13px;
   line-height: 15px;
   opacity: 1;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 4;
-  white-space: normal;
-  word-break: keep-all;
-  overflow: hidden;
-  position: relative;
   cursor: pointer;
 }
 .book-bookmark-index {

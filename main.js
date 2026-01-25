@@ -198,11 +198,6 @@ const createMainWin = () => {
     ? "http://localhost:3000"
     : `file://${path.join(__dirname, "./build/index.html")}`;
   mainWin.loadURL(urlLocation);
-  mainWin.webContents.on('console-message', (event, level, message, line, sourceId) => {
-    console.log(`[Renderer Console] Message: ${message}`);
-    // 这里你可以进一步处理消息，例如写入文件或发送到其他地方
-  });
-
   mainWin.on("close", () => {
     if (mainWin && !mainWin.isDestroyed()) {
       let bounds = mainWin.getBounds();
@@ -336,9 +331,6 @@ const createMainWin = () => {
         readerWindowList.push(readerWindow)
       }
       readerWindow = new BrowserWindow(options);
-      readerWindow.webContents.on('console-message', (event, level, message, line, sourceId) => {
-        console.log(`[Renderer Console] Message: ${message}`);
-      });
       if (store.get("isAlwaysOnTop") === "yes") {
         readerWindow.setAlwaysOnTop(true);
       }
@@ -364,9 +356,6 @@ const createMainWin = () => {
         frame: isMergeWord === "yes" ? false : true,
         hasShadow: isMergeWord === "yes" ? false : true,
         transparent: isMergeWord === "yes" ? true : false,
-      });
-      readerWindow.webContents.on('console-message', (event, level, message, line, sourceId) => {
-        console.log(`[Renderer Console] Message: ${message}`);
       });
       readerWindow.loadURL(url);
       // readerWindow.webContents.openDevTools();
@@ -851,9 +840,6 @@ const createMainWin = () => {
         readerWindowList.push(readerWindow)
       }
       readerWindow = new BrowserWindow(options);
-      readerWindow.webContents.on('console-message', (event, level, message, line, sourceId) => {
-        console.log(`[Renderer Console] Message: ${message}`);
-      });
       if (store.get("isAlwaysOnTop") === "yes") {
         readerWindow.setAlwaysOnTop(true);
       }
@@ -887,7 +873,6 @@ const createMainWin = () => {
     event.returnValue = path.join(dirPath, "data");
   });
   ipcMain.on("url-window-status", (event, config) => {
-    console.log(config, 'url status')
     if (config.type === "dict") {
       event.returnValue = dictWindow && !dictWindow.isDestroyed() ? true : false;
     } else if (config.type === "trans") {
@@ -913,7 +898,9 @@ const createMainWin = () => {
       );
       if (_data && _data.filePath) {
         filePath = _data.filePath;
-        fs.writeFileSync(path.join(dirPath, "log.json"), "", "utf-8");
+        setTimeout(() => {
+          fs.writeFileSync(path.join(dirPath, "log.json"), "", "utf-8");
+        }, 1000);
       }
     }
 

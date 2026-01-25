@@ -1,8 +1,10 @@
 import BookModel from "../../../models/Book";
+import PluginModel from "../../../models/Plugin";
 import HtmlBookModel from "../../../models/HtmlBook";
 export interface SettingSwitchProps {
   currentBook: BookModel;
   htmlBook: HtmlBookModel;
+  plugins: PluginModel[];
   renderBookFunc: () => void;
   handleHideFooter: (isHideFooter: boolean) => void;
   handleHideHeader: (isHideHeader: boolean) => void;

@@ -10,6 +10,7 @@ const mapStateToProps = (state: stateType) => {
     isReading: state.book.isReading,
     plugins: state.manager.plugins,
     readerMode: state.reader.readerMode,
+    isAuthed: state.manager.isAuthed,
   };
 };
 const actionCreator = { handleFetchPlugins };
