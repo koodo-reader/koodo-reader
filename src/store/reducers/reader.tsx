@@ -9,20 +9,20 @@ const initState = {
   color: parseInt(ConfigService.getReaderConfig("highlightIndex"))
     ? parseInt(ConfigService.getReaderConfig("highlightIndex"))
     : ConfigService.getReaderConfig("appSkin") === "night" ||
-      (ConfigService.getReaderConfig("appSkin") === "system" &&
-        ConfigService.getReaderConfig("isOSNight") === "yes")
-    ? 3
-    : 0,
+        (ConfigService.getReaderConfig("appSkin") === "system" &&
+          ConfigService.getReaderConfig("isOSNight") === "yes")
+      ? 3
+      : 0,
   backgroundColor:
     ConfigService.getReaderConfig("isMergeWord") === "yes"
       ? "rgba(0,0,0,0)"
       : ConfigService.getReaderConfig("backgroundColor")
-      ? ConfigService.getReaderConfig("backgroundColor")
-      : ConfigService.getReaderConfig("appSkin") === "night" ||
-        (ConfigService.getReaderConfig("appSkin") === "system" &&
-          ConfigService.getReaderConfig("isOSNight") === "yes")
-      ? "rgba(44,47,49,1)"
-      : "rgba(255,255,255,1)",
+        ? ConfigService.getReaderConfig("backgroundColor")
+        : ConfigService.getReaderConfig("appSkin") === "night" ||
+            (ConfigService.getReaderConfig("appSkin") === "system" &&
+              ConfigService.getReaderConfig("isOSNight") === "yes")
+          ? "rgba(44,47,49,1)"
+          : "rgba(255,255,255,1)",
   noteKey: "",
   originalText: "",
   htmlBook: null,

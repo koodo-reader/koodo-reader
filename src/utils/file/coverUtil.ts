@@ -182,9 +182,7 @@ class CoverUtil {
     } catch (error) {
       console.error("deleteOfflineCover error:", error);
       return;
-
     }
-
   }
   static async addCover(book: BookModel) {
     let coverBase64 = book.cover;
@@ -325,8 +323,9 @@ class CoverUtil {
           console.error("download cover failed");
           return;
         }
-        let base64 = `data:image/${cover.split(".").reverse()[0]
-          };base64,${imgStr}`;
+        let base64 = `data:image/${
+          cover.split(".").reverse()[0]
+        };base64,${imgStr}`;
         await this.saveCover(cover, base64);
       }
     }

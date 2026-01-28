@@ -158,8 +158,8 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
                   ? percentage === "0"
                     ? "New"
                     : percentage === "1"
-                    ? "Done"
-                    : (parseFloat(percentage) * 100).toFixed(2)
+                      ? "Done"
+                      : (parseFloat(percentage) * 100).toFixed(2)
                   : "0"}
                 {percentage &&
                   !isNaN(parseFloat(percentage)) &&

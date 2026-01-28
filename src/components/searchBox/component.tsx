@@ -50,9 +50,9 @@ class SearchBox extends React.Component<SearchBoxProps, SearchBoxState> {
     results = results.filter((result: any) => {
       return !deletedBookKeys.includes(
         result[
-        this.props.tabMode === "note" || this.props.tabMode === "highlight"
-          ? "bookKey"
-          : "key"
+          this.props.tabMode === "note" || this.props.tabMode === "highlight"
+            ? "bookKey"
+            : "key"
         ]
       );
     });
@@ -86,7 +86,10 @@ class SearchBox extends React.Component<SearchBoxProps, SearchBoxState> {
     this.props.handleNavSearchState("pending");
     this.props.handleSearchList(
       searchList.map((item: any) => {
-        const regex = new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
+        const regex = new RegExp(
+          q.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"),
+          "gi"
+        );
         item.excerpt = item.excerpt.replace(
           regex,
           `<span class="content-search-text">$&</span>`
@@ -136,10 +139,10 @@ class SearchBox extends React.Component<SearchBoxProps, SearchBoxState> {
           style={
             this.props.mode === "nav"
               ? {
-                width: this.props.width,
-                height: this.props.height,
-                paddingRight: "30px",
-              }
+                  width: this.props.width,
+                  height: this.props.height,
+                  paddingRight: "30px",
+                }
               : {}
           }
           onCompositionStart={() => {

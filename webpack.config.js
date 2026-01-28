@@ -28,10 +28,10 @@ module.exports = {
           loader: "babel-loader",
           options: {
             presets: ["@babel/preset-env", "@babel/preset-react"],
-            plugins: ["react-hot-loader/babel"]
-          }
-        }
-      }
+            plugins: ["react-hot-loader/babel"],
+          },
+        },
+      },
     ],
   },
   plugins: [new HardSourceWebpackPlugin()],

@@ -61,8 +61,8 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
             !this.props.isNavLocked && !this.props.isSettingLocked
               ? "100%"
               : this.props.isNavLocked && this.props.isSettingLocked
-              ? "calc(100% - 600px)"
-              : "calc(100% - 300px)",
+                ? "calc(100% - 600px)"
+                : "calc(100% - 300px)",
           left: !this.props.isNavLocked ? "0" : "300px",
           right: !this.props.isSettingLocked ? "0" : "300px",
           backgroundColor: this.props.backgroundColor,
