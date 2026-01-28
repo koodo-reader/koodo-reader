@@ -313,25 +313,25 @@ class BookList extends React.Component<BookListProps, BookListState> {
     let bookMode = this.props.isSearch
       ? "search"
       : this.props.shelfTitle
-      ? "shelf"
-      : this.props.mode === "favorite"
-      ? "favorite"
-      : this.state.isHideShelfBook
-      ? "hide"
-      : "home";
+        ? "shelf"
+        : this.props.mode === "favorite"
+          ? "favorite"
+          : this.state.isHideShelfBook
+            ? "hide"
+            : "home";
     let books =
       bookMode === "search"
         ? this.props.searchResults
         : bookMode === "shelf"
-        ? this.handleShelf(this.props.books, this.props.shelfTitle)
-        : bookMode === "favorite"
-        ? this.handleKeyFilter(
-            this.props.books,
-            ConfigService.getAllListConfig("favoriteBooks")
-          )
-        : bookMode === "hide"
-        ? this.handleFilterShelfBook(this.props.books)
-        : this.props.books;
+          ? this.handleShelf(this.props.books, this.props.shelfTitle)
+          : bookMode === "favorite"
+            ? this.handleKeyFilter(
+                this.props.books,
+                ConfigService.getAllListConfig("favoriteBooks")
+              )
+            : bookMode === "hide"
+              ? this.handleFilterShelfBook(this.props.books)
+              : this.props.books;
     return {
       books,
       bookMode,

@@ -580,8 +580,8 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
                     this.props.isNavLocked && !this.props.isSettingLocked
                       ? 150
                       : !this.props.isNavLocked && this.props.isSettingLocked
-                      ? -150
-                      : 0,
+                        ? -150
+                        : 0,
                 }
               : {
                   transform: "translateY(110px)",
@@ -589,8 +589,8 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
                     this.props.isNavLocked && !this.props.isSettingLocked
                       ? 150
                       : !this.props.isNavLocked && this.props.isSettingLocked
-                      ? -150
-                      : 0,
+                        ? -150
+                        : 0,
                 }
           }
         >
@@ -608,8 +608,8 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
                     this.props.isNavLocked && !this.props.isSettingLocked
                       ? 150
                       : !this.props.isNavLocked && this.props.isSettingLocked
-                      ? -150
-                      : 0,
+                        ? -150
+                        : 0,
                 }
               : {
                   transform: "translateY(-110px)",
@@ -617,8 +617,8 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
                     this.props.isNavLocked && !this.props.isSettingLocked
                       ? 150
                       : !this.props.isNavLocked && this.props.isSettingLocked
-                      ? -150
-                      : 0,
+                        ? -150
+                        : 0,
                 }
           }
         >
