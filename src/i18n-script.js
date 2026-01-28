@@ -1,5 +1,3 @@
-
-
 //list the folders in ./assets/locales
 const fs = require("fs");
 const path = require("path");
@@ -17,7 +15,8 @@ const zhdataRaw = fs.readFileSync(
   path.join(__dirname, "./assets/locales/zh-CN/translation.json"),
   "utf-8"
 );
-const enDataRaw = fs.readFileSync(path.join(__dirname, "./assets/locales/en/translation.json"),
+const enDataRaw = fs.readFileSync(
+  path.join(__dirname, "./assets/locales/en/translation.json"),
   "utf-8"
 );
 //find the missing terms in the target language
@@ -41,7 +40,6 @@ fs.writeFileSync(
   path.join(__dirname, "./assets/locales/en/translation.json"),
   JSON.stringify(mergedObj, null, 2)
 );
-
 
 // Step3:
 // fill out the rest of the terms in the target language

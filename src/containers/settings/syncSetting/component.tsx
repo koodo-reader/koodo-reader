@@ -231,7 +231,10 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
     }
     if (this.props.isAuthed && !ConfigService.getItem("defaultSyncOption")) {
       ConfigService.setItem("defaultSyncOption", this.props.settingDrive);
-      if (ConfigService.getReaderConfig("isEnableKoodoSync") === "yes" && this.props.userInfo.default_sync_option !== this.props.settingDrive) {
+      if (
+        ConfigService.getReaderConfig("isEnableKoodoSync") === "yes" &&
+        this.props.userInfo.default_sync_option !== this.props.settingDrive
+      ) {
         resetKoodoSync();
       }
       this.props.handleFetchDefaultSyncOption();
@@ -316,7 +319,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                         ConfigService,
                         BookUtil
                       );
-                      let timer = await showTaskProgress((_: boolean) => { });
+                      let timer = await showTaskProgress((_: boolean) => {});
                       if (!timer) {
                         return;
                       }
@@ -349,13 +352,13 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                 style={
                   this.state[item.propName]
                     ? {
-                      transform: "translateX(20px)",
-                      transition: "transform 0.5s ease",
-                    }
+                        transform: "translateX(20px)",
+                        transition: "transform 0.5s ease",
+                      }
                     : {
-                      transform: "translateX(0px)",
-                      transition: "transform 0.5s ease",
-                    }
+                        transform: "translateX(0px)",
+                        transition: "transform 0.5s ease",
+                      }
                 }
               ></span>
             </span>
@@ -380,11 +383,11 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
             }}
           >
             {this.props.settingDrive === "webdav" ||
-              this.props.settingDrive === "docker" ||
-              this.props.settingDrive === "ftp" ||
-              this.props.settingDrive === "sftp" ||
-              this.props.settingDrive === "mega" ||
-              this.props.settingDrive === "s3compatible" ? (
+            this.props.settingDrive === "docker" ||
+            this.props.settingDrive === "ftp" ||
+            this.props.settingDrive === "sftp" ||
+            this.props.settingDrive === "mega" ||
+            this.props.settingDrive === "s3compatible" ? (
               <>
                 {driveInputConfig[this.props.settingDrive].map((item) => {
                   return (
@@ -572,54 +575,54 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                   this.props.settingDrive === "adrive" ||
                   this.props.settingDrive === "microsoft_exp" ||
                   this.props.settingDrive === "microsoft") && (
-                    <div
-                      className="voice-add-confirm"
-                      style={{ marginRight: "10px" }}
-                      onClick={async () => {
-                        this.handleJump(
-                          new SyncUtil(this.props.settingDrive, {}).getAuthUrl(
-                            getServerRegion() === "china" &&
-                              (this.props.settingDrive === "microsoft" ||
-                                this.props.settingDrive === "microsoft_exp" ||
-                                this.props.settingDrive === "dubox" ||
-                                this.props.settingDrive === "yiyiwu" ||
-                                this.props.settingDrive === "adrive")
-                              ? KookitConfig.ThirdpartyConfig.cnCallbackUrl
-                              : KookitConfig.ThirdpartyConfig.callbackUrl
-                          )
-                        );
-                      }}
-                    >
-                      <Trans>Authorize</Trans>
-                    </div>
-                  )}
+                  <div
+                    className="voice-add-confirm"
+                    style={{ marginRight: "10px" }}
+                    onClick={async () => {
+                      this.handleJump(
+                        new SyncUtil(this.props.settingDrive, {}).getAuthUrl(
+                          getServerRegion() === "china" &&
+                            (this.props.settingDrive === "microsoft" ||
+                              this.props.settingDrive === "microsoft_exp" ||
+                              this.props.settingDrive === "dubox" ||
+                              this.props.settingDrive === "yiyiwu" ||
+                              this.props.settingDrive === "adrive")
+                            ? KookitConfig.ThirdpartyConfig.cnCallbackUrl
+                            : KookitConfig.ThirdpartyConfig.callbackUrl
+                        )
+                      );
+                    }}
+                  >
+                    <Trans>Authorize</Trans>
+                  </div>
+                )}
                 {(this.props.settingDrive === "webdav" ||
                   this.props.settingDrive === "docker" ||
                   this.props.settingDrive === "ftp" ||
                   this.props.settingDrive === "sftp" ||
                   this.props.settingDrive === "mega" ||
                   this.props.settingDrive === "s3compatible") && (
-                    <div
-                      className="voice-add-confirm"
-                      style={{ marginRight: "10px" }}
-                      onClick={async () => {
-                        if (this.props.settingDrive === "webdav") {
-                          let corsResult = await testCORS(
-                            this.state.driveConfig.url
-                          );
-                          if (!corsResult) {
-                            return;
-                          }
-                        }
-                        testConnection(
-                          this.props.settingDrive,
-                          this.state.driveConfig
+                  <div
+                    className="voice-add-confirm"
+                    style={{ marginRight: "10px" }}
+                    onClick={async () => {
+                      if (this.props.settingDrive === "webdav") {
+                        let corsResult = await testCORS(
+                          this.state.driveConfig.url
                         );
-                      }}
-                    >
-                      <Trans>Test</Trans>
-                    </div>
-                  )}
+                        if (!corsResult) {
+                          return;
+                        }
+                      }
+                      testConnection(
+                        this.props.settingDrive,
+                        this.state.driveConfig
+                      );
+                    }}
+                  >
+                    <Trans>Test</Trans>
+                  </div>
+                )}
                 {(this.props.settingDrive === "webdav" ||
                   this.props.settingDrive === "ftp" ||
                   this.props.settingDrive === "s3compatible" ||

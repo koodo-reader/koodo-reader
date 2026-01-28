@@ -123,7 +123,7 @@ class TextToSpeech extends React.Component<
     } else {
       if (
         ConfigService.getReaderConfig("voiceEngine") ===
-        "official-ai-voice-plugin" &&
+          "official-ai-voice-plugin" &&
         this.props.isAuthed
       ) {
         toast.loading(this.props.t("Loading audio, please wait..."), {
@@ -135,9 +135,10 @@ class TextToSpeech extends React.Component<
             toast.error(
               this.props.t(
                 "AI voice is only available for Pro users, please upgrade to Pro to use this feature"
-              ), {
-              id: "tts-load",
-            }
+              ),
+              {
+                id: "tts-load",
+              }
             );
             return;
           }
@@ -145,7 +146,7 @@ class TextToSpeech extends React.Component<
       }
       if (
         ConfigService.getReaderConfig("voiceEngine") ===
-        "official-ai-voice-plugin" &&
+          "official-ai-voice-plugin" &&
         !this.props.isAuthed
       ) {
         ConfigService.setReaderConfig("voiceEngine", "system");
@@ -194,7 +195,7 @@ class TextToSpeech extends React.Component<
         let currentPosition = this.props.htmlBook.rendition.getPosition();
         await this.props.htmlBook.rendition.goToChapterIndex(
           parseInt(currentPosition.chapterDocIndex) +
-          (this.props.readerMode === "double" ? 2 : 1)
+            (this.props.readerMode === "double" ? 2 : 1)
         );
       } else {
         await this.props.htmlBook.rendition.next();
@@ -277,7 +278,7 @@ class TextToSpeech extends React.Component<
           let currentPosition = this.props.htmlBook.rendition.getPosition();
           await this.props.htmlBook.rendition.goToChapterIndex(
             parseInt(currentPosition.chapterDocIndex) +
-            (this.props.readerMode === "double" ? 2 : 1)
+              (this.props.readerMode === "double" ? 2 : 1)
           );
         } else {
           await this.props.htmlBook.rendition.next();
@@ -338,7 +339,7 @@ class TextToSpeech extends React.Component<
           let currentPosition = this.props.htmlBook.rendition.getPosition();
           await this.props.htmlBook.rendition.goToChapterIndex(
             parseInt(currentPosition.chapterDocIndex) +
-            (this.props.readerMode === "double" ? 2 : 1)
+              (this.props.readerMode === "double" ? 2 : 1)
           );
         } else {
           await this.props.htmlBook.rendition.next();
@@ -443,13 +444,13 @@ class TextToSpeech extends React.Component<
                   style={
                     this.state.isAudioOn
                       ? {
-                        transform: "translateX(20px)",
-                        transition: "transform 0.5s ease",
-                      }
+                          transform: "translateX(20px)",
+                          transition: "transform 0.5s ease",
+                        }
                       : {
-                        transform: "translateX(0px)",
-                        transition: "transform 0.5s ease",
-                      }
+                          transform: "translateX(0px)",
+                          transition: "transform 0.5s ease",
+                        }
                   }
                 ></span>
               </span>

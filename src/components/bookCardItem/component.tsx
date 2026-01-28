@@ -251,8 +251,8 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
                 ? percentage === "0"
                   ? "New"
                   : percentage === "1"
-                  ? "Done"
-                  : (parseFloat(percentage) * 100).toFixed(2)
+                    ? "Done"
+                    : (parseFloat(percentage) * 100).toFixed(2)
                 : "0"}
               {percentage &&
                 !isNaN(parseFloat(percentage)) &&

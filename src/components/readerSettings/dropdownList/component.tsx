@@ -21,20 +21,17 @@ class DropdownList extends React.Component<
       }),
       currentLineHeightIndex: dropdownList[1].option.findIndex((item: any) => {
         return (
-          item.value ===
-          (ConfigService.getReaderConfig("lineHeight") || "")
+          item.value === (ConfigService.getReaderConfig("lineHeight") || "")
         );
       }),
       currentTextAlignIndex: dropdownList[2].option.findIndex((item: any) => {
         return (
-          item.value ===
-          (ConfigService.getReaderConfig("textAlign") || "")
+          item.value === (ConfigService.getReaderConfig("textAlign") || "")
         );
       }),
       chineseConversionIndex: dropdownList[3].option.findIndex((item: any) => {
         return (
-          item.value ===
-          (ConfigService.getReaderConfig("convertChinese") || "")
+          item.value === (ConfigService.getReaderConfig("convertChinese") || "")
         );
       }),
     };
