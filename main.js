@@ -734,8 +734,8 @@ const createMainWin = () => {
   });
   ipcMain.handle("hide-reader", (event, arg) => {
     if (
-      !readerWindow.isDestroyed() &&
       readerWindow &&
+      !readerWindow.isDestroyed() &&
       readerWindow.isFocused()
     ) {
       readerWindow.minimize();
